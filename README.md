@@ -10,12 +10,21 @@
 
 | 문서 | 내용 |
 |---|---|
+| [STATUS.md](./STATUS.md) | **현재 진행 상황 보드** — 매 세션이 읽고 갱신하는 단일 진실 원천 |
 | [ROADMAP.md](./ROADMAP.md) | 단계별(Phase 0~4) 실행 로드맵 — **여기서부터 읽기** |
+| [docs/EXECUTION_PLAN.md](./docs/EXECUTION_PLAN.md) | **작업 진행 방법** — 세션 운영 전략, 마일스톤 M0~M12 발주서 (비개발자용) |
 | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) | 시스템 아키텍처, 파이프라인 설계, 기술 스택 |
 | [docs/AGENTS.md](./docs/AGENTS.md) | 팀별 AI 에이전트 상세 스펙 (역할·입출력·프롬프트 골격) |
 | [docs/TEMPLATES.md](./docs/TEMPLATES.md) | 디자인 템플릿 시스템 설계 (무한 생산의 핵심) |
 | [docs/DATA_SOURCES.md](./docs/DATA_SOURCES.md) | 데이터 소스 카탈로그 (공공 API, 크롤링 대상) |
 | [docs/OPERATIONS.md](./docs/OPERATIONS.md) | 일일 운영 워크플로우, 승인 게이트, 리스크 관리 |
+| [CLAUDE.md](./CLAUDE.md) | 이 저장소에서 작업하는 모든 Claude 세션의 행동 지침 |
+
+## 작업 방식 (비개발자 운영자용 요약)
+
+- 이 프로젝트는 **한 세션에서 전부 만들지 않는다.** [docs/EXECUTION_PLAN.md](./docs/EXECUTION_PLAN.md)의 마일스톤(M0~M12)을 세션 하나당 하나씩 발주한다.
+- 세션은 오고 가지만 **이 저장소가 모든 것을 기억한다.** 새 세션은 CLAUDE.md와 STATUS.md를 읽고 즉시 이어서 일한다.
+- 운영자는 코드를 읽지 않는다. 각 마일스톤의 **"완료 확인" 체크리스트**(눈으로 검증 가능한 결과물)로 품질을 관리한다.
 
 ## 핵심 설계 원칙
 

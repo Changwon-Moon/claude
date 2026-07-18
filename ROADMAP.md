@@ -2,6 +2,8 @@
 
 전체 기간: 약 **12~16주** (1인 운영 + AI 에이전트 기준). 각 Phase는 "이게 되면 다음으로 넘어간다"는 완료 조건(Exit Criteria)을 가진다.
 
+> **실제 작업 진행 방법**(세션을 어떻게 나눠 발주하는지)은 [docs/EXECUTION_PLAN.md](./docs/EXECUTION_PLAN.md) 참고. Phase는 '무엇을'이고, 마일스톤 M0~M12는 '세션 단위로 어떻게'다. 매핑: Phase 1 = M0~M3, Phase 2 = M4~M7, Phase 3 = M8~M10, Phase 4 = M11~M12.
+
 ```
 Phase 0        Phase 1           Phase 2            Phase 3             Phase 4
 분석·기획  →   수동 MVP      →   반자동 파이프라인 →  풀 자동화        →   스케일·학습 루프
