@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ranking-table@1",
+  "description": "순위표 카드. 로고+이름+값(1~2열). 항목 3~15개.",
+  "type": "object",
+  "required": ["template", "badge", "title", "nameLabel", "valueLabel", "items", "source"],
+  "properties": {
+    "template": { "type": "string", "pattern": "^ranking-table@\\d+$" },
+    "date": { "type": "string" },
+    "variant": { "enum": ["a", "b", "c"], "description": "시안 선택. 확정 후 하나로 고정." },
+    "badge": { "type": "string", "maxLength": 22 },
+    "title": { "type": "string", "maxLength": 34 },
+    "subtitle": { "type": "string", "maxLength": 60 },
+    "nameLabel": { "type": "string", "maxLength": 12 },
+    "valueLabel": { "type": "string", "maxLength": 14 },
+    "subLabel": { "type": "string", "maxLength": 14 },
+    "items": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 15,
+      "items": {
+        "type": "object",
+        "required": ["name", "value"],
+        "properties": {
+          "name": { "type": "string", "maxLength": 24 },
+          "value": { "type": "string", "maxLength": 16 },
+          "sub": { "type": "string", "maxLength": 16 },
+          "logo": { "type": "string", "description": "로고 slug (라이브러리 구축 후). 없으면 모노그램." }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "asOf": { "type": "string" }
+      }
+    }
+  }
+}

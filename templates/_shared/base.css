@@ -1,8 +1,16 @@
 /*
  * wirit 공통 브랜드 스타일 (base.css)
  * BRAND.md 의 잉크네이비 팔레트·규칙을 구현한다.
- * M1: 시스템 폰트 스택 사용 (Pretendard 웹폰트 번들은 M2에서 추가).
+ * 폰트: Pretendard Variable 번들 (모든 웨이트 포함) → 머신 간 동일 렌더.
  */
+
+@font-face {
+  font-family: "Pretendard";
+  font-weight: 45 920; /* Variable: 얇은~Black 전 구간 */
+  font-style: normal;
+  font-display: block;
+  src: url("../_shared/fonts/PretendardVariable.woff2") format("woff2-variations");
+}
 
 :root {
   --wirit-ink: #141821; /* 본문, 수치, 다크 배경 */
@@ -91,12 +99,11 @@ body {
   color: var(--wirit-gray);
 }
 
-/* 하단 고정: 출처 + 워터마크 */
+/* 하단 고정: 출처 + 워터마크
+ * margin-top:auto 로 플렉스 컬럼의 맨 아래에 고정 → 본문과 절대 겹치지 않음 */
 .wirit-footer {
-  position: absolute;
-  left: 72px;
-  right: 72px;
-  bottom: 56px;
+  margin-top: auto;
+  margin-bottom: 44px;
   display: flex;
   justify-content: space-between;
   align-items: center;

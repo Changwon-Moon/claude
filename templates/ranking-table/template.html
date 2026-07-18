@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* =========================================================
+         ranking-table@1 — 순위표 템플릿
+         한 템플릿에서 variant(a/b/c) 로 3가지 룩을 전환.
+         시안 확정 후 하나만 남기고 정리한다.
+         ========================================================= */
+
+      .rt {
+        --row-font: 40px;
+        --row-pad: 19px;
+        --mono: 62px;
+      }
+      .rt.d-mid {
+        --row-font: 34px;
+        --row-pad: 13px;
+        --mono: 56px;
+      }
+      .rt.d-dense {
+        --row-font: 27px;
+        --row-pad: 6px;
+        --mono: 44px;
+      }
+      /* 순위표는 표 공간 확보를 위해 제목 영역을 살짝 압축 */
+      .rt .wirit-title {
+        font-size: 64px;
+        margin-top: 18px;
+      }
+      .rt .wirit-subtitle {
+        margin-top: 12px;
+        font-size: 32px;
+      }
+
+      .rt-head {
+        display: flex;
+        flex-direction: column;
+      }
+      .rt-body {
+        margin-top: 28px;
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* 표 공통 그리드: 순위 | 로고 | 이름 | 값 | (보조값) */
+      .rt-row {
+        display: grid;
+        grid-template-columns: 84px var(--mono) 1fr auto;
+        align-items: center;
+        gap: 22px;
+        padding: var(--row-pad) 20px;
+        font-size: var(--row-font);
+        line-height: 1.05;
+      }
+      .rt-row.has-sub {
+        grid-template-columns: 84px var(--mono) 1fr auto auto;
+      }
+      .rt-colhead {
+        font-size: 27px;
+        font-weight: 700;
+        color: var(--wirit-gray);
+      }
+      .rt-rank {
+        font-weight: 900;
+        color: var(--wirit-cobalt);
+        text-align: center;
+      }
+      .rt-mono {
+        width: var(--mono);
+        height: var(--mono);
+        border-radius: 50%;
+        background: var(--wirit-ink-06);
+        color: var(--wirit-ink);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: calc(var(--mono) * 0.44);
+      }
+      .rt-name {
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .rt-val {
+        font-weight: 800;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      .rt-sub {
+        font-weight: 600;
+        color: var(--wirit-gray);
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        min-width: 150px;
+      }
+
+      /* ---------- 시안 A: 페이퍼 테이블 (신문형·고밀도) ---------- */
+      .variant-a .rt-colheadrow {
+        border-bottom: 3px solid var(--wirit-ink);
+        padding-bottom: 12px;
+      }
+      .variant-a .rt-row:not(.rt-colheadrow):nth-child(even) {
+        background: var(--wirit-ink-06);
+        border-radius: 14px;
+      }
+
+      /* ---------- 시안 B: 다크 헤더 밴드 (에디토리얼·프리미엄) ---------- */
+      .variant-b {
+        padding: 0;
+      }
+      .variant-b .rt-head {
+        background: var(--wirit-ink);
+        color: var(--wirit-paper);
+        padding: 72px 72px 48px;
+      }
+      .variant-b .wirit-title {
+        color: var(--wirit-paper);
+      }
+      .variant-b .wirit-subtitle {
+        color: #b6c0cc;
+      }
+      .variant-b .rt-body {
+        margin: 40px 72px 0;
+      }
+      .variant-b .wirit-footer {
+        margin-left: 72px;
+        margin-right: 72px;
+      }
+      .variant-b .rt-colheadrow {
+        background: var(--wirit-cobalt);
+        border-radius: 14px;
+      }
+      .variant-b .rt-colheadrow .rt-colhead {
+        color: #fff;
+      }
+      .variant-b .rt-colheadrow .rt-rank {
+        color: #fff;
+      }
+      .variant-b .rt-row:not(.rt-colheadrow) {
+        border-bottom: 2px solid var(--wirit-ink-06);
+      }
+      .variant-b .rt-mono {
+        background: rgba(46, 107, 255, 0.12);
+        color: var(--wirit-cobalt);
+      }
+
+      /* ---------- 시안 C: 빅 랭킹 리스트 (Top3 강조·모바일 가독) ---------- */
+      .variant-c .rt-body {
+        gap: 6px;
+      }
+      .variant-c .rt-row {
+        grid-template-columns: 96px var(--mono) 1fr auto;
+        border-bottom: 2px solid var(--wirit-ink-06);
+        padding: calc(var(--row-pad) + 6px) 8px;
+      }
+      .variant-c .rt-row.has-sub {
+        grid-template-columns: 96px var(--mono) 1fr auto;
+      }
+      .variant-c .rt-rank {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        border: 3px solid var(--wirit-ink-12);
+        color: var(--wirit-ink);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        font-size: 34px;
+      }
+      .variant-c .rt-row.top .rt-rank {
+        background: var(--wirit-cobalt);
+        border-color: var(--wirit-cobalt);
+        color: #fff;
+      }
+      .variant-c .rt-name {
+        font-weight: 800;
+      }
+      .variant-c .rt-valwrap {
+        text-align: right;
+      }
+      .variant-c .rt-valwrap .rt-sub {
+        display: block;
+        min-width: 0;
+        font-size: calc(var(--row-font) * 0.62);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card {{#if variant}}variant-{{variant}}{{else}}variant-a{{/if}} rt {{densityClass items}}">
+      <div class="rt-head">
+        <span class="wirit-badge">{{badge}}</span>
+        <h1 class="wirit-title">{{title}}</h1>
+        {{#if subtitle}}<p class="wirit-subtitle">{{subtitle}}</p>{{/if}}
+      </div>
+
+      <div class="rt-body">
+        {{#unless (eq variant "c")}}
+        <div class="rt-row rt-colheadrow {{#if subLabel}}has-sub{{/if}}">
+          <span class="rt-colhead" style="text-align:center">순위</span>
+          <span></span>
+          <span class="rt-colhead">{{nameLabel}}</span>
+          <span class="rt-colhead" style="text-align:right">{{valueLabel}}</span>
+          {{#if subLabel}}<span class="rt-colhead" style="text-align:right">{{subLabel}}</span>{{/if}}
+        </div>
+        {{/unless}}
+
+        {{#each items}}
+        <div class="rt-row {{#if ../subLabel}}has-sub{{/if}} {{#if (lt @index 3)}}top{{/if}}">
+          <span class="rt-rank">{{inc @index}}</span>
+          <span class="rt-mono">{{initial this.name}}</span>
+          <span class="rt-name">{{this.name}}</span>
+          {{#if ../subLabel}}
+            {{#if (eq ../variant "c")}}
+            <span class="rt-valwrap"><span class="rt-val">{{this.value}}</span><span class="rt-sub">{{this.sub}}</span></span>
+            {{else}}
+            <span class="rt-val">{{this.value}}</span>
+            <span class="rt-sub">{{this.sub}}</span>
+            {{/if}}
+          {{else}}
+            <span class="rt-val">{{this.value}}</span>
+          {{/if}}
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+  </body>
+</html>

@@ -6,7 +6,11 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    devDependencies:
+      pretendard:
+        specifier: ^1.3.9
+        version: 1.3.9
 
   packages/renderer:
     dependencies:
@@ -229,6 +233,9 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
+  pretendard@1.3.9:
+    resolution: {integrity: sha512-PaQAADyLY5v4kYFwkpSJHbSSYIkiriY/1xXw75TKoZ9UQQqeU+tvP05yTdZAWibiIYoo8ZKtRv8PM7w0IaywSw==}
+
   require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
@@ -401,6 +408,8 @@ snapshots:
   neo-async@2.6.2: {}
 
   playwright-core@1.61.1: {}
+
+  pretendard@1.3.9: {}
 
   require-from-string@2.0.2: {}
 

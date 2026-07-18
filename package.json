@@ -9,5 +9,8 @@
   "scripts": {
     "render": "pnpm --filter @wirit/renderer render",
     "build": "pnpm -r build"
+  },
+  "devDependencies": {
+    "pretendard": "^1.3.9"
   }
 }
