@@ -1,0 +1,19 @@
+{
+  "template": "dummy-card@1",
+  "date": "2026-07-18",
+  "badge": "파이프라인 테스트",
+  "title": "wirit 렌더러가 살아있다",
+  "subtitle": "이 카드는 JSON 데이터로 자동 생성되었습니다",
+  "hero": {
+    "label": "이 카드를 만든 코드 줄 수",
+    "value": "0",
+    "delta": "사람이 그린 픽셀 0개"
+  },
+  "items": [
+    { "name": "데이터 → 이미지 자동 변환", "value": "성공" },
+    { "name": "브랜드 컬러 적용 (잉크네이비)", "value": "성공" },
+    { "name": "1080 × 1350 인스타 규격", "value": "성공" },
+    { "name": "동일 입력 = 동일 픽셀", "value": "성공" }
+  ],
+  "source": { "name": "wirit M1 렌더러" }
+}

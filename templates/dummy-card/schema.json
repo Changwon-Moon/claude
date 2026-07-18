@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "dummy-card@1",
+  "description": "M1 파이프라인 검증용 데모 카드. 실제 콘텐츠 템플릿은 M2부터.",
+  "type": "object",
+  "required": ["template", "badge", "title", "hero", "items", "source"],
+  "properties": {
+    "template": { "type": "string", "pattern": "^dummy-card@\\d+$" },
+    "date": { "type": "string" },
+    "badge": { "type": "string", "maxLength": 20 },
+    "title": { "type": "string", "maxLength": 40 },
+    "subtitle": { "type": "string", "maxLength": 60 },
+    "hero": {
+      "type": "object",
+      "required": ["label", "value"],
+      "properties": {
+        "label": { "type": "string" },
+        "value": { "type": "string" },
+        "delta": { "type": "string" }
+      }
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "required": ["name", "value"],
+        "properties": {
+          "name": { "type": "string" },
+          "value": { "type": "string" }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["name"],
+      "properties": { "name": { "type": "string" } }
+    }
+  }
+}

@@ -1,0 +1,115 @@
+/*
+ * wirit 공통 브랜드 스타일 (base.css)
+ * BRAND.md 의 잉크네이비 팔레트·규칙을 구현한다.
+ * M1: 시스템 폰트 스택 사용 (Pretendard 웹폰트 번들은 M2에서 추가).
+ */
+
+:root {
+  --wirit-ink: #141821; /* 본문, 수치, 다크 배경 */
+  --wirit-paper: #fafaf8; /* 기본 배경 */
+  --wirit-cobalt: #2e6bff; /* 강조 1축 */
+  --wirit-red: #e5484d; /* 상승·경고 시그널 전용 */
+  --wirit-gray: #5b6b7f; /* 보조 텍스트, 비강조 */
+  --wirit-ink-06: rgba(20, 24, 33, 0.06); /* 행 밴딩, 구분선 */
+  --wirit-ink-12: rgba(20, 24, 33, 0.12);
+
+  --font-sans: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR",
+    system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--wirit-paper);
+  color: var(--wirit-ink);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "tnum" 1; /* 표 정렬용 고정폭 숫자 */
+}
+
+/* 카드 프레임: 인스타 4:5 (1080×1350) */
+.wirit-card {
+  width: 1080px;
+  height: 1350px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 72px 72px 0;
+  background: var(--wirit-paper);
+}
+
+/* 상단: 카테고리 뱃지 + 제목 */
+.wirit-badge {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: var(--wirit-cobalt);
+  color: #fff;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.wirit-title {
+  margin-top: 28px;
+  font-size: 76px;
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: var(--wirit-ink);
+}
+
+.wirit-subtitle {
+  margin-top: 18px;
+  font-size: 34px;
+  font-weight: 600;
+  color: var(--wirit-gray);
+  letter-spacing: -0.01em;
+}
+
+/* 색 유틸 */
+.up {
+  color: var(--wirit-red);
+} /* 상승·경고 (시그널 전용) */
+.accent {
+  color: var(--wirit-cobalt);
+}
+.muted {
+  color: var(--wirit-gray);
+}
+
+/* 하단 고정: 출처 + 워터마크 */
+.wirit-footer {
+  position: absolute;
+  left: 72px;
+  right: 72px;
+  bottom: 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 26px;
+  color: var(--wirit-gray);
+  border-top: 2px solid var(--wirit-ink-12);
+  padding-top: 24px;
+}
+
+.wirit-watermark {
+  font-weight: 800;
+  color: var(--wirit-ink);
+}
+.wirit-watermark .dot {
+  color: var(--wirit-cobalt);
+}

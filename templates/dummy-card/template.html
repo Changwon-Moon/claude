@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* dummy-card 전용 스타일 (M1 파이프라인 검증용 데모 템플릿) */
+      .demo-hero {
+        margin-top: 64px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .demo-hero .label {
+        font-size: 34px;
+        font-weight: 700;
+        color: var(--wirit-gray);
+      }
+      .demo-hero .big {
+        font-size: 200px;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        color: var(--wirit-ink);
+      }
+      .demo-hero .delta {
+        font-size: 46px;
+        font-weight: 800;
+      }
+      .demo-list {
+        margin-top: 72px;
+        display: flex;
+        flex-direction: column;
+      }
+      .demo-row {
+        display: grid;
+        grid-template-columns: 96px 1fr auto;
+        align-items: center;
+        gap: 20px;
+        padding: 26px 24px;
+        font-size: 40px;
+      }
+      .demo-row:nth-child(odd) {
+        background: var(--wirit-ink-06);
+        border-radius: 16px;
+      }
+      .demo-row .rank {
+        font-weight: 900;
+        color: var(--wirit-cobalt);
+      }
+      .demo-row .name {
+        font-weight: 700;
+      }
+      .demo-row .value {
+        font-weight: 800;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card">
+      <span class="wirit-badge">{{badge}}</span>
+      <h1 class="wirit-title">{{title}}</h1>
+      {{#if subtitle}}<p class="wirit-subtitle">{{subtitle}}</p>{{/if}}
+
+      <div class="demo-hero">
+        <span class="label">{{hero.label}}</span>
+        <span class="big">{{hero.value}}</span>
+        {{#if hero.delta}}<span class="delta up">▲ {{hero.delta}}</span>{{/if}}
+      </div>
+
+      <div class="demo-list">
+        {{#each items}}
+        <div class="demo-row">
+          <span class="rank">{{inc @index}}</span>
+          <span class="name">{{this.name}}</span>
+          <span class="value">{{this.value}}</span>
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "wirit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "wirit(@wirit_note) 데이터 인포그래픽 카드뉴스 자동 생산 파이프라인",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "render": "pnpm --filter @wirit/renderer render",
+    "build": "pnpm -r build"
+  }
+}

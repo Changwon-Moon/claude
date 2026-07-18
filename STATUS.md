@@ -11,8 +11,8 @@
 |---|---|---|---|
 | — | 설계 문서 작성 (로드맵, 아키텍처, 에이전트, 템플릿, 소스, 운영, 실행전략) | ✅ 완료 | 2026-07-18 |
 | M0 | 준비 — 계정·API 키 발급 | 🟡 가이드 완료·운영자 수행 대기 | 가이드: [docs/guides/M0-setup.md](./docs/guides/M0-setup.md). 운영자가 키 6종 발급 후 M1 |
-| M1 | 레포 스캐폴딩 + 렌더러 코어 | ⬜ 대기 | |
-| M2 | 템플릿 1호 ranking-table | ⬜ 대기 | 운영자 시안 선택 필요 |
+| M1 | 레포 스캐폴딩 + 렌더러 코어 | ✅ 완료 | JSON→PNG 렌더러 동작. 결정성·스키마검증 확인. 미리보기: templates/dummy-card/preview.png |
+| M2 | 템플릿 1호 ranking-table | ⬜ 대기 | **다음 작업.** 운영자 시안 선택 필요 + Pretendard 폰트 번들 |
 | M3 | 템플릿 2·3호 (market-daily, vs-compare) | ⬜ 대기 | M4와 병렬 가능 |
 | M4 | 수집기 P0 (증시·환율·금리) + Actions cron | ⬜ 대기 | M3과 병렬 가능 |
 | M5 | 첫 무인 콘텐츠: 증시 데일리 E2E 자동 발행 | ⬜ 대기 | 최초의 가시적 성과 |
@@ -55,8 +55,12 @@
 | 2026-07-18 | 니치 확정(코어+트래픽 하이브리드), 콘텐츠 전략 문서화 | CONTENT_STRATEGY.md 추가 |
 | 2026-07-18 | 브랜드 확정: wirit(@wirit_note), 잉크네이비 팔레트 | BRAND.md, assets/brand/ 추가 |
 | 2026-07-18 | M0 셋업 가이드 작성 (계정·키 발급), 발행 방식 확정, .gitignore | M0-setup.md 추가, 운영자 수행 대기 |
+| 2026-07-18 | M1 렌더러 구축: 모노레포 + JSON→PNG(Playwright) + 스키마검증 + dummy-card | 렌더 성공, 해시 동일(결정성), 불량데이터 반려 확인 |
 
 ## 다음 세션이 알아야 할 메모
 
 - 운영자는 비개발자. 완료 확인은 항상 "눈으로 볼 수 있는 결과물"로 제시할 것
-- M0 진행 시 docs/guides/M0-setup.md 작성부터 시작
+- **M1 완료**: 렌더러(`packages/renderer`)가 `pnpm --filter @wirit/renderer render -- --data <json> --out <dir>` 로 동작. 새 템플릿은 `templates/{이름}/`에 html+schema+sample+config 4종.
+- **M2 착수 시 우선**: (1) Pretendard 웹폰트를 `templates/_shared/fonts/`에 번들하고 base.css에 @font-face 등록 → 머신 간 완전 동일 렌더. (2) ranking-table 시안 3개를 렌더해 운영자에게 이미지로 제시 후 선택.
+- 하락 색상(코발트) 확정은 M3(market-daily) 시안에서.
+- 아직 미완: 로고 원본 `assets/brand/logo.png` 업로드(운영자), M0 키 발급(운영자).
