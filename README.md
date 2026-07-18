@@ -14,6 +14,7 @@
 | [ROADMAP.md](./ROADMAP.md) | 단계별(Phase 0~4) 실행 로드맵 — **여기서부터 읽기** |
 | [docs/EXECUTION_PLAN.md](./docs/EXECUTION_PLAN.md) | **작업 진행 방법** — 세션 운영 전략, 마일스톤 M0~M12 발주서 (비개발자용) |
 | [docs/CONTENT_STRATEGY.md](./docs/CONTENT_STRATEGY.md) | 콘텐츠 전략 — 코어(부동산·주식·경제)+트래픽(범용) 믹스, 시리즈 카탈로그, 발행 캘린더 |
+| [docs/BRAND.md](./docs/BRAND.md) | 브랜드 가이드 — wirit(@wirit_note), 잉크네이비 팔레트, 컬러 사용 규칙, CSS 토큰 |
 | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) | 시스템 아키텍처, 파이프라인 설계, 기술 스택 |
 | [docs/AGENTS.md](./docs/AGENTS.md) | 팀별 AI 에이전트 상세 스펙 (역할·입출력·프롬프트 골격) |
 | [docs/TEMPLATES.md](./docs/TEMPLATES.md) | 디자인 템플릿 시스템 설계 (무한 생산의 핵심) |
