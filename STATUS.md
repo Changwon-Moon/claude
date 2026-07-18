@@ -10,7 +10,7 @@
 | # | 마일스톤 | 상태 | 비고 |
 |---|---|---|---|
 | — | 설계 문서 작성 (로드맵, 아키텍처, 에이전트, 템플릿, 소스, 운영, 실행전략) | ✅ 완료 | 2026-07-18 |
-| M0 | 준비 — 계정·API 키 발급 | ⬜ 대기 | **다음 작업.** 운영자 직접 수행 + 가이드 세션 |
+| M0 | 준비 — 계정·API 키 발급 | 🟡 가이드 완료·운영자 수행 대기 | 가이드: [docs/guides/M0-setup.md](./docs/guides/M0-setup.md). 운영자가 키 6종 발급 후 M1 |
 | M1 | 레포 스캐폴딩 + 렌더러 코어 | ⬜ 대기 | |
 | M2 | 템플릿 1호 ranking-table | ⬜ 대기 | 운영자 시안 선택 필요 |
 | M3 | 템플릿 2·3호 (market-daily, vs-compare) | ⬜ 대기 | M4와 병렬 가능 |
@@ -37,12 +37,15 @@
 
 | 항목 | 상태 |
 |---|---|
-| Instagram 프로페셔널 계정 | ⬜ |
-| Meta 개발자 앱 + Graph API 토큰 | ⬜ |
-| 공공데이터포털 API 키 | ⬜ |
-| 한국은행 ECOS API 키 | ⬜ |
-| Anthropic API 키 | ⬜ |
-| Telegram 봇 토큰 (M8) | ⬜ |
+| Instagram 프로페셔널 계정 (@wirit_note 전환) | ⬜ M0 1단계 |
+| Meta 개발자 앱 + 인스타 토큰 (`IG_ACCESS_TOKEN`, `IG_USER_ID`) | ⬜ M0 2단계 |
+| 공공데이터포털 API 키 (`DATA_GO_KR_API_KEY`) | ⬜ M0 3단계 |
+| 한국은행 ECOS API 키 (`ECOS_API_KEY`) | ⬜ M0 4단계 |
+| Anthropic API 키 (`ANTHROPIC_API_KEY`) | ⬜ M0 5단계 |
+| GitHub Secrets 5종 등록 | ⬜ M0 6단계 |
+| Telegram 봇 토큰 (`TELEGRAM_BOT_TOKEN`) | ⬜ M8에서 |
+
+> 방식 결정: 인스타 발행은 **"Instagram API with Instagram Login"**(2024.7~) 사용 — 페이스북 페이지 불필요, 내 계정만 대상이라 앱 심사 없이 개발 모드로 동작. 토큰 60일 유효 + M5에서 자동 갱신 구현 예정.
 
 ## 세션 로그
 
@@ -51,6 +54,7 @@
 | 2026-07-18 | 설계 문서 일체 작성, 실행 전략(세션 운영 방식) 수립 | 문서 9종 커밋 |
 | 2026-07-18 | 니치 확정(코어+트래픽 하이브리드), 콘텐츠 전략 문서화 | CONTENT_STRATEGY.md 추가 |
 | 2026-07-18 | 브랜드 확정: wirit(@wirit_note), 잉크네이비 팔레트 | BRAND.md, assets/brand/ 추가 |
+| 2026-07-18 | M0 셋업 가이드 작성 (계정·키 발급), 발행 방식 확정, .gitignore | M0-setup.md 추가, 운영자 수행 대기 |
 
 ## 다음 세션이 알아야 할 메모
 

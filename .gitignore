@@ -1,0 +1,33 @@
+# 비밀키·환경변수 — 절대 커밋 금지
+.env
+.env.*
+*.local
+secrets/
+*-token.txt
+*-key.txt
+
+# 의존성·빌드 산출물
+node_modules/
+dist/
+build/
+.next/
+*.tsbuildinfo
+
+# 파이프라인 런타임 데이터 (M1에서 정책 재확정)
+# raw 수집물·렌더 출력은 용량이 크므로 기본 제외. 샘플/뱅크는 별도 예외 규칙 예정.
+data/raw/
+data/out/
+data/briefs/
+data/plans/
+data/content/
+
+# OS·에디터
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# 로그
+*.log
+npm-debug.log*
+pnpm-debug.log*

@@ -86,7 +86,7 @@ data/
 | DB | SQLite → 성장 시 Postgres | 파이프라인 상태·발행 이력·성과 지표 |
 | 큐/스케줄 | cron + 오케스트레이터 상태 머신 (BullMQ는 규모 커지면) | 하루 수십 건 규모엔 단순함이 정의 |
 | 대시보드 | Next.js (승인 UI) + Slack/Telegram 봇 (모바일 승인) | 아침 침대에서 승인 가능해야 함 |
-| 발행 | Instagram Graph API (Content Publishing) | 캐러셀 예약 발행 지원, 비즈니스 계정 필수 |
+| 발행 | Instagram API with Instagram Login (Content Publishing) | **페이스북 페이지 불필요**, 내 계정 전용이라 앱 심사 없이 개발 모드로 동작. 장기 토큰 60일 + 자동 갱신 |
 | 인프라 | VPS 1대 or Fly.io/Railway + S3호환 스토리지 | 월 $10~20 수준에서 시작 |
 | 관측 | 파이프라인 로그 DB + Slack 알림 + LLM 비용 미터링 | 장애·비용 조기 감지 |
 
