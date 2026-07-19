@@ -6,7 +6,7 @@
 **최종 갱신**: 2026-07-19
 
 > ⚠️ **우선순위 재정렬 (2026-07-19)**: 시스템의 척추는 **리서치·기획(무엇을 만들지 결정)** — [docs/RESEARCH_WORKFLOW.md](./docs/RESEARCH_WORKFLOW.md)가 로드맵보다 우선. R0(운영자 수동)로 시작해 결정 로그를 쌓고 점진 자동화(R1→R3). M4(자동 수치수집)·M0/M5 발행부는 정기 고정물(증시)에만 먼저 적용하는 부수 트랙.
-> **다음 액션**: 운영자가 [research/DAILY_BRIEF_TEMPLATE.md](./research/DAILY_BRIEF_TEMPLATE.md)로 오늘 소재를 골라 [research/DECISION_LOG.md](./research/DECISION_LOG.md)에 기록 → Claude에 카드 제작 요청. 전체 흐름 1회 시연.
+> **다음 액션**: 운영자가 [오늘의 소재 보드](./research/briefs/2026-07-19-auto.md)에서 만들 것을 선택(번호로) → Claude가 카드 제작 → DECISION_LOG 기록. 내일부터 보드는 Actions가 매일 07:00 자동 생성.
 
 ## 마일스톤 현황
 
@@ -71,6 +71,7 @@
 | 2026-07-18 | M5 pipeline: raw→콘텐츠JSON→PNG 자동생성(간밤의 미국 증시) | 셀프테스트 15/15, 픽스처 데이터로 카드 자동생성 확인 |
 | 2026-07-19 | 공용 상단 캡션 표준화(날짜·부제 좌상단 옅게) | 두 카드 통일 |
 | 2026-07-19 | **우선순위 재정렬**: 리서치·기획 중심(수동 R0 우선). RESEARCH_WORKFLOW + 결정로그·브리핑 틀 | 운영자 방향. 자동수집/발행은 부수트랙 |
+| 2026-07-19 | R1 소재 보드 자동수집기: 주제별 구글뉴스·트렌드 RSS → research/briefs/{date}-auto.md, Actions 매일 07:00 커밋 | RSS 파서 셀프테스트 22/22. 오늘 첫 보드는 세션 웹검색으로 생성 |
 
 ## 다음 세션이 알아야 할 메모
 

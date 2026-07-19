@@ -5,6 +5,8 @@
  */
 import { parseStooqDailyCsv, monthlySample } from "./parse/stooq.js";
 import { parseEcosJson } from "./parse/ecos.js";
+import { parseRss, dedupeByTitle } from "./parse/rss.js";
+import { hasLever } from "./sources/researchSignals.js";
 import { toQuote } from "./sources/usMarket.js";
 import { ecosToQuote } from "./sources/krRates.js";
 import {
@@ -65,6 +67,25 @@ try {
   threw = true;
 }
 check("에러 응답은 throw", threw);
+
+console.log("[RSS 파서 (소재 신호)]");
+{
+  const RSS_FIXTURE = `<?xml version="1.0"?><rss><channel>
+  <item><title>10대 건설사 평균연봉 1위는 &quot;삼성물산&quot;</title><link>https://ex.com/1</link><pubDate>Sun, 19 Jul 2026 01:00:00 GMT</pubDate><source url="https://ex.com">매일경제</source></item>
+  <item><title><![CDATA[코스피 2,900 돌파…사상 최고]]></title><link>https://ex.com/2</link></item>
+  <item><title>10대 건설사 평균연봉 1위는 "삼성물산" - 한국경제</title><link>https://ex.com/3</link></item>
+  <item><title>링크 없는 항목</title></item>
+  </channel></rss>`;
+  const items = parseRss(RSS_FIXTURE);
+  check("item 3건 파싱(링크없는 것 제외)", items.length === 3, `got ${items.length}`);
+  check("엔티티 복원", items[0].title.includes('"삼성물산"'), items[0].title);
+  check("CDATA 처리", items[1].title === "코스피 2,900 돌파…사상 최고", items[1].title);
+  check("source 추출", items[0].source === "매일경제");
+  const deduped = dedupeByTitle(items);
+  check("유사중복 제거(꼬리 언론사)", deduped.length === 2, `got ${deduped.length}`);
+  check("레버 감지(1위/돌파)", hasLever(items[0].title) && hasLever(items[1].title));
+  check("레버 없음", !hasLever("오늘 날씨가 흐립니다"));
+}
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);
 if (fail > 0) process.exit(1);
