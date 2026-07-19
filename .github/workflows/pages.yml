@@ -1,0 +1,67 @@
+name: 관제탑 배포 (GitHub Pages)
+
+# 저장소 산출물 → 정적 관제탑(index.html) 생성 → GitHub Pages 상시 게시.
+# ⚠️ data/content·data/out은 gitignore이므로 CI 빌드에는 렌더 카드 썸네일이 빠질 수 있다
+#    (소재보드·결정·회사·자산 데이터는 정상). 썸네일 포함 완전판은 세션에서 생성/아티팩트로.
+# 최초 1회: 저장소 Settings → Pages → Source를 "GitHub Actions"로 설정해야 게시된다.
+on:
+  push:
+    branches:
+      - claude/instagram-content-automation-roadmap-fxnb7p
+    paths:
+      - "research/**"
+      - "company/**"
+      - "prompts/**"
+      - "data/datasets/**"
+      - "templates/_shared/**/catalog.json"
+      - "packages/dashboard-static/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: 파서 셀프테스트
+        run: pnpm --filter @wirit/dashboard-static selftest
+
+      - name: 관제탑 정적 생성
+        run: pnpm --filter @wirit/dashboard-static all
+
+      - name: 게시 디렉터리 준비
+        run: |
+          mkdir -p _site
+          cp packages/dashboard/index.html _site/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

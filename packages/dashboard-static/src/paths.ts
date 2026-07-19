@@ -11,6 +11,7 @@ export const P = {
   decisionLog: resolve(REPO_ROOT, "research/DECISION_LOG.md"),
   ceo: resolve(REPO_ROOT, "company/CEO.md"),
   teams: resolve(REPO_ROOT, "company/teams"),
+  prompts: resolve(REPO_ROOT, "prompts"),
   content: resolve(REPO_ROOT, "data/content"),
   out: resolve(REPO_ROOT, "data/out"),
   datasetCatalog: resolve(REPO_ROOT, "data/datasets/catalog.json"),

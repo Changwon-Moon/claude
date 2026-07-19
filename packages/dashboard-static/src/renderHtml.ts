@@ -80,12 +80,23 @@ button:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px;border-r
 .pcat h3{font-size:13.5px;font-weight:800;margin-bottom:7px}
 .pr{display:flex;gap:9px;font-size:13px;line-height:1.5;padding:6px 0;border-bottom:1px solid var(--line)}
 .pr .d{color:var(--gray);font-variant-numeric:tabular-nums;flex:0 0 42px;font-weight:700}
-.teams{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.teams{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
 .team{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 13px;display:flex;flex-direction:column;gap:6px}
 .team .h{font-size:14.5px;font-weight:800;display:flex;align-items:center;gap:7px}
-.team .v{font-size:12.5px;color:var(--gray);line-height:1.45}
+.team .v{font-size:12.5px;color:var(--text);line-height:1.45;font-weight:600}
+.team .resp{font-size:11.5px;color:var(--gray);line-height:1.4}
 .team .f{display:flex;gap:8px;align-items:center;font-size:11px;color:var(--gray);margin-top:2px}
 .team .lv{background:var(--band);border:1px solid var(--line);border-radius:6px;padding:2px 7px;font-weight:800;color:var(--cobalt)}
+/* 편집 컨트롤 (CEO·팀 공통) */
+.secttools{display:inline-flex;gap:6px;margin-left:8px;vertical-align:middle}
+.teamtools{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.ebtn{font-size:11px;font-weight:800;border-radius:7px;padding:4px 9px;background:var(--band);border:1px solid var(--line);color:var(--cobalt);text-decoration:none;display:inline-block}
+.ebtn.gh{color:var(--gray)}
+.ebtn.save{background:var(--cobalt);color:#fff;border-color:var(--cobalt);align-self:flex-start;cursor:pointer}
+.edarea{display:none;flex-direction:column;gap:7px;margin:8px 0 2px}
+.edarea.on{display:flex}
+.edarea textarea{font:inherit;font-size:12.5px;border:1.5px solid var(--line);border-radius:9px;background:var(--card);color:var(--text);padding:8px;min-height:58px;resize:vertical}
+.edhint{font-size:11px;color:var(--gray);line-height:1.4}
 
 /* 자산 탭 */
 .agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
@@ -163,6 +174,39 @@ document.querySelectorAll(".tab").forEach(b=>{
     document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="view-"+b.dataset.v));
   };
 });
+
+/* 결정 1건을 지시 전달함에 담기 */
+function pushDecision(text, msg){
+  S.decisions.push(text); save();
+  document.getElementById("dcnt").textContent=S.decisions.length;
+  toast(msg||"지시 전달함에 담김");
+}
+
+/* 회사 탭 편집 배선 — CEO 원칙 + 팀별 원칙·프롬프트 */
+function wireCompany(){
+  const ceoBtn=document.querySelector("[data-ce]");
+  if(ceoBtn){
+    ceoBtn.onclick=()=>document.getElementById("ed-ceo").classList.toggle("on");
+    document.querySelector("[data-ce-save]").onclick=()=>{
+      const ta=document.querySelector("#ed-ceo textarea"), v=ta.value.trim();
+      if(!v){ toast("내용을 입력하세요"); return; }
+      pushDecision("CEO 원칙 수정·추가: "+v, "CEO 원칙 지시 담김"); ta.value=""; document.getElementById("ed-ceo").classList.remove("on");
+    };
+  }
+  document.querySelectorAll("[data-te]").forEach(b=>{
+    const slug=b.dataset.te.split("|")[0];
+    b.onclick=()=>document.querySelector('[data-te-area="'+slug+'"]').classList.toggle("on");
+  });
+  document.querySelectorAll("[data-te-save]").forEach(b=>{
+    const [slug,name]=b.dataset.teSave.split("|");
+    b.onclick=()=>{
+      const area=document.querySelector('[data-te-area="'+slug+'"]'), ta=area.querySelector("textarea"), v=ta.value.trim();
+      if(!v){ toast("내용을 입력하세요"); return; }
+      pushDecision("「"+name+"」 원칙·프롬프트 수정: "+v, name+" 지시 담김"); ta.value=""; area.classList.remove("on");
+    };
+  });
+}
+wireCompany();
 
 /* 칸반 */
 const board=document.getElementById("board");
@@ -319,6 +363,14 @@ function kpiHtml(state: TowerState): string {
 }
 
 function companyHtml(state: TowerState): string {
+  const { owner, name, branch } = state.repo;
+  const ghEdit = (path: string): string =>
+    owner && name ? `https://github.com/${owner}/${name}/edit/${branch}/${path}` : "";
+  const ghLink = (path: string, label: string): string => {
+    const u = ghEdit(path);
+    return u ? `<a class="ebtn gh" href="${esc(u)}" target="_blank" rel="noopener">${esc(label)}↗</a>` : "";
+  };
+
   const cats = Object.entries(state.company.principles)
     .map(
       ([cat, list]) =>
@@ -327,18 +379,38 @@ function companyHtml(state: TowerState): string {
           .join("")}</div>`
     )
     .join("");
+
+  const ceoTools =
+    `<span class="secttools"><button class="ebtn" data-ce>✏️ 원칙 추가·수정</button>${ghLink(
+      state.company.ceoPath,
+      "GitHub"
+    )}</span>` +
+    `<div class="edarea" id="ed-ceo"><div class="edhint">추가하거나 고칠 원칙을 적으세요. [지시 전달함에 담기] → 하단 [요약 복사] → Claude에게 붙여넣으면 CEO.md에 반영됩니다.</div>` +
+    `<textarea placeholder="예) 디자인 원칙 추가: 표 헤더는 잉크 배경에 흰 글씨로 / 또는 기존 원칙 수정 내용"></textarea>` +
+    `<button class="ebtn save" data-ce-save>지시 전달함에 담기</button></div>`;
+
   const teams = state.company.teams
     .map(
       (t) =>
         `<div class="team"><div class="h">${esc(t.emoji)} ${esc(t.name)}</div>` +
         `<div class="v">${esc(t.values)}</div>` +
-        `<div class="f"><span class="lv">${esc(t.autonomy)}</span><span>학습 ${t.logCount}건</span></div></div>`
+        (t.responsibility ? `<div class="resp">책임 · ${esc(t.responsibility)}</div>` : "") +
+        `<div class="f"><span class="lv">${esc(t.autonomy)}</span><span>학습 ${t.logCount}건</span></div>` +
+        `<div class="teamtools"><button class="ebtn" data-te="${esc(t.slug)}|${esc(t.name)}">✏️ 수정지시</button>` +
+        ghLink(t.path, "사원카드") +
+        (t.hasPrompt ? ghLink(t.promptPath, "프롬프트") : "") +
+        `</div>` +
+        `<div class="edarea" data-te-area="${esc(t.slug)}"><div class="edhint">이 팀의 원칙·프롬프트를 어떻게 바꿀까요?</div>` +
+        `<textarea placeholder="예) 데이터 가용성 2점 미만 소재는 후보에서 자동 제외"></textarea>` +
+        `<button class="ebtn save" data-te-save="${esc(t.slug)}|${esc(t.name)}">지시 전달함에 담기</button></div>` +
+        `</div>`
     )
     .join("");
+
   return (
     `<div class="wrap">` +
-    `<div class="sect">🧠 CEO — 오너 판단 누적 (${state.company.principlesCount}개 원칙)</div>${cats}` +
-    `<div class="sect">👥 팀 (${state.company.teams.length}) — 가치관·자동화 수위·학습</div><div class="teams">${teams}</div>` +
+    `<div class="sect">🧠 CEO — 오너 판단 누적 (${state.company.principlesCount}개 원칙)${ceoTools}</div>${cats}` +
+    `<div class="sect">👥 팀 (${state.company.teams.length}) — 각 직원의 원칙·프롬프트를 직접 수정보완</div><div class="teams">${teams}</div>` +
     `</div>`
   );
 }
@@ -360,16 +432,28 @@ function assetsHtml(state: TowerState): string {
 }
 
 export function renderTowerHtml(state: TowerState): string {
-  const stateJson = JSON.stringify(state).replace(/</g, "\\u003c");
+  const body = renderTowerBody(state);
   return `<!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>wirit 관제탑</title>
-<style>${CSS}</style>
 </head>
 <body>
+${body}
+</body>
+</html>
+`;
+}
+
+/**
+ * 아티팩트/임베드용 본문(문서 스켈레톤 없이 style+마크업+script).
+ * claude.ai 아티팩트는 <head>를 제공하므로 doctype/html/head/body를 넣지 않는다.
+ */
+export function renderTowerBody(state: TowerState): string {
+  const stateJson = JSON.stringify(state).replace(/</g, "\\u003c");
+  return `<style>${CSS}</style>
 <header class="topbar">
   <span class="mark">wirit<span class="dot">.</span></span>
   <span class="sub">관제탑 · Control&nbsp;Tower</span>
@@ -406,8 +490,5 @@ export function renderTowerHtml(state: TowerState): string {
 <script>
 const STATE = ${stateJson};
 ${APP_JS}
-</script>
-</body>
-</html>
-`;
+</script>`;
 }

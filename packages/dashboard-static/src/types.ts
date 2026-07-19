@@ -69,9 +69,12 @@ export interface TeamCard {
   emoji: string;
   name: string;
   values: string; // 가치관 한 줄
+  responsibility: string; // 책임 한 줄
   autonomy: string; // 자동화 수위 (R0~R3)
   logCount: number; // 학습 로그 항목 수
-  path: string;
+  path: string; // company/teams/{slug}.md
+  promptPath: string; // prompts/{slug}.md
+  hasPrompt: boolean;
 }
 
 export interface Principle {
@@ -89,6 +92,7 @@ export interface AssetGroup {
 export interface TowerState {
   generatedFrom: string; // 어떤 저장소 상태 기준인지 (결정적: 콘텐츠 날짜에서 파생)
   dateLabel: string; // 상단 표시용 (예: "26.07.19(일)")
+  repo: { owner: string; name: string; branch: string }; // GitHub 직접 편집 링크용
   kpi: { label: string; value: string; note: string }[];
   stages: readonly string[];
   rubricLabels: readonly string[];
@@ -96,6 +100,7 @@ export interface TowerState {
   company: {
     principlesCount: number;
     principles: Record<string, Principle[]>; // 카테고리 → 원칙들
+    ceoPath: string; // company/CEO.md
     teams: TeamCard[];
   };
   assets: {

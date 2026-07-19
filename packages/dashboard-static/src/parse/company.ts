@@ -53,6 +53,9 @@ export function parseTeamCard(md: string, slug: string): TeamCard | null {
   const valuesM = md.match(/\*\*가치관\*\*\s*[:：]\s*([^\n]+)/);
   const values = valuesM ? valuesM[1].trim() : "";
 
+  const respM = md.match(/\*\*책임\*\*\s*[:：]\s*([^\n]+)/);
+  const responsibility = respM ? respM[1].trim() : "";
+
   const autoM = md.match(/\*\*자동화\*\*\s*[:：]\s*([^\n|]+)/);
   const autonomy = autoM ? autoM[1].trim() : "—";
 
@@ -73,5 +76,16 @@ export function parseTeamCard(md: string, slug: string): TeamCard | null {
     }
   }
 
-  return { slug, emoji, name, values, autonomy, logCount, path: `company/teams/${slug}.md` };
+  return {
+    slug,
+    emoji,
+    name,
+    values,
+    responsibility,
+    autonomy,
+    logCount,
+    path: `company/teams/${slug}.md`,
+    promptPath: `prompts/${slug}.md`,
+    hasPrompt: false, // buildState에서 파일 존재 확인 후 채움
+  };
 }

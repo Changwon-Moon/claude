@@ -28,6 +28,7 @@ templates/**/.render-tmp-*.html
 # 생성기 소스(packages/dashboard-static)만 커밋하고, 결과물은 필요 시 재생성/CI 배포
 packages/dashboard/index.html
 packages/dashboard/tower-state.json
+packages/dashboard/artifact-body.html
 
 # OS·에디터
 .DS_Store

@@ -4,7 +4,7 @@
  */
 import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { join, basename } from "node:path";
-import { P } from "./paths.js";
+import { P, REPO_ROOT } from "./paths.js";
 import { STAGES, RUBRIC_LABELS } from "./types.js";
 import type { TowerState, Ticket, TimelineEntry } from "./types.js";
 import { parseBrief } from "./parse/brief.js";
@@ -27,6 +27,31 @@ const TEAM_ORDER = [
 
 function normTitle(s: string): string {
   return s.replace(/\s+/g, "").replace(/[·—\-]/g, "").toLowerCase();
+}
+
+/** .git에서 owner/repo/branch를 읽어 GitHub 편집 링크 재료를 만든다. 실패해도 안전한 기본값. */
+function detectRepo(): { owner: string; name: string; branch: string } {
+  let owner = "";
+  let name = "";
+  let branch = "main";
+  try {
+    const cfg = readFileSync(join(REPO_ROOT, ".git/config"), "utf8");
+    const m = cfg.match(/url\s*=\s*.*?[/:]([^/]+)\/([^/\s.]+)(?:\.git)?\s*$/m);
+    if (m) {
+      owner = m[1];
+      name = m[2];
+    }
+  } catch {
+    /* noop */
+  }
+  try {
+    const head = readFileSync(join(REPO_ROOT, ".git/HEAD"), "utf8").trim();
+    const m = head.match(/ref:\s*refs\/heads\/(.+)$/);
+    if (m) branch = m[1];
+  } catch {
+    /* noop */
+  }
+  return { owner, name, branch };
 }
 
 function latestBrief(): { id: string; md: string } | null {
@@ -164,7 +189,10 @@ export function buildState(): TowerState {
   ];
   for (const slug of ordered) {
     const card = parseTeamCard(readFileSync(join(P.teams, bySlug.get(slug)!), "utf8"), slug);
-    if (card) teams.push(card);
+    if (card) {
+      card.hasPrompt = existsSync(join(P.prompts, `${slug}.md`));
+      teams.push(card);
+    }
   }
 
   const assets = buildAssetGroups({
@@ -194,11 +222,12 @@ export function buildState(): TowerState {
   return {
     generatedFrom: from,
     dateLabel: label,
+    repo: detectRepo(),
     kpi,
     stages: STAGES,
     rubricLabels: RUBRIC_LABELS,
     tickets,
-    company: { principlesCount, principles: byCategory, teams },
+    company: { principlesCount, principles: byCategory, ceoPath: "company/CEO.md", teams },
     assets: { groups: assets, reuseNote: "재사용률은 발행 누적 후 산출" },
     counts,
     images,

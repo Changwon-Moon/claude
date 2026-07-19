@@ -6,9 +6,10 @@
  */
 import { writeFileSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname } from "node:path";
-import { P } from "./paths.js";
+import { resolve } from "node:path";
+import { P, REPO_ROOT } from "./paths.js";
 import { buildState } from "./buildState.js";
-import { renderTowerHtml } from "./renderHtml.js";
+import { renderTowerHtml, renderTowerBody } from "./renderHtml.js";
 import type { TowerState } from "./types.js";
 
 function writeState(): TowerState {
@@ -29,15 +30,26 @@ function writeHtml(state: TowerState): void {
   console.log(`✅ index.html — ${kb}KB (packages/dashboard/index.html)`);
 }
 
+function writeArtifact(state: TowerState): void {
+  const dest = resolve(REPO_ROOT, "packages/dashboard/artifact-body.html");
+  writeFileSync(dest, renderTowerBody(state), "utf8");
+  const kb = Math.round(Buffer.byteLength(renderTowerBody(state), "utf8") / 1024);
+  console.log(`✅ artifact-body.html — ${kb}KB (아티팩트 발행용 body-only)`);
+}
+
 const cmd = process.argv[2] || "all";
 if (cmd === "state") {
   writeState();
 } else if (cmd === "html") {
   const state = JSON.parse(readFileSync(P.stateOut, "utf8")) as TowerState;
   writeHtml(state);
+} else if (cmd === "artifact") {
+  writeArtifact(buildState());
 } else if (cmd === "all") {
-  writeHtml(writeState());
+  const state = writeState();
+  writeHtml(state);
+  writeArtifact(state);
 } else {
-  console.error(`알 수 없는 명령: ${cmd} (state|html|all)`);
+  console.error(`알 수 없는 명령: ${cmd} (state|html|artifact|all)`);
   process.exit(1);
 }
