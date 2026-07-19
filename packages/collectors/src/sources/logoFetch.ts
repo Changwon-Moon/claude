@@ -12,15 +12,18 @@ import { fetchText } from "../http.js";
 
 const COMMONS_API = "https://commons.wikimedia.org/w/api.php";
 
-/** 회사명 → Commons 검색어(정확도↑)와 저장 slug. 여기 없으면 이름 그대로 검색 */
-export const COMPANY_QUERIES: Record<string, { query: string; slug: string }> = {
-  "SK하이닉스": { query: "SK hynix logo", slug: "skhynix" },
-  "한화에어로스페이스": { query: "Hanwha Aerospace logo", slug: "hanwha-aerospace" },
-  HMM: { query: "HMM company logo", slug: "hmm" },
-  "포스코인터내셔널": { query: "POSCO International logo", slug: "posco-international" },
-  "삼성바이오로직스": { query: "Samsung Biologics logo", slug: "samsung-biologics" },
-  "HD현대일렉트릭": { query: "HD Hyundai Electric logo", slug: "hd-hyundai-electric" },
-  "HD한국조선해양": { query: "Korea Shipbuilding Offshore Engineering logo", slug: "hd-ksoe" },
+/** 회사명 → Commons 검색어 후보(위에서부터 시도)와 저장 slug. 없으면 이름 그대로 검색 */
+export const COMPANY_QUERIES: Record<string, { queries: string[]; slug: string }> = {
+  "SK하이닉스": { queries: ["SK hynix logo", "SK Hynix"], slug: "skhynix" },
+  "한화에어로스페이스": { queries: ["Hanwha Aerospace logo", "Hanwha Aerospace"], slug: "hanwha-aerospace" },
+  HMM: { queries: ["HMM Co logo", "HMM company logo", "HMM shipping logo", "HMM (company)"], slug: "hmm" },
+  "포스코인터내셔널": { queries: ["POSCO International logo", "POSCO INTERNATIONAL", "Posco International"], slug: "posco-international" },
+  "삼성바이오로직스": { queries: ["Samsung Biologics logo", "Samsung Biologics"], slug: "samsung-biologics" },
+  "HD현대일렉트릭": { queries: ["HD Hyundai Electric logo", "Hyundai Electric logo", "HD Hyundai Electric"], slug: "hd-hyundai-electric" },
+  "HD한국조선해양": {
+    queries: ["HD Korea Shipbuilding Offshore Engineering logo", "Korea Shipbuilding & Offshore Engineering logo", "HD KSOE logo"],
+    slug: "hd-ksoe",
+  },
 };
 
 /** 라이선스 안전 판정: 로고 파일에 흔한 자유/퍼블릭/텍스트로고만 허용. 불명·비자유는 거부. */
@@ -39,9 +42,9 @@ export function parseCommonsSearch(json: string): string[] {
   return hits.map((h: any) => h.title as string).filter(Boolean);
 }
 
-/** 후보 파일 중 최적 선택: svg > png, 파일명에 'logo' 포함 우선, 'icon'·사진류 회피 */
-export function pickBestFile(titles: string[]): string | null {
-  const scored = titles
+/** 후보 파일을 점수순으로 정렬: svg > png, 'logo'·'wordmark' 우선, 사진류 회피 */
+export function pickBestFiles(titles: string[]): string[] {
+  return titles
     .filter((t) => /\.(svg|png)$/i.test(t))
     .map((t) => {
       const lower = t.toLowerCase();
@@ -49,11 +52,17 @@ export function pickBestFile(titles: string[]): string | null {
       if (lower.endsWith(".svg")) score += 10;
       if (lower.includes("logo")) score += 5;
       if (lower.includes("wordmark")) score += 3;
-      if (/photo|building|headquarter|ceo|store/.test(lower)) score -= 20;
+      if (/photo|building|headquarter|ceo|store|aircraft|ship\b|factory/.test(lower)) score -= 20;
       return { t, score };
     })
-    .sort((a, b) => b.score - a.score);
-  return scored.length ? scored[0].t : null;
+    .sort((a, b) => b.score - a.score)
+    .map((x) => x.t);
+}
+
+/** 최적 1개(테스트·단순용) */
+export function pickBestFile(titles: string[]): string | null {
+  const list = pickBestFiles(titles);
+  return list.length ? list[0] : null;
 }
 
 /** imageinfo 응답 → {url, mime, license} (없으면 null) */
@@ -92,28 +101,38 @@ export interface FetchedLogo {
  */
 export async function fetchCompanyLogo(company: string): Promise<FetchedLogo | null> {
   const cfg = COMPANY_QUERIES[company];
-  const query = cfg?.query ?? `${company} logo`;
+  const queries = cfg?.queries ?? [`${company} logo`];
   const slug = cfg?.slug ?? slugify(company);
 
-  const searchUrl =
-    `${COMMONS_API}?action=query&list=search&srnamespace=6&srlimit=15` +
-    `&srsearch=${encodeURIComponent(query)}&format=json&origin=*`;
-  const titles = parseCommonsSearch(await fetchText(searchUrl));
-  const best = pickBestFile(titles);
-  if (!best) return null;
+  // 검색어 후보 × 파일 후보(상위 4개)를 돌며 라이선스 안전한 첫 로고를 취득
+  for (const query of queries) {
+    const searchUrl =
+      `${COMMONS_API}?action=query&list=search&srnamespace=6&srlimit=20` +
+      `&srsearch=${encodeURIComponent(query)}&format=json&origin=*`;
+    let titles: string[];
+    try {
+      titles = parseCommonsSearch(await fetchText(searchUrl));
+    } catch {
+      continue;
+    }
+    for (const file of pickBestFiles(titles).slice(0, 4)) {
+      const infoUrl =
+        `${COMMONS_API}?action=query&prop=imageinfo&iiprop=url|mime|extmetadata` +
+        `&titles=${encodeURIComponent(file)}&format=json&origin=*`;
+      let info: ReturnType<typeof parseImageInfo>;
+      try {
+        info = parseImageInfo(await fetchText(infoUrl));
+      } catch {
+        continue;
+      }
+      if (!info || !isLicenseSafe(info.license)) continue;
 
-  const infoUrl =
-    `${COMMONS_API}?action=query&prop=imageinfo&iiprop=url|mime|extmetadata` +
-    `&titles=${encodeURIComponent(best)}&format=json&origin=*`;
-  const info = parseImageInfo(await fetchText(infoUrl));
-  if (!info) return null;
-  if (!isLicenseSafe(info.license)) return null; // 안전 라이선스만
-
-  // 바이너리 다운로드 (fetch 직접 — 이미지)
-  const res = await fetch(info.url, { headers: { "User-Agent": "wirit-collector/0.1" } });
-  if (!res.ok) return null;
-  const bytes = new Uint8Array(await res.arrayBuffer());
-  const ext: "svg" | "png" = /\.svg$/i.test(info.url) ? "svg" : "png";
-
-  return { company, slug, ext, bytes, license: info.license, sourceUrl: info.url };
+      const res = await fetch(info.url, { headers: { "User-Agent": "wirit-collector/0.1" } });
+      if (!res.ok) continue;
+      const bytes = new Uint8Array(await res.arrayBuffer());
+      const ext: "svg" | "png" = /\.svg$/i.test(info.url) ? "svg" : "png";
+      return { company, slug, ext, bytes, license: info.license, sourceUrl: info.url };
+    }
+  }
+  return null;
 }
