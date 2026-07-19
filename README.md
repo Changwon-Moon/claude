@@ -16,6 +16,7 @@
 | [docs/RESEARCH_WORKFLOW.md](./docs/RESEARCH_WORKFLOW.md) | **리서치·기획 워크플로우 (시스템의 척추)** — 수동 우선 → 점진 자동화(R0~R3), 소재 선정 기준 |
 | [docs/CONTENT_STRATEGY.md](./docs/CONTENT_STRATEGY.md) | 콘텐츠 전략 — 코어(부동산·주식·경제)+트래픽(범용) 믹스, 시리즈 카탈로그, 발행 캘린더 |
 | [docs/BRAND.md](./docs/BRAND.md) | 브랜드 가이드 — wirit(@wirit_note), 잉크네이비 팔레트, 컬러 사용 규칙, CSS 토큰 |
+| [docs/CONTROL_TOWER.md](./docs/CONTROL_TOWER.md) | 관제탑 설계 — 에이전트 판단·근거의 시각적 관리감독 (M9 대시보드의 원천) |
 | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) | 시스템 아키텍처, 파이프라인 설계, 기술 스택 |
 | [docs/AGENTS.md](./docs/AGENTS.md) | 팀별 AI 에이전트 상세 스펙 (역할·입출력·프롬프트 골격) |
 | [docs/TEMPLATES.md](./docs/TEMPLATES.md) | 디자인 템플릿 시스템 설계 (무한 생산의 핵심) |
