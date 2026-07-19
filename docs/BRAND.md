@@ -54,11 +54,32 @@
 }
 ```
 
-## 4. 타이포그래피 (방향 — M2 시안에서 확정)
+## 4. 타이포그래피
 
-- 후보: Pretendard (무료·상업 이용 가능, 웹폰트 로컬 번들) — 로고의 기하학적 산세리프와 결이 맞음
-- 위계: 제목 ExtraBold~Black / 핵심 수치 Bold(큰 사이즈, 자간 타이트) / 라벨·캡션 Regular(블루그레이)
-- 숫자는 tabular figures(고정폭 숫자) 사용 — 표 정렬 품질의 핵심
+**폰트 시스템**: 본문·수치(`--font-sans`)와 제목(`--font-title`)을 분리. 숫자는 항상 가독·고정폭 폰트로, 제목만 개성 폰트를 얹을 수 있다. base.css에 3종 번들:
+
+| 폰트 | 용도 후보 | 성격 |
+|---|---|---|
+| Pretendard | 본문·수치 | 깔끔·중립(널리 쓰여 개성 약함) |
+| Wanted Sans | 본문·수치 | 모던·기하학적, Pretendard보다 개성 ↑, 가독/tabular 우수 |
+| Black Han Sans | **제목 전용** | 굵고 임팩트 강한 디스플레이(타블로이드 헤드라인) |
+
+폰트 세트 전환: 카드 루트에 `font-pretendard` / `font-wanted` / `font-wanted-blackhan` 클래스. **확정 폰트는 운영자 선택 대기** (비교본: `templates/_shared/font-samples/`).
+
+- 위계: 제목 ExtraBold~Black(큰 사이즈, 자간 타이트) / 핵심 수치 Bold / 라벨·캡션 Regular(블루그레이)
+- 숫자는 tabular figures(고정폭) — 표 정렬 품질의 핵심 (Black Han Sans는 숫자 정렬 약해 **제목에만** 쓰고 숫자엔 안 씀)
+
+## 4b. 하단 바 (푸터) — 운영자 지정 (2026-07-18)
+
+- 로고색(잉크네이비 `#141821`) **풀블리드 배경 바**, 좌우 끝까지
+- 워드마크 `@wirit_note` 는 **흰색** + 코발트 마침표(로고와 동일 톤)
+- 출처 등 보조 텍스트는 밝은 회청색(`#aeb8c4`)
+
+## 4c. 로고 (실제 기업 로고)
+
+- 카드의 기업 표시는 **실제 브랜드 로고**(흰 원 안 브랜드색). 라이브러리: `templates/_shared/logos/{slug}.svg`
+- 로고 없으면 이름 첫 글자 모노그램으로 자동 폴백
+- 저작권·수집 정책: [../templates/_shared/logos/README.md](../templates/_shared/logos/README.md)
 
 ## 5. 카드 공통 레이아웃 규칙 (TEMPLATES.md §5 보충)
 

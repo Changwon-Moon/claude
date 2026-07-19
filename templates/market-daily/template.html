@@ -150,6 +150,29 @@
         font-weight: 800;
         font-size: 22px;
       }
+      /* 실제 로고: 흰 원 안 브랜드색 로고 */
+      .logo-badge {
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 0 0 1px var(--wirit-ink-06);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: none;
+      }
+      .logo-badge img {
+        width: 62%;
+        height: 62%;
+        object-fit: contain;
+      }
+      .feat-head .logo-badge {
+        width: 64px;
+        height: 64px;
+      }
+      .mv .logo-badge {
+        width: 44px;
+        height: 44px;
+      }
       .mv .nm {
         font-weight: 700;
         white-space: nowrap;
@@ -169,7 +192,7 @@
     </style>
   </head>
   <body>
-    <div class="wirit-card md">
+    <div class="wirit-card md {{#if font}}font-{{font}}{{/if}}">
       <div class="md-top">
         {{#if flag}}<img class="flag" src="../_shared/flags/{{flag}}.svg" alt="" />{{/if}}
         <span class="wirit-badge">{{badge}}</span>
@@ -190,7 +213,7 @@
       {{#if featured}}
       <div class="feat">
         <div class="feat-head">
-          <span class="mono">{{initial featured.name}}</span>
+          {{#if featured.logo}}<span class="logo-badge"><img src="../_shared/logos/{{featured.logo}}.svg" alt="" /></span>{{else}}<span class="mono">{{initial featured.name}}</span>{{/if}}
           <div>
             <div class="nm">{{featured.name}}</div>
             {{#if featured.sublabel}}<div class="sub">{{featured.sublabel}}</div>{{/if}}
@@ -215,7 +238,7 @@
       <div class="movers">
         {{#each movers}}
         <div class="mv">
-          <span class="mono">{{initial this.name}}</span>
+          {{#if this.logo}}<span class="logo-badge"><img src="../_shared/logos/{{this.logo}}.svg" alt="" /></span>{{else}}<span class="mono">{{initial this.name}}</span>{{/if}}
           <span class="nm">{{this.name}}</span>
           <span class="d {{this.dir}}">{{arrow this.dir}} {{this.delta}}</span>
         </div>

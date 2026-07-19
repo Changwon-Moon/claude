@@ -11,6 +11,20 @@
   font-display: block;
   src: url("../_shared/fonts/PretendardVariable.woff2") format("woff2-variations");
 }
+@font-face {
+  font-family: "Wanted Sans";
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: block;
+  src: url("../_shared/fonts/WantedSansVariable.woff2") format("woff2-variations");
+}
+@font-face {
+  font-family: "Black Han Sans"; /* 헤드라인 전용 디스플레이(굵고 임팩트) */
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+  src: url("../_shared/fonts/BlackHanSans-Korean.woff2") format("woff2");
+}
 
 :root {
   --wirit-ink: #141821; /* 본문, 수치, 다크 배경 */
@@ -21,8 +35,31 @@
   --wirit-ink-06: rgba(20, 24, 33, 0.06); /* 행 밴딩, 구분선 */
   --wirit-ink-12: rgba(20, 24, 33, 0.12);
 
-  --font-sans: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR",
-    system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* 폰트 후보 스택 */
+  --font-pretendard: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR",
+    system-ui, sans-serif;
+  --font-wanted: "Wanted Sans", "Pretendard", "Apple SD Gothic Neo",
+    system-ui, sans-serif;
+  --font-blackhan: "Black Han Sans", "Wanted Sans", "Pretendard", sans-serif;
+
+  /* 실제 사용 변수: 본문/숫자(sans)와 제목(title) 분리 */
+  --font-sans: var(--font-pretendard);
+  --font-title: var(--font-sans);
+}
+
+/* 폰트 세트 전환 (비교/확정용). 카드 루트 클래스로 지정.
+   숫자·본문은 항상 sans(가독/고정폭), 제목만 title 로 개성 부여. */
+.font-pretendard {
+  --font-sans: var(--font-pretendard);
+  --font-title: var(--font-pretendard);
+}
+.font-wanted {
+  --font-sans: var(--font-wanted);
+  --font-title: var(--font-wanted);
+}
+.font-wanted-blackhan {
+  --font-sans: var(--font-wanted);
+  --font-title: var(--font-blackhan);
 }
 
 * {
@@ -54,6 +91,7 @@ body {
   flex-direction: column;
   padding: 72px 72px 0;
   background: var(--wirit-paper);
+  font-family: var(--font-sans); /* 카드 폰트세트 전환이 하위에 전파되도록 */
 }
 
 /* 상단: 카테고리 뱃지 + 제목 */
@@ -72,6 +110,7 @@ body {
 }
 
 .wirit-title {
+  font-family: var(--font-title); /* 제목만 개성 폰트 적용 가능 */
   margin-top: 28px;
   font-size: 76px;
   font-weight: 900;
@@ -101,22 +140,25 @@ body {
 
 /* 하단 고정: 출처 + 워터마크
  * margin-top:auto 로 플렉스 컬럼의 맨 아래에 고정 → 본문과 절대 겹치지 않음 */
+/* 하단 바: 로고색(잉크네이비) 풀블리드 배경 + 흰색 글씨 (로고와 동일 톤) */
 .wirit-footer {
   margin-top: auto;
-  margin-bottom: 26px;
+  margin-left: -72px;
+  margin-right: -72px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 22px;
-  color: var(--wirit-gray);
-  border-top: 1px solid var(--wirit-ink-12);
-  padding-top: 13px;
+  padding: 22px 72px;
+  font-size: 23px;
+  font-weight: 600;
+  background: var(--wirit-ink);
+  color: #aeb8c4; /* 출처 등 보조 텍스트는 밝은 회청색 */
 }
 
 .wirit-watermark {
   font-weight: 800;
-  color: var(--wirit-ink);
+  color: #ffffff; /* 로고처럼 흰색 워드마크 */
 }
 .wirit-watermark .dot {
-  color: var(--wirit-cobalt);
+  color: var(--wirit-cobalt); /* 로고의 코발트 마침표 */
 }
