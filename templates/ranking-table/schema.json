@@ -26,7 +26,8 @@
           "value": { "type": "string", "maxLength": 16 },
           "sub": { "type": "string", "maxLength": 16 },
           "rank": { "type": "string", "maxLength": 6, "description": "명시 순위(공동순위 표기용). 없으면 행 번호 자동." },
-          "logo": { "type": "string", "description": "로고 slug (_shared/logos/{slug}.svg)" },
+          "logo": { "type": "string", "description": "로고 slug (_shared/logos/{slug}.{ext})" },
+          "logoExt": { "type": "string", "enum": ["svg", "png"], "description": "로고 확장자. 없으면 svg." },
           "logoColor": { "type": "string", "description": "브랜드색 hex. 실제 로고 없을 때 컬러칩 배경." },
           "logoText": { "type": "string", "maxLength": 4, "description": "칩 약칭. 없으면 첫 글자." }
         }

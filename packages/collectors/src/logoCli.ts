@@ -61,9 +61,17 @@ async function run(paths: string[]): Promise<void> {
 
   const got: string[] = [];
   const missed: string[] = [];
+  const skipped: string[] = [];
   for (const name of companies) {
-    const slug = COMPANY_QUERIES[name]?.slug;
-    if (slug && existsSync(resolve(LOGO_DIR, `${slug}.svg`))) {
+    const cfg = COMPANY_QUERIES[name];
+    // Tier B는 큐레이션된 회사(COMPANY_QUERIES)만. 나머지는 Tier A(simple-icons)/수동 소관 → 건너뜀.
+    if (!cfg) {
+      skipped.push(`${name} (Tier A/수동 대상)`);
+      continue;
+    }
+    const slug = cfg.slug;
+    // 이미 허브에 있으면(svg·png 무관) 건너뜀
+    if (existsSync(resolve(LOGO_DIR, `${slug}.svg`)) || existsSync(resolve(LOGO_DIR, `${slug}.png`))) {
       got.push(`${name} (이미 있음)`);
       continue;
     }
@@ -88,6 +96,11 @@ async function run(paths: string[]): Promise<void> {
     console.log(`\n⚠️ 미취득 ${missed.length}건 (Brandfetch 키 또는 사람 업로드 필요):`);
     missed.forEach((m) => console.log("  ·", m));
   }
+  if (skipped.length) {
+    console.log(`\n↷ 건너뜀 ${skipped.length}건 (Tier A/수동 소관):`);
+    skipped.forEach((s) => console.log("  ·", s));
+  }
+  console.log("\n⚠️ 취득 로고는 발행 전 반드시 눈으로 대조하세요(자동 취득은 오탐 가능).");
 }
 
 const paths = process.argv.slice(2);
