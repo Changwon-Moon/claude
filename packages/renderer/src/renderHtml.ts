@@ -101,5 +101,15 @@ export function renderPageHtml(
     html = `${styleTag}\n${html}`;
   }
 
+  // 모든 카드에 우상단 원형 로고(wirit.)를 자동 삽입 — 카드 여는 태그 바로 뒤.
+  html = html.replace(
+    /(<div class="wirit-card[^>]*>)/,
+    `$1${CORNER_LOGO}`,
+  );
+
   return html;
 }
+
+/** 우상단 원형 로고 마크업 (스타일은 base.css .wirit-corner) */
+const CORNER_LOGO =
+  '<div class="wirit-corner"><span class="mark">wirit<span class="dot">.</span></span></div>';

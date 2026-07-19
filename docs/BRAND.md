@@ -56,18 +56,24 @@
 
 ## 4. 타이포그래피
 
-**폰트 시스템**: 본문·수치(`--font-sans`)와 제목(`--font-title`)을 분리. 숫자는 항상 가독·고정폭 폰트로, 제목만 개성 폰트를 얹을 수 있다. base.css에 3종 번들:
+**폰트 시스템 (2026-07-18 운영자 확정)**: 3개 역할로 분리.
 
-| 폰트 | 용도 후보 | 성격 |
-|---|---|---|
-| Pretendard | 본문·수치 | 깔끔·중립(널리 쓰여 개성 약함) |
-| Wanted Sans | 본문·수치 | 모던·기하학적, Pretendard보다 개성 ↑, 가독/tabular 우수 |
-| Black Han Sans | **제목 전용** | 굵고 임팩트 강한 디스플레이(타블로이드 헤드라인) |
+| 역할 | CSS 변수 | 폰트 | 이유 |
+|---|---|---|---|
+| 헤드라인(제목) | `--font-title` | **Wanted Sans** | 개성·모던, 눈에 띔 |
+| 숫자(수치·순위·등락) | `--font-num` | **Wanted Sans** | 데이터 강조 + tabular 정렬 |
+| 본문·라벨·캡션 | `--font-sans` | **Pretendard** | 긴 텍스트 가독성 |
 
-폰트 세트 전환: 카드 루트에 `font-pretendard` / `font-wanted` / `font-wanted-blackhan` 클래스. **확정 폰트는 운영자 선택 대기** (비교본: `templates/_shared/font-samples/`).
+- 3종 모두 base.css @font-face 번들(Pretendard/Wanted Sans/Black Han Sans). Black Han Sans는 현재 미사용(향후 특집 헤드라인 옵션으로 보존).
+- 실험용 전환 클래스: `font-pretendard` / `font-wanted` / `font-wanted-blackhan` (카드 루트). 미지정 시 위 확정 하이브리드.
+- 위계: 제목 ExtraBold~Black(자간 타이트) / 수치 Bold(Wanted) / 라벨·캡션 Regular(Pretendard, 블루그레이)
+- 숫자 tabular figures(고정폭) — 표 정렬 품질의 핵심.
 
-- 위계: 제목 ExtraBold~Black(큰 사이즈, 자간 타이트) / 핵심 수치 Bold / 라벨·캡션 Regular(블루그레이)
-- 숫자는 tabular figures(고정폭) — 표 정렬 품질의 핵심 (Black Han Sans는 숫자 정렬 약해 **제목에만** 쓰고 숫자엔 안 씀)
+## 4a-2. 카드 아이덴티티 요소 (2026-07-18 운영자 지정)
+
+- **우상단 원형 로고**: 모든 카드에 `wirit.`(잉크네이비 원 + 흰 글씨 + 코발트 마침표) 자동 삽입(renderHtml). 스타일 `.wirit-corner`.
+- **코발트 테두리**: 카드 전체에 12px 코발트 프레임(`.wirit-card::after` 오버레이) — 브랜드 아이덴티티 강화.
+- **하단 바**: 높이 1.5배(패딩 34px), 워드마크 `@wirit_note` 확대(37px).
 
 ## 4b. 하단 바 (푸터) — 운영자 지정 (2026-07-18)
 
