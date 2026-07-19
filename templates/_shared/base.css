@@ -217,7 +217,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  border: 12px solid var(--wirit-cobalt);
+  border: 12px solid var(--wirit-ink);
   pointer-events: none;
   z-index: 10;
 }
