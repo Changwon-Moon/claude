@@ -73,6 +73,33 @@
       "license": "public-domain",
       "note": "자동 취득 · 원 라이선스 \"Public domain\" · 상표 nominative use",
       "added": "2026-07-19"
+    },
+    {
+      "slug": "hmm",
+      "name": "HMM",
+      "kind": "logo",
+      "source": "Wikimedia Commons (https://upload.wikimedia.org/wikipedia/commons/5/56/HMM_Logo_Basic_Form.svg)",
+      "license": "public-domain",
+      "note": "자동 취득 · 원 라이선스 \"Public domain\" · 상표 nominative use",
+      "added": "2026-07-19"
+    },
+    {
+      "slug": "logo",
+      "name": "삼성전자",
+      "kind": "logo",
+      "source": "Wikimedia Commons (https://upload.wikimedia.org/wikipedia/commons/c/c9/SamsungApps.png)",
+      "license": "public-domain",
+      "note": "자동 취득 · 원 라이선스 \"Public domain\" · 상표 nominative use",
+      "added": "2026-07-19"
+    },
+    {
+      "slug": "hd-hyundai-electric",
+      "name": "HD현대일렉트릭",
+      "kind": "logo",
+      "source": "Wikimedia Commons (https://upload.wikimedia.org/wikipedia/commons/2/23/HD_Hyundai_Electric_logo_EN.png)",
+      "license": "public-domain",
+      "note": "자동 취득 · 원 라이선스 \"Public domain\" · 상표 nominative use",
+      "added": "2026-07-19"
     }
   ]
 }
