@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "title": "서울 초고가 아파트 신고가 (2026)",
+    "source": "국토부 실거래가 (아파트미·KB부동산·네이트뉴스 교차확인)",
+    "sourceUrl": "https://apt2.me/apt/AptDaily.jsp",
+    "asOf": "2026-07",
+    "collectedAt": "2026-07-19",
+    "verified": true,
+    "perishable": true,
+    "note": "단지별 최고 실거래(신고가) 기준. 신고가는 갱신되므로 재사용 시 asOf 표기 필수. 전국 집계의 애매 항목(대우유로카운티 등)은 검수에서 제외.",
+    "usedIn": ["2026-07-19-002"]
+  },
+  "rows": [
+    { "name": "아크로리버파크", "price": 9800000000, "priceLabel": "98억", "area": "178.94㎡", "dong": "반포동", "gu": "서초구", "dealDate": "2026-06-29" },
+    { "name": "청담자이", "price": 5600000000, "priceLabel": "56억", "area": "89.36㎡", "dong": "청담동", "gu": "강남구", "dealDate": "2026-07-11" },
+    { "name": "디에이치반포라클라스", "price": 4400000000, "priceLabel": "44억", "area": "84.98㎡", "dong": "반포동", "gu": "서초구", "dealDate": "2026-05-23" }
+  ]
+}

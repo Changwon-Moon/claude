@@ -1,5 +1,13 @@
 {
   "$schema": "../../docs/ASSET_HUB.md",
   "kind": "dataset",
-  "items": []
+  "items": [
+    {
+      "file": "apt-highprice-2026-07.json",
+      "title": "서울 초고가 아파트 신고가 (2026)",
+      "verified": true,
+      "perishable": true,
+      "added": "2026-07-19"
+    }
+  ]
 }
