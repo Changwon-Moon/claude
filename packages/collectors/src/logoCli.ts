@@ -17,6 +17,15 @@ const CATALOG = resolve(LOGO_DIR, "catalog.json");
 const CWD = process.env.INIT_CWD || process.cwd();
 const fromCwd = (p: string): string => resolve(CWD, p);
 
+/** Wikimedia 라이선스 문자열 → 자산 허브 허용 어휘(validate-assets.mjs와 일치) */
+function normalizeLicense(raw: string): string {
+  const s = (raw || "").toLowerCase();
+  if (/public domain|pd-|cc0/.test(s)) return "public-domain";
+  if (/creative commons|\bcc[ -]/.test(s)) return "open-license";
+  if (/trademark/.test(s)) return "trademark-nominative";
+  return "trademark-nominative"; // isLicenseSafe 통과분 — 상표 nominative로 분류, 원문은 note에
+}
+
 function addCatalog(slug: string, name: string, license: string, sourceUrl: string): void {
   const cat = JSON.parse(readFileSync(CATALOG, "utf8"));
   if (cat.items.some((i: any) => i.slug === slug)) return;
@@ -25,8 +34,8 @@ function addCatalog(slug: string, name: string, license: string, sourceUrl: stri
     name,
     kind: "logo",
     source: `Wikimedia Commons (${sourceUrl})`,
-    license: license || "확인필요",
-    note: "자동 취득 — 상표 nominative use",
+    license: normalizeLicense(license),
+    note: `자동 취득 · 원 라이선스 "${license}" · 상표 nominative use`,
     added: new Date().toISOString().slice(0, 10),
   });
   writeFileSync(CATALOG, JSON.stringify(cat, null, 2) + "\n");

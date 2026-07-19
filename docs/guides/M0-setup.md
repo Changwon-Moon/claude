@@ -21,6 +21,7 @@
 | 인스타 계정 번호 | 같은 곳 | `IG_USER_ID` |
 | 정부 데이터 열쇠 | 공공데이터포털 | `DATA_GO_KR_API_KEY` |
 | 한국은행 데이터 열쇠 | 한국은행 ECOS | `ECOS_API_KEY` |
+| 전자공시 열쇠 (평균연봉·실적) | 금융감독원 DART(opendart.fss.or.kr) | `DART_API_KEY` |
 | Claude(AI) 열쇠 | Anthropic 콘솔 | `ANTHROPIC_API_KEY` |
 
 > 오른쪽 "이름"은 **철자·대문자·밑줄(_)까지 정확히 그대로** 써야 합니다. 이게 프로그램과 약속된 이름이라, 하나라도 틀리면 나중에 작동하지 않습니다. 복사해서 쓰세요.

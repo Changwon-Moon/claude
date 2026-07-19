@@ -1,0 +1,67 @@
+name: 평균연봉 수집 (DART)
+
+# 금융감독원 전자공시(DART)에서 회사별 1인 평균급여액을 수집해 검증 데이터셋으로 커밋한다.
+# 1차 출처라 정밀·검증 가능. DART_API_KEY(공공·무료) 필요 → GitHub Secrets.
+# 첫 수집분은 사람이 1~2개사 DART 원문과 대조 후 verified=true로 승격(품질검수).
+on:
+  workflow_dispatch:
+    inputs:
+      year:
+        description: "사업연도 (예: 2025)"
+        required: true
+        default: "2025"
+      companies:
+        description: "대상 회사목록/데이터셋 경로"
+        required: true
+        default: "data/datasets/salary-freshman-2026-07.json"
+
+permissions:
+  contents: write
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: 파서 셀프테스트
+        run: pnpm --filter @wirit/collectors selftest
+
+      - name: corpCode.xml 내려받기(전체 상장사 고유번호)
+        env:
+          KEY: ${{ secrets.DART_API_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then echo "DART_API_KEY 시크릿이 없습니다"; exit 1; fi
+          curl -sS "https://opendart.fss.or.kr/api/corpCode.xml?crtfc_key=$KEY" -o corpcode.zip
+          unzip -o corpcode.zip -d corpcode_dir
+          ls -la corpcode_dir
+
+      - name: 평균연봉 수집 → 데이터셋
+        env:
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
+        run: |
+          YEAR="${{ github.event.inputs.year }}"
+          pnpm --filter @wirit/collectors exec tsx src/dartCli.ts \
+            "$YEAR" "corpcode_dir/CORPCODE.xml" "${{ github.event.inputs.companies }}" \
+            "data/datasets/avg-salary-$YEAR.json"
+
+      - name: 데이터셋 커밋
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/datasets/*.json
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+          else
+            git commit -m "평균연봉(DART) 수집 ${{ github.event.inputs.year }}"
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
