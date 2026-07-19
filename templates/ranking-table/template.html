@@ -52,6 +52,62 @@
         flex-direction: column;
       }
 
+      /* 사진 있을 때: 소수 항목이면 행을 세로로 펴서 중간 공백 제거 */
+      .rt.has-photos .rt-row:not(.rt-colheadrow) {
+        flex: 1 1 0;
+        min-height: 0;
+      }
+      /* 하단 사진 스트립 (선택) — 3분할. 실사진 없으면 그래픽 플레이스홀더 */
+      .rt-photostrip {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-top: auto;
+        padding-top: 30px;
+      }
+      .rt-photo {
+        position: relative;
+        height: 320px;
+        border-radius: 20px;
+        overflow: hidden;
+        display: flex;
+        align-items: flex-end;
+        background: linear-gradient(150deg, var(--pc, #3a4a5e), rgba(20, 24, 33, 0.92));
+      }
+      .rt-photo img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .rt-photo .bldg {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .rt-photo .bldg svg {
+        width: 96px;
+        height: 96px;
+        fill: rgba(255, 255, 255, 0.42);
+      }
+      .rt-photo .cap {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        padding: 40px 16px 15px;
+        color: #fff;
+        font-weight: 800;
+        font-size: 27px;
+        letter-spacing: -0.02em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.58));
+      }
+
       /* 표 공통 그리드: 순위 | 로고 | 이름 | 값 | (보조값) */
       .rt-row {
         display: grid;
@@ -220,7 +276,7 @@
     </style>
   </head>
   <body>
-    <div class="wirit-card {{#if font}}font-{{font}}{{/if}} {{#if variant}}variant-{{variant}}{{else}}variant-a{{/if}} rt {{densityClass items}}">
+    <div class="wirit-card {{#if font}}font-{{font}}{{/if}} {{#if variant}}variant-{{variant}}{{else}}variant-a{{/if}} rt {{densityClass items}} {{#if photoStrip}}has-photos{{/if}}">
       <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
       <div class="rt-head">
         <h1 class="wirit-title">{{title}}</h1>
@@ -254,6 +310,17 @@
           {{/if}}
         </div>
         {{/each}}
+
+        {{#if photoStrip}}
+        <div class="rt-photostrip">
+          {{#each photoStrip}}
+          <div class="rt-photo" style="--pc:{{this.color}}">
+            {{#if this.photo}}<img src="../_shared/photos/{{this.photo}}" alt="" />{{else}}<span class="bldg"><svg viewBox="0 0 48 48"><path fill-rule="evenodd" d="M5 43V19l9-4V9h6v3l4-2 4 2V9h6v6l9 4v24H5zm5-4h5v-6h-5v6zm9 0h5v-6h-5v6zm9 0h5v-6h-5v6zM12 30h4v-4h-4v4zm8 0h4v-4h-4v4zm8 0h4v-4h-4v4zM20 22h4v-4h-4v4zm8 0h4v-4h-4v4z"/></svg></span>{{/if}}
+            <span class="cap">{{this.label}}</span>
+          </div>
+          {{/each}}
+        </div>
+        {{/if}}
       </div>
 
       <div class="wirit-footer">

@@ -38,6 +38,20 @@
         "name": { "type": "string" },
         "asOf": { "type": "string" }
       }
+    },
+    "photoStrip": {
+      "type": "array",
+      "maxItems": 3,
+      "description": "하단 3분할 사진. photo(허브 등록 파일명) 있으면 실사진, 없으면 그래픽 플레이스홀더",
+      "items": {
+        "type": "object",
+        "required": ["label"],
+        "properties": {
+          "label": { "type": "string", "maxLength": 24 },
+          "photo": { "type": "string" },
+          "color": { "type": "string" }
+        }
+      }
     }
   }
 }
