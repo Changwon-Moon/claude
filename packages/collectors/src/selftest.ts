@@ -6,7 +6,12 @@
 import { parseStooqDailyCsv, monthlySample } from "./parse/stooq.js";
 import { parseEcosJson } from "./parse/ecos.js";
 import { parseRss, dedupeByTitle } from "./parse/rss.js";
-import { hasLever } from "./sources/researchSignals.js";
+import {
+  hasLever,
+  extractTrendKeywords,
+  matchDemand,
+  renderBoard,
+} from "./sources/researchSignals.js";
 import { toQuote } from "./sources/usMarket.js";
 import { ecosToQuote } from "./sources/krRates.js";
 import {
@@ -85,6 +90,30 @@ console.log("[RSS 파서 (소재 신호)]");
   check("유사중복 제거(꼬리 언론사)", deduped.length === 2, `got ${deduped.length}`);
   check("레버 감지(1위/돌파)", hasLever(items[0].title) && hasLever(items[1].title));
   check("레버 없음", !hasLever("오늘 날씨가 흐립니다"));
+}
+
+console.log("[트렌드분석 v1: 수요 신호]");
+{
+  const trendItems = [
+    { title: "SK하이닉스", link: "x" },
+    { title: "아파트 실거래가", link: "x" },
+  ];
+  const kws = extractTrendKeywords(trendItems);
+  check("키워드 추출(복합어 토큰 포함)", kws.includes("SK하이닉스") && kws.includes("아파트") && kws.includes("실거래가"), kws.join(","));
+  check("수요 매칭: 겹침", matchDemand("SK하이닉스 3분기 실적 사상 최대", kws));
+  check("수요 매칭: 부분어(아파트)", matchDemand("서울 아파트값 상승", kws));
+  check("수요 매칭: 안겹침", !matchDemand("오늘의 날씨와 미세먼지", kws));
+
+  const board = renderBoard(
+    "2026-07-19",
+    [
+      { topic: "부동산", tier: "main", items: [{ title: "서울 아파트 1위", link: "http://a", lever: true, demand: true }] },
+      { topic: "검색 트렌드", tier: "sub", items: trendItems.map(t => ({ ...t, lever: false })) },
+    ],
+    kws,
+  );
+  check("보드에 📈 표시", board.includes("🔥 📈"));
+  check("보드에 급상승 검색어 줄", board.includes("오늘의 급상승 검색어"));
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);

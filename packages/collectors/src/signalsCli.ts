@@ -21,17 +21,21 @@ async function main(): Promise<void> {
   const { date } = parseArgs(process.argv.slice(2));
   console.log(`🔎 소재 신호 수집 (${date})`);
 
-  const signals = await collectResearchSignals();
+  const { signals, trendKeywords } = await collectResearchSignals();
   const ok = signals.filter((s) => !s.error);
   const failed = signals.filter((s) => s.error);
   const total = ok.reduce((n, s) => n + s.items.length, 0);
+  const demandHits = ok.reduce(
+    (n, s) => n + s.items.filter((i) => i.demand).length,
+    0,
+  );
 
   // JSON 원본 저장 (추후 R2 기획 에이전트의 입력)
   const jdir = rawDir(date);
   fs.mkdirSync(jdir, { recursive: true });
   fs.writeFileSync(
     path.join(jdir, "research-signals.json"),
-    JSON.stringify({ date, signals }, null, 2),
+    JSON.stringify({ date, trendKeywords, signals }, null, 2),
     "utf8",
   );
 
@@ -39,10 +43,12 @@ async function main(): Promise<void> {
   const bdir = path.join(REPO_ROOT, "research", "briefs");
   fs.mkdirSync(bdir, { recursive: true });
   const boardPath = path.join(bdir, `${date}-auto.md`);
-  fs.writeFileSync(boardPath, renderBoard(date, signals), "utf8");
+  fs.writeFileSync(boardPath, renderBoard(date, signals, trendKeywords), "utf8");
 
   console.log(`✅ 소재 보드: ${boardPath}`);
-  console.log(`   주제 ${ok.length}개 수집(항목 ${total}건), 실패 ${failed.length}개`);
+  console.log(
+    `   주제 ${ok.length}개(항목 ${total}건, 수요신호📈 ${demandHits}건, 트렌드 키워드 ${trendKeywords.length}개), 실패 ${failed.length}개`,
+  );
   for (const f of failed) console.log(`   ⚠️ ${f.topic}: ${f.error}`);
   if (ok.length === 0) process.exit(1); // 전부 실패 시 알림 트리거
 }

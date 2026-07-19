@@ -54,21 +54,82 @@ export function hasLever(title: string): boolean {
   return LEVER_WORDS.some((w) => title.includes(w));
 }
 
+/* ── 트렌드분석팀 v1: 검색 트렌드 → 수요 신호 ──
+ * 구글 트렌드 급상승 검색어를 키워드로 추출하고, 뉴스 소재 제목과 대조해
+ * 겹치는 소재에 📈(수요 신호)를 표시한다. 결정적 코드(LLM 미사용). */
+
+/** 트렌드 RSS 항목(검색어)에서 대조용 키워드 추출. 짧은 조사·기호 제거. */
+export function extractTrendKeywords(items: RssItem[]): string[] {
+  const kws = new Set<string>();
+  for (const it of items) {
+    const t = it.title.trim();
+    if (t.length >= 2) kws.add(t);
+    // 복합어는 공백 단위 토큰도 등록 (2글자 이상)
+    for (const tok of t.split(/\s+/)) {
+      if (tok.length >= 2) kws.add(tok);
+    }
+  }
+  return [...kws];
+}
+
+/** 소재 제목이 트렌드 키워드와 겹치는가 (수요 신호) */
+export function matchDemand(title: string, keywords: string[]): boolean {
+  return keywords.some((k) => title.includes(k));
+}
+
 export interface TopicSignals {
   topic: string;
   tier: "main" | "sub";
-  items: (RssItem & { lever: boolean })[];
+  items: (RssItem & { lever: boolean; demand?: boolean })[];
   error?: string;
 }
 
-export async function collectResearchSignals(): Promise<TopicSignals[]> {
+export interface SignalsResult {
+  signals: TopicSignals[];
+  /** 오늘의 급상승 검색 키워드 (수요 신호 원천) */
+  trendKeywords: string[];
+}
+
+export async function collectResearchSignals(): Promise<SignalsResult> {
   const results: TopicSignals[] = [];
-  for (const feed of TOPIC_FEEDS) {
+
+  // 1) 트렌드 피드를 먼저 수집해 수요 키워드를 확보
+  let trendKeywords: string[] = [];
+  const trendsFeed = TOPIC_FEEDS.find((f) => f.topic === "검색 트렌드");
+  const newsFeeds = TOPIC_FEEDS.filter((f) => f.topic !== "검색 트렌드");
+
+  let trendsResult: TopicSignals | null = null;
+  if (trendsFeed) {
+    try {
+      const xml = await fetchText(trendsFeed.url, { retries: 2, timeoutMs: 15000 });
+      const items = dedupeByTitle(parseRss(xml)).slice(0, trendsFeed.max);
+      trendKeywords = extractTrendKeywords(items);
+      trendsResult = {
+        topic: trendsFeed.topic,
+        tier: trendsFeed.tier,
+        items: items.map((it) => ({ ...it, lever: hasLever(it.title) })),
+      };
+    } catch (err) {
+      trendsResult = {
+        topic: trendsFeed.topic,
+        tier: trendsFeed.tier,
+        items: [],
+        error: err instanceof Error ? err.message.split("\n")[0] : String(err),
+      };
+    }
+  }
+
+  // 2) 뉴스 피드 수집 + 수요 신호(📈) 대조
+  for (const feed of newsFeeds) {
     try {
       const xml = await fetchText(feed.url, { retries: 2, timeoutMs: 15000 });
       const items = dedupeByTitle(parseRss(xml))
         .slice(0, feed.max)
-        .map((it) => ({ ...it, lever: hasLever(it.title) }));
+        .map((it) => ({
+          ...it,
+          lever: hasLever(it.title),
+          demand: matchDemand(it.title, trendKeywords),
+        }));
       results.push({ topic: feed.topic, tier: feed.tier, items });
     } catch (err) {
       results.push({
@@ -79,11 +140,17 @@ export async function collectResearchSignals(): Promise<TopicSignals[]> {
       });
     }
   }
-  return results;
+  if (trendsResult) results.push(trendsResult);
+
+  return { signals: results, trendKeywords };
 }
 
 /** 소재 보드 마크다운 생성 (결정적 — 입력이 같으면 출력 동일) */
-export function renderBoard(date: string, signals: TopicSignals[]): string {
+export function renderBoard(
+  date: string,
+  signals: TopicSignals[],
+  trendKeywords: string[] = [],
+): string {
   const main = signals.filter((s) => s.tier === "main");
   const sub = signals.filter((s) => s.tier === "sub");
 
@@ -95,19 +162,25 @@ export function renderBoard(date: string, signals: TopicSignals[]): string {
         if (s.items.length === 0) return `${head}\n> (수집된 항목 없음)`;
         const lines = s.items.map((it) => {
           const fire = it.lever ? " 🔥" : "";
+          const demand = it.demand ? " 📈" : "";
           const src = it.source ? ` — ${it.source}` : "";
-          return `- [ ] ${it.title}${src}${fire}\n  <${it.link}>`;
+          return `- [ ] ${it.title}${src}${fire}${demand}\n  <${it.link}>`;
         });
         return `${head}\n${lines.join("\n")}`;
       })
       .join("\n\n");
 
+  const trendLine =
+    trendKeywords.length > 0
+      ? `\n> 🔍 **오늘의 급상승 검색어**: ${trendKeywords.slice(0, 12).join(" · ")}\n`
+      : "";
+
   return `# 소재 보드 (자동 수집) — ${date}
 
 > **사용법**: 카드로 만들고 싶은 항목에 \`[x]\` 체크(GitHub 앱/웹에서 편집)하거나, Claude 세션에 "OO 만들어줘"라고 말하면 됩니다.
-> 🔥 = 숫자·순위 레버가 보이는 소재(카드화 유리). 선택한 소재는 [DECISION_LOG](../DECISION_LOG.md)에 기록됩니다.
-> 여기 없는 아이디어는 [IDEAS.md](../IDEAS.md)에 자유롭게 추가하세요.
-
+> 🔥 = 숫자·순위 레버(카드화 유리) · 📈 = 급상승 검색어와 겹침(**수요 신호**, 트렌드분석팀 v1)
+> 선택한 소재는 [DECISION_LOG](../DECISION_LOG.md)에 기록. 없는 아이디어는 [IDEAS.md](../IDEAS.md)에. 터진 콘텐츠를 보면 [PATTERN_LIBRARY](../PATTERN_LIBRARY.md)로 스크랩하세요.
+${trendLine}
 ## 🎯 주 콘텐츠 (부동산·주식·경제·통계·돈·부자)
 
 ${section(main)}
