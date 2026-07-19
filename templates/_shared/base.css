@@ -176,8 +176,8 @@ body {
   position: absolute;
   top: 40px;
   right: 40px;
-  padding: 13px 21px;
-  border-radius: 18px;
+  padding: 16px 25px;
+  border-radius: 22px;
   background: var(--wirit-ink);
   display: inline-flex;
   align-items: center;
@@ -186,7 +186,7 @@ body {
 .wirit-corner .mark {
   font-family: "Wanted Sans", "Pretendard", sans-serif;
   font-weight: 800;
-  font-size: 36px;
+  font-size: 43px;
   line-height: 1;
   letter-spacing: -0.03em;
   color: #ffffff;

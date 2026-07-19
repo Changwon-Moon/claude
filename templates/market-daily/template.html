@@ -26,17 +26,24 @@
         object-fit: cover;
         box-shadow: 0 0 0 1px var(--wirit-ink-12);
       }
-      .md-date {
-        margin-left: auto;
-        color: var(--wirit-gray);
-        font-size: 28px;
-        font-weight: 600;
-      }
-      /* 제목: 가운데 정렬 + 1.5배 크게 */
-      .md .wirit-title {
+      /* 제목: 가운데 정렬 + 1.5배 크게, 날짜는 제목 우측 하단에 작게 */
+      .md-titlewrap {
+        position: relative;
         margin-top: 22px;
+      }
+      .md .wirit-title {
+        margin-top: 0;
         font-size: 102px;
         text-align: center;
+      }
+      .md-date {
+        position: absolute;
+        right: 2px;
+        bottom: 12px;
+        color: var(--wirit-gray);
+        font-size: 23px;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
       }
 
       /* 지수 타일 */
@@ -218,9 +225,11 @@
       <div class="md-top">
         {{#if flag}}<img class="flag" src="../_shared/flags/{{flag}}.svg" alt="" />{{/if}}
         <span class="wirit-badge">{{badge}}</span>
+      </div>
+      <div class="md-titlewrap">
+        <h1 class="wirit-title">{{title}}</h1>
         {{#if date}}<span class="md-date">{{date}}</span>{{/if}}
       </div>
-      <h1 class="wirit-title">{{title}}</h1>
 
       <div class="idx">
         {{#each indices}}
