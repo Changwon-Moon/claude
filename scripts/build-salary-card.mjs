@@ -15,7 +15,7 @@ const ds = JSON.parse(readFileSync(join(ROOT, "data/datasets/salary-freshman-202
 const BRAND = {
   "SK하이닉스": { logoColor: "#EA002C", logoText: "SK" },
   "현대자동차": { logo: "hyundai" },
-  "기아": { logoColor: "#05141F", logoText: "KIA" },
+  "기아": { logo: "kia" },
   "한화에어로스페이스": { logoColor: "#F37021", logoText: "한화" },
   HMM: { logoColor: "#00A0DE", logoText: "HMM" },
   "삼성전자": { logo: "samsung" },
@@ -27,23 +27,33 @@ const BRAND = {
 
 const fmt = (n) => n.toLocaleString("en-US"); // 천단위 콤마
 
-const items = ds.rows.map((r) => ({
-  name: r.name,
-  ...(BRAND[r.name] || {}),
-  value: fmt(r.value),
-  sub: r.industry,
-}));
+// 값 내림차순 정렬 후 표준 경쟁순위(동일 값 = 공동순위: 1, 2,2,2,2, 6,6,…)
+const sorted = [...ds.rows].sort((a, b) => b.value - a.value);
+let lastVal = null;
+let lastRank = 0;
+const items = sorted.map((r, i) => {
+  const rank = r.value === lastVal ? lastRank : i + 1;
+  lastVal = r.value;
+  lastRank = rank;
+  return {
+    name: r.name,
+    rank: String(rank),
+    ...(BRAND[r.name] || {}),
+    value: fmt(r.value),
+    sub: r.industry,
+  };
+});
 
 const content = {
   template: "ranking-table@1",
   date: "2026-07-19",
-  subtitle: "잡코리아·링커리어·블라인드 집계 · 계약연봉 기준(성과급 별도)",
-  title: "2026 대기업\n신입 초봉 순위",
+  subtitle: "잡코리아·링커리어 집계 추정 · 계약연봉 밴드(정밀 수치 아님) · 동일 밴드는 공동순위",
+  title: "2026 대기업\n신입 초봉 밴드",
   nameLabel: "기업",
-  valueLabel: "초봉(만원)",
+  valueLabel: "계약연봉(만원)",
   subLabel: "업종",
   items,
-  source: { name: "잡코리아·링커리어 집계(계약연봉)", asOf: "2026-07" },
+  source: { name: "잡코리아·링커리어 집계 추정(계약연봉)", asOf: "2026-07" },
 };
 // 추적: 이 콘텐츠의 provenance는 data/datasets/salary-freshman-2026-07.json(usedIn)에 기록됨
 

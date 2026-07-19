@@ -295,7 +295,7 @@
 
         {{#each items}}
         <div class="rt-row {{#if ../subLabel}}has-sub{{/if}} {{#if (lt @index 3)}}top{{/if}}">
-          <span class="rt-rank">{{inc @index}}</span>
+          <span class="rt-rank">{{#if this.rank}}{{this.rank}}{{else}}{{inc @index}}{{/if}}</span>
           {{#if this.logo}}<span class="rt-logo"><img src="../_shared/logos/{{this.logo}}.svg" alt="" /></span>{{else}}{{#if this.logoColor}}<span class="rt-chip wirit-chip" style="background:{{this.logoColor}}">{{#if this.logoText}}{{this.logoText}}{{else}}{{initial this.name}}{{/if}}</span>{{else}}<span class="rt-mono">{{initial this.name}}</span>{{/if}}{{/if}}
           <span class="rt-name">{{this.name}}</span>
           {{#if ../subLabel}}
