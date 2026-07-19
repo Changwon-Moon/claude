@@ -1,0 +1,20 @@
+{
+  "name": "@wirit/dashboard-static",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "정적 관제탑(Control Tower B단계). 저장소 산출물(소재보드·결정로그·렌더카드·회사문서·자산카탈로그)을 읽어 하나의 tower-state.json으로 집계하고, 같은 목업 UI에 주입해 dashboard/index.html을 생성한다. 서버·DB 없음.",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "state": "tsx src/cli.ts state",
+    "html": "tsx src/cli.ts html",
+    "all": "tsx src/cli.ts all",
+    "selftest": "tsx src/selftest.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

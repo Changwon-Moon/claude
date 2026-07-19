@@ -28,7 +28,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: 파서 셀프테스트
-        run: pnpm --filter @wirit/collectors selftest
+        run: |
+          pnpm --filter @wirit/collectors selftest
+          pnpm --filter @wirit/dashboard-static selftest
 
       - name: 자산 허브 무결성 검사
         run: node scripts/validate-assets.mjs
@@ -48,3 +50,16 @@ jobs:
             git pull --rebase origin ${GITHUB_REF_NAME}
             git push origin HEAD:${GITHUB_REF_NAME}
           fi
+
+      # 관제탑 재생성 — 새 보드/결정/회사/자산을 반영한 정적 페이지.
+      # data/content·data/out은 저장소에 없으므로(gitignore) CI 산출물엔 렌더 썸네일이 빠질 수 있다.
+      # GitHub Pages 상시 배포는 다음 단계(토글)로 미루고, 지금은 워크플로 아티팩트로 내려받아 확인한다.
+      - name: 관제탑 정적 생성
+        run: pnpm --filter @wirit/dashboard-static all
+
+      - name: 관제탑 미리보기 업로드
+        uses: actions/upload-artifact@v4
+        with:
+          name: control-tower
+          path: packages/dashboard/index.html
+          if-no-files-found: warn
