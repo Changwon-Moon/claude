@@ -103,14 +103,14 @@ body {
  * margin-top:auto 로 플렉스 컬럼의 맨 아래에 고정 → 본문과 절대 겹치지 않음 */
 .wirit-footer {
   margin-top: auto;
-  margin-bottom: 44px;
+  margin-bottom: 26px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 26px;
+  font-size: 22px;
   color: var(--wirit-gray);
-  border-top: 2px solid var(--wirit-ink-12);
-  padding-top: 24px;
+  border-top: 1px solid var(--wirit-ink-12);
+  padding-top: 13px;
 }
 
 .wirit-watermark {
