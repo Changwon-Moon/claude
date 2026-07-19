@@ -10,36 +10,34 @@
       .md .down { color: var(--wirit-cobalt); }
       .md .flat { color: var(--wirit-gray); }
 
-      /* 상단 바: 태극기·뱃지·날짜를 우상단 로고 뱃지와 같은 높이 라인에 정렬 */
-      .md-top {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        margin-top: -30px; /* 로고 뱃지(top:40)와 수직 정렬 */
-        min-height: 62px; /* 로고 뱃지 높이에 맞춤 */
-        padding-right: 200px; /* 우상단 로고 뱃지 자리 확보 */
-      }
-      .flag {
-        width: 58px;
-        height: 44px;
-        border-radius: 6px;
-        object-fit: cover;
-        box-shadow: 0 0 0 1px var(--wirit-ink-12);
-      }
-      /* 제목: 가운데 정렬 + 1.5배 크게, 날짜는 제목 우측 하단에 작게 */
+      /* 제목: 태극기(왼쪽·큼) + 제목 가운데 정렬, 날짜는 제목 우측 하단에 작게.
+         우상단 로고와 겹치지 않도록 좌우 여백을 로고폭만큼 확보(대칭 유지). */
+      /* 제목 한 줄: 태극기(왼쪽·큼) + 제목, 가운데 정렬. 우상단 로고와 안 겹치게 크기 조정.
+         날짜는 제목 우측 하단에 작게. */
       .md-titlewrap {
         position: relative;
-        margin-top: 22px;
-      }
-      .md .wirit-title {
-        margin-top: 0;
-        font-size: 102px;
+        margin-top: 44px;
         text-align: center;
       }
+      .title-flag {
+        height: 66px;
+        width: auto;
+        vertical-align: middle;
+        margin-right: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 0 1px var(--wirit-ink-12);
+        position: relative;
+        top: -6px;
+      }
+      .md .wirit-title {
+        display: inline;
+        margin-top: 0;
+        font-size: 74px;
+        white-space: nowrap;
+      }
       .md-date {
-        position: absolute;
-        right: 2px;
-        bottom: 12px;
+        display: block;
+        margin-top: 12px;
         color: var(--wirit-gray);
         font-size: 23px;
         font-weight: 600;
@@ -222,12 +220,8 @@
   </head>
   <body>
     <div class="wirit-card md {{#if font}}font-{{font}}{{/if}}">
-      <div class="md-top">
-        {{#if flag}}<img class="flag" src="../_shared/flags/{{flag}}.svg" alt="" />{{/if}}
-        <span class="wirit-badge">{{badge}}</span>
-      </div>
       <div class="md-titlewrap">
-        <h1 class="wirit-title">{{title}}</h1>
+        <h1 class="wirit-title">{{#if flag}}<img class="title-flag" src="../_shared/flags/{{flag}}.svg" alt="" />{{/if}}{{title}}</h1>
         {{#if date}}<span class="md-date">{{date}}</span>{{/if}}
       </div>
 
