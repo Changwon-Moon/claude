@@ -8,6 +8,14 @@
       "verified": true,
       "perishable": true,
       "added": "2026-07-19"
+    },
+    {
+      "file": "salary-freshman-2026-07.json",
+      "title": "2026 대기업 신입 초봉 (계약연봉 집계)",
+      "verified": false,
+      "perishable": true,
+      "added": "2026-07-19",
+      "note": "커뮤니티·채용플랫폼 집계 신호 — 발행 전 1차 출처 재확인 필요. 비배포 시안용."
     }
   ]
 }

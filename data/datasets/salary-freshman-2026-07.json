@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "title": "2026 대기업 신입 초봉 (계약연봉 집계)",
+    "source": "잡코리아·링커리어·블라인드 집계 (뉴스앤잡·newsnjob 교차)",
+    "sourceUrl": "https://www.newsnjob.com/news/articleView.html?idxno=33642",
+    "asOf": "2026-07",
+    "collectedAt": "2026-07-19",
+    "verified": false,
+    "perishable": true,
+    "basis": "신입 계약연봉 기준(성과급·복지 별도). 커뮤니티·채용플랫폼 집계치로 '신호' 단계 — 발행 전 각사 채용공고 등 1차 출처 재확인 필요.",
+    "note": "동일 티어 내 순위는 임의(9,500만·9,000만 클럽은 공동 성격). 비배포 시안용.",
+    "usedIn": ["2026-07-19-salary-freshman"]
+  },
+  "rows": [
+    { "name": "SK하이닉스", "value": 15000, "industry": "반도체" },
+    { "name": "현대자동차", "value": 9500, "industry": "완성차" },
+    { "name": "기아", "value": 9500, "industry": "완성차" },
+    { "name": "한화에어로스페이스", "value": 9500, "industry": "방산" },
+    { "name": "HMM", "value": 9500, "industry": "해운" },
+    { "name": "삼성전자", "value": 9000, "industry": "반도체·전자" },
+    { "name": "삼성바이오로직스", "value": 9000, "industry": "바이오" },
+    { "name": "포스코인터내셔널", "value": 9000, "industry": "상사" },
+    { "name": "HD현대일렉트릭", "value": 9000, "industry": "전력기기" },
+    { "name": "HD한국조선해양", "value": 9000, "industry": "조선" }
+  ]
+}
