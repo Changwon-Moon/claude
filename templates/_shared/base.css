@@ -171,24 +171,23 @@ body {
   color: var(--wirit-cobalt); /* 로고의 코발트 마침표 */
 }
 
-/* 우상단 원형 로고 (wirit.) — 모든 카드 자동 삽입(renderHtml) */
+/* 우상단 로고 뱃지 (wirit.) — 네이비 둥근 사각형, 글자에 맞춘 여백. 자동 삽입(renderHtml) */
 .wirit-corner {
   position: absolute;
-  top: 38px;
-  right: 38px;
-  width: 116px;
-  height: 116px;
-  border-radius: 50%;
+  top: 40px;
+  right: 40px;
+  padding: 13px 21px;
+  border-radius: 18px;
   background: var(--wirit-ink);
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
   z-index: 6;
 }
 .wirit-corner .mark {
   font-family: "Wanted Sans", "Pretendard", sans-serif;
   font-weight: 800;
-  font-size: 31px;
+  font-size: 36px;
+  line-height: 1;
   letter-spacing: -0.03em;
   color: #ffffff;
 }
