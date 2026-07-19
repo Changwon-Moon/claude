@@ -10,6 +10,14 @@
 2. **docs/EXECUTION_PLAN.md의 해당 마일스톤 발주 내용**과 완료 확인 기준을 확인
 3. 관련 설계 문서(ARCHITECTURE.md, AGENTS.md, TEMPLATES.md, DATA_SOURCES.md)의 **계약을 따른다** — 계약을 바꿔야 한다면 임의로 바꾸지 말고 운영자에게 이유와 함께 제안한다
 
+## 학습 프로토콜 (회사의 기억 — 필수)
+
+이 저장소는 "회사"다(`company/README.md`). **운영자의 피드백을 받으면 반드시 기록한다**:
+- 판단·취향·전략 → `company/CEO.md` 판단 원칙에 추가 (일회성 지시는 제외, 애매하면 "확인 대기"에)
+- 특정 팀의 일하는 방식 → `company/teams/{팀}.md` 학습 로그에 추가
+- 소재 선택 이유 → `research/DECISION_LOG.md` / 터진 콘텐츠 → `research/PATTERN_LIBRARY.md`
+- **작업 시작 전 CEO.md의 원칙을 확인**하고 따른다 (특히 디자인 §C — 오너가 같은 말을 두 번 하게 하지 않는다)
+
 ## 세션 종료 시 반드시 할 일
 
 1. **STATUS.md 갱신** — 완료 항목 체크, 진행 중 이슈, 다음 세션이 알아야 할 메모
