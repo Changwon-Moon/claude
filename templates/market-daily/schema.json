@@ -31,6 +31,8 @@
       "properties": {
         "name": { "type": "string", "maxLength": 20 },
         "logo": { "type": "string" },
+        "logoColor": { "type": "string" },
+        "logoText": { "type": "string", "maxLength": 4 },
         "sublabel": { "type": "string", "maxLength": 24 },
         "price": { "type": "string", "maxLength": 14 },
         "delta": { "type": "string", "maxLength": 18 },
@@ -54,6 +56,8 @@
         "properties": {
           "name": { "type": "string", "maxLength": 16 },
           "logo": { "type": "string" },
+          "logoColor": { "type": "string" },
+          "logoText": { "type": "string", "maxLength": 4 },
           "delta": { "type": "string", "maxLength": 12 },
           "dir": { "enum": ["up", "down", "flat"] }
         }

@@ -9,16 +9,16 @@
   "valueLabel": "평균연봉",
   "subLabel": "평균근속",
   "items": [
-    { "name": "삼성물산", "value": "1.28억", "sub": "12.4년" },
-    { "name": "현대건설", "value": "1.09억", "sub": "13.1년" },
-    { "name": "대우건설", "value": "9,800만", "sub": "11.9년" },
-    { "name": "현대엔지니어링", "value": "9,600만", "sub": "10.7년" },
-    { "name": "DL이앤씨", "value": "9,400만", "sub": "12.2년" },
-    { "name": "GS건설", "value": "9,100만", "sub": "13.4년" },
-    { "name": "포스코이앤씨", "value": "8,900만", "sub": "12.8년" },
-    { "name": "롯데건설", "value": "8,600만", "sub": "11.5년" },
-    { "name": "SK에코플랜트", "value": "8,300만", "sub": "9.7년" },
-    { "name": "HDC현대산업개발", "value": "8,100만", "sub": "10.9년" }
+    { "name": "삼성물산", "logo": "samsung", "value": "1.28억", "sub": "12.4년" },
+    { "name": "현대건설", "logo": "hyundai", "value": "1.09억", "sub": "13.1년" },
+    { "name": "대우건설", "logoColor": "#0B4DA2", "logoText": "대우", "value": "9,800만", "sub": "11.9년" },
+    { "name": "현대엔지니어링", "logo": "hyundai", "value": "9,600만", "sub": "10.7년" },
+    { "name": "DL이앤씨", "logoColor": "#009D9C", "logoText": "DL", "value": "9,400만", "sub": "12.2년" },
+    { "name": "GS건설", "logoColor": "#EE2E24", "logoText": "GS", "value": "9,100만", "sub": "13.4년" },
+    { "name": "포스코이앤씨", "logoColor": "#00A0E9", "logoText": "포스코", "value": "8,900만", "sub": "12.8년" },
+    { "name": "롯데건설", "logoColor": "#ED1B2E", "logoText": "롯데", "value": "8,600만", "sub": "11.5년" },
+    { "name": "SK에코플랜트", "logoColor": "#EA002C", "logoText": "SK", "value": "8,300만", "sub": "9.7년" },
+    { "name": "HDC현대산업개발", "logoColor": "#002F6C", "logoText": "HDC", "value": "8,100만", "sub": "10.9년" }
   ],
   "source": { "name": "예시 데이터(디자인 시안용)", "asOf": "2026-07" }
 }

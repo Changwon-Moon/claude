@@ -25,7 +25,9 @@
           "name": { "type": "string", "maxLength": 24 },
           "value": { "type": "string", "maxLength": 16 },
           "sub": { "type": "string", "maxLength": 16 },
-          "logo": { "type": "string", "description": "로고 slug (라이브러리 구축 후). 없으면 모노그램." }
+          "logo": { "type": "string", "description": "로고 slug (_shared/logos/{slug}.svg)" },
+          "logoColor": { "type": "string", "description": "브랜드색 hex. 실제 로고 없을 때 컬러칩 배경." },
+          "logoText": { "type": "string", "maxLength": 4, "description": "칩 약칭. 없으면 첫 글자." }
         }
       }
     },

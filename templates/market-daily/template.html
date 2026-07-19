@@ -178,6 +178,17 @@
         width: 44px;
         height: 44px;
       }
+      .feat-head .wirit-chip {
+        width: 64px;
+        height: 64px;
+        font-size: 25px;
+      }
+      .mv .wirit-chip {
+        width: 44px;
+        height: 44px;
+        font-size: 17px;
+        letter-spacing: -0.02em;
+      }
       .mv .nm {
         font-weight: 700;
         white-space: nowrap;
@@ -219,7 +230,7 @@
       {{#if featured}}
       <div class="feat">
         <div class="feat-head">
-          {{#if featured.logo}}<span class="logo-badge"><img src="../_shared/logos/{{featured.logo}}.svg" alt="" /></span>{{else}}<span class="mono">{{initial featured.name}}</span>{{/if}}
+          {{#if featured.logo}}<span class="logo-badge"><img src="../_shared/logos/{{featured.logo}}.svg" alt="" /></span>{{else}}{{#if featured.logoColor}}<span class="wirit-chip" style="background:{{featured.logoColor}}">{{#if featured.logoText}}{{featured.logoText}}{{else}}{{initial featured.name}}{{/if}}</span>{{else}}<span class="mono">{{initial featured.name}}</span>{{/if}}{{/if}}
           <div>
             <div class="nm">{{featured.name}}</div>
             {{#if featured.sublabel}}<div class="sub">{{featured.sublabel}}</div>{{/if}}
@@ -244,7 +255,7 @@
       <div class="movers">
         {{#each movers}}
         <div class="mv">
-          {{#if this.logo}}<span class="logo-badge"><img src="../_shared/logos/{{this.logo}}.svg" alt="" /></span>{{else}}<span class="mono">{{initial this.name}}</span>{{/if}}
+          {{#if this.logo}}<span class="logo-badge"><img src="../_shared/logos/{{this.logo}}.svg" alt="" /></span>{{else}}{{#if this.logoColor}}<span class="wirit-chip" style="background:{{this.logoColor}}">{{#if this.logoText}}{{this.logoText}}{{else}}{{initial this.name}}{{/if}}</span>{{else}}<span class="mono">{{initial this.name}}</span>{{/if}}{{/if}}
           <span class="nm">{{this.name}}</span>
           <span class="d {{this.dir}}">{{arrow this.dir}} {{this.delta}}</span>
         </div>

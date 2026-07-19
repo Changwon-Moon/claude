@@ -100,6 +100,12 @@
         height: 62%;
         object-fit: contain;
       }
+      .rt-chip {
+        width: var(--mono);
+        height: var(--mono);
+        font-size: calc(var(--mono) * 0.3);
+        letter-spacing: -0.02em;
+      }
       .rt-name {
         font-weight: 700;
         white-space: nowrap;
@@ -231,7 +237,7 @@
         {{#each items}}
         <div class="rt-row {{#if ../subLabel}}has-sub{{/if}} {{#if (lt @index 3)}}top{{/if}}">
           <span class="rt-rank">{{inc @index}}</span>
-          {{#if this.logo}}<span class="rt-logo"><img src="../_shared/logos/{{this.logo}}.svg" alt="" /></span>{{else}}<span class="rt-mono">{{initial this.name}}</span>{{/if}}
+          {{#if this.logo}}<span class="rt-logo"><img src="../_shared/logos/{{this.logo}}.svg" alt="" /></span>{{else}}{{#if this.logoColor}}<span class="rt-chip wirit-chip" style="background:{{this.logoColor}}">{{#if this.logoText}}{{this.logoText}}{{else}}{{initial this.name}}{{/if}}</span>{{else}}<span class="rt-mono">{{initial this.name}}</span>{{/if}}{{/if}}
           <span class="rt-name">{{this.name}}</span>
           {{#if ../subLabel}}
             {{#if (eq ../variant "c")}}
