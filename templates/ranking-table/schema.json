@@ -3,7 +3,7 @@
   "title": "ranking-table@1",
   "description": "순위표 카드. 로고+이름+값(1~2열). 항목 3~15개.",
   "type": "object",
-  "required": ["template", "badge", "title", "nameLabel", "valueLabel", "items", "source"],
+  "required": ["template", "title", "nameLabel", "valueLabel", "items", "source"],
   "properties": {
     "template": { "type": "string", "pattern": "^ranking-table@\\d+$" },
     "date": { "type": "string" },

@@ -3,7 +3,7 @@
   "title": "market-daily@1",
   "description": "증시 데일리. 지수 타일 + 대표종목 1년 차트 + 종목 등락. 완전 무인 슬롯용.",
   "type": "object",
-  "required": ["template", "badge", "title", "indices", "source"],
+  "required": ["template", "title", "indices", "source"],
   "properties": {
     "template": { "type": "string", "pattern": "^market-daily@\\d+$" },
     "date": { "type": "string" },

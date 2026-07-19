@@ -4,6 +4,10 @@
   "private": true,
   "type": "module",
   "description": "콘텐츠 JSON을 인스타 카드(PNG)로 렌더링. 동일 입력 = 동일 픽셀(결정적).",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "bin": {
     "wirit-render": "./dist/cli.js"
   },

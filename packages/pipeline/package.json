@@ -1,0 +1,20 @@
+{
+  "name": "@wirit/pipeline",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "오케스트레이터 — 수집 데이터(raw)를 콘텐츠 JSON으로 변환하고 렌더까지 연결. 수치 변환은 결정적 코드(LLM 미사용).",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build-market-us": "tsx src/cli.ts",
+    "selftest": "tsx src/selftest.ts"
+  },
+  "dependencies": {
+    "@wirit/renderer": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
