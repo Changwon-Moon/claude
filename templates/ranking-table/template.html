@@ -26,11 +26,21 @@
         --mono: 44px;
       }
       /* 순위표는 표 공간 확보를 위해 제목 영역을 살짝 압축 */
-      /* 제목·부제 가운데 정렬. 제목은 data의 줄바꿈(\n)을 그대로 표현(pre-line).
-         우상단 로고 회피용 좌우 대칭 여백. */
+      /* 부제(캡션)를 상단 로고 라인에 왼쪽정렬로 배치 */
+      .rt-topcap {
+        display: flex;
+        align-items: center;
+        margin-top: -30px;
+        min-height: 62px;
+        padding-right: 200px; /* 우상단 로고 자리 */
+        color: var(--wirit-gray);
+        font-size: 32px;
+        font-weight: 600;
+      }
+      /* 제목: 2줄 가운데 정렬(data 줄바꿈 pre-line), 좌우 대칭 여백 */
       .rt-head {
         padding: 0 140px;
-        margin-top: 30px;
+        margin-top: 18px;
       }
       .rt .wirit-title {
         font-size: 80px;
@@ -38,11 +48,6 @@
         line-height: 1.08;
         text-align: center;
         white-space: pre-line;
-      }
-      .rt .wirit-subtitle {
-        margin-top: 16px;
-        font-size: 32px;
-        text-align: center;
       }
 
       .rt-head {
@@ -227,9 +232,9 @@
   </head>
   <body>
     <div class="wirit-card {{#if font}}font-{{font}}{{/if}} {{#if variant}}variant-{{variant}}{{else}}variant-a{{/if}} rt {{densityClass items}}">
+      <div class="rt-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
       <div class="rt-head">
         <h1 class="wirit-title">{{title}}</h1>
-        {{#if subtitle}}<p class="wirit-subtitle">{{subtitle}}</p>{{/if}}
       </div>
 
       <div class="rt-body">
