@@ -110,4 +110,6 @@ export interface TowerState {
   counts: { candidates: number; inProgress: number; awaiting: number; published: number };
   /** 이미지 풀: 썸네일 data-uri 중복 저장 방지. thumb 필드는 이 맵의 키를 담는다. */
   images: Record<string, string>;
+  /** 컨텐츠 마이닝 설정 — 주제 비중(합 100 지향). 마이닝 요청 시 이 비중을 실어 보낸다. */
+  mining: { weights: { label: string; pct: number }[] };
 }

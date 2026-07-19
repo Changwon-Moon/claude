@@ -73,6 +73,47 @@ button:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px;border-r
 .tk .mini{width:100%;border-radius:8px;border:1px solid var(--line);display:block;margin-top:2px}
 .empty{font-size:12px;color:var(--gray);text-align:center;padding:14px 4px}
 
+/* ── 컨텐츠 마이닝 패널 (칸반 첫 열, 화면 1/3 폭) ── */
+.col.mining{flex:0 0 min(660px,84vw);display:flex;flex-direction:column;max-height:calc(100vh - 205px);background:var(--band)}
+.mine-h{font-size:13.5px;font-weight:800;color:var(--cobalt);display:flex;align-items:center;gap:6px;padding:4px 6px 8px}
+.mine-h .n{margin-left:auto;font-variant-numeric:tabular-nums;background:var(--card);border:1px solid var(--line);border-radius:999px;min-width:22px;text-align:center;padding:1px 7px;font-size:11.5px;color:var(--text)}
+.mine-h .lrn{font-size:10.5px;font-weight:800;color:var(--gray);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:2px 8px}
+.weights{display:flex;gap:6px;flex-wrap:wrap;padding:0 4px 8px}
+.wt{display:flex;align-items:center;gap:3px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:11.5px;font-weight:700;color:var(--gray)}
+.wt input{width:34px;border:none;background:transparent;color:var(--cobalt);font-weight:800;font:inherit;font-size:12.5px;text-align:right;padding:0}
+.wt input:focus{outline:none}
+.wt .pc{color:var(--gray);font-weight:700}
+.wsum{font-size:10.5px;color:var(--gray);align-self:center;margin-left:2px}
+.wsum.bad{color:var(--red);font-weight:800}
+.mine-btn{width:100%;background:var(--cobalt);color:#fff;font-size:13.5px;font-weight:800;border-radius:10px;padding:11px;margin:0 0 4px;display:flex;align-items:center;justify-content:center;gap:7px}
+.mine-note{font-size:10.5px;color:var(--gray);line-height:1.4;padding:0 2px 6px}
+.cands{flex:1 1 auto;min-height:90px;overflow-y:auto;display:flex;flex-direction:column;gap:7px;padding:2px 2px 4px}
+.cand{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:10px 11px;display:flex;flex-direction:column;gap:5px}
+.cand.picked{border-color:var(--ok);opacity:.7}
+.cand.dropped{border-color:var(--line);opacity:.4}
+.cand .ctop{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.cand .ct{font-size:14px;font-weight:800;line-height:1.32;letter-spacing:-.01em}
+.cand .cmeta{font-size:11px;color:var(--gray);display:flex;gap:8px;flex-wrap:wrap}
+.cand .cmeta b{color:var(--text);font-weight:700}
+.cand .cr{font-size:12px;color:var(--text);line-height:1.45}
+.cand .cr .lbl{color:var(--gray);font-weight:700}
+.cand .cbtns{display:flex;gap:6px;margin-top:2px}
+.cbtn{font-size:12px;font-weight:800;border-radius:8px;padding:6px 12px;border:1px solid var(--line)}
+.cbtn.pick{background:var(--cobalt);color:#fff;border-color:var(--cobalt)}
+.cbtn.drop{background:var(--card);color:var(--red);border-color:var(--red)}
+.cbtn.detail{background:var(--card);color:var(--gray)}
+/* 지식 인풋 (마이닝 패널 하단 채팅창) */
+.kbox{border-top:1px solid var(--line);margin-top:6px;padding:9px 3px 2px;display:flex;flex-direction:column;gap:7px}
+.kbox .kh{font-size:11.5px;font-weight:800;color:var(--gray)}
+.kbox textarea{font:inherit;font-size:12.5px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--text);padding:9px;min-height:56px;resize:vertical}
+.kprev{display:flex;gap:6px;flex-wrap:wrap}
+.kprev .kp{position:relative}
+.kprev img{width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid var(--line);display:block}
+.kprev .kx{position:absolute;top:-6px;right:-6px;background:var(--ink);color:#fff;border-radius:50%;width:18px;height:18px;font-size:11px;line-height:18px;text-align:center}
+.kbox .krow{display:flex;gap:7px;align-items:center}
+.kbox .kadd{background:var(--cobalt);color:#fff;font-size:12.5px;font-weight:800;border-radius:9px;padding:8px 14px}
+.kbox .khint{font-size:10.5px;color:var(--gray);line-height:1.4}
+
 /* 회사 탭 */
 .wrap{padding:16px 18px 90px;max-width:900px}
 .sect{font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--gray);margin:18px 2px 10px}
@@ -161,8 +202,8 @@ function img(k){ return k ? (STATE.images[k] || k) : ""; }
 const KEY = "wirit-tower-" + STATE.generatedFrom;
 let S = load();
 function load(){
-  try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.tickets&&s.tickets.length===STATE.tickets.length) return s; }catch(e){}
-  return { tickets: STATE.tickets.map(t=>({...t, comments: []})), decisions: [] };
+  try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.tickets&&s.tickets.length===STATE.tickets.length){ if(!s.weights) s.weights=STATE.mining.weights.map(w=>({...w})); if(!s.learning) s.learning=[]; return s; } }catch(e){}
+  return { tickets: STATE.tickets.map(t=>({...t, comments: []})), decisions: [], weights: STATE.mining.weights.map(w=>({...w})), learning: [] };
 }
 function save(){ localStorage.setItem(KEY, JSON.stringify(S)); }
 function tk(id){ return S.tickets.find(t=>t.id===id); }
@@ -210,12 +251,60 @@ wireCompany();
 
 /* 칸반 */
 const board=document.getElementById("board");
+function candReason(t){
+  if(t.evidence&&t.evidence.length){ var e=t.evidence.find(x=>!/데이터 경로/.test(x[0]))||t.evidence[0]; return e[1]; }
+  return (t.fire?"숫자·순위 레버 뚜렷":"관심 소재")+" · "+t.topic+" 코어 연결";
+}
+function candSource(t){
+  if(t.evidence&&t.evidence.length){ var e=t.evidence.find(x=>!/데이터 경로/.test(x[0])); if(e) return (e[0]||"").split(" — ")[0]||e[0]; }
+  return "소재보드 신호";
+}
+function buildMiningPanel(list){
+  const col=document.createElement("section"); col.className="col mining";
+  // 헤더
+  let h='<div class="mine-h">🔎 컨텐츠 마이닝<span class="lrn">학습 '+S.learning.length+'건</span><span class="n">'+list.length+'</span></div>';
+  // 비중 설정
+  let wt='<div class="weights">';
+  S.weights.forEach((w,i)=>{ wt+='<span class="wt">'+esc(w.label)+' <input type="number" min="0" max="100" data-w="'+i+'" value="'+w.pct+'"><span class="pc">%</span></span>'; });
+  const sum=S.weights.reduce((a,w)=>a+(+w.pct||0),0);
+  wt+='<span class="wsum'+(sum===100?"":" bad")+'" id="wsum">합 '+sum+'%</span></div>';
+  // 마이닝 버튼 + 안내
+  const btn='<button class="mine-btn" id="mineBtn">⛏ 마이닝 실행 — 새 후보 10건 요청</button>'
+    +'<div class="mine-note">누르면 위 비중으로 <b>실시간 수집 요청</b>이 지시 전달함에 담깁니다 → 하단 [요약 복사] → Claude가 SNS·뉴스·통계를 돌려 후보를 채웁니다. 아래는 현재 수집된 후보입니다.</div>';
+  // 후보 목록 (스크롤)
+  let cands='<div class="cands" id="cands">';
+  if(!list.length) cands+='<div class="empty">후보 없음 — [마이닝 실행]으로 수집 요청</div>';
+  list.forEach(t=>{ cands+=candRow(t); });
+  cands+='</div>';
+  // 지식 인풋 (채팅창)
+  const kbox='<div class="kbox"><div class="kh">💬 내 지식 입력 — 기사·메모·사진을 붙여넣으세요</div>'
+    +'<div class="kprev" id="kprev"></div>'
+    +'<textarea id="ktext" placeholder="여기에 기사 본문·수치·아이디어를 붙여넣기(Ctrl+V). 이미지도 붙여넣으면 미리보기로 담깁니다."></textarea>'
+    +'<div class="krow"><button class="kadd" id="kadd">지식 추가</button>'
+    +'<span class="khint">텍스트는 그대로 전달됩니다. 이미지는 세션에 직접 올려야 제가 실제로 봅니다(여기선 첨부 표시만).</span></div></div>';
+  col.innerHTML=h+wt+btn+cands+kbox;
+  return col;
+}
+function candRow(t){
+  const picked=(t.flags||[]).includes("선정"), dropped=(t.flags||[]).includes("버림");
+  const sum=t.rubric&&t.rubric.sum?t.rubric.sum:null;
+  return '<div class="cand'+(picked?" picked":"")+(dropped?" dropped":"")+'" data-cid="'+t.id+'">'
+    +'<div class="ctop"><span class="chip '+(t.tier==="T1"?"t1":"t2")+'">'+(t.tier==="T1"?"주":"부")+'</span>'
+    +'<span class="topic">'+esc(t.topic)+'</span>'+(sum?'<span class="score" style="margin-left:auto">'+sum+'점</span>':"")+'</div>'
+    +'<div class="ct">'+(t.fire?"🔥 ":"")+esc(t.title)+'</div>'
+    +'<div class="cmeta"><span><b>출처</b> '+esc(candSource(t))+'</span><span><b>포맷</b> '+esc(t.fmt)+'</span></div>'
+    +'<div class="cr"><span class="lbl">선정 사유 · </span>'+esc(candReason(t))+'</div>'
+    +(picked?'<div class="cr" style="color:var(--ok);font-weight:800">✅ 선정됨 → 기획으로 이동</div>':dropped?'<div class="cr" style="color:var(--gray)">❌ 탈락</div>'
+      :'<div class="cbtns"><button class="cbtn pick" data-pick="'+t.id+'">✅ 선정</button><button class="cbtn drop" data-drop="'+t.id+'">❌ 탈락</button><button class="cbtn detail" data-detail="'+t.id+'">상세</button></div>')
+    +'</div>';
+}
 function renderBoard(){
   board.innerHTML="";
   STAGES.forEach((name,si)=>{
-    const col=document.createElement("section");
-    col.className="col"+(si===0?" hot":"");
     const list=S.tickets.filter(t=>t.stage===si && !(t.flags||[]).includes("버림"));
+    if(si===0){ board.appendChild(buildMiningPanel(list)); return; }
+    const col=document.createElement("section");
+    col.className="col";
     col.innerHTML='<h2>'+name+'<span class="n">'+list.length+'</span></h2>';
     const wrap=document.createElement("div"); wrap.className="tickets";
     if(!list.length){ wrap.innerHTML='<div class="empty">비어 있음</div>'; }
@@ -236,7 +325,61 @@ function renderBoard(){
     });
     col.appendChild(wrap); board.appendChild(col);
   });
+  wireMining();
   document.getElementById("dcnt").textContent=S.decisions.length;
+}
+
+/* 마이닝 패널 상호작용 */
+let pendingImgs=0;
+function wireMining(){
+  // 비중 입력
+  document.querySelectorAll("[data-w]").forEach(inp=>{
+    inp.onchange=()=>{ const i=+inp.dataset.w; S.weights[i].pct=Math.max(0,Math.min(100,+inp.value||0)); save();
+      const sum=S.weights.reduce((a,w)=>a+(+w.pct||0),0); const el=document.getElementById("wsum"); if(el){ el.textContent="합 "+sum+"%"; el.className="wsum"+(sum===100?"":" bad"); } };
+  });
+  // 마이닝 실행
+  const mb=document.getElementById("mineBtn");
+  if(mb) mb.onclick=()=>{
+    const w=S.weights.map(x=>x.label+" "+x.pct+"%").join(" · ");
+    pushDecision("🔎 컨텐츠 마이닝 실행 요청 — 비중["+w+"] → 새 후보 10건을 SNS·뉴스·통계에서 수집해줘",
+      "마이닝 요청 담김 — [요약 복사]로 저에게 보내세요");
+  };
+  // 후보 선정/탈락/상세
+  document.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>candAction(b.dataset.pick,"pick"));
+  document.querySelectorAll("[data-drop]").forEach(b=>b.onclick=()=>candAction(b.dataset.drop,"drop"));
+  document.querySelectorAll("[data-detail]").forEach(b=>b.onclick=()=>openDrawer(b.dataset.detail));
+  // 지식 인풋: 붙여넣기(이미지) + 추가
+  const ta=document.getElementById("ktext"), prev=document.getElementById("kprev");
+  if(ta){
+    ta.onpaste=(e)=>{
+      const items=(e.clipboardData||{}).items||[];
+      for(const it of items){ if(it.type&&it.type.indexOf("image")===0){ const f=it.getAsFile(); if(f){ const r=new FileReader(); r.onload=()=>addImgPrev(prev,r.result); r.readAsDataURL(f); pendingImgs++; } } }
+    };
+    const ka=document.getElementById("kadd");
+    if(ka) ka.onclick=()=>{
+      const v=ta.value.trim(); const imgs=prev?prev.querySelectorAll("img").length:0;
+      if(!v&&!imgs){ toast("기사·메모를 입력하거나 이미지를 붙여넣으세요"); return; }
+      let msg="💬 지식 입력: "+(v||"(텍스트 없음)"); if(imgs) msg+=" [사진 "+imgs+"장 첨부 — 세션에 직접 업로드 필요]";
+      pushDecision(msg, "지식 담김 — [요약 복사]로 전달");
+      ta.value=""; if(prev) prev.innerHTML=""; pendingImgs=0;
+    };
+  }
+}
+function addImgPrev(prev,src){
+  if(!prev) return; const d=document.createElement("span"); d.className="kp";
+  d.innerHTML='<img src="'+src+'" alt=""><span class="kx">✕</span>';
+  d.querySelector(".kx").onclick=()=>d.remove(); prev.appendChild(d);
+}
+function candAction(id,kind){
+  const t=tk(id); if(!t) return;
+  t.flags=t.flags||[];
+  if(kind==="pick"){ t.stage=1; if(!t.flags.includes("선정")) t.flags.push("선정");
+    S.learning.push({t:t.title,a:"선정",topic:t.topic,fire:!!t.fire});
+    pushDecision("✅ 선정: "+t.title+" ("+t.topic+"/"+t.fmt+") — 트렌드분석·리서치 학습신호(선호)", t.title.split(" — ")[0]+" 선정"); }
+  else { t.flags.push("버림");
+    S.learning.push({t:t.title,a:"탈락",topic:t.topic,fire:!!t.fire});
+    pushDecision("❌ 탈락: "+t.title+" ("+t.topic+") — 트렌드분석·리서치 학습신호(비선호)", t.title.split(" — ")[0]+" 탈락"); }
+  save(); renderBoard();
 }
 
 /* 드로어 */

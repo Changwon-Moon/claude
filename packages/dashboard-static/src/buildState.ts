@@ -231,5 +231,13 @@ export function buildState(): TowerState {
     assets: { groups: assets, reuseNote: "재사용률은 발행 누적 후 산출" },
     counts,
     images,
+    mining: {
+      weights: [
+        { label: "부동산", pct: 30 },
+        { label: "경제일반", pct: 20 },
+        { label: "주식", pct: 15 },
+        { label: "기타", pct: 35 },
+      ],
+    },
   };
 }
