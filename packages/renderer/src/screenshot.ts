@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import { chromium, type Browser } from "playwright-core";
 
 /**
@@ -42,14 +43,22 @@ export async function closeBrowser(): Promise<void> {
   }
 }
 
+let tmpCounter = 0;
+
 /**
  * HTML 문자열을 지정 크기 카드 PNG 로 캡처한다.
- * 결정적 렌더: 애니메이션 정지, 폰트 로딩 완료 대기 후 캡처.
+ * 결정적 렌더: 폰트·이미지 로딩 완료 후 캡처.
+ *
+ * 이미지·폰트 로딩을 위해 임시 HTML 파일을 `assetDir`(템플릿 폴더) 안에 써서
+ * file:// 로 goto 한다. 이렇게 해야 `../_shared/flags/kr.svg`, 로고 PNG,
+ * 실물 사진 같은 상대경로 자산이 정상 로드된다. (setContent 방식은 about:blank
+ * 오리진이라 file:// 하위자산이 보안상 차단됨.) 캡처 후 임시 파일은 삭제.
  */
 export async function screenshotHtml(
   html: string,
   outPath: string,
   opts: { width: number; height: number; scale: number },
+  assetDir: string,
 ): Promise<void> {
   const browser = await getBrowser();
   const context = await browser.newContext({
@@ -57,13 +66,23 @@ export async function screenshotHtml(
     deviceScaleFactor: opts.scale,
   });
   const page = await context.newPage();
+
+  const tmpName = `.render-tmp-${process.pid}-${tmpCounter++}.html`;
+  const tmpPath = path.join(assetDir, tmpName);
+  fs.writeFileSync(tmpPath, html, "utf8");
+
   try {
-    await page.setContent(html, { waitUntil: "networkidle" });
-    // 폰트가 다 로드된 뒤 캡처(글자 밀림 방지)
+    await page.goto(pathToFileURL(tmpPath).href, { waitUntil: "networkidle" });
+    // 폰트·이미지가 다 준비된 뒤 캡처
     await page.evaluate(() => (document as any).fonts?.ready);
     fs.mkdirSync(path.dirname(outPath), { recursive: true });
     await page.screenshot({ path: outPath, type: "png" });
   } finally {
     await context.close();
+    try {
+      fs.unlinkSync(tmpPath);
+    } catch {
+      /* 이미 지워졌으면 무시 */
+    }
   }
 }

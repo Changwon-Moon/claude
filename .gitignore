@@ -21,6 +21,9 @@ data/briefs/
 data/plans/
 data/content/
 
+# 렌더러 임시 HTML (템플릿 폴더에 잠깐 생겼다 삭제됨)
+templates/**/.render-tmp-*.html
+
 # OS·에디터
 .DS_Store
 Thumbs.db

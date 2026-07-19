@@ -45,7 +45,7 @@ export async function renderContentFile(
 
     const html = renderPageHtml(template, pageData);
     const outPath = path.join(outDir, `${stem}-p${i + 1}.png`);
-    await screenshotHtml(html, outPath, template.config);
+    await screenshotHtml(html, outPath, template.config, template.dir);
     outputs.push(outPath);
   }
 

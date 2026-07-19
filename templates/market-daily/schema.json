@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "market-daily@1",
+  "description": "증시 데일리. 지수 타일 + 대표종목 1년 차트 + 종목 등락. 완전 무인 슬롯용.",
+  "type": "object",
+  "required": ["template", "badge", "title", "indices", "source"],
+  "properties": {
+    "template": { "type": "string", "pattern": "^market-daily@\\d+$" },
+    "date": { "type": "string" },
+    "flag": { "type": "string", "description": "국기 slug (예: kr, us). _shared/flags/{slug}.svg" },
+    "badge": { "type": "string", "maxLength": 22 },
+    "title": { "type": "string", "maxLength": 30 },
+    "indices": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["label", "value", "delta", "dir"],
+        "properties": {
+          "label": { "type": "string", "maxLength": 14 },
+          "value": { "type": "string", "maxLength": 12 },
+          "delta": { "type": "string", "maxLength": 16 },
+          "dir": { "enum": ["up", "down", "flat"] }
+        }
+      }
+    },
+    "featured": {
+      "type": "object",
+      "required": ["name", "price", "delta", "dir", "chart"],
+      "properties": {
+        "name": { "type": "string", "maxLength": 20 },
+        "logo": { "type": "string" },
+        "sublabel": { "type": "string", "maxLength": 24 },
+        "price": { "type": "string", "maxLength": 14 },
+        "delta": { "type": "string", "maxLength": 18 },
+        "dir": { "enum": ["up", "down", "flat"] },
+        "chart": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 60,
+          "items": { "type": "number" }
+        },
+        "chartFrom": { "type": "string", "maxLength": 10 },
+        "chartTo": { "type": "string", "maxLength": 10 }
+      }
+    },
+    "movers": {
+      "type": "array",
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["name", "delta", "dir"],
+        "properties": {
+          "name": { "type": "string", "maxLength": 16 },
+          "logo": { "type": "string" },
+          "delta": { "type": "string", "maxLength": 12 },
+          "dir": { "enum": ["up", "down", "flat"] }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "asOf": { "type": "string" }
+      }
+    }
+  }
+}

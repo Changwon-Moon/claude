@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import path from "node:path";
-import { pathToFileURL } from "node:url";
 import Handlebars from "handlebars";
 import { SHARED_DIR } from "./paths.js";
 import type { LoadedTemplate } from "./types.js";
@@ -28,6 +27,50 @@ Handlebars.registerHelper("initial", (name: unknown) =>
   typeof name === "string" && name.length > 0 ? name.trim()[0] : "·",
 );
 
+// 등락 방향 화살표. 수치는 데이터가 제공, 화살표만 방향으로 표기.
+Handlebars.registerHelper("arrow", (dir: unknown) =>
+  dir === "up" ? "▲" : dir === "down" ? "▼" : "·",
+);
+
+/**
+ * 결정적 라인 차트 SVG 생성 (1년 추이 등).
+ * 사용: {{{lineChart series width=984 height=240}}}
+ * - 강조선=코발트, 하단 면=옅은 코발트, 마지막 점 강조
+ * - 수치는 데이터(series)에서만 옴 (LLM 창작 없음)
+ */
+Handlebars.registerHelper("lineChart", (series: unknown, options: any) => {
+  const hash = (options && options.hash) || {};
+  const w = Number(hash.width ?? 984);
+  const h = Number(hash.height ?? 240);
+  const pad = Number(hash.pad ?? 8);
+  const color = String(hash.color ?? "#2e6bff");
+  const fill = String(hash.fill ?? "rgba(46,107,255,0.10)");
+  const data = Array.isArray(series)
+    ? series.map(Number).filter((n) => !Number.isNaN(n))
+    : [];
+  if (data.length < 2) return new Handlebars.SafeString("");
+
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+  const n = data.length;
+  const px = (i: number) => pad + (i / (n - 1)) * (w - 2 * pad);
+  const py = (v: number) => pad + (1 - (v - min) / range) * (h - 2 * pad);
+  const pts = data.map((v, i) => `${px(i).toFixed(1)},${py(v).toFixed(1)}`);
+  const line = "M" + pts.join(" L");
+  const area =
+    `M${px(0).toFixed(1)},${(h - pad).toFixed(1)} L` +
+    pts.join(" L") +
+    ` L${px(n - 1).toFixed(1)},${(h - pad).toFixed(1)} Z`;
+  const svg =
+    `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">` +
+    `<path d="${area}" fill="${fill}"/>` +
+    `<path d="${line}" fill="none" stroke="${color}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>` +
+    `<circle cx="${px(n - 1).toFixed(1)}" cy="${py(data[n - 1]).toFixed(1)}" r="8" fill="${color}"/>` +
+    `</svg>`;
+  return new Handlebars.SafeString(svg);
+});
+
 function readSharedCss(): string {
   const p = path.join(SHARED_DIR, "base.css");
   return fs.existsSync(p) ? fs.readFileSync(p, "utf8") : "";
@@ -36,8 +79,10 @@ function readSharedCss(): string {
 /**
  * 한 페이지(카드 1장)의 데이터를 최종 HTML 문자열로 만든다.
  * - Handlebars 로 template.html 에 데이터 바인딩
- * - 상대경로 자산(로고 등) 해석을 위해 <base href> 주입 (템플릿 폴더 기준)
- * - 공통 base.css 를 인라인 <style> 로 주입 (네트워크 요청 없이 결정적 렌더)
+ * - 공통 base.css 를 인라인 <style> 로 주입
+ * 주의: 상대경로 자산(폰트·국기·로고·사진)은 렌더 단계에서 템플릿 폴더 안에
+ *       임시 HTML 파일을 써서 file:// 로 로드하므로(screenshot.ts), 여기서
+ *       <base href> 를 넣지 않는다. (setContent 방식은 file:// 하위자산이 차단됨)
  */
 export function renderPageHtml(
   template: LoadedTemplate,
@@ -46,19 +91,14 @@ export function renderPageHtml(
   const compile = Handlebars.compile(template.html, { noEscape: false });
   let html = compile(pageData);
 
-  const baseHref = pathToFileURL(template.dir + path.sep).href;
-  const baseTag = `<base href="${baseHref}">`;
   const styleTag = `<style>\n${readSharedCss()}\n</style>`;
 
-  const injection = `${baseTag}\n${styleTag}`;
-
   if (html.includes(SHARED_CSS_MARKER)) {
-    html = html.replace(SHARED_CSS_MARKER, injection);
+    html = html.replace(SHARED_CSS_MARKER, styleTag);
   } else if (html.includes("</head>")) {
-    html = html.replace("</head>", `${injection}\n</head>`);
+    html = html.replace("</head>", `${styleTag}\n</head>`);
   } else {
-    // <head> 가 없는 템플릿이면 맨 앞에 붙인다.
-    html = `${injection}\n${html}`;
+    html = `${styleTag}\n${html}`;
   }
 
   return html;

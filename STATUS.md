@@ -12,8 +12,8 @@
 | — | 설계 문서 작성 (로드맵, 아키텍처, 에이전트, 템플릿, 소스, 운영, 실행전략) | ✅ 완료 | 2026-07-18 |
 | M0 | 준비 — 계정·API 키 발급 | 🟡 가이드 완료·운영자 수행 대기 | 가이드: [docs/guides/M0-setup.md](./docs/guides/M0-setup.md). 운영자가 키 6종 발급 후 M1 |
 | M1 | 레포 스캐폴딩 + 렌더러 코어 | ✅ 완료 | JSON→PNG 렌더러 동작. 결정성·스키마검증 확인. 미리보기: templates/dummy-card/preview.png |
-| M2 | 템플릿 1호 ranking-table | 🟡 제작완료·시안선택 대기 | Pretendard 번들 완료, 템플릿 동작(5/10/15행·긴이름 검증). **운영자가 시안 A/B/C 선택 필요** → 확정 후 default 고정 |
-| M3 | 템플릿 2·3호 (market-daily, vs-compare) | ⬜ 대기 | M4와 병렬 가능 |
+| M2 | 템플릿 1호 ranking-table | ✅ 완료 | **시안 A 확정**(2026-07-18). Pretendard 번들, 5/10/15행·긴이름 검증 |
+| M3 | 템플릿 2호 market-daily (증시) | ✅ 완료 | 국기·1년차트·상승레드/하락코발트·종목그리드. **이미지 로딩 파이프라인 확립**(국기로 증명). vs-compare는 M3b로 이월 |
 | M4 | 수집기 P0 (증시·환율·금리) + Actions cron | ⬜ 대기 | M3과 병렬 가능 |
 | M5 | 첫 무인 콘텐츠: 증시 데일리 E2E 자동 발행 | ⬜ 대기 | 최초의 가시적 성과 |
 | M6 | 편집 에이전트 + 팩트체크 | ⬜ 대기 | |
@@ -57,14 +57,18 @@
 | 2026-07-18 | M0 셋업 가이드 작성 (계정·키 발급), 발행 방식 확정, .gitignore | M0-setup.md 추가, 운영자 수행 대기 |
 | 2026-07-18 | M1 렌더러 구축: 모노레포 + JSON→PNG(Playwright) + 스키마검증 + dummy-card | 렌더 성공, 해시 동일(결정성), 불량데이터 반려 확인 |
 | 2026-07-18 | M2 ranking-table 템플릿 3시안(A/B/C) + Pretendard 폰트 번들 | 5/10/15행·긴이름 렌더 검증. 시안 선택 대기 |
+| 2026-07-18 | M2 시안 A 확정. 푸터 얇게. 실물사진 1급요소 문서화 | 운영자 A 선택 |
+| 2026-07-18 | M3 market-daily(증시) 템플릿 + 국기 271종 번들 + lineChart 헬퍼 | 국기·차트·등락색 검증. 이미지 로딩=임시파일 goto 방식으로 확립 |
 
 ## 다음 세션이 알아야 할 메모
 
 - 운영자는 비개발자. 완료 확인은 항상 "눈으로 볼 수 있는 결과물"로 제시할 것
 - **M1 완료**: 렌더러(`packages/renderer`)가 `pnpm --filter @wirit/renderer render -- --data <json> --out <dir>` 로 동작. 새 템플릿은 `templates/{이름}/`에 html+schema+sample+config 4종.
-- **M2 진행중**: Pretendard 번들 완료(base.css @font-face). ranking-table 템플릿에 시안 A/B/C 3종을 `variant` 값으로 전환. 미리보기: `templates/ranking-table/previews/`.
-  - **대기: 운영자 시안 선택.** 선택 후 할 일: (1) sample.json의 variant를 확정값으로, (2) 선택 안 된 variant CSS 정리(또는 특집용으로 유지 결정 시 보존), (3) 템플릿 default variant 주석 갱신.
-  - 밀도 자동조절: d-sparse(≤6)/d-mid(7~11)/d-dense(≥12)로 행수에 맞춰 폰트·여백 자동 축소. 긴 이름은 말줄임(…).
-  - 로고: 현재 이름 첫 글자 모노그램(임시). 로고 라이브러리는 별도 구축 예정(교체 시 items[].logo slug 사용).
+- **M2 완료**: ranking-table 시안 A 확정(variant 미지정 시 A 기본). B/C variant CSS는 특집용으로 템플릿에 보존. 밀도 자동조절(d-sparse/mid/dense), 긴 이름 말줄임.
+- **M3 완료**: market-daily(증시). 국기 이미지(`_shared/flags/` 271종), 1년 라인차트(`lineChart` 헬퍼, 결정적 SVG), 등락색(상승=레드/하락=코발트).
+  - **중요 인프라 변경**: 렌더가 이제 템플릿 폴더에 임시 HTML을 써서 file:// 로 goto → 국기·로고·실물사진 등 상대경로 이미지가 정상 로드됨(구 setContent 방식은 이미지 차단). `.render-tmp-*.html`은 gitignore.
+  - **확인 요망(운영자)**: 하락=코발트 색이 괜찮은지. 지금은 한국 관례(상승 빨강)+팔레트 정합으로 채택. 별로면 변경 가능.
+- **로고**: 아직 이름 첫 글자 모노그램(임시). 로고 라이브러리(`_shared/logos/{slug}.png`) 구축은 별도 작업 — 실제 기업 로고 넣으면 완성도 크게 상승.
+- **다음 후보**: M4(데이터 수집기, 증시 자동화) 또는 M3b(vs-compare 템플릿). M4를 하면 이 증시 카드에 진짜 데이터가 자동으로 채워짐.
 - 하락 색상(코발트) 확정은 M3(market-daily) 시안에서.
 - 아직 미완: 로고 원본 `assets/brand/logo.png` 업로드(운영자), M0 키 발급(운영자).

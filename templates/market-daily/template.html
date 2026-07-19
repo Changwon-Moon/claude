@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* market-daily@1 — 증시 데일리 (지수 + 1년 차트 + 종목)
+         등락색: 상승=레드, 하락=코발트 (BRAND.md 파생규칙 / 한국 관례) */
+      .md .up { color: var(--wirit-red); }
+      .md .down { color: var(--wirit-cobalt); }
+      .md .flat { color: var(--wirit-gray); }
+
+      .md-top {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .flag {
+        width: 56px;
+        height: 42px;
+        border-radius: 6px;
+        object-fit: cover;
+        box-shadow: 0 0 0 1px var(--wirit-ink-12);
+      }
+      .md-date {
+        margin-left: auto;
+        color: var(--wirit-gray);
+        font-size: 28px;
+        font-weight: 600;
+      }
+      .md .wirit-title {
+        margin-top: 16px;
+        font-size: 68px;
+      }
+
+      /* 지수 타일 */
+      .idx {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-top: 30px;
+      }
+      .tile {
+        background: var(--wirit-ink-06);
+        border-radius: 20px;
+        padding: 24px 26px;
+      }
+      .tile .l {
+        font-size: 29px;
+        font-weight: 700;
+        color: var(--wirit-gray);
+      }
+      .tile .v {
+        font-size: 50px;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        margin-top: 8px;
+        font-variant-numeric: tabular-nums;
+      }
+      .tile .d {
+        font-size: 30px;
+        font-weight: 800;
+        margin-top: 4px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* 대표 종목 + 차트 */
+      .feat {
+        margin-top: 30px;
+      }
+      .feat-head {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+      .feat-head .mono {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: rgba(46, 107, 255, 0.12);
+        color: var(--wirit-cobalt);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 30px;
+      }
+      .feat-head .nm {
+        font-size: 40px;
+        font-weight: 800;
+      }
+      .feat-head .sub {
+        font-size: 26px;
+        color: var(--wirit-gray);
+        margin-top: 2px;
+      }
+      .feat-head .price {
+        margin-left: auto;
+        text-align: right;
+      }
+      .feat-head .price .p {
+        font-size: 50px;
+        font-weight: 900;
+        font-variant-numeric: tabular-nums;
+      }
+      .feat-head .price .d {
+        font-size: 30px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+      }
+      .chart {
+        margin-top: 18px;
+        border: 1px solid var(--wirit-ink-12);
+        border-radius: 20px;
+        padding: 18px 20px 12px;
+      }
+      .chart .cap {
+        display: flex;
+        justify-content: space-between;
+        font-size: 24px;
+        color: var(--wirit-gray);
+        margin-top: 6px;
+        font-weight: 600;
+      }
+
+      /* 종목 등락 그리드 */
+      .movers {
+        margin-top: 26px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+      .mv {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: var(--wirit-ink-06);
+        border-radius: 16px;
+        padding: 18px 22px;
+        font-size: 32px;
+      }
+      .mv .mono {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--wirit-paper);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 22px;
+      }
+      .mv .nm {
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .mv .d {
+        margin-left: auto;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        padding-left: 10px;
+      }
+      .mv .nm {
+        min-width: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card md">
+      <div class="md-top">
+        {{#if flag}}<img class="flag" src="../_shared/flags/{{flag}}.svg" alt="" />{{/if}}
+        <span class="wirit-badge">{{badge}}</span>
+        {{#if date}}<span class="md-date">{{date}}</span>{{/if}}
+      </div>
+      <h1 class="wirit-title">{{title}}</h1>
+
+      <div class="idx">
+        {{#each indices}}
+        <div class="tile">
+          <div class="l">{{this.label}}</div>
+          <div class="v">{{this.value}}</div>
+          <div class="d {{this.dir}}">{{arrow this.dir}} {{this.delta}}</div>
+        </div>
+        {{/each}}
+      </div>
+
+      {{#if featured}}
+      <div class="feat">
+        <div class="feat-head">
+          <span class="mono">{{initial featured.name}}</span>
+          <div>
+            <div class="nm">{{featured.name}}</div>
+            {{#if featured.sublabel}}<div class="sub">{{featured.sublabel}}</div>{{/if}}
+          </div>
+          <div class="price">
+            <div class="p">{{featured.price}}</div>
+            <div class="d {{featured.dir}}">{{arrow featured.dir}} {{featured.delta}}</div>
+          </div>
+        </div>
+        <div class="chart">
+          {{{lineChart featured.chart width=980 height=240}}}
+          <div class="cap">
+            <span>{{featured.chartFrom}}</span>
+            <span>최근 1년</span>
+            <span>{{featured.chartTo}}</span>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if movers}}
+      <div class="movers">
+        {{#each movers}}
+        <div class="mv">
+          <span class="mono">{{initial this.name}}</span>
+          <span class="nm">{{this.name}}</span>
+          <span class="d {{this.dir}}">{{arrow this.dir}} {{this.delta}}</span>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+  </body>
+</html>
