@@ -13,10 +13,10 @@ const ds = JSON.parse(readFileSync(join(ROOT, "data/datasets/salary-freshman-202
 
 // 브랜드 표기: 허브 로고 있으면 logo, 없으면 브랜드색 컬러칩(logoColor+logoText)
 const BRAND = {
-  "SK하이닉스": { logoColor: "#EA002C", logoText: "SK" },
+  "SK하이닉스": { logo: "skhynix" },
   "현대자동차": { logo: "hyundai" },
   "기아": { logo: "kia" },
-  "한화에어로스페이스": { logoColor: "#F37021", logoText: "한화" },
+  "한화에어로스페이스": { logo: "hanwha-aerospace" },
   HMM: { logoColor: "#00A0DE", logoText: "HMM" },
   "삼성전자": { logo: "samsung" },
   "삼성바이오로직스": { logoColor: "#1428A0", logoText: "삼바" },
