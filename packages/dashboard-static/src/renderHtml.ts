@@ -252,11 +252,15 @@ wireCompany();
 /* 칸반 */
 const board=document.getElementById("board");
 function candReason(t){
-  if(t.evidence&&t.evidence.length){ var e=t.evidence.find(x=>!/데이터 경로/.test(x[0]))||t.evidence[0]; return e[1]; }
+  var ev=t.evidence||[];
+  var e=ev.find(x=>x[0]==="선정 사유")||ev.find(x=>x[0]==="기획 판단");
+  if(e) return e[1];
   return (t.fire?"숫자·순위 레버 뚜렷":"관심 소재")+" · "+t.topic+" 코어 연결";
 }
 function candSource(t){
-  if(t.evidence&&t.evidence.length){ var e=t.evidence.find(x=>!/데이터 경로/.test(x[0])); if(e) return (e[0]||"").split(" — ")[0]||e[0]; }
+  var ev=t.evidence||[];
+  var e=ev.find(x=>x[0]==="출처")||ev.find(x=>x[0]==="신호");
+  if(e) return (e[1]||"").split(" — ")[0]||e[1];
   return "소재보드 신호";
 }
 function buildMiningPanel(list){

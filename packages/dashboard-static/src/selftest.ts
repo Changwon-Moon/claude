@@ -37,8 +37,17 @@ check("브리핑: 🔥 감지", bt[0].fire === true);
 check("브리핑: 포맷 추출", bt[0].fmt === "ranking-table", bt[0].fmt);
 check("브리핑: 토픽=부동산", bt[0].topic === "부동산", bt[0].topic);
 check("브리핑: 주(T1)/부(T2) 구분", bt[0].tier === "T1" && bt[1].tier === "T2");
-check("브리핑: 신호 출처 근거화", bt[0].evidence.some((e) => e[0].includes("국토부")));
+check(
+  "브리핑: 출처 근거화",
+  bt[0].evidence.some((e) => e[0] === "출처" && e[1].includes("국토부"))
+);
 check("브리핑: id에 번호 반영", bt[0].id.endsWith("c2"), bt[0].id);
+
+const briefReason = parseBrief(
+  `## 🎯 주 콘텐츠\n### 부동산\n- [ ] **1. 제목** (한국은행) 🔥\n  포맷: big-number · 데이터: ECOS · 사유: 인상 전환은 대형 이벤트\n`,
+  "b"
+);
+check("브리핑: 선정 사유 추출", briefReason[0].evidence.some((e) => e[0] === "선정 사유" && e[1].includes("대형 이벤트")));
 
 // ── 결정로그 파서 ──
 const LOG = `| 날짜 | 소재 | 신호 | Tier | 포맷 | 점수 | 결정 | 이유 | 성과 |

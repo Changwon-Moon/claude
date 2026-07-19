@@ -15,7 +15,11 @@ function extractFormat(detail: string): string {
   return m ? m[1].trim() : "미정";
 }
 function extractDataNote(detail: string): string {
-  const m = detail.match(/데이터\s*[:：]\s*([^\n]+)/);
+  const m = detail.match(/데이터\s*[:：]\s*([^·\n]+)/);
+  return m ? m[1].trim() : "";
+}
+function extractReason(detail: string): string {
+  const m = detail.match(/사유\s*[:：]\s*([^\n]+)/);
   return m ? m[1].trim() : "";
 }
 
@@ -62,12 +66,14 @@ export function parseBrief(md: string, briefId: string): Ticket[] {
     }
     const fmt = extractFormat(detail);
     const dataNote = extractDataNote(detail);
+    const reason = extractReason(detail);
 
     // 신호 출처: 괄호 안
     const srcM = tail.match(/\(([^)]+)\)/);
     const evidence: Evidence[] = [];
-    if (srcM) evidence.push([srcM[1].trim(), "소재보드 신호 — 1차 출처 재확인 필요"]);
-    if (dataNote) evidence.push(["데이터 경로", dataNote]);
+    if (srcM) evidence.push(["출처", srcM[1].trim()]);
+    if (reason) evidence.push(["선정 사유", reason]);
+    if (dataNote) evidence.push(["데이터", dataNote + " — 카드 제작 시 1차 출처 재확인"]);
 
     tickets.push({
       id: `${briefId}-c${num}`,
