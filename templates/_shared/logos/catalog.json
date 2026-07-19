@@ -2,11 +2,77 @@
   "$schema": "../../../docs/ASSET_HUB.md",
   "kind": "logo",
   "items": [
-    { "slug": "samsung", "name": "삼성", "kind": "logo", "source": "simple-icons v16 (https://simpleicons.org)", "license": "trademark-nominative", "note": "브랜드색 #1428A0 적용", "added": "2026-07-18" },
-    { "slug": "lg", "name": "LG", "kind": "logo", "source": "simple-icons v16 (https://simpleicons.org)", "license": "trademark-nominative", "note": "브랜드색 #A50034 적용", "added": "2026-07-18" },
-    { "slug": "naver", "name": "네이버", "kind": "logo", "source": "simple-icons v16 (https://simpleicons.org)", "license": "trademark-nominative", "note": "브랜드색 #03C75A 적용", "added": "2026-07-18" },
-    { "slug": "kakao", "name": "카카오", "kind": "logo", "source": "simple-icons v16 (https://simpleicons.org)", "license": "trademark-nominative", "note": "브랜드색 #FFCD00 적용", "added": "2026-07-18" },
-    { "slug": "hyundai", "name": "현대", "kind": "logo", "source": "simple-icons v16 (https://simpleicons.org)", "license": "trademark-nominative", "note": "브랜드색 #002C5F 적용", "added": "2026-07-18" },
-    { "slug": "kia", "name": "기아", "kind": "logo", "source": "simple-icons v16 (https://simpleicons.org)", "license": "trademark-nominative", "note": "브랜드색 #05141F 적용", "added": "2026-07-19" }
+    {
+      "slug": "samsung",
+      "name": "삼성",
+      "kind": "logo",
+      "source": "simple-icons v16 (https://simpleicons.org)",
+      "license": "trademark-nominative",
+      "note": "브랜드색 #1428A0 적용",
+      "added": "2026-07-18"
+    },
+    {
+      "slug": "lg",
+      "name": "LG",
+      "kind": "logo",
+      "source": "simple-icons v16 (https://simpleicons.org)",
+      "license": "trademark-nominative",
+      "note": "브랜드색 #A50034 적용",
+      "added": "2026-07-18"
+    },
+    {
+      "slug": "naver",
+      "name": "네이버",
+      "kind": "logo",
+      "source": "simple-icons v16 (https://simpleicons.org)",
+      "license": "trademark-nominative",
+      "note": "브랜드색 #03C75A 적용",
+      "added": "2026-07-18"
+    },
+    {
+      "slug": "kakao",
+      "name": "카카오",
+      "kind": "logo",
+      "source": "simple-icons v16 (https://simpleicons.org)",
+      "license": "trademark-nominative",
+      "note": "브랜드색 #FFCD00 적용",
+      "added": "2026-07-18"
+    },
+    {
+      "slug": "hyundai",
+      "name": "현대",
+      "kind": "logo",
+      "source": "simple-icons v16 (https://simpleicons.org)",
+      "license": "trademark-nominative",
+      "note": "브랜드색 #002C5F 적용",
+      "added": "2026-07-18"
+    },
+    {
+      "slug": "kia",
+      "name": "기아",
+      "kind": "logo",
+      "source": "simple-icons v16 (https://simpleicons.org)",
+      "license": "trademark-nominative",
+      "note": "브랜드색 #05141F 적용",
+      "added": "2026-07-19"
+    },
+    {
+      "slug": "skhynix",
+      "name": "SK하이닉스",
+      "kind": "logo",
+      "source": "Wikimedia Commons (https://upload.wikimedia.org/wikipedia/commons/2/24/SK_Hynix.svg)",
+      "license": "public-domain",
+      "note": "자동 취득 · 원 라이선스 \"Public domain\" · 상표 nominative use",
+      "added": "2026-07-19"
+    },
+    {
+      "slug": "hanwha-aerospace",
+      "name": "한화에어로스페이스",
+      "kind": "logo",
+      "source": "Wikimedia Commons (https://upload.wikimedia.org/wikipedia/commons/a/a1/Hanwha_Aerospace_Logo.svg)",
+      "license": "public-domain",
+      "note": "자동 취득 · 원 라이선스 \"Public domain\" · 상표 nominative use",
+      "added": "2026-07-19"
+    }
   ]
 }
