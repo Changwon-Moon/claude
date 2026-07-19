@@ -26,18 +26,7 @@
         --mono: 44px;
       }
       /* 순위표는 표 공간 확보를 위해 제목 영역을 살짝 압축 */
-      /* 부제(캡션)를 상단 로고 라인에 왼쪽정렬로 배치 */
-      .rt-topcap {
-        display: flex;
-        align-items: center;
-        margin-top: -30px;
-        min-height: 62px;
-        padding-right: 200px; /* 우상단 로고 자리 */
-        color: var(--wirit-gray);
-        font-size: 32px;
-        font-weight: 600;
-      }
-      /* 제목: 2줄 가운데 정렬(data 줄바꿈 pre-line), 좌우 대칭 여백 */
+      /* 제목: 2줄 가운데 정렬(data 줄바꿈 pre-line), 좌우 대칭 여백. 부제는 공용 .wirit-topcap */
       .rt-head {
         padding: 0 140px;
         margin-top: 18px;
@@ -232,7 +221,7 @@
   </head>
   <body>
     <div class="wirit-card {{#if font}}font-{{font}}{{/if}} {{#if variant}}variant-{{variant}}{{else}}variant-a{{/if}} rt {{densityClass items}}">
-      <div class="rt-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
+      <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
       <div class="rt-head">
         <h1 class="wirit-title">{{title}}</h1>
       </div>

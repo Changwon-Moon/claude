@@ -16,7 +16,7 @@
          날짜는 제목 우측 하단에 작게. */
       .md-titlewrap {
         position: relative;
-        margin-top: 50px;
+        margin-top: 14px;
         text-align: center;
       }
       .title-flag {
@@ -34,14 +34,6 @@
         margin-top: 0;
         font-size: 94px;
         white-space: nowrap;
-      }
-      .md-date {
-        display: block;
-        margin-top: 12px;
-        color: var(--wirit-gray);
-        font-size: 23px;
-        font-weight: 600;
-        font-variant-numeric: tabular-nums;
       }
 
       /* 지수 타일 */
@@ -220,9 +212,9 @@
   </head>
   <body>
     <div class="wirit-card md {{#if font}}font-{{font}}{{/if}}">
+      <div class="wirit-topcap">{{#if date}}<span>{{date}}</span>{{/if}}</div>
       <div class="md-titlewrap">
         <h1 class="wirit-title">{{#if flag}}<img class="title-flag" src="../_shared/flags/{{flag}}.svg" alt="" />{{/if}}{{title}}</h1>
-        {{#if date}}<span class="md-date">{{date}}</span>{{/if}}
       </div>
 
       <div class="idx">

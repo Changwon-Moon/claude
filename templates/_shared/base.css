@@ -195,6 +195,19 @@ body {
   color: var(--wirit-cobalt);
 }
 
+/* 공용 상단 캡션: 날짜·부제를 좌상단 로고 라인에 옅고 작게 (모든 카드 기본) */
+.wirit-topcap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: -30px; /* 우상단 로고 뱃지 라인에 맞춤 */
+  min-height: 62px;
+  padding-right: 190px; /* 우상단 로고 자리 확보 */
+  color: var(--wirit-gray);
+  font-size: 28px;
+  font-weight: 600;
+}
+
 /* 브랜드 컬러 로고칩: 실제 로고가 없을 때 브랜드색 원 + 약칭(흰 글씨).
  * 배경색은 인라인 style="background:{brandColor}" 로 지정.
  * 폴백 순서: 이미지 로고 > 컬러칩(logoColor) > 회색 모노그램 */
