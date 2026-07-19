@@ -13,6 +13,9 @@ import { fetchCompanyLogo, COMPANY_QUERIES } from "./sources/logoFetch.js";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const LOGO_DIR = resolve(ROOT, "templates/_shared/logos");
 const CATALOG = resolve(LOGO_DIR, "catalog.json");
+// 입력 경로는 명령을 부른 위치(pnpm은 INIT_CWD=호출 디렉터리) 기준으로 푼다
+const CWD = process.env.INIT_CWD || process.cwd();
+const fromCwd = (p: string): string => resolve(CWD, p);
 
 function addCatalog(slug: string, name: string, license: string, sourceUrl: string): void {
   const cat = JSON.parse(readFileSync(CATALOG, "utf8"));
@@ -33,7 +36,7 @@ async function run(paths: string[]): Promise<void> {
   // 대상 회사 수집: 콘텐츠 items 중 logo 없는 것
   const companies = new Set<string>();
   for (const p of paths) {
-    const json = JSON.parse(readFileSync(resolve(p), "utf8"));
+    const json = JSON.parse(readFileSync(fromCwd(p), "utf8"));
     // 콘텐츠(items[]): logo 없는 것만. 데이터셋(rows[]): 전체 이름.
     for (const it of json.items ?? []) {
       if (!it.logo && it.name) companies.add(it.name);

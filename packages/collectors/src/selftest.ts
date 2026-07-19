@@ -20,6 +20,7 @@ import {
   parseImageInfo,
   isLicenseSafe,
 } from "./sources/logoFetch.js";
+import { parseEmpSttus, parseCorpCodeXml, findCorpCode } from "./parse/dart.js";
 import {
   STOOQ_SPX_CSV,
   STOOQ_WITH_GAPS_CSV,
@@ -161,6 +162,37 @@ console.log("\n[로고 취득 파서 — Wikimedia]");
   check("라이선스 안전: CC-BY 허용", isLicenseSafe("CC BY-SA 4.0"));
   check("라이선스 거부: non-free", !isLicenseSafe("Non-free logo"));
   check("라이선스 거부: 빈값", !isLicenseSafe(""));
+}
+
+console.log("\n[DART 평균연봉 파서]");
+{
+  const emp = JSON.stringify({
+    status: "000",
+    list: [
+      { corp_name: "테스트전자", fo_bbm: "반도체", sexdstn: "남", sm: "1,000", fyer_salary_totamt: "130,000,000,000" },
+      { corp_name: "테스트전자", fo_bbm: "반도체", sexdstn: "여", sm: "1,000", fyer_salary_totamt: "110,000,000,000" },
+    ],
+  });
+  const r = parseEmpSttus(emp, "2025");
+  check("empSttus: 인원 합산 2,000", r?.headcount === 2000, String(r?.headcount));
+  check("empSttus: 가중평균 1.2억", r?.avgSalaryWon === 120000000, String(r?.avgSalaryWon));
+
+  const withTotal = JSON.stringify({
+    status: "000",
+    list: [
+      { corp_name: "X", fo_bbm: "합계", sexdstn: "", sm: "2,000", fyer_salary_totamt: "240,000,000,000" },
+      { corp_name: "X", fo_bbm: "사업", sexdstn: "남", sm: "1,000", fyer_salary_totamt: "130,000,000,000" },
+      { corp_name: "X", fo_bbm: "사업", sexdstn: "여", sm: "1,000", fyer_salary_totamt: "110,000,000,000" },
+    ],
+  });
+  check("empSttus: '합계' 행 제외(이중계상 방지)", parseEmpSttus(withTotal, "2025")?.headcount === 2000);
+  check("empSttus: 무자료(013) → null", parseEmpSttus(JSON.stringify({ status: "013", message: "no data" }), "2025") === null);
+
+  const corpXml = `<result><list><corp_code>00126380</corp_code><corp_name>삼성전자</corp_name></list><list><corp_code>00164779</corp_code><corp_name>SK하이닉스</corp_name></list></result>`;
+  const cmap = parseCorpCodeXml(corpXml);
+  check("corpCode: 2개사 매핑", cmap.size === 2);
+  check("corpCode: 삼성전자→00126380", cmap.get("삼성전자") === "00126380");
+  check("corpCode: 공백무시 조회", findCorpCode(cmap, "SK 하이닉스") === "00164779");
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);
