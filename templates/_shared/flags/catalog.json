@@ -1,0 +1,10 @@
+{
+  "$schema": "../../../docs/ASSET_HUB.md",
+  "kind": "flag",
+  "bulk": true,
+  "note": "국기 271종 일괄 등록 — 개별 항목 생략",
+  "source": "flag-icons v7.5 (https://github.com/lipis/flag-icons)",
+  "license": "open-license",
+  "licenseDetail": "MIT",
+  "added": "2026-07-18"
+}

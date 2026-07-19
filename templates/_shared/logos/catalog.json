@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../docs/ASSET_HUB.md",
+  "kind": "logo",
+  "items": [
+    { "slug": "samsung", "name": "삼성", "kind": "logo", "source": "simple-icons v16 (https://simpleicons.org)", "license": "trademark-nominative", "note": "브랜드색 #1428A0 적용", "added": "2026-07-18" },
+    { "slug": "lg", "name": "LG", "kind": "logo", "source": "simple-icons v16 (https://simpleicons.org)", "license": "trademark-nominative", "note": "브랜드색 #A50034 적용", "added": "2026-07-18" },
+    { "slug": "naver", "name": "네이버", "kind": "logo", "source": "simple-icons v16 (https://simpleicons.org)", "license": "trademark-nominative", "note": "브랜드색 #03C75A 적용", "added": "2026-07-18" },
+    { "slug": "kakao", "name": "카카오", "kind": "logo", "source": "simple-icons v16 (https://simpleicons.org)", "license": "trademark-nominative", "note": "브랜드색 #FFCD00 적용", "added": "2026-07-18" },
+    { "slug": "hyundai", "name": "현대", "kind": "logo", "source": "simple-icons v16 (https://simpleicons.org)", "license": "trademark-nominative", "note": "브랜드색 #002C5F 적용", "added": "2026-07-18" }
+  ]
+}

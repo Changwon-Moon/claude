@@ -24,6 +24,8 @@
 
 ## 로고 추가 방법 (실제 로고로 업그레이드)
 
+> ⚠️ **허브 규칙**: 파일 추가 시 `catalog.json`에 출처·라이선스 항목도 함께 추가해야 한다 ([docs/ASSET_HUB.md](../../../docs/ASSET_HUB.md)). `node scripts/validate-assets.mjs`가 누락을 잡는다.
+
 1. 로고 파일(SVG 권장, 없으면 투명 PNG)을 이 폴더에 `{slug}.svg`로 저장
    - slug는 소문자·하이픈 (예: `sk-hynix`, `posco`, `daewoo-en-c`)
 2. 콘텐츠 JSON의 해당 항목에 `"logo": "{slug}"` 추가 → 자동으로 실제 로고로 교체

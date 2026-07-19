@@ -30,6 +30,9 @@ jobs:
       - name: 파서 셀프테스트
         run: pnpm --filter @wirit/collectors selftest
 
+      - name: 자산 허브 무결성 검사
+        run: node scripts/validate-assets.mjs
+
       - name: 소재 신호 수집 → 보드 생성
         run: pnpm --filter @wirit/collectors collect-signals
 
