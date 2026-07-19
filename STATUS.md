@@ -40,13 +40,17 @@
 
 | 항목 | 상태 |
 |---|---|
-| Instagram 프로페셔널 계정 (@wirit_note 전환) | ⬜ M0 1단계 |
-| Meta 개발자 앱 + 인스타 토큰 (`IG_ACCESS_TOKEN`, `IG_USER_ID`) | ⬜ M0 2단계 |
-| 공공데이터포털 API 키 (`DATA_GO_KR_API_KEY`) | ⬜ M0 3단계 |
-| 한국은행 ECOS API 키 (`ECOS_API_KEY`) | ⬜ M0 4단계 |
-| Anthropic API 키 (`ANTHROPIC_API_KEY`) | ⬜ M0 5단계 |
-| GitHub Secrets 5종 등록 | ⬜ M0 6단계 |
+| 🟢 금융감독원 DART (`DART_API_KEY`) — 평균연봉·실적, 무료 | ⬜ M0 5단계 (우선) |
+| 🟢 한국은행 ECOS (`ECOS_API_KEY`) — 환율·금리, 무료 | ⬜ M0 4단계 |
+| 🟢 공공데이터포털 (`DATA_GO_KR_API_KEY`) — 부동산, 무료 | ⬜ M0 3단계 |
+| 🟢 Brandfetch (`BRANDFETCH_API_KEY`) — 로고, 무료·선택 | ⬜ M0 6단계 (선택) |
+| 🔵 Instagram 프로페셔널 계정 (@wirit_note 전환) | ⬜ M0 1단계 (발행 단계) |
+| 🔵 Meta 앱 + 인스타 토큰 (`IG_ACCESS_TOKEN`, `IG_USER_ID`) | ⬜ M0 2단계 (발행 단계) |
+| 🔵 Anthropic (`ANTHROPIC_API_KEY`) — AI 직원, 소액결제 | ⬜ M0 7단계 (AI 단계) |
+| GitHub Secrets 등록 | ⬜ M0 8단계 |
 | Telegram 봇 토큰 (`TELEGRAM_BOT_TOKEN`) | ⬜ M8에서 |
+
+> M0 가이드 확장(2026-07-19): 키를 🟢지금(무료·데이터/로고) / 🔵나중(발행·AI) 두 묶음으로 분리. DART가 최우선(정확한 연봉).
 
 > 방식 결정: 인스타 발행은 **"Instagram API with Instagram Login"**(2024.7~) 사용 — 페이스북 페이지 불필요, 내 계정만 대상이라 앱 심사 없이 개발 모드로 동작. 토큰 60일 유효 + M5에서 자동 갱신 구현 예정.
 
