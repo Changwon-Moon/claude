@@ -15,6 +15,12 @@ import {
 import { toQuote } from "./sources/usMarket.js";
 import { ecosToQuote } from "./sources/krRates.js";
 import {
+  parseCommonsSearch,
+  pickBestFile,
+  parseImageInfo,
+  isLicenseSafe,
+} from "./sources/logoFetch.js";
+import {
   STOOQ_SPX_CSV,
   STOOQ_WITH_GAPS_CSV,
   ECOS_FX_JSON,
@@ -114,6 +120,47 @@ console.log("[트렌드분석 v1: 수요 신호]");
   );
   check("보드에 📈 표시", board.includes("🔥 📈"));
   check("보드에 급상승 검색어 줄", board.includes("오늘의 급상승 검색어"));
+}
+
+console.log("\n[로고 취득 파서 — Wikimedia]");
+{
+  const search = JSON.stringify({
+    query: {
+      search: [
+        { title: "File:SK hynix logo.svg" },
+        { title: "File:SK Hynix building.jpg" },
+        { title: "File:Skhynix icon.png" },
+      ],
+    },
+  });
+  const titles = parseCommonsSearch(search);
+  check("검색: File 제목 3개", titles.length === 3);
+  check("최적 선택: svg·logo 우선", pickBestFile(titles) === "File:SK hynix logo.svg", pickBestFile(titles) || "");
+  check("사진류 회피", pickBestFile(["File:X building.jpg", "File:X logo.svg"]) === "File:X logo.svg");
+  check("svg/png 없으면 null", pickBestFile(["File:X.pdf"]) === null);
+
+  const info = JSON.stringify({
+    query: {
+      pages: {
+        "-1": {
+          imageinfo: [
+            {
+              url: "https://upload.wikimedia.org/x/SK_hynix_logo.svg",
+              mime: "image/svg+xml",
+              extmetadata: { LicenseShortName: { value: "Public domain" } },
+            },
+          ],
+        },
+      },
+    },
+  });
+  const parsed = parseImageInfo(info);
+  check("imageinfo: URL 추출", parsed?.url.endsWith("SK_hynix_logo.svg") === true);
+  check("imageinfo: 라이선스 추출", parsed?.license === "Public domain");
+  check("라이선스 안전: PD-textlogo 허용", isLicenseSafe("PD-textlogo"));
+  check("라이선스 안전: CC-BY 허용", isLicenseSafe("CC BY-SA 4.0"));
+  check("라이선스 거부: non-free", !isLicenseSafe("Non-free logo"));
+  check("라이선스 거부: 빈값", !isLicenseSafe(""));
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);

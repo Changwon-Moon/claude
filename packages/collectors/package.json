@@ -8,6 +8,7 @@
     "build": "tsc -p tsconfig.json",
     "collect": "tsx src/cli.ts",
     "collect-signals": "tsx src/signalsCli.ts",
+    "fetch-logos": "tsx src/logoCli.ts",
     "selftest": "tsx src/selftest.ts"
   },
   "dependencies": {},
