@@ -13,6 +13,7 @@
 | [STATUS.md](./STATUS.md) | **현재 진행 상황 보드** — 매 세션이 읽고 갱신하는 단일 진실 원천 |
 | [ROADMAP.md](./ROADMAP.md) | 단계별(Phase 0~4) 실행 로드맵 — **여기서부터 읽기** |
 | [docs/EXECUTION_PLAN.md](./docs/EXECUTION_PLAN.md) | **작업 진행 방법** — 세션 운영 전략, 마일스톤 M0~M12 발주서 (비개발자용) |
+| [docs/RESEARCH_WORKFLOW.md](./docs/RESEARCH_WORKFLOW.md) | **리서치·기획 워크플로우 (시스템의 척추)** — 수동 우선 → 점진 자동화(R0~R3), 소재 선정 기준 |
 | [docs/CONTENT_STRATEGY.md](./docs/CONTENT_STRATEGY.md) | 콘텐츠 전략 — 코어(부동산·주식·경제)+트래픽(범용) 믹스, 시리즈 카탈로그, 발행 캘린더 |
 | [docs/BRAND.md](./docs/BRAND.md) | 브랜드 가이드 — wirit(@wirit_note), 잉크네이비 팔레트, 컬러 사용 규칙, CSS 토큰 |
 | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) | 시스템 아키텍처, 파이프라인 설계, 기술 스택 |
