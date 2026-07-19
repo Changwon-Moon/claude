@@ -18,7 +18,7 @@
 | [docs/BRAND.md](./docs/BRAND.md) | 브랜드 가이드 — wirit(@wirit_note), 잉크네이비 팔레트, 컬러 사용 규칙, CSS 토큰 |
 | [docs/CONTROL_TOWER.md](./docs/CONTROL_TOWER.md) | 관제탑 설계 — 에이전트 판단·근거의 시각적 관리감독 (M9 대시보드의 원천) |
 | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) | 시스템 아키텍처, 파이프라인 설계, 기술 스택 |
-| [docs/AGENTS.md](./docs/AGENTS.md) | 팀별 AI 에이전트 상세 스펙 (역할·입출력·프롬프트 골격) |
+| [docs/AGENTS.md](./docs/AGENTS.md) | **AI 팀 조직도 v2** — 9팀 닫힌 루프(수요검증·자산허브·성과학습), 팀별 미션·KPI·검수 6항 |
 | [docs/TEMPLATES.md](./docs/TEMPLATES.md) | 디자인 템플릿 시스템 설계 (무한 생산의 핵심) |
 | [docs/DATA_SOURCES.md](./docs/DATA_SOURCES.md) | 데이터 소스 카탈로그 (공공 API, 크롤링 대상) |
 | [docs/OPERATIONS.md](./docs/OPERATIONS.md) | 일일 운영 워크플로우, 승인 게이트, 리스크 관리 |
