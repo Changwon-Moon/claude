@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "title": "대기업 평균연봉 (2025)",
+    "source": "금융감독원 전자공시 DART — 사업보고서 직원현황(1인 평균급여액)",
+    "sourceUrl": "https://opendart.fss.or.kr",
+    "asOf": "2025",
+    "collectedAt": "2026-07-20",
+    "verified": false,
+    "perishable": false,
+    "basis": "empSttus 1인 평균급여액(가중평균). 첫 수집분은 사람이 1~2개사 DART 원문 대조 후 verified=true로."
+  },
+  "rows": [
+    {
+      "name": "SK하이닉스",
+      "avgSalaryWon": 177951055,
+      "avgSalaryManwon": 17795,
+      "headcount": 34549
+    },
+    {
+      "name": "삼성전자",
+      "avgSalaryWon": 157064509,
+      "avgSalaryManwon": 15706,
+      "headcount": 128881
+    },
+    {
+      "name": "기아",
+      "avgSalaryWon": 133715884,
+      "avgSalaryManwon": 13372,
+      "headcount": 36566
+    },
+    {
+      "name": "포스코인터내셔널",
+      "avgSalaryWon": 131932681,
+      "avgSalaryManwon": 13193,
+      "headcount": 1738
+    },
+    {
+      "name": "현대자동차",
+      "avgSalaryWon": 131137345,
+      "avgSalaryManwon": 13114,
+      "headcount": 72598
+    },
+    {
+      "name": "HD현대일렉트릭",
+      "avgSalaryWon": 128043006,
+      "avgSalaryManwon": 12804,
+      "headcount": 2209
+    },
+    {
+      "name": "HD한국조선해양",
+      "avgSalaryWon": 127970901,
+      "avgSalaryManwon": 12797,
+      "headcount": 1543
+    },
+    {
+      "name": "한화에어로스페이스",
+      "avgSalaryWon": 124322845,
+      "avgSalaryManwon": 12432,
+      "headcount": 8168
+    },
+    {
+      "name": "HMM",
+      "avgSalaryWon": 121525026,
+      "avgSalaryManwon": 12153,
+      "headcount": 1933
+    },
+    {
+      "name": "삼성바이오로직스",
+      "avgSalaryWon": 114320807,
+      "avgSalaryManwon": 11432,
+      "headcount": 5455
+    }
+  ]
+}
