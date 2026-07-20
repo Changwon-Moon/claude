@@ -5,6 +5,8 @@
 
 ## 도구 (구현됨)
 - 소재 보드 자동 생성: `packages/collectors/src/signalsCli.ts` → `research/briefs/{date}-auto.md`
+- **소재 마이닝 보드**: `research/briefs/{date}-mining.md` — 세션 실행(주제 비중 반영)으로 후보 10건(주제·출처·선정사유). 관제탑이 파싱해 발굴 단계로 표시
+- **오너 제보/아이디어 접수**: `research/IDEAS.md`·채팅 → 후보화. 정치·특정인 지목 기사는 **데이터/메커니즘으로 추상화**(예: '근저당 끼고 매매' 방식)해 담고, 발행 전제(특정인 배제·등기부 재확인·CEO 승인) 명시
 - 주제 피드 구성(TOPIC_FEEDS): 부동산/증시/경제/통계/연봉/부자 + 기업/정책/인사/스포츠/트렌드
 - RSS 파서(테스트 28종): `packages/collectors/src/parse/rss.ts`
 

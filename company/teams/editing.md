@@ -5,6 +5,7 @@
 
 ## 도구 (구현됨)
 - 결정적 변환 파이프라인: `packages/pipeline` (raw→콘텐츠 JSON→렌더, 예: 간밤의 미국 증시)
+- **DART 평균연봉 카드 빌더(구현)**: `scripts/build-avgsalary-card.mjs` — 데이터셋(1차 출처)에서 수치를 **코드로 추출**해 순위표 콘텐츠 생성. 동일값 **공동순위(rank)**, 직원수 **figure-space 소수 정렬**, 로고 자동 해결. LLM 수치 창작 0(provenance 준수)
 - 포맷 헬퍼: `packages/pipeline/src/format.ts` (천단위·등락·날짜)
 - 스키마 검증: 템플릿별 `schema.json` (위반 시 렌더 거부)
 

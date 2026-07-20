@@ -4,9 +4,15 @@
 **책임**: 콘텐츠 JSON → 1080×1350 카드 PNG (결정적 렌더)
 
 ## 도구 (구현됨)
-- 렌더러: `packages/renderer` (Playwright, 스키마 검증, 캐러셀, 해시 동일성 검증됨)
-- **디자인 검수기**: `packages/renderer/src/designQa.ts` + `qaCli.ts` (`pnpm --filter @wirit/renderer qa <content>`) — 렌더된 카드 좌표를 측정해 자동 검출: 숫자열 정렬 어긋남·우측치우침(중앙 빈 띠)·이름 잘림·요소 넘침·행 겹침. error 발견 시 종료코드 1
-- 템플릿 2종 가동: ranking-table(시안A)·market-daily + dummy-card
+- 렌더러: `packages/renderer` (Playwright, 스키마 검증, 캐러셀, 해시 동일성 검증됨). 폰트 로딩 후 레이아웃 후처리 훅 `window.__wiritFit` 호출 — 렌더·검수 파이프라인 동일 적용(결정적)
+- **순위표 `ranking-table@1` — 확정 레퍼런스: "2026 대기업 평균연봉 Top10"**. 구현·확정된 기능:
+  · 제목행 라벨(순위·기업·연봉·직원수)을 내용 열 위 **가운데 정렬**(값·보조 열 밀도별 고정폭 + 중앙정렬)
+  · **제목 fit-to-width**: 표의 좌우 끝을 실측해 제목 좌우 끝을 **표와 동일하게 자동 정렬**하고 그 폭에 맞는 최대 폰트로 채움
+  · **1·2·3위 금·은·동 메달**(🥇🥈🥉) + 기업명 금/은/동(진한 금속톤·미세 그림자, 가독성 우선) — `medal`/`rankClass` 헬퍼
+  · **좌우 대칭 여백**(justify-content:center) + 데이터 행 **flex 세로 꽉 채움**(하단 여백 조절 가능)
+  · 직원수 소수점 정렬(figure space U+2007), 공동순위(`rank`) 지원, 로고 3단계 폴백
+- **디자인 검수기**: `packages/renderer/src/designQa.ts` + `qaCli.ts` (`pnpm --filter @wirit/renderer qa <content>`) — 렌더 좌표 측정 자동 검출: 숫자열 정렬 어긋남·우측치우침·이름 잘림·요소 넘침·행 겹침·**안쪽 여백(패딩) 침범(padcross)**. error 시 종료코드 1(발행 차단)
+- 가동 템플릿: ranking-table(시안A)·market-daily + dummy-card
 - 브랜드 토큰: `templates/_shared/base.css` (잉크네이비 팔레트, 폰트 3종 번들)
 
 ## 지식 (wirit 룩 — CEO.md §C가 원천)

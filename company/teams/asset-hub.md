@@ -8,6 +8,8 @@
 - 카탈로그: `templates/_shared/{logos,photos,maps,flags}/catalog.json`, `data/datasets/catalog.json`
 - **로고 자동 해결기 A**: `scripts/lib/logo-resolver.mjs` (회사명→simple-icons, 오프라인·무키)
 - **로고 자동 취득기 B**: `packages/collectors/src/sources/logoFetch.ts`+`logoCli.ts` (Wikimedia, 라이선스 검증, Actions) / 워크플로 `asset-fetch.yml`
+- **로고 자동 취득기 C(구현·가동)**: `packages/collectors/src/sources/brandfetchLogo.ts` (Brandfetch Brand API, 도메인 후보 배열 순차 시도, 키=`BRANDFETCH_API_KEY`) — logoCli가 B 실패 시 C로 폴백. 평균연봉 카드 로고 **10/10 실로고 확보**(포스코인터·삼성바이오·HD한국조선 등)
+- 로고 해결 우선순위: 허브(취득분 포함) → simple-icons → 모노그램. png/svg 확장자 모두 지원(`logoExt`)
 - 설계: `docs/ASSET_AUTOMATION.md` (로고 3티어 + 사진 반자동 + 법적 가드레일)
 
 ## 지식
