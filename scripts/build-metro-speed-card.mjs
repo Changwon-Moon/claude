@@ -63,6 +63,19 @@ write("metro-speed-hl.json", {
   source: src,
 });
 
-console.log(`✅ 3종 생성 — metro-speed(정보표) · metro-speed-cover(커버) · metro-speed-hl(하이라이트 표)`);
+// 4) 2단 정보표 — 좌우 2열, km/h는 셀 안, 극단 하이라이트
+const half = Math.ceil(sorted.length / 2);
+const col = (r) => ({ line: r.key, seg: segName(r), value: r.kmh.toFixed(1), ...(r === fast ? { hl: "fast" } : r === slow ? { hl: "slow" } : {}) });
+write("metro-2col.json", {
+  template: "metro-2col@1", date,
+  subtitle: subtitleShort,
+  title: "노선별 운행속도",
+  colHead: { line: "노선", seg: "구간", val: "속도" },
+  left: sorted.slice(0, half).map(col),
+  right: sorted.slice(half).map(col),
+  source: src,
+});
+
+console.log(`✅ 4종 생성 — metro-speed(정보표) · metro-speed-cover(커버) · metro-speed-hl(하이라이트) · metro-2col(2단)`);
 console.log(`   제일 빠름: ${fast.line} ${segName(fast)} ${fast.kmh} / 제일 느림: ${slow.line} ${segName(slow)} ${slow.kmh}`);
 console.log(`   내부정합 최대오차 ${maxDiff.toFixed(1)}km/h · ${ds.meta.verified ? "verified ✓" : "verified=false"}`);

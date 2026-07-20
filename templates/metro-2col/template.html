@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* =========================================================
+         metro-2col@1 — 좌우 2단 정보표(노선 뱃지·구간·속도)
+         공백 많은 단일 표 대신 가로를 활용해 촘촘하고 예쁘게.
+         ========================================================= */
+      .m2 {
+        --mono: 46px;
+      }
+      .m2-head {
+        padding: 0 40px;
+        margin-top: 8px;
+      }
+      .m2 .wirit-title {
+        font-size: 74px;
+        line-height: 1.04;
+        text-align: center;
+        white-space: nowrap;
+        margin: 0;
+      }
+      .m2-cols {
+        display: flex;
+        gap: 34px;
+        margin-top: 24px;
+        flex: 1;
+        min-height: 0;
+      }
+      .m2-col {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .m2-r {
+        display: grid;
+        grid-template-columns: var(--mono) 1fr auto;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 8px;
+        border-bottom: 2px solid var(--wirit-ink-06);
+        flex: 1 1 0;
+        min-height: 0;
+      }
+      .m2-r:last-child {
+        border-bottom: none;
+      }
+      .m2-hr {
+        flex: 0 0 auto;
+        border-bottom: 3px solid var(--wirit-ink);
+        padding-bottom: 10px;
+      }
+      .m2-hr span {
+        font-size: 25px;
+        font-weight: 700;
+        color: var(--wirit-gray);
+      }
+      .m2-hr .h-line {
+        text-align: center;
+        white-space: nowrap;
+      }
+      .m2-hr .h-val {
+        text-align: right;
+      }
+      .m2-seg {
+        font-size: 27px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .m2-val {
+        text-align: right;
+        font-family: var(--font-num);
+        white-space: nowrap;
+      }
+      .m2-val b {
+        font-size: 32px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+      }
+      .m2-val i {
+        font-size: 18px;
+        font-style: normal;
+        color: var(--wirit-gray);
+        margin-left: 3px;
+      }
+      .m2-r.hl-fast {
+        background: rgba(46, 107, 255, 0.14);
+        border-radius: 10px;
+      }
+      .m2-r.hl-slow {
+        background: rgba(224, 37, 37, 0.1);
+        border-radius: 10px;
+      }
+      .m2-r.hl-fast .m2-val b {
+        color: var(--wirit-cobalt);
+      }
+      .m2-r.hl-slow .m2-val b {
+        color: #d62828;
+      }
+
+      /* ── 노선 뱃지(metroBadge 헬퍼 출력) — ranking-table와 동일 스타일 ── */
+      .rt-line {
+        width: var(--mono);
+        height: var(--mono);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-family: var(--font-sans);
+        font-weight: 800;
+        line-height: 0.94;
+        box-shadow: 0 1px 3px rgba(20, 24, 33, 0.18);
+      }
+      .rt-line.ln-white {
+        color: #fff;
+      }
+      .rt-line.ln-white .num,
+      .rt-line.ln-white .nm,
+      .rt-line.ln-white .gtx {
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+      }
+      .rt-line.ln-dark {
+        color: #1c2431;
+      }
+      .rt-line .num {
+        font-size: calc(var(--mono) * 0.58);
+        font-weight: 900;
+      }
+      .rt-line .nm {
+        font-size: calc(var(--mono) * 0.3);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+      .rt-line .nm.two {
+        font-size: calc(var(--mono) * 0.28);
+        line-height: 1;
+      }
+      .rt-line .gtx {
+        display: flex;
+        flex-direction: column;
+        line-height: 0.86;
+      }
+      .rt-line .gtx i {
+        font-style: italic;
+        font-weight: 900;
+        font-size: calc(var(--mono) * 0.24);
+      }
+      .rt-line .gtx b {
+        font-size: calc(var(--mono) * 0.32);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card {{#if font}}font-{{font}}{{/if}} m2">
+      <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
+      <div class="m2-head"><h1 class="wirit-title">{{title}}</h1></div>
+
+      <div class="m2-cols">
+        <div class="m2-col">
+          <div class="m2-r m2-hr"><span class="h-line">{{colHead.line}}</span><span>{{colHead.seg}}</span><span class="h-val">{{colHead.val}}</span></div>
+          {{#each left}}
+          <div class="m2-r {{#if this.hl}}hl-{{this.hl}}{{/if}}">
+            {{{metroBadge this.line}}}
+            <span class="m2-seg">{{this.seg}}</span>
+            <span class="m2-val"><b>{{this.value}}</b><i>km/h</i></span>
+          </div>
+          {{/each}}
+        </div>
+        <div class="m2-col">
+          <div class="m2-r m2-hr"><span class="h-line">{{colHead.line}}</span><span>{{colHead.seg}}</span><span class="h-val">{{colHead.val}}</span></div>
+          {{#each right}}
+          <div class="m2-r {{#if this.hl}}hl-{{this.hl}}{{/if}}">
+            {{{metroBadge this.line}}}
+            <span class="m2-seg">{{this.seg}}</span>
+            <span class="m2-val"><b>{{this.value}}</b><i>km/h</i></span>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+  </body>
+</html>
