@@ -28,12 +28,12 @@ const items = sorted.map((r, i) => {
   const rank = r.avgSalaryManwon === lastVal ? lastRank : i + 1;
   lastVal = r.avgSalaryManwon;
   lastRank = rank;
-  // 로고 자동 해결(Tier A: simple-icons). 없으면 이름 첫 글자 폴백(템플릿이 처리)
+  // 로고 자동 해결: 허브(위키미디어 취득분 포함) 우선, 없으면 simple-icons. 없으면 모노그램 폴백.
   const logo = resolveLogo(r.name);
   return {
     name: r.name,
     rank: String(rank),
-    ...(logo ? { logo: logo.slug } : {}),
+    ...(logo ? { logo: logo.slug, logoExt: logo.ext } : {}),
     value: fmt(r.avgSalaryManwon),
     sub: `${fmt(r.headcount)}명`,
   };
@@ -42,7 +42,7 @@ const items = sorted.map((r, i) => {
 const content = {
   template: "ranking-table@1",
   date,
-  subtitle: `금융감독원 전자공시(DART) · ${year} 사업보고서 · 직원 1인 평균급여액`,
+  subtitle: `금융감독원 DART · ${year} 사업보고서 · 직원 1인 평균급여`,
   title: `${year} 대기업\n평균연봉 순위`,
   nameLabel: "기업",
   valueLabel: "평균연봉(만원)",

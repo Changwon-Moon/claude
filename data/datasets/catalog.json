@@ -16,6 +16,14 @@
       "perishable": true,
       "added": "2026-07-19",
       "note": "커뮤니티·채용플랫폼 집계 신호 — 발행 전 1차 출처 재확인 필요. 비배포 시안용."
+    },
+    {
+      "file": "avg-salary-2025.json",
+      "title": "대기업 평균연봉 (2025, DART)",
+      "verified": false,
+      "perishable": false,
+      "added": "2026-07-20",
+      "note": "금융감독원 전자공시 DART 직접 수집(1차 출처). 값 정성 검토는 통과했으나 원문 화면 대조는 미실시 — 발행 전 오너 확인 권장."
     }
   ]
 }

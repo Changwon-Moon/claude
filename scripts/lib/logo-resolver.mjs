@@ -38,6 +38,25 @@ const ALIASES = {
   카카오: "kakao",
 };
 
+function normTitle(s) {
+  return String(s || "").replace(/\s+/g, "").toLowerCase();
+}
+
+/** 허브 카탈로그에 이미 등록된 로고를 회사명으로 찾는다(위키미디어 취득분 포함). */
+function findInHub(name) {
+  const cat = readCatalog();
+  const norm = normTitle(name);
+  const hit = cat.items.find((i) => normTitle(i.name) === norm);
+  if (!hit) return null;
+  const ext = existsSync(join(LOGО_DIR, `${hit.slug}.svg`))
+    ? "svg"
+    : existsSync(join(LOGО_DIR, `${hit.slug}.png`))
+      ? "png"
+      : null;
+  if (!ext) return null;
+  return { slug: hit.slug, ext };
+}
+
 /** name → simple-icons icon 객체 (없으면 null) */
 export function matchIcon(name) {
   const norm = normalize(name);
@@ -76,10 +95,14 @@ function addCatalogEntry(slug, title, hex) {
 
 /**
  * 회사명 → 로고 확보 시도.
- * 성공: { slug } (svg·카탈로그 생성됨). 실패: null.
- * opts.write=false 면 파일 안 쓰고 매칭만 확인.
+ * 성공: { slug, ext }. 실패: null.
+ * 우선순위: ① 허브에 이미 있는 로고(Tier B 위키미디어 취득분 포함) ② simple-icons(Tier A) 신규 생성.
+ * opts.write=false 면 새 파일을 쓰지 않고 매칭만 확인.
  */
 export function resolveLogo(name, opts = {}) {
+  const inHub = findInHub(name);
+  if (inHub) return inHub;
+
   const icon = matchIcon(name);
   if (!icon) return null;
   const dest = join(LOGО_DIR, `${icon.slug}.svg`);
@@ -88,5 +111,5 @@ export function resolveLogo(name, opts = {}) {
     writeFileSync(dest, svg);
     addCatalogEntry(icon.slug, icon.title, icon.hex);
   }
-  return { slug: icon.slug, title: icon.title, hex: icon.hex };
+  return { slug: icon.slug, ext: "svg", title: icon.title, hex: icon.hex };
 }
