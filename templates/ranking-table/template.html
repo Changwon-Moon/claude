@@ -156,13 +156,27 @@
       .rt.no-rank .rt-row.has-sub {
         grid-template-columns: var(--mono) var(--name-w) var(--val-w) var(--sub-w);
       }
-      /* 노선 그룹 음영: 행별 줄무늬(nth-child) 끄고, 같은 노선을 한 덩어리로 묶어
-         음영 교차(grp-alt). grp-alt 규칙의 명시도를 zebra 이상으로 맞춰 확실히 적용. */
-      .rt.no-rank.variant-a .rt-row:not(.rt-colheadrow):nth-child(even) {
-        background: none;
+      /* no-rank 정보표도 기본 짝수행 줄무늬(variant-a nth-child)를 그대로 사용 */
+
+      /* 극단값 하이라이트: 제일 빠른(fast)·느린(slow) 행 강조 */
+      .rt.variant-a .rt-row.hl-fast:not(.rt-colheadrow) {
+        background: rgba(46, 107, 255, 0.16);
       }
-      .rt.no-rank.variant-a .rt-row.grp-alt:not(.rt-colheadrow) {
-        background: var(--wirit-ink-06);
+      .rt.variant-a .rt-row.hl-slow:not(.rt-colheadrow) {
+        background: rgba(224, 37, 37, 0.09);
+      }
+      .rt-row.hl-fast .rt-val {
+        color: var(--wirit-cobalt);
+      }
+      .rt-row.hl-slow .rt-val {
+        color: #d62828;
+      }
+      .rt-tag {
+        font-family: var(--font-sans);
+        font-weight: 800;
+        font-size: calc(var(--row-font) * 0.48);
+        margin-left: 10px;
+        vertical-align: 0.06em;
       }
       .rt-colhead {
         font-size: 27px;
@@ -297,6 +311,7 @@
         font-weight: 800;
         text-align: center;
         font-variant-numeric: tabular-nums;
+        white-space: nowrap;
       }
       .rt-sub {
         font-family: var(--font-num);
@@ -413,7 +428,7 @@
         {{/unless}}
 
         {{#each items}}
-        <div class="rt-row {{#if ../subLabel}}has-sub{{/if}} {{#if this.grpAlt}}grp-alt{{/if}} {{#unless ../hideRank}}{{#if (lt @index 3)}}top{{/if}}{{/unless}}">
+        <div class="rt-row {{#if ../subLabel}}has-sub{{/if}} {{#if this.hl}}hl-{{this.hl}}{{/if}} {{#unless ../hideRank}}{{#if (lt @index 3)}}top{{/if}}{{/unless}}">
           {{#unless ../hideRank}}<span class="rt-rank">{{medal this.rank @index}}</span>{{/unless}}
           {{#if this.line}}{{{metroBadge this.line}}}{{else}}{{#if this.logo}}<span class="rt-logo"><img src="../_shared/logos/{{this.logo}}.{{#if this.logoExt}}{{this.logoExt}}{{else}}svg{{/if}}" alt="" /></span>{{else}}{{#if this.logoColor}}<span class="rt-chip wirit-chip" style="background:{{this.logoColor}}">{{#if this.logoText}}{{this.logoText}}{{else}}{{initial this.name}}{{/if}}</span>{{else}}<span class="rt-mono">{{initial this.name}}</span>{{/if}}{{/if}}{{/if}}
           <span class="rt-name {{#unless ../hideRank}}{{rankClass this.rank @index}}{{/unless}}">{{this.name}}</span>
@@ -425,7 +440,7 @@
             <span class="rt-sub">{{this.sub}}</span>
             {{/if}}
           {{else}}
-            <span class="rt-val">{{this.value}}</span>
+            <span class="rt-val">{{this.value}}{{#if this.hl}}{{#if ../hlTag}} <span class="rt-tag">{{#if (eq this.hl "fast")}}🚀 최고{{else}}🐢 최저{{/if}}</span>{{/if}}{{/if}}</span>
           {{/if}}
         </div>
         {{/each}}

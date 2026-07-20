@@ -16,7 +16,7 @@
     "subLabel": { "type": "string", "maxLength": 14 },
     "items": {
       "type": "array",
-      "minItems": 3,
+      "minItems": 2,
       "maxItems": 24,
       "items": {
         "type": "object",
