@@ -193,6 +193,24 @@ button:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px;border-r
 .obtn.reset{color:#AEB8C4;border:1px solid rgba(255,255,255,.25)}
 .toast{position:fixed;left:50%;bottom:74px;transform:translateX(-50%) translateY(8px);background:var(--ink);color:#fff;font-size:13px;font-weight:700;border:1px solid rgba(255,255,255,.2);border-radius:99px;padding:9px 16px;opacity:0;pointer-events:none;transition:.2s;z-index:60}
 .toast.on{opacity:1;transform:translateX(-50%)}
+/* GitHub 연결 바 (관제탑을 실제로 동작시키는 백엔드) */
+.ghbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 18px;font-size:12.5px;border-bottom:1px solid var(--line);background:var(--band)}
+.ghbar.on{background:rgba(27,158,107,.10)}
+.ghbar .st{font-weight:800}
+.ghbar .st.ok{color:var(--ok)} .ghbar .st.off{color:var(--warn)}
+.ghbar .sp{margin-left:auto}
+.ghbtn{font-size:12px;font-weight:800;border-radius:8px;padding:6px 11px;border:1px solid var(--line);background:var(--card);color:var(--text);cursor:pointer}
+.ghbtn.prim{background:var(--cobalt);color:#fff;border-color:var(--cobalt)}
+.ghbtn.wf{color:var(--cobalt)}
+.ghform{display:none;gap:8px;align-items:center;width:100%;margin-top:8px;flex-wrap:wrap}
+.ghform.on{display:flex}
+.ghform input{flex:1;min-width:220px;font:inherit;font-size:12.5px;border:1.5px solid var(--line);border-radius:8px;background:var(--card);color:var(--text);padding:8px 10px}
+.ghform .hint{font-size:11px;color:var(--gray);width:100%;line-height:1.5}
+.ghform .hint a{color:var(--cobalt)}
+.runs{display:flex;gap:8px;flex-wrap:wrap;width:100%;margin-top:6px}
+.run{font-size:11px;border:1px solid var(--line);border-radius:7px;padding:3px 8px;background:var(--card);text-decoration:none;color:var(--text)}
+.run .dot{font-weight:900}
+.run .dot.ok{color:var(--ok)} .run .dot.bad{color:var(--red)} .run .dot.run{color:var(--warn)}
 @media (max-width:640px){.board{padding:12px;gap:10px}.col{flex-basis:240px}.kpis{grid-template-columns:repeat(2,1fr)}}
 `;
 
@@ -207,6 +225,85 @@ function load(){
 }
 function save(){ localStorage.setItem(KEY, JSON.stringify(S)); }
 function tk(id){ return S.tickets.find(t=>t.id===id); }
+
+/* ══ GitHub 연결 — 관제탑을 실제로 동작시키는 백엔드 ══ */
+const GHKEY="wirit-gh-token";
+const GH={
+  owner:(STATE.repo||{}).owner, repo:(STATE.repo||{}).name, branch:(STATE.repo||{}).branch,
+  token(){ try{ return localStorage.getItem(GHKEY)||""; }catch(e){ return ""; } },
+  setToken(t){ try{ if(t) localStorage.setItem(GHKEY,t); else localStorage.removeItem(GHKEY); }catch(e){} },
+  connected(){ return !!this.token() && !!this.owner; },
+  async api(path,opts){ opts=opts||{};
+    const res=await fetch("https://api.github.com"+path,{ method:opts.method||"GET",
+      headers:Object.assign({Authorization:"Bearer "+this.token(),Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"},opts.headers||{}),
+      body:opts.body?JSON.stringify(opts.body):undefined });
+    if(!res.ok){ const t=await res.text(); throw new Error("GitHub "+res.status+" · "+t.slice(0,160)); }
+    const txt=await res.text(); return txt?JSON.parse(txt):{}; },
+  me(){ return this.api("/user"); },
+  dispatch(wf,inputs){ return this.api("/repos/"+this.owner+"/"+this.repo+"/actions/workflows/"+wf+"/dispatches",{method:"POST",body:{ref:this.branch,inputs:inputs||{}}}); },
+  async getFile(path){ try{ const d=await this.api("/repos/"+this.owner+"/"+this.repo+"/contents/"+path+"?ref="+encodeURIComponent(this.branch));
+      return {sha:d.sha, text:decodeURIComponent(escape(atob((d.content||"").replace(/\s/g,""))))}; }catch(e){ return {sha:null,text:""}; } },
+  putFile(path,text,message,sha){ const b64=btoa(unescape(encodeURIComponent(text)));
+    return this.api("/repos/"+this.owner+"/"+this.repo+"/contents/"+path,{method:"PUT",body:{message:message,content:b64,branch:this.branch,sha:sha||undefined}}); },
+  async append(path,addition,message){ const cur=await this.getFile(path);
+    const text=(cur.text?cur.text.replace(/\s*$/,"")+"\n\n":"")+addition+"\n";
+    return this.putFile(path,text,message,cur.sha); },
+  async runs(){ const d=await this.api("/repos/"+this.owner+"/"+this.repo+"/actions/runs?per_page=6&branch="+encodeURIComponent(this.branch));
+    return (d.workflow_runs||[]).map(r=>({name:r.name,status:r.status,conclusion:r.conclusion,url:r.html_url})); },
+};
+function ghStamp(){ return "[" + STATE.dateLabel + " 관제탑]"; }
+
+/* 워크플로 빠른 실행 정의 */
+const GH_WF=[
+  {file:"research-digest.yml", label:"⛏ 마이닝", inputs:{}, msg:"소재 마이닝(RSS) 워크플로를 시작했습니다"},
+  {file:"asset-fetch.yml", label:"🖼 로고 취득", inputs:{target:"data/datasets/salary-freshman-2026-07.json"}, msg:"로고 자동취득 워크플로를 시작했습니다"},
+  {file:"dart-salary.yml", label:"💰 평균연봉", inputs:{year:"2025",companies:"data/datasets/salary-freshman-2026-07.json"}, msg:"평균연봉(DART) 워크플로를 시작했습니다"},
+];
+async function runWf(wf){
+  if(!GH.connected()){ toast("먼저 GitHub에 연결하세요"); return; }
+  try{ await GH.dispatch(wf.file, wf.inputs); toast(wf.msg+" — 잠시 후 [상태]로 확인"); setTimeout(refreshRuns, 3000); }
+  catch(e){ toast("실행 실패: "+e.message); }
+}
+async function refreshRuns(){
+  const box=document.getElementById("ghruns"); if(!box||!GH.connected()) return;
+  try{ const rs=await GH.runs();
+    box.innerHTML=rs.map(r=>{ const cls=r.status!=="completed"?"run":(r.conclusion==="success"?"ok":"bad");
+      const mark=r.status!=="completed"?"●":(r.conclusion==="success"?"✔":"✕");
+      return '<a class="run" href="'+r.url+'" target="_blank" rel="noopener"><span class="dot '+cls+'">'+mark+'</span> '+esc(r.name)+'</a>'; }).join("")||'<span class="run">최근 실행 없음</span>';
+  }catch(e){ box.innerHTML='<span class="run">상태 조회 실패: '+esc(e.message)+'</span>'; }
+}
+function renderGhBar(){
+  const bar=document.getElementById("ghbar"); if(!bar) return;
+  const on=GH.connected();
+  bar.className="ghbar"+(on?" on":"");
+  const wfBtns=on?GH_WF.map((w,i)=>'<button class="ghbtn wf" data-wf="'+i+'">'+w.label+'</button>').join(""):"";
+  bar.innerHTML=
+    '<span class="st '+(on?"ok":"off")+'">'+(on?"🟢 GitHub 연결됨":"🔌 GitHub 연결 안 됨")+'</span>'
+    +(on?'<span style="color:var(--gray)">'+esc(GH.owner)+"/"+esc(GH.repo)+' · '+esc(GH.branch)+'</span>':'<span style="color:var(--gray)">연결하면 관제탑에서 직접 마이닝·업로드·워크플로 실행이 됩니다</span>')
+    +wfBtns
+    +'<span class="sp"></span>'
+    +(on?'<button class="ghbtn" id="ghrefresh">↻ 상태</button><button class="ghbtn" id="ghdisc">연결 해제</button>':'<button class="ghbtn prim" id="ghconn">연결하기</button>')
+    +'<div class="ghform" id="ghform"><input type="password" id="ghtok" placeholder="GitHub 토큰 붙여넣기 (ghp_... 또는 github_pat_...)"><button class="ghbtn prim" id="ghsave">저장·연결</button>'
+    +'<div class="hint">이 저장소 전용 <b>Fine-grained 토큰</b>을 만드세요(권한: Contents=Read/Write, Actions=Read/Write). 토큰은 이 브라우저에만 저장되고 GitHub 외 어디로도 전송되지 않습니다. → <a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener">토큰 만들기</a></div></div>'
+    +(on?'<div class="runs" id="ghruns"></div>':"");
+  wireGhBar();
+  if(on) refreshRuns();
+}
+function wireGhBar(){
+  const conn=document.getElementById("ghconn");
+  if(conn) conn.onclick=()=>document.getElementById("ghform").classList.toggle("on");
+  const save=document.getElementById("ghsave");
+  if(save) save.onclick=async()=>{
+    const t=(document.getElementById("ghtok").value||"").trim(); if(!t){ toast("토큰을 붙여넣으세요"); return; }
+    GH.setToken(t);
+    try{ const me=await GH.me(); toast("연결 성공 — "+(me.login||"")); renderGhBar(); }
+    catch(e){ GH.setToken(""); toast("연결 실패: "+e.message); }
+  };
+  const disc=document.getElementById("ghdisc");
+  if(disc) disc.onclick=()=>{ GH.setToken(""); renderGhBar(); toast("연결 해제됨"); };
+  const rf=document.getElementById("ghrefresh"); if(rf) rf.onclick=refreshRuns;
+  document.querySelectorAll("[data-wf]").forEach(b=>b.onclick=()=>runWf(GH_WF[+b.dataset.wf]));
+}
 
 /* 탭 전환 */
 document.querySelectorAll(".tab").forEach(b=>{
@@ -274,18 +371,18 @@ function buildMiningPanel(list){
   wt+='<span class="wsum'+(sum===100?"":" bad")+'" id="wsum">합 '+sum+'%</span></div>';
   // 마이닝 버튼 + 안내
   const btn='<button class="mine-btn" id="mineBtn">⛏ 마이닝 실행 — 새 후보 10건 요청</button>'
-    +'<div class="mine-note">누르면 위 비중으로 <b>실시간 수집 요청</b>이 지시 전달함에 담깁니다 → 하단 [요약 복사] → Claude가 SNS·뉴스·통계를 돌려 후보를 채웁니다. 아래는 현재 수집된 후보입니다.</div>';
+    +'<div class="mine-note"><b>GitHub 연결 시</b>: 누르면 마이닝 워크플로가 <b>바로 실행</b>됩니다(상단 바에서 상태 확인). <b>미연결 시</b>: 요청이 지시 전달함에 담깁니다 → [요약 복사] → Claude. 아래는 현재 수집된 후보입니다.</div>';
   // 후보 목록 (스크롤)
   let cands='<div class="cands" id="cands">';
   if(!list.length) cands+='<div class="empty">후보 없음 — [마이닝 실행]으로 수집 요청</div>';
   list.forEach(t=>{ cands+=candRow(t); });
   cands+='</div>';
   // 지식 인풋 (채팅창)
-  const kbox='<div class="kbox"><div class="kh">💬 내 지식 입력 — 기사·메모·사진을 붙여넣으세요</div>'
+  const kbox='<div class="kbox"><div class="kh">💬 자료 인박스 — 기사·메모·대량 자료를 붙여넣으세요</div>'
     +'<div class="kprev" id="kprev"></div>'
-    +'<textarea id="ktext" placeholder="여기에 기사 본문·수치·아이디어를 붙여넣기(Ctrl+V). 이미지도 붙여넣으면 미리보기로 담깁니다."></textarea>'
+    +'<textarea id="ktext" placeholder="기사 본문·수치·아이디어를 붙여넣기(Ctrl+V). 길어도 됩니다 — 연결 시 저장소 research/INBOX.md에 바로 커밋됩니다."></textarea>'
     +'<div class="krow"><button class="kadd" id="kadd">지식 추가</button>'
-    +'<span class="khint">텍스트는 그대로 전달됩니다. 이미지는 세션에 직접 올려야 제가 실제로 봅니다(여기선 첨부 표시만).</span></div></div>';
+    +'<span class="khint"><b>연결 시</b> 저장소에 바로 저장됩니다(대량 OK). 이미지는 세션에 직접 올려야 실제로 반영됩니다(여기선 첨부 표시만).</span></div></div>';
   col.innerHTML=h+wt+btn+cands+kbox;
   return col;
 }
@@ -343,10 +440,16 @@ function wireMining(){
   });
   // 마이닝 실행
   const mb=document.getElementById("mineBtn");
-  if(mb) mb.onclick=()=>{
+  if(mb) mb.onclick=async()=>{
     const w=S.weights.map(x=>x.label+" "+x.pct+"%").join(" · ");
-    pushDecision("🔎 컨텐츠 마이닝 실행 요청 — 비중["+w+"] → 새 후보 10건을 SNS·뉴스·통계에서 수집해줘",
-      "마이닝 요청 담김 — [요약 복사]로 저에게 보내세요");
+    if(GH.connected()){
+      // 비중을 저장소에 기록하고 실제 마이닝 워크플로 실행
+      try{ await GH.append("research/mining-requests.md", "- "+ghStamp()+" 비중["+w+"] 마이닝 요청", "관제탑: 마이닝 요청 "+STATE.dateLabel); }catch(e){}
+      runWf(GH_WF[0]);
+    } else {
+      pushDecision("🔎 컨텐츠 마이닝 실행 요청 — 비중["+w+"] → 새 후보 10건을 SNS·뉴스·통계에서 수집해줘",
+        "마이닝 요청 담김 — [요약 복사]로 저에게 보내세요");
+    }
   };
   // 후보 선정/탈락/상세
   document.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>candAction(b.dataset.pick,"pick"));
@@ -360,12 +463,22 @@ function wireMining(){
       for(const it of items){ if(it.type&&it.type.indexOf("image")===0){ const f=it.getAsFile(); if(f){ const r=new FileReader(); r.onload=()=>addImgPrev(prev,r.result); r.readAsDataURL(f); pendingImgs++; } } }
     };
     const ka=document.getElementById("kadd");
-    if(ka) ka.onclick=()=>{
+    if(ka) ka.onclick=async()=>{
       const v=ta.value.trim(); const imgs=prev?prev.querySelectorAll("img").length:0;
       if(!v&&!imgs){ toast("기사·메모를 입력하거나 이미지를 붙여넣으세요"); return; }
-      let msg="💬 지식 입력: "+(v||"(텍스트 없음)"); if(imgs) msg+=" [사진 "+imgs+"장 첨부 — 세션에 직접 업로드 필요]";
-      pushDecision(msg, "지식 담김 — [요약 복사]로 전달");
-      ta.value=""; if(prev) prev.innerHTML=""; pendingImgs=0;
+      if(GH.connected()){
+        // 대량 자료를 저장소 인박스에 바로 커밋 (복사-붙여넣기 없이)
+        ka.disabled=true; ka.textContent="저장 중…";
+        const block="## "+ghStamp()+"\n\n"+(v||"(텍스트 없음)")+(imgs?"\n\n> 사진 "+imgs+"장은 세션에 직접 업로드해야 실제로 반영됩니다.":"");
+        try{ await GH.append("research/INBOX.md", block, "관제탑: 지식 자료 추가 "+STATE.dateLabel);
+          toast("저장소 research/INBOX.md에 커밋됨 ✓"); ta.value=""; if(prev) prev.innerHTML=""; pendingImgs=0;
+        }catch(e){ toast("커밋 실패: "+e.message); }
+        ka.disabled=false; ka.textContent="지식 추가";
+      } else {
+        let msg="💬 지식 입력: "+(v||"(텍스트 없음)"); if(imgs) msg+=" [사진 "+imgs+"장 첨부 — 세션에 직접 업로드 필요]";
+        pushDecision(msg, "지식 담김 — [요약 복사]로 전달");
+        ta.value=""; if(prev) prev.innerHTML=""; pendingImgs=0;
+      }
     };
   }
 }
@@ -377,12 +490,20 @@ function addImgPrev(prev,src){
 function candAction(id,kind){
   const t=tk(id); if(!t) return;
   t.flags=t.flags||[];
+  let line;
   if(kind==="pick"){ t.stage=1; if(!t.flags.includes("선정")) t.flags.push("선정");
     S.learning.push({t:t.title,a:"선정",topic:t.topic,fire:!!t.fire});
-    pushDecision("✅ 선정: "+t.title+" ("+t.topic+"/"+t.fmt+") — 트렌드분석·리서치 학습신호(선호)", t.title.split(" — ")[0]+" 선정"); }
+    line="✅ 선정: "+t.title+" ("+t.topic+"/"+t.fmt+")";
+    if(!GH.connected()) pushDecision(line+" — 트렌드분석·리서치 학습신호(선호)", t.title.split(" — ")[0]+" 선정"); }
   else { t.flags.push("버림");
     S.learning.push({t:t.title,a:"탈락",topic:t.topic,fire:!!t.fire});
-    pushDecision("❌ 탈락: "+t.title+" ("+t.topic+") — 트렌드분석·리서치 학습신호(비선호)", t.title.split(" — ")[0]+" 탈락"); }
+    line="❌ 탈락: "+t.title+" ("+t.topic+")";
+    if(!GH.connected()) pushDecision(line+" — 트렌드분석·리서치 학습신호(비선호)", t.title.split(" — ")[0]+" 탈락"); }
+  // 연결됐으면 선택을 저장소 결정 인박스에 바로 기록(트렌드분석·리서치 학습 데이터)
+  if(GH.connected()){
+    GH.append("research/decisions-inbox.md","- "+ghStamp()+" "+line,"관제탑: 소재 결정 "+STATE.dateLabel)
+      .then(()=>toast("결정을 저장소에 기록했습니다 ✓")).catch(e=>toast("기록 실패: "+e.message));
+  }
   save(); renderBoard();
 }
 
@@ -473,11 +594,19 @@ function wireActions(t){
 function short(t){ return t.title.split(" — ")[0]; }
 function done(msg){ save(); renderBoard(); closeDrawer(); toast(msg); }
 
+async function copyText(txt){
+  // 1) 표준 API (보안 컨텍스트에서만 동작 — 아티팩트 샌드박스에선 막힘)
+  try{ if(navigator.clipboard&&navigator.clipboard.writeText){ await navigator.clipboard.writeText(txt); return true; } }catch(e){}
+  // 2) 폴백: 임시 textarea + execCommand
+  try{ const ta=document.createElement("textarea"); ta.value=txt; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.focus(); ta.select();
+    const ok=document.execCommand("copy"); document.body.removeChild(ta); if(ok) return true; }catch(e){}
+  return false;
+}
 document.getElementById("bcopy").onclick=async()=>{
   if(!S.decisions.length){ toast("아직 결정이 없습니다 — 티켓을 눌러보세요"); return; }
   const txt="[wirit 관제탑 결정 · "+STATE.dateLabel+"]\n"+S.decisions.map(d=>"- "+d).join("\n")+"\n\n이대로 진행해줘.";
-  try{ await navigator.clipboard.writeText(txt); toast("복사 완료 — Claude에게 붙여넣으세요"); }
-  catch(e){ prompt("아래를 복사하세요:", txt); }
+  if(await copyText(txt)) toast("복사 완료 — Claude에게 붙여넣으세요");
+  else window.prompt("아래를 길게 눌러 복사하세요:", txt);
 };
 document.getElementById("breset").onclick=()=>{ localStorage.removeItem(KEY); S=load(); renderBoard(); toast("초기 상태로"); };
 
@@ -486,6 +615,7 @@ function toast(m){ const el=document.getElementById("toast"); el.textContent=m; 
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function fmt(s){ return esc(s).replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>"); }
 
+renderGhBar();
 renderBoard();
 `;
 
@@ -609,6 +739,8 @@ export function renderTowerBody(state: TowerState): string {
 </header>
 
 <div class="kpis">${kpiHtml(state)}</div>
+
+<div class="ghbar" id="ghbar"></div>
 
 <nav class="tabs">
   <button class="tab on" data-v="board">🗂 파이프라인</button>

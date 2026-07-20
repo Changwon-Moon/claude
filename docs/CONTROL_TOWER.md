@@ -95,4 +95,5 @@
 3. ✅ **회사 편집 기능** — CEO 원칙 + 9팀 원칙/프롬프트를 관제탑에서 직접 수정보완. 서버 없이 두 경로: (a) 관제탑 편집 → 지시 전달함 → [요약 복사] → Claude가 파일 반영·학습기록, (b) 각 문서(company/*, prompts/*) GitHub 직접 편집 링크. 런타임 프롬프트는 `prompts/{team}.md`(초안 9종)로 실존.
 4. 🟡 **GitHub Pages 배포** — `.github/workflows/pages.yml` + [가이드](./guides/control-tower-pages.md). 운영자가 Settings→Pages→Source=GitHub Actions 1회 설정하면 상시 URL. (CI 빌드엔 썸네일 빠질 수 있음 — 원본 gitignore)
 5. ✅ **아티팩트 발행** — 세션에서 body-only(`artifact`) 산출 → 비공개 아티팩트. 썸네일 포함 완전판.
-6. ⬜ 에이전트(M6~) 구현 시 "판단 기록 스키마"(§1) 의무 적용 → 관제탑 타임라인에 자동 출현
+6. 🟡 **라이브 모드(C단계 진입)** — 관제탑이 GitHub API 직접 호출: 마이닝/로고/평균연봉 워크플로 실행, 자료 인박스→저장소 커밋, 소재 선정/탈락→저장소 기록, 워크플로 상태 실시간. **GitHub Pages + 저장소 전용 토큰** 필요([가이드](./guides/control-tower-live.md)). ⚠️ 아티팩트는 외부통신 차단이라 읽기전용 유지 — 라이브는 Pages에서만. 남은 것: 인스타 발행(IG토큰), AI수준 마이닝·기획(M6 에이전트).
+7. ⬜ 에이전트(M6~) 구현 시 "판단 기록 스키마"(§1) 의무 적용 → 관제탑 타임라인에 자동 출현
