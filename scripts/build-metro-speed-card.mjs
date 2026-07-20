@@ -65,7 +65,14 @@ write("metro-speed-hl.json", {
 
 // 4) 2단 정보표 — 좌우 2열, km/h는 셀 안, 극단 하이라이트
 const half = Math.ceil(sorted.length / 2);
-const col = (r) => ({ line: r.key, seg: segName(r), value: r.kmh.toFixed(1), ...(r === fast ? { hl: "fast" } : r === slow ? { hl: "slow" } : {}) });
+const col = (r) => ({
+  line: r.key,
+  seg: r.seg,
+  gu: r.gu || "",
+  guClass: r.gu === "급" ? "g-exp" : r.gu === "완" ? "g-loc" : "",
+  value: r.kmh.toFixed(1),
+  ...(r === fast ? { hl: "fast" } : r === slow ? { hl: "slow" } : {}),
+});
 write("metro-2col.json", {
   template: "metro-2col@1", date,
   subtitle: subtitleShort,
