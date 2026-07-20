@@ -187,5 +187,36 @@
         <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
       </div>
     </div>
+    <!-- 제목 폭 맞춤: 컨테이너 폭을 넘지 않게 폰트 자동 축소(긴 제목 지원). 폰트 로딩 후 재실행. -->
+    <script>
+      window.__wiritFit = function () {
+        var el = document.querySelector(".m2 .wirit-title");
+        if (!el || (el.textContent || "").indexOf("\n") >= 0) return;
+        var head = el.parentElement;
+        var hs = getComputedStyle(head);
+        var avail =
+          head.clientWidth -
+          (parseFloat(hs.paddingLeft) || 0) -
+          (parseFloat(hs.paddingRight) || 0);
+        el.style.whiteSpace = "nowrap";
+        var lo = 40,
+          hi = 78,
+          best = lo;
+        for (var i = 0; i < 20; i++) {
+          var mid = (lo + hi) / 2;
+          el.style.fontSize = mid + "px";
+          if (el.scrollWidth <= avail) {
+            best = mid;
+            lo = mid;
+          } else {
+            hi = mid;
+          }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready)
+        document.fonts.ready.then(window.__wiritFit);
+    </script>
   </body>
 </html>

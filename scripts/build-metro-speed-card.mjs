@@ -69,7 +69,7 @@ const col = (r) => ({ line: r.key, seg: segName(r), value: r.kmh.toFixed(1), ...
 write("metro-2col.json", {
   template: "metro-2col@1", date,
   subtitle: subtitleShort,
-  title: "노선별 운행속도",
+  title: "수도권 지하철 노선별 운행속도",
   colHead: { line: "노선", seg: "구간", val: "속도" },
   left: sorted.slice(0, half).map(col),
   right: sorted.slice(half).map(col),
