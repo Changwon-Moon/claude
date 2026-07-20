@@ -14,7 +14,7 @@
       /* 제목은 카드 좌우 패딩을 넘어 거의 카드 끝까지(풀블리드) 채운다(연봉 카드와 동일). */
       .m2-head {
         padding: 0;
-        margin: 8px -52px 0;
+        margin: 50px -52px 0; /* 부제·wirit 뱃지 아래로 내려 겹침 방지 */
       }
       .m2 .wirit-title {
         font-size: 84px;
@@ -142,7 +142,11 @@
         overflow: hidden;
         pointer-events: none;
       }
-      .m2 > *:not(.m2-wm) {
+      /* 내용만 워터마크 위로(콘텐츠 래퍼에만 적용 — 우상단 wirit 뱃지의 absolute는 건드리지 않음) */
+      .m2 > .wirit-topcap,
+      .m2 > .m2-head,
+      .m2 > .m2-cols,
+      .m2 > .wirit-footer {
         position: relative;
         z-index: 1;
       }
