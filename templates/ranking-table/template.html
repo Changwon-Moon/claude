@@ -149,6 +149,21 @@
       .rt-row.has-sub {
         grid-template-columns: 72px var(--mono) var(--name-w) var(--val-w) var(--sub-w);
       }
+      /* 순위 없는 모드(정보형 표): 순위 열 제거, 뱃지·이름·값 3열 */
+      .rt.no-rank .rt-row {
+        grid-template-columns: var(--mono) var(--name-w) var(--val-w);
+      }
+      .rt.no-rank .rt-row.has-sub {
+        grid-template-columns: var(--mono) var(--name-w) var(--val-w) var(--sub-w);
+      }
+      /* 노선 그룹 음영: 행별 줄무늬(nth-child) 끄고, 같은 노선을 한 덩어리로 묶어
+         음영 교차(grp-alt). grp-alt 규칙의 명시도를 zebra 이상으로 맞춰 확실히 적용. */
+      .rt.no-rank.variant-a .rt-row:not(.rt-colheadrow):nth-child(even) {
+        background: none;
+      }
+      .rt.no-rank.variant-a .rt-row.grp-alt:not(.rt-colheadrow) {
+        background: var(--wirit-ink-06);
+      }
       .rt-colhead {
         font-size: 27px;
         font-weight: 700;
@@ -380,7 +395,7 @@
     </style>
   </head>
   <body>
-    <div class="wirit-card {{#if font}}font-{{font}}{{/if}} {{#if variant}}variant-{{variant}}{{else}}variant-a{{/if}} rt {{densityClass items}} {{#if photoStrip}}has-photos{{/if}}">
+    <div class="wirit-card {{#if font}}font-{{font}}{{/if}} {{#if variant}}variant-{{variant}}{{else}}variant-a{{/if}} rt {{densityClass items}} {{#if photoStrip}}has-photos{{/if}} {{#if hideRank}}no-rank{{/if}}">
       <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
       <div class="rt-head">
         <h1 class="wirit-title">{{title}}</h1>
@@ -389,8 +404,8 @@
       <div class="rt-body">
         {{#unless (eq variant "c")}}
         <div class="rt-row rt-colheadrow {{#if subLabel}}has-sub{{/if}}">
-          <span class="rt-colhead" style="text-align:center">순위</span>
-          <span></span>
+          {{#unless hideRank}}<span class="rt-colhead" style="text-align:center">순위</span>{{/unless}}
+          <span class="rt-colhead" style="text-align:center;white-space:nowrap">{{logoLabel}}</span>
           <span class="rt-colhead" style="text-align:center">{{nameLabel}}</span>
           <span class="rt-colhead" style="text-align:center">{{valueLabel}}</span>
           {{#if subLabel}}<span class="rt-colhead" style="text-align:center">{{subLabel}}</span>{{/if}}
@@ -398,10 +413,10 @@
         {{/unless}}
 
         {{#each items}}
-        <div class="rt-row {{#if ../subLabel}}has-sub{{/if}} {{#if (lt @index 3)}}top{{/if}}">
-          <span class="rt-rank">{{medal this.rank @index}}</span>
+        <div class="rt-row {{#if ../subLabel}}has-sub{{/if}} {{#if this.grpAlt}}grp-alt{{/if}} {{#unless ../hideRank}}{{#if (lt @index 3)}}top{{/if}}{{/unless}}">
+          {{#unless ../hideRank}}<span class="rt-rank">{{medal this.rank @index}}</span>{{/unless}}
           {{#if this.line}}{{{metroBadge this.line}}}{{else}}{{#if this.logo}}<span class="rt-logo"><img src="../_shared/logos/{{this.logo}}.{{#if this.logoExt}}{{this.logoExt}}{{else}}svg{{/if}}" alt="" /></span>{{else}}{{#if this.logoColor}}<span class="rt-chip wirit-chip" style="background:{{this.logoColor}}">{{#if this.logoText}}{{this.logoText}}{{else}}{{initial this.name}}{{/if}}</span>{{else}}<span class="rt-mono">{{initial this.name}}</span>{{/if}}{{/if}}{{/if}}
-          <span class="rt-name {{rankClass this.rank @index}}">{{this.name}}</span>
+          <span class="rt-name {{#unless ../hideRank}}{{rankClass this.rank @index}}{{/unless}}">{{this.name}}</span>
           {{#if ../subLabel}}
             {{#if (eq ../variant "c")}}
             <span class="rt-valwrap"><span class="rt-val">{{this.value}}</span><span class="rt-sub">{{this.sub}}</span></span>
