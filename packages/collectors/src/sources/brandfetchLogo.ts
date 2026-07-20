@@ -11,11 +11,11 @@ import { fetchText } from "../http.js";
 
 const API = "https://api.brandfetch.io/v2/brands";
 
-/** 회사명 → 공식 도메인. Tier B(Wikimedia)에서 못 찾은 큐레이션 대상만 등록. */
-export const DOMAIN_MAP: Record<string, string> = {
-  "포스코인터내셔널": "poscointl.com",
-  "삼성바이오로직스": "samsungbiologics.com",
-  "HD한국조선해양": "ksoe.co.kr",
+/** 회사명 → 공식 도메인 후보(우선순위 순). Tier B(Wikimedia)에서 못 찾은 큐레이션 대상만 등록. */
+export const DOMAIN_MAP: Record<string, string[]> = {
+  "포스코인터내셔널": ["poscointl.com"],
+  "삼성바이오로직스": ["samsungbiologics.com"],
+  "HD한국조선해양": ["ksoe.co.kr", "hd-ksoe.co.kr", "hdksoe.co.kr", "hyundai-ksoe.co.kr"],
 };
 
 interface LogoFormat {
@@ -64,15 +64,8 @@ export interface FetchedBrandLogo {
   domain: string;
 }
 
-/** 회사명 → Brandfetch 로고 취득(성공 시). 큐레이션 도메인 없거나 실패하면 null. */
-export async function fetchBrandfetchLogo(
-  company: string,
-  apiKey: string,
-  domainOverride?: string
-): Promise<FetchedBrandLogo | null> {
-  const domain = domainOverride ?? DOMAIN_MAP[company];
-  if (!domain) return null;
-
+/** 도메인 하나에 대해 Brand API 조회 + 최적 로고 다운로드 시도. 실패하면 null. */
+async function tryDomain(domain: string, apiKey: string): Promise<{ bytes: Uint8Array; ext: "svg" | "png" } | null> {
   const url = `${API}/${encodeURIComponent(domain)}`;
   let json: string;
   try {
@@ -83,13 +76,28 @@ export async function fetchBrandfetchLogo(
   } catch {
     return null;
   }
-  const logos = parseBrandLogos(json);
-  const best = pickBestLogoFormat(logos);
+  const best = pickBestLogoFormat(parseBrandLogos(json));
   if (!best) return null;
 
   const res = await fetch(best.src, { headers: { "User-Agent": "wirit-collector/0.1" } });
   if (!res.ok) return null;
   const bytes = new Uint8Array(await res.arrayBuffer());
   const ext: "svg" | "png" = best.format.toLowerCase() === "svg" ? "svg" : "png";
-  return { slug: slugify(company), ext, bytes, domain };
+  return { bytes, ext };
+}
+
+/** 회사명 → Brandfetch 로고 취득(성공 시). 도메인 후보를 순서대로 시도, 큐레이션 없거나 전부 실패하면 null. */
+export async function fetchBrandfetchLogo(
+  company: string,
+  apiKey: string,
+  domainOverrides?: string[]
+): Promise<FetchedBrandLogo | null> {
+  const domains = domainOverrides ?? DOMAIN_MAP[company];
+  if (!domains?.length) return null;
+
+  for (const domain of domains) {
+    const found = await tryDomain(domain, apiKey);
+    if (found) return { slug: slugify(company), ext: found.ext, bytes: found.bytes, domain };
+  }
+  return null;
 }
