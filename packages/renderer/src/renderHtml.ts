@@ -32,6 +32,21 @@ Handlebars.registerHelper("arrow", (dir: unknown) =>
   dir === "up" ? "▲" : dir === "down" ? "▼" : "·",
 );
 
+// 유효 순위 계산: rank 필드가 있으면 그 값(공동순위 반영), 없으면 표시 순번(@index+1).
+function effRank(rank: unknown, index: unknown): string {
+  return rank != null && rank !== "" ? String(rank) : String(Number(index) + 1);
+}
+// 1·2·3위는 금·은·동 메달, 그 외는 숫자. 사용: {{medal this.rank @index}}
+Handlebars.registerHelper("medal", (rank: unknown, index: unknown) => {
+  const r = effRank(rank, index);
+  return r === "1" ? "🥇" : r === "2" ? "🥈" : r === "3" ? "🥉" : r;
+});
+// 1·2·3위 기업명 색상 클래스(금/은/동). 사용: {{rankClass this.rank @index}}
+Handlebars.registerHelper("rankClass", (rank: unknown, index: unknown) => {
+  const r = effRank(rank, index);
+  return r === "1" ? "r-gold" : r === "2" ? "r-silver" : r === "3" ? "r-bronze" : "";
+});
+
 /**
  * 결정적 라인 차트 SVG 생성 (1년 추이 등).
  * 사용: {{{lineChart series width=984 height=240}}}

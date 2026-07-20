@@ -10,34 +10,44 @@
          시안 확정 후 하나만 남기고 정리한다.
          ========================================================= */
 
+      /* 고정폭 열: 이름·값·보조를 밀도별 고정폭으로 둬서 (각 행이 별도 grid라도)
+         제목 행 라벨과 아래 숫자가 같은 열 폭 안에서 가운데로 정렬되게 한다. */
       .rt {
-        --row-font: 40px;
-        --row-pad: 19px;
-        --mono: 62px;
-        --name-w: 360px; /* 이름 열 고정폭: 값이 행마다 같은 x에 정렬되도록(중앙 빈 띠↓) */
+        --row-font: 44px;
+        --row-pad: 20px;
+        --mono: 64px;
+        --name-w: 360px;
+        --val-w: 250px;
+        --sub-w: 168px;
       }
       .rt.d-mid {
-        --row-font: 34px;
-        --row-pad: 13px;
-        --mono: 56px;
-        --name-w: 320px;
+        --row-font: 38px;
+        --row-pad: 15px;
+        --mono: 58px;
+        --name-w: 330px;
+        --val-w: 240px;
+        --sub-w: 160px;
       }
       .rt.d-dense {
-        --row-font: 27px;
-        --row-pad: 6px;
-        --mono: 44px;
-        --name-w: 264px;
+        --row-font: 29px;
+        --row-pad: 8px;
+        --mono: 46px;
+        --name-w: 270px;
+        --val-w: 220px;
+        --sub-w: 150px;
       }
       /* 순위표는 표 공간 확보를 위해 제목 영역을 살짝 압축 */
       /* 제목: 2줄 가운데 정렬(data 줄바꿈 pre-line), 좌우 대칭 여백. 부제는 공용 .wirit-topcap */
       .rt-head {
-        padding: 0 140px;
+        padding: 0 56px;
         margin-top: 18px;
       }
+      /* 제목은 1행 기준. 한 줄에 들어오도록 폭에 맞춰 크기 조정(pre-line은 유지해
+         혹시 줄바꿈 문자가 있는 다른 카드도 지원). 여백이 준 만큼 표를 키운다. */
       .rt .wirit-title {
-        font-size: 80px;
+        font-size: 62px;
         margin-top: 0;
-        line-height: 1.08;
+        line-height: 1.1;
         text-align: center;
         white-space: pre-line;
       }
@@ -116,7 +126,7 @@
          숫자 블록이 우측 끝에 붙지 않고 중앙 쪽에 오도록(중앙 빈 띠 방지). */
       .rt-row {
         display: grid;
-        grid-template-columns: 84px var(--mono) var(--name-w) auto 1fr;
+        grid-template-columns: 84px var(--mono) var(--name-w) var(--val-w) 1fr;
         align-items: center;
         gap: 22px;
         padding: var(--row-pad) 20px;
@@ -124,7 +134,7 @@
         line-height: 1.05;
       }
       .rt-row.has-sub {
-        grid-template-columns: 84px var(--mono) var(--name-w) auto auto 1fr;
+        grid-template-columns: 84px var(--mono) var(--name-w) var(--val-w) var(--sub-w) 1fr;
       }
       .rt-colhead {
         font-size: 27px;
@@ -177,19 +187,33 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
+      /* 1·2·3위 기업명 금·은·동 색상 (밝은 종이 배경에서 읽히는 톤으로 조정) */
+      .rt-name.r-gold {
+        color: #c8a233;
+        font-weight: 800;
+      }
+      .rt-name.r-silver {
+        color: #8c93a0;
+        font-weight: 800;
+      }
+      .rt-name.r-bronze {
+        color: #b07a3c;
+        font-weight: 800;
+      }
+      /* 값·보조는 열 폭 안에서 가운데 정렬 → 제목 라벨이 내용 위에 가운데로 온다.
+         숫자는 tabular-nums + (직원수는 figure space 패딩)으로 자릿줄이 유지된다. */
       .rt-val {
         font-family: var(--font-num);
         font-weight: 800;
-        text-align: right;
+        text-align: center;
         font-variant-numeric: tabular-nums;
       }
       .rt-sub {
         font-family: var(--font-num);
         font-weight: 600;
         color: var(--wirit-gray);
-        text-align: right;
+        text-align: center;
         font-variant-numeric: tabular-nums;
-        min-width: 150px;
       }
 
       /* ---------- 시안 A: 페이퍼 테이블 (신문형·고밀도) ---------- */
@@ -292,17 +316,17 @@
         <div class="rt-row rt-colheadrow {{#if subLabel}}has-sub{{/if}}">
           <span class="rt-colhead" style="text-align:center">순위</span>
           <span></span>
-          <span class="rt-colhead">{{nameLabel}}</span>
-          <span class="rt-colhead" style="text-align:right">{{valueLabel}}</span>
-          {{#if subLabel}}<span class="rt-colhead" style="text-align:right">{{subLabel}}</span>{{/if}}
+          <span class="rt-colhead" style="text-align:center">{{nameLabel}}</span>
+          <span class="rt-colhead" style="text-align:center">{{valueLabel}}</span>
+          {{#if subLabel}}<span class="rt-colhead" style="text-align:center">{{subLabel}}</span>{{/if}}
         </div>
         {{/unless}}
 
         {{#each items}}
         <div class="rt-row {{#if ../subLabel}}has-sub{{/if}} {{#if (lt @index 3)}}top{{/if}}">
-          <span class="rt-rank">{{#if this.rank}}{{this.rank}}{{else}}{{inc @index}}{{/if}}</span>
+          <span class="rt-rank">{{medal this.rank @index}}</span>
           {{#if this.logo}}<span class="rt-logo"><img src="../_shared/logos/{{this.logo}}.{{#if this.logoExt}}{{this.logoExt}}{{else}}svg{{/if}}" alt="" /></span>{{else}}{{#if this.logoColor}}<span class="rt-chip wirit-chip" style="background:{{this.logoColor}}">{{#if this.logoText}}{{this.logoText}}{{else}}{{initial this.name}}{{/if}}</span>{{else}}<span class="rt-mono">{{initial this.name}}</span>{{/if}}{{/if}}
-          <span class="rt-name">{{this.name}}</span>
+          <span class="rt-name {{rankClass this.rank @index}}">{{this.name}}</span>
           {{#if ../subLabel}}
             {{#if (eq ../variant "c")}}
             <span class="rt-valwrap"><span class="rt-val">{{this.value}}</span><span class="rt-sub">{{this.sub}}</span></span>
