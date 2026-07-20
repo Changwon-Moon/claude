@@ -1,0 +1,42 @@
+name: 사진 자동 취득 (Wikimedia)
+
+# 위키미디어 커먼즈에서 라이선스 안전한(CC/PD) 사진을 취득 →
+# templates/_shared/photos/ 에 저장하고 catalog.json에 출처·라이선스·저자와 함께 커밋.
+# 세션(코드 대화창)은 웹 이미지 다운로드가 막혀 있어 취득은 여기(Actions)에서 돈다.
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: "Commons 파일 제목 (예: File:....jpg)"
+        required: true
+      slug:
+        description: "저장 slug (예: subway-jongno3ga)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: 사진 취득
+        run: node scripts/fetch-wikimedia-photo.mjs --title "${{ github.event.inputs.title }}" --slug "${{ github.event.inputs.slug }}"
+
+      - name: 취득 사진 커밋
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add templates/_shared/photos/
+          if git diff --cached --quiet; then
+            echo "새 사진 없음 — 커밋 생략"
+          else
+            git commit -m "사진 자동 취득 (Wikimedia) $(date -u +%Y-%m-%d)"
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
