@@ -25,10 +25,10 @@
         --row-font: 38px;
         --row-pad: 15px;
         --mono: 56px;
-        --name-w: 330px;
-        --val-w: 152px;
-        --sub-w: 170px;
-        --col-gap: 15px;
+        --name-w: 336px;
+        --val-w: 156px;
+        --sub-w: 176px;
+        --col-gap: 17px;
       }
       .rt.d-dense {
         --row-font: 29px;
@@ -42,11 +42,12 @@
       /* 순위표는 표 공간 확보를 위해 제목 영역을 살짝 압축 */
       /* 제목: 2줄 가운데 정렬(data 줄바꿈 pre-line), 좌우 대칭 여백. 부제는 공용 .wirit-topcap */
       .rt-head {
-        padding: 0 56px;
+        padding: 0 24px;
         margin-top: 18px;
       }
-      /* 제목은 1행 기준. 한 줄에 들어오도록 폭에 맞춰 크기 조정(pre-line은 유지해
-         혹시 줄바꿈 문자가 있는 다른 카드도 지원). 여백이 준 만큼 표를 키운다. */
+      /* 제목은 1행 기준. font-size 는 아래 fit 스크립트가 컨테이너 폭에 맞게
+         자동으로 키워 좌우를 꽉 채운다(결정적: 동일 입력=동일 결과).
+         62px 는 스크립트 미실행 시 폴백값. */
       .rt .wirit-title {
         font-size: 62px;
         margin-top: 0;
@@ -68,8 +69,9 @@
         flex-direction: column;
       }
 
-      /* 사진 있을 때: 소수 항목이면 행을 세로로 펴서 중간 공백 제거 */
-      .rt.has-photos .rt-row:not(.rt-colheadrow) {
+      /* 데이터 행을 세로로 펴서 표가 본문 높이를 꽉 채우게 한다(하단 빈 공간 제거).
+         각 행이 균등 높이가 되어 리듬이 안정적이다. 제목 행(colheadrow)은 제외. */
+      .rt-body .rt-row:not(.rt-colheadrow) {
         flex: 1 1 0;
         min-height: 0;
       }
@@ -127,9 +129,12 @@
       /* 표 공통 그리드: 순위 | 로고 | 이름(내용폭) | 값 | (보조값) | 우측 여백
          이름을 내용 폭(최대 340px)으로 제한하고 끝에 1fr 여백을 둬서
          숫자 블록이 우측 끝에 붙지 않고 중앙 쪽에 오도록(중앙 빈 띠 방지). */
+      /* 고정폭 열 묶음을 가운데로(justify-content:center) → 좌우 여백이 자동으로
+         동일해진다. 트레일링 1fr을 없애 숫자 블록이 우측으로 더 붙고 좌우가 대칭. */
       .rt-row {
         display: grid;
-        grid-template-columns: 72px var(--mono) var(--name-w) var(--val-w) 1fr;
+        grid-template-columns: 72px var(--mono) var(--name-w) var(--val-w);
+        justify-content: center;
         align-items: center;
         gap: var(--col-gap);
         padding: var(--row-pad) 20px;
@@ -137,7 +142,7 @@
         line-height: 1.05;
       }
       .rt-row.has-sub {
-        grid-template-columns: 72px var(--mono) var(--name-w) var(--val-w) var(--sub-w) 1fr;
+        grid-template-columns: 72px var(--mono) var(--name-w) var(--val-w) var(--sub-w);
       }
       .rt-colhead {
         font-size: 27px;
@@ -366,5 +371,41 @@
         <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
       </div>
     </div>
+
+    <!-- 제목 폭 맞춤(fit-to-width): 컨테이너 폭에 꽉 차도록 폰트 크기를 자동 조정.
+         이분 탐색으로 한 줄에 들어오는 최대 크기를 찾는다. 결정적(입력 동일→결과 동일).
+         줄바꿈(\n)이 있는 제목은 건드리지 않는다.
+         폰트 로딩 후 정확한 글자폭으로 재실행해야 하므로 window.__wiritFit 훅으로 노출 —
+         렌더/검수 파이프라인이 document.fonts.ready 뒤에 호출한다. 단독 열람 대비 즉시 1회도 실행. -->
+    <script>
+      window.__wiritFit = function () {
+        var el = document.querySelector(".rt .wirit-title");
+        if (!el || (el.textContent || "").indexOf("\n") >= 0) return;
+        var head = el.parentElement;
+        var hs = getComputedStyle(head);
+        var avail =
+          head.clientWidth -
+          (parseFloat(hs.paddingLeft) || 0) -
+          (parseFloat(hs.paddingRight) || 0);
+        el.style.whiteSpace = "nowrap";
+        var lo = 40,
+          hi = 118,
+          best = lo;
+        for (var i = 0; i < 20; i++) {
+          var mid = (lo + hi) / 2;
+          el.style.fontSize = mid + "px";
+          if (el.scrollWidth <= avail) {
+            best = mid;
+            lo = mid;
+          } else {
+            hi = mid;
+          }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready)
+        document.fonts.ready.then(window.__wiritFit);
+    </script>
   </body>
 </html>

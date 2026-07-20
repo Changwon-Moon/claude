@@ -66,6 +66,8 @@ export async function runDesignQa(contentPath: string): Promise<Finding[]> {
   try {
     await page.goto(pathToFileURL(tmp).href, { waitUntil: "networkidle" });
     await page.evaluate("document.fonts && document.fonts.ready");
+    // 렌더와 동일하게 폰트 로딩 후 레이아웃 훅(제목 폭 맞춤)을 적용한 상태를 측정
+    await page.evaluate("window.__wiritFit && window.__wiritFit()");
     // 측정 코드는 문자열로 전달(tsx의 __name 헬퍼가 직렬화되며 깨지는 것 회피)
     geo = (await page.evaluate(MEASURE_JS)) as Geo;
   } finally {

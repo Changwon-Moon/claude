@@ -75,6 +75,8 @@ export async function screenshotHtml(
     await page.goto(pathToFileURL(tmpPath).href, { waitUntil: "networkidle" });
     // 폰트·이미지가 다 준비된 뒤 캡처
     await page.evaluate(() => (document as any).fonts?.ready);
+    // 폰트 로딩 후 레이아웃 후처리 훅(예: 제목 폭 맞춤) — 실제 글자폭으로 재계산
+    await page.evaluate(() => (window as any).__wiritFit && (window as any).__wiritFit());
     fs.mkdirSync(path.dirname(outPath), { recursive: true });
     await page.screenshot({ path: outPath, type: "png" });
   } finally {
