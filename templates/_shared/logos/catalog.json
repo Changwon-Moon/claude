@@ -109,6 +109,15 @@
       "license": "public-domain",
       "note": "자동 취득 · 원 라이선스 \"Public domain\" · 상표 nominative use",
       "added": "2026-07-20"
+    },
+    {
+      "slug": "hd",
+      "name": "HD한국조선해양",
+      "kind": "logo",
+      "source": "Brandfetch (hdksoe.co.kr)",
+      "license": "trademark-nominative",
+      "note": "자동 취득(Tier C) · 회사 공식 자산 · 상표 nominative use",
+      "added": "2026-07-20"
     }
   ]
 }
