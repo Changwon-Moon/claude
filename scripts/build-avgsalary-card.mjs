@@ -20,9 +20,19 @@ if (!existsSync(dsPath)) {
 const ds = JSON.parse(readFileSync(dsPath, "utf8"));
 
 const fmt = (n) => n.toLocaleString("en-US");
-/** 직원수 → "00.0만명" 형식(소수 1자리 고정)으로 자릿수를 통일해 표 정렬을 맞춘다 */
-const fmtHead = (n) => `${(n / 10000).toFixed(1)}만명`;
 const sorted = [...ds.rows].sort((a, b) => b.avgSalaryManwon - a.avgSalaryManwon).slice(0, 10);
+
+/**
+ * 직원수 → "0.0만명". 정수부 자릿수가 다르면(12.9 vs 3.5) 우측정렬 시 소수점이 어긋나므로,
+ * 정수부가 짧은 값을 figure space(U+2007, 숫자폭 공백)로 앞에서 채워 소수점·자릿줄을 맞춘다.
+ */
+const headStr = (n) => (n / 10000).toFixed(1); // "3.5", "12.9"
+const maxIntLen = Math.max(...sorted.map((r) => headStr(r.headcount).split(".")[0].length));
+const fmtHead = (n) => {
+  const s = headStr(n);
+  const pad = "\u2007".repeat(maxIntLen - s.split(".")[0].length);
+  return pad + s + "만명";
+};
 
 let lastVal = null;
 let lastRank = 0;
