@@ -41,12 +41,13 @@
       }
       /* 순위표는 표 공간 확보를 위해 제목 영역을 살짝 압축 */
       /* 제목: 2줄 가운데 정렬(data 줄바꿈 pre-line), 좌우 대칭 여백. 부제는 공용 .wirit-topcap */
-      /* 제목은 카드 좌우 패딩을 넘어 거의 카드 끝까지(풀블리드) 채운다.
-         음수 마진으로 패딩(72px)을 상쇄해 폭을 넓히면 fit 스크립트가 더 큰
-         폰트로 맞춰 '여백 없이 꽉' 채워진다. */
+      /* 제목의 좌우 끝을 '아래 표 내용의 좌우 끝'과 정확히 맞춘다.
+         표는 justify-content:center로 좌우 여백이 동일(고정폭)하므로, 그 여백만큼
+         rt-head 에 좌우 패딩을 줘서 제목 fit 폭이 표 내용폭과 같아지게 한다.
+         패딩값(--title-inset)은 아래 fit 스크립트가 실제 표 좌우 끝을 재서 정한다. */
       .rt-head {
-        padding: 0;
-        margin: 14px -56px 0;
+        padding: 0 36px;
+        margin: 14px 0 0;
       }
       /* 제목은 1행 기준. font-size 는 아래 fit 스크립트가 컨테이너 폭에 맞게
          자동으로 키워 좌우를 꽉 채운다(결정적: 동일 입력=동일 결과).
@@ -376,16 +377,28 @@
       </div>
     </div>
 
-    <!-- 제목 폭 맞춤(fit-to-width): 컨테이너 폭에 꽉 차도록 폰트 크기를 자동 조정.
-         이분 탐색으로 한 줄에 들어오는 최대 크기를 찾는다. 결정적(입력 동일→결과 동일).
-         줄바꿈(\n)이 있는 제목은 건드리지 않는다.
-         폰트 로딩 후 정확한 글자폭으로 재실행해야 하므로 window.__wiritFit 훅으로 노출 —
-         렌더/검수 파이프라인이 document.fonts.ready 뒤에 호출한다. 단독 열람 대비 즉시 1회도 실행. -->
+    <!-- 제목 정렬·폭 맞춤: 제목의 좌우 끝을 '아래 표 내용의 좌우 끝'과 정확히 맞춘다.
+         표 첫 행의 맨 왼쪽 열(순위) 왼끝 ~ 맨 오른쪽 열(직원수) 오른끝을 실측해,
+         제목 컨테이너 좌우 패딩을 그만큼 줘서 제목이 표 폭과 동일하게 채워지도록 한다.
+         그 폭 안에서 한 줄에 들어오는 최대 폰트를 이분 탐색으로 찾는다.
+         결정적(입력 동일→결과 동일). 줄바꿈(\n) 제목은 건드리지 않는다.
+         폰트 로딩 후 실제 글자폭으로 재실행해야 하므로 window.__wiritFit 훅으로 노출. -->
     <script>
       window.__wiritFit = function () {
         var el = document.querySelector(".rt .wirit-title");
         if (!el || (el.textContent || "").indexOf("\n") >= 0) return;
         var head = el.parentElement;
+        // 표 좌우 끝 실측(첫 데이터 행의 맨 바깥 두 열)
+        var row = document.querySelector(".rt-body .rt-row:not(.rt-colheadrow)");
+        var hr = head.getBoundingClientRect();
+        if (row && row.children.length >= 2) {
+          var first = row.children[0].getBoundingClientRect();
+          var last = row.children[row.children.length - 1].getBoundingClientRect();
+          var padL = Math.max(0, first.left - hr.left);
+          var padR = Math.max(0, hr.right - last.right);
+          head.style.paddingLeft = padL + "px";
+          head.style.paddingRight = padR + "px";
+        }
         var hs = getComputedStyle(head);
         var avail =
           head.clientWidth -
