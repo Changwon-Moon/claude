@@ -41,9 +41,12 @@
       }
       /* 순위표는 표 공간 확보를 위해 제목 영역을 살짝 압축 */
       /* 제목: 2줄 가운데 정렬(data 줄바꿈 pre-line), 좌우 대칭 여백. 부제는 공용 .wirit-topcap */
+      /* 제목은 카드 좌우 패딩을 넘어 거의 카드 끝까지(풀블리드) 채운다.
+         음수 마진으로 패딩(72px)을 상쇄해 폭을 넓히면 fit 스크립트가 더 큰
+         폰트로 맞춰 '여백 없이 꽉' 채워진다. */
       .rt-head {
-        padding: 0 24px;
-        margin-top: 18px;
+        padding: 0;
+        margin: 14px -56px 0;
       }
       /* 제목은 1행 기준. font-size 는 아래 fit 스크립트가 컨테이너 폭에 맞게
          자동으로 키워 좌우를 꽉 채운다(결정적: 동일 입력=동일 결과).
@@ -61,7 +64,8 @@
         flex-direction: column;
       }
       .rt-body {
-        margin-top: 28px;
+        margin-top: 24px;
+        margin-bottom: 40px; /* 표 높이를 살짝 줄여 하단에 여백을 둔다(안정감) */
         flex: 1;
         min-height: 0;
         overflow: hidden;
