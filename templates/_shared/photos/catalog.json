@@ -1,5 +1,14 @@
 {
   "$schema": "../../../docs/ASSET_HUB.md",
   "kind": "photo",
-  "items": []
+  "items": [],
+  "subway-jongno3ga": {
+    "file": "subway-jongno3ga.jpg",
+    "source": "Wikimedia Commons",
+    "title": "File:Seoul-metro-534-Jongno-3ga-station-platform-20180915-123402.jpg",
+    "license": "CC BY-SA 4.0",
+    "author": "LERK",
+    "url": "https://commons.wikimedia.org/wiki/File%3ASeoul-metro-534-Jongno-3ga-station-platform-20180915-123402.jpg",
+    "fetchedFor": "wirit card"
+  }
 }
