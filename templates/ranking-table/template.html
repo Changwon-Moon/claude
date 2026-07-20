@@ -14,16 +14,19 @@
         --row-font: 40px;
         --row-pad: 19px;
         --mono: 62px;
+        --name-w: 360px; /* 이름 열 고정폭: 값이 행마다 같은 x에 정렬되도록(중앙 빈 띠↓) */
       }
       .rt.d-mid {
         --row-font: 34px;
         --row-pad: 13px;
         --mono: 56px;
+        --name-w: 320px;
       }
       .rt.d-dense {
         --row-font: 27px;
         --row-pad: 6px;
         --mono: 44px;
+        --name-w: 264px;
       }
       /* 순위표는 표 공간 확보를 위해 제목 영역을 살짝 압축 */
       /* 제목: 2줄 가운데 정렬(data 줄바꿈 pre-line), 좌우 대칭 여백. 부제는 공용 .wirit-topcap */
@@ -108,10 +111,12 @@
         background: linear-gradient(transparent, rgba(0, 0, 0, 0.58));
       }
 
-      /* 표 공통 그리드: 순위 | 로고 | 이름 | 값 | (보조값) */
+      /* 표 공통 그리드: 순위 | 로고 | 이름(내용폭) | 값 | (보조값) | 우측 여백
+         이름을 내용 폭(최대 340px)으로 제한하고 끝에 1fr 여백을 둬서
+         숫자 블록이 우측 끝에 붙지 않고 중앙 쪽에 오도록(중앙 빈 띠 방지). */
       .rt-row {
         display: grid;
-        grid-template-columns: 84px var(--mono) 1fr auto;
+        grid-template-columns: 84px var(--mono) var(--name-w) auto 1fr;
         align-items: center;
         gap: 22px;
         padding: var(--row-pad) 20px;
@@ -119,7 +124,7 @@
         line-height: 1.05;
       }
       .rt-row.has-sub {
-        grid-template-columns: 84px var(--mono) 1fr auto auto;
+        grid-template-columns: 84px var(--mono) var(--name-w) auto auto 1fr;
       }
       .rt-colhead {
         font-size: 27px;
