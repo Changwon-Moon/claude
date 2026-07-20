@@ -196,6 +196,60 @@
         /* 밝은 노선색(노랑·베이지 등) 위에서도 흰 글자가 읽히도록 미세 그림자 */
         text-shadow: 0 1px 1px rgba(0, 0, 0, 0.38);
       }
+
+      /* ── wirit 수도권 전철 노선 뱃지 (metroBadge 헬퍼) ──
+         공식 노선색 원형 심볼. 번호는 크게, 명칭형(신분당·수인분당·GTX)은 작게·2행.
+         밝은 노선색(노랑·베이지·라임)은 ln-dark로 진한 글자 → 가독성(wirit 개선점). */
+      .rt-line {
+        width: var(--mono);
+        height: var(--mono);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-family: var(--font-sans);
+        font-weight: 800;
+        line-height: 0.94;
+        box-shadow: 0 1px 3px rgba(20, 24, 33, 0.18);
+      }
+      .rt-line.ln-white {
+        color: #fff;
+      }
+      .rt-line.ln-white .num,
+      .rt-line.ln-white .nm,
+      .rt-line.ln-white .gtx {
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+      }
+      .rt-line.ln-dark {
+        color: #1c2431;
+      }
+      .rt-line .num {
+        font-size: calc(var(--mono) * 0.58);
+        font-weight: 900;
+      }
+      .rt-line .nm {
+        font-size: calc(var(--mono) * 0.3);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+      .rt-line .nm.two {
+        font-size: calc(var(--mono) * 0.28);
+        line-height: 1;
+      }
+      .rt-line .gtx {
+        display: flex;
+        flex-direction: column;
+        line-height: 0.86;
+      }
+      .rt-line .gtx i {
+        font-style: italic;
+        font-weight: 900;
+        font-size: calc(var(--mono) * 0.24);
+      }
+      .rt-line .gtx b {
+        font-size: calc(var(--mono) * 0.32);
+      }
       .rt-name {
         font-weight: 700;
         white-space: nowrap;
@@ -346,7 +400,7 @@
         {{#each items}}
         <div class="rt-row {{#if ../subLabel}}has-sub{{/if}} {{#if (lt @index 3)}}top{{/if}}">
           <span class="rt-rank">{{medal this.rank @index}}</span>
-          {{#if this.logo}}<span class="rt-logo"><img src="../_shared/logos/{{this.logo}}.{{#if this.logoExt}}{{this.logoExt}}{{else}}svg{{/if}}" alt="" /></span>{{else}}{{#if this.logoColor}}<span class="rt-chip wirit-chip" style="background:{{this.logoColor}}">{{#if this.logoText}}{{this.logoText}}{{else}}{{initial this.name}}{{/if}}</span>{{else}}<span class="rt-mono">{{initial this.name}}</span>{{/if}}{{/if}}
+          {{#if this.line}}{{{metroBadge this.line}}}{{else}}{{#if this.logo}}<span class="rt-logo"><img src="../_shared/logos/{{this.logo}}.{{#if this.logoExt}}{{this.logoExt}}{{else}}svg{{/if}}" alt="" /></span>{{else}}{{#if this.logoColor}}<span class="rt-chip wirit-chip" style="background:{{this.logoColor}}">{{#if this.logoText}}{{this.logoText}}{{else}}{{initial this.name}}{{/if}}</span>{{else}}<span class="rt-mono">{{initial this.name}}</span>{{/if}}{{/if}}{{/if}}
           <span class="rt-name {{rankClass this.rank @index}}">{{this.name}}</span>
           {{#if ../subLabel}}
             {{#if (eq ../variant "c")}}

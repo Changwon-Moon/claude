@@ -10,6 +10,7 @@
 - **로고 자동 취득기 B**: `packages/collectors/src/sources/logoFetch.ts`+`logoCli.ts` (Wikimedia, 라이선스 검증, Actions) / 워크플로 `asset-fetch.yml`
 - **로고 자동 취득기 C(구현·가동)**: `packages/collectors/src/sources/brandfetchLogo.ts` (Brandfetch Brand API, 도메인 후보 배열 순차 시도, 키=`BRANDFETCH_API_KEY`) — logoCli가 B 실패 시 C로 폴백. 평균연봉 카드 로고 **10/10 실로고 확보**(포스코인터·삼성바이오·HD한국조선 등)
 - 로고 해결 우선순위: 허브(취득분 포함) → simple-icons → 모노그램. png/svg 확장자 모두 지원(`logoExt`)
+- **수도권 전철 노선 뱃지 카탈로그(구현)**: `templates/_shared/metro-lines.json` — 공식 노선색+표기(번호 1~9, 명칭형 신분당·수인분당·경의중앙·공항철도·GTX-A/B/C·서해·신안산·경춘·김포골드·우이신설·인천1/2·경강). 렌더러 `metroBadge` 헬퍼가 wirit 스타일 원형 뱃지로 출력(밝은 노선색은 진한 글자로 가독성). 저작권 프리(색+숫자)
 - 설계: `docs/ASSET_AUTOMATION.md` (로고 3티어 + 사진 반자동 + 법적 가드레일)
 
 ## 지식

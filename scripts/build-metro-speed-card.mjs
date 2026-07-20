@@ -24,12 +24,13 @@ for (const l of ds.lines) {
   }
 }
 
+// 칩 약자 → 노선 뱃지 카탈로그 키(templates/_shared/metro-lines.json)
+const keyMap = { "분": "분당", "신": "신분당" };
 const sorted = [...ds.lines].sort((a, b) => b.kmh - a.kmh);
 const items = sorted.map((l, i) => ({
   name: l.line,
   rank: String(i + 1),
-  logoColor: l.color,
-  logoText: l.chip,
+  line: keyMap[l.chip] || l.chip,
   value: l.kmh.toFixed(1),
 }));
 

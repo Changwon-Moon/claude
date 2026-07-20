@@ -47,6 +47,32 @@ Handlebars.registerHelper("rankClass", (rank: unknown, index: unknown) => {
   return r === "1" ? "r-gold" : r === "2" ? "r-silver" : r === "3" ? "r-bronze" : "";
 });
 
+// 수도권 전철 노선 뱃지 — 공식 노선색 원형 심볼(번호/명칭/GTX). wirit 스타일.
+// 카탈로그: templates/_shared/metro-lines.json. 사용: {{{metroBadge this.line}}}
+let METRO_LINES: Record<string, any> = {};
+try {
+  METRO_LINES = JSON.parse(
+    fs.readFileSync(path.join(SHARED_DIR, "metro-lines.json"), "utf8"),
+  );
+} catch {
+  /* 카탈로그 없으면 폴백(아래 helper가 키 텍스트 표기) */
+}
+Handlebars.registerHelper("metroBadge", (key: unknown) => {
+  const k = String(key);
+  const m = METRO_LINES[k];
+  if (!m) return new Handlebars.SafeString(`<span class="rt-mono">${k}</span>`);
+  const cls = m.text === "dark" ? "ln-dark" : "ln-white";
+  let inner: string;
+  if (m.num) inner = `<span class="num">${m.num}</span>`;
+  else if (m.gtx) inner = `<span class="gtx"><i>GTX</i><b>${m.gtx}</b></span>`;
+  else if (Array.isArray(m.lines))
+    inner = `<span class="nm two">${m.lines[0]}<br>${m.lines[1]}</span>`;
+  else inner = `<span class="nm">${m.label || k}</span>`;
+  return new Handlebars.SafeString(
+    `<span class="rt-line ${cls}" style="background:${m.color}">${inner}</span>`,
+  );
+});
+
 /**
  * 결정적 라인 차트 SVG 생성 (1년 추이 등).
  * 사용: {{{lineChart series width=984 height=240}}}
