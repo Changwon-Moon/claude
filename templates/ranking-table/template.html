@@ -15,26 +15,29 @@
       .rt {
         --row-font: 44px;
         --row-pad: 20px;
-        --mono: 64px;
-        --name-w: 360px;
-        --val-w: 250px;
-        --sub-w: 168px;
+        --mono: 60px;
+        --name-w: 356px;
+        --val-w: 176px;
+        --sub-w: 188px;
+        --col-gap: 16px;
       }
       .rt.d-mid {
         --row-font: 38px;
         --row-pad: 15px;
-        --mono: 58px;
+        --mono: 56px;
         --name-w: 330px;
-        --val-w: 240px;
-        --sub-w: 160px;
+        --val-w: 152px;
+        --sub-w: 170px;
+        --col-gap: 15px;
       }
       .rt.d-dense {
         --row-font: 29px;
         --row-pad: 8px;
         --mono: 46px;
-        --name-w: 270px;
-        --val-w: 220px;
-        --sub-w: 150px;
+        --name-w: 262px;
+        --val-w: 128px;
+        --sub-w: 142px;
+        --col-gap: 12px;
       }
       /* 순위표는 표 공간 확보를 위해 제목 영역을 살짝 압축 */
       /* 제목: 2줄 가운데 정렬(data 줄바꿈 pre-line), 좌우 대칭 여백. 부제는 공용 .wirit-topcap */
@@ -126,15 +129,15 @@
          숫자 블록이 우측 끝에 붙지 않고 중앙 쪽에 오도록(중앙 빈 띠 방지). */
       .rt-row {
         display: grid;
-        grid-template-columns: 84px var(--mono) var(--name-w) var(--val-w) 1fr;
+        grid-template-columns: 72px var(--mono) var(--name-w) var(--val-w) 1fr;
         align-items: center;
-        gap: 22px;
+        gap: var(--col-gap);
         padding: var(--row-pad) 20px;
         font-size: var(--row-font);
         line-height: 1.05;
       }
       .rt-row.has-sub {
-        grid-template-columns: 84px var(--mono) var(--name-w) var(--val-w) var(--sub-w) 1fr;
+        grid-template-columns: 72px var(--mono) var(--name-w) var(--val-w) var(--sub-w) 1fr;
       }
       .rt-colhead {
         font-size: 27px;
@@ -187,18 +190,24 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
-      /* 1·2·3위 기업명 금·은·동 색상 (밝은 종이 배경에서 읽히는 톤으로 조정) */
+      /* 1·2·3위 기업명 금·은·동 색상.
+         밝은 종이 배경에서 은색(밝은 회색)은 대비가 약해 잘 안 읽히므로
+         세 톤 모두 '진한 금속색'으로 낮춰 대비를 확보하고, 미세한 그림자로
+         살짝 띄워(foil) 배경과 분리한다. 가독성 우선. */
+      .rt-name.r-gold,
+      .rt-name.r-silver,
+      .rt-name.r-bronze {
+        font-weight: 900;
+        text-shadow: 0 1px 1px rgba(20, 24, 33, 0.16);
+      }
       .rt-name.r-gold {
-        color: #c8a233;
-        font-weight: 800;
+        color: #a97b0c;
       }
       .rt-name.r-silver {
-        color: #8c93a0;
-        font-weight: 800;
+        color: #5b6675;
       }
       .rt-name.r-bronze {
-        color: #b07a3c;
-        font-weight: 800;
+        color: #9a5f27;
       }
       /* 값·보조는 열 폭 안에서 가운데 정렬 → 제목 라벨이 내용 위에 가운데로 온다.
          숫자는 tabular-nums + (직원수는 figure space 패딩)으로 자릿줄이 유지된다. */

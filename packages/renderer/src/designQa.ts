@@ -115,10 +115,32 @@ function analyze(g: Geo): Finding[] {
   const rows = g.rows.filter((r) => r.val || r.name);
   if (!rows.length) return out;
 
-  // 1) 넘침
+  // 1) 넘침 (카드 바깥 경계)
   g.overflow.forEach((o) =>
     out.push({ level: "error", code: "overflow", msg: `요소가 카드 ${o.side==="right"?"오른쪽":"아래"}로 ${o.by}px 넘침 (.${String(o.sel).split(" ")[0]})` })
   );
+
+  // 1b) 안쪽 여백(패딩) 침범 — 카드 바깥으로 넘치진 않아도 내용이 좌우 안전 여백을
+  //     넘어 테두리/여백 영역까지 밀고 들어가면(줄이 '선을 넘는' 상태) error.
+  //     바깥 경계(overflow)보다 먼저 잡히는, 더 엄격한 검수항이다.
+  const TOL = 1;
+  const crosses = (r: Rect | null) =>
+    r && (r.right > g.innerRight + TOL || r.left < g.innerLeft - TOL);
+  const worst = { by: 0 };
+  rows.forEach((r) => {
+    ([r.val, r.sub, r.name] as (Rect | null)[]).forEach((c) => {
+      if (crosses(c) && c) {
+        const by = Math.max(c.right - g.innerRight, g.innerLeft - c.left);
+        if (by > worst.by) worst.by = Math.round(by);
+      }
+    });
+  });
+  if (worst.by > TOL)
+    out.push({
+      level: "error",
+      code: "padcross",
+      msg: `내용이 카드 안쪽 여백(패딩 선)을 최대 ${worst.by}px 침범 — 열 폭(--name-w/--val-w/--sub-w)이나 열 간격(--col-gap)을 줄여 표가 안전 영역 안에 들어오게 하세요`,
+    });
 
   // 2) 숫자열 우측 정렬 일관성 (값/보조 각각 우측 끝이 행마다 같아야)
   const alignCheck = (key: "val" | "sub", label: string) => {
