@@ -32,7 +32,7 @@ const toItem = (r, hl) => ({ line: r.key, name: segName(r), value: r.kmh.toFixed
 
 const fast = sorted[0];
 const slow = sorted[sorted.length - 1];
-const src = { name: "한우진 표정속도표 · 신분당선 나무위키(2차)", asOf: ds.meta.asOf };
+const src = { name: "각 노선 운영사 영업거리·소요시간 기준 표정속도 산출", asOf: ds.meta.asOf };
 const subtitleShort = "표정속도 = 정차·가감속까지 포함한 실제 평균 시속";
 const labels = { logoLabel: "노선", nameLabel: "구간", valueLabel: "표정속도(km/h)" };
 
@@ -69,7 +69,7 @@ const col = (r) => ({ line: r.key, seg: segName(r), value: r.kmh.toFixed(1), ...
 write("metro-2col.json", {
   template: "metro-2col@1", date,
   subtitle: subtitleShort,
-  title: "수도권 지하철 노선별 운행속도",
+  title: "수도권 노선·구간별 운행속도",
   colHead: { line: "노선", seg: "구간", val: "속도" },
   left: sorted.slice(0, half).map(col),
   right: sorted.slice(half).map(col),

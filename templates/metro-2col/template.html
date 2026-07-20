@@ -11,12 +11,13 @@
       .m2 {
         --mono: 46px;
       }
+      /* 제목은 카드 좌우 패딩을 넘어 거의 카드 끝까지(풀블리드) 채운다(연봉 카드와 동일). */
       .m2-head {
-        padding: 0 40px;
-        margin-top: 8px;
+        padding: 0;
+        margin: 8px -52px 0;
       }
       .m2 .wirit-title {
-        font-size: 74px;
+        font-size: 84px;
         line-height: 1.04;
         text-align: center;
         white-space: nowrap;
@@ -25,7 +26,8 @@
       .m2-cols {
         display: flex;
         gap: 34px;
-        margin-top: 24px;
+        margin-top: 22px;
+        margin-bottom: 30px; /* 표 높이 살짝 축소 */
         flex: 1;
         min-height: 0;
       }
@@ -200,7 +202,7 @@
           (parseFloat(hs.paddingRight) || 0);
         el.style.whiteSpace = "nowrap";
         var lo = 40,
-          hi = 78,
+          hi = 112,
           best = lo;
         for (var i = 0; i < 20; i++) {
           var mid = (lo + hi) / 2;
