@@ -50,8 +50,9 @@ jobs:
         run: |
           YEAR="${{ github.event.inputs.year }}"
           pnpm --filter @wirit/collectors exec tsx src/dartCli.ts \
-            "$YEAR" "corpcode_dir/CORPCODE.xml" "${{ github.event.inputs.companies }}" \
-            "data/datasets/avg-salary-$YEAR.json"
+            "$YEAR" "$GITHUB_WORKSPACE/corpcode_dir/CORPCODE.xml" \
+            "$GITHUB_WORKSPACE/${{ github.event.inputs.companies }}" \
+            "$GITHUB_WORKSPACE/data/datasets/avg-salary-$YEAR.json"
 
       - name: 데이터셋 커밋
         run: |
