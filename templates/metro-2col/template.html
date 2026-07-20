@@ -37,7 +37,7 @@
       }
       .m2-r {
         display: grid;
-        grid-template-columns: var(--mono) 1fr auto;
+        grid-template-columns: var(--mono) 1fr 132px;
         align-items: center;
         gap: 10px;
         padding: 8px 8px;
@@ -53,17 +53,13 @@
         border-bottom: 3px solid var(--wirit-ink);
         padding-bottom: 10px;
       }
+      /* 헤드라인(제목 행)은 항상 각 내용 열 위에 가운데 정렬 */
       .m2-hr span {
         font-size: 25px;
         font-weight: 700;
         color: var(--wirit-gray);
-      }
-      .m2-hr .h-line {
         text-align: center;
         white-space: nowrap;
-      }
-      .m2-hr .h-val {
-        text-align: right;
       }
       .m2-seg {
         font-size: 27px;
@@ -74,7 +70,7 @@
         text-overflow: ellipsis;
       }
       .m2-val {
-        text-align: right;
+        text-align: center;
         font-family: var(--font-num);
         white-space: nowrap;
       }
