@@ -20,6 +20,8 @@ if (!existsSync(dsPath)) {
 const ds = JSON.parse(readFileSync(dsPath, "utf8"));
 
 const fmt = (n) => n.toLocaleString("en-US");
+/** 직원수 → "00.0만명" 형식(소수 1자리 고정)으로 자릿수를 통일해 표 정렬을 맞춘다 */
+const fmtHead = (n) => `${(n / 10000).toFixed(1)}만명`;
 const sorted = [...ds.rows].sort((a, b) => b.avgSalaryManwon - a.avgSalaryManwon).slice(0, 10);
 
 let lastVal = null;
@@ -35,7 +37,7 @@ const items = sorted.map((r, i) => {
     rank: String(rank),
     ...(logo ? { logo: logo.slug, logoExt: logo.ext } : {}),
     value: fmt(r.avgSalaryManwon),
-    sub: `${fmt(r.headcount)}명`,
+    sub: fmtHead(r.headcount),
   };
 });
 
@@ -43,7 +45,7 @@ const content = {
   template: "ranking-table@1",
   date,
   subtitle: `금융감독원 DART · ${year} 사업보고서 · 직원 1인 평균급여`,
-  title: `${year} 대기업\n평균연봉 순위`,
+  title: "2026 대기업\n평균연봉 Top10",
   nameLabel: "기업",
   valueLabel: "평균연봉(만원)",
   subLabel: "직원수",

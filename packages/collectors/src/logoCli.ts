@@ -9,6 +9,7 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { fetchCompanyLogo, COMPANY_QUERIES } from "./sources/logoFetch.js";
+import { fetchBrandfetchLogo, DOMAIN_MAP } from "./sources/brandfetchLogo.js";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const LOGO_DIR = resolve(ROOT, "templates/_shared/logos");
@@ -26,16 +27,16 @@ function normalizeLicense(raw: string): string {
   return "trademark-nominative"; // isLicenseSafe 통과분 — 상표 nominative로 분류, 원문은 note에
 }
 
-function addCatalog(slug: string, name: string, license: string, sourceUrl: string): void {
+function addCatalog(slug: string, name: string, license: string, source: string, note: string): void {
   const cat = JSON.parse(readFileSync(CATALOG, "utf8"));
   if (cat.items.some((i: any) => i.slug === slug)) return;
   cat.items.push({
     slug,
     name,
     kind: "logo",
-    source: `Wikimedia Commons (${sourceUrl})`,
-    license: normalizeLicense(license),
-    note: `자동 취득 · 원 라이선스 "${license}" · 상표 nominative use`,
+    source,
+    license,
+    note,
     added: new Date().toISOString().slice(0, 10),
   });
   writeFileSync(CATALOG, JSON.stringify(cat, null, 2) + "\n");
@@ -83,11 +84,52 @@ async function run(paths: string[]): Promise<void> {
       }
       const dest = resolve(LOGO_DIR, `${logo.slug}.${logo.ext}`);
       writeFileSync(dest, logo.bytes);
-      addCatalog(logo.slug, name, logo.license, logo.sourceUrl);
+      addCatalog(
+        logo.slug,
+        name,
+        normalizeLicense(logo.license),
+        `Wikimedia Commons (${logo.sourceUrl})`,
+        `자동 취득 · 원 라이선스 "${logo.license}" · 상표 nominative use`
+      );
       got.push(`${name} → ${logo.slug}.${logo.ext} (${logo.license})`);
     } catch (e) {
       missed.push(`${name} (오류: ${e instanceof Error ? e.message : e})`);
     }
+  }
+
+  // Tier C: Wikimedia에서 못 찾은 회사 중 도메인이 알려진 것 → Brandfetch
+  const brandfetchKey = process.env.BRANDFETCH_API_KEY;
+  if (brandfetchKey) {
+    const stillMissing = [...missed];
+    missed.length = 0;
+    for (const entry of stillMissing) {
+      const name = entry.split(" (")[0];
+      if (!DOMAIN_MAP[name]) {
+        missed.push(entry);
+        continue;
+      }
+      try {
+        const logo = await fetchBrandfetchLogo(name, brandfetchKey);
+        if (!logo) {
+          missed.push(`${entry} · Brandfetch도 실패`);
+          continue;
+        }
+        const dest = resolve(LOGO_DIR, `${logo.slug}.${logo.ext}`);
+        writeFileSync(dest, logo.bytes);
+        addCatalog(
+          logo.slug,
+          name,
+          "trademark-nominative",
+          `Brandfetch (${logo.domain})`,
+          "자동 취득(Tier C) · 회사 공식 자산 · 상표 nominative use"
+        );
+        got.push(`${name} → ${logo.slug}.${logo.ext} (Brandfetch)`);
+      } catch (e) {
+        missed.push(`${entry} · Brandfetch 오류: ${e instanceof Error ? e.message : e}`);
+      }
+    }
+  } else if (missed.some((m) => DOMAIN_MAP[m.split(" (")[0]])) {
+    missed.push("(BRANDFETCH_API_KEY 없음 — Tier C 생략)");
   }
 
   console.log(`\n✅ 취득 ${got.length}건:`);

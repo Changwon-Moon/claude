@@ -32,6 +32,8 @@ jobs:
         run: pnpm --filter @wirit/collectors selftest
 
       - name: 로고 취득
+        env:
+          BRANDFETCH_API_KEY: ${{ secrets.BRANDFETCH_API_KEY }}
         run: pnpm --filter @wirit/collectors fetch-logos "${{ github.event.inputs.target }}"
 
       - name: 자산 허브 무결성 검사

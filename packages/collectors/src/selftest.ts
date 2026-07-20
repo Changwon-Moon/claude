@@ -21,6 +21,7 @@ import {
   isLicenseSafe,
 } from "./sources/logoFetch.js";
 import { parseEmpSttus, parseCorpCodeXml, findCorpCode } from "./parse/dart.js";
+import { parseBrandLogos, pickBestLogoFormat, DOMAIN_MAP } from "./sources/brandfetchLogo.js";
 import {
   STOOQ_SPX_CSV,
   STOOQ_WITH_GAPS_CSV,
@@ -193,6 +194,45 @@ console.log("\n[DART 평균연봉 파서]");
   check("corpCode: 2개사 매핑", cmap.size === 2);
   check("corpCode: 삼성전자→00126380", cmap.get("삼성전자") === "00126380");
   check("corpCode: 공백무시 조회", findCorpCode(cmap, "SK 하이닉스") === "00164779");
+}
+
+console.log("\n[로고 취득 파서 — Brandfetch Tier C]");
+{
+  const resp = JSON.stringify({
+    name: "POSCO International",
+    domain: "poscointl.com",
+    logos: [
+      {
+        type: "icon",
+        theme: "light",
+        formats: [{ src: "https://cdn.example/icon.png", format: "png" }],
+      },
+      {
+        type: "logo",
+        theme: "dark",
+        formats: [{ src: "https://cdn.example/logo-dark.svg", format: "svg" }],
+      },
+      {
+        type: "logo",
+        theme: "light",
+        formats: [
+          { src: "https://cdn.example/logo-light.png", format: "png" },
+          { src: "https://cdn.example/logo-light.svg", format: "svg" },
+        ],
+      },
+    ],
+  });
+  const logos = parseBrandLogos(resp);
+  check("Brandfetch: logos 3개 파싱", logos.length === 3);
+  const best = pickBestLogoFormat(logos);
+  check(
+    "Brandfetch: logo·light·svg 최우선 선택",
+    best?.src === "https://cdn.example/logo-light.svg",
+    best?.src
+  );
+  check("Brandfetch: logos 없으면 null", pickBestLogoFormat([]) === null);
+  check("Brandfetch: 빈 응답 파싱", parseBrandLogos(JSON.stringify({})).length === 0);
+  check("Brandfetch: 도메인맵에 3개사 등록", Object.keys(DOMAIN_MAP).length === 3);
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);
