@@ -91,6 +91,24 @@
       "license": "public-domain",
       "note": "자동 취득 · 원 라이선스 \"Public domain\" · 상표 nominative use",
       "added": "2026-07-19"
+    },
+    {
+      "slug": "posco-international",
+      "name": "포스코인터내셔널",
+      "kind": "logo",
+      "source": "Wikimedia Commons (https://upload.wikimedia.org/wikipedia/commons/9/94/POSCOINTERNATIONAL.png)",
+      "license": "public-domain",
+      "note": "자동 취득 · 원 라이선스 \"Public domain\" · 상표 nominative use",
+      "added": "2026-07-20"
+    },
+    {
+      "slug": "samsung-biologics",
+      "name": "삼성바이오로직스",
+      "kind": "logo",
+      "source": "Wikimedia Commons (https://upload.wikimedia.org/wikipedia/commons/8/84/Samsung_Biologics_Logo.svg)",
+      "license": "public-domain",
+      "note": "자동 취득 · 원 라이선스 \"Public domain\" · 상표 nominative use",
+      "added": "2026-07-20"
     }
   ]
 }
