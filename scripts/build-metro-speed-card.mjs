@@ -76,6 +76,18 @@ write("metro-2col.json", {
   source: src,
 });
 
-console.log(`✅ 4종 생성 — metro-speed(정보표) · metro-speed-cover(커버) · metro-speed-hl(하이라이트) · metro-2col(2단)`);
+// 5) 캐러셀 후킹 커버(실사진) — A안
+write("metro-cover-photo.json", {
+  template: "metro-cover-photo@1", date,
+  photo: "subway-jongno3ga.jpg",
+  subtitle: "수도권 전철 표정속도 · 실제 평균 시속",
+  photoCredit: "사진 ⓒ LERK · Wikimedia Commons · CC BY-SA 4.0",
+  hook: '출근길 지하철 속도,\n1등과 꼴등이\n<span class="pt">같은 노선</span>이라고?',
+  top: { line: fast.key, seg: segName(fast), value: fast.kmh.toFixed(1), tag: "최고" },
+  bottom: { line: slow.key, seg: segName(slow), value: slow.kmh.toFixed(1), tag: "최저" },
+  source: src,
+});
+
+console.log(`✅ 5종 생성 — metro-speed · metro-speed-cover · metro-speed-hl · metro-2col · metro-cover-photo(A안)`);
 console.log(`   제일 빠름: ${fast.line} ${segName(fast)} ${fast.kmh} / 제일 느림: ${slow.line} ${segName(slow)} ${slow.kmh}`);
 console.log(`   내부정합 최대오차 ${maxDiff.toFixed(1)}km/h · ${ds.meta.verified ? "verified ✓" : "verified=false"}`);

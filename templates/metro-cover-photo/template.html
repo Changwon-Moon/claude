@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* metro-cover-photo@1 — 캐러셀 후킹 커버(실사진 풀블리드 + 후킹 문구 + 극단 대비) */
+      .cvr {
+        --mono: 66px;
+        position: relative;
+        padding: 0;
+        overflow: hidden;
+      }
+      .cvr-bg {
+        position: absolute;
+        inset: 0;
+      }
+      .cvr-bg img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .cvr-grad {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(9, 13, 20, 0.74) 0%,
+          rgba(9, 13, 20, 0.28) 34%,
+          rgba(9, 13, 20, 0.4) 56%,
+          rgba(9, 13, 20, 0.88) 100%
+        );
+      }
+      .cvr-inner {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 74px 60px 52px;
+        color: #fff;
+      }
+      .cvr-cap {
+        font-size: 30px;
+        font-weight: 700;
+        color: #e2e9f0;
+        letter-spacing: -0.01em;
+      }
+      .cvr-hook {
+        font-family: var(--font-sans);
+        font-weight: 900;
+        font-size: 86px;
+        line-height: 1.14;
+        margin: 20px 0 0;
+        letter-spacing: -0.02em;
+        white-space: pre-line;
+        text-shadow: 0 3px 20px rgba(0, 0, 0, 0.55);
+      }
+      .cvr-hook .pt {
+        color: #ffd24a;
+      }
+      .cvr-ex {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .cvr-row {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        background: rgba(255, 255, 255, 0.13);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 20px;
+        padding: 16px 22px;
+      }
+      .cvr-row .s {
+        font-size: 37px;
+        font-weight: 800;
+        flex: 1;
+        white-space: nowrap;
+        letter-spacing: -0.02em;
+      }
+      .cvr-row .v {
+        font-family: var(--font-num);
+        font-size: 50px;
+        font-weight: 900;
+        white-space: nowrap;
+      }
+      .cvr-row .v i {
+        font-size: 25px;
+        font-style: normal;
+        font-weight: 700;
+        margin-left: 4px;
+        opacity: 0.85;
+      }
+      .cvr-row .tag {
+        font-size: 29px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+      .cvr-row.fast .v {
+        color: #8ab4ff;
+      }
+      .cvr-row.slow .v {
+        color: #ff8f8f;
+      }
+      .cvr-src {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        font-size: 22px;
+        color: #c7d0da;
+      }
+      .cvr-src .ph {
+        display: block;
+        font-size: 17px;
+        color: #9fabb7;
+        margin-top: 3px;
+      }
+      .cvr-src .wm {
+        font-weight: 800;
+        color: #fff;
+      }
+
+      /* 노선 뱃지(metroBadge) — 커버용, 살짝 크게 */
+      .rt-line {
+        width: var(--mono);
+        height: var(--mono);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-family: var(--font-sans);
+        font-weight: 800;
+        line-height: 0.94;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+      }
+      .rt-line.ln-white {
+        color: #fff;
+      }
+      .rt-line.ln-white .num,
+      .rt-line.ln-white .nm,
+      .rt-line.ln-white .gtx {
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+      }
+      .rt-line.ln-dark {
+        color: #1c2431;
+      }
+      .rt-line .num {
+        font-size: calc(var(--mono) * 0.58);
+        font-weight: 900;
+      }
+      .rt-line .nm {
+        font-size: calc(var(--mono) * 0.3);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+      .rt-line .nm.two {
+        font-size: calc(var(--mono) * 0.28);
+        line-height: 1;
+      }
+      .rt-line .gtx {
+        display: flex;
+        flex-direction: column;
+        line-height: 0.86;
+      }
+      .rt-line .gtx i {
+        font-style: italic;
+        font-weight: 900;
+        font-size: calc(var(--mono) * 0.24);
+      }
+      .rt-line .gtx b {
+        font-size: calc(var(--mono) * 0.32);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card cvr">
+      <div class="cvr-bg"><img src="../_shared/photos/{{photo}}" alt="" /></div>
+      <div class="cvr-grad"></div>
+      <div class="cvr-inner">
+        <div class="cvr-cap">{{subtitle}}</div>
+        <h1 class="cvr-hook">{{{hook}}}</h1>
+        <div class="cvr-ex">
+          <div class="cvr-row fast">
+            {{{metroBadge top.line}}}
+            <span class="s">{{top.seg}}</span>
+            <span class="v">{{top.value}}<i>km/h</i></span>
+            <span class="tag">🚀 {{top.tag}}</span>
+          </div>
+          <div class="cvr-row slow">
+            {{{metroBadge bottom.line}}}
+            <span class="s">{{bottom.seg}}</span>
+            <span class="v">{{bottom.value}}<i>km/h</i></span>
+            <span class="tag">🐢 {{bottom.tag}}</span>
+          </div>
+          <div class="cvr-src">
+            <span>출처 · {{source.name}}{{#if photoCredit}}<span class="ph">{{photoCredit}}</span>{{/if}}</span>
+            <span class="wm">@wirit_note</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
