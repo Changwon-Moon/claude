@@ -105,6 +105,17 @@
       .cvr-row.slow .v {
         color: #ff8f8f;
       }
+      .cvr-q {
+        background: #6b7482;
+      }
+      .cvr-cta {
+        margin-top: 4px;
+        text-align: center;
+        font-size: 31px;
+        font-weight: 800;
+        color: #ffd24a;
+        letter-spacing: -0.01em;
+      }
       .cvr-src {
         margin-top: 20px;
         display: flex;
@@ -186,17 +197,18 @@
         <h1 class="cvr-hook">{{{hook}}}</h1>
         <div class="cvr-ex">
           <div class="cvr-row fast">
-            {{{metroBadge top.line}}}
+            {{#if top.line}}{{{metroBadge top.line}}}{{else}}<span class="rt-line ln-white cvr-q"><span class="num">?</span></span>{{/if}}
             <span class="s">{{top.seg}}</span>
             <span class="v">{{top.value}}<i>km/h</i></span>
             <span class="tag">🚀 {{top.tag}}</span>
           </div>
           <div class="cvr-row slow">
-            {{{metroBadge bottom.line}}}
+            {{#if bottom.line}}{{{metroBadge bottom.line}}}{{else}}<span class="rt-line ln-white cvr-q"><span class="num">?</span></span>{{/if}}
             <span class="s">{{bottom.seg}}</span>
             <span class="v">{{bottom.value}}<i>km/h</i></span>
             <span class="tag">🐢 {{bottom.tag}}</span>
           </div>
+          {{#if cta}}<div class="cvr-cta">{{cta}}</div>{{/if}}
           <div class="cvr-src">
             <span>출처 · {{source.name}}{{#if photoCredit}}<span class="ph">{{photoCredit}}</span>{{/if}}</span>
             <span class="wm">@wirit_note</span>

@@ -76,15 +76,16 @@ write("metro-2col.json", {
   source: src,
 });
 
-// 5) 캐러셀 후킹 커버(실사진) — A안
+// 5) 캐러셀 후킹 커버(실사진) — A안: 정답(노선·구간) 가리고 숫자만, 반전 후킹 + 다음장 유도
 write("metro-cover-photo.json", {
   template: "metro-cover-photo@1", date,
   photo: "subway-jongno3ga.jpg",
   subtitle: "수도권 전철 표정속도 · 실제 평균 시속",
   photoCredit: "사진 ⓒ LERK · Wikimedia Commons · CC BY-SA 4.0",
-  hook: '출근길 지하철 속도,\n1등과 꼴등이\n<span class="pt">같은 노선</span>이라고?',
-  top: { line: fast.key, seg: segName(fast), value: fast.kmh.toFixed(1), tag: "최고" },
-  bottom: { line: slow.key, seg: segName(slow), value: slow.kmh.toFixed(1), tag: "최저" },
+  hook: '출근길 지하철 속도,\n1등과 꼴등이\n<span class="pt">같은 노선</span>이라고?! 🤯',
+  cta: "→ 어느 노선인지, 전체 순위 다음 장에서",
+  top: { seg: "제일 빠른 구간", value: fast.kmh.toFixed(1), tag: "최고" },
+  bottom: { seg: "제일 느린 구간", value: slow.kmh.toFixed(1), tag: "최저" },
   source: src,
 });
 
