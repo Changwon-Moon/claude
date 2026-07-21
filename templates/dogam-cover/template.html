@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* dogam-cover@1 — '대장 도감' 시리즈 커버(수집형 넘버링 + 정답 가리기 티저). 종이 톤. */
+      .dg {
+        padding-top: 52px;
+      }
+      /* 종이 배경 → 뱃지 박스 제거, wirit. 잉크 워드마크만 (디자인 기준) */
+      .dg .wirit-corner {
+        background: transparent;
+        padding: 0;
+        box-shadow: none;
+        top: 44px;
+        right: 56px;
+      }
+      .dg .wirit-corner .mark {
+        color: var(--wirit-ink);
+        font-size: 40px;
+      }
+      .dg > .wirit-topcap {
+        padding-right: 150px;
+      }
+
+      .dg-no-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-top: 26px;
+      }
+      .dg-no {
+        font-family: var(--font-num);
+        font-weight: 900;
+        font-size: 64px;
+        color: var(--wirit-cobalt);
+        letter-spacing: -0.02em;
+      }
+      .dg-prog {
+        font-family: var(--font-num);
+        font-weight: 700;
+        font-size: 30px;
+        color: var(--wirit-gray);
+      }
+      .dg-gu {
+        margin: 6px 0 0;
+      }
+      .dg .wirit-title {
+        font-size: 200px;
+        line-height: 1.02;
+        text-align: center;
+        white-space: nowrap;
+        margin: 0;
+        letter-spacing: -0.03em;
+      }
+      .dg-rule {
+        height: 6px;
+        background: var(--wirit-ink);
+        margin: 34px 0 0;
+      }
+
+      .dg-tease {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 26px;
+      }
+      .dg-big {
+        text-align: center;
+        font-size: 44px;
+        font-weight: 800;
+        color: var(--wirit-ink);
+        letter-spacing: -0.02em;
+      }
+      .dg-price {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 26px;
+        background: var(--wirit-ink-06);
+        border-radius: 26px;
+        padding: 40px 44px;
+      }
+      .dg-q {
+        width: 92px;
+        height: 92px;
+        border-radius: 50%;
+        background: #6b7482;
+        color: #fff;
+        font-family: var(--font-num);
+        font-weight: 900;
+        font-size: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: none;
+      }
+      .dg-price .v {
+        font-family: var(--font-num);
+        font-weight: 900;
+        font-size: 130px;
+        color: var(--wirit-ink);
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+      .dg-price .v em {
+        font-style: normal;
+        color: var(--wirit-cobalt);
+      }
+      .dg-sub {
+        text-align: center;
+        font-size: 31px;
+        font-weight: 600;
+        color: var(--wirit-gray);
+      }
+      .dg-cta {
+        text-align: center;
+        font-size: 34px;
+        font-weight: 800;
+        color: var(--wirit-cobalt);
+        margin-bottom: 26px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card dg">
+      <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
+
+      <div class="dg-no-row">
+        <span class="dg-no">No.{{no}}</span>
+        <span class="dg-prog">{{no}} / {{total}}</span>
+      </div>
+      <div class="dg-gu"><h1 class="wirit-title">{{gu}}</h1></div>
+      <div class="dg-rule"></div>
+
+      <div class="dg-tease">
+        <div class="dg-big">{{{teaser}}}</div>
+        <div class="dg-price">
+          <span class="dg-q">?</span>
+          <span class="v">{{{price}}}</span>
+        </div>
+        <div class="dg-sub">{{priceNote}}</div>
+        <div class="dg-cta">{{cta}}</div>
+      </div>
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+  </body>
+</html>
