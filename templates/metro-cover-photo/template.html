@@ -116,23 +116,35 @@
         color: #ffd24a;
         letter-spacing: -0.01em;
       }
+      /* 기본: 하단 잉크 바(본문 푸터와 통일) — 사진 커버 표준 */
       .cvr-src {
-        margin-top: 20px;
+        margin: 22px -60px -52px;
+        padding: 28px 60px;
         display: flex;
         justify-content: space-between;
-        align-items: flex-end;
+        align-items: center;
         font-size: 22px;
-        color: #c7d0da;
+        color: #aeb8c4;
+        background: var(--wirit-ink);
       }
       .cvr-src .ph {
         display: block;
         font-size: 17px;
-        color: #9fabb7;
+        color: #8b96a3;
         margin-top: 3px;
       }
       .cvr-src .wm {
         font-weight: 800;
         color: #fff;
+        font-size: 30px;
+      }
+      /* 기본: 코너 뱃지 흰 반전(어두운 사진에서 wirit 각인) — 사진 커버 표준 */
+      .cvr .wirit-corner {
+        background: #fff;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      }
+      .cvr .wirit-corner .mark {
+        color: var(--wirit-ink);
       }
 
       /* 노선 뱃지(metroBadge) — 커버용, 살짝 크게 */
