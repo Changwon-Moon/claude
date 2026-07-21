@@ -12,7 +12,8 @@
   · **좌우 대칭 여백**(justify-content:center) + 데이터 행 **flex 세로 꽉 채움**(하단 여백 조절 가능)
   · 직원수 소수점 정렬(figure space U+2007), 공동순위(`rank`) 지원, 로고 3단계 폴백
 - **디자인 검수기**: `packages/renderer/src/designQa.ts` + `qaCli.ts` (`pnpm --filter @wirit/renderer qa <content>`) — 렌더 좌표 측정 자동 검출: 숫자열 정렬 어긋남·우측치우침·이름 잘림·요소 넘침·행 겹침·**안쪽 여백(패딩) 침범(padcross)**. error 시 종료코드 1(발행 차단)
-- 가동 템플릿: ranking-table(시안A)·market-daily + dummy-card
+- 가동 템플릿: ranking-table(시안A)·market-daily·metro-2col·metro-cover-photo·**highlight-cover**(스토리 하이라이트 커버, 1080×1080) + dummy-card
+- **하이라이트 커버**: 잉크 네이비 원 + 흰 라인 아이콘. 원형 크롭 대비 **중앙 42%만** 사용. 콘텐츠 기둥별 세트(소개=wirit 워드마크·부동산·증시경제·연봉돈·생활데이터·꿀팁트렌드). `build-highlight-covers.mjs`
 - 브랜드 토큰: `templates/_shared/base.css` (잉크네이비 팔레트, 폰트 3종 번들)
 
 ## 지식 (wirit 룩 — CEO.md §C가 원천)
