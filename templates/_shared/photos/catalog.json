@@ -10,5 +10,14 @@
     "author": "LERK",
     "url": "https://commons.wikimedia.org/wiki/File%3ASeoul-metro-534-Jongno-3ga-station-platform-20180915-123402.jpg",
     "fetchedFor": "wirit card"
+  },
+  "subway-pexels": {
+    "file": "subway-pexels.jpg",
+    "source": "pexels",
+    "query": "seoul subway train",
+    "license": "Pexels License (상업이용·표기불요)",
+    "author": "Paul Bill",
+    "url": "https://www.pexels.com/photo/woman-waiting-at-seoul-subway-station-29673487/",
+    "fetchedFor": "wirit card"
   }
 }
