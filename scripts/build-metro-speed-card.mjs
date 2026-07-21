@@ -96,6 +96,20 @@ write("metro-cover-photo.json", {
   source: src,
 });
 
-console.log(`✅ 5종 생성 — metro-speed · metro-speed-cover · metro-speed-hl · metro-2col · metro-cover-photo(A안)`);
+// 6) 캐러셀 p3 마무리 장 — 요약 3줄 + 팔로우 유도
+write("metro-p3.json", {
+  template: "metro-p3@1", date,
+  subtitle: "수도권 전철 운행속도 · 마무리",
+  title: "출근길 지하철, 이것만 기억",
+  points: [
+    { n: "1", head: '1등·꼴등이 <em>같은 1호선</em>', body: `천안–서울 급행 ${fast.kmh} ↔ 서울–청량리 ${slow.kmh} · 2.3배 차이` },
+    { n: "2", head: '표정속도 = <em>진짜 평균 속도</em>', body: "정차·가감속까지 포함 · 최고속도(80~90km)와 다름" },
+    { n: "3", head: '급행·외곽일수록 <em>빠르다</em>', body: "도심 지하·역 간격 짧은 구간일수록 느림" },
+  ],
+  cta: "매일 하나씩, 생활 속 숫자",
+  source: src,
+});
+
+console.log(`✅ 6종 생성 — metro-speed · cover · hl · 2col · cover-photo · p3(마무리)`);
 console.log(`   제일 빠름: ${fast.line} ${segName(fast)} ${fast.kmh} / 제일 느림: ${slow.line} ${segName(slow)} ${slow.kmh}`);
 console.log(`   내부정합 최대오차 ${maxDiff.toFixed(1)}km/h · ${ds.meta.verified ? "verified ✓" : "verified=false"}`);

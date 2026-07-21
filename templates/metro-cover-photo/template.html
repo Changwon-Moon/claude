@@ -121,11 +121,18 @@
         margin: 22px -60px -52px;
         padding: 28px 60px;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         font-size: 22px;
         color: #aeb8c4;
         background: var(--wirit-ink);
+      }
+      /* 시안: 하단 푸터 바 흰색 버전 */
+      .cvr.st-white .cvr-src {
+        background: #fff;
+      }
+      .cvr.st-white .cvr-src .wm {
+        color: var(--wirit-ink);
       }
       .cvr-src .ph {
         display: block;
@@ -242,7 +249,6 @@
       <div class="cvr-bg"><img src="../_shared/photos/{{photo}}" alt="" /></div>
       <div class="cvr-grad"></div>
       <div class="cvr-inner">
-        <div class="cvr-cap">{{subtitle}}</div>
         <h1 class="cvr-hook">{{{hook}}}</h1>
         <div class="cvr-ex">
           <div class="cvr-row fast">
@@ -259,7 +265,6 @@
           </div>
           {{#if cta}}<div class="cvr-cta">{{cta}}</div>{{/if}}
           <div class="cvr-src">
-            <span>출처 · {{source.name}}{{#if photoCredit}}<span class="ph">{{photoCredit}}</span>{{/if}}</span>
             <span class="wm">@wirit_note</span>
           </div>
         </div>
