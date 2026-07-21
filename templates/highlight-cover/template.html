@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* highlight-cover@1 — 인스타 스토리 하이라이트 커버(원형 표시). 1080×1080, 중앙 여백 크게. */
+      .hcover {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--wirit-ink);
+      }
+      .hcover.paper {
+        background: var(--wirit-paper);
+      }
+      /* 하이라이트는 원형으로 크롭되므로 중앙 42%만 사용(코너 여백 넉넉히) */
+      .hc-ico {
+        width: 42%;
+        height: 42%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+      }
+      .hcover.paper .hc-ico {
+        color: var(--wirit-ink);
+      }
+      .hc-ico svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .hc-word {
+        font-family: "Wanted Sans", "Pretendard", sans-serif;
+        font-weight: 800;
+        font-size: 210px;
+        letter-spacing: -0.03em;
+        color: #fff;
+        line-height: 1;
+      }
+      .hcover.paper .hc-word {
+        color: var(--wirit-ink);
+      }
+      .hc-word .dot {
+        color: var(--wirit-cobalt);
+      }
+      .hc-won {
+        font-family: "Wanted Sans", "Pretendard", sans-serif;
+        font-weight: 800;
+        font-size: 460px;
+        line-height: 0.9;
+        color: #fff;
+      }
+      .hcover.paper .hc-won {
+        color: var(--wirit-ink);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hcover {{#if paper}}paper{{/if}}">
+      {{#if word}}<div class="hc-word">{{{word}}}</div>{{else}}{{#if won}}<div class="hc-won">₩</div>{{else}}<div class="hc-ico">{{{icon}}}</div>{{/if}}{{/if}}
+    </div>
+  </body>
+</html>

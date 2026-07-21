@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["template"],
+  "properties": {
+    "template": { "type": "string" },
+    "date": { "type": "string" },
+    "icon": { "type": "string" },
+    "word": { "type": "string" },
+    "won": { "type": "boolean" },
+    "paper": { "type": "boolean" },
+    "label": { "type": "string" }
+  },
+  "additionalProperties": true
+}
