@@ -186,10 +186,47 @@
       .rt-line .gtx b {
         font-size: calc(var(--mono) * 0.32);
       }
+      /* ── 아이덴티티 시안 ── */
+      /* 시안1: 하단 잉크 바(본문 톤 통일) + 코너 뱃지 흰 테두리 */
+      .cvr.st-bar .cvr-src {
+        margin: 22px -60px -52px;
+        padding: 30px 60px;
+        background: var(--wirit-ink);
+        color: #aeb8c4;
+        align-items: center;
+      }
+      .cvr.st-bar .cvr-src .wm {
+        font-size: 30px;
+      }
+      .cvr.st-bar .wirit-corner {
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.92);
+      }
+      /* 시안2: 코너 뱃지 흰색 반전(강한 대비) */
+      .cvr.st-invert .wirit-corner {
+        background: #fff;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      }
+      .cvr.st-invert .wirit-corner .mark {
+        color: var(--wirit-ink);
+      }
+      /* 시안3: 원형 대형 wirit 엠블럼(흰 원) */
+      .cvr.st-ring .wirit-corner {
+        border-radius: 50%;
+        width: 118px;
+        height: 118px;
+        padding: 0;
+        justify-content: center;
+        background: #fff;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      }
+      .cvr.st-ring .wirit-corner .mark {
+        color: var(--wirit-ink);
+        font-size: 30px;
+      }
     </style>
   </head>
   <body>
-    <div class="wirit-card cvr">
+    <div class="wirit-card cvr {{#if coverStyle}}st-{{coverStyle}}{{/if}}">
       <div class="cvr-bg"><img src="../_shared/photos/{{photo}}" alt="" /></div>
       <div class="cvr-grad"></div>
       <div class="cvr-inner">
