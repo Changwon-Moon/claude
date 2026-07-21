@@ -254,14 +254,14 @@
           <div class="cvr-row fast">
             {{#if top.line}}{{{metroBadge top.line}}}{{else}}<span class="rt-line ln-white cvr-q"><span class="num">?</span></span>{{/if}}
             <span class="s">{{top.seg}}</span>
-            <span class="v">{{top.value}}<i>km/h</i></span>
-            <span class="tag">🚀 {{top.tag}}</span>
+            <span class="v">{{top.value}}{{#unless top.noUnit}}<i>{{#if top.unit}}{{top.unit}}{{else}}km/h{{/if}}</i>{{/unless}}</span>
+            <span class="tag">{{#if top.emoji}}{{top.emoji}}{{else}}🚀{{/if}} {{top.tag}}</span>
           </div>
           <div class="cvr-row slow">
             {{#if bottom.line}}{{{metroBadge bottom.line}}}{{else}}<span class="rt-line ln-white cvr-q"><span class="num">?</span></span>{{/if}}
             <span class="s">{{bottom.seg}}</span>
-            <span class="v">{{bottom.value}}<i>km/h</i></span>
-            <span class="tag">🐢 {{bottom.tag}}</span>
+            <span class="v">{{bottom.value}}{{#unless bottom.noUnit}}<i>{{#if bottom.unit}}{{bottom.unit}}{{else}}km/h{{/if}}</i>{{/unless}}</span>
+            <span class="tag">{{#if bottom.emoji}}{{bottom.emoji}}{{else}}🐢{{/if}} {{bottom.tag}}</span>
           </div>
           {{#if cta}}<div class="cvr-cta">{{cta}}</div>{{/if}}
           <div class="cvr-src">

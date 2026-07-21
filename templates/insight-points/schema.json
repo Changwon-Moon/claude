@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["template", "title", "points"],
+  "properties": {
+    "template": { "type": "string" },
+    "date": { "type": "string" },
+    "subtitle": { "type": "string" },
+    "title": { "type": "string" },
+    "note": { "type": "string" },
+    "points": {
+      "type": "array", "minItems": 2, "maxItems": 4,
+      "items": {
+        "type": "object", "required": ["n", "head", "body"],
+        "properties": { "n": {"type":"string"}, "head": {"type":"string"}, "body": {"type":"string"} }
+      }
+    },
+    "source": { "type": "object" }
+  },
+  "additionalProperties": true
+}
