@@ -145,18 +145,13 @@
         color: #fff;
         font-size: 40px;
       }
-      /* 기본: 뱃지 박스 제거 → wirit. 워드마크만(흰색+그림자, 어두운 사진서 각인) */
+      /* 기본: 코너 뱃지 흰 반전(어두운 사진에서 wirit 각인) — 사진 커버 표준 */
       .cvr .wirit-corner {
-        background: transparent;
-        padding: 0;
-        box-shadow: none;
-        top: 44px;
-        right: 56px;
+        background: #fff;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
       }
       .cvr .wirit-corner .mark {
-        color: #fff;
-        font-size: 42px;
-        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+        color: var(--wirit-ink);
       }
 
       /* 노선 뱃지(metroBadge) — 커버용, 살짝 크게 */
