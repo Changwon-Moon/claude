@@ -17,6 +17,12 @@
 - `docs/ASSET_HUB.md` — 메타데이터 스키마, 라이선스 5분류, 사진 3순위, perishable 규칙
 - 보유: 로고 5종(브랜드색), 국기 271종(MIT), 폰트 3종
 
+## 기본 업무 기준 (07-21 확정)
+- **사진 자동 취득(다중 소스)**: `scripts/fetch-photo.mjs` + `photo-fetch.yml`(Actions). source=auto/pexels/pixabay/wikimedia, 키워드 검색→라이선스 확인→세로형 우선 다운로드→catalog 기록. 세션은 이미지 다운로드 차단이라 **Actions 전용**
+- **무료 사진 소스·라이선스**: Pexels(상업OK·표기불요) · Pixabay(상업OK·표기불요) · Wikimedia(CC/PD, **CC BY-SA는 저작자 표기 필수**). 감성 커버엔 Pexels 우선
+- 로고 3티어(simple-icons→Wikimedia→Brandfetch) + **수도권 노선 뱃지 카탈로그**(`metro-lines.json`)
+- 모든 취득 자산은 catalog에 출처·라이선스·저자 기록(무결성 검사 CI)
+
 ## 학습 로그
 | 날짜 | 배운 것 | 출처 |
 |---|---|---|
