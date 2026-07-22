@@ -18,15 +18,19 @@ const ds = JSON.parse(readFileSync(join(ROOT, `data/datasets/kr-market-${year}.j
 const fmt = (v) => v.toLocaleString("ko-KR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const md = (iso) => `${+iso.slice(5, 7)}/${+iso.slice(8, 10)}`;
 const pct = (a, b) => Math.round(((b - a) / a) * 1000) / 10; // 소수1
+const monthsBetween = (aIso, bIso) => {
+  const a = new Date(aIso + "T00:00:00Z"), b = new Date(bIso + "T00:00:00Z");
+  return Math.max(1, Math.round((b - a) / (1000 * 60 * 60 * 24 * 30.44)));
+};
 
 /**
  * 시계열 → 주석 차트 SVG.
  * 3점(연초·고점·현재) 마커+라벨(날짜·주가), 연초→고점 상승률, 고점→현재 하락률,
  * 하단 날짜축(연초·고점·현재 tick). 결정적.
  */
-function chartSvg(series, startIso, peakIso, lastIso, riseTxt, fallTxt) {
-  const W = 1000, H = 300;
-  const L = 14, R = 14, T = 40, B = 40; // 상단 라벨 여백·하단 축 여백
+function chartSvg(series, startIso, peakIso, lastIso, riseTxt, monthsTxt) {
+  const W = 1000, H = 330;
+  const L = 16, R = 16, T = 78, B = 42; // T = 상단 주석 전용 밴드(데이터는 이 아래에만 그림)
   const closes = series.map((p) => p.c);
   const mn = Math.min(...closes), mx = Math.max(...closes);
   const span = mx - mn || 1;
@@ -37,38 +41,50 @@ function chartSvg(series, startIso, peakIso, lastIso, riseTxt, fallTxt) {
   const pts = series.map((p, i) => `${x(i).toFixed(1)},${y(p.c).toFixed(1)}`);
   const si = 0, pi = idxOf(peakIso), li = series.length - 1;
   const area = `M${pts[0]}L${pts.join("L")}L${x(li).toFixed(1)},${H - B}L${x(0).toFixed(1)},${H - B}Z`;
-
   const P = { s: { i: si, ...series[si] }, p: { i: pi, ...series[pi] }, l: { i: li, ...series[li] } };
-  const marker = (cls, i, c) => `<circle class="ix-dot-${cls}" cx="${x(i).toFixed(1)}" cy="${y(c).toFixed(1)}" r="9"/>`;
 
-  // 마커 라벨 = 주가만(날짜는 하단 축). 마커 위에 얹어 축과 겹침 방지.
-  const priceLabel = (cls, i, c, anchor, up = 22) => {
-    const px = x(i), py = y(c);
-    const dx = anchor === "start" ? 14 : anchor === "end" ? -14 : 0;
-    return `<text class="ix-pt ${cls}" x="${(px + dx).toFixed(1)}" y="${(py - up).toFixed(1)}" text-anchor="${anchor}">${fmt(c)}</text>`;
+  const marker = (cls, i, c) => `<circle class="ix-dot-${cls}" cx="${x(i).toFixed(1)}" cy="${y(c).toFixed(1)}" r="9"/>`;
+  // 주가 라벨(날짜는 축). up>0 위쪽, up<0 아래쪽.
+  const priceLabel = (cls, i, c, anchor, up) => {
+    const dx = anchor === "start" ? 6 : anchor === "end" ? -6 : 0;
+    return `<text class="ix-pt ${cls}" x="${(x(i) + dx).toFixed(1)}" y="${(y(c) - up).toFixed(1)}" text-anchor="${anchor}">${fmt(c)}</text>`;
   };
 
-  // 연초→고점 상승률(빨강, 상단 개활지)
-  const riseX = (x(P.s.i) + x(P.p.i)) / 2;
-  const riseLabel = `<text class="ix-rise" x="${riseX.toFixed(1)}" y="${(T + 22).toFixed(1)}" text-anchor="middle">▲ ${riseTxt}</text>`;
-  // 고점→현재 하락 = 대각 점선 가이드(그래프상 시각 표현). 하락률 숫자는 상단 히어로 박스가 메인.
-  const guide = `<line class="ix-guide" x1="${x(P.p.i).toFixed(1)}" y1="${y(P.p.c).toFixed(1)}" x2="${x(P.l.i).toFixed(1)}" y2="${y(P.l.c).toFixed(1)}"/>`;
-  const fallLabel = "";
+  // ── 연초→고점 상승 곡선 화살표(연한 빨강) — 라벨은 상단 전용 밴드(y<T, 데이터 없음)에 ──
+  const ax = x(P.s.i), ay = y(P.s.c), bx = x(P.p.i), by = y(P.p.c);
+  const midx = (ax + bx) / 2;
+  const tipX = bx - 3, tipY = by - 4;
+  const ctrlX = midx, ctrlY = 14; // 상단 밴드에서 볼록
+  const ux0 = tipX - ctrlX, uy0 = tipY - ctrlY, dl = Math.hypot(ux0, uy0) || 1;
+  const ux = ux0 / dl, uy = uy0 / dl, pxp = -uy, pyp = ux, aL = 15, aW = 9;
+  const barb = `M${(tipX - ux * aL + pxp * aW).toFixed(1)},${(tipY - uy * aL + pyp * aW).toFixed(1)} L${tipX.toFixed(1)},${tipY.toFixed(1)} L${(tipX - ux * aL - pxp * aW).toFixed(1)},${(tipY - uy * aL - pyp * aW).toFixed(1)}`;
+  const riseArc = `<path class="ix-risearc" d="M${ax.toFixed(1)},${(ay - 8).toFixed(1)} Q${ctrlX.toFixed(1)},${ctrlY.toFixed(1)} ${tipX.toFixed(1)},${tipY.toFixed(1)}"/><path class="ix-risearc" d="${barb}"/>`;
+  // 라벨: 상단 밴드 좌측(아치 왼쪽 개활지)에 2줄
+  const labelX = Math.max(L + 130, Math.min(midx - 40, W * 0.42));
+  const riseLabel = `<text class="ix-rise" text-anchor="middle">` +
+    `<tspan class="sm" x="${labelX.toFixed(1)}" y="26">${monthsTxt} 만에</tspan>` +
+    `<tspan class="big" x="${labelX.toFixed(1)}" y="60">▲ ${riseTxt}</tspan></text>`;
 
-  // 하단 날짜축(연초·고점·현재만)
+  // ── 고점→현재 하락 점선 가이드(숫자는 히어로 박스) ──
+  const guide = `<line class="ix-guide" x1="${bx.toFixed(1)}" y1="${by.toFixed(1)}" x2="${x(P.l.i).toFixed(1)}" y2="${y(P.l.c).toFixed(1)}"/>`;
+
+  // ── 축 ──
   const axis = `<line class="ix-axis" x1="${L}" y1="${H - B + 4}" x2="${W - R}" y2="${H - B + 4}"/>`;
   const tick = (i, iso, anchor) => `<text class="ix-tick" x="${x(i).toFixed(1)}" y="${H - 10}" text-anchor="${anchor}">${md(iso)}</text>`;
   const ticks = tick(si, startIso, "start") + tick(pi, peakIso, "middle") + tick(li, lastIso, "end");
 
+  // 라벨 배치: 상단은 주석 밴드 전용 → 고점 라벨은 항상 마커 아래(채움영역). 현재는 바닥 아니면 아래.
+  const peakUp = -26;
+  const lastBelow = y(P.l.c) < H - B - 60;
   return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">` +
     `<path class="ix-area" d="${area}"/>` +
     `<polyline class="ix-line" points="${pts.join(" ")}"/>` +
-    guide +
+    guide + riseArc +
     marker("start", P.s.i, P.s.c) + marker("peak", P.p.i, P.p.c) + marker("last", P.l.i, P.l.c) +
-    priceLabel("", P.s.i, P.s.c, "start", 26) +
-    priceLabel("peak", P.p.i, P.p.c, "end", 24) +
-    priceLabel("last", P.l.i, P.l.c, "end", 28) +
-    riseLabel + fallLabel +
+    priceLabel("", P.s.i, P.s.c, "start", 18) +
+    priceLabel("peak", P.p.i, P.p.c, "end", peakUp) +
+    priceLabel("last", P.l.i, P.l.c, "end", lastBelow ? -30 : 22) +
+    riseLabel +
     axis + ticks +
     `</svg>`;
 }
@@ -82,6 +98,7 @@ for (const key of ["kospi", "kosdaq"]) {
   const startIso = ix.yearStart.date, peakIso = ix.peak.date, lastIso = ix.asOf;
   const risePct = pct(ix.yearStart.close, ix.peak.close); // 연초→고점
   const dd = ix.drawdownFromPeakPct; // 고점→현재(음수)
+  const months = monthsBetween(startIso, peakIso);
   blocks.push({
     name: ix.label,
     asOf: md(ix.asOf),
@@ -90,7 +107,7 @@ for (const key of ["kospi", "kosdaq"]) {
     chartSvg: chartSvg(
       ix.series, startIso, peakIso, lastIso,
       `${risePct > 0 ? "+" : ""}${risePct}%`,
-      `${dd}%`,
+      `약 ${months}개월`,
     ),
   });
 }

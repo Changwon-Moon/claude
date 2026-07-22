@@ -23,32 +23,33 @@
       .ix-name { font-size: 46px; font-weight: 900; letter-spacing: -0.02em; color: var(--wirit-ink); }
       .ix-nowwrap { display: flex; flex-direction: column; line-height: 1.05; }
       .ix-nowlab { font-size: 20px; font-weight: 700; color: var(--wirit-gray); }
-      .ix-now { font-family: var(--font-num); font-size: 40px; font-weight: 900; color: var(--wirit-ink); }
+      .ix-now { font-family: "Pretendard", sans-serif; font-size: 40px; font-weight: 800; color: var(--wirit-ink); font-feature-settings: "tnum"; }
       .ix-dd { margin-left: auto; display: flex; align-items: baseline; gap: 12px;
         background: rgba(46,107,255,0.08); border-radius: 18px; padding: 8px 22px 12px; }
       .ix-dd .k { font-size: 24px; font-weight: 800; color: var(--wirit-gray); }
-      .ix-dd .v { font-family: var(--font-num); font-size: 64px; font-weight: 900; color: var(--wirit-cobalt); letter-spacing: -0.02em; }
+      .ix-dd .v { font-family: "Pretendard", sans-serif; font-size: 64px; font-weight: 800; color: var(--wirit-cobalt); letter-spacing: -0.02em; font-feature-settings: "tnum"; }
       .ix-dd .v i { font-style: normal; font-size: 36px; }
 
-      .ix-chart { flex: 1; min-height: 0; margin: 12px 0 0; }
+      /* 차트: 컨테이너 비율을 viewBox와 일치(1000:300)시켜 가로 늘림(왜곡) 방지 */
+      .ix-chart { width: 100%; aspect-ratio: 1000 / 330; margin: 8px 0 0; align-self: center; }
       .ix-chart svg { width: 100%; height: 100%; display: block; }
 
-      /* 차트 스타일 */
+      /* 차트 스타일 — 숫자는 Pretendard(정렬형) */
       .ix-line { fill: none; stroke: var(--wirit-ink); stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; }
       .ix-area { fill: rgba(20,24,33,0.045); stroke: none; }
       .ix-axis { stroke: rgba(20,24,33,0.18); stroke-width: 2; }
-      .ix-tick { font-family: "Pretendard", sans-serif; font-weight: 700; font-size: 21px; fill: #98a2b3; }
+      .ix-tick { font-family: "Pretendard", sans-serif; font-weight: 700; font-size: 22px; fill: #98a2b3; }
       .ix-dot-start { fill: var(--wirit-ink); }
       .ix-dot-peak { fill: var(--wirit-red); }
       .ix-dot-last { fill: var(--wirit-cobalt); }
-      .ix-pt { font-family: "Wanted Sans", sans-serif; font-weight: 800; font-size: 24px; fill: var(--wirit-ink); }
-      .ix-pt .d { font-weight: 700; fill: #7c8797; }
+      .ix-pt { font-family: "Pretendard", sans-serif; font-weight: 800; font-size: 25px; fill: var(--wirit-ink); }
       .ix-pt.peak { fill: var(--wirit-red); }
       .ix-pt.last { fill: var(--wirit-cobalt); }
-      .ix-rise { font-family: "Wanted Sans", sans-serif; font-weight: 900; font-size: 34px; fill: var(--wirit-red); }
-      .ix-fall { font-family: "Wanted Sans", sans-serif; font-weight: 900; font-size: 32px; fill: var(--wirit-cobalt); }
-      .ix-guide { stroke: rgba(46,107,255,0.45); stroke-width: 2.5; stroke-dasharray: 7 7; fill: none; }
-      .ix-guide-r { stroke: rgba(229,72,77,0.4); stroke-width: 2.5; stroke-dasharray: 7 7; fill: none; }
+      .ix-rise { font-family: "Pretendard", sans-serif; font-weight: 800; fill: var(--wirit-red); }
+      .ix-rise .big { font-size: 34px; font-weight: 800; }
+      .ix-rise .sm { font-size: 23px; font-weight: 700; fill: #d08a8c; }
+      .ix-risearc { fill: none; stroke: rgba(229,72,77,0.5); stroke-width: 3; stroke-linecap: round; }
+      .ix-guide { stroke: rgba(46,107,255,0.5); stroke-width: 3; stroke-dasharray: 8 8; fill: none; }
     </style>
   </head>
   <body>
