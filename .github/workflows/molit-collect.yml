@@ -11,7 +11,7 @@ on:
         required: true
         default: "강남구"
       months:
-        description: "수집 월(YYYYMM,콤마). 비우면 최근 2개월 자동"
+        description: "수집 월(YYYYMM,콤마). 비우면 최근 6개월 자동"
         required: false
         default: ""
       force:
@@ -50,9 +50,11 @@ jobs:
           GU="${{ github.event.inputs.gu }}"; GU="${GU:-강남구}"
           MONTHS="${{ github.event.inputs.months }}"
           if [ -z "$MONTHS" ]; then
-            M1=$(date -u -d "1 month ago" +%Y%m)
-            M2=$(date -u -d "2 months ago" +%Y%m)
-            MONTHS="$M2,$M1"
+            MONTHS=""
+            for i in 1 2 3 4 5 6; do
+              MONTHS="$MONTHS,$(date -u -d "$i month ago" +%Y%m)"
+            done
+            MONTHS="${MONTHS#,}"
           fi
           FORCE=""
           if [ "${{ github.event.inputs.force }}" = "true" ]; then FORCE="--force"; fi
