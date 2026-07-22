@@ -4,64 +4,58 @@
     <meta charset="utf-8" />
     <!--WIRIT_SHARED_CSS-->
     <style>
-      /* index-cover@1 — 증시 어그로 커버(다크 + 급락 차트 배경 + 충격 숫자). */
+      /* index-cover@1 — 증시 어그로 커버(주식 사진 + 강한 후킹 + '주요국 하락률 1위'). */
       .icv { position: relative; padding: 0; overflow: hidden; background: #0e1118; }
       .icv-bg { position: absolute; inset: 0; }
-      .icv-bg svg { width: 100%; height: 100%; display: block; }
+      .icv-bg img { width: 100%; height: 100%; object-fit: cover; }
+      /* 사진이 밝아도 텍스트가 읽히도록 강한 다크 그라디언트 */
       .icv-grad { position: absolute; inset: 0;
-        background: radial-gradient(120% 80% at 70% 30%, rgba(46,107,255,0.10), transparent 60%),
-          linear-gradient(180deg, rgba(14,17,24,0.55) 0%, rgba(14,17,24,0.2) 40%, rgba(14,17,24,0.85) 100%); }
+        background: linear-gradient(180deg, rgba(7,10,16,0.82) 0%, rgba(7,10,16,0.55) 32%, rgba(7,10,16,0.68) 60%, rgba(7,10,16,0.94) 100%); }
       .icv-in { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column;
         padding: 62px 62px 54px; color: #fff; }
 
-      .icv-cap { font-size: 32px; font-weight: 800; color: #aeb8c4; letter-spacing: 0.02em; }
+      .icv-cap { font-size: 32px; font-weight: 800; color: #cbd5e2; letter-spacing: 0.02em; }
 
-      .icv-hook { margin-top: 30px; font-family: var(--font-sans); font-weight: 900; font-size: 118px;
-        line-height: 1.04; letter-spacing: -0.04em; white-space: pre-line; text-shadow: 0 4px 24px rgba(0,0,0,0.55); }
+      .icv-hook { margin-top: 26px; font-family: var(--font-sans); font-weight: 900; font-size: 96px;
+        line-height: 1.06; letter-spacing: -0.035em; white-space: pre-line; text-shadow: 0 4px 24px rgba(0,0,0,0.6); }
       .icv-hook .em { color: #ff5a5f; }
 
-      .icv-drops { margin-top: auto; display: flex; flex-direction: column; gap: 18px; }
-      .icv-drop { display: flex; align-items: center; gap: 22px;
-        background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 22px; padding: 20px 28px; }
-      .icv-drop .nm { font-size: 44px; font-weight: 900; letter-spacing: -0.02em; }
-      .icv-drop .sub { font-family: var(--font-num); font-size: 26px; font-weight: 700; color: #9aa6b4; margin-left: 2px; }
-      .icv-drop .pct { margin-left: auto; font-family: var(--font-num); font-size: 78px; font-weight: 900;
-        color: #4d9bff; letter-spacing: -0.02em; line-height: 1; }
-      .icv-drop .pct i { font-style: normal; font-size: 42px; }
+      /* 펀치: 주요국 하락률 1위 */
+      .icv-punch { margin-top: auto; }
+      .icv-punch .rank { display: flex; align-items: center; gap: 20px;
+        background: linear-gradient(90deg, rgba(229,72,77,0.22), rgba(229,72,77,0.06));
+        border: 2px solid rgba(255,90,95,0.6); border-radius: 26px; padding: 30px 34px; }
+      .icv-punch .rank .txt { font-size: 52px; font-weight: 900; letter-spacing: -0.02em; line-height: 1.1; }
+      .icv-punch .rank .txt em { font-style: normal; color: #ff6b70; }
+      .icv-punch .rank .no { margin-left: auto; font-family: var(--font-num); font-weight: 900; font-size: 116px;
+        color: #ff5a5f; line-height: 0.9; letter-spacing: -0.03em; white-space: nowrap; text-shadow: 0 3px 18px rgba(0,0,0,0.5); }
+      .icv-punch .rank .no i { font-style: normal; font-size: 58px; }
+      .icv-src { margin-top: 12px; font-size: 22px; color: #94a2b2; text-align: right; }
 
-      .icv-cta { margin-top: 24px; text-align: center; font-size: 36px; font-weight: 800; color: #ffd24a; letter-spacing: -0.01em; }
+      .icv-cta { margin-top: 20px; text-align: center; font-size: 36px; font-weight: 800; color: #ffd24a; letter-spacing: -0.01em; }
 
-      .icv-foot { margin: 22px -62px -54px; padding: 30px 62px; display: flex; align-items: center; justify-content: center;
-        background: #05070c; }
+      .icv-foot { margin: 22px -62px -54px; padding: 30px 62px; display: flex; align-items: center; justify-content: center; background: #05070c; }
       .icv-foot .wm { font-weight: 800; color: #fff; font-size: 44px; }
       .icv-foot .wm .dot { color: var(--wirit-cobalt); }
 
       .icv .wirit-corner { background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
       .icv .wirit-corner .mark { color: var(--wirit-ink); }
-
-      /* 배경 급락 차트 */
-      .icv-line { fill: none; stroke: rgba(255,255,255,0.16); stroke-width: 4; stroke-linejoin: round; }
-      .icv-area { fill: rgba(77,155,255,0.08); }
-      .icv-peak { fill: #ff5a5f; }
-      .icv-fall { fill: none; stroke: rgba(255,90,95,0.55); stroke-width: 3; stroke-dasharray: 8 8; }
     </style>
   </head>
   <body>
     <div class="wirit-card icv">
-      <div class="icv-bg">{{{bgSvg}}}</div>
+      <div class="icv-bg"><img src="../_shared/photos/{{photo}}" alt="" /></div>
       <div class="icv-grad"></div>
       <div class="icv-in">
         <div class="icv-cap">{{caption}}</div>
         <h1 class="icv-hook">{{{hook}}}</h1>
 
-        <div class="icv-drops">
-          {{#each drops}}
-          <div class="icv-drop">
-            <span class="nm">{{this.name}}</span>
-            <span class="sub">{{this.peak}} → {{this.now}}</span>
-            <span class="pct">{{this.pct}}<i>%</i></span>
+        <div class="icv-punch">
+          <div class="rank">
+            <span class="txt">{{{rankLabel}}}</span>
+            <span class="no">{{rankNo}}<i>위</i></span>
           </div>
-          {{/each}}
+          {{#if sourceNote}}<div class="icv-src">{{sourceNote}}</div>{{/if}}
         </div>
 
         {{#if cta}}<div class="icv-cta">{{{cta}}}</div>{{/if}}
