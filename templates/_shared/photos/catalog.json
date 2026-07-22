@@ -28,5 +28,14 @@
     "author": "Ethan Brooke",
     "url": "https://www.pexels.com/photo/aerial-view-of-city-buildings-during-night-time-3142005/",
     "fetchedFor": "wirit card"
+  },
+  "stock-market-red": {
+    "file": "stock-market-red.jpg",
+    "source": "pexels",
+    "query": "stock market crash red chart screen",
+    "license": "Pexels License (상업이용·표기불요)",
+    "author": "Leeloo The First",
+    "url": "https://www.pexels.com/photo/clipboard-with-statistical-data-and-digital-tablet-with-stock-market-display-on-screen-5561917/",
+    "fetchedFor": "wirit card"
   }
 }
