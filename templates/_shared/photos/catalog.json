@@ -19,5 +19,14 @@
     "author": "Paul Bill",
     "url": "https://www.pexels.com/photo/woman-waiting-at-seoul-subway-station-29673487/",
     "fetchedFor": "wirit card"
+  },
+  "seoul-apart-night": {
+    "file": "seoul-apart-night.jpg",
+    "source": "pexels",
+    "query": "seoul apartment skyline night",
+    "license": "Pexels License (상업이용·표기불요)",
+    "author": "Ethan Brooke",
+    "url": "https://www.pexels.com/photo/aerial-view-of-city-buildings-during-night-time-3142005/",
+    "fetchedFor": "wirit card"
   }
 }
