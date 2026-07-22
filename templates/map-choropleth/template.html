@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* map-choropleth@1 — 행정구 경계 색칠지도(코로플레스). 종이 톤. mapSvg는 빌더가 생성. */
+      .mc {
+        padding-top: 52px;
+      }
+      /* 종이 배경 → wirit 워드마크만 */
+      .mc .wirit-corner { background: transparent; padding: 0; box-shadow: none; top: 44px; right: 56px; }
+      .mc .wirit-corner .mark { color: var(--wirit-ink); font-size: 40px; }
+      .mc > .wirit-topcap { padding-right: 150px; }
+
+      .mc-head { padding: 0 8px; margin: 6px 0 0; }
+      .mc .wirit-title { font-size: 74px; line-height: 1.05; text-align: center; white-space: nowrap; margin: 0; letter-spacing: -0.03em; }
+      .mc-map {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 8px 0 0;
+      }
+      .mc-map svg { width: 100%; height: 100%; display: block; }
+      .mc-geo { stroke: #ffffff; stroke-width: 2; stroke-linejoin: round; }
+      .mc-lab { font-family: "Pretendard", sans-serif; font-weight: 800; text-anchor: middle; }
+      .mc-lab .g { font-size: 20px; }
+      .mc-lab .v { font-family: "Wanted Sans", sans-serif; font-weight: 900; }
+      /* 범례 + 최고/최저 캡션 */
+      .mc-foot { display: flex; align-items: center; justify-content: space-between; margin: 6px 8px 0; }
+      .mc-leg { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 700; color: var(--wirit-gray); }
+      .mc-bar { width: 220px; height: 18px; border-radius: 9px; background: linear-gradient(90deg, var(--c-lo), var(--c-hi)); }
+      .mc-note { font-size: 24px; font-weight: 700; color: var(--wirit-ink); }
+      .mc-note b { color: #c0122a; }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card mc" style="--c-lo: {{colorLo}}; --c-hi: {{colorHi}};">
+      <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
+      <div class="mc-head"><h1 class="wirit-title">{{title}}</h1></div>
+
+      <div class="mc-map">{{{mapSvg}}}</div>
+
+      <div class="mc-foot">
+        <div class="mc-leg"><span>{{legendLo}}</span><span class="mc-bar"></span><span>{{legendHi}}</span></div>
+        <div class="mc-note">1위 <b>{{topName}} {{topValue}}</b></div>
+      </div>
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+  </body>
+</html>

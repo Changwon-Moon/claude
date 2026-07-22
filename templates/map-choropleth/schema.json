@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["template", "title", "mapSvg"],
+  "properties": {
+    "template": {"type":"string"}, "date":{"type":"string"}, "subtitle":{"type":"string"},
+    "title":{"type":"string"}, "mapSvg":{"type":"string"},
+    "colorLo":{"type":"string"}, "colorHi":{"type":"string"},
+    "legendLo":{"type":"string"}, "legendHi":{"type":"string"},
+    "topName":{"type":"string"}, "topValue":{"type":"string"},
+    "source":{"type":"object"}
+  },
+  "additionalProperties": true
+}
