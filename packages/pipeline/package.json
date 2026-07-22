@@ -7,9 +7,11 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "build-market-us": "tsx src/cli.ts",
+    "review": "tsx src/review/reviewCli.ts",
     "selftest": "tsx src/selftest.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.68.0",
     "@wirit/renderer": "workspace:*"
   },
   "devDependencies": {

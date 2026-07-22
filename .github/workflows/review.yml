@@ -1,0 +1,68 @@
+name: 콘텐츠 검수 (에이전트)
+
+# 콘텐츠 세트(커버+표+캡션)를 코드+LLM 에이전트로 검수하고 리포트를 커밋한다.
+# 코드 검수(결정성·레이아웃·캡션 린트·수치 대조)는 키 없이 동작.
+# LLM 검수(디자인·카피·적대적)는 ANTHROPIC_API_KEY 시크릿이 있을 때만 추가된다.
+on:
+  workflow_dispatch:
+    inputs:
+      cards:
+        description: "카드 JSON 경로들(공백 구분)"
+        required: true
+        default: "data/content/2026-07-21/estate-cover-84.json data/content/2026-07-21/maprank-84-p1.json data/content/2026-07-21/maprank-84-p2.json"
+      caption:
+        description: "캡션 txt 경로(선택)"
+        required: false
+        default: ""
+      label:
+        description: "리포트 이름"
+        required: true
+        default: "estate-84"
+
+permissions:
+  contents: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: 검수 실행
+        id: review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          WIRIT_REVIEW_MODEL: ${{ vars.WIRIT_REVIEW_MODEL }}
+        run: |
+          CAP=""
+          if [ -n "${{ github.event.inputs.caption }}" ]; then CAP="--caption ${{ github.event.inputs.caption }}"; fi
+          set +e
+          pnpm --filter @wirit/pipeline review -- \
+            ${{ github.event.inputs.cards }} $CAP \
+            --label "${{ github.event.inputs.label }}" --out data/review
+          echo "verdict_code=$?" >> "$GITHUB_OUTPUT"
+          set -e
+
+      - name: 리포트 커밋
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/review/*.json || true
+          if git diff --cached --quiet; then echo "리포트 변경 없음"; else
+            git commit -m "검수 리포트 ${{ github.event.inputs.label }}"
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
+
+      - name: 판정 반영(block이면 실패)
+        run: |
+          echo "검수 판정 코드: ${{ steps.review.outputs.verdict_code }} (1=block)"
+          exit ${{ steps.review.outputs.verdict_code }}
