@@ -1,23 +1,19 @@
 name: SVG 자산 취득 (공개)
 
-# 공개 SVG 자산(예: 서울특별시 휘장/심볼마크/로고타입)을 MediaWiki API로 실제 파일 URL을
-# 해석해 받아 검증 후 커밋. 세션은 외부 다운로드가 정책상 차단 → Actions 러너(개방망) 전용.
-# 파일명은 API로 검색·해석하므로 정확한 업로드 경로를 몰라도 된다.
+# 공개 SVG 자산(서울특별시 공식 로고/휘장)을 직접 URL에서 받아 검증 후 커밋.
+# 세션은 외부 다운로드가 정책상 차단 → Actions 러너(개방망) 전용. 취득 후 세션에서 pull.
+# 기본값: 위키미디어 공용의 서울특별시 로고(초록 산·파랑 한강·빨강 해 + 서울 로고타입).
 on:
   workflow_dispatch:
     inputs:
-      titles:
-        description: "위키 파일 제목 목록(| 구분, '파일:' 접두어 없이)"
+      url:
+        description: "다운로드할 SVG 직접 URL"
         required: true
-        default: "Logo of Seoul, South Korea.svg|Emblem of Seoul.svg|Seoul symbol.svg|Seoul logo.svg|Flag of Seoul.svg"
-      wikis:
-        description: "검색할 위키(| 구분)"
+        default: "https://upload.wikimedia.org/wikipedia/commons/f/f6/Logo_of_Seoul%2C_South_Korea.svg"
+      out:
+        description: "저장 경로"
         required: true
-        default: "ko.wikipedia.org|commons.wikimedia.org|en.wikipedia.org"
-      outdir:
-        description: "저장 폴더"
-        required: true
-        default: "data/assets/seoul"
+        default: "data/assets/seoul/seoul-logo.svg"
 
 permissions:
   contents: write
@@ -27,51 +23,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: MediaWiki API 해석 + 다운로드 + 검증
+      - name: 다운로드 + 검증(SVG)
         run: |
-          OUT="${{ github.event.inputs.outdir }}"
-          mkdir -p "$OUT"
-          UA="Mozilla/5.0 (wirit-bot; contact via github)"
-          IFS='|' read -ra TITLES <<< "${{ github.event.inputs.titles }}"
-          IFS='|' read -ra WIKIS <<< "${{ github.event.inputs.wikis }}"
-          i=0
-          for t in "${TITLES[@]}"; do
-            i=$((i+1))
-            slug=$(echo "$t" | tr ' ,()' '____' | sed 's/\.svg$//')
-            got=""
-            for w in "${WIKIS[@]}"; do
-              echo "── [$i] '$t' @ $w"
-              api="https://$w/w/api.php"
-              url=$(curl -sS -A "$UA" -G "$api" \
-                --data-urlencode "action=query" \
-                --data-urlencode "titles=File:$t" \
-                --data-urlencode "prop=imageinfo" \
-                --data-urlencode "iiprop=url" \
-                --data-urlencode "format=json" \
-                | jq -r '(.query.pages // {}) | to_entries[0].value.imageinfo[0].url // empty' 2>/dev/null)
-              echo "   → resolved: ${url:-(없음)}"
-              if [ -n "$url" ]; then
-                f="$OUT/${i}_${slug}.svg"
-                code=$(curl -sSL -A "$UA" -w "%{http_code}" -o "$f" "$url" || echo "000")
-                sz=$(wc -c < "$f" 2>/dev/null || echo 0)
-                echo "   HTTP $code · ${sz} bytes → $f"
-                if head -c 400 "$f" | grep -qi "<svg\|<?xml"; then
-                  echo "   OK SVG"; got="1"; break
-                else
-                  echo "   not SVG → remove"; rm -f "$f"
-                fi
-              fi
-            done
-            [ -z "$got" ] && echo "   ✗ 해석/다운로드 실패"
-          done
-          echo "── 결과"; ls -la "$OUT" || true
+          OUT="${{ github.event.inputs.out }}"
+          mkdir -p "$(dirname "$OUT")"
+          curl -sSL -A "Mozilla/5.0 (wirit-bot)" -o "$OUT" "${{ github.event.inputs.url }}"
+          echo "size: $(wc -c < "$OUT") bytes"
+          if head -c 400 "$OUT" | grep -qi "<svg\|<?xml"; then
+            echo "OK SVG"; head -c 600 "$OUT"; echo
+          else
+            echo "SVG 아님"; head -c 300 "$OUT"; exit 1
+          fi
       - name: 커밋
         run: |
           git config user.name "wirit-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add "${{ github.event.inputs.outdir }}" || true
+          git add "${{ github.event.inputs.out }}"
           if git diff --cached --quiet; then echo "변경 없음"; else
-            git commit -m "SVG 자산 취득: ${{ github.event.inputs.outdir }}"
+            git commit -m "SVG 자산 취득: ${{ github.event.inputs.out }}"
             git pull --rebase origin ${GITHUB_REF_NAME}
             git push origin HEAD:${GITHUB_REF_NAME}
           fi
