@@ -1,0 +1,52 @@
+name: 국내 증시 수집 (코스피·코스닥)
+
+# 코스피·코스닥 일간 시세(Stooq)를 받아 연중 고점·고점대비 하락률 데이터셋을 커밋한다.
+# 세션은 외부망 차단 → Actions 전용. 카드 빌더(build-index-2026.mjs)가 이 캐시를 소비.
+on:
+  workflow_dispatch:
+    inputs:
+      year:
+        description: "대상 연도"
+        required: true
+        default: "2026"
+  schedule:
+    # 평일 07:10 KST (22:10 UTC 전일) — 국내장 마감 후 확정치
+    - cron: "10 22 * * 0-4"
+
+permissions:
+  contents: write
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: 파서 셀프테스트
+        run: pnpm --filter @wirit/collectors selftest
+
+      - name: 수집 → 데이터셋
+        run: |
+          YEAR="${{ github.event.inputs.year }}"
+          YEAR="${YEAR:-2026}"
+          pnpm --filter @wirit/collectors collect-kr-market -- \
+            --year "$YEAR" --out "$GITHUB_WORKSPACE/data/datasets/kr-market-$YEAR.json"
+
+      - name: 커밋
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/datasets/kr-market-*.json
+          if git diff --cached --quiet; then echo "변경 없음"; else
+            git commit -m "국내 증시(코스피·코스닥) 수집"
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
