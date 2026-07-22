@@ -48,7 +48,7 @@ mkdirSync(outDir, { recursive: true });
 const out = {
   template: "estate-cover@1", date, photo, emblem,
   caption: "국토부 실거래 · 서울 25개 자치구",
-  hook: `<span class="dt">2026년 6월 기준</span>\n서울에서 가장 비싼\n<span class="pt">${PYEONG}</span>은?`,
+  hook: `<span class="dt">2026년 상반기 기준</span>\n서울에서 가장 비싼\n<span class="pt">${PYEONG}</span>은?`,
   revealLabel: "서울 최고가 1위",
   revealValue: eok(topEok),
   revealUnit: "억",
