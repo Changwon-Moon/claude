@@ -1,0 +1,49 @@
+{
+  "label": "estate-84",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 3장 · LLM 검수 포함",
+  "findings": [
+    {
+      "reviewer": "llm",
+      "level": "info",
+      "code": "llm-note",
+      "msg": "LLM 호출 실패: 400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CdHofhxWbCZ55zm5386rv\"}"
+    },
+    {
+      "reviewer": "llm",
+      "level": "info",
+      "code": "llm-note",
+      "msg": "LLM 호출 실패: 400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CdHofwS8J9kTC4FX5EZNh\"}"
+    },
+    {
+      "reviewer": "llm",
+      "level": "info",
+      "code": "llm-note",
+      "msg": "LLM 호출 실패: 400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CdHogA3eU9h1t4DPF4Fct\"}"
+    }
+  ],
+  "cards": [
+    {
+      "file": "estate-cover-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "maprank-84-p1.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "maprank-84-p2.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": true,
+    "note": "LLM 검수 활성 (모델: claude-sonnet-5)"
+  }
+}
