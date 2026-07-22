@@ -41,6 +41,9 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
 
+      - name: Chromium 설치(결정적 렌더용)
+        run: pnpm --filter @wirit/renderer exec playwright-core install --with-deps chromium chromium-headless-shell
+
       - name: 콘텐츠 재생성(prebuild)
         if: ${{ github.event.inputs.prebuild != '' }}
         run: |
