@@ -19,6 +19,7 @@
 | 소스 | 데이터 | 접근 | 갱신 |
 |---|---|---|---|
 | 국토교통부 실거래가 공개시스템 API | 아파트 매매/전월세 실거래 (단지·평형·금액) | 공공데이터포털 API (무료) | 일 |
+| └ **수집기 구현(P1, 07-21)** | 아파트 매매 상세(getRTMSDataSvcAptTradeDev) 구·월 수집 → `data/datasets/molit/{LAWD}-{YYYYMM}.json` 캐시 | `@wirit/collectors` molitCli + `molit-collect.yml`(dispatch·월5일 cron), `MOLIT_API_KEY` | 월 |
 | 청약홈 | 청약 일정, 경쟁률, 분양가 | API/크롤링 | 수시 |
 | KB부동산 데이터허브 | 주간/월간 시세 지수, 지역별 통계 | 공개 통계 다운로드 | 주 |
 | 한국부동산원 R-ONE | 지가·주택가격 지수, 거래량 | 공식 API | 주/월 |

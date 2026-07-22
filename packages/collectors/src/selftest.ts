@@ -23,10 +23,20 @@ import {
 import { parseEmpSttus, parseCorpCodeXml, findCorpCode } from "./parse/dart.js";
 import { parseBrandLogos, pickBestLogoFormat, DOMAIN_MAP } from "./sources/brandfetchLogo.js";
 import {
+  parseAptTrades,
+  parseTotalCount,
+  apiError,
+  highestPerApt,
+  summarizeDaejang,
+  toEok,
+} from "./parse/molit.js";
+import {
   STOOQ_SPX_CSV,
   STOOQ_WITH_GAPS_CSV,
   ECOS_FX_JSON,
   ECOS_ERROR_JSON,
+  MOLIT_APT_XML,
+  MOLIT_ERROR_XML,
 } from "./__fixtures__/fixtures.js";
 
 let pass = 0;
@@ -233,6 +243,37 @@ console.log("\n[로고 취득 파서 — Brandfetch Tier C]");
   check("Brandfetch: logos 없으면 null", pickBestLogoFormat([]) === null);
   check("Brandfetch: 빈 응답 파싱", parseBrandLogos(JSON.stringify({})).length === 0);
   check("Brandfetch: 도메인맵에 3개사 등록", Object.keys(DOMAIN_MAP).length === 3);
+}
+
+console.log("\n[국토부 실거래 파서 — MOLIT]");
+{
+  const txs = parseAptTrades(MOLIT_APT_XML);
+  check("item 5건 파싱", txs.length === 5, `got ${txs.length}`);
+  check("totalCount=5", parseTotalCount(MOLIT_APT_XML) === 5);
+  const first = txs[0];
+  check("거래금액 105만만원→원(1,050,000만원=10.5억*... )", first.priceWon === 10500000000, String(first.priceWon));
+  check("만원 필드 보존", first.priceManwon === 1050000);
+  check("전용면적 183.41", first.area === 183.41, String(first.area));
+  check("계약일 0패딩 2026-07-03", first.date === "2026-07-03", first.date);
+  check("건축년도 1982", first.buildYear === 1982);
+  check("거래유형 직거래 파싱", txs[2].dealingGbn === "직거래");
+  check("해제거래 canceled=true", txs[4].canceled === true);
+
+  const valid = highestPerApt(txs);
+  check("해제 제외 + 단지중복 최고가만 → 3단지", valid.length === 3, `got ${valid.length}`);
+  check("신현대11차는 105억(160㎡ 90억 아닌 최고가)", valid[0].priceWon === 10500000000);
+  check("2,000,000(해제)은 순위에서 제외", valid.every((t) => t.aptNm !== "해제거래"));
+
+  const sum = summarizeDaejang(txs, { topN: 3 });
+  check("대장 절대가 1위 = 신현대11차", sum.topByPrice[0].aptNm === "신현대11차");
+  check("국평(84.9㎡) 대장 = 국평샘플", sum.flagship84?.aptNm === "국평샘플", sum.flagship84?.aptNm);
+  check("유효 거래수 4건(해제 1 제외)", sum.count === 4, String(sum.count));
+
+  check("toEok 정수 105억", toEok(10500000000) === "105억", toEok(10500000000));
+  check("toEok 소수 44.5억", toEok(4450000000) === "44.5억", toEok(4450000000));
+
+  check("에러 XML 감지(키 미등록)", apiError(MOLIT_ERROR_XML) !== null);
+  check("정상 XML은 에러 없음", apiError(MOLIT_APT_XML) === null);
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);
