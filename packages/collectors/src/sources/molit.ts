@@ -8,6 +8,20 @@ import { parseAptTrades, parseTotalCount, apiError, type AptTrade } from "../par
 
 const BASE = "https://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev";
 
+/**
+ * 서비스키 정규화 — 공공데이터포털의 '인코딩 키'와 '디코딩 키' 어느 쪽이 등록됐든
+ * URL에 안전한 형태(퍼센트 인코딩)로 통일한다.
+ *   디코딩 키(abc+/def=) → encodeURIComponent → abc%2B%2Fdef%3D
+ *   인코딩 키(abc%2B...) → decode 후 재encode → 동일 결과(더블 인코딩 방지)
+ */
+export function encKey(raw: string): string {
+  try {
+    return encodeURIComponent(decodeURIComponent(raw));
+  } catch {
+    return encodeURIComponent(raw);
+  }
+}
+
 /** 구·월 한 달치 아파트 매매 전 건 수집(전 페이지). key는 인코딩 인증키(URL 그대로 붙임) */
 export async function fetchAptTradesMonth(
   lawdCd: string,
@@ -20,7 +34,7 @@ export async function fetchAptTradesMonth(
   const all: AptTrade[] = [];
   for (let page = 1; page <= maxPages; page++) {
     const url =
-      `${BASE}?serviceKey=${key}&LAWD_CD=${lawdCd}&DEAL_YMD=${dealYmd}` +
+      `${BASE}?serviceKey=${encKey(key)}&LAWD_CD=${lawdCd}&DEAL_YMD=${dealYmd}` +
       `&pageNo=${page}&numOfRows=${rows}`;
     const xml = await fetchText(url, { retries: 2 });
     const err = apiError(xml);

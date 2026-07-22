@@ -30,6 +30,7 @@ import {
   summarizeDaejang,
   toEok,
 } from "./parse/molit.js";
+import { encKey } from "./sources/molit.js";
 import {
   STOOQ_SPX_CSV,
   STOOQ_WITH_GAPS_CSV,
@@ -274,6 +275,11 @@ console.log("\n[국토부 실거래 파서 — MOLIT]");
 
   check("에러 XML 감지(키 미등록)", apiError(MOLIT_ERROR_XML) !== null);
   check("정상 XML은 에러 없음", apiError(MOLIT_APT_XML) === null);
+
+  // 서비스키 정규화: 디코딩 키·인코딩 키 둘 다 같은 안전 형태로
+  const enc = encKey("abc+/def=");
+  check("encKey: 디코딩키 퍼센트인코딩", enc === "abc%2B%2Fdef%3D", enc);
+  check("encKey: 인코딩키 더블인코딩 방지(동일 결과)", encKey("abc%2B%2Fdef%3D") === enc);
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);
