@@ -37,5 +37,14 @@
     "author": "Leeloo The First",
     "url": "https://www.pexels.com/photo/clipboard-with-statistical-data-and-digital-tablet-with-stock-market-display-on-screen-5561917/",
     "fetchedFor": "wirit card"
+  },
+  "stock-board": {
+    "file": "stock-board.jpg",
+    "source": "pexels",
+    "query": "stock exchange market display board numbers",
+    "license": "Pexels License (상업이용·표기불요)",
+    "author": "Bor Jinson",
+    "url": "https://www.pexels.com/photo/stock-market-display-board-in-japan-36790143/",
+    "fetchedFor": "wirit card"
   }
 }
