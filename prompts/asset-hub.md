@@ -23,3 +23,8 @@
 검증 R3, 수집 R0 — 수위 상향은 결정 로그가 충분히 쌓인 뒤 오너 승인으로.
 
 <!-- 이 아래에 팀 고유의 세부 지침·예시·금지사항을 자유롭게 추가한다. -->
+
+## 세부 지침 (07-22 학습 반영)
+- **공식 로고/자산 SVG는 파일명 추측 금지** → MediaWiki API(`action=query&titles=File:…&prop=imageinfo&iiprop=url`)로 실제 `upload.wikimedia` URL 해석 후 다운로드. 세션 다운로드 차단 시 Actions(`svg-asset-fetch.yml` 로고 · `photo-fetch.yml` 사진).
+- **워크플로 작성**: `run:` 블록 스칼라에 여러 줄 인라인 파이썬 금지(들여쓰기 붕괴로 YAML 파손) → `jq` 한 줄로. 콤마 포함 입력값은 `|` 구분자.
+- 취득 자산은 catalog에 출처·라이선스·저자 기록(무결성 CI).

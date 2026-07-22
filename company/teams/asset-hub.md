@@ -36,5 +36,8 @@
 | 07-20 | 회사명에서 뽑은 영문 slug(예: "HD한국조선해양"→"hd")가 지나치게 일반적이면 충돌 위험 — 취득 직후 사람이 slug 구체화(hd→hd-ksoe) | 눈 검증 |
 | 07-20 | **사진 자동 취득 파이프라인 가동**: `scripts/fetch-wikimedia-photo.mjs` + `photo-fetch.yml`(Actions). Commons API로 라이선스·저자 확인 후 CC/PD만 다운로드→catalog 기록. 세션은 이미지 다운로드 차단이라 Actions 전용. 첫 취득: 종로3가역 플랫폼(CC BY-SA 4.0, ⓒLERK) | 오너 "사진 위키미디어에서 취득" |
 | 07-20 | **CC BY-SA 사진은 저작자 표시 필수** → 카드에 "사진 ⓒ작가·CC BY-SA" 크레딧 노출(또는 캡션). SA(동일조건변경허락)도 준수 대상 | 라이선스 규정 |
+| 07-22 | **공식 로고 SVG는 MediaWiki API로 실제 URL 해석 후 다운로드**(파일명 추측 URL은 404 남발). `action=query&titles=File:…&iiprop=url`→`upload.wikimedia` 직접 URL→curl·SVG검증·커밋. `svg-asset-fetch.yml` 신설. 서울 심볼마크(Logo of Seoul) 확보→디자인이 결정적 인라인 | 로고 취득 |
+| 07-22 | **커버 사진**: `photo-fetch.yml`(Pexels) query 취득. '서울 아파트 야경'=`seoul-apart-night`(Pexels License·표기불요, ⓒEthan Brooke), 세로형이라 4:5 커버에 적합 | 커버 제작 |
+| 07-22 | **워크플로 작성 주의**: Actions `run:` 블록 스칼라에 여러 줄 인라인 파이썬은 **들여쓰기 붕괴로 YAML 파손** → `jq` 한 줄로. 입력 목록에 콤마 포함 값(파일명)이 있으면 콤마 대신 `|` 구분자 | 취득 워크플로 디버깅 |
 
 **KPI**: 자산 재사용률, 카탈로그 무결성(CI 통과 유지) | **자동화**: 검증 R3, 수집 R0
