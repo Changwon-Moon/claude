@@ -15,6 +15,16 @@ const date = process.argv[3] || "2026-07-21";
 const BAND = metric === "59" ? [58, 61] : [83, 86];
 const PYEONG = metric === "59" ? "25평" : "34평";
 
+// 서울특별시 공식 심볼마크(위키미디어 공용, 산·해·한강 3색 브러시) 인라인 — 결정적 렌더용
+const emblem = readFileSync(join(ROOT, "data/assets/seoul/seoul-logo.svg"), "utf8")
+  .replace(/<\?xml[^>]*\?>/i, "")
+  .replace(/<metadata>[\s\S]*?<\/metadata>/i, "")
+  .replace(/<svg\s/i, '<svg class="em" preserveAspectRatio="xMidYMid meet" ')
+  .replace(/\swidth="[^"]*"/i, "")
+  .replace(/\sheight="[^"]*"/i, "")
+  .replace(/\senable-background="[^"]*"/i, "")
+  .trim();
+
 // 최근 6개월만 사용
 const molitDir = join(ROOT, "data/datasets/molit");
 const files = readdirSync(molitDir).filter((f) => f.endsWith(".json"));
@@ -98,7 +108,7 @@ const half = Math.ceil(rowsAll.length / 2); // 13
 const rows1 = rowsAll.slice(0, half), rows2 = rowsAll.slice(half);
 const gus1 = new Set(rows1.map((r) => r.gu)), gus2 = new Set(rows2.map((r) => r.gu));
 const base = {
-  template: "map-rank@1", date, metric,
+  template: "map-rank@1", date, metric, emblem,
   subtitle: `전용 ${metric}㎡(${metric === "59" ? "25평" : "34평"}) 기준 · 최근 6개월 최고 실거래`,
   source,
 };
