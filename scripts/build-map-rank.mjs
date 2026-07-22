@@ -108,7 +108,7 @@ const half = Math.ceil(rowsAll.length / 2); // 13
 const rows1 = rowsAll.slice(0, half), rows2 = rowsAll.slice(half);
 const gus1 = new Set(rows1.map((r) => r.gu)), gus2 = new Set(rows2.map((r) => r.gu));
 const base = {
-  template: "map-rank@1", date, metric, emblem,
+  template: "map-rank@1", date, metric, emblem, pyeong: PYEONG,
   subtitle: `전용 ${metric}㎡(${metric === "59" ? "25평" : "34평"}) 기준 · 최근 6개월 최고 실거래`,
   source,
 };
