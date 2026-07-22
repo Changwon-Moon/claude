@@ -1,11 +1,16 @@
 name: 콘텐츠 검수 (에이전트)
 
 # 콘텐츠 세트(커버+표+캡션)를 코드+LLM 에이전트로 검수하고 리포트를 커밋한다.
+# 콘텐츠 JSON(data/content)은 gitignore이므로, prebuild로 커밋된 데이터에서 결정적으로 재생성한 뒤 검수.
 # 코드 검수(결정성·레이아웃·캡션 린트·수치 대조)는 키 없이 동작.
-# LLM 검수(디자인·카피·적대적)는 ANTHROPIC_API_KEY 시크릿이 있을 때만 추가된다.
+# LLM 검수(디자인·레퍼런스·카피·적대적)는 ANTHROPIC_API_KEY 시크릿이 있을 때만 추가된다.
 on:
   workflow_dispatch:
     inputs:
+      prebuild:
+        description: "콘텐츠 재생성 명령(세미콜론 구분)"
+        required: false
+        default: "node scripts/build-map-rank.mjs 84; node scripts/build-estate-cover.mjs 84 seoul-apart-night.jpg"
       cards:
         description: "카드 JSON 경로들(공백 구분)"
         required: true
@@ -13,7 +18,7 @@ on:
       caption:
         description: "캡션 txt 경로(선택)"
         required: false
-        default: ""
+        default: "data/review/captions/estate-84.txt"
       label:
         description: "리포트 이름"
         required: true
@@ -35,6 +40,17 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+
+      - name: 콘텐츠 재생성(prebuild)
+        if: ${{ github.event.inputs.prebuild != '' }}
+        run: |
+          set -e
+          IFS=';' read -ra CMDS <<< "${{ github.event.inputs.prebuild }}"
+          for c in "${CMDS[@]}"; do
+            c="$(echo "$c" | xargs)"  # trim
+            [ -z "$c" ] && continue
+            echo "▶ $c"; eval "$c"
+          done
 
       - name: 검수 실행
         id: review

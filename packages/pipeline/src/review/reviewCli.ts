@@ -79,7 +79,7 @@ async function main() {
     // 3) LLM 디자인·적대적 렌즈(키 있을 때)
     if (llm.ok) {
       const png = r1.outputs[0];
-      const lenses = ["design", "adversarial"];
+      const lenses = ["design", "reference", "adversarial"];
       const { results, note } = await reviewImage(png, undefined, lenses);
       if (note !== "ok") setFindings.push({ reviewer: "llm", level: "info", code: "llm-note", msg: note });
       results.forEach((lr) => findings.push(...lr.findings));
