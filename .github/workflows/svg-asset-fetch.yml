@@ -48,10 +48,7 @@ jobs:
                 --data-urlencode "prop=imageinfo" \
                 --data-urlencode "iiprop=url" \
                 --data-urlencode "format=json" \
-                | python3 -c "import sys,json;
-d=json.load(sys.stdin);
-pages=d.get('query',{}).get('pages',{});
-print(next((p['imageinfo'][0]['url'] for p in pages.values() if p.get('imageinfo')), ''))" 2>/dev/null)
+                | jq -r '(.query.pages // {}) | to_entries[0].value.imageinfo[0].url // empty' 2>/dev/null)
               echo "   → resolved: ${url:-(없음)}"
               if [ -n "$url" ]; then
                 f="$OUT/${i}_${slug}.svg"
