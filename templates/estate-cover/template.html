@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* estate-cover@1 — 실거래 랭킹 캐러셀 후킹 커버(다크 사진 + 질문형 + 정답 가리기) */
+      .ec { position: relative; padding: 0; overflow: hidden; }
+      .ec-bg { position: absolute; inset: 0; }
+      .ec-bg img { width: 100%; height: 100%; object-fit: cover; }
+      .ec-grad { position: absolute; inset: 0;
+        background: linear-gradient(180deg,
+          rgba(9,13,20,0.72) 0%, rgba(9,13,20,0.30) 32%,
+          rgba(9,13,20,0.46) 58%, rgba(9,13,20,0.92) 100%); }
+      .ec-inner { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column;
+        padding: 60px 62px 54px; color: #fff; }
+
+      /* 좌상단 캡션 */
+      .ec-cap { font-size: 30px; font-weight: 700; color: #dbe3ec; letter-spacing: -0.01em; }
+      .ec-cap .emb { width: 40px; height: 44px; vertical-align: -12px; margin-right: 10px; }
+
+      /* 후킹 대제목 */
+      .ec-hook { font-family: var(--font-sans); font-weight: 900; font-size: 104px; line-height: 1.1;
+        margin: 26px 0 0; letter-spacing: -0.03em; white-space: pre-line;
+        text-shadow: 0 3px 22px rgba(0,0,0,0.5); }
+      .ec-hook .pt { color: #ffd24a; }
+      .ec-hook .u { font-size: 60px; font-weight: 800; vertical-align: 14px; }
+
+      /* 정답 가리기 리빌 박스 */
+      .ec-reveal { margin-top: auto; background: rgba(255,255,255,0.11);
+        border: 1px solid rgba(255,255,255,0.2); border-radius: 26px; padding: 30px 34px; }
+      .ec-rlabel { display: inline-block; font-size: 27px; font-weight: 800; letter-spacing: -0.01em;
+        color: #0d1119; background: #ffd24a; border-radius: 999px; padding: 7px 20px 9px; }
+      .ec-rmain { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 20px; }
+      .ec-who { display: flex; align-items: center; gap: 14px; font-size: 40px; font-weight: 800; letter-spacing: -0.02em; }
+      .ec-who .mask { display: inline-flex; gap: 8px; }
+      .ec-who .mask b { width: 42px; height: 46px; border-radius: 9px; background: rgba(255,255,255,0.32); display: inline-block; }
+      .ec-who .q { font-size: 46px; font-weight: 900; color: #ffd24a; }
+      .ec-amt { font-family: var(--font-num); font-weight: 900; font-size: 86px; line-height: 1; color: #ffd24a;
+        white-space: nowrap; text-shadow: 0 2px 14px rgba(0,0,0,0.4); }
+      .ec-amt i { font-size: 40px; font-style: normal; font-weight: 800; margin-left: 4px; }
+
+      /* CTA */
+      .ec-cta { margin-top: 22px; text-align: center; font-size: 34px; font-weight: 800;
+        color: #fff; letter-spacing: -0.01em; }
+      .ec-cta b { color: #ffd24a; }
+
+      /* 하단 잉크 푸터 바(본문 톤 통일) */
+      .ec-foot { margin: 24px -62px -54px; padding: 30px 62px; display: flex; align-items: center; justify-content: center;
+        background: var(--wirit-ink); }
+      .ec-foot .wm { font-weight: 800; color: #fff; font-size: 40px; }
+      .ec-foot .wm .dot { color: var(--wirit-cobalt); }
+
+      /* 우상단 흰 반전 뱃지(다크 커버 각인) */
+      .ec .wirit-corner { background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
+      .ec .wirit-corner .mark { color: var(--wirit-ink); }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card ec">
+      <div class="ec-bg"><img src="../_shared/photos/{{photo}}" alt="" /></div>
+      <div class="ec-grad"></div>
+      <div class="ec-inner">
+        <div class="ec-cap">{{#if emblem}}{{{emblem}}}{{/if}}{{caption}}</div>
+        <h1 class="ec-hook">{{{hook}}}</h1>
+
+        <div class="ec-reveal">
+          <span class="ec-rlabel">{{revealLabel}}</span>
+          <div class="ec-rmain">
+            <span class="ec-who"><span class="mask"><b></b><b></b></span> · <span class="mask"><b></b><b></b><b></b><b></b></span> <span class="q">?</span></span>
+            <span class="ec-amt">{{revealValue}}<i>{{#if revealUnit}}{{revealUnit}}{{else}}억{{/if}}</i></span>
+          </div>
+        </div>
+
+        <div class="ec-cta">{{{cta}}}</div>
+
+        <div class="ec-foot"><span class="wm">@wirit_note<span class="dot">.</span></span></div>
+      </div>
+    </div>
+  </body>
+</html>
