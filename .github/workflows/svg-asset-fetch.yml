@@ -1,0 +1,54 @@
+name: SVG 자산 취득 (공개)
+
+# 공개 SVG 자산(예: 서울특별시 휘장/심볼마크)을 여러 후보 URL에서 받아 검증 후 커밋.
+# 세션은 외부 다운로드가 정책상 차단 → Actions 러너(개방망) 전용. 취득 후 세션에서 pull.
+on:
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: "다운로드 URL 목록(콤마 구분)"
+        required: true
+        default: "https://commons.wikimedia.org/wiki/Special:FilePath/Emblem_of_Seoul.svg,https://ko.wikipedia.org/wiki/Special:FilePath/Emblem_of_Seoul.svg,https://commons.wikimedia.org/wiki/Special:FilePath/Seoul_symbol.svg,https://ko.wikipedia.org/wiki/Special:FilePath/Logo_of_Seoul,_South_Korea.svg"
+      outdir:
+        description: "저장 폴더"
+        required: true
+        default: "data/assets/seoul"
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 다운로드 + 검증(SVG)
+        run: |
+          OUT="${{ github.event.inputs.outdir }}"
+          mkdir -p "$OUT"
+          IFS=',' read -ra URLS <<< "${{ github.event.inputs.urls }}"
+          i=0
+          for u in "${URLS[@]}"; do
+            i=$((i+1))
+            f="$OUT/candidate-$i.svg"
+            echo "── [$i] $u"
+            code=$(curl -sSL -A "Mozilla/5.0 wirit-bot" -w "%{http_code}" -o "$f" "$u" || echo "000")
+            sz=$(wc -c < "$f" 2>/dev/null || echo 0)
+            echo "   HTTP $code · ${sz} bytes"
+            if head -c 300 "$f" | grep -qi "<svg\|<?xml"; then
+              echo "   OK SVG"; head -c 500 "$f"; echo
+            else
+              echo "   not SVG → remove"; rm -f "$f"
+            fi
+          done
+          echo "── 결과"; ls -la "$OUT" || true
+      - name: 커밋
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "${{ github.event.inputs.outdir }}" || true
+          if git diff --cached --quiet; then echo "변경 없음"; else
+            git commit -m "SVG 자산 취득: ${{ github.event.inputs.outdir }}"
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi

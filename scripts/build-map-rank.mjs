@@ -1,6 +1,7 @@
 /**
  * 서울 행정구별 대장 APT — 코로플레스 지도(축소) + 구별 최고가 순위표. 2장 캐러셀.
- *   p1: 순위 1~13 · p2: 순위 14~25 (지도는 양쪽 공통, 히트맵)
+ *   p1: 순위 1~13 · p2: 순위 14~25
+ *   지도는 페이지별로 "해당 순위 구간의 구만 색상, 나머지는 회색" 처리.
  * data/geo/seoul-districts.geojson + data/datasets/molit/*.json(최근 6개월) 사용.
  * 실행: node scripts/build-map-rank.mjs <84|59> [date]
  */
@@ -50,8 +51,9 @@ const lerp = (a, b, t) => Math.round(a + (b - a) * t);
 const norm = (p) => (mx === mn ? 0.5 : (p - mn) / (mx - mn));
 const fill = (p) => `rgb(${lerp(C_LO[0], C_HI[0], norm(p))},${lerp(C_LO[1], C_HI[1], norm(p))},${lerp(C_LO[2], C_HI[2], norm(p))})`;
 const textCol = (p) => (norm(p) > 0.45 ? "#ffffff" : "#1c2431");
+const GRAY_FILL = "#dfe2e7", GRAY_TEXT = "#aab2bd"; // 언급 안 되는 구
 
-// ── GeoJSON → SVG (구명만 라벨, 가격은 표로) ──
+// ── GeoJSON → 투영 준비 ──
 const geo = JSON.parse(readFileSync(join(ROOT, "data/geo/seoul-districts.geojson"), "utf8"));
 const rings = (g) => (g.type === "Polygon" ? g.coordinates : g.type === "MultiPolygon" ? g.coordinates.flat() : []);
 let minLon = 999, maxLon = -999, minLat = 999, maxLat = -999;
@@ -61,24 +63,30 @@ for (const f of geo.features) for (const r of rings(f.geometry)) for (const [lo,
 const kx = Math.cos(((minLat + maxLat) / 2) * Math.PI / 180);
 const W = 1000, scale = W / ((maxLon - minLon) * kx), H = Math.round((maxLat - minLat) * scale), PAD = 6;
 const px = (lo) => PAD + (lo - minLon) * kx * scale, py = (la) => PAD + (maxLat - la) * scale;
-let paths = "", labels = "";
-for (const f of geo.features) {
-  const name = f.properties.name, info = guTop[name];
-  const p = info ? info.price : mn;
-  let d = "", big = null, bl = 0;
-  for (const ring of rings(f.geometry)) {
-    d += "M" + ring.map(([lo, la]) => `${px(lo).toFixed(1)},${py(la).toFixed(1)}`).join("L") + "Z";
-    if (ring.length > bl) { bl = ring.length; big = ring; }
+
+// activeGus: 이 페이지에서 색을 입힐 구(Set). 나머지는 회색.
+function genMap(activeGus) {
+  let paths = "", labels = "";
+  for (const f of geo.features) {
+    const name = f.properties.name, info = guTop[name];
+    const active = activeGus.has(name) && info;
+    const p = info ? info.price : mn;
+    let d = "", big = null, bl = 0;
+    for (const ring of rings(f.geometry)) {
+      d += "M" + ring.map(([lo, la]) => `${px(lo).toFixed(1)},${py(la).toFixed(1)}`).join("L") + "Z";
+      if (ring.length > bl) { bl = ring.length; big = ring; }
+    }
+    paths += `<path class="mr-geo" d="${d}" fill="${active ? fill(p) : GRAY_FILL}"/>`;
+    const pts = big.map(([lo, la]) => [px(lo), py(la)]);
+    let A = 0, cx = 0, cy = 0;
+    for (let i = 0; i < pts.length - 1; i++) { const [x0, y0] = pts[i], [x1, y1] = pts[i + 1]; const c = x0 * y1 - x1 * y0; A += c; cx += (x0 + x1) * c; cy += (y0 + y1) * c; }
+    if (Math.abs(A) < 1e-6) { cx = pts.reduce((s, q) => s + q[0], 0) / pts.length; cy = pts.reduce((s, q) => s + q[1], 0) / pts.length; }
+    else { A *= 0.5; cx /= 6 * A; cy /= 6 * A; }
+    const tc = active ? textCol(p) : GRAY_TEXT;
+    labels += `<text class="mr-lab" x="${cx.toFixed(0)}" y="${(cy + 10).toFixed(0)}" fill="${tc}"><tspan class="g" x="${cx.toFixed(0)}">${name.replace(/구$/, "")}</tspan></text>`;
   }
-  paths += `<path class="mr-geo" d="${d}" fill="${info ? fill(p) : "#e8eaed"}"/>`;
-  const pts = big.map(([lo, la]) => [px(lo), py(la)]);
-  let A = 0, cx = 0, cy = 0;
-  for (let i = 0; i < pts.length - 1; i++) { const [x0, y0] = pts[i], [x1, y1] = pts[i + 1]; const c = x0 * y1 - x1 * y0; A += c; cx += (x0 + x1) * c; cy += (y0 + y1) * c; }
-  if (Math.abs(A) < 1e-6) { cx = pts.reduce((s, q) => s + q[0], 0) / pts.length; cy = pts.reduce((s, q) => s + q[1], 0) / pts.length; }
-  else { A *= 0.5; cx /= 6 * A; cy /= 6 * A; }
-  labels += `<text class="mr-lab" x="${cx.toFixed(0)}" y="${(cy + 10).toFixed(0)}" fill="${info ? textCol(p) : "#98a2b3"}"><tspan class="g" x="${cx.toFixed(0)}">${name.replace(/구$/, "")}</tspan></text>`;
+  return `<svg viewBox="0 0 ${W + PAD * 2} ${H + PAD * 2}" xmlns="http://www.w3.org/2000/svg"><style>.mr-lab .g{font-size:34px}</style>${paths}${labels}</svg>`;
 }
-const mapSvg = `<svg viewBox="0 0 ${W + PAD * 2} ${H + PAD * 2}" xmlns="http://www.w3.org/2000/svg"><style>.mr-lab .g{font-size:34px}</style>${paths}${labels}</svg>`;
 
 // ── 콘텐츠 2장 ──
 const outDir = join(ROOT, `data/content/${date}`);
@@ -86,13 +94,14 @@ mkdirSync(outDir, { recursive: true });
 const source = { name: "국토부 실거래가 · 서울시 행정경계", asOf };
 const toRow = (r, i) => ({ rank: i + 1, gu: r.gu, apt: r.apt, price: eok(r.price), cls: i < 3 ? `r${i + 1}` : "" });
 const rowsAll = ranked.map(toRow);
+const half = Math.ceil(rowsAll.length / 2); // 13
+const rows1 = rowsAll.slice(0, half), rows2 = rowsAll.slice(half);
+const gus1 = new Set(rows1.map((r) => r.gu)), gus2 = new Set(rows2.map((r) => r.gu));
 const base = {
-  template: "map-rank@1", date, mapSvg,
-  subtitle: `전용 ${metric}㎡ 기준 · 최근 6개월 최고 실거래`,
-  title: `서울 행정구별 ${PYEONG} 대장 APT`,
+  template: "map-rank@1", date, metric,
+  subtitle: `전용 ${metric}㎡(${metric === "59" ? "25평" : "34평"}) 기준 · 최근 6개월 최고 실거래`,
   source,
 };
-const half = Math.ceil(rowsAll.length / 2); // 13
-writeFileSync(join(outDir, `maprank-${metric}-p1.json`), JSON.stringify({ ...base, rows: rowsAll.slice(0, half) }, null, 2) + "\n");
-writeFileSync(join(outDir, `maprank-${metric}-p2.json`), JSON.stringify({ ...base, rows: rowsAll.slice(half) }, null, 2) + "\n");
+writeFileSync(join(outDir, `maprank-${metric}-p1.json`), JSON.stringify({ ...base, mapSvg: genMap(gus1), rows: rows1 }, null, 2) + "\n");
+writeFileSync(join(outDir, `maprank-${metric}-p2.json`), JSON.stringify({ ...base, mapSvg: genMap(gus2), rows: rows2 }, null, 2) + "\n");
 console.log(`✅ ${PYEONG}(전용${metric}) 2장 — ${ranked.length}개구 · 1위 ${ranked[0].gu} ${ranked[0].apt} ${eok(mx)}억 · 기간 ${asOf}`);
