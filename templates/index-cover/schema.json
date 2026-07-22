@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["template", "hook", "drops"],
+  "properties": {
+    "template": { "type": "string" }, "date": { "type": "string" },
+    "caption": { "type": "string" }, "hook": { "type": "string" },
+    "drops": { "type": "array", "items": { "type": "object" } },
+    "cta": { "type": "string" }, "bgSvg": { "type": "string" }
+  },
+  "additionalProperties": true
+}
