@@ -1123,7 +1123,36 @@
       "https://query1.finance.yahoo.com/v8/finance/chart/%5EKS11?range=2y&interval=1d",
       "https://query1.finance.yahoo.com/v8/finance/chart/%5EKQ11?range=2y&interval=1d"
     ],
-    "verified": false,
-    "verificationNote": "발행 전 헤드라인 수치(현재지수·고점)를 KRX 정보데이터시스템 또는 언론 보도와 교차확인 후 verified=true 승격"
+    "verified": true,
+    "verificationNote": "발행 전 헤드라인 수치(현재지수·고점)를 KRX 정보데이터시스템 또는 언론 보도와 교차확인 후 verified=true 승격",
+    "verification": {
+      "date": "2026-07-22",
+      "checks": [
+        {
+          "claim": "코스피 연중(사상) 고점 9,114.55 (2026-06-22)",
+          "source": "뉴스핌 마감시황 '코스피, 최고가 또 썼다…9114 마감'(2026-06-22)",
+          "url": "https://www.newspim.com/news/view/20260622000949",
+          "result": "정확 일치"
+        },
+        {
+          "claim": "코스피 궤적(7/16 종가 6,820.60)",
+          "source": "국제신문 주가지수 2026-07-16",
+          "url": "https://www.kookje.co.kr/news2011/asp/newsbody.asp?code=0200&key=20260717.22010005165",
+          "result": "합치(우리 시계열 동일 구간)"
+        },
+        {
+          "claim": "코스피 9000 첫 돌파(6/18)",
+          "source": "파이낸셜뉴스·뉴시스(2026-06-18)",
+          "url": "https://www.fnnews.com/news/202606181831209006",
+          "result": "합치"
+        },
+        {
+          "claim": "코스닥 7월 중순 790선",
+          "source": "국제신문 2026-07-16(791.84)",
+          "url": "https://www.kookje.co.kr/news2011/asp/newsbody.asp?code=0200&key=20260717.22010005165",
+          "result": "합치"
+        }
+      ]
+    }
   }
 }

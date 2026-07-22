@@ -73,7 +73,7 @@ const doc = {
   title: "국내 증시, 지금 어디쯤?",
   subtitle: `코스피·코스닥 ${year}년 궤적 · 연중 고점 대비 현재`,
   blocks,
-  source: { name: "국내 증시 일간 종가(Stooq 집계)", asOf },
+  source: { name: ds.meta?.source || "국내 증시 일간 종가", asOf },
 };
 writeFileSync(join(outDir, `index-${year}.json`), JSON.stringify(doc, null, 2) + "\n");
 console.log(`✅ index-${year} — ${blocks.map((b) => `${b.name} ${b.now} (고점대비 ${b.dd}%)`).join(" · ")} · ${asOf} 기준`);
