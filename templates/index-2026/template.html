@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* index-2026@1 — 코스피·코스닥 연중 궤적 + 고점대비 하락률. 종이 톤. */
+      .ix { padding-top: 50px; }
+      .ix .wirit-corner { background: transparent; padding: 0; box-shadow: none; top: 42px; right: 56px; }
+      .ix .wirit-corner .mark { color: var(--wirit-ink); font-size: 40px; }
+      .ix > .wirit-topcap { padding-right: 150px; }
+
+      .ix-head { margin: 10px 0 0; }
+      .ix .wirit-title { font-size: 78px; line-height: 1.06; text-align: center; letter-spacing: -0.03em; margin: 0; white-space: nowrap; }
+      .ix .wirit-title .yr { color: #c0122a; }
+
+      .ix-list { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 26px; margin-top: 26px; margin-bottom: 20px; }
+      .ix-block { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column;
+        border: 2px solid var(--wirit-ink-12); border-radius: 24px; padding: 26px 34px 22px; background: #fff; }
+
+      .ix-top { display: flex; align-items: baseline; gap: 18px; }
+      .ix-name { font-size: 44px; font-weight: 900; letter-spacing: -0.02em; color: var(--wirit-ink); }
+      .ix-now { margin-left: auto; font-family: var(--font-num); font-size: 62px; font-weight: 900; color: var(--wirit-ink); }
+      .ix-ytd { font-family: var(--font-num); font-size: 30px; font-weight: 800; }
+      .ix-ytd.up { color: var(--wirit-red); }
+      .ix-ytd.down { color: var(--wirit-cobalt); }
+
+      .ix-chart { flex: 1; min-height: 0; margin: 14px 0 8px; }
+      .ix-chart svg { width: 100%; height: 100%; display: block; }
+
+      .ix-stats { display: flex; gap: 14px; }
+      .ix-stat { flex: 1; display: flex; flex-direction: column; gap: 2px;
+        background: rgba(20,24,33,0.04); border-radius: 14px; padding: 12px 18px; }
+      .ix-stat .k { font-size: 22px; font-weight: 700; color: var(--wirit-gray); }
+      .ix-stat .v { font-family: var(--font-num); font-size: 33px; font-weight: 900; color: var(--wirit-ink); white-space: nowrap; }
+      .ix-stat .v small { font-size: 21px; font-weight: 700; color: var(--wirit-gray); margin-left: 6px; }
+      .ix-stat.dd .v { color: var(--wirit-cobalt); }
+      .ix-stat.dd.flat .v { color: var(--wirit-ink); }
+
+      /* 스파크라인 색 */
+      .ix-line { fill: none; stroke: var(--wirit-ink); stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; }
+      .ix-area { fill: rgba(20,24,33,0.05); stroke: none; }
+      .ix-peak-dot { fill: #c0122a; }
+      .ix-peak-lab { font-family: "Wanted Sans", sans-serif; font-weight: 800; font-size: 24px; fill: #c0122a; }
+      .ix-last-dot { fill: var(--wirit-ink); }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card ix">
+      <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
+      <div class="ix-head"><h1 class="wirit-title"><span class="yr">{{year}}</span> {{title}}</h1></div>
+
+      <div class="ix-list">
+        {{#each blocks}}
+        <div class="ix-block">
+          <div class="ix-top">
+            <span class="ix-name">{{this.name}}</span>
+            <span class="ix-ytd {{this.ytdCls}}">{{this.ytdLabel}}</span>
+            <span class="ix-now">{{this.now}}</span>
+          </div>
+          <div class="ix-chart">{{{this.chartSvg}}}</div>
+          <div class="ix-stats">
+            <div class="ix-stat"><span class="k">연중 고점 ({{this.peakDate}})</span><span class="v">{{this.peak}}</span></div>
+            <div class="ix-stat dd {{this.ddCls}}"><span class="k">고점 대비</span><span class="v">{{this.dd}}<small>%</small></span></div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+  </body>
+</html>

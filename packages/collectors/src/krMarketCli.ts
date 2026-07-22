@@ -1,27 +1,50 @@
 /**
- * 국내 증시 수집 CLI — 코스피·코스닥 일간 시세(Stooq, 무료·키 불필요)를 받아
+ * 국내 증시 수집 CLI — 코스피(^KS11)·코스닥(^KQ11) 일간 종가를 받아
  * 2026년 궤적·연중 고점·고점대비 하락률을 코드로 산출해 데이터셋으로 저장한다.
  *
  *   tsx src/krMarketCli.ts [--year 2026] [--out data/datasets/kr-market-2026.json]
  *
+ * 소스: 야후 파이낸스 차트 API(무료·키 불필요, JSON). Stooq는 봇 차단(JS 검증)으로 러너에서 불가.
  * 세션은 외부망 차단 → Actions(kr-market.yml)에서 실행해 커밋. LLM 수치 창작 없음.
- * 주의: Stooq는 집계 소스 — 헤드라인 수치는 발행 전 KRX·언론 보도와 교차확인(verified 승격).
+ * 주의: 집계 소스 — 헤드라인 수치는 발행 전 KRX·언론 보도와 교차확인(verified 승격).
  */
 import { writeFileSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fetchText } from "./http.js";
-import { parseStooqDailyCsv, type DailyRow } from "./parse/stooq.js";
 
 const CWD = process.env.INIT_CWD || process.cwd();
 
 const INDICES = [
-  { key: "kospi", label: "코스피", stooq: "^kospi" },
-  { key: "kosdaq", label: "코스닥", stooq: "^kosdaq" },
+  { key: "kospi", label: "코스피", yahoo: "^KS11" },
+  { key: "kosdaq", label: "코스닥", yahoo: "^KQ11" },
 ];
 
 const r2 = (v: number) => Math.round(v * 100) / 100;
 
-function summarize(rows: DailyRow[], year: string) {
+interface Day {
+  date: string;
+  close: number;
+}
+
+/** 야후 차트 JSON → 일간 종가 배열 */
+export function parseYahooChart(json: string): Day[] {
+  const doc = JSON.parse(json);
+  const res = doc?.chart?.result?.[0];
+  if (!res) throw new Error(`야후 응답에 chart.result 없음: ${json.slice(0, 200)}`);
+  const ts: number[] = res.timestamp || [];
+  const closes: (number | null)[] = res.indicators?.quote?.[0]?.close || [];
+  const tz: string = res.meta?.exchangeTimezoneName || "Asia/Seoul";
+  const fmt = new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit" });
+  const rows: Day[] = [];
+  for (let i = 0; i < ts.length; i++) {
+    const c = closes[i];
+    if (c == null || Number.isNaN(c)) continue;
+    rows.push({ date: fmt.format(new Date(ts[i] * 1000)), close: c });
+  }
+  return rows;
+}
+
+function summarize(rows: Day[], year: string) {
   const yr = rows.filter((r) => r.date.startsWith(year));
   if (yr.length < 2) throw new Error(`${year}년 데이터가 ${yr.length}건 — 수집 불가`);
   const first = yr[0];
@@ -44,6 +67,9 @@ function summarize(rows: DailyRow[], year: string) {
   };
 }
 
+const yahooUrl = (sym: string) =>
+  `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?range=2y&interval=1d`;
+
 async function main() {
   const argv = process.argv.slice(2);
   let year = "2026";
@@ -55,11 +81,12 @@ async function main() {
 
   const indices: Record<string, unknown> = {};
   for (const idx of INDICES) {
-    const url = `https://stooq.com/q/d/l/?s=${encodeURIComponent(idx.stooq)}&i=d`;
-    console.log(`📥 ${idx.label} (${idx.stooq}) 수집...`);
-    const csv = await fetchText(url);
-    const rows = parseStooqDailyCsv(csv);
-    if (!rows.length) throw new Error(`${idx.label}: Stooq 응답에 시세 행 없음 (심볼 확인 필요)`);
+    console.log(`📥 ${idx.label} (${idx.yahoo}) 수집...`);
+    const json = await fetchText(yahooUrl(idx.yahoo), {
+      headers: { Accept: "application/json", "User-Agent": "Mozilla/5.0 (wirit-collector)" },
+    });
+    const rows = parseYahooChart(json);
+    if (!rows.length) throw new Error(`${idx.label}: 시세 행 없음`);
     const s = summarize(rows, year);
     indices[idx.key] = { label: idx.label, ...s };
     console.log(
@@ -72,8 +99,8 @@ async function main() {
     year,
     indices,
     meta: {
-      source: "Stooq 일간 종가 (무료 집계 소스)",
-      provenance: INDICES.map((i) => `https://stooq.com/q/d/l/?s=${i.stooq}&i=d`),
+      source: "야후 파이낸스 일간 종가 (무료 집계 소스)",
+      provenance: INDICES.map((i) => yahooUrl(i.yahoo)),
       verified: false,
       verificationNote:
         "발행 전 헤드라인 수치(현재지수·고점)를 KRX 정보데이터시스템 또는 언론 보도와 교차확인 후 verified=true 승격",

@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["template", "year", "title", "blocks"],
+  "properties": {
+    "template": { "type": "string" },
+    "date": { "type": "string" },
+    "subtitle": { "type": "string" },
+    "year": { "type": "string" },
+    "title": { "type": "string" },
+    "blocks": { "type": "array", "items": { "type": "object" } },
+    "source": { "type": "object" }
+  },
+  "additionalProperties": true
+}
