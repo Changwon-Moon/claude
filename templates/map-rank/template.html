@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* map-rank@1 — 코로플레스 지도(축소) + 구별 대장 순위표. 종이 톤. mapSvg는 빌더 생성. */
+      .mr { padding-top: 50px; }
+      .mr .wirit-corner { background: transparent; padding: 0; box-shadow: none; top: 42px; right: 56px; }
+      .mr .wirit-corner .mark { color: var(--wirit-ink); font-size: 40px; }
+      .mr > .wirit-topcap { padding-right: 150px; }
+
+      .mr-head { padding: 0 8px; margin: 2px 0 0; }
+      .mr .wirit-title { font-size: 66px; line-height: 1.04; text-align: center; white-space: nowrap; margin: 0; letter-spacing: -0.03em; }
+
+      .mr-map { height: 396px; display: flex; align-items: center; justify-content: center; margin: 10px 0 4px; }
+      .mr-map svg { height: 100%; width: auto; max-width: 100%; display: block; }
+      .mr-geo { stroke: #ffffff; stroke-width: 2; stroke-linejoin: round; }
+      .mr-lab { font-family: "Pretendard", sans-serif; font-weight: 800; text-anchor: middle; }
+      .mr-lab .g { font-size: 21px; }
+
+      /* 순위표 */
+      .mr-list { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+      .mr-hr, .mr-row {
+        display: grid;
+        grid-template-columns: 78px 172px 1fr 168px;
+        align-items: center;
+        gap: 12px;
+        padding: 0 14px;
+      }
+      .mr-hr { flex: 0 0 auto; padding-bottom: 8px; border-bottom: 3px solid var(--wirit-ink); }
+      .mr-hr span { font-size: 25px; font-weight: 700; color: var(--wirit-gray); }
+      .mr-hr .r, .mr-hr .v { text-align: center; }
+      .mr-row { flex: 1 1 0; min-height: 0; border-bottom: 1.5px solid var(--wirit-ink-06); }
+      .mr-row:nth-child(even) { background: rgba(20, 24, 33, 0.035); }
+      .mr-row:last-child { border-bottom: none; }
+
+      .mr-rank {
+        width: 50px; height: 50px; border-radius: 50%;
+        background: var(--wirit-ink-12); color: var(--wirit-ink);
+        font-family: var(--font-num); font-weight: 900; font-size: 26px;
+        display: flex; align-items: center; justify-content: center; margin: 0 auto;
+      }
+      .mr-row.r1 .mr-rank { background: #f2c14e; color: #5a4200; }
+      .mr-row.r2 .mr-rank { background: #c8ced6; color: #3a424d; }
+      .mr-row.r3 .mr-rank { background: #d9a06b; color: #4d2f14; }
+      .mr-gu { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; color: var(--wirit-ink); }
+      .mr-apt { font-size: 29px; font-weight: 600; color: var(--wirit-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .mr-price { text-align: right; font-family: var(--font-num); font-size: 34px; font-weight: 900; color: #c0122a; white-space: nowrap; }
+      .mr-price i { font-size: 21px; font-style: normal; font-weight: 800; margin-left: 2px; }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card mr">
+      <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
+      <div class="mr-head"><h1 class="wirit-title">{{title}}</h1></div>
+
+      <div class="mr-map">{{{mapSvg}}}</div>
+
+      <div class="mr-list">
+        <div class="mr-hr"><span class="r">순위</span><span>구</span><span>단지명</span><span class="v">거래가</span></div>
+        {{#each rows}}
+        <div class="mr-row {{this.cls}}">
+          <span class="mr-rank">{{this.rank}}</span>
+          <span class="mr-gu">{{this.gu}}</span>
+          <span class="mr-apt">{{this.apt}}</span>
+          <span class="mr-price">{{this.price}}<i>억</i></span>
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+  </body>
+</html>

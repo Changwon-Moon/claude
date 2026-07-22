@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["template","title","mapSvg","rows"],
+  "properties": {
+    "template":{"type":"string"},"date":{"type":"string"},"subtitle":{"type":"string"},
+    "title":{"type":"string"},"mapSvg":{"type":"string"},
+    "rows":{"type":"array","items":{"type":"object"}},"source":{"type":"object"}
+  },
+  "additionalProperties": true
+}
