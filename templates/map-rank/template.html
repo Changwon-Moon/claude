@@ -18,11 +18,11 @@
       .mr-title .em { width: 76px; height: 82px; flex: none; }
       .mr-title .unit { color: #c0122a; }
       .mr-title .hi { color: #c0122a; }
-      /* 상단 빈 공간의 평형 뱃지 */
-      .mr-pyeong { position: absolute; top: 8px; right: 2px; display: inline-flex; align-items: baseline; gap: 6px;
-        background: var(--wirit-ink); color: #fff; border-radius: 999px; padding: 9px 22px 11px; box-shadow: 0 3px 10px rgba(20,24,33,.16); }
-      .mr-pyeong b { font-family: var(--font-num); font-weight: 900; font-size: 34px; letter-spacing: -0.01em; }
-      .mr-pyeong i { font-style: normal; font-weight: 700; font-size: 24px; opacity: .82; }
+      /* 평형 뱃지 — 전용면적 숫자 바로 위에 붙여 배치(검정 글씨·회색 음영) */
+      .mr-metric { position: relative; display: inline-block; }
+      .mr-pyeong { position: absolute; left: 2px; bottom: 100%; margin-bottom: 4px; display: inline-flex; align-items: baseline;
+        background: #d7dbe1; color: #141821; border-radius: 999px; padding: 8px 22px 10px; box-shadow: 0 3px 9px rgba(20,24,33,.18); }
+      .mr-pyeong b { font-family: var(--font-num); font-weight: 900; font-size: 40px; letter-spacing: -0.01em; color: #141821; }
       .mr-map { flex: 1; min-width: 0; height: 100%; display: flex; align-items: center; justify-content: center; }
       .mr-map svg { max-height: 100%; max-width: 100%; width: auto; height: auto; display: block; }
       .mr-geo { stroke: #ffffff; stroke-width: 2; stroke-linejoin: round; }
@@ -42,15 +42,13 @@
       .mr-row:nth-child(even) { background: rgba(20, 24, 33, 0.035); }
       .mr-row:last-child { border-bottom: none; }
 
-      /* 순위: 1~3위만 메달 원, 4위부터 숫자만 */
+      /* 순위: 1~3위 메달, 4위부터 숫자만 */
       .mr-rank {
         width: 50px; height: 50px; margin: 0 auto;
         display: flex; align-items: center; justify-content: center;
         font-family: var(--font-num); font-weight: 900; font-size: 28px; color: var(--wirit-gray);
       }
-      .mr-row.r1 .mr-rank { border-radius: 50%; background: #f2c14e; color: #5a4200; }
-      .mr-row.r2 .mr-rank { border-radius: 50%; background: #c8ced6; color: #3a424d; }
-      .mr-row.r3 .mr-rank { border-radius: 50%; background: #d9a06b; color: #4d2f14; }
+      .mr-medal { font-size: 40px; line-height: 1; }
       .mr-gu { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; color: var(--wirit-ink); }
       .mr-apt { font-size: 29px; font-weight: 600; color: var(--wirit-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .mr-price { text-align: right; font-family: var(--font-num); font-size: 34px; font-weight: 900; color: #c0122a; white-space: nowrap; }
@@ -63,13 +61,12 @@
 
       <div class="mr-top">
         <div class="mr-title">
-          <span class="mr-pyeong"><b>약 {{pyeong}}</b></span>
           <div class="ln l1">
             {{{emblem}}}
             <span>서울</span>
           </div>
           <div class="ln">행정구별</div>
-          <div class="ln">전용면적 <span class="unit">{{metric}}㎡</span></div>
+          <div class="ln">전용면적 <span class="mr-metric"><span class="mr-pyeong"><b>약 {{pyeong}}</b></span><span class="unit">{{metric}}㎡</span></span></div>
           <div class="ln"><span class="hi">최고가</span> APT</div>
         </div>
         <div class="mr-map">{{{mapSvg}}}</div>
@@ -79,7 +76,7 @@
         <div class="mr-hr"><span class="r">순위</span><span>구</span><span>단지명</span><span class="v">거래가</span></div>
         {{#each rows}}
         <div class="mr-row {{this.cls}}">
-          <span class="mr-rank">{{this.rank}}</span>
+          <span class="mr-rank">{{#if this.medal}}<span class="mr-medal">{{this.medal}}</span>{{else}}{{this.rank}}{{/if}}</span>
           <span class="mr-gu">{{this.gu}}</span>
           <span class="mr-apt">{{this.apt}}</span>
           <span class="mr-price">{{this.price}}<i>억</i></span>

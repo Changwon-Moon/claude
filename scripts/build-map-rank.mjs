@@ -102,7 +102,8 @@ function genMap(activeGus) {
 const outDir = join(ROOT, `data/content/${date}`);
 mkdirSync(outDir, { recursive: true });
 const source = { name: "국토부 실거래가 · 서울시 행정경계", asOf };
-const toRow = (r, i) => ({ rank: i + 1, gu: r.gu, apt: r.apt, price: eok(r.price), cls: i < 3 ? `r${i + 1}` : "" });
+const MEDALS = ["🥇", "🥈", "🥉"];
+const toRow = (r, i) => ({ rank: i + 1, gu: r.gu, apt: r.apt, price: eok(r.price), cls: i < 3 ? `r${i + 1}` : "", medal: MEDALS[i] || "" });
 const rowsAll = ranked.map(toRow);
 const half = Math.ceil(rowsAll.length / 2); // 13
 const rows1 = rowsAll.slice(0, half), rows2 = rowsAll.slice(half);
