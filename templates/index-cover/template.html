@@ -20,6 +20,12 @@
         line-height: 1.06; letter-spacing: -0.035em; white-space: pre-line; text-shadow: 0 4px 24px rgba(0,0,0,0.6); }
       .icv-hook .em { color: #ff5a5f; }
 
+      /* 뉴스 헤드라인 인용 클립(캡처 대신 직접 렌더 — 저작권 안전) */
+      .icv-clip { margin-top: 22px; background: rgba(255,255,255,0.10); border-left: 6px solid #ff5a5f;
+        border-radius: 14px; padding: 18px 24px; }
+      .icv-clip .q { display: block; font-size: 32px; font-weight: 800; line-height: 1.32; color: #f1f5fa; letter-spacing: -0.01em; }
+      .icv-clip .by { display: block; margin-top: 8px; font-size: 23px; font-weight: 700; color: #9fb0c2; }
+
       /* 펀치: 주요국 하락률 1위 */
       .icv-punch { margin-top: auto; }
       .icv-punch .rank { display: flex; align-items: center; gap: 20px;
@@ -49,6 +55,13 @@
       <div class="icv-in">
         <div class="icv-cap">{{caption}}</div>
         <h1 class="icv-hook">{{{hook}}}</h1>
+
+        {{#if headline}}
+        <div class="icv-clip">
+          <span class="q">“{{headline}}”</span>
+          <span class="by">— {{headlineSrc}}</span>
+        </div>
+        {{/if}}
 
         <div class="icv-punch">
           <div class="rank">

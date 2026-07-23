@@ -20,9 +20,10 @@ const doc = {
   caption: `${year} 코스피·코스닥`,
   hook: `사상 최고 찍고\n<span class="em">한 달 만에</span>`,
   // 팩트체크: 뉴시스(2026-07-21) "미국 멀쩡한데 코스피 -28%…주요국 하락 1위" → '주요국' 한정 표기
+  headline: "미국 멀쩡한데 코스피 -28%…주요국 하락 1위",
+  headlineSrc: "뉴시스 · 2026.07.21",
   rankLabel: `주요국 증시<br><em>하락률</em>`,
   rankNo: "1",
-  sourceNote: "· 최근 한 달 주요국 지수 · 뉴시스(2026.7)",
   cta: "무슨 일이 있었나 👉 다음장에서",
 };
 writeFileSync(join(outDir, `index-cover-${year}.json`), JSON.stringify(doc, null, 2) + "\n");
