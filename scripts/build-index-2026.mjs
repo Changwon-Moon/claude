@@ -15,12 +15,18 @@ const date = process.argv[3] || "2026-07-26";
 
 const ds = JSON.parse(readFileSync(join(ROOT, `data/datasets/kr-market-${year}.json`), "utf8"));
 
-const fmt = (v) => v.toLocaleString("ko-KR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (v) => v.toLocaleString("ko-KR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+// 부호 포함 1소수 고정(예: -26 → "-26.0", 111.5 → "+111.5")
+const signed1 = (v) => `${v > 0 ? "+" : ""}${(Math.round(v * 10) / 10).toFixed(1)}`;
 const md = (iso) => `${+iso.slice(5, 7)}/${+iso.slice(8, 10)}`;
 const pct = (a, b) => Math.round(((b - a) / a) * 1000) / 10; // 소수1
 const monthsBetween = (aIso, bIso) => {
   const a = new Date(aIso + "T00:00:00Z"), b = new Date(bIso + "T00:00:00Z");
   return Math.max(1, Math.round((b - a) / (1000 * 60 * 60 * 24 * 30.44)));
+};
+const daysBetween = (aIso, bIso) => {
+  const a = new Date(aIso + "T00:00:00Z"), b = new Date(bIso + "T00:00:00Z");
+  return Math.max(1, Math.round((b - a) / (1000 * 60 * 60 * 24)));
 };
 
 /**
@@ -80,15 +86,15 @@ function chartSvg(series, startIso, peakIso, lastIso, riseTxt, monthsTxt) {
   const tick = (i, iso, anchor) => `<text class="ix-tick" x="${x(i).toFixed(1)}" y="${H - 10}" text-anchor="${anchor}">${md(iso)}</text>`;
   const ticks = tick(si, startIso, "start") + tick(pi, peakIso, "middle") + tick(li, lastIso, "end");
 
-  // 현재가 라벨은 헤더에 크게 표기하므로 차트에선 생략(중복·화살촉 겹침 방지). 고점은 마커 아래.
-  const peakUp = -26;
+  // 현재가 라벨은 헤더에 크게 표기하므로 차트에선 생략(중복·화살촉 겹침 방지).
+  // 고점 라벨은 마커 위·우측 개활지(상단 밴드)에 배치 → 라인·마커·화살촉과 겹침 방지.
   return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">` +
     `<path class="ix-area" d="${area}"/>` +
     `<polyline class="ix-line" points="${pts.join(" ")}"/>` +
     guide + riseArc +
     marker("start", P.s.i, P.s.c) + marker("peak", P.p.i, P.p.c) + marker("last", P.l.i, P.l.c) +
     priceLabel("", P.s.i, P.s.c, "start", 20) +
-    priceLabel("peak", P.p.i, P.p.c, "end", peakUp) +
+    priceLabel("peak", P.p.i, P.p.c, "start", 26) +
     riseLabel +
     axis + ticks +
     `</svg>`;
@@ -102,16 +108,17 @@ for (const key of ["kospi", "kosdaq"]) {
   asOf = ix.asOf;
   const startIso = ix.yearStart.date, peakIso = ix.peak.date, lastIso = ix.asOf;
   const risePct = pct(ix.yearStart.close, ix.peak.close); // 연초→고점
-  const dd = ix.drawdownFromPeakPct; // 고점→현재(음수)
   const months = monthsBetween(startIso, peakIso);
+  const ddDays = daysBetween(peakIso, lastIso); // 고점→현재 경과일
   blocks.push({
     name: ix.label,
     asOf: md(ix.asOf),
     now: fmt(ix.current),
-    dd: `${dd > 0 ? "+" : ""}${dd}`,
+    dd: signed1(ix.drawdownFromPeakPct),
+    ddDays: `${ddDays}일 만에`,
     chartSvg: chartSvg(
       ix.series, startIso, peakIso, lastIso,
-      `${risePct > 0 ? "+" : ""}${risePct}%`,
+      `${signed1(risePct)}%`,
       `약 ${months}개월`,
     ),
   });

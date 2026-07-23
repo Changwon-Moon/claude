@@ -24,9 +24,11 @@
       .ix-top { display: flex; align-items: center; gap: 22px; }
       .ix-name { font-size: 46px; font-weight: 900; letter-spacing: -0.02em; color: var(--wirit-ink); }
       .ix-now { font-family: "Pretendard", sans-serif; font-size: 62px; font-weight: 800; color: var(--wirit-ink); font-feature-settings: "tnum"; letter-spacing: -0.02em; }
-      .ix-dd { margin-left: auto; display: flex; align-items: baseline; gap: 12px;
-        background: rgba(46,107,255,0.08); border-radius: 18px; padding: 8px 22px 12px; }
-      .ix-dd .k { font-size: 24px; font-weight: 800; color: var(--wirit-gray); }
+      .ix-dd { margin-left: auto; display: flex; align-items: center; gap: 14px;
+        background: rgba(46,107,255,0.08); border-radius: 18px; padding: 10px 22px; }
+      .ix-dd .k { display: flex; flex-direction: column; line-height: 1.15; text-align: right; }
+      .ix-dd .k b { font-size: 24px; font-weight: 800; color: var(--wirit-gray); }
+      .ix-dd .k .d { font-family: "Pretendard", sans-serif; font-size: 21px; font-weight: 800; color: var(--wirit-cobalt); font-feature-settings: "tnum"; letter-spacing: -0.01em; }
       .ix-dd .v { font-family: "Pretendard", sans-serif; font-size: 64px; font-weight: 800; color: var(--wirit-cobalt); letter-spacing: -0.02em; font-feature-settings: "tnum"; }
       .ix-dd .v i { font-style: normal; font-size: 36px; }
 
@@ -42,7 +44,9 @@
       .ix-dot-start { fill: var(--wirit-ink); }
       .ix-dot-peak { fill: var(--wirit-red); }
       .ix-dot-last { fill: var(--wirit-cobalt); }
-      .ix-pt { font-family: "Pretendard", sans-serif; font-weight: 800; font-size: 25px; fill: var(--wirit-ink); }
+      /* 주가 라벨: 흰 헤일로(라인 위에서도 또렷) */
+      .ix-pt { font-family: "Pretendard", sans-serif; font-weight: 800; font-size: 25px; fill: var(--wirit-ink);
+        paint-order: stroke; stroke: #fff; stroke-width: 5px; stroke-linejoin: round; }
       .ix-pt.peak { fill: var(--wirit-red); }
       .ix-pt.last { fill: var(--wirit-cobalt); }
       .ix-rise { font-family: "Pretendard", sans-serif; font-weight: 800; fill: var(--wirit-red); }
@@ -63,7 +67,7 @@
           <div class="ix-top">
             <span class="ix-name">{{this.name}}</span>
             <span class="ix-now">{{this.now}}</span>
-            <span class="ix-dd"><span class="k">고점 대비</span><span class="v">{{this.dd}}<i>%</i></span></span>
+            <span class="ix-dd"><span class="k"><b>고점 대비</b><span class="d">{{this.ddDays}}</span></span><span class="v">{{this.dd}}<i>%</i></span></span>
           </div>
           <div class="ix-chart">{{{this.chartSvg}}}</div>
         </div>

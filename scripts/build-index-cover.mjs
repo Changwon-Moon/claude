@@ -18,11 +18,12 @@ const doc = {
   template: "index-cover@1",
   date,
   photo,
-  eyebrow: "파이낸셜뉴스 · 2026.07.20",
+  caption: "2026 코스피·코스닥",
   setup: `올해 세계 수익률 <s>1위</s>였던 <b>코스피</b>`,
   lead: "한 달 만에",
   crash: "세계 꼴찌",
   fact: `최근 한 달 주요국 지수 중 <em>최대 낙폭</em>`,
+  source: "파이낸셜뉴스 · 2026.07.20",
   cta: "무슨 일이 있었나 <b>👉 다음장에서</b>",
 };
 writeFileSync(join(outDir, `index-cover-${year}.json`), JSON.stringify(doc, null, 2) + "\n");

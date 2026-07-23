@@ -4,8 +4,8 @@
   "required": ["template", "crash"],
   "properties": {
     "template": { "type": "string" }, "date": { "type": "string" }, "photo": { "type": "string" },
-    "eyebrow": { "type": "string" }, "setup": { "type": "string" }, "lead": { "type": "string" },
-    "crash": { "type": "string" }, "fact": { "type": "string" }, "cta": { "type": "string" }
+    "caption": { "type": "string" }, "setup": { "type": "string" }, "lead": { "type": "string" },
+    "crash": { "type": "string" }, "fact": { "type": "string" }, "source": { "type": "string" }, "cta": { "type": "string" }
   },
   "additionalProperties": true
 }
