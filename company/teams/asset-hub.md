@@ -39,5 +39,9 @@
 | 07-22 | **공식 로고 SVG는 MediaWiki API로 실제 URL 해석 후 다운로드**(파일명 추측 URL은 404 남발). `action=query&titles=File:…&iiprop=url`→`upload.wikimedia` 직접 URL→curl·SVG검증·커밋. `svg-asset-fetch.yml` 신설. 서울 심볼마크(Logo of Seoul) 확보→디자인이 결정적 인라인 | 로고 취득 |
 | 07-22 | **커버 사진**: `photo-fetch.yml`(Pexels) query 취득. '서울 아파트 야경'=`seoul-apart-night`(Pexels License·표기불요, ⓒEthan Brooke), 세로형이라 4:5 커버에 적합 | 커버 제작 |
 | 07-22 | **워크플로 작성 주의**: Actions `run:` 블록 스칼라에 여러 줄 인라인 파이썬은 **들여쓰기 붕괴로 YAML 파손** → `jq` 한 줄로. 입력 목록에 콤마 포함 값(파일명)이 있으면 콤마 대신 `|` 구분자 | 취득 워크플로 디버깅 |
+| 07-23 | **폰트는 OTF 직접 참조 금지 → WOFF2 변환 필수**: CFF+세로메트릭(vhea/vmtx) OTF는 Chromium OTS가 거부해 렌더에서 폴백됨. `scripts/font_pipeline.py`(opentype-sanitizer 정화·otf2ttf CFF→TTF)+`font-convert.yml`(Actions)로 **WOFF2 생성** 후 base.css 참조. 단일 웨이트는 @font-face `font-weight:100 900`으로 선언 | 태백체 도입 |
+| 07-23 | **폰트 로딩 검증은 `file://` HTML을 goto**로(렌더러와 동일). `setContent`는 about:blank라 로컬 폰트/이미지 차단 → "font error"로 오판하기 쉬움 | 태백 로딩 디버깅 |
+| 07-23 | **사진 다장 취득 모드**: `photo-fetch.yml` `count`>1 → `cand/<slug>-i.jpg` 여러 장 취득 → **눈검증 후 1장 승격**(정식 파일명+카탈로그 등록, cand/ 정리). 어떤 사진이 맞을지 미리보기 못 하는 세션 제약 우회 | 커버 사진 교체 |
+| 07-23 | **커버 사진 = 추상·한국 우선, 외국어 텍스트/손·기기 없는 컷 선호**(일본 전광판 회피). 예 `stock-crash.jpg`(추상 캔들차트) | 오너 "한국·추상 주식 사진으로" |
 
 **KPI**: 자산 재사용률, 카탈로그 무결성(CI 통과 유지) | **자동화**: 검증 R3, 수집 R0
