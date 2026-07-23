@@ -27,13 +27,15 @@ def main() -> None:
     f.save(out, reorderTables=True)
     print(f"✅ {out} 저장 · 제거 테이블: {removed or '(없음)'}")
 
-    # 검증: 다시 열어 필수 테이블 존재 확인
+    # 검증: 다시 열어 필수 테이블 + 아웃라인(CFF 또는 glyf) 존재 확인
     chk = TTFont(out)
-    need = ["CFF ", "cmap", "head", "hhea", "hmtx", "maxp", "name", "post", "OS/2"]
+    need = ["cmap", "head", "hhea", "hmtx", "maxp", "name", "post", "OS/2"]
     missing = [t for t in need if t not in chk]
     if missing:
         raise SystemExit(f"⛔ 필수 테이블 누락: {missing}")
-    print(f"   검증 OK · 테이블 {len(chk.keys())}개")
+    if "CFF " not in chk and "glyf" not in chk:
+        raise SystemExit("⛔ 아웃라인 테이블(CFF/glyf) 없음")
+    print(f"   검증 OK · 테이블 {len(chk.keys())}개 · 아웃라인={'CFF' if 'CFF ' in chk else 'glyf'}")
 
 
 if __name__ == "__main__":
