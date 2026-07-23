@@ -46,5 +46,14 @@
     "author": "Bor Jinson",
     "url": "https://www.pexels.com/photo/stock-market-display-board-in-japan-36790143/",
     "fetchedFor": "wirit card"
+  },
+  "stock-crash": {
+    "file": "stock-crash.jpg",
+    "source": "pexels",
+    "query": "stock market candlestick chart screen",
+    "license": "Pexels License (상업이용·표기불요)",
+    "author": "Tima Miroshnichenko",
+    "url": "https://www.pexels.com/photo/stock-market-illustration-on-the-screen-7567223/",
+    "fetchedFor": "국장 커버(추상 캔들차트)"
   }
 }

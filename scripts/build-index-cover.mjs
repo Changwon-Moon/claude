@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const year = process.argv[2] || "2026";
 const date = process.argv[3] || "2026-07-26";
-const photo = process.argv[4] || "stock-board.jpg";
+const photo = process.argv[4] || "stock-crash.jpg";
 
 const outDir = join(ROOT, `data/content/${date}`);
 mkdirSync(outDir, { recursive: true });
