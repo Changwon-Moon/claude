@@ -56,15 +56,17 @@
 
 ## 4. 타이포그래피
 
-**폰트 시스템 (2026-07-18 운영자 확정)**: 3개 역할로 분리.
+**폰트 시스템 (2026-07-18 확정 · 2026-07-23 제목 폰트 변경)**: 3개 역할로 분리.
 
 | 역할 | CSS 변수 | 폰트 | 이유 |
 |---|---|---|---|
-| 헤드라인(제목) | `--font-title` | **Wanted Sans** | 개성·모던, 눈에 띔 |
+| 헤드라인(제목) | `--font-title` | **태백체(TAEBAEK)** | 개성 강한 지오메트릭 디스플레이 (2026-07-23 운영자 지정, 이전 Wanted Sans) |
 | 숫자(수치·순위·등락) | `--font-num` | **Wanted Sans** | 데이터 강조 + tabular 정렬 |
 | 본문·라벨·캡션 | `--font-sans` | **Pretendard** | 긴 텍스트 가독성 |
 
-- 3종 모두 base.css @font-face 번들(Pretendard/Wanted Sans/Black Han Sans). Black Han Sans는 현재 미사용(향후 특집 헤드라인 옵션으로 보존).
+- base.css @font-face 번들(Pretendard/Wanted Sans/Black Han Sans/**태백체**). Black Han Sans는 미사용(특집 옵션 보존).
+- **태백체는 WOFF2 번들만 사용**: 원본 OTF(CFF+세로메트릭 vhea/vmtx)는 Chromium OTS가 거부해 렌더에서 폴백됨 → `scripts/font_pipeline.py`+`font-convert.yml`(Actions)에서 OTS 정화·CFF→TTF 변환 후 `TAEBAEK.woff2` 생성. **새 폰트 도입 시 반드시 이 파이프라인으로 WOFF2 변환 후 사용**(OTF 직접 참조 금지). 태백체는 단일 웨이트라 @font-face `font-weight:100 900`으로 선언해 전 웨이트 요청을 매핑(폴백 이탈 방지).
+- 태백체는 Wanted Sans보다 자폭이 넓다 → nowrap 제목은 크기/여백 재확인 필수(예: index-2026 제목 78→64px).
 - 실험용 전환 클래스: `font-pretendard` / `font-wanted` / `font-wanted-blackhan` (카드 루트). 미지정 시 위 확정 하이브리드.
 - 위계: 제목 ExtraBold~Black(자간 타이트) / 수치 Bold(Wanted) / 라벨·캡션 Regular(Pretendard, 블루그레이)
 - 숫자 tabular figures(고정폭) — 표 정렬 품질의 핵심.
@@ -72,7 +74,7 @@
 ## 4a-2. 카드 아이덴티티 요소 (2026-07-18 운영자 지정)
 
 - **우상단 원형 로고**: 모든 카드에 `wirit.`(잉크네이비 원 + 흰 글씨 + 코발트 마침표) 자동 삽입(renderHtml). 스타일 `.wirit-corner`.
-- **코발트 테두리**: 카드 전체에 12px 코발트 프레임(`.wirit-card::after` 오버레이) — 브랜드 아이덴티티 강화.
+- **카드 테두리(2026-07-23 갱신)**: 최외곽 **얇은 흰색 라인 3px + 안쪽 잉크네이비 프레임 12px**(`.wirit-card::after`: `border:3px #fff` + `box-shadow:inset 0 0 0 12px 잉크`). 캡처 시 흰 배경·다크 배경 어디서도 카드 경계가 또렷하게 보이도록 흰 라인을 기본 적용. 레이아웃 영향 없는 오버레이.
 - **하단 바**: 높이 1.5배(패딩 34px), 워드마크 `@wirit_note` 확대(37px).
 
 ## 4b. 하단 바 (푸터) — 운영자 지정 (2026-07-18)
