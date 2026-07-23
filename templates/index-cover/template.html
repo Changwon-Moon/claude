@@ -4,47 +4,51 @@
     <meta charset="utf-8" />
     <!--WIRIT_SHARED_CSS-->
     <style>
-      /* index-cover@1 — 증시 어그로 커버(주식 사진 + 강한 후킹 + '주요국 하락률 1위'). */
-      .icv { position: relative; padding: 0; overflow: hidden; background: #0e1118; }
+      /* index-cover@1 — 증시 커버. 시그니처 = '1위(빨강·취소선) → 세계 꼴찌(블루·초대형)' 색 반전 타이포.
+         한국 증시 관례: 상승=빨강, 하락=파랑. */
+      .icv { position: relative; padding: 0; overflow: hidden; background: #0a0e16; }
       .icv-bg { position: absolute; inset: 0; }
-      .icv-bg img { width: 100%; height: 100%; object-fit: cover; }
-      /* 사진이 밝아도 텍스트가 읽히도록 강한 다크 그라디언트 */
+      .icv-bg img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.72) brightness(0.72); }
+      /* 파랑 틴트 다크 그라디언트 + 하단 비네트 → 티커는 텍스처로만 */
       .icv-grad { position: absolute; inset: 0;
-        background: linear-gradient(180deg, rgba(7,10,16,0.82) 0%, rgba(7,10,16,0.55) 32%, rgba(7,10,16,0.68) 60%, rgba(7,10,16,0.94) 100%); }
+        background:
+          radial-gradient(130% 80% at 30% 8%, rgba(10,14,22,0.35), transparent 55%),
+          linear-gradient(180deg, rgba(8,11,18,0.72) 0%, rgba(8,11,18,0.42) 34%, rgba(9,16,30,0.72) 70%, rgba(6,9,16,0.97) 100%); }
       .icv-in { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column;
-        padding: 62px 62px 54px; color: #fff; }
+        padding: 60px 60px 52px; color: #eef2f7; }
 
-      .icv-cap { font-size: 32px; font-weight: 800; color: #cbd5e2; letter-spacing: 0.02em; }
+      /* 출처 아이브로우 — 좌측 상단, 실선 인디케이터 */
+      .icv-eyebrow { display: inline-flex; align-items: center; gap: 12px; font-size: 26px; font-weight: 800;
+        color: #9fb0c2; letter-spacing: 0.01em; }
+      .icv-eyebrow::before { content: ""; width: 34px; height: 4px; background: #3d7bff; border-radius: 2px; }
 
-      .icv-hook { margin-top: 26px; font-family: var(--font-sans); font-weight: 900; font-size: 96px;
-        line-height: 1.06; letter-spacing: -0.035em; white-space: pre-line; text-shadow: 0 4px 24px rgba(0,0,0,0.6); }
-      .icv-hook .em { color: #ff5a5f; }
+      /* 반전 히어로 — 하단 정렬 */
+      .icv-hero { margin-top: auto; }
+      .icv-setup { font-family: var(--font-sans); font-size: 50px; font-weight: 800; line-height: 1.24;
+        letter-spacing: -0.02em; color: #dbe3ec; }
+      .icv-setup s { color: #ff5a5f; text-decoration-thickness: 5px; text-decoration-color: rgba(255,90,95,0.85); text-underline-offset: 2px; }
+      .icv-setup b { color: #fff; font-weight: 900; }
 
-      /* 뉴스 헤드라인 인용 클립(캡처 대신 직접 렌더 — 저작권 안전) */
-      .icv-clip { margin-top: 22px; background: rgba(255,255,255,0.10); border-left: 6px solid #ff5a5f;
-        border-radius: 14px; padding: 18px 24px; }
-      .icv-clip .q { display: block; font-size: 32px; font-weight: 800; line-height: 1.32; color: #f1f5fa; letter-spacing: -0.01em; }
-      .icv-clip .by { display: block; margin-top: 8px; font-size: 23px; font-weight: 700; color: #9fb0c2; }
+      .icv-lead { margin-top: 12px; font-family: var(--font-sans); font-size: 60px; font-weight: 900;
+        letter-spacing: -0.03em; color: #eef2f7; line-height: 1; }
+      .icv-crash { display: block; margin-top: 6px; font-family: var(--font-blackhan); font-size: 184px;
+        line-height: 0.92; letter-spacing: -0.03em; color: #3d7bff; white-space: nowrap;
+        text-shadow: 0 6px 34px rgba(61,123,255,0.4); }
 
-      /* 펀치: 주요국 하락률 1위 */
-      .icv-punch { margin-top: auto; }
-      .icv-punch .rank { display: flex; align-items: center; gap: 20px;
-        background: linear-gradient(90deg, rgba(229,72,77,0.22), rgba(229,72,77,0.06));
-        border: 2px solid rgba(255,90,95,0.6); border-radius: 26px; padding: 30px 34px; }
-      .icv-punch .rank .txt { font-size: 52px; font-weight: 900; letter-spacing: -0.02em; line-height: 1.1; }
-      .icv-punch .rank .txt em { font-style: normal; color: #ff6b70; }
-      .icv-punch .rank .no { margin-left: auto; font-family: var(--font-num); font-weight: 900; font-size: 116px;
-        color: #ff5a5f; line-height: 0.9; letter-spacing: -0.03em; white-space: nowrap; text-shadow: 0 3px 18px rgba(0,0,0,0.5); }
-      .icv-punch .rank .no i { font-style: normal; font-size: 58px; }
-      .icv-src { margin-top: 12px; font-size: 22px; color: #94a2b2; text-align: right; }
+      /* 시그니처 서포트: 급락 화살표 + 근거 한 줄 */
+      .icv-under { margin-top: 18px; display: flex; align-items: center; gap: 16px; }
+      .icv-under .plunge { font-size: 40px; color: #3d7bff; }
+      .icv-under .fact { font-size: 26px; font-weight: 700; color: #b7c3d1; letter-spacing: -0.01em; }
+      .icv-under .fact em { font-style: normal; color: #eef2f7; font-weight: 800; }
 
-      .icv-cta { margin-top: 20px; text-align: center; font-size: 36px; font-weight: 800; color: #ffd24a; letter-spacing: -0.01em; }
+      .icv-cta { margin-top: 26px; font-size: 34px; font-weight: 800; color: #ffd24a; letter-spacing: -0.01em; }
+      .icv-cta b { color: #fff; }
 
-      .icv-foot { margin: 22px -62px -54px; padding: 30px 62px; display: flex; align-items: center; justify-content: center; background: #05070c; }
+      .icv-foot { margin: 24px -60px -52px; padding: 30px 60px; display: flex; align-items: center; justify-content: center; background: #05070c; }
       .icv-foot .wm { font-weight: 800; color: #fff; font-size: 44px; }
-      .icv-foot .wm .dot { color: var(--wirit-cobalt); }
+      .icv-foot .wm .dot { color: #3d7bff; }
 
-      .icv .wirit-corner { background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
+      .icv .wirit-corner { background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.45); }
       .icv .wirit-corner .mark { color: var(--wirit-ink); }
     </style>
   </head>
@@ -53,25 +57,19 @@
       <div class="icv-bg"><img src="../_shared/photos/{{photo}}" alt="" /></div>
       <div class="icv-grad"></div>
       <div class="icv-in">
-        <div class="icv-cap">{{caption}}</div>
-        <h1 class="icv-hook">{{{hook}}}</h1>
+        <div class="icv-eyebrow">{{eyebrow}}</div>
 
-        {{#if headline}}
-        <div class="icv-clip">
-          <span class="q">“{{headline}}”</span>
-          <span class="by">— {{headlineSrc}}</span>
-        </div>
-        {{/if}}
-
-        <div class="icv-punch">
-          <div class="rank">
-            <span class="txt">{{{rankLabel}}}</span>
-            <span class="no">{{rankNo}}<i>위</i></span>
+        <div class="icv-hero">
+          <div class="icv-setup">{{{setup}}}</div>
+          <div class="icv-lead">{{lead}}</div>
+          <div class="icv-crash">{{crash}}</div>
+          <div class="icv-under">
+            <span class="plunge">▼</span>
+            <span class="fact">{{{fact}}}</span>
           </div>
-          {{#if sourceNote}}<div class="icv-src">{{sourceNote}}</div>{{/if}}
+          {{#if cta}}<div class="icv-cta">{{{cta}}}</div>{{/if}}
         </div>
 
-        {{#if cta}}<div class="icv-cta">{{{cta}}}</div>{{/if}}
         <div class="icv-foot"><span class="wm">@wirit_note<span class="dot">.</span></span></div>
       </div>
     </div>

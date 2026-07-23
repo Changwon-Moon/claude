@@ -70,8 +70,9 @@ function chartSvg(series, startIso, peakIso, lastIso, riseTxt, monthsTxt) {
   const fcx = (fx1 + fx2) / 2 + 14, fcy = (fy1 + fy2) / 2 + 30; // 살짝 아래로 볼록
   const fux0 = fx2 - fcx, fuy0 = fy2 - fcy, fdl = Math.hypot(fux0, fuy0) || 1;
   const fux = fux0 / fdl, fuy = fuy0 / fdl, fpx = -fuy, fpy = fux;
+  const faL = 22, faW = 13; // 하락 화살촉 크게(가시성)
   const ftipX = fx2 - fux * 4, ftipY = fy2 - fuy * 4;
-  const fbarb = `M${(ftipX - fux * aL + fpx * aW).toFixed(1)},${(ftipY - fuy * aL + fpy * aW).toFixed(1)} L${ftipX.toFixed(1)},${ftipY.toFixed(1)} L${(ftipX - fux * aL - fpx * aW).toFixed(1)},${(ftipY - fuy * aL - fpy * aW).toFixed(1)}`;
+  const fbarb = `M${(ftipX - fux * faL + fpx * faW).toFixed(1)},${(ftipY - fuy * faL + fpy * faW).toFixed(1)} L${ftipX.toFixed(1)},${ftipY.toFixed(1)} L${(ftipX - fux * faL - fpx * faW).toFixed(1)},${(ftipY - fuy * faL - fpy * faW).toFixed(1)}`;
   const guide = `<path class="ix-fallarc" d="M${fx1.toFixed(1)},${(fy1 + 10).toFixed(1)} Q${fcx.toFixed(1)},${fcy.toFixed(1)} ${ftipX.toFixed(1)},${ftipY.toFixed(1)}"/><path class="ix-fallarc" d="${fbarb}"/>`;
 
   // ── 축 ──

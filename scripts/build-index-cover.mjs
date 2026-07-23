@@ -1,6 +1,7 @@
 /**
- * 국장 성적표 어그로 커버 — 주식 사진 + 강한 후킹 + '주요국 증시 하락률 1위'(팩트체크·출처 표기).
- * 지수 숫자는 커버에서 제외(오너 지시). 실행: node scripts/build-index-cover.mjs [year] [date] [photo]
+ * 국장 커버 — 시그니처 '1위(빨강·취소선) → 세계 꼴찌(블루·초대형)' 색 반전 타이포.
+ * 근거: 파이낸셜뉴스(2026-07-20) "세계 1위 수익률이었는데…'세계 꼴찌'로 추락한 코스피".
+ * 지수 숫자·박스 제외(오너 지시). 실행: node scripts/build-index-cover.mjs [year] [date] [photo]
  */
 import { writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -17,14 +18,12 @@ const doc = {
   template: "index-cover@1",
   date,
   photo,
-  caption: `${year} 코스피·코스닥`,
-  hook: `사상 최고 찍고\n<span class="em">한 달 만에</span>`,
-  // 팩트체크: 뉴시스(2026-07-21) "미국 멀쩡한데 코스피 -28%…주요국 하락 1위" → '주요국' 한정 표기
-  headline: "미국 멀쩡한데 코스피 -28%…주요국 하락 1위",
-  headlineSrc: "뉴시스 · 2026.07.21",
-  rankLabel: `주요국 증시<br><em>하락률</em>`,
-  rankNo: "1",
-  cta: "무슨 일이 있었나 👉 다음장에서",
+  eyebrow: "파이낸셜뉴스 · 2026.07.20",
+  setup: `올해 세계 수익률 <s>1위</s>였던 <b>코스피</b>`,
+  lead: "한 달 만에",
+  crash: "세계 꼴찌",
+  fact: `최근 한 달 주요국 지수 중 <em>최대 낙폭</em>`,
+  cta: "무슨 일이 있었나 <b>👉 다음장에서</b>",
 };
 writeFileSync(join(outDir, `index-cover-${year}.json`), JSON.stringify(doc, null, 2) + "\n");
-console.log(`✅ index-cover ${year} — 주요국 하락률 1위 · 사진 ${photo}`);
+console.log(`✅ index-cover ${year} — '세계 1위→꼴찌' 반전 · 사진 ${photo}`);
