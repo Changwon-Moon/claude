@@ -21,6 +21,10 @@ on:
         description: "Commons 파일 제목 (wikimedia용, File:...)"
         required: false
         default: ""
+      count:
+        description: "후보 장수 (>1이면 cand/<slug>-i.jpg 여러 장 취득 → 미리보기 후 승격)"
+        required: false
+        default: "1"
 
 permissions:
   contents: write
@@ -44,6 +48,7 @@ jobs:
           --query "${{ github.event.inputs.query }}"
           --slug "${{ github.event.inputs.slug }}"
           --title "${{ github.event.inputs.title }}"
+          --count "${{ github.event.inputs.count }}"
 
       - name: 취득 사진 커밋
         run: |
