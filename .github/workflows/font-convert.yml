@@ -24,23 +24,12 @@ jobs:
       - name: 도구 설치 (fontTools + OTS + otf2ttf)
         run: pip install "fonttools[woff]" brotli opentype-sanitizer otf2ttf
 
-      - name: 변환 (OTS 진단·정화 → WOFF2)
+      - name: 변환 (OTS 정화 → WOFF2, Python API)
         run: |
-          set -x
           NAME="${{ github.event.inputs.name }}"
-          OTF="templates/_shared/fonts/${NAME}.otf"
-          echo "===== 1) OTS 원본 진단 ====="
-          ots-sanitize "$OTF" "/tmp/${NAME}.ots.otf" || echo "(OTS가 원본을 정화 실패 — 아래 로그 참고)"
-          echo "===== 2) CFF→TTF(glyf) 변환 후 OTS ====="
-          otf2ttf -o "/tmp/${NAME}.ttf" "$OTF" || echo "(otf2ttf 실패)"
-          ots-sanitize "/tmp/${NAME}.ttf" "/tmp/${NAME}.ots.ttf" || echo "(OTS가 TTF도 정화 실패)"
-          echo "===== 3) 통과한 산출물 선택 → WOFF2 ====="
-          SRC=""
-          if [ -f "/tmp/${NAME}.ots.ttf" ]; then SRC="/tmp/${NAME}.ots.ttf";
-          elif [ -f "/tmp/${NAME}.ots.otf" ]; then SRC="/tmp/${NAME}.ots.otf"; fi
-          if [ -z "$SRC" ]; then echo "⛔ OTS를 통과하는 산출물이 없음"; exit 1; fi
-          echo "선택: $SRC"
-          python3 scripts/convert_font.py "$SRC" "templates/_shared/fonts/${NAME}.woff2"
+          python3 scripts/font_pipeline.py \
+            "templates/_shared/fonts/${NAME}.otf" \
+            "templates/_shared/fonts/${NAME}.woff2"
 
       - name: 커밋
         run: |
