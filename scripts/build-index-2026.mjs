@@ -29,8 +29,8 @@ const monthsBetween = (aIso, bIso) => {
  * 하단 날짜축(연초·고점·현재 tick). 결정적.
  */
 function chartSvg(series, startIso, peakIso, lastIso, riseTxt, monthsTxt) {
-  const W = 1000, H = 330;
-  const L = 16, R = 16, T = 78, B = 42; // T = 상단 주석 전용 밴드(데이터는 이 아래에만 그림)
+  const W = 1000, H = 360;
+  const L = 16, R = 16, T = 82, B = 46; // T = 상단 주석 전용 밴드(데이터는 이 아래에만 그림)
   const closes = series.map((p) => p.c);
   const mn = Math.min(...closes), mx = Math.max(...closes);
   const span = mx - mn || 1;
@@ -65,25 +65,29 @@ function chartSvg(series, startIso, peakIso, lastIso, riseTxt, monthsTxt) {
     `<tspan class="sm" x="${labelX.toFixed(1)}" y="26">${monthsTxt} 만에</tspan>` +
     `<tspan class="big" x="${labelX.toFixed(1)}" y="60">▲ ${riseTxt}</tspan></text>`;
 
-  // ── 고점→현재 하락 점선 가이드(숫자는 히어로 박스) ──
-  const guide = `<line class="ix-guide" x1="${bx.toFixed(1)}" y1="${by.toFixed(1)}" x2="${x(P.l.i).toFixed(1)}" y2="${y(P.l.c).toFixed(1)}"/>`;
+  // ── 고점→현재 하락 곡선 화살표(연한 파랑) ──
+  const fx1 = bx, fy1 = by, fx2 = x(P.l.i), fy2 = y(P.l.c);
+  const fcx = (fx1 + fx2) / 2 + 14, fcy = (fy1 + fy2) / 2 + 30; // 살짝 아래로 볼록
+  const fux0 = fx2 - fcx, fuy0 = fy2 - fcy, fdl = Math.hypot(fux0, fuy0) || 1;
+  const fux = fux0 / fdl, fuy = fuy0 / fdl, fpx = -fuy, fpy = fux;
+  const ftipX = fx2 - fux * 4, ftipY = fy2 - fuy * 4;
+  const fbarb = `M${(ftipX - fux * aL + fpx * aW).toFixed(1)},${(ftipY - fuy * aL + fpy * aW).toFixed(1)} L${ftipX.toFixed(1)},${ftipY.toFixed(1)} L${(ftipX - fux * aL - fpx * aW).toFixed(1)},${(ftipY - fuy * aL - fpy * aW).toFixed(1)}`;
+  const guide = `<path class="ix-fallarc" d="M${fx1.toFixed(1)},${(fy1 + 10).toFixed(1)} Q${fcx.toFixed(1)},${fcy.toFixed(1)} ${ftipX.toFixed(1)},${ftipY.toFixed(1)}"/><path class="ix-fallarc" d="${fbarb}"/>`;
 
   // ── 축 ──
   const axis = `<line class="ix-axis" x1="${L}" y1="${H - B + 4}" x2="${W - R}" y2="${H - B + 4}"/>`;
   const tick = (i, iso, anchor) => `<text class="ix-tick" x="${x(i).toFixed(1)}" y="${H - 10}" text-anchor="${anchor}">${md(iso)}</text>`;
   const ticks = tick(si, startIso, "start") + tick(pi, peakIso, "middle") + tick(li, lastIso, "end");
 
-  // 라벨 배치: 상단은 주석 밴드 전용 → 고점 라벨은 항상 마커 아래(채움영역). 현재는 바닥 아니면 아래.
+  // 현재가 라벨은 헤더에 크게 표기하므로 차트에선 생략(중복·화살촉 겹침 방지). 고점은 마커 아래.
   const peakUp = -26;
-  const lastBelow = y(P.l.c) < H - B - 60;
   return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">` +
     `<path class="ix-area" d="${area}"/>` +
     `<polyline class="ix-line" points="${pts.join(" ")}"/>` +
     guide + riseArc +
     marker("start", P.s.i, P.s.c) + marker("peak", P.p.i, P.p.c) + marker("last", P.l.i, P.l.c) +
-    priceLabel("", P.s.i, P.s.c, "start", 18) +
+    priceLabel("", P.s.i, P.s.c, "start", 20) +
     priceLabel("peak", P.p.i, P.p.c, "end", peakUp) +
-    priceLabel("last", P.l.i, P.l.c, "end", lastBelow ? -30 : 22) +
     riseLabel +
     axis + ticks +
     `</svg>`;

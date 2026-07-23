@@ -10,20 +10,20 @@
       .ix .wirit-corner .mark { color: var(--wirit-ink); font-size: 40px; }
       .ix > .wirit-topcap { padding-right: 150px; }
 
-      .ix-head { margin: 8px 0 0; }
+      .ix-head { margin: 8px 0 0; position: relative; }
       .ix .wirit-title { font-size: 78px; line-height: 1.06; text-align: center; letter-spacing: -0.03em; margin: 0; white-space: nowrap; }
-      .ix .wirit-title .sub { font-size: 32px; font-weight: 700; color: var(--wirit-gray); margin-left: 16px; letter-spacing: -0.01em; vertical-align: 12px; }
+      /* 7/21 기준: 제목 베이스라인에 맞춰 내리고 우측 치우침 */
+      .ix .wirit-title .sub { position: absolute; right: 4px; bottom: 6px; font-size: 30px; font-weight: 700; color: var(--wirit-gray); letter-spacing: -0.01em; }
 
-      .ix-list { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 24px; margin-top: 22px; margin-bottom: 18px; }
-      .ix-block { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column;
-        border: 2px solid var(--wirit-ink-12); border-radius: 24px; padding: 24px 30px 18px; background: #fff; }
+      .ix-list { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center;
+        gap: 30px; margin: 24px 0; }
+      .ix-block { display: flex; flex-direction: column;
+        border: 2px solid var(--wirit-ink-12); border-radius: 24px; padding: 28px 34px 26px; background: #fff; }
 
-      /* 헤더: 좌 지수명·현재가, 우 고점대비(히어로) */
-      .ix-top { display: flex; align-items: center; gap: 18px; }
+      /* 헤더: 좌 지수명·현재가(크게), 우 고점대비(히어로) */
+      .ix-top { display: flex; align-items: center; gap: 22px; }
       .ix-name { font-size: 46px; font-weight: 900; letter-spacing: -0.02em; color: var(--wirit-ink); }
-      .ix-nowwrap { display: flex; flex-direction: column; line-height: 1.05; }
-      .ix-nowlab { font-size: 20px; font-weight: 700; color: var(--wirit-gray); }
-      .ix-now { font-family: "Pretendard", sans-serif; font-size: 40px; font-weight: 800; color: var(--wirit-ink); font-feature-settings: "tnum"; }
+      .ix-now { font-family: "Pretendard", sans-serif; font-size: 62px; font-weight: 800; color: var(--wirit-ink); font-feature-settings: "tnum"; letter-spacing: -0.02em; }
       .ix-dd { margin-left: auto; display: flex; align-items: baseline; gap: 12px;
         background: rgba(46,107,255,0.08); border-radius: 18px; padding: 8px 22px 12px; }
       .ix-dd .k { font-size: 24px; font-weight: 800; color: var(--wirit-gray); }
@@ -31,7 +31,7 @@
       .ix-dd .v i { font-style: normal; font-size: 36px; }
 
       /* 차트: 컨테이너 비율을 viewBox와 일치(1000:300)시켜 가로 늘림(왜곡) 방지 */
-      .ix-chart { width: 100%; aspect-ratio: 1000 / 330; margin: 8px 0 0; align-self: center; }
+      .ix-chart { width: 100%; aspect-ratio: 1000 / 360; margin: 14px 0 0; }
       .ix-chart svg { width: 100%; height: 100%; display: block; }
 
       /* 차트 스타일 — 숫자는 Pretendard(정렬형) */
@@ -49,7 +49,7 @@
       .ix-rise .big { font-size: 34px; font-weight: 800; }
       .ix-rise .sm { font-size: 23px; font-weight: 700; fill: #d08a8c; }
       .ix-risearc { fill: none; stroke: rgba(229,72,77,0.5); stroke-width: 3; stroke-linecap: round; }
-      .ix-guide { stroke: rgba(46,107,255,0.5); stroke-width: 3; stroke-dasharray: 8 8; fill: none; }
+      .ix-fallarc { fill: none; stroke: rgba(46,107,255,0.6); stroke-width: 3; stroke-linecap: round; }
     </style>
   </head>
   <body>
@@ -62,7 +62,7 @@
         <div class="ix-block">
           <div class="ix-top">
             <span class="ix-name">{{this.name}}</span>
-            <span class="ix-nowwrap"><span class="ix-nowlab">현재 ({{this.asOf}})</span><span class="ix-now">{{this.now}}</span></span>
+            <span class="ix-now">{{this.now}}</span>
             <span class="ix-dd"><span class="k">고점 대비</span><span class="v">{{this.dd}}<i>%</i></span></span>
           </div>
           <div class="ix-chart">{{{this.chartSvg}}}</div>
