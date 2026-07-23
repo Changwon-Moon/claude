@@ -30,7 +30,8 @@
   font-weight: 100 900; /* 단일 마스터 — 전 웨이트 요청을 이 서체로 매핑(폴백 이탈 방지) */
   font-style: normal;
   font-display: block;
-  src: url("../_shared/fonts/TAEBAEK.otf") format("opentype");
+  /* OTF(CFF+vhea/vmtx)는 Chromium OTS가 거부 → WOFF2로 재패키징(font-convert.yml) */
+  src: url("../_shared/fonts/TAEBAEK.woff2") format("woff2");
 }
 
 :root {
