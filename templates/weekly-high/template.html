@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* weekly-high@1 — 신고가(올해 최고 실거래) 경신 TOP. 직전→신고가 + 상승률(빨강). 종이 톤. */
+      .wh { padding-top: 46px; }
+      .wh .wirit-title { font-size: 68px; line-height: 1.04; letter-spacing: -0.03em; margin: 2px 0 0; }
+      .wh .wirit-title .up { color: var(--wirit-red); }
+      .wh-sub { margin-top: 9px; font-size: 29px; font-weight: 800; color: var(--wirit-gray); letter-spacing: -0.01em; }
+
+      .wh-list { flex: 1; min-height: 0; display: flex; flex-direction: column; margin: 16px 0 4px; }
+      .wh-head { display: grid; grid-template-columns: 80px 1fr 292px 148px; align-items: center;
+        gap: 12px; padding: 0 8px 8px; font-size: 23px; font-weight: 800; color: var(--wirit-gray); }
+      .wh-head .r { text-align: center; } .wh-head .g { text-align: right; }
+      .wh-row { display: grid; grid-template-columns: 80px 1fr 292px 148px; align-items: center; gap: 12px;
+        padding: 10px 8px; border-top: 2px solid var(--wirit-ink-06); }
+      .wh-row:first-of-type { border-top: none; }
+      .wh-row.top { background: rgba(229,72,77,0.05); border-radius: 12px; }
+
+      .wh-rank { text-align: center; font-family: var(--font-num); font-weight: 900; font-size: 32px; color: var(--wirit-gray); }
+      .wh-rank .medal { font-size: 38px; }
+
+      .wh-apt { min-width: 0; }
+      .wh-apt b { display: block; font-size: 33px; font-weight: 900; letter-spacing: -0.02em; color: var(--wirit-ink);
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .wh-apt small { display: block; margin-top: 2px; font-size: 23px; font-weight: 700; color: var(--wirit-gray); }
+
+      .wh-price { text-align: right; font-family: var(--font-num); font-size: 29px; font-weight: 800; color: var(--wirit-ink); white-space: nowrap; }
+      .wh-price .prev { color: var(--wirit-gray); font-weight: 700; }
+      .wh-price .arw { color: var(--wirit-gray); margin: 0 4px; }
+      .wh-price i { font-style: normal; font-size: 21px; font-weight: 700; margin-left: 1px; }
+
+      .wh-gain { text-align: right; font-family: var(--font-num); font-weight: 900; font-size: 32px; color: var(--wirit-red); white-space: nowrap; }
+      .wh-gain .tri { font-size: 23px; margin-right: 2px; }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card wh">
+      <div class="wirit-topcap">{{#if note}}<span>{{note}}</span>{{/if}}</div>
+      <h1 class="wirit-title">{{{title}}}</h1>
+      <div class="wh-sub">{{subtitle}}</div>
+
+      <div class="wh-list">
+        <div class="wh-head"><span class="r">순위</span><span>단지</span><span class="g">직전 → 신고가</span><span class="g">상승률</span></div>
+        {{#each rows}}
+        <div class="wh-row{{#if this.top}} top{{/if}}">
+          <span class="wh-rank">{{#if this.medal}}<span class="medal">{{this.medal}}</span>{{else}}{{this.rank}}{{/if}}</span>
+          <span class="wh-apt"><b>{{this.apt}}</b><small>{{this.gu}} · 전용 {{this.area}}㎡</small></span>
+          <span class="wh-price"><span class="prev">{{this.prev}}<i>억</i></span><span class="arw">→</span><b>{{this.now}}</b><i>억</i></span>
+          <span class="wh-gain"><span class="tri">▲</span>{{this.gain}}<i>%</i></span>
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.period}} · {{source.period}}{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+  </body>
+</html>
