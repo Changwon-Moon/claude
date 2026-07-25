@@ -1,0 +1,15 @@
+{
+  "meta": {
+    "gu": "화성구41596",
+    "lawdCd": "41596",
+    "dealYmd": "202605",
+    "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
+    "sourceUrl": "https://www.data.go.kr",
+    "collectedAt": "2026-07-25",
+    "count": 0,
+    "rawCount": 0,
+    "verified": true,
+    "note": "API 응답 원본을 코드로 정규화(해제 거래 제외). 1차 출처."
+  },
+  "trades": []
+}
