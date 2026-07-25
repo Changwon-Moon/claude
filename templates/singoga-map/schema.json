@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["template", "title", "mapSvg", "rows"],
+  "properties": {
+    "template": { "type": "string" }, "date": { "type": "string" }, "note": { "type": "string" },
+    "title": { "type": "string" }, "subtitle": { "type": "string" },
+    "mapSvg": { "type": "string" }, "rows": { "type": "array", "items": { "type": "object" } },
+    "totalHits": { "type": "number" }, "source": { "type": "object" }
+  },
+  "additionalProperties": true
+}
