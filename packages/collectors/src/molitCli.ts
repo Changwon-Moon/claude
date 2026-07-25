@@ -13,7 +13,10 @@ import { validTrades } from "./parse/molit.js";
 
 const CWD = process.env.INIT_CWD || process.cwd();
 const HERE = resolve(fileURLToPath(import.meta.url), "..");
-const LAWD = JSON.parse(readFileSync(join(HERE, "data", "lawd-seoul.json"), "utf8")).codes as Record<string, string>;
+/** 지역 코드표 — `--region seoul|gyeonggi|all` (기본 seoul). 이름 충돌 없음(서울=구, 경기=시/구). */
+const REGION_FILES: Record<string, string> = { seoul: "lawd-seoul.json", gyeonggi: "lawd-gyeonggi.json" };
+const loadCodes = (f: string) =>
+  JSON.parse(readFileSync(join(HERE, "data", f), "utf8")).codes as Record<string, string>;
 
 function arg(name: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
@@ -26,10 +29,18 @@ async function main() {
     console.error("MOLIT_API_KEY 환경변수가 없습니다 (GitHub Secrets에 등록).");
     process.exit(1);
   }
+  const regionArg = arg("region") ?? "seoul";
+  const regions = regionArg === "all" ? Object.keys(REGION_FILES) : regionArg.split(",").map((s) => s.trim());
+  const LAWD: Record<string, string> = {};
+  for (const r of regions) {
+    const f = REGION_FILES[r];
+    if (!f) { console.error(`알 수 없는 region: ${r} (seoul|gyeonggi|all)`); process.exit(1); }
+    Object.assign(LAWD, loadCodes(f));
+  }
   const guArg = arg("gu") ?? "강남구";
   const monthsArg = arg("months");
   if (!monthsArg) {
-    console.error("사용법: --gu 강남구,서초구|all --months 202606,202607 [--out dir] [--force]");
+    console.error("사용법: [--region seoul|gyeonggi|all] --gu 강남구,서초구|all --months 202606,202607 [--out dir] [--force]");
     process.exit(1);
   }
   const guList = guArg === "all" ? Object.keys(LAWD) : guArg.split(",").map((s) => s.trim());

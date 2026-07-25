@@ -6,8 +6,12 @@ name: 실거래 수집 (국토부)
 on:
   workflow_dispatch:
     inputs:
+      region:
+        description: "지역 코드표 (seoul/gyeonggi/all)"
+        required: false
+        default: "seoul"
       gu:
-        description: "구 목록(콤마) 또는 all (예: 강남구,서초구)"
+        description: "구·시 목록(콤마) 또는 all (예: 강남구,서초구 / 구리시,용인시기흥구)"
         required: true
         default: "강남구"
       months:
@@ -48,6 +52,7 @@ jobs:
         run: |
           if [ -z "$MOLIT_API_KEY" ]; then echo "MOLIT_API_KEY 시크릿이 없습니다"; exit 1; fi
           GU="${{ github.event.inputs.gu }}"; GU="${GU:-강남구}"
+          REGION="${{ github.event.inputs.region }}"; REGION="${REGION:-seoul}"
           MONTHS="${{ github.event.inputs.months }}"
           if [ -z "$MONTHS" ]; then
             MONTHS=""
@@ -58,9 +63,9 @@ jobs:
           fi
           FORCE=""
           if [ "${{ github.event.inputs.force }}" = "true" ]; then FORCE="--force"; fi
-          echo "수집: 구=$GU · 월=$MONTHS $FORCE"
+          echo "수집: region=$REGION · 구=$GU · 월=$MONTHS $FORCE"
           pnpm --filter @wirit/collectors exec tsx src/molitCli.ts \
-            --gu "$GU" --months "$MONTHS" \
+            --region "$REGION" --gu "$GU" --months "$MONTHS" \
             --out "$GITHUB_WORKSPACE/data/datasets/molit" $FORCE
 
       - name: 캐시 커밋
