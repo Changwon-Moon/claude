@@ -18,7 +18,8 @@ const latestPrefix = `${latest.slice(0, 4)}-${latest.slice(4, 6)}`;
 
 // ── 실거래 → 구별 신고가 경신 건수·거래수·비율 ──
 const molitDir = join(ROOT, "data/datasets/molit");
-const files = readdirSync(molitDir).filter((f) => f.endsWith(".json"));
+// ⚠️ 서울(법정동코드 11xxx)만. 경기(41xxx) 캐시가 같은 폴더에 있으므로 반드시 필터링한다.
+const files = readdirSync(molitDir).filter((f) => /^11\d{3}-\d{6}\.json$/.test(f));
 const yms = [...new Set(files.map((f) => f.match(/-(\d{6})\.json$/)?.[1]).filter(Boolean))].sort();
 const groups = new Map();
 const totalByGu = {};
@@ -117,6 +118,11 @@ const doc = {
   subtitle: `${latestPrefix.replace("-", "년 ")}월 · 구별 신고가(올해 최고 실거래) 경신 건수`,
   mapSvg,
   rows,
+  cta: {
+    title: `그런데 <b>강남 3구</b>는? 🥶`,
+    rows: laggards.map((l) => ({ k: l.gu, v: `${l.hits}건`, n: `${l.rank}위` })),
+  },
+  footnote: `2026 상반기 서울 신고가 경신 <b>${totalHits}건</b> · 강남·서초·송파는 TOP 밖`,
   laggards,
   totalHits,
   source: { name: "국토부 아파트 실거래가 · 서울시 행정경계", period: "2026 상반기(1~6월)", verified },

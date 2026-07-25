@@ -63,12 +63,14 @@
           </div>
           {{/each}}
 
+          {{#if cta}}
           <div class="sm-cta">
-            <div class="t">그런데 <b>강남 3구</b>는? 🥶</div>
+            <div class="t">{{{cta.title}}}</div>
             <div class="g3">
-              {{#each laggards}}<span><b>{{this.gu}}</b> {{this.hits}}건<i>{{this.rank}}위</i></span>{{/each}}
+              {{#each cta.rows}}<span><b>{{this.k}}</b> {{this.v}}<i>{{this.n}}</i></span>{{/each}}
             </div>
           </div>
+          {{/if}}
         </div>
 
         <div class="sm-map">
@@ -77,7 +79,7 @@
         </div>
       </div>
 
-      <div class="sm-total">2026 상반기 서울 신고가 경신 <b>{{totalHits}}건</b> · 강남·서초·송파는 TOP 밖</div>
+      {{#if footnote}}<div class="sm-total">{{{footnote}}}</div>{{/if}}
 
       <div class="wirit-footer">
         <span>출처 · {{source.name}}{{#if source.period}} · {{source.period}}{{/if}}</span>
