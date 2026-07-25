@@ -53,8 +53,11 @@ for (const [, arr] of groups) {
   }
 }
 
-// GeoJSON 이름 → 데이터 키 (부천은 geo가 3개 구로 세분, 실거래는 부천시 단일)
-const dataKey = (geoName) => (geoName.startsWith("부천시") ? "부천시" : geoName);
+/** GeoJSON 이름 → 실거래 데이터 키. 토허제 데이터셋에 dataKey가 있으면 우선(화성=동탄구). */
+const dataKey = (geoName) => {
+  const a = NEW.get(geoName) || OLD.get(geoName);
+  return (a && a.dataKey) || geoName;
+};
 
 // ── 지도 ──
 const geo = JSON.parse(readFileSync(join(ROOT, "data/geo/korea-municipalities.geojson"), "utf8"));
@@ -99,29 +102,34 @@ for (const f of gg) {
   const st = statusOf(name);
   const { d, cx, cy } = pathOf(f);
   paths += `<path class="th-geo th-${st}" d="${d}" fill="${FILL[st]}"/>`;
-  if (st !== "none") {
-    const info = NEW.get(name) || OLD.get(name);
+  // 라벨은 신규 3곳만 — 기존 12곳은 서울 남부에 밀집해 라벨이 겹친다(수치는 좌측 리스트로).
+  if (st === "new") {
+    const info = NEW.get(name);
     const hits = hitBy[dataKey(name)] ?? 0;
     labels += `<text class="th-lab" x="${cx.toFixed(0)}" y="${cy.toFixed(0)}" fill="${TEXT[st]}">` +
       `<tspan class="n" x="${cx.toFixed(0)}">${info.label}</tspan>` +
-      `<tspan class="c" x="${cx.toFixed(0)}" dy="30">${hits}</tspan></text>`;
+      `<tspan class="c" x="${cx.toFixed(0)}" dy="46">${hits}</tspan></text>`;
   }
 }
 const mapSvg = `<svg viewBox="0 0 ${W + PAD * 2} ${H + PAD * 2}" xmlns="http://www.w3.org/2000/svg">` +
   `<style>.th-geo{stroke:#fff;stroke-width:1.6}.th-new{stroke:#7d0a1d;stroke-width:3}` +
   `.th-seoul{fill:#c3cad4;stroke:#fff;stroke-width:1.2}` +
-  `.th-seoullab{text-anchor:middle;font-size:38px;font-weight:900;fill:#68748a}` +
-  `.th-lab{text-anchor:middle}.th-lab .n{font-size:25px;font-weight:800}` +
-  `.th-lab .c{font-size:29px;font-weight:900;font-family:'Wanted Sans','Pretendard',sans-serif}</style>` +
+  `.th-seoullab{text-anchor:middle;font-size:46px;font-weight:900;fill:#5f6b80}` +
+  `.th-lab{text-anchor:middle;paint-order:stroke;stroke:rgba(125,10,29,.55);stroke-width:5px;stroke-linejoin:round}` +
+  `.th-lab .n{font-size:36px;font-weight:800}` +
+  `.th-lab .c{font-size:46px;font-weight:900;font-family:'Wanted Sans','Pretendard',sans-serif}</style>` +
   `${paths}${seoulLabel}${labels}</svg>`;
 
 // ── 통계: 신규 3곳 + 토허제 전체 vs 미지정 ──
+// 주의: 통계는 '데이터 키' 기준이라 geo 이름과 다를 수 있다(화성시→화성시동탄구).
+// dataKey가 지정된 지역은 그 키에 토허제 상태를 부여해야 집계가 맞는다.
+const statusByDataKey = new Map();
+for (const [g, a] of NEW) statusByDataKey.set(a.dataKey || g, "new");
+for (const [g, a] of OLD) statusByDataKey.set(a.dataKey || g, "old");
+const statusOfData = (k) => statusByDataKey.get(k) || "none";
 const list = Object.keys(totalBy).map((r) => ({
-  region: r, hits: hitBy[r] || 0, total: totalBy[r],
-  status: statusOf(r) !== "none" ? statusOf(r) : (statusOf(r + "구") || "none"),
+  region: r, hits: hitBy[r] || 0, total: totalBy[r], status: statusOfData(r),
 }));
-// 상태는 geo 이름 기준이 정확 — 데이터 키와 동일하므로 직접 판정
-for (const r of list) r.status = statusOf(r.region);
 const sum = (arr, k) => arr.reduce((s, x) => s + x[k], 0);
 const tohuhAll = list.filter((r) => r.status !== "none");
 const plain = list.filter((r) => r.status === "none");
@@ -133,6 +141,15 @@ const newRows = tohuh.newly.areas.map((a) => ({
   ratio: (() => { const t = totalBy[dataKey(a.geoName)] || 0; const h = hitBy[dataKey(a.geoName)] || 0; return t ? (Math.round((h / t) * 1000) / 10).toFixed(1) : "0.0"; })(),
   partial: !!a.partial,
 })).sort((a, b) => b.hits - a.hits);
+
+// 기존 지정 12곳 — 건수 순(지도엔 라벨 없음, 여기서 수치 전달)
+const oldRows = tohuh.existing.areas
+  .map((a) => {
+    const k = a.dataKey || a.geoName;
+    const h = hitBy[k] ?? 0, t = totalBy[k] || 0;
+    return { label: a.label, hits: h, ratio: t ? (Math.round((h / t) * 1000) / 10).toFixed(1) : "0.0" };
+  })
+  .sort((a, b) => b.hits - a.hits);
 
 const stats = {
   tohuhRate: rate(tohuhAll).toFixed(1),
@@ -149,15 +166,16 @@ const doc = {
   template: "tohuh-map@1",
   date,
   note: "경기도 토지거래허가구역(아파트) · 국토부 실거래",
-  title: `경기도, 여기가 <span class="hi">묶였다</span>`,
-  subtitle: `2026.7.5 신규 지정 3곳 + 기존 12곳 · 숫자 = 지정 직전 6개월 신고가 경신`,
+  title: `묶인 데는 <span class="hi">이유</span>가 있었다`,
+  subtitle: `경기 아파트 토허제 15곳 · 숫자 = 지정 직전 6개월 신고가 경신 건수`,
   mapSvg,
   newRows,
+  oldRows,
   stats,
-  caveat: tohuh.meta.caveat,
+  caveat: "지도는 시·군·구 경계 기준. 실제 허가구역은 일부만 지정된 경우가 있다(화성=동탄 일대, 수치도 동탄구 기준). 신규 3곳은 아파트만 대상.",
   source: {
-    name: "경기도 토지거래허가구역 고시 · 국토부 실거래가",
-    period: "실거래 2026 상반기(1~6월)",
+    name: "경기도 허가구역 고시 · 국토부 실거래가",
+    period: "2026 상반기",
     verified: verifiedData && tohuh.meta.verified,
   },
 };
