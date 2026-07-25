@@ -206,6 +206,7 @@ const doc = {
   mapSvg,
   rows,
   compact: true,
+  stamp: true, // 지도가 카드 절반 이상 → 아이덴티티 슬롯 C(그래픽 내부 스탬프)
   head: { l: "지역", r: "신고가 건수" },
   insight: `🥇 동탄 신고가는 강남 3구 전체의 <b>무려 6.9배</b> !!!`,
   totalHits,

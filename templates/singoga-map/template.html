@@ -36,7 +36,7 @@
       .sm-val .r { display: block; font-family: var(--font-num); font-size: 21px; font-weight: 700; color: var(--wirit-gray); margin-top: 1px; }
 
       /* 우: 지도 */
-      .sm-map { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+      .sm-map { flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; }
       .sm-map svg { width: 100%; height: 100%; display: block; }
       .sm-legend { display: flex; align-items: center; gap: 10px; justify-content: flex-end; margin-top: 4px; font-size: 20px; font-weight: 700; color: var(--wirit-gray); }
       .sm-legend .bar { width: 150px; height: 12px; border-radius: 6px;
@@ -94,6 +94,7 @@
         <div class="sm-map">
           {{{mapSvg}}}
           {{#if legend}}<div class="sm-legend"><span>적음</span><span class="bar"></span><span>많음</span></div>{{/if}}
+          {{#if stamp}}<span class="wirit-stamp" style="left:2px;bottom:4px">@wirit_note</span>{{/if}}
         </div>
       </div>
 
