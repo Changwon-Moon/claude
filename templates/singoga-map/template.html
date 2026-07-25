@@ -45,14 +45,14 @@
       .sm-total { margin-top: 6px; font-size: 24px; font-weight: 700; color: var(--wirit-gray); }
       .sm-total b { color: var(--wirit-ink); font-weight: 900; }
 
-      /* 하단 인사이트 바 — 좌우 풀폭 음영 카드(한 줄 결론) */
-      .sm-insight { margin-top: 12px; background: var(--wirit-ink); color: #fff; border-radius: 18px;
-        padding: 22px 28px; font-size: 34px; font-weight: 900; letter-spacing: -0.02em; text-align: center; }
-      .sm-insight b { color: #ff6b70; }
-      .sm-insight em { font-style: normal; color: #ffd24a; }
+      /* 하단 인사이트 — 배경 없이 한 줄 결론(잉크 + 레드 강조) */
+      .sm-insight { margin-top: 10px; color: var(--wirit-ink); padding: 4px 2px;
+        font-size: 36px; font-weight: 900; letter-spacing: -0.02em; text-align: center; }
+      .sm-insight b { color: var(--wirit-red); }
 
       /* 컴팩트 variant — 목록 행이 많은 카드(수도권 40곳 등). 기본 카드엔 영향 없음. */
-      .sm-c .sm-body { gap: 14px; margin: 12px 0 2px; }
+      .sm-c .wirit-title { font-size: 50px; line-height: 1.12; padding-right: 172px; word-break: keep-all; text-wrap: balance; }
+      .sm-c .sm-body { gap: 14px; margin: 10px 0 2px; }
       .sm-c .sm-rank { flex: 0 0 350px; }
       .sm-c .sm-row { grid-template-columns: 54px 1fr auto; gap: 8px; padding: 7px 6px; }
       .sm-c .sm-rk { font-size: 26px; }

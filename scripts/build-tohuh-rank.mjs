@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const latest = process.argv[2] || "202606";
 const date = process.argv[3] || "2026-07-23";
-const topN = parseInt(process.argv[4] || "13", 10);
+const topN = parseInt(process.argv[4] || "18", 10);
 const latestPrefix = `${latest.slice(0, 4)}-${latest.slice(4, 6)}`;
 
 // ── 토허제 지정 현황(정책 사실 데이터셋) ──
@@ -121,7 +121,7 @@ for (const part of shownParts) {
     d += "M" + ring.map(([lo, la]) => `${px(lo).toFixed(1)},${py(la).toFixed(1)}`).join("L") + "Z";
     if (ring.length > bl) { bl = ring.length; big = ring; }
   }
-  paths += `<path class="tk-geo${info.isNew ? " tk-new" : ""}${merged ? " tk-merged" : ""}" d="${d}" fill="${fill(h)}"/>`;
+  paths += `<path class="tk-geo${merged ? " tk-merged" : ""}" d="${d}" fill="${fill(h)}"/>`;
   const pts = big.map(([lo, la]) => [px(lo), py(la)]);
   let A = 0, cx = 0, cy = 0;
   for (let i = 0; i < pts.length - 1; i++) { const [x0, y0] = pts[i], [x1, y1] = pts[i + 1]; const c = x0 * y1 - x1 * y0; A += c; cx += (x0 + x1) * c; cy += (y0 + y1) * c; }
@@ -149,8 +149,8 @@ for (const p of placed) {
     `<tspan class="n">${p.label}</tspan> <tspan class="c">${p.h}</tspan></text>`;
 }
 const mapSvg = `<svg viewBox="0 0 ${W + PAD * 2} ${H + PAD * 2}" xmlns="http://www.w3.org/2000/svg">` +
-  `<style>.tk-geo{stroke:#fff;stroke-width:2.5}.tk-new{stroke:#7d0a1d;stroke-width:5}` +
-  `.tk-merged{stroke:none}` +
+  `<style>.tk-geo{stroke:#fff;stroke-width:2.5}.tk-merged{stroke:none}` +
+  
   `.tk-lab{text-anchor:middle;paint-order:stroke;stroke:rgba(255,255,255,.65);stroke-width:3.5px;stroke-linejoin:round}` +
   `.tk-lab .n{font-size:21px;font-weight:800}` +
   `.tk-lab .c{font-size:23px;font-weight:900;font-family:'Wanted Sans','Pretendard',sans-serif}</style>` +
@@ -170,12 +170,12 @@ const doc = {
   template: "singoga-map@1",
   date,
   note: "수도권 토지거래허가구역(서울25+경기15) · 국토부 실거래",
-  title: `2026년 6월 신고가 건수`,
+  title: `🔥 2026년 6월 신고가 쏟아진 지역은? 🔥`,
   mapSvg,
   rows,
   compact: true,
   head: { l: "지역", r: "신고가 건수" },
-  insight: `강남3구를 <b>다 합쳐도</b> 노원구 하나보다 적다`,
+  insight: `🥇 동탄 신고가는 강남 3구 전체의 <b>무려 6.9배</b> !!!`,
   totalHits,
   source: {
     name: "서울시·경기도 고시 · 국토부 실거래가",
