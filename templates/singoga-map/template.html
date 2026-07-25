@@ -13,7 +13,7 @@
       .sm-body { flex: 1; min-height: 0; display: flex; gap: 20px; align-items: stretch; margin: 14px 0 2px; }
 
       /* 좌: TOP 순위 */
-      .sm-rank { flex: 0 0 396px; display: flex; flex-direction: column; }
+      .sm-rank { flex: 0 0 396px; display: flex; flex-direction: column; position: relative; }
       .sm-rank .rh { font-size: 23px; font-weight: 800; color: var(--wirit-gray); padding: 0 6px 8px; display: flex; justify-content: space-between; }
       .sm-row { display: grid; grid-template-columns: 62px 1fr auto; align-items: center; gap: 10px;
         padding: 12px 6px; border-top: 2px solid var(--wirit-ink-06); }
@@ -45,10 +45,23 @@
       .sm-total { margin-top: 6px; font-size: 24px; font-weight: 700; color: var(--wirit-gray); }
       .sm-total b { color: var(--wirit-ink); font-weight: 900; }
 
-      /* 하단 인사이트 — 배경 없이 한 줄 결론(잉크 + 레드 강조) */
-      .sm-insight { margin-top: 10px; color: var(--wirit-ink); padding: 4px 2px;
+      /* 하단 인사이트 — 배경 없이 한 줄 결론(잉크 + 레드 강조). 푸터 바와 붙지 않도록 아래 여백 확보 */
+      .sm-insight { margin-top: 10px; margin-bottom: 26px; color: var(--wirit-ink); padding: 4px 2px;
         font-size: 36px; font-weight: 900; letter-spacing: -0.02em; text-align: center; }
       .sm-insight b { color: var(--wirit-red); }
+
+      /* 순위 꼬리(최하위 N) — 생략 표시 + 우측 여백에 브래킷 주석 */
+      .sm-tail { position: relative; margin-top: 4px; }
+      .sm-gap { text-align: center; font-size: 30px; font-weight: 900; letter-spacing: 0.25em;
+        color: var(--wirit-ink-12); line-height: 0.7; padding: 6px 0 10px; }
+      .sm-tail .sm-row { opacity: 0.72; }
+      .sm-tailnote { position: absolute; left: 100%; margin-left: 20px; width: 260px;
+        top: 46px; bottom: 2px; display: flex; align-items: center; gap: 12px; }
+      .sm-tailnote .br { align-self: stretch; width: 14px; flex: none;
+        border: 3px solid var(--wirit-ink-12); border-right: none; border-radius: 10px 0 0 10px; }
+      .sm-tailnote .tx { font-size: 25px; font-weight: 800; line-height: 1.35;
+        color: var(--wirit-gray); letter-spacing: -0.01em; }
+      .sm-tailnote .tx b { display: block; color: var(--wirit-ink); font-weight: 900; }
 
       /* 컴팩트 variant — 목록 행이 많은 카드(수도권 40곳 등). 기본 카드엔 영향 없음. */
       /* 제목은 한 줄 고정(줄바꿈 금지). 상단 여백을 키워 우상단 로고 뱃지 아래로 내려 폭을 전부 쓴다. */
@@ -81,6 +94,20 @@
           </div>
           {{/each}}
 
+          {{#if tail}}
+          <div class="sm-tail">
+            <div class="sm-gap">···</div>
+            {{#each tail.rows}}
+            <div class="sm-row">
+              <span class="sm-rk">{{this.rank}}</span>
+              <span class="sm-gu">{{this.gu}}</span>
+              <span class="sm-val"><span class="h">{{this.hits}}<i>건</i></span></span>
+            </div>
+            {{/each}}
+            <div class="sm-tailnote"><span class="br"></span><span class="tx">{{{tail.note}}}</span></div>
+          </div>
+          {{/if}}
+
           {{#if cta}}
           <div class="sm-cta">
             <div class="t">{{{cta.title}}}</div>
@@ -94,7 +121,7 @@
         <div class="sm-map">
           {{{mapSvg}}}
           {{#if legend}}<div class="sm-legend"><span>적음</span><span class="bar"></span><span>많음</span></div>{{/if}}
-          {{#if stamp}}<span class="wirit-stamp" style="left:2px;bottom:4px">@wirit_note</span>{{/if}}
+          {{#if stamp}}<span class="wirit-stamp" style="left:6px;top:54%">@wirit_note</span>{{/if}}
         </div>
       </div>
 
@@ -103,7 +130,7 @@
 
       <div class="wirit-footer">
         <span>출처 · {{source.name}}{{#if source.period}} · {{source.period}}{{/if}}</span>
-        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+        {{#unless hideFooterId}}<span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>{{/unless}}
       </div>
     </div>
   </body>

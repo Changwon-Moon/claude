@@ -226,13 +226,13 @@ body {
   font-weight: 800;
   letter-spacing: -0.01em;
   color: var(--wirit-ink);
-  opacity: 0.24;
+  opacity: 0.16;
   pointer-events: none;
   z-index: 5;
 }
 .wirit-stamp.on-dark {
   color: #ffffff;
-  opacity: 0.32;
+  opacity: 0.26;
 }
 
 /* 브랜드 컬러 로고칩: 실제 로고가 없을 때 브랜드색 원 + 약칭(흰 글씨).

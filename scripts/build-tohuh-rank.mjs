@@ -152,6 +152,29 @@ for (const p of placed) {
   labels += `<text class="tk-lab" x="${p.x.toFixed(0)}" y="${p.y.toFixed(0)}" fill="${textCol(p.h)}">` +
     `<tspan class="n">${p.label}</tspan> <tspan class="c">${p.h}</tspan></text>`;
 }
+// ── 한강 ──
+// 손으로 그리지 않는다. 한강은 '한강 이북 구'와 '이남 구'의 경계이므로,
+// 두 그룹 폴리곤이 **공유하는 정점**을 뽑아 경도순으로 이으면 선이 정확히 구 경계 위에 놓인다.
+// (구리=이북, 하남·강동=이남으로 넣으면 서울 동쪽 구간까지 한 번에 얻어진다)
+const NORTH = new Set(["종로구", "중구", "용산구", "성동구", "광진구", "동대문구", "중랑구",
+  "성북구", "강북구", "도봉구", "노원구", "은평구", "서대문구", "마포구", "구리시"]);
+const SOUTH = new Set(["양천구", "강서구", "구로구", "금천구", "영등포구", "동작구", "관악구",
+  "서초구", "강남구", "송파구", "강동구", "하남시"]);
+const vkey = (p) => `${p[0].toFixed(6)},${p[1].toFixed(6)}`;
+const nPts = new Map(), sPts = new Map();
+for (const part of shownParts) {
+  const nm = part.info.geoName;
+  const bag = NORTH.has(nm) ? nPts : SOUTH.has(nm) ? sPts : null;
+  if (!bag) continue;
+  for (const f of part.features) for (const r of rings(f.geometry)) for (const p of r) bag.set(vkey(p), p);
+}
+const riverCore = [...nPts.keys()].filter((k) => sPts.has(k)).map((k) => nPts.get(k)).sort((a, b) => a[0] - b[0]);
+if (riverCore.length < 8) throw new Error(`한강 경계 정점 부족(${riverCore.length}) — 경계 데이터 확인`);
+// 양 끝단은 서울/경기 '시계'라 공유정점이 없다 → 해당 구의 북쪽 링 정점을 그대로 이어붙인다.
+const WEST_TAIL = [[126.807, 37.6012], [126.8225, 37.588]]; // 강서구 북쪽 링(=한강, 건너편 고양시)
+const EAST_TAIL = [[127.2014, 37.5883], [127.2364, 37.5549]]; // 하남시 북쪽 링(=한강, 건너편 남양주)
+const riverPts = [...WEST_TAIL, ...riverCore, ...EAST_TAIL];
+
 // ── 서울 경계 표기 ──
 // 서울 25구 링 전체를 굵게 stroke 하되, "서울 바깥"만 남기는 클립(전체 사각형 + 서울 링, evenodd)을 걸면
 // 구·구 사이 내부 경계선은 전부 잘려 사라지고 시 외곽선의 바깥 절반만 남는다.
@@ -160,41 +183,37 @@ const VW = W + PAD * 2, VH = H + PAD * 2;
 const seoulOutline =
   `<clipPath id="tkOutSeoul"><path clip-rule="evenodd" d="M0,0H${VW}V${VH}H0Z${seoulD}"/></clipPath>` +
   `<path class="tk-seoul" d="${seoulD}" clip-path="url(#tkOutSeoul)"/>`;
-// 서울 라벨: 서울 최북단 꼭짓점 바로 위 여백에
-let topX = 0, topY = 1e9;
-for (const part of shownParts) {
-  if (part.info.region !== "서울") continue;
-  for (const f of part.features) for (const r of rings(f.geometry)) for (const [lo, la] of r) {
-    const y = py(la); if (y < topY) { topY = y; topX = px(lo); }
-  }
-}
-const tagX = Math.max(90, Math.min(VW - 90, topX));
-const seoulTag = `<text class="tk-city" x="${tagX.toFixed(0)}" y="${(topY - 16).toFixed(0)}">서울특별시</text>`;
 
-// ── 한강(도식선) ── 그려진 땅 위에서만 보이도록 표시 지역 전체로 클리핑
-const river = JSON.parse(readFileSync(join(ROOT, "data/geo/hanriver-simplified.json"), "utf8"));
-const riverD = "M" + river.coordinates.map(([lo, la]) => `${px(lo).toFixed(1)},${py(la).toFixed(1)}`).join("L");
+// 한강 path — 그려진 땅 위에서만 보이도록 표시 지역 전체로 클리핑
+const riverD = "M" + riverPts.map(([lo, la]) => `${px(lo).toFixed(1)},${py(la).toFixed(1)}`).join("L");
 const riverSvg = `<clipPath id="tkLand"><path d="${clipD}"/></clipPath>` +
   `<path class="tk-river" d="${riverD}" clip-path="url(#tkLand)"/>`;
 
 const mapSvg = `<svg viewBox="0 0 ${W + PAD * 2} ${H + PAD * 2}" xmlns="http://www.w3.org/2000/svg">` +
   `<style>.tk-geo{stroke:#fff;stroke-width:2.5}.tk-merged{stroke:none}` +
-  `.tk-seoul{fill:none;stroke:#2c3a4a;stroke-width:11;stroke-linejoin:round;opacity:.88}` +
-  `.tk-city{text-anchor:middle;font-size:26px;font-weight:900;fill:#2c3a4a;letter-spacing:-0.02em;` +
-  `paint-order:stroke;stroke:rgba(255,255,255,.8);stroke-width:4px;stroke-linejoin:round}` +
+  `.tk-seoul{fill:none;stroke:#54636f;stroke-width:9;stroke-linejoin:round;opacity:.62}` +
   `.tk-river{fill:none;stroke:#8fbfe0;stroke-width:11;stroke-linecap:round;stroke-linejoin:round}` +
   `.tk-lab{text-anchor:middle;paint-order:stroke;stroke:rgba(255,255,255,.65);stroke-width:3.5px;stroke-linejoin:round}` +
   `.tk-lab .n{font-size:21px;font-weight:800}` +
   `.tk-lab .c{font-size:23px;font-weight:900;font-family:'Wanted Sans','Pretendard',sans-serif}</style>` +
-  `${paths}${riverSvg}${seoulOutline}${seoulTag}${labels}</svg>`;
+  `${paths}${riverSvg}${seoulOutline}${labels}</svg>`;
 
-// ── 좌측 TOP 순위 ──
+// ── 좌측 순위: 상위 topN + (생략) + 최하위 3곳 ──
+// "강남이 아니다" 반전을 끝까지 밀려면 꼴찌도 보여줘야 한다.
 const MEDALS = ["🥇", "🥈", "🥉"];
-const rows = stat.slice(0, topN).map((r, i) => ({
+const TAIL_N = 3;
+const rowOf = (r, i) => ({
   rank: i + 1, medal: MEDALS[i] || "", top: i < 3,
   gu: r.label + (r.isNew ? " ⚡" : ""),
   hits: r.hits,
-}));
+});
+const rows = stat.slice(0, topN).map(rowOf);
+const tailRows = stat.slice(-TAIL_N).map((r) => rowOf(r, stat.indexOf(r)));
+const tailSum = tailRows.reduce((a, r) => a + r.hits, 0);
+const tail = {
+  rows: tailRows,
+  note: `🥶 꼴찌 3곳<br><b>셋 다 합쳐 ${tailSum}건</b>`,
+};
 
 const outDir = join(ROOT, `data/content/${date}`);
 mkdirSync(outDir, { recursive: true });
@@ -205,8 +224,10 @@ const doc = {
   title: `🔥 2026년 6월 신고가 쏟아진 지역은? 🔥`,
   mapSvg,
   rows,
+  tail,
   compact: true,
   stamp: true, // 지도가 카드 절반 이상 → 아이덴티티 슬롯 C(그래픽 내부 스탬프)
+  hideFooterId: true, // 아이디는 지도 안(슬롯 C)에만 — 푸터 중복 제거(오너 지시)
   head: { l: "지역", r: "신고가 건수" },
   insight: `🥇 동탄 신고가는 강남 3구 전체의 <b>무려 6.9배</b> !!!`,
   totalHits,
@@ -219,3 +240,4 @@ const doc = {
 writeFileSync(join(outDir, `tohuh-rank.json`), JSON.stringify(doc, null, 2) + "\n");
 console.log(`✅ 토허제 40곳 — 총 ${totalHits}건(${tohuhRate}%) · 표시 ${AREAS.length}곳 vs 경기 그 외 ${pCount}곳 ${plainRate}%`);
 console.log(`   TOP: ${rows.map((r) => `${r.gu}${r.hits}`).join(" · ")}`);
+console.log(`   꼴찌: ${tailRows.map((r) => `${r.rank}위 ${r.gu}${r.hits}`).join(" · ")}`);
