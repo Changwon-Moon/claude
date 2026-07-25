@@ -24,7 +24,7 @@
       .sm-cta .t { font-size: 27px; font-weight: 800; letter-spacing: -0.01em; }
       .sm-cta .t b { color: #ff6b70; }
       .sm-cta .g3 { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
-      .sm-cta .g3 span { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 28px; font-weight: 800; white-space: nowrap; }
+      .sm-cta .g3 span { display: flex; align-items: baseline; justify-content: space-between; font-size: 30px; font-weight: 800; }
       .sm-cta .g3 b { font-weight: 900; }
       .sm-cta .g3 i { font-style: normal; font-family: var(--font-num); font-size: 24px; font-weight: 800; color: #ffd24a; }
       .sm-rk { text-align: center; font-family: var(--font-num); font-weight: 900; font-size: 30px; color: var(--wirit-gray); }
@@ -44,22 +44,38 @@
 
       .sm-total { margin-top: 6px; font-size: 24px; font-weight: 700; color: var(--wirit-gray); }
       .sm-total b { color: var(--wirit-ink); font-weight: 900; }
+
+      /* 하단 인사이트 바 — 좌우 풀폭 음영 카드(한 줄 결론) */
+      .sm-insight { margin-top: 12px; background: var(--wirit-ink); color: #fff; border-radius: 18px;
+        padding: 22px 28px; font-size: 34px; font-weight: 900; letter-spacing: -0.02em; text-align: center; }
+      .sm-insight b { color: #ff6b70; }
+      .sm-insight em { font-style: normal; color: #ffd24a; }
+
+      /* 컴팩트 variant — 목록 행이 많은 카드(수도권 40곳 등). 기본 카드엔 영향 없음. */
+      .sm-c .sm-body { gap: 14px; margin: 12px 0 2px; }
+      .sm-c .sm-rank { flex: 0 0 350px; }
+      .sm-c .sm-row { grid-template-columns: 54px 1fr auto; gap: 8px; padding: 7px 6px; }
+      .sm-c .sm-rk { font-size: 26px; }
+      .sm-c .sm-rk .medal { font-size: 30px; }
+      .sm-c .sm-gu { font-size: 26px; }
+      .sm-c .sm-val .h { font-size: 29px; }
+      .sm-c .sm-cta .g3 span { gap: 8px; font-size: 28px; white-space: nowrap; }
     </style>
   </head>
   <body>
-    <div class="wirit-card sm">
+    <div class="wirit-card sm{{#if compact}} sm-c{{/if}}">
       <div class="wirit-topcap">{{#if note}}<span>{{note}}</span>{{/if}}</div>
       <h1 class="wirit-title">{{{title}}}</h1>
-      <div class="sm-sub">{{subtitle}}</div>
+      {{#if subtitle}}<div class="sm-sub">{{subtitle}}</div>{{/if}}
 
       <div class="sm-body">
         <div class="sm-rank">
-          <div class="rh"><span>구</span><span>신고가 건수 · 비율</span></div>
+          <div class="rh"><span>{{#if head.l}}{{head.l}}{{else}}구{{/if}}</span><span>{{#if head.r}}{{head.r}}{{else}}신고가 건수 · 비율{{/if}}</span></div>
           {{#each rows}}
           <div class="sm-row{{#if this.top}} top{{/if}}">
             <span class="sm-rk">{{#if this.medal}}<span class="medal">{{this.medal}}</span>{{else}}{{this.rank}}{{/if}}</span>
             <span class="sm-gu">{{this.gu}}</span>
-            <span class="sm-val"><span class="h">{{this.hits}}<i>건</i></span><span class="r">거래 중 {{this.ratio}}%</span></span>
+            <span class="sm-val"><span class="h">{{this.hits}}<i>건</i></span>{{#if this.ratio}}<span class="r">거래 중 {{this.ratio}}%</span>{{/if}}</span>
           </div>
           {{/each}}
 
@@ -75,11 +91,12 @@
 
         <div class="sm-map">
           {{{mapSvg}}}
-          <div class="sm-legend"><span>적음</span><span class="bar"></span><span>많음</span></div>
+          {{#if legend}}<div class="sm-legend"><span>적음</span><span class="bar"></span><span>많음</span></div>{{/if}}
         </div>
       </div>
 
       {{#if footnote}}<div class="sm-total">{{{footnote}}}</div>{{/if}}
+      {{#if insight}}<div class="sm-insight">{{{insight}}}</div>{{/if}}
 
       <div class="wirit-footer">
         <span>출처 · {{source.name}}{{#if source.period}} · {{source.period}}{{/if}}</span>

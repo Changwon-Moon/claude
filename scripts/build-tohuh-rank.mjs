@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const latest = process.argv[2] || "202606";
 const date = process.argv[3] || "2026-07-23";
-const topN = parseInt(process.argv[4] || "8", 10);
+const topN = parseInt(process.argv[4] || "13", 10);
 const latestPrefix = `${latest.slice(0, 4)}-${latest.slice(4, 6)}`;
 
 // ── 토허제 지정 현황(정책 사실 데이터셋) ──
@@ -79,7 +79,20 @@ const plainRate = pTrades ? (Math.round((pHits / pTrades) * 1000) / 10).toFixed(
 
 // ── 지도: 토허제 지역만 그린다(미지정 미표시). bbox도 표시 대상만으로 계산해 꽉 차게. ──
 const geo = JSON.parse(readFileSync(join(ROOT, "data/geo/korea-municipalities.geojson"), "utf8"));
-const shown = geo.features.filter((f) => byGeo.has(f.properties.name) && /^(11|31)/.test(f.properties.code));
+const sub = JSON.parse(readFileSync(join(ROOT, "data/geo/korea-submunicipalities.geojson"), "utf8"));
+/** 표시 단위: {info, features[]}. subCodes가 있으면 읍면동을 합성해 신설 구(동탄구)를 만든다. */
+const shownParts = [];
+for (const a of AREAS) {
+  if (a.subCodes) {
+    const fs2 = sub.features.filter((f) => a.subCodes.includes(f.properties.code));
+    if (fs2.length !== a.subCodes.length) throw new Error(`합성 경계 누락: ${a.geoName} (${fs2.length}/${a.subCodes.length})`);
+    shownParts.push({ info: a, features: fs2 });
+  } else {
+    const f = geo.features.find((x) => x.properties.name === a.geoName && /^(11|31)/.test(x.properties.code));
+    if (f) shownParts.push({ info: a, features: [f] });
+  }
+}
+const shown = shownParts.flatMap((p) => p.features);
 const rings = (g) => (g.type === "Polygon" ? g.coordinates : g.type === "MultiPolygon" ? g.coordinates.flat() : []);
 let minLon = 999, maxLon = -999, minLat = 999, maxLat = -999;
 for (const f of shown) for (const r of rings(f.geometry)) for (const [lo, la] of r) {
@@ -97,22 +110,24 @@ const textCol = (h) => (h / maxHits > 0.5 ? "#ffffff" : "#26303d");
 
 let paths = "";
 const placed = []; // 라벨 배치 좌표(충돌 회피용)
-for (const f of shown) {
-  const info = byGeo.get(f.properties.name);
-  const rec = stat.find((r) => r.geoName === f.properties.name);
+for (const part of shownParts) {
+  const info = part.info;
+  const rec = stat.find((r) => r.geoName === info.geoName);
   const h = rec ? rec.hits : 0;
+  // 합성 지역은 여러 서브폴리곤을 한 path로 그리고 내부 경계선이 안 보이도록 stroke 생략
+  const merged = part.features.length > 1;
   let d = "", big = null, bl = 0;
-  for (const ring of rings(f.geometry)) {
+  for (const f of part.features) for (const ring of rings(f.geometry)) {
     d += "M" + ring.map(([lo, la]) => `${px(lo).toFixed(1)},${py(la).toFixed(1)}`).join("L") + "Z";
     if (ring.length > bl) { bl = ring.length; big = ring; }
   }
-  paths += `<path class="tk-geo${info.isNew ? " tk-new" : ""}" d="${d}" fill="${fill(h)}"/>`;
+  paths += `<path class="tk-geo${info.isNew ? " tk-new" : ""}${merged ? " tk-merged" : ""}" d="${d}" fill="${fill(h)}"/>`;
   const pts = big.map(([lo, la]) => [px(lo), py(la)]);
   let A = 0, cx = 0, cy = 0;
   for (let i = 0; i < pts.length - 1; i++) { const [x0, y0] = pts[i], [x1, y1] = pts[i + 1]; const c = x0 * y1 - x1 * y0; A += c; cx += (x0 + x1) * c; cy += (y0 + y1) * c; }
   if (Math.abs(A) < 1e-6) { cx = pts.reduce((s, q) => s + q[0], 0) / pts.length; cy = pts.reduce((s, q) => s + q[1], 0) / pts.length; }
   else { A *= 0.5; cx /= 6 * A; cy /= 6 * A; }
-  placed.push({ cx, cy, h, label: info.label });
+  placed.push({ cx, cy, h, label: info.mapLabel || info.label });
 }
 
 // 라벨 충돌 회피: 위→아래 순으로 배치하며 너무 가까우면 아래로 밀어낸다.
@@ -135,6 +150,7 @@ for (const p of placed) {
 }
 const mapSvg = `<svg viewBox="0 0 ${W + PAD * 2} ${H + PAD * 2}" xmlns="http://www.w3.org/2000/svg">` +
   `<style>.tk-geo{stroke:#fff;stroke-width:2.5}.tk-new{stroke:#7d0a1d;stroke-width:5}` +
+  `.tk-merged{stroke:none}` +
   `.tk-lab{text-anchor:middle;paint-order:stroke;stroke:rgba(255,255,255,.65);stroke-width:3.5px;stroke-linejoin:round}` +
   `.tk-lab .n{font-size:21px;font-weight:800}` +
   `.tk-lab .c{font-size:23px;font-weight:900;font-family:'Wanted Sans','Pretendard',sans-serif}</style>` +
@@ -145,7 +161,7 @@ const MEDALS = ["🥇", "🥈", "🥉"];
 const rows = stat.slice(0, topN).map((r, i) => ({
   rank: i + 1, medal: MEDALS[i] || "", top: i < 3,
   gu: r.label + (r.isNew ? " ⚡" : ""),
-  hits: r.hits, ratio: r.ratio.toFixed(1),
+  hits: r.hits,
 }));
 
 const outDir = join(ROOT, `data/content/${date}`);
@@ -153,19 +169,13 @@ mkdirSync(outDir, { recursive: true });
 const doc = {
   template: "singoga-map@1",
   date,
-  note: "토지거래허가구역 · 국토부 실거래",
+  note: "수도권 토지거래허가구역(서울25+경기15) · 국토부 실거래",
   title: `2026년 6월 신고가 건수`,
-  subtitle: `수도권 토허제 40곳(서울 25구·경기 15곳) · 올해 최고 실거래 경신 기준`,
   mapSvg,
   rows,
-  cta: {
-    title: `신고가 <b>비율</b> 비교`,
-    rows: [
-      { k: "토허제 40곳", v: `${totalHits}건`, n: `${tohuhRate}%` },
-      { k: `경기 미지정 ${pCount}`, v: `${pHits}건`, n: `${plainRate}%` },
-    ],
-  },
-  footnote: `서울 25구 전역(2025.10.20~) + 경기 15곳 · ⚡ = 경기 7·5 신규 지정 · 화성은 동탄 일대만`,
+  compact: true,
+  head: { l: "지역", r: "신고가 건수" },
+  insight: `강남3구를 <b>다 합쳐도</b> 노원구 하나보다 적다`,
   totalHits,
   source: {
     name: "서울시·경기도 고시 · 국토부 실거래가",

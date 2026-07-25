@@ -21,21 +21,30 @@
     "areas": [
       {
         "geoName": "용인시기흥구",
-        "label": "용인 기흥",
-        "areaKm2": 81.64
+        "label": "용인시 기흥구",
+        "areaKm2": 81.64,
+        "mapLabel": "용인 기흥"
       },
       {
-        "geoName": "화성시",
-        "label": "화성 동탄",
+        "geoName": "화성시동탄구",
+        "label": "화성시 동탄구",
         "areaKm2": 55.52,
         "partial": true,
-        "partialNote": "동탄 일대(2026-02 신설 동탄구 기준). 지도는 화성시 전체 경계로 표시",
-        "dataKey": "화성시동탄구"
+        "partialNote": "동탄구 경계 = 2013 읍면동(동탄면·동탄1~3동) 합성. 화성시 4개 구(2026-02 신설) 중 동탄구만 지정.",
+        "dataKey": "화성시동탄구",
+        "mapLabel": "화성 동탄",
+        "subCodes": [
+          "3124044",
+          "3124060",
+          "3124061",
+          "3124062"
+        ]
       },
       {
         "geoName": "구리시",
-        "label": "구리",
-        "areaKm2": 33.34
+        "label": "구리시",
+        "areaKm2": 33.34,
+        "mapLabel": "구리"
       }
     ]
   },
@@ -44,51 +53,63 @@
     "areas": [
       {
         "geoName": "과천시",
-        "label": "과천"
+        "label": "과천시",
+        "mapLabel": "과천"
       },
       {
         "geoName": "광명시",
-        "label": "광명"
+        "label": "광명시",
+        "mapLabel": "광명"
       },
       {
         "geoName": "성남시수정구",
-        "label": "성남 수정"
+        "label": "성남시 수정구",
+        "mapLabel": "성남 수정"
       },
       {
         "geoName": "성남시중원구",
-        "label": "성남 중원"
+        "label": "성남시 중원구",
+        "mapLabel": "성남 중원"
       },
       {
         "geoName": "성남시분당구",
-        "label": "성남 분당"
+        "label": "성남시 분당구",
+        "mapLabel": "성남 분당"
       },
       {
         "geoName": "수원시장안구",
-        "label": "수원 장안"
+        "label": "수원시 장안구",
+        "mapLabel": "수원 장안"
       },
       {
         "geoName": "수원시팔달구",
-        "label": "수원 팔달"
+        "label": "수원시 팔달구",
+        "mapLabel": "수원 팔달"
       },
       {
         "geoName": "수원시영통구",
-        "label": "수원 영통"
+        "label": "수원시 영통구",
+        "mapLabel": "수원 영통"
       },
       {
         "geoName": "안양시동안구",
-        "label": "안양 동안"
+        "label": "안양시 동안구",
+        "mapLabel": "안양 동안"
       },
       {
         "geoName": "용인시수지구",
-        "label": "용인 수지"
+        "label": "용인시 수지구",
+        "mapLabel": "용인 수지"
       },
       {
         "geoName": "의왕시",
-        "label": "의왕"
+        "label": "의왕시",
+        "mapLabel": "의왕"
       },
       {
         "geoName": "하남시",
-        "label": "하남"
+        "label": "하남시",
+        "mapLabel": "하남"
       }
     ]
   },
@@ -99,128 +120,153 @@
     "areas": [
       {
         "geoName": "종로구",
-        "label": "종로",
-        "core": false
+        "label": "종로구",
+        "core": false,
+        "mapLabel": "종로"
       },
       {
         "geoName": "중구",
-        "label": "중",
-        "core": false
+        "label": "중구",
+        "core": false,
+        "mapLabel": "중"
       },
       {
         "geoName": "용산구",
-        "label": "용산",
-        "core": true
+        "label": "용산구",
+        "core": true,
+        "mapLabel": "용산"
       },
       {
         "geoName": "성동구",
-        "label": "성동",
-        "core": false
+        "label": "성동구",
+        "core": false,
+        "mapLabel": "성동"
       },
       {
         "geoName": "광진구",
-        "label": "광진",
-        "core": false
+        "label": "광진구",
+        "core": false,
+        "mapLabel": "광진"
       },
       {
         "geoName": "동대문구",
-        "label": "동대문",
-        "core": false
+        "label": "동대문구",
+        "core": false,
+        "mapLabel": "동대문"
       },
       {
         "geoName": "중랑구",
-        "label": "중랑",
-        "core": false
+        "label": "중랑구",
+        "core": false,
+        "mapLabel": "중랑"
       },
       {
         "geoName": "성북구",
-        "label": "성북",
-        "core": false
+        "label": "성북구",
+        "core": false,
+        "mapLabel": "성북"
       },
       {
         "geoName": "강북구",
-        "label": "강북",
-        "core": false
+        "label": "강북구",
+        "core": false,
+        "mapLabel": "강북"
       },
       {
         "geoName": "도봉구",
-        "label": "도봉",
-        "core": false
+        "label": "도봉구",
+        "core": false,
+        "mapLabel": "도봉"
       },
       {
         "geoName": "노원구",
-        "label": "노원",
-        "core": false
+        "label": "노원구",
+        "core": false,
+        "mapLabel": "노원"
       },
       {
         "geoName": "은평구",
-        "label": "은평",
-        "core": false
+        "label": "은평구",
+        "core": false,
+        "mapLabel": "은평"
       },
       {
         "geoName": "서대문구",
-        "label": "서대문",
-        "core": false
+        "label": "서대문구",
+        "core": false,
+        "mapLabel": "서대문"
       },
       {
         "geoName": "마포구",
-        "label": "마포",
-        "core": false
+        "label": "마포구",
+        "core": false,
+        "mapLabel": "마포"
       },
       {
         "geoName": "양천구",
-        "label": "양천",
-        "core": false
+        "label": "양천구",
+        "core": false,
+        "mapLabel": "양천"
       },
       {
         "geoName": "강서구",
-        "label": "강서",
-        "core": false
+        "label": "강서구",
+        "core": false,
+        "mapLabel": "강서"
       },
       {
         "geoName": "구로구",
-        "label": "구로",
-        "core": false
+        "label": "구로구",
+        "core": false,
+        "mapLabel": "구로"
       },
       {
         "geoName": "금천구",
-        "label": "금천",
-        "core": false
+        "label": "금천구",
+        "core": false,
+        "mapLabel": "금천"
       },
       {
         "geoName": "영등포구",
-        "label": "영등포",
-        "core": false
+        "label": "영등포구",
+        "core": false,
+        "mapLabel": "영등포"
       },
       {
         "geoName": "동작구",
-        "label": "동작",
-        "core": false
+        "label": "동작구",
+        "core": false,
+        "mapLabel": "동작"
       },
       {
         "geoName": "관악구",
-        "label": "관악",
-        "core": false
+        "label": "관악구",
+        "core": false,
+        "mapLabel": "관악"
       },
       {
         "geoName": "서초구",
-        "label": "서초",
-        "core": true
+        "label": "서초구",
+        "core": true,
+        "mapLabel": "서초"
       },
       {
         "geoName": "강남구",
-        "label": "강남",
-        "core": true
+        "label": "강남구",
+        "core": true,
+        "mapLabel": "강남"
       },
       {
         "geoName": "송파구",
-        "label": "송파",
-        "core": true
+        "label": "송파구",
+        "core": true,
+        "mapLabel": "송파"
       },
       {
         "geoName": "강동구",
-        "label": "강동",
-        "core": false
+        "label": "강동구",
+        "core": false,
+        "mapLabel": "강동"
       }
     ]
   }

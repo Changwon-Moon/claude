@@ -117,6 +117,7 @@ const doc = {
   title: `신고가는 <span class="hi">강남</span>이 아니었다`,
   subtitle: `${latestPrefix.replace("-", "년 ")}월 · 구별 신고가(올해 최고 실거래) 경신 건수`,
   mapSvg,
+  legend: true,
   rows,
   cta: {
     title: `그런데 <b>강남 3구</b>는? 🥶`,
