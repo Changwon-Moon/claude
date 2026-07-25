@@ -17,7 +17,7 @@ const date = process.argv[3] || "2026-07-23";
 const latestPrefix = `${latest.slice(0, 4)}-${latest.slice(4, 6)}`;
 
 // ── 토허제 지정 현황(별도 데이터셋 — 정책 사실) ──
-const tohuh = JSON.parse(readFileSync(join(ROOT, "data/datasets/gg-tohuh-2026.json"), "utf8"));
+const tohuh = JSON.parse(readFileSync(join(ROOT, "data/datasets/tohuh-2026.json"), "utf8"));
 const NEW = new Map(tohuh.newly.areas.map((a) => [a.geoName, a]));
 const OLD = new Map(tohuh.existing.areas.map((a) => [a.geoName, a]));
 const statusOf = (name) => (NEW.has(name) ? "new" : OLD.has(name) ? "old" : "none");
