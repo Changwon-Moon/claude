@@ -109,6 +109,8 @@ const fill = (h) => { const t = h / maxHits; return `rgb(${lerp(C_LO[0], C_HI[0]
 const textCol = (h) => (h / maxHits > 0.5 ? "#ffffff" : "#26303d");
 
 let paths = "";
+let clipD = ""; // 표시 지역 전체(한강 클리핑용 — 그린 땅 위에만 강이 보이게)
+let seoulD = ""; // 서울 25구 전체 링(외곽선 collar용)
 const placed = []; // 라벨 배치 좌표(충돌 회피용)
 for (const part of shownParts) {
   const info = part.info;
@@ -122,6 +124,8 @@ for (const part of shownParts) {
     if (ring.length > bl) { bl = ring.length; big = ring; }
   }
   paths += `<path class="tk-geo${merged ? " tk-merged" : ""}" d="${d}" fill="${fill(h)}"/>`;
+  clipD += d;
+  if (info.region === "서울") seoulD += d;
   const pts = big.map(([lo, la]) => [px(lo), py(la)]);
   let A = 0, cx = 0, cy = 0;
   for (let i = 0; i < pts.length - 1; i++) { const [x0, y0] = pts[i], [x1, y1] = pts[i + 1]; const c = x0 * y1 - x1 * y0; A += c; cx += (x0 + x1) * c; cy += (y0 + y1) * c; }
@@ -148,13 +152,41 @@ for (const p of placed) {
   labels += `<text class="tk-lab" x="${p.x.toFixed(0)}" y="${p.y.toFixed(0)}" fill="${textCol(p.h)}">` +
     `<tspan class="n">${p.label}</tspan> <tspan class="c">${p.h}</tspan></text>`;
 }
+// ── 서울 경계 표기 ──
+// 서울 25구 링 전체를 굵게 stroke 하되, "서울 바깥"만 남기는 클립(전체 사각형 + 서울 링, evenodd)을 걸면
+// 구·구 사이 내부 경계선은 전부 잘려 사라지고 시 외곽선의 바깥 절반만 남는다.
+// → 폴리곤 union 연산 없이 시 경계만 얻는 방법. 경기 지역 위에 겹쳐 그려도 순서가 안전하다.
+const VW = W + PAD * 2, VH = H + PAD * 2;
+const seoulOutline =
+  `<clipPath id="tkOutSeoul"><path clip-rule="evenodd" d="M0,0H${VW}V${VH}H0Z${seoulD}"/></clipPath>` +
+  `<path class="tk-seoul" d="${seoulD}" clip-path="url(#tkOutSeoul)"/>`;
+// 서울 라벨: 서울 최북단 꼭짓점 바로 위 여백에
+let topX = 0, topY = 1e9;
+for (const part of shownParts) {
+  if (part.info.region !== "서울") continue;
+  for (const f of part.features) for (const r of rings(f.geometry)) for (const [lo, la] of r) {
+    const y = py(la); if (y < topY) { topY = y; topX = px(lo); }
+  }
+}
+const tagX = Math.max(90, Math.min(VW - 90, topX));
+const seoulTag = `<text class="tk-city" x="${tagX.toFixed(0)}" y="${(topY - 16).toFixed(0)}">서울특별시</text>`;
+
+// ── 한강(도식선) ── 그려진 땅 위에서만 보이도록 표시 지역 전체로 클리핑
+const river = JSON.parse(readFileSync(join(ROOT, "data/geo/hanriver-simplified.json"), "utf8"));
+const riverD = "M" + river.coordinates.map(([lo, la]) => `${px(lo).toFixed(1)},${py(la).toFixed(1)}`).join("L");
+const riverSvg = `<clipPath id="tkLand"><path d="${clipD}"/></clipPath>` +
+  `<path class="tk-river" d="${riverD}" clip-path="url(#tkLand)"/>`;
+
 const mapSvg = `<svg viewBox="0 0 ${W + PAD * 2} ${H + PAD * 2}" xmlns="http://www.w3.org/2000/svg">` +
   `<style>.tk-geo{stroke:#fff;stroke-width:2.5}.tk-merged{stroke:none}` +
-  
+  `.tk-seoul{fill:none;stroke:#2c3a4a;stroke-width:11;stroke-linejoin:round;opacity:.88}` +
+  `.tk-city{text-anchor:middle;font-size:26px;font-weight:900;fill:#2c3a4a;letter-spacing:-0.02em;` +
+  `paint-order:stroke;stroke:rgba(255,255,255,.8);stroke-width:4px;stroke-linejoin:round}` +
+  `.tk-river{fill:none;stroke:#8fbfe0;stroke-width:11;stroke-linecap:round;stroke-linejoin:round}` +
   `.tk-lab{text-anchor:middle;paint-order:stroke;stroke:rgba(255,255,255,.65);stroke-width:3.5px;stroke-linejoin:round}` +
   `.tk-lab .n{font-size:21px;font-weight:800}` +
   `.tk-lab .c{font-size:23px;font-weight:900;font-family:'Wanted Sans','Pretendard',sans-serif}</style>` +
-  `${paths}${labels}</svg>`;
+  `${paths}${riverSvg}${seoulOutline}${seoulTag}${labels}</svg>`;
 
 // ── 좌측 TOP 순위 ──
 const MEDALS = ["🥇", "🥈", "🥉"];

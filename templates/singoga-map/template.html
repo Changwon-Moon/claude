@@ -51,7 +51,9 @@
       .sm-insight b { color: var(--wirit-red); }
 
       /* 컴팩트 variant — 목록 행이 많은 카드(수도권 40곳 등). 기본 카드엔 영향 없음. */
-      .sm-c .wirit-title { font-size: 50px; line-height: 1.12; padding-right: 172px; word-break: keep-all; text-wrap: balance; }
+      /* 제목은 한 줄 고정(줄바꿈 금지). 상단 여백을 키워 우상단 로고 뱃지 아래로 내려 폭을 전부 쓴다. */
+      .sm-c { padding-top: 76px; }
+      .sm-c .wirit-title { font-size: 52px; line-height: 1.14; white-space: nowrap; }
       .sm-c .sm-body { gap: 14px; margin: 10px 0 2px; }
       .sm-c .sm-rank { flex: 0 0 350px; }
       .sm-c .sm-row { grid-template-columns: 54px 1fr auto; gap: 8px; padding: 7px 6px; }
