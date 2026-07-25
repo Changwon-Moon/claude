@@ -145,7 +145,11 @@
 - **캡션 금지어에 '수익률' 포함**(투자 뉘앙스 회피) — 상승/오름세로 우회. 규칙은 `packages/pipeline/src/review/rubric.ts`.
 
 ### 소재 관제탑 다시 열기
-- `node scripts/build-idea-board.mjs <출력.html>` → Artifact로 발행. 결정은 브라우저 localStorage(`wirit-ideas-2026-07-25`)에 저장
+- `node scripts/build-idea-board.mjs <출력.html>` → Artifact로 발행(같은 파일 경로면 같은 URL 유지). 조작은 localStorage(`wirit-ideas-v3`)에 저장
+- 보드에서 할 수 있는 것: **승인·보류·거부 / 수정 / 삭제 / 새 소재 추가 / 소재 발굴 요청 / 새로고침**
+  - 거부·삭제한 항목은 사라지지 않고 상단 '숨긴 항목'에서 되돌릴 수 있다
+  - 아티팩트는 네트워크가 막혀 있어 **발굴 자체는 페이지가 못 한다** → 요청 문장을 요약에 실어 보내면 세션에서 수행
+  - 오너가 요약을 붙여넣으면 ➕추가·✏️수정·🗑삭제까지 `research/IDEAS.md`에 반영할 것
 - 항목을 추가/삭제하면 `research/IDEAS.md`와 생성기 양쪽을 함께 갱신한다(IDEAS.md가 원천)
 
 ### 이 게시물(토허제 신고가 지도) 관련 (2026-07-25)
