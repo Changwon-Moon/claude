@@ -118,3 +118,33 @@ flow의 핵심은 표뿐 아니라 **실물 사진이 많다**는 점이다(항�
 - 2장: 데이터 표 — 팔로우 유도는 표 하단 푸터로 흡수
 - 마무리(p3) 장은 **기본 미포함**
 - 커버 제목은 기획 에이전트의 제목 시안 중 운영자가 게이트 1에서 선택 → Phase 4에서 A/B 테스트로 자동화
+
+## 7. `singoga-map@1` — 순위표 + 코로플레스 지도 (2026-07-25 확정)
+
+지역 단위 집계를 **좌: 순위표 / 우: 지도** 한 장으로 보여주는 단일 카드. 서울판(`singoga-map.json`)과
+수도권 토허제판(`tohuh-rank.json`) 2종이 이 템플릿을 공유한다. 제작 경위 전문 =
+[../research/production-logs/2026-07-25-tohuh-singoga-map.md](../research/production-logs/2026-07-25-tohuh-singoga-map.md)
+
+### 문서 필드
+
+| 필드 | 설명 |
+|---|---|
+| `title` / `note` | 제목(HTML 허용) / 좌상단 옅은 캡션 |
+| `mapSvg` | 빌더가 만든 결정적 SVG 문자열 (좌표·색 전부 코드 산출) |
+| `rows[]` | `{rank, medal, top, gu, hits, ratio?}` |
+| `head` | 표 헤더 좌/우 라벨 |
+| `insight` | 하단 결론 한 줄(HTML 허용, `<b>`=레드 강조) |
+| `cta` / `footnote` / `legend` | 선택 — 서울판에서 사용 |
+| `compact` | **행이 많은 카드용 variant `.sm-c`** 활성화 |
+| `stamp` | 그래픽 내부 아이덴티티 스탬프(CSS 배치형) |
+| `hideFooterId` | 푸터 `@wirit_note` 숨김 — 아이디를 그래픽 안에 둘 때 |
+
+### 규칙
+
+- **variant 격리 필수**: 새 스타일은 반드시 `.sm-c` 안에 넣는다. 공용 규칙을 고치면 이미 승인된
+  서울 카드가 조용히 바뀐다(실제로 발생). 수정 후 승인 카드 md5 회귀검사가 완료 조건.
+- **제목은 한 줄(`white-space:nowrap`)**, 상단 여백으로 우상단 로고 뱃지와 **30px 이상 이격**.
+- **행 수를 바꾸면 실측**: designQa가 flex 넘침을 못 잡으므로 `마지막 행 bottom ≤ 본문 bottom`을
+  Playwright로 확인한다.
+- **지도 표기 기법**(빌더 쪽 계약): 신설 행정구는 하위 행정동 합성(`subCodes`), 하천은 인접 그룹의
+  공유 정점에서 도출, 시 경계는 evenodd 클립으로 외곽선만. 상세는 위 제작 기록 §3.
