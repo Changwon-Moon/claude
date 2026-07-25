@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const latest = process.argv[2] || "202606";
 const date = process.argv[3] || "2026-07-23";
-const topN = parseInt(process.argv[4] || "18", 10);
+const topN = parseInt(process.argv[4] || "16", 10);
 const latestPrefix = `${latest.slice(0, 4)}-${latest.slice(4, 6)}`;
 
 // ── 토허제 지정 현황(정책 사실 데이터셋) ──
@@ -112,6 +112,7 @@ let paths = "";
 let clipD = ""; // 표시 지역 전체(한강 클리핑용 — 그린 땅 위에만 강이 보이게)
 let seoulD = ""; // 서울 25구 전체 링(외곽선 collar용)
 const placed = []; // 라벨 배치 좌표(충돌 회피용)
+const bbox = {}; // 지역별 px 바운딩박스(스탬프 배치용)
 for (const part of shownParts) {
   const info = part.info;
   const rec = stat.find((r) => r.geoName === info.geoName);
@@ -131,6 +132,8 @@ for (const part of shownParts) {
   for (let i = 0; i < pts.length - 1; i++) { const [x0, y0] = pts[i], [x1, y1] = pts[i + 1]; const c = x0 * y1 - x1 * y0; A += c; cx += (x0 + x1) * c; cy += (y0 + y1) * c; }
   if (Math.abs(A) < 1e-6) { cx = pts.reduce((s, q) => s + q[0], 0) / pts.length; cy = pts.reduce((s, q) => s + q[1], 0) / pts.length; }
   else { A *= 0.5; cx /= 6 * A; cy /= 6 * A; }
+  const xs = pts.map((q) => q[0]), ys = pts.map((q) => q[1]);
+  bbox[info.geoName] = { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys), cx, cy };
   placed.push({ cx, cy, h, label: info.mapLabel || info.label });
 }
 
@@ -189,31 +192,30 @@ const riverD = "M" + riverPts.map(([lo, la]) => `${px(lo).toFixed(1)},${py(la).t
 const riverSvg = `<clipPath id="tkLand"><path d="${clipD}"/></clipPath>` +
   `<path class="tk-river" d="${riverD}" clip-path="url(#tkLand)"/>`;
 
+// 아이덴티티 스탬프(슬롯 C) — 지도 '안'의 빈 여백 2곳. 뷰박스 좌표라 지도 밖으로 절대 안 나간다.
+//  (1) 광명 아래·수원 팔달 왼쪽  (2) 노원 오른쪽 위
+const STAMP_AT = [[120, 1020], [720, 110]];
+const stamps = STAMP_AT.map(([x, y]) => `<text class="tk-stamp" x="${x}" y="${y}">@wirit_note</text>`).join("");
+
 const mapSvg = `<svg viewBox="0 0 ${W + PAD * 2} ${H + PAD * 2}" xmlns="http://www.w3.org/2000/svg">` +
   `<style>.tk-geo{stroke:#fff;stroke-width:2.5}.tk-merged{stroke:none}` +
   `.tk-seoul{fill:none;stroke:#54636f;stroke-width:9;stroke-linejoin:round;opacity:.62}` +
   `.tk-river{fill:none;stroke:#8fbfe0;stroke-width:11;stroke-linecap:round;stroke-linejoin:round}` +
+  `.tk-stamp{font-size:38px;font-weight:800;fill:#141821;opacity:.17;letter-spacing:-0.01em}` +
   `.tk-lab{text-anchor:middle;paint-order:stroke;stroke:rgba(255,255,255,.65);stroke-width:3.5px;stroke-linejoin:round}` +
   `.tk-lab .n{font-size:21px;font-weight:800}` +
   `.tk-lab .c{font-size:23px;font-weight:900;font-family:'Wanted Sans','Pretendard',sans-serif}</style>` +
-  `${paths}${riverSvg}${seoulOutline}${labels}</svg>`;
+  `${paths}${riverSvg}${seoulOutline}${labels}${stamps}</svg>`;
 
 // ── 좌측 순위: 상위 topN + (생략) + 최하위 3곳 ──
 // "강남이 아니다" 반전을 끝까지 밀려면 꼴찌도 보여줘야 한다.
 const MEDALS = ["🥇", "🥈", "🥉"];
-const TAIL_N = 3;
 const rowOf = (r, i) => ({
   rank: i + 1, medal: MEDALS[i] || "", top: i < 3,
   gu: r.label + (r.isNew ? " ⚡" : ""),
   hits: r.hits,
 });
 const rows = stat.slice(0, topN).map(rowOf);
-const tailRows = stat.slice(-TAIL_N).map((r) => rowOf(r, stat.indexOf(r)));
-const tailSum = tailRows.reduce((a, r) => a + r.hits, 0);
-const tail = {
-  rows: tailRows,
-  note: `🥶 꼴찌 3곳<br><b>셋 다 합쳐 ${tailSum}건</b>`,
-};
 
 const outDir = join(ROOT, `data/content/${date}`);
 mkdirSync(outDir, { recursive: true });
@@ -221,12 +223,10 @@ const doc = {
   template: "singoga-map@1",
   date,
   note: "수도권 토지거래허가구역(서울25+경기15) · 국토부 실거래",
-  title: `🔥 2026년 6월 신고가 쏟아진 지역은? 🔥`,
+  title: `🔥 2026년 6월 신고가 쏟아진 지역은?`,
   mapSvg,
   rows,
-  tail,
   compact: true,
-  stamp: true, // 지도가 카드 절반 이상 → 아이덴티티 슬롯 C(그래픽 내부 스탬프)
   hideFooterId: true, // 아이디는 지도 안(슬롯 C)에만 — 푸터 중복 제거(오너 지시)
   head: { l: "지역", r: "신고가 건수" },
   insight: `🥇 동탄 신고가는 강남 3구 전체의 <b>무려 6.9배</b> !!!`,
@@ -240,4 +240,3 @@ const doc = {
 writeFileSync(join(outDir, `tohuh-rank.json`), JSON.stringify(doc, null, 2) + "\n");
 console.log(`✅ 토허제 40곳 — 총 ${totalHits}건(${tohuhRate}%) · 표시 ${AREAS.length}곳 vs 경기 그 외 ${pCount}곳 ${plainRate}%`);
 console.log(`   TOP: ${rows.map((r) => `${r.gu}${r.hits}`).join(" · ")}`);
-console.log(`   꼴찌: ${tailRows.map((r) => `${r.rank}위 ${r.gu}${r.hits}`).join(" · ")}`);

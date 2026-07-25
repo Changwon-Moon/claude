@@ -65,15 +65,17 @@
 
       /* 컴팩트 variant — 목록 행이 많은 카드(수도권 40곳 등). 기본 카드엔 영향 없음. */
       /* 제목은 한 줄 고정(줄바꿈 금지). 상단 여백을 키워 우상단 로고 뱃지 아래로 내려 폭을 전부 쓴다. */
-      .sm-c { padding-top: 76px; }
-      .sm-c .wirit-title { font-size: 52px; line-height: 1.14; white-space: nowrap; }
-      .sm-c .sm-body { gap: 14px; margin: 10px 0 2px; }
-      .sm-c .sm-rank { flex: 0 0 350px; }
-      .sm-c .sm-row { grid-template-columns: 54px 1fr auto; gap: 8px; padding: 7px 6px; }
-      .sm-c .sm-rk { font-size: 26px; }
-      .sm-c .sm-rk .medal { font-size: 30px; }
-      .sm-c .sm-gu { font-size: 26px; }
-      .sm-c .sm-val .h { font-size: 29px; }
+      .sm-c { padding-top: 92px; } /* 제목이 우상단 로고 뱃지와 시각적으로 붙지 않도록 충분히 내린다 */
+      .sm-c .wirit-title { font-size: 56px; line-height: 1.14; white-space: nowrap; margin-top: 8px; }
+      .sm-c .sm-body { gap: 16px; margin: 20px 0 6px; }
+      .sm-c .sm-rank { flex: 0 0 366px; }
+      .sm-c .rh { padding-bottom: 10px; }
+      .sm-c .sm-row { grid-template-columns: 58px 1fr auto; gap: 8px; padding: 8px 6px; }
+      .sm-c .sm-rk { font-size: 27px; }
+      .sm-c .sm-rk .medal { font-size: 32px; }
+      .sm-c .sm-gu { font-size: 28px; }
+      .sm-c .sm-val .h { font-size: 31px; }
+      .sm-c .sm-insight { margin-top: 16px; margin-bottom: 24px; }
       .sm-c .sm-cta .g3 span { gap: 8px; font-size: 28px; white-space: nowrap; }
     </style>
   </head>
