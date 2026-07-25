@@ -1,0 +1,170 @@
+/**
+ * 경기 토허제 지도 — 토지거래허가구역(아파트) 지정 시·군·구 + 지정 직전 6개월 신고가 경신 건수.
+ * 색 = 토허제 상태(신규/기존/미지정), 숫자 = 신고가 경신 건수(코드 산출).
+ * 판정 엔진은 singoga-map과 동일(그룹 이력 3건+ 누적최고 경신 → 이상치 방지).
+ * ⚠️ 캐시가 2026 상반기(1~6월) = 신규 지정(7/5 발효) **직전** → '규제 효과'가 아니라
+ *    '지정 직전 6개월 열기'로만 해석·표기한다(오보 0).
+ * ⚠️ 지도는 시·군·구 단위. 실제 허가구역은 일부만인 경우가 있다(화성=동탄 일대) → 카드에 caveat 표기.
+ * 실행: node scripts/build-tohuh-map.mjs [latestMonth=202606] [date=2026-07-23]
+ */
+import { readFileSync, writeFileSync, mkdirSync, readdirSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const latest = process.argv[2] || "202606";
+const date = process.argv[3] || "2026-07-23";
+const latestPrefix = `${latest.slice(0, 4)}-${latest.slice(4, 6)}`;
+
+// ── 토허제 지정 현황(별도 데이터셋 — 정책 사실) ──
+const tohuh = JSON.parse(readFileSync(join(ROOT, "data/datasets/gg-tohuh-2026.json"), "utf8"));
+const NEW = new Map(tohuh.newly.areas.map((a) => [a.geoName, a]));
+const OLD = new Map(tohuh.existing.areas.map((a) => [a.geoName, a]));
+const statusOf = (name) => (NEW.has(name) ? "new" : OLD.has(name) ? "old" : "none");
+
+// ── 경기 실거래 → 시군구별 신고가 경신 건수 ──
+const molitDir = join(ROOT, "data/datasets/molit");
+const files = readdirSync(molitDir).filter((f) => /^41\d{3}-\d{6}\.json$/.test(f));
+if (!files.length) throw new Error("경기(41xxx) 실거래 캐시가 없습니다 — molit-collect(region=gyeonggi) 먼저 실행");
+const groups = new Map();
+const totalBy = {};
+let verifiedData = true;
+for (const f of files) {
+  const d = JSON.parse(readFileSync(join(molitDir, f), "utf8"));
+  if (d.meta?.verified === false) verifiedData = false;
+  const region = d.meta.gu; // lawd-gyeonggi 키(예: 용인시기흥구)
+  for (const t of d.trades) {
+    if (t.canceled) continue;
+    totalBy[region] = (totalBy[region] || 0) + 1;
+    const k = `${region}|${t.aptNm}|${t.umdNm}|${Math.round(t.area)}`;
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push({ p: t.priceWon, d: t.date, region });
+  }
+}
+const hitBy = {};
+for (const [, arr] of groups) {
+  if (arr.length < 3) continue;
+  arr.sort((a, b) => (a.d < b.d ? -1 : 1));
+  let mx = -1;
+  for (let i = 0; i < arr.length; i++) {
+    const r = arr[i];
+    if (i >= 2 && r.p > mx && r.d >= `${latestPrefix}-01`) hitBy[r.region] = (hitBy[r.region] || 0) + 1;
+    if (r.p > mx) mx = r.p;
+  }
+}
+
+// GeoJSON 이름 → 데이터 키 (부천은 geo가 3개 구로 세분, 실거래는 부천시 단일)
+const dataKey = (geoName) => (geoName.startsWith("부천시") ? "부천시" : geoName);
+
+// ── 지도 ──
+const geo = JSON.parse(readFileSync(join(ROOT, "data/geo/korea-municipalities.geojson"), "utf8"));
+const gg = geo.features.filter((f) => f.properties.code.startsWith("31")); // 경기(2013 통계청 코드)
+const seoul = geo.features.filter((f) => f.properties.code.startsWith("11"));
+const rings = (g) => (g.type === "Polygon" ? g.coordinates : g.type === "MultiPolygon" ? g.coordinates.flat() : []);
+let minLon = 999, maxLon = -999, minLat = 999, maxLat = -999;
+for (const f of [...gg, ...seoul]) for (const r of rings(f.geometry)) for (const [lo, la] of r) {
+  minLon = Math.min(minLon, lo); maxLon = Math.max(maxLon, lo); minLat = Math.min(minLat, la); maxLat = Math.max(maxLat, la);
+}
+const kx = Math.cos(((minLat + maxLat) / 2) * Math.PI / 180);
+const W = 1000, scale = W / ((maxLon - minLon) * kx), H = Math.round((maxLat - minLat) * scale), PAD = 8;
+const px = (lo) => PAD + (lo - minLon) * kx * scale, py = (la) => PAD + (maxLat - la) * scale;
+const pathOf = (f) => {
+  let d = "", big = null, bl = 0;
+  for (const ring of rings(f.geometry)) {
+    d += "M" + ring.map(([lo, la]) => `${px(lo).toFixed(1)},${py(la).toFixed(1)}`).join("L") + "Z";
+    if (ring.length > bl) { bl = ring.length; big = ring; }
+  }
+  const pts = big.map(([lo, la]) => [px(lo), py(la)]);
+  let A = 0, cx = 0, cy = 0;
+  for (let i = 0; i < pts.length - 1; i++) { const [x0, y0] = pts[i], [x1, y1] = pts[i + 1]; const c = x0 * y1 - x1 * y0; A += c; cx += (x0 + x1) * c; cy += (y0 + y1) * c; }
+  if (Math.abs(A) < 1e-6) { cx = pts.reduce((s, q) => s + q[0], 0) / pts.length; cy = pts.reduce((s, q) => s + q[1], 0) / pts.length; }
+  else { A *= 0.5; cx /= 6 * A; cy /= 6 * A; }
+  return { d, cx, cy };
+};
+
+const FILL = { new: "#c8102e", old: "#f2a0a6", none: "#e6e9ee" };
+const TEXT = { new: "#ffffff", old: "#3b1116", none: "#98a2b0" };
+let paths = "", labels = "";
+// 서울: 회색 덩어리 한 개(지리 맥락용, 라벨 1개)
+let sMinX = 1e9, sMaxX = -1e9, sMinY = 1e9, sMaxY = -1e9;
+for (const f of seoul) {
+  const { d, cx, cy } = pathOf(f);
+  paths += `<path class="th-seoul" d="${d}"/>`;
+  sMinX = Math.min(sMinX, cx); sMaxX = Math.max(sMaxX, cx); sMinY = Math.min(sMinY, cy); sMaxY = Math.max(sMaxY, cy);
+}
+const seoulLabel = `<text class="th-seoullab" x="${((sMinX + sMaxX) / 2).toFixed(0)}" y="${((sMinY + sMaxY) / 2).toFixed(0)}">서울</text>`;
+// 경기: 토허제 색 + (지정지역만) 라벨·건수
+for (const f of gg) {
+  const name = f.properties.name;
+  const st = statusOf(name);
+  const { d, cx, cy } = pathOf(f);
+  paths += `<path class="th-geo th-${st}" d="${d}" fill="${FILL[st]}"/>`;
+  if (st !== "none") {
+    const info = NEW.get(name) || OLD.get(name);
+    const hits = hitBy[dataKey(name)] ?? 0;
+    labels += `<text class="th-lab" x="${cx.toFixed(0)}" y="${cy.toFixed(0)}" fill="${TEXT[st]}">` +
+      `<tspan class="n" x="${cx.toFixed(0)}">${info.label}</tspan>` +
+      `<tspan class="c" x="${cx.toFixed(0)}" dy="30">${hits}</tspan></text>`;
+  }
+}
+const mapSvg = `<svg viewBox="0 0 ${W + PAD * 2} ${H + PAD * 2}" xmlns="http://www.w3.org/2000/svg">` +
+  `<style>.th-geo{stroke:#fff;stroke-width:1.6}.th-new{stroke:#7d0a1d;stroke-width:3}` +
+  `.th-seoul{fill:#c3cad4;stroke:#fff;stroke-width:1.2}` +
+  `.th-seoullab{text-anchor:middle;font-size:38px;font-weight:900;fill:#68748a}` +
+  `.th-lab{text-anchor:middle}.th-lab .n{font-size:25px;font-weight:800}` +
+  `.th-lab .c{font-size:29px;font-weight:900;font-family:'Wanted Sans','Pretendard',sans-serif}</style>` +
+  `${paths}${seoulLabel}${labels}</svg>`;
+
+// ── 통계: 신규 3곳 + 토허제 전체 vs 미지정 ──
+const list = Object.keys(totalBy).map((r) => ({
+  region: r, hits: hitBy[r] || 0, total: totalBy[r],
+  status: statusOf(r) !== "none" ? statusOf(r) : (statusOf(r + "구") || "none"),
+}));
+// 상태는 geo 이름 기준이 정확 — 데이터 키와 동일하므로 직접 판정
+for (const r of list) r.status = statusOf(r.region);
+const sum = (arr, k) => arr.reduce((s, x) => s + x[k], 0);
+const tohuhAll = list.filter((r) => r.status !== "none");
+const plain = list.filter((r) => r.status === "none");
+const rate = (arr) => (sum(arr, "total") ? Math.round((sum(arr, "hits") / sum(arr, "total")) * 1000) / 10 : 0);
+
+const newRows = tohuh.newly.areas.map((a) => ({
+  label: a.label,
+  hits: hitBy[dataKey(a.geoName)] ?? 0,
+  ratio: (() => { const t = totalBy[dataKey(a.geoName)] || 0; const h = hitBy[dataKey(a.geoName)] || 0; return t ? (Math.round((h / t) * 1000) / 10).toFixed(1) : "0.0"; })(),
+  partial: !!a.partial,
+})).sort((a, b) => b.hits - a.hits);
+
+const stats = {
+  tohuhRate: rate(tohuhAll).toFixed(1),
+  plainRate: rate(plain).toFixed(1),
+  tohuhHits: sum(tohuhAll, "hits"),
+  plainHits: sum(plain, "hits"),
+  tohuhCount: tohuhAll.length,
+  plainCount: plain.length,
+};
+
+const outDir = join(ROOT, `data/content/${date}`);
+mkdirSync(outDir, { recursive: true });
+const doc = {
+  template: "tohuh-map@1",
+  date,
+  note: "경기도 토지거래허가구역(아파트) · 국토부 실거래",
+  title: `경기도, 여기가 <span class="hi">묶였다</span>`,
+  subtitle: `2026.7.5 신규 지정 3곳 + 기존 12곳 · 숫자 = 지정 직전 6개월 신고가 경신`,
+  mapSvg,
+  newRows,
+  stats,
+  caveat: tohuh.meta.caveat,
+  source: {
+    name: "경기도 토지거래허가구역 고시 · 국토부 실거래가",
+    period: "실거래 2026 상반기(1~6월)",
+    verified: verifiedData && tohuh.meta.verified,
+  },
+};
+writeFileSync(join(outDir, `tohuh-map.json`), JSON.stringify(doc, null, 2) + "\n");
+
+console.log(`✅ 토허제 지도 — 신규 3곳: ${newRows.map((r) => `${r.label} ${r.hits}건(${r.ratio}%)`).join(" · ")}`);
+console.log(`   토허제 ${stats.tohuhCount}곳 신고가율 ${stats.tohuhRate}% (${stats.tohuhHits}건) vs 미지정 ${stats.plainCount}곳 ${stats.plainRate}% (${stats.plainHits}건)`);
+console.log(`   경기 전체 상위:`);
+[...list].sort((a, b) => b.hits - a.hits).slice(0, 10).forEach((r) =>
+  console.log(`     ${String(r.hits).padStart(3)}건 ${r.region} (거래 ${r.total} · ${((r.hits / r.total) * 100).toFixed(1)}%) ${r.status !== "none" ? "[" + r.status + "]" : ""}`));

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* tohuh-map@1 — 경기 토지거래허가구역(아파트) 지도 + 지정 직전 6개월 신고가 경신. 종이 톤. */
+      .th { padding-top: 44px; }
+      .th .wirit-title { font-size: 66px; line-height: 1.05; letter-spacing: -0.03em; margin: 2px 0 0; }
+      .th .wirit-title .hi { color: var(--wirit-red); }
+      .th-sub { margin-top: 8px; font-size: 26px; font-weight: 800; color: var(--wirit-gray); letter-spacing: -0.01em; }
+
+      .th-body { flex: 1; min-height: 0; display: flex; gap: 18px; margin: 12px 0 0; }
+
+      /* 좌: 신규 지정 3곳 + 비교 */
+      .th-side { flex: 0 0 340px; display: flex; flex-direction: column; }
+      .th-h { font-size: 23px; font-weight: 800; color: var(--wirit-gray); padding: 0 4px 8px; }
+      .th-new { display: flex; flex-direction: column; gap: 8px; }
+      .th-new .it { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px;
+        background: rgba(200,16,46,0.07); border-left: 6px solid #c8102e; border-radius: 12px; padding: 12px 14px; }
+      .th-new .nm { font-size: 30px; font-weight: 900; letter-spacing: -0.02em; color: var(--wirit-ink); }
+      .th-new .nm sup { font-size: 17px; font-weight: 800; color: var(--wirit-gray); margin-left: 3px; vertical-align: super; }
+      .th-new .vv { text-align: right; white-space: nowrap; }
+      .th-new .vv b { font-family: var(--font-num); font-size: 31px; font-weight: 900; color: #c8102e; }
+      .th-new .vv i { font-style: normal; font-size: 20px; font-weight: 800; margin-left: 1px; }
+      .th-new .vv small { display: block; font-family: var(--font-num); font-size: 19px; font-weight: 700; color: var(--wirit-gray); }
+
+      /* 비교 콜아웃 */
+      .th-cmp { margin-top: auto; background: var(--wirit-ink); color: #fff; border-radius: 18px; padding: 20px 22px; }
+      .th-cmp .t { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; color: #cfd8e3; }
+      .th-cmp .rows { display: flex; flex-direction: column; gap: 10px; margin-top: 13px; }
+      .th-cmp .rows > span { display: flex; align-items: baseline; justify-content: space-between; }
+      .th-cmp .k { font-size: 25px; font-weight: 800; }
+      .th-cmp .v { font-family: var(--font-num); font-size: 33px; font-weight: 900; }
+      .th-cmp .on .k { color: #fff; } .th-cmp .on .v { color: #ff6b70; }
+      .th-cmp .off .k { color: #9aa7b6; } .th-cmp .off .v { color: #9aa7b6; }
+      .th-cmp .note { margin-top: 11px; font-size: 18px; font-weight: 700; color: #8895a6; line-height: 1.35; }
+
+      /* 우: 지도 */
+      .th-map { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+      .th-map svg { width: 100%; height: 100%; display: block; }
+      .th-legend { display: flex; align-items: center; gap: 16px; justify-content: center; margin-top: 2px;
+        font-size: 20px; font-weight: 700; color: var(--wirit-gray); }
+      .th-legend span { display: inline-flex; align-items: center; gap: 6px; }
+      .th-legend b { width: 20px; height: 14px; border-radius: 4px; display: inline-block; }
+      .th-legend .n b { background: #c8102e; } .th-legend .o b { background: #f2a0a6; }
+      .th-legend .x b { background: #e6e9ee; }
+
+      .th-caveat { margin-top: 8px; font-size: 19px; font-weight: 600; color: var(--wirit-gray); line-height: 1.35; }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card th">
+      <div class="wirit-topcap">{{#if note}}<span>{{note}}</span>{{/if}}</div>
+      <h1 class="wirit-title">{{{title}}}</h1>
+      <div class="th-sub">{{subtitle}}</div>
+
+      <div class="th-body">
+        <div class="th-side">
+          <div class="th-h">7·5 신규 지정 (아파트 한정)</div>
+          <div class="th-new">
+            {{#each newRows}}
+            <div class="it">
+              <span class="nm">{{this.label}}{{#if this.partial}}<sup>일부</sup>{{/if}}</span>
+              <span class="vv"><b>{{this.hits}}<i>건</i></b><small>거래 중 {{this.ratio}}%</small></span>
+            </div>
+            {{/each}}
+          </div>
+
+          <div class="th-cmp">
+            <div class="t">신고가 비율 (거래 대비)</div>
+            <div class="rows">
+              <span class="on"><span class="k">토허제 {{stats.tohuhCount}}곳</span><span class="v">{{stats.tohuhRate}}%</span></span>
+              <span class="off"><span class="k">그 외 {{stats.plainCount}}곳</span><span class="v">{{stats.plainRate}}%</span></span>
+            </div>
+            <div class="note">숫자는 모두 <b>지정 직전</b> 6개월(1~6월) 실거래 기준</div>
+          </div>
+        </div>
+
+        <div class="th-map">
+          {{{mapSvg}}}
+          <div class="th-legend">
+            <span class="n"><b></b>신규 지정</span>
+            <span class="o"><b></b>기존 지정</span>
+            <span class="x"><b></b>미지정</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="th-caveat">※ {{caveat}}</div>
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.period}} · {{source.period}}{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+  </body>
+</html>
