@@ -45,6 +45,14 @@ export interface Rubric {
   max: number;
 }
 
+/** 자동 검수 결과 요약 — 발행 승인 화면에서 "기계가 뭘 확인했는지"를 보여준다. */
+export interface ReviewInfo {
+  verdict: string; // pass | revise | block
+  summary: string;
+  errors: number;
+  warns: number;
+}
+
 /** 소재 1건 = 티켓 1장. */
 export interface Ticket {
   id: string;
@@ -62,6 +70,14 @@ export interface Ticket {
   auto?: boolean; // 무인(L3) 슬롯
   origin: "brief" | "ideas" | "decision" | "produced"; // 어느 산출물에서 왔나
   provenance: string; // 추적용 원본 경로
+  /** 캐러셀 전 장(이미지 풀 키). 발행 승인 시 실물을 다 넘겨본다. */
+  pages?: string[];
+  /** 업로드 캡션 전문 (data/review/captions/{slug}.txt) */
+  caption?: string;
+  /** 자동 검수 리포트 요약 (data/review/{slug}.json) */
+  review?: ReviewInfo | null;
+  /** 소재에서 승격된 티켓의 원본 소재 id — 관제탑이 되쓸 때 씀 */
+  ideaId?: string;
 }
 
 export interface TeamCard {
@@ -100,6 +116,19 @@ export interface Idea {
   state: string;
   /** "done" = 이미 카드로 제작됨 */
   status: string;
+  /**
+   * 파이프라인 위치. 없거나 0이면 아직 소재 풀에만 있다.
+   * 1 이상이면 STAGES 인덱스로 파이프라인 칸반에 티켓으로 뜬다.
+   * (오너가 "이 소재 진행"을 누르면 1=기획안으로 올라간다)
+   */
+  stage?: number;
+  /**
+   * 반려·보류 이유. 회사의 학습 신호 — 다음 소재 발굴이 이걸 읽고 취향을 반영한다.
+   * (CEO.md §C: 오너가 같은 말을 두 번 하게 하지 않는다)
+   */
+  reason?: string;
+  /** 마지막 결정 시점 라벨 (예: "26.07.26(일)") */
+  at?: string;
 }
 
 export interface IdeaCat {

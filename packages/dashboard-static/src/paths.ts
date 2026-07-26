@@ -15,6 +15,7 @@ export const P = {
   prompts: resolve(REPO_ROOT, "prompts"),
   content: resolve(REPO_ROOT, "data/content"),
   out: resolve(REPO_ROOT, "data/out"),
+  review: resolve(REPO_ROOT, "data/review"),
   datasetCatalog: resolve(REPO_ROOT, "data/datasets/catalog.json"),
   logoCatalog: resolve(REPO_ROOT, "templates/_shared/logos/catalog.json"),
   photoCatalog: resolve(REPO_ROOT, "templates/_shared/photos/catalog.json"),

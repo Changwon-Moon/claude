@@ -33,6 +33,30 @@ button:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px;border-r
 .topbar .date{margin-left:auto;font-size:13px;color:#AEB8C4;font-variant-numeric:tabular-nums}
 .badge-live{font-size:11px;font-weight:800;letter-spacing:.06em;background:var(--cobalt);color:#fff;border-radius:999px;padding:4px 10px;}
 
+/* 연결 뱃지 — 제목 행 맨 오른쪽. 한 번 연결하면 볼 일이 없으므로 최소 크기로. */
+.conn{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:800;
+  border-radius:999px;padding:5px 11px;border:1px solid rgba(255,255,255,.22);color:#AEB8C4;background:rgba(255,255,255,.06)}
+.conn:hover{border-color:rgba(255,255,255,.45);color:#fff}
+.conn .led{width:7px;height:7px;border-radius:50%;background:var(--warn);flex:none}
+.conn.on{color:#8FE3BE;border-color:rgba(143,227,190,.4)}
+.conn.on .led{background:#3DDC97}
+/* 연결 팝오버 */
+.connpop{position:fixed;top:52px;right:12px;z-index:70;width:min(400px,calc(100vw - 24px));
+  background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:14px;
+  padding:14px;box-shadow:0 12px 40px rgba(10,12,16,.28);display:none;flex-direction:column;gap:9px}
+.connpop.on{display:flex}
+.connpop h3{font-size:14px;font-weight:800;display:flex;align-items:center;gap:7px}
+.connpop .who{font-size:12px;color:var(--gray);word-break:break-all}
+.connpop input{font:inherit;font-size:12.5px;border:1.5px solid var(--line);border-radius:9px;
+  background:var(--paper);color:var(--text);padding:9px 11px;width:100%}
+.connpop .hint{font-size:11px;color:var(--gray);line-height:1.6}
+.connpop .hint a{color:var(--cobalt)}
+.connpop .row{display:flex;gap:7px;flex-wrap:wrap}
+.connpop .row button{flex:1;min-width:110px;font:inherit;font-size:12.5px;font-weight:800;
+  border-radius:9px;padding:9px;border:1.5px solid var(--line);background:transparent;color:var(--text);cursor:pointer}
+.connpop .row button.prim{background:var(--cobalt);border-color:var(--cobalt);color:#fff}
+.connpop .row button.dgr{color:var(--red);border-color:var(--red)}
+
 /* KPI 스트립 */
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border-bottom:1px solid var(--line)}
 .kpi{background:var(--paper);padding:11px 14px;display:flex;flex-direction:column;gap:2px}
@@ -73,46 +97,62 @@ button:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px;border-r
 .tk .mini{width:100%;border-radius:8px;border:1px solid var(--line);display:block;margin-top:2px}
 .empty{font-size:12px;color:var(--gray);text-align:center;padding:14px 4px}
 
-/* ── 컨텐츠 마이닝 패널 (칸반 첫 열, 화면 1/3 폭) ── */
-.col.mining{flex:0 0 min(660px,84vw);display:flex;flex-direction:column;max-height:calc(100vh - 205px);background:var(--band)}
-.mine-h{font-size:13.5px;font-weight:800;color:var(--cobalt);display:flex;align-items:center;gap:6px;padding:4px 6px 8px}
-.mine-h .n{margin-left:auto;font-variant-numeric:tabular-nums;background:var(--card);border:1px solid var(--line);border-radius:999px;min-width:22px;text-align:center;padding:1px 7px;font-size:11.5px;color:var(--text)}
-.mine-h .lrn{font-size:10.5px;font-weight:800;color:var(--gray);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:2px 8px}
-.weights{display:flex;gap:6px;flex-wrap:wrap;padding:0 4px 8px}
-.wt{display:flex;align-items:center;gap:3px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:11.5px;font-weight:700;color:var(--gray)}
-.wt input{width:34px;border:none;background:transparent;color:var(--cobalt);font-weight:800;font:inherit;font-size:12.5px;text-align:right;padding:0}
-.wt input:focus{outline:none}
-.wt .pc{color:var(--gray);font-weight:700}
-.wsum{font-size:10.5px;color:var(--gray);align-self:center;margin-left:2px}
-.wsum.bad{color:var(--red);font-weight:800}
-.mine-btn{width:100%;background:var(--cobalt);color:#fff;font-size:13.5px;font-weight:800;border-radius:10px;padding:11px;margin:0 0 4px;display:flex;align-items:center;justify-content:center;gap:7px}
-.mine-note{font-size:10.5px;color:var(--gray);line-height:1.4;padding:0 2px 6px}
-.cands{flex:1 1 auto;min-height:90px;overflow-y:auto;display:flex;flex-direction:column;gap:7px;padding:2px 2px 4px}
-.cand{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:10px 11px;display:flex;flex-direction:column;gap:5px}
-.cand.picked{border-color:var(--ok);opacity:.7}
-.cand.dropped{border-color:var(--line);opacity:.4}
-.cand .ctop{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.cand .ct{font-size:14px;font-weight:800;line-height:1.32;letter-spacing:-.01em}
-.cand .cmeta{font-size:11px;color:var(--gray);display:flex;gap:8px;flex-wrap:wrap}
-.cand .cmeta b{color:var(--text);font-weight:700}
-.cand .cr{font-size:12px;color:var(--text);line-height:1.45}
-.cand .cr .lbl{color:var(--gray);font-weight:700}
-.cand .cbtns{display:flex;gap:6px;margin-top:2px}
-.cbtn{font-size:12px;font-weight:800;border-radius:8px;padding:6px 12px;border:1px solid var(--line)}
-.cbtn.pick{background:var(--cobalt);color:#fff;border-color:var(--cobalt)}
-.cbtn.drop{background:var(--card);color:var(--red);border-color:var(--red)}
-.cbtn.detail{background:var(--card);color:var(--gray)}
-/* 지식 인풋 (마이닝 패널 하단 채팅창) */
-.kbox{border-top:1px solid var(--line);margin-top:6px;padding:9px 3px 2px;display:flex;flex-direction:column;gap:7px}
-.kbox .kh{font-size:11.5px;font-weight:800;color:var(--gray)}
-.kbox textarea{font:inherit;font-size:12.5px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--text);padding:9px;min-height:56px;resize:vertical}
-.kprev{display:flex;gap:6px;flex-wrap:wrap}
-.kprev .kp{position:relative}
-.kprev img{width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid var(--line);display:block}
-.kprev .kx{position:absolute;top:-6px;right:-6px;background:var(--ink);color:#fff;border-radius:50%;width:18px;height:18px;font-size:11px;line-height:18px;text-align:center}
-.kbox .krow{display:flex;gap:7px;align-items:center}
-.kbox .kadd{background:var(--cobalt);color:#fff;font-size:12.5px;font-weight:800;border-radius:9px;padding:8px 14px}
-.kbox .khint{font-size:10.5px;color:var(--gray);line-height:1.4}
+/* ══ 결정함 — 첫 화면. "오늘 내가 결정할 것"만 모아 보여준다 ══ */
+.inbox{padding:14px 18px 4px}
+.inbox h2{font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.inbox h2 .n{font-size:11.5px;font-weight:800;color:#fff;background:var(--red);border-radius:999px;padding:2px 9px;font-variant-numeric:tabular-nums}
+.dlist{display:flex;flex-direction:column;gap:8px}
+.dcard{width:100%;text-align:left;display:flex;align-items:center;gap:12px;background:var(--card);
+  border:1px solid var(--line);border-left:4px solid var(--cobalt);border-radius:12px;padding:11px 13px;
+  transition:transform .12s,box-shadow .12s}
+.dcard:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(20,24,33,.10)}
+.dcard.pub{border-left-color:var(--red)}
+.dcard.idea{border-left-color:var(--cobalt)}
+.dcard.rev{border-left-color:var(--warn)}
+.dcard .dth{width:44px;height:55px;border-radius:7px;border:1px solid var(--line);object-fit:cover;flex:none;background:var(--band)}
+.dcard .dm{min-width:0;flex:1}
+.dcard .dk{font-size:10.5px;font-weight:800;letter-spacing:.05em;color:var(--gray)}
+.dcard.pub .dk{color:var(--red)}
+.dcard .dt{font-size:14px;font-weight:800;line-height:1.35;letter-spacing:-.01em;
+  overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.dcard .dw{font-size:11.5px;color:var(--gray);margin-top:2px}
+.dcard .go{font-size:18px;color:var(--gray);flex:none}
+.allclear{display:flex;flex-direction:column;gap:5px;background:color-mix(in srgb,var(--ok) 9%,var(--card));
+  border:1px solid color-mix(in srgb,var(--ok) 32%,transparent);border-radius:12px;padding:15px 16px}
+.allclear .t{font-size:15px;font-weight:800;color:var(--ok)}
+.allclear .w{font-size:12.5px;color:var(--gray);line-height:1.6}
+
+/* ══ 발행 승인 — 실물 카드를 넘겨보고 결정한다 ══ */
+.pv{display:flex;flex-direction:column;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+.pv .ph{font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--gray);display:flex;align-items:center;gap:8px}
+.pv .ph .pn{margin-left:auto;font-variant-numeric:tabular-nums}
+.pvframe{position:relative;background:var(--band);border-radius:10px;overflow:hidden}
+.pvframe img{width:100%;display:block;border-radius:10px}
+.pvnav{display:flex;gap:6px;align-items:center;justify-content:center}
+.pvnav button{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--line);color:var(--text);font-weight:900}
+.pvnav button[disabled]{opacity:.3}
+.pvdots{display:flex;gap:5px}
+.pvdots i{width:7px;height:7px;border-radius:50%;background:var(--line);display:block}
+.pvdots i.on{background:var(--cobalt)}
+.cap{font-size:12.5px;line-height:1.65;white-space:pre-wrap;word-break:break-word;
+  background:var(--band);border-radius:10px;padding:11px 12px;max-height:230px;overflow-y:auto}
+.cap.empty{color:var(--gray);white-space:normal}
+.rvw{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;border-radius:10px;padding:9px 11px;border:1px solid var(--line)}
+.rvw.pass{background:color-mix(in srgb,var(--ok) 10%,transparent);border-color:color-mix(in srgb,var(--ok) 34%,transparent);color:var(--ok)}
+.rvw.block{background:color-mix(in srgb,var(--red) 10%,transparent);border-color:color-mix(in srgb,var(--red) 34%,transparent);color:var(--red)}
+.rvw.none{color:var(--gray)}
+
+/* 이유 입력 — 반려·보류의 "왜"를 받아 회사가 학습한다 */
+.rsn{display:none;flex-direction:column;gap:8px;width:100%;background:var(--band);border-radius:11px;padding:11px}
+.rsn.on{display:flex}
+.rsn .q{font-size:12.5px;font-weight:800}
+.rsn .chips{display:flex;gap:5px;flex-wrap:wrap}
+.rsn .chips button{font-size:11.5px;font-weight:700;border:1.5px solid var(--line);border-radius:999px;padding:5px 11px;color:var(--gray)}
+.rsn .chips button.on{background:var(--cobalt);border-color:var(--cobalt);color:#fff}
+.rsn input{font:inherit;font-size:12.5px;border:1.5px solid var(--line);border-radius:9px;background:var(--card);color:var(--text);padding:8px 10px;width:100%}
+.rsn .row{display:flex;gap:7px}
+.rsn .row button{flex:1;font-size:12.5px;font-weight:800;border-radius:9px;padding:9px;border:1.5px solid var(--line);color:var(--gray)}
+.rsn .row button.sv{background:var(--cobalt);border-color:var(--cobalt);color:#fff}
 
 /* 회사 탭 */
 .wrap{padding:16px 18px 90px;max-width:900px}
@@ -158,7 +198,7 @@ button:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px;border-r
 .dhead .close{position:absolute;top:10px;right:12px;color:#AEB8C4;font-size:22px;padding:6px}
 .dhead .tt{font-size:19px;font-weight:800;line-height:1.3;padding-right:34px}
 .dhead .row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12px;color:#AEB8C4}
-.dbody{flex:1;overflow-y:auto;padding:16px 18px 120px}
+.dbody{flex:1;min-height:0;overflow-y:auto;padding:16px 18px 20px;display:flex;flex-direction:column;gap:14px}
 .tl{display:flex;flex-direction:column;gap:14px}
 .entry{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 14px;display:flex;flex-direction:column;gap:9px}
 .entry .who{font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--gray);display:flex;align-items:center;gap:6px}
@@ -176,7 +216,9 @@ button:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px;border-r
 .rub .v{font-variant-numeric:tabular-nums;font-weight:800;text-align:right}
 .rub .sum{font-size:12px;font-weight:800;color:var(--cobalt);margin-top:2px}
 .thumb{width:180px;border-radius:10px;border:1px solid var(--line);display:block}
-.acts{position:sticky;bottom:0;margin:14px -18px -120px;padding:14px 18px 18px;background:var(--paper);border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap}
+/* 액션 바는 스크롤 영역 밖의 진짜 하단 바다 — 본문이 길어져도 절대 겹치지 않는다 */
+.acts{flex:none;padding:12px 18px calc(14px + env(safe-area-inset-bottom));background:var(--paper);
+  border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;max-height:60vh;overflow-y:auto}
 .btn{flex:1;min-width:110px;text-align:center;font-size:14px;font-weight:800;border-radius:10px;padding:12px 10px}
 .btn.primary{background:var(--cobalt);color:#fff}
 .btn.ghost{background:var(--card);border:1.5px solid var(--line);color:var(--text)}
@@ -186,24 +228,9 @@ button:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px;border-r
 .editbox textarea{font:inherit;font-size:13.5px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--text);padding:10px;min-height:74px;resize:vertical}
 .toast{position:fixed;left:50%;bottom:74px;transform:translateX(-50%) translateY(8px);background:var(--ink);color:#fff;font-size:13px;font-weight:700;border:1px solid rgba(255,255,255,.2);border-radius:99px;padding:9px 16px;opacity:0;pointer-events:none;transition:.2s;z-index:60}
 .toast.on{opacity:1;transform:translateX(-50%)}
-/* GitHub 연결 바 (관제탑을 실제로 동작시키는 백엔드) */
-.ghbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 18px;font-size:12.5px;border-bottom:1px solid var(--line);background:var(--band)}
-.ghbar.on{background:rgba(27,158,107,.10)}
-.ghbar .st{font-weight:800}
-.ghbar .st.ok{color:var(--ok)} .ghbar .st.off{color:var(--warn)}
-.ghbar .sp{margin-left:auto}
-.ghbtn{font-size:12px;font-weight:800;border-radius:8px;padding:6px 11px;border:1px solid var(--line);background:var(--card);color:var(--text);cursor:pointer}
-.ghbtn.prim{background:var(--cobalt);color:#fff;border-color:var(--cobalt)}
-.ghbtn.wf{color:var(--cobalt)}
-.ghform{display:none;gap:8px;align-items:center;width:100%;margin-top:8px;flex-wrap:wrap}
-.ghform.on{display:flex}
-.ghform input{flex:1;min-width:220px;font:inherit;font-size:12.5px;border:1.5px solid var(--line);border-radius:8px;background:var(--card);color:var(--text);padding:8px 10px}
-.ghform .hint{font-size:11px;color:var(--gray);width:100%;line-height:1.5}
-.ghform .hint a{color:var(--cobalt)}
-.runs{display:flex;gap:8px;flex-wrap:wrap;width:100%;margin-top:6px}
-.run{font-size:11px;border:1px solid var(--line);border-radius:7px;padding:3px 8px;background:var(--card);text-decoration:none;color:var(--text)}
-.run .dot{font-weight:900}
-.run .dot.ok{color:var(--ok)} .run .dot.bad{color:var(--red)} .run .dot.run{color:var(--warn)}
+/* 읽기 전용 잠금 — 미연결일 때 조작 버튼을 아예 못 누르게 한다.
+   (눌렸다가 실패하는 것보다, 애초에 안 눌리고 이유를 말해주는 편이 낫다) */
+.locked{opacity:.45;pointer-events:none}
 
 /* ══ 소재 보드 (관제탑 통합) ══ */
 .ideas{padding:14px;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:14px;align-items:start}
@@ -270,7 +297,32 @@ button:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px;border-r
  border:1px solid color-mix(in srgb,var(--warn) 40%,transparent);border-radius:9px;padding:8px 11px;margin-bottom:10px}
 .igate code{font-size:11px}
 
-@media (max-width:640px){.board{padding:12px;gap:10px}.col{flex-basis:240px}.kpis{grid-template-columns:repeat(2,1fr)}}
+/* ══ 폰 ══ 오너는 대부분 폰으로 본다. 칸반을 세로로 접고, 버튼을 엄지 크기로. */
+@media (max-width:720px){
+  .topbar{gap:9px;padding:11px 13px}
+  .topbar .sub,.badge-live{display:none}
+  .topbar .date{font-size:12px}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .tabs{padding:8px 10px 0;gap:2px;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{padding:9px 11px;font-size:12.5px;white-space:nowrap}
+  .inbox{padding:12px 13px 4px}
+  .dcard{padding:12px}
+  /* 칸반: 가로 스크롤 → 세로 아코디언. 비어있는 단계는 접힌 채로 둔다. */
+  .board{flex-direction:column;padding:12px 13px;gap:8px;overflow-x:visible}
+  .col{flex:1 1 auto;width:100%;padding:9px 11px}
+  .col h2{padding-bottom:6px;font-size:13px}
+  .col.fold .tickets{display:none}
+  .col.fold h2::after{content:"▾";margin-left:4px;color:var(--gray)}
+  .wrap{padding:14px 13px 90px}
+  .ideas{padding:12px 11px;gap:11px}
+  .drawer{width:100vw}
+  .btn{min-width:0;padding:14px 10px;font-size:14.5px}
+  .ib{width:34px;height:34px;font-size:14px}
+  .ib.sm{width:32px;height:32px;font-size:13px}
+  .itool{padding:9px 13px;font-size:12.5px}
+  .connpop{right:8px;left:8px;width:auto}
+}
 `;
 
 const APP_JS = String.raw`
@@ -279,8 +331,8 @@ function img(k){ return k ? (STATE.images[k] || k) : ""; }
 const KEY = "wirit-tower-" + STATE.generatedFrom;
 let S = load();
 function load(){
-  try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.tickets&&s.tickets.length===STATE.tickets.length){ if(!s.weights) s.weights=STATE.mining.weights.map(w=>({...w})); if(!s.learning) s.learning=[]; return s; } }catch(e){}
-  return { tickets: STATE.tickets.map(t=>({...t, comments: []})), weights: STATE.mining.weights.map(w=>({...w})), learning: [] };
+  try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.tickets&&s.tickets.length===STATE.tickets.length) return s; }catch(e){}
+  return { tickets: STATE.tickets.map(t=>({...t, comments: []})) };
 }
 function save(){ localStorage.setItem(KEY, JSON.stringify(S)); }
 function tk(id){ return S.tickets.find(t=>t.id===id); }
@@ -315,61 +367,58 @@ const GH={
         await new Promise(r=>setTimeout(r,350*(i+1))); }
     }
   },
-  async runs(){ const d=await this.api("/repos/"+this.owner+"/"+this.repo+"/actions/runs?per_page=6&branch="+encodeURIComponent(this.branch));
-    return (d.workflow_runs||[]).map(r=>({name:r.name,status:r.status,conclusion:r.conclusion,url:r.html_url})); },
 };
 function ghStamp(){ return "[" + STATE.dateLabel + " 관제탑]"; }
 
-/* 워크플로 빠른 실행 정의 */
-const GH_WF=[
-  {file:"research-digest.yml", label:"⛏ 마이닝", inputs:{}, msg:"소재 마이닝(RSS) 워크플로를 시작했습니다"},
-  {file:"asset-fetch.yml", label:"🖼 로고 취득", inputs:{target:"data/datasets/salary-freshman-2026-07.json"}, msg:"로고 자동취득 워크플로를 시작했습니다"},
-  {file:"dart-salary.yml", label:"💰 평균연봉", inputs:{year:"2025",companies:"data/datasets/salary-freshman-2026-07.json"}, msg:"평균연봉(DART) 워크플로를 시작했습니다"},
-];
-async function runWf(wf){
-  if(!GH.connected()){ toast("먼저 GitHub에 연결하세요"); return; }
-  try{ await GH.dispatch(wf.file, wf.inputs); toast(wf.msg+" — 잠시 후 [상태]로 확인"); setTimeout(refreshRuns, 3000); }
-  catch(e){ toast("실행 실패: "+e.message); }
-}
-async function refreshRuns(){
-  const box=document.getElementById("ghruns"); if(!box||!GH.connected()) return;
-  try{ const rs=await GH.runs();
-    box.innerHTML=rs.map(r=>{ const cls=r.status!=="completed"?"run":(r.conclusion==="success"?"ok":"bad");
-      const mark=r.status!=="completed"?"●":(r.conclusion==="success"?"✔":"✕");
-      return '<a class="run" href="'+r.url+'" target="_blank" rel="noopener"><span class="dot '+cls+'">'+mark+'</span> '+esc(r.name)+'</a>'; }).join("")||'<span class="run">최근 실행 없음</span>';
-  }catch(e){ box.innerHTML='<span class="run">상태 조회 실패: '+esc(e.message)+'</span>'; }
-}
-function renderGhBar(){
-  const bar=document.getElementById("ghbar"); if(!bar) return;
+/* ══ 연결 뱃지 — 제목 행 우측. 한 번 연결하면 볼 일이 없으므로 작게. ══ */
+function renderConn(){
+  const b=document.getElementById("connbtn"); if(!b) return;
   const on=GH.connected();
-  bar.className="ghbar"+(on?" on":"");
-  const wfBtns=on?GH_WF.map((w,i)=>'<button class="ghbtn wf" data-wf="'+i+'">'+w.label+'</button>').join(""):"";
-  bar.innerHTML=
-    '<span class="st '+(on?"ok":"off")+'">'+(on?"🟢 GitHub 연결됨":"🔌 GitHub 연결 안 됨")+'</span>'
-    +(on?'<span style="color:var(--gray)">'+esc(GH.owner)+"/"+esc(GH.repo)+' · '+esc(GH.branch)+'</span>':'<span style="color:var(--gray)">연결하면 관제탑에서 직접 마이닝·업로드·워크플로 실행이 됩니다</span>')
-    +wfBtns
-    +'<span class="sp"></span>'
-    +(on?'<button class="ghbtn" id="ghrefresh">↻ 상태</button><button class="ghbtn" id="ghdisc">연결 해제</button>':'<button class="ghbtn prim" id="ghconn">연결하기</button>')
-    +'<div class="ghform" id="ghform"><input type="password" id="ghtok" placeholder="GitHub 토큰 붙여넣기 (ghp_... 또는 github_pat_...)"><button class="ghbtn prim" id="ghsave">저장·연결</button>'
-    +'<div class="hint">이 저장소 전용 <b>Fine-grained 토큰</b>을 만드세요(권한: Contents=Read/Write, Actions=Read/Write). 토큰은 이 브라우저에만 저장되고 GitHub 외 어디로도 전송되지 않습니다. → <a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener">토큰 만들기</a></div></div>'
-    +(on?'<div class="runs" id="ghruns"></div>':"");
-  wireGhBar();
-  if(on) refreshRuns();
+  b.className="conn"+(on?" on":"");
+  b.innerHTML='<span class="led"></span>'+(on?"연결됨":"연결 필요");
+  b.setAttribute("aria-label", on?"GitHub 연결됨 — 누르면 설정":"GitHub 연결하기");
+  const pop=document.getElementById("connpop"); if(!pop) return;
+  pop.innerHTML = on
+    ? '<h3>🟢 GitHub에 연결됨</h3>'
+      +'<div class="who">'+esc(GH.owner)+"/"+esc(GH.repo)+' · '+esc(GH.branch)+'</div>'
+      +'<div class="hint">관제탑에서 누르는 모든 결정이 이 저장소에 바로 기록됩니다.</div>'
+      +'<div class="row"><button id="conndisc" class="dgr">연결 해제</button><button id="connclose">닫기</button></div>'
+    : '<h3>🔌 GitHub 연결</h3>'
+      +'<div class="hint">이 저장소 전용 <b>Fine-grained 토큰</b>이 필요합니다(권한: Contents = Read/Write). '
+      +'토큰은 <b>이 브라우저에만</b> 저장되고 GitHub 외 어디로도 전송되지 않습니다. → '
+      +'<a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener">토큰 만들기 ↗</a></div>'
+      +'<input type="password" id="conntok" placeholder="ghp_... 또는 github_pat_...">'
+      +'<div class="row"><button id="connsave" class="prim">연결하기</button><button id="connclose">닫기</button></div>';
+  wireConn();
 }
-function wireGhBar(){
-  const conn=document.getElementById("ghconn");
-  if(conn) conn.onclick=()=>document.getElementById("ghform").classList.toggle("on");
-  const save=document.getElementById("ghsave");
+function wireConn(){
+  const close=document.getElementById("connclose");
+  if(close) close.onclick=()=>document.getElementById("connpop").classList.remove("on");
+  const disc=document.getElementById("conndisc");
+  if(disc) disc.onclick=()=>{ GH.setToken(""); document.getElementById("connpop").classList.remove("on"); afterConnChange("연결 해제됨"); };
+  const save=document.getElementById("connsave");
   if(save) save.onclick=async()=>{
-    const t=(document.getElementById("ghtok").value||"").trim(); if(!t){ toast("토큰을 붙여넣으세요"); return; }
+    const t=(document.getElementById("conntok").value||"").trim();
+    if(!t){ toast("토큰을 붙여넣으세요"); return; }
     GH.setToken(t);
-    try{ const me=await GH.me(); toast("연결 성공 — "+(me.login||"")); renderGhBar(); setSave("ok"); if(document.getElementById("ideaBody")) renderIdeas(); }
-    catch(e){ GH.setToken(""); toast("연결 실패: "+e.message); }
+    try{ const me=await GH.me(); document.getElementById("connpop").classList.remove("on"); afterConnChange("연결 성공 — "+(me.login||"")); }
+    catch(e){ GH.setToken(""); toast("연결 실패: "+shortErr(e)); }
   };
-  const disc=document.getElementById("ghdisc");
-  if(disc) disc.onclick=()=>{ GH.setToken(""); renderGhBar(); setSave("off"); if(document.getElementById("ideaBody")) renderIdeas(); toast("연결 해제됨"); };
-  const rf=document.getElementById("ghrefresh"); if(rf) rf.onclick=refreshRuns;
-  document.querySelectorAll("[data-wf]").forEach(b=>b.onclick=()=>runWf(GH_WF[+b.dataset.wf]));
+}
+/** 연결 상태가 바뀌면 화면 전체(잠금·결정함·보드·소재)를 다시 맞춘다 */
+function afterConnChange(msg){
+  renderConn(); applyLock(); setSave(GH.connected()?"ok":"off");
+  renderInbox(); renderBoard(); renderIdeas();
+  if(msg) toast(msg);
+}
+/** 미연결이면 조작 UI를 아예 못 누르게 잠근다 */
+function applyLock(){
+  const on=GH.connected();
+  document.querySelectorAll("[data-lock]").forEach(el=>el.classList.toggle("locked", !on));
+  const g=document.getElementById("igate");
+  if(g){ g.hidden=on;
+    if(!on) g.innerHTML='🔌 <b>읽기 전용</b> — 우상단 <b>[연결 필요]</b>를 눌러 GitHub 토큰을 넣으면, '
+      +'승인·수정·추가가 누르는 즉시 <code>'+esc(IPATH)+'</code>에 기록됩니다.'; }
 }
 
 /* 탭 전환 — 주소 해시(#ideas 등)로도 열 수 있게 한다(구 /ideas.html 북마크 호환) */
@@ -384,10 +433,26 @@ document.querySelectorAll(".tab").forEach(b=>{
 });
 window.addEventListener("hashchange",()=>openTab(location.hash.slice(1)));
 
+/* ══ 발행 대기열 ══
+ * "발행 승인"이 기록으로만 끝나면 아무 일도 안 일어난다.
+ * 승인을 저장소의 발행 큐에 넣어 두면, 발행 워크플로가 이 큐만 보고 올린다.
+ * (오너 승인 없이는 큐에 아무것도 안 들어가므로 승인 게이트는 그대로 유지된다) */
+function queuePublish(t){
+  if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
+  setSave("saving");
+  const line="- [ ] "+ghStamp()+" **"+t.title+"** · "+t.fmt
+    +" · 원본 "+(t.provenance||"미상")
+    +(t.caption?"":"  ⚠️ 캡션 없음 — 발행 전 작성 필요");
+  GH.append("data/publish-queue.md", line, "관제탑: 발행 승인 — "+short(t))
+    .then(()=>GH.append("research/decisions-inbox.md", "- "+ghStamp()+" 🚀 발행 승인: "+t.title, "관제탑: 발행 승인 기록"))
+    .then(()=>{ setSave("ok"); toast("발행 대기열에 올렸습니다 ✓"); })
+    .catch(e=>{ const m=shortErr(e); setSave("bad","publish-queue.md · "+m); toast("승인 실패: "+m); });
+}
+
 /* 결정 1건을 저장소 결정 로그에 바로 기록 */
 function pushDecision(text, msg){
   // 연결돼 있으면 저장소 결정 로그에 바로 남긴다(복사-붙여넣기 우회 없음).
-  if(!GH.connected()){ setSave("off"); toast("GitHub에 연결해야 기록됩니다 — 상단 [연결하기]"); return; }
+  if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
   setSave("saving");
   GH.append("research/decisions-inbox.md", "- " + ghStamp() + " " + text, "관제탑: " + (msg||"결정 기록"))
     .then(()=>{ setSave("ok"); toast(msg||"저장소에 기록됨 ✓"); })
@@ -420,66 +485,89 @@ function wireCompany(){
 }
 wireCompany();
 
+/* ══════════ 결정함 — 첫 화면. "오늘 내가 결정할 것"만 모은다 ══════════
+ * 관제탑을 열었을 때 할 일이 없으면 "없다"고 분명히 말해준다.
+ * 그게 보이면 앱을 닫아도 된다는 뜻 — 매일 5분 운영의 핵심. */
+function pendingDecisions(){
+  const out=[];
+  // ① 발행 승인 대기 — 카드 + 캡션이 다 준비돼 오너 확인만 남은 것.
+  //    캡션이 없으면 올릴 글 자체가 없으므로 '결정할 일'이 아니다(파이프라인 목록에는 남는다).
+  //    실험·중간 렌더(발행 세트 미등록)도 제외 — 안 그러면 결정함이 수십 건으로 불어난다.
+  S.tickets.forEach(t=>{
+    if(t.stage!==4) return;
+    const fl=t.flags||[];
+    if(fl.includes("버림")||fl.includes("실험")) return;
+    if(!t.caption) return;
+    out.push({ kind:"pub", label:"발행 승인", title:t.title,
+      note:(t.pages&&t.pages.length?t.pages.length+"장 · ":"")+t.fmt
+        +(t.review?" · 자동검수 "+(t.review.verdict==="pass"?"통과":t.review.verdict):" · 자동검수 없음"),
+      thumb:t.thumb||null, go:()=>{ openTab("board"); openDrawer(t.id); } });
+  });
+  // ② 아직 고르지 않은 소재 — 오너가 골라줘야 회사가 움직인다
+  const open=IDEAS.filter(i=>!i.state && i.status!=="done" && !Number(i.stage||0));
+  if(open.length){
+    out.push({ kind:"idea", label:"소재 선택", title:open.length+"건이 오너 결정을 기다립니다",
+      note:open.slice(0,2).map(i=>i.title).join(" · ")+(open.length>2?" 외 "+(open.length-2)+"건":""),
+      thumb:null, go:()=>openTab("ideas") });
+  }
+  // ③ 수정지시를 내린 뒤 결과를 확인해야 하는 것
+  S.tickets.forEach(t=>{
+    if(!(t.flags||[]).includes("수정요청")) return;
+    if(t.stage===4) return; // 이미 ①에 잡힘
+    out.push({ kind:"rev", label:"수정 확인", title:t.title, note:"재작업 지시 후 대기 중",
+      thumb:t.thumb||null, go:()=>{ openTab("board"); openDrawer(t.id); } });
+  });
+  return out;
+}
+/** 한 화면에 보여줄 상한 — 이보다 많으면 접어서 "더 보기"로 연다 */
+const INBOX_CAP=6;
+let inboxAll=false;
+function renderInbox(){
+  const box=document.getElementById("inboxBody"); if(!box) return;
+  const list=pendingDecisions();
+  const n=document.getElementById("inboxN");
+  if(n){ n.textContent=list.length+"건"; n.hidden=list.length===0; }
+  box.textContent="";
+  if(!list.length){
+    const d=document.createElement("div"); d.className="allclear";
+    d.innerHTML='<div class="t">✓ 오늘 결정할 것 없음</div>'
+      +'<div class="w">파이프라인이 알아서 돌고 있습니다. 새 소재가 올라오거나 카드가 완성되면 여기에 뜹니다.</div>';
+    box.appendChild(d); return;
+  }
+  const shown=inboxAll?list:list.slice(0,INBOX_CAP);
+  const wrap=document.createElement("div"); wrap.className="dlist";
+  shown.forEach(d=>{
+    const b=document.createElement("button"); b.className="dcard "+d.kind; b.type="button";
+    b.innerHTML=(d.thumb?'<img class="dth" src="'+img(d.thumb)+'" alt="">':'<span class="dth"></span>')
+      +'<span class="dm"><span class="dk">'+esc(d.label)+'</span>'
+      +'<span class="dt">'+esc(d.title)+'</span>'
+      +'<span class="dw">'+esc(d.note||"")+'</span></span>'
+      +'<span class="go">›</span>';
+    b.onclick=d.go; wrap.appendChild(b);
+  });
+  if(list.length>INBOX_CAP){
+    const more=document.createElement("button");
+    more.className="itool"; more.type="button"; more.style.cssText="width:100%;margin-top:8px";
+    more.textContent=inboxAll?"접기":"그 외 "+(list.length-INBOX_CAP)+"건 더 보기";
+    more.onclick=()=>{ inboxAll=!inboxAll; renderInbox(); };
+    wrap.appendChild(more);
+  }
+  box.appendChild(wrap);
+}
+
 /* 칸반 */
 const board=document.getElementById("board");
-function candReason(t){
-  var ev=t.evidence||[];
-  var e=ev.find(x=>x[0]==="선정 사유")||ev.find(x=>x[0]==="기획 판단");
-  if(e) return e[1];
-  return (t.fire?"숫자·순위 레버 뚜렷":"관심 소재")+" · "+t.topic+" 코어 연결";
-}
-function candSource(t){
-  var ev=t.evidence||[];
-  var e=ev.find(x=>x[0]==="출처")||ev.find(x=>x[0]==="신호");
-  if(e) return (e[1]||"").split(" — ")[0]||e[1];
-  return "소재보드 신호";
-}
-function buildMiningPanel(list){
-  const col=document.createElement("section"); col.className="col mining";
-  // 헤더
-  let h='<div class="mine-h">🔎 컨텐츠 마이닝<span class="lrn">학습 '+S.learning.length+'건</span><span class="n">'+list.length+'</span></div>';
-  // 비중 설정
-  let wt='<div class="weights">';
-  S.weights.forEach((w,i)=>{ wt+='<span class="wt">'+esc(w.label)+' <input type="number" min="0" max="100" data-w="'+i+'" value="'+w.pct+'"><span class="pc">%</span></span>'; });
-  const sum=S.weights.reduce((a,w)=>a+(+w.pct||0),0);
-  wt+='<span class="wsum'+(sum===100?"":" bad")+'" id="wsum">합 '+sum+'%</span></div>';
-  // 마이닝 버튼 + 안내
-  const btn='<button class="mine-btn" id="mineBtn">⛏ 마이닝 실행 — 새 후보 10건 요청</button>'
-    +'<div class="mine-note">누르면 마이닝 워크플로가 <b>바로 실행</b>됩니다(상단 바에서 상태 확인). 아래는 현재 수집된 후보입니다.</div>';
-  // 후보 목록 (스크롤)
-  let cands='<div class="cands" id="cands">';
-  if(!list.length) cands+='<div class="empty">후보 없음 — [마이닝 실행]으로 수집 요청</div>';
-  list.forEach(t=>{ cands+=candRow(t); });
-  cands+='</div>';
-  // 지식 인풋 (채팅창)
-  const kbox='<div class="kbox"><div class="kh">💬 자료 인박스 — 기사·메모·대량 자료를 붙여넣으세요</div>'
-    +'<div class="kprev" id="kprev"></div>'
-    +'<textarea id="ktext" placeholder="기사 본문·수치·아이디어를 붙여넣기(Ctrl+V). 길어도 됩니다 — 연결 시 저장소 research/INBOX.md에 바로 커밋됩니다."></textarea>'
-    +'<div class="krow"><button class="kadd" id="kadd">지식 추가</button>'
-    +'<span class="khint"><b>연결 시</b> 저장소에 바로 저장됩니다(대량 OK). 이미지는 세션에 직접 올려야 실제로 반영됩니다(여기선 첨부 표시만).</span></div></div>';
-  col.innerHTML=h+wt+btn+cands+kbox;
-  return col;
-}
-function candRow(t){
-  const picked=(t.flags||[]).includes("선정"), dropped=(t.flags||[]).includes("버림");
-  const sum=t.rubric&&t.rubric.sum?t.rubric.sum:null;
-  return '<div class="cand'+(picked?" picked":"")+(dropped?" dropped":"")+'" data-cid="'+t.id+'">'
-    +'<div class="ctop"><span class="chip '+(t.tier==="T1"?"t1":"t2")+'">'+(t.tier==="T1"?"주":"부")+'</span>'
-    +'<span class="topic">'+esc(t.topic)+'</span>'+(sum?'<span class="score" style="margin-left:auto">'+sum+'점</span>':"")+'</div>'
-    +'<div class="ct">'+(t.fire?"🔥 ":"")+esc(t.title)+'</div>'
-    +'<div class="cmeta"><span><b>출처</b> '+esc(candSource(t))+'</span><span><b>포맷</b> '+esc(t.fmt)+'</span></div>'
-    +'<div class="cr"><span class="lbl">선정 사유 · </span>'+esc(candReason(t))+'</div>'
-    +(picked?'<div class="cr" style="color:var(--ok);font-weight:800">✅ 선정됨 → 기획으로 이동</div>':dropped?'<div class="cr" style="color:var(--gray)">❌ 탈락</div>'
-      :'<div class="cbtns"><button class="cbtn pick" data-pick="'+t.id+'">✅ 선정</button><button class="cbtn drop" data-drop="'+t.id+'">❌ 탈락</button><button class="cbtn detail" data-detail="'+t.id+'">상세</button></div>')
-    +'</div>';
-}
+/** 칸반은 '기획안'부터 그린다 — 소재 고르기는 💡소재 탭이 단일 창구다(2026-07-26 통합). */
+const FIRST_STAGE = 1;
 function renderBoard(){
+  if(!board) return;
   board.innerHTML="";
   STAGES.forEach((name,si)=>{
+    if(si<FIRST_STAGE) return;
     const list=S.tickets.filter(t=>t.stage===si && !(t.flags||[]).includes("버림"));
-    if(si===0){ board.appendChild(buildMiningPanel(list)); return; }
     const col=document.createElement("section");
-    col.className="col";
+    // 폰에서는 빈 단계를 접어 스크롤을 줄인다
+    col.className="col"+(list.length?"":" fold");
     col.innerHTML='<h2>'+name+'<span class="n">'+list.length+'</span></h2>';
     const wrap=document.createElement("div"); wrap.className="tickets";
     if(!list.length){ wrap.innerHTML='<div class="empty">비어 있음</div>'; }
@@ -492,100 +580,26 @@ function renderBoard(){
         +(t.auto?'<span class="chip auto">자동</span>':"")
         +((t.flags||[]).includes("보류")?'<span class="chip hold">⏸ 보류</span>':"")
         +((t.flags||[]).includes("수정요청")?'<span class="chip edit">✏️ 수정요청</span>':"")
+        +((t.flags||[]).includes("실험")?'<span class="chip t2">실험</span>':"")
         +'<span class="topic">'+esc(t.topic)+'</span></div>'
         +'<div class="tt">'+(t.fire?"🔥 ":"")+esc(t.title)+'</div>'
-        +'<div class="meta"><span>'+esc(t.fmt)+'</span>'+(sum?'<span class="score">'+sum+'점</span>':"")+'</div>'
+        +'<div class="meta"><span>'+esc(t.fmt)+'</span>'
+        +(si===4&&!t.caption?'<span style="color:var(--warn);font-weight:800">캡션 없음</span>':"")
+        +(sum?'<span class="score">'+sum+'점</span>':"")+'</div>'
         +(t.thumb?'<img class="mini" src="'+img(t.thumb)+'" alt="">':"");
       wrap.appendChild(b);
     });
     col.appendChild(wrap); board.appendChild(col);
   });
-  wireMining();
 }
-
-/* 마이닝 패널 상호작용 */
-let pendingImgs=0;
-function wireMining(){
-  // 비중 입력
-  document.querySelectorAll("[data-w]").forEach(inp=>{
-    inp.onchange=()=>{ const i=+inp.dataset.w; S.weights[i].pct=Math.max(0,Math.min(100,+inp.value||0)); save();
-      const sum=S.weights.reduce((a,w)=>a+(+w.pct||0),0); const el=document.getElementById("wsum"); if(el){ el.textContent="합 "+sum+"%"; el.className="wsum"+(sum===100?"":" bad"); } };
-  });
-  // 마이닝 실행
-  const mb=document.getElementById("mineBtn");
-  if(mb) mb.onclick=async()=>{
-    const w=S.weights.map(x=>x.label+" "+x.pct+"%").join(" · ");
-    if(GH.connected()){
-      // 비중을 저장소에 기록하고 실제 마이닝 워크플로 실행
-      try{ await GH.append("research/mining-requests.md", "- "+ghStamp()+" 비중["+w+"] 마이닝 요청", "관제탑: 마이닝 요청 "+STATE.dateLabel); }catch(e){}
-      runWf(GH_WF[0]);
-    } else {
-      pushDecision("🔎 컨텐츠 마이닝 실행 요청 — 비중["+w+"] → 새 후보 10건을 SNS·뉴스·통계에서 수집해줘",
-        "마이닝 요청 기록됨");
-    }
-  };
-  // 후보 선정/탈락/상세
-  document.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>candAction(b.dataset.pick,"pick"));
-  document.querySelectorAll("[data-drop]").forEach(b=>b.onclick=()=>candAction(b.dataset.drop,"drop"));
-  document.querySelectorAll("[data-detail]").forEach(b=>b.onclick=()=>openDrawer(b.dataset.detail));
-  // 지식 인풋: 붙여넣기(이미지) + 추가
-  const ta=document.getElementById("ktext"), prev=document.getElementById("kprev");
-  if(ta){
-    ta.onpaste=(e)=>{
-      const items=(e.clipboardData||{}).items||[];
-      for(const it of items){ if(it.type&&it.type.indexOf("image")===0){ const f=it.getAsFile(); if(f){ const r=new FileReader(); r.onload=()=>addImgPrev(prev,r.result); r.readAsDataURL(f); pendingImgs++; } } }
-    };
-    const ka=document.getElementById("kadd");
-    if(ka) ka.onclick=async()=>{
-      const v=ta.value.trim(); const imgs=prev?prev.querySelectorAll("img").length:0;
-      if(!v&&!imgs){ toast("기사·메모를 입력하거나 이미지를 붙여넣으세요"); return; }
-      if(GH.connected()){
-        // 대량 자료를 저장소 인박스에 바로 커밋 (복사-붙여넣기 없이)
-        ka.disabled=true; ka.textContent="저장 중…";
-        const block="## "+ghStamp()+"\n\n"+(v||"(텍스트 없음)")+(imgs?"\n\n> 사진 "+imgs+"장은 세션에 직접 업로드해야 실제로 반영됩니다.":"");
-        try{ await GH.append("research/INBOX.md", block, "관제탑: 지식 자료 추가 "+STATE.dateLabel);
-          toast("저장소 research/INBOX.md에 커밋됨 ✓"); ta.value=""; if(prev) prev.innerHTML=""; pendingImgs=0;
-        }catch(e){ toast("커밋 실패: "+e.message); }
-        ka.disabled=false; ka.textContent="지식 추가";
-      } else {
-        let msg="💬 지식 입력: "+(v||"(텍스트 없음)"); if(imgs) msg+=" [사진 "+imgs+"장 첨부 — 세션에 직접 업로드 필요]";
-        pushDecision(msg, "지식 기록됨");
-        ta.value=""; if(prev) prev.innerHTML=""; pendingImgs=0;
-      }
-    };
-  }
-}
-function addImgPrev(prev,src){
-  if(!prev) return; const d=document.createElement("span"); d.className="kp";
-  d.innerHTML='<img src="'+src+'" alt=""><span class="kx">✕</span>';
-  d.querySelector(".kx").onclick=()=>d.remove(); prev.appendChild(d);
-}
-function candAction(id,kind){
-  const t=tk(id); if(!t) return;
-  t.flags=t.flags||[];
-  let line;
-  if(kind==="pick"){ t.stage=1; if(!t.flags.includes("선정")) t.flags.push("선정");
-    S.learning.push({t:t.title,a:"선정",topic:t.topic,fire:!!t.fire});
-    line="✅ 선정: "+t.title+" ("+t.topic+"/"+t.fmt+")";
-    if(!GH.connected()) pushDecision(line+" — 트렌드분석·리서치 학습신호(선호)", t.title.split(" — ")[0]+" 선정"); }
-  else { t.flags.push("버림");
-    S.learning.push({t:t.title,a:"탈락",topic:t.topic,fire:!!t.fire});
-    line="❌ 탈락: "+t.title+" ("+t.topic+")";
-    if(!GH.connected()) pushDecision(line+" — 트렌드분석·리서치 학습신호(비선호)", t.title.split(" — ")[0]+" 탈락"); }
-  // 연결됐으면 선택을 저장소 결정 인박스에 바로 기록(트렌드분석·리서치 학습 데이터)
-  if(GH.connected()){
-    GH.append("research/decisions-inbox.md","- "+ghStamp()+" "+line,"관제탑: 소재 결정 "+STATE.dateLabel)
-      .then(()=>toast("결정을 저장소에 기록했습니다 ✓")).catch(e=>toast("기록 실패: "+e.message));
-  }
-  save(); renderBoard();
-}
-
 /* 드로어 */
 const drawer=document.getElementById("drawer"), scrim=document.getElementById("scrim");
 let cur=null;
-function openDrawer(id){ cur=id; const t=tk(id); drawer.innerHTML=buildDetail(t);
+function openDrawer(id){ cur=id; const t=tk(id); if(!t) return;
+  drawer.innerHTML=buildDetail(t);
   drawer.classList.add("on"); scrim.classList.add("on");
-  drawer.querySelector(".close").onclick=closeDrawer; wireActions(t);
+  drawer.querySelector(".close").onclick=closeDrawer;
+  wireCarousel(t); wireActions(t); applyLock();
   drawer.querySelector(".dbody").scrollTop=0; }
 function closeDrawer(){ drawer.classList.remove("on"); scrim.classList.remove("on"); cur=null; }
 scrim.onclick=closeDrawer;
@@ -623,21 +637,47 @@ function buildDetail(t){
       +'<div class="why">해당 팀이 이 코멘트로 재작업합니다(저장소 결정 로그에 기록됨).</div></div>';
   });
 
+  // ── 발행 승인 화면 — 실제로 나갈 실물(카드 전 장 + 캡션 + 자동검수)을 한 화면에.
+  //    "타임라인을 읽고 짐작"이 아니라 "나갈 물건을 보고 결정"하게 한다.
+  let proof="";
+  if(t.stage>=4){
+    const pages=(t.pages&&t.pages.length)?t.pages:(t.thumb?[t.thumb]:[]);
+    if(pages.length){
+      proof+='<div class="pv"><div class="ph">📱 나갈 카드<span class="pn" id="pvn">1 / '+pages.length+'</span></div>'
+        +'<div class="pvframe"><img id="pvimg" src="'+img(pages[0])+'" alt="카드 1장"></div>';
+      if(pages.length>1){
+        proof+='<div class="pvnav"><button id="pvprev" aria-label="이전 장" disabled>‹</button>'
+          +'<span class="pvdots" id="pvdots">'+pages.map((_,k)=>'<i'+(k?"":' class="on"')+'></i>').join("")+'</span>'
+          +'<button id="pvnext" aria-label="다음 장">›</button></div>';
+      }
+      proof+='</div>';
+    }
+    const rv=t.review;
+    proof+='<div class="rvw '+(rv?(rv.verdict==="pass"?"pass":"block"):"none")+'">'
+      +(rv?(rv.verdict==="pass"?"✓ 자동검수 통과":"⚠ 자동검수 "+esc(rv.verdict))
+           +" — "+esc(rv.summary||("오류 "+rv.errors+" · 경고 "+rv.warns))
+         :"자동검수 리포트 없음 — 수치·레이아웃 확인을 오너가 직접 해야 합니다")+'</div>';
+    proof+='<div class="pv"><div class="ph">✍️ 업로드 캡션</div>'
+      +(t.caption?'<div class="cap">'+esc(t.caption)+'</div>'
+                 :'<div class="cap empty">캡션이 아직 없습니다 — 발행 전에 작성이 필요합니다.</div>')+'</div>';
+  }
+
   let acts="";
   if(t.stage===0 && !(t.flags||[]).includes("버림")){
     acts='<button class="btn primary" data-act="go">✅ 이 소재 진행</button>'
       +'<button class="btn ghost" data-act="hold">⏸ 보류</button>'
-      +'<button class="btn danger" data-act="drop">🗑 버림</button>';
+      +'<button class="btn danger" data-act="drop">🗑 버림</button>'+reasonBox();
   } else if(t.stage===4){
     acts='<button class="btn primary" data-act="publish">🚀 발행 승인</button>'
       +'<button class="btn ghost" data-act="edit">✏️ 수정지시</button>'
       +'<button class="btn danger" data-act="reject">❌ 반려</button>'
       +'<div class="editbox" id="editbox"><textarea id="edittext" placeholder="예) 제목 폰트 키우고 2·3위 재확인해줘"></textarea>'
-      +'<button class="btn primary" data-act="editsave">코멘트 남기기</button></div>';
+      +'<button class="btn primary" data-act="editsave">코멘트 남기기</button></div>'+reasonBox();
   } else if(t.auto){
     acts='<div class="why">자동 슬롯 — 사후 통보만. 무인 해제는 설정에서.</div>';
   } else {
-    acts='<div class="why">이 단계에선 오너 액션이 없습니다. 다음 검수·승인 단계에서 다시 알림.</div>';
+    acts='<div class="btn ghost" style="flex:1 0 100%;cursor:default">진행 중 — 이 단계에선 오너 액션이 없습니다</div>'
+      +'<button class="btn danger" data-act="drop">🗑 이 건 중단</button>'+reasonBox();
   }
 
   return '<div class="dhead"><button class="close" aria-label="닫기">✕</button>'
@@ -645,18 +685,86 @@ function buildDetail(t){
     +'<div class="row"><span class="chip '+(t.tier==="T1"?"t1":"t2")+'">'+(t.tier==="T1"?"주 콘텐츠":"부 콘텐츠")+'</span>'
     +'<span>'+esc(t.topic)+'</span><span>·</span><span>'+esc(t.fmt)+'</span><span>·</span><span>'+STAGES[t.stage]+'</span>'
     +(sum?'<span>·</span><span>리서치 '+sum+'점</span>':"")+'</div></div>'
-    +'<div class="dbody"><div class="tl">'+tl+'</div><div class="acts">'+acts+'</div></div>';
+    +'<div class="dbody">'+proof+'<div class="tl">'+tl+'</div></div>'
+    +'<div class="acts" data-lock>'+acts+'</div>';
+}
+
+/* ── 이유 입력 ──
+ * 반려·보류·중단에는 반드시 "왜"를 붙인다. 이유 없는 거절은 회사를 학습시키지 못하고,
+ * 다음에 똑같은 소재가 또 올라온다 (CEO.md §C — 같은 말을 두 번 하게 하지 않는다). */
+const REASONS=["시의성 없음","이미 다룬 주제","숫자가 약함","우리답지 않음","데이터 부족"];
+function reasonBox(){
+  return '<div class="rsn" id="rsnbox"><div class="q" id="rsnq">왜 그렇게 결정하셨나요?</div>'
+    +'<div class="chips">'+REASONS.map(r=>'<button type="button" data-rsn="'+esc(r)+'">'+esc(r)+'</button>').join("")+'</div>'
+    +'<input id="rsntext" placeholder="직접 입력 (선택) — 회사가 이 이유를 학습합니다">'
+    +'<div class="row"><button type="button" data-act="rsncancel">취소</button>'
+    +'<button type="button" class="sv" data-act="rsnok">기록하고 진행</button></div></div>';
+}
+
+function wireCarousel(t){
+  const pages=(t.pages&&t.pages.length)?t.pages:(t.thumb?[t.thumb]:[]);
+  if(pages.length<2) return;
+  const im=drawer.querySelector("#pvimg"), nEl=drawer.querySelector("#pvn"),
+        pv=drawer.querySelector("#pvprev"), nx=drawer.querySelector("#pvnext"),
+        dots=drawer.querySelector("#pvdots");
+  let k=0;
+  const paint=()=>{
+    im.src=img(pages[k]); im.alt="카드 "+(k+1)+"장";
+    nEl.textContent=(k+1)+" / "+pages.length;
+    pv.disabled=k===0; nx.disabled=k===pages.length-1;
+    [...dots.children].forEach((d,i)=>d.className=i===k?"on":"");
+  };
+  pv.onclick=()=>{ if(k>0){ k--; paint(); } };
+  nx.onclick=()=>{ if(k<pages.length-1){ k++; paint(); } };
 }
 
 function wireActions(t){
+  const box=()=>drawer.querySelector("#rsnbox");
+  let picked="", pending=null;
+  // 이유를 먼저 받고, [기록하고 진행]을 눌렀을 때 실제 동작을 실행한다
+  function ask(question, run){
+    const b=box(); if(!b){ run(""); return; }
+    picked=""; pending=run;
+    b.querySelector("#rsnq").textContent=question;
+    b.querySelectorAll("[data-rsn]").forEach(x=>x.classList.remove("on"));
+    b.querySelector("#rsntext").value="";
+    b.classList.add("on");
+    b.scrollIntoView({block:"nearest"});
+  }
+  drawer.querySelectorAll("[data-rsn]").forEach(b=>b.onclick=()=>{
+    picked=(picked===b.dataset.rsn?"":b.dataset.rsn);
+    drawer.querySelectorAll("[data-rsn]").forEach(x=>x.classList.toggle("on",x.dataset.rsn===picked));
+  });
+
   drawer.querySelectorAll("[data-act]").forEach(b=>{
     b.onclick=()=>{
       const a=b.dataset.act, ttl=short(t);
-      if(a==="go"){ t.stage=1; t.flags=(t.flags||[]).filter(f=>f!=="보류"); pushDecision("진행: "+t.title+" → 기획안","진행 기록됨"); done(ttl+" 기획으로"); }
-      if(a==="hold"){ t.flags=t.flags||[]; if(!t.flags.includes("보류")) t.flags.push("보류"); pushDecision("보류: "+t.title,"보류 기록됨"); done(ttl+" 보류"); }
-      if(a==="drop"){ t.flags=t.flags||[]; t.flags.push("버림"); pushDecision("버림: "+t.title,"제외 기록됨"); done(ttl+" 제외"); }
-      if(a==="publish"){ t.stage=5; pushDecision("발행 승인: "+t.title,"발행 승인 기록됨"); done(ttl+" 발행 승인"); }
-      if(a==="reject"){ t.stage=2; t.flags=t.flags||[]; t.flags.push("수정요청"); pushDecision("반려: "+t.title+" → 재작업","반려 기록됨"); done(ttl+" 반려"); }
+      if(a==="rsncancel"){ box().classList.remove("on"); pending=null; return; }
+      if(a==="rsnok"){
+        const free=(drawer.querySelector("#rsntext").value||"").trim();
+        const why=[picked,free].filter(Boolean).join(" · ");
+        box().classList.remove("on");
+        const run=pending; pending=null; if(run) run(why);
+        return;
+      }
+      // 미연결이면 기록이 남지 않으므로 아예 진행하지 않는다
+      if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
+
+      if(a==="go"){ t.stage=1; t.flags=(t.flags||[]).filter(f=>f!=="보류");
+        promoteIdea(t,1); pushDecision("진행: "+t.title+" → 기획안","진행 기록됨"); done(ttl+" 기획으로"); }
+      if(a==="hold"){ ask("왜 보류하시나요? (회사가 학습합니다)", (why)=>{
+        t.flags=t.flags||[]; if(!t.flags.includes("보류")) t.flags.push("보류");
+        pushDecision("보류: "+t.title+(why?" — 이유: "+why:""),"보류 기록됨"); done(ttl+" 보류"); }); }
+      if(a==="drop"){ ask("왜 접으시나요? (회사가 학습합니다)", (why)=>{
+        t.flags=t.flags||[]; t.flags.push("버림");
+        pushDecision("버림: "+t.title+(why?" — 이유: "+why:""),"제외 기록됨"); done(ttl+" 제외"); }); }
+      if(a==="publish"){
+        if(t.review && t.review.verdict!=="pass"
+          && !confirm("자동검수가 통과가 아닙니다("+t.review.verdict+").\n그래도 발행 승인할까요?")) return;
+        t.stage=5; queuePublish(t); done(ttl+" 발행 승인"); }
+      if(a==="reject"){ ask("왜 반려하시나요? (해당 팀이 이 이유로 다시 만듭니다)", (why)=>{
+        t.stage=2; t.flags=t.flags||[]; if(!t.flags.includes("수정요청")) t.flags.push("수정요청");
+        pushDecision("반려: "+t.title+" → 재작업"+(why?" — 이유: "+why:""),"반려 기록됨"); done(ttl+" 반려"); }); }
       if(a==="edit"){ drawer.querySelector("#editbox").classList.toggle("on"); return; }
       if(a==="editsave"){ const v=drawer.querySelector("#edittext").value.trim(); if(!v){ toast("코멘트를 입력하세요"); return; }
         t.comments=t.comments||[]; t.comments.push(v); t.flags=t.flags||[]; if(!t.flags.includes("수정요청")) t.flags.push("수정요청");
@@ -664,8 +772,15 @@ function wireActions(t){
     };
   });
 }
+/** 파이프라인에서 단계를 옮기면, 소재에서 승격된 티켓은 소재 원본(ideas.json)도 같이 옮긴다 */
+function promoteIdea(t,stage){
+  if(!t.ideaId) return;
+  const i=ideaById(t.ideaId); if(!i) return;
+  i.stage=stage; i.at=STATE.dateLabel;
+  queueSave("소재 단계 이동("+STAGES[stage]+") — "+i.title);
+}
 function short(t){ return t.title.split(" — ")[0]; }
-function done(msg){ save(); renderBoard(); closeDrawer(); toast(msg); }
+function done(msg){ save(); renderBoard(); renderInbox(); closeDrawer(); toast(msg); }
 
 
 let tmr=null;
@@ -733,14 +848,20 @@ function hiddenIdea(i){ return i.state==="reject"; }
 
 function ideaCard(i){
   const done=i.status==="done";
-  return '<div class="idea'+(done?" done":"")+'" data-iid="'+esc(i.id)+'" data-st="'+esc(i.state||"")+'"'+(hiddenIdea(i)?" hidden":"")+'>'
+  const inPipe=Number(i.stage||0)>=1;
+  // 파이프라인에 올라간 소재·이미 만든 소재는 '진행' 버튼 대신 현재 위치를 보여준다
+  const goBtn = (done||inPipe)
+    ? '<span class="isrc ok">'+(done?"제작완료":"▶ "+esc(STAGES[Math.min(Number(i.stage),STAGES.length-1)]))+'</span>'
+    : '<button class="ib go" data-ia="go" title="이 소재로 진행 — 파이프라인 기획안으로">▶</button>';
+  return '<div class="idea'+(done?" done":"")+(inPipe?" inpipe":"")+'" data-iid="'+esc(i.id)+'" data-st="'+esc(i.state||"")+'"'+(hiddenIdea(i)?" hidden":"")+'>'
     +'<div class="imain"><div class="it">'+esc(i.title)+(i.isNew?'<span class="iflag">NEW</span>':"")+'</div>'
-    +'<div class="iw">'+esc(i.why||"")+'</div></div>'
-    +'<div class="iside"><span class="isrc'+(done?" ok":"")+'">'+esc(i.source||"출처 미정")+'</span>'
+    +'<div class="iw">'+esc(i.why||"")+(i.reason?' <span style="color:var(--red)">· 이유: '+esc(i.reason)+'</span>':"")+'</div></div>'
+    +'<div class="iside"><span class="isrc">'+esc(i.source||"출처 미정")+'</span>'
     +'<div class="ibtns">'
-    +'<button class="ib ap" data-ia="approve" title="승인">✓</button>'
+    + goBtn
+    +'<button class="ib ap" data-ia="approve" title="승인 — 좋은 소재로 표시">✓</button>'
     +'<button class="ib hd" data-ia="hold" title="보류">⏸</button>'
-    +'<button class="ib rj" data-ia="reject" title="거부 — 목록에서 숨김">✕</button>'
+    +'<button class="ib rj" data-ia="reject" title="반려 — 이유를 남기면 회사가 학습합니다">✕</button>'
     +'<button class="ib sm ed" data-ia="edit" title="수정">✎</button>'
     +'<button class="ib sm dl" data-ia="delete" title="삭제">🗑</button>'
     +'</div></div>'
@@ -752,15 +873,18 @@ function ideaCard(i){
     +'</div></div>';
 }
 
-function renderIdeaGate(){
-  const g=document.getElementById("igate"); if(!g) return;
-  const on=GH.connected();
-  g.hidden=on;
-  if(!on) g.innerHTML='🔌 <b>읽기 전용</b> — 승인·수정·추가를 하려면 상단 <b>[연결하기]</b>로 GitHub 토큰을 넣으세요. '
-    +'연결하면 누르는 즉시 <code>'+esc(IPATH)+'</code>에 기록됩니다.';
+/** 반려·보류의 "왜"를 짧게 받는다. 취소하면 null — 상태를 바꾸지 않는다. */
+function askReason(kind, title){
+  const v=prompt(
+    (kind==="reject"?"왜 반려하시나요?":"왜 보류하시나요?")
+    +"\n\n「"+title+"」\n\n한 줄이면 충분합니다 — 회사가 이 이유를 학습해 다음 발굴에 반영합니다."
+    +"\n(예: "+REASONS.join(" / ")+")","");
+  if(v===null) return null;
+  return v.trim();
 }
+
 function renderIdeas(){
-  renderIdeaGate();
+  applyLock();
   const box=document.getElementById("ideaBody"); if(!box) return;
   const visible=IDEAS.filter(i=>!hiddenIdea(i));
   let html="";
@@ -800,8 +924,17 @@ function wireIdeas(){
       const act=b.dataset.ia;
       if(act==="cancel"){ card.classList.remove("editing"); return; }
       // 미연결 상태에서 바꾸면 새로고침 시 사라진다 → 아예 바꾸지 않고 연결을 요구한다
-      if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 상단 [연결하기]"); return; }
+      if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
       if(act==="edit"){ card.classList.add("editing"); card.querySelector(".e-t").focus(); return; }
+      // ▶ 진행 — 소재를 파이프라인 '기획안'으로 올린다. 이게 소재↔파이프라인 단일 배관.
+      if(act==="go"){
+        i.stage=1; i.state="approve"; i.at=STATE.dateLabel; i.reason="";
+        queueSave("소재 진행 — "+i.title);
+        pushDecision("▶ 진행: "+i.title+" → 기획안"+(i.why?" (사유: "+i.why+")":""), "진행 기록됨 — 기획안으로");
+        renderIdeas(); renderInbox();
+        toast("파이프라인 기획안으로 올렸습니다 — 🗂 탭에서 확인");
+        return;
+      }
       if(act==="save"){
         const t=(card.querySelector(".e-t").value||"").trim();
         if(!t){ toast("제목은 비울 수 없습니다"); return; }
@@ -815,11 +948,22 @@ function wireIdeas(){
         queueSave("소재 삭제 — "+i.title); renderIdeas(); toast("삭제됨");
         return;
       }
-      // 승인 / 보류 / 거부 — 같은 버튼 다시 누르면 해제
-      i.state = (i.state===act ? "" : act);
+      // 승인 / 보류 / 반려 — 같은 버튼 다시 누르면 해제
+      const next = (i.state===act ? "" : act);
+      // 반려·보류에는 이유를 받는다. 이유 없는 거절은 회사를 학습시키지 못한다.
+      if(next==="reject"||next==="hold"){
+        const why=askReason(next, i.title);
+        if(why===null) return; // 취소 — 상태를 건드리지 않는다
+        i.reason=why;
+        pushDecision((next==="reject"?"❌ 반려":"⏸ 보류")+": "+i.title
+          +(why?" — 이유: "+why:" — 이유 미기재"), (next==="reject"?"반려":"보류")+" 기록됨");
+      } else {
+        i.reason="";
+      }
+      i.state=next; i.at=STATE.dateLabel;
       queueSave("소재 결정("+(i.state||"해제")+") — "+i.title);
-      renderIdeas();
-      if(i.state==="reject") toast("목록에서 숨김 — 위 '숨긴 항목'에서 되돌릴 수 있어요");
+      renderIdeas(); renderInbox();
+      if(i.state==="reject") toast("반려됨 — 위 '숨긴 항목'에서 되돌릴 수 있어요");
     });
   });
 }
@@ -843,18 +987,20 @@ function wireIdeaTools(){
     box.classList.remove("on"); renderIdeas(); toast("추가됨 — 저장소에 기록됩니다");
   };
 
-  // 소재 발굴 요청 — 방향을 적어 저장소 결정 로그에 남긴다(세션이 그 방향으로 발굴)
+  // 새 소재 발굴 — 방향을 저장소에 남기고, 수집 워크플로도 같이 돌린다(버튼 하나로 통합)
   const dig=document.getElementById("imineBtn");
-  if(dig) dig.onclick=()=>{
-    const v=prompt("어떤 방향으로 새 소재를 찾을까요?\n(예: 8월 시의성 부동산 / 20~30대 공감 통계 / 지도 엔진 재사용)","");
+  if(dig) dig.onclick=async()=>{
+    if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
+    const v=prompt("어떤 방향으로 새 소재를 찾을까요?\n(예: 8월 시의성 부동산 / 20~30대 공감 통계 / 지도 엔진 재사용)\n\n비워도 됩니다 — 그러면 최근 반려 이유를 참고해 알아서 찾습니다.","");
     if(v===null) return;
-    const t=v.trim(); if(!t){ toast("방향을 적어주세요"); return; }
-    pushDecision("🔎 신규 소재 발굴 요청 — "+t, "발굴 요청 기록됨");
+    const t=(v||"").trim();
+    // 최근 반려 이유를 같이 실어 보낸다 — 같은 걸 또 들고 오지 않도록
+    const avoid=IDEAS.filter(x=>x.state==="reject"&&x.reason).slice(-5).map(x=>x.reason);
+    pushDecision("🔎 신규 소재 발굴 요청"+(t?" — "+t:" — 방향 지정 없음")
+      +(avoid.length?" [피할 것: "+avoid.join(" / ")+"]":""), "발굴 요청 기록됨");
+    try{ await GH.dispatch("research-digest.yml",{}); toast("발굴 요청 기록 + 수집 워크플로 시작 ✓"); }
+    catch(e){ toast("기록됨 — 수집 워크플로는 수동 실행이 필요합니다"); }
   };
-
-  // 마이닝 워크플로 즉시 실행
-  const run=document.getElementById("imineRun");
-  if(run) run.onclick=()=>runWf(GH_WF[0]);
 
   // 자료 인박스 — research/INBOX.md 에 바로 커밋
   const kb=document.getElementById("kadd2");
@@ -874,11 +1020,21 @@ function wireIdeaTools(){
   if(rl) rl.onclick=()=>location.reload();
 }
 
-renderGhBar();
+/* 연결 뱃지 토글 — 바깥을 누르면 닫힌다 */
+const connBtn=document.getElementById("connbtn");
+if(connBtn) connBtn.onclick=(e)=>{ e.stopPropagation(); document.getElementById("connpop").classList.toggle("on"); };
+document.addEventListener("click",(e)=>{
+  const pop=document.getElementById("connpop");
+  if(pop&&pop.classList.contains("on")&&!pop.contains(e.target)) pop.classList.remove("on");
+});
+
+renderConn();
 renderBoard();
 renderIdeas();
-if(location.hash) openTab(location.hash.slice(1));
+renderInbox();
 wireIdeaTools();
+applyLock();
+if(location.hash) openTab(location.hash.slice(1));
 setSave(GH.connected()?"ok":"off");
 `;
 
@@ -904,9 +1060,9 @@ function ideasHtml(state: TowerState): string {
   <section class="ipanel">
     <div class="ih">💡 소재 보드<span class="n" id="icount">${visible}건</span></div>
     <div class="igate" id="igate" hidden></div>
-    <div class="itools">
+    <div class="itools" data-lock>
       <button class="itool prim" id="iaddBtn">➕ 새 소재</button>
-      <button class="itool" id="imineBtn">🔎 소재 발굴 요청</button>
+      <button class="itool" id="imineBtn">🔎 새 소재 발굴</button>
       <button class="itool" id="ireload">🔄 새로고침</button>
       <span class="path" style="margin-left:auto;font-size:11px;color:var(--gray)">제작 완료 ${done}건</span>
     </div>
@@ -925,12 +1081,12 @@ function ideasHtml(state: TowerState): string {
   </section>
 
   <aside class="ipanel">
-    <div class="ih">⛏ 마이닝</div>
+    <div class="ih">🔎 소재 발굴</div>
     <div style="font-size:11.5px;color:var(--gray);line-height:1.6;margin-bottom:10px">
-      주제 비중대로 새 소재를 수집합니다. 실행하면 저장소의 마이닝 워크플로가 <b>바로 돕니다</b>.
+      왼쪽 <b>[새 소재 발굴]</b>을 누르면 방향을 적을 수 있고, 그 방향으로 수집이 <b>바로 시작</b>됩니다.
+      최근 <b>반려 이유</b>를 같이 보내서 같은 소재가 또 올라오지 않게 합니다.
     </div>
-    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">${weights}</div>
-    <button class="itool prim" id="imineRun" style="width:100%">⛏ 마이닝 실행</button>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:4px">${weights}</div>
     <div class="ih" style="margin-top:16px">💬 자료 인박스</div>
     <div style="font-size:11.5px;color:var(--gray);line-height:1.6;margin-bottom:8px">
       기사·수치·메모를 붙여넣으면 <code>research/INBOX.md</code>에 바로 커밋됩니다.
@@ -1052,20 +1208,28 @@ export function renderTowerBody(state: TowerState): string {
   <span class="sub">관제탑 · Control&nbsp;Tower</span>
   <span class="badge-live">LIVE</span>
   <span class="date">${esc(state.dateLabel)}</span>
+  <button class="conn" id="connbtn" type="button"><span class="led"></span>연결 필요</button>
 </header>
+<div class="connpop" id="connpop"></div>
 
 <div class="kpis">${kpiHtml(state)}</div>
 
-<div class="ghbar" id="ghbar"></div>
-
 <nav class="tabs">
-  <button class="tab on" data-v="board">🗂 파이프라인</button>
+  <button class="tab on" data-v="today">🔔 오늘</button>
+  <button class="tab" data-v="board">🗂 파이프라인</button>
   <button class="tab" data-v="ideas">💡 소재</button>
   <button class="tab" data-v="company">🏢 회사</button>
   <button class="tab" data-v="assets">📦 자산</button>
 </nav>
 
-<section id="view-board" class="view on">
+<section id="view-today" class="view on">
+  <div class="inbox">
+    <h2>🔔 오늘 결정할 일<span class="n" id="inboxN" hidden>0건</span></h2>
+    <div id="inboxBody"></div>
+  </div>
+</section>
+
+<section id="view-board" class="view">
   <div class="notice"><span>티켓을 눌러 <b>판단·근거</b>를 보고 <b>승인/보류/수정지시</b>를 내립니다.</span><span>결정은 <b>저장소에 바로 기록</b>됩니다(하단 저장 상태 확인).</span></div>
   <main class="board" id="board"></main>
 </section>

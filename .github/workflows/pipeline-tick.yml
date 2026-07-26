@@ -1,0 +1,81 @@
+name: 파이프라인 진행 (승인 → 실행)
+
+# 오너의 승인이 "기록"에서 끝나지 않고 실제 일로 이어지게 하는 워크플로.
+#
+#   소재 [▶ 진행]  → research/ideas.json 에 stage:1  → 여기서 작업지시서 생성
+#   [🚀 발행 승인] → data/publish-queue.md 에 한 줄  → 여기서 대기열 점검·알림
+#
+# 왜 별도 워크플로인가: 관제탑 배포(tower-deploy)는 "화면을 새로 만드는" 일이고,
+# 이건 "일을 진행시키는" 일이다. 섞으면 한쪽 실패가 다른 쪽을 막는다.
+on:
+  push:
+    branches:
+      - claude/instagram-content-automation-roadmap-fxnb7p
+    paths:
+      - "research/ideas.json"
+      - "data/publish-queue.md"
+  schedule:
+    - cron: "0 22 * * *" # 매일 07:00 KST — 밤새 쌓인 결정을 정리하고 아침에 알린다
+  workflow_dispatch:
+
+concurrency:
+  group: pipeline-tick
+  cancel-in-progress: false # 승인 처리는 취소하면 안 된다
+
+permissions:
+  contents: write
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: claude/instagram-content-automation-roadmap-fxnb7p
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # ⑧ 승인된 소재 → 작업지시서. 이미 있으면 만들지 않는다(멱등).
+      - name: 작업지시서 생성
+        run: node scripts/open-work-orders.mjs
+
+      # ⑨ 발행 대기열 점검 — 무엇이 올라갈 준비가 됐는지 사람이 읽을 수 있게 요약
+      - name: 발행 대기열 점검
+        run: node scripts/check-publish-queue.mjs
+
+      # ⑪ 성과 회수 — 발행된 카드의 도달·저장 수를 되가져온다(토큰 없으면 건너뜀)
+      - name: 성과 회수
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+        run: node scripts/collect-insights.mjs
+
+      - name: 변경 사항 커밋
+        run: |
+          git config user.name  "wirit-bot"
+          git config user.email "noreply@github.com"
+          paths="research/work-orders data/publish-queue.md data/performance.md"
+          if [ -n "$(git status --porcelain -- $paths)" ]; then
+            git add -- $paths
+            git commit -m "파이프라인: 승인 처리(작업지시서·발행 대기열·성과)"
+            git push origin claude/instagram-content-automation-roadmap-fxnb7p
+          else
+            echo "커밋할 변경 없음"
+          fi
+
+      # ⑩ 카카오톡 알림 — 결정할 일이 있을 때만 보낸다(시크릿 없으면 조용히 건너뜀)
+      - name: 카카오톡 알림
+        env:
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
+          TOWER_URL: https://wirit-tower.engineerest0.workers.dev/
+        run: |
+          # 관제탑 상태를 먼저 만들어야 "결정할 일"을 셀 수 있다
+          pnpm --filter @wirit/dashboard-static state || true
+          node scripts/notify-kakao.mjs

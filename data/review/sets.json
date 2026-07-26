@@ -1,0 +1,48 @@
+{
+  "_": [
+    "발행 세트 정의 — '오너가 한 번에 승인하는 단위'를 명시한다.",
+    "",
+    "왜 필요한가: data/content 에는 실험 렌더·중간 산출물이 섞여 있다.",
+    "이걸 전부 '발행 승인 대기'로 띄우면 관제탑 결정함이 수십 건으로 불어나 못 쓴다.",
+    "여기에 적힌 세트만 진짜 발행 후보로 취급하고, 나머지는 파이프라인 목록에만 남긴다.",
+    "",
+    "cards = data/content/{날짜}/{slug}.json 의 slug. 적은 순서가 캐러셀 순서다.",
+    "caption = data/review/captions/{caption}.txt (없으면 label 과 같은 이름을 찾는다).",
+    "review = data/review/{review}.json (없으면 label 과 같은 이름을 찾는다).",
+    "",
+    "새 카드를 만들면 여기에 한 줄 추가한다 — 추가하지 않으면 발행 후보로 올라오지 않는다."
+  ],
+  "sets": [
+    {
+      "label": "tohuh-rank",
+      "title": "🔥 2026년 6월 신고가 쏟아진 지역은? (토허제 기준)",
+      "cards": ["tohuh-rank"],
+      "caption": "tohuh-rank",
+      "review": "토허제 신고가 지도"
+    },
+    {
+      "label": "index-2026",
+      "title": "2026년 국장 성적표 — 코스피·코스닥 고점 대비",
+      "cards": ["index-2026"],
+      "caption": "index-2026"
+    },
+    {
+      "label": "estate-84",
+      "title": "서울 아파트 실거래 랭킹 84㎡ (2026 상반기)",
+      "cards": ["estate-cover-84", "maprank-84-p1", "maprank-84-p2"],
+      "caption": "estate-84"
+    },
+    {
+      "label": "estate-59",
+      "title": "서울 아파트 실거래 랭킹 59㎡ (2026 상반기)",
+      "cards": ["estate-cover-59", "maprank-59-p1", "maprank-59-p2"],
+      "caption": "estate-59"
+    },
+    {
+      "label": "metro-speed",
+      "title": "수도권 지하철 노선·구간별 표정속도",
+      "cards": ["metro-cover-photo", "metro-2col"],
+      "caption": ""
+    }
+  ]
+}

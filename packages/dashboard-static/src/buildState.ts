@@ -6,7 +6,7 @@ import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { join, basename } from "node:path";
 import { P, REPO_ROOT } from "./paths.js";
 import { STAGES, RUBRIC_LABELS } from "./types.js";
-import type { TowerState, Ticket, TimelineEntry, Idea, IdeaCat } from "./types.js";
+import type { TowerState, Ticket, TimelineEntry, Idea, IdeaCat, Evidence } from "./types.js";
 import { parseBrief } from "./parse/brief.js";
 import { parseDecisionLog } from "./parse/decisionLog.js";
 import { parseCeoPrinciples, parseTeamCard } from "./parse/company.js";
@@ -108,7 +108,7 @@ export function buildState(): TowerState {
     : [];
 
   // 렌더 완료 산출물로 결정 티켓 승격 + 디자인 타임라인
-  const produced = collectProduced(P.content, P.out);
+  const produced = collectProduced(P.content, P.out, P.review);
   const usedProduced = new Set<string>();
 
   for (const t of decided) {
@@ -118,6 +118,9 @@ export function buildState(): TowerState {
       const key = intern(match.thumb);
       t.stage = 4; // 승인대기 (렌더 완료·발행 전)
       t.thumb = key;
+      t.pages = match.pages.map((u) => intern(u)!).filter(Boolean);
+      t.caption = match.caption;
+      t.review = match.review;
       t.fmt = match.fmt || t.fmt;
       const tl: TimelineEntry = {
         team: "🎨 디자인팀",
@@ -137,6 +140,8 @@ export function buildState(): TowerState {
   const extraProduced: Ticket[] = [];
   for (const p of produced) {
     if (usedProduced.has(p.slug + "@" + p.date)) continue;
+    // 세트의 2·3장은 대표 장에 캐러셀로 합쳐졌으므로 따로 티켓을 만들지 않는다
+    if (!p.setLead) continue;
     const key = intern(p.thumb);
     extraProduced.push({
       id: `p-${p.date}-${p.slug}`,
@@ -158,7 +163,12 @@ export function buildState(): TowerState {
         },
       ],
       thumb: key,
-      flags: [],
+      pages: p.pages.map((u) => intern(u)!).filter(Boolean),
+      caption: p.caption,
+      review: p.review,
+      // 발행 세트에 등록되지 않은 렌더는 실험·중간 산출물이다.
+      // 파이프라인 목록에는 남기되 결정함(오늘 결정할 일)에는 올리지 않는다.
+      flags: p.setLabel ? [] : ["실험"],
       origin: "produced",
       provenance: p.contentPath,
     });
@@ -173,7 +183,61 @@ export function buildState(): TowerState {
     return true;
   });
 
-  const tickets: Ticket[] = [...freshCandidates, ...decided, ...extraProduced];
+  // ── 소재 보드 — research/ideas.json 이 단일 원천(관제탑이 직접 되쓰는 파일).
+  let ideaCats: IdeaCat[] = [];
+  let ideaItems: Idea[] = [];
+  if (existsSync(P.ideasJson)) {
+    try {
+      const j = JSON.parse(readFileSync(P.ideasJson, "utf8"));
+      ideaCats = Array.isArray(j.cats) ? j.cats : [];
+      ideaItems = Array.isArray(j.ideas) ? j.ideas : [];
+    } catch {
+      // 깨진 JSON이면 보드만 비우고 나머지 관제탑은 정상 렌더(전체 실패 방지)
+    }
+  }
+
+  // ── 소재 → 파이프라인 배관 (2026-07-26)
+  // 오너가 소재 탭에서 "진행"을 누르면 그 소재에 stage가 붙는다.
+  // 아직 카드가 안 나온 소재는 여기서 티켓으로 승격돼 칸반에 뜬다.
+  // 이미 렌더된 카드가 있으면 그 티켓이 진짜이므로 중복 생성하지 않는다.
+  const catLabel = new Map(ideaCats.map((c) => [c.key, c.label]));
+  const existingTitles = [...decided, ...extraProduced].map((t) => normTitle(t.title));
+  const promoted: Ticket[] = [];
+  for (const it of ideaItems) {
+    const st = Number(it.stage || 0);
+    if (st < 1) continue;
+    const n = normTitle(it.title);
+    if (existingTitles.some((e) => e.includes(n) || n.includes(e))) continue;
+    promoted.push({
+      id: `idea-${it.id}`,
+      title: it.title,
+      topic: catLabel.get(it.cat) || it.cat || "소재",
+      tier: "T1",
+      fire: false,
+      fmt: "미정",
+      stage: Math.min(st, STAGES.length - 1),
+      rubric: null,
+      evidence: [
+        ...(it.why ? ([["선정 사유", it.why]] as Evidence[]) : []),
+        ...(it.source ? ([["출처", it.source]] as Evidence[]) : []),
+      ],
+      timeline: [
+        {
+          team: "🧑‍💼 오너",
+          tag: "소재 승인",
+          say: `이 소재로 진행 — ${it.why || "관제탑 소재 보드에서 승인"}`,
+          why: `research/ideas.json · ${it.id}${it.at ? ` · ${it.at}` : ""}`,
+        },
+      ],
+      thumb: null,
+      flags: [],
+      origin: "ideas",
+      provenance: `research/ideas.json#${it.id}`,
+      ideaId: it.id,
+    });
+  }
+
+  const tickets: Ticket[] = [...freshCandidates, ...decided, ...extraProduced, ...promoted];
 
   // 회사 탭
   const ceoMd = existsSync(P.ceo) ? readFileSync(P.ceo, "utf8") : "";
@@ -203,33 +267,30 @@ export function buildState(): TowerState {
 
   const { from, label } = deriveDateLabel(brief);
 
-  // 소재 보드 — research/ideas.json 이 단일 원천(관제탑이 직접 되쓰는 파일).
-  let ideaCats: IdeaCat[] = [];
-  let ideaItems: Idea[] = [];
-  if (existsSync(P.ideasJson)) {
-    try {
-      const j = JSON.parse(readFileSync(P.ideasJson, "utf8"));
-      ideaCats = Array.isArray(j.cats) ? j.cats : [];
-      ideaItems = Array.isArray(j.ideas) ? j.ideas : [];
-    } catch {
-      // 깨진 JSON이면 보드만 비우고 나머지 관제탑은 정상 렌더(전체 실패 방지)
-    }
-  }
+  // 소재 풀 = 아직 결정 안 난 소재(거부·제작완료 제외) — 오너가 골라줄 대상
+  const openIdeas = ideaItems.filter((i) => i.state !== "reject" && i.status !== "done" && !Number(i.stage || 0));
+  const undecided = openIdeas.filter((i) => !i.state).length;
+
+  // 발행 승인 후보 = 카드 + 캡션이 다 준비된 것. 캡션이 없으면 올릴 글이 없어 결정 대상이 아니다.
+  // (관제탑 결정함과 반드시 같은 기준을 써야 KPI 숫자와 목록이 어긋나지 않는다)
+  const readyToPublish = tickets.filter(
+    (t) => t.stage === 4 && !t.flags.includes("실험") && !t.flags.includes("버림") && !!t.caption
+  ).length;
 
   const counts = {
-    candidates: tickets.filter((t) => t.stage === 0 && !t.flags.includes("버림")).length,
+    candidates: undecided,
     inProgress: tickets.filter((t) => t.stage >= 1 && t.stage <= 3).length,
-    awaiting: tickets.filter((t) => t.stage === 4).length,
+    awaiting: readyToPublish,
     published: tickets.filter((t) => t.stage === 5).length,
   };
 
-  // KPI — 발행 전이라 정직하게 0/placeholder. 자산 재사용률만 실측.
+  // KPI — 오너가 "지금 뭘 해야 하나"를 읽는 줄. 결정 대기가 맨 앞.
   const totalAssets = assets.reduce((a, g) => a + g.count, 0);
   const kpi = [
-    { label: "주간 발행", value: String(counts.published), note: "M0 키 발급 후 가동" },
-    { label: "승인 대기", value: String(counts.awaiting), note: "렌더 완료·오너 확인 대기" },
-    { label: "소재 후보", value: String(counts.candidates), note: "보드+아이디어" },
-    { label: "자산 재사용", value: String(totalAssets), note: "허브 등록 자산 수" },
+    { label: "결정 대기", value: String(readyToPublish + (undecided ? 1 : 0)), note: `발행 ${readyToPublish} · 미결 소재 ${undecided}` },
+    { label: "제작 중", value: String(counts.inProgress), note: "기획~검수 진행" },
+    { label: "소재 풀", value: String(openIdeas.length), note: `미결 ${undecided}건` },
+    { label: "자산", value: String(totalAssets), note: "재사용 가능 자산" },
   ];
 
   return {
