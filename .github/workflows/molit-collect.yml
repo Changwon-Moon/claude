@@ -77,6 +77,8 @@ jobs:
             echo "변경 없음"
           else
             git commit -m "실거래(국토부) 수집 ${{ github.event.inputs.gu }}"
-            git pull --rebase origin ${GITHUB_REF_NAME}
+            # --autostash: 수집기가 남긴 부산물(data/raw 등) 때문에 rebase가 거부되어
+            # **커밋해 놓고 push를 못 한 채 죽는** 일이 있었다(2026-07-26 소재 발굴).
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
             git push origin HEAD:${GITHUB_REF_NAME}
           fi
