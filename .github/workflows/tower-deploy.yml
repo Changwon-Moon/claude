@@ -21,6 +21,7 @@ on:
       - "prompts/**"
       - "data/datasets/**"
       - "data/review/sets.json"
+      - "data/archive/**"
       - "data/publish-queue.md"
       - "data/performance.md"
       - "scripts/build-tower-site.mjs"
@@ -89,6 +90,10 @@ jobs:
           done
           echo "생성된 PNG: $(find data/out -name '*-p1.png' 2>/dev/null | wc -l)장" 
           exit 0
+
+      # 완성 작업물을 주제별로 정리한 색인 — 관제탑 보관함 탭이 이걸 읽는다
+      - name: 보관함 색인
+        run: node scripts/build-archive.mjs
 
       - name: 사이트 조립
         run: node scripts/build-tower-site.mjs

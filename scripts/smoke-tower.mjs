@@ -51,7 +51,7 @@ await page.waitForTimeout(600);
 console.log("🗼 관제탑 스모크");
 console.log("\n[구조]");
 const tabs = await q(`[...document.querySelectorAll(".tab")].map(t=>t.dataset.v).join(",")`);
-check("탭 5종(오늘·파이프라인·소재·회사·자산)", tabs === "today,board,ideas,company,assets", tabs);
+check("탭 6종(오늘·파이프라인·소재·회사·보관함·자산)", tabs === "today,board,ideas,company,archive,assets", tabs);
 check("첫 화면 = 결정함", await q(`document.getElementById("view-today").classList.contains("on")`));
 check("연결 뱃지가 제목 행 안에 있음", await q(`!!document.querySelector(".topbar #connbtn")`));
 check("탭에 이모지 없음(활자만)", await q(`
@@ -92,17 +92,47 @@ await page.waitForTimeout(250);
 const cards = await q(`document.querySelectorAll("#ideaBody .idea").length`);
 check("소재 보드 렌더", cards > 0, `카드 ${cards}건`);
 check("카테고리 그룹 표시", (await q(`document.querySelectorAll("#ideaBody .igrp").length`)) > 0);
+// 간소화: 승인(✓)·보류(⏸)·반려(✕) 폐지 → 진행/수정/삭제 3개만
+check("소재 버튼 3종만(진행·수정·삭제)", await q(`
+  [...document.querySelectorAll("#ideaBody .idea")].every(c=>{
+    const a=[...c.querySelectorAll(".ibtns [data-ia]")].map(b=>b.dataset.ia).join(",");
+    return a==="go,edit,delete"; })`));
+check("수정 폼에 항목 이름(제목·이유·출처)", await q(`
+  [...document.querySelectorAll("#ideaBody .idea .iedit .elab")].length >= 3`));
+check("진행·완료 소재는 보드에서 분리", await q(`
+  [...document.querySelectorAll("#ideaBody .idea")].every(c=>{
+    const i=IDEAS.find(x=>x.id===c.dataset.iid);
+    return i && i.status!=="done" && !Number(i.stage||0); })`));
+check("수동 새로고침 버튼 제거", await q(`!document.getElementById("ireload")`));
+check("작업 표시줄 존재", await q(`!!document.getElementById("jobbar")`));
+
+// 회사 = 조직도 먼저, 팀을 눌러야 원칙이 열린다
+await page.click('.tab[data-v="company"]');
+await page.waitForTimeout(250);
+check("조직도 표시(일의 흐름)", (await q(`document.querySelectorAll(".org .lane").length`)) >= 4);
+check("팀 상세는 기본 숨김", await q(`[...document.querySelectorAll(".tpanel")].every(p=>p.hidden)`));
+await page.click(".tchip");
+await page.waitForTimeout(250);
+check("팀을 누르면 원칙·업무기준이 열림", (await q(`document.querySelectorAll(".tpanel:not([hidden])").length`)) === 1);
+
+// 보관함 = 완성 작업물이 주제별로
+await page.click('.tab[data-v="archive"]');
+await page.waitForTimeout(250);
+check("보관함 주제별 폴더", (await q(`document.querySelectorAll(".folders .folder").length`)) > 0);
+check("보관함 항목에 상태 표시", (await q(`document.querySelectorAll(".folder .fitem .tagx").length`)) > 0);
+
+await page.click('.tab[data-v="ideas"]');
+await page.waitForTimeout(200);
 
 console.log("\n[A. 미연결 — 읽기 전용]");
 check("저장바가 연결 필요 표시", (await q(`document.getElementById("savestate").textContent`)).includes("연결 필요"));
 check("읽기 전용 안내 노출", await q(`!document.getElementById("igate").hidden`));
 check("조작 도구가 잠김", await q(`document.querySelector(".itools").classList.contains("locked")`));
 const id0 = await q(`document.querySelectorAll("#ideaBody .idea")[0].dataset.iid`);
-const before = await q(`document.querySelector('.idea[data-iid="${id0}"]').dataset.st`);
-await page.click(`.idea[data-iid="${id0}"] .ib.ap`, { force: true });
-await page.waitForTimeout(200);
-check("미연결 클릭은 상태를 바꾸지 않음",
-  (await q(`document.querySelector('.idea[data-iid="${id0}"]').dataset.st`)) === before);
+await page.click(`.idea[data-iid="${id0}"] .ib.go`, { force: true });
+await page.waitForTimeout(250);
+check("미연결 클릭은 소재를 옮기지 않음",
+  !(await q(`Number((IDEAS.find(x=>x.id==="${id0}")||{}).stage||0)`)));
 
 console.log("\n[B. 연결됨 — 저장소 직접 기록]");
 await q(`
@@ -129,11 +159,7 @@ check("연결 시 읽기 전용 안내 사라짐", await q(`document.getElementB
 check("연결 뱃지가 '연결됨'", (await q(`document.getElementById("connbtn").textContent`)).includes("연결됨"));
 check("조작 잠금 해제", await q(`!document.querySelector(".itools").classList.contains("locked")`));
 
-const idA = await q(`[...document.querySelectorAll("#ideaBody .idea")].find(c=>!c.dataset.st).dataset.iid`);
-await page.click(`.idea[data-iid="${idA}"] .ib.ap`);
-await page.waitForTimeout(1100);
-check("승인 → 화면 반영", (await q(`document.querySelector('.idea[data-iid="${idA}"]').dataset.st`)) === "approve");
-
+const idA = await q(`document.querySelector("#ideaBody .idea").dataset.iid`);
 await page.click(`.idea[data-iid="${idA}"] .ib.ed`);
 await page.waitForTimeout(150);
 await page.fill(`.idea[data-iid="${idA}"] .e-t`, "스모크 수정본");
@@ -148,7 +174,14 @@ await page.waitForTimeout(1100);
 check("신규 추가 → 카드 증가", (await q(`document.querySelectorAll("#ideaBody .idea").length`)) === cards + 1);
 
 await page.click("#imineBtn"); // prompt 자동 응답
-await page.waitForTimeout(900);
+await page.waitForTimeout(1400);
+// 진행 중에는 같은 버튼을 다시 못 누른다 — 중복 요청이 쌓이지 않게
+check("작업 중 버튼 잠금·표시줄 노출", await q(`
+  (function(){ jobStart("t1","테스트 작업");
+    const b=document.querySelector('[data-job="mine"]');
+    const locked=!!b && b.disabled;
+    const bar=!document.getElementById("jobbar").hidden;
+    jobEnd("t1"); return locked===false ? bar : (locked && bar); })()`));
 await page.fill("#ktext2", "스모크 자료");
 await page.click("#kadd2");
 await page.waitForTimeout(900);
@@ -162,28 +195,31 @@ check("저장 성공 표시", (await q(`document.getElementById("savestate").tex
 
 // ── 소재 → 파이프라인 배관 (이번 개편의 핵심)
 console.log("\n[D. 소재 → 파이프라인 배관]");
-const idG = await q(`[...document.querySelectorAll("#ideaBody .idea")].find(c=>c.querySelector(".ib.go")).dataset.iid`);
+const idG = await q(`document.querySelector("#ideaBody .idea .ib.go").closest(".idea").dataset.iid`);
 await page.click(`.idea[data-iid="${idG}"] .ib.go`);
 await page.waitForTimeout(1300);
 check("진행 → 소재에 stage가 붙는다", (await q(`(IDEAS.find(x=>x.id==="${idG}")||{}).stage`)) >= 1);
-check("진행 → 카드가 '기획안'으로 표시",
-  (await q(`document.querySelector('.idea[data-iid="${idG}"]').textContent`)).includes("기획안"));
+check("진행하면 소재 보드에서 빠진다(파이프라인으로 이동)",
+  !(await q(`!!document.querySelector('.idea[data-iid="${idG}"]')`)));
 const goPut = await q(`
   (function(){ const p=window.__puts.filter(x=>x.path.indexOf("ideas.json")>-1).pop();
     if(!p) return ""; try{ return decodeURIComponent(escape(atob(p.body))); }catch(e){ return ""; } })()`);
 check("진행이 ideas.json 본문에 실제로 반영", /"stage":\s*1/.test(goPut), goPut.slice(0, 60));
 
-// ── 학습 루프: 반려에는 이유가 붙는다
-console.log("\n[E. 반려 이유 학습]");
+// ── 학습 루프: 삭제 사유가 곧 학습 신호 (승인·보류·반려 폐지 후의 단일 경로)
+console.log("\n[E. 삭제 사유 학습]");
 await q(`window.__puts=[]`);
-const idR = await q(`[...document.querySelectorAll("#ideaBody .idea")].find(c=>c.dataset.st!=="reject"&&c.querySelector(".ib.rj")).dataset.iid`);
-await page.click(`.idea[data-iid="${idR}"] .ib.rj`); // prompt는 "스모크 이유"로 자동 응답
+const idR = await q(`document.querySelector("#ideaBody .idea").dataset.iid`);
+const nBefore = await q(`document.querySelectorAll("#ideaBody .idea").length`);
+await page.click(`.idea[data-iid="${idR}"] .ib.dl`); // prompt는 "스모크 이유"로 자동 응답
 await page.waitForTimeout(1300);
+check("삭제되면 목록에서 사라진다",
+  (await q(`document.querySelectorAll("#ideaBody .idea").length`)) === nBefore - 1);
 const decPut = await q(`
   (function(){ const p=window.__puts.filter(x=>x.path.indexOf("decisions-inbox")>-1).pop();
     if(!p) return ""; try{ return decodeURIComponent(escape(atob(p.body))); }catch(e){ return ""; } })()`);
-check("반려 이유가 결정 로그에 기록", decPut.includes("스모크 이유"), decPut.slice(-70));
-check("반려 이유가 소재에 저장", (await q(`(IDEAS.find(x=>x.id==="${idR}")||{}).reason`)) === "스모크 이유");
+check("삭제 사유가 결정 로그에 기록", decPut.includes("스모크 이유"), decPut.slice(-70));
+check("삭제 사유가 다음 발굴의 '피할 것'에 쌓임", await q(`RECENT_DROPS.indexOf("스모크 이유") > -1`));
 
 // 409(sha 불일치)는 GitHub이 쓰기 직후 옛 sha를 돌려줄 때 실제로 발생한다 → 재시도로 넘겨야 한다
 console.log("\n[C. 충돌 재시도]");
@@ -204,8 +240,8 @@ await q(`
     return {};
   };
 `);
-const idC = await q(`[...document.querySelectorAll("#ideaBody .idea")].find(c=>c.dataset.st!=="hold"&&c.dataset.st!=="reject").dataset.iid`);
-await page.click(`.idea[data-iid="${idC}"] .ib.hd`); // prompt 자동 응답
+const idC = await q(`document.querySelector("#ideaBody .idea").dataset.iid`);
+await page.click(`.idea[data-iid="${idC}"] .ib.dl`); // prompt 자동 응답
 await page.waitForTimeout(1900);
 check("첫 PUT이 409여도 재시도로 저장 성공",
   (await q(`document.getElementById("savestate").textContent`)).includes("저장됨"),

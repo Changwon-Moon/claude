@@ -131,6 +131,26 @@ export interface Idea {
   at?: string;
 }
 
+/** 보관함 한 칸 = 주제 하나. 안에 완성 작업물이 최근 순으로 들어간다. */
+export interface ArchiveWork {
+  label: string;
+  title: string;
+  topic: string;
+  date: string;
+  cards: number;
+  pages: number;
+  /** 미승인 | 발행 대기 | 발행됨 */
+  state: string;
+  verdict: string;
+  captionChars: number;
+  files: { content: string[]; png: string[]; caption: string; review: string };
+}
+export interface ArchiveFolder {
+  topic: string;
+  count: number;
+  items: ArchiveWork[];
+}
+
 export interface IdeaCat {
   key: string;
   label: string;
@@ -161,4 +181,8 @@ export interface TowerState {
   mining: { weights: { label: string; pct: number }[] };
   /** 소재 보드 — 관제탑 '소재' 탭에서 마이닝과 한 화면으로 통합된다. */
   ideas: { path: string; cats: IdeaCat[]; items: Idea[] };
+  /** 최근 오너가 소재를 지우며 남긴 사유 — 다음 발굴에 "피할 것"으로 실린다. */
+  recentDrops: string[];
+  /** 보관함 — 완성 작업물을 주제별로 묶은 색인 (data/archive/index.json) */
+  archive: ArchiveFolder[];
 }

@@ -1,0 +1,126 @@
+{
+  "_": "완성 작업물 색인 — scripts/build-archive.mjs 가 만든다. 손으로 고치지 말 것(다음 실행에 덮어씀).",
+  "total": 5,
+  "folders": [
+    {
+      "topic": "부동산",
+      "count": 3,
+      "items": [
+        {
+          "label": "tohuh-rank",
+          "title": "🔥 2026년 6월 신고가 쏟아진 지역은? (토허제 기준)",
+          "topic": "부동산",
+          "date": "2026-07-23",
+          "cards": 1,
+          "pages": 1,
+          "state": "발행 대기",
+          "files": {
+            "content": [
+              "data/content/2026-07-23/tohuh-rank.json"
+            ],
+            "png": [
+              "data/out/2026-07-23/tohuh-rank-p1.png"
+            ],
+            "caption": "data/review/captions/tohuh-rank.txt",
+            "review": "data/review/토허제 신고가 지도.json"
+          },
+          "verdict": "pass",
+          "captionChars": 676
+        },
+        {
+          "label": "estate-59",
+          "title": "서울 아파트 실거래 랭킹 59㎡ (2026 상반기)",
+          "topic": "부동산",
+          "date": "2026-07-21",
+          "cards": 3,
+          "pages": 0,
+          "state": "미승인",
+          "files": {
+            "content": [
+              "data/content/2026-07-21/estate-cover-59.json",
+              "data/content/2026-07-21/maprank-59-p1.json",
+              "data/content/2026-07-21/maprank-59-p2.json"
+            ],
+            "png": [],
+            "caption": "data/review/captions/estate-59.txt",
+            "review": ""
+          },
+          "verdict": "",
+          "captionChars": 332
+        },
+        {
+          "label": "estate-84",
+          "title": "서울 아파트 실거래 랭킹 84㎡ (2026 상반기)",
+          "topic": "부동산",
+          "date": "2026-07-21",
+          "cards": 3,
+          "pages": 0,
+          "state": "미승인",
+          "files": {
+            "content": [
+              "data/content/2026-07-21/estate-cover-84.json",
+              "data/content/2026-07-21/maprank-84-p1.json",
+              "data/content/2026-07-21/maprank-84-p2.json"
+            ],
+            "png": [],
+            "caption": "data/review/captions/estate-84.txt",
+            "review": "data/review/estate-84.json"
+          },
+          "verdict": "pass",
+          "captionChars": 328
+        }
+      ]
+    },
+    {
+      "topic": "교통·생활",
+      "count": 1,
+      "items": [
+        {
+          "label": "metro-speed",
+          "title": "수도권 지하철 노선·구간별 표정속도",
+          "topic": "교통·생활",
+          "date": "2026-07-20",
+          "cards": 2,
+          "pages": 0,
+          "state": "미승인",
+          "files": {
+            "content": [
+              "data/content/2026-07-20/metro-cover-photo.json",
+              "data/content/2026-07-20/metro-2col.json"
+            ],
+            "png": [],
+            "caption": "",
+            "review": ""
+          },
+          "verdict": "",
+          "captionChars": 0
+        }
+      ]
+    },
+    {
+      "topic": "증시·경제",
+      "count": 1,
+      "items": [
+        {
+          "label": "index-2026",
+          "title": "2026년 국장 성적표 — 코스피·코스닥 고점 대비",
+          "topic": "증시·경제",
+          "date": "2026-07-22",
+          "cards": 1,
+          "pages": 0,
+          "state": "발행 대기",
+          "files": {
+            "content": [
+              "data/content/2026-07-22/index-2026.json"
+            ],
+            "png": [],
+            "caption": "data/review/captions/index-2026.txt",
+            "review": ""
+          },
+          "verdict": "",
+          "captionChars": 505
+        }
+      ]
+    }
+  ]
+}

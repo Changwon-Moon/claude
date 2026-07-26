@@ -56,11 +56,15 @@ jobs:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
         run: node scripts/collect-insights.mjs
 
+      # 완성 작업물 색인 갱신 — 발행 상태가 바뀌면 보관함도 따라 바뀐다
+      - name: 보관함 색인
+        run: node scripts/build-archive.mjs
+
       - name: 변경 사항 커밋
         run: |
           git config user.name  "wirit-bot"
           git config user.email "noreply@github.com"
-          paths="research/work-orders data/publish-queue.md data/performance.md"
+          paths="research/work-orders data/publish-queue.md data/performance.md data/archive"
           if [ -n "$(git status --porcelain -- $paths)" ]; then
             git add -- $paths
             git commit -m "파이프라인: 승인 처리(작업지시서·발행 대기열·성과)"

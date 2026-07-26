@@ -6,7 +6,7 @@ import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { join, basename } from "node:path";
 import { P, REPO_ROOT } from "./paths.js";
 import { STAGES, RUBRIC_LABELS } from "./types.js";
-import type { TowerState, Ticket, TimelineEntry, Idea, IdeaCat, Evidence } from "./types.js";
+import type { TowerState, Ticket, TimelineEntry, Idea, IdeaCat, Evidence, ArchiveFolder } from "./types.js";
 import { parseBrief } from "./parse/brief.js";
 import { parseDecisionLog } from "./parse/decisionLog.js";
 import { parseCeoPrinciples, parseTeamCard } from "./parse/company.js";
@@ -276,6 +276,30 @@ export async function buildState(): Promise<TowerState> {
     photoCatalog: P.photoCatalog,
   });
 
+  // 최근 삭제 사유 — 다음 소재 발굴에 "이런 건 피해라"로 실어 보낼 학습 신호.
+  // 오너가 소재를 지울 때 남긴 한 줄이 결정 인박스에 쌓인다.
+  const recentDrops: string[] = [];
+  const inboxPath = join(REPO_ROOT, "research/decisions-inbox.md");
+  for (const f of [inboxPath, P.decisionLog]) {
+    if (!existsSync(f)) continue;
+    for (const line of readFileSync(f, "utf8").split(/\r?\n/)) {
+      const m = line.match(/(?:소재 삭제|반려)[^—]*—\s*이유:\s*(.+?)\s*$/);
+      if (m && m[1]) recentDrops.push(m[1].slice(0, 60));
+    }
+  }
+
+  // 보관함 색인 — scripts/build-archive.mjs 가 만든다. 없으면 빈 보관함으로 둔다.
+  let archive: ArchiveFolder[] = [];
+  const archPath = join(REPO_ROOT, "data/archive/index.json");
+  if (existsSync(archPath)) {
+    try {
+      const j = JSON.parse(readFileSync(archPath, "utf8"));
+      archive = Array.isArray(j.folders) ? j.folders : [];
+    } catch {
+      /* 색인이 깨져도 나머지 관제탑은 정상 */
+    }
+  }
+
   const { from, label } = deriveDateLabel(brief);
 
   // 실제로 화면에 쓰이는 크기로 줄인다(브라우저 없으면 원본 유지 — 무겁지만 동작은 한다)
@@ -285,9 +309,10 @@ export async function buildState(): Promise<TowerState> {
     if (small) images[key] = small;
   }
 
-  // 소재 풀 = 아직 결정 안 난 소재(거부·제작완료 제외) — 오너가 골라줄 대상
-  const openIdeas = ideaItems.filter((i) => i.state !== "reject" && i.status !== "done" && !Number(i.stage || 0));
-  const undecided = openIdeas.filter((i) => !i.state).length;
+  // 소재 풀 = 아직 안 고른 소재. 고르면(▶ 진행) stage가 붙어 파이프라인으로 빠지고,
+  // 아니면 삭제된다 — 그래서 '남아 있다 = 아직 안 골랐다'가 성립한다.
+  const openIdeas = ideaItems.filter((i) => i.status !== "done" && !Number(i.stage || 0));
+  const undecided = openIdeas.length;
 
   // ── 발행 대기열 반영 (2026-07-26)
   // 오너가 [🚀 발행 승인]을 누르면 data/publish-queue.md 에 줄이 붙는다.
@@ -350,6 +375,8 @@ export async function buildState(): Promise<TowerState> {
     counts,
     images,
     ideas: { path: "research/ideas.json", cats: ideaCats, items: ideaItems },
+    recentDrops: recentDrops.slice(-8),
+    archive,
     mining: {
       weights: [
         { label: "부동산", pct: 30 },
