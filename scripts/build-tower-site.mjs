@@ -12,7 +12,7 @@
  * 실행: node scripts/build-tower-site.mjs
  */
 import { execFileSync } from "node:child_process";
-import { mkdirSync, rmSync, copyFileSync, writeFileSync, existsSync, statSync } from "node:fs";
+import { mkdirSync, rmSync, copyFileSync, writeFileSync, existsSync, statSync, cpSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -32,6 +32,18 @@ run("pnpm", ["--filter", "@wirit/dashboard-static", "all"]);
 const tower = join(ROOT, "packages/dashboard/index.html");
 if (!existsSync(tower)) throw new Error("관제탑 index.html 생성 실패 — dashboard-static 확인");
 copyFileSync(tower, join(SITE, "index.html"));
+
+// 1-b) 본문 폰트 — 카드와 같은 Pretendard를 쓰되 HTML에 박아 넣지 않는다.
+//      Variable 폰트가 2MB라 임베드하면 관제탑이 다시 무거워진다.
+//      같은 출처의 별도 파일로 두면 브라우저가 한 번만 받아 캐시한다.
+const font = join(ROOT, "templates/_shared/fonts/PretendardVariable.woff2");
+if (existsSync(font)) {
+  mkdirSync(join(SITE, "fonts"), { recursive: true });
+  copyFileSync(font, join(SITE, "fonts/PretendardVariable.woff2"));
+  // 로컬에서 packages/dashboard/index.html 를 직접 열 때도 같은 상대경로가 맞도록
+  mkdirSync(join(ROOT, "packages/dashboard/fonts"), { recursive: true });
+  copyFileSync(font, join(ROOT, "packages/dashboard/fonts/PretendardVariable.woff2"));
+}
 
 // 2) 소재 보드는 관제탑 '💡 소재' 탭으로 흡수됐다(2026-07-26).
 //    기존 북마크(/ideas.html)가 죽지 않도록 리다이렉트 페이지만 남긴다.

@@ -5,6 +5,7 @@
  */
 import { readdirSync, readFileSync, existsSync, statSync } from "node:fs";
 import { join } from "node:path";
+import { plainTitle } from "./decisionLog.js";
 
 export interface ProducedCard {
   slug: string;
@@ -125,7 +126,8 @@ export function collectProduced(contentDir: string, outDir: string, reviewDir = 
       out.push({
         slug,
         date,
-        title: (json.title || slug).replace(/\n/g, " "),
+        // 카드 제목엔 강조용 HTML(<span class="hi">)이 들어 있다 → 관제탑에선 글자만
+        title: plainTitle(json.title || slug) || slug,
         fmt: fmtOf(json.template),
         thumb: null, // 세트로 묶은 뒤 아래에서 채운다
         pages: collectPages(join(outDir, date), slug),

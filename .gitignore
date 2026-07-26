@@ -43,3 +43,6 @@ pnpm-debug.log*
 
 # 관제탑 배포 산출물 (CI가 매 배포마다 재생성)
 packages/tower-worker/_site/
+
+# 관제탑 폰트 사본 — 빌드 때 templates/_shared/fonts 에서 복사된다
+packages/dashboard/fonts/

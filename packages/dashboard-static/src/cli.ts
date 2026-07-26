@@ -12,8 +12,8 @@ import { buildState } from "./buildState.js";
 import { renderTowerHtml, renderTowerBody } from "./renderHtml.js";
 import type { TowerState } from "./types.js";
 
-function writeState(): TowerState {
-  const state = buildState();
+async function writeState(): Promise<TowerState> {
+  const state = await buildState();
   mkdirSync(dirname(P.stateOut), { recursive: true });
   writeFileSync(P.stateOut, JSON.stringify(state, null, 2) + "\n", "utf8");
   const t = state.tickets.length;
@@ -39,14 +39,14 @@ function writeArtifact(state: TowerState): void {
 
 const cmd = process.argv[2] || "all";
 if (cmd === "state") {
-  writeState();
+  await writeState();
 } else if (cmd === "html") {
   const state = JSON.parse(readFileSync(P.stateOut, "utf8")) as TowerState;
   writeHtml(state);
 } else if (cmd === "artifact") {
-  writeArtifact(buildState());
+  writeArtifact(await buildState());
 } else if (cmd === "all") {
-  const state = writeState();
+  const state = await writeState();
   writeHtml(state);
   writeArtifact(state);
 } else {

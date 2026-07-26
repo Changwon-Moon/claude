@@ -12,6 +12,7 @@ import { parseDecisionLog } from "./parse/decisionLog.js";
 import { parseCeoPrinciples, parseTeamCard } from "./parse/company.js";
 import { buildAssetGroups } from "./parse/assets.js";
 import { collectProduced } from "./parse/produced.js";
+import { shrinkAll, shrinkKey, THUMB_W, PAGE_W } from "./parse/thumbs.js";
 
 const TEAM_ORDER = [
   "trend-analysis",
@@ -85,17 +86,25 @@ function deriveDateLabel(brief: { id: string } | null): { from: string; label: s
   return { from: iso, label: `${y.slice(2)}.${mo}.${da}(${dow[idx]})` };
 }
 
-export function buildState(): TowerState {
-  // 이미지 인터너: 동일 data-uri는 한 번만 저장하고 키로 참조
+export async function buildState(): Promise<TowerState> {
+  // ── 이미지 인터너
+  // 같은 그림은 한 번만 싣고 키로 참조한다. 여기에 더해 **쓰일 크기**를 함께 기억해서,
+  // 나중에 그 크기로 축소한 판본만 최종 HTML에 넣는다.
+  //   목록 썸네일(THUMB_W) : 어느 카드인지 알아보는 용도
+  //   상세 캐러셀(PAGE_W)  : 실제로 읽고 승인하는 용도 — 발행 후보에만 붙인다
+  // (원본 2160×2700 PNG를 그대로 넣으면 장당 870KB, 9장에 7.85MB가 된다)
   const images: Record<string, string> = {};
-  const byUri = new Map<string, string>();
-  function intern(uri: string | null | undefined): string | null {
+  const byKey = new Map<string, string>();
+  const jobs: { uri: string; width: number }[] = [];
+  function intern(uri: string | null | undefined, width: number = THUMB_W): string | null {
     if (!uri) return null;
-    let k = byUri.get(uri);
+    const ck = shrinkKey(uri, width);
+    let k = byKey.get(ck);
     if (!k) {
-      k = `img${byUri.size + 1}`;
-      byUri.set(uri, k);
-      images[k] = uri;
+      k = `img${byKey.size + 1}`;
+      byKey.set(ck, k);
+      images[k] = uri; // 축소 전 원본. 아래에서 축소본으로 바꿔 넣는다
+      jobs.push({ uri, width });
     }
     return k;
   }
@@ -118,7 +127,9 @@ export function buildState(): TowerState {
       const key = intern(match.thumb);
       t.stage = 4; // 승인대기 (렌더 완료·발행 전)
       t.thumb = key;
-      t.pages = match.pages.map((u) => intern(u)!).filter(Boolean);
+      // 캡션이 있는 세트 = 실제 발행 후보 → 상세에서 읽을 수 있게 큰 판본을 싣는다.
+      // 나머지는 목록에서 알아보기만 하면 되므로 큰 판본을 만들지 않는다.
+      t.pages = match.caption ? match.pages.map((u) => intern(u, PAGE_W)!).filter(Boolean) : [];
       t.caption = match.caption;
       t.review = match.review;
       t.fmt = match.fmt || t.fmt;
@@ -163,7 +174,7 @@ export function buildState(): TowerState {
         },
       ],
       thumb: key,
-      pages: p.pages.map((u) => intern(u)!).filter(Boolean),
+      pages: p.caption ? p.pages.map((u) => intern(u, PAGE_W)!).filter(Boolean) : [],
       caption: p.caption,
       review: p.review,
       // 발행 세트에 등록되지 않은 렌더는 실험·중간 산출물이다.
@@ -267,9 +278,42 @@ export function buildState(): TowerState {
 
   const { from, label } = deriveDateLabel(brief);
 
+  // 실제로 화면에 쓰이는 크기로 줄인다(브라우저 없으면 원본 유지 — 무겁지만 동작은 한다)
+  const shrunk = await shrinkAll(jobs);
+  for (const [ck, key] of byKey) {
+    const small = shrunk.get(ck);
+    if (small) images[key] = small;
+  }
+
   // 소재 풀 = 아직 결정 안 난 소재(거부·제작완료 제외) — 오너가 골라줄 대상
   const openIdeas = ideaItems.filter((i) => i.state !== "reject" && i.status !== "done" && !Number(i.stage || 0));
   const undecided = openIdeas.filter((i) => !i.state).length;
+
+  // ── 발행 대기열 반영 (2026-07-26)
+  // 오너가 [🚀 발행 승인]을 누르면 data/publish-queue.md 에 줄이 붙는다.
+  // 그 사실을 파이프라인에 되먹이지 않으면, 승인한 카드가 영원히 '승인대기'에 남는다.
+  //   - [ ] = 승인됨·업로드 전   - [x] = 업로드 완료
+  const queued = new Map<string, boolean>(); // 정규화 제목 → 업로드 완료 여부
+  const qPath = join(REPO_ROOT, "data/publish-queue.md");
+  if (existsSync(qPath)) {
+    for (const line of readFileSync(qPath, "utf8").split(/\r?\n/)) {
+      const m = line.match(/^\s*-\s*\[([ xX])\]\s*(.+)$/);
+      if (!m) continue;
+      const title = (m[2].match(/\*\*(.+?)\*\*/) || [, m[2]])[1];
+      queued.set(normTitle(title), m[1].toLowerCase() === "x");
+    }
+  }
+  for (const t of tickets) {
+    if (t.stage !== 4) continue;
+    const n = normTitle(t.title);
+    let hit: boolean | undefined;
+    for (const [k, done] of queued) {
+      if (k.includes(n) || n.includes(k)) { hit = done; break; }
+    }
+    if (hit === undefined) continue;
+    t.stage = 5; // 발행됨 — 오너의 손을 떠났다
+    if (!hit) t.flags.push("업로드 대기"); // 큐에는 올랐지만 아직 인스타에 안 올라감
+  }
 
   // 발행 승인 후보 = 카드 + 캡션이 다 준비된 것. 캡션이 없으면 올릴 글이 없어 결정 대상이 아니다.
   // (관제탑 결정함과 반드시 같은 기준을 써야 KPI 숫자와 목록이 어긋나지 않는다)
@@ -287,10 +331,10 @@ export function buildState(): TowerState {
   // KPI — 오너가 "지금 뭘 해야 하나"를 읽는 줄. 결정 대기가 맨 앞.
   const totalAssets = assets.reduce((a, g) => a + g.count, 0);
   const kpi = [
-    { label: "결정 대기", value: String(readyToPublish + (undecided ? 1 : 0)), note: `발행 ${readyToPublish} · 미결 소재 ${undecided}` },
-    { label: "제작 중", value: String(counts.inProgress), note: "기획~검수 진행" },
-    { label: "소재 풀", value: String(openIdeas.length), note: `미결 ${undecided}건` },
-    { label: "자산", value: String(totalAssets), note: "재사용 가능 자산" },
+    { label: "결재 대기", value: String(readyToPublish), note: undecided ? `+ 고를 소재 ${undecided}건` : "발행 승인 대기" },
+    { label: "작업중", value: String(counts.inProgress), note: "기획 · 제작 · 검수" },
+    { label: "소재 풀", value: String(openIdeas.length), note: `아직 안 고른 것 ${undecided}건` },
+    { label: "데이터 자산", value: String(totalAssets), note: "재사용 가능" },
   ];
 
   return {

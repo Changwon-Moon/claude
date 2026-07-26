@@ -54,6 +54,12 @@ const tabs = await q(`[...document.querySelectorAll(".tab")].map(t=>t.dataset.v)
 check("탭 5종(오늘·파이프라인·소재·회사·자산)", tabs === "today,board,ideas,company,assets", tabs);
 check("첫 화면 = 결정함", await q(`document.getElementById("view-today").classList.contains("on")`));
 check("연결 뱃지가 제목 행 안에 있음", await q(`!!document.querySelector(".topbar #connbtn")`));
+check("탭에 이모지 없음(활자만)", await q(`
+  [...document.querySelectorAll(".tab")].every(t=>!/\\p{Extended_Pictographic}/u.test(t.textContent))`));
+check("지표 명칭(결재 대기·작업중·소재 풀·데이터 자산)", await q(`
+  [...document.querySelectorAll(".kpi .l")].map(e=>e.textContent).join(",")`)
+  === "결재 대기,작업중,소재 풀,데이터 자산");
+check("지표를 누르면 해당 화면으로", await q(`!!document.querySelector(".kpi[data-go]")`));
 check("연결 바(ghbar) 제거", await q(`!document.getElementById("ghbar")`));
 // "평균연봉"은 실제 소재 제목이라 본문에 남아 있는 게 정상 → 실행 버튼만 없는지 본다
 check("워크플로 실행 버튼(마이닝·로고 취득·평균연봉) 제거", await q(`
@@ -63,12 +69,23 @@ check("복사-붙여넣기 우회 제거(요약복사·초기화·지시전달�
   (await q(`[!!document.getElementById("bcopy"),!!document.getElementById("breset"),!!document.getElementById("dcnt")].join()`)) === "false,false,false");
 check("저장 상태 바 존재", await q(`!!document.getElementById("savestate")`));
 
-// 칸반은 '기획안'부터 — 소재 고르기는 소재 탭이 단일 창구
+// 파이프라인 = 흐름 레일 + 단계별 목록 (가로 스크롤 칸반 폐지)
 await page.click('.tab[data-v="board"]');
-await page.waitForTimeout(200);
-const firstCol = await q(`(document.querySelector("#board .col h2")||{}).textContent||""`);
-check("칸반 첫 열 = 기획안(마이닝 열 제거)", firstCol.startsWith("기획안"), firstCol);
-check("칸반에 마이닝 패널 없음", await q(`!document.querySelector(".col.mining")`));
+await page.waitForTimeout(250);
+check("가로 스크롤 칸반 제거", await q(`!document.querySelector(".col, .col.mining")`));
+check("흐름 레일 표시", (await q(`document.querySelectorAll("#flow .fseg").length`)) >= 5);
+const firstGrp = await q(`(document.querySelector("#board .grph .gt")||{}).textContent||""`);
+check("첫 그룹 = 결재 대기(급한 것부터)", firstGrp === "결재 대기", firstGrp);
+check("실험 렌더는 별도 서랍으로 분리", await q(`
+  !![...document.querySelectorAll("#board .grph .gt")].find(e=>e.textContent.indexOf("실험")>-1)
+  || S.tickets.filter(t=>(t.flags||[]).includes("실험")).length===0`));
+// 지표·레일·목록이 같은 숫자를 말해야 도구를 믿을 수 있다
+const kpiN = await q(`document.querySelector(".kpi .v").textContent`);
+const railN = await q(`(document.querySelector("#flow .fseg.act .fv")||{}).textContent||"0"`);
+const grpN = await q(`(document.querySelector("#board .grph .gn")||{}).textContent||"0"`);
+check("지표·흐름레일·그룹 숫자 일치", kpiN === railN && railN === grpN, `${kpiN}/${railN}/${grpN}`);
+check("제목에 마크다운·HTML 잔재 없음", await q(`
+  S.tickets.every(t=>!/\\*\\*|<[a-z/]/i.test(t.title))`));
 
 await page.click('.tab[data-v="ideas"]');
 await page.waitForTimeout(250);
@@ -200,6 +217,9 @@ console.log("\n[F. 결정함]");
 await page.click('.tab[data-v="today"]');
 await page.waitForTimeout(300);
 const inboxN = await q(`document.querySelectorAll("#inboxBody .dcard").length`);
+check("결정함 건수 = 탭 배지", await q(`
+  document.getElementById("tabN").hidden
+  || document.getElementById("tabN").textContent === String(document.querySelectorAll("#inboxBody .dcard").length)`));
 const allClear = await q(`!!document.querySelector("#inboxBody .allclear")`);
 check("결정함이 결정 대기를 모으거나 '없음'을 명시", inboxN > 0 || allClear, `카드 ${inboxN}건`);
 if (inboxN > 0) {

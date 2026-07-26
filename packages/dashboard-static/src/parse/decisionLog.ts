@@ -11,6 +11,22 @@ function slugFromTitle(title: string, idx: number): string {
   return `d${idx}`;
 }
 
+/**
+ * 표 셀에는 마크다운(**굵게**, [링크](주소))과 카드용 HTML(<span class="hi">)이 섞여 있다.
+ * 관제탑 티켓 제목은 **사람이 읽는 한 줄**이므로 서식을 걷어내고 글자만 남긴다.
+ * (걷어내지 않으면 화면에 `**` 나 `<span class="hi">` 가 그대로 보인다)
+ */
+export function plainTitle(s: string): string {
+  return String(s || "")
+    .replace(/<br\s*\/?>/gi, " ")
+    .replace(/<[^>]+>/g, "") // 카드 강조용 태그
+    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, "$1") // [글자](링크) → 글자
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function tierOf(cell: string): "T1" | "T2" {
   return /T2/i.test(cell) ? "T2" : "T1";
 }
@@ -48,6 +64,9 @@ export function parseDecisionLog(md: string): Ticket[] {
     if (/^-{3,}/.test(material)) continue;
     if (/\(예시\)/.test(material)) continue;
     if (!material || material.startsWith("<!--")) continue;
+    // "└ …" 은 바로 위 행의 후속 기록(검증 완료 등)이지 별도 소재가 아니다.
+    // 티켓으로 만들면 칸반에 진행 상황 메모가 카드처럼 쌓여 화면이 지저분해진다.
+    if (/^[└┗ㄴ]/.test(material)) continue;
 
     idx++;
     const { stage, flags, auto } = mapDecision(decision);
@@ -64,7 +83,7 @@ export function parseDecisionLog(md: string): Ticket[] {
 
     tickets.push({
       id: slugFromTitle(material, idx),
-      title: material,
+      title: plainTitle(material),
       topic: topicOf(tierCell),
       tier: tierOf(tierCell),
       fire,
