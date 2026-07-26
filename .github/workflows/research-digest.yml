@@ -38,11 +38,17 @@ jobs:
       - name: 소재 신호 수집 → 보드 생성
         run: pnpm --filter @wirit/collectors collect-signals
 
+      # ⚠️ 여기가 빠져 있어서 [새 소재 발굴]이 "눌러도 안 먹는" 버튼이었다(2026-07-26).
+      #    수집 결과는 research/briefs/*.md 로만 떨어졌고, 소재 보드는 ideas.json 을 본다.
+      #    이 단계가 둘을 잇는다 — 관제탑에 실제로 새 소재가 뜬다.
+      - name: 신호 → 소재 보드 반영
+        run: node scripts/ingest-signals.mjs
+
       - name: 보드 커밋
         run: |
           git config user.name "wirit-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add research/briefs/*.md
+          git add research/briefs/*.md research/ideas.json
           if git diff --cached --quiet; then
             echo "변경 없음 — 커밋 생략"
           else

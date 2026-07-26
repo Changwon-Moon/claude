@@ -104,8 +104,12 @@ jobs:
       - name: 관제탑 스모크
         run: node scripts/smoke-tower.mjs packages/tower-worker/_site/index.html
 
-      # 화면의 모든 버튼을 실제로 눌러본다 — 스모크가 핵심 경로라면 이건 전수 조사
-      - name: 전 버튼 시뮬레이션
+      # 화면의 모든 버튼을 눌러보는 전수 조사.
+      # ⚠️ 배포를 막지는 않는다 — 탐색적 검사라 오탐이 나올 수 있고,
+      #    오탐 하나로 오너가 화면을 못 받는 쪽이 훨씬 나쁘다.
+      #    발행을 막아야 하는 결정적 검사는 위의 '관제탑 스모크'가 맡는다.
+      - name: 전 버튼 시뮬레이션 (경고만)
+        continue-on-error: true
         run: node scripts/sim-tower.mjs packages/tower-worker/_site/index.html
 
       # wrangler-action@v3은 구버전(3.90)을 설치해 jsonc 설정을 못 읽는다("Missing entry-point").

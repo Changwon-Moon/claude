@@ -72,10 +72,12 @@ for (const t of TABS) {
   await page.waitForTimeout(350);
   const shown = await page.evaluate(`document.getElementById("view-${t}").classList.contains("on")`);
   if (!shown) note(`탭:${t}`, "탭을 눌러도 화면이 안 바뀜");
-  // 이 화면에서 보이는 버튼 개수
-  const n = await page.evaluate(`
-    [...document.querySelectorAll("#view-${t} button")].filter(b=>b.offsetParent!==null).length`);
-  if (n === 0 && t !== "assets") note(`탭:${t}`, "누를 수 있는 게 아무것도 없음");
+  // 이 화면에 아무것도 없으면 최소한 "왜 비었는지"는 말해줘야 한다.
+  // (결정함이 비는 건 정상이다 — 대신 "오늘 결정할 것 없음"이 떠 있어야 한다)
+  const alive = await page.evaluate(`
+    [...document.querySelectorAll("#view-${t} button")].filter(b=>b.offsetParent!==null).length
+    + document.querySelectorAll("#view-${t} .allclear, #view-${t} .empty").length`);
+  if (alive === 0 && t !== "assets") note(`탭:${t}`, "아무것도 없고 왜 비었는지 설명도 없음");
 }
 
 // ── 2. 지표 4칸

@@ -51,7 +51,8 @@ await page.waitForTimeout(600);
 console.log("🗼 관제탑 스모크");
 console.log("\n[구조]");
 const tabs = await q(`[...document.querySelectorAll(".tab")].map(t=>t.dataset.v).join(",")`);
-check("탭 6종(오늘·파이프라인·소재·회사·보관함·자산)", tabs === "today,board,ideas,company,archive,assets", tabs);
+check("탭 7종(오늘·파이프라인·소재·회사·보관함·성과·자산)",
+  tabs === "today,board,ideas,company,archive,perf,assets", tabs);
 check("첫 화면 = 결정함", await q(`document.getElementById("view-today").classList.contains("on")`));
 check("연결 뱃지가 제목 행 안에 있음", await q(`!!document.querySelector(".topbar #connbtn")`));
 check("탭에 이모지 없음(활자만)", await q(`
@@ -133,6 +134,16 @@ await page.waitForTimeout(300);
 check("보관함 항목을 펴면 캡션 전문", await q(`!!document.querySelector(".fitem[open] .cap")`));
 check("보관함에 저장소 원본 링크", (await q(`document.querySelectorAll(".fitem[open] .flink").length`)) > 0);
 check("보관함에 카드 실물 썸네일", (await q(`document.querySelectorAll(".folder img.fthumb").length`)) > 0);
+
+// 성과 — 데이터가 없어도 '왜 없는지'와 '어떻게 채우는지'가 있어야 한다
+await page.click('.tab[data-v="perf"]');
+await page.waitForTimeout(250);
+check("성과 탭 내용 표시", await q(`
+  document.querySelectorAll("#view-perf .prow").length > 0
+  || !!document.querySelector("#view-perf .allclear")`));
+check("성과가 비면 채우는 방법 안내", await q(`
+  document.querySelectorAll("#view-perf .prow").length > 0
+  || /직접 입력|IG_ACCESS_TOKEN/.test(document.getElementById("view-perf").textContent)`));
 
 await page.click('.tab[data-v="ideas"]');
 await page.waitForTimeout(200);

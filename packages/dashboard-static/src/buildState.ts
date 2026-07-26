@@ -6,7 +6,7 @@ import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { join, basename } from "node:path";
 import { P, REPO_ROOT } from "./paths.js";
 import { STAGES, RUBRIC_LABELS } from "./types.js";
-import type { TowerState, Ticket, TimelineEntry, Idea, IdeaCat, Evidence, ArchiveFolder } from "./types.js";
+import type { TowerState, Ticket, TimelineEntry, Idea, IdeaCat, Evidence, ArchiveFolder, PerfRow } from "./types.js";
 import { parseBrief } from "./parse/brief.js";
 import { parseDecisionLog } from "./parse/decisionLog.js";
 import { parseCeoPrinciples, parseTeamCard } from "./parse/company.js";
@@ -307,6 +307,22 @@ export async function buildState(): Promise<TowerState> {
     }
   }
 
+  // 성과 — data/performance.md 의 표를 읽는다. 인스타 토큰이 붙기 전엔 오너가 손으로 채운다.
+  const perfRows: PerfRow[] = [];
+  const perfPath = join(REPO_ROOT, "data/performance.md");
+  if (existsSync(perfPath)) {
+    for (const line of readFileSync(perfPath, "utf8").split(/\r?\n/)) {
+      if (!/^\s*\|/.test(line)) continue;
+      const c = line.split("|").map((x) => x.trim());
+      const cells = c.slice(1, -1);
+      if (cells.length < 7) continue;
+      const [date, card, reach, saved, likes, comments, memo] = cells;
+      if (!date || date === "발행일" || /^-+$/.test(date.replace(/[:\s]/g, ""))) continue;
+      if (/^_?\(?아직/.test(date)) continue; // "(아직 발행 없음)" 안내행
+      perfRows.push({ date, card, reach, saved, likes, comments, memo });
+    }
+  }
+
   const { from, label } = deriveDateLabel(brief);
 
   // 실제로 화면에 쓰이는 크기로 줄인다(브라우저 없으면 원본 유지 — 무겁지만 동작은 한다)
@@ -414,6 +430,7 @@ export async function buildState(): Promise<TowerState> {
     ideas: { path: "research/ideas.json", cats: ideaCats, items: ideaItems },
     recentDrops: recentDrops.slice(-8),
     archive,
+    perf: { rows: perfRows, path: "data/performance.md" },
     mining: {
       weights: [
         { label: "부동산", pct: 30 },

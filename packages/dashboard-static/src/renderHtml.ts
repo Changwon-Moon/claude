@@ -494,6 +494,29 @@ button[disabled] .spin{margin-right:5px}
   padding:3px 8px;color:var(--muted);text-decoration:none}
 .flink:hover{color:var(--text);border-color:var(--muted)}
 
+/* ══ 성과 ══ 저장 수를 막대로 — 한눈에 무엇이 터졌는지 */
+.pstat{display:flex;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.pcell{flex:1;background:var(--card);padding:12px 15px;display:flex;flex-direction:column;gap:2px}
+.pcell.wide{flex:2}
+.pcell .v{font-size:22px;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.pcell .v.s{font-size:13.5px;font-weight:700;letter-spacing:-.015em;line-height:1.35;
+  overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.pcell .l{font-size:11px;color:var(--faint);font-weight:600}
+.plist{display:flex;flex-direction:column;gap:6px}
+.prow{display:grid;grid-template-columns:minmax(0,1fr) minmax(200px,300px);gap:16px;align-items:center;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:12px 14px}
+@media (max-width:720px){.prow{grid-template-columns:1fr;gap:8px}}
+.pmain{min-width:0}
+.pt{font-size:13.5px;font-weight:700;line-height:1.4}
+.pmeta{font-size:11px;color:var(--faint);margin-top:2px}
+.pbars{display:flex;flex-direction:column;gap:4px}
+.pbar{display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:center}
+.pk{font-size:10px;font-weight:800;color:var(--faint);letter-spacing:.05em}
+.ptrack{height:6px;border-radius:99px;background:var(--band);overflow:hidden}
+.ptrack i{display:block;height:100%;background:var(--cobalt);border-radius:99px}
+.pv{font-size:12.5px;font-weight:800}
+.psub{font-size:10.5px;color:var(--faint);padding-left:38px}
+
 /* ══ 폰 ══ 오너는 대부분 폰으로 본다 */
 @media (max-width:760px){
   .topbar{gap:9px;padding:0 13px;height:50px}
@@ -1839,6 +1862,68 @@ function archiveHtml(state: TowerState): string {
   </div>`;
 }
 
+/**
+ * 성과 — 발행한 카드가 실제로 어떻게 됐나.
+ * **저장 수**가 우리 계정의 핵심 지표다(저장해두고 다시 볼 카드를 만드는 계정이니까).
+ */
+function perfHtml(state: TowerState): string {
+  const rows = state.perf?.rows || [];
+  const { owner, name, branch } = state.repo;
+  const edit = owner && name
+    ? `https://github.com/${owner}/${name}/edit/${branch}/${state.perf.path}` : "";
+
+  if (!rows.length) {
+    return `<div class="wrap"><div class="sect">성과</div>
+      <div class="allclear"><div class="t">아직 성과 데이터가 없습니다</div>
+      <div class="w">첫 카드를 발행하면 여기에 <b>도달 · 저장 · 좋아요 · 댓글</b>이 쌓입니다.<br>
+      인스타 토큰(<code>IG_ACCESS_TOKEN</code>)이 붙으면 <b>매일 아침 자동으로</b> 채워지고,
+      그 전에는 아래 버튼으로 직접 적으시면 됩니다 — 한 줄이라도 적는 편이 훨씬 낫습니다.</div>
+      ${edit ? `<div style="margin-top:10px"><a class="ebtn" href="${esc(edit)}" target="_blank" rel="noopener">성과 직접 입력 ↗</a></div>` : ""}
+      </div></div>`;
+  }
+
+  const num = (v: string): number => {
+    const n = parseInt(String(v).replace(/[^\d]/g, ""), 10);
+    return Number.isFinite(n) ? n : 0;
+  };
+  const saved = rows.map((r) => num(r.saved)).filter((n) => n > 0);
+  const avg = saved.length ? Math.round(saved.reduce((a, b) => a + b, 0) / saved.length) : 0;
+  const best = rows.slice().sort((a, b) => num(b.saved) - num(a.saved))[0];
+  const maxSaved = Math.max(1, ...saved);
+
+  const body = rows
+    .map((r) => {
+      const s = num(r.saved);
+      const pct = Math.round((s / maxSaved) * 100);
+      return `<div class="prow">
+        <div class="pmain"><div class="pt">${esc(r.card)}</div>
+          <div class="pmeta num">${esc(r.date)}${r.memo ? ` · ${esc(r.memo)}` : ""}</div></div>
+        <div class="pbars">
+          <div class="pbar"><span class="pk">저장</span>
+            <span class="ptrack"><i style="width:${pct}%"></i></span>
+            <span class="pv num">${esc(r.saved || "-")}</span></div>
+          <div class="psub num">도달 ${esc(r.reach || "-")} · 좋아요 ${esc(r.likes || "-")} · 댓글 ${esc(r.comments || "-")}</div>
+        </div>
+      </div>`;
+    })
+    .join("");
+
+  return `<div class="wrap">
+    <div class="sect">성과 — 발행 ${rows.length}건</div>
+    <div class="pstat">
+      <div class="pcell"><span class="v num">${avg}</span><span class="l">평균 저장</span></div>
+      <div class="pcell"><span class="v num">${best ? esc(best.saved || "-") : "-"}</span><span class="l">최고 저장</span></div>
+      <div class="pcell wide"><span class="v s">${best ? esc(best.card) : "-"}</span><span class="l">가장 많이 저장된 카드</span></div>
+    </div>
+    <div class="howto-note" style="margin:12px 2px 14px">
+      <b>저장 수</b>가 우리 계정의 핵심 지표입니다 — 저장해두고 다시 볼 카드를 만드는 계정이니까요.
+      여기서 배운 것은 <code>research/PATTERN_LIBRARY.md</code>로 올라가 다음 소재 선택에 반영됩니다.
+      ${edit ? `<a class="ebtn" style="margin-left:6px" href="${esc(edit)}" target="_blank" rel="noopener">직접 입력 ↗</a>` : ""}
+    </div>
+    <div class="plist">${body}</div>
+  </div>`;
+}
+
 function assetsHtml(state: TowerState): string {
   const groups = state.assets.groups
     .map(
@@ -1895,6 +1980,7 @@ export function renderTowerBody(state: TowerState): string {
   <button class="tab" data-v="ideas">소재</button>
   <button class="tab" data-v="company">회사</button>
   <button class="tab" data-v="archive">보관함</button>
+  <button class="tab" data-v="perf">성과</button>
   <button class="tab" data-v="assets">자산</button>
 </nav>
 
@@ -1914,6 +2000,7 @@ export function renderTowerBody(state: TowerState): string {
 <section id="view-ideas" class="view">${ideasHtml(state)}</section>
 <section id="view-company" class="view">${companyHtml(state)}</section>
 <section id="view-archive" class="view">${archiveHtml(state)}</section>
+<section id="view-perf" class="view">${perfHtml(state)}</section>
 <section id="view-assets" class="view">${assetsHtml(state)}</section>
 
 <div class="scrim" id="scrim"></div>

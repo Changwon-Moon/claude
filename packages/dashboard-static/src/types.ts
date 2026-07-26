@@ -156,6 +156,17 @@ export interface ArchiveFolder {
   items: ArchiveWork[];
 }
 
+/** 발행 후 실제 성과 한 줄 (data/performance.md 표) */
+export interface PerfRow {
+  date: string;
+  card: string;
+  reach: string;
+  saved: string;
+  likes: string;
+  comments: string;
+  memo: string;
+}
+
 export interface IdeaCat {
   key: string;
   label: string;
@@ -190,4 +201,6 @@ export interface TowerState {
   recentDrops: string[];
   /** 보관함 — 완성 작업물을 주제별로 묶은 색인 (data/archive/index.json) */
   archive: ArchiveFolder[];
+  /** 성과 — 발행 후 도달·저장 수 (data/performance.md) */
+  perf: { rows: PerfRow[]; path: string };
 }
