@@ -143,6 +143,29 @@ has(/download\//, "결재 화면에 원본 내려받기 링크");
 has(/data-act="copywork"/, "제작 지시문 복사 버튼(사람이 시켜야 함을 화면이 말함)");
 check("'만드는 중' 거짓 문구 없음", !/카드를 만드는 중입니다/.test(html));
 
+// 내려받기 원본이 실제로 열리는가 — 링크만 있고 파일이 없으면 또 "안 열리는 링크"다
+if (PW) {
+  try {
+    const loginBody = new URLSearchParams({ pw: PW });
+    const lg = await fetch(URL_BASE + "/__login", { method: "POST", body: loginBody, redirect: "manual" });
+    const ck = (lg.headers.get("set-cookie") || "").split(";")[0];
+    const dl = await fetch(URL_BASE + "/download/index.json", { headers: { Cookie: ck } });
+    const dj = await dl.json().catch(() => ({}));
+    const first = ((dj.sets || [])[0] || {}).files?.[0];
+    check("내려받기 색인이 열림", dl.status === 200 && Array.isArray(dj.sets) && dj.sets.length > 0,
+      `HTTP ${dl.status}`);
+    if (first) {
+      const img0 = await fetch(URL_BASE + "/" + first, { headers: { Cookie: ck } });
+      check("내려받기 원본 JPG가 실제로 열림", img0.status === 200
+        && (img0.headers.get("content-type") || "").includes("image"), `HTTP ${img0.status} · ${first}`);
+    }
+    const open = await fetch(URL_BASE + "/download/index.json");
+    check("내려받기는 문 안쪽(비번 없인 안 열림)", /비밀번호/.test(await open.text()));
+  } catch (e) {
+    check("내려받기 확인", false, String(e).slice(0, 100));
+  }
+}
+
 // 카드 실물이 들어갔는지 — CI가 렌더한 썸네일
 const imgs = (html.match(/data:image\/(jpeg|png);base64/g) || []).length;
 check("카드 썸네일 포함", imgs > 0, `${imgs}장`);

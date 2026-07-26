@@ -12,7 +12,7 @@ import { parseDecisionLog } from "./parse/decisionLog.js";
 import { parseCeoPrinciples, parseTeamCard } from "./parse/company.js";
 import { buildAssetGroups } from "./parse/assets.js";
 import { collectProduced } from "./parse/produced.js";
-import { shrinkAll, shrinkKey, THUMB_W, PAGE_W } from "./parse/thumbs.js";
+import { shrinkAll, shrinkKey, THUMB_W } from "./parse/thumbs.js";
 
 const TEAM_ORDER = [
   "trend-analysis",
@@ -129,7 +129,11 @@ export async function buildState(): Promise<TowerState> {
       t.thumb = key;
       // 캡션이 있는 세트 = 실제 발행 후보 → 상세에서 읽을 수 있게 큰 판본을 싣는다.
       // 나머지는 목록에서 알아보기만 하면 되므로 큰 판본을 만들지 않는다.
-      t.pages = match.caption ? match.pages.map((u) => intern(u, PAGE_W)!).filter(Boolean) : [];
+      // 결재 화면의 카드 큰 판본은 HTML에 박지 않는다(base64 임베드 → 4MB 사고).
+      // 같은 사이트의 /download/{label}-{n}.jpg (stage-public-cards 가 만든 원본)를 참조한다.
+      t.pages = match.caption && match.setLabel
+        ? match.pages.map((_, i) => `download/${match.setLabel}-${i + 1}.jpg`)
+        : [];
       t.caption = match.caption;
       t.review = match.review;
       t.setLabel = match.setLabel || undefined;
@@ -175,7 +179,9 @@ export async function buildState(): Promise<TowerState> {
         },
       ],
       thumb: key,
-      pages: p.caption ? p.pages.map((u) => intern(u, PAGE_W)!).filter(Boolean) : [],
+      pages: p.caption && p.setLabel
+        ? p.pages.map((_, i) => `download/${p.setLabel}-${i + 1}.jpg`)
+        : [],
       caption: p.caption,
       review: p.review,
       // 발행 세트에 등록되지 않은 렌더는 실험·중간 산출물이다.
@@ -307,8 +313,9 @@ export async function buildState(): Promise<TowerState> {
           const lead = produced.find((p) => p.setLabel === w.label && p.setLead);
           w.thumb = lead ? intern(lead.thumb) : null;
           // PNG·카드 JSON은 저장소에 없어 링크를 걸 수 없다(gitignore).
-          // 대신 **실물을 여기서 바로 보여준다** — 그게 보관함의 존재 이유다.
-          w.shots = lead ? lead.pages.map((u) => intern(u, PAGE_W)!).filter(Boolean) : [];
+          // 실물은 같은 사이트의 /download/ 원본을 참조한다 — HTML에 base64로 박으면
+          // 화면이 수 MB로 부푼다(2026-07-26 4.3MB 사고).
+          w.shots = lead ? lead.pages.map((_, i) => `download/${w.label}-${i + 1}.jpg`) : [];
         }
       }
     } catch {
