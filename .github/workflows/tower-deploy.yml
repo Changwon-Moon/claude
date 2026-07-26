@@ -20,8 +20,8 @@ on:
       - "company/**"
       - "prompts/**"
       - "data/datasets/**"
-      - "scripts/build-idea-board.mjs"
       - "scripts/build-tower-site.mjs"
+      - "scripts/smoke-tower.mjs"
       - "packages/dashboard-static/**"
       - "packages/tower-worker/**"
       - ".github/workflows/tower-deploy.yml"
@@ -127,4 +127,4 @@ jobs:
           echo "### 관제탑 배포 완료 :rocket:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- 관제탑: https://wirit-tower.engineerest0.workers.dev/" >> $GITHUB_STEP_SUMMARY
-          echo "- 소재 보드: https://wirit-tower.engineerest0.workers.dev/ideas.html" >> $GITHUB_STEP_SUMMARY
+          echo "- 소재 보드: 관제탑 안 **💡 소재** 탭 (/#ideas)" >> $GITHUB_STEP_SUMMARY

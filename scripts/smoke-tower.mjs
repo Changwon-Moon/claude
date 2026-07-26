@@ -117,6 +117,33 @@ check("발굴 요청이 결정 로그에 기록", wrote("research/decisions-inbo
 check("자료 인박스가 INBOX.md에 기록", wrote("research/INBOX.md"));
 check("저장 성공 표시", (await q(`document.getElementById("savestate").textContent`)).includes("저장됨"));
 
+// 409(sha 불일치)는 GitHub이 쓰기 직후 옛 sha를 돌려줄 때 실제로 발생한다 → 재시도로 넘겨야 한다
+console.log("\n[C. 충돌 재시도]");
+await q(`
+  window.__try = 0;
+  GH.api = async (path, opts) => {
+    opts = opts || {};
+    if (opts.method === "PUT") {
+      window.__try++;
+      if (window.__try === 1) { const e = new Error('GitHub 409 · { "message": "does not match" }'); throw e; }
+      return {};
+    }
+    if (path.indexOf("/contents/") > -1) {
+      const isJson = path.indexOf(".json") > -1;
+      const body = isJson ? JSON.stringify({ meta:{}, cats: STATE.ideas.cats, ideas: STATE.ideas.items }) : "# 기존";
+      return { sha: "sha" + window.__try, content: btoa(unescape(encodeURIComponent(body))) };
+    }
+    return {};
+  };
+`);
+const idC = await q(`[...document.querySelectorAll("#ideaBody .idea")].find(c=>c.dataset.st!=="hold").dataset.iid`);
+await page.click(`.idea[data-iid="${idC}"] .ib.hd`);
+await page.waitForTimeout(1800);
+check("첫 PUT이 409여도 재시도로 저장 성공",
+  (await q(`document.getElementById("savestate").textContent`)).includes("저장됨"),
+  await q(`document.getElementById("savestate").textContent`));
+check("재시도가 실제로 일어남", (await q(`window.__try`)) >= 2, `시도 ${await q(`window.__try`)}회`);
+
 check("콘솔·페이지 오류 없음", errors.length === 0, errors.slice(0, 3).join(" | "));
 
 await browser.close();

@@ -304,9 +304,17 @@ const GH={
       return {sha:d.sha, text:decodeURIComponent(escape(atob((d.content||"").replace(/\s/g,""))))}; }catch(e){ return {sha:null,text:""}; } },
   putFile(path,text,message,sha){ const b64=btoa(unescape(encodeURIComponent(text)));
     return this.api("/repos/"+this.owner+"/"+this.repo+"/contents/"+path,{method:"PUT",body:{message:message,content:b64,branch:this.branch,sha:sha||undefined}}); },
-  async append(path,addition,message){ const cur=await this.getFile(path);
-    const text=(cur.text?cur.text.replace(/\s*$/,"")+"\n\n":"")+addition+"\n";
-    return this.putFile(path,text,message,cur.sha); },
+  /** 쓰기 직후 GitHub이 옛 sha를 돌려줘 409가 나는 경우가 있다 → 다시 읽어 재시도 */
+  isConflict(e){ return /\b409\b|\b422\b|does not match/i.test(e&&e.message||""); },
+  async append(path,addition,message){
+    for(let i=0;i<3;i++){
+      const cur=await this.getFile(path);
+      const text=(cur.text?cur.text.replace(/\s*$/,"")+"\n\n":"")+addition+"\n";
+      try{ return await this.putFile(path,text,message,cur.sha); }
+      catch(e){ if(!this.isConflict(e)||i===2) throw e;
+        await new Promise(r=>setTimeout(r,350*(i+1))); }
+    }
+  },
   async runs(){ const d=await this.api("/repos/"+this.owner+"/"+this.repo+"/actions/runs?per_page=6&branch="+encodeURIComponent(this.branch));
     return (d.workflow_runs||[]).map(r=>({name:r.name,status:r.status,conclusion:r.conclusion,url:r.html_url})); },
 };
@@ -383,7 +391,7 @@ function pushDecision(text, msg){
   setSave("saving");
   GH.append("research/decisions-inbox.md", "- " + ghStamp() + " " + text, "관제탑: " + (msg||"결정 기록"))
     .then(()=>{ setSave("ok"); toast(msg||"저장소에 기록됨 ✓"); })
-    .catch(e=>{ setSave("bad", e.message.slice(0,70)); toast("기록 실패: "+e.message); });
+    .catch(e=>{ const t=shortErr(e); setSave("bad", "decisions-inbox.md · "+t); toast("기록 실패: "+t); });
 }
 
 /* 회사 탭 편집 배선 — CEO 원칙 + 팀별 원칙·프롬프트 */
@@ -674,6 +682,13 @@ const ICATS = ((STATE.ideas||{}).cats)||[];
 const IPATH = (STATE.ideas||{}).path || "research/ideas.json";
 let saveTimer=null, saveReason="";
 
+/** GitHub 오류를 사람이 읽을 수 있게 줄인다(원문 JSON은 너무 길다) */
+function shortErr(e){
+  const m=String(e&&e.message||e);
+  const j=m.match(/"message"\s*:\s*"([^"]+)"/);
+  return (j?j[1]:m).slice(0,80);
+}
+
 function setSave(kind, extra){
   const el=document.getElementById("savestate"); if(!el) return;
   const map={ok:["ok","✔ 저장됨"],saving:["saving","● 저장 중…"],bad:["bad","✕ 저장 실패"],off:["off","🔌 연결 필요"]};
@@ -695,17 +710,22 @@ async function flushSave(){
   if(!GH.connected()){ setSave("off"); return; }
   const reason=saveReason; saveReason="";
   try{
-    // 저장 직전에 원격을 다시 읽어 sha를 맞춘다(다른 기기·세션과의 충돌 방지)
-    const cur=await GH.getFile(IPATH);
-    let doc;
-    try{ doc=JSON.parse(cur.text); }catch(e){ doc={meta:{},cats:ICATS,ideas:[]}; }
-    doc.cats=doc.cats&&doc.cats.length?doc.cats:ICATS;
-    doc.ideas=IDEAS;
-    doc.meta=doc.meta||{};
-    doc.meta.updated=STATE.generatedFrom;
-    await GH.putFile(IPATH, JSON.stringify(doc,null,2)+"\n", "관제탑: "+reason, cur.sha);
+    // 저장 직전에 원격을 다시 읽어 sha를 맞춘다(다른 기기·세션과의 충돌 방지).
+    // 그래도 409가 나면 sha가 잠시 어긋난 것이므로 다시 읽어 재시도한다.
+    for(let i=0;i<3;i++){
+      const cur=await GH.getFile(IPATH);
+      let doc;
+      try{ doc=JSON.parse(cur.text); }catch(e){ doc={meta:{},cats:ICATS,ideas:[]}; }
+      doc.cats=doc.cats&&doc.cats.length?doc.cats:ICATS;
+      doc.ideas=IDEAS;
+      doc.meta=doc.meta||{};
+      doc.meta.updated=STATE.generatedFrom;
+      try{ await GH.putFile(IPATH, JSON.stringify(doc,null,2)+"\n", "관제탑: "+reason, cur.sha); break; }
+      catch(e){ if(!GH.isConflict(e)||i===2) throw e;
+        await new Promise(r=>setTimeout(r,350*(i+1))); }
+    }
     setSave("ok");
-  }catch(e){ setSave("bad", e.message.slice(0,70)); }
+  }catch(e){ setSave("bad", shortErr(e)); }
 }
 
 function ideaById(id){ return IDEAS.find(x=>x.id===id); }
@@ -846,7 +866,7 @@ function wireIdeaTools(){
     try{
       await GH.append("research/INBOX.md", "## "+ghStamp()+"\n\n"+v, "관제탑: 지식 자료 추가");
       setSave("ok"); ta.value=""; toast("research/INBOX.md에 커밋됨 ✓");
-    }catch(e){ setSave("bad", e.message.slice(0,70)); toast("저장 실패: "+e.message); }
+    }catch(e){ const t=shortErr(e); setSave("bad", "INBOX.md · "+t); toast("저장 실패: "+t); }
   };
 
   // 새로고침 — 재배포된 최신 관제탑을 받는다
