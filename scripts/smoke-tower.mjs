@@ -92,9 +92,11 @@ check("가로 스크롤 칸반 제거", await q(`!document.querySelector(".col, 
 check("흐름 레일 표시", (await q(`document.querySelectorAll("#flow .fseg").length`)) >= 5);
 const firstGrp = await q(`(document.querySelector("#board .grph .gt")||{}).textContent||""`);
 check("첫 그룹 = 결재 대기(급한 것부터)", firstGrp === "결재 대기", firstGrp);
+// ⚠️ 중단된(버림) 실험 렌더는 서랍에도 안 나온다 → 셀 때도 빼야 한다.
+//    (안 빼면 "실험은 있는데 서랍이 없다"고 잘못 잡는다 — CI에서만 터졌던 오탐)
 check("실험 렌더는 별도 서랍으로 분리", await q(`
   !![...document.querySelectorAll("#board .grph .gt")].find(e=>e.textContent.indexOf("실험")>-1)
-  || S.tickets.filter(t=>(t.flags||[]).includes("실험")).length===0`));
+  || S.tickets.filter(t=>(t.flags||[]).includes("실험") && !(t.flags||[]).includes("버림")).length===0`));
 // 지표·레일·목록이 같은 숫자를 말해야 도구를 믿을 수 있다
 const kpiN = await q(`document.querySelector(".kpi .v").textContent`);
 const railN = await q(`(document.querySelector("#flow .fseg.act .fv")||{}).textContent||"0"`);
