@@ -69,6 +69,21 @@ check("워크플로 실행 버튼(마이닝·로고 취득·평균연봉) 제거
 check("복사-붙여넣기 우회 제거(요약복사·초기화·지시전달함)",
   (await q(`[!!document.getElementById("bcopy"),!!document.getElementById("breset"),!!document.getElementById("dcnt")].join()`)) === "false,false,false");
 check("저장 상태 바 존재", await q(`!!document.getElementById("savestate")`));
+// ⚠️ 화면에 버튼이 있어도 배선이 빠지면 아무 일도 안 일어난다.
+//    (2026-07-26: 소재 탭을 갈아끼우다 연결 뱃지 배선이 통째로 사라진 적이 있다)
+//    "있는가"가 아니라 "눌리는가"를 본다.
+await page.click("#connbtn");
+await page.waitForTimeout(200);
+check("연결 뱃지를 누르면 팝오버가 열림",
+  await q(`document.getElementById("connpop").classList.contains("on")`));
+await page.keyboard.press("Escape");
+await q(`document.getElementById("connpop").classList.remove("on")`);
+await page.click('.kpi[data-go="board"]');
+await page.waitForTimeout(250);
+check("지표를 누르면 실제로 화면이 바뀜",
+  await q(`document.getElementById("view-board").classList.contains("on")`));
+await page.click('.tab[data-v="today"]');
+await page.waitForTimeout(200);
 
 // 파이프라인 = 흐름 레일 + 단계별 목록 (가로 스크롤 칸반 폐지)
 await page.click('.tab[data-v="board"]');
@@ -98,13 +113,15 @@ check("소재 버튼 3종만(진행·수정·삭제)", await q(`
   [...document.querySelectorAll("#ideaBody .idea")].every(c=>{
     const a=[...c.querySelectorAll(".ibtns [data-ia]")].map(b=>b.dataset.ia).join(",");
     return a==="go,edit,delete"; })`));
-check("수정 폼에 항목 이름(제목·이유·출처)", await q(`
+check("소재 수정 폼에 항목 이름", await q(`
   [...document.querySelectorAll("#ideaBody .idea .iedit .elab")].length >= 3`));
 check("진행·완료 소재는 보드에서 분리", await q(`
   [...document.querySelectorAll("#ideaBody .idea")].every(c=>{
     const i=IDEAS.find(x=>x.id===c.dataset.iid);
     return i && i.status!=="done" && !Number(i.stage||0); })`));
 check("수동 새로고침 버튼 제거", await q(`!document.getElementById("ireload")`));
+check("칸 나눈 입력 폼 제거(제목·이유·출처)", await q(`
+  !document.getElementById("na-t") && !document.getElementById("na-w") && !document.getElementById("na-s")`));
 check("작업 표시줄 존재(평소엔 숨김)", await q(`
   !!document.getElementById("jobbar") && document.getElementById("jobbar").offsetParent===null`));
 
@@ -151,7 +168,7 @@ await page.waitForTimeout(200);
 console.log("\n[A. 미연결 — 읽기 전용]");
 check("저장바가 연결 필요 표시", (await q(`document.getElementById("savestate").textContent`)).includes("연결 필요"));
 check("읽기 전용 안내 노출", await q(`!document.getElementById("igate").hidden`));
-check("조작 도구가 잠김", await q(`document.querySelector(".itools").classList.contains("locked")`));
+check("조작 도구가 잠김", await q(`document.querySelector(".askpanel").classList.contains("locked")`));
 const id0 = await q(`document.querySelectorAll("#ideaBody .idea")[0].dataset.iid`);
 await page.click(`.idea[data-iid="${id0}"] .ib.go`, { force: true });
 await page.waitForTimeout(250);
@@ -181,7 +198,7 @@ await page.click('.tab[data-v="ideas"]');
 await page.waitForTimeout(200);
 check("연결 시 읽기 전용 안내 사라짐", await q(`document.getElementById("igate").hidden`));
 check("연결 뱃지가 '연결됨'", (await q(`document.getElementById("connbtn").textContent`)).includes("연결됨"));
-check("조작 잠금 해제", await q(`!document.querySelector(".itools").classList.contains("locked")`));
+check("조작 잠금 해제", await q(`!document.querySelector(".askpanel").classList.contains("locked")`));
 
 const idA = await q(`document.querySelector("#ideaBody .idea").dataset.iid`);
 await page.click(`.idea[data-iid="${idA}"] .ib.ed`);
@@ -191,13 +208,21 @@ await page.click(`.idea[data-iid="${idA}"] .iedit .sv`);
 await page.waitForTimeout(1100);
 check("수정 → 화면 반영", (await q(`document.querySelector('.idea[data-iid="${idA}"] .it').textContent`)).includes("스모크 수정본"));
 
-await page.click("#iaddBtn");
-await page.fill("#na-t", "스모크 신규 소재");
-await page.click("#iaddSave");
-await page.waitForTimeout(1100);
-check("신규 추가 → 카드 증가", (await q(`document.querySelectorAll("#ideaBody .idea").length`)) === cards + 1);
+// 지시함 — 칸을 나누지 않고 한 곳에 적으면 알아서 접수한다
+check("지시함이 자유 입력창 하나", await q(`
+  !!document.getElementById("ask") && !document.getElementById("na-t")`));
+await page.fill("#ask", "스모크 신규 소재");
+await page.click("#asksend");
+await page.waitForTimeout(1400);
+check("짧은 한 줄 → 소재로 등록", (await q(`document.querySelectorAll("#ideaBody .idea").length`)) === cards + 1);
+check("접수 결과를 그 자리에서 알려줌", (await q(`document.getElementById("askhint").textContent`)).length > 3);
+check("보낸 것 기록에 남음", (await q(`document.querySelectorAll("#asklog .askitem").length`)) > 0);
 
-await page.click("#imineBtn"); // prompt 자동 응답
+await page.fill("#ask", "https://example.com/news 이 기사로 카드 만들어줘");
+await page.click("#asksend");
+await page.waitForTimeout(1300);
+
+await page.click("#askmine");
 await page.waitForTimeout(1400);
 // 진행 중에는 같은 버튼을 다시 못 누른다 — 중복 요청이 쌓이지 않게
 check("작업 중 버튼 잠금·표시줄 노출", await q(`
@@ -206,15 +231,11 @@ check("작업 중 버튼 잠금·표시줄 노출", await q(`
     const locked=!!b && b.disabled;
     const bar=!document.getElementById("jobbar").hidden;
     jobEnd("t1"); return locked===false ? bar : (locked && bar); })()`));
-await page.fill("#ktext2", "스모크 자료");
-await page.click("#kadd2");
-await page.waitForTimeout(900);
-
 const puts = await q(`window.__puts.map(p=>p.path.split("/contents/")[1]||p.path)`);
 const wrote = (f) => puts.some((p) => p.startsWith(f));
 check("소재 변경이 ideas.json에 기록", wrote("research/ideas.json"), puts.join(" "));
-check("발굴 요청이 결정 로그에 기록", wrote("research/decisions-inbox.md"));
-check("자료 인박스가 INBOX.md에 기록", wrote("research/INBOX.md"));
+check("발굴·지시가 결정 로그에 기록", wrote("research/decisions-inbox.md"));
+check("링크·자료가 INBOX.md에 기록", wrote("research/INBOX.md"));
 check("저장 성공 표시", (await q(`document.getElementById("savestate").textContent`)).includes("저장됨"));
 
 // ── 소재 → 파이프라인 배관 (이번 개편의 핵심)
@@ -289,6 +310,49 @@ if (inboxN > 0) {
     document.getElementById("view-board").classList.contains("on")
     || document.getElementById("view-ideas").classList.contains("on")`));
 }
+
+// ── 왕복 검사 (2026-07-26 신설)
+// 이번 사태의 근본 원인: 나는 "저장소에 요청이 갔나"만 봤고,
+// **그걸 다시 읽었을 때 화면에 반영되는가**는 한 번도 안 봤다.
+// 그래서 오너는 [중단]을 눌러도 새로고침하면 되살아나는 화면을 봤다.
+console.log("\n[G. 왕복 — 쓴 것이 다시 읽어도 반영되는가]");
+await q(`closeDrawer && closeDrawer()`);
+await page.waitForTimeout(300);
+await q(`
+  // 저장소에 '중단' 기록이 이미 있는 상태를 흉내낸다
+  window.__dropped = S.tickets.find(t=>t.stage>=1 && !(t.flags||[]).includes("버림"));
+  GH.api = async (path, opts) => {
+    opts = opts || {};
+    if (opts.method === "PUT") return {};
+    if (path === "/user") return { login: "smoke" };
+    if (path.indexOf("/actions/runs") > -1) return { workflow_runs: [] };
+    if (path.indexOf("pipeline-state") > -1) {
+      const body = JSON.stringify({ dropped: [{ title: window.__dropped.title }], revise: [] });
+      return { sha: "sha", content: btoa(unescape(encodeURIComponent(body))) };
+    }
+    if (path.indexOf("/contents/") > -1) {
+      const body = JSON.stringify({ meta:{}, cats: STATE.ideas.cats, ideas: IDEAS });
+      return { sha: "sha", content: btoa(unescape(encodeURIComponent(body))) };
+    }
+    return {};
+  };
+`);
+const dropTitle = await q(`window.__dropped.title`);
+await q(`refreshFromRepo()`);
+await page.waitForTimeout(900);
+check("저장소의 '중단' 기록이 화면에 반영됨(배포를 안 기다림)", await q(`
+  (S.tickets.find(t=>t.title===window.__dropped.title)||{}).flags.includes("버림")`), dropTitle);
+await page.click('.tab[data-v="board"]');
+await page.waitForTimeout(300);
+check("중단된 건은 파이프라인 목록에서 사라짐", await q(`
+  ![...document.querySelectorAll("#board .row .rt")].some(e=>e.textContent.indexOf(window.__dropped.title)>-1)`));
+
+// 보관함 링크는 '있는 파일'만 걸려 있어야 한다 — 없는 파일에 링크하면 전부 404다
+await page.click('.tab[data-v="archive"]');
+await page.waitForTimeout(250);
+check("보관함 링크가 저장소에 없는 파일을 가리키지 않음", await q(`
+  [...document.querySelectorAll(".flink")].every(a =>
+    !/\\/data\\/(out|content)\\//.test(a.getAttribute("href")||""))`));
 
 check("콘솔·페이지 오류 없음", errors.length === 0, errors.slice(0, 3).join(" | "));
 

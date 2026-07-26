@@ -106,11 +106,10 @@ jobs:
         run: node scripts/smoke-tower.mjs packages/tower-worker/_site/index.html
 
       # 화면의 모든 버튼을 눌러보는 전수 조사.
-      # ⚠️ 배포를 막지는 않는다 — 탐색적 검사라 오탐이 나올 수 있고,
-      #    오탐 하나로 오너가 화면을 못 받는 쪽이 훨씬 나쁘다.
-      #    발행을 막아야 하는 결정적 검사는 위의 '관제탑 스모크'가 맡는다.
-      - name: 전 버튼 시뮬레이션 (경고만)
-        continue-on-error: true
+      # 처음엔 오탐 때문에 경고로만 뒀는데, 실제로 **배선이 통째로 빠진 버그**
+      # (연결 뱃지가 안 열림)를 이게 잡았다. 오탐은 검사를 고쳐서 없애고,
+      # 검사 자체는 배포를 막게 둔다 — 안 눌리는 버튼을 내보내는 게 더 나쁘다.
+      - name: 전 버튼 시뮬레이션
         run: node scripts/sim-tower.mjs packages/tower-worker/_site/index.html
 
       # wrangler-action@v3은 구버전(3.90)을 설치해 jsonc 설정을 못 읽는다("Missing entry-point").

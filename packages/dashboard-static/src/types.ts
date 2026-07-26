@@ -147,8 +147,13 @@ export interface ArchiveWork {
   caption?: string;
   captionChars: number;
   files: { content: string[]; png: string[]; caption: string; review: string };
+  /** 저장소에 없는(매번 다시 그리는) 산출물 경로 — 링크가 아니라 정보로 보여준다 */
+  rebuilt?: { content: string[]; png: string[] };
   /** 대표 장 썸네일(이미지 풀 키) — buildState 가 채운다 */
   thumb?: string | null;
+  /** 카드 전 장 이미지(이미지 풀 키) — 보관함에서 실물을 본다.
+   *  ⚠️ 위의 `pages`(숫자=렌더 장수)와 다른 것이라 이름을 나눴다. */
+  shots?: string[];
 }
 export interface ArchiveFolder {
   topic: string;

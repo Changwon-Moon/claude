@@ -121,25 +121,24 @@ if (await page.$("#board .row")) {
   await press("파이프라인 행", "#board .row", { wait: 600 });
   const opened = await page.evaluate(`document.getElementById("drawer").classList.contains("on")`);
   if (!opened) note("파이프라인 행", "눌러도 상세가 안 열림");
+  const acts2 = await page.evaluate(`[...drawer.querySelectorAll("[data-act]")].map(b=>b.dataset.act)`);
+  if (!acts2.length) note("파이프라인 행", "상세에 아무 액션도 없음(오너가 손을 못 씀)");
   await press("드로어 닫기", "#drawer .close");
 }
 
 // ── 5. 소재 탭 전 버튼
 await page.click('.tab[data-v="ideas"]');
 await page.waitForTimeout(350);
-await press("새 소재 열기", "#iaddBtn");
-await press("새 소재 취소", "#iaddCancel");
-await press("새 소재 열기2", "#iaddBtn");
-await page.fill("#na-t", "시뮬 소재");
-await press("새 소재 저장", "#iaddSave", { wait: 1300 });
+await press("지시함 빈 입력 보내기", "#asksend", { wait: 400 });
+await page.fill("#ask", "시뮬 소재");
+await press("지시함 보내기", "#asksend", { wait: 1400 });
+await page.fill("#ask", "https://example.com 이 기사로 카드 만들어줘");
+await press("지시함 링크 보내기", "#asksend", { wait: 1300 });
 await press("소재 수정 열기", "#ideaBody .idea .ib.ed");
 await press("소재 수정 취소", "#ideaBody .idea .iedit [data-ia='cancel']");
 await press("소재 수정 열기2", "#ideaBody .idea .ib.ed");
 await press("소재 수정 저장", "#ideaBody .idea .iedit .sv", { wait: 1300 });
-await press("자료 저장(빈 입력)", "#kadd2", { wait: 400 });
-await page.fill("#ktext2", "시뮬 자료");
-await press("자료 저장", "#kadd2", { wait: 1200 });
-await press("새 소재 발굴", "#imineBtn", { wait: 1600 });
+await press("새 소재 찾아줘", "#askmine", { wait: 1600 });
 
 // ── 6. 회사: CEO / 팀 노드 / 원칙 편집
 await page.click('.tab[data-v="company"]');
@@ -168,6 +167,11 @@ const bodyShown = await page.evaluate(`!!document.querySelector(".fitem[open] .f
 if (!bodyShown) note("보관함", "펼쳐도 내용이 안 나옴");
 const hasCap = await page.evaluate(`!!document.querySelector(".fitem[open] .cap")`);
 const hasFiles = await page.evaluate(`document.querySelectorAll(".fitem[open] .flink").length`);
+const deadLinks = await page.evaluate(`
+  [...document.querySelectorAll(".flink")].filter(a=>/\\/data\\/(out|content)\\//.test(a.getAttribute("href")||"")).length`);
+if (deadLinks) note("보관함", `저장소에 없는 파일로 가는 링크 ${deadLinks}개(404)`);
+const shots = await page.evaluate(`document.querySelectorAll(".fitem[open] .fstrip img").length`);
+if (!shots && !hasFiles) note("보관함", "펼쳐도 실물도 링크도 없음");
 if (!hasCap) note("보관함", "캡션 전문이 안 보임");
 if (!hasFiles) note("보관함", "저장소 원본 링크가 없음");
 

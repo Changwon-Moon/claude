@@ -19,6 +19,7 @@
  * 실행: node scripts/build-archive.mjs
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, statSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -27,6 +28,23 @@ const REVIEW = join(ROOT, "data/review");
 const CONTENT = join(ROOT, "data/content");
 const OUT = join(ROOT, "data/out");
 const ARCHIVE = join(ROOT, "data/archive");
+
+/**
+ * 저장소(git)에 실제로 들어 있는 파일 목록.
+ *
+ * ⚠️ 이걸 안 보면 안 되는 이유(2026-07-26 오너 보고: "눌러도 안 뜨네"):
+ * data/content(카드 JSON)·data/out(PNG)은 용량 때문에 gitignore다 → GitHub에 없다.
+ * 그런데도 보관함이 그 경로로 링크를 걸어서 전부 404였다.
+ * **없는 파일에는 링크를 걸지 않는다** — 링크가 있으면 열려야 한다.
+ */
+let TRACKED = new Set();
+try {
+  const out = execFileSync("git", ["ls-files", "data", "research"], { cwd: ROOT, encoding: "utf8" });
+  TRACKED = new Set(out.split("\n").filter(Boolean));
+} catch {
+  /* git이 없으면 링크를 보수적으로 비운다 */
+}
+const inRepo = (p) => TRACKED.has(p);
 
 const read = (p, fb = null) => {
   try {
@@ -117,11 +135,19 @@ for (const set of sets) {
     cards: set.cards.length,
     pages: locs.reduce((a, l) => a + l.pngs.length, 0),
     state: publishState(set.title),
+    // 링크로 걸 파일 = 저장소에 실제로 있는 것만. 나머지는 경로만 안내한다.
     files: {
-      content: locs.map((l) => l.content),
-      png: locs.flatMap((l) => l.pngs),
-      caption: existsSync(capPath) ? `data/review/captions/${capName}.txt` : "",
-      review: existsSync(revPath) ? `data/review/${set.review || set.label}.json` : "",
+      content: locs.map((l) => l.content).filter(inRepo),
+      png: locs.flatMap((l) => l.pngs).filter(inRepo),
+      caption: existsSync(capPath) && inRepo(`data/review/captions/${capName}.txt`)
+        ? `data/review/captions/${capName}.txt` : "",
+      review: existsSync(revPath) && inRepo(`data/review/${set.review || set.label}.json`)
+        ? `data/review/${set.review || set.label}.json` : "",
+    },
+    // 저장소에 없는(=매번 다시 그리는) 산출물의 경로 — 링크가 아니라 정보로 보여준다
+    rebuilt: {
+      content: locs.map((l) => l.content).filter((p) => !inRepo(p)),
+      png: locs.flatMap((l) => l.pngs).filter((p) => !inRepo(p)),
     },
     verdict: rev?.verdict || "",
     reviewSummary: rev?.summary || "",

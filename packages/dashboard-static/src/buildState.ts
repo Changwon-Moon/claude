@@ -300,6 +300,9 @@ export async function buildState(): Promise<TowerState> {
         for (const w of f.items) {
           const lead = produced.find((p) => p.setLabel === w.label && p.setLead);
           w.thumb = lead ? intern(lead.thumb) : null;
+          // PNG·카드 JSON은 저장소에 없어 링크를 걸 수 없다(gitignore).
+          // 대신 **실물을 여기서 바로 보여준다** — 그게 보관함의 존재 이유다.
+          w.shots = lead ? lead.pages.map((u) => intern(u, PAGE_W)!).filter(Boolean) : [];
         }
       }
     } catch {

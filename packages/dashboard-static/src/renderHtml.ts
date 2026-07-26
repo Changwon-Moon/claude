@@ -358,6 +358,8 @@ input,textarea,select{font-family:inherit}
 .editbox.on{display:flex}
 .editbox textarea{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);color:var(--text);padding:10px;min-height:72px;resize:vertical}
 /* 이유 입력 — 반려·보류의 "왜"를 받아 회사가 학습한다 */
+.stagenote{flex:1 0 100%;font-size:12.5px;color:var(--muted);line-height:1.6;margin-bottom:2px}
+.stagenote b{color:var(--text)}
 .rsn{display:none;flex-direction:column;gap:9px;width:100%;background:var(--band);border-radius:var(--r);padding:12px}
 .rsn.on{display:flex}
 .rsn .q{font-size:12.5px;font-weight:700}
@@ -487,12 +489,29 @@ button[disabled] .spin{margin-right:5px}
 .fbody{padding:4px 0 14px 48px;display:flex;flex-direction:column;gap:12px}
 @media (max-width:640px){.fbody{padding-left:0}}
 .fcap .cap{margin-top:5px;font-family:inherit}
+.fcards .fstrip{display:flex;gap:8px;overflow-x:auto;padding:6px 2px 2px;scrollbar-width:thin}
+.fcards .fstrip img{height:230px;width:auto;border-radius:8px;border:1px solid var(--line);flex:none;background:var(--band)}
 .fcopy{margin-top:7px}
 .frv{font-size:11.5px;color:var(--muted);border-left:2px solid var(--line);padding-left:9px}
 .ffiles .flinks{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
 .flink{font-size:10.5px;font-weight:700;border:1px solid var(--line);border-radius:5px;
   padding:3px 8px;color:var(--muted);text-decoration:none}
 .flink:hover{color:var(--text);border-color:var(--muted)}
+
+/* ══ 지시함 ══ 칸을 나누지 않는다. 그냥 적으면 알아서 접수한다 */
+.askpanel{position:sticky;top:112px}
+.askbox{width:100%;font:inherit;font-size:13px;line-height:1.65;padding:11px 12px;border-radius:var(--r);
+  border:1px solid var(--line);background:var(--paper);color:var(--text);resize:vertical;min-height:132px}
+.askbox:focus{border-color:var(--cobalt);outline:none}
+.askrow{display:flex;gap:6px;margin-top:8px}
+.askrow .itool{flex:1}
+.askhint{font-size:11.5px;color:var(--ok);line-height:1.6;margin-top:8px;min-height:1px}
+.asklog{display:flex;flex-direction:column;gap:6px;max-height:230px;overflow-y:auto}
+.askitem{background:var(--band);border-radius:9px;padding:8px 10px}
+.asktxt{font-size:11.5px;line-height:1.55;white-space:pre-wrap;word-break:break-word;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.askmeta{font-size:10px;color:var(--faint);margin-top:3px;font-variant-numeric:tabular-nums}
+@media (max-width:940px){.askpanel{position:static}}
 
 /* ══ 성과 ══ 저장 수를 막대로 — 한눈에 무엇이 터졌는지 */
 .pstat{display:flex;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
@@ -653,7 +672,7 @@ function wireConn(){
 function afterConnChange(msg){
   renderConn(); applyLock(); setSave(GH.connected()?"ok":"off");
   renderInbox(); renderBoard(); renderIdeas();
-  if(GH.connected()) startWatching();   // 저장소 작업 상태를 지켜본다
+  if(GH.connected()){ startWatching(); refreshFromRepo(); } // 저장소 상태를 먼저 맞춘다
   if(msg) toast(msg);
 }
 /** 미연결이면 조작 UI를 아예 못 누르게 잠근다 */
@@ -745,20 +764,43 @@ function scheduleRuns(){
 function startWatching(){ if(watching) return; watching=true; pollRuns(); }
 
 /**
- * 저장소에서 최신 소재를 다시 읽어 화면에 반영한다.
- * ⚠️ 페이지 새로고침이 아니다 — 지금 보고 있는 화면을 그대로 두고 데이터만 갈아끼운다.
- *   (카드 썸네일 같은 '빌드 산출물'은 배포가 다시 돌아야 바뀌므로, 그건 별도 안내)
+ * 저장소에서 최신 상태를 읽어 화면에 반영한다.
+ *
+ * ⚠️ 이게 없으면 이런 일이 생긴다(2026-07-26 오너 보고):
+ *   [중단·삭제]를 누른다 → 저장소에는 기록된다 → 그런데 **화면은 배포 시점의 사진**이라
+ *   새로고침하면 그 건이 되살아나 보인다. 오너는 "안 먹는다"고 판단한다.
+ * 화면을 열 때(그리고 작업이 끝날 때마다) 저장소를 직접 읽어 덮어쓰면,
+ * **배포를 기다릴 필요가 없다.**
  */
 async function refreshFromRepo(){
   if(!GH.connected()) return;
+  let changed=false;
+  // ① 소재
   try{
     const cur=await GH.getFile(IPATH);
     const doc=JSON.parse(cur.text);
-    if(Array.isArray(doc.ideas)){
-      IDEAS=doc.ideas;
-      renderIdeas(); renderInbox();
-    }
+    if(Array.isArray(doc.ideas)){ IDEAS=doc.ideas; changed=true; }
   }catch(e){ /* 못 읽으면 그냥 둔다 */ }
+  // ② 파이프라인 결정(중단·수정지시) — 배포 전에도 화면에 즉시 반영
+  try{
+    const cur=await GH.getFile("data/pipeline-state.json");
+    const doc=JSON.parse(cur.text);
+    const key=(x)=>String(x||"").replace(/\s+/g,"").replace(/[·—-]/g,"").toLowerCase();
+    const mark=(list,flag)=>{
+      for(const d of (Array.isArray(list)?list:[])){
+        const n=key(d.title); if(!n) continue;
+        for(const t of S.tickets){
+          const m=key(t.title);
+          if(!(m.indexOf(n)>-1 || n.indexOf(m)>-1)) continue;
+          t.flags=t.flags||[];
+          if(!t.flags.includes(flag)){ t.flags.push(flag); changed=true; }
+        }
+      }
+    };
+    mark(doc.dropped,"버림");
+    mark(doc.revise,"수정요청");
+  }catch(e){ /* 파일이 없을 수도 있다 */ }
+  if(changed){ save(); renderIdeas(); renderInbox(); renderBoard(); }
 }
 
 /* ══ 발행 대기열 ══
@@ -1217,8 +1259,25 @@ function buildDetail(t){
   } else if(t.auto){
     acts='<div class="why">자동 슬롯 — 사후 통보만. 무인 해제는 설정에서.</div>';
   } else {
-    acts='<div class="btn ghost" style="flex:1 0 100%;cursor:default">진행 중 — 이 단계에선 오너 액션이 없습니다</div>'
-      +'<button class="btn danger" data-act="drop">중단·삭제</button>'+reasonBox();
+    // 기획안·제작중·검수대기 — "아무 액션 없음"으로 두면 오너가 손을 못 쓴다.
+    // 여기서 할 수 있는 일은 세 가지다: 지시를 더 주거나, 다 됐다고 넘기거나, 접거나.
+    const wo = t.ideaId ? "research/work-orders/"+t.ideaId+".md" : "";
+    const woLink = (wo && STATE.repo.owner)
+      ? '<a class="btn ghost" style="text-decoration:none" target="_blank" rel="noopener" href="https://github.com/'
+        +esc(STATE.repo.owner)+"/"+esc(STATE.repo.name)+"/blob/"+esc(STATE.repo.branch)+"/"+esc(wo)+'">작업지시서 보기 ↗</a>'
+      : "";
+    acts='<div class="stagenote">'
+      +(t.stage===1 ? "오너가 승인한 소재입니다. <b>작업지시서가 만들어졌고</b>, 다음 작업 때 데이터·카드 제작에 들어갑니다."
+        : t.stage===2 ? "데이터를 모으고 카드를 만드는 중입니다."
+        : "자동 검수(수치·레이아웃·캡션)를 도는 중입니다.")
+      +'</div>'
+      +'<button class="btn primary" data-act="push">지시 추가</button>'
+      + woLink
+      +'<button class="btn ghost" data-act="next">다음 단계로</button>'
+      +'<button class="btn danger" data-act="drop">중단·삭제</button>'
+      +'<div class="editbox" id="editbox"><textarea id="edittext" placeholder="예) 7월 데이터로 다시 뽑아줘 / 제목을 더 세게"></textarea>'
+      +'<button class="btn primary" data-act="editsave">지시 기록</button></div>'
+      +reasonBox();
   }
 
   return '<div class="dhead"><button class="close" aria-label="닫기">✕</button>'
@@ -1312,7 +1371,15 @@ function wireActions(t){
       if(a==="unqueue"){ ask("왜 내리시나요? (기록에 남습니다)", (why)=>{
         t.stage=4; t.flags=(t.flags||[]).filter(f=>f!=="업로드 대기");
         unqueuePublish(t, why); done(ttl+" 대기열에서 내림"); }); }
-      if(a==="edit"){ drawer.querySelector("#editbox").classList.toggle("on"); return; }
+      if(a==="edit"||a==="push"){ drawer.querySelector("#editbox").classList.toggle("on"); return; }
+      // 다음 단계로 — 오너가 "이건 끝났다"고 손으로 밀어 올린다(저장소에 남는다)
+      if(a==="next"){
+        const to=Math.min(t.stage+1, STAGES.length-1);
+        t.stage=to;
+        if(t.ideaId){ const i=ideaById(t.ideaId); if(i){ i.stage=to; queueSave("소재 단계 이동 — "+i.title); } }
+        pushDecision("▶ 단계 이동: "+t.title+" → "+STAGES[to], STAGES[to]+"로 이동");
+        done(ttl+" → "+STAGES[to]);
+      }
       if(a==="editsave"){ const v=drawer.querySelector("#edittext").value.trim(); if(!v){ toast("코멘트를 입력하세요"); return; }
         t.comments=t.comments||[]; t.comments.push(v); t.flags=t.flags||[]; if(!t.flags.includes("수정요청")) t.flags.push("수정요청");
         reviseTicket(t, v); done("수정지시 기록됨"); }
@@ -1507,57 +1574,89 @@ function wireIdeas(){
   });
 }
 
-function wireIdeaTools(){
-  const add=document.getElementById("iaddBtn"), box=document.getElementById("iaddBox");
-  if(add) add.onclick=()=>{ box.classList.toggle("on"); if(box.classList.contains("on")) document.getElementById("na-t").focus(); };
-  const cancel=document.getElementById("iaddCancel");
-  if(cancel) cancel.onclick=()=>box.classList.remove("on");
-  const save=document.getElementById("iaddSave");
-  if(save) save.onclick=()=>{
-    if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 상단 [연결하기]"); return; }
-    const t=(document.getElementById("na-t").value||"").trim();
-    if(!t){ toast("제목을 입력해주세요"); return; }
-    const item={ id:"new-"+Date.now().toString(36), cat:document.getElementById("na-c").value,
-      title:t, why:(document.getElementById("na-w").value||"").trim(),
-      source:(document.getElementById("na-s").value||"").trim(), state:"", status:"", isNew:true };
-    IDEAS.push(item);
-    queueSave("소재 추가 — "+t);
-    document.getElementById("na-t").value=""; document.getElementById("na-w").value=""; document.getElementById("na-s").value="";
-    box.classList.remove("on"); renderIdeas(); toast("추가됨 — 저장소에 기록됩니다");
-  };
+/* ══════════ 지시함 ══════════
+ * 오너가 칸을 나눠 채우게 하지 않는다. 기사 링크든 메모든 지시문이든
+ * **그냥 한 칸에 적으면** 저장소에 쌓이고, 다음 작업이 그걸 읽고 처리한다.
+ * (브라우저에서 LLM을 돌릴 수는 없으므로 "즉답"은 안 된다 — 대신 무엇이 접수됐고
+ *  어떻게 처리될지를 그 자리에서 분명히 말해준다. 말없이 삼키지 않는다.) */
+const ASKLOG_KEY="wirit-asklog";
+function askLog(){ try{ return JSON.parse(localStorage.getItem(ASKLOG_KEY)||"[]"); }catch(e){ return []; } }
+function askLogPush(e){ const l=askLog(); l.unshift(e); localStorage.setItem(ASKLOG_KEY, JSON.stringify(l.slice(0,20))); renderAskLog(); }
+function renderAskLog(){
+  const el=document.getElementById("asklog"); if(!el) return;
+  const l=askLog();
+  if(!l.length){ el.innerHTML='<span class="howto-note">아직 없습니다.</span>'; return; }
+  el.innerHTML=l.map(e=>'<div class="askitem"><div class="asktxt">'+esc(e.text)+'</div>'
+    +'<div class="askmeta">'+esc(e.at)+' · '+esc(e.kind)+'</div></div>').join("");
+}
 
-  // 새 소재 발굴 — 방향을 저장소에 남기고, 수집 워크플로도 같이 돌린다(버튼 하나로 통합)
-  const dig=document.getElementById("imineBtn");
+/** 적어 넣은 내용을 보고 무엇으로 접수할지 판단한다 — 오너가 고르게 하지 않는다 */
+function classifyAsk(text){
+  const t=text.trim();
+  if(/https?:\/\//.test(t)) return { kind:"자료(링크)", to:"research/INBOX.md",
+    note:"링크를 자료로 접수했습니다. 다음 작업 때 읽고 소재로 쓸지 판단합니다." };
+  if(/만들|뽑아|해줘|해봐|카드|제작|수정|바꿔|다시/.test(t)) return { kind:"작업 지시", to:"research/decisions-inbox.md",
+    note:"작업 지시로 접수했습니다. 다음 작업 때 이대로 진행합니다." };
+  if(t.length<=60) return { kind:"소재 아이디어", to:"ideas",
+    note:"소재로 등록했습니다 — 왼쪽 보드에서 바로 확인하세요." };
+  return { kind:"자료(메모)", to:"research/INBOX.md",
+    note:"자료로 접수했습니다. 다음 작업 때 읽습니다." };
+}
+
+function wireIdeaTools(){
+  renderAskLog();
+
+  const send=document.getElementById("asksend");
+  if(send) send.onclick=async()=>{
+    const ta=document.getElementById("ask");
+    const v=(ta.value||"").trim();
+    const hint=document.getElementById("askhint");
+    if(!v){ toast("무엇을 할지 적어주세요"); ta.focus(); return; }
+    if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
+
+    const c=classifyAsk(v);
+    jobStart("ask","보내는 중"); setSave("saving");
+    try{
+      if(c.to==="ideas"){
+        // 짧은 한 줄은 소재로 바로 등록한다 — 화면에서 즉시 보인다
+        IDEAS.push({ id:"ask-"+Date.now().toString(36), cat:(ICATS[0]||{}).key||"misc",
+          title:v.slice(0,90), why:"오너 직접 입력", source:"지시함", state:"", status:"", isNew:true });
+        await new Promise(r=>{ queueSave("소재 추가 — "+v.slice(0,40)); setTimeout(r,900); });
+        renderIdeas();
+      } else {
+        await GH.append(c.to, "- "+ghStamp()+" "+v.replace(/\n+/g," / "), "관제탑: "+c.kind);
+      }
+      setSave("ok");
+      askLogPush({ text:v.slice(0,160), at:STATE.dateLabel, kind:c.kind });
+      ta.value="";
+      if(hint) hint.textContent="✔ "+c.note;
+      jobEnd("ask", c.kind+"로 접수했습니다");
+      renderInbox();
+    }catch(e){ const m=shortErr(e); setSave("bad", m); jobEnd("ask", m, true); }
+  };
+  // Ctrl/⌘+Enter 로도 보낸다 — 채팅창처럼
+  const ta=document.getElementById("ask");
+  if(ta) ta.onkeydown=(e)=>{ if((e.metaKey||e.ctrlKey)&&e.key==="Enter"){ e.preventDefault(); send&&send.click(); } };
+
+  // 새 소재 찾아줘 — 수집을 돌리고, 끝나면 자동으로 보드에 반영된다
+  const dig=document.getElementById("askmine");
   if(dig) dig.onclick=async()=>{
     if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
-    const v=prompt("어떤 방향으로 새 소재를 찾을까요?\n(예: 8월 시의성 부동산 / 20~30대 공감 통계 / 지도 엔진 재사용)\n\n비워도 됩니다 — 그러면 최근 삭제 사유를 참고해 알아서 찾습니다.","");
-    if(v===null) return;
-    const t=(v||"").trim();
-    jobStart("mine","소재 발굴 요청");
+    const dir=(document.getElementById("ask").value||"").trim();
+    jobStart("mine","소재 찾는 중");
     try{
-      // 최근 삭제 사유를 같이 실어 보낸다 — 같은 걸 또 들고 오지 않도록
       const avoid=RECENT_DROPS.slice(-5);
       await GH.append("research/decisions-inbox.md",
-        "- "+ghStamp()+" 🔎 신규 소재 발굴 요청"+(t?" — "+t:" — 방향 지정 없음")
-        +(avoid.length?" [피할 것: "+avoid.join(" / ")+"]":""),
-        "관제탑: 소재 발굴 요청");
-      try{ await GH.dispatch("research-digest.yml",{}); }catch(e){}
-      jobEnd("mine","발굴을 시작했습니다 — 끝나면 자동으로 반영됩니다");
+        "- "+ghStamp()+" 🔎 새 소재 발굴"+(dir?" — "+dir.replace(/\n+/g," / "):"")
+        +(avoid.length?" [피할 것: "+avoid.join(" / ")+"]":""), "관제탑: 소재 발굴 요청");
+      await GH.dispatch("research-digest.yml",{});
+      const hint=document.getElementById("askhint");
+      if(hint) hint.textContent="✔ 수집을 시작했습니다 — 끝나면 왼쪽 보드에 새 소재가 자동으로 뜹니다(2~3분).";
+      askLogPush({ text:dir||"(방향 지정 없음)", at:STATE.dateLabel, kind:"소재 발굴" });
+      document.getElementById("ask").value="";
+      jobEnd("mine","수집 시작 — 끝나면 자동 반영");
       startWatching();
-    }catch(e){ jobEnd("mine", shortErr(e), true); }
-  };
-
-  // 자료 인박스 — research/INBOX.md 에 바로 커밋
-  const kb=document.getElementById("kadd2");
-  if(kb) kb.onclick=async()=>{
-    const ta=document.getElementById("ktext2"); const v=(ta.value||"").trim();
-    if(!v){ toast("붙여넣은 내용이 없습니다"); return; }
-    if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
-    jobStart("inbox","자료 저장"); setSave("saving");
-    try{
-      await GH.append("research/INBOX.md", "## "+ghStamp()+"\n\n"+v, "관제탑: 지식 자료 추가");
-      setSave("ok"); ta.value=""; jobEnd("inbox","research/INBOX.md 에 저장됨");
-    }catch(e){ const t=shortErr(e); setSave("bad", "INBOX.md · "+t); jobEnd("inbox", t, true); }
+    }catch(e){ const m=shortErr(e); jobEnd("mine", m, true); }
   };
 }
 
@@ -1567,10 +1666,6 @@ if(connBtn) connBtn.onclick=(e)=>{ e.stopPropagation(); document.getElementById(
 document.addEventListener("click",(e)=>{
   const pop=document.getElementById("connpop");
   if(pop&&pop.classList.contains("on")&&!pop.contains(e.target)) pop.classList.remove("on");
-});
-
-document.querySelectorAll("[data-go]").forEach(b=>{
-  b.onclick=()=>{ openTab(b.dataset.go); history.replaceState(null,"","#"+b.dataset.go); };
 });
 
 /* 보관함 — 캡션 복사 */
@@ -1584,6 +1679,11 @@ document.querySelectorAll(".fcopy").forEach(b=>{
   };
 });
 
+/* 지표 클릭 → 해당 화면 */
+document.querySelectorAll("[data-go]").forEach(b=>{
+  b.onclick=()=>{ openTab(b.dataset.go); history.replaceState(null,"","#"+b.dataset.go); };
+});
+
 renderConn();
 renderBoard();
 renderIdeas();
@@ -1592,9 +1692,12 @@ wireIdeaTools();
 applyLock();
 if(location.hash) openTab(location.hash.slice(1));
 setSave(GH.connected()?"ok":"off");
-if(GH.connected()) startWatching();
+if(GH.connected()){ startWatching(); refreshFromRepo(); }
 // 탭을 다시 보면 그동안 바뀐 게 있는지 확인한다 — 새로고침을 누를 일이 없게
-document.addEventListener("visibilitychange",()=>{ if(!document.hidden&&GH.connected()) pollRuns(); });
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden||!GH.connected()) return;
+  pollRuns(); refreshFromRepo();
+});
 `;
 
 function esc(s: unknown): string {
@@ -1606,46 +1709,42 @@ function esc(s: unknown): string {
 
 /** 소재 탭 — 마이닝(요청·자료 인박스)과 아이디어 보드를 한 화면에. */
 function ideasHtml(state: TowerState): string {
-  const cats = state.ideas.cats;
   const items = state.ideas.items;
-  // 보드에 남는 건 '아직 안 고른 것'뿐. 진행·완료는 파이프라인·보관함이 맡는다.
   const open = items.filter((i) => i.status !== "done" && !Number(i.stage || 0)).length;
-  const opts = cats.map((c) => `<option value="${esc(c.key)}">${esc(c.label)}</option>`).join("");
   const weights = state.mining.weights.map((w) => `<span class="wchip">${esc(w.label)} ${w.pct}%</span>`).join("");
 
   return `<div class="ideas">
   <section class="ipanel">
     <div class="ih">소재 보드<span class="n num" id="icount">${open}건</span></div>
     <div class="igate" id="igate" hidden></div>
-    <div class="itools" data-lock>
-      <button class="itool prim" id="iaddBtn">+ 새 소재</button>
-      <button class="itool" id="imineBtn" data-job="mine">새 소재 발굴</button>
-    </div>
     <div class="moved" id="imoved"></div>
-    <div class="iadd" id="iaddBox">
-      <label class="elab">제목<input id="na-t" placeholder="예: 학군지 프리미엄 지도"></label>
-      <label class="elab">왜 이 소재인가<input id="na-w" placeholder="터질 것 같은 이유 한 줄"></label>
-      <label class="elab">데이터 출처<input id="na-s" placeholder="예: 국토부 실거래 + 학교알리미"></label>
-      <label class="elab">분류<select id="na-c">${opts}</select></label>
-      <div class="row"><button id="iaddCancel">취소</button><button class="sv" id="iaddSave">추가</button></div>
-    </div>
     <div id="ideaBody"></div>
   </section>
 
-  <aside class="ipanel">
-    <div class="ih">이 화면 사용법</div>
-    <ul class="howto">
-      <li><b>▶ 진행</b> — 이 소재로 만들자. 파이프라인 <b>기획안</b>으로 올라가고, 작업지시서가 자동으로 만들어집니다.</li>
-      <li><b>✎ 수정</b> — 제목·이유·출처를 다듬습니다.</li>
-      <li><b>🗑 삭제</b> — 목록에서 뺍니다. <b>사유를 적으면</b> 회사가 학습해 비슷한 소재를 다시 안 가져옵니다. 비우면 그냥 지웁니다.</li>
-      <li><b>새 소재 발굴</b> — 찾을 방향을 적으면 수집 작업이 <b>바로 시작</b>되고, 최근 삭제 사유를 함께 보내 같은 걸 또 안 가져오게 합니다. 끝나면 <b>자동으로 반영</b>됩니다(새로고침 불필요).</li>
-    </ul>
+  <aside class="ipanel askpanel" data-lock>
+    <div class="ih">지시함</div>
+    <div class="howto-note" style="margin-bottom:9px">
+      기사 링크·수치·메모·작업 지시… <b>아무거나 그냥 적으세요.</b>
+      칸을 나눠 채울 필요 없습니다 — 읽고 알아서 처리합니다.
+    </div>
+    <textarea id="ask" class="askbox" rows="6"
+      placeholder="예)
+https://n.news.naver.com/... 이 기사로 카드 하나 만들어줘
+
+전세가율 지도 만들면 재밌을 듯
+
+토허제 지도 7월 데이터로 다시 뽑아줘"></textarea>
+    <div class="askrow">
+      <button class="itool prim" id="asksend" data-job="ask">보내기</button>
+      <button class="itool" id="askmine" data-job="mine">새 소재 찾아줘</button>
+    </div>
+    <div class="askhint" id="askhint"></div>
+
+    <div class="ih" style="margin-top:18px">보낸 것</div>
+    <div class="asklog" id="asklog"><span class="howto-note">아직 없습니다.</span></div>
+
     <div class="ih" style="margin-top:18px">수집 비중</div>
     <div class="wchips">${weights}</div>
-    <div class="ih" style="margin-top:18px">자료 인박스</div>
-    <div class="howto-note">기사·수치·메모를 붙여넣으면 <code>research/INBOX.md</code>에 바로 저장됩니다.</div>
-    <textarea id="ktext2" class="kbox2" placeholder="여기에 붙여넣기 (Ctrl+V)"></textarea>
-    <button class="itool" id="kadd2" data-job="inbox" style="width:100%;margin-top:7px">자료 저장</button>
   </aside>
 </div>`;
 }
@@ -1813,11 +1912,14 @@ function archiveHtml(state: TowerState): string {
       <div class="fhead"><span class="fname">${esc(f.topic)}</span><span class="fn num">${f.count}</span></div>
       ${f.items
         .map((w) => {
+          // 저장소에 실제로 있는 것만 링크한다(없는 파일에 링크를 걸면 전부 404다)
           const files =
+            (w.files.caption ? fileLink(w.files.caption, "캡션 원본") : "") +
+            (w.files.review ? fileLink(w.files.review, "검수 리포트") : "") +
             w.files.content.map((p, i) => fileLink(p, `카드 ${i + 1}`)).join("") +
-            (w.files.caption ? fileLink(w.files.caption, "캡션") : "") +
-            (w.files.review ? fileLink(w.files.review, "검수") : "") +
             w.files.png.map((p, i) => fileLink(p, `PNG ${i + 1}`)).join("");
+          const rebuilt = (w.rebuilt?.content.length || 0) + (w.rebuilt?.png.length || 0);
+          const shots = w.shots || [];
           return `<details class="fitem">
           <summary class="fsum">
             ${w.thumb ? `<img class="fthumb" src="${esc(state.images[w.thumb] || "")}" alt="">`
@@ -1831,12 +1933,24 @@ function archiveHtml(state: TowerState): string {
             <span class="fside">${badge(w.state)}</span>
           </summary>
           <div class="fbody">
+            ${shots.length
+              ? `<div class="fcards"><div class="eyebrow">완성 카드 ${shots.length}장</div>
+                 <div class="fstrip">${shots
+                   .map((k, i) => `<img src="${esc(state.images[k] || "")}" alt="${i + 1}장" loading="lazy">`)
+                   .join("")}</div></div>`
+              : `<div class="howto-note">완성 카드 이미지가 아직 없습니다(다음 배포에서 다시 그려집니다).</div>`}
             ${w.caption
               ? `<div class="fcap"><div class="eyebrow">업로드 캡션</div><pre class="cap">${esc(w.caption)}</pre>
                  <button class="ebtn fcopy" data-cap="${esc(w.label)}">캡션 복사</button></div>`
               : `<div class="howto-note">캡션이 아직 없습니다 — 발행하려면 <code>data/review/captions/${esc(w.label)}.txt</code>가 필요합니다.</div>`}
             ${w.reviewSummary ? `<div class="frv">${esc(w.reviewSummary)}</div>` : ""}
-            <div class="ffiles"><div class="eyebrow">저장소 원본</div><div class="flinks">${files || '<span class="howto-note">연결된 파일 없음</span>'}</div></div>
+            <div class="ffiles"><div class="eyebrow">저장소 원본</div>
+              <div class="flinks">${files || '<span class="howto-note">저장소에 남는 파일 없음</span>'}</div>
+              ${rebuilt ? `<div class="howto-note" style="margin-top:6px">
+                카드 JSON·PNG ${rebuilt}개는 용량 때문에 저장소에 두지 않습니다 —
+                재료(<code>data/datasets</code>)에서 <b>매번 다시 그립니다</b>. 그래서 링크 대신 위에 실물을 띄웁니다.
+              </div>` : ""}
+            </div>
           </div>
         </details>`;
         })
