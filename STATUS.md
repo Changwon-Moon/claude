@@ -144,6 +144,11 @@
 - **국내 증시 수집**: `krMarketCli`(야후 파이낸스 차트 API) → `data/datasets/kr-market-2026.json`. `kr-market.yml`(수동+평일 cron). 발행 전 헤드라인 수치(현재·고점) KRX/언론 교차확인 후 verified 승격.
 - **캡션 금지어에 '수익률' 포함**(투자 뉘앙스 회피) — 상승/오름세로 우회. 규칙은 `packages/pipeline/src/review/rubric.ts`.
 
+### 관제탑 실시간화 (오너 질문 07-25 → 답변 문서화)
+- 단계별 안내: `docs/guides/control-tower-realtime.md` (1 고정주소 → 2 자동갱신 → 3 직접저장 → 4 기기동기화 → 5 자동발굴 → 6 웹서비스)
+- **오너 행동 대기**: ① GitHub Pages 켜기(1분) ② 저장소 전용 토큰 발급(5분). 이 둘 없이는 3단계 이후가 물리적으로 불가(아티팩트는 외부 통신 차단)
+- 권장 범위 = 1~4단계(전부 0원, 오너 실작업 6분). 5·6단계는 답답함을 느낀 뒤 결정
+
 ### 소재 관제탑 다시 열기
 - `node scripts/build-idea-board.mjs <출력.html>` → Artifact로 발행(같은 파일 경로면 같은 URL 유지). 조작은 localStorage(`wirit-ideas-v3`)에 저장
 - 보드에서 할 수 있는 것: **승인·보류·거부 / 수정 / 삭제 / 새 소재 추가 / 소재 발굴 요청 / 새로고침**
