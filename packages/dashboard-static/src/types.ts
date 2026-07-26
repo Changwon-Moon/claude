@@ -142,8 +142,13 @@ export interface ArchiveWork {
   /** 미승인 | 발행 대기 | 발행됨 */
   state: string;
   verdict: string;
+  reviewSummary?: string;
+  /** 캡션 전문 — 보관함에서 바로 읽고 복사한다 */
+  caption?: string;
   captionChars: number;
   files: { content: string[]; png: string[]; caption: string; review: string };
+  /** 대표 장 썸네일(이미지 풀 키) — buildState 가 채운다 */
+  thumb?: string | null;
 }
 export interface ArchiveFolder {
   topic: string;

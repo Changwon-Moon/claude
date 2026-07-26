@@ -26,6 +26,8 @@ on:
       - "data/performance.md"
       - "scripts/build-tower-site.mjs"
       - "scripts/smoke-tower.mjs"
+      - "scripts/sim-tower.mjs"
+      - "data/pipeline-state.json"
       - "packages/dashboard-static/**"
       - "packages/tower-worker/**"
       - ".github/workflows/tower-deploy.yml"
@@ -101,6 +103,10 @@ jobs:
       # 관제탑이 실제로 동작하는지(읽기 전용 게이트 + 저장소 직접 쓰기) 배포 전에 확인
       - name: 관제탑 스모크
         run: node scripts/smoke-tower.mjs packages/tower-worker/_site/index.html
+
+      # 화면의 모든 버튼을 실제로 눌러본다 — 스모크가 핵심 경로라면 이건 전수 조사
+      - name: 전 버튼 시뮬레이션
+        run: node scripts/sim-tower.mjs packages/tower-worker/_site/index.html
 
       # wrangler-action@v3은 구버전(3.90)을 설치해 jsonc 설정을 못 읽는다("Missing entry-point").
       # 버전을 직접 고정해 실행한다.

@@ -391,6 +391,7 @@ input,textarea,select{font-family:inherit}
 @keyframes sp{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion: reduce){.spin{animation-duration:2s}}
 .jobbar{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;color:var(--muted)}
+.jobbar[hidden]{display:none}  /* display 지정이 [hidden]을 덮지 않도록 */
 .jobbar .jt{font-weight:700;color:var(--text)}
 .jobbar .jchip{font-size:10.5px;border:1px solid var(--line);border-radius:5px;padding:2px 7px;color:var(--muted)}
 button[disabled]{opacity:.6;cursor:progress}
@@ -411,36 +412,60 @@ button[disabled] .spin{margin-right:5px}
 .kbox2{width:100%;height:104px;font:inherit;font-size:12px;padding:9px 11px;border-radius:var(--r);
   border:1px solid var(--line);background:var(--paper);color:var(--text);resize:vertical}
 
-/* ══ 조직도 ══ 누가 무슨 일을 하는지가 먼저, 원칙은 눌러서 */
-.org{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
-.lane{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:12px 14px}
-.lanehead{display:flex;align-items:baseline;gap:9px;margin-bottom:9px}
-.lanel{font-size:12.5px;font-weight:800;letter-spacing:-.01em}
-.lanen{font-size:11px;color:var(--faint)}
-.lanebody{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
-.tchip{text-align:left;display:flex;flex-direction:column;gap:3px;padding:11px 12px;
-  border:1px solid var(--line);border-radius:var(--r);background:var(--paper);transition:.13s}
-.tchip:hover{border-color:var(--muted);transform:translateY(-1px)}
-.tchip.on{border-color:var(--cobalt);background:color-mix(in srgb,var(--cobalt) 6%,var(--paper))}
-.tchip .te{font-size:15px;line-height:1}
-.tchip .tn{font-size:13px;font-weight:800;letter-spacing:-.015em}
-.tchip .tv{font-size:11px;color:var(--muted);line-height:1.45;
-  overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.tchip .tf{display:flex;gap:7px;align-items:center;font-size:10.5px;color:var(--faint);margin-top:2px}
-.tchip .lv{background:var(--band);border-radius:4px;padding:1px 6px;font-weight:700}
+/* ══ 조직도 ══ CEO를 정점으로 한 보고 계통 + 일의 흐름 */
+.wrap.wide{max-width:1180px}
+.org{display:flex;flex-direction:column;align-items:center;margin-bottom:22px}
+.onode{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 16px;
+  border:1px solid var(--line);border-radius:var(--r);background:var(--card);
+  min-width:132px;transition:.13s;text-align:center}
+.onode:hover{border-color:var(--muted);transform:translateY(-1px);box-shadow:var(--shadow)}
+.onode.on{border-color:var(--cobalt);background:color-mix(in srgb,var(--cobalt) 7%,var(--card))}
+.onode .oe{font-size:16px;line-height:1.1}
+.onode .on{font-size:12.5px;font-weight:800;letter-spacing:-.015em}
+.onode .olv{font-size:9.5px;font-weight:700;color:var(--faint);letter-spacing:.04em}
+.onode .osub{font-size:10.5px;color:var(--muted);font-weight:500}
+.onode.ceo{background:var(--ink);border-color:var(--ink);color:#fff;padding:13px 26px;min-width:210px}
+.onode.ceo .osub{color:rgba(255,255,255,.6)}
+.onode.ceo:hover{filter:brightness(1.15)}
+.onode.lead{border-color:var(--muted)}
+/* 계통선 — 위 노드에서 아래로 내려오는 줄기 */
+.ostem{width:1px;height:20px;background:var(--line);display:block;flex:none}
+.orow{display:flex;gap:10px}
+/* 5개 본부 — 가로로 흐르고, 위쪽 가로선으로 한 부모에 매달린다 */
+.odivs{display:flex;align-items:stretch;gap:6px;width:100%;position:relative;padding-top:14px}
+.odivs::before{content:"";position:absolute;top:0;left:9%;right:9%;height:1px;background:var(--line)}
+.odiv{flex:1;position:relative;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:10px 11px;display:flex;flex-direction:column;gap:8px}
+.odiv::before{content:"";position:absolute;top:-14px;left:50%;width:1px;height:14px;background:var(--line)}
+.odiv.solo{margin-top:14px;flex:0 0 auto;align-self:center;min-width:240px}
+.odiv.solo::before{display:none}
+.odivh{display:flex;align-items:baseline;gap:6px;justify-content:center}
+.odivl{font-size:11.5px;font-weight:800;letter-spacing:-.01em}
+.odivn{font-size:10px;color:var(--faint)}
+.odivb{display:flex;flex-direction:column;gap:6px}
+.odivb .onode{min-width:0;width:100%;padding:9px 8px}
+.oarrow{align-self:center;color:var(--faint);font-size:13px;flex:none;padding-top:14px}
+@media (max-width:900px){
+  .odivs{flex-direction:column;padding-top:0}
+  .odivs::before{display:none}
+  .odiv::before{display:none}
+  .oarrow{transform:rotate(90deg);padding:0}
+}
+/* ⚠️ display를 주면 [hidden]을 덮어써서 전부 펼쳐진다 → 숨김 규칙을 명시한다 */
 .tpanel{background:var(--card);border:1px solid var(--cobalt);border-radius:var(--r-lg);
   padding:14px 16px;margin-bottom:16px;display:flex;flex-direction:column;gap:8px}
+.tpanel[hidden]{display:none}
 .tphead{display:flex;align-items:center;gap:8px;font-size:14.5px;letter-spacing:-.02em}
 .tphead .ebtn{margin-left:auto}
 .tprow{display:flex;gap:12px;font-size:12.5px;line-height:1.6}
 .tprow .k{flex:0 0 58px;font-size:10.5px;font-weight:800;letter-spacing:.07em;color:var(--faint);
   text-transform:uppercase;padding-top:3px}
-.ceo{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card);padding:12px 16px}
-.ceo>summary{cursor:pointer;font-size:12.5px;font-weight:800;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
-.ceo>summary::-webkit-details-marker{display:none}
-.ceo>summary::before{content:"▸";color:var(--faint);font-size:11px}
-.ceo[open]>summary::before{content:"▾"}
-.ceo .pcat{margin-top:14px}
+.ceo-box{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card);padding:12px 16px}
+.ceo-box>summary{cursor:pointer;font-size:12.5px;font-weight:800;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.ceo-box>summary::-webkit-details-marker{display:none}
+.ceo-box>summary::before{content:"▸";color:var(--faint);font-size:11px}
+.ceo-box[open]>summary::before{content:"▾"}
+.ceo-box .pcat{margin-top:14px}
 
 /* ══ 보관함 ══ */
 .folders{display:flex;flex-direction:column;gap:12px}
@@ -448,12 +473,26 @@ button[disabled] .spin{margin-right:5px}
 .fhead{display:flex;align-items:baseline;gap:8px;padding-bottom:9px;margin-bottom:4px;border-bottom:1px solid var(--line)}
 .fname{font-size:13px;font-weight:800;letter-spacing:-.015em}
 .fn{font-size:11px;color:var(--faint);font-weight:700}
-.fitem{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--hair)}
+.fitem{border-bottom:1px solid var(--hair)}
 .fitem:last-child{border-bottom:none}
-.fmain{min-width:0;flex:1}
+.fsum{display:flex;align-items:center;gap:12px;padding:10px 0;cursor:pointer;list-style:none}
+.fsum::-webkit-details-marker{display:none}
+.fsum:hover .ft{color:var(--cobalt)}
+.fthumb{width:36px;height:45px;border-radius:5px;border:1px solid var(--hair);object-fit:cover;
+  object-position:top;background:var(--band);flex:none;display:block}
+.fmain{min-width:0;flex:1;display:flex;flex-direction:column}
 .ft{font-size:13px;font-weight:600;line-height:1.4}
 .fmeta{font-size:11px;color:var(--faint);margin-top:2px}
 .fside{flex:none}
+.fbody{padding:4px 0 14px 48px;display:flex;flex-direction:column;gap:12px}
+@media (max-width:640px){.fbody{padding-left:0}}
+.fcap .cap{margin-top:5px;font-family:inherit}
+.fcopy{margin-top:7px}
+.frv{font-size:11.5px;color:var(--muted);border-left:2px solid var(--line);padding-left:9px}
+.ffiles .flinks{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+.flink{font-size:10.5px;font-weight:700;border:1px solid var(--line);border-radius:5px;
+  padding:3px 8px;color:var(--muted);text-decoration:none}
+.flink:hover{color:var(--text);border-color:var(--muted)}
 
 /* ══ 폰 ══ 오너는 대부분 폰으로 본다 */
 @media (max-width:760px){
@@ -715,6 +754,89 @@ function queuePublish(t){
     .catch(e=>{ const m=shortErr(e); setSave("bad","publish-queue.md · "+m); toast("승인 실패: "+m); });
 }
 
+/**
+ * 중단·삭제를 **저장소에** 남긴다.
+ * 브라우저에만 남기면 관제탑이 다시 만들어질 때 그 건이 되살아난다.
+ * (발행 승인이 publish-queue.md 에 남는 것과 같은 이유)
+ */
+function dropTicket(t, why){
+  if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
+  setSave("saving"); jobStart("drop","중단 기록");
+  editPipelineState((doc)=>{
+    if(!doc.dropped.some(d=>d.title===t.title)){
+      doc.dropped.push({title:t.title, at:STATE.dateLabel, why:(why||"").trim()});
+    }
+  }, "관제탑: 중단 — "+short(t))
+  .then(()=>GH.append("research/decisions-inbox.md",
+      "- "+ghStamp()+" ⏹ 중단: "+t.title+(why?" — 이유: "+why:""), "관제탑: 중단 기록"))
+  .then(()=>{ setSave("ok"); jobEnd("drop","중단 처리됨 — 다시 올라오지 않습니다"); })
+  .catch(e=>{ const m=shortErr(e); setSave("bad","pipeline-state.json · "+m); jobEnd("drop", m, true); });
+}
+
+/**
+ * 파이프라인 상태 파일을 안전하게 고친다(읽기 → 수정 → 쓰기, 충돌 재시도).
+ * mutate(doc) 안에서 doc 을 바꾸면 된다. 파일의 주석(_) 등 나머지는 그대로 보존된다.
+ */
+function editPipelineState(mutate, message){
+  const PATH="data/pipeline-state.json";
+  return GH.serial(async()=>{
+    for(let i=0;i<5;i++){
+      const cur=await GH.getFile(PATH);
+      let doc; try{ doc=JSON.parse(cur.text); }catch(e){ doc={}; }
+      if(!Array.isArray(doc.dropped)) doc.dropped=[];
+      if(!Array.isArray(doc.revise)) doc.revise=[];
+      mutate(doc);
+      try{ return await GH.putFile(PATH, JSON.stringify(doc,null,2)+"\n", message, cur.sha); }
+      catch(e){ if(!GH.isConflict(e)||i===4) throw e;
+        await new Promise(r=>setTimeout(r,400*Math.pow(2,i))); }
+    }
+  });
+}
+
+/**
+ * 수정지시를 **저장소에** 남긴다.
+ * 결정 로그에 글만 남기면 관제탑이 다시 만들어질 때 '수정요청' 표시가 사라져,
+ * 무엇이 재작업 대기인지 알 수 없게 된다.
+ */
+function reviseTicket(t, note){
+  if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
+  setSave("saving"); jobStart("revise","수정지시 기록");
+  editPipelineState((doc)=>{
+    doc.revise=doc.revise.filter(r=>r.title!==t.title);
+    doc.revise.push({title:t.title, at:STATE.dateLabel, note:note});
+  }, "관제탑: 수정지시 — "+short(t))
+    .then(()=>GH.append("research/decisions-inbox.md",
+        "- "+ghStamp()+' ✏️ 수정지시("+t.title+"): "'+note+'"', "관제탑: 수정지시"))
+    .then(()=>{ setSave("ok"); jobEnd("revise","수정지시가 기록됐습니다"); })
+    .catch(e=>{ const m=shortErr(e); setSave("bad","pipeline-state.json · "+m); jobEnd("revise", m, true); });
+}
+
+/** 발행 취소 — 대기열 파일에서 그 줄을 실제로 지운다(안 지우면 다음 빌드에 되살아난다) */
+function unqueuePublish(t, why){
+  if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
+  const PATH="data/publish-queue.md";
+  const key=t.title.replace(/\s+/g,"").toLowerCase();
+  setSave("saving"); jobStart("unq","발행 취소");
+  GH.serial(async()=>{
+    for(let i=0;i<5;i++){
+      const cur=await GH.getFile(PATH);
+      const kept=cur.text.split("\n").filter(line=>{
+        if(!/^\s*-\s*\[[ xX]\]/.test(line)) return true;
+        const m=line.match(/\*\*(.+?)\*\*/);
+        const tt=(m?m[1]:line).replace(/\s+/g,"").toLowerCase();
+        return !(tt.indexOf(key)>-1 || key.indexOf(tt)>-1);
+      }).join("\n");
+      try{ return await GH.putFile(PATH, kept, "관제탑: 발행 취소 — "+short(t), cur.sha); }
+      catch(e){ if(!GH.isConflict(e)||i===4) throw e;
+        await new Promise(r=>setTimeout(r,400*Math.pow(2,i))); }
+    }
+  })
+    .then(()=>GH.append("research/decisions-inbox.md",
+        "- "+ghStamp()+" ↩ 발행 취소: "+t.title+(why?" — 이유: "+why:""), "관제탑: 발행 취소"))
+    .then(()=>{ setSave("ok"); jobEnd("unq","대기열에서 내렸습니다"); })
+    .catch(e=>{ const m=shortErr(e); setSave("bad","publish-queue.md · "+m); jobEnd("unq", m, true); });
+}
+
 /* 결정 1건을 저장소 결정 로그에 바로 기록 */
 function pushDecision(text, msg){
   // 연결돼 있으면 저장소 결정 로그에 바로 남긴다(복사-붙여넣기 우회 없음).
@@ -789,12 +911,20 @@ function pendingDecisions(){
         +(t.review?" · 자동검수 "+(t.review.verdict==="pass"?"통과":t.review.verdict):" · 자동검수 없음"),
       thumb:t.thumb||null, go:()=>{ openTab("board"); openDrawer(t.id); } });
   });
-  // ② 아직 고르지 않은 소재 — 오너가 골라줘야 회사가 움직인다
-  const open=IDEAS.filter(i=>!i.state && i.status!=="done" && !Number(i.stage||0));
-  if(open.length){
-    out.push({ kind:"idea", label:"소재 선택", title:open.length+"건이 오너 결정을 기다립니다",
-      note:open.slice(0,2).map(i=>i.title).join(" · ")+(open.length>2?" 외 "+(open.length-2)+"건":""),
+  // ② 소재 — 쌓여 있다고 매일 알리면 그건 영구 알림이지 '오늘 할 일'이 아니다.
+  //    정말 결정이 필요한 두 경우에만 올린다:
+  //      (a) 새로 발굴돼 아직 안 본 소재가 있다
+  //      (b) 파이프라인이 비었다 = 만들 게 없다 → 지금 골라야 회사가 움직인다
+  const open=IDEAS.filter(i=>i.status!=="done" && !Number(i.stage||0));
+  const fresh=open.filter(i=>i.isNew);
+  const working=S.tickets.filter(t=>t.stage>=1&&t.stage<=3&&!(t.flags||[]).includes("버림")).length;
+  if(fresh.length){
+    out.push({ kind:"idea", label:"새 소재", title:"새로 발굴된 소재 "+fresh.length+"건",
+      note:fresh.slice(0,2).map(i=>i.title).join(" · ")+(fresh.length>2?" 외 "+(fresh.length-2)+"건":""),
       thumb:null, go:()=>openTab("ideas") });
+  } else if(!working && open.length){
+    out.push({ kind:"idea", label:"소재 선택", title:"만들고 있는 게 없습니다 — 소재를 골라주세요",
+      note:"소재 풀 "+open.length+"건 대기 중", thumb:null, go:()=>openTab("ideas") });
   }
   // ③ 수정지시를 내린 뒤 결과를 확인해야 하는 것
   S.tickets.forEach(t=>{
@@ -1048,7 +1178,7 @@ function buildDetail(t){
   if(t.stage===0 && !(t.flags||[]).includes("버림")){
     acts='<button class="btn primary" data-act="go">✅ 이 소재 진행</button>'
       +'<button class="btn ghost" data-act="hold">⏸ 보류</button>'
-      +'<button class="btn danger" data-act="drop">🗑 버림</button>'+reasonBox();
+      +'<button class="btn danger" data-act="drop">중단·삭제</button>'+reasonBox();
   } else if(t.stage===4){
     acts='<button class="btn primary" data-act="publish">🚀 발행 승인</button>'
       +'<button class="btn ghost" data-act="edit">✏️ 수정지시</button>'
@@ -1065,7 +1195,7 @@ function buildDetail(t){
     acts='<div class="why">자동 슬롯 — 사후 통보만. 무인 해제는 설정에서.</div>';
   } else {
     acts='<div class="btn ghost" style="flex:1 0 100%;cursor:default">진행 중 — 이 단계에선 오너 액션이 없습니다</div>'
-      +'<button class="btn danger" data-act="drop">🗑 이 건 중단</button>'+reasonBox();
+      +'<button class="btn danger" data-act="drop">중단·삭제</button>'+reasonBox();
   }
 
   return '<div class="dhead"><button class="close" aria-label="닫기">✕</button>'
@@ -1143,9 +1273,12 @@ function wireActions(t){
       if(a==="hold"){ ask("왜 보류하시나요? (회사가 학습합니다)", (why)=>{
         t.flags=t.flags||[]; if(!t.flags.includes("보류")) t.flags.push("보류");
         pushDecision("보류: "+t.title+(why?" — 이유: "+why:""),"보류 기록됨"); done(ttl+" 보류"); }); }
-      if(a==="drop"){ ask("왜 접으시나요? (회사가 학습합니다)", (why)=>{
-        t.flags=t.flags||[]; t.flags.push("버림");
-        pushDecision("버림: "+t.title+(why?" — 이유: "+why:""),"제외 기록됨"); done(ttl+" 제외"); }); }
+      if(a==="drop"){ ask("왜 중단하시나요? (비워도 됩니다 — 적으면 회사가 학습합니다)", (why)=>{
+        t.flags=t.flags||[]; if(!t.flags.includes("버림")) t.flags.push("버림");
+        dropTicket(t, why);
+        // 소재에서 올라온 티켓이면 소재도 같이 내린다(양쪽에 유령이 남지 않게)
+        if(t.ideaId){ const i=ideaById(t.ideaId); if(i){ i.stage=0; queueSave("소재 되돌림 — "+i.title); } }
+        done(ttl+" 중단"); }); }
       if(a==="publish"){
         if(t.review && t.review.verdict!=="pass"
           && !confirm("자동검수가 통과가 아닙니다("+t.review.verdict+").\n그래도 발행 승인할까요?")) return;
@@ -1155,13 +1288,11 @@ function wireActions(t){
         pushDecision("반려: "+t.title+" → 재작업"+(why?" — 이유: "+why:""),"반려 기록됨"); done(ttl+" 반려"); }); }
       if(a==="unqueue"){ ask("왜 내리시나요? (기록에 남습니다)", (why)=>{
         t.stage=4; t.flags=(t.flags||[]).filter(f=>f!=="업로드 대기");
-        pushDecision("↩ 발행 취소: "+t.title+(why?" — 이유: "+why:""),"발행 취소 기록됨");
-        toast("대기열에서 내렸습니다 — data/publish-queue.md 의 해당 줄은 다음 정리 때 반영됩니다");
-        done(ttl+" 대기열에서 내림"); }); }
+        unqueuePublish(t, why); done(ttl+" 대기열에서 내림"); }); }
       if(a==="edit"){ drawer.querySelector("#editbox").classList.toggle("on"); return; }
       if(a==="editsave"){ const v=drawer.querySelector("#edittext").value.trim(); if(!v){ toast("코멘트를 입력하세요"); return; }
         t.comments=t.comments||[]; t.comments.push(v); t.flags=t.flags||[]; if(!t.flags.includes("수정요청")) t.flags.push("수정요청");
-        pushDecision('수정지시('+t.title+'): "'+v+'"',"수정지시 기록됨"); done("수정지시 기록됨"); }
+        reviseTicket(t, v); done("수정지시 기록됨"); }
     };
   });
 }
@@ -1419,6 +1550,17 @@ document.querySelectorAll("[data-go]").forEach(b=>{
   b.onclick=()=>{ openTab(b.dataset.go); history.replaceState(null,"","#"+b.dataset.go); };
 });
 
+/* 보관함 — 캡션 복사 */
+document.querySelectorAll(".fcopy").forEach(b=>{
+  b.onclick=async(e)=>{
+    e.preventDefault(); e.stopPropagation();
+    const src=document.querySelector('.capsrc[data-for="'+b.dataset.cap+'"]');
+    if(!src) return;
+    try{ await navigator.clipboard.writeText(JSON.parse(src.textContent)); toast("캡션을 복사했습니다"); }
+    catch(err){ toast("복사 실패 — 캡션을 직접 선택해 복사해주세요"); }
+  };
+});
+
 renderConn();
 renderBoard();
 renderIdeas();
@@ -1505,7 +1647,14 @@ function kpiHtml(state: TowerState): string {
     .join("");
 }
 
-/** 조직도 우선 — 누가 무슨 일을 하는지 먼저 보이고, 눌러야 원칙·업무기준이 열린다. */
+/**
+ * 회사 — CEO를 정점으로 한 실제 조직도.
+ * 카드를 늘어놓는 게 아니라 **보고 계통과 일의 흐름**을 그린다.
+ *   CEO (오너 판단의 누적)
+ *    └ 오케스트레이터 (실장 — 파이프라인을 굴린다)
+ *       └ 발굴 → 기획 → 제작 → 검수 → 발행  (5개 본부)
+ * 팀을 누르면 그 팀의 가치관·책임·업무기준이 열린다.
+ */
 function companyHtml(state: TowerState): string {
   const { owner, name, branch } = state.repo;
   const ghEdit = (path: string): string =>
@@ -1515,42 +1664,38 @@ function companyHtml(state: TowerState): string {
     return u ? `<a class="ebtn gh" href="${esc(u)}" target="_blank" rel="noopener">${esc(label)} ↗</a>` : "";
   };
 
-  // 조직도 — 실제 일의 흐름대로 묶는다(발굴 → 기획 → 제작 → 검수 → 발행)
-  const LANES: { key: string; label: string; note: string; slugs: string[] }[] = [
-    { key: "find", label: "발굴", note: "무엇을 만들지 찾는다", slugs: ["trend-analysis", "research"] },
-    { key: "plan", label: "기획", note: "어떻게 만들지 정한다", slugs: ["planning", "asset-hub"] },
-    { key: "make", label: "제작", note: "실제로 만든다", slugs: ["editing", "design"] },
-    { key: "check", label: "검수", note: "틀린 게 없는지 본다", slugs: ["qa"] },
-    { key: "go", label: "발행·운영", note: "내보내고 굴린다", slugs: ["marketing", "orchestrator"] },
-  ];
   const bySlug = new Map(state.company.teams.map((t) => [t.slug, t]));
   const placed = new Set<string>();
-
-  const lanes = LANES.map((ln) => {
-    const members = ln.slugs.map((s) => bySlug.get(s)).filter(Boolean) as typeof state.company.teams;
-    members.forEach((m) => placed.add(m.slug));
-    if (!members.length) return "";
-    return `<div class="lane">
-      <div class="lanehead"><span class="lanel">${esc(ln.label)}</span><span class="lanen">${esc(ln.note)}</span></div>
-      <div class="lanebody">${members.map(teamChip).join("")}</div>
-    </div>`;
-  }).join("");
-  const rest = state.company.teams.filter((t) => !placed.has(t.slug));
-  const restLane = rest.length
-    ? `<div class="lane"><div class="lanehead"><span class="lanel">기타</span></div>
-       <div class="lanebody">${rest.map(teamChip).join("")}</div></div>`
-    : "";
-
-  function teamChip(t: (typeof state.company.teams)[number]): string {
-    return `<button type="button" class="tchip" data-team="${esc(t.slug)}">
-      <span class="te">${esc(t.emoji)}</span>
-      <span class="tn">${esc(t.name)}</span>
-      <span class="tv">${esc(t.values)}</span>
-      <span class="tf"><span class="lv">${esc(t.autonomy)}</span><span>학습 ${t.logCount}</span></span>
+  const node = (slug: string, cls = ""): string => {
+    const t = bySlug.get(slug);
+    if (!t) return "";
+    placed.add(slug);
+    return `<button type="button" class="onode ${cls}" data-team="${esc(t.slug)}">
+      <span class="oe">${esc(t.emoji)}</span>
+      <span class="on">${esc(t.name)}</span>
+      <span class="olv">${esc(t.autonomy.split(/[(,]/)[0].trim())}</span>
     </button>`;
-  }
+  };
 
-  // 팀 상세 — 기본은 숨김. 조직도에서 누르면 열린다.
+  // 5개 본부 — 일이 흐르는 순서 그대로
+  const DIV: { label: string; note: string; slugs: string[] }[] = [
+    { label: "발굴", note: "무엇을 만들지", slugs: ["trend-analysis", "research"] },
+    { label: "기획", note: "어떻게 만들지", slugs: ["planning", "asset-hub"] },
+    { label: "제작", note: "실제로 만든다", slugs: ["editing", "design"] },
+    { label: "검수", note: "틀린 게 없는지", slugs: ["qa"] },
+    { label: "발행·운영", note: "내보내고 굴린다", slugs: ["marketing"] },
+  ];
+  const divisions = DIV.map(
+    (d) => `<div class="odiv">
+      <div class="odivh"><span class="odivl">${esc(d.label)}</span><span class="odivn">${esc(d.note)}</span></div>
+      <div class="odivb">${d.slugs.map((s) => node(s)).join("")}</div>
+    </div>`
+  ).join('<span class="oarrow" aria-hidden="true">→</span>');
+
+  const orch = node("orchestrator", "lead");
+  const rest = state.company.teams.filter((t) => !placed.has(t.slug));
+
+  // 팀 상세 — 기본 숨김. 조직도에서 누르면 열린다.
   const panels = state.company.teams
     .map(
       (t) => `<section class="tpanel" id="team-${esc(t.slug)}" hidden>
@@ -1564,7 +1709,7 @@ function companyHtml(state: TowerState): string {
         ${ghLink(t.path, "사원카드")}${t.hasPrompt ? ghLink(t.promptPath, "프롬프트") : ""}
       </div>
       <div class="edarea" data-te-area="${esc(t.slug)}">
-        <div class="edhint">이 팀의 원칙·업무기준을 어떻게 바꿀까요? 적어서 기록하면 저장소에 남고 다음 작업부터 반영됩니다.</div>
+        <div class="edhint">이 팀의 원칙·업무기준을 어떻게 바꿀까요? 기록하면 저장소에 남고 다음 작업부터 반영됩니다.</div>
         <textarea placeholder="예) 데이터 가용성 2점 미만 소재는 후보에서 자동 제외"></textarea>
         <button class="ebtn save" data-te-save="${esc(t.slug)}|${esc(t.name)}">기록하기</button>
       </div>
@@ -1582,11 +1727,27 @@ function companyHtml(state: TowerState): string {
     .join("");
 
   return (
-    `<div class="wrap">` +
-    `<div class="sect">조직도 — 일의 흐름</div>` +
-    `<div class="org">${lanes}${restLane}</div>` +
+    `<div class="wrap wide">` +
+    `<div class="sect">조직도</div>` +
+    `<div class="org">` +
+      // 정점 — CEO
+      `<button type="button" class="onode ceo" data-ceo>` +
+        `<span class="oe">🧠</span><span class="on">CEO</span>` +
+        `<span class="osub">오너 판단의 누적 · 원칙 ${state.company.principlesCount}개</span>` +
+      `</button>` +
+      `<span class="ostem" aria-hidden="true"></span>` +
+      // 실장 — 파이프라인을 굴린다
+      `<div class="orow">${orch}</div>` +
+      `<span class="ostem" aria-hidden="true"></span>` +
+      // 5개 본부
+      `<div class="odivs">${divisions}</div>` +
+      (rest.length
+        ? `<div class="odiv solo"><div class="odivh"><span class="odivl">기타</span></div>
+           <div class="odivb">${rest.map((t) => node(t.slug)).join("")}</div></div>`
+        : "") +
+    `</div>` +
     panels +
-    `<details class="ceo"><summary>CEO 판단 원칙 ${state.company.principlesCount}개 — 회사 전체에 적용되는 기준` +
+    `<details class="ceo-box" id="ceoBox"><summary>CEO 판단 원칙 ${state.company.principlesCount}개 — 회사 전체에 적용되는 기준` +
     `<span class="secttools"><button class="ebtn" data-ce>원칙 추가·수정</button>${ghLink(state.company.ceoPath, "GitHub")}</span></summary>` +
     `<div class="edarea" id="ed-ceo"><div class="edhint">추가하거나 고칠 원칙을 적으세요. 기록하면 저장소 결정 로그에 남고 다음 세션에서 CEO.md에 반영됩니다.</div>` +
     `<textarea placeholder="예) 표 헤더는 잉크 배경에 흰 글씨로"></textarea>` +
@@ -1597,9 +1758,16 @@ function companyHtml(state: TowerState): string {
   );
 }
 
-/** 보관함 — 완성 작업물이 주제별로 자동 정리돼 모인다. */
+/**
+ * 보관함 — 완성 작업물이 주제별로 자동 정리돼 모인다.
+ * 목록에서 바로 실물(카드 그림)을 보고, 눌러서 캡션 전문·원본 파일까지 연다.
+ */
 function archiveHtml(state: TowerState): string {
   const fold = state.archive || [];
+  const { owner, name, branch } = state.repo;
+  const gh = (path: string): string =>
+    owner && name ? `https://github.com/${owner}/${name}/blob/${branch}/${path}` : "";
+
   if (!fold.length) {
     return `<div class="wrap"><div class="sect">보관함</div>
       <div class="allclear"><div class="t">아직 완성된 작업물이 없습니다</div>
@@ -1611,32 +1779,63 @@ function archiveHtml(state: TowerState): string {
     : st === "발행 대기" ? '<span class="tagx hot">발행 대기</span>'
     : '<span class="tagx">미승인</span>';
 
+  const fileLink = (p: string, label: string): string => {
+    const u = gh(p);
+    return u ? `<a class="flink" href="${esc(u)}" target="_blank" rel="noopener">${esc(label)} ↗</a>` : "";
+  };
+
   const folders = fold
     .map(
       (f) => `<section class="folder">
       <div class="fhead"><span class="fname">${esc(f.topic)}</span><span class="fn num">${f.count}</span></div>
       ${f.items
-        .map(
-          (w) => `<div class="fitem">
-        <div class="fmain"><div class="ft">${esc(w.title)}</div>
-          <div class="fmeta num">${esc(w.date || "-")} · 카드 ${w.cards}장${w.pages ? ` · 렌더 ${w.pages}장` : ""}${
-            w.captionChars ? ` · 캡션 ${w.captionChars}자` : " · 캡션 없음"
-          }${w.verdict ? ` · 검수 ${esc(w.verdict)}` : ""}</div></div>
-        <div class="fside">${badge(w.state)}</div>
-      </div>`
-        )
+        .map((w) => {
+          const files =
+            w.files.content.map((p, i) => fileLink(p, `카드 ${i + 1}`)).join("") +
+            (w.files.caption ? fileLink(w.files.caption, "캡션") : "") +
+            (w.files.review ? fileLink(w.files.review, "검수") : "") +
+            w.files.png.map((p, i) => fileLink(p, `PNG ${i + 1}`)).join("");
+          return `<details class="fitem">
+          <summary class="fsum">
+            ${w.thumb ? `<img class="fthumb" src="${esc(state.images[w.thumb] || "")}" alt="">`
+                      : '<span class="fthumb"></span>'}
+            <span class="fmain"><span class="ft">${esc(w.title)}</span>
+              <span class="fmeta num">${esc(w.date || "-")} · 카드 ${w.cards}장${
+                w.pages ? ` · 렌더 ${w.pages}장` : " · 렌더 없음"
+              }${w.captionChars ? ` · 캡션 ${w.captionChars}자` : " · 캡션 없음"}${
+                w.verdict ? ` · 검수 ${esc(w.verdict)}` : ""
+              }</span></span>
+            <span class="fside">${badge(w.state)}</span>
+          </summary>
+          <div class="fbody">
+            ${w.caption
+              ? `<div class="fcap"><div class="eyebrow">업로드 캡션</div><pre class="cap">${esc(w.caption)}</pre>
+                 <button class="ebtn fcopy" data-cap="${esc(w.label)}">캡션 복사</button></div>`
+              : `<div class="howto-note">캡션이 아직 없습니다 — 발행하려면 <code>data/review/captions/${esc(w.label)}.txt</code>가 필요합니다.</div>`}
+            ${w.reviewSummary ? `<div class="frv">${esc(w.reviewSummary)}</div>` : ""}
+            <div class="ffiles"><div class="eyebrow">저장소 원본</div><div class="flinks">${files || '<span class="howto-note">연결된 파일 없음</span>'}</div></div>
+          </div>
+        </details>`;
+        })
         .join("")}
     </section>`
     )
     .join("");
 
+  // 캡션 복사를 위해 원문을 숨겨 둔다(클릭 시 클립보드로)
+  const capData = fold
+    .flatMap((f) => f.items)
+    .filter((w) => w.caption)
+    .map((w) => `<script type="application/json" class="capsrc" data-for="${esc(w.label)}">${JSON.stringify(w.caption)}</script>`)
+    .join("");
+
   return `<div class="wrap">
     <div class="sect">보관함 — 완성 작업물 ${total}건 · 주제 ${fold.length}개</div>
     <div class="howto-note" style="margin:-4px 2px 14px">
-      만들 때 정한 분류대로 <b>자동으로 묶입니다</b>. 색인은 <code>data/archive/index.json</code>에 있고,
-      원본 카드·캡션·검수 리포트 경로가 모두 기록돼 언제든 다시 그릴 수 있습니다.
+      만들 때 정한 분류대로 <b>자동으로 묶입니다</b>. 항목을 누르면 <b>캡션 전문</b>과
+      <b>저장소 원본</b>(카드 JSON·PNG·검수 리포트) 링크가 열립니다.
     </div>
-    <div class="folders">${folders}</div>
+    <div class="folders">${folders}</div>${capData}
   </div>`;
 }
 

@@ -104,22 +104,35 @@ check("진행·완료 소재는 보드에서 분리", await q(`
     const i=IDEAS.find(x=>x.id===c.dataset.iid);
     return i && i.status!=="done" && !Number(i.stage||0); })`));
 check("수동 새로고침 버튼 제거", await q(`!document.getElementById("ireload")`));
-check("작업 표시줄 존재", await q(`!!document.getElementById("jobbar")`));
+check("작업 표시줄 존재(평소엔 숨김)", await q(`
+  !!document.getElementById("jobbar") && document.getElementById("jobbar").offsetParent===null`));
 
 // 회사 = 조직도 먼저, 팀을 눌러야 원칙이 열린다
 await page.click('.tab[data-v="company"]');
 await page.waitForTimeout(250);
-check("조직도 표시(일의 흐름)", (await q(`document.querySelectorAll(".org .lane").length`)) >= 4);
-check("팀 상세는 기본 숨김", await q(`[...document.querySelectorAll(".tpanel")].every(p=>p.hidden)`));
-await page.click(".tchip");
-await page.waitForTimeout(250);
-check("팀을 누르면 원칙·업무기준이 열림", (await q(`document.querySelectorAll(".tpanel:not([hidden])").length`)) === 1);
+check("조직도 정점 = CEO", await q(`!!document.querySelector(".org .onode.ceo")`));
+check("CEO 아래 총괄 → 5개 본부", (await q(`document.querySelectorAll(".odivs .odiv").length`)) >= 5
+  && (await q(`!!document.querySelector(".org .onode.lead")`)));
+check("보고 계통선 표시", (await q(`document.querySelectorAll(".org .ostem").length`)) >= 2);
+// [hidden] 은 CSS display 지정에 덮이기 쉽다 → '보이는가'로 확인한다
+check("팀 상세는 기본 숨김(실제로 안 보임)", await q(`
+  [...document.querySelectorAll(".tpanel")].every(p=>p.offsetParent===null)`));
+await page.click(".onode[data-team]");
+await page.waitForTimeout(300);
+check("팀을 누르면 원칙·업무기준이 열림", (await q(`
+  [...document.querySelectorAll(".tpanel")].filter(p=>p.offsetParent!==null).length`)) === 1);
 
 // 보관함 = 완성 작업물이 주제별로
 await page.click('.tab[data-v="archive"]');
 await page.waitForTimeout(250);
 check("보관함 주제별 폴더", (await q(`document.querySelectorAll(".folders .folder").length`)) > 0);
 check("보관함 항목에 상태 표시", (await q(`document.querySelectorAll(".folder .fitem .tagx").length`)) > 0);
+// 실제 데이터가 보여야 한다 — 목록만 있으면 보관함이 아니다
+await page.click(".folder .fitem .fsum");
+await page.waitForTimeout(300);
+check("보관함 항목을 펴면 캡션 전문", await q(`!!document.querySelector(".fitem[open] .cap")`));
+check("보관함에 저장소 원본 링크", (await q(`document.querySelectorAll(".fitem[open] .flink").length`)) > 0);
+check("보관함에 카드 실물 썸네일", (await q(`document.querySelectorAll(".folder img.fthumb").length`)) > 0);
 
 await page.click('.tab[data-v="ideas"]');
 await page.waitForTimeout(200);

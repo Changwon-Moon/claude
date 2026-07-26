@@ -295,6 +295,13 @@ export async function buildState(): Promise<TowerState> {
     try {
       const j = JSON.parse(readFileSync(archPath, "utf8"));
       archive = Array.isArray(j.folders) ? j.folders : [];
+      // 색인에는 파일 경로만 있다 → 실제 그림을 찾아 붙인다(목록에서 알아보게)
+      for (const f of archive) {
+        for (const w of f.items) {
+          const lead = produced.find((p) => p.setLabel === w.label && p.setLead);
+          w.thumb = lead ? intern(lead.thumb) : null;
+        }
+      }
     } catch {
       /* 색인이 깨져도 나머지 관제탑은 정상 */
     }
@@ -340,6 +347,36 @@ export async function buildState(): Promise<TowerState> {
     if (!hit) t.flags.push("업로드 대기"); // 큐에는 올랐지만 아직 인스타에 안 올라감
   }
 
+  // ── 오너가 중단한 건 반영 (2026-07-26)
+  // 관제탑 [중단·삭제]는 data/pipeline-state.json 에 남는다.
+  // 여기서 읽어 '버림' 플래그를 붙여야 재빌드 후에도 되살아나지 않는다.
+  const statePath = join(REPO_ROOT, "data/pipeline-state.json");
+  if (existsSync(statePath)) {
+    try {
+      const j = JSON.parse(readFileSync(statePath, "utf8"));
+      const apply = (list: { title?: string; note?: string }[], flag: string, onHit?: (t: Ticket, r: { note?: string }) => void) => {
+        for (const d of Array.isArray(list) ? list : []) {
+          const n = normTitle(d.title || "");
+          if (!n) continue;
+          for (const t of tickets) {
+            const m = normTitle(t.title);
+            if (!(m.includes(n) || n.includes(m))) continue;
+            if (!t.flags.includes(flag)) t.flags.push(flag);
+            onHit?.(t, d);
+          }
+        }
+      };
+      apply(j.dropped, "버림");
+      // 수정지시도 저장소에 남는다 — 안 그러면 재빌드 때 '무엇이 재작업 대기인지'를 잃는다
+      apply(j.revise, "수정요청", (t, r) => {
+        if (!r.note) return;
+        t.timeline.push({ team: "🧑‍💼 오너", tag: "수정지시", say: r.note, why: "재작업 후 다시 검수·승인 단계로 올라옵니다." });
+      });
+    } catch {
+      /* 깨져도 나머지는 정상 — 중단 반영만 건너뛴다 */
+    }
+  }
+
   // 발행 승인 후보 = 카드 + 캡션이 다 준비된 것. 캡션이 없으면 올릴 글이 없어 결정 대상이 아니다.
   // (관제탑 결정함과 반드시 같은 기준을 써야 KPI 숫자와 목록이 어긋나지 않는다)
   const readyToPublish = tickets.filter(
@@ -356,7 +393,7 @@ export async function buildState(): Promise<TowerState> {
   // KPI — 오너가 "지금 뭘 해야 하나"를 읽는 줄. 결정 대기가 맨 앞.
   const totalAssets = assets.reduce((a, g) => a + g.count, 0);
   const kpi = [
-    { label: "결재 대기", value: String(readyToPublish), note: undecided ? `+ 고를 소재 ${undecided}건` : "발행 승인 대기" },
+    { label: "결재 대기", value: String(readyToPublish), note: "발행 승인 대기" },
     { label: "작업중", value: String(counts.inProgress), note: "기획 · 제작 · 검수" },
     { label: "소재 풀", value: String(openIdeas.length), note: `아직 안 고른 것 ${undecided}건` },
     { label: "데이터 자산", value: String(totalAssets), note: "재사용 가능" },

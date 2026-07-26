@@ -124,6 +124,9 @@ for (const set of sets) {
       review: existsSync(revPath) ? `data/review/${set.review || set.label}.json` : "",
     },
     verdict: rev?.verdict || "",
+    reviewSummary: rev?.summary || "",
+    // 캡션 전문 — 보관함에서 바로 읽고 복사해 쓸 수 있어야 한다
+    caption: existsSync(capPath) ? readFileSync(capPath, "utf8").trim() : "",
     captionChars: existsSync(capPath) ? readFileSync(capPath, "utf8").trim().length : 0,
   });
 }
