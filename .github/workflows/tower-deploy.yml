@@ -27,6 +27,7 @@ on:
       - "scripts/build-tower-site.mjs"
       - "scripts/smoke-tower.mjs"
       - "scripts/sim-tower.mjs"
+      - "scripts/verify-live.mjs"
       - "data/pipeline-state.json"
       - "packages/dashboard-static/**"
       - "packages/tower-worker/**"
@@ -132,6 +133,18 @@ jobs:
           TOWER_PASSWORD: ${{ secrets.TOWER_PASSWORD }}
         run: printf '%s' "$TOWER_PASSWORD" | npx --yes wrangler@4 secret put TOWER_PASSWORD
 
+      # ⚠️ 여기가 핵심이다 — 지금까지 검사는 전부 '로컬 파일' 대상이었고,
+      #    그래서 배포가 실패해 사이트가 옛 버전에 멈춰 있어도 아무도 몰랐다.
+      #    이제 **인터넷에 올라간 그 주소**를 실제로 열어 최신 화면인지 확인한다.
+      - name: 실제 사이트 확인
+        env:
+          TOWER_URL: https://wirit-tower.engineerest0.workers.dev
+          TOWER_PASSWORD: ${{ secrets.TOWER_PASSWORD }}
+        run: |
+          # 워커 배포가 전 세계에 퍼지는 데 몇 초 걸린다
+          sleep 12
+          node scripts/verify-live.mjs
+
       - name: 문 상태 확인
         run: |
           if [ "$HAS_PASSWORD" = "true" ]; then
@@ -145,4 +158,4 @@ jobs:
           echo "### 관제탑 배포 완료 :rocket:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- 관제탑: https://wirit-tower.engineerest0.workers.dev/" >> $GITHUB_STEP_SUMMARY
-          echo "- 소재 보드: 관제탑 안 **💡 소재** 탭 (/#ideas)" >> $GITHUB_STEP_SUMMARY
+          echo "- 실제 사이트 확인까지 통과했습니다(위 '실제 사이트 확인' 단계 참고)." >> $GITHUB_STEP_SUMMARY
