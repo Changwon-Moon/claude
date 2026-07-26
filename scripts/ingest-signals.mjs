@@ -58,8 +58,16 @@ if (!files.length) {
   console.log("보드 파일 없음.");
   process.exit(0);
 }
-const latest = files[files.length - 1];
-const md = readFileSync(join(BRIEFS, latest), "utf8");
+
+/**
+ * ⚠️ 예전엔 "파일명 정렬 후 마지막 하나"만 읽었다. 그런데 지시 수집 파일
+ * `{날짜}-ask-{키워드}.md` 는 `{날짜}-auto.md` 보다 **앞에** 정렬돼서
+ * 오너가 시킨 수집 결과가 통째로 무시됐다.
+ * → 가장 최근 날짜의 보드를 **전부** 읽는다(그날의 auto + 지시 수집 여러 건).
+ */
+const latestDate = files.map((f) => f.slice(0, 10)).sort().pop();
+const targets = files.filter((f) => f.startsWith(latestDate));
+const latest = targets.join(", ");
 
 /**
  * 보드에서 후보를 뽑는다. 수집기가 만드는 두 형식을 모두 받는다.
@@ -140,7 +148,14 @@ for (const f of ["research/decisions-inbox.md", "research/DECISION_LOG.md"]) {
   }
 }
 
-const cands = parseCandidates(md);
+// 지시 수집 결과를 먼저 넣는다 — 오너가 직접 시킨 것이 자동 수집보다 우선이다
+const cands = [];
+for (const f of [...targets].sort((a, b) => (a.includes("-ask-") ? -1 : 0) - (b.includes("-ask-") ? -1 : 0))) {
+  const text = readFileSync(join(BRIEFS, f), "utf8");
+  const ask = (text.match(/^>\s*오너 지시:\s*\*\*"(.+?)"\*\*/m) || [])[1] || "";
+  for (const c of parseCandidates(text)) cands.push({ ...c, file: f, ask });
+}
+
 const added = [];
 let n = 0;
 for (const c of cands) {
@@ -149,16 +164,17 @@ for (const c of cands) {
   if (!key || key.length < 4 || known.has(key)) continue;
   if ([...droppedTitles].some((d) => d && (d.includes(key) || key.includes(d)))) continue;
   known.add(key);
-  const id = `sig-${latest.slice(0, 10)}-${++n}`;
+  const id = `sig-${latestDate}-${++n}`;
   const item = {
     id,
     cat: pickCat(c),
     title: clean(c.title).slice(0, 90),
-    why: clean(c.why).slice(0, 140),
-    source: `자동 수집 · ${latest}`,
+    why: c.ask ? `지시 "${c.ask}"로 찾은 소재` : clean(c.why).slice(0, 140),
+    source: c.ask ? `지시 수집 · ${c.file}` : `자동 수집 · ${c.file}`,
     state: "",
     status: "",
     isNew: true, // 관제탑 '오늘' 탭이 이걸 보고 "새로 발굴된 소재"로 부른다
+    ...(c.ask ? { ask: c.ask } : {}), // 어떤 지시에 대한 답인지 — 관제탑이 되짚어 보여준다
   };
   items.push(item);
   added.push(item);

@@ -5,7 +5,12 @@ name: 소재 보드 수집 (daily)
 on:
   schedule:
     - cron: "0 22 * * *" # 07:00 KST 매일
-  workflow_dispatch: # 수동 실행 버튼
+  workflow_dispatch: # 수동 실행 버튼 (관제탑 [새 소재 찾아줘]도 여기로 들어온다)
+    inputs:
+      query:
+        description: "찾을 키워드 (비우면 고정 주제 전체 수집)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -35,8 +40,15 @@ jobs:
       - name: 자산 허브 무결성 검사
         run: node scripts/validate-assets.mjs
 
+      # 고정 주제 수집은 항상 돈다(매일의 기본 급식).
       - name: 소재 신호 수집 → 보드 생성
         run: pnpm --filter @wirit/collectors collect-signals
+
+      # 오너가 관제탑에서 "OO 자료 찾아줘"라고 적으면 그 말이 여기 검색어로 들어온다.
+      # 이게 없던 동안 지시는 접수만 되고 아무 일도 안 일어났다(2026-07-26 오너 보고).
+      - name: 지시 키워드 수집
+        if: inputs.query != ''
+        run: pnpm --filter @wirit/collectors collect-signals -- --query "${{ inputs.query }}"
 
       # ⚠️ 여기가 빠져 있어서 [새 소재 발굴]이 "눌러도 안 먹는" 버튼이었다(2026-07-26).
       #    수집 결과는 research/briefs/*.md 로만 떨어졌고, 소재 보드는 ideas.json 을 본다.

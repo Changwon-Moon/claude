@@ -172,6 +172,29 @@ export interface PerfRow {
   memo: string;
 }
 
+/**
+ * 요청 대장 한 줄 (data/requests.json).
+ *
+ * 오너가 관제탑에서 시킨 일은 전부 여기 남는다. 화면은 이걸 읽어
+ * **누가 · 언제** 처리하는지를 말한다 — "대기 중"이라고만 쓰지 않는다.
+ * (2026-07-26 오너 질문: "언제까지 기다려야 해?")
+ */
+export interface RequestRow {
+  id: string;
+  at: string; // 사람이 읽는 접수일 (예: "26.07.26(일)")
+  ts: string; // UTC ISO — 경과 시간 계산용
+  kind: string; // 자료 조사 | 수정 지시 | 소재 등록 | 작업 지시
+  what: string; // 오너가 적은 말 그대로
+  about?: string; // 대상 티켓 제목
+  /** digest = 수집이 자동으로 돈다 / order = 작업지시서가 자동 생성된다 / none = 사람이 해야 한다 */
+  auto: string;
+  run?: string; // 자동 실행을 건 Actions 주소
+  done: boolean;
+  doneAt?: string;
+  result?: string; // 무엇이 생겼는지 (사실만)
+  order?: string; // 생성된 작업지시서 경로
+}
+
 export interface IdeaCat {
   key: string;
   label: string;
@@ -208,4 +231,6 @@ export interface TowerState {
   archive: ArchiveFolder[];
   /** 성과 — 발행 후 도달·저장 수 (data/performance.md) */
   perf: { rows: PerfRow[]; path: string };
+  /** 요청 대장 — 오너가 시킨 일의 접수·담당·처리 상태 (data/requests.json) */
+  requests: RequestRow[];
 }

@@ -141,6 +141,29 @@ input,textarea,select{font-family:inherit}
 .allclear .t{font-size:15px;font-weight:800;letter-spacing:-.02em}
 .allclear .w{font-size:12.5px;color:var(--muted);line-height:1.7}
 
+/* ══ 내가 시킨 일 ══
+   왼쪽 색 띠 하나로 "지금 누구 손에 있는지"를 말한다.
+     파랑 = 기계가 돌고 있다 · 노랑 = 사람 차례다 · 초록 = 끝났다
+   글로 다 읽지 않아도 색만 보고 알 수 있어야 한다. */
+.reqlead{font-size:12.5px;color:var(--muted);line-height:1.7;margin:-6px 0 12px}
+#reqBody{display:flex;flex-direction:column;gap:8px}
+.reqrow{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--faint);
+  border-radius:var(--r-lg);padding:12px 14px}
+.reqrow.run{border-left-color:var(--cobalt)}
+.reqrow.hand{border-left-color:var(--warn)}
+.reqrow.ok{border-left-color:var(--ok);opacity:.72}
+.reqrow .rhead{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:5px}
+.reqrow .rkind{font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--faint)}
+.reqrow .rwho{font-size:11.5px;font-weight:800}
+.reqrow.run .rwho{color:var(--cobalt)}
+.reqrow.hand .rwho{color:var(--warn)}
+.reqrow.ok .rwho{color:var(--ok)}
+.reqrow .rat{font-size:11.5px;color:var(--muted);margin-left:auto;font-variant-numeric:tabular-nums}
+.reqrow .rabout{font-size:13.5px;font-weight:700;letter-spacing:-.015em;margin-bottom:2px}
+.reqrow .rwhat{font-size:13px;line-height:1.65;color:var(--text)}
+.reqrow .rwhen{font-size:12px;color:var(--muted);line-height:1.65;margin-top:5px}
+.reqrow .ract{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+
 /* ══ 파이프라인 ══
    7열 칸반은 여러 사람이 카드를 옮길 때 쓰는 도구다. 여기선 한 사람이,
    두 지점에서만 움직인다 → 단계별 그룹의 세로 목록이 정직하다.
@@ -573,9 +596,24 @@ const STAGES = STATE.stages, RLBL = STATE.rubricLabels;
 function img(k){ return k ? (STATE.images[k] || k) : ""; }
 const KEY = "wirit-tower-" + STATE.generatedFrom;
 let S = load();
+/**
+ * ⚠️ 브라우저의 옛 기억이 저장소의 사실을 덮어쓰지 않게 한다.
+ *
+ * 예전엔 화면 상태를 통째로 localStorage 에 저장하고 다음 방문에 **그걸 먼저** 복원했다.
+ * 그래서 이런 일이 생겼다(2026-07-26 오너 보고 "삭제했는데 왜 남아있지?"):
+ *   중단·삭제를 눌러 저장소에는 지워졌는데, 브라우저에 남은 옛 깃발이 되살아나
+ *   결정함에 계속 떴다. 저장소 동기화는 깃발을 **더하기만** 하고 빼지 않으니 영영 안 사라진다.
+ *
+ * 이제 상태(단계·깃발)의 유일한 사실은 **저장소와 빌드 결과**다.
+ * localStorage 에는 오너가 적은 메모(comments)만 남긴다 — 그건 저장소에 없는 것이라 잃으면 안 된다.
+ */
 function load(){
-  try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.tickets&&s.tickets.length===STATE.tickets.length) return s; }catch(e){}
-  return { tickets: STATE.tickets.map(t=>({...t, comments: []})) };
+  let memo={};
+  try{
+    const s=JSON.parse(localStorage.getItem(KEY));
+    if(s&&Array.isArray(s.tickets)) for(const t of s.tickets) if(t&&t.id&&(t.comments||[]).length) memo[t.id]=t.comments;
+  }catch(e){}
+  return { tickets: STATE.tickets.map(t=>({...t, flags:(t.flags||[]).slice(), comments: memo[t.id]||[] })) };
 }
 function save(){ localStorage.setItem(KEY, JSON.stringify(S)); }
 function tk(id){ return S.tickets.find(t=>t.id===id); }
@@ -595,8 +633,33 @@ const GH={
     const txt=await res.text(); return txt?JSON.parse(txt):{}; },
   me(){ return this.api("/user"); },
   dispatch(wf,inputs){ return this.api("/repos/"+this.owner+"/"+this.repo+"/actions/workflows/"+wf+"/dispatches",{method:"POST",body:{ref:this.branch,inputs:inputs||{}}}); },
-  async getFile(path){ try{ const d=await this.api("/repos/"+this.owner+"/"+this.repo+"/contents/"+path+"?ref="+encodeURIComponent(this.branch));
-      return {sha:d.sha, text:decodeURIComponent(escape(atob((d.content||"").replace(/\s/g,""))))}; }catch(e){ return {sha:null,text:""}; } },
+  /**
+   * 파일 읽기 — **반드시 최신본**을 읽는다.
+   *
+   * ⚠️ 여기가 409의 진짜 원인이었다(2026-07-26 오너 재보고).
+   *   contents/{경로}?ref={브랜치} 로 읽으면 CDN 캐시를 타서, 방금 저장한 뒤에도
+   *   몇 초 동안 **옛 sha**를 돌려준다. 그 옛 sha로 저장하면 GitHub이 409로 거절한다.
+   *   재시도해도 계속 옛 sha를 받으니 5번 다 실패했다.
+   *
+   * 해법: 브랜치 이름 대신 **지금 이 순간의 커밋 sha**로 읽는다.
+   *   ① git/ref 로 브랜치의 머리 커밋을 확인 (캐시 무력화 파라미터 포함)
+   *   ② 그 커밋을 ref 로 지정해 파일을 읽는다 — 커밋은 불변이라 캐시가 있어도 정확하다
+   * 실패하면 예전 방식으로 물러난다(읽기 자체를 못 하는 것보다 낫다).
+   */
+  async head(){
+    try{
+      const r=await this.api("/repos/"+this.owner+"/"+this.repo+"/git/ref/heads/"+encodeURIComponent(this.branch)+"?nocache="+Date.now());
+      return (r&&r.object&&r.object.sha)||"";
+    }catch(e){ return ""; }
+  },
+  async getFile(path){
+    const at=await this.head();
+    const ref=at||this.branch;
+    try{
+      const d=await this.api("/repos/"+this.owner+"/"+this.repo+"/contents/"+path
+        +"?ref="+encodeURIComponent(ref)+"&nocache="+Date.now());
+      return {sha:d.sha, text:decodeURIComponent(escape(atob((d.content||"").replace(/\s/g,"")))), at:ref};
+    }catch(e){ return {sha:null,text:"",at:ref}; } },
   putFile(path,text,message,sha){ const b64=btoa(unescape(encodeURIComponent(text)));
     return this.api("/repos/"+this.owner+"/"+this.repo+"/contents/"+path,{method:"PUT",body:{message:message,content:b64,branch:this.branch,sha:sha||undefined}}); },
   /** 쓰기 직후 GitHub이 옛 sha를 돌려줘 409가 나는 경우가 있다 → 다시 읽어 재시도 */
@@ -614,20 +677,22 @@ const GH={
   },
   append(path,addition,message){
     return this.serial(async()=>{
-      let lastSha=null;
-      for(let i=0;i<5;i++){
+      let last="";
+      for(let i=0;i<6;i++){
         const cur=await this.getFile(path);
-        // 재시도인데 sha가 그대로면 GitHub이 아직 옛 버전을 주는 것 → 더 기다린다
-        const stale=(i>0 && cur.sha===lastSha);
-        lastSha=cur.sha;
-        if(!stale){
-          const text=(cur.text?cur.text.replace(/\s*$/,"")+"\n":"")+addition+"\n";
-          try{ return await this.putFile(path,text,message,cur.sha); }
-          catch(e){ if(!this.isConflict(e)||i===4) throw e; }
+        // ⚠️ 예전엔 "sha가 안 바뀌었으면 저장을 건너뛴다"고 짰다.
+        //    캐시 때문에 sha가 계속 그대로면 **한 번도 저장을 시도하지 않고** 5번을 다 써버렸다.
+        //    → 매 회 반드시 저장을 시도한다. 기다리기만 하는 회차는 없다.
+        const text=(cur.text?cur.text.replace(/\s*$/,"")+"\n":"")+addition+"\n";
+        try{ return await this.putFile(path,text,message,cur.sha); }
+        catch(e){
+          if(!this.isConflict(e)) throw e;
+          last=shortErr(e);
+          if(i===5) break;
+          await new Promise(r=>setTimeout(r,500*Math.pow(2,i))); // 0.5→1→2→4→8초
         }
-        await new Promise(r=>setTimeout(r,400*Math.pow(2,i))); // 0.4→0.8→1.6→3.2초
       }
-      throw new Error("GitHub 409 · 재시도 5회 실패 — 잠시 후 다시 눌러주세요");
+      throw new Error("저장 충돌이 계속됩니다 — 자동 정리가 같은 파일을 쓰는 중일 수 있습니다. 1분 뒤 다시 눌러주세요. ("+last+")");
     });
   },
 };
@@ -671,7 +736,7 @@ function wireConn(){
 /** 연결 상태가 바뀌면 화면 전체(잠금·결정함·보드·소재)를 다시 맞춘다 */
 function afterConnChange(msg){
   renderConn(); applyLock(); setSave(GH.connected()?"ok":"off");
-  renderInbox(); renderBoard(); renderIdeas();
+  renderInbox(); renderReqs(); renderBoard(); renderIdeas();
   if(GH.connected()){ startWatching(); refreshFromRepo(); } // 저장소 상태를 먼저 맞춘다
   if(msg) toast(msg);
 }
@@ -800,7 +865,13 @@ async function refreshFromRepo(){
     mark(doc.dropped,"버림");
     mark(doc.revise,"수정요청");
   }catch(e){ /* 파일이 없을 수도 있다 */ }
-  if(changed){ save(); renderIdeas(); renderInbox(); renderBoard(); }
+  // ③ 요청 대장 — "내가 시킨 일"이 지금 어디까지 왔는지도 배포를 안 기다리고 최신으로
+  try{
+    const cur=await GH.getFile("data/requests.json");
+    const doc=JSON.parse(cur.text);
+    if(Array.isArray(doc.items)){ REQS=doc.items.slice(); changed=true; }
+  }catch(e){ /* 없으면 그대로 */ }
+  if(changed){ save(); renderIdeas(); renderInbox(); renderReqs(); renderBoard(); }
 }
 
 /* ══ 발행 대기열 ══
@@ -845,15 +916,15 @@ function dropTicket(t, why){
 function editPipelineState(mutate, message){
   const PATH="data/pipeline-state.json";
   return GH.serial(async()=>{
-    for(let i=0;i<5;i++){
+    for(let i=0;i<6;i++){
       const cur=await GH.getFile(PATH);
       let doc; try{ doc=JSON.parse(cur.text); }catch(e){ doc={}; }
       if(!Array.isArray(doc.dropped)) doc.dropped=[];
       if(!Array.isArray(doc.revise)) doc.revise=[];
       mutate(doc);
       try{ return await GH.putFile(PATH, JSON.stringify(doc,null,2)+"\n", message, cur.sha); }
-      catch(e){ if(!GH.isConflict(e)||i===4) throw e;
-        await new Promise(r=>setTimeout(r,400*Math.pow(2,i))); }
+      catch(e){ if(!GH.isConflict(e)||i===5) throw e;
+        await new Promise(r=>setTimeout(r,500*Math.pow(2,i))); }
     }
   });
 }
@@ -866,15 +937,25 @@ function editPipelineState(mutate, message){
 function reviseTicket(t, note){
   if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
   setSave("saving"); jobStart("revise","수정지시 기록");
+  // 지시가 "자료를 모아달라"면 그건 수집으로 바로 돌릴 수 있다.
+  // 제목을 검색어의 뼈대로 쓴다 — 지시문에서 뽑는 것보다 정확하다.
+  const wantsData=/찾아|모아|조사|자료|데이터|순위|통계/.test(note);
+  const year=(note.match(/20\d{2}/)||[])[0]||"";
+  const q=wantsData ? (keywordsOf(plain(t.title))+(year?" "+year:"")).trim() : "";
   editPipelineState((doc)=>{
     doc.revise=doc.revise.filter(r=>r.title!==t.title);
     doc.revise.push({title:t.title, at:STATE.dateLabel, note:note});
   }, "관제탑: 수정지시 — "+short(t))
     .then(()=>GH.append("research/decisions-inbox.md",
-        "- "+ghStamp()+' ✏️ 수정지시("+t.title+"): "'+note+'"', "관제탑: 수정지시"))
-    .then(()=>{ setSave("ok"); jobEnd("revise","수정지시가 기록됐습니다"); })
+        "- "+ghStamp()+" ✏️ 수정지시("+t.title+"): \""+note+"\"", "관제탑: 수정지시"))
+    .then(()=>logRequest("수정 지시", note, t.title, "order"))
+    .then(()=>q ? GH.dispatch("research-digest.yml",{query:q}).then(()=>{ startWatching(); }, ()=>{}) : null)
+    .then(()=>{ setSave("ok");
+      jobEnd("revise", q ? "수정지시 기록 + «"+q+"» 자료 수집 시작(2~3분)" : "수정지시가 기록됐습니다 — '내가 시킨 일'에서 진행 상황을 보세요"); })
     .catch(e=>{ const m=shortErr(e); setSave("bad","pipeline-state.json · "+m); jobEnd("revise", m, true); });
 }
+/** 제목에서 이모지·기호를 걷어낸다(검색어로 쓸 때 필요) */
+function plain(s){ return String(s||"").replace(/[^0-9A-Za-z가-힣\s]/g," ").replace(/\s+/g," ").trim(); }
 
 /** 발행 취소 — 대기열 파일에서 그 줄을 실제로 지운다(안 지우면 다음 빌드에 되살아난다) */
 function unqueuePublish(t, why){
@@ -991,14 +1072,56 @@ function pendingDecisions(){
     out.push({ kind:"idea", label:"소재 선택", title:"만들고 있는 게 없습니다 — 소재를 골라주세요",
       note:"소재 풀 "+open.length+"건 대기 중", thumb:null, go:()=>openTab("ideas") });
   }
-  // ③ 수정지시를 내린 뒤 결과를 확인해야 하는 것
+  // ③ 재작업이 끝나 오너가 결과를 봐야 하는 것.
+  //    ⚠️ '중단·삭제'한 건과 실험 렌더는 결정 대상이 아니다 — 이걸 안 걸러서
+  //       지운 항목이 결정함에 계속 떴다(2026-07-26 오너 보고).
+  //    ⚠️ 아직 재작업 중인 것도 여기 올리지 않는다. 결정함은 "내가 지금 결정할 것"만 담는다.
+  //       진행 상황은 아래 '요청 처리 현황'이 따로 보여준다.
   S.tickets.forEach(t=>{
-    if(!(t.flags||[]).includes("수정요청")) return;
+    const fl=t.flags||[];
+    if(!fl.includes("수정요청")) return;
+    if(fl.includes("버림")||fl.includes("실험")) return;
     if(t.stage===4) return; // 이미 ①에 잡힘
-    out.push({ kind:"rev", label:"수정 확인", title:t.title, note:"재작업 지시 후 대기 중",
+    if(openRequests().some(r=>r.kind==="수정 지시" && sameTitle(r.about, t.title))) return;
+    out.push({ kind:"rev", label:"수정 확인", title:t.title, note:"재작업이 끝났습니다 — 결과를 확인하세요",
       thumb:t.thumb||null, go:()=>{ openTab("board"); openDrawer(t.id); } });
   });
   return out;
+}
+
+/* ══════════ 요청 처리 현황 ══════════
+ * 오너 질문의 근원: "시켰는데 언제까지 기다려야 해?"
+ * 원인은 화면이 **누가 · 언제**를 말하지 않고 '대기 중'이라고만 썼던 것.
+ * 여기서는 모든 요청에 대해 반드시 세 가지를 말한다 —
+ *   ① 언제 시켰나(경과)  ② 누가 하나(자동/사람)  ③ 언제 되나(다음 처리 시각)
+ * 모르면 "모른다"고 쓴다. 아는 척하지 않는다. */
+let REQS=(STATE.requests||[]).slice();
+function sameTitle(a,b){
+  const k=(x)=>String(x||"").replace(/\s+/g,"").replace(/[·—-]/g,"").toLowerCase();
+  const x=k(a), y=k(b);
+  return !!x && !!y && (x.indexOf(y)>-1 || y.indexOf(x)>-1);
+}
+function openRequests(){ return REQS.filter(r=>!r.done); }
+/** 접수 후 얼마나 지났나 — 사람이 읽는 말로. 시각을 모르면 빈 문자열(추측하지 않는다). */
+function since(ts){
+  if(!ts) return "";
+  const ms=Date.now()-Date.parse(ts);
+  if(!isFinite(ms)||ms<0) return "";
+  const m=Math.floor(ms/60000);
+  if(m<1) return "방금";
+  if(m<60) return m+"분째";
+  const h=Math.floor(m/60);
+  if(h<24) return h+"시간째";
+  return Math.floor(h/24)+"일째";
+}
+/** 누가 처리하나 · 언제 되나 — 요청 종류가 아니라 **자동화 여부**로 갈린다 */
+function whoWhen(r){
+  if(r.done) return { who:"완료", when:r.result||"처리됨", tone:"ok" };
+  if(r.auto==="digest") return { who:"자동 수집", when:"보통 2~3분 · 끝나면 소재 보드에 자동으로 뜹니다", tone:"run" };
+  if(r.auto==="order") return r.order
+    ? { who:"작업 세션(사람)", when:"작업지시서가 준비됐습니다 — 다음 작업 세션에서 제작합니다", tone:"hand" }
+    : { who:"자동 정리", when:"매일 07:00 정리 때 작업지시서가 만들어집니다 · [지금 실행] 가능", tone:"run" };
+  return { who:"작업 세션(사람)", when:"자동으로는 처리되지 않습니다 — 작업 세션에 넘겨야 합니다", tone:"hand" };
 }
 /** 한 화면에 보여줄 상한 — 이보다 많으면 접어서 "더 보기"로 연다 */
 const INBOX_CAP=6;
@@ -1036,6 +1159,71 @@ function renderInbox(){
     wrap.appendChild(more);
   }
   box.appendChild(wrap);
+}
+
+/** 요청 처리 현황 — 시킨 일이 지금 어디까지 왔는지. 비어 있으면 칸 자체를 감춘다. */
+function renderReqs(){
+  const sec=document.getElementById("reqsec"), box=document.getElementById("reqBody");
+  if(!sec||!box) return;
+  const open=openRequests();
+  const recent=REQS.filter(r=>r.done).slice(-3);
+  const list=open.concat(recent);
+  sec.hidden=list.length===0;
+  if(!list.length) return;
+  const cnt=document.getElementById("reqN");
+  if(cnt){ cnt.textContent=String(open.length); cnt.hidden=open.length===0; }
+  box.textContent="";
+  list.forEach(r=>{
+    const w=whoWhen(r), el=document.createElement("div");
+    el.className="reqrow "+w.tone;
+    const ago=since(r.ts), when=r.at?esc(r.at)+(ago?" · "+esc(ago):""):(ago?esc(ago):"접수 시각 미기록");
+    el.innerHTML='<div class="rhead"><span class="rkind">'+esc(r.kind)+'</span>'
+      +'<span class="rwho">'+esc(w.who)+'</span>'
+      +'<span class="rat">'+when+'</span></div>'
+      +(r.about?'<div class="rabout">'+esc(r.about)+'</div>':'')
+      +'<div class="rwhat">'+esc(r.what||"")+'</div>'
+      +'<div class="rwhen">'+(r.done?"✓ ":"")+esc(w.when)+'</div>';
+    const bar=document.createElement("div"); bar.className="ract";
+    if(r.order){
+      const a=document.createElement("a"); a.className="itool"; a.target="_blank"; a.rel="noopener";
+      a.href=ghLink(r.order); a.textContent="작업지시서 보기 ↗"; bar.appendChild(a);
+    }
+    if(!r.done && r.auto!=="digest"){
+      const b=document.createElement("button"); b.className="itool"; b.type="button";
+      b.textContent="지금 처리 돌리기";
+      b.onclick=()=>runTick(b);
+      bar.appendChild(b);
+    }
+    if(!r.done && w.tone==="hand"){
+      const c=document.createElement("button"); c.className="itool"; c.type="button";
+      c.textContent="작업 세션에 넘길 지시문 복사";
+      c.onclick=()=>copyText(handoffText(r), c, "복사됨 ✓");
+      bar.appendChild(c);
+    }
+    if(bar.children.length) el.appendChild(bar);
+    box.appendChild(el);
+  });
+}
+
+/** 파이프라인 정리를 지금 돌린다 — 매일 07:00까지 기다리지 않아도 된다 */
+async function runTick(btn){
+  if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
+  jobStart("tick","요청 처리 중");
+  try{
+    await GH.dispatch("pipeline-tick.yml",{});
+    jobEnd("tick","처리를 시작했습니다 — 끝나면 자동 반영");
+    startWatching();
+  }catch(e){ const m=shortErr(e); jobEnd("tick", m, true); }
+}
+
+/** 사람(작업 세션)이 해야 하는 요청 — 그대로 붙여넣으면 되는 지시문을 만든다 */
+function handoffText(r){
+  return "wirit 관제탑에서 넘긴 "+r.kind+"입니다.\n\n"
+    +(r.about?"대상: "+r.about+"\n":"")
+    +"접수: "+(r.at||"미상")+"\n\n"
+    +"지시 내용:\n"+(r.what||"")+"\n\n"
+    +(r.order?"작업지시서: "+r.order+"\n":"")
+    +"끝나면 data/pipeline-state.json 의 revise 에서 이 항목을 지우고, 결과를 관제탑 결재 대기로 올려주세요.";
 }
 
 /* ══════════ 파이프라인 ══════════
@@ -1401,6 +1589,19 @@ let tmr=null;
 function toast(m){ const el=document.getElementById("toast"); el.textContent=m; el.classList.add("on"); clearTimeout(tmr); tmr=setTimeout(()=>el.classList.remove("on"),2400); }
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function fmt(s){ return esc(s).replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>"); }
+/** 저장소 파일 주소 — 관제탑에서 실물을 바로 열어보게 한다 */
+function ghLink(path){
+  const r=STATE.repo||{};
+  return r.owner&&r.name ? "https://github.com/"+r.owner+"/"+r.name+"/blob/"+r.branch+"/"+path : "#";
+}
+/** 복사 — 누른 버튼에 결과를 그 자리에서 보여준다(어디로 갔는지 모르게 두지 않는다) */
+async function copyText(text, btn, okLabel){
+  try{
+    await navigator.clipboard.writeText(text);
+    if(btn){ const old=btn.textContent; btn.textContent=okLabel||"복사됨 ✓"; setTimeout(()=>{ btn.textContent=old; },1600); }
+    else toast("복사했습니다");
+  }catch(e){ toast("복사 실패 — 직접 선택해 복사해주세요"); }
+}
 
 
 /* ══════════ 소재 보드 — research/ideas.json 을 직접 되쓴다 ══════════
@@ -1590,17 +1791,80 @@ function renderAskLog(){
     +'<div class="askmeta">'+esc(e.at)+' · '+esc(e.kind)+'</div></div>').join("");
 }
 
-/** 적어 넣은 내용을 보고 무엇으로 접수할지 판단한다 — 오너가 고르게 하지 않는다 */
+/* 검색어를 뽑는다 — "전세가율 지도, 전세난 정도 등 전세 관련 데이터 시각화 소재들 찾아줘"
+ * 를 그대로 뉴스에 넣으면 아무것도 안 나온다. 지시하는 말(찾아줘·모아줘)과 조사를 걷어내고
+ * 남은 낱말만 검색어로 쓴다. 결정적 코드다 — LLM 안 쓴다. */
+const ASK_STOP=/^(찾아줘|찾아|찾기|모아줘|모아|모아서|만들어줘|만들어|만들|해줘|해봐|해서|알아봐|알아|정리해줘|정리해|정리|주세요|관련된|관련|다양한|여러가지|여러|일단|다시|좀|정도|자료들|자료|데이터|소재들|소재|기사나|기사|언론사들|언론사|있을거야|있을|발표한|발표|매기는|카드|뽑아|보여줘|필요해|같은|것들|이런|그런|저런|우리|지금|오늘|내일)$/;
+function keywordsOf(text){
+  const toks=String(text||"").replace(/[^0-9A-Za-z가-힣\s]/g," ").split(/\s+/).filter(Boolean);
+  const out=[];
+  for(let w of toks){
+    w=w.replace(/(으로|로서|에서|에게|에는|에|을|를|이|가|은|는|의|와|과|도|만|들)$/,"");
+    if(w.length<2 || ASK_STOP.test(w) || out.indexOf(w)>-1) continue;
+    out.push(w);
+    if(out.length>=5) break;
+  }
+  return out.join(" ");
+}
+
+/** 적어 넣은 내용을 보고 무엇으로 접수할지 판단한다 — 오너가 고르게 하지 않는다.
+ *  ⚠️ note 에는 **실제로 일어날 일**만 적는다. "다음 작업 때"처럼 언제인지 모르는 말은
+ *     그 자체가 오너를 기다리게 만든 원인이었다(2026-07-26). */
 function classifyAsk(text){
   const t=text.trim();
-  if(/https?:\/\//.test(t)) return { kind:"자료(링크)", to:"research/INBOX.md",
-    note:"링크를 자료로 접수했습니다. 다음 작업 때 읽고 소재로 쓸지 판단합니다." };
-  if(/만들|뽑아|해줘|해봐|카드|제작|수정|바꿔|다시/.test(t)) return { kind:"작업 지시", to:"research/decisions-inbox.md",
-    note:"작업 지시로 접수했습니다. 다음 작업 때 이대로 진행합니다." };
-  if(t.length<=60) return { kind:"소재 아이디어", to:"ideas",
+  if(/https?:\/\//.test(t)) return { kind:"자료(링크)", to:"research/INBOX.md", auto:"none",
+    note:"링크를 자료로 접수했습니다. 아래 '내가 시킨 일'에서 처리 상태를 볼 수 있습니다." };
+  // 자료를 찾아달라 = 지금 바로 수집을 돌릴 수 있다. 이게 가장 흔한 지시다.
+  if(/찾아|모아|조사|알아봐|검색|수집|자료|데이터/.test(t) && !/만들어|제작|카드로/.test(t))
+    return { kind:"자료 조사", to:"digest", auto:"digest",
+      note:"수집을 시작했습니다 — 2~3분 뒤 왼쪽 보드에 새 소재로 뜹니다." };
+  if(/만들|뽑아|해줘|해봐|카드|제작|수정|바꿔|다시/.test(t)) return { kind:"작업 지시", to:"research/decisions-inbox.md", auto:"none",
+    note:"작업 지시로 접수했습니다. 이건 자동으로는 안 되고 작업 세션이 처리합니다 — 상태는 '내가 시킨 일'에서 보세요." };
+  if(t.length<=60) return { kind:"소재 등록", to:"ideas", auto:"none",
     note:"소재로 등록했습니다 — 왼쪽 보드에서 바로 확인하세요." };
-  return { kind:"자료(메모)", to:"research/INBOX.md",
-    note:"자료로 접수했습니다. 다음 작업 때 읽습니다." };
+  return { kind:"자료(메모)", to:"research/INBOX.md", auto:"none",
+    note:"자료로 접수했습니다. 상태는 '내가 시킨 일'에서 보세요." };
+}
+
+/**
+ * 요청 대장에 한 줄 남긴다 — 오너가 시킨 일이 **어디에도 안 남는** 일이 없게.
+ * 이 대장이 화면의 '내가 시킨 일'을 만든다.
+ */
+function logRequest(kind, what, about, auto, run){
+  if(!GH.connected()) return Promise.resolve();
+  const PATH="data/requests.json";
+  return GH.serial(async()=>{
+    for(let i=0;i<6;i++){
+      const cur=await GH.getFile(PATH);
+      let doc; try{ doc=JSON.parse(cur.text); }catch(e){ doc={}; }
+      if(!Array.isArray(doc.items)) doc.items=[];
+      const row={ id:"req-"+Date.now().toString(36), at:STATE.dateLabel, ts:new Date().toISOString(),
+        kind:kind, what:String(what||"").slice(0,400), about:about||"", auto:auto||"none",
+        run:run||"", done:false };
+      doc.items.push(row);
+      try{
+        await GH.putFile(PATH, JSON.stringify(doc,null,2)+"\n", "관제탑: 요청 접수 — "+kind, cur.sha);
+        REQS.push(row); renderReqs();
+        return row;
+      }catch(e){ if(!GH.isConflict(e)||i===5) throw e;
+        await new Promise(r=>setTimeout(r,500*Math.pow(2,i))); }
+    }
+  });
+}
+
+/** 소재 분류를 내용으로 고른다 — 예전엔 첫 카테고리를 그냥 써서
+ *  새로 넣은 소재가 '✅ 제작 완료' 칸에 들어갔다(2026-07-26 오너 화면). */
+function pickCat(text){
+  const t=String(text||"");
+  const R=[[/부동산|아파트|전세|월세|분양|재건축|토허|실거래|집값/,"부동산"],
+    [/증시|코스피|코스닥|주식|환율|금리|경제/,"경제"],
+    [/연봉|월급|초봉|자산|저축|투자|소득/,"돈"],
+    [/지하철|교통|철도|GTX|버스/,"지하철"]];
+  for(const [re,key] of R){ if(!re.test(t)) continue;
+    const hit=ICATS.find(c=>c.key.indexOf(key)>-1||c.label.indexOf(key)>-1);
+    if(hit) return hit.key; }
+  const novel=ICATS.find(c=>/참신|통계|novel/.test(c.key+c.label));
+  return (novel||ICATS[ICATS.length-1]||{}).key||"misc";
 }
 
 function wireIdeaTools(){
@@ -1619,13 +1883,23 @@ function wireIdeaTools(){
     try{
       if(c.to==="ideas"){
         // 짧은 한 줄은 소재로 바로 등록한다 — 화면에서 즉시 보인다
-        IDEAS.push({ id:"ask-"+Date.now().toString(36), cat:(ICATS[0]||{}).key||"misc",
+        IDEAS.push({ id:"ask-"+Date.now().toString(36), cat:pickCat(v),
           title:v.slice(0,90), why:"오너 직접 입력", source:"지시함", state:"", status:"", isNew:true });
         await new Promise(r=>{ queueSave("소재 추가 — "+v.slice(0,40)); setTimeout(r,900); });
         renderIdeas();
+      } else if(c.to==="digest"){
+        // "OO 자료 찾아줘" → 그 말에서 검색어를 뽑아 **지금 수집을 돌린다**.
+        // 예전엔 여기서 기록만 하고 끝나 아무 일도 안 일어났다.
+        const q=keywordsOf(v);
+        await GH.append("research/decisions-inbox.md",
+          "- "+ghStamp()+" 🔎 자료 조사: "+v.replace(/\n+/g," / ")+(q?"  [검색어: "+q+"]":""), "관제탑: 자료 조사 요청");
+        await GH.dispatch("research-digest.yml", q?{query:q}:{});
+        c.note="검색어 «"+(q||"기본 주제")+"» 로 수집을 시작했습니다 — 2~3분 뒤 왼쪽 보드에 뜹니다.";
+        startWatching();
       } else {
         await GH.append(c.to, "- "+ghStamp()+" "+v.replace(/\n+/g," / "), "관제탑: "+c.kind);
       }
+      await logRequest(c.kind, v, "", c.auto);
       setSave("ok");
       askLogPush({ text:v.slice(0,160), at:STATE.dateLabel, kind:c.kind });
       ta.value="";
@@ -1688,6 +1962,7 @@ renderConn();
 renderBoard();
 renderIdeas();
 renderInbox();
+renderReqs();
 wireIdeaTools();
 applyLock();
 if(location.hash) openTab(location.hash.slice(1));
@@ -2102,6 +2377,11 @@ export function renderTowerBody(state: TowerState): string {
   <div class="inbox">
     <h2>오늘 결정할 일<span class="n num" id="inboxN" hidden>0</span></h2>
     <div id="inboxBody"></div>
+  </div>
+  <div class="inbox" id="reqsec" hidden>
+    <h2>내가 시킨 일<span class="n num" id="reqN" hidden>0</span></h2>
+    <p class="reqlead">시킨 일이 지금 어디까지 왔는지, <b>누가 하고 언제 되는지</b>를 그대로 적습니다.</p>
+    <div id="reqBody"></div>
   </div>
 </section>
 

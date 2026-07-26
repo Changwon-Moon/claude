@@ -295,6 +295,38 @@ check("첫 PUT이 409여도 재시도로 저장 성공",
   await q(`document.getElementById("savestate").textContent`));
 check("재시도가 실제로 일어남", (await q(`window.__try`)) >= 2, `시도 ${await q(`window.__try`)}회`);
 
+/* ⚠️ 오너가 실제로 본 실패(2026-07-26): "저장 실패 · decisions-inbox.md · 409 · 재시도 5회 실패"
+ * 원인은 GitHub의 읽기 캐시다 — 브랜치 이름으로 읽으면 방금 바뀐 파일도 몇 초간 **옛 sha**를 준다.
+ * 그 옛 sha로 저장하면 계속 409. 아래는 그 상황 그대로를 흉내내 재현한다:
+ *   브랜치로 읽으면 STALE, 지금 커밋(git/ref)으로 읽으면 FRESH, PUT은 FRESH만 받는다.
+ * 브랜치로 읽는 구현이면 100% 실패하고, 커밋으로 읽는 구현만 통과한다. */
+// 앞 절에서 걸어둔 저장이 아직 날아다닐 수 있다 → 가라앉힌 뒤에 측정한다(검사끼리 오염 금지)
+await page.waitForTimeout(700);
+await q(`
+  window.__putOk = 0; window.__usedStale = 0;
+  GH._chain = Promise.resolve();
+  GH.api = async (path, opts) => {
+    opts = opts || {};
+    if (opts.method === "PUT") {
+      const mine = path.indexOf("cachecheck.md") > -1;      // 이 검사가 건 저장만 센다
+      if ((opts.body||{}).sha !== "FRESH") { if(mine) window.__usedStale++; throw new Error('GitHub 409 · { "message": "does not match" }'); }
+      if(mine) window.__putOk++;
+      return {};
+    }
+    if (path.indexOf("/git/ref/heads/") > -1) return { object: { sha: "HEAD9" } };
+    if (path.indexOf("/contents/") > -1) {
+      const fresh = path.indexOf("ref=HEAD9") > -1;   // 커밋으로 읽었나
+      return { sha: fresh ? "FRESH" : "STALE", content: btoa(unescape(encodeURIComponent("# 기존"))) };
+    }
+    return {};
+  };
+  GH.append("research/cachecheck.md", "- 캐시 검사", "smoke").then(()=>{}, ()=>{});
+`);
+await page.waitForTimeout(1500);
+check("읽기 캐시가 옛 sha를 줘도 저장 성공(브랜치가 아니라 커밋으로 읽는다)",
+  (await q(`window.__putOk`)) >= 1, `저장 ${await q(`window.__putOk`)}회 · 옛sha사용 ${await q(`window.__usedStale`)}회`);
+check("옛 sha로는 아예 저장을 시도하지 않는다", (await q(`window.__usedStale`)) === 0);
+
 // ── 결정함: 결정할 일이 실제로 모이는가
 console.log("\n[F. 결정함]");
 await page.click('.tab[data-v="today"]');
@@ -355,6 +387,59 @@ await page.waitForTimeout(250);
 check("보관함 링크가 저장소에 없는 파일을 가리키지 않음", await q(`
   [...document.querySelectorAll(".flink")].every(a =>
     !/\\/data\\/(out|content)\\//.test(a.getAttribute("href")||""))`));
+
+/* ── H. "언제까지 기다려?"가 다시 안 나오게 (2026-07-26 오너 질문 3건)
+ * 근원은 화면이 '대기 중'이라고만 쓰고 **누가·언제**를 말하지 않은 것이었다.
+ * 그러니 여기서 검사할 것은 "칸이 있는가"가 아니라 **말이 구체적인가**다. */
+console.log("\n[H. 시킨 일이 어디까지 왔는지 말하는가]");
+await page.click('.tab[data-v="today"]');
+await page.waitForTimeout(300);
+const hasReq = await q(`(STATE.requests||[]).length > 0`);
+check("요청 대장을 화면이 읽는다", await q(`typeof REQS !== "undefined"`));
+if (hasReq) {
+  check("'내가 시킨 일' 칸이 보인다", await q(`document.getElementById("reqsec").offsetParent !== null`));
+  check("각 줄에 담당(누가)이 적혀 있다", await q(`
+    [...document.querySelectorAll("#reqBody .reqrow")].length > 0 &&
+    [...document.querySelectorAll("#reqBody .reqrow")].every(r=>(r.querySelector(".rwho")||{}).textContent)`));
+  check("각 줄에 언제 되는지가 적혀 있다", await q(`
+    [...document.querySelectorAll("#reqBody .reqrow")].every(r=>((r.querySelector(".rwhen")||{}).textContent||"").length > 6)`));
+  check("사람이 해야 하는 일엔 넘길 방법을 준다", await q(`
+    [...document.querySelectorAll("#reqBody .reqrow.hand")].every(r=>
+      [...r.querySelectorAll(".ract .itool")].some(b=>/넘길|지시서/.test(b.textContent)))`));
+}
+// 화면 어디에도 "그냥 기다리라"는 말은 없어야 한다 — 그게 이 사태의 원인이었다
+check("'대기 중'처럼 주체 없는 말이 결정함·요청함에 없다", await q(`
+  !/재작업 지시 후 대기 중/.test(
+    (document.getElementById("inboxBody")||{}).textContent + (document.getElementById("reqBody")||{}).textContent)`));
+
+// 지시함에 "자료 찾아줘"라고 적으면 → 검색어를 뽑아 **수집을 실제로 실행**해야 한다
+await page.click('.tab[data-v="ideas"]');
+await page.waitForTimeout(250);
+await q(`
+  window.__disp=[]; window.__reqPut=0;
+  GH._chain = Promise.resolve();
+  GH.api = async (path, opts) => {
+    opts = opts || {};
+    if (path.indexOf("/dispatches") > -1) { window.__disp.push(opts.body||{}); return {}; }
+    if (opts.method === "PUT") { if(path.indexOf("requests.json")>-1) window.__reqPut++; return {}; }
+    if (path.indexOf("/git/ref/heads/") > -1) return { object: { sha: "H" } };
+    if (path.indexOf("/contents/") > -1) {
+      const isReq = path.indexOf("requests.json") > -1;
+      const body = isReq ? JSON.stringify({items:[]}) : "# 기존";
+      return { sha:"s", content: btoa(unescape(encodeURIComponent(body))) };
+    }
+    return {};
+  };
+  document.getElementById("ask").value = "전세가율 지도, 전세난 정도 등 전세 관련 데이터 찾아줘";
+`);
+await page.click("#asksend");
+await page.waitForTimeout(1400);
+check("'자료 찾아줘'가 실제 수집 실행으로 이어진다", await q(`
+  window.__disp.some(d=>(d.inputs||{}).query)`), await q(`JSON.stringify(window.__disp)`));
+check("뽑아낸 검색어에 지시 동사가 안 섞인다", await q(`
+  window.__disp.every(d=>!/찾아|모아|해줘/.test(((d.inputs||{}).query)||""))`),
+  await q(`(window.__disp[0]||{inputs:{}}).inputs.query||""`));
+check("시킨 일이 요청 대장에 기록된다", (await q(`window.__reqPut`)) >= 1);
 
 check("콘솔·페이지 오류 없음", errors.length === 0, errors.slice(0, 3).join(" | "));
 

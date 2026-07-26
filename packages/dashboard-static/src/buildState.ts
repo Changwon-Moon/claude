@@ -6,7 +6,7 @@ import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { join, basename } from "node:path";
 import { P, REPO_ROOT } from "./paths.js";
 import { STAGES, RUBRIC_LABELS } from "./types.js";
-import type { TowerState, Ticket, TimelineEntry, Idea, IdeaCat, Evidence, ArchiveFolder, PerfRow } from "./types.js";
+import type { TowerState, Ticket, TimelineEntry, Idea, IdeaCat, Evidence, ArchiveFolder, PerfRow, RequestRow } from "./types.js";
 import { parseBrief } from "./parse/brief.js";
 import { parseDecisionLog } from "./parse/decisionLog.js";
 import { parseCeoPrinciples, parseTeamCard } from "./parse/company.js";
@@ -396,6 +396,69 @@ export async function buildState(): Promise<TowerState> {
     }
   }
 
+  /* ── 요청 대장 ─────────────────────────────────────────────────────────
+   * 오너가 시킨 일이 "지금 어디까지 왔는지"를 화면이 말할 수 있게 모은다.
+   *
+   * 두 곳에서 온다:
+   *   ① data/requests.json — 관제탑이 요청할 때마다 직접 적는 대장
+   *   ② data/pipeline-state.json 의 revise[] — 대장이 생기기 전에 남은 수정지시
+   * ②를 함께 읽는 이유: 대장 도입 전 지시가 화면에서 사라지면 그것도 똑같이
+   * "시켰는데 아무 일도 안 일어난" 상태가 된다. 있던 것을 잃지 않는다.
+   */
+  const requests: RequestRow[] = [];
+  const reqPath = join(REPO_ROOT, "data/requests.json");
+  if (existsSync(reqPath)) {
+    try {
+      const j = JSON.parse(readFileSync(reqPath, "utf8"));
+      for (const r of Array.isArray(j.items) ? j.items : []) {
+        requests.push({
+          id: String(r.id || ""),
+          at: String(r.at || ""),
+          ts: String(r.ts || ""),
+          kind: String(r.kind || "작업 지시"),
+          what: String(r.what || ""),
+          about: r.about ? String(r.about) : undefined,
+          auto: String(r.auto || "none"),
+          run: r.run ? String(r.run) : undefined,
+          done: !!r.done,
+          doneAt: r.doneAt ? String(r.doneAt) : undefined,
+          result: r.result ? String(r.result) : undefined,
+          order: r.order ? String(r.order) : undefined,
+        });
+      }
+    } catch {
+      /* 깨져도 나머지 화면은 정상 */
+    }
+  }
+  if (existsSync(statePath)) {
+    try {
+      const j = JSON.parse(readFileSync(statePath, "utf8"));
+      for (const r of Array.isArray(j.revise) ? j.revise : []) {
+        const title = String(r.title || "");
+        if (!title) continue;
+        if (requests.some((q) => q.kind === "수정 지시" && normTitle(q.about || "") === normTitle(title))) continue;
+        // 지시서가 실제로 만들어졌는지 눈으로 확인 — 없으면 "아직 안 잡힘"이라고 말해야 한다
+        const file = `${title.replace(/[^0-9A-Za-z가-힣]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 32) || "req"}-revise.md`;
+        const orderPath = join(REPO_ROOT, "research/work-orders", file);
+        const hasOrder = existsSync(orderPath);
+        requests.push({
+          id: `rev-${normTitle(title).slice(0, 24)}`,
+          at: String(r.at || ""),
+          ts: "",
+          kind: "수정 지시",
+          what: String(r.note || ""),
+          about: title,
+          auto: "order",
+          done: false,
+          result: hasOrder ? "작업지시서 생성됨 — 제작 대기" : "",
+          order: hasOrder ? `research/work-orders/${file}` : undefined,
+        });
+      }
+    } catch {
+      /* 무시 */
+    }
+  }
+
   // 발행 승인 후보 = 카드 + 캡션이 다 준비된 것. 캡션이 없으면 올릴 글이 없어 결정 대상이 아니다.
   // (관제탑 결정함과 반드시 같은 기준을 써야 KPI 숫자와 목록이 어긋나지 않는다)
   const readyToPublish = tickets.filter(
@@ -434,6 +497,7 @@ export async function buildState(): Promise<TowerState> {
     recentDrops: recentDrops.slice(-8),
     archive,
     perf: { rows: perfRows, path: "data/performance.md" },
+    requests,
     mining: {
       weights: [
         { label: "부동산", pct: 30 },

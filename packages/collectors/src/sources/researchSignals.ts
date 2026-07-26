@@ -90,13 +90,39 @@ export interface SignalsResult {
   trendKeywords: string[];
 }
 
-export async function collectResearchSignals(): Promise<SignalsResult> {
+/**
+ * 오너가 지시한 키워드로 만드는 임시 피드.
+ *
+ * 왜 필요한가(2026-07-26 오너 질문 "전세 데이터 찾아달라 했는데 진행되는 거야?"):
+ * 기존 수집은 **고정 주제 11개**만 돌았다. 그래서 "전세 자료 찾아줘" 같은 지시는
+ * 접수만 되고 아무 일도 안 일어났다. 여기서 지시한 말 그대로 뉴스를 검색한다.
+ *
+ * 두 갈래로 나눠 검색한다 — 최신 흐름(7일)과 숫자·순위가 붙은 자료(30일).
+ * 카드는 수치가 있어야 만들어지므로 후자가 실제로 쓸모 있는 쪽이다.
+ */
+export function queryFeeds(query: string): TopicFeed[] {
+  const q = query.trim().replace(/\s+/g, " ").slice(0, 80);
+  if (!q) return [];
+  return [
+    { topic: `요청: ${q}`, tier: "main", url: gn(`${q} when:7d`), max: 10 },
+    {
+      topic: `요청: ${q} (숫자·순위 자료)`,
+      tier: "main",
+      url: gn(`${q} (순위 OR 통계 OR 조사 OR 평균 OR 발표) when:30d`),
+      max: 10,
+    },
+  ];
+}
+
+export async function collectResearchSignals(
+  feeds: TopicFeed[] = TOPIC_FEEDS,
+): Promise<SignalsResult> {
   const results: TopicSignals[] = [];
 
   // 1) 트렌드 피드를 먼저 수집해 수요 키워드를 확보
   let trendKeywords: string[] = [];
-  const trendsFeed = TOPIC_FEEDS.find((f) => f.topic === "검색 트렌드");
-  const newsFeeds = TOPIC_FEEDS.filter((f) => f.topic !== "검색 트렌드");
+  const trendsFeed = feeds.find((f) => f.topic === "검색 트렌드");
+  const newsFeeds = feeds.filter((f) => f.topic !== "검색 트렌드");
 
   let trendsResult: TopicSignals | null = null;
   if (trendsFeed) {
@@ -150,6 +176,8 @@ export function renderBoard(
   date: string,
   signals: TopicSignals[],
   trendKeywords: string[] = [],
+  /** 오너가 지시한 키워드로 돌린 수집이면 그 말을 그대로 넣는다(무엇에 대한 답인지 남긴다) */
+  askedFor = "",
 ): string {
   const main = signals.filter((s) => s.tier === "main");
   const sub = signals.filter((s) => s.tier === "sub");
@@ -174,6 +202,21 @@ export function renderBoard(
     trendKeywords.length > 0
       ? `\n> 🔍 **오늘의 급상승 검색어**: ${trendKeywords.slice(0, 12).join(" · ")}\n`
       : "";
+
+  // 지시 수집(키워드 검색)은 부 콘텐츠가 없다 — 빈 칸을 만들지 않는다
+  if (askedFor) {
+    return `# 소재 보드 (지시 수집) — ${date}
+
+> 오너 지시: **"${askedFor}"**
+> 이 말 그대로 뉴스를 검색한 결과입니다. 🔥 = 숫자·순위 레버(카드화 유리)
+> 🔥 항목은 관제탑 소재 보드에 자동으로 올라갑니다(\`scripts/ingest-signals.mjs\`).
+
+${section(main)}
+
+---
+_자동 생성: 구글뉴스 RSS 키워드 검색. \`collect-signals --query "${askedFor}"\`_
+`;
+  }
 
   return `# 소재 보드 (자동 수집) — ${date}
 

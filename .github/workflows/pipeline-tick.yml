@@ -14,6 +14,8 @@ on:
     paths:
       - "research/ideas.json"
       - "data/publish-queue.md"
+      - "data/requests.json"
+      - "data/pipeline-state.json"
   schedule:
     - cron: "0 22 * * *" # 매일 07:00 KST — 밤새 쌓인 결정을 정리하고 아침에 알린다
   workflow_dispatch:
@@ -45,6 +47,11 @@ jobs:
       - name: 작업지시서 생성
         run: node scripts/open-work-orders.mjs
 
+      # 오너가 시킨 일이 "적히기만" 하고 끝나지 않게 — 수정 지시를 지시서로 펴고,
+      # 이미 처리된 요청은 사실(파일 존재)로 확인해 완료로 닫는다.
+      - name: 요청 대장 처리
+        run: node scripts/process-requests.mjs
+
       # ⑨ 발행 대기열 점검 — 무엇이 올라갈 준비가 됐는지 사람이 읽을 수 있게 요약
       - name: 발행 대기열 점검
         run: node scripts/check-publish-queue.mjs
@@ -64,7 +71,7 @@ jobs:
         run: |
           git config user.name  "wirit-bot"
           git config user.email "noreply@github.com"
-          paths="research/work-orders data/publish-queue.md data/performance.md data/archive"
+          paths="research/work-orders data/publish-queue.md data/performance.md data/archive data/requests.json"
           if [ -n "$(git status --porcelain -- $paths)" ]; then
             git add -- $paths
             git commit -m "파이프라인: 승인 처리(작업지시서·발행 대기열·성과)"

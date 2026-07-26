@@ -29,6 +29,7 @@ on:
       - "scripts/sim-tower.mjs"
       - "scripts/verify-live.mjs"
       - "data/pipeline-state.json"
+      - "data/requests.json"
       - "packages/dashboard-static/**"
       - "packages/tower-worker/**"
       - ".github/workflows/tower-deploy.yml"

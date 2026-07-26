@@ -108,6 +108,17 @@ check("저장소 상태를 직접 읽는 코드 존재(배포를 안 기다림)"
 check("옛 화면 잔재 없음(마이닝 열·연결 바)",
   !/id="ghbar"/.test(html) && !/col mining/.test(html));
 
+// "언제까지 기다려?"를 없앤 장치들이 실제 사이트에 올라갔는지 (2026-07-26)
+has(/id="reqsec"/, "'내가 시킨 일' 칸");
+has(/function whoWhen/, "요청마다 담당·예정을 말하는 코드");
+check("주체 없는 '대기 중' 문구 제거", !/재작업 지시 후 대기 중/.test(html));
+check("읽기 캐시를 우회해 최신본을 읽는다(409 재발 방지)",
+  /git\/ref\/heads/.test(html) && /nocache=/.test(html));
+check("'자료 찾아줘'를 검색어로 바꿔 수집을 실행",
+  /function keywordsOf/.test(html) && /research-digest\.yml/.test(html));
+check("브라우저 옛 상태가 저장소를 덮지 않음",
+  !/localStorage\.getItem\(KEY\)\);\s*if\(s&&s\.tickets&&s\.tickets\.length/.test(html));
+
 // 카드 실물이 들어갔는지 — CI가 렌더한 썸네일
 const imgs = (html.match(/data:image\/(jpeg|png);base64/g) || []).length;
 check("카드 썸네일 포함", imgs > 0, `${imgs}장`);
