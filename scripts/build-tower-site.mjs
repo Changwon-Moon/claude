@@ -33,6 +33,12 @@ const tower = join(ROOT, "packages/dashboard/index.html");
 if (!existsSync(tower)) throw new Error("관제탑 index.html 생성 실패 — dashboard-static 확인");
 copyFileSync(tower, join(SITE, "index.html"));
 
+// 배포 확인용 판번호 — 어느 커밋의 화면인지.
+// 왜: Cloudflare 게시 후 전 세계 전파가 몇 초~수십 초 걸린다. "12초 대기"처럼
+// 시간을 어림잡으면 옛 화면을 검사하고 실패한다(2026-07-26 run #실패).
+// verify-live 는 이 파일이 기대한 커밋과 같아질 때까지 기다렸다가 검사한다.
+writeFileSync(join(SITE, "version.txt"), (process.env.GITHUB_SHA || "dev") + "\n", "utf8");
+
 // 1-b) 본문 폰트 — 카드와 같은 Pretendard를 쓰되 HTML에 박아 넣지 않는다.
 //      Variable 폰트가 2MB라 임베드하면 관제탑이 다시 무거워진다.
 //      같은 출처의 별도 파일로 두면 브라우저가 한 번만 받아 캐시한다.

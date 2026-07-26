@@ -144,10 +144,7 @@ jobs:
         env:
           TOWER_URL: https://wirit-tower.engineerest0.workers.dev
           TOWER_PASSWORD: ${{ secrets.TOWER_PASSWORD }}
-        run: |
-          # 워커 배포가 전 세계에 퍼지는 데 몇 초 걸린다
-          sleep 12
-          node scripts/verify-live.mjs
+        run: node scripts/verify-live.mjs # 전파 대기는 스크립트가 version.txt 로 직접 확인한다
 
       # 여기까지 와야 이미지가 인터넷에 살아 있다 → 이제 인스타가 가져갈 수 있다.
       # 오너가 승인한(대기열 [ ]) 건만 올린다. 토큰이 없으면 조용히 건너뛴다.

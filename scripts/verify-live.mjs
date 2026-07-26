@@ -65,7 +65,26 @@ if (gated) {
     console.log(`\n❌ ${pass}/${pass + fail} — 로그인 실패로 본문 확인 불가`);
     process.exit(1);
   }
-  const page = await fetch(URL_BASE + "/", { headers: { Cookie: cookie } });
+  /* ── 새 판이 실제로 퍼질 때까지 기다린다 ──
+   * 게시 직후엔 엣지 캐시가 옛 화면을 줄 수 있다. version.txt(빌드 커밋)가
+   * 기대한 커밋과 같아질 때까지 최대 2분 폴링한 뒤에 검사한다.
+   * 시간을 어림잡던 sleep 12 는 이걸로 대체됐다. */
+  const wantSha = (process.env.GITHUB_SHA || "").trim();
+  if (wantSha) {
+    let seen = "";
+    for (let i = 0; i < 12; i++) {
+      try {
+        const v = await fetch(URL_BASE + "/version.txt", { headers: { Cookie: cookie, "Cache-Control": "no-cache" } });
+        seen = (await v.text()).trim();
+      } catch { /* 다음 시도 */ }
+      if (seen === wantSha) break;
+      await new Promise((r) => setTimeout(r, 10000));
+    }
+    check("새 판이 전파됨(빌드 커밋 일치)", seen === wantSha,
+      `기대 ${wantSha.slice(0, 7)} · 실제 ${String(seen).slice(0, 7) || "없음"}`);
+  }
+
+  const page = await fetch(URL_BASE + "/", { headers: { Cookie: cookie, "Cache-Control": "no-cache" } });
   html = await page.text();
 }
 
