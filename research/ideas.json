@@ -338,7 +338,9 @@
       "why": "'월급=치킨 N마리' 연도별",
       "source": "통계청 외식물가",
       "state": "approve",
-      "status": ""
+      "status": "",
+      "stage": 1,
+      "at": "26.07.26(일)"
     },
     {
       "id": "day",
