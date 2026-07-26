@@ -90,6 +90,10 @@ jobs:
       - name: 사이트 조립
         run: node scripts/build-tower-site.mjs
 
+      # 관제탑이 실제로 동작하는지(읽기 전용 게이트 + 저장소 직접 쓰기) 배포 전에 확인
+      - name: 관제탑 스모크
+        run: node scripts/smoke-tower.mjs packages/tower-worker/_site/index.html
+
       # wrangler-action@v3은 구버전(3.90)을 설치해 jsonc 설정을 못 읽는다("Missing entry-point").
       # 버전을 직접 고정해 실행한다.
       - name: Cloudflare 게시

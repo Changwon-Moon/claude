@@ -89,6 +89,24 @@ export interface AssetGroup {
   items: { title: string; meta?: string }[];
 }
 
+/** 소재(아이디어) 1건. research/ideas.json 이 단일 원천이며 관제탑이 직접 되쓴다. */
+export interface Idea {
+  id: string;
+  cat: string;
+  title: string;
+  why: string;
+  source: string;
+  /** 오너 결정: approve | hold | reject | "" (미결) */
+  state: string;
+  /** "done" = 이미 카드로 제작됨 */
+  status: string;
+}
+
+export interface IdeaCat {
+  key: string;
+  label: string;
+}
+
 export interface TowerState {
   generatedFrom: string; // 어떤 저장소 상태 기준인지 (결정적: 콘텐츠 날짜에서 파생)
   dateLabel: string; // 상단 표시용 (예: "26.07.19(일)")
@@ -112,4 +130,6 @@ export interface TowerState {
   images: Record<string, string>;
   /** 컨텐츠 마이닝 설정 — 주제 비중(합 100 지향). 마이닝 요청 시 이 비중을 실어 보낸다. */
   mining: { weights: { label: string; pct: number }[] };
+  /** 소재 보드 — 관제탑 '소재' 탭에서 마이닝과 한 화면으로 통합된다. */
+  ideas: { path: string; cats: IdeaCat[]; items: Idea[] };
 }

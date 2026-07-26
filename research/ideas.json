@@ -1,0 +1,453 @@
+{
+  "meta": {
+    "note": "소재(아이디어) 단일 원천. 관제탑이 읽고, 오너가 조작하면 GitHub API로 이 파일을 되쓴다.",
+    "updated": "2026-07-26",
+    "schema": "{id, cat, title, why, source, state(approve|hold|reject|\"\"), status(done|\"\")}"
+  },
+  "cats": [
+    {
+      "key": "done",
+      "label": "✅ 제작 완료 · 발행 대기"
+    },
+    {
+      "key": "now",
+      "label": "🔥 시의성 대응 (지금 아니면 김빠짐)"
+    },
+    {
+      "key": "rhythm",
+      "label": "📅 발행 리듬 (데일리·주간·월간·분기 고정물)"
+    },
+    {
+      "key": "viral",
+      "label": "🧨 부동산 바이럴 시리즈"
+    },
+    {
+      "key": "auto",
+      "label": "🤖 실거래 자동화 심화 (엔진 재활용)"
+    },
+    {
+      "key": "novel",
+      "label": "💡 참신 통계 (범용 트래픽축)"
+    },
+    {
+      "key": "metro",
+      "label": "🚇 지하철 시리즈"
+    }
+  ],
+  "ideas": [
+    {
+      "id": "tohuh",
+      "cat": "done",
+      "title": "🗺 [월간] 토허제 신고가 지도",
+      "why": "수도권 토허제 40곳 신고가 경신 건수(지도+순위). 매월 재생산",
+      "source": "발행 대기 · 재사용 오더",
+      "state": "",
+      "status": "done"
+    },
+    {
+      "id": "seoulmap",
+      "cat": "done",
+      "title": "🗺 서울 신고가 지도 '강남이 아니었다'",
+      "why": "서울 25구 신고가 경신 건수 코로플레스",
+      "source": "제작 완료(픽셀 고정)",
+      "state": "",
+      "status": "done"
+    },
+    {
+      "id": "index2026",
+      "cat": "done",
+      "title": "📉 국장 성적표 (코스피·코스닥 고점대비)",
+      "why": "커버+차트 2장. 캡션 확정",
+      "source": "발행 대기",
+      "state": "",
+      "status": "done"
+    },
+    {
+      "id": "metrospeed",
+      "cat": "done",
+      "title": "🚇 지하철 운행속도 (1등·꼴등 둘 다 1호선)",
+      "why": "커버+2단표 2장. 1차 출처 검증 완료",
+      "source": "발행 대기 2호",
+      "state": "",
+      "status": "done"
+    },
+    {
+      "id": "gtxa",
+      "cat": "done",
+      "title": "🚄 지하철이 온다 EP.1 · GTX-A",
+      "why": "커버+현황일정+집값+인사이트 4장",
+      "source": "제작·검증 완료",
+      "state": "",
+      "status": "done"
+    },
+    {
+      "id": "daejang8459",
+      "cat": "done",
+      "title": "🏢 서울 34평·25평 대장 APT",
+      "why": "지도+순위. 신폰트·테두리 반영 완료",
+      "source": "제작 완료",
+      "state": "",
+      "status": "done"
+    },
+    {
+      "id": "dogam01",
+      "cat": "done",
+      "title": "🏆 대장 도감 No.01 강남구",
+      "why": "구별 대장 아파트 콜렉션 파일럿 3장",
+      "source": "제작 완료",
+      "state": "",
+      "status": "done"
+    },
+    {
+      "id": "salary",
+      "cat": "done",
+      "title": "💰 2026 대기업 평균연봉 TOP10",
+      "why": "DART 공시 정밀값 + 실로고 10/10",
+      "source": "승인 대기",
+      "state": "",
+      "status": "done"
+    },
+    {
+      "id": "choron",
+      "cat": "now",
+      "title": "부동산 대토론회 · 3대 쟁점",
+      "why": "7/23 대국민 토론회 공급·금융·세제를 숫자로",
+      "source": "국토부·금융위·국세청",
+      "state": "hold",
+      "status": ""
+    },
+    {
+      "id": "minwage",
+      "cat": "now",
+      "title": "2027 최저임금 10,700원",
+      "why": "7/14 확정. 역대 타임라인 + '최저임금으로 국평 몇 년'",
+      "source": "최저임금위 공식",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "rate",
+      "cat": "now",
+      "title": "기준금리 3년6개월 만에 인상",
+      "why": "7/16 2.50→2.75%. 추이 + '0.25%p면 이자 얼마'",
+      "source": "한국은행 공표",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "polhist",
+      "cat": "now",
+      "title": "규제의 역사 타임라인",
+      "why": "대책 발표일 vs 집값 흐름. 발표 당일 대응용",
+      "source": "국토부·보도",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "krclose",
+      "cat": "rhythm",
+      "title": "[데일리] 오늘의 국내 증시 마감",
+      "why": "코스피·코스닥 마감+고점대비(국장 엔진 재활용)",
+      "source": "야후/KRX",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "usopen",
+      "cat": "rhythm",
+      "title": "[데일리] 간밤의 미국 증시",
+      "why": "M5 완성, IG 토큰 대기. 아침 습관 슬롯",
+      "source": "Stooq",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "metroseries",
+      "cat": "rhythm",
+      "title": "[주간·금] 지하철이 온다",
+      "why": "개통 로드맵×부동산. 파일럿 GTX-A 완료",
+      "source": "공식 로드맵·실거래",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "club10",
+      "cat": "rhythm",
+      "title": "[월간] 국평 10억 클럽",
+      "why": "이달의 입성/이탈 동네",
+      "source": "국토부 실거래",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "chungyak",
+      "cat": "rhythm",
+      "title": "[월간] 월간 청약 성적표",
+      "why": "경쟁률 TOP·미달 단지 정직 공개",
+      "source": "청약홈 API",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "payslip",
+      "cat": "rhythm",
+      "title": "[월간] 월급 실수령액 표",
+      "why": "최저임금·세법 갱신 시 재발행(저장 킬러)",
+      "source": "최저임금·세법",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "daejangq",
+      "cat": "rhythm",
+      "title": "[분기] 대장 84·59 지도+순위 갱신",
+      "why": "같은 템플릿·새 데이터 + 순위 변동",
+      "source": "국토부 실거래",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "years",
+      "cat": "viral",
+      "title": "💸 월급으로 사는 데 몇 년? 🥇",
+      "why": "아파트값÷평균연봉(DART×실거래, 남들 못 하는 조합)",
+      "source": "DART+국토부",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "lotto",
+      "cat": "viral",
+      "title": "🎰 청약 로또 판독기",
+      "why": "분양가 vs 주변 실거래 안전마진(차익보장 아님)",
+      "source": "청약홈+실거래",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "shoulda",
+      "cat": "viral",
+      "title": "⏰ 그때 살걸 계산기",
+      "why": "10년 전 vs 지금. 고점 매수도 정직하게",
+      "source": "국토부 실거래",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "commuteprice",
+      "cat": "viral",
+      "title": "🚇 출근 30분의 가격",
+      "why": "통근시간×집값, '강남까지 1분당 N천만원'",
+      "source": "실거래+좌표",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "unsold",
+      "cat": "viral",
+      "title": "📉 미분양의 역설",
+      "why": "그때 미분양, 지금은? 성공·실패 양면",
+      "source": "국토부 미분양",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "samedon",
+      "cat": "viral",
+      "title": "🆚 같은 돈으로",
+      "why": "10억: 강남 15평 vs 마포 25평 vs 일산 40평",
+      "source": "국토부 실거래",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "brand",
+      "cat": "viral",
+      "title": "🏢 브랜드 계급도 ⚠️민감",
+      "why": "브랜드별 평균 평당가('서열 아님' 프레임 필수)",
+      "source": "국토부 실거래",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "dong",
+      "cat": "auto",
+      "title": "동별 대장 ×25",
+      "why": "구 심화(반포/서초/방배…) 엔진 파라미터만 교체",
+      "source": "국토부 실거래",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "station",
+      "cat": "auto",
+      "title": "노선별 역세권 대장",
+      "why": "역 좌표+반경 500m, 노선당 1편",
+      "source": "실거래+좌표",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "gyeonggi",
+      "cat": "auto",
+      "title": "경기·신도시 대장",
+      "why": "분당·일산·동탄·위례·광교…",
+      "source": "국토부 실거래",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "budget",
+      "cat": "auto",
+      "title": "예산 지도 '15억이면 어디?'",
+      "why": "구별 국평 중위가로 가능/불가 지도(5·10·15·20억)",
+      "source": "국토부 실거래",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "heatmap",
+      "cat": "auto",
+      "title": "구별 평당가 히트맵",
+      "why": "지도 엔진 재사용",
+      "source": "국토부 실거래",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "floor",
+      "cat": "auto",
+      "title": "층수 프리미엄",
+      "why": "같은 단지 로얄층 vs 저층 '1층의 할인율'",
+      "source": "실거래 층 필드",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "chicken",
+      "cat": "novel",
+      "title": "🍗 치킨으로 환산한 물가",
+      "why": "'월급=치킨 N마리' 연도별",
+      "source": "통계청 외식물가",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "day",
+      "cat": "novel",
+      "title": "⏰ 한국인의 평균 하루",
+      "why": "수면·노동·여가 분 단위",
+      "source": "통계청 생활시간",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "babyname",
+      "cat": "novel",
+      "title": "👶 신생아 이름 TOP10",
+      "why": "매년 자동 재활용, '내 이름은?'",
+      "source": "행안부 공개",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "cvs",
+      "cat": "novel",
+      "title": "🏪 편의점 밀도 지도",
+      "why": "구별 편의점 수(지도 엔진 보유)",
+      "source": "localdata",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "cafe",
+      "cat": "novel",
+      "title": "☕ 카페 창업 vs 폐업",
+      "why": "구별 개폐업(자영업 공감)",
+      "source": "localdata",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "nightstn",
+      "cat": "novel",
+      "title": "🚇 잠들지 않는 역",
+      "why": "첫차·막차로 본 서울",
+      "source": "공식 시간표",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "tuition",
+      "cat": "novel",
+      "title": "🎓 등록금 vs 초봉",
+      "why": "대학 4년 비용과 첫 연봉",
+      "source": "공시×DART",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "pension",
+      "cat": "novel",
+      "title": "🧓 국민연금 세대 격차 ⚠️",
+      "why": "낸 돈 vs 받는 돈(정치 프레임 주의)",
+      "source": "공단 통계",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "commutemap",
+      "cat": "novel",
+      "title": "🚶 통근시간 지도",
+      "why": "시군구별 평균 통근",
+      "source": "통계청 총조사",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "pop",
+      "cat": "novel",
+      "title": "📉 우리 구 인구가 줄고 있다",
+      "why": "주민등록 증감 히트맵",
+      "source": "주민등록 API",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "congest",
+      "cat": "metro",
+      "title": "노선별 혼잡도 순위",
+      "why": "출퇴근 공감, 2단 표",
+      "source": "공공데이터",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "transfer",
+      "cat": "metro",
+      "title": "환승 많은 역 순위",
+      "why": "한 역에 노선 뱃지 여러 개",
+      "source": "공공데이터",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "aptchange",
+      "cat": "metro",
+      "title": "노선별 평균 아파트값 5년 변화",
+      "why": "부동산×지하철 교차 before/after",
+      "source": "실거래+역",
+      "state": "approve",
+      "status": ""
+    },
+    {
+      "id": "gtxspeed",
+      "cat": "metro",
+      "title": "GTX 개통되면 표정속도 몇 배?",
+      "why": "표정속도 후속·화제성",
+      "source": "공식 속도",
+      "state": "approve",
+      "status": ""
+    }
+  ]
+}

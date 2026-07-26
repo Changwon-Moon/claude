@@ -12,7 +12,7 @@
  * 실행: node scripts/build-tower-site.mjs
  */
 import { execFileSync } from "node:child_process";
-import { mkdirSync, rmSync, copyFileSync, existsSync, statSync } from "node:fs";
+import { mkdirSync, rmSync, copyFileSync, writeFileSync, existsSync, statSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -33,8 +33,15 @@ const tower = join(ROOT, "packages/dashboard/index.html");
 if (!existsSync(tower)) throw new Error("관제탑 index.html 생성 실패 — dashboard-static 확인");
 copyFileSync(tower, join(SITE, "index.html"));
 
-// 2) 소재 보드
-run("node", ["scripts/build-idea-board.mjs", join(SITE, "ideas.html")]);
+// 2) 소재 보드는 관제탑 '💡 소재' 탭으로 흡수됐다(2026-07-26).
+//    기존 북마크(/ideas.html)가 죽지 않도록 리다이렉트 페이지만 남긴다.
+writeFileSync(
+  join(SITE, "ideas.html"),
+  `<!doctype html><meta charset="utf-8"><title>소재 보드 → 관제탑</title>
+<meta http-equiv="refresh" content="0; url=/#ideas">
+<p style="font-family:system-ui;padding:24px">소재 보드는 관제탑 <b>💡 소재</b> 탭으로 통합됐습니다.
+<a href="/#ideas">관제탑으로 이동</a></p>`,
+);
 
 const kb = (p) => Math.round(statSync(p).size / 1024);
 console.log(`\n✅ _site 조립 완료`);

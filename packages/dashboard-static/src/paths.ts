@@ -8,6 +8,7 @@ export const REPO_ROOT = resolve(here, "../../..");
 export const P = {
   briefs: resolve(REPO_ROOT, "research/briefs"),
   ideas: resolve(REPO_ROOT, "research/IDEAS.md"),
+  ideasJson: resolve(REPO_ROOT, "research/ideas.json"),
   decisionLog: resolve(REPO_ROOT, "research/DECISION_LOG.md"),
   ceo: resolve(REPO_ROOT, "company/CEO.md"),
   teams: resolve(REPO_ROOT, "company/teams"),

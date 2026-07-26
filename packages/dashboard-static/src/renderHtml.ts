@@ -184,13 +184,6 @@ button:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px;border-r
 .editbox{display:none;flex-direction:column;gap:8px;width:100%}
 .editbox.on{display:flex}
 .editbox textarea{font:inherit;font-size:13.5px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--text);padding:10px;min-height:74px;resize:vertical}
-.outbox{position:fixed;left:0;right:0;bottom:0;z-index:35;background:var(--ink);color:#fff;display:flex;gap:10px;align-items:center;padding:11px 16px}
-.outbox .cnt{font-size:13px;color:#AEB8C4}
-.outbox .cnt b{color:#fff;font-variant-numeric:tabular-nums}
-.outbox .sp{margin-left:auto}
-.obtn{font-size:13px;font-weight:800;border-radius:9px;padding:9px 14px}
-.obtn.copy{background:var(--cobalt);color:#fff}
-.obtn.reset{color:#AEB8C4;border:1px solid rgba(255,255,255,.25)}
 .toast{position:fixed;left:50%;bottom:74px;transform:translateX(-50%) translateY(8px);background:var(--ink);color:#fff;font-size:13px;font-weight:700;border:1px solid rgba(255,255,255,.2);border-radius:99px;padding:9px 16px;opacity:0;pointer-events:none;transition:.2s;z-index:60}
 .toast.on{opacity:1;transform:translateX(-50%)}
 /* GitHub 연결 바 (관제탑을 실제로 동작시키는 백엔드) */
@@ -211,6 +204,72 @@ button:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px;border-r
 .run{font-size:11px;border:1px solid var(--line);border-radius:7px;padding:3px 8px;background:var(--card);text-decoration:none;color:var(--text)}
 .run .dot{font-weight:900}
 .run .dot.ok{color:var(--ok)} .run .dot.bad{color:var(--red)} .run .dot.run{color:var(--warn)}
+
+/* ══ 소재 보드 (관제탑 통합) ══ */
+.ideas{padding:14px;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:14px;align-items:start}
+@media (max-width:900px){.ideas{grid-template-columns:1fr}}
+.ipanel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+.ih{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800;margin-bottom:10px;flex-wrap:wrap}
+.ih .n{margin-left:auto;font-size:11px;font-weight:800;color:var(--gray);font-variant-numeric:tabular-nums}
+.itools{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.itool{font:inherit;font-size:12px;font-weight:800;padding:7px 11px;border-radius:9px;border:1.5px solid var(--line);background:transparent;color:var(--text);cursor:pointer}
+.itool:hover{border-color:var(--gray)}
+.itool.prim{background:var(--cobalt);border-color:var(--cobalt);color:#fff}
+.igrp{margin-bottom:14px}
+.igrp h4{margin:0 0 6px;font-size:12px;font-weight:800;color:var(--gray);display:flex;align-items:center;gap:6px}
+.igrp h4 .c{font-size:10.5px;font-weight:800;color:var(--gray);font-variant-numeric:tabular-nums}
+.idea{display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--bg);
+ border:1px solid var(--line);border-left:4px solid var(--line);border-radius:10px;padding:8px 10px;margin-bottom:6px}
+.idea[data-st="approve"]{border-left-color:var(--ok)}
+.idea[data-st="hold"]{border-left-color:var(--warn)}
+.idea.done{border-left-color:var(--cobalt);background:color-mix(in srgb,var(--cobalt) 6%,var(--bg))}
+.idea[hidden]{display:none}
+.imain{min-width:0;flex:1}
+.it{font-size:13px;font-weight:800;letter-spacing:-.01em}
+.iw{font-size:11.5px;color:var(--gray);margin-top:2px}
+.iflag{font-size:10px;font-weight:800;color:var(--cobalt);margin-left:5px;vertical-align:1px}
+.iside{display:flex;align-items:center;gap:6px;flex:none}
+.isrc{font-size:10.5px;color:var(--gray);font-weight:700;background:var(--chip,rgba(120,130,150,.12));padding:2px 7px;border-radius:999px;white-space:nowrap}
+.isrc.ok{background:color-mix(in srgb,var(--cobalt) 16%,transparent);color:var(--cobalt)}
+@media (max-width:720px){.isrc{display:none}}
+.ibtns{display:flex;gap:3px}
+.ib{width:28px;height:28px;border-radius:8px;border:1.5px solid var(--line);background:transparent;color:var(--gray);
+ font-size:12px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ib:hover{border-color:var(--gray);color:var(--text)}
+.ib.sm{width:26px;height:26px;font-size:11px}
+.idea[data-st="approve"] .ib.ap{background:var(--ok);border-color:var(--ok);color:#fff}
+.idea[data-st="hold"] .ib.hd{background:var(--warn);border-color:var(--warn);color:#fff}
+.iedit{display:none;flex-direction:column;gap:5px;width:100%}
+.idea.editing .iedit{display:flex}
+.idea.editing .imain,.idea.editing .iside{display:none}
+.iedit input{font:inherit;font-size:12.5px;padding:6px 9px;border-radius:7px;border:1.5px solid var(--line);background:var(--card);color:var(--text);width:100%}
+.iedit .row{display:flex;gap:5px;justify-content:flex-end}
+.iedit .row button{font:inherit;font-size:11.5px;font-weight:800;padding:6px 11px;border-radius:7px;border:1.5px solid var(--line);background:transparent;color:var(--gray);cursor:pointer}
+.iedit .row button.sv{background:var(--cobalt);border-color:var(--cobalt);color:#fff}
+.iadd{display:none;flex-direction:column;gap:6px;border:1.5px dashed var(--cobalt);border-radius:10px;padding:10px;margin-bottom:10px}
+.iadd.on{display:flex}
+.iadd input,.iadd select{font:inherit;font-size:12.5px;padding:7px 9px;border-radius:7px;border:1.5px solid var(--line);background:var(--bg);color:var(--text);width:100%}
+.iadd .row{display:flex;gap:5px;justify-content:flex-end}
+.iadd .row button{font:inherit;font-size:11.5px;font-weight:800;padding:7px 13px;border-radius:7px;border:1.5px solid var(--line);background:transparent;color:var(--gray);cursor:pointer}
+.iadd .row button.sv{background:var(--cobalt);border-color:var(--cobalt);color:#fff}
+.itray{margin:0 0 10px;font-size:11.5px;color:var(--gray)}
+.itray summary{cursor:pointer;font-weight:800;padding:4px 0}
+.itray ul{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:4px}
+.itray li{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 9px}
+.itray button{font:inherit;font-size:10.5px;font-weight:800;padding:4px 9px;border-radius:6px;border:1.5px solid var(--line);background:transparent;color:var(--gray);cursor:pointer}
+
+/* ══ 저장 상태 바 — 모든 조작이 저장소에 바로 기록된다 ══ */
+.savebar{position:sticky;bottom:0;z-index:20;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+ padding:9px 14px;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line);font-size:12px}
+.savebar .s{font-weight:800;display:inline-flex;align-items:center;gap:6px}
+.savebar .s.ok{color:var(--ok)} .savebar .s.saving{color:var(--warn)} .savebar .s.bad{color:var(--red)} .savebar .s.off{color:var(--gray)}
+.savebar .path{color:var(--gray);font-size:11px}
+.savebar .sp{flex:1}
+.savebar .gate{font-weight:800;color:var(--red)}
+.igate{font-size:11.5px;line-height:1.6;color:var(--text);background:color-mix(in srgb,var(--warn) 12%,transparent);
+ border:1px solid color-mix(in srgb,var(--warn) 40%,transparent);border-radius:9px;padding:8px 11px;margin-bottom:10px}
+.igate code{font-size:11px}
+
 @media (max-width:640px){.board{padding:12px;gap:10px}.col{flex-basis:240px}.kpis{grid-template-columns:repeat(2,1fr)}}
 `;
 
@@ -221,7 +280,7 @@ const KEY = "wirit-tower-" + STATE.generatedFrom;
 let S = load();
 function load(){
   try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.tickets&&s.tickets.length===STATE.tickets.length){ if(!s.weights) s.weights=STATE.mining.weights.map(w=>({...w})); if(!s.learning) s.learning=[]; return s; } }catch(e){}
-  return { tickets: STATE.tickets.map(t=>({...t, comments: []})), decisions: [], weights: STATE.mining.weights.map(w=>({...w})), learning: [] };
+  return { tickets: STATE.tickets.map(t=>({...t, comments: []})), weights: STATE.mining.weights.map(w=>({...w})), learning: [] };
 }
 function save(){ localStorage.setItem(KEY, JSON.stringify(S)); }
 function tk(id){ return S.tickets.find(t=>t.id===id); }
@@ -296,28 +355,35 @@ function wireGhBar(){
   if(save) save.onclick=async()=>{
     const t=(document.getElementById("ghtok").value||"").trim(); if(!t){ toast("토큰을 붙여넣으세요"); return; }
     GH.setToken(t);
-    try{ const me=await GH.me(); toast("연결 성공 — "+(me.login||"")); renderGhBar(); }
+    try{ const me=await GH.me(); toast("연결 성공 — "+(me.login||"")); renderGhBar(); setSave("ok"); if(document.getElementById("ideaBody")) renderIdeas(); }
     catch(e){ GH.setToken(""); toast("연결 실패: "+e.message); }
   };
   const disc=document.getElementById("ghdisc");
-  if(disc) disc.onclick=()=>{ GH.setToken(""); renderGhBar(); toast("연결 해제됨"); };
+  if(disc) disc.onclick=()=>{ GH.setToken(""); renderGhBar(); setSave("off"); if(document.getElementById("ideaBody")) renderIdeas(); toast("연결 해제됨"); };
   const rf=document.getElementById("ghrefresh"); if(rf) rf.onclick=refreshRuns;
   document.querySelectorAll("[data-wf]").forEach(b=>b.onclick=()=>runWf(GH_WF[+b.dataset.wf]));
 }
 
-/* 탭 전환 */
+/* 탭 전환 — 주소 해시(#ideas 등)로도 열 수 있게 한다(구 /ideas.html 북마크 호환) */
+function openTab(name){
+  const b=document.querySelector('.tab[data-v="'+name+'"]'); if(!b) return false;
+  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b));
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="view-"+name));
+  return true;
+}
 document.querySelectorAll(".tab").forEach(b=>{
-  b.onclick=()=>{
-    document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b));
-    document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="view-"+b.dataset.v));
-  };
+  b.onclick=()=>{ openTab(b.dataset.v); history.replaceState(null,"","#"+b.dataset.v); };
 });
+window.addEventListener("hashchange",()=>openTab(location.hash.slice(1)));
 
-/* 결정 1건을 지시 전달함에 담기 */
+/* 결정 1건을 저장소 결정 로그에 바로 기록 */
 function pushDecision(text, msg){
-  S.decisions.push(text); save();
-  document.getElementById("dcnt").textContent=S.decisions.length;
-  toast(msg||"지시 전달함에 담김");
+  // 연결돼 있으면 저장소 결정 로그에 바로 남긴다(복사-붙여넣기 우회 없음).
+  if(!GH.connected()){ setSave("off"); toast("GitHub에 연결해야 기록됩니다 — 상단 [연결하기]"); return; }
+  setSave("saving");
+  GH.append("research/decisions-inbox.md", "- " + ghStamp() + " " + text, "관제탑: " + (msg||"결정 기록"))
+    .then(()=>{ setSave("ok"); toast(msg||"저장소에 기록됨 ✓"); })
+    .catch(e=>{ setSave("bad", e.message.slice(0,70)); toast("기록 실패: "+e.message); });
 }
 
 /* 회사 탭 편집 배선 — CEO 원칙 + 팀별 원칙·프롬프트 */
@@ -328,7 +394,7 @@ function wireCompany(){
     document.querySelector("[data-ce-save]").onclick=()=>{
       const ta=document.querySelector("#ed-ceo textarea"), v=ta.value.trim();
       if(!v){ toast("내용을 입력하세요"); return; }
-      pushDecision("CEO 원칙 수정·추가: "+v, "CEO 원칙 지시 담김"); ta.value=""; document.getElementById("ed-ceo").classList.remove("on");
+      pushDecision("CEO 원칙 수정·추가: "+v, "CEO 원칙 기록됨"); ta.value=""; document.getElementById("ed-ceo").classList.remove("on");
     };
   }
   document.querySelectorAll("[data-te]").forEach(b=>{
@@ -340,7 +406,7 @@ function wireCompany(){
     b.onclick=()=>{
       const area=document.querySelector('[data-te-area="'+slug+'"]'), ta=area.querySelector("textarea"), v=ta.value.trim();
       if(!v){ toast("내용을 입력하세요"); return; }
-      pushDecision("「"+name+"」 원칙·프롬프트 수정: "+v, name+" 지시 담김"); ta.value=""; area.classList.remove("on");
+      pushDecision("「"+name+"」 원칙·프롬프트 수정: "+v, name+" 기록됨"); ta.value=""; area.classList.remove("on");
     };
   });
 }
@@ -371,7 +437,7 @@ function buildMiningPanel(list){
   wt+='<span class="wsum'+(sum===100?"":" bad")+'" id="wsum">합 '+sum+'%</span></div>';
   // 마이닝 버튼 + 안내
   const btn='<button class="mine-btn" id="mineBtn">⛏ 마이닝 실행 — 새 후보 10건 요청</button>'
-    +'<div class="mine-note"><b>GitHub 연결 시</b>: 누르면 마이닝 워크플로가 <b>바로 실행</b>됩니다(상단 바에서 상태 확인). <b>미연결 시</b>: 요청이 지시 전달함에 담깁니다 → [요약 복사] → Claude. 아래는 현재 수집된 후보입니다.</div>';
+    +'<div class="mine-note">누르면 마이닝 워크플로가 <b>바로 실행</b>됩니다(상단 바에서 상태 확인). 아래는 현재 수집된 후보입니다.</div>';
   // 후보 목록 (스크롤)
   let cands='<div class="cands" id="cands">';
   if(!list.length) cands+='<div class="empty">후보 없음 — [마이닝 실행]으로 수집 요청</div>';
@@ -427,7 +493,6 @@ function renderBoard(){
     col.appendChild(wrap); board.appendChild(col);
   });
   wireMining();
-  document.getElementById("dcnt").textContent=S.decisions.length;
 }
 
 /* 마이닝 패널 상호작용 */
@@ -448,7 +513,7 @@ function wireMining(){
       runWf(GH_WF[0]);
     } else {
       pushDecision("🔎 컨텐츠 마이닝 실행 요청 — 비중["+w+"] → 새 후보 10건을 SNS·뉴스·통계에서 수집해줘",
-        "마이닝 요청 담김 — [요약 복사]로 저에게 보내세요");
+        "마이닝 요청 기록됨");
     }
   };
   // 후보 선정/탈락/상세
@@ -476,7 +541,7 @@ function wireMining(){
         ka.disabled=false; ka.textContent="지식 추가";
       } else {
         let msg="💬 지식 입력: "+(v||"(텍스트 없음)"); if(imgs) msg+=" [사진 "+imgs+"장 첨부 — 세션에 직접 업로드 필요]";
-        pushDecision(msg, "지식 담김 — [요약 복사]로 전달");
+        pushDecision(msg, "지식 기록됨");
         ta.value=""; if(prev) prev.innerHTML=""; pendingImgs=0;
       }
     };
@@ -547,7 +612,7 @@ function buildDetail(t){
   (t.comments||[]).forEach(c=>{
     tl+='<div class="entry op"><div class="who">🧑‍💼 운영자 <span class="t">수정지시</span></div>'
       +'<div class="say">"'+esc(c)+'"</div>'
-      +'<div class="why">해당 팀이 이 코멘트로 재작업합니다(지시 전달함에 기록됨).</div></div>';
+      +'<div class="why">해당 팀이 이 코멘트로 재작업합니다(저장소 결정 로그에 기록됨).</div></div>';
   });
 
   let acts="";
@@ -579,44 +644,222 @@ function wireActions(t){
   drawer.querySelectorAll("[data-act]").forEach(b=>{
     b.onclick=()=>{
       const a=b.dataset.act, ttl=short(t);
-      if(a==="go"){ t.stage=1; t.flags=(t.flags||[]).filter(f=>f!=="보류"); S.decisions.push("진행: "+t.title+" → 기획안"); done(ttl+" 기획으로"); }
-      if(a==="hold"){ t.flags=t.flags||[]; if(!t.flags.includes("보류")) t.flags.push("보류"); S.decisions.push("보류: "+t.title); done(ttl+" 보류"); }
-      if(a==="drop"){ t.flags=t.flags||[]; t.flags.push("버림"); S.decisions.push("버림: "+t.title); done(ttl+" 제외"); }
-      if(a==="publish"){ t.stage=5; S.decisions.push("발행 승인: "+t.title); done(ttl+" 발행 승인"); }
-      if(a==="reject"){ t.stage=2; t.flags=t.flags||[]; t.flags.push("수정요청"); S.decisions.push("반려: "+t.title+" → 재작업"); done(ttl+" 반려"); }
+      if(a==="go"){ t.stage=1; t.flags=(t.flags||[]).filter(f=>f!=="보류"); pushDecision("진행: "+t.title+" → 기획안","진행 기록됨"); done(ttl+" 기획으로"); }
+      if(a==="hold"){ t.flags=t.flags||[]; if(!t.flags.includes("보류")) t.flags.push("보류"); pushDecision("보류: "+t.title,"보류 기록됨"); done(ttl+" 보류"); }
+      if(a==="drop"){ t.flags=t.flags||[]; t.flags.push("버림"); pushDecision("버림: "+t.title,"제외 기록됨"); done(ttl+" 제외"); }
+      if(a==="publish"){ t.stage=5; pushDecision("발행 승인: "+t.title,"발행 승인 기록됨"); done(ttl+" 발행 승인"); }
+      if(a==="reject"){ t.stage=2; t.flags=t.flags||[]; t.flags.push("수정요청"); pushDecision("반려: "+t.title+" → 재작업","반려 기록됨"); done(ttl+" 반려"); }
       if(a==="edit"){ drawer.querySelector("#editbox").classList.toggle("on"); return; }
       if(a==="editsave"){ const v=drawer.querySelector("#edittext").value.trim(); if(!v){ toast("코멘트를 입력하세요"); return; }
         t.comments=t.comments||[]; t.comments.push(v); t.flags=t.flags||[]; if(!t.flags.includes("수정요청")) t.flags.push("수정요청");
-        S.decisions.push('수정지시('+t.title+'): "'+v+'"'); done("수정지시 기록됨"); }
+        pushDecision('수정지시('+t.title+'): "'+v+'"',"수정지시 기록됨"); done("수정지시 기록됨"); }
     };
   });
 }
 function short(t){ return t.title.split(" — ")[0]; }
 function done(msg){ save(); renderBoard(); closeDrawer(); toast(msg); }
 
-async function copyText(txt){
-  // 1) 표준 API (보안 컨텍스트에서만 동작 — 아티팩트 샌드박스에선 막힘)
-  try{ if(navigator.clipboard&&navigator.clipboard.writeText){ await navigator.clipboard.writeText(txt); return true; } }catch(e){}
-  // 2) 폴백: 임시 textarea + execCommand
-  try{ const ta=document.createElement("textarea"); ta.value=txt; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.focus(); ta.select();
-    const ok=document.execCommand("copy"); document.body.removeChild(ta); if(ok) return true; }catch(e){}
-  return false;
-}
-document.getElementById("bcopy").onclick=async()=>{
-  if(!S.decisions.length){ toast("아직 결정이 없습니다 — 티켓을 눌러보세요"); return; }
-  const txt="[wirit 관제탑 결정 · "+STATE.dateLabel+"]\n"+S.decisions.map(d=>"- "+d).join("\n")+"\n\n이대로 진행해줘.";
-  if(await copyText(txt)) toast("복사 완료 — Claude에게 붙여넣으세요");
-  else window.prompt("아래를 길게 눌러 복사하세요:", txt);
-};
-document.getElementById("breset").onclick=()=>{ localStorage.removeItem(KEY); S=load(); renderBoard(); toast("초기 상태로"); };
 
 let tmr=null;
 function toast(m){ const el=document.getElementById("toast"); el.textContent=m; el.classList.add("on"); clearTimeout(tmr); tmr=setTimeout(()=>el.classList.remove("on"),2400); }
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function fmt(s){ return esc(s).replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>"); }
 
+
+/* ══════════ 소재 보드 — research/ideas.json 을 직접 되쓴다 ══════════
+ * 복사-붙여넣기 우회 없음. 오너가 누르는 즉시 저장소에 커밋된다.
+ * 저장은 800ms 디바운스로 묶어 연타 시 커밋이 쏟아지지 않게 한다. */
+let IDEAS = JSON.parse(JSON.stringify((STATE.ideas||{}).items||[]));
+const ICATS = ((STATE.ideas||{}).cats)||[];
+const IPATH = (STATE.ideas||{}).path || "research/ideas.json";
+let saveTimer=null, saveReason="";
+
+function setSave(kind, extra){
+  const el=document.getElementById("savestate"); if(!el) return;
+  const map={ok:["ok","✔ 저장됨"],saving:["saving","● 저장 중…"],bad:["bad","✕ 저장 실패"],off:["off","🔌 연결 필요"]};
+  const [cls,txt]=map[kind]||map.off;
+  el.className="s "+cls;
+  el.textContent=txt+(kind==="ok"?" · "+new Date().toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"}):"")+(extra?" · "+extra:"");
+}
+
+/** 저장 예약 — 연타를 한 커밋으로 묶는다 */
+function queueSave(reason){
+  saveReason=reason||saveReason||"소재 보드 갱신";
+  if(!GH.connected()){ setSave("off"); return; }
+  setSave("saving");
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(flushSave, 800);
+}
+
+async function flushSave(){
+  if(!GH.connected()){ setSave("off"); return; }
+  const reason=saveReason; saveReason="";
+  try{
+    // 저장 직전에 원격을 다시 읽어 sha를 맞춘다(다른 기기·세션과의 충돌 방지)
+    const cur=await GH.getFile(IPATH);
+    let doc;
+    try{ doc=JSON.parse(cur.text); }catch(e){ doc={meta:{},cats:ICATS,ideas:[]}; }
+    doc.cats=doc.cats&&doc.cats.length?doc.cats:ICATS;
+    doc.ideas=IDEAS;
+    doc.meta=doc.meta||{};
+    doc.meta.updated=STATE.generatedFrom;
+    await GH.putFile(IPATH, JSON.stringify(doc,null,2)+"\n", "관제탑: "+reason, cur.sha);
+    setSave("ok");
+  }catch(e){ setSave("bad", e.message.slice(0,70)); }
+}
+
+function ideaById(id){ return IDEAS.find(x=>x.id===id); }
+function hiddenIdea(i){ return i.state==="reject"; }
+
+function ideaCard(i){
+  const done=i.status==="done";
+  return '<div class="idea'+(done?" done":"")+'" data-iid="'+esc(i.id)+'" data-st="'+esc(i.state||"")+'"'+(hiddenIdea(i)?" hidden":"")+'>'
+    +'<div class="imain"><div class="it">'+esc(i.title)+(i.isNew?'<span class="iflag">NEW</span>':"")+'</div>'
+    +'<div class="iw">'+esc(i.why||"")+'</div></div>'
+    +'<div class="iside"><span class="isrc'+(done?" ok":"")+'">'+esc(i.source||"출처 미정")+'</span>'
+    +'<div class="ibtns">'
+    +'<button class="ib ap" data-ia="approve" title="승인">✓</button>'
+    +'<button class="ib hd" data-ia="hold" title="보류">⏸</button>'
+    +'<button class="ib rj" data-ia="reject" title="거부 — 목록에서 숨김">✕</button>'
+    +'<button class="ib sm ed" data-ia="edit" title="수정">✎</button>'
+    +'<button class="ib sm dl" data-ia="delete" title="삭제">🗑</button>'
+    +'</div></div>'
+    +'<div class="iedit">'
+    +'<input class="e-t" value="'+esc(i.title)+'" aria-label="제목">'
+    +'<input class="e-w" value="'+esc(i.why||"")+'" aria-label="한 줄 이유">'
+    +'<input class="e-s" value="'+esc(i.source||"")+'" aria-label="출처">'
+    +'<div class="row"><button data-ia="cancel">취소</button><button class="sv" data-ia="save">저장</button></div>'
+    +'</div></div>';
+}
+
+function renderIdeaGate(){
+  const g=document.getElementById("igate"); if(!g) return;
+  const on=GH.connected();
+  g.hidden=on;
+  if(!on) g.innerHTML='🔌 <b>읽기 전용</b> — 승인·수정·추가를 하려면 상단 <b>[연결하기]</b>로 GitHub 토큰을 넣으세요. '
+    +'연결하면 누르는 즉시 <code>'+esc(IPATH)+'</code>에 기록됩니다.';
+}
+function renderIdeas(){
+  renderIdeaGate();
+  const box=document.getElementById("ideaBody"); if(!box) return;
+  const visible=IDEAS.filter(i=>!hiddenIdea(i));
+  let html="";
+  ICATS.forEach(c=>{
+    const list=IDEAS.filter(i=>i.cat===c.key);
+    if(!list.length) return;
+    const vis=list.filter(i=>!hiddenIdea(i)).length;
+    html+='<div class="igrp"><h4>'+esc(c.label)+'<span class="c">'+vis+'건</span></h4>'
+      +list.map(ideaCard).join("")+'</div>';
+  });
+  box.innerHTML=html||'<div class="empty">소재가 없습니다</div>';
+  const n=document.getElementById("icount"); if(n) n.textContent=visible.length+"건";
+  renderTray();
+  wireIdeas();
+}
+
+function renderTray(){
+  const t=document.getElementById("itray"); if(!t) return;
+  const hid=IDEAS.filter(hiddenIdea);
+  t.hidden=hid.length===0;
+  const n=document.getElementById("itrayn"); if(n) n.textContent=hid.length;
+  const ul=document.getElementById("itraylist"); if(!ul) return;
+  ul.textContent="";
+  hid.forEach(i=>{
+    const li=document.createElement("li");
+    const sp=document.createElement("span"); sp.textContent="✕ "+i.title;
+    const b=document.createElement("button"); b.type="button"; b.textContent="되돌리기";
+    b.onclick=()=>{ i.state=""; queueSave("소재 거부 해제 — "+i.title); renderIdeas(); };
+    li.append(sp,b); ul.appendChild(li);
+  });
+}
+
+function wireIdeas(){
+  document.querySelectorAll("[data-iid]").forEach(card=>{
+    const i=ideaById(card.dataset.iid); if(!i) return;
+    card.querySelectorAll("[data-ia]").forEach(b=>b.onclick=()=>{
+      const act=b.dataset.ia;
+      if(act==="cancel"){ card.classList.remove("editing"); return; }
+      // 미연결 상태에서 바꾸면 새로고침 시 사라진다 → 아예 바꾸지 않고 연결을 요구한다
+      if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 상단 [연결하기]"); return; }
+      if(act==="edit"){ card.classList.add("editing"); card.querySelector(".e-t").focus(); return; }
+      if(act==="save"){
+        const t=(card.querySelector(".e-t").value||"").trim();
+        if(!t){ toast("제목은 비울 수 없습니다"); return; }
+        i.title=t; i.why=(card.querySelector(".e-w").value||"").trim(); i.source=(card.querySelector(".e-s").value||"").trim();
+        queueSave("소재 수정 — "+t); renderIdeas(); toast("수정됨");
+        return;
+      }
+      if(act==="delete"){
+        if(!confirm("'"+i.title+"' 을(를) 목록에서 완전히 지울까요?\n(저장소 이력에는 남으므로 되살릴 수 있습니다)")) return;
+        IDEAS=IDEAS.filter(x=>x.id!==i.id);
+        queueSave("소재 삭제 — "+i.title); renderIdeas(); toast("삭제됨");
+        return;
+      }
+      // 승인 / 보류 / 거부 — 같은 버튼 다시 누르면 해제
+      i.state = (i.state===act ? "" : act);
+      queueSave("소재 결정("+(i.state||"해제")+") — "+i.title);
+      renderIdeas();
+      if(i.state==="reject") toast("목록에서 숨김 — 위 '숨긴 항목'에서 되돌릴 수 있어요");
+    });
+  });
+}
+
+function wireIdeaTools(){
+  const add=document.getElementById("iaddBtn"), box=document.getElementById("iaddBox");
+  if(add) add.onclick=()=>{ box.classList.toggle("on"); if(box.classList.contains("on")) document.getElementById("na-t").focus(); };
+  const cancel=document.getElementById("iaddCancel");
+  if(cancel) cancel.onclick=()=>box.classList.remove("on");
+  const save=document.getElementById("iaddSave");
+  if(save) save.onclick=()=>{
+    if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 상단 [연결하기]"); return; }
+    const t=(document.getElementById("na-t").value||"").trim();
+    if(!t){ toast("제목을 입력해주세요"); return; }
+    const item={ id:"new-"+Date.now().toString(36), cat:document.getElementById("na-c").value,
+      title:t, why:(document.getElementById("na-w").value||"").trim(),
+      source:(document.getElementById("na-s").value||"").trim(), state:"", status:"", isNew:true };
+    IDEAS.push(item);
+    queueSave("소재 추가 — "+t);
+    document.getElementById("na-t").value=""; document.getElementById("na-w").value=""; document.getElementById("na-s").value="";
+    box.classList.remove("on"); renderIdeas(); toast("추가됨 — 저장소에 기록됩니다");
+  };
+
+  // 소재 발굴 요청 — 방향을 적어 저장소 결정 로그에 남긴다(세션이 그 방향으로 발굴)
+  const dig=document.getElementById("imineBtn");
+  if(dig) dig.onclick=()=>{
+    const v=prompt("어떤 방향으로 새 소재를 찾을까요?\n(예: 8월 시의성 부동산 / 20~30대 공감 통계 / 지도 엔진 재사용)","");
+    if(v===null) return;
+    const t=v.trim(); if(!t){ toast("방향을 적어주세요"); return; }
+    pushDecision("🔎 신규 소재 발굴 요청 — "+t, "발굴 요청 기록됨");
+  };
+
+  // 마이닝 워크플로 즉시 실행
+  const run=document.getElementById("imineRun");
+  if(run) run.onclick=()=>runWf(GH_WF[0]);
+
+  // 자료 인박스 — research/INBOX.md 에 바로 커밋
+  const kb=document.getElementById("kadd2");
+  if(kb) kb.onclick=async()=>{
+    const ta=document.getElementById("ktext2"); const v=(ta.value||"").trim();
+    if(!v){ toast("붙여넣은 내용이 없습니다"); return; }
+    if(!GH.connected()){ setSave("off"); toast("GitHub에 연결해야 저장됩니다 — 상단 [연결하기]"); return; }
+    setSave("saving");
+    try{
+      await GH.append("research/INBOX.md", "## "+ghStamp()+"\n\n"+v, "관제탑: 지식 자료 추가");
+      setSave("ok"); ta.value=""; toast("research/INBOX.md에 커밋됨 ✓");
+    }catch(e){ setSave("bad", e.message.slice(0,70)); toast("저장 실패: "+e.message); }
+  };
+
+  // 새로고침 — 재배포된 최신 관제탑을 받는다
+  const rl=document.getElementById("ireload");
+  if(rl) rl.onclick=()=>location.reload();
+}
+
 renderGhBar();
 renderBoard();
+renderIdeas();
+if(location.hash) openTab(location.hash.slice(1));
+wireIdeaTools();
+setSave(GH.connected()?"ok":"off");
 `;
 
 function esc(s: unknown): string {
@@ -625,6 +868,59 @@ function esc(s: unknown): string {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 }
+
+/** 소재 탭 — 마이닝(요청·자료 인박스)과 아이디어 보드를 한 화면에. */
+function ideasHtml(state: TowerState): string {
+  const cats = state.ideas.cats;
+  const items = state.ideas.items;
+  const done = items.filter((i) => i.status === "done").length;
+  const visible = items.filter((i) => i.state !== "reject").length;
+  const opts = cats.map((c) => `<option value="${esc(c.key)}">${esc(c.label)}</option>`).join("");
+  const weights = state.mining.weights
+    .map((w) => `<span class="isrc">${esc(w.label)} ${w.pct}%</span>`)
+    .join("");
+
+  return `<div class="ideas">
+  <section class="ipanel">
+    <div class="ih">💡 소재 보드<span class="n" id="icount">${visible}건</span></div>
+    <div class="igate" id="igate" hidden></div>
+    <div class="itools">
+      <button class="itool prim" id="iaddBtn">➕ 새 소재</button>
+      <button class="itool" id="imineBtn">🔎 소재 발굴 요청</button>
+      <button class="itool" id="ireload">🔄 새로고침</button>
+      <span class="path" style="margin-left:auto;font-size:11px;color:var(--gray)">제작 완료 ${done}건</span>
+    </div>
+    <div class="iadd" id="iaddBox">
+      <input id="na-t" placeholder="제목 — 예: 🏫 학군지 프리미엄 지도">
+      <input id="na-w" placeholder="한 줄 이유 — 왜 터질 것 같은지">
+      <input id="na-s" placeholder="데이터 출처 — 예: 국토부 실거래 + 학교알리미">
+      <select id="na-c" aria-label="분류">${opts}</select>
+      <div class="row"><button id="iaddCancel">취소</button><button class="sv" id="iaddSave">추가</button></div>
+    </div>
+    <details class="itray" id="itray" hidden>
+      <summary>숨긴 항목 <span id="itrayn">0</span>건 — 되돌리기</summary>
+      <ul id="itraylist"></ul>
+    </details>
+    <div id="ideaBody"></div>
+  </section>
+
+  <aside class="ipanel">
+    <div class="ih">⛏ 마이닝</div>
+    <div style="font-size:11.5px;color:var(--gray);line-height:1.6;margin-bottom:10px">
+      주제 비중대로 새 소재를 수집합니다. 실행하면 저장소의 마이닝 워크플로가 <b>바로 돕니다</b>.
+    </div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">${weights}</div>
+    <button class="itool prim" id="imineRun" style="width:100%">⛏ 마이닝 실행</button>
+    <div class="ih" style="margin-top:16px">💬 자료 인박스</div>
+    <div style="font-size:11.5px;color:var(--gray);line-height:1.6;margin-bottom:8px">
+      기사·수치·메모를 붙여넣으면 <code>research/INBOX.md</code>에 바로 커밋됩니다.
+    </div>
+    <textarea id="ktext2" style="width:100%;height:110px;font:inherit;font-size:12px;padding:8px 10px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--text)" placeholder="여기에 붙여넣기(Ctrl+V)"></textarea>
+    <button class="itool" id="kadd2" style="width:100%;margin-top:6px">지식 추가</button>
+  </aside>
+</div>`;
+}
+
 /** esc 후 **볼드** 마크다운만 <b>로 변환 */
 function fmt(s: unknown): string {
   return esc(s).replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
@@ -662,9 +958,9 @@ function companyHtml(state: TowerState): string {
       state.company.ceoPath,
       "GitHub"
     )}</span>` +
-    `<div class="edarea" id="ed-ceo"><div class="edhint">추가하거나 고칠 원칙을 적으세요. [지시 전달함에 담기] → 하단 [요약 복사] → Claude에게 붙여넣으면 CEO.md에 반영됩니다.</div>` +
+    `<div class="edarea" id="ed-ceo"><div class="edhint">추가하거나 고칠 원칙을 적으세요. [기록하기]를 누르면 저장소 결정 로그에 바로 남고, 다음 세션에서 CEO.md에 반영됩니다.</div>` +
     `<textarea placeholder="예) 디자인 원칙 추가: 표 헤더는 잉크 배경에 흰 글씨로 / 또는 기존 원칙 수정 내용"></textarea>` +
-    `<button class="ebtn save" data-ce-save>지시 전달함에 담기</button></div>`;
+    `<button class="ebtn save" data-ce-save>기록하기</button></div>`;
 
   const teams = state.company.teams
     .map(
@@ -679,7 +975,7 @@ function companyHtml(state: TowerState): string {
         `</div>` +
         `<div class="edarea" data-te-area="${esc(t.slug)}"><div class="edhint">이 팀의 원칙·프롬프트를 어떻게 바꿀까요?</div>` +
         `<textarea placeholder="예) 데이터 가용성 2점 미만 소재는 후보에서 자동 제외"></textarea>` +
-        `<button class="ebtn save" data-te-save="${esc(t.slug)}|${esc(t.name)}">지시 전달함에 담기</button></div>` +
+        `<button class="ebtn save" data-te-save="${esc(t.slug)}|${esc(t.name)}">기록하기</button></div>` +
         `</div>`
     )
     .join("");
@@ -744,25 +1040,27 @@ export function renderTowerBody(state: TowerState): string {
 
 <nav class="tabs">
   <button class="tab on" data-v="board">🗂 파이프라인</button>
+  <button class="tab" data-v="ideas">💡 소재</button>
   <button class="tab" data-v="company">🏢 회사</button>
   <button class="tab" data-v="assets">📦 자산</button>
 </nav>
 
 <section id="view-board" class="view on">
-  <div class="notice"><span>티켓을 눌러 <b>판단·근거</b>를 보고 <b>승인/보류/수정지시</b>를 내립니다.</span><span>결정은 아래 <b>지시 전달함</b>에 모입니다 → [요약 복사] 후 Claude에게 붙여넣으면 실행됩니다.</span></div>
+  <div class="notice"><span>티켓을 눌러 <b>판단·근거</b>를 보고 <b>승인/보류/수정지시</b>를 내립니다.</span><span>결정은 <b>저장소에 바로 기록</b>됩니다(하단 저장 상태 확인).</span></div>
   <main class="board" id="board"></main>
 </section>
+<section id="view-ideas" class="view">${ideasHtml(state)}</section>
 <section id="view-company" class="view">${companyHtml(state)}</section>
 <section id="view-assets" class="view">${assetsHtml(state)}</section>
 
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" aria-label="티켓 상세"></aside>
 
-<footer class="outbox">
-  <span class="cnt">지시 전달함 · <b id="dcnt">0</b>건</span>
+<footer class="savebar">
+  <span class="s off" id="savestate">🔌 연결 필요</span>
+  <span class="path">${esc(state.ideas.path)}</span>
   <span class="sp"></span>
-  <button class="obtn reset" id="breset">초기화</button>
-  <button class="obtn copy" id="bcopy">요약 복사</button>
+  <span class="path" id="savehint">누르는 즉시 저장소에 기록됩니다</span>
 </footer>
 <div class="toast" id="toast"></div>
 

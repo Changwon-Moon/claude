@@ -6,7 +6,7 @@ import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { join, basename } from "node:path";
 import { P, REPO_ROOT } from "./paths.js";
 import { STAGES, RUBRIC_LABELS } from "./types.js";
-import type { TowerState, Ticket, TimelineEntry } from "./types.js";
+import type { TowerState, Ticket, TimelineEntry, Idea, IdeaCat } from "./types.js";
 import { parseBrief } from "./parse/brief.js";
 import { parseDecisionLog } from "./parse/decisionLog.js";
 import { parseCeoPrinciples, parseTeamCard } from "./parse/company.js";
@@ -203,6 +203,19 @@ export function buildState(): TowerState {
 
   const { from, label } = deriveDateLabel(brief);
 
+  // 소재 보드 — research/ideas.json 이 단일 원천(관제탑이 직접 되쓰는 파일).
+  let ideaCats: IdeaCat[] = [];
+  let ideaItems: Idea[] = [];
+  if (existsSync(P.ideasJson)) {
+    try {
+      const j = JSON.parse(readFileSync(P.ideasJson, "utf8"));
+      ideaCats = Array.isArray(j.cats) ? j.cats : [];
+      ideaItems = Array.isArray(j.ideas) ? j.ideas : [];
+    } catch {
+      // 깨진 JSON이면 보드만 비우고 나머지 관제탑은 정상 렌더(전체 실패 방지)
+    }
+  }
+
   const counts = {
     candidates: tickets.filter((t) => t.stage === 0 && !t.flags.includes("버림")).length,
     inProgress: tickets.filter((t) => t.stage >= 1 && t.stage <= 3).length,
@@ -231,6 +244,7 @@ export function buildState(): TowerState {
     assets: { groups: assets, reuseNote: "재사용률은 발행 누적 후 산출" },
     counts,
     images,
+    ideas: { path: "research/ideas.json", cats: ideaCats, items: ideaItems },
     mining: {
       weights: [
         { label: "부동산", pct: 30 },
