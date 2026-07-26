@@ -1,5 +1,5 @@
 /**
- * 발행 승인된 카드를 **인스타가 가져갈 수 있는 자리**에 옮긴다.
+ * 완성 카드를 두 자리로 옮긴다 — ① 발행용(공개) ② 오너 내려받기용(문 안쪽).
  *
  * ── 왜 필요한가
  * 인스타그램 Graph API는 이미지를 파일 업로드로 받지 않는다. **공개 URL을 주면 서버가 직접 가져간다.**
@@ -25,6 +25,10 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const QUEUE = join(ROOT, "data/publish-queue.md");
 const SETS = join(ROOT, "data/review/sets.json");
 const OUT = join(ROOT, "packages/tower-worker/_site/cards");
+/* 오너가 수동 업로드할 원본 — 비밀번호 문 **안쪽**이라 공개되지 않는다.
+ * (2026-07-26 오너: "인스타는 당분간 내가 수동으로 올릴거야" — 그런데 원본을
+ *  받을 통로가 없었다. 관제탑 화면의 이미지는 900px 축소본이라 업로드용이 아니다.) */
+const DL = join(ROOT, "packages/tower-worker/_site/download");
 const CONTENT = join(ROOT, "data/content");
 const RENDERS = join(ROOT, "data/out");
 
@@ -45,12 +49,8 @@ for (const line of readFileSync(QUEUE, "utf8").split(/\r?\n/)) {
   const title = (m[2].match(/\*\*(.+?)\*\*/) || [])[1] || m[2];
   pending.push(title.trim());
 }
-if (!pending.length) {
-  console.log("올릴 대기 항목이 없습니다.");
-  process.exit(0);
-}
 
-/** 제목 → 세트 */
+/** 발행용(공개) = 승인된 것만 */
 const matched = [];
 for (const title of pending) {
   const hit = sets.find((s) => norm(s.title).includes(norm(title)) || norm(title).includes(norm(s.title)));
@@ -59,10 +59,6 @@ for (const title of pending) {
     continue;
   }
   matched.push(hit);
-}
-if (!matched.length) {
-  console.log("세트와 짝지어진 대기 항목이 없습니다.");
-  process.exit(0);
 }
 
 /** slug → 렌더된 PNG 경로들(장 순서) */
@@ -109,16 +105,18 @@ const TO_JPEG = `(src) => new Promise((resolve) => {
 
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
+rmSync(DL, { recursive: true, force: true });
+mkdirSync(DL, { recursive: true });
 
-const manifest = [];
-for (const set of matched) {
+/** 세트 하나를 dir 로 옮긴다(원본 해상도 JPEG + 캡션 txt). 옮긴 파일 목록을 돌려준다. */
+async function stageSet(set, dir, rel) {
   const files = [];
   for (const slug of set.cards) {
     const found = pagesOf(slug);
     if (!found.length) console.log(`::warning::렌더가 없습니다 — ${slug} (카드 재생성 필요)`);
     files.push(...found);
   }
-  if (!files.length) continue;
+  if (!files.length) return null;
 
   const urls = [];
   for (let i = 0; i < files.length; i++) {
@@ -129,22 +127,35 @@ for (const set of matched) {
       continue;
     }
     const name = `${set.label}-${i + 1}.jpg`;
-    writeFileSync(join(OUT, name), Buffer.from(jpeg.split(",")[1], "base64"));
-    urls.push(`cards/${name}`);
+    writeFileSync(join(dir, name), Buffer.from(jpeg.split(",")[1], "base64"));
+    urls.push(`${rel}/${name}`);
   }
 
   const capName = set.caption || set.label;
   const capPath = join(ROOT, "data/review/captions", `${capName}.txt`);
-  manifest.push({
-    label: set.label,
-    title: set.title,
-    files: urls,
-    caption: existsSync(capPath) ? readFileSync(capPath, "utf8").trim() : "",
-  });
+  const caption = existsSync(capPath) ? readFileSync(capPath, "utf8").trim() : "";
+  if (caption) writeFileSync(join(dir, `${set.label}-caption.txt`), caption + "\n", "utf8");
+  return { label: set.label, title: set.title, files: urls, caption };
+}
+
+/* ① 발행용(공개, /cards/) — 오너가 승인해 대기열에 오른 세트만 */
+const manifest = [];
+for (const set of matched) {
+  const m = await stageSet(set, OUT, "cards");
+  if (m) manifest.push(m);
+}
+
+/* ② 내려받기용(문 안쪽, /download/) — 렌더가 있는 **모든** 세트.
+ * 오너가 수동 업로드·검토용으로 원본을 받아가는 자리다. 승인 전 카드도 문 안쪽이니 안전하다. */
+const dlManifest = [];
+for (const set of sets) {
+  const m = await stageSet(set, DL, "download");
+  if (m) dlManifest.push(m);
 }
 
 await browser.close();
 
 writeFileSync(join(OUT, "index.json"), JSON.stringify({ sets: manifest }, null, 2) + "\n", "utf8");
-console.log(`🖼  발행용 이미지 ${manifest.reduce((n, m) => n + m.files.length, 0)}장 준비 (${OUT})`);
-for (const m of manifest) console.log(`   · ${m.label} — ${m.files.length}장 · 캡션 ${m.caption ? m.caption.length + "자" : "없음"}`);
+writeFileSync(join(DL, "index.json"), JSON.stringify({ sets: dlManifest }, null, 2) + "\n", "utf8");
+console.log(`🖼  발행용(공개) ${manifest.reduce((n, m) => n + m.files.length, 0)}장 · 내려받기(문 안) ${dlManifest.reduce((n, m) => n + m.files.length, 0)}장`);
+for (const m of dlManifest) console.log(`   · ${m.label} — ${m.files.length}장 · 캡션 ${m.caption ? m.caption.length + "자" : "없음"}`);

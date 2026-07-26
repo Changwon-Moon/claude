@@ -78,6 +78,8 @@ export interface Ticket {
   review?: ReviewInfo | null;
   /** 소재에서 승격된 티켓의 원본 소재 id — 관제탑이 되쓸 때 씀 */
   ideaId?: string;
+  /** 발행 세트 라벨(sets.json) — 원본 내려받기 링크(download/{label}-{n}.jpg)를 만들 때 씀 */
+  setLabel?: string;
 }
 
 export interface TeamCard {

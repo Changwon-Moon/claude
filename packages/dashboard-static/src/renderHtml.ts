@@ -346,6 +346,8 @@ input,textarea,select{font-family:inherit}
 .rub .sum{font-size:11.5px;font-weight:700;color:var(--muted);margin-top:2px}
 .thumb{width:150px;border-radius:8px;border:1px solid var(--line);display:block}
 
+.dlrow{display:flex;gap:6px;flex-wrap:wrap;padding:10px 12px}
+.itool.dl{text-decoration:none}
 /* 발행 승인 — 나갈 물건을 본다 */
 .pv{display:flex;flex-direction:column;gap:9px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:13px 14px}
 .pv .ph{font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--faint);display:flex;align-items:center;gap:8px}
@@ -1216,6 +1218,23 @@ async function runTick(btn){
   }catch(e){ const m=shortErr(e); jobEnd("tick", m, true); }
 }
 
+/** 티켓 하나를 작업 세션에 시키는 지시문 — 붙여넣으면 바로 제작이 시작되게 필요한 걸 다 담는다 */
+function workOrderText(t){
+  const lines=["wirit 관제탑에서 넘긴 제작 지시입니다.","",
+    "카드: "+t.title,
+    "현재 단계: "+(STAGES[t.stage]||t.stage),
+    t.ideaId?"작업지시서: research/work-orders/"+t.ideaId+".md":"",
+    t.provenance?"원본: "+t.provenance:"", "",
+    "해야 할 일:",
+    "1. 데이터를 raw에서 코드로 추출한다 (LLM이 수치를 만들지 않는다 · provenance 기록)",
+    "2. 카드 렌더 → 결정성·designQa 통과",
+    "3. 캡션 작성(data/review/captions/) → 자동검수(review) PASS",
+    "4. data/review/sets.json 과 builders.json 에 등록 — 등록해야 관제탑 결재 대기에 뜬다",
+    "5. 커밋·푸시하면 배포가 카드까지 다시 그린다"];
+  (t.comments||[]).forEach(c=>lines.push("","오너 코멘트: \""+c+"\""));
+  return lines.filter(x=>x!==null).join("\n");
+}
+
 /** 사람(작업 세션)이 해야 하는 요청 — 그대로 붙여넣으면 되는 지시문을 만든다 */
 function handoffText(r){
   return "wirit 관제탑에서 넘긴 "+r.kind+"입니다.\n\n"
@@ -1364,6 +1383,8 @@ function openDrawer(id){ cur=id; const t=tk(id); if(!t) return;
   drawer.innerHTML=buildDetail(t);
   drawer.classList.add("on"); scrim.classList.add("on");
   drawer.querySelector(".close").onclick=closeDrawer;
+  const cc=drawer.querySelector('[data-act="copycap"]');
+  if(cc) cc.onclick=()=>copyText(t.caption||"", cc, "복사됨 ✓");
   wireCarousel(t); wireActions(t); applyLock();
   drawer.querySelector(".dbody").scrollTop=0; }
 function closeDrawer(){ drawer.classList.remove("on"); scrim.classList.remove("on"); cur=null; }
@@ -1425,6 +1446,16 @@ function buildDetail(t){
     proof+='<div class="pv"><div class="ph">✍️ 업로드 캡션</div>'
       +(t.caption?'<div class="cap">'+esc(t.caption)+'</div>'
                  :'<div class="cap empty">캡션이 아직 없습니다 — 발행 전에 작성이 필요합니다.</div>')+'</div>';
+    // 수동 업로드 통로 — 화면 이미지는 축소본이라, 올릴 때는 반드시 이 원본을 쓴다.
+    // (2026-07-26 오너: "인스타는 당분간 내가 수동으로 올릴거야" — 원본 받을 곳이 없었다)
+    if(t.setLabel){
+      const n=(t.pages&&t.pages.length)||1;
+      proof+='<div class="pv"><div class="ph">⬇️ 원본 내려받기 <span class="pn">수동 업로드용 · 원본 해상도</span></div><div class="dlrow">';
+      for(let k=1;k<=n;k++)
+        proof+='<a class="itool dl" download href="download/'+esc(t.setLabel)+'-'+k+'.jpg">'+k+'장 JPG</a>';
+      if(t.caption) proof+='<button class="itool" data-act="copycap">캡션 복사</button>';
+      proof+='</div></div>';
+    }
   }
 
   let acts="";
@@ -1454,12 +1485,16 @@ function buildDetail(t){
       ? '<a class="btn ghost" style="text-decoration:none" target="_blank" rel="noopener" href="https://github.com/'
         +esc(STATE.repo.owner)+"/"+esc(STATE.repo.name)+"/blob/"+esc(STATE.repo.branch)+"/"+esc(wo)+'">작업지시서 보기 ↗</a>'
       : "";
+    // ⚠️ "만드는 중입니다"라고 쓰면 거짓말이다 — 제작은 자동이 아니라 **작업 세션(사람)** 몫이고,
+    //    시키지 않으면 아무 일도 일어나지 않는다. 화면은 그 사실을 그대로 말한다.
+    //    (2026-07-26 오너: "제작중으로 분류된 컨텐츠들 아무것도 작성을 안 하고 있는데?")
     acts='<div class="stagenote">'
-      +(t.stage===1 ? "오너가 승인한 소재입니다. <b>작업지시서가 만들어졌고</b>, 다음 작업 때 데이터·카드 제작에 들어갑니다."
-        : t.stage===2 ? "데이터를 모으고 카드를 만드는 중입니다."
+      +(t.stage===1 ? "오너가 승인한 소재입니다. <b>작업지시서까지는 자동</b>, 실제 제작은 <b>작업 세션(사람)</b> 몫입니다 — [제작 지시문 복사]를 눌러 채팅에 붙여넣으면 그 자리에서 제작이 시작됩니다."
+        : t.stage===2 ? "<b>자동으로 진행되지 않습니다.</b> 제작(데이터 추출·카드 렌더)은 작업 세션(사람)이 합니다 — [제작 지시문 복사]로 채팅에 붙여넣어 시키세요."
         : "자동 검수(수치·레이아웃·캡션)를 도는 중입니다.")
       +'</div>'
       +'<button class="btn primary" data-act="push">지시 추가</button>'
+      +'<button class="btn ghost" data-act="copywork">제작 지시문 복사</button>'
       + woLink
       +'<button class="btn ghost" data-act="next">다음 단계로</button>'
       +'<button class="btn danger" data-act="drop">중단·삭제</button>'
@@ -1535,6 +1570,8 @@ function wireActions(t){
         const run=pending; pending=null; if(run) run(why);
         return;
       }
+      // 복사는 기록이 아니다 — 연결 없이도 된다
+      if(a==="copywork"){ copyText(workOrderText(t), b, "복사됨 ✓ — 채팅에 붙여넣으세요"); return; }
       // 미연결이면 기록이 남지 않으므로 아예 진행하지 않는다
       if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
 

@@ -44,11 +44,39 @@ page.on("console", (m) => { if (m.type() === "error") errors.push(m.text().slice
 // prompt는 반려 이유·발굴 방향 입력에 쓰인다 → 스모크에서는 항상 값을 준다
 page.on("dialog", (d) => d.accept(d.type() === "prompt" ? "스모크 이유" : undefined));
 
+/* ── 0. 배관 정합 (브라우저 밖, 파일끼리) ──
+ * "세션에서 만든 카드가 실사이트에 없다"(2026-07-26)의 재발 방지.
+ * 카드 PNG는 저장소에 없으므로, 배포가 다시 그릴 수 있어야 화면에 뜬다.
+ * = 캡션이 있는 발행 세트는 반드시 빌더(builders.json)가 있어야 한다. */
+{
+  const { readFileSync: rf, existsSync: ex } = await import("node:fs");
+  console.log("🗼 관제탑 스모크\n\n[0. 세트 ↔ 빌더 정합]");
+  try {
+    const sets = JSON.parse(rf(join(ROOT, "data/review/sets.json"), "utf8")).sets || [];
+    const builders = JSON.parse(rf(join(ROOT, "data/review/builders.json"), "utf8")).builders || [];
+    const bLabels = new Set(builders.map((b) => b.label));
+    for (const st of sets) {
+      const capName = st.caption || st.label;
+      const hasCap = ex(join(ROOT, "data/review/captions", capName + ".txt"));
+      if (!hasCap) continue; // 캡션 없는 세트는 아직 발행 후보가 아니다
+      // 세트의 각 카드 slug 를 어떤 빌더가 만들어 주는가 — 라벨 대응 또는 접두 일치로 본다
+      const covered = bLabels.has(st.label)
+        || st.cards.every((c) => [...bLabels].some((b) => c.startsWith(b) || b.startsWith(c.replace(/-p\d+$/, ""))));
+      check(`발행 세트 '${st.label}' 에 카드 재생성 빌더가 있다`, covered,
+        "builders.json 에 등록하세요 — 없으면 실사이트에 카드가 안 뜹니다");
+    }
+    for (const b of builders) {
+      check(`빌더 스크립트 존재 — ${b.cmd}`, ex(join(ROOT, b.cmd)));
+    }
+  } catch (e) {
+    check("세트·빌더 명세 읽기", false, String(e).slice(0, 120));
+  }
+}
+
 const q = (js) => page.evaluate(js);
 await page.goto("file://" + PAGE);
 await page.waitForTimeout(600);
 
-console.log("🗼 관제탑 스모크");
 console.log("\n[구조]");
 const tabs = await q(`[...document.querySelectorAll(".tab")].map(t=>t.dataset.v).join(",")`);
 check("탭 7종(오늘·파이프라인·소재·회사·보관함·성과·자산)",
@@ -440,6 +468,32 @@ check("뽑아낸 검색어에 지시 동사가 안 섞인다", await q(`
   window.__disp.every(d=>!/찾아|모아|해줘/.test(((d.inputs||{}).query)||""))`),
   await q(`(window.__disp[0]||{inputs:{}}).inputs.query||""`));
 check("시킨 일이 요청 대장에 기록된다", (await q(`window.__reqPut`)) >= 1);
+
+/* ── I. 완성 카드가 오너 손에 닿는가 (2026-07-26 "제작된 카드는 어딨는거야?") ── */
+console.log("\n[I. 완성 카드 전달]");
+await q(`closeDrawer && closeDrawer()`);
+await page.click('.tab[data-v="board"]');
+await page.waitForTimeout(300);
+const dlTicket = await q(`(S.tickets.find(t=>t.stage===4 && t.caption && t.setLabel)||{}).id||""`);
+if (dlTicket) {
+  await q(`openDrawer(${JSON.stringify(dlTicket)})`);
+  await page.waitForTimeout(300);
+  check("결재 화면에 원본 내려받기 링크(수동 업로드용)", await q(`
+    [...document.querySelectorAll("#drawer .dlrow a.dl")].length >= 1
+    && [...document.querySelectorAll("#drawer .dlrow a.dl")].every(a=>(a.getAttribute("href")||"").indexOf("download/")===0)`));
+  check("캡션 복사 버튼", await q(`!!document.querySelector('#drawer [data-act="copycap"]')`));
+  await q(`closeDrawer()`);
+}
+const wkTicket = await q(`(S.tickets.find(t=>t.stage>=1&&t.stage<=2&&!(t.flags||[]).includes("버림"))||{}).id||""`);
+if (wkTicket) {
+  await q(`openDrawer(${JSON.stringify(wkTicket)})`);
+  await page.waitForTimeout(300);
+  check("제작 단계에 [제작 지시문 복사] — 사람이 시켜야 함을 화면이 말한다", await q(`
+    !!document.querySelector('#drawer [data-act="copywork"]')`));
+  check("'만드는 중'이라는 거짓 문구 없음", await q(`
+    !/카드를 만드는 중입니다/.test(document.querySelector("#drawer .stagenote").textContent)`));
+  await q(`closeDrawer()`);
+}
 
 check("콘솔·페이지 오류 없음", errors.length === 0, errors.slice(0, 3).join(" | "));
 

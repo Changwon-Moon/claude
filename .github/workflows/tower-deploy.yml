@@ -21,6 +21,8 @@ on:
       - "prompts/**"
       - "data/datasets/**"
       - "data/review/sets.json"
+      - "data/review/builders.json"
+      - "data/review/captions/**"
       - "data/archive/**"
       - "data/publish-queue.md"
       - "data/performance.md"
@@ -71,16 +73,10 @@ jobs:
 
       # 썸네일 복구 — 재료(data/datasets)에서 카드를 다시 그린다.
       # 개별 빌더가 실패해도 배포는 계속(관제탑의 나머지 정보는 정상 표시).
+      # ⚠️ 빌더 목록을 여기 하드코딩하지 않는다 — data/review/builders.json 이 단일 원천.
+      #    하드코딩하던 시절, 새 카드('월급 34평')가 목록에 빠져 실사이트에 카드가 없었다.
       - name: 카드 재생성
-        continue-on-error: true
-        run: |
-          set +e
-          node scripts/build-tohuh-rank.mjs   202606 2026-07-23 16
-          node scripts/build-singoga-map.mjs  202606 2026-07-23 8
-          node scripts/build-index-2026.mjs
-          node scripts/build-map-rank.mjs 84
-          node scripts/build-map-rank.mjs 59
-          exit 0
+        run: node scripts/rebuild-cards.mjs
 
       - name: 카드 렌더(PNG)
         continue-on-error: true

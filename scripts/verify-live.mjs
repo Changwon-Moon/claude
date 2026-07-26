@@ -119,6 +119,11 @@ check("'자료 찾아줘'를 검색어로 바꿔 수집을 실행",
 check("브라우저 옛 상태가 저장소를 덮지 않음",
   !/localStorage\.getItem\(KEY\)\);\s*if\(s&&s\.tickets&&s\.tickets\.length/.test(html));
 
+// 완성 카드가 오너 손에 닿는가 (2026-07-26 "제작된 카드는 어딨는거야?")
+has(/download\//, "결재 화면에 원본 내려받기 링크");
+has(/data-act="copywork"/, "제작 지시문 복사 버튼(사람이 시켜야 함을 화면이 말함)");
+check("'만드는 중' 거짓 문구 없음", !/카드를 만드는 중입니다/.test(html));
+
 // 카드 실물이 들어갔는지 — CI가 렌더한 썸네일
 const imgs = (html.match(/data:image\/(jpeg|png);base64/g) || []).length;
 check("카드 썸네일 포함", imgs > 0, `${imgs}장`);

@@ -1,0 +1,76 @@
+{
+  "_": [
+    "카드 빌더 명세 — 배포 때 카드를 다시 그리는 명령의 단일 원천.",
+    "",
+    "왜 필요한가 (2026-07-26 오너 질문 '제작된 카드는 어딨는거야?'):",
+    "  카드 PNG는 저장소에 없다(용량). 배포 파이프라인이 매번 다시 그리는데,",
+    "  그 목록이 워크플로 YAML에 하드코딩돼 있었다. 새 카드를 만들어도 이 목록에",
+    "  손으로 추가하지 않으면 **실사이트에는 카드가 영영 안 뜬다** — '월급 34평'이 그랬다.",
+    "",
+    "규칙: 새 카드 빌더를 만들면 반드시 여기 한 줄 추가한다.",
+    "  scripts/rebuild-cards.mjs 가 이 목록을 순서대로 실행하고,",
+    "  스모크가 sets.json의 모든 세트에 빌더가 있는지 검사한다(빠지면 배포가 막힌다).",
+    "",
+    "한 줄 = { label(sets.json의 세트와 대응), cmd(node 스크립트), args }"
+  ],
+  "builders": [
+    {
+      "label": "tohuh-rank",
+      "cmd": "scripts/build-tohuh-rank.mjs",
+      "args": [
+        "202606",
+        "2026-07-23",
+        "16"
+      ]
+    },
+    {
+      "label": "singoga",
+      "cmd": "scripts/build-singoga-map.mjs",
+      "args": [
+        "202606",
+        "2026-07-23",
+        "8"
+      ]
+    },
+    {
+      "label": "index-2026",
+      "cmd": "scripts/build-index-2026.mjs",
+      "args": []
+    },
+    {
+      "label": "estate-84",
+      "cmd": "scripts/build-map-rank.mjs",
+      "args": [
+        "84"
+      ]
+    },
+    {
+      "label": "estate-59",
+      "cmd": "scripts/build-map-rank.mjs",
+      "args": [
+        "59"
+      ]
+    },
+    {
+      "label": "years-to-buy",
+      "cmd": "scripts/build-years-to-buy.mjs",
+      "args": [
+        "2026-07-26"
+      ]
+    },
+    {
+      "label": "estate-cover-84",
+      "cmd": "scripts/build-estate-cover.mjs",
+      "args": [
+        "84"
+      ]
+    },
+    {
+      "label": "estate-cover-59",
+      "cmd": "scripts/build-estate-cover.mjs",
+      "args": [
+        "59"
+      ]
+    }
+  ]
+}

@@ -132,6 +132,7 @@ export async function buildState(): Promise<TowerState> {
       t.pages = match.caption ? match.pages.map((u) => intern(u, PAGE_W)!).filter(Boolean) : [];
       t.caption = match.caption;
       t.review = match.review;
+      t.setLabel = match.setLabel || undefined;
       t.fmt = match.fmt || t.fmt;
       const tl: TimelineEntry = {
         team: "🎨 디자인팀",
@@ -180,6 +181,7 @@ export async function buildState(): Promise<TowerState> {
       // 발행 세트에 등록되지 않은 렌더는 실험·중간 산출물이다.
       // 파이프라인 목록에는 남기되 결정함(오늘 결정할 일)에는 올리지 않는다.
       flags: p.setLabel ? [] : ["실험"],
+      setLabel: p.setLabel || undefined,
       origin: "produced",
       provenance: p.contentPath,
     });
