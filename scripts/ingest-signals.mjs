@@ -67,7 +67,7 @@ if (!files.length) {
  */
 const latestDate = files.map((f) => f.slice(0, 10)).sort().pop();
 const targets = files.filter((f) => f.startsWith(latestDate));
-const latest = targets.join(", ");
+const latest = () => readFrom.join(", ");
 
 /**
  * 보드에서 후보를 뽑는다. 수집기가 만드는 두 형식을 모두 받는다.
@@ -148,21 +148,47 @@ for (const f of ["research/decisions-inbox.md", "research/DECISION_LOG.md"]) {
   }
 }
 
-// 지시 수집 결과를 먼저 넣는다 — 오너가 직접 시킨 것이 자동 수집보다 우선이다
+/* 지시 수집이 있으면 **그것만** 올린다.
+ * 오너가 "전세 자료 찾아줘"라고 시켰는데 그 결과 1건 + 무관한 일반 뉴스 7건이
+ * 함께 올라오면, 시킨 것에 답한 게 아니라 보드만 불린 것이다.
+ * 일반 수집은 매일 아침 자동 수집이 알아서 한다. */
+const askFiles = targets.filter((f) => f.includes("-ask-"));
+const readFrom = askFiles.length ? askFiles : targets;
+
 const cands = [];
-for (const f of [...targets].sort((a, b) => (a.includes("-ask-") ? -1 : 0) - (b.includes("-ask-") ? -1 : 0))) {
+for (const f of readFrom) {
   const text = readFileSync(join(BRIEFS, f), "utf8");
   const ask = (text.match(/^>\s*오너 지시:\s*\*\*"(.+?)"\*\*/m) || [])[1] || "";
   for (const c of parseCandidates(text)) cands.push({ ...c, file: f, ask });
 }
 
+/**
+ * 지시 수집 결과는 **시킨 것에 대한 답**이어야 한다.
+ *
+ * 뉴스 검색은 관련 없는 기사(특히 분양 광고성 기사)를 섞어 준다.
+ * 실제로 "전세가율 전세난 전세 시장"을 시켰더니 김해 아파트 분양 기사가 딸려왔다.
+ * → 지시 수집 항목은 **시킨 낱말 중 하나를 제목에 담고 있을 때만** 올린다.
+ *   (자동 수집은 원래 넓게 훑는 것이 목적이라 이 규칙을 적용하지 않는다)
+ */
+function answersAsk(title, ask) {
+  const words = String(ask || "")
+    .split(/\s+/)
+    .map((w) => w.trim())
+    .filter((w) => w.length >= 2);
+  if (!words.length) return true;
+  const t = norm(title);
+  return words.some((w) => t.includes(norm(w)));
+}
+
 const added = [];
+const offTopic = [];
 let n = 0;
 for (const c of cands) {
   if (added.length >= MAX_INGEST) break; // 한 번에 쏟아붓지 않는다 — 오너가 볼 수 있는 양만
   const key = norm(clean(c.title));
   if (!key || key.length < 4 || known.has(key)) continue;
   if ([...droppedTitles].some((d) => d && (d.includes(key) || key.includes(d)))) continue;
+  if (c.ask && !answersAsk(c.title, c.ask)) { offTopic.push(clean(c.title)); continue; }
   known.add(key);
   const id = `sig-${latestDate}-${++n}`;
   const item = {
@@ -181,11 +207,15 @@ for (const c of cands) {
 }
 
 if (!added.length) {
-  console.log(`새로 넣을 소재 없음 (후보 ${cands.length}건은 모두 기존/삭제 이력과 중복).`);
+  console.log(`새로 넣을 소재 없음 (후보 ${cands.length}건 · 지시와 무관해 제외 ${offTopic.length}건 · 나머지는 기존/삭제 이력과 중복).`);
   process.exit(0);
 }
 
 doc.ideas = items;
 writeFileSync(IDEAS, JSON.stringify(doc, null, 2) + "\n", "utf8");
-console.log(`💡 소재 보드에 ${added.length}건 추가 (출처: ${latest})`);
+console.log(`💡 소재 보드에 ${added.length}건 추가 (출처: ${latest()})`);
 for (const a of added) console.log(`   · ${a.title}`);
+// 걸러낸 것도 말한다 — 조용히 버리면 "왜 이것만 왔지"를 알 수 없다
+if (offTopic.length) {
+  console.log(`   (지시와 무관해 제외 ${offTopic.length}건: ${offTopic.slice(0, 3).join(" / ")})`);
+}

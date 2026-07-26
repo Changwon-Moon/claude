@@ -100,7 +100,22 @@ for (const r of revise) {
 
 /* ── ② 대장의 각 요청이 실제로 처리됐는지 '사실'로 판정 ── */
 const ideaTitles = new Set(ideas.map((i) => norm(i.title)));
-const askedFor = new Set(ideas.map((i) => norm(i.ask)).filter(Boolean));
+
+/** 두 문장이 같은 것을 가리키는가 — 뜻있는 낱말이 2개 이상 겹치면 그렇다고 본다 */
+const STOP = new Set(["찾아줘", "찾아", "모아줘", "모아", "관련된", "관련", "다양한", "여러가지", "정도", "자료", "자료들", "데이터", "소재", "소재들", "등"]);
+function words(s) {
+  return String(s || "")
+    .replace(/[^0-9A-Za-z가-힣\s]/g, " ")
+    .split(/\s+/)
+    .map((w) => w.replace(/(으로|에서|에게|에는|을|를|이|가|은|는|의|와|과|도|만|들)$/, ""))
+    .filter((w) => w.length >= 2 && !STOP.has(w));
+}
+function overlaps(a, b) {
+  const A = new Set(words(a));
+  let n = 0;
+  for (const w of words(b)) if (A.has(w)) n++;
+  return n >= 2;
+}
 
 let closed = 0;
 for (const it of doc.items) {
@@ -117,11 +132,13 @@ for (const it of doc.items) {
       it.result = ok ? "재작업 완료 — 파이프라인에서 확인하세요" : "작업지시서 생성됨 — 제작 대기";
     }
   } else if (it.kind === "자료 조사") {
-    // 그 지시로 찾아낸 소재가 보드에 실제로 올라왔는가
-    const hit = [...askedFor].some((a) => a && (a.includes(norm(it.what)) || norm(it.what).includes(a)));
-    if (hit) {
+    // 그 지시로 찾아낸 소재가 보드에 실제로 올라왔는가.
+    // 지시문("전세가율 지도, 전세난 정도 등 … 찾아줘")과 검색어("전세가율 전세난 전세 시장")는
+    // 글자가 다르다 → 통째로 비교하지 말고 **낱말이 겹치는지**로 본다.
+    const found = ideas.filter((i) => i.ask && overlaps(it.what, i.ask));
+    if (found.length) {
       ok = true;
-      it.result = "수집 완료 — 소재 보드에 올라왔습니다";
+      it.result = `수집 완료 — 소재 보드에 ${found.length}건 올라왔습니다`;
     }
   } else if (it.kind === "소재 등록") {
     if (ideaTitles.has(norm(it.what))) {
