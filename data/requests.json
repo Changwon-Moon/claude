@@ -54,7 +54,9 @@
       "about": "서울 아파트 실거래 랭킹 59㎡ (2026 상반기)",
       "auto": "order",
       "run": "",
-      "done": false
+      "done": false,
+      "order": "research/work-orders/서울-아파트-실거래-랭킹-59-2026-상반기-revise.md",
+      "result": "작업지시서 생성됨 — 제작 대기"
     }
   ]
 }
