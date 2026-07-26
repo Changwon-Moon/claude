@@ -16,33 +16,56 @@
     {
       "label": "tohuh-rank",
       "title": "🔥 2026년 6월 신고가 쏟아진 지역은? (토허제 기준)",
-      "cards": ["tohuh-rank"],
+      "cards": [
+        "tohuh-rank"
+      ],
       "caption": "tohuh-rank",
       "review": "토허제 신고가 지도"
     },
     {
       "label": "index-2026",
       "title": "2026년 국장 성적표 — 코스피·코스닥 고점 대비",
-      "cards": ["index-2026"],
+      "cards": [
+        "index-2026"
+      ],
       "caption": "index-2026"
     },
     {
       "label": "estate-84",
       "title": "서울 아파트 실거래 랭킹 84㎡ (2026 상반기)",
-      "cards": ["estate-cover-84", "maprank-84-p1", "maprank-84-p2"],
+      "cards": [
+        "estate-cover-84",
+        "maprank-84-p1",
+        "maprank-84-p2"
+      ],
       "caption": "estate-84"
     },
     {
       "label": "estate-59",
       "title": "서울 아파트 실거래 랭킹 59㎡ (2026 상반기)",
-      "cards": ["estate-cover-59", "maprank-59-p1", "maprank-59-p2"],
+      "cards": [
+        "estate-cover-59",
+        "maprank-59-p1",
+        "maprank-59-p2"
+      ],
       "caption": "estate-59"
     },
     {
       "label": "metro-speed",
       "title": "수도권 지하철 노선·구간별 표정속도",
-      "cards": ["metro-cover-photo", "metro-2col"],
+      "cards": [
+        "metro-cover-photo",
+        "metro-2col"
+      ],
       "caption": ""
+    },
+    {
+      "label": "years-to-buy",
+      "title": "💸 월급 안 쓰고 모으면 서울 34평까지 몇 년?",
+      "cards": [
+        "years-to-buy"
+      ],
+      "caption": "years-to-buy"
     }
   ]
 }

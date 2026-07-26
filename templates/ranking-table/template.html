@@ -149,6 +149,21 @@
       .rt-row.has-sub {
         grid-template-columns: 72px var(--mono) var(--name-w) var(--val-w) var(--sub-w);
       }
+      /* 표식 없는 모드(자치구·지역 순위): 로고 열 자체를 뺀다.
+         ⚠️ 열을 안 빼면 본문 칸이 한 칸씩 밀려 이름이 "강…"으로 잘린다.
+            머리글(rt-colheadrow)에서도 같이 빼야 한다 — 둘의 열 수는 항상 같아야 한다. */
+      .rt.no-mark .rt-row {
+        grid-template-columns: 72px var(--name-w) var(--val-w);
+      }
+      .rt.no-mark .rt-row.has-sub {
+        grid-template-columns: 72px var(--name-w) var(--val-w) var(--sub-w);
+      }
+      .rt.no-mark.no-rank .rt-row {
+        grid-template-columns: var(--name-w) var(--val-w);
+      }
+      .rt.no-mark.no-rank .rt-row.has-sub {
+        grid-template-columns: var(--name-w) var(--val-w) var(--sub-w);
+      }
       /* 순위 없는 모드(정보형 표): 순위 열 제거, 뱃지·이름·값 3열 */
       .rt.no-rank .rt-row {
         grid-template-columns: var(--mono) var(--name-w) var(--val-w);
@@ -410,7 +425,7 @@
     </style>
   </head>
   <body>
-    <div class="wirit-card {{#if font}}font-{{font}}{{/if}} {{#if variant}}variant-{{variant}}{{else}}variant-a{{/if}} rt {{densityClass items}} {{#if photoStrip}}has-photos{{/if}} {{#if hideRank}}no-rank{{/if}}">
+    <div class="wirit-card {{#if font}}font-{{font}}{{/if}} {{#if variant}}variant-{{variant}}{{else}}variant-a{{/if}} rt {{densityClass items}} {{#if photoStrip}}has-photos{{/if}} {{#if hideRank}}no-rank{{/if}} {{#if hideMark}}no-mark{{/if}}">
       <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
       <div class="rt-head">
         <h1 class="wirit-title">{{title}}</h1>
@@ -420,7 +435,7 @@
         {{#unless (eq variant "c")}}
         <div class="rt-row rt-colheadrow {{#if subLabel}}has-sub{{/if}}">
           {{#unless hideRank}}<span class="rt-colhead" style="text-align:center">순위</span>{{/unless}}
-          <span class="rt-colhead" style="text-align:center;white-space:nowrap">{{logoLabel}}</span>
+          {{#unless hideMark}}<span class="rt-colhead" style="text-align:center;white-space:nowrap">{{logoLabel}}</span>{{/unless}}
           <span class="rt-colhead" style="text-align:center">{{nameLabel}}</span>
           <span class="rt-colhead" style="text-align:center">{{valueLabel}}</span>
           {{#if subLabel}}<span class="rt-colhead" style="text-align:center">{{subLabel}}</span>{{/if}}
@@ -429,9 +444,9 @@
 
         {{#each items}}
         <div class="rt-row {{#if ../subLabel}}has-sub{{/if}} {{#if this.hl}}hl-{{this.hl}}{{/if}} {{#unless ../hideRank}}{{#if (lt @index 3)}}top{{/if}}{{/unless}}">
-          {{#unless ../hideRank}}<span class="rt-rank">{{medal this.rank @index}}</span>{{/unless}}
-          {{#if this.line}}{{{metroBadge this.line}}}{{else}}{{#if this.logo}}<span class="rt-logo"><img src="../_shared/logos/{{this.logo}}.{{#if this.logoExt}}{{this.logoExt}}{{else}}svg{{/if}}" alt="" /></span>{{else}}{{#if this.logoColor}}<span class="rt-chip wirit-chip" style="background:{{this.logoColor}}">{{#if this.logoText}}{{this.logoText}}{{else}}{{initial this.name}}{{/if}}</span>{{else}}<span class="rt-mono">{{initial this.name}}</span>{{/if}}{{/if}}{{/if}}
-          <span class="rt-name {{#unless ../hideRank}}{{rankClass this.rank @index}}{{/unless}}">{{this.name}}</span>
+          {{#unless ../hideRank}}<span class="rt-rank">{{#if ../plainRank}}{{rankNo this.rank @index}}{{else}}{{medal this.rank @index}}{{/if}}</span>{{/unless}}
+          {{#unless ../hideMark}}{{#if this.line}}{{{metroBadge this.line}}}{{else}}{{#if this.logo}}<span class="rt-logo"><img src="../_shared/logos/{{this.logo}}.{{#if this.logoExt}}{{this.logoExt}}{{else}}svg{{/if}}" alt="" /></span>{{else}}{{#if this.logoColor}}<span class="rt-chip wirit-chip" style="background:{{this.logoColor}}">{{#if this.logoText}}{{this.logoText}}{{else}}{{initial this.name}}{{/if}}</span>{{else}}<span class="rt-mono">{{initial this.name}}</span>{{/if}}{{/if}}{{/if}}{{/unless}}
+          <span class="rt-name {{#unless ../hideRank}}{{#unless ../plainRank}}{{rankClass this.rank @index}}{{/unless}}{{/unless}}">{{this.name}}</span>
           {{#if ../subLabel}}
             {{#if (eq ../variant "c")}}
             <span class="rt-valwrap"><span class="rt-val">{{this.value}}</span><span class="rt-sub">{{this.sub}}</span></span>

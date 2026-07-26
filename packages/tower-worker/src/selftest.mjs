@@ -44,6 +44,17 @@ check("위조 쿠키 차단", (await r.text()).includes("비밀번호"));
 r = await worker.fetch(new Request("https://x/ideas.html"), env);
 check("하위 경로도 문을 못 지나침", (await r.text()).includes("비밀번호"));
 
+/* /cards/ 만 문 밖 — 인스타가 이미지를 가져가야 발행이 된다.
+ * 딱 그 경로만 열려야 하므로 비슷한 이름(/cardsx, /card/)까지 새는지 확인한다. */
+r = await worker.fetch(new Request("https://x/cards/tohuh-rank-1.jpg"), env);
+check("발행용 이미지는 문 없이 통과(인스타가 가져갈 수 있어야 함)", (await r.text()) === "SECRET-CONTENT");
+r = await worker.fetch(new Request("https://x/cards/x.jpg"), env);
+check("발행용 이미지도 색인은 차단", r.headers.get("X-Robots-Tag") === "noindex, nofollow");
+for (const p of ["/cardsx.html", "/card/x.jpg", "/Cards/x.jpg"]) {
+  r = await worker.fetch(new Request("https://x" + p), env);
+  check(`비슷한 경로는 안 열림 — ${p}`, (await r.text()).includes("비밀번호"));
+}
+
 r = await worker.fetch(new Request("https://x/"), { ASSETS });
 check("비번 미설정 시에는 통과(자물쇠 사고 방지)", (await r.text()) === "SECRET-CONTENT");
 

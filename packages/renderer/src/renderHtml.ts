@@ -41,6 +41,9 @@ Handlebars.registerHelper("medal", (rank: unknown, index: unknown) => {
   const r = effRank(rank, index);
   return r === "1" ? "🥇" : r === "2" ? "🥈" : r === "3" ? "🥉" : r;
 });
+// 메달 없이 숫자만. 1위가 '잘한 것'이 아닌 순위(집값 비싼 순 등)에 쓴다.
+// 사용: {{rankNo this.rank @index}}
+Handlebars.registerHelper("rankNo", (rank: unknown, index: unknown) => effRank(rank, index));
 // 1·2·3위 기업명 색상 클래스(금/은/동). 사용: {{rankClass this.rank @index}}
 Handlebars.registerHelper("rankClass", (rank: unknown, index: unknown) => {
   const r = effRank(rank, index);

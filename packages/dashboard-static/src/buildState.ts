@@ -217,6 +217,10 @@ export async function buildState(): Promise<TowerState> {
   for (const it of ideaItems) {
     const st = Number(it.stage || 0);
     if (st < 1) continue;
+    // 카드가 나온 소재는 **렌더 산출물 쪽 티켓이 진짜다.** 소재까지 티켓으로 올리면
+    // 같은 건이 파이프라인에 두 번 뜬다(2026-07-26: '월급으로 사는 데 몇 년'이 그랬다).
+    // 제목이 달라져(기획 제목 → 최종 제목) 아래 중복 검사에 안 걸리므로 여기서 막는다.
+    if (it.status === "done") continue;
     const n = normTitle(it.title);
     if (existingTitles.some((e) => e.includes(n) || n.includes(e))) continue;
     promoted.push({

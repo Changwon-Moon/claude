@@ -14,6 +14,14 @@
     "nameLabel": { "type": "string", "maxLength": 12 },
     "valueLabel": { "type": "string", "maxLength": 14 },
     "subLabel": { "type": "string", "maxLength": 14 },
+    "hideMark": {
+      "type": "boolean",
+      "description": "이름 앞 표식(로고·컬러칩·첫글자 원)을 숨긴다. 자치구·지역처럼 브랜드 마크가 없는 순위표용 — 첫 글자 원은 정보가 없어 노이즈다."
+    },
+    "plainRank": {
+      "type": "boolean",
+      "description": "1~3위 메달(🥇🥈🥉) 대신 숫자만. 1위가 '잘한 것'이 아닌 순위(예: 집값이 비싼 순)에서는 메달이 뜻을 왜곡한다."
+    },
     "items": {
       "type": "array",
       "minItems": 2,
