@@ -78,20 +78,23 @@ jobs:
           shopt -s nullglob
           for f in data/content/*/*.json; do
             echo "▶ render $f"
-            pnpm --filter @wirit/renderer render -- --data "$f" --out data/out
+            # ⚠️ pnpm --filter는 작업 폴더를 packages/renderer로 바꾼다 → 반드시 절대경로
+            pnpm --filter @wirit/renderer render -- --data "$PWD/$f" --out "$PWD/data/out"
           done
+          echo "생성된 PNG: $(ls data/out/*.png 2>/dev/null | wc -l)장" 
           exit 0
 
       - name: 사이트 조립
         run: node scripts/build-tower-site.mjs
 
+      # wrangler-action@v3은 구버전(3.90)을 설치해 jsonc 설정을 못 읽는다("Missing entry-point").
+      # 버전을 직접 고정해 실행한다.
       - name: Cloudflare 게시
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: packages/tower-worker
-          command: deploy
+        working-directory: packages/tower-worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx --yes wrangler@4 deploy
 
       # 비밀번호 문 — TOWER_PASSWORD 시크릿이 있을 때만 건다.
       # 없으면 워커가 문 없이 통과시키므로(자물쇠 사고 방지) 배포 자체는 정상.
