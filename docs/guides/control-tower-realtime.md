@@ -46,9 +46,13 @@
 claude.ai 아티팩트 페이지는 보안 때문에 **바깥과 통신이 전부 막혀 있어서**, 거기서는
 아무리 잘 만들어도 "직접 저장"이 불가능합니다. Pages 주소에서는 됩니다.
 
-**누가**: 오너. GitHub 설정 화면에서 클릭 5번.
-**시간**: 1분 · **비용**: 0원
-**방법**: [control-tower-pages.md](./control-tower-pages.md)
+**누가**: 오너. **시간**: 약 15분 · **비용**: 0원
+
+> ⚠️ **두 가지 걸림돌이 있고, 둘 다 0원으로 풀립니다.**
+> ① 비공개 저장소는 GitHub Pages가 유료 ② 배포본에 카드 썸네일이 빠짐
+> → **Cloudflare Pages(무료) + 빌드 시 카드 재생성**으로 해결.
+> **방법: [control-tower-hosting.md](./control-tower-hosting.md)** (이쪽을 따르세요)
+> GitHub Pages를 쓰는 경우는 [control-tower-pages.md](./control-tower-pages.md)
 
 ---
 
