@@ -88,6 +88,23 @@ has(/중단·삭제/, "버튼 이름 '중단·삭제'");
 has(/data-ia="delete"/, "소재 삭제 버튼");
 check("소재 보드에 승인·보류 버튼 없음(간소화 반영)",
   !/data-ia="approve"/.test(html) && !/data-ia="hold"/.test(html));
+
+// 이번 개편분 — 화면에 실제로 올라갔는지
+has(/id="ask"/, "지시함(자유 입력창)");
+check("칸 나눈 입력 폼 제거(제목·이유·출처)",
+  !/id="na-t"/.test(html) && !/id="na-w"/.test(html) && !/id="na-s"/.test(html));
+has(/data-act="next"/, "단계 이동 버튼(기획안에서 손을 쓸 수 있음)");
+has(/class="stagenote"/, "지금 무엇을 기다리는지 설명");
+has(/class="fstrip"/, "보관함에 카드 실물");
+
+// 링크는 열려야 링크다 — 저장소에 없는 경로로 가는 링크가 있으면 전부 404다
+const deadLinks = (html.match(/href="[^"]*\/(?:data\/out|data\/content)\/[^"]*"/g) || []).length;
+check("보관함 링크가 404 경로를 가리키지 않음", deadLinks === 0, `${deadLinks}개 발견`);
+
+// 배선 확인 — 요소만 있고 동작이 없으면 소용없다
+check("연결 뱃지에 동작이 붙어 있음", /connBtn\.onclick/.test(html) || /connbtn/.test(html));
+check("저장소 상태를 직접 읽는 코드 존재(배포를 안 기다림)",
+  /refreshFromRepo/.test(html) && /pipeline-state\.json/.test(html));
 check("옛 화면 잔재 없음(마이닝 열·연결 바)",
   !/id="ghbar"/.test(html) && !/col mining/.test(html));
 
