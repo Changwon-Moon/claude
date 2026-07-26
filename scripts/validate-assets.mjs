@@ -74,7 +74,13 @@ function checkDatasets() {
     const ds = readJson(path.join(dir, f));
     if (!ds) continue;
     const m = ds.meta ?? {};
-    for (const field of ["title", "source", "asOf"]) {
+    // 출처는 한 줄(source)일 수도, 항목별 출처 묶음(sources)이나 URL 목록(provenance)일
+    // 수도 있다. 요구하는 것은 "추적 가능한 근거가 있는가"이지 특정 필드명이 아니다.
+    const hasSource = !!m.source
+      || (m.sources && Object.keys(m.sources).length > 0)
+      || (Array.isArray(m.provenance) && m.provenance.length > 0);
+    if (!hasSource) fail(`${f}: 출처 없음 — meta.source / meta.sources / meta.provenance 중 하나 필요`);
+    for (const field of ["title", "asOf"]) {
       if (!m[field]) fail(`${f}: meta.${field} 누락`);
     }
     if (typeof m.verified !== "boolean") fail(`${f}: meta.verified(불리언) 누락`);

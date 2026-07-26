@@ -24,6 +24,46 @@
       "perishable": false,
       "added": "2026-07-20",
       "note": "금융감독원 전자공시 DART 직접 수집(1차 출처). 값 정성 검토는 통과했으나 원문 화면 대조는 미실시 — 발행 전 오너 확인 권장."
+    },
+    {
+      "file": "dogam-gangnam-2026.json",
+      "title": "서울 대장 아파트 도감 No.01 강남구",
+      "verified": true,
+      "perishable": true,
+      "added": "2026-07-26",
+      "note": "단지별 공개 실거래 신고가 + 언론 보도 교차확인. meta.sources 에 항목별 출처."
+    },
+    {
+      "file": "gtx-a-2026.json",
+      "title": "GTX-A 현황·소요시간·역세권 실거래 (시리즈 '지하철이 온다' EP.1)",
+      "verified": true,
+      "perishable": true,
+      "added": "2026-07-26",
+      "note": "개통 일정은 계획·변동 가능. meta.sources 에 항목별 출처."
+    },
+    {
+      "file": "kr-market-2026.json",
+      "title": "코스피 · 코스닥 지수 추이(2026)",
+      "verified": false,
+      "perishable": true,
+      "added": "2026-07-26",
+      "note": "야후 파이낸스 일간 종가. 발행 전 헤드라인 수치를 KRX·언론과 교차확인 후 verified 승격."
+    },
+    {
+      "file": "metro-speed-2026.json",
+      "title": "수도권 전철 운행속도(표정속도)",
+      "verified": true,
+      "perishable": false,
+      "added": "2026-07-26",
+      "note": "서울교통공사 공개데이터·급행 시간표·법령/보도로 교차검증(2026-07-21)."
+    },
+    {
+      "file": "tohuh-2026.json",
+      "title": "수도권 토지거래허가구역(아파트) 지정 현황 — 서울 25구 + 경기 15곳",
+      "verified": false,
+      "perishable": true,
+      "added": "2026-07-26",
+      "note": "발행 전 서울시·경기도 공고문으로 목록·기간 재확인 후 verified 승격."
     }
   ]
 }

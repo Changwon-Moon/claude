@@ -1132,6 +1132,8 @@
       "https://query1.finance.yahoo.com/v8/finance/chart/%5EKQ11?range=2y&interval=1d"
     ],
     "verified": false,
-    "verificationNote": "발행 전 헤드라인 수치(현재지수·고점)를 KRX 정보데이터시스템 또는 언론 보도와 교차확인 후 verified=true 승격"
+    "verificationNote": "발행 전 헤드라인 수치(현재지수·고점)를 KRX 정보데이터시스템 또는 언론 보도와 교차확인 후 verified=true 승격",
+    "asOf": "2026-07-22",
+    "title": "코스피 · 코스닥 지수 추이(2026)"
   }
 }

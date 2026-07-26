@@ -1,59 +1,60 @@
 {
   "$schema": "../../../docs/ASSET_HUB.md",
   "kind": "photo",
-  "items": [],
-  "subway-jongno3ga": {
-    "file": "subway-jongno3ga.jpg",
-    "source": "Wikimedia Commons",
-    "title": "File:Seoul-metro-534-Jongno-3ga-station-platform-20180915-123402.jpg",
-    "license": "CC BY-SA 4.0",
-    "author": "LERK",
-    "url": "https://commons.wikimedia.org/wiki/File%3ASeoul-metro-534-Jongno-3ga-station-platform-20180915-123402.jpg",
-    "fetchedFor": "wirit card"
-  },
-  "subway-pexels": {
-    "file": "subway-pexels.jpg",
-    "source": "pexels",
-    "query": "seoul subway train",
-    "license": "Pexels License (상업이용·표기불요)",
-    "author": "Paul Bill",
-    "url": "https://www.pexels.com/photo/woman-waiting-at-seoul-subway-station-29673487/",
-    "fetchedFor": "wirit card"
-  },
-  "seoul-apart-night": {
-    "file": "seoul-apart-night.jpg",
-    "source": "pexels",
-    "query": "seoul apartment skyline night",
-    "license": "Pexels License (상업이용·표기불요)",
-    "author": "Ethan Brooke",
-    "url": "https://www.pexels.com/photo/aerial-view-of-city-buildings-during-night-time-3142005/",
-    "fetchedFor": "wirit card"
-  },
-  "stock-market-red": {
-    "file": "stock-market-red.jpg",
-    "source": "pexels",
-    "query": "stock market crash red chart screen",
-    "license": "Pexels License (상업이용·표기불요)",
-    "author": "Leeloo The First",
-    "url": "https://www.pexels.com/photo/clipboard-with-statistical-data-and-digital-tablet-with-stock-market-display-on-screen-5561917/",
-    "fetchedFor": "wirit card"
-  },
-  "stock-board": {
-    "file": "stock-board.jpg",
-    "source": "pexels",
-    "query": "stock exchange market display board numbers",
-    "license": "Pexels License (상업이용·표기불요)",
-    "author": "Bor Jinson",
-    "url": "https://www.pexels.com/photo/stock-market-display-board-in-japan-36790143/",
-    "fetchedFor": "wirit card"
-  },
-  "stock-crash": {
-    "file": "stock-crash.jpg",
-    "source": "pexels",
-    "query": "stock market candlestick chart screen",
-    "license": "Pexels License (상업이용·표기불요)",
-    "author": "Tima Miroshnichenko",
-    "url": "https://www.pexels.com/photo/stock-market-illustration-on-the-screen-7567223/",
-    "fetchedFor": "국장 커버(추상 캔들차트)"
-  }
+  "items": [
+    {
+      "slug": "subway-jongno3ga",
+      "name": "File:Seoul-metro-534-Jongno-3ga-station-platform-20180915-123402.jpg",
+      "kind": "photo",
+      "source": "Wikimedia Commons (https://commons.wikimedia.org/wiki/File%3ASeoul-metro-534-Jongno-3ga-station-platform-20180915-123402.jpg)",
+      "license": "open-license",
+      "note": "원 라이선스: CC BY-SA 4.0 · 촬영/제작: LERK",
+      "added": "2026-07-26"
+    },
+    {
+      "slug": "subway-pexels",
+      "name": "seoul subway train",
+      "kind": "photo",
+      "source": "pexels (https://www.pexels.com/photo/woman-waiting-at-seoul-subway-station-29673487/)",
+      "license": "open-license",
+      "note": "원 라이선스: Pexels License (상업이용·표기불요) · 촬영/제작: Paul Bill",
+      "added": "2026-07-26"
+    },
+    {
+      "slug": "seoul-apart-night",
+      "name": "seoul apartment skyline night",
+      "kind": "photo",
+      "source": "pexels (https://www.pexels.com/photo/aerial-view-of-city-buildings-during-night-time-3142005/)",
+      "license": "open-license",
+      "note": "원 라이선스: Pexels License (상업이용·표기불요) · 촬영/제작: Ethan Brooke",
+      "added": "2026-07-26"
+    },
+    {
+      "slug": "stock-market-red",
+      "name": "stock market crash red chart screen",
+      "kind": "photo",
+      "source": "pexels (https://www.pexels.com/photo/clipboard-with-statistical-data-and-digital-tablet-with-stock-market-display-on-screen-5561917/)",
+      "license": "open-license",
+      "note": "원 라이선스: Pexels License (상업이용·표기불요) · 촬영/제작: Leeloo The First",
+      "added": "2026-07-26"
+    },
+    {
+      "slug": "stock-board",
+      "name": "stock exchange market display board numbers",
+      "kind": "photo",
+      "source": "pexels (https://www.pexels.com/photo/stock-market-display-board-in-japan-36790143/)",
+      "license": "open-license",
+      "note": "원 라이선스: Pexels License (상업이용·표기불요) · 촬영/제작: Bor Jinson",
+      "added": "2026-07-26"
+    },
+    {
+      "slug": "stock-crash",
+      "name": "stock market candlestick chart screen",
+      "kind": "photo",
+      "source": "pexels (https://www.pexels.com/photo/stock-market-illustration-on-the-screen-7567223/)",
+      "license": "open-license",
+      "note": "원 라이선스: Pexels License (상업이용·표기불요) · 촬영/제작: Tima Miroshnichenko",
+      "added": "2026-07-26"
+    }
+  ]
 }

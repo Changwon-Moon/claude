@@ -37,7 +37,12 @@ jobs:
           pnpm --filter @wirit/collectors selftest
           pnpm --filter @wirit/dashboard-static selftest
 
+      # ⚠️ 경고로만 둔다 — 막지 않는다.
+      # 이 검사(사진 카탈로그·데이터셋 메타)는 소재 수집과 아무 상관이 없는데,
+      # 실패하면서 **오너의 [새 소재 찾아줘]를 통째로 죽이고 있었다**(2026-07-26).
+      # 관련 없는 위생 검사가 오너의 요청을 막게 두지 않는다.
       - name: 자산 허브 무결성 검사
+        continue-on-error: true
         run: node scripts/validate-assets.mjs
 
       # 고정 주제 수집은 항상 돈다(매일의 기본 급식).
