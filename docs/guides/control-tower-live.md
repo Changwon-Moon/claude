@@ -10,6 +10,7 @@
 | **🖼 로고 취득 / 💰 평균연봉** 버튼 | 해당 워크플로 바로 실행 |
 | **자료 인박스**에 붙여넣기 → 지식 추가 | 저장소 `research/INBOX.md`에 **바로 커밋**(대량 OK) |
 | 소재 **✅ 선정 / ❌ 탈락** | `research/decisions-inbox.md`에 **바로 기록**(트렌드분석·리서치 학습) |
+| 💡 소재 탭 승인·수정·추가 | `research/ideas.json`을 **직접 갱신**(2026-07-26 추가) |
 | **↻ 상태** | 워크플로 실행 현황 실시간 표시 |
 
 ## 왜 두 가지가 필요한가
@@ -19,8 +20,9 @@
 
 ## 설정 (1회, 약 5분)
 
-### ① GitHub Pages 켜기 (아직 안 했다면)
-[control-tower-pages.md](./control-tower-pages.md) 참고 — 저장소 **Settings → Pages → Source = "GitHub Actions"**. 켜면 관제탑 고정 주소가 생깁니다.
+### ① 관제탑 주소 (이미 완료 · 2026-07-26)
+`https://wirit-tower.engineerest0.workers.dev/` — Cloudflare Workers에 상시 배포되고, 비밀번호 문이 걸려 있습니다.
+설정 경위는 [control-tower-hosting.md](./control-tower-hosting.md).
 
 ### ② 저장소 전용 토큰 만들기
 1. **github.com/settings/tokens?type=beta** 접속 (또는 Settings → Developer settings → **Fine-grained tokens**)
@@ -33,11 +35,23 @@
    - ⚠️ 딱 한 번만 보여줍니다. 놓치면 새로 만들면 돼요.
 
 ### ③ 관제탑에 붙여넣기
-1. Pages 주소로 관제탑을 엽니다
+1. `https://wirit-tower.engineerest0.workers.dev/` 를 엽니다(비밀번호 입력)
 2. 상단 **🔌 GitHub 연결 안 됨 → [연결하기]** 클릭
 3. 토큰 붙여넣고 **저장·연결** → "연결 성공"이 뜨면 끝
 
-이제 상단 바가 🟢로 바뀌고, 마이닝·로고·평균연봉 버튼과 자료 인박스가 **실제로 동작**합니다.
+이제 상단 바가 🟢로 바뀌고 **모든 조작이 저장소에 바로 기록**됩니다.
+
+| 관제탑에서 누르면 | 저장소에 이렇게 남습니다 |
+|---|---|
+| 💡 소재 탭에서 승인·보류·거부·수정·삭제·추가 | `research/ideas.json` 이 바로 갱신 |
+| 소재 발굴 요청 / 티켓 승인·보류·반려·수정지시 / 회사 원칙 편집 | `research/decisions-inbox.md` 에 추가 |
+| 자료 인박스에 붙여넣기 | `research/INBOX.md` 에 추가 |
+| ⛏ 마이닝 실행 | 수집 워크플로가 바로 실행 |
+
+화면 맨 아래 **저장 상태 바**에 `✔ 저장됨 · 시각`이 뜨면 기록된 것입니다.
+
+> **연결 안 하면 읽기 전용입니다.** 버튼을 눌러도 아무것도 바뀌지 않습니다.
+> (예전처럼 눌러놓고 요약을 복사하는 방식은 없앴습니다 — 새로고침하면 사라져서 위험했습니다.)
 
 ## 아직 안 되는 것 (정직하게)
 
