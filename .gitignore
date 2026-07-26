@@ -40,3 +40,6 @@ Thumbs.db
 *.log
 npm-debug.log*
 pnpm-debug.log*
+
+# 관제탑 배포 산출물 (CI가 매 배포마다 재생성)
+packages/tower-worker/_site/

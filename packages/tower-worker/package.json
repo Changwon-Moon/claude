@@ -1,0 +1,10 @@
+{
+  "name": "@wirit/tower-worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "관제탑 게이트 워커. 정적 사이트(_site)를 서버 측 비밀번호 문 뒤에서 서빙한다(Cloudflare Workers).",
+  "scripts": {
+    "selftest": "node src/selftest.mjs"
+  }
+}

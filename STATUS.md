@@ -115,6 +115,7 @@
 | 2026-07-25 | **토허제 지도 최종 레이아웃**: 표 16위까지(꼬리 삭제), 제목 56px 한 줄·끝 이모지 제거·상단 여백 92px로 로고 뱃지와 30px 이격(겹침 방지), 행 높이·폰트 확대로 표 균형, 인사이트 여백 정리. **아이디 스탬프를 지도 SVG 뷰박스 좌표로 이동**(광명 아래·수원 팔달 좌측 / 노원 우측 2곳) → 지도 경계를 절대 벗어나지 않음 | 오너 지시. 실측(Playwright)으로 행 넘침 확인 후 확정. QA 0·결정성 OK·서울 카드 해시 불변 |
 | 2026-07-25 | **토허제 신고가 지도 제작 완료(발행 대기) + 제작 기록 문서화**: 캡션까지 확정(린트 PASS). 이 게시물의 전 과정(소재 재정의·경기 실거래 확장·동탄구 경계 합성·서울 데이터 오염 사고·한강/시경계 도출·오너 피드백 5라운드 전체·최종 스펙·캡션 근거)을 [research/production-logs/2026-07-25-tohuh-singoga-map.md](./research/production-logs/2026-07-25-tohuh-singoga-map.md)에 정리. 팀 기준(qa·research·marketing·planning·editing) + DECISION_LOG·PATTERN_LIBRARY·TEMPLATES §7·DATA_SOURCES §2-1/2-2 동기화 | **오너 확인 필요**: 토허제 지정 목록 1차 출처 대조 후 verified 승격 → 발행 |
 | 2026-07-25 | **토허제 지도 = [월간] 정기물 등록 + 재사용 오더 확정**: "토허제 기준으로~/토허제 지도~" 오더 = 기존 카드 그대로 재사용(월·데이터만 교체). IDEAS.md 월간 정기물·CEO §D·planning 반영. **소재 관제탑 생성기를 저장소로 이관**(`scripts/build-idea-board.mjs`) — 스크래치패드는 세션과 함께 사라지므로. 보드에 제작 완료 8건 그룹 신설 + 07-23 트리아지 결정 시드 주입(총 59건) | 헤드리스 스모크 통과(오류 0·복사 동작·결정 반영) |
+| 2026-07-26 | **관제탑 상시 호스팅 배선 완료(배포 대기)**: Cloudflare Workers 배포 워크플로(`tower-deploy.yml`) — 저장소 산출물 → **카드 재생성·렌더(썸네일 복구)** → `_site` 조립 → wrangler 게시. **문 잠그기 방식 교체**: Cloudflare Access가 대시보드 버그(`use_clientless_isolation_app_launcher_url`)로 반복 실패 + workers.dev 보호 여부 불확실 → **워커 서버 측 비밀번호 문**(`packages/tower-worker`)으로 대체. 게이트 셀프테스트 9/9 통과 | 오너: Cloudflare 가입·프로젝트·토큰·GitHub Secrets 등록 완료. **남은 것 = `TOWER_PASSWORD` 시크릿 추가 후 워크플로 실행** |
 
 ## 다음 세션이 알아야 할 메모
 
@@ -143,6 +144,12 @@
 - **사진 다장 취득**: `photo-fetch.yml`에 `count`>1 → `cand/<slug>-i.jpg` 여러 장 받아 **눈검증 후 1장 승격**(정식 파일명+카탈로그 등록, cand/ 정리). 세션은 다운로드 차단이라 취득은 Actions.
 - **국내 증시 수집**: `krMarketCli`(야후 파이낸스 차트 API) → `data/datasets/kr-market-2026.json`. `kr-market.yml`(수동+평일 cron). 발행 전 헤드라인 수치(현재·고점) KRX/언론 교차확인 후 verified 승격.
 - **캡션 금지어에 '수익률' 포함**(투자 뉘앙스 회피) — 상승/오름세로 우회. 규칙은 `packages/pipeline/src/review/rubric.ts`.
+
+### 관제탑 호스팅 (2026-07-26 배선 완료)
+- 주소: `https://wirit-tower.engineerest0.workers.dev/` (관제탑) · `/ideas.html` (소재 보드)
+- 배포: `.github/workflows/tower-deploy.yml` — push·매일 06:00 KST·수동. CI가 카드를 다시 그려 **썸네일 포함**
+- 문 잠금: `packages/tower-worker` 워커가 서버 측에서 비번 검사. `TOWER_PASSWORD` 시크릿이 **없으면 공개 상태**(경고 출력)
+- ⚠️ Cloudflare Access는 쓰지 않는다 — 대시보드 버그로 생성 불가했고 workers.dev 보호 여부도 불확실
 
 ### 관제탑 실시간화 (오너 질문 07-25 → 답변 문서화)
 - 단계별 안내: `docs/guides/control-tower-realtime.md` (1 고정주소 → 2 자동갱신 → 3 직접저장 → 4 기기동기화 → 5 자동발굴 → 6 웹서비스)

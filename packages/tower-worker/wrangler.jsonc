@@ -1,0 +1,15 @@
+{
+  // 관제탑 배포 설정 — 정적 사이트(_site)를 워커가 비밀번호 문 뒤에서 서빙한다.
+  // 배포: npx wrangler deploy  (CI가 CLOUDFLARE_API_TOKEN·CLOUDFLARE_ACCOUNT_ID로 인증)
+  "name": "wirit-tower",
+  "main": "src/worker.js",
+  "compatibility_date": "2025-01-01",
+  "assets": {
+    // 빌드 산출물. gitignore 대상이며 CI가 매 배포마다 새로 만든다.
+    "directory": "./_site",
+    "binding": "ASSETS",
+    // 워커가 모든 요청을 먼저 받아 인증한 뒤 ASSETS로 넘긴다(문을 못 지나치게).
+    "run_worker_first": true
+  },
+  "observability": { "enabled": true }
+}

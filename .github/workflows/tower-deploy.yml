@@ -1,0 +1,120 @@
+name: 관제탑 배포 (Cloudflare)
+
+# 저장소 산출물 → 카드 재생성·렌더 → 관제탑 사이트 조립 → Cloudflare Workers 게시.
+#
+# 왜 카드를 CI에서 다시 그리나:
+#   콘텐츠 JSON(data/content)과 카드 PNG(data/out)는 용량 때문에 저장소에 안 넣는다(gitignore).
+#   대신 재료(data/datasets 실거래·정책 데이터)는 커밋돼 있으므로, 여기서 다시 그리면
+#   저장소를 깨끗하게 두면서도 관제탑에 썸네일이 들어간다.
+#
+# 필요한 저장소 시크릿:
+#   CLOUDFLARE_API_TOKEN    (필수) Workers Scripts: Edit 권한
+#   CLOUDFLARE_ACCOUNT_ID   (필수)
+#   TOWER_PASSWORD          (선택) 넣으면 관제탑에 비밀번호 문이 생긴다. 없으면 문 없이 공개.
+on:
+  push:
+    branches:
+      - claude/instagram-content-automation-roadmap-fxnb7p
+    paths:
+      - "research/**"
+      - "company/**"
+      - "prompts/**"
+      - "data/datasets/**"
+      - "scripts/build-idea-board.mjs"
+      - "scripts/build-tower-site.mjs"
+      - "packages/dashboard-static/**"
+      - "packages/tower-worker/**"
+      - ".github/workflows/tower-deploy.yml"
+  schedule:
+    - cron: "0 21 * * *" # 매일 06:00 KST
+  workflow_dispatch:
+
+concurrency:
+  group: tower-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      # 시크릿을 if 조건에서 바로 못 쓰므로 불린으로 한 번 옮긴다
+      HAS_PASSWORD: ${{ secrets.TOWER_PASSWORD != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: 셀프테스트(관제탑 파서 + 게이트 잠금)
+        run: |
+          pnpm --filter @wirit/dashboard-static selftest
+          pnpm --filter @wirit/tower-worker selftest
+
+      - name: Chromium 설치(카드 렌더용)
+        run: pnpm --filter @wirit/renderer exec playwright-core install --with-deps chromium chromium-headless-shell
+
+      # 썸네일 복구 — 재료(data/datasets)에서 카드를 다시 그린다.
+      # 개별 빌더가 실패해도 배포는 계속(관제탑의 나머지 정보는 정상 표시).
+      - name: 카드 재생성
+        continue-on-error: true
+        run: |
+          set +e
+          node scripts/build-tohuh-rank.mjs   202606 2026-07-23 16
+          node scripts/build-singoga-map.mjs  202606 2026-07-23 8
+          node scripts/build-index-2026.mjs
+          node scripts/build-map-rank.mjs 84
+          node scripts/build-map-rank.mjs 59
+          exit 0
+
+      - name: 카드 렌더(PNG)
+        continue-on-error: true
+        run: |
+          set +e
+          shopt -s nullglob
+          for f in data/content/*/*.json; do
+            echo "▶ render $f"
+            pnpm --filter @wirit/renderer render -- --data "$f" --out data/out
+          done
+          exit 0
+
+      - name: 사이트 조립
+        run: node scripts/build-tower-site.mjs
+
+      - name: Cloudflare 게시
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: packages/tower-worker
+          command: deploy
+
+      # 비밀번호 문 — TOWER_PASSWORD 시크릿이 있을 때만 건다.
+      # 없으면 워커가 문 없이 통과시키므로(자물쇠 사고 방지) 배포 자체는 정상.
+      - name: 비밀번호 설정
+        if: env.HAS_PASSWORD == 'true'
+        working-directory: packages/tower-worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          TOWER_PASSWORD: ${{ secrets.TOWER_PASSWORD }}
+        run: printf '%s' "$TOWER_PASSWORD" | npx --yes wrangler@4 secret put TOWER_PASSWORD
+
+      - name: 문 상태 확인
+        run: |
+          if [ "$HAS_PASSWORD" = "true" ]; then
+            echo "🔐 비밀번호 문 적용됨"
+          else
+            echo "::warning::TOWER_PASSWORD 시크릿이 없어 관제탑이 공개 상태입니다. 저장소 Settings → Secrets에서 추가하세요."
+          fi
+
+      - name: 결과 안내
+        run: |
+          echo "### 관제탑 배포 완료 :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- 관제탑: https://wirit-tower.engineerest0.workers.dev/" >> $GITHUB_STEP_SUMMARY
+          echo "- 소재 보드: https://wirit-tower.engineerest0.workers.dev/ideas.html" >> $GITHUB_STEP_SUMMARY
