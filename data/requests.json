@@ -41,7 +41,9 @@
       "about": "🏢 브랜드 계급도 ⚠️민감",
       "auto": "order",
       "run": "",
-      "done": false
+      "done": false,
+      "order": "research/work-orders/브랜드-계급도-민감-revise.md",
+      "result": "작업지시서 생성됨 — 제작 대기"
     }
   ]
 }
