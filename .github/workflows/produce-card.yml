@@ -1,0 +1,64 @@
+name: 카드 제작 (관제탑 버튼)
+
+# 오너가 관제탑에서 [제작 실행]을 누르면 여기로 온다 — 클로드 세션 없이 돈다.
+#
+# 되는 것: 빌더(builders.json)가 있는 카드의 재생산 — 최신 데이터로 다시 계산해
+#          렌더·자동검수까지. 정기물(토허제 월간·증시·실거래 랭킹)이 전부 여기 해당.
+# 안 되는 것: 빌더가 없는 새 소재의 첫 제작 — 데이터 소스 판단·코드 작성이 필요해
+#          작업 세션(사람+AI)이 한다. 관제탑 화면이 그 구분을 그대로 말한다.
+on:
+  workflow_dispatch:
+    inputs:
+      label:
+        description: "발행 세트 라벨 (data/review/sets.json)"
+        required: true
+
+permissions:
+  contents: write # 검수 리포트를 커밋한다
+  actions: write # 끝나면 관제탑 배포를 이어서 건다
+
+concurrency:
+  group: produce-${{ inputs.label }}
+  cancel-in-progress: false # 제작을 중간에 끊으면 반쪽 산출물이 남는다
+
+jobs:
+  produce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Chromium 설치(렌더용)
+        run: pnpm --filter @wirit/renderer exec playwright-core install --with-deps chromium chromium-headless-shell
+
+      - name: 제작 (데이터 → 카드 → 검수)
+        run: node scripts/produce-card.mjs "${{ inputs.label }}"
+
+      - name: 검수 리포트 커밋
+        run: |
+          git config user.name  "wirit-bot"
+          git config user.email "noreply@github.com"
+          if [ -n "$(git status --porcelain -- data/review)" ]; then
+            git add -- data/review
+            git commit -m "제작: ${{ inputs.label }} 재생산 (관제탑 버튼)"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          else
+            echo "리포트 변경 없음"
+          fi
+
+      # 카드 PNG는 저장소에 안 남으므로(용량), 배포가 다시 그려서 화면·내려받기에 반영한다.
+      # 위 커밋이 배포를 자동으로 깨우지만, 커밋이 없을 때도 확실히 깨운다.
+      - name: 관제탑 배포 깨우기
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run tower-deploy.yml --ref "${GITHUB_REF_NAME}" || echo "이미 배포가 도는 중일 수 있음"

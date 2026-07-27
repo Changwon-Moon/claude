@@ -495,6 +495,35 @@ if (wkTicket) {
   await q(`closeDrawer()`);
 }
 
+/* ── J. 관제탑 단독 제작 (2026-07-26 "대시보드에서 제작 명령을 못 내리잖아") ──
+ * 빌더 있는 세트 = 버튼이 있고, 누르면 제작 워크플로가 실제로 걸린다.
+ * 빌더 없는 것 = 거짓 버튼 대신 "작업 세션 필요"를 말한다. */
+console.log("\n[J. 관제탑 단독 제작]");
+check("기계 재생산 목록이 상태에 실림", await q(`Array.isArray(STATE.builders) && STATE.builders.length >= 5`));
+await page.click('.tab[data-v="archive"]');
+await page.waitForTimeout(300);
+check("보관함에 [다시 제작] 버튼(빌더 있는 세트)", await q(`
+  document.querySelectorAll(".fremake[data-remake]").length >= 3`));
+check("빌더 없는 세트엔 버튼 대신 '작업 세션 필요' 안내", await q(`
+  [...document.querySelectorAll(".folder .fitem")].every(el=>
+    el.querySelector(".fremake") || /작업 세션/.test(el.textContent))`));
+await q(`
+  window.__made=[];
+  GH._chain=Promise.resolve();
+  GH.api = async (path, opts) => {
+    opts=opts||{};
+    if (path.indexOf("/dispatches") > -1) { window.__made.push(path); return {}; }
+    if (opts.method === "PUT") return {};
+    if (path.indexOf("/git/ref/heads/") > -1) return { object:{sha:"H"} };
+    if (path.indexOf("/contents/") > -1) return { sha:"s", content: btoa(unescape(encodeURIComponent(JSON.stringify({items:[]})))) };
+    return {};
+  };
+`);
+await page.click(".fremake[data-remake]");
+await page.waitForTimeout(900);
+check("버튼을 누르면 제작 워크플로가 실제로 걸림", await q(`
+  window.__made.some(p=>p.indexOf("produce-card.yml")>-1)`), await q(`JSON.stringify(window.__made)`));
+
 check("콘솔·페이지 오류 없음", errors.length === 0, errors.slice(0, 3).join(" | "));
 
 await browser.close();

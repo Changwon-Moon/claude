@@ -235,4 +235,6 @@ export interface TowerState {
   perf: { rows: PerfRow[]; path: string };
   /** 요청 대장 — 오너가 시킨 일의 접수·담당·처리 상태 (data/requests.json) */
   requests: RequestRow[];
+  /** 기계 재생산이 가능한 세트 라벨들(builders.json) — 관제탑 [제작 실행] 버튼의 근거 */
+  builders: string[];
 }

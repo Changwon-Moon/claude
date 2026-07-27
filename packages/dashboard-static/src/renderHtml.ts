@@ -1120,6 +1120,7 @@ function since(ts){
 function whoWhen(r){
   if(r.done) return { who:"완료", when:r.result||"처리됨", tone:"ok" };
   if(r.auto==="digest") return { who:"자동 수집", when:"보통 2~3분 · 끝나면 소재 보드에 자동으로 뜹니다", tone:"run" };
+  if(r.auto==="machine") return { who:"자동 제작", when:"보통 5~8분 · 끝나면 결재 대기·보관함에 새 카드가 뜹니다", tone:"run" };
   if(r.auto==="order") return r.order
     ? { who:"작업 세션(사람)", when:"작업지시서가 준비됐습니다 — 다음 작업 세션에서 제작합니다", tone:"hand" }
     : { who:"자동 정리", when:"매일 07:00 정리 때 작업지시서가 만들어집니다 · [지금 실행] 가능", tone:"run" };
@@ -1206,6 +1207,27 @@ function renderReqs(){
     box.appendChild(el);
   });
 }
+
+/**
+ * 카드 재생산 — 관제탑 버튼만으로 제작이 돈다(클로드 세션 불필요).
+ * 빌더(builders.json)가 있는 세트만 이 버튼이 붙는다. 새 소재의 첫 제작은
+ * 데이터 소스 판단·코드 작성이 필요해서 작업 세션 몫이다 — 화면이 그렇게 말한다.
+ */
+async function runProduce(label, title){
+  if(!label) return;
+  if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
+  jobStart("make-"+label,"카드 제작 중 — "+label);
+  try{
+    await GH.dispatch("produce-card.yml",{label:label});
+    await logRequest("카드 재생산", (title||label)+" — 최신 데이터로 다시 제작", title||label, "machine");
+    jobEnd("make-"+label,"제작을 시작했습니다 — 5~8분 뒤 자동 반영");
+    startWatching();
+  }catch(e){ const m=shortErr(e); jobEnd("make-"+label, m, true); }
+}
+document.addEventListener("click",(e)=>{
+  const b=e.target.closest&&e.target.closest(".fremake");
+  if(b) runProduce(b.dataset.remake, b.dataset.remake);
+});
 
 /** 파이프라인 정리를 지금 돌린다 — 매일 07:00까지 기다리지 않아도 된다 */
 async function runTick(btn){
@@ -1454,6 +1476,8 @@ function buildDetail(t){
       for(let k=1;k<=n;k++)
         proof+='<a class="itool dl" download href="download/'+esc(t.setLabel)+'-'+k+'.jpg">'+k+'장 JPG</a>';
       if(t.caption) proof+='<button class="itool" data-act="copycap">캡션 복사</button>';
+      if((STATE.builders||[]).indexOf(t.setLabel)>-1)
+        proof+='<button class="itool" data-act="remake" data-remake="'+esc(t.setLabel)+'">🔁 최신 데이터로 다시 제작</button>';
       proof+='</div></div>';
     }
   }
@@ -1572,6 +1596,7 @@ function wireActions(t){
       }
       // 복사는 기록이 아니다 — 연결 없이도 된다
       if(a==="copywork"){ copyText(workOrderText(t), b, "복사됨 ✓ — 채팅에 붙여넣으세요"); return; }
+      if(a==="remake"){ runProduce(b.dataset.remake, t.title); return; }
       // 미연결이면 기록이 남지 않으므로 아예 진행하지 않는다
       if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
 
@@ -2246,11 +2271,17 @@ function archiveHtml(state: TowerState): string {
           </summary>
           <div class="fbody">
             ${shots.length
-              ? `<div class="fcards"><div class="eyebrow">완성 카드 ${shots.length}장</div>
+              ? `<div class="fcards"><div class="eyebrow">완성 카드 ${shots.length}장 — 누르면 원본이 열립니다(수동 업로드용)</div>
                  <div class="fstrip">${shots
-                   .map((k, i) => `<img src="${esc(state.images[k] || "")}" alt="${i + 1}장" loading="lazy">`)
+                   .map((k, i) => `<a href="${esc(state.images[k] || k)}" target="_blank" rel="noopener"><img src="${esc(
+                     state.images[k] || k
+                   )}" alt="${i + 1}장" loading="lazy"></a>`)
                    .join("")}</div></div>`
               : `<div class="howto-note">완성 카드 이미지가 아직 없습니다(다음 배포에서 다시 그려집니다).</div>`}
+            ${state.builders.includes(w.label)
+              ? `<div class="ract" style="margin:10px 0 2px"><button class="itool fremake" data-remake="${esc(w.label)}">🔁 최신 데이터로 다시 제작</button>
+                 <span class="howto-note" style="align-self:center">클로드 없이 돕니다 — 데이터 다시 계산 → 렌더 → 자동검수 → 화면 반영(5~8분)</span></div>`
+              : `<div class="howto-note" style="margin-top:8px">이 카드는 자동 재생산 빌더가 아직 없습니다 — 첫 제작은 작업 세션이 합니다.</div>`}
             ${w.caption
               ? `<div class="fcap"><div class="eyebrow">업로드 캡션</div><pre class="cap">${esc(w.caption)}</pre>
                  <button class="ebtn fcopy" data-cap="${esc(w.label)}">캡션 복사</button></div>`

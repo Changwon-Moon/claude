@@ -472,6 +472,19 @@ export async function buildState(): Promise<TowerState> {
     }
   }
 
+  // 기계 재생산 가능 목록 — builders.json 라벨. 관제탑이 [제작 실행] 버튼을 이 근거로만 단다.
+  // (버튼만 있고 뒤에 아무것도 없는 사고를 막는다 — 빌더 없는 세트엔 버튼이 안 뜬다)
+  let builderLabels: string[] = [];
+  const bPath = join(REPO_ROOT, "data/review/builders.json");
+  if (existsSync(bPath)) {
+    try {
+      const bj = JSON.parse(readFileSync(bPath, "utf8"));
+      builderLabels = (Array.isArray(bj.builders) ? bj.builders : []).map((b: { label?: string }) => String(b.label || "")).filter(Boolean);
+    } catch {
+      /* 명세가 깨져도 화면은 정상 — 버튼만 안 뜬다 */
+    }
+  }
+
   // 발행 승인 후보 = 카드 + 캡션이 다 준비된 것. 캡션이 없으면 올릴 글이 없어 결정 대상이 아니다.
   // (관제탑 결정함과 반드시 같은 기준을 써야 KPI 숫자와 목록이 어긋나지 않는다)
   const readyToPublish = tickets.filter(
@@ -511,6 +524,7 @@ export async function buildState(): Promise<TowerState> {
     archive,
     perf: { rows: perfRows, path: "data/performance.md" },
     requests,
+    builders: builderLabels,
     mining: {
       weights: [
         { label: "부동산", pct: 30 },

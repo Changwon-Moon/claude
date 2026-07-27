@@ -166,6 +166,10 @@ if (PW) {
   }
 }
 
+// 관제탑 단독 제작 (클로드 없이) — 버튼과 배선이 실사이트에 있는가
+has(/data-remake=/, "[다시 제작] 버튼(관제탑 단독 제작)");
+has(/produce-card\.yml/, "제작 워크플로 배선");
+
 // 카드 실물이 들어갔는지 — CI가 렌더한 썸네일
 const imgs = (html.match(/data:image\/(jpeg|png);base64/g) || []).length;
 check("카드 썸네일 포함", imgs > 0, `${imgs}장`);
