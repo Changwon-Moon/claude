@@ -33,6 +33,13 @@ const tower = join(ROOT, "packages/dashboard/index.html");
 if (!existsSync(tower)) throw new Error("관제탑 index.html 생성 실패 — dashboard-static 확인");
 copyFileSync(tower, join(SITE, "index.html"));
 
+// ⚠️ 판번호는 **페이지 자체에도** 박는다. version.txt 만 보면, 엣지에서
+// version.txt 는 새 판인데 index.html 은 옛 판을 주는 시차에 속는다
+// (2026-07-27 run 실패 — 같은 배포에서 스모크는 통과했는데 실사이트만 옛 화면).
+import("node:fs").then(({ appendFileSync }) =>
+  appendFileSync(join(SITE, "index.html"), "\n<!--build:" + (process.env.GITHUB_SHA || "dev") + "-->\n")
+);
+
 // 배포 확인용 판번호 — 어느 커밋의 화면인지.
 // 왜: Cloudflare 게시 후 전 세계 전파가 몇 초~수십 초 걸린다. "12초 대기"처럼
 // 시간을 어림잡으면 옛 화면을 검사하고 실패한다(2026-07-26 run #실패).

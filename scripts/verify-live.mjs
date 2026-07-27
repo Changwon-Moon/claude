@@ -66,26 +66,22 @@ if (gated) {
     process.exit(1);
   }
   /* ── 새 판이 실제로 퍼질 때까지 기다린다 ──
-   * 게시 직후엔 엣지 캐시가 옛 화면을 줄 수 있다. version.txt(빌드 커밋)가
-   * 기대한 커밋과 같아질 때까지 최대 2분 폴링한 뒤에 검사한다.
-   * 시간을 어림잡던 sleep 12 는 이걸로 대체됐다. */
+   * ⚠️ version.txt 를 따로 보면 안 된다 — 엣지에서 version.txt 는 새 판인데
+   * index.html 은 옛 판을 주는 시차가 실제로 있었다(2026-07-27 run 실패).
+   * 검사할 대상은 페이지 자체이므로, **페이지 안의 판번호**(<!--build:sha-->)가
+   * 기대한 커밋이 될 때까지 최대 2분 페이지를 다시 받는다. */
   const wantSha = (process.env.GITHUB_SHA || "").trim();
+  for (let i = 0; i < 12; i++) {
+    const page = await fetch(URL_BASE + "/?v=" + Date.now(), { headers: { Cookie: cookie, "Cache-Control": "no-cache" } });
+    html = await page.text();
+    if (!wantSha || html.includes("<!--build:" + wantSha + "-->")) break;
+    await new Promise((r) => setTimeout(r, 10000));
+  }
   if (wantSha) {
-    let seen = "";
-    for (let i = 0; i < 12; i++) {
-      try {
-        const v = await fetch(URL_BASE + "/version.txt", { headers: { Cookie: cookie, "Cache-Control": "no-cache" } });
-        seen = (await v.text()).trim();
-      } catch { /* 다음 시도 */ }
-      if (seen === wantSha) break;
-      await new Promise((r) => setTimeout(r, 10000));
-    }
-    check("새 판이 전파됨(빌드 커밋 일치)", seen === wantSha,
+    const seen = (html.match(/<!--build:([0-9a-f]+|dev)-->/) || [])[1] || "";
+    check("새 판이 전파됨(페이지 판번호 일치)", seen === wantSha,
       `기대 ${wantSha.slice(0, 7)} · 실제 ${String(seen).slice(0, 7) || "없음"}`);
   }
-
-  const page = await fetch(URL_BASE + "/", { headers: { Cookie: cookie, "Cache-Control": "no-cache" } });
-  html = await page.text();
 }
 
 const kb = Math.round(html.length / 1024);
