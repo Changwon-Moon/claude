@@ -110,7 +110,20 @@ export interface AssetGroup {
 /** 소재(아이디어) 1건. research/ideas.json 이 단일 원천이며 관제탑이 직접 되쓴다. */
 export interface Idea {
   id: string;
+  /**
+   * 분류 = **발행 주기**다(주제가 아니다). daily|weekly|monthly|quarter|yearly|hot|once|todo.
+   * 2026-07-27 오너 지시로 주제별 → 주기별로 재편했다. 오너가 소재 보드에서 묻는 질문이
+   * "이건 무슨 분야지?"가 아니라 "이건 언제 또 내야 하지?"였기 때문이다.
+   */
   cat: string;
+  /** 주제 — 보관함 폴더링에 쓴다(부동산·증시·경제·돈·연봉·교통·생활·생활·통계). */
+  topic?: string;
+  /**
+   * 데이터가 스스로 갱신되는가.
+   *  auto   = 수집기가 이미 돌고 있다 → 관제탑 [🔁 다시 제작] 버튼만으로 최신판이 나온다
+   *  manual = 자료를 사람(작업 세션)이 다시 넣어야 한다 → 정기물로 잡아도 버튼만으론 안 된다
+   */
+  feed?: "auto" | "manual";
   title: string;
   why: string;
   source: string;
@@ -200,6 +213,8 @@ export interface RequestRow {
 export interface IdeaCat {
   key: string;
   label: string;
+  /** 이 주기가 무슨 뜻인지 한 줄 — 보드 그룹 머리에 그대로 뜬다 */
+  note?: string;
 }
 
 export interface TowerState {

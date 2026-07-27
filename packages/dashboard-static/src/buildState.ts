@@ -234,7 +234,8 @@ export async function buildState(): Promise<TowerState> {
     promoted.push({
       id: `idea-${it.id}`,
       title: it.title,
-      topic: catLabel.get(it.cat) || it.cat || "소재",
+      // 주제가 먼저다. cat은 2026-07-27부터 '발행 주기'라서 칸반 라벨로는 뜻이 흐리다.
+      topic: it.topic || catLabel.get(it.cat) || it.cat || "소재",
       tier: "T1",
       fire: false,
       fmt: "미정",

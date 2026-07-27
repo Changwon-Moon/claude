@@ -244,6 +244,7 @@ input,textarea,select{font-family:inherit}
 .igrp h4{margin:0 0 6px;font-size:10.5px;font-weight:800;letter-spacing:.09em;color:var(--faint);
   display:flex;align-items:center;gap:7px;text-transform:uppercase}
 .igrp h4 .c{font-weight:700;font-variant-numeric:tabular-nums}
+.igrp .gnote{margin:-3px 0 6px;font-size:11px;color:var(--faint);line-height:1.4}
 .idea{display:flex;gap:10px;align-items:center;justify-content:space-between;
   border-bottom:1px solid var(--hair);padding:9px 4px 9px 10px;position:relative}
 .idea::before{content:"";position:absolute;left:0;top:9px;bottom:9px;width:2px;border-radius:2px;background:transparent}
@@ -261,6 +262,11 @@ input,textarea,select{font-family:inherit}
 .isrc{font-size:10.5px;color:var(--faint);font-weight:600;white-space:nowrap;max-width:150px;overflow:hidden;text-overflow:ellipsis}
 .isrc.ok{color:var(--cobalt);font-weight:700}
 @media (max-width:820px){.isrc{display:none}}
+/* 자료가 스스로 갱신되나 — 정기물로 삼을 수 있는지가 여기서 갈린다.
+ * 좁은 화면에서 출처(.isrc)는 숨기지만 이 뱃지는 남긴다. 더 중요한 정보다. */
+.ifeed{font-size:9.5px;font-weight:800;letter-spacing:.04em;padding:2px 6px;border-radius:999px;
+  border:1px solid var(--line);color:var(--faint);white-space:nowrap;flex:none}
+.ifeed.auto{color:var(--cobalt);border-color:var(--cobalt)}
 .ibtns{display:flex;gap:2px}
 .ib{width:27px;height:27px;border-radius:7px;border:1px solid transparent;background:transparent;
   color:var(--faint);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;transition:.12s}
@@ -1851,17 +1857,29 @@ function ideaById(id){ return IDEAS.find(x=>x.id===id); }
 /** 소재 보드에 남는 것 = 아직 안 고른 것. 진행·제작완료는 파이프라인/보관함이 맡는다. */
 function isOpenIdea(i){ return !(i.status==="done") && !(Number(i.stage||0)>=1); }
 
+/** 자료가 스스로 갱신되나 — 정기물로 삼을 수 있느냐가 여기서 갈린다.
+ *  auto: 수집기가 이미 돈다 → 보관함 [🔁 다시 제작] 한 번이면 이번 판이 나온다
+ *  manual: 자료를 사람이 다시 넣어야 한다 → 정기로 잡아도 버튼만으론 안 된다 */
+function feedChip(i){
+  if(i.feed==="auto") return '<span class="ifeed auto" title="데이터가 스스로 갱신됩니다 — 버튼 한 번이면 최신판">자동</span>';
+  if(i.feed==="manual") return '<span class="ifeed" title="자료를 사람이 다시 넣어야 합니다 — 채팅으로 주문해 주세요">수동</span>';
+  return "";
+}
+
 function ideaCard(i){
   return '<div class="idea" data-iid="'+esc(i.id)+'">'
     +'<div class="imain"><div class="it">'+esc(i.title)+(i.isNew?'<span class="iflag">NEW</span>':"")+'</div>'
     +'<div class="iw">'+esc(i.why||"")+'</div></div>'
-    +'<div class="iside"><span class="isrc">'+esc(i.source||"출처 미정")+'</span>'
+    +'<div class="iside">'+feedChip(i)+'<span class="isrc">'+esc(i.source||"출처 미정")+'</span>'
     +'<div class="ibtns">'
     +'<button class="ib go" data-ia="go" title="이 소재로 진행 — 파이프라인 기획안으로 올립니다">▶</button>'
     +'<button class="ib sm ed" data-ia="edit" title="수정">✎</button>'
     +'<button class="ib sm dl" data-ia="delete" title="삭제 — 사유를 적으면 회사가 학습합니다">🗑</button>'
     +'</div></div>'
     +'<div class="iedit">'
+    +'<label class="elab">얼마나 자주 낼 것인가<select class="e-c">'
+    + ICATS.map(c=>'<option value="'+esc(c.key)+'"'+(c.key===i.cat?" selected":"")+'>'+esc(c.label)+'</option>').join("")
+    +'</select></label>'
     +'<label class="elab">제목<input class="e-t" value="'+esc(i.title)+'" placeholder="예: 서울 25구 신고가 지도"></label>'
     +'<label class="elab">왜 이 소재인가<input class="e-w" value="'+esc(i.why||"")+'" placeholder="터질 것 같은 이유 한 줄"></label>'
     +'<label class="elab">데이터 출처<input class="e-s" value="'+esc(i.source||"")+'" placeholder="예: 국토부 실거래 + 서울시 행정경계"></label>'
@@ -1887,6 +1905,7 @@ function renderIdeas(){
     const list=open.filter(i=>i.cat===c.key);
     if(!list.length) return;
     html+='<div class="igrp"><h4>'+esc(c.label)+'<span class="c">'+list.length+'</span></h4>'
+      +(c.note?'<p class="gnote">'+esc(c.note)+'</p>':"")
       +list.map(ideaCard).join("")+'</div>';
   });
   box.innerHTML=html||'<div class="empty">고를 소재가 없습니다 — [새 소재 발굴]을 눌러보세요</div>';
@@ -1929,7 +1948,15 @@ function wireIdeas(){
         const t=(card.querySelector(".e-t").value||"").trim();
         if(!t){ toast("제목은 비울 수 없습니다"); return; }
         i.title=t; i.why=(card.querySelector(".e-w").value||"").trim(); i.source=(card.querySelector(".e-s").value||"").trim();
-        queueSave("소재 수정 — "+t); renderIdeas(); toast("수정됨");
+        // 발행 주기 — 바꾸면 소재가 다른 칸으로 옮겨간다. '🆕 분류 대기'를 비우는 유일한 길이다.
+        const sel=card.querySelector(".e-c");
+        const was=i.cat;
+        if(sel&&sel.value) i.cat=sel.value;
+        queueSave("소재 수정 — "+t); renderIdeas();
+        if(was!==i.cat){
+          const lb=(ICATS.find(c=>c.key===i.cat)||{}).label||i.cat;
+          pushDecision("🗂 발행 주기 지정: "+t+" → "+lb, "«"+lb+"» 칸으로 옮겼습니다");
+        } else toast("수정됨");
         return;
       }
       // 🗑 삭제 — 사유를 적으면 학습 신호로 남기고, 비우면 그냥 지운다.
@@ -2026,19 +2053,29 @@ function logRequest(kind, what, about, auto, run){
   });
 }
 
-/** 소재 분류를 내용으로 고른다 — 예전엔 첫 카테고리를 그냥 써서
- *  새로 넣은 소재가 '✅ 제작 완료' 칸에 들어갔다(2026-07-26 오너 화면). */
+/** 소재 분류를 내용으로 고른다.
+ *
+ * 분류 기준이 **주제 → 발행 주기**로 바뀌었다(2026-07-27 오너 지시).
+ * 그래서 "부동산이냐 증시냐"를 맞히는 건 이제 의미가 없다. 맞혀야 할 것은
+ * **이걸 한 번 내고 마느냐, 계속 낼 거냐**인데 그건 오너만 안다.
+ * → 주문 문장에 주기를 말한 흔적이 있으면 그걸 쓰고, 없으면 '🆕 분류 대기'로 보낸다.
+ *
+ * ⚠️ 절대 ICATS의 첫/마지막 칸을 기본값으로 쓰지 않는다. 예전에 그렇게 했다가
+ *    새 소재가 '✅ 제작 완료' 칸에 들어갔다(2026-07-26 오너 화면).
+ */
 function pickCat(text){
   const t=String(text||"");
-  const R=[[/부동산|아파트|전세|월세|분양|재건축|토허|실거래|집값/,"부동산"],
-    [/증시|코스피|코스닥|주식|환율|금리|경제/,"경제"],
-    [/연봉|월급|초봉|자산|저축|투자|소득/,"돈"],
-    [/지하철|교통|철도|GTX|버스/,"지하철"]];
-  for(const [re,key] of R){ if(!re.test(t)) continue;
-    const hit=ICATS.find(c=>c.key.indexOf(key)>-1||c.label.indexOf(key)>-1);
-    if(hit) return hit.key; }
-  const novel=ICATS.find(c=>/참신|통계|novel/.test(c.key+c.label));
-  return (novel||ICATS[ICATS.length-1]||{}).key||"misc";
+  const R=[[/매일|데일리|평일마다|장 ?마감마다/,"daily"],
+    [/매주|주간|주 ?1회|요일마다/,"weekly"],
+    [/매달|매월|월간|달마다|월 ?1회/,"monthly"],
+    [/분기|3개월마다|계절마다/,"quarter"],
+    [/매년|연간|해마다|년 ?1회|1년에 한 번/,"yearly"],
+    [/한 ?번만|일회성|이번만|딱 한 번/,"once"]];
+  for(const [re,key] of R){
+    if(!re.test(t)) continue;
+    if(ICATS.some(c=>c.key===key)) return key;
+  }
+  return (ICATS.find(c=>c.key==="todo")||{}).key||"todo";
 }
 
 function wireIdeaTools(){

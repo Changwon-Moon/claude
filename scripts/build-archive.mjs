@@ -7,7 +7,7 @@
  * 여기서 하나의 색인(data/archive/index.json)으로 묶어 관제탑 보관함 탭이 그걸 읽는다.
  *
  * ── 폴더링 기준: 주제
- * 소재 보드의 분류(research/ideas.json 의 cat)를 1순위로 쓰고,
+ * 소재 보드의 주제(research/ideas.json 의 topic)를 1순위로 쓰고,
  * 매칭되는 소재가 없으면 세트 label 앞자락에서 계열을 유추한다(estate-*, metro-*, index-* …).
  * 사람이 새 주제를 만들 필요 없이, 만들던 대로 만들면 알아서 모인다.
  *
@@ -56,7 +56,6 @@ const read = (p, fb = null) => {
 
 const sets = (read(join(REVIEW, "sets.json"), { sets: [] }) || { sets: [] }).sets || [];
 const ideasDoc = read(join(ROOT, "research/ideas.json"), { cats: [], ideas: [] }) || { cats: [], ideas: [] };
-const cats = ideasDoc.cats || [];
 const ideas = ideasDoc.ideas || [];
 
 /** 계열 접두사 → 주제. 소재 분류로 못 찾을 때의 안전망. */
@@ -64,19 +63,22 @@ const FAMILY = [
   [/^estate|^maprank|^tohuh|^singoga|^apt/, "부동산"],
   [/^metro/, "교통·생활"],
   [/^index|^market/, "증시·경제"],
-  [/^salary|^avg-salary/, "돈·연봉"],
+  [/^salary|^avg-salary|^years-to-buy|^payslip/, "돈·연봉"],
 ];
 
 const norm = (s) => String(s || "").replace(/\s+/g, "").replace(/[·—\-'"']/g, "").toLowerCase();
-const catLabel = new Map(cats.map((c) => [c.key, c.label]));
 
-/** 세트 → 주제. ① 제목이 겹치는 소재의 분류 ② 계열 접두사 ③ 기타 */
+/** 세트 → 주제. ① 제목이 겹치는 소재의 topic ② 계열 접두사 ③ 기타
+ *
+ * ⚠️ 소재의 cat(분류)을 쓰면 안 된다. 2026-07-27부터 cat은 **주제가 아니라 발행 주기**다
+ *    (데일리/주간/월간…). 그걸 폴더 이름으로 쓰면 보관함이 '🔁 정기 · 월간' 같은
+ *    쓸모없는 칸으로 묶인다. 주제는 소재의 topic 필드가 맡는다. */
 function topicOf(set) {
   const n = norm(set.title);
   for (const i of ideas) {
     const m = norm(i.title);
     if (!m) continue;
-    if (n.includes(m) || m.includes(n)) return catLabel.get(i.cat) || i.cat || "기타";
+    if ((n.includes(m) || m.includes(n)) && i.topic) return i.topic;
   }
   for (const [re, label] of FAMILY) if (re.test(set.label)) return label;
   return "기타";

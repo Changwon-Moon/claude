@@ -176,6 +176,15 @@ check("연결 시 권한을 실제로 확인", /actions\/workflows\?per_page=1/.
 has(/id="handoffBtn"/, "[밀린 일 한번에 넘기기] 버튼");
 has(/function allHandoffText/, "밀린 일 묶음 지시문 생성 코드");
 
+// 소재 보드가 발행 주기로 정리됐는가 (2026-07-27 오너 지시)
+has(/정기 · 월간/, "소재 칸이 발행 주기로 서 있음(정기·월간)");
+has(/일회성/, "일회성 칸");
+has(/🆕 분류 대기/, "새로 들어온 소재가 갈 '분류 대기' 칸");
+has(/class="ifeed/, "소재마다 자료 자동갱신 여부 뱃지");
+has(/class="e-c"/, "✎ 수정에서 발행 주기를 바꿀 수 있음");
+check("새 소재가 엉뚱한 칸에 처박히지 않음(첫/마지막 칸 기본값 금지)",
+  !/ICATS\[ICATS\.length-1\]/.test(html) && /c\.key==="todo"/.test(html));
+
 // 카드 실물이 들어갔는지 — CI가 렌더한 썸네일
 const imgs = (html.match(/data:image\/(jpeg|png);base64/g) || []).length;
 check("카드 썸네일 포함", imgs > 0, `${imgs}장`);

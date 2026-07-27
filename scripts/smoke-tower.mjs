@@ -577,6 +577,51 @@ if (backlog > 0) {
     (await q(`window.__copied.length`)) > 50 && (await q(`window.__copied.indexOf("관제탑에 밀려 있는 일")`)) > -1);
 }
 
+/* 소재 보드는 2026-07-27부터 **주제가 아니라 발행 주기**로 묶인다.
+ * 여기서 지키려는 것: ① 칸이 주기로 서 있고 ② 오너가 화면에서 주기를 바꿀 수 있고
+ * ③ 새로 들어온 소재가 엉뚱한 칸(정기·데일리, 제작 완료)에 처박히지 않는다. */
+console.log("\n[M. 소재 정리 — 정기/일회 주기별]");
+await page.click('.tab[data-v="ideas"]');
+await page.waitForTimeout(300);
+const catKeys = await q(`ICATS.map(c=>c.key).join(",")`);
+check("칸이 발행 주기로 서 있다", ["daily", "weekly", "monthly", "quarter", "yearly", "once", "todo"]
+  .every((k) => catKeys.split(",").includes(k)), catKeys);
+check("칸마다 무슨 뜻인지 한 줄 설명", (await q(`document.querySelectorAll("#ideaBody .igrp .gnote").length`)) > 0);
+check("소재마다 자료가 자동 갱신되는지 표시", (await q(`document.querySelectorAll("#ideaBody .ifeed").length`)) > 0);
+check("새로 들어온 소재는 '분류 대기'로 간다(데일리·제작완료 칸에 처박히지 않음)",
+  (await q(`pickCat("아무 말이나 던진 소재")`)) === "todo");
+check("주기를 말하면 알아듣는다", (await q(`pickCat("이거 매달 낼 거야")`)) === "monthly"
+  && (await q(`pickCat("이번 한 번만이면 돼")`)) === "once");
+// 화면에서 주기를 바꿀 수 있어야 '분류 대기'를 비울 수 있다
+const idCad = await q(`document.querySelector("#ideaBody .idea").dataset.iid`);
+await page.click(`.idea[data-iid="${idCad}"] .ib.ed`);
+await page.waitForTimeout(200);
+check("✎ 수정에 발행 주기 선택칸이 있다",
+  await q(`!!document.querySelector('.idea[data-iid="${idCad}"] .e-c')`));
+// 앞 절들이 GH.api를 갈아끼워 왔다 → 여기서 쓰기를 다시 받아 적는 판을 깐다
+await q(`
+  window.__puts=[];
+  GH._chain = Promise.resolve();
+  GH.api = async (path, opts) => {
+    opts = opts || {};
+    if (opts.method === "PUT") { window.__puts.push({path, body:(opts.body||{}).content}); return {}; }
+    if (path.indexOf("/git/ref/heads/") > -1) return { object: { sha: "HEAD1" } };
+    if (path.indexOf("/contents/") > -1) {
+      const isJson = path.indexOf(".json") > -1;
+      const body = isJson ? JSON.stringify({ meta:{}, cats: STATE.ideas.cats, ideas: IDEAS }) : "# 기존";
+      return { sha: "sha", content: btoa(unescape(encodeURIComponent(body))) };
+    }
+    return {};
+  };
+  (function(){ const s=document.querySelector('.idea[data-iid="${idCad}"] .e-c');
+    s.value = s.value==="once" ? "monthly" : "once"; })()`);
+await page.click(`.idea[data-iid="${idCad}"] [data-ia="save"]`);
+await page.waitForTimeout(1300);
+const catPut = await q(`
+  (function(){ const p=window.__puts.filter(x=>x.path.indexOf("ideas.json")>-1).pop();
+    if(!p) return ""; try{ return decodeURIComponent(escape(atob(p.body))); }catch(e){ return ""; } })()`);
+check("주기를 바꾸면 ideas.json에 실제로 저장된다", catPut.includes(`"id": "${idCad}"`), catPut.slice(0, 40));
+
 check("콘솔·페이지 오류 없음", errors.length === 0, errors.slice(0, 3).join(" | "));
 
 await browser.close();

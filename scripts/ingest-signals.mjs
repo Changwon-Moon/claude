@@ -120,20 +120,31 @@ function parseCandidates(text) {
 }
 
 /** 신호 텍스트에서 분류를 고른다 — 없으면 첫 카테고리 */
-function pickCat(c) {
+/**
+ * 새로 수집한 신호를 어느 칸에 넣을 것인가.
+ *
+ * 분류 기준이 **주제 → 발행 주기**로 바뀌었다(2026-07-27 오너 지시).
+ * 갓 수집된 뉴스 신호는 정기물인지 일회성인지 기계가 알 수 없다 — 그건 오너의 판단이다.
+ * 그래서 전부 '🆕 분류 대기'로 보낸다. 오너가 소재 보드에서 ✎로 주기를 정하면 옮겨간다.
+ *
+ * ⚠️ cats[0]을 기본값으로 쓰지 않는다. 그러면 수집물이 전부 '정기 · 데일리' 칸에 쌓인다.
+ */
+function pickCat() {
+  const todo = cats.find((x) => x.key === "todo");
+  return todo ? todo.key : "todo";
+}
+
+/** 주제 — 보관함 폴더링용. 주기(cat)와 별개다. */
+function pickTopic(c) {
   const t = `${c.title} ${c.why} ${c.tier} ${c.section || ""}`;
   const RULES = [
-    [/부동산|아파트|전세|월세|분양|재건축|토허|실거래/, "부동산"],
-    [/증시|코스피|코스닥|주식|환율|금리|경제/, "경제"],
-    [/연봉|월급|초봉|자산|저축|투자/, "돈"],
-    [/지하철|교통|철도|GTX|버스/, "생활"],
+    [/부동산|아파트|전세|월세|분양|재건축|토허|실거래|집값/, "부동산"],
+    [/증시|코스피|코스닥|주식|환율|금리|경제/, "증시·경제"],
+    [/연봉|월급|초봉|자산|저축|투자|소득/, "돈·연봉"],
+    [/지하철|교통|철도|GTX|버스/, "교통·생활"],
   ];
-  for (const [re, key] of RULES) {
-    if (!re.test(t)) continue;
-    const hit = cats.find((x) => x.key.includes(key) || x.label.includes(key));
-    if (hit) return hit.key;
-  }
-  return cats[0]?.key || "misc";
+  for (const [re, label] of RULES) if (re.test(t)) return label;
+  return "생활·통계";
 }
 
 // 이미 있는 것 + 오너가 지운 것은 다시 넣지 않는다
@@ -193,7 +204,9 @@ for (const c of cands) {
   const id = `sig-${latestDate}-${++n}`;
   const item = {
     id,
-    cat: pickCat(c),
+    cat: pickCat(),
+    topic: pickTopic(c),
+    feed: "manual", // 뉴스에서 온 신호는 자료 갱신 통로가 없다 — 정기물로 만들려면 수집기부터
     title: clean(c.title).slice(0, 90),
     why: c.ask ? `지시 "${c.ask}"로 찾은 소재` : clean(c.why).slice(0, 140),
     source: c.ask ? `지시 수집 · ${c.file}` : `자동 수집 · ${c.file}`,
