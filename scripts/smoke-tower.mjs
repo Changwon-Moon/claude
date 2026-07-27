@@ -524,6 +524,35 @@ await page.waitForTimeout(900);
 check("버튼을 누르면 제작 워크플로가 실제로 걸림", await q(`
   window.__made.some(p=>p.indexOf("produce-card.yml")>-1)`), await q(`JSON.stringify(window.__made)`));
 
+/* ── K. 연결 안내가 실제로 필요한 권한을 말하는가 (2026-07-27 모바일 연결) ──
+ * Contents만 안내하면 토큰을 그대로 만든 오너는 "연결됐는데 제작·발굴 버튼이 안 먹는" 상태가 된다.
+ * 관제탑이 워크플로를 dispatch 하므로 Actions 권한이 반드시 필요하다. */
+console.log("\n[K. 연결 안내·검사]");
+await q(`GH.setToken(""); renderConn(); document.getElementById("connpop").classList.add("on");`);
+await page.waitForTimeout(200);
+const popTxt = await q(`document.getElementById("connpop").textContent`);
+check("필요한 권한 2개를 모두 안내(Contents·Actions)",
+  /Contents/.test(popTxt) && /Actions/.test(popTxt), popTxt.slice(0, 80));
+check("기기마다 붙여넣어야 함을 안내(모바일 연동)", /기기마다/.test(popTxt));
+check("휴대폰 단계 안내 존재", await q(`!!document.querySelector("#connpop .connsteps")`));
+// 권한이 모자란 토큰이면 '연결됨'으로 끝내지 않고 알려주는가
+await q(`
+  window.__warned="";
+  GH.api = async (path) => {
+    if (path === "/user") return { login: "smoke" };
+    if (path.indexOf("/actions/workflows") > -1) throw new Error("GitHub 403 · Resource not accessible");
+    if (path.indexOf("/git/ref/heads/") > -1) return { object:{sha:"H"} };
+    if (path.indexOf("/contents/") > -1) return { sha:"s", content: btoa("{}") };
+    return {};
+  };
+  const _t = window.toast; window.toast = (m) => { window.__warned += m; _t && _t(m); };
+  document.getElementById("conntok").value = "github_pat_smoke";
+`);
+await page.click("#connsave");
+await page.waitForTimeout(900);
+check("Actions 권한이 없으면 그 사실을 알려준다", await q(`/Actions 권한/.test(window.__warned)`),
+  await q(`window.__warned`));
+
 check("콘솔·페이지 오류 없음", errors.length === 0, errors.slice(0, 3).join(" | "));
 
 await browser.close();

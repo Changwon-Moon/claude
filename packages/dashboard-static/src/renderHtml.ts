@@ -86,6 +86,11 @@ input,textarea,select{font-family:inherit}
   background:var(--paper);color:var(--text);padding:10px 12px;width:100%}
 .connpop .hint{font-size:11.5px;color:var(--muted);line-height:1.65}
 .connpop .hint a{color:var(--cobalt)}
+.connpop .dim{color:var(--faint)}
+.connpop .connsteps{border:1px solid var(--line);border-radius:var(--r);padding:9px 11px;font-size:12px}
+.connpop .connsteps summary{cursor:pointer;font-weight:800;font-size:12.5px}
+.connpop .connsteps ol{margin:8px 0 6px;padding-left:18px;line-height:1.85;color:var(--muted)}
+.connpop .connsteps b{color:var(--text)}
 .connpop .row{display:flex;gap:8px}
 .connpop .row button{flex:1;font-size:12.5px;font-weight:700;border-radius:var(--r);padding:9px;
   border:1px solid var(--line);color:var(--text)}
@@ -714,10 +719,22 @@ function renderConn(){
       +'<div class="hint">관제탑에서 누르는 모든 결정이 이 저장소에 바로 기록됩니다.</div>'
       +'<div class="row"><button id="conndisc" class="dgr">연결 해제</button><button id="connclose">닫기</button></div>'
     : '<h3>🔌 GitHub 연결</h3>'
-      +'<div class="hint">이 저장소 전용 <b>Fine-grained 토큰</b>이 필요합니다(권한: Contents = Read/Write). '
-      +'토큰은 <b>이 브라우저에만</b> 저장되고 GitHub 외 어디로도 전송되지 않습니다. → '
-      +'<a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener">토큰 만들기 ↗</a></div>'
-      +'<input type="password" id="conntok" placeholder="ghp_... 또는 github_pat_...">'
+      // ⚠️ 권한을 하나라도 빠뜨리면 "연결은 됐는데 버튼이 안 먹는" 상태가 된다.
+      //    Contents = 결정 기록(승인·삭제·지시), Actions = 실행 버튼(소재 발굴·카드 제작).
+      +'<div class="hint">이 저장소 전용 <b>Fine-grained 토큰</b>이 필요합니다. 권한 <b>2개</b>를 켜세요 —'
+      +'<br>· <b>Contents</b> = Read and write <span class="dim">(승인·삭제·지시 기록)</span>'
+      +'<br>· <b>Actions</b> = Read and write <span class="dim">(소재 발굴·카드 제작 실행)</span>'
+      +'<br>토큰은 <b>이 기기의 이 브라우저에만</b> 저장됩니다 — 그래서 <b>기기마다 한 번씩</b> 붙여넣어야 합니다(같은 토큰 재사용 가능). → '
+      +'<a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">토큰 만들기 ↗</a></div>'
+      +'<details class="connsteps"><summary>📱 휴대폰에서 만드는 순서</summary>'
+      +'<ol><li>위 [토큰 만들기] → GitHub 로그인</li>'
+      +'<li><b>Token name</b>: wirit 관제탑 · <b>Expiration</b>: 90 days 이상</li>'
+      +'<li><b>Repository access</b> → Only select repositories → <b>'+esc(GH.owner||"내 계정")+"/"+esc(GH.repo||"claude")+'</b></li>'
+      +'<li><b>Permissions</b> → Repository permissions에서 <b>Contents</b>와 <b>Actions</b>를 각각 <b>Read and write</b>로</li>'
+      +'<li>맨 아래 <b>Generate token</b> → 나온 문자열 복사(<b>이 화면을 벗어나면 다시 못 봅니다</b>)</li>'
+      +'<li>아래 칸에 붙여넣고 [연결하기]</li></ol>'
+      +'<div class="dim">화면이 PC용으로 보이면 브라우저 메뉴에서 «데스크톱 사이트»를 켜면 편합니다.</div></details>'
+      +'<input type="password" id="conntok" placeholder="github_pat_... (붙여넣기)" autocomplete="off" autocapitalize="off" spellcheck="false">'
       +'<div class="row"><button id="connsave" class="prim">연결하기</button><button id="connclose">닫기</button></div>';
   wireConn();
 }
@@ -731,8 +748,21 @@ function wireConn(){
     const t=(document.getElementById("conntok").value||"").trim();
     if(!t){ toast("토큰을 붙여넣으세요"); return; }
     GH.setToken(t);
-    try{ const me=await GH.me(); document.getElementById("connpop").classList.remove("on"); afterConnChange("연결 성공 — "+(me.login||"")); }
+    save.disabled=true; save.textContent="확인 중…";
+    try{
+      // ⚠️ /user 만 물어보면 어떤 토큰이든 통과한다 → "연결됨"인데 버튼은 안 먹는 상태가 된다.
+      //    실제로 쓰는 두 가지를 여기서 직접 확인한다: 저장소 읽기·쓰기(Contents), 워크플로(Actions).
+      const me=await GH.me();
+      const cur=await GH.getFile("data/requests.json");
+      if(cur.sha===null) throw new Error("이 저장소에 접근할 수 없습니다 — 토큰의 Repository access에 "+GH.owner+"/"+GH.repo+"가 있는지 확인하세요");
+      let acts=true;
+      try{ await GH.api("/repos/"+GH.owner+"/"+GH.repo+"/actions/workflows?per_page=1"); }catch(e){ acts=false; }
+      document.getElementById("connpop").classList.remove("on");
+      afterConnChange("연결 성공 — "+(me.login||""));
+      if(!acts) toast("연결됐지만 Actions 권한이 없습니다 — 소재 발굴·카드 제작 버튼이 안 먹습니다. 토큰 권한에 Actions=Read and write를 추가하세요");
+    }
     catch(e){ GH.setToken(""); toast("연결 실패: "+shortErr(e)); }
+    finally{ if(save){ save.disabled=false; save.textContent="연결하기"; } }
   };
 }
 /** 연결 상태가 바뀌면 화면 전체(잠금·결정함·보드·소재)를 다시 맞춘다 */
