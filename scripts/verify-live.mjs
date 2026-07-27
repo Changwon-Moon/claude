@@ -172,6 +172,10 @@ check("연결 안내에 Actions 권한 포함(실행 버튼의 전제)",
 has(/connsteps/, "휴대폰 연결 단계 안내");
 check("연결 시 권한을 실제로 확인", /actions\/workflows\?per_page=1/.test(html));
 
+// 밀린 일 한번에 넘기기 (2026-07-27)
+has(/id="handoffBtn"/, "[밀린 일 한번에 넘기기] 버튼");
+has(/function allHandoffText/, "밀린 일 묶음 지시문 생성 코드");
+
 // 카드 실물이 들어갔는지 — CI가 렌더한 썸네일
 const imgs = (html.match(/data:image\/(jpeg|png);base64/g) || []).length;
 check("카드 썸네일 포함", imgs > 0, `${imgs}장`);

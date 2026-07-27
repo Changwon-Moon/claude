@@ -168,6 +168,15 @@ input,textarea,select{font-family:inherit}
 .reqrow .rwhat{font-size:13px;line-height:1.65;color:var(--text)}
 .reqrow .rwhen{font-size:12px;color:var(--muted);line-height:1.65;margin-top:5px}
 .reqrow .ract{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+/* 밀린 일 묶음 — 하루 한 번 여기만 누르면 되게 눈에 띄는 자리에 */
+.handoff{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;
+  background:color-mix(in srgb,var(--cobalt) 7%,var(--card));
+  border:1px solid color-mix(in srgb,var(--cobalt) 30%,var(--line));
+  border-radius:var(--r-lg);padding:12px 14px}
+.handoff[hidden]{display:none}
+.handoff .hmain{flex:1 1 240px;font-size:13px;line-height:1.6}
+.handoff .dim{color:var(--muted)}
+.itool.prim{background:var(--cobalt);border-color:var(--cobalt);color:#fff;font-weight:800}
 
 /* ══ 파이프라인 ══
    7열 칸반은 여러 사람이 카드를 옮길 때 쓰는 도구다. 여기선 한 사람이,
@@ -1204,7 +1213,9 @@ function renderReqs(){
   const open=openRequests();
   const recent=REQS.filter(r=>r.done).slice(-3);
   const list=open.concat(recent);
-  sec.hidden=list.length===0;
+  const backlog=pendingWork().length;
+  sec.hidden=list.length===0 && backlog===0;
+  renderHandoff();
   if(!list.length) return;
   const cnt=document.getElementById("reqN");
   if(cnt){ cnt.textContent=String(open.length); cnt.hidden=open.length===0; }
@@ -1265,6 +1276,18 @@ document.addEventListener("click",(e)=>{
   if(b) runProduce(b.dataset.remake, b.dataset.remake);
 });
 
+/** 밀린 일 묶음 — 개수를 세어 보여주고, 누르면 지시문 전체를 복사한다 */
+function renderHandoff(){
+  const box=document.getElementById("handoff"); if(!box) return;
+  const n=pendingWork().length;
+  box.hidden=n===0;
+  if(!n) return;
+  const label=document.getElementById("handoffN");
+  if(label) label.textContent=n+"건";
+  const b=document.getElementById("handoffBtn");
+  if(b) b.onclick=()=>copyText(allHandoffText(), b, "복사됨 ✓ — 채팅에 붙여넣으세요");
+}
+
 /** 파이프라인 정리를 지금 돌린다 — 매일 07:00까지 기다리지 않아도 된다 */
 async function runTick(btn){
   if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
@@ -1274,6 +1297,59 @@ async function runTick(btn){
     jobEnd("tick","처리를 시작했습니다 — 끝나면 자동 반영");
     startWatching();
   }catch(e){ const m=shortErr(e); jobEnd("tick", m, true); }
+}
+
+/**
+ * 지금 사람(작업 세션)을 기다리는 일을 전부 모은다.
+ *
+ * ── 왜 (2026-07-27 오너)
+ * 관제탑은 요청을 받아 두지만, 새 카드 제작·코드 수정은 작업 세션이 해야 한다.
+ * 건마다 [지시문 복사]를 누르면 오너가 채팅을 여러 번 열어야 한다.
+ * → 밀린 걸 한 덩어리로 묶어 **하루 한 번 붙여넣기**로 끝내게 한다.
+ */
+function pendingWork(){
+  const out=[];
+  // ① 요청 대장에서 사람 몫으로 남은 것
+  openRequests().forEach(r=>{
+    if(r.auto==="digest") return;              // 수집은 기계가 한다
+    out.push({ kind:r.kind, title:r.about||r.what, what:r.what, order:r.order||"" });
+  });
+  // ② 파이프라인에서 제작을 기다리는 티켓(기획안·제작중·검수대기)
+  S.tickets.forEach(t=>{
+    const fl=t.flags||[];
+    if(t.stage<1||t.stage>3) return;
+    if(fl.includes("버림")||fl.includes("실험")) return;
+    if(out.some(o=>sameTitle(o.title,t.title))) return;   // 요청 대장과 겹치면 한 번만
+    out.push({ kind:"카드 제작", title:t.title, what:(t.comments||[]).join(" / ")||"작업지시서대로 제작",
+      order:t.ideaId?"research/work-orders/"+t.ideaId+".md":"" });
+  });
+  // ③ 카드는 있는데 캡션이 없어 결재로 못 올라가는 것
+  S.tickets.forEach(t=>{
+    const fl=t.flags||[];
+    if(t.stage!==4||t.caption||fl.includes("버림")||fl.includes("실험")) return;
+    if(!t.setLabel) return;                    // 발행 세트에 등록된 것만
+    out.push({ kind:"캡션 작성", title:t.title, what:"카드는 나왔는데 캡션이 없어 결재로 못 올라갑니다",
+      order:"data/review/captions/"+t.setLabel+".txt" });
+  });
+  return out;
+}
+
+/** 밀린 일 전부를 한 번에 시키는 지시문 — 채팅에 붙여넣으면 그날 치가 끝난다 */
+function allHandoffText(){
+  const list=pendingWork();
+  const L=["wirit 관제탑에 밀려 있는 일입니다. 아래를 순서대로 처리해주세요.",""];
+  list.forEach((w,i)=>{
+    L.push((i+1)+") ["+w.kind+"] "+w.title);
+    if(w.what && w.what!==w.title) L.push("   요청: "+w.what);
+    if(w.order) L.push("   참고: "+w.order);
+  });
+  L.push("", "공통 규칙:",
+    "· 수치는 raw 데이터에서 코드로 추출한다(LLM이 만들지 않는다) · provenance 기록",
+    "· 렌더 결정성·designQa 통과 → 캡션 → 자동검수 PASS",
+    "· 새 카드는 data/review/sets.json 과 builders.json 에 등록한다(등록해야 관제탑에 뜬다)",
+    "· 끝나면 data/pipeline-state.json 의 revise 와 data/requests.json 을 정리한다",
+    "· 커밋·푸시하면 배포가 카드까지 다시 그린다");
+  return L.join("\n");
 }
 
 /** 티켓 하나를 작업 세션에 시키는 지시문 — 붙여넣으면 바로 제작이 시작되게 필요한 걸 다 담는다 */
@@ -2485,6 +2561,11 @@ export function renderTowerBody(state: TowerState): string {
   <div class="inbox" id="reqsec" hidden>
     <h2>내가 시킨 일<span class="n num" id="reqN" hidden>0</span></h2>
     <p class="reqlead">시킨 일이 지금 어디까지 왔는지, <b>누가 하고 언제 되는지</b>를 그대로 적습니다.</p>
+    <div class="handoff" id="handoff" hidden>
+      <div class="hmain"><b id="handoffN">0건</b>이 작업 세션을 기다리고 있습니다
+        <span class="dim">— 한 번에 복사해 채팅에 붙여넣으면 그날 치가 끝납니다</span></div>
+      <button class="itool prim" id="handoffBtn">📋 밀린 일 한번에 넘기기</button>
+    </div>
     <div id="reqBody"></div>
   </div>
 </section>

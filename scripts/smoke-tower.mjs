@@ -553,6 +553,30 @@ await page.waitForTimeout(900);
 check("Actions 권한이 없으면 그 사실을 알려준다", await q(`/Actions 권한/.test(window.__warned)`),
   await q(`window.__warned`));
 
+/* ── L. 밀린 일 한번에 넘기기 (2026-07-27 오너 요청) ──
+ * 건마다 복사하면 채팅을 여러 번 열어야 한다. 하루 한 번으로 끝나야 한다. */
+console.log("\n[L. 밀린 일 묶음]");
+await q(`closeDrawer && closeDrawer()`);
+await page.click('.tab[data-v="today"]');
+await page.waitForTimeout(300);
+const backlog = await q(`pendingWork().length`);
+check("밀린 일을 세어서 알려준다", backlog >= 0 && typeof backlog === "number", `${backlog}건`);
+if (backlog > 0) {
+  check("밀린 일 묶음 칸이 보인다", await q(`document.getElementById("handoff").offsetParent !== null`));
+  check("개수를 화면에 적는다", (await q(`document.getElementById("handoffN").textContent`)).includes(String(backlog)));
+  const txt = await q(`allHandoffText()`);
+  check("지시문에 모든 건이 번호로 들어간다",
+    txt.includes("1)") && (backlog < 2 || txt.includes("2)")), txt.split("\n")[0]);
+  check("지시문에 오보 0 규칙이 들어간다", txt.includes("코드로 추출"));
+  check("지시문에 등록 규칙이 들어간다", txt.includes("builders.json"));
+  // 눌러서 실제로 복사되는가 (클립보드를 가로채 확인)
+  await q(`window.__copied=""; navigator.clipboard.writeText = async (t) => { window.__copied = t; };`);
+  await page.click("#handoffBtn");
+  await page.waitForTimeout(400);
+  check("버튼을 누르면 지시문 전체가 복사된다",
+    (await q(`window.__copied.length`)) > 50 && (await q(`window.__copied.indexOf("관제탑에 밀려 있는 일")`)) > -1);
+}
+
 check("콘솔·페이지 오류 없음", errors.length === 0, errors.slice(0, 3).join(" | "));
 
 await browser.close();
