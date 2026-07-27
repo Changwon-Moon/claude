@@ -12,6 +12,13 @@ on:
       label:
         description: "발행 세트 라벨 (data/review/sets.json)"
         required: true
+  # ⚠️ 등록용 — 수동 실행 전용 워크플로는 한 번도 안 돌면 GitHub에 등록되지 않아
+  #    관제탑 버튼(dispatch)이 404를 받는다. 이 파일이 바뀌면 한 번 돌아 자신을 등록한다.
+  push:
+    branches:
+      - claude/instagram-content-automation-roadmap-fxnb7p
+    paths:
+      - ".github/workflows/produce-card.yml"
 
 permissions:
   contents: write # 검수 리포트를 커밋한다
@@ -22,7 +29,15 @@ concurrency:
   cancel-in-progress: false # 제작을 중간에 끊으면 반쪽 산출물이 남는다
 
 jobs:
+  # push(등록용)로 들어오면 이 잡만 돌고 끝난다 — 제작은 label 이 있어야 한다
+  register:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "produce-card 등록 완료 — 이제 관제탑 버튼(dispatch)이 이 워크플로를 찾을 수 있다"
+
   produce:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
