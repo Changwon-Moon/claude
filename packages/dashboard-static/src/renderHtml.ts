@@ -352,6 +352,9 @@ input,textarea,select{font-family:inherit}
 .thumb{width:150px;border-radius:8px;border:1px solid var(--line);display:block}
 
 .dlrow{display:flex;gap:6px;flex-wrap:wrap;padding:10px 12px}
+/* 좁은 화면에서 버튼 5개가 한 줄에 끼면 글자가 "중단·삭 제"처럼 세로로 깨진다.
+   줄바꿈을 막고 최소폭을 줘서, 안 들어가면 아래 줄로 내려가게 한다. */
+.acts .btn{white-space:nowrap;min-width:max-content}
 .itool.dl{text-decoration:none}
 /* 발행 승인 — 나갈 물건을 본다 */
 .pv{display:flex;flex-direction:column;gap:9px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:13px 14px}
@@ -1152,8 +1155,8 @@ function whoWhen(r){
   if(r.auto==="digest") return { who:"자동 수집", when:"보통 2~3분 · 끝나면 소재 보드에 자동으로 뜹니다", tone:"run" };
   if(r.auto==="machine") return { who:"자동 제작", when:"보통 5~8분 · 끝나면 결재 대기·보관함에 새 카드가 뜹니다", tone:"run" };
   if(r.auto==="order") return r.order
-    ? { who:"작업 세션(사람)", when:"작업지시서가 준비됐습니다 — 다음 작업 세션에서 제작합니다", tone:"hand" }
-    : { who:"자동 정리", when:"매일 07:00 정리 때 작업지시서가 만들어집니다 · [지금 실행] 가능", tone:"run" };
+    ? { who:"오너가 시켜야 함", when:"지시서까지는 준비됐습니다. <b>여기서 저절로 진행되지는 않습니다</b> — [작업 세션에 넘길 지시문 복사]를 눌러 채팅에 붙여넣으면 그때 제작이 시작됩니다", tone:"hand" }
+    : { who:"자동 정리", when:"매일 07:00 정리 때 작업지시서가 만들어집니다 · [지금 처리 돌리기] 가능", tone:"run" };
   return { who:"작업 세션(사람)", when:"자동으로는 처리되지 않습니다 — 작업 세션에 넘겨야 합니다", tone:"hand" };
 }
 /** 한 화면에 보여줄 상한 — 이보다 많으면 접어서 "더 보기"로 연다 */
@@ -1215,13 +1218,16 @@ function renderReqs(){
       +'<span class="rat">'+when+'</span></div>'
       +(r.about?'<div class="rabout">'+esc(r.about)+'</div>':'')
       +'<div class="rwhat">'+esc(r.what||"")+'</div>'
-      +'<div class="rwhen">'+(r.done?"✓ ":"")+esc(w.when)+'</div>';
+      +'<div class="rwhen">'+(r.done?"✓ ":"")+w.when+'</div>'; // when 은 우리가 만든 문구(HTML 허용)
     const bar=document.createElement("div"); bar.className="ract";
     if(r.order){
       const a=document.createElement("a"); a.className="itool"; a.target="_blank"; a.rel="noopener";
       a.href=ghLink(r.order); a.textContent="작업지시서 보기 ↗"; bar.appendChild(a);
     }
-    if(!r.done && r.auto!=="digest"){
+    // ⚠️ 이미 지시서가 만들어진 요청에 '지금 처리 돌리기'를 눌러도 아무 일도 안 일어난다.
+    //    (정리 워크플로는 지시서를 만드는 일까지만 한다 — 제작은 사람 몫)
+    //    효과가 없는 버튼을 두면 오너는 눌러보고 "또 안 되네"를 겪는다. 그래서 뺀다.
+    if(!r.done && r.auto!=="digest" && !r.order){
       const b=document.createElement("button"); b.className="itool"; b.type="button";
       b.textContent="지금 처리 돌리기";
       b.onclick=()=>runTick(b);
@@ -1545,7 +1551,7 @@ function buildDetail(t){
     acts='<div class="stagenote">'
       +(t.stage===1 ? "오너가 승인한 소재입니다. <b>작업지시서까지는 자동</b>, 실제 제작은 <b>작업 세션(사람)</b> 몫입니다 — [제작 지시문 복사]를 눌러 채팅에 붙여넣으면 그 자리에서 제작이 시작됩니다."
         : t.stage===2 ? "<b>자동으로 진행되지 않습니다.</b> 제작(데이터 추출·카드 렌더)은 작업 세션(사람)이 합니다 — [제작 지시문 복사]로 채팅에 붙여넣어 시키세요."
-        : "자동 검수(수치·레이아웃·캡션)를 도는 중입니다.")
+        : "<b>지금은 아무도 손대고 있지 않습니다.</b> 검수는 카드가 만들어질 때 함께 돌고, 그 제작을 시키는 건 오너입니다 — 아래 [제작 지시문 복사].")
       +'</div>'
       +'<button class="btn primary" data-act="push">지시 추가</button>'
       +'<button class="btn ghost" data-act="copywork">제작 지시문 복사</button>'

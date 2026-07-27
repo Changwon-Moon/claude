@@ -54,9 +54,10 @@
       "about": "서울 아파트 실거래 랭킹 59㎡ (2026 상반기)",
       "auto": "order",
       "run": "",
-      "done": false,
+      "done": true,
       "order": "research/work-orders/서울-아파트-실거래-랭킹-59-2026-상반기-revise.md",
-      "result": "작업지시서 생성됨 — 제작 대기"
+      "result": "수정 완료 — 빌더가 서울 25개구만 읽도록 고쳤습니다(경기도 제거). 재생산·검수 PASS",
+      "doneAt": "2026-07-27"
     },
     {
       "id": "req-ms1wf2zp",
@@ -67,9 +68,10 @@
       "about": "서울 아파트 실거래 랭킹 84㎡ (2026 상반기)",
       "auto": "order",
       "run": "",
-      "done": false,
+      "done": true,
       "order": "research/work-orders/서울-아파트-실거래-랭킹-84-2026-상반기-revise.md",
-      "result": "작업지시서 생성됨 — 제작 대기"
+      "result": "수정 완료 — 빌더가 서울 25개구만 읽도록 고쳤습니다(경기도 제거). 재생산·검수 PASS",
+      "doneAt": "2026-07-27"
     }
   ]
 }

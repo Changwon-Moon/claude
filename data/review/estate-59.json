@@ -1,23 +1,23 @@
 {
-  "label": "estate-84",
+  "label": "estate-59",
   "verdict": "pass",
   "summary": "PASS — error 0 · warn 0 · 카드 3장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
-      "file": "estate-cover-84.json",
+      "file": "estate-cover-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
     },
     {
-      "file": "maprank-84-p1.json",
+      "file": "maprank-59-p1.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
     },
     {
-      "file": "maprank-84-p2.json",
+      "file": "maprank-59-p2.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []

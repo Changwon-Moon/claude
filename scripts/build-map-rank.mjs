@@ -27,7 +27,11 @@ const emblem = readFileSync(join(ROOT, "data/assets/seoul/seoul-logo.svg"), "utf
 
 // 최근 6개월만 사용
 const molitDir = join(ROOT, "data/datasets/molit");
-const files = readdirSync(molitDir).filter((f) => f.endsWith(".json"));
+// ⚠️ **서울만** 읽는다(법정동코드 11xxx). 지역 구분 없이 읽으면 나중에 다른 지역
+//    실거래를 수집하는 순간 이 카드가 조용히 오염된다 — 실제로 그랬다:
+//    7/21 서울 카드가 7/22 경기 수집 후 과천·분당·동탄이 섞인 채로 바뀌었다(2026-07-27 오너 발견).
+//    제목이 "서울 아파트"인데 경기가 들어가면 그건 오보다.
+const files = readdirSync(molitDir).filter((f) => /^11\d{3}-\d{6}\.json$/.test(f));
 const yms = [...new Set(files.map((f) => f.match(/-(\d{6})\.json$/)?.[1]).filter(Boolean))].sort();
 const use6 = yms.slice(-6);
 const byGu = {};

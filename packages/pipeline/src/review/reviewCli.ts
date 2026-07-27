@@ -13,6 +13,7 @@ import { tmpdir } from "node:os";
 import { join, resolve, basename } from "node:path";
 import { renderContentFile, runDesignQa, closeBrowser } from "@wirit/renderer";
 import { lintCaption, captionNumberMatch } from "./captionChecks.js";
+import { scopeMatch } from "./scopeChecks.js";
 import { llmAvailability, reviewImage } from "./llmReview.js";
 import { decideVerdict } from "./types.js";
 import type { Finding, CardResult, ReviewReport } from "./types.js";
@@ -87,6 +88,9 @@ async function main() {
 
     cardResults.push({ file: basename(c), deterministic, qaErrors, findings, png: r1.outputs[0] });
   }
+
+  // 4-0) 범위 정합 — 캡션과 무관하다. 캡션이 없어도 반드시 본다.
+  setFindings.push(...scopeMatch(cardDocs));
 
   // 4) 캡션 검수(세트 레벨)
   if (captionText) {
