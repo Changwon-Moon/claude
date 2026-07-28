@@ -1,0 +1,77 @@
+name: 완성본 보관 (발행 완료)
+
+# 오너가 인스타에 직접 올린 뒤 관제탑에서 [✅ 인스타에 올렸습니다]를 누르면 여기로 온다.
+#
+# 하는 일: 발행 대기열에서 `- [x]` 로 표시된 세트의 **그날 픽셀 그대로**를
+#          published/{발행일}-{label}/ 에 JPEG + 캡션 + 근거로 커밋한다.
+#
+# 안 하는 일: 인스타 업로드. 2026-07-27 오너 결정으로 **발행은 사람이 직접 한다.**
+#            이 워크플로는 "무엇을 발행했는가"를 저장소에 남기는 일만 맡는다.
+on:
+  workflow_dispatch:
+  # ⚠️ 등록용 — 수동 실행 전용 워크플로는 한 번도 안 돌면 GitHub에 등록되지 않아
+  #    관제탑 버튼(dispatch)이 404를 받는다. 이 파일이 바뀌면 한 번 돌아 자신을 등록한다.
+  push:
+    branches:
+      - claude/instagram-content-automation-roadmap-fxnb7p
+    paths:
+      - ".github/workflows/publish-archive.yml"
+      - "data/publish-queue.md"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-archive
+  cancel-in-progress: false # 보관을 중간에 끊으면 반쪽 폴더가 남는다
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Chromium 설치(렌더용)
+        run: pnpm --filter @wirit/renderer exec playwright-core install --with-deps chromium chromium-headless-shell
+
+      # 카드 PNG는 저장소에 없다(용량) → 재료에서 다시 그려야 옮길 실물이 생긴다.
+      # 개별 빌더가 실패해도 나머지는 보관한다.
+      - name: 카드 재생성
+        continue-on-error: true
+        run: node scripts/rebuild-cards.mjs
+
+      - name: 카드 렌더(PNG)
+        continue-on-error: true
+        run: |
+          set +e
+          shopt -s nullglob
+          for f in data/content/*/*.json; do
+            pnpm --filter @wirit/renderer render "$f"
+          done
+          exit 0
+
+      - name: 완성본 저장소로 보관
+        run: node scripts/archive-published.mjs
+
+      - name: 커밋
+        run: |
+          git config user.name  "wirit-bot"
+          git config user.email "noreply@github.com"
+          if [ -n "$(git status --porcelain -- published)" ]; then
+            git add -- published
+            git commit -m "발행 기록: 완성본 보관"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          else
+            echo "새로 보관할 완성본 없음"
+          fi

@@ -75,18 +75,12 @@ export default {
     const expected = await tokenOf(pw);
     const url = new URL(request.url);
 
-    /* /cards/ 만 문 밖에 둔다 — 인스타그램이 이미지를 가져갈 수 있어야 하기 때문.
-     *
-     * 왜 안전한가: 여기 놓이는 파일은 **오너가 발행을 승인한, 곧 공개될 카드**뿐이다.
-     * 인스타 Graph API는 공개 URL로만 이미지를 받으므로 이 통로가 없으면 발행 자체가 불가능하다.
-     * 검색에는 안 걸리게 noindex 를 붙이고, 그 외 경로는 전부 문 뒤에 남는다. */
-    if (url.pathname.startsWith("/cards/")) {
-      const res = await env.ASSETS.fetch(request);
-      const out = new Response(res.body, res);
-      out.headers.set("X-Robots-Tag", "noindex, nofollow");
-      out.headers.set("Cache-Control", "public, max-age=600");
-      return out;
-    }
+    /* ⚠️ 예전에는 /cards/ 를 문 **밖**에 뒀다 — 인스타그램 Graph API가 공개 URL로만
+     * 이미지를 가져가기 때문이었다. 2026-07-27 오너 결정으로 **자동 발행을 하지 않고
+     * 오너가 직접 올리기로** 했다. 그러면 그 통로를 찾아올 상대가 아무도 없다.
+     * 쓸 데 없이 열린 문은 닫는다 — 이제 전 경로가 비밀번호 뒤에 있다.
+     * (오너가 원본을 받는 길은 문 안쪽 /download/ 다. 자동 발행을 다시 켜는 날
+     *  여기에 /cards/ 예외를 되살리면 된다.) */
 
     if (url.pathname === "/__login") {
       if (request.method !== "POST") return loginPage();

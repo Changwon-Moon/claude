@@ -185,6 +185,22 @@ has(/class="e-c"/, "✎ 수정에서 발행 주기를 바꿀 수 있음");
 check("새 소재가 엉뚱한 칸에 처박히지 않음(첫/마지막 칸 기본값 금지)",
   !/ICATS\[ICATS\.length-1\]/.test(html) && /c\.key==="todo"/.test(html));
 
+// 발행은 사람이 한다 — 그 사실이 실사이트에 반영됐는가 (2026-07-27)
+has(/data-act="posted"/, "[✅ 인스타에 올렸습니다] 버튼");
+has(/publish-archive\.yml/, "완성본 보관 워크플로 배선");
+has(/class="pubnote"/, "결재 화면이 '오너가 직접 올린다'고 안내");
+has(/발행 이력/, "성과 화면의 발행 이력 칸");
+check("자동 업로드를 하는 척하는 문구 없음",
+  !/인스타에 자동으로 올라갑|자동 발행됩니다/.test(html));
+
+// 자동 발행을 접었으니 공개 예외도 닫혀 있어야 한다 — 쓸 데 없이 열린 문은 위험이다
+if (PW) {
+  const openCards = await fetch(URL_BASE + "/cards/tohuh-rank-1.jpg");
+  check("공개 카드 경로가 닫혀 있음(자동 발행 폐지)", /비밀번호/.test(await openCards.text()));
+  const openPub = await fetch(URL_BASE + "/published/index.json");
+  check("완성본도 문 안쪽", /비밀번호/.test(await openPub.text()));
+}
+
 // 카드 실물이 들어갔는지 — CI가 렌더한 썸네일
 const imgs = (html.match(/data:image\/(jpeg|png);base64/g) || []).length;
 check("카드 썸네일 포함", imgs > 0, `${imgs}장`);

@@ -6,7 +6,7 @@ import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { join, basename } from "node:path";
 import { P, REPO_ROOT } from "./paths.js";
 import { STAGES, RUBRIC_LABELS } from "./types.js";
-import type { TowerState, Ticket, TimelineEntry, Idea, IdeaCat, Evidence, ArchiveFolder, PerfRow, RequestRow } from "./types.js";
+import type { TowerState, Ticket, TimelineEntry, Idea, IdeaCat, Evidence, ArchiveFolder, PublishedPost, PerfRow, RequestRow } from "./types.js";
 import { parseBrief } from "./parse/brief.js";
 import { parseDecisionLog } from "./parse/decisionLog.js";
 import { parseCeoPrinciples, parseTeamCard } from "./parse/company.js";
@@ -324,6 +324,22 @@ export async function buildState(): Promise<TowerState> {
     }
   }
 
+  /* 완성본 저장소 — **실제로 인스타에 올라간 물건**의 목록(published/index.json).
+   *
+   * ⚠️ 이게 없어서 시스템이 오너에게 거짓말을 했다(2026-07-27): 오너는 직접 올리고 계셨는데
+   *    저장소에는 그 사실을 적을 자리가 없어 "발행 0건"이라고 보고했다.
+   *    이제 [✅ 인스타에 올렸습니다]가 이 목록을 만든다 — 발행 이력의 유일한 사실. */
+  let published: PublishedPost[] = [];
+  const pubPath = join(REPO_ROOT, "published/index.json");
+  if (existsSync(pubPath)) {
+    try {
+      const j = JSON.parse(readFileSync(pubPath, "utf8"));
+      published = Array.isArray(j.posts) ? j.posts : [];
+    } catch {
+      /* 색인이 깨져도 나머지 관제탑은 정상 */
+    }
+  }
+
   // 성과 — data/performance.md 의 표를 읽는다. 인스타 토큰이 붙기 전엔 오너가 손으로 채운다.
   const perfRows: PerfRow[] = [];
   const perfPath = join(REPO_ROOT, "data/performance.md");
@@ -376,8 +392,9 @@ export async function buildState(): Promise<TowerState> {
       if (k.includes(n) || n.includes(k)) { hit = done; break; }
     }
     if (hit === undefined) continue;
-    t.stage = 5; // 발행됨 — 오너의 손을 떠났다
-    if (!hit) t.flags.push("업로드 대기"); // 큐에는 올랐지만 아직 인스타에 안 올라감
+    t.stage = 5; // 승인 완료 — 남은 일은 오너가 직접 올리는 것뿐
+    // `- [ ]` = 승인은 났지만 아직 오너가 안 올림. 올리면 [✅ 인스타에 올렸습니다]로 `- [x]` 가 된다.
+    if (!hit) t.flags.push("업로드 대기");
   }
 
   // ── 오너가 중단한 건 반영 (2026-07-26)
@@ -523,6 +540,7 @@ export async function buildState(): Promise<TowerState> {
     ideas: { path: "research/ideas.json", cats: ideaCats, items: ideaItems },
     recentDrops: recentDrops.slice(-8),
     archive,
+    published,
     perf: { rows: perfRows, path: "data/performance.md" },
     requests,
     builders: builderLabels,

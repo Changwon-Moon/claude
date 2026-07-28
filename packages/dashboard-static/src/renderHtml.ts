@@ -2,7 +2,7 @@
  * TowerState → 정적 관제탑 HTML(자체 완결).
  * 데이터는 주입되고, 이 파일은 그 데이터를 보는 방식(디자인 시스템 + 화면)을 정의한다.
  */
-import type { TowerState } from "./types.js";
+import type { TowerState, PublishedPost } from "./types.js";
 
 const CSS = String.raw`
 /* ══════════════════════════════════════════════════════════════
@@ -245,6 +245,10 @@ input,textarea,select{font-family:inherit}
   display:flex;align-items:center;gap:7px;text-transform:uppercase}
 .igrp h4 .c{font-weight:700;font-variant-numeric:tabular-nums}
 .igrp .gnote{margin:-3px 0 6px;font-size:11px;color:var(--faint);line-height:1.4}
+/* 발행은 사람이 한다 — 그 사실을 결재 화면이 분명히 말한다 */
+.pubnote{flex:1 0 100%;font-size:12px;line-height:1.55;color:var(--faint);
+  background:var(--band);border:1px solid var(--line);border-radius:9px;padding:9px 11px;margin-bottom:2px}
+.pubnote b{color:var(--text)}
 .idea{display:flex;gap:10px;align-items:center;justify-content:space-between;
   border-bottom:1px solid var(--hair);padding:9px 4px 9px 10px;position:relative}
 .idea::before{content:"";position:absolute;left:0;top:9px;bottom:9px;width:2px;border-radius:2px;background:transparent}
@@ -925,9 +929,9 @@ async function refreshFromRepo(){
 }
 
 /* ══ 발행 대기열 ══
- * "발행 승인"이 기록으로만 끝나면 아무 일도 안 일어난다.
- * 승인을 저장소의 발행 큐에 넣어 두면, 발행 워크플로가 이 큐만 보고 올린다.
- * (오너 승인 없이는 큐에 아무것도 안 들어가므로 승인 게이트는 그대로 유지된다) */
+ * [🚀 발행 승인] = "이건 나가도 좋다". 대기열에 미체크 한 줄로 남는다.
+ * 올리는 것은 **오너**다(2026-07-27 결정: 자동 발행 안 함) — 올린 뒤
+ * [✅ 인스타에 올렸습니다]를 누르면 체크로 바뀌고 완성본이 보관된다. */
 function queuePublish(t){
   if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
   setSave("saving");
@@ -936,7 +940,7 @@ function queuePublish(t){
     +(t.caption?"":"  ⚠️ 캡션 없음 — 발행 전 작성 필요");
   GH.append("data/publish-queue.md", line, "관제탑: 발행 승인 — "+short(t))
     .then(()=>GH.append("research/decisions-inbox.md", "- "+ghStamp()+" 🚀 발행 승인: "+t.title, "관제탑: 발행 승인 기록"))
-    .then(()=>{ setSave("ok"); toast("발행 대기열에 올렸습니다 ✓"); })
+    .then(()=>{ setSave("ok"); toast("승인됐습니다 ✓ 이제 JPG를 받아 인스타에 올려주세요"); })
     .catch(e=>{ const m=shortErr(e); setSave("bad","publish-queue.md · "+m); toast("승인 실패: "+m); });
 }
 
@@ -1033,6 +1037,54 @@ function unqueuePublish(t, why){
     .catch(e=>{ const m=shortErr(e); setSave("bad","publish-queue.md · "+m); jobEnd("unq", m, true); });
 }
 
+/* ══ 발행 완료 — "내가 인스타에 올렸다"를 저장소에 남긴다 ══
+ *
+ * ⚠️ 이 버튼이 없어서 시스템이 오너에게 거짓말을 했다(2026-07-27).
+ *    오너는 직접 올리고 계셨는데 그 사실을 적을 자리가 없어 "발행 0건"이라고 보고했다.
+ *    자동 발행을 하지 않기로 한 이상 **올렸다고 말해 줄 사람은 오너뿐**이고,
+ *    도구는 그 말을 받을 칸을 반드시 갖고 있어야 한다.
+ *
+ * 누르면 두 가지가 일어난다:
+ *   ① 발행 대기열의 그 줄이 미체크 → 체크 상태로 바뀐다 (발행 이력)
+ *   ② 완성본 보관 워크플로가 돌아 published/{발행일}-{label}/ 에
+ *      **그날 픽셀 그대로의 JPEG + 캡션 + 근거**를 커밋한다.
+ *      (실거래가 갱신되면 카드 숫자가 바뀐다 — 그때 나간 물건은 따로 굳혀 둬야 한다) */
+function markUploaded(t){
+  if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
+  const PATH="data/publish-queue.md";
+  const key=t.title.replace(/\s+/g,"").toLowerCase();
+  setSave("saving"); jobStart("pubdone","완성본 보관");
+  GH.serial(async()=>{
+    for(let i=0;i<5;i++){
+      const cur=await GH.getFile(PATH);
+      let hit=false;
+      const next=cur.text.split("\n").map(line=>{
+        const m=line.match(/^(\s*-\s*)\[ \](\s*.+)$/);
+        if(!m) return line;
+        const tm=line.match(/\*\*(.+?)\*\*/);
+        const tt=(tm?tm[1]:line).replace(/\s+/g,"").toLowerCase();
+        if(!(tt.indexOf(key)>-1 || key.indexOf(tt)>-1)) return line;
+        hit=true;
+        return m[1]+"[x]"+m[2];
+      }).join("\n");
+      // 대기열에 줄이 없으면(승인 없이 바로 올린 경우) 완료 상태로 새로 적는다
+      const text=hit ? next
+        : (cur.text.replace(/\s*$/,"")+"\n- [x] "+ghStamp()+" **"+t.title+"** · "+(t.fmt||"카드")
+           +" · 원본 "+(t.provenance||"미상")+"\n");
+      try{ return await GH.putFile(PATH, text, "관제탑: 발행 완료 — "+short(t), cur.sha); }
+      catch(e){ if(!GH.isConflict(e)||i===4) throw e;
+        await new Promise(r=>setTimeout(r,400*Math.pow(2,i))); }
+    }
+  })
+    .then(()=>GH.append("research/decisions-inbox.md",
+        "- "+ghStamp()+" 📮 발행 완료(수동 업로드): "+t.title, "관제탑: 발행 완료"))
+    .then(()=>GH.dispatch("publish-archive.yml",{}))
+    .then(()=>{ setSave("ok");
+      jobEnd("pubdone","완성본 저장소로 옮기는 중입니다 — 2~3분 뒤 보관함에 뜹니다");
+      startWatching(); })
+    .catch(e=>{ const m=shortErr(e); setSave("bad","publish-queue.md · "+m); jobEnd("pubdone", m, true); });
+}
+
 /* 결정 1건을 저장소 결정 로그에 바로 기록 */
 function pushDecision(text, msg){
   // 연결돼 있으면 저장소 결정 로그에 바로 남긴다(복사-붙여넣기 우회 없음).
@@ -1105,6 +1157,23 @@ function pendingDecisions(){
     out.push({ kind:"pub", label:"발행 승인", title:t.title,
       note:(t.pages&&t.pages.length?t.pages.length+"장 · ":"")+t.fmt
         +(t.review?" · 자동검수 "+(t.review.verdict==="pass"?"통과":t.review.verdict):" · 자동검수 없음"),
+      thumb:t.thumb||null, go:()=>{ openTab("board"); openDrawer(t.id); } });
+  });
+  /* ①-2 올릴 차례 — 승인은 났고 남은 건 **오너가 인스타에 올리는 일**뿐.
+   * 자동 발행을 하지 않기로 했으므로(2026-07-27) 이건 영원히 오너 몫이다.
+   * 결정함에 안 띄우면 승인만 해 놓고 잊게 되고, 시스템은 계속 '발행 0건'이라 말한다. */
+  const postedSeen=new Set();
+  S.tickets.forEach(t=>{
+    if(t.stage!==5) return;
+    if(!(t.flags||[]).includes("업로드 대기")) return;
+    if((STATE.published||[]).some(p=>p.label===t.setLabel)) return;
+    /* 같은 카드가 두 갈래(결정 로그 티켓 + 렌더 산출물 티켓)로 올라올 수 있다.
+     * 대기열의 한 줄에 대응하는 일은 하나이므로 제목 기준으로 한 번만 띄운다. */
+    const k=String(t.setLabel||t.title).replace(/\s+/g,"").replace(/[·—-]/g,"").toLowerCase();
+    if(postedSeen.has(k)) return;
+    postedSeen.add(k);
+    out.push({ kind:"pub", label:"올릴 차례", title:t.title,
+      note:"승인 완료 — JPG 받아 인스타에 올린 뒤 [✅ 올렸습니다]를 눌러주세요",
       thumb:t.thumb||null, go:()=>{ openTab("board"); openDrawer(t.id); } });
   });
   // ② 소재 — 쌓여 있다고 매일 알리면 그건 영구 알림이지 '오늘 할 일'이 아니다.
@@ -1399,7 +1468,7 @@ const ACT_STAGE=4;                   // 오너의 결재가 필요한 단계
  * 안 나누면 지표의 '결재 대기 5'와 목록의 '승인대기 9'가 어긋나 도구를 못 믿게 된다. */
 const GROUP_ORDER=["ready","nocap",2,3,1,5,6];
 const GROUP_NOTE={1:"소재 승인 후 기획 대기",2:"데이터·카드 제작 중",3:"자동 검수 진행",
-  5:"승인 완료 — 업로드 대기/완료",6:"발행 후 성과",
+  5:"승인 완료 — 오너가 인스타에 올릴 차례(자동 발행 안 함)",6:"발행 후 성과",
   ready:"카드+캡션 준비 완료 — 오너 확인만 남음",
   nocap:"캡션을 써야 결재 목록으로 올라옵니다"};
 const GROUP_TITLE={ready:"결재 대기",nocap:"캡션 대기"};
@@ -1612,11 +1681,19 @@ function buildDetail(t){
       +'<div class="editbox" id="editbox"><textarea id="edittext" placeholder="예) 제목 폰트 키우고 2·3위 재확인해줘"></textarea>'
       +'<button class="btn primary" data-act="editsave">코멘트 남기기</button></div>'+reasonBox();
   } else if(t.stage===5){
-    // 이미 오너의 손을 떠난 건 — 되돌릴 길만 열어 둔다
-    const waiting=(t.flags||[]).includes("업로드 대기");
-    acts='<div class="btn ghost" style="flex:1 0 100%;cursor:default">'
-      +(waiting?"발행 대기열에 올라 있습니다 — 업로드 대기 중":"업로드 완료")+'</div>'
-      +(waiting?'<button class="btn danger" data-act="unqueue">↩ 대기열에서 내리기</button>'+reasonBox():"");
+    /* 승인은 났다. 올리는 사람은 **오너**다(2026-07-27 결정: 자동 발행 안 함).
+     * 그러니 여기서 화면이 할 일은 두 가지뿐이다 —
+     *   ① 올릴 물건(JPG·캡션)을 손에 쥐여 주고
+     *   ② 올렸다는 사실을 받아 적는다. 이 칸이 없으면 시스템은 영원히 '발행 0건'이라 말한다. */
+    const posted=(STATE.published||[]).find(p=>p.label===t.setLabel);
+    if(posted){
+      acts='<div class="btn ghost" style="flex:1 0 100%;cursor:default">'
+        +'📮 '+esc(posted.publishedAt)+' 발행됨 · 완성본 보관 완료('+posted.pages+'장)</div>';
+    } else {
+      acts='<div class="pubnote">인스타에는 <b>오너가 직접</b> 올립니다. 위에서 JPG를 받고 캡션을 복사해 올린 뒤, 아래 버튼을 눌러 주세요.</div>'
+        +'<button class="btn primary" data-act="posted">✅ 인스타에 올렸습니다</button>'
+        +'<button class="btn danger" data-act="unqueue">↩ 대기열에서 내리기</button>'+reasonBox();
+    }
   } else if(t.auto){
     acts='<div class="why">자동 슬롯 — 사후 통보만. 무인 해제는 설정에서.</div>';
   } else {
@@ -1736,6 +1813,10 @@ function wireActions(t){
       if(a==="reject"){ ask("왜 반려하시나요? (해당 팀이 이 이유로 다시 만듭니다)", (why)=>{
         t.stage=2; t.flags=t.flags||[]; if(!t.flags.includes("수정요청")) t.flags.push("수정요청");
         pushDecision("반려: "+t.title+" → 재작업"+(why?" — 이유: "+why:""),"반려 기록됨"); done(ttl+" 반려"); }); }
+      // ✅ 올렸습니다 — 오너만 알 수 있는 사실을 저장소에 받아 적는다
+      if(a==="posted"){
+        if(!confirm("인스타그램에 올리셨나요?\n\n확인을 누르면 발행일이 기록되고, 그때 나간 카드·캡션이\n완성본 저장소(published/)에 그대로 보관됩니다.")) return;
+        markUploaded(t); done(ttl+" 발행 완료"); }
       if(a==="unqueue"){ ask("왜 내리시나요? (기록에 남습니다)", (why)=>{
         t.stage=4; t.flags=(t.flags||[]).filter(f=>f!=="업로드 대기");
         unqueuePublish(t, why); done(ttl+" 대기열에서 내림"); }); }
@@ -2472,6 +2553,50 @@ function archiveHtml(state: TowerState): string {
  * 성과 — 발행한 카드가 실제로 어떻게 됐나.
  * **저장 수**가 우리 계정의 핵심 지표다(저장해두고 다시 볼 카드를 만드는 계정이니까).
  */
+/** 완성본 저장소 — **실제로 올라간 것**의 목록. 성과 화면 맨 위에 둔다.
+ *
+ * 성과 표(도달·저장)는 오너가 손으로 채우는 것이라 비어 있을 수 있다. 그걸 보고
+ * "발행 0건"이라고 읽으면 안 된다 — 발행 사실은 이 목록이 말한다(2026-07-27). */
+function publishedHtml(state: TowerState): string {
+  const posts = state.published || [];
+  const row = (p: PublishedPost): string =>
+    `<div class="prow">
+      <div class="pmain"><div class="pt">${esc(p.title)}</div>
+        <div class="pmeta num">${esc(p.publishedAt || "날짜 미상")} · ${p.pages}장${
+          p.captionChars ? ` · 캡션 ${p.captionChars}자` : ""
+        }${p.verdict ? ` · 검수 ${esc(p.verdict === "pass" ? "통과" : p.verdict)}` : ""}</div></div>
+      <div class="pbars"><a class="itool dl" href="published/${esc(p.dir)}/" target="_blank" rel="noopener">실물 열기</a></div>
+    </div>`;
+
+  const yes = posts.filter((p) => p.confirmed);
+  const no = posts.filter((p) => !p.confirmed);
+
+  let out = "";
+  if (yes.length) {
+    out += `<div class="sect">발행 이력 — ${yes.length}건 (완성본 보관됨)</div>
+      <div class="plist" style="margin-bottom:16px">${yes.map(row).join("")}</div>`;
+  } else {
+    out += `<div class="sect">발행 이력</div>
+      <div class="howto-note" style="margin:0 2px 14px">
+        아직 <b>[✅ 인스타에 올렸습니다]</b>를 누른 건이 없습니다.
+        올리셨다면 <b>파이프라인 → 해당 카드</b>에서 그 버튼을 눌러주세요 —
+        그때 나간 카드·캡션이 <code>published/</code>에 굳어지고 여기 목록에 뜹니다.
+        <br>자동 발행을 하지 않으므로, <b>올렸다는 사실은 오너만 알려주실 수 있습니다.</b>
+      </div>`;
+  }
+  /* ⚠️ 옛 꾸러미를 발행 건수에 섞어 세면 안 된다 — 만들어만 두고 안 올린 것일 수 있다.
+   * 반대로 숨겨도 안 된다. 오너가 이미 올렸는데 시스템이 모르는 상태가 바로 지금 문제다. */
+  if (no.length) {
+    out += `<div class="sect">업로드용으로 만들어 둔 완성본 — ${no.length}건 <span class="c" style="font-weight:600;color:var(--faint)">발행 여부 미확인</span></div>
+      <div class="howto-note" style="margin:0 2px 10px">
+        이전 세션이 <b>넘겨드리려고</b> 만든 꾸러미입니다. 실제로 올리셨는지는 기록이 없습니다.
+        <b>이미 올리신 게 있으면 알려주세요</b> — 발행일과 함께 이력으로 옮겨 놓겠습니다.
+      </div>
+      <div class="plist" style="margin-bottom:18px">${no.map(row).join("")}</div>`;
+  }
+  return out;
+}
+
 function perfHtml(state: TowerState): string {
   const rows = state.perf?.rows || [];
   const { owner, name, branch } = state.repo;
@@ -2479,11 +2604,11 @@ function perfHtml(state: TowerState): string {
     ? `https://github.com/${owner}/${name}/edit/${branch}/${state.perf.path}` : "";
 
   if (!rows.length) {
-    return `<div class="wrap"><div class="sect">성과</div>
-      <div class="allclear"><div class="t">아직 성과 데이터가 없습니다</div>
-      <div class="w">첫 카드를 발행하면 여기에 <b>도달 · 저장 · 좋아요 · 댓글</b>이 쌓입니다.<br>
-      인스타 토큰(<code>IG_ACCESS_TOKEN</code>)이 붙으면 <b>매일 아침 자동으로</b> 채워지고,
-      그 전에는 아래 버튼으로 직접 적으시면 됩니다 — 한 줄이라도 적는 편이 훨씬 낫습니다.</div>
+    return `<div class="wrap">${publishedHtml(state)}<div class="sect">성과</div>
+      <div class="allclear"><div class="t">아직 성과 수치가 없습니다</div>
+      <div class="w">발행한 카드의 <b>도달 · 저장 · 좋아요 · 댓글</b>을 여기에 쌓습니다.<br>
+      인스타 앱의 게시물 인사이트를 보고 <b>아래 버튼으로 직접 적어</b> 주세요 —
+      한 줄이라도 적는 편이 훨씬 낫습니다. 저장 수가 우리 계정의 핵심 지표입니다.</div>
       ${edit ? `<div style="margin-top:10px"><a class="ebtn" href="${esc(edit)}" target="_blank" rel="noopener">성과 직접 입력 ↗</a></div>` : ""}
       </div></div>`;
   }
@@ -2515,7 +2640,8 @@ function perfHtml(state: TowerState): string {
     .join("");
 
   return `<div class="wrap">
-    <div class="sect">성과 — 발행 ${rows.length}건</div>
+    ${publishedHtml(state)}
+    <div class="sect">성과 — 수치 기록 ${rows.length}건</div>
     <div class="pstat">
       <div class="pcell"><span class="v num">${avg}</span><span class="l">평균 저장</span></div>
       <div class="pcell"><span class="v num">${best ? esc(best.saved || "-") : "-"}</span><span class="l">최고 저장</span></div>

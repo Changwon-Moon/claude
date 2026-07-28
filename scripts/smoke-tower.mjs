@@ -360,9 +360,18 @@ console.log("\n[F. 결정함]");
 await page.click('.tab[data-v="today"]');
 await page.waitForTimeout(300);
 const inboxN = await q(`document.querySelectorAll("#inboxBody .dcard").length`);
-check("결정함 건수 = 탭 배지", await q(`
+/* 배지는 **전체 건수**를 말해야 한다 — 화면은 6건까지만 펼치고 나머지는 '더 보기'로 접힌다.
+ * (보이는 카드 수와 배지를 비교하면 7건째부터 항상 틀린다) */
+check("결정함 탭 배지 = 결정할 일 전체 건수", await q(`
   document.getElementById("tabN").hidden
-  || document.getElementById("tabN").textContent === String(document.querySelectorAll("#inboxBody .dcard").length)`));
+  || document.getElementById("tabN").textContent === String(pendingDecisions().length)`),
+  await q(`document.getElementById("tabN").textContent + " vs " + pendingDecisions().length`));
+check("결정함은 상한(6)까지만 펼친다", await q(`
+  document.querySelectorAll("#inboxBody .dcard").length === Math.min(6, pendingDecisions().length)`));
+check("같은 카드가 결정함에 두 번 뜨지 않음", await q(`
+  (function(){ const k=(s)=>String(s||"").replace(/\\s+/g,"").toLowerCase();
+    const ts=pendingDecisions().map(d=>d.label+"|"+k(d.title));
+    return new Set(ts).size === ts.length; })()`));
 const allClear = await q(`!!document.querySelector("#inboxBody .allclear")`);
 check("결정함이 결정 대기를 모으거나 '없음'을 명시", inboxN > 0 || allClear, `카드 ${inboxN}건`);
 if (inboxN > 0) {
@@ -621,6 +630,55 @@ const catPut = await q(`
   (function(){ const p=window.__puts.filter(x=>x.path.indexOf("ideas.json")>-1).pop();
     if(!p) return ""; try{ return decodeURIComponent(escape(atob(p.body))); }catch(e){ return ""; } })()`);
 check("주기를 바꾸면 ideas.json에 실제로 저장된다", catPut.includes(`"id": "${idCad}"`), catPut.slice(0, 40));
+
+/* 발행은 **오너가 직접** 한다(2026-07-27). 그러면 시스템이 발행 사실을 아는 길은
+ * 오너가 눌러 주는 버튼 하나뿐이다. 그 버튼이 없어서 "발행 0건"이라는 거짓 보고가 나왔다.
+ * 여기서 지키는 것: ① 버튼이 있고 ② 눌리면 대기열이 체크되고 ③ 완성본 보관이 실제로 걸린다. */
+console.log("\n[N. 발행 완료 — 수동 업로드 기록]");
+await q(`closeDrawer && closeDrawer()`);
+await page.click('.tab[data-v="board"]');
+await page.waitForTimeout(300);
+const waitId = await q(`
+  (S.tickets.find(t=>t.stage===5 && (t.flags||[]).includes("업로드 대기"))||{}).id || ""`);
+check("승인 후 '올릴 차례'인 건이 파이프라인에 있다", !!waitId, waitId || "없음");
+if (waitId) {
+  await q(`openDrawer(${JSON.stringify(waitId)})`);
+  await page.waitForTimeout(400);
+  check("결재 화면이 '오너가 직접 올린다'고 말한다",
+    (await q(`(document.querySelector("#drawer .pubnote")||{}).textContent||""`)).includes("직접"));
+  check("[✅ 인스타에 올렸습니다] 버튼 존재",
+    await q(`!!document.querySelector('#drawer [data-act="posted"]')`));
+
+  // 눌렀을 때 저장소에 무엇이 쓰이는지 — 요소가 아니라 결과를 본다
+  await q(`
+    window.__puts=[]; window.__wf=[];
+    GH._chain = Promise.resolve();
+    GH.api = async (path, opts) => {
+      opts = opts || {};
+      if (opts.method === "PUT") { window.__puts.push({path, body:(opts.body||{}).content}); return {}; }
+      if (path.indexOf("/dispatches") > -1) { window.__wf.push(path); return {}; }
+      if (path.indexOf("/git/ref/heads/") > -1) return { object: { sha: "HEAD1" } };
+      if (path.indexOf("/contents/") > -1) {
+        const body = "- [ ] [26.07.26(일) 관제탑] **" + S.tickets.find(t=>t.id===${JSON.stringify(waitId)}).title + "** · 카드";
+        return { sha: "sha", content: btoa(unescape(encodeURIComponent(body))) };
+      }
+      return {};
+    };`);
+  await page.click('#drawer [data-act="posted"]'); // confirm 은 dialog 핸들러가 수락
+  await page.waitForTimeout(1600);
+  const qput = await q(`
+    (function(){ const p=window.__puts.filter(x=>x.path.indexOf("publish-queue")>-1).pop();
+      if(!p) return ""; try{ return decodeURIComponent(escape(atob(p.body))); }catch(e){ return ""; } })()`);
+  check("누르면 발행 대기열이 완료로 체크된다", /^\s*-\s*\[x\]/m.test(qput), qput.slice(0, 60));
+  check("발행 사실이 결정 로그에도 남는다", await q(`
+    window.__puts.some(p=>p.path.indexOf("decisions-inbox")>-1)`));
+  check("완성본 보관 워크플로가 실제로 걸린다", await q(`
+    window.__wf.some(p=>p.indexOf("publish-archive.yml")>-1)`), (await q(`window.__wf.join(",")`)) || "없음");
+}
+check("자동 업로드를 하는 척하지 않는다", await q(`
+  !/인스타에 자동으로 올라갑|자동 발행됩니다|업로드 중입니다/.test(document.body.innerText)`));
+check("성과 화면이 발행 이력을 따로 말한다",
+  (await q(`document.getElementById("view-perf").innerHTML`)).includes("발행 이력"));
 
 check("콘솔·페이지 오류 없음", errors.length === 0, errors.slice(0, 3).join(" | "));
 

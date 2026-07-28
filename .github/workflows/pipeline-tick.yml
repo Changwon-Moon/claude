@@ -56,7 +56,9 @@ jobs:
       - name: 발행 대기열 점검
         run: node scripts/check-publish-queue.mjs
 
-      # ⑪ 성과 회수 — 발행된 카드의 도달·저장 수를 되가져온다(토큰 없으면 건너뜀)
+      # ⑪ 성과 회수 — 발행된 카드의 도달·저장 수를 되가져온다.
+      # ⚠️ 수동 발행이라 IG 토큰이 없으므로 실제로는 늘 건너뛴다(오너가 앱 인사이트를 보고 직접 기입).
+      #    읽기 전용이라 남겨 둔다 — 토큰이 생기는 날 바로 돈다.
       - name: 성과 회수
         env:
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}

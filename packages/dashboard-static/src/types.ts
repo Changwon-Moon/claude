@@ -210,6 +210,26 @@ export interface RequestRow {
   order?: string; // 생성된 작업지시서 경로
 }
 
+/** 완성본 저장소 한 건 = **실제로 인스타에 올라간** 게시물 하나 (published/index.json) */
+export interface PublishedPost {
+  /** published/ 아래 폴더 이름 — `{발행일}-{label}` */
+  dir: string;
+  label: string;
+  title: string;
+  /** 오너가 올린 날 (YYYY-MM-DD) */
+  publishedAt: string;
+  pages: number;
+  captionChars: number;
+  /** 발행 시점의 자동검수 판정 */
+  verdict: string;
+  /**
+   * 오너가 [✅ 인스타에 올렸습니다]를 눌러 만들어진 기록인가.
+   * false = 이전 세션이 **업로드용으로 만들어만 둔** 옛 꾸러미 — 실제 발행 여부는 오너만 안다.
+   * 이 둘을 섞어 세면 또 거짓 보고가 된다.
+   */
+  confirmed: boolean;
+}
+
 export interface IdeaCat {
   key: string;
   label: string;
@@ -246,6 +266,8 @@ export interface TowerState {
   recentDrops: string[];
   /** 보관함 — 완성 작업물을 주제별로 묶은 색인 (data/archive/index.json) */
   archive: ArchiveFolder[];
+  /** 완성본 저장소 — 실제로 발행된 게시물 (published/index.json). 발행 이력의 사실. */
+  published: PublishedPost[];
   /** 성과 — 발행 후 도달·저장 수 (data/performance.md) */
   perf: { rows: PerfRow[]; path: string };
   /** 요청 대장 — 오너가 시킨 일의 접수·담당·처리 상태 (data/requests.json) */

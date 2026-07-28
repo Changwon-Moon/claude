@@ -101,9 +101,9 @@ jobs:
       - name: 사이트 조립
         run: node scripts/build-tower-site.mjs
 
-      # 승인된 카드를 /cards/ 로 옮긴다 — 인스타는 **공개 URL**로만 이미지를 가져간다.
+      # 오너가 수동 업로드할 원본(JPEG)과 지난 발행분을 문 안쪽에 깐다.
       # ⚠️ 사이트 조립이 _site 를 통째로 지우므로 반드시 그 **뒤에** 와야 한다.
-      - name: 발행용 이미지 준비
+      - name: 내려받기·완성본 이미지 준비
         run: node scripts/stage-public-cards.mjs
 
       # 관제탑이 실제로 동작하는지(읽기 전용 게이트 + 저장소 직접 쓰기) 배포 전에 확인
@@ -146,27 +146,11 @@ jobs:
           TOWER_PASSWORD: ${{ secrets.TOWER_PASSWORD }}
         run: node scripts/verify-live.mjs # 전파 대기는 스크립트가 version.txt 로 직접 확인한다
 
-      # 여기까지 와야 이미지가 인터넷에 살아 있다 → 이제 인스타가 가져갈 수 있다.
-      # 오너가 승인한(대기열 [ ]) 건만 올린다. 토큰이 없으면 조용히 건너뛴다.
-      - name: 인스타그램 발행
-        env:
-          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
-          IG_USER_ID: ${{ secrets.IG_USER_ID }}
-          TOWER_URL: https://wirit-tower.engineerest0.workers.dev
-        run: node scripts/publish-instagram.mjs --limit 1
-
-      - name: 발행 결과 커밋
-        run: |
-          git config user.name  "wirit-bot"
-          git config user.email "noreply@github.com"
-          if [ -n "$(git status --porcelain -- data/publish-queue.md)" ]; then
-            git add -- data/publish-queue.md
-            git commit -m "발행: 인스타 업로드 완료 표시"
-            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
-            git push origin HEAD:${GITHUB_REF_NAME}
-          else
-            echo "발행된 건 없음 — 커밋 생략"
-          fi
+      # ⚠️ 자동 발행 단계는 없앴다(2026-07-27 오너 결정: "인스타는 내가 수동으로 올린다").
+      #    올리는 사람은 오너, 관제탑은 **올린 사실을 기록**한다:
+      #    결재 화면 [JPG 내려받기]+[캡션 복사] → 오너가 앱에서 업로드 →
+      #    [✅ 인스타에 올렸습니다] → publish-archive.yml 이 완성본을 published/ 에 보관.
+      #    자동 발행을 다시 켤 땐 scripts/publish-instagram.mjs 를 여기 연결하면 된다.
 
       - name: 문 상태 확인
         run: |
