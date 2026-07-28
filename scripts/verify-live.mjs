@@ -193,12 +193,21 @@ has(/발행 이력/, "성과 화면의 발행 이력 칸");
 check("자동 업로드를 하는 척하는 문구 없음",
   !/인스타에 자동으로 올라갑|자동 발행됩니다/.test(html));
 
-// 자동 발행을 접었으니 공개 예외도 닫혀 있어야 한다 — 쓸 데 없이 열린 문은 위험이다
+/* 자동 발행을 접었으니 공개 예외도 닫혀 있어야 한다 — 쓸 데 없이 열린 문은 위험이다.
+ *
+ * ⚠️ 옛 워커는 /cards/ 응답에 `public, max-age=600` 을 붙였다 → 엣지에 남아 있을 수 있다.
+ *    캐시를 우회해 **지금 워커가 무엇을 주는지**를 본다. 그리고 실패하면 무엇을 받았는지
+ *    반드시 적는다 — 판정만 있고 근거가 없으면 다음 사람이 또 추측해야 한다. */
 if (PW) {
-  const openCards = await fetch(URL_BASE + "/cards/tohuh-rank-1.jpg");
-  check("공개 카드 경로가 닫혀 있음(자동 발행 폐지)", /비밀번호/.test(await openCards.text()));
-  const openPub = await fetch(URL_BASE + "/published/index.json");
-  check("완성본도 문 안쪽", /비밀번호/.test(await openPub.text()));
+  for (const p of ["/cards/tohuh-rank-1.jpg", "/published/index.json"]) {
+    const r = await fetch(`${URL_BASE}${p}?nocache=${Date.now()}`, { headers: { "Cache-Control": "no-cache" } });
+    const ct = r.headers.get("content-type") || "";
+    const body = await r.text();
+    // 닫혀 있다 = 비밀번호 화면을 주거나, 내용을 아예 안 준다(4xx·비이미지)
+    const closed = /비밀번호/.test(body) || (r.status >= 400 && !ct.includes("image"));
+    check(`비번 없이 안 열림 — ${p}`, closed,
+      `HTTP ${r.status} · ${ct} · ${body.slice(0, 70).replace(/\s+/g, " ")}`);
+  }
 }
 
 // 카드 실물이 들어갔는지 — CI가 렌더한 썸네일
