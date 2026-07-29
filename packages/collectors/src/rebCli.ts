@@ -79,26 +79,43 @@ async function main(): Promise<void> {
   const toYear = Number(arg("--to", "")) || new Date().getUTCFullYear();
   const outPath = fromCwd(arg("--out", "data/datasets/reb-rent-index.json"));
 
-  // ID를 직접 못 박았으면 이름으로 찾는다
+  /* 실측으로 확정한 표(2026-07-29 discover). 매번 78개를 훑지 않고 이걸 먼저 쓴다.
+   *
+   * 왜 이 둘인가 — 부동산원은 보증금 크기로 임대차를 넷으로 나눈다:
+   *   월세(보증금 ≤ 12개월치) · 준월세(12~240) · 준전세(>240) · 그리고 그 통합.
+   * 우리가 말하는 "월세"는 **순수 월세**라 `월세가격지수_아파트` 를 쓴다.
+   * (`월세통합가격지수` 는 준전세까지 섞여 전세와 겹쳐 읽힌다 — 두 지수를 나란히 놓는
+   *  카드에서는 그게 이야기를 흐린다)
+   * 아파트로 통일하는 이유: 우리 부동산 카드 전부가 아파트 기준이다. 섞으면 비교가 깨진다.
+   *
+   * 개편으로 ID가 죽으면 --jeonse/--wolse 로 덮어쓰거나 --discover 로 다시 찾는다. */
+  const PINNED = {
+    jeonse: { id: "A_2024_00050", name: "(월) 전세가격지수_아파트" },
+    wolse: { id: "A_2024_00055", name: "(월) 월세가격지수_아파트" },
+  };
+
   let jeonseId = arg("--jeonse");
   let wolseId = arg("--wolse");
   const picked: Record<string, string> = {};
-  if (!jeonseId || !wolseId) {
+  if (!jeonseId) {
+    jeonseId = PINNED.jeonse.id;
+    picked.jeonse = PINNED.jeonse.name;
+  }
+  if (!wolseId) {
+    wolseId = PINNED.wolse.id;
+    picked.wolse = PINNED.wolse.name;
+  }
+  // 이름으로 다시 찾아야 할 때(개편)만 목록을 훑는다
+  if (process.argv.includes("--find")) {
     const tables = await listTables(key, "지수");
     console.log(`통계표 후보 ${tables.length}개에서 고릅니다.`);
-    if (!jeonseId) {
-      const t = chooseTable(tables, "전세");
-      if (t) {
-        jeonseId = t.id;
-        picked.jeonse = t.name;
-      }
-    }
-    if (!wolseId) {
-      const t = chooseTable(tables, "월세");
-      if (t) {
-        wolseId = t.id;
-        picked.wolse = t.name;
-      }
+    for (const [k, want] of [["jeonse", "전세"], ["wolse", "월세"]] as const) {
+      const t = chooseTable(tables, want);
+      if (!t) continue;
+      if (k === "jeonse") jeonseId = t.id;
+      else wolseId = t.id;
+      picked[k] = t.name;
+      console.log(`  ${want} → ${t.id} (${t.name})`);
     }
   }
   if (!jeonseId || !wolseId) {
