@@ -12,7 +12,23 @@
     },
     "wolse": {
       "id": "A_2024_00055",
-      "name": "(월) 월세가격지수_아파트"
+      "name": "(월) 월세가격지수_아파트",
+      "note": "순수 월세(보증금 12개월치 이하) · 2015-06 시작"
+    },
+    "wolseAll": {
+      "id": "A_2024_00054",
+      "name": "(월) 월세통합가격지수_아파트",
+      "note": "월세+준월세+준전세 통합 · 더 긴 계열"
+    },
+    "avgWolse": {
+      "id": "A_2024_00069",
+      "name": "(월) 평균월세가격_아파트",
+      "note": "실제 평균 금액(원) — 지수와 다른 이야기를 한다"
+    },
+    "avgJeonse": {
+      "id": "A_2024_00064",
+      "name": "(월) 평균전세가격_아파트",
+      "note": "실제 평균 금액(원)"
     }
   },
   "asOf": "2026-06",
@@ -24,9 +40,9 @@
     "전세": {
       "label": "전세",
       "range": {
-        "first": "2011-01",
+        "first": "2003-11",
         "last": "2026-06",
-        "months": 186
+        "months": 272
       },
       "peak": {
         "peakYm": "2022-01",
@@ -37,13 +53,13 @@
         "fromPeakPct": -4.1
       },
       "before": {
-        "from": "2011-01",
+        "from": "2003-11",
         "to": "2020-07",
-        "fromValue": 65.2,
+        "fromValue": 49.2,
         "toValue": 98.8,
-        "totalPct": 51.5,
-        "yearsSpan": 9.5,
-        "cagrPct": 4.47
+        "totalPct": 100.8,
+        "yearsSpan": 16.7,
+        "cagrPct": 4.27
       },
       "after": {
         "from": "2020-07",
@@ -55,6 +71,38 @@
         "cagrPct": 0.94
       },
       "yearly": [
+        {
+          "year": 2004,
+          "pct": -4.63
+        },
+        {
+          "year": 2005,
+          "pct": 5.8
+        },
+        {
+          "year": 2006,
+          "pct": 11.71
+        },
+        {
+          "year": 2007,
+          "pct": 2.89
+        },
+        {
+          "year": 2008,
+          "pct": -1.13
+        },
+        {
+          "year": 2009,
+          "pct": 7.77
+        },
+        {
+          "year": 2010,
+          "pct": 7.29
+        },
+        {
+          "year": 2011,
+          "pct": 12.96
+        },
         {
           "year": 2012,
           "pct": 0.02
@@ -113,11 +161,11 @@
         }
       ],
       "beforeLaw": {
-        "years": 8,
-        "avgYearlyPct": 3.7,
-        "maxYearlyPct": 10.79,
-        "minYearlyPct": -0.69,
-        "negativeYears": 2
+        "years": 16,
+        "avgYearlyPct": 4.52,
+        "maxYearlyPct": 12.96,
+        "minYearlyPct": -4.63,
+        "negativeYears": 4
       },
       "afterLaw": {
         "years": 6,
@@ -215,7 +263,100 @@
     },
     "월세통합": {
       "label": "월세통합",
-      "empty": true
+      "range": {
+        "first": "2015-06",
+        "last": "2026-06",
+        "months": 133
+      },
+      "peak": {
+        "peakYm": "2026-06",
+        "peakValue": 104,
+        "lastYm": "2026-06",
+        "lastValue": 104,
+        "isNowPeak": true,
+        "fromPeakPct": 0
+      },
+      "before": {
+        "from": "2015-06",
+        "to": "2020-07",
+        "fromValue": 90.1,
+        "toValue": 90,
+        "totalPct": -0.1,
+        "yearsSpan": 5.1,
+        "cagrPct": -0.03
+      },
+      "after": {
+        "from": "2020-07",
+        "to": "2026-06",
+        "fromValue": 90,
+        "toValue": 104,
+        "totalPct": 15.5,
+        "yearsSpan": 5.9,
+        "cagrPct": 2.47
+      },
+      "yearly": [
+        {
+          "year": 2016,
+          "pct": -0.27
+        },
+        {
+          "year": 2017,
+          "pct": -0.01
+        },
+        {
+          "year": 2018,
+          "pct": -0.32
+        },
+        {
+          "year": 2019,
+          "pct": -0.33
+        },
+        {
+          "year": 2020,
+          "pct": 1.54
+        },
+        {
+          "year": 2021,
+          "pct": 2.53
+        },
+        {
+          "year": 2022,
+          "pct": 0.45
+        },
+        {
+          "year": 2023,
+          "pct": -0.73
+        },
+        {
+          "year": 2024,
+          "pct": 2.86
+        },
+        {
+          "year": 2025,
+          "pct": 3.94
+        }
+      ],
+      "beforeLaw": {
+        "years": 4,
+        "avgYearlyPct": -0.23,
+        "maxYearlyPct": -0.01,
+        "minYearlyPct": -0.33,
+        "negativeYears": 4
+      },
+      "afterLaw": {
+        "years": 6,
+        "avgYearlyPct": 1.77,
+        "negativeYears": 1
+      }
     }
+  },
+  "crashWindow": {
+    "window": {
+      "from": "2022-01",
+      "to": "2023-05"
+    },
+    "jeonsePct": -19.4,
+    "wolseAllPct": -1.4,
+    "jeonseRecoveredPct": 18.9
   }
 }

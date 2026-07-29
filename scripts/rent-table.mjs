@@ -67,12 +67,29 @@ function span(s, a, b) {
   };
 }
 
-/** 금액 표시 — 원 단위로 오는지 만원 단위로 오는지 데이터 크기로 판단한다(추측 금지) */
+/**
+ * 금액 계열의 단위는 **천원**이다.
+ *
+ * ── 어떻게 알았나 (2026-07-29)
+ * R-ONE 응답에 단위 필드가 없다. 그래서 **크기로 판정했다** — 자기모순이 없는 읽기가 하나뿐이다:
+ *   서울 아파트, 2026-06 · 평균월세 1,592 · 평균전세 622,270
+ *     · 천원으로 읽으면 → 월세 159만원 · 전세 6.2억   ← 둘 다 그럴듯하다
+ *     · 원으로 읽으면   → 월세 1,592원 · 전세 62만원   ← 말이 안 된다
+ *     · 만원으로 읽으면 → 월세 1,592만원 · 전세 62억   ← 말이 안 된다
+ * ⚠️ 이건 **추론**이다. 발행 전 부동산원 공표 보도자료의 서울 평균 월세·전세 금액과
+ *    한 번 대조해 확정해야 한다(데이터셋 meta.verified 가 아직 false인 이유).
+ */
+const THOUSAND_WON = 1000;
+
+/** 천원 값 → 사람이 읽는 금액. 큰 값은 억, 작은 값은 만원. */
 function money(v) {
   if (v == null) return "—";
-  if (v >= 100000) return `${Math.round(v / 10000).toLocaleString("ko-KR")}만원`; // 원 단위
-  if (v >= 1000) return `${Math.round(v).toLocaleString("ko-KR")}만원`; // 만원 단위(전세)
-  return `${Math.round(v).toLocaleString("ko-KR")}만원`; // 만원 단위(월세)
+  const won = v * THOUSAND_WON;
+  if (won >= 100000000) {
+    const eok = won / 100000000;
+    return `${(Math.round(eok * 100) / 100).toLocaleString("ko-KR")}억원`;
+  }
+  return `${Math.round(won / 10000).toLocaleString("ko-KR")}만원`;
 }
 
 /* ── 출력 ── */
@@ -95,7 +112,7 @@ p(`| 계열 | 무엇을 재나 | 구간 | 개월 |`);
 p(`|---|---|---|---:|`);
 for (const [label, s, kind] of SERIES) {
   const k = ms(s);
-  const what = kind === "index" ? "품질조정 지수 (2021.6=100)" : "실제 계약 평균 금액";
+  const what = kind === "index" ? "품질조정 지수 (2021.6=100)" : "실제 계약 평균 금액 (천원 단위 원자료)";
   p(`| ${label} | ${what} | ${k.length ? `${k[0]} ~ ${k[k.length - 1]}` : "자료 없음"} | ${k.length} |`);
 }
 p();
