@@ -18,7 +18,7 @@
  */
 import { writeFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
-import { listTables, fetchMonthly, toSeries, latestMonth, type RebTable } from "./sources/rebIndex.js";
+import { listTables, fetchMonthly, toSeries, latestMonth, probeData, type RebTable } from "./sources/rebIndex.js";
 
 const CWD = process.env.INIT_CWD || process.cwd();
 const fromCwd = (p: string): string => resolve(CWD, p);
@@ -71,6 +71,21 @@ async function main(): Promise<void> {
     console.log(`🔎 "${kw}" 가 이름에 들어간 통계표 ${tables.length}개`);
     for (const t of tables) console.log(`   ${t.id}  [${t.cycle}]  ${t.name}`);
     if (!tables.length) console.log("   (하나도 없으면 키 권한 또는 R-ONE 응답 형식을 확인하세요)");
+    return;
+  }
+
+  /* ── 진단 모드 — 데이터 조회 파라미터를 실측으로 찾는다 ──
+   * 표 ID는 맞는데 0건이 오면 기간·페이지 파라미터가 다른 것이다. 짐작을 고쳐 다시
+   * 던지길 반복하지 않고, 여러 형태를 한 번에 던져 **무엇이 행을 주는지** 본다. */
+  if (process.argv.includes("--probe")) {
+    const id = arg("--probe") || "A_2024_00050";
+    console.log(`🔬 데이터 조회 형태 실측 — 통계표 ${id}`);
+    for (const r of await probeData(key, id)) {
+      const mark = r.rows > 0 ? "✅" : r.rows === 0 ? "⬜" : "❌";
+      console.log(`\n${mark} ${r.label} — HTTP ${r.status} · 행 ${r.rows}`);
+      console.log(`   ${r.url}`);
+      console.log(`   ${r.head}`);
+    }
     return;
   }
 

@@ -104,6 +104,53 @@ function pick(row: any, ...names: string[]): string {
   return "";
 }
 
+/**
+ * 데이터 조회 파라미터를 **실측으로 찾는다**.
+ *
+ * ── 왜 필요한가 (2026-07-29)
+ * 표 ID는 목록 API로 확인했는데 데이터가 0건으로 돌아왔다. 즉 기간·페이지 파라미터의
+ * 이름이나 형태가 내 짐작과 다르다. 이럴 때 짐작을 고쳐 다시 던지는 걸 반복하면
+ * CI 왕복만 늘어난다. **한 번에 여러 형태를 던져 보고 무엇이 행을 주는지 눈으로 본다.**
+ * 응답 앞자락을 그대로 찍는 게 핵심이다 — 판정만 있으면 또 추측해야 한다.
+ */
+export interface ProbeResult {
+  label: string;
+  url: string;
+  status: number;
+  rows: number;
+  head: string;
+}
+
+export async function probeData(key: string, statblId: string): Promise<ProbeResult[]> {
+  const base = `${HOST}/SttsApiTblData.do?KEY=${encodeURIComponent(key)}&Type=json&STATBL_ID=${encodeURIComponent(statblId)}`;
+  const variants: [string, string][] = [
+    ["기간범위(YYYYMM)", `&DTACYCLE_CD=MM&START_WRTTIME=202601&END_WRTTIME=202612&pIndex=1&pSize=100`],
+    ["단일시점", `&DTACYCLE_CD=MM&WRTTIME_IDTFR_ID=202606&pIndex=1&pSize=100`],
+    ["기간없음", `&DTACYCLE_CD=MM&pIndex=1&pSize=100`],
+    ["주기없음", `&pIndex=1&pSize=100`],
+    ["기간범위(YYYY)", `&DTACYCLE_CD=MM&START_WRTTIME=2026&END_WRTTIME=2026&pIndex=1&pSize=100`],
+    ["큰페이지", `&DTACYCLE_CD=MM&START_WRTTIME=202601&END_WRTTIME=202612&pIndex=1&pSize=10000`],
+  ];
+  const out: ProbeResult[] = [];
+  for (const [label, qs] of variants) {
+    const url = base + qs;
+    try {
+      const { status, body } = await getRaw(url);
+      let rows = 0;
+      try {
+        rows = rowsOf(JSON.parse(body)).length;
+      } catch {
+        rows = -1; // JSON 이 아니다
+      }
+      out.push({ label, url: url.replace(encodeURIComponent(key), "***"), status, rows, head: body.slice(0, 300).replace(/\s+/g, " ") });
+    } catch (e) {
+      out.push({ label, url: url.replace(encodeURIComponent(key), "***"), status: 0, rows: -1, head: String(e).slice(0, 200) });
+    }
+    await new Promise((r) => setTimeout(r, 400));
+  }
+  return out;
+}
+
 /** 통계표 목록 — 이름에 keyword 가 들어간 표만 (표 ID를 하드코딩하지 않기 위한 탐색) */
 export async function listTables(key: string, keyword: string): Promise<RebTable[]> {
   const found: RebTable[] = [];

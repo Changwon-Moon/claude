@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "collect(수집) 또는 discover(통계표 찾기)"
+        description: "collect(수집) · discover(통계표 찾기) · probe(조회 형태 실측)"
         required: true
         default: "collect"
       keyword:
@@ -81,8 +81,18 @@ jobs:
           pnpm --filter @wirit/collectors exec tsx src/rebCli.ts \
             --discover "${{ github.event.inputs.keyword }}"
 
+      # 표 ID는 맞는데 데이터가 0건일 때 — 여러 조회 형태를 한 번에 던져 응답을 그대로 본다.
+      # 짐작을 고쳐 다시 던지길 반복하면 CI 왕복만 늘어난다(2026-07-29).
+      - name: 조회 형태 실측 (probe)
+        if: github.event.inputs.mode == 'probe'
+        env:
+          RONE_API_KEY: ${{ secrets.RONE_API_KEY }}
+          REB_API_KEY: ${{ secrets.REB_API_KEY }}
+        run: |
+          pnpm --filter @wirit/collectors exec tsx src/rebCli.ts --probe A_2024_00050
+
       - name: 전세·월세 지수 수집
-        if: github.event.inputs.mode != 'discover'
+        if: github.event.inputs.mode != 'discover' && github.event.inputs.mode != 'probe'
         env:
           RONE_API_KEY: ${{ secrets.RONE_API_KEY }}
           REB_API_KEY: ${{ secrets.REB_API_KEY }}
@@ -92,7 +102,7 @@ jobs:
             --out "$GITHUB_WORKSPACE/data/datasets/reb-rent-index.json"
 
       - name: 데이터셋 커밋
-        if: github.event.inputs.mode != 'discover'
+        if: github.event.inputs.mode != 'discover' && github.event.inputs.mode != 'probe'
         run: |
           git config user.name "wirit-bot"
           git config user.email "noreply@github.com"
