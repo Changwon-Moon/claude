@@ -1,0 +1,73 @@
+name: 기사 읽어오기
+
+# 오너가 준 기사 링크를 **Actions 안에서** 열어 본문을 저장소에 남긴다.
+#
+# 왜: 작업 세션은 네이버·다음을 못 읽는다(차단). 그때마다 "못 읽습니다"라고 답하면
+#     오너가 본문을 손으로 옮겨야 한다. 여기서 읽어 두면 다음 세션도 그 기사를 읽는다.
+#
+# ⚠️ 기사는 2차 출처다. 여기 저장된 숫자를 카드에 그대로 쓰지 않는다 —
+#    시의성 훅으로 쓰거나, 1차 출처로 다시 확인한 뒤에만 쓴다(ARCHITECTURE.md §2).
+on:
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: "기사 URL (공백으로 여러 개)"
+        required: true
+  # ⚠️ 등록용 — 수동 실행 전용 워크플로는 한 번도 안 돌면 GitHub에 등록되지 않아
+  #    dispatch 가 404를 받는다. 이 파일이 바뀌면 한 번 돌아 자신을 등록한다.
+  push:
+    branches:
+      - claude/instagram-content-automation-roadmap-fxnb7p
+    paths:
+      - ".github/workflows/fetch-article.yml"
+      - "scripts/fetch-article.mjs"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fetch-article
+  cancel-in-progress: false
+
+jobs:
+  register:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "fetch-article 등록 완료 — 이제 dispatch 로 기사를 읽을 수 있다"
+
+  fetch:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # 네이버·다음은 JS로 본문을 채운다 → 실제 브라우저로 열어야 글이 보인다
+      - name: Chromium 설치
+        run: pnpm --filter @wirit/renderer exec playwright-core install --with-deps chromium chromium-headless-shell
+
+      - name: 기사 읽기
+        run: node scripts/fetch-article.mjs ${{ github.event.inputs.urls }}
+
+      - name: 커밋
+        run: |
+          git config user.name  "wirit-bot"
+          git config user.email "noreply@github.com"
+          git add -- research/articles
+          if git diff --cached --quiet; then
+            echo "새로 저장된 기사 없음"
+          else
+            git commit -m "기사 보관: 오너 제공 링크"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
