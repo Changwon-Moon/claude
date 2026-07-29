@@ -91,11 +91,17 @@ for (const url of urls) {
   let err = "";
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
-      await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
+      const res = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
       await page.waitForTimeout(1500); // JS가 본문을 채울 틈
       got = await page.evaluate(EXTRACT);
       if (got && got.body && got.body.length > 200) break;
-      err = `본문이 짧다(${got?.body?.length || 0}자)`;
+      /* ⚠️ 판정만 남기면 다음 사람이 또 추측한다. **무엇을 받았는지** 적는다.
+       * (2026-07-29: 네이버·다음이 본문 0자로 왔는데 원인이 봇 차단인지 선택자
+       *  문제인지 구분할 근거가 로그에 없었다) */
+      const html = await page.content().catch(() => "");
+      err =
+        `본문 ${got?.body?.length || 0}자 · HTTP ${res?.status() || "?"} · HTML ${html.length}자 · ` +
+        `제목 "${(got?.title || "").slice(0, 40)}" · 최종URL ${(got?.finalUrl || "").slice(0, 80)}`;
     } catch (e) {
       err = String(e?.message || e).slice(0, 140);
     }
@@ -143,4 +149,12 @@ await browser.close();
 console.log(`\n${ok}/${urls.length}건 저장`);
 if (existsSync(OUT)) console.log(`보관된 기사 총 ${readdirSync(OUT).filter((f) => f.endsWith(".md")).length}건`);
 // 하나도 못 읽었으면 실패로 끝낸다 — 조용히 넘어가면 오너는 저장된 줄 안다
-if (!ok) process.exit(1);
+if (!ok) {
+  console.log(
+    "\n한 건도 못 읽었습니다. 위 진단(HTTP·HTML 길이·제목)을 보고 원인을 가리세요:\n" +
+      "  · HTML 이 짧다 → 봇 차단 화면일 가능성. 그 사이트는 이 통로로 못 읽는다\n" +
+      "  · HTML 은 긴데 본문 0자 → 본문 선택자를 추가해야 한다(EXTRACT)\n" +
+      "  어느 쪽이든 우회를 억지로 시도하지 않는다 — 오너에게 본문을 받는 편이 빠르고 정직하다.",
+  );
+  process.exit(1);
+}
