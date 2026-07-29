@@ -31,6 +31,7 @@ import {
   toEok,
 } from "./parse/molit.js";
 import { encKey } from "./sources/molit.js";
+import { toSeries, latestMonth, type RebPoint } from "./sources/rebIndex.js";
 import {
   STOOQ_SPX_CSV,
   STOOQ_WITH_GAPS_CSV,
@@ -280,6 +281,26 @@ console.log("\n[국토부 실거래 파서 — MOLIT]");
   const enc = encKey("abc+/def=");
   check("encKey: 디코딩키 퍼센트인코딩", enc === "abc%2B%2Fdef%3D", enc);
   check("encKey: 인코딩키 더블인코딩 방지(동일 결과)", encKey("abc%2B%2Fdef%3D") === enc);
+}
+
+console.log("\n[부동산원 전세·월세 지수 — R-ONE]");
+{
+  /* R-ONE 응답은 판올림마다 껍데기가 바뀐다. 여기서 지키는 것은 **접는 규칙**이다 —
+   * 지역×월 격자로 접히는가, 그리고 asOf 를 '실행 시각'이 아니라 '데이터가 말하는 달'로
+   * 잡는가. 후자를 놓치면 같은 입력이 매번 다른 파일을 만든다(결정성 위반). */
+  const pts: RebPoint[] = [
+    { region: "서울특별시", regionCode: "11", ym: "2026-06", value: 240.1 },
+    { region: "서울특별시", regionCode: "11", ym: "2026-07", value: 243.8 },
+    { region: "노원구", regionCode: "11350", ym: "2026-07", value: 231.2 },
+  ];
+  const s = toSeries(pts);
+  check("지역×월 격자로 접힌다", Object.keys(s).length === 2 && Object.keys(s["서울특별시"]).length === 2);
+  check("값이 그대로 살아 있다", s["노원구"]["2026-07"] === 231.2);
+  check("최신 관측월을 데이터에서 읽는다(실행 시각 아님)", latestMonth(s) === "2026-07", latestMonth(s));
+  // 같은 지역·월이 두 번 오면 마지막 값으로 덮는다(중복 행 방어)
+  const dup = toSeries([...pts, { region: "노원구", regionCode: "11350", ym: "2026-07", value: 232.0 }]);
+  check("같은 지역·월 중복은 마지막 값", dup["노원구"]["2026-07"] === 232.0);
+  check("빈 계열이면 최신월도 빈 값", latestMonth({}) === "");
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);
