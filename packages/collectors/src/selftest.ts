@@ -31,7 +31,7 @@ import {
   toEok,
 } from "./parse/molit.js";
 import { encKey } from "./sources/molit.js";
-import { toSeries, latestMonth, type RebPoint } from "./sources/rebIndex.js";
+import { toSeries, latestMonth, readPage, type RebPoint } from "./sources/rebIndex.js";
 import {
   STOOQ_SPX_CSV,
   STOOQ_WITH_GAPS_CSV,
@@ -301,6 +301,35 @@ console.log("\n[부동산원 전세·월세 지수 — R-ONE]");
   const dup = toSeries([...pts, { region: "노원구", regionCode: "11350", ym: "2026-07", value: 232.0 }]);
   check("같은 지역·월 중복은 마지막 값", dup["노원구"]["2026-07"] === 232.0);
   check("빈 계열이면 최신월도 빈 값", latestMonth({}) === "");
+
+  /* 실제 R-ONE 응답 그대로(2026-07-29 probe 실측). head 와 row 가 **형제 배열 원소**다 —
+   * 예전 구현은 아무 객체 배열이나 긁어서 head 항목까지 데이터 행으로 셌다. */
+  const REAL = {
+    SttsApiTblData: [
+      { head: [{ list_total_count: 56751 }, { RESULT: { CODE: "INFO-000", MESSAGE: "정상 처리되었습니다." } }] },
+      {
+        row: [
+          { STATBL_ID: "A_2024_00050", DTACYCLE_CD: "MM", WRTTIME_IDTFR_ID: "202606",
+            CLS_ID: 500001, CLS_NM: "전국", ITM_ID: 100001, ITM_NM: "지수", DTA_VAL: 102.04742 },
+          { STATBL_ID: "A_2024_00050", DTACYCLE_CD: "MM", WRTTIME_IDTFR_ID: "200311",
+            CLS_ID: 510111, CLS_NM: "창원시", ITM_ID: 100001, ITM_NM: "지수", DTA_VAL: 58.463 },
+        ],
+      },
+    ],
+  };
+  const pg = readPage(REAL);
+  check("실제 응답에서 행만 정확히 뽑는다(head 안 섞임)", pg.rows.length === 2, String(pg.rows.length));
+  check("전체 건수를 읽는다", pg.total === 56751, String(pg.total));
+
+  // 오류 응답은 조용히 0건으로 넘기지 않고 사유를 던진다 — 안 그러면 빈 데이터셋이 커밋된다
+  let threw = "";
+  try { readPage({ RESULT: { CODE: "ERROR-336", MESSAGE: "데이터요청은 한번에 최대 1,000건을 넘을 수 없습니다." } }); }
+  catch (e) { threw = String((e as Error).message); }
+  check("오류 응답은 예외로 알린다", threw.includes("ERROR-336"), threw);
+  let threw2 = "";
+  try { readPage({ SttsApiTblData: [{ head: [{ RESULT: { CODE: "INFO-200", MESSAGE: "해당하는 데이터가 없습니다." } }] }] }); }
+  catch (e) { threw2 = String((e as Error).message); }
+  check("껍데기 안의 오류 코드도 잡는다", threw2.includes("INFO-200"), threw2);
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);

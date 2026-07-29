@@ -180,6 +180,54 @@ export async function listTables(key: string, keyword: string): Promise<RebTable
  * R-ONE 은 기간을 한 번에 다 주지 않는 판올림이 있어, **연 단위로 나눠** 요청하고 합친다.
  * 빈 해가 나와도 멈추지 않는다 — 중간이 비어 있을 뿐 뒤에 데이터가 있을 수 있다.
  */
+/**
+ * R-ONE 데이터 응답에서 행 배열과 전체 건수를 꺼낸다.
+ *
+ * 실측한 실제 응답(2026-07-29 probe):
+ *   {"SttsApiTblData":[{"head":[{"list_total_count":56751},{"RESULT":{"CODE":"INFO-000",…}}]},
+ *                      {"row":[{ …STATBL_ID, WRTTIME_IDTFR_ID, CLS_ID, CLS_NM, ITM_ID, ITM_NM, DTA_VAL… }]}]}
+ * head 와 row 가 **형제 배열 원소**로 나뉘어 있다. 그래서 예전처럼 아무 객체 배열이나
+ * 긁으면 head 항목까지 데이터 행으로 세게 된다 — 형태를 알았으니 정확히 짚어 읽는다.
+ */
+export function readPage(doc: any): { rows: any[]; total: number } {
+  const box = doc?.SttsApiTblData;
+  if (!Array.isArray(box)) {
+    // 오류 응답은 {"RESULT":{"CODE":"ERROR-300",…}} 처럼 껍데기가 없다
+    const code = doc?.RESULT?.CODE;
+    if (code && code !== "INFO-000") throw new Error(`R-ONE ${code} · ${doc?.RESULT?.MESSAGE || ""}`);
+    return { rows: rowsOf(doc), total: 0 }; // 알 수 없는 형태 → 느슨하게 시도
+  }
+  let rows: any[] = [];
+  let total = 0;
+  for (const part of box) {
+    if (Array.isArray(part?.row)) rows = part.row;
+    if (Array.isArray(part?.head)) {
+      for (const h of part.head) {
+        if (typeof h?.list_total_count === "number") total = h.list_total_count;
+        const code = h?.RESULT?.CODE;
+        if (code && code !== "INFO-000") throw new Error(`R-ONE ${code} · ${h.RESULT.MESSAGE || ""}`);
+      }
+    }
+  }
+  return { rows, total };
+}
+
+/** R-ONE 한 번 요청의 상한 (초과하면 ERROR-336). 실측으로 확인한 값. */
+const PAGE = 1000;
+
+/**
+ * 한 통계표의 **월별 전 계열**을 받는다.
+ *
+ * ⚠️ 조회 문법을 실측으로 확정했다(2026-07-29 probe). 짐작으로 쓰면 조용히 0건이 온다:
+ *   · `START_WRTTIME`/`END_WRTTIME` 은 **먹지 않는다** ("해당하는 데이터가 없습니다")
+ *   · 기간을 주려면 `WRTTIME_IDTFR_ID=YYYYMM` (한 달)
+ *   · 기간을 아예 안 주면 **전 기간**이 온다 → 페이지로 훑는 편이 요청 수가 훨씬 적다
+ *     (한 표 56,751행 = 57페이지 vs 달마다 요청하면 187번)
+ *   · `DTACYCLE_CD` 는 필수 (빼면 ERROR-300)
+ *   · 한 번에 1,000건 초과 금지 (ERROR-336)
+ *
+ * 표에는 지수 외 항목(전월비 등)이 섞일 수 있어 **항목 이름이 '지수'인 행만** 쓴다.
+ */
 export async function fetchMonthly(
   key: string,
   statblId: string,
@@ -187,38 +235,50 @@ export async function fetchMonthly(
   toYear: number,
 ): Promise<{ points: RebPoint[]; note: string }> {
   const points: RebPoint[] = [];
-  const empty: number[] = [];
-  for (let y = fromYear; y <= toYear; y++) {
-    const url =
-      `${HOST}/SttsApiTblData.do?KEY=${encodeURIComponent(key)}&Type=json&pIndex=1&pSize=10000` +
-      `&STATBL_ID=${encodeURIComponent(statblId)}&DTACYCLE_CD=MM` +
-      `&START_WRTTIME=${y}01&END_WRTTIME=${y}12`;
-    let doc: any;
+  const notes: string[] = [];
+  const base =
+    `${HOST}/SttsApiTblData.do?KEY=${encodeURIComponent(key)}&Type=json` +
+    `&STATBL_ID=${encodeURIComponent(statblId)}&DTACYCLE_CD=MM&pSize=${PAGE}`;
+
+  let total = 0;
+  let seen = 0;
+  let skippedItems = 0;
+  for (let page = 1; page <= 200; page++) {
+    let got: { rows: any[]; total: number };
     try {
-      doc = await getJson(url);
+      got = readPage(await getJson(`${base}&pIndex=${page}`));
     } catch (e) {
-      // 한 해가 실패해도 나머지는 살린다 — 전체를 버리면 아무것도 못 만든다
-      empty.push(y);
-      continue;
+      notes.push(`${page}페이지 실패: ${String((e as Error)?.message || e).slice(0, 80)}`);
+      break;
     }
-    const rows = rowsOf(doc);
-    let got = 0;
-    for (const r of rows) {
-      const ymRaw = pick(r, "WRTTIME_IDTFR_ID", "WRTTIME_DESC", "wrttimeIdtfrId");
-      const m = ymRaw.match(/^(\d{4})[-.]?(\d{2})/);
+    if (page === 1) total = got.total;
+    if (!got.rows.length) break;
+    seen += got.rows.length;
+
+    for (const r of got.rows) {
+      // 항목이 여러 개인 표가 있다 — '지수'가 아닌 행(전월비 등)은 섞지 않는다
+      const item = pick(r, "ITM_NM", "itmNm");
+      if (item && !item.includes("지수")) {
+        skippedItems++;
+        continue;
+      }
+      const ymRaw = pick(r, "WRTTIME_IDTFR_ID", "wrttimeIdtfrId");
+      const m = ymRaw.match(/^(\d{4})(\d{2})$/);
       if (!m) continue;
-      const raw = pick(r, "DTA_VAL", "dtaVal");
-      const value = Number(raw);
+      const y = Number(m[1]);
+      if (y < fromYear || y > toYear) continue; // 표는 2003년부터 온다 — 필요한 구간만 남긴다
+      const value = Number(pick(r, "DTA_VAL", "dtaVal"));
       if (!Number.isFinite(value)) continue;
-      const region = pick(r, "CLS_NM", "CLS_FULLNM", "clsNm");
+      const region = pick(r, "CLS_NM", "clsNm");
       if (!region) continue;
       points.push({ region, regionCode: pick(r, "CLS_ID", "clsId"), ym: `${m[1]}-${m[2]}`, value });
-      got++;
     }
-    if (!got) empty.push(y);
+    if (total && seen >= total) break;
   }
-  const note = empty.length ? `자료 없음: ${empty.join(",")}` : "";
-  return { points, note };
+
+  if (total && seen < total) notes.push(`전체 ${total}행 중 ${seen}행만 받음`);
+  if (skippedItems) notes.push(`지수 아닌 항목 ${skippedItems}행 제외`);
+  return { points, note: notes.join(" / ") };
 }
 
 /** 지역 → { YYYY-MM: 값 } 으로 접는다. 같은 지역·월이 겹치면 마지막 값을 쓴다. */
