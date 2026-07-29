@@ -34,7 +34,7 @@
 1. 저장소 페이지 → 상단 **Settings**
 2. 왼쪽 메뉴 **Secrets and variables** → **Actions**
 3. **New repository secret** 버튼
-4. **Name** 칸: `REB_API_KEY` (정확히 이대로)
+4. **Name** 칸: `RONE_API_KEY` (정확히 이대로)
 5. **Secret** 칸: 복사한 인증키 붙여넣기
 6. **Add secret**
 
@@ -53,7 +53,7 @@
 
 | 화면에 뜨는 말 | 뜻 | 할 일 |
 |---|---|---|
-| `REB_API_KEY 시크릿이 없습니다` | 3단계가 안 됨 | 이름 철자 확인 (`REB_API_KEY`) |
+| `RONE_API_KEY 시크릿이 없습니다` | 3단계가 안 됨 | 이름 철자 확인 (`RONE_API_KEY`) |
 | `JSON 아님 · <html…` | 열쇠가 아직 안 먹음 | 발급 직후면 5분 뒤 재실행 |
 | `통계표를 못 찾았습니다` | 통계표 이름이 개편됨 | `mode`를 `discover`, `keyword`를 `전세`로 두고 실행 → 나온 목록을 저에게 그대로 붙여넣어 주세요 |
 

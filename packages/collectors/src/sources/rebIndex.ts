@@ -14,7 +14,7 @@
  * 통계표 ID는 개편 때 바뀐다. 이름으로 찾아 쓰고, 찾은 ID를 결과에 적어 둔다.
  * 그래야 다음 사람이 "왜 이 표인가"를 되짚을 수 있다.
  *
- * REB_API_KEY 필요(무료). 세션은 네트워크 차단이라 GitHub Actions 에서 실행한다.
+ * RONE_API_KEY 필요(무료). 세션은 네트워크 차단이라 GitHub Actions 에서 실행한다.
  */
 
 const HOST = "https://www.reb.or.kr/r-one/openapi";

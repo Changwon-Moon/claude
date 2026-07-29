@@ -2,7 +2,7 @@ name: 전세·월세 지수 수집 (한국부동산원)
 
 # 한국부동산원 R-ONE 에서 **전세가격지수·월세가격지수** 월별 계열을 통째로 받아 커밋한다.
 # 지수를 만드는 기관이 부동산원 자신이라 1차 출처다(오보 0 — ARCHITECTURE.md §2).
-# REB_API_KEY(무료) 필요 → GitHub Secrets. 발급 안내: docs/guides/reb-key.md
+# RONE_API_KEY(무료) 필요 → GitHub Secrets. 발급 안내: docs/guides/reb-key.md
 #
 # 매월 재발행하는 정기물의 재료다 → 부동산원 공표 다음 날(매월 16일)에 자동으로 돈다.
 on:
@@ -62,16 +62,20 @@ jobs:
       # 키가 없으면 여기서 분명히 말하고 멈춘다 — 조용히 빈 파일을 만들면 그게 더 나쁘다
       - name: 키 확인
         env:
+          RONE_API_KEY: ${{ secrets.RONE_API_KEY }}
           REB_API_KEY: ${{ secrets.REB_API_KEY }}
         run: |
-          if [ -z "$REB_API_KEY" ]; then
-            echo "::error::REB_API_KEY 시크릿이 없습니다 — 발급 안내: docs/guides/reb-key.md (무료, 5분)"
+          # 이름이 두 가지로 쓰여 왔다(RONE_API_KEY 가 실제 등록된 이름). 둘 중 하나면 된다.
+          if [ -z "$RONE_API_KEY" ] && [ -z "$REB_API_KEY" ]; then
+            echo "::error::RONE_API_KEY 시크릿이 없습니다 — 발급 안내: docs/guides/reb-key.md"
             exit 1
           fi
+          echo "키 확인됨 (RONE_API_KEY=${RONE_API_KEY:+있음}${RONE_API_KEY:-없음} · REB_API_KEY=${REB_API_KEY:+있음}${REB_API_KEY:-없음})"
 
       - name: 통계표 찾기 (discover)
         if: github.event.inputs.mode == 'discover'
         env:
+          RONE_API_KEY: ${{ secrets.RONE_API_KEY }}
           REB_API_KEY: ${{ secrets.REB_API_KEY }}
         run: |
           pnpm --filter @wirit/collectors exec tsx src/rebCli.ts \
@@ -80,6 +84,7 @@ jobs:
       - name: 전세·월세 지수 수집
         if: github.event.inputs.mode != 'discover'
         env:
+          RONE_API_KEY: ${{ secrets.RONE_API_KEY }}
           REB_API_KEY: ${{ secrets.REB_API_KEY }}
         run: |
           pnpm --filter @wirit/collectors exec tsx src/rebCli.ts --collect \

@@ -1,8 +1,8 @@
 /**
  * 한국부동산원 R-ONE 전세·월세 가격지수 수집 CLI (Actions에서 실행 — 네트워크·키 필요).
  *
- *   탐색: REB_API_KEY=xxx tsx src/rebCli.ts --discover 전세
- *   수집: REB_API_KEY=xxx tsx src/rebCli.ts --collect [--from 2011] [--out data/datasets/reb-rent-index.json]
+ *   탐색: RONE_API_KEY=xxx tsx src/rebCli.ts --discover 전세
+ *   수집: RONE_API_KEY=xxx tsx src/rebCli.ts --collect [--from 2011] [--out data/datasets/reb-rent-index.json]
  *
  * ── 왜 '탐색' 모드가 따로 있나
  * 통계표 ID는 통계 개편 때 바뀐다. 처음 붙일 때·안 맞을 때 이름으로 찾아보고,
@@ -28,9 +28,11 @@ function arg(name: string, fallback = ""): string {
   return i > -1 && process.argv[i + 1] && !process.argv[i + 1].startsWith("--") ? process.argv[i + 1] : fallback;
 }
 
-const key = process.env.REB_API_KEY || "";
+/* 시크릿 이름을 하나로 못 박지 않는다 — 오너가 이미 `RONE_API_KEY` 로 등록해 두셨다.
+ * 이름이 달라서 "키가 없다"고 멈추는 건 도구 잘못이다(2026-07-29). 둘 다 받는다. */
+const key = process.env.RONE_API_KEY || process.env.REB_API_KEY || "";
 if (!key) {
-  console.error("REB_API_KEY 환경변수가 없습니다 — 발급 안내: docs/guides/reb-key.md (무료, 5분)");
+  console.error("RONE_API_KEY(또는 REB_API_KEY) 환경변수가 없습니다 — 발급 안내: docs/guides/reb-key.md");
   process.exit(1);
 }
 
