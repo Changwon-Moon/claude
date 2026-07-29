@@ -36,20 +36,31 @@ if (!key) {
   process.exit(1);
 }
 
-/** 후보 표 중 우리가 원하는 것을 고른다: 아파트 · 매매가 아닌 전세/월세 · 지수 */
+/**
+ * 후보 표 중 우리가 원하는 것을 고른다.
+ *
+ * 실측(2026-07-29 discover): "전세"만 78개가 걸린다. 이름이 비슷한 함정이 많다 —
+ *   오피스텔(다른 자산) · 규모별/연령별(지역별이 아닌 쪼갠 표) · 계절조정(보정치) ·
+ *   준전세/준월세(중간 형태) · 수급동향(지수가 아님) · 평균/중위가격(지수가 아님) · 주간(WK)
+ * 그래서 **떨어뜨릴 것을 명시**한다. 애매하면 아무것도 고르지 않고 사람에게 넘긴다.
+ */
+const EXCLUDE = /오피스텔|규모별|연령별|계절조정|준전세|준월세|수급동향|평균|중위|대비/;
+
 function chooseTable(tables: RebTable[], want: "전세" | "월세"): RebTable | null {
   const scored = tables
+    .filter((t) => t.cycle === "MM") // 월간 계열만 (주간은 다른 표본·기준)
     .filter((t) => t.name.includes(want) && t.name.includes("지수"))
+    .filter((t) => !EXCLUDE.test(t.name))
     .map((t) => {
       let s = 0;
-      if (t.name.includes("아파트")) s += 3; // 우리 카드는 아파트 기준으로 통일
-      if (t.name.includes("매매")) s -= 5; // 매매 지수는 다른 이야기다
-      if (t.cycle === "MM") s += 2; // 월간 계열
-      if (t.name.includes("종합")) s += 1;
+      if (t.name.includes("아파트")) s += 5; // 우리 카드는 아파트 기준으로 통일
+      if (t.name.includes("매매")) s -= 9; // 매매 지수는 다른 이야기다
+      // "(월) 전세가격지수_아파트" 처럼 군더더기 없는 이름이 지역별 본표다
+      if (new RegExp(`\\(월\\)\\s*${want}(가격)?지수_아파트$`).test(t.name)) s += 4;
       return { t, s };
     })
     .sort((a, b) => b.s - a.s);
-  return scored.length ? scored[0].t : null;
+  return scored.length && scored[0].s > 0 ? scored[0].t : null;
 }
 
 async function main(): Promise<void> {
