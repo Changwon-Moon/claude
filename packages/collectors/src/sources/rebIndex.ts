@@ -48,10 +48,16 @@ async function getRaw(url: string, timeoutMs = 20000): Promise<{ status: number;
   }
 }
 
-/** 3회까지 재시도하는 JSON GET. 실패 사유는 본문 앞자락과 함께 던진다. */
+/**
+ * 재시도하는 JSON GET. 실패 사유는 본문 앞자락과 함께 던진다.
+ *
+ * ⚠️ 5회로 늘린 이유(2026-07-29): 표 두 개를 57페이지씩 연달아 때리자 R-ONE 이
+ *    `fetch failed` 로 끊었다. 3회로는 못 넘겼다. 서버를 두들기는 쪽이 우리이므로
+ *    간격도 함께 둔다(아래 fetchMonthly 의 페이지 간 대기).
+ */
 async function getJson(url: string): Promise<any> {
   let last = "";
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 5; i++) {
     try {
       const { status, body } = await getRaw(url);
       if (status !== 200) {
@@ -67,7 +73,7 @@ async function getJson(url: string): Promise<any> {
     } catch (e) {
       last = String(e).slice(0, 160);
     }
-    if (i < 2) await new Promise((r) => setTimeout(r, 1500 * (i + 1)));
+    if (i < 4) await new Promise((r) => setTimeout(r, 1500 * (i + 1)));
   }
   throw new Error(`R-ONE 요청 실패 — ${last}`);
 }
@@ -244,12 +250,16 @@ export async function fetchMonthly(
   let seen = 0;
   let skippedItems = 0;
   for (let page = 1; page <= 200; page++) {
+    // 서버를 연달아 두들기지 않는다 — 이래서 앞선 수집이 중간에 끊겼다
+    if (page > 1) await new Promise((r) => setTimeout(r, 350));
     let got: { rows: any[]; total: number };
     try {
       got = readPage(await getJson(`${base}&pIndex=${page}`));
     } catch (e) {
-      notes.push(`${page}페이지 실패: ${String((e as Error)?.message || e).slice(0, 80)}`);
-      break;
+      /* ⚠️ 여기서 break 하고 "받은 만큼" 돌려주면 안 된다.
+       * 그렇게 했다가 3페이지에서 끊긴 반쪽 데이터(2,000행)가 그대로 커밋됐다(2026-07-29).
+       * 반쪽 계열로 만든 카드는 오보가 된다 — 조용히 넘기지 말고 여기서 끝낸다. */
+      throw new Error(`${statblId} ${page}페이지에서 끊김 — ${String((e as Error)?.message || e).slice(0, 100)}`);
     }
     if (page === 1) total = got.total;
     if (!got.rows.length) break;
@@ -276,7 +286,9 @@ export async function fetchMonthly(
     if (total && seen >= total) break;
   }
 
-  if (total && seen < total) notes.push(`전체 ${total}행 중 ${seen}행만 받음`);
+  /* 전체 건수를 알고 있는데 덜 받았다면 그건 실패다. 경고로 남기고 넘어가면
+   * "왜 우리 카드에 최근 달이 없지?"를 나중에 눈으로 찾아야 한다. */
+  if (total && seen < total) throw new Error(`${statblId}: 전체 ${total}행 중 ${seen}행만 받았다 — 불완전`);
   if (skippedItems) notes.push(`지수 아닌 항목 ${skippedItems}행 제외`);
   return { points, note: notes.join(" / ") };
 }

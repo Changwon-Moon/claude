@@ -93,7 +93,7 @@ async function main(): Promise<void> {
   }
 
   /* ── 수집 모드 ── */
-  const fromYear = Number(arg("--from", "2011"));
+  const fromYear = Number(arg("--from", "2003")); // 통계 시작부터 — "통계 이래" 를 우리 수치로 말하려면 필요하다
   const toYear = Number(arg("--to", "")) || new Date().getUTCFullYear();
   const outPath = fromCwd(arg("--out", "data/datasets/reb-rent-index.json"));
 
@@ -156,8 +156,32 @@ async function main(): Promise<void> {
   const dup = ambiguousNames(names);
 
   const regions = new Set([...Object.keys(jeonse), ...Object.keys(wolse)]);
-  if (!regions.size) {
-    console.error("받은 데이터가 없습니다 — 키 권한 또는 통계표 ID를 확인하세요.");
+
+  /* ── 쓰기 전 온전성 검사 ──
+   * 반쪽 데이터를 파일로 쓰면 그대로 커밋되고, 그걸로 만든 카드는 오보가 된다.
+   * 실제로 그렇게 됐다(2026-07-29): 월세 1페이지가 끊겨 **월세가 0건인 파일**이
+   * "수집 성공"으로 커밋됐다. 그래서 여기서 막는다 — 의심스러우면 쓰지 않는다. */
+  const fail: string[] = [];
+  if (!Object.keys(jeonse).length) fail.push("전세 계열이 비어 있다");
+  if (!Object.keys(wolse).length) fail.push("월세 계열이 비어 있다");
+  // 두 계열의 최신 달이 크게 어긋나면 한쪽만 덜 받은 것이다
+  const jLast = latestMonth(jeonse);
+  const wLast = latestMonth(wolse);
+  if (jLast && wLast) {
+    const gap = Math.abs(Number(jLast.replace("-", "")) - Number(wLast.replace("-", "")));
+    if (gap > 3) fail.push(`전세(${jLast})와 월세(${wLast})의 최신 달이 어긋난다`);
+  }
+  // 서울(500008)은 반드시 있어야 한다 — 우리 카드의 기준 지역이다
+  for (const [label, s] of [["전세", jeonse], ["월세", wolse]] as const) {
+    const seoul = s["500008"];
+    if (!seoul || Object.keys(seoul).length < 24) {
+      fail.push(`${label} 서울 계열이 없거나 너무 짧다(${seoul ? Object.keys(seoul).length : 0}개월)`);
+    }
+  }
+  if (fail.length) {
+    console.error("❌ 온전하지 않아 저장하지 않습니다:");
+    for (const f of fail) console.error(`   · ${f}`);
+    console.error("   (네트워크가 끊겼다면 다시 실행하세요. 반쪽 데이터로는 카드를 만들 수 없습니다)");
     process.exit(1);
   }
 
