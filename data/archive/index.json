@@ -13,7 +13,7 @@
           "date": "",
           "cards": 3,
           "pages": 0,
-          "state": "미승인",
+          "state": "발행됨",
           "files": {
             "content": [],
             "png": [],
@@ -36,7 +36,7 @@
           "date": "",
           "cards": 3,
           "pages": 0,
-          "state": "미승인",
+          "state": "발행됨",
           "files": {
             "content": [],
             "png": [],
@@ -59,7 +59,7 @@
           "date": "",
           "cards": 1,
           "pages": 0,
-          "state": "발행 대기",
+          "state": "발행됨",
           "files": {
             "content": [],
             "png": [],
@@ -146,7 +146,7 @@
           "date": "",
           "cards": 1,
           "pages": 0,
-          "state": "발행 대기",
+          "state": "발행됨",
           "files": {
             "content": [],
             "png": [],
