@@ -1057,18 +1057,23 @@ function markUploaded(t){
   GH.serial(async()=>{
     for(let i=0;i<5;i++){
       const cur=await GH.getFile(PATH);
+      const matches=(line)=>{
+        const tm=line.match(/\*\*(.+?)\*\*/);
+        const tt=(tm?tm[1]:line).replace(/\s+/g,"").toLowerCase();
+        return tt.indexOf(key)>-1 || key.indexOf(tt)>-1;
+      };
+      /* 이미 완료로 적힌 줄이 있으면 아무것도 더 하지 않는다.
+       * 두 번 누르면 같은 건이 대기열에 두 줄로 쌓였다(2026-07-29 실제 발생). */
+      const done=cur.text.split("\n").some(l=>/^\s*-\s*\[[xX]\]/.test(l)&&matches(l));
       let hit=false;
       const next=cur.text.split("\n").map(line=>{
         const m=line.match(/^(\s*-\s*)\[ \](\s*.+)$/);
-        if(!m) return line;
-        const tm=line.match(/\*\*(.+?)\*\*/);
-        const tt=(tm?tm[1]:line).replace(/\s+/g,"").toLowerCase();
-        if(!(tt.indexOf(key)>-1 || key.indexOf(tt)>-1)) return line;
+        if(!m||!matches(line)) return line;
         hit=true;
         return m[1]+"[x]"+m[2];
       }).join("\n");
       // 대기열에 줄이 없으면(승인 없이 바로 올린 경우) 완료 상태로 새로 적는다
-      const text=hit ? next
+      const text=(hit||done) ? next
         : (cur.text.replace(/\s*$/,"")+"\n- [x] "+ghStamp()+" **"+t.title+"** · "+(t.fmt||"카드")
            +" · 원본 "+(t.provenance||"미상")+"\n");
       try{ return await GH.putFile(PATH, text, "관제탑: 발행 완료 — "+short(t), cur.sha); }

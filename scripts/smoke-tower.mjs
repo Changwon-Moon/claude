@@ -638,9 +638,13 @@ console.log("\n[N. 발행 완료 — 수동 업로드 기록]");
 await q(`closeDrawer && closeDrawer()`);
 await page.click('.tab[data-v="board"]');
 await page.waitForTimeout(300);
+/* ⚠️ 대기 중인 건이 0일 수도 있다 — 오너가 다 올렸으면 그게 정상이다.
+ *    "항상 하나는 있다"고 가정하면, 일을 다 끝낸 날 검사가 빨간불이 된다(2026-07-29 실제). */
 const waitId = await q(`
   (S.tickets.find(t=>t.stage===5 && (t.flags||[]).includes("업로드 대기"))||{}).id || ""`);
-check("승인 후 '올릴 차례'인 건이 파이프라인에 있다", !!waitId, waitId || "없음");
+const postedN = await q(`(STATE.published||[]).filter(p=>p.confirmed).length`);
+check("발행 흐름의 상태가 둘 중 하나로 분명함(올릴 게 있거나 · 다 올렸거나)",
+  !!waitId || postedN > 0, `대기 ${waitId ? 1 : 0}건 · 발행 확인 ${postedN}건`);
 if (waitId) {
   await q(`openDrawer(${JSON.stringify(waitId)})`);
   await page.waitForTimeout(400);
@@ -675,10 +679,22 @@ if (waitId) {
   check("완성본 보관 워크플로가 실제로 걸린다", await q(`
     window.__wf.some(p=>p.indexOf("publish-archive.yml")>-1)`), (await q(`window.__wf.join(",")`)) || "없음");
 }
+// 버튼 자체는 대기 건 유무와 무관하게 화면에 심어져 있어야 한다
+check("[✅ 올렸습니다] 배선이 화면에 있다", await q(`
+  typeof markUploaded === "function" && document.documentElement.innerHTML.indexOf('data-act="posted"') > -1`));
 check("자동 업로드를 하는 척하지 않는다", await q(`
   !/인스타에 자동으로 올라갑|자동 발행됩니다|업로드 중입니다/.test(document.body.innerText)`));
 check("성과 화면이 발행 이력을 따로 말한다",
   (await q(`document.getElementById("view-perf").innerHTML`)).includes("발행 이력"));
+if (postedN > 0) {
+  // 올린 건은 '발행됨'으로 굳어 보여야 한다 — 다시 올리라고 재촉하면 안 된다
+  check("발행 확인된 건은 결정함에 '올릴 차례'로 다시 뜨지 않는다", await q(`
+    (function(){ const labels=(STATE.published||[]).filter(p=>p.confirmed).map(p=>p.label);
+      return !S.tickets.some(t=>labels.indexOf(t.setLabel)>-1
+        && pendingDecisions().some(d=>d.label==="올릴 차례" && d.title===t.title)); })()`));
+  check("성과 화면에 발행 건수가 적힌다",
+    (await q(`document.getElementById("view-perf").innerHTML`)).includes(`${postedN}건`), `${postedN}건`);
+}
 
 check("콘솔·페이지 오류 없음", errors.length === 0, errors.slice(0, 3).join(" | "));
 

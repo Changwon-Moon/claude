@@ -19,4 +19,3 @@
 - [x] [26.07.26(일) 관제탑] **2026년 국장 성적표 — 코스피·코스닥 고점 대비** · index-2026 · 원본 data/content/2026-07-22/index-2026.json
 - [x] [26.07.26(일) 관제탑] **서울 아파트 실거래 랭킹 59㎡ (2026 상반기)** · estate-cover · 원본 data/content/2026-07-21/estate-cover-59.json
 - [x] [26.07.26(일) 관제탑] **서울 아파트 실거래 랭킹 84㎡ (2026 상반기)** · estate-cover · 원본 data/content/2026-07-21/estate-cover-84.json
-- [x] [26.07.26(일) 관제탑] **🔥 2026년 6월 신고가 쏟아진 지역은? (토허제 기준)** · singoga-map · 원본 data/content/2026-07-23/tohuh-rank.json

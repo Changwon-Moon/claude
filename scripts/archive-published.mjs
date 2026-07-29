@@ -89,31 +89,49 @@ function pagesOf(slug) {
   return out;
 }
 
-/* 옮길 대상만 먼저 추린다 — 브라우저는 정말 필요할 때만 띄운다 */
+/* 옮길 대상만 먼저 추린다 — 브라우저는 정말 필요할 때만 띄운다.
+ *
+ * ⚠️ "옮길 게 없다"에는 두 가지가 있고, 섞어 말하면 거짓 보고가 된다(2026-07-29 실제 발생):
+ *    ① 이미 다 보관돼 있다 → 정상
+ *    ② 옮기려 했는데 **재료(렌더)가 없었다** → 실패다. 성공이라고 말하면 안 된다.
+ *    아래에서 둘을 따로 센다. */
 const todo = [];
+let already = 0;
+const blocked = [];
 for (const row of done) {
   const set = sets.find((s) => norm(s.title).includes(norm(row.title)) || norm(row.title).includes(norm(s.title)));
   if (!set) {
-    console.log(`::warning::세트 정의를 못 찾음 — "${row.title}" (data/review/sets.json 확인)`);
+    blocked.push(`"${row.title}" — 세트 정의 없음(data/review/sets.json 확인)`);
     continue;
   }
   const pages = set.cards.flatMap((slug) => pagesOf(slug));
   const date = row.date || pages[0]?.date || "";
   if (!date) {
-    console.log(`::warning::발행일을 알 수 없음 — ${set.label}`);
+    blocked.push(`${set.label} — 발행일을 알 수 없음`);
     continue;
   }
   const dir = join(PUB, `${date}-${set.label}`);
-  if (existsSync(join(dir, "meta.json"))) continue; // 이미 나간 물건은 다시 그리지 않는다
+  if (existsSync(join(dir, "meta.json"))) {
+    already++;
+    continue; // 이미 나간 물건은 다시 그리지 않는다
+  }
   if (!pages.length) {
-    console.log(`::warning::렌더가 없어 보관 못 함 — ${set.label} (카드 재생성 필요)`);
+    blocked.push(`${set.label} — 렌더 PNG가 없음(data/out 비어 있음 → 렌더 단계 확인)`);
     continue;
   }
   todo.push({ set, date, dir, pages });
 }
 
+for (const b of blocked) console.log(`::warning::보관 못 함 — ${b}`);
+
 if (!todo.length) {
-  console.log(`✅ 완성본 저장소가 최신입니다 — 발행 ${done.length}건 모두 보관돼 있습니다.`);
+  if (blocked.length) {
+    // 실패를 성공으로 포장하지 않는다 — 여기서 멈추면 오너는 보관된 줄 안다
+    console.error(`❌ 발행 ${done.length}건 중 ${blocked.length}건을 보관하지 못했습니다(위 경고 참고).`);
+    writeIndex();
+    process.exit(1);
+  }
+  console.log(`✅ 완성본 저장소가 최신입니다 — 발행 ${already}건 모두 보관돼 있습니다.`);
   writeIndex();
   process.exit(0);
 }
@@ -173,6 +191,9 @@ for (const { set, date, dir, pages } of todo) {
     JSON.stringify(
       {
         _: "실제로 인스타에 올라간 물건의 사본. 손으로 고치지 말 것 — 이게 '무엇을 발행했는가'의 유일한 증거다.",
+        _pixels:
+          "[✅ 올렸습니다]를 누른 시점의 데이터로 렌더한 그림이다. 올린 직후에 누르면 실제 업로드분과 같다. " +
+          "며칠 뒤에 눌렀고 그 사이 데이터·빌더가 바뀌었다면 다를 수 있다 — 그 경우 publishedAt 과 커밋 이력을 함께 보라.",
         label: set.label,
         title: set.title,
         publishedAt: date,
