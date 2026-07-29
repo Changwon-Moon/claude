@@ -31,7 +31,7 @@ import {
   toEok,
 } from "./parse/molit.js";
 import { encKey } from "./sources/molit.js";
-import { toSeries, latestMonth, readPage, type RebPoint } from "./sources/rebIndex.js";
+import { toSeries, regionNames, ambiguousNames, latestMonth, readPage, type RebPoint } from "./sources/rebIndex.js";
 import {
   STOOQ_SPX_CSV,
   STOOQ_WITH_GAPS_CSV,
@@ -293,14 +293,28 @@ console.log("\n[부동산원 전세·월세 지수 — R-ONE]");
     { region: "서울특별시", regionCode: "11", ym: "2026-07", value: 243.8 },
     { region: "노원구", regionCode: "11350", ym: "2026-07", value: 231.2 },
   ];
+  // 계열의 키는 **코드**다 (이름이 아니다)
   const s = toSeries(pts);
-  check("지역×월 격자로 접힌다", Object.keys(s).length === 2 && Object.keys(s["서울특별시"]).length === 2);
-  check("값이 그대로 살아 있다", s["노원구"]["2026-07"] === 231.2);
+  check("지역코드×월 격자로 접힌다", Object.keys(s).length === 2 && Object.keys(s["11"]).length === 2);
+  check("값이 그대로 살아 있다", s["11350"]["2026-07"] === 231.2);
   check("최신 관측월을 데이터에서 읽는다(실행 시각 아님)", latestMonth(s) === "2026-07", latestMonth(s));
   // 같은 지역·월이 두 번 오면 마지막 값으로 덮는다(중복 행 방어)
-  const dup = toSeries([...pts, { region: "노원구", regionCode: "11350", ym: "2026-07", value: 232.0 }]);
-  check("같은 지역·월 중복은 마지막 값", dup["노원구"]["2026-07"] === 232.0);
+  const dupS = toSeries([...pts, { region: "노원구", regionCode: "11350", ym: "2026-07", value: 232.0 }]);
+  check("같은 지역·월 중복은 마지막 값", dupS["11350"]["2026-07"] === 232.0);
   check("빈 계열이면 최신월도 빈 값", latestMonth({}) === "");
+
+  /* ⚠️ 이름으로 접으면 여러 도시의 동명 구가 서로를 덮어쓴다 — 실제로 그렇게 나왔다
+   * (2026-07-29: 중구·동구·남구·북구·서구·강북지역 6종이 겹쳤다).
+   * 이름 충돌을 **찾아내는지**를 검사한다. 못 찾으면 빌더가 조용히 엉뚱한 도시를 집는다. */
+  const two: RebPoint[] = [
+    { region: "중구", regionCode: "11140", ym: "2026-06", value: 250 }, // 서울 중구
+    { region: "중구", regionCode: "26110", ym: "2026-06", value: 130 }, // 부산 중구
+  ];
+  const nm = regionNames(two);
+  check("코드가 다르면 계열도 따로 유지된다", Object.keys(toSeries(two)).length === 2);
+  const amb = ambiguousNames(nm);
+  check("이름 충돌을 잡아낸다", (amb["중구"] || []).length === 2, JSON.stringify(amb));
+  check("충돌 없으면 빈 목록", Object.keys(ambiguousNames({ "11350": "노원구" })).length === 0);
 
   /* 실제 R-ONE 응답 그대로(2026-07-29 probe 실측). head 와 row 가 **형제 배열 원소**다 —
    * 예전 구현은 아무 객체 배열이나 긁어서 head 항목까지 데이터 행으로 셌다. */

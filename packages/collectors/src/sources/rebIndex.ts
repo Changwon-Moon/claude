@@ -281,13 +281,41 @@ export async function fetchMonthly(
   return { points, note: notes.join(" / ") };
 }
 
-/** 지역 → { YYYY-MM: 값 } 으로 접는다. 같은 지역·월이 겹치면 마지막 값을 쓴다. */
+/**
+ * 지역코드 → { YYYY-MM: 값 } 으로 접는다.
+ *
+ * ⚠️ **이름으로 접으면 안 된다.** `중구`·`동구`·`남구`·`북구`·`서구` 는 서울·부산·대구·인천·
+ *    광주·대전·울산에 다 있다. 이름을 키로 쓰면 서로 덮어써서 **어느 도시 값인지 알 수 없는
+ *    계열**이 만들어진다(2026-07-29 실제로 그렇게 나왔다 — 지역 211개 중 6개가 겹쳤다).
+ *    같은 종류의 사고를 이미 한 번 겪었다: 서울 랭킹 카드에 경기도가 섞였던 일.
+ *    **코드가 정체성이다.** 이름은 표시용으로만 따로 들고 다닌다.
+ */
 export function toSeries(points: RebPoint[]): Record<string, Record<string, number>> {
   const out: Record<string, Record<string, number>> = {};
   for (const p of points) {
-    (out[p.region] ||= {})[p.ym] = p.value;
+    const key = p.regionCode || p.region; // 코드가 없으면 이름이라도 (구형 응답 방어)
+    (out[key] ||= {})[p.ym] = p.value;
   }
   return out;
+}
+
+/** 코드 → 이름 표. 이름은 표시용이고, 계열의 정체성은 코드다. */
+export function regionNames(points: RebPoint[]): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const p of points) if (p.regionCode) out[p.regionCode] = p.region;
+  return out;
+}
+
+/**
+ * 같은 이름이 여러 코드에 걸린 것을 찾아낸다 — 카드에 쓰기 전에 반드시 본다.
+ * 이름만으로 "노원구"를 집는 코드는 언젠가 다른 도시의 동명 구를 집는다.
+ */
+export function ambiguousNames(names: Record<string, string>): Record<string, string[]> {
+  const byName: Record<string, string[]> = {};
+  for (const [code, name] of Object.entries(names)) (byName[name] ||= []).push(code);
+  const dup: Record<string, string[]> = {};
+  for (const [name, codes] of Object.entries(byName)) if (codes.length > 1) dup[name] = codes;
+  return dup;
 }
 
 /** 계열에서 가장 최근 관측월 — 수집 시각이 아니라 **데이터가 말하는 시점**을 쓴다(결정성) */

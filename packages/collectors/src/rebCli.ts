@@ -18,7 +18,10 @@
  */
 import { writeFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
-import { listTables, fetchMonthly, toSeries, latestMonth, probeData, type RebTable } from "./sources/rebIndex.js";
+import {
+  listTables, fetchMonthly, toSeries, regionNames, ambiguousNames, latestMonth, probeData,
+  type RebTable,
+} from "./sources/rebIndex.js";
 
 const CWD = process.env.INIT_CWD || process.cwd();
 const fromCwd = (p: string): string => resolve(CWD, p);
@@ -147,6 +150,10 @@ async function main(): Promise<void> {
   const w = await fetchMonthly(key, wolseId, fromYear, toYear);
   const jeonse = toSeries(j.points);
   const wolse = toSeries(w.points);
+  /* 계열은 **코드**로 키를 잡고 이름은 따로 둔다 — 중구·동구·남구·북구·서구는
+   * 여러 광역시에 다 있어서 이름으로 접으면 서로 덮어쓴다(2026-07-29 실측). */
+  const names = { ...regionNames(w.points), ...regionNames(j.points) };
+  const dup = ambiguousNames(names);
 
   const regions = new Set([...Object.keys(jeonse), ...Object.keys(wolse)]);
   if (!regions.size) {
@@ -169,11 +176,16 @@ async function main(): Promise<void> {
       asOf,
       range: { from: fromYear, to: toYear },
       regions: regions.size,
+      /* 같은 이름이 여러 코드에 걸린 목록. 빌더가 이름으로 지역을 집으려 할 때
+       * 여기 있는 이름이면 **코드로 집어야 한다**는 경고다. */
+      ambiguousNames: dup,
       notes: [j.note, w.note].filter(Boolean),
       verified: false,
       verificationNote:
         "발행 전 부동산원 공표 보도자료(월간 주택가격동향)와 서울 지수 1~2개 값을 눈으로 대조한 뒤 verified=true 로 올린다.",
     },
+    /** 코드 → 지역명 (표시용). 계열의 정체성은 코드다. */
+    regionNames: names,
     jeonse,
     wolse,
   };
@@ -185,6 +197,14 @@ async function main(): Promise<void> {
     Math.max(0, ...Object.values(s).map((v) => Object.keys(v).length));
   console.log(`✅ ${outPath}`);
   console.log(`   지역 ${regions.size}개 · 전세 최장 ${months(jeonse)}개월 · 월세 최장 ${months(wolse)}개월 · 최신 ${asOf}`);
+  const dupN = Object.keys(dup).length;
+  if (dupN) {
+    console.log(`   ⓘ 이름이 겹치는 지역 ${dupN}종 — 코드로 구분해야 한다:`);
+    for (const [name, codes] of Object.entries(dup)) console.log(`      ${name} → ${codes.join(", ")}`);
+  }
+  // 서울 자치구를 코드로 집을 수 있게, 서울 계열 코드를 한 번 찍어 둔다(빌더가 참고)
+  const seoulish = Object.entries(names).filter(([, n]) => /^서울/.test(n));
+  for (const [code, n] of seoulish) console.log(`   서울 계열: ${code} = ${n}`);
   for (const n of doc.meta.notes) console.log(`   ⚠️ ${n}`);
 }
 
