@@ -157,9 +157,12 @@ async function main(): Promise<void> {
   console.log(`전세 표 ${jeonseId}${picked.jeonse ? ` (${picked.jeonse})` : ""}`);
   console.log(`월세 표 ${wolseId}${picked.wolse ? ` (${picked.wolse})` : ""}`);
 
-  const j = await fetchMonthly(key, jeonseId, fromYear, toYear);
-  const w = await fetchMonthly(key, wolseId, fromYear, toYear);
-  const wa = await fetchMonthly(key, PINNED.wolseAll.id, fromYear, toYear);
+  /* 지수 표는 항목이 여럿(지수·전월비…)이라 '지수'만 고른다.
+   * 금액 표는 항목이 금액 하나뿐이라 조건을 주지 않는다 — 조건을 주면 통째로 걸러진다. */
+  const onlyIndex = (n: string): boolean => n.includes("지수");
+  const j = await fetchMonthly(key, jeonseId, fromYear, toYear, onlyIndex);
+  const w = await fetchMonthly(key, wolseId, fromYear, toYear, onlyIndex);
+  const wa = await fetchMonthly(key, PINNED.wolseAll.id, fromYear, toYear, onlyIndex);
   const aw = await fetchMonthly(key, PINNED.avgWolse.id, fromYear, toYear);
   const aj = await fetchMonthly(key, PINNED.avgJeonse.id, fromYear, toYear);
   const jeonse = toSeries(j.points);

@@ -239,6 +239,15 @@ export async function fetchMonthly(
   statblId: string,
   fromYear: number,
   toYear: number,
+  /**
+   * 남길 항목 이름의 조건. 지수 표는 여러 항목(지수·전월비 등)이 섞여 오므로 골라야 한다.
+   *
+   * ⚠️ 기본값을 "지수 포함"으로 박아 뒀다가 **금액 표를 통째로 날렸다**(2026-07-29):
+   *    평균월세가격 표의 항목 이름은 '지수'가 아니라서 모든 행이 걸러졌고,
+   *    계열이 0건인 채로 "수집됨"이 됐다. 그래서 기본값은 **전부 받기**로 바꾸고,
+   *    골라야 하는 표에서만 조건을 준다. 그리고 무엇을 걸렀는지 반드시 기록한다.
+   */
+  wantItem?: (itemName: string) => boolean,
 ): Promise<{ points: RebPoint[]; note: string }> {
   const points: RebPoint[] = [];
   const notes: string[] = [];
@@ -249,6 +258,7 @@ export async function fetchMonthly(
   let total = 0;
   let seen = 0;
   let skippedItems = 0;
+  const itemsSeen = new Set<string>();
   for (let page = 1; page <= 200; page++) {
     // 서버를 연달아 두들기지 않는다 — 이래서 앞선 수집이 중간에 끊겼다
     if (page > 1) await new Promise((r) => setTimeout(r, 350));
@@ -266,11 +276,13 @@ export async function fetchMonthly(
     seen += got.rows.length;
 
     for (const r of got.rows) {
-      // 항목이 여러 개인 표가 있다 — '지수'가 아닌 행(전월비 등)은 섞지 않는다
       const item = pick(r, "ITM_NM", "itmNm");
-      if (item && !item.includes("지수")) {
-        skippedItems++;
-        continue;
+      if (item) {
+        itemsSeen.add(item);
+        if (wantItem && !wantItem(item)) {
+          skippedItems++;
+          continue;
+        }
       }
       const ymRaw = pick(r, "WRTTIME_IDTFR_ID", "wrttimeIdtfrId");
       const m = ymRaw.match(/^(\d{4})(\d{2})$/);
@@ -289,7 +301,15 @@ export async function fetchMonthly(
   /* 전체 건수를 알고 있는데 덜 받았다면 그건 실패다. 경고로 남기고 넘어가면
    * "왜 우리 카드에 최근 달이 없지?"를 나중에 눈으로 찾아야 한다. */
   if (total && seen < total) throw new Error(`${statblId}: 전체 ${total}행 중 ${seen}행만 받았다 — 불완전`);
-  if (skippedItems) notes.push(`지수 아닌 항목 ${skippedItems}행 제외`);
+  if (skippedItems) notes.push(`항목 조건에 안 맞아 ${skippedItems}행 제외`);
+  /* 표에 어떤 항목이 들어 있었는지 남긴다 — 다음에 "왜 0건이지?"를 추측하지 않도록 */
+  if (itemsSeen.size) notes.push(`항목: ${[...itemsSeen].join(", ")}`);
+  if (!points.length) {
+    throw new Error(
+      `${statblId}: 조건에 맞는 행이 하나도 없다 — 받은 항목은 [${[...itemsSeen].join(", ") || "없음"}]. ` +
+        `항목 조건(wantItem)을 확인하라.`,
+    );
+  }
   return { points, note: notes.join(" / ") };
 }
 
