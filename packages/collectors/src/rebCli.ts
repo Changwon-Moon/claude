@@ -110,6 +110,17 @@ async function main(): Promise<void> {
   const PINNED = {
     jeonse: { id: "A_2024_00050", name: "(월) 전세가격지수_아파트" },
     wolse: { id: "A_2024_00055", name: "(월) 월세가격지수_아파트" },
+    /* 순수 월세지수는 **2015년 6월부터**다(실측). "통계 이래 안 올랐다"를 말하려면
+     * 더 긴 계열이 필요해서 월세통합지수도 함께 받는다. 통합은 월세+준월세+준전세다.
+     * 어느 쪽을 카드에 쓸지는 데이터를 보고 정하고, 쓴 쪽을 캡션에 밝힌다. */
+    wolseAll: { id: "A_2024_00054", name: "(월) 월세통합가격지수_아파트" },
+    /* ⚠️ 지수와 **실제 금액**은 다른 이야기를 한다(2026-07-29 발견).
+     * 월세가격지수는 품질조정된 표본 지수라 서울 아파트가 2015-06~2026-06 에 +12% 남짓인데,
+     * 언론이 말하는 "서울 월세 150만원 시대"는 **평균 월세가격(원)** 기준이다.
+     * 어느 쪽도 틀리지 않았고 **재는 것이 다르다.** 둘 다 받아 두고, 카드에 쓴 쪽을 캡션에 밝힌다.
+     * 금액 계열은 사람이 체감하는 숫자라 카드로는 대개 이쪽이 세다. */
+    avgWolse: { id: "A_2024_00069", name: "(월) 평균월세가격_아파트" },
+    avgJeonse: { id: "A_2024_00064", name: "(월) 평균전세가격_아파트" },
   };
 
   let jeonseId = arg("--jeonse");
@@ -148,11 +159,20 @@ async function main(): Promise<void> {
 
   const j = await fetchMonthly(key, jeonseId, fromYear, toYear);
   const w = await fetchMonthly(key, wolseId, fromYear, toYear);
+  const wa = await fetchMonthly(key, PINNED.wolseAll.id, fromYear, toYear);
+  const aw = await fetchMonthly(key, PINNED.avgWolse.id, fromYear, toYear);
+  const aj = await fetchMonthly(key, PINNED.avgJeonse.id, fromYear, toYear);
   const jeonse = toSeries(j.points);
   const wolse = toSeries(w.points);
+  const wolseAll = toSeries(wa.points);
+  const avgWolse = toSeries(aw.points);
+  const avgJeonse = toSeries(aj.points);
   /* 계열은 **코드**로 키를 잡고 이름은 따로 둔다 — 중구·동구·남구·북구·서구는
    * 여러 광역시에 다 있어서 이름으로 접으면 서로 덮어쓴다(2026-07-29 실측). */
-  const names = { ...regionNames(w.points), ...regionNames(j.points) };
+  const names = {
+    ...regionNames(aj.points), ...regionNames(aw.points),
+    ...regionNames(wa.points), ...regionNames(w.points), ...regionNames(j.points),
+  };
   const dup = ambiguousNames(names);
 
   const regions = new Set([...Object.keys(jeonse), ...Object.keys(wolse)]);
@@ -196,14 +216,20 @@ async function main(): Promise<void> {
         `https://www.reb.or.kr/r-one/openapi/SttsApiTblData.do?STATBL_ID=${jeonseId}&DTACYCLE_CD=MM`,
         `https://www.reb.or.kr/r-one/openapi/SttsApiTblData.do?STATBL_ID=${wolseId}&DTACYCLE_CD=MM`,
       ],
-      tables: { jeonse: { id: jeonseId, name: picked.jeonse || "" }, wolse: { id: wolseId, name: picked.wolse || "" } },
+      tables: {
+        jeonse: { id: jeonseId, name: picked.jeonse || "" },
+        wolse: { id: wolseId, name: picked.wolse || "", note: "순수 월세(보증금 12개월치 이하) · 2015-06 시작" },
+        wolseAll: { id: PINNED.wolseAll.id, name: PINNED.wolseAll.name, note: "월세+준월세+준전세 통합 · 더 긴 계열" },
+        avgWolse: { id: PINNED.avgWolse.id, name: PINNED.avgWolse.name, note: "실제 평균 금액(원) — 지수와 다른 이야기를 한다" },
+        avgJeonse: { id: PINNED.avgJeonse.id, name: PINNED.avgJeonse.name, note: "실제 평균 금액(원)" },
+      },
       asOf,
       range: { from: fromYear, to: toYear },
       regions: regions.size,
       /* 같은 이름이 여러 코드에 걸린 목록. 빌더가 이름으로 지역을 집으려 할 때
        * 여기 있는 이름이면 **코드로 집어야 한다**는 경고다. */
       ambiguousNames: dup,
-      notes: [j.note, w.note].filter(Boolean),
+      notes: [j.note, w.note, wa.note, aw.note, aj.note].filter(Boolean),
       verified: false,
       verificationNote:
         "발행 전 부동산원 공표 보도자료(월간 주택가격동향)와 서울 지수 1~2개 값을 눈으로 대조한 뒤 verified=true 로 올린다.",
@@ -212,6 +238,9 @@ async function main(): Promise<void> {
     regionNames: names,
     jeonse,
     wolse,
+    wolseAll,
+    avgWolse,
+    avgJeonse,
   };
 
   mkdirSync(dirname(outPath), { recursive: true });
@@ -220,7 +249,13 @@ async function main(): Promise<void> {
   const months = (s: Record<string, Record<string, number>>): number =>
     Math.max(0, ...Object.values(s).map((v) => Object.keys(v).length));
   console.log(`✅ ${outPath}`);
-  console.log(`   지역 ${regions.size}개 · 전세 최장 ${months(jeonse)}개월 · 월세 최장 ${months(wolse)}개월 · 최신 ${asOf}`);
+  console.log(`   지역 ${regions.size}개 · 최신 ${asOf}`);
+  for (const [lbl, s2] of [["전세지수", jeonse], ["월세지수", wolse], ["월세통합지수", wolseAll],
+    ["평균월세액", avgWolse], ["평균전세액", avgJeonse]] as const) {
+    const seoul = s2["500008"] || {};
+    const ks = Object.keys(seoul).sort();
+    console.log(`   ${lbl}: 최장 ${months(s2)}개월 · 서울 ${ks.length}개월 (${ks[0] || "-"} → ${ks[ks.length - 1] || "-"})`);
+  }
   const dupN = Object.keys(dup).length;
   if (dupN) {
     console.log(`   ⓘ 이름이 겹치는 지역 ${dupN}종 — 코드로 구분해야 한다:`);

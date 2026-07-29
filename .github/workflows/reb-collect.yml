@@ -17,9 +17,9 @@ on:
         required: false
         default: "전세"
       from:
-        description: "시작 연도"
+        description: "시작 연도 (2003 = 통계 시작부터)"
         required: false
-        default: "2011"
+        default: "2003"
   schedule:
     # 부동산원 월간 주택가격동향은 매월 중순 공표 → 16일 02:00 UTC(11:00 KST)
     - cron: "0 2 16 * *"
@@ -98,7 +98,7 @@ jobs:
           REB_API_KEY: ${{ secrets.REB_API_KEY }}
         run: |
           pnpm --filter @wirit/collectors exec tsx src/rebCli.ts --collect \
-            --from "${{ github.event.inputs.from || '2011' }}" \
+            --from "${{ github.event.inputs.from || '2003' }}" \
             --out "$GITHUB_WORKSPACE/data/datasets/reb-rent-index.json"
 
       - name: 데이터셋 커밋

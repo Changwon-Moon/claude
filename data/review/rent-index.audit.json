@@ -1,0 +1,221 @@
+{
+  "_": "전세·월세 지수 분석 — 카드로 넘어갈 수치의 감사 기록. 손으로 고치지 말 것.",
+  "region": {
+    "code": "500008",
+    "name": "서울"
+  },
+  "source": "한국부동산원 R-ONE 통계 OpenAPI",
+  "tables": {
+    "jeonse": {
+      "id": "A_2024_00050",
+      "name": "(월) 전세가격지수_아파트"
+    },
+    "wolse": {
+      "id": "A_2024_00055",
+      "name": "(월) 월세가격지수_아파트"
+    }
+  },
+  "asOf": "2026-06",
+  "lawLine": {
+    "ym": "2020-07",
+    "label": "2020년 7월 임대차 2법 시행"
+  },
+  "series": {
+    "전세": {
+      "label": "전세",
+      "range": {
+        "first": "2011-01",
+        "last": "2026-06",
+        "months": 186
+      },
+      "peak": {
+        "peakYm": "2022-01",
+        "peakValue": 108.9,
+        "lastYm": "2026-06",
+        "lastValue": 104.4,
+        "isNowPeak": false,
+        "fromPeakPct": -4.1
+      },
+      "before": {
+        "from": "2011-01",
+        "to": "2020-07",
+        "fromValue": 65.2,
+        "toValue": 98.8,
+        "totalPct": 51.5,
+        "yearsSpan": 9.5,
+        "cagrPct": 4.47
+      },
+      "after": {
+        "from": "2020-07",
+        "to": "2026-06",
+        "fromValue": 98.8,
+        "toValue": 104.4,
+        "totalPct": 5.7,
+        "yearsSpan": 5.9,
+        "cagrPct": 0.94
+      },
+      "yearly": [
+        {
+          "year": 2012,
+          "pct": 0.02
+        },
+        {
+          "year": 2013,
+          "pct": 9.02
+        },
+        {
+          "year": 2014,
+          "pct": 5.28
+        },
+        {
+          "year": 2015,
+          "pct": 10.79
+        },
+        {
+          "year": 2016,
+          "pct": 2.82
+        },
+        {
+          "year": 2017,
+          "pct": 2.4
+        },
+        {
+          "year": 2018,
+          "pct": -0.03
+        },
+        {
+          "year": 2019,
+          "pct": -0.69
+        },
+        {
+          "year": 2020,
+          "pct": 5.58
+        },
+        {
+          "year": 2021,
+          "pct": 6.48
+        },
+        {
+          "year": 2022,
+          "pct": -10.11
+        },
+        {
+          "year": 2023,
+          "pct": -6.94
+        },
+        {
+          "year": 2024,
+          "pct": 5.23
+        },
+        {
+          "year": 2025,
+          "pct": 3.77
+        }
+      ],
+      "beforeLaw": {
+        "years": 8,
+        "avgYearlyPct": 3.7,
+        "maxYearlyPct": 10.79,
+        "minYearlyPct": -0.69,
+        "negativeYears": 2
+      },
+      "afterLaw": {
+        "years": 6,
+        "avgYearlyPct": 0.67,
+        "negativeYears": 2
+      }
+    },
+    "월세": {
+      "label": "월세",
+      "range": {
+        "first": "2015-06",
+        "last": "2026-06",
+        "months": 133
+      },
+      "peak": {
+        "peakYm": "2026-06",
+        "peakValue": 103.9,
+        "lastYm": "2026-06",
+        "lastValue": 103.9,
+        "isNowPeak": true,
+        "fromPeakPct": 0
+      },
+      "before": {
+        "from": "2015-06",
+        "to": "2020-07",
+        "fromValue": 92.5,
+        "toValue": 88,
+        "totalPct": -4.9,
+        "yearsSpan": 5.1,
+        "cagrPct": -0.98
+      },
+      "after": {
+        "from": "2020-07",
+        "to": "2026-06",
+        "fromValue": 88,
+        "toValue": 103.9,
+        "totalPct": 18.1,
+        "yearsSpan": 5.9,
+        "cagrPct": 2.85
+      },
+      "yearly": [
+        {
+          "year": 2016,
+          "pct": -1.45
+        },
+        {
+          "year": 2017,
+          "pct": -1.1
+        },
+        {
+          "year": 2018,
+          "pct": -0.42
+        },
+        {
+          "year": 2019,
+          "pct": -0.17
+        },
+        {
+          "year": 2020,
+          "pct": -0.3
+        },
+        {
+          "year": 2021,
+          "pct": 1.65
+        },
+        {
+          "year": 2022,
+          "pct": 2.03
+        },
+        {
+          "year": 2023,
+          "pct": 1.83
+        },
+        {
+          "year": 2024,
+          "pct": 2.32
+        },
+        {
+          "year": 2025,
+          "pct": 4.47
+        }
+      ],
+      "beforeLaw": {
+        "years": 4,
+        "avgYearlyPct": -0.78,
+        "maxYearlyPct": -0.17,
+        "minYearlyPct": -1.45,
+        "negativeYears": 4
+      },
+      "afterLaw": {
+        "years": 6,
+        "avgYearlyPct": 2,
+        "negativeYears": 1
+      }
+    },
+    "월세통합": {
+      "label": "월세통합",
+      "empty": true
+    }
+  }
+}
