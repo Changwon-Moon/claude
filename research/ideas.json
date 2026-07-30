@@ -806,6 +806,102 @@
       "stage": 4,
       "at": "26.07.30(목)",
       "titleWas": "🔥 토허제 40곳 월세 상승률 (지도+행정구역 표)"
+    },
+    {
+      "id": "sig-2026-07-30-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "이 대통령 지지율 취임 후 최저치...부동산·증시 불안 영향 미친 듯",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-07-30-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-07-30-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "“부동산 정책 잘못” 56%…대통령 지지율 하락 속 세제개편 승부수 통할까",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-07-30-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-07-30-3",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "\"코스피 5% 오르다가 뚝\" 탄식 터졌다...외인 줍줍에도 5500대로 - 머니투데이",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-07-30-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-07-30-4",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "증권가와 테크 업계, \"반도체 주가 급락? 공급 부족 본질은 여전히 유효\"",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-07-30-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-07-30-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "최태원, SK하이닉스 48억어치 첫 매수…‘반토막’ 주가에 승부수",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-07-30-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-07-30-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "잉글랜드은행, 기준금리 3.75%로 동결…동결 6 vs 인상 3(상보)",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-07-30-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-07-30-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "영국 기준금리 3.75% 유지…\"물가목표 위해 필요한 조처할 것\"(종합)",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-07-30-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-07-30-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "영국 기준금리 3.75% 동결…중동발 물가 불확실성 경계 - 조선비즈",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-07-30-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
