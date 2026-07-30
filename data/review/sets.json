@@ -78,13 +78,13 @@
       "caption": "wolse-flip"
     },
     {
-      "label": "rent-gu-map",
-      "title": "🗺 서울 자치구 전·월세 상승률 지도",
+      "label": "tohuh-rent-map",
+      "title": "🗺 토지거래허가구역 40곳 전·월세 상승률 지도",
       "cards": [
-        "rent-gu-map-p1",
-        "rent-gu-map-p2"
+        "tohuh-rent-map-p1",
+        "tohuh-rent-map-p2"
       ],
-      "caption": "rent-gu-map"
+      "caption": "tohuh-rent-map"
     }
   ]
 }

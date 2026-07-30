@@ -104,24 +104,67 @@ const ymKo = (ym) => `${ym.slice(0, 4)}년 ${Number(ym.slice(5))}월`;
 const negRun = groupsRaw.find((g) => g.tone === "neg");
 const posRun = groupsRaw.at(-1);
 
+/* ── 마지막 연도의 연간 추정 (2026-07-30 오너 지시) ──
+ * ⚠️ **원자료에 없는 숫자다.** 그래서 규칙을 여기 한 줄로 못박고, 카드에서도 분리해 그린다:
+ *     추정 = 상반기 실적 × (12 / 지난 개월수)   ← 남은 기간이 같은 속도라고 가정
+ * 이건 예측 모델이 아니라 **명시된 산술 가정**이다. 계절성·정책 변화를 전혀 반영하지 않는다.
+ * 그래서 ① 점선+사선 막대 ② "하반기 추정" 꼬리표 ③ 실측/추정 경계 세로선 ④ 캡션 주석
+ * 네 곳에서 실측과 갈라 놓는다. 하나만 빠뜨리면 추정치가 사실로 읽힌다. */
+const partialRow = yearRows.find((r) => r.partial);
+const monthsDone = Number(lastMon);
+const estAdd = partialRow ? partialRow.v * ((12 - monthsDone) / monthsDone) : null;
+const estFull = partialRow ? partialRow.v + estAdd : null;
+
+/* ── 세로 막대 좌표 (플롯 높이 대비 %) ──
+ * 0선 위쪽은 최대 오름(추정 포함), 아래쪽은 최대 내림이 차지한다. */
+const maxUp = Math.max(...yearRows.map((r) => (r.v > 0 ? r.v : 0)), estFull ?? 0);
+const maxDown = Math.max(...yearRows.map((r) => (r.v < 0 ? -r.v : 0)));
+const HEADROOM = 1.18; // 값 라벨이 막대 위에 앉을 자리
+const spanUp = maxUp * HEADROOM;
+const spanDown = maxDown * 1.75; // 내림 막대 아래에 값 라벨이 들어갈 자리
+const total = spanUp + spanDown;
+const zeroAt = (spanUp / total) * 100;
+const pctOf = (v) => `${((Math.abs(v) / total) * 100).toFixed(2)}%`;
+
+/* 막대 라벨은 **부호+숫자만** 쓴다(단위는 부제에). "%"를 붙이면 라벨이 칸보다 넓어져
+ * 옆 칸과 겹친다(첫 렌더에서 +2.0% / +1.8% / +2.3% 가 뭉쳤다). */
+const bare = (v) => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(1);
+
+const points = yearRows.map((r) => {
+  const isEst = r.partial && estAdd != null;
+  const h = pctOf(r.v);
+  return {
+    year: String(r.y),
+    /* 추정 연도만 단위를 붙인다 — 이 카드가 말하려는 한 숫자다 */
+    value: isEst ? `${bare(estFull)}%` : bare(r.v),
+    dir: r.v < 0 ? "down" : "up",
+    h,
+    ...(isEst ? { hEst: pctOf(estAdd), totalH: pctOf(estFull), tag: "하반기 추정" } : { totalH: h }),
+    /* ⚠️ '최고 실측 연도' 강조는 넣지 않는다.
+     * 2025년(연 +4.5%)보다 2026년 상반기 실측(+4.6%)이 이미 높아서, 2025에 최고 표식을 달면
+     * 독자가 두 강조 사이에서 초점을 잃는다. 이 카드의 초점은 마지막 막대 하나다. */
+  };
+});
+/* 실측/추정 경계선 — 마지막 막대의 왼쪽 경계에 세운다 */
+const splitAt = partialRow ? `${((points.length - 1) / points.length) * 100}%` : "";
+
 const p1 = {
-  template: "year-bars@1",
+  template: "year-bars@2",
   date,
-  subtitle: `서울 아파트 · 월세가격지수 · ${ymKo(asOf)} 기준`,
-  title: "서울 월세,\n뒤집힌 해",
-  lede: `${firstYear}년부터 ${lastYear}년까지 연도별 변화율`,
-  many: yearRows.length >= 12,
-  negLabel: "내림",
-  posLabel: "오름",
-  groups,
+  subtitle: `서울 아파트 · 순수 월세가격지수 연간 변화율 · ${ymKo(asOf)} 공표분`,
+  title: "서울 월세 폭등 추이",
+  lede: partialRow
+    ? `단위 % · ${lastYear}년은 ${monthsDone}월까지 실측 ${sign1(partialRow.v)} + 같은 속도 가정 추정`
+    : `단위 % · ${firstYear}년부터 ${lastYear}년까지 연도별 변화율`,
+  zeroAt: `${zeroAt.toFixed(2)}%`,
+  colGap: "10px",
+  splitAt,
+  points,
+  /* 오너 지시: 하단 카드 문구를 '사상 최대 · 6년 연속 상승중'으로 교체 */
   foot: [
-    { k: "지수 최저", v: ymKo(trough) },
-    ...(isPeakNow ? [{ k: "지금은", v: "사상 최고", accent: true }] : [{ k: "사상 최고", v: ymKo(peak) }]),
-    { k: `${posRun.rows[0].y}년부터`, v: `${posRun.rows.length}년 연속 오름`, accent: true },
+    { k: "월세가격지수", v: isPeakNow ? "사상 최대" : `최고 ${ymKo(peak)}`, hot: true },
+    { k: `${posRun.rows[0].y}년부터`, v: `${posRun.rows.length}년 연속 상승중`, hot: true },
   ],
-  /* 정직 문구는 한 줄에 들어와야 한다 — 두 줄로 밀리면 마지막 글자가 잘려
-   * 경고가 반쪽이 된다(첫 렌더에서 "사선 막대)"가 다음 줄로 넘어갔다). */
-  caveat: `순수 월세가격지수 기준 · 통계 시작 2015년 6월 · ${lastYear}년은 ${Number(lastMon)}월까지(사선)`,
   source: { name: "한국부동산원 「전국주택가격동향조사」", asOf: ymKo(asOf) },
 };
 

@@ -1,5 +1,5 @@
 /**
- * 서울 자치구 코로플레스 지도 SVG 생성 — 공용 모듈.
+ * 코로플레스 지도 SVG 생성 — 공용 모듈. (서울 자치구 / 수도권 시·군·구)
  *
  * ── 왜 모듈로 뽑았나 (2026-07-30)
  * 경계 투영과 라벨 무게중심 계산이 build-map-card.mjs 와 build-map-rank.mjs 에
@@ -14,7 +14,17 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "../..");
-const GEO = join(ROOT, "data/geo/seoul-districts.geojson");
+
+/**
+ * 경계 파일 목록. **파일명을 빌더에 흩어 놓지 않는다** — 어느 카드가 어느 경계를 쓰는지
+ * 한 곳에서 보여야 "같은 서울인데 모양이 다른 지도"가 안 생긴다.
+ *   seoul  : 서울 25개 자치구만
+ *   capital: 전국 시·군·구 중 서울(11)·경기(31)만 골라 쓴다(2013 통계청 코드)
+ */
+const GEO_FILES = {
+  seoul: { file: "data/geo/seoul-districts.geojson", codes: null },
+  capital: { file: "data/geo/korea-municipalities.geojson", codes: /^(11|31)/ },
+};
 
 const rings = (geom) =>
   geom?.type === "Polygon"
@@ -23,14 +33,31 @@ const rings = (geom) =>
       ? geom.coordinates.flat()
       : [];
 
-/** 경계 파일을 읽고 화면 좌표 변환기를 만든다. W=1000 고정(템플릿이 100% 폭으로 늘린다). */
-export function loadSeoulGeo({ width = 1000, pad = 6 } = {}) {
-  const geo = JSON.parse(readFileSync(GEO, "utf8"));
+/**
+ * 경계 파일을 읽고 화면 좌표 변환기를 만든다. W=1000 고정(템플릿이 100% 폭으로 늘린다).
+ * ⚠️ bbox 는 **그릴 지형 전체**로 잡는다. 색칠할 지역만으로 잡으면 배경(맥락) 지역이 잘린다.
+ */
+export function loadSeoulGeo({ width = 1000, pad = 6, scope = "seoul", framedBy = null, margin = 0.04 } = {}) {
+  const spec = GEO_FILES[scope];
+  if (!spec) throw new Error(`모르는 경계 범위: ${scope} (${Object.keys(GEO_FILES).join(", ")})`);
+  const raw = JSON.parse(readFileSync(join(ROOT, spec.file), "utf8"));
+  const geo = spec.codes
+    ? { ...raw, features: raw.features.filter((f) => spec.codes.test(String(f.properties.code || ""))) }
+    : raw;
+  if (!geo.features.length) throw new Error(`경계가 비었다: ${spec.file} (${scope})`);
+
+  /* ── 화면을 무엇으로 채울지 (framedBy) ──
+   * bbox 를 그리는 지형 **전체**로 잡으면, 대상이 일부에 몰린 지도는 대상이 깨알처럼 작아진다.
+   * 실제로 토허제 40곳 지도를 경기 전체 bbox 로 그렸더니 서울이 뭉개져 라벨을 읽을 수 없었다.
+   * framedBy(이름 → boolean)를 주면 **그 지역들만으로 bbox** 를 잡고, 나머지는 배경으로
+   * 그려지다가 viewBox 밖으로 잘린다 — 잘려도 되는 건 맥락이고, 잘리면 안 되는 건 대상이다. */
+  const framing = framedBy ? geo.features.filter((f) => framedBy(f.properties.name)) : geo.features;
+  if (!framing.length) throw new Error("framedBy 가 아무 지역도 고르지 못했다 — 이름 표기를 확인하세요");
   let minLon = 999,
     maxLon = -999,
     minLat = 999,
     maxLat = -999;
-  for (const f of geo.features)
+  for (const f of framing)
     for (const ring of rings(f.geometry))
       for (const [lon, lat] of ring) {
         minLon = Math.min(minLon, lon);
@@ -38,6 +65,13 @@ export function loadSeoulGeo({ width = 1000, pad = 6 } = {}) {
         minLat = Math.min(minLat, lat);
         maxLat = Math.max(maxLat, lat);
       }
+  // 대상이 카드 테두리에 딱 붙지 않게 여유를 둔다
+  const mLon = (maxLon - minLon) * margin;
+  const mLat = (maxLat - minLat) * margin;
+  minLon -= mLon;
+  maxLon += mLon;
+  minLat -= mLat;
+  maxLat += mLat;
   // 위도에 따른 경도 축소 보정 — 안 하면 서울이 가로로 늘어난다
   const kx = Math.cos((((minLat + maxLat) / 2) * Math.PI) / 180);
   const scale = width / ((maxLon - minLon) * kx);
@@ -110,9 +144,13 @@ export function ramp(lo, hi, t) {
  * @param opts.labClass  text 에 붙일 클래스
  * @param opts.value     (자치구명) → { fill, textFill, lines: [{text, cls, dy}] } | null
  *                       null 이면 '값 없음' 처리(호출자가 회색 등으로 정한다)
- * @param opts.blankFill 값이 없는 자치구 색
- * @param opts.blankText 값이 없는 자치구 글자색
+ * @param opts.blankFill 값이 없는 지역 색(배경·맥락으로만 그려지는 지역)
+ * @param opts.blankText 값이 없는 지역 글자색
  * @param opts.extraStyle svg 안에 넣을 <style> 내용(라벨 크기 등)
+ * @param opts.scope     "seoul"(서울 자치구) | "capital"(서울+경기 시·군·구)
+ * @param opts.framedBy  (지역명) → boolean. 화면(bbox)을 채울 지역. 없으면 전체.
+ * @param opts.margin    bbox 여유 비율(기본 0.04)
+ * @param opts.blankClass 값 없는 지역의 path 클래스 — 색칠 지역과 테두리를 다르게 줄 때
  */
 export function choroplethSvg({
   geoClass = "mc-geo",
@@ -120,11 +158,15 @@ export function choroplethSvg({
   value,
   blankFill = "#eee",
   blankText = "#98a2b3",
+  blankClass = "",
   extraStyle = "",
   width = 1000,
   pad = 6,
+  scope = "seoul",
+  framedBy = null,
+  margin = 0.04,
 } = {}) {
-  const { geo, height, px, py } = loadSeoulGeo({ width, pad });
+  const { geo, height, px, py } = loadSeoulGeo({ width, pad, scope, framedBy, margin });
 
   /* 도형을 먼저 다 재고(면적 포함) → 그 다음에 라벨을 만든다.
    * 라벨 크기를 면적 비율로 정하려면 **가장 큰 구를 알아야** 하므로 두 번 돈다. */
@@ -146,21 +188,33 @@ export function choroplethSvg({
 
   let paths = "";
   let labels = "";
+  /* ⚠️ 색칠 지역을 **나중에** 그린다. 배경 지역과 경계를 맞대면 뒤에 그린 쪽의
+   * 흰 테두리가 위에 얹히는데, 배경이 위로 오면 색칠 지역 윤곽이 갉아먹힌다. */
+  const withValue = [];
   for (const s of shapes) {
     const v = value ? value(s.name, { area: s.area, maxArea }) : null;
-    paths += `<path class="${geoClass}" d="${s.d}" fill="${v ? v.fill : blankFill}"/>`;
+    if (v) {
+      withValue.push([s, v]);
+      continue;
+    }
+    paths += `<path class="${blankClass || geoClass}" d="${s.d}" fill="${blankFill}"/>`;
+  }
+  for (const [s, v] of withValue) {
+    paths += `<path class="${geoClass}" d="${s.d}" fill="${v.fill}"/>`;
+  }
+  for (const [s, v] of withValue) {
     const [cx0, cy0] = centroid(s.pts);
     const cx = cx0.toFixed(0);
-    const lines = v?.lines || [];
+    const lines = v.lines || [];
     /* 라벨 후광(halo): 글자 뒤에 **그 자치구의 색**을 두껍게 깔고 그 위에 글자를 그린다.
      * 작은 구에서는 라벨이 옆 구 경계를 넘어갈 수밖에 없는데(글자가 도형보다 넓다),
      * 후광이 없으면 두 구의 글자가 뒤엉켜 읽히지 않는다(첫 렌더에서 성동·광진이 그랬다).
      * 후광 색을 자기 구 색으로 쓰면 넘어간 글자도 **어느 구의 글자인지** 보인다. */
-    const halo = v?.halo
+    const halo = v.halo
       ? `paint-order:stroke;stroke:${v.halo};stroke-width:6px;stroke-linejoin:round`
       : "";
     labels +=
-      `<text class="${labClass}" x="${cx}" y="${(cy0 + (v?.dy ?? 0)).toFixed(0)}" fill="${v ? v.textFill : blankText}"` +
+      `<text class="${labClass}" x="${cx}" y="${(cy0 + (v.dy ?? 0)).toFixed(0)}" fill="${v.textFill || blankText}"` +
       (halo ? ` style="${halo}"` : "") +
       `>` +
       lines

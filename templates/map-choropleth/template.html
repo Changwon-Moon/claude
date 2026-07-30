@@ -40,6 +40,9 @@
       .mc-leg .mc-zero { font-variant-numeric: tabular-nums; }
       .mc-note { font-size: 24px; font-weight: 700; color: var(--wirit-ink); }
       .mc-note b { color: #c0122a; }
+      /* 범례를 뺀 카드에서도 **기준·한계는 남아야 한다.** 값이 지도 위에 다 적혀 있어
+       * 범례가 필요 없는 경우(hideLegend)에도, 무엇을 기준으로 잰 수치인지는 지워지지 않는다. */
+      .mc-fn { margin: 10px 8px 18px; font-size: 22px; font-weight: 600; line-height: 1.35; color: var(--wirit-gray); }
     </style>
   </head>
   <body>
@@ -49,10 +52,13 @@
 
       <div class="mc-map">{{{mapSvg}}}</div>
 
+      {{#unless hideLegend}}
       <div class="mc-foot">
         <div class="mc-leg"><span>{{legendLo}}</span><span class="mc-bar"></span><span>{{legendHi}}</span>{{#if legendMid}}<span class="mc-zero">({{legendMid}})</span>{{/if}}</div>
         <div class="mc-note">1위 <b>{{topName}} {{topValue}}</b></div>
       </div>
+      {{/unless}}
+      {{#if footnote}}<p class="mc-fn">{{footnote}}</p>{{/if}}
 
       <div class="wirit-footer">
         <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>

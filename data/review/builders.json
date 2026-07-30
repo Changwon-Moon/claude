@@ -80,8 +80,8 @@
       ]
     },
     {
-      "label": "rent-gu-map",
-      "cmd": "scripts/build-rent-gu-map.mjs",
+      "label": "tohuh-rent-map",
+      "cmd": "scripts/build-tohuh-rent-map.mjs",
       "args": [
         "2026-07-30"
       ]
