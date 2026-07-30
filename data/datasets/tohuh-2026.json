@@ -14,7 +14,8 @@
     "verificationNote": "발행 전 서울시(land.seoul.go.kr)·경기도 공고문으로 지역 목록·기간 재확인 후 verified=true 승격.",
     "caveat": "지도는 시·군·구 경계 기준. 실제 허가구역은 행정구 일부만 지정된 경우가 있다(화성=동탄 일대, 수치도 동탄구 기준).",
     "title": "수도권 토지거래허가구역(아파트) 지정 현황 — 서울 25구 + 경기 15곳",
-    "asOf": "2026-07-23"
+    "asOf": "2026-07-23",
+    "rebCodeNote": "rebCode = 한국부동산원 R-ONE 지역코드. 이름으로 지역을 집으면 동명 지역이 섞이므로 여기 명단을 참조한다."
   },
   "newly": {
     "effectiveFrom": "2026-07-05",
@@ -25,7 +26,8 @@
         "geoName": "용인시기흥구",
         "label": "용인시 기흥구",
         "areaKm2": 81.64,
-        "mapLabel": "용인 기흥"
+        "mapLabel": "용인 기흥",
+        "rebCode": "530057"
       },
       {
         "geoName": "화성시동탄구",
@@ -40,13 +42,16 @@
           "3124060",
           "3124061",
           "3124062"
-        ]
+        ],
+        "rebCode": "520032",
+        "rebCodeNote": "허가구역은 동탄구지만 동탄구 지수는 2026-01 분구 이후치뿐 → 화성시(520032) 전체 기준"
       },
       {
         "geoName": "구리시",
         "label": "구리시",
         "areaKm2": 33.34,
-        "mapLabel": "구리"
+        "mapLabel": "구리",
+        "rebCode": "520037"
       }
     ]
   },
@@ -56,62 +61,74 @@
       {
         "geoName": "과천시",
         "label": "과천시",
-        "mapLabel": "과천"
+        "mapLabel": "과천",
+        "rebCode": "520018"
       },
       {
         "geoName": "광명시",
         "label": "광명시",
-        "mapLabel": "광명"
+        "mapLabel": "광명",
+        "rebCode": "520031"
       },
       {
         "geoName": "성남시수정구",
         "label": "성남시 수정구",
-        "mapLabel": "성남 수정"
+        "mapLabel": "성남 수정",
+        "rebCode": "530048"
       },
       {
         "geoName": "성남시중원구",
         "label": "성남시 중원구",
-        "mapLabel": "성남 중원"
+        "mapLabel": "성남 중원",
+        "rebCode": "530049"
       },
       {
         "geoName": "성남시분당구",
         "label": "성남시 분당구",
-        "mapLabel": "성남 분당"
+        "mapLabel": "성남 분당",
+        "rebCode": "530050"
       },
       {
         "geoName": "수원시장안구",
         "label": "수원시 장안구",
-        "mapLabel": "수원 장안"
+        "mapLabel": "수원 장안",
+        "rebCode": "530060"
       },
       {
         "geoName": "수원시팔달구",
         "label": "수원시 팔달구",
-        "mapLabel": "수원 팔달"
+        "mapLabel": "수원 팔달",
+        "rebCode": "530062"
       },
       {
         "geoName": "수원시영통구",
         "label": "수원시 영통구",
-        "mapLabel": "수원 영통"
+        "mapLabel": "수원 영통",
+        "rebCode": "530063"
       },
       {
         "geoName": "안양시동안구",
         "label": "안양시 동안구",
-        "mapLabel": "안양 동안"
+        "mapLabel": "안양 동안",
+        "rebCode": "530046"
       },
       {
         "geoName": "용인시수지구",
         "label": "용인시 수지구",
-        "mapLabel": "용인 수지"
+        "mapLabel": "용인 수지",
+        "rebCode": "530058"
       },
       {
         "geoName": "의왕시",
         "label": "의왕시",
-        "mapLabel": "의왕"
+        "mapLabel": "의왕",
+        "rebCode": "520022"
       },
       {
         "geoName": "하남시",
         "label": "하남시",
-        "mapLabel": "하남"
+        "mapLabel": "하남",
+        "rebCode": "520038"
       }
     ]
   },
@@ -124,151 +141,176 @@
         "geoName": "종로구",
         "label": "종로구",
         "core": false,
-        "mapLabel": "종로"
+        "mapLabel": "종로",
+        "rebCode": "530011"
       },
       {
         "geoName": "중구",
         "label": "중구",
         "core": false,
-        "mapLabel": "중"
+        "mapLabel": "중",
+        "rebCode": "530012"
       },
       {
         "geoName": "용산구",
         "label": "용산구",
         "core": true,
-        "mapLabel": "용산"
+        "mapLabel": "용산",
+        "rebCode": "530013"
       },
       {
         "geoName": "성동구",
         "label": "성동구",
         "core": false,
-        "mapLabel": "성동"
+        "mapLabel": "성동",
+        "rebCode": "530015"
       },
       {
         "geoName": "광진구",
         "label": "광진구",
         "core": false,
-        "mapLabel": "광진"
+        "mapLabel": "광진",
+        "rebCode": "530016"
       },
       {
         "geoName": "동대문구",
         "label": "동대문구",
         "core": false,
-        "mapLabel": "동대문"
+        "mapLabel": "동대문",
+        "rebCode": "530017"
       },
       {
         "geoName": "중랑구",
         "label": "중랑구",
         "core": false,
-        "mapLabel": "중랑"
+        "mapLabel": "중랑",
+        "rebCode": "530018"
       },
       {
         "geoName": "성북구",
         "label": "성북구",
         "core": false,
-        "mapLabel": "성북"
+        "mapLabel": "성북",
+        "rebCode": "530019"
       },
       {
         "geoName": "강북구",
         "label": "강북구",
         "core": false,
-        "mapLabel": "강북"
+        "mapLabel": "강북",
+        "rebCode": "530020"
       },
       {
         "geoName": "도봉구",
         "label": "도봉구",
         "core": false,
-        "mapLabel": "도봉"
+        "mapLabel": "도봉",
+        "rebCode": "530021"
       },
       {
         "geoName": "노원구",
         "label": "노원구",
         "core": false,
-        "mapLabel": "노원"
+        "mapLabel": "노원",
+        "rebCode": "530022"
       },
       {
         "geoName": "은평구",
         "label": "은평구",
         "core": false,
-        "mapLabel": "은평"
+        "mapLabel": "은평",
+        "rebCode": "530024"
       },
       {
         "geoName": "서대문구",
         "label": "서대문구",
         "core": false,
-        "mapLabel": "서대문"
+        "mapLabel": "서대문",
+        "rebCode": "530025"
       },
       {
         "geoName": "마포구",
         "label": "마포구",
         "core": false,
-        "mapLabel": "마포"
+        "mapLabel": "마포",
+        "rebCode": "530026"
       },
       {
         "geoName": "양천구",
         "label": "양천구",
         "core": false,
-        "mapLabel": "양천"
+        "mapLabel": "양천",
+        "rebCode": "530029"
       },
       {
         "geoName": "강서구",
         "label": "강서구",
         "core": false,
-        "mapLabel": "강서"
+        "mapLabel": "강서",
+        "rebCode": "530030"
       },
       {
         "geoName": "구로구",
         "label": "구로구",
         "core": false,
-        "mapLabel": "구로"
+        "mapLabel": "구로",
+        "rebCode": "530031"
       },
       {
         "geoName": "금천구",
         "label": "금천구",
         "core": false,
-        "mapLabel": "금천"
+        "mapLabel": "금천",
+        "rebCode": "530032"
       },
       {
         "geoName": "영등포구",
         "label": "영등포구",
         "core": false,
-        "mapLabel": "영등포"
+        "mapLabel": "영등포",
+        "rebCode": "530033"
       },
       {
         "geoName": "동작구",
         "label": "동작구",
         "core": false,
-        "mapLabel": "동작"
+        "mapLabel": "동작",
+        "rebCode": "530034"
       },
       {
         "geoName": "관악구",
         "label": "관악구",
         "core": false,
-        "mapLabel": "관악"
+        "mapLabel": "관악",
+        "rebCode": "530035"
       },
       {
         "geoName": "서초구",
         "label": "서초구",
         "core": true,
-        "mapLabel": "서초"
+        "mapLabel": "서초",
+        "rebCode": "530037"
       },
       {
         "geoName": "강남구",
         "label": "강남구",
         "core": true,
-        "mapLabel": "강남"
+        "mapLabel": "강남",
+        "rebCode": "530038"
       },
       {
         "geoName": "송파구",
         "label": "송파구",
         "core": true,
-        "mapLabel": "송파"
+        "mapLabel": "송파",
+        "rebCode": "530039"
       },
       {
         "geoName": "강동구",
         "label": "강동구",
         "core": false,
-        "mapLabel": "강동"
+        "mapLabel": "강동",
+        "rebCode": "530040"
       }
     ]
   }

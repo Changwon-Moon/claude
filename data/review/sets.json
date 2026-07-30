@@ -79,10 +79,9 @@
     },
     {
       "label": "tohuh-rent-map",
-      "title": "🗺 토지거래허가구역 40곳 전·월세 상승률 지도",
+      "title": "🔥 토허제 40곳 월세 폭등 (지도+행정구역 표)",
       "cards": [
-        "tohuh-rent-map-p1",
-        "tohuh-rent-map-p2"
+        "tohuh-rent-map"
       ],
       "caption": "tohuh-rent-map"
     }

@@ -8,11 +8,12 @@
     "template": { "type": "string", "pattern": "^year-bars@\\d+$" },
     "date": { "type": "string" },
     "subtitle": { "type": "string", "maxLength": 70 },
-    "title": { "type": "string", "maxLength": 30, "description": "줄바꿈(\\n) 허용. nowrap 아님" },
-    "lede": { "type": "string", "maxLength": 60 },
+    "title": { "type": "string", "maxLength": 30, "description": "한 줄. 폭(936px)에 맞게 템플릿이 폰트를 자동 축소한다(줄이는 방향만)" },
     "zeroAt": { "type": "string", "description": "0선의 위치(플롯 높이 대비 %). 빌더가 최대 오름/내림 비율로 계산" },
     "colGap": { "type": "string", "description": "막대 간격. 기본 12px" },
     "splitAt": { "type": "string", "description": "실측/추정 경계 세로 점선 위치(%). 추정이 있을 때만" },
+    "arrow": { "type": "boolean", "description": "빈 공간을 지나 추정치 카드로 향하는 우상향 곡선(장식). 막대 뒤 레이어" },
+    "stamp": { "type": "boolean", "description": "플롯 좌상단 wirit 워터마크" },
     "points": {
       "type": "array",
       "minItems": 3,
@@ -28,6 +29,16 @@
           "hEst": { "type": "string", "description": "추정 막대 높이(실측 위에 쌓임). 있으면 점선+사선으로 그려진다" },
           "totalH": { "type": "string", "description": "실측+추정 합. 값 라벨을 막대 위에 올리는 데 쓴다" },
           "tag": { "type": "string", "maxLength": 12, "description": "추정 막대에 붙는 꼬리표(예: '하반기 추정')" },
+          "card": {
+            "type": "object",
+            "description": "그 칸의 값 라벨을 대신하는 배지 카드. 추정 연도에만 쓴다(점선+사선 = 추정 막대와 같은 언어). tag 에 '추정'이, note 에 산술 가정이 반드시 들어가야 한다.",
+            "required": ["tag", "value", "note"],
+            "properties": {
+              "tag": { "type": "string", "maxLength": 14 },
+              "value": { "type": "string", "maxLength": 10 },
+              "note": { "type": "string", "maxLength": 30 }
+            }
+          },
           "peak": { "type": "boolean", "description": "최고 실측 연도 1개만. 강조는 한 곳." }
         }
       }

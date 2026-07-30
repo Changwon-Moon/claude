@@ -119,9 +119,15 @@ const estFull = partialRow ? partialRow.v + estAdd : null;
  * 0선 위쪽은 최대 오름(추정 포함), 아래쪽은 최대 내림이 차지한다. */
 const maxUp = Math.max(...yearRows.map((r) => (r.v > 0 ? r.v : 0)), estFull ?? 0);
 const maxDown = Math.max(...yearRows.map((r) => (r.v < 0 ? -r.v : 0)));
-const HEADROOM = 1.18; // 값 라벨이 막대 위에 앉을 자리
+/* 가장 높은 막대 위에 남길 여유. 1.18 → 1.42 로 올렸다(2026-07-30 시안 A):
+ * 그 자리에 값 라벨이 아니라 **추정치 카드**(3줄 배지)가 앉기 때문이다.
+ * 더 줄이면 카드가 카드 상단(제목 헤어라인)에 붙고, 더 늘리면 막대가 힘을 잃는다. */
+const HEADROOM = 1.42;
 const spanUp = maxUp * HEADROOM;
-const spanDown = maxDown * 1.75; // 내림 막대 아래에 값 라벨이 들어갈 자리
+/* 내림 막대 아래에 값 라벨이 들어갈 자리. 1.75 → 1.45 로 줄였다(오너 지시: 꽉 차 보이게).
+ * 이 값을 줄이면 0선이 아래로 내려가 **양수 막대가 그만큼 커진다**.
+ * 1.3 이하로 내리면 −1.5 값 라벨이 연도 축과 겹친다(렌더로 확인). */
+const spanDown = maxDown * 1.45;
 const total = spanUp + spanDown;
 const zeroAt = (spanUp / total) * 100;
 const pctOf = (v) => `${((Math.abs(v) / total) * 100).toFixed(2)}%`;
@@ -129,6 +135,11 @@ const pctOf = (v) => `${((Math.abs(v) / total) * 100).toFixed(2)}%`;
 /* 막대 라벨은 **부호+숫자만** 쓴다(단위는 부제에). "%"를 붙이면 라벨이 칸보다 넓어져
  * 옆 칸과 겹친다(첫 렌더에서 +2.0% / +1.8% / +2.3% 가 뭉쳤다). */
 const bare = (v) => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(1);
+
+/* 추정 배수(12 / 지난 개월수) — 카드에 적는 '가정' 그 자체다. 6월까지면 ×2.
+ * 문구를 손으로 "×2"라고 쓰면 7월 공표분에서 거짓이 된다. */
+const estMul = monthsDone ? 12 / monthsDone : null;
+const mulTxt = estMul == null ? "" : Number.isInteger(estMul) ? String(estMul) : estMul.toFixed(1);
 
 const points = yearRows.map((r) => {
   const isEst = r.partial && estAdd != null;
@@ -139,7 +150,21 @@ const points = yearRows.map((r) => {
     value: isEst ? `${bare(estFull)}%` : bare(r.v),
     dir: r.v < 0 ? "down" : "up",
     h,
-    ...(isEst ? { hEst: pctOf(estAdd), totalH: pctOf(estFull), tag: "하반기 추정" } : { totalH: h }),
+    ...(isEst
+      ? {
+          hEst: pctOf(estAdd),
+          totalH: pctOf(estFull),
+          tag: "하반기 추정",
+          /* 추정치 카드 — 막대 위에 앉는 배지. 값 라벨(.yc-val) 을 대신한다.
+           * ⚠️ tag/note 없이 숫자만 크게 띄우면 추정치가 실측으로 읽힌다.
+           *    "추정" 명시 + 산술 가정(실측 × 배수)을 카드 안에 함께 적는다. */
+          card: {
+            tag: `${r.y}년 추정`,
+            value: `${bare(estFull)}%`,
+            note: `${monthsDone}개월 실측 ${sign1(r.v)} × ${mulTxt}`,
+          },
+        }
+      : { totalH: h }),
     /* ⚠️ '최고 실측 연도' 강조는 넣지 않는다.
      * 2025년(연 +4.5%)보다 2026년 상반기 실측(+4.6%)이 이미 높아서, 2025에 최고 표식을 달면
      * 독자가 두 강조 사이에서 초점을 잃는다. 이 카드의 초점은 마지막 막대 하나다. */
@@ -151,16 +176,21 @@ const splitAt = partialRow ? `${((points.length - 1) / points.length) * 100}%` :
 const p1 = {
   template: "year-bars@2",
   date,
-  subtitle: `서울 아파트 · 순수 월세가격지수 연간 변화율 · ${ymKo(asOf)} 공표분`,
-  title: "서울 월세 폭등 추이",
-  lede: partialRow
-    ? `단위 % · ${lastYear}년은 ${monthsDone}월까지 실측 ${sign1(partialRow.v)} + 같은 속도 가정 추정`
-    : `단위 % · ${firstYear}년부터 ${lastYear}년까지 연도별 변화율`,
+  /* 단위(%)는 여기로 옮겼다 — lede 를 지웠고, 축 왼쪽에 붙이면 −1.5 라벨과 겹친다.
+   * ⚠️ 캡션은 한 줄이다. "…공표분"까지 붙였더니 두 줄로 접혀 제목을 밀어냈다(렌더 확인).
+   *    공표 기준월은 하단 푸터(source.asOf)에 이미 있으니 여기서는 뺀다. */
+  subtitle: `서울 아파트 · 순수 월세가격지수 연간 변화율 · 단위 %`,
+  /* 오너 지시(2026-07-30): 제목은 이 문구 그대로 한 줄. 템플릿이 폭에 맞춰 폰트를 줄인다.
+   * lede(제목 아래 회색 작은 글씨)는 삭제. */
+  title: "미쳐버린 서울 월세 폭등 상황",
   zeroAt: `${zeroAt.toFixed(2)}%`,
   colGap: "10px",
   splitAt,
+  arrow: true, // 빈 공간을 지나 추정치 카드로 향하는 우상향 곡선(장식, 막대 뒤 레이어)
+  stamp: true, // 플롯 왼쪽 빈 공간의 wirit 워터마크 — 그래픽만 잘라 써도 출처가 따라간다
   points,
-  /* 오너 지시: 하단 카드 문구를 '사상 최대 · 6년 연속 상승중'으로 교체 */
+  /* 오너 지시: 요약 카드 문구는 '사상 최대 · 6년 연속 상승중'.
+   * 시안 A(2026-07-30): 위치를 축 아래 → **플롯 좌상단 빈 사분면**으로 옮겼다(템플릿 담당). */
   foot: [
     { k: "월세가격지수", v: isPeakNow ? "사상 최대" : `최고 ${ymKo(peak)}`, hot: true },
     { k: `${posRun.rows[0].y}년부터`, v: `${posRun.rows.length}년 연속 상승중`, hot: true },

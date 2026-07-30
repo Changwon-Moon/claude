@@ -12,26 +12,39 @@
          왜 세로 막대인가: 시간은 가로로 흐른다. 가로 막대로 세우면 독자가
          "위에서 아래로 읽는 순위표"로 착각한다. 연도별 추이는 세로가 표준이다.
 
-         구조: [플롯(0선 기준 위/아래)] → [연도 축] → [요약 카드]
+         구조: [제목 1줄 + 헤어라인]
+               → [플롯: 요약카드(좌상단) · 추정 카드(우상단) · 추세 화살표 · 0선 기준 막대]
+               → [연도 축]
          · 막대 높이(h)는 빌더가 % 로 계산한다. 템플릿은 그리기만 한다.
          · 색: 오름 = 레드, 내림 = 코발트 (index-2026@1 과 같은 규칙)
-         · 추정 구간은 **점선 테두리 + 사선 칠 + 라벨**로 실측과 분리한다.
+         · 추정 구간은 **점선 테두리 + 사선 칠 + 꼬리표 + 경계 세로선**으로 실측과 분리한다.
            숫자에만 "추정"을 적으면 그래픽만 잘라 썼을 때 경고가 사라진다.
+
+         ── 시안 A(에디토리얼·절제) 2026-07-30 오너 지시 반영 ──
+         ① 제목 1줄(자동 축소, 줄이는 방향만) ② 제목 아래 lede 삭제 → 헤어라인만
+         ③ 빈 공간에 우상향 곡선 화살표(막대 뒤 배경 요소) ④ 추정치 카드(점선·사선 = 막대와 같은 언어)
+         ⑤ 플롯 빈 사분면에 wirit 워터마크 ⑥ 꽉 차 보이게 — 제목이 폭을 채우고,
+           하단 요약 카드 2장을 **플롯 좌상단 빈 사분면**으로 올려 세로로 쌓았다(플롯이 그만큼 자란다)
          ========================================================= */
 
       .yc-head {
-        margin-top: 4px;
+        margin-top: 2px;
       }
+      /* 제목은 한 줄. 폰트 크기는 아래 __wiritFit 이 실측해서 폭(936px)에 맞춘다.
+       * CSS 값은 상한이고, 스크립트는 **줄이는 방향으로만** 움직인다. */
       .yc .wirit-title {
         margin-top: 0;
-        font-size: 74px;
-        line-height: 1.06;
-        white-space: pre-line;
+        font-size: 88px;
+        line-height: 1.04;
+        white-space: nowrap;
         letter-spacing: -0.035em;
       }
-      .yc .wirit-subtitle {
-        margin-top: 12px;
-        font-size: 29px;
+      /* 헤어라인 — 여백을 구조로 쓴다. 제목 아래 회색 글씨(lede) 대신 이 선 하나. */
+      .yc-rule {
+        margin-top: 20px;
+        height: 3px;
+        background: var(--wirit-ink);
+        opacity: 0.9;
       }
 
       .yc-chart {
@@ -39,7 +52,7 @@
         min-height: 0;
         display: flex;
         flex-direction: column;
-        margin: 30px 0 0;
+        margin: 18px 0 26px;
       }
 
       /* ── 플롯 영역 ── */
@@ -56,7 +69,7 @@
         top: var(--zero);
         height: 4px;
         background: var(--wirit-ink);
-        z-index: 2;
+        z-index: 3;
       }
       .yc-zero::after {
         content: "0";
@@ -75,17 +88,72 @@
         grid-auto-flow: column;
         grid-auto-columns: 1fr;
         gap: var(--col-gap, 12px);
+        z-index: 2; /* 화살표(z-index:0)보다 위 — 곡선은 막대 뒤로 지나간다 */
       }
       .yc-col {
         position: relative;
       }
 
+      /* ── 추세 화살표(장식) ──
+       * 데이터가 아니다. 막대 뒤를 지나가는 배경 요소다. 그래서
+       *  · 값이 아닌 **좌표**로만 정의(빌더의 수치와 무관)
+       *  · 막대·0선보다 아래 레이어(z-index 0)
+       *  · 옅은 레드 그라데이션(과거=거의 안 보임 → 현재=진함)
+       * 좌표계는 플롯 박스를 1000×1000 으로 정규화(preserveAspectRatio=none).
+       * 세로 비율이 데이터(0선 위치)에 따라 조금 변해도 곡선이 같은 위치를 지난다.
+       * 선 굵기는 non-scaling-stroke 로 왜곡을 막는다. */
+      /* ⚠️ width/height 를 반드시 적는다. inset:0 만 주면 <svg> 는 대체요소라
+       * viewBox 비율(1000×1000=정사각)로 높이를 잡아 플롯보다 159px 아래까지 늘어난다.
+       * (첫 렌더에서 곡선이 0선 아래·연도 축까지 흘러내렸다.) */
+      .yc-arrow {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+      }
+      /* 색은 브랜드 토큰(--wirit-red)에서만 온다. SVG 프레젠테이션 속성에는 var() 를 쓸 수 없으므로
+       * stop-color/stroke 를 CSS 로 지정한다(농도만 변주 — 과거는 거의 안 보이고 현재는 진하게). */
+      .yc-arrow .s0 {
+        stop-color: var(--wirit-red);
+        stop-opacity: 0.08;
+      }
+      .yc-arrow .s1 {
+        stop-color: var(--wirit-red);
+        stop-opacity: 0.32;
+      }
+      .yc-arrow .s2 {
+        stop-color: var(--wirit-red);
+        stop-opacity: 0.72;
+      }
+      .yc-arrowhead path {
+        stroke: var(--wirit-red);
+        stroke-opacity: 0.72;
+      }
+      /* 화살촉은 정규화 좌표에서 늘어나면 모양이 망가진다 → 고정 픽셀 SVG 를
+       * 곡선 끝점(%)에 놓고 접선 각도만큼 돌린다. 회전 기준점 = 촉의 꼭짓점. */
+      .yc-arrowhead {
+        position: absolute;
+        left: 88%;
+        top: 25%;
+        width: 52px;
+        height: 52px;
+        margin: -26px 0 0 -44px;
+        transform-origin: 44px 26px;
+        transform: rotate(-70deg);
+        z-index: 0;
+        pointer-events: none;
+      }
+
       /* 막대: 0선에서 위(오름) 또는 아래(내림)로 자란다 */
+      /* 막대 두께 — 칸 폭의 92%(좌우 4%). 오너 지시(2026-07-30)로 84%→92% 로 굵혔다.
+       * 더 굵히면 막대끼리 붙어 개별 연도로 안 읽힌다(colGap 10px 뿐이다). */
       .yc-bar {
         position: absolute;
-        left: 8%;
-        right: 8%;
-        border-radius: 5px 5px 0 0;
+        left: 4%;
+        right: 4%;
+        border-radius: 6px 6px 0 0;
       }
       .yc-col.up .yc-bar.solid {
         bottom: calc(100% - var(--zero));
@@ -96,7 +164,7 @@
         top: var(--zero);
         height: var(--h);
         background: var(--wirit-cobalt);
-        border-radius: 0 0 5px 5px;
+        border-radius: 0 0 6px 6px;
       }
       /* 최고 실측 연도만 진하게. 강조는 한 곳. */
       .yc-col.peak .yc-bar.solid {
@@ -114,12 +182,12 @@
         );
         border: 3px dashed #c0272d;
         border-bottom: none;
-        border-radius: 5px 5px 0 0;
+        border-radius: 6px 6px 0 0;
       }
 
       /* 값 라벨 */
       /* ⚠️ 라벨 상자는 **칸 폭을 넘지 않는다.** 첫 렌더에서 left/right 를 -6px 로 넓혔더니
-       * 옆 칸 라벨과 겹쳐 +2.0% / +1.8% / +2.3% 가 뭉쳤다. 값은 짧게(단위는 부제로) 쓰고
+       * 옆 칸 라벨과 겹쳐 +2.0% / +1.8% / +2.3% 가 뭉쳤다. 값은 짧게(단위는 축 라벨로) 쓰고
        * 상자는 칸 안에 가둔다. */
       .yc-val {
         position: absolute;
@@ -144,11 +212,6 @@
       .yc-col.peak .yc-val {
         color: #a5121f;
       }
-      /* 추정 연도만 크게 — 이 카드의 초점은 하나다 */
-      .yc-col.est-col .yc-val {
-        font-size: 36px;
-        color: #a5121f;
-      }
       /* 추정 막대에 붙는 꼬리표 — 그래픽만 잘라 써도 '추정'이 따라간다 */
       .yc-tag {
         position: absolute;
@@ -163,8 +226,65 @@
         font-weight: 800;
         letter-spacing: -0.03em;
         white-space: nowrap;
-        z-index: 3;
+        z-index: 4;
       }
+
+      /* ── 추정치 카드 ──
+       * 값 라벨(.yc-val) 대신 그 칸에 붙는다. 막대 위쪽에 앵커되므로 데이터가 바뀌면 같이 움직인다.
+       * ⚠️ 테두리(점선)·바탕(사선)은 추정 막대와 **같은 언어**다. 실선/단색으로 바꾸면
+       *    추정치가 실측처럼 읽힌다 — 디자인보다 앞서는 오보 방지 규칙. */
+      .yc-card {
+        position: absolute;
+        right: 0;
+        width: 508px;
+        bottom: calc(100% - var(--zero) + var(--total-h) + 20px);
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        padding: 15px 22px 16px;
+        border: 3px dashed #c0272d;
+        border-radius: 20px;
+        background:
+          repeating-linear-gradient(
+            -45deg,
+            rgba(229, 72, 77, 0.13) 0 7px,
+            rgba(229, 72, 77, 0.03) 7px 15px
+          ),
+          var(--wirit-paper);
+        z-index: 4;
+      }
+      .yc-card .lab {
+        flex: 1;
+        min-width: 0;
+      }
+      .yc-card .t {
+        display: block;
+        font-size: 23px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: #c0272d;
+      }
+      /* 산술 가정 한 줄 — 두 줄로 접히면 카드가 커져 막대를 덮는다. nowrap 로 못박는다. */
+      .yc-card .n {
+        display: block;
+        margin-top: 5px;
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--wirit-gray);
+        white-space: nowrap;
+      }
+      .yc-card .v {
+        font-family: var(--font-num);
+        font-size: 62px;
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: -0.04em;
+        color: #a5121f;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
       /* 실측/추정 경계선 — 어디까지가 사실인지 한 줄로 못박는다 */
       .yc-split {
         position: absolute;
@@ -180,14 +300,22 @@
         z-index: 1;
       }
 
+      /* 워터마크 — 플롯 좌상단(데이터가 없는 빈 코너). 데이터 위에는 올리지 않는다.
+       * 이 카드는 초년도 값이 0 근처라 좌상단이 넓게 비는데, 그 여백을 채우는 역할도 한다. */
+      .yc .wirit-stamp {
+        font-size: 52px;
+        opacity: 0.13;
+      }
+
       /* ── 연도 축 ── */
       .yc-axis {
         display: grid;
         grid-auto-flow: column;
         grid-auto-columns: 1fr;
         gap: var(--col-gap, 12px);
-        margin-top: 16px;
-        padding-top: 12px;
+        margin-top: 14px;
+        padding-top: 10px;
+        position: relative;
       }
       .yc-axis span {
         text-align: center;
@@ -201,17 +329,26 @@
         color: var(--wirit-ink);
         font-weight: 900;
       }
+      /* ⚠️ 단위(%)는 축 왼쪽에 두면 −1.5 값 라벨과 부딪힌다(첫 렌더에서 겹쳤다).
+       * lede 를 지운 뒤에는 좌상단 캡션(subtitle)에 "단위 %"를 붙여서 해결했다. */
 
-      /* ── 하단 요약 카드 ── */
+      /* ── 요약 카드 2장 ──
+       * 원래는 축 아래(하단)에 나란히 뒀다. 2026-07-30 오너 지적("막대 위쪽 빈 공간이 크다")에 따라
+       * **플롯 좌상단 빈 사분면으로 옮겨 세로로 쌓았다.** 초년도 값이 0 근처라 그 영역에는
+       * 데이터가 애초에 없다 — 데이터를 가리지 않고 여백만 채운다. 하단이 비워진 만큼
+       * 플롯이 자라서 막대도 커진다(같은 카드 안에서 정보 밀도만 올라간다). */
       .yc-foot {
-        margin-top: 26px;
-        margin-bottom: 22px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 42%;
         display: flex;
-        gap: 14px;
+        flex-direction: column;
+        gap: 18px;
+        z-index: 4;
       }
       .yc-foot .cell {
-        flex: 1;
-        padding: 22px 26px;
+        padding: 24px 28px;
         border-radius: 20px;
         background: var(--wirit-ink-06);
       }
@@ -228,7 +365,7 @@
         display: block;
         margin-top: 8px;
         font-family: var(--font-num);
-        font-size: 44px;
+        font-size: 46px;
         font-weight: 900;
         letter-spacing: -0.03em;
         line-height: 1.05;
@@ -243,11 +380,50 @@
       <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
       <div class="yc-head">
         <h1 class="wirit-title">{{title}}</h1>
-        {{#if lede}}<p class="wirit-subtitle">{{lede}}</p>{{/if}}
       </div>
+      <div class="yc-rule"></div>
 
       <div class="yc-chart" style="--zero: {{zeroAt}}; --col-gap: {{#if colGap}}{{colGap}}{{else}}12px{{/if}}">
         <div class="yc-plot">
+          {{#if arrow}}
+          <svg class="yc-arrow" viewBox="0 0 1000 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="ycTrend" x1="0" y1="1" x2="1" y2="0">
+                <stop class="s0" offset="0" />
+                <stop class="s1" offset="0.55" />
+                <stop class="s2" offset="1" />
+              </linearGradient>
+            </defs>
+            <!-- 왼쪽 아래(0선 살짝 위)에서 출발해 초년도 빈 구간을 낮게 지나고,
+                 2021·2022 막대 상단을 스치며(막대 뒤로) 올라가 마지막에 추정 카드 밑으로 치솟는다.
+                 좌표는 장식 기하다 — 데이터 수치가 아니다. 손대면 렌더로 눈으로 확인할 것. -->
+            <path
+              d="M 15 780 C 250 776 480 756 640 690 C 728 645 830 420 880 250"
+              fill="none"
+              stroke="url(#ycTrend)"
+              stroke-width="7"
+              stroke-linecap="round"
+              vector-effect="non-scaling-stroke"
+            />
+          </svg>
+          <svg class="yc-arrowhead" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M 18 8 L 44 26 L 18 44"
+              fill="none"
+              stroke-width="7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          {{/if}}
+          {{#if foot}}
+          <div class="yc-foot">
+            {{#each foot}}
+            <div class="cell {{#if this.hot}}hot{{/if}}"><span class="k">{{this.k}}</span><span class="v">{{this.v}}</span></div>
+            {{/each}}
+          </div>
+          {{/if}}
+          {{#if stamp}}<span class="wirit-stamp" style="left: 4px; top: 50%">@wirit_note</span>{{/if}}
           {{#if splitAt}}<span class="yc-split" style="--split-at: {{splitAt}}"></span>{{/if}}
           <span class="yc-zero"></span>
           <div class="yc-cols">
@@ -259,7 +435,18 @@
               <span class="yc-bar solid"></span>
               {{#if this.hEst}}<span class="yc-bar est"></span>{{/if}}
               {{#if this.tag}}<span class="yc-tag">{{this.tag}}</span>{{/if}}
+              {{#if this.card}}
+              <!-- 추정 연도: 값 라벨 대신 카드. 같은 숫자를 두 번 쓰지 않는다. -->
+              <div class="yc-card">
+                <span class="lab">
+                  <span class="t">{{this.card.tag}}</span>
+                  <span class="n">{{this.card.note}}</span>
+                </span>
+                <span class="v">{{this.card.value}}</span>
+              </div>
+              {{else}}
               <span class="yc-val">{{this.value}}</span>
+              {{/if}}
             </div>
             {{/each}}
           </div>
@@ -269,18 +456,46 @@
         </div>
       </div>
 
-      {{#if foot}}
-      <div class="yc-foot">
-        {{#each foot}}
-        <div class="cell {{#if this.hot}}hot{{/if}}"><span class="k">{{this.k}}</span><span class="v">{{this.v}}</span></div>
-        {{/each}}
-      </div>
-      {{/if}}
-
       <div class="wirit-footer">
         <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
         <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
       </div>
     </div>
+
+    <!-- 제목 1줄 맞춤: 콘텐츠 폭(936px) 안에 한 줄로 들어오는 최대 폰트를 이분 탐색으로 찾는다.
+         **줄이는 방향으로만** 움직인다(상한 = CSS font-size). 결정적: 입력 동일 → 결과 동일.
+         폰트 로딩 후 실제 글자폭으로 다시 재야 하므로 window.__wiritFit 훅으로 노출. -->
+    <script>
+      window.__wiritFit = function () {
+        var el = document.querySelector(".yc .wirit-title");
+        if (!el) return;
+        var head = el.parentElement;
+        var avail = head.clientWidth;
+        if (!avail) return;
+        el.style.whiteSpace = "nowrap";
+        var hi = parseFloat(getComputedStyle(el).fontSize) || 88;
+        var lo = 34,
+          best = lo;
+        el.style.fontSize = hi + "px";
+        if (el.scrollWidth <= avail) {
+          best = hi;
+        } else {
+          for (var i = 0; i < 22; i++) {
+            var mid = (lo + hi) / 2;
+            el.style.fontSize = mid + "px";
+            if (el.scrollWidth <= avail) {
+              best = mid;
+              lo = mid;
+            } else {
+              hi = mid;
+            }
+          }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready)
+        document.fonts.ready.then(window.__wiritFit);
+    </script>
   </body>
 </html>
