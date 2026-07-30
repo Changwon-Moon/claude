@@ -46,6 +46,10 @@ interface Geo {
   collisions: { a: string; b: string; x: number; y: number }[];
   footerTop: number | null;
   lastRowBottom: number | null;
+  /** 머리글 ↔ 데이터 행의 열 상자 어긋남 — {tag, col, dx}(px) */
+  colSkew: { tag: string; col: number; dx: number }[];
+  /** 푸터 바로 위 요소와 푸터 사이 간격(px). null = 해당 요소 없음 */
+  footerGap: number | null;
 }
 interface Rect {
   left: number;
@@ -168,14 +172,49 @@ const MEASURE_JS = `(() => {
       if(o) collisions.push({a:".yc-bar",b:".yc-lidx",x:o.x,y:o.y});
     });
   });
+  /* ── 머리글 ↔ 데이터 행 열 정렬 (colalign) ──
+   * 오너가 **두 번** 지적한 항목이다(07-20 순위표, 07-30 토허제 표).
+   * 머리글 행과 데이터 행은 각자 다른 grid 다. 열을 둘 다 \`auto\` 로 두면
+   * 머리글은 라벨 폭("월세 상승분"), 행은 값 폭("+38만원")으로 **각자** 계산해 어긋난다.
+   * 눈으로는 "조금 오른쪽" 정도로 보여 넘어가기 쉬우므로 좌표로 못박는다.
+   * 재는 것은 **글자가 아니라 열 상자**다 — 상자 안 정렬(가운데/왼쪽/오른쪽)은 별개 결정이다. */
+  var colSkew=[];
+  [["표 머리글", ".sm-rank .rh3", ".sm-rank .sm-row"],
+   ["순위표 머리글", ".rt-colheadrow", ".rt-row:not(.rt-colheadrow)"]].forEach(function(pair){
+    var head=card.querySelector(pair[1]);
+    var row=card.querySelector(pair[2]);
+    if(!head||!row) return;
+    var hc=head.children, rc=row.children;
+    var n=Math.min(hc.length, rc.length);
+    for(var i=0;i<n;i++){
+      var a=hc[i].getBoundingClientRect(), b=rc[i].getBoundingClientRect();
+      if(!a.width||!b.width) continue;
+      var dx=Math.max(Math.abs(a.left-b.left), Math.abs(a.right-b.right));
+      if(dx>2) colSkew.push({tag:pair[0], col:i+1, dx:Math.round(dx)});
+    }
+  });
   var footer=card.querySelector(".wirit-footer");
+  /* 푸터 바로 위 요소와의 간격 — 붙어 있으면 답답해 보인다(오너 반복 지적).
+   * 흐름 배치라 '겹침'은 안 생기므로 기존 rowclip 이 못 잡는다. */
+  var footerGap=null;
+  if(footer){
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap");
+    var ft=footer.getBoundingClientRect().top, bot=null;
+    Array.prototype.forEach.call(above, function(el){
+      var r=el.getBoundingClientRect();
+      if(!r.height) return;
+      if(bot===null||r.bottom>bot) bot=r.bottom;
+    });
+    if(bot!==null) footerGap=Math.round(ft-bot);
+  }
   var lastRow=rows.length?rows[rows.length-1]:null;
   return {
     card:{left:cb.left,right:cb.right,top:cb.top,bottom:cb.bottom,width:cb.width},
     innerW:cb.width-padL-padR, innerLeft:cb.left+padL, innerRight:cb.right-padR,
     rows:rows, overflow:overflow, collisions:collisions,
     footerTop:footer?footer.getBoundingClientRect().top:null,
-    lastRowBottom:(lastRow&&lastRow.name)?lastRow.name.bottom:null
+    lastRowBottom:(lastRow&&lastRow.name)?lastRow.name.bottom:null,
+    colSkew:colSkew, footerGap:footerGap
   };
 })()`;
 
@@ -194,6 +233,26 @@ function analyze(g: Geo): Finding[] {
       msg: `${c.b} 가 ${c.a} 와 겹침 (가로 ${c.x}px · 세로 ${c.y}px) — 여백을 늘리거나 글자를 줄이세요`,
     })
   );
+
+  /* 1) 머리글 ↔ 데이터 열 어긋남 — 오너가 두 번 지적한 항목이라 error 로 둔다.
+   *    고치는 법: 두 grid 의 열 정의를 **같게** 하고, `auto` 열은 고정 폭으로 못박는다. */
+  (g.colSkew || []).forEach((c) =>
+    out.push({
+      level: "error",
+      code: "colalign",
+      msg: `${c.tag} ${c.col}번째 열이 데이터 행과 ${c.dx}px 어긋남 — 머리글과 행의 grid 열 정의를 같게 하고 auto 열은 고정 폭으로 (auto 는 각자 내용 폭으로 계산돼 어긋납니다)`,
+    })
+  );
+
+  /* 2) 푸터 바로 위 요소가 푸터에 붙음 — 겹치진 않지만 답답해 보인다(오너 반복 지적).
+   *    흐름 배치라 rowclip 이 못 잡는 자리다. 미학 항목이므로 warn. */
+  const FOOTER_GAP_MIN = 14;
+  if (g.footerGap != null && g.footerGap < FOOTER_GAP_MIN)
+    out.push({
+      level: "warn",
+      code: "footergap",
+      msg: `푸터 바로 위 요소와의 간격이 ${g.footerGap}px (최소 ${FOOTER_GAP_MIN}px) — 하단 주석·축에 margin-bottom 을 주세요`,
+    });
 
   /* 아래 검사들은 순위표(ranking-table) 전용이다 — 행이 없으면 여기서 끝낸다.
    * ⚠️ 이 return 이 위쪽에 있었기 때문에 순위표가 아닌 카드는 **넘침 검사조차
