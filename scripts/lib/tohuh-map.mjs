@@ -144,7 +144,12 @@ export function tohuhMapSvg({
     const xs = pts.map((q) => q[0]);
     const ys = pts.map((q) => q[1]);
     const area = (Math.max(...xs) - Math.min(...xs)) * (Math.max(...ys) - Math.min(...ys));
-    placed.push({ cx, cy, v, area, label: info.mapLabel || info.label });
+    /* 투영된 링 전부 — 라벨이 **자기 도형 안에** 앉았는지 판정하는 데 쓴다.
+     * 무게중심만으로는 부족하다: 오목한 구(중랑·성동)는 무게중심이 옆 구 위에 떨어진다. */
+    const projRings = [];
+    for (const f of part.features)
+      for (const ring of rings(f.geometry)) projRings.push(ring.map(([lo, la]) => [px(lo), py(la)]));
+    placed.push({ cx, cy, v, area, rings: projRings, label: info.mapLabel || info.label });
   }
 
   /* 라벨 충돌 회피: 위→아래로 배치하며 너무 가까우면 아래로 밀어낸다.
@@ -159,27 +164,52 @@ export function tohuhMapSvg({
   const clampX = (x) => Math.max(XMIN, Math.min(XMAX, x));
 
   if (placement === "nearest") {
-    /* ── 무게중심에서 **가장 가까운** 빈 자리 (2026-07-30 오너 지적) ──
-     * "down" 방식은 겹치면 아래로만 밀어서, 밀린 라벨이 자기 구역을 훌쩍 벗어난다
-     * → "이게 어느 구 숫자인지" 모르게 된다.
-     * 여기서는 (0, ±7, ±14, …) 순서로 위/아래를 **번갈아** 시도하고, 그래도 막히면
-     * 좌우로 조금 흔든다. 이동량이 작은 자리를 먼저 잡으니 라벨이 중앙 근처에 남는다.
+    /* ── 자기 도형 안, 중앙에 가장 가까운 자리 (2026-07-30 오너 3차 지적) ──
+     * "down" 방식은 겹치면 아래로만 밀어서 라벨이 자기 구역을 훌쩍 벗어난다.
+     * 2차 시도(빈 자리 우선 탐색)도 "겹치지 않는 첫 자리"를 잡느라 중랑·서대문·금천이
+     * 옆 구 위로 날아갔다 — **겹침 회피가 소속보다 앞선** 게 원인이다.
+     *
+     * 그래서 셋을 한 점수로 겨룬다. 후보 격자를 전부 훑어 최솟값을 고른다:
+     *   ① 중앙에서 멀어진 거리(px)
+     *   ② 라벨이 자기 도형 **밖**으로 나간 정도 (OUT_PEN)
+     *   ③ 다른 라벨과 겹친 **면적 비율** (OVER_PEN — 0/1 이 아니라 연속값)
+     * ③ 이 연속값이라 좁은 구(수원 팔달)는 "살짝 겹치고 제자리"를 택한다(오너 허용).
      * 큰 구부터 자리를 잡는다 — 작은 구는 어차피 밀리므로 큰 구의 중앙을 지켜준다.
-     * 결정적: 후보 순서가 고정돼 있어 같은 입력 → 같은 배치. */
+     * 결정적: 격자·순서가 고정돼 있어 같은 입력 → 같은 배치. */
+    const OUT_PEN = 300; // 도형 밖으로 완전히 나간 라벨의 벌점(px 환산)
+    const OVER_PEN = 560; // 라벨 하나와 완전히 겹쳤을 때의 벌점(px 환산)
+    /* 라벨 글자 상자의 세로 표본점 — 2줄이면 위/가운데/아래를 다 본다(앵커 기준 상대 좌표) */
+    const PROBE = twoLine ? [-22, 0, 14] : [0];
+    const inPoly = (rs, x, y) => {
+      let c = false;
+      for (const r of rs)
+        for (let i = 0, j = r.length - 1; i < r.length; j = i++) {
+          const [xi, yi] = r[i], [xj, yj] = r[j];
+          if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) c = !c;
+        }
+      return c;
+    };
     placed.sort((a, b) => b.area - a.area || a.cy - b.cy || a.cx - b.cx);
-    const CAND = [];
-    for (let step = 0; step <= 14; step++) {
-      const dy = step * 7;
-      for (const sy of step === 0 ? [0] : [-1, 1]) {
-        CAND.push([0, dy * sy]);
-        if (step >= 3) for (const sx of [-1, 1]) CAND.push([sx * Math.min(dy, LW * 0.55), dy * sy]);
-      }
-    }
+    const SX = LW / 12, SY = 6, RX = 8, RY = 11; // 격자 간격·범위(중앙에서 ±79px, ±66px)
     for (const p of placed) {
-      const bx = clampX(p.cx);
-      const hit = CAND.find(([dx, dy]) => free(clampX(bx + dx), p.cy + dy)) || [0, 105];
-      p.x = clampX(bx + hit[0]);
-      p.y = p.cy + hit[1];
+      let best = null;
+      for (let iy = -RY; iy <= RY; iy++)
+        for (let ix = -RX; ix <= RX; ix++) {
+          const x = clampX(p.cx + ix * SX);
+          const y = p.cy + iy * SY;
+          let out = 0;
+          for (const dy of PROBE) if (!inPoly(p.rings, x, y + dy)) out++;
+          let ov = 0;
+          for (const q of done) {
+            const fx = Math.max(0, LW - Math.abs(q.x - x)) / LW;
+            const fy = Math.max(0, LH - Math.abs(q.y - y)) / LH;
+            ov += fx * fy;
+          }
+          const score = Math.hypot(x - p.cx, y - p.cy) + (out / PROBE.length) * OUT_PEN + ov * OVER_PEN;
+          if (!best || score < best.score) best = { x, y, score };
+        }
+      p.x = best.x;
+      p.y = best.y;
       done.push({ x: p.x, y: p.y });
     }
   } else {

@@ -147,8 +147,8 @@ const MEASURE_JS = `(() => {
    * 값·라벨류 글자 상자를 서로 대조한다. 조상-자손 관계는 건너뛴다(당연히 겹친다). */
   /* ⚠️ 하단 설명(.sm-total)·푸터 글자도 넣는다. 표가 길어져 이들을 덮는 것이
    * 가장 흔한 불량인데, 처음엔 목록에 없어서 검수가 놓쳤다(2026-07-30). */
-  var LEAF = ".yc-val,.yc-solid-val,.yc-tag,.yc-card .t,.yc-card .n,.yc-card .v," +
-             ".yc-axis span,.yc-lidx," +
+  var LEAF = ".yc-val,.yc-solid-val,.yc-tag,.yc-card .ln," +
+             ".yc-axis span,.yc-lidx,.sm-asof," +
              ".sm-gu,.sm-val .h,.sm-val .r,.sm-total,.sm-insight,.sm-tailnote .tx," +
              ".wirit-footer span,.rt-name,.rt-val,.mc-fn";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));

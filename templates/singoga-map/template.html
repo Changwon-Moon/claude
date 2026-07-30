@@ -45,6 +45,13 @@
       .sm-val .h i { font-style: normal; font-size: 22px; font-weight: 800; margin-left: 1px; }
       .sm-val .r { display: block; font-family: var(--font-num); font-size: 21px; font-weight: 700; color: var(--wirit-gray); margin-top: 1px; }
 
+      /* 기준 시점 — 제목 바로 아래 · 표 오른쪽 · 지도 위(오너 지시 2026-07-30).
+       * 폰트는 **제목의 절반**이다. fitTitle 이 제목 크기를 실측으로 정하므로
+       * 여기서 고정값을 쓰면 제목이 커질 때 비율이 깨진다 → 아래 스크립트가 계산해 넣는다.
+       * (fitTitle 을 안 쓰는 카드를 위해 CSS 에도 기본값을 둔다.) */
+      .sm-asof { font-size: 28px; font-weight: 800; color: var(--wirit-gray);
+        letter-spacing: -0.02em; text-align: right; line-height: 1; margin-bottom: 8px; }
+
       /* 우: 지도 */
       .sm-map { flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; }
       .sm-map svg { width: 100%; height: 100%; display: block; }
@@ -52,7 +59,8 @@
       .sm-legend .bar { width: 150px; height: 12px; border-radius: 6px;
         background: linear-gradient(90deg, rgb(255,226,219), rgb(176,11,30)); }
 
-      .sm-total { margin-top: 6px; font-size: 24px; font-weight: 700; color: var(--wirit-gray); }
+      /* 하단 주석 — 푸터 바로 위에 붙어 답답해 보였다(오너 지시 2026-07-30). 위아래로 숨을 준다. */
+      .sm-total { margin-top: 14px; margin-bottom: 22px; font-size: 24px; font-weight: 700; color: var(--wirit-gray); }
       .sm-total b { color: var(--wirit-ink); font-weight: 900; }
 
       /* 하단 인사이트 — 배경 없이 한 줄 결론(잉크 + 레드 강조). 푸터 바와 붙지 않도록 아래 여백 확보 */
@@ -135,6 +143,7 @@
         </div>
 
         <div class="sm-map">
+          {{#if asOfNote}}<div class="sm-asof">{{asOfNote}}</div>{{/if}}
           {{{mapSvg}}}
           {{#if legend}}<div class="sm-legend"><span>적음</span><span class="bar"></span><span>많음</span></div>{{/if}}
           {{#if stamp}}<span class="wirit-stamp" style="left:6px;top:54%">@wirit_note</span>{{/if}}
@@ -178,6 +187,9 @@
           }
         }
         el.style.fontSize = best.toFixed(2) + "px";
+        /* 기준 시점은 **제목의 절반**(오너 지시). 제목이 자동으로 커지므로 여기서 같이 따라간다. */
+        var asof = card.querySelector(".sm-asof");
+        if (asof) asof.style.fontSize = (best / 2).toFixed(2) + "px";
       };
       window.__wiritFit();
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(window.__wiritFit);

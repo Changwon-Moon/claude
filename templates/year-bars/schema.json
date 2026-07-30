@@ -8,7 +8,7 @@
     "template": { "type": "string", "pattern": "^year-bars@\\d+$" },
     "date": { "type": "string" },
     "subtitle": { "type": "string", "maxLength": 70 },
-    "title": { "type": "string", "maxLength": 30, "description": "한 줄. 폭(936px)에 맞게 템플릿이 폰트를 자동 축소한다(줄이는 방향만)" },
+    "title": { "type": "string", "maxLength": 90, "description": "한 줄. 폭(936px)에 맞게 템플릿이 폰트를 자동 축소한다(줄이는 방향만). <span class=\"hi\">…</span> 으로 일부를 레드 강조할 수 있어 태그까지 세면 길어진다 — 보이는 글자는 30자 안쪽으로 쓴다" },
     "zeroAt": { "type": "string", "description": "0선의 위치(플롯 높이 대비 %). 빌더가 최대 오름/내림 비율로 계산" },
     "colGap": { "type": "string", "description": "막대 간격. 기본 12px" },
     "splitAt": { "type": "string", "description": "실측/추정 경계 세로 점선 위치(%). 추정이 있을 때만" },
@@ -46,28 +46,26 @@
     },
     "side": {
       "type": "object",
-      "description": "플롯 좌측 빈 칸에 놓는 정보 블록(2026-07-30). 지수 카드 + 추정 배지.",
+      "description": "제목 아래·플롯 좌상단에 좌우로 놓는 강조 카드(2026-07-30 3차). 최대 2장.",
       "properties": {
-        "index": {
-          "type": "object",
-          "required": ["pastYm", "pastValue", "nowYm", "nowValue"],
-          "properties": {
-            "pastLabel": { "type": "string", "maxLength": 20 },
-            "pastYm": { "type": "string", "maxLength": 10, "description": "예: 2020.09월" },
-            "pastValue": { "type": "string", "maxLength": 10 },
-            "nowLabel": { "type": "string", "maxLength": 24 },
-            "nowYm": { "type": "string", "maxLength": 10 },
-            "nowValue": { "type": "string", "maxLength": 10 }
-          }
-        },
-        "est": {
-          "type": "object",
-          "required": ["tag", "value", "note"],
-          "description": "추정 배지. note 에 산술 가정을 반드시 적는다 — 없으면 추정이 실측으로 읽힌다.",
-          "properties": {
-            "tag": { "type": "string", "maxLength": 16 },
-            "value": { "type": "string", "maxLength": 10 },
-            "note": { "type": "string", "maxLength": 40 }
+        "cards": {
+          "type": "array",
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["style", "text"],
+            "properties": {
+              "style": {
+                "type": "string",
+                "enum": ["est", "idx"],
+                "description": "그래프 요소와 색을 맞춘다. est = 추정 막대(레드·점선·사선) / idx = 지수 곡선(잉크·회색). est 는 점선·사선을 절대 실선/단색으로 바꾸지 않는다 — 추정이 실측으로 읽힌다"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 90,
+                "description": "카드 한 줄. 글자 크기는 전부 같다 — 강조는 <b>숫자</b> 의 색·굵기로만. <i>(추정)</i> 만 작게 들어간다. style 이 est 면 '추정' 표기가 반드시 있어야 한다"
+              }
+            }
           }
         }
       }
