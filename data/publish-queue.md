@@ -20,4 +20,4 @@
 - [x] [26.07.26(일) 관제탑] **서울 아파트 실거래 랭킹 59㎡ (2026 상반기)** · estate-cover · 원본 data/content/2026-07-21/estate-cover-59.json
 - [x] [26.07.26(일) 관제탑] **서울 아파트 실거래 랭킹 84㎡ (2026 상반기)** · estate-cover · 원본 data/content/2026-07-21/estate-cover-84.json
 - [ ] [26.07.30(목) 오너 확정] **📉📈 미쳐버린 서울 월세 폭등 상황 (월세지수 2016~2026)** · year-bars · 원본 data/content/2026-07-30/wolse-flip-p1.json
-- [ ] [26.07.30(목) 오너 확정] **🔥 토허제 40곳 월세 폭등 (지도+행정구역 표)** · singoga-map · 원본 data/content/2026-07-30/tohuh-rent-map.json
+- [x] [26.07.30(목) 오너 확정] **🔥 토허제 40곳 월세 폭등 (지도+행정구역 표)** · singoga-map · 원본 data/content/2026-07-30/tohuh-rent-map.json
