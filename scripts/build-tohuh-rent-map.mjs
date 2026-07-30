@@ -179,41 +179,51 @@ mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "tohuh-rent-map.json"), JSON.stringify(card, null, 2) + "\n", "utf8");
 
 /* ── 캡션 ── 숫자는 전부 위 계산값. 손으로 적으면 다음 갱신에 카드와 어긋난다. */
-const seoulRanked = ranked.filter((a) => a.region === "서울");
 const ggRanked = ranked.filter((a) => a.region === "경기");
 const m = (g) => money.get(g);
 const line = (a) => `${won(m(a.geoName).up)}원 → 현재 ${Math.round(m(a.geoName).now)}만원`;
+/* 금액 vs 지수 — 이 카드의 유일한 약점을 우리 입으로 먼저 말하는 문장이다.
+ * ⚠️ 손으로 "송파 +20.2% / 지수 +10.6%" 라고 적어두면 다음 달 공표분에서 거짓이 된다.
+ *    1위 지역의 두 수치를 그때그때 계산해서 넣는다. */
+const idxPct = pct(at(doc.wolse?.[top1.rebCode], BASE), at(doc.wolse?.[top1.rebCode], asOf));
+const gapNote =
+  idxPct == null
+    ? null
+    : `   순위가 조금 달라집니다 (${top1.label} 금액 ${sign1(m(top1.geoName).pct)}% / 지수 ${sign1(idxPct)}%)`;
+
 const caption = [
-  `토허제 40곳, 1년 만에 월세가 이만큼 올랐습니다 🔥`,
+  /* 첫 두 줄이 '더 보기' 앞에 보이는 전부다 — 숫자와 규모를 여기서 다 말한다 */
+  `1년 만에 월세 ${Math.round(m(top1.geoName).up)}만원. 🔥`,
+  `토허제 40곳 중 ${AREAS.filter((a) => rate.get(a.geoName) > 0).length}곳이 올랐습니다.`,
   ``,
-  `서울 25개 자치구 전역과 경기 15곳,`,
+  `서울 25개 자치구 전역 + 경기 15곳,`,
   `토지거래허가구역 40곳의 아파트 평균 월세를`,
-  `최근 1년(${ymKo(BASE)} → ${ymKo(asOf)})으로 비교했습니다.`,
+  `${ymKo(BASE)} → ${ymKo(asOf)} 로 비교했습니다.`,
   ``,
-  upAll
-    ? `· 40곳 전부 올랐습니다. 내린 곳은 없습니다`
-    : `· 40곳 중 ${AREAS.filter((a) => rate.get(a.geoName) > 0).length}곳이 올랐습니다`,
-  `· 가장 많이 : ${top1.label} ${line(top1)}`,
-  `· 가장 적게 : ${last.label} ${line(last)}`,
-  `· 서울 1위 : ${seoulRanked[0].label} ${line(seoulRanked[0])}`,
-  `· 경기 1위 : ${ggRanked[0].label} ${line(ggRanked[0])}`,
+  `· 최다 상승 : ${top1.label} ${line(top1)}`,
+  `· 경기 최다 : ${ggRanked[0].label} ${line(ggRanked[0])}`,
+  ...(upAll
+    ? [`· 내린 곳은 없습니다`]
+    : [`· 유일한 하락 : ${last.label} ${won(m(last.geoName).up)}원 (그래도 현재 ${Math.round(m(last.geoName).now)}만원)`]),
   ``,
   `[40곳 전체 · 1년간 오른 월세]`,
-  ...ranked.map((a, i) => `${i + 1}. ${a.label} ${line(a)}`),
+  ...ranked.map((a, i) => `${i + 1}. ${a.label} ${won(m(a.geoName).up)} → ${Math.round(m(a.geoName).now)}만`),
   ``,
   `📌 저장해두고 우리 동네가 몇 위인지 확인하기`,
   ``,
   `—`,
-  `📊 가격 : 한국부동산원 「전국주택가격동향조사」 아파트 평균월세가격`,
-  `   (${ymKo(asOf)} 공표분 · ${ymKo(BASE)} 대비 · 단위 만원)`,
+  `📊 한국부동산원 아파트 평균월세가격`,
+  `   ${ymKo(asOf)} 공표분 · ${ymKo(BASE)} 대비 · 단위 만원`,
   `🗂 허가구역 : 서울시·경기도 토지거래허가구역 지정 고시`,
-  `   서울 25개 자치구 전역(2025년 10월 지정) · 경기 15곳(기존 12곳 + 2026년 7월 신규 3곳 ⚡)`,
-  `※ 동탄구는 화성시 전체 수치 기준입니다. 지도 경계는 동탄구(2013 읍면동 합성)지만,`,
-  `   동탄구 지수는 2026년 분구 이후 6개월치뿐이어서 1년 비교를 할 수 없습니다.`,
-  `※ 그 외 지역은 시·군·구 경계 기준이며, 실제 허가구역이 일부인 곳이 있습니다.`,
-  `※ 평균 금액이라 그달 계약된 아파트 구성에 따라 흔들립니다. 구성 영향을 통제한`,
-  `   월세가격지수로 보면 순위가 조금 달라집니다(예: 송파 금액 +20.2% / 지수 +10.6%).`,
-  `※ ${ymKo(BASE)}은 비교 기준점이며, 특정 정부·제도가 원인이라는 뜻이 아닙니다.`,
+  `   서울 25개 자치구 전역(2025년 10월) · 경기 15곳(기존 12곳 + 2026년 7월 신규 3곳 ⚡)`,
+  ``,
+  `※ 동탄구는 화성시 전체 기준입니다 — 2026년 1월 분구라 1년 비교가 안 됩니다`,
+  `   (지도 경계만 동탄구입니다)`,
+  `※ 시·군·구 경계 기준이며, 실제 허가구역이 일부인 곳이 있습니다`,
+  `※ 평균 금액은 그달 계약된 아파트 구성에 흔들립니다.`,
+  `   구성 영향을 통제한 월세가격지수로 보면`,
+  ...(gapNote ? [gapNote] : []),
+  `※ ${ymKo(BASE)}은 비교 기준점이며, 특정 정부·제도가 원인이라는 뜻이 아닙니다`,
   ``,
   `#부동산 #월세 #토지거래허가구역 #전월세 #데이터시각화`,
 ].join("\n");

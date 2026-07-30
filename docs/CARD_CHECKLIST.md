@@ -131,9 +131,11 @@ node scripts/smoke-tower.mjs        # 관제탑 스모크
   (`.sm-c` · `.sm-h3`(head.c) · `data-fit="1"`(fitTitle) · `placement:"nearest"` · `stamp2`)
 - 공용 파일을 고쳤으면 **발행본 md5 를 다시 확인**한다
 
-| 카드 | 기준 md5 |
-|---|---|
-| `2026-07-26-tohuh-rank` (발행) | `572b4238dd87968e8f604f3f6caff68d` |
+| 카드 | 상태 | 기준 md5 |
+|---|---|---|
+| `tohuh-rank` — 2026년 6월 신고가 지역 | **발행** (2026-07-26) | `572b4238dd87968e8f604f3f6caff68d` |
+| `tohuh-rent-map` — 1년 만에 월세 38만원 | **오너 확정** (2026-07-30) | `ec4cad52505fcdbba9bb1bf76e33c9b6` |
+| `wolse-flip-p1` — 미쳐버린 서울 월세 폭등 상황 | **오너 확정** (2026-07-30) | `87ef2d006936e7629d593c747e466843` |
 
 ```bash
 pnpm -s --filter @wirit/renderer render \

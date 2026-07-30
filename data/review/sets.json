@@ -69,13 +69,12 @@
     },
     {
       "label": "wolse-flip",
-      "title": "📉📈 서울 월세, 뒤집힌 해 — 5년 마이너스 → 6년 플러스",
+      "title": "📉📈 미쳐버린 서울 월세 폭등 상황 (월세지수 2016~2026)",
       "cards": [
-        "wolse-flip-p1",
-        "wolse-flip-p2",
-        "wolse-flip-p3"
+        "wolse-flip-p1"
       ],
-      "caption": "wolse-flip"
+      "caption": "wolse-flip",
+      "note": "오너 확정(2026-07-30) — 단일 카드. 자치구 25곳 표(p2·p3)는 기준 시점이 달라(2020-07 임대차2법 이후 누적) 같은 캐러셀에 섞으면 독자가 두 기준을 헷갈린다. 빌더는 그대로 두었으니 별도 소재로 낼 때 되살릴 수 있다."
     },
     {
       "label": "tohuh-rent-map",
