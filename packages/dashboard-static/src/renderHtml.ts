@@ -230,7 +230,7 @@ input,textarea,select{font-family:inherit}
 .chip.edit{color:var(--cobalt);border:1px solid color-mix(in srgb,var(--cobalt) 38%,transparent)}
 
 /* ══ 소재 보드 ══ */
-.ideas{padding:16px 20px 28px;display:grid;grid-template-columns:minmax(0,1fr) 316px;gap:18px;align-items:start;max-width:1240px}
+.ideas{padding:16px 20px 28px;display:grid;grid-template-columns:minmax(0,1fr);gap:18px;align-items:start;max-width:940px;margin:0 auto}
 @media (max-width:940px){.ideas{grid-template-columns:1fr}}
 .ipanel{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px 16px}
 .ih{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;letter-spacing:-.01em;margin-bottom:12px}
@@ -551,7 +551,6 @@ button[disabled] .spin{margin-right:5px}
 .flink:hover{color:var(--text);border-color:var(--muted)}
 
 /* ══ 지시함 ══ 칸을 나누지 않는다. 그냥 적으면 알아서 접수한다 */
-.askpanel{position:sticky;top:112px}
 .askbox{width:100%;font:inherit;font-size:13px;line-height:1.65;padding:11px 12px;border-radius:var(--r);
   border:1px solid var(--line);background:var(--paper);color:var(--text);resize:vertical;min-height:132px}
 .askbox:focus{border-color:var(--cobalt);outline:none}
@@ -563,7 +562,6 @@ button[disabled] .spin{margin-right:5px}
 .asktxt{font-size:11.5px;line-height:1.55;white-space:pre-wrap;word-break:break-word;
   overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
 .askmeta{font-size:10px;color:var(--faint);margin-top:3px;font-variant-numeric:tabular-nums}
-@media (max-width:940px){.askpanel{position:static}}
 
 /* ══ 성과 ══ 저장 수를 막대로 — 한눈에 무엇이 터졌는지 */
 .pstat{display:flex;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
@@ -787,10 +785,10 @@ function wireConn(){
     finally{ if(save){ save.disabled=false; save.textContent="연결하기"; } }
   };
 }
-/** 연결 상태가 바뀌면 화면 전체(잠금·결정함·보드·소재)를 다시 맞춘다 */
+/** 연결 상태가 바뀌면 화면 전체(잠금·발행·소재)를 다시 맞춘다 */
 function afterConnChange(msg){
   renderConn(); applyLock(); setSave(GH.connected()?"ok":"off");
-  renderInbox(); renderReqs(); renderBoard(); renderIdeas();
+  renderPublish(); renderIdeas();
   if(GH.connected()){ startWatching(); refreshFromRepo(); } // 저장소 상태를 먼저 맞춘다
   if(msg) toast(msg);
 }
@@ -919,13 +917,7 @@ async function refreshFromRepo(){
     mark(doc.dropped,"버림");
     mark(doc.revise,"수정요청");
   }catch(e){ /* 파일이 없을 수도 있다 */ }
-  // ③ 요청 대장 — "내가 시킨 일"이 지금 어디까지 왔는지도 배포를 안 기다리고 최신으로
-  try{
-    const cur=await GH.getFile("data/requests.json");
-    const doc=JSON.parse(cur.text);
-    if(Array.isArray(doc.items)){ REQS=doc.items.slice(); changed=true; }
-  }catch(e){ /* 없으면 그대로 */ }
-  if(changed){ save(); renderIdeas(); renderInbox(); renderReqs(); renderBoard(); }
+  if(changed){ save(); renderIdeas(); renderPublish(); }
 }
 
 /* ══ 발행 대기열 ══
@@ -943,73 +935,6 @@ function queuePublish(t){
     .then(()=>{ setSave("ok"); toast("승인됐습니다 ✓ 이제 JPG를 받아 인스타에 올려주세요"); })
     .catch(e=>{ const m=shortErr(e); setSave("bad","publish-queue.md · "+m); toast("승인 실패: "+m); });
 }
-
-/**
- * 중단·삭제를 **저장소에** 남긴다.
- * 브라우저에만 남기면 관제탑이 다시 만들어질 때 그 건이 되살아난다.
- * (발행 승인이 publish-queue.md 에 남는 것과 같은 이유)
- */
-function dropTicket(t, why){
-  if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
-  setSave("saving"); jobStart("drop","중단 기록");
-  editPipelineState((doc)=>{
-    if(!doc.dropped.some(d=>d.title===t.title)){
-      doc.dropped.push({title:t.title, at:STATE.dateLabel, why:(why||"").trim()});
-    }
-  }, "관제탑: 중단 — "+short(t))
-  .then(()=>GH.append("research/decisions-inbox.md",
-      "- "+ghStamp()+" ⏹ 중단: "+t.title+(why?" — 이유: "+why:""), "관제탑: 중단 기록"))
-  .then(()=>{ setSave("ok"); jobEnd("drop","중단 처리됨 — 다시 올라오지 않습니다"); })
-  .catch(e=>{ const m=shortErr(e); setSave("bad","pipeline-state.json · "+m); jobEnd("drop", m, true); });
-}
-
-/**
- * 파이프라인 상태 파일을 안전하게 고친다(읽기 → 수정 → 쓰기, 충돌 재시도).
- * mutate(doc) 안에서 doc 을 바꾸면 된다. 파일의 주석(_) 등 나머지는 그대로 보존된다.
- */
-function editPipelineState(mutate, message){
-  const PATH="data/pipeline-state.json";
-  return GH.serial(async()=>{
-    for(let i=0;i<6;i++){
-      const cur=await GH.getFile(PATH);
-      let doc; try{ doc=JSON.parse(cur.text); }catch(e){ doc={}; }
-      if(!Array.isArray(doc.dropped)) doc.dropped=[];
-      if(!Array.isArray(doc.revise)) doc.revise=[];
-      mutate(doc);
-      try{ return await GH.putFile(PATH, JSON.stringify(doc,null,2)+"\n", message, cur.sha); }
-      catch(e){ if(!GH.isConflict(e)||i===5) throw e;
-        await new Promise(r=>setTimeout(r,500*Math.pow(2,i))); }
-    }
-  });
-}
-
-/**
- * 수정지시를 **저장소에** 남긴다.
- * 결정 로그에 글만 남기면 관제탑이 다시 만들어질 때 '수정요청' 표시가 사라져,
- * 무엇이 재작업 대기인지 알 수 없게 된다.
- */
-function reviseTicket(t, note){
-  if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
-  setSave("saving"); jobStart("revise","수정지시 기록");
-  // 지시가 "자료를 모아달라"면 그건 수집으로 바로 돌릴 수 있다.
-  // 제목을 검색어의 뼈대로 쓴다 — 지시문에서 뽑는 것보다 정확하다.
-  const wantsData=/찾아|모아|조사|자료|데이터|순위|통계/.test(note);
-  const year=(note.match(/20\d{2}/)||[])[0]||"";
-  const q=wantsData ? (keywordsOf(plain(t.title))+(year?" "+year:"")).trim() : "";
-  editPipelineState((doc)=>{
-    doc.revise=doc.revise.filter(r=>r.title!==t.title);
-    doc.revise.push({title:t.title, at:STATE.dateLabel, note:note});
-  }, "관제탑: 수정지시 — "+short(t))
-    .then(()=>GH.append("research/decisions-inbox.md",
-        "- "+ghStamp()+" ✏️ 수정지시("+t.title+"): \""+note+"\"", "관제탑: 수정지시"))
-    .then(()=>logRequest("수정 지시", note, t.title, "order"))
-    .then(()=>q ? GH.dispatch("research-digest.yml",{query:q}).then(()=>{ startWatching(); }, ()=>{}) : null)
-    .then(()=>{ setSave("ok");
-      jobEnd("revise", q ? "수정지시 기록 + «"+q+"» 자료 수집 시작(2~3분)" : "수정지시가 기록됐습니다 — '내가 시킨 일'에서 진행 상황을 보세요"); })
-    .catch(e=>{ const m=shortErr(e); setSave("bad","pipeline-state.json · "+m); jobEnd("revise", m, true); });
-}
-/** 제목에서 이모지·기호를 걷어낸다(검색어로 쓸 때 필요) */
-function plain(s){ return String(s||"").replace(/[^0-9A-Za-z가-힣\s]/g," ").replace(/\s+/g," ").trim(); }
 
 /** 발행 취소 — 대기열 파일에서 그 줄을 실제로 지운다(안 지우면 다음 빌드에 되살아난다) */
 function unqueuePublish(t, why){
@@ -1146,193 +1071,70 @@ function wireOrg(){
 wireCompany();
 wireOrg();
 
-/* ══════════ 결정함 — 첫 화면. "오늘 내가 결정할 것"만 모은다 ══════════
- * 관제탑을 열었을 때 할 일이 없으면 "없다"고 분명히 말해준다.
- * 그게 보이면 앱을 닫아도 된다는 뜻 — 매일 5분 운영의 핵심. */
-function pendingDecisions(){
-  const out=[];
-  // ① 발행 승인 대기 — 카드 + 캡션이 다 준비돼 오너 확인만 남은 것.
-  //    캡션이 없으면 올릴 글 자체가 없으므로 '결정할 일'이 아니다(파이프라인 목록에는 남는다).
-  //    실험·중간 렌더(발행 세트 미등록)도 제외 — 안 그러면 결정함이 수십 건으로 불어난다.
-  S.tickets.forEach(t=>{
-    if(t.stage!==4) return;
+/* ══════════ 발행 — 첫 화면 ══════════
+ * 관제탑의 두 가지 고유 임무만 남긴다(2026-07-30 오너 승인 축소):
+ *   ① 결재 대기 — 카드+캡션이 준비된 것을 눈으로 보고 [🚀 발행 승인]
+ *   ② 올릴 차례 — JPG 받아 인스타에 올리고 [✅ 올렸습니다]로 사실을 기록
+ * 결정함·파이프라인 칸반은 뺐다 — 소재 선정과 제작·수정은 채팅(작업 세션)에서 일어난다.
+ * 여기 없는 티켓(기획·제작 단계)은 화면에 아예 안 그린다. 허구의 장부를 두지 않는다. */
+function approveList(){
+  return S.tickets.filter(t=>{
+    if(t.stage!==4) return false;
     const fl=t.flags||[];
-    if(fl.includes("버림")||fl.includes("실험")) return;
-    if(!t.caption) return;
-    out.push({ kind:"pub", label:"발행 승인", title:t.title,
-      note:(t.pages&&t.pages.length?t.pages.length+"장 · ":"")+t.fmt
-        +(t.review?" · 자동검수 "+(t.review.verdict==="pass"?"통과":t.review.verdict):" · 자동검수 없음"),
-      thumb:t.thumb||null, go:()=>{ openTab("board"); openDrawer(t.id); } });
+    if(fl.includes("버림")||fl.includes("실험")) return false;
+    return !!t.caption;   // 캡션이 없으면 올릴 글 자체가 없다 — 결재 대상이 아니다
   });
-  /* ①-2 올릴 차례 — 승인은 났고 남은 건 **오너가 인스타에 올리는 일**뿐.
-   * 자동 발행을 하지 않기로 했으므로(2026-07-27) 이건 영원히 오너 몫이다.
-   * 결정함에 안 띄우면 승인만 해 놓고 잊게 되고, 시스템은 계속 '발행 0건'이라 말한다. */
-  const postedSeen=new Set();
-  S.tickets.forEach(t=>{
-    if(t.stage!==5) return;
-    if(!(t.flags||[]).includes("업로드 대기")) return;
-    if((STATE.published||[]).some(p=>p.label===t.setLabel)) return;
-    /* 같은 카드가 두 갈래(결정 로그 티켓 + 렌더 산출물 티켓)로 올라올 수 있다.
-     * 대기열의 한 줄에 대응하는 일은 하나이므로 제목 기준으로 한 번만 띄운다. */
+}
+function uploadList(){
+  const seen=new Set();
+  return S.tickets.filter(t=>{
+    if(t.stage!==5) return false;
+    if(!(t.flags||[]).includes("업로드 대기")) return false;
+    if((STATE.published||[]).some(p=>p.label===t.setLabel)) return false;
+    /* 같은 카드가 두 갈래(결정 로그 티켓 + 렌더 산출물 티켓)로 올라올 수 있다 —
+     * 대기열의 한 줄에 대응하는 일은 하나이므로 제목 기준으로 한 번만 */
     const k=String(t.setLabel||t.title).replace(/\s+/g,"").replace(/[·—-]/g,"").toLowerCase();
-    if(postedSeen.has(k)) return;
-    postedSeen.add(k);
-    out.push({ kind:"pub", label:"올릴 차례", title:t.title,
-      note:"승인 완료 — JPG 받아 인스타에 올린 뒤 [✅ 올렸습니다]를 눌러주세요",
-      thumb:t.thumb||null, go:()=>{ openTab("board"); openDrawer(t.id); } });
+    if(seen.has(k)) return false;
+    seen.add(k); return true;
   });
-  // ② 소재 — 쌓여 있다고 매일 알리면 그건 영구 알림이지 '오늘 할 일'이 아니다.
-  //    정말 결정이 필요한 두 경우에만 올린다:
-  //      (a) 새로 발굴돼 아직 안 본 소재가 있다
-  //      (b) 파이프라인이 비었다 = 만들 게 없다 → 지금 골라야 회사가 움직인다
-  const open=IDEAS.filter(i=>i.status!=="done" && !Number(i.stage||0));
-  const fresh=open.filter(i=>i.isNew);
-  const working=S.tickets.filter(t=>t.stage>=1&&t.stage<=3&&!(t.flags||[]).includes("버림")).length;
-  if(fresh.length){
-    out.push({ kind:"idea", label:"새 소재", title:"새로 발굴된 소재 "+fresh.length+"건",
-      note:fresh.slice(0,2).map(i=>i.title).join(" · ")+(fresh.length>2?" 외 "+(fresh.length-2)+"건":""),
-      thumb:null, go:()=>openTab("ideas") });
-  } else if(!working && open.length){
-    out.push({ kind:"idea", label:"소재 선택", title:"만들고 있는 게 없습니다 — 소재를 골라주세요",
-      note:"소재 풀 "+open.length+"건 대기 중", thumb:null, go:()=>openTab("ideas") });
-  }
-  // ③ 재작업이 끝나 오너가 결과를 봐야 하는 것.
-  //    ⚠️ '중단·삭제'한 건과 실험 렌더는 결정 대상이 아니다 — 이걸 안 걸러서
-  //       지운 항목이 결정함에 계속 떴다(2026-07-26 오너 보고).
-  //    ⚠️ 아직 재작업 중인 것도 여기 올리지 않는다. 결정함은 "내가 지금 결정할 것"만 담는다.
-  //       진행 상황은 아래 '요청 처리 현황'이 따로 보여준다.
-  S.tickets.forEach(t=>{
-    const fl=t.flags||[];
-    if(!fl.includes("수정요청")) return;
-    if(fl.includes("버림")||fl.includes("실험")) return;
-    if(t.stage===4) return; // 이미 ①에 잡힘
-    if(openRequests().some(r=>r.kind==="수정 지시" && sameTitle(r.about, t.title))) return;
-    out.push({ kind:"rev", label:"수정 확인", title:t.title, note:"재작업이 끝났습니다 — 결과를 확인하세요",
-      thumb:t.thumb||null, go:()=>{ openTab("board"); openDrawer(t.id); } });
-  });
-  return out;
 }
-
-/* ══════════ 요청 처리 현황 ══════════
- * 오너 질문의 근원: "시켰는데 언제까지 기다려야 해?"
- * 원인은 화면이 **누가 · 언제**를 말하지 않고 '대기 중'이라고만 썼던 것.
- * 여기서는 모든 요청에 대해 반드시 세 가지를 말한다 —
- *   ① 언제 시켰나(경과)  ② 누가 하나(자동/사람)  ③ 언제 되나(다음 처리 시각)
- * 모르면 "모른다"고 쓴다. 아는 척하지 않는다. */
-let REQS=(STATE.requests||[]).slice();
-function sameTitle(a,b){
-  const k=(x)=>String(x||"").replace(/\s+/g,"").replace(/[·—-]/g,"").toLowerCase();
-  const x=k(a), y=k(b);
-  return !!x && !!y && (x.indexOf(y)>-1 || y.indexOf(x)>-1);
+function pubRow(t, note){
+  const b=document.createElement("button"); b.className="dcard pub"; b.type="button";
+  b.innerHTML=(t.thumb?'<img class="dth" src="'+img(t.thumb)+'" alt="">':'<span class="dth"></span>')
+    +'<span class="dm"><span class="dt">'+esc(t.title)+'</span>'
+    +'<span class="dw">'+esc(note)+'</span></span>'
+    +'<span class="go">›</span>';
+  b.onclick=()=>openDrawer(t.id);
+  return b;
 }
-function openRequests(){ return REQS.filter(r=>!r.done); }
-/** 접수 후 얼마나 지났나 — 사람이 읽는 말로. 시각을 모르면 빈 문자열(추측하지 않는다). */
-function since(ts){
-  if(!ts) return "";
-  const ms=Date.now()-Date.parse(ts);
-  if(!isFinite(ms)||ms<0) return "";
-  const m=Math.floor(ms/60000);
-  if(m<1) return "방금";
-  if(m<60) return m+"분째";
-  const h=Math.floor(m/60);
-  if(h<24) return h+"시간째";
-  return Math.floor(h/24)+"일째";
-}
-/** 누가 처리하나 · 언제 되나 — 요청 종류가 아니라 **자동화 여부**로 갈린다 */
-function whoWhen(r){
-  if(r.done) return { who:"완료", when:r.result||"처리됨", tone:"ok" };
-  if(r.auto==="digest") return { who:"자동 수집", when:"보통 2~3분 · 끝나면 소재 보드에 자동으로 뜹니다", tone:"run" };
-  if(r.auto==="machine") return { who:"자동 제작", when:"보통 5~8분 · 끝나면 결재 대기·보관함에 새 카드가 뜹니다", tone:"run" };
-  if(r.auto==="order") return r.order
-    ? { who:"오너가 시켜야 함", when:"지시서까지는 준비됐습니다. <b>여기서 저절로 진행되지는 않습니다</b> — [작업 세션에 넘길 지시문 복사]를 눌러 채팅에 붙여넣으면 그때 제작이 시작됩니다", tone:"hand" }
-    : { who:"자동 정리", when:"매일 07:00 정리 때 작업지시서가 만들어집니다 · [지금 처리 돌리기] 가능", tone:"run" };
-  return { who:"작업 세션(사람)", when:"자동으로는 처리되지 않습니다 — 작업 세션에 넘겨야 합니다", tone:"hand" };
-}
-/** 한 화면에 보여줄 상한 — 이보다 많으면 접어서 "더 보기"로 연다 */
-const INBOX_CAP=6;
-let inboxAll=false;
-function renderInbox(){
-  const box=document.getElementById("inboxBody"); if(!box) return;
-  const list=pendingDecisions();
-  const n=document.getElementById("inboxN");
-  if(n){ n.textContent=String(list.length); n.hidden=list.length===0; }
+function renderPublish(){
+  const ab=document.getElementById("approveBody"), ub=document.getElementById("uploadBody");
+  if(!ab||!ub) return;
+  const ap=approveList(), up=uploadList();
+  const setN=(id,n)=>{ const el=document.getElementById(id); if(el){ el.textContent=String(n); el.hidden=n===0; } };
+  setN("approveN", ap.length); setN("uploadN", up.length);
   const tn=document.getElementById("tabN");
-  if(tn){ tn.textContent=String(list.length); tn.hidden=list.length===0; }
-  box.textContent="";
-  if(!list.length){
-    const d=document.createElement("div"); d.className="allclear";
-    d.innerHTML='<div class="t">✓ 오늘 결정할 것 없음</div>'
-      +'<div class="w">파이프라인이 알아서 돌고 있습니다. 새 소재가 올라오거나 카드가 완성되면 여기에 뜹니다.</div>';
-    box.appendChild(d); return;
+  if(tn){ const n=ap.length+up.length; tn.textContent=String(n); tn.hidden=n===0; }
+  ab.textContent="";
+  if(!ap.length){
+    ab.innerHTML='<div class="allclear"><div class="t">✓ 결재할 것 없음</div>'
+      +'<div class="w">새 카드가 완성되면(카드+캡션+검수) 여기 올라옵니다.</div></div>';
+  } else {
+    const w=document.createElement("div"); w.className="dlist";
+    ap.forEach(t=>w.appendChild(pubRow(t,
+      ((t.pages&&t.pages.length)?t.pages.length+"장 · ":"")+t.fmt
+      +(t.review?" · 자동검수 "+(t.review.verdict==="pass"?"통과":t.review.verdict):" · 자동검수 없음"))));
+    ab.appendChild(w);
   }
-  const shown=inboxAll?list:list.slice(0,INBOX_CAP);
-  const wrap=document.createElement("div"); wrap.className="dlist";
-  shown.forEach(d=>{
-    const b=document.createElement("button"); b.className="dcard "+d.kind; b.type="button";
-    b.innerHTML=(d.thumb?'<img class="dth" src="'+img(d.thumb)+'" alt="">':'<span class="dth"></span>')
-      +'<span class="dm"><span class="dk">'+esc(d.label)+'</span>'
-      +'<span class="dt">'+esc(d.title)+'</span>'
-      +'<span class="dw">'+esc(d.note||"")+'</span></span>'
-      +'<span class="go">›</span>';
-    b.onclick=d.go; wrap.appendChild(b);
-  });
-  if(list.length>INBOX_CAP){
-    const more=document.createElement("button");
-    more.className="itool"; more.type="button"; more.style.cssText="width:100%;margin-top:8px";
-    more.textContent=inboxAll?"접기":"그 외 "+(list.length-INBOX_CAP)+"건 더 보기";
-    more.onclick=()=>{ inboxAll=!inboxAll; renderInbox(); };
-    wrap.appendChild(more);
+  ub.textContent="";
+  if(!up.length){
+    ub.innerHTML='<div class="allclear"><div class="t">✓ 다 올리셨습니다</div>'
+      +'<div class="w">승인된 카드를 인스타에 올린 뒤 여기서 [✅ 올렸습니다]를 누르면 발행 이력이 남습니다.</div></div>';
+  } else {
+    const w=document.createElement("div"); w.className="dlist";
+    up.forEach(t=>w.appendChild(pubRow(t,"승인 완료 — JPG 받아 올린 뒤 [✅ 올렸습니다]")));
+    ub.appendChild(w);
   }
-  box.appendChild(wrap);
-}
-
-/** 요청 처리 현황 — 시킨 일이 지금 어디까지 왔는지. 비어 있으면 칸 자체를 감춘다. */
-function renderReqs(){
-  const sec=document.getElementById("reqsec"), box=document.getElementById("reqBody");
-  if(!sec||!box) return;
-  const open=openRequests();
-  const recent=REQS.filter(r=>r.done).slice(-3);
-  const list=open.concat(recent);
-  const backlog=pendingWork().length;
-  sec.hidden=list.length===0 && backlog===0;
-  renderHandoff();
-  if(!list.length) return;
-  const cnt=document.getElementById("reqN");
-  if(cnt){ cnt.textContent=String(open.length); cnt.hidden=open.length===0; }
-  box.textContent="";
-  list.forEach(r=>{
-    const w=whoWhen(r), el=document.createElement("div");
-    el.className="reqrow "+w.tone;
-    const ago=since(r.ts), when=r.at?esc(r.at)+(ago?" · "+esc(ago):""):(ago?esc(ago):"접수 시각 미기록");
-    el.innerHTML='<div class="rhead"><span class="rkind">'+esc(r.kind)+'</span>'
-      +'<span class="rwho">'+esc(w.who)+'</span>'
-      +'<span class="rat">'+when+'</span></div>'
-      +(r.about?'<div class="rabout">'+esc(r.about)+'</div>':'')
-      +'<div class="rwhat">'+esc(r.what||"")+'</div>'
-      +'<div class="rwhen">'+(r.done?"✓ ":"")+w.when+'</div>'; // when 은 우리가 만든 문구(HTML 허용)
-    const bar=document.createElement("div"); bar.className="ract";
-    if(r.order){
-      const a=document.createElement("a"); a.className="itool"; a.target="_blank"; a.rel="noopener";
-      a.href=ghLink(r.order); a.textContent="작업지시서 보기 ↗"; bar.appendChild(a);
-    }
-    // ⚠️ 이미 지시서가 만들어진 요청에 '지금 처리 돌리기'를 눌러도 아무 일도 안 일어난다.
-    //    (정리 워크플로는 지시서를 만드는 일까지만 한다 — 제작은 사람 몫)
-    //    효과가 없는 버튼을 두면 오너는 눌러보고 "또 안 되네"를 겪는다. 그래서 뺀다.
-    if(!r.done && r.auto!=="digest" && !r.order){
-      const b=document.createElement("button"); b.className="itool"; b.type="button";
-      b.textContent="지금 처리 돌리기";
-      b.onclick=()=>runTick(b);
-      bar.appendChild(b);
-    }
-    if(!r.done && w.tone==="hand"){
-      const c=document.createElement("button"); c.className="itool"; c.type="button";
-      c.textContent="작업 세션에 넘길 지시문 복사";
-      c.onclick=()=>copyText(handoffText(r), c, "복사됨 ✓");
-      bar.appendChild(c);
-    }
-    if(bar.children.length) el.appendChild(bar);
-    box.appendChild(el);
-  });
 }
 
 /**
@@ -1346,7 +1148,6 @@ async function runProduce(label, title){
   jobStart("make-"+label,"카드 제작 중 — "+label);
   try{
     await GH.dispatch("produce-card.yml",{label:label});
-    await logRequest("카드 재생산", (title||label)+" — 최신 데이터로 다시 제작", title||label, "machine");
     jobEnd("make-"+label,"제작을 시작했습니다 — 5~8분 뒤 자동 반영");
     startWatching();
   }catch(e){ const m=shortErr(e); jobEnd("make-"+label, m, true); }
@@ -1355,240 +1156,6 @@ document.addEventListener("click",(e)=>{
   const b=e.target.closest&&e.target.closest(".fremake");
   if(b) runProduce(b.dataset.remake, b.dataset.remake);
 });
-
-/** 밀린 일 묶음 — 개수를 세어 보여주고, 누르면 지시문 전체를 복사한다 */
-function renderHandoff(){
-  const box=document.getElementById("handoff"); if(!box) return;
-  const n=pendingWork().length;
-  box.hidden=n===0;
-  if(!n) return;
-  const label=document.getElementById("handoffN");
-  if(label) label.textContent=n+"건";
-  const b=document.getElementById("handoffBtn");
-  if(b) b.onclick=()=>copyText(allHandoffText(), b, "복사됨 ✓ — 채팅에 붙여넣으세요");
-}
-
-/** 파이프라인 정리를 지금 돌린다 — 매일 07:00까지 기다리지 않아도 된다 */
-async function runTick(btn){
-  if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
-  jobStart("tick","요청 처리 중");
-  try{
-    await GH.dispatch("pipeline-tick.yml",{});
-    jobEnd("tick","처리를 시작했습니다 — 끝나면 자동 반영");
-    startWatching();
-  }catch(e){ const m=shortErr(e); jobEnd("tick", m, true); }
-}
-
-/**
- * 지금 사람(작업 세션)을 기다리는 일을 전부 모은다.
- *
- * ── 왜 (2026-07-27 오너)
- * 관제탑은 요청을 받아 두지만, 새 카드 제작·코드 수정은 작업 세션이 해야 한다.
- * 건마다 [지시문 복사]를 누르면 오너가 채팅을 여러 번 열어야 한다.
- * → 밀린 걸 한 덩어리로 묶어 **하루 한 번 붙여넣기**로 끝내게 한다.
- */
-function pendingWork(){
-  const out=[];
-  // ① 요청 대장에서 사람 몫으로 남은 것
-  openRequests().forEach(r=>{
-    if(r.auto==="digest") return;              // 수집은 기계가 한다
-    out.push({ kind:r.kind, title:r.about||r.what, what:r.what, order:r.order||"" });
-  });
-  // ② 파이프라인에서 제작을 기다리는 티켓(기획안·제작중·검수대기)
-  S.tickets.forEach(t=>{
-    const fl=t.flags||[];
-    if(t.stage<1||t.stage>3) return;
-    if(fl.includes("버림")||fl.includes("실험")) return;
-    if(out.some(o=>sameTitle(o.title,t.title))) return;   // 요청 대장과 겹치면 한 번만
-    out.push({ kind:"카드 제작", title:t.title, what:(t.comments||[]).join(" / ")||"작업지시서대로 제작",
-      order:t.ideaId?"research/work-orders/"+t.ideaId+".md":"" });
-  });
-  // ③ 카드는 있는데 캡션이 없어 결재로 못 올라가는 것
-  S.tickets.forEach(t=>{
-    const fl=t.flags||[];
-    if(t.stage!==4||t.caption||fl.includes("버림")||fl.includes("실험")) return;
-    if(!t.setLabel) return;                    // 발행 세트에 등록된 것만
-    out.push({ kind:"캡션 작성", title:t.title, what:"카드는 나왔는데 캡션이 없어 결재로 못 올라갑니다",
-      order:"data/review/captions/"+t.setLabel+".txt" });
-  });
-  return out;
-}
-
-/** 밀린 일 전부를 한 번에 시키는 지시문 — 채팅에 붙여넣으면 그날 치가 끝난다 */
-function allHandoffText(){
-  const list=pendingWork();
-  const L=["wirit 관제탑에 밀려 있는 일입니다. 아래를 순서대로 처리해주세요.",""];
-  list.forEach((w,i)=>{
-    L.push((i+1)+") ["+w.kind+"] "+w.title);
-    if(w.what && w.what!==w.title) L.push("   요청: "+w.what);
-    if(w.order) L.push("   참고: "+w.order);
-  });
-  L.push("", "공통 규칙:",
-    "· 수치는 raw 데이터에서 코드로 추출한다(LLM이 만들지 않는다) · provenance 기록",
-    "· 렌더 결정성·designQa 통과 → 캡션 → 자동검수 PASS",
-    "· 새 카드는 data/review/sets.json 과 builders.json 에 등록한다(등록해야 관제탑에 뜬다)",
-    "· 끝나면 data/pipeline-state.json 의 revise 와 data/requests.json 을 정리한다",
-    "· 커밋·푸시하면 배포가 카드까지 다시 그린다");
-  return L.join("\n");
-}
-
-/** 티켓 하나를 작업 세션에 시키는 지시문 — 붙여넣으면 바로 제작이 시작되게 필요한 걸 다 담는다 */
-function workOrderText(t){
-  const lines=["wirit 관제탑에서 넘긴 제작 지시입니다.","",
-    "카드: "+t.title,
-    "현재 단계: "+(STAGES[t.stage]||t.stage),
-    t.ideaId?"작업지시서: research/work-orders/"+t.ideaId+".md":"",
-    t.provenance?"원본: "+t.provenance:"", "",
-    "해야 할 일:",
-    "1. 데이터를 raw에서 코드로 추출한다 (LLM이 수치를 만들지 않는다 · provenance 기록)",
-    "2. 카드 렌더 → 결정성·designQa 통과",
-    "3. 캡션 작성(data/review/captions/) → 자동검수(review) PASS",
-    "4. data/review/sets.json 과 builders.json 에 등록 — 등록해야 관제탑 결재 대기에 뜬다",
-    "5. 커밋·푸시하면 배포가 카드까지 다시 그린다"];
-  (t.comments||[]).forEach(c=>lines.push("","오너 코멘트: \""+c+"\""));
-  return lines.filter(x=>x!==null).join("\n");
-}
-
-/** 사람(작업 세션)이 해야 하는 요청 — 그대로 붙여넣으면 되는 지시문을 만든다 */
-function handoffText(r){
-  return "wirit 관제탑에서 넘긴 "+r.kind+"입니다.\n\n"
-    +(r.about?"대상: "+r.about+"\n":"")
-    +"접수: "+(r.at||"미상")+"\n\n"
-    +"지시 내용:\n"+(r.what||"")+"\n\n"
-    +(r.order?"작업지시서: "+r.order+"\n":"")
-    +"끝나면 data/pipeline-state.json 의 revise 에서 이 항목을 지우고, 결과를 관제탑 결재 대기로 올려주세요.";
-}
-
-/* ══════════ 파이프라인 ══════════
- * 7열 칸반은 여러 사람이 카드를 옮길 때 쓰는 도구다.
- * 여기선 한 사람이, 두 지점(소재 선택·발행 승인)에서만 움직인다.
- * → 흐름은 위쪽 레일 한 줄로 보여주고, 내용은 단계별 세로 목록으로 쌓는다.
- *   · 가로 스크롤 없음 · 무한 세로 스크롤 없음(상태 행은 한 줄, 그룹은 접힌다)
- *   · 그림은 '결재 대기'에만 — 그때만 어느 카드인지 눈으로 확인할 필요가 있다 */
-const board=document.getElementById("board");
-const FIRST_STAGE=1;                 // 소재 고르기는 💡소재 탭이 단일 창구
-const ACT_STAGE=4;                   // 오너의 결재가 필요한 단계
-/* 급한 것부터 — 왼→오른쪽 단계 순서보다 '무엇을 먼저 봐야 하나'가 중요하다.
- * 4번(승인대기)은 두 갈래로 나눈다: 결재할 수 있는 것 / 캡션이 없어 아직 못 하는 것.
- * 안 나누면 지표의 '결재 대기 5'와 목록의 '승인대기 9'가 어긋나 도구를 못 믿게 된다. */
-const GROUP_ORDER=["ready","nocap",2,3,1,5,6];
-const GROUP_NOTE={1:"소재 승인 후 기획 대기",2:"데이터·카드 제작 중",3:"자동 검수 진행",
-  5:"승인 완료 — 오너가 인스타에 올릴 차례(자동 발행 안 함)",6:"발행 후 성과",
-  ready:"카드+캡션 준비 완료 — 오너 확인만 남음",
-  nocap:"캡션을 써야 결재 목록으로 올라옵니다"};
-const GROUP_TITLE={ready:"결재 대기",nocap:"캡션 대기"};
-const FOLDED=new Set();              // 접어둔 그룹(기본은 다 펼침, 빈 그룹은 자동으로 접힘)
-
-/** 실험·중간 렌더는 어느 단계에도 끼우지 않는다 — 맨 아래 접힌 서랍에 따로 모은다.
- *  (안 그러면 '승인대기'가 22건이 되고, 그중 17건은 아무도 승인할 생각이 없는 것들이다) */
-function isLab(t){ return (t.flags||[]).includes("실험"); }
-function stageList(si){
-  return S.tickets.filter(t=>t.stage===si && !(t.flags||[]).includes("버림") && !isLab(t));
-}
-function labList(){
-  return S.tickets.filter(t=>isLab(t) && !(t.flags||[]).includes("버림"));
-}
-/** 그룹 키(단계 번호 또는 ready/nocap) → 티켓 목록 */
-function groupList(key){
-  if(key==="ready") return stageList(ACT_STAGE).filter(t=>!!t.caption);
-  if(key==="nocap") return stageList(ACT_STAGE).filter(t=>!t.caption);
-  return stageList(key);
-}
-function groupTitle(key){ return GROUP_TITLE[key] || STAGES[key]; }
-/** 흐름 레일 — 어디에 몇 건이 있는지 한 줄로. 누르면 그 그룹으로 간다. */
-function renderFlow(){
-  const el=document.getElementById("flow"); if(!el) return;
-  el.textContent="";
-  for(let si=FIRST_STAGE; si<STAGES.length; si++){
-    // 승인대기 칸은 '결재할 수 있는 것'만 센다 — 지표·목록·레일이 같은 숫자를 말해야 한다
-    const key=(si===ACT_STAGE)?"ready":si;
-    const n=groupList(key).length;
-    const b=document.createElement("button");
-    b.type="button";
-    b.className="fseg"+(n?"":" zero")+(si===ACT_STAGE&&n?" act":"");
-    b.innerHTML='<span class="fv num">'+n+'</span><span class="fl">'+esc(si===ACT_STAGE?"결재 대기":STAGES[si])+'</span>';
-    b.onclick=()=>{ const g=document.getElementById("grp"+key); if(g) g.scrollIntoView({block:"start",behavior:"smooth"}); };
-    el.appendChild(b);
-  }
-}
-/** 결재 행에 붙는 상태 꼬리표 — 왜 아직 못 나가는지 한눈에 */
-function rowTags(t){
-  const out=[];
-  const fl=t.flags||[];
-  if(fl.includes("보류")) out.push(['warn','보류']);
-  if(fl.includes("수정요청")) out.push(['hot','수정요청']);
-  if(fl.includes("실험")) out.push(['','실험']);
-  if(t.stage===ACT_STAGE){
-    if(!t.caption) out.push(['warn','캡션 없음']);
-    if(t.review) out.push([t.review.verdict==="pass"?'ok':'warn', t.review.verdict==="pass"?'검수 통과':'검수 '+t.review.verdict]);
-    else if(t.caption) out.push(['','검수 없음']);
-    if((t.pages||[]).length>1) out.push(['', (t.pages.length)+'장']);
-  }
-  return out.map(([k,v])=>'<span class="tagx'+(k?" "+k:"")+'">'+esc(v)+'</span>').join("");
-}
-function renderBoard(){
-  if(!board) return;
-  renderFlow();
-  board.textContent="";
-  GROUP_ORDER.forEach(si=>{
-    if(typeof si==="number" && si<FIRST_STAGE) return;
-    const list=groupList(si);
-    const act=si==="ready"; // 그림과 무게를 갖는 유일한 그룹
-    // 빈 그룹은 자리만 차지하므로 접어 둔다(결재 대기는 비어도 '없음'을 보여준다)
-    const fold=FOLDED.has(si) || (!list.length && !act);
-    const g=document.createElement("section");
-    g.className="grp"; g.id="grp"+si;
-
-    const h=document.createElement("button");
-    h.type="button"; h.className="grph";
-    h.innerHTML='<span class="gt">'+esc(groupTitle(si))+'</span><span class="gn num">'+list.length+'</span>'
-      +'<span class="gd">'+(fold?"펼치기":esc(GROUP_NOTE[si]||""))+'</span>';
-    h.onclick=()=>{ FOLDED.has(si)?FOLDED.delete(si):FOLDED.add(si); renderBoard(); };
-    g.appendChild(h);
-
-    if(!fold){
-      const rows=document.createElement("div");
-      rows.className="rows"+(act?" act":"");
-      if(!list.length){ rows.innerHTML='<div class="empty">'+(act?"결재할 것 없음 — 다 처리하셨습니다":"비어 있음")+'</div>'; }
-      list.forEach(t=>{
-        const b=document.createElement("button");
-        b.type="button"; b.className="row"; b.onclick=()=>openDrawer(t.id);
-        const tags=rowTags(t);
-        const thumb=(act&&t.thumb)?'<img class="rowthumb" src="'+img(t.thumb)+'" alt="">':(act?'<span class="rowthumb"></span>':"");
-        b.innerHTML=thumb
-          +'<span class="rt">'+(t.fire?"🔥 ":"")+esc(t.title)+'</span>'
-          +'<span class="rm">'+(tags||'<span class="tagx">'+esc(t.fmt)+'</span>')+'</span>';
-        rows.appendChild(b);
-      });
-      g.appendChild(rows);
-    }
-    board.appendChild(g);
-  });
-
-  // 실험 서랍 — 디자인 시안·중간 렌더. 기본은 접혀 있고, 볼 사람만 편다.
-  const lab=labList();
-  if(lab.length){
-    const g=document.createElement("section"); g.className="grp"; g.id="grpLab";
-    const open=FOLDED.has("lab") === false && FOLDED.has("labOpen");
-    const h=document.createElement("button"); h.type="button"; h.className="grph";
-    h.innerHTML='<span class="gt">실험 · 중간 렌더</span><span class="gn num">'+lab.length+'</span>'
-      +'<span class="gd">'+(open?"디자인 시안·미등록 렌더":"펼치기")+'</span>';
-    h.onclick=()=>{ FOLDED.has("labOpen")?FOLDED.delete("labOpen"):FOLDED.add("labOpen"); renderBoard(); };
-    g.appendChild(h);
-    if(open){
-      const rows=document.createElement("div"); rows.className="rows";
-      lab.forEach(t=>{
-        const b=document.createElement("button"); b.type="button"; b.className="row";
-        b.onclick=()=>openDrawer(t.id);
-        b.innerHTML='<span class="rt">'+esc(t.title)+'</span>'
-          +'<span class="rm"><span class="tagx">'+esc(t.fmt)+'</span></span>';
-        rows.appendChild(b);
-      });
-      g.appendChild(rows);
-    }
-    board.appendChild(g);
-  }
-}
 
 /* 드로어 */
 const drawer=document.getElementById("drawer"), scrim=document.getElementById("scrim");
@@ -1675,16 +1242,11 @@ function buildDetail(t){
   }
 
   let acts="";
-  if(t.stage===0 && !(t.flags||[]).includes("버림")){
-    acts='<button class="btn primary" data-act="go">✅ 이 소재 진행</button>'
-      +'<button class="btn ghost" data-act="hold">⏸ 보류</button>'
-      +'<button class="btn danger" data-act="drop">중단·삭제</button>'+reasonBox();
-  } else if(t.stage===4){
-    acts='<button class="btn primary" data-act="publish">🚀 발행 승인</button>'
-      +'<button class="btn ghost" data-act="edit">✏️ 수정지시</button>'
-      +'<button class="btn danger" data-act="reject">❌ 반려</button>'
-      +'<div class="editbox" id="editbox"><textarea id="edittext" placeholder="예) 제목 폰트 키우고 2·3위 재확인해줘"></textarea>'
-      +'<button class="btn primary" data-act="editsave">코멘트 남기기</button></div>'+reasonBox();
+  if(t.stage===4){
+    /* 수정지시·반려 버튼은 뺐다(2026-07-30 축소) — 여기 적어도 "접수"만 되고
+     * 실행은 채팅이 한다. 같은 말을 채팅에 하면 그 자리에서 고쳐서 다시 올라온다. */
+    acts='<div class="pubnote">수정하거나 반려할 게 있으면 <b>채팅에</b> 말씀해주세요 — 고쳐서 다시 올립니다.</div>'
+      +'<button class="btn primary" data-act="publish">🚀 발행 승인</button>'+reasonBox();
   } else if(t.stage===5){
     /* 승인은 났다. 올리는 사람은 **오너**다(2026-07-27 결정: 자동 발행 안 함).
      * 그러니 여기서 화면이 할 일은 두 가지뿐이다 —
@@ -1699,32 +1261,9 @@ function buildDetail(t){
         +'<button class="btn primary" data-act="posted">✅ 인스타에 올렸습니다</button>'
         +'<button class="btn danger" data-act="unqueue">↩ 대기열에서 내리기</button>'+reasonBox();
     }
-  } else if(t.auto){
-    acts='<div class="why">자동 슬롯 — 사후 통보만. 무인 해제는 설정에서.</div>';
   } else {
-    // 기획안·제작중·검수대기 — "아무 액션 없음"으로 두면 오너가 손을 못 쓴다.
-    // 여기서 할 수 있는 일은 세 가지다: 지시를 더 주거나, 다 됐다고 넘기거나, 접거나.
-    const wo = t.ideaId ? "research/work-orders/"+t.ideaId+".md" : "";
-    const woLink = (wo && STATE.repo.owner)
-      ? '<a class="btn ghost" style="text-decoration:none" target="_blank" rel="noopener" href="https://github.com/'
-        +esc(STATE.repo.owner)+"/"+esc(STATE.repo.name)+"/blob/"+esc(STATE.repo.branch)+"/"+esc(wo)+'">작업지시서 보기 ↗</a>'
-      : "";
-    // ⚠️ "만드는 중입니다"라고 쓰면 거짓말이다 — 제작은 자동이 아니라 **작업 세션(사람)** 몫이고,
-    //    시키지 않으면 아무 일도 일어나지 않는다. 화면은 그 사실을 그대로 말한다.
-    //    (2026-07-26 오너: "제작중으로 분류된 컨텐츠들 아무것도 작성을 안 하고 있는데?")
-    acts='<div class="stagenote">'
-      +(t.stage===1 ? "오너가 승인한 소재입니다. <b>작업지시서까지는 자동</b>, 실제 제작은 <b>작업 세션(사람)</b> 몫입니다 — [제작 지시문 복사]를 눌러 채팅에 붙여넣으면 그 자리에서 제작이 시작됩니다."
-        : t.stage===2 ? "<b>자동으로 진행되지 않습니다.</b> 제작(데이터 추출·카드 렌더)은 작업 세션(사람)이 합니다 — [제작 지시문 복사]로 채팅에 붙여넣어 시키세요."
-        : "<b>지금은 아무도 손대고 있지 않습니다.</b> 검수는 카드가 만들어질 때 함께 돌고, 그 제작을 시키는 건 오너입니다 — 아래 [제작 지시문 복사].")
-      +'</div>'
-      +'<button class="btn primary" data-act="push">지시 추가</button>'
-      +'<button class="btn ghost" data-act="copywork">제작 지시문 복사</button>'
-      + woLink
-      +'<button class="btn ghost" data-act="next">다음 단계로</button>'
-      +'<button class="btn danger" data-act="drop">중단·삭제</button>'
-      +'<div class="editbox" id="editbox"><textarea id="edittext" placeholder="예) 7월 데이터로 다시 뽑아줘 / 제목을 더 세게"></textarea>'
-      +'<button class="btn primary" data-act="editsave">지시 기록</button></div>'
-      +reasonBox();
+    /* 발행 단계가 아닌 티켓 — 축소 후 이 화면으로 열릴 일은 없지만, 안전망으로 남긴다 */
+    acts='<div class="pubnote">이 카드는 아직 발행 단계가 아닙니다 — 소재 선정·제작·수정은 <b>채팅</b>에서 합니다.</div>';
   }
 
   return '<div class="dhead"><button class="close" aria-label="닫기">✕</button>'
@@ -1795,29 +1334,15 @@ function wireActions(t){
         return;
       }
       // 복사는 기록이 아니다 — 연결 없이도 된다
-      if(a==="copywork"){ copyText(workOrderText(t), b, "복사됨 ✓ — 채팅에 붙여넣으세요"); return; }
       if(a==="remake"){ runProduce(b.dataset.remake, t.title); return; }
       // 미연결이면 기록이 남지 않으므로 아예 진행하지 않는다
       if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
 
-      if(a==="go"){ t.stage=1; t.flags=(t.flags||[]).filter(f=>f!=="보류");
-        promoteIdea(t,1); pushDecision("진행: "+t.title+" → 기획안","진행 기록됨"); done(ttl+" 기획으로"); }
-      if(a==="hold"){ ask("왜 보류하시나요? (회사가 학습합니다)", (why)=>{
-        t.flags=t.flags||[]; if(!t.flags.includes("보류")) t.flags.push("보류");
-        pushDecision("보류: "+t.title+(why?" — 이유: "+why:""),"보류 기록됨"); done(ttl+" 보류"); }); }
-      if(a==="drop"){ ask("왜 중단하시나요? (비워도 됩니다 — 적으면 회사가 학습합니다)", (why)=>{
-        t.flags=t.flags||[]; if(!t.flags.includes("버림")) t.flags.push("버림");
-        dropTicket(t, why);
-        // 소재에서 올라온 티켓이면 소재도 같이 내린다(양쪽에 유령이 남지 않게)
-        if(t.ideaId){ const i=ideaById(t.ideaId); if(i){ i.stage=0; queueSave("소재 되돌림 — "+i.title); } }
-        done(ttl+" 중단"); }); }
       if(a==="publish"){
         if(t.review && t.review.verdict!=="pass"
           && !confirm("자동검수가 통과가 아닙니다("+t.review.verdict+").\n그래도 발행 승인할까요?")) return;
-        t.stage=5; queuePublish(t); done(ttl+" 발행 승인"); }
-      if(a==="reject"){ ask("왜 반려하시나요? (해당 팀이 이 이유로 다시 만듭니다)", (why)=>{
-        t.stage=2; t.flags=t.flags||[]; if(!t.flags.includes("수정요청")) t.flags.push("수정요청");
-        pushDecision("반려: "+t.title+" → 재작업"+(why?" — 이유: "+why:""),"반려 기록됨"); done(ttl+" 반려"); }); }
+        t.stage=5; t.flags=t.flags||[]; if(!t.flags.includes("업로드 대기")) t.flags.push("업로드 대기");
+        queuePublish(t); done(ttl+" 발행 승인 — 이제 올릴 차례에 있습니다"); }
       // ✅ 올렸습니다 — 오너만 알 수 있는 사실을 저장소에 받아 적는다
       if(a==="posted"){
         if(!confirm("인스타그램에 올리셨나요?\n\n확인을 누르면 발행일이 기록되고, 그때 나간 카드·캡션이\n완성본 저장소(published/)에 그대로 보관됩니다.")) return;
@@ -1825,30 +1350,11 @@ function wireActions(t){
       if(a==="unqueue"){ ask("왜 내리시나요? (기록에 남습니다)", (why)=>{
         t.stage=4; t.flags=(t.flags||[]).filter(f=>f!=="업로드 대기");
         unqueuePublish(t, why); done(ttl+" 대기열에서 내림"); }); }
-      if(a==="edit"||a==="push"){ drawer.querySelector("#editbox").classList.toggle("on"); return; }
-      // 다음 단계로 — 오너가 "이건 끝났다"고 손으로 밀어 올린다(저장소에 남는다)
-      if(a==="next"){
-        const to=Math.min(t.stage+1, STAGES.length-1);
-        t.stage=to;
-        if(t.ideaId){ const i=ideaById(t.ideaId); if(i){ i.stage=to; queueSave("소재 단계 이동 — "+i.title); } }
-        pushDecision("▶ 단계 이동: "+t.title+" → "+STAGES[to], STAGES[to]+"로 이동");
-        done(ttl+" → "+STAGES[to]);
-      }
-      if(a==="editsave"){ const v=drawer.querySelector("#edittext").value.trim(); if(!v){ toast("코멘트를 입력하세요"); return; }
-        t.comments=t.comments||[]; t.comments.push(v); t.flags=t.flags||[]; if(!t.flags.includes("수정요청")) t.flags.push("수정요청");
-        reviseTicket(t, v); done("수정지시 기록됨"); }
     };
   });
 }
-/** 파이프라인에서 단계를 옮기면, 소재에서 승격된 티켓은 소재 원본(ideas.json)도 같이 옮긴다 */
-function promoteIdea(t,stage){
-  if(!t.ideaId) return;
-  const i=ideaById(t.ideaId); if(!i) return;
-  i.stage=stage; i.at=STATE.dateLabel;
-  queueSave("소재 단계 이동("+STAGES[stage]+") — "+i.title);
-}
 function short(t){ return t.title.split(" — ")[0]; }
-function done(msg){ save(); renderBoard(); renderInbox(); closeDrawer(); toast(msg); }
+function done(msg){ save(); renderPublish(); closeDrawer(); toast(msg); }
 
 
 let tmr=null;
@@ -1994,7 +1500,7 @@ function renderIdeas(){
       +(c.note?'<p class="gnote">'+esc(c.note)+'</p>':"")
       +list.map(ideaCard).join("")+'</div>';
   });
-  box.innerHTML=html||'<div class="empty">고를 소재가 없습니다 — [새 소재 발굴]을 눌러보세요</div>';
+  box.innerHTML=html||'<div class="empty">고를 소재가 없습니다 — 채팅에 소재를 붙여주세요</div>';
   const n=document.getElementById("icount"); if(n) n.textContent=open.length+"건";
   // 진행·완료로 넘어간 것은 여기 두지 않는다. 어디로 갔는지만 알려준다.
   const mv=document.getElementById("imoved");
@@ -2002,7 +1508,7 @@ function renderIdeas(){
     const inPipe=IDEAS.filter(i=>Number(i.stage||0)>=1 && i.status!=="done").length;
     const done=IDEAS.filter(i=>i.status==="done").length;
     mv.innerHTML=(inPipe||done)
-      ? '진행 중 <b>'+inPipe+'</b>건은 <button class="lnk" data-go="board">파이프라인</button>에, '
+      ? '고른 소재 <b>'+inPipe+'</b>건은 채팅(작업 세션)이 제작합니다 · '
         +'완료 <b>'+done+'</b>건은 <button class="lnk" data-go="archive">보관함</button>에 있습니다.'
       : "";
     mv.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{
@@ -2025,9 +1531,9 @@ function wireIdeas(){
       if(act==="go"){
         i.stage=1; i.at=STATE.dateLabel;
         queueSave("소재 진행 — "+i.title);
-        pushDecision("▶ 진행: "+i.title+" → 기획안"+(i.why?" (사유: "+i.why+")":""), "기획안으로 올림");
-        renderIdeas(); renderInbox(); renderBoard();
-        toast("파이프라인 기획안으로 올렸습니다");
+        pushDecision("▶ 진행: "+i.title+(i.why?" (사유: "+i.why+")":""), "진행 기록됨 — 제작은 채팅에 시켜주세요");
+        renderIdeas();
+        toast("골랐습니다 — 제작은 채팅에 시켜주세요 (\""+i.title+"\" 만들어줘)");
         return;
       }
       if(act==="save"){
@@ -2055,180 +1561,11 @@ function wireIdeas(){
         // 사유가 있을 때만 결정 로그에 남긴다(빈 삭제까지 로그를 채우면 신호가 묻힌다)
         if(w){ RECENT_DROPS.push(w); pushDecision("🗑 소재 삭제: "+i.title+" — 이유: "+w, "삭제 사유 기록됨"); }
         else toast("삭제됨 (저장소 이력에는 남습니다)");
-        renderIdeas(); renderInbox();
+        renderIdeas();
         return;
       }
     });
   });
-}
-
-/* ══════════ 지시함 ══════════
- * 오너가 칸을 나눠 채우게 하지 않는다. 기사 링크든 메모든 지시문이든
- * **그냥 한 칸에 적으면** 저장소에 쌓이고, 다음 작업이 그걸 읽고 처리한다.
- * (브라우저에서 LLM을 돌릴 수는 없으므로 "즉답"은 안 된다 — 대신 무엇이 접수됐고
- *  어떻게 처리될지를 그 자리에서 분명히 말해준다. 말없이 삼키지 않는다.) */
-const ASKLOG_KEY="wirit-asklog";
-function askLog(){ try{ return JSON.parse(localStorage.getItem(ASKLOG_KEY)||"[]"); }catch(e){ return []; } }
-function askLogPush(e){ const l=askLog(); l.unshift(e); localStorage.setItem(ASKLOG_KEY, JSON.stringify(l.slice(0,20))); renderAskLog(); }
-function renderAskLog(){
-  const el=document.getElementById("asklog"); if(!el) return;
-  const l=askLog();
-  if(!l.length){ el.innerHTML='<span class="howto-note">아직 없습니다.</span>'; return; }
-  el.innerHTML=l.map(e=>'<div class="askitem"><div class="asktxt">'+esc(e.text)+'</div>'
-    +'<div class="askmeta">'+esc(e.at)+' · '+esc(e.kind)+'</div></div>').join("");
-}
-
-/* 검색어를 뽑는다 — "전세가율 지도, 전세난 정도 등 전세 관련 데이터 시각화 소재들 찾아줘"
- * 를 그대로 뉴스에 넣으면 아무것도 안 나온다. 지시하는 말(찾아줘·모아줘)과 조사를 걷어내고
- * 남은 낱말만 검색어로 쓴다. 결정적 코드다 — LLM 안 쓴다. */
-const ASK_STOP=/^(찾아줘|찾아|찾기|모아줘|모아|모아서|만들어줘|만들어|만들|해줘|해봐|해서|알아봐|알아|정리해줘|정리해|정리|주세요|관련된|관련|다양한|여러가지|여러|일단|다시|좀|정도|자료들|자료|데이터|소재들|소재|기사나|기사|언론사들|언론사|있을거야|있을|발표한|발표|매기는|카드|뽑아|보여줘|필요해|같은|것들|이런|그런|저런|우리|지금|오늘|내일)$/;
-function keywordsOf(text){
-  const toks=String(text||"").replace(/[^0-9A-Za-z가-힣\s]/g," ").split(/\s+/).filter(Boolean);
-  const out=[];
-  for(let w of toks){
-    w=w.replace(/(으로|로서|에서|에게|에는|에|을|를|이|가|은|는|의|와|과|도|만|들)$/,"");
-    if(w.length<2 || ASK_STOP.test(w) || out.indexOf(w)>-1) continue;
-    out.push(w);
-    if(out.length>=5) break;
-  }
-  return out.join(" ");
-}
-
-/** 적어 넣은 내용을 보고 무엇으로 접수할지 판단한다 — 오너가 고르게 하지 않는다.
- *  ⚠️ note 에는 **실제로 일어날 일**만 적는다. "다음 작업 때"처럼 언제인지 모르는 말은
- *     그 자체가 오너를 기다리게 만든 원인이었다(2026-07-26). */
-function classifyAsk(text){
-  const t=text.trim();
-  if(/https?:\/\//.test(t)) return { kind:"자료(링크)", to:"research/INBOX.md", auto:"none",
-    note:"링크를 자료로 접수했습니다. 아래 '내가 시킨 일'에서 처리 상태를 볼 수 있습니다." };
-  // 자료를 찾아달라 = 지금 바로 수집을 돌릴 수 있다. 이게 가장 흔한 지시다.
-  if(/찾아|모아|조사|알아봐|검색|수집|자료|데이터/.test(t) && !/만들어|제작|카드로/.test(t))
-    return { kind:"자료 조사", to:"digest", auto:"digest",
-      note:"수집을 시작했습니다 — 2~3분 뒤 왼쪽 보드에 새 소재로 뜹니다." };
-  if(/만들|뽑아|해줘|해봐|카드|제작|수정|바꿔|다시/.test(t)) return { kind:"작업 지시", to:"research/decisions-inbox.md", auto:"none",
-    note:"작업 지시로 접수했습니다. 이건 자동으로는 안 되고 작업 세션이 처리합니다 — 상태는 '내가 시킨 일'에서 보세요." };
-  if(t.length<=60) return { kind:"소재 등록", to:"ideas", auto:"none",
-    note:"소재로 등록했습니다 — 왼쪽 보드에서 바로 확인하세요." };
-  return { kind:"자료(메모)", to:"research/INBOX.md", auto:"none",
-    note:"자료로 접수했습니다. 상태는 '내가 시킨 일'에서 보세요." };
-}
-
-/**
- * 요청 대장에 한 줄 남긴다 — 오너가 시킨 일이 **어디에도 안 남는** 일이 없게.
- * 이 대장이 화면의 '내가 시킨 일'을 만든다.
- */
-function logRequest(kind, what, about, auto, run){
-  if(!GH.connected()) return Promise.resolve();
-  const PATH="data/requests.json";
-  return GH.serial(async()=>{
-    for(let i=0;i<6;i++){
-      const cur=await GH.getFile(PATH);
-      let doc; try{ doc=JSON.parse(cur.text); }catch(e){ doc={}; }
-      if(!Array.isArray(doc.items)) doc.items=[];
-      const row={ id:"req-"+Date.now().toString(36), at:STATE.dateLabel, ts:new Date().toISOString(),
-        kind:kind, what:String(what||"").slice(0,400), about:about||"", auto:auto||"none",
-        run:run||"", done:false };
-      doc.items.push(row);
-      try{
-        await GH.putFile(PATH, JSON.stringify(doc,null,2)+"\n", "관제탑: 요청 접수 — "+kind, cur.sha);
-        REQS.push(row); renderReqs();
-        return row;
-      }catch(e){ if(!GH.isConflict(e)||i===5) throw e;
-        await new Promise(r=>setTimeout(r,500*Math.pow(2,i))); }
-    }
-  });
-}
-
-/** 소재 분류를 내용으로 고른다.
- *
- * 분류 기준이 **주제 → 발행 주기**로 바뀌었다(2026-07-27 오너 지시).
- * 그래서 "부동산이냐 증시냐"를 맞히는 건 이제 의미가 없다. 맞혀야 할 것은
- * **이걸 한 번 내고 마느냐, 계속 낼 거냐**인데 그건 오너만 안다.
- * → 주문 문장에 주기를 말한 흔적이 있으면 그걸 쓰고, 없으면 '🆕 분류 대기'로 보낸다.
- *
- * ⚠️ 절대 ICATS의 첫/마지막 칸을 기본값으로 쓰지 않는다. 예전에 그렇게 했다가
- *    새 소재가 '✅ 제작 완료' 칸에 들어갔다(2026-07-26 오너 화면).
- */
-function pickCat(text){
-  const t=String(text||"");
-  const R=[[/매일|데일리|평일마다|장 ?마감마다/,"daily"],
-    [/매주|주간|주 ?1회|요일마다/,"weekly"],
-    [/매달|매월|월간|달마다|월 ?1회/,"monthly"],
-    [/분기|3개월마다|계절마다/,"quarter"],
-    [/매년|연간|해마다|년 ?1회|1년에 한 번/,"yearly"],
-    [/한 ?번만|일회성|이번만|딱 한 번/,"once"]];
-  for(const [re,key] of R){
-    if(!re.test(t)) continue;
-    if(ICATS.some(c=>c.key===key)) return key;
-  }
-  return (ICATS.find(c=>c.key==="todo")||{}).key||"todo";
-}
-
-function wireIdeaTools(){
-  renderAskLog();
-
-  const send=document.getElementById("asksend");
-  if(send) send.onclick=async()=>{
-    const ta=document.getElementById("ask");
-    const v=(ta.value||"").trim();
-    const hint=document.getElementById("askhint");
-    if(!v){ toast("무엇을 할지 적어주세요"); ta.focus(); return; }
-    if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
-
-    const c=classifyAsk(v);
-    jobStart("ask","보내는 중"); setSave("saving");
-    try{
-      if(c.to==="ideas"){
-        // 짧은 한 줄은 소재로 바로 등록한다 — 화면에서 즉시 보인다
-        IDEAS.push({ id:"ask-"+Date.now().toString(36), cat:pickCat(v),
-          title:v.slice(0,90), why:"오너 직접 입력", source:"지시함", state:"", status:"", isNew:true });
-        await new Promise(r=>{ queueSave("소재 추가 — "+v.slice(0,40)); setTimeout(r,900); });
-        renderIdeas();
-      } else if(c.to==="digest"){
-        // "OO 자료 찾아줘" → 그 말에서 검색어를 뽑아 **지금 수집을 돌린다**.
-        // 예전엔 여기서 기록만 하고 끝나 아무 일도 안 일어났다.
-        const q=keywordsOf(v);
-        await GH.append("research/decisions-inbox.md",
-          "- "+ghStamp()+" 🔎 자료 조사: "+v.replace(/\n+/g," / ")+(q?"  [검색어: "+q+"]":""), "관제탑: 자료 조사 요청");
-        await GH.dispatch("research-digest.yml", q?{query:q}:{});
-        c.note="검색어 «"+(q||"기본 주제")+"» 로 수집을 시작했습니다 — 2~3분 뒤 왼쪽 보드에 뜹니다.";
-        startWatching();
-      } else {
-        await GH.append(c.to, "- "+ghStamp()+" "+v.replace(/\n+/g," / "), "관제탑: "+c.kind);
-      }
-      await logRequest(c.kind, v, "", c.auto);
-      setSave("ok");
-      askLogPush({ text:v.slice(0,160), at:STATE.dateLabel, kind:c.kind });
-      ta.value="";
-      if(hint) hint.textContent="✔ "+c.note;
-      jobEnd("ask", c.kind+"로 접수했습니다");
-      renderInbox();
-    }catch(e){ const m=shortErr(e); setSave("bad", m); jobEnd("ask", m, true); }
-  };
-  // Ctrl/⌘+Enter 로도 보낸다 — 채팅창처럼
-  const ta=document.getElementById("ask");
-  if(ta) ta.onkeydown=(e)=>{ if((e.metaKey||e.ctrlKey)&&e.key==="Enter"){ e.preventDefault(); send&&send.click(); } };
-
-  // 새 소재 찾아줘 — 수집을 돌리고, 끝나면 자동으로 보드에 반영된다
-  const dig=document.getElementById("askmine");
-  if(dig) dig.onclick=async()=>{
-    if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
-    const dir=(document.getElementById("ask").value||"").trim();
-    jobStart("mine","소재 찾는 중");
-    try{
-      const avoid=RECENT_DROPS.slice(-5);
-      await GH.append("research/decisions-inbox.md",
-        "- "+ghStamp()+" 🔎 새 소재 발굴"+(dir?" — "+dir.replace(/\n+/g," / "):"")
-        +(avoid.length?" [피할 것: "+avoid.join(" / ")+"]":""), "관제탑: 소재 발굴 요청");
-      await GH.dispatch("research-digest.yml",{});
-      const hint=document.getElementById("askhint");
-      if(hint) hint.textContent="✔ 수집을 시작했습니다 — 끝나면 왼쪽 보드에 새 소재가 자동으로 뜹니다(2~3분).";
-      askLogPush({ text:dir||"(방향 지정 없음)", at:STATE.dateLabel, kind:"소재 발굴" });
-      document.getElementById("ask").value="";
-      jobEnd("mine","수집 시작 — 끝나면 자동 반영");
-      startWatching();
-    }catch(e){ const m=shortErr(e); jobEnd("mine", m, true); }
-  };
 }
 
 /* 연결 뱃지 토글 — 바깥을 누르면 닫힌다 */
@@ -2256,11 +1593,8 @@ document.querySelectorAll("[data-go]").forEach(b=>{
 });
 
 renderConn();
-renderBoard();
+renderPublish();
 renderIdeas();
-renderInbox();
-renderReqs();
-wireIdeaTools();
 applyLock();
 if(location.hash) openTab(location.hash.slice(1));
 setSave(GH.connected()?"ok":"off");
@@ -2283,41 +1617,21 @@ function esc(s: unknown): string {
 function ideasHtml(state: TowerState): string {
   const items = state.ideas.items;
   const open = items.filter((i) => i.status !== "done" && !Number(i.stage || 0)).length;
-  const weights = state.mining.weights.map((w) => `<span class="wchip">${esc(w.label)} ${w.pct}%</span>`).join("");
 
-  return `<div class="ideas">
+  /* 지시함(자유 입력창)은 뺐다(2026-07-30 오너 승인 축소).
+   * 여기 적어도 "접수"만 되고 실행은 못 한다 — 같은 말을 채팅에 하면 그 자리에서 실행된다.
+   * 신규 소재·지시의 단일 입구는 채팅이고, 이 보드는 그 결과를 보는 곳이다. */
+  return `<div class="ideas one">
   <section class="ipanel">
     <div class="ih">소재 보드<span class="n num" id="icount">${open}건</span></div>
+    <div class="howto-note" style="margin:2px 2px 10px">
+      새 소재·기사 링크·지시는 <b>채팅에 그냥 붙여주세요</b> — 등록부터 제작까지 그 자리에서 됩니다.
+      여기서는 고르고(▶) 다듬고(✎) 버립니다(🗑).
+    </div>
     <div class="igate" id="igate" hidden></div>
     <div class="moved" id="imoved"></div>
     <div id="ideaBody"></div>
   </section>
-
-  <aside class="ipanel askpanel" data-lock>
-    <div class="ih">지시함</div>
-    <div class="howto-note" style="margin-bottom:9px">
-      기사 링크·수치·메모·작업 지시… <b>아무거나 그냥 적으세요.</b>
-      칸을 나눠 채울 필요 없습니다 — 읽고 알아서 처리합니다.
-    </div>
-    <textarea id="ask" class="askbox" rows="6"
-      placeholder="예)
-https://n.news.naver.com/... 이 기사로 카드 하나 만들어줘
-
-전세가율 지도 만들면 재밌을 듯
-
-토허제 지도 7월 데이터로 다시 뽑아줘"></textarea>
-    <div class="askrow">
-      <button class="itool prim" id="asksend" data-job="ask">보내기</button>
-      <button class="itool" id="askmine" data-job="mine">새 소재 찾아줘</button>
-    </div>
-    <div class="askhint" id="askhint"></div>
-
-    <div class="ih" style="margin-top:18px">보낸 것</div>
-    <div class="asklog" id="asklog"><span class="howto-note">아직 없습니다.</span></div>
-
-    <div class="ih" style="margin-top:18px">수집 비중</div>
-    <div class="wchips">${weights}</div>
-  </aside>
 </div>`;
 }
 
@@ -2328,12 +1642,12 @@ function fmt(s: unknown): string {
 
 /** 지표 레일 — 4칸 박스가 아니라 한 줄의 활자. 누르면 그 화면으로 간다. */
 function kpiHtml(state: TowerState): string {
-  const go = ["today", "board", "ideas", "assets"];
+  const go = ["publish", "publish", "ideas", "assets"];
   return state.kpi
     .map((k, i) => {
       // '결재 대기'만 0보다 클 때 색을 얻는다 — 색은 신호이지 장식이 아니다
       const hot = i === 0 && k.value !== "0" ? " hot" : "";
-      return `<button type="button" class="kpi${hot}" data-go="${go[i] || "today"}">` +
+      return `<button type="button" class="kpi${hot}" data-go="${go[i] || "publish"}">` +
         `<span class="v">${esc(k.value)}</span>` +
         `<span class="l">${esc(k.label)}</span>` +
         `<span class="n">${esc(k.note)}</span></button>`;
@@ -2602,65 +1916,6 @@ function publishedHtml(state: TowerState): string {
   return out;
 }
 
-function perfHtml(state: TowerState): string {
-  const rows = state.perf?.rows || [];
-  const { owner, name, branch } = state.repo;
-  const edit = owner && name
-    ? `https://github.com/${owner}/${name}/edit/${branch}/${state.perf.path}` : "";
-
-  if (!rows.length) {
-    return `<div class="wrap">${publishedHtml(state)}<div class="sect">성과</div>
-      <div class="allclear"><div class="t">아직 성과 수치가 없습니다</div>
-      <div class="w">발행한 카드의 <b>도달 · 저장 · 좋아요 · 댓글</b>을 여기에 쌓습니다.<br>
-      인스타 앱의 게시물 인사이트를 보고 <b>아래 버튼으로 직접 적어</b> 주세요 —
-      한 줄이라도 적는 편이 훨씬 낫습니다. 저장 수가 우리 계정의 핵심 지표입니다.</div>
-      ${edit ? `<div style="margin-top:10px"><a class="ebtn" href="${esc(edit)}" target="_blank" rel="noopener">성과 직접 입력 ↗</a></div>` : ""}
-      </div></div>`;
-  }
-
-  const num = (v: string): number => {
-    const n = parseInt(String(v).replace(/[^\d]/g, ""), 10);
-    return Number.isFinite(n) ? n : 0;
-  };
-  const saved = rows.map((r) => num(r.saved)).filter((n) => n > 0);
-  const avg = saved.length ? Math.round(saved.reduce((a, b) => a + b, 0) / saved.length) : 0;
-  const best = rows.slice().sort((a, b) => num(b.saved) - num(a.saved))[0];
-  const maxSaved = Math.max(1, ...saved);
-
-  const body = rows
-    .map((r) => {
-      const s = num(r.saved);
-      const pct = Math.round((s / maxSaved) * 100);
-      return `<div class="prow">
-        <div class="pmain"><div class="pt">${esc(r.card)}</div>
-          <div class="pmeta num">${esc(r.date)}${r.memo ? ` · ${esc(r.memo)}` : ""}</div></div>
-        <div class="pbars">
-          <div class="pbar"><span class="pk">저장</span>
-            <span class="ptrack"><i style="width:${pct}%"></i></span>
-            <span class="pv num">${esc(r.saved || "-")}</span></div>
-          <div class="psub num">도달 ${esc(r.reach || "-")} · 좋아요 ${esc(r.likes || "-")} · 댓글 ${esc(r.comments || "-")}</div>
-        </div>
-      </div>`;
-    })
-    .join("");
-
-  return `<div class="wrap">
-    ${publishedHtml(state)}
-    <div class="sect">성과 — 수치 기록 ${rows.length}건</div>
-    <div class="pstat">
-      <div class="pcell"><span class="v num">${avg}</span><span class="l">평균 저장</span></div>
-      <div class="pcell"><span class="v num">${best ? esc(best.saved || "-") : "-"}</span><span class="l">최고 저장</span></div>
-      <div class="pcell wide"><span class="v s">${best ? esc(best.card) : "-"}</span><span class="l">가장 많이 저장된 카드</span></div>
-    </div>
-    <div class="howto-note" style="margin:12px 2px 14px">
-      <b>저장 수</b>가 우리 계정의 핵심 지표입니다 — 저장해두고 다시 볼 카드를 만드는 계정이니까요.
-      여기서 배운 것은 <code>research/PATTERN_LIBRARY.md</code>로 올라가 다음 소재 선택에 반영됩니다.
-      ${edit ? `<a class="ebtn" style="margin-left:6px" href="${esc(edit)}" target="_blank" rel="noopener">직접 입력 ↗</a>` : ""}
-    </div>
-    <div class="plist">${body}</div>
-  </div>`;
-}
-
 function assetsHtml(state: TowerState): string {
   const groups = state.assets.groups
     .map(
@@ -2712,42 +1967,29 @@ export function renderTowerBody(state: TowerState): string {
 <div class="kpis">${kpiHtml(state)}</div>
 
 <nav class="tabs">
-  <button class="tab on" data-v="today">오늘<span class="c" id="tabN" hidden>0</span></button>
-  <button class="tab" data-v="board">파이프라인</button>
+  <button class="tab on" data-v="publish">발행<span class="c" id="tabN" hidden>0</span></button>
   <button class="tab" data-v="ideas">소재</button>
-  <button class="tab" data-v="company">회사</button>
   <button class="tab" data-v="archive">보관함</button>
-  <button class="tab" data-v="perf">성과</button>
+  <button class="tab" data-v="company">회사</button>
   <button class="tab" data-v="assets">자산</button>
 </nav>
 
-<section id="view-today" class="view on">
+<section id="view-publish" class="view on">
   <div class="inbox">
-    <h2>오늘 결정할 일<span class="n num" id="inboxN" hidden>0</span></h2>
-    <div id="inboxBody"></div>
+    <h2>결재 대기<span class="n num" id="approveN" hidden>0</span></h2>
+    <div class="howto-note" style="margin:2px 2px 10px">카드+캡션이 준비된 것만 올라옵니다. 눌러서 실물을 확인하고 <b>[🚀 발행 승인]</b> 하세요. 수정할 게 있으면 <b>채팅에</b> 말씀해주세요.</div>
+    <div id="approveBody"></div>
   </div>
-  <div class="inbox" id="reqsec" hidden>
-    <h2>내가 시킨 일<span class="n num" id="reqN" hidden>0</span></h2>
-    <p class="reqlead">시킨 일이 지금 어디까지 왔는지, <b>누가 하고 언제 되는지</b>를 그대로 적습니다.</p>
-    <div class="handoff" id="handoff" hidden>
-      <div class="hmain"><b id="handoffN">0건</b>이 작업 세션을 기다리고 있습니다
-        <span class="dim">— 한 번에 복사해 채팅에 붙여넣으면 그날 치가 끝납니다</span></div>
-      <button class="itool prim" id="handoffBtn">📋 밀린 일 한번에 넘기기</button>
-    </div>
-    <div id="reqBody"></div>
+  <div class="inbox">
+    <h2>올릴 차례<span class="n num" id="uploadN" hidden>0</span></h2>
+    <div class="howto-note" style="margin:2px 2px 10px">승인 완료 — JPG를 받아 <b>인스타에 직접</b> 올린 뒤 <b>[✅ 인스타에 올렸습니다]</b>를 눌러주세요. 그래야 발행 이력이 남습니다.</div>
+    <div id="uploadBody"></div>
   </div>
-</section>
-
-<section id="view-board" class="view">
-  <div class="pipe">
-    <div class="flow" id="flow"></div>
-    <main id="board"></main>
-  </div>
+  <div class="inbox">${publishedHtml(state)}</div>
 </section>
 <section id="view-ideas" class="view">${ideasHtml(state)}</section>
-<section id="view-company" class="view">${companyHtml(state)}</section>
 <section id="view-archive" class="view">${archiveHtml(state)}</section>
-<section id="view-perf" class="view">${perfHtml(state)}</section>
+<section id="view-company" class="view">${companyHtml(state)}</section>
 <section id="view-assets" class="view">${assetsHtml(state)}</section>
 
 <div class="scrim" id="scrim"></div>

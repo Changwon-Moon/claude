@@ -90,26 +90,27 @@ console.log(`  · 받은 화면 ${kb}KB`);
 // ── 4. 최신 화면이 맞는가 — 이번 개편의 결과물이 실제로 올라갔는지
 const has = (re, name, hint) => check(name, re.test(html), hint);
 
-has(/data-v="today"[\s\S]*data-v="board"[\s\S]*data-v="ideas"[\s\S]*data-v="company"[\s\S]*data-v="archive"[\s\S]*data-v="perf"[\s\S]*data-v="assets"/,
-  "탭 7종(오늘·파이프라인·소재·회사·보관함·성과·자산)");
+/* 2026-07-30 표준 축소(오너 승인) — 탭 5종. 지운 화면이 배포본에 되살아나면 축소가 무효다. */
+has(/data-v="publish"[\s\S]*data-v="ideas"[\s\S]*data-v="archive"[\s\S]*data-v="company"[\s\S]*data-v="assets"/,
+  "탭 5종(발행·소재·보관함·회사·자산)");
+check("지운 화면 없음(결정함·칸반·지시함·성과·요청 대장)",
+  !/id="view-today"/.test(html) && !/id="view-board"/.test(html) && !/id="view-perf"/.test(html)
+  && !/id="ask"/.test(html) && !/id="reqsec"/.test(html));
+has(/id="view-publish"/, "발행 화면(결재·업로드·이력)");
+has(/id="approveBody"/, "결재 대기 칸");
+has(/id="uploadBody"/, "올릴 차례 칸");
 has(/class="onode ceo"/, "조직도 정점 = CEO 노드");
 has(/class="odivs"/, "조직도 5개 본부(계통도)");
 has(/id="view-archive"/, "보관함 화면");
-has(/id="view-perf"/, "성과 화면");
 has(/id="jobbar"/, "작업 표시줄");
 has(/id="connbtn"/, "상단 연결 뱃지");
 has(/결재 대기/, "지표 명칭 '결재 대기'");
-has(/중단·삭제/, "버튼 이름 '중단·삭제'");
+has(/올릴 차례/, "지표 명칭 '올릴 차례'");
 has(/data-ia="delete"/, "소재 삭제 버튼");
 check("소재 보드에 승인·보류 버튼 없음(간소화 반영)",
   !/data-ia="approve"/.test(html) && !/data-ia="hold"/.test(html));
-
-// 이번 개편분 — 화면에 실제로 올라갔는지
-has(/id="ask"/, "지시함(자유 입력창)");
 check("칸 나눈 입력 폼 제거(제목·이유·출처)",
   !/id="na-t"/.test(html) && !/id="na-w"/.test(html) && !/id="na-s"/.test(html));
-has(/data-act="next"/, "단계 이동 버튼(기획안에서 손을 쓸 수 있음)");
-has(/class="stagenote"/, "지금 무엇을 기다리는지 설명");
 has(/class="fstrip"/, "보관함에 카드 실물");
 
 // 링크는 열려야 링크다 — 저장소에 없는 경로로 가는 링크가 있으면 전부 404다
@@ -123,20 +124,13 @@ check("저장소 상태를 직접 읽는 코드 존재(배포를 안 기다림)"
 check("옛 화면 잔재 없음(마이닝 열·연결 바)",
   !/id="ghbar"/.test(html) && !/col mining/.test(html));
 
-// "언제까지 기다려?"를 없앤 장치들이 실제 사이트에 올라갔는지 (2026-07-26)
-has(/id="reqsec"/, "'내가 시킨 일' 칸");
-has(/function whoWhen/, "요청마다 담당·예정을 말하는 코드");
-check("주체 없는 '대기 중' 문구 제거", !/재작업 지시 후 대기 중/.test(html));
 check("읽기 캐시를 우회해 최신본을 읽는다(409 재발 방지)",
   /git\/ref\/heads/.test(html) && /nocache=/.test(html));
-check("'자료 찾아줘'를 검색어로 바꿔 수집을 실행",
-  /function keywordsOf/.test(html) && /research-digest\.yml/.test(html));
 check("브라우저 옛 상태가 저장소를 덮지 않음",
   !/localStorage\.getItem\(KEY\)\);\s*if\(s&&s\.tickets&&s\.tickets\.length/.test(html));
 
 // 완성 카드가 오너 손에 닿는가 (2026-07-26 "제작된 카드는 어딨는거야?")
 has(/download\//, "결재 화면에 원본 내려받기 링크");
-has(/data-act="copywork"/, "제작 지시문 복사 버튼(사람이 시켜야 함을 화면이 말함)");
 check("'만드는 중' 거짓 문구 없음", !/카드를 만드는 중입니다/.test(html));
 
 // 내려받기 원본이 실제로 열리는가 — 링크만 있고 파일이 없으면 또 "안 열리는 링크"다
@@ -172,10 +166,6 @@ check("연결 안내에 Actions 권한 포함(실행 버튼의 전제)",
 has(/connsteps/, "휴대폰 연결 단계 안내");
 check("연결 시 권한을 실제로 확인", /actions\/workflows\?per_page=1/.test(html));
 
-// 밀린 일 한번에 넘기기 (2026-07-27)
-has(/id="handoffBtn"/, "[밀린 일 한번에 넘기기] 버튼");
-has(/function allHandoffText/, "밀린 일 묶음 지시문 생성 코드");
-
 // 소재 보드가 발행 주기로 정리됐는가 (2026-07-27 오너 지시)
 has(/정기 · 월간/, "소재 칸이 발행 주기로 서 있음(정기·월간)");
 has(/일회성/, "일회성 칸");
@@ -189,7 +179,7 @@ check("새 소재가 엉뚱한 칸에 처박히지 않음(첫/마지막 칸 기�
 has(/data-act="posted"/, "[✅ 인스타에 올렸습니다] 버튼");
 has(/publish-archive\.yml/, "완성본 보관 워크플로 배선");
 has(/class="pubnote"/, "결재 화면이 '오너가 직접 올린다'고 안내");
-has(/발행 이력/, "성과 화면의 발행 이력 칸");
+has(/발행 이력/, "발행 화면의 발행 이력 칸");
 check("자동 업로드를 하는 척하는 문구 없음",
   !/인스타에 자동으로 올라갑|자동 발행됩니다/.test(html));
 

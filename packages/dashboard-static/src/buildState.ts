@@ -516,11 +516,23 @@ export async function buildState(): Promise<TowerState> {
     published: tickets.filter((t) => t.stage === 5).length,
   };
 
-  // KPI — 오너가 "지금 뭘 해야 하나"를 읽는 줄. 결정 대기가 맨 앞.
+  // KPI — 오너가 "지금 뭘 해야 하나"를 읽는 줄. 결재 대기가 맨 앞.
+  // '작업중'은 뺐다(2026-07-30 축소) — 제작은 채팅에서 일어나므로 여기 숫자는 허구가 된다.
+  // 대신 '올릴 차례'(승인됐고 오너가 인스타에 올릴 것)를 넣는다. 발행 탭과 같은 기준.
   const totalAssets = assets.reduce((a, g) => a + g.count, 0);
+  const publishedLabels = new Set(published.filter((p) => p.label).map((p) => p.label));
+  const upSeen = new Set<string>();
+  const uploadWait = tickets.filter((t) => {
+    if (t.stage !== 5 || !t.flags.includes("업로드 대기")) return false;
+    if (t.setLabel && publishedLabels.has(t.setLabel)) return false;
+    const k = String(t.setLabel || t.title).replace(/\s+/g, "").replace(/[·—-]/g, "").toLowerCase();
+    if (upSeen.has(k)) return false;
+    upSeen.add(k);
+    return true;
+  }).length;
   const kpi = [
     { label: "결재 대기", value: String(readyToPublish), note: "발행 승인 대기" },
-    { label: "작업중", value: String(counts.inProgress), note: "기획 · 제작 · 검수" },
+    { label: "올릴 차례", value: String(uploadWait), note: "인스타에 올릴 것" },
     { label: "소재 풀", value: String(openIdeas.length), note: `아직 안 고른 것 ${undecided}건` },
     { label: "데이터 자산", value: String(totalAssets), note: "재사용 가능" },
   ];
