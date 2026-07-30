@@ -12,8 +12,9 @@
          왜 세로 막대인가: 시간은 가로로 흐른다. 가로 막대로 세우면 독자가
          "위에서 아래로 읽는 순위표"로 착각한다. 연도별 추이는 세로가 표준이다.
 
-         구조: [제목 1줄 + 헤어라인]
-               → [플롯: 요약카드(좌상단) · 추정 카드(우상단) · 추세 화살표 · 0선 기준 막대]
+         구조: [제목 1줄 · 가운데 · 뱃지 아래]
+               → [플롯: 좌측 정보 블록(지수 카드 + 추정 배지) · 추세 화살표 · 0선 기준 막대
+                        · 0선 아래 빈 칸의 워터마크]
                → [연도 축]
          · 막대 높이(h)는 빌더가 % 로 계산한다. 템플릿은 그리기만 한다.
          · 색: 오름 = 레드, 내림 = 코발트 (index-2026@1 과 같은 규칙)
@@ -23,28 +24,31 @@
          ── 시안 A(에디토리얼·절제) 2026-07-30 오너 지시 반영 ──
          ① 제목 1줄(자동 축소, 줄이는 방향만) ② 제목 아래 lede 삭제 → 헤어라인만
          ③ 빈 공간에 우상향 곡선 화살표(막대 뒤 배경 요소) ④ 추정치 카드(점선·사선 = 막대와 같은 언어)
-         ⑤ 플롯 빈 사분면에 wirit 워터마크 ⑥ 꽉 차 보이게 — 제목이 폭을 채우고,
-           하단 요약 카드 2장을 **플롯 좌상단 빈 사분면**으로 올려 세로로 쌓았다(플롯이 그만큼 자란다)
+         ⑤ 플롯 빈 칸에 wirit 워터마크 ⑥ 꽉 차 보이게
+
+         ── 2차 수정(2026-07-30 오너) ──
+         제목 가운데 정렬 + 뱃지 아래로 · 헤어라인 삭제 · 요약 카드 삭제 ·
+         지수 카드(과거/현재 2줄)와 추정 배지를 **플롯 좌측 빈 칸**으로 ·
+         워터마크는 0선 아래 빈 칸(후반 연도 아래)으로 · 실측/추정 값 둘 다 표기
          ========================================================= */
 
+      /* 제목은 **우상단 로고 뱃지 아래**에서 시작한다(오너 지시 2026-07-30).
+       * 뱃지는 top:40px + 높이 약 62px → 카드 상단에서 약 102px 지점에서 끝난다.
+       * 가운데 정렬한 제목은 카드 폭을 다 쓰므로 뱃지와 세로로 안 겹치게 내려야 한다.
+       * 이 겹침은 카드 밖으로 나가지 않아 예전 검수(overflow)에 안 걸렸다 →
+       * designQa 에 badgeclip 검사를 추가했다(검수가 잡아 주니 값을 임의로 못 줄인다). */
       .yc-head {
-        margin-top: 2px;
+        margin-top: 44px;
       }
-      /* 제목은 한 줄. 폰트 크기는 아래 __wiritFit 이 실측해서 폭(936px)에 맞춘다.
+      /* 제목은 한 줄·가운데. 폰트 크기는 아래 __wiritFit 이 실측해서 폭(936px)에 맞춘다.
        * CSS 값은 상한이고, 스크립트는 **줄이는 방향으로만** 움직인다. */
       .yc .wirit-title {
         margin-top: 0;
+        text-align: center;
         font-size: 88px;
         line-height: 1.04;
         white-space: nowrap;
         letter-spacing: -0.035em;
-      }
-      /* 헤어라인 — 여백을 구조로 쓴다. 제목 아래 회색 글씨(lede) 대신 이 선 하나. */
-      .yc-rule {
-        margin-top: 20px;
-        height: 3px;
-        background: var(--wirit-ink);
-        opacity: 0.9;
       }
 
       .yc-chart {
@@ -52,7 +56,7 @@
         min-height: 0;
         display: flex;
         flex-direction: column;
-        margin: 18px 0 26px;
+        margin: 22px 0 22px;
       }
 
       /* ── 플롯 영역 ── */
@@ -147,6 +151,66 @@
       }
 
       /* 막대: 0선에서 위(오름) 또는 아래(내림)로 자란다 */
+      /* ── 좌측 정보 블록 ──
+       * 초년도(2016~2020)는 값이 0 근처라 **0선 위쪽 좌측이 데이터가 없는 사분면**이다.
+       * 그 빈 칸에 지수 카드와 추정 배지를 넣는다(오너 지시: 카드들을 그래프 좌측 공백으로).
+       * 폭은 5칸(2016~2020) 정도 — 2021 막대를 덮지 않는 선. */
+      .yc-side {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 45%;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        z-index: 4;
+      }
+      /* 지수 카드: 과거 한 줄 + 현재(사상 최대) 한 줄 */
+      .yc-idx {
+        padding: 20px 24px 22px;
+        border-radius: 20px;
+        background: var(--wirit-ink-06);
+      }
+      .yc-idx .k {
+        display: block;
+        font-size: 23px;
+        font-weight: 700;
+        color: var(--wirit-gray);
+      }
+      .yc-idx .row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 14px;
+        margin-top: 6px;
+      }
+      .yc-idx .row .ym {
+        font-family: var(--font-num);
+        font-size: 27px;
+        font-weight: 800;
+        color: var(--wirit-gray);
+      }
+      .yc-idx .row .v {
+        font-family: var(--font-num);
+        font-size: 40px;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        color: var(--wirit-ink);
+      }
+      .yc-idx .now {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 2px solid var(--wirit-ink-12);
+      }
+      .yc-idx .now .k {
+        color: var(--wirit-red);
+        font-weight: 800;
+      }
+      .yc-idx .now .row .v {
+        color: var(--wirit-red);
+        font-size: 46px;
+      }
+
       /* 막대 두께 — 칸 폭의 92%(좌우 4%). 오너 지시(2026-07-30)로 84%→92% 로 굵혔다.
        * 더 굵히면 막대끼리 붙어 개별 연도로 안 읽힌다(colGap 10px 뿐이다). */
       .yc-bar {
@@ -212,6 +276,23 @@
       .yc-col.peak .yc-val {
         color: #a5121f;
       }
+      /* 실측 부분의 값 — 추정 막대가 위에 쌓인 칸에서도 **실측 숫자를 보여준다**
+       * (오너 지시: 2026년 6월 기준 +4.6% 도 그래프에 표기).
+       * 추정 막대 안이 아니라 **실측 막대 안 상단**에 흰 글씨로 올린다 —
+       * 밖에 두면 추정 막대와 겹치고, 어디까지가 실측인지도 흐려진다. */
+      .yc-solid-val {
+        position: absolute;
+        left: 4%;
+        right: 4%;
+        bottom: calc(100% - var(--zero) + var(--h) - 40px);
+        text-align: center;
+        font-family: var(--font-num);
+        font-size: 25px;
+        font-weight: 900;
+        color: #fff;
+        white-space: nowrap;
+        z-index: 3;
+      }
       /* 추정 막대에 붙는 꼬리표 — 그래픽만 잘라 써도 '추정'이 따라간다 */
       .yc-tag {
         position: absolute;
@@ -233,15 +314,19 @@
        * 값 라벨(.yc-val) 대신 그 칸에 붙는다. 막대 위쪽에 앵커되므로 데이터가 바뀌면 같이 움직인다.
        * ⚠️ 테두리(점선)·바탕(사선)은 추정 막대와 **같은 언어**다. 실선/단색으로 바꾸면
        *    추정치가 실측처럼 읽힌다 — 디자인보다 앞서는 오보 방지 규칙. */
+      /* 추정 배지 — 오너 지시로 막대 위 앵커에서 **좌측 정보 블록 안**으로 옮겼다.
+       * 점선 테두리·사선 바탕은 추정 막대와 같은 언어다. 실선/단색으로 바꾸면
+       * 추정치가 실측처럼 읽힌다 — 디자인보다 앞서는 오보 방지 규칙. */
+      /* ⚠️ 좌측 블록은 카드 폭의 45% 뿐이다. 라벨과 큰 숫자를 **한 줄에 나란히** 두면
+       * 설명 글이 숫자 아래로 깔린다(검수 textclip 이 잡았다). 그래서 세로로 쌓는다:
+       *   1행 = 태그 + 값(baseline 정렬) / 2행 = 산술 가정 */
       .yc-card {
-        position: absolute;
-        right: 0;
-        width: 508px;
-        bottom: calc(100% - var(--zero) + var(--total-h) + 20px);
+        position: relative;
+        width: 100%;
         display: flex;
-        align-items: center;
-        gap: 22px;
-        padding: 15px 22px 16px;
+        flex-direction: column;
+        gap: 10px;
+        padding: 16px 22px 18px;
         border: 3px dashed #c0272d;
         border-radius: 20px;
         background:
@@ -254,8 +339,11 @@
         z-index: 4;
       }
       .yc-card .lab {
-        flex: 1;
-        min-width: 0;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 14px;
+        width: 100%;
       }
       .yc-card .t {
         display: block;
@@ -267,7 +355,7 @@
       /* 산술 가정 한 줄 — 두 줄로 접히면 카드가 커져 막대를 덮는다. nowrap 로 못박는다. */
       .yc-card .n {
         display: block;
-        margin-top: 5px;
+        margin-top: 0;
         font-size: 20px;
         font-weight: 600;
         letter-spacing: -0.02em;
@@ -300,8 +388,8 @@
         z-index: 1;
       }
 
-      /* 워터마크 — 플롯 좌상단(데이터가 없는 빈 코너). 데이터 위에는 올리지 않는다.
-       * 이 카드는 초년도 값이 0 근처라 좌상단이 넓게 비는데, 그 여백을 채우는 역할도 한다. */
+      /* 워터마크 — 0선 **아래** 빈 칸(후반 연도 밑, 음수 막대가 없는 구간).
+       * 위치는 마크업에서 zeroAt 로 계산해 인라인으로 준다. 데이터 위에는 올리지 않는다. */
       .yc .wirit-stamp {
         font-size: 52px;
         opacity: 0.13;
@@ -332,47 +420,6 @@
       /* ⚠️ 단위(%)는 축 왼쪽에 두면 −1.5 값 라벨과 부딪힌다(첫 렌더에서 겹쳤다).
        * lede 를 지운 뒤에는 좌상단 캡션(subtitle)에 "단위 %"를 붙여서 해결했다. */
 
-      /* ── 요약 카드 2장 ──
-       * 원래는 축 아래(하단)에 나란히 뒀다. 2026-07-30 오너 지적("막대 위쪽 빈 공간이 크다")에 따라
-       * **플롯 좌상단 빈 사분면으로 옮겨 세로로 쌓았다.** 초년도 값이 0 근처라 그 영역에는
-       * 데이터가 애초에 없다 — 데이터를 가리지 않고 여백만 채운다. 하단이 비워진 만큼
-       * 플롯이 자라서 막대도 커진다(같은 카드 안에서 정보 밀도만 올라간다). */
-      .yc-foot {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 42%;
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-        z-index: 4;
-      }
-      .yc-foot .cell {
-        padding: 24px 28px;
-        border-radius: 20px;
-        background: var(--wirit-ink-06);
-      }
-      .yc-foot .cell.hot {
-        background: rgba(229, 72, 77, 0.12);
-      }
-      .yc-foot .cell .k {
-        display: block;
-        font-size: 24px;
-        font-weight: 700;
-        color: var(--wirit-gray);
-      }
-      .yc-foot .cell .v {
-        display: block;
-        margin-top: 8px;
-        font-family: var(--font-num);
-        font-size: 46px;
-        font-weight: 900;
-        letter-spacing: -0.03em;
-        line-height: 1.05;
-      }
-      .yc-foot .cell.hot .v {
-        color: var(--wirit-red);
-      }
     </style>
   </head>
   <body>
@@ -381,7 +428,6 @@
       <div class="yc-head">
         <h1 class="wirit-title">{{title}}</h1>
       </div>
-      <div class="yc-rule"></div>
 
       <div class="yc-chart" style="--zero: {{zeroAt}}; --col-gap: {{#if colGap}}{{colGap}}{{else}}12px{{/if}}">
         <div class="yc-plot">
@@ -416,14 +462,32 @@
             />
           </svg>
           {{/if}}
-          {{#if foot}}
-          <div class="yc-foot">
-            {{#each foot}}
-            <div class="cell {{#if this.hot}}hot{{/if}}"><span class="k">{{this.k}}</span><span class="v">{{this.v}}</span></div>
-            {{/each}}
+          {{#if side}}
+          <div class="yc-side">
+            {{#if side.index}}
+            <div class="yc-idx">
+              <span class="k">{{side.index.pastLabel}}</span>
+              <span class="row"><span class="ym">{{side.index.pastYm}}</span><span class="v">{{side.index.pastValue}}</span></span>
+              <div class="now">
+                <span class="k">{{side.index.nowLabel}}</span>
+                <span class="row"><span class="ym">{{side.index.nowYm}}</span><span class="v">{{side.index.nowValue}}</span></span>
+              </div>
+            </div>
+            {{/if}}
+            {{#if side.est}}
+            <div class="yc-card">
+              <span class="lab">
+                <span class="t">{{side.est.tag}}</span>
+                <span class="v">{{side.est.value}}</span>
+              </span>
+              <span class="n">{{side.est.note}}</span>
+            </div>
+            {{/if}}
           </div>
           {{/if}}
-          {{#if stamp}}<span class="wirit-stamp" style="left: 4px; top: 50%">@wirit_note</span>{{/if}}
+          {{!-- 워터마크는 0선 **아래** 빈 칸(후반 연도 밑 — 음수 막대가 없는 구간)에.
+                오너 지시 2026-07-30. 데이터 위에 얹지 않는다(base.css 규칙). --}}
+          {{#if stamp}}<span class="wirit-stamp" style="left: 58%; top: calc({{zeroAt}} + 44px)">@wirit_note</span>{{/if}}
           {{#if splitAt}}<span class="yc-split" style="--split-at: {{splitAt}}"></span>{{/if}}
           <span class="yc-zero"></span>
           <div class="yc-cols">
@@ -435,18 +499,8 @@
               <span class="yc-bar solid"></span>
               {{#if this.hEst}}<span class="yc-bar est"></span>{{/if}}
               {{#if this.tag}}<span class="yc-tag">{{this.tag}}</span>{{/if}}
-              {{#if this.card}}
-              <!-- 추정 연도: 값 라벨 대신 카드. 같은 숫자를 두 번 쓰지 않는다. -->
-              <div class="yc-card">
-                <span class="lab">
-                  <span class="t">{{this.card.tag}}</span>
-                  <span class="n">{{this.card.note}}</span>
-                </span>
-                <span class="v">{{this.card.value}}</span>
-              </div>
-              {{else}}
+              {{#if this.solidValue}}<span class="yc-solid-val">{{this.solidValue}}</span>{{/if}}
               <span class="yc-val">{{this.value}}</span>
-              {{/if}}
             </div>
             {{/each}}
           </div>

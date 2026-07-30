@@ -15,7 +15,7 @@
  *
  * 실행: node scripts/rebuild-cards.mjs
  */
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -47,5 +47,38 @@ for (const b of Array.isArray(builders) ? builders : []) {
   }
 }
 console.log(`\n🃏 카드 재생성 — 성공 ${ok} · 실패 ${bad}`);
+
+/* ── 디자인 검수 자동 실행 (2026-07-30 오너 지시: "작업하면서 검수 자동으로 돌려줘") ──
+ * 카드 JSON 을 다 만든 뒤, sets.json 에 실린 카드 전부를 렌더해 레이아웃을 실측한다.
+ * 겹침·넘침은 눈으로 보면 놓친다 — 실제로 제목이 로고 뱃지에 파고든 채 나갔다.
+ * ⚠️ 검수 실패는 배포를 막지 않는다(다른 카드·정보는 정상 표시해야 한다).
+ *    대신 ::warning 으로 크게 소리 낸다. 조용히 넘기지 않는 게 이 단계의 목적이다.
+ */
+const SETS = join(ROOT, "data/review/sets.json");
+if (existsSync(SETS)) {
+  const { sets } = JSON.parse(readFileSync(SETS, "utf8"));
+  const targets = [];
+  for (const s of Array.isArray(sets) ? sets : []) {
+    for (const slug of s.cards || []) {
+      // 카드 JSON 은 날짜 폴더 아래 있다 — 가장 최근 것을 찾는다
+      const days = existsSync(join(ROOT, "data/content"))
+        ? readdirSync(join(ROOT, "data/content")).filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)).sort().reverse()
+        : [];
+      const hit = days.map((d) => join(ROOT, `data/content/${d}/${slug}.json`)).find((p) => existsSync(p));
+      if (hit) targets.push(hit);
+    }
+  }
+  if (targets.length) {
+    console.log(`\n🧐 디자인 검수 ${targets.length}장`);
+    const r = spawnSync("pnpm", ["-s", "--filter", "@wirit/renderer", "qa", ...targets], {
+      cwd: ROOT,
+      stdio: "inherit",
+    });
+    if (r.status !== 0) console.log("::warning::디자인 검수에서 문제가 발견됐습니다 — 위 항목을 고치세요");
+  }
+}
+
 // 실패가 있어도 배포는 계속한다(나머지 카드·정보는 정상). 실패는 위 경고로 보인다.
+// ⚠️ 이 exit 은 **맨 마지막**이어야 한다. 위에 두면 뒤에 붙인 단계(디자인 검수)가
+//    조용히 안 돌아간다 — 실제로 검수 블록을 붙였는데 한 줄도 실행되지 않았다(2026-07-30).
 process.exit(0);
