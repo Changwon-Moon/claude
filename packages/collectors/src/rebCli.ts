@@ -20,6 +20,7 @@ import { writeFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import {
   listTables, fetchMonthly, toSeries, regionNames, ambiguousNames, latestMonth, probeData,
+  SEOUL_GU_CODES,
   type RebTable,
 } from "./sources/rebIndex.js";
 
@@ -201,6 +202,15 @@ async function main(): Promise<void> {
       fail.push(`${label} 서울 계열이 없거나 너무 짧다(${seoul ? Object.keys(seoul).length : 0}개월)`);
     }
   }
+  /* 서울 25개 자치구가 다 있는지 본다.
+   * 자치구 순위 카드는 **25곳 전부**를 전제로 한다. 23곳만 있으면 순위가 조용히 달라진다. */
+  const guMissing = SEOUL_GU_CODES.filter((c) => !wolse[c] || Object.keys(wolse[c]).length < 24);
+  if (guMissing.length) {
+    fail.push(
+      `서울 자치구 ${guMissing.length}곳의 월세 계열이 없거나 짧다: ` +
+        guMissing.map((c) => `${names[c] || "?"}(${c})`).join(", "),
+    );
+  }
   if (fail.length) {
     console.error("❌ 온전하지 않아 저장하지 않습니다:");
     for (const f of fail) console.error(`   · ${f}`);
@@ -232,6 +242,10 @@ async function main(): Promise<void> {
       /* 같은 이름이 여러 코드에 걸린 목록. 빌더가 이름으로 지역을 집으려 할 때
        * 여기 있는 이름이면 **코드로 집어야 한다**는 경고다. */
       ambiguousNames: dup,
+      /* 지역 묶음. **빌더는 코드 접두사로 지역을 자르지 말고 여기서 가져간다.**
+       * "530 으로 시작하면 서울"이라고 자르면 분당·영통·일산 등 경기 24곳이 섞인다
+       * (2026-07-30 실제로 서울 순위표 1위가 경기 수원 영통구로 나왔다). */
+      groups: { seoulGu: [...SEOUL_GU_CODES] },
       notes: [j.note, w.note, wa.note, aw.note, aj.note].filter(Boolean),
       verified: false,
       verificationNote:

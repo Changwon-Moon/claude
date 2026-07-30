@@ -40,7 +40,25 @@ const browser = await chromium.launch(existsSync(PINNED) ? { executablePath: PIN
 const page = await browser.newPage({ viewport: { width: 1200, height: 1400 } });
 const errors = [];
 page.on("pageerror", (e) => errors.push(String(e).slice(0, 160)));
-page.on("console", (m) => { if (m.type() === "error") errors.push(m.text().slice(0, 160)); });
+page.on("console", (m) => {
+  if (m.type() !== "error") return;
+  /* "Failed to load resource" 는 **어느 파일인지 안 적혀 있다.** 같은 사건을 아래
+   * requestfailed 가 URL 과 함께 잡으므로 여기서는 버린다 — 중복도 줄고 진단도 남는다. */
+  if (/Failed to load resource/.test(m.text())) return;
+  errors.push(m.text().slice(0, 160));
+});
+/* ⚠️ 콘솔의 "Failed to load resource" 는 **어느 파일인지 안 알려준다.**
+ * 그것만 보고는 실제 버그인지 로컬에 없는 이미지인지 구분이 안 돼 원인 추적에 시간이 든다.
+ * 실패한 요청은 URL 을 붙여서 따로 남긴다(2026-07-30). */
+const localOnlyMissing = [];
+page.on("requestfailed", (r) => {
+  const u = r.url().replace(/^file:\/\//, "");
+  /* /download/ 의 완성본 이미지는 **Actions 에서만 만들어진다**(PNG→JPEG 변환 단계).
+   * 로컬 스모크에는 없는 게 정상이므로 실패로 세지 않는다 — 대신 몇 개가 없었는지 보고한다.
+   * 실제 배포본에서 이 이미지가 없으면 verify-live.mjs 가 잡는다. */
+  if (/\/download\//.test(u)) { localOnlyMissing.push(u.split("/").pop()); return; }
+  errors.push(`요청 실패 ${r.failure()?.errorText || "?"} · ${u.slice(-90)}`);
+});
 // prompt는 반려 이유·발굴 방향 입력에 쓰인다 → 스모크에서는 항상 값을 준다
 page.on("dialog", (d) => d.accept(d.type() === "prompt" ? "스모크 이유" : undefined));
 
@@ -697,6 +715,12 @@ if (postedN > 0) {
 }
 
 check("콘솔·페이지 오류 없음", errors.length === 0, errors.slice(0, 3).join(" | "));
+if (localOnlyMissing.length) {
+  console.log(
+    `  ℹ️  완성본 이미지 ${localOnlyMissing.length}개는 로컬에 없습니다(Actions 에서 생성) — ` +
+      `${localOnlyMissing.slice(0, 3).join(", ")}${localOnlyMissing.length > 3 ? " …" : ""}`,
+  );
+}
 
 await browser.close();
 console.log(`\n${fail ? "❌" : "✅"} ${pass}/${pass + fail} 통과`);
