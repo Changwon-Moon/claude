@@ -16,7 +16,7 @@
  *     wolse  : 같은 형태
  *   묶음(권역)은 여기서 만들지 않는다 — 빌더가 코드로 만든다.
  */
-import { writeFileSync, mkdirSync } from "node:fs";
+import { writeFileSync, mkdirSync, readFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import {
   listTables, fetchMonthly, toSeries, regionNames, ambiguousNames, latestMonth, probeData,
@@ -26,6 +26,49 @@ import {
 
 const CWD = process.env.INIT_CWD || process.cwd();
 const fromCwd = (p: string): string => resolve(CWD, p);
+
+/**
+ * 앞선 파일에서 **사람이 확인한 기록**을 이어받는다.
+ *
+ * 왜: 확인(verified)은 수집기가 아니라 사람이 기사·보도자료와 대조해 얻은 사실이다.
+ * 매 실행마다 false 로 되돌리면 그 노동이 매번 사라지고, 카드 빌더가 verified 를 요구하므로
+ * **수집이 성공할 때마다 카드 제작이 막힌다**(2026-07-30 실제로 그랬다).
+ *
+ * 이어받는 조건: 최신 관측월이 같을 때만. 새 달이 들어오면 그 달은 확인 전이므로 내린다.
+ */
+function carryVerification(
+  outPath: string,
+  asOf: string,
+): { verified: boolean; verificationNote: string; unit?: unknown } {
+  const TODO =
+    "발행 전 부동산원 공표 보도자료(월간 주택가격동향)와 서울 지수 1~2개 값을 대조한 뒤 verified=true 로 올린다. " +
+    "scripts/article-crosscheck.mjs 가 기계 대조를 대신해 준다.";
+  if (!existsSync(outPath)) return { verified: false, verificationNote: TODO };
+  let prev: any;
+  try {
+    prev = JSON.parse(readFileSync(outPath, "utf8"));
+  } catch {
+    return { verified: false, verificationNote: TODO }; // 깨진 파일이면 확인 기록도 못 믿는다
+  }
+  const prevAsOf = prev?.meta?.asOf;
+  // 단위는 특정 달의 성질이 아니라 API 자체의 성질이다 — 항상 이어받는다
+  const unit = prev?.meta?.unit ? { unit: prev.meta.unit } : {};
+  if (prevAsOf && prevAsOf === asOf && prev?.meta?.verified === true) {
+    console.log(`   ↩︎ 확인 기록 유지 — 최신월이 그대로다(${asOf})`);
+    return { verified: true, verificationNote: String(prev.meta.verificationNote || ""), ...unit };
+  }
+  if (prevAsOf && prevAsOf !== asOf && prev?.meta?.verified === true) {
+    console.log(`   ⚠️ 새 달이 들어왔다(${prevAsOf} → ${asOf}) — verified 를 내립니다`);
+    return {
+      verified: false,
+      verificationNote:
+        `${prevAsOf} 까지는 확인됐으나 ${asOf} 자료가 새로 들어왔다. 새 달을 다시 대조한 뒤 올린다. ` +
+        `이전 확인 기록: ${String(prev.meta.verificationNote || "").slice(0, 300)}`,
+      ...unit,
+    };
+  }
+  return { verified: false, verificationNote: TODO, ...unit };
+}
 
 function arg(name: string, fallback = ""): string {
   const i = process.argv.indexOf(name);
@@ -247,9 +290,16 @@ async function main(): Promise<void> {
        * (2026-07-30 실제로 서울 순위표 1위가 경기 수원 영통구로 나왔다). */
       groups: { seoulGu: [...SEOUL_GU_CODES] },
       notes: [j.note, w.note, wa.note, aw.note, aj.note].filter(Boolean),
-      verified: false,
-      verificationNote:
-        "발행 전 부동산원 공표 보도자료(월간 주택가격동향)와 서울 지수 1~2개 값을 눈으로 대조한 뒤 verified=true 로 올린다.",
+      /* ── 사람이 확인한 기록은 덮지 않는다 ──
+       * 2026-07-30: 예정 실행이 한 번 돌면서 `verified: true`·교차확인 메모·단위 확정 기록을
+       * 전부 지워 버렸다. 그 세 줄은 **기사와 대조해 사람이 얻은 사실**이고, 수집기가
+       * 매달 지우면 매달 다시 확인해야 한다. 게다가 카드 빌더는 verified 를 요구하므로
+       * 수집이 성공할 때마다 카드 제작이 막히는 꼴이 된다.
+       *
+       * 규칙: 최신 관측월(asOf)이 그대로면 확인 기록을 **이어받는다.**
+       *       새 달이 들어왔으면 그 달은 아직 확인 전이므로 false 로 내리고 이유를 남긴다.
+       * 단위(unit)는 특정 달의 성질이 아니라 API 자체의 성질이라 항상 이어받는다. */
+      ...carryVerification(outPath, asOf),
     },
     /** 코드 → 지역명 (표시용). 계열의 정체성은 코드다. */
     regionNames: names,

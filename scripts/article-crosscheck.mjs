@@ -171,4 +171,34 @@ p(`우리 원자료는 **${r(w, 2)}** 이다 → 천원 단위로 읽어야 맞�
 mkdirSync(join(ROOT, "data/review"), { recursive: true });
 writeFileSync(join(ROOT, "data/review/article-crosscheck.md"), md.join("\n") + "\n", "utf8");
 console.log(`\n🗂  data/review/article-crosscheck.md`);
+
+/* ── 대조 결과를 데이터셋에 직접 기록한다 ──
+ * 왜: 처음엔 이 스크립트가 보고서만 쓰고, meta.verified 는 **사람이 손으로** 올렸다.
+ * 그러다 2026-07-30 예정 수집이 한 번 돌면서 그 한 줄이 지워졌고, 복구할 근거가
+ * 이 스크립트를 다시 돌리는 것뿐이었다 — 근거가 코드에 있는데 결과는 손에만 있었던 셈이다.
+ * 이제 대조한 스크립트가 판정까지 남긴다. 손으로 올리지 않는다.
+ *
+ * 승격 기준: 허용오차 안에 든 항목이 전체의 3/4 이상. 전부 일치를 요구하면
+ * 기사 두 건이 서로 다른 값을 적은 경우(실제로 있다)에 영원히 승격되지 않는다. */
+const PASS_RATIO = 0.75;
+const promote = ok / CLAIMS.length >= PASS_RATIO;
+const dsPath = join(ROOT, "data/datasets/reb-rent-index.json");
+const ds = JSON.parse(readFileSync(dsPath, "utf8"));
+const before = ds.meta.verified;
+ds.meta.verified = promote;
+ds.meta.verificationNote = promote
+  ? `${doc.meta.asOf} 기준 교차 확인 — 세계일보·뉴시스 2026-07-30 기사가 밝힌 부동산원 공표치와 ` +
+    `${CLAIMS.length}개 항목 중 ${ok}개 일치(scripts/article-crosscheck.mjs · data/review/article-crosscheck.md). ` +
+    `금액 계열의 단위가 '천원'임이 확인됐다(기사 159만2,000원 = 우리 원자료 ${r(w, 2)}). ` +
+    (fails.length ? `어긋난 항목: ${fails.join(" / ")} — 기준 시점·계열 차이로 보이며 카드에는 우리 기준을 명시해 쓴다.` : "")
+  : `대조 ${ok}/${CLAIMS.length} — 기준(${Math.round(PASS_RATIO * 100)}%)에 못 미쳐 승격하지 않았다. ` +
+    `어긋난 항목: ${fails.join(" / ")}`;
+/* 단위는 특정 달의 성질이 아니라 API 자체의 성질이다 — 여기서 못박아 두면 수집기가 이어받는다 */
+ds.meta.unit = { avgWolse: "천원", avgJeonse: "천원", ...(ds.meta.unit || {}) };
+writeFileSync(dsPath, JSON.stringify(ds, null, 2) + "\n", "utf8");
+console.log(
+  `${promote ? "✅" : "⚠️"} meta.verified = ${promote}` +
+    (before === promote ? " (변동 없음)" : ` (이전 ${before})`),
+);
+
 if (bad) process.exitCode = 0; // 어긋남은 정보다 — 실패로 끝내지 않고 사람이 판단하게 남긴다
