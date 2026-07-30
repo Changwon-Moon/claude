@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* =========================================================
+         year-bars@1 — 연도별 변화율 발산 막대
+         한 지표의 **방향이 뒤집힌 지점**을 한 장에 보여준다.
+
+         왜 순위표가 아닌가:
+           연도별 변화율은 순위가 아니다. 순위표에 넣으면 연도 옆에 1·2·3이 붙어
+           "2025년이 1위"처럼 읽힌다 — 시간축이 순위로 오독된다.
+           그래서 시간 순서를 유지하고, 0을 기준으로 좌우로 갈라 놓는다.
+
+         구조(왼→오): [연속구간 라벨] [연도] [음수 트랙] │0 [양수 트랙] [값]
+           · 값은 막대 끝이 아니라 **오른쪽 고정 열**에 둔다. 막대 끝에 붙이면
+             음수 행의 값이 왼쪽으로 밀려 연도와 충돌하고 자릿줄도 깨진다.
+           · 색은 브랜드 관례를 따른다 — 상승=레드(시그널), 하락=코발트.
+             (index-2026 의 하락 아크가 코발트인 것과 같은 규칙)
+         ========================================================= */
+
+      .yb {
+        --gutter: 76px;
+        --year-w: 96px;
+        --track: 280px;
+        --val-w: 148px;
+        --gap: 14px;
+      }
+      /* 행이 많으면 촘촘하게 — densityClass 가 아니라 행 수를 직접 받는다
+         (densityClass 의 기준은 순위표용이라 연도 카드에는 맞지 않는다) */
+      .yb.y-many {
+        --track: 262px;
+        --val-w: 138px;
+      }
+
+      .yb-head {
+        margin-top: 6px;
+      }
+      .yb .wirit-title {
+        margin-top: 0;
+        font-size: 68px;
+        line-height: 1.08;
+        white-space: pre-line;
+      }
+      .yb .wirit-subtitle {
+        margin-top: 14px;
+        font-size: 30px;
+      }
+
+      .yb-body {
+        flex: 1;
+        min-height: 0;
+        margin: 26px 0 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* 축 머리글: 어느 쪽이 하락이고 어느 쪽이 상승인지 한 번만 말한다 */
+      .yb-axhead {
+        display: grid;
+        grid-template-columns: var(--gutter) var(--year-w) calc(var(--track) * 2) var(--val-w);
+        gap: var(--gap);
+        align-items: end;
+        padding-bottom: 10px;
+        font-size: 25px;
+        font-weight: 700;
+        color: var(--wirit-gray);
+      }
+      /* 축 머리글은 0 위에서 좌우로 갈라진다 — 트랙 가운데가 곧 0이다 */
+      .yb-axhead .ax {
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        gap: 12px;
+      }
+      .yb-axhead .ax b {
+        font-family: var(--font-num);
+        font-weight: 800;
+        font-size: 26px;
+        color: var(--wirit-ink);
+      }
+
+      /* ── 연속 구간(그룹) ──
+         "5년 연속 마이너스 → 6년 연속 플러스" 는 이 카드의 핵심 사실이다.
+         그래서 구간을 시각 요소로 만든다: 왼쪽 세로 괄호 + 세로쓰기 라벨.
+         장식이 아니라 **연속 횟수라는 정보**를 담는 구조물이다. */
+      .yb-group {
+        display: flex;
+        flex-direction: column;
+        flex: var(--grow, 1) 1 0;
+        min-height: 0;
+        position: relative;
+      }
+      .yb-group + .yb-group {
+        margin-top: 14px;
+      }
+      .yb-grow {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex: 1;
+        min-height: 0;
+      }
+
+      .yb-row {
+        display: grid;
+        grid-template-columns: var(--gutter) var(--year-w) calc(var(--track) * 2) var(--val-w);
+        gap: var(--gap);
+        align-items: center;
+        flex: 1 1 0;
+        min-height: 0;
+      }
+      /* ⚠️ 음수·양수 트랙을 **한 칸 안에** 둔다. 별도 그리드 칸으로 나누면 그 사이
+       * gap 만큼 막대가 0축에서 떠 보인다(첫 렌더에서 14px 떴다). 축은 두 반쪽의 경계다. */
+      .yb-track {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        height: 100%;
+        min-width: 0;
+      }
+
+      /* 구간 괄호: 첫 행에서 시작해 마지막 행까지 이어지는 왼쪽 기둥 */
+      .yb-tag {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: var(--gutter);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .yb-tag .bar {
+        position: absolute;
+        left: 24px;
+        top: 4px;
+        bottom: 4px;
+        width: 6px;
+        border-radius: 3px;
+        background: var(--wirit-ink-12);
+      }
+      .yb-tag .lab {
+        position: relative;
+        writing-mode: vertical-rl;
+        /* upright 없으면 숫자('5년'의 5)가 90도 눕는다 — 첫 렌더에서 눕었다 */
+        text-orientation: upright;
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        color: var(--wirit-gray);
+        padding-left: 14px;
+        white-space: nowrap;
+      }
+      .yb-group.g-pos .yb-tag .bar {
+        background: rgba(229, 72, 77, 0.5);
+      }
+      .yb-group.g-pos .yb-tag .lab {
+        color: var(--wirit-red);
+      }
+      .yb-group.g-neg .yb-tag .bar {
+        background: rgba(46, 107, 255, 0.45);
+      }
+      .yb-group.g-neg .yb-tag .lab {
+        color: var(--wirit-cobalt);
+      }
+
+      .yb-year {
+        font-family: var(--font-num);
+        font-weight: 800;
+        font-size: 38px;
+        color: var(--wirit-ink);
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* 트랙: 음수는 오른쪽 끝(0)에서 왼쪽으로, 양수는 왼쪽 끝(0)에서 오른쪽으로 자란다 */
+      .yb-neg,
+      .yb-pos {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        min-width: 0;
+      }
+      .yb-neg {
+        justify-content: flex-end;
+        /* 0 축 — 행이 이어붙어 세로선이 끊기지 않는다 */
+        border-right: 4px solid var(--wirit-ink);
+      }
+      .yb-pos {
+        justify-content: flex-start;
+      }
+      .yb-bar {
+        height: 60%;
+        max-height: 42px;
+        min-height: 16px;
+        border-radius: 6px;
+      }
+      .yb-neg .yb-bar {
+        background: var(--wirit-cobalt);
+        border-radius: 6px 0 0 6px;
+      }
+      .yb-pos .yb-bar {
+        background: var(--wirit-red);
+        border-radius: 0 6px 6px 0;
+      }
+      /* 최대 상승 연도만 진하게 + 살짝 두껍게. 강조는 한 곳만. */
+      .yb-row.is-max .yb-pos .yb-bar {
+        background: #c0272d;
+        height: 74%;
+        max-height: 50px;
+      }
+      .yb-row.is-max .yb-val {
+        color: #c0272d;
+      }
+      /* 미완결 연도(예: 6월까지)는 사선으로 칠해 **끝나지 않았음**을 막대 자체가 말한다.
+         숫자에만 "(반년)"을 적으면 그래픽만 잘라 쓸 때 그 경고가 사라진다. */
+      .yb-row.is-partial .yb-bar {
+        background-image: repeating-linear-gradient(
+          -45deg,
+          rgba(255, 255, 255, 0.55) 0 6px,
+          rgba(255, 255, 255, 0) 6px 13px
+        );
+      }
+
+      .yb-val {
+        font-family: var(--font-num);
+        font-weight: 800;
+        font-size: 38px;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      .yb-row.d-neg .yb-val {
+        color: var(--wirit-cobalt);
+      }
+      .yb-row.d-pos .yb-val {
+        color: var(--wirit-red);
+      }
+      .yb-note {
+        display: block;
+        font-family: var(--font-sans);
+        font-size: 21px;
+        font-weight: 700;
+        color: var(--wirit-gray);
+        letter-spacing: -0.02em;
+      }
+
+      /* 뒤집힌 지점: 이 카드에서 유일하게 강한 선 */
+      .yb-split {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin: 10px 0 4px;
+      }
+      .yb-split .ln {
+        flex: 1;
+        height: 3px;
+        background: var(--wirit-ink);
+      }
+      .yb-split .chip {
+        flex: none;
+        padding: 9px 22px;
+        border-radius: 999px;
+        background: var(--wirit-ink);
+        color: #fff;
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+
+      /* 하단 요약: 카드를 한 문장으로 되짚는다 */
+      .yb-foot {
+        margin-top: 22px;
+        display: flex;
+        gap: 12px;
+      }
+      .yb-foot .cell {
+        flex: 1;
+        padding: 18px 22px;
+        border-radius: 18px;
+        background: var(--wirit-ink-06);
+      }
+      .yb-foot .cell .k {
+        display: block;
+        font-size: 23px;
+        font-weight: 700;
+        color: var(--wirit-gray);
+      }
+      .yb-foot .cell .v {
+        display: block;
+        margin-top: 6px;
+        font-family: var(--font-num);
+        font-size: 40px;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+      }
+      .yb-foot .cell.accent-v .v {
+        color: var(--wirit-red);
+      }
+
+      .yb-caveat {
+        margin-top: 16px;
+        margin-bottom: 8px;
+        font-size: 23px;
+        font-weight: 600;
+        line-height: 1.35;
+        color: var(--wirit-gray);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card yb {{#if font}}font-{{font}}{{/if}} {{#if many}}y-many{{/if}}">
+      <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
+      <div class="yb-head">
+        <h1 class="wirit-title">{{title}}</h1>
+        {{#if lede}}<p class="wirit-subtitle">{{lede}}</p>{{/if}}
+      </div>
+
+      <div class="yb-body">
+        <div class="yb-axhead">
+          <span></span>
+          <span></span>
+          <span class="ax"
+            ><span>◀ {{#if negLabel}}{{negLabel}}{{else}}하락{{/if}}</span><b>0</b
+            ><span>{{#if posLabel}}{{posLabel}}{{else}}상승{{/if}} ▶</span></span
+          >
+          <span></span>
+        </div>
+
+        {{#each groups}}
+        {{#if this.split}}
+        <div class="yb-split"><span class="ln"></span><span class="chip">{{this.split}}</span><span class="ln"></span></div>
+        {{/if}}
+        <div class="yb-group g-{{this.tone}}" style="--grow:{{this.rows.length}}">
+          {{#if this.label}}
+          <div class="yb-tag"><span class="bar"></span><span class="lab">{{this.label}}</span></div>
+          {{/if}}
+          <div class="yb-grow">
+            {{#each this.rows}}
+            <div class="yb-row d-{{this.dir}} {{#if this.max}}is-max{{/if}} {{#if this.partial}}is-partial{{/if}}">
+              <span></span>
+              <span class="yb-year">{{this.year}}</span>
+              <span class="yb-track">
+                <span class="yb-neg">{{#if (eq this.dir "neg")}}<span class="yb-bar" style="width:{{this.w}}%"></span>{{/if}}</span>
+                <span class="yb-pos">{{#if (eq this.dir "pos")}}<span class="yb-bar" style="width:{{this.w}}%"></span>{{/if}}</span>
+              </span>
+              <span class="yb-val">{{this.value}}{{#if this.note}}<span class="yb-note">{{this.note}}</span>{{/if}}</span>
+            </div>
+            {{/each}}
+          </div>
+        </div>
+        {{/each}}
+      </div>
+
+      {{#if foot}}
+      <div class="yb-foot">
+        {{#each foot}}
+        <div class="cell {{#if this.accent}}accent-v{{/if}}"><span class="k">{{this.k}}</span><span class="v">{{this.v}}</span></div>
+        {{/each}}
+      </div>
+      {{/if}}
+      {{#if caveat}}<p class="yb-caveat">{{caveat}}</p>{{/if}}
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+  </body>
+</html>

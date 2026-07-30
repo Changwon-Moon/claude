@@ -66,6 +66,25 @@
         "years-to-buy"
       ],
       "caption": "years-to-buy"
+    },
+    {
+      "label": "wolse-flip",
+      "title": "📉📈 서울 월세, 뒤집힌 해 — 5년 마이너스 → 6년 플러스",
+      "cards": [
+        "wolse-flip-p1",
+        "wolse-flip-p2",
+        "wolse-flip-p3"
+      ],
+      "caption": "wolse-flip"
+    },
+    {
+      "label": "rent-gu-map",
+      "title": "🗺 서울 자치구 전·월세 상승률 지도",
+      "cards": [
+        "rent-gu-map-p1",
+        "rent-gu-map-p2"
+      ],
+      "caption": "rent-gu-map"
     }
   ]
 }

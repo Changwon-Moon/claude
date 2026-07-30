@@ -32,19 +32,25 @@
       .mc-foot { display: flex; align-items: center; justify-content: space-between; margin: 6px 8px 0; }
       .mc-leg { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 700; color: var(--wirit-gray); }
       .mc-bar { width: 220px; height: 18px; border-radius: 9px; background: linear-gradient(90deg, var(--c-lo), var(--c-hi)); }
+      /* 발산 범례(값이 0을 가로지를 때) — 가운데 색을 따로 받아 3단 그라디언트로 그린다.
+       * 왜: 마이너스가 섞인 자료를 단색 농담으로 칠하면 **내린 지역이 '조금 오른' 것처럼** 보인다.
+       *    (전세 지도 첫 렌더에서 −5.0%인 금천구가 옅은 파랑 = 소폭 상승처럼 읽혔다)
+       * colorMid 를 안 주면 위의 2단 그라디언트가 그대로 쓰인다 — 기존 카드는 영향 없다. */
+      .mc.diverging .mc-bar { background: linear-gradient(90deg, var(--c-lo), var(--c-mid) var(--mid-at, 50%), var(--c-hi)); }
+      .mc-leg .mc-zero { font-variant-numeric: tabular-nums; }
       .mc-note { font-size: 24px; font-weight: 700; color: var(--wirit-ink); }
       .mc-note b { color: #c0122a; }
     </style>
   </head>
   <body>
-    <div class="wirit-card mc" style="--c-lo: {{colorLo}}; --c-hi: {{colorHi}};">
+    <div class="wirit-card mc{{#if colorMid}} diverging{{/if}}" style="--c-lo: {{colorLo}}; --c-hi: {{colorHi}};{{#if colorMid}} --c-mid: {{colorMid}}; --mid-at: {{midAt}};{{/if}}">
       <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
       <div class="mc-head"><h1 class="wirit-title">{{title}}</h1></div>
 
       <div class="mc-map">{{{mapSvg}}}</div>
 
       <div class="mc-foot">
-        <div class="mc-leg"><span>{{legendLo}}</span><span class="mc-bar"></span><span>{{legendHi}}</span></div>
+        <div class="mc-leg"><span>{{legendLo}}</span><span class="mc-bar"></span><span>{{legendHi}}</span>{{#if legendMid}}<span class="mc-zero">({{legendMid}})</span>{{/if}}</div>
         <div class="mc-note">1위 <b>{{topName}} {{topValue}}</b></div>
       </div>
 
@@ -53,5 +59,45 @@
         <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
       </div>
     </div>
+
+    <!-- 제목 넘침 방지 — **줄이는 방향으로만** 작동한다.
+         왜: 제목이 nowrap 이라 길면 카드 밖으로 잘려 나간다(전세 지도 첫 렌더에서
+             "…5개 구가 내렸다"의 끝 글자가 사라졌다). 글자가 잘린 카드는 그냥 불량품이다.
+         왜 키우지 않나: 기존 카드(대장 APT 지도)는 74px 로 이미 확정된 픽셀이다.
+             키우는 로직을 넣으면 손대지 않은 카드의 결과가 바뀐다 — 결정성 위반이다.
+         폰트 로딩 후 실제 글자폭으로 한 번 더 재야 하므로 fonts.ready 에서 재실행. -->
+    <script>
+      window.__wiritFit = function () {
+        var el = document.querySelector(".mc .wirit-title");
+        if (!el) return;
+        var box = el.parentElement;
+        var bs = getComputedStyle(box);
+        var avail =
+          box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
+        var base = parseFloat(el.dataset.baseSize || "");
+        if (!base) {
+          base = parseFloat(getComputedStyle(el).fontSize);
+          el.dataset.baseSize = String(base);
+        }
+        el.style.fontSize = base + "px";
+        if (el.scrollWidth <= avail) return; // 들어오면 손대지 않는다
+        var lo = 34,
+          hi = base,
+          best = lo;
+        for (var i = 0; i < 20; i++) {
+          var mid = (lo + hi) / 2;
+          el.style.fontSize = mid + "px";
+          if (el.scrollWidth <= avail) {
+            best = mid;
+            lo = mid;
+          } else {
+            hi = mid;
+          }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(window.__wiritFit);
+    </script>
   </body>
 </html>

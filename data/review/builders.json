@@ -71,6 +71,20 @@
       "args": [
         "59"
       ]
+    },
+    {
+      "label": "wolse-flip",
+      "cmd": "scripts/build-wolse-flip.mjs",
+      "args": [
+        "2026-07-30"
+      ]
+    },
+    {
+      "label": "rent-gu-map",
+      "cmd": "scripts/build-rent-gu-map.mjs",
+      "args": [
+        "2026-07-30"
+      ]
     }
   ]
 }

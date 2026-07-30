@@ -64,6 +64,14 @@
       "perishable": true,
       "added": "2026-07-26",
       "note": "발행 전 서울시·경기도 공고문으로 목록·기간 재확인 후 verified 승격."
+    },
+    {
+      "file": "reb-rent-index.json",
+      "title": "전국 주택 전세·월세 가격지수 (한국부동산원 R-ONE)",
+      "verified": true,
+      "perishable": true,
+      "added": "2026-07-30",
+      "note": "R-ONE OpenAPI 1차 수집. 2026-07-30 세계일보·뉴시스 공표치와 9항목 중 8항목 일치(data/review/article-crosscheck.md) — 금액 계열 단위 '천원' 확인됨. meta.groups.seoulGu 로 서울 25개 자치구 명단을 함께 내보낸다(코드 접두사로 자르면 경기가 섞인다)."
     }
   ]
 }
