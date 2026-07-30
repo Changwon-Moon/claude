@@ -14,6 +14,10 @@
 
       /* 좌: TOP 순위 */
       .sm-rank { flex: 0 0 396px; display: flex; flex-direction: column; position: relative; }
+      /* 행이 적으면(10행 이하) 아래가 크게 빈다 → 행을 세로로 펴서 표가 본문 높이를 채운다.
+       * 데이터를 늘리는 게 아니라 **간격만** 늘리므로 정보는 그대로다.
+       * 켜는 조건은 빌더가 정한다(spread: true) — 행이 많은 카드에서 켜면 표가 넘친다. */
+      .sm-spread .sm-rank .sm-row { flex: 1 1 0; min-height: 0; }
       .sm-rank .rh { font-size: 23px; font-weight: 800; color: var(--wirit-gray); padding: 0 6px 8px; display: flex; justify-content: space-between; }
       .sm-row { display: grid; grid-template-columns: 62px 1fr auto; align-items: center; gap: 10px;
         padding: 12px 6px; border-top: 2px solid var(--wirit-ink-06); }
@@ -80,7 +84,7 @@
     </style>
   </head>
   <body>
-    <div class="wirit-card sm{{#if compact}} sm-c{{/if}}">
+    <div class="wirit-card sm{{#if compact}} sm-c{{/if}}{{#if spread}} sm-spread{{/if}}">
       <div class="wirit-topcap">{{#if note}}<span>{{note}}</span>{{/if}}</div>
       <h1 class="wirit-title">{{{title}}}</h1>
       {{#if subtitle}}<div class="sm-sub">{{subtitle}}</div>{{/if}}

@@ -68,8 +68,10 @@ export function tohuhParts(areas) {
  * @param textOf   (info) → string  라벨에 붙일 값 문자열(예: "57" 또는 "+22.9%")
  * @param maxValue 색 정규화 기준(없으면 valueOf 최대값)
  * @param labelWidth 라벨 충돌 판정 폭. 값 문자열이 길면(예: "+6.9%") 키운다. 기본 140
+ * @param twoLine  라벨을 2줄로(이름 / 값). 좁은 도형에서 1줄보다 훨씬 잘 들어간다.
+ *                 폭이 절반쯤으로 줄어드니 labelWidth 도 함께 줄인다.
  */
-export function tohuhMapSvg({ parts, valueOf, textOf, maxValue = null, labelWidth = 140 }) {
+export function tohuhMapSvg({ parts, valueOf, textOf, maxValue = null, labelWidth = 140, twoLine = false }) {
   /* bbox 는 **표시 대상만**으로 잡는다 — 경기 전체로 잡으면 40곳이 깨알처럼 작아진다 */
   const shown = parts.flatMap((p) => p.features);
   let minLon = 999, maxLon = -999, minLat = 999, maxLat = -999;
@@ -134,7 +136,8 @@ export function tohuhMapSvg({ parts, valueOf, textOf, maxValue = null, labelWidt
   /* 라벨 폭은 **호출자가 준다.** 기본 140 은 신고가 카드("성남 수정 26") 기준이고,
    * 상승률 카드는 "성남 수정 +6.9%" 로 더 넓어서 140 으로는 겹친다(노원·구리가 겹쳤다).
    * 이 값을 바꾸면 신고가 카드 픽셀이 변하므로 기본값은 절대 건드리지 않는다. */
-  const LW = labelWidth, LH = 26; // 라벨 대략 폭·높이(viewBox 단위)
+  /* 2줄 라벨은 폭이 줄고 높이가 는다 — 충돌 판정도 그에 맞춘다 */
+  const LW = labelWidth, LH = twoLine ? 52 : 26;
   placed.sort((a, b) => a.cy - b.cy || a.cx - b.cx);
   const done = [];
   const XMIN = 78, XMAX = W + PAD * 2 - 78; // 가장자리 라벨이 잘리지 않게 안쪽으로 클램프
@@ -147,9 +150,14 @@ export function tohuhMapSvg({ parts, valueOf, textOf, maxValue = null, labelWidt
   }
   let labels = "";
   for (const p of placed) {
+    const y = twoLine ? p.y - 9 : p.y;
     labels +=
-      `<text class="tk-lab" x="${p.x.toFixed(0)}" y="${p.y.toFixed(0)}" fill="${textCol(p.v)}">` +
-      `<tspan class="n">${p.label}</tspan> <tspan class="c">${textOf(p)}</tspan></text>`;
+      `<text class="tk-lab" x="${p.x.toFixed(0)}" y="${y.toFixed(0)}" fill="${textCol(p.v)}">` +
+      (twoLine
+        ? `<tspan class="n" x="${p.x.toFixed(0)}">${p.label}</tspan>` +
+          `<tspan class="c" x="${p.x.toFixed(0)}" dy="27">${textOf(p)}</tspan>`
+        : `<tspan class="n">${p.label}</tspan> <tspan class="c">${textOf(p)}</tspan>`) +
+      `</text>`;
   }
 
   /* 한강 — 손으로 그리지 않는다. 이북·이남 구가 공유하는 정점을 경도순으로 이으면

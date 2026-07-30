@@ -170,6 +170,41 @@ const points = yearRows.map((r) => {
      * 독자가 두 강조 사이에서 초점을 잃는다. 이 카드의 초점은 마지막 막대 하나다. */
   };
 });
+/* ── 월세가격지수 곡선 (2026-07-30 오너 제안: 지수 그래프도 겹쳐 보기) ──
+ * 막대 = **그 해에 얼마나 올랐나**(연간 변화율), 곡선 = **어디까지 왔나**(지수 수준).
+ * 둘은 축이 다르다. 그래서:
+ *   · 곡선에는 **눈금을 넣지 않는다.** 두 축의 눈금을 나란히 두면 "선이 막대를 앞질렀다" 같은
+ *     착시가 생긴다. 시작값·끝값만 적어 수준을 읽게 한다.
+ *   · 곡선은 옅은 잉크색 배경 레이어다(막대 뒤). 데이터지만 **주인공은 막대**다.
+ *   · 지수 기준시점(2026-01=100)을 카드에 밝힌다 — 안 밝히면 103.90 이 뭔지 알 수 없다.
+ * x 는 연도 칸 안의 월 위치, y 는 0선 위 영역에 지수 최소~최대를 매핑한다(정규화 1000×1000). */
+const lineMonths = Object.keys(wolse)
+  .filter((m) => m >= `${firstYear}-01` && m <= asOf)
+  .sort();
+if (lineMonths.length < 24) throw new Error(`지수 곡선용 월이 ${lineMonths.length}개뿐이다`);
+const lineVals = lineMonths.map((m) => wolse[m]);
+const lMin = Math.min(...lineVals);
+const lMax = Math.max(...lineVals);
+const nCols = points.length;
+const Y_TOP = 110; // 플롯 위쪽 여유(추정 배지·값 라벨 자리)
+const Y_BOT = zeroAt * 10 * 0.94; // 0선 바로 위 (zeroAt 는 %, 정규화 좌표는 1000)
+const lx = (m) => {
+  const y = Number(m.slice(0, 4));
+  const mo = Number(m.slice(5));
+  return (((y - firstYear) + (mo - 0.5) / 12) / nCols) * 1000;
+};
+const ly = (v) => Y_BOT - ((v - lMin) / (lMax - lMin || 1)) * (Y_BOT - Y_TOP);
+const indexLine = {
+  points: lineMonths.map((m) => `${lx(m).toFixed(1)},${ly(wolse[m]).toFixed(1)}`).join(" "),
+  startLabel: idx(lineMonths[0]),
+  startX: `${(lx(lineMonths[0]) / 10).toFixed(2)}%`,
+  startY: `${(ly(wolse[lineMonths[0]]) / 10).toFixed(2)}%`,
+  endLabel: idx(asOf),
+  endX: `${(lx(asOf) / 10).toFixed(2)}%`,
+  endY: `${(ly(wolse[asOf]) / 10).toFixed(2)}%`,
+  legend: "선 = 월세가격지수(2026.01=100)",
+};
+
 /* 실측/추정 경계선 — 마지막 막대의 왼쪽 경계에 세운다 */
 const splitAt = partialRow ? `${((points.length - 1) / points.length) * 100}%` : "";
 
@@ -187,7 +222,10 @@ const p1 = {
   zeroAt: `${zeroAt.toFixed(2)}%`,
   colGap: "10px",
   splitAt,
-  arrow: true, // 초년도 빈 구간을 지나 우상향하는 곡선(장식, 막대 뒤 레이어)
+  /* 장식 곡선은 뺐다(2026-07-30 오너 지시로 **실제 지수 곡선**이 들어온다).
+   * 장식과 데이터를 같이 두면 독자가 어느 선이 사실인지 구분하지 못한다. */
+  arrow: false,
+  line: indexLine,
   stamp: true, // 0선 아래 빈 칸의 wirit 워터마크 — 그래픽만 잘라 써도 출처가 따라간다
   points,
   /* ── 플롯 좌측 정보 블록 (2026-07-30 2차 수정) ──
@@ -196,15 +234,11 @@ const p1 = {
    *
    * 과거 기준월은 **지수 최저점**을 쓴다. "몇 년부터"처럼 임의로 고른 해가 아니라
    * 데이터가 정한 바닥이라 "여기서 여기까지"가 반박당하지 않는다. */
+  /* 오너 지시(2026-07-30): 최저 지수 카드는 삭제. 추정 배지만 남는다.
+   * 지수 수준은 아래 겹친 곡선이 직접 보여주므로 카드로 또 말하지 않는다. */
   side: {
-    index: {
-      pastLabel: "월세가격지수 최저",
-      pastYm: ymNum(trough),
-      pastValue: idx(trough),
-      nowLabel: isPeakNow ? "현재 · 사상 최대" : `현재 (최고 ${ymKo(peak)})`,
-      nowYm: ymNum(asOf),
-      nowValue: idx(asOf),
-    },
+    /* 곡선 범례 — 두 축을 한 카드에 담았으니 어느 게 무엇인지 한 줄로 밝힌다 */
+    note: `막대 = 연간 변화율(%) · 회색 선 = 월세가격지수 수준(2026.01=100)`,
     ...(partialRow
       ? {
           est: {
