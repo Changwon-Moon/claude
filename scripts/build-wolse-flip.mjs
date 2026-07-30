@@ -187,22 +187,39 @@ const lMin = Math.min(...lineVals);
 const lMax = Math.max(...lineVals);
 const nCols = points.length;
 const Y_TOP = 110; // 플롯 위쪽 여유(추정 배지·값 라벨 자리)
-const Y_BOT = zeroAt * 10 * 0.94; // 0선 바로 위 (zeroAt 는 %, 정규화 좌표는 1000)
+/* 곡선 바닥(최저점) — 0선 바로 위(0.94)에 두면 최하점(2020-09)이 2021 막대를 관통한다
+ * (2026-07-30 오너: "2020 최하점을 2021 막대와 겹치지 않게 위로").
+ * 그래서 **첫 플러스 연도 막대의 상단보다 30 위**로 올린다. 상한(끝점=최고값)은
+ * Y_TOP 에 앵커돼 있어 Y_BOT 을 올려도 2026 끝점은 움직이지 않는다. */
+const zeroNorm = zeroAt * 10; // zeroAt 는 %, 정규화 좌표는 1000
+const firstPos = yearRows.find((r) => r.v > 0);
+const Y_BOT = firstPos
+  ? Math.min(zeroNorm * 0.94, zeroNorm - (firstPos.v / total) * 1000 - 30)
+  : zeroNorm * 0.94;
 const lx = (m) => {
   const y = Number(m.slice(0, 4));
   const mo = Number(m.slice(5));
   return (((y - firstYear) + (mo - 0.5) / 12) / nCols) * 1000;
 };
 const ly = (v) => Y_BOT - ((v - lMin) / (lMax - lMin || 1)) * (Y_BOT - Y_TOP);
+/* ── 곡선 위 지수 레이블 (2026-07-30 오너: 매년 6월 말 기준, 회색 폰트) ──
+ * 시작점(2016-01, 90.94)은 뱃지가 아니라 **같은 회색 레이블**로 통일한다.
+ * 첫해(2016)는 시작점 레이블이 6월 자리와 39px 거리라 겹친다 → 시작점이 그 해를 대표한다.
+ * anchor: "s"=시작점(오른쪽 위로), "l"=끝점(왼쪽으로 — 위는 추정 막대 라벨 자리), 기본=위 가운데 */
+const labelMonths = [{ m: lineMonths[0], anchor: "s" }];
+for (let y = firstYear + 1; y <= lastYear; y++) {
+  const m = `${y}-06`;
+  if (m <= asOf && at(wolse, m) != null)
+    labelMonths.push({ m, ...(y === lastYear ? { anchor: "l" } : {}) });
+}
 const indexLine = {
   points: lineMonths.map((m) => `${lx(m).toFixed(1)},${ly(wolse[m]).toFixed(1)}`).join(" "),
-  startLabel: idx(lineMonths[0]),
-  startX: `${(lx(lineMonths[0]) / 10).toFixed(2)}%`,
-  startY: `${(ly(wolse[lineMonths[0]]) / 10).toFixed(2)}%`,
-  endLabel: idx(asOf),
-  endX: `${(lx(asOf) / 10).toFixed(2)}%`,
-  endY: `${(ly(wolse[asOf]) / 10).toFixed(2)}%`,
-  legend: "선 = 월세가격지수(2026.01=100)",
+  labels: labelMonths.map(({ m, anchor }) => ({
+    x: `${(lx(m) / 10).toFixed(2)}%`,
+    y: `${(ly(wolse[m]) / 10).toFixed(2)}%`,
+    text: idx(m),
+    ...(anchor ? { anchor } : {}),
+  })),
 };
 
 /* 실측/추정 경계선 — 마지막 막대의 왼쪽 경계에 세운다 */
@@ -214,8 +231,9 @@ const p1 = {
   /* 단위(%)는 여기로 옮겼다 — lede 를 지웠고, 축 왼쪽에 붙이면 −1.5 라벨과 겹친다.
    * ⚠️ 캡션은 한 줄이다. "…공표분"까지 붙였더니 두 줄로 접혀 제목을 밀어냈다(렌더 확인).
    *    공표 기준월은 하단 푸터(source.asOf)에 이미 있으니 여기서는 뺀다. */
-  /* 오너 지시(2026-07-30): 최상단 문구에서 '순수' 삭제 */
-  subtitle: `서울 아파트 · 월세가격지수 연간 변화율 · 단위 %`,
+  /* 오너 지시(2026-07-30): 최상단 문구에서 '순수' 삭제, 3차 지시로 '단위 %'도 삭제.
+   * % 단위는 좌측 추정 카드 값(+9.2%)과 마지막 막대 라벨에 남아 있다. */
+  subtitle: `서울 아파트 · 월세가격지수 연간 변화율`,
   /* 오너 지시(2026-07-30): 제목은 이 문구 그대로 한 줄. 템플릿이 폭에 맞춰 폰트를 줄인다.
    * lede(제목 아래 회색 작은 글씨)는 삭제. */
   title: "미쳐버린 서울 월세 폭등 상황",
@@ -234,20 +252,32 @@ const p1 = {
    *
    * 과거 기준월은 **지수 최저점**을 쓴다. "몇 년부터"처럼 임의로 고른 해가 아니라
    * 데이터가 정한 바닥이라 "여기서 여기까지"가 반박당하지 않는다. */
-  /* 오너 지시(2026-07-30): 최저 지수 카드는 삭제. 추정 배지만 남는다.
-   * 지수 수준은 아래 겹친 곡선이 직접 보여주므로 카드로 또 말하지 않는다. */
+  /* ── 좌측 강조 카드 2장 (2026-07-30 오너 3차 지시) ──
+   * 각 카드는 자기 그래프 요소와 **색을 공유**한다:
+   *   est(레드·점선·사선) = 추정 막대 / idx(잉크·회색) = 지수 곡선
+   * 회색 범례문(막대·곡선 설명)은 삭제 — 카드가 그 역할을 대신한다.
+   * ⚠️ est 카드의 산술 가정 한 줄(n)은 남긴다. 없으면 추정치가 실측처럼 읽힌다.
+   * ⚠️ "역사상 최고 경신"은 isPeakNow 를 계산으로 확인했을 때만 적는다 — 손으로 적으면
+   *    다음 달 데이터에서 거짓이 될 수 있다. */
   side: {
-    /* 곡선 범례 — 두 축을 한 카드에 담았으니 어느 게 무엇인지 한 줄로 밝힌다 */
-    note: `막대 = 연간 변화율(%) · 회색 선 = 월세가격지수 수준(2026.01=100)`,
-    ...(partialRow
-      ? {
-          est: {
-            tag: `${lastYear}년 추정`,
-            value: `${bare(estFull)}%`,
-            note: `${monthsDone}개월 실측 ${sign1(partialRow.v)} × ${mulTxt}`,
-          },
-        }
-      : {}),
+    cards: [
+      ...(partialRow
+        ? [
+            {
+              style: "est",
+              t: `${lastYear}년 월세 상승률(추정)`,
+              v: `${bare(estFull)}%`,
+              n: `${monthsDone}개월 실측 ${sign1(partialRow.v)} × ${mulTxt}`,
+            },
+          ]
+        : []),
+      {
+        style: "idx",
+        t: `월세가격지수`,
+        v: (at(wolse, asOf) ?? 0).toFixed(1),
+        n: isPeakNow ? `역사상 최고 경신` : `사상 최고 ${ymNum(peak)}`,
+      },
+    ],
   },
   source: { name: "한국부동산원 「전국주택가격동향조사」", asOf: ymKo(asOf) },
 };

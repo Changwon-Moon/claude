@@ -71,7 +71,19 @@ export function tohuhParts(areas) {
  * @param twoLine  라벨을 2줄로(이름 / 값). 좁은 도형에서 1줄보다 훨씬 잘 들어간다.
  *                 폭이 절반쯤으로 줄어드니 labelWidth 도 함께 줄인다.
  */
-export function tohuhMapSvg({ parts, valueOf, textOf, maxValue = null, labelWidth = 140, twoLine = false }) {
+export function tohuhMapSvg({
+  parts,
+  valueOf,
+  textOf,
+  maxValue = null,
+  labelWidth = 140,
+  twoLine = false,
+  /** 라벨 배치 방식. "down"(기본) = 아래로만 밀기 · "nearest" = 중앙에서 가장 가까운 빈 자리.
+   * ⚠️ 기본값을 바꾸면 **이미 발행된** 신고가 카드(published/2026-07-26-tohuh-rank)의
+   *    픽셀이 달라진다. 발행본과 저장소 보관본이 어긋나면 "그날의 픽셀"이라는 기록이 거짓이 된다.
+   *    그래서 개선은 새 카드에서만 켠다. */
+  placement = "down",
+}) {
   /* bbox 는 **표시 대상만**으로 잡는다 — 경기 전체로 잡으면 40곳이 깨알처럼 작아진다 */
   const shown = parts.flatMap((p) => p.features);
   let minLon = 999, maxLon = -999, minLat = 999, maxLat = -999;
@@ -128,7 +140,11 @@ export function tohuhMapSvg({ parts, valueOf, textOf, maxValue = null, labelWidt
       cx = pts.reduce((s, q) => s + q[0], 0) / pts.length;
       cy = pts.reduce((s, q) => s + q[1], 0) / pts.length;
     } else { A *= 0.5; cx /= 6 * A; cy /= 6 * A; }
-    placed.push({ cx, cy, v, label: info.mapLabel || info.label });
+    /* 면적도 함께 넘긴다 — 큰 구부터 자리를 잡아 중앙을 지켜주려면 필요하다 */
+    const xs = pts.map((q) => q[0]);
+    const ys = pts.map((q) => q[1]);
+    const area = (Math.max(...xs) - Math.min(...xs)) * (Math.max(...ys) - Math.min(...ys));
+    placed.push({ cx, cy, v, area, label: info.mapLabel || info.label });
   }
 
   /* 라벨 충돌 회피: 위→아래로 배치하며 너무 가까우면 아래로 밀어낸다.
@@ -136,17 +152,46 @@ export function tohuhMapSvg({ parts, valueOf, textOf, maxValue = null, labelWidt
   /* 라벨 폭은 **호출자가 준다.** 기본 140 은 신고가 카드("성남 수정 26") 기준이고,
    * 상승률 카드는 "성남 수정 +6.9%" 로 더 넓어서 140 으로는 겹친다(노원·구리가 겹쳤다).
    * 이 값을 바꾸면 신고가 카드 픽셀이 변하므로 기본값은 절대 건드리지 않는다. */
-  /* 2줄 라벨은 폭이 줄고 높이가 는다 — 충돌 판정도 그에 맞춘다 */
   const LW = labelWidth, LH = twoLine ? 52 : 26;
-  placed.sort((a, b) => a.cy - b.cy || a.cx - b.cx);
-  const done = [];
   const XMIN = 78, XMAX = W + PAD * 2 - 78; // 가장자리 라벨이 잘리지 않게 안쪽으로 클램프
-  for (const p of placed) {
-    p.x = Math.max(XMIN, Math.min(XMAX, p.cx));
-    let y = p.cy, guard = 0;
-    while (guard++ < 30 && done.some((q) => Math.abs(q.x - p.x) < LW && Math.abs(q.y - y) < LH)) y += 7;
-    p.y = y;
-    done.push({ x: p.x, y });
+  const done = [];
+  const free = (x, y) => !done.some((q) => Math.abs(q.x - x) < LW && Math.abs(q.y - y) < LH);
+  const clampX = (x) => Math.max(XMIN, Math.min(XMAX, x));
+
+  if (placement === "nearest") {
+    /* ── 무게중심에서 **가장 가까운** 빈 자리 (2026-07-30 오너 지적) ──
+     * "down" 방식은 겹치면 아래로만 밀어서, 밀린 라벨이 자기 구역을 훌쩍 벗어난다
+     * → "이게 어느 구 숫자인지" 모르게 된다.
+     * 여기서는 (0, ±7, ±14, …) 순서로 위/아래를 **번갈아** 시도하고, 그래도 막히면
+     * 좌우로 조금 흔든다. 이동량이 작은 자리를 먼저 잡으니 라벨이 중앙 근처에 남는다.
+     * 큰 구부터 자리를 잡는다 — 작은 구는 어차피 밀리므로 큰 구의 중앙을 지켜준다.
+     * 결정적: 후보 순서가 고정돼 있어 같은 입력 → 같은 배치. */
+    placed.sort((a, b) => b.area - a.area || a.cy - b.cy || a.cx - b.cx);
+    const CAND = [];
+    for (let step = 0; step <= 14; step++) {
+      const dy = step * 7;
+      for (const sy of step === 0 ? [0] : [-1, 1]) {
+        CAND.push([0, dy * sy]);
+        if (step >= 3) for (const sx of [-1, 1]) CAND.push([sx * Math.min(dy, LW * 0.55), dy * sy]);
+      }
+    }
+    for (const p of placed) {
+      const bx = clampX(p.cx);
+      const hit = CAND.find(([dx, dy]) => free(clampX(bx + dx), p.cy + dy)) || [0, 105];
+      p.x = clampX(bx + hit[0]);
+      p.y = p.cy + hit[1];
+      done.push({ x: p.x, y: p.y });
+    }
+  } else {
+    /* 기존 방식(발행된 신고가 카드가 이 배치로 굳어 있다) — 위→아래로 훑으며 아래로만 밀어낸다 */
+    placed.sort((a, b) => a.cy - b.cy || a.cx - b.cx);
+    for (const p of placed) {
+      p.x = clampX(p.cx);
+      let y = p.cy, guard = 0;
+      while (guard++ < 30 && !free(p.x, y)) y += 7;
+      p.y = y;
+      done.push({ x: p.x, y });
+    }
   }
   let labels = "";
   for (const p of placed) {

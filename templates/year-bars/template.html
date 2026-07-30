@@ -152,47 +152,47 @@
 
       /* ── 월세가격지수 곡선 ──
        * 장식이 아니라 **데이터**다. 다만 축이 막대와 달라서(수준 vs 변화율) 눈금을 넣지 않고
-       * 시작·끝 값만 적는다. 막대보다 뒤 레이어에 옅게 둬서 주인공을 헷갈리지 않게 한다.
+       * 매년 6월 말 지수 레이블만 적는다.
+       * 막대보다 **앞** 레이어다(2026-07-30 오너: 막대에 가려지지 않게) — 대신 색은
+       * 회색(--wirit-gray)으로 낮춰 주인공(막대)을 뺏지 않는다. 좌측 idx 카드와 같은 색.
        * ⚠️ width/height 를 명시한다 — inset:0 만 주면 <svg> 가 viewBox 비율로 늘어난다. */
       .yc-line {
         position: absolute;
         inset: 0;
         width: 100%;
         height: 100%;
-        z-index: 1;
+        z-index: 3;
         pointer-events: none;
       }
       .yc-line polyline {
         fill: none;
-        stroke: var(--wirit-ink);
-        stroke-opacity: 0.34;
+        stroke: var(--wirit-gray);
+        stroke-opacity: 0.9;
         stroke-width: 5;
         stroke-linejoin: round;
         stroke-linecap: round;
         vector-effect: non-scaling-stroke;
       }
-      /* 곡선 위 값 라벨 — 시작(왼쪽 아래)·끝(오른쪽 위) 두 개만 */
-      .yc-lpt {
+      /* 곡선 위 지수 레이블 — 매년 6월 말 값. 뱃지(pill)가 아니라 **회색 숫자**로 통일
+       * (2026-07-30 오너: 90.94 도 뱃지 말고 레이블로 동일하게).
+       * anchor: 기본 = 점 위 가운데 / .s = 시작점(오른쪽 위 — 왼쪽은 플롯 밖) /
+       *         .l = 끝점(왼쪽 — 위는 추정 막대의 값 라벨 자리) */
+      .yc-lidx {
         position: absolute;
-        transform: translate(-50%, -50%);
-        padding: 5px 12px;
-        border-radius: 999px;
-        background: var(--wirit-ink);
-        color: #fff;
+        transform: translate(-50%, -150%);
         font-family: var(--font-num);
-        font-size: 23px;
+        font-size: 22px;
         font-weight: 800;
         letter-spacing: -0.02em;
-        white-space: nowrap;
-        z-index: 5;
-      }
-      /* 곡선 범례는 좌측 블록 안에 둔다. 플롯 바닥에 두면 −1.5 값 라벨과 겹친다(검수가 잡았다). */
-      .yc-snote {
-        font-size: 22px;
-        font-weight: 700;
-        line-height: 1.35;
         color: var(--wirit-gray);
-        letter-spacing: -0.02em;
+        white-space: nowrap;
+        z-index: 3;
+      }
+      .yc-lidx.s {
+        transform: translate(-8%, -150%);
+      }
+      .yc-lidx.l {
+        transform: translate(-112%, -46%);
       }
 
       /* 막대: 0선에서 위(오름) 또는 아래(내림)로 자란다 */
@@ -209,51 +209,6 @@
         flex-direction: column;
         gap: 18px;
         z-index: 4;
-      }
-      /* 지수 카드: 과거 한 줄 + 현재(사상 최대) 한 줄 */
-      .yc-idx {
-        padding: 20px 24px 22px;
-        border-radius: 20px;
-        background: var(--wirit-ink-06);
-      }
-      .yc-idx .k {
-        display: block;
-        font-size: 23px;
-        font-weight: 700;
-        color: var(--wirit-gray);
-      }
-      .yc-idx .row {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 14px;
-        margin-top: 6px;
-      }
-      .yc-idx .row .ym {
-        font-family: var(--font-num);
-        font-size: 27px;
-        font-weight: 800;
-        color: var(--wirit-gray);
-      }
-      .yc-idx .row .v {
-        font-family: var(--font-num);
-        font-size: 40px;
-        font-weight: 900;
-        letter-spacing: -0.02em;
-        color: var(--wirit-ink);
-      }
-      .yc-idx .now {
-        margin-top: 16px;
-        padding-top: 16px;
-        border-top: 2px solid var(--wirit-ink-12);
-      }
-      .yc-idx .now .k {
-        color: var(--wirit-red);
-        font-weight: 800;
-      }
-      .yc-idx .now .row .v {
-        color: var(--wirit-red);
-        font-size: 46px;
       }
 
       /* 막대 두께 — 칸 폭의 92%(좌우 4%). 오너 지시(2026-07-30)로 84%→92% 로 굵혔다.
@@ -359,25 +314,25 @@
         z-index: 4;
       }
 
-      /* ── 추정치 카드 ──
-       * 값 라벨(.yc-val) 대신 그 칸에 붙는다. 막대 위쪽에 앵커되므로 데이터가 바뀌면 같이 움직인다.
-       * ⚠️ 테두리(점선)·바탕(사선)은 추정 막대와 **같은 언어**다. 실선/단색으로 바꾸면
-       *    추정치가 실측처럼 읽힌다 — 디자인보다 앞서는 오보 방지 규칙. */
-      /* 추정 배지 — 오너 지시로 막대 위 앵커에서 **좌측 정보 블록 안**으로 옮겼다.
-       * 점선 테두리·사선 바탕은 추정 막대와 같은 언어다. 실선/단색으로 바꾸면
-       * 추정치가 실측처럼 읽힌다 — 디자인보다 앞서는 오보 방지 규칙. */
-      /* ⚠️ 좌측 블록은 카드 폭의 45% 뿐이다. 라벨과 큰 숫자를 **한 줄에 나란히** 두면
-       * 설명 글이 숫자 아래로 깔린다(검수 textclip 이 잡았다). 그래서 세로로 쌓는다:
-       *   1행 = 태그 + 값(baseline 정렬) / 2행 = 산술 가정 */
+      /* ── 좌측 강조 카드 2장 (2026-07-30 오너 3차 지시) ──
+       * 각 카드는 자기 그래프 요소와 색을 공유한다:
+       *   .est = 추정 막대(레드·점선·사선) / .idx = 지수 곡선(회색·잉크)
+       * ⚠️ est 의 점선 테두리·사선 바탕은 추정 막대와 **같은 언어**다. 실선/단색으로 바꾸면
+       *    추정치가 실측처럼 읽힌다 — 디자인보다 앞서는 오보 방지 규칙.
+       * ⚠️ 좌측 블록은 카드 폭의 45% 뿐이다. 긴 라벨과 큰 숫자를 한 줄에 두면 겹친다
+       *    (검수 textclip 이 잡았다) → 세로 스택: 라벨 / 큰 값 / 부가 한 줄. */
       .yc-card {
         position: relative;
         width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        padding: 16px 22px 18px;
-        border: 3px dashed #c0272d;
+        gap: 8px;
+        padding: 18px 24px 20px;
         border-radius: 20px;
+        z-index: 4;
+      }
+      .yc-card.est {
+        border: 3px dashed #c0272d;
         background:
           repeating-linear-gradient(
             -45deg,
@@ -385,14 +340,10 @@
             rgba(229, 72, 77, 0.03) 7px 15px
           ),
           var(--wirit-paper);
-        z-index: 4;
       }
-      .yc-card .lab {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 14px;
-        width: 100%;
+      .yc-card.idx {
+        border: 3px solid var(--wirit-ink-12);
+        background: var(--wirit-ink-06);
       }
       .yc-card .t {
         display: block;
@@ -401,15 +352,8 @@
         letter-spacing: -0.02em;
         color: #c0272d;
       }
-      /* 산술 가정 한 줄 — 두 줄로 접히면 카드가 커져 막대를 덮는다. nowrap 로 못박는다. */
-      .yc-card .n {
-        display: block;
-        margin-top: 0;
-        font-size: 20px;
-        font-weight: 600;
-        letter-spacing: -0.02em;
+      .yc-card.idx .t {
         color: var(--wirit-gray);
-        white-space: nowrap;
       }
       .yc-card .v {
         font-family: var(--font-num);
@@ -420,6 +364,22 @@
         color: #a5121f;
         font-variant-numeric: tabular-nums;
         white-space: nowrap;
+      }
+      .yc-card.idx .v {
+        color: var(--wirit-ink);
+      }
+      /* 부가 한 줄(산술 가정·경신 표시) — 두 줄로 접히면 카드가 커져 막대를 덮는다. nowrap. */
+      .yc-card .n {
+        display: block;
+        margin-top: 0;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--wirit-gray);
+        white-space: nowrap;
+      }
+      .yc-card.idx .n {
+        color: var(--wirit-ink);
       }
 
       /* 실측/추정 경계선 — 어디까지가 사실인지 한 줄로 못박는다 */
@@ -515,31 +475,19 @@
           <svg class="yc-line" viewBox="0 0 1000 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
             <polyline points="{{line.points}}" />
           </svg>
-          <span class="yc-lpt" style="left: {{line.startX}}; top: {{line.startY}}">{{line.startLabel}}</span>
-          <span class="yc-lpt yc-lend" style="left: {{line.endX}}; top: {{line.endY}}">{{line.endLabel}}</span>
+          {{#each line.labels}}
+          <span class="yc-lidx {{#if this.anchor}}{{this.anchor}}{{/if}}" style="left: {{this.x}}; top: {{this.y}}">{{this.text}}</span>
+          {{/each}}
           {{/if}}
           {{#if side}}
           <div class="yc-side">
-            {{#if side.index}}
-            <div class="yc-idx">
-              <span class="k">{{side.index.pastLabel}}</span>
-              <span class="row"><span class="ym">{{side.index.pastYm}}</span><span class="v">{{side.index.pastValue}}</span></span>
-              <div class="now">
-                <span class="k">{{side.index.nowLabel}}</span>
-                <span class="row"><span class="ym">{{side.index.nowYm}}</span><span class="v">{{side.index.nowValue}}</span></span>
-              </div>
+            {{#each side.cards}}
+            <div class="yc-card {{this.style}}">
+              <span class="t">{{this.t}}</span>
+              <span class="v">{{this.v}}</span>
+              {{#if this.n}}<span class="n">{{this.n}}</span>{{/if}}
             </div>
-            {{/if}}
-            {{#if side.est}}
-            <div class="yc-card">
-              <span class="lab">
-                <span class="t">{{side.est.tag}}</span>
-                <span class="v">{{side.est.value}}</span>
-              </span>
-              <span class="n">{{side.est.note}}</span>
-            </div>
-            {{/if}}
-            {{#if side.note}}<p class="yc-snote">{{side.note}}</p>{{/if}}
+            {{/each}}
           </div>
           {{/if}}
           {{!-- 워터마크는 0선 **아래** 빈 칸(후반 연도 밑 — 음수 막대가 없는 구간)에.

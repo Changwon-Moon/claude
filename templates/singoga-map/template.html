@@ -19,6 +19,12 @@
        * 켜는 조건은 빌더가 정한다(spread: true) — 행이 많은 카드에서 켜면 표가 넘친다. */
       .sm-spread .sm-rank .sm-row { flex: 1 1 0; min-height: 0; }
       .sm-rank .rh { font-size: 23px; font-weight: 800; color: var(--wirit-gray); padding: 0 6px 8px; display: flex; justify-content: space-between; }
+      /* 머리글 3열 모드 — 아래 데이터 행과 **같은 그리드**를 써서 열이 정확히 맞고,
+       * 각 칸을 가운데 정렬한다(오너 지시 2026-07-30: 순위 / 지역 / 월세 상승분).
+       * flex 2열 머리글은 열이 안 맞아 "지역"이 순위 칸 위에 오는 문제가 있었다. */
+      .sm-rank .rh.rh3 { display: grid; grid-template-columns: 62px 1fr auto; gap: 10px; }
+      .sm-c .sm-rank .rh.rh3 { grid-template-columns: 58px 1fr auto; gap: 8px; }
+      .sm-rank .rh.rh3 span { text-align: center; }
       .sm-row { display: grid; grid-template-columns: 62px 1fr auto; align-items: center; gap: 10px;
         padding: 12px 6px; border-top: 2px solid var(--wirit-ink-06); }
       .sm-row:first-of-type { border-top: none; }
@@ -84,14 +90,18 @@
     </style>
   </head>
   <body>
-    <div class="wirit-card sm{{#if compact}} sm-c{{/if}}{{#if spread}} sm-spread{{/if}}">
+    <div class="wirit-card sm{{#if compact}} sm-c{{/if}}{{#if spread}} sm-spread{{/if}}"{{#if fitTitle}} data-fit="1"{{/if}}>
       <div class="wirit-topcap">{{#if note}}<span>{{note}}</span>{{/if}}</div>
       <h1 class="wirit-title">{{{title}}}</h1>
       {{#if subtitle}}<div class="sm-sub">{{subtitle}}</div>{{/if}}
 
       <div class="sm-body">
         <div class="sm-rank">
+          {{#if head.c}}
+          <div class="rh rh3"><span>{{head.c.[0]}}</span><span>{{head.c.[1]}}</span><span>{{head.c.[2]}}</span></div>
+          {{else}}
           <div class="rh"><span>{{#if head.l}}{{head.l}}{{else}}구{{/if}}</span><span>{{#if head.r}}{{head.r}}{{else}}신고가 건수 · 비율{{/if}}</span></div>
+          {{/if}}
           {{#each rows}}
           <div class="sm-row{{#if this.top}} top{{/if}}">
             <span class="sm-rk">{{#if this.medal}}<span class="medal">{{this.medal}}</span>{{else}}{{this.rank}}{{/if}}</span>
@@ -139,5 +149,38 @@
         {{#unless hideFooterId}}<span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>{{/unless}}
       </div>
     </div>
+
+    <!-- 제목 폭 맞춤(선택: fitTitle) — 콘텐츠 폭 안에 한 줄로 들어오는 최대 폰트를 이분 탐색.
+         ⚠️ **이 카드가 요청할 때만** 돈다. 항상 켜면 이미 발행된 신고가 카드의 제목 크기가
+            달라져 발행본과 보관본이 어긋난다. 결정적: 입력 동일 → 결과 동일. -->
+    <script>
+      window.__wiritFit = function () {
+        var card = document.querySelector(".sm");
+        if (!card || card.dataset.fit !== "1") return;
+        var el = card.querySelector(".wirit-title");
+        if (!el) return;
+        var cs = getComputedStyle(card);
+        var avail =
+          card.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
+        if (!avail) return;
+        el.style.whiteSpace = "nowrap";
+        var lo = 40,
+          hi = 132,
+          best = lo;
+        for (var i = 0; i < 22; i++) {
+          var mid = (lo + hi) / 2;
+          el.style.fontSize = mid + "px";
+          if (el.scrollWidth <= avail) {
+            best = mid;
+            lo = mid;
+          } else {
+            hi = mid;
+          }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(window.__wiritFit);
+    </script>
   </body>
 </html>

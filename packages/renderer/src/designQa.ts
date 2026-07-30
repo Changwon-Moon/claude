@@ -148,7 +148,7 @@ const MEASURE_JS = `(() => {
   /* ⚠️ 하단 설명(.sm-total)·푸터 글자도 넣는다. 표가 길어져 이들을 덮는 것이
    * 가장 흔한 불량인데, 처음엔 목록에 없어서 검수가 놓쳤다(2026-07-30). */
   var LEAF = ".yc-val,.yc-solid-val,.yc-tag,.yc-card .t,.yc-card .n,.yc-card .v," +
-             ".yc-idx .k,.yc-idx .ym,.yc-idx .v,.yc-axis span,.yc-lpt,.yc-lleg,.yc-snote," +
+             ".yc-axis span,.yc-lidx," +
              ".sm-gu,.sm-val .h,.sm-val .r,.sm-total,.sm-insight,.sm-tailnote .tx," +
              ".wirit-footer span,.rt-name,.rt-val,.mc-fn";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
