@@ -137,13 +137,16 @@ node scripts/smoke-tower.mjs        # 관제탑 스모크
 | `tohuh-rent-map` — 1년 만에 월세 38만원 | **오너 확정** (2026-07-30) | `ec4cad52505fcdbba9bb1bf76e33c9b6` |
 | `wolse-flip-p1` — 미쳐버린 서울 월세 폭등 상황 | **오너 확정** (2026-07-30) | `87ef2d006936e7629d593c747e466843` |
 
+확인은 손으로 하지 않는다 — **진단기가 빌더부터 돌려 전부 대조한다**:
+
 ```bash
-pnpm -s --filter @wirit/renderer render \
-  --data /home/user/claude/data/content/2026-07-23/tohuh-rank.json --out <임시경로>
-md5sum <임시경로>/tohuh-rank-p1.png
+node scripts/doctor.mjs        # 빌더 → 렌더 → md5 대조 → 자동 검수
 ```
 
-오너가 **확정**이라고 한 카드도 같다 — 확정 이후엔 그 카드 픽셀을 바꾸지 않는다.
+⚠️ 위 표는 **사람이 읽는 사본**이고, 기계가 읽는 원천은 `data/review/pixel-baselines.json` 하나다.
+새 카드를 확정하면 **그 파일에 추가**하고 이 표도 같이 고친다(두 곳에 적으면 반드시 어긋난다).
+
+오너가 **확정**이라고 한 카드도 발행본과 같다 — 확정 이후엔 그 카드 픽셀을 바꾸지 않는다.
 
 ---
 

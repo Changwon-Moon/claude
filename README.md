@@ -1,5 +1,8 @@
 # 인포그래픽 카드뉴스 자동화 프로젝트
 
+> 🧳 **새로 합류했다면 [docs/HANDOFF.md](docs/HANDOFF.md) 부터.**
+> 환경 확인: `pnpm install --frozen-lockfile && node scripts/doctor.mjs`
+
 @flow, APT_LAP 스타일의 데이터 기반 인포그래픽 카드뉴스를 **AI 에이전트 파이프라인**으로 매일 자동 생산하는 인스타그램 계정 구축 프로젝트.
 
 ## 최종 목표

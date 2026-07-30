@@ -1,0 +1,49 @@
+{
+  "_": [
+    "발행본·오너 확정본의 **픽셀 기준값**. 사람이 읽는 표는 docs/CARD_CHECKLIST.md §5 에 있고,",
+    "기계가 읽는 원천은 이 파일 하나다 — 두 곳에 적으면 반드시 어긋난다.",
+    "",
+    "왜 필요한가: 카드는 매번 데이터에서 다시 그려진다. 공용 템플릿(_shared/base.css,",
+    "templates/*/template.html)을 건드리면 이미 발행한 카드가 조용히 바뀐다.",
+    "나간 물건의 픽셀이 바뀌면 '그날 무엇을 발행했는가'의 증거가 사라진다.",
+    "",
+    "확인: node scripts/doctor.mjs  (빌더 → 렌더 → md5 대조까지 한 번에)",
+    "",
+    "새 카드를 확정하면 여기 한 줄 추가한다:",
+    "  builder = data/review/builders.json 의 label (없으면 null — 수동 렌더만)",
+    "  content = 빌더가 만드는 카드 JSON 경로",
+    "  md5     = 그 JSON을 렌더한 PNG 1장의 md5"
+  ],
+  "cards": [
+    {
+      "label": "tohuh-rank",
+      "title": "2026년 6월 신고가 쏟아진 지역은? (토허제 기준)",
+      "state": "발행",
+      "at": "2026-07-26",
+      "builder": "tohuh-rank",
+      "content": "data/content/2026-07-23/tohuh-rank.json",
+      "png": "tohuh-rank-p1.png",
+      "md5": "572b4238dd87968e8f604f3f6caff68d"
+    },
+    {
+      "label": "tohuh-rent-map",
+      "title": "1년 만에 월세 38만원 더 낸다",
+      "state": "오너 확정",
+      "at": "2026-07-30",
+      "builder": "tohuh-rent-map",
+      "content": "data/content/2026-07-30/tohuh-rent-map.json",
+      "png": "tohuh-rent-map-p1.png",
+      "md5": "ec4cad52505fcdbba9bb1bf76e33c9b6"
+    },
+    {
+      "label": "wolse-flip",
+      "title": "미쳐버린 서울 월세 폭등 상황",
+      "state": "오너 확정",
+      "at": "2026-07-30",
+      "builder": "wolse-flip",
+      "content": "data/content/2026-07-30/wolse-flip-p1.json",
+      "png": "wolse-flip-p1-p1.png",
+      "md5": "87ef2d006936e7629d593c747e466843"
+    }
+  ]
+}
