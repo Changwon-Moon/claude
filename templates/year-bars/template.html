@@ -178,26 +178,37 @@
         stroke-linecap: round;
         vector-effect: non-scaling-stroke;
       }
-      /* 곡선 위 지수 레이블 — 매년 6월 말 값. 뱃지(pill)가 아니라 **회색 숫자**로 통일
-       * (2026-07-30 오너: 90.94 도 뱃지 말고 레이블로 동일하게).
-       * anchor: 기본 = 점 위 가운데 / .s = 시작점(오른쪽 위 — 왼쪽은 플롯 밖) /
-       *         .l = 끝점(왼쪽 — 위는 추정 막대의 값 라벨 자리) */
+      /* 곡선 위 지수 레이블 — **원형 뱃지**(오너 지시 2026-07-30 6차).
+       * 곡선과 같은 회색으로 채워 "이 점의 값"임을 색으로 묶는다.
+       * anchor 로 막대를 피한다 — 이 세 값이 막대와 겹치면 어느 축의 숫자인지 헷갈린다:
+       *   기본 = 점 위쪽(2020 — 바로 아래에 2021 막대가 있다)
+       *   .s   = 시작점(오른쪽으로 조금 — 왼쪽은 플롯 밖)
+       *   .l   = 끝점(왼쪽으로 — 오른쪽은 추정 막대와 그 값 라벨 자리) */
       .yc-lidx {
         position: absolute;
-        transform: translate(-50%, -150%);
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translate(-50%, -110%);
+        background: var(--wirit-gray);
+        color: #fff;
         font-family: var(--font-num);
-        font-size: 22px;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        color: var(--wirit-gray);
+        font-size: 23px;
+        font-weight: 900;
+        letter-spacing: -0.03em;
         white-space: nowrap;
         z-index: 3;
       }
       .yc-lidx.s {
-        transform: translate(-8%, -150%);
+        transform: translate(-30%, -50%);
       }
+      /* 끝점 뱃지는 추정 막대 **왼쪽 바깥**에 세운다. -115% 로는 원의 오른쪽이 막대에 물렸다
+       * (검수의 barclip 이 잡는다 — 이 값을 줄이면 바로 걸린다). */
       .yc-lidx.l {
-        transform: translate(-112%, -46%);
+        transform: translate(-142%, -30%);
       }
 
       /* 막대: 0선에서 위(오름) 또는 아래(내림)로 자란다 */
@@ -288,6 +299,13 @@
       .yc-col.peak .yc-val {
         color: #a5121f;
       }
+      /* 막대 **안** 값(흰 글씨) — 막대 위에 두면 지수 곡선과 겹치는 칸에 쓴다(오너 지시 6차).
+       * 어느 칸에 쓸지는 빌더가 곡선과의 실측 거리로 정한다(valueInside) — 눈대중이 아니다. */
+      .yc-col.up .yc-val.inside {
+        bottom: calc(100% - var(--zero) + var(--h) - 42px);
+        color: #fff;
+        z-index: 3;
+      }
       /* 실측 부분의 값 — 추정 막대가 위에 쌓인 칸에서도 **실측 숫자를 보여준다**
        * (오너 지시: 2026년 6월 기준 +4.6% 도 그래프에 표기).
        * 추정 막대 안이 아니라 **실측 막대 안 상단**에 흰 글씨로 올린다 —
@@ -305,19 +323,32 @@
         white-space: nowrap;
         z-index: 3;
       }
-      /* 추정 막대에 붙는 꼬리표 — 그래픽만 잘라 써도 '추정'이 따라간다 */
+      /* 추정 막대에 붙는 꼬리표 — 그래픽만 잘라 써도 '추정'이 따라간다.
+       * **정사각 2줄**(오너 지시 6차: 하반기 / 추정). 알약형 1줄은 막대보다 넓어서
+       * 왼쪽으로 삐져나온 부분이 지수 곡선과 겹쳤다.
+       * 세로 위치는 추정 구간 **아래쪽**(0.14). 곡선은 이 구간을 왼쪽 아래 → 오른쪽 위로
+       * 가파르게 지나가므로, 가운데보다 아래에서 폭이 좁은 뱃지가 곡선을 피한다. */
       .yc-tag {
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        bottom: calc(100% - var(--zero) + var(--h) + var(--he) / 2 - 16px);
-        padding: 5px 12px;
-        border-radius: 999px;
+        bottom: calc(100% - var(--zero) + var(--h) + var(--he) * 0.10);
+        /* 막대보다 **좁게**(막대 폭 78px) — 뱃지가 막대보다 넓으면 삐져나온 쪽이
+         * 막대 왼쪽 경계를 타고 오르는 지수 곡선과 겹친다. */
+        width: 70px;
+        height: 70px;
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1px;
         background: #c0272d;
         color: #fff;
-        font-size: 20px;
+        font-size: 19px;
         font-weight: 800;
-        letter-spacing: -0.03em;
+        line-height: 1.1;
+        letter-spacing: -0.04em;
         white-space: nowrap;
         z-index: 4;
       }
@@ -333,6 +364,11 @@
        * 정사각형이라 줄 수가 고정이어야 한다. 라벨은 빌더가 **줄 단위로** 넘긴다
        * (자동 줄바꿈에 맡기면 폰트·데이터가 바뀔 때 4줄이 돼 정사각형을 넘친다).
        * 숫자는 레드·크게 — 이 카드가 말하려는 한 숫자다. (추정)만 작게. */
+      /* ⚠️ 큰 라운드 + 옅은 회색 채움 + 사선 무늬는 **어느 서비스에나 있는 UI 카드**로 읽힌다
+       * (오너 지적 2026-07-30: "AI티 안 나게"). 각을 세우고 채움을 걷어내
+       * 종이 바탕 + 괘선만 남겼다 — 인쇄 인포그래픽의 언어다.
+       * 두 박스의 **차이는 선 하나**다: 실선 = 실측 / 점선 = 추정.
+       * 이 대비가 곧 정보다. 점선을 실선으로 바꾸면 추정치가 실측으로 읽힌다. */
       .yc-card {
         position: relative;
         flex: 1 1 0;
@@ -341,8 +377,9 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: 26px 30px;
-        border-radius: 24px;
+        padding: 26px 28px;
+        border-radius: 3px;
+        background: var(--wirit-paper);
         z-index: 4;
       }
       .yc-card .l {
@@ -368,29 +405,21 @@
         font-variant-numeric: tabular-nums;
         white-space: nowrap;
       }
-      /* (추정) — 유일하게 작은 글자. 작아도 반드시 붙는다: 이 숫자는 원자료에 없다. */
-      .yc-card .v i {
-        font-style: normal;
-        font-family: var(--font-sans);
+      /* (추정) — **값 아래 독립된 줄**(오너 지시 6차). 값 옆에 붙이면 그 카드만 숫자가
+       * 좁아져 좌우 카드의 숫자 크기가 어긋난다. 작아도 반드시 붙는다: 이 숫자는 원자료에 없다. */
+      .yc-card .sm {
+        display: block;
+        margin-top: 6px;
         font-size: 26px;
         font-weight: 800;
         letter-spacing: -0.02em;
-        color: var(--wirit-gray);
-        margin-left: 4px;
+        color: #c0272d;
       }
       .yc-card.est {
         border: 3px dashed #c0272d;
-        background:
-          repeating-linear-gradient(
-            -45deg,
-            rgba(229, 72, 77, 0.13) 0 7px,
-            rgba(229, 72, 77, 0.03) 7px 15px
-          ),
-          var(--wirit-paper);
       }
       .yc-card.idx {
-        border: 3px solid var(--wirit-ink-12);
-        background: var(--wirit-ink-06);
+        border: 3px solid var(--wirit-ink);
       }
 
       /* 실측/추정 경계선 — 어디까지가 사실인지 한 줄로 못박는다 */
@@ -496,7 +525,8 @@
             <div class="yc-card {{this.style}}">
               <span class="l">{{this.lines.[0]}}</span>
               <span class="l">{{this.lines.[1]}}</span>
-              <span class="v">{{this.value}}{{#if this.small}}<i>{{this.small}}</i>{{/if}}</span>
+              <span class="v">{{this.value}}</span>
+              {{#if this.small}}<span class="sm">{{this.small}}</span>{{/if}}
             </div>
             {{/each}}
           </div>
@@ -518,9 +548,9 @@
             >
               <span class="yc-bar solid"></span>
               {{#if this.hEst}}<span class="yc-bar est"></span>{{/if}}
-              {{#if this.tag}}<span class="yc-tag">{{this.tag}}</span>{{/if}}
+              {{#if this.tag}}<span class="yc-tag"><span>{{this.tag.[0]}}</span><span>{{this.tag.[1]}}</span></span>{{/if}}
               {{#if this.solidValue}}<span class="yc-solid-val">{{this.solidValue}}</span>{{/if}}
-              <span class="yc-val">{{this.value}}</span>
+              <span class="yc-val{{#if this.valueInside}} inside{{/if}}">{{this.value}}</span>
             </div>
             {{/each}}
           </div>
@@ -574,6 +604,7 @@
        * 줄이는 방향으로만 움직이고 최소 34px 에서 멈춘다. 결정적: 입력 동일 → 결과 동일. */
       function fitCardValues() {
         var cards = document.querySelectorAll(".yc-card");
+        var vals = [], avails = [], base = 0;
         for (var k = 0; k < cards.length; k++) {
           var v = cards[k].querySelector(".v");
           if (!v) continue;
@@ -581,15 +612,21 @@
           var avail =
             cards[k].clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
           if (!avail) continue;
-          var small = v.querySelector("i");
-          var base = parseFloat(getComputedStyle(v).fontSize) || 70;
-          var sbase = small ? parseFloat(getComputedStyle(small).fontSize) || 0 : 0;
-          var size = base;
-          while (size > 34 && textWidth(v) > avail) {
-            size -= 1;
-            v.style.fontSize = size + "px";
-            if (small) small.style.fontSize = ((sbase * size) / base).toFixed(2) + "px";
-          }
+          vals.push(v);
+          avails.push(avail);
+          base = base || parseFloat(getComputedStyle(v).fontSize) || 70;
+        }
+        /* 좌우 카드의 숫자는 **같은 크기**여야 한다(오너 지시 6차).
+         * 그래서 각자 줄이지 않고, 둘 다 들어가는 하나의 크기를 찾아 함께 적용한다.
+         * ⚠️ CSS 값만 믿으면 자릿수가 늘 때(+12.4%) 테두리 밖으로 삐져나간다 —
+         *    실제로 그랬다. 줄이는 방향으로만, 최소 34px 에서 멈춘다. */
+        var size = base;
+        while (size > 34) {
+          var fits = true;
+          for (var i = 0; i < vals.length; i++) if (textWidth(vals[i]) > avails[i]) fits = false;
+          if (fits) break;
+          size -= 1;
+          for (var j = 0; j < vals.length; j++) vals[j].style.fontSize = size + "px";
         }
       }
       function textWidth(el) {

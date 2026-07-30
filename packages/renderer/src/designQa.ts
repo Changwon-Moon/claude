@@ -158,6 +158,16 @@ const MEASURE_JS = `(() => {
     var o=overlapOf(a,b);
     if(o) collisions.push({a:name(a),b:name(b),x:o.x,y:o.y});
   }
+  /* ── 지수 뱃지 ↔ 막대 겹침 (barclip) ──
+   * 오너 규칙(2026-07-30): 지수 원형 뱃지는 **막대와 겹치지 않는다.**
+   * 두 축(수준 vs 변화율)이 겹쳐 보이면 독자가 어느 축의 숫자인지 알 수 없다.
+   * ⚠️ 막대 안에 **일부러** 넣는 글자(.yc-solid-val, .yc-tag, .yc-val.inside)는 대상이 아니다. */
+  Array.prototype.forEach.call(card.querySelectorAll(".yc-lidx"), function(lb){
+    Array.prototype.forEach.call(card.querySelectorAll(".yc-bar"), function(br){
+      var o=overlapOf(lb,br);
+      if(o) collisions.push({a:".yc-bar",b:".yc-lidx",x:o.x,y:o.y});
+    });
+  });
   var footer=card.querySelector(".wirit-footer");
   var lastRow=rows.length?rows[rows.length-1]:null;
   return {
@@ -180,7 +190,7 @@ function analyze(g: Geo): Finding[] {
   (g.collisions || []).forEach((c) =>
     out.push({
       level: "error",
-      code: c.a === ".wirit-corner" ? "badgeclip" : "textclip",
+      code: c.a === ".wirit-corner" ? "badgeclip" : c.a === ".yc-bar" ? "barclip" : "textclip",
       msg: `${c.b} 가 ${c.a} 와 겹침 (가로 ${c.x}px · 세로 ${c.y}px) — 여백을 늘리거나 글자를 줄이세요`,
     })
   );

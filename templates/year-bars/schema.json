@@ -29,7 +29,7 @@
           "h": { "type": "string", "description": "실측 막대 높이(플롯 대비 %)" },
           "hEst": { "type": "string", "description": "추정 막대 높이(실측 위에 쌓임). 있으면 점선+사선으로 그려진다" },
           "totalH": { "type": "string", "description": "실측+추정 합. 값 라벨을 막대 위에 올리는 데 쓴다" },
-          "tag": { "type": "string", "maxLength": 12, "description": "추정 막대에 붙는 꼬리표(예: '하반기 추정')" },
+          "tag": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "string", "maxLength": 6 }, "description": "추정 막대에 붙는 정사각 2줄 꼬리표(예: ['하반기','추정']). 1줄 알약형은 막대보다 넓어 지수 곡선과 겹친다" },
           "solidValue": { "type": "string", "maxLength": 8, "description": "실측 부분의 값. 추정이 위에 쌓인 칸에서 '어디까지가 실측인지'를 숫자로 보여준다" },
           "card": {
             "type": "object",
@@ -41,7 +41,8 @@
               "note": { "type": "string", "maxLength": 30 }
             }
           },
-          "peak": { "type": "boolean", "description": "최고 실측 연도 1개만. 강조는 한 곳." }
+          "peak": { "type": "boolean", "description": "최고 실측 연도 1개만. 강조는 한 곳." },
+          "valueInside": { "type": "boolean", "description": "값 라벨을 막대 안(흰 글씨)에 넣는다. 막대 위 자리가 지수 곡선과 겹칠 때만 — 빌더가 실측 거리로 정한다" }
         }
       }
     },

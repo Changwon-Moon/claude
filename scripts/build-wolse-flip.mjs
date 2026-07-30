@@ -161,7 +161,8 @@ const points = yearRows.map((r) => {
       ? {
           hEst: pctOf(estAdd),
           totalH: pctOf(estFull),
-          tag: "하반기 추정",
+          /* 정사각 2줄 뱃지(오너 지시 6차) — 알약형 1줄은 막대보다 넓어 곡선과 겹쳤다 */
+          tag: ["하반기", "추정"],
           /* 오너 지시: 실측(6월까지) 값도 그래프에 표기. 추정 막대가 위에 쌓여도
            * **어디까지가 실측인지** 숫자로 보인다. */
           solidValue: `${bare(r.v)}`,
@@ -222,10 +223,26 @@ const indexLine = {
   labels: labelMonths.map(({ m, anchor }) => ({
     x: `${(lx(m) / 10).toFixed(2)}%`,
     y: `${(ly(wolse[m]) / 10).toFixed(2)}%`,
-    text: idx(m),
+    /* 원형 뱃지 안에 들어가야 하니 **소수 한 자리**다(둘째 자리까지 쓰면 6글자라 원을 넘친다).
+     * 카드의 103.9 와도 같은 자릿수 — 한 카드 안에서 정밀도가 엇갈리면 독자가 의심한다. */
+    text: idx1(m),
     ...(anchor ? { anchor } : {}),
   })),
 };
+
+/* ── 값 라벨을 막대 **안**(흰 글씨)에 넣을 칸 고르기 (오너 지시 6차: +1.7 을 막대 안으로) ──
+ * 눈대중으로 "2021번 칸"이라고 박아두면 데이터가 바뀔 때 엉뚱한 칸이 흰 글씨가 된다.
+ * 규칙: 막대 위에 라벨을 놓을 자리(막대 top - 라벨 높이)가 **곡선보다 위**로 올라가면
+ *       곡선과 겹친다 → 그 칸은 라벨을 막대 안으로 내린다.
+ * 지금 데이터에서는 2021 한 칸만 걸린다(곡선이 바닥 근처를 지나는 해). */
+const LABEL_H = 44; // 라벨 높이 + 막대와의 간격(정규화 1000 기준)
+for (const p of points) {
+  if (p.dir !== "up" || p.hEst) continue; // 추정 칸은 이미 막대 안에 실측값을 흰 글씨로 쓴다
+  const barTop = zeroNorm - parseFloat(p.h) * 10; // % → 정규화 1000
+  const curveY = ly(at(wolse, `${p.year}-06`) ?? lMin);
+  /* 막대가 라벨을 품을 만큼 높지 않으면 오히려 글자가 막대를 넘친다 — 그때는 그냥 위에 둔다 */
+  if (barTop - LABEL_H < curveY && parseFloat(p.h) * 10 > LABEL_H + 18) p.valueInside = true;
+}
 
 /* 실측/추정 경계선 — 마지막 막대의 왼쪽 경계에 세운다 */
 const splitAt = partialRow ? `${((points.length - 1) / points.length) * 100}%` : "";
