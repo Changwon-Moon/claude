@@ -13,7 +13,8 @@
     "colGap": { "type": "string", "description": "막대 간격. 기본 12px" },
     "splitAt": { "type": "string", "description": "실측/추정 경계 세로 점선 위치(%). 추정이 있을 때만" },
     "arrow": { "type": "boolean", "description": "빈 공간을 지나 추정치 카드로 향하는 우상향 곡선(장식). 막대 뒤 레이어" },
-    "stamp": { "type": "boolean", "description": "플롯 좌상단 wirit 워터마크" },
+    "stamp": { "type": "boolean", "description": "0선 아래 빈 칸(후반 연도 밑)의 wirit 워터마크" },
+    "stamp2": { "type": "boolean", "description": "지수 곡선 아래·막대 위 빈 칸의 wirit 워터마크. 초년도 막대가 0선 아래에만 있을 때만 켠다 — 아니면 막대를 덮는다" },
     "points": {
       "type": "array",
       "minItems": 3,

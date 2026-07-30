@@ -201,22 +201,20 @@
       }
 
       /* 막대: 0선에서 위(오름) 또는 아래(내림)로 자란다 */
-      /* ── 좌측 정보 블록 ──
-       * 초년도(2016~2020)는 값이 0 근처라 **0선 위쪽 좌측이 데이터가 없는 사분면**이다.
-       * 그 빈 칸에 지수 카드와 추정 배지를 넣는다(오너 지시: 카드들을 그래프 좌측 공백으로).
-       * 폭은 5칸(2016~2020) 정도 — 2021 막대를 덮지 않는 선. */
-      /* 2026-07-30 오너 3차: 카드 두 장을 **좌우로** 놓는다(좌 = 월세지수, 우 = 상승률).
+      /* ── 제목 아래 강조 카드 (2026-07-30 오너 3차) ──
+       * 카드 두 장을 **좌우로** 놓는다(좌 = 월세지수, 우 = 상승률).
        * 세로로 쌓으면 좌측 기둥이 길어져 2021 막대까지 내려온다. 가로로 누이면 높이가 절반이라
-       * 곡선·막대와 안 부딪힌다. top 여백은 제목과 붙지 않게 띄운 값이다. */
+       * 곡선·막대와 안 부딪힌다. top 여백은 제목과 붙지 않게 띄운 값이다.
+       * 폭 78% — 4차 지시로 66%→78% 키웠다. 더 넓히면 마지막 칸의 +9.2% 값 라벨과 부딪힌다. */
       .yc-side {
         position: absolute;
         left: 0;
         top: 34px;
-        width: 66%;
+        width: 78%;
         display: flex;
         flex-direction: row;
         align-items: stretch;
-        gap: 16px;
+        gap: 18px;
         z-index: 4;
       }
 
@@ -339,14 +337,19 @@
         min-width: 0;
         display: flex;
         align-items: center;
-        padding: 22px 24px;
-        border-radius: 20px;
+        padding: 28px 30px;
+        border-radius: 24px;
         z-index: 4;
       }
+      /* 카드 글자 — 4차 지시로 31px → 39px. 두 카드가 2줄로 접히는 걸 전제로 잡은 값이다.
+       * 더 키우면 3줄로 접혀 카드가 곡선까지 내려온다(렌더로 확인). */
       .yc-card .ln {
-        font-size: 31px;
+        font-size: 39px;
         font-weight: 800;
-        line-height: 1.3;
+        /* ⚠️ 한국어는 기본값(break-all 성향)이면 단어 중간에서 끊긴다 — "역사상 최 / 고 103.9".
+         * keep-all 로 어절 단위로만 접히게 못박는다. */
+        word-break: keep-all;
+        line-height: 1.28;
         letter-spacing: -0.03em;
         color: var(--wirit-ink);
       }
@@ -361,7 +364,7 @@
       /* (추정) — 유일하게 작은 글자. 작아도 반드시 붙는다: 이 숫자는 원자료에 없다. */
       .yc-card .ln i {
         font-style: normal;
-        font-size: 23px;
+        font-size: 28px;
         font-weight: 800;
         color: var(--wirit-gray);
         margin-left: 2px;
@@ -488,6 +491,10 @@
           {{!-- 워터마크는 0선 **아래** 빈 칸(후반 연도 밑 — 음수 막대가 없는 구간)에.
                 오너 지시 2026-07-30. 데이터 위에 얹지 않는다(base.css 규칙). --}}
           {{#if stamp}}<span class="wirit-stamp" style="left: 58%; top: calc({{zeroAt}} + 44px)">@wirit_note</span>{{/if}}
+          {{!-- 두 번째 스탬프(4차 지시) — **지수 곡선 아래·막대 위** 빈 칸.
+                초년도(2016~2020)는 막대가 0선 아래에만 있어 0선 바로 위가 통째로 빈다.
+                0선에서 위로 띄워 앉히므로 데이터 위에 얹히지 않는다(base.css 규칙). --}}
+          {{#if stamp2}}<span class="wirit-stamp" style="left: 13%; top: calc({{zeroAt}} - 74px)">@wirit_note</span>{{/if}}
           {{#if splitAt}}<span class="yc-split" style="--split-at: {{splitAt}}"></span>{{/if}}
           <span class="yc-zero"></span>
           <div class="yc-cols">
