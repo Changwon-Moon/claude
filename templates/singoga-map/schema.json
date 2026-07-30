@@ -6,7 +6,9 @@
     "template": { "type": "string" }, "date": { "type": "string" }, "note": { "type": "string" },
     "title": { "type": "string" }, "subtitle": { "type": "string" },
     "mapSvg": { "type": "string" }, "rows": { "type": "array", "items": { "type": "object" } },
-    "totalHits": { "type": "number" }, "source": { "type": "object" }
+    "totalHits": { "type": "number" }, "source": { "type": "object" },
+    "unit": { "type": "string", "maxLength": 4, "description": "값 뒤 단위. 없으면 '건'(기존 카드 호환)" },
+    "subUnit": { "type": "string", "maxLength": 8, "description": "보조값(ratio) 앞에 붙일 말. 없으면 뒤에 '%'" }
   },
   "additionalProperties": true
 }

@@ -160,36 +160,38 @@ const PAPER = [250, 250, 248];
 const RISE = [176, 11, 30];
 const FALL = [23, 65, 168];
 
-function card({ seriesKey, label, titleFn }) {
-  const vals = valuesOf(seriesKey);
-  const nums = [...vals.values()];
-  const mn = Math.min(...nums);
-  const mx = Math.max(...nums);
-  const posMax = Math.max(0, mx);
-  const negMax = Math.max(0, -mn);
-  const colorOf = (v) =>
-    v >= 0 ? ramp(PAPER, RISE, posMax ? v / posMax : 0) : ramp(PAPER, FALL, negMax ? -v / negMax : 0);
-  const isDark = (v) => (v >= 0 ? (posMax ? v / posMax : 0) : negMax ? -v / negMax : 0) > 0.6;
-
-  const mapSvg = choroplethSvg({
-    parts: PARTS, // 지정 40곳만 그린다 — 화면도 이 40곳으로 채워진다
+/**
+ * 지도 SVG 하나를 만든다.
+ * @param small 지도가 카드의 오른쪽 절반만 차지하는 경우(지도+표 포맷) — 라벨을 못 넣는다.
+ *              40곳 라벨을 554px 폭에 넣으면 서로 덮는다. 숫자는 표가 말한다.
+ */
+function mapOf({ vals, colorOf, isDark, small = false, labelTop = 0 }) {
+  const ranked = [...vals.entries()].sort((a, b) => b[1] - a[1]);
+  const topSet = new Set(ranked.slice(0, labelTop).map(([g]) => g));
+  return choroplethSvg({
+    parts: PARTS,
     margin: 0.03,
     geoClass: "mc-geo",
     extraStyle:
-      ".mc-geo{stroke:#fff;stroke-width:2.4}.mc-lab .g{font-weight:800}.mc-lab .v{font-weight:900}",
+      `.mc-geo{stroke:#fff;stroke-width:${small ? 1.6 : 2.4}}` +
+      ".mc-lab .g{font-weight:800}.mc-lab .v{font-weight:900}",
     value: (geoName, { area, maxArea }) => {
       const t = TARGET.get(geoName);
       if (!t) return null;
       const v = vals.get(geoName);
+      const fill = colorOf(v);
+      const base = { fill, textFill: isDark(v) ? "#ffffff" : "#1c2431", halo: fill };
+      if (small) {
+        /* 좁은 패널: 상위 몇 곳만 이름을 적는다. 전부 적으면 아무것도 안 읽힌다. */
+        if (!topSet.has(geoName)) return { ...base, lines: [] };
+        return { ...base, dy: 6, lines: [{ text: t.label, cls: "g", size: 30 }] };
+      }
       /* 40곳은 25곳보다 훨씬 촘촘하다 — 글자 크기를 면적으로 정하고 하한을 낮춘다 */
       const k = Math.pow(area / maxArea, 0.28);
       const nameSize = Math.round(Math.max(15, Math.min(27, 27 * k)));
       const valSize = Math.round(nameSize * 1.14);
-      const fill = colorOf(v);
       return {
-        fill,
-        textFill: isDark(v) ? "#ffffff" : "#1c2431",
-        halo: fill,
+        ...base,
         dy: -Math.round(valSize * 0.2),
         lines: [
           { text: t.label, cls: "g", size: nameSize },
@@ -198,7 +200,41 @@ function card({ seriesKey, label, titleFn }) {
       };
     },
   });
+}
 
+/** 계열의 색 함수 묶음 — 오름=레드, 내림=코발트, 0에서 종이색. */
+function palette(vals) {
+  const nums = [...vals.values()];
+  const mn = Math.min(...nums);
+  const mx = Math.max(...nums);
+  const posMax = Math.max(0, mx);
+  const negMax = Math.max(0, -mn);
+  return {
+    mn,
+    mx,
+    colorOf: (v) =>
+      v >= 0 ? ramp(PAPER, RISE, posMax ? v / posMax : 0) : ramp(PAPER, FALL, negMax ? -v / negMax : 0),
+    isDark: (v) => (v >= 0 ? (posMax ? v / posMax : 0) : negMax ? -v / negMax : 0) > 0.6,
+  };
+}
+
+/* 표·캡션에서는 **시 이름까지** 밝힌다 — 지도에선 좁아서 짧게 썼으니 글에서 갚는다 */
+const FULL = {
+  화성시동탄구: "화성 동탄구",
+  성남시수정구: "성남 수정구", 성남시중원구: "성남 중원구", 성남시분당구: "성남 분당구",
+  수원시장안구: "수원 장안구", 수원시팔달구: "수원 팔달구", 수원시영통구: "수원 영통구",
+  안양시동안구: "안양 동안구", 용인시수지구: "용인 수지구", 용인시기흥구: "용인 기흥구",
+};
+const nameOf = (g) => FULL[g] || TARGET.get(g).label;
+
+/* 최하단 설명 문구 — 오너 지시(2026-07-30): "동탄구는 화성시 전체 수치 기준" */
+const DONGTAN_NOTE = "※ 동탄구는 화성시 전체 수치 기준입니다";
+
+/** 지도 한 장 카드 (map-choropleth@1) — 값을 지도 위에 다 적는다. */
+function mapCard({ seriesKey, label, titleFn }) {
+  const vals = valuesOf(seriesKey);
+  const { mn, mx, colorOf, isDark } = palette(vals);
+  const mapSvg = mapOf({ vals, colorOf, isDark });
   const ranked = [...vals.entries()].sort((a, b) => b[1] - a[1]);
   const title = titleFn(ranked);
   if ([...title].length > 20) throw new Error(`제목이 너무 길다(${[...title].length}자): ${title}`);
@@ -212,11 +248,7 @@ function card({ seriesKey, label, titleFn }) {
     /* 오너 지시: 하단 범례 삭제. 값이 지도 위에 다 적혀 있어 색 눈금이 필요 없다.
      * 다만 **기준·한계 문구는 남긴다** — 그건 범례가 아니라 정직의 문제다. */
     hideLegend: true,
-    /* 한 줄에 담기게 짧게. 나머지 한계는 캡션에 적는다 — 카드에 다 넣으면 아무도 안 읽는다 */
-    /* 오너 지시: 동탄구 표기의 한계를 **별도 설명으로** 아래에 둔다 */
-    footnote:
-      `서울 25구 전역 + 경기 15곳 · ${label} · ${ymKo(BASE)} 대비 ${ymKo(asOf)}\n` +
-      `※ 동탄구는 경계만 동탄이고 지수는 화성시 전체 기준입니다(동탄구 지수는 2026년 분구 이후치뿐)`,
+    footnote: `서울 25구 전역 + 경기 15곳 · ${label} · ${ymKo(BASE)} 대비 ${ymKo(asOf)}\n${DONGTAN_NOTE}`,
     colorLo: colorOf(mn),
     colorHi: colorOf(mx),
     topName: ranked[0][0],
@@ -229,15 +261,75 @@ function card({ seriesKey, label, titleFn }) {
   };
 }
 
-const p1 = card({
+/**
+ * 지도 + 행정구역 표 카드 (singoga-map@1) — 이미 쓰던 '토허제 신고가' 카드와 같은 포맷.
+ *
+ * 40곳을 한 표에 다 넣을 수 없다(칸이 20줄쯤 들어간다). 그래서 **상위 N + 하위 3 + 생략 표시**로
+ * 자르고, 몇 곳을 생략했는지 표 안에 적는다 — 조용히 자르면 "40곳 다 보여준 표"로 읽힌다.
+ * 지도는 색만 말하고(라벨은 상위 3곳), 숫자는 표가 말한다.
+ */
+function rankCard({ seriesKey, label, titleFn, subtitle }) {
+  const vals = valuesOf(seriesKey);
+  const { colorOf, isDark } = palette(vals);
+  const ranked = [...vals.entries()].sort((a, b) => b[1] - a[1]);
+
+  /* 표에 몇 줄이 들어가는지는 렌더로 재 봤다: 상위 12 + 하위 3 이 한계다.
+   * 15+3 은 표가 푸터를 덮었고, 13+3 은 마지막 줄이 하단 설명에 닿았다. */
+  const TOP = 12;
+  const TAIL = 3;
+  const omitted = ranked.length - TOP - TAIL;
+  if (omitted < 1) throw new Error(`표 자르기 계산이 안 맞다 — 대상 ${ranked.length}곳`);
+
+  const MEDALS = ["🥇", "🥈", "🥉"];
+  const row = (entry, i) => ({
+    rank: i + 1,
+    medal: MEDALS[i] || "",
+    top: i < 3,
+    gu: nameOf(entry[0]),
+    hits: sign1(entry[1]),
+  });
+  const rows = ranked.slice(0, TOP).map(row);
+  const tailRows = ranked.slice(-TAIL).map((e) => row(e, ranked.indexOf(e)));
+
+  const title = titleFn(ranked);
+  return {
+    template: "singoga-map@1",
+    date,
+    compact: true,
+    hideFooterId: false,
+    note: `토지거래허가구역 40곳 · 서울 25구 전역 + 경기 15곳`,
+    title,
+    subtitle,
+    unit: "%", // 기본값은 '건' — 이 카드는 상승률이라 단위를 바꿔 넘긴다
+    head: { l: "지역", r: `${label} 상승률` },
+    mapSvg: mapOf({ vals, colorOf, isDark, small: true, labelTop: 3 }),
+    rows,
+    tail: {
+      rows: tailRows,
+      note: `가운데 <b>${omitted}곳</b> 생략 · 40곳 전부 캡션에`,
+    },
+    footnote: `${ymKo(BASE)}(임대차 2법 시행월) 대비 ${ymKo(asOf)} · ${DONGTAN_NOTE}`,
+    /* 푸터는 한 줄이다 — 길면 두 줄로 밀려 잘린다. 고시 출처는 캡션이 밝힌다. */
+    source: {
+      name: `한국부동산원 ${label}가격지수 · 허가구역 고시`,
+      period: `${BASE.replace("-0", ".")}→${asOf.replace("-0", ".")}`,
+    },
+  };
+}
+
+/* p1 — 오너 지시(2026-07-30): 월세 카드는 '토허제 신고가' 카드와 같은 지도+표 포맷으로 */
+const p1 = rankCard({
   seriesKey: "wolse",
-  label: "월세가격지수",
+  label: "월세",
+  subtitle: `${ymKo(BASE)} 이후 월세가격지수 상승률`,
   titleFn: (ranked) => {
     const up = ranked.filter(([, v]) => v > 0).length;
-    return up === ranked.length ? `토허제 40곳, 월세 전부 올랐다` : `토허제 40곳 월세 상승률`;
+    return up === ranked.length
+      ? `토허제 40곳, <span class="hi">월세 전부</span> 올랐다`
+      : `토허제 40곳 월세 상승률`;
   },
 });
-const p2 = card({
+const p2 = mapCard({
   seriesKey: "jeonse",
   label: "전세가격지수",
   titleFn: (ranked) => {
@@ -255,14 +347,6 @@ writeFileSync(join(outDir, "tohuh-rent-map-p2.json"), JSON.stringify(p2, null, 2
 const w = valuesOf("wolse");
 const j = valuesOf("jeonse");
 const rank = (m) => [...m.entries()].sort((a, b) => b[1] - a[1]);
-/* 캡션에서는 **시 이름까지** 밝힌다 — 지도에선 짧게 썼으니 글에서 갚는다 */
-const FULL = {
-  화성시동탄구: "화성 동탄구",
-  성남시수정구: "성남 수정구", 성남시중원구: "성남 중원구", 성남시분당구: "성남 분당구",
-  수원시장안구: "수원 장안구", 수원시팔달구: "수원 팔달구", 수원시영통구: "수원 영통구",
-  안양시동안구: "안양 동안구", 용인시수지구: "용인 수지구", 용인시기흥구: "용인 기흥구",
-};
-const nameOf = (g) => FULL[g] || TARGET.get(g).label;
 const wR = rank(w);
 const jDown = rank(j).filter(([, v]) => v < 0);
 const gapR = [...w.entries()].map(([g, v]) => [g, v - j.get(g)]).sort((a, b) => b[1] - a[1]);
@@ -290,13 +374,16 @@ const caption = [
   `두 숫자의 차이가 가장 큰 곳은 ${nameOf(gapR[0][0])}입니다.`,
   `월세 ${sign1(w.get(gapR[0][0]))}% / 전세 ${sign1(j.get(gapR[0][0]))}%`,
   ``,
+  `[월세 상승률 40곳 전체]`,
+  ...wR.map(([g, v], i) => `${i + 1}. ${nameOf(g)} ${sign1(v)}%`),
+  ``,
   `📌 저장해두고 우리 동네 두 숫자를 비교해 보기`,
   ``,
   `—`,
   `📊 가격 : 한국부동산원 「전국주택가격동향조사」 아파트 월세·전세가격지수`,
   `   (${ymKo(asOf)} 공표분 · ${ymKo(BASE)} 대비)`,
   `🗂 허가구역 : 서울시·경기도 토지거래허가구역 지정 고시`,
-  `※ 동탄구는 지도 경계만 동탄구(2013 읍면동 합성)이고, 지수는 화성시 전체 기준입니다.`,
+  `※ 동탄구는 화성시 전체 수치 기준입니다. 지도 경계는 동탄구(2013 읍면동 합성)지만,`,
   `   동탄구 지수는 2026년 분구 이후 6개월치뿐이어서 2020년과 비교할 수 없습니다.`,
   `※ 그 외 지역은 시·군·구 경계 기준입니다.`,
   `※ 기준으로 잡은 ${ymKo(BASE)}은 시행일이 확인된 기준점이어서 쓴 것이며,`,

@@ -92,7 +92,7 @@
           <div class="sm-row{{#if this.top}} top{{/if}}">
             <span class="sm-rk">{{#if this.medal}}<span class="medal">{{this.medal}}</span>{{else}}{{this.rank}}{{/if}}</span>
             <span class="sm-gu">{{this.gu}}</span>
-            <span class="sm-val"><span class="h">{{this.hits}}<i>건</i></span>{{#if this.ratio}}<span class="r">거래 중 {{this.ratio}}%</span>{{/if}}</span>
+            <span class="sm-val"><span class="h">{{this.hits}}<i>{{#if ../unit}}{{../unit}}{{else}}건{{/if}}</i></span>{{#if this.ratio}}<span class="r">{{#if ../subUnit}}{{../subUnit}} {{/if}}{{this.ratio}}{{#unless ../subUnit}}%{{/unless}}</span>{{/if}}</span>
           </div>
           {{/each}}
 
@@ -103,7 +103,7 @@
             <div class="sm-row">
               <span class="sm-rk">{{this.rank}}</span>
               <span class="sm-gu">{{this.gu}}</span>
-              <span class="sm-val"><span class="h">{{this.hits}}<i>건</i></span></span>
+              <span class="sm-val"><span class="h">{{this.hits}}<i>{{#if ../unit}}{{../unit}}{{else}}건{{/if}}</i></span></span>
             </div>
             {{/each}}
             <div class="sm-tailnote"><span class="br"></span><span class="tx">{{{tail.note}}}</span></div>
