@@ -11,10 +11,16 @@
  * 경기 시·군·구 24곳이 서울 순위표에 섞여 1위가 영통구(수원)로 나왔다(2026-07-30).
  * 그래서 **경계 이름 → R-ONE 코드**를 아래 표에 하나씩 적는다. 명단은 틀리면 눈에 보인다.
  *
- * ── 화성시에 대한 정직 표기
- * 허가구역은 **동탄 일대**인데, R-ONE 동탄구 계열은 2026-01 분구 이후 6개월치뿐이라
- * 2020-07 기준 비교를 할 수 없다. 그래서 **화성시 전체** 지수를 쓰고 카드에 그렇게 적는다.
- * 동탄 값을 쓴 척하는 것이 오보다.
+ * ── 그리는 범위: 지정된 40곳만 (2026-07-30 오너 지시)
+ * 미지정 지역을 회색 배경으로 깔지 않는다. 화면도 40곳으로 꽉 채운다.
+ * 이미 만들어 둔 토허제 지도(build-tohuh-rank.mjs)와 같은 규칙이다.
+ *
+ * ── 화성 동탄구: 경계는 동탄, 수치는 화성시
+ * 허가구역은 **동탄구만**이다. 그래서 지도에도 **동탄구 경계만** 그린다
+ * (2013 읍면동 동탄면·동탄1~3동 합성 — tohuh-2026.json 의 subCodes).
+ * 다만 R-ONE 동탄구 지수는 2026-01 분구 이후 6개월치뿐이라 2020-07 비교가 불가능해서,
+ * **수치는 화성시 전체 기준**을 쓴다. 경계와 수치의 단위가 다르므로 카드 아래에 따로 밝힌다.
+ * 동탄 값인 척하는 것이 오보다.
  *
  * 실행: node scripts/build-tohuh-rent-map.mjs [date=2026-07-30]
  * 출력: data/content/{date}/tohuh-rent-map-p1.json, -p2.json
@@ -22,7 +28,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { choroplethSvg, ramp } from "./lib/seoul-map.mjs";
+import { choroplethSvg, ramp, readGeo } from "./lib/seoul-map.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const date = process.argv[2] || "2026-07-30";
@@ -54,8 +60,8 @@ const GG_CODE = {
   안양시동안구: "530046",
   용인시수지구: "530058",
   용인시기흥구: "530057",
-  // 허가구역은 동탄 일대지만 동탄구 계열은 2026-01 분구 후 6개월치뿐 → 시 전체로 잰다
-  화성시: "520032",
+  // 경계는 동탄구, 수치는 화성시(520032) — 동탄구 지수가 2026-01 분구 이후치뿐이다
+  화성시동탄구: "520032",
 };
 /**
  * 지도에 적을 짧은 이름.
@@ -65,6 +71,7 @@ const GG_CODE = {
  * (첫 렌더에서 수원팔달/수원영통, 성남수정/성남중원이 겹쳤다). 시 이름은 캡션이 밝힌다.
  */
 const GG_LABEL = {
+  화성시동탄구: "동탄",
   성남시수정구: "수정",
   성남시중원구: "중원",
   성남시분당구: "분당",
@@ -74,7 +81,6 @@ const GG_LABEL = {
   안양시동안구: "동안",
   용인시수지구: "수지",
   용인시기흥구: "기흥",
-  화성시: "화성",
   과천시: "과천",
   광명시: "광명",
   구리시: "구리",
@@ -83,10 +89,8 @@ const GG_LABEL = {
 };
 
 /* 지정 목록과 매칭표가 어긋나면 지도에 구멍이 난다 — 조용히 빠지지 않게 먼저 검사한다 */
-const designated = [...tohuh.newly.areas, ...tohuh.existing.areas].map((a) => a.geoName);
-const geoNameOf = (g) => (g === "화성시동탄구" ? "화성시" : g);
-const ggWanted = [...new Set(designated.map(geoNameOf))];
-const missing = ggWanted.filter((n) => !GG_CODE[n]);
+const GG_AREAS = [...tohuh.newly.areas, ...tohuh.existing.areas];
+const missing = GG_AREAS.map((a) => a.geoName).filter((n) => !GG_CODE[n]);
 if (missing.length) {
   throw new Error(
     `토허제 지정 지역 중 매칭표에 없는 곳: ${missing.join(", ")}\n` +
@@ -116,6 +120,27 @@ for (const [geoName, code] of Object.entries(GG_CODE)) {
   TARGET.set(geoName, { code, label: GG_LABEL[geoName] || geoName });
 }
 if (TARGET.size !== 40) throw new Error(`대상이 40곳이 아니다: ${TARGET.size}곳`);
+
+/* ── 그릴 도형 40개를 직접 만든다 ──
+ * 미지정 지역은 아예 안 그린다(오너 지시). 그래서 배경 필터가 아니라 **명시 목록**을 넘긴다.
+ * 동탄구처럼 2013 경계에 없는 신설 구는 읍면동(subCodes)을 합성해 만든다 —
+ * 화성시 전체를 칠하면 지정되지 않은 향남·봉담까지 규제 지역처럼 보인다. */
+const muni = readGeo("capital");
+const sub = readGeo("sub");
+const SUB_CODES = new Map(GG_AREAS.filter((a) => a.subCodes).map((a) => [a.geoName, a.subCodes]));
+const PARTS = [...TARGET.keys()].map((geoName) => {
+  const codes = SUB_CODES.get(geoName);
+  if (codes) {
+    const features = sub.features.filter((f) => codes.includes(String(f.properties.code)));
+    if (features.length !== codes.length) {
+      throw new Error(`합성 경계 누락: ${geoName} (${features.length}/${codes.length}) — subCodes 확인 필요`);
+    }
+    return { name: geoName, features };
+  }
+  const f = muni.features.find((x) => x.properties.name === geoName);
+  if (!f) throw new Error(`경계를 못 찾았다: ${geoName} — korea-municipalities.geojson 이름 표기 확인`);
+  return { name: geoName, features: [f] };
+});
 
 /** 계열별 값 표(경계 이름 → %). 값이 하나라도 비면 던진다 — 구멍 난 지도는 오보다. */
 function valuesOf(seriesKey) {
@@ -147,20 +172,14 @@ function card({ seriesKey, label, titleFn }) {
   const isDark = (v) => (v >= 0 ? (posMax ? v / posMax : 0) : negMax ? -v / negMax : 0) > 0.6;
 
   const mapSvg = choroplethSvg({
-    scope: "capital",
-    /* 화면은 **40곳으로** 채운다. 경기 전체 bbox 로 그리면 대상이 중앙에 뭉쳐
-     * 서울 라벨을 읽을 수 없다(첫 렌더에서 그랬다). 잘려도 되는 건 배경이다. */
-    framedBy: (name) => TARGET.has(name),
-    margin: 0.05,
+    parts: PARTS, // 지정 40곳만 그린다 — 화면도 이 40곳으로 채워진다
+    margin: 0.03,
     geoClass: "mc-geo",
-    blankClass: "mc-bg",
-    blankFill: "#e9ecf1", // 미지정 지역 — 지리 맥락으로만 남긴다
     extraStyle:
-      ".mc-geo{stroke:#fff;stroke-width:2}.mc-bg{stroke:#fff;stroke-width:1.2}" +
-      ".mc-lab .g{font-weight:800}.mc-lab .v{font-weight:900}",
+      ".mc-geo{stroke:#fff;stroke-width:2.4}.mc-lab .g{font-weight:800}.mc-lab .v{font-weight:900}",
     value: (geoName, { area, maxArea }) => {
       const t = TARGET.get(geoName);
-      if (!t) return null; // 토허제 미지정 → 배경
+      if (!t) return null;
       const v = vals.get(geoName);
       /* 40곳은 25곳보다 훨씬 촘촘하다 — 글자 크기를 면적으로 정하고 하한을 낮춘다 */
       const k = Math.pow(area / maxArea, 0.28);
@@ -194,8 +213,10 @@ function card({ seriesKey, label, titleFn }) {
      * 다만 **기준·한계 문구는 남긴다** — 그건 범례가 아니라 정직의 문제다. */
     hideLegend: true,
     /* 한 줄에 담기게 짧게. 나머지 한계는 캡션에 적는다 — 카드에 다 넣으면 아무도 안 읽는다 */
+    /* 오너 지시: 동탄구 표기의 한계를 **별도 설명으로** 아래에 둔다 */
     footnote:
-      `서울 25구 전역 + 경기 15곳 · ${label} · ${ymKo(BASE)} 대비 ${ymKo(asOf)} · 화성은 시 전체 기준`,
+      `서울 25구 전역 + 경기 15곳 · ${label} · ${ymKo(BASE)} 대비 ${ymKo(asOf)}\n` +
+      `※ 동탄구는 경계만 동탄이고 지수는 화성시 전체 기준입니다(동탄구 지수는 2026년 분구 이후치뿐)`,
     colorLo: colorOf(mn),
     colorHi: colorOf(mx),
     topName: ranked[0][0],
@@ -236,6 +257,7 @@ const j = valuesOf("jeonse");
 const rank = (m) => [...m.entries()].sort((a, b) => b[1] - a[1]);
 /* 캡션에서는 **시 이름까지** 밝힌다 — 지도에선 짧게 썼으니 글에서 갚는다 */
 const FULL = {
+  화성시동탄구: "화성 동탄구",
   성남시수정구: "성남 수정구", 성남시중원구: "성남 중원구", 성남시분당구: "성남 분당구",
   수원시장안구: "수원 장안구", 수원시팔달구: "수원 팔달구", 수원시영통구: "수원 영통구",
   안양시동안구: "안양 동안구", 용인시수지구: "용인 수지구", 용인시기흥구: "용인 기흥구",
@@ -274,9 +296,9 @@ const caption = [
   `📊 가격 : 한국부동산원 「전국주택가격동향조사」 아파트 월세·전세가격지수`,
   `   (${ymKo(asOf)} 공표분 · ${ymKo(BASE)} 대비)`,
   `🗂 허가구역 : 서울시·경기도 토지거래허가구역 지정 고시`,
-  `※ 화성은 허가구역이 동탄 일대지만, 동탄구 지수가 2026년 분구 이후치뿐이어서`,
-  `   화성시 전체 기준으로 표기했습니다.`,
-  `※ 지도는 시·군·구 경계 기준입니다. 실제 허가구역이 일부인 곳이 있습니다.`,
+  `※ 동탄구는 지도 경계만 동탄구(2013 읍면동 합성)이고, 지수는 화성시 전체 기준입니다.`,
+  `   동탄구 지수는 2026년 분구 이후 6개월치뿐이어서 2020년과 비교할 수 없습니다.`,
+  `※ 그 외 지역은 시·군·구 경계 기준입니다.`,
   `※ 기준으로 잡은 ${ymKo(BASE)}은 시행일이 확인된 기준점이어서 쓴 것이며,`,
   `   특정 제도가 원인이라는 뜻이 아닙니다.`,
   ``,

@@ -24,6 +24,8 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "../..");
 const GEO_FILES = {
   seoul: { file: "data/geo/seoul-districts.geojson", codes: null },
   capital: { file: "data/geo/korea-municipalities.geojson", codes: /^(11|31)/ },
+  // 읍면동 — 2013 경계에 없는 신설 구(화성 동탄구 등)를 합성할 때 쓴다
+  sub: { file: "data/geo/korea-submunicipalities.geojson", codes: null },
 };
 
 const rings = (geom) =>
@@ -37,22 +39,17 @@ const rings = (geom) =>
  * 경계 파일을 읽고 화면 좌표 변환기를 만든다. W=1000 고정(템플릿이 100% 폭으로 늘린다).
  * ⚠️ bbox 는 **그릴 지형 전체**로 잡는다. 색칠할 지역만으로 잡으면 배경(맥락) 지역이 잘린다.
  */
-export function loadSeoulGeo({ width = 1000, pad = 6, scope = "seoul", framedBy = null, margin = 0.04 } = {}) {
-  const spec = GEO_FILES[scope];
-  if (!spec) throw new Error(`모르는 경계 범위: ${scope} (${Object.keys(GEO_FILES).join(", ")})`);
-  const raw = JSON.parse(readFileSync(join(ROOT, spec.file), "utf8"));
-  const geo = spec.codes
-    ? { ...raw, features: raw.features.filter((f) => spec.codes.test(String(f.properties.code || ""))) }
-    : raw;
-  if (!geo.features.length) throw new Error(`경계가 비었다: ${spec.file} (${scope})`);
-
-  /* ── 화면을 무엇으로 채울지 (framedBy) ──
-   * bbox 를 그리는 지형 **전체**로 잡으면, 대상이 일부에 몰린 지도는 대상이 깨알처럼 작아진다.
-   * 실제로 토허제 40곳 지도를 경기 전체 bbox 로 그렸더니 서울이 뭉개져 라벨을 읽을 수 없었다.
-   * framedBy(이름 → boolean)를 주면 **그 지역들만으로 bbox** 를 잡고, 나머지는 배경으로
-   * 그려지다가 viewBox 밖으로 잘린다 — 잘려도 되는 건 맥락이고, 잘리면 안 되는 건 대상이다. */
-  const framing = framedBy ? geo.features.filter((f) => framedBy(f.properties.name)) : geo.features;
-  if (!framing.length) throw new Error("framedBy 가 아무 지역도 고르지 못했다 — 이름 표기를 확인하세요");
+/**
+ * 주어진 도형들을 화면에 꽉 채우는 좌표 변환기.
+ *
+ * ── 무엇으로 화면을 채우나 (framing)
+ * bbox 를 그리는 지형 **전체**로 잡으면, 대상이 일부에 몰린 지도는 대상이 깨알처럼 작아진다.
+ * 실제로 토허제 40곳 지도를 경기 전체 bbox 로 그렸더니 서울이 뭉개져 라벨을 읽을 수 없었다.
+ * 그래서 **채울 대상만** framing 으로 넘긴다. 배경은 그려지다가 viewBox 밖으로 잘린다 —
+ * 잘려도 되는 건 맥락이고, 잘리면 안 되는 건 대상이다.
+ */
+export function projector(framing, { width = 1000, pad = 6, margin = 0.04 } = {}) {
+  if (!framing?.length) throw new Error("좌표 변환기: 채울 도형이 없다");
   let minLon = 999,
     maxLon = -999,
     minLat = 999,
@@ -77,13 +74,31 @@ export function loadSeoulGeo({ width = 1000, pad = 6, scope = "seoul", framedBy 
   const scale = width / ((maxLon - minLon) * kx);
   const height = Math.round((maxLat - minLat) * scale);
   return {
-    geo,
     width,
     height,
     pad,
     px: (lon) => pad + (lon - minLon) * kx * scale,
     py: (lat) => pad + (maxLat - lat) * scale,
   };
+}
+
+/** 경계 파일을 읽는다(코드 필터 적용). scope 는 GEO_FILES 의 키. */
+export function readGeo(scope) {
+  const spec = GEO_FILES[scope];
+  if (!spec) throw new Error(`모르는 경계 범위: ${scope} (${Object.keys(GEO_FILES).join(", ")})`);
+  const raw = JSON.parse(readFileSync(join(ROOT, spec.file), "utf8"));
+  const geo = spec.codes
+    ? { ...raw, features: raw.features.filter((f) => spec.codes.test(String(f.properties.code || ""))) }
+    : raw;
+  if (!geo.features.length) throw new Error(`경계가 비었다: ${spec.file} (${scope})`);
+  return geo;
+}
+
+export function loadSeoulGeo({ width = 1000, pad = 6, scope = "seoul", framedBy = null, margin = 0.04 } = {}) {
+  const geo = readGeo(scope);
+  const framing = framedBy ? geo.features.filter((f) => framedBy(f.properties.name)) : geo.features;
+  if (!framing.length) throw new Error("framedBy 가 아무 지역도 고르지 못했다 — 이름 표기를 확인하세요");
+  return { geo, ...projector(framing, { width, pad, margin }) };
 }
 
 /**
@@ -150,6 +165,10 @@ export function ramp(lo, hi, t) {
  * @param opts.scope     "seoul"(서울 자치구) | "capital"(서울+경기 시·군·구)
  * @param opts.framedBy  (지역명) → boolean. 화면(bbox)을 채울 지역. 없으면 전체.
  * @param opts.margin    bbox 여유 비율(기본 0.04)
+ * @param opts.parts     [{ name, features[] }] — **그릴 도형을 직접 지정**한다.
+ *                       주면 scope/framedBy 대신 이 목록만 그린다(배경 없음).
+ *                       features 가 여럿이면 한 path 로 합쳐 내부 경계선이 안 보인다
+ *                       (읍면동을 합성해 신설 구를 만드는 경우 — 예: 화성 동탄구).
  * @param opts.blankClass 값 없는 지역의 path 클래스 — 색칠 지역과 테두리를 다르게 줄 때
  */
 export function choroplethSvg({
@@ -165,24 +184,37 @@ export function choroplethSvg({
   scope = "seoul",
   framedBy = null,
   margin = 0.04,
+  parts = null,
 } = {}) {
-  const { geo, height, px, py } = loadSeoulGeo({ width, pad, scope, framedBy, margin });
+  /* parts 를 주면 **그 도형만** 그린다(배경 없음). 화면도 그 도형들로 채운다. */
+  const groups = parts
+    ? parts.map((p) => ({ name: p.name, features: p.features, merged: p.features.length > 1 }))
+    : loadSeoulGeo({ width, pad, scope, framedBy, margin }).geo.features.map((f) => ({
+        name: f.properties.name,
+        features: [f],
+        merged: false,
+      }));
+  const proj = parts
+    ? projector(groups.flatMap((g) => g.features), { width, pad, margin })
+    : loadSeoulGeo({ width, pad, scope, framedBy, margin });
+  const { height, px, py } = proj;
 
   /* 도형을 먼저 다 재고(면적 포함) → 그 다음에 라벨을 만든다.
    * 라벨 크기를 면적 비율로 정하려면 **가장 큰 구를 알아야** 하므로 두 번 돈다. */
-  const shapes = geo.features.map((f) => {
+  const shapes = groups.map((g) => {
     let d = "";
     let biggest = null;
     let biggestLen = 0;
-    for (const ring of rings(f.geometry)) {
-      d += "M" + ring.map(([lo, la]) => `${px(lo).toFixed(1)},${py(la).toFixed(1)}`).join("L") + "Z";
-      if (ring.length > biggestLen) {
-        biggestLen = ring.length;
-        biggest = ring;
+    for (const f of g.features)
+      for (const ring of rings(f.geometry)) {
+        d += "M" + ring.map(([lo, la]) => `${px(lo).toFixed(1)},${py(la).toFixed(1)}`).join("L") + "Z";
+        if (ring.length > biggestLen) {
+          biggestLen = ring.length;
+          biggest = ring;
+        }
       }
-    }
     const pts = biggest.map(([lo, la]) => [px(lo), py(la)]);
-    return { name: f.properties.name, d, pts, area: polyArea(pts) };
+    return { name: g.name, d, pts, area: polyArea(pts), merged: g.merged };
   });
   const maxArea = Math.max(...shapes.map((s) => s.area));
 
@@ -200,7 +232,8 @@ export function choroplethSvg({
     paths += `<path class="${blankClass || geoClass}" d="${s.d}" fill="${blankFill}"/>`;
   }
   for (const [s, v] of withValue) {
-    paths += `<path class="${geoClass}" d="${s.d}" fill="${v.fill}"/>`;
+    /* 합성 도형은 내부 경계선(읍면동 경계)이 보이면 한 지역으로 안 읽힌다 → stroke 제거 */
+    paths += `<path class="${geoClass}${s.merged ? " is-merged" : ""}" d="${s.d}" fill="${v.fill}"${s.merged ? ' stroke="none"' : ""}/>`;
   }
   for (const [s, v] of withValue) {
     const [cx0, cy0] = centroid(s.pts);

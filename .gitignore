@@ -46,3 +46,6 @@ packages/tower-worker/_site/
 
 # 관제탑 폰트 사본 — 빌드 때 templates/_shared/fonts 에서 복사된다
 packages/dashboard/fonts/
+
+# 에이전트 작업용 워크트리 — 저장소에 들어가면 안 된다(내부에 또 다른 git 이다)
+.claude/worktrees/
