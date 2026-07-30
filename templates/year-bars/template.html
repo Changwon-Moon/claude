@@ -324,31 +324,28 @@
         z-index: 3;
       }
       /* 추정 막대에 붙는 꼬리표 — 그래픽만 잘라 써도 '추정'이 따라간다.
-       * **정사각 2줄**(오너 지시 6차: 하반기 / 추정). 알약형 1줄은 막대보다 넓어서
-       * 왼쪽으로 삐져나온 부분이 지수 곡선과 겹쳤다.
-       * 세로 위치는 추정 구간 **아래쪽**(0.14). 곡선은 이 구간을 왼쪽 아래 → 오른쪽 위로
-       * 가파르게 지나가므로, 가운데보다 아래에서 폭이 좁은 뱃지가 곡선을 피한다. */
+       * **뱃지(상자) 없이 글자만**(오너 지시 7차). 2줄(하반기 / 추정)은 유지 —
+       * 1줄은 막대보다 넓어져 삐져나온 쪽이 막대 경계를 타고 오르는 지수 곡선과 겹친다.
+       * ⚠️ 상자를 없앴으니 **글자색은 흰색이 아니라 진한 레드**다. 사선 바탕은 옅은 분홍이라
+       *    흰 글씨는 사라진다(상자가 있을 때만 흰 글씨가 성립했다).
+       * 세로 위치는 추정 구간 **아래쪽**(0.10) — 곡선이 이 구간을 왼쪽 아래 → 오른쪽 위로
+       * 가파르게 지나가므로 아래쪽이 곡선에서 멀다. */
       .yc-tag {
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
         bottom: calc(100% - var(--zero) + var(--h) + var(--he) * 0.10);
-        /* 막대보다 **좁게**(막대 폭 78px) — 뱃지가 막대보다 넓으면 삐져나온 쪽이
-         * 막대 왼쪽 경계를 타고 오르는 지수 곡선과 겹친다. */
         width: 70px;
-        height: 70px;
-        border-radius: 4px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
         gap: 1px;
-        background: #c0272d;
-        color: #fff;
-        font-size: 19px;
-        font-weight: 800;
-        line-height: 1.1;
+        color: #a5121f;
+        font-size: 21px;
+        font-weight: 900;
+        line-height: 1.12;
         letter-spacing: -0.04em;
+        text-align: center;
         white-space: nowrap;
         z-index: 4;
       }
