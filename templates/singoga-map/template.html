@@ -19,12 +19,22 @@
        * 켜는 조건은 빌더가 정한다(spread: true) — 행이 많은 카드에서 켜면 표가 넘친다. */
       .sm-spread .sm-rank .sm-row { flex: 1 1 0; min-height: 0; }
       .sm-rank .rh { font-size: 23px; font-weight: 800; color: var(--wirit-gray); padding: 0 6px 8px; display: flex; justify-content: space-between; }
-      /* 머리글 3열 모드 — 아래 데이터 행과 **같은 그리드**를 써서 열이 정확히 맞고,
-       * 각 칸을 가운데 정렬한다(오너 지시 2026-07-30: 순위 / 지역 / 월세 상승분).
-       * flex 2열 머리글은 열이 안 맞아 "지역"이 순위 칸 위에 오는 문제가 있었다. */
+      /* 머리글 3열 모드 (오너 지시 2026-07-30: 순위 / 지역 / 월세 상승분).
+       * ── 열이 안 맞았던 진짜 이유 (오너 지적: "지역 위치가 너무 오른쪽")
+       * 머리글과 데이터 행은 **서로 다른 그리드**다. 3열을 둘 다 `auto` 로 두면
+       * 머리글은 "월세 상승분" 폭, 행은 "+38만원" 폭으로 각자 계산해 열이 어긋난다.
+       * → 값 열을 **고정 폭**으로 못박아 두 그리드가 같은 자리에서 끊기게 한다.
+       * 정렬도 데이터에 맞춘다: 순위 가운데(.sm-rk) · 지역 왼쪽(.sm-gu) · 값 오른쪽(.sm-val).
+       * ⚠️ `.sm-h3` 로 스코프한다 — 이 클래스는 head.c 를 준 카드에만 붙는다.
+       *    전역으로 바꾸면 **발행된 신고가 카드**의 열 폭이 달라진다. */
       .sm-rank .rh.rh3 { display: grid; grid-template-columns: 62px 1fr auto; gap: 10px; }
-      .sm-c .sm-rank .rh.rh3 { grid-template-columns: 58px 1fr auto; gap: 8px; }
-      .sm-rank .rh.rh3 span { text-align: center; }
+      .sm-h3 .sm-rank .rh.rh3,
+      .sm-h3 .sm-rank .sm-row { grid-template-columns: 62px 1fr 176px; gap: 10px; }
+      .sm-h3.sm-c .sm-rank .rh.rh3,
+      .sm-h3.sm-c .sm-rank .sm-row { grid-template-columns: 58px 1fr 176px; gap: 8px; }
+      .sm-rank .rh.rh3 span:nth-child(1) { text-align: center; }
+      .sm-rank .rh.rh3 span:nth-child(2) { text-align: left; }
+      .sm-rank .rh.rh3 span:nth-child(3) { text-align: right; }
       .sm-row { display: grid; grid-template-columns: 62px 1fr auto; align-items: center; gap: 10px;
         padding: 12px 6px; border-top: 2px solid var(--wirit-ink-06); }
       .sm-row:first-of-type { border-top: none; }
@@ -98,7 +108,7 @@
     </style>
   </head>
   <body>
-    <div class="wirit-card sm{{#if compact}} sm-c{{/if}}{{#if spread}} sm-spread{{/if}}"{{#if fitTitle}} data-fit="1"{{/if}}>
+    <div class="wirit-card sm{{#if compact}} sm-c{{/if}}{{#if spread}} sm-spread{{/if}}{{#if head.c}} sm-h3{{/if}}"{{#if fitTitle}} data-fit="1"{{/if}}>
       <div class="wirit-topcap">{{#if note}}<span>{{note}}</span>{{/if}}</div>
       <h1 class="wirit-title">{{{title}}}</h1>
       {{#if subtitle}}<div class="sm-sub">{{subtitle}}</div>{{/if}}

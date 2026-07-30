@@ -54,18 +54,22 @@
           "maxItems": 2,
           "items": {
             "type": "object",
-            "required": ["style", "text"],
+            "required": ["style", "lines", "value"],
             "properties": {
               "style": {
                 "type": "string",
                 "enum": ["est", "idx"],
-                "description": "그래프 요소와 색을 맞춘다. est = 추정 막대(레드·점선·사선) / idx = 지수 곡선(잉크·회색). est 는 점선·사선을 절대 실선/단색으로 바꾸지 않는다 — 추정이 실측으로 읽힌다"
+                "description": "그래프 요소와 색을 맞춘다. est = 추정 막대(레드·점선·사선) / idx = 지수 곡선(회색 테두리). est 는 점선·사선을 절대 실선/단색으로 바꾸지 않는다 — 추정이 실측으로 읽힌다"
               },
-              "text": {
-                "type": "string",
-                "maxLength": 90,
-                "description": "카드 한 줄. 글자 크기는 전부 같다 — 강조는 <b>숫자</b> 의 색·굵기로만. <i>(추정)</i> 만 작게 들어간다. style 이 est 면 '추정' 표기가 반드시 있어야 한다"
-              }
+              "lines": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": { "type": "string", "maxLength": 14 },
+                "description": "라벨 2줄. 카드가 정사각형이라 줄 수가 고정이어야 한다 — 자동 줄바꿈에 맡기면 4줄이 돼 정사각형을 넘친다"
+              },
+              "value": { "type": "string", "maxLength": 10, "description": "3번째 줄. 레드·크게. 이 카드가 말하려는 한 숫자다" },
+              "small": { "type": "string", "maxLength": 8, "description": "값 뒤 작은 글씨(예: (추정)). style 이 est 면 '추정' 표기가 반드시 있어야 한다" }
             }
           }
         }

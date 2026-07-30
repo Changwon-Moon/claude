@@ -205,16 +205,17 @@
        * 카드 두 장을 **좌우로** 놓는다(좌 = 월세지수, 우 = 상승률).
        * 세로로 쌓으면 좌측 기둥이 길어져 2021 막대까지 내려온다. 가로로 누이면 높이가 절반이라
        * 곡선·막대와 안 부딪힌다. top 여백은 제목과 붙지 않게 띄운 값이다.
-       * 폭 78% — 4차 지시로 66%→78% 키웠다. 더 넓히면 마지막 칸의 +9.2% 값 라벨과 부딪힌다. */
+       * 폭 68% — 카드가 **정사각**(aspect-ratio 1:1)이라 폭이 곧 높이다(5차 지시).
+       * 이 값을 키우면 카드가 아래로도 커져 지수 곡선을 덮는다 — 렌더로 확인하고 바꿀 것. */
       .yc-side {
         position: absolute;
         left: 0;
         top: 34px;
-        width: 78%;
+        width: 68%;
         display: flex;
         flex-direction: row;
-        align-items: stretch;
-        gap: 18px;
+        align-items: flex-start;
+        gap: 20px;
         z-index: 4;
       }
 
@@ -328,46 +329,54 @@
        *    추정치가 실측처럼 읽힌다 — 디자인보다 앞서는 오보 방지 규칙.
        * ⚠️ 좌측 블록은 카드 폭의 45% 뿐이다. 긴 라벨과 큰 숫자를 한 줄에 두면 겹친다
        *    (검수 textclip 이 잡았다) → 세로 스택: 라벨 / 큰 값 / 부가 한 줄. */
-      /* ⚠️ 카드 안 글자는 **전부 같은 크기**다(오너 지시 2026-07-30 3차).
-       * 숫자만 키우면 카드가 "숫자 하나 + 설명"으로 읽혀 문장이 안 읽힌다.
-       * 강조는 크기가 아니라 **색과 굵기**로만 준다. 예외는 (추정) 한 곳뿐 — 부가 표기라 작게. */
+      /* ── 카드 본문: 라벨 2줄 + 큰 숫자 1줄 (5차 지시) ──
+       * 정사각형이라 줄 수가 고정이어야 한다. 라벨은 빌더가 **줄 단위로** 넘긴다
+       * (자동 줄바꿈에 맡기면 폰트·데이터가 바뀔 때 4줄이 돼 정사각형을 넘친다).
+       * 숫자는 레드·크게 — 이 카드가 말하려는 한 숫자다. (추정)만 작게. */
       .yc-card {
         position: relative;
         flex: 1 1 0;
         min-width: 0;
+        aspect-ratio: 1 / 1;
         display: flex;
-        align-items: center;
-        padding: 28px 30px;
+        flex-direction: column;
+        justify-content: center;
+        padding: 26px 30px;
         border-radius: 24px;
         z-index: 4;
       }
-      /* 카드 글자 — 4차 지시로 31px → 39px. 두 카드가 2줄로 접히는 걸 전제로 잡은 값이다.
-       * 더 키우면 3줄로 접혀 카드가 곡선까지 내려온다(렌더로 확인). */
-      .yc-card .ln {
-        font-size: 39px;
+      .yc-card .l {
+        display: block;
+        font-size: 36px;
         font-weight: 800;
-        /* ⚠️ 한국어는 기본값(break-all 성향)이면 단어 중간에서 끊긴다 — "역사상 최 / 고 103.9".
-         * keep-all 로 어절 단위로만 접히게 못박는다. */
-        word-break: keep-all;
-        line-height: 1.28;
+        line-height: 1.2;
         letter-spacing: -0.03em;
+        /* ⚠️ 한국어는 기본값이면 어절 중간에서 끊긴다 — "역사상 최 / 고". keep-all 로 못박는다. */
+        word-break: keep-all;
         color: var(--wirit-ink);
       }
-      .yc-card .ln b {
+      .yc-card .v {
+        display: block;
+        margin-top: 12px;
         font-family: var(--font-num);
+        font-size: 70px;
         font-weight: 900;
+        line-height: 1;
+        letter-spacing: -0.04em;
+        /* 레드는 이 카드에서 '오름'이다 — 막대·제목과 같은 토큰을 쓴다(다른 빨강을 쓰면 색이 어긋난다) */
+        color: var(--wirit-red);
         font-variant-numeric: tabular-nums;
-      }
-      .yc-card.est .ln b {
-        color: #a5121f;
+        white-space: nowrap;
       }
       /* (추정) — 유일하게 작은 글자. 작아도 반드시 붙는다: 이 숫자는 원자료에 없다. */
-      .yc-card .ln i {
+      .yc-card .v i {
         font-style: normal;
-        font-size: 28px;
+        font-family: var(--font-sans);
+        font-size: 26px;
         font-weight: 800;
+        letter-spacing: -0.02em;
         color: var(--wirit-gray);
-        margin-left: 2px;
+        margin-left: 4px;
       }
       .yc-card.est {
         border: 3px dashed #c0272d;
@@ -484,7 +493,11 @@
           {{#if side}}
           <div class="yc-side">
             {{#each side.cards}}
-            <div class="yc-card {{this.style}}"><span class="ln">{{{this.text}}}</span></div>
+            <div class="yc-card {{this.style}}">
+              <span class="l">{{this.lines.[0]}}</span>
+              <span class="l">{{this.lines.[1]}}</span>
+              <span class="v">{{this.value}}{{#if this.small}}<i>{{this.small}}</i>{{/if}}</span>
+            </div>
             {{/each}}
           </div>
           {{/if}}
@@ -494,7 +507,7 @@
           {{!-- 두 번째 스탬프(4차 지시) — **지수 곡선 아래·막대 위** 빈 칸.
                 초년도(2016~2020)는 막대가 0선 아래에만 있어 0선 바로 위가 통째로 빈다.
                 0선에서 위로 띄워 앉히므로 데이터 위에 얹히지 않는다(base.css 규칙). --}}
-          {{#if stamp2}}<span class="wirit-stamp" style="left: 13%; top: calc({{zeroAt}} - 74px)">@wirit_note</span>{{/if}}
+          {{#if stamp2}}<span class="wirit-stamp" style="left: 6%; top: calc({{zeroAt}} - 138px)">@wirit_note</span>{{/if}}
           {{#if splitAt}}<span class="yc-split" style="--split-at: {{splitAt}}"></span>{{/if}}
           <span class="yc-zero"></span>
           <div class="yc-cols">
@@ -553,7 +566,37 @@
           }
         }
         el.style.fontSize = best.toFixed(2) + "px";
+        fitCardValues();
       };
+      /* 카드 값 줄("+9.2%(추정)")이 정사각형 카드 폭을 넘지 않게 실측해 줄인다.
+       * ⚠️ CSS 값만 믿으면 안 된다 — 데이터가 한 자리 늘면(예: +12.4%) 점선 밖으로 삐져나간다.
+       * 실제로 첫 렌더에서 "(추정)"이 카드 오른쪽 테두리를 넘어갔다.
+       * 줄이는 방향으로만 움직이고 최소 34px 에서 멈춘다. 결정적: 입력 동일 → 결과 동일. */
+      function fitCardValues() {
+        var cards = document.querySelectorAll(".yc-card");
+        for (var k = 0; k < cards.length; k++) {
+          var v = cards[k].querySelector(".v");
+          if (!v) continue;
+          var cs = getComputedStyle(cards[k]);
+          var avail =
+            cards[k].clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
+          if (!avail) continue;
+          var small = v.querySelector("i");
+          var base = parseFloat(getComputedStyle(v).fontSize) || 70;
+          var sbase = small ? parseFloat(getComputedStyle(small).fontSize) || 0 : 0;
+          var size = base;
+          while (size > 34 && textWidth(v) > avail) {
+            size -= 1;
+            v.style.fontSize = size + "px";
+            if (small) small.style.fontSize = ((sbase * size) / base).toFixed(2) + "px";
+          }
+        }
+      }
+      function textWidth(el) {
+        var rg = document.createRange();
+        rg.selectNodeContents(el);
+        return rg.getBoundingClientRect().width;
+      }
       window.__wiritFit();
       if (document.fonts && document.fonts.ready)
         document.fonts.ready.then(window.__wiritFit);

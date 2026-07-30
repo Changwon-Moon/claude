@@ -276,16 +276,18 @@ const p1 = {
       {
         style: "idx",
         /* "역사상 최고"는 **계산으로 확인됐을 때만** 쓴다. 손으로 박아두면 다음 달 공표분에서
-         * 지수가 꺾이는 순간 카드가 거짓말을 한다. 아니면 지금 값과 최고 시점을 같이 적는다. */
-        text: isPeakNow
-          ? `월세지수 역사상 최고 <b>${idx1(asOf)}</b>`
-          : `월세지수 <b>${idx1(asOf)}</b> · 최고 ${ymNum(peak)} <b>${idx1(peak)}</b>`,
+         * 지수가 꺾이는 순간 카드가 거짓말을 한다. 아니면 최고 시점을 대신 적는다. */
+        lines: ["월세지수", isPeakNow ? "역사상 최고" : `최고는 ${ymNum(peak)}`],
+        value: isPeakNow ? idx1(asOf) : idx1(peak),
       },
       ...(partialRow
         ? [
             {
               style: "est",
-              text: `${lastYear} 월세상승률 <b>${bare(estFull)}%</b><i>(추정)</i>`,
+              lines: [`${lastYear}년`, "월세상승률"],
+              value: `${bare(estFull)}%`,
+              /* (추정) 은 작아도 반드시 붙는다 — 이 숫자만 원자료에 없다 */
+              small: "(추정)",
             },
           ]
         : []),
