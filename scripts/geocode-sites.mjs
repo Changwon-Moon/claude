@@ -27,6 +27,11 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+
+/* 구 경계 — 검증에 쓴다. 주소 문자열은 표기가 흔들리지만 도형은 흔들리지 않는다. */
+const GEO = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../data/geo/seoul-districts.geojson"), "utf8"));
+const ringsOf = (g) => (g.type === "Polygon" ? g.coordinates : g.type === "MultiPolygon" ? g.coordinates.flat() : []);
+const GU_RINGS = Object.fromEntries(GEO.features.map((f) => [f.properties.name, ringsOf(f.geometry)]));
 const KEY = process.env.KAKAO_REST_KEY || process.env.KAKAO_REST_API_KEY || "";
 /* 키가 안 들어왔을 때 **왜**인지 알 수 있게 진단을 남긴다.
  * 값은 절대 찍지 않는다 — 이름과 길이만. 로그는 저장소에 커밋되기 때문이다.
@@ -55,11 +60,32 @@ async function search(query) {
   return j.documents || [];
 }
 
-/** 서울 안이고, 기대한 구와 맞는 결과만 고른다. 엉뚱한 지역을 집으면 오보다. */
-function pick(docs, gu) {
-  const inGu = docs.find((d) => (d.address_name || "").includes(gu) || (d.road_address_name || "").includes(gu));
-  if (inGu) return inGu;
-  return docs.find((d) => (d.address_name || "").startsWith("서울")) || null;
+/* ── 결과 검증: 기대한 **구 안에 있는 것만** 받는다 ──
+ * 2026-07-31 사고: "서울이면 통과"라는 폴백을 뒀더니 동대문구의 신이문역세권이
+ * **마포**래미안푸르지오로 잡혔다. 브랜드명("푸르지오 아파트라")으로 검색하다
+ * 다른 구의 같은 브랜드 단지를 집은 것이다. 지도가 통째로 거짓말이 된다.
+ * 폴백을 없애고, 주소 문자열만 믿지 않고 **좌표가 그 구 도형 안에 있는지 실측**한다.
+ * 못 찾으면 비워 둔다 — 틀린 좌표는 없는 좌표보다 나쁘다. */
+function pointInRings(lon, lat, ringList) {
+  let inside = false;
+  for (const ring of ringList) {
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const [xi, yi] = ring[i], [xj, yj] = ring[j];
+      if (yi > lat !== yj > lat && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) inside = !inside;
+    }
+  }
+  return inside;
+}
+function pick(docs, gu, guRings) {
+  for (const d of docs) {
+    const addr = `${d.address_name || ""} ${d.road_address_name || ""}`;
+    if (!addr.includes(gu)) continue;                       // ① 주소에 구 이름
+    const lon = Number(d.x), lat = Number(d.y);
+    if (!Number.isFinite(lon) || !Number.isFinite(lat)) continue;
+    if (guRings && !pointInRings(lon, lat, guRings)) continue; // ② 좌표가 실제로 그 구 안
+    return d;
+  }
+  return null; // 폴백 없음
 }
 
 /** "압구정3구역" → "압구정동" — 숫자·'구역'·'지구'·'차'를 떼고 동을 만든다 */
@@ -70,16 +96,19 @@ function dongOf(name) {
 
 let ok = 0, failed = 0;
 for (const s of sites) {
+  /* 순서가 곧 신뢰도다. 브랜드명은 **맨 뒤**로 민다 —
+   * '푸르지오'·'래미안'은 서울에 수십 개라 다른 구의 같은 브랜드를 집기 쉽다.
+   * 구 검증이 걸러 주긴 하지만, 애초에 덜 위험한 것부터 시도하는 게 맞다. */
   const tries = [
     [s.name, "구역명"],
     [`${s.gu} ${s.name}`, "구+구역명"],
-    ...(s.brand && s.brand !== "미정" && s.brand !== "리모델링" ? [[s.brand, "브랜드명"]] : []),
     ...(dongOf(s.name) ? [[`서울 ${s.gu} ${dongOf(s.name)}`, "동 이름(근사)"]] : []),
+    ...(s.brand && s.brand !== "미정" && s.brand !== "리모델링" ? [[`${s.gu} ${s.brand}`, "구+브랜드명"]] : []),
   ];
   let hit = null, how = null;
   for (const [q, label] of tries) {
     try {
-      const d = pick(await search(q), s.gu);
+      const d = pick(await search(q), s.gu, GU_RINGS[s.gu]);
       if (d) { hit = d; how = label; break; }
     } catch (e) {
       console.log(`::warning::검색 실패 — ${s.name} / ${q} — ${e.message}`);
