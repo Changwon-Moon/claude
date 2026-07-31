@@ -80,38 +80,30 @@
       "key": "foreign",
       "label": "외국인 순매수",
       "value": "8조 7,709억",
-      "prev": "SK하이닉스에만 3조 5,883억",
       "source": "https://www.seoul.co.kr/news/economy/securities/2026/07/31/20260731500267",
       "claim": "하루 <em>최대</em>",
-      "amountEok": 87709
+      "prev": null
     },
     {
       "key": "retail",
       "label": "개인 순매도",
       "value": "10조 3,834억",
-      "prev": null,
       "source": "https://www.seoul.co.kr/news/economy/securities/2026/07/31/20260731500267",
       "claim": "하루 <em>최대</em>",
-      "amountEok": 103834
+      "prev": null
     },
     {
       "key": "hynix",
       "label": "SK하이닉스",
       "value": "+29.95%",
-      "prev": "171만 8,000원 · 직전 2009년",
+      "prev": "직전 상한가 2009.01.28",
       "source": "https://www.mt.co.kr/stock/2026/07/31/2026073116111478041",
-      "claim": "<em>17년</em> 만의 상한가"
-    },
-    {
-      "key": "samsung",
-      "label": "삼성전자",
-      "value": "+26.81%",
-      "prev": "시총 비중 51.22%",
-      "source": "https://www.seoul.co.kr/news/economy/securities/2026/07/31/20260731500267",
-      "claim": "두 종목이 코스피의 <em>절반</em>"
+      "claim": "<em>17년</em> 만의 상한가",
+      "prevSource": "https://www.hankyung.com/article/2026073181716"
     }
   ],
   "notUsed": [
+    "삼성전자 +26.81% · 두 종목 시총 비중 51.22% — 오너 지시로 카드에서 뺐다(2026-07-31). 캡션이 갖는다.",
     "유가증권 시총 5,445조 1,937억원 — 4거래일 만에 5,000조 회복",
     "사이드카 유가증권 올해 44번째 · 코스닥 28번째",
     "코스피200 선물지수 +18.79%",
@@ -122,5 +114,30 @@
     "asOf": "2026-07-31",
     "research": "research/articles/2026-07-31-증시-하루만에-역대최대반등.md",
     "sourceFull": "머니투데이·서울신문·아주경제·헤럴드경제·오마이뉴스 (캡션·리서치 문서가 전체를 갖는다)"
+  },
+  "recentCloses": {
+    "_": "차트용 최근 종가. 수집기(야후)가 이 세션에서 막혀 kr-market-2026.json 이 07-22 에 멈춰 있다. 여기 있는 것은 **보도로 확인한 날만**이고, 7/23~7/28 은 확인하지 못해 비어 있다. 카드는 그 구간을 점선으로 긋는다 — 실선으로 이으면 서킷브레이커 이틀을 매끈한 하락으로 속인다.",
+    "known": [
+      {
+        "d": "2026-07-29",
+        "c": 5663.24,
+        "src": "https://www.ohmynews.com/NWS_Web/View/at_pg.aspx?CNTN_CD=A0003255138"
+      },
+      {
+        "d": "2026-07-30",
+        "c": 5593.56,
+        "src": "https://www.fnnews.com/news/202607301638179200"
+      },
+      {
+        "d": "2026-07-31",
+        "c": 6595.45,
+        "src": "https://www.mt.co.kr/stock/2026/07/31/2026073115275588013"
+      }
+    ],
+    "gap": {
+      "from": "2026-07-23",
+      "to": "2026-07-28",
+      "why": "수집 미갱신 — Actions kr-market.yml 실행 필요"
+    }
   }
 }

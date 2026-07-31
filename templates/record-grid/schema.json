@@ -26,7 +26,6 @@
     },
     "lead": {
       "type": "object",
-      "description": "제목 아래 한 줄 — 오늘의 핵심 지수. 없으면 생략된다.",
       "required": [
         "label",
         "value"
@@ -34,19 +33,20 @@
       "properties": {
         "label": {
           "type": "string",
-          "maxLength": 20
+          "maxLength": 12
+        },
+        "cap": {
+          "type": "string",
+          "maxLength": 30,
+          "description": "뱃지 아래 붉은 띠 한 줄"
         },
         "value": {
           "type": "string",
-          "maxLength": 16
+          "maxLength": 14
         },
         "delta": {
           "type": "string",
           "maxLength": 24
-        },
-        "sub": {
-          "type": "string",
-          "maxLength": 40
         }
       }
     },
@@ -57,19 +57,13 @@
       "items": {
         "type": "object",
         "required": [
-          "label",
           "claim",
           "value"
         ],
         "properties": {
-          "label": {
-            "type": "string",
-            "maxLength": 16,
-            "description": "무엇의 기록인가 (작은 눈썹줄)"
-          },
           "claim": {
             "type": "string",
-            "maxLength": 40,
+            "maxLength": 44,
             "description": "어떤 기록인가 — 이 카드의 주인공. <em>…</em> 로 감싼 낱말만 빨강"
           },
           "value": {
@@ -103,6 +97,70 @@
           "type": "string"
         }
       }
+    },
+    "badge": {
+      "type": "string",
+      "maxLength": 16,
+      "description": "제목 위 뱃지 (날짜 등)"
+    },
+    "spark": {
+      "type": "object",
+      "required": [
+        "points"
+      ],
+      "description": "지수 추이 꺾은선. 미수집 구간은 점선으로 긋는다.",
+      "properties": {
+        "points": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "d",
+              "c"
+            ],
+            "properties": {
+              "d": {
+                "type": "string"
+              },
+              "c": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "gapAfter": {
+          "type": "string"
+        },
+        "gapUntil": {
+          "type": "string"
+        },
+        "gapLabel": {
+          "type": "string",
+          "maxLength": 24
+        },
+        "from": {
+          "type": "string"
+        },
+        "last": {
+          "type": "object",
+          "properties": {
+            "d": {
+              "type": "string"
+            },
+            "c": {
+              "type": "number"
+            },
+            "label": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "sparkJson": {
+      "type": "string",
+      "description": "spark 를 문자열로 담은 것 — 템플릿 스크립트가 읽는다"
     }
   }
 }

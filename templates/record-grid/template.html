@@ -23,51 +23,70 @@
          카드 패딩 72 · 우상단 검은 뱃지 · 상단캡. 그래픽을 키우려고 머리를 줄이지 않는다. */
       .rg { display: flex; flex-direction: column; }
 
-      .rg-head { padding: 0; margin: 26px 0 0; }
+      /* 제목 위 뱃지 — 상단캡 자리에 앉는다(오너 지시 2026-07-31). */
+      .rg-badge {
+        display: inline-flex; align-items: center; padding: 8px 18px; border-radius: 999px;
+        background: var(--wirit-ink); color: #fff; font-family: var(--font-num);
+        font-size: 24px; font-weight: 900; letter-spacing: 0.01em;
+      }
+      .rg-head { padding: 0; margin: 22px 0 0; }
       .rg .wirit-title {
         font-size: 76px; line-height: 1.04; text-align: left; white-space: nowrap;
         margin: 0; letter-spacing: -0.04em;
       }
       .rg .wirit-title .hi { color: var(--wirit-red); }
 
-      /* ── 지수 띠 ──
-         카드 폭을 꽉 채워 좌우로 흘러나간다(푸터와 같은 방식). 둥근 상자로 띄우면
-         '카드 안에 놓인 위젯'이 되는데, 이 줄은 위젯이 아니라 **오늘의 기준점**이다.
-         띠로 깔면 위(제목)와 아래(기록 장부)를 갈라 주는 일까지 한다. */
+      /* ── 주가 추이 + 지수 라벨 ──
+         레퍼런스(@flow)처럼 **꺾은선 위에 검은 라벨을 얹는다.** 라벨을 선 밖에 두면
+         "이 숫자가 이 그래프의 것"이라는 연결을 독자가 직접 해야 한다.
+         선 위에 얹으면 그 일이 사라진다.
+
+         미수집 구간(7/23~28)은 **점선**이다. 실선으로 이으면 서킷브레이커 두 번이
+         매끈한 미끄럼틀로 보인다 — 없는 날을 그럴듯하게 메우지 않는다
+         (CEO.md 07-30 "실선=실측 / 점선=추정"). */
+      .rg-chart { flex: 0 0 auto; position: relative; margin: 30px 0 0; height: 312px; }
+      .rg-chart svg { display: block; width: 100%; height: 100%; }
       .rg-lead {
-        flex: 0 0 auto; margin: 36px -72px 0; padding: 26px 72px 28px;
-        background: var(--wirit-ink); color: #fff;
-        display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap;
+        /* 왼쪽 위에 앉힌다. 가운데에 두면 그래프의 오르는 구간을 덮는다 —
+           연초 구간은 지수가 낮아 그 위가 비어 있고, 라벨이 들어갈 자리가 거기다. */
+        position: absolute; left: 0; top: 0;
+        background: var(--wirit-ink); color: #fff; border-radius: 14px;
+        padding: 12px 22px 14px; text-align: center; min-width: 330px;
       }
-      .rg-lead .lb { font-size: 27px; font-weight: 800; letter-spacing: -0.05em; opacity: 0.6; }
-      .rg-lead .vl { font-family: var(--font-num); font-size: 62px; font-weight: 900; letter-spacing: -0.035em; line-height: 1; }
+      .rg-lead .lb {
+        font-family: var(--font-num); font-size: 46px; font-weight: 900;
+        letter-spacing: 0.01em; line-height: 1.05;
+      }
+      .rg-lead .cap {
+        margin-top: 6px; background: var(--wirit-red); border-radius: 6px;
+        padding: 4px 10px; font-size: 21px; font-weight: 800; letter-spacing: -0.04em;
+      }
       .rg-lead .dt {
-        font-family: var(--font-num); font-size: 33px; font-weight: 900;
-        color: var(--wirit-red); letter-spacing: -0.02em;
+        display: block; margin-top: 8px; font-family: var(--font-num);
+        font-size: 34px; font-weight: 900; letter-spacing: -0.02em;
       }
-      .rg-lead .sb {
-        flex: 1 0 100%; font-size: 22px; font-weight: 600; opacity: 0.58;
-        letter-spacing: -0.04em; margin-top: 6px;
-      }
+      /* 축 눈금 — 오른쪽에 값, 아래에 달. 격자는 아주 옅게. */
+      .rg-chart .ax { font-family: var(--font-num); font-size: 20px; font-weight: 800; fill: #8A97A6; }
+      .rg-chart .axm { font-family: var(--font-num); font-size: 19px; font-weight: 700; fill: #A6B0BC; }
+      .rg-chart .gap-l { font-size: 17px; font-weight: 700; fill: #A6B0BC; }
+      .rg-chart .lastv { font-family: var(--font-num); font-size: 26px; font-weight: 900; fill: var(--wirit-ink); }
 
       /* ── 기록 장부 ──
          한 줄 = 한 기록. 남는 세로를 여섯 줄이 똑같이 나눠 갖는다. */
       .rg-list { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+      /* 한 줄 = 한 기록. 문구는 **1행**이다(오너 지시 2026-07-31) —
+         '무엇의'를 위에 얹어 2행으로 만들면 다섯 줄이 열 줄처럼 보인다. */
       .rg-r {
         flex: 1 1 0; display: grid; grid-template-columns: minmax(0, 1fr) auto;
-        align-items: center; column-gap: 24px; padding: 4px 2px;
+        align-items: center; column-gap: 24px; padding: 2px 2px;
       }
       .rg-r + .rg-r { border-top: 1px solid var(--wirit-ink-12); }
 
-      /* 왼쪽 — 무엇의 기록인가(작게) / 어떤 기록인가(크게) */
-      .rg-r .of {
-        font-size: 23px; font-weight: 700; color: var(--wirit-gray);
-        letter-spacing: -0.05em; line-height: 1;
-      }
+      /* 왼쪽 — 어떤 기록인가. 이 줄이 카드의 주인공이다. */
       .rg-r .claim {
         font-family: var(--font-title); /* 태백체 — 제목과 같은 목소리로 말한다 */
-        font-size: 50px; font-weight: 900; color: var(--wirit-ink);
-        letter-spacing: -0.045em; line-height: 1.06; margin-top: 9px; white-space: nowrap;
+        font-size: 46px; font-weight: 900; color: var(--wirit-ink);
+        letter-spacing: -0.05em; line-height: 1.05; white-space: nowrap;
       }
       /* 기록을 기록이게 하는 낱말(1위·최대·17년)만 빨강. 문구 전체를 빨갛게 칠하면
          여섯 줄이 전부 소리를 질러 아무것도 안 들린다. */
@@ -84,9 +103,13 @@
         letter-spacing: -0.04em; line-height: 1.2; white-space: nowrap;
       }
 
-      /* ── 맥락 한 줄 ── 오늘이 왜 놀라운지는 어제까지를 알아야 나온다. 한 줄만 둔다. */
+      /* ── 맥락 한 줄 ──
+         오늘이 왜 놀라운지는 어제까지를 알아야 나온다. 한 줄만 둔다.
+         **여백은 항상 챙긴다(오너 2026-07-31 "최하단 문구도 여백 중요해, 항상 기억해").**
+         위로 표와 붙으면 표의 마지막 줄로 읽히고, 아래로 푸터와 붙으면 출처처럼 읽힌다.
+         위 26 / 아래 22 — 어느 쪽에도 달라붙지 않는다. */
       .rg-note {
-        flex: 0 0 auto; margin: 18px 2px 2px; font-size: 22px; font-weight: 700;
+        flex: 0 0 auto; margin: 26px 2px 22px; font-size: 22px; font-weight: 700;
         color: var(--wirit-gray); letter-spacing: -0.045em; line-height: 1.35;
       }
       .rg-note b { color: var(--wirit-ink); font-weight: 900; }
@@ -94,25 +117,26 @@
   </head>
   <body>
     <div class="wirit-card rg">
-      <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
+      <div class="wirit-topcap">{{#if badge}}<span class="rg-badge">{{badge}}</span>{{/if}}</div>
       <div class="rg-head"><h1 class="wirit-title">{{{title}}}</h1></div>
 
-      {{#if lead}}
-      <div class="rg-lead">
-        <span class="lb">{{lead.label}}</span>
-        <span class="vl">{{lead.value}}</span>
-        {{#if lead.delta}}<span class="dt">{{lead.delta}}</span>{{/if}}
-        {{#if lead.sub}}<span class="sb">{{lead.sub}}</span>{{/if}}
+      {{#if spark}}
+      <div class="rg-chart" id="rgChart" data-spark="{{sparkJson}}">
+        <svg viewBox="0 0 1000 310" preserveAspectRatio="none" aria-hidden="true"></svg>
+        {{#if lead}}
+        <div class="rg-lead">
+          <div class="lb">{{lead.label}}</div>
+          {{#if lead.cap}}<div class="cap">{{lead.cap}}</div>{{/if}}
+          {{#if lead.delta}}<span class="dt">{{lead.delta}}</span>{{/if}}
+        </div>
+        {{/if}}
       </div>
       {{/if}}
 
       <div class="rg-list">
         {{#each cells}}
         <div class="rg-r">
-          <div>
-            <div class="of">{{this.label}}</div>
-            <div class="claim">{{{this.claim}}}</div>
-          </div>
+          <div class="claim">{{{this.claim}}}</div>
           <div class="fig">
             <div class="v">{{this.value}}</div>
             {{#if this.prev}}<div class="p">{{this.prev}}</div>{{/if}}
@@ -143,6 +167,75 @@
             if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
           }
           el.style.fontSize = best.toFixed(2) + "px";
+        }
+        /* ② 주가 추이를 그린다.
+           SVG 를 손으로 그리는 이유: 차트 라이브러리는 폰트·픽셀이 환경마다 달라져
+           "같은 입력 = 같은 픽셀"이 깨진다(저장소 절대 규칙). 점 좌표는 산수다.
+
+           미수집 구간은 **선을 긋지 않고 점선으로만 잇는다** — 그 구간에 서킷브레이커가
+           두 번 있었다. 실선으로 이으면 없던 매끈함을 만들어 낸다. */
+        var chart = document.getElementById("rgChart");
+        if (chart) {
+          var sp = JSON.parse(chart.getAttribute("data-spark") || "null");
+          var svg = chart.querySelector("svg");
+          if (sp && svg && sp.points && sp.points.length > 1) {
+            var W = 1000, H = 310, PADR = 118, PADB = 62, PADT = 10;
+            var vals = sp.points.map(function (p) { return p.c; });
+            var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
+            var span = hi - lo || 1;
+            lo -= span * 0.10; hi += span * 0.14;
+            var t0 = Date.parse(sp.points[0].d), t1 = Date.parse(sp.points[sp.points.length - 1].d);
+            var X = function (d) { return ((Date.parse(d) - t0) / (t1 - t0)) * (W - PADR); };
+            var Y = function (c) { return PADT + (1 - (c - lo) / (hi - lo)) * (H - PADT - PADB); };
+            var ns = "http://www.w3.org/2000/svg";
+            var add = function (tag, attrs, text) {
+              var e = document.createElementNS(ns, tag);
+              for (var k in attrs) e.setAttribute(k, attrs[k]);
+              if (text !== undefined) e.textContent = text;
+              svg.appendChild(e); return e;
+            };
+            /* 가로 격자 4줄 + 오른쪽 눈금값 */
+            for (var g = 0; g < 4; g++) {
+              var cv = lo + ((hi - lo) * (g + 0.7)) / 4.4, y = Y(cv);
+              add("line", { x1: 0, y1: y, x2: W - PADR, y2: y, stroke: "rgba(20,24,33,0.07)", "stroke-width": 1 });
+              add("text", { x: W - PADR + 14, y: y + 7, class: "ax" }, Math.round(cv).toLocaleString("ko-KR"));
+            }
+            /* 실측 구간과 미수집 구간을 나눠 그린다 */
+            var before = [], after = [];
+            sp.points.forEach(function (p) { (p.d <= sp.gapAfter ? before : after).push(p); });
+            var path = function (arr) {
+              return arr.map(function (p, i) { return (i ? "L" : "M") + X(p.d).toFixed(1) + " " + Y(p.c).toFixed(1); }).join(" ");
+            };
+            add("path", { d: path(before), fill: "none", stroke: "#E5484D", "stroke-width": 3.2, "stroke-linejoin": "round" });
+            if (after.length) {
+              var lastB = before[before.length - 1];
+              add("path", {
+                d: "M" + X(lastB.d).toFixed(1) + " " + Y(lastB.c).toFixed(1) + " L" + X(after[0].d).toFixed(1) + " " + Y(after[0].c).toFixed(1),
+                fill: "none", stroke: "#E5484D", "stroke-width": 3.2, "stroke-dasharray": "7 7", opacity: 0.55
+              });
+              add("path", { d: path(after), fill: "none", stroke: "#E5484D", "stroke-width": 3.2, "stroke-linejoin": "round" });
+              /* 점선 구간이 무엇인지 적는다. 안 적으면 독자는 그냥 선으로 읽는다. */
+              /* 각주는 선 위가 아니라 축 아래에 적는다 — 선 위에 두면 마지막 값과 겹친다.
+                 점선 구간의 가로 위치 바로 아래에 두어 무엇을 가리키는지는 유지한다. */
+              var gx = (X(lastB.d) + X(after[0].d)) / 2;
+              add("text", { x: gx, y: H - 8, class: "gap-l", "text-anchor": "middle" }, sp.gapLabel || "");
+            }
+            /* 마지막 점 + 값 */
+            if (sp.last) {
+              var lx = X(sp.last.d), ly = Y(sp.last.c);
+              add("circle", { cx: lx, cy: ly, r: 8, fill: "#E5484D" });
+              add("text", { x: lx - 4, y: ly - 40, class: "lastv", "text-anchor": "end" }, sp.last.label);
+            }
+            /* 아래 달 눈금 — 첫 점과 마지막 점 사이를 3등분해 실제 있는 날짜만 찍는다 */
+            var marks = [0, 0.34, 0.67, 1].map(function (f) {
+              return sp.points[Math.min(sp.points.length - 1, Math.round(f * (sp.points.length - 1)))];
+            });
+            marks.forEach(function (p, i) {
+              var m = Number(p.d.slice(5, 7)) + "월";
+              add("text", { x: Math.min(W - PADR, Math.max(16, X(p.d))), y: H - 36, class: "axm",
+                "text-anchor": i === 0 ? "start" : (i === marks.length - 1 ? "end" : "middle") }, m);
+            });
+          }
         }
         /* ② 기록 문구는 여섯 줄이 **같은 크기**여야 기둥으로 읽힌다.
            줄마다 제 폭에 맞춰 키우면 '역대 1위'만 커지고 '17년 만의 상한가'는 작아져
