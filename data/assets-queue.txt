@@ -1,3 +1,0 @@
-# 로고 취득 대기열 — 작업 세션이 대상 파일 경로를 적어 푸시하면
-# `로고 자동 취득` 워크플로가 깨어나 templates/_shared/logos/ 에 저장하고 이 파일을 비운다.
-data/datasets/jeongbi-order-2026-07.json
