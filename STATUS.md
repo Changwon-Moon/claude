@@ -72,7 +72,7 @@
 | ~~Meta 앱 + 인스타 토큰~~ | ⛔ 불필요 — 2026-07-27 오너 결정으로 수동 발행 |
 | 🔵 Anthropic (`ANTHROPIC_API_KEY`) — AI 직원, 소액결제 | ⬜ M0 7단계 (AI 단계) |
 | GitHub Secrets 등록 | ⬜ M0 8단계 |
-| 🟢 카카오 알림 (`KAKAO_REST_API_KEY`, `KAKAO_REFRESH_TOKEN`) — **무료** | ⬜ 오너 15분 작업 ([가이드](./docs/guides/kakao-notify.md)) |
+| 🟢 카카오 알림 (`KAKAO_REST_API_KEY`, `KAKAO_REFRESH_TOKEN`) — **무료** | ⚠️ **이름 어긋남(2026-07-31 발견)** — 등록된 건 `KAKAO_REST_KEY`(`API` 누락)이고 `KAKAO_REFRESH_TOKEN`은 미등록. 그래서 알림이 조용히 안 가고 있었다. 오너가 시크릿 이름을 고쳐야 한다 ([가이드](./docs/guides/kakao-notify.md)) |
 | ~~Telegram 봇 토큰~~ | ❌ 미채택 — 카카오톡으로 대체(2026-07-26) |
 
 > M0 가이드 확장(2026-07-19): 키를 🟢지금(무료·데이터/로고) / 🔵나중(발행·AI) 두 묶음으로 분리. DART가 최우선(정확한 연봉).

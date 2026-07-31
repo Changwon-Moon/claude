@@ -180,6 +180,14 @@ node scripts/build-tower-site.mjs && node scripts/smoke-tower.mjs
 | `tower-deploy.yml` | 관제탑 배포 | `CLOUDFLARE_*` |
 
 키는 **GitHub Secrets** 또는 `.env`(gitignore). **저장소에 커밋 절대 금지.**
+
+> 🔑 **이름이 한 글자만 달라도 에러 없이 조용히 건너뜁니다.**
+> 2026-07-31 에 `KAKAO_REST_KEY` 로 등록돼 있어(코드는 `KAKAO_REST_API_KEY`)
+> 카카오 알림이 안 가고 있던 것을 발견했습니다. 켜 둔 줄 알았는데 안 켜져 있는 상태였습니다.
+> 정답 목록은 손으로 적지 않고 그때그때 뽑습니다 — `node scripts/check-secrets.mjs`
+> 를 돌려 GitHub Secrets 화면과 눈으로 대조하세요. (등록된 이름조차 저장소에서는
+> 읽을 수 없습니다 — Actions 러너 안에서만 주입되는 것이 "커밋하지 않는다"의 실현 방식입니다.)
+
 수집한 데이터는 `verified: false`로 들어오고, 1차 출처 대조 후에야 `true`로 올립니다.
 
 ---
