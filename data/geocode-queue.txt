@@ -1,2 +1,0 @@
-# 좌표 재요청 — 오너 지번 주소 3건
-data/datasets/jeongbi-order-2026-07.json
