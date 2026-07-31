@@ -1,2 +1,2 @@
-# 로고 취득 대기열
+# 로고 취득 대기열 — 아파트 브랜드
 data/datasets/apt-brands.json
