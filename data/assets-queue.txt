@@ -1,2 +1,0 @@
-# 로고 취득 — 아파트 브랜드 9종
-data/datasets/apt-brands.json

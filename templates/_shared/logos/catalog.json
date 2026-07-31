@@ -118,6 +118,15 @@
       "license": "trademark-nominative",
       "note": "자동 취득(Tier C) · 회사 공식 자산 · 상표 nominative use",
       "added": "2026-07-20"
+    },
+    {
+      "slug": "logo",
+      "name": "래미안",
+      "kind": "logo",
+      "source": "Brandfetch (raemian.co.kr)",
+      "license": "trademark-nominative",
+      "note": "자동 취득(Tier C) · 회사 공식 자산 · 상표 nominative use",
+      "added": "2026-07-31"
     }
   ]
 }
