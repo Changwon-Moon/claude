@@ -213,7 +213,11 @@ for (const s of [...numbered].sort((a, b) => a.y - b.y || a.x - b.x)) {
  * **점에 최대한 붙인다**. 겹침만 없으면 된다.
  * 배치: 점 주변 가까운 자리부터(바로 옆 → 위/아래 → 조금 더 멀리) 훑어 빈 자리를 잡는다.
  * 거리를 조금씩만 늘리므로 선이 짧게 유지되고, 자리가 없을 때만 멀어진다. */
-const LOGO = 26, LH = 34;
+/* 로고는 대부분 **가로로 긴 워드마크**(RAEMIAN·DAEWOO E&C)다.
+ * 정사각 26px 에 넣으면 높이에 맞춰 줄어들어 글자를 못 읽는다.
+ * 가로 상자(64×22)로 두고 라벨 폭 계산에도 그대로 반영한다 —
+ * 폭을 반영하지 않으면 충돌 검사가 또 거짓말을 한다. */
+const LOGO_W = 64, LOGO_H = 22, LH = 34;
 /* ⚠️ 한글 굵은 글씨의 한 글자 폭은 **글자 크기와 거의 같다**(27px → 약 27).
  * 처음 15.5 로 잡았더니 상자가 실제 글자보다 훨씬 작아 "겹침 0"이라 보고하고도
  * 눈으로는 겹쳐 보였다. 상자가 거짓이면 충돌 검사 전체가 거짓이 된다. */
@@ -225,7 +229,7 @@ const boxes = numbered.map((s) => ({ x0: s.x - 13, x1: s.x + 13, y0: s.y - 13, y
 const hitBox = (a, b) => !(a.x1 <= b.x0 || b.x1 <= a.x0 || a.y1 <= b.y0 || b.y1 <= a.y0);
 let leaders = "", siteLabels = "", unplaced = 0;
 for (const s of [...numbered].sort((a, b) => a.y - b.y)) {
-  const w = LOGO + 8 + s.name.length * CH;
+  const w = (s.logo ? LOGO_W : 22) + 8 + s.name.length * CH;
   let put = null;
   outer: for (const R of RINGS) {
     for (const [dx, dy] of DIRS) {
@@ -249,11 +253,12 @@ for (const s of [...numbered].sort((a, b) => a.y - b.y)) {
     `L${((s.x + anchorX) / 2).toFixed(1)},${put.cy.toFixed(1)}L${anchorX.toFixed(1)},${put.cy.toFixed(1)}"/>`;
   // 라벨: [로고|칩] + 사업지명. 로고 파일이 있으면 이미지, 없으면 회사색 원판
   const lx = put.x0;
+  const lw = s.logo ? LOGO_W : 22;
   siteLabels +=
     (s.logo
-      ? `<image href="../_shared/logos/${s.logo}" x="${lx}" y="${(put.cy - LOGO / 2).toFixed(1)}" width="${LOGO}" height="${LOGO}" preserveAspectRatio="xMidYMid meet"/>`
-      : `<circle cx="${lx + LOGO / 2}" cy="${put.cy.toFixed(1)}" r="${LOGO / 2}" fill="${s.color}"/>`) +
-    `<text class="sl" x="${(lx + LOGO + 8).toFixed(1)}" y="${(put.cy + 9).toFixed(1)}" fill="#26303d">${s.name}</text>`;
+      ? `<image href="../_shared/logos/${s.logo}" x="${lx}" y="${(put.cy - LOGO_H / 2).toFixed(1)}" width="${LOGO_W}" height="${LOGO_H}" preserveAspectRatio="xMinYMid meet"/>`
+      : `<circle cx="${lx + 11}" cy="${put.cy.toFixed(1)}" r="10" fill="${s.color}"/>`) +
+    `<text class="sl" x="${(lx + lw + 8).toFixed(1)}" y="${(put.cy + 9).toFixed(1)}" fill="#26303d">${s.name}</text>`;
 }
 
 let marks = "";
