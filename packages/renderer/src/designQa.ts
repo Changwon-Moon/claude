@@ -159,7 +159,10 @@ const MEASURE_JS = `(() => {
   var LEAF = ".yc-val,.yc-solid-val,.yc-tag,.yc-card .l,.yc-card .v," +
              ".yc-axis span,.yc-lidx,.sm-asof," +
              ".sm-gu,.sm-val .h,.sm-val .r,.sm-total,.sm-insight,.sm-tailnote .tx," +
-             ".wirit-footer span,.rt-name,.rt-val,.rt-sub,.mc-fn";
+             ".wirit-footer span,.rt-name,.rt-val,.rt-sub,.mc-fn," +
+             /* record-grid — 새 템플릿을 만들고 여기 추가하지 않아 이 카드의 글자가
+                통째로 겹침 검사 밖에 있었다(AS팀 지적 2026-07-31). 템플릿을 만들면 여기도 만진다. */
+             ".rg-r .claim,.rg-r .fig .v,.rg-r .fig .p,.rg-note,.rg-lead .lb,.rg-lead .dt,.rg-lead .vl";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
   for (var i=0;i<leaves.length;i++) for (var j=i+1;j<leaves.length;j++) {
     var a=leaves[i], b=leaves[j];
@@ -203,7 +206,9 @@ const MEASURE_JS = `(() => {
    * 흐름 배치라 '겹침'은 안 생기므로 기존 rowclip 이 못 잡는다. */
   var footerGap=null;
   if(footer){
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap");
+    /* .rg-note 를 빠뜨려 record-grid 에서는 이 검사가 아무것도 안 재고 있었다(AS팀 지적 2026-07-31).
+       "최하단 문구 여백"은 오너가 두 번 말한 항목인데 새 템플릿에 적용되지 않은 상태였다. */
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();
@@ -278,9 +283,21 @@ const MEASURE_JS = `(() => {
     if(mx<170) return;                       // 짙다 — 잉크 띠/뱃지
     tiles.push(Math.round(rad));
   });
+  /* ── 문구 ↔ 수치 위계 ──
+   * 오너 지시(2026-07-31): "중요한 건 숫자가 아니라 '역대 1위' 같은 내용이야."
+   * 이건 취향이 아니라 **재서 지킬 수 있는 규칙**이다 — 기록 문구가 수치보다 작아지면
+   * 카드가 다시 숫자 자랑이 된다. 두 글자 크기를 재서 뒤집힘을 잡는다. */
+  var hier=null;
+  var claimEl=card.querySelector(".rg-r .claim"), figEl=card.querySelector(".rg-r .fig .v");
+  if(claimEl&&figEl){
+    hier={
+      claimPx: Math.round(parseFloat(getComputedStyle(claimEl).fontSize)||0),
+      figPx:   Math.round(parseFloat(getComputedStyle(figEl).fontSize)||0)
+    };
+  }
   var lastRow=rows.length?rows[rows.length-1]:null;
   return {
-    head:head, titleGap:titleGap, titlePx:titlePx, aiTiles:tiles,
+    head:head, titleGap:titleGap, titlePx:titlePx, aiTiles:tiles, hier:hier,
     card:{left:cb.left,right:cb.right,top:cb.top,bottom:cb.bottom,width:cb.width},
     innerW:cb.width-padL-padR, innerLeft:cb.left+padL, innerRight:cb.right-padR,
     rows:rows, overflow:overflow, collisions:collisions,
@@ -319,6 +336,14 @@ function analyze(g: Geo): Finding[] {
   if (tiles && tiles.length >= 3)
     out.push({ level: "warn", code: "aicard",
       msg: `큰 라운드(${Math.min(...tiles)}~${Math.max(...tiles)}px) + 옅은 회색 채움 덩어리가 ${tiles.length}개 반복됩니다 — 어느 서비스에나 있는 UI 카드로 읽힙니다(CEO.md "AI티 금지"). 채움을 걷고 괘선·여백으로 나누세요` });
+
+  /* 0-d) 기록 문구가 수치보다 작아지지 않았는가 (오너 지시 2026-07-31)
+   * 문턱을 '같거나 크다'로 두지 않고 **1.15배**로 잡았다 — 비슷한 크기면 둘 다 주인공이 되어
+   * 위계가 사라진다. 주인공은 하나여야 한다. */
+  const hr = (g as any).hier;
+  if (hr && hr.claimPx && hr.figPx && hr.claimPx < hr.figPx * 1.15)
+    out.push({ level: "warn", code: "hierarchy",
+      msg: `기록 문구 ${hr.claimPx}px 가 수치 ${hr.figPx}px 에 비해 작습니다 — 이 카드의 주인공은 '역대 1위' 같은 문구이고 수치는 증거입니다(CEO.md). 문구를 수치의 1.15배 이상으로 두세요` });
 
   const h = (g as any).head;
   if (h) {
