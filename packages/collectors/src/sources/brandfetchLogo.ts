@@ -75,8 +75,21 @@ export function pickBestLogoFormat(logos: LogoAsset[]): LogoFormat | null {
   return best ? best.fmt : null;
 }
 
-function slugify(name: string): string {
-  return name.replace(/\s+/g, "-").replace(/[^\w-]/g, "").toLowerCase() || "logo";
+/* ⚠️ JS 정규식의 `\w` 는 [A-Za-z0-9_] 라 **한글이 통째로 지워진다.**
+ * 그래서 '래미안'·'자이'·'푸르지오'가 전부 빈 문자열 → 기본값 "logo" 가 되어
+ * 6개 로고가 같은 파일명으로 **서로를 덮어썼다**(2026-07-31).
+ * 래미안 자리에 아크로가 붙는 사고는 오보와 다르지 않다.
+ *
+ * 그래서 도메인을 슬러그의 근간으로 쓴다 — raemian.co.kr → raemian.
+ * 도메인은 회사마다 유일하고 영문이라 안전하며, 사람이 봐도 어느 회사인지 읽힌다. */
+function slugFromDomain(domain: string): string {
+  return domain.split(".")[0].replace(/[^a-z0-9-]/gi, "").toLowerCase();
+}
+function slugify(name: string, domain?: string): string {
+  const ascii = name.replace(/\s+/g, "-").replace(/[^A-Za-z0-9-]/g, "").toLowerCase();
+  if (ascii) return ascii;
+  if (domain) return slugFromDomain(domain);
+  throw new Error(`슬러그를 만들 수 없습니다: "${name}" — 도메인이 필요합니다`);
 }
 
 export interface FetchedBrandLogo {
@@ -119,7 +132,7 @@ export async function fetchBrandfetchLogo(
 
   for (const domain of domains) {
     const found = await tryDomain(domain, apiKey);
-    if (found) return { slug: slugify(company), ext: found.ext, bytes: found.bytes, domain };
+    if (found) return { slug: slugify(company, domain), ext: found.ext, bytes: found.bytes, domain };
   }
   return null;
 }
