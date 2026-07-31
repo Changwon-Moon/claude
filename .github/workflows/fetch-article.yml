@@ -85,30 +85,61 @@ jobs:
         if: steps.pick.outputs.urls != ''
         run: pnpm --filter @wirit/renderer exec playwright-core install --with-deps chromium chromium-headless-shell
 
+      # continue-on-error: 읽기에 실패해도 **아래 기록 단계까지 반드시 간다.**
+      # 실패를 조용히 삼키는 게 아니라, 실패했다는 사실과 진단을 저장소에 남기기 위해서다.
+      # (fetch-article.mjs 는 한 건도 못 읽으면 exit 1 로 끝난다 — 그러면 예전 구조에서는
+      #  커밋 단계가 통째로 건너뛰어져 세션에 아무 흔적도 안 남았다. 2026-07-31 실제로 겪음)
       - name: 기사 읽기
+        id: read
         if: steps.pick.outputs.urls != ''
+        continue-on-error: true
         env:
           URLS: ${{ steps.pick.outputs.urls }}
         run: |
           # 따옴표 없이 $URLS 를 넘겨 공백으로 나뉜 여러 URL 이 각각의 인자가 되게 한다.
           # 값 자체는 env 를 거쳐 오므로 셸 확장 대상이 아니다.
           # shellcheck disable=SC2086
-          node scripts/fetch-article.mjs $URLS
+          set -o pipefail
+          node scripts/fetch-article.mjs $URLS 2>&1 | tee /tmp/fetch-article.log
 
-      # 대기열은 비워서 함께 커밋한다 — 안 비우면 다음 푸시 때 같은 기사를 또 읽는다.
-      # 단 커밋 경로에 대기열을 포함해도 재실행되지 않는다: 이 커밋은 봇이 하고,
+      # 항상 기록한다 — 세션은 Actions 로그를 볼 수 없으므로(GitHub API 차단)
+      # 이 파일이 유일한 눈이다. 실패도 결과다.
+      # 대기열을 비워 함께 커밋해도 재실행되지 않는다: 이 커밋은 봇이 하고,
       # GITHUB_TOKEN 으로 민 푸시는 워크플로를 다시 트리거하지 않는다(GitHub 기본 동작).
-      - name: 커밋
-        if: steps.pick.outputs.urls != ''
+      - name: 결과 기록 + 커밋
+        if: always() && steps.pick.outputs.urls != ''
+        env:
+          URLS: ${{ steps.pick.outputs.urls }}
+          OUTCOME: ${{ steps.read.outcome }}
         run: |
+          {
+            echo "# 기사 읽어오기 — 마지막 실행 결과"
+            echo
+            echo "- 실행: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo "- 결과: **${OUTCOME}**"
+            echo "- 요청한 URL: ${URLS}"
+            echo "- 실행 기록: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo
+            echo '> 워크플로가 매번 덮어씁니다. 작업 세션이 결과를 확인하는 통로입니다.'
+            echo
+            echo '## 로그'
+            echo
+            echo '```'
+            if [ -f /tmp/fetch-article.log ]; then cat /tmp/fetch-article.log; else echo "(로그 없음 — 읽기 단계 전에 끝났습니다)"; fi
+            echo '```'
+          } > research/article-fetch-last.md
+
+          # 대기열은 성공·실패와 무관하게 비운다. 남겨 두면 다음 푸시 때 같은 요청이 또 돈다.
+          # 다시 시도할지는 로그를 본 세션이 판단한다.
+          : > research/article-queue.txt
+
           git config user.name  "wirit-bot"
           git config user.email "noreply@github.com"
-          : > research/article-queue.txt
-          git add -- research/articles research/article-queue.txt
+          git add -- research/articles research/article-queue.txt research/article-fetch-last.md
           if git diff --cached --quiet; then
-            echo "새로 저장된 기사 없음"
+            echo "커밋할 변경 없음"
           else
-            git commit -m "기사 보관: 오너 제공 링크"
-            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
-            git push origin HEAD:${GITHUB_REF_NAME}
+            git commit -m "기사 읽어오기 결과(${OUTCOME}) — 대기열 처리"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push origin HEAD:"${GITHUB_REF_NAME}"
           fi
