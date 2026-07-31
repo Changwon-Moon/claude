@@ -1,7 +1,6 @@
 /**
- * 🧪 시안 — 아파트 브랜드 순위, 조사 5곳을 한 표에. brand-rank-grid@1.
- *
- * ⚠️ 오너 확정 전 **시안**이다. sets.json·builders.json 에 등록하지 않는다.
+ * 아파트 브랜드 순위, 조사 5곳을 한 표에. brand-rank-grid@1.
+ * ✅ 오너 확정 2026-07-31 — builders.json·sets.json·pixel-baselines.json 등록 완료.
  *
  * ── 무엇을 말하는 카드인가
  * "아파트 브랜드 1위"는 조사마다 다르다. 2026년만 봐도 래미안·자이·힐스테이트가 각각 1위다.
@@ -107,13 +106,16 @@ const card = {
   source: { name: "각 조사기관 발표" },
 };
 
-const outDir = join(ROOT, "data/out/_spike");
+/* 확정 후 산출 위치를 data/content/{날짜}/ 로 옮겼다(2026-07-31).
+ * _spike 는 시안 서랍이라 배포 파이프라인이 쳐다보지 않는다 —
+ * 거기 둔 채 sets.json 에만 올리면 '실사이트에 카드가 영영 안 뜬다'(builders.json 주석의 그 사고). */
+const outDir = join(ROOT, "data/content", date);
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "brand-rank.json"), JSON.stringify(card, null, 2) + "\n", "utf8");
 
-console.log(`🧪 시안 brand-rank — 조사 ${rows.length}곳 × 1~${N}위`);
+console.log(`brand-rank — 조사 ${rows.length}곳 × 1~${N}위`);
 console.log(`   1위 종류: ${firsts.join(", ")}`);
 const cells = rows.flatMap((r) => r.cells);
 console.log(`   칸 ${cells.length}개 · 로고 ${cells.filter((c) => c.logo).length} · 발표 없음 ${cells.filter((c) => c.empty).length}`);
 if (missingLogos.size) console.log(`   ⚠ 로고 없음(이름만 표기): ${[...missingLogos].join(", ")}`);
-console.log(`   → data/out/_spike/brand-rank.json`);
+console.log(`   → data/content/${date}/brand-rank.json`);
