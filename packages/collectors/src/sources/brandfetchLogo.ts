@@ -19,6 +19,9 @@ export const DOMAIN_MAP: Record<string, string[]> = {
   /* 아파트 브랜드 — 카드에는 회사 로고보다 브랜드 로고가 낫다(래미안·자이는 그 자체로 읽힌다).
    * ⚠️ 도메인이 틀리면 **다른 회사 로고가 붙는다.** 취득 후 반드시 눈으로 대조한다.
    *    후보를 여러 개 두는 이유도 그것이다 — 첫 도메인이 빗나가면 다음을 시도한다. */
+  "아이파크": ["ipark.co.kr", "hdc-dvp.com"],
+  "위브": ["doosanenc.com", "we-ve.co.kr"],
+  "포레나": ["forena.co.kr", "hanwha.co.kr"],
   "래미안": ["raemian.co.kr"],
   "자이": ["xi.co.kr", "gsconst.co.kr"],
   "푸르지오": ["prugio.com", "prugio.co.kr"],

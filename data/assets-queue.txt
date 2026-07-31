@@ -1,0 +1,2 @@
+# 순위 카드용 브랜드 로고 3종
+data/datasets/apt-brands-rank.json
