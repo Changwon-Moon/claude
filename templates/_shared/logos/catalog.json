@@ -136,6 +136,51 @@
       "license": "trademark-nominative",
       "note": "자동 취득(Tier C) · 회사 공식 자산 · 상표 nominative use",
       "added": "2026-07-31"
+    },
+    {
+      "slug": "raemian",
+      "name": "래미안",
+      "kind": "logo",
+      "source": "Brandfetch (raemian.co.kr)",
+      "license": "trademark-nominative",
+      "note": "자동 취득(Tier C) · 회사 공식 자산 · 상표 nominative use",
+      "added": "2026-07-31"
+    },
+    {
+      "slug": "daewooenc",
+      "name": "써밋",
+      "kind": "logo",
+      "source": "Brandfetch (daewooenc.com)",
+      "license": "trademark-nominative",
+      "note": "자동 취득(Tier C) · 회사 공식 자산 · 상표 nominative use",
+      "added": "2026-07-31"
+    },
+    {
+      "slug": "thesharp",
+      "name": "더샵",
+      "kind": "logo",
+      "source": "Brandfetch (thesharp.co.kr)",
+      "license": "trademark-nominative",
+      "note": "자동 취득(Tier C) · 회사 공식 자산 · 상표 nominative use",
+      "added": "2026-07-31"
+    },
+    {
+      "slug": "poscoenc",
+      "name": "오티에르",
+      "kind": "logo",
+      "source": "Brandfetch (poscoenc.com)",
+      "license": "trademark-nominative",
+      "note": "자동 취득(Tier C) · 회사 공식 자산 · 상표 nominative use",
+      "added": "2026-07-31"
+    },
+    {
+      "slug": "e",
+      "name": "e편한세상",
+      "kind": "logo",
+      "source": "Brandfetch (dlenc.co.kr)",
+      "license": "trademark-nominative",
+      "note": "자동 취득(Tier C) · 회사 공식 자산 · 상표 nominative use",
+      "added": "2026-07-31"
     }
   ]
 }

@@ -1,2 +1,0 @@
-# 브랜드 로고 재취득 (하이엔드 포함)
-data/datasets/apt-brands.json
