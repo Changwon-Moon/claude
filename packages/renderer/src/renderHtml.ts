@@ -77,14 +77,20 @@ Handlebars.registerHelper("metroBadge", (key: unknown) => {
 });
 
 /* ── 노선색 글자(metroInk) ─────────────────────────────────────────────
- * 오너 지시(2026-07-31): "구간들은 노선 색깔과 동일한 폰트로. 밝으면 알아서 테두리 처리."
+ * 오너 지시(2026-07-31): "구간들은 노선 색깔과 동일한 폰트로." → 이어서 "테두리가 이상하다.
+ * 알아서 두께 조절해서 가독성 높여봐."
  *
- * 색을 손으로 찍지 않는다 — 뱃지와 **같은 카탈로그**(metro-lines.json)에서 온다.
- * 노선색을 그대로 글자에 쓰면 수인분당(#FABE00)·서해(#8FC31F)처럼 밝은 노선은
- * 종이 바탕(#FAFAF8)에서 거의 안 읽힌다. 그래서 눈이 아니라 **대비를 재서** 가른다:
- * WCAG 대비 3.2 미만이면 같은 색을 어둡게 깎아 테두리를 두른다(칠은 노선색 그대로).
- * `paint-order: stroke fill` 이라 테두리가 글자 **뒤**로 깔려 획이 뭉개지지 않는다.
- * "밝아 보이면"이 아니라 계산값이 기준이므로 노선이 추가돼도 자동으로 맞는다. */
+ * 1차 시도는 노선색을 그대로 칠하고 밝은 색에만 `-webkit-text-stroke` 로 테두리를 둘렀다.
+ * **실패였다** — 한글 27px 에서 테두리가 획을 뚱뚱하게 만들어 스티커처럼 보이고,
+ * 테두리 있는 줄과 없는 줄의 **글자 굵기가 달라져** 표가 들쭉날쭉해졌다.
+ * 획 두께는 폰트가 정하는 것이지 테두리가 정할 게 아니다.
+ *
+ * 2차(현재): **테두리를 걷어내고 색 자체를 읽히는 밝기까지 낮춘다.**
+ * HSL 로 바꿔 **색상(H)·채도(S)는 그대로 두고 밝기(L)만** 이분탐색으로 내려
+ * 종이 바탕(#FAFAF8) 대비 목표치를 만족시킨다 — 노선 정체성은 유지하면서 읽힌다.
+ * 원래 어두운 노선(1·8·신분당…)은 계산이 통과하므로 손대지 않는다.
+ * 눈이 아니라 계산이 기준이라 노선이 추가돼도 자동으로 맞는다.
+ * 굵기는 템플릿에서 **모든 줄 동일**(800)하게 둔다 — 색이 달라도 획은 같아야 표가 고르다. */
 function hexRgb(h: string): [number, number, number] {
   const s = h.replace("#", "");
   return [
@@ -105,23 +111,48 @@ function contrastRatio(a: string, b: string): number {
   const la = relLum(a), lb = relLum(b);
   return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
 }
-function darken(hex: string, k: number): string {
-  const [r, g, b] = hexRgb(hex);
-  const c = (v: number) => Math.round(v * k).toString(16).padStart(2, "0");
-  return `#${c(r)}${c(g)}${c(b)}`;
+function rgbToHsl(hex: string): [number, number, number] {
+  const [r0, g0, b0] = hexRgb(hex).map((v) => v / 255) as [number, number, number];
+  const mx = Math.max(r0, g0, b0), mn = Math.min(r0, g0, b0);
+  const l = (mx + mn) / 2;
+  let h = 0, s = 0;
+  if (mx !== mn) {
+    const d = mx - mn;
+    s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
+    if (mx === r0) h = (g0 - b0) / d + (g0 < b0 ? 6 : 0);
+    else if (mx === g0) h = (b0 - r0) / d + 2;
+    else h = (r0 - g0) / d + 4;
+    h /= 6;
+  }
+  return [h, s, l];
+}
+function hslToHex(h: number, s: number, l: number): string {
+  const f = (n: number) => {
+    const k = (n + h * 12) % 12;
+    const a = s * Math.min(l, 1 - l);
+    const v = l - a * Math.max(-1, Math.min(k - 3, Math.min(9 - k, 1)));
+    return Math.round(255 * v).toString(16).padStart(2, "0");
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
 }
 const PAPER_BG = "#FAFAF8";
+/** 대비 목표를 만족할 때까지 **밝기만** 낮춘다(색상·채도 유지). 이미 만족하면 원색 그대로. */
+function inkFor(color: string, target = 4.2): string {
+  if (contrastRatio(color, PAPER_BG) >= target) return color;
+  const [h, s, l0] = rgbToHsl(color);
+  let lo = 0, hi = l0, best = 0;
+  for (let i = 0; i < 24; i++) {
+    const mid = (lo + hi) / 2;
+    if (contrastRatio(hslToHex(h, s, mid), PAPER_BG) >= target) { best = mid; lo = mid; }
+    else hi = mid;
+  }
+  return hslToHex(h, s, best);
+}
 /** 사용: <span class="m2-seg" {{{metroInk this.line}}}> — style 속성을 통째로 반환 */
 Handlebars.registerHelper("metroInk", (key: unknown) => {
   const m = METRO_LINES[String(key)];
   if (!m || !m.color) return new Handlebars.SafeString("");
-  const color = String(m.color);
-  if (contrastRatio(color, PAPER_BG) >= 3.2)
-    return new Handlebars.SafeString(`style="color:${color}"`);
-  const edge = darken(color, 0.45);
-  return new Handlebars.SafeString(
-    `style="color:${color};-webkit-text-stroke:1.1px ${edge};paint-order:stroke fill"`,
-  );
+  return new Handlebars.SafeString(`style="color:${inkFor(String(m.color))}"`);
 });
 
 /**

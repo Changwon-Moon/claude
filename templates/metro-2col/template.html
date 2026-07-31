@@ -86,20 +86,17 @@
         text-align: left;
         padding-left: 8px; /* .m2-seg 와 동일 — 머리글과 데이터의 왼쪽 끝을 맞춘다 */
       }
-      /* 구간명은 노선색으로 칠한다(색·테두리는 metroInk 헬퍼가 카탈로그에서 계산해 인라인으로 준다) */
+      /* 구간명은 노선색으로 칠한다 — 색은 metroInk 헬퍼가 카탈로그에서 계산해 인라인으로 준다.
+       * 굵기는 **모든 줄 동일 800**. 밝은 노선만 테두리를 두르면 그 줄만 획이 두꺼워져
+       * 표가 들쭉날쭉해진다(07-31 1차 시도 실패) — 획은 폰트가, 가독성은 색이 책임진다. */
       .m2-seg {
         font-size: 27px;
-        font-weight: 700;
+        font-weight: 800;
         letter-spacing: -0.02em;
         padding-left: 8px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-      }
-      /* 급/완 태그는 자기 색을 쓰므로 구간명의 테두리를 물려받으면 안 된다 */
-      .m2-seg .gu-tag {
-        -webkit-text-stroke: 0;
-        paint-order: normal;
       }
       .m2-val {
         text-align: center;
