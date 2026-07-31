@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* record-grid@1 — 하루에 쏟아진 '기록'을 6칸에 나열한다.
+         ── 왜 이 판형인가 (2026-07-31)
+         사건이 터진 날에는 숫자가 열 개씩 나온다. 하나만 크게 쓰면 나머지가 버려지고,
+         열 개를 다 늘어놓으면 아무것도 안 남는다. **여섯 칸**이 한도다.
+         칸마다 '무엇을 / 얼마나 / 역대 몇 위 / 직전 기록'을 같은 순서로 적어
+         독자가 첫 칸에서 읽는 법을 배우면 나머지 다섯 칸은 저절로 읽히게 한다.
+
+         ── 직전 기록을 반드시 함께 적는다
+         "역대 1위"는 그 자체로는 크기를 모른다. 2008년 11.95% 옆에 놓아야 17.91%가 보인다.
+         기록 카드에서 비교 대상을 빼면 숫자가 아니라 감탄사가 된다.
+
+         ── 머리 부분은 공용 규격 그대로다
+         카드 패딩 72 · 우상단 검은 뱃지 · 상단캡. 그래픽을 키우려고 머리를 줄이지 않는다. */
+      .rg { display: flex; flex-direction: column; }
+
+      .rg-head { padding: 0; margin: 28px 0 0; }
+      .rg .wirit-title {
+        font-size: 76px; line-height: 1.04; text-align: left; white-space: nowrap;
+        margin: 0; letter-spacing: -0.04em;
+      }
+      .rg .wirit-title .hi { color: var(--wirit-red); }
+
+      /* ── 머리 수치 한 줄 ──
+         오늘의 주인공(코스피 종가·등락)을 크게 한 번 말하고 시작한다.
+         여섯 칸은 '그래서 무엇이 기록이었나'의 목록이지, 오늘 시장이 어땠나가 아니다. */
+      .rg-lead {
+        flex: 0 0 auto; margin: 30px 0 0; padding: 24px 28px;
+        background: var(--wirit-ink); border-radius: 24px; color: #fff;
+        display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+      }
+      .rg-lead .lb { font-size: 26px; font-weight: 800; letter-spacing: -0.04em; opacity: 0.72; }
+      .rg-lead .vl { font-family: var(--font-num); font-size: 58px; font-weight: 900; letter-spacing: -0.03em; line-height: 1; }
+      .rg-lead .dt { font-family: var(--font-num); font-size: 34px; font-weight: 900; color: #FF6B6B; letter-spacing: -0.02em; }
+      .rg-lead .sb { flex: 1 0 100%; font-size: 21px; font-weight: 600; opacity: 0.66; letter-spacing: -0.03em; margin-top: 4px; }
+
+      /* ── 기록 6칸 ──
+         2열 × 3행. 남는 세로를 칸들이 나눠 갖는다 — 아래에 흰 띠를 남기지 않는다. */
+      .rg-cells {
+        flex: 1 1 auto; min-height: 0; display: grid;
+        grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0 0;
+      }
+      .rg-c {
+        background: var(--wirit-ink-06); border-radius: 24px; padding: 26px 26px 24px;
+        display: flex; flex-direction: column; justify-content: center; min-width: 0;
+      }
+      .rg-c .lb {
+        font-size: 25px; font-weight: 800; color: var(--wirit-gray);
+        letter-spacing: -0.05em; line-height: 1.15;
+      }
+      /* 값과 순위는 한 줄에 — 눈이 왼쪽에서 오른쪽으로 한 번만 움직인다. */
+      .rg-c .row { display: flex; align-items: baseline; gap: 10px; margin-top: 8px; min-width: 0; }
+      .rg-c .vl {
+        font-family: var(--font-num); font-weight: 900; letter-spacing: -0.035em;
+        line-height: 1; color: var(--wirit-ink); white-space: nowrap;
+      }
+      .rg-c .rk {
+        flex: 0 0 auto; font-size: 19px; font-weight: 900; letter-spacing: -0.04em;
+        color: #fff; background: var(--wirit-red); border-radius: 999px; padding: 5px 11px;
+        white-space: nowrap;
+      }
+      /* 직전 기록 — 회색으로 낮춘다. 기록보다 먼저 읽히면 안 되지만 없어서도 안 된다. */
+      .rg-c .pv {
+        margin-top: 9px; font-size: 19px; font-weight: 600; color: var(--wirit-gray);
+        letter-spacing: -0.035em; line-height: 1.25;
+      }
+
+      /* ── 맥락 한 줄 ──
+         오늘 급등이 왜 놀라운지는 어제까지의 이야기를 알아야 나온다.
+         길게 쓰면 기록 목록이 묻히므로 **한 줄**만 둔다(오너 선택 2026-07-31). */
+      .rg-note {
+        flex: 0 0 auto; margin: 16px 2px 4px; font-size: 21px; font-weight: 700;
+        color: var(--wirit-gray); letter-spacing: -0.04em; line-height: 1.35;
+      }
+      .rg-note b { color: var(--wirit-ink); font-weight: 900; }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card rg">
+      <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
+      <div class="rg-head"><h1 class="wirit-title">{{{title}}}</h1></div>
+
+      {{#if lead}}
+      <div class="rg-lead">
+        <span class="lb">{{lead.label}}</span>
+        <span class="vl">{{lead.value}}</span>
+        {{#if lead.delta}}<span class="dt">{{lead.delta}}</span>{{/if}}
+        {{#if lead.sub}}<span class="sb">{{lead.sub}}</span>{{/if}}
+      </div>
+      {{/if}}
+
+      <div class="rg-cells">
+        {{#each cells}}
+        <div class="rg-c">
+          <div class="lb">{{this.label}}</div>
+          <div class="row">
+            <span class="vl">{{this.value}}</span>
+            {{#if this.rank}}<span class="rk">{{this.rank}}</span>{{/if}}
+          </div>
+          {{#if this.prev}}<div class="pv">{{this.prev}}</div>{{/if}}
+        </div>
+        {{/each}}
+      </div>
+
+      {{#if note}}<div class="rg-note">{{{note}}}</div>{{/if}}
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <script>
+      window.__wiritFit = function () {
+        /* ① 제목이 카드 폭을 채우게 키우고 줄인다(다른 카드와 같은 코드·같은 이유). */
+        var el = document.querySelector(".rg .wirit-title");
+        if (el) {
+          var box = el.parentElement, bs = getComputedStyle(box);
+          var avail = box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
+          var lo = 34, hi = 112, best = 34;
+          for (var i = 0; i < 24; i++) {
+            var mid = (lo + hi) / 2;
+            el.style.fontSize = mid + "px";
+            if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
+          }
+          el.style.fontSize = best.toFixed(2) + "px";
+        }
+        /* ② 칸 안의 숫자도 각자 폭에 맞춘다.
+           '10조 3,834억'과 '+29.95%'는 길이가 두 배 가까이 차이 난다. 한 크기로 박으면
+           긴 쪽이 잘리거나(2026-07-31 '억' 잘림 사고) 짧은 쪽이 초라해진다.
+           칸마다 재서 각자 최대 크기를 준다 — 값은 한 줄을 넘지 않는다. */
+        var cells = document.querySelectorAll(".rg-c");
+        Array.prototype.forEach.call(cells, function (c) {
+          var v = c.querySelector(".vl"), row = c.querySelector(".row");
+          if (!v || !row) return;
+          var rk = row.querySelector(".rk");
+          var gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+          var avail = row.clientWidth - (rk ? rk.getBoundingClientRect().width + gap : 0);
+          var lo = 22, hi = 52, best = 22;
+          for (var i = 0; i < 22; i++) {
+            var mid = (lo + hi) / 2;
+            v.style.fontSize = mid + "px";
+            if (v.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
+          }
+          v.style.fontSize = best.toFixed(2) + "px";
+        });
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(window.__wiritFit);
+    </script>
+  </body>
+</html>
