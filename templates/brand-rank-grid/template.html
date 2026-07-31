@@ -67,7 +67,17 @@
       /* 발표가 없는 자리 — 비워 두지 않고 **없다고 적는다.** 빈칸은 '못 찾았다'로 읽힌다. */
       .bg-c .none { font-size: 14px; font-weight: 700; color: #C2C8D0; letter-spacing: -0.03em; text-align: center; line-height: 1.25; }
 
-      .bg-note { flex: 0 0 auto; margin: 14px 2px 10px; font-size: 18px; font-weight: 600; line-height: 1.35; color: var(--wirit-gray); }
+      /* ── 푸터 위 설명 줄 (2026-07-31 오너 요청) ──
+         회색 칩(대면 설문·온라인 빅데이터…)은 '무엇을 재나'를 이름으로만 말한다.
+         그것이 **왜 순위를 가르는지**는 한 줄이 더 필요하다. 표를 다 읽고 나서
+         "그래서 왜 다른데?"가 남으면 카드가 절반만 일한 것이다.
+         두 번째 줄은 연도 단서다 — 2025년 조사를 2026년 숫자로 읽지 않게 한다. */
+      .bg-note { flex: 0 0 auto; margin: 16px 2px 8px; }
+      .bg-note .l { display: flex; align-items: baseline; gap: 8px; font-size: 17px; line-height: 1.45; }
+      .bg-note .l + .l { margin-top: 5px; }
+      .bg-note .k { flex: 0 0 auto; font-weight: 900; color: var(--wirit-ink); letter-spacing: -0.03em; }
+      .bg-note .v { font-weight: 600; color: var(--wirit-gray); letter-spacing: -0.02em; }
+      .bg-note .cav { margin-top: 9px; font-size: 15px; font-weight: 600; color: #97A2AF; letter-spacing: -0.02em; }
     </style>
   </head>
   <body>
@@ -108,6 +118,15 @@
         </div>
         {{/each}}
       </div>
+
+      {{#if notes}}
+      <div class="bg-note">
+        {{#each notes}}
+        <div class="l"><span class="k">{{this.k}}</span><span class="v">{{this.v}}</span></div>
+        {{/each}}
+        {{#if caveat}}<div class="cav">{{caveat}}</div>{{/if}}
+      </div>
+      {{/if}}
 
       <div class="wirit-footer">
         <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>

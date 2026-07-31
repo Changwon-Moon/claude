@@ -35,7 +35,9 @@ const date = process.argv[2] || "2026-07-31";
 const doc = JSON.parse(readFileSync(join(ROOT, "data/datasets/jeongbi-order-2026-07.json"), "utf8"));
 const sites = doc.seoulSites.items;
 
-const { byName: BRAND, companyColor } = loadPalette();
+/* "jeongbi-board" 를 넘겨 이 카드용 색 수정(더샵 보라·푸르지오 초록)을 켠다.
+ * 이 카드는 시공사 8곳 색이 나란히 놓여 서로 구별돼야 한다 — 다른 카드와 사정이 다르다. */
+const { byName: BRAND, companyColor } = loadPalette("jeongbi-board");
 const GRAY = "#B4BAC2";
 const ABBR = {
   현대건설: "현대", GS건설: "GS", 삼성물산: "삼성", 대우건설: "대우", 롯데건설: "롯데",

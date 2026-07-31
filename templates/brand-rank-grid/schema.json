@@ -129,6 +129,33 @@
           "type": "string"
         }
       }
+    },
+    "notes": {
+      "type": "array",
+      "maxItems": 4,
+      "description": "푸터 위 설명 — 조사 종류가 무엇을 재는지 한 줄씩.",
+      "items": {
+        "type": "object",
+        "required": [
+          "k",
+          "v"
+        ],
+        "properties": {
+          "k": {
+            "type": "string",
+            "maxLength": 16
+          },
+          "v": {
+            "type": "string",
+            "maxLength": 80
+          }
+        }
+      }
+    },
+    "caveat": {
+      "type": "string",
+      "maxLength": 90,
+      "description": "연도·범위 단서 한 줄"
     }
   }
 }

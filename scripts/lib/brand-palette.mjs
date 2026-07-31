@@ -18,14 +18,18 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "../..");
 
-export function loadPalette() {
+/** @param {string} [scope] 카드 label. 지정하면 그 카드용 오너 수정만 적용한다.
+ *  안 주면 **로고에서 뽑은 색 그대로** — 로고와 글씨를 나란히 놓는 카드가 이쪽이다. */
+export function loadPalette(scope) {
   const ex = JSON.parse(readFileSync(join(ROOT, "data/datasets/brand-colors.json"), "utf8"));
   const ov = JSON.parse(readFileSync(join(ROOT, "data/datasets/brand-color-overrides.json"), "utf8"));
 
   const byName = new Map();
   const mainOf = new Map();     // 회사 → 일반 브랜드 색
   for (const b of ex.brands) {
-    const o = ov.overrides[b.name];
+    const raw = ov.overrides[b.name];
+    /* scope 가 없는 오버라이드는 전역, 있으면 그 카드에서만. */
+    const o = raw && (!raw.scope || (scope && raw.scope.includes(scope))) ? raw : null;
     const hex = o ? o.hex : b.hex;
     byName.set(b.name, { ...b, hex, overridden: !!o, why: o?.why });
     if (b.tier === "일반") mainOf.set(b.company, hex);
