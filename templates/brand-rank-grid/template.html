@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* brand-rank-grid@1 — 행=조사 / 열=순위 / 칸=브랜드 로고.
+         ── 왜 이 판형인가 (2026-07-31)
+         "아파트 브랜드 1위"는 조사마다 다르다. 한 조사만 보여주면 그 조사가 진실처럼 읽힌다.
+         **여러 조사를 겹쳐 놓아야** 순위를 만드는 것이 실력 차가 아니라 조사 성격이라는 게 보인다.
+         ranking-table 은 한 조사의 세로 순위표라 이 말을 못 한다.
+
+         ── 머리 부분은 공용 규격 그대로다
+         카드 패딩 72 · 우상단 검은 뱃지 · 상단캡. 그래픽을 키우려고 머리를 줄이지 않는다
+         (2026-07-31 map-board 에서 그렇게 했다가 계정에서 그 카드만 튀었다). */
+      .bg { display: flex; flex-direction: column; }
+
+      .bg-head { padding: 0; margin: 28px 0 0; }
+      .bg .wirit-title {
+        font-size: 76px; line-height: 1.02; text-align: left; white-space: nowrap;
+        margin: 0; letter-spacing: -0.035em;
+      }
+      .bg .wirit-title .hi { color: var(--wirit-red); }
+
+      /* ── 표 ──
+         왼쪽 조사 이름 열 + 순위 열들. 상자를 두르지 않고 **가로줄만** 긋는다 —
+         칸마다 테두리를 두르면 격자무늬가 로고보다 먼저 보인다. */
+      .bg-tbl { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; min-height: 0; margin: 22px 0 0; }
+      .bg-r {
+        display: grid; grid-template-columns: 218px repeat(var(--n), minmax(0, 1fr));
+        column-gap: 10px; align-items: center;
+      }
+      .bg-r + .bg-r { border-top: 1px solid rgba(38, 48, 61, 0.12); }
+
+      /* 머리줄 — 순위. 1~3위는 메달, 4위부터 숫자. */
+      .bg-r.hd { border-bottom: 3px solid var(--wirit-ink); padding-bottom: 8px; }
+      .bg-r.hd .c { text-align: center; font-size: 26px; font-weight: 900; color: var(--wirit-gray); letter-spacing: -0.03em; }
+      .bg-r.hd .c .md { font-size: 34px; }
+
+      /* 조사 이름 칸 — 이름 / 주체·시점 / 무엇을 재나 */
+      .bg-l { padding: 22px 0; }
+      .bg-l .nm { font-size: 24px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.05em; line-height: 1.1; }
+      .bg-l .by { font-size: 16px; white-space: nowrap; font-weight: 600; color: var(--wirit-gray); letter-spacing: -0.03em; margin-top: 3px; line-height: 1.25; }
+      .bg-l .kd {
+        display: inline-block; margin-top: 6px; padding: 3px 9px; border-radius: 999px;
+        background: rgba(38, 48, 61, 0.07); color: var(--wirit-gray);
+        font-size: 13px; font-weight: 800; letter-spacing: -0.03em;
+      }
+
+      /* 순위 칸 — 로고 위, 브랜드명 아래. 로고는 모두 같은 규격(normalize-logos.mjs)이라
+         상자 하나로 통일된다. 파일마다 크기를 손으로 맞추지 않는다. */
+      .bg-c { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; padding: 26px 2px; min-width: 0; }
+      .bg-c .lg { height: 52px; display: flex; align-items: center; justify-content: center; gap: 3px; }
+      .bg-c .lg img { max-width: 110px; height: 50px; object-fit: contain; }
+      .bg-c.tie .lg img { max-width: 64px; height: 38px; }
+      .bg-c .bn { font-size: 19px; font-weight: 800; letter-spacing: -0.05em; text-align: center; line-height: 1.15; }
+      .bg-c .sc { font-family: "Wanted Sans", "Pretendard", sans-serif; font-size: 15px; font-weight: 800; color: var(--wirit-gray); }
+      /* 발표가 없는 자리 — 비워 두지 않고 **없다고 적는다.** 빈칸은 '못 찾았다'로 읽힌다. */
+      .bg-c .none { font-size: 14px; font-weight: 700; color: #C2C8D0; letter-spacing: -0.03em; text-align: center; line-height: 1.25; }
+
+      .bg-note { flex: 0 0 auto; margin: 14px 2px 10px; font-size: 18px; font-weight: 600; line-height: 1.35; color: var(--wirit-gray); }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card bg">
+      <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
+      <div class="bg-head"><h1 class="wirit-title">{{{title}}}</h1></div>
+
+      <div class="bg-tbl" style="--n: {{cols.length}}">
+        <div class="bg-r hd">
+          <div class="bg-l"></div>
+          {{#each cols}}<div class="c">{{{this}}}</div>{{/each}}
+        </div>
+        {{#each rows}}
+        <div class="bg-r">
+          <div class="bg-l">
+            <div class="nm">{{this.label}}</div>
+            {{#if this.by}}<div class="by">{{this.by}}</div>{{/if}}
+            {{#if this.kind}}<span class="kd">{{this.kind}}</span>{{/if}}
+          </div>
+          {{#each this.cells}}
+          <div class="bg-c{{#if this.logo2}} tie{{/if}}">
+            {{#if this.empty}}
+              <span class="none">{{this.empty}}</span>
+            {{else}}
+              <span class="lg">
+                {{#if this.logo}}<img src="../_shared/logos/{{this.logo}}" alt="" />{{/if}}
+                {{#if this.logo2}}<img src="../_shared/logos/{{this.logo2}}" alt="" />{{/if}}
+              </span>
+              <span class="bn" style="color:{{#if this.color}}{{this.color}}{{else}}var(--wirit-ink){{/if}}">{{this.brand}}{{#if this.brand2}}<br />{{this.brand2}}{{/if}}</span>
+              {{#if this.score}}<span class="sc">{{this.score}}</span>{{/if}}
+            {{/if}}
+          </div>
+          {{/each}}
+        </div>
+        {{/each}}
+      </div>
+
+      {{#if note}}<p class="bg-note">{{note}}</p>{{/if}}
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <!-- 제목이 카드 폭을 채우게 키우고 줄인다(map-board 와 같은 코드·같은 이유). -->
+    <script>
+      window.__wiritFit = function () {
+        var el = document.querySelector(".bg .wirit-title");
+        if (!el) return;
+        var box = el.parentElement;
+        var bs = getComputedStyle(box);
+        var avail = box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
+        var MINPX = 34, MAXPX = 104;
+        var lo = MINPX, hi = MAXPX, best = MINPX;
+        for (var i = 0; i < 24; i++) {
+          var mid = (lo + hi) / 2;
+          el.style.fontSize = mid + "px";
+          if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(window.__wiritFit);
+    </script>
+  </body>
+</html>

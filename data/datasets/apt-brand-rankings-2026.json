@@ -1,0 +1,107 @@
+{
+  "_": [
+    "아파트 브랜드 순위 — 5개 조사의 1~5위. 2026-07-31 원문 재검증.",
+    "",
+    "── 규칙",
+    "· 각 순위는 원 발표 기사·자료를 직접 열어 확인한 것만 적는다. 못 본 자리는 null 이다.",
+    "· null 을 그럴듯한 브랜드로 메우지 않는다 — 순위표는 한 칸만 틀려도 전체가 거짓이 된다.",
+    "· asOf 는 '발표 시점'이고 surveyedAt 은 '조사 시점'이다. 둘이 다른 조사가 많다.",
+    "",
+    "── 왜 조사마다 1위가 다른가 (카드가 말할 것)",
+    "K-BPI 는 사람을 만나 물은 인지도, 브랜드평판은 온라인 언급량, BSTI 는 지수(주가 70%+설문 30%),",
+    "부동산R114 는 6항목 설문, 여론조사는 ARS 선호도다. 재는 자가 다르니 1위도 다르다."
+  ],
+  "verifiedAt": "2026-07-31",
+  "surveys": [
+    {
+      "id": "A1",
+      "name": "K-BPI 브랜드파워",
+      "by": "한국능률협회컨설팅",
+      "kind": "대면 설문",
+      "asOf": "2026.3",
+      "surveyedAt": "2025.10~2026.1",
+      "sample": "13,500명 · 서울+6대 광역시 · 1:1 개별 면접",
+      "note": "발표 자료가 부문별 1~3위만 공개한다 — 4·5위는 애초에 없다",
+      "ranks": [
+        { "rank": 1, "brand": "래미안", "score": "575.4" },
+        { "rank": 2, "brand": "힐스테이트", "score": "488.3" },
+        { "rank": 3, "brand": "자이", "score": "415.5" },
+        { "rank": 4, "brand": null },
+        { "rank": 5, "brand": null }
+      ],
+      "source": "https://kmac.co.kr/static/portal/assets/download/service_valueInnovation/K-BPI_2026_Power_Chosun.pdf"
+    },
+    {
+      "id": "A2",
+      "name": "베스트 아파트 브랜드",
+      "by": "부동산R114",
+      "kind": "설문 6항목",
+      "asOf": "2025.10",
+      "surveyedAt": "2025.9.15~28",
+      "sample": "전국 성인 4,846명",
+      "note": "2026년판은 미발표(통상 10~11월). 3위는 롯데캐슬·래미안 공동",
+      "ranks": [
+        { "rank": 1, "brand": "자이" },
+        { "rank": 2, "brand": "힐스테이트" },
+        { "rank": 3, "brand": "롯데캐슬", "tie": "래미안" },
+        { "rank": 4, "brand": "아이파크" },
+        { "rank": 5, "brand": "위브" }
+      ],
+      "source": "https://www.newspim.com/news/view/20251030000484"
+    },
+    {
+      "id": "A4",
+      "name": "브랜드 선호도 여론조사",
+      "by": "스트레이트뉴스 · 조원씨앤아이",
+      "kind": "ARS 여론조사",
+      "asOf": "2025.3",
+      "surveyedAt": "2025.3.8~10",
+      "sample": "2,001명 · 휴대전화 100% RDD · ±2.2%p",
+      "note": "2026년판은 확인되지 않는다",
+      "ranks": [
+        { "rank": 1, "brand": "래미안", "score": "18.3%" },
+        { "rank": 2, "brand": "자이", "score": "10.7%" },
+        { "rank": 3, "brand": "힐스테이트", "score": "10.4%" },
+        { "rank": 4, "brand": "더샵", "score": "8.1%" },
+        { "rank": 5, "brand": "푸르지오", "score": "6.2%" }
+      ],
+      "source": "https://www.straightnews.co.kr/news/articleView.html?idxno=266287"
+    },
+    {
+      "id": "B1",
+      "name": "브랜드평판 지수",
+      "by": "한국기업평판연구소",
+      "kind": "온라인 빅데이터",
+      "asOf": "2026.7",
+      "surveyedAt": "2026.6.16~7.16",
+      "sample": "빅데이터 3,286만 건",
+      "note": "매월 발표 — 상위권이 달마다 흔들린다(6월 3위는 아이파크였다)",
+      "ranks": [
+        { "rank": 1, "brand": "힐스테이트", "score": "555만" },
+        { "rank": 2, "brand": "롯데캐슬", "score": "375만" },
+        { "rank": 3, "brand": "자이", "score": "328만" },
+        { "rank": 4, "brand": "푸르지오" },
+        { "rank": 5, "brand": "래미안" }
+      ],
+      "source": "https://www.enetnews.co.kr/news/articleView.html?idxno=52447"
+    },
+    {
+      "id": "B2",
+      "name": "BSTI 브랜드가치",
+      "by": "브랜드스탁",
+      "kind": "지수(주가 70%+설문 30%)",
+      "asOf": "2025 종합 · 2025.12 발표",
+      "surveyedAt": "2025년 연간",
+      "sample": "약 230개 부문 1,000여 브랜드",
+      "note": "2026.6 시점 상위 4위 순서도 동일(자이 865.0·힐스테이트 855.7·롯데캐슬 849.5·래미안 848.4). 5위까지 공개된 것은 2025 종합뿐",
+      "ranks": [
+        { "rank": 1, "brand": "자이", "score": "843.1" },
+        { "rank": 2, "brand": "힐스테이트", "score": "838.4" },
+        { "rank": 3, "brand": "롯데캐슬", "score": "833.6" },
+        { "rank": 4, "brand": "래미안", "score": "823.8" },
+        { "rank": 5, "brand": "e편한세상" }
+      ],
+      "source": "https://www.biztribune.co.kr/news/articleView.html?idxno=345738"
+    }
+  ]
+}
