@@ -20,16 +20,14 @@
     },
     "title": {
       "type": "string",
-      "maxLength": 34
+      "maxLength": 90,
+      "description": "제목. <span class=\"hi\">…</span> 로 일부를 강조할 수 있다(템플릿이 {{{title}}} 로 받는다). 태그를 세느라 글자 수 상한이 넉넉하다 — 실제 넘침은 designQa 와 제목 맞춤 스크립트가 잡는다."
     },
     "subtitle": {
       "type": "string",
       "maxLength": 70
     },
     "mapSvg": {
-      "type": "string"
-    },
-    "footnote": {
       "type": "string"
     },
     "rows": {

@@ -4,100 +4,108 @@
     <meta charset="utf-8" />
     <!--WIRIT_SHARED_CSS-->
     <style>
-      /* map-board@1 — 상 제목 / 중 지도 / 하 시공사 카드.
+      /* map-board@1 — 상 제목 / 중 지도(번호 원) / 하 시공사 8칸.
          ── 왜 새 템플릿인가 (2026-07-31 오너 지시)
          "상 제목 - 중 지도 - 하 표" 3단은 기존 어느 템플릿에도 없다.
          map-choropleth 는 지도만, singoga-map 은 좌 표·우 지도다. 세로 3단은 처음이다.
          ── 왜 범례가 없나
-         오너 지시: 범례 대신 **하단 카드가 곧 범례**다. 카드의 색 띠와 지도 마커 색이 같아
-         눈이 바로 잇는다. 색 범례를 따로 두면 한 번 더 눈을 옮기게 만든다. */
-      .mb { padding-top: 46px; display: flex; flex-direction: column; }
-      .mb .wirit-corner { background: transparent; padding: 0; box-shadow: none; top: 40px; right: 52px; }
+         범례 대신 **아래 8칸이 곧 범례**다. 지도의 번호와 8칸의 번호가 같은 색이라
+         눈이 바로 잇는다. 색 범례를 따로 두면 한 번 더 눈을 옮기게 만든다.
+
+         ── 왜 상자를 걷어냈나 (2026-07-31 오너 "AI스럽지 않게")
+         회색 둥근 상자 8개를 격자로 늘어놓으면 어느 대시보드에나 있는 그림이 된다.
+         상자를 없애고 **브랜드색 굵은 선 하나**로 칸을 열었다. 경계를 색으로 긋고
+         나머지는 여백에 맡기는 편이 신문 지면에 가깝다. 색은 그대로 두고 상자만 뺐다. */
+      .mb { padding-top: 44px; display: flex; flex-direction: column; }
+      .mb .wirit-corner { background: transparent; padding: 0; box-shadow: none; top: 38px; right: 52px; }
       .mb .wirit-corner .mark { color: var(--wirit-ink); font-size: 40px; }
       .mb > .wirit-topcap { padding-right: 150px; }
 
-      .mb-head { padding: 0 8px; margin: 16px 0 0; }  /* 코너 배지와 4px 겹쳤다 — 제목을 내려 비킨다(designQa badgeclip) */
-      .mb .wirit-title { font-size: 74px; line-height: 1.05; text-align: center; white-space: nowrap; margin: 0; letter-spacing: -0.03em; }
-
-      /* ── 지도가 남는 세로를 **전부** 먹는다 (2026-07-31 오너 지시) ──
-         전에는 max-height 로 지도를 묶어 두었는데, 카드가 7장 1행이라 아래가 텅 비었다.
-         이제 카드가 2행이 되어 필요한 높이가 확정되므로, 지도는 flex:1 로 나머지를 채운다.
-         고정 픽셀을 적지 않는 이유: 카드 행수나 제목 줄수가 바뀌면 그 숫자가 곧 거짓이 된다. */
-      /* 지도는 **제 비율대로** 폭을 가득 채운다. height:100% 로 두면 지도 비율(가로로 넓다)과
-         칸 비율이 달라 위아래에 흰 띠가 남는다 — 실제로 그렇게 남았다.
-         남는 세로는 아래 카드가 가져간다(.mb-cards 가 flex:1). */
-      /* 지도는 제 비율대로 폭을 가득 채운다(height:100% 로 두면 비율이 달라 흰 띠가 남는다).
-         남는 세로는 지도 **위아래로 나눠** 준다 — 한쪽에 몰리면 '아래가 비었다'로 보이지만
-         양쪽으로 갈라지면 여백으로 읽힌다. 카드를 억지로 늘리면 카드 속이 텅 빈다. */
-      .mb-map { flex: 1 1 auto; display: flex; align-items: center; min-height: 0; }
-      .mb-map svg { width: 100%; height: auto; display: block; }
-
-      /* ── 하단 시공사 카드 — 4열 × 2행 (2026-07-31 오너 지시) ──
-         카드가 이제 '이 회사가 어디를 땄나'까지 말한다. 지도에서 이름을 걷어냈으므로
-         번호와 단지명이 여기서 만나지 못하면 지도의 번호는 아무 뜻이 없다.
-         minmax(0,1fr): 1fr 만 쓰면 최소 폭이 '내용 크기'라 긴 이름이 칸을 밀어낸다. */
-      .mb-cards { flex: 0 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 9px; margin: 8px 2px 6px; }
-      .mb-c {
-        display: flex; flex-direction: column; gap: 7px;
-        padding: 12px 12px 11px; border-radius: 10px; overflow: hidden;
-        background: rgba(38, 48, 61, 0.05);
-        border-top: 5px solid var(--c);
+      /* 제목은 카드 폭을 **가득 채운다**(오너 지시). 아래 스크립트가 키우고 줄인다. */
+      .mb-head { padding: 0; margin: 14px 0 0; }
+      .mb .wirit-title {
+        font-size: 76px; line-height: 1.02; text-align: left; white-space: nowrap;
+        margin: 0; letter-spacing: -0.035em;
       }
-      /* 머리: 로고(일반 위 / 하이엔드 아래) 왼쪽, 회사명·수주액 오른쪽.
-         로고를 가로로 늘어놓으면 폭을 두 배 먹는다 — 카드 폭이 240px 뿐이라 세로로 쌓는다. */
-      .mb-c .hd { display: grid; grid-template-columns: 58px minmax(0, 1fr); column-gap: 9px; align-items: center; }
-      .mb-c .lgs { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
-      .mb-c .lgs img { width: 100%; max-height: 30px; object-fit: contain; }
-      /* 로고가 하나뿐인 회사(자이·래미안)는 그 한 장을 크게 — 위쪽이 비면 카드가 기울어 보인다 */
-      .mb-c .lgs.one img { max-height: 52px; }
+      .mb .wirit-title .hi { color: var(--wirit-red); }
+
+      /* 지도는 제 비율대로 폭을 채우고, 남는 세로는 위아래로 나눠 갖는다.
+         height:100% 로 두면 지도 비율과 칸 비율이 달라 한쪽에 흰 띠가 몰린다. */
+      /* height:auto 로 두면 지도가 제 비율대로 커지다 **칸을 넘쳐 제목을 덮었다**(2026-07-31).
+         width·height 를 100% 로 묶고 viewBox 의 preserveAspectRatio 에 맡기면
+         남는 칸 안에 반드시 들어간다 — 넘침이 구조적으로 불가능해진다. */
+      .mb-map { flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; margin: 2px 0 0; }
+      .mb-map svg { width: 100%; height: 100%; display: block; }
+
+      /* ── 하단 시공사 8칸 — 4열 × 2행 ──
+         상자가 아니라 **위쪽 굵은 선**으로 칸을 연다. 칸 사이는 여백만으로 갈린다.
+         minmax(0,1fr): 1fr 만 쓰면 최소 폭이 '내용 크기'라 긴 이름이 칸을 밀어낸다. */
+      .mb-cards {
+        flex: 0 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+        column-gap: 24px; row-gap: 16px; margin: 12px 0 2px;
+      }
+      .mb-c { display: flex; flex-direction: column; gap: 6px; padding-top: 9px; border-top: 5px solid var(--c); }
+
+      /* 머리: 순위(메달) + 회사명 → 수주액 → 로고. 위에서 아래로 읽는 순서 그대로 쌓는다. */
+      .mb-c .rk { display: flex; align-items: baseline; gap: 7px; }
+      /* 1~3위는 메달 그림, 4위부터는 숫자 — 같은 자리에 오므로 크기를 맞춰 둔다.
+         메달은 이모지라 글꼴 크기보다 크게 보인다. 그래서 숫자보다 조금 작게 준다. */
+      .mb-c .rk .rn {
+        font-family: "Wanted Sans", "Pretendard", sans-serif;
+        font-size: 25px; font-weight: 900; color: var(--wirit-gray); letter-spacing: -0.03em; line-height: 1;
+      }
+      .mb-c .nm { font-size: 25px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.05em; line-height: 1; }
+      .mb-c .vl {
+        font-family: "Wanted Sans", "Pretendard", sans-serif;
+        font-size: 31px; font-weight: 900; color: var(--c); white-space: nowrap; line-height: 1;
+        letter-spacing: -0.03em; margin-top: -2px;
+      }
+      .mb-c .vl i { font-style: normal; font-size: 18px; font-weight: 800; margin-left: 2px; }
+
+      /* 로고는 일반(위) / 하이엔드(아래)를 세로로 — 가로로 늘어놓으면 폭을 두 배 먹는다.
+         왼쪽 정렬이라야 위 글자 줄과 축이 맞는다(가운데 정렬은 칸마다 축이 흔들린다). */
+      .mb-c .lgs { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 5px; height: 66px; }
+      .mb-c .lgs img { max-width: 118px; max-height: 30px; object-fit: contain; }
+      .mb-c .lgs.one img { max-height: 54px; max-width: 128px; }
       .mb-c .chip {
-        width: 42px; height: 42px; border-radius: 50%; background: var(--c); color: #fff;
+        width: 44px; height: 44px; border-radius: 50%; background: var(--c); color: #fff;
         display: flex; align-items: center; justify-content: center;
         font-size: 15px; font-weight: 800; letter-spacing: -0.04em;
       }
-      .mb-c .nm { font-size: 22px; font-weight: 800; color: var(--wirit-ink); line-height: 1.1; letter-spacing: -0.04em; }
-      .mb-c .vl {
-        font-family: "Wanted Sans", "Pretendard", sans-serif;
-        font-size: 24px; font-weight: 900; color: var(--c); white-space: nowrap; line-height: 1.2;
-      }
-      .mb-c .vl i { font-style: normal; font-size: 14px; font-weight: 800; margin-left: 2px; }
 
-      /* 사업지 목록 — 번호 원의 색과 글씨 색이 모두 **그 단지의 브랜드 색**이다.
-         지도의 원과 같은 색·같은 숫자라 눈이 바로 잇는다. */
-      .mb-c .st { display: flex; flex-direction: column; gap: 3px; border-top: 1px solid rgba(38,48,61,.1); padding-top: 7px; }
-      .mb-c .st li { display: flex; align-items: center; gap: 5px; list-style: none; }
+      /* 사업지 — 번호 원과 글씨가 모두 그 단지의 브랜드 색. 지도의 원과 같은 색·같은 숫자다. */
+      .mb-c .st { display: flex; flex-direction: column; gap: 3px; margin: 0; padding: 0; }
+      .mb-c .st li { display: flex; align-items: center; gap: 6px; list-style: none; }
       .mb-c .st .n {
-        flex: 0 0 auto; width: 19px; height: 19px; border-radius: 50%;
+        flex: 0 0 auto; width: 20px; height: 20px; border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
-        font-size: 12px; font-weight: 800; color: #fff; letter-spacing: -0.05em;
+        font-size: 13px; font-weight: 800; color: #fff; letter-spacing: -0.05em;
       }
-      .mb-c .st .t { font-size: 16px; font-weight: 700; letter-spacing: -0.045em; white-space: nowrap;
-        overflow: hidden; text-overflow: ellipsis; }
-
-      .mb-fn { white-space: pre-line; margin: 0 12px 8px; font-size: 17px; font-weight: 600; line-height: 1.35; color: var(--wirit-gray); }
+      .mb-c .st .t {
+        font-size: 16px; font-weight: 700; letter-spacing: -0.05em; white-space: nowrap;
+        overflow: hidden; text-overflow: ellipsis;
+      }
     </style>
   </head>
   <body>
     <div class="wirit-card mb">
       <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
-      <div class="mb-head"><h1 class="wirit-title">{{title}}</h1></div>
+      <div class="mb-head"><h1 class="wirit-title">{{{title}}}</h1></div>
 
       <div class="mb-map">{{{mapSvg}}}</div>
 
       <div class="mb-cards">
         {{#each rows}}
         <div class="mb-c" style="--c: {{this.color}}">
-          <div class="hd">
-            <span class="lgs {{#unless this.logos.[1]}}one{{/unless}}">
-              {{#if this.logos.length}}{{#each this.logos}}<img src="../_shared/logos/{{this}}" alt="" />{{/each}}
-              {{else}}<span class="chip">{{../this.abbr}}</span>{{/if}}
-            </span>
-            <span>
-              <span class="nm">{{this.name}}</span><br />
-              <span class="vl">{{this.value}}{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
-            </span>
-          </div>
+          <span class="rk">
+            <span class="rn">{{medal this.rank @index}}</span>
+            <span class="nm">{{this.name}}</span>
+          </span>
+          <span class="vl">{{this.value}}{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
+          <span class="lgs {{#unless this.logos.[1]}}one{{/unless}}">
+            {{#if this.logos.length}}{{#each this.logos}}<img src="../_shared/logos/{{this}}" alt="" />{{/each}}
+            {{else}}<span class="chip">{{../this.abbr}}</span>{{/if}}
+          </span>
           <ul class="st">
             {{#each this.sites}}
             <li><span class="n" style="background:{{this.color}}">{{this.no}}</span><span class="t" style="color:{{this.color}}">{{this.name}}</span></li>
@@ -107,16 +115,16 @@
         {{/each}}
       </div>
 
-      {{#if footnote}}<p class="mb-fn">{{footnote}}</p>{{/if}}
-
       <div class="wirit-footer">
         <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
         <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
       </div>
     </div>
 
-    <!-- 제목 넘침 방지 — **줄이는 방향으로만** 작동한다(map-choropleth 와 같은 이유·같은 코드).
-         제목이 nowrap 이라 길면 카드 밖으로 잘려 나간다. 글자가 잘린 카드는 불량품이다. -->
+    <!-- 제목 맞춤 — 이 템플릿만 **키우기도** 한다(오너 지시 "제목 폰트 크기 키워서 채워줘").
+         다른 템플릿의 fit 은 줄이기만 한다(잘린 글자를 막는 안전장치). 여기서는 제목이
+         카드 폭을 채우는 것이 디자인이므로 위아래 양쪽으로 맞춘다.
+         상한(MAXPX)을 두는 이유: 제목이 짧은 날 글자가 터무니없이 커지는 것을 막는다. -->
     <script>
       window.__wiritFit = function () {
         var el = document.querySelector(".mb .wirit-title");
@@ -124,12 +132,9 @@
         var box = el.parentElement;
         var bs = getComputedStyle(box);
         var avail = box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
-        var base = parseFloat(el.dataset.baseSize || "");
-        if (!base) { base = parseFloat(getComputedStyle(el).fontSize); el.dataset.baseSize = String(base); }
-        el.style.fontSize = base + "px";
-        if (el.scrollWidth <= avail) return;
-        var lo = 34, hi = base, best = lo;
-        for (var i = 0; i < 20; i++) {
+        var MINPX = 34, MAXPX = 108;
+        var lo = MINPX, hi = MAXPX, best = MINPX;
+        for (var i = 0; i < 24; i++) {
           var mid = (lo + hi) / 2;
           el.style.fontSize = mid + "px";
           if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }

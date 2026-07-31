@@ -174,7 +174,9 @@ for (const [gu, arr] of Object.entries(byGu)) {
  * 라벨이 사라져 지도가 훨씬 한산해졌으므로 원을 키울 수 있다(R=19).
  * 원이 커진 만큼 최소 간격도 키운다 — 안 그러면 강남에서 숫자가 겹쳐 못 읽는다.
  * 미는 방향은 인덱스 순서로만 정한다(랜덤 금지 — 같은 입력이면 같은 그림). */
-const MR = 16, MIND = MR * 2 + 3;
+/* 오너 지시(2026-07-31) — 마커를 키운다. 카드 최하단 3줄(각주)을 걷어내 지도가 쓸 세로가
+ * 늘었으므로 원을 키워도 카드가 밀리지 않는다. 원이 커진 만큼 최소 간격도 같이 커진다. */
+const MR = 21, MIND = MR * 2 + 4;
 const drawn = [];
 for (const s of numbered) { s.x0 = s.x; s.y0 = s.y; }   // 밀기 전 자리 — 얼마나 밀렸는지 재려고 남긴다
 for (const s of [...numbered].sort((a, b) => a.y - b.y || a.x - b.x)) {
@@ -193,7 +195,7 @@ for (const s of [...numbered].sort((a, b) => a.y - b.y || a.x - b.x)) {
 let marks = "";
 for (const s of numbered) {
   marks +=
-    `<circle cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="${MR}" fill="${s.color}" stroke="#fff" stroke-width="3"/>` +
+    `<circle cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="${MR}" fill="${s.color}" stroke="#fff" stroke-width="3.5"/>` +
     `<text class="mn" x="${s.x.toFixed(1)}" y="${s.y.toFixed(1)}">${s.no}</text>`;
 }
 
@@ -219,8 +221,9 @@ const WM_W = 200, WM_H = 36;
 const hitBox = (a, b) => !(a.x1 <= b.x0 || b.x1 <= a.x0 || a.y1 <= b.y0 || b.y1 <= a.y0);
 const markBoxes = numbered.map((s) => ({ x0: s.x - MR - 4, x1: s.x + MR + 4, y0: s.y - MR - 4, y1: s.y + MR + 4 }));
 const cands = [];
-for (const fx of [0.01, 0.1, 0.42, 0.7, 0.88]) {
-  for (const fy of [0.02, 0.15, 0.5, 0.83, 0.97]) {
+/* 맨 윗줄은 후보에서 뺀다 — 지도 위쪽은 제목 바로 아래라 워터마크가 제목에 붙어 보인다. */
+for (const fx of [0.01, 0.12, 0.44, 0.72, 0.88]) {
+  for (const fy of [0.22, 0.42, 0.62, 0.84, 0.96]) {
     const x0 = cx0 + fx * (VW - WM_W), y0 = cy0 + fy * (VH - WM_H);
     cands.push({ x0, x1: x0 + WM_W, y0, y1: y0 + WM_H, edge: Math.min(fx, 1 - fx) + Math.min(fy, 1 - fy) });
   }
@@ -238,7 +241,7 @@ const watermarks = wmPicked
 const mapSvg =
   `<svg viewBox="${cx0.toFixed(0)} ${cy0.toFixed(0)} ${VW} ${VH}" xmlns="http://www.w3.org/2000/svg">` +
   `<style>.river{fill:none;stroke:#8fbfe0;stroke-width:9;stroke-linecap:round;stroke-linejoin:round}` +
-  `.mn{font-family:'Pretendard',sans-serif;font-size:22px;font-weight:800;fill:#fff;text-anchor:middle;dominant-baseline:central}` +
+  `.mn{font-family:'Pretendard',sans-serif;font-size:26px;font-weight:800;fill:#fff;text-anchor:middle;dominant-baseline:central}` +
   `.wm{font-family:'Pretendard',sans-serif;font-size:28px;font-weight:800;fill:#26303d;opacity:.16;text-anchor:middle;dominant-baseline:central}` +
   `.wmd{fill:#F04E3E}</style>` +
   `${paths}<path class="river" d="${riverD}"/>${watermarks}${marks}</svg>`;
@@ -270,15 +273,16 @@ const noBrand = numbered.filter((s) => !s.brandKnown).map((s) => s.name);
 const card = {
   template: "map-board@1",
   date,
-  title: "올해 서울 정비사업, 누가 어디를",
-  subtitle: `주요 건설사 서울 수주 ${numbered.length}곳 · ${doc.seoulSites.asOf.replace(/-/g, ".").slice(2)} 기준`,
+  /* 제목의 '1위'만 강조색 — 기존 완성본(tohuh-rent-map)이 쓰는 방식 그대로 <span class="hi">.
+   * 템플릿이 {{{title}}} 로 받으므로 HTML 이 그대로 들어간다. */
+  title: `올해 서울 정비사업 수주 <span class="hi">1위</span>는?`,
+  subtitle: `2026년 상반기 · 주요 건설사 서울 정비사업 수주 ${numbered.length}곳`,
   mapSvg,
   rows,
-  footnote:
-    `번호는 아래 카드의 사업지와 이어집니다. 색은 그 단지의 아파트 브랜드 색입니다.\n` +
-    `수주액은 서울 외 사업지를 포함한 전국 누적입니다.` +
-    (approx.length ? `\n${approx.join("·")}는 구역 중심이 아니라 동 중심으로 찍은 근사 위치입니다.` : ""),
-  source: { name: "각 사 · 뉴시스 정리", asOf: doc.seoulSites.asOf },
+  /* 각주 3줄은 오너 지시로 뺐다(2026-07-31). 근사 좌표·브랜드 미정 같은 단서는
+   * 카드 면 대신 캡션에 적는다 — 카드에서 사라졌다고 사실이 없어진 것은 아니므로
+   * 아래 콘솔이 그 목록을 계속 뱉는다. 캡션 쓸 때 그대로 옮긴다. */
+  source: { name: "뉴시스 · 각 사 취합", asOf: doc.seoulSites.asOf },
 };
 
 const outDir = join(ROOT, "data/out/_spike");
@@ -293,4 +297,6 @@ const moved = numbered.map((s) => Math.hypot(s.x - s.x0, s.y - s.y0));
 const worst = numbered[moved.indexOf(Math.max(...moved))];
 console.log(`   마커 겹침 벌리기: 평균 ${(moved.reduce((a, b) => a + b, 0) / moved.length).toFixed(0)}px · 최대 ${Math.max(...moved).toFixed(0)}px (${worst.name})`);
 console.log(`   지도 자르기: ${W}×${H} → ${VW}×${VH} (비율 ${(VW / VH).toFixed(2)}) · 워터마크 ${wmPicked.length}/2`);
+if (approx.length) console.log(`   ⚠ 캡션에 적을 것 — 근사 위치: ${approx.join(", ")}`);
+if (noBrand.length) console.log(`   ⚠ 캡션에 적을 것 — 단지명 미정(시공사 색): ${noBrand.join(", ")}`);
 console.log(`   → data/out/_spike/jeongbi-board.json`);
