@@ -22,6 +22,7 @@ on:
       - "data/assets-queue.txt"
       - ".github/workflows/asset-fetch.yml"
 
+# 재트리거 표식: 2026-07-31 — 대기열만 바꿔서는 안 깨어나 워크플로 파일도 함께 건드린다
 permissions:
   contents: write
 

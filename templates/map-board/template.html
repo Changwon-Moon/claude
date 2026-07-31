@@ -23,46 +23,35 @@
          (첫 시안에서 9행 중 2행과 푸터가 잘렸다). 표는 정보의 본체다. 지도가 양보한다.
          회사 2곳을 빼 표가 9행→7행이 되면서 아래가 비었다 → 상한을 470→620 으로 올렸다.
          표 행수가 바뀌면 이 값도 함께 봐야 한다. */
-      .mb-map { display: flex; align-items: center; justify-content: center; margin: 6px 0 2px; max-height: 620px; }
-      .mb-map svg { width: 100%; height: 100%; max-height: 620px; object-fit: contain; display: block; }
+      .mb-map { display: flex; align-items: center; justify-content: center; margin: 6px 0 2px; max-height: 720px; }
+      .mb-map svg { width: 100%; height: 100%; max-height: 720px; object-fit: contain; display: block; }
 
-      /* ── 표 ──
-         열: 번호들 · 로고 · 회사명 · 수주액.
-         번호가 여러 개 붙는 회사가 있으므로 번호 열은 줄바꿈을 허용한다. */
-      .mb-tab { margin: 0 4px 8px; display: flex; flex-direction: column; gap: 2px; }
-      .mb-row {
-        display: grid;
-        grid-template-columns: 42px 1fr auto;
-        align-items: center;
-        gap: 14px;
-        padding: 5px 12px;
-        border-radius: 4px;
+      /* ── 하단 시공사 카드 (2026-07-31 오너 지시) ──
+         표(행 나열) 대신 **7장을 한 줄에** 놓는다. 로고 / 회사명 / 수주액 3단.
+         한 줄에 7장이면 장당 폭이 좁으므로 회사명은 줄여 쓰고 금액은 '조'까지만 남긴다. */
+      /* 7장을 한 줄에 — minmax(0,1fr) 이어야 내용이 길 때 칸이 늘어나 카드 밖으로 넘치지 않는다.
+         1fr 만 쓰면 최소 폭이 '내용 크기'라 DL이앤씨가 잘려 나갔다. */
+      .mb-cards { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin: 4px 4px 8px; }
+      .mb-c {
+        display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+        gap: 5px; padding: 10px 2px 12px; border-radius: 6px;
+        background: rgba(38, 48, 61, 0.045);
+        border-top: 4px solid var(--c);
       }
-      .mb-row:nth-child(odd) { background: rgba(38, 48, 61, 0.045); }
-
-      .mb-logo { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; }
-      .mb-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
-      /* 로고가 없을 때 — 첫 글자 원은 정보가 없어 노이즈다. 회사색 칩에 약칭을 쓴다. */
-      .mb-chip {
-        width: 40px; height: 40px; border-radius: 3px; display: flex; align-items: center;
-        justify-content: center; color: #fff; font-size: 17px; font-weight: 800; letter-spacing: -0.03em;
-      }
-
-      .mb-name { display: flex; align-items: center; gap: 10px; min-width: 0; }
-      .mb-nm { font-size: 27px; font-weight: 800; color: var(--wirit-ink); white-space: nowrap; }
-      .mb-nos { display: flex; flex-wrap: wrap; gap: 4px; }
-      /* 지도 표식과 **같은 글꼴·같은 지름**. 이 일치가 이 카드의 배선이다. */
-      .mb-no {
-        width: 27px; height: 27px; border-radius: 50%;
+      .mb-c .lg { height: 34px; display: flex; align-items: center; justify-content: center; }
+      .mb-c .lg img { max-width: 100%; max-height: 34px; object-fit: contain; }
+      /* 로고가 없을 때 — 회사색 원판에 약칭. 빈칸을 두면 카드가 무너져 보인다. */
+      .mb-c .chip {
+        width: 34px; height: 34px; border-radius: 50%; background: var(--c); color: #fff;
         display: flex; align-items: center; justify-content: center;
-        font-family: "Pretendard", sans-serif; font-size: 16px; font-weight: 800;
-        color: #fff;
+        font-size: 13px; font-weight: 800; letter-spacing: -0.04em;
       }
-      .mb-val {
+      .mb-c .nm { font-size: 17px; font-weight: 800; color: var(--wirit-ink); text-align: center; line-height: 1.15; }
+      .mb-c .vl {
         font-family: "Wanted Sans", "Pretendard", sans-serif;
-        font-size: 29px; font-weight: 900; color: var(--wirit-ink); white-space: nowrap;
+        font-size: 20px; font-weight: 900; color: var(--c); white-space: nowrap;
       }
-      .mb-val i { font-style: normal; font-size: 20px; font-weight: 800; color: var(--wirit-gray); margin-left: 2px; }
+      .mb-c .vl i { font-style: normal; font-size: 13px; font-weight: 800; margin-left: 1px; }
 
       .mb-fn { white-space: pre-line; margin: 2px 12px 10px; font-size: 18px; font-weight: 600; line-height: 1.35; color: var(--wirit-gray); }
     </style>
@@ -74,20 +63,15 @@
 
       <div class="mb-map">{{{mapSvg}}}</div>
 
-      <div class="mb-tab">
+      <div class="mb-cards">
         {{#each rows}}
-        <div class="mb-row">
-          <span class="mb-logo">
+        <div class="mb-c" style="--c: {{this.color}}">
+          <span class="lg">
             {{#if this.logo}}<img src="../_shared/logos/{{this.logo}}" alt="" />
-            {{else}}<span class="mb-chip" style="background:{{this.color}}">{{this.abbr}}</span>{{/if}}
+            {{else}}<span class="chip">{{this.abbr}}</span>{{/if}}
           </span>
-          <span class="mb-name">
-            <span class="mb-nm">{{this.name}}</span>
-            <span class="mb-nos">
-              {{#each this.nos}}<span class="mb-no" style="background:{{../this.color}}">{{this}}</span>{{/each}}
-            </span>
-          </span>
-          <span class="mb-val">{{this.value}}{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
+          <span class="nm">{{this.name}}</span>
+          <span class="vl">{{this.value}}{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
         </div>
         {{/each}}
       </div>
