@@ -52,6 +52,16 @@ const sites = doc.seoulSites.items;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+/* 주소 검색 — 키워드 검색보다 정밀하다. 오너가 확인해 준 주소는 이쪽으로 간다.
+ * 키워드 검색은 '서초진흥'을 '한국전파진흥협회'로 집는 식의 사고가 나지만,
+ * 주소는 그런 흔들림이 없다. */
+async function searchAddr(query) {
+  const url = `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(query)}&size=5`;
+  const r = await fetch(url, { headers: { Authorization: `KakaoAK ${KEY}` } });
+  if (!r.ok) throw new Error(`카카오(주소) ${r.status} — ${(await r.text()).slice(0, 120)}`);
+  return (await r.json()).documents || [];
+}
+
 async function search(query) {
   const url = `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(query)}&size=5`;
   const r = await fetch(url, { headers: { Authorization: `KakaoAK ${KEY}` } });
@@ -106,7 +116,18 @@ for (const s of sites) {
     ...(s.brand && s.brand !== "미정" && s.brand !== "리모델링" ? [[`${s.gu} ${s.brand}`, "구+브랜드명"]] : []),
   ];
   let hit = null, how = null;
+  /* ① 오너가 확인해 준 주소가 있으면 그것부터. 사람이 끊어 준 것이 가장 세다. */
+  if (s.addrOverride) {
+    try {
+      const d = pick(await searchAddr(s.addrOverride), s.gu, GU_RINGS[s.gu]);
+      if (d) { hit = d; how = "확인 주소"; }
+    } catch (e) {
+      console.log(`::warning::주소 검색 실패 — ${s.name} / ${s.addrOverride} — ${e.message}`);
+    }
+    await sleep(120);
+  }
   for (const [q, label] of tries) {
+    if (hit) break;
     try {
       const d = pick(await search(q), s.gu, GU_RINGS[s.gu]);
       if (d) { hit = d; how = label; break; }
