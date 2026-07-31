@@ -1,54 +1,75 @@
 /**
- * 🧪 시안 — 상 제목 / 중 지도 / 하 시공사 카드. map-board@1.
+ * 🧪 시안 — 상 제목 / 중 지도(번호 점) / 하 시공사 카드 8장. map-board@1.
  *
  * ⚠️ 오너 확정 전 **시안**이다. sets.json·builders.json 에 등록하지 않는다.
  *
  * ── 오너 지시 (2026-07-31, 최신)
- *   ① 지도 위 표식은 점, 라벨은 「브랜드 로고 + 사업지명」, 짧은 꺾은선
- *   ② 로고는 **인포그래픽의 단지명**에서 정한다 (시공사가 아니라 브랜드)
- *   ③ 신반포20차(단지명 미정)는 드파인
- *   ④ 하단 시공사 카드는 8장 2행 — SK에코플랜트 포함
- *   ⑤ 마커·카드 색은 시공사 브랜드 컬러로 통일
- *   ⑥ 지도를 내리고 지도·카드가 카드 면을 꽉 채우게
- *   ⑦ 워터마크를 지도 여백에 2개
+ *   ① 지도 위 표식은 **번호가 든 원**. 색은 브랜드(=시공사) 색
+ *   ② 지도에서 꺾은선과 단지명을 없앤다 — 번호만 남는다
+ *   ③ 단지명은 하단 카드 안에 번호와 함께 나열한다
+ *   ④ 단지명 글씨색은 그 단지의 브랜드 색
+ *   ⑤ 카드 색은 그 회사의 **일반 브랜드** 로고 메인 컬러로 통일
+ *   ⑥ 하이엔드 브랜드가 있으면 카드 안에 일반/하이엔드 로고를 위아래로 둘 다
+ *   ⑦ 카드를 키운다
  *
- * ── 왜 '단지명 → 브랜드 로고'인가
- * 앞선 시안은 라벨에 **시공사** 로고를 붙였다. 그런데 독자가 지도에서 알고 싶은 것은
- * "여기 뭐가 들어서나"이지 "누가 짓나"가 아니다(누가 짓나는 색과 하단 카드가 답한다).
- * 단지명이 '래미안일루체'면 래미안 로고가 붙는 게 맞다.
- * 단지명이 미정이라 브랜드를 못 고르는 곳은 **시공사 로고로 물러서고, 그 사실을 센다.**
- * 짐작으로 하이엔드 로고를 붙이지 않는다 — 그 순간 지도가 없는 사실을 말한다.
+ * ── 왜 지도에서 이름을 걷어내는가
+ * 24곳에 라벨을 붙이면 강남·서초에서 라벨끼리 밀려 꺾은선이 길어지고, 결국 선이
+ * 지도를 가로지른다. 번호만 남기면 지도는 **위치만** 말하고 이름은 카드가 말한다 —
+ * 원본 뉴시스 인포그래픽이 아니라, 정보를 두 층으로 나누는 편집이다.
+ *
+ * ── 번호는 왜 직접 그리나
+ * 유니코드 원문자(①)는 번들 폰트에 ⑳까지만 있다(Wanted Sans 는 ⑨). 사업지가 24곳이라
+ * 21번부터 글자가 깨진다. 그래서 원을 그리고 그 안에 숫자를 넣는다 — 개수 제한이 없다.
  *
  * 실행: node scripts/build-jeongbi-board.mjs [date=2026-07-31]
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { loadPalette } from "./lib/brand-palette.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const date = process.argv[2] || "2026-07-31";
 const doc = JSON.parse(readFileSync(join(ROOT, "data/datasets/jeongbi-order-2026-07.json"), "utf8"));
 const sites = doc.seoulSites.items;
 
-/* 색은 데이터셋에서 읽는다 — 코드에 흩어 두면 마커와 카드가 어긋난다(같은 회사, 두 색). */
-const PAL = JSON.parse(readFileSync(join(ROOT, "data/datasets/builder-colors.json"), "utf8"));
-const COLOR = Object.fromEntries(Object.entries(PAL.colors).map(([k, v]) => [k, v.hex]));
-const GRAY = PAL.unknown.hex;
+const { byName: BRAND, companyColor } = loadPalette();
+const GRAY = "#B4BAC2";
 const ABBR = {
   현대건설: "현대", GS건설: "GS", 삼성물산: "삼성", 대우건설: "대우", 롯데건설: "롯데",
   포스코이앤씨: "포스코", DL이앤씨: "DL", HDC현대산업개발: "HDC", SK에코플랜트: "SK",
 };
 
-/* HDC현대산업개발만 뺀다. 서울 사업지가 없어(성남태평3구역) 지도에 점이 하나도 안 찍히는데
- * 카드만 놓이면 "이 회사는 어디에?"라는 답 없는 질문이 남는다.
- * SK에코플랜트는 오너 지시로 되살렸다 — 신반포20차(드파인)가 지도에 있다. */
+/* HDC현대산업개발만 뺀다 — 서울 사업지가 없어(성남태평3구역) 지도에 점이 하나도 안 찍힌다. */
 const EXCLUDE = new Set(["HDC현대산업개발"]);
-
 const order = [...doc.items].filter((c) => !EXCLUDE.has(c.name)).sort((a, b) => b.amount - a.amount);
+
+/* ── 단지명 → 브랜드 ──
+ * 긴 이름이 앞이어야 'e편한세상'이 '편한'에 걸려 엉뚱하게 잡히지 않는다. */
+const BRAND_WORDS = [
+  ["e편한세상", "e편한세상"], ["힐스테이트", "힐스테이트"], ["롯데캐슬", "롯데캐슬"],
+  ["오티에르", "오티에르"], ["디에이치", "디에이치"], ["푸르지오", "푸르지오"],
+  ["드파인", "드파인"], ["래미안", "래미안"], ["아크로", "아크로"], ["더샵", "더샵"],
+  ["써밋", "써밋"], ["SK뷰", "SK뷰"], ["자이", "자이"], ["르엘", "르엘"],
+];
+
+/* 번호는 카드 순서(수주액 내림차순 → 회사 안에서 데이터 순)를 따른다.
+ * 그래야 한 카드의 번호가 ①②③ 처럼 연속으로 붙어 눈이 지도와 카드를 왔다갔다 하기 쉽다. */
 const numbered = [];
 for (const co of order) {
   for (const s of sites.filter((x) => x.builder === co.name)) {
-    numbered.push({ ...s, no: numbered.length + 1, color: COLOR[co.name] || GRAY });
+    const key = s.brandOverride || s.brand || "";
+    const hit = BRAND_WORDS.find(([w]) => key.includes(w));
+    const brandName = hit ? hit[1] : null;
+    numbered.push({
+      ...s,
+      no: numbered.length + 1,
+      brandName,
+      /* 단지명 색 = 그 단지의 브랜드 색. 브랜드를 못 고른 곳(단지명 미정)은 시공사 색을 쓴다 —
+       * 하이엔드가 일반 브랜드 색을 물려받은 뒤로는 어차피 회사당 색이 하나라 어긋나지 않는다. */
+      color: (brandName && BRAND.get(brandName)?.hex) || companyColor[co.name] || GRAY,
+      brandKnown: !!brandName,
+    });
   }
 }
 const unmatched = sites.filter((x) => !x.builder);
@@ -56,73 +77,29 @@ const dropped = sites.filter((x) => x.builder && EXCLUDE.has(x.builder));
 if (numbered.length + dropped.length + unmatched.length !== sites.length)
   throw new Error(`집계 불일치: ${numbered.length}+${dropped.length}+${unmatched.length}/${sites.length}`);
 
-/* ── 단지명 → 브랜드 로고 ──
- * 단지명 안에 브랜드 이름이 들어 있으면 그 로고를 쓴다. 목록 순서가 곧 우선순위다:
- * 긴 이름을 앞에 둬야 'e편한세상'이 '편한'에 걸려 엉뚱하게 잡히지 않는다. */
-const BRAND_LOGO = [
-  ["e편한세상", "epyeonhansesang"],
-  ["힐스테이트", "hillstate"],
-  ["롯데캐슬", "lottecastle"],
-  ["오티에르", "hauterre"],
-  ["디에이치", "theh"],
-  ["푸르지오", "prugio"],
-  ["드파인", "define"],
-  ["래미안", "raemian-symbol"],
-  ["아크로", "acro"],
-  ["더샵", "thesharp"],
-  ["써밋", "summit"],
-  ["SK뷰", "skview"],
-  ["자이", "xi"],
-  ["르엘", "leel"],
-];
-/* ── 시공사 **회사** 로고 ──
- * 여기에는 브랜드 로고를 넣지 않는다. 지도 라벨에서 브랜드를 못 고른 곳(단지명 미정)의
- * 대타로 쓰이는데, 대타로 브랜드 로고가 들어가면 **없는 사실을 말한다**:
- * '압구정 현대'(단지명 미정)에 힐스테이트 로고가 붙는 식이다. 첫 렌더에서 실제로 그랬다.
- * 회사 로고가 없으면 로고를 안 붙인다 — 색 점이 시공사를 이미 말하고 있다. */
-const COMPANY_SLUG = {
-  현대건설: ["hdec"],
-  GS건설: ["gs", "gsconst"],
-  삼성물산: ["samsungcnt"],
-  대우건설: ["daewooenc"],
-  롯데건설: ["lottecon"],
-  포스코이앤씨: ["poscoenc"],
-  DL이앤씨: ["dl", "dlenc"],
-  SK에코플랜트: ["skecoplant", "sk-eco"],
-};
-/* 하단 카드는 사정이 다르다. 카드는 '이 회사가 얼마를 수주했나'를 말하는 자리라
- * 회사를 알아볼 수만 있으면 된다. 회사 로고가 없으면 그 회사의 대표 브랜드 로고를 쓴다 —
- * 빈 색칩보다 롯데캐슬·SK뷰가 훨씬 잘 읽힌다(오너가 그 로고들을 직접 줬다). */
-const CARD_FALLBACK = { 롯데건설: "lottecastle", SK에코플랜트: "skview" };
 const fileOf = (slug) => {
   for (const ext of ["svg", "png"]) {
     if (existsSync(join(ROOT, `templates/_shared/logos/${slug}.${ext}`))) return `${slug}.${ext}`;
   }
   return null;
 };
-const companyLogo = (name) => {
-  for (const slug of COMPANY_SLUG[name] || []) { const f = fileOf(slug); if (f) return f; }
-  return null;
+/* 카드에 올릴 브랜드 로고 — 위(일반) / 아래(하이엔드). 하이엔드가 없는 회사는 한 장만. */
+const CARD_LOGOS = {
+  현대건설: ["hillstate", "theh"],
+  GS건설: ["xi"],
+  삼성물산: ["raemian-symbol"],
+  대우건설: ["prugio", "summit"],
+  롯데건설: ["lottecastle", "leel"],
+  포스코이앤씨: ["thesharp", "hauterre"],
+  DL이앤씨: ["epyeonhansesang", "acro"],
+  SK에코플랜트: ["skview", "define"],
 };
-const cardLogo = (name) => companyLogo(name) || (CARD_FALLBACK[name] ? fileOf(CARD_FALLBACK[name]) : null);
-/* brandOverride: 단지명이 미정이지만 오너가 직접 정해 준 것(신반포20차 → 드파인).
- * 데이터에 남겨야 다음 사람이 "왜 미정인데 로고가 있지?"를 되짚을 수 있다. */
-let brandHit = 0, brandFallback = 0;
-for (const s of numbered) {
-  const key = s.brandOverride || s.brand || "";
-  const m = BRAND_LOGO.find(([word]) => key.includes(word));
-  if (m) { s.logo = fileOf(m[1]); s.logoKind = "브랜드"; if (s.logo) brandHit++; }
-  if (!s.logo) { s.logo = companyLogo(s.builder); s.logoKind = "시공사(단지명 미정)"; if (s.logo) brandFallback++; }
-}
 
 // ── 서울 경계 ──
 const geo = JSON.parse(readFileSync(join(ROOT, "data/geo/seoul-districts.geojson"), "utf8"));
 const rings = (g) => (g.type === "Polygon" ? g.coordinates : g.type === "MultiPolygon" ? g.coordinates.flat() : []);
 const guWithSites = new Set(sites.map((s) => s.gu));
 
-/* ── 북부 잘라내기 ──
- * bbox 를 **사업지가 있는 구**로만 잡는다. 배경(다른 구)은 그려지다가 viewBox 밖으로
- * 잘린다 — seoul-map.mjs 의 방침 그대로: "잘려도 되는 건 맥락이고, 잘리면 안 되는 건 대상이다". */
 let minLon = 999, maxLon = -999, minLat = 999, maxLat = -999;
 for (const f of geo.features) {
   if (!guWithSites.has(f.properties.name)) continue;
@@ -134,17 +111,14 @@ for (const f of geo.features) {
 const mx = (maxLon - minLon) * 0.03, my = (maxLat - minLat) * 0.03;
 minLon -= mx; maxLon += mx; minLat -= my; maxLat += my;
 
-const MAPW = 1000;
-const GUT = 40;             // 라벨이 카드 밖으로 안 나가게 하는 최소 여백
+const MAPW = 1000, GUT = 24;
 const kx = Math.cos((((minLat + maxLat) / 2) * Math.PI) / 180);
 const scale = MAPW / ((maxLon - minLon) * kx), H = Math.round((maxLat - minLat) * scale);
 const W = MAPW + GUT * 2;
 const px = (lo) => GUT + (lo - minLon) * kx * scale;
 const py = (la) => (maxLat - la) * scale;
 
-/* ── 한강 ──
- * 손으로 그리지 않는다. **이북 구와 이남 구가 공유하는 경계 정점**을 경도순으로 이으면
- * 선이 정확히 구 경계 위에 놓인다(scripts/lib/tohuh-map.mjs 가 확립한 방법). */
+/* ── 한강 ── 이북·이남 구가 공유하는 경계 정점을 이으면 선이 구 경계 위에 정확히 놓인다. */
 const NORTH = new Set(["종로구","중구","용산구","성동구","광진구","동대문구","중랑구","성북구","강북구","도봉구","노원구","은평구","서대문구","마포구"]);
 const SOUTH = new Set(["양천구","강서구","구로구","금천구","영등포구","동작구","관악구","서초구","강남구","송파구","강동구"]);
 const vkey = (q) => `${q[0].toFixed(6)},${q[1].toFixed(6)}`;
@@ -155,7 +129,7 @@ for (const f of geo.features) {
   for (const r of rings(f.geometry)) for (const q of r) bag.set(vkey(q), q);
 }
 const riverCore = [...nPts.keys()].filter((k) => sPts.has(k)).map((k) => nPts.get(k)).sort((a, b) => a[0] - b[0]);
-if (riverCore.length < 8) throw new Error(`한강 경계 정점 부족(${riverCore.length}) — 경계 데이터 확인`);
+if (riverCore.length < 8) throw new Error(`한강 경계 정점 부족(${riverCore.length})`);
 const riverD = "M" + riverCore.map(([lo, la]) => `${px(lo).toFixed(1)},${py(la).toFixed(1)}`).join("L");
 
 const cen = {};
@@ -179,7 +153,7 @@ for (const f of geo.features) {
   cen[f.properties.name] = [cx, cy];
 }
 
-/* ── 마커 좌표 ── 데이터에 lon/lat 이 있으면 실제 위치(카카오 지오코딩). */
+/* ── 좌표 ── data 의 lon/lat(카카오 지오코딩). 없으면 구 무게중심 주위 임시 자리. */
 const byGu = {};
 for (const s of numbered) (byGu[s.gu] ||= []).push(s);
 let realCoords = 0;
@@ -188,25 +162,27 @@ for (const [gu, arr] of Object.entries(byGu)) {
   const [cx, cy] = cen[gu] || [W / 2, H / 2];
   const R = arr.length === 1 ? 0 : 15 + arr.length * 4.5;
   arr.forEach((s, i) => {
-    if (Number.isFinite(s.lon) && Number.isFinite(s.lat)) {
-      s.x = px(s.lon); s.y = py(s.lat); realCoords++;
-    } else {
+    if (Number.isFinite(s.lon) && Number.isFinite(s.lat)) { s.x = px(s.lon); s.y = py(s.lat); realCoords++; }
+    else {
       const th = -Math.PI / 2 + (i * 2 * Math.PI) / arr.length;
-      s.x = cx + R * Math.cos(th); s.y = cy + R * Math.sin(th);
-      noCoord.push(s.name);
+      s.x = cx + R * Math.cos(th); s.y = cy + R * Math.sin(th); noCoord.push(s.name);
     }
   });
 }
 
-/* ── 시각적으로 뭉친 마커 벌리기 ── 그리는 자리만 최소 간격까지 민다(결정적). */
-const MIND = 22;
+/* ── 번호 원이 서로를 덮지 않게 ──
+ * 라벨이 사라져 지도가 훨씬 한산해졌으므로 원을 키울 수 있다(R=19).
+ * 원이 커진 만큼 최소 간격도 키운다 — 안 그러면 강남에서 숫자가 겹쳐 못 읽는다.
+ * 미는 방향은 인덱스 순서로만 정한다(랜덤 금지 — 같은 입력이면 같은 그림). */
+const MR = 16, MIND = MR * 2 + 3;
 const drawn = [];
+for (const s of numbered) { s.x0 = s.x; s.y0 = s.y; }   // 밀기 전 자리 — 얼마나 밀렸는지 재려고 남긴다
 for (const s of [...numbered].sort((a, b) => a.y - b.y || a.x - b.x)) {
   let guard = 0;
-  while (guard++ < 60) {
-    const hitOne = drawn.find((q) => Math.hypot(q.x - s.x, q.y - s.y) < MIND);
-    if (!hitOne) break;
-    const dx = s.x - hitOne.x, dy = s.y - hitOne.y;
+  while (guard++ < 80) {
+    const hit = drawn.find((q) => Math.hypot(q.x - s.x, q.y - s.y) < MIND);
+    if (!hit) break;
+    const dx = s.x - hit.x, dy = s.y - hit.y;
     const d = Math.hypot(dx, dy) || 0.001;
     s.x += (dx / d) * (MIND - d + 1);
     s.y += (dy / d) * (MIND - d + 1);
@@ -214,101 +190,45 @@ for (const s of [...numbered].sort((a, b) => a.y - b.y || a.x - b.x)) {
   drawn.push(s);
 }
 
-/* ── 라벨: 로고 + 사업지명, 짧은 꺾은선 ──
- * 로고는 이제 **정사각 규격**이다(normalize-logos.mjs 가 모두 320² 로 맞췄다).
- * 가로 워드마크를 가정하던 64×22 상자는 더 이상 맞지 않는다 — 정사각으로 바꾼다.
- * ⚠️ 한글 굵은 글씨의 한 글자 폭은 글자 크기와 거의 같다(26px → 약 26).
- *    상자가 실제 글자보다 작으면 "겹침 0"이라 보고하고도 눈으로는 겹쳐 보인다. */
-/* 브랜드 로고는 정사각 규격(normalize-logos.mjs)이라 30×30 이면 충분하다.
- * 회사 로고는 'SAMSUNG C&T' 같은 **가로 워드마크**라 정사각에 넣으면 높이에 맞춰 줄어
- * 글자가 3px 가 된다 — 첫 렌더의 압구정4구역이 그랬다. 종류에 따라 상자를 달리 준다. */
-const LOGO = 30, LOGO_WM_W = 66, LOGO_WM_H = 24, LH = 34, CH = 26;
-const RINGS = [16, 26, 38, 52, 70, 92, 118, 150];
-const DIRS = [[1, 0], [-1, 0], [1, -1], [-1, -1], [1, 1], [-1, 1], [0, -1], [0, 1]];
-const boxes = numbered.map((s) => ({ x0: s.x - 13, x1: s.x + 13, y0: s.y - 13, y1: s.y + 13 }));
-const hitBox = (a, b) => !(a.x1 <= b.x0 || b.x1 <= a.x0 || a.y1 <= b.y0 || b.y1 <= a.y0);
-let leaders = "", siteLabels = "", unplaced = 0;
-const unplacedNames = [];
-for (const s of [...numbered].sort((a, b) => a.y - b.y)) {
-  const wm = s.logoKind !== "브랜드";              // 회사 워드마크인가
-  const lw0 = s.logo ? (wm ? LOGO_WM_W : LOGO) : 22;
-  const w = lw0 + 7 + s.name.length * CH;
-  let put = null;
-  outer: for (const R of RINGS) {
-    for (const [dx, dy] of DIRS) {
-      const dir = dx >= 0 ? 1 : -1;
-      const cx = s.x + dx * (R + w / 2);
-      const cy = s.y + dy * (dy === 0 ? 0 : R + LH / 2);
-      const x0 = cx - w / 2, x1 = cx + w / 2;
-      if (x0 < GUT || x1 > W - GUT) continue;
-      if (cy - LH / 2 < 6 || cy + LH / 2 > H - 6) continue;
-      const b = { x0, x1, y0: cy - LH / 2, y1: cy + LH / 2, cx, cy, dir };
-      if (boxes.some((q) => hitBox(b, q))) continue;
-      put = b; break outer;
-    }
-  }
-  if (!put) { unplaced++; unplacedNames.push(s.name); continue; }
-  boxes.push(put);
-  const anchorX = put.dir > 0 ? put.x0 : put.x1;
-  leaders +=
-    `<path class="ld" stroke="${s.color}" d="M${s.x.toFixed(1)},${s.y.toFixed(1)}` +
-    `L${((s.x + anchorX) / 2).toFixed(1)},${s.y.toFixed(1)}` +
-    `L${((s.x + anchorX) / 2).toFixed(1)},${put.cy.toFixed(1)}L${anchorX.toFixed(1)},${put.cy.toFixed(1)}"/>`;
-  const lx = put.x0;
-  const lw = lw0;
-  const lh = wm ? LOGO_WM_H : LOGO;
-  siteLabels +=
-    (s.logo
-      ? `<image href="../_shared/logos/${s.logo}" x="${lx}" y="${(put.cy - lh / 2).toFixed(1)}" width="${lw}" height="${lh}" preserveAspectRatio="xMidYMid meet"/>`
-      : `<circle cx="${lx + 11}" cy="${put.cy.toFixed(1)}" r="10" fill="${s.color}"/>`) +
-    `<text class="sl" x="${(lx + lw + 7).toFixed(1)}" y="${(put.cy + 9).toFixed(1)}" fill="#26303d">${s.name}</text>`;
-}
-
 let marks = "";
 for (const s of numbered) {
-  marks += `<circle cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="9" fill="${s.color}" stroke="#fff" stroke-width="2.5"/>`;
+  marks +=
+    `<circle cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="${MR}" fill="${s.color}" stroke="#fff" stroke-width="3"/>` +
+    `<text class="mn" x="${s.x.toFixed(1)}" y="${s.y.toFixed(1)}">${s.no}</text>`;
 }
 
-/* ── viewBox 를 **내용에 맞춰 자른다** (2026-07-31 오너 지시 "꽉 차게") ──
- * bbox 를 구 도형으로 잡으면 사업지가 하나도 없는 구로/금천/관악이 지도 아래쪽을
- * 통째로 차지해 카드 면에 빈 띠가 생긴다. 첫 렌더에서 지도 아래가 그렇게 비었다.
- * 그렇다고 지도를 손으로 자르면 마커나 라벨이 잘려 나간다.
- * 그래서 **배치가 끝난 뒤** 마커·라벨·워터마크 상자를 모두 감싸는 최소 사각형을 구해
- * 거기에 여백만 더해 viewBox 로 쓴다 — 잘릴 것이 남아 있을 수 없다. */
-const CROP_PAD = 16;
+/* ── viewBox 를 내용에 맞춰 자른다 ──
+ * 구 도형으로 잡으면 사업지 없는 구로·금천·관악이 지도 아래를 차지해 빈 띠가 생긴다.
+ * 손으로 자르면 마커가 잘린다. 그래서 **마커를 모두 감싸는 최소 사각형**에 여백만 더한다. */
+/* 여백을 넉넉히 둔다. 마커에 딱 붙여 자르면 카드가 꽉 차긴 하는데
+ * **서울 모양이 안 보인다** — 어느 동네인지 못 읽는 지도는 점 그림일 뿐이다. */
+const CROP = 58;
 let cx0 = Infinity, cy0 = Infinity, cx1 = -Infinity, cy1 = -Infinity;
-for (const b of boxes) {
-  cx0 = Math.min(cx0, b.x0); cy0 = Math.min(cy0, b.y0);
-  cx1 = Math.max(cx1, b.x1); cy1 = Math.max(cy1, b.y1);
+for (const s of numbered) {
+  cx0 = Math.min(cx0, s.x - MR); cy0 = Math.min(cy0, s.y - MR);
+  cx1 = Math.max(cx1, s.x + MR); cy1 = Math.max(cy1, s.y + MR);
 }
-cx0 = Math.max(0, cx0 - CROP_PAD); cy0 = Math.max(0, cy0 - CROP_PAD);
-cx1 = Math.min(W, cx1 + CROP_PAD); cy1 = Math.min(H, cy1 + CROP_PAD);
+cx0 = Math.max(0, cx0 - CROP); cy0 = Math.max(0, cy0 - CROP);
+cx1 = Math.min(W, cx1 + CROP); cy1 = Math.min(H, cy1 + CROP);
 const VW = Math.round(cx1 - cx0), VH = Math.round(cy1 - cy0);
 
-
-/* ── 워터마크 2개 (2026-07-31 오너 지시 "지도 주위 적정한 곳에 여백 신경써서") ──
- * '적정한 곳'을 손으로 찍지 않는다. 라벨·마커 상자가 이미 다 모여 있으므로
- * **비어 있는 자리를 찾아** 놓는다. 후보를 훑어 아무것과도 겹치지 않는 것 중
- * 가장 가장자리에 가까운 두 곳을 고른다 — 가운데에 놓이면 지도를 가린다.
- * 자리가 없으면 안 그린다. 겹쳐 놓느니 없는 편이 낫다. */
-const WM_W = 190, WM_H = 34;
-const wmCands = [];
-/* 후보는 **잘라낸 지도 안**에서만 고른다. 바깥에 놓으면 워터마크가 크롭을 끌어당겨
- * 빈 하늘까지 지도에 딸려 들어온다 — 첫 렌더에서 지도 위아래에 흰 띠가 그래서 남았다. */
-for (const fx of [0.02, 0.12, 0.5, 0.72, 0.86]) {
-  for (const fy of [0.02, 0.14, 0.5, 0.84, 0.96]) {
+/* ── 워터마크 2개 ──
+ * '적정한 곳'을 손으로 찍지 않는다. 마커 상자를 피해 **비어 있는 자리**를 찾고,
+ * 그중 가장자리에 가까운 두 곳을 고른다. 자리가 없으면 안 그린다 — 겹쳐 놓느니 없는 편이 낫다. */
+const WM_W = 200, WM_H = 36;
+const hitBox = (a, b) => !(a.x1 <= b.x0 || b.x1 <= a.x0 || a.y1 <= b.y0 || b.y1 <= a.y0);
+const markBoxes = numbered.map((s) => ({ x0: s.x - MR - 4, x1: s.x + MR + 4, y0: s.y - MR - 4, y1: s.y + MR + 4 }));
+const cands = [];
+for (const fx of [0.01, 0.1, 0.42, 0.7, 0.88]) {
+  for (const fy of [0.02, 0.15, 0.5, 0.83, 0.97]) {
     const x0 = cx0 + fx * (VW - WM_W), y0 = cy0 + fy * (VH - WM_H);
-    wmCands.push({ x0, x1: x0 + WM_W, y0, y1: y0 + WM_H, edge: Math.min(fx, 1 - fx) + Math.min(fy, 1 - fy) });
+    cands.push({ x0, x1: x0 + WM_W, y0, y1: y0 + WM_H, edge: Math.min(fx, 1 - fx) + Math.min(fy, 1 - fy) });
   }
 }
-const wmFree = wmCands
-  .filter((b) => !boxes.some((q) => hitBox(b, q)))
-  .sort((a, b) => a.edge - b.edge);
 const wmPicked = [];
-for (const b of wmFree) {
+for (const b of cands.filter((b) => !markBoxes.some((q) => hitBox(b, q))).sort((a, b) => a.edge - b.edge)) {
   if (wmPicked.length >= 2) break;
-  // 둘이 붙어 있으면 워터마크가 두 개로 안 보이고 한 덩어리로 보인다 — 충분히 떨어뜨린다
-  if (wmPicked.some((p) => Math.hypot(p.x0 - b.x0, p.y0 - b.y0) < 320)) continue;
+  if (wmPicked.some((p) => Math.hypot(p.x0 - b.x0, p.y0 - b.y0) < 340)) continue;  // 붙어 있으면 한 덩어리로 보인다
   wmPicked.push(b);
 }
 const watermarks = wmPicked
@@ -318,34 +238,34 @@ const watermarks = wmPicked
 const mapSvg =
   `<svg viewBox="${cx0.toFixed(0)} ${cy0.toFixed(0)} ${VW} ${VH}" xmlns="http://www.w3.org/2000/svg">` +
   `<style>.river{fill:none;stroke:#8fbfe0;stroke-width:9;stroke-linecap:round;stroke-linejoin:round}` +
-  `.sl{font-family:'Pretendard',sans-serif;font-size:26px;font-weight:800}` +
-  `.ld{fill:none;stroke-width:2;opacity:.55}` +
-  `.wm{font-family:'Pretendard',sans-serif;font-size:27px;font-weight:800;fill:#26303d;opacity:.17;text-anchor:middle;dominant-baseline:central}` +
+  `.mn{font-family:'Pretendard',sans-serif;font-size:22px;font-weight:800;fill:#fff;text-anchor:middle;dominant-baseline:central}` +
+  `.wm{font-family:'Pretendard',sans-serif;font-size:28px;font-weight:800;fill:#26303d;opacity:.16;text-anchor:middle;dominant-baseline:central}` +
   `.wmd{fill:#F04E3E}</style>` +
-  `${paths}<path class="river" d="${riverD}"/>${watermarks}${leaders}${marks}${siteLabels}</svg>`;
+  `${paths}<path class="river" d="${riverD}"/>${watermarks}${marks}</svg>`;
 
 // ── 하단 시공사 카드 ──
 function won(억) {
   const jo = Math.floor(억 / 10000), rest = 억 % 10000;
-  /* '7조 6,946' 의 공백 한 칸이 카드 폭을 넘겨 숫자 끝자리가 잘렸다.
-   칸이 좁을 때 가장 먼저 버릴 것은 공백이다 — 숫자는 못 버린다. */
   return jo ? `${jo}조${rest.toLocaleString("ko-KR")}` : `${rest.toLocaleString("ko-KR")}`;
 }
-/* 카드 폭(약 259px)에서 로고·여백을 빼면 회사명이 쓸 수 있는 폭은 165px 남짓이다.
- * 'SK에코플랜트'(7자)는 24px 글씨로 168px 라 한 글자가 다음 줄로 넘어가며 카드가 어긋났다.
- * 업계 통용 약칭으로 줄인다 — 글씨만 줄이면 다른 카드와 크기가 달라져 더 눈에 띈다. */
 const SHORT = { HDC현대산업개발: "HDC현산", SK에코플랜트: "SK에코" };
-const rows = order.map((co) => ({
-  name: SHORT[co.name] || co.name,
-  value: won(co.amount),
-  unit: "억",
-  color: COLOR[co.name] || GRAY,
-  abbr: ABBR[co.name] || co.name.slice(0, 2),
-  ...(cardLogo(co.name) ? { logo: cardLogo(co.name) } : {}),
-  nos: numbered.filter((s) => s.builder === co.name).map((s) => String(s.no)),
-}));
+const rows = order.map((co) => {
+  const mine = numbered.filter((s) => s.builder === co.name);
+  return {
+    name: SHORT[co.name] || co.name,
+    value: won(co.amount),
+    unit: "억",
+    color: companyColor[co.name] || GRAY,
+    abbr: ABBR[co.name] || co.name.slice(0, 2),
+    logos: (CARD_LOGOS[co.name] || []).map(fileOf).filter(Boolean),
+    /* 단지명 색은 그 단지의 브랜드 색이다. 회사 색과 같아 보여도 계산 경로가 다르다 —
+     * 나중에 하이엔드에 따로 색을 주기로 하면 여기만 갈라진다. */
+    sites: mine.map((s) => ({ no: s.no, name: s.name, color: s.color })),
+  };
+});
 
 const approx = numbered.filter((s) => /근사/.test(s.geo?.method || "")).map((s) => s.name);
+const noBrand = numbered.filter((s) => !s.brandKnown).map((s) => s.name);
 
 const card = {
   template: "map-board@1",
@@ -354,9 +274,8 @@ const card = {
   subtitle: `주요 건설사 서울 수주 ${numbered.length}곳 · ${doc.seoulSites.asOf.replace(/-/g, ".").slice(2)} 기준`,
   mapSvg,
   rows,
-  /* 근사 좌표를 말없이 두면 지도가 아는 척을 한다. 어느 점이 덜 정확한지 카드가 스스로 밝힌다. */
   footnote:
-    `점 색은 시공사입니다. 로고는 단지명 기준이며, 단지명이 정해지지 않은 곳은 시공사 로고를 넣었습니다.\n` +
+    `번호는 아래 카드의 사업지와 이어집니다. 색은 그 단지의 아파트 브랜드 색입니다.\n` +
     `수주액은 서울 외 사업지를 포함한 전국 누적입니다.` +
     (approx.length ? `\n${approx.join("·")}는 구역 중심이 아니라 동 중심으로 찍은 근사 위치입니다.` : ""),
   source: { name: "각 사 · 뉴시스 정리", asOf: doc.seoulSites.asOf },
@@ -366,12 +285,12 @@ const outDir = join(ROOT, "data/out/_spike");
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "jeongbi-board.json"), JSON.stringify(card, null, 2) + "\n", "utf8");
 
-console.log(`🧪 시안 board — 사업지 ${numbered.length}곳 · 카드 ${rows.length}장(2행)`);
-console.log(`   라벨 로고: 브랜드 ${brandHit} · 시공사 대타 ${brandFallback} · 없음 ${numbered.filter((s) => !s.logo).length}`);
-console.log(`   카드 로고: ${rows.filter((r) => r.logo).length}/${rows.length}` +
-  (rows.filter((r) => !r.logo).length ? ` — 없음: ${rows.filter((r) => !r.logo).map((r) => r.name).join(", ")}` : ""));
+console.log(`🧪 시안 board — 사업지 ${numbered.length}곳 · 카드 ${rows.length}장`);
+console.log(`   카드 로고: ${rows.map((r) => `${r.name} ${r.logos.length}장`).join(" · ")}`);
+console.log(`   브랜드 확정: ${numbered.length - noBrand.length}/${numbered.length}` + (noBrand.length ? ` — 미정(시공사 색): ${noBrand.join(", ")}` : ""));
 console.log(`   좌표: 실제 ${realCoords} / ${numbered.length}` + (noCoord.length ? ` — 임시: ${noCoord.join(", ")}` : ""));
-console.log(`   라벨 배치 실패: ${unplaced}건${unplacedNames.length ? `(${unplacedNames.join(", ")})` : ""} · 워터마크: ${wmPicked.length}/2`);
-console.log(`   지도 자르기: ${W}×${H} → ${VW}×${VH} (세로 ${Math.round((1 - VH / H) * 100)}% 덜어냄)`);
-console.log(`   제외: ${[...EXCLUDE].join(", ")} (사업지 ${dropped.length}곳 함께 빠짐)`);
+const moved = numbered.map((s) => Math.hypot(s.x - s.x0, s.y - s.y0));
+const worst = numbered[moved.indexOf(Math.max(...moved))];
+console.log(`   마커 겹침 벌리기: 평균 ${(moved.reduce((a, b) => a + b, 0) / moved.length).toFixed(0)}px · 최대 ${Math.max(...moved).toFixed(0)}px (${worst.name})`);
+console.log(`   지도 자르기: ${W}×${H} → ${VW}×${VH} (비율 ${(VW / VH).toFixed(2)}) · 워터마크 ${wmPicked.length}/2`);
 console.log(`   → data/out/_spike/jeongbi-board.json`);

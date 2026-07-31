@@ -1,0 +1,181 @@
+{
+  "_": [
+    "로고 이미지에서 뽑은 브랜드 메인 컬러. scripts/extract-brand-colors.mjs 가 만든다 — 손으로 고치지 않는다.",
+    "hex 는 흰 배경에서 글자색으로 쓸 수 있게 밝기를 누른 값이고, raw 는 로고에서 그대로 뽑은 색이다.",
+    "achromatic=true 는 로고가 검정·회색이라 색으로 구별이 안 된다는 뜻이다 — 오너 판단이 필요하다.",
+    "clashes 는 카드 8장에 나란히 놓일 일반 브랜드 색 중 서로 헷갈리는 짝이다."
+  ],
+  "extractedAt": "2026-07-31",
+  "brands": [
+    {
+      "company": "현대건설",
+      "tier": "일반",
+      "name": "힐스테이트",
+      "file": "hillstate.png",
+      "hex": "#971934",
+      "raw": "#971934",
+      "dimmed": false,
+      "achromatic": false,
+      "share": 100
+    },
+    {
+      "company": "현대건설",
+      "tier": "하이엔드",
+      "name": "디에이치",
+      "file": "theh.png",
+      "hex": "#000000",
+      "raw": "#000000",
+      "dimmed": false,
+      "achromatic": true,
+      "share": 0
+    },
+    {
+      "company": "GS건설",
+      "tier": "일반",
+      "name": "자이",
+      "file": "xi.png",
+      "hex": "#002F47",
+      "raw": "#002F47",
+      "dimmed": false,
+      "achromatic": false,
+      "share": 100
+    },
+    {
+      "company": "삼성물산",
+      "tier": "일반",
+      "name": "래미안",
+      "file": "raemian-symbol.png",
+      "hex": "#009DAD",
+      "raw": "#009DAD",
+      "dimmed": false,
+      "achromatic": false,
+      "share": 67
+    },
+    {
+      "company": "대우건설",
+      "tier": "일반",
+      "name": "푸르지오",
+      "file": "prugio.png",
+      "hex": "#074F51",
+      "raw": "#074F51",
+      "dimmed": false,
+      "achromatic": false,
+      "share": 100
+    },
+    {
+      "company": "대우건설",
+      "tier": "하이엔드",
+      "name": "써밋",
+      "file": "summit.png",
+      "hex": "#000000",
+      "raw": "#000000",
+      "dimmed": false,
+      "achromatic": true,
+      "share": 0
+    },
+    {
+      "company": "롯데건설",
+      "tier": "일반",
+      "name": "롯데캐슬",
+      "file": "lottecastle.png",
+      "hex": "#95785E",
+      "raw": "#95785E",
+      "dimmed": false,
+      "achromatic": false,
+      "share": 100
+    },
+    {
+      "company": "롯데건설",
+      "tier": "하이엔드",
+      "name": "르엘",
+      "file": "leel.png",
+      "hex": "#222222",
+      "raw": "#222222",
+      "dimmed": false,
+      "achromatic": true,
+      "share": 0
+    },
+    {
+      "company": "포스코이앤씨",
+      "tier": "일반",
+      "name": "더샵",
+      "file": "thesharp.png",
+      "hex": "#001140",
+      "raw": "#001140",
+      "dimmed": false,
+      "achromatic": false,
+      "share": 100
+    },
+    {
+      "company": "포스코이앤씨",
+      "tier": "하이엔드",
+      "name": "오티에르",
+      "file": "hauterre.png",
+      "hex": "#010E43",
+      "raw": "#010E43",
+      "dimmed": false,
+      "achromatic": false,
+      "share": 89
+    },
+    {
+      "company": "DL이앤씨",
+      "tier": "일반",
+      "name": "e편한세상",
+      "file": "epyeonhansesang.png",
+      "hex": "#FF671D",
+      "raw": "#FF671D",
+      "dimmed": false,
+      "achromatic": false,
+      "share": 100
+    },
+    {
+      "company": "DL이앤씨",
+      "tier": "하이엔드",
+      "name": "아크로",
+      "file": "acro.png",
+      "hex": "#000000",
+      "raw": "#000000",
+      "dimmed": false,
+      "achromatic": true,
+      "share": 0
+    },
+    {
+      "company": "SK에코플랜트",
+      "tier": "일반",
+      "name": "SK뷰",
+      "file": "skview.png",
+      "hex": "#E0002A",
+      "raw": "#E0002A",
+      "dimmed": false,
+      "achromatic": false,
+      "share": 49
+    },
+    {
+      "company": "SK에코플랜트",
+      "tier": "하이엔드",
+      "name": "드파인",
+      "file": "define.png",
+      "hex": "#020202",
+      "raw": "#020202",
+      "dimmed": false,
+      "achromatic": true,
+      "share": 0
+    }
+  ],
+  "clashes": [
+    {
+      "a": "자이",
+      "aHex": "#002F47",
+      "b": "더샵",
+      "bHex": "#001140",
+      "distance": 61
+    },
+    {
+      "a": "자이",
+      "aHex": "#002F47",
+      "b": "푸르지오",
+      "bHex": "#074F51",
+      "distance": 67
+    }
+  ]
+}

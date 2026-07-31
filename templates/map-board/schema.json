@@ -1,38 +1,123 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "map-board@1",
-  "description": "상 제목 / 중 지도 / 하 표. 지도의 번호 표식과 표의 번호가 서로를 가리킨다. 범례 없음 — 표가 곧 범례다.",
+  "description": "상 제목 / 중 지도(번호 원) / 하 시공사 카드 8장. 지도에는 번호만, 이름은 카드가 말한다.",
   "type": "object",
-  "required": ["template", "title", "mapSvg", "rows", "source"],
+  "required": [
+    "template",
+    "title",
+    "mapSvg",
+    "rows",
+    "source"
+  ],
   "properties": {
-    "template": { "type": "string", "pattern": "^map-board@\\d+$" },
-    "date": { "type": "string" },
-    "title": { "type": "string", "maxLength": 34 },
-    "subtitle": { "type": "string", "maxLength": 70 },
-    "mapSvg": { "type": "string" },
-    "footnote": { "type": "string" },
+    "template": {
+      "type": "string",
+      "pattern": "^map-board@\\d+$"
+    },
+    "date": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 34
+    },
+    "subtitle": {
+      "type": "string",
+      "maxLength": 70
+    },
+    "mapSvg": {
+      "type": "string"
+    },
+    "footnote": {
+      "type": "string"
+    },
     "rows": {
       "type": "array",
       "minItems": 1,
       "maxItems": 8,
       "items": {
         "type": "object",
-        "required": ["name", "value", "color"],
+        "required": [
+          "name",
+          "value",
+          "color"
+        ],
         "properties": {
-          "name": { "type": "string", "maxLength": 12 },
-          "value": { "type": "string", "maxLength": 14 },
-          "unit": { "type": "string", "maxLength": 4 },
-          "color": { "type": "string", "description": "번호 표식·칩 배경색. 지도 마커와 같은 색이어야 한다." },
-          "abbr": { "type": "string", "maxLength": 4, "description": "로고 없을 때 칩에 넣을 약칭" },
-          "logo": { "type": "string", "description": "_shared/logos/ 아래 파일명(확장자 포함). 없으면 칩으로 대체." },
-          "abbrLong": { "type": "string", "maxLength": 12 }
+          "name": {
+            "type": "string",
+            "maxLength": 12
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 14
+          },
+          "unit": {
+            "type": "string",
+            "maxLength": 4
+          },
+          "color": {
+            "type": "string",
+            "description": "번호 표식·칩 배경색. 지도 마커와 같은 색이어야 한다."
+          },
+          "abbr": {
+            "type": "string",
+            "maxLength": 4,
+            "description": "로고 없을 때 칩에 넣을 약칭"
+          },
+          "abbrLong": {
+            "type": "string",
+            "maxLength": 12
+          },
+          "logos": {
+            "type": "array",
+            "maxItems": 2,
+            "description": "카드에 올릴 브랜드 로고. 위=일반, 아래=하이엔드(있을 때만). _shared/logos/ 아래 파일명.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sites": {
+            "type": "array",
+            "maxItems": 8,
+            "description": "이 시공사의 사업지. 지도의 번호 원과 no 로 이어진다. color 는 그 단지의 아파트 브랜드 색.",
+            "items": {
+              "type": "object",
+              "required": [
+                "no",
+                "name",
+                "color"
+              ],
+              "properties": {
+                "no": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string",
+                  "maxLength": 14
+                },
+                "color": {
+                  "type": "string"
+                }
+              }
+            }
+          }
         }
       }
     },
     "source": {
       "type": "object",
-      "required": ["name"],
-      "properties": { "name": { "type": "string" }, "asOf": { "type": "string" } }
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "asOf": {
+          "type": "string"
+        }
+      }
     }
   }
 }
