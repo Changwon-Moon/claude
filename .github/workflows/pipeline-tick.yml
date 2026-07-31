@@ -82,13 +82,13 @@ jobs:
             echo "커밋할 변경 없음"
           fi
 
-      # ⑩ 카카오톡 알림 — 결정할 일이 있을 때만 보낸다(시크릿 없으면 조용히 건너뜀)
-      - name: 카카오톡 알림
+      # ⑩ 텔레그램 알림 — 결정할 일이 있을 때만 보낸다(시크릿 없으면 조용히 건너뜀)
+      - name: 텔레그램 알림
         env:
-          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
-          KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TOWER_URL: https://wirit-tower.engineerest0.workers.dev/
         run: |
           # 관제탑 상태를 먼저 만들어야 "결정할 일"을 셀 수 있다
           pnpm --filter @wirit/dashboard-static state || true
-          node scripts/notify-kakao.mjs
+          node scripts/notify-telegram.mjs

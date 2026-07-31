@@ -161,12 +161,12 @@ C단계에서 "눌러서 저장소를 바꾸는 도구"가 됐지만, **오너�
 | 소재 **▶ 진행** | `research/ideas.json` `stage:1` | `pipeline-tick.yml` → `research/work-orders/{id}.md` 작업지시서 생성 |
 | 소재 **반려/보류** | 이유가 `decisions-inbox.md` + 소재 카드 | 다음 발굴 요청에 "피할 것"으로 실림 |
 | **🚀 발행 승인** | `data/publish-queue.md` 한 줄 | 대기열 점검(캡션·검수 확인) → IG 토큰 발급 시 실제 업로드 |
-| — | — | 카카오톡 알림(무료·나에게 보내기) → [관제탑 열기] |
+| — | — | 텔레그램 알림(무료·봇) → [관제탑 열기] |
 | 발행 후 | — | `collect-insights.mjs` → `data/performance.md` (도달·**저장**·좋아요·댓글) |
 
-- 스크립트: `open-work-orders.mjs` · `check-publish-queue.mjs` · `notify-kakao.mjs` · `collect-insights.mjs`
+- 스크립트: `open-work-orders.mjs` · `check-publish-queue.mjs` · `notify-telegram.mjs` · `collect-insights.mjs`
 - 워크플로: `.github/workflows/pipeline-tick.yml` (푸시 + 매일 07:00 KST)
-- 알림 설정 가이드: [guides/kakao-notify.md](./guides/kakao-notify.md)
+- 알림 설정 가이드: [guides/telegram-notify.md](./guides/telegram-notify.md)
 - 회귀 방지: `scripts/smoke-tower.mjs` **35항목**(구조·읽기전용·쓰기·배관·학습·충돌재시도·결정함)
 
 ## 5. 진행 상황
