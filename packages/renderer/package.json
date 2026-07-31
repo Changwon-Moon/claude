@@ -15,7 +15,8 @@
     "build": "tsc -p tsconfig.json",
     "render": "tsx src/cli.ts",
     "test:sample": "tsx src/cli.ts --data ../../templates/dummy-card/sample.json --out ../../data/out",
-    "qa": "tsx src/qaCli.ts"
+    "qa": "tsx src/qaCli.ts",
+    "audit-head": "tsx src/auditHead.ts"
   },
   "dependencies": {
     "ajv": "^8.17.1",

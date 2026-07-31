@@ -10,24 +10,10 @@
          ========================================================= */
       .m2 {
         --mono: 46px;
-        padding-top: 52px; /* 상단 여백 축소 → 콘텐츠 위로 */
       }
-      /* 우상단: 뱃지 박스 제거 → wirit. 워드마크만(잉크색). 공간 축소 */
-      .m2 .wirit-corner {
-        background: transparent;
-        padding: 0;
-        box-shadow: none;
-        top: 44px;
-        right: 56px;
-      }
-      .m2 .wirit-corner .mark {
-        color: var(--wirit-ink);
-        font-size: 40px;
-      }
-      /* 뱃지가 작아진 만큼 상단 캡션 우측 여백 축소 */
-      .m2 > .wirit-topcap {
-        padding-right: 150px;
-      }
+      /* 머리(카드 위 여백·우상단 뱃지)는 **공용 기준 그대로** — 재정의하지 않는다.
+       * 2026-07-31 오너 지시로 되돌렸다(위 여백 52px·투명 뱃지·글자 40px → 72px·잉크네이비 판·36px).
+       * 점검: pnpm --filter @wirit/renderer audit-head */
       /* 제목은 카드 좌우 패딩을 넘어 거의 카드 끝까지(풀블리드) 채운다(연봉 카드와 동일). */
       /* 제목은 표와 같은 최소 좌우 여백(카드 패딩) 유지 — 풀블리드 아님 */
       .m2-head {

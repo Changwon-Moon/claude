@@ -5,17 +5,21 @@
     <!--WIRIT_SHARED_CSS-->
     <style>
       /* map-rank@1 — 좌측 4줄 제목(서울 엠블럼) + 우측 지도 + 구별 대장 순위표. 종이 톤. */
-      .mr { padding-top: 50px; }
-      .mr .wirit-corner { background: transparent; padding: 0; box-shadow: none; top: 42px; right: 56px; }
-      .mr .wirit-corner .mark { color: var(--wirit-ink); font-size: 40px; }
-      .mr > .wirit-topcap { padding-right: 150px; }
+      /* 머리(카드 위 여백·우상단 뱃지)는 **공용 기준을 그대로 쓴다** — 재정의하지 않는다.
+       * 2026-07-31 오너 "위릿뱃지와 카드 흰색테두리 등 기준에 안 맞는 거 전체 수정".
+       * 이 템플릿은 위 여백 50px·투명 뱃지·글자 40px 로 제 맘대로 바꿔 놓아서, 다른 카드와
+       * 나란히 놓으면 머리가 혼자 달라 보였다. base.css 의 72px·잉크네이비 판·36px 로 되돌린다.
+       * 점검: pnpm --filter @wirit/renderer audit-head */
 
       /* 상단: 좌 제목 · 우 지도
        * 2026-07-31 오너 "제목 더 키워서 꽉 채워줘" — 고정 62px 을 버리고 제목 칸을 넓힌 뒤
        * __wiritFit 이 **네 줄 중 가장 긴 줄이 칸을 꽉 채우는** 크기를 이분탐색으로 찾는다
        * (CARD_CHECKLIST §2 "폭에 맞춰 크게, 고정 폰트 크기로 두지 않는다").
        * 엠블럼·평형 뱃지는 px 이 아니라 em 이라 제목과 **함께** 커진다 — 따로 두면 비율이 깨진다. */
-      .mr-top { display: flex; align-items: center; gap: 20px; margin-top: 14px; height: 452px; }
+            /* 높이 452 → 430: 카드 위 여백을 공용 72px 로 되돌리며 표가 22px 짧아졌고, 그만큼
+         행이 낮아져 1~3위 메달이 위아래로 겹쳤다. 잃은 22px 를 제목·지도 칸에서 돌려준다
+         (제목은 폭에 묶여 있어 이 정도 높이 변화로는 크기가 안 줄어든다). */
+      .mr-top { display: flex; align-items: center; gap: 20px; margin-top: 14px; height: 430px; }
       .mr-title { flex: 0 0 556px; position: relative; font-size: 62px; }
       /* width:max-content — 줄 상자가 글자를 감싸게 한다. 블록 기본값(폭 100%)으로 두면
          상자끼리 늘 겹쳐 있어 designQa 의 겹침 검사가 거짓 경보만 낸다(검사에 못 올린다). */
@@ -67,8 +71,11 @@
       .mr-row:last-child { border-bottom: none; }
 
       /* 순위: 1~3위 메달, 4위부터 숫자만 */
+      /* 높이를 50px 로 못박아 두면 행이 조금만 낮아져도(카드 위 여백을 공용 72px 로 되돌리며
+         표가 22px 짧아졌다) 메달 상자가 위아래 행과 겹친다 — 실제로 겹쳤다.
+         높이는 내용이 정하게 두고 세로 가운데는 grid 의 align-items 가 맡는다. */
       .mr-rank {
-        width: 50px; height: 50px; margin: 0 auto;
+        width: 50px; margin: 0 auto;
         display: flex; align-items: center; justify-content: center;
         font-family: var(--font-num); font-weight: 900; font-size: 28px; color: var(--wirit-gray);
       }

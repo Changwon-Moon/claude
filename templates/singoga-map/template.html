@@ -5,7 +5,10 @@
     <!--WIRIT_SHARED_CSS-->
     <style>
       /* singoga-map@1 — 구별 신고가 경신 건수 코로플레스 + TOP 순위. 반전 훅(강남 아님). 종이 톤. */
-      .sm { padding-top: 44px; }
+      /* 카드 위 여백은 공용 기준 72px. 44px 로 깎아 놓아 다른 카드와 머리가 달랐다
+         (2026-07-31 오너 지시로 되돌림). `.sm-c`(compact)의 92px 은 제목이 우상단 뱃지에
+         붙지 않도록 **더 준** 값이라 그대로 둔다 — 기준보다 좁은 것만 문제다. */
+      .sm { padding-top: 72px; }
       .sm .wirit-title { font-size: 66px; line-height: 1.05; letter-spacing: -0.03em; margin: 2px 0 0; }
       .sm .wirit-title .hi { color: var(--wirit-red); }
       .sm-sub { margin-top: 8px; font-size: 27px; font-weight: 800; color: var(--wirit-gray); letter-spacing: -0.01em; }

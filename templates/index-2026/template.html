@@ -5,9 +5,8 @@
     <!--WIRIT_SHARED_CSS-->
     <style>
       /* index-2026@1 — 연중 주가추이(연초·고점·현재 주석 + 날짜축). 메인 포커스 = 고점대비 하락률. */
-      .ix { padding-top: 50px; }
-      .ix .wirit-corner { background: transparent; padding: 0; box-shadow: none; top: 42px; right: 56px; }
-      .ix .wirit-corner .mark { color: var(--wirit-ink); font-size: 40px; }
+      /* 머리는 공용 기준 그대로 — 재정의하지 않는다(2026-07-31 오너 지시로 되돌림).
+       * 점검: pnpm --filter @wirit/renderer audit-head */
       .ix > .wirit-topcap { padding-right: 150px; }
 
       .ix-head { margin: 8px 0 0; position: relative; }
