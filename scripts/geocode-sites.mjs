@@ -112,15 +112,21 @@ for (const s of sites) {
   const tries = [
     [s.name, "구역명"],
     [`${s.gu} ${s.name}`, "구+구역명"],
-    ...(dongOf(s.name) ? [[`서울 ${s.gu} ${dongOf(s.name)}`, "동 이름(근사)"]] : []),
     ...(s.brand && s.brand !== "미정" && s.brand !== "리모델링" ? [[`${s.gu} ${s.brand}`, "구+브랜드명"]] : []),
+    ...(dongOf(s.name) ? [[`서울 ${s.gu} ${dongOf(s.name)}`, "동 이름(근사)"]] : []),
   ];
   let hit = null, how = null;
   /* ① 오너가 확인해 준 주소가 있으면 그것부터. 사람이 끊어 준 것이 가장 세다. */
   if (s.addrOverride) {
     try {
-      const d = pick(await searchAddr(s.addrOverride), s.gu, GU_RINGS[s.gu]);
-      if (d) { hit = d; how = "확인 주소"; }
+      /* '서울특별시'를 '서울'로 줄여서도 시도한다 — 주소 검색이 정식 명칭에
+       * 오히려 걸리는 경우가 있다(서초대로 387 이 그랬다). */
+      const cands = [s.addrOverride, s.addrOverride.replace("서울특별시", "서울")];
+      for (const a of [...new Set(cands)]) {
+        const d = pick(await searchAddr(a), s.gu, GU_RINGS[s.gu]);
+        if (d) { hit = d; how = "확인 주소"; break; }
+        await sleep(120);
+      }
     } catch (e) {
       console.log(`::warning::주소 검색 실패 — ${s.name} / ${s.addrOverride} — ${e.message}`);
     }
@@ -148,6 +154,31 @@ for (const s of sites) {
     failed++;
     console.log(`  ❌ ${s.name} — 못 찾음(좌표 비움)`);
   }
+}
+
+/* ── 좌표가 겹친 것 분산 ──
+ * 압구정3구역과 4구역이 둘 다 '압구정로데오거리'로 떨어져 **같은 점**이 됐다.
+ * 서로 다른 두 사업이 한 점으로 보이면 그건 지도가 아니라 오독 장치다.
+ * 정확한 구역 중심을 모르는 상태이므로 **결정적으로 조금 벌리고, 그 사실을 표시**한다.
+ * 숨기고 겹쳐 두는 것보다 "이 둘은 근사 위치"라고 말하는 편이 정직하다. */
+const at = new Map();
+for (const s of sites) {
+  if (!Number.isFinite(s.lon)) continue;
+  const k = `${s.lon.toFixed(5)},${s.lat.toFixed(5)}`;
+  if (!at.has(k)) at.set(k, []);
+  at.get(k).push(s);
+}
+for (const [, group] of at) {
+  if (group.length < 2) continue;
+  const R = 0.0016; // 약 140m — 같은 동 안에서 구분되는 최소 거리
+  group.forEach((s, i) => {
+    const th = (-Math.PI / 2) + (i * 2 * Math.PI) / group.length;
+    s.lon += R * Math.cos(th) / Math.cos((s.lat * Math.PI) / 180);
+    s.lat += R * Math.sin(th);
+    s.geo.method = `${s.geo.method} · 중복 분산`;
+    s.geo.spread = true;
+  });
+  console.log(`  ⚠ 좌표 겹침 분산: ${group.map((s) => s.name).join(" / ")}`);
 }
 
 doc.seoulSites.geocodedAt = new Date().toISOString().slice(0, 10);

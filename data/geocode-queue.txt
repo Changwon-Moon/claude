@@ -1,0 +1,2 @@
+# 좌표 재요청 — 주소 정규화·브랜드 우선·중복 분산
+data/datasets/jeongbi-order-2026-07.json
