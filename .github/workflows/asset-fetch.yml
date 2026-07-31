@@ -31,18 +31,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-
-      - name: 파서 셀프테스트
-        run: pnpm --filter @wirit/collectors selftest
-
       - name: 대상 정하기
         id: pick
         env:
@@ -58,6 +46,22 @@ jobs:
             echo "대상: $T"
           fi
           echo "target=$T" >> "$GITHUB_OUTPUT"
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # continue-on-error: 여기서 죽으면 아래 '대상 정하기'가 실행되지 않아
+      # 결과 기록까지 통째로 건너뛰었다. 세션은 Actions 로그를 못 보므로
+      # **아무 흔적도 없이 사라진다** — 기사 읽어오기에서 겪은 것과 같은 구멍이다.
+      - name: 파서 셀프테스트
+        continue-on-error: true
+        run: pnpm --filter @wirit/collectors selftest
 
       # continue-on-error: 실패해도 아래 기록 단계까지 간다.
       # 세션은 Actions 로그를 못 보므로 결과를 저장소에 남겨야 원인을 안다
@@ -79,7 +83,7 @@ jobs:
         run: node scripts/validate-assets.mjs
 
       - name: 결과 기록 + 취득 로고 커밋
-        if: always() && steps.pick.outputs.target != ''
+        if: always()
         env:
           OUTCOME: ${{ steps.fetch.outcome }}
           TARGET: ${{ steps.pick.outputs.target }}
