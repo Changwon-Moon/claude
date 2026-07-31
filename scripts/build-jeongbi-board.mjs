@@ -87,9 +87,17 @@ for (const f of geo.features) {
 const mx = (maxLon - minLon) * 0.03, my = (maxLat - minLat) * 0.03;
 minLon -= mx; maxLon += mx; minLat -= my; maxLat += my;
 
+/* ── 여백 앵커 레이아웃 (2026-07-31 오너 지시) ──
+ * 라벨을 마커 옆에 두지 않고 **카드 좌우 여백에 세로로 정렬**한다.
+ * 마커 y 순서와 슬롯 순서를 같게 두면 지시선이 서로 교차하지 않는다 —
+ * 이게 겹침을 '피하는' 게 아니라 '생길 수 없게' 만드는 방법이다.
+ * 앞서 마커 주위 8방향을 시도하던 방식은 밀집 구간에서 결국 자리가 모자랐다. */
+const MAPW = 1000;          // 지도 자체 폭
+const GUT = 330;            // 좌우 여백(라벨 자리)
 const kx = Math.cos((((minLat + maxLat) / 2) * Math.PI) / 180);
-const W = 1000, scale = W / ((maxLon - minLon) * kx), H = Math.round((maxLat - minLat) * scale);
-const px = (lo) => (lo - minLon) * kx * scale;
+const scale = MAPW / ((maxLon - minLon) * kx), H = Math.round((maxLat - minLat) * scale);
+const W = MAPW + GUT * 2;   // 전체 뷰박스 폭
+const px = (lo) => GUT + (lo - minLon) * kx * scale;
 const py = (la) => (maxLat - la) * scale;
 
 /* ── 한강 ──
@@ -155,53 +163,87 @@ for (const [gu, arr] of Object.entries(byGu)) {
   });
 }
 
-/* ── 꺾은선 라벨 (2026-07-31 오너 지시) ──
- * 마커에서 가로로 뻗은 뒤 위/아래로 꺾어 구역명을 단다.
- * 자리는 마커 좌우 8단(위4·아래4)을 **고정 순서로** 시도해 안 겹치는 첫 자리를 고른다.
- * 결정성이 규칙이므로 랜덤은 없다. 끝내 자리가 없으면 겹친 채 두고 **세어서 보고한다** —
- * 숨기면 다음 사람이 "다 들어갔다"고 믿는다. */
-const CH = 11.2;            // 19px 굵은 한글 한 글자 대략 폭
-const LH = 26;              // 라벨 줄 높이(충돌 상자)
-const STEPS = [-1, 1, -2, 2, -3, 3, -4, 4]; // 위·아래 번갈아 멀어진다
-const boxes = [];
-const overlaps = (a, b) => !(a.x1 <= b.x0 || b.x1 <= a.x0 || a.y1 <= b.y0 || b.y1 <= a.y0);
-let leaders = "", siteLabels = "", unplaced = 0;
-// 왼쪽 절반은 왼쪽으로, 오른쪽 절반은 오른쪽으로 빼야 지도 밖으로 덜 나간다
-for (const s of [...numbered].sort((a, b) => a.y - b.y)) {
-  const dir = s.x < W * 0.5 ? -1 : 1;
-  const w = Math.max(60, s.name.length * CH);
-  let put = null;
-  for (const st of STEPS) {
-    const ly = s.y + st * LH;
-    const lx = s.x + dir * 34;                      // 가로로 뻗는 길이
-    const x0 = dir < 0 ? lx - w : lx, x1 = dir < 0 ? lx : lx + w;
-    const b = { x0, x1, y0: ly - LH / 2, y1: ly + LH / 2, lx, ly };
-    if (x0 < -6 || x1 > W + 6) continue;             // 카드 밖으로 나가면 버린다
-    if (!boxes.some((q) => overlaps(b, q))) { put = b; break; }
+/* ── 마커가 시각적으로 뭉친 것 벌리기 ──
+ * 압구정3·4·5구역처럼 수백 미터 안에 몰린 곳은 원(r=17)이 서로를 덮어 숫자를 못 읽는다.
+ * 좌표를 버리는 게 아니라 **그리는 자리만** 최소 간격까지 민다. 데이터는 그대로다.
+ * 결정적이어야 하므로 y·x 순으로 정렬해 앞에서부터 민다(랜덤 없음). */
+const MIND = 40;
+const drawn = [];
+for (const s of [...numbered].sort((a, b) => a.y - b.y || a.x - b.x)) {
+  let guard = 0;
+  while (guard++ < 60) {
+    const hitOne = drawn.find((q) => Math.hypot(q.x - s.x, q.y - s.y) < MIND);
+    if (!hitOne) break;
+    const dx = s.x - hitOne.x, dy = s.y - hitOne.y;
+    const d = Math.hypot(dx, dy) || 0.001;
+    s.x += (dx / d) * (MIND - d + 1);
+    s.y += (dy / d) * (MIND - d + 1);
   }
-  if (!put) { unplaced++; continue; }               // 자리가 없으면 라벨을 안 단다(번호는 남는다)
-  boxes.push(put);
-  // 꺾은선: 마커 → 가로 → 라벨 높이로 꺾기 → 라벨까지
-  const midX = s.x + dir * 18;
-  leaders += `<path class="ld" stroke="${s.color}" d="M${s.x.toFixed(1)},${s.y.toFixed(1)}` +
-    `L${midX.toFixed(1)},${s.y.toFixed(1)}L${midX.toFixed(1)},${put.ly.toFixed(1)}L${put.lx.toFixed(1)},${put.ly.toFixed(1)}"/>`;
-  siteLabels += `<text class="sl" x="${(put.lx + dir * 5).toFixed(1)}" y="${(put.ly + 6).toFixed(1)}" ` +
-    `fill="${s.color}" text-anchor="${dir < 0 ? "end" : "start"}">${s.name}</text>`;
+  drawn.push(s);
+}
+
+/* ── 지시선 + 여백 라벨 ──
+ * ① 마커 x 로 좌/우를 가른다(왼쪽 절반은 왼쪽 여백으로)
+ * ② 각 쪽에서 마커 y 순으로 정렬해 슬롯을 위에서부터 순서대로 준다
+ *    → 순서가 같으므로 선이 교차하지 않는다
+ * ③ 지시선은 마커 → 가로 → 세로 → 라벨의 꺾은선
+ * 슬롯 간격은 라벨 높이보다 넓게 잡아 라벨끼리도 절대 안 닿는다. */
+const SLOT = 40;            // 슬롯 간격(라벨 높이 30보다 넓게)
+/* 좌우를 지도 중앙선으로 가르면 대상이 한쪽에 몰릴 때 8:15 처럼 치우친다.
+ * **마커 x 의 중앙값**으로 가르면 언제나 반씩 나뉜다 — 슬롯이 남는 쪽 없이 고르게 쓰인다. */
+const sides = { L: [], R: [] };
+const xsSorted = numbered.map((s) => s.x).sort((a, b) => a - b);
+const medianX = xsSorted[Math.floor(xsSorted.length / 2)];
+for (const s of [...numbered].sort((a, b) => a.x - b.x)) (sides.L.length < Math.ceil(numbered.length / 2) ? sides.L : sides.R).push(s);
+void medianX;
+// 한쪽에 너무 몰리면 슬롯이 지도 높이를 넘는다 → 넘치는 만큼 반대쪽으로 넘긴다
+const cap = Math.floor((H - 20) / SLOT);
+for (const [from, to] of [["L", "R"], ["R", "L"]]) {
+  while (sides[from].length > cap && sides[to].length < cap) {
+    // 반대쪽에 가장 가까운 것부터 넘긴다
+    sides[from].sort((a, b) => (from === "L" ? b.x - a.x : a.x - b.x));
+    sides[to].push(sides[from].shift());
+  }
+}
+
+let leaders = "", siteLabels = "", unplaced = 0;
+for (const key of ["L", "R"]) {
+  const arr = sides[key].sort((a, b) => a.y - b.y);
+  if (!arr.length) continue;
+  const span = (arr.length - 1) * SLOT;
+  let top = Math.max(14, Math.min(...arr.map((s) => s.y)) - span / 2);
+  if (top + span > H - 14) top = Math.max(14, H - 14 - span);
+  const dir = key === "L" ? -1 : 1;
+  const elbowX = key === "L" ? GUT - 46 : GUT + MAPW + 46;
+  const labelX = key === "L" ? GUT - 62 : GUT + MAPW + 62;
+  arr.forEach((s, i) => {
+    const ly = top + i * SLOT;
+    leaders +=
+      `<path class="ld" stroke="${s.color}" d="M${s.x.toFixed(1)},${s.y.toFixed(1)}` +
+      `L${(s.x + dir * 16).toFixed(1)},${s.y.toFixed(1)}` +
+      `L${elbowX},${s.y.toFixed(1)}L${elbowX},${ly.toFixed(1)}L${labelX},${ly.toFixed(1)}"/>`;
+    siteLabels +=
+      `<circle cx="${labelX + dir * 16}" cy="${ly.toFixed(1)}" r="15" fill="${s.color}"/>` +
+      `<text class="ln" x="${labelX + dir * 16}" y="${ly.toFixed(1)}">${s.no}</text>` +
+      `<text class="sl" x="${(labelX + dir * 36).toFixed(1)}" y="${(ly + 9).toFixed(1)}" ` +
+      `fill="#26303d" text-anchor="${key === "L" ? "end" : "start"}">${s.name}</text>`;
+  });
 }
 
 let marks = "";
 for (const s of numbered) {
   marks +=
-    `<circle cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="14" fill="${s.color}" stroke="#fff" stroke-width="2.5"/>` +
+    `<circle cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="17" fill="${s.color}" stroke="#fff" stroke-width="3"/>` +
     `<text class="no" x="${s.x.toFixed(1)}" y="${s.y.toFixed(1)}">${s.no}</text>`;
 }
 
 const mapSvg =
   `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">` +
   `<style>.river{fill:none;stroke:#8fbfe0;stroke-width:9;stroke-linecap:round;stroke-linejoin:round}` +
-  `.sl{font-family:'Pretendard',sans-serif;font-size:19px;font-weight:800}` +
-  `.ld{fill:none;stroke-width:1.6;opacity:.85}` +
-  `.no{font-family:'Pretendard',sans-serif;font-size:16px;font-weight:800;fill:#fff;text-anchor:middle;dominant-baseline:central}</style>` +
+  `.sl{font-family:'Pretendard',sans-serif;font-size:27px;font-weight:800}` +
+  `.ln{font-family:'Pretendard',sans-serif;font-size:19px;font-weight:800;fill:#fff;text-anchor:middle;dominant-baseline:central}` +
+  `.ld{fill:none;stroke-width:2;opacity:.55}` +
+  `.no{font-family:'Pretendard',sans-serif;font-size:20px;font-weight:800;fill:#fff;text-anchor:middle;dominant-baseline:central}</style>` +
   `${paths}<path class="river" d="${riverD}"/>${guLabels}${leaders}${marks}${siteLabels}</svg>`;
 
 // ── 표 ──
@@ -249,6 +291,6 @@ writeFileSync(join(outDir, "jeongbi-board.json"), JSON.stringify(card, null, 2) 
 console.log(`🧪 시안 board — 사업지 ${numbered.length}곳 · 표 ${rows.length}행`);
 console.log(`   로고 확보: ${rows.filter((r) => r.logo).length}/${rows.length} (나머지는 색칩 약칭)`);
 console.log(`   좌표: 실제 ${realCoords} · 임시 ${numbered.length - realCoords} / ${numbered.length}`);
-console.log(`   라벨 자리 못 찾음: ${unplaced}건`);
+console.log(`   여백 라벨: 좌 ${sides.L.length} · 우 ${sides.R.length} (슬롯 여유 ${cap}칸/쪽)`);
 console.log(`   제외: ${[...EXCLUDE].join(", ")} (사업지 ${dropped.length}곳 함께 빠짐)`);
 console.log(`   → data/out/_spike/jeongbi-board.json`);
