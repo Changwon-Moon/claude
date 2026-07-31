@@ -244,6 +244,24 @@
       "license": "trademark-nominative",
       "note": "SK에코플랜트 아파트 브랜드 · 자동 취득 실패분 · 여백 자동 절삭",
       "added": "2026-07-31"
+    },
+    {
+      "slug": "hdc-dvp",
+      "name": "아이파크",
+      "kind": "logo",
+      "source": "Brandfetch (hdc-dvp.com)",
+      "license": "trademark-nominative",
+      "note": "자동 취득(Tier C) · 회사 공식 자산 · 상표 nominative use",
+      "added": "2026-07-31"
+    },
+    {
+      "slug": "hanwha",
+      "name": "포레나",
+      "kind": "logo",
+      "source": "Brandfetch (hanwha.co.kr)",
+      "license": "trademark-nominative",
+      "note": "자동 취득(Tier C) · 회사 공식 자산 · 상표 nominative use",
+      "added": "2026-07-31"
     }
   ]
 }
