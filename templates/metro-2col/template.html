@@ -162,13 +162,14 @@
         font-size: 132px;
         line-height: 1;
         letter-spacing: -0.03em;
-        color: rgba(20, 24, 33, 0.06);
+        color: rgba(20, 24, 33, 0.045);
         transform: rotate(-24deg);
         white-space: nowrap;
       }
-      .m2-wm .w1 { left: 8px; top: 300px; }
-      .m2-wm .w2 { right: 8px; top: 900px; }
-      .m2-wm .dot { color: rgba(46, 107, 255, 0.17); }
+      .m2-wm .w1 { left: 44px; top: 300px; }
+      .m2-wm .w2 { right: 44px; top: 900px; }
+      /* 마침표까지 같은 회색 — 코발트 점은 이 농도에서 혼자 튄다(오너 지시 07-31 3차) */
+      .m2-wm .dot { color: inherit; }
       /* 내용만 워터마크 위로(콘텐츠 래퍼에만 적용 — 우상단 wirit 뱃지의 absolute는 건드리지 않음) */
       .m2 > .wirit-topcap,
       .m2 > .m2-head,

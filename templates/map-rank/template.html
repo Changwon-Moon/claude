@@ -31,17 +31,29 @@
       .mr-pyeong b { font-family: var(--font-num); font-weight: 900; font-size: 0.645em; letter-spacing: -0.01em; color: var(--wirit-ink); }
       .mr-map { flex: 1; min-width: 0; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; }
       .mr-map svg { max-height: 100%; max-width: 100%; width: auto; height: auto; display: block; position: relative; z-index: 1; }
-      /* 지도 좌상단 빈 사분면 — 서울 도형이 닿지 않는 자리라 워드마크를 얹어도 데이터를 가리지 않는다
-       * (CARD_CHECKLIST §2 "빈 사분면이 크면 워터마크로 채운다 — 단 데이터 위에는 아무것도 얹지 않는다") */
-      .mr-wm { position: absolute; left: 0; top: 2px; z-index: 0; pointer-events: none;
-        font-family: "Wanted Sans", "Pretendard", sans-serif; font-weight: 800; font-size: 56px;
-        line-height: 1; letter-spacing: -0.03em; color: rgba(20, 24, 33, 0.17); }
-      .mr-wm .dot { color: rgba(46, 107, 255, 0.45); }
       .mr-geo { stroke: #ffffff; stroke-width: 2; stroke-linejoin: round; }
       .mr-lab { font-family: "Pretendard", sans-serif; font-weight: 800; text-anchor: middle; }
 
-      /* 순위표 */
-      .mr-list { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-top: 8px; margin-bottom: 26px; }
+      /* 순위표
+       * 워터마크는 지도 좌상단(07-31 1차)에서 **표 뒤**로 옮겼다(오너 2차 지시).
+       * 지도는 비우고, 순위표를 가로지르는 큰 워드마크 1개만 아주 옅게 깐다.
+       * ⚠️ 좌표·크기는 CSS px(카드 1080×1350) 기준이다 — PNG 2160×2700 이 아니다(§4). */
+      .mr-list { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-top: 8px; margin-bottom: 26px;
+        position: relative; overflow: hidden; }
+      /* ⚠️ 워터마크는 **가상요소**로 넣는다. 실제 <div> 를 넣으면 .mr-row:nth-child(even) 의
+         셈이 한 칸씩 밀려 **짝수행 음영이 통째로 뒤집힌다**(넣어 보고 알았다). 가상요소는 세지 않는다.
+         마침표까지 같은 회색 — 코발트 점은 이 농도에서 혼자 튄다(오너 지시 07-31 3차).
+         좌표·크기는 CSS px(카드 1080×1350) 기준 — PNG 2160×2700 이 아니다(§4). */
+      .mr-list::before {
+        content: "wirit."; position: absolute; left: 50%; top: 50%; z-index: 0; pointer-events: none;
+        font-family: "Wanted Sans", "Pretendard", sans-serif; font-weight: 800; font-size: 158px;
+        line-height: 1; letter-spacing: -0.03em; white-space: nowrap;
+        color: rgba(20, 24, 33, 0.045);
+        /* 표 한가운데를 대각으로 가로지른다. left/top 을 px 로 잡으면 회전 뒤 왼쪽이 잘린다(한 번 잘렸다) */
+        transform: translate(-50%, -50%) rotate(-24deg);
+      }
+      /* 표 내용은 워터마크 위로 */
+      .mr-list > .mr-hr, .mr-list > .mr-row { position: relative; z-index: 1; }
       .mr-hr, .mr-row {
         display: grid;
         grid-template-columns: 78px 172px 1fr 168px;
@@ -84,7 +96,7 @@
           <div class="ln"><span class="tx">전용면적 </span><span class="mr-metric"><span class="mr-pyeong"><b>약 {{pyeong}}</b></span><span class="tx unit">{{metric}}㎡</span></span></div>
           <div class="ln"><span class="tx"><span class="hi">최고가</span> APT</span></div>
         </div>
-        <div class="mr-map"><span class="mr-wm" aria-hidden="true">wirit<span class="dot">.</span></span>{{{mapSvg}}}</div>
+        <div class="mr-map">{{{mapSvg}}}</div>
       </div>
 
       <div class="mr-list">
