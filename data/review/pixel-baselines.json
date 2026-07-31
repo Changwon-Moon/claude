@@ -48,12 +48,13 @@
     {
       "label": "jeongbi-board",
       "title": "올해 서울 정비사업 수주 1위는?",
-      "state": "발행",
+      "state": "오너 확정",
       "builder": "jeongbi-board",
       "content": "data/content/2026-07-31/jeongbi-board.json",
       "md5": "ea241b6e598c313f1a8d7e47a782fd8a",
       "at": "2026-07-31",
-      "png": "jeongbi-board-p1.png"
+      "png": "jeongbi-board-p1.png",
+      "note": "2026-07-31 발행 후 머리 규격(카드 위 패딩·코너 뱃지)을 공용 규격으로 되돌린 수정본이다. 인스타에 올라간 이미지는 직전 픽셀(e407c7fb)이므로, 재발행하면 이 판으로 나간다."
     }
   ]
 }
