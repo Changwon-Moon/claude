@@ -48,7 +48,7 @@
     {
       "label": "jeongbi-board",
       "title": "올해 서울 정비사업 수주 1위는?",
-      "state": "오너 확정",
+      "state": "발행",
       "builder": "jeongbi-board",
       "content": "data/content/2026-07-31/jeongbi-board.json",
       "md5": "e407c7fb389a2cc13b93e4fed7703ca7",
