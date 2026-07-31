@@ -3,13 +3,24 @@ name: 로고 자동 취득 (Wikimedia)
 # 데이터셋/콘텐츠의 회사명을 읽어 Wikimedia Commons에서 라이선스 명시 로고를 자동 취득 →
 # templates/_shared/logos/ 에 저장하고 catalog.json에 출처·라이선스와 함께 등록·커밋한다.
 # 키 불필요. 이 세션(코드 대화창)은 웹 이미지가 막혀 있으므로 자동 취득은 여기(Actions)에서 돈다.
+#
+# ── 대기열 방식 (2026-07-31 추가, 기사 읽어오기와 같은 구조)
+# 작업 세션은 GitHub API 가 막혀 워크플로를 직접 실행하지 못하지만 git push 는 된다.
+# `data/assets-queue.txt` 에 대상 파일 경로를 적어 푸시하면 이 워크플로가 깨어난다.
+# 오너가 버튼을 누르러 갈 일이 없다.
 on:
   workflow_dispatch:
     inputs:
       target:
-        description: "대상 파일(데이터셋 또는 콘텐츠 JSON) 경로"
-        required: true
-        default: "data/datasets/salary-freshman-2026-07.json"
+        description: "대상 파일(데이터셋 또는 콘텐츠 JSON) 경로. 비우면 대기열을 읽는다"
+        required: false
+        default: ""
+  push:
+    branches:
+      - claude/instagram-content-automation-roadmap-fxnb7p
+    paths:
+      - "data/assets-queue.txt"
+      - ".github/workflows/asset-fetch.yml"
 
 permissions:
   contents: write
@@ -31,19 +42,63 @@ jobs:
       - name: 파서 셀프테스트
         run: pnpm --filter @wirit/collectors selftest
 
+      - name: 대상 정하기
+        id: pick
+        env:
+          INPUT_TARGET: ${{ github.event.inputs.target }}
+        run: |
+          T="$INPUT_TARGET"
+          if [ -z "$T" ] && [ -f data/assets-queue.txt ]; then
+            T=$(grep -vE '^\s*(#|$)' data/assets-queue.txt | head -1)
+          fi
+          if [ -z "$T" ]; then
+            echo "대상이 없습니다 — 대기열이 비었습니다"
+          else
+            echo "대상: $T"
+          fi
+          echo "target=$T" >> "$GITHUB_OUTPUT"
+
+      # continue-on-error: 실패해도 아래 기록 단계까지 간다.
+      # 세션은 Actions 로그를 못 보므로 결과를 저장소에 남겨야 원인을 안다
+      # (기사 읽어오기에서 같은 구멍에 빠졌다 — 2026-07-31).
       - name: 로고 취득
+        id: fetch
+        if: steps.pick.outputs.target != ''
+        continue-on-error: true
         env:
           BRANDFETCH_API_KEY: ${{ secrets.BRANDFETCH_API_KEY }}
-        run: pnpm --filter @wirit/collectors fetch-logos "${{ github.event.inputs.target }}"
+          TARGET: ${{ steps.pick.outputs.target }}
+        run: |
+          set -o pipefail
+          pnpm --filter @wirit/collectors fetch-logos "$TARGET" 2>&1 | tee /tmp/logos.log
 
       - name: 자산 허브 무결성 검사
+        if: steps.pick.outputs.target != ''
+        continue-on-error: true
         run: node scripts/validate-assets.mjs
 
-      - name: 취득 로고 커밋
+      - name: 결과 기록 + 취득 로고 커밋
+        if: always() && steps.pick.outputs.target != ''
+        env:
+          OUTCOME: ${{ steps.fetch.outcome }}
+          TARGET: ${{ steps.pick.outputs.target }}
         run: |
+          {
+            echo "# 로고 취득 — 마지막 실행 결과"
+            echo
+            echo "- 실행: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo "- 결과: **${OUTCOME}**"
+            echo "- 대상: ${TARGET}"
+            echo "- 실행 기록: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo
+            echo '```'
+            if [ -f /tmp/logos.log ]; then cat /tmp/logos.log; else echo "(로그 없음)"; fi
+            echo '```'
+          } > data/assets-fetch-last.md
+          : > data/assets-queue.txt
+          git add -- templates/_shared/logos/ data/assets-queue.txt data/assets-fetch-last.md
           git config user.name "wirit-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add templates/_shared/logos/
           if git diff --cached --quiet; then
             echo "새 로고 없음 — 커밋 생략"
           else
