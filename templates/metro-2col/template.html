@@ -141,25 +141,34 @@
         color: var(--wirit-gray);
       }
 
-      /* 캡처 대비 배경 워터마크 — 옅은 회색 "wirit." 대각 반복. 내용은 그 위에. */
+      /* 캡처 대비 배경 워터마크
+       * 2026-07-31 오너 지적: "수도없이 들어간 워터마크 싹 지우고 깔끔하게 2개만".
+       * 이전에는 "wirit." 을 260번 반복해 대각으로 깔았다 — 표가 촘촘한 카드에서는
+       * 배경이 지저분해 보이고, 캡처 억제 효과가 반복 횟수에 비례하지도 않는다.
+       * → 큰 워드마크 **정확히 2개**(좌상·우하)로 바꾼다. 대각 방향과 옅은 농도는 유지. */
       .m2-wm {
         position: absolute;
-        top: -25%;
-        left: -15%;
-        right: -15%;
-        bottom: -25%;
+        inset: 0;
         z-index: 0;
-        transform: rotate(-24deg);
-        font-family: var(--font-sans);
-        font-weight: 900;
-        font-size: 88px;
-        line-height: 2.1;
-        letter-spacing: 0.1em;
-        word-spacing: 34px;
-        color: rgba(20, 24, 33, 0.03);
         overflow: hidden;
         pointer-events: none;
       }
+      /* ⚠️ 좌표는 CSS px 이다 — 카드는 1080×1350 으로 잡고 2배 배율로 캡처한다(screenshot.ts).
+         PNG 가 2160×2700 이라고 2700 기준으로 적으면 카드 밖으로 나가 잘린다(07-31에 한 번 잘렸다). */
+      .m2-wm > span {
+        position: absolute;
+        font-family: "Wanted Sans", "Pretendard", sans-serif;
+        font-weight: 800;
+        font-size: 132px;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        color: rgba(20, 24, 33, 0.06);
+        transform: rotate(-24deg);
+        white-space: nowrap;
+      }
+      .m2-wm .w1 { left: 8px; top: 300px; }
+      .m2-wm .w2 { right: 8px; top: 900px; }
+      .m2-wm .dot { color: rgba(46, 107, 255, 0.17); }
       /* 내용만 워터마크 위로(콘텐츠 래퍼에만 적용 — 우상단 wirit 뱃지의 absolute는 건드리지 않음) */
       .m2 > .wirit-topcap,
       .m2 > .m2-head,
@@ -224,7 +233,7 @@
   </head>
   <body>
     <div class="wirit-card {{#if font}}font-{{font}}{{/if}} m2">
-      <div class="m2-wm" aria-hidden="true"></div>
+      <div class="m2-wm" aria-hidden="true"><span class="w1">wirit<span class="dot">.</span></span><span class="w2">wirit<span class="dot">.</span></span></div>
       <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
       <div class="m2-head"><h1 class="wirit-title">{{title}}</h1></div>
 
@@ -259,8 +268,7 @@
     <!-- 제목 폭 맞춤: 컨테이너 폭을 넘지 않게 폰트 자동 축소(긴 제목 지원). 폰트 로딩 후 재실행. -->
     <script>
       window.__wiritFit = function () {
-        var wm = document.querySelector(".m2-wm");
-        if (wm && !wm.textContent) wm.textContent = "wirit.  ".repeat(260);
+        /* 워터마크는 이제 마크업에 2개가 그대로 있다 — 스크립트가 260번 찍던 코드는 제거(07-31 오너) */
         var el = document.querySelector(".m2 .wirit-title");
         if (!el || (el.textContent || "").indexOf("\n") >= 0) return;
         var head = el.parentElement;
@@ -271,7 +279,7 @@
           (parseFloat(hs.paddingRight) || 0);
         el.style.whiteSpace = "nowrap";
         var lo = 40,
-          hi = 112,
+          hi = 136,
           best = lo;
         for (var i = 0; i < 20; i++) {
           var mid = (lo + hi) / 2;

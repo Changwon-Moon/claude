@@ -162,7 +162,13 @@ const MEASURE_JS = `(() => {
              ".wirit-footer span,.rt-name,.rt-val,.rt-sub,.mc-fn," +
              /* record-grid — 새 템플릿을 만들고 여기 추가하지 않아 이 카드의 글자가
                 통째로 겹침 검사 밖에 있었다(AS팀 지적 2026-07-31). 템플릿을 만들면 여기도 만진다. */
-             ".rg-r .claim,.rg-r .fig .v,.rg-r .fig .p,.rg-note,.rg-lead .lb,.rg-lead .dt,.rg-lead .vl";
+             ".rg-r .claim,.rg-r .fig .v,.rg-r .fig .p,.rg-note,.rg-lead .lb,.rg-lead .dt,.rg-lead .vl," +
+             /* map-rank·metro-2col — 2026-07-31. 두 템플릿의 글자가 통째로 검사 밖에 있었다.
+                제목을 칸에 꽉 차게 키우는 변경을 하면서 올린다 — 커진 제목이 평형 뱃지·지도와
+                부딪히는지는 사람 눈이 아니라 좌표가 판정해야 한다.
+                (.mr-wm·.m2-wm 워터마크는 일부러 뒤에 깔린 장식이라 넣지 않는다) */
+             ".mr-title .tx,.mr-pyeong b,.mr-hr span,.mr-rank,.mr-gu,.mr-apt,.mr-price," +
+             ".m2-hr span,.m2-seg,.m2-val";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
   for (var i=0;i<leaves.length;i++) for (var j=i+1;j<leaves.length;j++) {
     var a=leaves[i], b=leaves[j];
@@ -208,7 +214,7 @@ const MEASURE_JS = `(() => {
   if(footer){
     /* .rg-note 를 빠뜨려 record-grid 에서는 이 검사가 아무것도 안 재고 있었다(AS팀 지적 2026-07-31).
        "최하단 문구 여백"은 오너가 두 번 말한 항목인데 새 템플릿에 적용되지 않은 상태였다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note");
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.mr-row:last-child,.m2-r:last-child");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();
