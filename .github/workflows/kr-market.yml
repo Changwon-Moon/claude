@@ -3,6 +3,12 @@ name: 국내 증시 수집 (코스피·코스닥)
 # 코스피·코스닥 일간 시세(Stooq)를 받아 연중 고점·고점대비 하락률 데이터셋을 커밋한다.
 # 세션은 외부망 차단 → Actions 전용. 카드 빌더(build-index-2026.mjs)가 이 캐시를 소비.
 on:
+  # 대기열 파일이 바뀌면 실행한다 — 이 저장소의 다른 수집기(asset-fetch·geocode)와 같은 방식.
+  # 작업 세션은 GitHub API 가 막혀 있어 workflow_dispatch 버튼을 누를 수 없다.
+  # 푸시는 되므로, 파일 한 줄을 밀어 넣는 것이 세션이 수집을 시작할 수 있는 유일한 손잡이다.
+  push:
+    paths:
+      - "data/market-queue.txt"
   workflow_dispatch:
     inputs:
       year:
