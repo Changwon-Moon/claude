@@ -98,10 +98,16 @@ function pick(docs, gu, guRings) {
   return null; // 폴백 없음
 }
 
-/** "압구정3구역" → "압구정동" — 숫자·'구역'·'지구'·'차'를 떼고 동을 만든다 */
+/** "압구정3구역" → "압구정동" — 숫자·'구역'·'지구'·'차'·'번지'를 떼고 동을 만든다.
+ *  '중림동398번지'처럼 이미 '동'으로 끝나면 '동'을 또 붙이지 않는다
+ *  ('중림동동'이 되어 아무 데도 안 걸렸다 — 2026-07-31). */
 function dongOf(name) {
-  const base = name.replace(/[0-9·\-]+\s*(구역|지구|차|단지).*$/, "").replace(/역세권$/, "").trim();
-  return base ? `${base}동` : null;
+  const base = name
+    .replace(/[0-9·\-]+\s*(구역|지구|차|단지|번지).*$/, "")
+    .replace(/역세권$/, "")
+    .trim();
+  if (!base) return null;
+  return base.endsWith("동") ? base : `${base}동`;
 }
 
 let ok = 0, failed = 0;
