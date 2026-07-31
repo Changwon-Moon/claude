@@ -59,6 +59,8 @@ const EXTRACT = `() => {
   const cands = [
     ...pick("#dic_area"),               // 네이버 뉴스
     ...pick("#newsct_article"),         // 네이버 뉴스(신)
+    ...pick("._article_content"),       // 네이버 모바일 (naver.me 단축링크가 여기로 온다)
+    ...pick("#comp_news_article"),      // 네이버 모바일(구)
     ...pick("[data-article-body]"),
     ...pick(".article_view"),           // 다음
     ...pick("#harmonyContainer"),       // 다음(신)
@@ -92,8 +94,22 @@ for (const url of urls) {
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const res = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
-      await page.waitForTimeout(1500); // JS가 본문을 채울 틈
+      /* ⚠️ 단축 URL(naver.me 등)은 **도착한 뒤 한 번 더 이동한다.**
+       * 이동 중에 읽으면 빈 문서를 읽는다 — 2026-07-31 에 실제로 그랬다:
+       * HTTP 200 · HTML 362KB 인데 제목도 location.href 도 빈 문자열이었다.
+       * 그래서 주소가 **멎을 때까지** 기다린 뒤에 읽는다. */
+      let seen = "";
+      for (let w = 0; w < 12; w++) {
+        await page.waitForTimeout(700);
+        const now = page.url();
+        if (now === seen && now && now !== "about:blank") break;
+        seen = now;
+      }
+      await page.waitForLoadState("load", { timeout: 15000 }).catch(() => {});
+      await page.waitForTimeout(1200); // JS가 본문을 채울 틈
       got = await page.evaluate(EXTRACT);
+      /* finalUrl 은 Node 쪽에서도 잡는다 — 페이지 안에서 읽은 값이 비는 경우가 있다 */
+      if (got && !got.finalUrl) got.finalUrl = page.url();
       if (got && got.body && got.body.length > 200) break;
       /* ⚠️ 판정만 남기면 다음 사람이 또 추측한다. **무엇을 받았는지** 적는다.
        * (2026-07-29: 네이버·다음이 본문 0자로 왔는데 원인이 봇 차단인지 선택자
@@ -101,7 +117,7 @@ for (const url of urls) {
       const html = await page.content().catch(() => "");
       err =
         `본문 ${got?.body?.length || 0}자 · HTTP ${res?.status() || "?"} · HTML ${html.length}자 · ` +
-        `제목 "${(got?.title || "").slice(0, 40)}" · 최종URL ${(got?.finalUrl || "").slice(0, 80)}`;
+        `제목 "${(got?.title || "").slice(0, 40)}" · 최종URL ${(got?.finalUrl || page.url() || "").slice(0, 100)}`;
     } catch (e) {
       err = String(e?.message || e).slice(0, 140);
     }

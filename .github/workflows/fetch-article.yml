@@ -59,7 +59,8 @@ jobs:
           URLS="$INPUT_URLS"
           if [ -z "$URLS" ] && [ -f research/article-queue.txt ]; then
             # 주석(#)과 빈 줄을 걷어내고 한 줄로 모은다
-            URLS=$(grep -vE '^\s*(#|$)' research/article-queue.txt | tr '\n' ' ')
+            # 중복 제거(순서 유지) — 같은 링크가 두 줄 있으면 같은 기사를 두 번 읽는다
+            URLS=$(grep -vE '^\s*(#|$)' research/article-queue.txt | awk '!seen[$0]++' | tr '\n' ' ')
           fi
           if [ -z "$(echo "$URLS" | tr -d ' ')" ]; then
             echo "읽을 URL 이 없습니다 — 대기열이 비었습니다(등록용 실행일 수 있음)"
