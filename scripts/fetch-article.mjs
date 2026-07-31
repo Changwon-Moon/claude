@@ -83,14 +83,42 @@ const EXTRACT = `() => {
   };
 }`;
 
+/* ── 실패했을 때 **무엇이 거기 있었는지** 통째로 남긴다 (2026-07-31)
+ * "본문 0자"만 알면 선택자 문제인지 렌더 타이밍인지 차단 화면인지 못 가른다.
+ * 세션은 Actions 로그 말고는 볼 방법이 없으므로, 판별에 필요한 것을 한 번에 적는다. */
+const PROBE = `() => {
+  const sels = ["#dic_area","#newsct_article","._article_content","#comp_news_article",
+    "[data-article-body]",".article_view","#harmonyContainer","article",
+    ".news_end",".article-body",".art_txt","#articleBody",".news_view",".newsct_article","#ct","#contents"];
+  const hits = sels.map(s => {
+    const els = [...document.querySelectorAll(s)];
+    const len = els.reduce((a,e) => a + ((e.innerText||"").trim().length), 0);
+    return els.length ? (s + " ×" + els.length + " (" + len + "자)") : null;
+  }).filter(Boolean);
+  const metas = [...document.querySelectorAll("meta")]
+    .map(m => (m.getAttribute("property")||m.getAttribute("name")||""))
+    .filter(n => /og:|title|article/i.test(n)).slice(0, 12);
+  const b = document.body;
+  return {
+    href: location.href, readyState: document.readyState, title: document.title,
+    bodyText: (b ? (b.innerText||"").trim().length : -1),
+    bodyChildren: b ? b.childElementCount : -1,
+    iframes: document.querySelectorAll("iframe").length,
+    hits, metas,
+    head: (b ? (b.innerText||"").trim().slice(0, 600) : ""),
+  };
+}`;
+
 mkdirSync(OUT, { recursive: true });
 let ok = 0;
 const results = [];
+const probes = [];
 
 for (const url of urls) {
   const page = await ctx.newPage();
   let got = null;
   let err = "";
+  let probe = null;
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const res = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
@@ -118,10 +146,23 @@ for (const url of urls) {
       err =
         `본문 ${got?.body?.length || 0}자 · HTTP ${res?.status() || "?"} · HTML ${html.length}자 · ` +
         `제목 "${(got?.title || "").slice(0, 40)}" · 최종URL ${(got?.finalUrl || page.url() || "").slice(0, 100)}`;
+      /* 마지막 시도까지 못 읽었으면 **거기 무엇이 있었는지**를 통째로 남긴다.
+       * 페이지를 닫기 전에만 찍을 수 있으므로 여기서 찍는다. */
+      if (attempt === 2) probe = await page.evaluate(PROBE).catch((e) => ({ probeError: String(e?.message || e) }));
     } catch (e) {
       err = String(e?.message || e).slice(0, 140);
     }
-    if (attempt < 2) await new Promise((r) => setTimeout(r, 2000 * (attempt + 1)));
+    /* 재시도는 **전략을 바꿔서** 한다. 같은 방식으로 세 번 하면 세 번 같은 결과다.
+     * 2차부터는 네트워크가 잠잠해질 때까지(networkidle) 기다린 뒤 읽는다. */
+    if (attempt < 2) {
+      await new Promise((r) => setTimeout(r, 2000 * (attempt + 1)));
+      await page.waitForLoadState("networkidle", { timeout: 20000 }).catch(() => {});
+    }
+  }
+  if (probe) {
+    console.log(`\n── 진단: ${url} 에 실제로 있던 것 ──`);
+    console.log(JSON.stringify(probe, null, 1).slice(0, 2500));
+    console.log("──────────────────────────────\n");
   }
   await page.close();
 
@@ -130,6 +171,7 @@ for (const url of urls) {
     results.push({ url, ok: false, err });
     continue;
   }
+  void probes;
 
   /* 날짜는 **기사가 말하는 발행일**을 쓴다. 없으면 파일명에서 유추하지 않고 'unknown' 을 쓴다 —
    * 실행 시각을 발행일로 적으면 나중에 그게 사실인 줄 알고 인용하게 된다. */
