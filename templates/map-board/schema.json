@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "map-board@1",
+  "description": "상 제목 / 중 지도 / 하 표. 지도의 번호 표식과 표의 번호가 서로를 가리킨다. 범례 없음 — 표가 곧 범례다.",
+  "type": "object",
+  "required": ["template", "title", "mapSvg", "rows", "source"],
+  "properties": {
+    "template": { "type": "string", "pattern": "^map-board@\\d+$" },
+    "date": { "type": "string" },
+    "title": { "type": "string", "maxLength": 34 },
+    "subtitle": { "type": "string", "maxLength": 70 },
+    "mapSvg": { "type": "string" },
+    "footnote": { "type": "string" },
+    "rows": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "required": ["name", "value", "color"],
+        "properties": {
+          "name": { "type": "string", "maxLength": 20 },
+          "value": { "type": "string", "maxLength": 14 },
+          "unit": { "type": "string", "maxLength": 4 },
+          "color": { "type": "string", "description": "번호 표식·칩 배경색. 지도 마커와 같은 색이어야 한다." },
+          "abbr": { "type": "string", "maxLength": 4, "description": "로고 없을 때 칩에 넣을 약칭" },
+          "logo": { "type": "string", "description": "_shared/logos/ 아래 파일명(확장자 포함). 없으면 칩으로 대체." },
+          "nos": {
+            "type": "array",
+            "description": "지도 위 번호들. 문자열로 준다(원문자 아님 — 원을 그려 넣으므로 숫자만).",
+            "items": { "type": "string", "maxLength": 3 }
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["name"],
+      "properties": { "name": { "type": "string" }, "asOf": { "type": "string" } }
+    }
+  }
+}

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* map-board@1 — 상 제목 / 중 지도 / 하 표. 지도의 번호 표식과 표의 번호가 서로를 가리킨다.
+         ── 왜 새 템플릿인가 (2026-07-31 오너 지시)
+         "상 제목 - 중 지도 - 하 표" 3단은 기존 어느 템플릿에도 없다.
+         map-choropleth 는 지도만, singoga-map 은 좌 표·우 지도다. 세로 3단은 처음이다.
+         ── 왜 범례가 없나
+         오너 지시: 범례 대신 **표가 곧 범례**다. 지도 위 번호와 표의 번호가 같은 폰트·같은
+         모양이라 눈이 바로 잇는다. 색 범례는 한 번 더 눈을 옮기게 만든다. */
+      .mb { padding-top: 52px; }
+      .mb .wirit-corner { background: transparent; padding: 0; box-shadow: none; top: 44px; right: 56px; }
+      .mb .wirit-corner .mark { color: var(--wirit-ink); font-size: 40px; }
+      .mb > .wirit-topcap { padding-right: 150px; }
+
+      .mb-head { padding: 0 8px; margin: 6px 0 0; }
+      .mb .wirit-title { font-size: 74px; line-height: 1.05; text-align: center; white-space: nowrap; margin: 0; letter-spacing: -0.03em; }
+
+      /* 지도에 상한을 준다 — 없으면 지도가 세로를 다 먹고 **표가 카드 밖으로 밀려난다**
+         (첫 시안에서 9행 중 2행과 푸터가 잘렸다). 표는 정보의 본체다. 지도가 양보한다. */
+      .mb-map { display: flex; align-items: center; justify-content: center; margin: 6px 0 2px; max-height: 470px; }
+      .mb-map svg { width: 100%; height: 100%; max-height: 470px; object-fit: contain; display: block; }
+
+      /* ── 표 ──
+         열: 번호들 · 로고 · 회사명 · 수주액.
+         번호가 여러 개 붙는 회사가 있으므로 번호 열은 줄바꿈을 허용한다. */
+      .mb-tab { margin: 0 4px 8px; display: flex; flex-direction: column; gap: 2px; }
+      .mb-row {
+        display: grid;
+        grid-template-columns: 42px 1fr auto;
+        align-items: center;
+        gap: 14px;
+        padding: 5px 12px;
+        border-radius: 4px;
+      }
+      .mb-row:nth-child(odd) { background: rgba(38, 48, 61, 0.045); }
+
+      .mb-logo { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; }
+      .mb-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+      /* 로고가 없을 때 — 첫 글자 원은 정보가 없어 노이즈다. 회사색 칩에 약칭을 쓴다. */
+      .mb-chip {
+        width: 40px; height: 40px; border-radius: 3px; display: flex; align-items: center;
+        justify-content: center; color: #fff; font-size: 17px; font-weight: 800; letter-spacing: -0.03em;
+      }
+
+      .mb-name { display: flex; align-items: center; gap: 10px; min-width: 0; }
+      .mb-nm { font-size: 27px; font-weight: 800; color: var(--wirit-ink); white-space: nowrap; }
+      .mb-nos { display: flex; flex-wrap: wrap; gap: 4px; }
+      /* 지도 표식과 **같은 글꼴·같은 지름**. 이 일치가 이 카드의 배선이다. */
+      .mb-no {
+        width: 27px; height: 27px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-family: "Pretendard", sans-serif; font-size: 16px; font-weight: 800;
+        color: #fff;
+      }
+      .mb-val {
+        font-family: "Wanted Sans", "Pretendard", sans-serif;
+        font-size: 29px; font-weight: 900; color: var(--wirit-ink); white-space: nowrap;
+      }
+      .mb-val i { font-style: normal; font-size: 20px; font-weight: 800; color: var(--wirit-gray); margin-left: 2px; }
+
+      .mb-fn { white-space: pre-line; margin: 2px 12px 10px; font-size: 18px; font-weight: 600; line-height: 1.35; color: var(--wirit-gray); }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card mb">
+      <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
+      <div class="mb-head"><h1 class="wirit-title">{{title}}</h1></div>
+
+      <div class="mb-map">{{{mapSvg}}}</div>
+
+      <div class="mb-tab">
+        {{#each rows}}
+        <div class="mb-row">
+          <span class="mb-logo">
+            {{#if this.logo}}<img src="../_shared/logos/{{this.logo}}" alt="" />
+            {{else}}<span class="mb-chip" style="background:{{this.color}}">{{this.abbr}}</span>{{/if}}
+          </span>
+          <span class="mb-name">
+            <span class="mb-nm">{{this.name}}</span>
+            <span class="mb-nos">
+              {{#each this.nos}}<span class="mb-no" style="background:{{../this.color}}">{{this}}</span>{{/each}}
+            </span>
+          </span>
+          <span class="mb-val">{{this.value}}{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
+        </div>
+        {{/each}}
+      </div>
+
+      {{#if footnote}}<p class="mb-fn">{{footnote}}</p>{{/if}}
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <!-- 제목 넘침 방지 — **줄이는 방향으로만** 작동한다(map-choropleth 와 같은 이유·같은 코드).
+         제목이 nowrap 이라 길면 카드 밖으로 잘려 나간다. 글자가 잘린 카드는 불량품이다. -->
+    <script>
+      window.__wiritFit = function () {
+        var el = document.querySelector(".mb .wirit-title");
+        if (!el) return;
+        var box = el.parentElement;
+        var bs = getComputedStyle(box);
+        var avail = box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
+        var base = parseFloat(el.dataset.baseSize || "");
+        if (!base) { base = parseFloat(getComputedStyle(el).fontSize); el.dataset.baseSize = String(base); }
+        el.style.fontSize = base + "px";
+        if (el.scrollWidth <= avail) return;
+        var lo = 34, hi = base, best = lo;
+        for (var i = 0; i < 20; i++) {
+          var mid = (lo + hi) / 2;
+          el.style.fontSize = mid + "px";
+          if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(window.__wiritFit);
+    </script>
+  </body>
+</html>
