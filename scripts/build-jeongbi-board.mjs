@@ -345,6 +345,8 @@ const rows = order.map((co) => ({
   nos: numbered.filter((s) => s.builder === co.name).map((s) => String(s.no)),
 }));
 
+const approx = numbered.filter((s) => /근사/.test(s.geo?.method || "")).map((s) => s.name);
+
 const card = {
   template: "map-board@1",
   date,
@@ -352,9 +354,11 @@ const card = {
   subtitle: `주요 건설사 서울 수주 ${numbered.length}곳 · ${doc.seoulSites.asOf.replace(/-/g, ".").slice(2)} 기준`,
   mapSvg,
   rows,
+  /* 근사 좌표를 말없이 두면 지도가 아는 척을 한다. 어느 점이 덜 정확한지 카드가 스스로 밝힌다. */
   footnote:
     `점 색은 시공사입니다. 로고는 단지명 기준이며, 단지명이 정해지지 않은 곳은 시공사 로고를 넣었습니다.\n` +
-    `수주액은 서울 외 사업지를 포함한 전국 누적입니다.`,
+    `수주액은 서울 외 사업지를 포함한 전국 누적입니다.` +
+    (approx.length ? `\n${approx.join("·")}는 구역 중심이 아니라 동 중심으로 찍은 근사 위치입니다.` : ""),
   source: { name: "각 사 · 뉴시스 정리", asOf: doc.seoulSites.asOf },
 };
 
