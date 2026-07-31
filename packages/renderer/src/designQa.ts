@@ -212,8 +212,24 @@ const MEASURE_JS = `(() => {
     });
     if(bot!==null) footerGap=Math.round(ft-bot);
   }
+  /* ── 머리 부분(아이덴티티) 규격 ──
+   * 2026-07-31: 지도를 키우려고 map-board 가 카드 패딩 72→44, 코너 뱃지를
+   * 검은 판에서 투명 글자로 바꿔 놨다. **다른 발행본과 윗부분이 눈에 띄게 달라졌고**
+   * 오너가 나란히 놓고서야 알아챘다. 좌표로 잴 수 있는 것은 사람 눈에 맡기지 않는다.
+   * 배경색·뱃지 글자 크기·카드 위 패딩 셋을 재서 공용 기본값과 대조한다. */
+  var head=null;
+  if(badge){
+    var bcs=getComputedStyle(badge);
+    var markEl=badge.querySelector(".mark");
+    head={
+      badgeBg: bcs.backgroundColor,
+      badgeMarkPx: markEl ? Math.round(parseFloat(getComputedStyle(markEl).fontSize)) : null,
+      cardPadTop: Math.round(parseFloat(cs.paddingTop)||0)
+    };
+  }
   var lastRow=rows.length?rows[rows.length-1]:null;
   return {
+    head:head,
     card:{left:cb.left,right:cb.right,top:cb.top,bottom:cb.bottom,width:cb.width},
     innerW:cb.width-padL-padR, innerLeft:cb.left+padL, innerRight:cb.right-padR,
     rows:rows, overflow:overflow, collisions:collisions,
@@ -226,6 +242,30 @@ const MEASURE_JS = `(() => {
 /** 측정 결과 → 문제 목록 */
 function analyze(g: Geo): Finding[] {
   const out: Finding[] = [];
+
+  /* 0-a) 머리 부분이 공용 규격인가 — 계정의 카드는 윗부분이 같아야 시리즈로 읽힌다.
+   * 기준값은 templates/_shared/base.css: 뱃지 배경 = 잉크네이비(불투명),
+   * 뱃지 글자 36px, .wirit-card 위 패딩 72px. */
+  /* 수준을 warn 으로 둔 이유: 이 검수를 켠 날(2026-07-31) 이미 나가 있던 카드
+   * 여러 장(index-2026·maprank·estate-cover)이 같은 방식으로 어긋나 있었다.
+   * error 로 두면 **손대면 안 되는 발행본** 때문에 내보내기가 통째로 막힌다.
+   * 새 카드·고치는 카드는 이 warn 이 뜨면 반드시 맞춘다 — 표지형(전면 사진)은 예외다. */
+  const h = (g as any).head;
+  if (h) {
+    const transparent = !h.badgeBg || /rgba\(\s*0\s*,\s*0\s*,\s*0\s*,\s*0\s*\)|transparent/.test(h.badgeBg);
+    if (transparent)
+      out.push({ level: "warn", code: "brandhead",
+        msg: "우상단 wirit 뱃지 배경이 비었습니다 — 공용 규격은 잉크네이비 판입니다(base.css .wirit-corner). 템플릿에서 재정의했는지 확인하세요" });
+    if (h.badgeMarkPx !== null && Math.abs(h.badgeMarkPx - 36) > 2)
+      out.push({ level: "warn", code: "brandhead",
+        msg: `우상단 뱃지 글자 ${h.badgeMarkPx}px — 공용 규격 36px 과 다릅니다` });
+    /* 위 여백은 **줄이는 쪽만** 잡는다. 더 넉넉히 두는 것은 디자인 선택이고
+     * (발행본 tohuh-rent-map 이 92px 이다), 문제는 그래픽 자리를 벌려고 머리를
+     * 깎아 다른 카드보다 좁아지는 경우다. */
+    if (h.cardPadTop < 70)
+      out.push({ level: "warn", code: "brandhead",
+        msg: `카드 위 여백 ${h.cardPadTop}px — 공용 규격 72px 보다 좁습니다. 그래픽을 키우려고 머리를 줄이지 않습니다` });
+  }
 
   // 0) 넘침·겹침 — 템플릿 종류와 무관하게 항상 검사한다
   g.overflow.forEach((o) =>

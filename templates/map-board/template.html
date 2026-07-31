@@ -16,13 +16,17 @@
          회색 둥근 상자 8개를 격자로 늘어놓으면 어느 대시보드에나 있는 그림이 된다.
          상자를 없애고 **브랜드색 굵은 선 하나**로 칸을 열었다. 경계를 색으로 긋고
          나머지는 여백에 맡기는 편이 신문 지면에 가깝다. 색은 그대로 두고 상자만 뺐다. */
-      .mb { padding-top: 44px; display: flex; flex-direction: column; }
-      .mb .wirit-corner { background: transparent; padding: 0; box-shadow: none; top: 38px; right: 52px; }
-      .mb .wirit-corner .mark { color: var(--wirit-ink); font-size: 40px; }
-      .mb > .wirit-topcap { padding-right: 150px; }
+      /* ── 머리 부분은 공용 규격을 그대로 쓴다 (2026-07-31 오너 지적) ──
+         이 템플릿은 지도를 키우려고 위쪽을 줄여 놨었다: 카드 패딩 72→44,
+         코너 뱃지를 검은 판에서 투명 글자로, 상단캡 오른쪽 여백 190→150.
+         그 결과 **다른 발행본과 윗부분이 눈에 띄게 달라졌다** — 뱃지 모양까지 달랐다.
+         한 계정의 카드는 윗부분이 같아야 시리즈로 읽힌다. 지도를 키우려고
+         아이덴티티를 줄이지 않는다. 세로가 모자라면 지도가 양보한다. */
+      .mb { display: flex; flex-direction: column; }
 
-      /* 제목은 카드 폭을 **가득 채운다**(오너 지시). 아래 스크립트가 키우고 줄인다. */
-      .mb-head { padding: 0; margin: 14px 0 0; }
+      /* 제목은 카드 폭을 **가득 채운다**(오너 지시). 아래 스크립트가 키우고 줄인다.
+         margin-top 28px 은 base.css 의 .wirit-title 기본값과 같다 — 상단캡과의 간격을 맞춘다. */
+      .mb-head { padding: 0; margin: 28px 0 0; }
       .mb .wirit-title {
         font-size: 76px; line-height: 1.02; text-align: left; white-space: nowrap;
         margin: 0; letter-spacing: -0.035em;
@@ -34,7 +38,9 @@
       /* height:auto 로 두면 지도가 제 비율대로 커지다 **칸을 넘쳐 제목을 덮었다**(2026-07-31).
          width·height 를 100% 로 묶고 viewBox 의 preserveAspectRatio 에 맡기면
          남는 칸 안에 반드시 들어간다 — 넘침이 구조적으로 불가능해진다. */
-      .mb-map { flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; margin: 2px 0 0; }
+      /* max-height 로 지도를 조금 줄인다(오너 지시) — flex:1 만 두면 지도가 남는 세로를
+         전부 먹어 제목·카드와 맞닿는다. 상한을 두면 남는 만큼이 여백으로 돌아간다. */
+      .mb-map { flex: 1 1 auto; min-height: 0; max-height: 620px; display: flex; align-items: center; justify-content: center; margin: 8px 0 0; }
       .mb-map svg { width: 100%; height: 100%; display: block; }
 
       /* ── 하단 시공사 8칸 — 4열 × 2행 ──
@@ -42,7 +48,9 @@
          minmax(0,1fr): 1fr 만 쓰면 최소 폭이 '내용 크기'라 긴 이름이 칸을 밀어낸다. */
       .mb-cards {
         flex: 0 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-        column-gap: 24px; row-gap: 16px; margin: 12px 0 2px;
+        /* 아래 여백 28px — 마지막 줄 로고가 푸터에 거의 닿아 있었다(오너 지적).
+           푸터는 카드 밖으로 풀블리드되는 검은 띠라, 닿으면 글자가 띠에 얹힌 것처럼 보인다. */
+        column-gap: 24px; row-gap: 16px; margin: 16px 0 28px;
       }
       .mb-c { display: flex; flex-direction: column; gap: 6px; padding-top: 9px; border-top: 5px solid var(--c); }
 
