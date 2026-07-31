@@ -1,16 +1,17 @@
 # 기사 읽어오기 — 마지막 실행 결과
 
-- 실행: 2026-07-31 02:48 UTC
+- 실행: 2026-07-31 03:20 UTC
 - 결과: **failure**
 - 요청한 URL: https://n.news.naver.com/mnews/article/003/0014099900 
-- 실행 기록: https://github.com/Changwon-Moon/claude/actions/runs/30599891177
+- 실행 기록: https://github.com/Changwon-Moon/claude/actions/runs/30601305271
 
 > 워크플로가 매번 덮어씁니다. 작업 세션이 결과를 확인하는 통로입니다.
 
 ## 로그
 
 ```
-::warning::못 읽음 — https://n.news.naver.com/mnews/article/003/0014099900 (본문 0자 · HTTP 200 · HTML 336820자 · 제목 "" · 최종URL https://n.news.naver.com/mnews/article/003/0014099900)
+   ↳ 시도할 주소 3개: https://news.naver.com/main/read.naver?mode=LSD&mid=shm&oid=003&aid=0014099900 · https://news.naver.com/mnews/article/003/0014099900 · https://n.news.naver.com/mnews/article/003/0014099900
+::warning::못 읽음 — https://n.news.naver.com/mnews/article/003/0014099900 (본문 0자 · HTTP 200 · HTML 335003자 · 제목 "" · 최종URL https://n.news.naver.com/mnews/article/003/0014099900)
 
 0/1건 저장
 보관된 기사 총 2건
