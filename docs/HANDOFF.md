@@ -95,6 +95,8 @@ node scripts/doctor.mjs            # 3~5분. 실제로 카드를 만들어 봅�
 node scripts/rebuild-cards.mjs
 
 # 관제탑 화면 스모크 (97항)
+# ⚠️ 갓 clone 한 환경이면 먼저 아래 "관제탑 다시 생성"을 돌립니다 —
+#    폰트·썸네일은 gitignore 대상이라 clone 직후에는 없습니다(§4 맨 아래 주석 참고)
 node scripts/smoke-tower.mjs
 
 # 환경 자가진단 + 발행본 픽셀 회귀
@@ -110,11 +112,37 @@ pnpm -s --filter @wirit/renderer qa data/content/{날짜}/{카드}.json
 cd packages/pipeline && pnpm -s review /절대경로/카드.json \
   --caption /절대경로/캡션.txt --label {label} --out /절대경로/data/review
 
-# 관제탑 다시 생성
+# 관제탑 다시 생성 — 이걸 쓰세요(폰트 복사 + _site 조립까지 한 번에)
+node scripts/build-tower-site.mjs
+
+# (참고) 상태·HTML 만 다시 만들기 — 폰트는 복사하지 않습니다
 pnpm -s --filter @wirit/dashboard-static all
 ```
 
 **`error`가 하나라도 있으면 내보내지 않습니다.** `warn`은 이유를 대고 넘길 수 있습니다.
+
+### 갓 clone 한 환경에서 스모크가 떨어질 때 (2026-07-31 확인)
+
+`packages/dashboard/fonts/` · `data/out/` 은 **gitignore 대상**이라 clone 직후에는 없습니다.
+문서만 보고 `dashboard-static all` → `smoke-tower` 순으로 돌리면 **94/97** 로 떨어집니다.
+떨어지는 3항은 전부 "생성물이 아직 없다"이지 코드 문제가 아닙니다:
+
+| 실패 항목 | 없는 것 | 채우는 명령 |
+|---|---|---|
+| 콘솔·페이지 오류 없음 | `packages/dashboard/fonts/PretendardVariable.woff2` | `node scripts/build-tower-site.mjs` |
+| 보관함에 카드 실물 썸네일 | `data/out/{날짜}/{slug}-p1.png` | 아래 렌더 루프 |
+| 결재 화면에 나갈 카드 실물 | 〃 | 〃 |
+
+```bash
+# 새 환경 1회 — sets.json 의 카드를 전부 data/out 으로 렌더(썸네일 원천)
+node scripts/render-sets.mjs
+
+# 그 다음 관제탑 생성 → 스모크 (97/97)
+node scripts/build-tower-site.mjs && node scripts/smoke-tower.mjs
+```
+
+> 기존 작업 환경에서는 이 파일들이 이미 남아 있어 통과합니다 —
+> **정말 백지에서 복제될 때만 드러나는 구멍**이라 여기 적어둡니다.
 
 ---
 
@@ -213,6 +241,7 @@ pnpm -s --filter @wirit/dashboard-static all
 - [ ] `STATUS.md` 갱신 — 무엇을 **왜** 그렇게 했는지
 - [ ] 오너 피드백을 원천에 반영(§9)
 - [ ] `node scripts/rebuild-cards.mjs` + `node scripts/smoke-tower.mjs` 통과
+      (스모크가 떨어지면 §4 아래 "갓 clone 한 환경에서 스모크가 떨어질 때" 를 먼저 확인)
 - [ ] 공용 파일을 고쳤으면 `node scripts/doctor.mjs`로 **발행본 픽셀 회귀 확인**
 - [ ] **커밋 & 푸시** — 커밋 안 한 작업은 세션과 함께 사라집니다
 - [ ] 오너에게 **렌더 PNG**로 결과 전달
@@ -247,6 +276,26 @@ pnpm -s --filter @wirit/dashboard-static all
 
 - **✅** → 그 창구에서 전부 할 수 있습니다
 - **❌** → 카드 제작은 실행 가능한 곳에서. 그 창구에서는 소재 발굴·리서치·캡션·기준 문서만
+
+### Cowork 실측 결과 (2026-07-31) — ✅ 전부 통과
+
+백지 clone 에서 실제로 돌려 확인했습니다. **픽셀 불변이 창구를 넘어서도 지켜집니다.**
+
+| 확인 | 결과 |
+|---|---|
+| `doctor.mjs` | ✅ 필수 18항 통과 |
+| 발행본 md5 3장 | `572b4238…` · `ec4cad52…` · `87ef2d00…` — **32자리 전부 일치** |
+| `rebuild-cards.mjs` | 검수 15장 error 0건 |
+| `smoke-tower.mjs` | 97/97 (위 §4 순서를 따랐을 때) |
+| dashboard-static selftest | 24/24 |
+
+환경 조건: Node 22 · pnpm 10 · Chromium 은 `/opt/pw-browsers/chromium` 에 사전 설치
+(`PLAYWRIGHT_BROWSERS_PATH` 설정됨 — `playwright install` 을 돌리지 마세요).
+폰트는 `templates/_shared/fonts/` 에 번들돼 있어 clone 만으로 따라옵니다.
+
+> **렌더 환경은 한 곳으로 고정하세요.** 결정적 렌더의 전제가 "같은 기계"입니다.
+> 두 창구에서 번갈아 렌더하면 픽셀 기준선이 갈라질 수 있습니다 —
+> §12 첫머리의 "두 창구로 쪼개지 말라"는 경고가 픽셀 층에도 그대로 적용됩니다.
 
 > **두 창구로 쪼개는 것은 권하지 않습니다.** 기준이 두 곳에 흩어져 안 훑히는 것 —
 > 그게 오너가 "왜 같은 말을 두 번 하게 하냐"고 한 문제의 정확한 원인이었습니다.
