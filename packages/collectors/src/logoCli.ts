@@ -65,9 +65,17 @@ async function run(paths: string[]): Promise<void> {
   const skipped: string[] = [];
   for (const name of companies) {
     const cfg = COMPANY_QUERIES[name];
-    // Tier B는 큐레이션된 회사(COMPANY_QUERIES)만. 나머지는 Tier A(simple-icons)/수동 소관 → 건너뜀.
+    /* Tier B는 큐레이션된 회사(COMPANY_QUERIES)만 본다.
+     * ⚠️ 다만 **DOMAIN_MAP 에 있는 회사는 건너뛰면 안 된다** — 아래 Tier C(Brandfetch)가
+     * `missed` 만 훑기 때문에, 여기서 skipped 로 빠지면 Tier C 까지 못 간다.
+     * 2026-07-31 에 건설사 9곳이 정확히 그렇게 사라졌다: Tier B는 "Tier A 소관"이라 넘기고
+     * Tier A 에는 건설사가 없고 Tier C 는 호출조차 안 됐다. 세 티어가 서로를 미룬 것이다. */
     if (!cfg) {
-      skipped.push(`${name} (Tier A/수동 대상)`);
+      if (DOMAIN_MAP[name]) {
+        missed.push(`${name} (Tier B 대상 아님 → Tier C 로)`);
+      } else {
+        skipped.push(`${name} (Tier A/수동 대상)`);
+      }
       continue;
     }
     const slug = cfg.slug;

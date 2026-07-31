@@ -1,0 +1,80 @@
+name: 좌표 지오코딩 (카카오 로컬)
+
+# 정비사업 구역명 → 좌표. 지도 마커를 실제 위치에 찍기 위한 것.
+# KAKAO_REST_KEY 필요 → GitHub Secrets. (이 키는 원래 이 용도로 등록돼 있었다 —
+# docs/guides/realestate-data-apis.md §2 "카카오 로컬 API (좌표)")
+#
+# ── 대기열 방식 (기사 읽어오기·로고 취득과 같은 구조)
+# 작업 세션은 GitHub API 가 막혀 워크플로를 직접 실행하지 못하지만 git push 는 된다.
+# data/geocode-queue.txt 에 대상 파일 경로를 적어 푸시하면 깨어난다.
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - claude/instagram-content-automation-roadmap-fxnb7p
+    paths:
+      - "data/geocode-queue.txt"
+      - ".github/workflows/geocode.yml"
+      - "scripts/geocode-sites.mjs"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: geocode
+  cancel-in-progress: false
+
+jobs:
+  geocode:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # continue-on-error + always(): 실패해도 결과를 저장소에 남긴다.
+      # 세션은 Actions 로그를 못 보므로 이 파일이 유일한 눈이다.
+      - name: 지오코딩
+        id: geo
+        continue-on-error: true
+        env:
+          KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
+        run: |
+          set -o pipefail
+          node scripts/geocode-sites.mjs 2>&1 | tee /tmp/geo.log
+
+      - name: 결과 기록 + 커밋
+        if: always()
+        env:
+          OUTCOME: ${{ steps.geo.outcome }}
+        run: |
+          {
+            echo "# 좌표 지오코딩 — 마지막 실행 결과"
+            echo
+            echo "- 실행: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo "- 결과: **${OUTCOME}**"
+            echo "- 실행 기록: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo
+            echo '```'
+            if [ -f /tmp/geo.log ]; then cat /tmp/geo.log; else echo "(로그 없음)"; fi
+            echo '```'
+          } > data/geocode-last.md
+          : > data/geocode-queue.txt
+          git config user.name  "wirit-bot"
+          git config user.email "noreply@github.com"
+          git add -- data/datasets data/geocode-queue.txt data/geocode-last.md
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+          else
+            git commit -m "좌표 지오코딩 결과(${OUTCOME})"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push origin HEAD:"${GITHUB_REF_NAME}"
+          fi

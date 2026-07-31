@@ -13,6 +13,28 @@ const API = "https://api.brandfetch.io/v2/brands";
 
 /** 회사명 → 공식 도메인 후보(우선순위 순). Tier B(Wikimedia)에서 못 찾은 큐레이션 대상만 등록. */
 export const DOMAIN_MAP: Record<string, string[]> = {
+  /* 건설사 — Tier A(simple-icons)에도 Tier B(Wikimedia 큐레이션)에도 없어 여기서 받는다.
+   * 2026-07-31: 정비사업 카드에 로고가 필요했는데 세 티어가 서로를 미뤄 아무 데서도 안 나왔다.
+   * 도메인을 잘못 적으면 **다른 회사 로고가 붙는다** — 취득 후 반드시 눈으로 대조한다. */
+  /* 아파트 브랜드 — 카드에는 회사 로고보다 브랜드 로고가 낫다(래미안·자이는 그 자체로 읽힌다).
+   * ⚠️ 도메인이 틀리면 **다른 회사 로고가 붙는다.** 취득 후 반드시 눈으로 대조한다.
+   *    후보를 여러 개 두는 이유도 그것이다 — 첫 도메인이 빗나가면 다음을 시도한다. */
+  "래미안": ["raemian.co.kr"],
+  "자이": ["xi.co.kr", "gsconst.co.kr"],
+  "푸르지오": ["prugio.com", "daewooenc.com"],
+  "써밋": ["daewooenc.com"],
+  "힐스테이트": ["hillstate.co.kr", "hdec.co.kr"],
+  "디에이치": ["thedh.co.kr", "hdec.co.kr"],
+  "르엘": ["lottecastle.co.kr", "lottecon.co.kr"],
+  "더샵": ["thesharp.co.kr", "poscoenc.com"],
+  "아크로": ["acro.co.kr", "dlenc.co.kr"],
+  "현대건설": ["hdec.co.kr", "hdec.kr"],
+  "GS건설": ["gsconst.co.kr", "xi.co.kr"],
+  "삼성물산": ["samsungcnt.com", "secc.co.kr"],
+  "대우건설": ["daewooenc.com"],
+  "롯데건설": ["lottecon.co.kr"],
+  "포스코이앤씨": ["poscoenc.com"],
+  "DL이앤씨": ["dlenc.co.kr"],
   "포스코인터내셔널": ["poscointl.com"],
   "삼성바이오로직스": ["samsungbiologics.com"],
   "HD한국조선해양": ["ksoe.co.kr", "hd-ksoe.co.kr", "hdksoe.co.kr", "hyundai-ksoe.co.kr"],

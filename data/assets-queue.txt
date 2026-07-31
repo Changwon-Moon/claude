@@ -1,0 +1,2 @@
+# 로고 취득 대기열
+data/datasets/apt-brands.json
