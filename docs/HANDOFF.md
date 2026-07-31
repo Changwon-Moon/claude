@@ -279,6 +279,8 @@ node scripts/build-tower-site.mjs && node scripts/smoke-tower.mjs
 
 ### Cowork 실측 결과 (2026-07-31) — ✅ 전부 통과
 
+> 코워크로 옮겨 심는 절차·경계선·체크리스트는 **[docs/COWORK.md](./COWORK.md)** 에 따로 있습니다.
+
 백지 clone 에서 실제로 돌려 확인했습니다. **픽셀 불변이 창구를 넘어서도 지켜집니다.**
 
 | 확인 | 결과 |
