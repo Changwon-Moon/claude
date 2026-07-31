@@ -253,7 +253,11 @@ function won(억) {
   const jo = Math.floor(억 / 10000), rest = 억 % 10000;
   return jo ? `${jo}조${rest.toLocaleString("ko-KR")}` : `${rest.toLocaleString("ko-KR")}`;
 }
-const SHORT = { HDC현대산업개발: "HDC현산", SK에코플랜트: "SK에코" };
+/* 회사명은 줄이지 않는다 (2026-07-31 오너 지시 — 'SK에코' → 'SK에코플랜트' 복구).
+ * 처음 줄인 이유는 카드가 좌우 2단이 되기 **전**, 회사명이 쓸 수 있는 폭이 165px 뿐이라
+ * 7자가 두 줄로 접혔기 때문이다. 로고를 왼쪽 칸으로 뺀 뒤로는 머리줄이 칸 폭을 다 쓴다.
+ * HDC현대산업개발은 서울 사업지가 없어 지금은 카드에 안 오르지만, 오르게 되면 다시 재 본다. */
+const SHORT = { HDC현대산업개발: "HDC현산" };
 const rows = order.map((co) => {
   const mine = numbered.filter((s) => s.builder === co.name);
   return {
