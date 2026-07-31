@@ -43,8 +43,14 @@ const ABBR = {
 };
 const GRAY = "#B4BAC2";
 
+/* 오너 지시(2026-07-31): HDC현대산업개발·SK에코플랜트는 뺀다.
+ * HDC 는 서울 사업지가 없고(성남태평3구역), SK 는 신반포20차 한 곳뿐이다.
+ * 표에서 빼면 그 회사의 사업지도 지도에서 함께 빠져야 한다 — 표에 없는 번호가
+ * 지도에만 떠 있으면 독자는 그 점이 무엇인지 알 방법이 없다. */
+const EXCLUDE = new Set(["HDC현대산업개발", "SK에코플랜트"]);
+
 // ── 번호 매기기: 표 순서(수주액 내림차순) → 회사별 사업지 → 미확정은 맨 뒤 ──
-const order = [...doc.items].sort((a, b) => b.amount - a.amount);
+const order = [...doc.items].filter((c) => !EXCLUDE.has(c.name)).sort((a, b) => b.amount - a.amount);
 const numbered = [];
 for (const co of order) {
   for (const s of sites.filter((x) => x.builder === co.name)) {
@@ -54,7 +60,10 @@ for (const co of order) {
 for (const s of sites.filter((x) => !x.builder)) {
   numbered.push({ ...s, no: numbered.length + 1, color: GRAY });
 }
-if (numbered.length !== sites.length) throw new Error(`번호 누락: ${numbered.length}/${sites.length}`);
+// 제외 회사의 사업지는 지도에서도 빠진다 — 표에 없는 번호를 지도에 남기지 않는다
+const dropped = sites.filter((x) => x.builder && EXCLUDE.has(x.builder));
+if (numbered.length + dropped.length !== sites.length)
+  throw new Error(`번호 누락: ${numbered.length}+${dropped.length}/${sites.length}`);
 
 // ── 서울 경계 ──
 const geo = JSON.parse(readFileSync(join(ROOT, "data/geo/seoul-districts.geojson"), "utf8"));
@@ -83,6 +92,23 @@ const W = 1000, scale = W / ((maxLon - minLon) * kx), H = Math.round((maxLat - m
 const px = (lo) => (lo - minLon) * kx * scale;
 const py = (la) => (maxLat - la) * scale;
 
+/* ── 한강 ──
+ * 손으로 그리지 않는다. **이북 구와 이남 구가 공유하는 경계 정점**을 경도순으로 이으면
+ * 선이 정확히 구 경계 위에 놓인다(scripts/lib/tohuh-map.mjs 가 확립한 방법).
+ * 좌표를 베껴 적으면 경계 데이터가 바뀔 때 강만 어긋난 지도가 남는다. */
+const NORTH = new Set(["종로구","중구","용산구","성동구","광진구","동대문구","중랑구","성북구","강북구","도봉구","노원구","은평구","서대문구","마포구"]);
+const SOUTH = new Set(["양천구","강서구","구로구","금천구","영등포구","동작구","관악구","서초구","강남구","송파구","강동구"]);
+const vkey = (q) => `${q[0].toFixed(6)},${q[1].toFixed(6)}`;
+const nPts = new Map(), sPts = new Map();
+for (const f of geo.features) {
+  const bag = NORTH.has(f.properties.name) ? nPts : SOUTH.has(f.properties.name) ? sPts : null;
+  if (!bag) continue;
+  for (const r of rings(f.geometry)) for (const q of r) bag.set(vkey(q), q);
+}
+const riverCore = [...nPts.keys()].filter((k) => sPts.has(k)).map((k) => nPts.get(k)).sort((a, b) => a[0] - b[0]);
+if (riverCore.length < 8) throw new Error(`한강 경계 정점 부족(${riverCore.length}) — 경계 데이터 확인`);
+const riverD = "M" + riverCore.map(([lo, la]) => `${px(lo).toFixed(1)},${py(la).toFixed(1)}`).join("L");
+
 const cen = {};
 let paths = "";
 for (const f of geo.features) {
@@ -104,45 +130,79 @@ for (const f of geo.features) {
   cen[f.properties.name] = [cx, cy];
 }
 
-/* 구 이름 — 마커 무리 **위**로 올린다.
- * 고정 오프셋(34px)으로는 강남 6곳·서초 4곳처럼 무리가 큰 구에서 여전히 가렸다.
- * 무리 반지름에 비례해 올려야 개수가 달라져도 안 가린다. */
-const clusterR = {};
-for (const s of numbered) clusterR[s.gu] = (clusterR[s.gu] || 0) + 1;
-let guLabels = "";
-for (const [g, [cx, cy]] of Object.entries(cen)) {
-  if (cx < -20 || cx > W + 20 || cy < -20 || cy > H + 20) continue; // 잘려 나간 구는 건너뛴다
-  // 마커가 있는 구는 이름을 위로 올린다 — 무게중심에 두면 번호에 가려 못 읽는다
-  const cn = clusterR[g] || 0;
-  const up = cn ? (cn === 1 ? 26 : 15 + cn * 4.5 + 20) : 0;
-  guLabels += `<text class="gu${up ? " on" : ""}" x="${cx.toFixed(0)}" y="${(cy - up).toFixed(0)}">${g.replace(/구$/, "")}</text>`;
-}
+/* 행정구역명은 넣지 않는다(2026-07-31 오너 지시).
+ * 구역명 라벨이 붙는 지도에서 구 이름까지 있으면 글자가 두 겹이 된다.
+ * 어느 동네인지는 구역명(압구정·성수·목동…)이 이미 말해 준다. */
+const guLabels = "";
 
-/* ── 번호 표식 배치 ──
- * 같은 구의 여러 곳은 무게중심 주위에 결정적으로 흩뿌린다(임시 좌표 — 진짜 좌표는
- * 카카오 로컬 지오코딩이 필요하고 수집기가 아직 없다). 표식은 원+숫자뿐이라
- * 라벨 시험 때처럼 겹쳐 뭉개지지 않는다 — 그게 번호 방식의 이점이다. */
+/* ── 마커 좌표 ──
+ * 데이터에 lon/lat 이 있으면 **실제 위치**를 쓴다(카카오 로컬 지오코딩, geocode-sites.mjs).
+ * 아직 없으면 구 무게중심 주위에 결정적으로 흩뿌린 임시 좌표로 떨어진다 —
+ * 어느 쪽인지 로그에 찍어 둔다. 임시 좌표인 채로 발행하면 위치가 거짓말이 된다. */
 const byGu = {};
 for (const s of numbered) (byGu[s.gu] ||= []).push(s);
-let marks = "";
+let realCoords = 0;
 for (const [gu, arr] of Object.entries(byGu)) {
   const [cx, cy] = cen[gu] || [W / 2, H / 2];
   const R = arr.length === 1 ? 0 : 15 + arr.length * 4.5;
   arr.forEach((s, i) => {
-    const th = -Math.PI / 2 + (i * 2 * Math.PI) / arr.length;
-    const x = cx + R * Math.cos(th), y = cy + R * Math.sin(th);
-    marks +=
-      `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="15" fill="${s.color}" stroke="#fff" stroke-width="2.5"/>` +
-      `<text class="no" x="${x.toFixed(1)}" y="${y.toFixed(1)}">${s.no}</text>`;
+    if (Number.isFinite(s.lon) && Number.isFinite(s.lat)) {
+      s.x = px(s.lon); s.y = py(s.lat); realCoords++;
+    } else {
+      const th = -Math.PI / 2 + (i * 2 * Math.PI) / arr.length;
+      s.x = cx + R * Math.cos(th); s.y = cy + R * Math.sin(th);
+    }
   });
+}
+
+/* ── 꺾은선 라벨 (2026-07-31 오너 지시) ──
+ * 마커에서 가로로 뻗은 뒤 위/아래로 꺾어 구역명을 단다.
+ * 자리는 마커 좌우 8단(위4·아래4)을 **고정 순서로** 시도해 안 겹치는 첫 자리를 고른다.
+ * 결정성이 규칙이므로 랜덤은 없다. 끝내 자리가 없으면 겹친 채 두고 **세어서 보고한다** —
+ * 숨기면 다음 사람이 "다 들어갔다"고 믿는다. */
+const CH = 11.2;            // 19px 굵은 한글 한 글자 대략 폭
+const LH = 26;              // 라벨 줄 높이(충돌 상자)
+const STEPS = [-1, 1, -2, 2, -3, 3, -4, 4]; // 위·아래 번갈아 멀어진다
+const boxes = [];
+const overlaps = (a, b) => !(a.x1 <= b.x0 || b.x1 <= a.x0 || a.y1 <= b.y0 || b.y1 <= a.y0);
+let leaders = "", siteLabels = "", unplaced = 0;
+// 왼쪽 절반은 왼쪽으로, 오른쪽 절반은 오른쪽으로 빼야 지도 밖으로 덜 나간다
+for (const s of [...numbered].sort((a, b) => a.y - b.y)) {
+  const dir = s.x < W * 0.5 ? -1 : 1;
+  const w = Math.max(60, s.name.length * CH);
+  let put = null;
+  for (const st of STEPS) {
+    const ly = s.y + st * LH;
+    const lx = s.x + dir * 34;                      // 가로로 뻗는 길이
+    const x0 = dir < 0 ? lx - w : lx, x1 = dir < 0 ? lx : lx + w;
+    const b = { x0, x1, y0: ly - LH / 2, y1: ly + LH / 2, lx, ly };
+    if (x0 < -6 || x1 > W + 6) continue;             // 카드 밖으로 나가면 버린다
+    if (!boxes.some((q) => overlaps(b, q))) { put = b; break; }
+  }
+  if (!put) { unplaced++; continue; }               // 자리가 없으면 라벨을 안 단다(번호는 남는다)
+  boxes.push(put);
+  // 꺾은선: 마커 → 가로 → 라벨 높이로 꺾기 → 라벨까지
+  const midX = s.x + dir * 18;
+  leaders += `<path class="ld" stroke="${s.color}" d="M${s.x.toFixed(1)},${s.y.toFixed(1)}` +
+    `L${midX.toFixed(1)},${s.y.toFixed(1)}L${midX.toFixed(1)},${put.ly.toFixed(1)}L${put.lx.toFixed(1)},${put.ly.toFixed(1)}"/>`;
+  siteLabels += `<text class="sl" x="${(put.lx + dir * 5).toFixed(1)}" y="${(put.ly + 6).toFixed(1)}" ` +
+    `fill="${s.color}" text-anchor="${dir < 0 ? "end" : "start"}">${s.name}</text>`;
+}
+
+let marks = "";
+for (const s of numbered) {
+  marks +=
+    `<circle cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="14" fill="${s.color}" stroke="#fff" stroke-width="2.5"/>` +
+    `<text class="no" x="${s.x.toFixed(1)}" y="${s.y.toFixed(1)}">${s.no}</text>`;
 }
 
 const mapSvg =
   `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">` +
-  `<style>.gu{font-family:'Pretendard',sans-serif;font-size:21px;font-weight:700;fill:#98A0AB;text-anchor:middle}` +
-  `.gu.on{fill:#5A6473;font-weight:800}` +
+  `<style>.river{fill:none;stroke:#8fbfe0;stroke-width:9;stroke-linecap:round;stroke-linejoin:round}` +
+  `.sl{font-family:'Pretendard',sans-serif;font-size:19px;font-weight:800}` +
+  `.ld{fill:none;stroke-width:1.6;opacity:.85}` +
   `.no{font-family:'Pretendard',sans-serif;font-size:16px;font-weight:800;fill:#fff;text-anchor:middle;dominant-baseline:central}</style>` +
-  `${paths}${guLabels}${marks}</svg>`;
+  `${paths}<path class="river" d="${riverD}"/>${guLabels}${leaders}${marks}${siteLabels}</svg>`;
 
 // ── 표 ──
 function won(억) {
@@ -188,5 +248,7 @@ writeFileSync(join(outDir, "jeongbi-board.json"), JSON.stringify(card, null, 2) 
 
 console.log(`🧪 시안 board — 사업지 ${numbered.length}곳 · 표 ${rows.length}행`);
 console.log(`   로고 확보: ${rows.filter((r) => r.logo).length}/${rows.length} (나머지는 색칩 약칭)`);
-console.log(`   지도 크롭: 사업지 있는 ${guWithSites.size}개 구 기준 · 북부 잘림`);
+console.log(`   좌표: 실제 ${realCoords} · 임시 ${numbered.length - realCoords} / ${numbered.length}`);
+console.log(`   라벨 자리 못 찾음: ${unplaced}건`);
+console.log(`   제외: ${[...EXCLUDE].join(", ")} (사업지 ${dropped.length}곳 함께 빠짐)`);
 console.log(`   → data/out/_spike/jeongbi-board.json`);

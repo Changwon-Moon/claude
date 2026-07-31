@@ -28,11 +28,18 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const KEY = process.env.KAKAO_REST_KEY || process.env.KAKAO_REST_API_KEY || "";
+/* 키가 안 들어왔을 때 **왜**인지 알 수 있게 진단을 남긴다.
+ * 값은 절대 찍지 않는다 — 이름과 길이만. 로그는 저장소에 커밋되기 때문이다.
+ * (2026-07-31: 시크릿이 분명히 등록돼 있는데 "없음"으로 끝나 원인을 못 가렸다) */
 if (!KEY) {
-  console.log("⏭ KAKAO_REST_KEY 가 없어 지오코딩을 건너뜁니다.");
-  console.log("  GitHub Secrets 에 등록돼 있습니다 — Actions 에서 돌리세요.");
+  const seen = Object.keys(process.env).filter((k) => /KAKAO|REST_KEY/i.test(k));
+  console.log("⏭ 카카오 키가 비어 지오코딩을 건너뜁니다.");
+  console.log(`  워크플로가 넘긴 KAKAO* 환경변수: ${seen.length ? seen.map((k) => `${k}(${(process.env[k] || "").length}자)`).join(", ") : "없음"}`);
+  console.log("  → 0자로 보이면 시크릿 이름이 다르거나 값이 비어 있습니다.");
+  console.log("     `node scripts/check-secrets.mjs` 로 이름을 대조하세요.");
   process.exit(0);
 }
+console.log(`🔑 카카오 키 확인 (${KEY.length}자)`);
 
 const FILE = join(ROOT, "data/datasets/jeongbi-order-2026-07.json");
 const doc = JSON.parse(readFileSync(FILE, "utf8"));
