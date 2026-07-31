@@ -7,18 +7,28 @@ name: 기사 읽어오기
 #
 # ⚠️ 기사는 2차 출처다. 여기 저장된 숫자를 카드에 그대로 쓰지 않는다 —
 #    시의성 훅으로 쓰거나, 1차 출처로 다시 확인한 뒤에만 쓴다(ARCHITECTURE.md §2).
+#
+# ── 대기열 방식 (2026-07-31 추가)
+# 오너 지적: "직접 깃허브에 링크를 붙이고 액션을 누르면 의미가 없잖아."
+# 맞다. 작업 세션은 GitHub **API** 가 막혀 워크플로를 직접 실행하지 못하지만
+# **git push 는 된다.** 그래서 푸시를 방아쇠로 쓴다 —
+# 세션이 `research/article-queue.txt` 에 URL 을 적어 푸시하면 이 워크플로가 깨어난다.
+# 오너는 채팅에 링크만 주면 되고, 버튼을 누르러 갈 일이 없다.
 on:
   workflow_dispatch:
     inputs:
       urls:
-        description: "기사 URL (공백으로 여러 개)"
-        required: true
-  # ⚠️ 등록용 — 수동 실행 전용 워크플로는 한 번도 안 돌면 GitHub에 등록되지 않아
-  #    dispatch 가 404를 받는다. 이 파일이 바뀌면 한 번 돌아 자신을 등록한다.
+        description: "기사 URL (공백으로 여러 개). 비우면 대기열 파일을 읽는다"
+        required: false
+        default: ""
   push:
     branches:
       - claude/instagram-content-automation-roadmap-fxnb7p
     paths:
+      # 세션이 URL 을 적어 푸시하는 파일 — 이게 이 워크플로의 진짜 입구다
+      - "research/article-queue.txt"
+      # ⚠️ 등록용 — 수동 실행 전용 워크플로는 한 번도 안 돌면 GitHub에 등록되지 않아
+      #    dispatch 가 404를 받는다. 이 파일들이 바뀌면 한 번 돌아 자신을 등록한다.
       - ".github/workflows/fetch-article.yml"
       - "scripts/fetch-article.mjs"
 
@@ -30,40 +40,71 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  register:
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "fetch-article 등록 완료 — 이제 dispatch 로 기사를 읽을 수 있다"
-
   fetch:
-    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
+
+      # 읽을 URL 정하기 — dispatch 입력이 있으면 그걸, 없으면 대기열 파일을 읽는다.
+      # 대기열이 비어 있으면(워크플로 파일만 고친 등록용 실행) 조용히 끝낸다.
+      - name: 읽을 URL 정하기
+        id: pick
+        env:
+          # ⚠️ URL 을 ${{ }} 로 셸 명령줄에 직접 박지 않는다 —
+          #    URL 안의 & ; $ 같은 문자가 명령으로 해석된다. env 로 넘겨 값으로만 다룬다.
+          INPUT_URLS: ${{ github.event.inputs.urls }}
+        run: |
+          URLS="$INPUT_URLS"
+          if [ -z "$URLS" ] && [ -f research/article-queue.txt ]; then
+            # 주석(#)과 빈 줄을 걷어내고 한 줄로 모은다
+            URLS=$(grep -vE '^\s*(#|$)' research/article-queue.txt | tr '\n' ' ')
+          fi
+          if [ -z "$(echo "$URLS" | tr -d ' ')" ]; then
+            echo "읽을 URL 이 없습니다 — 대기열이 비었습니다(등록용 실행일 수 있음)"
+            echo "urls=" >> "$GITHUB_OUTPUT"
+          else
+            echo "읽을 URL: $URLS"
+            echo "urls=$URLS" >> "$GITHUB_OUTPUT"
+          fi
       - uses: pnpm/action-setup@v4
+        if: steps.pick.outputs.urls != ''
         with:
           version: 10
       - uses: actions/setup-node@v4
+        if: steps.pick.outputs.urls != ''
         with:
           node-version: 22
           cache: pnpm
-      - run: pnpm install --frozen-lockfile
+      - if: steps.pick.outputs.urls != ''
+        run: pnpm install --frozen-lockfile
 
       # 네이버·다음은 JS로 본문을 채운다 → 실제 브라우저로 열어야 글이 보인다
       - name: Chromium 설치
+        if: steps.pick.outputs.urls != ''
         run: pnpm --filter @wirit/renderer exec playwright-core install --with-deps chromium chromium-headless-shell
 
       - name: 기사 읽기
-        run: node scripts/fetch-article.mjs ${{ github.event.inputs.urls }}
+        if: steps.pick.outputs.urls != ''
+        env:
+          URLS: ${{ steps.pick.outputs.urls }}
+        run: |
+          # 따옴표 없이 $URLS 를 넘겨 공백으로 나뉜 여러 URL 이 각각의 인자가 되게 한다.
+          # 값 자체는 env 를 거쳐 오므로 셸 확장 대상이 아니다.
+          # shellcheck disable=SC2086
+          node scripts/fetch-article.mjs $URLS
 
+      # 대기열은 비워서 함께 커밋한다 — 안 비우면 다음 푸시 때 같은 기사를 또 읽는다.
+      # 단 커밋 경로에 대기열을 포함해도 재실행되지 않는다: 이 커밋은 봇이 하고,
+      # GITHUB_TOKEN 으로 민 푸시는 워크플로를 다시 트리거하지 않는다(GitHub 기본 동작).
       - name: 커밋
+        if: steps.pick.outputs.urls != ''
         run: |
           git config user.name  "wirit-bot"
           git config user.email "noreply@github.com"
-          git add -- research/articles
+          : > research/article-queue.txt
+          git add -- research/articles research/article-queue.txt
           if git diff --cached --quiet; then
             echo "새로 저장된 기사 없음"
           else

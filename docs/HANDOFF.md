@@ -191,6 +191,22 @@ node scripts/build-tower-site.mjs && node scripts/smoke-tower.mjs
 
 수집한 데이터는 `verified: false`로 들어오고, 1차 출처 대조 후에야 `true`로 올립니다.
 
+### 오너가 기사 링크를 줬을 때 (버튼 누르지 않게)
+
+작업 세션은 네이버·다음을 못 읽고, GitHub **API** 도 막혀 워크플로를 직접 실행하지 못합니다.
+하지만 **git push 는 됩니다.** 그래서 푸시를 방아쇠로 씁니다:
+
+```bash
+echo "https://n.news.naver.com/…" >> research/article-queue.txt
+git commit -am "기사 요청" && git push        # ← 이 푸시가 워크플로를 깨운다
+```
+
+`기사 읽어오기` 워크플로가 브라우저로 본문을 읽어 `research/articles/{날짜}-{슬러그}.md`
+에 커밋하고 대기열을 비웁니다. 1~3분 뒤 `git pull` 하면 기사가 와 있습니다.
+
+> **오너에게 "GitHub 에서 Actions 를 눌러 주세요"라고 하지 마세요.** 그러면 자동화가 아닙니다.
+> 링크를 받으면 세션이 대기열에 적어 푸시하고, 기사가 올 때까지 기다렸다가 이어서 진행합니다.
+
 ---
 
 ## §7. 관제탑 (웹 화면) — 지금은 축소돼 있습니다
