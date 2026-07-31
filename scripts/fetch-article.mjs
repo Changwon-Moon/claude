@@ -116,6 +116,33 @@ const PROBE = `() => {
  * page.content() 는 337KB 를 멀쩡히 돌려줬다. 실행 컨텍스트가 깨진 것이지
  * 페이지가 없는 게 아니다. 그러면 컨텍스트를 쓰지 않으면 된다 —
  * 받아 둔 HTML 을 Node 에서 직접 파싱한다. 브라우저 안 상태에 기대지 않는 길이다. */
+/* ── 모바일 주소를 PC 주소로 바꾼다 (2026-07-31)
+ * 이 스크립트의 1순위 선택자 `#dic_area` 는 네이버 **PC판** 본문 id 다.
+ * 그런데 naver.me 단축링크는 `n.news.naver.com`(**모바일판**)으로 떨어지고,
+ * 모바일판은 클라이언트 렌더라 초기 HTML 에 본문이 없다.
+ * 즉 "모바일로 들어가서 PC용 선택자로 찾고 있었다" — 다섯 번 실패한 진짜 이유다.
+ * (research/articles 의 기존 두 건도 전부 오너가 본문을 붙여 준 것이었다.
+ *  이 통로로 네이버를 읽어낸 적은 한 번도 없었다.)
+ *
+ * 기사 번호(oid/aid)만 알면 PC 주소를 만들 수 있다. PC판은 서버 렌더라 본문이 HTML 에 있다.
+ * 원본 주소도 함께 돌려줘서, PC 주소가 실패하면 원본으로 한 번 더 시도한다.
+ */
+function urlCandidates(url) {
+  const out = [];
+  // https://n.news.naver.com/mnews/article/003/0014099900  (?sid=101 등 뒤에 붙어도 됨)
+  // https://n.news.naver.com/article/003/0014099900
+  const m = url.match(/n\.news\.naver\.com\/(?:mnews\/)?article\/(\d+)\/(\d+)/);
+  if (m) {
+    out.push(`https://news.naver.com/main/read.naver?mode=LSD&mid=shm&oid=${m[1]}&aid=${m[2]}`);
+    out.push(`https://news.naver.com/mnews/article/${m[1]}/${m[2]}`);
+  }
+  // 다음 모바일 → PC
+  const d = url.match(/v\.daum\.net\/v\/(\w+)/);
+  if (d) out.push(`https://news.v.daum.net/v/${d[1]}`);
+  out.push(url); // 원본은 언제나 마지막 후보
+  return [...new Set(out)];
+}
+
 function fromHtml(html) {
   if (!html || html.length < 500) return null;
   const meta = (n) => {
@@ -175,9 +202,27 @@ for (const url of urls) {
   let got = null;
   let err = "";
   let probe = null;
-  for (let attempt = 0; attempt < 3; attempt++) {
+  /* 단축·모바일 주소는 PC 주소로 바꿔 먼저 시도한다(위 urlCandidates 주석 참고).
+   * naver.me 처럼 한 번 튕기는 주소는 먼저 열어 최종 주소를 알아낸 뒤 후보를 다시 만든다. */
+  let candidates = urlCandidates(url);
+  if (/naver\.me|url\.kr|bit\.ly/.test(url)) {
     try {
-      const res = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
+      await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
+      await page.waitForTimeout(2500);
+      const landed = page.url();
+      if (landed && landed !== url) {
+        console.log(`   ↳ 단축주소 해석: ${landed}`);
+        candidates = urlCandidates(landed);
+      }
+    } catch { /* 못 풀면 원래 후보로 간다 */ }
+  }
+  console.log(`   ↳ 시도할 주소 ${candidates.length}개: ${candidates.join(" · ")}`);
+
+  for (let attempt = 0; attempt < candidates.length; attempt++) {
+    const tryUrl = candidates[attempt];
+    const last = attempt === candidates.length - 1;
+    try {
+      const res = await page.goto(tryUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
       /* ⚠️ 단축 URL(naver.me 등)은 **도착한 뒤 한 번 더 이동한다.**
        * 이동 중에 읽으면 빈 문서를 읽는다 — 2026-07-31 에 실제로 그랬다:
        * HTTP 200 · HTML 362KB 인데 제목도 location.href 도 빈 문자열이었다.
@@ -214,14 +259,14 @@ for (const url of urls) {
         `제목 "${(got?.title || "").slice(0, 40)}" · 최종URL ${(got?.finalUrl || page.url() || "").slice(0, 100)}`;
       /* 마지막 시도까지 못 읽었으면 **거기 무엇이 있었는지**를 통째로 남긴다.
        * 페이지를 닫기 전에만 찍을 수 있으므로 여기서 찍는다. */
-      if (attempt === 2) probe = await page.evaluate(PROBE).catch((e) => ({ probeError: String(e?.message || e) }));
+      if (last) probe = await page.evaluate(PROBE).catch((e) => ({ probeError: String(e?.message || e) }));
     } catch (e) {
       err = String(e?.message || e).slice(0, 140);
     }
     /* 재시도는 **전략을 바꿔서** 한다. 같은 방식으로 세 번 하면 세 번 같은 결과다.
      * 2차부터는 네트워크가 잠잠해질 때까지(networkidle) 기다린 뒤 읽는다. */
-    if (attempt < 2) {
-      await new Promise((r) => setTimeout(r, 2000 * (attempt + 1)));
+    if (!last) {
+      await new Promise((r) => setTimeout(r, 1500));
       await page.waitForLoadState("networkidle", { timeout: 20000 }).catch(() => {});
     }
   }
