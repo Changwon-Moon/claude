@@ -1,0 +1,43 @@
+{
+  "label": "metro-speed-nocover",
+  "verdict": "revise",
+  "summary": "REVISE — error 0 · warn 4 · 카드 1장 · 코드 검수만",
+  "findings": [],
+  "cards": [
+    {
+      "file": "metro-2col.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": [
+        {
+          "reviewer": "design-qa",
+          "level": "warn",
+          "code": "titlegap",
+          "msg": "제목과 바로 아래 요소의 간격이 22px 입니다 (제목 76px) — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다"
+        },
+        {
+          "reviewer": "design-qa",
+          "level": "warn",
+          "code": "brandhead",
+          "msg": "우상단 wirit 뱃지 배경이 비었습니다 — 공용 규격은 잉크네이비 판입니다(base.css .wirit-corner). 템플릿에서 재정의했는지 확인하세요"
+        },
+        {
+          "reviewer": "design-qa",
+          "level": "warn",
+          "code": "brandhead",
+          "msg": "우상단 뱃지 글자 40px — 공용 규격 36px 과 다릅니다"
+        },
+        {
+          "reviewer": "design-qa",
+          "level": "warn",
+          "code": "brandhead",
+          "msg": "카드 위 여백 52px — 공용 규격 72px 보다 좁습니다. 그래픽을 키우려고 머리를 줄이지 않습니다"
+        }
+      ]
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}

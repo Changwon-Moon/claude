@@ -34,30 +34,30 @@
       "label": "estate-84",
       "title": "서울 아파트 실거래 랭킹 84㎡ (2026 상반기)",
       "cards": [
-        "estate-cover-84",
         "maprank-84-p1",
         "maprank-84-p2"
       ],
-      "caption": "estate-84"
+      "caption": "estate-84",
+      "note": "커버 없이 재업로드 (2026-07-31 오너 결정) — 커버 빌더는 builders.json에 남겨둠"
     },
     {
       "label": "estate-59",
       "title": "서울 아파트 실거래 랭킹 59㎡ (2026 상반기)",
       "cards": [
-        "estate-cover-59",
         "maprank-59-p1",
         "maprank-59-p2"
       ],
-      "caption": "estate-59"
+      "caption": "estate-59",
+      "note": "커버 없이 재업로드 (2026-07-31 오너 결정) — 커버 빌더는 builders.json에 남겨둠"
     },
     {
       "label": "metro-speed",
       "title": "수도권 지하철 노선·구간별 표정속도",
       "cards": [
-        "metro-cover-photo",
         "metro-2col"
       ],
-      "caption": ""
+      "caption": "metro-speed",
+      "note": "커버 없이 재업로드 (2026-07-31 오너 결정) — 커버 빌더는 builders.json에 남겨둠"
     },
     {
       "label": "years-to-buy",

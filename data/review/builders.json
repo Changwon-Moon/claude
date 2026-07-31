@@ -120,6 +120,13 @@
       "args": [
         "2026-07-31"
       ]
+    },
+    {
+      "label": "metro-speed",
+      "cmd": "scripts/build-metro-speed-card.mjs",
+      "args": [
+        "2026-07-20"
+      ]
     }
   ]
 }
