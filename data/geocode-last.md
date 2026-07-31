@@ -1,8 +1,8 @@
 # 좌표 지오코딩 — 마지막 실행 결과
 
-- 실행: 2026-07-31 08:03 UTC
+- 실행: 2026-07-31 08:07 UTC
 - 결과: **success**
-- 실행 기록: https://github.com/Changwon-Moon/claude/actions/runs/30614914033
+- 실행 기록: https://github.com/Changwon-Moon/claude/actions/runs/30615142131
 
 ```
 🔑 카카오 키 확인 (32자)
