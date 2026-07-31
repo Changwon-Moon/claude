@@ -1,2 +1,0 @@
-# 로고 재취득 — 슬러그 버그 수정 후
-data/datasets/apt-brands.json
