@@ -64,7 +64,7 @@
       "key": "rate",
       "label": "코스피 상승률",
       "value": "17.91%",
-      "prev": "직전 2008.10.30 · 11.95%",
+      "prev": "직전 2008.10.30",
       "source": "https://www.mt.co.kr/stock/2026/07/31/2026073115275588013",
       "claim": "역대 <em>1위</em>"
     },
@@ -72,7 +72,7 @@
       "key": "point",
       "label": "코스피 상승폭",
       "value": "1,001.89p",
-      "prev": "직전 2026.6.9 · 612.52p",
+      "prev": "직전 2026.6.9",
       "source": "https://www.ajunews.com/view/20260731165002980",
       "claim": "역대 <em>1위</em>"
     },
@@ -89,7 +89,7 @@
       "label": "개인 순매도",
       "value": "10조 3,834억",
       "source": "https://www.seoul.co.kr/news/economy/securities/2026/07/31/20260731500267",
-      "claim": "하루 <em>최대</em>",
+      "claim": "하루 <em>최대</em> 😢",
       "prev": null
     },
     {

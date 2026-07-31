@@ -44,7 +44,13 @@
          미수집 구간(7/23~28)은 **점선**이다. 실선으로 이으면 서킷브레이커 두 번이
          매끈한 미끄럼틀로 보인다 — 없는 날을 그럴듯하게 메우지 않는다
          (CEO.md 07-30 "실선=실측 / 점선=추정"). */
-      .rg-chart { flex: 0 0 auto; position: relative; margin: 30px 0 0; height: 312px; }
+      /* 그래프를 **옅은 판 위에** 올린다(오너 지시 2026-07-31).
+         눈금선을 지우면 선이 허공에 뜨는데, 판이 그 바닥 역할을 대신한다.
+         칸을 나누는 상자가 아니라 그래프 하나를 받치는 판이라 'AI 타일'과는 다른 물건이다. */
+      .rg-chart {
+        flex: 0 0 auto; position: relative; margin: 32px 0 0; height: 330px;
+        background: rgba(20, 24, 33, 0.045); border-radius: 28px; padding: 10px 0 0;
+      }
       .rg-chart svg { display: block; width: 100%; height: 100%; }
       .rg-lead {
         /* 왼쪽 위에 앉힌다. 가운데에 두면 그래프의 오르는 구간을 덮는다 —
@@ -57,19 +63,21 @@
         font-family: var(--font-num); font-size: 46px; font-weight: 900;
         letter-spacing: 0.01em; line-height: 1.05;
       }
-      .rg-lead .cap {
-        margin-top: 6px; background: var(--wirit-red); border-radius: 6px;
-        padding: 4px 10px; font-size: 21px; font-weight: 800; letter-spacing: -0.04em;
+      /* 붉은 띠를 걷고 **수치 자체를 빨강으로** 말한다(오너 지시 2026-07-31).
+         띠는 글자를 담는 그릇이라 한 겹이 더 생긴다 — 색만으로 같은 말을 할 수 있으면 그릇은 군더더기다. */
+      .rg-lead .vl {
+        display: block; margin-top: 4px; font-family: var(--font-num);
+        font-size: 44px; font-weight: 900; color: var(--wirit-red); letter-spacing: -0.03em; line-height: 1.1;
       }
       .rg-lead .dt {
-        display: block; margin-top: 8px; font-family: var(--font-num);
-        font-size: 34px; font-weight: 900; letter-spacing: -0.02em;
+        display: block; margin-top: 2px; font-family: var(--font-num);
+        font-size: 30px; font-weight: 900; color: var(--wirit-red); letter-spacing: -0.02em;
       }
       /* 축 눈금 — 오른쪽에 값, 아래에 달. 격자는 아주 옅게. */
-      .rg-chart .ax { font-family: var(--font-num); font-size: 20px; font-weight: 800; fill: #8A97A6; }
+      .rg-chart .bdg-t { font-family: var(--font-num); font-size: 22px; font-weight: 900; fill: #fff; }
       .rg-chart .axm { font-family: var(--font-num); font-size: 19px; font-weight: 700; fill: #A6B0BC; }
       .rg-chart .gap-l { font-size: 17px; font-weight: 700; fill: #A6B0BC; }
-      .rg-chart .lastv { font-family: var(--font-num); font-size: 26px; font-weight: 900; fill: var(--wirit-ink); }
+
 
       /* ── 기록 장부 ──
          한 줄 = 한 기록. 남는 세로를 여섯 줄이 똑같이 나눠 갖는다. */
@@ -126,7 +134,7 @@
         {{#if lead}}
         <div class="rg-lead">
           <div class="lb">{{lead.label}}</div>
-          {{#if lead.cap}}<div class="cap">{{lead.cap}}</div>{{/if}}
+          {{#if lead.value}}<span class="vl">{{lead.value}}</span>{{/if}}
           {{#if lead.delta}}<span class="dt">{{lead.delta}}</span>{{/if}}
         </div>
         {{/if}}
@@ -179,13 +187,14 @@
           var sp = JSON.parse(chart.getAttribute("data-spark") || "null");
           var svg = chart.querySelector("svg");
           if (sp && svg && sp.points && sp.points.length > 1) {
-            var W = 1000, H = 310, PADR = 118, PADB = 62, PADT = 10;
+            /* PADL: 첫 점이 판 가장자리에 물리면 뱃지가 판 밖으로 나간다. PADR: 마지막 점 오른쪽 숨. */
+            var W = 1000, H = 310, PADL = 26, PADR = 40, PADB = 62, PADT = 46;
             var vals = sp.points.map(function (p) { return p.c; });
             var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
             var span = hi - lo || 1;
             lo -= span * 0.10; hi += span * 0.14;
             var t0 = Date.parse(sp.points[0].d), t1 = Date.parse(sp.points[sp.points.length - 1].d);
-            var X = function (d) { return ((Date.parse(d) - t0) / (t1 - t0)) * (W - PADR); };
+            var X = function (d) { return PADL + ((Date.parse(d) - t0) / (t1 - t0)) * (W - PADL - PADR); };
             var Y = function (c) { return PADT + (1 - (c - lo) / (hi - lo)) * (H - PADT - PADB); };
             var ns = "http://www.w3.org/2000/svg";
             var add = function (tag, attrs, text) {
@@ -194,12 +203,10 @@
               if (text !== undefined) e.textContent = text;
               svg.appendChild(e); return e;
             };
-            /* 가로 격자 4줄 + 오른쪽 눈금값 */
-            for (var g = 0; g < 4; g++) {
-              var cv = lo + ((hi - lo) * (g + 0.7)) / 4.4, y = Y(cv);
-              add("line", { x1: 0, y1: y, x2: W - PADR, y2: y, stroke: "rgba(20,24,33,0.07)", "stroke-width": 1 });
-              add("text", { x: W - PADR + 14, y: y + 7, class: "ax" }, Math.round(cv).toLocaleString("ko-KR"));
-            }
+            /* 눈금선·오른쪽 축값은 두지 않는다(오너 지시 2026-07-31).
+               대신 연초·최고점·오늘 **세 지점에만 뱃지**로 값을 적는다 —
+               읽는 사람이 실제로 궁금한 건 "어디서 시작해 어디까지 갔다가 지금 어디인가"이지
+               중간 눈금이 아니다. 눈금을 지우면 선이 깨끗해지고, 뱃지 셋이 이야기를 만든다. */
             /* 실측 구간과 미수집 구간을 나눠 그린다 */
             var before = [], after = [];
             sp.points.forEach(function (p) { (p.d <= sp.gapAfter ? before : after).push(p); });
@@ -218,21 +225,44 @@
               /* 각주는 선 위가 아니라 축 아래에 적는다 — 선 위에 두면 마지막 값과 겹친다.
                  점선 구간의 가로 위치 바로 아래에 두어 무엇을 가리키는지는 유지한다. */
               var gx = (X(lastB.d) + X(after[0].d)) / 2;
-              add("text", { x: gx, y: H - 8, class: "gap-l", "text-anchor": "middle" }, sp.gapLabel || "");
+              add("text", { x: Math.min(gx, W - 90), y: H - 8, class: "gap-l", "text-anchor": "middle" }, sp.gapLabel || "");
             }
-            /* 마지막 점 + 값 */
-            if (sp.last) {
-              var lx = X(sp.last.d), ly = Y(sp.last.c);
-              add("circle", { cx: lx, cy: ly, r: 8, fill: "#E5484D" });
-              add("text", { x: lx - 4, y: ly - 40, class: "lastv", "text-anchor": "end" }, sp.last.label);
-            }
+            /* 연초·최고점·오늘 — 세 지점에만 뱃지로 값을 적는다.
+               최고점은 손으로 고르지 않고 **데이터에서 찾는다**. 눈으로 찍으면
+               데이터가 바뀔 때 엉뚱한 곳을 가리킨 채로 남는다. */
+            var peak = sp.points.reduce(function (a, b) { return b.c > a.c ? b : a; }, sp.points[0]);
+            var lastP = sp.points[sp.points.length - 1];
+            var stops = [
+              { p: sp.points[0], t: "연초", tone: "ink", side: "right" },
+              { p: peak,         t: "최고점", tone: "ink", side: "mid" },
+              { p: lastP,        t: "오늘",  tone: "red", side: "mid" }   // 점 위 — 옆에 두면 내려오는 점선을 덮는다
+            ];
+            stops.forEach(function (st) {
+              var x = X(st.p.d), y = Y(st.p.c);
+              var val = st.p.c.toLocaleString("ko-KR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+              var txt = st.t + " " + val;
+              /* 글자 폭을 재서 알약을 그린다 — 폭을 어림하면 긴 값에서 글자가 삐져나온다. */
+              var probe = add("text", { x: -9999, y: -9999, class: "bdg-t" }, txt);
+              var tw = probe.getComputedTextLength(), pw = tw + 30, ph = 40;
+              var bx = st.side === "right" ? x + 10 : (st.side === "left" ? x - pw - 12 : x - pw / 2);
+              bx = Math.max(8, Math.min(W - pw - 8, bx));
+              /* 최고점 뱃지는 점 **위**, 나머지는 점 옆. 최고점 위는 늘 비어 있다. */
+              var by = st.side === "mid" ? y - ph - 16 : y - ph / 2;
+              by = Math.max(4, Math.min(H - PADB - ph - 4, by));
+              add("rect", { x: bx, y: by, width: pw, height: ph, rx: 20,
+                fill: st.tone === "red" ? "#E5484D" : "#141821" });
+              probe.setAttribute("x", bx + pw / 2); probe.setAttribute("y", by + ph / 2 + 8);
+              probe.setAttribute("text-anchor", "middle");
+              svg.appendChild(probe);
+              add("circle", { cx: x, cy: y, r: 7, fill: st.tone === "red" ? "#E5484D" : "#141821" });
+            });
             /* 아래 달 눈금 — 첫 점과 마지막 점 사이를 3등분해 실제 있는 날짜만 찍는다 */
             var marks = [0, 0.34, 0.67, 1].map(function (f) {
               return sp.points[Math.min(sp.points.length - 1, Math.round(f * (sp.points.length - 1)))];
             });
             marks.forEach(function (p, i) {
               var m = Number(p.d.slice(5, 7)) + "월";
-              add("text", { x: Math.min(W - PADR, Math.max(16, X(p.d))), y: H - 36, class: "axm",
+              add("text", { x: Math.min(W - 20, Math.max(20, X(p.d))), y: H - 36, class: "axm",
                 "text-anchor": i === 0 ? "start" : (i === marks.length - 1 ? "end" : "middle") }, m);
             });
           }
