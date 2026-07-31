@@ -1,7 +1,7 @@
 /**
- * 🧪 시안 — 2026-07-31 국내증시 하루 기록. record-grid@1.
- *
- * ⚠️ 오너 확정 전 **시안**이다. sets.json·builders.json 에 등록하지 않는다.
+ * 2026-07-31 국내증시 하루 기록. record-grid@1.
+ * ✅ 오너 확정 2026-07-31 — builders.json·sets.json·pixel-baselines.json 등록 완료.
+ * ⚠️ 다만 데이터셋은 verified=false 다(보도 출처). **KRX 대조 전에는 발행하지 않는다.**
  *
  * ── 무엇을 말하는 카드인가
  * 이 날 코스피는 하루에 1,001.89포인트(+17.91%) 올랐다. 상승률·상승폭 둘 다 역대 1위다.
@@ -138,11 +138,12 @@ const card = {
   source: { name: d.meta.source, asOf: d.meta.asOf },
 };
 
-const outDir = join(ROOT, "data/out/_spike");
+/* 확정 후 산출 위치를 data/content/{날짜}/ 로 옮겼다 — _spike 는 배포 파이프라인이 안 본다. */
+const outDir = join(ROOT, "data/content", date);
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "kospi-record.json"), JSON.stringify(card, null, 2) + "\n", "utf8");
 
-console.log(`🧪 시안 kospi-record — 기록 ${card.cells.length}칸`);
+console.log(`kospi-record — 기록 ${card.cells.length}칸`);
 console.log(`   코스피 ${fmt(K.close)} ▲${fmt(K.change)} (+${K.changePct}%) — 정합성 검사 통과`);
 console.log(`   ⚠ 데이터셋 verified=${d.verified} — 발행 전 KRX 대조 필요`);
-console.log(`   → data/out/_spike/kospi-record.json`);
+console.log(`   → data/content/${date}/kospi-record.json`);

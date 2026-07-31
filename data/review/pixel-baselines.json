@@ -66,6 +66,17 @@
       "png": "brand-rank-p1.png",
       "md5": "91d8e2ab6a2c8bda92d1dc97ae36f66f",
       "note": "로고 22칸이 들어가는 카드라 templates/_shared/logos/ 의 파일이 하나만 바뀌어도 md5 가 깨진다. 로고를 다시 정규화(normalize-logos.mjs)하면 이 값도 함께 갱신해야 한다."
+    },
+    {
+      "label": "kospi-record",
+      "title": "오늘 국내 증시가 세운 기록들",
+      "state": "오너 확정",
+      "at": "2026-07-31",
+      "builder": "kospi-record",
+      "content": "data/content/2026-07-31/kospi-record.json",
+      "png": "kospi-record-p1.png",
+      "md5": "5c242f77c9ce1b86eb26e40a45c4e0be",
+      "note": "그래프를 템플릿 스크립트가 SVG 로 직접 그린다. 뱃지 자리는 겹침을 재서 고르므로 시계열이 바뀌면 뱃지 위치가 따라 바뀌고 md5 도 바뀐다 — 정상이다. kr-market-2026.json 을 갱신하면 이 값도 함께 갱신한다."
     }
   ]
 }

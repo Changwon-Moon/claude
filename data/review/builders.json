@@ -113,6 +113,13 @@
       "args": [
         "2026-07-31"
       ]
+    },
+    {
+      "label": "kospi-record",
+      "cmd": "scripts/build-kospi-record.mjs",
+      "args": [
+        "2026-07-31"
+      ]
     }
   ]
 }
