@@ -99,6 +99,13 @@
       "args": [
         "2026-07-31"
       ]
+    },
+    {
+      "label": "jeongbi-board",
+      "cmd": "scripts/build-jeongbi-board.mjs",
+      "args": [
+        "2026-07-31"
+      ]
     }
   ]
 }

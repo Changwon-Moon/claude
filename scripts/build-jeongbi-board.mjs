@@ -1,7 +1,9 @@
 /**
  * 🧪 시안 — 상 제목 / 중 지도(번호 점) / 하 시공사 카드 8장. map-board@1.
  *
- * ⚠️ 오너 확정 전 **시안**이다. sets.json·builders.json 에 등록하지 않는다.
+ * ✅ **오너 확정** (2026-07-31). 확정 이후 이 카드의 픽셀은 바꾸지 않는다 —
+ * 공용 파일(base.css·map-board/template.html)을 건드렸으면 md5 회귀를 확인한다
+ * (기준값: data/review/pixel-baselines.json · 사람이 읽는 표는 CARD_CHECKLIST §5).
  *
  * ── 오너 지시 (2026-07-31, 최신)
  *   ① 지도 위 표식은 **번호가 든 원**. 색은 브랜드(=시공사) 색
@@ -285,7 +287,10 @@ const card = {
   source: { name: "뉴시스 · 각 사 취합", asOf: doc.seoulSites.asOf },
 };
 
-const outDir = join(ROOT, "data/out/_spike");
+/* 확정 전에는 data/out/_spike 에 뒀지만, 확정된 카드는 **data/content 아래**로 간다.
+ * rebuild-cards.mjs·sets.json·스모크가 모두 그 경로를 본다 —
+ * 여기 없으면 실사이트와 발행 후보 목록에 영영 안 뜬다(2026-07-26 '월급 34평' 사고). */
+const outDir = join(ROOT, `data/content/${date}`);
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "jeongbi-board.json"), JSON.stringify(card, null, 2) + "\n", "utf8");
 
@@ -299,4 +304,4 @@ console.log(`   마커 겹침 벌리기: 평균 ${(moved.reduce((a, b) => a + b,
 console.log(`   지도 자르기: ${W}×${H} → ${VW}×${VH} (비율 ${(VW / VH).toFixed(2)}) · 워터마크 ${wmPicked.length}/2`);
 if (approx.length) console.log(`   ⚠ 캡션에 적을 것 — 근사 위치: ${approx.join(", ")}`);
 if (noBrand.length) console.log(`   ⚠ 캡션에 적을 것 — 단지명 미정(시공사 색): ${noBrand.join(", ")}`);
-console.log(`   → data/out/_spike/jeongbi-board.json`);
+console.log(`   → data/content/${date}/jeongbi-board.json`);

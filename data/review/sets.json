@@ -93,6 +93,14 @@
       ],
       "caption": "jeongbi-rank",
       "note": "뉴시스 인포그래픽(2026-07-31) 소재. 자료는 각 사 — 1차 출처 대조 전이라 데이터셋 verified:false. 브랜드 서열로 읽히지 않게 메달·로고를 뺐다(ideas.json 브랜드 계급도 소재의 민감 표시 참고). 사업지·비중은 캡션이 갖는다. p2는 서울 사업지 24곳의 자치구별 분포 — 원본은 점 지도지만 좌표 수집기가 없어 구 단위 코로플레스로 간다. 손으로 좌표를 찍는 것은 CARD_CHECKLIST가 금지한다."
+    },
+    {
+      "label": "jeongbi-board",
+      "title": "올해 서울 정비사업 수주 1위는? (지도 + 시공사 8곳)",
+      "cards": [
+        "jeongbi-board"
+      ],
+      "caption": "jeongbi-board"
     }
   ]
 }

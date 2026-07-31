@@ -44,6 +44,16 @@
       "content": "data/content/2026-07-30/wolse-flip-p1.json",
       "png": "wolse-flip-p1-p1.png",
       "md5": "87ef2d006936e7629d593c747e466843"
+    },
+    {
+      "label": "jeongbi-board",
+      "title": "올해 서울 정비사업 수주 1위는?",
+      "state": "오너 확정",
+      "builder": "jeongbi-board",
+      "content": "data/content/2026-07-31/jeongbi-board.json",
+      "md5": "57783108f6f9a7a7d824179f2fe853cd",
+      "at": "2026-07-31",
+      "png": "jeongbi-board-p1.png"
     }
   ]
 }
