@@ -45,6 +45,22 @@ if (d.records.length !== 6) throw new Error(`기록 칸은 6개여야 한다 —
 const K = d.index.kospi;
 const fmt = (n) => n.toLocaleString("ko-KR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+/** 억 단위 정수 → "n조 n,nnn억". 손으로 적으면 원 수치가 바뀔 때 조용히 거짓이 된다. */
+const jo = (eok) => {
+  const j = Math.floor(eok / 10000), e = eok % 10000;
+  return j ? `${j}조 ${e.toLocaleString("ko-KR")}억` : `${e.toLocaleString("ko-KR")}억`;
+};
+
+/* 개인 순매도의 비교값은 '외국인이 산 것보다 얼마나 더 팔았나'다 — 두 수치의 뺄셈이라
+ * 데이터셋에 적어 두면 한쪽만 고쳐졌을 때 틀린 값이 카드에 남는다. 매번 계산한다. */
+const byKey = Object.fromEntries(d.records.map((r) => [r.key, r]));
+function fillPrev(r) {
+  if (r.prev) return r.prev;
+  if (r.key === "retail" && byKey.foreign?.amountEok && r.amountEok)
+    return `외국인이 산 것보다 ${jo(r.amountEok - byKey.foreign.amountEok)} 많다`;
+  return null;
+}
+
 const card = {
   template: "record-grid@1",
   date,
@@ -58,13 +74,13 @@ const card = {
      * 카드 제목이 코스피만 말하면 "코스닥은 어땠나"가 남는다. */
     sub: `코스닥 ${fmt(d.index.kosdaq.close)} · ▲${fmt(d.index.kosdaq.change)} (+${d.index.kosdaq.changePct}%)`,
   },
-  /* rank(빨간 뱃지)는 **기록일 때만** 붙인다. 값이 없으면 키 자체를 뺀다 —
-   * null 을 넣으면 스키마가 막는다(막아 주는 게 맞다. 뱃지에 가격을 넣었다가 걸렸다). */
+  /* 한 줄 = 한 기록. **claim(어떤 기록인가)이 주인공**이고 value 는 증거다(오너 지시 2026-07-31).
+   * prev 가 비어 있으면 빌더가 계산해 채운다 — 아래 fillPrev 참고. */
   cells: d.records.map((r) => ({
-    label: r.label, value: r.value, ...(r.rank ? { rank: r.rank } : {}), prev: r.prev,
+    label: r.label, claim: r.claim, value: r.value, ...(fillPrev(r) ? { prev: fillPrev(r) } : {}),
   })),
-  /* 맥락 한 줄 — 데이터셋의 값으로 문장을 만든다. 숫자를 손으로 적지 않는다. */
-  note: `7월 한 달 <b>${d.context.julyDropPct}%</b> · ${d.context.circuitBreakerShort}(7/28~29) 뒤 반등입니다`,
+  /* 맥락 한 줄 — 오너가 문구를 직접 지정했다(2026-07-31). 그대로 쓴다. */
+  note: d.context.noteLine,
   /* 기준일을 적는다 — 이 카드는 **하루치 스냅숏**이라 시점이 하나뿐이다.
    * (여러 시점이 섞인 카드에서는 기준일을 적지 않는다 — CEO.md 출처 원칙) */
   source: { name: d.meta.source, asOf: d.meta.asOf },

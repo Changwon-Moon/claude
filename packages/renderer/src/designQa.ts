@@ -245,9 +245,42 @@ const MEASURE_JS = `(() => {
       titleGap=Math.round(next.getBoundingClientRect().top - block.getBoundingClientRect().bottom);
     }
   }
+  /* ── 'AI티' 타일 ──
+   * 오너 지적 2회(2026-07-30 jeongbi-board, 2026-07-31 record-grid).
+   * 07-30 에 CEO.md 에 원칙을 적어 두고도 07-31 에 같은 걸 또 만들었다 —
+   * 글로 적은 기준은 내가 안 읽으면 없는 것과 같아서, 재는 쪽으로 내린다.
+   * 무엇을 재나: **큰 라운드(≥20px) + 옅은 회색 채움**을 가진 덩어리가 3개 이상 반복되는가.
+   * 셋이 모여야 '어느 서비스에나 있는 UI 카드'가 된다 — 하나짜리 강조 상자는 문제가 아니다.
+   * 흰색·투명·짙은 배경(잉크 띠, 검은 뱃지)은 제외한다. 회색 채움만 본다. */
+  var tiles=[];
+  Array.prototype.forEach.call(card.querySelectorAll("*"), function(el){
+    var s=getComputedStyle(el), r=el.getBoundingClientRect();
+    if(r.width<120||r.height<60) return;
+    var rad=parseFloat(s.borderTopLeftRadius)||0;
+    if(rad<20) return;
+    /* getComputedStyle 의 backgroundColor 는 항상 "rgb(r, g, b)" / "rgba(r, g, b, a)" 다.
+       정규식을 쓰지 않는 이유: 이 스크립트는 템플릿 문자열 안에 들어가 브라우저로 넘어가는데
+       거기서 역슬래시가 한 번 먹혀 패턴이 깨진다(2026-07-31 실제로 깨졌다). 잘라 쓴다. */
+    var bg=s.backgroundColor||"";
+    var open=bg.indexOf("("), close=bg.indexOf(")");
+    if(open<0||close<0) return;
+    var parts=bg.slice(open+1, close).split(",").map(function(x){return parseFloat(x);});
+    if(parts.length<3||parts.some(isNaN)) return;
+    var a=parts.length>3?parts[3]:1;
+    if(a<0.02) return;                       // 투명 — 채움이 아니다
+    var R=parts[0],G=parts[1],B=parts[2];
+    /* 반투명 잉크(rgba(20,24,33,0.06))는 종이 위에서 옅은 회색으로 보인다 → 종이와 합성해서 판단 */
+    var pr=250,pg=250,pb=248;
+    var er=R*a+pr*(1-a), eg=G*a+pg*(1-a), eb=B*a+pb*(1-a);
+    var mx=Math.max(er,eg,eb), mn=Math.min(er,eg,eb);
+    if(mx-mn>18) return;                     // 색이 있다 — 브랜드 강조 상자로 본다
+    if(mx>246) return;                       // 종이와 같다 — 채움이 아니다
+    if(mx<170) return;                       // 짙다 — 잉크 띠/뱃지
+    tiles.push(Math.round(rad));
+  });
   var lastRow=rows.length?rows[rows.length-1]:null;
   return {
-    head:head, titleGap:titleGap, titlePx:titlePx,
+    head:head, titleGap:titleGap, titlePx:titlePx, aiTiles:tiles,
     card:{left:cb.left,right:cb.right,top:cb.top,bottom:cb.bottom,width:cb.width},
     innerW:cb.width-padL-padR, innerLeft:cb.left+padL, innerRight:cb.right-padR,
     rows:rows, overflow:overflow, collisions:collisions,
@@ -278,6 +311,14 @@ function analyze(g: Geo): Finding[] {
   if (tg !== null && tg !== undefined && tg < 28)
     out.push({ level: "warn", code: "titlegap",
       msg: `제목과 바로 아래 요소의 간격이 ${tg}px 입니다${tpx ? ` (제목 ${tpx}px)` : ""} — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다` });
+
+  /* 0-c) 'AI티' 타일 (오너 지적 2026-07-30 · 2026-07-31 — 두 번째라 검수로 내렸다)
+   * 문턱 3개: 하나짜리 강조 상자는 디자인이고, 셋이 나란히 반복되면 UI 카드가 된다.
+   * warn 인 이유는 brandhead·titlegap 과 같다 — 이미 나간 카드를 막지 않는다. */
+  const tiles = (g as any).aiTiles as number[] | undefined;
+  if (tiles && tiles.length >= 3)
+    out.push({ level: "warn", code: "aicard",
+      msg: `큰 라운드(${Math.min(...tiles)}~${Math.max(...tiles)}px) + 옅은 회색 채움 덩어리가 ${tiles.length}개 반복됩니다 — 어느 서비스에나 있는 UI 카드로 읽힙니다(CEO.md "AI티 금지"). 채움을 걷고 괘선·여백으로 나누세요` });
 
   const h = (g as any).head;
   if (h) {

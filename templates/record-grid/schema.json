@@ -1,23 +1,53 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "record-grid@1",
-  "description": "하루에 쏟아진 '기록'을 6칸에 나열한다. 사건이 터진 날 쓰는 판형.",
+  "description": "하루에 쏟아진 '기록'을 장부처럼 쌓는다. 주인공은 기록 문구이고 수치는 증거다.",
   "type": "object",
-  "required": ["template", "title", "cells", "source"],
+  "required": [
+    "template",
+    "title",
+    "cells",
+    "source"
+  ],
   "properties": {
-    "template": { "type": "string", "pattern": "^record-grid@\\d+$" },
-    "date": { "type": "string" },
-    "subtitle": { "type": "string", "maxLength": 40 },
-    "title": { "type": "string" },
+    "template": {
+      "type": "string",
+      "pattern": "^record-grid@\\d+$"
+    },
+    "date": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "title": {
+      "type": "string"
+    },
     "lead": {
       "type": "object",
       "description": "제목 아래 한 줄 — 오늘의 핵심 지수. 없으면 생략된다.",
-      "required": ["label", "value"],
+      "required": [
+        "label",
+        "value"
+      ],
       "properties": {
-        "label": { "type": "string", "maxLength": 20 },
-        "value": { "type": "string", "maxLength": 16 },
-        "delta": { "type": "string", "maxLength": 24 },
-        "sub": { "type": "string", "maxLength": 40 }
+        "label": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "value": {
+          "type": "string",
+          "maxLength": 16
+        },
+        "delta": {
+          "type": "string",
+          "maxLength": 24
+        },
+        "sub": {
+          "type": "string",
+          "maxLength": 40
+        }
       }
     },
     "cells": {
@@ -26,22 +56,52 @@
       "maxItems": 6,
       "items": {
         "type": "object",
-        "required": ["label", "value"],
+        "required": [
+          "label",
+          "claim",
+          "value"
+        ],
         "properties": {
-          "label": { "type": "string", "maxLength": 16 },
-          "value": { "type": "string", "maxLength": 12 },
-          "rank": { "type": "string", "maxLength": 10 },
-          "prev": { "type": "string", "maxLength": 34 }
+          "label": {
+            "type": "string",
+            "maxLength": 16,
+            "description": "무엇의 기록인가 (작은 눈썹줄)"
+          },
+          "claim": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "어떤 기록인가 — 이 카드의 주인공. <em>…</em> 로 감싼 낱말만 빨강"
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 12,
+            "description": "증거가 되는 수치. 회색 보조"
+          },
+          "prev": {
+            "type": "string",
+            "maxLength": 30,
+            "description": "직전 기록·비교값. 없으면 생략"
+          }
         }
       }
     },
-    "note": { "type": "string", "maxLength": 80, "description": "맥락 한 줄. 카드 맨 아래 푸터 위." },
+    "note": {
+      "type": "string",
+      "maxLength": 80,
+      "description": "맥락 한 줄. 카드 맨 아래 푸터 위."
+    },
     "source": {
       "type": "object",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "properties": {
-        "name": { "type": "string" },
-        "asOf": { "type": "string" }
+        "name": {
+          "type": "string"
+        },
+        "asOf": {
+          "type": "string"
+        }
       }
     }
   }

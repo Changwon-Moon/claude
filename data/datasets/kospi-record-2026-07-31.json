@@ -4,6 +4,8 @@
     "",
     "── 왜 별도 데이터셋인가",
     "kr-market-2026.json 은 야후 일간 종가만 갖는다. 여기 있는 값 중 지수 등락은 거기서",
+    "· 2026-07-31 개편: 각 기록에 claim(어떤 기록인가)을 넣었다. 오너 지적 — 카드의 주인공은",
+    "  수치가 아니라 '역대 1위'·'하루 최대' 같은 **내용**이다. 수치는 그 주장의 증거다.",
     "산출할 수 있지만 수급(외국인·개인)·시총·사이드카 횟수·종목 상한가는 종가 시계열에",
     "없다. 그건 거래소 집계를 언론이 받아 쓴 것이다. 그래서 **항목마다 출처를 따로 붙여**",
     "여기 모았다. 빌더는 이 파일만 읽는다 — 숫자가 코드나 프롬프트에 박히지 않는다.",
@@ -17,7 +19,11 @@
     "── 내부 정합성 (스크립트가 매번 확인한다)",
     "· 코스피 종가 6595.45 − 상승폭 1001.89 = 5593.56 = 7/30 종가 ✓",
     "· 코스닥 종가 719.76 − 74.98 = 644.78 = 7/30 종가 ✓",
-    "· SK하이닉스 1,718,000 − 396,000 = 1,322,000 → +29.95% ✓"
+    "· SK하이닉스 1,718,000 − 396,000 = 1,322,000 → +29.95% ✓",
+    "",
+    "── prev 를 비워 둔 자리(retail)",
+    "개인 순매도의 비교값은 '외국인이 산 것보다 얼마나 더 팔았나'다. 두 수치의 차이라서",
+    "손으로 적으면 한쪽이 바뀔 때 거짓이 된다 → amountEok 을 두고 빌더가 뺄셈한다."
   ],
   "dataset": "kospi-record-2026-07-31",
   "date": "2026-07-31",
@@ -49,56 +55,60 @@
     "julyDropPct": -32.6,
     "circuitBreaker": "7/28~29 양 시장 이틀 연속 서킷브레이커 — 1966년 제도 도입 이래 처음",
     "source": "헤럴드경제 2026-07-31 · 오마이뉴스 2026-07-29",
-    "circuitBreakerShort": "사상 첫 이틀 연속 서킷브레이커"
+    "circuitBreakerShort": "사상 첫 이틀 연속 서킷브레이커",
+    "noteLine": "역사상 첫 이틀 연속 서킷브레이커(7/28~7/29) 이후 반등",
+    "noteLineNote": "오너가 문구를 직접 지정했다(2026-07-31). 빌더는 이 값을 그대로 쓴다."
   },
   "records": [
     {
       "key": "rate",
       "label": "코스피 상승률",
       "value": "17.91%",
-      "rank": "역대 1위",
       "prev": "직전 2008.10.30 · 11.95%",
-      "source": "https://www.mt.co.kr/stock/2026/07/31/2026073115275588013"
+      "source": "https://www.mt.co.kr/stock/2026/07/31/2026073115275588013",
+      "claim": "역대 <em>1위</em>"
     },
     {
       "key": "point",
       "label": "코스피 상승폭",
       "value": "1,001.89p",
-      "rank": "역대 1위",
       "prev": "직전 2026.6.9 · 612.52p",
-      "source": "https://www.ajunews.com/view/20260731165002980"
+      "source": "https://www.ajunews.com/view/20260731165002980",
+      "claim": "역대 <em>1위</em>"
     },
     {
       "key": "foreign",
       "label": "외국인 순매수",
       "value": "8조 7,709억",
-      "rank": "역대 1위",
-      "prev": "하루 순매수 최대",
-      "source": "https://www.seoul.co.kr/news/economy/securities/2026/07/31/20260731500267"
+      "prev": "SK하이닉스에만 3조 5,883억",
+      "source": "https://www.seoul.co.kr/news/economy/securities/2026/07/31/20260731500267",
+      "claim": "하루 <em>최대</em>",
+      "amountEok": 87709
     },
     {
       "key": "retail",
       "label": "개인 순매도",
       "value": "10조 3,834억",
-      "rank": "역대 1위",
-      "prev": "하루 순매도 최대",
-      "source": "https://www.seoul.co.kr/news/economy/securities/2026/07/31/20260731500267"
+      "prev": null,
+      "source": "https://www.seoul.co.kr/news/economy/securities/2026/07/31/20260731500267",
+      "claim": "하루 <em>최대</em>",
+      "amountEok": 103834
     },
     {
       "key": "hynix",
       "label": "SK하이닉스",
       "value": "+29.95%",
-      "rank": "상한가",
-      "prev": "171만 8,000원 · 2009년 이후 17년 만",
-      "source": "https://www.mt.co.kr/stock/2026/07/31/2026073116111478041"
+      "prev": "171만 8,000원 · 직전 2009년",
+      "source": "https://www.mt.co.kr/stock/2026/07/31/2026073116111478041",
+      "claim": "<em>17년</em> 만의 상한가"
     },
     {
       "key": "samsung",
       "label": "삼성전자",
       "value": "+26.81%",
-      "rank": null,
-      "prev": "26만 2,500원 · 두 종목 시총 51.22%",
-      "source": "https://www.seoul.co.kr/news/economy/securities/2026/07/31/20260731500267"
+      "prev": "시총 비중 51.22%",
+      "source": "https://www.seoul.co.kr/news/economy/securities/2026/07/31/20260731500267",
+      "claim": "두 종목이 코스피의 <em>절반</em>"
     }
   ],
   "notUsed": [
