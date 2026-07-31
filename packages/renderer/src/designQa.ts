@@ -227,9 +227,27 @@ const MEASURE_JS = `(() => {
       cardPadTop: Math.round(parseFloat(cs.paddingTop)||0)
     };
   }
+  /* ── 제목 아래 숨 ──
+   * 2026-07-31 오너 지적 "제목과 표 헤드라인이 너무 붙어있어".
+   * 제목은 카드 폭을 채우도록 자동으로 커지는데(fitTitle), 글자가 커지면 **그 아래 여백이
+   * 함께 줄어든다** — 여백을 건드린 적이 없어도 붙는다. 제목만 보면 문제가 안 보이고,
+   * 제목과 다음 덩어리를 같이 봐야 보인다. 그래서 사람 눈이 놓치기 쉬운 자리다.
+   * 제목 상자 아래끝과 그 다음 형제 요소의 윗끝 사이를 잰다. */
+  var titleGap=null, titlePx=null;
+  var tEl=card.querySelector(".wirit-title");
+  if(tEl){
+    titlePx=Math.round(parseFloat(getComputedStyle(tEl).fontSize)||0);
+    /* 제목이 감싸개(.bg-head 등) 안에 있으면 그 감싸개가 흐름상의 형제 단위다. */
+    var block=tEl.parentElement && tEl.parentElement!==card ? tEl.parentElement : tEl;
+    var next=block.nextElementSibling;
+    while(next && !next.getBoundingClientRect().height) next=next.nextElementSibling;
+    if(next && !next.classList.contains("wirit-footer")){
+      titleGap=Math.round(next.getBoundingClientRect().top - block.getBoundingClientRect().bottom);
+    }
+  }
   var lastRow=rows.length?rows[rows.length-1]:null;
   return {
-    head:head,
+    head:head, titleGap:titleGap, titlePx:titlePx,
     card:{left:cb.left,right:cb.right,top:cb.top,bottom:cb.bottom,width:cb.width},
     innerW:cb.width-padL-padR, innerLeft:cb.left+padL, innerRight:cb.right-padR,
     rows:rows, overflow:overflow, collisions:collisions,
@@ -250,6 +268,17 @@ function analyze(g: Geo): Finding[] {
    * 여러 장(index-2026·maprank·estate-cover)이 같은 방식으로 어긋나 있었다.
    * error 로 두면 **손대면 안 되는 발행본** 때문에 내보내기가 통째로 막힌다.
    * 새 카드·고치는 카드는 이 warn 이 뜨면 반드시 맞춘다 — 표지형(전면 사진)은 예외다. */
+  /* 0-b) 제목과 그 아래 덩어리가 붙지 않았는가 (오너 지적 2026-07-31) —
+   * 제목을 키우면 여백을 건드리지 않아도 아래가 좁아진다.
+   * 문턱 28px: 이 지적이 나온 판이 20px 이었고 고친 판이 60px 이다. 그 사이에서
+   * '확실히 좁다'는 쪽만 잡도록 낮게 잡았다 — 여백은 디자인 선택의 폭이 넓어
+   * 문턱을 높이면 멀쩡한 카드까지 시끄러워진다.
+   * warn 인 이유는 brandhead 와 같다: 이미 나간 카드를 막지 않기 위해서다. */
+  const tg = (g as any).titleGap, tpx = (g as any).titlePx;
+  if (tg !== null && tg !== undefined && tg < 28)
+    out.push({ level: "warn", code: "titlegap",
+      msg: `제목과 바로 아래 요소의 간격이 ${tg}px 입니다${tpx ? ` (제목 ${tpx}px)` : ""} — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다` });
+
   const h = (g as any).head;
   if (h) {
     const transparent = !h.badgeBg || /rgba\(\s*0\s*,\s*0\s*,\s*0\s*,\s*0\s*\)|transparent/.test(h.badgeBg);
