@@ -85,6 +85,13 @@
       "args": [
         "2026-07-30"
       ]
+    },
+    {
+      "label": "jeongbi-rank",
+      "cmd": "scripts/build-jeongbi-rank.mjs",
+      "args": [
+        "2026-07-31"
+      ]
     }
   ]
 }

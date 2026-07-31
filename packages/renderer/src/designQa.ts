@@ -150,11 +150,16 @@ const MEASURE_JS = `(() => {
    * (2026-07-30: 추정 배지의 "6개월 실측 +4.6% × 2" 가 "+9.2%" 아래로 들어갔다).
    * 값·라벨류 글자 상자를 서로 대조한다. 조상-자손 관계는 건너뛴다(당연히 겹친다). */
   /* ⚠️ 하단 설명(.sm-total)·푸터 글자도 넣는다. 표가 길어져 이들을 덮는 것이
-   * 가장 흔한 불량인데, 처음엔 목록에 없어서 검수가 놓쳤다(2026-07-30). */
+   * 가장 흔한 불량인데, 처음엔 목록에 없어서 검수가 놓쳤다(2026-07-30).
+   * ⚠️ .rt-sub (순위표 보조 열)도 넣는다 — 목록에 없어서 **수주액이 비중을 통째로
+   *    덮은 카드가 "문제 없음"으로 통과했다**(2026-07-31). 열 폭(--val-w 176px)보다
+   *    긴 값("7조 6,946억")이 옆 칸으로 넘친 것인데, 대조 대상이 아니면 검수는 눈을 감는다.
+   *    **검사 목록에서 빠진 요소는 없는 것과 같다.** 순위표에 열을 더하면 여기도 더한다.
+   *    (이 주석 안에서는 역따옴표를 쓰지 않는다 — 이 블록 전체가 템플릿 리터럴이다) */
   var LEAF = ".yc-val,.yc-solid-val,.yc-tag,.yc-card .l,.yc-card .v," +
              ".yc-axis span,.yc-lidx,.sm-asof," +
              ".sm-gu,.sm-val .h,.sm-val .r,.sm-total,.sm-insight,.sm-tailnote .tx," +
-             ".wirit-footer span,.rt-name,.rt-val,.mc-fn";
+             ".wirit-footer span,.rt-name,.rt-val,.rt-sub,.mc-fn";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
   for (var i=0;i<leaves.length;i++) for (var j=i+1;j<leaves.length;j++) {
     var a=leaves[i], b=leaves[j];

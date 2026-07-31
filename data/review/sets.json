@@ -83,6 +83,15 @@
         "tohuh-rent-map"
       ],
       "caption": "tohuh-rent-map"
+    },
+    {
+      "label": "jeongbi-rank",
+      "title": "🏗 올해 정비사업 누적 수주 — 1·2위가 나란히 7조",
+      "cards": [
+        "jeongbi-rank"
+      ],
+      "caption": "jeongbi-rank",
+      "note": "뉴시스 인포그래픽(2026-07-31) 소재. 자료는 각 사 — 1차 출처 대조 전이라 데이터셋 verified:false. 브랜드 서열로 읽히지 않게 메달·로고를 뺐다(ideas.json 브랜드 계급도 소재의 민감 표시 참고). 사업지·비중은 캡션이 갖는다."
     }
   ]
 }
