@@ -244,7 +244,26 @@ console.log("\n[로고 취득 파서 — Brandfetch Tier C]");
   );
   check("Brandfetch: logos 없으면 null", pickBestLogoFormat([]) === null);
   check("Brandfetch: 빈 응답 파싱", parseBrandLogos(JSON.stringify({})).length === 0);
-  check("Brandfetch: 도메인맵에 3개사 등록", Object.keys(DOMAIN_MAP).length === 3);
+  /* ⚠️ 예전에는 여기서 `Object.keys(DOMAIN_MAP).length === 3` 을 봤다.
+   * 도메인맵은 **브랜드를 추가할 때마다 자라는 큐레이션 목록**인데 개수를 못박아 둔 탓에,
+   * 브랜드를 하나 넣을 때마다 셀프테스트가 깨졌다. 그리고 워크플로는 수집 전에 셀프테스트를
+   * 돌리므로 **증시 수집이 통째로 죽어 있었다**(2026-07-31 발견 — 오너가 Actions 실패를 보고).
+   * 개수는 이 파서의 성질이 아니다. 성질은 "모든 항목이 쓸 수 있는 도메인을 갖는가"다. */
+  check("Brandfetch: 도메인맵이 비어 있지 않다", Object.keys(DOMAIN_MAP).length > 0);
+  check(
+    "Brandfetch: 모든 항목이 도메인을 1개 이상 갖는다",
+    Object.values(DOMAIN_MAP).every((v) => Array.isArray(v) && v.length > 0 && v.every((d) => /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(d))),
+    Object.entries(DOMAIN_MAP).filter(([, v]) => !v?.length || v.some((d) => !/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(d))).map(([k]) => k).join(",")
+  );
+  check(
+    "Brandfetch: 같은 도메인이 두 브랜드에 중복 등록되지 않았다",
+    (() => {
+      const first = Object.entries(DOMAIN_MAP).map(([k, v]) => [k, v[0]] as const);
+      const seen = new Map<string, string>();
+      for (const [k, d] of first) { if (seen.has(d)) return false; seen.set(d, k); }
+      return true;
+    })()
+  );
 }
 
 console.log("\n[국토부 실거래 파서 — MOLIT]");
