@@ -26,19 +26,18 @@ const LOGOS = join(ROOT, "templates/_shared/logos");
 /* 요청 목록은 오너가 준 순서 그대로 둔다 — 대조는 순서가 같아야 빠르다.
  * file 은 취득 결과, verdict 는 **내가 눈으로 본 소견**이다(오너 판정을 대신하지 않는다). */
 const ROWS = [
-  { brand: "래미안", owner: "삼성물산", file: "raemian-symbol.png", note: "워드마크에서 심볼만 잘라냄(원본 raemian.png 도 보관)" },
-  { brand: "래미안(원본)", owner: "삼성물산", file: "raemian.png", note: "심볼+글자 통짜" },
-  { brand: "자이", owner: "GS건설", file: "xi.png", note: "" },
-  { brand: "푸르지오", owner: "대우건설", file: null, note: "취득 실패" },
-  { brand: "써밋", owner: "대우건설", file: "daewooenc.svg", note: "브랜드가 아니라 대우건설 회사 로고로 보임" },
-  { brand: "더샵", owner: "포스코이앤씨", file: "thesharp.png", note: "브랜드가 아니라 포스코이앤씨 회사 로고" },
-  { brand: "오티에르", owner: "포스코이앤씨", file: "poscoenc.png", note: "위와 같은 회사 로고" },
-  { brand: "e편한세상", owner: "DL이앤씨", file: "e.svg", note: "브랜드가 아니라 DL이앤씨 회사 로고" },
-  { brand: "아크로", owner: "DL이앤씨", file: "acro.png", note: "ACRO 심볼로 보임 — 맞는지 확인 부탁" },
-  { brand: "롯데캐슬", owner: "롯데건설", file: null, note: "취득 실패" },
-  { brand: "르엘", owner: "롯데건설", file: null, note: "취득 실패" },
-  { brand: "힐스테이트", owner: "현대건설", file: null, note: "취득 실패" },
-  { brand: "디에이치", owner: "현대건설", file: null, note: "취득 실패" },
+  { brand: "래미안", owner: "삼성물산", file: "raemian-symbol.png", src: "자동", note: "워드마크에서 심볼만 잘라냄(원본 raemian.png 도 보관)" },
+  { brand: "자이", owner: "GS건설", file: "xi.png", src: "자동", note: "" },
+  { brand: "아크로", owner: "DL이앤씨", file: "acro.png", src: "자동", note: "" },
+  { brand: "푸르지오", owner: "대우건설", file: "prugio.png", src: "오너", note: "" },
+  { brand: "써밋", owner: "대우건설", file: "summit.png", src: "오너", note: "" },
+  { brand: "더샵", owner: "포스코이앤씨", file: "thesharp.png", src: "오너", note: "심볼+글자 세로 조합" },
+  { brand: "오티에르", owner: "포스코이앤씨", file: "hauterre.png", src: "오너", note: "심볼+글자 세로 조합" },
+  { brand: "e편한세상", owner: "DL이앤씨", file: "epyeonhansesang.png", src: "오너", note: "" },
+  { brand: "롯데캐슬", owner: "롯데건설", file: "lottecastle.png", src: "오너", note: "심볼+글자 세로 조합" },
+  { brand: "르엘", owner: "롯데건설", file: "leel.png", src: "오너", note: "" },
+  { brand: "힐스테이트", owner: "현대건설", file: "hillstate.png", src: "오너", note: "심볼+글자 세로 조합" },
+  { brand: "디에이치", owner: "현대건설", file: "theh.png", src: "오너", note: "여백 94% 잘라냄" },
 ];
 
 const cell = (r) => {
@@ -48,7 +47,7 @@ const cell = (r) => {
   <div class="row${ok ? "" : " miss"}">
     <div class="b">${r.brand}<span class="o">${r.owner}</span></div>
     <div class="img">${ok ? `<img src="file://${p}" />` : `<span class="x">파일 없음</span>`}</div>
-    <div class="f">${ok ? r.file : "—"}</div>
+    <div class="f"><span class="tag ${r.src === "오너" ? "own" : "auto"}">${r.src}</span>${ok ? r.file : "—"}</div>
     <div class="n">${r.note || ""}</div>
   </div>`;
 };
@@ -69,11 +68,15 @@ const html = `<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
   .img img { max-width: 200px; max-height: 42px; object-fit: contain; }
   .x { font-size: 13px; color: #b9c0c9; }
   .f { font-size: 14px; color: #5b6672; font-family: ui-monospace, monospace; word-break: break-all; }
+  .tag { display: inline-block; font-family: "Pretendard", sans-serif; font-size: 11px; font-weight: 700;
+         padding: 2px 6px; border-radius: 3px; margin-right: 6px; vertical-align: 1px; }
+  .tag.own { background: #e6f0fb; color: #1f5fa8; }
+  .tag.auto { background: #eef3ee; color: #4a7a52; }
   .n { font-size: 14px; color: #8a5b1f; line-height: 1.35; }
   .row.miss .n { color: #a0a8b2; }
 </style></head><body><div class="wrap">
-  <h1>브랜드 로고 대조표 — 붙이기 전 확인</h1>
-  <p class="sub">자동 취득은 오탐합니다. 그림이 브랜드와 맞는지 눈으로 봐 주세요. 회색 줄은 못 받은 것입니다.</p>
+  <h1>브랜드 로고 대조표 — 12종 전부 확보</h1>
+  <p class="sub">파란 «오너»는 직접 주신 파일, 초록 «자동»은 자동 취득분입니다. 그림이 브랜드와 맞는지 확인 부탁드립니다.</p>
   ${ROWS.map(cell).join("")}
 </div></body></html>`;
 

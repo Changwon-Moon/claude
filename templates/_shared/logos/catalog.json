@@ -147,39 +147,84 @@
       "added": "2026-07-31"
     },
     {
-      "slug": "daewooenc",
+      "slug": "summit",
       "name": "써밋",
       "kind": "logo",
-      "source": "Brandfetch (daewooenc.com)",
+      "source": "오너 직접 제공 (2026-07-31)",
       "license": "trademark-nominative",
-      "note": "자동 취득(Tier C) · 회사 공식 자산 · 상표 nominative use",
+      "note": "대우건설 아파트 브랜드 · 자동 취득 실패분 · 여백 자동 절삭",
       "added": "2026-07-31"
     },
     {
       "slug": "thesharp",
       "name": "더샵",
       "kind": "logo",
-      "source": "Brandfetch (thesharp.co.kr)",
+      "source": "오너 직접 제공 (2026-07-31)",
       "license": "trademark-nominative",
-      "note": "자동 취득(Tier C) · 회사 공식 자산 · 상표 nominative use",
+      "note": "포스코이앤씨 아파트 브랜드 · 자동 취득 실패분 · 여백 자동 절삭",
       "added": "2026-07-31"
     },
     {
-      "slug": "poscoenc",
+      "slug": "hauterre",
       "name": "오티에르",
       "kind": "logo",
-      "source": "Brandfetch (poscoenc.com)",
+      "source": "오너 직접 제공 (2026-07-31)",
       "license": "trademark-nominative",
-      "note": "자동 취득(Tier C) · 회사 공식 자산 · 상표 nominative use",
+      "note": "포스코이앤씨 아파트 브랜드 · 자동 취득 실패분 · 여백 자동 절삭",
       "added": "2026-07-31"
     },
     {
-      "slug": "e",
+      "slug": "epyeonhansesang",
       "name": "e편한세상",
       "kind": "logo",
-      "source": "Brandfetch (dlenc.co.kr)",
+      "source": "오너 직접 제공 (2026-07-31)",
       "license": "trademark-nominative",
-      "note": "자동 취득(Tier C) · 회사 공식 자산 · 상표 nominative use",
+      "note": "DL이앤씨 아파트 브랜드 · 자동 취득 실패분 · 여백 자동 절삭",
+      "added": "2026-07-31"
+    },
+    {
+      "slug": "prugio",
+      "name": "푸르지오",
+      "kind": "logo",
+      "source": "오너 직접 제공 (2026-07-31)",
+      "license": "trademark-nominative",
+      "note": "대우건설 아파트 브랜드 · 자동 취득 실패분 · 여백 자동 절삭",
+      "added": "2026-07-31"
+    },
+    {
+      "slug": "lottecastle",
+      "name": "롯데캐슬",
+      "kind": "logo",
+      "source": "오너 직접 제공 (2026-07-31)",
+      "license": "trademark-nominative",
+      "note": "롯데건설 아파트 브랜드 · 자동 취득 실패분 · 여백 자동 절삭",
+      "added": "2026-07-31"
+    },
+    {
+      "slug": "leel",
+      "name": "르엘",
+      "kind": "logo",
+      "source": "오너 직접 제공 (2026-07-31)",
+      "license": "trademark-nominative",
+      "note": "롯데건설 아파트 브랜드 · 자동 취득 실패분 · 여백 자동 절삭",
+      "added": "2026-07-31"
+    },
+    {
+      "slug": "hillstate",
+      "name": "힐스테이트",
+      "kind": "logo",
+      "source": "오너 직접 제공 (2026-07-31)",
+      "license": "trademark-nominative",
+      "note": "현대건설 아파트 브랜드 · 자동 취득 실패분 · 여백 자동 절삭",
+      "added": "2026-07-31"
+    },
+    {
+      "slug": "theh",
+      "name": "디에이치",
+      "kind": "logo",
+      "source": "오너 직접 제공 (2026-07-31)",
+      "license": "trademark-nominative",
+      "note": "현대건설 아파트 브랜드 · 자동 취득 실패분 · 여백 자동 절삭",
       "added": "2026-07-31"
     }
   ]
