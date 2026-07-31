@@ -109,6 +109,62 @@ const PROBE = `() => {
   };
 }`;
 
+
+/* ── HTML 문자열에서 직접 뽑기 (2026-07-31)
+ * 페이지 **안**에서 읽은 값이 전부 비어 오는 일이 있었다 —
+ * title 도 body.innerText 도 심지어 location.href 까지 빈 문자열인데,
+ * page.content() 는 337KB 를 멀쩡히 돌려줬다. 실행 컨텍스트가 깨진 것이지
+ * 페이지가 없는 게 아니다. 그러면 컨텍스트를 쓰지 않으면 된다 —
+ * 받아 둔 HTML 을 Node 에서 직접 파싱한다. 브라우저 안 상태에 기대지 않는 길이다. */
+function fromHtml(html) {
+  if (!html || html.length < 500) return null;
+  const meta = (n) => {
+    const re = new RegExp(`<meta[^>]+(?:property|name)=["']${n}["'][^>]*content=["']([^"']*)["']`, "i");
+    const re2 = new RegExp(`<meta[^>]+content=["']([^"']*)["'][^>]*(?:property|name)=["']${n}["']`, "i");
+    const m = html.match(re) || html.match(re2);
+    return m ? m[1].trim() : "";
+  };
+  // 본문 컨테이너 후보를 열어 그 안의 텍스트를 뽑는다. 가장 긴 것을 쓴다.
+  const IDS = ["dic_area", "newsct_article", "articleBody", "harmonyContainer", "comp_news_article"];
+  const CLS = ["_article_content", "article_view", "news_end", "article-body", "art_txt", "newsct_article"];
+  const chunks = [];
+  for (const id of IDS) {
+    const m = html.match(new RegExp(`<[a-z]+[^>]*id=["']${id}["'][^>]*>([\\s\\S]*?)<\\/(?:div|article|section)>`, "i"));
+    if (m) chunks.push(m[1]);
+  }
+  for (const c of CLS) {
+    const m = html.match(new RegExp(`<[a-z]+[^>]*class=["'][^"']*${c}[^"']*["'][^>]*>([\\s\\S]*?)<\\/(?:div|article|section)>`, "i"));
+    if (m) chunks.push(m[1]);
+  }
+  const strip = (s) =>
+    s
+      .replace(/<script[\\s\\S]*?<\/script>/gi, " ")
+      .replace(/<style[\\s\\S]*?<\/style>/gi, " ")
+      .replace(/<br\s*\/?>/gi, "\n")
+      .replace(/<\/p>/gi, "\n\n")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/&nbsp;/g, " ")
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/[ \t]+/g, " ")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+  const texts = chunks.map(strip).filter((s) => s.length > 200);
+  texts.sort((a, b) => b.length - a.length);
+  const titleTag = (html.match(/<title[^>]*>([\\s\\S]*?)<\/title>/i) || [])[1] || "";
+  return {
+    title: meta("og:title") || strip(titleTag),
+    outlet: meta("og:site_name"),
+    published: meta("article:published_time"),
+    desc: meta("og:description"),
+    body: texts[0] || "",
+    finalUrl: meta("og:url"),
+  };
+}
+
 mkdirSync(OUT, { recursive: true });
 let ok = 0;
 const results = [];
@@ -143,6 +199,16 @@ for (const url of urls) {
        * (2026-07-29: 네이버·다음이 본문 0자로 왔는데 원인이 봇 차단인지 선택자
        *  문제인지 구분할 근거가 로그에 없었다) */
       const html = await page.content().catch(() => "");
+      /* 페이지 안 읽기가 빈손이면 HTML 을 직접 판다 — 실행 컨텍스트에 기대지 않는 길 */
+      if (!got || !got.body || got.body.length < 200) {
+        const alt = fromHtml(html);
+        if (alt && alt.body && alt.body.length > 200) {
+          if (!alt.finalUrl) alt.finalUrl = page.url();
+          got = alt;
+          console.log(`   ↳ HTML 직접 파싱으로 회수 (${alt.body.length}자)`);
+          break;
+        }
+      }
       err =
         `본문 ${got?.body?.length || 0}자 · HTTP ${res?.status() || "?"} · HTML ${html.length}자 · ` +
         `제목 "${(got?.title || "").slice(0, 40)}" · 최종URL ${(got?.finalUrl || page.url() || "").slice(0, 100)}`;
