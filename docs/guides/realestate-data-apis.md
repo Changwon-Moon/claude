@@ -19,8 +19,21 @@
 ## 2. 선택 (Phase 3) — 카카오 로컬 API (좌표, 무료)
 
 역세권·지도형 콘텐츠(역별 대장, 15억 배치 지도)에 **단지·역 좌표**가 필요할 때.
-1. [developers.kakao.com](https://developers.kakao.com) → 앱 만들기 → REST API 키 복사
-2. GitHub Secrets → **`KAKAO_REST_KEY`**
+1. [developers.kakao.com](https://developers.kakao.com) → 로그인 → **내 애플리케이션**
+   - 앱이 이미 있으면(예: 알림용으로 만든 것) **그걸 그대로 씁니다.** 앱 하나에 REST API 키는 하나입니다
+   - 없으면 **애플리케이션 추가하기** → 앱 이름 `wirit` / 회사명 `wirit`
+2. 만든 앱 클릭 → 좌측 **앱 키** → **REST API 키** 복사 (32자 안팎의 영숫자)
+3. GitHub → 저장소 → **Settings** → **Secrets and variables** → **Actions**
+   - ⚠️ **반드시 `Actions` 탭입니다.** 바로 옆 `Dependabot` 탭은 화면이 거의 똑같은데
+     **Actions 워크플로에서는 읽히지 않습니다.** 2026-07-31 에 이 키가 이름만 있고
+     값이 0자로 들어와 지오코딩이 통째로 건너뛰어졌습니다 — 이 함정이 유력한 원인이었습니다
+4. **New repository secret** → Name `KAKAO_REST_KEY` / Secret 에 붙여넣기 → **Add secret**
+   - 이미 같은 이름이 있으면 연필(수정)로 **값을 다시 넣습니다**. 값은 화면에 안 보이므로
+     "등록돼 있다"만으로는 값이 들어 있는지 알 수 없습니다
+
+**확인하는 법**: 값이 제대로 들어갔는지는 `scripts/geocode-sites.mjs` 가 알려줍니다.
+Actions 로그(또는 커밋되는 `data/geocode-last.md`)에 `🔑 카카오 키 확인 (N자)` 가 찍히면 성공,
+`KAKAO_REST_KEY(0자)` 가 보이면 값이 비어 있는 것입니다. **값은 절대 로그에 찍지 않습니다.**
 - 용도: 단지 주소→좌표 변환(지오코딩) **1회 배치**만. 이후 저장소에 캐시.
 - 지하철역 좌표는 서울 열린데이터광장·국가철도공단 공공데이터로 무료 확보(키 불요).
 
