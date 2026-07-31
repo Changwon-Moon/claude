@@ -127,6 +127,13 @@
       "args": [
         "2026-07-20"
       ]
+    },
+    {
+      "label": "sinbundang-map",
+      "cmd": "scripts/build-sinbundang-map.mjs",
+      "args": [
+        "2026-07-31"
+      ]
     }
   ]
 }
