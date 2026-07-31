@@ -47,6 +47,10 @@
           "type": "string",
           "maxLength": 8,
           "description": "국기 이모지"
+        },
+        "deltaNote": {
+          "type": "string",
+          "maxLength": 20
         }
       }
     },

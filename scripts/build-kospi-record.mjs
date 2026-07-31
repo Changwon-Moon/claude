@@ -120,7 +120,8 @@ const card = {
     label: "KOSPI",
     /* 등락률과 '역사상 최대 상승'을 한 줄로 — 숫자만 두면 오늘이 특별한 줄 모르고,
        말만 두면 얼마나 특별한지 모른다. */
-    delta: `+${K.changePct}% 역사상 최대 상승`,
+    delta: `+${K.changePct}%`,
+    deltaNote: "역사상 최대 상승",
     value: fmt(K.close),
   },
   /* 한 줄 = 한 기록. **claim(어떤 기록인가)이 주인공**이고 value 는 증거다(오너 지시 2026-07-31).

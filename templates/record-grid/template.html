@@ -55,29 +55,33 @@
       .rg-lead {
         /* 왼쪽 위에 앉힌다. 가운데에 두면 그래프의 오르는 구간을 덮는다 —
            연초 구간은 지수가 낮아 그 위가 비어 있고, 라벨이 들어갈 자리가 거기다. */
-        /* 오른쪽 위(오너 지시 2026-07-31). 그 아래는 PADT 로 비워 두었으므로 선을 가리지 않는다. */
-        position: absolute; right: 0; top: 0;
+        /* 왼쪽 위(오너 지시 2026-07-31). 연초~3월 구간은 지수가 낮아 이 자리가 원래 비어 있다 —
+           카드를 옮긴 게 아니라, 카드가 있어도 되는 자리를 고른 것이다. */
+        position: absolute; left: 0; top: 0;
         background: var(--wirit-ink); color: #fff; border-radius: 14px;
         padding: 12px 22px 14px; text-align: center; min-width: 330px;
       }
       .rg-lead .lb {
-        font-family: var(--font-num); font-size: 36px; font-weight: 900;
-        letter-spacing: 0.01em; line-height: 1.05;
-        display: flex; align-items: center; justify-content: center; gap: 10px;
+        font-family: var(--font-num); font-size: 48px; font-weight: 900;
+        letter-spacing: 0.01em; line-height: 1.02;
+        display: flex; align-items: center; justify-content: center; gap: 12px;
       }
       .rg-lead .lb .flag { font-size: 38px; line-height: 1; }
       /* 가운데 줄 — 붉은 띠 위에 잉크 글자(오너 지시 2026-07-31).
          등락률과 '역사상 최대 상승'을 한 줄로 묶는다. 숫자만 두면 오늘이 특별한 줄 모르고,
          말만 두면 얼마나 특별한지 모른다. 둘이 붙어야 한 문장이 된다. */
+      /* 등락률과 '역사상 최대 상승'을 두 줄로 나누되 **한 덩어리(붉은 판)** 안에 둔다 —
+         떨어뜨려 놓으면 숫자와 말이 서로 다른 것에 대한 설명처럼 읽힌다. */
       .rg-lead .dt {
-        display: block; margin: 8px 0 0; background: var(--wirit-red); border-radius: 8px;
-        padding: 6px 14px; color: var(--wirit-ink);
-        font-family: var(--font-num); font-size: 36px; font-weight: 900; letter-spacing: -0.03em;
+        display: block; margin: 10px 0 0; background: var(--wirit-red); border-radius: 10px;
+        padding: 8px 16px 10px; color: var(--wirit-ink);
       }
+      .rg-lead .dt .p { display: block; font-family: var(--font-num); font-size: 38px; font-weight: 900; letter-spacing: -0.03em; line-height: 1.05; }
+      .rg-lead .dt .n { display: block; margin-top: 2px; font-size: 27px; font-weight: 900; letter-spacing: -0.05em; line-height: 1.1; }
       /* 아래 줄 — 오늘 지수. 흰 글자로 카드의 결론 자리에 둔다. */
       .rg-lead .vl {
         display: block; margin-top: 10px; font-family: var(--font-num);
-        font-size: 36px; font-weight: 900; color: #fff; letter-spacing: -0.03em; line-height: 1.05;
+        font-size: 50px; font-weight: 900; color: #fff; letter-spacing: -0.03em; line-height: 1.05;
       }
       /* 축 눈금 — 오른쪽에 값, 아래에 달. 격자는 아주 옅게. */
       .rg-chart .bdg-t { font-family: var(--font-num); font-size: 22px; font-weight: 900; fill: #fff; }
@@ -140,7 +144,7 @@
         {{#if lead}}
         <div class="rg-lead">
           <div class="lb">{{#if lead.flag}}<span class="flag">{{lead.flag}}</span>{{/if}}{{lead.label}}</div>
-          {{#if lead.delta}}<span class="dt">{{lead.delta}}</span>{{/if}}
+          {{#if lead.delta}}<span class="dt"><span class="p">{{lead.delta}}</span>{{#if lead.deltaNote}}<span class="n">{{lead.deltaNote}}</span>{{/if}}</span>{{/if}}
           {{#if lead.value}}<span class="vl">{{lead.value}}</span>{{/if}}
         </div>
         {{/if}}
@@ -197,7 +201,8 @@
             /* 그래프는 판을 가로로 꽉 채운다(오너 지시 2026-07-31) — 좌우 여백은 뱃지가 물리지 않을 만큼만.
                PADT 를 크게 잡아 **위쪽 띠를 비운다**: 거기에 KOSPI 카드가 앉는다.
                카드를 선 위에 겹치지 않게 하는 방법은 카드를 옮기는 게 아니라 선을 내리는 것이다. */
-            var W = 1000, H = 410, PADL = 16, PADR = 16, PADB = 58, PADT = 176;
+            /* 카드가 왼쪽 위 빈 자리에 앉으므로 위 띠를 크게 비울 필요가 없다 — 선이 판을 꽉 쓴다. */
+            var W = 1000, H = 410, PADL = 16, PADR = 16, PADB = 56, PADT = 26;
             var vals = sp.points.map(function (p) { return p.c; });
             var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
             var span = hi - lo || 1;
@@ -243,57 +248,85 @@
               var gx = (X(lastB.d) + X(after[0].d)) / 2;
               add("text", { x: Math.min(gx, W - 90), y: H - 8, class: "gap-l", "text-anchor": "middle" }, sp.gapLabel || "");
             }
-            /* 연초·최고점·오늘 — 세 지점에만 뱃지로 값을 적는다.
-               최고점은 손으로 고르지 않고 **데이터에서 찾는다**. 눈으로 찍으면
-               데이터가 바뀔 때 엉뚱한 곳을 가리킨 채로 남는다. */
+            /* ── 지점 뱃지: 연초 · 최고점 · 현재 ──
+               자리를 손으로 정하지 않는다. 오너가 "뱃지가 그래프를 가린다"고 두 번 말했고,
+               두 번 다 원인은 같았다 — **"이쯤은 비어 있겠지"라는 가정**. 데이터가 바뀌면
+               그 가정은 조용히 틀린다(지도 라벨을 무게중심으로 찍었다가 남의 구에 떨어진 것과 같다).
+
+               그래서 후보 자리를 여덟 개 놓고, 각 자리마다 **실제로 무엇과 겹치는지 재서** 고른다.
+               장애물은 셋이다: ①꺾은선 위의 점들 ②왼쪽 위 KOSPI 카드 ③먼저 놓인 다른 뱃지.
+               겹침이 0인 자리가 있으면 그중 우선순위가 높은 것을, 없으면 겹침이 가장 작은 자리를 쓴다. */
             var peak = sp.points.reduce(function (a, b) { return b.c > a.c ? b : a; }, sp.points[0]);
             var lastP = sp.points[sp.points.length - 1];
-            add("circle", { cx: X(lastP.d), cy: Y(lastP.c), r: 8, fill: "#E5484D" });   // 오늘 — 점만
-            /* '오늘'은 뱃지로 적지 않는다(오너 지시 2026-07-31) — 오른쪽 KOSPI 카드가 같은 말을 한다.
-               같은 숫자를 두 번 적으면 독자는 둘이 다른 것인 줄 알고 한 번 더 확인한다.
-               연초·최고점 둘 다 점 **위**에 둔다 — 옆에 두면 선을 가린다. */
             var stops = [
-              { p: sp.points[0], t: "연초", tone: "ink", side: "mid" },
-              { p: peak,         t: "최고점", tone: "ink", side: "below" }  // 위는 KOSPI 카드 자리 — 꼭짓점 아래 빈 쐐기에 놓는다
+              { p: lastP,        t: "현재",   tone: "red" },   // 가장 중요한 것부터 자리를 고른다
+              { p: peak,         t: "최고점", tone: "ink" },
+              { p: sp.points[0], t: "연초",   tone: "ink" }
             ];
+
+            /* KOSPI 카드를 SVG 좌표로 환산해 장애물로 넣는다 — 카드는 HTML이라 SVG가 모른다. */
+            var obstacles = [];
+            var leadEl = chart.querySelector(".rg-lead");
+            if (leadEl) {
+              var cr = chart.getBoundingClientRect(), lr = leadEl.getBoundingClientRect();
+              var sx = W / cr.width, sy = H / cr.height;
+              obstacles.push({
+                x: (lr.left - cr.left) * sx, y: (lr.top - cr.top) * sy,
+                w: lr.width * sx, h: lr.height * sy
+              });
+            }
+            var hit = function (r) {
+              var score = 0;
+              /* ① 선 위의 점 */
+              for (var i = 0; i < sp.points.length; i++) {
+                var qx = X(sp.points[i].d), qy = Y(sp.points[i].c);
+                if (qx >= r.x - 4 && qx <= r.x + r.w + 4 && qy >= r.y - 4 && qy <= r.y + r.h + 4) score += 4;
+              }
+              /* ② 카드·다른 뱃지 */
+              for (var j = 0; j < obstacles.length; j++) {
+                var o = obstacles[j];
+                var ox = Math.min(r.x + r.w, o.x + o.w) - Math.max(r.x, o.x);
+                var oy = Math.min(r.y + r.h, o.y + o.h) - Math.max(r.y, o.y);
+                if (ox > 0 && oy > 0) score += (ox * oy) / 400;
+              }
+              /* ③ 판 밖으로 나가면 큰 벌점 */
+              if (r.x < 4 || r.x + r.w > W - 4 || r.y < 4 || r.y + r.h > H - PADB + 8) score += 500;
+              return score;
+            };
+
             stops.forEach(function (st) {
               var x = X(st.p.d), y = Y(st.p.c);
               var val = st.p.c.toLocaleString("ko-KR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
               var txt = st.t + " " + val;
-              /* 글자 폭을 재서 알약을 그린다 — 폭을 어림하면 긴 값에서 글자가 삐져나온다. */
+              /* 글자 폭을 재서 알약을 그린다 — 어림하면 긴 값에서 글자가 삐져나온다. */
               var probe = add("text", { x: -9999, y: -9999, class: "bdg-t" }, txt);
-              var tw = probe.getComputedTextLength(), pw = tw + 30, ph = 40;
-              var bx = st.side === "right" ? x + 10 : (st.side === "left" ? x - pw - 12 : x - pw / 2);   // mid·below 는 가운데
-              bx = Math.max(8, Math.min(W - pw - 8, bx));
-              /* 최고점 뱃지는 점 **위**, 나머지는 점 옆. 최고점 위는 늘 비어 있다. */
-              var by = st.side === "mid" ? y - ph - 16
-                     : st.side === "below" ? y + 18
-                     : y - ph / 2;
-              /* 뱃지가 선을 덮지 않게 **실제로 재서** 밀어낸다(디자인팀 지적 2026-07-31).
-                 꼭짓점 아래라고 늘 비어 있는 게 아니다 — 꼭짓점 직후의 되돌림이 그 자리로 들어온다.
-                 뱃지 가로 구간 안에 있는 점들의 y 를 훑어, 겹치면 그 아래로 내린다.
-                 (지도 라벨을 무게중심이 아니라 도형 포함 여부로 판정하는 것과 같은 이유:
-                  "대개 비어 있다"는 가정은 데이터가 바뀌면 조용히 틀린다.) */
-              if (st.side === "below" || st.side === "mid") {
-                var lowest = null;
-                sp.points.forEach(function (q) {
-                  var qx = X(q.d);
-                  if (qx < bx - 6 || qx > bx + pw + 6) return;
-                  var qy = Y(q.c);
-                  if (lowest === null || qy > lowest) lowest = qy;
-                });
-                if (lowest !== null && st.side === "below" && by < lowest + 12) by = lowest + 12;
-              }
-              by = Math.max(4, Math.min(H - PADB - ph - 4, by));
-              add("rect", { x: bx, y: by, width: pw, height: ph, rx: 20,
+              var pw = probe.getComputedTextLength() + 30, ph = 40;
+              var G = 16;   // 점과 뱃지 사이 최소 숨
+              var cands = [
+                { x: x - pw / 2,   y: y - ph - G },        // 위
+                { x: x - pw / 2,   y: y + G },             // 아래
+                { x: x + G,        y: y - ph / 2 },        // 오른쪽
+                { x: x - pw - G,   y: y - ph / 2 },        // 왼쪽
+                { x: x + G,        y: y - ph - G },        // 오른쪽 위
+                { x: x - pw - G,   y: y - ph - G },        // 왼쪽 위
+                { x: x + G,        y: y + G },             // 오른쪽 아래
+                { x: x - pw - G,   y: y + G }              // 왼쪽 아래
+              ];
+              var best = null, bestScore = Infinity;
+              cands.forEach(function (c) {
+                var r = { x: Math.max(6, Math.min(W - pw - 6, c.x)), y: c.y, w: pw, h: ph };
+                var sc = hit(r);
+                if (sc < bestScore) { bestScore = sc; best = r; }
+              });
+              add("rect", { x: best.x, y: best.y, width: pw, height: ph, rx: 20,
                 fill: st.tone === "red" ? "#E5484D" : "#141821" });
-              /* 세로 가운데는 dominant-baseline 으로 맞춘다 — '+8px' 같은 어림값은
-                 글꼴이나 크기가 바뀌면 그대로 어긋난다. */
-              probe.setAttribute("x", bx + pw / 2); probe.setAttribute("y", by + ph / 2);
+              probe.setAttribute("x", best.x + pw / 2);
+              probe.setAttribute("y", best.y + ph / 2);
               probe.setAttribute("text-anchor", "middle");
               probe.setAttribute("dominant-baseline", "central");
               svg.appendChild(probe);
               add("circle", { cx: x, cy: y, r: 7, fill: st.tone === "red" ? "#E5484D" : "#141821" });
+              obstacles.push(best);   // 다음 뱃지는 이걸 피한다
             });
             /* 아래 달 눈금 — 첫 점과 마지막 점 사이를 3등분해 실제 있는 날짜만 찍는다 */
             var marks = [0, 0.34, 0.67, 1].map(function (f) {
