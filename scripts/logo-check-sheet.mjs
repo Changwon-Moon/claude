@@ -26,18 +26,20 @@ const LOGOS = join(ROOT, "templates/_shared/logos");
 /* 요청 목록은 오너가 준 순서 그대로 둔다 — 대조는 순서가 같아야 빠르다.
  * file 은 취득 결과, verdict 는 **내가 눈으로 본 소견**이다(오너 판정을 대신하지 않는다). */
 const ROWS = [
-  { brand: "래미안", owner: "삼성물산", file: "raemian-symbol.png", src: "자동", note: "워드마크에서 심볼만 잘라냄(원본 raemian.png 도 보관)" },
+  { brand: "래미안", owner: "삼성물산", file: "raemian-symbol.png", src: "자동", note: "워드마크에서 심볼만 잘라냄" },
   { brand: "자이", owner: "GS건설", file: "xi.png", src: "자동", note: "" },
   { brand: "아크로", owner: "DL이앤씨", file: "acro.png", src: "자동", note: "" },
   { brand: "푸르지오", owner: "대우건설", file: "prugio.png", src: "오너", note: "" },
   { brand: "써밋", owner: "대우건설", file: "summit.png", src: "오너", note: "" },
-  { brand: "더샵", owner: "포스코이앤씨", file: "thesharp.png", src: "오너", note: "심볼+글자 세로 조합" },
-  { brand: "오티에르", owner: "포스코이앤씨", file: "hauterre.png", src: "오너", note: "심볼+글자 세로 조합" },
-  { brand: "e편한세상", owner: "DL이앤씨", file: "epyeonhansesang.png", src: "오너", note: "" },
-  { brand: "롯데캐슬", owner: "롯데건설", file: "lottecastle.png", src: "오너", note: "심볼+글자 세로 조합" },
-  { brand: "르엘", owner: "롯데건설", file: "leel.png", src: "오너", note: "" },
-  { brand: "힐스테이트", owner: "현대건설", file: "hillstate.png", src: "오너", note: "심볼+글자 세로 조합" },
-  { brand: "디에이치", owner: "현대건설", file: "theh.png", src: "오너", note: "여백 94% 잘라냄" },
+  { brand: "더샵", owner: "포스코이앤씨", file: "thesharp.png", src: "오너", note: "" },
+  { brand: "오티에르", owner: "포스코이앤씨", file: "hauterre.png", src: "오너", note: "" },
+  { brand: "e편한세상", owner: "DL이앤씨", file: "epyeonhansesang.png", src: "오너", note: "크기 줄임" },
+  { brand: "롯데캐슬", owner: "롯데건설", file: "lottecastle.png", src: "오너", note: "" },
+  { brand: "르엘", owner: "롯데건설", file: "leel.png", src: "오너", note: "크기 줄임" },
+  { brand: "힐스테이트", owner: "현대건설", file: "hillstate.png", src: "오너", note: "" },
+  { brand: "디에이치", owner: "현대건설", file: "theh.png", src: "오너", note: "" },
+  { brand: "SK뷰", owner: "SK에코플랜트", file: "skview.png", src: "오너", note: "새로 추가" },
+  { brand: "드파인", owner: "SK에코플랜트", file: "define.png", src: "오너", note: "새로 추가 · 신반포20차에 사용" },
 ];
 
 const cell = (r) => {
@@ -63,9 +65,12 @@ const html = `<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
   .row.miss { background: #fbfbfc; }
   .b { font-size: 19px; font-weight: 700; }
   .b .o { display: block; font-size: 13px; font-weight: 500; color: #8b96a3; margin-top: 2px; }
-  .img { display: flex; align-items: center; justify-content: center; height: 48px;
-         background: #f5f7f9; border-radius: 5px; }
-  .img img { max-width: 200px; max-height: 42px; object-fit: contain; }
+  .img { display: flex; align-items: center; justify-content: center; height: 56px; width: 56px;
+         border-radius: 5px;
+         background-color: #fff;
+         background-image: linear-gradient(45deg,#e3e7ec 25%,transparent 25%),linear-gradient(-45deg,#e3e7ec 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e3e7ec 75%),linear-gradient(-45deg,transparent 75%,#e3e7ec 75%);
+         background-size: 12px 12px; background-position: 0 0,0 6px,6px -6px,-6px 0; }
+  .img img { max-width: 48px; max-height: 48px; object-fit: contain; }
   .x { font-size: 13px; color: #b9c0c9; }
   .f { font-size: 14px; color: #5b6672; font-family: ui-monospace, monospace; word-break: break-all; }
   .tag { display: inline-block; font-family: "Pretendard", sans-serif; font-size: 11px; font-weight: 700;
@@ -75,8 +80,8 @@ const html = `<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
   .n { font-size: 14px; color: #8a5b1f; line-height: 1.35; }
   .row.miss .n { color: #a0a8b2; }
 </style></head><body><div class="wrap">
-  <h1>브랜드 로고 대조표 — 12종 전부 확보</h1>
-  <p class="sub">파란 «오너»는 직접 주신 파일, 초록 «자동»은 자동 취득분입니다. 그림이 브랜드와 맞는지 확인 부탁드립니다.</p>
+  <h1>브랜드 로고 대조표 — 14종 · 누끼 + 크기 정규화</h1>
+  <p class="sub">체크무늬가 비쳐 보이면 배경이 투명하다는 뜻입니다. 모든 로고를 같은 정사각 규격에 「잉크 면적」 기준으로 맞췄습니다.</p>
   ${ROWS.map(cell).join("")}
 </div></body></html>`;
 

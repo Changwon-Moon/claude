@@ -30,7 +30,6 @@ const UP = "/root/.claude/uploads/c2574856-dc47-5825-96a7-544a93f35f4e";
 /* 오너가 올린 순서 = 오너가 적은 이름 순서. 그 대응을 여기 한 곳에만 적는다. */
 const JOBS = [
   { file: "4f886256-1785480931039_image.png", slug: "thesharp", name: "더샵", owner: "포스코이앤씨" },
-  { file: "649ddad8-HAUTERRE_logo.jpg", slug: "hauterre", name: "오티에르", owner: "포스코이앤씨" },
   { file: "9b5cbab4-1785481899985_image.png", slug: "summit", name: "써밋", owner: "대우건설" },
   { file: "96003d29-1785481935172_image.png", slug: "epyeonhansesang", name: "e편한세상", owner: "DL이앤씨" },
   { file: "5145e839-Prugio_character.png", slug: "prugio", name: "푸르지오", owner: "대우건설" },
@@ -38,6 +37,9 @@ const JOBS = [
   { file: "e537cc5f-1785482066420_image.png", slug: "leel", name: "르엘", owner: "롯데건설" },
   { file: "49c6397d-1785482105139_image.png", slug: "hillstate", name: "힐스테이트", owner: "현대건설" },
   { file: "0e001e18-1785482292457_image.png", slug: "theh", name: "디에이치", owner: "현대건설" },
+  { file: "8599be08-HAUTERRE_logo.jpg", slug: "hauterre", name: "오티에르", owner: "포스코이앤씨" },
+  { file: "3f838dc5-1785483323831_image.png", slug: "skview", name: "SK뷰", owner: "SK에코플랜트" },
+  { file: "f30ec6da-1785483492387_image.png", slug: "define", name: "드파인", owner: "SK에코플랜트" },
 ];
 
 const { chromium } = require("playwright-core");

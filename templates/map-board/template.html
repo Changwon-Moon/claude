@@ -4,57 +4,63 @@
     <meta charset="utf-8" />
     <!--WIRIT_SHARED_CSS-->
     <style>
-      /* map-board@1 — 상 제목 / 중 지도 / 하 표. 지도의 번호 표식과 표의 번호가 서로를 가리킨다.
+      /* map-board@1 — 상 제목 / 중 지도 / 하 시공사 카드.
          ── 왜 새 템플릿인가 (2026-07-31 오너 지시)
          "상 제목 - 중 지도 - 하 표" 3단은 기존 어느 템플릿에도 없다.
          map-choropleth 는 지도만, singoga-map 은 좌 표·우 지도다. 세로 3단은 처음이다.
          ── 왜 범례가 없나
-         오너 지시: 범례 대신 **표가 곧 범례**다. 지도 위 번호와 표의 번호가 같은 폰트·같은
-         모양이라 눈이 바로 잇는다. 색 범례는 한 번 더 눈을 옮기게 만든다. */
-      .mb { padding-top: 52px; }
-      .mb .wirit-corner { background: transparent; padding: 0; box-shadow: none; top: 44px; right: 56px; }
+         오너 지시: 범례 대신 **하단 카드가 곧 범례**다. 카드의 색 띠와 지도 마커 색이 같아
+         눈이 바로 잇는다. 색 범례를 따로 두면 한 번 더 눈을 옮기게 만든다. */
+      .mb { padding-top: 46px; display: flex; flex-direction: column; }
+      .mb .wirit-corner { background: transparent; padding: 0; box-shadow: none; top: 40px; right: 52px; }
       .mb .wirit-corner .mark { color: var(--wirit-ink); font-size: 40px; }
       .mb > .wirit-topcap { padding-right: 150px; }
 
-      .mb-head { padding: 0 8px; margin: 6px 0 0; }
+      .mb-head { padding: 0 8px; margin: 4px 0 0; }
       .mb .wirit-title { font-size: 74px; line-height: 1.05; text-align: center; white-space: nowrap; margin: 0; letter-spacing: -0.03em; }
 
-      /* 지도에 상한을 준다 — 없으면 지도가 세로를 다 먹고 **표가 카드 밖으로 밀려난다**
-         (첫 시안에서 9행 중 2행과 푸터가 잘렸다). 표는 정보의 본체다. 지도가 양보한다.
-         회사 2곳을 빼 표가 9행→7행이 되면서 아래가 비었다 → 상한을 470→620 으로 올렸다.
-         표 행수가 바뀌면 이 값도 함께 봐야 한다. */
-      .mb-map { display: flex; align-items: center; justify-content: center; margin: 6px 0 2px; max-height: 720px; }
-      .mb-map svg { width: 100%; height: 100%; max-height: 720px; object-fit: contain; display: block; }
+      /* ── 지도가 남는 세로를 **전부** 먹는다 (2026-07-31 오너 지시) ──
+         전에는 max-height 로 지도를 묶어 두었는데, 카드가 7장 1행이라 아래가 텅 비었다.
+         이제 카드가 2행이 되어 필요한 높이가 확정되므로, 지도는 flex:1 로 나머지를 채운다.
+         고정 픽셀을 적지 않는 이유: 카드 행수나 제목 줄수가 바뀌면 그 숫자가 곧 거짓이 된다. */
+      /* 지도는 **제 비율대로** 폭을 가득 채운다. height:100% 로 두면 지도 비율(가로로 넓다)과
+         칸 비율이 달라 위아래에 흰 띠가 남는다 — 실제로 그렇게 남았다.
+         남는 세로는 아래 카드가 가져간다(.mb-cards 가 flex:1). */
+      .mb-map { flex: 0 0 auto; display: block; margin: 2px 0 0; }
+      .mb-map svg { width: 100%; height: auto; display: block; }
 
-      /* ── 하단 시공사 카드 (2026-07-31 오너 지시) ──
-         표(행 나열) 대신 **7장을 한 줄에** 놓는다. 로고 / 회사명 / 수주액 3단.
-         한 줄에 7장이면 장당 폭이 좁으므로 회사명은 줄여 쓰고 금액은 '조'까지만 남긴다. */
-      /* 7장을 한 줄에 — minmax(0,1fr) 이어야 내용이 길 때 칸이 늘어나 카드 밖으로 넘치지 않는다.
-         1fr 만 쓰면 최소 폭이 '내용 크기'라 DL이앤씨가 잘려 나갔다. */
-      .mb-cards { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin: 4px 4px 8px; }
+      /* ── 하단 시공사 카드 — 4열 × 2행 (2026-07-31 오너 지시) ──
+         1행 8장이면 장당 폭이 120px 남짓이라 로고도 금액도 뭉갠다.
+         2행으로 접으면 장당 폭이 두 배가 되어 로고가 제 크기로 들어간다.
+         minmax(0,1fr): 1fr 만 쓰면 최소 폭이 '내용 크기'라 긴 회사명이 칸을 밀어낸다. */
+      /* flex:1 — 지도가 쓰고 남긴 세로를 카드가 전부 가져간다. 행 높이를 1fr 1fr 로 두어
+         두 줄이 똑같이 늘어난다. 고정 높이를 적으면 지도 비율이 바뀔 때 다시 빈 띠가 생긴다. */
+      .mb-cards { flex: 1 1 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-rows: 1fr 1fr; gap: 10px; margin: 12px 4px 8px; min-height: 0; }
       .mb-c {
-        display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-        gap: 5px; padding: 10px 6px 12px; border-radius: 6px; overflow: hidden;
+        display: grid; grid-template-columns: 74px 1fr; grid-template-rows: auto auto;
+        align-items: center; column-gap: 10px; row-gap: 0;
+        padding: 12px 14px; border-radius: 8px; overflow: hidden;
         background: rgba(38, 48, 61, 0.045);
-        border-top: 4px solid var(--c);
+        border-left: 6px solid var(--c);
       }
-      .mb-c .lg { width: 100%; height: 32px; display: flex; align-items: center; justify-content: center; }
-      /* 워드마크가 칸보다 길어 카드 밖으로 삐져나갔다 — 폭을 칸 안으로 묶는다 */
-      .mb-c .lg img { max-width: 100%; width: auto; max-height: 30px; object-fit: contain; }
+      /* 로고는 두 줄(회사명+금액)에 걸쳐 왼쪽에 선다 — 가로로 늘어놓는 것보다 폭을 덜 먹는다 */
+      .mb-c .lg { grid-row: 1 / 3; width: 74px; height: 62px; display: flex; align-items: center; justify-content: center; }
+      .mb-c .lg img { max-width: 100%; max-height: 100%; object-fit: contain; }
       /* 로고가 없을 때 — 회사색 원판에 약칭. 빈칸을 두면 카드가 무너져 보인다. */
       .mb-c .chip {
-        width: 34px; height: 34px; border-radius: 50%; background: var(--c); color: #fff;
+        width: 46px; height: 46px; border-radius: 50%; background: var(--c); color: #fff;
         display: flex; align-items: center; justify-content: center;
-        font-size: 13px; font-weight: 800; letter-spacing: -0.04em;
+        font-size: 16px; font-weight: 800; letter-spacing: -0.04em;
       }
-      .mb-c .nm { font-size: 17px; font-weight: 800; color: var(--wirit-ink); text-align: center; line-height: 1.15; }
+      .mb-c .nm { font-size: 26px; font-weight: 800; color: var(--wirit-ink); line-height: 1.1; letter-spacing: -0.03em; }
       .mb-c .vl {
         font-family: "Wanted Sans", "Pretendard", sans-serif;
-        font-size: 20px; font-weight: 900; color: var(--c); white-space: nowrap;
+        font-size: 32px; font-weight: 900; color: var(--c); white-space: nowrap; line-height: 1.15;
       }
-      .mb-c .vl i { font-style: normal; font-size: 13px; font-weight: 800; margin-left: 1px; }
+      .mb-c .vl i { font-style: normal; font-size: 19px; font-weight: 800; margin-left: 2px; }
 
-      .mb-fn { white-space: pre-line; margin: 2px 12px 10px; font-size: 18px; font-weight: 600; line-height: 1.35; color: var(--wirit-gray); }
+      .mb-fn { white-space: pre-line; margin: 0 12px 8px; font-size: 17px; font-weight: 600; line-height: 1.35; color: var(--wirit-gray); }
     </style>
   </head>
   <body>
