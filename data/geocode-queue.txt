@@ -1,2 +1,0 @@
-# 좌표 지오코딩 — 구 검증 강화 후 재실행
-data/datasets/jeongbi-order-2026-07.json
