@@ -35,18 +35,18 @@
           "type": "string",
           "maxLength": 12
         },
-        "cap": {
-          "type": "string",
-          "maxLength": 30,
-          "description": "뱃지 아래 붉은 띠 한 줄"
-        },
         "value": {
           "type": "string",
           "maxLength": 14
         },
         "delta": {
           "type": "string",
-          "maxLength": 24
+          "maxLength": 30
+        },
+        "flag": {
+          "type": "string",
+          "maxLength": 8,
+          "description": "국기 이모지"
         }
       }
     },

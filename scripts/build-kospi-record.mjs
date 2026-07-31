@@ -88,16 +88,18 @@ const card = {
   template: "record-grid@1",
   date,
   badge: date.replace(/-/g, ".").slice(2),      // 26.07.31 (오너 지시 2026-07-31)
-  title: `오늘 국내 증시가 세운 기록들`,
+  title: `<span class="hi">오늘</span> 국내 증시가 세운 기록들`,   // '오늘' 빨강(오너 지시 2026-07-31)
   spark,
   /* 템플릿 안 자바스크립트가 읽을 수 있게 문자열로도 넣는다 —
      Handlebars 는 객체를 속성에 못 박는다. 렌더러가 JSON 을 그대로 넘겨준 것과 같다. */
   sparkJson: JSON.stringify(spark),
   lead: {
+    flag: "🇰🇷",
     label: "KOSPI",
-    cap: "코스피 역대 최대 상승률 기록",
+    /* 등락률과 '역사상 최대 상승'을 한 줄로 — 숫자만 두면 오늘이 특별한 줄 모르고,
+       말만 두면 얼마나 특별한지 모른다. */
+    delta: `+${K.changePct}% 역사상 최대 상승`,
     value: fmt(K.close),
-    delta: `▲${fmt(K.change)} (+${K.changePct}%)`,
   },
   /* 한 줄 = 한 기록. **claim(어떤 기록인가)이 주인공**이고 value 는 증거다(오너 지시 2026-07-31).
    * prev 가 비어 있으면 빌더가 계산해 채운다 — 아래 fillPrev 참고. */

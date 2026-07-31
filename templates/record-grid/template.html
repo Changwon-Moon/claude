@@ -23,11 +23,11 @@
          카드 패딩 72 · 우상단 검은 뱃지 · 상단캡. 그래픽을 키우려고 머리를 줄이지 않는다. */
       .rg { display: flex; flex-direction: column; }
 
-      /* 제목 위 뱃지 — 상단캡 자리에 앉는다(오너 지시 2026-07-31). */
+      /* 날짜 — 알약을 걷고 회색 글씨로 크게(오너 지시 2026-07-31).
+         알약은 '분류'를 뜻하는 장치인데 날짜는 분류가 아니다. 상단캡의 원래 용법으로 돌아간다. */
       .rg-badge {
-        display: inline-flex; align-items: center; padding: 8px 18px; border-radius: 999px;
-        background: var(--wirit-ink); color: #fff; font-family: var(--font-num);
-        font-size: 24px; font-weight: 900; letter-spacing: 0.01em;
+        font-family: var(--font-num); font-size: 34px; font-weight: 900;
+        color: var(--wirit-gray); letter-spacing: 0.005em;
       }
       .rg-head { padding: 0; margin: 22px 0 0; }
       .rg .wirit-title {
@@ -60,18 +60,23 @@
         padding: 12px 22px 14px; text-align: center; min-width: 330px;
       }
       .rg-lead .lb {
-        font-family: var(--font-num); font-size: 46px; font-weight: 900;
+        font-family: var(--font-num); font-size: 44px; font-weight: 900;
         letter-spacing: 0.01em; line-height: 1.05;
+        display: flex; align-items: center; justify-content: center; gap: 10px;
       }
-      /* 붉은 띠를 걷고 **수치 자체를 빨강으로** 말한다(오너 지시 2026-07-31).
-         띠는 글자를 담는 그릇이라 한 겹이 더 생긴다 — 색만으로 같은 말을 할 수 있으면 그릇은 군더더기다. */
-      .rg-lead .vl {
-        display: block; margin-top: 4px; font-family: var(--font-num);
-        font-size: 44px; font-weight: 900; color: var(--wirit-red); letter-spacing: -0.03em; line-height: 1.1;
-      }
+      .rg-lead .lb .flag { font-size: 38px; line-height: 1; }
+      /* 가운데 줄 — 붉은 띠 위에 잉크 글자(오너 지시 2026-07-31).
+         등락률과 '역사상 최대 상승'을 한 줄로 묶는다. 숫자만 두면 오늘이 특별한 줄 모르고,
+         말만 두면 얼마나 특별한지 모른다. 둘이 붙어야 한 문장이 된다. */
       .rg-lead .dt {
-        display: block; margin-top: 2px; font-family: var(--font-num);
-        font-size: 30px; font-weight: 900; color: var(--wirit-red); letter-spacing: -0.02em;
+        display: block; margin: 8px 0 0; background: var(--wirit-red); border-radius: 8px;
+        padding: 6px 14px; color: var(--wirit-ink);
+        font-family: var(--font-num); font-size: 26px; font-weight: 900; letter-spacing: -0.03em;
+      }
+      /* 아래 줄 — 오늘 지수. 흰 글자로 카드의 결론 자리에 둔다. */
+      .rg-lead .vl {
+        display: block; margin-top: 10px; font-family: var(--font-num);
+        font-size: 46px; font-weight: 900; color: #fff; letter-spacing: -0.03em; line-height: 1.05;
       }
       /* 축 눈금 — 오른쪽에 값, 아래에 달. 격자는 아주 옅게. */
       .rg-chart .bdg-t { font-family: var(--font-num); font-size: 22px; font-weight: 900; fill: #fff; }
@@ -133,9 +138,9 @@
         <svg viewBox="0 0 1000 310" preserveAspectRatio="none" aria-hidden="true"></svg>
         {{#if lead}}
         <div class="rg-lead">
-          <div class="lb">{{lead.label}}</div>
-          {{#if lead.value}}<span class="vl">{{lead.value}}</span>{{/if}}
+          <div class="lb">{{#if lead.flag}}<span class="flag">{{lead.flag}}</span>{{/if}}{{lead.label}}</div>
           {{#if lead.delta}}<span class="dt">{{lead.delta}}</span>{{/if}}
+          {{#if lead.value}}<span class="vl">{{lead.value}}</span>{{/if}}
         </div>
         {{/if}}
       </div>
@@ -188,7 +193,8 @@
           var svg = chart.querySelector("svg");
           if (sp && svg && sp.points && sp.points.length > 1) {
             /* PADL: 첫 점이 판 가장자리에 물리면 뱃지가 판 밖으로 나간다. PADR: 마지막 점 오른쪽 숨. */
-            var W = 1000, H = 310, PADL = 26, PADR = 40, PADB = 62, PADT = 46;
+            /* PADR 을 넓게 잡아 마지막 뱃지를 **선 오른쪽 빈자리**에 놓는다 — 선 위에 얹으면 그래프를 가린다. */
+            var W = 1000, H = 310, PADL = 26, PADR = 250, PADB = 62, PADT = 40;
             var vals = sp.points.map(function (p) { return p.c; });
             var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
             var span = hi - lo || 1;
@@ -235,7 +241,7 @@
             var stops = [
               { p: sp.points[0], t: "연초", tone: "ink", side: "right" },
               { p: peak,         t: "최고점", tone: "ink", side: "mid" },
-              { p: lastP,        t: "오늘",  tone: "red", side: "mid" }   // 점 위 — 옆에 두면 내려오는 점선을 덮는다
+              { p: lastP,        t: "오늘",  tone: "red", side: "right" }  // 선 오른쪽 빈자리 — 그래프를 안 가린다
             ];
             stops.forEach(function (st) {
               var x = X(st.p.d), y = Y(st.p.c);
@@ -251,8 +257,11 @@
               by = Math.max(4, Math.min(H - PADB - ph - 4, by));
               add("rect", { x: bx, y: by, width: pw, height: ph, rx: 20,
                 fill: st.tone === "red" ? "#E5484D" : "#141821" });
-              probe.setAttribute("x", bx + pw / 2); probe.setAttribute("y", by + ph / 2 + 8);
+              /* 세로 가운데는 dominant-baseline 으로 맞춘다 — '+8px' 같은 어림값은
+                 글꼴이나 크기가 바뀌면 그대로 어긋난다. */
+              probe.setAttribute("x", bx + pw / 2); probe.setAttribute("y", by + ph / 2);
               probe.setAttribute("text-anchor", "middle");
+              probe.setAttribute("dominant-baseline", "central");
               svg.appendChild(probe);
               add("circle", { cx: x, cy: y, r: 7, fill: st.tone === "red" ? "#E5484D" : "#141821" });
             });
