@@ -327,7 +327,9 @@ const mapSvg =
 // ── 하단 시공사 카드 ──
 function won(억) {
   const jo = Math.floor(억 / 10000), rest = 억 % 10000;
-  return jo ? `${jo}조 ${rest.toLocaleString("ko-KR")}` : `${rest.toLocaleString("ko-KR")}`;
+  /* '7조 6,946' 의 공백 한 칸이 카드 폭을 넘겨 숫자 끝자리가 잘렸다.
+   칸이 좁을 때 가장 먼저 버릴 것은 공백이다 — 숫자는 못 버린다. */
+  return jo ? `${jo}조${rest.toLocaleString("ko-KR")}` : `${rest.toLocaleString("ko-KR")}`;
 }
 /* 카드 폭(약 259px)에서 로고·여백을 빼면 회사명이 쓸 수 있는 폭은 165px 남짓이다.
  * 'SK에코플랜트'(7자)는 24px 글씨로 168px 라 한 글자가 다음 줄로 넘어가며 카드가 어긋났다.
