@@ -1,2 +1,0 @@
-# 좌표 지오코딩 대기열 — 카카오 키 재등록 후 재시도
-data/datasets/jeongbi-order-2026-07.json

@@ -108,7 +108,8 @@
       "gu 는 그 지도가 마커를 놓은 자치구를 그대로 옮긴 것이다 — 우리가 추정하지 않는다.",
       "builder 는 **브랜드명으로 확정되는 것만** 적는다(자이=GS, 래미안=삼성물산, 푸르지오=대우,",
       "힐스테이트=현대건설, 르엘/로엘=롯데, 더샵=포스코, 아크로=DL). 색만 보고 찍으면 저해상도에서 오독이 난다.",
-      "확정 못 한 2곳은 builder: null 이다. 지도 카드는 **구별 건수**만 쓰므로 이 불확실성이 카드에 들어가지 않는다."
+      "확정 못 한 2곳은 builder: null 이다. 지도 카드는 **구별 건수**만 쓰므로 이 불확실성이 카드에 들어가지 않는다.",
+      "lon/lat 은 카카오 로컬 검색 결과다. geo.method 가 '동 이름(근사)'인 것은 구역 중심이 아니라 동 중심이므로 정확도가 낮다."
     ],
     "asOf": "2026-07-30",
     "items": [
@@ -116,146 +117,243 @@
         "name": "신이문역세권",
         "gu": "동대문구",
         "brand": "푸르지오 아파트라",
-        "builder": "대우건설"
+        "builder": "대우건설",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "중림동398번지",
         "gu": "중구",
         "brand": "브리티지 서울",
-        "builder": "포스코이앤씨"
+        "builder": "포스코이앤씨",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "성수1지구",
         "gu": "성동구",
         "brand": "라베니르 자이",
-        "builder": "GS건설"
+        "builder": "GS건설",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "성수4지구",
         "gu": "성동구",
         "brand": "성수로엘 S70",
-        "builder": "롯데건설"
+        "builder": "롯데건설",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "금호21구역",
         "gu": "성동구",
         "brand": "미정",
-        "builder": "롯데건설"
+        "builder": "롯데건설",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "천호A1-1구역",
         "gu": "강동구",
         "brand": "씨밋 트래버",
-        "builder": null
+        "builder": null,
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "압구정3구역",
         "gu": "강남구",
         "brand": "압구정 현대",
-        "builder": "현대건설"
+        "builder": "현대건설",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "압구정5구역",
         "gu": "강남구",
         "brand": "압구정현대 갤러리아",
-        "builder": "현대건설"
+        "builder": "현대건설",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "압구정4구역",
         "gu": "강남구",
         "brand": "컬리넌압구정",
-        "builder": "삼성물산"
+        "builder": "삼성물산",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "개포우성6차",
         "gu": "강남구",
         "brand": "미정",
-        "builder": "GS건설"
+        "builder": "GS건설",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "개포우성4차",
         "gu": "강남구",
         "brand": "래미안 도곡뮬리스",
-        "builder": "삼성물산"
+        "builder": "삼성물산",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "대치쌍용1차",
         "gu": "강남구",
         "brand": "래미안트웰비",
-        "builder": "삼성물산"
+        "builder": "삼성물산",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "신길1구역",
         "gu": "영등포구",
         "brand": "힐스테이트강글레온",
-        "builder": "현대건설"
+        "builder": "현대건설",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "신길역세권",
         "gu": "영등포구",
         "brand": "더샵클래론",
-        "builder": "포스코이앤씨"
+        "builder": "포스코이앤씨",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "문래현대5차",
         "gu": "영등포구",
         "brand": "리모델링",
-        "builder": null
+        "builder": null,
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "목동6단지",
         "gu": "양천구",
         "brand": "아크로목동 리엔사",
-        "builder": "DL이앤씨"
+        "builder": "DL이앤씨",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "신대방역세권",
         "gu": "동작구",
         "brand": "프래니푸르지오 보라애",
-        "builder": "대우건설"
+        "builder": "대우건설",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "상도15구역",
         "gu": "동작구",
         "brand": "상도 씨지",
-        "builder": "대우건설"
+        "builder": "대우건설",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "신반포19·25차",
         "gu": "서초구",
         "brand": "래미안퍼스트빌",
-        "builder": "삼성물산"
+        "builder": "삼성물산",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "신반포20차",
         "gu": "서초구",
         "brand": "미정",
-        "builder": "SK에코플랜트"
+        "builder": "SK에코플랜트",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "방배신삼호",
         "gu": "서초구",
         "brand": "래미안 로터리움",
-        "builder": "삼성물산"
+        "builder": "삼성물산",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "서초진흥",
         "gu": "서초구",
         "brand": "서초자이 컬리너스",
-        "builder": "GS건설"
+        "builder": "GS건설",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "한양2차",
         "gu": "송파구",
         "brand": "송파센트럴자이",
-        "builder": "GS건설"
+        "builder": "GS건설",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       },
       {
         "name": "가락극동",
         "gu": "송파구",
         "brand": "가락르엘",
-        "builder": "롯데건설"
+        "builder": "롯데건설",
+        "geo": {
+          "method": null,
+          "note": "지오코딩 실패 — 좌표 없음"
+        }
       }
-    ]
+    ],
+    "geocodedAt": "2026-07-31"
   }
 }
