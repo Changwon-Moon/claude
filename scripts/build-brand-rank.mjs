@@ -52,12 +52,18 @@ const colorOf = (brand) => BRAND.get(brand)?.hex || "#5B6B7F";
 
 const MEDAL = { 1: "🥇", 2: "🥈", 3: "🥉" };
 const N = 5;
+/* 머리줄은 '메달 + n위'다(오너 지시 2026-07-31). 메달만 두면 4·5위와 표기 규칙이 갈라져
+ * 눈이 한 번 더 멈춘다. 메달은 1~3위의 장식이고, 순위 이름은 다섯 칸 모두 같은 말로 적는다. */
 const cols = Array.from({ length: N }, (_, i) =>
-  MEDAL[i + 1] ? `<span class="md">${MEDAL[i + 1]}</span>` : String(i + 1),
+  (MEDAL[i + 1] ? `<span class="md">${MEDAL[i + 1]}</span>` : "") + `${i + 1}위`,
 );
 
 const missingLogos = new Set();
-const rows = doc.surveys.map((s) => ({
+/* K-BPI 를 맨 아래로 내린다(오너 지시 2026-07-31).
+ * 1~3위만 발표하는 조사라 4·5위가 '발표 없음'으로 비는데, 그게 표 맨 위에 오면
+ * 표 전체가 비어 보인다. 채워진 줄이 먼저 읽히고 예외가 아래에 놓이는 편이 낫다. */
+const ordered = [...doc.surveys].sort((a, b) => (a.id === "A1" ? 1 : 0) - (b.id === "A1" ? 1 : 0));
+const rows = ordered.map((s) => ({
   label: s.name,
   /* 발표 주체는 한 줄에 들어가야 한다 — 두 줄이 되면 조사명과 어깨가 어긋난다.
      기관이 둘인 조사는 앞의 것(의뢰처)만 적고, 전체는 데이터셋과 캡션이 갖고 있다. */
@@ -70,18 +76,23 @@ const rows = doc.surveys.map((s) => ({
     const cell = { brand: r.brand, color: colorOf(r.brand) };
     if (logo) cell.logo = logo;
     if (r.score) cell.score = r.score;
-    /* 공동 순위 — 한 칸에 둘. 둘 중 하나만 적으면 그 조사를 잘못 옮기는 것이다. */
+    /* 공동 순위 — 한 칸을 좌우로 나눠 각자 로고와 이름을 준다.
+     * 둘 중 하나만 적으면 그 조사를 잘못 옮기는 것이고,
+     * 로고 둘에 이름 한 덩어리를 붙이면 어느 이름이 어느 로고인지 모른다. */
     if (r.tie) {
-      cell.brand2 = r.tie;
-      const l2 = fileOf(r.tie);
-      if (l2) cell.logo2 = l2; else missingLogos.add(r.tie);
+      const mk = (b) => {
+        const f = fileOf(b);
+        if (!f) missingLogos.add(b);
+        return { brand: b, color: colorOf(b), ...(f ? { logo: f } : {}) };
+      };
+      return { pair: [mk(r.tie), mk(r.brand)] };   // 데이터의 tie 가 먼저(래미안) — 오너 지정 순서
     }
     return cell;
   }),
 }));
 
 /* 1위가 몇 종류인지 세어 부제에 쓴다 — 손으로 적으면 데이터가 바뀔 때 거짓이 된다. */
-const firsts = [...new Set(doc.surveys.map((s) => s.ranks[0]?.brand).filter(Boolean))];
+const firsts = [...new Set(ordered.map((s) => s.ranks[0]?.brand).filter(Boolean))];
 
 const card = {
   template: "brand-rank-grid@1",
@@ -90,9 +101,6 @@ const card = {
   subtitle: `아파트 브랜드 순위 조사 ${doc.surveys.length}곳 · 1~5위 비교`,
   cols,
   rows,
-  note:
-    `같은 브랜드를 재는데 1위가 ${firsts.length}곳으로 갈립니다 — ${firsts.join("·")}.\n` +
-    `무엇을 재는 조사인지(회색 표)를 함께 보세요.`,
   source: { name: "각 조사기관 발표", asOf: doc.verifiedAt },
 };
 

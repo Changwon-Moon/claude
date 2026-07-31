@@ -58,7 +58,7 @@ const MIME = { ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg",
 const BRANDS = [
   "raemian-symbol", "xi", "acro", "prugio", "summit", "thesharp",
   "hauterre", "epyeonhansesang", "lottecastle", "leel", "hillstate", "theh",
-  "skview", "define",
+  "skview", "define", "ipark", "weve",
 ];
 
 const { chromium } = require("playwright-core");

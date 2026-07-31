@@ -160,6 +160,28 @@
       "dimmed": false,
       "achromatic": true,
       "share": 0
+    },
+    {
+      "company": "HDC현대산업개발",
+      "tier": "일반",
+      "name": "아이파크",
+      "file": "ipark.png",
+      "hex": "#212121",
+      "raw": "#212121",
+      "dimmed": false,
+      "achromatic": true,
+      "share": 0
+    },
+    {
+      "company": "두산건설",
+      "tier": "일반",
+      "name": "위브",
+      "file": "weve.png",
+      "hex": "#014099",
+      "raw": "#014099",
+      "dimmed": false,
+      "achromatic": false,
+      "share": 100
     }
   ],
   "clashes": [
@@ -176,6 +198,20 @@
       "b": "푸르지오",
       "bHex": "#074F51",
       "distance": 67
+    },
+    {
+      "a": "더샵",
+      "aHex": "#001140",
+      "b": "아이파크",
+      "bHex": "#212121",
+      "distance": 78
+    },
+    {
+      "a": "자이",
+      "aHex": "#002F47",
+      "b": "아이파크",
+      "bHex": "#212121",
+      "distance": 85
     }
   ]
 }

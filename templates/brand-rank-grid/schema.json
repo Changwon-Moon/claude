@@ -3,39 +3,113 @@
   "title": "brand-rank-grid@1",
   "description": "조사 여러 곳의 순위를 한 표에 겹쳐 보여준다. 행=조사, 열=순위, 칸=브랜드 로고. '같은 것을 재는 것 같지만 다른 결과'를 보이는 판형.",
   "type": "object",
-  "required": ["template", "title", "cols", "rows", "source"],
+  "required": [
+    "template",
+    "title",
+    "cols",
+    "rows",
+    "source"
+  ],
   "properties": {
-    "template": { "type": "string", "pattern": "^brand-rank-grid@\\d+$" },
-    "date": { "type": "string" },
-    "title": { "type": "string", "maxLength": 90, "description": "<span class=\"hi\">…</span> 강조 가능(템플릿이 {{{title}}} 로 받는다)" },
-    "subtitle": { "type": "string", "maxLength": 70 },
-    "note": { "type": "string", "maxLength": 120, "description": "표 아래 한 줄 — 읽는 법을 알려준다" },
+    "template": {
+      "type": "string",
+      "pattern": "^brand-rank-grid@\\d+$"
+    },
+    "date": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 90,
+      "description": "<span class=\"hi\">…</span> 강조 가능(템플릿이 {{{title}}} 로 받는다)"
+    },
+    "subtitle": {
+      "type": "string",
+      "maxLength": 70
+    },
     "cols": {
-      "type": "array", "minItems": 3, "maxItems": 6,
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 6,
       "description": "열 머리(순위 표기). 1~3위는 메달로 그린다.",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
     "rows": {
-      "type": "array", "minItems": 2, "maxItems": 6,
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 6,
       "items": {
         "type": "object",
-        "required": ["label", "cells"],
+        "required": [
+          "label",
+          "cells"
+        ],
         "properties": {
-          "label": { "type": "string", "maxLength": 20, "description": "조사 이름" },
-          "by": { "type": "string", "maxLength": 34, "description": "발표 주체 · 시점" },
-          "kind": { "type": "string", "maxLength": 20, "description": "무엇을 재는 조사인가" },
+          "label": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "조사 이름"
+          },
+          "by": {
+            "type": "string",
+            "maxLength": 34,
+            "description": "발표 주체 · 시점"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "무엇을 재는 조사인가"
+          },
           "cells": {
-            "type": "array", "minItems": 3, "maxItems": 6,
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 6,
             "items": {
               "type": "object",
               "properties": {
-                "brand": { "type": "string", "maxLength": 12 },
-                "logo": { "type": "string", "description": "_shared/logos/ 아래 파일명. 없으면 이름만 적는다." },
-                "logo2": { "type": "string", "description": "공동 순위일 때 두 번째 로고" },
-                "brand2": { "type": "string", "maxLength": 12 },
-                "color": { "type": "string" },
-                "score": { "type": "string", "maxLength": 10 },
-                "empty": { "type": "string", "maxLength": 14, "description": "그 자리 발표가 없을 때 적는 말" }
+                "brand": {
+                  "type": "string",
+                  "maxLength": 12
+                },
+                "logo": {
+                  "type": "string",
+                  "description": "_shared/logos/ 아래 파일명. 없으면 이름만 적는다."
+                },
+                "color": {
+                  "type": "string"
+                },
+                "score": {
+                  "type": "string",
+                  "maxLength": 10
+                },
+                "empty": {
+                  "type": "string",
+                  "maxLength": 14,
+                  "description": "그 자리 발표가 없을 때 적는 말"
+                },
+                "pair": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "description": "공동 순위 — 좌우 두 칸으로 그린다. 각각 로고와 이름을 갖는다.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "brand": {
+                        "type": "string",
+                        "maxLength": 12
+                      },
+                      "logo": {
+                        "type": "string"
+                      },
+                      "color": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -43,8 +117,18 @@
       }
     },
     "source": {
-      "type": "object", "required": ["name"],
-      "properties": { "name": { "type": "string" }, "asOf": { "type": "string" } }
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "asOf": {
+          "type": "string"
+        }
+      }
     }
   }
 }

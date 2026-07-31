@@ -34,8 +34,11 @@
 
       /* 머리줄 — 순위. 1~3위는 메달, 4위부터 숫자. */
       .bg-r.hd { border-bottom: 3px solid var(--wirit-ink); padding-bottom: 8px; }
-      .bg-r.hd .c { text-align: center; font-size: 26px; font-weight: 900; color: var(--wirit-gray); letter-spacing: -0.03em; }
-      .bg-r.hd .c .md { font-size: 34px; }
+      .bg-r.hd .c {
+        text-align: center; font-size: 25px; font-weight: 900; color: var(--wirit-ink);
+        letter-spacing: -0.04em; display: flex; align-items: center; justify-content: center; gap: 5px;
+      }
+      .bg-r.hd .c .md { font-size: 30px; line-height: 1; }
 
       /* 조사 이름 칸 — 이름 / 주체·시점 / 무엇을 재나 */
       .bg-l { padding: 22px 0; }
@@ -52,7 +55,13 @@
       .bg-c { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; padding: 26px 2px; min-width: 0; }
       .bg-c .lg { height: 52px; display: flex; align-items: center; justify-content: center; gap: 3px; }
       .bg-c .lg img { max-width: 110px; height: 50px; object-fit: contain; }
-      .bg-c.tie .lg img { max-width: 64px; height: 38px; }
+      /* 공동 순위 — 한 칸 안에 **좌우 두 칸**으로 나눈다(오너 지시 2026-07-31).
+         로고 둘을 붙여 놓고 이름을 아래 한 덩어리로 적으면 어느 이름이 어느 로고인지 모른다. */
+      .bg-c.tie { flex-direction: row; gap: 8px; padding: 20px 0; }
+      .bg-c .sub { display: flex; flex-direction: column; align-items: center; gap: 5px; min-width: 0; }
+      .bg-c.tie .lg { height: 42px; }
+      .bg-c.tie .lg img { max-width: 56px; height: 40px; }
+      .bg-c.tie .bn { font-size: 15px; }
       .bg-c .bn { font-size: 19px; font-weight: 800; letter-spacing: -0.05em; text-align: center; line-height: 1.15; }
       .bg-c .sc { font-family: "Wanted Sans", "Pretendard", sans-serif; font-size: 15px; font-weight: 800; color: var(--wirit-gray); }
       /* 발표가 없는 자리 — 비워 두지 않고 **없다고 적는다.** 빈칸은 '못 찾았다'로 읽힌다. */
@@ -79,15 +88,19 @@
             {{#if this.kind}}<span class="kd">{{this.kind}}</span>{{/if}}
           </div>
           {{#each this.cells}}
-          <div class="bg-c{{#if this.logo2}} tie{{/if}}">
+          <div class="bg-c{{#if this.pair}} tie{{/if}}">
             {{#if this.empty}}
               <span class="none">{{this.empty}}</span>
-            {{else}}
-              <span class="lg">
-                {{#if this.logo}}<img src="../_shared/logos/{{this.logo}}" alt="" />{{/if}}
-                {{#if this.logo2}}<img src="../_shared/logos/{{this.logo2}}" alt="" />{{/if}}
+            {{else if this.pair}}
+              {{#each this.pair}}
+              <span class="sub">
+                <span class="lg">{{#if this.logo}}<img src="../_shared/logos/{{this.logo}}" alt="" />{{/if}}</span>
+                <span class="bn" style="color:{{this.color}}">{{this.brand}}</span>
               </span>
-              <span class="bn" style="color:{{#if this.color}}{{this.color}}{{else}}var(--wirit-ink){{/if}}">{{this.brand}}{{#if this.brand2}}<br />{{this.brand2}}{{/if}}</span>
+              {{/each}}
+            {{else}}
+              <span class="lg">{{#if this.logo}}<img src="../_shared/logos/{{this.logo}}" alt="" />{{/if}}</span>
+              <span class="bn" style="color:{{#if this.color}}{{this.color}}{{else}}var(--wirit-ink){{/if}}">{{this.brand}}</span>
               {{#if this.score}}<span class="sc">{{this.score}}</span>{{/if}}
             {{/if}}
           </div>
@@ -95,8 +108,6 @@
         </div>
         {{/each}}
       </div>
-
-      {{#if note}}<p class="bg-note">{{note}}</p>{{/if}}
 
       <div class="wirit-footer">
         <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>

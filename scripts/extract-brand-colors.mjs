@@ -47,6 +47,10 @@ const BRANDS = [
   { company: "DL이앤씨",     tier: "하이엔드", name: "아크로",      file: "acro.png" },
   { company: "SK에코플랜트", tier: "일반",     name: "SK뷰",        file: "skview.png" },
   { company: "SK에코플랜트", tier: "하이엔드", name: "드파인",      file: "define.png" },
+  /* 순위 카드용 — 정비사업 카드에는 안 나오지만 브랜드 순위 조사에는 4·5위로 등장한다.
+   * 색을 뽑아 두지 않으면 카드에서 이름이 회색으로 나가 다른 브랜드와 위계가 어긋난다. */
+  { company: "HDC현대산업개발", tier: "일반",    name: "아이파크",    file: "ipark.png" },
+  { company: "두산건설",       tier: "일반",     name: "위브",        file: "weve.png" },
 ];
 
 const { chromium } = require("playwright-core");

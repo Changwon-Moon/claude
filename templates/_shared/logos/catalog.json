@@ -244,6 +244,24 @@
       "license": "trademark-nominative",
       "note": "SK에코플랜트 아파트 브랜드 · 자동 취득 실패분 · 여백 자동 절삭",
       "added": "2026-07-31"
+    },
+    {
+      "slug": "ipark",
+      "name": "아이파크",
+      "kind": "logo",
+      "source": "오너 직접 제공 (2026-07-31)",
+      "license": "trademark-nominative",
+      "note": "HDC현대산업개발 아파트 브랜드 · 자동 취득 실패분(모회사 로고로 떨어짐)",
+      "added": "2026-07-31"
+    },
+    {
+      "slug": "weve",
+      "name": "위브",
+      "kind": "logo",
+      "source": "오너 직접 제공 (2026-07-31)",
+      "license": "trademark-nominative",
+      "note": "두산건설 아파트 브랜드 · 자동 취득 실패분(모회사 로고로 떨어짐)",
+      "added": "2026-07-31"
     }
   ]
 }
