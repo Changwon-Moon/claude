@@ -72,15 +72,37 @@ function fillPrev(r) {
  * 실선 = 실측 / 점선 = 미수집(CEO.md 07-30 "박스를 둘 이상 쓰면 그 차이가 정보를 담는다"). */
 const mk = JSON.parse(readFileSync(join(ROOT, "data/datasets/kr-market-2026.json"), "utf8"));
 const base = mk.indices.kospi.series.map((p) => ({ d: p.d, c: p.c }));
-const known = d.recentCloses.known.map((p) => ({ d: p.d, c: p.c }));
-const series = [...base, ...known];
-const gapAfter = base[base.length - 1].d;      // 이 날 뒤부터 점선
+const baseLast = base[base.length - 1].d;
+const byDate = new Map(base.map((p) => [p.d, p.c]));
+
+/* ── 보도값 ↔ 수집값 교차 확인 ──
+ * 수집기가 갱신되면서 보도로 적어 둔 날(7/29·7/30)이 야후 종가와 겹친다.
+ * 겹치는 날은 **두 출처가 같은 값을 말하는지 확인**한다. 이건 공짜로 얻는 검증이다 —
+ * 다르면 보도를 잘못 옮겼거나 수집이 잘못된 것이고, 어느 쪽이든 카드를 내면 안 된다. */
+const crossChecked = [];
+for (const p of d.recentCloses.known) {
+  if (!byDate.has(p.d)) continue;
+  const got = byDate.get(p.d);
+  if (r2(got) !== r2(p.c))
+    throw new Error(`${p.d}: 보도값 ${p.c} 와 수집값 ${got} 이 다르다 — 카드를 내기 전에 원인을 밝힌다`);
+  crossChecked.push(p.d);
+}
+
+/* 수집이 아직 닿지 않은 날만 이어 붙인다(오늘 종가는 장 마감 직후라 수집에 없다). */
+const tail = d.recentCloses.known.filter((p) => p.d > baseLast).map((p) => ({ d: p.d, c: p.c }));
+const series = [...base, ...tail];
+
+/* 빈 구간이 남았을 때만 점선을 긋는다. 수집이 채워졌으면 실선으로 이어야 한다 —
+ * "없는 날은 잇지 않는다"의 반대편 규칙이다: **있는 날을 끊어 놓지도 않는다.** */
+const gapDays = tail.length
+  ? (Date.parse(tail[0].d) - Date.parse(baseLast)) / 86400000
+  : 0;
+const hasGap = gapDays > 4;   // 주말(최대 3일)보다 크면 진짜 결측이다
+const lastP = series[series.length - 1];
 const spark = {
   points: series,
-  gapAfter,
-  gapUntil: known[0].d,
-  gapLabel: `${d.recentCloses.gap.from.slice(5).replace("-", "/")}~${d.recentCloses.gap.to.slice(5).replace("-", "/")} 미수집`,
-  last: { d: known[known.length - 1].d, c: known[known.length - 1].c, label: fmt(K.close) },
+  ...(hasGap ? { gapAfter: baseLast, gapUntil: tail[0].d, gapLabel: "수집 미갱신 구간" } : {}),
+  last: { d: lastP.d, c: lastP.c, label: fmt(K.close) },
   from: series[0].d,
 };
 
