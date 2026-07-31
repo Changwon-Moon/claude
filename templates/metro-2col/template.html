@@ -73,7 +73,8 @@
         border-bottom: 3px solid var(--wirit-ink);
         padding-bottom: 10px;
       }
-      /* 헤드라인(제목 행)은 항상 각 내용 열 위에 가운데 정렬 */
+      /* 머리글은 데이터에 맞춘다 — 노선(가운데) / 구간(왼쪽) / 속도(가운데).
+         '구간'만 가운데 두면 왼쪽으로 붙은 구간명 위에서 혼자 떠 보인다(오너 지시 07-31). */
       .m2-hr span {
         font-size: 25px;
         font-weight: 700;
@@ -81,6 +82,11 @@
         text-align: center;
         white-space: nowrap;
       }
+      .m2-hr .h-seg {
+        text-align: left;
+        padding-left: 8px; /* .m2-seg 와 동일 — 머리글과 데이터의 왼쪽 끝을 맞춘다 */
+      }
+      /* 구간명은 노선색으로 칠한다(색·테두리는 metroInk 헬퍼가 카탈로그에서 계산해 인라인으로 준다) */
       .m2-seg {
         font-size: 27px;
         font-weight: 700;
@@ -89,6 +95,11 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+      }
+      /* 급/완 태그는 자기 색을 쓰므로 구간명의 테두리를 물려받으면 안 된다 */
+      .m2-seg .gu-tag {
+        -webkit-text-stroke: 0;
+        paint-order: normal;
       }
       .m2-val {
         text-align: center;
@@ -240,21 +251,21 @@
 
       <div class="m2-cols">
         <div class="m2-col">
-          <div class="m2-r m2-hr"><span class="h-line">{{colHead.line}}</span><span>{{colHead.seg}}</span><span class="h-val">{{colHead.val}}</span></div>
+          <div class="m2-r m2-hr"><span class="h-line">{{colHead.line}}</span><span class="h-seg">{{colHead.seg}}</span><span class="h-val">{{colHead.val}}</span></div>
           {{#each left}}
           <div class="m2-r {{#if this.hl}}hl-{{this.hl}}{{/if}}">
             {{{metroBadge this.line}}}
-            <span class="m2-seg">{{this.seg}}{{#if this.gu}} <span class="gu-tag {{this.guClass}}">{{this.gu}}</span>{{/if}}</span>
+            <span class="m2-seg" {{{metroInk this.line}}}>{{this.seg}}{{#if this.gu}} <span class="gu-tag {{this.guClass}}">{{this.gu}}</span>{{/if}}</span>
             <span class="m2-val"><b>{{this.value}}</b><i>km/h</i></span>
           </div>
           {{/each}}
         </div>
         <div class="m2-col">
-          <div class="m2-r m2-hr"><span class="h-line">{{colHead.line}}</span><span>{{colHead.seg}}</span><span class="h-val">{{colHead.val}}</span></div>
+          <div class="m2-r m2-hr"><span class="h-line">{{colHead.line}}</span><span class="h-seg">{{colHead.seg}}</span><span class="h-val">{{colHead.val}}</span></div>
           {{#each right}}
           <div class="m2-r {{#if this.hl}}hl-{{this.hl}}{{/if}}">
             {{{metroBadge this.line}}}
-            <span class="m2-seg">{{this.seg}}{{#if this.gu}} <span class="gu-tag {{this.guClass}}">{{this.gu}}</span>{{/if}}</span>
+            <span class="m2-seg" {{{metroInk this.line}}}>{{this.seg}}{{#if this.gu}} <span class="gu-tag {{this.guClass}}">{{this.gu}}</span>{{/if}}</span>
             <span class="m2-val"><b>{{this.value}}</b><i>km/h</i></span>
           </div>
           {{/each}}

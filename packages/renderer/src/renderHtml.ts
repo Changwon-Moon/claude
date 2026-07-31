@@ -76,6 +76,54 @@ Handlebars.registerHelper("metroBadge", (key: unknown) => {
   );
 });
 
+/* ── 노선색 글자(metroInk) ─────────────────────────────────────────────
+ * 오너 지시(2026-07-31): "구간들은 노선 색깔과 동일한 폰트로. 밝으면 알아서 테두리 처리."
+ *
+ * 색을 손으로 찍지 않는다 — 뱃지와 **같은 카탈로그**(metro-lines.json)에서 온다.
+ * 노선색을 그대로 글자에 쓰면 수인분당(#FABE00)·서해(#8FC31F)처럼 밝은 노선은
+ * 종이 바탕(#FAFAF8)에서 거의 안 읽힌다. 그래서 눈이 아니라 **대비를 재서** 가른다:
+ * WCAG 대비 3.2 미만이면 같은 색을 어둡게 깎아 테두리를 두른다(칠은 노선색 그대로).
+ * `paint-order: stroke fill` 이라 테두리가 글자 **뒤**로 깔려 획이 뭉개지지 않는다.
+ * "밝아 보이면"이 아니라 계산값이 기준이므로 노선이 추가돼도 자동으로 맞는다. */
+function hexRgb(h: string): [number, number, number] {
+  const s = h.replace("#", "");
+  return [
+    parseInt(s.slice(0, 2), 16),
+    parseInt(s.slice(2, 4), 16),
+    parseInt(s.slice(4, 6), 16),
+  ];
+}
+function relLum(hex: string): number {
+  const f = (v: number) => {
+    const c = v / 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  };
+  const [r, g, b] = hexRgb(hex);
+  return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+}
+function contrastRatio(a: string, b: string): number {
+  const la = relLum(a), lb = relLum(b);
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+function darken(hex: string, k: number): string {
+  const [r, g, b] = hexRgb(hex);
+  const c = (v: number) => Math.round(v * k).toString(16).padStart(2, "0");
+  return `#${c(r)}${c(g)}${c(b)}`;
+}
+const PAPER_BG = "#FAFAF8";
+/** 사용: <span class="m2-seg" {{{metroInk this.line}}}> — style 속성을 통째로 반환 */
+Handlebars.registerHelper("metroInk", (key: unknown) => {
+  const m = METRO_LINES[String(key)];
+  if (!m || !m.color) return new Handlebars.SafeString("");
+  const color = String(m.color);
+  if (contrastRatio(color, PAPER_BG) >= 3.2)
+    return new Handlebars.SafeString(`style="color:${color}"`);
+  const edge = darken(color, 0.45);
+  return new Handlebars.SafeString(
+    `style="color:${color};-webkit-text-stroke:1.1px ${edge};paint-order:stroke fill"`,
+  );
+});
+
 /**
  * 결정적 라인 차트 SVG 생성 (1년 추이 등).
  * 사용: {{{lineChart series width=984 height=240}}}
