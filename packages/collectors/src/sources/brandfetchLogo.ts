@@ -38,6 +38,7 @@ export const DOMAIN_MAP: Record<string, string[]> = {
   "롯데건설": ["lottecon.co.kr"],
   "포스코이앤씨": ["poscoenc.com"],
   "DL이앤씨": ["dlenc.co.kr"],
+  "SK에코플랜트": ["skecoplant.com", "sk-eco.com"],
   "포스코인터내셔널": ["poscointl.com"],
   "삼성바이오로직스": ["samsungbiologics.com"],
   "HD한국조선해양": ["ksoe.co.kr", "hd-ksoe.co.kr", "hdksoe.co.kr", "hyundai-ksoe.co.kr"],
