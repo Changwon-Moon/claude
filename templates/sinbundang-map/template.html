@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* sinbundang-map@1 — 노선도형 지도 인포그래픽.
+         신분당선 라인(공식색)을 세로로 그리고, 역세권 종합 대장 10곳을
+         역 순서대로 정거장처럼 배치. 페이퍼·잉크 톤 + 괘선(표티 억제). */
+      /* 카드 위 여백은 공용 72px 를 그대로 둔다(brandhead — 머리 규격 불변) */
+      .sbm-head {
+        padding: 0 4px;
+        margin-top: 4px;
+      }
+      .sbm .wirit-title {
+        font-size: 57px;
+        line-height: 1.06;
+        margin: 6px 0 0;
+      }
+      .sbm .wirit-title .ln {
+        color: var(--sbm-line);
+      }
+      .sbm-legend {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin: 22px 4px 6px;
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--wirit-gray);
+      }
+      .sbm-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 18px 8px 14px;
+        border-radius: 999px;
+        background: var(--sbm-line);
+        color: #fff;
+        font-size: 27px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      .sbm-pill .d {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background: #fff;
+      }
+      .sbm-ends {
+        color: var(--wirit-ink);
+        font-weight: 800;
+      }
+
+      /* 노선 리스트 */
+      .sbm-list {
+        position: relative;
+        flex: 1;
+        min-height: 0;
+        margin: 8px 0 6px;
+        display: flex;
+        flex-direction: column;
+      }
+      /* 세로 노선 레일 — 첫 정거장 중심(5%)에서 마지막 정거장 중심(95%)까지 */
+      .sbm-list::before {
+        content: "";
+        position: absolute;
+        left: 29px;
+        top: 5%;
+        height: 90%;
+        width: 8px;
+        transform: translateX(-50%);
+        background: var(--sbm-line);
+        border-radius: 4px;
+        z-index: 0;
+      }
+      .sbm-row {
+        position: relative;
+        z-index: 1;
+        flex: 1;
+        display: grid;
+        grid-template-columns: 58px 1fr auto;
+        align-items: center;
+        gap: 22px;
+        border-bottom: 2px solid var(--wirit-ink-12);
+      }
+      .sbm-row:last-child {
+        border-bottom: none;
+      }
+      /* 정거장 점 */
+      .sbm-dot {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #fff;
+        border: 8px solid var(--sbm-line);
+        justify-self: center;
+        box-sizing: border-box;
+      }
+      /* 가운데: 역명 + 단지명 */
+      .sbm-mid {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        min-width: 0;
+      }
+      .sbm-stn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 25px;
+        font-weight: 800;
+        color: var(--sbm-line);
+        letter-spacing: -0.02em;
+      }
+      .sbm-stn .tg {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--wirit-gray);
+        background: var(--wirit-ink-06);
+        border-radius: 5px;
+        padding: 2px 9px;
+      }
+      .sbm-danji {
+        font-size: 33px;
+        font-weight: 800;
+        color: var(--wirit-ink);
+        letter-spacing: -0.03em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      /* 오른쪽: 시세 */
+      .sbm-price {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+        min-width: 150px;
+      }
+      .sbm-price .v {
+        font-family: var(--font-num);
+        font-size: 43px;
+        font-weight: 900;
+        color: var(--sbm-line);
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+      }
+      .sbm-price .v .u {
+        font-size: 27px;
+        font-weight: 800;
+        margin-left: 2px;
+      }
+      .sbm-price .sz {
+        font-size: 21px;
+        font-weight: 700;
+        color: var(--wirit-gray);
+        margin-top: 11px;
+      }
+
+      .sbm-note {
+        margin: 6px 4px 22px;
+        font-size: 21px;
+        font-weight: 600;
+        color: var(--wirit-gray);
+        line-height: 1.32;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card sbm" style="--sbm-line: {{line.color}}">
+      <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
+      <div class="sbm-head"><h1 class="wirit-title">{{{title}}}</h1></div>
+
+      <div class="sbm-legend">
+        <span class="sbm-pill"><span class="d"></span>{{line.name}}</span>
+        <span class="sbm-ends">{{line.from}}</span>
+        <span>→</span>
+        <span class="sbm-ends">{{line.to}}</span>
+      </div>
+
+      <div class="sbm-list">
+        {{#each stops}}
+        <div class="sbm-row">
+          <span class="sbm-dot"></span>
+          <div class="sbm-mid">
+            <span class="sbm-stn">{{this.station}}{{#if this.tag}}<span class="tg">{{this.tag}}</span>{{/if}}</span>
+            <span class="sbm-danji">{{this.danji}}</span>
+          </div>
+          <div class="sbm-price">
+            <span class="v">{{this.price}}<span class="u">{{this.unit}}</span></span>
+            <span class="sz">{{this.size}}</span>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+
+      {{#if note}}<div class="sbm-note">{{note}}</div>{{/if}}
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+  </body>
+</html>

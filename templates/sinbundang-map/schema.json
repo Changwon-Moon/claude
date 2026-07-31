@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["template", "title", "line", "stops"],
+  "properties": {
+    "template": { "type": "string" },
+    "date": { "type": "string" },
+    "subtitle": { "type": "string" },
+    "title": { "type": "string" },
+    "note": { "type": "string" },
+    "line": {
+      "type": "object",
+      "required": ["name", "color", "from", "to"],
+      "properties": {
+        "name": { "type": "string" },
+        "color": { "type": "string" },
+        "from": { "type": "string" },
+        "to": { "type": "string" }
+      }
+    },
+    "stops": {
+      "type": "array", "minItems": 6, "maxItems": 12,
+      "items": {
+        "type": "object",
+        "required": ["station", "danji", "price", "unit", "size"],
+        "properties": {
+          "station": { "type": "string" },
+          "danji": { "type": "string" },
+          "price": { "type": "string" },
+          "unit": { "type": "string" },
+          "size": { "type": "string" },
+          "sub": { "type": "string" },
+          "tag": { "type": "string" }
+        }
+      }
+    },
+    "source": { "type": "object" }
+  },
+  "additionalProperties": true
+}

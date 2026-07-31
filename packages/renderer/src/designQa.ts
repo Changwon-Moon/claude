@@ -168,7 +168,10 @@ const MEASURE_JS = `(() => {
                 부딪히는지는 사람 눈이 아니라 좌표가 판정해야 한다.
                 (.mr-wm·.m2-wm 워터마크는 일부러 뒤에 깔린 장식이라 넣지 않는다) */
              ".mr-title .tx,.mr-pyeong b,.mr-hr span,.mr-rank,.mr-gu,.mr-apt,.mr-price," +
-             ".m2-hr span,.m2-seg,.m2-val";
+             ".m2-hr span,.m2-seg,.m2-val," +
+             /* sinbundang-map — 노선도형 지도 카드(2026-07-31). 새 템플릿을 만들면 글자 요소를
+                여기 등록해야 겹침 검사가 실제로 잰다(빠뜨리면 검사받지 않은 것). */
+             ".sbm-stn,.sbm-danji,.sbm-price .v,.sbm-price .sz,.sbm-note";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
   for (var i=0;i<leaves.length;i++) for (var j=i+1;j<leaves.length;j++) {
     var a=leaves[i], b=leaves[j];
@@ -214,7 +217,7 @@ const MEASURE_JS = `(() => {
   if(footer){
     /* .rg-note 를 빠뜨려 record-grid 에서는 이 검사가 아무것도 안 재고 있었다(AS팀 지적 2026-07-31).
        "최하단 문구 여백"은 오너가 두 번 말한 항목인데 새 템플릿에 적용되지 않은 상태였다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.mr-row:last-child,.m2-r:last-child");
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.mr-row:last-child,.m2-r:last-child,.sbm-note");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();

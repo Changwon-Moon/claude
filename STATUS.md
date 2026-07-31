@@ -5,6 +5,15 @@
 
 **최종 갱신**: 2026-07-31
 
+> **07-31 (3) 코워크 세션 — 신규 템플릿 `sinbundang-map` + 신분당선 대장아파트 지도 카드(시안)**
+> ① **소재**: 오너 요청 — 신분당선 역세권 '대장아파트'를 지도 인포그래픽으로. 1·2차 리서치에서 대장 선정 기준이 "가장 비싼 단지"였던 것을 오너가 지적 → **역근접·인지도·거래량·가격리딩·세대수 5기준 종합**으로 재선정(신논현 아크로힐스논현→서초푸르지오써밋, 판교 그랑블→봇들마을, 동천 이스트팰리스→동천센트럴자이 등). 신사·양재시민의숲·광교(종점)는 초역세권 대단지 부재로 표기.
+> ② **신규 템플릿 `sinbundang-map@1`**(노선도형 지도): 세로 노선 레일(신분당 공식색 #D4003B)+정거장 점+역명/단지/대표평형 시세. 페이퍼·잉크 톤, 괘선(표티 억제, AI카드 금지 톤 준수). **카드 위 패딩 72px·코너 뱃지 공용 규격 그대로 둠**(brandhead 회귀 방지 — 07-31 map-board 사고 반복 안 함).
+> ③ **오보 0**: 모든 수치는 `data/datasets/sinbundang-daejang-2026.json`(provenance·**verified:false**)에서 코드가 읽는다. 빌더 손수치 0개. 데이터는 웹 리서치 종합(호갱노노·리치고·KB·집품·실거래 기사·나무위키) 근사치 → **발행 전 국토부 실거래가 재대조 필요**(세트 note 명시).
+> ④ **검수 배관**: 새 템플릿 글자요소(`.sbm-stn`·`.sbm-danji`·`.sbm-price .v/.sz`·`.sbm-note`)를 `designQa.ts` LEAF·footerGap 목록에 등록 → **실제로 겹침을 잰다**(등록 과정에서 시세↔평형 2px 겹침·세로 오버플로를 검수가 잡아 수정함 — 검사가 살아있음을 확인). record-grid·metro 사고 교훈 준수.
+> ⑤ **등록**: `builders.json`+`sets.json`(시안, verified:false note)+`captions/sinbundang-map.txt`(태그5·금지어0·기간표기·'억'수치 카드대조 통과). 평면 슬러그(`data/content/{date}/sinbundang-map.json`)로 세트 인식.
+> ⑥ **검증**: rebuild-cards designQa **error 0**, render-sets 16/16, smoke-tower **110/110**, doctor **발행본 6장 픽셀 불변**(픽셀 회귀 통과 — 공용파일 안 건드림). 오너에게 렌더 PNG 전송, **확정 대기**.
+> ⚠️ 남은 것: 오너 확정 시 → verified 승격(국토부 대조)·`pixel-baselines.json` md5 추가·산출물 `data/content/{날짜}/`로 이동. titlegap 22px warn은 발행 카드들과 동급(행 10개 수용 위해 유지).
+
 > **07-31 (2) 코워크 세션 — 커버 없이 재업로드 3건 + 지하철 카드 배관 구멍 발견**
 > ① **오너 결정**: 「서울 최고가 25평(59㎡)」·「34평(84㎡)」·「출근길 지하철 속도」 3건을 **커버 없이, 3개 별도 게시물로 재업로드**. `sets.json` 의 `cards` 에서 커버 슬러그만 제거(`estate-cover-59`·`estate-cover-84`·`metro-cover-photo`), **커버 빌더는 `builders.json` 에 그대로 남겼다** — 되돌릴 수 있어야 하므로. 본문 카드 픽셀은 손대지 않았다(doctor 픽셀 회귀 24/24 통과).
 > ② **구멍 발견 — 지하철 카드는 갓 clone 한 환경에서 아예 생성되지 않았다.** `scripts/build-metro-speed-card.mjs` 가 **`builders.json` 에 등록돼 있지 않았고**, `metro-speed` 세트는 `caption: ""` 였다. `smoke-tower` 의 「세트↔빌더 정합」 검사는 **캡션이 있는 세트만** 보기 때문에(`if (!hasCap) continue`) 이 세트는 검사를 통째로 건너뛰었다 — **통과한 게 아니라 검사받지 않은 것**. → 빌더 등록 + `data/review/captions/metro-speed.txt` 신규 작성 + `sets.json` 캡션 연결로 검사 대상에 올렸다. 재발 방지 항목을 `CARD_CHECKLIST.md` §2 「세트 등록 — 캡션이 없으면 검사도 없다」에 추가.
