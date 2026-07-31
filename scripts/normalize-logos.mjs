@@ -32,13 +32,24 @@ const LOGOS = join(ROOT, "templates/_shared/logos");
 const SRC = join(LOGOS, "_source");
 mkdirSync(SRC, { recursive: true });
 
-/** 캔버스 한 변. 지도 라벨은 이보다 훨씬 작게 쓰지만 원본은 넉넉히 남긴다. */
-const CANVAS = 320;
-/** 잉크가 캔버스에서 차지할 목표 면적 비율. 0.22 는 눈으로 맞춰 고른 값이 아니라,
- *  가장 정사각에 가까운 로고(자이)가 원래 보이던 크기에 맞춘 기준이다. */
+/** 캔버스 크기. 정사각이 아니라 **카드의 로고 칸 비율(60:46)**에 맞춘다.
+ *  ── 왜 (2026-07-31)
+ *  정사각 캔버스에 넣으면 가로로 아주 넓은 워드마크(르엘 4:1, 드파인 3.3:1)는
+ *  폭 상한에 먼저 걸려 더 못 커진다 — 상자 점유가 22%에 묶여 카드에서 유난히 작아 보였다.
+ *  칸과 같은 비율로 두면 넓은 로고가 쓸 수 있는 폭이 늘어 크기가 서로 가까워진다. */
+const CANVAS_W = 416, CANVAS_H = 320;
+/** 잉크가 캔버스에서 차지할 목표 면적 비율(획의 굵기까지 세는 '시각 무게'). */
 const TARGET_INK = 0.22;
+/** 로고 **상자**가 캔버스에서 차지할 목표 비율.
+ *  ── 왜 둘을 섞나 (2026-07-31 오너 "로고들 간 크기도 비슷하게")
+ *  잉크 면적만 맞추면 획이 가는 로고(르엘·드파인 같은 얇은 세리프 워드마크)는
+ *  같은 무게를 채우려 상자가 작아지고, 획이 굵은 로고(더샵·푸르지오)는 상자가 커진다.
+ *  실제로 상자 점유가 22%~78% 로 벌어져 카드에서 로고 크기가 제각각으로 보였다.
+ *  상자 기준만 맞추면 반대로 가는 로고가 훅 커 보인다.
+ *  그래서 **두 배율의 기하평균**을 쓴다 — 양 극단이 가운데로 당겨진다(22~78% → 33~62%). */
+const TARGET_BOX = 0.50;
 /** 아무리 가늘어도 캔버스를 넘지 않게 하는 상한 — 르엘처럼 극단적으로 납작한 것 대비 */
-const MAX_FILL = 0.94;
+const MAX_FILL = 0.96;
 
 const MIME = { ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp" };
 
@@ -63,7 +74,7 @@ for (const slug of BRANDS) {
   if (!existsSync(keep)) copyFileSync(file, keep);
 
   const b64 = readFileSync(keep).toString("base64");
-  const r = await page.evaluate(async ([u, CANVAS, TARGET_INK, MAX_FILL]) => {
+  const r = await page.evaluate(async ([u, CW, CH, TARGET_INK, MAX_FILL, TARGET_BOX]) => {
     const img = new Image();
     img.src = u;
     await img.decode();
@@ -98,22 +109,25 @@ for (const slug of BRANDS) {
     g.putImageData(im, 0, 0);
 
     const w = x1 - x0 + 1, h = y1 - y0 + 1;
-    /* 배율: 잉크 면적이 목표치가 되도록. 잉크는 배율의 제곱으로 늘어난다. */
-    let s = Math.sqrt((CANVAS * CANVAS * TARGET_INK) / ink);
-    s = Math.min(s, (CANVAS * MAX_FILL) / w, (CANVAS * MAX_FILL) / h);
+    /* 배율 둘을 각각 구해 기하평균을 쓴다(면적은 배율의 제곱으로 늘어난다). */
+    const AREA = CW * CH;
+    const sInk = Math.sqrt((AREA * TARGET_INK) / ink);
+    const sBox = Math.sqrt((AREA * TARGET_BOX) / (w * h));
+    let s = Math.sqrt(sInk * sBox);
+    s = Math.min(s, (CW * MAX_FILL) / w, (CH * MAX_FILL) / h);
 
     const o = document.createElement("canvas");
-    o.width = CANVAS; o.height = CANVAS;
+    o.width = CW; o.height = CH;
     const og = o.getContext("2d");
     og.imageSmoothingQuality = "high";
     const dw = w * s, dh = h * s;
-    og.drawImage(c, x0, y0, w, h, (CANVAS - dw) / 2, (CANVAS - dh) / 2, dw, dh);
-    return { png: o.toDataURL("image/png").split(",")[1], w, h, ink, s: Number(s.toFixed(3)), fill: Math.round((dw * dh) / (CANVAS * CANVAS) * 100) };
-  }, [`data:${MIME[extname(keep).toLowerCase()] || "image/png"};base64,${b64}`, CANVAS, TARGET_INK, MAX_FILL]);
+    og.drawImage(c, x0, y0, w, h, (CW - dw) / 2, (CH - dh) / 2, dw, dh);
+    return { png: o.toDataURL("image/png").split(",")[1], w, h, ink, s: Number(s.toFixed(3)), fill: Math.round((dw * dh) / AREA * 100) };
+  }, [`data:${MIME[extname(keep).toLowerCase()] || "image/png"};base64,${b64}`, CANVAS_W, CANVAS_H, TARGET_INK, MAX_FILL, TARGET_BOX]);
 
   if (!r) { console.log(`::warning::잉크 없음 — ${slug}`); continue; }
   writeFileSync(file, Buffer.from(r.png, "base64"));
-  console.log(`✅ ${slug.padEnd(16)} ${String(r.w).padStart(4)}×${String(r.h).padEnd(4)} → ${CANVAS}² · 배율 ${String(r.s).padStart(6)} · 상자점유 ${String(r.fill).padStart(2)}%`);
+  console.log(`✅ ${slug.padEnd(16)} ${String(r.w).padStart(4)}×${String(r.h).padEnd(4)} → ${CANVAS_W}×${CANVAS_H} · 배율 ${String(r.s).padStart(6)} · 상자점유 ${String(r.fill).padStart(2)}%`);
 }
 await browser.close();
 console.log(`\n📦 원본 보관: templates/_shared/logos/_source/ (다시 규격을 잡을 때 여기서 시작한다)`);
