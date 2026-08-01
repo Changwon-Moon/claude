@@ -382,11 +382,12 @@ function analyze(g: Geo): Finding[] {
       msg: `제목과 바로 아래 요소의 간격이 ${tg}px 입니다${tpx ? ` (제목 ${tpx}px)` : ""} — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다` });
 
   /* 0-b2) 뱃지 ↔ 제목 클리어런스 (badgeclear) — 오너 반복 지적한 "제목이 로고에 붙는" 고질병.
-   * error 로 둔다: overlap(badgeclip)은 이미 error 인데, "닿기 직전"만 통과하던 구멍을 막는 것이므로
-   * 같은 급으로 취급한다. 제목 폭을 꽉 채우면 우측이 뱃지 아래로 오므로 세로 30px 는 반드시 띄운다. */
+   * warn 으로 둔다(brandhead·titlegap 과 같은 이유): 이 검사를 켠 날 이미 나가 있던 카드
+   * 여러 장이 30px 미만이라, error 로 두면 **손대면 안 되는 발행본** 때문에 내보내기가 통째로 막힌다.
+   * 새 카드·고치는 카드는 이 warn 이 뜨면 반드시 맞춘다(신규 카드 목표는 30px 이상). */
   const bc = (g as any).badgeClear;
   if (bc !== null && bc !== undefined && bc < 30)
-    out.push({ level: "error", code: "badgeclear",
+    out.push({ level: "warn", code: "badgeclear",
       msg: `제목이 우상단 로고 뱃지 아래 ${bc}px 로 붙어 있습니다 — 세로 30px 이상 띄우세요(제목 블록 위 여백↑ 또는 제목 축소). CARD_CHECKLIST §2` });
 
   /* 0-c) 'AI티' 타일 (오너 지적 2026-07-30 · 2026-07-31 — 두 번째라 검수로 내렸다)

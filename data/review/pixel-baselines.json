@@ -87,6 +87,16 @@
       "content": "data/content/2026-07-20/metro-2col.json",
       "png": "metro-2col-p1.png",
       "md5": "62e94c06f8fae70402862d99f06862d2"
+    },
+    {
+      "label": "sinbundang-loop",
+      "title": "신분당선 역세권 34평 APT 시세 (2026.01~07)",
+      "state": "오너 확정",
+      "at": "2026-08-01",
+      "builder": "sinbundang-loop",
+      "content": "data/content/2026-07-31/sinbundang-loop.json",
+      "png": "sinbundang-loop-p1.png",
+      "md5": "b9d327c4f40e13b6b5a58f0630bafe4f"
     }
   ]
 }
