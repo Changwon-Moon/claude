@@ -1,9 +1,8 @@
 {
-  "_": "국토부 실거래 수집 요청 — 이 파일을 고쳐 push 하면 collect-on-request.yml 가 자동 수집한다. 신분당선 역세권 구(강남/서초/분당/수지/영통) 2026년 7월.",
-  "requestedAt": "2026-07-31",
+  "_": "국토부 실거래 수집 요청 — 이 파일을 고쳐 push 하면 collect-on-request.yml 가 자동 수집한다. 3호선 일산/고양 구(덕양·일산동·일산서) 2026년 7월.",
+  "requestedAt": "2026-08-01",
   "jobs": [
-    { "region": "seoul", "gu": "강남구,서초구", "months": "202607" },
-    { "region": "gyeonggi", "gu": "성남시분당구,용인시수지구,수원시영통구", "months": "202607" }
+    { "region": "gyeonggi", "gu": "고양시덕양구,고양시일산동구,고양시일산서구", "months": "202607" }
   ],
   "force": false
 }
