@@ -31,8 +31,11 @@ on:
         required: false
         default: "false"
   schedule:
-    # 매월 5일 03:20 UTC — 지난달 확정분 갱신(전월 실거래는 익월 초까지 신고됨)
-    - cron: "20 3 5 * *"
+    # 매월 5일·20일 03:20 UTC.
+    # 왜 두 번인가: 실거래 **신고기한이 계약 후 30일**이다. 5일치만 받으면 지난달 거래의
+    # 상당수가 아직 안 들어와 있고, 20일에 한 번 더 받아야 그달 숫자가 굳는다.
+    # (2026-07-31 오너 "매번 눌러야 돼?" → 사람이 시점을 재는 대신 달력에 못박았다)
+    - cron: "20 3 5,20 * *"
 
 permissions:
   contents: write
@@ -73,6 +76,9 @@ jobs:
             [ -z "$MONTHS" ] && MONTHS=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^months=//p')
             [ -z "$FORCE_IN" ] && FORCE_IN=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^force=//p')
           fi
+          # 정기 실행은 입력칸이 없다 → 서울 25개구 전체가 기본. '강남구' 하나만 받으면
+          # 대장 엔진이 25개 구를 못 채워 카드가 반쪽이 된다.
+          if [ "${{ github.event_name }}" = "schedule" ]; then GU="${GU:-all}"; fi
           GU="${GU:-강남구}"; REGION="${REGION:-seoul}"
           if [ -z "$MONTHS" ]; then
             MONTHS=""
@@ -83,6 +89,10 @@ jobs:
           fi
           FORCE=""
           if [ "$FORCE_IN" = "true" ]; then FORCE="--force"; fi
+          # ⚠️ 정기(schedule) 실행은 **항상 재수집**한다. 수집기는 캐시가 있으면 건너뛰므로
+          #    force 없이 돌면 이미 받아둔 달은 영영 갱신되지 않는다 — 늦게 들어온 신고가
+          #    반영이 안 되고, 그러면 5일·20일 두 번 도는 의미가 없다.
+          if [ "${{ github.event_name }}" = "schedule" ]; then FORCE="--force"; fi
           echo "수집: region=$REGION · 구=$GU · 월=$MONTHS $FORCE"
           pnpm --filter @wirit/collectors exec tsx src/molitCli.ts \
             --region "$REGION" --gu "$GU" --months "$MONTHS" \

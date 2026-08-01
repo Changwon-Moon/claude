@@ -19,7 +19,12 @@ const latestPrefix = `${latest.slice(0, 4)}-${latest.slice(4, 6)}`;
 // ── 실거래 → 구별 신고가 경신 건수·거래수·비율 ──
 const molitDir = join(ROOT, "data/datasets/molit");
 // ⚠️ 서울(법정동코드 11xxx)만. 경기(41xxx) 캐시가 같은 폴더에 있으므로 반드시 필터링한다.
-const files = readdirSync(molitDir).filter((f) => /^11\d{3}-\d{6}\.json$/.test(f));
+// ⚠️ 대상 월(latest)보다 뒤의 달은 읽지 않는다 — tohuh-rank 와 같은 이유.
+// 신고가 판정이 `r.d >= {latest}-01` 이라, 뒤의 달이 캐시에 있으면 그 거래까지
+// 이 달의 신고가로 세어 버린다(2026-07-31 발견).
+const files = readdirSync(molitDir).filter(
+  (f) => /^11\d{3}-\d{6}\.json$/.test(f) && (f.match(/-(\d{6})\.json$/)?.[1] ?? "") <= latest,
+);
 const yms = [...new Set(files.map((f) => f.match(/-(\d{6})\.json$/)?.[1]).filter(Boolean))].sort();
 const groups = new Map();
 const totalByGu = {};

@@ -54,7 +54,9 @@ node scripts/doctor.mjs            # 3~5분. 실제로 카드를 만들어 봅�
 2. **`docs/CARD_CHECKLIST.md`** — 카드를 만들거나 고치는 작업이면 **필수**.
    §2(재발 금지 항목)를 훑고 시작합니다
 3. **`company/CEO.md`** — 오너 판단 원칙 100여 개(전략·콘텐츠·디자인·프로세스)
-4. 관련 계약 문서: `docs/ARCHITECTURE.md` · `TEMPLATES.md` · `DATA_SOURCES.md`
+4. **`docs/DATA_REFRESH.md`** — 정기물이 **사람 없이 굴러가는 배관**과 그 업무 기준.
+   "이건 내가 눌러야 하나?" 싶으면 여기부터 봅니다(대개 안 눌러도 됩니다)
+5. 관련 계약 문서: `docs/ARCHITECTURE.md` · `TEMPLATES.md` · `DATA_SOURCES.md`
 
 > **이 순서가 왜 강제인가**: 2026-07-30에 오너가 **이미 정해둔 기준을 열 번 넘게 다시 말하게** 됐습니다.
 > 원인은 기준이 없어서가 아니라, 긴 학습 로그에 흩어져 있어 아무도 작업 전에 안 훑어서였습니다.

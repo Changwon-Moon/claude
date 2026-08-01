@@ -31,7 +31,14 @@ const keyOf = (a) => a.dataKey || a.geoName;
 
 // ── 실거래(서울 11xxx + 경기 41xxx) → 신고가 경신 건수 ──
 const molitDir = join(ROOT, "data/datasets/molit");
-const files = readdirSync(molitDir).filter((f) => /^(11|41)\d{3}-\d{6}\.json$/.test(f));
+// ⚠️ **대상 월(latest)보다 뒤의 달은 읽지 않는다.**
+// 2026-07-31: 7월 실거래가 캐시에 들어오자 이 카드(제목 "2026년 6월 신고가")의 픽셀이 바뀌었다.
+// 픽셀만 바뀐 게 아니다 — 신고가 판정이 `r.d >= 2026-06-01` 이라 **7월 거래까지 6월 신고가로
+// 세고 있었다.** 발행본 md5 회귀 검사가 이걸 잡았다(그래서 그 검사가 있다).
+// 카드가 말하는 달보다 뒤의 데이터는 그 카드의 근거가 아니다.
+const files = readdirSync(molitDir).filter(
+  (f) => /^(11|41)\d{3}-\d{6}\.json$/.test(f) && (f.match(/-(\d{6})\.json$/)?.[1] ?? "") <= latest,
+);
 if (!files.length) throw new Error("실거래 캐시 없음 — molit-collect 먼저");
 const groups = new Map();
 const totalBy = {};

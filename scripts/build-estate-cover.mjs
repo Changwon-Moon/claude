@@ -18,7 +18,10 @@ const PYEONG = metric === "59" ? "25평" : "34평";
 const molitDir = join(ROOT, "data/datasets/molit");
 const files = readdirSync(molitDir).filter((f) => f.endsWith(".json"));
 const yms = [...new Set(files.map((f) => f.match(/-(\d{6})\.json$/)?.[1]).filter(Boolean))].sort();
-const use6 = yms.slice(-6);
+// 표(map-rank)와 **같은 창**을 본다 — 그해 1월~최신월 누적. 커버와 표가 다른 기간을 보면
+// 같은 캐러셀 안에서 숫자가 어긋난다(2026-07-31 map-rank 창 변경에 맞춰 함께 바꿈).
+const YEAR = yms.at(-1)?.slice(0, 4) ?? "";
+const use6 = yms.filter((m) => m.startsWith(YEAR));
 let top = 0;
 for (const f of files) {
   const ym = f.match(/-(\d{6})\.json$/)?.[1];
