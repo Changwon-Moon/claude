@@ -1,0 +1,213 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "danji-brief@1",
+  "description": "청약단지 브리핑 — 상단 조감도(또는 그래픽 폴백) + 하단 정보표. 분양 예정(kind:presale)과 청약 결과(kind:result) 두 변형을 한 템플릿이 담는다. 칸의 뜻은 데이터가 정하고 템플릿은 배치만 한다.",
+  "type": "object",
+  "required": [
+    "template",
+    "titleLines",
+    "danji",
+    "stats",
+    "source"
+  ],
+  "properties": {
+    "template": {
+      "type": "string",
+      "pattern": "^danji-brief@\\d+$"
+    },
+    "date": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "presale",
+        "result"
+      ],
+      "description": "presale=분양 예정 소개 / result=청약 결과. 강조색과 일정칸 라벨 톤만 달라진다."
+    },
+    "titleLines": {
+      "type": "array",
+      "description": "제목을 줄 단위로 준다. 자동 줄바꿈에 맡기면 폰트가 바뀔 때 줄 수가 달라진다",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "maxItems": 3
+    },
+    "hero": {
+      "type": "object",
+      "description": "상단 그림. photo 가 있으면 사진, 없으면 브랜드색 그래픽 폴백",
+      "properties": {
+        "photo": {
+          "type": "string",
+          "description": "templates/_shared/photos/ 안의 파일명"
+        },
+        "credit": {
+          "type": "string",
+          "maxLength": 40,
+          "description": "사진 출처 표기(예: 출처. DL이앤씨 조감도). 사진을 쓰면 필수"
+        },
+        "placeholder": {
+          "type": "boolean",
+          "description": "true 면 시안용 대체 이미지라고 카드에 밝힌다"
+        },
+        "fallbackColor": {
+          "type": "string",
+          "description": "폴백 그래픽 바탕색(브랜드색). 없으면 잉크네이비"
+        },
+        "fallbackWord": {
+          "type": "string",
+          "maxLength": 20,
+          "description": "폴백 그래픽에 크게 적을 말(보통 브랜드명)"
+        }
+      }
+    },
+    "danji": {
+      "type": "object",
+      "required": [
+        "name",
+        "location"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 24
+        },
+        "location": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "company": {
+          "type": "string",
+          "maxLength": 20,
+          "description": "시공사(회사명)"
+        },
+        "logo": {
+          "type": "string",
+          "description": "templates/_shared/logos/ 안의 파일명. 브랜드 로고가 확실할 때만"
+        },
+        "logoColor": {
+          "type": "string",
+          "description": "로고 파일이 없을 때 쓰는 브랜드색 글자 칩"
+        }
+      }
+    },
+    "stats": {
+      "type": "array",
+      "description": "숫자 스트립 3칸. 나란히 놓이므로 값 글자 크기는 서로 같다",
+      "minItems": 2,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "label",
+          "value"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "maxLength": 12
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "unit": {
+            "type": "string",
+            "maxLength": 6
+          },
+          "hi": {
+            "type": "boolean",
+            "description": "강조(레드). 카드당 한 칸까지"
+          }
+        }
+      }
+    },
+    "table": {
+      "type": "object",
+      "description": "평형별 표. 머리글과 행은 같은 grid 를 쓴다(colalign)",
+      "required": [
+        "cols",
+        "rows"
+      ],
+      "properties": {
+        "cols": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 4,
+          "description": "열 수. 머리글과 행이 같은 grid 를 보게 하는 단일 원천"
+        },
+        "head": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "minItems": 2,
+          "maxItems": 4,
+          "description": "없으면 머리글 없이 라벨·값 표로 그린다"
+        },
+        "rows": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 5,
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 28
+            }
+          }
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 40,
+          "description": "표 아래 작은 단서(예: 공급평형 미고지 — 전용면적 표기)"
+        }
+      }
+    },
+    "schedule": {
+      "type": "array",
+      "description": "청약 일정 칸. 미정이면 date 에 '미정'을 적는다 — 칸을 지우지 않는다",
+      "minItems": 2,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": [
+          "label",
+          "date"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "date": {
+            "type": "string",
+            "maxLength": 12
+          }
+        }
+      }
+    },
+    "note": {
+      "type": "string",
+      "maxLength": 60,
+      "description": "하단 맥락 한 줄. 본문·푸터 어디에도 붙지 않게 위아래 여백을 따로 준다"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "asOf": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

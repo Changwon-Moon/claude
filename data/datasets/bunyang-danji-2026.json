@@ -1,0 +1,156 @@
+{
+  "_": [
+    "청약단지 브리핑 카드(danji-brief@1)의 원자료. 단지 한 곳이 객체 하나다.",
+    "★ verified: false — 여기 담긴 수치는 아직 **보도에서 옮긴 것**이다.",
+    "  청약홈(applyhome.co.kr) 입주자모집공고문으로 대조하기 전까지 발행하지 않는다.",
+    "  (docs/HANDOFF.md §5 '확정과 발행 게이트는 다르다')",
+    "모르는 값은 채우지 않고 null 로 둔다 — 빌더가 '미고지'라고 카드에 적는다.",
+    "숫자는 전부 원단위 정수로 적는다. '2,706가구' 같은 표기는 빌더가 만든다.",
+    "record 필드는 '역대 최고' 같은 말을 카드에 쓸 수 있게 하는 열쇠다. 우리 데이터에 과거 경쟁률이 없어 코드가 직접 확인할 수 없으므로, 근거(by·via)를 함께 적은 이 필드가 있을 때만 빌더가 그 문구를 쓴다. 필드가 없으면 문구도 없다."
+  ],
+  "meta": {
+    "name": "2026년 분양·청약 단지",
+    "verified": false,
+    "verifyNote": "청약홈 입주자모집공고문 대조 전. 발행 게이트를 통과하지 않았다.",
+    "unit": {
+      "count": "가구",
+      "floor": "층",
+      "area": "㎡(전용)"
+    },
+    "updatedAt": "2026-08-01"
+  },
+  "danji": [
+    {
+      "id": "sangok-xi-hillstate",
+      "kind": "presale",
+      "name": "산곡역자이힐스테이트&하늘채",
+      "location": "인천 부평구 산곡동",
+      "company": "GS건설·현대건설·코오롱글로벌",
+      "logo": null,
+      "logoNote": "3개 브랜드 컨소시엄이라 브랜드 로고를 하나만 붙이면 오해가 된다. 로고 없이 이름만 적는다.",
+      "total": 2706,
+      "general": 1289,
+      "buildings": 20,
+      "topFloor": 33,
+      "underFloor": 3,
+      "areas": [
+        {
+          "m2": 50,
+          "types": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "m2": 59,
+          "types": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "m2": 75,
+          "types": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "m2": 84,
+          "types": [
+            "A",
+            "B"
+          ]
+        }
+      ],
+      "pyeongDisclosed": false,
+      "priceDisclosed": false,
+      "saleMonth": "2026-08",
+      "moveIn": "2029-12",
+      "schedule": {
+        "special": null,
+        "first": null,
+        "announce": null
+      },
+      "highlight": "지하철 7호선 산곡역 초역세권",
+      "source": {
+        "name": "GS건설 보도자료",
+        "via": "파이낸셜뉴스 (2026.7.7)",
+        "url": "https://www.fnnews.com/news/202607071742444802"
+      },
+      "nearest": {
+        "line": "7호선",
+        "station": "산곡역",
+        "desc": "바로 앞"
+      }
+    },
+    {
+      "id": "acro-de-seocho",
+      "kind": "result",
+      "name": "아크로 드 서초",
+      "location": "서울 서초구 서초동",
+      "company": "DL이앤씨",
+      "logo": "acro.png",
+      "total": 1161,
+      "buildings": 16,
+      "topFloor": 39,
+      "underFloor": 4,
+      "areas": [
+        {
+          "m2": 59,
+          "types": [
+            "A"
+          ]
+        }
+      ],
+      "pyeongDisclosed": false,
+      "priceDisclosed": true,
+      "price": {
+        "perPyeongMan": 7800,
+        "unit59Won": 1860000000,
+        "nearbyMarketWon": 3200000000,
+        "capApplied": true
+      },
+      "moveIn": "2029-02",
+      "schedule": {
+        "special": "2026-03-31",
+        "first": "2026-04-01",
+        "announce": null
+      },
+      "apply": [
+        {
+          "label": "특별공급",
+          "supply": 26,
+          "received": 19533,
+          "reported": 751
+        },
+        {
+          "label": "1순위",
+          "supply": 30,
+          "received": 32973,
+          "reported": 1099
+        },
+        {
+          "label": "전용 59㎡A",
+          "supply": 26,
+          "received": 29535,
+          "reported": 1135
+        }
+      ],
+      "applyNote": "reported = 보도에 실린 경쟁률. 빌더가 received/supply 로 다시 계산해 어긋나면 던진다.",
+      "highlight": "서울 민간분양 역대 최고 경쟁률",
+      "source": {
+        "name": "한국부동산원 청약홈 집계",
+        "via": "머니투데이 (2026.4.2)",
+        "url": "https://www.mt.co.kr/estate/2026/04/02/2026040209081169869"
+      },
+      "record": {
+        "claim": "서울 민간분양 역대 최고 경쟁률",
+        "scope": "서울 민간분양 1순위 평균",
+        "by": "한국부동산원 청약홈 집계",
+        "via": "머니투데이 (2026.4.2)"
+      }
+    }
+  ]
+}

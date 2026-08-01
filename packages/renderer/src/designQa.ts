@@ -179,7 +179,15 @@ const MEASURE_JS = `(() => {
              ".m2-hr span,.m2-seg,.m2-val," +
              /* sinbundang-map — 노선도형 지도 카드(2026-07-31). 새 템플릿을 만들면 글자 요소를
                 여기 등록해야 겹침 검사가 실제로 잰다(빠뜨리면 검사받지 않은 것). */
-             ".sbm-stn,.sbm-danji,.sbm-price .v,.sbm-price .sz,.sbm-note";
+             ".sbm-stn,.sbm-danji,.sbm-price .v,.sbm-price .sz,.sbm-note," +
+             /* danji-brief — 청약단지 브리핑(2026-08-01). 새 템플릿을 만들면 여기부터 올린다.
+                record-grid 를 만들고 이 목록에 안 올려 카드 전체가 겹침 검사 밖에 있었던 적이 있다
+                (AS팀 지적 2026-07-31) — 검사 목록에서 빠진 요소는 통과한 게 아니라 재지 않은 것이다.
+                (.db-scrim 은 글자가 아닌 그라디언트 판이라 넣지 않는다) */
+             ".db-title .ln,.db-credit,.db-fb .w,.db-fb .sub," +
+             ".db-nm .n,.db-nm .loc,.db-nm .lgtx," +
+             ".db-s .l,.db-s .v,.db-hr span,.db-row span," +
+             ".db-sc .l,.db-sc .d,.db-tnote,.db-note";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
   for (var i=0;i<leaves.length;i++) for (var j=i+1;j<leaves.length;j++) {
     var a=leaves[i], b=leaves[j];
@@ -205,7 +213,10 @@ const MEASURE_JS = `(() => {
    * 재는 것은 **글자가 아니라 열 상자**다 — 상자 안 정렬(가운데/왼쪽/오른쪽)은 별개 결정이다. */
   var colSkew=[];
   [["표 머리글", ".sm-rank .rh3", ".sm-rank .sm-row"],
-   ["순위표 머리글", ".rt-colheadrow", ".rt-row:not(.rt-colheadrow)"]].forEach(function(pair){
+   ["순위표 머리글", ".rt-colheadrow", ".rt-row:not(.rt-colheadrow)"],
+   /* danji-brief — 머리글과 행이 같은 grid 변수(--c)를 보게 만들어 뒀지만,
+      "그렇게 만들었다"와 "실제로 맞는다"는 다르다. 재는 쪽에도 올린다. */
+   ["단지표 머리글", ".db-hr", ".db-row"]].forEach(function(pair){
     var head=card.querySelector(pair[1]);
     var row=card.querySelector(pair[2]);
     if(!head||!row) return;
@@ -224,7 +235,7 @@ const MEASURE_JS = `(() => {
    * (이 주석 안에서는 역따옴표를 쓰지 않는다 — 이 블록 전체가 템플릿 리터럴이다)
    * text-overflow:ellipsis 를 쓰는 칸은 **잘렸는지 좌표로** 확인한다 — 눈으로는 그럴듯해 보인다. */
   var clipped=[];
-  Array.prototype.forEach.call(card.querySelectorAll(".mr-apt,.mr-gu,.m2-seg,.rt-name,.sm-gu"), function(el){
+  Array.prototype.forEach.call(card.querySelectorAll(".mr-apt,.mr-gu,.m2-seg,.rt-name,.sm-gu,.db-nm .n,.db-nm .loc,.db-row span"), function(el){
     if(el.scrollWidth - el.clientWidth > 1)
       clipped.push({sel:name(el), text:(el.textContent||"").trim().slice(0,24), need:Math.ceil(el.scrollWidth), has:Math.ceil(el.clientWidth)});
   });
@@ -235,7 +246,7 @@ const MEASURE_JS = `(() => {
   if(footer){
     /* .rg-note 를 빠뜨려 record-grid 에서는 이 검사가 아무것도 안 재고 있었다(AS팀 지적 2026-07-31).
        "최하단 문구 여백"은 오너가 두 번 말한 항목인데 새 템플릿에 적용되지 않은 상태였다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.mr-row:last-child,.m2-r:last-child,.sbm-note");
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();
