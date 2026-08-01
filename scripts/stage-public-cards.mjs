@@ -147,5 +147,74 @@ if (existsSync(PUB_SRC)) {
   }
 }
 
-console.log(`🖼  내려받기(문 안) ${dlManifest.reduce((n, m) => n + m.files.length, 0)}장 · 완성본 ${pubN}장`);
+/* ③ 완성본을 **폰에서 볼 수 있게** 한다 — 폴더마다 index.html, 그리고 전체 목록 페이지.
+ *
+ * ── 왜 (2026-08-01 오너 "모바일에서 완성된 카드 모아둔 곳 어떻게 보지?" + 404 스크린샷)
+ * 관제탑 보관함의 [실물 열기] 는 `/published/{폴더}/` 를 여는데, 그 폴더에는 JPEG·캡션·meta 만
+ * 있고 **index.html 이 없었다.** Cloudflare 정적 자산은 index 없는 폴더를 목록으로 보여주지
+ * 않으므로 **11개 발행본 전부 404** 였다. 링크가 있는데 열리지 않는 것은 없는 것보다 나쁘다.
+ * 다시 그리지 않는다 — 저장소에 커밋된 그때 그 JPEG 를 그대로 감싸 보여주기만 한다. */
+const esc = (t) => String(t ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const SHELL = (title, body) => `<!doctype html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(title)} · wirit.</title><style>
+:root{--ink:#141821;--paper:#FAFAF8;--gray:#5B6B7F;--cobalt:#2E6BFF}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard",sans-serif;-webkit-text-size-adjust:100%}
+header{background:var(--ink);color:#fff;padding:18px 20px;position:sticky;top:0;z-index:9}
+header a{color:#aeb8c4;text-decoration:none;font-size:14px}
+header .wm{font-weight:800;letter-spacing:-.02em}header .wm i{color:var(--cobalt);font-style:normal}
+h1{font-size:20px;font-weight:800;letter-spacing:-.02em;margin:6px 0 2px;line-height:1.3}
+.sub{color:var(--gray);font-size:13px}
+main{padding:16px 14px 60px;max-width:720px;margin:0 auto}
+.card{display:block;width:100%;border-radius:10px;margin:0 0 14px;box-shadow:0 2px 10px rgba(20,24,33,.12)}
+.cap{background:#fff;border:1px solid rgba(20,24,33,.12);border-radius:10px;padding:14px;margin-top:8px}
+.cap pre{white-space:pre-wrap;word-break:break-word;font:15px/1.65 inherit}
+button{appearance:none;border:0;background:var(--cobalt);color:#fff;font-weight:700;font-size:15px;
+ padding:12px 16px;border-radius:10px;width:100%;margin-top:10px}
+ul{list-style:none}li{margin-bottom:12px}
+.row{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid rgba(20,24,33,.12);
+ border-radius:12px;padding:10px;text-decoration:none;color:inherit}
+.row img{width:76px;height:95px;object-fit:cover;border-radius:8px;flex:none;background:#eee}
+.row .t{font-weight:700;font-size:15px;line-height:1.35;letter-spacing:-.01em}
+.row .m{color:var(--gray);font-size:13px;margin-top:3px}
+</style></head><body>${body}
+<script>function cp(id){var t=document.getElementById(id).textContent;
+navigator.clipboard.writeText(t).then(function(){var b=event.target;var o=b.textContent;b.textContent='복사됐습니다 ✓';setTimeout(function(){b.textContent=o},1500)})}</script>
+</body></html>`;
+
+let pages = 0;
+if (existsSync(PUB_DST)) {
+  const dirs = readdirSync(PUB_DST).filter((d) => { try { return readdirSync(join(PUB_DST, d)).length > 0; } catch { return false; } });
+  const rows = [];
+  for (const d of dirs) {
+    const dir = join(PUB_DST, d);
+    const jpgs = readdirSync(dir).filter((f) => /\.(jpe?g|png)$/i.test(f))
+      .sort((a, b) => (parseInt(a) || 0) - (parseInt(b) || 0) || a.localeCompare(b));
+    if (!jpgs.length) continue;
+    let meta = {};
+    try { meta = JSON.parse(readFileSync(join(dir, "meta.json"), "utf8")); } catch { /* 예전 발행분엔 meta 가 없다 */ }
+    let caption = meta.caption || "";
+    if (!caption) { try { caption = readFileSync(join(dir, "caption.txt"), "utf8"); } catch { /* 없으면 없는 대로 */ } }
+    const title = meta.title || d;
+    const at = meta.publishedAt || (d.match(/^(\d{4}-\d{2}-\d{2})/) || [])[1] || "";
+    const body = `<header><a href="../">← 완성본 전체</a><h1>${esc(title)}</h1>
+<div class="sub">${esc(at)}${at ? " 발행 · " : ""}${jpgs.length}장</div></header>
+<main>${jpgs.map((f) => `<img class="card" src="${encodeURIComponent(f)}" alt="">`).join("\n")}
+${caption ? `<div class="cap"><pre id="cap">${esc(caption.trim())}</pre>
+<button onclick="cp('cap')">캡션 복사</button></div>` : ""}</main>`;
+    writeFileSync(join(dir, "index.html"), SHELL(title, body), "utf8");
+    pages++;
+    rows.push({ d, title, at, n: jpgs.length, thumb: jpgs[0] });
+  }
+  rows.sort((a, b) => (b.at || "").localeCompare(a.at || "") || b.d.localeCompare(a.d));
+  const list = `<header><a href="../">← 관제탑</a><h1>완성본 보관함</h1>
+<div class="sub">인스타에 올린 그대로 · ${rows.length}건</div></header>
+<main><ul>${rows.map((r) => `<li><a class="row" href="${encodeURIComponent(r.d)}/">
+<img src="${encodeURIComponent(r.d)}/${encodeURIComponent(r.thumb)}" alt="">
+<div><div class="t">${esc(r.title)}</div><div class="m">${esc(r.at || "발행일 미상")} · ${r.n}장</div></div></a></li>`).join("\n")}</ul></main>`;
+  writeFileSync(join(PUB_DST, "index.html"), SHELL("완성본 보관함", list), "utf8");
+}
+
+console.log(`🖼  내려받기(문 안) ${dlManifest.reduce((n, m) => n + m.files.length, 0)}장 · 완성본 ${pubN}장 · 완성본 페이지 ${pages}개(+목록 1)`);
 for (const m of dlManifest) console.log(`   · ${m.label} — ${m.files.length}장 · 캡션 ${m.caption ? m.caption.length + "자" : "없음"}`);

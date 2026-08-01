@@ -50,11 +50,32 @@ await page.waitForTimeout(400);
 const findings = [];
 const note = (where, what) => { findings.push(`${where} — ${what}`); };
 
+/* ⚠️ 아래 두 개는 **직접 page.click/page.fill 을 쓰지 않기 위한** 안전 wrapper 다.
+ * 화면이 바뀌어 선택자가 낡으면 playwright 기본 30초 대기 뒤 예외로 죽는데,
+ * 그러면 시뮬이 **첫 번째 낡은 선택자에서 멈춰** 나머지를 하나도 못 본다.
+ * 더 나쁜 건 그게 배포를 통째로 막는다는 것 — 2026-08-01 에 탭 이름이 today→publish 로
+ * 바뀐 뒤 이 스크립트가 죽어 **관제탑이 배포되지 않고 있었고, 그래서 완성본 링크가 404 였다.**
+ * 없는 것은 '없다'고 **보고**하고 계속 간다. 판정(종료코드)은 마지막에 한 번에 내린다. */
+async function tap(label, selector, wait = 350) {
+  try { await page.click(selector, { timeout: 2500 }); await page.waitForTimeout(wait); return true; }
+  catch { note(label, `요소를 못 찾음 (${selector}) — 화면이 바뀌었는지 확인`); return false; }
+}
+async function type(label, selector, text) {
+  try { await page.fill(selector, text, { timeout: 2500 }); return true; }
+  catch { note(label, `입력칸을 못 찾음 (${selector}) — 화면이 바뀌었는지 확인`); return false; }
+}
+
 /** 한 버튼을 눌러보고 새 오류가 생겼는지 본다 */
 async function press(label, selector, opts = {}) {
   const before = errors.length;
   const el = await page.$(selector);
-  if (!el) { note(label, `버튼을 찾을 수 없음 (${selector})`); return false; }
+  if (!el) {
+    /* 데이터가 있어야만 그려지는 것(파이프라인 행·그룹 헤더 등)은 '없음'이 정상 상태다.
+       그걸 결함으로 세면 조용한 날마다 배포가 막힌다 — 옵션 표시가 있으면 알리고 넘어간다. */
+    if (opts.optional) { console.log(`  · (없음, 정상) ${label}`); return false; }
+    note(label, `버튼을 찾을 수 없음 (${selector})`);
+    return false;
+  }
   const disabled = await el.evaluate((n) => n.disabled === true);
   if (disabled && !opts.allowDisabled) { note(label, "비활성 상태라 못 누름"); return false; }
   try { await el.click({ timeout: 3000, force: !!opts.force }); }
@@ -64,11 +85,20 @@ async function press(label, selector, opts = {}) {
   return true;
 }
 
-const TABS = ["today", "board", "ideas", "company", "archive", "assets"];
+/* ⚠️ 탭 목록을 손으로 적어 두면 **검사가 스스로 낡아 배포를 막는다.**
+ * 2026-08-01 발견: 관제탑이 '오늘(today)'·'파이프라인(board)' 을 '발행(publish)' 하나로 합쳤는데
+ * 이 목록은 옛 이름을 그대로 들고 있었다 → 시뮬이 30초 기다리다 죽고,
+ * 그 단계가 tower-deploy 를 막고 있어서 **관제탑이 배포되지 않고 있었다.**
+ * (그래서 완성본 링크가 404 였다 — 화면은 고쳤는데 나가질 않았다)
+ * 화면에 있는 탭을 **화면에서 읽는다.** 이름이 바뀌어도 따라간다. */
+const TABS = await page.evaluate(`[...document.querySelectorAll(".tab")].map(t => t.dataset.v)`);
+if (!TABS.length) { console.log("::error::탭을 하나도 찾지 못했습니다 — 화면 구조가 바뀌었는지 확인하세요"); process.exit(1); }
+/** 첫 화면(지표·결정함이 있는 탭) — 이름이 today→publish 로 바뀐 적이 있어 고정하지 않는다 */
+const HOME = TABS[0];
 
 // ── 1. 모든 탭을 돌면서 눌리는 것을 다 눌러본다
 for (const t of TABS) {
-  await page.click(`.tab[data-v="${t}"]`);
+  await tap(`탭:${t}`, `.tab[data-v="${t}"]`);
   await page.waitForTimeout(350);
   const shown = await page.evaluate(`document.getElementById("view-${t}").classList.contains("on")`);
   if (!shown) note(`탭:${t}`, "탭을 눌러도 화면이 안 바뀜");
@@ -81,13 +111,13 @@ for (const t of TABS) {
 }
 
 // ── 2. 지표 4칸
-await page.click('.tab[data-v="today"]');
+await tap("탭:홈", `.tab[data-v="${HOME}"]`);
 for (let i = 0; i < 4; i++) {
   await press(`지표 ${i + 1}`, `.kpi:nth-child(${i + 1})`);
 }
 
 // ── 3. 결정함 카드
-await page.click('.tab[data-v="today"]');
+await tap("탭:홈", `.tab[data-v="${HOME}"]`);
 await page.waitForTimeout(300);
 const inboxN = await page.evaluate(`document.querySelectorAll("#inboxBody .dcard").length`);
 if (inboxN) {
@@ -112,13 +142,13 @@ if (inboxN) {
 await page.evaluate(`closeDrawer()`);
 
 // ── 4. 파이프라인: 그룹 접기/펴기 + 흐름 레일 + 행 클릭
-await page.click('.tab[data-v="board"]');
+await tap("탭:홈", `.tab[data-v="${HOME}"]`); // 파이프라인은 발행 탭 안으로 합쳐졌다
 await page.waitForTimeout(350);
-await press("흐름 레일 첫 칸", "#flow .fseg");
-await press("그룹 헤더(접기)", "#board .grph");
-await press("그룹 헤더(펴기)", "#board .grph");
-if (await page.$("#board .row")) {
-  await press("파이프라인 행", "#board .row", { wait: 600 });
+await press("흐름 레일 첫 칸", ".fseg", { optional: true });
+await press("그룹 헤더(접기)", ".grph", { optional: true });
+await press("그룹 헤더(펴기)", ".grph", { optional: true });
+if (await page.$(".rows .row", { optional: true })) {
+  await press("파이프라인 행", ".rows .row", { optional: true }, { wait: 600 });
   const opened = await page.evaluate(`document.getElementById("drawer").classList.contains("on")`);
   if (!opened) note("파이프라인 행", "눌러도 상세가 안 열림");
   const acts2 = await page.evaluate(`[...drawer.querySelectorAll("[data-act]")].map(b=>b.dataset.act)`);
@@ -127,21 +157,17 @@ if (await page.$("#board .row")) {
 }
 
 // ── 5. 소재 탭 전 버튼
-await page.click('.tab[data-v="ideas"]');
+await tap("탭:ideas", '.tab[data-v="ideas"]');
 await page.waitForTimeout(350);
-await press("지시함 빈 입력 보내기", "#asksend", { wait: 400 });
-await page.fill("#ask", "시뮬 소재");
-await press("지시함 보내기", "#asksend", { wait: 1400 });
-await page.fill("#ask", "https://example.com 이 기사로 카드 만들어줘");
-await press("지시함 링크 보내기", "#asksend", { wait: 1300 });
-await press("소재 수정 열기", "#ideaBody .idea .ib.ed");
-await press("소재 수정 취소", "#ideaBody .idea .iedit [data-ia='cancel']");
-await press("소재 수정 열기2", "#ideaBody .idea .ib.ed");
-await press("소재 수정 저장", "#ideaBody .idea .iedit .sv", { wait: 1300 });
-await press("새 소재 찾아줘", "#askmine", { wait: 1600 });
+/* 지시함(#ask/#asksend/#askmine)은 화면에서 사라진 기능이다 — 검사도 함께 걷는다.
+ * 없는 기능을 계속 두드리면 결함 9건이 매번 뜨고, 그러면 진짜 결함이 그 속에 묻힌다. */
+await press("소재 수정 열기", "#ideaBody .idea .ib.ed", { optional: true });
+await press("소재 수정 취소", "#ideaBody .idea .iedit [data-ia='cancel']", { optional: true });
+await press("소재 수정 열기2", "#ideaBody .idea .ib.ed", { optional: true });
+await press("소재 수정 저장", "#ideaBody .idea .iedit .sv", { wait: 1300, optional: true });
 
 // ── 6. 회사: CEO / 팀 노드 / 원칙 편집
-await page.click('.tab[data-v="company"]');
+await tap("탭:company", '.tab[data-v="company"]');
 await page.waitForTimeout(350);
 await press("CEO 노드", ".onode.ceo", { wait: 500 });
 const teamNodes = await page.evaluate(`document.querySelectorAll(".onode[data-team]").length`);
@@ -158,7 +184,7 @@ await press("업무기준 기록", ".tpanel:not([hidden]) [data-te-save]", { wai
 await press("팀 상세 닫기", ".tpanel:not([hidden]) [data-teamclose]");
 
 // ── 7. 보관함
-await page.click('.tab[data-v="archive"]');
+await tap("탭:archive", '.tab[data-v="archive"]');
 await page.waitForTimeout(350);
 const items = await page.evaluate(`document.querySelectorAll(".folder .fitem").length`);
 if (!items) note("보관함", "항목이 하나도 없음");

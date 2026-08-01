@@ -30,6 +30,11 @@ on:
       - "scripts/smoke-tower.mjs"
       - "scripts/sim-tower.mjs"
       - "scripts/verify-live.mjs"
+      # ⚠️ 아래 셋이 빠져 있어서 **완성본 페이지를 고쳐도 배포가 안 돌았다**(2026-08-01).
+      #    화면을 만드는 스크립트와 화면의 재료(published/)는 전부 여기 있어야 한다.
+      - "scripts/stage-public-cards.mjs"
+      - "scripts/build-archive.mjs"
+      - "published/**"
       - "data/pipeline-state.json"
       - "data/requests.json"
       - "packages/dashboard-static/**"
