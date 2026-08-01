@@ -50,6 +50,8 @@ interface Geo {
   colSkew: { tag: string; col: number; dx: number }[];
   /** 푸터 바로 위 요소와 푸터 사이 간격(px). null = 해당 요소 없음 */
   footerGap: number | null;
+  /** 말줄임으로 잘린 글자 — {sel, text, need, has} */
+  clipped: { sel: string; text: string; need: number; has: number }[];
 }
 interface Rect {
   left: number;
@@ -141,6 +143,12 @@ const MEASURE_JS = `(() => {
   var badge=card.querySelector(".wirit-corner");
   if(badge){
     Array.prototype.forEach.call(card.querySelectorAll(".wirit-title,.wirit-subtitle,.wirit-topcap,.sm-sub,.yc-card,.yc-side"), function(el){
+      /* 글자도 배경도 없는 빈 상자는 겹쳐도 눈에 안 보인다 — 자리만 잡아 두는 껍데기다.
+         2026-07-31: 상단 회색 캡션을 안 쓰기로 하자 .wirit-topcap 이 빈 상자로 남았고,
+         Range 가 잡을 글자가 없어 **상자 전체**로 재는 바람에 뱃지와 74px 겹친 것으로 나왔다.
+         (그림 요소 .yc-card·.yc-side 는 글자가 없어도 보이므로 대상으로 남긴다) */
+      var blank = !(el.textContent||"").trim() && /wirit-(title|subtitle|topcap)|sm-sub/.test(el.className||"");
+      if(blank) return;
       var o=overlapOf(badge,el);
       if(o) collisions.push({a:".wirit-corner",b:name(el),x:o.x,y:o.y});
     });
@@ -209,6 +217,16 @@ const MEASURE_JS = `(() => {
       var dx=Math.max(Math.abs(a.left-b.left), Math.abs(a.right-b.right));
       if(dx>2) colSkew.push({tag:pair[0], col:i+1, dx:Math.round(dx)});
     }
+  });
+  /* ── 잘린 글자(말줄임) ──
+   * 2026-07-31: 표 열 폭을 조정하다 "현대14차(203,204,205,206동)" 이 조용히 "…" 로 잘렸다.
+   * 기존 truncate 검사는 .rt-name 만 봐서 map-rank 의 단지명은 아무도 재지 않았다.
+   * (이 주석 안에서는 역따옴표를 쓰지 않는다 — 이 블록 전체가 템플릿 리터럴이다)
+   * text-overflow:ellipsis 를 쓰는 칸은 **잘렸는지 좌표로** 확인한다 — 눈으로는 그럴듯해 보인다. */
+  var clipped=[];
+  Array.prototype.forEach.call(card.querySelectorAll(".mr-apt,.mr-gu,.m2-seg,.rt-name,.sm-gu"), function(el){
+    if(el.scrollWidth - el.clientWidth > 1)
+      clipped.push({sel:name(el), text:(el.textContent||"").trim().slice(0,24), need:Math.ceil(el.scrollWidth), has:Math.ceil(el.clientWidth)});
   });
   var footer=card.querySelector(".wirit-footer");
   /* 푸터 바로 위 요소와의 간격 — 붙어 있으면 답답해 보인다(오너 반복 지적).
@@ -312,7 +330,7 @@ const MEASURE_JS = `(() => {
     rows:rows, overflow:overflow, collisions:collisions,
     footerTop:footer?footer.getBoundingClientRect().top:null,
     lastRowBottom:(lastRow&&lastRow.name)?lastRow.name.bottom:null,
-    colSkew:colSkew, footerGap:footerGap
+    colSkew:colSkew, footerGap:footerGap, clipped:clipped
   };
 })()`;
 
@@ -385,6 +403,16 @@ function analyze(g: Geo): Finding[] {
 
   /* 1) 머리글 ↔ 데이터 열 어긋남 — 오너가 두 번 지적한 항목이라 error 로 둔다.
    *    고치는 법: 두 grid 의 열 정의를 **같게** 하고, `auto` 열은 고정 폭으로 못박는다. */
+  /* 잘린 글자는 **error**. warn 으로 두면 흘러가고, 흘러가면 카드에 "…" 가 나간다.
+   * 고치는 법은 칸을 넓히거나 글자를 줄이는 것 — 둘 다 5분이면 된다. */
+  (g.clipped || []).forEach((c) =>
+    out.push({
+      level: "error",
+      code: "clipped",
+      msg: `${c.sel} 글자가 잘렸습니다 — "${c.text}" (필요 ${c.need}px · 칸 ${c.has}px). 칸을 넓히거나 글자를 줄이세요`,
+    })
+  );
+
   (g.colSkew || []).forEach((c) =>
     out.push({
       level: "error",

@@ -68,10 +68,12 @@ const lastYm = useMonths.at(-1) ?? "";
 const [bY, bM] = date.split("-").map(Number);
 const gapMonths = lastYm ? (bY - +lastYm.slice(0, 4)) * 12 + (bM - +lastYm.slice(4)) : 99;
 const partial = gapMonths <= 1; // 최신월이 이번 달이거나 지난달 → 신고가 아직 들어오는 중
-const asOfBase = useMonths.length
-  ? `${YEAR}.${+useMonths[0].slice(4)}~${useMonths.at(-1).slice(4)}월`
+// 표기: 2026.01~07월 (월은 두 자리로 0을 채운다 — 한 카드 안에서 자릿수를 통일한다)
+const asOf = useMonths.length
+  ? `${YEAR}.${useMonths[0].slice(4)}~${useMonths.at(-1).slice(4)}월`
   : "최근 6개월";
-const asOf = partial ? `${asOfBase}(${+lastYm.slice(4)}월분 신고 진행 중)` : asOfBase;
+// `partial`(최신월이 아직 신고기한 안) 은 **캡션이 진다** — 카드 출처 줄은 짧게 유지한다(오너 지시).
+if (partial) console.log(`   ⚠ 캡션에 적을 것 — ${+lastYm.slice(4)}월분은 신고기한(계약 후 30일)이 남아 있음`);
 
 // ── 색상(빨강 히트맵) ──
 const C_LO = [255, 224, 217], C_HI = [176, 11, 30];
@@ -129,11 +131,10 @@ const rowsAll = ranked.map(toRow);
 const half = Math.ceil(rowsAll.length / 2); // 13
 const rows1 = rowsAll.slice(0, half), rows2 = rowsAll.slice(half);
 const gus1 = new Set(rows1.map((r) => r.gu)), gus2 = new Set(rows2.map((r) => r.gu));
-const base = {
-  template: "map-rank@1", date, metric, emblem, pyeong: PYEONG,
-  subtitle: `전용 ${metric}㎡(${metric === "59" ? "25평" : "34평"}) 기준 · ${asOfBase} 최고 실거래`,
-  source,
-};
-writeFileSync(join(outDir, `maprank-${metric}-p1.json`), JSON.stringify({ ...base, mapSvg: genMap(gus1), rows: rows1 }, null, 2) + "\n");
-writeFileSync(join(outDir, `maprank-${metric}-p2.json`), JSON.stringify({ ...base, mapSvg: genMap(gus2), rows: rows2 }, null, 2) + "\n");
+// 상단 회색 캡션(subtitle)은 넣지 않는다 — 제목이 "전용면적 59㎡ 최고가 APT"라고 이미 말하고,
+// 기간은 출처 줄에 있다. 같은 말을 두 번 하면 카드 위쪽만 복잡해진다(2026-07-31 오너 기준).
+const base = { template: "map-rank@1", date, metric, emblem, pyeong: PYEONG, source };
+// 1장은 상위 절반, 2장은 하위 절반 — 제목이 그걸 말한다(2026-07-31 오너 문안)
+writeFileSync(join(outDir, `maprank-${metric}-p1.json`), JSON.stringify({ ...base, tier: "중상급지", mapSvg: genMap(gus1), rows: rows1 }, null, 2) + "\n");
+writeFileSync(join(outDir, `maprank-${metric}-p2.json`), JSON.stringify({ ...base, tier: "중하급지", mapSvg: genMap(gus2), rows: rows2 }, null, 2) + "\n");
 console.log(`✅ ${PYEONG}(전용${metric}) 2장 — ${ranked.length}개구 · 1위 ${ranked[0].gu} ${ranked[0].apt} ${eok(mx)}억 · 기간 ${asOf}`);
