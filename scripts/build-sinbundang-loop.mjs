@@ -85,10 +85,10 @@ svg += `</svg>`;
 
 const card = {
   template:"sinbundang-loop@1", date,
-  subtitle:"국토부 실거래가 2026.01~06월 · 전용면적 84㎡ · 최고가 기준",
+  subtitle:"국토부 실거래가 2026.01~07월 · 전용면적 84㎡ · 최고가 기준",
   title:`<span class="ln">신분당선</span> 역세권 34평 APT 시세`,
   svg, cards,
-  source:{ name:"국토부 실거래가 (2026.01~06 최고가)" },
+  source:{ name:"국토부 실거래가" },
 };
 const outDir = join(ROOT, `data/content/${date}`);
 mkdirSync(outDir,{recursive:true});
