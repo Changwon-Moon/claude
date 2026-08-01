@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["template", "title", "svg", "cards"],
+  "properties": {
+    "template": { "type": "string" },
+    "date": { "type": "string" },
+    "subtitle": { "type": "string" },
+    "title": { "type": "string" },
+    "svg": { "type": "string" },
+    "cards": { "type": "array" },
+    "note": { "type": "string" },
+    "source": { "type": "object" }
+  },
+  "additionalProperties": true
+}

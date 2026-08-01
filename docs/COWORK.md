@@ -193,3 +193,26 @@ clone 해서 docs/HANDOFF.md 읽고 doctor 돌려줘. 토큰: <여기에 토큰>
 
 **옮기는 것이 아니라 현관문을 하나 더 다는 일이고, 오늘 그 문이 실제로 열리는 것을 확인했습니다.**
 기준은 저장소가 갖고 있으므로, 오너가 하실 일은 세션 시작 한 줄과 토큰 하나뿐입니다.
+
+---
+
+## §N. 코워크 세션에서 데이터 수집 — "안 된다" 하지 말고 push-트리거 (2026-07-31 오너 지시)
+
+**원칙: 코워크 세션은 국토부·부동산원 등 외부 API 를 직접 못 부른다(망 차단·키는 Secrets). 그리고 GitHub API(workflow_dispatch)도 이 세션에선 403 이다. 하지만 `git push` 는 된다.**
+
+그래서 수집이 필요하면 **"안 된다"고 답하지 말고** 다음을 한다:
+
+1. `data/collect-request.json` 에 수집할 지역·월을 적는다. 형식:
+   ```json
+   { "jobs": [
+       { "region": "seoul",    "gu": "강남구,서초구",                       "months": "202607" },
+       { "region": "gyeonggi", "gu": "성남시분당구,용인시수지구,수원시영통구", "months": "202607" }
+     ], "force": false }
+   ```
+   (구 이름은 `packages/collectors/src/data/lawd-{seoul,gyeonggi}.json` 의 `codes` 키와 정확히 일치해야 한다.)
+2. **push 한다.** `.github/workflows/collect-on-request.yml` 이 이 파일 변경을 감지해 자동으로
+   `molitCli` 를 돌리고 `data/datasets/molit/*.json` 캐시를 커밋한다. (파인그레인드 토큰 push 는 워크플로를 트리거한다 — GITHUB_TOKEN push 와 달리.)
+3. 수집이 끝나면(수 분) **`git pull` 로 새 캐시를 받는다.** Actions 실행 상태 조회는 API 라 막혀 있으니, 상태는 보지 말고 pull 로 결과만 확인한다.
+
+**즉, "이 세션에서 07월 수집 못 한다"는 틀린 답이다.** 정답은 "요청 파일에 적어 push하면 Actions 가 수집한다"이다.
+정기 수집(매월 5일)·수동 dispatch(`molit-collect.yml`)는 그대로 두고, 세션발(發) 요청은 이 push-트리거를 쓴다.

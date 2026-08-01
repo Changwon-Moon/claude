@@ -1,36 +1,41 @@
 {
   "meta": {
-    "title": "신분당선 역세권 대장아파트 (지도 인포그래픽 소재)",
-    "asOf": "2026-07",
-    "verified": false,
-    "verifiedOn": null,
-    "unit": "억원(대표평형 매매 근사치)",
-    "disclaimer": "각 역세권 '종합 대장'은 역근접·인지도·거래량·가격리딩·세대수 5기준 종합 선정. 시세는 실거래가·호가·플랫폼 추정시세가 혼재된 근사치이며 특정 평형·시점 기준. 투자 권유가 아님. 발행 전 국토부 실거래가공개시스템으로 평형·시점 통일 재대조 필요(오보 0).",
-    "selection": "역근접·인지도·거래량(84㎡ 국민평형 위주)·가격리딩·세대수 5기준 종합. 가격 최고가 단지와 종합 대장이 갈리면 종합 대장을 표기.",
+    "title": "신분당선 역세권 34평(84㎡) 국토부 실거래가 — 도보10분·300세대↑ 최고가",
+    "asOf": "2026-06",
+    "verified": true,
+    "verifiedOn": "2026-07-31",
+    "unit": "억원(전용 84㎡ 매매 실거래 최고가, 2026.01~06)",
+    "disclaimer": "선정: 각 역 도보 10분 내 역세권 + 300세대 이상 단지 중 전용 84㎡(±2㎡) 매매 실거래 최고가(2026.01~06). 신고가는 갱신되므로 asOf 표기 필수. 투자 권유 아님.",
     "sources": {
-      "research": "wirit 코워크 세션 웹 리서치 2026-07-31 (호갱노노·리치고·KB부동산·집품·네이트/파이낸셜뉴스 실거래 기사·나무위키 종합)",
-      "line": "신분당선 신사~광교 16개역, 공식 노선색 #D4003B (templates/_shared/metro-lines.json)",
-      "molit": "발행 전 rt.molit.go.kr 실거래 대조 예정 (미이행 → verified:false)"
-    }
+      "molit": "국토교통부 아파트 매매 실거래가 상세자료(getRTMSDataSvcAptTradeDev), data/datasets/molit/ 캐시(2026.01~06). 단지별 전용 84㎡ 최고 실거래.",
+      "select": "역세권(도보10분)·세대수(300↑)는 코워크 세션 에이전트가 호갱노노·리치고·KB·나무위키·집품 등으로 교차확인(2026-07-31).",
+      "line": "신분당선 신사~광교 16개역, 공식 노선색 #D4003B"
+    },
+    "flags": [
+      "강남: 후보(래미안리더스원·서초그랑자이 등)는 서초동 재건축벨트로 최근접이 서초·교대역. 강남역 도보10분 초과 — '강남권 대장'으로 완화 포함(리더스원 38.0).",
+      "신논현: 개나리푸르지오(역삼동 재건축벨트)는 언주역과도 근접, 신논현역 도보 경계값(불확실).",
+      "동천: 동천센트럴자이는 최고가·대단지지만 동천역 도보 약13~15분(마을버스). 엄격 10분 미충족.",
+      "논현·양재시민의숲: 도보10분·300세대↑ 84㎡ 단지 없음 → 역명만.",
+      "07월 미포함: 캐시가 2026.06까지 — 07월 실거래는 Actions 재수집 필요."
+    ]
   },
-  "line": {
-    "name": "신분당선",
-    "color": "#D4003B",
-    "from": "신사",
-    "to": "광교",
-    "stationCount": 16
-  },
-  "note": "지도 카드에는 대표단지 10개만 노선 순서대로 노출. price 는 대표평형(size) 기준 근사치, 억 단위.",
+  "line": { "name": "신분당선", "color": "#D4003B", "from": "신사", "to": "광교", "stationCount": 16 },
+  "note": "price=전용84㎡ 실거래 최고가(억, 2026.01~06). 논현·양재시민의숲은 조건 충족 단지 없어 제외(역명만).",
   "picks": [
-    { "order": 1,  "station": "신논현", "danji": "아크로힐스논현", "households": 368,  "built": 2014, "size": "84㎡", "price": 28, "note": "신논현역 준신축 랜드마크(가격 상징)", "tag": "가격상징" },
-    { "order": 2,  "station": "강남",   "danji": "래미안 리더스원", "households": 1317, "built": 2020, "size": "84㎡", "price": 40, "note": "강남권 최대 신축 대단지·가격리딩", "tag": "대장" },
-    { "order": 3,  "station": "양재",   "danji": "양재우성",       "households": 794,  "built": 1991, "size": "30평", "price": 22, "note": "양재역 권역 최대 대단지·재건축 기대", "tag": "대장" },
-    { "order": 4,  "station": "판교",   "danji": "봇들마을4단지",  "households": 748,  "built": 2009, "size": "84㎡", "price": 22, "note": "판교역·테크노밸리 초역세권, 84㎡ 거래 활발 (최고가는 푸르지오그랑블 43억)", "tag": "대장" },
-    { "order": 5,  "station": "정자",   "danji": "분당 파크뷰",    "households": 1829, "built": 2004, "size": "32평", "price": 25, "note": "분당 최상급 고급 주상복합", "tag": "대장" },
-    { "order": 6,  "station": "미금",   "danji": "무지개마을",     "households": 964,  "built": 1996, "size": "32평", "price": 15, "note": "1기 신도시·학군·재건축 기대", "tag": "대장" },
-    { "order": 7,  "station": "동천",   "danji": "동천센트럴자이", "households": 1057, "built": 2019, "size": "84㎡", "price": 14, "note": "동천역 초역세권 신축, 84㎡ 거래 최다", "tag": "대장" },
-    { "order": 8,  "station": "수지구청", "danji": "e편한세상수지", "households": 1237, "built": 2017, "size": "84㎡", "price": 16, "note": "수지구청역 초역세권·학군", "tag": "대장" },
-    { "order": 9,  "station": "성복",   "danji": "성복역 롯데캐슬 골드타운", "households": 2356, "built": 2019, "size": "84㎡", "price": 18, "note": "롯데몰·백화점 지하직결, 구간 최대 세대수", "tag": "대장" },
-    { "order": 10, "station": "광교중앙", "danji": "광교중흥S클래스", "households": 2231, "built": 2019, "size": "84㎡", "price": 18, "note": "49층 호수조망 랜드마크·세대수 1위 (84㎡ 최고가는 자연앤힐스테이트 20억)", "tag": "대장" }
+    { "order": 1,  "station": "신사",     "danji": "논현신동아파밀리에", "households": 644,  "built": 1997, "size": "84㎡", "price": 23.9, "deal": "2026-04", "note": "신사역 3분·644세대" },
+    { "order": 3,  "station": "신논현",   "danji": "개나리푸르지오",     "households": 332,  "built": 2006, "size": "84㎡", "price": 35.0, "deal": "2026-05", "note": "역삼동 재건축벨트·신논현역 경계(불확실)", "flag": true },
+    { "order": 4,  "station": "강남",     "danji": "래미안 리더스원",   "households": 1317, "built": 2020, "size": "84㎡", "price": 38.0, "deal": "2026-04", "note": "서초동·강남역 도보 완화 포함", "flag": true },
+    { "order": 5,  "station": "양재",     "danji": "서초동 현대아파트", "households": 413,  "built": 1989, "size": "84㎡", "price": 24.5, "deal": "2026-04", "note": "오너 지정(서초동 현대아파트)" },
+    { "order": 6,  "station": "양재시민의숲", "danji": "양재우성",      "households": 794,  "built": 1991, "size": "84㎡", "price": 22.5, "deal": "2026-01", "note": "오너 지정(양재우성)" },
+    { "order": 7,  "station": "청계산입구", "danji": "서초포레스타7단지", "households": 310,  "built": 2013, "size": "84㎡", "price": 19.8, "deal": "2026-01", "note": "역 137m·310세대" },
+    { "order": 8,  "station": "판교",     "danji": "봇들마을7단지",     "households": 585,  "built": 2009, "size": "84㎡", "price": 28.0, "deal": "2026-06", "note": "판교역 7분·585세대" },
+    { "order": 9,  "station": "정자",     "danji": "분당 파크뷰",       "households": 1829, "built": 2004, "size": "84㎡", "price": 26.5, "deal": "2026-04", "note": "정자역 5분·1829세대" },
+    { "order": 10, "station": "미금",     "danji": "청솔마을 계룡",     "households": 492,  "built": 1996, "size": "84㎡", "price": 19.5, "deal": "2026-04", "note": "미금역 5~8분·492세대(무지개마을은 84㎡ 없음)" },
+    { "order": 11, "station": "동천",     "danji": "동천센트럴자이",   "households": 1057, "built": 2019, "size": "84㎡", "price": 14.1, "deal": "2026-06", "note": "동천역 도보 13~15분(엄격 미충족)", "flag": true },
+    { "order": 12, "station": "수지구청", "danji": "신정마을7단지",     "households": 670,  "built": 2000, "size": "84㎡", "price": 14.0, "deal": "2026-04", "note": "오너 지정(신정7단지 상록공무원)" },
+    { "order": 13, "station": "성복",     "danji": "성복역 롯데캐슬 골드타운", "households": 2356, "built": 2019, "size": "84㎡", "price": 17.8, "deal": "2026-06", "note": "성복역 직결·2356세대" },
+    { "order": 14, "station": "상현",     "danji": "광교자이더클래스",   "households": 1035, "built": 2012, "size": "84㎡", "price": 16.0, "deal": "2026-06", "note": "상현역 235m·1035세대" },
+    { "order": 15, "station": "광교중앙", "danji": "자연앤힐스테이트",   "households": 1764, "built": 2012, "size": "84㎡", "price": 20.1, "deal": "2026-06", "note": "광교중앙역 3~5분·1764세대" },
+    { "order": 16, "station": "광교",     "danji": "호반베르디움트라엘", "households": 446, "built": 2017, "size": "84㎡", "price": 10.6, "deal": "2026-04", "note": "오너 지정(광교호반베르디움트라엘)" }
   ]
 }

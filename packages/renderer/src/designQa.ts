@@ -52,6 +52,8 @@ interface Geo {
   footerGap: number | null;
   /** 말줄임으로 잘린 글자 — {sel, text, need, has} */
   clipped: { sel: string; text: string; need: number; has: number }[];
+  /** 우상단 뱃지 아래 제목까지 세로 간격(px). 0~29 = 너무 붙음. null = 해당없음/겹침(별도) */
+  badgeClear: number | null;
 }
 interface Rect {
   left: number;
@@ -141,6 +143,12 @@ const MEASURE_JS = `(() => {
   }
   function name(el){ return "."+String(el.className||el.tagName).split(" ")[0]; }
   var badge=card.querySelector(".wirit-corner");
+  /* ── 뱃지 ↔ 제목 클리어런스(badgeclear) ──
+   * 오너 반복 지적(고질병): 제목이 우상단 로고 뱃지에 **붙어 보인다.** 겹침(overlap)만 재면
+   * "닿기 직전"은 통과한다 — CARD_CHECKLIST 는 "겹치지 않는 것만으론 부족, 세로 30px 이상"이라 못박았는데
+   * 검사는 그 30px 를 안 재고 있었다(2026-07-31 승격). 뱃지와 가로로 겹치는 제목 글자가 뱃지 아래
+   * 30px 안으로 들어오면 잡는다. */
+  var badgeClear=null;
   if(badge){
     Array.prototype.forEach.call(card.querySelectorAll(".wirit-title,.wirit-subtitle,.wirit-topcap,.sm-sub,.yc-card,.yc-side"), function(el){
       /* 글자도 배경도 없는 빈 상자는 겹쳐도 눈에 안 보인다 — 자리만 잡아 두는 껍데기다.
@@ -152,6 +160,13 @@ const MEASURE_JS = `(() => {
       var o=overlapOf(badge,el);
       if(o) collisions.push({a:".wirit-corner",b:name(el),x:o.x,y:o.y});
     });
+    var brb=badge.getBoundingClientRect();
+    var tEl=card.querySelector(".wirit-title");
+    if(tEl){
+      var tr=contentRect(tEl);
+      var xov=Math.min(brb.right,tr.right)-Math.max(brb.left,tr.left);
+      if(xov>1){ var gap=tr.top-brb.bottom; if(gap>=0) badgeClear=Math.round(gap); }
+    }
   }
   /* ── 글자끼리 겹침 ──
    * 뱃지만 검사하면 **카드 안에서 설명 글이 큰 숫자에 깔리는** 불량을 놓친다
@@ -180,14 +195,13 @@ const MEASURE_JS = `(() => {
              /* sinbundang-map — 노선도형 지도 카드(2026-07-31). 새 템플릿을 만들면 글자 요소를
                 여기 등록해야 겹침 검사가 실제로 잰다(빠뜨리면 검사받지 않은 것). */
              ".sbm-stn,.sbm-danji,.sbm-price .v,.sbm-price .sz,.sbm-note," +
-             /* danji-brief — 청약단지 브리핑(2026-08-01). 새 템플릿을 만들면 여기부터 올린다.
-                record-grid 를 만들고 이 목록에 안 올려 카드 전체가 겹침 검사 밖에 있었던 적이 있다
-                (AS팀 지적 2026-07-31) — 검사 목록에서 빠진 요소는 통과한 게 아니라 재지 않은 것이다.
-                (.db-scrim 은 글자가 아닌 그라디언트 판이라 넣지 않는다) */
+             /* danji-brief — 청약단지 브리핑(2026-08-01). */
              ".db-title .ln,.db-credit,.db-fb .w,.db-fb .sub," +
              ".db-nm .n,.db-nm .loc,.db-nm .lgtx," +
              ".db-s .l,.db-s .v,.db-hr span,.db-row span," +
-             ".db-sc .l,.db-sc .d,.db-tnote,.db-note";
+             ".db-sc .l,.db-sc .d,.db-tnote,.db-note," +
+             /* sinbundang-loop — 노선 접이형 정보카드(2026-07-31). */
+             ".slp-stn,.slp-danji,.slp-meta,.slp-priceB,.slp-name";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
   for (var i=0;i<leaves.length;i++) for (var j=i+1;j<leaves.length;j++) {
     var a=leaves[i], b=leaves[j];
@@ -246,7 +260,7 @@ const MEASURE_JS = `(() => {
   if(footer){
     /* .rg-note 를 빠뜨려 record-grid 에서는 이 검사가 아무것도 안 재고 있었다(AS팀 지적 2026-07-31).
        "최하단 문구 여백"은 오너가 두 번 말한 항목인데 새 템플릿에 적용되지 않은 상태였다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note");
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();
@@ -341,7 +355,7 @@ const MEASURE_JS = `(() => {
     rows:rows, overflow:overflow, collisions:collisions,
     footerTop:footer?footer.getBoundingClientRect().top:null,
     lastRowBottom:(lastRow&&lastRow.name)?lastRow.name.bottom:null,
-    colSkew:colSkew, footerGap:footerGap, clipped:clipped
+    colSkew:colSkew, footerGap:footerGap, clipped:clipped, badgeClear:badgeClear
   };
 })()`;
 
@@ -366,6 +380,14 @@ function analyze(g: Geo): Finding[] {
   if (tg !== null && tg !== undefined && tg < 28)
     out.push({ level: "warn", code: "titlegap",
       msg: `제목과 바로 아래 요소의 간격이 ${tg}px 입니다${tpx ? ` (제목 ${tpx}px)` : ""} — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다` });
+
+  /* 0-b2) 뱃지 ↔ 제목 클리어런스 (badgeclear) — 오너 반복 지적한 "제목이 로고에 붙는" 고질병.
+   * error 로 둔다: overlap(badgeclip)은 이미 error 인데, "닿기 직전"만 통과하던 구멍을 막는 것이므로
+   * 같은 급으로 취급한다. 제목 폭을 꽉 채우면 우측이 뱃지 아래로 오므로 세로 30px 는 반드시 띄운다. */
+  const bc = (g as any).badgeClear;
+  if (bc !== null && bc !== undefined && bc < 30)
+    out.push({ level: "error", code: "badgeclear",
+      msg: `제목이 우상단 로고 뱃지 아래 ${bc}px 로 붙어 있습니다 — 세로 30px 이상 띄우세요(제목 블록 위 여백↑ 또는 제목 축소). CARD_CHECKLIST §2` });
 
   /* 0-c) 'AI티' 타일 (오너 지적 2026-07-30 · 2026-07-31 — 두 번째라 검수로 내렸다)
    * 문턱 3개: 하나짜리 강조 상자는 디자인이고, 셋이 나란히 반복되면 UI 카드가 된다.

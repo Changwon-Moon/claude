@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* sinbundang-geomap@1 — 실좌표 노선지도(래스터)를 위릿 카드 프레임에 얹은 지도 카드.
+         지도 자체는 scripts/spike-sinbundang-geomap.py(BARE) 가 데이터셋에서 생성. */
+      .sg-head {
+        padding: 0 4px;
+        margin-top: 4px;
+      }
+      .sg .wirit-title {
+        font-size: 58px;
+        line-height: 1.06;
+        margin: 6px 0 0;
+      }
+      .sg .wirit-title .ln {
+        color: var(--sg-line, #d4003b);
+      }
+      .sg-map {
+        flex: 1;
+        min-height: 0;
+        margin: 20px 0 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+      .sg-map img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+      .sg-note {
+        margin: 0 4px 22px;
+        font-size: 21px;
+        font-weight: 600;
+        color: var(--wirit-gray);
+        line-height: 1.32;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card sg">
+      <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
+      <div class="sg-head"><h1 class="wirit-title">{{{title}}}</h1></div>
+
+      <div class="sg-map"><img src="../_shared/maps/{{map}}" alt="신분당선 노선지도" /></div>
+
+      {{#if note}}<div class="sg-note">{{note}}</div>{{/if}}
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+  </body>
+</html>

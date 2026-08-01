@@ -1,0 +1,78 @@
+name: 실거래 수집 (요청 파일 push 트리거)
+
+# 코워크 세션은 GitHub API(workflow_dispatch)가 403 으로 막혀 있다. 하지만 git push 는 된다.
+# 그래서 세션에서 data/collect-request.json 을 써서 push 하면 이 워크플로가 자동으로 돌아
+# 국토부 실거래를 수집·커밋한다. (오너 지시 2026-07-31: "세션에서 안 된다 하지 말고 자동 수집")
+#
+# 요청 파일 형식(data/collect-request.json):
+#   { "jobs": [
+#       { "region": "seoul",    "gu": "강남구,서초구",                       "months": "202607" },
+#       { "region": "gyeonggi", "gu": "성남시분당구,용인시수지구,수원시영통구", "months": "202607" }
+#     ],
+#     "force": false }
+#
+# MOLIT_API_KEY(공공·무료 인코딩 인증키)는 GitHub Secrets 에 있다. 세션은 이 키에 접근 못 한다.
+
+on:
+  push:
+    paths:
+      - "data/collect-request.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: collect-on-request-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: 파서 셀프테스트
+        run: pnpm --filter @wirit/collectors selftest
+
+      - name: 요청 파일대로 수집
+        env:
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        run: |
+          set -e
+          if [ -z "$MOLIT_API_KEY" ]; then echo "::error::MOLIT_API_KEY 시크릿이 없습니다"; exit 1; fi
+          REQ=data/collect-request.json
+          if [ ! -f "$REQ" ]; then echo "요청 파일 없음 — 건너뜀"; exit 0; fi
+          FORCE=""
+          if [ "$(jq -r '.force // false' "$REQ")" = "true" ]; then FORCE="--force"; fi
+          COUNT=$(jq '.jobs | length' "$REQ")
+          echo "수집 잡 $COUNT 건 $FORCE"
+          for i in $(seq 0 $((COUNT-1))); do
+            REGION=$(jq -r ".jobs[$i].region // \"seoul\"" "$REQ")
+            GU=$(jq -r ".jobs[$i].gu" "$REQ")
+            MONTHS=$(jq -r ".jobs[$i].months" "$REQ")
+            echo "▶ region=$REGION · 구=$GU · 월=$MONTHS"
+            pnpm --filter @wirit/collectors exec tsx src/molitCli.ts \
+              --region "$REGION" --gu "$GU" --months "$MONTHS" \
+              --out "$GITHUB_WORKSPACE/data/datasets/molit" $FORCE
+          done
+
+      - name: 캐시 커밋
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/datasets/molit/*.json
+          if git diff --cached --quiet; then
+            echo "새 실거래 없음(이미 캐시됨)"
+          else
+            git commit -m "실거래(국토부) 자동수집 — 요청 파일 트리거"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
