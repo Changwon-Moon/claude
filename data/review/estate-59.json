@@ -1,15 +1,9 @@
 {
   "label": "estate-59",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 3장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 2장 · 코드 검수만",
   "findings": [],
   "cards": [
-    {
-      "file": "estate-cover-59.json",
-      "deterministic": true,
-      "qaErrors": 0,
-      "findings": []
-    },
     {
       "file": "maprank-59-p1.json",
       "deterministic": true,

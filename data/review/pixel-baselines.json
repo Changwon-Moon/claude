@@ -77,6 +77,16 @@
       "png": "kospi-record-p1.png",
       "md5": "5c242f77c9ce1b86eb26e40a45c4e0be",
       "note": "그래프를 템플릿 스크립트가 SVG 로 직접 그린다. 뱃지 자리는 겹침을 재서 고르므로 시계열이 바뀌면 뱃지 위치가 따라 바뀌고 md5 도 바뀐다 — 정상이다. kr-market-2026.json 을 갱신하면 이 값도 함께 갱신한다."
+    },
+    {
+      "label": "metro-speed",
+      "title": "수도권 지하철 노선·구간별 표정속도",
+      "state": "오너 확정",
+      "at": "2026-08-01",
+      "builder": "metro-speed",
+      "content": "data/content/2026-07-20/metro-2col.json",
+      "png": "metro-2col-p1.png",
+      "md5": "62e94c06f8fae70402862d99f06862d2"
     }
   ]
 }

@@ -38,7 +38,14 @@
         "maprank-84-p2"
       ],
       "caption": "estate-84",
-      "note": "커버 없이 재업로드 (2026-07-31 오너 결정) — 커버 빌더는 builders.json에 남겨둠"
+      "note": "커버 없이 재업로드 (2026-07-31 오너 결정) — 커버 빌더는 builders.json에 남겨둠 / 커버 없이 재업로드 · 2026.01~07월 반영",
+      "state": "오너 확정",
+      "confirmedAt": "2026-08-01",
+      "confirmedMd5": [
+        "maprank-84-p1:88beb58caa77",
+        "maprank-84-p2:a72bd7d12852"
+      ],
+      "pixelPolicy": "정기물 — data/datasets/molit/,data/datasets/molit 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
     },
     {
       "label": "estate-59",
@@ -48,7 +55,14 @@
         "maprank-59-p2"
       ],
       "caption": "estate-59",
-      "note": "커버 없이 재업로드 (2026-07-31 오너 결정) — 커버 빌더는 builders.json에 남겨둠"
+      "note": "커버 없이 재업로드 (2026-07-31 오너 결정) — 커버 빌더는 builders.json에 남겨둠 / 커버 없이 재업로드 · 2026.01~07월 반영",
+      "state": "오너 확정",
+      "confirmedAt": "2026-08-01",
+      "confirmedMd5": [
+        "maprank-59-p1:4014afbaaa8d",
+        "maprank-59-p2:594f39393f8e"
+      ],
+      "pixelPolicy": "정기물 — data/datasets/molit/,data/datasets/molit 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
     },
     {
       "label": "metro-speed",
@@ -57,7 +71,12 @@
         "metro-2col"
       ],
       "caption": "metro-speed",
-      "note": "커버 없이 재업로드 (2026-07-31 오너 결정) — 커버 빌더는 builders.json에 남겨둠"
+      "note": "커버 없이 재업로드 (2026-07-31 오너 결정) — 커버 빌더는 builders.json에 남겨둠 / 커버 없이 재업로드 · 2026.01~07월 반영",
+      "state": "오너 확정",
+      "confirmedAt": "2026-08-01",
+      "confirmedMd5": [
+        "metro-2col:62e94c06f8fa"
+      ]
     },
     {
       "label": "years-to-buy",
