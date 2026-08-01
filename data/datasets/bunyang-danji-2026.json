@@ -151,6 +151,93 @@
         "by": "한국부동산원 청약홈 집계",
         "via": "머니투데이 (2026.4.2)"
       }
+    },
+    {
+      "id": "sangdong-lotte-castle",
+      "kind": "presale",
+      "name": "상동역 롯데캐슬 시그니처",
+      "location": "경기 부천시 원미구 상동",
+      "company": "롯데건설",
+      "logo": "lottecastle.png",
+      "total": 1859,
+      "general": 1859,
+      "generalNote": "조합원·임대 물량이 없는 일반분양 단지. 총 세대수 = 일반분양 세대수다.",
+      "buildings": 7,
+      "topFloor": 49,
+      "underFloor": 8,
+      "areas": [
+        {
+          "m2": 84,
+          "types": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F"
+          ],
+          "units": 1370
+        },
+        {
+          "m2": 113,
+          "types": [
+            "A",
+            "B"
+          ],
+          "units": 308
+        },
+        {
+          "m2": 121,
+          "types": [
+            "-"
+          ],
+          "units": 178
+        },
+        {
+          "m2": 153,
+          "types": [
+            "P"
+          ],
+          "units": 1
+        },
+        {
+          "m2": 187,
+          "types": [
+            "P"
+          ],
+          "units": 1
+        },
+        {
+          "m2": 192,
+          "types": [
+            "P"
+          ],
+          "units": 1
+        }
+      ],
+      "areaNote": "롯데건설 사업개요의 주택형별 세대수를 전용면적대로 묶은 것. 합이 total 과 다르면 빌더가 던진다.",
+      "pyeongDisclosed": false,
+      "priceDisclosed": false,
+      "saleMonth": "2026-08",
+      "moveIn": null,
+      "schedule": {
+        "special": null,
+        "first": null,
+        "announce": null
+      },
+      "nearest": {
+        "line": "7호선",
+        "station": "상동역",
+        "desc": "바로 앞"
+      },
+      "site": "옛 홈플러스 상동점 부지",
+      "highlight": "상동·중동 8년 만의 새 브랜드 대단지",
+      "source": {
+        "name": "롯데건설 사업개요",
+        "via": "한국경제 (2026.6.30) · 뉴시스 (2026.6.30)",
+        "url": "https://www.hankyung.com/article/2026063073421"
+      },
+      "gap": "분양가·청약 일정·입주 예정은 1차 출처(입주자모집공고)를 아직 못 잡았다. 카드에는 '미고지'로 적는다."
     }
   ]
 }
