@@ -201,7 +201,7 @@ const MEASURE_JS = `(() => {
              ".db-s .l,.db-s .v,.db-hr span,.db-row span," +
              ".db-sc .l,.db-sc .d,.db-tnote,.db-note," +
              /* sinbundang-loop — 노선 접이형 정보카드(2026-07-31). */
-             ".slp-stn,.slp-danji,.slp-meta,.slp-priceB,.slp-name";
+             ".slp-stn,.slp-danji,.slp-meta,.slp-priceB,.slp-name,.slp-gu,.slp-top";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
   for (var i=0;i<leaves.length;i++) for (var j=i+1;j<leaves.length;j++) {
     var a=leaves[i], b=leaves[j];
