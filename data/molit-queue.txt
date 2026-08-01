@@ -1,0 +1,4 @@
+# 국토부 실거래 수집 요청 대기열 — 이 파일이 바뀌면 molit-collect.yml 이 돈다.
+# 한 줄 형식: region=seoul gu=all months=202607 force=false
+# (작업 세션은 GitHub API 가 막혀 Run workflow 버튼을 못 누른다 — 푸시가 유일한 손잡이)
+region=seoul gu=all months=202607 force=false

@@ -4,6 +4,14 @@ name: 실거래 수집 (국토부)
 # 1차 출처(오보 0). MOLIT_API_KEY(공공·무료 인코딩 인증키) 필요 → GitHub Secrets.
 # 대장 엔진·카드 빌더가 이 캐시(data/datasets/molit/*.json)를 재사용.
 on:
+  # 대기열 파일이 바뀌면 실행한다 — kr-market·asset-fetch·geocode 와 같은 방식.
+  # 작업 세션은 GitHub API 가 프록시에서 막혀 있어 workflow_dispatch 버튼을 누를 수 없다
+  # (2026-07-31 확인: api.github.com 이 403 "GitHub access to this repository is not enabled").
+  # 푸시는 되므로, 파일 한 줄을 밀어 넣는 것이 세션이 수집을 시작할 수 있는 **유일한 손잡이**다.
+  # 한 줄 형식:  region=seoul gu=all months=202607 force=false
+  push:
+    paths:
+      - "data/molit-queue.txt"
   workflow_dispatch:
     inputs:
       region:
@@ -51,9 +59,21 @@ jobs:
           MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
         run: |
           if [ -z "$MOLIT_API_KEY" ]; then echo "MOLIT_API_KEY 시크릿이 없습니다"; exit 1; fi
-          GU="${{ github.event.inputs.gu }}"; GU="${GU:-강남구}"
-          REGION="${{ github.event.inputs.region }}"; REGION="${REGION:-seoul}"
+          GU="${{ github.event.inputs.gu }}"
+          REGION="${{ github.event.inputs.region }}"
           MONTHS="${{ github.event.inputs.months }}"
+          FORCE_IN="${{ github.event.inputs.force }}"
+          # 대기열 푸시로 들어온 실행은 입력칸이 비어 있다 → 파일 마지막 줄에서 읽는다.
+          # (주석 #·빈 줄 무시. 값이 없는 항목은 아래 기본값으로 떨어진다)
+          if [ -f data/molit-queue.txt ]; then
+            LINE=$(grep -v '^[[:space:]]*#' data/molit-queue.txt | grep -v '^[[:space:]]*$' | tail -1)
+            echo "대기열 마지막 줄: $LINE"
+            [ -z "$REGION" ] && REGION=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^region=//p')
+            [ -z "$GU" ]     && GU=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^gu=//p')
+            [ -z "$MONTHS" ] && MONTHS=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^months=//p')
+            [ -z "$FORCE_IN" ] && FORCE_IN=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^force=//p')
+          fi
+          GU="${GU:-강남구}"; REGION="${REGION:-seoul}"
           if [ -z "$MONTHS" ]; then
             MONTHS=""
             for i in 1 2 3 4 5 6; do
@@ -62,7 +82,7 @@ jobs:
             MONTHS="${MONTHS#,}"
           fi
           FORCE=""
-          if [ "${{ github.event.inputs.force }}" = "true" ]; then FORCE="--force"; fi
+          if [ "$FORCE_IN" = "true" ]; then FORCE="--force"; fi
           echo "수집: region=$REGION · 구=$GU · 월=$MONTHS $FORCE"
           pnpm --filter @wirit/collectors exec tsx src/molitCli.ts \
             --region "$REGION" --gu "$GU" --months "$MONTHS" \
@@ -76,7 +96,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "변경 없음"
           else
-            git commit -m "실거래(국토부) 수집 ${{ github.event.inputs.gu }}"
+            git commit -m "실거래(국토부) 수집 — $REGION / $GU / $MONTHS"
             # --autostash: 수집기가 남긴 부산물(data/raw 등) 때문에 rebase가 거부되어
             # **커밋해 놓고 push를 못 한 채 죽는** 일이 있었다(2026-07-26 소재 발굴).
             git pull --rebase --autostash origin ${GITHUB_REF_NAME}

@@ -25,7 +25,9 @@ const emblem = readFileSync(join(ROOT, "data/assets/seoul/seoul-logo.svg"), "utf
   .replace(/\senable-background="[^"]*"/i, "")
   .trim();
 
-// 최근 6개월만 사용
+// 집계 창 = **그해 1월부터 최신월까지 누적**(2026-07-31 오너 결정).
+// 이전에는 `slice(-6)` 로 항상 최근 6개월이었다 — 7월이 들어오면 1월이 밀려나면서
+// 구에 따라 최고가가 **내려가는** 일이 생긴다. "올해 가장 비싼 거래"라는 말과도 어긋난다.
 const molitDir = join(ROOT, "data/datasets/molit");
 // ⚠️ **서울만** 읽는다(법정동코드 11xxx). 지역 구분 없이 읽으면 나중에 다른 지역
 //    실거래를 수집하는 순간 이 카드가 조용히 오염된다 — 실제로 그랬다:
@@ -33,11 +35,12 @@ const molitDir = join(ROOT, "data/datasets/molit");
 //    제목이 "서울 아파트"인데 경기가 들어가면 그건 오보다.
 const files = readdirSync(molitDir).filter((f) => /^11\d{3}-\d{6}\.json$/.test(f));
 const yms = [...new Set(files.map((f) => f.match(/-(\d{6})\.json$/)?.[1]).filter(Boolean))].sort();
-const use6 = yms.slice(-6);
+const YEAR = yms.at(-1)?.slice(0, 4) ?? "";
+const useMonths = yms.filter((m) => m.startsWith(YEAR));
 const byGu = {};
 for (const f of files) {
   const ym = f.match(/-(\d{6})\.json$/)?.[1];
-  if (!use6.includes(ym)) continue;
+  if (!useMonths.includes(ym)) continue;
   const d = JSON.parse(readFileSync(join(molitDir, f), "utf8"));
   (byGu[d.meta.gu] ??= []).push(...d.trades);
 }
@@ -57,7 +60,18 @@ const ranked = Object.entries(guTop).map(([gu, v]) => ({ gu, ...v })).sort((a, b
 const prices = ranked.map((r) => r.price);
 const mn = Math.min(...prices), mx = Math.max(...prices);
 const eok = (v) => (Number.isInteger(v) ? v.toFixed(0) : v.toFixed(1));
-const asOf = use6.length ? `${use6[0].slice(0,4)}.${+use6[0].slice(4)}~${use6.at(-1).slice(4)}월` : "최근 6개월";
+/* 표기: 2026.1~07월 기준. 최신월이 **아직 신고 기간 안**이면 그 사실을 카드에 적는다 —
+ * 실거래 신고기한은 계약 후 30일이라, 갓 지난 달은 절반쯤만 들어와 있다.
+ * 밝히지 않으면 나중에 신고가 채워져 숫자가 바뀔 때 앞 카드가 틀린 것처럼 보인다.
+ * 판정은 눈이 아니라 빌드 날짜(인자)와 최신월의 차이로 한다 — 결정적으로 재현된다. */
+const lastYm = useMonths.at(-1) ?? "";
+const [bY, bM] = date.split("-").map(Number);
+const gapMonths = lastYm ? (bY - +lastYm.slice(0, 4)) * 12 + (bM - +lastYm.slice(4)) : 99;
+const partial = gapMonths <= 1; // 최신월이 이번 달이거나 지난달 → 신고가 아직 들어오는 중
+const asOfBase = useMonths.length
+  ? `${YEAR}.${+useMonths[0].slice(4)}~${useMonths.at(-1).slice(4)}월`
+  : "최근 6개월";
+const asOf = partial ? `${asOfBase}(${+lastYm.slice(4)}월분 신고 진행 중)` : asOfBase;
 
 // ── 색상(빨강 히트맵) ──
 const C_LO = [255, 224, 217], C_HI = [176, 11, 30];
@@ -105,7 +119,10 @@ function genMap(activeGus) {
 // ── 콘텐츠 2장 ──
 const outDir = join(ROOT, `data/content/${date}`);
 mkdirSync(outDir, { recursive: true });
-const source = { name: "국토부 실거래가 · 서울시 행정경계", asOf };
+// 출처는 **수치의 출처**만 적는다(2026-07-31 오너 지시로 '서울시 행정경계' 제거).
+// 행정경계는 지도를 그리는 도형일 뿐 표의 숫자가 나온 곳이 아니다 — 함께 적으면
+// 독자가 "가격도 서울시 자료인가" 하고 헷갈린다. 도형 출처는 geojson 쪽에 남아 있다.
+const source = { name: "국토부 실거래가", asOf };
 const MEDALS = ["🥇", "🥈", "🥉"];
 const toRow = (r, i) => ({ rank: i + 1, gu: r.gu, apt: r.apt, price: eok(r.price), cls: i < 3 ? `r${i + 1}` : "", medal: MEDALS[i] || "" });
 const rowsAll = ranked.map(toRow);
@@ -114,7 +131,7 @@ const rows1 = rowsAll.slice(0, half), rows2 = rowsAll.slice(half);
 const gus1 = new Set(rows1.map((r) => r.gu)), gus2 = new Set(rows2.map((r) => r.gu));
 const base = {
   template: "map-rank@1", date, metric, emblem, pyeong: PYEONG,
-  subtitle: `전용 ${metric}㎡(${metric === "59" ? "25평" : "34평"}) 기준 · 최근 6개월 최고 실거래`,
+  subtitle: `전용 ${metric}㎡(${metric === "59" ? "25평" : "34평"}) 기준 · ${asOfBase} 최고 실거래`,
   source,
 };
 writeFileSync(join(outDir, `maprank-${metric}-p1.json`), JSON.stringify({ ...base, mapSvg: genMap(gus1), rows: rows1 }, null, 2) + "\n");
