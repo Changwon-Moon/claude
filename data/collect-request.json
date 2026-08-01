@@ -1,8 +1,8 @@
 {
-  "_": "국토부 실거래 수집 요청 — 이 파일을 고쳐 push 하면 collect-on-request.yml 가 자동 수집한다. 4호선 경기 남부(과천·안양동안·군포) 2026년 7월.",
+  "_": "국토부 실거래 수집 요청 — 이 파일을 고쳐 push 하면 collect-on-request.yml 가 자동 수집한다. 5호선 하남(미사 등) 2026년 7월.",
   "requestedAt": "2026-08-01",
   "jobs": [
-    { "region": "gyeonggi", "gu": "과천시,안양시동안구,군포시", "months": "202607" }
+    { "region": "gyeonggi", "gu": "하남시", "months": "202607" }
   ],
   "force": false
 }
