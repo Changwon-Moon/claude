@@ -142,6 +142,7 @@ writeJson("data/review/pixel-baselines.json", baselines);
 
 console.log("\n══════ 내보내기 전 검사(§0) ══════");
 for (const [name, cmd, args] of [
+  ["캡션 고정 서명", "node", ["scripts/apply-signature.mjs", "--check"]],
   ["전 카드 재생성·검수", "node", ["scripts/rebuild-cards.mjs"]],
   ["관제탑 화면 생성", "node", ["scripts/build-tower-site.mjs"]],
   ["관제탑 스모크", "node", ["scripts/smoke-tower.mjs"]],

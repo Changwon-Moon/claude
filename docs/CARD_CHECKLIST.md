@@ -19,6 +19,7 @@
 node scripts/rebuild-cards.mjs      # 전 카드 재생성 + 자동 디자인 검수
 node scripts/smoke-tower.mjs        # 관제탑 스모크
 pnpm --filter @wirit/renderer audit-head   # 머리 규격 전수 표(뱃지·위 여백·흰 테두리)
+node scripts/apply-signature.mjs    # 캡션 고정 서명(위릿노트 3줄)을 제자리에
 # 발행본을 건드렸을 수 있으면 md5 회귀 — 아래 §5
 ```
 
@@ -83,6 +84,16 @@ node scripts/confirm.mjs estate-84 estate-59 metro-speed --note "메모"
       한 칸만 크게 비우면 "왼쪽으로 치우쳤다"고 읽힌다(07-31 오너 지적).
       좌우 여백·열 간격을 함께 키워 퍼뜨린다. 단, **가장 긴 값이 안 잘리는 선**까지만 —
       잘리면 `clipped` 가 error 로 막는다(칸을 넓히거나 글자를 줄인다).
+
+### 캡션 고정 서명 — 위릿노트 3줄 (08-01 오너)
+- [ ] **계정 소개 3줄이 모든 캡션 맨 아래, 해시태그 바로 위에 있는가.**
+      원천은 `data/review/captions/_signature.txt` **한 곳**이고 `scripts/apply-signature.mjs`
+      가 뿌린다(멱등 — 다시 돌려도 안전). 캡션마다 손으로 적으면 한 글자씩 달라지고
+      문구를 바꿀 때 열 몇 개를 다 고쳐야 한다.
+- [ ] **해시태그는 항상 마지막 줄이다.** 서명이 태그 아래로 가면 인스타 '더보기' 접힘에
+      묻혀 안 보인다. 순서: 본문 → 출처 → 서명 → 해시태그.
+- [ ] **해시태그는 5개까지**(`CAPTION_MAX_TAGS`). 더 늘리려면 기준을 먼저 바꾸고
+      캡션을 고친다 — 캡션만 늘리면 검수가 error 로 막는다.
 
 ### 상단 회색 캡션(`subtitle`) — 안 쓰는 것이 기본 (07-31 오너)
 - [ ] **제목과 출처로 충분하면 상단 캡션을 넣지 않는다.** 제목이 "전용면적 59㎡ 최고가 APT"라고
