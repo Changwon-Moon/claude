@@ -21,6 +21,20 @@ const XFER = {
   "판교":[["경강","#003DA5",0]], "정자":[["분당","#F5C400",0,1]], "미금":[["분당","#F5C400",0,1]],
 };
 const shortDanji = (s)=> s.replace(/^\S*역\s+/, "");
+// 줄바꿈은 단어(동네·건설사·브랜드) 단위. 띄어쓰기 없는 이름엔 경계에 ZWSP(​)를 넣어
+// keep-all 과 함께 "그 지점에서만" 끊기게 한다(음절 중간 끊김 방지). 공백 있는 이름은 keep-all 이 공백에서 끊음.
+const WRAP = {
+  "논현신동아파밀리에": "논현신동아​파밀리에",
+  "개나리푸르지오": "개나리​푸르지오",
+  "서초포레스타7단지": "서초포레스타​7단지",
+  "봇들마을7단지": "봇들마을​7단지",
+  "동천센트럴자이": "동천​센트럴자이",
+  "신정마을7단지": "신정마을​7단지",
+  "광교자이더클래스": "광교자이​더클래스",
+  "자연앤힐스테이트": "자연앤​힐스테이트",
+  "호반베르디움트라엘": "호반베르디움​트라엘",
+};
+const wrapDanji = (s)=> WRAP[s] || s;
 // 행정구역(구) 매핑 + 구별 색
 const GU = {신사:"강남구",논현:"강남구",신논현:"강남구",강남:"서초구",양재:"서초구","양재시민의숲":"서초구",청계산입구:"서초구",
   판교:"분당구",정자:"분당구",미금:"분당구",동천:"수지구",수지구청:"수지구",성복:"수지구",상현:"수지구",광교중앙:"영통구",광교:"영통구"};
@@ -29,7 +43,7 @@ const GUC = {"강남구":"#2E6BFF","서초구":"#0E9AA7","분당구":"#12A150","
 const _pv = Object.values(price).map(p=>p.price); const PMIN=Math.min(..._pv), PMAX=Math.max(..._pv);
 const heat = (pr)=> (0.02 + (pr-PMIN)/(PMAX-PMIN)*0.13).toFixed(3); // 낮음 연분홍 → 높음 진분홍
 
-const W=936, H=940, RAILL=334, RAILR=602, R_TOP=110, R_BOT=866;
+const W=936, H=962, RAILL=368, RAILR=568, R_TOP=110, R_BOT=898; // 노선 폭 좁힘·세로 확장(모바일 가독)
 const ys = Array.from({length:8},(_,i)=> R_TOP + i*((R_BOT-R_TOP)/7));
 
 function badge(cx, cy, code, col, isNum, dark){
@@ -77,16 +91,15 @@ for (let i=0;i<8;i++){
         svg += badge(bx,y,code,col,isNum,dark);
       }
     }
-    const boxW=298; // 레일(역 원)에서 카드를 더 떨어뜨려 시세가 점에 안 붙게
+    const boxW=352; // 노선 좁아진 만큼 카드 폭 확대(모바일 가독)
     const styleL = side==="L" ? `left:6px;width:${boxW}px;` : `left:${W-6-boxW}px;width:${boxW}px;`;
     const align = side==="L" ? "r" : "l";
-    if (rep){ const {danji,price:pr,households,built}=price[name];
-      const meta = `${households.toLocaleString()}세대 · ${built}년식`;
+    if (rep){ const {danji,price:pr}=price[name];
       const gu=GU[name], guc=GUC[gu], top=(pr>=PMAX-0.001);
       const bg=`background:rgba(212,0,59,${heat(pr)});`;
-      cards.push({style:`${styleL}top:${Math.round(y-42)}px;${bg}`, align, rep:true, name, danji:shortDanji(danji), pr:pr.toFixed(1), meta, gu, guc, top});
+      cards.push({style:`${styleL}top:${Math.round(y-44)}px;${bg}`, align, rep:true, name, danji:wrapDanji(shortDanji(danji)), pr:pr.toFixed(1), gu, guc, top});
     } else {
-      cards.push({style:`${styleL}top:${Math.round(y-14)}px;`, align, rep:false, name, gu:GU[name], guc:GUC[GU[name]]});
+      cards.push({style:`${styleL}top:${Math.round(y-16)}px;`, align, rep:false, name, gu:GU[name], guc:GUC[GU[name]]});
     }
   }
 }
