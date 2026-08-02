@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* streak-line@1 — 두 국면의 '누적 상승률 궤적'을 직선 두 개로 비교한다.
+         직선 = 평균 상승 속도(기울기), 끝점 = 누적 상승률. 현재(빨강)는 더 짧은데 더 가파르게
+         올라 더 높이 닿는다 — "짧은데 더 올랐다"를 기울기와 높이로 동시에 보여준다.
+         ── 왜 직선인가: '주간 매매가격지수'의 주별 시계열 원자료가 저장소에 없다(오보 0).
+            주별 등락을 지어내지 않고, 확정된 '평균 주간 상승률(=기울기)'과 '누적 상승률(=끝점)'
+            만으로 정직하게 긋는다. 그래서 캡션에 '직선 = 평균 상승 속도'를 밝힌다.
+         ── 좌표는 빌더가 계산한다(템플릿은 숫자를 만들지 않는다). 크롬은 record-grid 규격 상속. */
+      .sl { display: flex; flex-direction: column; }
+      .sl-badge {
+        font-family: var(--font-num); font-size: 34px; font-weight: 900;
+        color: var(--wirit-gray); letter-spacing: 0.005em;
+      }
+      .sl-head { padding: 0; margin: 40px 0 0; }
+      .sl .wirit-title {
+        font-size: 76px; line-height: 1.04; text-align: left; white-space: nowrap;
+        margin: 0; letter-spacing: -0.04em;
+      }
+      .sl .wirit-title .hi { color: var(--wirit-red); }
+
+      .sl-chart { flex: 1 1 auto; display: flex; align-items: center; margin: 40px 0 0; }
+      .sl-svg { display: block; width: 100%; height: auto; }
+      .sl-grid { stroke: var(--wirit-ink-06); stroke-width: 1.5; }
+      .sl-axis { stroke: #c9cdd4; stroke-width: 2.5; }
+      .sl-yl { font-family: var(--font-num); font-size: 22px; font-weight: 700; fill: #9aa3af; }
+      .sl-xl { font-family: var(--font-num); font-size: 26px; font-weight: 900; }
+      .sl-vl { font-family: var(--font-num); font-size: 33px; font-weight: 900; letter-spacing: -0.02em; }
+      .sl-lg { font-family: var(--font-num); font-size: 26px; font-weight: 800; }
+      .sl-cap { font-family: var(--font-num); font-size: 22px; font-weight: 600; fill: #9aa3af; }
+
+      .sl-note {
+        flex: 0 0 auto; margin: 26px 2px 24px; font-size: 24px; font-weight: 700;
+        color: var(--wirit-gray); letter-spacing: -0.045em; line-height: 1.35;
+      }
+      .sl-note b { color: var(--wirit-red); font-weight: 900; }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card sl">
+      <div class="wirit-topcap">{{#if badge}}<span class="sl-badge">{{badge}}</span>{{/if}}</div>
+      <div class="sl-head"><h1 class="wirit-title">{{{title}}}</h1></div>
+
+      <div class="sl-chart">
+        <svg class="sl-svg" viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          {{#each chart.grid}}<line class="sl-grid" x1="{{x1}}" y1="{{y}}" x2="{{x2}}" y2="{{y}}" />{{/each}}
+          {{#each chart.areas}}<polygon points="{{points}}" fill="{{fill}}" opacity="{{opacity}}" />{{/each}}
+          {{#if chart.base}}<line class="sl-axis" x1="{{chart.base.x1}}" y1="{{chart.base.y}}" x2="{{chart.base.x2}}" y2="{{chart.base.y}}" />{{/if}}
+          {{#each chart.vmarks}}<line x1="{{x}}" y1="{{y1}}" x2="{{x}}" y2="{{y2}}" stroke="{{color}}" stroke-width="2" stroke-dasharray="6 6" opacity="0.5" />{{/each}}
+          {{#each chart.ylabels}}<text class="sl-yl" x="{{x}}" y="{{y}}" text-anchor="end">{{text}}</text>{{/each}}
+          {{#each chart.lines}}<line x1="{{x1}}" y1="{{y1}}" x2="{{x2}}" y2="{{y2}}" stroke="{{color}}" stroke-width="{{width}}" stroke-linecap="round" />{{/each}}
+          {{#each chart.dots}}<circle cx="{{x}}" cy="{{y}}" r="{{r}}" fill="{{color}}" />{{/each}}
+          {{#each chart.vlabels}}<text class="sl-vl" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="{{anchor}}">{{text}}</text>{{/each}}
+          {{#each chart.xlabels}}<text class="sl-xl" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="middle">{{text}}</text>{{/each}}
+          {{#each chart.legend}}<line x1="{{sx1}}" y1="{{sy}}" x2="{{sx2}}" y2="{{sy}}" stroke="{{color}}" stroke-width="7" stroke-linecap="round" /><text class="sl-lg" x="{{tx}}" y="{{ty}}" fill="{{fill}}">{{text}}</text>{{/each}}
+          {{#if chart.caption}}<text class="sl-cap" x="{{chart.caption.x}}" y="{{chart.caption.y}}" text-anchor="end">{{chart.caption.text}}</text>{{/if}}
+        </svg>
+      </div>
+
+      {{#if note}}<div class="sl-note">{{{note}}}</div>{{/if}}
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <script>
+      window.__wiritFit = function () {
+        var el = document.querySelector(".sl .wirit-title");
+        if (!el) return;
+        var box = el.parentElement, bs = getComputedStyle(box);
+        var avail = box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
+        var lo = 34, hi = 112, best = 34;
+        for (var i = 0; i < 24; i++) {
+          var mid = (lo + hi) / 2;
+          el.style.fontSize = mid + "px";
+          if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+    </script>
+  </body>
+</html>
