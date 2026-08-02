@@ -1,18 +1,16 @@
 /**
- * 서울 아파트 주간 매매가격 '연속 상승' — 누적 상승률 궤적 비교. streak-line@1 (꺾은선/직선).
- * 제목: "서울 아파트 77주 연속 상승" ('77주 연속 상승'만 레드)
+ * 서울 아파트 주간 매매가격 누적 상승률 — 현재 국면 vs 역대 최장. streak-line@1.
+ * 제목: "서울 아파트, 상승폭은 이미 文정부의 2배" ('文정부의 2배' 레드)
+ * 부제: "최장 기간 연속 상승까지 단 8주 남았다" ('8주' 레드)
  *
- * ── 무엇을 말하는 카드인가
- * 두 국면의 '누적 상승률 궤적'을 직선으로 겹쳐 그린다.
- *   · 현재(빨강): 77주 만에 +15.55% — 더 짧은데 더 가파르고 더 높이 닿는다
- *   · 역대 최장(회색): 85주 동안 +7.71%
- * 기울기(=평균 주간 상승률)와 끝 높이(=누적)로 "짧은데 더 올랐다"를 한 번에 보여준다.
+ * ── 강조: 이번 상승기는 이전과 다르다
+ * 현재(빨강)는 더 짧은 기간(77주)에 더 가파르게 올라 역대 최장기(85주)의 누적을 2배 넘게 앞선다.
  *
- * ── 왜 직선인가 (오보 0)
- * '주간 매매가격지수'의 주별 시계열 원자료가 저장소에 아직 없다. 주별 등락을 지어내지 않고,
- * 확정된 '평균 주간 상승률(=기울기)'과 '누적 상승률(=끝점)'만으로 정직하게 긋는다.
- * 그래서 캡션에 '직선 = 평균 상승 속도'를 밝힌다. 좌표는 아래에서 코드가 계산한다.
- * ⚠️ 데이터셋 verified=false — R-ONE 주간 매매지수 수집·재계산 대조 전에는 발행하지 않는다.
+ * ── 데이터 (오보 0)
+ * data/datasets/mae-streak-2026-08.json 하나만 읽는다. 끝점·기간·시작값은 첨부 부동산원 인포그래픽.
+ * '주간 매매가격지수' 주별 시계열이 저장소에 없어(세션은 reb.or.kr 네트워크 차단·키는 Actions Secret)
+ * 주별 굴곡은 그리지 않는다 — 직선은 시작→끝 평균 궤적, 끝점만 실측이다. verified=false.
+ * 좌표는 아래에서 코드가 계산한다(템플릿은 숫자를 만들지 않는다).
  *
  * 실행: node scripts/build-mae-streak.mjs
  */
@@ -24,72 +22,85 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const date = process.argv[2] || "2026-08-01";
 const d = JSON.parse(readFileSync(join(ROOT, "data/datasets/mae-streak-2026-08.json"), "utf8"));
 const cur = d.current, rec = d.record;
-
 const r1 = (v) => Math.round(v * 10) / 10;
 
 /* ── 정합성 검사 ── */
 if (!(cur.weeks < rec.weeks)) throw new Error(`현재 ${cur.weeks}주가 역대 최장 ${rec.weeks}주보다 짧아야 한다`);
-if (cur.rankByWeeks !== 2) throw new Error(`rankByWeeks 는 2여야 한다 — 지금 ${cur.rankByWeeks}`);
+if (cur.rankByWeeks !== 2) throw new Error(`rankByWeeks 는 2여야 한다`);
 const gap = rec.weeks - cur.weeks;
 if (gap <= 0) throw new Error(`gap 이 0 이하다(${gap})`);
 if (!(cur.cumPct > rec.cumPct)) throw new Error(`현재 누적이 역대 최장기 누적보다 커야 한다`);
-const speed = r1(cur.avgWeeklyPct / rec.avgWeeklyPct);
+const ratio = r1(cur.cumPct / rec.cumPct);          // 상승폭(누적) 배수 → 제목 '2배'
+if (ratio < 1.9) throw new Error(`누적 배수 ${ratio} 가 2배 미만이다 — 제목을 고친다`);
 
-/* ── 좌표계 (뷰박스 1000×590) ── */
+/* ── 좌표계 (뷰박스 1000×850) ── */
 const RED = "#e5484d", SLATE = "#5b6b7f", INK = "#141821", MUTE = "#9aa3af";
-const AXIS_X = 70, RIGHT = 980, TOP = 60, BASE = 520;
-const XMAX = 90, YMAX = 17;                                  // 주 0~90 · % 0~17 (여백 포함)
-const xw = (w) => r1(AXIS_X + (w / XMAX) * (RIGHT - AXIS_X));
+const AXIS_X = 95, RIGHT = 968, TOP = 64, BASE = 782;
+const WMAX = 90, YMAX = 17;
+const xw = (w) => r1(AXIS_X + ((w - 1) / (WMAX - 1)) * (RIGHT - AXIS_X));  // 1주차 = 좌축
 const yp = (p) => r1(BASE - (p / YMAX) * (BASE - TOP));
 
 const curX = xw(cur.weeks), curY = yp(cur.cumPct);
 const recX = xw(rec.weeks), recY = yp(rec.cumPct);
+const x1 = AXIS_X, y0 = yp(0);
 
 const grid = [5, 10, 15].map((p) => ({ x1: AXIS_X, x2: RIGHT, y: yp(p) }));
-const ylabels = [0, 5, 10, 15].map((p) => ({ x: AXIS_X - 12, y: yp(p) + 7, text: `${p}%` }));
+const ylabels = [0, 5, 10, 15].map((p) => ({ x: AXIS_X - 16, y: yp(p) + 9, text: `${p}` }));
+const yunit = { x: AXIS_X - 16, y: TOP - 8, text: "(%)" };
 
 const areas = [
-  { points: `${AXIS_X},${BASE} ${recX},${recY} ${recX},${BASE}`, fill: SLATE, opacity: 0.06 },
-  { points: `${AXIS_X},${BASE} ${curX},${curY} ${curX},${BASE}`, fill: RED, opacity: 0.08 },
+  { points: `${x1},${y0} ${recX},${recY} ${recX},${y0}`, fill: SLATE, opacity: 0.06 },
+  { points: `${x1},${y0} ${curX},${curY} ${curX},${y0}`, fill: RED, opacity: 0.09 },
 ];
 const lines = [
-  { x1: AXIS_X, y1: BASE, x2: recX, y2: recY, color: SLATE, width: 6 },
-  { x1: AXIS_X, y1: BASE, x2: curX, y2: curY, color: RED, width: 7 },
+  { x1, y1: y0, x2: recX, y2: recY, color: SLATE, width: 7 },
+  { x1, y1: y0, x2: curX, y2: curY, color: RED, width: 8 },
 ];
 const dots = [
-  { x: recX, y: recY, color: SLATE, r: 10 },
-  { x: curX, y: curY, color: RED, r: 11 },
+  { x: recX, y: recY, color: SLATE, r: 13 },
+  { x: curX, y: curY, color: RED, r: 14 },
 ];
 const vmarks = [
-  { x: recX, y1: recY, y2: BASE, color: SLATE },
-  { x: curX, y1: curY, y2: BASE, color: RED },
+  { x: recX, y1: recY, y2: y0, color: SLATE },
+  { x: curX, y1: curY, y2: y0, color: RED },
 ];
 const vlabels = [
-  { x: curX, y: curY - 22, text: `+${cur.cumPct}%`, fill: RED, anchor: "middle" },
-  { x: recX - 16, y: recY - 16, text: `+${rec.cumPct}%`, fill: SLATE, anchor: "end" },
+  { x: curX, y: curY - 30, text: `+${cur.cumPct.toFixed(2)}%`, fill: RED, anchor: "middle" },
+  { x: recX - 18, y: recY - 20, text: `+${rec.cumPct.toFixed(2)}%`, fill: SLATE, anchor: "end" },
 ];
 const xlabels = [
-  { x: AXIS_X, y: BASE + 42, text: "0", fill: MUTE },
-  { x: curX, y: BASE + 42, text: `${cur.weeks}주`, fill: RED },
-  { x: recX, y: BASE + 42, text: `${rec.weeks}주`, fill: SLATE },
+  { x: AXIS_X, y: BASE + 52, text: "1주차", fill: MUTE },
+  { x: curX, y: BASE + 52, text: `${cur.weeks}주`, fill: RED },
+  { x: recX, y: BASE + 52, text: `${rec.weeks}주`, fill: SLATE },
 ];
+
+/* 77주 → 85주 = gap주 화살표 (역대 최장까지 남은 거리) */
+const ay = BASE - 26, midX = r1((curX + recX) / 2);
+const arrow = {
+  x1: curX, x2: recX, y: ay, color: RED,
+  heads: [
+    { points: `${curX},${ay} ${curX + 15},${ay - 7} ${curX + 15},${ay + 7}`, fill: RED },
+    { points: `${recX},${ay} ${recX - 15},${ay - 7} ${recX - 15},${ay + 7}`, fill: RED },
+  ],
+  lx: midX, ly: ay - 16, text: `${gap}주`,
+};
+
 const legend = [
-  { sx1: 104, sx2: 148, sy: 100, color: RED, tx: 160, ty: 109, text: "현재 상승기", fill: INK },
-  { sx1: 104, sx2: 148, sy: 142, color: SLATE, tx: 160, ty: 151, text: "역대 최장 (2020~22)", fill: INK },
+  { sx1: 120, sx2: 182, sy: 172, color: RED, tx: 200, ty: 164, text: cur.label, fill: INK, sub: cur.periodLabel, sty: 206 },
+  { sx1: 120, sx2: 182, sy: 262, color: SLATE, tx: 200, ty: 254, text: rec.label, fill: INK, sub: rec.periodLabel, sty: 296 },
 ];
 
 const card = {
   template: "streak-line@1",
   date,
   badge: date.replace(/-/g, ".").slice(2),
-  title: `서울 아파트 <span class="hi">${cur.weeks}주 연속 상승</span>`,
+  title: `서울 아파트, 상승폭은 이미<br><span class="hi">文정부의 ${ratio.toFixed(0)}배</span>`,
+  subtitle: `최장 기간 연속 상승까지 단 <span class="hi">${gap}주</span> 남았다`,
   chart: {
-    vb: "0 0 1000 590",
-    base: { y: BASE, x1: AXIS_X, x2: RIGHT },
-    grid, areas, ylabels, vmarks, lines, dots, vlabels, xlabels, legend,
-    caption: { x: RIGHT, y: 44, text: "직선 = 평균 상승 속도" },
+    vb: "0 0 1000 850",
+    base: { y: y0, x1: AXIS_X, x2: RIGHT },
+    grid, areas, ylabels, yunit, vmarks, lines, dots, vlabels, xlabels, arrow, legend,
   },
-  note: `누적 상승률 궤적 — 현재는 <b>${gap}주</b> 짧은데(역대 ${cur.rankByWeeks}위), 오름폭은 이미 <b>${speed.toFixed(1)}배</b>.`,
   source: { name: d.meta.source, asOf: d.meta.asOf },
 };
 
@@ -97,7 +108,6 @@ const outDir = join(ROOT, "data/content", date);
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "mae-streak.json"), JSON.stringify(card, null, 2) + "\n", "utf8");
 
-console.log(`mae-streak (streak-line) — 직선 ${lines.length}개`);
-console.log(`   현재 (${cur.weeks}주, +${cur.cumPct}%) 기울기>${''} 역대 (${rec.weeks}주, +${rec.cumPct}%) · gap ${gap} · 속도 ${speed.toFixed(1)}배`);
-console.log(`   ⚠ 데이터셋 verified=${d.verified} — R-ONE 주간 매매지수 대조 전 발행 금지`);
+console.log(`mae-streak (streak-line) — 현재 ${cur.weeks}주 +${cur.cumPct}% vs 역대 ${rec.weeks}주 +${rec.cumPct}% · 누적 ${ratio}배 · gap ${gap}주`);
+console.log(`   ⚠ verified=${d.verified} — R-ONE 주간 매매지수 수집(Actions)·재현 대조 전 발행 금지`);
 console.log(`   → data/content/${date}/mae-streak.json`);
