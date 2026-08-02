@@ -186,6 +186,9 @@ const MEASURE_JS = `(() => {
              /* record-grid — 새 템플릿을 만들고 여기 추가하지 않아 이 카드의 글자가
                 통째로 겹침 검사 밖에 있었다(AS팀 지적 2026-07-31). 템플릿을 만들면 여기도 만진다. */
              ".rg-r .claim,.rg-r .fig .v,.rg-r .fig .p,.rg-note,.rg-lead .lb,.rg-lead .dt,.rg-lead .vl," +
+             /* streak-bars — 막대 비교 카드의 하단 문구. SVG 막대·값 라벨은 그래프라 Range 대상이
+                아니다(record-grid spark 라벨과 같은 취급). HTML 글자는 이 문구 하나뿐이라 여기 올린다. */
+             ".sb-note," +
              /* map-rank·metro-2col — 2026-07-31. 두 템플릿의 글자가 통째로 검사 밖에 있었다.
                 제목을 칸에 꽉 차게 키우는 변경을 하면서 올린다 — 커진 제목이 평형 뱃지·지도와
                 부딪히는지는 사람 눈이 아니라 좌표가 판정해야 한다.
@@ -260,7 +263,7 @@ const MEASURE_JS = `(() => {
   if(footer){
     /* .rg-note 를 빠뜨려 record-grid 에서는 이 검사가 아무것도 안 재고 있었다(AS팀 지적 2026-07-31).
        "최하단 문구 여백"은 오너가 두 번 말한 항목인데 새 템플릿에 적용되지 않은 상태였다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note");
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();

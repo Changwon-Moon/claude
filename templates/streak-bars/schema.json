@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "streak-bars@1",
+  "description": "두 국면(현재 vs 역대 최장)을 두 지표(연속 주수 · 누적 상승률) 막대로 비교한다. 시계열 원자료 없이 확정된 수치만으로 그리는 정직한 비교 그래프. 막대 좌표는 빌더가 계산한다(템플릿은 숫자 계산 없음).",
+  "type": "object",
+  "required": ["template", "title", "chart", "source"],
+  "additionalProperties": true,
+  "properties": {
+    "template": { "type": "string", "pattern": "^streak-bars@\\d+$" },
+    "date": { "type": "string" },
+    "badge": { "type": "string", "maxLength": 16 },
+    "title": { "type": "string", "description": "한 줄. <span class=\"hi\">…</span> 로 레드 강조." },
+    "note": { "type": "string", "maxLength": 80 },
+    "chart": {
+      "type": "object",
+      "required": ["vb", "bars", "ptitles", "vlabels", "xlabels"],
+      "properties": {
+        "vb": { "type": "string" },
+        "baseline": {
+          "type": "object",
+          "required": ["y", "x1", "x2"],
+          "properties": { "y": { "type": "number" }, "x1": { "type": "number" }, "x2": { "type": "number" } }
+        },
+        "bars": {
+          "type": "array", "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["x", "y", "w", "h", "fill"],
+            "properties": {
+              "x": { "type": "number" }, "y": { "type": "number" },
+              "w": { "type": "number" }, "h": { "type": "number" },
+              "fill": { "type": "string" }
+            }
+          }
+        },
+        "ptitles": { "type": "array", "items": { "type": "object", "required": ["x", "y", "text"] } },
+        "vlabels": { "type": "array", "items": { "type": "object", "required": ["x", "y", "text", "fill"] } },
+        "xlabels": { "type": "array", "items": { "type": "object", "required": ["x", "y", "text"] } },
+        "xsubs":   { "type": "array", "items": { "type": "object", "required": ["x", "y", "text"] } }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["name"],
+      "properties": { "name": { "type": "string" }, "asOf": { "type": "string" } }
+    }
+  }
+}
