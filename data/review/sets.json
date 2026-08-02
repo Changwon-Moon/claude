@@ -161,6 +161,86 @@
       "confirmedMd5": [
         "sinbundang-loop:acdaf3493e6c"
       ]
+    },
+    {
+      "label": "line2-loop",
+      "title": "2호선 역세권 34평 APT 시세 (2026.01~07)",
+      "cards": [
+        "line2-loop"
+      ],
+      "caption": "line2-loop",
+      "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
+      "state": "시안"
+    },
+    {
+      "label": "line3-loop",
+      "title": "3호선 역세권 34평 APT 시세 (2026.01~07)",
+      "cards": [
+        "line3-loop"
+      ],
+      "caption": "line3-loop",
+      "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
+      "state": "시안"
+    },
+    {
+      "label": "line4-loop",
+      "title": "4호선 역세권 34평 APT 시세 (2026.01~07)",
+      "cards": [
+        "line4-loop"
+      ],
+      "caption": "line4-loop",
+      "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
+      "state": "시안"
+    },
+    {
+      "label": "line5-loop",
+      "title": "5호선 역세권 34평 APT 시세 (2026.01~07)",
+      "cards": [
+        "line5-loop"
+      ],
+      "caption": "line5-loop",
+      "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
+      "state": "시안"
+    },
+    {
+      "label": "line6-loop",
+      "title": "6호선 역세권 34평 APT 시세 (2026.01~07)",
+      "cards": [
+        "line6-loop"
+      ],
+      "caption": "line6-loop",
+      "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
+      "state": "시안"
+    },
+    {
+      "label": "line7-loop",
+      "title": "7호선 역세권 34평 APT 시세 (2026.01~07)",
+      "cards": [
+        "line7-loop"
+      ],
+      "caption": "line7-loop",
+      "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
+      "state": "시안"
+    },
+    {
+      "label": "line8-loop",
+      "title": "8호선 역세권 34평 APT 시세 (2026.01~07)",
+      "cards": [
+        "line8-loop"
+      ],
+      "caption": "line8-loop",
+      "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
+      "state": "시안"
+    },
+    {
+      "label": "line9-loop",
+      "title": "9호선 역세권 34평 APT 시세 (2026.01~07)",
+      "cards": [
+        "line9-loop"
+      ],
+      "caption": "line9-loop",
+      "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
+      "state": "시안"
     }
   ]
 }

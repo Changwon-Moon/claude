@@ -1,118 +1,27 @@
-/**
- * 신분당선 — 노선 2열 접이(U자) + 환승뱃지 + 편집형 정보(비-AI, 종이·괘선). 1장 카드.
- * 수치는 data/datasets/sinbundang-daejang-2026.json 에서 코드가 읽는다(오보 0).
- * 실행: node scripts/build-sinbundang-loop.mjs [date]
- */
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
-import { join, dirname } from "node:path";
+/** 신분당선 — 공용 렌더러 사용. 수치는 data/datasets/sinbundang-daejang-2026.json (오보 0). */
+import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-
+import { join } from "node:path";
+import { renderLineCard, EXP } from "./lib/wirit-line.mjs";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const date = process.argv[2] || "2026-07-31";
-const ds = JSON.parse(readFileSync(join(ROOT, "data/datasets/sinbundang-daejang-2026.json"), "utf8"));
-const price = {}; for (const p of ds.picks) price[p.station] = { danji: p.danji, price: p.price, households: p.households, built: p.built };
-
-const ORDER = ["신사","논현","신논현","강남","양재","양재시민의숲","청계산입구","판교",
-               "정자","미금","동천","수지구청","성복","상현","광교중앙","광교"];
-// 환승노선: [표시라벨, 색, 숫자여부, 어두운글씨(1=검정 — 밝은 배경 대비 확보)]
-const XFER = {
-  "신사":[["3","#E8690C",1]], "논현":[["7","#747F00",1]], "신논현":[["9","#6B6440",1]],
-  "강남":[["2","#00A84D",1]], "양재":[["3","#E8690C",1]],
-  "판교":[["경강","#003DA5",0]], "정자":[["분당","#F5C400",0,1]], "미금":[["분당","#F5C400",0,1]],
-};
-const shortDanji = (s)=> s.replace(/^\S*역\s+/, "");
-// 줄바꿈은 단어(동네·건설사·브랜드) 단위. 띄어쓰기 없는 이름엔 경계에 ZWSP(​)를 넣어
-// keep-all 과 함께 "그 지점에서만" 끊기게 한다(음절 중간 끊김 방지). 공백 있는 이름은 keep-all 이 공백에서 끊음.
-const WRAP = {
-  "논현신동아파밀리에": "논현신동아​파밀리에",
-  "개나리푸르지오": "개나리​푸르지오",
-  "서초포레스타7단지": "서초포레스타​7단지",
-  "봇들마을7단지": "봇들마을​7단지",
-  "동천센트럴자이": "동천​센트럴자이",
-  "신정마을7단지": "신정마을​7단지",
-  "광교자이더클래스": "광교자이​더클래스",
-  "자연앤힐스테이트": "자연앤​힐스테이트",
-  "호반베르디움트라엘": "호반베르디움​트라엘",
-};
-const wrapDanji = (s)=> WRAP[s] || s;
-// 행정구역(구) 매핑 + 구별 색
-const GU = {신사:"강남구",논현:"강남구",신논현:"강남구",강남:"서초구",양재:"서초구","양재시민의숲":"서초구",청계산입구:"서초구",
-  판교:"분당구",정자:"분당구",미금:"분당구",동천:"수지구",수지구청:"수지구",성복:"수지구",상현:"수지구",광교중앙:"영통구",광교:"영통구"};
-const GUC = {"강남구":"#2E6BFF","서초구":"#0E9AA7","분당구":"#12A150","수지구":"#D9871A","영통구":"#8B5CF6"};
-// 가격 히트맵 범위
-const _pv = Object.values(price).map(p=>p.price); const PMIN=Math.min(..._pv), PMAX=Math.max(..._pv);
-const heat = (pr)=> (0.02 + (pr-PMIN)/(PMAX-PMIN)*0.13).toFixed(3); // 낮음 연분홍 → 높음 진분홍
-
-const W=936, H=962, RAILL=368, RAILR=568, R_TOP=110, R_BOT=898; // 노선 폭 좁힘·세로 확장(모바일 가독)
-const ys = Array.from({length:8},(_,i)=> R_TOP + i*((R_BOT-R_TOP)/7));
-
-function badge(cx, cy, code, col, isNum, dark){
-  const tc = dark ? "#141821" : "#fff";
-  if (isNum){
-    return `<circle cx="${cx}" cy="${cy}" r="19" fill="${col}"/>`
-         + `<text x="${cx}" y="${cy+8}" text-anchor="middle" fill="${tc}" font-family="Pretendard" font-weight="800" font-size="24">${code}</text>`;
-  }
-  const w = code.length*22+22;
-  return `<rect x="${cx-w/2}" y="${cy-19}" width="${w}" height="38" rx="10" fill="${col}"/>`
-       + `<text x="${cx}" y="${cy+8}" text-anchor="middle" fill="${tc}" font-family="Pretendard" font-weight="800" font-size="22">${code}</text>`;
-}
-function dot(cx,cy,rep){
-  return rep
-   ? `<circle cx="${cx}" cy="${cy}" r="18" fill="#fff" stroke="#D4003B" stroke-width="7"/>`
-   : `<circle cx="${cx}" cy="${cy}" r="11" fill="#D4003B"/>`;
-}
-
-const RAD=48; // 하단 자연스러운 라운드 코너 반경
-let svg = `<svg class="slp-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
-svg += `<line x1="${RAILL}" y1="${R_TOP}" x2="${RAILL}" y2="${R_BOT}" stroke="#D4003B" stroke-width="15" stroke-linecap="round"/>`;
-svg += `<line x1="${RAILR}" y1="${R_TOP}" x2="${RAILR}" y2="${R_BOT}" stroke="#D4003B" stroke-width="15" stroke-linecap="round"/>`;
-// 하단 U턴 — 둥근 코너 + 짧은 수평(판교~정자 자연스럽게 꺾임)
-svg += `<path d="M${RAILL},${R_BOT} Q${RAILL},${R_BOT+RAD} ${RAILL+RAD},${R_BOT+RAD} L${RAILR-RAD},${R_BOT+RAD} Q${RAILR},${R_BOT+RAD} ${RAILR},${R_BOT}" stroke="#D4003B" stroke-width="15" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
-// 종점 캡(신분당선) — 빨강 바탕·흰 글씨 — 신사/광교
-for (const cx of [RAILL,RAILR]){
-  svg += `<rect x="${cx-68}" y="${R_TOP-102}" width="136" height="42" rx="21" fill="#D4003B"/>`;
-  svg += `<text x="${cx}" y="${R_TOP-74}" text-anchor="middle" fill="#fff" font-family="Pretendard" font-weight="800" font-size="23">신분당선</text>`;
-  svg += `<line x1="${cx}" y1="${R_TOP-60}" x2="${cx}" y2="${R_TOP}" stroke="#D4003B" stroke-width="15"/>`;
-}
-
-const cards=[];
-for (let i=0;i<8;i++){
-  const y=ys[i];
-  for (const [name,cx,side] of [[ORDER[i],RAILL,"L"],[ORDER[15-i],RAILR,"R"]]){
-    const rep=!!price[name];
-    svg += dot(cx,y,rep);
-    // 환승뱃지 — 안쪽(센터 채널). 노선과 겹치지 않게 뱃지 크기만큼 여백 두고 배치
-    const xf = XFER[name];
-    if (xf){
-      for (const [code,col,isNum,dark] of xf){
-        const half = isNum ? 19 : (code.length*22+22)/2;
-        const off = 28 + half; // 레일 가장자리(7.5)에서 ≈20px 이상 띄움
-        const bx = side==="L" ? cx+off : cx-off;
-        svg += badge(bx,y,code,col,isNum,dark);
-      }
-    }
-    const boxW=352; // 노선 좁아진 만큼 카드 폭 확대(모바일 가독)
-    const styleL = side==="L" ? `left:6px;width:${boxW}px;` : `left:${W-6-boxW}px;width:${boxW}px;`;
-    const align = side==="L" ? "r" : "l";
-    if (rep){ const {danji,price:pr}=price[name];
-      const gu=GU[name], guc=GUC[gu], top=(pr>=PMAX-0.001);
-      const bg=`background:rgba(212,0,59,${heat(pr)});`;
-      cards.push({style:`${styleL}top:${Math.round(y-44)}px;${bg}`, align, rep:true, name, danji:wrapDanji(shortDanji(danji)), pr:pr.toFixed(1), gu, guc, top});
-    } else {
-      cards.push({style:`${styleL}top:${Math.round(y-16)}px;`, align, rep:false, name, gu:GU[name], guc:GUC[GU[name]]});
-    }
-  }
-}
-svg += `</svg>`;
-
-const card = {
-  template:"sinbundang-loop@1", date,
-  subtitle:"국토부 실거래가 2026.01~07월 · 전용면적 84㎡ · 최고가 기준",
-  title:`<span class="ln">신분당선</span> 역세권 34평 APT 시세`,
-  svg, cards,
-  source:{ name:"국토부 실거래가" },
-};
-const outDir = join(ROOT, `data/content/${date}`);
-mkdirSync(outDir,{recursive:true});
-writeFileSync(join(outDir,"sinbundang-loop.json"), JSON.stringify(card,null,2)+"\n");
-console.log(`✅ 접이형(편집형) 카드 → data/content/${date}/sinbundang-loop.json (카드 ${cards.length})`);
+const N=(c)=>[c,{ "1":"#0D3692","2":"#00A84D","3":"#EF7C1C","4":"#00A5DE","5":"#8936A8","6":"#CD7C2F","7":"#747F00","8":"#E6186C","9":"#C8A415" }[c],1, c==="9"?1:0];
+renderLineCard({
+  root: ROOT, date, dsFile: "data/datasets/sinbundang-daejang-2026.json", template: "sinbundang-loop@1",
+  form: "caps", capName: "신분당선", color: "#D4003B",
+  subtitle: "국토부 실거래가 2026.01~07월 · 전용면적 84㎡ · 최고가 기준",
+  title: `<span class="ln">신분당선</span> 역세권 34평 APT 시세`,
+  XFER: {
+    "신사":[N("3")], "논현":[N("7")], "신논현":[N("9")], "강남":[N("2")],
+    "양재":[N("3"), EXP.gtxc], "판교":[["경강","#003DA5",0,0], EXP.wolpan], "정자":[["분당","#F5C400",0,1]],
+    "미금":[["분당","#F5C400",0,1]],
+  },
+  DISP: {
+    "신사":"논현신동아​파밀리에","신논현":"개나리​푸르지오","강남":"래미안 리더스원","양재":"서초동 현대아파트",
+    "양재시민의숲":"양재우성","청계산입구":"서초포레스타​7단지","판교":"봇들마을​7단지","정자":"분당 파크뷰",
+    "미금":"청솔마을 계룡","동천":"동천​센트럴자이","수지구청":"신정마을​7단지","성복":"롯데캐슬 골드타운",
+    "상현":"광교자이​더클래스","광교중앙":"자연앤​힐스테이트","광교":"호반베르디움​트라엘",
+  },
+  GUC: {"강남구":"#2E6BFF","서초구":"#0E9AA7","분당구":"#12A150","수지구":"#D9871A","영통구":"#8B5CF6"},
+  nameOnly: {"논현":"강남구"},
+});

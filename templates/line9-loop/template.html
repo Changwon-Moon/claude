@@ -4,39 +4,32 @@
     <meta charset="utf-8" />
     <!--WIRIT_SHARED_CSS-->
     <style>
-      /* sinbundang-loop@1 — 노선 2열 접이(U자) + 환승뱃지 + 편집형(역명/단지/세대·년식 3줄 + 측면 시세). */
+      /* line9-loop@1 — 4호선 U자(종점 캡) + 환승뱃지 + 편집형(역명/단지 + 측면 시세). */
       .slp-head { padding: 0 2px; margin-top: 34px; }
       .slp .wirit-title { font-size: 72px; line-height: 1.04; margin: 0; white-space: nowrap; }
-      .slp .wirit-title .ln { color: #d4003b; }
+      .slp .wirit-title .ln { color: #A8890F; }
       .slp-stage { position: relative; width: 100%; height: 962px; margin: 30px 0 0; }
       .slp-svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
 
       .slp-card { position: absolute; z-index: 2; display: flex; align-items: center; gap: 14px; }
       .slp-card.r { flex-direction: row; justify-content: space-between; }
       .slp-card.l { flex-direction: row-reverse; justify-content: space-between; }
-      /* 단지 카드 음영은 시세 히트맵(빌더가 inline background 로 농도 지정) */
-      .slp-card.rb { border-radius: 13px; padding: 6px 7px; }
-      /* 이름만 역: 라벨을 레일(역) 쪽으로 붙인다 */
+      .slp-card.rb { border-radius: 13px; padding: 3px 7px; }
       .slp-card.no { justify-content: flex-end; }
 
-      /* 텍스트 블록: 역명 / 단지 / (세대·년식) — 레일 쪽 붉은 괘선 */
       .slp-txt { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-      .slp-card.r .slp-txt { align-items: flex-start; text-align: left; border-left: 4px solid #d4003b; padding-left: 13px; }
-      .slp-card.l .slp-txt { align-items: flex-end; text-align: right; border-right: 4px solid #d4003b; padding-right: 13px; }
+      .slp-card.r .slp-txt { align-items: flex-start; text-align: left; border-left: 4px solid #C8A415; padding-left: 13px; }
+      .slp-card.l .slp-txt { align-items: flex-end; text-align: right; border-right: 4px solid #C8A415; padding-right: 13px; }
       .slp-stnrow { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 2px; flex-wrap: nowrap; }
-      .slp-stn { font-size: 24px; font-weight: 800; color: #d4003b; letter-spacing: -0.01em; line-height: 1.05; white-space: nowrap; }
-      /* 행정구역(구) 칩 */
+      .slp-stn { font-size: 24px; font-weight: 800; color: #8A6D0F; letter-spacing: -0.01em; line-height: 1.05; white-space: nowrap; }
       .slp-gu { font-size: 14px; font-weight: 800; color: #141821; padding: 2px 7px; border-radius: 6px; letter-spacing: -0.02em; line-height: 1.25; white-space: nowrap; flex: 0 0 auto; }
-      /* 최고가 강조 칩 */
-      .slp-top { font-size: 14px; font-weight: 800; color: #fff; background: #d4003b; padding: 2px 7px; border-radius: 6px; line-height: 1.25; white-space: nowrap; flex: 0 0 auto; }
-      /* 단지명 — 크게, 필요시 두 줄 */
-      /* 줄바꿈은 단어(동네·건설사·브랜드) 단위 — keep-all + 빌더가 넣는 ​(단어 경계)에서만 끊는다. 음절 중간 금지. */
+      .slp-top { font-size: 14px; font-weight: 800; color: #fff; background: #8A6D0F; padding: 2px 7px; border-radius: 6px; line-height: 1.25; white-space: nowrap; flex: 0 0 auto; }
+      /* 단지명 — 크게, 필요시 두 줄. 줄바꿈은 단어 단위(keep-all + 빌더 ZWSP). 2줄 높이 확보로 큰 가격 겹침 방지. */
       .slp-danji { font-size: 29px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.045em; line-height: 1.08;
-        word-break: keep-all; overflow-wrap: normal;
+        word-break: keep-all; overflow-wrap: normal; min-height: 69px;
         display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; max-width: 200px; }
-      /* 측면 시세 — 크게 */
-      .slp-priceB { font-family: var(--font-num); font-size: 46px; font-weight: 900; color: var(--wirit-ink); line-height: 1; white-space: nowrap; flex: 0 0 auto; font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
-      .slp-priceB.top { color: #d4003b; }
+      .slp-priceB { font-family: var(--font-num); font-size: 40px; font-weight: 900; color: var(--wirit-ink); line-height: 1; white-space: nowrap; flex: 0 0 auto; font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+      .slp-priceB.top { color: #8A6D0F; }
       .slp-card.r .slp-priceB { margin-right: 6px; }
       .slp-card.l .slp-priceB { margin-left: 6px; }
       .slp-priceB .u { font-size: 24px; font-weight: 800; color: #7a8494; margin-left: 2px; }
@@ -73,7 +66,6 @@
     </div>
 
     <script>
-      /* 제목은 항상 폭을 꽉 채운다(fitTitle). */
       window.__wiritFit = function () {
         var el = document.querySelector(".slp .wirit-title");
         if (!el) return;

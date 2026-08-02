@@ -141,6 +141,62 @@
       "args": [
         "2026-07-31"
       ]
+    },
+    {
+      "label": "line2-loop",
+      "cmd": "scripts/build-line2-loop.mjs",
+      "args": [
+        "2026-07-31"
+      ]
+    },
+    {
+      "label": "line3-loop",
+      "cmd": "scripts/build-line3-loop.mjs",
+      "args": [
+        "2026-07-31"
+      ]
+    },
+    {
+      "label": "line4-loop",
+      "cmd": "scripts/build-line4-loop.mjs",
+      "args": [
+        "2026-07-31"
+      ]
+    },
+    {
+      "label": "line5-loop",
+      "cmd": "scripts/build-line5-loop.mjs",
+      "args": [
+        "2026-07-31"
+      ]
+    },
+    {
+      "label": "line6-loop",
+      "cmd": "scripts/build-line6-loop.mjs",
+      "args": [
+        "2026-07-31"
+      ]
+    },
+    {
+      "label": "line7-loop",
+      "cmd": "scripts/build-line7-loop.mjs",
+      "args": [
+        "2026-07-31"
+      ]
+    },
+    {
+      "label": "line8-loop",
+      "cmd": "scripts/build-line8-loop.mjs",
+      "args": [
+        "2026-07-31"
+      ]
+    },
+    {
+      "label": "line9-loop",
+      "cmd": "scripts/build-line9-loop.mjs",
+      "args": [
+        "2026-07-31"
+      ]
     }
   ]
 }
