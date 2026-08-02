@@ -4,38 +4,42 @@
     <meta charset="utf-8" />
     <!--WIRIT_SHARED_CSS-->
     <style>
-      /* streak-line@1 — 두 국면의 '누적 상승률 궤적'을 직선 두 개로 비교한다.
-         직선 = 평균 상승 속도(기울기), 끝점 = 누적 상승률. 현재(빨강)는 더 짧은데 더 가파르게
-         올라 더 높이 닿는다 — "짧은데 더 올랐다"를 기울기와 높이로 동시에 보여준다.
-         ── 왜 직선인가: '주간 매매가격지수'의 주별 시계열 원자료가 저장소에 없다(오보 0).
-            주별 등락을 지어내지 않고, 확정된 '평균 주간 상승률(=기울기)'과 '누적 상승률(=끝점)'
-            만으로 정직하게 긋는다. 그래서 캡션에 '직선 = 평균 상승 속도'를 밝힌다.
-         ── 좌표는 빌더가 계산한다(템플릿은 숫자를 만들지 않는다). 크롬은 record-grid 규격 상속. */
+      /* streak-line@1 — 두 국면의 누적 상승률을 실제 주간 지수 곡선으로 비교한다.
+         수치·곡선은 빌더가 원자료(부동산원 주간 매매지수)에서 계산(오보 0). 크롬은 record-grid 규격 상속. */
       .sl { display: flex; flex-direction: column; }
       .sl-badge {
-        font-family: var(--font-num); font-size: 34px; font-weight: 900;
-        color: var(--wirit-gray); letter-spacing: 0.005em;
+        font-family: var(--font-num); font-size: 31px; font-weight: 800;
+        color: var(--wirit-gray); letter-spacing: -0.01em;
       }
-      .sl-head { padding: 0; margin: 40px 0 0; }
-      .sl .wirit-title {
-        font-size: 76px; line-height: 1.04; text-align: left; white-space: nowrap;
-        margin: 0; letter-spacing: -0.04em;
+      .sl-head { padding: 0; margin: 34px 0 0; }
+      /* 제목 두 줄 — 각 줄(.tl)을 카드 폭에 꽉 차게 개별 확대해 좌우 여백을 맞춘다(빡빡). */
+      .sl .wirit-title { margin: 0; }
+      .sl .wirit-title .tl {
+        display: block; white-space: nowrap; font-family: var(--font-title);
+        font-weight: 900; line-height: 1.12; letter-spacing: -0.045em; color: var(--wirit-ink);
       }
+      .sl .wirit-title .tl + .tl { margin-top: 6px; }
       .sl .wirit-title .hi { color: var(--wirit-red); }
 
-      .sl-chart { flex: 1 1 auto; display: flex; align-items: center; margin: 40px 0 0; }
+      .sl-chart { flex: 0 0 auto; display: flex; align-items: center; margin: 30px 0 0; }
+      /* 하단 문구를 그래프와 푸터 사이 남은 공간의 정중앙에 둔다 */
+      .sl-notewrap { flex: 1 1 auto; display: flex; align-items: center; justify-content: center; }
       .sl-svg { display: block; width: 100%; height: auto; }
-      .sl-grid { stroke: var(--wirit-ink-06); stroke-width: 1.5; }
+      .sl-grid { stroke: var(--wirit-ink-06); stroke-width: 1.6; }
       .sl-axis { stroke: #c9cdd4; stroke-width: 2.5; }
-      .sl-yl { font-family: var(--font-num); font-size: 22px; font-weight: 700; fill: #9aa3af; }
-      .sl-xl { font-family: var(--font-num); font-size: 26px; font-weight: 900; }
-      .sl-vl { font-family: var(--font-num); font-size: 33px; font-weight: 900; letter-spacing: -0.02em; }
-      .sl-lg { font-family: var(--font-num); font-size: 26px; font-weight: 800; }
-      .sl-cap { font-family: var(--font-num); font-size: 22px; font-weight: 600; fill: #9aa3af; }
+      .sl-yl { font-family: var(--font-num); font-size: 32px; font-weight: 700; fill: #9aa3af; }
+      .sl-unit { font-family: var(--font-num); font-size: 30px; font-weight: 700; fill: #9aa3af; }
+      .sl-xl { font-family: var(--font-num); font-size: 40px; font-weight: 900; }
+      .sl-vl { font-family: var(--font-num); font-size: 54px; font-weight: 900; letter-spacing: -0.02em; }
+      .sl-lg { font-family: var(--font-num); font-size: 40px; font-weight: 800; }
+      .sl-lgs { font-family: var(--font-num); font-size: 31px; font-weight: 600; }
+      .sl-arw { font-family: var(--font-num); font-size: 40px; font-weight: 900; }
 
+      /* 그래프 아래·푸터 위 — 가운데 정렬 큰 마무리 문구(제목보다 조금 작게). */
       .sl-note {
-        flex: 0 0 auto; margin: 26px 2px 24px; font-size: 24px; font-weight: 700;
-        color: var(--wirit-gray); letter-spacing: -0.045em; line-height: 1.35;
+        margin: 0; text-align: center; font-family: var(--font-title);
+        font-size: 50px; font-weight: 900; color: var(--wirit-ink);
+        letter-spacing: -0.05em; line-height: 1.2; white-space: nowrap;
       }
       .sl-note b { color: var(--wirit-red); font-weight: 900; }
     </style>
@@ -47,21 +51,32 @@
 
       <div class="sl-chart">
         <svg class="sl-svg" viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          {{#if chart.bgImage}}<image href="{{chart.bgImage.href}}" x="{{chart.bgImage.x}}" y="{{chart.bgImage.y}}" width="{{chart.bgImage.w}}" height="{{chart.bgImage.h}}" opacity="{{chart.bgImage.opacity}}" preserveAspectRatio="xMidYMid meet" />{{/if}}
+          {{#if chart.wm}}<text x="{{chart.wm.x}}" y="{{chart.wm.y}}" font-size="{{chart.wm.size}}" fill="{{chart.wm.fill}}" opacity="{{chart.wm.opacity}}" text-anchor="{{chart.wm.anchor}}" font-weight="900" style="font-family:var(--font-title)">{{chart.wm.text}}</text>{{/if}}
           {{#each chart.grid}}<line class="sl-grid" x1="{{x1}}" y1="{{y}}" x2="{{x2}}" y2="{{y}}" />{{/each}}
           {{#each chart.areas}}<polygon points="{{points}}" fill="{{fill}}" opacity="{{opacity}}" />{{/each}}
           {{#if chart.base}}<line class="sl-axis" x1="{{chart.base.x1}}" y1="{{chart.base.y}}" x2="{{chart.base.x2}}" y2="{{chart.base.y}}" />{{/if}}
-          {{#each chart.vmarks}}<line x1="{{x}}" y1="{{y1}}" x2="{{x}}" y2="{{y2}}" stroke="{{color}}" stroke-width="2" stroke-dasharray="6 6" opacity="0.5" />{{/each}}
+          {{#each chart.vmarks}}<line x1="{{x}}" y1="{{y1}}" x2="{{x}}" y2="{{y2}}" stroke="{{color}}" stroke-width="2.5" stroke-dasharray="8 8" opacity="0.55" />{{/each}}
+          {{#if chart.yunit}}<text class="sl-unit" x="{{chart.yunit.x}}" y="{{chart.yunit.y}}" text-anchor="middle">{{chart.yunit.text}}</text>{{/if}}
           {{#each chart.ylabels}}<text class="sl-yl" x="{{x}}" y="{{y}}" text-anchor="end">{{text}}</text>{{/each}}
-          {{#each chart.lines}}<line x1="{{x1}}" y1="{{y1}}" x2="{{x2}}" y2="{{y2}}" stroke="{{color}}" stroke-width="{{width}}" stroke-linecap="round" />{{/each}}
-          {{#each chart.dots}}<circle cx="{{x}}" cy="{{y}}" r="{{r}}" fill="{{color}}" />{{/each}}
+          {{#each chart.polylines}}<polyline points="{{points}}" fill="none" stroke="{{color}}" stroke-width="{{width}}" stroke-linejoin="round" stroke-linecap="round" />{{/each}}
+          {{#each chart.dots}}<circle cx="{{x}}" cy="{{y}}" r="{{r}}" fill="#fff" stroke="{{color}}" stroke-width="7" />{{/each}}
           {{#each chart.vlabels}}<text class="sl-vl" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="{{anchor}}">{{text}}</text>{{/each}}
-          {{#each chart.xlabels}}<text class="sl-xl" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="middle">{{text}}</text>{{/each}}
-          {{#each chart.legend}}<line x1="{{sx1}}" y1="{{sy}}" x2="{{sx2}}" y2="{{sy}}" stroke="{{color}}" stroke-width="7" stroke-linecap="round" /><text class="sl-lg" x="{{tx}}" y="{{ty}}" fill="{{fill}}">{{text}}</text>{{/each}}
-          {{#if chart.caption}}<text class="sl-cap" x="{{chart.caption.x}}" y="{{chart.caption.y}}" text-anchor="end">{{chart.caption.text}}</text>{{/if}}
+          {{#each chart.xlabels}}<text class="sl-xl" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="{{anchor}}">{{text}}</text>{{/each}}
+          {{#if chart.arrow}}
+            <line x1="{{chart.arrow.x1}}" y1="{{chart.arrow.y}}" x2="{{chart.arrow.x2}}" y2="{{chart.arrow.y}}" stroke="{{chart.arrow.color}}" stroke-width="5" />
+            {{#each chart.arrow.heads}}<polygon points="{{points}}" fill="{{fill}}" />{{/each}}
+            <text class="sl-arw" x="{{chart.arrow.lx}}" y="{{chart.arrow.ly}}" fill="{{chart.arrow.color}}" text-anchor="middle">{{chart.arrow.text}}</text>
+          {{/if}}
+          {{#each chart.legend}}
+            <line x1="{{sx1}}" y1="{{sy}}" x2="{{sx2}}" y2="{{sy}}" stroke="{{color}}" stroke-width="11" stroke-linecap="round" />
+            <text class="sl-lg" x="{{tx}}" y="{{ty}}" fill="{{fill}}">{{text}}</text>
+            {{#if sub}}<text class="sl-lgs" x="{{tx}}" y="{{sty}}" fill="#9aa3af">{{sub}}</text>{{/if}}
+          {{/each}}
         </svg>
       </div>
 
-      {{#if note}}<div class="sl-note">{{{note}}}</div>{{/if}}
+      <div class="sl-notewrap">{{#if note}}<div class="sl-note">{{{note}}}</div>{{/if}}</div>
 
       <div class="wirit-footer">
         <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
@@ -70,18 +85,22 @@
     </div>
 
     <script>
+      /* 제목 각 줄(.tl)을 카드 폭에 꽉 차게 개별 확대 → 위아랫줄 좌우 여백이 맞는다. */
       window.__wiritFit = function () {
-        var el = document.querySelector(".sl .wirit-title");
-        if (!el) return;
-        var box = el.parentElement, bs = getComputedStyle(box);
+        var box = document.querySelector(".sl .wirit-title");
+        if (!box) return;
+        var bs = getComputedStyle(box);
         var avail = box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
-        var lo = 34, hi = 112, best = 34;
-        for (var i = 0; i < 24; i++) {
-          var mid = (lo + hi) / 2;
-          el.style.fontSize = mid + "px";
-          if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
+        var tls = box.querySelectorAll(".tl");
+        for (var n = 0; n < tls.length; n++) {
+          var el = tls[n], lo = 44, hi = 150, best = 44;
+          for (var i = 0; i < 26; i++) {
+            var mid = (lo + hi) / 2;
+            el.style.fontSize = mid + "px";
+            if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
+          }
+          el.style.fontSize = best.toFixed(2) + "px";
         }
-        el.style.fontSize = best.toFixed(2) + "px";
       };
     </script>
   </body>
