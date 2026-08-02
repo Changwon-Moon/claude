@@ -108,13 +108,16 @@ const arrow = {
   lx: midX, ly: ay - 16, text: `${gap}주`,
 };
 const legend = [
-  { sx1: 118, sx2: 196, sy: 178, color: RED, tx: 214, ty: 168, text: "현재 상승기", fill: INK, sub: "2025.2 첫째주 ~ 진행 중", sty: 214 },
-  { sx1: 118, sx2: 196, sy: 292, color: SLATE, tx: 214, ty: 282, text: "역대 최장 (文정부)", fill: INK, sub: "2020.6 둘째주 ~ 2022.1 셋째주", sty: 328 },
+  { sx1: 118, sx2: 196, sy: 120, color: RED, tx: 214, ty: 110, text: "현재 상승기", fill: INK, sub: "2025.2 첫째주 ~ 진행 중", sty: 156 },
+  { sx1: 118, sx2: 196, sy: 210, color: SLATE, tx: 214, ty: 200, text: "역대 최장 (文정부)", fill: INK, sub: "2020.6 둘째주 ~ 2022.1 셋째주", sty: 246 },
 ];
 /* 그래프 뒤 옅은 '서울' 배경 워드마크 (공식 로고 파일이 없어 워드마크로 — 자산 있으면 교체) */
-const bg = { x: 590, y: 540, size: 270, text: "서울", fill: INK, opacity: 0.05 };
-/* 범례 아래 빈 공간(좌하 삼각)에 위릿 워드마크 워터마크 */
-const wm = { x: 150, y: 452, size: 66, text: "위릿.", fill: "#2e6bff", opacity: 0.18, anchor: "start" };
+/* 그래프 뒤 서울시 공식 로고(자동 수집 자산)를 옅게 배경으로 — 텍스트 대체가 아니라 실제 자산 */
+const seoulHref = "data:image/svg+xml;base64," + readFileSync(join(ROOT, "data/assets/seoul/seoul-logo.svg")).toString("base64");
+const LOGO_H = 300, LOGO_W = Math.round((LOGO_H * 306) / 329.88);
+const bgImage = { href: seoulHref, x: Math.round(505 - LOGO_W / 2), y: 200, w: LOGO_W, h: LOGO_H, opacity: 0.08 };
+/* 범례 아래 빈 공간에 계정 아이디 워터마크(BRAND §4b 슬롯 C — @wirit_note·잉크 옅게) */
+const wm = { x: 150, y: 418, size: 40, text: "@wirit_note", fill: INK, opacity: 0.14, anchor: "start" };
 
 const card = {
   template: "streak-line@1",
@@ -122,8 +125,8 @@ const card = {
   badge: `오늘의 주요 부동산 이슈 (${date.replace(/-/g, ".")})`,
   title: `<span class="tl">서울 아파트 <span class="hi">${current.weeks}주 연속</span> 상승</span>` +
          `<span class="tl">상승폭은 이미 文정부의 <span class="hi">${ratio.toFixed(0)}배</span></span>`,
-  chart: { vb: `0 0 1000 ${VB_H}`, bg, wm, base: { y: y0, x1: AXIS_X, x2: RIGHT }, grid, areas, ylabels, yunit, vmarks, polylines, dots, vlabels, xlabels, arrow, legend },
-  note: `역사상 최장 기간 연속 상승까지,<br>단 <b>${gap}주</b>`,
+  chart: { vb: `0 0 1000 ${VB_H}`, bgImage, wm, base: { y: y0, x1: AXIS_X, x2: RIGHT }, grid, areas, ylabels, yunit, vmarks, polylines, dots, vlabels, xlabels, arrow, legend },
+  note: `역사상 최장 기간 연속 상승까지, 단 <b>${gap}주</b>`,
   source: { name: "한국부동산원 주간 아파트가격동향" },
 };
 

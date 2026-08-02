@@ -21,7 +21,9 @@
       .sl .wirit-title .tl + .tl { margin-top: 6px; }
       .sl .wirit-title .hi { color: var(--wirit-red); }
 
-      .sl-chart { flex: 1 1 auto; display: flex; align-items: center; margin: 34px 0 4px; }
+      .sl-chart { flex: 0 0 auto; display: flex; align-items: center; margin: 30px 0 0; }
+      /* 하단 문구를 그래프와 푸터 사이 남은 공간의 정중앙에 둔다 */
+      .sl-notewrap { flex: 1 1 auto; display: flex; align-items: center; justify-content: center; }
       .sl-svg { display: block; width: 100%; height: auto; }
       .sl-grid { stroke: var(--wirit-ink-06); stroke-width: 1.6; }
       .sl-axis { stroke: #c9cdd4; stroke-width: 2.5; }
@@ -35,9 +37,9 @@
 
       /* 그래프 아래·푸터 위 — 가운데 정렬 큰 마무리 문구(제목보다 조금 작게). */
       .sl-note {
-        flex: 0 0 auto; margin: 14px 0 20px; text-align: center; font-family: var(--font-title);
-        font-size: 62px; font-weight: 900; color: var(--wirit-ink);
-        letter-spacing: -0.05em; line-height: 1.16; word-break: keep-all;
+        margin: 0; text-align: center; font-family: var(--font-title);
+        font-size: 50px; font-weight: 900; color: var(--wirit-ink);
+        letter-spacing: -0.05em; line-height: 1.2; white-space: nowrap;
       }
       .sl-note b { color: var(--wirit-red); font-weight: 900; }
     </style>
@@ -49,7 +51,7 @@
 
       <div class="sl-chart">
         <svg class="sl-svg" viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-          {{#if chart.bg}}<text x="{{chart.bg.x}}" y="{{chart.bg.y}}" font-size="{{chart.bg.size}}" fill="{{chart.bg.fill}}" opacity="{{chart.bg.opacity}}" text-anchor="middle" font-weight="900" style="font-family:var(--font-title)">{{chart.bg.text}}</text>{{/if}}
+          {{#if chart.bgImage}}<image href="{{chart.bgImage.href}}" x="{{chart.bgImage.x}}" y="{{chart.bgImage.y}}" width="{{chart.bgImage.w}}" height="{{chart.bgImage.h}}" opacity="{{chart.bgImage.opacity}}" preserveAspectRatio="xMidYMid meet" />{{/if}}
           {{#if chart.wm}}<text x="{{chart.wm.x}}" y="{{chart.wm.y}}" font-size="{{chart.wm.size}}" fill="{{chart.wm.fill}}" opacity="{{chart.wm.opacity}}" text-anchor="{{chart.wm.anchor}}" font-weight="900" style="font-family:var(--font-title)">{{chart.wm.text}}</text>{{/if}}
           {{#each chart.grid}}<line class="sl-grid" x1="{{x1}}" y1="{{y}}" x2="{{x2}}" y2="{{y}}" />{{/each}}
           {{#each chart.areas}}<polygon points="{{points}}" fill="{{fill}}" opacity="{{opacity}}" />{{/each}}
@@ -74,7 +76,7 @@
         </svg>
       </div>
 
-      {{#if note}}<div class="sl-note">{{{note}}}</div>{{/if}}
+      <div class="sl-notewrap">{{#if note}}<div class="sl-note">{{{note}}}</div>{{/if}}</div>
 
       <div class="wirit-footer">
         <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
