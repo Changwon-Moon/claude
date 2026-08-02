@@ -1,0 +1,58 @@
+name: 텔레그램 연결 확인
+
+# ── 왜 이 워크플로가 따로 있나 (2026-08-02)
+# 알림은 **안 오는 것이 정상인 날**이 있다(결정할 일이 없으면 안 보낸다).
+# 그래서 "조용하다"로는 연결이 끊긴 것과 오늘 조용한 것을 구분할 수 없다 —
+# 2026-07-31 에 알림 키가 등록된 적 없이 몇 주가 지난 사고가 정확히 그 구멍이었다.
+#
+# 이 워크플로는 **일부러 한 통 보내서** 그 구분을 짓는다.
+# 진단 결과는 성공·실패 무관하게 data/telegram-last.md 에 적혀 커밋된다 —
+# 오너도 세션도 Actions 로그를 열지 않고 그 파일만 보면 된다.
+on:
+  # 대기열 푸시가 방아쇠 — 오너가 Actions 탭에 들어가지 않는다.
+  # 세션은 api.github.com 이 막혀 [Run workflow] 를 못 누르지만 푸시는 된다.
+  push:
+    paths:
+      - "data/telegram-test.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: telegram-test
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: 연결 진단 + 확인 메시지 발송
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          node scripts/telegram-doctor.mjs \
+            --out data/telegram-last.md \
+            --stamp "$(TZ=Asia/Seoul date '+%F %H:%M') KST"
+
+      - name: 결과 커밋
+        if: always()
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@github.com"
+          git add -f data/telegram-last.md
+          if git diff --cached --quiet; then
+            echo "바뀐 것 없음"
+          else
+            git commit -m "텔레그램 연결 확인 결과"
+            git pull --rebase --autostash origin ${{ github.ref_name }} || true
+            git push origin HEAD:${{ github.ref_name }}
+          fi
