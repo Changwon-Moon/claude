@@ -66,16 +66,23 @@ board.ideas = board.ideas.filter((i) => {
 });
 const pruned = before - board.ideas.length;
 
-/* ── ② 새 공고 등록 ── */
-const fresh = notices.filter((x) => x.score >= MIN && !known.has(idOf(x)));
-for (const x of fresh) {
+/* ── ② 새 공고 등록 · 이미 있는 건 최신 내용으로 갱신 ──
+ *
+ * 갱신이 왜 필요한가 (2026-08-02):
+ *  · **D-N 이 굳는다.** 어제 D-3 이던 줄이 오늘도 D-3 이라고 적혀 있으면 그건 틀린 정보다.
+ *  · **합쳐진 뒤의 이름·세대수가 반영돼야 한다.** 블록 5건을 한 줄로 합치자 살아남은 항목이
+ *    옛 블록 이름("G5-1블록 · 35가구")을 그대로 달고 있었다. 지금 사실은 "150가구 · 5개 블록"이다.
+ *
+ * 단, **오너가 손댄 줄은 절대 덮지 않는다**(state 나 status 가 채워진 것).
+ * 그건 오너의 결정이고, 기계가 덮으면 결정이 사라진다. */
+function entryOf(x) {
   const left = daysLeft(x.receiptTo);
   const isJupjup = x.kind === "remndr";
   /* cat 은 '얼마나 자주 내는가'다(CEO 07-27). 마감이 코앞인 줍줍은 정확히 '🔥 시의성'의 정의
      — 날짜가 지나면 김빠진다. 나머지는 '분류 대기'에 두고 오너가 정한다. */
   const cat = isJupjup && left !== null && left <= 3 ? "hot" : "todo";
   const dl = x.receiptTo ? ` · 접수 ~${x.receiptTo}${left !== null && left >= 0 ? `(D-${left})` : ""}` : "";
-  board.ideas.push({
+  return {
     id: idOf(x),
     cat,
     topic: "부동산",
@@ -90,7 +97,21 @@ for (const x of fresh) {
     status: "",
     deadline: x.receiptTo || "",
     url: x.noticeUrl || x.homepage || "",
-  });
+  };
+}
+
+const passing = notices.filter((x) => x.score >= MIN);
+const fresh = passing.filter((x) => !known.has(idOf(x)));
+const byId = new Map(board.ideas.map((i) => [i.id, i]));
+let updated = 0;
+for (const x of passing) {
+  const e = entryOf(x);
+  const cur = byId.get(e.id);
+  if (!cur) { board.ideas.push(e); continue; }
+  if (cur.feed !== "auto" || cur.state !== "" || cur.status) continue; // 오너의 것은 건드리지 않는다
+  if (cur.title === e.title && cur.why === e.why && cur.deadline === e.deadline) continue;
+  Object.assign(cur, { cat: e.cat, title: e.title, why: e.why, deadline: e.deadline, url: e.url });
+  updated++;
 }
 
 board.meta = board.meta || {};
@@ -113,6 +134,6 @@ if (fresh.length) {
 }
 writeFileSync(alertPath, msg, "utf8");
 
-console.log(`청약홈 소재 등록 — 새로 ${fresh.length}건 · 지난 것 정리 ${pruned}건 · 보드 총 ${board.ideas.length}건`);
+console.log(`청약홈 소재 등록 — 새로 ${fresh.length}건 · 갱신 ${updated}건 · 지난 것 정리 ${pruned}건 · 보드 총 ${board.ideas.length}건`);
 for (const x of fresh.slice(0, TOP)) console.log(`   +${x.score}점 ${x.name} (${x.areaName})`);
 if (!fresh.length) console.log("   (문턱 넘은 새 공고 없음 — 알림 보내지 않음)");
