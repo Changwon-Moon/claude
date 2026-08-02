@@ -102,3 +102,24 @@
 5. `node scripts/build-{line}-loop.mjs` → 렌더 → `designQa` 에러 0 → 에이전트 검수.
 6. `data/review/builders.json`·`sets.json`·캡션 등록.
 7. 시안 전달 → 오너 확정 시 `confirm.mjs`.
+
+## 8. 데이터 리프레시 (원할 때)
+
+단지 선정은 데이터셋에 고정 → 갱신은 **같은 단지의 최고가만 다시 뽑는 일**. 3단계.
+
+```bash
+# ① 새 기간 molit 수집(서울 밖 포함). 구 목록 자동.
+node scripts/refresh-line-cards.mjs --collect 202608
+git add data/collect-request.json && git commit -m "수집: 202608" && git push ...   # Action 수집
+git pull ...                                                                        # 캐시 받기
+
+# ② 같은 단지 최고가 재추출 + 재빌드
+node scripts/refresh-line-cards.mjs --to 202608     # 정확매칭(aptNm+umd)만 자동 갱신, 나머지는 표시
+
+# ③ 캡션 재생성
+node scripts/gen-line-captions.mjs
+```
+
+- 그 뒤 렌더·`designQa`·검수 → `confirm.mjs` 로 확정.
+- **한계(정직하게)**: 데이터셋 `danji` 가 molit 원본명과 다른 역(신분당 전역은 `umd` 없음, 옥수파크힐스·현대14차·성남 일부 등 동 표기 차이)은 자동매칭이 안 돼 **세션에서 몇 건만 손으로 확인**해야 한다. 그래서 리프레시는 "스크립트로 대부분 + 세션에서 flag 몇 건 정리"가 현실적이다. 완전 무인화하려면 각 pick 에 `src:{apt,umd}`(정확 molit 키)를 넣는 1회 보강이 필요.
+- **기간 라벨**(빌더 subtitle `2026.01~07월`·데이터셋 disclaimer)은 창을 넓혔으면 함께 수정한다.
