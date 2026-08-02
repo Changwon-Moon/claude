@@ -1,6 +1,6 @@
 ---
 name: wirit-cards
-description: 위릿(@wirit_note) 인스타 카드뉴스 공장을 여는 스킬. GitHub 저장소 Changwon-Moon/claude 를 clone 해 환경 자가진단(doctor)을 돌리고, 저장소의 제작 기준(CLAUDE.md·CARD_CHECKLIST.md·CEO.md)을 상속받아 작업을 시작한다. 오너가 "위릿", "카드뉴스", "카드 만들어줘", "관제탑", "소재 발굴", "인스타 카드", "@wirit_note", "부동산 카드", "발행 준비" 같은 말을 꺼내거나, 데이터 인포그래픽 카드 제작·검수·발행 준비를 요청하면 반드시 이 스킬을 먼저 쓴다. 새 코워크 세션은 매번 빈 컨테이너에서 시작하므로, 저장소를 열지 않은 채 카드 작업을 시도하면 기준을 못 읽고 픽셀을 깨뜨린다.
+description: 위릿(@wirit_note) 인스타 카드뉴스 공장을 여는 스킬. GitHub 저장소 Changwon-Moon/claude 를 clone 해 환경 자가진단(doctor)을 돌리고, 저장소의 제작 기준(CLAUDE.md·CARD_CHECKLIST.md·CEO.md·LINE_CARDS.md)을 상속받아 작업을 시작한다. 오너가 "위릿", "카드뉴스", "카드 만들어줘", "관제탑", "소재 발굴", "인스타 카드", "@wirit_note", "부동산 카드", "발행 준비", "N호선/신분당 역세권 (대장) 아파트 시세", "노선 시세 카드" 같은 말을 꺼내거나, 데이터 인포그래픽 카드 제작·검수·발행 준비를 요청하면 반드시 이 스킬을 먼저 쓴다. 지하철 노선 시세 카드는 저장소의 `node scripts/line-card.mjs <노선>` 원커맨드로 리프레시→캡션→빌드→렌더→QA 가 자동으로 돈다. 새 코워크 세션은 매번 빈 컨테이너에서 시작하므로, 저장소를 열지 않은 채 카드 작업을 시도하면 기준을 못 읽고 픽셀을 깨뜨린다.
 ---
 
 # 위릿 카드 공장 — 세션 부트스트랩
@@ -83,9 +83,10 @@ B등급(API 키) 경고는 **새 데이터 수집에만** 필요하다. 없어�
 1. `docs/HANDOFF.md` — 이 공장의 단일 입구
 2. `STATUS.md` — 어디까지 왔고 다음이 뭔지
 3. `docs/CARD_CHECKLIST.md` §2 — **카드를 만들거나 고치는 작업이면 필수**(재발 금지 항목)
-4. `company/CEO.md` — 오너 판단 원칙 115개
-5. `docs/COWORK.md` — 코워크에서의 경계선(무엇을 여기서, 무엇을 GitHub Actions 에서)
-6. `prompts/{design,qa,editing,orchestrator,research}.md` — **팀별 세부 지침.**
+4. `company/CEO.md` — 오너 판단 원칙(누적)
+5. `docs/LINE_CARDS.md` — **지하철 노선 시세 카드 시리즈**(신분당·2~9호선 「역세권 34평 APT 시세」) 단일 기준. 노선 카드 요청이면 필수.
+6. `docs/COWORK.md` — 코워크에서의 경계선(무엇을 여기서, 무엇을 GitHub Actions 에서)
+7. `prompts/{design,qa,editing,orchestrator,research}.md` — **팀별 세부 지침.**
    CEO.md 가 "무엇을 판단하나"라면 이쪽은 "그래서 어떻게 손을 움직이나"다.
    디자인·검수 작업을 맡으면 해당 팀 프롬프트를 읽고 시작한다.
    디자인 작업이면 `company/teams/design.md`(과거 수정지시가 왜 그렇게 굳었는지의 서사)도 함께 본다.
@@ -154,6 +155,18 @@ node scripts/build-tower-site.mjs   # 관제탑 생성(폰트 복사 포함)
 node scripts/smoke-tower.mjs        # 관제탑 화면 스모크
 pnpm --filter @wirit/renderer audit-head   # 머리 규격 전수 표(뱃지·위 여백·흰 테두리)
 ```
+
+## 🚇 오너가 "N호선 (역세권) 시세 작업해줘" 라고 하면 — 원커맨드
+
+신분당·2~9호선 「역세권 34평 APT 시세」 시리즈다. **단계를 나눠 묻지 않는다** — 한 줄로 데이터 리프레시→캡션→빌드→렌더→designQa 가 자동으로 돈다(오보 0).
+
+```bash
+node scripts/line-card.mjs 3호선          # 문장째 넘겨도 됨: "3호선 역세권 대장 아파트 시세"
+```
+
+- 세부 기준(선정·리프레시·환승뱃지·SUB·대체 정책)은 **`docs/LINE_CARDS.md`**. 새 노선/역 편집 전 반드시 읽는다.
+- 나온 PNG·캡션을 오너에게 보이고 확정 시 `confirm.mjs`. 새 달 포함은 `--collect 202608` → push→pull 후 재실행.
+- **오너 지정 단지에 국토부 84㎡ 실거래가 없으면**(신축·대형/소형만) 지어내지 말고, 실전용 병기(SUB) 또는 역 84㎡ 대장 대체를 **오너에게 확인**하고 `meta.flags` 에 남긴다(2026-08-02). 환승·예정노선 뱃지 누락 재확인은 반복 요청이다.
 
 ## 🔑 오너가 "확정할게" 라고 하면 — 스크립트 한 줄
 
