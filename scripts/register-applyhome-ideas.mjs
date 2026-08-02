@@ -12,8 +12,13 @@
  *    그건 결정 요청이 아니라 영구 알림이다. 오너가 이미 고른 것(state 가 채워진 것)은 건드리지 않는다.
  *  · 알림은 **새로 들어온 게 있을 때만** 간다.
  *
- * 실행: node scripts/register-applyhome-ideas.mjs [--today 2026-08-01] [--min 45] [--top 5]
- * 산출: research/ideas.json 갱신 · data/applyhome-alert.txt (알림 문구, 새 게 없으면 빈 파일)
+ * ── --digest — "오늘 것 한 번 보내줘"
+ * 평소 알림은 **새로 들어온 것만** 보낸다(알림 피로 방지). 그런데 오너가 직접 물을 때는
+ * 새것 여부와 무관하게 **지금 살아 있는 소재 전체**를 보고 싶은 것이다.
+ * --digest 는 그 요청용이다 — 접수가 아직 열려 있는 건을 점수순으로 담는다.
+ *
+ * 실행: node scripts/register-applyhome-ideas.mjs [--today 2026-08-01] [--min 45] [--top 5] [--digest]
+ * 산출: research/ideas.json 갱신 · data/applyhome-alert.txt (알림 문구, 보낼 게 없으면 빈 파일)
  */
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -28,6 +33,8 @@ const arg = (k, d) => {
 const TODAY = arg("today", new Date().toISOString().slice(0, 10));
 const MIN = Number(arg("min", 45));
 const TOP = Number(arg("top", 5));
+/* 오너가 직접 물었을 때만 켜는 모드 — 새것만이 아니라 지금 살아 있는 것 전체를 보낸다 */
+const DIGEST = process.argv.includes("--digest");
 
 const latestPath = join(ROOT, "data/datasets/applyhome-latest.json");
 if (!existsSync(latestPath)) {
@@ -118,22 +125,47 @@ board.meta = board.meta || {};
 board.meta.updated = TODAY;
 writeFileSync(ideasPath, JSON.stringify(board, null, 2) + "\n", "utf8");
 
-/* ── ③ 알림 문구 — 새 게 있을 때만 ── */
+/* ── ③ 알림 문구 ──
+ * 기본은 **새로 들어온 것만**(알림 피로 방지 — 매일 같은 목록을 보내면 아무도 안 본다).
+ * --digest 면 새것 여부와 무관하게 **지금 접수가 열려 있는 것 전체**를 점수순으로 담는다. */
 const alertPath = join(ROOT, "data/applyhome-alert.txt");
+const line = (x) => {
+  const left = daysLeft(x.receiptTo);
+  const dl = left === null ? "" : left === 0 ? " ⏰오늘 마감" : left > 0 ? ` D-${left}` : "";
+  const tag = x.kind === "remndr" ? "줍줍" : "신규";
+  const blk = x.blocks ? `·${x.blocks}블록` : "";
+  const cnt = x.supply ? ` ${x.supply.toLocaleString("ko-KR")}가구` : "";
+  return `· [${tag}] ${x.name}\n   ${x.areaName}${cnt}${blk}${dl}`;
+};
+
 let msg = "";
-if (fresh.length) {
-  const lines = fresh.slice(0, TOP).map((x) => {
+if (DIGEST) {
+  /* 이미 마감된 건 뺀다 — 오늘 못 넣는 공고를 알림에 올리면 그건 정보가 아니라 소음이다. */
+  const live = passing.filter((x) => {
     const left = daysLeft(x.receiptTo);
-    const urgent = left !== null && left >= 0 && left <= 2 ? ` ⏰D-${left}` : "";
-    const tag = x.kind === "remndr" ? "줍줍" : "신규";
-    const blk = x.blocks ? ` ${x.blocks}블록` : "";
-    return `· [${tag}] ${x.name} (${x.areaName}${x.supply ? ` ${x.supply.toLocaleString("ko-KR")}가구` : ""}${blk})${urgent}`;
+    return left === null || left >= 0;
   });
-  const more = fresh.length > TOP ? `\n외 ${fresh.length - TOP}건` : "";
-  msg = `🏠 청약홈 새 공고 ${fresh.length}건 (${TODAY})\n${lines.join("\n")}${more}`;
+  if (live.length) {
+    const head = `🏠 오늘의 청약·분양 소재 (${TODAY})`;
+    const jup = live.filter((x) => x.kind === "remndr");
+    const npd = live.filter((x) => x.kind !== "remndr");
+    const parts = [head, ""];
+    if (jup.length) parts.push(`— 무순위·줍줍 ${jup.length}건 —`, ...jup.slice(0, TOP).map(line));
+    if (npd.length) parts.push("", `— 신규 분양 ${npd.length}건 —`, ...npd.slice(0, TOP).map(line));
+    const cut = Math.max(0, jup.length - TOP) + Math.max(0, npd.length - TOP);
+    if (cut) parts.push("", `외 ${cut}건은 관제탑 소재 탭에서`);
+    msg = parts.join("\n");
+  } else {
+    /* 빈손도 답이다 — 물었는데 아무 말이 없으면 "고장인가?" 를 의심하게 된다. */
+    msg = `🏠 오늘의 청약·분양 소재 (${TODAY})\n\n접수가 열려 있는 ${MIN}점 이상 공고가 없습니다.`;
+  }
+} else if (fresh.length) {
+  const more = fresh.length > TOP ? `\n\n외 ${fresh.length - TOP}건` : "";
+  msg = `🏠 청약홈 새 공고 ${fresh.length}건 (${TODAY})\n\n${fresh.slice(0, TOP).map(line).join("\n")}${more}`;
 }
 writeFileSync(alertPath, msg, "utf8");
 
 console.log(`청약홈 소재 등록 — 새로 ${fresh.length}건 · 갱신 ${updated}건 · 지난 것 정리 ${pruned}건 · 보드 총 ${board.ideas.length}건`);
 for (const x of fresh.slice(0, TOP)) console.log(`   +${x.score}점 ${x.name} (${x.areaName})`);
-if (!fresh.length) console.log("   (문턱 넘은 새 공고 없음 — 알림 보내지 않음)");
+if (DIGEST) console.log("   📨 요약 알림(digest) 문구를 작성했습니다 — 새것 여부와 무관하게 보냅니다.");
+else if (!fresh.length) console.log("   (문턱 넘은 새 공고 없음 — 알림 보내지 않음)");

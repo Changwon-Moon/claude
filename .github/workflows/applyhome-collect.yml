@@ -36,6 +36,10 @@ on:
         description: "소재로 올릴 최소 점수(기본 45)"
         required: false
         default: "45"
+      digest:
+        description: "1 이면 새것만이 아니라 지금 살아 있는 소재 전체를 알림으로 보낸다"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -70,17 +74,20 @@ jobs:
           MIN="${{ github.event.inputs.min }}"
           # 대기열 푸시로 들어온 실행은 입력칸이 비어 있다 → 파일 마지막 줄에서 읽는다
           # (주석 #·빈 줄 무시. 없는 값은 기본값으로 떨어진다)
+          DIGEST="${{ github.event.inputs.digest }}"
           Q=data/applyhome-queue.txt
-          if [ -z "$WITHIN$MIN" ] && [ -f "$Q" ]; then
+          if [ -z "$WITHIN$MIN$DIGEST" ] && [ -f "$Q" ]; then
             LINE=$(grep -v '^\s*#' "$Q" | grep -v '^\s*$' | tail -1)
             echo "대기열 마지막 줄: ${LINE:-(비어 있음)}"
             for kv in $LINE; do
               case "$kv" in
                 within=*) WITHIN="${kv#within=}" ;;
                 min=*)    MIN="${kv#min=}" ;;
+                digest=*) DIGEST="${kv#digest=}" ;;
               esac
             done
           fi
+          [ "$DIGEST" = "1" ] && echo "digest=--digest" >> "$GITHUB_OUTPUT" || echo "digest=" >> "$GITHUB_OUTPUT"
           echo "within=${WITHIN:-7}" >> "$GITHUB_OUTPUT"
           echo "min=${MIN:-45}" >> "$GITHUB_OUTPUT"
           echo "today=$(TZ=Asia/Seoul date +%F)" >> "$GITHUB_OUTPUT"
@@ -114,7 +121,7 @@ jobs:
           set -o pipefail
           node scripts/register-applyhome-ideas.mjs \
             --today ${{ steps.cfg.outputs.today }} \
-            --min ${{ steps.cfg.outputs.min }} 2>&1 | tee /tmp/register.log
+            --min ${{ steps.cfg.outputs.min }} ${{ steps.cfg.outputs.digest }} 2>&1 | tee /tmp/register.log
 
       # 파서 셀프테스트는 **수집 뒤에** 돌린다.
       # 2026-07-31 에 증시 수집이 셀프테스트 실패로 며칠간 죽어 있었다 — 테스트가 기능을 지키는
