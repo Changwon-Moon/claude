@@ -23,61 +23,11 @@
   "notices": [
     {
       "kind": "remndr",
-      "pblancNo": "2026910207",
-      "name": "더샵 송도그란테르 G5-11블록",
-      "areaName": "인천",
-      "address": "인천광역시 연수구 송도동 32-15 (G5-11BL)",
-      "supply": 45,
-      "noticeDate": "2026-07-30",
-      "receiptFrom": "2026-08-04",
-      "receiptTo": "2026-08-04",
-      "announceDate": "2026-08-07",
-      "builder": "케이비부동산신탁(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://더샵송도그란테르.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910207&pblancNo=2026910207",
-      "score": 82,
-      "reasons": [
-        "수도권",
-        "45가구",
-        "무순위",
-        "D-2",
-        "더샵"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910205",
-      "name": "더샵 송도그란테르 G5-4블록",
-      "areaName": "인천",
-      "address": "인천광역시 연수구 송도동 32-10 (G5-4BL)",
-      "supply": 36,
-      "noticeDate": "2026-07-30",
-      "receiptFrom": "2026-08-04",
-      "receiptTo": "2026-08-04",
-      "announceDate": "2026-08-07",
-      "builder": "케이비부동산신탁(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://더샵송도그란테르.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910205&pblancNo=2026910205",
-      "score": 82,
-      "reasons": [
-        "수도권",
-        "36가구",
-        "무순위",
-        "D-2",
-        "더샵"
-      ]
-    },
-    {
-      "kind": "remndr",
       "pblancNo": "2026910203",
-      "name": "더샵 송도그란테르 G5-1블록",
+      "name": "더샵 송도그란테르",
       "areaName": "인천",
       "address": "인천광역시 연수구 송도동 32-1,-4 (G5-1BL)",
-      "supply": 35,
+      "supply": 150,
       "noticeDate": "2026-07-30",
       "receiptFrom": "2026-08-04",
       "receiptTo": "2026-08-04",
@@ -87,61 +37,22 @@
       "speculative": false,
       "homepage": "https://더샵송도그란테르.kr",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910203&pblancNo=2026910203",
-      "score": 82,
+      "blocks": 5,
+      "blockNames": [
+        "더샵 송도그란테르 G5-11블록",
+        "더샵 송도그란테르 G5-5블록",
+        "더샵 송도그란테르 G5-4블록",
+        "더샵 송도그란테르 G5-3블록",
+        "더샵 송도그란테르 G5-1블록"
+      ],
+      "score": 88,
       "reasons": [
         "수도권",
-        "35가구",
+        "150가구",
         "무순위",
         "D-2",
-        "더샵"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910206",
-      "name": "더샵 송도그란테르 G5-5블록",
-      "areaName": "인천",
-      "address": "인천광역시 연수구 송도동 32-8 (G5-5BL)",
-      "supply": 12,
-      "noticeDate": "2026-07-30",
-      "receiptFrom": "2026-08-04",
-      "receiptTo": "2026-08-04",
-      "announceDate": "2026-08-07",
-      "builder": "케이비부동산신탁(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://더샵송도그란테르.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910206&pblancNo=2026910206",
-      "score": 76,
-      "reasons": [
-        "수도권",
-        "무순위",
-        "D-2",
-        "더샵"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910204",
-      "name": "더샵 송도그란테르 G5-3블록",
-      "areaName": "인천",
-      "address": "인천광역시 연수구 송도동 32-12 (G5-3BL)",
-      "supply": 22,
-      "noticeDate": "2026-07-30",
-      "receiptFrom": "2026-08-04",
-      "receiptTo": "2026-08-04",
-      "announceDate": "2026-08-07",
-      "builder": "케이비부동산신탁(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://더샵송도그란테르.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910204&pblancNo=2026910204",
-      "score": 76,
-      "reasons": [
-        "수도권",
-        "무순위",
-        "D-2",
-        "더샵"
+        "더샵",
+        "5개 블록 합계"
       ]
     },
     {

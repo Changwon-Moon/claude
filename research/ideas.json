@@ -937,32 +937,6 @@
       "status": ""
     },
     {
-      "id": "ah-remndr-2026910207",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 더샵 송도그란테르 G5-11블록",
-      "why": "인천 · 45가구 · 접수 ~2026-08-04(D-2) · 82점(수도권·45가구·무순위·D-2·더샵)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-08-04",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910207&pblancNo=2026910207"
-    },
-    {
-      "id": "ah-remndr-2026910205",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 더샵 송도그란테르 G5-4블록",
-      "why": "인천 · 36가구 · 접수 ~2026-08-04(D-2) · 82점(수도권·36가구·무순위·D-2·더샵)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-08-04",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910205&pblancNo=2026910205"
-    },
-    {
       "id": "ah-remndr-2026910203",
       "cat": "hot",
       "topic": "부동산",
@@ -974,32 +948,6 @@
       "status": "",
       "deadline": "2026-08-04",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910203&pblancNo=2026910203"
-    },
-    {
-      "id": "ah-remndr-2026910206",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 더샵 송도그란테르 G5-5블록",
-      "why": "인천 · 12가구 · 접수 ~2026-08-04(D-2) · 76점(수도권·무순위·D-2·더샵)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-08-04",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910206&pblancNo=2026910206"
-    },
-    {
-      "id": "ah-remndr-2026910204",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 더샵 송도그란테르 G5-3블록",
-      "why": "인천 · 22가구 · 접수 ~2026-08-04(D-2) · 76점(수도권·무순위·D-2·더샵)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-08-04",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910204&pblancNo=2026910204"
     },
     {
       "id": "ah-remndr-2026910193",
