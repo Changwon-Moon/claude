@@ -72,17 +72,23 @@ const rebuild = !argv.includes("--no-rebuild");
 const dry = argv.includes("--dry");   // 매칭만 점검, 데이터셋에 쓰지 않음
 console.log(`🔄 리프레시 기간: ${from}~${to} (${months.length}개월)`);
 
-// molit 전 파일에서 area 82~86 최고가 인덱스 — aptNm|umd(정확 매칭 전용)
-// aptNm 단독 매칭은 동명이단지(예: 여러 '삼성'·'현대')를 잘못 잡으므로 쓰지 않는다.
-const byKey = {};
+// molit 전 파일 인덱스 — aptNm|umd → 해당 키의 전 거래(area 포함). 정확 매칭 전용.
+// aptNm 단독 매칭은 동명이단지(여러 '삼성'·'현대')를 잘못 잡으므로 쓰지 않는다.
+// 전용면적 예외 픽(목동 101·오목교 119·신금호 60·이태원 106 등)을 위해 area 전 구간을 담는다.
+const byKeyAll = {};
 for (const f of readdirSync(MOLIT)){
   const m=f.match(/-(\d{6})\.json$/); if(!m || !months.includes(m[1])) continue;
   const ym=m[1];
   for (const x of JSON.parse(readFileSync(join(MOLIT,f),"utf8")).trades){
-    if (x.canceled || x.area<82 || x.area>86) continue;
-    const k=`${x.aptNm}|${x.umdNm}`;
-    if (!byKey[k] || x.priceManwon>byKey[k].p) byKey[k]={p:x.priceManwon, ym};
+    if (x.canceled) continue;
+    (byKeyAll[`${x.aptNm}|${x.umdNm}`] ||= []).push({ area:x.area, p:x.priceManwon, ym });
   }
+}
+// 키의 [lo,hi] area 창 최고가. 기본 84㎡(82~86), 픽에 areaLo/areaHi 있으면 그 창.
+function bestFor(key, lo, hi){
+  const rows = byKeyAll[key]; if(!rows) return null; let best=null;
+  for (const r of rows){ if(r.area<lo || r.area>hi) continue; if(!best || r.p>best.p) best={p:r.p, ym:r.ym}; }
+  return best;
 }
 const disp = (억)=> (Math.round((억+1e-9)*10)/10).toFixed(1); // 카드 표시값(round-half-up 1자리)
 
@@ -90,8 +96,9 @@ let changed=0; const missList=[];
 for (const k of LINES){
   const ds=JSON.parse(readFileSync(dsPath(k),"utf8"));
   for (const p of ds.picks){ if(p.price==null) continue;
-    // molit 원본키(srcApt||danji)+umd 정확 매칭만 자동 갱신. enrich-line-src 로 심어둔 srcApt 우선.
-    const b = p.umd ? byKey[`${p.srcApt||p.danji}|${p.umd}`] : null;
+    // molit 원본키(srcApt||danji)+umd 정확 매칭만 자동 갱신. area 창은 픽별 예외 존중.
+    const lo = p.areaLo ?? 82, hi = p.areaHi ?? 86;
+    const b = p.umd ? bestFor(`${p.srcApt||p.danji}|${p.umd}`, lo, hi) : null;
     if(!b){ missList.push(`[${ds.line?.name||k}] ${p.station} · ${p.danji}${p.umd?"|"+p.umd:" (umd 없음)"}`); continue; }
     const np=Math.round(b.p/100)/100, nd=`${b.ym.slice(0,4)}-${b.ym.slice(4)}`;
     if(disp(np)!==disp(p.price) || nd!==p.deal){   // 표시값이 바뀔 때만 갱신(반올림 잡음 무시)

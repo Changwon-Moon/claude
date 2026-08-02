@@ -130,12 +130,16 @@
       "order": 9,
       "station": "이태원",
       "gu": "용산구",
-      "danji": "청화1",
+      "danji": "청화",
       "umd": "이태원동",
       "built": 1998,
       "price": 31.69,
       "deal": "2026-03",
-      "flag": true
+      "flag": true,
+      "areaNote": "전용 106㎡",
+      "srcApt": "청화1",
+      "areaLo": 104,
+      "areaHi": 108
     },
     {
       "order": 10,

@@ -27,7 +27,9 @@ for (const [key,line] of SETS){
   const ds = JSON.parse(readFileSync(dsFile(key),"utf8"));
   const picks = ds.picks.filter(p=>p.price!=null).slice().sort((a,b)=>b.price-a.price);
   let out = `${line} 역세권,\n대장 APT 지금 얼마일까요? 🚇\n\n📊 시세 순위 (전용 84㎡ 실거래 최고가)\n`;
-  picks.forEach((p,i)=>{ out += `${i+1}위. ${p.station}역 : ${px(p.price)}억 - ${clean(p.danji)}(${p.built}년식)\n`; });
+  // 전용면적 예외(84㎡ 아님)는 헤더가 84㎡라 오해 소지 → 해당 픽만 전용면적 병기.
+  picks.forEach((p,i)=>{ const meta = p.areaNote ? `${p.areaNote}·${p.built}년식` : `${p.built}년식`;
+    out += `${i+1}위. ${p.station}역 : ${px(p.price)}억 - ${clean(p.danji)}(${meta})\n`; });
   out += SIG(line);
   writeFileSync(capFile(key), out); // {set}-loop.txt
   all += `═══════════════════════════════════════\n  ▸ ${key}-loop\n═══════════════════════════════════════\n\n${out}\n\n`;
