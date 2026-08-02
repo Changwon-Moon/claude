@@ -97,7 +97,7 @@
 
 1. 대표 16개 역 큐레이션(위 §3). 필요 lawdCd 의 07월 없으면 `collect-request.json` push 수집.
 2. 클러스터별 에이전트로 역별 대장 단지 선정·교차확인.
-3. 코드로 84㎡ 최고가 추출 → `data/datasets/{line}-daejang-2026.json` (order·picks[station,gu,danji,umd,built,price,deal,note]·meta.flags).
+3. 코드로 84㎡ 최고가 추출 → `data/datasets/{line}-daejang-2026.json` (order·picks[station,gu,danji,umd,built,price,deal,note,(srcApt)]·meta.flags). 데이터셋 완성 후 `node scripts/enrich-line-src.mjs` 로 각 pick 에 molit 원본 키(umd·srcApt)를 심어 리프레시 자동매칭을 100%로 만든다(미해결로 뜨는 건만 손으로 확인).
 4. `scripts/build-{line}-loop.mjs`(설정만) + `templates/{line}-loop/template.html`(line4 복사, 색만 변경).
 5. `node scripts/build-{line}-loop.mjs` → 렌더 → `designQa` 에러 0 → 에이전트 검수.
 6. `data/review/builders.json`·`sets.json`·캡션 등록.
@@ -121,5 +121,18 @@ node scripts/gen-line-captions.mjs
 ```
 
 - 그 뒤 렌더·`designQa`·검수 → `confirm.mjs` 로 확정.
-- **한계(정직하게)**: 데이터셋 `danji` 가 molit 원본명과 다른 역(신분당 전역은 `umd` 없음, 옥수파크힐스·현대14차·성남 일부 등 동 표기 차이)은 자동매칭이 안 돼 **세션에서 몇 건만 손으로 확인**해야 한다. 그래서 리프레시는 "스크립트로 대부분 + 세션에서 flag 몇 건 정리"가 현실적이다. 완전 무인화하려면 각 pick 에 `src:{apt,umd}`(정확 molit 키)를 넣는 1회 보강이 필요.
+- **자동매칭 100%**: 각 pick 에 molit 원본 키(`umd`·이름 다르면 `srcApt`)를 1회 보강해 심어뒀다(`scripts/enrich-line-src.mjs`). 그래서 리프레시는 `${srcApt||danji}|${umd}` 정확 매칭으로 **미해결 0건**이다(예: 신사→`신동아(22)`, 옥수파크힐스, 성복→`성복역롯데캐슬골드타운`, 복정→`위례 래미안이편한세상`, 수지구청→`신정7단지(상록)공무원`). 새 pick 을 추가하면 `enrich-line-src.mjs` 를 다시 돌리고, 가격이 안 맞아 미해결로 뜨는 건만 molit 을 찾아 `srcApt`/`umd` 를 손으로 심는다.
+- 점검만 하려면 `node scripts/refresh-line-cards.mjs --to 202608 --dry`(데이터셋 미기록).
 - **기간 라벨**(빌더 subtitle `2026.01~07월`·데이터셋 disclaimer)은 창을 넓혔으면 함께 수정한다.
+
+## 9. 원커맨드 — "N호선 시세 작업해줘" (권장 경로)
+
+오너가 **"3호선 역세권 대장 아파트 시세 작업해줘"** 라고 하면, 새 세션은 이것 하나만 돌린다:
+
+```bash
+node scripts/line-card.mjs 3호선          # 문장/별칭 허용: "3호선 역세권 대장 아파트 시세", "신분당"
+node scripts/line-card.mjs 5호선 --no-render   # JSON 까지만
+node scripts/line-card.mjs 5호선 --collect 202608   # 새 달 수집부터(→ push→pull 후 --collect 없이 재실행)
+```
+
+`line-card.mjs` 가 순서대로: **① 리프레시(--only, 정확매칭) → ② 캡션 재생성 → ③ 카드 빌드 → ④ 렌더(PNG) → ⑤ designQa**. 자연어에서 노선 키를 뽑고(신분당/2~9호선), 데이터셋이 없으면 §7 절차를 안내하며 멈춘다. 결과 PNG·캡션을 오너에게 보여주고 **확정 시 `confirm.mjs`**. CLAUDE.md 상단 트리거 절이 이 경로를 가리킨다.

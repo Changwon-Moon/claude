@@ -8,10 +8,14 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-const SETS = [
+const ALL_SETS = [
   ["sinbundang","신분당선"],["line2","2호선"],["line3","3호선"],["line4","4호선"],["line5","5호선"],
   ["line6","6호선"],["line7","7호선"],["line8","8호선"],["line9","9호선"],
 ];
+// --only <key>: 한 노선 캡션만 재생성(통합본은 그대로 두려면 --no-all).
+const onlyIdx = process.argv.indexOf("--only");
+const only = onlyIdx>=0 ? process.argv[onlyIdx+1] : null;
+const SETS = only ? ALL_SETS.filter(s=>s[0]===only) : ALL_SETS;
 const dsFile = (k)=> join(ROOT, `data/datasets/${k}-daejang-2026.json`);
 const capFile = (k)=> join(ROOT, `data/review/captions/${k}-loop.txt`);
 const px = (p)=> (Math.round((p+1e-9)*10)/10).toFixed(1);
@@ -28,5 +32,5 @@ for (const [key,line] of SETS){
   writeFileSync(capFile(key), out); // {set}-loop.txt
   all += `═══════════════════════════════════════\n  ▸ ${key}-loop\n═══════════════════════════════════════\n\n${out}\n\n`;
 }
-writeFileSync(join(ROOT,"data/review/captions/_ALL-9lines.txt"), all);
-console.log("✅ 캡션 9종 + 통합본 재생성");
+if(!only){ writeFileSync(join(ROOT,"data/review/captions/_ALL-9lines.txt"), all); console.log("✅ 캡션 9종 + 통합본 재생성"); }
+else console.log(`✅ 캡션 재생성: ${SETS.map(s=>s[0]).join(", ")}`);

@@ -20,12 +20,15 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const MOLIT = join(ROOT, "data/datasets/molit");
-const LINES = ["sinbundang","line2","line3","line4","line5","line6","line7","line8","line9"];
+const ALL_LINES = ["sinbundang","line2","line3","line4","line5","line6","line7","line8","line9"];
 const dsPath = (k)=> join(ROOT, `data/datasets/${k==="sinbundang"?"sinbundang":k}-daejang-2026.json`);
 
 const argv = process.argv.slice(2);
 const getArg = (f)=>{ const i=argv.indexOf(f); return i>=0?argv[i+1]:null; };
 const collectMonth = getArg("--collect");
+// --only <key>: 특정 노선만 재추출·재빌드(line-card.mjs 오케스트레이터가 사용). 없으면 전 노선.
+const only = getArg("--only");
+const LINES = only ? ALL_LINES.filter(k=>k===only) : ALL_LINES;
 
 // 캐시에 있는 최신월 탐지
 function latestMonth(){
@@ -66,6 +69,7 @@ const from = getArg("--from") || "202601";
 const to   = getArg("--to")   || latestMonth();
 const months = monthsInRange(from,to);
 const rebuild = !argv.includes("--no-rebuild");
+const dry = argv.includes("--dry");   // 매칭만 점검, 데이터셋에 쓰지 않음
 console.log(`🔄 리프레시 기간: ${from}~${to} (${months.length}개월)`);
 
 // molit 전 파일에서 area 82~86 최고가 인덱스 — aptNm|umd(정확 매칭 전용)
@@ -86,8 +90,8 @@ let changed=0; const missList=[];
 for (const k of LINES){
   const ds=JSON.parse(readFileSync(dsPath(k),"utf8"));
   for (const p of ds.picks){ if(p.price==null) continue;
-    // 데이터셋 단지명(=molit aptNm)+umd 정확 매칭만 자동 갱신. 나머지는 표시만(세션 확인).
-    const b = p.umd ? byKey[`${p.danji}|${p.umd}`] : null;
+    // molit 원본키(srcApt||danji)+umd 정확 매칭만 자동 갱신. enrich-line-src 로 심어둔 srcApt 우선.
+    const b = p.umd ? byKey[`${p.srcApt||p.danji}|${p.umd}`] : null;
     if(!b){ missList.push(`[${ds.line?.name||k}] ${p.station} · ${p.danji}${p.umd?"|"+p.umd:" (umd 없음)"}`); continue; }
     const np=Math.round(b.p/100)/100, nd=`${b.ym.slice(0,4)}-${b.ym.slice(4)}`;
     if(disp(np)!==disp(p.price) || nd!==p.deal){   // 표시값이 바뀔 때만 갱신(반올림 잡음 무시)
@@ -96,13 +100,15 @@ for (const k of LINES){
     }
   }
   if(ds.meta) ds.meta.asOf=`${to.slice(0,4)}-${to.slice(4)}`;
-  writeFileSync(dsPath(k), JSON.stringify(ds,null,2)+"\n");
+  if(!dry) writeFileSync(dsPath(k), JSON.stringify(ds,null,2)+"\n");
 }
 if(missList.length){ console.log(`\n⚠️ 자동매칭 실패(단지명이 molit 원본과 달라 세션에서 확인 필요) ${missList.length}건:`); missList.forEach(x=>console.log("   - "+x)); }
 console.log(`\n표시값 변경 ${changed}건.`);
 console.log(`※ 기간 라벨(빌더 subtitle "2026.01~07월"·데이터셋 disclaimer)은 별도 확인 — 창을 넓혔으면 함께 수정.`);
 
-if (rebuild){
+if (dry){
+  console.log("→ --dry: 데이터셋 미기록(매칭 점검만).");
+} else if (rebuild){
   for (const k of LINES){ spawnSync("node",[`scripts/build-${k}-loop.mjs`],{cwd:ROOT,stdio:"inherit"}); }
   console.log("✅ 재빌드 완료. 렌더·QA·검수 후 confirm.mjs 로 확정.");
 } else {
