@@ -1,7 +1,7 @@
 {
   "meta": {
     "note": "소재(아이디어) 단일 원천. 관제탑이 읽고, 오너가 조작하면 GitHub API로 이 파일을 되쓴다.",
-    "updated": "2026-08-03",
+    "updated": "2026-07-31",
     "schema": "{id, cat(=발행 주기), topic(=주제/보관함 폴더), feed(auto|manual), title, why, source, state, status(done|\"\"), stage}",
     "catNote": "cat은 '주제'가 아니라 **얼마나 자주 내는가**다. 주제는 topic이 맡는다(보관함 폴더링). 2026-07-27 오너 지시로 재편.",
     "feedNote": "feed=auto 는 데이터가 스스로 갱신되는 소재 — 관제탑 [🔁 다시 제작] 버튼만으로 최신판이 나온다. feed=manual 은 자료를 사람(작업 세션)이 다시 넣어야 한다."
@@ -685,18 +685,6 @@
       "title": "🗓 2027 황금연휴 미리보기 — 연차 조합 계산",
       "why": "저장 유도 1등 소재(플로우 검증). 공휴일은 확정 데이터라 연차 조합은 코드로 계산 가능. 특일 API 연결하면 매년 자동",
       "source": "공공데이터 특일 API(미연결)",
-      "state": "",
-      "status": "",
-      "isNew": true
-    },
-    {
-      "id": "gongsigap",
-      "cat": "yearly",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "공시가격 vs 실거래가 갭 지도 — 세금은 어느 동네가 유리한가",
-      "why": "공시가(연 1회 공개) ÷ 실거래 중위가를 구별 계산. 큐레이션으론 못 만들고 계산으로만 나오는 카드 — 우리만 할 수 있는 각도",
-      "source": "공시가격 공개자료 + 국토부 실거래",
       "state": "",
       "status": "",
       "isNew": true
