@@ -93,7 +93,7 @@ force 없이 돌면 이미 받아둔 달은 영영 갱신되지 않는다 — �
 
 | | |
 |---|---|
-| 워크플로 | `.github/workflows/applyhome-collect.yml` — 매일 **08:00 KST**(`0 23 * * *` UTC) |
+| 워크플로 | `.github/workflows/applyhome-collect.yml` — 매일 **08:00 KST**(`0 23 * * *` UTC) · 대기열 푸시로도 즉시 실행 |
 | 키 | `DATA_GO_KR_API_KEY` (공공데이터포털) |
 | 오퍼레이션 | `getAPTLttotPblancDetail`(신규 APT) · `getRemndrLttotPblancDetail`(무순위·잔여세대) |
 | 산출 | `data/datasets/applyhome-latest.json` + `data/datasets/applyhome/{날짜}.json` |
@@ -145,6 +145,13 @@ LLM 이 고르지 않는다. **45점 이상**만 보드에 올라간다.
 **첫 실제 실행에서 필드 이름이 다르면 워크플로가 빨갛게 뜬다**(조용히 넘어가지 않는다).
 그때 실제 응답 한 건을 표본으로 옮겨 심고 별칭 목록을 고친다.
 
+### 세션이 결과를 보는 창구 — `data/applyhome-last.md`
+
+세션은 GitHub API 가 막혀 Actions 로그를 못 본다. 그래서 이 워크플로는 **성공이든 실패든**
+실행 조건·수집 로그·소재 등록 결과를 `data/applyhome-last.md` 에 적어 커밋한다
+(`research/article-fetch-last.md` 와 같은 방식). 세션은 `git pull` 로 그 파일을 읽는다.
+**오너에게 "Actions 를 열어 보세요"라고 하지 않기 위한 장치다.**
+
 ---
 
 ## 5. 세션이 수집을 걸어야 할 때
@@ -157,6 +164,7 @@ LLM 이 고르지 않는다. **45점 이상**만 보드에 올라간다.
 | 수집기 | 대기열 파일 | 한 줄 형식 |
 |---|---|---|
 | 실거래(국토부) | `data/molit-queue.txt` | `region=seoul gu=all months=202607 force=false` |
+| **청약홈(줍줍·신규분양)** | `data/applyhome-queue.txt` | `within=7 min=45` (둘 다 선택) |
 | 증시 | `data/market-queue.txt` | 아무 줄이나(파일이 바뀌면 실행) |
 | 자산·지오코딩 | `data/assets-queue.txt` · `data/geocode-queue.txt` | 각 워크플로 참조 |
 
