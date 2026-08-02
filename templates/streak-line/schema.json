@@ -8,7 +8,7 @@
   "properties": {
     "template": { "type": "string", "pattern": "^streak-line@\\d+$" },
     "date": { "type": "string" },
-    "badge": { "type": "string", "maxLength": 16 },
+    "badge": { "type": "string", "maxLength": 40 },
     "title": { "type": "string" },
     "note": { "type": "string", "maxLength": 80 },
     "chart": {

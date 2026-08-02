@@ -53,9 +53,9 @@ const ratio = r1(curCum / recCum);
 if (gap <= 0) throw new Error(`현재(${current.weeks})가 역대 최장(${record.weeks})을 이미 넘었다 — 제목을 바꾼다`);
 if (ratio < 1.9) throw new Error(`누적 배수 ${ratio} 가 2배 미만 — 제목을 고친다`);
 
-/* ── 좌표 (뷰박스 1000×850) ── */
+/* ── 좌표 (뷰박스 1000×715 — 그래프 높이 살짝 축소) ── */
 const RED = "#e5484d", SLATE = "#5b6b7f", INK = "#141821", MUTE = "#9aa3af";
-const AXIS_X = 95, RIGHT = 945, TOP = 64, BASE = 782;
+const AXIS_X = 95, RIGHT = 915, TOP = 70, BASE = 650, VB_H = 715;
 const WMAX = Math.max(current.weeks, record.weeks), YMAX = 17;
 const xw = (w) => r1(AXIS_X + ((w - 1) / (WMAX - 1)) * (RIGHT - AXIS_X));   // 1주차 = 좌축
 const yp = (p) => r1(BASE - (p / YMAX) * (BASE - TOP));
@@ -82,21 +82,21 @@ const polylines = [
 ];
 const cx = xw(current.weeks), cy = yp(curCum), rx = xw(record.weeks), ry = yp(recCum);
 const dots = [
-  { x: rx, y: ry, color: SLATE, r: 13 },
-  { x: cx, y: cy, color: RED, r: 14 },
+  { x: rx, y: ry, color: SLATE, r: 15 },
+  { x: cx, y: cy, color: RED, r: 16 },
 ];
 const vmarks = [
   { x: rx, y1: ry, y2: y0, color: SLATE },
   { x: cx, y1: cy, y2: y0, color: RED },
 ];
 const vlabels = [
-  { x: cx, y: cy - 30, text: `+${curCum.toFixed(2)}%`, fill: RED, anchor: "middle" },
-  { x: rx - 14, y: ry - 20, text: `+${recCum.toFixed(2)}%`, fill: SLATE, anchor: "end" },
+  { x: cx, y: cy - 36, text: `+${curCum.toFixed(2)}%`, fill: RED, anchor: "middle" },
+  { x: rx - 16, y: ry - 26, text: `+${recCum.toFixed(2)}%`, fill: SLATE, anchor: "end" },
 ];
 const xlabels = [
-  { x: AXIS_X, y: BASE + 52, text: "1주차", fill: MUTE },
-  { x: cx, y: BASE + 52, text: `${current.weeks}주`, fill: RED },
-  { x: rx, y: BASE + 52, text: `${record.weeks}주`, fill: SLATE },
+  { x: AXIS_X, y: BASE + 46, text: "1주차", fill: MUTE, anchor: "middle" },
+  { x: cx, y: BASE + 46, text: `${current.weeks}주`, fill: RED, anchor: "end" },
+  { x: rx, y: BASE + 46, text: `${record.weeks}주`, fill: SLATE, anchor: "start" },
 ];
 const ay = BASE - 26, midX = r1((cx + rx) / 2);
 const arrow = {
@@ -108,17 +108,22 @@ const arrow = {
   lx: midX, ly: ay - 16, text: `${gap}주`,
 };
 const legend = [
-  { sx1: 120, sx2: 182, sy: 172, color: RED, tx: 200, ty: 164, text: "현재 상승기", fill: INK, sub: "2025.2 첫째주 ~ 진행 중", sty: 206 },
-  { sx1: 120, sx2: 182, sy: 262, color: SLATE, tx: 200, ty: 254, text: "역대 최장 (文정부)", fill: INK, sub: "2020.6 둘째주 ~ 2022.1 셋째주", sty: 296 },
+  { sx1: 118, sx2: 196, sy: 178, color: RED, tx: 214, ty: 168, text: "현재 상승기", fill: INK, sub: "2025.2 첫째주 ~ 진행 중", sty: 214 },
+  { sx1: 118, sx2: 196, sy: 292, color: SLATE, tx: 214, ty: 282, text: "역대 최장 (文정부)", fill: INK, sub: "2020.6 둘째주 ~ 2022.1 셋째주", sty: 328 },
 ];
+/* 그래프 뒤 옅은 '서울' 배경 워드마크 (공식 로고 파일이 없어 워드마크로 — 자산 있으면 교체) */
+const bg = { x: 590, y: 540, size: 270, text: "서울", fill: INK, opacity: 0.05 };
+/* 범례 아래 빈 공간(좌하 삼각)에 위릿 워드마크 워터마크 */
+const wm = { x: 150, y: 452, size: 66, text: "위릿.", fill: "#2e6bff", opacity: 0.18, anchor: "start" };
 
 const card = {
   template: "streak-line@1",
   date,
-  badge: date.replace(/-/g, ".").slice(2),
-  title: `서울 아파트 <span class="hi">${current.weeks}주 연속</span> 상승<br>상승폭은 이미 文정부 <span class="hi">${ratio.toFixed(0)}배</span>`,
-  chart: { vb: "0 0 1000 850", base: { y: y0, x1: AXIS_X, x2: RIGHT }, grid, areas, ylabels, yunit, vmarks, polylines, dots, vlabels, xlabels, arrow, legend },
-  note: `역사상 최장 기간 연속 상승까지, 단 <b>${gap}주</b>`,
+  badge: `오늘의 주요 부동산 이슈 (${date.replace(/-/g, ".")})`,
+  title: `<span class="tl">서울 아파트 <span class="hi">${current.weeks}주 연속</span> 상승</span>` +
+         `<span class="tl">상승폭은 이미 文정부의 <span class="hi">${ratio.toFixed(0)}배</span></span>`,
+  chart: { vb: `0 0 1000 ${VB_H}`, bg, wm, base: { y: y0, x1: AXIS_X, x2: RIGHT }, grid, areas, ylabels, yunit, vmarks, polylines, dots, vlabels, xlabels, arrow, legend },
+  note: `역사상 최장 기간 연속 상승까지,<br>단 <b>${gap}주</b>`,
   source: { name: "한국부동산원 주간 아파트가격동향" },
 };
 
