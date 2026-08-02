@@ -241,6 +241,21 @@
       "caption": "line9-loop",
       "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
       "state": "시안"
+    },
+    {
+      "label": "mae-streak",
+      "title": "서울 아파트 78주 연속 상승 — 상승폭 文정부의 2배",
+      "cards": [
+        "mae-streak"
+      ],
+      "caption": "mae-streak",
+      "note": "원자료 계산(한국부동산원 주간 매매가격지수)·verified. 정기물(주간 갱신) — reb-weekly-index.json 의존. 서울 로고·워터마크는 저장소 자산/BRAND 슬롯 사용. / 원자료(부동산원 주간 매매지수) 계산 실곡선·verified. 정기물(주간 갱신). 서울 로고·워터마크 저장소 자산 사용. / 원자료(부동산원 주간 매매지수) 계산 실곡선·verified. 정기물(주간 갱신). 로고·워터마크 저장소 자산. / 원자료(부동산원 주간 매매지수) 계산 실곡선·verified. 정기물(주간 갱신). 로고·워터마크 저장소 자산.",
+      "state": "오너 확정",
+      "confirmedAt": "2026-08-02",
+      "confirmedMd5": [
+        "mae-streak:5fd952641afd"
+      ],
+      "pixelPolicy": "정기물 — data/datasets/reb-weekly-index.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
     }
   ]
 }
