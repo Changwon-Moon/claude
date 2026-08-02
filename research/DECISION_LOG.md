@@ -161,3 +161,12 @@
 - 산출물: `data/datasets/reb-weekly-index.json` (mae/jeonse: 코드→{YYYYMMDD:지수}). 세션은 reb.or.kr
   차단이라 **실행·검증은 Actions**. 표 ID는 하드코딩 안 함 — 첫 실행 자동선택, 어긋나면 discover 로 확인.
 - 다음: 데이터 들어오면 build-mae-streak 를 이 파일 소비로 바꿔 주별 실곡선+verified 로 승격.
+
+## 2026-08-01 (개정4) — 실데이터 곡선 전환 (verified)
+- Actions 주간 수집 성공 → reb-weekly-index.json(서울 매매 740주, 2012w19~2026w31, 시점키 YYYYWW).
+- build-mae-streak 를 이 파일 소비로 재작성: 서울 매매지수에서 '전주比 상승 연속 run'을 코드가 계산.
+  · 역대 최장 = 85주 +7.71% (202023~202204) — 첨부 부동산원 값과 정확히 일치(검증)
+  · 현재 = 78주 +15.55% (202503~202631) — 뉴스 '77주'는 30주차 기준, 데이터가 1주 더 최신(31주차)이라 78주.
+    오보 0 원칙대로 계산값(78주) 사용·차이 보고. 남은 주 = 85−78 = 7주(제목/부제/화살표 반영).
+- streak-line 템플릿을 직선→polyline(실곡선)으로 변경, schema polylines 필수화. designQa error 0, 발행본 md5 불변.
+- 손으로 적은 숫자 0개 — 주수·누적%·gap·배수·곡선 전부 원자료 계산. 정기물(주간 갱신)이라 pixel-baselines 미등록.

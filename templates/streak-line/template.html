@@ -55,7 +55,7 @@
           {{#each chart.vmarks}}<line x1="{{x}}" y1="{{y1}}" x2="{{x}}" y2="{{y2}}" stroke="{{color}}" stroke-width="2" stroke-dasharray="7 7" opacity="0.55" />{{/each}}
           {{#if chart.yunit}}<text class="sl-unit" x="{{chart.yunit.x}}" y="{{chart.yunit.y}}" text-anchor="middle">{{chart.yunit.text}}</text>{{/if}}
           {{#each chart.ylabels}}<text class="sl-yl" x="{{x}}" y="{{y}}" text-anchor="end">{{text}}</text>{{/each}}
-          {{#each chart.lines}}<line x1="{{x1}}" y1="{{y1}}" x2="{{x2}}" y2="{{y2}}" stroke="{{color}}" stroke-width="{{width}}" stroke-linecap="round" />{{/each}}
+          {{#each chart.polylines}}<polyline points="{{points}}" fill="none" stroke="{{color}}" stroke-width="{{width}}" stroke-linejoin="round" stroke-linecap="round" />{{/each}}
           {{#each chart.dots}}<circle cx="{{x}}" cy="{{y}}" r="{{r}}" fill="#fff" stroke="{{color}}" stroke-width="6" />{{/each}}
           {{#each chart.vlabels}}<text class="sl-vl" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="{{anchor}}">{{text}}</text>{{/each}}
           {{#each chart.xlabels}}<text class="sl-xl" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="middle">{{text}}</text>{{/each}}

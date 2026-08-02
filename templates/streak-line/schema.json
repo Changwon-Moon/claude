@@ -13,7 +13,7 @@
     "note": { "type": "string", "maxLength": 80 },
     "chart": {
       "type": "object",
-      "required": ["vb", "lines", "dots", "vlabels", "xlabels"],
+      "required": ["vb", "polylines", "dots", "vlabels", "xlabels"],
       "properties": {
         "vb": { "type": "string" },
         "base": { "type": "object" },
@@ -21,7 +21,7 @@
         "areas": { "type": "array" },
         "ylabels": { "type": "array" },
         "vmarks": { "type": "array" },
-        "lines": { "type": "array", "minItems": 2 },
+        "polylines": { "type": "array", "minItems": 2 },
         "dots": { "type": "array" },
         "vlabels": { "type": "array" },
         "xlabels": { "type": "array" },
