@@ -36,6 +36,8 @@ import {
   normalize as ahNormalize,
   recent as ahRecent,
   dedupe as ahDedupe,
+  mergeBlocks as ahMerge,
+  baseName as ahBase,
   rank as ahRank,
   toIsoDate as ahIso,
   toCount as ahCount,
@@ -426,6 +428,31 @@ console.log("\n[청약홈 분양정보 파서]");
   check("대단지·브랜드가 지방 소형보다 위", 
     ranked.findIndex((x) => x.name === "상동역 롯데캐슬 시그니처") < ranked.findIndex((x) => x.name === "지방소형단지"));
   check("브랜드를 알아본다(롯데캐슬)", ranked.find((x) => x.name.includes("롯데캐슬"))!.reasons.includes("롯데캐슬"));
+
+  /* ── 블록 합치기 (2026-08-02 첫 실제 실행에서 드러난 문제) ──
+     같은 단지가 블록마다 따로 공고돼 소재 보드 상위 5칸을 한 단지가 도배했다. */
+  check("블록 표기를 걷어낸다", ahBase("더샵 송도그란테르 G5-11블록") === "더샵 송도그란테르",
+    ahBase("더샵 송도그란테르 G5-11블록"));
+  check("괄호 안 블록도 걷어낸다", ahBase("금강펜테리움 6차(A59BL) (3차)") === "금강펜테리움 6차 (3차)",
+    ahBase("금강펜테리움 6차(A59BL) (3차)"));
+  // ⚠️ '2차'는 블록이 아니라 단지 이름의 일부다 — 지우면 1차와 합쳐져 오보가 된다
+  check("'N차'는 건드리지 않는다", ahBase("한화포레나 안산고잔2차") === "한화포레나 안산고잔2차",
+    ahBase("한화포레나 안산고잔2차"));
+
+  const blocks: typeof rem = [45, 36, 35].map((n, i) => ({
+    ...rem[0], pblancNo: `B${i}`, name: `더샵 송도그란테르 G5-${i + 1}블록`, supply: n,
+  }));
+  const merged = ahMerge(blocks);
+  check("블록 3건이 1건으로", merged.length === 1, String(merged.length));
+  check("세대수는 합계 116", merged[0].supply === 116, String(merged[0].supply));
+  check("합친 이름은 블록 없는 이름", merged[0].name === "더샵 송도그란테르", merged[0].name);
+  check("몇 개를 합쳤는지 남긴다", merged[0].blocks === 3, String(merged[0].blocks));
+  // 접수 마감일이 다르면(=다른 회차) 합치지 않는다
+  const diffDate = ahMerge([blocks[0], { ...blocks[1], receiptTo: "2026-08-09" }]);
+  check("접수일이 다르면 합치지 않는다", diffDate.length === 2, String(diffDate.length));
+  // 혼자면 이름을 그대로 둔다 — 블록만 지우면 사실 정보를 잃는다
+  const alone = ahMerge([blocks[0]]);
+  check("혼자면 원래 이름 유지", alone[0].name === "더샵 송도그란테르 G5-1블록", alone[0].name);
 
   const dup = ahDedupe([...fresh, ...fresh]);
   check("공고번호로 중복 제거", dup.length === fresh.length, String(dup.length));

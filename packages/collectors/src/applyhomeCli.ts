@@ -13,7 +13,7 @@
 import { writeFileSync, mkdirSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { fetchNotices, OPERATIONS } from "./sources/applyhome.js";
-import { normalize, recent, dedupe, rank, type Kind, type Notice } from "./parse/applyhome.js";
+import { normalize, recent, dedupe, mergeBlocks, rank, type Kind, type Notice } from "./parse/applyhome.js";
 import { APPLYHOME_APT_JSON, APPLYHOME_REMNDR_JSON } from "./__fixtures__/fixtures.js";
 
 const CWD = process.env.INIT_CWD || process.cwd();
@@ -56,7 +56,9 @@ async function main() {
     console.log(`· ${OPERATIONS[kind].label} — 전체 ${list.length}건`);
   }
 
-  const picked = rank(dedupe(recent(all, today, within)), today);
+  /* 블록별로 쪼개진 공고는 합친 뒤에 점수를 매긴다 — 순서가 중요하다.
+   합치기 전에 매기면 45가구짜리 다섯 줄이 되고, 합친 뒤에 매기면 150가구 한 줄이 된다. */
+  const picked = rank(mergeBlocks(dedupe(recent(all, today, within))), today);
 
   mkdirSync(join(outDir, "applyhome"), { recursive: true });
   const doc = {
@@ -85,7 +87,7 @@ async function main() {
   if (DRY) console.log("\n⚠️  --dry 모드 — 표본 응답입니다. 실제 청약홈 데이터가 아닙니다.");
   console.log(`\n✅ ${today} 기준 최근 ${within}일 이내·접수중 ${picked.length}건`);
   for (const p of picked.slice(0, 8)) {
-    const tail = p.receiptTo ? ` ~${p.receiptTo}` : "";
+    const tail = (p.receiptTo ? ` ~${p.receiptTo}` : "") + (p.blocks ? ` [${p.blocks}개 블록]` : "");
     console.log(`   ${String(p.score).padStart(3)}점  [${p.kind === "remndr" ? "줍줍" : "신규"}] ${p.name} (${p.areaName})${tail}  ${p.reasons.join("·")}`);
   }
   if (!picked.length) console.log("   (오늘 새로 뜬 공고 없음 — 이것도 사실이다. 빈 결과와 실패는 다르다)");

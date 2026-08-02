@@ -50,11 +50,19 @@ const daysLeft = (to) =>
  * 접수가 끝났는데 오너가 아직 손대지 않은(state === "") 자동 등록 건만 지운다.
  * 오너가 [진행]을 눌렀거나 메모를 남긴 것은 그대로 둔다 — 그건 오너의 결정이다. */
 const before = board.ideas.length;
+/* 이번 수집에 실제로 들어 있는 공고 목록 — '사라진 것'을 가려내는 기준.
+   ⚠️ 수집이 0건인 날에는 이 기준을 쓰지 않는다. 하루 API 가 비면 보드가 통째로 비워진다. */
+const inRun = new Set(notices.map(idOf));
+const runHasData = notices.length > 0;
 board.ideas = board.ideas.filter((i) => {
   if (!String(i.id).startsWith("ah-") || i.feed !== "auto") return true;
-  if (i.state !== "" || i.status) return true;
+  if (i.state !== "" || i.status) return true; // 오너가 손댄 것은 오너의 결정이다 — 건드리지 않는다
   const left = daysLeft(i.deadline);
-  return left === null || left >= 0;
+  if (left !== null && left < 0) return false; // 접수가 끝났다
+  /* 이번 수집에 없는 자동 소재도 내린다. 블록별로 쪼개졌던 공고를 한 줄로 합치면
+     옛 블록 항목들이 갈 곳을 잃는데(2026-08-02), 그것들이 보드에 남으면 같은 단지가 두 번 보인다. */
+  if (runHasData && !inRun.has(i.id)) return false;
+  return true;
 });
 const pruned = before - board.ideas.length;
 
@@ -74,7 +82,8 @@ for (const x of fresh) {
     feed: "auto",
     title: `${isJupjup ? "[줍줍]" : "[신규분양]"} ${x.name}`,
     why:
-      `${x.areaName}${x.supply ? ` · ${x.supply.toLocaleString("ko-KR")}가구` : ""}${dl}` +
+      `${x.areaName}${x.supply ? ` · ${x.supply.toLocaleString("ko-KR")}가구` : ""}` +
+      `${x.blocks ? `(${x.blocks}개 블록 합계)` : ""}${dl}` +
       ` · ${x.score}점(${x.reasons.join("·")})`,
     source: "한국부동산원 청약홈 API",
     state: "",
@@ -96,7 +105,8 @@ if (fresh.length) {
     const left = daysLeft(x.receiptTo);
     const urgent = left !== null && left >= 0 && left <= 2 ? ` ⏰D-${left}` : "";
     const tag = x.kind === "remndr" ? "줍줍" : "신규";
-    return `· [${tag}] ${x.name} (${x.areaName}${x.supply ? ` ${x.supply.toLocaleString("ko-KR")}가구` : ""})${urgent}`;
+    const blk = x.blocks ? ` ${x.blocks}블록` : "";
+    return `· [${tag}] ${x.name} (${x.areaName}${x.supply ? ` ${x.supply.toLocaleString("ko-KR")}가구` : ""}${blk})${urgent}`;
   });
   const more = fresh.length > TOP ? `\n외 ${fresh.length - TOP}건` : "";
   msg = `🏠 청약홈 새 공고 ${fresh.length}건 (${TODAY})\n${lines.join("\n")}${more}`;

@@ -52,6 +52,9 @@ export type Notice = {
   speculative: boolean;
   homepage: string | null;
   noticeUrl: string | null;
+  /** 블록별로 쪼개진 공고를 합쳤을 때 몇 건을 합쳤나(합치지 않았으면 없음) */
+  blocks?: number;
+  blockNames?: string[];
 };
 
 /* ── 필드 별칭 ──
@@ -238,6 +241,7 @@ export function score(x: Notice, today: string): Scored {
   if (brand) { s += 10; why.push(brand); }
 
   // ⑥ 규제 — 상한제는 시세차익 서사가 붙는다
+  if (x.blocks && x.blocks > 1) why.push(`${x.blocks}개 블록 합계`);
   if (x.priceCap) { s += 12; why.push("분양가상한제"); }
   if (x.speculative) { s += 5; why.push("투기과열지구"); }
 
@@ -254,6 +258,58 @@ export function rank(list: Notice[], today: string): Scored[] {
       const lb = daysBetween(today, b.receiptTo) ?? 9999;
       return la - lb;
     });
+}
+
+/* ────────────────────────────────────────────────────────────────────
+ * 블록별로 쪼개진 공고 합치기 (2026-08-02 첫 실제 실행에서 드러난 문제)
+ *
+ * 첫날 결과 상위 5칸을 「더샵 송도그란테르 G5-1·G5-3·G5-4·G5-5·G5-11블록」이 통째로 차지했다.
+ * 청약홈은 같은 단지라도 **블록마다 공고를 따로** 낸다. 그대로 두면 소재 보드가
+ * 한 단지로 도배되고, 오너는 다섯 줄을 보고도 "송도에 줍줍 하나 떴다"밖에 못 읽는다.
+ * 한 화면은 한 가지 일만 맡는다(CEO 07-26).
+ *
+ * 합치는 조건은 좁게 잡는다 — **같은 종류·같은 지역·같은 접수 마감일**이고 이름이
+ * 블록 표기만 다를 때. 회차가 다르면 접수일이 달라 자동으로 안 합쳐진다.
+ * ──────────────────────────────────────────────────────────────────── */
+
+/** 이름에서 블록 표기를 걷어낸다. "G5-11블록"·"(A59BL)"·"A5블록" 등.
+ *  ⚠️ "안산고잔2차"의 '2차'는 블록이 아니라 단지 이름의 일부다 — 건드리지 않는다. */
+export function baseName(name: string): string {
+  return name
+    .replace(/[(（]?\s*[A-Za-z]{0,3}\d+(?:-\d+)?\s*(?:블록|블럭|BL)\s*[)）]?/g, " ")
+    .replace(/\s{2,}/g, " ")
+    .replace(/\s*,\s*\)/g, ")")
+    .trim();
+}
+
+/**
+ * 블록 공고들을 한 줄로 합친다. 2건 이상 모일 때만 합치고, 혼자면 원래 이름을 그대로 둔다
+ * (혼자인데 이름에서 블록만 지우면 "A5블록"이라는 사실 정보를 잃는다).
+ * 합친 줄의 세대수는 **합계**다 — 45+36+35+12+22 = 150가구가 진짜 크기다.
+ */
+export function mergeBlocks(list: Notice[]): Notice[] {
+  const groups = new Map<string, Notice[]>();
+  for (const x of list) {
+    const key = `${x.kind}|${baseName(x.name)}|${x.areaName}|${x.receiptTo ?? ""}`;
+    const g = groups.get(key);
+    if (g) g.push(x);
+    else groups.set(key, [x]);
+  }
+
+  const out: Notice[] = [];
+  for (const g of groups.values()) {
+    if (g.length === 1) { out.push(g[0]); continue; }
+    const supplies = g.map((x) => x.supply).filter((v): v is number => v !== null);
+    const first = [...g].sort((a, b) => a.pblancNo.localeCompare(b.pblancNo))[0];
+    out.push({
+      ...first,
+      name: baseName(first.name),
+      supply: supplies.length ? supplies.reduce((a, b) => a + b, 0) : null,
+      blocks: g.length,
+      blockNames: g.map((x) => x.name),
+    });
+  }
+  return out;
 }
 
 /** 공고번호로 중복 제거 — 같은 단지가 여러 오퍼레이션에 걸쳐 나올 수 있다. */
