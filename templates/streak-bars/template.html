@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* streak-bars@1 — 두 국면(현재 vs 역대 최장)을 두 지표(연속 주수·누적 상승률)
+         막대로 비교한다. record-grid 의 머리·푸터 규격을 그대로 물려받고(같은 클래스),
+         본문만 글자 목록 대신 막대그래프로 바꾼 판형이다.
+         ── 왜 시계열 꺾은선이 아니라 막대인가
+         '주간 매매가격지수'의 주별 시계열 원자료가 저장소에 아직 없다. 없는 궤적을
+         지어내지 않는다(오보 0). 대신 확정된 네 수치(77·85주, +15.55·+7.71%)만으로
+         '주수는 2위인데 오름폭은 1위'라는 역설을 두 쌍의 막대로 정직하게 보여준다.
+         ── 막대 좌표는 빌더가 계산한다(TEMPLATES: 템플릿은 숫자를 만들지 않는다). */
+      .sb { display: flex; flex-direction: column; }
+      .sb-badge {
+        font-family: var(--font-num); font-size: 34px; font-weight: 900;
+        color: var(--wirit-gray); letter-spacing: 0.005em;
+      }
+      .sb-head { padding: 0; margin: 40px 0 0; }
+      .sb .wirit-title {
+        font-size: 76px; line-height: 1.04; text-align: left; white-space: nowrap;
+        margin: 0; letter-spacing: -0.04em;
+      }
+      .sb .wirit-title .hi { color: var(--wirit-red); }
+
+      .sb-chart { flex: 1 1 auto; display: flex; align-items: center; margin: 44px 0 0; }
+      .sb-svg { display: block; width: 100%; height: auto; }
+      .sb-base { stroke: var(--wirit-ink-12); stroke-width: 2; }
+      .sb-ptitle { font-family: var(--font-num); font-size: 30px; font-weight: 800; letter-spacing: -0.02em; }
+      .sb-vlabel { font-family: var(--font-num); font-size: 50px; font-weight: 900; letter-spacing: -0.03em; }
+      .sb-xlabel { font-family: var(--font-title); font-size: 34px; font-weight: 900; letter-spacing: -0.04em; }
+      .sb-xsub   { font-family: var(--font-num); font-size: 23px; font-weight: 600; letter-spacing: -0.02em; }
+
+      .sb-note {
+        flex: 0 0 auto; margin: 30px 2px 24px; font-size: 24px; font-weight: 700;
+        color: var(--wirit-gray); letter-spacing: -0.045em; line-height: 1.35;
+      }
+      .sb-note b { color: var(--wirit-red); font-weight: 900; }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card sb">
+      <div class="wirit-topcap">{{#if badge}}<span class="sb-badge">{{badge}}</span>{{/if}}</div>
+      <div class="sb-head"><h1 class="wirit-title">{{{title}}}</h1></div>
+
+      <div class="sb-chart">
+        <svg class="sb-svg" viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          {{#if chart.baseline}}<line class="sb-base" x1="{{chart.baseline.x1}}" y1="{{chart.baseline.y}}" x2="{{chart.baseline.x2}}" y2="{{chart.baseline.y}}" />{{/if}}
+          {{#each chart.bars}}<rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" rx="8" fill="{{fill}}" />{{/each}}
+          {{#each chart.ptitles}}<text class="sb-ptitle" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="middle">{{text}}</text>{{/each}}
+          {{#each chart.vlabels}}<text class="sb-vlabel" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="middle">{{text}}</text>{{/each}}
+          {{#each chart.xlabels}}<text class="sb-xlabel" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="middle">{{text}}</text>{{/each}}
+          {{#each chart.xsubs}}<text class="sb-xsub" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="middle">{{text}}</text>{{/each}}
+        </svg>
+      </div>
+
+      {{#if note}}<div class="sb-note">{{{note}}}</div>{{/if}}
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <script>
+      /* 제목이 카드 폭을 채우게 키우고 줄인다(다른 카드와 같은 코드·같은 이유). */
+      window.__wiritFit = function () {
+        var el = document.querySelector(".sb .wirit-title");
+        if (!el) return;
+        var box = el.parentElement, bs = getComputedStyle(box);
+        var avail = box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
+        var lo = 34, hi = 112, best = 34;
+        for (var i = 0; i < 24; i++) {
+          var mid = (lo + hi) / 2;
+          el.style.fontSize = mid + "px";
+          if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+    </script>
+  </body>
+</html>
