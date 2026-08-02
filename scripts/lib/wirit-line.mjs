@@ -32,9 +32,13 @@ function badgeNum(cx, cy, code, col, dark) {
     + `<text x="${cx}" y="${cy+6}" text-anchor="middle" fill="${tc}" font-family="Pretendard" font-weight="800" font-size="21">${code}</text>`;
 }
 function badgeText(cx, cy, code, col, dark) {
-  const tc = dark ? "#141821" : "#fff"; const w = code.length * 12 + 16;
-  return `<rect x="${cx-w/2}" y="${cy-13}" width="${w}" height="26" rx="7" fill="${col}"/>`
-    + `<text x="${cx}" y="${cy+5}" text-anchor="middle" fill="${tc}" font-family="Pretendard" font-weight="800" font-size="14">${code}</text>`;
+  const tc = dark ? "#141821" : "#fff";
+  // GTX 뱃지는 라벨이 길어(‘GTX-A’) 레일에 겹쳐 → 더 작게(폰트·폭·높이 축소).
+  const isGtx = /^GTX/.test(code);
+  const fs = isGtx ? 11 : 14, per = isGtx ? 8 : 12, pad = isGtx ? 12 : 16, h = isGtx ? 21 : 26;
+  const w = code.length * per + pad;
+  return `<rect x="${cx-w/2}" y="${cy-h/2}" width="${w}" height="${h}" rx="6" fill="${col}"/>`
+    + `<text x="${cx}" y="${cy+fs*0.35}" text-anchor="middle" fill="${tc}" font-family="Pretendard" font-weight="800" font-size="${fs}">${code}</text>`;
 }
 
 /**
@@ -107,7 +111,8 @@ export function renderLineCard(cfg) {
         const pr = price[name].price, gu = GU[name], guc = hexA(GUC[gu], 0.16), top = (pr >= PMAX - 0.001);
         const bg = `background:rgba(${CR},${CG},${CB},${heat(pr)});`;
         const prDisp = (Math.round((pr + 1e-9) * 10) / 10).toFixed(1);
-        cards.push({ style: `${styleL}top:${Math.round(y-44)}px;${bg}`, align, rep: true, name, danji: DISP[name], pr: prDisp, gu, guc, top });
+        const sub = cfg.SUB && cfg.SUB[name];   // 전용면적 예외 표기(예: 전용 101㎡ 기준) — 약하게
+        cards.push({ style: `${styleL}top:${Math.round(y-44)}px;${bg}`, align, rep: true, name, danji: DISP[name], sub, pr: prDisp, gu, guc, top });
       } else {
         const gu = GU[name] || (cfg.nameOnly && cfg.nameOnly[name]) || "";
         const guc = GUC[gu] ? hexA(GUC[gu], 0.16) : "transparent";

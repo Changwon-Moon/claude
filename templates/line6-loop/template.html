@@ -26,8 +26,12 @@
       .slp-top { font-size: 14px; font-weight: 800; color: #fff; background: #A85A16; padding: 2px 7px; border-radius: 6px; line-height: 1.25; white-space: nowrap; flex: 0 0 auto; }
       /* 단지명 — 크게, 필요시 두 줄. 줄바꿈은 단어 단위(keep-all + 빌더 ZWSP). 2줄 높이 확보로 큰 가격 겹침 방지. */
       .slp-danji { font-size: 29px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.045em; line-height: 1.08;
-        word-break: keep-all; overflow-wrap: normal; min-height: 69px;
+        word-break: keep-all; overflow-wrap: normal;
         display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; max-width: 200px; }
+      .slp-danjibox { display: flex; flex-direction: column; min-height: 69px; }
+      .slp-card.l .slp-danjibox { align-items: flex-end; }
+      .slp-card.r .slp-danjibox { align-items: flex-start; }
+      .slp-sub { font-size: 12px; font-weight: 700; color: var(--wirit-gray); opacity: 0.68; letter-spacing: -0.02em; line-height: 1.1; margin-top: 2px; white-space: nowrap; }
       .slp-priceB { font-family: var(--font-num); font-size: 40px; font-weight: 900; color: var(--wirit-ink); line-height: 1; white-space: nowrap; flex: 0 0 auto; font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
       .slp-priceB.top { color: #A85A16; }
       .slp-card.r .slp-priceB { margin-right: 6px; }
@@ -49,7 +53,7 @@
           {{#if this.rep}}
           <div class="slp-txt">
             <span class="slp-stnrow"><span class="slp-stn">{{this.name}}</span><span class="slp-gu" style="background:{{this.guc}}">{{this.gu}}</span></span>
-            <span class="slp-danji">{{this.danji}}</span>
+            <span class="slp-danjibox"><span class="slp-danji">{{this.danji}}</span>{{#if this.sub}}<span class="slp-sub">{{this.sub}}</span>{{/if}}</span>
           </div>
           <div class="slp-priceB{{#if this.top}} top{{/if}}">{{this.pr}}<span class="u">억</span></div>
           {{else}}
