@@ -151,3 +151,13 @@
 - `.sl-note` 를 designQa LEAF + footerGap 에 등록. 발행본 8장 md5 불변.
 - streak-bars@1(막대 버전)도 저장소에 남겨둠 — 오너가 고르면 빌더 template 만 바꾸면 된다.
 - ⚠️ verified=false 유지(보도 인용). R-ONE 주간 매매지수 수집·재계산이 발행 조건.
+
+## 2026-08-01 (개정3) — 주간 매매·전세 수집기 추가
+- 오너 "주간 매매/전세 실데이터로". 기존 R-ONE 수집기는 월간 전세·월세 전용(주간 명시적 제외).
+- 추가: `sources/rebWeekly.ts`(WK 수집·유연한 시점파싱 6~8자리·미완저장 금지) + `rebWeeklyCli.ts`
+  (--discover/--probe/--collect, 표 자동선택 or --mae/--jeonse 못박기) + 워크플로 `reb-weekly-collect.yml`
+  (기존 RONE_API_KEY 사용, 금요일 cron, push/dispatch 트리거) + 대기열 `data/reb-weekly-queue.txt`.
+- 기존 rebIndex 의 getJson·rowsOf·pick 만 export 로 재사용(월간 코드 로직은 불변). 셀프테스트 85/0 통과.
+- 산출물: `data/datasets/reb-weekly-index.json` (mae/jeonse: 코드→{YYYYMMDD:지수}). 세션은 reb.or.kr
+  차단이라 **실행·검증은 Actions**. 표 ID는 하드코딩 안 함 — 첫 실행 자동선택, 어긋나면 discover 로 확인.
+- 다음: 데이터 들어오면 build-mae-streak 를 이 파일 소비로 바꿔 주별 실곡선+verified 로 승격.

@@ -1,0 +1,5 @@
+# 주간 매매·전세 지수 수집 요청 대기열 — 이 파일이 바뀌면 reb-weekly-collect.yml 이 돈다.
+# (작업 세션은 reb.or.kr 네트워크 차단 + Run 버튼 못 눌러 push 가 유일한 손잡이)
+# 첫 실행은 자동선택을 시도한다. 어긋나면 Actions 에서 mode=discover 로 [WK] 표 ID를 확인해
+# workflow_dispatch 입력 mae/jeonse 로 못 박는다.
+2026-08-01 최초 요청 — 주간 매매/전세 수집기 추가, 자동선택으로 첫 수집 시도

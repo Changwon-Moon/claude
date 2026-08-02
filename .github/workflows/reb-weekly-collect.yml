@@ -1,0 +1,121 @@
+name: 주간 매매·전세 지수 수집 (한국부동산원)
+
+# 한국부동산원 R-ONE 에서 **주간** 아파트 매매가격지수·전세가격지수 계열을 받아 커밋한다.
+# '연속 상승 국면' 카드(주별 누적 곡선)의 재료다. 지수를 만드는 기관이 부동산원 자신이라 1차 출처(오보 0).
+# RONE_API_KEY(무료) 필요 → GitHub Secrets(전세·월세 수집과 같은 키). 발급 안내: docs/guides/reb-key.md
+#
+# ⚠️ 표(STATBL_ID)는 하드코딩하지 않는다. 처음엔 mode=discover 로 주간 매매/전세 [WK] 표 ID를 확인하고,
+#    자동선택이 어긋나면 workflow_dispatch 입력 mae/jeonse 로 못 박는다.
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "collect(수집) · discover(통계표 찾기) · probe(조회 형태 실측)"
+        required: true
+        default: "collect"
+      keyword:
+        description: "discover 일 때 찾을 이름 (예: 매매)"
+        required: false
+        default: "매매"
+      mae:
+        description: "collect 일 때 매매 주간 표 ID를 못 박기(선택 — 비우면 자동선택)"
+        required: false
+        default: ""
+      jeonse:
+        description: "collect 일 때 전세 주간 표 ID를 못 박기(선택 — 비우면 자동선택)"
+        required: false
+        default: ""
+      probe_id:
+        description: "probe 일 때 조회 형태를 실측할 표 ID"
+        required: false
+        default: ""
+  schedule:
+    # 부동산원 주간 아파트가격동향은 목요일 공표 → 금요일 01:07 UTC(10:07 KST)에 돈다
+    - cron: "7 1 * * 5"
+  # 대기열 한 줄 push 또는 소스 변경으로 등록·트리거된다(세션은 Run 버튼을 못 눌러 push 가 유일한 손잡이)
+  push:
+    branches:
+      - claude/instagram-content-automation-roadmap-fxnb7p
+    paths:
+      - ".github/workflows/reb-weekly-collect.yml"
+      - "packages/collectors/src/sources/rebWeekly.ts"
+      - "packages/collectors/src/rebWeeklyCli.ts"
+      - "data/reb-weekly-queue.txt"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: reb-weekly-collect
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: 파서 셀프테스트
+        run: pnpm --filter @wirit/collectors selftest
+
+      - name: 키 확인
+        env:
+          RONE_API_KEY: ${{ secrets.RONE_API_KEY }}
+          REB_API_KEY: ${{ secrets.REB_API_KEY }}
+        run: |
+          if [ -z "$RONE_API_KEY" ] && [ -z "$REB_API_KEY" ]; then
+            echo "::error::RONE_API_KEY 시크릿이 없습니다 — 발급 안내: docs/guides/reb-key.md"
+            exit 1
+          fi
+          echo "키 확인됨"
+
+      - name: 주간 통계표 찾기 (discover)
+        if: github.event.inputs.mode == 'discover'
+        env:
+          RONE_API_KEY: ${{ secrets.RONE_API_KEY }}
+          REB_API_KEY: ${{ secrets.REB_API_KEY }}
+        run: |
+          pnpm --filter @wirit/collectors exec tsx src/rebWeeklyCli.ts --discover "${{ github.event.inputs.keyword }}"
+
+      - name: 조회 형태 실측 (probe)
+        if: github.event.inputs.mode == 'probe'
+        env:
+          RONE_API_KEY: ${{ secrets.RONE_API_KEY }}
+          REB_API_KEY: ${{ secrets.REB_API_KEY }}
+        run: |
+          pnpm --filter @wirit/collectors exec tsx src/rebWeeklyCli.ts --probe "${{ github.event.inputs.probe_id }}"
+
+      - name: 주간 매매·전세 지수 수집
+        if: github.event.inputs.mode != 'discover' && github.event.inputs.mode != 'probe'
+        env:
+          RONE_API_KEY: ${{ secrets.RONE_API_KEY }}
+          REB_API_KEY: ${{ secrets.REB_API_KEY }}
+        run: |
+          ARGS="--collect --out $GITHUB_WORKSPACE/data/datasets/reb-weekly-index.json"
+          if [ -n "${{ github.event.inputs.mae }}" ]; then ARGS="$ARGS --mae ${{ github.event.inputs.mae }}"; fi
+          if [ -n "${{ github.event.inputs.jeonse }}" ]; then ARGS="$ARGS --jeonse ${{ github.event.inputs.jeonse }}"; fi
+          pnpm --filter @wirit/collectors exec tsx src/rebWeeklyCli.ts $ARGS
+
+      - name: 데이터셋 커밋
+        if: github.event.inputs.mode != 'discover' && github.event.inputs.mode != 'probe'
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "noreply@github.com"
+          git add -- data/datasets/reb-weekly-index.json
+          if git diff --cached --quiet; then
+            echo "변경 없음 — 이번 주 공표분이 아직 반영되지 않았을 수 있습니다"
+          else
+            git commit -m "주간 매매·전세 지수 수집(부동산원)"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
