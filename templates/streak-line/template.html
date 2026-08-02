@@ -4,29 +4,23 @@
     <meta charset="utf-8" />
     <!--WIRIT_SHARED_CSS-->
     <style>
-      /* streak-line@1 — 두 국면의 '누적 상승률 궤적'을 직선 두 개로 비교한다.
-         직선 = 시작→끝 평균 궤적(끝점 = 실제 누적). 주별 시계열 원자료가 없어 굴곡은 그리지 않는다(오보 0).
-         현재(빨강)가 더 짧은데 더 가파르게 올라 더 높이 닿는다 — "이번 상승기는 이전과 다르다".
-         좌표는 빌더가 계산한다(템플릿은 숫자를 만들지 않는다). 크롬은 record-grid 규격 상속. */
+      /* streak-line@1 — 두 국면의 '누적 상승률 궤적'을 실제 주간 지수로 그린 곡선 두 개로 비교한다.
+         현재(빨강)가 더 짧은데 더 가파르게·더 높이 — "이번 상승기는 이전과 다르다".
+         수치·곡선은 빌더가 원자료(부동산원 주간 매매지수)에서 계산한다(오보 0). 크롬은 record-grid 규격 상속. */
       .sl { display: flex; flex-direction: column; }
       .sl-badge {
         font-family: var(--font-num); font-size: 34px; font-weight: 900;
         color: var(--wirit-gray); letter-spacing: 0.005em;
       }
-      .sl-head { padding: 0; margin: 30px 0 0; }
+      .sl-head { padding: 0; margin: 36px 0 0; }
       .sl .wirit-title {
         font-family: var(--font-title);
-        font-size: 74px; line-height: 1.12; text-align: left; letter-spacing: -0.04em;
-        margin: 0; word-break: keep-all;
+        font-size: 86px; line-height: 1.12; text-align: left; letter-spacing: -0.045em;
+        margin: 0; white-space: nowrap;
       }
       .sl .wirit-title .hi { color: var(--wirit-red); }
-      .sl-sub {
-        margin: 18px 0 0; font-family: var(--font-num); font-size: 42px; font-weight: 700;
-        color: var(--wirit-gray); letter-spacing: -0.04em; word-break: keep-all; line-height: 1.2;
-      }
-      .sl-sub .hi { color: var(--wirit-red); font-weight: 900; }
 
-      .sl-chart { flex: 1 1 auto; display: flex; align-items: center; margin: 30px 0 6px; }
+      .sl-chart { flex: 1 1 auto; display: flex; align-items: center; margin: 32px 0 4px; }
       .sl-svg { display: block; width: 100%; height: auto; }
       .sl-grid { stroke: var(--wirit-ink-06); stroke-width: 1.5; }
       .sl-axis { stroke: #c9cdd4; stroke-width: 2.5; }
@@ -37,15 +31,20 @@
       .sl-lg { font-family: var(--font-num); font-size: 30px; font-weight: 800; }
       .sl-lgs { font-family: var(--font-num); font-size: 24px; font-weight: 600; }
       .sl-arw { font-family: var(--font-num); font-size: 30px; font-weight: 900; }
+
+      /* 그래프 아래·푸터 위 한 줄. LEAF·footerGap 에 .sl-note 등록되어 겹침·여백 검사 대상. */
+      .sl-note {
+        flex: 0 0 auto; margin: 18px 2px 22px; font-family: var(--font-num);
+        font-size: 35px; font-weight: 800; color: var(--wirit-gray);
+        letter-spacing: -0.05em; line-height: 1.25;
+      }
+      .sl-note b { color: var(--wirit-red); font-weight: 900; }
     </style>
   </head>
   <body>
     <div class="wirit-card sl">
       <div class="wirit-topcap">{{#if badge}}<span class="sl-badge">{{badge}}</span>{{/if}}</div>
-      <div class="sl-head">
-        <h1 class="wirit-title">{{{title}}}</h1>
-        {{#if subtitle}}<div class="sl-sub">{{{subtitle}}}</div>{{/if}}
-      </div>
+      <div class="sl-head"><h1 class="wirit-title">{{{title}}}</h1></div>
 
       <div class="sl-chart">
         <svg class="sl-svg" viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
@@ -72,10 +71,29 @@
         </svg>
       </div>
 
+      {{#if note}}<div class="sl-note">{{{note}}}</div>{{/if}}
+
       <div class="wirit-footer">
         <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
         <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
       </div>
     </div>
+
+    <script>
+      /* 제목을 카드 폭에 꽉 차게 키운다(2줄 — <br> 포함이라 scrollWidth 는 가장 긴 줄 폭). */
+      window.__wiritFit = function () {
+        var el = document.querySelector(".sl .wirit-title");
+        if (!el) return;
+        var box = el.parentElement, bs = getComputedStyle(box);
+        var avail = box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
+        var lo = 44, hi = 128, best = 44;
+        for (var i = 0; i < 26; i++) {
+          var mid = (lo + hi) / 2;
+          el.style.fontSize = mid + "px";
+          if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+    </script>
   </body>
 </html>

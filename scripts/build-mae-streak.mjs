@@ -116,9 +116,9 @@ const card = {
   template: "streak-line@1",
   date,
   badge: date.replace(/-/g, ".").slice(2),
-  title: `서울 아파트, 상승폭은 이미<br><span class="hi">文정부의 ${ratio.toFixed(0)}배</span>`,
-  subtitle: `최장 기간 연속 상승까지 단 <span class="hi">${gap}주</span> 남았다`,
+  title: `서울 아파트 <span class="hi">${current.weeks}주 연속</span> 상승<br>상승폭은 이미 文정부 <span class="hi">${ratio.toFixed(0)}배</span>`,
   chart: { vb: "0 0 1000 850", base: { y: y0, x1: AXIS_X, x2: RIGHT }, grid, areas, ylabels, yunit, vmarks, polylines, dots, vlabels, xlabels, arrow, legend },
+  note: `역사상 최장 기간 연속 상승까지, 단 <b>${gap}주</b>`,
   source: { name: "한국부동산원 주간 아파트가격동향" },
 };
 
