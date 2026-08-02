@@ -253,7 +253,7 @@
       "state": "오너 확정",
       "confirmedAt": "2026-08-02",
       "confirmedMd5": [
-        "mae-streak:5fd952641afd"
+        "mae-streak:ed884ffc0acb"
       ],
       "pixelPolicy": "정기물 — data/datasets/reb-weekly-index.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
     }

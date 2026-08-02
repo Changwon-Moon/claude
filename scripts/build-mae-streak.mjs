@@ -18,7 +18,6 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const date = process.argv[2] || "2026-08-01";
 const d = JSON.parse(readFileSync(join(ROOT, "data/datasets/reb-weekly-index.json"), "utf8"));
 const sc = d.meta.seoulCode;
 const series = d.mae?.[sc];
@@ -28,6 +27,28 @@ const ks = Object.keys(series).sort();          // YYYYWW 정렬
 const vals = ks.map((k) => series[k]);
 const r1 = (v) => Math.round(v * 10) / 10;
 const r2 = (v) => Math.round(v * 100) / 100;
+
+/* ── 시점 코드(YYYYWW) → 실제 날짜: 손으로 안 적는다(오보 0). 매주 자동으로 굴러간다 ──
+ * WW = ISO 연차주. 그 주 월요일 = 부동산원 '기준일'(보도자료 "(m.d일 기준)"과 같은 날).
+ * 202631 이 2026-07-27(월, ISO 31주)로 나오는 것을 오늘 날짜로 검증했다. */
+const mondayOf = (key) => {
+  const y = +key.slice(0, 4), w = +key.slice(4);
+  const simple = new Date(Date.UTC(y, 0, 1 + (w - 1) * 7));
+  const dow = simple.getUTCDay() || 7;
+  const mon = new Date(simple); mon.setUTCDate(simple.getUTCDate() - dow + 1);
+  return mon;                                    // UTC 자정 기준 월요일
+};
+const ORD = ["", "첫", "둘", "셋", "넷", "다섯"];
+const weekLabel = (key) => {                      // "2020.6 둘째주" (부동산원식 월-주차)
+  const m = mondayOf(key);
+  const wom = Math.floor((m.getUTCDate() - 1) / 7) + 1;
+  return `${m.getUTCFullYear()}.${m.getUTCMonth() + 1} ${ORD[wom]}째주`;
+};
+const isoDate = (key) => mondayOf(key).toISOString().slice(0, 10);   // YYYY-MM-DD
+
+/* 뱃지·저장 폴더 날짜 = 최신 데이터 주(기준일). 인자를 주면 그걸로 덮어쓸 수 있다(테스트용). */
+const latestKey = d.meta.asOf || ks[ks.length - 1];
+const date = process.argv[2] || isoDate(latestKey);
 
 /* ── 연속 상승 run 계산: 전주比 상승이 이어진 구간. base=첫 상승 직전(저점) ── */
 const runs = [];
@@ -107,9 +128,13 @@ const arrow = {
   ],
   lx: midX, ly: ay - 16, text: `${gap}주`,
 };
+/* 범례 기간 라벨도 원자료에서 계산한다(손으로 적지 않는다). 상승 시작주 = base 다음 주(첫 상승주). */
+const curStart = weekLabel(ks[current.base + 1]);
+const recStart = weekLabel(ks[record.base + 1]);
+const recEnd = weekLabel(ks[record.end]);
 const legend = [
-  { sx1: 118, sx2: 196, sy: 120, color: RED, tx: 214, ty: 110, text: "현재 상승기", fill: INK, sub: "2025.2 첫째주 ~ 진행 중", sty: 156 },
-  { sx1: 118, sx2: 196, sy: 210, color: SLATE, tx: 214, ty: 200, text: "역대 최장 (文정부)", fill: INK, sub: "2020.6 둘째주 ~ 2022.1 셋째주", sty: 246 },
+  { sx1: 118, sx2: 196, sy: 120, color: RED, tx: 214, ty: 110, text: "현재 상승기", fill: INK, sub: `${curStart} ~ 진행 중`, sty: 156 },
+  { sx1: 118, sx2: 196, sy: 210, color: SLATE, tx: 214, ty: 200, text: "역대 최장 (文정부)", fill: INK, sub: `${recStart} ~ ${recEnd}`, sty: 246 },
 ];
 /* 그래프 뒤 옅은 '서울' 배경 워드마크 (공식 로고 파일이 없어 워드마크로 — 자산 있으면 교체) */
 /* 그래프 뒤 서울시 공식 로고(자동 수집 자산)를 옅게 배경으로 — 텍스트 대체가 아니라 실제 자산 */
@@ -134,7 +159,7 @@ const outDir = join(ROOT, "data/content", date);
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "mae-streak.json"), JSON.stringify(card, null, 2) + "\n", "utf8");
 
-console.log(`mae-streak (streak-line, 실곡선) — 원자료 계산`);
-console.log(`   현재 ${current.weeks}주(${ks[current.base]}~${ks[current.end]}) 누적 +${curCum}%`);
+console.log(`mae-streak (streak-line, 실곡선) — 원자료 계산 · 기준일 ${date}(최신 주 ${latestKey})`);
+console.log(`   현재 ${current.weeks}주(${ks[current.base]}~${ks[current.end]}) 누적 +${curCum}% · 시작 ${curStart}`);
 console.log(`   역대 최장 ${record.weeks}주(${ks[record.base]}~${ks[record.end]}) 누적 +${recCum}%`);
 console.log(`   남은 ${gap}주 · 배수 ${ratio}배 · 곡선점 현재 ${curCurve.length}·역대 ${recCurve.length}`);

@@ -201,9 +201,7 @@
     {
       "label": "mae-streak",
       "cmd": "scripts/build-mae-streak.mjs",
-      "args": [
-        "2026-08-01"
-      ]
+      "args": []
     }
   ]
 }
