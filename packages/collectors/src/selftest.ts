@@ -33,6 +33,19 @@ import {
 import { encKey } from "./sources/molit.js";
 import { toSeries, regionNames, ambiguousNames, latestMonth, readPage, type RebPoint } from "./sources/rebIndex.js";
 import {
+  normalize as ahNormalize,
+  recent as ahRecent,
+  dedupe as ahDedupe,
+  rank as ahRank,
+  toIsoDate as ahIso,
+  toCount as ahCount,
+  daysBetween as ahDays,
+} from "./parse/applyhome.js";
+import { buildUrl as ahUrl, encKey as ahEncKey } from "./sources/applyhome.js";
+import {
+  APPLYHOME_APT_JSON,
+  APPLYHOME_REMNDR_JSON,
+  APPLYHOME_SHAPE_CHANGED_JSON,
   STOOQ_SPX_CSV,
   STOOQ_WITH_GAPS_CSV,
   ECOS_FX_JSON,
@@ -363,6 +376,64 @@ console.log("\n[부동산원 전세·월세 지수 — R-ONE]");
   try { readPage({ SttsApiTblData: [{ head: [{ RESULT: { CODE: "INFO-200", MESSAGE: "해당하는 데이터가 없습니다." } }] }] }); }
   catch (e) { threw2 = String((e as Error).message); }
   check("껍데기 안의 오류 코드도 잡는다", threw2.includes("INFO-200"), threw2);
+}
+
+console.log("\n[청약홈 분양정보 파서]");
+{
+  const TODAY = "2026-08-01"; // 오늘을 인자로 못박는다 — 시계에 의존하면 테스트가 내일 깨진다
+
+  check("날짜 정규화 20260810 → 2026-08-10", ahIso("20260810") === "2026-08-10");
+  check("점 찍힌 날짜도 읽는다", ahIso("2026.08.10") === "2026-08-10");
+  check("빈 값·형식 오류는 null", ahIso("") === null && ahIso("2026-8") === null);
+  check("세대수 1,859 → 1859", ahCount("1,859") === 1859);
+  check("세대수 0·빈칸은 null(0 으로 채우지 않는다)", ahCount("0") === null && ahCount(null) === null);
+  check("남은 일수 계산", ahDays(TODAY, "2026-08-03") === 2);
+
+  const apt = ahNormalize(JSON.parse(APPLYHOME_APT_JSON), "apt");
+  check("APT 3건 정규화", apt.length === 3, String(apt.length));
+  check("공고번호·이름을 읽는다", apt[0].pblancNo === "2026000401" && apt[0].name === "상동역 롯데캐슬 시그니처");
+  check("세대수 1859", apt[0].supply === 1859, String(apt[0].supply));
+  // 접수 마감 필드 이름이 오퍼레이션마다 다르다 — 별칭 목록의 첫 발견값을 쓴다
+  check("APT 접수 마감을 별칭으로 찾는다", apt[0].receiptTo === "2026-08-13", String(apt[0].receiptTo));
+  check("무명 단지는 접수 필드가 달라도 읽힌다", apt[1].receiptTo === "2026-08-07", String(apt[1].receiptTo));
+
+  const rem = ahNormalize(JSON.parse(APPLYHOME_REMNDR_JSON), "remndr");
+  check("무순위 접수 마감(SUBSCRPT_RCEPT_ENDDE)", rem[0].receiptTo === "2026-08-02", String(rem[0].receiptTo));
+  check("상한제·투기과열 플래그", rem[0].priceCap === true && rem[0].speculative === true);
+  check("시행사만 있으면 그것을 쓴다", rem[0].builder === "샘플주택", String(rem[0].builder));
+
+  // ⚠️ 필드 이름이 바뀌면 **빈 결과가 아니라 예외**여야 한다.
+  //    빈 배열로 넘기면 "오늘은 공고가 없었다"와 구분되지 않는다(2026-07-31 조용한 실패 교훈).
+  let ahThrew = "";
+  try { ahNormalize(JSON.parse(APPLYHOME_SHAPE_CHANGED_JSON), "apt"); }
+  catch (e) { ahThrew = String((e as Error).message); }
+  check("필드 이름이 바뀌면 던진다", ahThrew.includes("필드 이름"), ahThrew);
+
+  let ahThrew2 = "";
+  try { ahNormalize({} as never, "apt"); }
+  catch (e) { ahThrew2 = String((e as Error).message); }
+  check("data 배열이 없으면 던진다", ahThrew2.includes("data"), ahThrew2);
+
+  // 최근 것만 — 6월 공고(접수도 끝남)는 빠져야 한다
+  const fresh = ahRecent([...apt, ...rem], TODAY, 7);
+  check("지난달 공고는 걸러진다", !fresh.some((x) => x.name === "지난달공고단지"), fresh.map((x) => x.name).join(","));
+  check("최근·접수중만 3건", fresh.length === 3, String(fresh.length));
+
+  const ranked = ahRank(ahDedupe(fresh), TODAY);
+  check("무순위·서울·D-1 이 1위", ranked[0].name === "서울무순위샘플아파트", ranked[0].name);
+  check("1위 점수에 이유가 붙는다", ranked[0].reasons.includes("무순위") && ranked[0].reasons.includes("서울"),
+    ranked[0].reasons.join(","));
+  check("대단지·브랜드가 지방 소형보다 위", 
+    ranked.findIndex((x) => x.name === "상동역 롯데캐슬 시그니처") < ranked.findIndex((x) => x.name === "지방소형단지"));
+  check("브랜드를 알아본다(롯데캐슬)", ranked.find((x) => x.name.includes("롯데캐슬"))!.reasons.includes("롯데캐슬"));
+
+  const dup = ahDedupe([...fresh, ...fresh]);
+  check("공고번호로 중복 제거", dup.length === fresh.length, String(dup.length));
+
+  // 이미 인코딩된 키를 다시 인코딩하면 인증이 깨진다(국토부에서 한 번 밟은 함정)
+  check("인코딩된 키는 그대로 둔다", ahEncKey("abc%2Bdef") === "abc%2Bdef");
+  check("디코딩된 키는 인코딩한다", ahEncKey("abc+def") === "abc%2Bdef");
+  check("URL 에 오퍼레이션 경로가 들어간다", ahUrl("remndr", "K", 1, 500).includes("getRemndrLttotPblancDetail"));
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);

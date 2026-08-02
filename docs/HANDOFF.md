@@ -182,6 +182,7 @@ node scripts/build-tower-site.mjs && node scripts/smoke-tower.mjs
 | `kr-market.yml` | 코스피·코스닥 | — |
 | `dart-salary.yml` | DART 평균연봉 | `DART_API_KEY` |
 | `research-digest.yml` | 소재 자동 수집 | — |
+| `applyhome-collect.yml` | **청약홈 신규 분양·무순위(줍줍) 매일 08:00 KST** | `DATA_GO_KR_API_KEY` |
 | `produce-card.yml` | 카드 재생산(관제탑 버튼) | — |
 | `publish-archive.yml` | 발행 완성본 보관 | — |
 | `tower-deploy.yml` | 관제탑 배포 | `CLOUDFLARE_*` |

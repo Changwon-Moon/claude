@@ -46,3 +46,83 @@ export const MOLIT_APT_XML = `<?xml version="1.0" encoding="UTF-8"?>
 
 // 국토부 인증키 미등록 에러 응답 모사
 export const MOLIT_ERROR_XML = `<OpenAPI_ServiceResponse><cmmMsgHeader><returnReasonCode>30</returnReasonCode><returnAuthMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</returnAuthMsg><errMsg>SERVICE ERROR</errMsg></cmmMsgHeader></OpenAPI_ServiceResponse>`;
+
+/* ── 청약홈(odcloud) 응답 모사 ─────────────────────────────────────────
+ * 실제 응답을 세션에서 받아볼 수 없으므로(외부망 차단) 공개된 스펙의 필드 이름으로 만든 표본이다.
+ * **이 표본이 맞다는 보장은 없다** — 그래서 파서는 필드를 못 찾으면 던지고, 첫 실제 실행에서
+ * 이름이 다르면 워크플로가 빨갛게 뜬다(빈 결과로 넘어가지 않는다). 그때 이 표본을 실물로 교체한다.
+ * 접수 마감 필드 이름이 오퍼레이션마다 다른 것(GNRL_RNK1_* vs SUBSCRPT_RCEPT_*)을 일부러 섞어 뒀다. */
+export const APPLYHOME_APT_JSON = JSON.stringify({
+  currentCount: 3,
+  totalCount: 3,
+  page: 1,
+  perPage: 500,
+  data: [
+    {
+      PBLANC_NO: "2026000401",
+      HOUSE_MANAGE_NO: "2026000401",
+      HOUSE_NM: "상동역 롯데캐슬 시그니처",
+      SUBSCRPT_AREA_CODE_NM: "경기",
+      HSSPLY_ADRES: "경기도 부천시 원미구 상동 540-1",
+      TOT_SUPLY_HSHLDCO: "1859",
+      RCRIT_PBLANC_DE: "2026-07-30",
+      GNRL_RNK1_CRSPAREA_RCPTDE: "2026-08-11",
+      GNRL_RNK2_ETC_RCPTDE: "2026-08-13",
+      PRZWNER_PRESNATN_DE: "2026-08-20",
+      CNSTRCT_ENTRPS_NM: "롯데건설",
+      PARCPRC_ULS_AT: "N",
+      SPECLT_RDN_EARTH_AT: "N",
+      HMPG_ADRES: "https://www.i-lotte.kr/",
+      PBLANC_URL: "https://www.applyhome.co.kr/",
+    },
+    {
+      PBLANC_NO: "2026000402",
+      HOUSE_NM: "지방소형단지",
+      SUBSCRPT_AREA_CODE_NM: "전북",
+      HSSPLY_ADRES: "전북 어딘가",
+      TOT_SUPLY_HSHLDCO: "80",
+      RCRIT_PBLANC_DE: "2026-07-31",
+      RCEPT_BGNDE: "2026-08-05",
+      RCEPT_ENDDE: "2026-08-07",
+      CNSTRCT_ENTRPS_NM: "무명건설",
+      PARCPRC_ULS_AT: "N",
+    },
+    {
+      PBLANC_NO: "2026000399",
+      HOUSE_NM: "지난달공고단지",
+      SUBSCRPT_AREA_CODE_NM: "서울",
+      HSSPLY_ADRES: "서울 어딘가",
+      TOT_SUPLY_HSHLDCO: "300",
+      RCRIT_PBLANC_DE: "2026-06-01",
+      RCEPT_BGNDE: "2026-06-10",
+      RCEPT_ENDDE: "2026-06-12",
+      CNSTRCT_ENTRPS_NM: "옛건설",
+    },
+  ],
+});
+
+export const APPLYHOME_REMNDR_JSON = JSON.stringify({
+  currentCount: 1,
+  totalCount: 1,
+  data: [
+    {
+      PBLANC_NO: "2026R00077",
+      HOUSE_NM: "서울무순위샘플아파트",
+      SUBSCRPT_AREA_CODE_NM: "서울",
+      HSSPLY_ADRES: "서울특별시 어딘가",
+      TOT_SUPLY_HSHLDCO: "12",
+      RCRIT_PBLANC_DE: "2026-07-30",
+      SUBSCRPT_RCEPT_BGNDE: "2026-08-01",
+      SUBSCRPT_RCEPT_ENDDE: "2026-08-02",
+      PRZWNER_PRESNATN_DE: "2026-08-08",
+      BSNS_MBY_NM: "샘플주택",
+      PARCPRC_ULS_AT: "Y",
+      SPECLT_RDN_EARTH_AT: "Y",
+    },
+  ],
+});
+
+/** 필드 이름이 통째로 바뀐 경우 — 파서가 조용히 빈 결과를 내지 않고 던져야 한다 */
+export const APPLYHOME_SHAPE_CHANGED_JSON = JSON.stringify({
+  data: [{ houseName: "이름이바뀐응답", area: "서울" }],
+});
