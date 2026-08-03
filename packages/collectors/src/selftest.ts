@@ -29,6 +29,8 @@ import {
   highestPerApt,
   summarizeDaejang,
   toEok,
+  parseAptRents,
+  aggregateRents,
 } from "./parse/molit.js";
 import { encKey } from "./sources/molit.js";
 import {
@@ -68,6 +70,7 @@ import {
   ECOS_FX_JSON,
   ECOS_ERROR_JSON,
   MOLIT_APT_XML,
+  MOLIT_RENT_XML,
   MOLIT_ERROR_XML,
   KOSIS_POP_JSON,
   KOSIS_POP_SHAPE_CHANGED_JSON,
@@ -332,6 +335,25 @@ console.log("\n[국토부 실거래 파서 — MOLIT]");
   const enc = encKey("abc+/def=");
   check("encKey: 디코딩키 퍼센트인코딩", enc === "abc%2B%2Fdef%3D", enc);
   check("encKey: 인코딩키 더블인코딩 방지(동일 결과)", encKey("abc%2B%2Fdef%3D") === enc);
+}
+
+console.log("\n[국토부 전월세 파서 — MOLIT Rent]");
+{
+  const rents = parseAptRents(MOLIT_RENT_XML);
+  check("item 6건 파싱", rents.length === 6, `got ${rents.length}`);
+  check("영문태그 전세 파싱(월세0→전세)", rents[0].isJeonse === true && rents[0].deposit === 50000);
+  check("한글태그 전세 파싱(보증금액 콤마)", rents[1].deposit === 40000 && rents[1].isJeonse === true);
+  check("월세>0 → 월세계약", rents[3].isJeonse === false && rents[3].monthlyRent === 80);
+  check("계약구분 신규 추출", rents[0].contractType === "신규");
+  check("갱신요구권 사용 추출", rents[2].useRRRight === "사용");
+  const a = aggregateRents(rents);
+  check("총 6건", a.total === 6, String(a.total));
+  check("전세 3 / 월세 3", a.jeonse === 3 && a.wolse === 3, `${a.jeonse}/${a.wolse}`);
+  check("월세비중 50.0%", a.wolseRatio === 50.0, String(a.wolseRatio));
+  check("신규 3건(전세2+월세1)", a.newTotal === 3 && a.newWolse === 1, `${a.newTotal}/${a.newWolse}`);
+  check("신규 중 월세비중 33.3%", a.newWolseRatio === 33.3, String(a.newWolseRatio));
+  check("갱신 2건", a.renewTotal === 2, String(a.renewTotal));
+  check("계약구분 있는 건 5건(무구분 1 제외)", a.typedTotal === 5, String(a.typedTotal));
 }
 
 console.log("\n[부동산원 전세·월세 지수 — R-ONE]");

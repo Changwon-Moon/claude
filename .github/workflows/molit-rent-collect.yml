@@ -1,0 +1,109 @@
+name: 전월세 실거래 수집 (국토부)
+
+# 국토교통부 아파트 전월세 실거래를 구·월 단위로 받아 **전세/월세·신규/갱신 집계(건수·비중)**로 커밋한다.
+# 1차 출처(오보 0). MOLIT_API_KEY(매매와 같은 키) 필요 → GitHub Secrets.
+# '아파트 전월세 자료' 활용신청이 매매와 별도 승인 대상이다(403이면 승인/전파 확인).
+# 계약 비중·현황 카드(월세화·전세월세 비중 등)의 재료.
+on:
+  # 대기열 파일 한 줄 푸시가 세션이 수집을 거는 유일한 손잡이(세션은 Run 버튼 못 누름).
+  #   한 줄 형식:  region=seoul gu=all months=202606 force=false
+  push:
+    paths:
+      - "data/molit-rent-queue.txt"
+      - ".github/workflows/molit-rent-collect.yml"
+      - "packages/collectors/src/molitRentCli.ts"
+      - "packages/collectors/src/sources/molit.ts"
+      - "packages/collectors/src/parse/molit.ts"
+  workflow_dispatch:
+    inputs:
+      region:
+        description: "지역 코드표 (seoul/gyeonggi/all)"
+        required: false
+        default: "seoul"
+      gu:
+        description: "구·시 목록(콤마) 또는 all"
+        required: false
+        default: "all"
+      months:
+        description: "수집 월(YYYYMM,콤마). 비우면 최근 6개월 자동"
+        required: false
+        default: ""
+      force:
+        description: "캐시 무시 재수집 (true/false)"
+        required: false
+        default: "false"
+  schedule:
+    # 전월세도 신고기한 30일 → 매월 5일·20일 03:40 UTC 두 번(그달 숫자가 굳게).
+    - cron: "40 3 5,20 * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: molit-rent-collect
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: 파서 셀프테스트
+        run: pnpm --filter @wirit/collectors selftest
+
+      - name: 전월세 실거래 수집 → 집계 데이터셋
+        env:
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        run: |
+          if [ -z "$MOLIT_API_KEY" ]; then echo "::error::MOLIT_API_KEY 시크릿이 없습니다"; exit 1; fi
+          GU="${{ github.event.inputs.gu }}"
+          REGION="${{ github.event.inputs.region }}"
+          MONTHS="${{ github.event.inputs.months }}"
+          FORCE_IN="${{ github.event.inputs.force }}"
+          # 대기열/소스 푸시로 들어온 실행은 입력칸이 비어 있다 → 큐 파일 마지막 줄에서 읽는다.
+          if [ -f data/molit-rent-queue.txt ]; then
+            LINE=$(grep -v '^[[:space:]]*#' data/molit-rent-queue.txt | grep -v '^[[:space:]]*$' | tail -1)
+            echo "대기열 마지막 줄: $LINE"
+            [ -z "$REGION" ] && REGION=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^region=//p')
+            [ -z "$GU" ]     && GU=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^gu=//p')
+            [ -z "$MONTHS" ] && MONTHS=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^months=//p')
+            [ -z "$FORCE_IN" ] && FORCE_IN=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^force=//p')
+          fi
+          # 정기 실행은 서울 25개구 전체·최근 6개월 기본(비중 추세용).
+          if [ "${{ github.event_name }}" = "schedule" ]; then GU="${GU:-all}"; fi
+          GU="${GU:-강남구}"; REGION="${REGION:-seoul}"
+          if [ -z "$MONTHS" ]; then
+            MONTHS=""
+            for i in 1 2 3 4 5 6; do MONTHS="$MONTHS,$(date -u -d "$i month ago" +%Y%m)"; done
+            MONTHS="${MONTHS#,}"
+          fi
+          FORCE=""
+          if [ "$FORCE_IN" = "true" ]; then FORCE="--force"; fi
+          if [ "${{ github.event_name }}" = "schedule" ]; then FORCE="--force"; fi
+          echo "수집: region=$REGION · 구=$GU · 월=$MONTHS $FORCE"
+          echo "REGION=$REGION" >> "$GITHUB_ENV"; echo "GU=$GU" >> "$GITHUB_ENV"; echo "MONTHS=$MONTHS" >> "$GITHUB_ENV"
+          pnpm --filter @wirit/collectors exec tsx src/molitRentCli.ts \
+            --region "$REGION" --gu "$GU" --months "$MONTHS" \
+            --out "$GITHUB_WORKSPACE/data/datasets/molit-rent" $FORCE
+
+      - name: 집계 커밋
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/datasets/molit-rent/*.json
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+          else
+            git commit -m "전월세 실거래(국토부) 집계 — ${REGION} / ${GU} / ${MONTHS}"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi

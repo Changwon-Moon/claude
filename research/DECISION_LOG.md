@@ -448,3 +448,10 @@ HTML 을 그리므로 통과했고, PNG 만 옛것이었다. **렌더 출력은 
 - 뱃지 날짜: 오너 "오늘자로" → 정기물 뱃지 = **발행일(KST 오늘)**. '오늘의 이슈'라 데이터 기준일이 아니라 나가는 날짜. 정기물이라 pixel-baselines 미등록이라 날짜 변동 OK.
 - 확정: 정기물 md5 aff013eeb31b. 캡션 첫 줄 질문형 후킹. 다른 세션 캡션 4건 서명 미스로 수동 커밋.
 - 미착수(오너 다음 지시로 보류): 소재 브레인스토밍에서 '전세의 월세화'(서울 2020~ 전세+7.0% vs 월세+17.9%, 2.5배)·'매전월 트리플' 각까지 데이터로 확인해 둠 → 다음에 시안.
+
+## 2026-08-03 (5) — 전월세 계약 비중/현황 수집기 추가 (국토부 전월세 실거래)
+- 오너 "전세/월세 신규 계약 비중·계약 현황 데이터 되나?" → 지금은 가격지수·평균금액만 있고 **거래 건수/비중은 없음**. 국토부 아파트 전월세 실거래(getRTMSDataSvcAptRent)로 받아올 수 있음(오너 "승인돼 있을 것, 진행").
+- 추가: parse/molit.ts `parseAptRents`(월세금액 0=전세/>0=월세, 계약구분 신규/갱신·갱신요구권, 영문·한글 태그 방어) + `aggregateRents`(전세/월세·신규/갱신 건수·비중). sources/molit.ts `fetchAptRentsMonth`(매매와 동일 LAWD/DEAL_YMD·페이지네이션, Rent 엔드포인트). CLI `molitRentCli.ts`(구·월별 **집계만** 저장, 원거래 미보존 → 파일 경량). 워크플로 `molit-rent-collect.yml`(큐 `data/molit-rent-queue.txt`·5,20일 cron·매매와 같은 MOLIT_API_KEY). 셀프테스트 12항 추가(173/0 통과), tsc 0.
+- 산출: `data/datasets/molit-rent/{LAWD}-{YYYYMM}.json` (total·jeonse·wolse·wolseRatio·new/renew·newWolseRatio·typedTotal).
+- 주의: '아파트 전월세 자료'는 매매와 **별도 활용신청 승인** 필요(403이면 승인/전파 확인). 계약구분은 전월세신고제(2021.6~) 이후만 채워짐 → typedTotal로 커버리지 확인.
+- 첫 푸시로 검증용 소량(강남구 202606) 수집 트리거. 성공 확인되면 gu=all 로 확대. 이 데이터로 '전세월세 비중·월세화(건수판)' 카드 제작 가능.

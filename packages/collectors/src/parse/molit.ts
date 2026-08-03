@@ -120,3 +120,79 @@ export function toEok(won: number): string {
   const eok = won / 100000000;
   return (Number.isInteger(eok) ? eok.toFixed(0) : eok.toFixed(1)) + "억";
 }
+
+/* ───────────────────────────── 아파트 전월세 실거래 ─────────────────────────────
+ * 국토부 아파트 전월세(getRTMSDataSvcAptRent). 매매와 같은 RTMS 계열·같은 LAWD_CD/DEAL_YMD.
+ * 계약 한 건마다 보증금·월세금액이 있고, **월세금액 0 = 전세 / >0 = 월세** 로 코드가 가른다(오보 0).
+ * 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워진다 — 없으면 typed 집계에서 빠진다.
+ */
+export interface AptRent {
+  aptNm: string;        // 아파트명
+  umdNm: string;        // 법정동
+  deposit: number;      // 보증금(만원)
+  monthlyRent: number;  // 월세(만원) — 0이면 전세
+  isJeonse: boolean;    // 월세==0
+  area: number;         // 전용면적(㎡)
+  floor: number;
+  buildYear: number;
+  date: string;         // YYYY-MM-DD 계약일
+  contractType: string; // 계약구분: 신규|갱신|"" (전월세신고제 이후만)
+  useRRRight: string;   // 갱신요구권사용: 사용|미사용|""
+  sggCd: string;        // 시군구코드
+}
+
+/** 국토부 아파트 전월세 응답 XML → 계약 배열. 영문(deposit/monthlyRent…)·한글(보증금액/월세금액…) 태그 모두 처리 */
+export function parseAptRents(xml: string): AptRent[] {
+  const out: AptRent[] = [];
+  const items = xml.match(/<item>[\s\S]*?<\/item>/g) ?? [];
+  for (const it of items) {
+    const deposit = num(tag(it, "deposit", "보증금액"));
+    const y = tag(it, "dealYear", "년");
+    const mo = tag(it, "dealMonth", "월");
+    const d = tag(it, "dealDay", "일");
+    if (!Number.isFinite(deposit) || !y) continue;
+    const mr = num(tag(it, "monthlyRent", "월세금액", "월세"));
+    const monthlyRent = Number.isFinite(mr) ? mr : 0;
+    const pad = (s: string) => s.padStart(2, "0");
+    out.push({
+      aptNm: tag(it, "aptNm", "아파트"),
+      umdNm: tag(it, "umdNm", "법정동"),
+      deposit,
+      monthlyRent,
+      isJeonse: !(monthlyRent > 0),
+      area: num(tag(it, "excluUseAr", "전용면적")),
+      floor: num(tag(it, "floor", "층")),
+      buildYear: num(tag(it, "buildYear", "건축년도")),
+      date: `${y}-${pad(mo)}-${pad(d)}`,
+      contractType: tag(it, "contractType", "계약구분"),
+      useRRRight: tag(it, "useRRRight", "갱신요구권사용"),
+      sggCd: tag(it, "sggCd", "지역코드"),
+    });
+  }
+  return out;
+}
+
+export interface RentAgg {
+  total: number; jeonse: number; wolse: number; wolseRatio: number; // 월세/전체(%)
+  newTotal: number; newJeonse: number; newWolse: number; newWolseRatio: number | null; // 신규계약 중 월세비중(%)
+  renewTotal: number; renewJeonse: number; renewWolse: number;
+  typedTotal: number; // 계약구분이 있는 건수(신규+갱신) — 전월세신고제 커버리지
+}
+
+/** 전월세 계약 배열 → 전세/월세·신규/갱신 집계(비중 포함). 수치는 코드가 센다(오보 0) */
+export function aggregateRents(rents: AptRent[]): RentAgg {
+  let jeonse = 0, wolse = 0, nT = 0, nJ = 0, nW = 0, rT = 0, rJ = 0, rW = 0;
+  for (const r of rents) {
+    if (r.isJeonse) jeonse++; else wolse++;
+    if (r.contractType === "신규") { nT++; r.isJeonse ? nJ++ : nW++; }
+    else if (r.contractType === "갱신") { rT++; r.isJeonse ? rJ++ : rW++; }
+  }
+  const total = rents.length;
+  const pct = (a: number, b: number) => (b > 0 ? Math.round((a / b) * 1000) / 10 : 0);
+  return {
+    total, jeonse, wolse, wolseRatio: pct(wolse, total),
+    newTotal: nT, newJeonse: nJ, newWolse: nW, newWolseRatio: nT > 0 ? pct(nW, nT) : null,
+    renewTotal: rT, renewJeonse: rJ, renewWolse: rW,
+    typedTotal: nT + rT,
+  };
+}
