@@ -24,7 +24,8 @@
       "type": "string",
       "enum": [
         "presale",
-        "result"
+        "result",
+        "remndr"
       ]
     },
     "topcap": {
@@ -193,8 +194,8 @@
         "cols": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 4,
-          "description": "가격판 열 수 — 코드가 개수로 정한다(4 이하는 그 수, 5~6은 3열)"
+          "maximum": 5,
+          "description": "가격판 열 수 — 코드가 값의 길이로 정한다(분양가는 4 이하, 무순위 '잔여 세대'는 5까지 한 줄)"
         }
       }
     },

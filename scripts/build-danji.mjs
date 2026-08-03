@@ -161,6 +161,25 @@ function repPrice(d, rep) {
  */
 function priceTable(d, total) {
   if (!d.areas?.length) throw new Error(NEED_AREAS(d.id));
+  /* ── 무순위(줍줍) ──
+   * 같은 밴드가 다른 것을 말한다. 청약홈은 무순위 분양가를 "사업주체 문의"로 감추므로
+   * 분양가를 못 쓴다 — 대신 **면적대별 잔여 세대**를 얹는다. 줍줍에서 독자가 가장 먼저
+   * 묻는 것도 "어떤 평형이 얼마나 남았나"다.
+   * 칸의 뜻은 **데이터가 정하고** 템플릿은 배치만 한다(TEMPLATES.md §11). */
+  if (d.kind === "remndr") {
+    const rows = d.areas.map((a) => ({
+      area: `${a.m2}㎡`,
+      price: `${n(a.units)}세대`,
+      main: d.mainArea?.m2 === a.m2,
+    }));
+    const sum = d.areas.reduce((s, a) => s + a.units, 0);
+    if (sum !== total)
+      throw new Error(`${d.id}: 면적대별 잔여 세대 합 ${sum} ≠ 총 공급 ${total} — 어느 쪽이 틀렸는지 확인할 것`);
+    if (rows.length > 6) throw new Error(`${d.id}: 면적대가 ${rows.length}개다 — 판이 카드를 넘긴다`);
+    /* 잔여 세대 값("68세대")은 분양가("11.9억")보다 짧아 한 줄에 다섯까지 들어간다.
+       두 줄로 접히면 종이 단이 길어져 푸터를 민다(검수가 잡았다) — 열 수는 값의 길이가 정한다. */
+    return { head: ["전용면적별 잔여 세대"], cols: rows.length <= 5 ? rows.length : 3, rows };
+  }
   const rows = d.areas.map((a) => {
     const t = (a.types || []).find((x) => x && x !== "-") || "";
     const hit = d.price?.byArea?.find((x) => x.m2 === a.m2);
@@ -306,6 +325,79 @@ function presale(d) {
 }
 
 /* ────────────────────────────────────────────────────────────────
+ * 무순위(줍줍) 카드 — 자리는 같고 세 칸의 뜻이 바뀐다
+ *   머리 밴드: 분양가 → **면적대별 잔여 세대**(청약홈이 무순위 분양가를 주지 않는다)
+ *   제원      : 총 세대수 → **잔여 세대 · 블록 수**
+ *   일정      : 특공·1순위 → **접수 · 당첨자 발표 · 입주**(접수가 하루면 칸이 셋)
+ * ──────────────────────────────────────────────────────────────── */
+function remndr(d) {
+  const ah = applyhome(d);
+  if (!ah) throw new Error(`${d.id}: 무순위 카드는 청약홈 공고(applyhomeNo)가 있어야 한다`);
+  const total = ah.supply;
+  const md = (iso) => { const [, m, dd] = iso.split("-"); return `${Number(m)}/${Number(dd)}`; };
+  const ymKo = (ym) => (ym ? `${ym.split("-")[0]}년 ${Number(ym.split("-")[1])}월` : "미고지");
+
+  /* 접수가 하루면 '시작·마감' 두 칸이 같은 날을 두 번 말한다 — 데이터가 칸 수를 정한다. */
+  const oneDay = !ah.receiptTo || ah.receiptFrom === ah.receiptTo;
+  const schedule = oneDay
+    ? [
+        { label: "접수", date: ah.receiptFrom ? md(ah.receiptFrom) : "미고지", tbd: !ah.receiptFrom },
+        { label: "당첨자 발표", date: ah.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah.announceDate },
+        { label: "입주 예정", date: ymKo(ah.moveInYm ?? d.moveIn), tbd: !(ah.moveInYm ?? d.moveIn) },
+      ]
+    : [
+        { label: "접수 시작", date: md(ah.receiptFrom) },
+        { label: "접수 마감", date: md(ah.receiptTo) },
+        { label: "당첨자 발표", date: ah.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah.announceDate },
+        { label: "입주 예정", date: ymKo(ah.moveInYm ?? d.moveIn), tbd: !(ah.moveInYm ?? d.moveIn) },
+      ];
+
+  const blocks = d.blocks ?? ah.blocks ?? null;
+  const flags = [];
+  /* 블록별로 공고가 따로 난다 — 무순위에서 이건 '몇 곳을 한 번에 넣을 수 있나'라 실용 정보다.
+     이름을 그대로 나열하면 한 줄을 넘겨 푸터를 민다(검수가 잡았다). 접두어가 같으면 묶는다:
+     ["G5-1블록","G5-3블록",…] → "G5-1·3·4·5·11블록" */
+  const blockLabel = (names) => {
+    const m = names.map((x) => String(x).match(/^(.+?)-(\d+)블록$/));
+    if (!m.every(Boolean) || new Set(m.map((x) => x[1])).size !== 1) return names.join(" · ");
+    return `${m[0][1]}-${m.map((x) => x[2]).join("·")}블록`;
+  };
+  if (blocks && d.blockNames?.length)
+    flags.push(`<i class="em">💡</i>${blocks}개 블록(${blockLabel(d.blockNames)}) 동시 접수`);
+  if (ah.priceCap) flags.push(`<i class="em">💡</i><span class="tag">분양가상한제</span> 적용`);
+
+  const hook = d.hook || d.location.split(" ").slice(2, 3).join("") || d.location;
+  return {
+    template: "danji-cover@1",
+    date,
+    kind: "remndr",
+    topcap: `오늘의 주요 청약 이슈 (${date.replace(/-/g, ".")})`,
+    /* 무순위 문형: "{훅} 줍줍 {N}가구" — 분양가를 못 쓰니 규모가 제목을 진다. */
+    titleLines: [`<span class="hi">${hook}</span> 줍줍 <span class="hi">${n(total)}가구</span>`],
+    hero: d.photo
+      ? { photo: d.photo.file, credit: d.photo.credit, shift: heroShift(d.photo.file) }
+      : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true, shift: heroShift("seoul-apart-night.jpg") },
+    danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
+    address: addressOf(d),
+    spec: [
+      { label: "잔여 세대", value: n(total), unit: "가구" },
+      blocks
+        ? { label: "블록", value: String(blocks), unit: "개 블록" }
+        : d.buildings != null
+          ? { label: "동수", value: String(d.buildings), unit: "개동" }
+          : { label: "동수", value: "미고지", tbd: true },
+      d.topFloor != null
+        ? { label: "최고 층수", pre: "최고", value: String(d.topFloor), unit: "층" }
+        : { label: "최고 층수", value: "미고지", tbd: true },
+    ],
+    priceTable: priceTable(d, total),
+    schedule,
+    notice: flags.join(" · "),
+    source: { name: d.source.name.replace(/^한국부동산원\s+/, "") },
+  };
+}
+
+/* ────────────────────────────────────────────────────────────────
  * 청약 결과 카드 — 자리는 같고 두 칸의 뜻만 바뀐다
  * ──────────────────────────────────────────────────────────────── */
 function result(d) {
@@ -368,7 +460,7 @@ const skipped = [];
 for (const d of targets) {
   let card;
   try {
-    card = d.kind === "result" ? result(d) : presale(d);
+    card = d.kind === "result" ? result(d) : d.kind === "remndr" ? remndr(d) : presale(d);
   } catch (e) {
     /* --only 로 그 단지를 콕 집었으면 실패는 실패다. 전체 빌드에서는 남은 것을 계속 만든다. */
     if (only) throw e;

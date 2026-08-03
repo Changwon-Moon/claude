@@ -350,6 +350,74 @@
       },
       "hook": "한강뷰",
       "slug": "hangang"
+    },
+    {
+      "id": "songdo-granter-remndr",
+      "slug": "songdo",
+      "kind": "remndr",
+      "name": "더샵 송도그란테르",
+      "location": "인천 연수구 송도동",
+      "hook": "송도",
+      "applyhomeNo": "2026910203",
+      "total": 150,
+      "blocks": 5,
+      "buildings": null,
+      "topFloor": null,
+      "_areasNote": "5개 블록 공고(2026910203·04·05·06·07)의 주택형별 세대수를 면적대로 합산. 합계 150 = 청약홈 API supply 150 과 일치(교차검증). ⚠️ 웹 열람 전사값이므로 발행 전 오너 대조 필요.",
+      "areas": [
+        {
+          "m2": 84,
+          "units": 68,
+          "types": [
+            "A"
+          ]
+        },
+        {
+          "m2": 118,
+          "units": 56,
+          "types": [
+            "K"
+          ]
+        },
+        {
+          "m2": 124,
+          "units": 23,
+          "types": [
+            "A"
+          ]
+        },
+        {
+          "m2": 128,
+          "units": 2,
+          "types": [
+            "H"
+          ]
+        },
+        {
+          "m2": 188,
+          "units": 1,
+          "types": [
+            "K"
+          ]
+        }
+      ],
+      "mainArea": {
+        "m2": 84,
+        "units": 68
+      },
+      "blockNames": [
+        "G5-1블록",
+        "G5-3블록",
+        "G5-4블록",
+        "G5-5블록",
+        "G5-11블록"
+      ],
+      "company": "케이비부동산신탁",
+      "source": {
+        "name": "한국부동산원 청약홈 무순위 입주자모집공고",
+        "via": "청약홈 블록별 공고 5건 (2026-08-03 열람)",
+        "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910203&pblancNo=2026910203"
+      }
     }
   ]
 }
