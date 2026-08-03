@@ -359,6 +359,8 @@ pnpm -s --filter @wirit/renderer render -- --data "$PWD/data/content/2026-07-23/
 | 가로 괘선 | 1px `--wirit-ink-12` | 위 단/아래 단, 제원/일정 |
 | 세로 괘선 | 1px `rgba(20,24,33,.09)` | 더 옅다 — '구분'이지 '단락'이 아니므로 |
 | 아래 단 정렬 | 칸마다 **가운데**. 단 라벨·내역은 값과 **왼쪽 선을 맞춘다**(`.box` 덩어리를 가운데로) | 각자 가운데로 맞추면 짧은 라벨이 값 한가운데로 밀려 두 줄이 어긋나 보인다 |
+| 제원 열 | `1.15fr 0.85fr 1fr` — **col3 은 반드시 1fr** | 세대수만 내역 한 줄이 더 붙어 폭이 더 필요하다. col3 을 건드리면 두 번째 세로선이 624px 를 벗어나 일정 줄과 어긋난다 |
+| 특이사항 아이콘 | `.dcv-note .em` 0.78em · opacity .72 (💡 상한제 / 🚫 전매제한 / ⚠️ 투기과열) | 아이콘은 글자를 돕는 것이지 겨루는 것이 아니다 |
 | 일정 열 | 4칸 `1fr 1fr 1fr 1.5fr` / 3칸 `1fr 1fr 1fr` | 아래 "열 폭은 데이터가 정한다" 참조 |
 | 폰트 | 제목만 태백, **흰 영역 전부 프리텐다드** | 숫자가 열 개 넘게 깔리면 디스플레이 서체는 획이 뭉친다 |
 
@@ -412,7 +414,7 @@ pnpm -s --filter @wirit/renderer render -- --data "$PWD/data/content/2026-07-23/
 
 ```bash
 pnpm --filter @wirit/renderer render -- --data ../../templates/danji-cover/sample.json --out /tmp/samp
-md5sum /tmp/samp/sample-p1.png   # 확정 시점: eefe65a85f30cafa43855c30223a54ed
+md5sum /tmp/samp/sample-p1.png   # 확정 시점: d26c3c8aa9fb7bf60a4aa69427b0be9a
 pnpm --filter @wirit/renderer qa templates/danji-cover/sample.json
 ```
 

@@ -21,7 +21,7 @@
       "label": "세대수",
       "value": "2,682",
       "unit": "세대",
-      "breakdown": "APT 2,432세대, OT 250실"
+      "breakdown": "(APT 2,432세대, OT 250실)"
     },
     {
       "label": "동수",
@@ -85,7 +85,7 @@
       "tbd": false
     }
   ],
-  "notice": "<span class=\"tag\">분양가상한제</span> 적용 · 전매제한 2년",
+  "notice": "<i class=\"em\">💡</i><span class=\"tag\">분양가상한제</span> 적용 · <i class=\"em\">🚫</i>전매제한 2년",
   "source": {
     "name": "청약홈 입주자모집공고",
     "photo": "대우건설 홈페이지"

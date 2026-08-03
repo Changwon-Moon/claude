@@ -170,9 +170,9 @@ function specCells(d, aptTotal) {
       label: "세대수",
       value: n(aptTotal + ot),
       unit: "세대",
-      /* 내역은 값 바로 아래 회색 한 줄(오너 지정 표기 2026-08-03: "APT 0000세대, OT 000실").
+      /* 내역은 값 바로 아래 회색 한 줄(오너 지정 표기 2026-08-03: "(APT 0000세대, OT 000실)").
          오피스텔이 없으면 만들지 않는다 — "OT 0실"은 0실 공급으로 읽힌다. */
-      ...(ot ? { breakdown: `APT ${n(aptTotal)}세대, OT ${n(ot)}실` } : {}),
+      ...(ot ? { breakdown: `(APT ${n(aptTotal)}세대, OT ${n(ot)}실)` } : {}),
     },
     { label: "동수", value: String(d.buildings), unit: "개동" },
     /* "최고"는 숫자를 수식하는 말이라 값 앞에 붙는다 — 라벨 줄을 지운 판형(danji-c)에서
@@ -204,10 +204,14 @@ function presale(d) {
   const moveInYm = ah?.moveInYm ?? d.moveIn ?? null;
 
   /* 특이사항 — 규제·조건 중 **확인된 것만** 적는다. 없으면 그 자리는 비운다. */
+  /* 특이사항 앞의 아이콘(오너 지시 2026-08-03) — 규제 항목마다 성격이 다른 그림 하나.
+     💡 = 상한제(알아 두면 이득), 🚫 = 전매제한(못 하는 것), ⚠️ = 투기과열지구(주의).
+     크기는 본문보다 작게, 투명도를 낮춰 **글자를 이기지 않게** 둔다(.dcv-note .em). */
   const flags = [];
-  if (ah?.priceCap ?? d.price?.capApplied) flags.push(`<span class="tag">분양가상한제</span> 적용`);
-  if (d.price?.resaleBanYears) flags.push(`전매제한 ${d.price.resaleBanYears}년`);
-  if (ah?.speculative) flags.push("투기과열지구");
+  if (ah?.priceCap ?? d.price?.capApplied)
+    flags.push(`<i class="em">💡</i><span class="tag">분양가상한제</span> 적용`);
+  if (d.price?.resaleBanYears) flags.push(`<i class="em">🚫</i>전매제한 ${d.price.resaleBanYears}년`);
+  if (ah?.speculative) flags.push(`<i class="em">⚠️</i>투기과열지구`);
   /* 오피스텔은 이제 위 스트립이 말한다 — 한 카드에서 같은 말을 두 번 하지 않는다 */
 
   return {
@@ -260,7 +264,7 @@ function result(d) {
   const ymKo = (ym) => (ym ? `${ym.split("-")[0]}년 ${Number(ym.split("-")[1])}월` : "미고지");
 
   const flags = [];
-  if (d.price?.capApplied) flags.push(`<span class="tag">분양가상한제</span> 적용`);
+  if (d.price?.capApplied) flags.push(`<i class="em">💡</i><span class="tag">분양가상한제</span> 적용`);
   if (d.record) flags.push(d.record.claim);
 
   return {
