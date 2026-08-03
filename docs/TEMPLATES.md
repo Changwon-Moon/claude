@@ -358,6 +358,7 @@ pnpm -s --filter @wirit/renderer render -- --data "$PWD/data/content/2026-07-23/
 | 특이사항 | 34px | |
 | 가로 괘선 | 1px `--wirit-ink-12` | 위 단/아래 단, 제원/일정 |
 | 세로 괘선 | 1px `rgba(20,24,33,.09)` | 더 옅다 — '구분'이지 '단락'이 아니므로 |
+| 아래 단 정렬 | 칸마다 **가운데**. 단 라벨·내역은 값과 **왼쪽 선을 맞춘다**(`.box` 덩어리를 가운데로) | 각자 가운데로 맞추면 짧은 라벨이 값 한가운데로 밀려 두 줄이 어긋나 보인다 |
 | 일정 열 | 4칸 `1fr 1fr 1fr 1.5fr` / 3칸 `1fr 1fr 1fr` | 아래 "열 폭은 데이터가 정한다" 참조 |
 | 폰트 | 제목만 태백, **흰 영역 전부 프리텐다드** | 숫자가 열 개 넘게 깔리면 디스플레이 서체는 획이 뭉친다 |
 
@@ -398,6 +399,9 @@ pnpm -s --filter @wirit/renderer render -- --data "$PWD/data/content/2026-07-23/
 
 ### 검수 등록
 
+> ⚠️ 값의 부모는 이제 shrink-to-fit 인 `.box` 다. **폭 맞춤(`__wiritFit`)은 부모가 아니라
+> `.cell` 의 내용 폭으로 잰다** — 부모로 재면 언제나 "딱 맞음"이 나와 넘침 보호가 통째로 꺼진다.
+
 `designQa.ts` `LEAF`: `.dcv-title .ln` · `.dcv-fb .w` · `.dcv-nm .nm/.loc` · `.dcv-ph` ·
 `.dcv .lab` · `.dcv-facts .v/.brk` · `.dcv-item .a/.p` · `.dcv-note`.
 **목록에서 빠진 요소는 검사받지 않은 것과 같다.**
@@ -408,7 +412,7 @@ pnpm -s --filter @wirit/renderer render -- --data "$PWD/data/content/2026-07-23/
 
 ```bash
 pnpm --filter @wirit/renderer render -- --data ../../templates/danji-cover/sample.json --out /tmp/samp
-md5sum /tmp/samp/sample-p1.png   # 확정 시점: 7e3c4c5913bdbc9414ef75f21486af65
+md5sum /tmp/samp/sample-p1.png   # 확정 시점: eefe65a85f30cafa43855c30223a54ed
 pnpm --filter @wirit/renderer qa templates/danji-cover/sample.json
 ```
 

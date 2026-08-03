@@ -144,6 +144,13 @@
        * '2,682세대'만으로 읽힌다. 층수만 예외로 '최고'가 앞에 붙는다 — 그게 없으면
        * 38층이 최고층인지 평균층인지 카드가 말하지 못한다.
        * 단위는 **크기 그대로, 색만 회색**(오너 지시). '2,682세대'는 숫자와 단위가 한 낱말이다. */
+      /* 칸 안의 내용은 **가운데**로 앉힌다(오너 지시 2026-08-03).
+         다만 라벨(특별공급·1순위…)과 내역(APT …)은 값과 **왼쪽 선을 맞춘다** — 각자 가운데로
+         맞추면 짧은 라벨이 값 한가운데로 밀려 두 줄이 서로 어긋나 보인다.
+         그래서 라벨+값을 `.box` 한 덩어리로 묶어 **덩어리를 가운데**로 두고,
+         덩어리 **안**은 왼쪽 맞춤으로 둔다. 두 줄의 왼쪽 선이 하나가 된다. */
+      .dcv-facts .cell { text-align: center; }
+      .dcv-facts .box { display: inline-block; text-align: left; }
       .dcv-facts .frow { display: grid; grid-template-columns: 1fr 1fr 1fr; }
       /* 일정은 4칸(오너 지시). 마지막 칸만 1.5배로 넓힌다 — '2031년 1월'이 가장 긴 값이라
          균등 4열이면 이 칸이 공통 수치 크기를 통째로 끌어내린다.
@@ -236,19 +243,19 @@
       <div class="dcv-facts">
         <div class="frow">
           {{#each spec}}
-          <div class="cell">
+          <div class="cell"><div class="box">
             <span class="v">{{#if this.pre}}<b>{{this.pre}}</b>{{/if}}{{this.value}}{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
             {{#if this.breakdown}}<span class="brk">{{this.breakdown}}</span>{{/if}}
-          </div>
+          </div></div>
           {{/each}}
         </div>
         <div class="fhr"></div>
         <div class="frow when">
           {{#each schedule}}
-          <div class="cell">
+          <div class="cell"><div class="box">
             <span class="lab">{{this.label}}</span>
             <span class="v{{#if this.tbd}} tbd{{/if}}">{{this.date}}</span>
-          </div>
+          </div></div>
           {{/each}}
         </div>
       </div>
@@ -283,10 +290,18 @@
             t.style.fontSize = best + "px";
           }
         }
+        /* ⚠️ 재는 자는 **칸(.cell)** 이지 부모가 아니다. 제원·일정의 값은 이제
+           shrink-to-fit 인 `.box` 안에 들어 있어서, 부모 폭으로 재면 언제나 "딱 맞음"이 나와
+           넘침 보호가 통째로 꺼진다. 칸의 **내용 폭**(패딩 제외)으로 잰다. */
+        function boxOf(el) {
+          var c = el.closest(".cell") || el.parentNode;
+          var cs = getComputedStyle(c);
+          return c.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
+        }
         var nums = [];
         Array.prototype.forEach.call(
           document.querySelectorAll(".dcv-item .a,.dcv-item .p,.dcv-facts .v"),
-          function (el) { nums.push({ el: el, box: el.parentNode.clientWidth }); },
+          function (el) { nums.push({ el: el, box: boxOf(el) }); },
         );
         if (nums.length) {
           /* 상한 52 — 이 이상 키우면 아래 단이 푸터를 밀어낸다(칸 폭이 아니라 카드 높이가 한계다) */
