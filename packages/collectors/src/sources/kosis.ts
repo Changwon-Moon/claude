@@ -86,6 +86,23 @@ export type TableSpec = {
 
   /** 이 표만 기간을 짧게 받는다. 1세별처럼 무거운 표는 긴 시계열이 필요 없다. */
   maxMonths?: number;
+
+  /**
+   * **행정구역이 몇 번째 축인가.** 기본은 C1 이지만 표마다 다르다.
+   *
+   * 사망 표(DT_1B34E13)는 C1 이 **사망원인**이고 C2 가 행정구역이다.
+   * 이걸 모르고 C1 을 지역으로 읽으면 `11=호흡기 결핵` 이 지역 코드로 들어가고,
+   * 지도에는 엉뚱한 곳이 칠해진다. 응답은 정상이라 아무도 모른다.
+   */
+  regionAxis?: "C1" | "C2" | "C3" | "C4";
+
+  /**
+   * probe 전용 — 축을 싸게 열거하기 위한 objL 조합.
+   * 축이 셋인 표를 전부 ALL 로 열면 4만 셀을 넘어 **아무 축도 못 본다.**
+   * 행정구역만 한 곳으로 묶으면 나머지 축은 통째로 볼 수 있다.
+   * 예: 사망 표 ["ALL", "11", "ALL"] = 사망원인 전체 × 서울 × 성별 전체.
+   */
+  probeObjL?: string[];
 };
 
 /** KOSIS 한 요청당 셀 한도. 문서값은 4만이고, 여유를 두고 자른다. */
@@ -120,6 +137,7 @@ export const TABLES: Record<string, TableSpec> = {
     orgId: "101", tblId: "DT_1B04006", label: "행정구역(시군구)별/1세별 주민등록인구",
     metric: "연령", itmId: "T2", objL1: "ALL", objL2: "", prdSe: "M",
     extraObjL: ["ALL"], codeSystem: "kostat", cellsPerRegionPeriod: 101, maxMonths: 13,
+    regionAxis: "C1",
     confidence: "표명확실", enabled: false,
     note: "probe 로 축 확인(2026-08-03): C2=연령(000=계, 0401=0세, 0402=1세 …) · 항목 T2=총인구수/T3=남/T4=여. " +
       "코드 체계는 통계청(11110=종로구)이라 지도에 그대로 붙는다. " +
@@ -141,8 +159,9 @@ export const TABLES: Record<string, TableSpec> = {
   },
   deaths: {
     orgId: "101", tblId: "DT_1B34E13", label: "시군구/사망원인별 사망자수",
-    metric: "사망", itmId: "ALL", objL1: "ALL", objL2: "", prdSe: "Y",
+    metric: "사망", itmId: "T1", objL1: "ALL", objL2: "", prdSe: "Y",
     codeSystem: "vital", cellsPerRegionPeriod: 50,
+    regionAxis: "C2", probeObjL: ["ALL", "11", "ALL"],
     confidence: "표명확실", enabled: false,
     note: "사망원인통계(연간). 사망원인 분류축의 '계'를 뽑아야 총사망자수가 된다 — " +
       "**축 구성 미확인이라 probe 없이 쓰면 특정 사인의 숫자를 총사망자수로 낼 위험이 있다.** " +

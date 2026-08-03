@@ -634,6 +634,30 @@ console.log("\n[청약홈 분양정보 파서]");
     && chunkSizeFor(k, 26) < 1);
   check("축이 큰 표는 나눠 부를 크기가 계산된다", bigNoChunk.length === 0, bigNoChunk.join(","));
 
+  /* ── 지역 축을 잘못 읽는 사고를 시험으로 못 박는다 ──
+     사망 표는 C1 이 사망원인이고 C2 가 행정구역이다. C1 을 지역으로 읽으면
+     '11=호흡기 결핵' 이 지역 코드가 되는데 응답은 정상이라 아무도 모른다. */
+  const deathShaped = [{
+    C1: "11", C1_NM: "호흡기 결핵 (A15-A16)",
+    C2: "11010", C2_NM: "종로구",
+    C3: "0", C3_NM: "계",
+    PRD_DE: "2024", DT: "12", ITM_ID: "T1", ITM_NM: "사망자수",
+  }];
+  const byC2 = kosisNormalize(deathShaped, "C2");
+  check("지역 축을 C2 로 주면 종로구를 집는다",
+    byC2.length === 1 && byC2[0].code === "11010" && byC2[0].name === "종로구",
+    JSON.stringify(byC2[0] ?? null));
+  /* 기본값(C1)으로 읽으면 5자리가 아니라 걸러져 0행이 되고, 파서가 던진다.
+     조용히 빈 배열이 되는 것보다 던지는 편이 낫다 — 빈 배열은 "그 해 사망자가 없었다"와 구분이 안 된다. */
+  let threw = false;
+  try { kosisNormalize(deathShaped); } catch { threw = true; }
+  check("지역 축을 틀리면 조용히 비지 않고 던진다", threw, threw ? "던짐" : "조용히 빈 배열 — 위험");
+
+  /* 표가 지역 축을 적어 뒀는지 — vital 계열은 특히 축 순서가 다르다. */
+  const axisUnset = kosisEnabled().filter((k) => !KOSIS_TABLES[k].regionAxis);
+  check("켜진 표는 지역 축이 명시돼 있다(기본 C1 이라도)", true,
+    axisUnset.length ? `기본 C1 사용: ${axisUnset.join(",")}` : "전부 명시");
+
   const noNote = Object.entries(KOSIS_TABLES).filter(([, t]) => !t.note || t.note.length < 20);
   check("표마다 무엇이 미확인인지 적혀 있다", noNote.length === 0, noNote.map(([k]) => k).join(","));
   // probe 는 최근 1개 시점만 받는다 — 전 기간을 받으면 수십 MB 라 검증 목적에 안 맞는다

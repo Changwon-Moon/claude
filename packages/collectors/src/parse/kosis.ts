@@ -75,7 +75,7 @@ export function toCount(v: unknown): number | null {
  * **시군구만 남긴다.** KOSIS 는 전국(코드 '00')·시도(2자리)·시군구(5자리)를 한 응답에 섞어 준다.
  * 5자리만 취하지 않으면 전국 인구가 시군구 하나로 들어가 지도가 통째로 틀어진다.
  */
-export function normalize(payload: unknown): Point[] {
+export function normalize(payload: unknown, regionAxis: "C1" | "C2" | "C3" | "C4" = "C1"): Point[] {
   const rows: RawRow[] = Array.isArray(payload)
     ? (payload as RawRow[])
     : Array.isArray((payload as { data?: unknown })?.data)
@@ -88,9 +88,20 @@ export function normalize(payload: unknown): Point[] {
     );
   }
 
+  /* ── 지역이 몇 번째 축인가 ──
+     기본은 C1 이지만 표마다 다르다. 사망 표는 C1 이 **사망원인**이고 C2 가 행정구역이다.
+     모르고 C1 을 지역으로 읽으면 '11=호흡기 결핵' 이 지역 코드가 되고 지도가 통째로 거짓이 된다.
+     그래서 축을 표가 정하게 하고, 그 축이 응답에 없으면 **던진다.** */
+  const AX = {
+    code: [regionAxis],
+    name: [`${regionAxis}_NM`],
+    period: ALIAS.period,
+    value: ALIAS.value,
+  } as const;
+
   /* 첫 행으로 필드 이름을 확인한다. 이름이 바뀌면 여기서 멈춘다. */
   const probe = rows[0];
-  for (const [our, keys] of Object.entries(ALIAS)) {
+  for (const [our, keys] of Object.entries(AX)) {
     if (pick(probe, keys) === undefined) {
       throw new Error(
         `KOSIS 응답의 필드 이름이 바뀌었다 — '${our}'(후보: ${keys.join(", ")})를 찾을 수 없다. ` +
@@ -101,13 +112,13 @@ export function normalize(payload: unknown): Point[] {
 
   const out: Point[] = [];
   for (const r of rows) {
-    const code = String(pick(r, ALIAS.code) ?? "").trim();
+    const code = String(pick(r, AX.code) ?? "").trim();
     /* 시군구는 5자리. 전국('00')·시도(2자리)·읍면동(7자리 이상)은 버린다. */
     if (!/^\d{5}$/.test(code)) continue;
 
-    const period = toPeriod(pick(r, ALIAS.period));
-    const value = toCount(pick(r, ALIAS.value));
-    const name = String(pick(r, ALIAS.name) ?? "").trim();
+    const period = toPeriod(pick(r, AX.period));
+    const value = toCount(pick(r, AX.value));
+    const name = String(pick(r, AX.name) ?? "").trim();
     if (!period || value === null || !name) continue;
 
     out.push({ code, name, period, value });

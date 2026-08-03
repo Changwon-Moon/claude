@@ -79,7 +79,23 @@ async function probeOne(key: TableKey, apiKey: string): Promise<Probe> {
     let json: unknown = null;
     let used = 0;
     let lastErr: unknown = null;
-    for (const extra of [[], ["ALL"], ["ALL", "ALL"], ["ALL", "ALL", "ALL"]]) {
+
+    /* 표가 스스로 "이렇게 부르면 축이 다 보인다" 고 적어 뒀으면 그것부터 쓴다.
+       축이 셋인 표를 전부 ALL 로 열면 4만 셀을 넘어 아무 축도 못 본다. */
+    const hint = TABLES[key].probeObjL;
+    if (hint?.length) {
+      try {
+        json = await fetchTable(key, apiKey, {
+          newEstPrdCnt: 1, objL1: hint[0], extraObjL: hint.slice(1),
+        });
+        used = hint.length - 1;
+        attempts.push(`표가 지정한 조합 objL=${hint.join(",")} → 성공`);
+      } catch (e0) {
+        attempts.push(`표가 지정한 조합 objL=${hint.join(",")} → ${(e0 instanceof Error ? e0.message : String(e0)).slice(0, 80)}`);
+      }
+    }
+
+    for (const extra of json ? [] : [[], ["ALL"], ["ALL", "ALL"], ["ALL", "ALL", "ALL"]]) {
       try {
         json = await fetchTable(key, apiKey, { newEstPrdCnt: 1, extraObjL: extra });
         used = extra.length;
@@ -100,7 +116,7 @@ async function probeOne(key: TableKey, apiKey: string): Promise<Probe> {
        그렇다고 축 코드를 추측할 수는 없다. 그래서 **지역을 한 곳으로 좁혀** 축만 엿본다 —
        종로구 하나면 셀이 수백 개라 한도에 안 걸리고, 축에 무슨 코드가 있는지는 똑같이 보인다.
        (정기 수집 때는 지역을 나눠 여러 번 부르면 된다.) */
-    if (lastErr) {
+    if (!json && lastErr) {
       const m0 = lastErr instanceof Error ? lastErr.message : String(lastErr);
       if (m0.includes("4만") || m0.includes("40,000") || m0.includes("40000")) {
         /* 어느 코드로 좁힐지도 표마다 다르다. 인구 계열은 11110=종로구,
@@ -122,7 +138,7 @@ async function probeOne(key: TableKey, apiKey: string): Promise<Probe> {
         }
       }
     }
-    if (lastErr) throw lastErr;
+    if (!json && lastErr) throw lastErr;
     const rows = (Array.isArray(json) ? json : []) as Record<string, unknown>[];
     if (!rows.length) return { key, ok: false, error: "행이 0개 — 표 ID 또는 분류축이 맞지 않을 수 있다" };
 

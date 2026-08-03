@@ -174,7 +174,7 @@ async function main() {
       payload = await fetchTable(t, key!, { startPrdDe: start, endPrdDe: end, extraObjL: spec.extraObjL });
     }
 
-    let points = normalize(payload);
+    let points = normalize(payload, spec.regionAxis ?? "C1");
     if (spec.codeSystem === "vital") {
       const before = points.length;
       points = remapRegions(points, regionMap.maps?.[t] ?? {});
