@@ -362,7 +362,8 @@ pnpm -s --filter @wirit/renderer render -- --data "$PWD/data/content/2026-07-23/
 | 칸 여백 | `.cell { padding: 0 22px }` — **좌우 대칭** | 왼쪽에만 주면 `text-align:center` 가 '패딩 안쪽 가운데'를 잡아 글자가 칸 중심에서 밀린다 |
 | 단지명 행 | 단지명(좌) · 주소+로고(우) **한 행**, `align-items:flex-end` + 모두 `line-height:1` | 주소가 둘째 줄일 때는 로고만 오른쪽에 홀로 떠 있었다 |
 | 단지명 크기 | 30~60px **자동**(행 전체가 카드 폭에 들어가는 최대) | 고정 크기면 이름이 긴 단지에서 로고가 밖으로 밀린다 |
-| 제원 열 | `1.15fr 0.85fr 1fr` — **col3 은 반드시 1fr** | 세대수만 내역 한 줄이 더 붙어 폭이 더 필요하다. col3 을 건드리면 두 번째 세로선이 624px 를 벗어나 일정 줄과 어긋난다 |
+| 최하단 문구 | `.dcv-note { margin-top: auto }` **＋ `.dcv .wirit-footer { margin-top: 0 }`** | 미는 쪽이 둘이면 남는 세로를 **나눠 갖는다** — 문구가 푸터에 안 붙고 중간에 뜬다. 특이사항이 없어도 이 칸은 렌더한다(auto 여백을 이 요소가 갖는다) |
+| 제원 열 | 기본 **균등 3등분**, `:has(.brk)` 인 카드만 `1.15fr 0.85fr 1fr` — **col3 은 반드시 1fr** | 세대수만 내역 한 줄이 더 붙어 폭이 더 필요하다. col3 을 건드리면 두 번째 세로선이 624px 를 벗어나 일정 줄과 어긋난다 |
 | 특이사항 아이콘 | `.dcv-note .em` 0.78em · opacity .72 (💡 상한제 / 🔒 전매제한 / ⚠️ 투기과열) | 아이콘은 글자를 돕는 것이지 겨루는 것이 아니다 |
 | 일정 열 | 4칸 `1fr 1fr 1fr 1.5fr` / 3칸 `1fr 1fr 1fr` | 아래 "열 폭은 데이터가 정한다" 참조 |
 | 폰트 | 제목만 태백, **흰 영역 전부 프리텐다드** | 숫자가 열 개 넘게 깔리면 디스플레이 서체는 획이 뭉친다 |
@@ -434,7 +435,7 @@ node scripts/danji-card.mjs "<단지명 또는 공고번호>" --photo <조감도
 
 ```bash
 pnpm --filter @wirit/renderer render -- --data ../../templates/danji-cover/sample.json --out /tmp/samp
-md5sum /tmp/samp/sample-p1.png   # 확정 시점: 424ea5ff60f7a31a6e4b4a05cc2048c8
+md5sum /tmp/samp/sample-p1.png   # 확정 시점: 4abbe13b03dc3f1373c6c3ad7b4122d3
 pnpm --filter @wirit/renderer qa templates/danji-cover/sample.json
 ```
 

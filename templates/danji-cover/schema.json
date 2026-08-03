@@ -236,6 +236,15 @@
           "tbd": {
             "type": "boolean",
             "description": "아직 못 채운 값('미고지') — 회색으로 눕힌다"
+          },
+          "above": {
+            "type": "string",
+            "maxLength": 24,
+            "description": "값 위에 붙는 회색 한 줄('총 1,640세대 중')"
+          },
+          "hi": {
+            "type": "boolean",
+            "description": "값의 숫자를 코발트로 — 카드의 강조 한 군데"
           }
         }
       }

@@ -167,11 +167,9 @@ function priceTable(d, total) {
    * 묻는 것도 "어떤 평형이 얼마나 남았나"다.
    * 칸의 뜻은 **데이터가 정하고** 템플릿은 배치만 한다(TEMPLATES.md §11). */
   if (d.kind === "remndr") {
-    const rows = d.areas.map((a) => ({
-      area: `${a.m2}㎡`,
-      price: `${n(a.units)}세대`,
-      main: d.mainArea?.m2 === a.m2,
-    }));
+    /* 여기서는 주력 면적대를 칠하지 않는다 — 이 카드의 강조는 제원의 '150세대' 하나다.
+       밴드와 제원 양쪽을 칠하면 강조가 둘이 되어 어느 쪽도 강조가 아니게 된다(BRAND 규칙). */
+    const rows = d.areas.map((a) => ({ area: `${a.m2}㎡`, price: `${n(a.units)}세대` }));
     const sum = d.areas.reduce((s, a) => s + a.units, 0);
     if (sum !== total)
       throw new Error(`${d.id}: 면적대별 잔여 세대 합 ${sum} ≠ 총 공급 ${total} — 어느 쪽이 틀렸는지 확인할 것`);
@@ -216,7 +214,7 @@ function titleFor(d, { total, repWon }) {
      강조가 둘이지만 같은 문장의 주어와 술어라 초점이 갈리지 않는다. */
   return eokRound
     ? [`<span class="hi">${hook}</span> 아파트 분양가 <span class="hi">${eokRound}억대</span>?`]
-    : [`<span class="hi">${hook}</span> 아파트 <span class="hi">${n(total)}가구</span>`];
+    : [`<span class="hi">${hook}</span> 아파트 <span class="hi">${n(total)}세대</span>`];
 }
 
 /**
@@ -341,12 +339,12 @@ function remndr(d) {
   const oneDay = !ah.receiptTo || ah.receiptFrom === ah.receiptTo;
   const schedule = oneDay
     ? [
-        { label: "접수", date: ah.receiptFrom ? md(ah.receiptFrom) : "미고지", tbd: !ah.receiptFrom },
+        { label: "무순위 접수", date: ah.receiptFrom ? md(ah.receiptFrom) : "미고지", tbd: !ah.receiptFrom },
         { label: "당첨자 발표", date: ah.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah.announceDate },
         { label: "입주 예정", date: ymKo(ah.moveInYm ?? d.moveIn), tbd: !(ah.moveInYm ?? d.moveIn) },
       ]
     : [
-        { label: "접수 시작", date: md(ah.receiptFrom) },
+        { label: "무순위 접수", date: md(ah.receiptFrom) },
         { label: "접수 마감", date: md(ah.receiptTo) },
         { label: "당첨자 발표", date: ah.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah.announceDate },
         { label: "입주 예정", date: ymKo(ah.moveInYm ?? d.moveIn), tbd: !(ah.moveInYm ?? d.moveIn) },
@@ -372,19 +370,28 @@ function remndr(d) {
     date,
     kind: "remndr",
     topcap: `오늘의 주요 청약 이슈 (${date.replace(/-/g, ".")})`,
-    /* 무순위 문형: "{훅} 줍줍 {N}가구" — 분양가를 못 쓰니 규모가 제목을 진다. */
-    titleLines: [`<span class="hi">${hook}</span> 줍줍 <span class="hi">${n(total)}가구</span>`],
+    /* 무순위 문형(오너 확정): "{훅} 무순위 줍줍 {N}세대" — 분양가를 못 쓰니 규모가 제목을 진다. */
+    titleLines: [`<span class="hi">${hook}</span> 무순위 줍줍 <span class="hi">${n(total)}세대</span>`],
     hero: d.photo
       ? { photo: d.photo.file, credit: d.photo.credit, shift: heroShift(d.photo.file) }
       : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true, shift: heroShift("seoul-apart-night.jpg") },
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
     address: addressOf(d),
     spec: [
-      { label: "잔여 세대", value: n(total), unit: "가구" },
-      blocks
-        ? { label: "블록", value: String(blocks), unit: "개 블록" }
-        : d.buildings != null
-          ? { label: "동수", value: String(d.buildings), unit: "개동" }
+      {
+        label: "잔여 세대",
+        /* 잔여 세대는 **전체 대비 얼마인지**가 있어야 크기가 읽힌다(오너 지시).
+           전체 세대수는 청약홈에 없으므로 데이터셋(totalComplex)에 있을 때만 얹는다. */
+        ...(d.totalComplex ? { above: `총 ${n(d.totalComplex)}세대 중` } : {}),
+        value: n(total),
+        unit: "세대",
+        hi: true,
+      },
+      /* 동수를 알면 동수가 낫다 — '5개 블록'은 공고 편의상의 구분이고 독자가 궁금한 건 단지 규모다. */
+      d.buildings != null
+        ? { label: "동수", pre: "총", value: String(d.buildings), unit: "개동" }
+        : blocks
+          ? { label: "블록", value: String(blocks), unit: "개 블록" }
           : { label: "동수", value: "미고지", tbd: true },
       d.topFloor != null
         ? { label: "최고 층수", pre: "최고", value: String(d.topFloor), unit: "층" }

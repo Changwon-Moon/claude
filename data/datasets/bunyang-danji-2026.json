@@ -361,8 +361,8 @@
       "applyhomeNo": "2026910203",
       "total": 150,
       "blocks": 5,
-      "buildings": null,
-      "topFloor": null,
+      "buildings": 15,
+      "topFloor": 46,
       "_areasNote": "5개 블록 공고(2026910203·04·05·06·07)의 주택형별 세대수를 면적대로 합산. 합계 150 = 청약홈 API supply 150 과 일치(교차검증). ⚠️ 웹 열람 전사값이므로 발행 전 오너 대조 필요.",
       "areas": [
         {
@@ -417,6 +417,13 @@
         "name": "한국부동산원 청약홈 무순위 입주자모집공고",
         "via": "청약홈 블록별 공고 5건 (2026-08-03 열람)",
         "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910203&pblancNo=2026910203"
+      },
+      "totalComplex": 1640,
+      "_ownerNote": "총 1,640세대·15개동·최고 46층 = 오너 제공(2026-08-03). 청약홈 무순위 공고에는 없는 값이다.",
+      "photo": {
+        "file": "songdo-granter-remndr.png",
+        "credit": "출처. 케이비부동산신탁(주) 홈페이지",
+        "provided": "2026-08-03 오너 제공 · 원본은 templates/_shared/photos/_source/"
       }
     }
   ]

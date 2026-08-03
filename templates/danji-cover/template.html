@@ -168,7 +168,11 @@
          ⚠️ **col3 은 1fr 그대로 둔다.** 그래야 두 번째 세로선이 936-312 = 624px 에 그대로 남고,
          일정 줄(1:1:1:1.5)의 마지막 세로선과 계속 겹친다. 넓힌 만큼은 col1↔col2 사이에서만
          주고받는다 — 여백(column-gap·padding-left 28)은 손대지 않으므로 리듬도 그대로다. */
-      .dcv-facts .frow { display: grid; grid-template-columns: 1.15fr 0.85fr 1fr; }
+      /* 기본은 **균등 3등분**. 세대수 칸에 내역 한 줄(.brk)이 붙는 카드만 그 칸을 넓힌다 —
+         내역이 없는 카드까지 1.15fr 로 두면 첫 값만 리듬이 어긋나 보인다(오너 지적).
+         어느 쪽이든 두 번째 세로선은 936-312 = 624px 라 일정 줄과 계속 겹친다. */
+      .dcv-facts .frow { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+      .dcv-facts .frow:has(.brk) { grid-template-columns: 1.15fr 0.85fr 1fr; }
       /* 일정은 4칸(오너 지시). 마지막 칸만 1.5배로 넓힌다 — '2031년 1월'이 가장 긴 값이라
          균등 4열이면 이 칸이 공통 수치 크기를 통째로 끌어내린다.
          덤: 1:1:1:1.5 의 마지막 경계는 936×3/4.5 = 624px 로, 위 줄(3등분)의 두 번째
@@ -198,13 +202,21 @@
       .dcv-facts .v i { margin-left: 4px; }
       .dcv-facts .v.tbd { color: var(--wirit-gray); }
       .dcv-facts .v.tbd i, .dcv-facts .v.tbd b { color: var(--wirit-gray); }
+      /* 값 **위**에 붙는 회색 한 줄('총 1,640세대 중'). 아래에 붙는 내역(.brk)과 같은 급이다. */
+      .dcv-facts .abv {
+        display: block; margin-bottom: 10px; font-family: var(--font-sans); font-size: 24px;
+        font-weight: 700; letter-spacing: -0.02em; color: var(--wirit-gray); line-height: 1; white-space: nowrap;
+      }
+      .dcv-facts .v .num.hi { color: var(--wirit-cobalt); }
       .dcv-facts .brk {
         display: block; margin-top: 12px; font-family: var(--font-sans); font-size: 24px;
         font-weight: 700; letter-spacing: -0.02em; color: var(--wirit-gray); line-height: 1; white-space: nowrap;
       }
 
+      /* 최하단 문구는 **푸터에 붙는다**(오너 지시). margin-top:auto 로 남는 세로를 위로 몰아
+         문구가 푸터 바로 위에 앉게 한다. 아래 여백 22px 은 다른 덩어리 간격과 같은 급이다. */
       .dcv-note {
-        margin: 24px 0 22px; font-family: var(--font-sans); font-size: 34px; font-weight: 700;
+        margin: 24px 0 22px; margin-top: auto; font-family: var(--font-sans); font-size: 34px; font-weight: 700;
         letter-spacing: -0.02em; color: var(--wirit-ink); line-height: 1.25; word-break: keep-all;
       }
       .dcv-note .tag { color: var(--wirit-cobalt); }
@@ -215,8 +227,11 @@
         margin-right: 10px; vertical-align: 0.04em;
       }
 
-      /* 출처 줄이 길어졌다(조감도 출처가 붙었다) — 워터마크와 붙지 않게 최소 간격을 준다 */
-      .dcv .wirit-footer { gap: 28px; }
+      /* 출처 줄이 길어졌다(조감도 출처가 붙었다) — 워터마크와 붙지 않게 최소 간격을 준다.
+         ⚠️ `margin-top: 0` 이 중요하다. 공용 푸터는 `margin-top: auto` 로 바닥에 붙는데,
+         `.dcv-note` 도 auto 를 갖게 되면 **남는 세로를 둘이 나눠 갖는다** — 그래서 문구가
+         푸터에 붙지 않고 중간에 떴다(오너 지적). 미는 쪽은 하나여야 한다. */
+      .dcv .wirit-footer { gap: 28px; margin-top: 0; }
     </style>
   </head>
   <body>
@@ -271,7 +286,8 @@
         <div class="frow">
           {{#each spec}}
           <div class="cell"><div class="box">
-            <span class="v{{#if this.tbd}} tbd{{/if}}">{{#if this.pre}}<b>{{this.pre}}</b>{{/if}}{{this.value}}{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
+            {{#if this.above}}<span class="abv">{{this.above}}</span>{{/if}}
+            <span class="v{{#if this.tbd}} tbd{{/if}}">{{#if this.pre}}<b>{{this.pre}}</b>{{/if}}<span class="num{{#if this.hi}} hi{{/if}}">{{this.value}}</span>{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
             {{#if this.breakdown}}<span class="brk">{{this.breakdown}}</span>{{/if}}
           </div></div>
           {{/each}}
@@ -287,7 +303,8 @@
         </div>
       </div>
 
-      {{#if notice}}<div class="dcv-note">{{{notice}}}</div>{{/if}}
+      {{! 특이사항이 없어도 이 칸은 남긴다 — 바닥까지 미는 auto 여백을 이 요소가 갖고 있다 }}
+      <div class="dcv-note">{{{notice}}}</div>
 
       <div class="wirit-footer">
         <span>출처 · {{source.name}}{{#if source.photo}} · {{source.photo}}{{/if}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
