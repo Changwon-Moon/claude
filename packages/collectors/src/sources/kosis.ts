@@ -177,7 +177,10 @@ export const TABLES: Record<string, TableSpec> = {
        나눠 부를 필요가 없어 cellsPerRegionPeriod 를 두지 않는다. */
     metric: "사망", itmId: "T1", objL1: "0", objL2: "", prdSe: "Y",
     extraObjL: ["ALL", "0"], codeSystem: "vital",
-    regionAxis: "C2", probeObjL: ["ALL", "11", "ALL"],
+    /* 축 열거는 끝났다(사망원인 0=계 확인). 이제 힌트를 **실제 수집과 똑같은 조합**으로 둔다 —
+       0=사망원인 계 · ALL=전 지역 · 0=성별 계. 250셀이라 한도에 안 걸리고,
+       probe 가 곧 실전 예행연습이 된다. 지역 목록도 이 호출로 나온다. */
+    regionAxis: "C2", probeObjL: ["0", "ALL", "0"],
     confidence: "확실", enabled: false,
     note: "probe 로 축 전부 확인(2026-08-03): objL1=사망원인 52개(**0=계**) · objL2=행정구역 · " +
       "objL3=성별 3개(0=계) · 항목 T1=사망자수(T4 사망률·T7 연령표준화). 사망원인·성별을 '계'로 " +
