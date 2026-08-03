@@ -467,3 +467,8 @@ HTML 을 그리므로 통과했고, PNG 만 옛것이었다. **렌더 출력은 
 - 경기 토허 15곳 전월세 수집 확대(molit-rent) → 40곳 매핑(tohuh-2026.json geoName↔meta.gu 전부 일치). 40곳 전체 월세비중 50.5%(신규 56.3%) — '월세가 전세를 넘어섰다' 여전히 성립(오보 0 확인). 40위=구리시 31.5%.
 - 지도: build-tohuh-rent-map 과 같은 tohuh-map.mjs 재사용(valueOf=월세비중, textOf=%). singoga-map@1 재사용.
 - 템플릿 격리 추가: `titleLead 로고 CSS(.wirit-title img.tlogo)` + `ctaRight`(CTA를 지도 아래 우측). singoga·tohuh-rent 두 발행카드 md5 불변 검증(9ca188ce0c22·ec4cad52505f 동일). 범례는 legend 미설정으로 제거. tail 로 40위. compact+fitTitle. hideFooterId(지도 스탬프가 ID) — BRAND 카드당 1개.
+
+## 2026-08-03 (8) — 월세비중 토허지도 다듬기(잉크통일·지도축소·막대·신규3개월)
+- 오너 수정지시: 지도 글자 전체 잉크색(흰색 안보임) / 지도 축소해 좌측표와 간격 / CTA 문구→막대그래프(전세|월세) / 최하단 문구 삭제 / 카드 하단 "신규: 최근 3개월".
+- tohuh-map: textThreshold 9(흰 글자 미사용) + colorHi 톤 낮춰 잉크 글자 가독. 템플릿: `.sm-map.cta-under svg{max-width:88%;margin:auto}`(지도 축소·가운데) + CTA `barsHtml`(막대 누적) 옵션. 기존 singoga·tohuh-rent md5 불변 검증(9ca188ce0c22·ec4cad52505f).
+- 신규 계약 비중 = 최근 3개월(202604~06) 합산(안정). 경기 15곳 4·5월 추가 수집(30/30). 전체=해당 월(202606). 전체 50.5% / 신규 53.5%. footnote 삭제, 푸터 period 에 '신규 최근 3개월' 명시(오보 0: 창 명시).

@@ -29,26 +29,57 @@ const AREAS = [
 ];
 if (AREAS.length !== 40) throw new Error(`토허 지역이 40곳이 아니다: ${AREAS.length}`);
 
-// ── 전월세 집계 로드(구별 월세비중) ──
+// ── 전월세 집계 로드 ──
+// 전체·지도·순위 = 해당 월(latest). 신규 계약 비중 = 최근 3개월(latest 포함 3개) 합산(안정).
 const dir = join(ROOT, "data/datasets/molit-rent");
-const byGu = {};
-for (const f of readdirSync(dir).filter((f) => f.endsWith(`-${latest}.json`))) {
+const recent3 = (() => {
+  const y = +latest.slice(0, 4), m = +latest.slice(4);
+  return [0, 1, 2].map((i) => { const mm = m - i; const yy = y + Math.floor((mm - 1) / 12); const mo = ((mm - 1 + 1200) % 12) + 1; return `${yy}${String(mo).padStart(2, "0")}`; });
+})();
+const byGu = {};                 // latest 월 agg
+const new3 = {};                 // geoName → {nT, nW} 최근 3개월 합
+for (const f of readdirSync(dir)) {
+  const m = f.match(/-(\d{6})\.json$/); if (!m) continue;
+  const ym = m[1];
   const d = JSON.parse(readFileSync(join(dir, f), "utf8"));
-  byGu[d.meta.gu] = { ...d.agg, verified: d.meta?.verified };
+  const gu = d.meta.gu;
+  if (ym === latest) byGu[gu] = { ...d.agg, verified: d.meta?.verified };
+  if (recent3.includes(ym)) {
+    new3[gu] = new3[gu] || { nT: 0, nW: 0 };
+    new3[gu].nT += d.agg.newTotal; new3[gu].nW += d.agg.newWolse;
+  }
 }
 const missing = AREAS.filter((a) => !byGu[a.geoName]);
-if (missing.length) throw new Error(`전월세 집계 없는 토허 지역: ${missing.map((a) => a.geoName).join(", ")} — 수집 확대 필요`);
+if (missing.length) throw new Error(`${latest} 전월세 집계 없는 토허 지역: ${missing.map((a) => a.geoName).join(", ")} — 수집 확대 필요`);
 
-let T = 0, W = 0, nT = 0, nW = 0, verified = true;
+let T = 0, W = 0, verified = true, n3T = 0, n3W = 0;
 for (const a of AREAS) {
   const g = byGu[a.geoName];
-  T += g.total; W += g.wolse; nT += g.newTotal; nW += g.newWolse;
+  T += g.total; W += g.wolse;
   if (g.verified === false) verified = false;
+  const nn = new3[a.geoName] || { nT: 0, nW: 0 };
+  n3T += nn.nT; n3W += nn.nW;
 }
-const r1 = (a, b) => Math.round((a / b) * 1000) / 10;
-const allWolse = r1(W, T);        // 40곳 전체 월세비중
-const newWolse = r1(nW, nT);      // 40곳 신규 월세비중
+const r1 = (a, b) => (b > 0 ? Math.round((a / b) * 1000) / 10 : 0);
+const allWolse = r1(W, T);         // 40곳 전체 월세비중(해당 월)
+const newWolse = r1(n3W, n3T);     // 40곳 신규 월세비중(최근 3개월)
 const ratioOf = (geoName) => byGu[geoName].wolseRatio;
+
+/* CTA 막대그래프: 전체·신규 계약을 [전세 | 월세] 가로 누적 막대로. .sm-cta(잉크 배경) 안, 흰 글자. */
+function ctaBars(allW, newW) {
+  const seg = (label, pct, bg) =>
+    `<div style="width:${pct}%;background:${bg};display:flex;align-items:center;justify-content:center;color:#fff;` +
+    `font-family:var(--font-num);font-weight:800;font-size:23px;white-space:nowrap">${label} ${pct}%</div>`;
+  const bar = (rowLabel, wolse) => {
+    const je = Math.round((100 - wolse) * 10) / 10;
+    return `<div style="display:flex;align-items:center;gap:16px;margin-top:14px">` +
+      `<div style="width:132px;font-size:26px;font-weight:800;color:#fff;letter-spacing:-0.01em">${rowLabel}</div>` +
+      `<div style="flex:1;display:flex;height:50px;border-radius:11px;overflow:hidden">` +
+      seg("전세", je, "#7f8b99") + seg("월세", wolse, "#e5484d") +
+      `</div></div>`;
+  };
+  return `<div style="margin-top:4px">${bar("전체 계약", allW)}${bar("신규 계약", newW)}</div>`;
+}
 
 // ── 지도: 토허 40곳 코로플레스(월세비중), 라벨 = 지역/비중% 2줄 ──
 // 색: 꼴찌(최소 비중)=옅은 회색 → 1위(최대 비중)=빨강. 실제 [min,max] 정규화로 대비를 준다.
@@ -61,8 +92,8 @@ const mapSvg = tohuhMapSvg({
   minValue: Math.min(...ratios),
   maxValue: Math.max(...ratios),
   colorLo: [233, 236, 239], // 옅은 회색(전세 많음)
-  colorHi: [211, 41, 47],   // 빨강(월세 많음)
-  textThreshold: 0.56,      // 확실히 붉은 상위만 흰 글자, 나머지는 잉크 글자(지저분함 방지)
+  colorHi: [224, 96, 100],  // 빨강(월세 많음) — 잉크 글자가 읽히도록 톤 조절
+  textThreshold: 9,         // 글자 전체 잉크색 통일(흰 글자 안 씀)
   twoLine: true,
   labelWidth: 118,
   placement: "nearest",
@@ -105,15 +136,8 @@ const doc = {
   mapSvg,
   rows,
   tail,
-  cta: {
-    title: `새로 맺는 계약, <b>절반 넘게</b> 월세 🏠`,
-    rows: [
-      { k: "전체 계약", v: `월세 ${allWolse}%`, n: "" },
-      { k: "신규 계약", v: `월세 ${newWolse}%`, n: "" },
-    ],
-  },
-  footnote: `${latestPrefix} 토허 40곳 아파트 전월세 <b>${T.toLocaleString()}건</b> 중 월세 <b>${allWolse}%</b> · 신규계약은 <b>${newWolse}%</b>`,
-  source: { name: "국토부 아파트 전월세 실거래 · 서울시 행정경계", period: latestPrefix, verified },
+  cta: { title: `새로 맺는 계약, <b>절반 넘게</b> 월세 🏠`, barsHtml: ctaBars(allWolse, newWolse) },
+  source: { name: "국토부 아파트 전월세 실거래 · 서울시 행정경계", period: `${latestPrefix} · 신규 최근 3개월`, verified },
 };
 writeFileSync(join(outDir, "jeonwolse-map.json"), JSON.stringify(doc, null, 2) + "\n", "utf8");
 
