@@ -9,7 +9,7 @@
 | population | `DT_1B040A3` | ❌ | — | — | 확실 · 수집중 |
 | households | `DT_1B040B3` | ❌ | — | — | 확실 · 수집중 |
 | migration | `DT_1B26001_A01` | ❌ | — | — | 확실 · 수집중 |
-| age | `DT_1B04006` | ❌ | — | — | 표명확실 · 대기 |
+| age | `DT_1B04006` | ❌ | — | — | 확실 · 수집중 |
 | births | `DT_1B81A03` | ❌ | — | — | 확실 · 수집중 |
 | deaths | `DT_1B34E13` | ❌ | — | — | 표명확실 · 대기 |
 
@@ -105,8 +105,9 @@ fetch failed
 
 ## age — 행정구역(시군구)별/1세별 주민등록인구
 
-- tblId: `DT_1B04006` · 주기 `M` · 우리가 뽑으려는 값: **연령**
-- 메모: probe 로 축 확인(2026-08-03): C2=연령(000=계, 0401=0세, 0402=1세 …) · 항목 T2=총인구수/T3=남/T4=여. 코드 체계는 통계청(11110=종로구)이라 지도에 그대로 붙는다. **1세별 101개 × 전국이라 4만 셀 한도를 넘는다** → 지역을 나눠 부른다(cellsPerRegionPeriod). 축 전체 목록을 아직 다 못 봐서 대기 — 5세 단위 묶음 코드가 있으면 그쪽이 훨씬 싸다.
+- tblId: `DT_1B04006` · 주기 `M` · 우리가 뽑으려는 값: **고령인구**
+- 메모: probe 로 축 확인(2026-08-03): C2=연령(000=계, 0401=0세, 0402=1세 …) · 항목 T2=총인구수/T3=남/T4=여. 코드 체계는 통계청(11110=종로구)이라 지도에 그대로 붙는다. **1세별 101개 × 전국이라 4만 셀 한도를 넘는다** → 지역을 나눠 부른다(cellsPerRegionPeriod). 축 전체 확인: C2 102개(000=계 · 0401=0세 … 440=100세 이상). **5세 묶음 코드는 없다** — 1세별뿐이다.
+그래서 한 지역·한 시점에 102줄이 온다. 그대로 두면 시계열이 겹쳐 망가지므로 **derive: senior65 로 65세 이상을 합쳐 한 줄로 접는다**(비율이 아니라 명수). 연령 코드는 규칙이 없어(07 다음이 10, 44는 세 자리) 코드가 아니라 **이름의 숫자를 읽는다.**
 - ❌ **실패**: GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=MzJmZWNmOWUxYWQ5NzVkMzU3Yjc0OTRjMGQ2ZTJhYzA%3D&itmId=T2&objL1=ALL&format=json&jsonVD=Y&prdSe=M&orgId=101&tblId=DT_1B04006&objL2=ALL&objL3=ALL&objL4=ALL&newEstPrdCnt=1
 fetch failed
 
