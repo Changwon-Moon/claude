@@ -31,6 +31,20 @@ import {
   toEok,
 } from "./parse/molit.js";
 import { encKey } from "./sources/molit.js";
+import {
+  normalize as kosisNormalize,
+  toSeries as kosisSeries,
+  toPeriod as kosisPeriod,
+  toCount as kosisCount,
+  milestones as kosisMilestones,
+  streaks as kosisStreaks,
+  topMovers as kosisTopMovers,
+  rank as kosisRank,
+  joinReport as kosisJoin,
+  type Series as KosisSeries,
+} from "./parse/kosis.js";
+import { buildUrl as kosisUrl, encKey as kosisEncKey } from "./sources/kosis.js";
+
 import { toSeries, regionNames, ambiguousNames, latestMonth, readPage, type RebPoint } from "./sources/rebIndex.js";
 import {
   normalize as ahNormalize,
@@ -55,6 +69,8 @@ import {
   ECOS_ERROR_JSON,
   MOLIT_APT_XML,
   MOLIT_ERROR_XML,
+  KOSIS_POP_JSON,
+  KOSIS_POP_SHAPE_CHANGED_JSON,
 } from "./__fixtures__/fixtures.js";
 
 let pass = 0;
@@ -469,6 +485,92 @@ console.log("\n[청약홈 분양정보 파서]");
   check("인코딩된 키는 그대로 둔다", ahEncKey("abc%2Bdef") === "abc%2Bdef");
   check("디코딩된 키는 인코딩한다", ahEncKey("abc+def") === "abc%2Bdef");
   check("URL 에 오퍼레이션 경로가 들어간다", ahUrl("remndr", "K", 1, 500).includes("getRemndrLttotPblancDetail"));
+}
+
+/* ────────────────────────────────────────────────
+   KOSIS 주민등록 인구 (2026-08-03)
+   ──────────────────────────────────────────────── */
+{
+  check("KOSIS 기간 202606 → 2026-06", kosisPeriod("202606") === "2026-06");
+  check("KOSIS 연간 2026 → 2026-12", kosisPeriod("2026") === "2026-12");
+  check("KOSIS 형식 오류는 null", kosisPeriod("26-6") === null && kosisPeriod("") === null);
+  check("쉼표 섞인 인구를 정수로", kosisCount("140,880") === 140880);
+  check("숫자가 아니면 null(0 으로 안 채운다)", kosisCount("-") === null && kosisCount(null) === null);
+
+  const pts = kosisNormalize(JSON.parse(KOSIS_POP_JSON));
+  // 전국('00')·시도(2자리)·읍면동(7자리)은 버리고 시군구(5자리)만 남아야 한다
+  check("시군구 4행만 남는다(전국·시도·동 제외)", pts.length === 4, String(pts.length));
+  check("전국이 섞여 들어오지 않는다", !pts.some((p) => p.name === "전국"));
+  check("읍면동이 섞여 들어오지 않는다", !pts.some((p) => p.name === "사직동"));
+  check("종로구 인구를 읽는다", pts.find((p) => p.period === "2026-06" && p.code === "11010")!.value === 140880);
+
+  const ser = kosisSeries(pts);
+  check("시군구 2곳의 시계열", ser.length === 2, String(ser.length));
+  check("시점이 오름차순", ser[0].points[0].period === "2026-05" && ser[0].points[1].period === "2026-06");
+
+  // ⚠️ 필드 이름이 바뀌면 **빈 결과가 아니라 예외**여야 한다(2026-07-31 조용한 실패 교훈)
+  let kThrew = "";
+  try { kosisNormalize(JSON.parse(KOSIS_POP_SHAPE_CHANGED_JSON)); }
+  catch (e) { kThrew = String((e as Error).message); }
+  check("KOSIS 필드 이름이 바뀌면 던진다", kThrew.includes("필드 이름"), kThrew);
+
+  let kThrew2 = "";
+  try { kosisNormalize([]); }
+  catch (e) { kThrew2 = String((e as Error).message); }
+  check("빈 응답이면 던진다(빈 결과 ≠ 실패)", kThrew2.includes("행이 없다"), kThrew2);
+
+  /* ── 소재 추출 규칙 ── 합성 시계열로 규칙만 검증한다(원자료가 아니라 로직 시험). */
+  const mk = (code: string, name: string, vals: number[]): KosisSeries => ({
+    code, name,
+    points: vals.map((v, i) => ({ period: `2025-${String(i + 1).padStart(2, "0")}`, value: v })),
+  });
+
+  // 문턱 돌파 — 99,800 → 100,300 은 10만 선을 넘었다
+  const ms = kosisMilestones([mk("31240", "가상시", [99_800, 100_300])]);
+  check("10만 돌파를 잡는다", ms.length === 1 && ms[0].title.includes("10만 돌파"), ms.map((x) => x.title).join(","));
+  const msDown = kosisMilestones([mk("37010", "가상군", [100_200, 99_500])]);
+  check("10만 붕괴를 잡는다", msDown[0].title.includes("10만 붕괴"), msDown[0]?.title);
+  check("선을 안 건드리면 신호 없음", kosisMilestones([mk("11010", "가상구", [98_000, 99_000])]).length === 0);
+
+  // 연속 증감 — 값이 같은 달은 연속을 끊어야 한다(부풀리면 오보)
+  const down8 = mk("11010", "감소구", [108, 107, 106, 105, 104, 103, 102, 101, 100].map((v) => v * 1000));
+  const st = kosisStreaks([down8], 6);
+  check("8개월 연속 감소를 센다", st.length === 1 && st[0].facts.months === 8, JSON.stringify(st[0]?.facts.months));
+  const flat = mk("11020", "보합구", [108, 107, 106, 106, 105, 104, 103, 102, 101].map((v) => v * 1000));
+  const stFlat = kosisStreaks([flat], 6);
+  check("값이 같은 달은 연속을 끊는다", stFlat.length === 0, JSON.stringify(stFlat.map((x) => x.facts.months)));
+  check("짧은 연속은 소재가 아니다", kosisStreaks([mk("11030", "짧은구", [105, 104, 103, 102].map((v) => v * 1000))], 6).length === 0);
+
+  // 1년 증감률 상·하위 — 13개 시점이 있어야 계산된다
+  const many = Array.from({ length: 25 }, (_, i) =>
+    mk(`3${String(1000 + i)}`, `가상${i}`, Array.from({ length: 13 }, (_, j) => 100_000 + i * 100 * j)),
+  );
+  const tm = kosisTopMovers(many, 10);
+  check("증가·감소 순위표 2건", tm.length === 2, String(tm.length));
+  check("증가 1위는 가장 많이 늘어난 곳", tm[0].facts.leader === "가상24", String(tm[0].facts.leader));
+  check("시점이 13개 미만이면 순위표를 안 만든다", kosisTopMovers([mk("11010", "짧은", [1, 2, 3])], 10).length === 0);
+
+  // 점수 — 서울 대도시 100만 돌파가 지방 소도시 5만 돌파보다 위여야 한다
+  const ranked = kosisRank([
+    ...kosisMilestones([mk("11010", "서울대구", [999_000, 1_000_500])]),
+    ...kosisMilestones([mk("37010", "지방군", [49_800, 50_200])]),
+  ], 45);
+  check("100만 돌파가 5만 돌파보다 위", ranked[0].name === "서울대구", ranked.map((x) => `${x.name}:${x.score}`).join(","));
+  check("점수에 이유가 붙는다", ranked[0].reasons.includes("서울") && ranked[0].reasons.some((r) => r.includes("100만")),
+    ranked[0].reasons.join(","));
+  check("문턱 아래는 걸러진다", kosisRank([...kosisMilestones([mk("37010", "지방군", [49_800, 50_200])])], 999).length === 0);
+
+  // 지도 조인 — 우리 지도에 없는 코드가 있으면 드러나야 한다
+  const jr = kosisJoin([mk("11010", "종로구", [1, 2]), mk("99999", "없는곳", [1, 2])], ["11010", "11020"]);
+  check("지도에 없는 시군구를 집어낸다", jr.missingInGeo.join(",") === "99999", jr.missingInGeo.join(","));
+  check("데이터에 없는 시군구도 집어낸다", jr.missingInData.join(",") === "11020", jr.missingInData.join(","));
+
+  // 인코딩된 키를 다시 인코딩하면 인증이 깨진다(국토부에서 밟은 함정)
+  check("KOSIS 인코딩된 키는 그대로", kosisEncKey("a%2Bb") === "a%2Bb");
+  const ku = kosisUrl("population", "KEY", { startPrdDe: "202501", endPrdDe: "202606" });
+  check("URL 에 표 ID 가 들어간다", ku.includes("tblId=DT_1B040A3"), ku);
+  check("URL 에 인증키가 들어간다", ku.includes("apiKey=KEY"), ku);
+  check("URL 에 기간이 들어간다", ku.includes("startPrdDe=202501") && ku.includes("endPrdDe=202606"));
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);

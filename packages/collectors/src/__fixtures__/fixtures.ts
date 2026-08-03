@@ -128,3 +128,27 @@ export const APPLYHOME_REMNDR_JSON = JSON.stringify({
 export const APPLYHOME_SHAPE_CHANGED_JSON = JSON.stringify({
   data: [{ houseName: "이름이바뀐응답", area: "서울" }],
 });
+
+/* ── KOSIS 주민등록 인구 (2026-08-03 추가) ──
+ * ⚠️ 이것은 **표본**이다. 실제 KOSIS 응답을 세션에서 한 번도 못 봤다(외부망 차단).
+ *    필드 이름은 KOSIS OpenAPI 공개 문서 기준이고, 첫 실제 실행에서 맞는지 판가름 난다.
+ *    그래서 파서가 필드를 못 찾으면 던지도록 해 두었다 — 조용히 비는 것이 가장 위험하다.
+ *
+ * 확인 대상 두 가지가 이 표본에 다 들어 있다:
+ *   ① 전국('00')·시도(2자리)가 시군구(5자리)와 **한 응답에 섞여 온다** → 5자리만 남는지
+ *   ② 인구가 쉼표 섞인 문자열로 온다 → 정수로 읽는지
+ */
+export const KOSIS_POP_JSON = JSON.stringify([
+  { C1: "00", C1_NM: "전국", PRD_DE: "202605", DT: "51,203,441", ITM_ID: "T20", ITM_NM: "총인구수", UNIT_NM: "명", TBL_NM: "행정구역(시군구)별, 성별 인구수" },
+  { C1: "11", C1_NM: "서울특별시", PRD_DE: "202605", DT: "9,331,205", ITM_ID: "T20", ITM_NM: "총인구수", UNIT_NM: "명" },
+  { C1: "11010", C1_NM: "종로구", PRD_DE: "202605", DT: "141,102", ITM_ID: "T20", ITM_NM: "총인구수", UNIT_NM: "명" },
+  { C1: "11010", C1_NM: "종로구", PRD_DE: "202606", DT: "140,880", ITM_ID: "T20", ITM_NM: "총인구수", UNIT_NM: "명" },
+  { C1: "31241", C1_NM: "화성시만세구", PRD_DE: "202605", DT: "299,410", ITM_ID: "T20", ITM_NM: "총인구수", UNIT_NM: "명" },
+  { C1: "31241", C1_NM: "화성시만세구", PRD_DE: "202606", DT: "301,255", ITM_ID: "T20", ITM_NM: "총인구수", UNIT_NM: "명" },
+  { C1: "1101053", C1_NM: "사직동", PRD_DE: "202606", DT: "9,412", ITM_ID: "T20", ITM_NM: "총인구수", UNIT_NM: "명" },
+]);
+
+/** 필드 이름이 바뀐 표본 — 파서가 **던져야** 한다(빈 결과로 넘어가면 안 된다) */
+export const KOSIS_POP_SHAPE_CHANGED_JSON = JSON.stringify([
+  { REGION_CD: "11010", REGION_NM: "종로구", PERIOD: "202606", VALUE: "140,880" },
+]);
