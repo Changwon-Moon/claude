@@ -461,3 +461,9 @@ HTML 을 그리므로 통과했고, PNG 만 옛것이었다. **렌더 출력은 
 - 데이터: molit-rent 집계에서 구별 월세비중·서울 전체(전체 54.8%/신규 61.7%) 코드 계산(오보 0·verified). 중랑 76.4%·구로 69.1%·용산 69.0% 상위, 동작 43.4% 하위. 색은 [min,max] 정규화로 대비.
 - 제목 짧게("월세가 전세를 넘어섰다") → badgeclear 해소. titlegap 경고는 singoga 원본도 동일한 템플릿 고유 특성이라 공유 템플릿 미변경. 뱃지 발행일(오늘).
 - 기존 템플릿 재사용이라 designQa LEAF 신규 등록 불필요(크롬·SVG 규격 상속).
+
+## 2026-08-03 (7) — 월세비중 카드 수도권 토허 40곳 지도로 개편
+- 오너: 지도 토허 40곳 확대 / CTA 우측 지도 아래 / 제목 크게+서울로고 앞 / 좌측 1~12위+···+40위(꼴찌1) / 범례 삭제.
+- 경기 토허 15곳 전월세 수집 확대(molit-rent) → 40곳 매핑(tohuh-2026.json geoName↔meta.gu 전부 일치). 40곳 전체 월세비중 50.5%(신규 56.3%) — '월세가 전세를 넘어섰다' 여전히 성립(오보 0 확인). 40위=구리시 31.5%.
+- 지도: build-tohuh-rent-map 과 같은 tohuh-map.mjs 재사용(valueOf=월세비중, textOf=%). singoga-map@1 재사용.
+- 템플릿 격리 추가: `titleLead 로고 CSS(.wirit-title img.tlogo)` + `ctaRight`(CTA를 지도 아래 우측). singoga·tohuh-rent 두 발행카드 md5 불변 검증(9ca188ce0c22·ec4cad52505f 동일). 범례는 legend 미설정으로 제거. tail 로 40위. compact+fitTitle. hideFooterId(지도 스탬프가 ID) — BRAND 카드당 1개.
