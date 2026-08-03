@@ -1,5 +1,5 @@
 # 국토부 전월세 실거래 수집 요청 대기열 — 이 파일이 바뀌면 molit-rent-collect.yml 이 돈다.
 # 한 줄 형식: region=seoul gu=all months=202606 force=false
 # (세션은 GitHub API 가 막혀 Run 버튼을 못 누른다 — 푸시가 유일한 손잡이)
-# 첫 줄은 승인/엔드포인트 검증용 소량(강남구 1개월). 성공 확인되면 gu=all 로 넓힌다.
-region=seoul gu=강남구 months=202606 force=true
+# 검증 성공(강남구 202606: 월세비중 64.5%) → 서울 25개구 전체 최근 3개월로 확대.
+region=seoul gu=all months=202604,202605,202606 force=false
