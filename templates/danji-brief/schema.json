@@ -209,14 +209,19 @@
           "unit": {
             "type": "string",
             "maxLength": 6
+          },
+          "breakdown": {
+            "type": "string",
+            "maxLength": 34,
+            "description": "값 아래 회색 괄호 내역"
           }
         }
       }
     },
-    "subline": {
+    "address": {
       "type": "string",
-      "maxLength": 90,
-      "description": "수치를 뒷받침하는 한 줄(내역·주소). <b> 허용"
+      "maxLength": 40,
+      "description": "조감도 바로 아래 붙는 주소(읍면동까지)"
     }
   }
 }

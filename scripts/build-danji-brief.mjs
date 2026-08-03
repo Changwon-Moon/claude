@@ -162,7 +162,14 @@ function titleFor(d, { total, repWon }) {
 function specCells(d, aptTotal) {
   const ot = d.extra?.officetel ?? 0;
   return [
-    { label: "세대수", value: n(aptTotal + ot), unit: "세대" },
+    {
+      label: "세대수",
+      value: n(aptTotal + ot),
+      unit: "세대",
+      /* 내역은 값 바로 아래 회색 괄호(오너 지정 2026-08-03).
+         오피스텔이 없으면 만들지 않는다 — "오피스텔 0실"은 0실 공급으로 읽힌다. */
+      ...(ot ? { breakdown: `(아파트 ${n(aptTotal)}가구, 오피스텔 ${n(ot)}실)` } : {}),
+    },
     { label: "동수", value: String(d.buildings), unit: "개동" },
     { label: "최고 층수", value: String(d.topFloor), unit: "층" },
   ];
@@ -173,13 +180,9 @@ function specCells(d, aptTotal) {
  * 오피스텔이 없으면 그 조각을 만들지 않는다("OT 0" 은 0실 공급으로 읽힌다).
  * 주소는 읍면동까지(오너 지정).
  */
-function subLine(d, aptTotal) {
-  const ot = d.extra?.officetel ?? 0;
-  const parts = [];
-  if (ot) parts.push(`아파트 <b>${n(aptTotal)}</b>가구 · 오피스텔 <b>${n(ot)}</b>실`);
-  if (d.location) parts.push(`<b>${d.location}</b>`);
-  return parts.join("  |  ");
-}
+/* 주소는 조감도 바로 아래에 붙는다(오너 지시). 사진이 "어디"를 보여주면
+   다음 줄이 그 "어디"를 글로 못박는다 — 떨어뜨리면 두 요소가 남남이 된다. */
+const addressOf = (d) => d.location || "";
 
 /* ────────────────────────────────────────────────────────────────
  * 분양 예정 카드
@@ -212,8 +215,8 @@ function presale(d) {
       ? { photo: d.photo.file, credit: d.photo.credit }
       : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true },
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
+    address: addressOf(d),
     spec: specCells(d, total),
-    subline: subLine(d, total),
     priceTable: priceTable(d, total),
     schedule: [
       { label: "특별공급", date: ah?.specialFrom ? md(ah.specialFrom) : "미고지", tbd: !ah?.specialFrom },
@@ -257,7 +260,7 @@ function result(d) {
       /* 결과 카드의 세 번째 칸은 경쟁률이다 — 이 카드의 주인공이 층수는 아니다 */
       { label: "1순위 경쟁률", value: n(first.shown), unit: "대 1" },
     ],
-    subline: subLine(d, d.total),
+    address: addressOf(d),
     priceTable: priceTable(d, d.total),
     schedule: [
       { label: "특별공급", date: md(d.schedule.special) },
@@ -285,7 +288,7 @@ for (const [slug, card] of cards) {
   console.log(`${slug} — ${card.danji.name}`);
   console.log(`   ${card.topcap} · ${card.titleLines.join(" ").replace(/<[^>]+>/g, "")}`);
   console.log(`   ${card.spec.map((c) => `${c.label} ${c.value}${c.unit || ""}`).join(" · ")}`);
-  if (card.subline) console.log(`   ${card.subline.replace(/<[^>]+>/g, "")}`);
+  if (card.address) console.log(`   ${card.address}`);
   console.log(`   평형 ${card.priceTable.rows.map((r) => `${r.area} ${r.price}`).join(" · ")}`);
   console.log(`   일정 ${card.schedule.map((s) => `${s.label} ${s.date}`).join(" · ")}`);
 }
