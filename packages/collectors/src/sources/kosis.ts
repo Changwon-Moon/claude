@@ -169,13 +169,26 @@ export const TABLES: Record<string, TableSpec> = {
   },
   deaths: {
     orgId: "101", tblId: "DT_1B34E13", label: "시군구/사망원인별 사망자수",
-    metric: "사망", itmId: "T1", objL1: "ALL", objL2: "", prdSe: "Y",
-    codeSystem: "vital", cellsPerRegionPeriod: 50,
+    /* 축 구성이 전부 밝혀졌다(2026-08-03 probe):
+         objL1 = 사망원인(52개) → "0"=계
+         objL2 = 행정구역        → ALL
+         objL3 = 성별(3개)      → "0"=계
+       사망원인과 성별을 '계' 로 고정하면 지역·시점당 1셀이라 4만 셀 한도에 안 걸린다.
+       나눠 부를 필요가 없어 cellsPerRegionPeriod 를 두지 않는다. */
+    metric: "사망", itmId: "T1", objL1: "0", objL2: "", prdSe: "Y",
+    extraObjL: ["ALL", "0"], codeSystem: "vital",
     regionAxis: "C2", probeObjL: ["ALL", "11", "ALL"],
-    confidence: "표명확실", enabled: false,
-    note: "사망원인통계(연간). 사망원인 분류축의 '계'를 뽑아야 총사망자수가 된다 — " +
-      "**축 구성 미확인이라 probe 없이 쓰면 특정 사인의 숫자를 총사망자수로 낼 위험이 있다.** " +
-      "시군구 단위 순수 사망자수 전용표는 찾지 못했다.",
+    confidence: "확실", enabled: false,
+    note: "probe 로 축 전부 확인(2026-08-03): objL1=사망원인 52개(**0=계**) · objL2=행정구역 · " +
+      "objL3=성별 3개(0=계) · 항목 T1=사망자수(T4 사망률·T7 연령표준화). 사망원인·성별을 '계'로 " +
+      "고정하므로 지역·시점당 1셀 — 4만 셀 한도에 안 걸린다.\n" +
+      "⚠️ **C1 이 지역이 아니다.** C1=사망원인, C2=행정구역. regionAxis 를 안 주면 " +
+      "'11=호흡기 결핵' 이 지역 코드로 들어가고 지도가 통째로 거짓이 된다.\n" +
+      "🚧 **남은 것 하나**: 이 표의 지역 코드가 출생표와 같은 vital 체계인지 **미검증**. " +
+      "C2 표본에서 11010=종로구·21010=중구·35010=전주시 를 봐서 같아 보이지만 " +
+      "**같아 보이는 것과 확인한 것은 다르다.** probe 가 C2 지역 목록을 받아 " +
+      "build-kosis-region-map.mjs 가 deaths 대조표를 만들면 그때 켠다. " +
+      "대조표 없이 켜면 selftest 가 막는다(vital 표는 대조표 필수).",
   },
 };
 
