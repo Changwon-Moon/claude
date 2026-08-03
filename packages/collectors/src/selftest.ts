@@ -577,7 +577,20 @@ console.log("\n[청약홈 분양정보 파서]");
      "확실" 이 아닌 표는 반드시 enabled=false 여야 한다. */
   const notSure = Object.entries(KOSIS_TABLES).filter(([, t]) => t.confidence !== "확실" && t.enabled);
   check("규격 미확인 표는 정기 수집에 끼지 않는다", notSure.length === 0, notSure.map(([k]) => k).join(","));
-  check("켜진 표는 인구뿐(검증 전)", kosisEnabled().join(",") === "population", kosisEnabled().join(","));
+  /* 켜진 표는 probe 로 실물 검증된 것만 — 2026-08-03 probe 결과 3개(인구·세대·이동) 통과.
+     "인구뿐" 이라고 못 박아 두면 검증이 진행될 때마다 이 줄을 고쳐야 하고,
+     고치다 보면 규칙이 아니라 통과시키기 위한 숫자가 된다. 원칙만 지킨다. */
+  const enabledNames = kosisEnabled();
+  check("켜진 표가 하나는 있다", enabledNames.length > 0, enabledNames.join(","));
+  const enabledUnsure = enabledNames.filter((k) => KOSIS_TABLES[k].confidence !== "확실");
+  check("켜진 표는 전부 '확실'", enabledUnsure.length === 0, enabledUnsure.join(","));
+  /* 파서가 ITM_ID 를 구분하지 않는다 — 항목을 여러 개 받으면 한 지역에 값이 겹쳐 시계열이 망가진다.
+     그래서 켜진 표의 itmId 는 반드시 단일 코드여야 한다. ALL·'+' 는 금지. */
+  const multiItem = enabledNames.filter((k) => {
+    const it = KOSIS_TABLES[k].itmId;
+    return it === "ALL" || it.includes("+");
+  });
+  check("켜진 표의 항목은 단일 코드(파서가 항목 축을 안 가른다)", multiItem.length === 0, multiItem.join(","));
   const noNote = Object.entries(KOSIS_TABLES).filter(([, t]) => !t.note || t.note.length < 20);
   check("표마다 무엇이 미확인인지 적혀 있다", noNote.length === 0, noNote.map(([k]) => k).join(","));
   // probe 는 최근 1개 시점만 받는다 — 전 기간을 받으면 수십 MB 라 검증 목적에 안 맞는다

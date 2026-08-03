@@ -67,18 +67,20 @@ export const TABLES: Record<string, TableSpec> = {
   },
   households: {
     orgId: "101", tblId: "DT_1B040B3", label: "행정구역(시군구)별 주민등록세대수",
-    metric: "세대수", itmId: "ALL", objL1: "ALL", objL2: "", prdSe: "M",
-    confidence: "표명확실", enabled: false,
-    note: "표 제목·수록주기(월·년, 1992~)는 확인. **항목코드 미확인** → probe 로 확정한다. " +
-      "세대당 인구는 이 표의 항목을 쓰지 않고 인구÷세대수로 우리가 계산한다(전용 항목이 있는지 확인 못 했다).",
+    metric: "세대수", itmId: "T1", objL1: "ALL", objL2: "", prdSe: "M",
+    confidence: "확실", enabled: true,
+    note: "probe 검증 완료(2026-08-03): 통계표명 일치 · T1=세대수 · 시군구 5자리 277개 · 202606. " +
+      "세대당 인구는 이 표의 항목을 쓰지 않고 인구÷세대수로 우리가 계산한다(전용 항목이 없다).",
   },
   migration: {
     orgId: "101", tblId: "DT_1B26001_A01", label: "시군구별 이동자수(국내인구이동)",
-    metric: "이동", itmId: "ALL", objL1: "ALL", objL2: "", prdSe: "Y",
-    confidence: "표명확실", enabled: false,
-    note: "시군구 5자리 코드로 실제 호출된 URL 이 확인됐다(objL1=11110+11140+…). " +
-      "**항목코드 미확인**(T25 하나만 실물 관측, 라벨 모름). 월간 지원 여부도 미확인 → 연간으로 시작. " +
-      "총전입·총전출·순이동 구성으로 추정되며, 순이동은 우리가 전입-전출로 다시 계산한다.",
+    metric: "이동", itmId: "T25", objL1: "ALL", objL2: "", prdSe: "Y",
+    confidence: "확실", enabled: true,
+    note: "probe 검증 완료(2026-08-03): 통계표명 '시군구별 이동자수' · 시군구 5자리 254개 · 2025년. " +
+      "항목 8개 확인 — T10=총전입 T20=총전출 T25=순이동 T30~T50=시도내외 분해. " +
+      "**T25(순이동) 하나만 받는다.** 파서(parse/kosis.ts)가 ITM_ID 를 구분하지 않아 여러 항목을 " +
+      "한꺼번에 받으면 한 지역에 값이 8개씩 겹쳐 시계열이 망가진다. 전입·전출 분해가 필요해지면 " +
+      "파서에 항목 축을 먼저 넣고 그 다음에 늘린다.",
   },
   age: {
     orgId: "101", tblId: "DT_1B04006", label: "행정구역(시군구)별/1세별 주민등록인구",
@@ -174,6 +176,50 @@ export async function fetchTable(
     const o = json as Record<string, unknown>;
     if (o.err || o.errMsg || o.ERR || o.errCd) {
       throw new Error(`KOSIS API 오류(${table}): ${String(o.errMsg ?? o.err ?? o.errCd ?? "")}`);
+    }
+  }
+  return json;
+}
+
+/**
+ * 표의 **분류축 메타**를 읽는다 — "필수요청변수값이 누락되었습니다. (objL)" 를 푸는 열쇠.
+ *
+ * 어떤 표는 축이 여럿이라(연령·성별·사망원인 등) objL1 만 주면 KOSIS 가 거부한다.
+ * 어떤 축이 몇 개인지, 각 축의 '계'가 무슨 코드인지는 **메타를 봐야 안다.**
+ * 추측해서 박으면 특정 사인(死因)의 숫자가 총사망자수로 카드에 올라간다.
+ *
+ * type=OBJ 는 분류축과 그 코드들을, type=ITM 은 항목 코드를 준다.
+ */
+const META = "https://kosis.kr/openapi/statisticsData.do";
+
+export async function fetchMeta(
+  table: TableKey,
+  key: string,
+  type: "OBJ" | "ITM",
+): Promise<unknown> {
+  const t = TABLES[table];
+  const p = new URLSearchParams({
+    method: "getMeta",
+    apiKey: "__KEY__",
+    orgId: t.orgId,
+    tblId: t.tblId,
+    type,
+    format: "json",
+    jsonVD: "Y",
+  });
+  const url = `${META}?${p.toString()}`.replace("__KEY__", encKey(key));
+  const text = await fetchText(url, { timeoutMs: 30000 });
+
+  let json: unknown;
+  try {
+    json = JSON.parse(text);
+  } catch {
+    throw new Error(`KOSIS 메타 응답이 JSON 이 아니다(${table}/${type}): ${text.slice(0, 300)}`);
+  }
+  if (json && typeof json === "object" && !Array.isArray(json)) {
+    const o = json as Record<string, unknown>;
+    if (o.err || o.errMsg || o.ERR || o.errCd) {
+      throw new Error(`KOSIS 메타 오류(${table}/${type}): ${String(o.errMsg ?? o.err ?? o.errCd ?? "")}`);
     }
   }
   return json;

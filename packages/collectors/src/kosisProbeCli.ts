@@ -20,7 +20,7 @@
  */
 import { writeFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
-import { fetchTable, TABLES, type TableKey } from "./sources/kosis.js";
+import { fetchTable, fetchMeta, TABLES, type TableKey } from "./sources/kosis.js";
 
 const CWD = process.env.INIT_CWD || process.cwd();
 
@@ -40,6 +40,8 @@ type Probe = {
   periods?: string[];
   sggCodes?: number;
   sample?: Record<string, unknown>;
+  /** 실패했을 때 — 표의 분류축 메타. objL 을 어떻게 채워야 하는지 여기 답이 있다. */
+  meta?: { axes: string; items: string };
 };
 
 /** 응답에서 분류축 C1~C4 의 값을 몇 개만 뽑아 본다 — 무엇이 그 축인지 사람이 보면 안다. */
@@ -83,7 +85,21 @@ async function probeOne(key: TableKey, apiKey: string): Promise<Probe> {
       sample: rows[0],
     };
   } catch (e) {
-    return { key, ok: false, error: e instanceof Error ? e.message : String(e) };
+    const error = e instanceof Error ? e.message : String(e);
+    /* 실패했으면 **왜** 실패했는지까지 한 번에 가져온다.
+       다음 세션이 같은 실패를 또 보고 또 메타를 따로 받는 왕복을 하지 않도록. */
+    let meta: Probe["meta"];
+    try {
+      const [obj, itm] = await Promise.all([
+        fetchMeta(key, apiKey, "OBJ").catch((x) => ({ 메타실패: String(x?.message ?? x) })),
+        fetchMeta(key, apiKey, "ITM").catch((x) => ({ 메타실패: String(x?.message ?? x) })),
+      ]);
+      meta = {
+        axes: JSON.stringify(obj, null, 1).slice(0, 6000),
+        items: JSON.stringify(itm, null, 1).slice(0, 3000),
+      };
+    } catch { /* 메타까지 실패하면 그냥 없이 간다 */ }
+    return { key, ok: false, error, meta };
   }
 }
 
@@ -132,6 +148,20 @@ async function main() {
     L.push(`- 메모: ${t.note}`);
     if (!r.ok) {
       L.push(`- ❌ **실패**: ${r.error}`);
+      if (r.meta) {
+        L.push("");
+        L.push("**분류축 메타(OBJ)** — `objL1`·`objL2`… 를 여기 코드로 채운다. 축이 여럿이면 행정구역이 아닌 축은 '계'를 고른다");
+        L.push("");
+        L.push("```json");
+        L.push(r.meta.axes);
+        L.push("```");
+        L.push("");
+        L.push("**항목 메타(ITM)**");
+        L.push("");
+        L.push("```json");
+        L.push(r.meta.items);
+        L.push("```");
+      }
       continue;
     }
     L.push(`- 시점: ${r.periods?.join(", ")}`);
