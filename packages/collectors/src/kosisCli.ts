@@ -151,43 +151,57 @@ async function main() {
   const regionMap = loadRegionMap(CWD);
 
   const metrics: Record<string, Series[]> = {};
+  /* ── 한 표가 넘어져도 나머지는 간다 ──
+     표 하나에서 던지면 수집 전체가 멈춘다. 새로 켠 표(연령·출생)가 넘어졌다고
+     잘 돌던 인구·세대수까지 못 받는 것은 손해가 크다.
+     다만 **조용히 넘어가지는 않는다** — 실패를 모아 두었다가 보고서에 적고,
+     산출물을 다 쓴 뒤에 빨간불로 끝낸다. 데이터는 남기고 실패는 보이게 한다.
+     인구는 예외다. 모든 신호의 기준선이라 없으면 아래에서 어차피 멈춘다. */
+  const failures: { table: string; why: string }[] = [];
   for (const t of tables) {
     const spec = TABLES[t];
-    const periods = spec.prdSe === "Y" ? Math.ceil((spec.maxMonths ?? months) / 12) + 1 : (spec.maxMonths ?? months) + 1;
+    try {
+      const periods = spec.prdSe === "Y" ? Math.ceil((spec.maxMonths ?? months) / 12) + 1 : (spec.maxMonths ?? months) + 1;
 
-    let payload: unknown;
-    if (DRY) {
-      payload = synthesize(geo.codes, geo.names, months);
-    } else if ((spec.cellsPerRegionPeriod ?? 1) > 1) {
-      /* 축이 큰 표(연령 1세별·사망원인)는 4만 셀 한도에 걸린다 — 지역을 나눠 부른다.
-         나눌 코드는 그 표의 코드 체계로 줘야 한다. */
-      const codes = regionCodesFor(t, regionMap, geo.codes);
-      const size = chunkSizeFor(t, periods);
-      console.log(`· ${spec.metric}(${spec.tblId}) — 지역 ${codes.length}곳을 ${size}개씩 ${Math.ceil(codes.length / size)}번에 나눠 받습니다(4만 셀 한도)`);
-      payload = await fetchTableChunked(
-        t, key!,
-        { startPrdDe: start, endPrdDe: end, prdSe: spec.prdSe },
-        codes, periods,
-        (d, n) => { if (d === n || d % 5 === 0) console.log(`   ${d}/${n}`); },
-      );
-    } else {
-      payload = await fetchTable(t, key!, { startPrdDe: start, endPrdDe: end, extraObjL: spec.extraObjL });
-    }
-
-    /* 1세별처럼 한 지역에 여러 줄이 오는 표는 그대로 시계열로 못 쓴다 — 먼저 접는다. */
-    let points = spec.derive === "senior65"
-      ? seniorPoints(payload, spec.regionAxis ?? "C1")
-      : normalize(payload, spec.regionAxis ?? "C1");
-    if (spec.codeSystem === "vital") {
-      const before = points.length;
-      points = remapRegions(points, regionMap.maps?.[t] ?? {});
-      console.log(`· ${spec.metric} 코드 변환(${spec.codeSystem} → 통계청): ${points.length}/${before}행`);
-      if (!points.length && before) {
-        throw new Error(`${t}: 코드 대조표가 한 행도 못 옮겼다 — data/geo/kosis-region-map.json 을 다시 만들어야 한다.`);
+      let payload: unknown;
+      if (DRY) {
+        payload = synthesize(geo.codes, geo.names, months);
+      } else if ((spec.cellsPerRegionPeriod ?? 1) > 1) {
+        /* 축이 큰 표(연령 1세별·사망원인)는 4만 셀 한도에 걸린다 — 지역을 나눠 부른다.
+           나눌 코드는 그 표의 코드 체계로 줘야 한다. */
+        const codes = regionCodesFor(t, regionMap, geo.codes);
+        const size = chunkSizeFor(t, periods);
+        console.log(`· ${spec.metric}(${spec.tblId}) — 지역 ${codes.length}곳을 ${size}개씩 ${Math.ceil(codes.length / size)}번에 나눠 받습니다(4만 셀 한도)`);
+        payload = await fetchTableChunked(
+          t, key!,
+          { startPrdDe: start, endPrdDe: end, prdSe: spec.prdSe },
+          codes, periods,
+          (d, n) => { if (d === n || d % 5 === 0) console.log(`   ${d}/${n}`); },
+        );
+      } else {
+        payload = await fetchTable(t, key!, { startPrdDe: start, endPrdDe: end, extraObjL: spec.extraObjL });
       }
+
+      /* 1세별처럼 한 지역에 여러 줄이 오는 표는 그대로 시계열로 못 쓴다 — 먼저 접는다. */
+      let points = spec.derive === "senior65"
+        ? seniorPoints(payload, spec.regionAxis ?? "C1")
+        : normalize(payload, spec.regionAxis ?? "C1");
+      if (spec.codeSystem === "vital") {
+        const before = points.length;
+        points = remapRegions(points, regionMap.maps?.[t] ?? {});
+        console.log(`· ${spec.metric} 코드 변환(${spec.codeSystem} → 통계청): ${points.length}/${before}행`);
+        if (!points.length && before) {
+          throw new Error(`${t}: 코드 대조표가 한 행도 못 옮겼다 — data/geo/kosis-region-map.json 을 다시 만들어야 한다.`);
+        }
+      }
+      metrics[spec.metric] = toSeries(points);
+      console.log(`· ${spec.metric}(${spec.tblId}) — 시군구 ${metrics[spec.metric].length}곳 · 시점 ${metrics[spec.metric][0]?.points.length ?? 0}개`);
+    } catch (e) {
+      const why = e instanceof Error ? e.message : String(e);
+      failures.push({ table: `${t}(${spec.tblId})`, why });
+      console.log(`::error::${spec.metric}(${spec.tblId}) 수집 실패 — ${why}`);
+      console.log(`  → 나머지 표는 계속 받습니다. 이 표는 이번 회차 산출물에서 빠집니다.`);
     }
-    metrics[spec.metric] = toSeries(points);
-    console.log(`· ${spec.metric}(${spec.tblId}) — 시군구 ${metrics[spec.metric].length}곳 · 시점 ${metrics[spec.metric][0]?.points.length ?? 0}개`);
   }
   if (waiting.length) {
     console.log(`· 검증 대기 중인 표 ${waiting.length}개: ${waiting.map((k) => `${k}(${TABLES[k].tblId})`).join(", ")}`);
@@ -265,6 +279,19 @@ async function main() {
     console.log(`   ${String(s.score).padStart(3)}점  [${s.kind}] ${s.title}  — ${s.reasons.join("·")}`);
   }
   if (!signals.length) console.log("   (이달에 새로 뜬 소재 없음 — 이것도 사실이다. 빈 결과와 실패는 다르다)");
+
+  /* 산출물을 다 쓴 뒤에 실패를 알린다 — 데이터는 남기고 실패는 보이게 한다. */
+  reportFailures(failures);
+  if (failures.length) process.exit(1);
+}
+
+/* 실패한 표가 있으면 **산출물을 다 쓴 뒤에** 빨간불로 끝낸다.
+   조용히 성공으로 끝내면 "이번 달은 이게 다" 로 읽히고, 빠진 지표를 아무도 못 챙긴다. */
+function reportFailures(failures: { table: string; why: string }[]): void {
+  if (!failures.length) return;
+  console.log(`\n⚠️ 표 ${failures.length}개가 이번 회차에서 빠졌습니다:`);
+  for (const f of failures) console.log(`   · ${f.table} — ${f.why}`);
+  console.log("   나머지 표의 산출물은 정상적으로 기록됐습니다.");
 }
 
 main().catch((e) => {
