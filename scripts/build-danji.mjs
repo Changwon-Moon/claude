@@ -90,6 +90,8 @@ const byId = (id) => {
 };
 
 const n = (v) => Number(v).toLocaleString("ko-KR");
+/** 요일은 코드가 날짜에서 계산한다 — 손으로 적으면 다음 카드에서 틀린다. */
+const WD = "일월화수목금토";
 
 /** 억 단위 한글 표기 — 1,860,000,000 → "18억 6,000만원" */
 function won(v) {
@@ -270,7 +272,12 @@ function presale(d) {
   const total = ah ? ah.supply : d.total;
   const rep = repArea(d);
   const repWon = repPrice(d, rep);
-  const md = (iso) => { const [, m, dd] = iso.split("-"); return `${Number(m)}/${Number(dd)}`; };
+  /* 날짜에는 요일을 붙인다(오너 지시 2026-08-03) — 청약은 평일 하루짜리라 요일이 곧 일정이다.
+     요일은 **코드가 날짜에서 계산한다.** 손으로 적으면 다음 카드에서 틀린다. */
+  const md = (iso) => {
+    const [, m, dd] = iso.split("-");
+    return `${Number(m)}/${Number(dd)}(${WD[new Date(`${iso}T00:00:00Z`).getUTCDay()]})`;
+  };
   const ymKo = (ym) => (ym ? `${ym.split("-")[0]}년 ${Number(ym.split("-")[1])}월` : "미고지");
   const moveInYm = ah?.moveInYm ?? d.moveIn ?? null;
 
@@ -337,7 +344,6 @@ function remndr(d) {
      분양 예정 카드는 특공·1순위·당발이 며칠에 걸쳐 있어 요일 가치가 낮고, 일정이 4칸이라
      요일을 붙이면 가장 긴 칸이 공통 수치 크기를 통째로 끌어내린다 — 거기는 붙이지 않는다.
      요일은 **코드가 날짜에서 계산한다.** 손으로 적으면 다음 카드에서 틀린다. */
-  const WD = "일월화수목금토";
   const md = (iso) => {
     const [, m, dd] = iso.split("-");
     return `${Number(m)}/${Number(dd)}(${WD[new Date(`${iso}T00:00:00Z`).getUTCDay()]})`;
@@ -422,7 +428,10 @@ function result(d) {
   const first = rows.find((r) => r.label === "1순위");
   if (!first) throw new Error("1순위 행이 있어야 한다");
   const repWon = d.price?.unit59Won ?? null;
-  const md = (iso) => { const [, m, dd] = iso.split("-"); return `${Number(m)}/${Number(dd)}`; };
+  const md = (iso) => {
+    const [, m, dd] = iso.split("-");
+    return `${Number(m)}/${Number(dd)}(${WD[new Date(`${iso}T00:00:00Z`).getUTCDay()]})`;
+  };
   const ymKo = (ym) => (ym ? `${ym.split("-")[0]}년 ${Number(ym.split("-")[1])}월` : "미고지");
 
   const flags = [];

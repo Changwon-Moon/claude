@@ -67,17 +67,17 @@
   "schedule": [
     {
       "label": "특별공급",
-      "date": "8/10",
+      "date": "8/10(월)",
       "tbd": false
     },
     {
       "label": "1순위",
-      "date": "8/11",
+      "date": "8/11(화)",
       "tbd": false
     },
     {
       "label": "당첨자 발표",
-      "date": "8/20",
+      "date": "8/20(목)",
       "tbd": false
     },
     {
