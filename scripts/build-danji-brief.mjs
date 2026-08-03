@@ -30,13 +30,37 @@
  *
  * 실행: node scripts/build-danji-brief.mjs [date=2026-08-01]
  */
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const date = process.argv[2] || "2026-08-01";
 const doc = JSON.parse(readFileSync(join(ROOT, "data/datasets/bunyang-danji-2026.json"), "utf8"));
+
+/* ── 청약홈 1차 출처 병합 (2026-08-03) ──
+ * 매일 도는 수집기가 받아 놓은 `applyhome-latest.json` 에서 그 공고를 찾아 쓴다.
+ * **여기 손으로 옮겨 적지 않는다** — 옮겨 적는 순간 두 곳이 어긋나고, 어긋난 쪽이
+ * 카드에 나가면 그게 오보다. 데이터셋에는 API 에 없는 것(동수·층수·분양가)만 둔다.
+ *
+ * ⚠️ 데이터셋에도 같은 값이 적혀 있고 청약홈과 다르면 **던진다.**
+ *    "둘 중 뭐가 맞지?" 를 사람이 눈으로 고르게 두지 않는다. */
+function applyhome(d) {
+  if (!d.applyhomeNo) return null;
+  const p = join(ROOT, "data/datasets/applyhome-latest.json");
+  if (!existsSync(p))
+    throw new Error(`청약홈 수집 결과가 없다 — 대기열(data/applyhome-queue.txt)로 수집을 먼저 건다 (${d.id})`);
+  const doc = JSON.parse(readFileSync(p, "utf8"));
+  const hit = (doc.notices || []).find((x) => x.pblancNo === d.applyhomeNo);
+  if (!hit)
+    throw new Error(
+      `청약홈 최신 수집분에 공고번호 ${d.applyhomeNo} 가 없다 (${d.id}). ` +
+        `접수가 끝나 목록에서 빠졌을 수 있다 — data/datasets/applyhome/{날짜}.json 을 확인할 것.`,
+    );
+  if (d.total != null && d.total !== hit.supply)
+    throw new Error(`총 세대수 불일치 — 데이터셋 ${d.total} vs 청약홈 ${hit.supply} (${d.id})`);
+  return hit;
+}
 
 const byId = (id) => {
   const d = doc.danji.find((x) => x.id === id);
@@ -69,22 +93,51 @@ function ratio(row) {
   return { shown, calc };
 }
 
-/** 전용면적 목록. 4개를 넘으면 최소~최대 범위로 줄인다 — 여섯 개를 다 적으면 칸을 넘긴다. */
+/** 전용면적 목록. 길면 최소~최대 범위로 줄인다.
+ *  ⚠️ 개수만으로 자르면 안 된다 — "84·106·122·180" 은 네 개인데도 칸(425px)을 넘겼다
+ *  (2026-08-03 designQa clipped 가 잡았다). 세 자리 숫자가 섞이면 글자 수로 재야 맞는다. */
 const areaList = (areas) => {
   const ms = areas.map((a) => a.m2);
-  return (ms.length > 4 ? `${Math.min(...ms)}~${Math.max(...ms)}` : ms.join("·")) + "㎡";
+  const joined = ms.join("·");
+  return (ms.length > 4 || joined.length > 12 ? `${Math.min(...ms)}~${Math.max(...ms)}` : joined) + "㎡";
 };
 const typeCount = (areas) => areas.reduce((s, a) => s + a.types.length, 0);
 
 /** 주력 면적대 — 세대수가 가장 많은 전용면적과 그 비중. units 가 다 적혀 있을 때만.
  *  합계가 총 세대수와 다르면 던진다. 데이터가 스스로 검산하지 않으면 표가 조용히 틀린다. */
-function mainArea(d) {
+function mainArea(d, total) {
+  /* 주력 면적대만 따로 알려진 단지가 있다(전체 타입별 세대수는 공고문에만 있다).
+     그때는 그 하나만 받되 **총 세대수를 넘지 않는지** 확인한다. */
+  if (d.mainArea) {
+    const { m2, units } = d.mainArea;
+    if (!(units > 0 && units <= total))
+      throw new Error(`주력 면적 세대수 ${units} 가 총 세대수 ${total} 범위 밖이다 (${d.id})`);
+    return { m2, units, pct: Math.round((units / total) * 1000) / 10 };
+  }
   if (!d.areas.every((a) => Number.isInteger(a.units))) return null;
   const sum = d.areas.reduce((s, a) => s + a.units, 0);
-  if (sum !== d.total)
-    throw new Error(`주택형 세대수 합 ${sum} ≠ 총 세대수 ${d.total} — 원자료를 확인할 것 (${d.id})`);
+  if (sum !== total)
+    throw new Error(`주택형 세대수 합 ${sum} ≠ 총 세대수 ${total} — 원자료를 확인할 것 (${d.id})`);
   const top = d.areas.reduce((a, b) => (b.units > a.units ? b : a));
-  return { m2: top.m2, units: top.units, pct: Math.round((top.units / d.total) * 1000) / 10 };
+  return { m2: top.m2, units: top.units, pct: Math.round((top.units / total) * 1000) / 10 };
+}
+
+/* 제목 안 — 오너가 고를 수 있게 변형으로 둔다(CEO 07-31 "선택지는 렌더해서 보여준다").
+ * 어느 안이든 **숫자는 전부 데이터에서** 온다. 손으로 적은 문구는 없다. */
+const TITLE_VARIANT = process.env.WIRIT_TITLE || "a";
+function titleFor(d, { total, ah }) {
+  const v = TITLE_VARIANT;
+  if (d.price?.headline && v === "a")
+    // 가격이 곧 반전 — "한강 보는 84㎡가 7억대"
+    return [`한강 보는 ${d.price.headline.label.replace("전용 ", "")}가`, `<span class="hi">${won(d.price.headline.won)}</span>`];
+  if (v === "b")
+    // 규모가 훅 — 지역은 위치에서 뽑는다(highlight 를 쓰면 "한강과 맞닿은 한강변"처럼 말이 겹친다)
+    return [`${d.location.split(" ").slice(0, 2).join(" ")} 한강변에`, `<span class="hi">${n(total)}가구</span> 들어선다`];
+  if (v === "c" && ah?.priceCap)
+    return [`분양가상한제 한강변`, `<span class="hi">${n(total)}가구</span>`];
+  if (d.site)
+    return [`${d.site.replace(/ 부지$/, "")}에`, `<span class="hi">${d.topFloor}층 ${n(total)}가구</span>`];
+  return [`${d.nearest.line} ${d.nearest.station} ${d.nearest.desc}`, `<span class="hi">${n(total)}가구</span> 들어선다`];
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -92,14 +145,29 @@ function mainArea(d) {
  * ──────────────────────────────────────────────────────────────── */
 function presale(d) {
   if (d.kind !== "presale") throw new Error(`${d.id} 는 presale 이 아니다`);
-  const [saleY, saleM] = d.saleMonth.split("-");
+  /* 청약홈 공고가 붙어 있으면 그쪽이 사실의 원천이다. 없으면 데이터셋 값으로 간다
+     (모집공고 전 단지는 아직 청약홈에 없다 — 그건 정상이다). */
+  const ah = applyhome(d);
+  const total = ah ? ah.supply : d.total;
+  /* ⚠️ '일반분양'은 확인된 단지에서만 말한다.
+   * 청약홈의 총공급세대수(TOT_SUPLY_HSHLDCO)는 '공급 세대수'이지 '조합원 몫이 없다'는 뜻이 아니다.
+   * 데이터셋이 general 을 명시하지 않았는데 total 을 그대로 넣으면, 카드에 같은 숫자가 두 번
+   * 찍히면서 **확인하지 않은 사실(전량 일반분양)을 단정**하게 된다(2026-08-03 한강 카드에서 발견).
+   * 그때는 그 칸을 주력 면적대로 바꾼다 — 정보량도 그쪽이 크다. */
+  const general = d.general ?? null;
+  const moveInYm = ah?.moveInYm ?? d.moveIn ?? null;
+  const [saleY, saleM] = (ah?.noticeDate ?? d.saleMonth).split("-");
   /* 모르는 날짜는 지어내지 않고 '미고지'로 적는다 — 칸을 지우면 그런 정보가 없는 줄 안다. */
-  const ym = (iso) => (iso ? `${iso.split("-")[0]}.${Number(iso.split("-")[1])}` : "미고지");
+  const ymLabel = (iso) => (iso ? `${iso.split("-")[0]}.${Number(iso.split("-")[1])}` : "미고지");
+  /* 3.31 로 적으면 소수처럼 읽힌다. 날짜는 슬래시로 — 8/10. */
+  const md = (iso) => { const [, m, dd] = iso.split("-"); return `${Number(m)}/${Number(dd)}`; };
 
   /* 일반분양 비율은 '얼마나 살 수 있나'를 말한다 — 조합원 몫이 큰 단지와 구분된다. */
-  const ratioPct = Math.round((d.general / d.total) * 1000) / 10;
-  const main = mainArea(d);
-  const allGeneral = d.general === d.total;   // 조합원·임대 물량이 없는 단지
+  const main = mainArea(d, total);
+  if (d.general == null && !main)
+    throw new Error(`${d.id}: general(일반분양)도 mainArea(주력 면적대)도 없다 — 숫자칸 하나를 채울 수 없다`);
+  const ratioPct = general === null ? null : Math.round((general / total) * 1000) / 10;
+  const allGeneral = general !== null && general === total;   // 조합원·임대 물량이 없다고 **확인된** 단지
 
   return {
     template: "danji-brief@1",
@@ -111,12 +179,7 @@ function presale(d) {
      * 부지 내력(site)이 있으면 그게 가장 센 훅이다 —
      * "옛 홈플러스 자리"는 독자가 아는 장소라 세대수보다 먼저 걸린다.
      * 없으면 역 이름으로 간다. 둘 다 데이터에 있는 값이고, 최상급은 쓰지 않는다. */
-    titleLines: d.site
-      ? [`${d.site.replace(/ 부지$/, "")}에`, `<span class="hi">${d.topFloor}층 ${n(d.total)}가구</span>`]
-      : [
-          `${d.nearest.line} ${d.nearest.station} ${d.nearest.desc}`,
-          `<span class="hi">${n(d.total)}가구</span> 들어선다`,
-        ],
+    titleLines: titleFor(d, { total, ah }),
     hero: {
       photo: "seoul-apart-night.jpg",
       credit: "조감도 미확보",
@@ -129,8 +192,10 @@ function presale(d) {
       ...(d.logo ? { logo: d.logo } : {}),
     },
     stats: [
-      { label: "총 세대수", value: n(d.total), unit: "가구" },
-      { label: "일반분양", value: n(d.general), unit: "가구" },
+      { label: "총 세대수", value: n(total), unit: "가구" },
+      general !== null
+        ? { label: "일반분양", value: n(general), unit: "가구" }
+        : { label: `주력 전용 ${main.m2}㎡`, value: n(main.units), unit: "가구" },
       { label: "최고 층수", value: String(d.topFloor), unit: "층" },
     ],
     table: {
@@ -139,24 +204,40 @@ function presale(d) {
         ["전용면적", `${areaList(d.areas)} · ${typeCount(d.areas)}개 타입`],
         /* 주력 면적대는 '이 단지가 누구를 위한 곳인가'를 한 줄로 말한다.
            units 가 다 적혀 있고 합이 총 세대수와 맞을 때만 나간다(mainArea 가 검산한다). */
-        ...(main ? [[`주력 전용 ${main.m2}㎡`, `${n(main.units)}가구 · ${main.pct}%`]] : []),
+        /* 숫자칸이 이미 주력 면적대를 말하고 있으면 표에서는 뺀다 — 같은 말을 두 번 하지 않는다 */
+        ...(main && general !== null ? [[`주력 전용 ${main.m2}㎡`, `${n(main.units)}가구 · ${main.pct}%`]] : []),
         ["규모", `${d.buildings}개동 · 지하${d.underFloor}~지상${d.topFloor}층`],
-        ["분양가", d.priceDisclosed ? won(d.price.unit59Won) : "모집공고 시 공개"],
+        ["분양가", d.priceDisclosed ? `${d.price.headline.label} ${won(d.price.headline.won)}` : "모집공고 시 공개"],
         /* 입주 예정은 아래 일정칸이 이미 말한다 — 한 카드에서 같은 말을 두 번 하지 않는다 */
       ],
       note: d.pyeongDisclosed ? undefined : "공급평형 미고지 — 전용면적으로 표기",
     },
-    schedule: [
-      { label: "분양 시기", date: `${saleY}.${Number(saleM)}` },
-      { label: "청약 일정", date: d.schedule.first ? ym(d.schedule.first) : "미고지", tbd: !d.schedule.first },
-      { label: "입주 예정", date: ym(d.moveIn), tbd: !d.moveIn },
-    ],
+    /* 청약 일정 3칸은 오너가 고른 고정 항목이다(2026-08-01).
+       청약홈이 세 날짜를 다 주면 그대로 쓰고, 없으면 '미고지'로 칸을 남긴다. */
+    schedule: ah?.specialFrom
+      ? [
+          { label: "특별공급", date: md(ah.specialFrom) },
+          { label: "1순위", date: md(ah.rank1From ?? ah.receiptFrom) },
+          { label: "당첨자 발표", date: md(ah.announceDate) },
+        ]
+      : [
+          { label: "분양 시기", date: `${saleY}.${Number(saleM)}` },
+          { label: "청약 일정", date: d.schedule?.first ? ymLabel(d.schedule.first) : "미고지", tbd: !d.schedule?.first },
+          { label: "입주 예정", date: ymLabel(moveInYm), tbd: !moveInYm },
+        ],
     /* 하단 한 줄은 제목이 **하지 않은 말**을 한다. 제목이 이미 역과 세대수를 말했으니
      * 여기서 다시 '산곡역 초역세권'이라고 쓰면 같은 말이 두 번이다.
      * 두 값 모두 계산이다 — 최대 전용면적은 areas 에서 뽑고, 비율은 나눗셈이다. */
-    note: allGeneral
-      ? `${n(d.total)}가구 전부 일반분양` + (d.nearest ? ` · ${d.nearest.line} ${d.nearest.station} ${d.nearest.desc}` : "")
-      : `전용 ${Math.max(...d.areas.map((a) => a.m2))}㎡ 이하로만 구성 · 일반분양이 전체의 ${ratioPct}%`,
+    /* 하단 한 줄은 제목·표·일정칸이 **하지 않은 말**을 한다.
+       청약홈 일정 3칸을 쓰는 카드는 입주예정이 어디에도 안 나오므로 여기서 말한다. */
+    note: ah?.specialFrom
+      ? `입주 예정 ${ymLabel(moveInYm)}` +
+        (ah.priceCap ? ` · 분양가상한제 적용${d.price?.resaleBanYears ? ` · 전매제한 ${d.price.resaleBanYears}년` : ""}` : "")
+      : allGeneral
+        ? `${n(total)}가구 전부 일반분양` + (d.nearest ? ` · ${d.nearest.line} ${d.nearest.station} ${d.nearest.desc}` : "")
+        : ratioPct !== null
+          ? `전용 ${Math.max(...d.areas.map((a) => a.m2))}㎡ 이하로만 구성 · 일반분양이 전체의 ${ratioPct}%`
+          : `주력 전용 ${main.m2}㎡ 가 전체의 ${main.pct}%`,
     /* 푸터는 한 줄이다 — 매체를 둘 이상 적으면 워드마크에 닿는다.
        전체 경로는 데이터셋의 source.via 가 갖고 있어 추적은 그대로 된다. */
     source: { name: `${d.source.name} · ${d.source.via.split(" · ")[0]}` },
@@ -243,6 +324,7 @@ const cards = [
   ["danji-brief-presale", presale(byId("sangok-xi-hillstate"))],
   ["danji-brief-result", result(byId("acro-de-seocho"))],
   ["danji-brief-sangdong", presale(byId("sangdong-lotte-castle"))],
+  ["danji-brief-hangang", presale(byId("hangang-prugio-riverfront"))],
 ];
 
 for (const [slug, card] of cards) {
