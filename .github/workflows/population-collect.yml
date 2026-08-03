@@ -42,9 +42,13 @@ on:
         required: false
         default: "45"
       top:
-        description: "소재 보드에 올릴 상위 건수(기본 8)"
+        description: "알림에 넣을 상위 건수(기본 8)"
         required: false
         default: "8"
+      register:
+        description: "1 이면 신호를 소재 보드에 자동 등록한다(기본: 안 한다 — 오너가 직접 고른다)"
+        required: false
+        default: ""
       digest:
         description: "1 이면 새것만이 아니라 지금 살아 있는 소재 전체를 알림으로 보낸다"
         required: false
@@ -83,10 +87,11 @@ jobs:
           MIN="${{ github.event.inputs.min }}"
           TOP="${{ github.event.inputs.top }}"
           DIGEST="${{ github.event.inputs.digest }}"
+          REGISTER="${{ github.event.inputs.register }}"
           # 대기열 푸시로 들어온 실행은 입력칸이 비어 있다 → 파일 마지막 줄에서 읽는다
           # (주석 #·빈 줄 무시. 없는 값은 기본값으로 떨어진다)
           Q=data/population-queue.txt
-          if [ -z "$MONTHS$MIN$TOP$DIGEST" ] && [ -f "$Q" ]; then
+          if [ -z "$MONTHS$MIN$TOP$DIGEST$REGISTER" ] && [ -f "$Q" ]; then
             LINE=$(grep -v '^\s*#' "$Q" | grep -v '^\s*$' | tail -1)
             echo "대기열 마지막 줄: ${LINE:-(비어 있음)}"
             for kv in $LINE; do
@@ -95,10 +100,13 @@ jobs:
                 min=*)    MIN="${kv#min=}" ;;
                 top=*)    TOP="${kv#top=}" ;;
                 digest=*) DIGEST="${kv#digest=}" ;;
+                register=*) REGISTER="${kv#register=}" ;;
               esac
             done
           fi
           [ "$DIGEST" = "1" ] && echo "digest=--digest" >> "$GITHUB_OUTPUT" || echo "digest=" >> "$GITHUB_OUTPUT"
+          # ⚠️ 기본은 **보드에 안 올린다** — 오너 결정(2026-08-03): "데이터만 자동, 소재는 내가 고른다"
+          [ "$REGISTER" = "1" ] && echo "register=--register" >> "$GITHUB_OUTPUT" || echo "register=" >> "$GITHUB_OUTPUT"
           echo "months=${MONTHS:-25}" >> "$GITHUB_OUTPUT"
           echo "min=${MIN:-45}" >> "$GITHUB_OUTPUT"
           echo "top=${TOP:-8}" >> "$GITHUB_OUTPUT"
@@ -128,13 +136,14 @@ jobs:
             --months ${{ steps.cfg.outputs.months }} \
             --min ${{ steps.cfg.outputs.min }} 2>&1 | tee /tmp/collect.log
 
-      - name: 소재 보드 등록 + 알림 문구
+      - name: 신호 정리 + 알림 문구
         id: register
         run: |
           set -o pipefail
           node scripts/register-population-ideas.mjs \
             --min ${{ steps.cfg.outputs.min }} \
-            --top ${{ steps.cfg.outputs.top }} ${{ steps.cfg.outputs.digest }} 2>&1 | tee /tmp/register.log
+            --top ${{ steps.cfg.outputs.top }} \
+            ${{ steps.cfg.outputs.digest }} ${{ steps.cfg.outputs.register }} 2>&1 | tee /tmp/register.log
 
       # 파서 셀프테스트는 **수집 뒤에** 돌린다.
       # 2026-07-31 에 증시 수집이 셀프테스트 실패로 며칠간 죽어 있었다 — 검사는 하되,
@@ -151,7 +160,8 @@ jobs:
             echo "# 인구 수집 마지막 실행"
             echo
             echo "- 실행: ${{ steps.cfg.outputs.today }} (KST) · 방아쇠 \`${{ github.event_name }}\`"
-            echo "- 조건: 최근 ${{ steps.cfg.outputs.months }}개월 · 소재 문턱 ${{ steps.cfg.outputs.min }}점 · 상위 ${{ steps.cfg.outputs.top }}건 등록"
+            echo "- 조건: 최근 ${{ steps.cfg.outputs.months }}개월 · 신호 문턱 ${{ steps.cfg.outputs.min }}점 · 상위 ${{ steps.cfg.outputs.top }}건"
+            echo "- 보드 자동 등록: ${{ steps.cfg.outputs.register && '켬' || '끔(오너가 직접 고릅니다)' }}"
             echo "- 결과: **${{ job.status == 'success' && '성공' || '실패' }}**"
             echo "- 커밋: \`${{ github.sha }}\`"
             echo
@@ -160,7 +170,7 @@ jobs:
             cat /tmp/collect.log 2>/dev/null || echo "(수집 단계가 실행되지 못했습니다 — 키 확인 단계에서 멈췄을 수 있습니다)"
             echo '```'
             echo
-            echo '## 소재 등록'
+            echo '## 신호 정리'
             echo '```'
             cat /tmp/register.log 2>/dev/null || echo "(등록 단계가 실행되지 못했습니다)"
             echo '```'
@@ -177,6 +187,7 @@ jobs:
           # ⚠️ 폴더를 통째로 쓸어 담지 않는다 — confirm.mjs 가 워크플로의 git add 경로를 읽어
           #    '정기물'을 가르기 때문에, 넓게 적으면 손으로 만든 데이터셋까지 정기물로 오인한다.
           git add -f data/population-last.md
+          git add data/population-signals.md 2>/dev/null || true
           git add data/datasets/population-latest.json data/datasets/population research/ideas.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "바뀐 것 없음 — 커밋 생략"
@@ -186,7 +197,7 @@ jobs:
             git push origin HEAD:${{ github.ref_name }}
           fi
 
-      - name: 텔레그램 알림 (새 소재가 있을 때만)
+      - name: 텔레그램 알림 (신호가 있을 때만)
         if: always()
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
