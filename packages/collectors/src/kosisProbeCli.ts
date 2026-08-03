@@ -201,13 +201,36 @@ async function main() {
   const keys = Object.keys(TABLES) as TableKey[];
   const results: Probe[] = [];
 
+  /* ── 끊기는 날이 있다 ──
+     2026-08-03 실측: KOSIS 가 GitHub 러너의 요청을 몇십 분씩 통째로 거부하는 창이 있다
+     (여섯 표 전부 "fetch failed"). 표가 잘못된 것과 그 시각에 안 열린 것은 다른 문제인데,
+     한 번 찔러 보고 실패로 적으면 다음 사람이 표를 의심하며 시간을 버린다.
+     그래서 **네트워크로 실패한 표만** 사이를 두고 다시 찔러 본다.
+     표 자체가 틀린 실패(오류 응답)는 다시 해도 같으므로 재시도하지 않는다. */
+  const isNetworkFail = (r: Probe) =>
+    !r.ok && /GET 실패|fetch failed|ETIMEDOUT|ECONNRESET|socket hang up/i.test(r.error ?? "");
+  const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
+  const ROUNDS = 3;
+  const GAP_MS = 90_000;
+
   for (const k of keys) {
     process.stdout.write(`· ${k} (${TABLES[k].tblId}) … `);
-    const r = await probeOne(k, apiKey);
+    let r = await probeOne(k, apiKey);
     results.push(r);
     console.log(r.ok
       ? `OK ${r.rows}행 · 시군구코드 ${r.sggCodes}개 · 추가축 ${r.objLUsed ?? 0}개`
       : `실패 — ${r.error?.slice(0, 120)}`);
+
+    for (let round = 2; round <= ROUNDS && isNetworkFail(r); round++) {
+      console.log(`   ↻ 표가 아니라 연결이 실패했다 — ${GAP_MS / 1000}초 뒤 ${round}/${ROUNDS}회차 재시도`);
+      await sleep(GAP_MS);
+      const again = await probeOne(k, apiKey);
+      results[results.length - 1] = again;
+      r = again;
+      console.log(again.ok
+        ? `   ✅ ${round}회차 성공 — ${again.rows}행 · 시군구코드 ${again.sggCodes}개`
+        : `   ${round}회차도 실패 — ${again.error?.slice(0, 100)}`);
+    }
   }
 
   const L: string[] = [];
