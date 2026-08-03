@@ -84,7 +84,8 @@
         "line": "7호선",
         "station": "산곡역",
         "desc": "바로 앞"
-      }
+      },
+      "hook": "7호선 산곡역"
     },
     {
       "id": "acro-de-seocho",
@@ -238,7 +239,8 @@
         "via": "한국경제 (2026.6.30) · 뉴시스 (2026.6.30)",
         "url": "https://www.hankyung.com/article/2026063073421"
       },
-      "gap": "분양가·청약 일정·입주 예정은 1차 출처(입주자모집공고)를 아직 못 잡았다. 카드에는 '미고지'로 적는다."
+      "gap": "분양가·청약 일정·입주 예정은 1차 출처(입주자모집공고)를 아직 못 잡았다. 카드에는 '미고지'로 적는다.",
+      "hook": "옛 홈플러스 자리"
     },
     {
       "id": "hangang-prugio-riverfront",
@@ -331,7 +333,13 @@
         "via": "파이낸셜뉴스 (2026.8.2)",
         "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000367&pblancNo=2026000367"
       },
-      "conflictLog": "입주예정: 분양대행 사이트는 2029년 7월이라 적었으나 청약홈 공고는 2031년 1월이다. 1차 출처를 쓴다."
+      "conflictLog": "입주예정: 분양대행 사이트는 2029년 7월이라 적었으나 청약홈 공고는 2031년 1월이다. 1차 출처를 쓴다.",
+      "photo": {
+        "file": "hangang-prugio-riverfront.jpg",
+        "credit": "출처. 대우건설 조감도",
+        "provided": "2026-08-03 오너 제공 · 원본은 templates/_shared/photos/_source/"
+      },
+      "hook": "한강뷰"
     }
   ]
 }

@@ -55,6 +55,15 @@
       "license": "open-license",
       "note": "원 라이선스: Pexels License (상업이용·표기불요) · 촬영/제작: Tima Miroshnichenko",
       "added": "2026-07-26"
+    },
+    {
+      "slug": "hangang-prugio-riverfront",
+      "name": "한강 푸르지오 리버프론트 조감도",
+      "kind": "photo",
+      "source": "대우건설 분양 홍보자료 (오너가 직접 제공)",
+      "license": "press-material",
+      "note": "건설사 분양 홍보 이미지. 정보전달 목적의 지명적 사용이며 카드에 '출처. 대우건설 조감도'를 표기한다. 원본은 _source/ 에 보관. 이미지 하단에 '상기 이미지는 소비자의 이해를 돕기 위한 것으로 실제와 차이가 날 수 있으며…' 고지가 있으므로 크롭 시 유의.",
+      "added": "2026-08-03"
     }
   ]
 }
