@@ -142,6 +142,8 @@ async function probeOne(key: TableKey, apiKey: string): Promise<Probe> {
     const rows = (Array.isArray(json) ? json : []) as Record<string, unknown>[];
     if (!rows.length) return { key, ok: false, error: "행이 0개 — 표 ID 또는 분류축이 맞지 않을 수 있다" };
 
+    /* 지역 축은 표가 정한다(기본 C1). 사망 표는 C2 다. */
+    const rax = TABLES[key].regionAxis ?? "C1";
     const uniq = (f: string) => [...new Set(rows.map((r) => String(r[f] ?? "")).filter(Boolean))];
     const items = [...new Set(rows.map((r) => `${r.ITM_ID}=${r.ITM_NM}`))].slice(0, 12);
 
@@ -155,14 +157,16 @@ async function probeOne(key: TableKey, apiKey: string): Promise<Probe> {
       items,
       axes: axesOf(rows),
       periods: uniq("PRD_DE").slice(0, 3),
-      /* 시군구(5자리)가 실제로 오는가 — 이게 0 이면 그 표는 시도까지만 준다는 뜻이다. */
-      sggCodes: new Set(rows.map((r) => String(r.C1 ?? "")).filter((c) => /^\d{5}$/.test(c))).size,
+      /* 시군구(5자리)가 실제로 오는가 — 이게 0 이면 그 표는 시도까지만 준다는 뜻이다.
+         **어느 축이 지역인지는 표가 정한다.** 사망 표는 C1 이 사망원인이고 C2 가 행정구역이라
+         C1 로 세면 0이 나오고, 0이면 "이 표는 시군구를 안 준다" 는 정반대 결론을 내리게 된다. */
+      sggCodes: new Set(rows.map((r) => String(r[rax] ?? "")).filter((c) => /^\d{5}$/.test(c))).size,
       sample: rows[0],
       /* 지역 코드→이름 전체. 표마다 행정구역 코드 체계가 다를 수 있어(출생 표가 그랬다)
          대조표를 만들려면 원본 코드와 이름이 통째로 필요하다. */
       regions: Object.fromEntries(
         rows
-          .map((r) => [String(r.C1 ?? ""), String(r.C1_NM ?? "")] as const)
+          .map((r) => [String(r[rax] ?? ""), String(r[`${rax}_NM`] ?? "")] as const)
           .filter(([c]) => c),
       ),
     };

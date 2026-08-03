@@ -7,7 +7,7 @@
   "만든 법: scripts/build-kosis-region-map.mjs (재료 data/kosis-probe-raw.json)"
  ],
  "base": "population",
- "builtFrom": "2026-08-03T05:18:05.104Z",
+ "builtFrom": "2026-08-03T06:21:25.645Z",
  "maps": {
   "births": {
    "11": "11",
@@ -377,7 +377,8 @@
    "39010": "50110",
    "39020": "50130",
    "00": "00"
-  }
+  },
+  "deaths": {}
  },
  "unmatched": {
   "births": [
@@ -466,6 +467,7 @@
     "name": "남제주군",
     "sido": "제주특별자치도"
    }
-  ]
+  ],
+  "deaths": []
  }
 }
