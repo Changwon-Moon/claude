@@ -141,6 +141,13 @@
       "args": [
         "2026-07-31"
       ]
+    },
+    {
+      "label": "tax-1house",
+      "cmd": "scripts/build-tax-1house.mjs",
+      "args": [
+        "2026-08-03"
+      ]
     }
   ]
 }

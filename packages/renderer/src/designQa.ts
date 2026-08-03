@@ -192,6 +192,10 @@ const MEASURE_JS = `(() => {
                 (.mr-wm·.m2-wm 워터마크는 일부러 뒤에 깔린 장식이라 넣지 않는다) */
              ".mr-title .tx,.mr-pyeong b,.mr-hr span,.mr-rank,.mr-gu,.mr-apt,.mr-price," +
              ".m2-hr span,.m2-seg,.m2-val," +
+             /* tax-matrix — 세제 행렬(2026-08-03). 새 템플릿을 만들면 **여기부터** 등록한다.
+                안 넣으면 검수는 "문제 없음"이라 답하면서 아무것도 재지 않는다.
+                (.tx-grid 워터마크는 일부러 뒤에 깔린 장식이라 넣지 않는다) */
+             ".tx-tag,.tx-hr span,.tx-lb,.tx-cell,.tx-foot,.tx-apply," +
              /* sinbundang-map — 노선도형 지도 카드(2026-07-31). 새 템플릿을 만들면 글자 요소를
                 여기 등록해야 겹침 검사가 실제로 잰다(빠뜨리면 검사받지 않은 것). */
              ".sbm-stn,.sbm-danji,.sbm-price .v,.sbm-price .sz,.sbm-note," +
@@ -249,7 +253,7 @@ const MEASURE_JS = `(() => {
    * (이 주석 안에서는 역따옴표를 쓰지 않는다 — 이 블록 전체가 템플릿 리터럴이다)
    * text-overflow:ellipsis 를 쓰는 칸은 **잘렸는지 좌표로** 확인한다 — 눈으로는 그럴듯해 보인다. */
   var clipped=[];
-  Array.prototype.forEach.call(card.querySelectorAll(".mr-apt,.mr-gu,.m2-seg,.rt-name,.sm-gu,.db-nm .n,.db-nm .loc,.db-row span"), function(el){
+  Array.prototype.forEach.call(card.querySelectorAll(".mr-apt,.mr-gu,.m2-seg,.rt-name,.sm-gu,.db-nm .n,.db-nm .loc,.db-row span,.tx-cell,.tx-lb"), function(el){
     if(el.scrollWidth - el.clientWidth > 1)
       clipped.push({sel:name(el), text:(el.textContent||"").trim().slice(0,24), need:Math.ceil(el.scrollWidth), has:Math.ceil(el.clientWidth)});
   });
@@ -260,7 +264,7 @@ const MEASURE_JS = `(() => {
   if(footer){
     /* .rg-note 를 빠뜨려 record-grid 에서는 이 검사가 아무것도 안 재고 있었다(AS팀 지적 2026-07-31).
        "최하단 문구 여백"은 오너가 두 번 말한 항목인데 새 템플릿에 적용되지 않은 상태였다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note");
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note,.tx-apply");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();

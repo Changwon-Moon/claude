@@ -161,6 +161,18 @@
       "confirmedMd5": [
         "sinbundang-loop:acdaf3493e6c"
       ]
+    },
+    {
+      "label": "tax-1house",
+      "title": "2026 세제개편안 — 1주택자 편 (정부안)",
+      "cards": [
+        "tax1-cover",
+        "tax1-jongbuse",
+        "tax1-jangteuk",
+        "tax1-timeline"
+      ],
+      "caption": "tax-1house",
+      "note": "⚠️ verified=false — 오너 제공 정부 인포그래픽 이미지에서 전사. 발행 전 재정경제부 보도자료 원문 대조 필요. 국회 통과 전 정부안이라 전 장에 정부안 딱지."
     }
   ]
 }

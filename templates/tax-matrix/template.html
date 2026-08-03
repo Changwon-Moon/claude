@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* =========================================================
+         tax-matrix@1 — 세제 비교 행렬(항목 × 연도/구분)
+         2026-08-03: 주택 세제 시리즈용. 순위표·지도·막대로는 못 그리는 **행렬**을 맡는다.
+         하나로 여러 장을 찍는다 — 기본공제·장특공제·시행일·커버가 전부 이 형태다.
+
+         ⚠️ 세제 카드 전용 두 가지가 머리에 붙는다:
+           ① 대상 뱃지(1세대 1주택 / 다주택 …) — 안 적으면 남의 세금을 자기 것으로 읽는다
+           ② 상태 딱지(정부안) — 국회 통과 전이다. 확정처럼 읽히면 그게 오보다
+         머리(카드 위 여백·우상단 뱃지)는 공용 규격 그대로 쓴다 — 재정의하지 않는다.
+         ========================================================= */
+
+      /* 대상·상태 딱지 줄 */
+      .tx-tags { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+      .tx-tag {
+        display: inline-flex; align-items: center; line-height: 1;
+        font-size: 27px; font-weight: 800; letter-spacing: -0.02em;
+        padding: 11px 18px 12px; border-radius: 999px;
+      }
+      .tx-tag.who { background: var(--wirit-ink); color: #fff; }
+      /* 상태는 코발트가 아니라 **경고 톤**이다 — 확정이 아니라는 뜻이라 눈에 걸려야 한다 */
+      .tx-tag.st { background: #fdeaec; color: #c0122a; border: 2px solid rgba(192,18,42,.28); }
+
+      /* 제목 아래 숨 — 제목이 자동으로 커지면 아래 여백이 함께 줄어든다(titlegap 28px 기준) */
+      .tx-head { margin-top: 18px; }
+      .tx .wirit-title { font-size: 76px; line-height: 1.06; letter-spacing: -0.035em; margin: 0; white-space: nowrap; }
+      .tx .wirit-title .hi { color: #c0122a; }
+
+      /* 본문 표 — 행(항목) × 열. 열 수는 데이터가 정한다(2~4열). */
+      .tx-grid {
+        flex: 1; min-height: 0; display: flex; flex-direction: column;
+        margin: 32px 0 24px; position: relative; overflow: hidden;
+      }
+      /* 워터마크는 가상요소로 — 실제 <div>를 넣으면 nth-child 셈이 밀린다(07-31 사고) */
+      .tx-grid::before {
+        content: "wirit."; position: absolute; left: 50%; top: 50%; z-index: 0; pointer-events: none;
+        font-family: "Wanted Sans", "Pretendard", sans-serif; font-weight: 800; font-size: 150px;
+        line-height: 1; letter-spacing: -0.03em; white-space: nowrap;
+        color: rgba(20, 24, 33, 0.045); transform: translate(-50%, -50%) rotate(-24deg);
+      }
+      .tx-hr, .tx-row {
+        display: grid; grid-template-columns: var(--labw, 250px) repeat(var(--n, 3), 1fr);
+        align-items: center; gap: 16px; padding: 0 18px; position: relative; z-index: 1;
+      }
+      .tx-hr { flex: 0 0 auto; padding-bottom: 12px; border-bottom: 3px solid var(--wirit-ink); }
+      .tx-hr span { font-size: 30px; font-weight: 800; color: var(--wirit-gray); text-align: center; letter-spacing: -0.02em; }
+      .tx-hr .lb { text-align: left; }
+      .tx-row { flex: 1 1 0; min-height: 0; border-bottom: 1.5px solid var(--wirit-ink-06); }
+      .tx-row:nth-child(even) { background: rgba(20, 24, 33, 0.035); }
+      .tx-row:last-child { border-bottom: none; }
+
+      /* 행이 하나뿐인 카드(커버)는 늘리지 않는다 — 늘리면 가운데가 텅 빈 띠가 된다.
+         가운데로 모으고 숫자를 키워 **대비 하나**만 보게 한다. */
+      .tx-grid.hero { justify-content: center; }
+      .tx-grid.hero .tx-row { flex: 0 0 auto; padding: 118px 18px; border-bottom: none; background: rgba(20,24,33,.035); border-radius: 16px; }
+      .tx-grid.hero .tx-cell b { font-size: 82px; }
+      .tx-grid.hero .tx-cell i { font-size: 34px; }
+      .tx-grid.hero .tx-lb { font-size: 34px; }
+      .tx-grid.hero .tx-hr span { font-size: 34px; }
+      .tx-lb { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; color: var(--wirit-ink); }
+      .tx-lb i { display: block; font-style: normal; font-size: 22px; font-weight: 600; color: var(--wirit-gray); margin-top: 4px; }
+      .tx-cell { text-align: center; font-family: var(--font-num); white-space: nowrap; }
+      .tx-cell b { font-size: 46px; font-weight: 900; letter-spacing: -0.02em; }
+      .tx-cell i { font-style: normal; font-size: 24px; font-weight: 800; color: var(--wirit-gray); margin-left: 3px; }
+      /* 마지막 열 = 개정안/최종 상태. 여기만 색이 붙는다 — 강조는 한 군데만 */
+      .tx-cell.up b { color: #c0122a; }
+      .tx-cell.down b { color: var(--wirit-cobalt); }
+      /* 긴 산식·문장이 들어오는 칸은 숫자가 아니다 — 크기를 줄이고 왼쪽으로 */
+      .tx-cell.tx-txt { text-align: left; white-space: normal; font-family: var(--font-sans); }
+      .tx-cell.tx-txt b { font-size: 27px; font-weight: 700; line-height: 1.35; letter-spacing: -0.02em; }
+
+      /* 하단 강조 한 줄 — "10년 거주, 최대 80%" 처럼 표 전체를 묶는 말 */
+      .tx-foot {
+        flex: 0 0 auto; margin-top: 16px; background: var(--wirit-ink); color: #fff;
+        border-radius: 14px; padding: 20px 24px; text-align: center;
+        font-size: 38px; font-weight: 900; letter-spacing: -0.02em; position: relative; z-index: 1;
+      }
+      .tx-foot b { color: #ff6b70; font-weight: 900; }
+
+      /* 적용 시기 — 세제 카드의 필수 줄. 이게 없으면 "언제부터"를 댓글로 묻는다 */
+      /* 푸터는 카드 밖으로 풀블리드되는 잉크 띠라 닿으면 글자가 띠에 얹힌 것처럼 보인다(≥14px) */
+      .tx-apply { flex: 0 0 auto; margin-top: 16px; margin-bottom: 26px; font-size: 25px; font-weight: 700; color: var(--wirit-gray); letter-spacing: -0.01em; }
+      .tx-apply b { color: var(--wirit-ink); font-weight: 800; }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card tx">
+      <div class="tx-tags">
+        {{#if who}}<span class="tx-tag who">{{who}}</span>{{/if}}
+        {{#if status}}<span class="tx-tag st">{{status}}</span>{{/if}}
+      </div>
+
+      <div class="tx-head"><h1 class="wirit-title">{{{title}}}</h1></div>
+
+      <div class="tx-grid{{#if hero}} hero{{/if}}" style="--n:{{n}};--labw:{{labw}}px">
+        <div class="tx-hr"><span class="lb">{{lead}}</span>{{#each cols}}<span>{{this}}</span>{{/each}}</div>
+        {{#each rows}}
+        <div class="tx-row">
+          <span class="tx-lb">{{this.label}}{{#if this.note}}<i>{{this.note}}</i>{{/if}}</span>
+          {{#each this.cells}}
+          <span class="tx-cell {{this.cls}}"><b>{{this.v}}</b>{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
+          {{/each}}
+        </div>
+        {{/each}}
+      </div>
+
+      {{#if foot}}<div class="tx-foot">{{{foot}}}</div>{{/if}}
+      {{#if applyAt}}<div class="tx-apply">적용 · <b>{{applyAt}}</b></div>{{/if}}
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}}{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+    <!-- 제목 폭 맞춤 — 한 줄짜리 제목을 칸에 꽉 채운다(고정 크기로 두지 않는다) -->
+    <script>
+      window.__wiritFit = function () {
+        var el = document.querySelector(".tx .wirit-title");
+        if (!el) return;
+        var head = el.parentElement;
+        var hs = getComputedStyle(head);
+        var avail = head.clientWidth - (parseFloat(hs.paddingLeft) || 0) - (parseFloat(hs.paddingRight) || 0);
+        if (/<br|\n/.test(el.innerHTML)) return;   /* 여러 줄 제목은 건드리지 않는다 */
+        var lo = 40, hi = 96, best = lo;
+        for (var i = 0; i < 22; i++) {
+          var mid = (lo + hi) / 2;
+          el.style.fontSize = mid + "px";
+          if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(window.__wiritFit);
+    </script>
+  </body>
+</html>
