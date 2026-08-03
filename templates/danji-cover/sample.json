@@ -8,7 +8,8 @@
   ],
   "hero": {
     "photo": "hangang-prugio-riverfront.jpg",
-    "credit": "출처. 대우건설 홈페이지"
+    "credit": "출처. 대우건설 홈페이지",
+    "shift": 63
   },
   "danji": {
     "name": "한강 푸르지오 리버프론트",

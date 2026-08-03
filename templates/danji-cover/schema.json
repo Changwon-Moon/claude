@@ -60,6 +60,12 @@
         "fallbackWord": {
           "type": "string",
           "maxLength": 20
+        },
+        "shift": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000,
+          "description": "표지 사진을 위로 끌어올릴 px. **빌더가 원본 크기에서 계산한다** — 손으로 적지 않는다"
         }
       }
     },
@@ -225,6 +231,10 @@
             "type": "string",
             "maxLength": 6,
             "description": "값 앞에 붙는 회색 수식어('최고'). 라벨 줄을 지운 판형에서 값의 뜻을 지킨다"
+          },
+          "tbd": {
+            "type": "boolean",
+            "description": "아직 못 채운 값('미고지') — 회색으로 눕힌다"
           }
         }
       }

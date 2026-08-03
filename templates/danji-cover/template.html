@@ -25,11 +25,12 @@
        *  · 타입 글씨를 분양가와 **같은 크기**로.
        *  · 단위(세대·개동·층)는 **크기는 그대로, 색만 회색**.
        *
-       * ── 사진 위치 계산 (손으로 고르지 않는다)
-       * 원본 1200×660. 카드 폭(1080)에 맞추면 594px 로 그려진다. 이 그림에서 건물 꼭대기는
-       * 세로 38.7% 지점(≈230px, 렌더로 실측)에 있다. 사진 칸을 446px 로 두고 그림을 **63px 끌어올리면**
-       * 보이는 하늘은 230-63 = 167px — 이전(250px)의 2/3다. 아래는 509px 까지만 보이므로
-       * 원본 하단에 박힌 건설사 고지문(≈564px 이후)도 자동으로 잘린다.
+       * ── 사진 위치는 **빌더가 계산한다** (손으로 고르지 않는다)
+       * 표지 사진 칸은 446px. 그림은 카드 폭(1080)에 맞춰 비율대로 그려지고, 남는 세로의
+       * 42.5% 를 위에서 걷어낸다 → `hero.shift`. 한강 카드(1200×660 → 렌더 594 → 남는 148)는
+       * 63px 이고, 그때 보이는 하늘이 오너가 승인한 양이다.
+       * **사진이 바뀌면 값도 바뀐다.** 그래서 이 파일에는 숫자를 박지 않는다
+       * (build-danji.mjs `heroShift`, docs/guides/청약분양-카드-기준.md).
        */
 
       .dcv {
@@ -51,8 +52,10 @@
         overflow: hidden; background: var(--ink);
       }
       .dcv-photo { position: absolute; left: 0; right: 0; top: 0; height: 446px; overflow: hidden; }
-      /* 폭만 맞추고 높이는 비율대로 — 그래야 위로 끌어올린 양(44px)이 원본 픽셀과 1:1로 대응한다 */
-      .dcv-photo img { position: absolute; left: 0; top: -63px; width: 100%; height: auto; display: block; }
+      /* 폭만 맞추고 높이는 비율대로 — 그래야 끌어올린 양이 원본 픽셀과 1:1로 대응한다.
+         끌어올림(top)은 **CSS 에 박지 않는다.** 사진마다 값이 달라야 하므로 빌더가 원본 크기에서
+         계산해 `hero.shift` 로 실어 보낸다(build-danji.mjs `heroShift`). */
+      .dcv-photo img { position: absolute; left: 0; top: 0; width: 100%; height: auto; display: block; }
       .dcv-fb { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--ink); }
       .dcv-fb .w { font-family: var(--font-title); font-size: 96px; font-weight: 900; color: rgba(255,255,255,0.9); line-height: 1; }
       /* 사진이 잉크로 **번지며** 끝난다. 선으로 자르면 다시 '사진 상자'가 된다. */
@@ -194,6 +197,7 @@
       .dcv-facts .v b { margin-right: 10px; }
       .dcv-facts .v i { margin-left: 4px; }
       .dcv-facts .v.tbd { color: var(--wirit-gray); }
+      .dcv-facts .v.tbd i, .dcv-facts .v.tbd b { color: var(--wirit-gray); }
       .dcv-facts .brk {
         display: block; margin-top: 12px; font-family: var(--font-sans); font-size: 24px;
         font-weight: 700; letter-spacing: -0.02em; color: var(--wirit-gray); line-height: 1; white-space: nowrap;
@@ -220,7 +224,7 @@
       <div class="dcv-cover">
         <div class="dcv-photo">
           {{#if hero.photo}}
-            <img src="../_shared/photos/{{hero.photo}}" alt="" />
+            <img src="../_shared/photos/{{hero.photo}}" alt=""{{#if hero.shift}} style="top:-{{hero.shift}}px"{{/if}} />
           {{else}}
             <div class="dcv-fb"{{#if hero.fallbackColor}} style="background:{{hero.fallbackColor}}"{{/if}}>
               <span class="w">{{#if hero.fallbackWord}}{{hero.fallbackWord}}{{else}}{{danji.name}}{{/if}}</span>
@@ -267,7 +271,7 @@
         <div class="frow">
           {{#each spec}}
           <div class="cell"><div class="box">
-            <span class="v">{{#if this.pre}}<b>{{this.pre}}</b>{{/if}}{{this.value}}{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
+            <span class="v{{#if this.tbd}} tbd{{/if}}">{{#if this.pre}}<b>{{this.pre}}</b>{{/if}}{{this.value}}{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
             {{#if this.breakdown}}<span class="brk">{{this.breakdown}}</span>{{/if}}
           </div></div>
           {{/each}}

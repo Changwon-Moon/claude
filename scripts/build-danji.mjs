@@ -39,6 +39,50 @@ const date =
   new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const doc = JSON.parse(readFileSync(join(ROOT, "data/datasets/bunyang-danji-2026.json"), "utf8"));
 
+/* ── 조감도 크롭은 **계산한다** ──
+ * 표지 사진 칸은 446px 이고, 그림은 카드 폭(1080)에 맞춰 비율대로 그려진다.
+ * 남는 세로(slack)의 42.5% 만큼 위에서 걷어내면 하늘이 적당히 남는다 —
+ * 오너가 승인한 한강 카드(1200×660 → 렌더 594 → slack 148 → 63px)가 이 값이다.
+ * **사진이 바뀌면 이 값도 바뀐다.** 그래서 CSS 에 박지 않고 매 빌드마다 원본에서 다시 잰다.
+ * (docs/guides/청약분양-카드-기준.md "사진 위치는 계산한다") */
+const PHOTO_BOX_H = 446;
+const CARD_W = 1080;
+const SKY_KEEP = 0.425;
+
+/** JPEG/PNG 헤더에서 가로·세로를 읽는다. 외부 의존성 없이 — 빌드는 네트워크를 타지 않는다. */
+function imageSize(file) {
+  const b = readFileSync(file);
+  if (b[0] === 0x89 && b[1] === 0x50) return { w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
+  if (b[0] === 0xff && b[1] === 0xd8) {
+    let i = 2;
+    while (i < b.length) {
+      if (b[i] !== 0xff) { i++; continue; }
+      const m = b[i + 1];
+      if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc)
+        return { h: b.readUInt16BE(i + 5), w: b.readUInt16BE(i + 7) };
+      i += 2 + b.readUInt16BE(i + 2);
+    }
+  }
+  throw new Error(`이미지 크기를 못 읽는다(JPEG/PNG 만 지원): ${file}`);
+}
+
+/** 표지 사진의 끌어올림 px. 원본이 세로로 짧으면 칸을 못 채우므로 던진다. */
+function heroShift(fileName) {
+  const p = join(ROOT, "templates/_shared/photos", fileName);
+  if (!existsSync(p)) throw new Error(`조감도 파일이 없다: templates/_shared/photos/${fileName}`);
+  const { w, h } = imageSize(p);
+  const renderH = Math.round((CARD_W * h) / w);
+  if (renderH < PHOTO_BOX_H)
+    throw new Error(
+      `조감도가 가로로 너무 길다 — 1080px 폭에 맞추면 세로가 ${renderH}px 라 표지 칸(${PHOTO_BOX_H}px)을 못 채운다: ${fileName}`,
+    );
+  const shift = Math.round((renderH - PHOTO_BOX_H) * SKY_KEEP);
+  /* 건설사 고지문은 원본 맨 아래에 박힌다 — 보이는 창이 하단 5% 를 건드리면 알려 준다. */
+  if (shift + PHOTO_BOX_H > renderH * 0.95)
+    console.log(`   ⚠ ${fileName}: 크롭 하단이 원본 아래 5% 에 닿는다 — 건설사 고지문이 보일 수 있다`);
+  return shift;
+}
+
 const byId = (id) => {
   const d = doc.danji.find((x) => x.id === id);
   if (!d) throw new Error(`단지 없음: ${id}`);
@@ -90,7 +134,11 @@ function applyhome(d) {
  * 대표평형 하나를 **코드가 고른다**. 84A~D 를 다 적지 않는다(오너 지시 2026-08-03).
  * 고르는 순서: ① 주력 면적대(mainArea) ② 국민평형 84㎡ ③ 타입이 가장 많은 면적대.
  */
+const NEED_AREAS = (id) =>
+  `${id}: 전용면적 구성(areas)이 비어 있다 — 청약홈은 평형을 주지 않으므로 입주자모집공고문에서 채워야 카드가 나온다`;
+
 function repArea(d) {
+  if (!d.areas?.length) throw new Error(NEED_AREAS(d.id));
   const pick =
     (d.mainArea && d.areas.find((a) => a.m2 === d.mainArea.m2)) ||
     d.areas.find((a) => a.m2 === 84) ||
@@ -112,6 +160,7 @@ function repPrice(d, rep) {
  * 분양가가 없는 면적은 '미고지'로 남긴다 — 줄을 지우면 그 평형이 없는 줄 안다.
  */
 function priceTable(d, total) {
+  if (!d.areas?.length) throw new Error(NEED_AREAS(d.id));
   const rows = d.areas.map((a) => {
     const t = (a.types || []).find((x) => x && x !== "-") || "";
     const hit = d.price?.byArea?.find((x) => x.m2 === a.m2);
@@ -174,10 +223,15 @@ function specCells(d, aptTotal) {
          오피스텔이 없으면 만들지 않는다 — "OT 0실"은 0실 공급으로 읽힌다. */
       ...(ot ? { breakdown: `(APT ${n(aptTotal)}세대, OT ${n(ot)}실)` } : {}),
     },
-    { label: "동수", value: String(d.buildings), unit: "개동" },
-    /* "최고"는 숫자를 수식하는 말이라 값 앞에 붙는다 — 라벨 줄을 지운 판형(danji-c)에서
+    /* 동수·층수는 청약홈이 주지 않는다 — 아직 못 채운 단지는 '미고지'로 남긴다. 지어내지 않는다. */
+    d.buildings != null
+      ? { label: "동수", value: String(d.buildings), unit: "개동" }
+      : { label: "동수", value: "미고지", tbd: true },
+    /* "최고"는 숫자를 수식하는 말이라 값 앞에 붙는다 — 라벨 줄을 지운 판형에서
        "38층"만 남으면 그게 최고층인지 평균층인지 카드가 말하지 못한다. */
-    { label: "최고 층수", pre: "최고", value: String(d.topFloor), unit: "층" },
+    d.topFloor != null
+      ? { label: "최고 층수", pre: "최고", value: String(d.topFloor), unit: "층" }
+      : { label: "최고 층수", value: "미고지", tbd: true },
   ];
 }
 
@@ -222,8 +276,8 @@ function presale(d) {
     topcap: `오늘의 주요 청약 이슈 (${date.replace(/-/g, ".")})`,
     titleLines: titleFor(d, { total, repWon }),
     hero: d.photo
-      ? { photo: d.photo.file, credit: d.photo.credit }
-      : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true },
+      ? { photo: d.photo.file, credit: d.photo.credit, shift: heroShift(d.photo.file) }
+      : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true, shift: heroShift("seoul-apart-night.jpg") },
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
     address: addressOf(d),
     spec: specCells(d, total),
@@ -274,7 +328,7 @@ function result(d) {
     topcap: `오늘의 주요 청약 이슈 (${date.replace(/-/g, ".")})`,
     titleLines: [`1순위 <span class="up">${n(first.shown)}대 1</span>`],
     hero: d.photo
-      ? { photo: d.photo.file, credit: d.photo.credit }
+      ? { photo: d.photo.file, credit: d.photo.credit, shift: heroShift(d.photo.file) }
       : { fallbackColor: "#101418", fallbackWord: "ACRO" },
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}) },
     spec: [
@@ -302,15 +356,29 @@ function result(d) {
 const outDir = join(ROOT, "data/out/_spike");
 mkdirSync(outDir, { recursive: true });
 
-const cards = [
-  ["danji-hangang", presale(byId("hangang-prugio-riverfront"))],
-  ["danji-sangdong", presale(byId("sangdong-lotte-castle"))],
-  ["danji-sangok", presale(byId("sangok-xi-hillstate"))],
-  ["danji-acro", result(byId("acro-de-seocho"))],
-];
+/* 데이터셋에 있는 단지를 **전부** 만든다. 목록을 손으로 적지 않는다 —
+   새 단지를 데이터셋에 넣으면 그 순간 카드가 나온다(원커맨드 자동화의 전제). */
+const onlyIdx = process.argv.indexOf("--only");
+const only = onlyIdx >= 0 ? process.argv[onlyIdx + 1] : null;
+const targets = doc.danji.filter((d) => !only || d.id === only);
+if (only && !targets.length) throw new Error(`단지 없음: ${only}`);
 
-for (const [slug, card] of cards) {
+let made = 0;
+const skipped = [];
+for (const d of targets) {
+  let card;
+  try {
+    card = d.kind === "result" ? result(d) : presale(d);
+  } catch (e) {
+    /* --only 로 그 단지를 콕 집었으면 실패는 실패다. 전체 빌드에서는 남은 것을 계속 만든다. */
+    if (only) throw e;
+    skipped.push([d.id, e.message]);
+    continue;
+  }
+  /* 출력 파일명은 데이터가 정한다 — slug 가 있으면 그것, 없으면 id 앞머리 */
+  const slug = `danji-${d.slug || d.id.split("-")[0]}`;
   writeFileSync(join(outDir, `${slug}.json`), JSON.stringify(card, null, 2) + "\n", "utf8");
+  made++;
   console.log(`${slug} — ${card.danji.name}`);
   console.log(`   ${card.topcap} · ${card.titleLines.join(" ").replace(/<[^>]+>/g, "")}`);
   console.log(`   ${card.spec.map((c) => `${c.label} ${c.value}${c.unit || ""}`).join(" · ")}`);
@@ -318,4 +386,10 @@ for (const [slug, card] of cards) {
   console.log(`   평형 ${card.priceTable.rows.map((r) => `${r.area} ${r.price}`).join(" · ")}`);
   console.log(`   일정 ${card.schedule.map((s) => `${s.label} ${s.date}`).join(" · ")}`);
 }
-console.log("\n⚠ 분양가는 보도값이다 — 입주자모집공고문 대조 전까지 발행 금지.");
+
+if (skipped.length) {
+  console.log(`\n⏭  아직 못 만드는 단지 ${skipped.length}곳 — 데이터가 덜 찼습니다:`);
+  for (const [id, msg] of skipped) console.log(`   · ${id}: ${msg}`);
+}
+console.log(`\n✅ ${made}장 생성 → data/out/_spike/`);
+console.log("⚠ 분양가는 보도값이다 — 입주자모집공고문 대조 전까지 발행 금지.");

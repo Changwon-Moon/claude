@@ -85,7 +85,8 @@
         "station": "산곡역",
         "desc": "바로 앞"
       },
-      "hook": "7호선 산곡역"
+      "hook": "7호선 산곡역",
+      "slug": "sangok"
     },
     {
       "id": "acro-de-seocho",
@@ -158,7 +159,8 @@
         "scope": "서울 민간분양 1순위 평균",
         "by": "한국부동산원 청약홈 집계",
         "via": "머니투데이 (2026.4.2)"
-      }
+      },
+      "slug": "acro"
     },
     {
       "id": "sangdong-lotte-castle",
@@ -246,7 +248,8 @@
         "url": "https://www.hankyung.com/article/2026063073421"
       },
       "gap": "분양가·청약 일정·입주 예정은 1차 출처(입주자모집공고)를 아직 못 잡았다. 카드에는 '미고지'로 적는다.",
-      "hook": "옛 홈플러스 자리"
+      "hook": "옛 홈플러스 자리",
+      "slug": "sangdong"
     },
     {
       "id": "hangang-prugio-riverfront",
@@ -345,7 +348,8 @@
         "credit": "출처. 대우건설 홈페이지",
         "provided": "2026-08-03 오너 제공 · 원본은 templates/_shared/photos/_source/"
       },
-      "hook": "한강뷰"
+      "hook": "한강뷰",
+      "slug": "hangang"
     }
   ]
 }
