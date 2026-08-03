@@ -1,0 +1,122 @@
+name: KOSIS 표 검증 (probe)
+
+# ── 무엇을 하나 (2026-08-03)
+# KOSIS 표마다 **최근 1개 시점만** 받아 "이 표가 진짜 우리가 생각한 그 표인지" 확인하고
+# 결과를 `data/kosis-probe.md` 에 적어 커밋한다.
+#
+# ── 왜 정기 수집과 나눴나
+# kosis.kr 본문이 세션에서 안 열려(robots) 표 ID 를 검색결과 제목까지만 확인했다.
+# 항목코드(itmId)·분류축(objL)·수록주기는 대부분 미확인이다. 이대로 정기 수집을 돌리면
+# **엉뚱한 항목의 숫자가 조용히 카드에 올라간다** — 예컨대 사망 표는 '사망원인 50항목' 축이 있어
+# '계'를 안 고르면 특정 사인의 숫자가 총사망자수로 나간다.
+#
+# 검증되면 `packages/collectors/src/sources/kosis.ts` 의 `enabled` 를 켠다.
+# **켜지기 전 표는 정기 수집에 끼지 않는다.**
+on:
+  push:
+    paths:
+      - "data/kosis-probe-queue.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kosis-probe
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # 키가 없어도 여기서 죽이지 않는다. 죽이면 뒤 단계가 건너뛰어져
+      # 세션 쪽에서는 "아무 일도 안 일어난 것"과 구별이 안 된다.
+      # 대신 결과 파일에 그 사실을 적어 커밋한다.
+      - name: 키 확인
+        id: keycheck
+        env:
+          KOSIS_API_KEY: ${{ secrets.KOSIS_API_KEY }}
+        run: |
+          if [ -z "$KOSIS_API_KEY" ]; then
+            echo "::error::KOSIS_API_KEY 가 GitHub Secrets 에 없습니다."
+            echo "has_key=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "키 확인됨 (길이 ${#KOSIS_API_KEY})"
+            echo "has_key=yes" >> "$GITHUB_OUTPUT"
+          fi
+
+      # 표 하나가 실패해도 나머지 결과는 파일에 남는다(스크립트가 표별로 잡는다).
+      # 다만 하나라도 실패하면 exit 1 이라 워크플로는 빨갛게 된다 — 반쪽 검증을 성공으로 읽지 않기 위해서다.
+      - name: 표 검증
+        if: steps.keycheck.outputs.has_key == 'yes'
+        continue-on-error: true
+        env:
+          KOSIS_API_KEY: ${{ secrets.KOSIS_API_KEY }}
+        run: pnpm --filter @wirit/collectors probe-kosis 2>&1 | tee /tmp/probe.log
+
+      # 검증이 파일을 못 남겼으면(키 없음·설치 실패·스크립트 크래시) 실패 사실을 파일에 적는다.
+      # 이 저장소에서 세션의 유일한 눈은 커밋된 파일이다. 빈손으로 끝내면 원인을 못 찾는다.
+      - name: 결과 없으면 실패 기록
+        if: always()
+        run: |
+          if ! git diff --quiet -- data/kosis-probe.md data/kosis-probe-raw.json 2>/dev/null; then
+            echo "검증이 파일을 갱신했다 — 그대로 둔다"; exit 0
+          fi
+          {
+            echo "# KOSIS 표 검증 결과 — ❌ 검증이 돌지 못했다"
+            echo
+            echo "- 실행 시각(KST): $(TZ=Asia/Seoul date '+%F %H:%M')"
+            echo "- 실행 로그: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "- 키 있음: ${{ steps.keycheck.outputs.has_key }}"
+            echo
+            echo "## 마지막 로그 40줄"
+            echo
+            echo '```'
+            tail -40 /tmp/probe.log 2>/dev/null || echo "(probe.log 없음 — 검증 단계까지 못 갔다)"
+            echo '```'
+          } > data/kosis-probe.md
+
+      - name: 커밋
+        if: always()
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@github.com"
+          git add -f data/kosis-probe.md data/kosis-probe-raw.json || true
+          if git diff --cached --quiet; then
+            echo "바뀐 것 없음 — 커밋 생략"
+          else
+            git commit -m "KOSIS 표 검증 $(TZ=Asia/Seoul date +%F)"
+            # 이 브랜치는 여러 세션이 동시에 민다. 한 번 밀어 실패하면 결과가 통째로 사라진다 —
+            # 검증을 다시 돌리는 비용보다 재시도가 싸다. 리베이스하고 세 번까지 다시 민다.
+            for try in 1 2 3 4 5 6 7 8; do
+              git pull --rebase --autostash origin ${{ github.ref_name }} || true
+              if git push origin HEAD:${{ github.ref_name }}; then
+                echo "푸시 성공(시도 $try)"; exit 0
+              fi
+              echo "푸시 실패(시도 $try) — 원격이 움직였다. 리베이스 후 재시도"
+              sleep $((try * 7 + RANDOM % 10))
+            done
+            echo "::error::여덟 번 시도했으나 푸시 실패 — 검증 결과가 유실됐다"
+            exit 1
+          fi
+
+      - name: 텔레그램 알림
+        if: always()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          SUM=$(tail -3 /tmp/probe.log 2>/dev/null || echo "(로그 없음)")
+          MSG=$(printf '🔎 KOSIS 표 검증 완료 — data/kosis-probe.md 를 확인하세요\n%s' "$SUM")
+          node scripts/notify-telegram.mjs "$MSG" || echo "알림 시크릿이 없어 건너뜁니다"

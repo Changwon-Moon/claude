@@ -143,6 +143,97 @@
       ]
     },
     {
+      "label": "line2-loop",
+      "cmd": "scripts/build-line2-loop.mjs",
+      "args": [
+        "2026-07-31"
+      ]
+    },
+    {
+      "label": "line3-loop",
+      "cmd": "scripts/build-line3-loop.mjs",
+      "args": [
+        "2026-07-31"
+      ]
+    },
+    {
+      "label": "line4-loop",
+      "cmd": "scripts/build-line4-loop.mjs",
+      "args": [
+        "2026-07-31"
+      ]
+    },
+    {
+      "label": "line5-loop",
+      "cmd": "scripts/build-line5-loop.mjs",
+      "args": [
+        "2026-07-31"
+      ]
+    },
+    {
+      "label": "line6-loop",
+      "cmd": "scripts/build-line6-loop.mjs",
+      "args": [
+        "2026-07-31"
+      ]
+    },
+    {
+      "label": "line7-loop",
+      "cmd": "scripts/build-line7-loop.mjs",
+      "args": [
+        "2026-07-31"
+      ]
+    },
+    {
+      "label": "line8-loop",
+      "cmd": "scripts/build-line8-loop.mjs",
+      "args": [
+        "2026-07-31"
+      ]
+    },
+    {
+      "label": "line9-loop",
+      "cmd": "scripts/build-line9-loop.mjs",
+      "args": [
+        "2026-07-31"
+      ]
+    },
+    {
+      "label": "mae-streak",
+      "cmd": "scripts/build-mae-streak.mjs",
+      "args": []
+    },
+    {
+      "label": "jeonse-streak",
+      "cmd": "scripts/build-jeonse-streak.mjs",
+      "args": []
+    },
+    {
+      "label": "jeonwolse-map",
+      "cmd": "scripts/build-jeonwolse-map.mjs",
+      "args": []
+    },
+    {
+      "label": "danji-hangang",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-08-03",
+        "--only",
+        "hangang-prugio-riverfront",
+        "--publish"
+      ]
+    },
+    {
+      "label": "danji-songdo",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-08-03",
+        "--only",
+        "songdo-granter-remndr",
+        "--publish"
+      ]
+    },
+    {
       "label": "tax-1house",
       "cmd": "scripts/build-tax-1house.mjs",
       "args": [

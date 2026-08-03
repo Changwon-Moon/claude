@@ -1,0 +1,94 @@
+{
+  "template": "danji-cover@1",
+  "date": "2026-08-03",
+  "kind": "presale",
+  "topcap": "오늘의 주요 청약 이슈 (2026.08.03)",
+  "titleLines": [
+    "<span class=\"hi\">한강뷰</span> 아파트 분양가 <span class=\"hi\">7억대</span>?"
+  ],
+  "hero": {
+    "photo": "hangang-prugio-riverfront.jpg",
+    "credit": "출처. 대우건설 홈페이지",
+    "shift": 63
+  },
+  "danji": {
+    "name": "한강 푸르지오 리버프론트",
+    "logo": "prugio.png",
+    "company": "대우건설"
+  },
+  "address": "경기 김포시 고촌읍",
+  "spec": [
+    {
+      "label": "세대수",
+      "value": "2,682",
+      "unit": "세대",
+      "breakdown": "(APT 2,432세대, OT 250실)"
+    },
+    {
+      "label": "동수",
+      "value": "12",
+      "unit": "개동"
+    },
+    {
+      "label": "최고 층수",
+      "pre": "최고",
+      "value": "38",
+      "unit": "층"
+    }
+  ],
+  "priceTable": {
+    "head": [
+      "타입별 분양가(최고가 기준)"
+    ],
+    "cols": 4,
+    "rows": [
+      {
+        "area": "84A",
+        "price": "7.7억",
+        "main": true
+      },
+      {
+        "area": "106",
+        "price": "9.5억",
+        "main": false
+      },
+      {
+        "area": "122",
+        "price": "11.9억",
+        "main": false
+      },
+      {
+        "area": "180P",
+        "price": "30.0억",
+        "main": false
+      }
+    ]
+  },
+  "schedule": [
+    {
+      "label": "특별공급",
+      "date": "8/10(월)",
+      "tbd": false
+    },
+    {
+      "label": "1순위",
+      "date": "8/11(화)",
+      "tbd": false
+    },
+    {
+      "label": "당첨자 발표",
+      "date": "8/20(목)",
+      "tbd": false
+    },
+    {
+      "label": "입주 예정",
+      "date": "2031년 1월",
+      "tbd": false
+    }
+  ],
+  "notice": "<i class=\"em\">💡</i><span class=\"tag\">분양가상한제</span> 적용 · <i class=\"em\">🔒</i>전매제한 2년",
+  "source": {
+    "name": "청약홈 입주자모집공고",
+    "photo": "대우건설 홈페이지"
+  }
+}

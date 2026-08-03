@@ -76,6 +76,12 @@ export function tohuhMapSvg({
   valueOf,
   textOf,
   maxValue = null,
+  /** 색·정규화 옵션(기본값 = 기존 동작 유지 → 발행 카드 픽셀 불변).
+   * minValue 를 주면 [min,max] 정규화(대비↑). colorLo/colorHi 로 그라데이션 양끝을 바꾼다. */
+  minValue = 0,
+  colorLo = [255, 226, 219],
+  colorHi = [176, 11, 30],
+  textThreshold = 0.5,
   labelWidth = 140,
   twoLine = false,
   /** 라벨 배치 방식. "down"(기본) = 아래로만 밀기 · "nearest" = 중앙에서 가장 가까운 빈 자리.
@@ -103,14 +109,16 @@ export function tohuhMapSvg({
 
   const vals = parts.map((p) => valueOf(p.info));
   const max = maxValue ?? Math.max(...vals, 1);
-  const C_LO = [255, 226, 219], C_HI = [176, 11, 30];
+  const min = minValue;                       // 기본 0 → v/max (기존 동작)
+  const span = max - min || 1;
+  const C_LO = colorLo, C_HI = colorHi;
   const lerp = (a, b, t) => Math.round(a + (b - a) * t);
-  const norm = (v) => Math.min(1, Math.max(0, v / max));
+  const norm = (v) => Math.min(1, Math.max(0, (v - min) / span));
   const fill = (v) => {
     const t = norm(v);
     return `rgb(${lerp(C_LO[0], C_HI[0], t)},${lerp(C_LO[1], C_HI[1], t)},${lerp(C_LO[2], C_HI[2], t)})`;
   };
-  const textCol = (v) => (norm(v) > 0.5 ? "#ffffff" : "#26303d");
+  const textCol = (v) => (norm(v) > textThreshold ? "#ffffff" : "#26303d");
 
   let paths = "";
   let clipD = ""; // 표시 지역 전체(한강 클리핑 — 그린 땅 위에만 강이 보이게)

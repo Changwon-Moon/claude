@@ -55,7 +55,7 @@ async function getRaw(url: string, timeoutMs = 20000): Promise<{ status: number;
  *    `fetch failed` 로 끊었다. 3회로는 못 넘겼다. 서버를 두들기는 쪽이 우리이므로
  *    간격도 함께 둔다(아래 fetchMonthly 의 페이지 간 대기).
  */
-async function getJson(url: string): Promise<any> {
+export async function getJson(url: string): Promise<any> {
   let last = "";
   for (let i = 0; i < 5; i++) {
     try {
@@ -82,7 +82,7 @@ async function getJson(url: string): Promise<any> {
  * R-ONE 응답 껍데기가 판올림마다 조금씩 달라서(배열/객체, head/row 중첩) 형태를 가리지 않고
  * **행 배열**만 끄집어낸다. 스키마를 단정하지 않는 편이 오래 간다.
  */
-function rowsOf(doc: any): any[] {
+export function rowsOf(doc: any): any[] {
   const out: any[] = [];
   const walk = (v: any, depth: number): void => {
     if (depth > 6 || v == null) return;
@@ -102,7 +102,7 @@ function rowsOf(doc: any): any[] {
 }
 
 /** 키 이름이 판올림마다 달라서, 후보를 순서대로 훑어 첫 값을 쓴다 */
-function pick(row: any, ...names: string[]): string {
+export function pick(row: any, ...names: string[]): string {
   for (const n of names) {
     const v = row?.[n];
     if (v !== undefined && v !== null && String(v).trim() !== "") return String(v).trim();

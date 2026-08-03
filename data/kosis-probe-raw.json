@@ -1,0 +1,108 @@
+{
+ "generatedAt": "2026-08-03T07:14:42.895Z",
+ "tables": {
+  "population": {
+   "tblId": "DT_1B040A3",
+   "ok": false,
+   "error": "GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T20&objL1=ALL&format=json&jsonVD=Y&prdSe=M&orgId=101&tblId=DT_1B040A3&objL2=ALL&objL3=ALL&objL4=ALL&newEstPrdCnt=1\nfetch failed",
+   "objLUsed": 0,
+   "attempts": [
+    "objL2..1=(없음) → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..2=ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..3=ALL,ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..4=ALL,ALL,ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method="
+   ],
+   "tblNm": null,
+   "items": [],
+   "axes": [],
+   "periods": [],
+   "regions": {}
+  },
+  "households": {
+   "tblId": "DT_1B040B3",
+   "ok": false,
+   "error": "GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T1&objL1=ALL&format=json&jsonVD=Y&prdSe=M&orgId=101&tblId=DT_1B040B3&objL2=ALL&objL3=ALL&objL4=ALL&newEstPrdCnt=1\nfetch failed",
+   "objLUsed": 0,
+   "attempts": [
+    "objL2..1=(없음) → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..2=ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..3=ALL,ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..4=ALL,ALL,ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method="
+   ],
+   "tblNm": null,
+   "items": [],
+   "axes": [],
+   "periods": [],
+   "regions": {}
+  },
+  "migration": {
+   "tblId": "DT_1B26001_A01",
+   "ok": false,
+   "error": "GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T25&objL1=ALL&format=json&jsonVD=Y&prdSe=Y&orgId=101&tblId=DT_1B26001_A01&objL2=ALL&objL3=ALL&objL4=ALL&newEstPrdCnt=1\nfetch failed",
+   "objLUsed": 0,
+   "attempts": [
+    "objL2..1=(없음) → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..2=ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..3=ALL,ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..4=ALL,ALL,ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method="
+   ],
+   "tblNm": null,
+   "items": [],
+   "axes": [],
+   "periods": [],
+   "regions": {}
+  },
+  "age": {
+   "tblId": "DT_1B04006",
+   "ok": false,
+   "error": "GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T2&objL1=ALL&format=json&jsonVD=Y&prdSe=M&orgId=101&tblId=DT_1B04006&objL2=ALL&objL3=ALL&objL4=ALL&newEstPrdCnt=1\nfetch failed",
+   "objLUsed": 0,
+   "attempts": [
+    "objL2..1=(없음) → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..2=ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..3=ALL,ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..4=ALL,ALL,ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method="
+   ],
+   "tblNm": null,
+   "items": [],
+   "axes": [],
+   "periods": [],
+   "regions": {}
+  },
+  "births": {
+   "tblId": "DT_1B81A03",
+   "ok": false,
+   "error": "GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T1&objL1=ALL&format=json&jsonVD=Y&prdSe=Y&orgId=101&tblId=DT_1B81A03&objL2=ALL&objL3=ALL&objL4=ALL&newEstPrdCnt=1\nfetch failed",
+   "objLUsed": 0,
+   "attempts": [
+    "objL2..1=(없음) → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..2=ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..3=ALL,ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..4=ALL,ALL,ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method="
+   ],
+   "tblNm": null,
+   "items": [],
+   "axes": [],
+   "periods": [],
+   "regions": {}
+  },
+  "deaths": {
+   "tblId": "DT_1B34E13",
+   "ok": false,
+   "error": "GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T1&objL1=ALL&format=json&jsonVD=Y&prdSe=Y&orgId=101&tblId=DT_1B34E13&objL2=ALL&objL3=ALL&objL4=ALL&newEstPrdCnt=1\nfetch failed",
+   "objLUsed": 0,
+   "attempts": [
+    "표가 지정한 조합 objL=ALL,11,ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..1=(없음) → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..2=ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..3=ALL,ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=",
+    "objL2..4=ALL,ALL,ALL → GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method="
+   ],
+   "tblNm": null,
+   "items": [],
+   "axes": [],
+   "periods": [],
+   "regions": {}
+  }
+ }
+}

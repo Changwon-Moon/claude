@@ -1,7 +1,7 @@
 {
   "meta": {
     "note": "소재(아이디어) 단일 원천. 관제탑이 읽고, 오너가 조작하면 GitHub API로 이 파일을 되쓴다.",
-    "updated": "2026-07-31",
+    "updated": "2026-08-03",
     "schema": "{id, cat(=발행 주기), topic(=주제/보관함 폴더), feed(auto|manual), title, why, source, state, status(done|\"\"), stage}",
     "catNote": "cat은 '주제'가 아니라 **얼마나 자주 내는가**다. 주제는 topic이 맡는다(보관함 폴더링). 2026-07-27 오너 지시로 재편.",
     "feedNote": "feed=auto 는 데이터가 스스로 갱신되는 소재 — 관제탑 [🔁 다시 제작] 버튼만으로 최신판이 나온다. feed=manual 은 자료를 사람(작업 세션)이 다시 넣어야 한다."
@@ -690,18 +690,6 @@
       "isNew": true
     },
     {
-      "id": "gongsigap",
-      "cat": "yearly",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "공시가격 vs 실거래가 갭 지도 — 세금은 어느 동네가 유리한가",
-      "why": "공시가(연 1회 공개) ÷ 실거래 중위가를 구별 계산. 큐레이션으론 못 만들고 계산으로만 나오는 카드 — 우리만 할 수 있는 각도",
-      "source": "공시가격 공개자료 + 국토부 실거래",
-      "state": "",
-      "status": "",
-      "isNew": true
-    },
-    {
       "id": "cartogram",
       "cat": "once",
       "topic": "부동산",
@@ -935,6 +923,136 @@
       "source": "야후 파이낸스 일간 종가 (kr-market-2026.json · asOf 07-22 → Actions kr-market.yml 갱신 필요)",
       "state": "",
       "status": ""
+    },
+    {
+      "id": "ah-remndr-2026910203",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 더샵 송도그란테르",
+      "why": "인천 · 150가구(5개 블록 합계) · 접수 ~2026-08-04(D-1) · 88점(수도권·150가구·무순위·D-1·더샵·5개 블록 합계)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-08-04",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910203&pblancNo=2026910203"
+    },
+    {
+      "id": "ah-remndr-2026910193",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 김해 신문 센트럴 아이파크",
+      "why": "경남 · 865가구 · 접수 ~2026-08-03(D-0) · 74점(865가구·무순위·오늘 마감·아이파크)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-08-03",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910193&pblancNo=2026910193"
+    },
+    {
+      "id": "ah-remndr-2026910200",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 한화포레나 안산고잔2차",
+      "why": "경기 · 2가구 · 접수 ~2026-08-03(D-0) · 72점(수도권·무순위·오늘 마감·포레나)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-08-03",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910200&pblancNo=2026910200"
+    },
+    {
+      "id": "ah-remndr-2026910208",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] e편한세상 동탄 파크아너스 A56블럭(2회차)",
+      "why": "경기 · 4가구 · 접수 ~2026-08-05(D-2) · 72점(수도권·무순위·D-2·e편한세상)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-08-05",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910208&pblancNo=2026910208"
+    },
+    {
+      "id": "ah-apt-2026000367",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[신규분양] 한강 푸르지오 리버프론트",
+      "why": "경기 · 2,432가구 · 접수 ~2026-08-12(D-9) · 65점(수도권·2,432가구 대단지·푸르지오·분양가상한제)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-08-12",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000367&pblancNo=2026000367"
+    },
+    {
+      "id": "ah-remndr-2026910199",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 펜타힐즈 더블유 1단지",
+      "why": "경북 · 486가구 · 접수 ~2026-08-03(D-0) · 64점(486가구·무순위·오늘 마감)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-08-03",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910199&pblancNo=2026910199"
+    },
+    {
+      "id": "ah-remndr-2026910201",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 동탄신도시 금강펜테리움 6차 센트럴파크(A59BL) (3차)",
+      "why": "경기 · 3가구 · 접수 ~2026-08-03(D-0) · 62점(수도권·무순위·오늘 마감)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-08-03",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910201&pblancNo=2026910201"
+    },
+    {
+      "id": "ah-apt-2026820007",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[신규분양] 수원당수지구 A5블록 신혼희망타운(공공분양) 추가 입주자모집",
+      "why": "경기 · 142가구 · 접수 ~2026-08-04(D-1) · 51점(수도권·D-1·분양가상한제)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-08-04",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820007&pblancNo=2026820007"
+    },
+    {
+      "id": "ah-apt-2026000331",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[신규분양] 센트레빌 아스테리움 거제",
+      "why": "경남 · 1,307가구 · 접수 ~2026-08-05(D-2) · 54점(1,307가구 대단지·D-2·센트레빌)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-08-05",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000331&pblancNo=2026000331"
+    },
+    {
+      "id": "ah-apt-2026000295",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[신규분양] 아산테크노밸리 더원 7차 (Ab4BL)",
+      "why": "충남 · 622가구 · 접수 ~2026-08-05(D-2) · 49점(622가구·D-2·분양가상한제)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-08-05",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000295&pblancNo=2026000295"
     }
   ]
 }

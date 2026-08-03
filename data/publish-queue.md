@@ -1,4 +1,4 @@
-<!-- 점검: 대기 2 · 올릴 준비 2 · 막힘 0 -->
+<!-- 점검: 대기 15 · 올릴 준비 5 · 막힘 10 -->
 # 발행 대기열
 
 > 관제탑에서 **[🚀 발행 승인]**을 누르면 이 파일 맨 아래에 한 줄이 붙습니다.
@@ -21,3 +21,18 @@
 - [x] [26.07.26(일) 관제탑] **서울 아파트 실거래 랭킹 84㎡ (2026 상반기)** · estate-cover · 원본 data/content/2026-07-21/estate-cover-84.json
 - [x] [26.07.30(목) 오너 확정] **📉📈 미쳐버린 서울 월세 폭등 상황 (월세지수 2016~2026)** · year-bars · 원본 data/content/2026-07-30/wolse-flip-p1.json
 - [x] [26.07.30(목) 오너 확정] **🔥 토허제 40곳 월세 폭등 (지도+행정구역 표)** · singoga-map · 원본 data/content/2026-07-30/tohuh-rent-map.json
+- [ ] [26.08.03(월) 오너 확정] **🌊 한강뷰 아파트 분양가 7억대? (한강 푸르지오 리버프론트)** · danji-hangang · 원본 data/content/2026-08-03/danji-hangang.json
+- [ ] [26.08.03(월) 오너 확정] **🏙 송도 무순위 줍줍 150세대 (더샵 송도그란테르)** · danji-songdo · 원본 data/content/2026-08-03/danji-songdo.json
+- [ ] [26.08.03(월) 관제탑] **서울 아파트 78주 연속 상승 — 상승폭 文정부의 2배** · streak-line · 원본 data/content/2026-07-27/mae-streak.json
+- [ ] [26.08.03(월) 관제탑] **한강뷰 아파트 분양가 7억대?** · danji-cover · 원본 data/content/2026-08-03/danji-hangang.json
+- [ ] [26.08.03(월) 관제탑] **송도 무순위 줍줍 150세대** · danji-cover · 원본 data/content/2026-08-03/danji-songdo.json
+- [ ] [26.08.03(월) 관제탑] **서울 아파트 매매·전세 동반 78주 연속 상승** · streak-line · 원본 data/content/2026-08-03/jeonse-streak.json
+- [ ] [26.08.03(월) 관제탑] **월세가 전세를 넘어섰다 (토허 40곳 월세 비중)** · singoga-map · 원본 data/content/2026-08-03/jeonwolse-map.json
+- [ ] [26.08.03(월) 관제탑] **2호선 역세권 34평 APT 시세 (2026.01~07)** · line2-loop · 원본 data/content/2026-07-31/line2-loop.json
+- [ ] [26.08.03(월) 관제탑] **3호선 역세권 34평 APT 시세 (2026.01~07)** · line3-loop · 원본 data/content/2026-07-31/line3-loop.json
+- [ ] [26.08.03(월) 관제탑] **4호선 역세권 34평 APT 시세 (2026.01~07)** · line4-loop · 원본 data/content/2026-07-31/line4-loop.json
+- [ ] [26.08.03(월) 관제탑] **5호선 역세권 34평 APT 시세 (2026.01~07)** · line5-loop · 원본 data/content/2026-07-31/line5-loop.json
+- [ ] [26.08.03(월) 관제탑] **6호선 역세권 34평 APT 시세 (2026.01~07)** · line6-loop · 원본 data/content/2026-07-31/line6-loop.json
+- [ ] [26.08.03(월) 관제탑] **7호선 역세권 34평 APT 시세 (2026.01~07)** · line7-loop · 원본 data/content/2026-07-31/line7-loop.json
+- [ ] [26.08.03(월) 관제탑] **8호선 역세권 34평 APT 시세 (2026.01~07)** · line8-loop · 원본 data/content/2026-07-31/line8-loop.json
+- [ ] [26.08.03(월) 관제탑] **9호선 역세권 34평 APT 시세 (2026.01~07)** · line9-loop · 원본 data/content/2026-07-31/line9-loop.json

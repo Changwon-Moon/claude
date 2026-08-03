@@ -1,12 +1,13 @@
 {
   "_": [
-    "청약단지 브리핑 카드(danji-brief@1)의 원자료. 단지 한 곳이 객체 하나다.",
+    "청약·분양 카드(danji-cover@1)의 원자료. 단지 한 곳이 객체 하나다. 기준: docs/guides/청약분양-카드-기준.md",
     "★ verified: false — 여기 담긴 수치는 아직 **보도에서 옮긴 것**이다.",
     "  청약홈(applyhome.co.kr) 입주자모집공고문으로 대조하기 전까지 발행하지 않는다.",
     "  (docs/HANDOFF.md §5 '확정과 발행 게이트는 다르다')",
     "모르는 값은 채우지 않고 null 로 둔다 — 빌더가 '미고지'라고 카드에 적는다.",
     "숫자는 전부 원단위 정수로 적는다. '2,706가구' 같은 표기는 빌더가 만든다.",
-    "record 필드는 '역대 최고' 같은 말을 카드에 쓸 수 있게 하는 열쇠다. 우리 데이터에 과거 경쟁률이 없어 코드가 직접 확인할 수 없으므로, 근거(by·via)를 함께 적은 이 필드가 있을 때만 빌더가 그 문구를 쓴다. 필드가 없으면 문구도 없다."
+    "record 필드는 '역대 최고' 같은 말을 카드에 쓸 수 있게 하는 열쇠다. 우리 데이터에 과거 경쟁률이 없어 코드가 직접 확인할 수 없으므로, 근거(by·via)를 함께 적은 이 필드가 있을 때만 빌더가 그 문구를 쓴다. 필드가 없으면 문구도 없다.",
+    "applyhomeNo 가 있으면 빌더가 data/datasets/applyhome-latest.json(청약홈 1차 출처)에서 세대수·청약일정·입주예정월·분양가상한제를 **직접 읽는다**. 여기 손으로 옮겨 적지 않는다 — 옮겨 적는 순간 두 곳이 어긋난다."
   ],
   "meta": {
     "name": "2026년 분양·청약 단지",
@@ -83,7 +84,9 @@
         "line": "7호선",
         "station": "산곡역",
         "desc": "바로 앞"
-      }
+      },
+      "hook": "7호선 산곡역",
+      "slug": "sangok"
     },
     {
       "id": "acro-de-seocho",
@@ -110,7 +113,13 @@
         "perPyeongMan": 7800,
         "unit59Won": 1860000000,
         "nearbyMarketWon": 3200000000,
-        "capApplied": true
+        "capApplied": true,
+        "byArea": [
+          {
+            "m2": 59,
+            "won": 1860000000
+          }
+        ]
       },
       "moveIn": "2029-02",
       "schedule": {
@@ -150,7 +159,8 @@
         "scope": "서울 민간분양 1순위 평균",
         "by": "한국부동산원 청약홈 집계",
         "via": "머니투데이 (2026.4.2)"
-      }
+      },
+      "slug": "acro"
     },
     {
       "id": "sangdong-lotte-castle",
@@ -237,7 +247,185 @@
         "via": "한국경제 (2026.6.30) · 뉴시스 (2026.6.30)",
         "url": "https://www.hankyung.com/article/2026063073421"
       },
-      "gap": "분양가·청약 일정·입주 예정은 1차 출처(입주자모집공고)를 아직 못 잡았다. 카드에는 '미고지'로 적는다."
+      "gap": "분양가·청약 일정·입주 예정은 1차 출처(입주자모집공고)를 아직 못 잡았다. 카드에는 '미고지'로 적는다.",
+      "hook": "옛 홈플러스 자리",
+      "slug": "sangdong"
+    },
+    {
+      "id": "hangang-prugio-riverfront",
+      "kind": "presale",
+      "name": "한강 푸르지오 리버프론트",
+      "location": "경기 김포시 고촌읍",
+      "company": "대우건설",
+      "logo": "prugio.png",
+      "applyhomeNo": "2026000367",
+      "applyhomeNote": "세대수·특별공급·1순위·당첨자발표·입주예정월·분양가상한제는 이 번호로 청약홈에서 읽는다. 손으로 적지 않는다.",
+      "buildings": 12,
+      "topFloor": 38,
+      "underFloor": 4,
+      "scaleSource": "대우건설 보도자료 · 헤럴드경제(2026.7) · 공식 분양 홈페이지",
+      "areas": [
+        {
+          "m2": 84,
+          "types": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "m2": 106,
+          "types": [
+            "-"
+          ]
+        },
+        {
+          "m2": 122,
+          "types": [
+            "-"
+          ]
+        },
+        {
+          "m2": 180,
+          "types": [
+            "P"
+          ]
+        }
+      ],
+      "mainArea": {
+        "m2": 84,
+        "units": 1775,
+        "by": "파이낸셜뉴스 (2026.8.2) — 전용 84㎡ 1,775가구, 전체의 약 73%"
+      },
+      "pyeongDisclosed": false,
+      "priceDisclosed": true,
+      "price": {
+        "headline": {
+          "label": "전용 84㎡",
+          "won": 773000000,
+          "note": "최고가 기준"
+        },
+        "byArea": [
+          {
+            "m2": 84,
+            "won": 773000000
+          },
+          {
+            "m2": 106,
+            "won": 951000000
+          },
+          {
+            "m2": 122,
+            "won": 1186000000
+          },
+          {
+            "m2": 180,
+            "won": 2999000000
+          }
+        ],
+        "capApplied": true,
+        "resaleBanYears": 2,
+        "by": "파이낸셜뉴스 (2026.8.2)",
+        "caution": "분양가는 청약홈 API 가 주지 않는다 — 보도에서 옮긴 값이다. 입주자모집공고문으로 대조하기 전까지 verified 로 올리지 않는다.",
+        "verifiedAgainst": "한국부동산원 청약홈 입주자모집공고 상세(2026-08-03 열람) — 공급금액 84㎡ 77,300 · 106㎡ 95,100 · 122㎡ 118,600 · 180㎡ 299,900(만원, 최고가) 가 데이터셋 값과 네 건 모두 일치. 평형별 세대수 합 1,775+432+216+9 = 2,432 = API supply 도 일치"
+      },
+      "extra": {
+        "officetel": 250
+      },
+      "nearest": {
+        "line": "인천 5호선 연장",
+        "station": "시네폴리스역(예정)",
+        "desc": "예비타당성조사 통과"
+      },
+      "highlight": "한강과 맞닿은 한강변 입지",
+      "source": {
+        "name": "한국부동산원 청약홈 입주자모집공고",
+        "via": "한국부동산원 청약홈 입주자모집공고 상세 (2026-08-03 대조 완료)",
+        "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000367&pblancNo=2026000367"
+      },
+      "conflictLog": "입주예정: 분양대행 사이트는 2029년 7월이라 적었으나 청약홈 공고는 2031년 1월이다. 1차 출처를 쓴다.",
+      "photo": {
+        "file": "hangang-prugio-riverfront.jpg",
+        "credit": "출처. 대우건설 홈페이지",
+        "provided": "2026-08-03 오너 제공 · 원본은 templates/_shared/photos/_source/"
+      },
+      "hook": "한강뷰",
+      "slug": "hangang"
+    },
+    {
+      "id": "songdo-granter-remndr",
+      "slug": "songdo",
+      "kind": "remndr",
+      "name": "더샵 송도그란테르",
+      "location": "인천 연수구 송도동",
+      "hook": "송도",
+      "applyhomeNo": "2026910203",
+      "total": 150,
+      "blocks": 5,
+      "buildings": 15,
+      "topFloor": 46,
+      "_areasNote": "5개 블록 공고(2026910203·04·05·06·07)의 주택형별 세대수를 면적대로 합산. 합계 150 = 청약홈 API supply 150 과 일치(교차검증). ⚠️ 웹 열람 전사값이므로 발행 전 오너 대조 필요.",
+      "areas": [
+        {
+          "m2": 84,
+          "units": 68,
+          "types": [
+            "A"
+          ]
+        },
+        {
+          "m2": 118,
+          "units": 56,
+          "types": [
+            "K"
+          ]
+        },
+        {
+          "m2": 124,
+          "units": 23,
+          "types": [
+            "A"
+          ]
+        },
+        {
+          "m2": 128,
+          "units": 2,
+          "types": [
+            "H"
+          ]
+        },
+        {
+          "m2": 188,
+          "units": 1,
+          "types": [
+            "K"
+          ]
+        }
+      ],
+      "mainArea": {
+        "m2": 84,
+        "units": 68
+      },
+      "blockNames": [
+        "G5-1블록",
+        "G5-3블록",
+        "G5-4블록",
+        "G5-5블록",
+        "G5-11블록"
+      ],
+      "company": "케이비부동산신탁",
+      "source": {
+        "name": "한국부동산원 청약홈 무순위 입주자모집공고",
+        "via": "청약홈 블록별 공고 5건 (2026-08-03 열람)",
+        "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910203&pblancNo=2026910203"
+      },
+      "totalComplex": 1640,
+      "_ownerNote": "총 1,640세대·15개동·최고 46층 = 오너 제공(2026-08-03). 청약홈 무순위 공고에는 없는 값이다.",
+      "photo": {
+        "file": "songdo-granter-remndr.png",
+        "credit": "출처. 케이비부동산신탁(주) 홈페이지",
+        "provided": "2026-08-03 오너 제공 · 원본은 templates/_shared/photos/_source/"
+      }
     }
   ]
 }

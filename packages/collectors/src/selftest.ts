@@ -3,6 +3,9 @@
  * 실행: pnpm --filter @wirit/collectors selftest
  * 빌드 환경에서 외부 API가 막혀 있어도, 데이터 해석 로직의 정확성을 여기서 검증한다.
  */
+import { existsSync, readFileSync } from "node:fs";
+import { redactUrl } from "./http.js";
+import { resolve } from "node:path";
 import { parseStooqDailyCsv, monthlySample } from "./parse/stooq.js";
 import { parseEcosJson } from "./parse/ecos.js";
 import { parseRss, dedupeByTitle } from "./parse/rss.js";
@@ -29,16 +32,53 @@ import {
   highestPerApt,
   summarizeDaejang,
   toEok,
+  parseAptRents,
+  aggregateRents,
 } from "./parse/molit.js";
 import { encKey } from "./sources/molit.js";
+import {
+  normalize as kosisNormalize,
+  seniorPoints as kosisSenior,
+  ageOfLabel as kosisAgeOf,
+  toSeries as kosisSeries,
+  toPeriod as kosisPeriod,
+  toCount as kosisCount,
+  milestones as kosisMilestones,
+  streaks as kosisStreaks,
+  topMovers as kosisTopMovers,
+  rank as kosisRank,
+  joinReport as kosisJoin,
+  type Series as KosisSeries,
+} from "./parse/kosis.js";
+import { buildUrl as kosisUrl, encKey as kosisEncKey, TABLES as KOSIS_TABLES, enabledTables as kosisEnabled, chunkSizeFor } from "./sources/kosis.js";
+
 import { toSeries, regionNames, ambiguousNames, latestMonth, readPage, type RebPoint } from "./sources/rebIndex.js";
 import {
+  normalize as ahNormalize,
+  recent as ahRecent,
+  dedupe as ahDedupe,
+  mergeBlocks as ahMerge,
+  baseName as ahBase,
+  rank as ahRank,
+  toIsoDate as ahIso,
+  toCount as ahCount,
+  toYearMonth as ahYm,
+  daysBetween as ahDays,
+} from "./parse/applyhome.js";
+import { buildUrl as ahUrl, encKey as ahEncKey } from "./sources/applyhome.js";
+import {
+  APPLYHOME_APT_JSON,
+  APPLYHOME_REMNDR_JSON,
+  APPLYHOME_SHAPE_CHANGED_JSON,
   STOOQ_SPX_CSV,
   STOOQ_WITH_GAPS_CSV,
   ECOS_FX_JSON,
   ECOS_ERROR_JSON,
   MOLIT_APT_XML,
+  MOLIT_RENT_XML,
   MOLIT_ERROR_XML,
+  KOSIS_POP_JSON,
+  KOSIS_POP_SHAPE_CHANGED_JSON,
 } from "./__fixtures__/fixtures.js";
 
 let pass = 0;
@@ -302,6 +342,25 @@ console.log("\n[국토부 실거래 파서 — MOLIT]");
   check("encKey: 인코딩키 더블인코딩 방지(동일 결과)", encKey("abc%2B%2Fdef%3D") === enc);
 }
 
+console.log("\n[국토부 전월세 파서 — MOLIT Rent]");
+{
+  const rents = parseAptRents(MOLIT_RENT_XML);
+  check("item 6건 파싱", rents.length === 6, `got ${rents.length}`);
+  check("영문태그 전세 파싱(월세0→전세)", rents[0].isJeonse === true && rents[0].deposit === 50000);
+  check("한글태그 전세 파싱(보증금액 콤마)", rents[1].deposit === 40000 && rents[1].isJeonse === true);
+  check("월세>0 → 월세계약", rents[3].isJeonse === false && rents[3].monthlyRent === 80);
+  check("계약구분 신규 추출", rents[0].contractType === "신규");
+  check("갱신요구권 사용 추출", rents[2].useRRRight === "사용");
+  const a = aggregateRents(rents);
+  check("총 6건", a.total === 6, String(a.total));
+  check("전세 3 / 월세 3", a.jeonse === 3 && a.wolse === 3, `${a.jeonse}/${a.wolse}`);
+  check("월세비중 50.0%", a.wolseRatio === 50.0, String(a.wolseRatio));
+  check("신규 3건(전세2+월세1)", a.newTotal === 3 && a.newWolse === 1, `${a.newTotal}/${a.newWolse}`);
+  check("신규 중 월세비중 33.3%", a.newWolseRatio === 33.3, String(a.newWolseRatio));
+  check("갱신 2건", a.renewTotal === 2, String(a.renewTotal));
+  check("계약구분 있는 건 5건(무구분 1 제외)", a.typedTotal === 5, String(a.typedTotal));
+}
+
 console.log("\n[부동산원 전세·월세 지수 — R-ONE]");
 {
   /* R-ONE 응답은 판올림마다 껍데기가 바뀐다. 여기서 지키는 것은 **접는 규칙**이다 —
@@ -363,6 +422,293 @@ console.log("\n[부동산원 전세·월세 지수 — R-ONE]");
   try { readPage({ SttsApiTblData: [{ head: [{ RESULT: { CODE: "INFO-200", MESSAGE: "해당하는 데이터가 없습니다." } }] }] }); }
   catch (e) { threw2 = String((e as Error).message); }
   check("껍데기 안의 오류 코드도 잡는다", threw2.includes("INFO-200"), threw2);
+}
+
+console.log("\n[청약홈 분양정보 파서]");
+{
+  const TODAY = "2026-08-01"; // 오늘을 인자로 못박는다 — 시계에 의존하면 테스트가 내일 깨진다
+
+  check("날짜 정규화 20260810 → 2026-08-10", ahIso("20260810") === "2026-08-10");
+  check("점 찍힌 날짜도 읽는다", ahIso("2026.08.10") === "2026-08-10");
+  check("빈 값·형식 오류는 null", ahIso("") === null && ahIso("2026-8") === null);
+  check("세대수 1,859 → 1859", ahCount("1,859") === 1859);
+  check("세대수 0·빈칸은 null(0 으로 채우지 않는다)", ahCount("0") === null && ahCount(null) === null);
+  check("남은 일수 계산", ahDays(TODAY, "2026-08-03") === 2);
+  check("입주예정월 파싱", ahYm("203101") === "2031-01" && ahYm("20310") === null);
+
+  const apt = ahNormalize(JSON.parse(APPLYHOME_APT_JSON), "apt");
+  check("APT 3건 정규화", apt.length === 3, String(apt.length));
+  check("공고번호·이름을 읽는다", apt[0].pblancNo === "2026000401" && apt[0].name === "상동역 롯데캐슬 시그니처");
+  check("세대수 1859", apt[0].supply === 1859, String(apt[0].supply));
+  // 접수 마감 필드 이름이 오퍼레이션마다 다르다 — 별칭 목록의 첫 발견값을 쓴다
+  check("APT 접수 마감을 별칭으로 찾는다", apt[0].receiptTo === "2026-08-13", String(apt[0].receiptTo));
+  check("무명 단지는 접수 필드가 달라도 읽힌다", apt[1].receiptTo === "2026-08-07", String(apt[1].receiptTo));
+  // 청약 일정 3칸은 오너가 고른 고정 항목이다 — 하나로 뭉개면 카드가 못 쓴다
+  check("특별공급 접수일을 따로 읽는다", apt[0].specialFrom === "2026-08-10", String(apt[0].specialFrom));
+  check("1순위 접수일을 따로 읽는다", apt[0].rank1From === "2026-08-11", String(apt[0].rank1From));
+  check("당첨자 발표일을 읽는다", apt[0].announceDate === "2026-08-20", String(apt[0].announceDate));
+  // 입주예정월은 보도마다 달리 적히는 항목이라 1차 출처가 특히 중요하다
+  check("입주예정월 202601 형식을 읽는다", apt[0].moveInYm === "2031-01", String(apt[0].moveInYm));
+
+  const rem = ahNormalize(JSON.parse(APPLYHOME_REMNDR_JSON), "remndr");
+  check("무순위 접수 마감(SUBSCRPT_RCEPT_ENDDE)", rem[0].receiptTo === "2026-08-02", String(rem[0].receiptTo));
+  check("상한제·투기과열 플래그", rem[0].priceCap === true && rem[0].speculative === true);
+  check("시행사만 있으면 그것을 쓴다", rem[0].builder === "샘플주택", String(rem[0].builder));
+
+  // ⚠️ 필드 이름이 바뀌면 **빈 결과가 아니라 예외**여야 한다.
+  //    빈 배열로 넘기면 "오늘은 공고가 없었다"와 구분되지 않는다(2026-07-31 조용한 실패 교훈).
+  let ahThrew = "";
+  try { ahNormalize(JSON.parse(APPLYHOME_SHAPE_CHANGED_JSON), "apt"); }
+  catch (e) { ahThrew = String((e as Error).message); }
+  check("필드 이름이 바뀌면 던진다", ahThrew.includes("필드 이름"), ahThrew);
+
+  let ahThrew2 = "";
+  try { ahNormalize({} as never, "apt"); }
+  catch (e) { ahThrew2 = String((e as Error).message); }
+  check("data 배열이 없으면 던진다", ahThrew2.includes("data"), ahThrew2);
+
+  // 최근 것만 — 6월 공고(접수도 끝남)는 빠져야 한다
+  const fresh = ahRecent([...apt, ...rem], TODAY, 7);
+  check("지난달 공고는 걸러진다", !fresh.some((x) => x.name === "지난달공고단지"), fresh.map((x) => x.name).join(","));
+  check("최근·접수중만 3건", fresh.length === 3, String(fresh.length));
+
+  const ranked = ahRank(ahDedupe(fresh), TODAY);
+  check("무순위·서울·D-1 이 1위", ranked[0].name === "서울무순위샘플아파트", ranked[0].name);
+  check("1위 점수에 이유가 붙는다", ranked[0].reasons.includes("무순위") && ranked[0].reasons.includes("서울"),
+    ranked[0].reasons.join(","));
+  check("대단지·브랜드가 지방 소형보다 위", 
+    ranked.findIndex((x) => x.name === "상동역 롯데캐슬 시그니처") < ranked.findIndex((x) => x.name === "지방소형단지"));
+  check("브랜드를 알아본다(롯데캐슬)", ranked.find((x) => x.name.includes("롯데캐슬"))!.reasons.includes("롯데캐슬"));
+
+  /* ── 블록 합치기 (2026-08-02 첫 실제 실행에서 드러난 문제) ──
+     같은 단지가 블록마다 따로 공고돼 소재 보드 상위 5칸을 한 단지가 도배했다. */
+  check("블록 표기를 걷어낸다", ahBase("더샵 송도그란테르 G5-11블록") === "더샵 송도그란테르",
+    ahBase("더샵 송도그란테르 G5-11블록"));
+  check("괄호 안 블록도 걷어낸다", ahBase("금강펜테리움 6차(A59BL) (3차)") === "금강펜테리움 6차 (3차)",
+    ahBase("금강펜테리움 6차(A59BL) (3차)"));
+  // ⚠️ '2차'는 블록이 아니라 단지 이름의 일부다 — 지우면 1차와 합쳐져 오보가 된다
+  check("'N차'는 건드리지 않는다", ahBase("한화포레나 안산고잔2차") === "한화포레나 안산고잔2차",
+    ahBase("한화포레나 안산고잔2차"));
+
+  const blocks: typeof rem = [45, 36, 35].map((n, i) => ({
+    ...rem[0], pblancNo: `B${i}`, name: `더샵 송도그란테르 G5-${i + 1}블록`, supply: n,
+  }));
+  const merged = ahMerge(blocks);
+  check("블록 3건이 1건으로", merged.length === 1, String(merged.length));
+  check("세대수는 합계 116", merged[0].supply === 116, String(merged[0].supply));
+  check("합친 이름은 블록 없는 이름", merged[0].name === "더샵 송도그란테르", merged[0].name);
+  check("몇 개를 합쳤는지 남긴다", merged[0].blocks === 3, String(merged[0].blocks));
+  // 접수 마감일이 다르면(=다른 회차) 합치지 않는다
+  const diffDate = ahMerge([blocks[0], { ...blocks[1], receiptTo: "2026-08-09" }]);
+  check("접수일이 다르면 합치지 않는다", diffDate.length === 2, String(diffDate.length));
+  // 혼자면 이름을 그대로 둔다 — 블록만 지우면 사실 정보를 잃는다
+  const alone = ahMerge([blocks[0]]);
+  check("혼자면 원래 이름 유지", alone[0].name === "더샵 송도그란테르 G5-1블록", alone[0].name);
+
+  const dup = ahDedupe([...fresh, ...fresh]);
+  check("공고번호로 중복 제거", dup.length === fresh.length, String(dup.length));
+
+  // 이미 인코딩된 키를 다시 인코딩하면 인증이 깨진다(국토부에서 한 번 밟은 함정)
+  check("인코딩된 키는 그대로 둔다", ahEncKey("abc%2Bdef") === "abc%2Bdef");
+  check("디코딩된 키는 인코딩한다", ahEncKey("abc+def") === "abc%2Bdef");
+  check("URL 에 오퍼레이션 경로가 들어간다", ahUrl("remndr", "K", 1, 500).includes("getRemndrLttotPblancDetail"));
+}
+
+/* ────────────────────────────────────────────────
+   KOSIS 주민등록 인구 (2026-08-03)
+   ──────────────────────────────────────────────── */
+{
+  check("KOSIS 기간 202606 → 2026-06", kosisPeriod("202606") === "2026-06");
+  check("KOSIS 연간 2026 → 2026-12", kosisPeriod("2026") === "2026-12");
+  check("KOSIS 형식 오류는 null", kosisPeriod("26-6") === null && kosisPeriod("") === null);
+  check("쉼표 섞인 인구를 정수로", kosisCount("140,880") === 140880);
+  check("숫자가 아니면 null(0 으로 안 채운다)", kosisCount("-") === null && kosisCount(null) === null);
+
+  const pts = kosisNormalize(JSON.parse(KOSIS_POP_JSON));
+  // 전국('00')·시도(2자리)·읍면동(7자리)은 버리고 시군구(5자리)만 남아야 한다
+  check("시군구 4행만 남는다(전국·시도·동 제외)", pts.length === 4, String(pts.length));
+  check("전국이 섞여 들어오지 않는다", !pts.some((p) => p.name === "전국"));
+  check("읍면동이 섞여 들어오지 않는다", !pts.some((p) => p.name === "사직동"));
+  check("종로구 인구를 읽는다", pts.find((p) => p.period === "2026-06" && p.code === "11010")!.value === 140880);
+
+  const ser = kosisSeries(pts);
+  check("시군구 2곳의 시계열", ser.length === 2, String(ser.length));
+  check("시점이 오름차순", ser[0].points[0].period === "2026-05" && ser[0].points[1].period === "2026-06");
+
+  // ⚠️ 필드 이름이 바뀌면 **빈 결과가 아니라 예외**여야 한다(2026-07-31 조용한 실패 교훈)
+  let kThrew = "";
+  try { kosisNormalize(JSON.parse(KOSIS_POP_SHAPE_CHANGED_JSON)); }
+  catch (e) { kThrew = String((e as Error).message); }
+  check("KOSIS 필드 이름이 바뀌면 던진다", kThrew.includes("필드 이름"), kThrew);
+
+  let kThrew2 = "";
+  try { kosisNormalize([]); }
+  catch (e) { kThrew2 = String((e as Error).message); }
+  check("빈 응답이면 던진다(빈 결과 ≠ 실패)", kThrew2.includes("행이 없다"), kThrew2);
+
+  /* ── 소재 추출 규칙 ── 합성 시계열로 규칙만 검증한다(원자료가 아니라 로직 시험). */
+  const mk = (code: string, name: string, vals: number[]): KosisSeries => ({
+    code, name,
+    points: vals.map((v, i) => ({ period: `2025-${String(i + 1).padStart(2, "0")}`, value: v })),
+  });
+
+  // 문턱 돌파 — 99,800 → 100,300 은 10만 선을 넘었다
+  const ms = kosisMilestones([mk("31240", "가상시", [99_800, 100_300])]);
+  check("10만 돌파를 잡는다", ms.length === 1 && ms[0].title.includes("10만 돌파"), ms.map((x) => x.title).join(","));
+  const msDown = kosisMilestones([mk("37010", "가상군", [100_200, 99_500])]);
+  check("10만 붕괴를 잡는다", msDown[0].title.includes("10만 붕괴"), msDown[0]?.title);
+  check("선을 안 건드리면 신호 없음", kosisMilestones([mk("11010", "가상구", [98_000, 99_000])]).length === 0);
+
+  // 연속 증감 — 값이 같은 달은 연속을 끊어야 한다(부풀리면 오보)
+  const down8 = mk("11010", "감소구", [108, 107, 106, 105, 104, 103, 102, 101, 100].map((v) => v * 1000));
+  const st = kosisStreaks([down8], 6);
+  check("8개월 연속 감소를 센다", st.length === 1 && st[0].facts.months === 8, JSON.stringify(st[0]?.facts.months));
+  const flat = mk("11020", "보합구", [108, 107, 106, 106, 105, 104, 103, 102, 101].map((v) => v * 1000));
+  const stFlat = kosisStreaks([flat], 6);
+  check("값이 같은 달은 연속을 끊는다", stFlat.length === 0, JSON.stringify(stFlat.map((x) => x.facts.months)));
+  check("짧은 연속은 소재가 아니다", kosisStreaks([mk("11030", "짧은구", [105, 104, 103, 102].map((v) => v * 1000))], 6).length === 0);
+
+  // 1년 증감률 상·하위 — 13개 시점이 있어야 계산된다
+  const many = Array.from({ length: 25 }, (_, i) =>
+    mk(`3${String(1000 + i)}`, `가상${i}`, Array.from({ length: 13 }, (_, j) => 100_000 + i * 100 * j)),
+  );
+  const tm = kosisTopMovers(many, 10);
+  check("증가·감소 순위표 2건", tm.length === 2, String(tm.length));
+  check("증가 1위는 가장 많이 늘어난 곳", tm[0].facts.leader === "가상24", String(tm[0].facts.leader));
+  check("시점이 13개 미만이면 순위표를 안 만든다", kosisTopMovers([mk("11010", "짧은", [1, 2, 3])], 10).length === 0);
+
+  // 점수 — 서울 대도시 100만 돌파가 지방 소도시 5만 돌파보다 위여야 한다
+  const ranked = kosisRank([
+    ...kosisMilestones([mk("11010", "서울대구", [999_000, 1_000_500])]),
+    ...kosisMilestones([mk("37010", "지방군", [49_800, 50_200])]),
+  ], 45);
+  check("100만 돌파가 5만 돌파보다 위", ranked[0].name === "서울대구", ranked.map((x) => `${x.name}:${x.score}`).join(","));
+  check("점수에 이유가 붙는다", ranked[0].reasons.includes("서울") && ranked[0].reasons.some((r) => r.includes("100만")),
+    ranked[0].reasons.join(","));
+  check("문턱 아래는 걸러진다", kosisRank([...kosisMilestones([mk("37010", "지방군", [49_800, 50_200])])], 999).length === 0);
+
+  // 지도 조인 — 우리 지도에 없는 코드가 있으면 드러나야 한다
+  const jr = kosisJoin([mk("11010", "종로구", [1, 2]), mk("99999", "없는곳", [1, 2])], ["11010", "11020"]);
+  check("지도에 없는 시군구를 집어낸다", jr.missingInGeo.join(",") === "99999", jr.missingInGeo.join(","));
+  check("데이터에 없는 시군구도 집어낸다", jr.missingInData.join(",") === "11020", jr.missingInData.join(","));
+
+  // 인코딩된 키를 다시 인코딩하면 인증이 깨진다(국토부에서 밟은 함정)
+  check("KOSIS 인코딩된 키는 그대로", kosisEncKey("a%2Bb") === "a%2Bb");
+  const ku = kosisUrl("population", "KEY", { startPrdDe: "202501", endPrdDe: "202606" });
+  check("URL 에 표 ID 가 들어간다", ku.includes("tblId=DT_1B040A3"), ku);
+  check("URL 에 인증키가 들어간다", ku.includes("apiKey=KEY"), ku);
+  check("URL 에 기간이 들어간다", ku.includes("startPrdDe=202501") && ku.includes("endPrdDe=202606"));
+
+  /* ── 표 등록부 규칙 ──
+     규격을 확인 못 한 표가 실수로 정기 수집에 끼는 것이 이 배관에서 가장 위험한 사고다.
+     "확실" 이 아닌 표는 반드시 enabled=false 여야 한다. */
+  const notSure = Object.entries(KOSIS_TABLES).filter(([, t]) => t.confidence !== "확실" && t.enabled);
+  check("규격 미확인 표는 정기 수집에 끼지 않는다", notSure.length === 0, notSure.map(([k]) => k).join(","));
+  /* 켜진 표는 probe 로 실물 검증된 것만 — 2026-08-03 probe 결과 3개(인구·세대·이동) 통과.
+     "인구뿐" 이라고 못 박아 두면 검증이 진행될 때마다 이 줄을 고쳐야 하고,
+     고치다 보면 규칙이 아니라 통과시키기 위한 숫자가 된다. 원칙만 지킨다. */
+  const enabledNames = kosisEnabled();
+  check("켜진 표가 하나는 있다", enabledNames.length > 0, enabledNames.join(","));
+  const enabledUnsure = enabledNames.filter((k) => KOSIS_TABLES[k].confidence !== "확실");
+  check("켜진 표는 전부 '확실'", enabledUnsure.length === 0, enabledUnsure.join(","));
+  /* 파서가 ITM_ID 를 구분하지 않는다 — 항목을 여러 개 받으면 한 지역에 값이 겹쳐 시계열이 망가진다.
+     그래서 켜진 표의 itmId 는 반드시 단일 코드여야 한다. ALL·'+' 는 금지. */
+  const multiItem = enabledNames.filter((k) => {
+    const it = KOSIS_TABLES[k].itmId;
+    return it === "ALL" || it.includes("+");
+  });
+  check("켜진 표의 항목은 단일 코드(파서가 항목 축을 안 가른다)", multiItem.length === 0, multiItem.join(","));
+  /* vital 코드 체계(출생·사망)는 대조표 없이 켜지면 숫자가 엉뚱한 지역에 얹힌다.
+     26=울산/부산 처럼 시도부터 겹치는데 지도는 정상으로 그려져 눈으로 안 잡힌다. */
+  const vitalOn = kosisEnabled().filter((k) => KOSIS_TABLES[k].codeSystem === "vital");
+  const mapPath = resolve(process.env.INIT_CWD || process.cwd(), "data/geo/kosis-region-map.json");
+  const mapExists = existsSync(mapPath);
+  check("vital 체계 표를 켰으면 코드 대조표가 있다", !vitalOn.length || mapExists,
+    vitalOn.length ? `${vitalOn.join(",")} → 대조표 ${mapExists ? "있음" : "없음"}` : "(해당 없음)");
+  if (vitalOn.length && mapExists) {
+    const rm = JSON.parse(readFileSync(mapPath, "utf8")) as { maps?: Record<string, Record<string, string>> };
+    for (const k of vitalOn) {
+      const n = Object.keys(rm.maps?.[k] ?? {}).length;
+      check(`대조표에 ${k} 코드가 들어 있다`, n > 100, `${n}개`);
+    }
+  }
+  /* 4만 셀 한도 — 축이 큰 표는 나눠 부를 계산이 되어 있어야 한다. */
+  const bigNoChunk = kosisEnabled().filter((k) => (KOSIS_TABLES[k].cellsPerRegionPeriod ?? 1) > 1
+    && chunkSizeFor(k, 26) < 1);
+  check("축이 큰 표는 나눠 부를 크기가 계산된다", bigNoChunk.length === 0, bigNoChunk.join(","));
+
+  /* ── 지역 축을 잘못 읽는 사고를 시험으로 못 박는다 ──
+     사망 표는 C1 이 사망원인이고 C2 가 행정구역이다. C1 을 지역으로 읽으면
+     '11=호흡기 결핵' 이 지역 코드가 되는데 응답은 정상이라 아무도 모른다. */
+  const deathShaped = [{
+    C1: "11", C1_NM: "호흡기 결핵 (A15-A16)",
+    C2: "11010", C2_NM: "종로구",
+    C3: "0", C3_NM: "계",
+    PRD_DE: "2024", DT: "12", ITM_ID: "T1", ITM_NM: "사망자수",
+  }];
+  const byC2 = kosisNormalize(deathShaped, "C2");
+  check("지역 축을 C2 로 주면 종로구를 집는다",
+    byC2.length === 1 && byC2[0].code === "11010" && byC2[0].name === "종로구",
+    JSON.stringify(byC2[0] ?? null));
+  /* 기본값(C1)으로 읽으면 5자리가 아니라 걸러져 0행이 되고, 파서가 던진다.
+     조용히 빈 배열이 되는 것보다 던지는 편이 낫다 — 빈 배열은 "그 해 사망자가 없었다"와 구분이 안 된다. */
+  let threw = false;
+  try { kosisNormalize(deathShaped); } catch { threw = true; }
+  check("지역 축을 틀리면 조용히 비지 않고 던진다", threw, threw ? "던짐" : "조용히 빈 배열 — 위험");
+
+  /* 표가 지역 축을 적어 뒀는지 — vital 계열은 특히 축 순서가 다르다. */
+  const axisUnset = kosisEnabled().filter((k) => !KOSIS_TABLES[k].regionAxis);
+  check("켜진 표는 지역 축이 명시돼 있다(기본 C1 이라도)", true,
+    axisUnset.length ? `기본 C1 사용: ${axisUnset.join(",")}` : "전부 명시");
+
+  /* ── 연령 표 접기 ──
+     1세별 102줄을 65세 이상 합계로 접는다. 코드가 아니라 이름의 숫자를 읽는지 확인한다 —
+     연령 코드는 규칙이 없어(0701=10세, 440=100세 이상) 코드로 추리면 언젠가 어긋난다. */
+  check("연령 이름 파싱 — 65세", kosisAgeOf("65세") === 65, String(kosisAgeOf("65세")));
+  check("연령 이름 파싱 — 100세 이상", kosisAgeOf("100세 이상") === 100, String(kosisAgeOf("100세 이상")));
+  check("연령 이름 파싱 — '계' 는 연령이 아니다", kosisAgeOf("계") === null, String(kosisAgeOf("계")));
+  const ageRows = [
+    { C1: "11110", C1_NM: "종로구", C2: "000", C2_NM: "계", PRD_DE: "202606", DT: "1000" },
+    { C1: "11110", C1_NM: "종로구", C2: "3801", C2_NM: "64세", PRD_DE: "202606", DT: "50" },
+    { C1: "11110", C1_NM: "종로구", C2: "3802", C2_NM: "65세", PRD_DE: "202606", DT: "40" },
+    { C1: "11110", C1_NM: "종로구", C2: "4305", C2_NM: "99세", PRD_DE: "202606", DT: "3" },
+    { C1: "11110", C1_NM: "종로구", C2: "440", C2_NM: "100세 이상", PRD_DE: "202606", DT: "2" },
+    { C1: "11", C1_NM: "서울특별시", C2: "3802", C2_NM: "65세", PRD_DE: "202606", DT: "9999" },
+  ];
+  const sp = kosisSenior(ageRows);
+  check("65세 이상만 합친다(64세·계 제외)", sp.length === 1 && sp[0].value === 45,
+    JSON.stringify(sp[0] ?? null));
+  check("시도(2자리)는 시군구 합계에 안 낀다", sp.length === 1, `${sp.length}행`);
+  /* 이름 규칙이 바뀌면 조용히 0이 되지 않고 던져야 한다 — 0은 '고령인구 없는 시군구' 가 되어 오보다. */
+  let ageThrew = false;
+  try {
+    kosisSenior([{ C1: "11110", C1_NM: "종로구", C2: "000", C2_NM: "계", PRD_DE: "202606", DT: "1" }]);
+  } catch { ageThrew = true; }
+  check("65세 이상이 한 줄도 없으면 던진다", ageThrew, ageThrew ? "던짐" : "조용히 0 — 위험");
+
+  /* ── 인증키가 로그·산출물에 실리면 안 된다 ──
+     2026-08-03 사고: 실패한 URL 이 오류 메시지에 그대로 실렸고, probe 가 그것을
+     결과 파일에 적어 저장소에 커밋했다. 키가 통째로 남았다. */
+  check("URL 오류 메시지에서 apiKey 가 지워진다",
+    redactUrl("https://x/y?a=1&apiKey=SECRETVALUE&b=2") === "https://x/y?a=1&apiKey=***&b=2",
+    redactUrl("https://x/y?a=1&apiKey=SECRETVALUE&b=2"));
+  check("serviceKey·authKey 도 지워진다",
+    redactUrl("https://x?serviceKey=AAA&authKey=BBB") === "https://x?serviceKey=***&authKey=***",
+    redactUrl("https://x?serviceKey=AAA&authKey=BBB"));
+  /* 커밋된 산출물에 키가 남아 있지 않은지 — 사고가 재발하면 여기서 걸린다. */
+  for (const f of ["data/kosis-probe.md", "data/kosis-probe-raw.json"]) {
+    const fp = resolve(process.env.INIT_CWD || process.cwd(), f);
+    if (!existsSync(fp)) continue;
+    const body = readFileSync(fp, "utf8");
+    const leaked = /(?:apiKey|serviceKey|authKey)=(?!\*\*\*)[A-Za-z0-9%+/=_-]{8,}/i.test(body);
+    check(`${f} 에 인증키가 남아 있지 않다`, !leaked, leaked ? "키로 보이는 문자열 발견" : "깨끗함");
+  }
+
+  const noNote = Object.entries(KOSIS_TABLES).filter(([, t]) => !t.note || t.note.length < 20);
+  check("표마다 무엇이 미확인인지 적혀 있다", noNote.length === 0, noNote.map(([k]) => k).join(","));
+  // probe 는 최근 1개 시점만 받는다 — 전 기간을 받으면 수십 MB 라 검증 목적에 안 맞는다
+  const pu = kosisUrl("deaths", "K", { newEstPrdCnt: 1 });
+  check("probe URL 은 newEstPrdCnt 로 최근 1개만", pu.includes("newEstPrdCnt=1") && !pu.includes("startPrdDe"), pu);
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);

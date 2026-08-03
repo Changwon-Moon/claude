@@ -98,3 +98,49 @@ export async function fetchAptTradesMonth(
   }
   return all;
 }
+
+/* ───────────────────────────── 아파트 전월세 실거래 ─────────────────────────────
+ * 매매와 동일 방식(LAWD_CD·DEAL_YMD·페이지네이션). 전월세 전용 엔드포인트만 다르다.
+ * 활용신청은 '아파트 전월세 자료'가 매매와 별도 승인 대상이다(403이면 승인/전파 확인).
+ */
+const RENT_ENDPOINTS = [
+  `${HOST}/RTMSDataSvcAptRent/getRTMSDataSvcAptRent`,
+];
+
+/** 구·월 한 달치 아파트 전월세 전 건 수집(전 페이지). */
+export async function fetchAptRentsMonth(
+  lawdCd: string,
+  dealYmd: string,
+  key: string,
+  opts: { rows?: number; maxPages?: number } = {},
+): Promise<import("../parse/molit.js").AptRent[]> {
+  const { parseAptRents } = await import("../parse/molit.js");
+  const rows = opts.rows ?? 1000;
+  const maxPages = opts.maxPages ?? 40;
+
+  let endpoint = "";
+  let firstXml = "";
+  const errs: string[] = [];
+  for (const ep of RENT_ENDPOINTS) {
+    try { firstXml = await fetchPage(ep, key, lawdCd, dealYmd, 1, rows); endpoint = ep; break; }
+    catch (e) { errs.push(`${ep.split("/").pop()}: ${e instanceof Error ? e.message : e}`); }
+  }
+  if (!endpoint) {
+    throw new Error(
+      `전월세 엔드포인트 실패 — ${errs.join(" | ")}\n` +
+        `↳ 403이면: (a) 키 전파 지연(최대 1~2시간) 또는 (b) '아파트 전월세 실거래가 자료' 활용신청 미승인. ` +
+        `공공데이터포털 마이페이지에서 승인 상태 확인(매매와 별도).`,
+    );
+  }
+
+  const all = [...parseAptRents(firstXml)];
+  const total = parseTotalCount(firstXml);
+  for (let page = 2; page <= maxPages; page++) {
+    if (all.length >= total) break;
+    const xml = await fetchPage(endpoint, key, lawdCd, dealYmd, page, rows);
+    const batch = parseAptRents(xml);
+    all.push(...batch);
+    if (batch.length < rows) break;
+  }
+  return all;
+}

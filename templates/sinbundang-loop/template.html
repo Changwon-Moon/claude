@@ -26,7 +26,7 @@
       .slp-stnrow { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 2px; flex-wrap: nowrap; }
       .slp-stn { font-size: 24px; font-weight: 800; color: #d4003b; letter-spacing: -0.01em; line-height: 1.05; white-space: nowrap; }
       /* 행정구역(구) 칩 */
-      .slp-gu { font-size: 14px; font-weight: 800; color: #fff; padding: 2px 7px; border-radius: 6px; letter-spacing: -0.02em; line-height: 1.25; white-space: nowrap; flex: 0 0 auto; }
+      .slp-gu { font-size: 14px; font-weight: 800; color: #141821; padding: 2px 7px; border-radius: 6px; letter-spacing: -0.02em; line-height: 1.25; white-space: nowrap; flex: 0 0 auto; }
       /* 최고가 강조 칩 */
       .slp-top { font-size: 14px; font-weight: 800; color: #fff; background: #d4003b; padding: 2px 7px; border-radius: 6px; line-height: 1.25; white-space: nowrap; flex: 0 0 auto; }
       /* 단지명 — 크게, 필요시 두 줄 */
@@ -55,7 +55,7 @@
         <div class="slp-card {{this.align}} {{#if this.rep}}rb{{else}}no{{/if}}" style="{{{this.style}}}">
           {{#if this.rep}}
           <div class="slp-txt">
-            <span class="slp-stnrow"><span class="slp-stn">{{this.name}}</span><span class="slp-gu" style="background:{{this.guc}}">{{this.gu}}</span>{{#if this.top}}<span class="slp-top">최고가</span>{{/if}}</span>
+            <span class="slp-stnrow"><span class="slp-stn">{{this.name}}</span><span class="slp-gu" style="background:{{this.guc}}">{{this.gu}}</span></span>
             <span class="slp-danji">{{this.danji}}</span>
           </div>
           <div class="slp-priceB{{#if this.top}} top{{/if}}">{{this.pr}}<span class="u">억</span></div>

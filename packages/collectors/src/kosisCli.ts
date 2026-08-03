@@ -1,0 +1,300 @@
+/**
+ * KOSIS 주민등록 인구 수집 CLI — Actions 에서 매월 한 번 돈다.
+ *   KOSIS_API_KEY=xxx tsx src/kosisCli.ts [--today 2026-08-03] [--months 25] [--out dir]
+ *
+ * 산출: data/datasets/population-latest.json      (최신 시계열 + 자동 추출된 소재 신호)
+ *       data/datasets/population/{YYYY-MM}.json   (그달 스냅숏 — 되짚어 볼 수 있게)
+ *
+ * ── 키가 없으면 **실패한다**(조용히 건너뛰지 않는다)
+ * 2026-07-31 에 이 회사는 "키가 없으면 스크립트가 조용히 넘어가 몇 주간 아무도 몰랐던" 사고를
+ * 겪었다. 정기 수집기가 조용히 아무것도 안 하면 그건 없는 것과 같다 → exit 1 로 워크플로를 빨갛게.
+ */
+import { writeFileSync, mkdirSync, readFileSync, existsSync } from "node:fs";
+import { resolve, join } from "node:path";
+import {
+  fetchTable, fetchTableChunked, TABLES, enabledTables, chunkSizeFor, type TableKey,
+} from "./sources/kosis.js";
+import {
+  normalize, seniorPoints, toSeries, milestones, streaks, topMovers, rank, joinReport,
+  type Series, type Signal, type Point,
+} from "./parse/kosis.js";
+
+const CWD = process.env.INIT_CWD || process.cwd();
+
+function arg(name: string): string | undefined {
+  const i = process.argv.indexOf(`--${name}`);
+  return i >= 0 ? process.argv[i + 1] : undefined;
+}
+
+/* --dry — 네트워크 없이 배관 전체를 돌려 본다.
+ * 작업 세션은 외부망이 막혀 있어 실제 호출을 못 한다. 그렇다고 돌려보지도 않고 워크플로에
+ * 올리면 첫 실행이 곧 첫 시험이 된다. 정규화→시계열→소재 추출→점수→지도 조인까지 여기서 다 본다.
+ * **키가 맞는지·필드 이름이 맞는지는 확인되지 않는다** — 그건 실제 실행뿐이다. */
+const DRY = process.argv.includes("--dry");
+
+/** 지도의 시군구 코드 목록 — 조인이 되는지 매번 확인한다. */
+function geoCodes(): { codes: string[]; names: Map<string, string> } {
+  const p = resolve(CWD, "data/geo/sgg-codes.json");
+  if (!existsSync(p)) return { codes: [], names: new Map() };
+  const d = JSON.parse(readFileSync(p, "utf8")) as { sgg: { code: string; name: string; sido: string }[] };
+  return {
+    codes: d.sgg.map((x) => x.code),
+    names: new Map(d.sgg.map((x) => [x.code, `${x.sido} ${x.name}`])),
+  };
+}
+
+/** 최근 N개월의 YYYYMM 범위 */
+function periodRange(today: string, months: number): { start: string; end: string } {
+  const [y, m] = today.split("-").map(Number);
+  /* 주민등록 인구는 **전월분**이 다음 달 초에 공표된다 — 이번 달을 끝으로 잡으면 빈다. */
+  const end = new Date(Date.UTC(y, m - 2, 1));
+  const start = new Date(Date.UTC(y, m - 1 - months, 1));
+  const ym = (d: Date) => `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
+  return { start: ym(start), end: ym(end) };
+}
+
+/**
+ * --dry 전용 합성 데이터.
+ * ⚠️ **가짜 숫자다.** 실제 인구가 아니다. 그래서 산출 경로도 `_dry/` 로 갈라 두고
+ *    meta.dry=true 를 박는다 — 진짜 데이터셋과 절대 섞이지 않게.
+ *    목적은 오직 하나: 규칙·조인·등록 배관이 실제로 도는지 보는 것.
+ */
+function synthesize(codes: string[], names: Map<string, string>, months: number): unknown[] {
+  const rows: Record<string, string>[] = [];
+  codes.forEach((code, i) => {
+    const base = 30_000 + ((i * 7919) % 970_000);
+    /* 코드로 결정되는 값만 쓴다 — 난수를 쓰면 돌릴 때마다 결과가 달라져 확인이 안 된다. */
+    const drift = ((i % 7) - 3) * (base > 500_000 ? 900 : 220);
+    for (let k = months; k >= 0; k--) {
+      const d = new Date(Date.UTC(2026, 6 - k, 1));
+      rows.push({
+        C1: code,
+        C1_NM: (names.get(code) ?? code).split(" ").pop()!,
+        PRD_DE: `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, "0")}`,
+        DT: String(base + drift * (months - k)),
+        ITM_ID: "T20",
+        ITM_NM: "총인구수",
+        UNIT_NM: "명",
+      });
+    }
+  });
+  return rows;
+}
+
+
+/* ── 코드 대조표 읽기 ──
+   없으면 조용히 넘어가지 않는다. vital 체계 표를 켜 놓고 대조표가 없으면
+   숫자가 엉뚱한 지역에 얹히는데, 지도는 정상으로 보인다. */
+type RegionMap = { maps?: Record<string, Record<string, string>>; unmatched?: Record<string, unknown[]> };
+
+function loadRegionMap(cwd: string): RegionMap {
+  const p = resolve(cwd, "data/geo/kosis-region-map.json");
+  if (!existsSync(p)) return {};
+  try {
+    return JSON.parse(readFileSync(p, "utf8")) as RegionMap;
+  } catch {
+    return {};
+  }
+}
+
+/** 나눠 부를 때 쓸 지역 코드 목록 — 그 표의 코드 체계로 준다. */
+function regionCodesFor(t: TableKey, rm: RegionMap, geoCodes: string[]): string[] {
+  const spec = TABLES[t];
+  if (spec.codeSystem === "vital") {
+    /* 대조표의 열쇠가 곧 그 표의 코드다. 5자리만 고른다(시도는 합계라 빼야 중복이 없다). */
+    const keys = Object.keys(rm.maps?.[t] ?? {}).filter((c) => c.length === 5);
+    if (keys.length) return keys;
+  }
+  return geoCodes.filter((c) => c.length === 5);
+}
+
+/** vital 코드를 통계청 코드로 옮긴다. 대조표에 없는 코드는 **버린다** — 대부분 폐지된 행정구역이다. */
+function remapRegions(points: Point[], map: Record<string, string>): Point[] {
+  if (!Object.keys(map).length) return points;
+  const out: Point[] = [];
+  for (const pt of points) {
+    const to = map[pt.code];
+    if (to) out.push({ ...pt, code: to });
+  }
+  return out;
+}
+
+async function main() {
+  const key = process.env.KOSIS_API_KEY;
+  if (!key && !DRY) {
+    console.error("❌ KOSIS_API_KEY 가 없습니다.");
+    console.error("   kosis.kr → 오픈API → 활용신청(즉시 발급) 후");
+    console.error("   GitHub Secrets 에 KOSIS_API_KEY 로 등록하세요(이름이 한 글자만 달라도 안 읽힙니다).");
+    process.exit(1);
+  }
+
+  /* 오늘 날짜는 **인자로 받는다.** 워크플로가 KST 기준 날짜를 넘겨 주므로 UTC 러너에서
+     하루가 밀리지 않는다(렌더 결정성과 같은 이유). */
+  const today = arg("today") ?? new Date().toISOString().slice(0, 10);
+  const months = Number(arg("months") ?? 25); // 1년 증감률을 보려면 최소 13, 여유 있게 25
+  const minScore = Number(arg("min") ?? 45);
+  const outDir = resolve(CWD, arg("out") ?? "data/datasets");
+  const { start, end } = periodRange(today, months);
+  const geo = geoCodes();
+
+  /* ── 켜져 있는 표만 받는다 ──
+     `enabled: false` 인 표는 아직 규격이 확인되지 않은 것이다(sources/kosis.ts 의 note 참고).
+     `kosisProbeCli.ts` 로 검증하고 오너가 확인한 뒤에 켠다.
+     **확인 안 된 표에서 뽑은 숫자가 카드에 올라가는 것이 이 회사에서 가장 위험한 일이다.** */
+  const tables = DRY ? (["population"] as TableKey[]) : enabledTables();
+  const waiting = (Object.keys(TABLES) as TableKey[]).filter((k) => !TABLES[k].enabled);
+
+  /* ── 행정구역 코드 대조표 ──
+     KOSIS 안에서도 표마다 코드 체계가 다르다. 인구동향 계열(출생·사망)은
+     26=울산인데 주민등록 계열은 26=부산이다. 숫자로 조인하면 조용히 뒤바뀐다.
+     대조표는 scripts/build-kosis-region-map.mjs 가 probe 원자료로 만든다. */
+  const regionMap = loadRegionMap(CWD);
+
+  const metrics: Record<string, Series[]> = {};
+  /* ── 한 표가 넘어져도 나머지는 간다 ──
+     표 하나에서 던지면 수집 전체가 멈춘다. 새로 켠 표(연령·출생)가 넘어졌다고
+     잘 돌던 인구·세대수까지 못 받는 것은 손해가 크다.
+     다만 **조용히 넘어가지는 않는다** — 실패를 모아 두었다가 보고서에 적고,
+     산출물을 다 쓴 뒤에 빨간불로 끝낸다. 데이터는 남기고 실패는 보이게 한다.
+     인구는 예외다. 모든 신호의 기준선이라 없으면 아래에서 어차피 멈춘다. */
+  const failures: { table: string; why: string }[] = [];
+  for (const t of tables) {
+    const spec = TABLES[t];
+    try {
+      const periods = spec.prdSe === "Y" ? Math.ceil((spec.maxMonths ?? months) / 12) + 1 : (spec.maxMonths ?? months) + 1;
+
+      let payload: unknown;
+      if (DRY) {
+        payload = synthesize(geo.codes, geo.names, months);
+      } else if ((spec.cellsPerRegionPeriod ?? 1) > 1) {
+        /* 축이 큰 표(연령 1세별·사망원인)는 4만 셀 한도에 걸린다 — 지역을 나눠 부른다.
+           나눌 코드는 그 표의 코드 체계로 줘야 한다. */
+        const codes = regionCodesFor(t, regionMap, geo.codes);
+        const size = chunkSizeFor(t, periods);
+        console.log(`· ${spec.metric}(${spec.tblId}) — 지역 ${codes.length}곳을 ${size}개씩 ${Math.ceil(codes.length / size)}번에 나눠 받습니다(4만 셀 한도)`);
+        payload = await fetchTableChunked(
+          t, key!,
+          { startPrdDe: start, endPrdDe: end, prdSe: spec.prdSe },
+          codes, periods,
+          (d, n) => { if (d === n || d % 5 === 0) console.log(`   ${d}/${n}`); },
+        );
+      } else {
+        payload = await fetchTable(t, key!, { startPrdDe: start, endPrdDe: end, extraObjL: spec.extraObjL });
+      }
+
+      /* 1세별처럼 한 지역에 여러 줄이 오는 표는 그대로 시계열로 못 쓴다 — 먼저 접는다. */
+      let points = spec.derive === "senior65"
+        ? seniorPoints(payload, spec.regionAxis ?? "C1")
+        : normalize(payload, spec.regionAxis ?? "C1");
+      if (spec.codeSystem === "vital") {
+        const before = points.length;
+        points = remapRegions(points, regionMap.maps?.[t] ?? {});
+        console.log(`· ${spec.metric} 코드 변환(${spec.codeSystem} → 통계청): ${points.length}/${before}행`);
+        if (!points.length && before) {
+          throw new Error(`${t}: 코드 대조표가 한 행도 못 옮겼다 — data/geo/kosis-region-map.json 을 다시 만들어야 한다.`);
+        }
+      }
+      metrics[spec.metric] = toSeries(points);
+      console.log(`· ${spec.metric}(${spec.tblId}) — 시군구 ${metrics[spec.metric].length}곳 · 시점 ${metrics[spec.metric][0]?.points.length ?? 0}개`);
+    } catch (e) {
+      const why = e instanceof Error ? e.message : String(e);
+      failures.push({ table: `${t}(${spec.tblId})`, why });
+      console.log(`::error::${spec.metric}(${spec.tblId}) 수집 실패 — ${why}`);
+      console.log(`  → 나머지 표는 계속 받습니다. 이 표는 이번 회차 산출물에서 빠집니다.`);
+    }
+  }
+  if (waiting.length) {
+    console.log(`· 검증 대기 중인 표 ${waiting.length}개: ${waiting.map((k) => `${k}(${TABLES[k].tblId})`).join(", ")}`);
+    console.log("  → pnpm --filter @wirit/collectors probe-kosis 로 규격을 확인한 뒤 enabled 를 켭니다.");
+  }
+
+  /* 인구는 모든 신호의 기준선이다 — 없으면 소재를 만들 수 없다. */
+  const series: Series[] = metrics["인구"] ?? [];
+  if (!series.length) throw new Error("인구 시계열이 비었다 — 표 ID·기간·인증키를 확인해야 한다.");
+  console.log(`· 기준 인구 시계열 ${series.length}곳 (${start}~${end})`);
+
+  /* ── 지도 조인 검사 ──
+     행정구역이 바뀌면 여기서 먼저 드러난다. 조용히 빈 칸으로 그리면 그게 곧 오보다. */
+  const jr = joinReport(series, geo.codes);
+  if (geo.codes.length) {
+    console.log(`· 지도 조인 — 맞음 ${jr.matched.length} · 지도에 없음 ${jr.missingInGeo.length} · 데이터에 없음 ${jr.missingInData.length}`);
+    if (jr.missingInGeo.length) {
+      console.log(`  ⚠️ 지도에 없는 시군구: ${jr.missingInGeo.slice(0, 12).join(", ")}${jr.missingInGeo.length > 12 ? " …" : ""}`);
+      console.log("     → data/geo/korea-sgg-2026.geojson 을 다시 만들어야 할 수 있습니다(scripts/build-sgg-geo.mjs).");
+    }
+  }
+
+  /* ── 소재 자동 추출 — 규칙은 전부 parse/kosis.ts 안에 있다. LLM 이 고르지 않는다. */
+  const signals: Signal[] = rank(
+    [...milestones(series), ...streaks(series), ...topMovers(series)],
+    minScore,
+  );
+
+  const latestPeriod = series[0]?.points.at(-1)?.period ?? end;
+  const snapDir = join(outDir, DRY ? "_dry" : "population");
+  mkdirSync(snapDir, { recursive: true });
+
+  const doc = {
+    _: [
+      DRY
+        ? "⚠️ --dry 합성 데이터입니다. 실제 인구가 아닙니다. 카드에 절대 쓰지 마세요."
+        : "KOSIS 에서 코드가 그대로 받아 적은 것 — 손으로 넣은 값 0개.",
+      "signals 의 점수·이유는 packages/collectors/src/parse/kosis.ts 의 규칙이 계산한 것이다.",
+      "code = 통계청 행정구역코드(지도 data/geo/korea-sgg-2026.geojson 의 code 와 같은 열쇠).",
+    ],
+    meta: {
+      name: "시군구 주민등록 인구",
+      /* ⚠️ 아직 false 다. KOSIS 표 ID·필드 이름을 실제 응답으로 대조하기 전까지는
+         '1차 출처에서 받았다'고 말할 수 없다. 첫 실행 뒤 오너가 눈으로 대조하면 승격한다. */
+      verified: false,
+      dry: DRY,
+      source: `KOSIS 국가통계포털 · ${tables.map((t) => `${TABLES[t].orgId}/${TABLES[t].tblId}(${TABLES[t].label})`).join(" · ")}`,
+      sourceUrl: `https://kosis.kr/statHtml/statHtml.do?orgId=${TABLES.population.orgId}&tblId=${TABLES.population.tblId}`,
+      collectedFor: today,
+      latestPeriod,
+      periodRange: { start, end },
+      unit: { value: "명" },
+      /* 어떤 표를 실제로 받았고, 무엇이 아직 검증 대기인지 데이터셋에 남긴다 —
+         카드를 만들 때 "왜 이 지표는 없나"를 다시 파지 않도록. */
+      tables: tables.map((t) => ({ key: t, tblId: TABLES[t].tblId, metric: TABLES[t].metric, confidence: TABLES[t].confidence })),
+      tablesWaiting: waiting.map((t) => ({ key: t, tblId: TABLES[t].tblId, metric: TABLES[t].metric, note: TABLES[t].note })),
+      geoJoin: {
+        matched: jr.matched.length,
+        missingInGeo: jr.missingInGeo,
+        missingInData: jr.missingInData,
+      },
+    },
+    signals,
+    series,
+    /* 인구 말고 다른 지표(세대수·이동·연령·출생·사망)는 검증되어 켜지는 대로 여기 쌓인다. */
+    metrics,
+  };
+
+  if (!DRY) writeFileSync(join(outDir, "population-latest.json"), JSON.stringify(doc, null, 2) + "\n", "utf8");
+  writeFileSync(join(snapDir, `${DRY ? "dry" : latestPeriod}.json`), JSON.stringify(doc, null, 2) + "\n", "utf8");
+
+  if (DRY) console.log("\n⚠️  --dry 모드 — 합성 숫자입니다. 실제 인구가 아닙니다(산출도 _dry/ 로 갈라 뒀습니다).");
+  console.log(`\n✅ ${latestPeriod} 기준 · 문턱 ${minScore}점 넘은 소재 ${signals.length}건`);
+  for (const s of signals.slice(0, 10)) {
+    console.log(`   ${String(s.score).padStart(3)}점  [${s.kind}] ${s.title}  — ${s.reasons.join("·")}`);
+  }
+  if (!signals.length) console.log("   (이달에 새로 뜬 소재 없음 — 이것도 사실이다. 빈 결과와 실패는 다르다)");
+
+  /* 산출물을 다 쓴 뒤에 실패를 알린다 — 데이터는 남기고 실패는 보이게 한다. */
+  reportFailures(failures);
+  if (failures.length) process.exit(1);
+}
+
+/* 실패한 표가 있으면 **산출물을 다 쓴 뒤에** 빨간불로 끝낸다.
+   조용히 성공으로 끝내면 "이번 달은 이게 다" 로 읽히고, 빠진 지표를 아무도 못 챙긴다. */
+function reportFailures(failures: { table: string; why: string }[]): void {
+  if (!failures.length) return;
+  console.log(`\n⚠️ 표 ${failures.length}개가 이번 회차에서 빠졌습니다:`);
+  for (const f of failures) console.log(`   · ${f.table} — ${f.why}`);
+  console.log("   나머지 표의 산출물은 정상적으로 기록됐습니다.");
+}
+
+main().catch((e) => {
+  console.error(`❌ 수집 실패: ${e instanceof Error ? e.message : e}`);
+  process.exit(1);
+});

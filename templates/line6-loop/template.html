@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* line6-loop@1 — 4호선 U자(종점 캡) + 환승뱃지 + 편집형(역명/단지 + 측면 시세). */
+      .slp-head { padding: 0 2px; margin-top: 34px; }
+      .slp .wirit-title { font-size: 72px; line-height: 1.04; margin: 0; white-space: nowrap; }
+      .slp .wirit-title .ln { color: #CD7C2F; }
+      .slp-stage { position: relative; width: 100%; height: 962px; margin: 30px 0 0; }
+      .slp-svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+
+      .slp-card { position: absolute; z-index: 2; display: flex; align-items: center; gap: 14px; }
+      .slp-card.r { flex-direction: row; justify-content: space-between; }
+      .slp-card.l { flex-direction: row-reverse; justify-content: space-between; }
+      .slp-card.rb { border-radius: 13px; padding: 3px 7px; }
+      .slp-card.no { justify-content: flex-end; }
+
+      .slp-txt { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+      .slp-card.r .slp-txt { align-items: flex-start; text-align: left; border-left: 4px solid #CD7C2F; padding-left: 13px; }
+      .slp-card.l .slp-txt { align-items: flex-end; text-align: right; border-right: 4px solid #CD7C2F; padding-right: 13px; }
+      .slp-stnrow { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 2px; flex-wrap: nowrap; }
+      .slp-stn { font-size: 24px; font-weight: 800; color: #A85A16; letter-spacing: -0.01em; line-height: 1.05; white-space: nowrap; }
+      .slp-gu { font-size: 14px; font-weight: 800; color: #141821; padding: 2px 7px; border-radius: 6px; letter-spacing: -0.02em; line-height: 1.25; white-space: nowrap; flex: 0 0 auto; }
+      .slp-top { font-size: 14px; font-weight: 800; color: #fff; background: #A85A16; padding: 2px 7px; border-radius: 6px; line-height: 1.25; white-space: nowrap; flex: 0 0 auto; }
+      /* 단지명 — 크게, 필요시 두 줄. 줄바꿈은 단어 단위(keep-all + 빌더 ZWSP). 2줄 높이 확보로 큰 가격 겹침 방지. */
+      .slp-danji { font-size: 29px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.045em; line-height: 1.08;
+        word-break: keep-all; overflow-wrap: normal;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; max-width: 200px; }
+      .slp-danjibox { display: flex; flex-direction: column; min-height: 69px; }
+      .slp-card.l .slp-danjibox { align-items: flex-end; }
+      .slp-card.r .slp-danjibox { align-items: flex-start; }
+      .slp-sub { font-size: 12px; font-weight: 700; color: var(--wirit-gray); opacity: 0.68; letter-spacing: -0.02em; line-height: 1.1; margin-top: 2px; white-space: nowrap; }
+      .slp-priceB { font-family: var(--font-num); font-size: 40px; font-weight: 900; color: var(--wirit-ink); line-height: 1; white-space: nowrap; flex: 0 0 auto; font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+      .slp-priceB.top { color: #A85A16; }
+      .slp-card.r .slp-priceB { margin-right: 6px; }
+      .slp-card.l .slp-priceB { margin-left: 6px; }
+      .slp-priceB .u { font-size: 24px; font-weight: 800; color: #7a8494; margin-left: 2px; }
+
+      .slp-name { font-size: 26px; font-weight: 700; color: var(--wirit-gray); letter-spacing: -0.01em; padding: 0 15px; }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card slp">
+      <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
+      <div class="slp-head"><h1 class="wirit-title">{{{title}}}</h1></div>
+
+      <div class="slp-stage">
+        {{{svg}}}
+        {{#each cards}}
+        <div class="slp-card {{this.align}} {{#if this.rep}}rb{{else}}no{{/if}}" style="{{{this.style}}}">
+          {{#if this.rep}}
+          <div class="slp-txt">
+            <span class="slp-stnrow"><span class="slp-stn">{{this.name}}</span><span class="slp-gu" style="background:{{this.guc}}">{{this.gu}}</span></span>
+            <span class="slp-danjibox"><span class="slp-danji">{{this.danji}}</span>{{#if this.sub}}<span class="slp-sub">{{this.sub}}</span>{{/if}}</span>
+          </div>
+          <div class="slp-priceB{{#if this.top}} top{{/if}}">{{this.pr}}<span class="u">억</span></div>
+          {{else}}
+          <span class="slp-stnrow"><span class="slp-name">{{this.name}}</span><span class="slp-gu" style="background:{{this.guc}}">{{this.gu}}</span></span>
+          {{/if}}
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="wirit-footer">
+        <span>{{#if source.name}}출처 · {{source.name}}{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <script>
+      window.__wiritFit = function () {
+        var el = document.querySelector(".slp .wirit-title");
+        if (!el) return;
+        var avail = el.parentElement.clientWidth;
+        if (!avail) return;
+        var hi = 120, lo = 34, best = lo;
+        el.style.fontSize = hi + "px";
+        if (el.scrollWidth <= avail) { best = hi; }
+        else { for (var i=0;i<24;i++){ var mid=(lo+hi)/2; el.style.fontSize=mid+"px";
+          if (el.scrollWidth<=avail){best=mid;lo=mid;} else {hi=mid;} } }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(window.__wiritFit);
+    </script>
+  </body>
+</html>

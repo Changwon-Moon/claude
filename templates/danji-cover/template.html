@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* danji-cover@1 — 청약·분양 카드 **표준 판형** (오너 확정 2026-08-03)
+       *
+       * 이 템플릿이 앞으로 청약·분양 카드의 기본이다. 시안 A·B·C 중 C(표지형)가 채택돼
+       * 마감 지시 12건을 거쳐 확정됐다. 판형을 바꾸려면 오너 승인이 필요하다
+       * (docs/guides/청약분양-카드-기준.md).
+       *
+       * ── 구조: 표지 한 덩어리 + 종이 두 단
+       *   [표지 690px]  조감도 → 아래로 잉크가 번지며 그대로 잉크 밴드가 된다.
+       *                 부제는 사진 위, **제목·단지명·주소는 잉크 밴드 안**에 앉는다.
+       *   [종이]        위 단 = 타입·분양가 / 가운데 선 / 아래 단 = 제원·일정 6칸
+       *
+       * ── 오너 지시 (2026-08-03)
+       *  · 사진 위 조감도 출처 표기 삭제 → 푸터 출처 줄로 내렸다(표기를 없애지는 않는다.
+       *    조감도는 건설사 저작물이라 카드 어딘가에는 출처가 남아야 한다).
+       *  · 사진을 위로 — 건물 위 하늘을 이전의 2/3만 남긴다.
+       *  · 제목을 아래로 — 이전 '단지명 자리'로 내린다.
+       *  · 사진 하단 잉크 영역을 아래로 늘려 단지명·주소까지 그 안에 넣는다.
+       *  · 본문은 위/아래 두 단, 사이에 선 하나.
+       *  · 타입 글씨를 분양가와 **같은 크기**로.
+       *  · 단위(세대·개동·층)는 **크기는 그대로, 색만 회색**.
+       *
+       * ── 사진 위치는 **빌더가 계산한다** (손으로 고르지 않는다)
+       * 표지 사진 칸은 446px. 그림은 카드 폭(1080)에 맞춰 비율대로 그려지고, 남는 세로의
+       * 42.5% 를 위에서 걷어낸다 → `hero.shift`. 한강 카드(1200×660 → 렌더 594 → 남는 148)는
+       * 63px 이고, 그때 보이는 하늘이 오너가 승인한 양이다.
+       * **사진이 바뀌면 값도 바뀐다.** 그래서 이 파일에는 숫자를 박지 않는다
+       * (build-danji.mjs `heroShift`, docs/guides/청약분양-카드-기준.md).
+       */
+
+      .dcv {
+        --font-num: var(--font-pretendard);
+        --t-n: 46px;   /* 수치 기준 크기 — 실제 값은 __wiritFit 이 공통으로 정한다 */
+        --t-l: 26px;
+        --ink: #141821;
+      }
+
+      .dcv .lab {
+        display: block; font-family: var(--font-sans); font-size: var(--t-l);
+        font-weight: 700; letter-spacing: -0.005em; line-height: 1; color: var(--wirit-gray);
+        margin-bottom: 12px;
+      }
+
+      /* ── 표지 = 사진 + 잉크 밴드 (경계 없이 하나) ── */
+      .dcv-cover {
+        position: relative; flex: none; height: 690px; margin: -72px -72px 0;
+        overflow: hidden; background: var(--ink);
+      }
+      .dcv-photo { position: absolute; left: 0; right: 0; top: 0; height: 446px; overflow: hidden; }
+      /* 폭만 맞추고 높이는 비율대로 — 그래야 끌어올린 양이 원본 픽셀과 1:1로 대응한다.
+         끌어올림(top)은 **CSS 에 박지 않는다.** 사진마다 값이 달라야 하므로 빌더가 원본 크기에서
+         계산해 `hero.shift` 로 실어 보낸다(build-danji.mjs `heroShift`). */
+      .dcv-photo img { position: absolute; left: 0; top: 0; width: 100%; height: auto; display: block; }
+      .dcv-fb { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--ink); }
+      .dcv-fb .w { font-family: var(--font-title); font-size: 96px; font-weight: 900; color: rgba(255,255,255,0.9); line-height: 1; }
+      /* 사진이 잉크로 **번지며** 끝난다. 선으로 자르면 다시 '사진 상자'가 된다. */
+      .dcv-fade {
+        position: absolute; left: 0; right: 0; top: 266px; height: 180px;
+        background: linear-gradient(180deg, rgba(20,24,33,0) 0%, rgba(20,24,33,0.55) 46%, rgba(20,24,33,0.9) 80%, var(--ink) 100%);
+      }
+      /* 부제가 밝은 하늘에 묻히지 않게 위쪽에만 얕은 그늘 */
+      .dcv-topshade {
+        position: absolute; left: 0; right: 0; top: 0; height: 190px;
+        background: linear-gradient(180deg, rgba(8,11,18,0.46) 0%, rgba(8,11,18,0.1) 60%, rgba(8,11,18,0) 100%);
+      }
+      /* ⚠️ 조감도가 없어 대체 사진을 깐 경우의 경고. 조감도 출처 표기를 지우면서(오너 지시)
+         이 표시까지 함께 사라졌었다 — 그러면 **아무 사진이나 그 단지의 조감도로 읽힌다.**
+         출처를 지우는 것과 거짓을 허용하는 것은 다르다. 발행 전에 반드시 걷어내야 할 상태다. */
+      .dcv-ph {
+        position: absolute; right: 72px; top: 118px; padding: 8px 16px; border-radius: 4px;
+        background: rgba(255, 196, 0, 0.92); color: #1a1400;
+        font-size: 22px; font-weight: 800; letter-spacing: -0.01em;
+      }
+
+      .dcv .wirit-topcap {
+        position: absolute; left: 72px; right: 72px; top: 0;
+        margin-top: 0; padding-top: 46px; color: rgba(255,255,255,0.82);
+        text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+      }
+
+      /* 제목 — 이전 '단지명 자리'로 내려왔다. 잉크 밴드 안이라 그림자가 필요 없다. */
+      .dcv-head { position: absolute; left: 72px; right: 72px; bottom: 34px; }
+      .dcv-title { font-size: 92px; }
+      .dcv-title .ln {
+        font-family: var(--font-title); font-size: 1em; font-weight: 900; line-height: 1.08;
+        letter-spacing: -0.035em; color: #fff; white-space: nowrap; width: max-content; max-width: 100%;
+      }
+      .dcv-title .hi { color: #7aa6ff; }
+      .dcv-title .up { color: #ff8a8e; }
+
+      /* 단지명 · 주소 · 로고를 **한 행**에 두고 아랫단을 맞춘다(오너 지시 2026-08-03).
+         주소가 단지명 아래 두 번째 줄일 때는 로고만 오른쪽에 홀로 떠 있었다 —
+         오른쪽에 글자 하나를 붙여 주면 로고가 행의 일부가 된다.
+         `align-items: flex-end` + 세 요소 모두 `line-height: 1` → 글자 밑선과 마크 밑변이 한 줄. */
+      .dcv-nm {
+        margin-top: 22px; display: flex; flex-wrap: nowrap;
+        align-items: flex-end; justify-content: space-between; gap: 28px;
+      }
+      .dcv-nm .nm {
+        display: block; font-family: var(--font-sans); font-size: 52px; font-weight: 800;
+        letter-spacing: -0.03em; color: #fff; line-height: 1; white-space: nowrap;
+      }
+      .dcv-nm .rt { display: flex; align-items: flex-end; gap: 22px; flex: none; }
+      .dcv-nm .loc {
+        display: block; font-family: var(--font-sans); font-size: 28px; font-weight: 700;
+        letter-spacing: -0.02em; color: rgba(255,255,255,0.72); line-height: 1; white-space: nowrap;
+        padding-bottom: 2px; /* 글자 밑선을 마크 밑변에 맞춘다 */
+      }
+      /* 짙은 단색 브랜드 마크는 잉크 위에서 사라진다 — 흰색으로 뒤집는다(형태는 그대로) */
+      .dcv-nm .lg {
+        flex: none; height: 62px; width: auto; max-width: 220px; object-fit: contain;
+        filter: brightness(0) invert(1); opacity: 0.95;
+      }
+
+      /* ── 종이 위 단: 타입 · 분양가 ──
+       * 타입과 금액을 **같은 크기**로 둔다(오너 지시). 위계는 크기가 아니라 색이 만든다 —
+       * 타입은 회색, 금액은 잉크, 주력 면적대만 코발트. */
+      .dcv-price { margin-top: 30px; }
+      .dcv-price .top { display: flex; align-items: baseline; justify-content: space-between; }
+      .dcv-grid { display: grid; column-gap: 22px; row-gap: 20px; }
+      /* 타입과 금액은 칸 **가운데** 로 맞춘다(오너 지시 2026-08-03). 왼쪽 맞춤이면 '84A'와
+         '7.7억'의 글자 수가 달라 둘의 무게중심이 어긋나 보인다. */
+      .dcv-item { min-width: 0; text-align: center; }
+      /* 평형이 하나뿐이면 칸이 카드 폭 전체다 — 가운데로 밀면 왼쪽 머리글과 따로 논다.
+         이때만 왼쪽 맞춤으로 되돌린다. */
+      .dcv-grid .dcv-item:only-child { text-align: left; }
+      .dcv-item .a {
+        display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 800;
+        letter-spacing: -0.03em; color: var(--wirit-gray); line-height: 1; margin-bottom: 10px; white-space: nowrap;
+      }
+      .dcv-item .p {
+        display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 900;
+        letter-spacing: -0.03em; color: var(--wirit-ink); line-height: 1; white-space: nowrap;
+      }
+      /* 코발트는 **금액에만**. 타입은 주력이든 아니든 전부 회색이다(오너 지시 2026-08-03) —
+         타입은 금액을 읽기 위한 열쇠지 그 자체가 강조 대상이 아니다. */
+      .dcv-item.main .p { color: var(--wirit-cobalt); }
+
+      /* ── 가운데 선: 위 단(가격)과 아래 단(제원·일정)을 가른다 ── */
+      .dcv-rule { height: 1px; background: var(--wirit-ink-12); margin: 24px 0; }
+
+      /* ── 종이 아래 단: 제원 3 + 일정 3 = 두 줄 괘선 그리드 ──
+       * 오너: "카드 형태로 표현한다든지, 위아래 줄을 구분할 수 있는 선을 추가한다든지."
+       * 옅은 회색 채움 상자는 쓰지 않는다(AI티 금지, CEO 07-18). 대신 **괘선만**으로 짠다 —
+       * 가로선이 제원/일정을 가르고, 세로선이 세 칸을 가른다. 채움이 없으니 카드가 무거워지지
+       * 않고, 선이 있으니 숫자가 허공에 뜨지 않는다. 인쇄 매체의 제원표가 쓰는 방식이다.
+       * 선의 굵기는 하나(1px)이고 농도만 둘 — 가로 12%, 세로 9%. 세로선이 더 옅은 이유는
+       * 그것이 '구분'이지 '단락'이 아니기 때문이다.
+       *
+       * 라벨(세대수·동수·최고 층수)은 오너 지시로 지웠다. 값이 단위를 데리고 있어
+       * '2,682세대'만으로 읽힌다. 층수만 예외로 '최고'가 앞에 붙는다 — 그게 없으면
+       * 38층이 최고층인지 평균층인지 카드가 말하지 못한다.
+       * 단위는 **크기 그대로, 색만 회색**(오너 지시). '2,682세대'는 숫자와 단위가 한 낱말이다. */
+      /* 칸 안의 내용은 **가운데**로 앉힌다(오너 지시 2026-08-03).
+         다만 라벨(특별공급·1순위…)과 내역(APT …)은 값과 **왼쪽 선을 맞춘다** — 각자 가운데로
+         맞추면 짧은 라벨이 값 한가운데로 밀려 두 줄이 서로 어긋나 보인다.
+         그래서 라벨+값을 `.box` 한 덩어리로 묶어 **덩어리를 가운데**로 두고,
+         덩어리 **안**은 왼쪽 맞춤으로 둔다. 두 줄의 왼쪽 선이 하나가 된다. */
+      .dcv-facts .cell { text-align: center; }
+      .dcv-facts .box { display: block; text-align: left; }
+      /* 제원 3칸은 균등이 아니다(오너 지시 2026-08-03): 세대수 칸을 넓히고 동수 칸을 줄인다 —
+         세대수만 아래에 내역 한 줄이 더 붙어 실제로 필요한 폭이 다르다.
+         ⚠️ **col3 은 1fr 그대로 둔다.** 그래야 두 번째 세로선이 936-312 = 624px 에 그대로 남고,
+         일정 줄(1:1:1:1.5)의 마지막 세로선과 계속 겹친다. 넓힌 만큼은 col1↔col2 사이에서만
+         주고받는다 — 여백(column-gap·padding-left 28)은 손대지 않으므로 리듬도 그대로다. */
+      /* 기본은 **균등 3등분**. 세대수 칸에 내역 한 줄(.brk)이 붙는 카드만 그 칸을 넓힌다 —
+         내역이 없는 카드까지 1.15fr 로 두면 첫 값만 리듬이 어긋나 보인다(오너 지적).
+         어느 쪽이든 두 번째 세로선은 936-312 = 624px 라 일정 줄과 계속 겹친다. */
+      .dcv-facts .frow { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+      .dcv-facts .frow:has(.brk) { grid-template-columns: 1.15fr 0.85fr 1fr; }
+      /* 일정은 4칸(오너 지시). 마지막 칸만 1.5배로 넓힌다 — '2031년 1월'이 가장 긴 값이라
+         균등 4열이면 이 칸이 공통 수치 크기를 통째로 끌어내린다.
+         덤: 1:1:1:1.5 의 마지막 경계는 936×3/4.5 = 624px 로, 위 줄(3등분)의 두 번째
+         세로선과 **정확히 겹친다.** 두 줄이 선 하나를 공유하니 그리드가 우연처럼 보이지 않는다. */
+      .dcv-facts .frow.when { grid-template-columns: 1fr 1fr 1fr 1.5fr; }
+      /* 일정이 3칸인 카드(청약 결과 등)도 있다. 4열 고정이면 빈 열이 남고 세로선이 어긋난다.
+         칸 수를 세어 열 수를 맞춘다 — 데이터가 판을 정하지, 판이 데이터를 정하지 않는다.
+         3칸일 때는 균등 3열이 정답이다: 위 줄(제원)도 3등분이라 **두 세로선이 모두 겹치고**,
+         칸 폭 284px 는 가장 긴 '2029년 2월'을 52px 로 담기에 넉넉하다. */
+      .dcv-facts .frow.when:has(.cell:nth-child(3):last-child) { grid-template-columns: 1fr 1fr 1fr; }
+      /* ⚠️ 여백은 **좌우 대칭**이어야 한다. 왼쪽에만 28px 를 주면 `text-align:center` 가
+         '패딩 안쪽의 가운데'를 잡아 글자가 칸 중심에서 14px 오른쪽으로 밀린다
+         (오너 지적: "12개동이 가운데 정렬 안 됐어"). 세로선은 border 라 패딩과 무관하다. */
+      /* 칸 안의 덩어리는 **아래로 붙인다.** 세대수 칸만 위에 회색 한 줄이 더 붙어서,
+         위로 붙이면 그 칸의 값만 34px 내려앉아 세 값의 밑선이 어긋난다(오너 지적).
+         칸 자체는 늘어난 채로 둬야 세로 괘선이 같은 높이로 선다 — 그래서 칸을 세로 플렉스로
+         만들고 **안의 덩어리만** 아래로 민다. */
+      .dcv-facts .cell {
+        min-width: 0; padding: 0 22px;
+        display: flex; flex-direction: column; justify-content: flex-start; align-items: center;
+      }
+      /* 세 값의 **밑선을 맞춘다.** 한 칸에만 위(.abv) 또는 아래(.brk) 회색 줄이 붙으면 그 칸의
+         큰 값만 위아래로 밀려 나머지와 어긋난다(오너 지적).
+         덩어리를 통째로 위/아래로 미는 것으로는 안 된다 — 줄이 **위**에 붙는 카드와 **아래**에
+         붙는 카드에서 방향이 반대라, 한쪽을 맞추면 다른 쪽이 깨진다.
+         그래서 **없는 칸에 같은 높이의 빈 자리를 만든다.** 그러면 값의 자리가 저절로 같아진다.
+         (.abv 24 + 아래여백 10 = 34 · .brk 위여백 12 + 24 = 36) */
+      .dcv-facts .frow:has(.abv) .box:not(:has(.abv))::before { content: ""; display: block; height: 34px; }
+      .dcv-facts .frow:has(.brk) .box:not(:has(.brk))::after { content: ""; display: block; height: 36px; }
+      .dcv-facts .cell + .cell { border-left: 1px solid rgba(20, 24, 33, 0.09); }
+      .dcv-facts .fhr { height: 1px; background: var(--wirit-ink-12); margin: 22px 0; }
+      .dcv-facts .v {
+        display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 900;
+        line-height: 1; letter-spacing: -0.03em; color: var(--wirit-ink); white-space: nowrap;
+      }
+      .dcv-facts .v b,
+      .dcv-facts .v i {
+        font-family: var(--font-num); font-style: normal; font-weight: 900;
+        font-size: 1em; color: var(--wirit-gray);
+      }
+      .dcv-facts .v b { margin-right: 10px; }
+      .dcv-facts .v i { margin-left: 4px; }
+      .dcv-facts .v.tbd { color: var(--wirit-gray); }
+      .dcv-facts .v.tbd i, .dcv-facts .v.tbd b { color: var(--wirit-gray); }
+      /* 값 **위**에 붙는 회색 한 줄('총 1,640세대 중'). 아래에 붙는 내역(.brk)과 같은 급이다. */
+      .dcv-facts .abv {
+        display: block; margin-bottom: 10px; font-family: var(--font-sans); font-size: 24px;
+        font-weight: 700; letter-spacing: -0.02em; color: var(--wirit-gray); line-height: 1; white-space: nowrap;
+      }
+      .dcv-facts .v .num.hi { color: var(--wirit-cobalt); }
+      .dcv-facts .brk {
+        display: block; margin-top: 12px; font-family: var(--font-sans); font-size: 24px;
+        font-weight: 700; letter-spacing: -0.02em; color: var(--wirit-gray); line-height: 1; white-space: nowrap;
+      }
+
+      /* 최하단 문구는 **푸터에 붙는다**(오너 지시). margin-top:auto 로 남는 세로를 위로 몰아
+         문구가 푸터 바로 위에 앉게 한다. 아래 여백 22px 은 다른 덩어리 간격과 같은 급이다. */
+      .dcv-note {
+        margin: 24px 0 22px; margin-top: auto; font-family: var(--font-sans); font-size: 34px; font-weight: 700;
+        letter-spacing: -0.02em; color: var(--wirit-ink); line-height: 1.25; word-break: keep-all;
+      }
+      .dcv-note .tag { color: var(--wirit-cobalt); }
+      /* 아이콘은 글자를 돕는 것이지 글자와 겨루는 것이 아니다 — 본문보다 작게, 옅게.
+         (오너: "이모지는 튀지 않는 것으로") */
+      .dcv-note .em {
+        font-style: normal; font-size: 0.78em; opacity: 0.72;
+        margin-right: 10px; vertical-align: 0.04em;
+      }
+
+      /* 출처 줄이 길어졌다(조감도 출처가 붙었다) — 워터마크와 붙지 않게 최소 간격을 준다.
+         ⚠️ `margin-top: 0` 이 중요하다. 공용 푸터는 `margin-top: auto` 로 바닥에 붙는데,
+         `.dcv-note` 도 auto 를 갖게 되면 **남는 세로를 둘이 나눠 갖는다** — 그래서 문구가
+         푸터에 붙지 않고 중간에 떴다(오너 지적). 미는 쪽은 하나여야 한다. */
+      .dcv .wirit-footer { gap: 28px; margin-top: 0; }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card dcv">
+      <div class="dcv-cover">
+        <div class="dcv-photo">
+          {{#if hero.photo}}
+            <img src="../_shared/photos/{{hero.photo}}" alt=""{{#if hero.shift}} style="top:-{{hero.shift}}px"{{/if}} />
+          {{else}}
+            <div class="dcv-fb"{{#if hero.fallbackColor}} style="background:{{hero.fallbackColor}}"{{/if}}>
+              <span class="w">{{#if hero.fallbackWord}}{{hero.fallbackWord}}{{else}}{{danji.name}}{{/if}}</span>
+            </div>
+          {{/if}}
+          <div class="dcv-topshade"></div>
+        </div>
+        <div class="dcv-fade"></div>
+        {{#if hero.placeholder}}<div class="dcv-ph">조감도 미확보 · 대체 이미지</div>{{/if}}
+
+        <div class="wirit-topcap"><span class="tx">{{topcap}}</span></div>
+
+        <div class="dcv-head">
+          <div class="dcv-title">
+            {{#each titleLines}}<div class="ln">{{{this}}}</div>{{/each}}
+          </div>
+          <div class="dcv-nm">
+            <span class="nm">{{danji.name}}</span>
+            <div class="rt">
+              {{#if address}}<span class="loc">{{address}}</span>{{/if}}
+              {{#if danji.logo}}<img class="lg" src="../_shared/logos/{{danji.logo}}" alt="" />{{/if}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dcv-price">
+        <div class="top">
+          <span class="lab">{{priceTable.head.[0]}}</span>
+        </div>
+        <div class="dcv-grid" style="grid-template-columns: repeat({{priceTable.cols}}, 1fr)">
+          {{#each priceTable.rows}}
+          <div class="dcv-item{{#if this.main}} main{{/if}}">
+            <span class="a">{{this.area}}</span>
+            <span class="p">{{this.price}}</span>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+
+      <div class="dcv-rule"></div>
+
+      <div class="dcv-facts">
+        <div class="frow">
+          {{#each spec}}
+          <div class="cell"><div class="box">
+            {{#if this.above}}<span class="abv">{{this.above}}</span>{{/if}}
+            <span class="v{{#if this.tbd}} tbd{{/if}}">{{#if this.pre}}<b>{{this.pre}}</b>{{/if}}<span class="num{{#if this.hi}} hi{{/if}}">{{this.value}}</span>{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
+            {{#if this.breakdown}}<span class="brk">{{this.breakdown}}</span>{{/if}}
+          </div></div>
+          {{/each}}
+        </div>
+        <div class="fhr"></div>
+        <div class="frow when">
+          {{#each schedule}}
+          <div class="cell"><div class="box">
+            <span class="lab">{{this.label}}</span>
+            <span class="v{{#if this.tbd}} tbd{{/if}}"><span class="num{{#if this.hi}} hi{{/if}}">{{this.date}}</span></span>
+          </div></div>
+          {{/each}}
+        </div>
+      </div>
+
+      {{! 특이사항이 없어도 이 칸은 남긴다 — 바닥까지 미는 auto 여백을 이 요소가 갖고 있다 }}
+      <div class="dcv-note">{{{notice}}}</div>
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.photo}} · {{source.photo}}{{/if}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <script>
+      /* 폭 맞춤 둘.
+         ① 제목 — 한 줄이 카드 폭을 꽉 채우는 크기(줄이기만 하지 않고 키운다).
+         ② 수치 — **타입·분양가·제원·일정을 한 자로 재서 같은 크기**로 만든다.
+            타입(.a)까지 이 그룹에 넣은 것이 @1 과의 차이다(오너 지시: 타입도 같은 크기). */
+      window.__wiritFit = function () {
+        var t = document.querySelector(".dcv-title");
+        if (t) {
+          var lines = t.querySelectorAll(".ln");
+          var availW = t.clientWidth;
+          if (lines.length) {
+            var lo = 40, hi = 128, best = lo;
+            for (var i = 0; i < 26; i++) {
+              var mid = (lo + hi) / 2;
+              t.style.fontSize = mid + "px";
+              var fits = true;
+              for (var j = 0; j < lines.length; j++) if (lines[j].scrollWidth > availW + 0.5) { fits = false; break; }
+              if (fits) { best = mid; lo = mid; } else { hi = mid; }
+            }
+            t.style.fontSize = best + "px";
+          }
+        }
+        /* 단지명은 주소·로고와 **한 행**을 나눠 쓴다 — 셋의 합이 카드 폭을 넘지 않는 최대 크기를
+           찾는다. 고정 크기로 두면 이름이 긴 단지에서 로고가 밖으로 밀려난다. */
+        var nmEl = document.querySelector(".dcv-nm .nm");
+        var nmRow = document.querySelector(".dcv-nm");
+        if (nmEl && nmRow) {
+          var lo2 = 30, hi2 = 60, best2 = lo2;
+          for (var q = 0; q < 22; q++) {
+            var m2 = (lo2 + hi2) / 2;
+            nmEl.style.fontSize = m2 + "px";
+            if (nmRow.scrollWidth <= nmRow.clientWidth + 0.5) { best2 = m2; lo2 = m2; } else { hi2 = m2; }
+          }
+          nmEl.style.fontSize = best2 + "px";
+        }
+
+        /* ⚠️ 재는 자는 **칸(.cell)** 이지 부모가 아니다. 제원·일정의 값은 이제
+           shrink-to-fit 인 `.box` 안에 들어 있어서, 부모 폭으로 재면 언제나 "딱 맞음"이 나와
+           넘침 보호가 통째로 꺼진다. 칸의 **내용 폭**(패딩 제외)으로 잰다. */
+        function boxOf(el) {
+          var c = el.closest(".cell") || el.parentNode;
+          var cs = getComputedStyle(c);
+          return c.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
+        }
+        /* ── 시각적 왼쪽 맞춤 (오너 지적 2026-08-03) ──
+         * 레이아웃 상자가 같은 x 에서 시작해도 **글자는 안 그렇다.**
+         * 원인은 본문에 걸린 `font-feature-settings: "tnum"`(고정폭 숫자)이다. 숫자는 모두
+         * 같은 자리를 쓰는데 글자 폭은 제각각이라, 좁은 '1' 은 그 자리 **가운데로 밀려**
+         * 잉크가 7px 안쪽에서 시작한다. '8' 은 2px, 한글은 0px 다 — **글자마다 다르다.**
+         * 그래서 상수로 박을 수 없고, 매번 잰다:
+         *   비례폭(canvas measureText) + 실제 자리폭(DOM) 으로 가운데 밀린 양을 구하고,
+         *   거기에 글자 자체의 좌측 여백(actualBoundingBoxLeft)을 더한다.
+         * 캔버스는 폰트를 제대로 물고 있다(한글 advance 가 DOM 과 0.01px 차이). */
+        var __cv = document.createElement("canvas");
+        var __cx = __cv.getContext("2d");
+        var __probe = document.createElement("span");
+        __probe.style.cssText = "position:absolute;visibility:hidden;white-space:pre;left:-9999px";
+        document.body.appendChild(__probe);
+        function inkLeft(el) {
+          var t = (el.textContent || "").trim();
+          if (!t) return 0;
+          var ch = t.charAt(0);
+          var cs = getComputedStyle(el);
+          __cx.font = cs.fontStyle + " " + cs.fontWeight + " " + cs.fontSize + " " + cs.fontFamily;
+          var m = __cx.measureText(ch);
+          /* ⚠️ `style.font` 단축 속성은 **font-feature-settings 를 초기화한다** — 그러면 tnum 이
+             풀려 자리폭이 비례폭과 같아지고, 보정값이 0에 가깝게 나온다(첫 구현에서 그랬다).
+             속성을 하나씩 옮긴다. */
+          __probe.style.fontFamily = cs.fontFamily;
+          __probe.style.fontSize = cs.fontSize;
+          __probe.style.fontWeight = cs.fontWeight;
+          __probe.style.fontStyle = cs.fontStyle;
+          __probe.style.fontFeatureSettings = cs.fontFeatureSettings;
+          __probe.style.fontVariationSettings = cs.fontVariationSettings;
+          __probe.style.letterSpacing = "normal";
+          __probe.textContent = ch;
+          var domAdv = __probe.getBoundingClientRect().width;      /* tnum 이 걸린 실제 자리폭 */
+          var centered = Math.max(0, (domAdv - m.width) / 2);      /* 그 자리에서 가운데로 밀린 양 */
+          return centered - (m.actualBoundingBoxLeft || 0);
+        }
+        Array.prototype.forEach.call(document.querySelectorAll(".dcv-facts .box"), function (box) {
+          var v = box.querySelector(".v");
+          if (!v) return;
+          var vOff = inkLeft(v.querySelector(".num") || v);
+          Array.prototype.forEach.call(box.querySelectorAll(".abv,.lab,.brk"), function (el) {
+            var dx = vOff - inkLeft(el);
+            el.style.marginLeft = Math.abs(dx) < 20 ? dx.toFixed(2) + "px" : "0px";
+          });
+        });
+        __probe.remove();
+
+        var nums = [];
+        Array.prototype.forEach.call(
+          document.querySelectorAll(".dcv-item .a,.dcv-item .p,.dcv-facts .v"),
+          function (el) { nums.push({ el: el, box: boxOf(el) }); },
+        );
+        if (nums.length) {
+          /* 상한 52 — 이 이상 키우면 아래 단이 푸터를 밀어낸다(칸 폭이 아니라 카드 높이가 한계다) */
+          var loS = 28, hiS = 52, bestS = loS;
+          for (var k = 0; k < 24; k++) {
+            var m = (loS + hiS) / 2;
+            for (var a = 0; a < nums.length; a++) nums[a].el.style.fontSize = m + "px";
+            var ok = true;
+            for (var b = 0; b < nums.length; b++) if (nums[b].el.scrollWidth > nums[b].box) { ok = false; break; }
+            if (ok) { bestS = m; loS = m; } else { hiS = m; }
+          }
+          for (var c = 0; c < nums.length; c++) nums[c].el.style.fontSize = bestS + "px";
+        }
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(window.__wiritFit);
+    </script>
+  </body>
+</html>

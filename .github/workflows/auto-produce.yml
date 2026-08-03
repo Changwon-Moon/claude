@@ -112,9 +112,8 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          node scripts/notify-telegram.mjs \
-            "🔄 데이터가 갱신돼 카드를 다시 만들었습니다: ${{ steps.pick.outputs.labels }}
-관제탑 결재 대기에서 확인해주세요." || echo "알림 시크릿이 없어 건너뜁니다"
+          MSG=$(printf '🔄 데이터가 갱신돼 카드를 다시 만들었습니다: %s\n관제탑 결재 대기에서 확인해주세요.' "${{ steps.pick.outputs.labels }}")
+          node scripts/notify-telegram.mjs "$MSG" || echo "알림 시크릿이 없어 건너뜁니다"
 
       - name: 실패한 세트가 있으면 빨간불
         if: steps.pick.outputs.labels != '' && env.PRODUCE_FAIL == '1'

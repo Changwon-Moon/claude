@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "gu": "성남시중원구",
+    "lawdCd": "41133",
+    "dealYmd": "202605",
+    "source": "국토교통부 아파트 전월세 실거래가 (getRTMSDataSvcAptRent)",
+    "sourceUrl": "https://www.data.go.kr",
+    "collectedAt": "2026-08-03",
+    "verified": true,
+    "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존)."
+  },
+  "agg": {
+    "total": 215,
+    "jeonse": 131,
+    "wolse": 84,
+    "wolseRatio": 39.1,
+    "newTotal": 121,
+    "newJeonse": 75,
+    "newWolse": 46,
+    "newWolseRatio": 38,
+    "renewTotal": 85,
+    "renewJeonse": 50,
+    "renewWolse": 35,
+    "typedTotal": 206
+  }
+}

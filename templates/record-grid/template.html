@@ -131,6 +131,14 @@
         color: var(--wirit-gray); letter-spacing: -0.045em; line-height: 1.35;
       }
       .rg-note b { color: var(--wirit-ink); font-weight: 900; }
+
+      /* ── spark(추이 그래프)가 없는 record-grid ──
+         그래프가 있을 때는 `.rg-chart`(margin-top 32)가 머리와 목록 사이 숨을 대신 만든다.
+         그래프가 없으면 제목이 뱃지에 붙고(badgeclear) 목록에 붙는다(titlegap).
+         → 그래프가 대던 위 여백을 머리·목록에 돌려준다. `:has()` 로 자기 격리하므로
+         그래프가 있는 카드(kospi-record 등)에는 한 픽셀도 영향이 없다(§5 픽셀 불변). */
+      .rg:not(:has(.rg-chart)) .rg-head { margin-top: 44px; }
+      .rg:not(:has(.rg-chart)) .rg-list { margin-top: 40px; }
     </style>
   </head>
   <body>

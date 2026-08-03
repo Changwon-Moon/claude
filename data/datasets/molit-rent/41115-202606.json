@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "gu": "수원시팔달구",
+    "lawdCd": "41115",
+    "dealYmd": "202606",
+    "source": "국토교통부 아파트 전월세 실거래가 (getRTMSDataSvcAptRent)",
+    "sourceUrl": "https://www.data.go.kr",
+    "collectedAt": "2026-08-03",
+    "verified": true,
+    "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존)."
+  },
+  "agg": {
+    "total": 336,
+    "jeonse": 181,
+    "wolse": 155,
+    "wolseRatio": 46.1,
+    "newTotal": 228,
+    "newJeonse": 116,
+    "newWolse": 112,
+    "newWolseRatio": 49.1,
+    "renewTotal": 104,
+    "renewJeonse": 63,
+    "renewWolse": 41,
+    "typedTotal": 332
+  }
+}

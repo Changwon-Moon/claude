@@ -213,6 +213,21 @@ const remote = gitOk ? (() => { try { return sh("git", ["remote", "get-url", "or
 check("원격 저장소 연결", !!remote, remote.replace(/https?:\/\/[^@]*@/, ""), "git remote add origin …");
 if (!process.env.CLOUDFLARE_API_TOKEN) soft("CLOUDFLARE_API_TOKEN 없음", "관제탑 배포는 GitHub Actions 가 합니다 — 로컬엔 불필요");
 
+/* ═══════════════ D. 워크플로 무결성 ═══════════════ */
+/* 깨진 워크플로는 GitHub 에 등록조차 안 돼 실행 목록에 안 뜬다 — 빨간불도 없다.
+   2026-08-03 에 kosis-probe.yml 이 이 결함으로 한 번도 안 돌았다. 그래서 상시 검사한다. */
+console.log("\n[D. 자동화 워크플로]");
+let wfOk = true, wfOut = "";
+try {
+  wfOut = sh("node", ["scripts/lint-workflows.mjs"]).trim();
+} catch (e) {
+  wfOk = false;
+  wfOut = (e.stdout || e.message || "").toString().trim();
+}
+check("워크플로 YAML", wfOk, wfOk ? wfOut.replace(/^✅\s*/, "") : "깨진 워크플로가 있습니다",
+  "node scripts/lint-workflows.mjs 로 어느 줄인지 확인하세요 — 깨진 워크플로는 조용히 안 돕니다");
+if (!wfOk) console.log(wfOut.split("\n").map((l) => "     " + l).join("\n"));
+
 /* ═══════════════ 판정 ═══════════════ */
 console.log("\n" + "─".repeat(58));
 if (!fail) {

@@ -52,6 +52,8 @@ node scripts/doctor.mjs            # 3~5분. 실제로 카드를 만들어 봅�
 
 1. **`STATUS.md`** — 어디까지 왔고 다음 세션이 뭘 알아야 하는지
 2. **`docs/CARD_CHECKLIST.md`** — 카드를 만들거나 고치는 작업이면 **필수**.
+   - 🏢 청약·분양 소재라면 **`docs/guides/청약분양-카드-기준.md`** 도 필수(판형 `danji-cover@1`).
+     원커맨드 `node scripts/danji-card.mjs "<단지명>" --photo <조감도>` 하나로 끝납니다.
    §2(재발 금지 항목)를 훑고 시작합니다
 3. **`company/CEO.md`** — 오너 판단 원칙 100여 개(전략·콘텐츠·디자인·프로세스)
 4. **`docs/DATA_REFRESH.md`** — 정기물이 **사람 없이 굴러가는 배관**과 그 업무 기준.
@@ -182,6 +184,7 @@ node scripts/build-tower-site.mjs && node scripts/smoke-tower.mjs
 | `kr-market.yml` | 코스피·코스닥 | — |
 | `dart-salary.yml` | DART 평균연봉 | `DART_API_KEY` |
 | `research-digest.yml` | 소재 자동 수집 | — |
+| `applyhome-collect.yml` | **청약홈 신규 분양·무순위(줍줍) 매일 08:00 KST** | `DATA_GO_KR_API_KEY` |
 | `produce-card.yml` | 카드 재생산(관제탑 버튼) | — |
 | `publish-archive.yml` | 발행 완성본 보관 | — |
 | `tower-deploy.yml` | 관제탑 배포 | `CLOUDFLARE_*` |

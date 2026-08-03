@@ -1,0 +1,130 @@
+name: 시군구 경계 갱신 (GeoJSON)
+
+# ── 무엇을 하나 (2026-08-03)
+# 행정동 경계 원본을 받아 **시군구 한 장**으로 합쳐 `data/geo/korea-sgg-2026.geojson` 과
+# 코드 대조표 `data/geo/sgg-codes.json` 을 다시 만든다.
+#
+# ── 왜 필요한가
+# 기존 `data/geo/korea-municipalities.geojson` 은 통계청 **2013년판**이라 청원군(2014 청주 통합
+# 으로 소멸)이 아직 살아 있고, 인천 미추홀구가 '남구'이며, 화성 4구 분구(2026-02)가 없다.
+# 전국 인구 히트맵은 시군구를 전수로 칠하는 카드라 이 어긋남이 그대로 화면에 보인다.
+#
+# ── 언제 돌리나
+# 행정구역이 바뀌었을 때만. `data/population-last.md` 의 지도 조인 보고에
+# "지도에 없는 시군구"가 뜨면 그때가 그때다. 정기 실행을 걸지 않는 이유는
+# 경계가 바뀌면 **이미 발행한 지도 카드의 픽셀도 바뀌기 때문**이다(픽셀 불변).
+on:
+  push:
+    paths:
+      - "data/geo-queue.txt"
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "행정동 경계 GeoJSON 원본 URL"
+        required: true
+        default: "https://raw.githubusercontent.com/vuski/admdongkor/master/ver20260401/HangJeongDong_ver20260401.geojson"
+      tolerance:
+        description: "단순화 허용오차(도). 바꾸면 지도 픽셀이 바뀐다"
+        required: false
+        default: "0.0004"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sgg-geo-refresh
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: 실행 조건 정하기
+        id: cfg
+        run: |
+          URL="${{ github.event.inputs.url }}"
+          TOL="${{ github.event.inputs.tolerance }}"
+          Q=data/geo-queue.txt
+          if [ -z "$URL$TOL" ] && [ -f "$Q" ]; then
+            LINE=$(grep -v '^\s*#' "$Q" | grep -v '^\s*$' | tail -1)
+            echo "대기열 마지막 줄: ${LINE:-(비어 있음)}"
+            for kv in $LINE; do
+              case "$kv" in
+                url=*)       URL="${kv#url=}" ;;
+                tolerance=*) TOL="${kv#tolerance=}" ;;
+              esac
+            done
+          fi
+          echo "url=${URL:-https://raw.githubusercontent.com/vuski/admdongkor/master/ver20260401/HangJeongDong_ver20260401.geojson}" >> "$GITHUB_OUTPUT"
+          echo "tolerance=${TOL:-0.0004}" >> "$GITHUB_OUTPUT"
+          echo "today=$(TZ=Asia/Seoul date +%F)" >> "$GITHUB_OUTPUT"
+
+      - name: 원본 내려받기
+        run: |
+          set -o pipefail
+          curl -sSL "${{ steps.cfg.outputs.url }}" -o /tmp/hjd.geojson
+          node -e "
+            const fs=require('fs');
+            const n=fs.statSync('/tmp/hjd.geojson').size;
+            if(n < 1000000) { console.error('원본이 너무 작다('+n+' bytes) — 다운로드가 실패했을 수 있다'); process.exit(1); }
+            console.log('원본', (n/1048576).toFixed(1)+'MB');
+          "
+
+      - name: 시군구로 합치기
+        run: |
+          set -o pipefail
+          node --max-old-space-size=6144 scripts/build-sgg-geo.mjs \
+            --in /tmp/hjd.geojson \
+            --tolerance ${{ steps.cfg.outputs.tolerance }} 2>&1 | tee /tmp/geo.log
+
+      # ⚠️ 지도가 바뀌면 이미 발행한 지도 카드의 픽셀도 바뀔 수 있다.
+      #    doctor 가 픽셀 회귀를 잡으므로 여기서 먼저 확인하고, 깨지면 **커밋하지 않는다.**
+      - name: 발행본 픽셀 회귀 확인
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: /opt/pw-browsers
+        run: |
+          corepack enable && corepack prepare pnpm@10 --activate
+          pnpm install --frozen-lockfile
+          node scripts/doctor.mjs 2>&1 | tee /tmp/doctor.log || true
+          if grep -q "픽셀 동일 —.*기대" /tmp/doctor.log; then
+            echo "::warning::발행본 픽셀이 바뀌었습니다 — /tmp/doctor.log 를 확인하세요"
+          fi
+
+      - name: 실행 결과 기록
+        if: always()
+        run: |
+          {
+            echo "# 시군구 경계 마지막 갱신"
+            echo
+            echo "- 실행: ${{ steps.cfg.outputs.today }} (KST) · 방아쇠 \`${{ github.event_name }}\`"
+            echo "- 원본: ${{ steps.cfg.outputs.url }}"
+            echo "- 단순화 허용오차: ${{ steps.cfg.outputs.tolerance }}°"
+            echo "- 결과: **${{ job.status == 'success' && '성공' || '실패' }}**"
+            echo
+            echo '## 합치기 로그'
+            echo '```'
+            cat /tmp/geo.log 2>/dev/null || echo "(실행되지 못했습니다)"
+            echo '```'
+          } > data/geo-last.md
+
+      - name: 커밋
+        if: always()
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@github.com"
+          git add -f data/geo-last.md
+          git add data/geo/korea-sgg-2026.geojson data/geo/sgg-codes.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "바뀐 것 없음 — 커밋 생략"
+          else
+            git commit -m "시군구 경계 갱신 ${{ steps.cfg.outputs.today }}"
+            git pull --rebase --autostash origin ${{ github.ref_name }} || true
+            git push origin HEAD:${{ github.ref_name }}
+          fi

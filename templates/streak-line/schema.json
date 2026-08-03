@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "streak-line@1",
+  "description": "두 국면의 '누적 상승률 궤적'을 직선 두 개로 비교한다. 직선 = 평균 상승 속도(기울기), 끝점 = 누적 상승률. 주별 시계열 원자료가 없어도 확정된 끝값·평균속도만으로 정직하게 그린다. 좌표는 빌더가 계산(템플릿은 숫자를 만들지 않는다).",
+  "type": "object",
+  "required": ["template", "title", "chart", "source"],
+  "additionalProperties": true,
+  "properties": {
+    "template": { "type": "string", "pattern": "^streak-line@\\d+$" },
+    "date": { "type": "string" },
+    "badge": { "type": "string", "maxLength": 40 },
+    "title": { "type": "string" },
+    "note": { "type": "string", "maxLength": 80 },
+    "chart": {
+      "type": "object",
+      "required": ["vb", "polylines", "dots", "vlabels", "xlabels"],
+      "properties": {
+        "vb": { "type": "string" },
+        "base": { "type": "object" },
+        "grid": { "type": "array" },
+        "areas": { "type": "array" },
+        "ylabels": { "type": "array" },
+        "vmarks": { "type": "array" },
+        "polylines": { "type": "array", "minItems": 2 },
+        "dots": { "type": "array" },
+        "vlabels": { "type": "array" },
+        "xlabels": { "type": "array" },
+        "legend": { "type": "array" },
+        "caption": { "type": "object" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["name"],
+      "properties": { "name": { "type": "string" }, "asOf": { "type": "string" } }
+    }
+  }
+}

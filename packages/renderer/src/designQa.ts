@@ -186,6 +186,9 @@ const MEASURE_JS = `(() => {
              /* record-grid — 새 템플릿을 만들고 여기 추가하지 않아 이 카드의 글자가
                 통째로 겹침 검사 밖에 있었다(AS팀 지적 2026-07-31). 템플릿을 만들면 여기도 만진다. */
              ".rg-r .claim,.rg-r .fig .v,.rg-r .fig .p,.rg-note,.rg-lead .lb,.rg-lead .dt,.rg-lead .vl," +
+             /* streak-bars — 막대 비교 카드의 하단 문구. SVG 막대·값 라벨은 그래프라 Range 대상이
+                아니다(record-grid spark 라벨과 같은 취급). HTML 글자는 이 문구 하나뿐이라 여기 올린다. */
+             ".sb-note,.sl-note," +
              /* map-rank·metro-2col — 2026-07-31. 두 템플릿의 글자가 통째로 검사 밖에 있었다.
                 제목을 칸에 꽉 차게 키우는 변경을 하면서 올린다 — 커진 제목이 평형 뱃지·지도와
                 부딪히는지는 사람 눈이 아니라 좌표가 판정해야 한다.
@@ -199,11 +202,11 @@ const MEASURE_JS = `(() => {
              /* sinbundang-map — 노선도형 지도 카드(2026-07-31). 새 템플릿을 만들면 글자 요소를
                 여기 등록해야 겹침 검사가 실제로 잰다(빠뜨리면 검사받지 않은 것). */
              ".sbm-stn,.sbm-danji,.sbm-price .v,.sbm-price .sz,.sbm-note," +
-             /* danji-brief — 청약단지 브리핑(2026-08-01). */
-             ".db-title .ln,.db-credit,.db-fb .w,.db-fb .sub," +
-             ".db-nm .n,.db-nm .loc,.db-nm .lgtx," +
-             ".db-s .l,.db-s .v,.db-hr span,.db-row span," +
-             ".db-sc .l,.db-sc .d,.db-tnote,.db-note," +
+             /* danji-cover — 청약·분양 표준 판형(오너 확정 2026-08-03). 새 템플릿을 만들면
+                글자 요소를 여기 등록해야 겹침 검사가 실제로 잰다 — 빠진 요소는 없는 것과 같다.
+                (danji-brief 는 이 판형으로 대체돼 삭제됐다) */
+             ".dcv-title .ln,.dcv-fb .w,.dcv-nm .nm,.dcv-nm .loc,.dcv-ph," +
+             ".dcv .lab,.dcv-facts .v,.dcv-facts .brk,.dcv-item .a,.dcv-item .p,.dcv-note," +
              /* sinbundang-loop — 노선 접이형 정보카드(2026-07-31). */
              ".slp-stn,.slp-danji,.slp-meta,.slp-priceB,.slp-name,.slp-gu,.slp-top";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
@@ -234,7 +237,9 @@ const MEASURE_JS = `(() => {
    ["순위표 머리글", ".rt-colheadrow", ".rt-row:not(.rt-colheadrow)"],
    /* danji-brief — 머리글과 행이 같은 grid 변수(--c)를 보게 만들어 뒀지만,
       "그렇게 만들었다"와 "실제로 맞는다"는 다르다. 재는 쪽에도 올린다. */
-   ["단지표 머리글", ".db-hr", ".db-row"]].forEach(function(pair){
+   ["단지표 머리글", ".db-hr", ".db-row"],
+   /* 평형표도 머리글과 행이 같은 grid 를 본다 — "그렇게 만들었다"와 "실제로 맞는다"는 다르다 */
+   ].forEach(function(pair){
     var head=card.querySelector(pair[1]);
     var row=card.querySelector(pair[2]);
     if(!head||!row) return;
@@ -264,7 +269,7 @@ const MEASURE_JS = `(() => {
   if(footer){
     /* .rg-note 를 빠뜨려 record-grid 에서는 이 검사가 아무것도 안 재고 있었다(AS팀 지적 2026-07-31).
        "최하단 문구 여백"은 오너가 두 번 말한 항목인데 새 템플릿에 적용되지 않은 상태였다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note,.tx-apply");
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note,.tx-apply");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();
