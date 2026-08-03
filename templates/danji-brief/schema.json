@@ -8,8 +8,9 @@
     "topcap",
     "titleLines",
     "danji",
-    "strips",
-    "source"
+    "source",
+    "left",
+    "priceTable"
   ],
   "properties": {
     "template": {
@@ -82,45 +83,6 @@
         "company": {
           "type": "string",
           "maxLength": 20
-        }
-      }
-    },
-    "strips": {
-      "type": "array",
-      "description": "2칸짜리 줄들. 1줄 = [세대수, 최고층] / 2줄 = [대표평형, 분양가]",
-      "minItems": 1,
-      "maxItems": 1,
-      "items": {
-        "type": "array",
-        "minItems": 2,
-        "maxItems": 3,
-        "items": {
-          "type": "object",
-          "required": [
-            "label",
-            "value"
-          ],
-          "properties": {
-            "label": {
-              "type": "string",
-              "maxLength": 14
-            },
-            "value": {
-              "type": "string",
-              "maxLength": 12
-            },
-            "unit": {
-              "type": "string",
-              "maxLength": 6
-            },
-            "hi": {
-              "type": "boolean"
-            },
-            "key": {
-              "type": "boolean",
-              "description": "코발트 강조(값). 레드(hi)는 상승·과열 시그널 전용이다"
-            }
-          }
         }
       }
     },
@@ -209,6 +171,46 @@
                 "description": "주력 면적대 — 한 줄만 코발트"
               }
             }
+          }
+        }
+      }
+    },
+    "left": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 4,
+      "description": "왼쪽 단 — 세대수(+APT|OT 내역)·규모·주소. 오너 지시 2026-08-03",
+      "items": {
+        "type": "object",
+        "required": [
+          "label",
+          "value"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 24
+          },
+          "unit": {
+            "type": "string",
+            "maxLength": 6
+          },
+          "sub": {
+            "type": "string",
+            "maxLength": 26,
+            "description": "작게·회색으로 붙는 내역(APT n | OT n)"
+          },
+          "addr": {
+            "type": "boolean",
+            "description": "주소 줄 — 숫자 서체가 아니라 본문 서체로 그린다"
+          },
+          "big": {
+            "type": "boolean",
+            "description": "큰 숫자로 그린다(세대수). 문장형 값과 크기를 섞지 않기 위한 구분"
           }
         }
       }

@@ -53,8 +53,10 @@ function won(v) {
   if (!eok) return `${n(man)}만원`;
   return man ? `${n(eok)}억 ${n(man)}만원` : `${n(eok)}억원`;
 }
-/** 스트립용 짧은 표기 — 773,000,000 → "7.73억" (오너 지정 형식 0.00억) */
-const eok2 = (v) => `${(v / 100000000).toFixed(2)}억`;
+/** 짧은 표기 — 773,000,000 → "7.7억" (오너 지정 형식 00.0억, 2026-08-03).
+ *  소수 1자리로 반올림한다. 표시 정밀도가 0.1억이므로 그 아래는 카드가 말하지 않는다 —
+ *  정확한 금액은 캡션·모집공고가 갖고 있다. */
+const eok1 = (v) => `${(v / 100000000).toFixed(1)}억`;
 
 /** 경쟁률은 받아 적지 않고 계산한다. 보도값과 벌어지면 던진다. */
 function ratio(row) {
@@ -113,7 +115,7 @@ function priceTable(d, total) {
     const hit = d.price?.byArea?.find((x) => x.m2 === a.m2);
     return {
       area: `${a.m2}${t}`,
-      price: hit ? eok2(hit.won) : "미고지",
+      price: hit ? eok1(hit.won) : "미고지",
       /* 주력 면적대 한 줄만 코발트로. 강조가 둘이면 강조가 아니다. */
       main: d.mainArea?.m2 === a.m2,
     };
@@ -134,6 +136,31 @@ function titleFor(d, { total, repWon }) {
   return eokRound
     ? [`${hook} 분양가 <span class="hi">${eokRound}억대</span>?`]
     : [`${hook} <span class="hi">${n(total)}가구</span> 나온다`];
+}
+
+/**
+ * 왼쪽 단 — 단지의 몸집(오너 지시 2026-08-03).
+ *   ① 세대수 합계 + (APT n | OT n) 작은 회색 내역
+ *   ② 0개동 | 최고 00층
+ *   ③ 주소(읍면동까지)
+ * 오피스텔이 없으면 내역 줄을 만들지 않는다 — "OT 0" 은 0실 공급으로 읽힌다.
+ */
+function leftBlocks(d, aptTotal) {
+  const ot = d.extra?.officetel ?? 0;
+  const sum = aptTotal + ot;
+  const blocks = [
+    {
+      label: "세대수",
+      value: n(sum),
+      unit: "세대",
+      big: true,
+      ...(ot ? { sub: `APT ${n(aptTotal)} | OT ${n(ot)}` } : {}),
+    },
+    { label: "규모", value: `${d.buildings}개동 | 최고 ${d.topFloor}층` },
+  ];
+  /* 주소는 **읍면동까지**(오너 지정). 데이터의 location 이 그 단위로 적혀 있다. */
+  if (d.location) blocks.push({ label: "위치", value: d.location, addr: true });
+  return blocks;
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -167,15 +194,7 @@ function presale(d) {
       ? { photo: d.photo.file, credit: d.photo.credit }
       : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true },
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
-    /* 총 세대수를 아파트·오피스텔로 나눈다(오너 지시 2026-08-03).
-       오피스텔이 없는 단지는 그 칸을 만들지 않는다 — 0 을 적으면 '0실 공급'으로 읽힌다. */
-    strips: [
-      [
-        { label: "아파트", value: n(total), unit: "가구" },
-        ...(d.extra?.officetel ? [{ label: "오피스텔", value: n(d.extra.officetel), unit: "실" }] : []),
-        { label: "최고 층수", value: String(d.topFloor), unit: "층" },
-      ],
-    ],
+    left: leftBlocks(d, total),
     priceTable: priceTable(d, total),
     schedule: [
       { label: "특별공급", date: ah?.specialFrom ? md(ah.specialFrom) : "미고지", tbd: !ah?.specialFrom },
@@ -213,12 +232,9 @@ function result(d) {
       ? { photo: d.photo.file, credit: d.photo.credit }
       : { fallbackColor: "#101418", fallbackWord: "ACRO" },
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}) },
-    strips: [
-      [
-        { label: "아파트", value: n(d.total), unit: "가구" },
-        ...(d.extra?.officetel ? [{ label: "오피스텔", value: n(d.extra.officetel), unit: "실" }] : []),
-        { label: "1순위 경쟁률", value: `${n(first.shown)}대 1`, hi: true },
-      ],
+    left: [
+      ...leftBlocks(d, d.total),
+      /* 결과 카드는 경쟁률이 주인공이다 — 제목이 말하고 여기서 한 번 더 못박는다 */
     ],
     priceTable: priceTable(d, d.total),
     schedule: [
@@ -246,7 +262,8 @@ for (const [slug, card] of cards) {
   writeFileSync(join(outDir, `${slug}.json`), JSON.stringify(card, null, 2) + "\n", "utf8");
   console.log(`${slug} — ${card.danji.name}`);
   console.log(`   ${card.topcap} · ${card.titleLines.join(" ").replace(/<[^>]+>/g, "")}`);
-  console.log(`   ${card.strips.flat().map((c) => `${c.label} ${c.value}${c.unit || ""}`).join(" · ")}`);
+  console.log(`   ${card.left.map((c) => `${c.label} ${c.value}${c.unit || ""}${c.sub ? ` (${c.sub})` : ""}`).join(" · ")}`);
+  console.log(`   평형 ${card.priceTable.rows.map((r) => `${r.area} ${r.price}`).join(" · ")}`);
   console.log(`   일정 ${card.schedule.map((s) => `${s.label} ${s.date}`).join(" · ")}`);
 }
 console.log("\n⚠ 분양가는 보도값이다 — 입주자모집공고문 대조 전까지 발행 금지.");
