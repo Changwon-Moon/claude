@@ -8,4 +8,4 @@
 # 결과를 보고 맞으면 packages/collectors/src/sources/kosis.ts 의 enabled 를 켠다.
 #
 # ⚠️ KOSIS_API_KEY 가 Secrets 에 있어야 돈다.
-run 2026-08-03 #16 — 사망 표 지역목록 재시도(푸시 8회)
+run 2026-08-03 #17 — 키 재발급 후 사망 표 지역목록 확보
