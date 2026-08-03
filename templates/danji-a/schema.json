@@ -1,0 +1,227 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "danji-a@1",
+  "description": "청약단지 브리핑 A안 '두 덩어리' — 조감도 띠와 잉크 시트를 모두 카드 좌우 끝까지 붙이고, 잉크 시트를 푸터와 이어 붙인다. 떠 있는 상자가 없다.",
+  "type": "object",
+  "required": [
+    "template",
+    "topcap",
+    "titleLines",
+    "danji",
+    "source",
+    "priceTable",
+    "spec"
+  ],
+  "properties": {
+    "template": {
+      "type": "string",
+      "pattern": "^danji-a@\\d+$"
+    },
+    "date": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "presale",
+        "result"
+      ]
+    },
+    "topcap": {
+      "type": "string",
+      "maxLength": 40,
+      "description": "고정 부제 + 기준 날짜. 빌더가 만든다 — 손으로 적으면 날짜가 굳는다"
+    },
+    "titleLines": {
+      "type": "array",
+      "description": "제목. 오너 지시로 **한 줄**이 기본이다(폰트를 최대로 키우기 위해)",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "maxItems": 2
+    },
+    "hero": {
+      "type": "object",
+      "properties": {
+        "photo": {
+          "type": "string"
+        },
+        "credit": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "placeholder": {
+          "type": "boolean"
+        },
+        "fallbackColor": {
+          "type": "string"
+        },
+        "fallbackWord": {
+          "type": "string",
+          "maxLength": 20
+        }
+      }
+    },
+    "danji": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "description": "주소·시공사 줄은 오너 지시로 삭제됐다(2026-08-03). 이름과 브랜드 로고만 남는다",
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 24
+        },
+        "logo": {
+          "type": "string"
+        },
+        "logoColor": {
+          "type": "string"
+        },
+        "company": {
+          "type": "string",
+          "maxLength": 20
+        }
+      }
+    },
+    "schedule": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "label",
+          "date"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "date": {
+            "type": "string",
+            "maxLength": 12
+          },
+          "tbd": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "notice": {
+      "type": "string",
+      "maxLength": 70,
+      "description": "특이사항 한 줄 — 분상제·전매제한 등"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "asOf": {
+          "type": "string"
+        }
+      }
+    },
+    "priceTable": {
+      "type": "object",
+      "required": [
+        "head",
+        "rows",
+        "cols"
+      ],
+      "description": "평형별 대표타입 표 — 면적대마다 타입 하나씩, 전부 적는다(오너 지시 2026-08-03)",
+      "properties": {
+        "head": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 24
+          },
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "rows": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "required": [
+              "area",
+              "price"
+            ],
+            "properties": {
+              "area": {
+                "type": "string",
+                "maxLength": 10
+              },
+              "price": {
+                "type": "string",
+                "maxLength": 12
+              },
+              "main": {
+                "type": "boolean",
+                "description": "주력 면적대 — 한 줄만 코발트"
+              }
+            }
+          }
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "cols": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4,
+          "description": "가격판 열 수 — 코드가 개수로 정한다(4 이하는 그 수, 5~6은 3열)"
+        }
+      }
+    },
+    "spec": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "description": "제원 3분할 — 전부 순수 수치. 문장형 값을 섞으면 공통 fit 에서 큰 숫자가 끌려 내려간다",
+      "items": {
+        "type": "object",
+        "required": [
+          "label",
+          "value"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "maxLength": 12
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "unit": {
+            "type": "string",
+            "maxLength": 6
+          },
+          "breakdown": {
+            "type": "string",
+            "maxLength": 34,
+            "description": "값 아래 회색 괄호 내역"
+          }
+        }
+      }
+    },
+    "address": {
+      "type": "string",
+      "maxLength": 40,
+      "description": "조감도 바로 아래 붙는 주소(읍면동까지)"
+    }
+  }
+}

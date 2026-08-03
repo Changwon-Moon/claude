@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* danji-a@1 — 청약단지 브리핑 A안 "두 덩어리"
+       *
+       * ── @3 에서 오너가 지적한 것
+       * "사진도 아래 박스도 나뉘어져 보이고, 폰트 균형도 그렇고…"
+       * 원인은 분명하다. @3 은 종이 위에 **모서리 둥근 사진**과 **모서리 둥근 잉크판**을
+       * 따로 얹었다. 둘 다 사방에 여백이 있으니 카드 위를 떠다니는 두 개의 섬이 된다.
+       *
+       * ── A안의 해법: 떠 있는 것을 없앤다
+       * 사진도 잉크도 **카드 좌우 끝까지 붙인다(full-bleed)**. 모서리 라운드를 지운다.
+       * 그러면 둘은 '얹힌 상자'가 아니라 카드를 가로로 자른 **띠**가 된다.
+       * 그리고 잉크 띠는 아래 푸터 잉크바와 **이어붙인다** — 경계선이 사라지므로
+       * 카드 하단 절반이 통짜 잉크 한 장이 된다. 상자가 없으면 상자처럼 보일 수 없다.
+       *
+       * 위(종이: 부제·제목) / 가운데(사진) / 아래(잉크: 수치 전부) — 덩어리는 셋뿐이고
+       * 셋 다 카드 폭을 꽉 채운다. 여백은 덩어리 **안쪽**에만 있다.
+       *
+       * ── 글자
+       * 제목만 태백. 숫자·라벨은 프리텐다드(오너 지시 2026-08-03).
+       * 제원·가격·일정 값은 **한 자로 재서 같은 크기**(오너 지시). 라벨은 한 종류(26px).
+       */
+
+      .da {
+        --font-num: var(--font-pretendard);
+        --t-n: 56px;
+        --t-l: 26px;
+        --s2: 16px; --s3: 24px; --s4: 32px;
+        --on-ink: #f4f7fb;
+        --on-ink-dim: rgba(255, 255, 255, 0.5);
+        --hair: rgba(255, 255, 255, 0.14);
+      }
+
+      .da .lab {
+        display: block; font-family: var(--font-sans); font-size: var(--t-l);
+        font-weight: 700; letter-spacing: -0.005em; line-height: 1; color: var(--on-ink-dim);
+      }
+
+      /* ── 종이: 제목 한 줄 ── */
+      .da-title { margin-top: 6px; height: 132px; display: flex; align-items: center; font-size: 92px; }
+      .da-title .ln {
+        font-family: var(--font-title); font-size: 1em; font-weight: 900; line-height: 1.08;
+        letter-spacing: -0.035em; color: var(--wirit-ink);
+        white-space: nowrap; width: max-content; max-width: 100%;
+      }
+      .da-title .hi { color: var(--wirit-cobalt); }
+      .da-title .up { color: var(--wirit-red); }
+
+      /* ── 띠 1: 조감도 (좌우 끝까지) ── */
+      .da-hero {
+        position: relative; flex: 1 1 auto; min-height: 300px;
+        margin: var(--s3) -72px 0; overflow: hidden; background: var(--wirit-ink);
+      }
+      .da-hero img { width: 100%; height: 100%; object-fit: cover; object-position: center 62%; display: block; }
+      .da-fb { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--wirit-ink); }
+      .da-fb .w { font-family: var(--font-title); font-size: 92px; font-weight: 900; color: rgba(255,255,255,0.9); line-height: 1; }
+      /* 이름이 앉을 자리만 어둡게 — 조감도가 주인공이라 그림을 덮지 않는다 */
+      .da-veil {
+        position: absolute; left: 0; right: 0; bottom: 0; height: 190px;
+        background: linear-gradient(180deg, rgba(10,14,22,0) 0%, rgba(10,14,22,0.5) 55%, rgba(10,14,22,0.78) 100%);
+      }
+      .da-cap {
+        position: absolute; left: 72px; right: 72px; bottom: 30px;
+        display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3);
+      }
+      .da-cap .nm {
+        display: block; font-family: var(--font-sans); font-size: 58px; font-weight: 800;
+        letter-spacing: -0.035em; color: #fff; line-height: 1.02; white-space: nowrap;
+        text-shadow: 0 2px 14px rgba(0,0,0,0.65);
+      }
+      .da-cap .loc {
+        display: block; margin-top: 12px; font-family: var(--font-sans); font-size: 30px;
+        font-weight: 700; letter-spacing: -0.02em; color: rgba(255,255,255,0.86); line-height: 1;
+        text-shadow: 0 2px 12px rgba(0,0,0,0.7);
+      }
+      .da-cap .lg {
+        flex: none; height: 66px; width: auto; max-width: 240px; object-fit: contain;
+        /* 브랜드 마크는 대개 짙은 단색이라 사진·잉크 위에서 사라진다(푸르지오 = 짙은 청록).
+           흰색으로 뒤집어 얹는다 — 마크 형태는 그대로고 대비만 확보된다. */
+        filter: brightness(0) invert(1) drop-shadow(0 2px 10px rgba(0, 0, 0, 0.55)); opacity: 0.95;
+      }
+      .da-credit {
+        position: absolute; right: 72px; top: 24px; font-size: 22px; font-weight: 700;
+        color: rgba(255,255,255,0.86); text-shadow: 0 1px 8px rgba(0,0,0,0.75);
+      }
+      .da-credit .ph { color: #ffd24a; }
+
+      /* ── 띠 2: 잉크 시트 — 좌우 끝까지, 그리고 아래 푸터까지 이어진다 ──
+       * padding-bottom 을 주지 않는다. 아래에 오는 .wirit-footer 가 같은 잉크색이므로
+       * 시트와 푸터 사이에 경계가 생기지 않는다. 카드 하단은 통짜 잉크 한 장이 된다. */
+      .da-sheet {
+        margin: 0 -72px; padding: 36px 72px 0; background: var(--wirit-ink); color: var(--on-ink);
+      }
+      .da-sheet .rule { height: 1px; background: var(--hair); margin: 30px 0; }
+
+      /* 제원 3분할 */
+      .da-spec { display: grid; grid-template-columns: 1.45fr 1fr 1fr; gap: var(--s3); }
+      .da-spec .lab { margin-bottom: 12px; }
+      .da-spec .v {
+        display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 900;
+        line-height: 1; letter-spacing: -0.03em; color: var(--on-ink); white-space: nowrap;
+      }
+      .da-spec .v i {
+        font-family: var(--font-sans); font-style: normal; font-size: 0.42em; font-weight: 700;
+        margin-left: 6px; color: var(--on-ink-dim);
+      }
+      .da-spec .brk {
+        display: block; margin-top: 12px; font-family: var(--font-sans); font-size: 25px;
+        font-weight: 700; letter-spacing: -0.02em; color: var(--on-ink-dim); line-height: 1; white-space: nowrap;
+      }
+
+      /* 가격 — 시트 안에서 가장 밝은 줄. 강조는 주력 면적대 하나뿐이다 */
+      .da-price .top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 24px; }
+      .da-price .top .note { font-size: 24px; font-weight: 700; color: var(--on-ink-dim); }
+      .da-grid { display: grid; column-gap: var(--s3); row-gap: 28px; }
+      .da-item { min-width: 0; }
+      .da-item .a {
+        display: block; font-family: var(--font-num); font-size: 30px; font-weight: 800;
+        letter-spacing: -0.01em; color: var(--on-ink-dim); line-height: 1; margin-bottom: 12px;
+      }
+      .da-item .p {
+        display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 900;
+        letter-spacing: -0.03em; color: var(--on-ink); line-height: 1; white-space: nowrap;
+      }
+      .da-item.main .a { color: rgba(255,255,255,0.82); }
+      .da-item.main .p { color: #7aa6ff; }
+
+      /* 일정 3분할 */
+      .da-when { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--s3); }
+      .da-when .lab { margin-bottom: 12px; }
+      .da-when .d {
+        display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 900;
+        line-height: 1; letter-spacing: -0.03em; color: var(--on-ink); white-space: nowrap;
+      }
+      .da-when .d.tbd { font-family: var(--font-sans); font-size: 34px; font-weight: 700; color: var(--on-ink-dim); }
+
+      /* 특이사항 — 시트 마지막 줄. 푸터와 붙지 않게 아래 여백을 준다 */
+      .da-note {
+        margin: 30px 0 34px; font-family: var(--font-sans); font-size: 31px; font-weight: 700;
+        letter-spacing: -0.02em; color: rgba(255,255,255,0.9); line-height: 1.25; word-break: keep-all;
+      }
+      .da-note .tag { color: #7aa6ff; }
+
+      /* 푸터는 시트의 마지막 칸이다 — 색이 같으므로 얇은 선 하나로만 구분한다 */
+      .da .wirit-footer { border-top: 1px solid var(--hair); }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card da">
+      <div class="wirit-topcap"><span class="tx">{{topcap}}</span></div>
+
+      <div class="da-title">
+        {{#each titleLines}}<div class="ln">{{{this}}}</div>{{/each}}
+      </div>
+
+      <div class="da-hero">
+        {{#if hero.photo}}
+          <img src="../_shared/photos/{{hero.photo}}" alt="" />
+        {{else}}
+          <div class="da-fb"{{#if hero.fallbackColor}} style="background:{{hero.fallbackColor}}"{{/if}}>
+            <span class="w">{{#if hero.fallbackWord}}{{hero.fallbackWord}}{{else}}{{danji.name}}{{/if}}</span>
+          </div>
+        {{/if}}
+        <div class="da-veil"></div>
+        <div class="da-cap">
+          <div>
+            <span class="nm">{{danji.name}}</span>
+            {{#if address}}<span class="loc">{{address}}</span>{{/if}}
+          </div>
+          {{#if danji.logo}}<img class="lg" src="../_shared/logos/{{danji.logo}}" alt="" />{{/if}}
+        </div>
+        {{#if hero.credit}}
+          <div class="da-credit">{{hero.credit}}{{#if hero.placeholder}} <span class="ph">· 시안</span>{{/if}}</div>
+        {{/if}}
+      </div>
+
+      <div class="da-sheet">
+        <div class="da-spec">
+          {{#each spec}}
+          <div class="cell">
+            <span class="lab">{{this.label}}</span>
+            <span class="v">{{this.value}}{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
+            {{#if this.breakdown}}<span class="brk">{{this.breakdown}}</span>{{/if}}
+          </div>
+          {{/each}}
+        </div>
+
+        <div class="rule"></div>
+
+        <div class="da-price">
+          <div class="top">
+            <span class="lab">{{priceTable.head.[0]}}</span>
+            {{#if priceTable.note}}<span class="note">{{priceTable.note}}</span>{{/if}}
+          </div>
+          <div class="da-grid" style="grid-template-columns: repeat({{priceTable.cols}}, 1fr)">
+            {{#each priceTable.rows}}
+            <div class="da-item{{#if this.main}} main{{/if}}">
+              <span class="a">{{this.area}}</span>
+              <span class="p">{{this.price}}</span>
+            </div>
+            {{/each}}
+          </div>
+        </div>
+
+        {{#if schedule}}
+        <div class="rule"></div>
+        <div class="da-when">
+          {{#each schedule}}
+          <div class="cell">
+            <span class="lab">{{this.label}}</span>
+            <span class="d{{#if this.tbd}} tbd{{/if}}">{{this.date}}</span>
+          </div>
+          {{/each}}
+        </div>
+        {{/if}}
+
+        {{#if notice}}<div class="da-note">{{{notice}}}</div>{{/if}}
+      </div>
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <script>
+      /* 폭 맞춤 둘 — ① 제목 한 줄이 카드 폭을 꽉 채우는 크기 ② 제원·가격·일정 **공통** 수치 크기.
+         셋을 한 자로 재야 같은 크기가 된다(오너 지시). 그룹별로 따로 맞추면 칸 폭 차이로 갈린다. */
+      window.__wiritFit = function () {
+        var t = document.querySelector(".da-title");
+        if (t) {
+          var lines = t.querySelectorAll(".ln");
+          var availW = t.clientWidth, availH = t.clientHeight;
+          if (lines.length) {
+            var lo = 40, hi = 148, best = lo;
+            for (var i = 0; i < 26; i++) {
+              var mid = (lo + hi) / 2;
+              t.style.fontSize = mid + "px";
+              var fits = true;
+              for (var j = 0; j < lines.length; j++) if (lines[j].scrollWidth > availW + 0.5) { fits = false; break; }
+              if (fits && t.scrollHeight <= availH + 0.5) { best = mid; lo = mid; } else { hi = mid; }
+            }
+            t.style.fontSize = best + "px";
+          }
+        }
+        var nums = [];
+        Array.prototype.forEach.call(document.querySelectorAll(".da-spec .v"), function (el) { nums.push({ el: el, box: el.parentNode.clientWidth }); });
+        Array.prototype.forEach.call(document.querySelectorAll(".da-item .p"), function (el) { nums.push({ el: el, box: el.parentNode.clientWidth }); });
+        Array.prototype.forEach.call(document.querySelectorAll(".da-when .d:not(.tbd)"), function (el) { nums.push({ el: el, box: el.parentNode.clientWidth }); });
+        if (nums.length) {
+          var loS = 30, hiS = 76, bestS = loS;
+          for (var k = 0; k < 24; k++) {
+            var m = (loS + hiS) / 2;
+            for (var a = 0; a < nums.length; a++) nums[a].el.style.fontSize = m + "px";
+            var ok = true;
+            for (var b = 0; b < nums.length; b++) if (nums[b].el.scrollWidth > nums[b].box) { ok = false; break; }
+            if (ok) { bestS = m; loS = m; } else { hiS = m; }
+          }
+          for (var c = 0; c < nums.length; c++) nums[c].el.style.fontSize = bestS + "px";
+        }
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(window.__wiritFit);
+    </script>
+  </body>
+</html>

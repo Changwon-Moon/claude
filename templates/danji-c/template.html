@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* danji-c@1 — 청약단지 브리핑 C안 "표지형"
+       *
+       * ── A·B와 다른 전제
+       * A안과 B안은 "제목 → 사진 → 데이터" 순서를 지킨 채 사진과 데이터의 관계만 고쳤다.
+       * C안은 순서를 바꾼다. **사진이 카드의 머리 자체가 된다.**
+       * 조감도가 카드 맨 위 0px 부터 690px 까지를 통으로 덮고, 부제·제목·단지명·주소가
+       * 그 위에 얹힌다. 사진 아래로는 종이 위 수치만 남는다.
+       *
+       * 그러면 "사진과 아래 박스가 나뉘어 보인다"는 지적이 성립하지 않는다 —
+       * 사진은 더 이상 카드 안의 요소가 아니라 카드의 상반신이고, 아래는 그 설명이다.
+       * 잡지 표지와 같은 구조다. 덩어리는 둘, 경계는 하나.
+       *
+       * ── 대가와 그 처리
+       * 사진 위 글씨는 읽히기 어렵다. 그래서 아래쪽 그라데이션을 A·B보다 깊게 깔고
+       * 제목에 그림자를 준다. 코발트는 어두운 배경에서 죽으므로 밝은 청색(#7aa6ff)으로 올린다.
+       * 조감도의 하늘이 밝아 부제가 묻힐 수 있어 상단에도 얕은 그늘을 둔다.
+       */
+
+      .dcv {
+        --font-num: var(--font-pretendard);
+        --t-n: 56px;
+        --t-l: 26px;
+        --gap-block: 36px;
+        --sky: #7aa6ff;
+      }
+
+      .dcv .lab {
+        display: block; font-family: var(--font-sans); font-size: var(--t-l);
+        font-weight: 700; letter-spacing: -0.005em; line-height: 1; color: var(--wirit-gray);
+        margin-bottom: 12px;
+      }
+
+      /* ── 표지: 카드 맨 위부터 ── */
+      .dcv-cover {
+        position: relative; flex: none; height: 650px; margin: -72px -72px 0; overflow: hidden;
+        background: var(--wirit-ink);
+      }
+      /* 원본(1200×660) 하단에 건설사 고지문이 박혀 있다. 표지 칸이 원본보다 세로로 길어
+         object-position 으로는 잘리지 않는다 — 칸보다 54px 키워 아래를 잘라낸다. */
+      .dcv-cover img {
+        width: 100%; height: calc(100% + 54px); object-fit: cover; object-position: center top; display: block;
+      }
+      .dcv-fb { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--wirit-ink); }
+      .dcv-fb .w { font-family: var(--font-title); font-size: 96px; font-weight: 900; color: rgba(255,255,255,0.9); line-height: 1; }
+      /* 위 그늘: 부제가 밝은 하늘에 묻히지 않게. 아래 그늘: 제목과 단지명이 앉을 자리. */
+      .dcv-shade {
+        position: absolute; inset: 0;
+        background:
+          linear-gradient(180deg, rgba(8,11,18,0.5) 0%, rgba(8,11,18,0.12) 22%, rgba(8,11,18,0) 40%),
+          linear-gradient(180deg, rgba(8,11,18,0) 42%, rgba(8,11,18,0.62) 76%, rgba(8,11,18,0.88) 100%);
+      }
+      .dcv-credit {
+        position: absolute; right: 72px; top: 118px; font-size: 22px; font-weight: 700;
+        color: rgba(255,255,255,0.8); text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+      }
+      .dcv-credit .ph { color: #ffd24a; }
+
+      .dcv-head {
+        position: absolute; left: 72px; right: 72px; top: 0; bottom: 34px;
+        display: flex; flex-direction: column; justify-content: space-between;
+      }
+      /* 공용 부제 규격을 표지 위로 옮긴다 — 위치(로고 라인)·크기(28)는 그대로, 색만 흰색 계열 */
+      .dcv .wirit-topcap {
+        margin-top: 0; padding-top: 46px; color: rgba(255,255,255,0.82);
+        text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+      }
+
+      .dcv-title { font-size: 92px; }
+      .dcv-title .ln {
+        font-family: var(--font-title); font-size: 1em; font-weight: 900; line-height: 1.08;
+        letter-spacing: -0.035em; color: #fff; white-space: nowrap; width: max-content; max-width: 100%;
+        text-shadow: 0 3px 20px rgba(0,0,0,0.62);
+      }
+      .dcv-title .hi { color: var(--sky); }
+      .dcv-title .up { color: #ff8a8e; }
+
+      .dcv-nm {
+        margin-top: 22px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;
+      }
+      .dcv-nm .nm {
+        display: block; font-family: var(--font-sans); font-size: 42px; font-weight: 800;
+        letter-spacing: -0.03em; color: #fff; line-height: 1.05; white-space: nowrap;
+        text-shadow: 0 2px 12px rgba(0,0,0,0.7);
+      }
+      .dcv-nm .loc {
+        display: block; margin-top: 10px; font-family: var(--font-sans); font-size: 28px; font-weight: 700;
+        letter-spacing: -0.02em; color: rgba(255,255,255,0.82); line-height: 1;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.75);
+      }
+      .dcv-nm .lg {
+        flex: none; height: 62px; width: auto; max-width: 220px; object-fit: contain;
+        /* 짙은 단색 마크는 사진 위에서 사라진다 — 흰색으로 뒤집는다 */
+        filter: brightness(0) invert(1) drop-shadow(0 2px 10px rgba(0, 0, 0, 0.55)); opacity: 0.95;
+      }
+
+      /* ── 종이: 표지의 설명 ── */
+      .dcv-price { margin-top: var(--gap-block); }
+      .dcv-price .top { display: flex; align-items: baseline; justify-content: space-between; }
+      .dcv-price .top .note { font-size: 24px; font-weight: 700; color: var(--wirit-gray); }
+      .dcv-grid { display: grid; column-gap: 24px; row-gap: 24px; }
+      .dcv-item { min-width: 0; }
+      .dcv-item .a {
+        display: block; font-family: var(--font-num); font-size: 30px; font-weight: 800;
+        letter-spacing: -0.01em; color: var(--wirit-gray); line-height: 1; margin-bottom: 12px;
+      }
+      .dcv-item .p {
+        display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 900;
+        letter-spacing: -0.03em; color: var(--wirit-ink); line-height: 1; white-space: nowrap;
+      }
+      .dcv-item.main .a { color: var(--wirit-cobalt); }
+      .dcv-item.main .p { color: var(--wirit-cobalt); }
+
+      .dcv-spec { display: grid; grid-template-columns: 1.45fr 1fr 1fr; gap: 24px; margin-top: var(--gap-block); }
+      .dcv-spec .v {
+        display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 900;
+        line-height: 1; letter-spacing: -0.03em; color: var(--wirit-ink); white-space: nowrap;
+      }
+      .dcv-spec .v i {
+        font-family: var(--font-sans); font-style: normal; font-size: 0.42em; font-weight: 700;
+        margin-left: 6px; color: var(--wirit-gray);
+      }
+      .dcv-spec .brk {
+        display: block; margin-top: 12px; font-family: var(--font-sans); font-size: 25px;
+        font-weight: 700; letter-spacing: -0.02em; color: var(--wirit-gray); line-height: 1; white-space: nowrap;
+      }
+
+      .dcv-when { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: var(--gap-block); }
+      .dcv-when .d {
+        display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 900;
+        line-height: 1; letter-spacing: -0.03em; color: var(--wirit-ink); white-space: nowrap;
+      }
+      .dcv-when .d.tbd { font-family: var(--font-sans); font-size: 34px; font-weight: 700; color: var(--wirit-gray); }
+
+      .dcv-note {
+        margin: var(--gap-block) 0 32px; font-family: var(--font-sans); font-size: 31px; font-weight: 700;
+        letter-spacing: -0.02em; color: var(--wirit-ink); line-height: 1.25; word-break: keep-all;
+      }
+      .dcv-note .tag { color: var(--wirit-cobalt); }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card dcv">
+      <div class="dcv-cover">
+        {{#if hero.photo}}
+          <img src="../_shared/photos/{{hero.photo}}" alt="" />
+        {{else}}
+          <div class="dcv-fb"{{#if hero.fallbackColor}} style="background:{{hero.fallbackColor}}"{{/if}}>
+            <span class="w">{{#if hero.fallbackWord}}{{hero.fallbackWord}}{{else}}{{danji.name}}{{/if}}</span>
+          </div>
+        {{/if}}
+        <div class="dcv-shade"></div>
+        {{#if hero.credit}}
+          <div class="dcv-credit">{{hero.credit}}{{#if hero.placeholder}} <span class="ph">· 시안</span>{{/if}}</div>
+        {{/if}}
+        <div class="dcv-head">
+          <div class="wirit-topcap"><span class="tx">{{topcap}}</span></div>
+          <div>
+            <div class="dcv-title">
+              {{#each titleLines}}<div class="ln">{{{this}}}</div>{{/each}}
+            </div>
+            <div class="dcv-nm">
+              <div>
+                <span class="nm">{{danji.name}}</span>
+                {{#if address}}<span class="loc">{{address}}</span>{{/if}}
+              </div>
+              {{#if danji.logo}}<img class="lg" src="../_shared/logos/{{danji.logo}}" alt="" />{{/if}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dcv-price">
+        <div class="top">
+          <span class="lab">{{priceTable.head.[0]}}</span>
+          {{#if priceTable.note}}<span class="note">{{priceTable.note}}</span>{{/if}}
+        </div>
+        <div class="dcv-grid" style="grid-template-columns: repeat({{priceTable.cols}}, 1fr)">
+          {{#each priceTable.rows}}
+          <div class="dcv-item{{#if this.main}} main{{/if}}">
+            <span class="a">{{this.area}}</span>
+            <span class="p">{{this.price}}</span>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+
+      <div class="dcv-spec">
+        {{#each spec}}
+        <div class="cell">
+          <span class="lab">{{this.label}}</span>
+          <span class="v">{{this.value}}{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
+          {{#if this.breakdown}}<span class="brk">{{this.breakdown}}</span>{{/if}}
+        </div>
+        {{/each}}
+      </div>
+
+      {{#if schedule}}
+      <div class="dcv-when">
+        {{#each schedule}}
+        <div class="cell">
+          <span class="lab">{{this.label}}</span>
+          <span class="d{{#if this.tbd}} tbd{{/if}}">{{this.date}}</span>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+
+      {{#if notice}}<div class="dcv-note">{{{notice}}}</div>{{/if}}
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <script>
+      window.__wiritFit = function () {
+        var t = document.querySelector(".dcv-title");
+        if (t) {
+          var lines = t.querySelectorAll(".ln");
+          var availW = t.clientWidth;
+          if (lines.length) {
+            var lo = 40, hi = 132, best = lo;
+            for (var i = 0; i < 26; i++) {
+              var mid = (lo + hi) / 2;
+              t.style.fontSize = mid + "px";
+              var fits = true;
+              for (var j = 0; j < lines.length; j++) if (lines[j].scrollWidth > availW + 0.5) { fits = false; break; }
+              if (fits) { best = mid; lo = mid; } else { hi = mid; }
+            }
+            t.style.fontSize = best + "px";
+          }
+        }
+        var nums = [];
+        Array.prototype.forEach.call(document.querySelectorAll(".dcv-spec .v"), function (el) { nums.push({ el: el, box: el.parentNode.clientWidth }); });
+        Array.prototype.forEach.call(document.querySelectorAll(".dcv-item .p"), function (el) { nums.push({ el: el, box: el.parentNode.clientWidth }); });
+        Array.prototype.forEach.call(document.querySelectorAll(".dcv-when .d:not(.tbd)"), function (el) { nums.push({ el: el, box: el.parentNode.clientWidth }); });
+        if (nums.length) {
+          var loS = 30, hiS = 76, bestS = loS;
+          for (var k = 0; k < 24; k++) {
+            var m = (loS + hiS) / 2;
+            for (var a = 0; a < nums.length; a++) nums[a].el.style.fontSize = m + "px";
+            var ok = true;
+            for (var b = 0; b < nums.length; b++) if (nums[b].el.scrollWidth > nums[b].box) { ok = false; break; }
+            if (ok) { bestS = m; loS = m; } else { hiS = m; }
+          }
+          for (var c = 0; c < nums.length; c++) nums[c].el.style.fontSize = bestS + "px";
+        }
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(window.__wiritFit);
+    </script>
+  </body>
+</html>

@@ -283,6 +283,16 @@ const cards = [
   ["danji-brief-result", result(byId("acro-de-seocho"))],
 ];
 
+/* ── 배치 시안 A·B·C (2026-08-03) ──
+ * 오너: "배치와 디자인들을 좀 여러가지 버전으로 제안해줘. 지금 건 사진도 아래 박스도
+ *        나뉘어져 보이고, 폰트 균형도 그렇고 너무 맘에 안 들어…"
+ * → 같은 데이터로 **판형만 다른** 세 장을 낸다. 데이터를 손대면 비교가 성립하지 않는다.
+ *   내용 계약(topcap·titleLines·hero·danji·address·spec·priceTable·schedule·notice·source)은
+ *   셋이 동일하고, 바뀌는 것은 template 한 줄뿐이다. 오너가 고르면 나머지 둘은 지운다. */
+for (const v of ["a", "b", "c"]) {
+  cards.push([`danji-${v}-hangang`, { ...cards[0][1], template: `danji-${v}@1` }]);
+}
+
 for (const [slug, card] of cards) {
   writeFileSync(join(outDir, `${slug}.json`), JSON.stringify(card, null, 2) + "\n", "utf8");
   console.log(`${slug} — ${card.danji.name}`);
