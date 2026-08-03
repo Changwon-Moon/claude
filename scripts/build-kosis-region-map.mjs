@@ -44,6 +44,31 @@ const ALT = ["births", "deaths"];
 
 const norm = (s) => String(s ?? "").replace(/\s+/g, "");
 
+/**
+ * 시도 이름을 **한 가지 꼴로 맞춘다.**
+ *
+ * 같은 도를 표마다 다르게 부른다. 실측(2026-08-03):
+ *   사망표 32=강원도      · 출생표 32=강원특별자치도   · 인구표 51=강원특별자치도
+ *   사망표 35=전라북도     · 출생표 35=전북특별자치도   · 인구표 52=전북특별자치도
+ *   사망표 39=제주도      · 출생표 39=제주특별자치도   · 인구표 50=제주특별자치도
+ *
+ * 사망 표는 1998년부터의 시계열이라 **개편 전 이름과 개편 후 이름이 함께** 들어 있다
+ * (32310=홍천군 과 32510=홍천군 이 둘 다 있다). 옛 코드도 같은 곳을 가리키므로 함께 옮긴다.
+ *
+ * 이름 그대로 맞추면 강원·전북·제주가 통째로 떨어져 나가고, 그러면 그 세 도의
+ * 시군구가 지도에서 조용히 빈다. 빈 지도는 "데이터가 없다" 로 보이지 성능 문제로 안 보인다.
+ */
+function canonSido(name) {
+  let s = norm(name);
+  s = s.replace(/(특별자치도|특별자치시|특별시|광역시|자치도|도|시)$/u, "");
+  const alias = {
+    전라북: "전북", 전라남: "전남",
+    충청북: "충북", 충청남: "충남",
+    경상북: "경북", 경상남: "경남",
+  };
+  return alias[s] ?? s;
+}
+
 let raw;
 try {
   raw = JSON.parse(readFileSync(RAW, "utf8"));
@@ -64,7 +89,7 @@ if (!base?.ok || !Object.keys(base.regions ?? {}).length) {
 const baseSidoByName = new Map();
 const baseSggByKey = new Map();
 for (const [code, name] of Object.entries(base.regions)) {
-  if (code.length === 2) baseSidoByName.set(norm(name), code);
+  if (code.length === 2) baseSidoByName.set(canonSido(name), code);
   else if (code.length === 5) baseSggByKey.set(`${code.slice(0, 2)}|${norm(name)}`, code);
 }
 
@@ -94,7 +119,7 @@ for (const key of ALT) {
 
   const sidoByCode = new Map();
   for (const [code, name] of Object.entries(t.regions)) {
-    if (code.length === 2) sidoByCode.set(code, norm(name));
+    if (code.length === 2) sidoByCode.set(code, canonSido(name));
   }
 
   const map = {};
