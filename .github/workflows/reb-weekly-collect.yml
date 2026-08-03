@@ -107,6 +107,7 @@ jobs:
           pnpm --filter @wirit/collectors exec tsx src/rebWeeklyCli.ts $ARGS
 
       - name: 데이터셋 커밋
+        id: commit
         if: github.event.inputs.mode != 'discover' && github.event.inputs.mode != 'probe'
         run: |
           git config user.name "wirit-bot"
@@ -114,8 +115,22 @@ jobs:
           git add -- data/datasets/reb-weekly-index.json
           if git diff --cached --quiet; then
             echo "변경 없음 — 이번 주 공표분이 아직 반영되지 않았을 수 있습니다"
+            echo "changed=0" >> "$GITHUB_OUTPUT"
           else
             git commit -m "주간 매매·전세 지수 수집(부동산원)"
             git pull --rebase --autostash origin ${GITHUB_REF_NAME}
             git push origin HEAD:${GITHUB_REF_NAME}
+            echo "changed=1" >> "$GITHUB_OUTPUT"
           fi
+
+      # 새 주간 지수가 들어왔을 때만 오너 폰으로 브리핑을 보낸다(전주比 변동·서울 연속 주수).
+      # 문구는 원자료 계산(scripts/reb-weekly-brief.mjs). 시크릿이 없으면 notify 가 조용히 건너뛴다.
+      - name: 텔레그램 알림 (새 주간 지수가 있을 때만)
+        if: steps.commit.outputs.changed == '1'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TOWER_URL: ${{ secrets.TOWER_URL }}
+        run: |
+          MSG=$(node scripts/reb-weekly-brief.mjs)
+          node scripts/notify-telegram.mjs "$MSG"
