@@ -14,6 +14,7 @@
 2. **docs/EXECUTION_PLAN.md의 해당 마일스톤 발주 내용**과 완료 확인 기준을 확인
 3. 관련 설계 문서(ARCHITECTURE.md, AGENTS.md, TEMPLATES.md, DATA_SOURCES.md)의 **계약을 따른다** — 계약을 바꿔야 한다면 임의로 바꾸지 말고 운영자에게 이유와 함께 제안한다
 4. **카드를 만들거나 고치는 작업이면 [docs/CARD_CHECKLIST.md](docs/CARD_CHECKLIST.md) 를 먼저 읽는다.**
+   - 🏢 **청약·분양 소재**라면 [docs/guides/청약분양-카드-기준.md](docs/guides/청약분양-카드-기준.md) 도 **반드시** 읽는다. 판형은 `danji-cover@1` 하나뿐이고, 새 템플릿을 만들지 않는다.
    이건 권장이 아니라 필수다 — 이 문서가 생긴 이유가 *이미 정해둔 기준을 오너가 다시 말하게 된 일*이다.
    §2(재발 금지 항목)를 훑고, 내보내기 전에 §0(재생성 + 자동 검수 + 발행본 md5)을 실행한다.
 

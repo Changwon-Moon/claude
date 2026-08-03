@@ -83,6 +83,8 @@ B등급(API 키) 경고는 **새 데이터 수집에만** 필요하다. 없어�
 1. `docs/HANDOFF.md` — 이 공장의 단일 입구
 2. `STATUS.md` — 어디까지 왔고 다음이 뭔지
 3. `docs/CARD_CHECKLIST.md` §2 — **카드를 만들거나 고치는 작업이면 필수**(재발 금지 항목)
+   - 🏢 **청약·분양 소재**면 `docs/guides/청약분양-카드-기준.md` 도 필수. 판형은 `danji-cover@1` 하나,
+     빌더는 `scripts/build-danji.mjs` 하나다. **분양가는 입주자모집공고문 대조 전 발행 금지.**
 4. `company/CEO.md` — 오너 판단 원칙(누적)
 5. `docs/LINE_CARDS.md` — **지하철 노선 시세 카드 시리즈**(신분당·2~9호선 「역세권 34평 APT 시세」) 단일 기준. 노선 카드 요청이면 필수.
 6. `docs/COWORK.md` — 코워크에서의 경계선(무엇을 여기서, 무엇을 GitHub Actions 에서)

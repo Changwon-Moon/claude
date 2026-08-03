@@ -198,14 +198,10 @@ const MEASURE_JS = `(() => {
              /* sinbundang-map — 노선도형 지도 카드(2026-07-31). 새 템플릿을 만들면 글자 요소를
                 여기 등록해야 겹침 검사가 실제로 잰다(빠뜨리면 검사받지 않은 것). */
              ".sbm-stn,.sbm-danji,.sbm-price .v,.sbm-price .sz,.sbm-note," +
-             /* danji-brief — 청약단지 브리핑(2026-08-01). */
-             ".db-title .ln,.db-credit,.db-fb .w,.db-fb .sub," +
-             ".db-nm .n,.db-nm .loc,.db-nm .lgtx," +
-             ".db-s .l,.db-s .v,.db-hr span,.db-row span," +
-             ".db-sc .l,.db-sc .d,.db-tnote,.db-note," +
-             /* danji-c — 표지형(오너 채택안, 2026-08-03). 새 템플릿을 만들면 글자 요소를 여기
-                등록해야 겹침 검사가 실제로 잰다 — 목록에서 빠진 요소는 없는 것과 같다. */
-             ".dcv-title .ln,.dcv-fb .w,.dcv-nm .nm,.dcv-nm .loc," +
+             /* danji-cover — 청약·분양 표준 판형(오너 확정 2026-08-03). 새 템플릿을 만들면
+                글자 요소를 여기 등록해야 겹침 검사가 실제로 잰다 — 빠진 요소는 없는 것과 같다.
+                (danji-brief 는 이 판형으로 대체돼 삭제됐다) */
+             ".dcv-title .ln,.dcv-fb .w,.dcv-nm .nm,.dcv-nm .loc,.dcv-ph," +
              ".dcv .lab,.dcv-facts .v,.dcv-facts .brk,.dcv-item .a,.dcv-item .p,.dcv-note," +
              /* sinbundang-loop — 노선 접이형 정보카드(2026-07-31). */
              ".slp-stn,.slp-danji,.slp-meta,.slp-priceB,.slp-name,.slp-gu,.slp-top";

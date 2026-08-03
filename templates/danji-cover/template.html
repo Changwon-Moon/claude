@@ -4,7 +4,11 @@
     <meta charset="utf-8" />
     <!--WIRIT_SHARED_CSS-->
     <style>
-      /* danji-c@2 — 청약단지 브리핑 "표지형" (오너 채택안, 2026-08-03 지시 반영)
+      /* danji-cover@1 — 청약·분양 카드 **표준 판형** (오너 확정 2026-08-03)
+       *
+       * 이 템플릿이 앞으로 청약·분양 카드의 기본이다. 시안 A·B·C 중 C(표지형)가 채택돼
+       * 마감 지시 12건을 거쳐 확정됐다. 판형을 바꾸려면 오너 승인이 필요하다
+       * (docs/guides/청약분양-카드-기준.md).
        *
        * ── 구조: 표지 한 덩어리 + 종이 두 단
        *   [표지 690px]  조감도 → 아래로 잉크가 번지며 그대로 잉크 밴드가 된다.
@@ -61,6 +65,14 @@
         position: absolute; left: 0; right: 0; top: 0; height: 190px;
         background: linear-gradient(180deg, rgba(8,11,18,0.46) 0%, rgba(8,11,18,0.1) 60%, rgba(8,11,18,0) 100%);
       }
+      /* ⚠️ 조감도가 없어 대체 사진을 깐 경우의 경고. 조감도 출처 표기를 지우면서(오너 지시)
+         이 표시까지 함께 사라졌었다 — 그러면 **아무 사진이나 그 단지의 조감도로 읽힌다.**
+         출처를 지우는 것과 거짓을 허용하는 것은 다르다. 발행 전에 반드시 걷어내야 할 상태다. */
+      .dcv-ph {
+        position: absolute; right: 72px; top: 118px; padding: 8px 16px; border-radius: 4px;
+        background: rgba(255, 196, 0, 0.92); color: #1a1400;
+        font-size: 22px; font-weight: 800; letter-spacing: -0.01em;
+      }
 
       .dcv .wirit-topcap {
         position: absolute; left: 72px; right: 72px; top: 0;
@@ -102,6 +114,9 @@
       /* 타입과 금액은 칸 **가운데** 로 맞춘다(오너 지시 2026-08-03). 왼쪽 맞춤이면 '84A'와
          '7.7억'의 글자 수가 달라 둘의 무게중심이 어긋나 보인다. */
       .dcv-item { min-width: 0; text-align: center; }
+      /* 평형이 하나뿐이면 칸이 카드 폭 전체다 — 가운데로 밀면 왼쪽 머리글과 따로 논다.
+         이때만 왼쪽 맞춤으로 되돌린다. */
+      .dcv-grid .dcv-item:only-child { text-align: left; }
       .dcv-item .a {
         display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 800;
         letter-spacing: -0.03em; color: var(--wirit-gray); line-height: 1; margin-bottom: 10px; white-space: nowrap;
@@ -135,6 +150,11 @@
          덤: 1:1:1:1.5 의 마지막 경계는 936×3/4.5 = 624px 로, 위 줄(3등분)의 두 번째
          세로선과 **정확히 겹친다.** 두 줄이 선 하나를 공유하니 그리드가 우연처럼 보이지 않는다. */
       .dcv-facts .frow.when { grid-template-columns: 1fr 1fr 1fr 1.5fr; }
+      /* 일정이 3칸인 카드(청약 결과 등)도 있다. 4열 고정이면 빈 열이 남고 세로선이 어긋난다.
+         칸 수를 세어 열 수를 맞춘다 — 데이터가 판을 정하지, 판이 데이터를 정하지 않는다.
+         3칸일 때는 균등 3열이 정답이다: 위 줄(제원)도 3등분이라 **두 세로선이 모두 겹치고**,
+         칸 폭 284px 는 가장 긴 '2029년 2월'을 52px 로 담기에 넉넉하다. */
+      .dcv-facts .frow.when:has(.cell:nth-child(3):last-child) { grid-template-columns: 1fr 1fr 1fr; }
       .dcv-facts .cell { min-width: 0; }
       .dcv-facts .cell + .cell { border-left: 1px solid rgba(20, 24, 33, 0.09); padding-left: 28px; }
       .dcv-facts .fhr { height: 1px; background: var(--wirit-ink-12); margin: 22px 0; }
@@ -179,6 +199,7 @@
           <div class="dcv-topshade"></div>
         </div>
         <div class="dcv-fade"></div>
+        {{#if hero.placeholder}}<div class="dcv-ph">조감도 미확보 · 대체 이미지</div>{{/if}}
 
         <div class="wirit-topcap"><span class="tx">{{topcap}}</span></div>
 

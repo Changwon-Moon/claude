@@ -1,29 +1,31 @@
 /**
- * 청약단지 브리핑 카드 — danji-brief@2.
- * 🧪 시안. 분양가는 보도값이라 아직 verified 가 아니다(청약홈 API 는 분양가를 주지 않는다).
+ * 청약·분양 카드 빌더 — 표준 판형 `danji-cover@1` (오너 확정 2026-08-03).
  *
- * ── @2 에서 오너가 지시한 판형 (2026-08-03)
- *   최상단 고정 부제 "오늘의 주요 청약 이슈 (날짜)" — 날짜 자동
- *   → 제목 **한 줄, 폰트 최대**
- *   → 조감도
- *   → 단지명 (주소·시공사 줄 삭제)
- *   → [세대수 | 최고층]
- *   → [대표평형 | 분양가]
- *   → [특공 | 1순위 | 입주예정월]
+ * 이 스크립트가 청약·분양 카드의 **유일한** 빌더다. 판형도 하나뿐이다.
+ * 기준 문서: docs/guides/청약분양-카드-기준.md (읽지 않고 손대지 말 것)
+ *
+ * ── 카드가 말하는 것 (순서 고정)
+ *   고정 부제 "오늘의 주요 청약 이슈 (날짜)" — 날짜 자동
+ *   → 조감도(표지) → 제목 한 줄 → 단지명 → 주소
+ *   → 타입별 분양가(최고가 기준) — 면적대마다 대표타입 하나씩 전부
+ *   → 세대수 / 동수 / 최고 층수
+ *   → 특공 / 1순위 / 당첨자 발표 / 입주 예정
  *   → 특이사항 한 줄(분상제·전매제한 등)
  *
- * ── 사실의 원천
- *  · `applyhomeNo` 가 있으면 세대수·특공일·1순위일·입주예정월·분양가상한제를
+ * ── 사실의 원천 (오보 0)
+ *  · `applyhomeNo` 가 있으면 세대수·특공일·1순위일·당첨자발표일·입주예정월·분양가상한제를
  *    **청약홈 수집분(applyhome-latest.json)에서 코드가 직접 읽는다.** 손으로 옮기지 않는다.
- *    데이터셋에 같은 값이 적혀 있고 다르면 던진다 — 사람이 눈으로 고르게 두지 않는다.
+ *    데이터셋에 같은 값이 적혀 있고 다르면 **던진다** — 사람이 눈으로 고르게 두지 않는다.
  *  · 청약홈에 없는 것(동수·층수·전용면적 구성·분양가)만 데이터셋에 둔다.
+ *  · ⚠️ 분양가는 청약홈 API 가 주지 않는다. 보도값으로 만들어 두더라도
+ *    **입주자모집공고문 대조 전까지 발행 금지**다.
  *
  * ── 대표평형 (오너 지시)
- * 84A~D 가 여러 개여도 카드에는 **하나만** 적는다. 주력 면적대(mainArea)가 있으면 그것,
+ * 84A~D 가 여러 개여도 면적대마다 **하나만** 적는다. 주력 면적대(mainArea)가 있으면 그것,
  * 없으면 국민평형(84㎡), 그것도 없으면 타입이 가장 많은 면적대를 고른다.
  * 어느 쪽이든 **코드가 고른다** — "이 칸"이라고 손으로 박지 않는다(CARD_CHECKLIST §3).
  *
- * 실행: node scripts/build-danji-brief.mjs [date=오늘] [WIRIT_TITLE=a|b|c|…]
+ * 실행: node scripts/build-danji.mjs [날짜=오늘]
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -209,7 +211,7 @@ function presale(d) {
   /* 오피스텔은 이제 위 스트립이 말한다 — 한 카드에서 같은 말을 두 번 하지 않는다 */
 
   return {
-    template: "danji-brief@3",
+    template: "danji-cover@1",
     date,
     kind: "presale",
     /* 고정 부제 + 날짜. 손으로 적지 않는다 — 적는 순간 다음 카드에서 날짜가 굳는다. */
@@ -262,7 +264,7 @@ function result(d) {
   if (d.record) flags.push(d.record.claim);
 
   return {
-    template: "danji-brief@3",
+    template: "danji-cover@1",
     date,
     kind: "result",
     topcap: `오늘의 주요 청약 이슈 (${date.replace(/-/g, ".")})`,
@@ -274,8 +276,9 @@ function result(d) {
     spec: [
       { label: "세대수", value: n(d.total), unit: "세대" },
       { label: "동수", value: String(d.buildings), unit: "개동" },
-      /* 결과 카드의 세 번째 칸은 경쟁률이다 — 이 카드의 주인공이 층수는 아니다 */
-      { label: "1순위 경쟁률", value: n(first.shown), unit: "대 1" },
+      /* 결과 카드의 세 번째 칸은 경쟁률이다 — 이 카드의 주인공이 층수는 아니다.
+         표준 판형은 제원 라벨을 그리지 않으므로 "1순위"를 값 앞에 붙여 뜻을 지킨다. */
+      { label: "1순위 경쟁률", pre: "1순위", value: n(first.shown), unit: "대 1" },
     ],
     address: addressOf(d),
     priceTable: priceTable(d, d.total),
@@ -285,7 +288,9 @@ function result(d) {
       { label: "입주 예정", date: ymKo(d.moveIn) },
     ],
     notice: flags.join(" · "),
-    source: { name: `${d.source.name} · ${d.source.via.split(" · ")[0]}` },
+    /* 결과 카드의 경쟁률은 청약홈 집계 + 보도에서 온다 — 분양 예정 카드와 달리 보도를 남긴다.
+       숫자가 실제로 어디서 왔는지가 푸터의 유일한 기준이다. */
+    source: { name: `${d.source.name.replace(/^한국부동산원\s+/, "")} · ${d.source.via.split(" · ")[0]}` },
   };
 }
 
@@ -294,16 +299,11 @@ const outDir = join(ROOT, "data/out/_spike");
 mkdirSync(outDir, { recursive: true });
 
 const cards = [
-  ["danji-brief-hangang", presale(byId("hangang-prugio-riverfront"))],
-  ["danji-brief-sangdong", presale(byId("sangdong-lotte-castle"))],
-  ["danji-brief-presale", presale(byId("sangok-xi-hillstate"))],
-  ["danji-brief-result", result(byId("acro-de-seocho"))],
+  ["danji-hangang", presale(byId("hangang-prugio-riverfront"))],
+  ["danji-sangdong", presale(byId("sangdong-lotte-castle"))],
+  ["danji-sangok", presale(byId("sangok-xi-hillstate"))],
+  ["danji-acro", result(byId("acro-de-seocho"))],
 ];
-
-/* ── 채택안 (2026-08-03) ──
- * 배치 시안 A·B·C 중 오너가 **C(표지형)** 를 골랐다. 나머지 둘은 폴더째 지웠다 —
- * 고르고 남은 선택지를 코드에 두면 다음 사람이 무엇이 정답인지 다시 고민한다. */
-cards.push(["danji-c-hangang", { ...cards[0][1], template: "danji-c@2" }]);
 
 for (const [slug, card] of cards) {
   writeFileSync(join(outDir, `${slug}.json`), JSON.stringify(card, null, 2) + "\n", "utf8");

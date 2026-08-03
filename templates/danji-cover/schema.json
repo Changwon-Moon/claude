@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "danji-c@2",
-  "description": "청약단지 브리핑 표지형(오너 채택안) — 조감도가 카드 머리를 이루고 아래로 잉크가 번지며 제목·단지명·주소를 담는다. 종이는 위(타입·분양가)/아래(제원·일정 6칸) 두 단, 사이에 선 하나.",
+  "title": "danji-cover@1",
+  "description": "청약·분양 카드 **표준 판형**(오너 확정 2026-08-03). 표지(조감도→잉크 밴드에 제목·단지명·주소) + 종이 두 단(타입별 분양가 / 제원·일정 괘선 그리드) + 특이사항 + 푸터.",
   "type": "object",
   "required": [
     "template",
@@ -15,7 +15,7 @@
   "properties": {
     "template": {
       "type": "string",
-      "pattern": "^danji-c@\\d+$"
+      "pattern": "^danji-cover@\\d+$"
     },
     "date": {
       "type": "string"
