@@ -51,11 +51,18 @@ const newWolse = r1(nW, nT);      // 40곳 신규 월세비중
 const ratioOf = (geoName) => byGu[geoName].wolseRatio;
 
 // ── 지도: 토허 40곳 코로플레스(월세비중), 라벨 = 지역/비중% 2줄 ──
+// 색: 꼴찌(최소 비중)=옅은 회색 → 1위(최대 비중)=빨강. 실제 [min,max] 정규화로 대비를 준다.
+const ratios = AREAS.map((a) => ratioOf(a.geoName));
 const parts = tohuhParts(AREAS);
 const mapSvg = tohuhMapSvg({
   parts,
   valueOf: (info) => ratioOf(info.geoName),
   textOf: (p) => `${p.v}%`,
+  minValue: Math.min(...ratios),
+  maxValue: Math.max(...ratios),
+  colorLo: [233, 236, 239], // 옅은 회색(전세 많음)
+  colorHi: [211, 41, 47],   // 빨강(월세 많음)
+  textThreshold: 0.56,      // 확실히 붉은 상위만 흰 글자, 나머지는 잉크 글자(지저분함 방지)
   twoLine: true,
   labelWidth: 118,
   placement: "nearest",
