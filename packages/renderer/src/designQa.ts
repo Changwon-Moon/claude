@@ -203,14 +203,10 @@ const MEASURE_JS = `(() => {
              ".db-nm .n,.db-nm .loc,.db-nm .lgtx," +
              ".db-s .l,.db-s .v,.db-hr span,.db-row span," +
              ".db-sc .l,.db-sc .d,.db-tnote,.db-note," +
-             /* danji-a·b·c — 배치 시안 3종(2026-08-03). 새 템플릿을 만들면 글자 요소를 여기
+             /* danji-c — 표지형(오너 채택안, 2026-08-03). 새 템플릿을 만들면 글자 요소를 여기
                 등록해야 겹침 검사가 실제로 잰다 — 목록에서 빠진 요소는 없는 것과 같다. */
-             ".da-title .ln,.da-credit,.da-fb .w,.da-cap .nm,.da-cap .loc," +
-             ".da .lab,.da-spec .v,.da-spec .brk,.da-item .a,.da-item .p,.da-price .note,.da-when .d,.da-note," +
-             ".dbp-title .ln,.dbp-credit,.dbp-fb .w,.dbp-cap .nm,.dbp-addr .tx," +
-             ".dbp .lab,.dbp-spec .v,.dbp-spec .brk,.dbp-item .a,.dbp-item .p,.dbp-price .note,.dbp-when .d,.dbp-note," +
-             ".dcv-title .ln,.dcv-credit,.dcv-fb .w,.dcv-nm .nm,.dcv-nm .loc," +
-             ".dcv .lab,.dcv-spec .v,.dcv-spec .brk,.dcv-item .a,.dcv-item .p,.dcv-price .note,.dcv-when .d,.dcv-note," +
+             ".dcv-title .ln,.dcv-fb .w,.dcv-nm .nm,.dcv-nm .loc," +
+             ".dcv .lab,.dcv-facts .v,.dcv-facts .brk,.dcv-item .a,.dcv-item .p,.dcv-price .note,.dcv-note," +
              /* sinbundang-loop — 노선 접이형 정보카드(2026-07-31). */
              ".slp-stn,.slp-danji,.slp-meta,.slp-priceB,.slp-name,.slp-gu,.slp-top";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));

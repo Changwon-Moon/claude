@@ -4,30 +4,35 @@
     <meta charset="utf-8" />
     <!--WIRIT_SHARED_CSS-->
     <style>
-      /* danji-c@1 — 청약단지 브리핑 C안 "표지형"
+      /* danji-c@2 — 청약단지 브리핑 "표지형" (오너 채택안, 2026-08-03 지시 반영)
        *
-       * ── A·B와 다른 전제
-       * A안과 B안은 "제목 → 사진 → 데이터" 순서를 지킨 채 사진과 데이터의 관계만 고쳤다.
-       * C안은 순서를 바꾼다. **사진이 카드의 머리 자체가 된다.**
-       * 조감도가 카드 맨 위 0px 부터 690px 까지를 통으로 덮고, 부제·제목·단지명·주소가
-       * 그 위에 얹힌다. 사진 아래로는 종이 위 수치만 남는다.
+       * ── 구조: 표지 한 덩어리 + 종이 두 단
+       *   [표지 690px]  조감도 → 아래로 잉크가 번지며 그대로 잉크 밴드가 된다.
+       *                 부제는 사진 위, **제목·단지명·주소는 잉크 밴드 안**에 앉는다.
+       *   [종이]        위 단 = 타입·분양가 / 가운데 선 / 아래 단 = 제원·일정 6칸
        *
-       * 그러면 "사진과 아래 박스가 나뉘어 보인다"는 지적이 성립하지 않는다 —
-       * 사진은 더 이상 카드 안의 요소가 아니라 카드의 상반신이고, 아래는 그 설명이다.
-       * 잡지 표지와 같은 구조다. 덩어리는 둘, 경계는 하나.
+       * ── 오너 지시 (2026-08-03)
+       *  · 사진 위 조감도 출처 표기 삭제 → 푸터 출처 줄로 내렸다(표기를 없애지는 않는다.
+       *    조감도는 건설사 저작물이라 카드 어딘가에는 출처가 남아야 한다).
+       *  · 사진을 위로 — 건물 위 하늘을 이전의 2/3만 남긴다.
+       *  · 제목을 아래로 — 이전 '단지명 자리'로 내린다.
+       *  · 사진 하단 잉크 영역을 아래로 늘려 단지명·주소까지 그 안에 넣는다.
+       *  · 본문은 위/아래 두 단, 사이에 선 하나.
+       *  · 타입 글씨를 분양가와 **같은 크기**로.
+       *  · 단위(세대·개동·층)는 **크기는 그대로, 색만 회색**.
        *
-       * ── 대가와 그 처리
-       * 사진 위 글씨는 읽히기 어렵다. 그래서 아래쪽 그라데이션을 A·B보다 깊게 깔고
-       * 제목에 그림자를 준다. 코발트는 어두운 배경에서 죽으므로 밝은 청색(#7aa6ff)으로 올린다.
-       * 조감도의 하늘이 밝아 부제가 묻힐 수 있어 상단에도 얕은 그늘을 둔다.
+       * ── 사진 위치 계산 (손으로 고르지 않는다)
+       * 원본 1200×660. 카드 폭(1080)에 맞추면 594px 로 그려진다. 이 그림에서 건물 꼭대기는
+       * 세로 38.7% 지점(≈230px, 렌더로 실측)에 있다. 사진 칸을 446px 로 두고 그림을 **63px 끌어올리면**
+       * 보이는 하늘은 230-63 = 167px — 이전(250px)의 2/3다. 아래는 509px 까지만 보이므로
+       * 원본 하단에 박힌 건설사 고지문(≈564px 이후)도 자동으로 잘린다.
        */
 
       .dcv {
         --font-num: var(--font-pretendard);
-        --t-n: 56px;
+        --t-n: 46px;   /* 수치 기준 크기 — 실제 값은 __wiritFit 이 공통으로 정한다 */
         --t-l: 26px;
-        --gap-block: 36px;
-        --sky: #7aa6ff;
+        --ink: #141821;
       }
 
       .dcv .lab {
@@ -36,141 +41,135 @@
         margin-bottom: 12px;
       }
 
-      /* ── 표지: 카드 맨 위부터 ── */
+      /* ── 표지 = 사진 + 잉크 밴드 (경계 없이 하나) ── */
       .dcv-cover {
-        position: relative; flex: none; height: 650px; margin: -72px -72px 0; overflow: hidden;
-        background: var(--wirit-ink);
+        position: relative; flex: none; height: 690px; margin: -72px -72px 0;
+        overflow: hidden; background: var(--ink);
       }
-      /* 원본(1200×660) 하단에 건설사 고지문이 박혀 있다. 표지 칸이 원본보다 세로로 길어
-         object-position 으로는 잘리지 않는다 — 칸보다 54px 키워 아래를 잘라낸다. */
-      .dcv-cover img {
-        width: 100%; height: calc(100% + 54px); object-fit: cover; object-position: center top; display: block;
-      }
-      .dcv-fb { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--wirit-ink); }
+      .dcv-photo { position: absolute; left: 0; right: 0; top: 0; height: 446px; overflow: hidden; }
+      /* 폭만 맞추고 높이는 비율대로 — 그래야 위로 끌어올린 양(44px)이 원본 픽셀과 1:1로 대응한다 */
+      .dcv-photo img { position: absolute; left: 0; top: -63px; width: 100%; height: auto; display: block; }
+      .dcv-fb { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--ink); }
       .dcv-fb .w { font-family: var(--font-title); font-size: 96px; font-weight: 900; color: rgba(255,255,255,0.9); line-height: 1; }
-      /* 위 그늘: 부제가 밝은 하늘에 묻히지 않게. 아래 그늘: 제목과 단지명이 앉을 자리. */
-      .dcv-shade {
-        position: absolute; inset: 0;
-        background:
-          linear-gradient(180deg, rgba(8,11,18,0.5) 0%, rgba(8,11,18,0.12) 22%, rgba(8,11,18,0) 40%),
-          linear-gradient(180deg, rgba(8,11,18,0) 42%, rgba(8,11,18,0.62) 76%, rgba(8,11,18,0.88) 100%);
+      /* 사진이 잉크로 **번지며** 끝난다. 선으로 자르면 다시 '사진 상자'가 된다. */
+      .dcv-fade {
+        position: absolute; left: 0; right: 0; top: 266px; height: 180px;
+        background: linear-gradient(180deg, rgba(20,24,33,0) 0%, rgba(20,24,33,0.55) 46%, rgba(20,24,33,0.9) 80%, var(--ink) 100%);
       }
-      .dcv-credit {
-        position: absolute; right: 72px; top: 118px; font-size: 22px; font-weight: 700;
-        color: rgba(255,255,255,0.8); text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+      /* 부제가 밝은 하늘에 묻히지 않게 위쪽에만 얕은 그늘 */
+      .dcv-topshade {
+        position: absolute; left: 0; right: 0; top: 0; height: 190px;
+        background: linear-gradient(180deg, rgba(8,11,18,0.46) 0%, rgba(8,11,18,0.1) 60%, rgba(8,11,18,0) 100%);
       }
-      .dcv-credit .ph { color: #ffd24a; }
 
-      .dcv-head {
-        position: absolute; left: 72px; right: 72px; top: 0; bottom: 34px;
-        display: flex; flex-direction: column; justify-content: space-between;
-      }
-      /* 공용 부제 규격을 표지 위로 옮긴다 — 위치(로고 라인)·크기(28)는 그대로, 색만 흰색 계열 */
       .dcv .wirit-topcap {
+        position: absolute; left: 72px; right: 72px; top: 0;
         margin-top: 0; padding-top: 46px; color: rgba(255,255,255,0.82);
         text-shadow: 0 1px 8px rgba(0,0,0,0.6);
       }
 
+      /* 제목 — 이전 '단지명 자리'로 내려왔다. 잉크 밴드 안이라 그림자가 필요 없다. */
+      .dcv-head { position: absolute; left: 72px; right: 72px; bottom: 34px; }
       .dcv-title { font-size: 92px; }
       .dcv-title .ln {
         font-family: var(--font-title); font-size: 1em; font-weight: 900; line-height: 1.08;
         letter-spacing: -0.035em; color: #fff; white-space: nowrap; width: max-content; max-width: 100%;
-        text-shadow: 0 3px 20px rgba(0,0,0,0.62);
       }
-      .dcv-title .hi { color: var(--sky); }
+      .dcv-title .hi { color: #7aa6ff; }
       .dcv-title .up { color: #ff8a8e; }
 
-      .dcv-nm {
-        margin-top: 22px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;
-      }
+      .dcv-nm { margin-top: 22px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
       .dcv-nm .nm {
         display: block; font-family: var(--font-sans); font-size: 42px; font-weight: 800;
         letter-spacing: -0.03em; color: #fff; line-height: 1.05; white-space: nowrap;
-        text-shadow: 0 2px 12px rgba(0,0,0,0.7);
       }
       .dcv-nm .loc {
         display: block; margin-top: 10px; font-family: var(--font-sans); font-size: 28px; font-weight: 700;
-        letter-spacing: -0.02em; color: rgba(255,255,255,0.82); line-height: 1;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.75);
+        letter-spacing: -0.02em; color: rgba(255,255,255,0.72); line-height: 1;
       }
+      /* 짙은 단색 브랜드 마크는 잉크 위에서 사라진다 — 흰색으로 뒤집는다(형태는 그대로) */
       .dcv-nm .lg {
         flex: none; height: 62px; width: auto; max-width: 220px; object-fit: contain;
-        /* 짙은 단색 마크는 사진 위에서 사라진다 — 흰색으로 뒤집는다 */
-        filter: brightness(0) invert(1) drop-shadow(0 2px 10px rgba(0, 0, 0, 0.55)); opacity: 0.95;
+        filter: brightness(0) invert(1); opacity: 0.95;
       }
 
-      /* ── 종이: 표지의 설명 ── */
-      .dcv-price { margin-top: var(--gap-block); }
+      /* ── 종이 위 단: 타입 · 분양가 ──
+       * 타입과 금액을 **같은 크기**로 둔다(오너 지시). 위계는 크기가 아니라 색이 만든다 —
+       * 타입은 회색, 금액은 잉크, 주력 면적대만 코발트. */
+      .dcv-price { margin-top: 30px; }
       .dcv-price .top { display: flex; align-items: baseline; justify-content: space-between; }
       .dcv-price .top .note { font-size: 24px; font-weight: 700; color: var(--wirit-gray); }
-      .dcv-grid { display: grid; column-gap: 24px; row-gap: 24px; }
+      .dcv-grid { display: grid; column-gap: 22px; row-gap: 20px; }
       .dcv-item { min-width: 0; }
       .dcv-item .a {
-        display: block; font-family: var(--font-num); font-size: 30px; font-weight: 800;
-        letter-spacing: -0.01em; color: var(--wirit-gray); line-height: 1; margin-bottom: 12px;
+        display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 800;
+        letter-spacing: -0.03em; color: var(--wirit-gray); line-height: 1; margin-bottom: 10px; white-space: nowrap;
       }
       .dcv-item .p {
         display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 900;
         letter-spacing: -0.03em; color: var(--wirit-ink); line-height: 1; white-space: nowrap;
       }
-      .dcv-item.main .a { color: var(--wirit-cobalt); }
+      .dcv-item.main .a,
       .dcv-item.main .p { color: var(--wirit-cobalt); }
 
-      .dcv-spec { display: grid; grid-template-columns: 1.45fr 1fr 1fr; gap: 24px; margin-top: var(--gap-block); }
-      .dcv-spec .v {
+      /* ── 가운데 선: 위 단(가격)과 아래 단(제원·일정)을 가른다 ── */
+      .dcv-rule { height: 1px; background: var(--wirit-ink-12); margin: 26px 0; }
+
+      /* ── 종이 아래 단: 제원 3 + 일정 3 = 6칸 ──
+       * 단위는 **크기 그대로, 색만 회색**(오너 지시). 크기를 줄이면 단위가 각주가 되는데,
+       * '2,682세대'는 숫자와 단위가 한 낱말이다. */
+      .dcv-facts { display: grid; grid-template-columns: 1fr 1fr 1fr; column-gap: 22px; row-gap: 26px; }
+      .dcv-facts .v {
         display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 900;
         line-height: 1; letter-spacing: -0.03em; color: var(--wirit-ink); white-space: nowrap;
       }
-      .dcv-spec .v i {
-        font-family: var(--font-sans); font-style: normal; font-size: 0.42em; font-weight: 700;
-        margin-left: 6px; color: var(--wirit-gray);
+      .dcv-facts .v i {
+        font-family: var(--font-num); font-style: normal; font-size: 1em; font-weight: 900;
+        margin-left: 4px; color: var(--wirit-gray);
       }
-      .dcv-spec .brk {
-        display: block; margin-top: 12px; font-family: var(--font-sans); font-size: 25px;
+      .dcv-facts .v.tbd { color: var(--wirit-gray); }
+      .dcv-facts .brk {
+        display: block; margin-top: 10px; font-family: var(--font-sans); font-size: 24px;
         font-weight: 700; letter-spacing: -0.02em; color: var(--wirit-gray); line-height: 1; white-space: nowrap;
       }
 
-      .dcv-when { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: var(--gap-block); }
-      .dcv-when .d {
-        display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 900;
-        line-height: 1; letter-spacing: -0.03em; color: var(--wirit-ink); white-space: nowrap;
-      }
-      .dcv-when .d.tbd { font-family: var(--font-sans); font-size: 34px; font-weight: 700; color: var(--wirit-gray); }
-
       .dcv-note {
-        margin: var(--gap-block) 0 32px; font-family: var(--font-sans); font-size: 31px; font-weight: 700;
+        margin: 26px 0 24px; font-family: var(--font-sans); font-size: 30px; font-weight: 700;
         letter-spacing: -0.02em; color: var(--wirit-ink); line-height: 1.25; word-break: keep-all;
       }
       .dcv-note .tag { color: var(--wirit-cobalt); }
+
+      /* 출처 줄이 길어졌다(조감도 출처가 붙었다) — 워터마크와 붙지 않게 최소 간격을 준다 */
+      .dcv .wirit-footer { gap: 28px; }
     </style>
   </head>
   <body>
     <div class="wirit-card dcv">
       <div class="dcv-cover">
-        {{#if hero.photo}}
-          <img src="../_shared/photos/{{hero.photo}}" alt="" />
-        {{else}}
-          <div class="dcv-fb"{{#if hero.fallbackColor}} style="background:{{hero.fallbackColor}}"{{/if}}>
-            <span class="w">{{#if hero.fallbackWord}}{{hero.fallbackWord}}{{else}}{{danji.name}}{{/if}}</span>
-          </div>
-        {{/if}}
-        <div class="dcv-shade"></div>
-        {{#if hero.credit}}
-          <div class="dcv-credit">{{hero.credit}}{{#if hero.placeholder}} <span class="ph">· 시안</span>{{/if}}</div>
-        {{/if}}
+        <div class="dcv-photo">
+          {{#if hero.photo}}
+            <img src="../_shared/photos/{{hero.photo}}" alt="" />
+          {{else}}
+            <div class="dcv-fb"{{#if hero.fallbackColor}} style="background:{{hero.fallbackColor}}"{{/if}}>
+              <span class="w">{{#if hero.fallbackWord}}{{hero.fallbackWord}}{{else}}{{danji.name}}{{/if}}</span>
+            </div>
+          {{/if}}
+          <div class="dcv-topshade"></div>
+        </div>
+        <div class="dcv-fade"></div>
+
+        <div class="wirit-topcap"><span class="tx">{{topcap}}</span></div>
+
         <div class="dcv-head">
-          <div class="wirit-topcap"><span class="tx">{{topcap}}</span></div>
-          <div>
-            <div class="dcv-title">
-              {{#each titleLines}}<div class="ln">{{{this}}}</div>{{/each}}
+          <div class="dcv-title">
+            {{#each titleLines}}<div class="ln">{{{this}}}</div>{{/each}}
+          </div>
+          <div class="dcv-nm">
+            <div>
+              <span class="nm">{{danji.name}}</span>
+              {{#if address}}<span class="loc">{{address}}</span>{{/if}}
             </div>
-            <div class="dcv-nm">
-              <div>
-                <span class="nm">{{danji.name}}</span>
-                {{#if address}}<span class="loc">{{address}}</span>{{/if}}
-              </div>
-              {{#if danji.logo}}<img class="lg" src="../_shared/logos/{{danji.logo}}" alt="" />{{/if}}
-            </div>
+            {{#if danji.logo}}<img class="lg" src="../_shared/logos/{{danji.logo}}" alt="" />{{/if}}
           </div>
         </div>
       </div>
@@ -190,7 +189,9 @@
         </div>
       </div>
 
-      <div class="dcv-spec">
+      <div class="dcv-rule"></div>
+
+      <div class="dcv-facts">
         {{#each spec}}
         <div class="cell">
           <span class="lab">{{this.label}}</span>
@@ -198,35 +199,34 @@
           {{#if this.breakdown}}<span class="brk">{{this.breakdown}}</span>{{/if}}
         </div>
         {{/each}}
-      </div>
-
-      {{#if schedule}}
-      <div class="dcv-when">
         {{#each schedule}}
         <div class="cell">
           <span class="lab">{{this.label}}</span>
-          <span class="d{{#if this.tbd}} tbd{{/if}}">{{this.date}}</span>
+          <span class="v{{#if this.tbd}} tbd{{/if}}">{{this.date}}</span>
         </div>
         {{/each}}
       </div>
-      {{/if}}
 
       {{#if notice}}<div class="dcv-note">{{{notice}}}</div>{{/if}}
 
       <div class="wirit-footer">
-        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span>출처 · {{source.name}}{{#if source.photo}} · {{source.photo}}{{/if}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
         <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
       </div>
     </div>
 
     <script>
+      /* 폭 맞춤 둘.
+         ① 제목 — 한 줄이 카드 폭을 꽉 채우는 크기(줄이기만 하지 않고 키운다).
+         ② 수치 — **타입·분양가·제원·일정을 한 자로 재서 같은 크기**로 만든다.
+            타입(.a)까지 이 그룹에 넣은 것이 @1 과의 차이다(오너 지시: 타입도 같은 크기). */
       window.__wiritFit = function () {
         var t = document.querySelector(".dcv-title");
         if (t) {
           var lines = t.querySelectorAll(".ln");
           var availW = t.clientWidth;
           if (lines.length) {
-            var lo = 40, hi = 132, best = lo;
+            var lo = 40, hi = 128, best = lo;
             for (var i = 0; i < 26; i++) {
               var mid = (lo + hi) / 2;
               t.style.fontSize = mid + "px";
@@ -238,11 +238,13 @@
           }
         }
         var nums = [];
-        Array.prototype.forEach.call(document.querySelectorAll(".dcv-spec .v"), function (el) { nums.push({ el: el, box: el.parentNode.clientWidth }); });
-        Array.prototype.forEach.call(document.querySelectorAll(".dcv-item .p"), function (el) { nums.push({ el: el, box: el.parentNode.clientWidth }); });
-        Array.prototype.forEach.call(document.querySelectorAll(".dcv-when .d:not(.tbd)"), function (el) { nums.push({ el: el, box: el.parentNode.clientWidth }); });
+        Array.prototype.forEach.call(
+          document.querySelectorAll(".dcv-item .a,.dcv-item .p,.dcv-facts .v"),
+          function (el) { nums.push({ el: el, box: el.parentNode.clientWidth }); },
+        );
         if (nums.length) {
-          var loS = 30, hiS = 76, bestS = loS;
+          /* 상한 50 — 이 이상 키우면 아래 단이 푸터를 밀어낸다(칸 폭이 아니라 카드 높이가 한계다) */
+          var loS = 28, hiS = 50, bestS = loS;
           for (var k = 0; k < 24; k++) {
             var m = (loS + hiS) / 2;
             for (var a = 0; a < nums.length; a++) nums[a].el.style.fontSize = m + "px";

@@ -224,7 +224,17 @@ function presale(d) {
       { label: "입주 예정", date: ymKo(moveInYm), tbd: !moveInYm },
     ],
     notice: flags.join(" · "),
-    source: { name: `${d.source.name} · ${d.source.via.split(" · ")[0]}` },
+    source: {
+      /* 푸터 출처 줄은 한 줄이어야 한다(머리 규격). 조감도 출처가 붙으면서 넘쳐 둘을 줄였다.
+         ① '한국부동산원' 제거 — 청약홈은 한국부동산원이 운영하는 자체 브랜드라 함께 적으면
+            같은 기관을 두 번 말하는 것이다.
+         ② 보도 날짜 괄호 제거 — 날짜는 캡션과 데이터셋(source.via)이 갖는다.
+            카드 푸터가 답해야 할 질문은 '어디서 왔나'이지 '언제 보도됐나'가 아니다. */
+      name: `${d.source.name.replace(/^한국부동산원\s+/, "")} · ${d.source.via.split(" · ")[0].replace(/\s*\(.*\)$/, "")}`,
+      /* 조감도 출처. 사진 위 표기는 오너 지시로 지웠지만(2026-08-03) 표기 자체를 없애지는
+         않는다 — 건설사 저작물이다. "출처." 접두는 푸터 줄이 이미 갖고 있으므로 벗긴다. */
+      ...(d.photo?.credit ? { photo: d.photo.credit.replace(/^\s*출처[.·:]?\s*/, "") } : {}),
+    },
   };
 }
 
@@ -283,15 +293,10 @@ const cards = [
   ["danji-brief-result", result(byId("acro-de-seocho"))],
 ];
 
-/* ── 배치 시안 A·B·C (2026-08-03) ──
- * 오너: "배치와 디자인들을 좀 여러가지 버전으로 제안해줘. 지금 건 사진도 아래 박스도
- *        나뉘어져 보이고, 폰트 균형도 그렇고 너무 맘에 안 들어…"
- * → 같은 데이터로 **판형만 다른** 세 장을 낸다. 데이터를 손대면 비교가 성립하지 않는다.
- *   내용 계약(topcap·titleLines·hero·danji·address·spec·priceTable·schedule·notice·source)은
- *   셋이 동일하고, 바뀌는 것은 template 한 줄뿐이다. 오너가 고르면 나머지 둘은 지운다. */
-for (const v of ["a", "b", "c"]) {
-  cards.push([`danji-${v}-hangang`, { ...cards[0][1], template: `danji-${v}@1` }]);
-}
+/* ── 채택안 (2026-08-03) ──
+ * 배치 시안 A·B·C 중 오너가 **C(표지형)** 를 골랐다. 나머지 둘은 폴더째 지웠다 —
+ * 고르고 남은 선택지를 코드에 두면 다음 사람이 무엇이 정답인지 다시 고민한다. */
+cards.push(["danji-c-hangang", { ...cards[0][1], template: "danji-c@2" }]);
 
 for (const [slug, card] of cards) {
   writeFileSync(join(outDir, `${slug}.json`), JSON.stringify(card, null, 2) + "\n", "utf8");
