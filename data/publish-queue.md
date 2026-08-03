@@ -23,3 +23,4 @@
 - [x] [26.07.30(목) 오너 확정] **🔥 토허제 40곳 월세 폭등 (지도+행정구역 표)** · singoga-map · 원본 data/content/2026-07-30/tohuh-rent-map.json
 - [ ] [26.08.03(월) 오너 확정] **🌊 한강뷰 아파트 분양가 7억대? (한강 푸르지오 리버프론트)** · danji-hangang · 원본 data/content/2026-08-03/danji-hangang.json
 - [ ] [26.08.03(월) 오너 확정] **🏙 송도 무순위 줍줍 150세대 (더샵 송도그란테르)** · danji-songdo · 원본 data/content/2026-08-03/danji-songdo.json
+- [ ] [26.08.03(월) 관제탑] **서울 아파트 78주 연속 상승 — 상승폭 文정부의 2배** · streak-line · 원본 data/content/2026-07-27/mae-streak.json
