@@ -74,8 +74,14 @@
       /* 지도는 최대한 크게(96%). CTA 박스는 콤팩트(자연 높이)·왼쪽=지도 끝선(2%)·오른쪽=카드 끝까지,
        * 지도 바로 아래 붙인다(위아래 여백 최소화 → 지도 공간 최대). 배경 연하게. */
       .sm-map.cta-under svg { height: auto; flex: 0 0 auto; min-height: 0; max-width: 96%; margin: 0 auto; }
-      .sm-map.cta-under .sm-cta { background: rgba(20, 24, 33, 0.72); max-width: none;
+      .sm-map.cta-under .sm-cta { background: rgba(20, 24, 33, 0.30); max-width: none;
         margin: 12px 0 0 2%; padding: 18px 24px; }
+
+      /* centerBody — 본문(표·지도·카드)을 세로 가운데로. 제목~콘텐츠 = 콘텐츠~푸터 여백 동일.
+       * 상단 여백은 기준(72px)로 되돌려 최상단·제목을 위로 올린다(오너 지시 2026-08-01).
+       * ⚠️ sm-cb 를 준 카드에만 붙는다 — 발행된 신고가/토허 카드엔 영향 없음. */
+      .sm-cb.sm-c { padding-top: 72px; }
+      .sm-cb .sm-body { flex: 0 0 auto; margin-top: auto; margin-bottom: auto; }
       .sm-legend { display: flex; align-items: center; gap: 10px; justify-content: flex-end; margin-top: 4px; font-size: 20px; font-weight: 700; color: var(--wirit-gray); }
       .sm-legend .bar { width: 150px; height: 12px; border-radius: 6px;
         background: linear-gradient(90deg, rgb(255,226,219), rgb(176,11,30)); }
@@ -119,7 +125,7 @@
     </style>
   </head>
   <body>
-    <div class="wirit-card sm{{#if compact}} sm-c{{/if}}{{#if spread}} sm-spread{{/if}}{{#if head.c}} sm-h3{{/if}}"{{#if fitTitle}} data-fit="1"{{/if}}>
+    <div class="wirit-card sm{{#if compact}} sm-c{{/if}}{{#if spread}} sm-spread{{/if}}{{#if head.c}} sm-h3{{/if}}{{#if centerBody}} sm-cb{{/if}}"{{#if fitTitle}} data-fit="1"{{/if}}>
       <div class="wirit-topcap">{{#if note}}<span>{{note}}</span>{{/if}}</div>
       <h1 class="wirit-title">{{{title}}}</h1>
       {{#if subtitle}}<div class="sm-sub">{{subtitle}}</div>{{/if}}

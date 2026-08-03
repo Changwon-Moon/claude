@@ -75,7 +75,7 @@ function ctaBars(allW, newW) {
   const bar = (rowLabel, wolse) => {
     const je = Math.round((100 - wolse) * 10) / 10;
     return `<div style="display:flex;align-items:center;gap:16px;margin-top:12px">` +
-      `<div style="width:104px;font-size:25px;font-weight:800;color:#fff;letter-spacing:-0.01em">${rowLabel}</div>` +
+      `<div style="width:104px;font-size:25px;font-weight:800;color:#141821;letter-spacing:-0.01em">${rowLabel}</div>` +
       `<div style="flex:1;display:flex;height:46px;border-radius:10px;overflow:hidden">` +
       seg(je, COB) + seg(wolse, RED) +
       `</div></div>`;
@@ -84,9 +84,9 @@ function ctaBars(allW, newW) {
     `<div style="display:flex;align-items:center;gap:16px">` +
       `<div style="width:104px"></div>` +
       `<div style="flex:1;display:flex;justify-content:space-between;font-size:24px;font-weight:800">` +
-        `<span style="color:#6f9cff">전세</span><span style="color:#ff7a7e">월세</span></div></div>` +
+        `<span style="color:#2e6bff">전세</span><span style="color:#e5484d">월세</span></div></div>` +
     bar("전체 계약", allW) + bar("신규 계약", newW) +
-    `<div style="margin-top:16px;font-size:21px;font-weight:700;color:#9aa3af;text-align:right">※ 신규 : 최근 3개월</div>` +
+    `<div style="margin-top:16px;font-size:21px;font-weight:700;color:#6b7280;text-align:right">※ 신규 : 최근 3개월</div>` +
     `</div>`;
 }
 
@@ -135,6 +135,7 @@ const doc = {
   compact: true,
   fitTitle: true,
   ctaRight: true,
+  centerBody: true,
   hideFooterId: true, // 아이디는 지도 안 스탬프에 있다 — 푸터 중복 제거(BRAND: 카드당 1개)
   date,
   note: `오늘의 주요 부동산 이슈 (${date.replace(/-/g, ".")})`,
