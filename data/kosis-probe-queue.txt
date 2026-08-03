@@ -8,4 +8,4 @@
 # 결과를 보고 맞으면 packages/collectors/src/sources/kosis.ts 의 enabled 를 켠다.
 #
 # ⚠️ KOSIS_API_KEY 가 Secrets 에 있어야 돈다.
-run 2026-08-03 #11 — 사망원인 축 열거 재시도
+run 2026-08-03 #12 — KOSIS 무응답으로 전 표 실패, 재시도
