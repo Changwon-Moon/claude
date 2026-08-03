@@ -128,13 +128,18 @@ export function encKey(key: string): string {
 export function buildUrl(
   table: TableKey,
   key: string,
-  opts: { prdSe?: "M" | "Y"; startPrdDe?: string; endPrdDe?: string; newEstPrdCnt?: number },
+  opts: {
+    prdSe?: "M" | "Y"; startPrdDe?: string; endPrdDe?: string; newEstPrdCnt?: number;
+    /** probe 전용 — 축을 하나씩 열어 보며 이 표가 축을 몇 개 요구하는지 관찰한다. */
+    extraObjL?: string[];
+    itmId?: string;
+  },
 ): string {
   const t = TABLES[table];
   const p = new URLSearchParams({
     method: "getList",
     apiKey: "__KEY__", // 아래에서 직접 갈아끼운다(URLSearchParams 가 키를 이중 인코딩하지 않도록)
-    itmId: t.itmId,
+    itmId: opts.itmId ?? t.itmId,
     objL1: t.objL1,
     format: "json",
     jsonVD: "Y",
@@ -144,6 +149,10 @@ export function buildUrl(
   });
   /* 기간은 둘 중 하나로 준다 — 범위(startPrdDe~endPrdDe) 또는 최근 N개(newEstPrdCnt).
      probe 는 최근 1개만 받아 응답 모양만 본다(전 기간을 받으면 수십 MB 가 된다). */
+  /* objL2·objL3… 을 채운다. 어떤 표는 축이 여럿이라 objL1 만 주면 KOSIS 가 거부한다.
+     무엇이 '계' 인지는 모르므로 ALL 로 열어 두고 **응답에 실제로 뭐가 오는지 본다.**
+     추측해서 특정 코드를 박으면 엉뚱한 항목이 총계로 둔갑한다. */
+  (opts.extraObjL ?? []).forEach((v, i) => p.set(`objL${i + 2}`, v));
   if (opts.newEstPrdCnt) p.set("newEstPrdCnt", String(opts.newEstPrdCnt));
   else {
     p.set("startPrdDe", opts.startPrdDe ?? "");
@@ -156,7 +165,10 @@ export function buildUrl(
 export async function fetchTable(
   table: TableKey,
   key: string,
-  opts: { prdSe?: "M" | "Y"; startPrdDe?: string; endPrdDe?: string; newEstPrdCnt?: number },
+  opts: {
+    prdSe?: "M" | "Y"; startPrdDe?: string; endPrdDe?: string; newEstPrdCnt?: number;
+    extraObjL?: string[]; itmId?: string;
+  },
 ): Promise<unknown> {
   const url = buildUrl(table, key, opts);
   const text = await fetchText(url, { timeoutMs: 30000 });
