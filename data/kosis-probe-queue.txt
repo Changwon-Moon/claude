@@ -8,4 +8,4 @@
 # 결과를 보고 맞으면 packages/collectors/src/sources/kosis.ts 의 enabled 를 켠다.
 #
 # ⚠️ KOSIS_API_KEY 가 Secrets 에 있어야 돈다.
-run 2026-08-03 #7 — 푸시 재시도 후 재실행
+run 2026-08-03 #8 — 축 전체 + 지역 코드 원자료 확보

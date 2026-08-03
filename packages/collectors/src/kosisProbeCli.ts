@@ -42,6 +42,7 @@ type Probe = {
   sample?: Record<string, unknown>;
   /** 실패했을 때 — 표의 분류축 메타. objL 을 어떻게 채워야 하는지 여기 답이 있다. */
   meta?: { axes: string; items: string };
+  regions?: Record<string, string>;
   /** 축을 몇 개까지 열어야 응답이 왔는가 — 이 표의 진짜 축 개수다. */
   objLUsed?: number;
   /** 시도한 조합과 각각의 결과 — 실패해도 다음 사람이 어디까지 해봤는지 안다. */
@@ -59,7 +60,7 @@ function axesOf(rows: Record<string, unknown>[]): { axis: string; sample: string
     for (const r of rows) {
       const k = String(r[id] ?? "");
       if (k && !seen.has(k)) seen.set(k, String(r[nm] ?? ""));
-      if (seen.size >= 6) break;
+      if (seen.size >= 80) break;
     }
     out.push({ axis: id, sample: [...seen].map(([k, v]) => `${k}=${v}`) });
   }
@@ -135,6 +136,13 @@ async function probeOne(key: TableKey, apiKey: string): Promise<Probe> {
       /* 시군구(5자리)가 실제로 오는가 — 이게 0 이면 그 표는 시도까지만 준다는 뜻이다. */
       sggCodes: new Set(rows.map((r) => String(r.C1 ?? "")).filter((c) => /^\d{5}$/.test(c))).size,
       sample: rows[0],
+      /* 지역 코드→이름 전체. 표마다 행정구역 코드 체계가 다를 수 있어(출생 표가 그랬다)
+         대조표를 만들려면 원본 코드와 이름이 통째로 필요하다. */
+      regions: Object.fromEntries(
+        rows
+          .map((r) => [String(r.C1 ?? ""), String(r.C1_NM ?? "")] as const)
+          .filter(([c]) => c),
+      ),
     };
   } catch (e) {
     const error = e instanceof Error ? e.message : String(e);
@@ -257,6 +265,27 @@ async function main() {
 
   mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, L.join("\n") + "\n", "utf8");
+
+  /* 사람이 읽는 마크다운과 별개로, 코드가 읽을 원자료를 남긴다.
+     세션은 외부망이 막혀 KOSIS 를 직접 못 부른다 — 여기 떨어진 것만이 재료다.
+     특히 표마다 다른 행정구역 코드 체계는 이 파일 없이는 대조표를 못 만든다. */
+  const raw = resolve(CWD, "data/kosis-probe-raw.json");
+  writeFileSync(raw, JSON.stringify({
+    generatedAt: new Date().toISOString(),
+    tables: Object.fromEntries(results.map((r) => [r.key, {
+      tblId: TABLES[r.key].tblId,
+      ok: r.ok,
+      error: r.error ?? null,
+      objLUsed: r.objLUsed ?? 0,
+      attempts: r.attempts ?? [],
+      tblNm: r.tblNm ?? null,
+      items: r.items ?? [],
+      axes: r.axes ?? [],
+      periods: r.periods ?? [],
+      regions: r.regions ?? {},
+    }])),
+  }, null, 1), "utf8");
+  console.log(`   원자료 → ${raw}`);
 
   const ok = results.filter((r) => r.ok).length;
   console.log(`\n✅ ${ok}/${results.length} 표 응답 확인 → ${out}`);

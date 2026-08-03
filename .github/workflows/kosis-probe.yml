@@ -70,7 +70,7 @@ jobs:
       - name: 결과 없으면 실패 기록
         if: always()
         run: |
-          if ! git diff --quiet -- data/kosis-probe.md 2>/dev/null; then
+          if ! git diff --quiet -- data/kosis-probe.md data/kosis-probe-raw.json 2>/dev/null; then
             echo "검증이 파일을 갱신했다 — 그대로 둔다"; exit 0
           fi
           {
@@ -92,7 +92,7 @@ jobs:
         run: |
           git config user.name "wirit-bot"
           git config user.email "actions@github.com"
-          git add -f data/kosis-probe.md || true
+          git add -f data/kosis-probe.md data/kosis-probe-raw.json || true
           if git diff --cached --quiet; then
             echo "바뀐 것 없음 — 커밋 생략"
           else
