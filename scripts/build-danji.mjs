@@ -470,7 +470,10 @@ function result(d) {
 }
 
 /* ── 산출 ── 시안이므로 data/out/_spike. 확정되면 data/content/{날짜}/ 로 옮기고 세트에 등록한다. */
-const outDir = join(ROOT, "data/out/_spike");
+/* 시안은 `data/out/_spike`, **확정본은 `data/content/{날짜}/`** 에 쓴다(--publish).
+   확정본은 produce-card.mjs 가 그 자리에서 찾아 다시 그리므로 자리가 곧 계약이다. */
+const PUBLISH = process.argv.includes("--publish");
+const outDir = PUBLISH ? join(ROOT, "data/content", date) : join(ROOT, "data/out/_spike");
 mkdirSync(outDir, { recursive: true });
 
 /* 데이터셋에 있는 단지를 **전부** 만든다. 목록을 손으로 적지 않는다 —
@@ -508,5 +511,5 @@ if (skipped.length) {
   console.log(`\n⏭  아직 못 만드는 단지 ${skipped.length}곳 — 데이터가 덜 찼습니다:`);
   for (const [id, msg] of skipped) console.log(`   · ${id}: ${msg}`);
 }
-console.log(`\n✅ ${made}장 생성 → data/out/_spike/`);
+console.log(`\n✅ ${made}장 생성 → ${PUBLISH ? `data/content/${date}/` : "data/out/_spike/"}`);
 console.log("⚠ 분양가는 보도값이다 — 입주자모집공고문 대조 전까지 발행 금지.");

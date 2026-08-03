@@ -101,6 +101,10 @@ node scripts/danji-card.mjs "<단지명 또는 공고번호>" --photo <조감도
 - 스크립트가 "채워야 할 칸"을 찍고 멈추면 **입주자모집공고문에서 그 값만 채워** 데이터셋에 넣고
   같은 명령을 다시 돌린다. **숫자를 지어내지 않는다.**
 - 새 템플릿을 만들지 않는다. 판형은 `danji-cover@1` 하나뿐이다.
+- 무순위(줍줍)도 **같은 판형**이다 — `kind: "remndr"` 로 세 칸의 뜻만 바뀐다(분양가 → 잔여 세대).
+- 확정: `--publish` 로 `data/content/{날짜}/` 에 쓰고 → 캡션(반드시 '출처' 포함) → `builders.json`·
+  `sets.json` 등록 → `produce-card.mjs` → `confirm.mjs`. **청약 카드는 정기물이라
+  `pixel-baselines` 에 넣지 않는다.** 확정본 2장: `danji-hangang` · `danji-songdo`(2026-08-03).
 4. `company/CEO.md` — 오너 판단 원칙(누적)
 5. `docs/LINE_CARDS.md` — **지하철 노선 시세 카드 시리즈**(신분당·2~9호선 「역세권 34평 APT 시세」) 단일 기준. 노선 카드 요청이면 필수.
 6. `docs/COWORK.md` — 코워크에서의 경계선(무엇을 여기서, 무엇을 GitHub Actions 에서)

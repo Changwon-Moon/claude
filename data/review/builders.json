@@ -212,6 +212,26 @@
       "label": "jeonwolse-map",
       "cmd": "scripts/build-jeonwolse-map.mjs",
       "args": []
+    },
+    {
+      "label": "danji-hangang",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-08-03",
+        "--only",
+        "hangang-prugio-riverfront",
+        "--publish"
+      ]
+    },
+    {
+      "label": "danji-songdo",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-08-03",
+        "--only",
+        "songdo-granter-remndr",
+        "--publish"
+      ]
     }
   ]
 }

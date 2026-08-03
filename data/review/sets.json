@@ -286,6 +286,36 @@
         "jeonwolse-map:06763f06b3be"
       ],
       "pixelPolicy": "정기물 — data/datasets/molit-rent/,data/datasets/molit-rent 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
+    },
+    {
+      "label": "danji-hangang",
+      "title": "한강뷰 아파트 분양가 7억대?",
+      "cards": [
+        "danji-hangang"
+      ],
+      "caption": "danji-hangang",
+      "note": "청약·분양 표준 판형 danji-cover@1 첫 확정본. 세대수·일정·상한제는 청약홈 API 를 코드가 직접 읽는다. ⚠️ 분양가(7.7/9.5/11.9/30.0억)는 보도값 — 입주자모집공고문 대조 전까지 발행 금지.",
+      "state": "오너 확정",
+      "confirmedAt": "2026-08-03",
+      "confirmedMd5": [
+        "danji-hangang:3dc78a132f5c"
+      ],
+      "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증). 접수가 끝나면 공고가 목록에서 빠져 빌더가 던진다 — 그때는 재생산하지 않는다"
+    },
+    {
+      "label": "danji-songdo",
+      "title": "송도 무순위 줍줍 150세대",
+      "cards": [
+        "danji-songdo"
+      ],
+      "caption": "danji-songdo",
+      "note": "무순위(kind: remndr) 첫 확정본. 머리 밴드가 분양가 대신 전용면적별 잔여 세대를 말한다. 면적대별 세대수는 청약홈 블록별 공고 5건(2026910203~07) 열람 전사 — 합계 150 = API supply 150 교차검증. ⚠️ 발행 전 오너 대조 필요.",
+      "state": "오너 확정",
+      "confirmedAt": "2026-08-03",
+      "confirmedMd5": [
+        "danji-songdo:553d4532c187"
+      ],
+      "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증). 접수가 끝나면 공고가 목록에서 빠져 빌더가 던진다 — 그때는 재생산하지 않는다"
     }
   ]
 }

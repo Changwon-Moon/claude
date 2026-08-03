@@ -431,6 +431,15 @@ node scripts/danji-card.mjs "<단지명 또는 공고번호>" --photo <조감도
 빌드 대상 목록은 **데이터셋이 정한다**(`build-danji.mjs` 가 `doc.danji` 전체를 돈다) —
 새 단지를 넣으면 그 순간 카드가 나온다. 자세한 것은 `docs/guides/청약분양-카드-기준.md` §0.
 
+### 확정본 (2026-08-03)
+
+| 세트 | 카드 | kind | md5 |
+|---|---|---|---|
+| `danji-hangang` | 한강뷰 아파트 분양가 7억대? | `presale` | `3dc78a13…` |
+| `danji-songdo` | 송도 무순위 줍줍 150세대 | `remndr` | `553d4532…` |
+
+둘 다 **정기물**이라 `pixel-baselines.json` 이 아니라 `sets.json` 의 `confirmedMd5` 로 남긴다.
+
 ### 판형 회귀 — `templates/danji-cover/sample.json`
 
 오너 확정 시점(2026-08-03)의 카드 JSON을 **얼려서** 템플릿 옆에 둔다. 판형이 바뀌면 md5가 바뀐다.

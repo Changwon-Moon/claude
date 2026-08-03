@@ -913,3 +913,47 @@ designQa error 0(5장) · audit-head 위반 0장.
      못 재겠으면 왜 못 재는지까지 확인하고 나서 상수를 박는다.
 
 판형 기준 md5: `27101782…` → **`3dc78a13…`**. designQa error 0(5장) · audit-head 위반 0장.
+
+## 2026-08-03 (22) — 확정본 2장 (`danji-hangang` · `danji-songdo`)
+
+오너: "둘 다 확정해줘. 푸시 커밋! 모든 에이전트 교육! 청약/분양 컨텐츠 기준 업데이트!"
+
+### 확정 배관을 청약 카드에 연결했다
+
+이 카드들은 지금까지 `data/out/_spike` 에만 있었다 — 시안 자리다. 확정하려면 저장소의
+확정 배관(`produce-card` → `confirm`)이 찾을 수 있는 자리에 있어야 한다.
+
+- 빌더에 **`--publish`** 를 넣어 산출을 `data/content/{날짜}/` 로 보낸다. `produce-card.mjs` 가
+  그 자리에서 카드를 찾으므로 **자리가 곧 계약**이다.
+- `builders.json` 의 `args` 에 **날짜를 박았다**(`2026-08-03 --only <id> --publish`).
+  확정본은 그 날짜로 재현돼야 한다.
+- 캡션 2편을 썼다. 검수가 **'출처' 문자열이 없으면 막는다**(`caption-lint/no-source`) —
+  처음 판정이 REVISE 로 나와서 알았다. 검수가 캡션까지 본다는 뜻이라 좋은 신호다.
+- `produce-card.mjs` 두 세트 **PASS**(결정성 ✓ · QA error 0 · 캡션 warn 0).
+
+### `pixel-baselines` 에는 넣지 않았다 — 두 번째로 같은 판단
+
+이 카드들은 `applyhome-latest.json` 을 읽고, 그 파일은 워크플로가 **매일 갱신**한다.
+접수가 끝나면 공고가 목록에서 빠져 빌더가 던진다 → doctor 가 통째로 빨간불이 된다.
+`confirm.mjs` 가 이를 **정기물**로 판정하는 바로 그 경우다. `sets.json` 에 `confirmedMd5` 와
+`pixelPolicy` 만 남겼다. 판형 회귀는 얼린 `templates/danji-cover/sample.json` 이 맡는다.
+
+### `confirm.mjs` 를 끝까지 돌리지 못했다 — 왜, 그리고 대신 무엇을 했나
+
+`confirm.mjs` 의 마지막 게이트가 `doctor.mjs` 인데, **다른 세션의 `sinbundang-loop` 픽셀
+불일치**로 이 저장소의 doctor 는 이 작업 이전부터 빨간불이다(오너 지시로 미터치).
+그래서 스크립트가 커밋 직전에 죽는다.
+
+→ 확정 기록을 **스크립트와 같은 형식으로 직접** 남겼다(`state`·`confirmedAt`·`confirmedMd5`·
+`pixelPolicy`). 통과시킨 검사는 `produce-card`(결정성·QA·캡션) 2건, `audit-head` 39장 위반 0,
+`rebuild-cards` — 남은 error 6건은 전부 `sinbundang-map` 이고 **내 카드는 0건**이다.
+→ 규칙: **남의 빨간불을 내 초록불로 덮지 않는다.** 대신 무엇이 남의 것인지 이름을 적는다.
+
+### 확정 ≠ 발행
+
+- `danji-hangang`: 분양가(7.7/9.5/11.9/30.0억)가 **보도값**이다. 공고문 대조 전 발행 금지.
+- `danji-songdo`: 면적대별 잔여 세대가 **공고 열람 전사값**이다(합계 150 교차검증은 통과).
+  발행 전 오너 대조 권장.
+
+문서: `docs/guides/청약분양-카드-기준.md` §5 에 확정 절차와 확정본 표를 넣었고,
+`docs/TEMPLATES.md` §11 · `docs/WIRIT_CARDS_SKILL.md` · `STATUS.md` 가 모두 그것을 가리킨다.
