@@ -133,6 +133,8 @@ export function buildUrl(
     /** probe 전용 — 축을 하나씩 열어 보며 이 표가 축을 몇 개 요구하는지 관찰한다. */
     extraObjL?: string[];
     itmId?: string;
+    /** probe 전용 — 행정구역 축을 한 곳으로 좁힌다. 4만 셀 한도에 걸린 표의 축을 엿보기 위해서다. */
+    objL1?: string;
   },
 ): string {
   const t = TABLES[table];
@@ -140,7 +142,7 @@ export function buildUrl(
     method: "getList",
     apiKey: "__KEY__", // 아래에서 직접 갈아끼운다(URLSearchParams 가 키를 이중 인코딩하지 않도록)
     itmId: opts.itmId ?? t.itmId,
-    objL1: t.objL1,
+    objL1: opts.objL1 ?? t.objL1,
     format: "json",
     jsonVD: "Y",
     prdSe: opts.prdSe ?? t.prdSe,
@@ -167,7 +169,7 @@ export async function fetchTable(
   key: string,
   opts: {
     prdSe?: "M" | "Y"; startPrdDe?: string; endPrdDe?: string; newEstPrdCnt?: number;
-    extraObjL?: string[]; itmId?: string;
+    extraObjL?: string[]; itmId?: string; objL1?: string;
   },
 ): Promise<unknown> {
   const url = buildUrl(table, key, opts);

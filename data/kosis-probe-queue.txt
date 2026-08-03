@@ -8,4 +8,4 @@
 # 결과를 보고 맞으면 packages/collectors/src/sources/kosis.ts 의 enabled 를 켠다.
 #
 # ⚠️ KOSIS_API_KEY 가 Secrets 에 있어야 돈다.
-run 2026-08-03 #5 — 축을 하나씩 열어 실제 응답을 관찰
+run 2026-08-03 #6 — 4만셀 걸린 표는 지역을 좁혀 축만 엿본다

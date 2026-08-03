@@ -93,6 +93,28 @@ async function probeOne(key: TableKey, apiKey: string): Promise<Probe> {
         if (!m.includes("objL")) break;
       }
     }
+    /* ── 4만 셀 한도에 걸린 표 ──
+       KOSIS 는 한 번에 4만 셀까지만 준다. 연령(1세별 101개)·사망원인(50항목) 같은 표는
+       전국 277개 지역 × 축 전체를 한 번에 부르면 바로 넘는다.
+       그렇다고 축 코드를 추측할 수는 없다. 그래서 **지역을 한 곳으로 좁혀** 축만 엿본다 —
+       종로구 하나면 셀이 수백 개라 한도에 안 걸리고, 축에 무슨 코드가 있는지는 똑같이 보인다.
+       (정기 수집 때는 지역을 나눠 여러 번 부르면 된다.) */
+    if (lastErr) {
+      const m0 = lastErr instanceof Error ? lastErr.message : String(lastErr);
+      if (m0.includes("4만") || m0.includes("40,000") || m0.includes("40000")) {
+        for (const extra of [["ALL"], ["ALL", "ALL"]]) {
+          try {
+            json = await fetchTable(key, apiKey, { newEstPrdCnt: 1, extraObjL: extra, objL1: "11110" });
+            used = extra.length;
+            attempts.push(`objL1=11110(종로구 하나로 좁힘) + objL2..${extra.length + 1}=ALL → 성공 · 축만 엿본 것이라 전국 수집은 나눠 불러야 한다`);
+            lastErr = null;
+            break;
+          } catch (e2) {
+            attempts.push(`objL1=11110 + objL2..${extra.length + 1}=ALL → ${(e2 instanceof Error ? e2.message : String(e2)).slice(0, 80)}`);
+          }
+        }
+      }
+    }
     if (lastErr) throw lastErr;
     const rows = (Array.isArray(json) ? json : []) as Record<string, unknown>[];
     if (!rows.length) return { key, ok: false, error: "행이 0개 — 표 ID 또는 분류축이 맞지 않을 수 있다" };
