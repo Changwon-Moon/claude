@@ -90,14 +90,23 @@
       .dcv-title .hi { color: #7aa6ff; }
       .dcv-title .up { color: #ff8a8e; }
 
-      .dcv-nm { margin-top: 22px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
-      .dcv-nm .nm {
-        display: block; font-family: var(--font-sans); font-size: 42px; font-weight: 800;
-        letter-spacing: -0.03em; color: #fff; line-height: 1.05; white-space: nowrap;
+      /* 단지명 · 주소 · 로고를 **한 행**에 두고 아랫단을 맞춘다(오너 지시 2026-08-03).
+         주소가 단지명 아래 두 번째 줄일 때는 로고만 오른쪽에 홀로 떠 있었다 —
+         오른쪽에 글자 하나를 붙여 주면 로고가 행의 일부가 된다.
+         `align-items: flex-end` + 세 요소 모두 `line-height: 1` → 글자 밑선과 마크 밑변이 한 줄. */
+      .dcv-nm {
+        margin-top: 22px; display: flex; flex-wrap: nowrap;
+        align-items: flex-end; justify-content: space-between; gap: 28px;
       }
+      .dcv-nm .nm {
+        display: block; font-family: var(--font-sans); font-size: 52px; font-weight: 800;
+        letter-spacing: -0.03em; color: #fff; line-height: 1; white-space: nowrap;
+      }
+      .dcv-nm .rt { display: flex; align-items: flex-end; gap: 22px; flex: none; }
       .dcv-nm .loc {
-        display: block; margin-top: 10px; font-family: var(--font-sans); font-size: 28px; font-weight: 700;
-        letter-spacing: -0.02em; color: rgba(255,255,255,0.72); line-height: 1;
+        display: block; font-family: var(--font-sans); font-size: 28px; font-weight: 700;
+        letter-spacing: -0.02em; color: rgba(255,255,255,0.72); line-height: 1; white-space: nowrap;
+        padding-bottom: 2px; /* 글자 밑선을 마크 밑변에 맞춘다 */
       }
       /* 짙은 단색 브랜드 마크는 잉크 위에서 사라진다 — 흰색으로 뒤집는다(형태는 그대로) */
       .dcv-nm .lg {
@@ -167,8 +176,11 @@
          3칸일 때는 균등 3열이 정답이다: 위 줄(제원)도 3등분이라 **두 세로선이 모두 겹치고**,
          칸 폭 284px 는 가장 긴 '2029년 2월'을 52px 로 담기에 넉넉하다. */
       .dcv-facts .frow.when:has(.cell:nth-child(3):last-child) { grid-template-columns: 1fr 1fr 1fr; }
-      .dcv-facts .cell { min-width: 0; }
-      .dcv-facts .cell + .cell { border-left: 1px solid rgba(20, 24, 33, 0.09); padding-left: 28px; }
+      /* ⚠️ 여백은 **좌우 대칭**이어야 한다. 왼쪽에만 28px 를 주면 `text-align:center` 가
+         '패딩 안쪽의 가운데'를 잡아 글자가 칸 중심에서 14px 오른쪽으로 밀린다
+         (오너 지적: "12개동이 가운데 정렬 안 됐어"). 세로선은 border 라 패딩과 무관하다. */
+      .dcv-facts .cell { min-width: 0; padding: 0 22px; }
+      .dcv-facts .cell + .cell { border-left: 1px solid rgba(20, 24, 33, 0.09); }
       .dcv-facts .fhr { height: 1px; background: var(--wirit-ink-12); margin: 22px 0; }
       .dcv-facts .v {
         display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 900;
@@ -226,11 +238,11 @@
             {{#each titleLines}}<div class="ln">{{{this}}}</div>{{/each}}
           </div>
           <div class="dcv-nm">
-            <div>
-              <span class="nm">{{danji.name}}</span>
+            <span class="nm">{{danji.name}}</span>
+            <div class="rt">
               {{#if address}}<span class="loc">{{address}}</span>{{/if}}
+              {{#if danji.logo}}<img class="lg" src="../_shared/logos/{{danji.logo}}" alt="" />{{/if}}
             </div>
-            {{#if danji.logo}}<img class="lg" src="../_shared/logos/{{danji.logo}}" alt="" />{{/if}}
           </div>
         </div>
       </div>
@@ -301,6 +313,20 @@
             t.style.fontSize = best + "px";
           }
         }
+        /* 단지명은 주소·로고와 **한 행**을 나눠 쓴다 — 셋의 합이 카드 폭을 넘지 않는 최대 크기를
+           찾는다. 고정 크기로 두면 이름이 긴 단지에서 로고가 밖으로 밀려난다. */
+        var nmEl = document.querySelector(".dcv-nm .nm");
+        var nmRow = document.querySelector(".dcv-nm");
+        if (nmEl && nmRow) {
+          var lo2 = 30, hi2 = 60, best2 = lo2;
+          for (var q = 0; q < 22; q++) {
+            var m2 = (lo2 + hi2) / 2;
+            nmEl.style.fontSize = m2 + "px";
+            if (nmRow.scrollWidth <= nmRow.clientWidth + 0.5) { best2 = m2; lo2 = m2; } else { hi2 = m2; }
+          }
+          nmEl.style.fontSize = best2 + "px";
+        }
+
         /* ⚠️ 재는 자는 **칸(.cell)** 이지 부모가 아니다. 제원·일정의 값은 이제
            shrink-to-fit 인 `.box` 안에 들어 있어서, 부모 폭으로 재면 언제나 "딱 맞음"이 나와
            넘침 보호가 통째로 꺼진다. 칸의 **내용 폭**(패딩 제외)으로 잰다. */

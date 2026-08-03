@@ -328,7 +328,7 @@ pnpm -s --filter @wirit/renderer render -- --data "$PWD/data/content/2026-07-23/
 │         조감도 446px           │
 │  ↓ 잉크가 번지며 사진이 끝난다   │  ← .dcv-fade 180px, 선이 아니라 그라데이션
 │  제목 (태백, 한 줄, 흰색)        │  ← 잉크 밴드 244px
-│  단지명 / 주소          [로고]  │
+│  단지명        주소  [로고]     │  ← 한 행, 아랫단 정렬
 ├───────────────────────────────┤
 │ 타입별 분양가(최고가 기준)       │  ← 위 단. 타입=금액 같은 크기, 칸 가운데 정렬
 │  84A    106    122    180P     │     타입 회색 / 금액 잉크 / 주력만 코발트
@@ -359,8 +359,11 @@ pnpm -s --filter @wirit/renderer render -- --data "$PWD/data/content/2026-07-23/
 | 가로 괘선 | 1px `--wirit-ink-12` | 위 단/아래 단, 제원/일정 |
 | 세로 괘선 | 1px `rgba(20,24,33,.09)` | 더 옅다 — '구분'이지 '단락'이 아니므로 |
 | 아래 단 정렬 | 칸마다 **가운데**. 단 라벨·내역은 값과 **왼쪽 선을 맞춘다**(`.box` 덩어리를 가운데로) | 각자 가운데로 맞추면 짧은 라벨이 값 한가운데로 밀려 두 줄이 어긋나 보인다 |
+| 칸 여백 | `.cell { padding: 0 22px }` — **좌우 대칭** | 왼쪽에만 주면 `text-align:center` 가 '패딩 안쪽 가운데'를 잡아 글자가 칸 중심에서 밀린다 |
+| 단지명 행 | 단지명(좌) · 주소+로고(우) **한 행**, `align-items:flex-end` + 모두 `line-height:1` | 주소가 둘째 줄일 때는 로고만 오른쪽에 홀로 떠 있었다 |
+| 단지명 크기 | 30~60px **자동**(행 전체가 카드 폭에 들어가는 최대) | 고정 크기면 이름이 긴 단지에서 로고가 밖으로 밀린다 |
 | 제원 열 | `1.15fr 0.85fr 1fr` — **col3 은 반드시 1fr** | 세대수만 내역 한 줄이 더 붙어 폭이 더 필요하다. col3 을 건드리면 두 번째 세로선이 624px 를 벗어나 일정 줄과 어긋난다 |
-| 특이사항 아이콘 | `.dcv-note .em` 0.78em · opacity .72 (💡 상한제 / 🚫 전매제한 / ⚠️ 투기과열) | 아이콘은 글자를 돕는 것이지 겨루는 것이 아니다 |
+| 특이사항 아이콘 | `.dcv-note .em` 0.78em · opacity .72 (💡 상한제 / 🔒 전매제한 / ⚠️ 투기과열) | 아이콘은 글자를 돕는 것이지 겨루는 것이 아니다 |
 | 일정 열 | 4칸 `1fr 1fr 1fr 1.5fr` / 3칸 `1fr 1fr 1fr` | 아래 "열 폭은 데이터가 정한다" 참조 |
 | 폰트 | 제목만 태백, **흰 영역 전부 프리텐다드** | 숫자가 열 개 넘게 깔리면 디스플레이 서체는 획이 뭉친다 |
 
@@ -414,7 +417,7 @@ pnpm -s --filter @wirit/renderer render -- --data "$PWD/data/content/2026-07-23/
 
 ```bash
 pnpm --filter @wirit/renderer render -- --data ../../templates/danji-cover/sample.json --out /tmp/samp
-md5sum /tmp/samp/sample-p1.png   # 확정 시점: d26c3c8aa9fb7bf60a4aa69427b0be9a
+md5sum /tmp/samp/sample-p1.png   # 확정 시점: 424ea5ff60f7a31a6e4b4a05cc2048c8
 pnpm --filter @wirit/renderer qa templates/danji-cover/sample.json
 ```
 

@@ -205,12 +205,12 @@ function presale(d) {
 
   /* 특이사항 — 규제·조건 중 **확인된 것만** 적는다. 없으면 그 자리는 비운다. */
   /* 특이사항 앞의 아이콘(오너 지시 2026-08-03) — 규제 항목마다 성격이 다른 그림 하나.
-     💡 = 상한제(알아 두면 이득), 🚫 = 전매제한(못 하는 것), ⚠️ = 투기과열지구(주의).
+     💡 = 상한제(알아 두면 이득), 🔒 = 전매제한(묶여 있는 것), ⚠️ = 투기과열지구(주의).
      크기는 본문보다 작게, 투명도를 낮춰 **글자를 이기지 않게** 둔다(.dcv-note .em). */
   const flags = [];
   if (ah?.priceCap ?? d.price?.capApplied)
     flags.push(`<i class="em">💡</i><span class="tag">분양가상한제</span> 적용`);
-  if (d.price?.resaleBanYears) flags.push(`<i class="em">🚫</i>전매제한 ${d.price.resaleBanYears}년`);
+  if (d.price?.resaleBanYears) flags.push(`<i class="em">🔒</i>전매제한 ${d.price.resaleBanYears}년`);
   if (ah?.speculative) flags.push(`<i class="em">⚠️</i>투기과열지구`);
   /* 오피스텔은 이제 위 스트립이 말한다 — 한 카드에서 같은 말을 두 번 하지 않는다 */
 
