@@ -110,10 +110,14 @@
           },
           "date": {
             "type": "string",
-            "maxLength": 12
+            "maxLength": 14
           },
           "tbd": {
             "type": "boolean"
+          },
+          "hi": {
+            "type": "boolean",
+            "description": "이 일정을 코발트로 — 무순위 접수처럼 '그날 하루'가 카드의 핵심일 때만"
           }
         }
       },

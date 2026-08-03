@@ -324,7 +324,7 @@
           {{#each schedule}}
           <div class="cell"><div class="box">
             <span class="lab">{{this.label}}</span>
-            <span class="v{{#if this.tbd}} tbd{{/if}}">{{this.date}}</span>
+            <span class="v{{#if this.tbd}} tbd{{/if}}"><span class="num{{#if this.hi}} hi{{/if}}">{{this.date}}</span></span>
           </div></div>
           {{/each}}
         </div>

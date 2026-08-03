@@ -332,19 +332,28 @@ function remndr(d) {
   const ah = applyhome(d);
   if (!ah) throw new Error(`${d.id}: 무순위 카드는 청약홈 공고(applyhomeNo)가 있어야 한다`);
   const total = ah.supply;
-  const md = (iso) => { const [, m, dd] = iso.split("-"); return `${Number(m)}/${Number(dd)}`; };
+  /* 무순위는 **접수가 하루**다. 그 하루가 무슨 요일인지가 곧 "내일 넣을 수 있나"라
+     날짜만큼 중요하다 — 그래서 무순위 일정에는 요일을 붙인다(오너 지시 2026-08-03).
+     분양 예정 카드는 특공·1순위·당발이 며칠에 걸쳐 있어 요일 가치가 낮고, 일정이 4칸이라
+     요일을 붙이면 가장 긴 칸이 공통 수치 크기를 통째로 끌어내린다 — 거기는 붙이지 않는다.
+     요일은 **코드가 날짜에서 계산한다.** 손으로 적으면 다음 카드에서 틀린다. */
+  const WD = "일월화수목금토";
+  const md = (iso) => {
+    const [, m, dd] = iso.split("-");
+    return `${Number(m)}/${Number(dd)}(${WD[new Date(`${iso}T00:00:00Z`).getUTCDay()]})`;
+  };
   const ymKo = (ym) => (ym ? `${ym.split("-")[0]}년 ${Number(ym.split("-")[1])}월` : "미고지");
 
   /* 접수가 하루면 '시작·마감' 두 칸이 같은 날을 두 번 말한다 — 데이터가 칸 수를 정한다. */
   const oneDay = !ah.receiptTo || ah.receiptFrom === ah.receiptTo;
   const schedule = oneDay
     ? [
-        { label: "무순위 접수", date: ah.receiptFrom ? md(ah.receiptFrom) : "미고지", tbd: !ah.receiptFrom },
+        { label: "무순위 접수", date: ah.receiptFrom ? md(ah.receiptFrom) : "미고지", tbd: !ah.receiptFrom, hi: true },
         { label: "당첨자 발표", date: ah.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah.announceDate },
         { label: "입주 예정", date: ymKo(ah.moveInYm ?? d.moveIn), tbd: !(ah.moveInYm ?? d.moveIn) },
       ]
     : [
-        { label: "무순위 접수", date: md(ah.receiptFrom) },
+        { label: "무순위 접수", date: md(ah.receiptFrom), hi: true },
         { label: "접수 마감", date: md(ah.receiptTo) },
         { label: "당첨자 발표", date: ah.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah.announceDate },
         { label: "입주 예정", date: ymKo(ah.moveInYm ?? d.moveIn), tbd: !(ah.moveInYm ?? d.moveIn) },
