@@ -107,10 +107,10 @@ const mapSvg = tohuhMapSvg({
   placement: "nearest",
 });
 
-// ── 순위: 1~15위 + ··· + 38~40위 ──
+// ── 순위: 1~17위 + ··· + 38~40위 ──
 const ranked = [...AREAS].sort((a, b) => ratioOf(b.geoName) - ratioOf(a.geoName));
 const MEDALS = ["🥇", "🥈", "🥉"];
-const rows = ranked.slice(0, 15).map((a, i) => ({
+const rows = ranked.slice(0, 17).map((a, i) => ({
   rank: i + 1, medal: MEDALS[i] || "", top: i < 3,
   gu: a.label, hits: ratioOf(a.geoName).toFixed(1),
 }));
