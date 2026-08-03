@@ -68,11 +68,15 @@ const rows = ranked.slice(0, 12).map((a, i) => ({
   rank: i + 1, medal: MEDALS[i] || "", top: i < 3,
   gu: a.label, hits: ratioOf(a.geoName).toFixed(1),
 }));
-const last = ranked[ranked.length - 1];
+// 하위 3곳(38~40위) — 전세가 가장 많은 지역
+const bottom = ranked.slice(-3);
 const tail = {
-  rows: [{ rank: AREAS.length, gu: last.label, hits: ratioOf(last.geoName).toFixed(1) }],
-  note: `<b>전세가 가장 많은 곳</b>${last.mapLabel ? "" : ""}`,
+  rows: bottom.map((a, idx) => ({
+    rank: AREAS.length - 2 + idx, gu: a.label, hits: ratioOf(a.geoName).toFixed(1),
+  })),
+  note: `<b>전세가 가장 많은 곳</b>`,
 };
+const last = bottom[bottom.length - 1];
 
 // 그래픽 안 서울 로고를 제목 앞에 얹는다(저장소 자산 상속)
 const seoulLogo = "data:image/svg+xml;base64," + readFileSync(join(ROOT, "data/assets/seoul/seoul-logo.svg")).toString("base64");
