@@ -133,6 +133,8 @@ mkdirSync(outDir, { recursive: true });
 const doc = {
   template: "singoga-map@1",
   compact: true,
+  spread: true,
+  evenGap: true,
   fitTitle: true,
   ctaRight: true,
   hideFooterId: true, // 아이디는 지도 안 스탬프에 있다 — 푸터 중복 제거(BRAND: 카드당 1개)
