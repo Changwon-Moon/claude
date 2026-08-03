@@ -113,28 +113,43 @@
       .dcv-item.main .p { color: var(--wirit-cobalt); }
 
       /* ── 가운데 선: 위 단(가격)과 아래 단(제원·일정)을 가른다 ── */
-      .dcv-rule { height: 1px; background: var(--wirit-ink-12); margin: 26px 0; }
+      .dcv-rule { height: 1px; background: var(--wirit-ink-12); margin: 24px 0; }
 
-      /* ── 종이 아래 단: 제원 3 + 일정 3 = 6칸 ──
-       * 단위는 **크기 그대로, 색만 회색**(오너 지시). 크기를 줄이면 단위가 각주가 되는데,
-       * '2,682세대'는 숫자와 단위가 한 낱말이다. */
-      .dcv-facts { display: grid; grid-template-columns: 1fr 1fr 1fr; column-gap: 22px; row-gap: 26px; }
+      /* ── 종이 아래 단: 제원 3 + 일정 3 = 두 줄 괘선 그리드 ──
+       * 오너: "카드 형태로 표현한다든지, 위아래 줄을 구분할 수 있는 선을 추가한다든지."
+       * 옅은 회색 채움 상자는 쓰지 않는다(AI티 금지, CEO 07-18). 대신 **괘선만**으로 짠다 —
+       * 가로선이 제원/일정을 가르고, 세로선이 세 칸을 가른다. 채움이 없으니 카드가 무거워지지
+       * 않고, 선이 있으니 숫자가 허공에 뜨지 않는다. 인쇄 매체의 제원표가 쓰는 방식이다.
+       * 선의 굵기는 하나(1px)이고 농도만 둘 — 가로 12%, 세로 9%. 세로선이 더 옅은 이유는
+       * 그것이 '구분'이지 '단락'이 아니기 때문이다.
+       *
+       * 라벨(세대수·동수·최고 층수)은 오너 지시로 지웠다. 값이 단위를 데리고 있어
+       * '2,682세대'만으로 읽힌다. 층수만 예외로 '최고'가 앞에 붙는다 — 그게 없으면
+       * 38층이 최고층인지 평균층인지 카드가 말하지 못한다.
+       * 단위는 **크기 그대로, 색만 회색**(오너 지시). '2,682세대'는 숫자와 단위가 한 낱말이다. */
+      .dcv-facts .frow { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+      .dcv-facts .cell { min-width: 0; }
+      .dcv-facts .cell + .cell { border-left: 1px solid rgba(20, 24, 33, 0.09); padding-left: 28px; }
+      .dcv-facts .fhr { height: 1px; background: var(--wirit-ink-12); margin: 22px 0; }
       .dcv-facts .v {
         display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 900;
         line-height: 1; letter-spacing: -0.03em; color: var(--wirit-ink); white-space: nowrap;
       }
+      .dcv-facts .v b,
       .dcv-facts .v i {
-        font-family: var(--font-num); font-style: normal; font-size: 1em; font-weight: 900;
-        margin-left: 4px; color: var(--wirit-gray);
+        font-family: var(--font-num); font-style: normal; font-weight: 900;
+        font-size: 1em; color: var(--wirit-gray);
       }
+      .dcv-facts .v b { margin-right: 10px; }
+      .dcv-facts .v i { margin-left: 4px; }
       .dcv-facts .v.tbd { color: var(--wirit-gray); }
       .dcv-facts .brk {
-        display: block; margin-top: 10px; font-family: var(--font-sans); font-size: 24px;
+        display: block; margin-top: 12px; font-family: var(--font-sans); font-size: 24px;
         font-weight: 700; letter-spacing: -0.02em; color: var(--wirit-gray); line-height: 1; white-space: nowrap;
       }
 
       .dcv-note {
-        margin: 26px 0 24px; font-family: var(--font-sans); font-size: 30px; font-weight: 700;
+        margin: 24px 0 22px; font-family: var(--font-sans); font-size: 34px; font-weight: 700;
         letter-spacing: -0.02em; color: var(--wirit-ink); line-height: 1.25; word-break: keep-all;
       }
       .dcv-note .tag { color: var(--wirit-cobalt); }
@@ -192,19 +207,23 @@
       <div class="dcv-rule"></div>
 
       <div class="dcv-facts">
-        {{#each spec}}
-        <div class="cell">
-          <span class="lab">{{this.label}}</span>
-          <span class="v">{{this.value}}{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
-          {{#if this.breakdown}}<span class="brk">{{this.breakdown}}</span>{{/if}}
+        <div class="frow">
+          {{#each spec}}
+          <div class="cell">
+            <span class="v">{{#if this.pre}}<b>{{this.pre}}</b>{{/if}}{{this.value}}{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
+            {{#if this.breakdown}}<span class="brk">{{this.breakdown}}</span>{{/if}}
+          </div>
+          {{/each}}
         </div>
-        {{/each}}
-        {{#each schedule}}
-        <div class="cell">
-          <span class="lab">{{this.label}}</span>
-          <span class="v{{#if this.tbd}} tbd{{/if}}">{{this.date}}</span>
+        <div class="fhr"></div>
+        <div class="frow">
+          {{#each schedule}}
+          <div class="cell">
+            <span class="lab">{{this.label}}</span>
+            <span class="v{{#if this.tbd}} tbd{{/if}}">{{this.date}}</span>
+          </div>
+          {{/each}}
         </div>
-        {{/each}}
       </div>
 
       {{#if notice}}<div class="dcv-note">{{{notice}}}</div>{{/if}}
@@ -243,8 +262,8 @@
           function (el) { nums.push({ el: el, box: el.parentNode.clientWidth }); },
         );
         if (nums.length) {
-          /* 상한 50 — 이 이상 키우면 아래 단이 푸터를 밀어낸다(칸 폭이 아니라 카드 높이가 한계다) */
-          var loS = 28, hiS = 50, bestS = loS;
+          /* 상한 52 — 이 이상 키우면 아래 단이 푸터를 밀어낸다(칸 폭이 아니라 카드 높이가 한계다) */
+          var loS = 28, hiS = 52, bestS = loS;
           for (var k = 0; k < 24; k++) {
             var m = (loS + hiS) / 2;
             for (var a = 0; a < nums.length; a++) nums[a].el.style.fontSize = m + "px";

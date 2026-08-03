@@ -166,12 +166,14 @@ function specCells(d, aptTotal) {
       label: "세대수",
       value: n(aptTotal + ot),
       unit: "세대",
-      /* 내역은 값 바로 아래 회색 괄호(오너 지정 2026-08-03).
-         오피스텔이 없으면 만들지 않는다 — "오피스텔 0실"은 0실 공급으로 읽힌다. */
-      ...(ot ? { breakdown: `(아파트 ${n(aptTotal)}가구, 오피스텔 ${n(ot)}실)` } : {}),
+      /* 내역은 값 바로 아래 회색 한 줄(오너 지정 표기 2026-08-03: "APT 0000세대, OT 000실").
+         오피스텔이 없으면 만들지 않는다 — "OT 0실"은 0실 공급으로 읽힌다. */
+      ...(ot ? { breakdown: `APT ${n(aptTotal)}세대, OT ${n(ot)}실` } : {}),
     },
     { label: "동수", value: String(d.buildings), unit: "개동" },
-    { label: "최고 층수", value: String(d.topFloor), unit: "층" },
+    /* "최고"는 숫자를 수식하는 말이라 값 앞에 붙는다 — 라벨 줄을 지운 판형(danji-c)에서
+       "38층"만 남으면 그게 최고층인지 평균층인지 카드가 말하지 못한다. */
+    { label: "최고 층수", pre: "최고", value: String(d.topFloor), unit: "층" },
   ];
 }
 

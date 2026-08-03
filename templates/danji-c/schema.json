@@ -219,6 +219,11 @@
             "type": "string",
             "maxLength": 34,
             "description": "값 아래 회색 괄호 내역"
+          },
+          "pre": {
+            "type": "string",
+            "maxLength": 6,
+            "description": "값 앞에 붙는 회색 수식어('최고'). 라벨 줄을 지운 판형에서 값의 뜻을 지킨다"
           }
         }
       }
