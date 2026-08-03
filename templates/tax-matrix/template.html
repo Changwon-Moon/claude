@@ -49,21 +49,32 @@
       }
       .tx-hr { flex: 0 0 auto; padding-bottom: 12px; border-bottom: 3px solid var(--wirit-ink); }
       .tx-hr span { font-size: 30px; font-weight: 800; color: var(--wirit-gray); text-align: center; letter-spacing: -0.02em; }
-      .tx-hr .lb { text-align: left; }
-      .tx-row { flex: 1 1 0; min-height: 0; border-bottom: 1.5px solid var(--wirit-ink-06); }
+      .tx-hr .lb, .tx-hr .lft { text-align: left; }
+      /* 행 높이 상한 — 없으면 2행짜리 카드에서 한 행이 500px 띠가 된다(2026-08-03 오너 검수).
+         상한을 걸고, 남는 자리는 위아래 auto 여백으로 **가운데 정렬**한다. */
+      .tx-row { flex: 1 1 0; min-height: 0; max-height: 300px; border-bottom: 1.5px solid var(--wirit-ink-06); }
+      .tx-row:nth-child(2) { margin-top: auto; }
       .tx-row:nth-child(even) { background: rgba(20, 24, 33, 0.035); }
-      .tx-row:last-child { border-bottom: none; }
+      .tx-row:last-child { border-bottom: none; margin-bottom: auto; }
+
+      /* 행이 둘뿐인 카드는 상한(300px)만 걸면 표 위아래가 텅 빈다.
+         행을 더 키우고 숫자도 키워 **빈자리 대신 크기로** 채운다(2026-08-03 오너 검수). */
+      .tx-grid.sparse .tx-row { max-height: 380px; }
+      .tx-grid.sparse .tx-cell b { font-size: 62px; }
+      .tx-grid.sparse .tx-lb { font-size: 38px; }
+      .tx-grid.sparse .tx-lb i { font-size: 24px; }
 
       /* 행이 하나뿐인 카드(커버)는 늘리지 않는다 — 늘리면 가운데가 텅 빈 띠가 된다.
          가운데로 모으고 숫자를 키워 **대비 하나**만 보게 한다. */
       .tx-grid.hero { justify-content: center; }
-      .tx-grid.hero .tx-row { flex: 0 0 auto; padding: 118px 18px; border-bottom: none; background: rgba(20,24,33,.035); border-radius: 16px; }
-      .tx-grid.hero .tx-cell b { font-size: 82px; }
+      .tx-grid.hero .tx-row { flex: 0 0 auto; max-height: none; margin: auto 0; padding: 202px 18px; gap: 40px; border-bottom: none; background: rgba(20,24,33,.035); border-radius: 16px; }
+      .tx-grid.hero .tx-cell b { font-size: 86px; }
       .tx-grid.hero .tx-cell i { font-size: 34px; }
       .tx-grid.hero .tx-lb { font-size: 34px; }
       .tx-grid.hero .tx-hr span { font-size: 34px; }
-      .tx-lb { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; color: var(--wirit-ink); }
-      .tx-lb i { display: block; font-style: normal; font-size: 22px; font-weight: 600; color: var(--wirit-gray); margin-top: 4px; }
+      /* 한글은 어절 단위로만 끊는다 — 기본값은 "과 / 세 제외" 처럼 낱말 가운데를 자른다(오너 검수) */
+      .tx-lb { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; color: var(--wirit-ink); word-break: keep-all; }
+      .tx-lb i { display: block; font-style: normal; font-size: 22px; font-weight: 600; color: var(--wirit-gray); margin-top: 4px; line-height: 1.32; word-break: keep-all; }
       .tx-cell { text-align: center; font-family: var(--font-num); white-space: nowrap; }
       .tx-cell b { font-size: 46px; font-weight: 900; letter-spacing: -0.02em; }
       .tx-cell i { font-style: normal; font-size: 24px; font-weight: 800; color: var(--wirit-gray); margin-left: 3px; }
@@ -72,7 +83,7 @@
       .tx-cell.down b { color: var(--wirit-cobalt); }
       /* 긴 산식·문장이 들어오는 칸은 숫자가 아니다 — 크기를 줄이고 왼쪽으로 */
       .tx-cell.tx-txt { text-align: left; white-space: normal; font-family: var(--font-sans); }
-      .tx-cell.tx-txt b { font-size: 27px; font-weight: 700; line-height: 1.35; letter-spacing: -0.02em; }
+      .tx-cell.tx-txt b { font-size: 27px; font-weight: 700; line-height: 1.35; letter-spacing: -0.02em; word-break: keep-all; }
 
       /* 하단 강조 한 줄 — "10년 거주, 최대 80%" 처럼 표 전체를 묶는 말 */
       .tx-foot {
@@ -97,8 +108,9 @@
 
       <div class="tx-head"><h1 class="wirit-title">{{{title}}}</h1></div>
 
-      <div class="tx-grid{{#if hero}} hero{{/if}}" style="--n:{{n}};--labw:{{labw}}px">
-        <div class="tx-hr"><span class="lb">{{lead}}</span>{{#each cols}}<span>{{this}}</span>{{/each}}</div>
+      <div class="tx-grid{{#if hero}} hero{{/if}}{{#if sparse}} sparse{{/if}}" style="--n:{{n}};--labw:{{labw}}px">
+        <!-- 열 머리는 그 열 값의 정렬을 따라간다 — 값이 왼쪽인데 머리만 가운데면 어긋나 보인다 -->
+        <div class="tx-hr"><span class="lb">{{lead}}</span>{{#each cols}}<span class="{{#if this.lft}}lft{{/if}}">{{#if this.t}}{{this.t}}{{else}}{{this}}{{/if}}</span>{{/each}}</div>
         {{#each rows}}
         <div class="tx-row">
           <span class="tx-lb">{{this.label}}{{#if this.note}}<i>{{this.note}}</i>{{/if}}</span>

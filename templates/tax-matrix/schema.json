@@ -12,7 +12,17 @@
     "n": { "type": "integer", "minimum": 1 },
     "labw": { "type": "integer", "minimum": 100 },
     "hero": { "type": "boolean" },
-    "cols": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "sparse": { "type": "boolean" },
+    "cols": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["t"],
+        "properties": { "t": { "type": "string" }, "lft": { "type": "boolean" } },
+        "additionalProperties": false
+      }
+    },
     "rows": {
       "type": "array",
       "minItems": 1,

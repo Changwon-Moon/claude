@@ -45,13 +45,20 @@ function toCells(row, n, tone) {
 }
 const build = (slug, spec) => {
   const n = spec.cols.length;
+  const rows = spec.rows.map((r) => ({ label: r.label, note: r.note, cells: toCells(r, n, r.tone) }));
+  /* 열 머리 정렬은 **그 열 값이 정한다**. 문장 칸(tx-txt)은 왼쪽이라 머리도 왼쪽이어야
+     한다 — 가운데 머리 밑에 왼쪽 문장이 오면 어긋난 표로 읽힌다(2026-08-03 오너 검수). */
+  const cols = spec.cols.map((t, i) => ({
+    t, lft: rows.every((r) => /tx-txt/.test(r.cells[i]?.cls || "")),
+  }));
   const doc = {
     template: "tax-matrix@1", date,
     who: WHO, status: M.status,
     title: spec.title, lead: spec.lead ?? "", n, labw: spec.labw ?? 250,
-    hero: spec.rows.length <= 1,   // 행 하나짜리(커버)는 늘리지 않고 가운데로 모은다
-    cols: spec.cols,
-    rows: spec.rows.map((r) => ({ label: r.label, note: r.note, cells: toCells(r, n, r.tone) })),
+    hero: rows.length <= 1,   // 행 하나짜리(커버)는 늘리지 않고 가운데로 모은다
+    sparse: rows.length === 2, // 두 행이면 크기로 채운다(빈 띠 방지)
+    cols,
+    rows,
     foot: spec.foot, applyAt: spec.applyAt, source,
   };
   writeFileSync(join(outDir, `${slug}.json`), JSON.stringify(doc, null, 2) + "\n");
@@ -69,9 +76,18 @@ writeFileSync(join(outDir, "tax1-cover.json"), JSON.stringify(cover, null, 2) + 
 /* ⚠️ '그 외'(다주택) 행은 **1주택자 편에서 뺀다.** 대상 뱃지가 "1세대 1주택"인데 다주택 산식이
  *    같이 있으면 뱃지가 거짓말이 된다 — 남의 세금을 자기 것으로 읽게 만드는 자리다.
  *    이 행은 다주택자 편(B)이 가져간다. */
+/* 하단 한 줄은 **데이터에서 계산한다** — 손으로 적으면 표와 어긋나도 아무도 못 잡는다.
+   현행 → 개정안 증감을 두 행에서 직접 빼서 만든다. */
+const jb = D.jongbuse_basic.rows.filter((r) => r.label !== "그 외");
+const eok = (s) => Number(String(s).replace(/[^\d.]/g, ""));
+const delta = (r) => {
+  const d = eok(r.cells[1]) - eok(r.cells[0]);
+  return `${d > 0 ? "+" : "−"}${Math.abs(d)}억`;
+};
 build("tax1-jongbuse", { ...D.jongbuse_basic, lead: "구분", labw: 320,
   title: "종부세 기본공제, 12억이 둘로",
-  rows: D.jongbuse_basic.rows.filter((r) => r.label !== "그 외") });
+  foot: `거주 ${delta(jb[0])} · 비거주 ${delta(jb[1])}`,
+  rows: jb });
 
 build("tax1-jangteuk", { ...D.yangdo_jangteuk, lead: "구분", labw: 250,
   title: "장기보유특별공제 개편안" });
