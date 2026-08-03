@@ -122,12 +122,14 @@ function priceTable(d, total) {
   });
   if (rows.length > 6)
     throw new Error(`${d.id}: 면적대가 ${rows.length}개다 — 판이 카드를 넘긴다. 데이터에서 묶을 것`);
+  /* 머리글은 한 덩어리로 쓴다(오너 지시 2026-08-03): "타입별 분양가(최고가 기준)".
+     이전엔 왼쪽 라벨과 오른쪽 단서를 갈라 놨는데, 둘은 한 문장이라 붙여 읽어야 뜻이 산다. */
+  const basis = d.price?.headline?.note || (d.price?.byArea ? "최고가 기준" : "");
   return {
-    head: ["분양가 · 전용면적별"],
+    head: [basis ? `타입별 분양가(${basis})` : "타입별 분양가"],
     /* 열 수는 개수가 정한다 — 4 이하면 한 줄로 펴고, 5~6이면 3열 두 줄.
        손으로 "2열"이라 박으면 평형이 셋인 단지에서 한 칸이 빈다. */
     cols: rows.length <= 4 ? rows.length : 3,
-    note: d.price?.headline?.note || (d.price?.byArea ? "최고가 기준" : ""),
     rows,
   };
 }
@@ -220,19 +222,22 @@ function presale(d) {
     address: addressOf(d),
     spec: specCells(d, total),
     priceTable: priceTable(d, total),
+    /* 일정 4칸(오너 지시 2026-08-03) — 특공·1순위·당첨자 발표·입주 예정.
+       당첨자 발표일은 청약홈 PRZWNER_PRESNATN_DE 에서 수집기가 이미 읽어 둔다(announceDate). */
     schedule: [
       { label: "특별공급", date: ah?.specialFrom ? md(ah.specialFrom) : "미고지", tbd: !ah?.specialFrom },
       { label: "1순위", date: ah?.rank1From ? md(ah.rank1From) : "미고지", tbd: !ah?.rank1From },
+      { label: "당첨자 발표", date: ah?.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah?.announceDate },
       { label: "입주 예정", date: ymKo(moveInYm), tbd: !moveInYm },
     ],
     notice: flags.join(" · "),
     source: {
-      /* 푸터 출처 줄은 한 줄이어야 한다(머리 규격). 조감도 출처가 붙으면서 넘쳐 둘을 줄였다.
-         ① '한국부동산원' 제거 — 청약홈은 한국부동산원이 운영하는 자체 브랜드라 함께 적으면
-            같은 기관을 두 번 말하는 것이다.
-         ② 보도 날짜 괄호 제거 — 날짜는 캡션과 데이터셋(source.via)이 갖는다.
-            카드 푸터가 답해야 할 질문은 '어디서 왔나'이지 '언제 보도됐나'가 아니다. */
-      name: `${d.source.name.replace(/^한국부동산원\s+/, "")} · ${d.source.via.split(" · ")[0].replace(/\s*\(.*\)$/, "")}`,
+      /* 푸터 출처 줄 = **1차 출처만**. 오너 지시(2026-08-03)로 보도(파이낸셜뉴스)를 뺐다.
+         ⚠️ 전제: 분양가를 입주자모집공고문으로 확정한 뒤에야 이 줄이 참이 된다.
+            보도값을 그대로 두고 보도 출처만 지우면 출처 없는 숫자가 된다 — 발행 게이트에서 막는다.
+         '한국부동산원'도 뺀다 — 청약홈은 한국부동산원이 운영하는 자체 브랜드라
+         함께 적으면 같은 기관을 두 번 말하는 것이다. */
+      name: d.source.name.replace(/^한국부동산원\s+/, ""),
       /* 조감도 출처. 사진 위 표기는 오너 지시로 지웠지만(2026-08-03) 표기 자체를 없애지는
          않는다 — 건설사 저작물이다. "출처." 접두는 푸터 줄이 이미 갖고 있으므로 벗긴다. */
       ...(d.photo?.credit ? { photo: d.photo.credit.replace(/^\s*출처[.·:]?\s*/, "") } : {}),

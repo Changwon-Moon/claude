@@ -206,7 +206,7 @@ const MEASURE_JS = `(() => {
              /* danji-c — 표지형(오너 채택안, 2026-08-03). 새 템플릿을 만들면 글자 요소를 여기
                 등록해야 겹침 검사가 실제로 잰다 — 목록에서 빠진 요소는 없는 것과 같다. */
              ".dcv-title .ln,.dcv-fb .w,.dcv-nm .nm,.dcv-nm .loc," +
-             ".dcv .lab,.dcv-facts .v,.dcv-facts .brk,.dcv-item .a,.dcv-item .p,.dcv-price .note,.dcv-note," +
+             ".dcv .lab,.dcv-facts .v,.dcv-facts .brk,.dcv-item .a,.dcv-item .p,.dcv-note," +
              /* sinbundang-loop — 노선 접이형 정보카드(2026-07-31). */
              ".slp-stn,.slp-danji,.slp-meta,.slp-priceB,.slp-name,.slp-gu,.slp-top";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));

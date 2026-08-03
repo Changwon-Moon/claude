@@ -342,7 +342,7 @@
       "conflictLog": "입주예정: 분양대행 사이트는 2029년 7월이라 적었으나 청약홈 공고는 2031년 1월이다. 1차 출처를 쓴다.",
       "photo": {
         "file": "hangang-prugio-riverfront.jpg",
-        "credit": "출처. 대우건설 조감도",
+        "credit": "출처. 대우건설 홈페이지",
         "provided": "2026-08-03 오너 제공 · 원본은 templates/_shared/photos/_source/"
       },
       "hook": "한강뷰"

@@ -98,9 +98,10 @@
        * 타입은 회색, 금액은 잉크, 주력 면적대만 코발트. */
       .dcv-price { margin-top: 30px; }
       .dcv-price .top { display: flex; align-items: baseline; justify-content: space-between; }
-      .dcv-price .top .note { font-size: 24px; font-weight: 700; color: var(--wirit-gray); }
       .dcv-grid { display: grid; column-gap: 22px; row-gap: 20px; }
-      .dcv-item { min-width: 0; }
+      /* 타입과 금액은 칸 **가운데** 로 맞춘다(오너 지시 2026-08-03). 왼쪽 맞춤이면 '84A'와
+         '7.7억'의 글자 수가 달라 둘의 무게중심이 어긋나 보인다. */
+      .dcv-item { min-width: 0; text-align: center; }
       .dcv-item .a {
         display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 800;
         letter-spacing: -0.03em; color: var(--wirit-gray); line-height: 1; margin-bottom: 10px; white-space: nowrap;
@@ -109,7 +110,8 @@
         display: block; font-family: var(--font-num); font-size: var(--t-n); font-weight: 900;
         letter-spacing: -0.03em; color: var(--wirit-ink); line-height: 1; white-space: nowrap;
       }
-      .dcv-item.main .a,
+      /* 코발트는 **금액에만**. 타입은 주력이든 아니든 전부 회색이다(오너 지시 2026-08-03) —
+         타입은 금액을 읽기 위한 열쇠지 그 자체가 강조 대상이 아니다. */
       .dcv-item.main .p { color: var(--wirit-cobalt); }
 
       /* ── 가운데 선: 위 단(가격)과 아래 단(제원·일정)을 가른다 ── */
@@ -128,6 +130,11 @@
        * 38층이 최고층인지 평균층인지 카드가 말하지 못한다.
        * 단위는 **크기 그대로, 색만 회색**(오너 지시). '2,682세대'는 숫자와 단위가 한 낱말이다. */
       .dcv-facts .frow { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+      /* 일정은 4칸(오너 지시). 마지막 칸만 1.5배로 넓힌다 — '2031년 1월'이 가장 긴 값이라
+         균등 4열이면 이 칸이 공통 수치 크기를 통째로 끌어내린다.
+         덤: 1:1:1:1.5 의 마지막 경계는 936×3/4.5 = 624px 로, 위 줄(3등분)의 두 번째
+         세로선과 **정확히 겹친다.** 두 줄이 선 하나를 공유하니 그리드가 우연처럼 보이지 않는다. */
+      .dcv-facts .frow.when { grid-template-columns: 1fr 1fr 1fr 1.5fr; }
       .dcv-facts .cell { min-width: 0; }
       .dcv-facts .cell + .cell { border-left: 1px solid rgba(20, 24, 33, 0.09); padding-left: 28px; }
       .dcv-facts .fhr { height: 1px; background: var(--wirit-ink-12); margin: 22px 0; }
@@ -192,7 +199,6 @@
       <div class="dcv-price">
         <div class="top">
           <span class="lab">{{priceTable.head.[0]}}</span>
-          {{#if priceTable.note}}<span class="note">{{priceTable.note}}</span>{{/if}}
         </div>
         <div class="dcv-grid" style="grid-template-columns: repeat({{priceTable.cols}}, 1fr)">
           {{#each priceTable.rows}}
@@ -216,7 +222,7 @@
           {{/each}}
         </div>
         <div class="fhr"></div>
-        <div class="frow">
+        <div class="frow when">
           {{#each schedule}}
           <div class="cell">
             <span class="lab">{{this.label}}</span>

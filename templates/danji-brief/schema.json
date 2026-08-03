@@ -89,7 +89,7 @@
     "schedule": {
       "type": "array",
       "minItems": 3,
-      "maxItems": 3,
+      "maxItems": 4,
       "items": {
         "type": "object",
         "required": [
@@ -109,7 +109,8 @@
             "type": "boolean"
           }
         }
-      }
+      },
+      "description": "청약 일정 — 특공·1순위·당첨자 발표·입주 예정(오너 지시 2026-08-03, 4칸)"
     },
     "notice": {
       "type": "string",
