@@ -37,6 +37,8 @@ import {
 import { encKey } from "./sources/molit.js";
 import {
   normalize as kosisNormalize,
+  seniorPoints as kosisSenior,
+  ageOfLabel as kosisAgeOf,
   toSeries as kosisSeries,
   toPeriod as kosisPeriod,
   toCount as kosisCount,
@@ -657,6 +659,31 @@ console.log("\n[청약홈 분양정보 파서]");
   const axisUnset = kosisEnabled().filter((k) => !KOSIS_TABLES[k].regionAxis);
   check("켜진 표는 지역 축이 명시돼 있다(기본 C1 이라도)", true,
     axisUnset.length ? `기본 C1 사용: ${axisUnset.join(",")}` : "전부 명시");
+
+  /* ── 연령 표 접기 ──
+     1세별 102줄을 65세 이상 합계로 접는다. 코드가 아니라 이름의 숫자를 읽는지 확인한다 —
+     연령 코드는 규칙이 없어(0701=10세, 440=100세 이상) 코드로 추리면 언젠가 어긋난다. */
+  check("연령 이름 파싱 — 65세", kosisAgeOf("65세") === 65, String(kosisAgeOf("65세")));
+  check("연령 이름 파싱 — 100세 이상", kosisAgeOf("100세 이상") === 100, String(kosisAgeOf("100세 이상")));
+  check("연령 이름 파싱 — '계' 는 연령이 아니다", kosisAgeOf("계") === null, String(kosisAgeOf("계")));
+  const ageRows = [
+    { C1: "11110", C1_NM: "종로구", C2: "000", C2_NM: "계", PRD_DE: "202606", DT: "1000" },
+    { C1: "11110", C1_NM: "종로구", C2: "3801", C2_NM: "64세", PRD_DE: "202606", DT: "50" },
+    { C1: "11110", C1_NM: "종로구", C2: "3802", C2_NM: "65세", PRD_DE: "202606", DT: "40" },
+    { C1: "11110", C1_NM: "종로구", C2: "4305", C2_NM: "99세", PRD_DE: "202606", DT: "3" },
+    { C1: "11110", C1_NM: "종로구", C2: "440", C2_NM: "100세 이상", PRD_DE: "202606", DT: "2" },
+    { C1: "11", C1_NM: "서울특별시", C2: "3802", C2_NM: "65세", PRD_DE: "202606", DT: "9999" },
+  ];
+  const sp = kosisSenior(ageRows);
+  check("65세 이상만 합친다(64세·계 제외)", sp.length === 1 && sp[0].value === 45,
+    JSON.stringify(sp[0] ?? null));
+  check("시도(2자리)는 시군구 합계에 안 낀다", sp.length === 1, `${sp.length}행`);
+  /* 이름 규칙이 바뀌면 조용히 0이 되지 않고 던져야 한다 — 0은 '고령인구 없는 시군구' 가 되어 오보다. */
+  let ageThrew = false;
+  try {
+    kosisSenior([{ C1: "11110", C1_NM: "종로구", C2: "000", C2_NM: "계", PRD_DE: "202606", DT: "1" }]);
+  } catch { ageThrew = true; }
+  check("65세 이상이 한 줄도 없으면 던진다", ageThrew, ageThrew ? "던짐" : "조용히 0 — 위험");
 
   const noNote = Object.entries(KOSIS_TABLES).filter(([, t]) => !t.note || t.note.length < 20);
   check("표마다 무엇이 미확인인지 적혀 있다", noNote.length === 0, noNote.map(([k]) => k).join(","));

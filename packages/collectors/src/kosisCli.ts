@@ -15,7 +15,7 @@ import {
   fetchTable, fetchTableChunked, TABLES, enabledTables, chunkSizeFor, type TableKey,
 } from "./sources/kosis.js";
 import {
-  normalize, toSeries, milestones, streaks, topMovers, rank, joinReport,
+  normalize, seniorPoints, toSeries, milestones, streaks, topMovers, rank, joinReport,
   type Series, type Signal, type Point,
 } from "./parse/kosis.js";
 
@@ -174,7 +174,10 @@ async function main() {
       payload = await fetchTable(t, key!, { startPrdDe: start, endPrdDe: end, extraObjL: spec.extraObjL });
     }
 
-    let points = normalize(payload, spec.regionAxis ?? "C1");
+    /* 1세별처럼 한 지역에 여러 줄이 오는 표는 그대로 시계열로 못 쓴다 — 먼저 접는다. */
+    let points = spec.derive === "senior65"
+      ? seniorPoints(payload, spec.regionAxis ?? "C1")
+      : normalize(payload, spec.regionAxis ?? "C1");
     if (spec.codeSystem === "vital") {
       const before = points.length;
       points = remapRegions(points, regionMap.maps?.[t] ?? {});

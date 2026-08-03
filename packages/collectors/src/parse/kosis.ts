@@ -398,3 +398,88 @@ export function joinReport(
     missingInData: [...geo].filter((c) => !data.has(c)).sort(),
   };
 }
+
+/* ══════════════ 연령 표 집계 ══════════════
+ *
+ * 1세별 표(DT_1B04006)는 한 지역·한 시점에 **102줄**을 준다(000=계, 0세…100세 이상).
+ * 그대로 normalize 에 넣으면 한 지역에 값이 102개 겹쳐 시계열이 조용히 망가진다.
+ * 그래서 이 표만은 **읽어서 접는다.**
+ *
+ * ── 왜 코드를 안 믿고 이름을 읽나
+ * 연령 코드는 규칙이 없다: 0401=0세 · 0501=5세 · 0701=10세 · 1001=15세 · 440=100세 이상.
+ * 앞두자리가 5세 묶음처럼 보이지만 07 다음이 10 이고 44 는 세 자리다.
+ * 코드로 "65세 이상"을 추리면 언젠가 어긋난다. **이름에 적힌 숫자를 읽는다.**
+ * 이름 규칙이 바뀌면 파싱이 0을 반환하고, 그러면 아래에서 던진다.
+ */
+
+/** "65세" → 65 · "100세 이상" → 100 · "계" → null */
+export function ageOfLabel(label: unknown): number | null {
+  const s = String(label ?? "").trim();
+  if (!s || s === "계") return null;
+  const m = s.match(/(\d+)\s*세/);
+  if (!m) return null;
+  const n = Number(m[1]);
+  return Number.isFinite(n) ? n : null;
+}
+
+/**
+ * 연령 표 → **고령인구(65세 이상)** 시계열용 Point[].
+ *
+ * 비율이 아니라 **명수**를 낸다. 비율은 인구 시계열과 나눠 쓰는 쪽이 안전하다 —
+ * 여기서 비율을 만들면 분모가 이 표의 '계'인지 인구표인지 흐려지고,
+ * 두 표의 시점이 어긋난 달에 조용히 틀린 비율이 나온다.
+ */
+export function seniorPoints(
+  payload: unknown,
+  regionAxis: "C1" | "C2" | "C3" | "C4" = "C1",
+  minAge = 65,
+): Point[] {
+  const rows: RawRow[] = Array.isArray(payload)
+    ? (payload as RawRow[])
+    : Array.isArray((payload as { data?: unknown })?.data)
+      ? ((payload as { data: RawRow[] }).data)
+      : [];
+  if (!rows.length) throw new Error("연령 표 응답에 행이 없다 — 빈 결과와 실패는 다르다.");
+
+  /* 연령 축을 찾는다. 지역 축이 아닌 C 축 중에서 이름이 '…세' 인 것이 연령이다.
+     축 번호를 박아 두지 않는 이유는 표가 축 순서를 바꾼 전례가 있기 때문이다(사망 표). */
+  let ageAxis = "";
+  for (const n of [1, 2, 3, 4]) {
+    const ax = `C${n}`;
+    if (ax === regionAxis) continue;
+    if (rows.some((r) => ageOfLabel(r[`${ax}_NM`]) !== null)) { ageAxis = ax; break; }
+  }
+  if (!ageAxis) {
+    throw new Error(
+      "연령 표에서 연령 축을 못 찾았다 — 이름 규칙이 바뀌었을 수 있다(기대: '65세', '100세 이상'). " +
+      `있는 필드: ${Object.keys(rows[0]).join(", ")}`,
+    );
+  }
+
+  const acc = new Map<string, { code: string; name: string; period: string; value: number }>();
+  let counted = 0;
+  for (const r of rows) {
+    const code = String(r[regionAxis] ?? "").trim();
+    if (!/^\d{5}$/.test(code)) continue;              // 시군구만
+    const age = ageOfLabel(r[`${ageAxis}_NM`]);
+    if (age === null || age < minAge) continue;        // '계' 와 65세 미만은 뺀다
+    const period = toPeriod(r.PRD_DE);
+    const value = toCount(r.DT);
+    if (!period || value === null) continue;
+    const name = String(r[`${regionAxis}_NM`] ?? "").trim();
+    if (!name) continue;
+    const k = `${code}|${period}`;
+    const cur = acc.get(k);
+    if (cur) cur.value += value;
+    else acc.set(k, { code, name, period, value });
+    counted++;
+  }
+
+  if (!counted) {
+    throw new Error(
+      `연령 표에서 ${minAge}세 이상 행을 한 줄도 못 찾았다 — 축(${ageAxis})이나 이름 규칙이 바뀌었다. ` +
+      "조용히 0으로 두면 '고령인구가 없는 시군구' 가 되어 그대로 오보가 된다.",
+    );
+  }
+  return [...acc.values()];
+}

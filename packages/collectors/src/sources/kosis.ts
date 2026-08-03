@@ -103,6 +103,13 @@ export type TableSpec = {
    * 예: 사망 표 ["ALL", "11", "ALL"] = 사망원인 전체 × 서울 × 성별 전체.
    */
   probeObjL?: string[];
+
+  /**
+   * 응답을 그대로 시계열로 못 쓰고 **접어야** 하는 표.
+   *   senior65 — 1세별 102줄을 65세 이상 합계 한 줄로 접는다.
+   * 접지 않으면 한 지역·한 시점에 값이 102개 겹쳐 시계열이 조용히 망가진다.
+   */
+  derive?: "senior65";
 };
 
 /** KOSIS 한 요청당 셀 한도. 문서값은 4만이고, 여유를 두고 자른다. */
@@ -135,14 +142,17 @@ export const TABLES: Record<string, TableSpec> = {
   },
   age: {
     orgId: "101", tblId: "DT_1B04006", label: "행정구역(시군구)별/1세별 주민등록인구",
-    metric: "연령", itmId: "T2", objL1: "ALL", objL2: "", prdSe: "M",
-    extraObjL: ["ALL"], codeSystem: "kostat", cellsPerRegionPeriod: 101, maxMonths: 13,
-    regionAxis: "C1",
-    confidence: "표명확실", enabled: false,
+    metric: "고령인구", itmId: "T2", objL1: "ALL", objL2: "", prdSe: "M",
+    extraObjL: ["ALL"], codeSystem: "kostat", cellsPerRegionPeriod: 102, maxMonths: 13,
+    regionAxis: "C1", derive: "senior65",
+    confidence: "확실", enabled: true,
     note: "probe 로 축 확인(2026-08-03): C2=연령(000=계, 0401=0세, 0402=1세 …) · 항목 T2=총인구수/T3=남/T4=여. " +
       "코드 체계는 통계청(11110=종로구)이라 지도에 그대로 붙는다. " +
       "**1세별 101개 × 전국이라 4만 셀 한도를 넘는다** → 지역을 나눠 부른다(cellsPerRegionPeriod). " +
-      "축 전체 목록을 아직 다 못 봐서 대기 — 5세 단위 묶음 코드가 있으면 그쪽이 훨씬 싸다.",
+      "축 전체 확인: C2 102개(000=계 · 0401=0세 … 440=100세 이상). **5세 묶음 코드는 없다** — 1세별뿐이다.\n" +
+      "그래서 한 지역·한 시점에 102줄이 온다. 그대로 두면 시계열이 겹쳐 망가지므로 " +
+      "**derive: senior65 로 65세 이상을 합쳐 한 줄로 접는다**(비율이 아니라 명수). " +
+      "연령 코드는 규칙이 없어(07 다음이 10, 44는 세 자리) 코드가 아니라 **이름의 숫자를 읽는다.**",
   },
   births: {
     orgId: "101", tblId: "DT_1B81A03", label: "시군구/성/출산순위별 출생",
