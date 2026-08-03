@@ -68,7 +68,7 @@ const ratioOf = (geoName) => byGu[geoName].wolseRatio;
 /* CTA 막대그래프: 전체·신규 계약 [전세(코발트) | 월세(빨강)] 가로 누적 막대. 막대 안엔 %만,
    전세/월세는 막대 위 좌우 바깥 라벨. .sm-cta(잉크 배경) 안, 흰 글자. 아래에 '신규: 최근 3개월'. */
 function ctaBars(allW, newW) {
-  const COB = "#2e6bff", RED = "#e5484d";
+  const COB = "rgba(46,107,255,0.72)", RED = "rgba(229,72,77,0.72)"; // 연하게(투명도↑)
   const seg = (pct, bg) =>
     `<div style="width:${pct}%;background:${bg};display:flex;align-items:center;justify-content:center;color:#fff;` +
     `font-family:var(--font-num);font-weight:900;font-size:24px">${pct}%</div>`;
@@ -133,8 +133,6 @@ mkdirSync(outDir, { recursive: true });
 const doc = {
   template: "singoga-map@1",
   compact: true,
-  spread: true,
-  evenGap: true,
   fitTitle: true,
   ctaRight: true,
   hideFooterId: true, // 아이디는 지도 안 스탬프에 있다 — 푸터 중복 제거(BRAND: 카드당 1개)
