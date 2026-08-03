@@ -40,30 +40,59 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
 
+      # 키가 없어도 여기서 죽이지 않는다. 죽이면 뒤 단계가 건너뛰어져
+      # 세션 쪽에서는 "아무 일도 안 일어난 것"과 구별이 안 된다.
+      # 대신 결과 파일에 그 사실을 적어 커밋한다.
       - name: 키 확인
+        id: keycheck
         env:
           KOSIS_API_KEY: ${{ secrets.KOSIS_API_KEY }}
         run: |
           if [ -z "$KOSIS_API_KEY" ]; then
             echo "::error::KOSIS_API_KEY 가 GitHub Secrets 에 없습니다."
-            echo "kosis.kr → 오픈API → 활용신청(즉시 발급) → Secrets 에 KOSIS_API_KEY 로 등록하세요."
-            exit 1
+            echo "has_key=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "키 확인됨 (길이 ${#KOSIS_API_KEY})"
+            echo "has_key=yes" >> "$GITHUB_OUTPUT"
           fi
 
       # 표 하나가 실패해도 나머지 결과는 파일에 남는다(스크립트가 표별로 잡는다).
       # 다만 하나라도 실패하면 exit 1 이라 워크플로는 빨갛게 된다 — 반쪽 검증을 성공으로 읽지 않기 위해서다.
       - name: 표 검증
+        if: steps.keycheck.outputs.has_key == 'yes'
         continue-on-error: true
         env:
           KOSIS_API_KEY: ${{ secrets.KOSIS_API_KEY }}
         run: pnpm --filter @wirit/collectors probe-kosis 2>&1 | tee /tmp/probe.log
+
+      # 검증이 파일을 못 남겼으면(키 없음·설치 실패·스크립트 크래시) 실패 사실을 파일에 적는다.
+      # 이 저장소에서 세션의 유일한 눈은 커밋된 파일이다. 빈손으로 끝내면 원인을 못 찾는다.
+      - name: 결과 없으면 실패 기록
+        if: always()
+        run: |
+          if ! git diff --quiet -- data/kosis-probe.md 2>/dev/null; then
+            echo "검증이 파일을 갱신했다 — 그대로 둔다"; exit 0
+          fi
+          {
+            echo "# KOSIS 표 검증 결과 — ❌ 검증이 돌지 못했다"
+            echo
+            echo "- 실행 시각(KST): $(TZ=Asia/Seoul date '+%F %H:%M')"
+            echo "- 실행 로그: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "- 키 있음: ${{ steps.keycheck.outputs.has_key }}"
+            echo
+            echo "## 마지막 로그 40줄"
+            echo
+            echo '```'
+            tail -40 /tmp/probe.log 2>/dev/null || echo "(probe.log 없음 — 검증 단계까지 못 갔다)"
+            echo '```'
+          } > data/kosis-probe.md
 
       - name: 커밋
         if: always()
         run: |
           git config user.name "wirit-bot"
           git config user.email "actions@github.com"
-          git add -f data/kosis-probe.md
+          git add -f data/kosis-probe.md || true
           if git diff --cached --quiet; then
             echo "바뀐 것 없음 — 커밋 생략"
           else
@@ -79,5 +108,5 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           SUM=$(tail -3 /tmp/probe.log 2>/dev/null || echo "(로그 없음)")
-          node scripts/notify-telegram.mjs "🔎 KOSIS 표 검증 완료 — data/kosis-probe.md 를 확인하세요
-$SUM"
+          MSG=$(printf '🔎 KOSIS 표 검증 완료 — data/kosis-probe.md 를 확인하세요\n%s' "$SUM")
+          node scripts/notify-telegram.mjs "$MSG" || echo "알림 시크릿이 없어 건너뜁니다"
