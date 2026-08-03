@@ -70,15 +70,15 @@ function ctaBars(allW, newW) {
   const seg = (label, pct, bg) =>
     `<div style="width:${pct}%;background:${bg};display:flex;align-items:center;justify-content:center;color:#fff;` +
     `font-family:var(--font-num);font-weight:800;font-size:23px;white-space:nowrap">${label} ${pct}%</div>`;
-  const bar = (rowLabel, wolse) => {
+  const bar = (rowLabel, wolse, first) => {
     const je = Math.round((100 - wolse) * 10) / 10;
-    return `<div style="display:flex;align-items:center;gap:16px;margin-top:14px">` +
-      `<div style="width:132px;font-size:26px;font-weight:800;color:#fff;letter-spacing:-0.01em">${rowLabel}</div>` +
+    return `<div style="display:flex;align-items:center;gap:16px;margin-top:${first ? 0 : 16}px">` +
+      `<div style="width:132px;font-size:26px;font-weight:800;color:#141821;letter-spacing:-0.01em">${rowLabel}</div>` +
       `<div style="flex:1;display:flex;height:50px;border-radius:11px;overflow:hidden">` +
       seg("전세", je, "#7f8b99") + seg("월세", wolse, "#e5484d") +
       `</div></div>`;
   };
-  return `<div style="margin-top:4px">${bar("전체 계약", allW)}${bar("신규 계약", newW)}</div>`;
+  return `<div>${bar("전체 계약", allW, true)}${bar("신규 계약", newW, false)}</div>`;
 }
 
 // ── 지도: 토허 40곳 코로플레스(월세비중), 라벨 = 지역/비중% 2줄 ──
@@ -112,7 +112,7 @@ const tail = {
   rows: bottom.map((a, idx) => ({
     rank: AREAS.length - 2 + idx, gu: a.label, hits: ratioOf(a.geoName).toFixed(1),
   })),
-  note: `<b>전세가 가장 많은 곳</b>`,
+  // 주석 괄호는 CTA 박스와 겹쳐 생략(note 없음 → 템플릿이 미표시)
 };
 const last = bottom[bottom.length - 1];
 
@@ -136,7 +136,7 @@ const doc = {
   mapSvg,
   rows,
   tail,
-  cta: { title: `새로 맺는 계약, <b>절반 넘게</b> 월세 🏠`, barsHtml: ctaBars(allWolse, newWolse) },
+  cta: { barsHtml: ctaBars(allWolse, newWolse) },
   source: { name: "국토부 아파트 전월세 실거래 · 서울시 행정경계", period: `${latestPrefix} · 신규 최근 3개월`, verified },
 };
 writeFileSync(join(outDir, "jeonwolse-map.json"), JSON.stringify(doc, null, 2) + "\n", "utf8");

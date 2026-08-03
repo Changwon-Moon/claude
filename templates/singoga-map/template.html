@@ -73,7 +73,9 @@
       /* (옵션) CTA 를 지도 아래(우측)에 둔다 — ctaRight 를 준 카드만. 기본 카드는 CTA 가 좌측에 그대로. */
       /* 지도는 좌측 표와 떨어지도록 폭을 줄여 가운데 정렬(양옆 여백). */
       .sm-map.cta-under svg { height: auto; flex: 0 0 auto; min-height: 0; max-width: 88%; margin: 0 auto; }
-      .sm-map.cta-under .sm-cta { margin-top: auto; }
+      /* CTA 박스: 회색 배경 · 폭 줄여 표에 안 붙게 가운데 · 푸터와 여백 확보. */
+      .sm-map.cta-under .sm-cta { background: #e7eaee; color: var(--wirit-ink);
+        max-width: 84%; margin: auto auto 26px; }
       .sm-legend { display: flex; align-items: center; gap: 10px; justify-content: flex-end; margin-top: 4px; font-size: 20px; font-weight: 700; color: var(--wirit-gray); }
       .sm-legend .bar { width: 150px; height: 12px; border-radius: 6px;
         background: linear-gradient(90deg, rgb(255,226,219), rgb(176,11,30)); }
@@ -147,13 +149,13 @@
               <span class="sm-val"><span class="h">{{this.hits}}<i>{{#if ../unit}}{{../unit}}{{else}}건{{/if}}</i></span></span>
             </div>
             {{/each}}
-            <div class="sm-tailnote"><span class="br"></span><span class="tx">{{{tail.note}}}</span></div>
+            {{#if tail.note}}<div class="sm-tailnote"><span class="br"></span><span class="tx">{{{tail.note}}}</span></div>{{/if}}
           </div>
           {{/if}}
 
           {{#if cta}}{{#unless ctaRight}}
           <div class="sm-cta">
-            <div class="t">{{{cta.title}}}</div>
+            {{#if cta.title}}<div class="t">{{{cta.title}}}</div>{{/if}}
             {{#if cta.barsHtml}}{{{cta.barsHtml}}}{{else}}<div class="g3">
               {{#each cta.rows}}<span><b>{{this.k}}</b> {{this.v}}<i>{{this.n}}</i></span>{{/each}}
             </div>{{/if}}
@@ -167,7 +169,7 @@
           {{#if legend}}<div class="sm-legend"><span>적음</span><span class="bar"></span><span>많음</span></div>{{/if}}
           {{#if ctaRight}}{{#if cta}}
           <div class="sm-cta">
-            <div class="t">{{{cta.title}}}</div>
+            {{#if cta.title}}<div class="t">{{{cta.title}}}</div>{{/if}}
             {{#if cta.barsHtml}}{{{cta.barsHtml}}}{{else}}<div class="g3">
               {{#each cta.rows}}<span><b>{{this.k}}</b> {{this.v}}<i>{{this.n}}</i></span>{{/each}}
             </div>{{/if}}
