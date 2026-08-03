@@ -57,7 +57,10 @@ const N = mae.run.weeks;
 if (jeon.run.weeks !== N) throw new Error(`매매(${N})·전세(${jeon.run.weeks}) 연속 주수가 달라 '동반' 프레임이 안 맞는다 — 제목을 바꾼다`);
 const sameBottom = mae.ks[mae.run.base] === jeon.ks[jeon.run.base];
 const startLabel = weekLabel(mae.ks[mae.run.base + 1]);
-const date = process.argv[2] || isoDate(d.meta.asOf || mae.ks[mae.ks.length - 1]);
+/* 뱃지·폴더 = 발행일(오늘, KST). '오늘의 이슈'라 데이터 기준일이 아니라 카드가 나가는 날짜를 쓴다.
+   인자를 주면 그 날짜로 고정(재현/테스트용). 정기물이라 pixel-baselines 미등록 → 날짜 변동 OK. */
+const kstToday = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+const date = process.argv[2] || kstToday;
 
 /* ── 좌표 (매매 카드와 동일 규격 상속) ── */
 const RED = "#e5484d", COBALT = "#2e6bff", INK = "#141821", MUTE = "#9aa3af";
