@@ -81,7 +81,15 @@
        * 상단 여백은 기준(72px)로 되돌려 최상단·제목을 위로 올린다(오너 지시 2026-08-01).
        * ⚠️ sm-cb 를 준 카드에만 붙는다 — 발행된 신고가/토허 카드엔 영향 없음. */
       .sm-cb.sm-c { padding-top: 72px; }
-      .sm-cb .sm-body { flex: 0 0 auto; margin-top: auto; margin-bottom: auto; }
+      /* ⚠️ .sm-c .sm-body(뒤에 나옴)와 명세도가 같아 밀리므로 .sm-cb.sm-c 로 명세도를 올린다.
+       * 본문(표·지도·카드)을 아래로 내려 푸터 위 빈 공간을 줄인다. 상단 여백은 넉넉히,
+       * 하단 여백은 최소로 — 두 열(표/지도) 높이가 달라 auto 가운데정렬로는 안 맞는다.
+       * 값은 렌더 실측으로 맞춘 고정치(오너 지적 2026-08-03: 푸터 위가 너무 빔). */
+      .sm-cb.sm-c .sm-body { flex: 0 0 auto; margin-top: auto; margin-bottom: auto; }
+      /* 지도를 열 폭 전부로 키워(96%→100%) 세로 공간을 채운다 + 표 열을 조금 줄여 지도에 폭을 더 준다.
+       * → 본문이 커져 푸터 위 빈 공간이 줄고, 가운데정렬 여백이 자연히 작아진다(오너 지적 2026-08-03). */
+      .sm-cb .sm-map.cta-under svg { max-width: 100%; }
+      .sm-cb.sm-c .sm-rank { flex: 0 0 336px; }
       .sm-legend { display: flex; align-items: center; gap: 10px; justify-content: flex-end; margin-top: 4px; font-size: 20px; font-weight: 700; color: var(--wirit-gray); }
       .sm-legend .bar { width: 150px; height: 12px; border-radius: 6px;
         background: linear-gradient(90deg, rgb(255,226,219), rgb(176,11,30)); }
