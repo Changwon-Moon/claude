@@ -65,20 +65,29 @@ const allWolse = r1(W, T);         // 40곳 전체 월세비중(해당 월)
 const newWolse = r1(n3W, n3T);     // 40곳 신규 월세비중(최근 3개월)
 const ratioOf = (geoName) => byGu[geoName].wolseRatio;
 
-/* CTA 막대그래프: 전체·신규 계약을 [전세 | 월세] 가로 누적 막대로. .sm-cta(잉크 배경) 안, 흰 글자. */
+/* CTA 막대그래프: 전체·신규 계약 [전세(코발트) | 월세(빨강)] 가로 누적 막대. 막대 안엔 %만,
+   전세/월세는 막대 위 좌우 바깥 라벨. .sm-cta(잉크 배경) 안, 흰 글자. 아래에 '신규: 최근 3개월'. */
 function ctaBars(allW, newW) {
-  const seg = (label, pct, bg) =>
+  const COB = "#2e6bff", RED = "#e5484d";
+  const seg = (pct, bg) =>
     `<div style="width:${pct}%;background:${bg};display:flex;align-items:center;justify-content:center;color:#fff;` +
-    `font-family:var(--font-num);font-weight:800;font-size:23px;white-space:nowrap">${label} ${pct}%</div>`;
-  const bar = (rowLabel, wolse, first) => {
+    `font-family:var(--font-num);font-weight:900;font-size:24px">${pct}%</div>`;
+  const bar = (rowLabel, wolse) => {
     const je = Math.round((100 - wolse) * 10) / 10;
-    return `<div style="display:flex;align-items:center;gap:16px;margin-top:${first ? 0 : 16}px">` +
-      `<div style="width:132px;font-size:26px;font-weight:800;color:#141821;letter-spacing:-0.01em">${rowLabel}</div>` +
-      `<div style="flex:1;display:flex;height:50px;border-radius:11px;overflow:hidden">` +
-      seg("전세", je, "#7f8b99") + seg("월세", wolse, "#e5484d") +
+    return `<div style="display:flex;align-items:center;gap:16px;margin-top:12px">` +
+      `<div style="width:104px;font-size:25px;font-weight:800;color:#fff;letter-spacing:-0.01em">${rowLabel}</div>` +
+      `<div style="flex:1;display:flex;height:46px;border-radius:10px;overflow:hidden">` +
+      seg(je, COB) + seg(wolse, RED) +
       `</div></div>`;
   };
-  return `<div>${bar("전체 계약", allW, true)}${bar("신규 계약", newW, false)}</div>`;
+  return `<div>` +
+    `<div style="display:flex;align-items:center;gap:16px">` +
+      `<div style="width:104px"></div>` +
+      `<div style="flex:1;display:flex;justify-content:space-between;font-size:24px;font-weight:800">` +
+        `<span style="color:#6f9cff">전세</span><span style="color:#ff7a7e">월세</span></div></div>` +
+    bar("전체 계약", allW) + bar("신규 계약", newW) +
+    `<div style="margin-top:16px;font-size:21px;font-weight:700;color:#9aa3af;text-align:right">※ 신규 : 최근 3개월</div>` +
+    `</div>`;
 }
 
 // ── 지도: 토허 40곳 코로플레스(월세비중), 라벨 = 지역/비중% 2줄 ──
@@ -130,14 +139,13 @@ const doc = {
   date,
   note: `오늘의 주요 부동산 이슈 (${date.replace(/-/g, ".")})`,
   title: `<img class="tlogo" src="${seoulLogo}" alt="" /><span class="hi">월세</span>가 전세를 넘어섰다`,
-  subtitle: `수도권 토허구역 40곳 · ${latestPrefix} · 구별 월세 비중 (아파트 전월세 실거래)`,
   head: { l: "지역", r: "월세 비중" },
   unit: "%",
   mapSvg,
   rows,
   tail,
   cta: { barsHtml: ctaBars(allWolse, newWolse) },
-  source: { name: "국토부 아파트 전월세 실거래 · 서울시 행정경계", period: `${latestPrefix} · 신규 최근 3개월`, verified },
+  source: { name: "국토부 아파트 전월세 실거래 · 서울시 행정경계", period: latestPrefix, verified },
 };
 writeFileSync(join(outDir, "jeonwolse-map.json"), JSON.stringify(doc, null, 2) + "\n", "utf8");
 
