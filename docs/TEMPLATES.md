@@ -359,6 +359,8 @@ pnpm -s --filter @wirit/renderer render -- --data "$PWD/data/content/2026-07-23/
 | 가로 괘선 | 1px `--wirit-ink-12` | 위 단/아래 단, 제원/일정 |
 | 세로 괘선 | 1px `rgba(20,24,33,.09)` | 더 옅다 — '구분'이지 '단락'이 아니므로 |
 | 아래 단 정렬 | 칸마다 **가운데**. 단 라벨·내역은 값과 **왼쪽 선을 맞춘다**(`.box` 덩어리를 가운데로) | 각자 가운데로 맞추면 짧은 라벨이 값 한가운데로 밀려 두 줄이 어긋나 보인다 |
+| 값 밑선 맞춤 | 한 칸에만 `.abv`/`.brk` 가 붙으면 **없는 칸에 같은 높이의 빈 자리**(`::before` 34px / `::after` 36px)를 만든다 | 덩어리를 통째로 밀면 위에 붙는 카드와 아래에 붙는 카드에서 방향이 반대라 한쪽이 깨진다 |
+| 회색 줄 시각 보정 | `.abv/.lab/.brk { margin-left: 5px }` | 상자는 맞아도 **글자가 어긋난다** — 프리텐다드 숫자는 52px에서 잉크가 7.5px 안쪽, 한글 라벨은 24~26px에서 2.5px. 캔버스·SVG 는 Chromium 이 레이아웃 상자를 돌려주므로 렌더 실측값을 상수로 박았다 |
 | 칸 여백 | `.cell { padding: 0 22px }` — **좌우 대칭** | 왼쪽에만 주면 `text-align:center` 가 '패딩 안쪽 가운데'를 잡아 글자가 칸 중심에서 밀린다 |
 | 단지명 행 | 단지명(좌) · 주소+로고(우) **한 행**, `align-items:flex-end` + 모두 `line-height:1` | 주소가 둘째 줄일 때는 로고만 오른쪽에 홀로 떠 있었다 |
 | 단지명 크기 | 30~60px **자동**(행 전체가 카드 폭에 들어가는 최대) | 고정 크기면 이름이 긴 단지에서 로고가 밖으로 밀린다 |
@@ -435,7 +437,7 @@ node scripts/danji-card.mjs "<단지명 또는 공고번호>" --photo <조감도
 
 ```bash
 pnpm --filter @wirit/renderer render -- --data ../../templates/danji-cover/sample.json --out /tmp/samp
-md5sum /tmp/samp/sample-p1.png   # 확정 시점: 4abbe13b03dc3f1373c6c3ad7b4122d3
+md5sum /tmp/samp/sample-p1.png   # 확정 시점: 271017829c49d53ce59985bfd9cad9c5
 pnpm --filter @wirit/renderer qa templates/danji-cover/sample.json
 ```
 
