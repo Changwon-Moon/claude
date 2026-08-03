@@ -86,7 +86,6 @@ function ctaBars(allW, newW) {
       `<div style="flex:1;display:flex;justify-content:space-between;font-size:24px;font-weight:800">` +
         `<span style="color:#2e6bff">전세</span><span style="color:#e5484d">월세</span></div></div>` +
     bar("전체 계약", allW) + bar("신규 계약", newW) +
-    `<div style="margin-top:16px;font-size:21px;font-weight:700;color:#6b7280;text-align:right">※ 신규 : 최근 3개월</div>` +
     `</div>`;
 }
 
@@ -108,10 +107,10 @@ const mapSvg = tohuhMapSvg({
   placement: "nearest",
 });
 
-// ── 순위: 1~12위 + ··· + 40위(꼴찌 하나) ──
+// ── 순위: 1~15위 + ··· + 38~40위 ──
 const ranked = [...AREAS].sort((a, b) => ratioOf(b.geoName) - ratioOf(a.geoName));
 const MEDALS = ["🥇", "🥈", "🥉"];
-const rows = ranked.slice(0, 12).map((a, i) => ({
+const rows = ranked.slice(0, 15).map((a, i) => ({
   rank: i + 1, medal: MEDALS[i] || "", top: i < 3,
   gu: a.label, hits: ratioOf(a.geoName).toFixed(1),
 }));
@@ -145,7 +144,7 @@ const doc = {
   mapSvg,
   rows,
   tail,
-  cta: { barsHtml: ctaBars(allWolse, newWolse) },
+  cta: { barsHtml: ctaBars(allWolse, newWolse), footNote: "※ 신규 : 최근 3개월" },
   source: { name: "국토부 아파트 전월세 실거래 · 서울시 행정경계", period: latestPrefix, verified },
 };
 writeFileSync(join(outDir, "jeonwolse-map.json"), JSON.stringify(doc, null, 2) + "\n", "utf8");
