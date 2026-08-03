@@ -11,7 +11,7 @@
  */
 import { writeFileSync, mkdirSync, readFileSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
-import { fetchTable, TABLES } from "./sources/kosis.js";
+import { fetchTable, TABLES, enabledTables, type TableKey } from "./sources/kosis.js";
 import {
   normalize, toSeries, milestones, streaks, topMovers, rank, joinReport,
   type Series, type Signal,
@@ -97,13 +97,31 @@ async function main() {
   const { start, end } = periodRange(today, months);
   const geo = geoCodes();
 
-  const payload = DRY
-    ? synthesize(geo.codes, geo.names, months)
-    : await fetchTable("population", key!, { prdSe: "M", startPrdDe: start, endPrdDe: end });
+  /* ── 켜져 있는 표만 받는다 ──
+     `enabled: false` 인 표는 아직 규격이 확인되지 않은 것이다(sources/kosis.ts 의 note 참고).
+     `kosisProbeCli.ts` 로 검증하고 오너가 확인한 뒤에 켠다.
+     **확인 안 된 표에서 뽑은 숫자가 카드에 올라가는 것이 이 회사에서 가장 위험한 일이다.** */
+  const tables = DRY ? (["population"] as TableKey[]) : enabledTables();
+  const waiting = (Object.keys(TABLES) as TableKey[]).filter((k) => !TABLES[k].enabled);
 
-  const points = normalize(payload);
-  const series: Series[] = toSeries(points);
-  console.log(`· 시군구 ${series.length}곳 · 시점 ${series[0]?.points.length ?? 0}개 (${start}~${end})`);
+  const metrics: Record<string, Series[]> = {};
+  for (const t of tables) {
+    const spec = TABLES[t];
+    const payload = DRY
+      ? synthesize(geo.codes, geo.names, months)
+      : await fetchTable(t, key!, { startPrdDe: start, endPrdDe: end });
+    metrics[spec.metric] = toSeries(normalize(payload));
+    console.log(`· ${spec.metric}(${spec.tblId}) — 시군구 ${metrics[spec.metric].length}곳 · 시점 ${metrics[spec.metric][0]?.points.length ?? 0}개`);
+  }
+  if (waiting.length) {
+    console.log(`· 검증 대기 중인 표 ${waiting.length}개: ${waiting.map((k) => `${k}(${TABLES[k].tblId})`).join(", ")}`);
+    console.log("  → pnpm --filter @wirit/collectors probe-kosis 로 규격을 확인한 뒤 enabled 를 켭니다.");
+  }
+
+  /* 인구는 모든 신호의 기준선이다 — 없으면 소재를 만들 수 없다. */
+  const series: Series[] = metrics["인구"] ?? [];
+  if (!series.length) throw new Error("인구 시계열이 비었다 — 표 ID·기간·인증키를 확인해야 한다.");
+  console.log(`· 기준 인구 시계열 ${series.length}곳 (${start}~${end})`);
 
   /* ── 지도 조인 검사 ──
      행정구역이 바뀌면 여기서 먼저 드러난다. 조용히 빈 칸으로 그리면 그게 곧 오보다. */
@@ -140,12 +158,16 @@ async function main() {
          '1차 출처에서 받았다'고 말할 수 없다. 첫 실행 뒤 오너가 눈으로 대조하면 승격한다. */
       verified: false,
       dry: DRY,
-      source: `KOSIS 국가통계포털 ${TABLES.population.orgId}/${TABLES.population.tblId} (${TABLES.population.label})`,
+      source: `KOSIS 국가통계포털 · ${tables.map((t) => `${TABLES[t].orgId}/${TABLES[t].tblId}(${TABLES[t].label})`).join(" · ")}`,
       sourceUrl: `https://kosis.kr/statHtml/statHtml.do?orgId=${TABLES.population.orgId}&tblId=${TABLES.population.tblId}`,
       collectedFor: today,
       latestPeriod,
       periodRange: { start, end },
       unit: { value: "명" },
+      /* 어떤 표를 실제로 받았고, 무엇이 아직 검증 대기인지 데이터셋에 남긴다 —
+         카드를 만들 때 "왜 이 지표는 없나"를 다시 파지 않도록. */
+      tables: tables.map((t) => ({ key: t, tblId: TABLES[t].tblId, metric: TABLES[t].metric, confidence: TABLES[t].confidence })),
+      tablesWaiting: waiting.map((t) => ({ key: t, tblId: TABLES[t].tblId, metric: TABLES[t].metric, note: TABLES[t].note })),
       geoJoin: {
         matched: jr.matched.length,
         missingInGeo: jr.missingInGeo,
@@ -154,6 +176,8 @@ async function main() {
     },
     signals,
     series,
+    /* 인구 말고 다른 지표(세대수·이동·연령·출생·사망)는 검증되어 켜지는 대로 여기 쌓인다. */
+    metrics,
   };
 
   if (!DRY) writeFileSync(join(outDir, "population-latest.json"), JSON.stringify(doc, null, 2) + "\n", "utf8");

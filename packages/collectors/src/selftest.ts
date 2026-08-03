@@ -43,7 +43,7 @@ import {
   joinReport as kosisJoin,
   type Series as KosisSeries,
 } from "./parse/kosis.js";
-import { buildUrl as kosisUrl, encKey as kosisEncKey } from "./sources/kosis.js";
+import { buildUrl as kosisUrl, encKey as kosisEncKey, TABLES as KOSIS_TABLES, enabledTables as kosisEnabled } from "./sources/kosis.js";
 
 import { toSeries, regionNames, ambiguousNames, latestMonth, readPage, type RebPoint } from "./sources/rebIndex.js";
 import {
@@ -571,6 +571,18 @@ console.log("\n[청약홈 분양정보 파서]");
   check("URL 에 표 ID 가 들어간다", ku.includes("tblId=DT_1B040A3"), ku);
   check("URL 에 인증키가 들어간다", ku.includes("apiKey=KEY"), ku);
   check("URL 에 기간이 들어간다", ku.includes("startPrdDe=202501") && ku.includes("endPrdDe=202606"));
+
+  /* ── 표 등록부 규칙 ──
+     규격을 확인 못 한 표가 실수로 정기 수집에 끼는 것이 이 배관에서 가장 위험한 사고다.
+     "확실" 이 아닌 표는 반드시 enabled=false 여야 한다. */
+  const notSure = Object.entries(KOSIS_TABLES).filter(([, t]) => t.confidence !== "확실" && t.enabled);
+  check("규격 미확인 표는 정기 수집에 끼지 않는다", notSure.length === 0, notSure.map(([k]) => k).join(","));
+  check("켜진 표는 인구뿐(검증 전)", kosisEnabled().join(",") === "population", kosisEnabled().join(","));
+  const noNote = Object.entries(KOSIS_TABLES).filter(([, t]) => !t.note || t.note.length < 20);
+  check("표마다 무엇이 미확인인지 적혀 있다", noNote.length === 0, noNote.map(([k]) => k).join(","));
+  // probe 는 최근 1개 시점만 받는다 — 전 기간을 받으면 수십 MB 라 검증 목적에 안 맞는다
+  const pu = kosisUrl("deaths", "K", { newEstPrdCnt: 1 });
+  check("probe URL 은 newEstPrdCnt 로 최근 1개만", pu.includes("newEstPrdCnt=1") && !pu.includes("startPrdDe"), pu);
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);

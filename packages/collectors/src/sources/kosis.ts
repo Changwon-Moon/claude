@@ -26,25 +26,89 @@ const BASE = "https://kosis.kr/openapi/Param/statisticsParameterData.do";
 /**
  * 우리가 받는 통계표.
  *
- * ⚠️ `tblId` 는 **세션에서 원문 대조를 못 했다.** DT_1B040A3 은 KOSIS statHtml 화면 제목이
- *    「행정구역(시군구)별, 성별 인구수」인 것까지만 확인됐다. 첫 실행에서 응답 헤더의
- *    통계표명을 그대로 데이터셋 meta 에 적어 두고, 오너가 눈으로 한 번 대조한다.
- *    그 전까지 이 데이터로 만든 카드는 `verified:false` 다.
+ * ⚠️ **표 ID 를 세션에서 원문 대조하지 못했다.** kosis.kr 본문이 robots 로 막혀 있어
+ *    검색결과에 노출된 표 제목까지만 확인됐다. 그래서 표마다 `confidence` 를 적어 두고,
+ *    `--probe` 로 **첫 실제 호출에서 스스로 검증**한다(응답의 통계표명·항목코드를 받아 적는다).
+ *    `enabled: false` 인 표는 검증 전까지 정기 수집에 끼지 않는다 —
+ *    확인 안 된 표에서 뽑은 숫자가 카드에 올라가는 것이 이 회사에서 가장 위험한 일이다.
  */
-export const TABLES = {
+
+export type TableSpec = {
+  orgId: string;
+  tblId: string;
+  label: string;
+  /** 우리가 이 표에서 뽑는 값의 이름. 신호·카드가 이 이름으로 부른다. */
+  metric: string;
+  /** 항목 코드. "ALL" 이면 전부 받아 온다(어떤 항목이 있는지 모를 때). */
+  itmId: string;
+  objL1: string;
+  objL2: string;
+  /** 수록 주기 — 월간이 있으면 M, 연간뿐이면 Y */
+  prdSe: "M" | "Y";
+  /**
+   * 얼마나 확인됐나.
+   *   확실     — 표 제목 + 항목코드까지 실동작 사례로 확인
+   *   표명확실 — 표 제목은 확인, 항목코드·분류축은 미확인
+   *   추정     — 제목도 간접 확인
+   */
+  confidence: "확실" | "표명확실" | "추정";
+  /** 정기 수집에 낄 것인가. 검증 전 표는 false 로 둔다. */
+  enabled: boolean;
+  /** 왜 이 표를 쓰나 / 무엇이 아직 확인 안 됐나 */
+  note: string;
+};
+
+export const TABLES: Record<string, TableSpec> = {
   population: {
-    orgId: "101",
-    tblId: "DT_1B040A3",
-    label: "행정구역(시군구)별 성별 인구수",
-    /** 총인구 항목. 성별 분리가 필요해지면 여기만 늘린다. */
-    itmId: "T20",
-    /** objL1 = 행정구역, objL2 = 성별(총계) */
-    objL1: "ALL",
-    objL2: "",
+    orgId: "101", tblId: "DT_1B040A3", label: "행정구역(시군구)별 성별 인구수",
+    metric: "인구", itmId: "T20", objL1: "ALL", objL2: "", prdSe: "M",
+    confidence: "확실", enabled: true,
+    note: "T20=총인구수 까지 실동작 사례로 확인. objL2=성별(계).",
   },
-} as const;
+  households: {
+    orgId: "101", tblId: "DT_1B040B3", label: "행정구역(시군구)별 주민등록세대수",
+    metric: "세대수", itmId: "ALL", objL1: "ALL", objL2: "", prdSe: "M",
+    confidence: "표명확실", enabled: false,
+    note: "표 제목·수록주기(월·년, 1992~)는 확인. **항목코드 미확인** → probe 로 확정한다. " +
+      "세대당 인구는 이 표의 항목을 쓰지 않고 인구÷세대수로 우리가 계산한다(전용 항목이 있는지 확인 못 했다).",
+  },
+  migration: {
+    orgId: "101", tblId: "DT_1B26001_A01", label: "시군구별 이동자수(국내인구이동)",
+    metric: "이동", itmId: "ALL", objL1: "ALL", objL2: "", prdSe: "Y",
+    confidence: "표명확실", enabled: false,
+    note: "시군구 5자리 코드로 실제 호출된 URL 이 확인됐다(objL1=11110+11140+…). " +
+      "**항목코드 미확인**(T25 하나만 실물 관측, 라벨 모름). 월간 지원 여부도 미확인 → 연간으로 시작. " +
+      "총전입·총전출·순이동 구성으로 추정되며, 순이동은 우리가 전입-전출로 다시 계산한다.",
+  },
+  age: {
+    orgId: "101", tblId: "DT_1B04006", label: "행정구역(시군구)별/1세별 주민등록인구",
+    metric: "연령", itmId: "ALL", objL1: "ALL", objL2: "", prdSe: "M",
+    confidence: "표명확실", enabled: false,
+    note: "1세 단위 원자료 → 65세이상 비율·중위연령을 우리가 직접 계산한다(지표표를 받아 적지 않는다). " +
+      "**분류축·항목코드·주기 미확인** → probe 로 확정. 응답이 크므로 확정 뒤 축을 좁힌다.",
+  },
+  births: {
+    orgId: "101", tblId: "DT_1B81A03", label: "시군구/성/출산순위별 출생",
+    metric: "출생", itmId: "ALL", objL1: "ALL", objL2: "", prdSe: "Y",
+    confidence: "표명확실", enabled: false,
+    note: "인구동향조사(연간). **분류축·항목코드 미확인.** " +
+      "월간 인구동향표(DT_1B8000G)는 시군구까지 내려가는지 확인 못 해 쓰지 않는다.",
+  },
+  deaths: {
+    orgId: "101", tblId: "DT_1B34E13", label: "시군구/사망원인별 사망자수",
+    metric: "사망", itmId: "ALL", objL1: "ALL", objL2: "", prdSe: "Y",
+    confidence: "표명확실", enabled: false,
+    note: "사망원인통계(연간). 사망원인 분류축의 '계'를 뽑아야 총사망자수가 된다 — " +
+      "**축 구성 미확인이라 probe 없이 쓰면 특정 사인의 숫자를 총사망자수로 낼 위험이 있다.** " +
+      "시군구 단위 순수 사망자수 전용표는 찾지 못했다.",
+  },
+};
 
 export type TableKey = keyof typeof TABLES;
+
+/** 정기 수집에 낄 표 */
+export const enabledTables = (): TableKey[] =>
+  Object.keys(TABLES).filter((k) => TABLES[k].enabled);
 
 /**
  * KOSIS 인증키는 발급 화면에서 그대로 복사한 평문이다(청약홈처럼 인코딩 두 벌이 아니다).
@@ -62,7 +126,7 @@ export function encKey(key: string): string {
 export function buildUrl(
   table: TableKey,
   key: string,
-  opts: { prdSe?: "M" | "Y"; startPrdDe: string; endPrdDe: string },
+  opts: { prdSe?: "M" | "Y"; startPrdDe?: string; endPrdDe?: string; newEstPrdCnt?: number },
 ): string {
   const t = TABLES[table];
   const p = new URLSearchParams({
@@ -72,12 +136,17 @@ export function buildUrl(
     objL1: t.objL1,
     format: "json",
     jsonVD: "Y",
-    prdSe: opts.prdSe ?? "M",
-    startPrdDe: opts.startPrdDe,
-    endPrdDe: opts.endPrdDe,
+    prdSe: opts.prdSe ?? t.prdSe,
     orgId: t.orgId,
     tblId: t.tblId,
   });
+  /* 기간은 둘 중 하나로 준다 — 범위(startPrdDe~endPrdDe) 또는 최근 N개(newEstPrdCnt).
+     probe 는 최근 1개만 받아 응답 모양만 본다(전 기간을 받으면 수십 MB 가 된다). */
+  if (opts.newEstPrdCnt) p.set("newEstPrdCnt", String(opts.newEstPrdCnt));
+  else {
+    p.set("startPrdDe", opts.startPrdDe ?? "");
+    p.set("endPrdDe", opts.endPrdDe ?? "");
+  }
   return `${BASE}?${p.toString()}`.replace("__KEY__", encKey(key));
 }
 
@@ -85,7 +154,7 @@ export function buildUrl(
 export async function fetchTable(
   table: TableKey,
   key: string,
-  opts: { prdSe?: "M" | "Y"; startPrdDe: string; endPrdDe: string },
+  opts: { prdSe?: "M" | "Y"; startPrdDe?: string; endPrdDe?: string; newEstPrdCnt?: number },
 ): Promise<unknown> {
   const url = buildUrl(table, key, opts);
   const text = await fetchText(url, { timeoutMs: 30000 });

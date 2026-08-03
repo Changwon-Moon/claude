@@ -1,0 +1,11 @@
+# KOSIS 표 검증 대기열 — 아무 줄이나 바꿔 푸시하면 검증이 돈다.
+#
+# 무엇을 하나: 표마다 최근 1개 시점만 받아 통계표명·항목코드(itmId)·분류축을 확인해
+#   data/kosis-probe.md 에 적어 커밋한다.
+# 왜 필요한가: 표 ID 를 검색결과 제목까지만 확인했다. 항목코드·분류축은 미확인이라
+#   그대로 수집하면 엉뚱한 항목의 숫자가 카드에 올라갈 수 있다.
+#
+# 결과를 보고 맞으면 packages/collectors/src/sources/kosis.ts 의 enabled 를 켠다.
+#
+# ⚠️ KOSIS_API_KEY 가 Secrets 에 있어야 돈다.
+run 2026-08-03

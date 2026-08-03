@@ -1,0 +1,83 @@
+name: KOSIS 표 검증 (probe)
+
+# ── 무엇을 하나 (2026-08-03)
+# KOSIS 표마다 **최근 1개 시점만** 받아 "이 표가 진짜 우리가 생각한 그 표인지" 확인하고
+# 결과를 `data/kosis-probe.md` 에 적어 커밋한다.
+#
+# ── 왜 정기 수집과 나눴나
+# kosis.kr 본문이 세션에서 안 열려(robots) 표 ID 를 검색결과 제목까지만 확인했다.
+# 항목코드(itmId)·분류축(objL)·수록주기는 대부분 미확인이다. 이대로 정기 수집을 돌리면
+# **엉뚱한 항목의 숫자가 조용히 카드에 올라간다** — 예컨대 사망 표는 '사망원인 50항목' 축이 있어
+# '계'를 안 고르면 특정 사인의 숫자가 총사망자수로 나간다.
+#
+# 검증되면 `packages/collectors/src/sources/kosis.ts` 의 `enabled` 를 켠다.
+# **켜지기 전 표는 정기 수집에 끼지 않는다.**
+on:
+  push:
+    paths:
+      - "data/kosis-probe-queue.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kosis-probe
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: 키 확인
+        env:
+          KOSIS_API_KEY: ${{ secrets.KOSIS_API_KEY }}
+        run: |
+          if [ -z "$KOSIS_API_KEY" ]; then
+            echo "::error::KOSIS_API_KEY 가 GitHub Secrets 에 없습니다."
+            echo "kosis.kr → 오픈API → 활용신청(즉시 발급) → Secrets 에 KOSIS_API_KEY 로 등록하세요."
+            exit 1
+          fi
+
+      # 표 하나가 실패해도 나머지 결과는 파일에 남는다(스크립트가 표별로 잡는다).
+      # 다만 하나라도 실패하면 exit 1 이라 워크플로는 빨갛게 된다 — 반쪽 검증을 성공으로 읽지 않기 위해서다.
+      - name: 표 검증
+        continue-on-error: true
+        env:
+          KOSIS_API_KEY: ${{ secrets.KOSIS_API_KEY }}
+        run: pnpm --filter @wirit/collectors probe-kosis 2>&1 | tee /tmp/probe.log
+
+      - name: 커밋
+        if: always()
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@github.com"
+          git add -f data/kosis-probe.md
+          if git diff --cached --quiet; then
+            echo "바뀐 것 없음 — 커밋 생략"
+          else
+            git commit -m "KOSIS 표 검증 $(TZ=Asia/Seoul date +%F)"
+            git pull --rebase --autostash origin ${{ github.ref_name }} || true
+            git push origin HEAD:${{ github.ref_name }}
+          fi
+
+      - name: 텔레그램 알림
+        if: always()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          SUM=$(tail -3 /tmp/probe.log 2>/dev/null || echo "(로그 없음)")
+          node scripts/notify-telegram.mjs "🔎 KOSIS 표 검증 완료 — data/kosis-probe.md 를 확인하세요
+$SUM"
