@@ -26,3 +26,4 @@
 - [ ] [26.08.03(월) 관제탑] **서울 아파트 78주 연속 상승 — 상승폭 文정부의 2배** · streak-line · 원본 data/content/2026-07-27/mae-streak.json
 - [ ] [26.08.03(월) 관제탑] **한강뷰 아파트 분양가 7억대?** · danji-cover · 원본 data/content/2026-08-03/danji-hangang.json
 - [ ] [26.08.03(월) 관제탑] **송도 무순위 줍줍 150세대** · danji-cover · 원본 data/content/2026-08-03/danji-songdo.json
+- [ ] [26.08.03(월) 관제탑] **서울 아파트 매매·전세 동반 78주 연속 상승** · streak-line · 원본 data/content/2026-08-03/jeonse-streak.json
