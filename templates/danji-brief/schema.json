@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "danji-brief@2",
-  "description": "청약단지 브리핑 — 고정 부제(오늘의 주요 청약 이슈 + 날짜) · 한 줄 대제목 · 조감도 · 2칸 스트립 두 줄 · 청약 일정 3칸 · 특이사항. 2026-08-03 오너 지시 재설계.",
+  "title": "danji-brief@3",
+  "description": "청약단지 브리핑 — 고정 부제 · 한 줄 대제목 · 조감도(단지명 인레이) · 제원 3분할 · 잉크 가격판 · 일정 3분할 · 특이사항. 2026-08-03 디자인 재구성.",
   "type": "object",
   "required": [
     "template",
@@ -9,8 +9,8 @@
     "titleLines",
     "danji",
     "source",
-    "left",
-    "priceTable"
+    "priceTable",
+    "spec"
   ],
   "properties": {
     "template": {
@@ -134,7 +134,8 @@
       "type": "object",
       "required": [
         "head",
-        "rows"
+        "rows",
+        "cols"
       ],
       "description": "평형별 대표타입 표 — 면적대마다 타입 하나씩, 전부 적는다(오너 지시 2026-08-03)",
       "properties": {
@@ -142,10 +143,10 @@
           "type": "array",
           "items": {
             "type": "string",
-            "maxLength": 14
+            "maxLength": 24
           },
-          "minItems": 2,
-          "maxItems": 2
+          "minItems": 1,
+          "maxItems": 1
         },
         "rows": {
           "type": "array",
@@ -172,14 +173,24 @@
               }
             }
           }
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "cols": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4,
+          "description": "가격판 열 수 — 코드가 개수로 정한다(4 이하는 그 수, 5~6은 3열)"
         }
       }
     },
-    "left": {
+    "spec": {
       "type": "array",
-      "minItems": 2,
-      "maxItems": 4,
-      "description": "왼쪽 단 — 세대수(+APT|OT 내역)·규모·주소. 오너 지시 2026-08-03",
+      "minItems": 3,
+      "maxItems": 3,
+      "description": "제원 3분할 — 전부 순수 수치. 문장형 값을 섞으면 공통 fit 에서 큰 숫자가 끌려 내려간다",
       "items": {
         "type": "object",
         "required": [
@@ -189,31 +200,23 @@
         "properties": {
           "label": {
             "type": "string",
-            "maxLength": 10
+            "maxLength": 12
           },
           "value": {
             "type": "string",
-            "maxLength": 24
+            "maxLength": 10
           },
           "unit": {
             "type": "string",
             "maxLength": 6
-          },
-          "sub": {
-            "type": "string",
-            "maxLength": 26,
-            "description": "작게·회색으로 붙는 내역(APT n | OT n)"
-          },
-          "addr": {
-            "type": "boolean",
-            "description": "주소 줄 — 숫자 서체가 아니라 본문 서체로 그린다"
-          },
-          "big": {
-            "type": "boolean",
-            "description": "큰 숫자로 그린다(세대수). 문장형 값과 크기를 섞지 않기 위한 구분"
           }
         }
       }
+    },
+    "subline": {
+      "type": "string",
+      "maxLength": 90,
+      "description": "수치를 뒷받침하는 한 줄(내역·주소). <b> 허용"
     }
   }
 }

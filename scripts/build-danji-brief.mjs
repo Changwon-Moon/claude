@@ -121,8 +121,15 @@ function priceTable(d, total) {
     };
   });
   if (rows.length > 6)
-    throw new Error(`${d.id}: 면적대가 ${rows.length}개다 — 표가 카드를 넘긴다. 데이터에서 묶을 것`);
-  return { head: ["대표평형(전용)", "분양가"], rows };
+    throw new Error(`${d.id}: 면적대가 ${rows.length}개다 — 판이 카드를 넘긴다. 데이터에서 묶을 것`);
+  return {
+    head: ["분양가 · 전용면적별"],
+    /* 열 수는 개수가 정한다 — 4 이하면 한 줄로 펴고, 5~6이면 3열 두 줄.
+       손으로 "2열"이라 박으면 평형이 셋인 단지에서 한 칸이 빈다. */
+    cols: rows.length <= 4 ? rows.length : 3,
+    note: d.price?.headline?.note || (d.price?.byArea ? "최고가 기준" : ""),
+    rows,
+  };
 }
 
 /* ── 제목 ──
@@ -145,22 +152,31 @@ function titleFor(d, { total, repWon }) {
  *   ③ 주소(읍면동까지)
  * 오피스텔이 없으면 내역 줄을 만들지 않는다 — "OT 0" 은 0실 공급으로 읽힌다.
  */
-function leftBlocks(d, aptTotal) {
+/**
+ * 제원 3분할 — **전부 순수 수치**로 맞춘다(2026-08-03 재구성).
+ * @2 에서는 "12개동 | 최고 38층"을 한 칸에 넣었는데, 문장형 값과 큰 숫자를 같은 자로 재니
+ * 긴 쪽이 짧은 쪽을 끌어내려 세대수까지 작아졌다. 칸을 쪼개면 셋 다 크게 앉는다.
+ */
+function specCells(d, aptTotal) {
   const ot = d.extra?.officetel ?? 0;
-  const sum = aptTotal + ot;
-  const blocks = [
-    {
-      label: "세대수",
-      value: n(sum),
-      unit: "세대",
-      big: true,
-      ...(ot ? { sub: `APT ${n(aptTotal)} | OT ${n(ot)}` } : {}),
-    },
-    { label: "규모", value: `${d.buildings}개동 | 최고 ${d.topFloor}층` },
+  return [
+    { label: "세대수", value: n(aptTotal + ot), unit: "세대" },
+    { label: "동수", value: String(d.buildings), unit: "개동" },
+    { label: "최고 층수", value: String(d.topFloor), unit: "층" },
   ];
-  /* 주소는 **읍면동까지**(오너 지정). 데이터의 location 이 그 단위로 적혀 있다. */
-  if (d.location) blocks.push({ label: "위치", value: d.location, addr: true });
-  return blocks;
+}
+
+/**
+ * 수치를 뒷받침하는 한 줄 — 내역과 주소.
+ * 오피스텔이 없으면 그 조각을 만들지 않는다("OT 0" 은 0실 공급으로 읽힌다).
+ * 주소는 읍면동까지(오너 지정).
+ */
+function subLine(d, aptTotal) {
+  const ot = d.extra?.officetel ?? 0;
+  const parts = [];
+  if (ot) parts.push(`아파트 <b>${n(aptTotal)}</b>가구 · 오피스텔 <b>${n(ot)}</b>실`);
+  if (d.location) parts.push(`<b>${d.location}</b>`);
+  return parts.join("  |  ");
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -184,7 +200,7 @@ function presale(d) {
   /* 오피스텔은 이제 위 스트립이 말한다 — 한 카드에서 같은 말을 두 번 하지 않는다 */
 
   return {
-    template: "danji-brief@2",
+    template: "danji-brief@3",
     date,
     kind: "presale",
     /* 고정 부제 + 날짜. 손으로 적지 않는다 — 적는 순간 다음 카드에서 날짜가 굳는다. */
@@ -194,7 +210,8 @@ function presale(d) {
       ? { photo: d.photo.file, credit: d.photo.credit }
       : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true },
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
-    left: leftBlocks(d, total),
+    spec: specCells(d, total),
+    subline: subLine(d, total),
     priceTable: priceTable(d, total),
     schedule: [
       { label: "특별공급", date: ah?.specialFrom ? md(ah.specialFrom) : "미고지", tbd: !ah?.specialFrom },
@@ -223,7 +240,7 @@ function result(d) {
   if (d.record) flags.push(d.record.claim);
 
   return {
-    template: "danji-brief@2",
+    template: "danji-brief@3",
     date,
     kind: "result",
     topcap: `오늘의 주요 청약 이슈 (${date.replace(/-/g, ".")})`,
@@ -232,10 +249,13 @@ function result(d) {
       ? { photo: d.photo.file, credit: d.photo.credit }
       : { fallbackColor: "#101418", fallbackWord: "ACRO" },
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}) },
-    left: [
-      ...leftBlocks(d, d.total),
-      /* 결과 카드는 경쟁률이 주인공이다 — 제목이 말하고 여기서 한 번 더 못박는다 */
+    spec: [
+      { label: "세대수", value: n(d.total), unit: "세대" },
+      { label: "동수", value: String(d.buildings), unit: "개동" },
+      /* 결과 카드의 세 번째 칸은 경쟁률이다 — 이 카드의 주인공이 층수는 아니다 */
+      { label: "1순위 경쟁률", value: n(first.shown), unit: "대 1" },
     ],
+    subline: subLine(d, d.total),
     priceTable: priceTable(d, d.total),
     schedule: [
       { label: "특별공급", date: md(d.schedule.special) },
@@ -262,7 +282,8 @@ for (const [slug, card] of cards) {
   writeFileSync(join(outDir, `${slug}.json`), JSON.stringify(card, null, 2) + "\n", "utf8");
   console.log(`${slug} — ${card.danji.name}`);
   console.log(`   ${card.topcap} · ${card.titleLines.join(" ").replace(/<[^>]+>/g, "")}`);
-  console.log(`   ${card.left.map((c) => `${c.label} ${c.value}${c.unit || ""}${c.sub ? ` (${c.sub})` : ""}`).join(" · ")}`);
+  console.log(`   ${card.spec.map((c) => `${c.label} ${c.value}${c.unit || ""}`).join(" · ")}`);
+  if (card.subline) console.log(`   ${card.subline.replace(/<[^>]+>/g, "")}`);
   console.log(`   평형 ${card.priceTable.rows.map((r) => `${r.area} ${r.price}`).join(" · ")}`);
   console.log(`   일정 ${card.schedule.map((s) => `${s.label} ${s.date}`).join(" · ")}`);
 }

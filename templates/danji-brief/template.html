@@ -4,138 +4,177 @@
     <meta charset="utf-8" />
     <!--WIRIT_SHARED_CSS-->
     <style>
-      /* danji-brief@2 — 청약단지 브리핑 (2026-08-03 오너 지시로 재설계)
+      /* danji-brief@3 — 청약단지 브리핑 (2026-08-03 디자인 재구성)
        *
-       * ── @1 → @2 경위
-       * @1 은 단지명 아래에 주소·시공사 줄을 두고 2~4열 표를 썼다. 오너 지시로 바꾼 것:
-       *   ① 최상단에 **고정 부제** "오늘의 주요 청약 이슈 (날짜)" — 날짜는 자동
-       *   ② 제목은 **한 줄, 폭에 꽉 차게 최대 크기**
-       *   ③ 주소·시공사 줄 삭제
-       *   ④ 2칸 스트립 두 줄: [세대수 | 최고층] · [대표평형 | 분양가]
-       *   ⑤ 일정 3칸: 특공 · 1순위 · 입주예정월
-       *   ⑥ 맨 아래 특이사항 한 줄(분상제·전매제한 등)
-       * @1 은 발행 이력이 없는 시안이라 폴더를 그대로 쓰고 버전만 올린다
-       * (year-bars@1→@2 와 같은 처리 — TEMPLATES.md §8).
+       * ── @2 의 문제 (오너 지적)
+       * "작은 글씨가 많고, 좌우 2단이 표처럼 되어 안 예쁘고, 폰트 크기·간격이 다르고,
+       *  레이아웃·여백이 정리 안 됐다. AI 스럽지 않게."
+       * 실제로 @2 에는 글자 크기가 열 종류(26·27·28·32·38·42·46·52·56·66) 섞여 있었고,
+       * 여백은 8·10·12·14·16·18·20·26·30 이 뒤죽박죽이었다. 괘선으로 칸을 나누니
+       * 결국 표가 됐다.
+       *
+       * ── 방향: "종이 위의 잉크 값표"
+       * 청약의 세계는 입주자모집공고문이고 그 언어는 굵은 괘선과 표다. 그대로 쓰면 표가 된다.
+       * 그래서 **뒤집는다** — 표를 지우고, 이 카드가 묻는 것(가격)에만 잉크네이비 판 하나를
+       * 앉힌다. 나머지는 전부 종이 위 조용한 조판이고, 칸은 선이 아니라 **여백**이 나눈다.
+       * 대담함은 한 곳에만 쓴다.
+       *
+       * ── 글자 5단계 (이 파일 밖에서 다른 크기를 쓰지 않는다)
+       *   --t-h   58  단지명
+       *   --t-n1  68  큰 수치(세대수)
+       *   --t-n2  48  중간 수치(제원·일정·가격)
+       *   --t-l   27  라벨
+       *   --t-b   32  본문
+       * ── 여백: 8 의 배수만. --s1 8 / --s2 16 / --s3 24 / --s4 32 / --s5 40
        *
        * ── 머리 규격은 공용 그대로 (CEO 07-31)
        * 카드 위 패딩 72 · 우상단 잉크 뱃지 36px · 흰 테두리 · 좌상단 옅은 캡션 28px.
-       * 사진을 키우려고 머리를 깎지 않는다 — 세로가 모자라면 사진이 양보한다(flex:1).
-       *
-       * ── 상단 캡션을 쓰는 이유
-       * CEO 07-31 은 "상단 회색 캡션은 기본 안 쓴다"이지만, 예외는 **제목이 말하지 않는 것**을
-       * 담을 때다. 이 캡션은 시리즈 이름과 기준 날짜를 말한다 — 제목이 하지 않는 말이고,
-       * 매일 나가는 정기물이라 날짜가 카드에 박혀 있어야 나중에도 언제 것인지 안다.
        */
 
-      .db { position: relative; }
+      .db {
+        --t-h: 58px; --t-n1: 68px; --t-n2: 48px; --t-l: 27px; --t-b: 32px;
+        --s1: 8px; --s2: 16px; --s3: 24px; --s4: 32px; --s5: 40px;
+        --on-ink: #f4f7fb;
+        --on-ink-dim: rgba(255, 255, 255, 0.52);
+        position: relative;
+      }
 
-      /* ── 제목 — 한 줄, 폭에 꽉 차게 ──
-       * 상단 캡션이 있으므로 제목은 그 아래에서 시작한다(뱃지와 부딪힐 일이 없다). */
-      .db-title { margin-top: 10px; height: 132px; display: flex; align-items: center; font-size: 92px; }
-      .db-title .ln { font-family: var(--font-title); font-size: 1em; font-weight: 900;
-        line-height: 1.1; letter-spacing: -0.035em; color: var(--wirit-ink);
-        white-space: nowrap; width: max-content; max-width: 100%; }
+      /* 라벨은 한 곳에서만 정의한다 — @2 에서 라벨이 26·27·28 세 종류였다 */
+      .db .lab {
+        display: block; font-family: var(--font-sans); font-size: var(--t-l);
+        font-weight: 700; letter-spacing: -0.005em; color: var(--wirit-gray); line-height: 1;
+      }
+
+      /* ── 제목: 한 줄, 폭에 꽉 차게 ── */
+      .db-title { margin-top: var(--s1); height: 128px; display: flex; align-items: center; font-size: 92px; }
+      .db-title .ln {
+        font-family: var(--font-title); font-size: 1em; font-weight: 900; line-height: 1.1;
+        letter-spacing: -0.035em; color: var(--wirit-ink);
+        white-space: nowrap; width: max-content; max-width: 100%;
+      }
       .db-title .hi { color: var(--wirit-cobalt); }
       .db-title .up { color: var(--wirit-red); }
 
-      /* ── 조감도 ── */
-      /* 데이터가 우선이다(오너 2026-08-03 "모든 데이터 최대한 크게") — 세로가 모자라면
-         조감도가 양보한다. min-height 를 낮춰 표·스트립이 먼저 자리를 가져간다. */
-      .db-hero { position: relative; flex: 1 1 auto; min-height: 200px; margin-top: 12px;
-        border-radius: 4px; overflow: hidden; background: var(--wirit-ink); }
-      .db-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-      .db-fb { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 14px;
-        align-items: center; justify-content: center; background: var(--wirit-ink); }
-      .db-fb .w { font-family: var(--font-title); font-size: 92px; font-weight: 900;
-        letter-spacing: -0.03em; color: rgba(255,255,255,0.92); line-height: 1; }
-      .db-fb .sub { font-size: 27px; font-weight: 700; letter-spacing: -0.01em; color: rgba(255,255,255,0.5); }
-
-      /* 조감도는 건설사 홍보 이미지다. 출처 없이 쓰지 않는다. */
-      .db-scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 88px;
-        background: linear-gradient(180deg, rgba(9,13,20,0) 0%, rgba(9,13,20,0.6) 100%); }
-      .db-credit { position: absolute; left: 20px; bottom: 15px; font-size: 23px; font-weight: 700;
-        letter-spacing: -0.01em; color: rgba(255,255,255,0.86); }
+      /* ── 조감도 + 단지명 ──
+       * 단지명을 사진 안으로 넣어 줄 하나를 없앴다. 없앤 높이만큼 아래 수치가 커진다.
+       * 사진은 그림이자 이름표가 된다 — 한 요소가 두 일을 하면 카드가 짧아진다. */
+      .db-hero {
+        position: relative; flex: 1 1 auto; min-height: 300px; margin-top: var(--s2);
+        border-radius: 4px; overflow: hidden; background: var(--wirit-ink);
+      }
+      .db-hero img {
+        width: 100%; height: 100%; object-fit: cover; display: block;
+        /* 가로로 긴 칸이라 세로가 잘린다. 하늘보다 **건물 발치와 강**을 남긴다 —
+           '한강뷰'가 제목인 카드에서 강이 잘리면 제목이 근거를 잃는다. */
+        object-position: center 62%;
+      }
+      .db-fb {
+        width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+        background: var(--wirit-ink);
+      }
+      .db-fb .w {
+        font-family: var(--font-title); font-size: 92px; font-weight: 900;
+        letter-spacing: -0.03em; color: rgba(255, 255, 255, 0.9); line-height: 1;
+      }
+      /* 이름이 앉을 자리만 어둡게. 위쪽 하늘은 건드리지 않는다 */
+      /* 이름이 앉을 자리만 최소한으로 어둡게. 첫 시안에서 너무 진해 건물 발치와 강이 다 묻혔다 —
+         조감도가 주인공인 카드에서 그림을 가리는 건 손해다. 대비는 그림자가 벌충한다. */
+      .db-veil {
+        position: absolute; left: 0; right: 0; bottom: 0; height: 150px;
+        background: linear-gradient(180deg, rgba(10, 14, 22, 0) 0%, rgba(10, 14, 22, 0.42) 58%, rgba(10, 14, 22, 0.62) 100%);
+      }
+      .db-cap {
+        position: absolute; left: var(--s4); right: var(--s4); bottom: var(--s3);
+        display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3);
+      }
+      .db-cap .nm {
+        font-family: var(--font-sans); font-size: var(--t-h); font-weight: 800;
+        letter-spacing: -0.035em; color: #fff; line-height: 1.05;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6), 0 0 34px rgba(0, 0, 0, 0.45);
+      }
+      /* 조감도는 건설사 홍보 이미지다. 출처 없이 쓰지 않는다 — 우상단, 작고 조용하게 */
+      .db-credit {
+        position: absolute; right: var(--s3); top: var(--s3); font-size: 22px; font-weight: 700;
+        letter-spacing: -0.01em; color: rgba(255, 255, 255, 0.88);
+        text-shadow: 0 1px 8px rgba(0, 0, 0, 0.75), 0 0 20px rgba(0, 0, 0, 0.5);
+      }
       .db-credit .ph { color: #ffd24a; }
 
-      /* ── 단지명 (주소·시공사 줄은 오너 지시로 삭제) ── */
-      .db-nm { display: flex; align-items: center; gap: 18px; height: 80px; margin-top: 10px; }
-      .db-nm .tx { flex: 1; min-width: 0; }
-      .db-nm .n { display: block; font-size: 56px; font-weight: 800; letter-spacing: -0.03em;
-        color: var(--wirit-ink); line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-      .db-nm .lg { flex: none; height: 46px; width: auto; max-width: 200px; object-fit: contain; }
-      .db-nm .lgtx { flex: none; font-size: 34px; font-weight: 800; letter-spacing: -0.02em; }
+      /* ── 제원: 괘선 없이 여백으로만 나눈다 ──
+       * 선을 지우는 것이 "표가 아니게" 만드는 가장 빠른 방법이다. */
+      .db-spec { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: var(--s3); margin-top: var(--s5); }
+      .db-spec .cell .lab { margin-bottom: 10px; }
+      .db-spec .v {
+        display: block; font-family: var(--font-num); font-size: var(--t-n1); font-weight: 900;
+        line-height: 1; letter-spacing: -0.03em; color: var(--wirit-ink); white-space: nowrap;
+      }
+      .db-spec .v i {
+        font-family: var(--font-sans); font-style: normal; font-size: 0.42em; font-weight: 700;
+        margin-left: 5px; color: var(--wirit-gray);
+      }
+      /* 내역·주소는 수치를 뒷받침하는 한 줄 — 수치보다 작고 조용하다 */
+      /* 브랜드 로고는 **종이 위에** 둔다. 사진 위에 얹었더니 어두운 초록 심볼(푸르지오)이
+         스크림에 먹혀 사라졌다 — 로고는 보이라고 붙이는 것이다. */
+      .db-sub {
+        margin-top: var(--s3); display: flex; align-items: center; justify-content: space-between;
+        gap: var(--s3);
+      }
+      .db-sub .tx {
+        font-family: var(--font-sans); font-size: var(--t-b); font-weight: 700;
+        letter-spacing: -0.02em; color: var(--wirit-gray); line-height: 1.2;
+      }
+      .db-sub b { font-weight: 800; color: var(--wirit-ink); }
+      .db-sub .lg { flex: none; height: 48px; width: auto; max-width: 180px; object-fit: contain; }
 
-      /* ── 내용부: 좌우 2단 (오너 지시 2026-08-03) ──
-       * 왼쪽 = 단지의 몸집(세대수·동/층·주소), 오른쪽 = 돈(평형별 분양가).
-       * 세로로 쌓으면 카드가 길어지고 각 줄이 작아진다 — 좌우로 나누면 같은 높이에
-       * 글자를 두 배로 키울 수 있다. 모바일에서 읽히는 게 우선이다.
-       * 가르는 것은 배경이 아니라 **괘선**이다(AI 카드 금지 — CEO 07-30·31). */
-      .db-cols { display: grid; grid-template-columns: 1fr 1fr; margin-top: 8px;
-        border-top: 2px solid var(--wirit-ink); }
-      /* 세 블록이 오른쪽 표와 같은 높이를 채우게 편다 — 위쪽만 비면 카드가 기운 것처럼 보인다 */
-      .db-col { display: flex; flex-direction: column; justify-content: space-evenly; }
-      .db-col.r { border-left: 1px solid var(--wirit-ink-12); padding-left: 30px; }
+      /* ── 시그니처: 잉크 가격판 ──
+       * 제목이 던진 질문("7억대?")의 답이 카드에서 가장 무겁게 앉는 자리.
+       * 종이 카드에 어두운 블록은 이것 하나뿐이다. 판 안에서는 선을 쓰지 않고
+       * 여백만으로 값을 배치한다 — 격자를 그으면 다시 표가 된다. */
+      .db-price {
+        margin-top: var(--s4); background: var(--wirit-ink); border-radius: 4px;
+        padding: 30px var(--s4) var(--s4); color: var(--on-ink);
+      }
+      .db-price .head { display: flex; align-items: baseline; justify-content: space-between; }
+      .db-price .head .lab { color: var(--on-ink-dim); }
+      .db-price .head .note { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; color: var(--on-ink-dim); }
+      /* 값을 라벨 **아래**로 세우고 가로로 편다 — 전광판처럼 읽힌다.
+         좌우 배치(라벨↔값)로 두면 첫 열의 값과 둘째 열의 라벨이 붙어 한 덩어리로 보였다. */
+      .db-grid { display: grid; column-gap: var(--s3); row-gap: 30px; margin-top: 26px; }
+      .db-item { min-width: 0; }
+      .db-item .a {
+        display: block; font-family: var(--font-num); font-size: 32px; font-weight: 800;
+        letter-spacing: -0.01em; color: var(--on-ink-dim); line-height: 1; margin-bottom: 12px;
+      }
+      .db-item .p {
+        display: block; font-family: var(--font-num); font-size: var(--t-n2); font-weight: 900;
+        letter-spacing: -0.03em; color: var(--on-ink); line-height: 1; white-space: nowrap;
+      }
+      /* 주력 면적대 한 줄만 밝힌다 — 강조가 둘이면 강조가 아니다 */
+      .db-item.main .a { color: rgba(255, 255, 255, 0.8); }
+      .db-item.main .p { color: #7aa6ff; }
 
-      /* 왼쪽 — 블록 사이는 옅은 괘선으로만 나눈다 */
-      .db-b { padding: 16px 0; }
-      .db-b + .db-b { border-top: 1px solid var(--wirit-ink-06); }
-      .db-b .l { display: block; font-size: 27px; font-weight: 700; letter-spacing: -0.01em;
-        color: var(--wirit-gray); line-height: 1; margin-bottom: 10px; }
-      /* 세대수만 큰 숫자다(오너 스펙의 머리). 규모·주소는 문장형이라 같은 크기로 두면
-         "12개동 | 최고 38층"이 칸을 넘겨 **세대수까지 같이 작아진다** — 크기를 따로 준다. */
-      .db-b .v { display: block; font-family: var(--font-num); font-size: 42px; font-weight: 900;
-        line-height: 1; letter-spacing: -0.02em; color: var(--wirit-ink); white-space: nowrap; }
-      .db-b.big .v { font-size: 66px; }
-      .db-b .v i { font-family: var(--font-sans); font-style: normal; font-size: 0.45em;
-        font-weight: 700; margin-left: 4px; color: var(--wirit-gray); }
-      /* APT | OT 내역은 **작게·회색**(오너 지정) — 합계가 주인공이고 이건 그 근거다 */
-      .db-b .sub { display: block; margin-top: 9px; font-size: 26px; font-weight: 700;
-        letter-spacing: -0.01em; color: var(--wirit-gray); line-height: 1; }
-      /* 주소는 숫자가 아니라 말이라 본문 서체로 — 숫자 서체로 쓰면 어색하다 */
-      .db-b .addr { display: block; font-family: var(--font-sans); font-size: 38px; font-weight: 800;
-        letter-spacing: -0.02em; color: var(--wirit-ink); line-height: 1.15; word-break: keep-all; }
-
-      /* 오른쪽 — 평형별 대표타입 하나씩, 전부.
-         행 수에 따라 높이·글자를 코드가 고른다. 눈대중으로 "이쯤"이라 박지 않는다. */
-      .db-pt { --pt-f: 52px; --pt-g: 20px; }
-      .db-pt.r5 { --pt-f: 46px; --pt-g: 14px; }
-      .db-pt.r6 { --pt-f: 40px; --pt-g: 10px; }
-      .db-pt-h { display: flex; justify-content: space-between; align-items: baseline;
-        padding-bottom: 12px; border-bottom: 1px solid var(--wirit-ink-12); }
-      .db-pt-h span { font-size: 27px; font-weight: 700; letter-spacing: -0.01em; color: var(--wirit-gray); }
-      .db-pt-r { display: flex; justify-content: space-between; align-items: baseline;
-        padding: var(--pt-g) 0; }
-      .db-pt-r + .db-pt-r { border-top: 1px solid var(--wirit-ink-06); }
-      .db-pt-r .a { font-family: var(--font-num); font-size: var(--pt-f); font-weight: 800;
-        letter-spacing: -0.02em; color: var(--wirit-ink); }
-      .db-pt-r .p { font-family: var(--font-num); font-size: var(--pt-f); font-weight: 900;
-        letter-spacing: -0.02em; color: var(--wirit-ink); }
-      /* 주력 면적대 한 줄만 코발트 — 강조가 둘이면 강조가 아니다 */
-      .db-pt-r.main .a, .db-pt-r.main .p { color: var(--wirit-cobalt); }
-
-      /* ── 청약 일정 3칸 ── */
-      .db-sch { display: grid; grid-template-columns: 1fr 1fr 1fr; height: 96px; margin-top: 16px;
-        border-top: 2px solid var(--wirit-ink); }
-      .db-sc { display: flex; flex-direction: column; justify-content: center; gap: 7px; padding-left: 24px; }
-      .db-sc + .db-sc { border-left: 1px solid var(--wirit-ink-12); }
-      .db-sc:first-child { padding-left: 0; }
-      .db-sc .l { font-size: 27px; font-weight: 700; letter-spacing: -0.01em; color: var(--wirit-gray); line-height: 1; }
-      .db-sc .d { font-family: var(--font-num); font-size: 46px; font-weight: 900; line-height: 1;
-        letter-spacing: -0.02em; color: var(--wirit-ink); white-space: nowrap; }
-      .db-sc .d.tbd { font-family: var(--font-sans); font-size: 30px; font-weight: 700; color: var(--wirit-gray); }
+      /* ── 일정: 여기도 선 없이 여백으로 ── */
+      .db-when { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--s3); margin-top: var(--s4); }
+      .db-when .lab { margin-bottom: 10px; }
+      .db-when .d {
+        display: block; font-family: var(--font-num); font-size: var(--t-n2); font-weight: 900;
+        line-height: 1; letter-spacing: -0.03em; color: var(--wirit-ink); white-space: nowrap;
+      }
+      .db-when .d.tbd { font-family: var(--font-sans); font-size: 34px; font-weight: 700; color: var(--wirit-gray); }
 
       /* ── 특이사항 한 줄 ──
-       * 위(일정)에 붙으면 일정의 꼬리로, 아래(푸터)에 붙으면 출처로 읽힌다.
-       * 그래서 위아래 여백을 **따로** 준다(CEO 07-31 "항상 기억해"). */
-      .db-note { margin: 18px 0 16px; font-size: 32px; font-weight: 700;
-        letter-spacing: -0.01em; color: var(--wirit-ink); line-height: 1.25; word-break: keep-all; }
+       * 위(일정)에도 아래(푸터)에도 붙지 않게 여백을 따로 준다(CEO 07-31 "항상 기억해"). */
+      .db-note {
+        margin: var(--s4) 0 var(--s3); font-family: var(--font-sans); font-size: var(--t-b);
+        font-weight: 700; letter-spacing: -0.02em; color: var(--wirit-ink); line-height: 1.25;
+        word-break: keep-all;
+      }
       .db-note .tag { color: var(--wirit-cobalt); }
     </style>
   </head>
   <body>
     <div class="wirit-card db">
-      <!-- 고정 부제 + 날짜(자동). 공용 .wirit-topcap 규격 그대로 — 좌상단 옅은 작은 캡션. -->
       <div class="wirit-topcap"><span class="tx">{{topcap}}</span></div>
 
       <div class="db-title">
@@ -148,47 +187,52 @@
         {{else}}
           <div class="db-fb"{{#if hero.fallbackColor}} style="background:{{hero.fallbackColor}}"{{/if}}>
             <span class="w">{{#if hero.fallbackWord}}{{hero.fallbackWord}}{{else}}{{danji.name}}{{/if}}</span>
-            <span class="sub">조감도 미확보 — 건설사 제공본 확보 후 교체</span>
           </div>
         {{/if}}
+        <div class="db-veil"></div>
+        <div class="db-cap">
+          <span class="nm">{{danji.name}}</span>
+        </div>
         {{#if hero.credit}}
-          <div class="db-scrim"></div>
-          <div class="db-credit">{{hero.credit}}{{#if hero.placeholder}} <span class="ph">· 시안용 대체 이미지</span>{{/if}}</div>
+          <div class="db-credit">{{hero.credit}}{{#if hero.placeholder}} <span class="ph">· 시안</span>{{/if}}</div>
         {{/if}}
       </div>
 
-      <div class="db-nm">
-        <div class="tx"><span class="n">{{danji.name}}</span></div>
-        {{#if danji.logo}}<img class="lg" src="../_shared/logos/{{danji.logo}}" alt="" />
-        {{else}}{{#if danji.logoColor}}<span class="lgtx" style="color:{{danji.logoColor}}">{{danji.company}}</span>{{/if}}{{/if}}
+      <div class="db-spec">
+        {{#each spec}}
+        <div class="cell">
+          <span class="lab">{{this.label}}</span>
+          <span class="v">{{this.value}}{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
+        </div>
+        {{/each}}
       </div>
+      {{#if subline}}
+      <div class="db-sub">
+        <span class="tx">{{{subline}}}</span>
+        {{#if danji.logo}}<img class="lg" src="../_shared/logos/{{danji.logo}}" alt="" />{{/if}}
+      </div>
+      {{/if}}
 
-      <div class="db-cols">
-        <div class="db-col">
-          {{#each left}}
-          <div class="db-b{{#if this.big}} big{{/if}}">
-            <span class="l">{{this.label}}</span>
-            {{#if this.addr}}<span class="addr">{{this.value}}</span>
-            {{else}}<span class="v">{{this.value}}{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>{{/if}}
-            {{#if this.sub}}<span class="sub">{{this.sub}}</span>{{/if}}
+      <div class="db-price">
+        <div class="head">
+          <span class="lab">{{priceTable.head.[0]}}</span>
+          {{#if priceTable.note}}<span class="note">{{priceTable.note}}</span>{{/if}}
+        </div>
+        <div class="db-grid" style="grid-template-columns: repeat({{priceTable.cols}}, 1fr)">
+          {{#each priceTable.rows}}
+          <div class="db-item{{#if this.main}} main{{/if}}">
+            <span class="a">{{this.area}}</span>
+            <span class="p">{{this.price}}</span>
           </div>
           {{/each}}
-        </div>
-        <div class="db-col r">
-          <div class="db-pt r{{priceTable.rows.length}}">
-            <div class="db-pt-h"><span>{{priceTable.head.[0]}}</span><span>{{priceTable.head.[1]}}</span></div>
-            {{#each priceTable.rows}}
-            <div class="db-pt-r{{#if this.main}} main{{/if}}"><span class="a">{{this.area}}</span><span class="p">{{this.price}}</span></div>
-            {{/each}}
-          </div>
         </div>
       </div>
 
       {{#if schedule}}
-      <div class="db-sch">
+      <div class="db-when">
         {{#each schedule}}
-        <div class="db-sc">
-          <span class="l">{{this.label}}</span>
+        <div class="cell">
+          <span class="lab">{{this.label}}</span>
           <span class="d{{#if this.tbd}} tbd{{/if}}">{{this.date}}</span>
         </div>
         {{/each}}
@@ -204,11 +248,10 @@
     </div>
 
     <!-- 폭 맞춤 둘.
-         ① 제목: **한 줄이 카드 폭을 꽉 채우는** 크기를 이분탐색으로 찾는다(오너 "폰트는 최대로").
-            줄이기만 하는 게 아니라 키우기도 한다 — 고정 크기는 데이터가 바뀌면 남거나 넘친다.
-         ② 스트립 값: 네 칸의 값이 **모두** 제 칸에 들어가는 공통 크기를 찾아 함께 적용한다.
-            각자 줄이면 나란히 놓인 숫자 크기가 어긋난다(CEO 07-30).
-         폰트는 늦게 로드되므로 fonts.ready 후 한 번 더 돌린다. -->
+         ① 제목 — 한 줄이 카드 폭을 꽉 채우는 크기를 이분탐색으로 찾는다(줄이기만 하지 않고 키운다).
+         ② 제원 수치 — 세 칸의 값이 **모두** 제 칸에 들어가는 공통 크기. 각자 줄이면 어긋난다.
+            ⚠️ 같은 종류의 값끼리만 묶는다. @2 에서 문장형("12개동 | 최고 38층")을 큰 숫자와
+            한 자에 묶었다가 세대수까지 같이 작아졌다 — 이제 제원은 전부 순수 수치다. -->
     <script>
       window.__wiritFit = function () {
         var t = document.querySelector(".db-title");
@@ -230,20 +273,18 @@
           }
         }
 
-        /* 왼쪽 큰 숫자들은 **공통 크기**로 맞춘다 — 각자 줄이면 위아래 숫자가 어긋나 보인다.
-           칸 폭(2단이라 절반)에 가장 긴 값이 들어가는 크기를 찾는다. */
-        var lefts = document.querySelectorAll(".db-col .db-b.big .v");
-        if (lefts.length) {
-          var box = document.querySelector(".db-col").clientWidth - 16;
-          var loS = 34, hiS = 76, bestS = loS;
+        var cells = document.querySelectorAll(".db-spec .cell");
+        var vals = document.querySelectorAll(".db-spec .v");
+        if (vals.length) {
+          var loS = 36, hiS = 78, bestS = loS;
           for (var k = 0; k < 22; k++) {
             var m = (loS + hiS) / 2;
-            for (var a = 0; a < lefts.length; a++) lefts[a].style.fontSize = m + "px";
+            for (var a = 0; a < vals.length; a++) vals[a].style.fontSize = m + "px";
             var ok = true;
-            for (var b = 0; b < lefts.length; b++) if (lefts[b].scrollWidth > box) { ok = false; break; }
+            for (var b = 0; b < vals.length; b++) if (vals[b].scrollWidth > cells[b].clientWidth) { ok = false; break; }
             if (ok) { bestS = m; loS = m; } else { hiS = m; }
           }
-          for (var c = 0; c < lefts.length; c++) lefts[c].style.fontSize = bestS + "px";
+          for (var c = 0; c < vals.length; c++) vals[c].style.fontSize = bestS + "px";
         }
       };
       window.__wiritFit();
