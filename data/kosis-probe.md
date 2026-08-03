@@ -10,7 +10,7 @@
 | households | `DT_1B040B3` | ✅ | 행정구역(시군구)별 주민등록세대수 | 277개 | 확실 · 수집중 |
 | migration | `DT_1B26001_A01` | ✅ | 시군구별 이동자수 | 254개 | 확실 · 수집중 |
 | age | `DT_1B04006` | ❌ | — | — | 표명확실 · 대기 |
-| births | `DT_1B81A03` | ❌ | — | — | 표명확실 · 대기 |
+| births | `DT_1B81A03` | ✅ | 시군구/성/출산순위별 출생 | 366개 | 표명확실 · 대기 |
 | deaths | `DT_1B34E13` | ❌ | — | — | 표명확실 · 대기 |
 
 ## population — 행정구역(시군구)별 성별 인구수
@@ -18,6 +18,7 @@
 - tblId: `DT_1B040A3` · 주기 `M` · 우리가 뽑으려는 값: **인구**
 - 메모: T20=총인구수 까지 실동작 사례로 확인. objL2=성별(계).
 - 시점: 202606
+- **행정구역 외 축 0개** (행정구역 축 하나뿐 — 그대로 써도 된다)
 - **시군구(5자리) 코드 277개** 
 
 **항목(itmId)** — 우리가 뽑을 항목을 여기서 고른다
@@ -59,6 +60,7 @@
 - tblId: `DT_1B040B3` · 주기 `M` · 우리가 뽑으려는 값: **세대수**
 - 메모: probe 검증 완료(2026-08-03): 통계표명 일치 · T1=세대수 · 시군구 5자리 277개 · 202606. 세대당 인구는 이 표의 항목을 쓰지 않고 인구÷세대수로 우리가 계산한다(전용 항목이 없다).
 - 시점: 202606
+- **행정구역 외 축 0개** (행정구역 축 하나뿐 — 그대로 써도 된다)
 - **시군구(5자리) 코드 277개** 
 
 **항목(itmId)** — 우리가 뽑을 항목을 여기서 고른다
@@ -100,6 +102,7 @@
 - tblId: `DT_1B26001_A01` · 주기 `Y` · 우리가 뽑으려는 값: **이동**
 - 메모: probe 검증 완료(2026-08-03): 통계표명 '시군구별 이동자수' · 시군구 5자리 254개 · 2025년. 항목 8개 확인 — T10=총전입 T20=총전출 T25=순이동 T30~T50=시도내외 분해. **T25(순이동) 하나만 받는다.** 파서(parse/kosis.ts)가 ITM_ID 를 구분하지 않아 여러 항목을 한꺼번에 받으면 한 지역에 값이 8개씩 겹쳐 시계열이 망가진다. 전입·전출 분해가 필요해지면 파서에 항목 축을 먼저 넣고 그 다음에 늘린다.
 - 시점: 2025
+- **행정구역 외 축 0개** (행정구역 축 하나뿐 — 그대로 써도 된다)
 - **시군구(5자리) 코드 254개** 
 
 **항목(itmId)** — 우리가 뽑을 항목을 여기서 고른다
@@ -140,7 +143,12 @@
 
 - tblId: `DT_1B04006` · 주기 `M` · 우리가 뽑으려는 값: **연령**
 - 메모: 1세 단위 원자료 → 65세이상 비율·중위연령을 우리가 직접 계산한다(지표표를 받아 적지 않는다). **분류축·항목코드·주기 미확인** → probe 로 확정. 응답이 크므로 확정 뒤 축을 좁힌다.
-- ❌ **실패**: KOSIS API 오류(age): 필수요청변수값이 누락되었습니다. (objL)
+- ❌ **실패**: KOSIS API 오류(age):  40,000셀을 초과한 결과값은 요청하실 수 없습니다.
+
+**시도한 축 조합** — 다음 사람이 같은 것을 또 해보지 않도록
+
+- objL2..1=(없음) → KOSIS API 오류(age): 필수요청변수값이 누락되었습니다. (objL)
+- objL2..2=ALL → KOSIS API 오류(age):  40,000셀을 초과한 결과값은 요청하실 수 없습니다.
 
 **분류축 메타(OBJ)** — `objL1`·`objL2`… 를 여기 코드로 채운다. 축이 여럿이면 행정구역이 아닌 축은 '계'를 고른다
 
@@ -307,168 +315,62 @@
 
 - tblId: `DT_1B81A03` · 주기 `Y` · 우리가 뽑으려는 값: **출생**
 - 메모: 인구동향조사(연간). **분류축·항목코드 미확인.** 월간 인구동향표(DT_1B8000G)는 시군구까지 내려가는지 확인 못 해 쓰지 않는다.
-- ❌ **실패**: KOSIS API 오류(births): 필수요청변수값이 누락되었습니다. (objL)
+- 시점: 2024
+- **행정구역 외 축 1개** — 아래 분류축에서 '계'에 해당하는 코드를 골라 박아야 한다
+- **시군구(5자리) 코드 366개** 
 
-**분류축 메타(OBJ)** — `objL1`·`objL2`… 를 여기 코드로 채운다. 축이 여럿이면 행정구역이 아닌 축은 '계'를 고른다
+**항목(itmId)** — 우리가 뽑을 항목을 여기서 고른다
+
+- `T1=계`
+- `T2=남자`
+- `T3=여자`
+
+**분류축** — 행정구역이 아닌 축(성별·연령·사망원인 등)은 '계'를 골라야 한다
+
+- `C1`: 00=전국 · 11=서울특별시 · 11010=종로구 · 11020=중구 · 11030=용산구 · 11040=성동구
+- `C2`: 00=총계 · 01=1아 · 02=2아 · 13=3아 이상 · 99=미상
+
+<details><summary>응답 한 행 원본</summary>
 
 ```json
 {
- "메타실패": "KOSIS 메타 오류(births/OBJ): 데이터가 존재하지 않습니다."
+  "C1_OBJ_NM": "시군구별",
+  "C2_NM": "총계",
+  "DT": "238317",
+  "C2": "00",
+  "C1": "00",
+  "PRD_SE": "A",
+  "UNIT_NM_ENG": "Person",
+  "ITM_ID": "T1",
+  "TBL_ID": "DT_1B81A03",
+  "ITM_NM": "계",
+  "TBL_NM": "시군구/성/출산순위별 출생",
+  "PRD_DE": "2024",
+  "LST_CHN_DE": "2025-08-23",
+  "C1_NM_ENG": "Whole country",
+  "C1_NM": "전국",
+  "UNIT_NM": "명",
+  "ITM_NM_ENG": "Total",
+  "C2_OBJ_NM_ENG": "By birth order",
+  "C2_NM_ENG": "Total",
+  "ORG_ID": "101",
+  "C1_OBJ_NM_ENG": "By si(city) gun(county) and gu(borough)   ",
+  "C2_OBJ_NM": "출산순위별"
 }
 ```
 
-**항목 메타(ITM)**
-
-```json
-[
- {
-  "UNIT_ID": "14STD04553",
-  "OBJ_NM_ENG": "Item code list",
-  "UNIT_NM": "명",
-  "ITM_NM_ENG": "Total",
-  "ITM_ID": "T1",
-  "TBL_ID": "DT_1B81A03",
-  "OBJ_NM": "항목",
-  "UNIT_ENG_NM": "Person",
-  "ITM_NM": "계",
-  "ORG_ID": "101",
-  "OBJ_ID": "ITEM"
- },
- {
-  "UNIT_ID": "14STD04553",
-  "OBJ_NM_ENG": "Item code list",
-  "UNIT_NM": "명",
-  "ITM_NM_ENG": "Male",
-  "ITM_ID": "T2",
-  "TBL_ID": "DT_1B81A03",
-  "OBJ_NM": "항목",
-  "UNIT_ENG_NM": "Person",
-  "ITM_NM": "남자",
-  "ORG_ID": "101",
-  "OBJ_ID": "ITEM"
- },
- {
-  "UNIT_ID": "14STD04553",
-  "OBJ_NM_ENG": "Item code list",
-  "UNIT_NM": "명",
-  "ITM_NM_ENG": "Female",
-  "ITM_ID": "T3",
-  "TBL_ID": "DT_1B81A03",
-  "OBJ_NM": "항목",
-  "UNIT_ENG_NM": "Person",
-  "ITM_NM": "여자",
-  "ORG_ID": "101",
-  "OBJ_ID": "ITEM"
- },
- {
-  "OBJ_NM_ENG": "By si(city) gun(county) and gu(borough)   ",
-  "ITM_NM_ENG": "Whole country",
-  "ITM_ID": "00",
-  "TBL_ID": "DT_1B81A03",
-  "OBJ_NM": "시군구별",
-  "ITM_NM": "전국",
-  "ORG_ID": "101",
-  "OBJ_ID_SN": "1",
-  "OBJ_ID": "A"
- },
- {
-  "OBJ_NM_ENG": "By si(city) gun(county) and gu(borough)   ",
-  "ITM_NM_ENG": "Seoul",
-  "ITM_ID": "11",
-  "TBL_ID": "DT_1B81A03",
-  "OBJ_NM": "시군구별",
-  "ITM_NM": "서울특별시",
-  "ORG_ID": "101",
-  "OBJ_ID_SN": "1",
-  "OBJ_ID": "A"
- },
- {
-  "OBJ_NM_ENG": "By si(city) gun(county) and gu(borough)   ",
-  "UP_ITM_ID": "11",
-  "ITM_NM_ENG": "Jongno-gu",
-  "ITM_ID": "11010",
-  "TBL_ID": "DT_1B81A03",
-  "OBJ_NM": "시군구별",
-  "ITM_NM": "종로구",
-  "ORG_ID": "101",
-  "OBJ_ID_SN": "1",
-  "OBJ_ID": "A"
- },
- {
-  "OBJ_NM_ENG": "By si(city) gun(county) and gu(borough)   ",
-  "UP_ITM_ID": "11",
-  "ITM_NM_ENG": "Jung-gu",
-  "ITM_ID": "11020",
-  "TBL_ID": "DT_1B81A03",
-  "OBJ_NM": "시군구별",
-  "ITM_NM": "중구",
-  "ORG_ID": "101",
-  "OBJ_ID_SN": "1",
-  "OBJ_ID": "A"
- },
- {
-  "OBJ_NM_ENG": "By si(city) gun(county) and gu(borough)   ",
-  "UP_ITM_ID": "11",
-  "ITM_NM_ENG": "Yongsan-gu",
-  "ITM_ID": "11030",
-  "TBL_ID": "DT_1B81A03",
-  "OBJ_NM": "시군구별",
-  "ITM_NM": "용산구",
-  "ORG_ID": "101",
-  "OBJ_ID_SN": "1",
-  "OBJ_ID": "A"
- },
- {
-  "OBJ_NM_ENG": "By si(city) gun(county) and gu(borough)   ",
-  "UP_ITM_ID": "11",
-  "ITM_NM_ENG": "Seongdong-gu",
-  "ITM_ID": "11040",
-  "TBL_ID": "DT_1B81A03",
-  "OBJ_NM": "시군구별",
-  "ITM_NM": "성동구",
-  "ORG_ID": "101",
-  "OBJ_ID_SN": "1",
-  "OBJ_ID": "A"
- },
- {
-  "OBJ_NM_ENG": "By si(city) gun(county) and gu(borough)   ",
-  "UP_ITM_ID": "11",
-  "ITM_NM_ENG": "Gwangjin-gu",
-  "ITM_ID": "11050",
-  "TBL_ID": "DT_1B81A03",
-  "OBJ_NM": "시군구별",
-  "ITM_NM": "광진구",
-  "ORG_ID": "101",
-  "OBJ_ID_SN": "1",
-  "OBJ_ID": "A"
- },
- {
-  "OBJ_NM_ENG": "By si(city) gun(county) and gu(borough)   ",
-  "UP_ITM_ID": "11",
-  "ITM_NM_ENG": "Dongdaemun-gu",
-  "ITM_ID": "11060",
-  "TBL_ID": "DT_1B81A03",
-  "OBJ_NM": "시군구별",
-  "ITM_NM": "동대문구",
-  "ORG_ID": "101",
-  "OBJ_ID_SN": "1",
-  "OBJ_ID": "A"
- },
- {
-  "OBJ_NM_ENG": "By si(city) gun(county) and gu(borough)   ",
-  "UP_ITM_ID": "11",
-  "ITM_NM_ENG": "Jungnang-gu",
-  "ITM_ID": "11070",
-  "TBL_ID": "DT_1B81A03",
-  "OBJ_NM": "시군구별",
-  "ITM
-```
+</details>
 
 ## deaths — 시군구/사망원인별 사망자수
 
 - tblId: `DT_1B34E13` · 주기 `Y` · 우리가 뽑으려는 값: **사망**
 - 메모: 사망원인통계(연간). 사망원인 분류축의 '계'를 뽑아야 총사망자수가 된다 — **축 구성 미확인이라 probe 없이 쓰면 특정 사인의 숫자를 총사망자수로 낼 위험이 있다.** 시군구 단위 순수 사망자수 전용표는 찾지 못했다.
-- ❌ **실패**: KOSIS API 오류(deaths): 필수요청변수값이 누락되었습니다. (objL)
+- ❌ **실패**: KOSIS API 오류(deaths):  40,000셀을 초과한 결과값은 요청하실 수 없습니다.
+
+**시도한 축 조합** — 다음 사람이 같은 것을 또 해보지 않도록
+
+- objL2..1=(없음) → KOSIS API 오류(deaths): 필수요청변수값이 누락되었습니다. (objL)
+- objL2..2=ALL → KOSIS API 오류(deaths):  40,000셀을 초과한 결과값은 요청하실 수 없습니다.
 
 **분류축 메타(OBJ)** — `objL1`·`objL2`… 를 여기 코드로 채운다. 축이 여럿이면 행정구역이 아닌 축은 '계'를 고른다
 
