@@ -89,11 +89,11 @@
       "type": "array",
       "description": "2칸짜리 줄들. 1줄 = [세대수, 최고층] / 2줄 = [대표평형, 분양가]",
       "minItems": 1,
-      "maxItems": 2,
+      "maxItems": 1,
       "items": {
         "type": "array",
         "minItems": 2,
-        "maxItems": 2,
+        "maxItems": 3,
         "items": {
           "type": "object",
           "required": [
@@ -165,6 +165,51 @@
         },
         "asOf": {
           "type": "string"
+        }
+      }
+    },
+    "priceTable": {
+      "type": "object",
+      "required": [
+        "head",
+        "rows"
+      ],
+      "description": "평형별 대표타입 표 — 면적대마다 타입 하나씩, 전부 적는다(오너 지시 2026-08-03)",
+      "properties": {
+        "head": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 14
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "rows": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "required": [
+              "area",
+              "price"
+            ],
+            "properties": {
+              "area": {
+                "type": "string",
+                "maxLength": 10
+              },
+              "price": {
+                "type": "string",
+                "maxLength": 12
+              },
+              "main": {
+                "type": "boolean",
+                "description": "주력 면적대 — 한 줄만 코발트"
+              }
+            }
+          }
         }
       }
     }

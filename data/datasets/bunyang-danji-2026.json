@@ -112,7 +112,13 @@
         "perPyeongMan": 7800,
         "unit59Won": 1860000000,
         "nearbyMarketWon": 3200000000,
-        "capApplied": true
+        "capApplied": true,
+        "byArea": [
+          {
+            "m2": 59,
+            "won": 1860000000
+          }
+        ]
       },
       "moveIn": "2029-02",
       "schedule": {

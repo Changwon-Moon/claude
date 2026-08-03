@@ -101,32 +101,39 @@ function repPrice(d, rep) {
   return hit ? hit.won : null;
 }
 
-/* ── 제목 안 ──
- * 어느 안이든 **숫자는 전부 데이터에서** 온다. 손으로 적은 수치는 없다.
- * 한 줄이 기본이다(오너 "한 줄로 제목 폰트는 최대로"). */
-const TITLE_VARIANT = process.env.WIRIT_TITLE || "a";
-function titleFor(d, { total, rep, repWon, ah }) {
-  const eokRound = repWon ? Math.floor(repWon / 100000000) : null;
-  /* hook = 그 단지의 한 마디(데이터에 적는다). 없으면 지역명으로 떨어진다 —
-     "한강뷰" 같은 말을 코드에 박으면 다음 단지에서 거짓말이 된다. */
-  const hook = d.hook || d.location.split(" ").slice(1, 2).join("") || d.location;
-  /* "경기 김포시 고촌읍" → "김포". 시·군·구 접미사를 떼야 말이 자연스럽다("김포시인데" ✕) */
-  const city = (d.location.split(" ")[1] || d.location).replace(/(특별시|광역시|시|군|구)$/, "");
-  const pctMain = d.mainArea ? Math.round((d.mainArea.units / total) * 10) : null;
+/**
+ * 평형별 대표타입 표 (오너 지시 2026-08-03).
+ * "평형이 여러 개인데 왜 84만 했어. **평형별 대표타입만을 쓰되, 여러 평형은 다 넣어야지.**"
+ * → 면적대마다 타입 하나(A·P 등 첫 실제 타입)만 뽑아 **전부** 적는다. 84A~D 를 네 줄로 늘리지 않는다.
+ * 분양가가 없는 면적은 '미고지'로 남긴다 — 줄을 지우면 그 평형이 없는 줄 안다.
+ */
+function priceTable(d, total) {
+  const rows = d.areas.map((a) => {
+    const t = (a.types || []).find((x) => x && x !== "-") || "";
+    const hit = d.price?.byArea?.find((x) => x.m2 === a.m2);
+    return {
+      area: `${a.m2}${t}`,
+      price: hit ? eok2(hit.won) : "미고지",
+      /* 주력 면적대 한 줄만 코발트로. 강조가 둘이면 강조가 아니다. */
+      main: d.mainArea?.m2 === a.m2,
+    };
+  });
+  if (rows.length > 6)
+    throw new Error(`${d.id}: 면적대가 ${rows.length}개다 — 표가 카드를 넘긴다. 데이터에서 묶을 것`);
+  return { head: ["대표평형(전용)", "분양가"], rows };
+}
 
-  /* 값이 없는 안은 null 을 돌려주고 규모 안으로 떨어진다 — 없는 수치로 제목을 짓지 않는다. */
-  const V = {
-    a: () => (eokRound ? [`${hook} 분양가 <span class="hi">${eokRound}억대</span>?`] : null),
-    b: () => (repWon ? [`${city}인데 <span class="hi">${eok2(repWon)}</span>, 비싼가`] : null),
-    c: () => [`${hook} <span class="hi">${n(total)}가구</span> 나온다`],
-    d: () => (repWon && (ah?.priceCap ?? d.price?.capApplied) ? [`상한제 걸고도 <span class="hi">${eok2(repWon)}</span>`] : null),
-    e: () =>
-      ah?.rank1From && eokRound
-        ? [`${Number(ah.rank1From.split("-")[1])}/${Number(ah.rank1From.split("-")[2])} 1순위, <span class="hi">${eokRound}억대</span>`]
-        : null,
-    f: () => (pctMain ? [`10집 중 ${pctMain}집이 <span class="hi">${rep.m2}㎡</span>`] : null),
-  };
-  return (V[TITLE_VARIANT] || V.a)() || V.c();
+/* ── 제목 ──
+ * 오너가 안을 골랐다(2026-08-03): **"{hook} 분양가 N억대?"**.
+ * 변형 실험은 끝났으므로 그 형태 하나만 남긴다 — 선택지를 코드에 남겨 두면 다음 사람이
+ * 무엇이 정답인지 다시 고민한다(CEO 07-23 "승인된 구성은 임의로 바꾸지 않는다").
+ * 숫자·훅은 전부 데이터에서 온다. 값이 없으면 규모 문장으로 떨어진다. */
+function titleFor(d, { total, repWon }) {
+  const hook = d.hook || d.location.split(" ").slice(1, 2).join("") || d.location;
+  const eokRound = repWon ? Math.floor(repWon / 100000000) : null;
+  return eokRound
+    ? [`${hook} 분양가 <span class="hi">${eokRound}억대</span>?`]
+    : [`${hook} <span class="hi">${n(total)}가구</span> 나온다`];
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -147,7 +154,7 @@ function presale(d) {
   if (ah?.priceCap ?? d.price?.capApplied) flags.push(`<span class="tag">분양가상한제</span> 적용`);
   if (d.price?.resaleBanYears) flags.push(`전매제한 ${d.price.resaleBanYears}년`);
   if (ah?.speculative) flags.push("투기과열지구");
-  if (d.extra?.officetel) flags.push(`오피스텔 ${n(d.extra.officetel)}실 별도`);
+  /* 오피스텔은 이제 위 스트립이 말한다 — 한 카드에서 같은 말을 두 번 하지 않는다 */
 
   return {
     template: "danji-brief@2",
@@ -155,23 +162,21 @@ function presale(d) {
     kind: "presale",
     /* 고정 부제 + 날짜. 손으로 적지 않는다 — 적는 순간 다음 카드에서 날짜가 굳는다. */
     topcap: `오늘의 주요 청약 이슈 (${date.replace(/-/g, ".")})`,
-    titleLines: titleFor(d, { total, rep, repWon, ah }),
+    titleLines: titleFor(d, { total, repWon }),
     hero: d.photo
       ? { photo: d.photo.file, credit: d.photo.credit }
       : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true },
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
+    /* 총 세대수를 아파트·오피스텔로 나눈다(오너 지시 2026-08-03).
+       오피스텔이 없는 단지는 그 칸을 만들지 않는다 — 0 을 적으면 '0실 공급'으로 읽힌다. */
     strips: [
       [
-        { label: "총 세대수", value: n(total), unit: "가구" },
+        { label: "아파트", value: n(total), unit: "가구" },
+        ...(d.extra?.officetel ? [{ label: "오피스텔", value: n(d.extra.officetel), unit: "실" }] : []),
         { label: "최고 층수", value: String(d.topFloor), unit: "층" },
       ],
-      [
-        { label: "대표평형", value: rep.label },
-        repWon
-          ? { label: "분양가", value: eok2(repWon), key: true }
-          : { label: "분양가", value: "미고지" },
-      ],
     ],
+    priceTable: priceTable(d, total),
     schedule: [
       { label: "특별공급", date: ah?.specialFrom ? md(ah.specialFrom) : "미고지", tbd: !ah?.specialFrom },
       { label: "1순위", date: ah?.rank1From ? md(ah.rank1From) : "미고지", tbd: !ah?.rank1From },
@@ -190,7 +195,6 @@ function result(d) {
   const rows = d.apply.map((r) => ({ ...r, shown: ratio(r) }));
   const first = rows.find((r) => r.label === "1순위");
   if (!first) throw new Error("1순위 행이 있어야 한다");
-  const rep = repArea(d);
   const repWon = d.price?.unit59Won ?? null;
   const md = (iso) => { const [, m, dd] = iso.split("-"); return `${Number(m)}/${Number(dd)}`; };
   const ymKo = (ym) => (ym ? `${ym.split("-")[0]}년 ${Number(ym.split("-")[1])}월` : "미고지");
@@ -211,14 +215,12 @@ function result(d) {
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}) },
     strips: [
       [
-        { label: "총 세대수", value: n(d.total), unit: "가구" },
+        { label: "아파트", value: n(d.total), unit: "가구" },
+        ...(d.extra?.officetel ? [{ label: "오피스텔", value: n(d.extra.officetel), unit: "실" }] : []),
         { label: "1순위 경쟁률", value: `${n(first.shown)}대 1`, hi: true },
       ],
-      [
-        { label: "대표평형", value: rep.label },
-        repWon ? { label: "분양가", value: eok2(repWon) } : { label: "분양가", value: "미고지" },
-      ],
     ],
+    priceTable: priceTable(d, d.total),
     schedule: [
       { label: "특별공급", date: md(d.schedule.special) },
       { label: "1순위", date: md(d.schedule.first) },

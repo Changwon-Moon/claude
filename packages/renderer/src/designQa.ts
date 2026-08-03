@@ -233,7 +233,9 @@ const MEASURE_JS = `(() => {
    ["순위표 머리글", ".rt-colheadrow", ".rt-row:not(.rt-colheadrow)"],
    /* danji-brief — 머리글과 행이 같은 grid 변수(--c)를 보게 만들어 뒀지만,
       "그렇게 만들었다"와 "실제로 맞는다"는 다르다. 재는 쪽에도 올린다. */
-   ["단지표 머리글", ".db-hr", ".db-row"]].forEach(function(pair){
+   ["단지표 머리글", ".db-hr", ".db-row"],
+   /* 평형표도 머리글과 행이 같은 grid 를 본다 — "그렇게 만들었다"와 "실제로 맞는다"는 다르다 */
+   ["평형표 머리글", ".db-pt-h", ".db-pt-r"]].forEach(function(pair){
     var head=card.querySelector(pair[1]);
     var row=card.querySelector(pair[2]);
     if(!head||!row) return;
