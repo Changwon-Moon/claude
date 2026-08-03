@@ -41,6 +41,7 @@ import {
   rank as ahRank,
   toIsoDate as ahIso,
   toCount as ahCount,
+  toYearMonth as ahYm,
   daysBetween as ahDays,
 } from "./parse/applyhome.js";
 import { buildUrl as ahUrl, encKey as ahEncKey } from "./sources/applyhome.js";
@@ -390,6 +391,7 @@ console.log("\n[청약홈 분양정보 파서]");
   check("세대수 1,859 → 1859", ahCount("1,859") === 1859);
   check("세대수 0·빈칸은 null(0 으로 채우지 않는다)", ahCount("0") === null && ahCount(null) === null);
   check("남은 일수 계산", ahDays(TODAY, "2026-08-03") === 2);
+  check("입주예정월 파싱", ahYm("203101") === "2031-01" && ahYm("20310") === null);
 
   const apt = ahNormalize(JSON.parse(APPLYHOME_APT_JSON), "apt");
   check("APT 3건 정규화", apt.length === 3, String(apt.length));
@@ -398,6 +400,12 @@ console.log("\n[청약홈 분양정보 파서]");
   // 접수 마감 필드 이름이 오퍼레이션마다 다르다 — 별칭 목록의 첫 발견값을 쓴다
   check("APT 접수 마감을 별칭으로 찾는다", apt[0].receiptTo === "2026-08-13", String(apt[0].receiptTo));
   check("무명 단지는 접수 필드가 달라도 읽힌다", apt[1].receiptTo === "2026-08-07", String(apt[1].receiptTo));
+  // 청약 일정 3칸은 오너가 고른 고정 항목이다 — 하나로 뭉개면 카드가 못 쓴다
+  check("특별공급 접수일을 따로 읽는다", apt[0].specialFrom === "2026-08-10", String(apt[0].specialFrom));
+  check("1순위 접수일을 따로 읽는다", apt[0].rank1From === "2026-08-11", String(apt[0].rank1From));
+  check("당첨자 발표일을 읽는다", apt[0].announceDate === "2026-08-20", String(apt[0].announceDate));
+  // 입주예정월은 보도마다 달리 적히는 항목이라 1차 출처가 특히 중요하다
+  check("입주예정월 202601 형식을 읽는다", apt[0].moveInYm === "2031-01", String(apt[0].moveInYm));
 
   const rem = ahNormalize(JSON.parse(APPLYHOME_REMNDR_JSON), "remndr");
   check("무순위 접수 마감(SUBSCRPT_RCEPT_ENDDE)", rem[0].receiptTo === "2026-08-02", String(rem[0].receiptTo));

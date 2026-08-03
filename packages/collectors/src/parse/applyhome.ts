@@ -43,6 +43,11 @@ export type Notice = {
   /** 접수 시작·종료 YYYY-MM-DD */
   receiptFrom: string | null;
   receiptTo: string | null;
+  /** 특별공급 접수 시작 · 1순위 접수 시작 — 카드의 청약 일정 3칸이 이걸 쓴다 */
+  specialFrom: string | null;
+  rank1From: string | null;
+  /** 입주예정월 YYYY-MM (청약홈 원본은 YYYYMM) */
+  moveInYm: string | null;
   /** 당첨자 발표 */
   announceDate: string | null;
   builder: string | null;
@@ -68,6 +73,13 @@ const ALIAS = {
   supply: ["TOT_SUPLY_HSHLDCO"],
   noticeDate: ["RCRIT_PBLANC_DE"],
   receiptFrom: ["SUBSCRPT_RCEPT_BGNDE", "GNRL_RNK1_CRSPAREA_RCPTDE", "RCEPT_BGNDE", "SPSPLY_RCEPT_BGNDE"],
+  /* 청약 일정 3칸(특공·1순위·당첨자발표)은 오너가 고른 고정 항목이다(2026-08-01).
+     API 가 각각 따로 주므로 따로 받는다 — receiptFrom 하나로 뭉개면 카드가 못 쓴다. */
+  specialFrom: ["SPSPLY_RCEPT_BGNDE"],
+  rank1From: ["GNRL_RNK1_CRSPAREA_RCPTDE", "GNRL_RNK1_ETC_RCPTDE"],
+  /* 입주예정월 — 보도마다 다르게 적히는 항목이라 1차 출처가 특히 중요하다.
+     2026-08-03 에 한 기사는 2031년 1월, 분양대행 사이트는 2029년 7월이라고 했다. */
+  moveInYm: ["MVN_PREARNGE_YM"],
   receiptTo: ["SUBSCRPT_RCEPT_ENDDE", "GNRL_RNK2_ETC_RCPTDE", "RCEPT_ENDDE", "GNRL_RNK1_ETC_RCPTDE"],
   announceDate: ["PRZWNER_PRESNATN_DE"],
   builder: ["CNSTRCT_ENTRPS_NM", "BSNS_MBY_NM"],
@@ -106,6 +118,16 @@ export function toCount(v: string | null): number | null {
   return Number.isFinite(n) && n > 0 ? n : null;
 }
 
+/** "202901" · "2029-01" → "2029-01". 6자리 숫자가 아니면 null. */
+export function toYearMonth(v: string | null): string | null {
+  if (!v) return null;
+  const d = v.replace(/[^0-9]/g, "");
+  if (d.length !== 6) return null;
+  const y = Number(d.slice(0, 4)), m = Number(d.slice(4, 6));
+  if (y < 2000 || y > 2100 || m < 1 || m > 12) return null;
+  return `${d.slice(0, 4)}-${d.slice(4, 6)}`;
+}
+
 const isY = (v: string | null) => v === "Y" || v === "y";
 
 /**
@@ -135,6 +157,9 @@ export function normalize(env: Envelope, kind: Kind): Notice[] {
     noticeDate: toIsoDate(pick(r, ALIAS.noticeDate)),
     receiptFrom: toIsoDate(pick(r, ALIAS.receiptFrom)),
     receiptTo: toIsoDate(pick(r, ALIAS.receiptTo)),
+    specialFrom: toIsoDate(pick(r, ALIAS.specialFrom)),
+    rank1From: toIsoDate(pick(r, ALIAS.rank1From)),
+    moveInYm: toYearMonth(pick(r, ALIAS.moveInYm)),
     announceDate: toIsoDate(pick(r, ALIAS.announceDate)),
     builder: pick(r, ALIAS.builder),
     priceCap: isY(pick(r, ALIAS.priceCap)),
