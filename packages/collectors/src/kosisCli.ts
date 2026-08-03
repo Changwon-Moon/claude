@@ -11,10 +11,12 @@
  */
 import { writeFileSync, mkdirSync, readFileSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
-import { fetchTable, TABLES, enabledTables, type TableKey } from "./sources/kosis.js";
+import {
+  fetchTable, fetchTableChunked, TABLES, enabledTables, chunkSizeFor, type TableKey,
+} from "./sources/kosis.js";
 import {
   normalize, toSeries, milestones, streaks, topMovers, rank, joinReport,
-  type Series, type Signal,
+  type Series, type Signal, type Point,
 } from "./parse/kosis.js";
 
 const CWD = process.env.INIT_CWD || process.cwd();
@@ -79,6 +81,44 @@ function synthesize(codes: string[], names: Map<string, string>, months: number)
   return rows;
 }
 
+
+/* ── 코드 대조표 읽기 ──
+   없으면 조용히 넘어가지 않는다. vital 체계 표를 켜 놓고 대조표가 없으면
+   숫자가 엉뚱한 지역에 얹히는데, 지도는 정상으로 보인다. */
+type RegionMap = { maps?: Record<string, Record<string, string>>; unmatched?: Record<string, unknown[]> };
+
+function loadRegionMap(cwd: string): RegionMap {
+  const p = resolve(cwd, "data/geo/kosis-region-map.json");
+  if (!existsSync(p)) return {};
+  try {
+    return JSON.parse(readFileSync(p, "utf8")) as RegionMap;
+  } catch {
+    return {};
+  }
+}
+
+/** 나눠 부를 때 쓸 지역 코드 목록 — 그 표의 코드 체계로 준다. */
+function regionCodesFor(t: TableKey, rm: RegionMap, geoCodes: string[]): string[] {
+  const spec = TABLES[t];
+  if (spec.codeSystem === "vital") {
+    /* 대조표의 열쇠가 곧 그 표의 코드다. 5자리만 고른다(시도는 합계라 빼야 중복이 없다). */
+    const keys = Object.keys(rm.maps?.[t] ?? {}).filter((c) => c.length === 5);
+    if (keys.length) return keys;
+  }
+  return geoCodes.filter((c) => c.length === 5);
+}
+
+/** vital 코드를 통계청 코드로 옮긴다. 대조표에 없는 코드는 **버린다** — 대부분 폐지된 행정구역이다. */
+function remapRegions(points: Point[], map: Record<string, string>): Point[] {
+  if (!Object.keys(map).length) return points;
+  const out: Point[] = [];
+  for (const pt of points) {
+    const to = map[pt.code];
+    if (to) out.push({ ...pt, code: to });
+  }
+  return out;
+}
+
 async function main() {
   const key = process.env.KOSIS_API_KEY;
   if (!key && !DRY) {
@@ -104,13 +144,46 @@ async function main() {
   const tables = DRY ? (["population"] as TableKey[]) : enabledTables();
   const waiting = (Object.keys(TABLES) as TableKey[]).filter((k) => !TABLES[k].enabled);
 
+  /* ── 행정구역 코드 대조표 ──
+     KOSIS 안에서도 표마다 코드 체계가 다르다. 인구동향 계열(출생·사망)은
+     26=울산인데 주민등록 계열은 26=부산이다. 숫자로 조인하면 조용히 뒤바뀐다.
+     대조표는 scripts/build-kosis-region-map.mjs 가 probe 원자료로 만든다. */
+  const regionMap = loadRegionMap(CWD);
+
   const metrics: Record<string, Series[]> = {};
   for (const t of tables) {
     const spec = TABLES[t];
-    const payload = DRY
-      ? synthesize(geo.codes, geo.names, months)
-      : await fetchTable(t, key!, { startPrdDe: start, endPrdDe: end });
-    metrics[spec.metric] = toSeries(normalize(payload));
+    const periods = spec.prdSe === "Y" ? Math.ceil((spec.maxMonths ?? months) / 12) + 1 : (spec.maxMonths ?? months) + 1;
+
+    let payload: unknown;
+    if (DRY) {
+      payload = synthesize(geo.codes, geo.names, months);
+    } else if ((spec.cellsPerRegionPeriod ?? 1) > 1) {
+      /* 축이 큰 표(연령 1세별·사망원인)는 4만 셀 한도에 걸린다 — 지역을 나눠 부른다.
+         나눌 코드는 그 표의 코드 체계로 줘야 한다. */
+      const codes = regionCodesFor(t, regionMap, geo.codes);
+      const size = chunkSizeFor(t, periods);
+      console.log(`· ${spec.metric}(${spec.tblId}) — 지역 ${codes.length}곳을 ${size}개씩 ${Math.ceil(codes.length / size)}번에 나눠 받습니다(4만 셀 한도)`);
+      payload = await fetchTableChunked(
+        t, key!,
+        { startPrdDe: start, endPrdDe: end, prdSe: spec.prdSe },
+        codes, periods,
+        (d, n) => { if (d === n || d % 5 === 0) console.log(`   ${d}/${n}`); },
+      );
+    } else {
+      payload = await fetchTable(t, key!, { startPrdDe: start, endPrdDe: end, extraObjL: spec.extraObjL });
+    }
+
+    let points = normalize(payload);
+    if (spec.codeSystem === "vital") {
+      const before = points.length;
+      points = remapRegions(points, regionMap.maps?.[t] ?? {});
+      console.log(`· ${spec.metric} 코드 변환(${spec.codeSystem} → 통계청): ${points.length}/${before}행`);
+      if (!points.length && before) {
+        throw new Error(`${t}: 코드 대조표가 한 행도 못 옮겼다 — data/geo/kosis-region-map.json 을 다시 만들어야 한다.`);
+      }
+    }
+    metrics[spec.metric] = toSeries(points);
     console.log(`· ${spec.metric}(${spec.tblId}) — 시군구 ${metrics[spec.metric].length}곳 · 시점 ${metrics[spec.metric][0]?.points.length ?? 0}개`);
   }
   if (waiting.length) {

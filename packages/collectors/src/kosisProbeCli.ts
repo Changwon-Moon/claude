@@ -60,7 +60,7 @@ function axesOf(rows: Record<string, unknown>[]): { axis: string; sample: string
     for (const r of rows) {
       const k = String(r[id] ?? "");
       if (k && !seen.has(k)) seen.set(k, String(r[nm] ?? ""));
-      if (seen.size >= 80) break;
+      if (seen.size >= 250) break;
     }
     out.push({ axis: id, sample: [...seen].map(([k, v]) => `${k}=${v}`) });
   }
@@ -103,15 +103,21 @@ async function probeOne(key: TableKey, apiKey: string): Promise<Probe> {
     if (lastErr) {
       const m0 = lastErr instanceof Error ? lastErr.message : String(lastErr);
       if (m0.includes("4만") || m0.includes("40,000") || m0.includes("40000")) {
-        for (const extra of [["ALL"], ["ALL", "ALL"]]) {
-          try {
-            json = await fetchTable(key, apiKey, { newEstPrdCnt: 1, extraObjL: extra, objL1: "11110" });
-            used = extra.length;
-            attempts.push(`objL1=11110(종로구 하나로 좁힘) + objL2..${extra.length + 1}=ALL → 성공 · 축만 엿본 것이라 전국 수집은 나눠 불러야 한다`);
-            lastErr = null;
-            break;
-          } catch (e2) {
-            attempts.push(`objL1=11110 + objL2..${extra.length + 1}=ALL → ${(e2 instanceof Error ? e2.message : String(e2)).slice(0, 80)}`);
+        /* 어느 코드로 좁힐지도 표마다 다르다. 인구 계열은 11110=종로구,
+           인구동향 계열(출생·사망)은 11010=종로구다. 시도코드 "11"(서울)은 두 체계 모두에서 통한다.
+           그래서 넓은 것부터 좁은 것 순으로 시도한다 — 어느 쪽이 통하는지가 곧 그 표의 코드 체계다. */
+        const spots = ["11", "11110", "11010"];
+        outer: for (const spot of spots) {
+          for (const extra of [["ALL"], ["ALL", "ALL"], ["ALL", "ALL", "ALL"]]) {
+            try {
+              json = await fetchTable(key, apiKey, { newEstPrdCnt: 1, extraObjL: extra, objL1: spot });
+              used = extra.length;
+              attempts.push(`objL1=${spot}(좁힘) + objL2..${extra.length + 1}=ALL → 성공 · 축만 엿본 것이라 전국 수집은 나눠 불러야 한다`);
+              lastErr = null;
+              break outer;
+            } catch (e2) {
+              attempts.push(`objL1=${spot} + objL2..${extra.length + 1}=ALL → ${(e2 instanceof Error ? e2.message : String(e2)).slice(0, 70)}`);
+            }
           }
         }
       }

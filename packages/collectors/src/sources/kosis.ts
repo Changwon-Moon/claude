@@ -56,7 +56,41 @@ export type TableSpec = {
   enabled: boolean;
   /** 왜 이 표를 쓰나 / 무엇이 아직 확인 안 됐나 */
   note: string;
+
+  /* ── 아래는 표마다 다른 '요구사항'이다. probe 로 실측해서 채운다. ── */
+
+  /**
+   * 이 표가 요구하는 추가 분류축(objL2, objL3…).
+   * 축이 여럿인 표는 objL1 만 주면 KOSIS 가 거부한다.
+   * "ALL" 이면 그 축 전부, 코드를 박으면 그것만(예: 출생표 "00"=총계).
+   */
+  extraObjL?: string[];
+
+  /**
+   * 행정구역 코드 체계.
+   *   kostat — 통계청 행정구역코드(우리 지도와 같다). 그대로 쓴다.
+   *   vital  — 인구동향 계열(출생·사망) 별도 체계. **반드시 대조표를 거친다.**
+   *
+   * 두 체계는 시도부터 겹친다: 26=울산/부산, 29=세종/광주, 31=경기/울산, 36=전남/세종.
+   * 숫자로 조인하면 울산 출생아가 부산에 얹히고 지도는 예쁘게 그려진다.
+   */
+  codeSystem?: "kostat" | "vital";
+
+  /**
+   * 한 지역·한 시점당 대략 몇 셀인가.
+   * KOSIS 는 한 요청당 **4만 셀**까지만 준다. 연령(1세별 101개)·사망(사망원인 50항목)은
+   * 전국을 한 번에 부르면 바로 넘는다. 이 값으로 **지역을 몇 개씩 끊어 부를지 계산**한다.
+   * 비워 두면 1(축이 행정구역뿐)로 본다.
+   */
+  cellsPerRegionPeriod?: number;
+
+  /** 이 표만 기간을 짧게 받는다. 1세별처럼 무거운 표는 긴 시계열이 필요 없다. */
+  maxMonths?: number;
 };
+
+/** KOSIS 한 요청당 셀 한도. 문서값은 4만이고, 여유를 두고 자른다. */
+export const CELL_LIMIT = 40000;
+export const CELL_BUDGET = 34000;
 
 export const TABLES: Record<string, TableSpec> = {
   population: {
@@ -84,21 +118,31 @@ export const TABLES: Record<string, TableSpec> = {
   },
   age: {
     orgId: "101", tblId: "DT_1B04006", label: "행정구역(시군구)별/1세별 주민등록인구",
-    metric: "연령", itmId: "ALL", objL1: "ALL", objL2: "", prdSe: "M",
+    metric: "연령", itmId: "T2", objL1: "ALL", objL2: "", prdSe: "M",
+    extraObjL: ["ALL"], codeSystem: "kostat", cellsPerRegionPeriod: 101, maxMonths: 13,
     confidence: "표명확실", enabled: false,
-    note: "1세 단위 원자료 → 65세이상 비율·중위연령을 우리가 직접 계산한다(지표표를 받아 적지 않는다). " +
-      "**분류축·항목코드·주기 미확인** → probe 로 확정. 응답이 크므로 확정 뒤 축을 좁힌다.",
+    note: "probe 로 축 확인(2026-08-03): C2=연령(000=계, 0401=0세, 0402=1세 …) · 항목 T2=총인구수/T3=남/T4=여. " +
+      "코드 체계는 통계청(11110=종로구)이라 지도에 그대로 붙는다. " +
+      "**1세별 101개 × 전국이라 4만 셀 한도를 넘는다** → 지역을 나눠 부른다(cellsPerRegionPeriod). " +
+      "축 전체 목록을 아직 다 못 봐서 대기 — 5세 단위 묶음 코드가 있으면 그쪽이 훨씬 싸다.",
   },
   births: {
     orgId: "101", tblId: "DT_1B81A03", label: "시군구/성/출산순위별 출생",
-    metric: "출생", itmId: "ALL", objL1: "ALL", objL2: "", prdSe: "Y",
-    confidence: "표명확실", enabled: false,
-    note: "인구동향조사(연간). **분류축·항목코드 미확인.** " +
-      "월간 인구동향표(DT_1B8000G)는 시군구까지 내려가는지 확인 못 해 쓰지 않는다.",
+    metric: "출생", itmId: "T1", objL1: "ALL", objL2: "", prdSe: "Y",
+    extraObjL: ["00"], codeSystem: "vital",
+    confidence: "확실", enabled: true,
+    note: "probe 검증 완료(2026-08-03): 통계표명 일치 · 항목 T1=계(T2 남/T3 여) · " +
+      "축 C2=출산순위(00=총계, 01=1아, 02=2아, 13=3아이상, 99=미상) → **00=총계만 받는다** · 2024년.\n" +
+      "⚠️ **코드 체계가 다르다.** 종로구가 11010(인구표는 11110)이고 시도부터 겹친다 — " +
+      "26=울산(인구표는 부산) · 29=세종(광주) · 31=경기(울산) · 36=전남(세종). " +
+      "숫자로 조인하면 울산 출생아가 부산에 얹히고 지도는 예쁘게 그려진다. " +
+      "data/geo/kosis-region-map.json 대조표를 반드시 거친다(이름으로 묶었고 349/366 매칭, " +
+      "미매칭 17개는 청원군·마산시 등 폐지된 행정구역).",
   },
   deaths: {
     orgId: "101", tblId: "DT_1B34E13", label: "시군구/사망원인별 사망자수",
     metric: "사망", itmId: "ALL", objL1: "ALL", objL2: "", prdSe: "Y",
+    codeSystem: "vital", cellsPerRegionPeriod: 50,
     confidence: "표명확실", enabled: false,
     note: "사망원인통계(연간). 사망원인 분류축의 '계'를 뽑아야 총사망자수가 된다 — " +
       "**축 구성 미확인이라 probe 없이 쓰면 특정 사인의 숫자를 총사망자수로 낼 위험이 있다.** " +
@@ -237,4 +281,55 @@ export async function fetchMeta(
     }
   }
   return json;
+}
+
+/**
+ * 지역을 몇 개씩 끊어 부를지 계산한다.
+ *
+ * 한 번에 오는 셀 수 ≈ 지역수 × 시점수 × (지역·시점당 셀)
+ * 이게 한도를 넘지 않도록 지역수를 정한다. 고정 숫자를 박지 않는 이유는
+ * 표마다 축 크기가 다르고(연령 101 · 사망원인 50), 기간도 달라지기 때문이다.
+ * 한 번 걸려 본 한도는 다시 걸린다.
+ */
+export function chunkSizeFor(table: TableKey, periods: number): number {
+  const per = Math.max(1, TABLES[table].cellsPerRegionPeriod ?? 1);
+  const n = Math.floor(CELL_BUDGET / Math.max(1, per * Math.max(1, periods)));
+  return Math.max(1, n);
+}
+
+/**
+ * 지역을 나눠 여러 번 부르고 이어 붙인다.
+ *
+ * `codes` 가 비면 한 번에 ALL 로 부른다(축이 작은 표는 나눌 이유가 없다).
+ * 한 덩어리가 실패하면 **던진다** — 일부만 받고 성공한 척하면 그게 곧 오보다.
+ * "전국 255곳" 이라고 적힌 카드가 실은 180곳만 본 것이면 순위가 통째로 거짓이 된다.
+ */
+export async function fetchTableChunked(
+  table: TableKey,
+  key: string,
+  opts: { startPrdDe?: string; endPrdDe?: string; prdSe?: "M" | "Y" },
+  codes: string[],
+  periods: number,
+  onProgress?: (done: number, total: number) => void,
+): Promise<unknown[]> {
+  const t = TABLES[table];
+  const base = { ...opts, extraObjL: t.extraObjL };
+
+  if (!codes.length || chunkSizeFor(table, periods) >= codes.length) {
+    const one = await fetchTable(table, key, base);
+    return Array.isArray(one) ? one : [];
+  }
+
+  const size = chunkSizeFor(table, periods);
+  const chunks: string[][] = [];
+  for (let i = 0; i < codes.length; i += size) chunks.push(codes.slice(i, i + size));
+
+  const all: unknown[] = [];
+  for (let i = 0; i < chunks.length; i++) {
+    /* objL1 에 코드를 '+' 로 이어 준다 — KOSIS 가 여러 지역을 받는 방식이다. */
+    const rows = await fetchTable(table, key, { ...base, objL1: chunks[i].join("+") });
+    if (Array.isArray(rows)) all.push(...rows);
+    onProgress?.(i + 1, chunks.length);
+  }
+  return all;
 }

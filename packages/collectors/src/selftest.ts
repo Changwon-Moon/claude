@@ -3,6 +3,8 @@
  * 실행: pnpm --filter @wirit/collectors selftest
  * 빌드 환경에서 외부 API가 막혀 있어도, 데이터 해석 로직의 정확성을 여기서 검증한다.
  */
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { parseStooqDailyCsv, monthlySample } from "./parse/stooq.js";
 import { parseEcosJson } from "./parse/ecos.js";
 import { parseRss, dedupeByTitle } from "./parse/rss.js";
@@ -45,7 +47,7 @@ import {
   joinReport as kosisJoin,
   type Series as KosisSeries,
 } from "./parse/kosis.js";
-import { buildUrl as kosisUrl, encKey as kosisEncKey, TABLES as KOSIS_TABLES, enabledTables as kosisEnabled } from "./sources/kosis.js";
+import { buildUrl as kosisUrl, encKey as kosisEncKey, TABLES as KOSIS_TABLES, enabledTables as kosisEnabled, chunkSizeFor } from "./sources/kosis.js";
 
 import { toSeries, regionNames, ambiguousNames, latestMonth, readPage, type RebPoint } from "./sources/rebIndex.js";
 import {
@@ -613,6 +615,25 @@ console.log("\n[청약홈 분양정보 파서]");
     return it === "ALL" || it.includes("+");
   });
   check("켜진 표의 항목은 단일 코드(파서가 항목 축을 안 가른다)", multiItem.length === 0, multiItem.join(","));
+  /* vital 코드 체계(출생·사망)는 대조표 없이 켜지면 숫자가 엉뚱한 지역에 얹힌다.
+     26=울산/부산 처럼 시도부터 겹치는데 지도는 정상으로 그려져 눈으로 안 잡힌다. */
+  const vitalOn = kosisEnabled().filter((k) => KOSIS_TABLES[k].codeSystem === "vital");
+  const mapPath = resolve(process.env.INIT_CWD || process.cwd(), "data/geo/kosis-region-map.json");
+  const mapExists = existsSync(mapPath);
+  check("vital 체계 표를 켰으면 코드 대조표가 있다", !vitalOn.length || mapExists,
+    vitalOn.length ? `${vitalOn.join(",")} → 대조표 ${mapExists ? "있음" : "없음"}` : "(해당 없음)");
+  if (vitalOn.length && mapExists) {
+    const rm = JSON.parse(readFileSync(mapPath, "utf8")) as { maps?: Record<string, Record<string, string>> };
+    for (const k of vitalOn) {
+      const n = Object.keys(rm.maps?.[k] ?? {}).length;
+      check(`대조표에 ${k} 코드가 들어 있다`, n > 100, `${n}개`);
+    }
+  }
+  /* 4만 셀 한도 — 축이 큰 표는 나눠 부를 계산이 되어 있어야 한다. */
+  const bigNoChunk = kosisEnabled().filter((k) => (KOSIS_TABLES[k].cellsPerRegionPeriod ?? 1) > 1
+    && chunkSizeFor(k, 26) < 1);
+  check("축이 큰 표는 나눠 부를 크기가 계산된다", bigNoChunk.length === 0, bigNoChunk.join(","));
+
   const noNote = Object.entries(KOSIS_TABLES).filter(([, t]) => !t.note || t.note.length < 20);
   check("표마다 무엇이 미확인인지 적혀 있다", noNote.length === 0, noNote.map(([k]) => k).join(","));
   // probe 는 최근 1개 시점만 받는다 — 전 기간을 받으면 수십 MB 라 검증 목적에 안 맞는다
