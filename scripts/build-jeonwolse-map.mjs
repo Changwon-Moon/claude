@@ -15,7 +15,13 @@ import { fileURLToPath } from "node:url";
 import { tohuhParts, tohuhMapSvg } from "./lib/tohuh-map.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const latest = process.argv[2] || "202606";
+// latest 월: 인자로 주면 그걸, 없으면 수집된 파일 중 최신 월 자동 감지(정기물 — 수집이 늘면 따라 올라간다).
+const detectLatest = () => {
+  const ms = readdirSync(join(ROOT, "data/datasets/molit-rent"))
+    .map((f) => (f.match(/-(\d{6})\.json$/) || [])[1]).filter(Boolean).sort();
+  return ms[ms.length - 1] || "202606";
+};
+const latest = process.argv[2] || detectLatest();
 const kstToday = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const date = process.argv[3] || kstToday;
 const latestPrefix = `${latest.slice(0, 4)}년 ${latest.slice(4, 6)}월`;

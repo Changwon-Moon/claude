@@ -207,6 +207,11 @@
       "label": "jeonse-streak",
       "cmd": "scripts/build-jeonse-streak.mjs",
       "args": []
+    },
+    {
+      "label": "jeonwolse-map",
+      "cmd": "scripts/build-jeonwolse-map.mjs",
+      "args": []
     }
   ]
 }
