@@ -21,6 +21,15 @@
       .sl .wirit-title .tl + .tl { margin-top: 6px; }
       .sl .wirit-title .hi { color: var(--wirit-red); }
 
+      /* (옵션) 제목 리드 줄 — 본 제목의 절반 크기·진회색·가운데(양옆 여백 허용). 로고를 앞에 얹는다.
+         titleLead 를 주지 않는 카드(예: mae-streak)엔 영향 없음(픽셀 불변). 크기는 __wiritFit 가 본줄의 1/2로 맞춘다. */
+      .sl-lead {
+        display: flex; align-items: center; justify-content: center; gap: 16px;
+        margin: 0 0 6px; color: #3f4856; font-family: var(--font-title);
+        font-weight: 800; white-space: nowrap; letter-spacing: -0.03em; line-height: 1.12;
+      }
+      .sl-lead-logo { height: 1em; width: auto; display: block; }
+
       .sl-chart { flex: 0 0 auto; display: flex; align-items: center; margin: 30px 0 0; }
       /* 하단 문구를 그래프와 푸터 사이 남은 공간의 정중앙에 둔다 */
       .sl-notewrap { flex: 1 1 auto; display: flex; align-items: center; justify-content: center; }
@@ -47,7 +56,10 @@
   <body>
     <div class="wirit-card sl">
       <div class="wirit-topcap">{{#if badge}}<span class="sl-badge">{{badge}}</span>{{/if}}</div>
-      <div class="sl-head"><h1 class="wirit-title">{{{title}}}</h1></div>
+      <div class="sl-head">
+        {{#if titleLead}}<div class="sl-lead">{{#if titleLead.logo}}<img class="sl-lead-logo" src="{{titleLead.logo.href}}" alt="" />{{/if}}<span>{{titleLead.text}}</span></div>{{/if}}
+        <h1 class="wirit-title">{{{title}}}</h1>
+      </div>
 
       <div class="sl-chart">
         <svg class="sl-svg" viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
@@ -101,6 +113,9 @@
           }
           el.style.fontSize = best.toFixed(2) + "px";
         }
+        /* (옵션) 리드 줄이 있으면 본 제목(마지막 .tl)의 절반 크기로. 없으면 아무 것도 안 한다. */
+        var lead = document.querySelector(".sl .sl-lead");
+        if (lead) lead.style.fontSize = (best / 2).toFixed(2) + "px";
       };
     </script>
   </body>
