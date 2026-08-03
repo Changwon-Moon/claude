@@ -99,15 +99,15 @@ jobs:
             git commit -m "KOSIS 표 검증 $(TZ=Asia/Seoul date +%F)"
             # 이 브랜치는 여러 세션이 동시에 민다. 한 번 밀어 실패하면 결과가 통째로 사라진다 —
             # 검증을 다시 돌리는 비용보다 재시도가 싸다. 리베이스하고 세 번까지 다시 민다.
-            for try in 1 2 3; do
+            for try in 1 2 3 4 5 6 7 8; do
               git pull --rebase --autostash origin ${{ github.ref_name }} || true
               if git push origin HEAD:${{ github.ref_name }}; then
                 echo "푸시 성공(시도 $try)"; exit 0
               fi
               echo "푸시 실패(시도 $try) — 원격이 움직였다. 리베이스 후 재시도"
-              sleep $((try * 5))
+              sleep $((try * 7 + RANDOM % 10))
             done
-            echo "::error::세 번 시도했으나 푸시 실패 — 검증 결과가 유실됐다"
+            echo "::error::여덟 번 시도했으나 푸시 실패 — 검증 결과가 유실됐다"
             exit 1
           fi
 
