@@ -140,9 +140,11 @@ function priceTable(d, total) {
 function titleFor(d, { total, repWon }) {
   const hook = d.hook || d.location.split(" ").slice(1, 2).join("") || d.location;
   const eokRound = repWon ? Math.floor(repWon / 100000000) : null;
+  /* 오너 확정 문형(2026-08-03): "{훅} 아파트 분양가 {N}억대?" — 훅과 금액 **둘 다** 파랑.
+     강조가 둘이지만 같은 문장의 주어와 술어라 초점이 갈리지 않는다. */
   return eokRound
-    ? [`${hook} 분양가 <span class="hi">${eokRound}억대</span>?`]
-    : [`${hook} <span class="hi">${n(total)}가구</span> 나온다`];
+    ? [`<span class="hi">${hook}</span> 아파트 분양가 <span class="hi">${eokRound}억대</span>?`]
+    : [`<span class="hi">${hook}</span> 아파트 <span class="hi">${n(total)}가구</span>`];
 }
 
 /**
