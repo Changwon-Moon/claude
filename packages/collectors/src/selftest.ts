@@ -4,6 +4,7 @@
  * 빌드 환경에서 외부 API가 막혀 있어도, 데이터 해석 로직의 정확성을 여기서 검증한다.
  */
 import { existsSync, readFileSync } from "node:fs";
+import { redactUrl } from "./http.js";
 import { resolve } from "node:path";
 import { parseStooqDailyCsv, monthlySample } from "./parse/stooq.js";
 import { parseEcosJson } from "./parse/ecos.js";
@@ -684,6 +685,24 @@ console.log("\n[청약홈 분양정보 파서]");
     kosisSenior([{ C1: "11110", C1_NM: "종로구", C2: "000", C2_NM: "계", PRD_DE: "202606", DT: "1" }]);
   } catch { ageThrew = true; }
   check("65세 이상이 한 줄도 없으면 던진다", ageThrew, ageThrew ? "던짐" : "조용히 0 — 위험");
+
+  /* ── 인증키가 로그·산출물에 실리면 안 된다 ──
+     2026-08-03 사고: 실패한 URL 이 오류 메시지에 그대로 실렸고, probe 가 그것을
+     결과 파일에 적어 저장소에 커밋했다. 키가 통째로 남았다. */
+  check("URL 오류 메시지에서 apiKey 가 지워진다",
+    redactUrl("https://x/y?a=1&apiKey=SECRETVALUE&b=2") === "https://x/y?a=1&apiKey=***&b=2",
+    redactUrl("https://x/y?a=1&apiKey=SECRETVALUE&b=2"));
+  check("serviceKey·authKey 도 지워진다",
+    redactUrl("https://x?serviceKey=AAA&authKey=BBB") === "https://x?serviceKey=***&authKey=***",
+    redactUrl("https://x?serviceKey=AAA&authKey=BBB"));
+  /* 커밋된 산출물에 키가 남아 있지 않은지 — 사고가 재발하면 여기서 걸린다. */
+  for (const f of ["data/kosis-probe.md", "data/kosis-probe-raw.json"]) {
+    const fp = resolve(process.env.INIT_CWD || process.cwd(), f);
+    if (!existsSync(fp)) continue;
+    const body = readFileSync(fp, "utf8");
+    const leaked = /(?:apiKey|serviceKey|authKey)=(?!\*\*\*)[A-Za-z0-9%+/=_-]{8,}/i.test(body);
+    check(`${f} 에 인증키가 남아 있지 않다`, !leaked, leaked ? "키로 보이는 문자열 발견" : "깨끗함");
+  }
 
   const noNote = Object.entries(KOSIS_TABLES).filter(([, t]) => !t.note || t.note.length < 20);
   check("표마다 무엇이 미확인인지 적혀 있다", noNote.length === 0, noNote.map(([k]) => k).join(","));
