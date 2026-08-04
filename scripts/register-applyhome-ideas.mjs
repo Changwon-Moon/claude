@@ -10,12 +10,12 @@
  *  · 이미 올린 공고는 다시 올리지 않는다(id = ah-{kind}-{공고번호}).
  *  · 접수가 끝났고 오너가 아직 안 고른 자동 소재는 **지운다.** 지난 줍줍이 보드에 남으면
  *    그건 결정 요청이 아니라 영구 알림이다. 오너가 이미 고른 것(state 가 채워진 것)은 건드리지 않는다.
- *  · 알림은 **새로 들어온 게 있을 때만** 간다.
  *
- * ── --digest — "오늘 것 한 번 보내줘"
- * 평소 알림은 **새로 들어온 것만** 보낸다(알림 피로 방지). 그런데 오너가 직접 물을 때는
- * 새것 여부와 무관하게 **지금 살아 있는 소재 전체**를 보고 싶은 것이다.
- * --digest 는 그 요청용이다 — 접수가 아직 열려 있는 건을 점수순으로 담는다.
+ * ── --digest — 매일 아침의 기본 (2026-08-04 변경)
+ * 원래는 "새로 들어온 게 있을 때만" 보냈다. 알림 피로를 막으려던 것인데, 대가가 컸다 —
+ * 조용한 아침이 **정상**인지 **고장**인지 오너가 구분할 수 없었다(8/3 이 그랬다).
+ * 그래서 예약 실행은 --digest 로 돈다: 새것이 없어도 지금 접수가 열려 있는 소재 전체를 보낸다.
+ * 피로는 목록을 줄여서가 아니라 **🆕 로 차이를 보여줘서** 막는다.
  *
  * 실행: node scripts/register-applyhome-ideas.mjs [--today 2026-08-01] [--min 45] [--top 5] [--digest]
  * 산출: research/ideas.json 갱신 · data/applyhome-alert.txt (알림 문구, 보낼 게 없으면 빈 파일)
@@ -96,7 +96,7 @@ function entryOf(x) {
     feed: "auto",
     title: `${isJupjup ? "[줍줍]" : "[신규분양]"} ${x.name}`,
     why:
-      `${x.areaName}${x.supply ? ` · ${x.supply.toLocaleString("ko-KR")}가구` : ""}` +
+      `${x.areaName}${x.supply ? ` · ${x.supply.toLocaleString("ko-KR")}세대` : ""}` +
       `${x.blocks ? `(${x.blocks}개 블록 합계)` : ""}${dl}` +
       ` · ${x.score}점(${x.reasons.join("·")})`,
     source: "한국부동산원 청약홈 API",
@@ -126,16 +126,20 @@ board.meta.updated = TODAY;
 writeFileSync(ideasPath, JSON.stringify(board, null, 2) + "\n", "utf8");
 
 /* ── ③ 알림 문구 ──
- * 기본은 **새로 들어온 것만**(알림 피로 방지 — 매일 같은 목록을 보내면 아무도 안 본다).
- * --digest 면 새것 여부와 무관하게 **지금 접수가 열려 있는 것 전체**를 점수순으로 담는다. */
+ * 예약 실행(매일 아침)은 워크플로가 --digest 를 붙인다 → 지금 접수가 열려 있는 것 전체.
+ * --digest 없이 부르면 **새로 들어온 것만** 보낸다(세션이 중간에 한 번 더 돌릴 때). */
 const alertPath = join(ROOT, "data/applyhome-alert.txt");
+/* 매일 같은 목록이 오면 사람은 셋째 날부터 안 읽는다. 그래서 digest 안에서도
+   "어제와 뭐가 다른가"를 한 글자로 보여준다 — 오늘 새로 들어온 것에 🆕. */
+const freshIds = new Set(fresh.map((x) => idOf(x)));
 const line = (x) => {
   const left = daysLeft(x.receiptTo);
   const dl = left === null ? "" : left === 0 ? " ⏰오늘 마감" : left > 0 ? ` D-${left}` : "";
   const tag = x.kind === "remndr" ? "줍줍" : "신규";
   const blk = x.blocks ? `·${x.blocks}블록` : "";
-  const cnt = x.supply ? ` ${x.supply.toLocaleString("ko-KR")}가구` : "";
-  return `· [${tag}] ${x.name}\n   ${x.areaName}${cnt}${blk}${dl}`;
+  const cnt = x.supply ? ` ${x.supply.toLocaleString("ko-KR")}세대` : "";
+  const nu = freshIds.has(idOf(x)) ? "🆕 " : "";
+  return `· ${nu}[${tag}] ${x.name}\n   ${x.areaName}${cnt}${blk}${dl}`;
 };
 
 let msg = "";
@@ -146,7 +150,9 @@ if (DIGEST) {
     return left === null || left >= 0;
   });
   if (live.length) {
-    const head = `🏠 오늘의 청약·분양 소재 (${TODAY})`;
+    const nNew = live.filter((x) => freshIds.has(idOf(x))).length;
+    const head =
+      `🏠 오늘의 청약·분양 소재 (${TODAY})` + (nNew ? `\n오늘 새로 들어온 것 ${nNew}건 🆕` : "");
     const jup = live.filter((x) => x.kind === "remndr");
     const npd = live.filter((x) => x.kind !== "remndr");
     const parts = [head, ""];

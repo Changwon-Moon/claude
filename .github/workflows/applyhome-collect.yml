@@ -87,6 +87,9 @@ jobs:
               esac
             done
           fi
+          # 예약 실행은 언제나 요약(digest)이다. 새 공고 0건이라 조용한 아침과
+          # 수집기가 죽어서 조용한 아침을 오너가 구분할 수 없기 때문이다(2026-08-04 사고).
+          [ "${{ github.event_name }}" = "schedule" ] && DIGEST=1
           [ "$DIGEST" = "1" ] && echo "digest=--digest" >> "$GITHUB_OUTPUT" || echo "digest=" >> "$GITHUB_OUTPUT"
           echo "within=${WITHIN:-7}" >> "$GITHUB_OUTPUT"
           echo "min=${MIN:-45}" >> "$GITHUB_OUTPUT"
