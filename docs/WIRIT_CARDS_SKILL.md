@@ -231,8 +231,8 @@ node scripts/confirm.mjs <세트라벨...> [--note "메모"]
 
 소재 확정(`research/ideas.json` 또는 오너 지시) → 데이터 확인(`meta.verified: true` 인가)
 → 템플릿 선택(기존 것으로 되면 새로 만들지 않는다) → 빌더 작성(`scripts/build-{이름}.mjs`)
-→ 렌더·검수(designQa error 0) → 캡션(빌더가 생성) → `sets.json`·`builders.json` 등록
-→ 종합 검수 → **오너에게 렌더 PNG 전송** → 오너가 확정하면 `pixel-baselines.json` 에 md5 추가.
+→ 렌더·검수(designQa error 0) → **시안 선검수 3팀(기획·디자인·검수)을 오너에게 보이기 전에 스스로 돌린다 — `docs/CARD_CHECKLIST.md §0.5`(08-04 오너: 검수를 시안 순간으로 앞당김)** → 캡션(확정 후) → `sets.json`·`builders.json` 등록
+→ **오너에게 렌더 PNG + '선검수 결과' 한 줄 전송** → 오너가 확정하면 `pixel-baselines.json` 에 md5 추가.
 
 등록하지 않으면 관제탑에 뜨지 않고, 정기물이면 매번 세션을 불러야 하는 일회성이 된다.
 **확정 뒤에는 산출 위치를 `data/out/_spike` 에서 `data/content/{날짜}/` 로 옮긴다** —
