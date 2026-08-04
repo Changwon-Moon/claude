@@ -1,5 +1,5 @@
 /**
- * 글로벌 자본의 국내 임대시장 진출 — 좌: 제목(세로) / 우: 수도권 투자위치 지도 / 하: 투자자 표(위치·세대수). (A안)
+ * 글로벌 자본의 국내 임대시장 진출 — 좌: 제목(세로) / 우: 서울 투자위치 지도 / 하: 투자자 표(위치·세대수). (A안)
  * 소재: claude/소재-글로벌자본-국내임대시장-2026.md (각 사 발표·언론 보도 종합).
  *
  * ⚠️ 뉴스 소재 = verified:false. 금액·세대수는 발표·약정·목표가 섞여 있어 발행 전 1차 출처 재대조(오보 0).
@@ -10,30 +10,29 @@
 import { writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { capitalInvestSvg } from "./lib/capital-invest-map.mjs";
+import { seoulInvestSvg } from "./lib/seoul-invest-map.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const kstToday = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const date = process.argv[2] || kstToday;
 
-// ── 투자 위치(수도권) — 핀 좌표는 capital-invest-map.mjs 가 지오데이터에서 계산(손 좌표 없음) ──
-// gu=서울 구(강조·서울 동 핀), sgg=경기 시군. label 준 곳만 지도에 글자(대부분은 표가 위치를 가짐).
+// ── 투자 위치(서울만) — 핀 좌표는 seoul-invest-map.mjs 가 지오데이터에서 계산(손 좌표 없음) ──
+// 서울 외(이천·서울5곳 등 광역)는 지도에 안 찍고 표에만 담는다(오너 지시). dx/dy=라벨 겹침 미세조정.
 const spots = [
-  { gu: "강동구", dong: "" },
-  { gu: "금천구", dong: "독산" },
-  { gu: "금천구", dong: "가산" },
-  { gu: "성북구", dong: "안암" },
-  { gu: "동대문구", dong: "회기" },
-  { gu: "영등포구", dong: "양평" },
-  { gu: "강남구", dong: "" },
-  { gu: "중구", dong: "명동" },
-  { gu: "중구", dong: "신당" },
-  { gu: "서대문구", dong: "신촌" },
-  { gu: "강북구", dong: "수유" },
-  { gu: "서초구", dong: "방배" },
-  { sgg: "이천시", label: "이천", dy: 4 }, // 경기 — APG 건설임대 권역
+  { gu: "강동구", label: "강동" },
+  { gu: "금천구", dong: "독산", label: "독산", dx: -56, dy: 2 },
+  { gu: "금천구", dong: "가산", label: "가산", dx: 40, dy: 52 },
+  { gu: "성북구", dong: "안암", label: "안암" },
+  { gu: "동대문구", dong: "회기", label: "회기" },
+  { gu: "영등포구", dong: "양평", label: "양평" },
+  { gu: "강남구", label: "강남" },
+  { gu: "중구", dong: "명동", label: "명동", dx: -20 },
+  { gu: "중구", dong: "신당", label: "신당", dx: 24, dy: 8 },
+  { gu: "서대문구", dong: "신촌", label: "신촌" },
+  { gu: "강북구", dong: "수유", label: "수유" },
+  { gu: "서초구", dong: "방배", label: "방배" },
 ];
-const mapSvg = capitalInvestSvg({ spots });
+const mapSvg = seoulInvestSvg({ spots });
 
 // ── 투자자 표(9곳): 국기 · 투자자(파트너) · 투자 위치 · 세대수·규모 ──
 // amount = 세대수(있으면) 또는 발표 금액. muted=회색(비공개/정성 표기).
@@ -55,8 +54,8 @@ const doc = {
   template: "world-capital@1",
   date,
   note: "해외 자본의 국내 임대시장 진출 · 2026",
-  title: `당신 건물주가<br/><span class="co">네덜란드<br/>연기금</span>? 🌍`,
-  subtitle: "전세가 사라진 자리,<br/>글로벌 자본이 사들이는 수도권",
+  title: `전세가<br/>사라진 자리,<br/><span class="co">글로벌 자본</span>이<br/>들어온다`,
+  subtitle: "서울 임대주택을 사 모으는<br/>해외 큰손 9곳",
   mapSvg,
   legend: [
     { cls: "pin", label: "투자 위치" },
@@ -66,4 +65,4 @@ const doc = {
   source: { name: "각 사 발표·언론 보도 종합", period: "2026", verified: false },
 };
 writeFileSync(join(outDir, "world-capital.json"), JSON.stringify(doc, null, 2) + "\n", "utf8");
-console.log(`✅ world-capital — 수도권 투자 위치 ${spots.length}곳 · 투자자 ${rows.length}곳 · ${date}`);
+console.log(`✅ world-capital — 서울 투자 위치 ${spots.length}곳 · 투자자 ${rows.length}곳 · ${date}`);
