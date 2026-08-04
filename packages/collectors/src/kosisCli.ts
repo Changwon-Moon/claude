@@ -15,7 +15,7 @@ import {
   fetchTable, fetchTableChunked, TABLES, enabledTables, chunkSizeFor, rangeForTable, type TableKey,
 } from "./sources/kosis.js";
 import {
-  normalize, seniorPoints, toSeries, milestones, streaks, topMovers, rank, joinReport,
+  normalize, seniorPoints, nationalByPeriod, coverageGap, toSeries, milestones, streaks, topMovers, rank, joinReport,
   type Series, type Signal, type Point,
 } from "./parse/kosis.js";
 
@@ -165,6 +165,7 @@ async function main() {
      산출물을 다 쓴 뒤에 빨간불로 끝낸다. 데이터는 남기고 실패는 보이게 한다.
      인구는 예외다. 모든 신호의 기준선이라 없으면 아래에서 어차피 멈춘다. */
   const failures: { table: string; why: string }[] = [];
+  const coverageWarnings: string[] = [];
   for (const t of tables) {
     const spec = TABLES[t];
     try {
@@ -215,6 +216,22 @@ async function main() {
       if (!points.length && before) {
         throw new Error(`${t}: 대조표가 한 행도 못 옮겼다 — 대조표를 다시 만들어야 한다.`);
       }
+      /* ── 얼마나 놓쳤는지 같은 응답 안의 전국 값과 대 본다 ──
+         빠진 시군구는 지도에서 빈 칸으로 보이고, 빈 칸은 "데이터 없는 곳" 으로 읽힌다.
+         전국 순위 카드를 만들면 그 도시가 없는 순위가 된다. 조용히 넘어가면 안 된다. */
+      const nat = nationalByPeriod(payload, spec.regionAxis ?? "C1");
+      const gap = spec.derive ? null : coverageGap(points, nat);
+      if (gap) {
+        const line = `· ${spec.metric} 전국 대조 ${gap.period}: 우리 합계 ${gap.ours.toLocaleString()} / 전국 ${gap.national.toLocaleString()} — 차이 ${gap.gapPct.toFixed(1)}%`;
+        if (Math.abs(gap.gapPct) >= 3) {
+          console.log(`::warning::${line}`);
+          console.log("   → 빠진 시군구가 있습니다. 이 지표로 전국 순위·합계 카드를 만들면 그만큼 틀립니다.");
+          coverageWarnings.push(`${spec.metric} ${gap.gapPct.toFixed(1)}% 부족(${gap.period})`);
+        } else {
+          console.log(line);
+        }
+      }
+
       metrics[spec.metric] = toSeries(points);
       console.log(`· ${spec.metric}(${spec.tblId}) — 시군구 ${metrics[spec.metric].length}곳 · 시점 ${metrics[spec.metric][0]?.points.length ?? 0}개`);
     } catch (e) {
@@ -302,6 +319,10 @@ async function main() {
   if (!signals.length) console.log("   (이달에 새로 뜬 소재 없음 — 이것도 사실이다. 빈 결과와 실패는 다르다)");
 
   /* 산출물을 다 쓴 뒤에 실패를 알린다 — 데이터는 남기고 실패는 보이게 한다. */
+  if (coverageWarnings.length) {
+    console.log(`\n⚠️ 전국 대조에서 벌어진 지표 ${coverageWarnings.length}개: ${coverageWarnings.join(" · ")}`);
+    console.log("   빠진 시군구가 있다는 뜻입니다 — 그 지표로 전국 순위·합계를 말하면 그만큼 틀립니다.");
+  }
   reportFailures(failures);
   if (failures.length) process.exit(1);
 }

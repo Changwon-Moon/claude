@@ -19,3 +19,5 @@ months=25 min=45 top=8
 months=25 min=45 top=8
 # 표별 기간 분리 후 재수집
 months=25 min=45 top=8
+# 전국 대조 가드 붙인 뒤 재수집
+months=25 min=45 top=8

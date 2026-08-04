@@ -39,6 +39,8 @@ import { encKey } from "./sources/molit.js";
 import {
   normalize as kosisNormalize,
   seniorPoints as kosisSenior,
+  nationalByPeriod as kosisNational,
+  coverageGap as kosisGap,
   ageOfLabel as kosisAgeOf,
   toSeries as kosisSeries,
   toPeriod as kosisPeriod,
@@ -738,6 +740,23 @@ console.log("\n[청약홈 분양정보 파서]");
     check(`${k} 한 요청이 4만 셀 안에 든다`, size * r.periods * per <= 40000,
       `${size}곳 × ${r.periods}시점 × ${per}셀 = ${size * r.periods * per}`);
   }
+
+  /* ── 전국 대조 ──
+     시군구를 다 받은 줄 알았는데 합계가 공표치보다 적은 일이 있었다(출생에서 화성시 누락).
+     이런 누락은 지도에서 빈 칸으로만 보여 눈으로 안 잡힌다. */
+  const natRows = [
+    { C1: "00", C1_NM: "전국", PRD_DE: "2024", DT: "1000" },
+    { C1: "11010", C1_NM: "종로구", PRD_DE: "2024", DT: "400" },
+    { C1: "11020", C1_NM: "중구", PRD_DE: "2024", DT: "500" },
+  ];
+  const nat = kosisNational(natRows);
+  check("전국 행('00')을 시점별로 뽑는다", nat.get("2024-12") === 1000, String(nat.get("2024-12")));
+  const gap = kosisGap(kosisNormalize(natRows), nat);
+  check("빠진 시군구를 % 로 잡는다", !!gap && Math.round(gap.gapPct) === 10,
+    gap ? `우리 ${gap.ours} / 전국 ${gap.national} → ${gap.gapPct.toFixed(1)}%` : "null");
+  const full = [...natRows, { C1: "11030", C1_NM: "용산구", PRD_DE: "2024", DT: "100" }];
+  const gap2 = kosisGap(kosisNormalize(full), kosisNational(full));
+  check("다 받았으면 차이 0%", !!gap2 && Math.abs(gap2.gapPct) < 0.001, gap2 ? `${gap2.gapPct}%` : "null");
 
   const noNote = Object.entries(KOSIS_TABLES).filter(([, t]) => !t.note || t.note.length < 20);
   check("표마다 무엇이 미확인인지 적혀 있다", noNote.length === 0, noNote.map(([k]) => k).join(","));

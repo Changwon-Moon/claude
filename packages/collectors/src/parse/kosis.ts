@@ -483,3 +483,53 @@ export function seniorPoints(
   }
   return [...acc.values()];
 }
+
+/**
+ * 응답 안의 **전국 행('00')** 값을 시점별로 뽑는다.
+ *
+ * ── 왜 필요한가 (2026-08-04)
+ * 시군구를 다 받은 줄 알았는데 합계가 공표치보다 적은 일이 있었다.
+ * 출생 표에서 화성시가 통째로 빠졌다 — 2026-02 에 4개 구로 나뉜 도시라
+ * 2024년 출생 데이터에는 '화성시' 한 행으로만 있고, 우리 지도에는 그 이름이 없다.
+ *
+ * 이런 누락은 **지도에서 안 보인다.** 화성시 자리는 그냥 비어 있고, 빈 칸은
+ * "데이터가 없는 곳" 으로 읽힌다. 전국 순위 카드를 만들면 화성시가 없는 순위가 된다.
+ *
+ * 그래서 같은 응답 안에 있는 전국 값과 우리가 합친 값을 대 본다.
+ * 다른 데서 가져온 숫자가 아니라 **같은 응답 안의 숫자**라 시점·정의가 어긋날 일이 없다.
+ */
+export function nationalByPeriod(
+  payload: unknown,
+  regionAxis: "C1" | "C2" | "C3" | "C4" = "C1",
+): Map<string, number> {
+  const rows: RawRow[] = Array.isArray(payload)
+    ? (payload as RawRow[])
+    : Array.isArray((payload as { data?: unknown })?.data)
+      ? ((payload as { data: RawRow[] }).data)
+      : [];
+  const out = new Map<string, number>();
+  for (const r of rows) {
+    if (String(r[regionAxis] ?? "").trim() !== "00") continue;
+    const period = toPeriod(r.PRD_DE);
+    const value = toCount(r.DT);
+    if (period && value !== null) out.set(period, value);
+  }
+  return out;
+}
+
+/** 우리가 모은 시군구 합계와 전국 값의 차이(%) — 시점은 둘 다 있는 것만 본다. */
+export function coverageGap(
+  points: Point[],
+  national: Map<string, number>,
+): { period: string; ours: number; national: number; gapPct: number } | null {
+  const byPeriod = new Map<string, number>();
+  for (const p of points) byPeriod.set(p.period, (byPeriod.get(p.period) ?? 0) + p.value);
+  /* 가장 최신 시점으로 본다 — 카드에 나가는 것이 최신이기 때문이다. */
+  const shared = [...byPeriod.keys()].filter((k) => national.has(k)).sort();
+  const period = shared[shared.length - 1];
+  if (!period) return null;
+  const ours = byPeriod.get(period)!;
+  const nat = national.get(period)!;
+  if (!nat) return null;
+  return { period, ours, national: nat, gapPct: ((nat - ours) / nat) * 100 };
+}
