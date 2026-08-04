@@ -176,7 +176,7 @@ jobs:
             git push origin HEAD:${{ github.ref_name }}
           fi
 
-      - name: 텔레그램 알림 (새 공고가 있을 때만)
+      - name: 텔레그램 알림 (조용한 날도 한 줄은 보낸다)
         if: always()
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -190,5 +190,15 @@ jobs:
           if [ -n "$MSG" ]; then
             node scripts/notify-telegram.mjs "$MSG"
           else
-            echo "새 공고 없음 — 알림 생략(조용한 날도 정상이다)"
+            # ── 조용한 날도 보낸다 ──
+            # 매일 도는 수집기의 침묵은 정상과 구분이 안 된다. 아침에 아무것도 안 오면
+            # 공고가 없었던 건지, 수집기가 죽은 건지, 예약이 안 깨어난 건지 알 수가 없다.
+            # (실제로 예약 7개가 기본 브랜치 문제로 몇 주째 안 돌았는데 아무도 몰랐다.)
+            # 다만 빈 "0건" 은 며칠이면 안 읽게 되므로, 접수중·마감임박을 얹어 보낸다.
+            HB=$(node scripts/applyhome-heartbeat.mjs --today "${{ steps.cfg.outputs.today }}" 2>/dev/null || true)
+            if [ -n "$HB" ]; then
+              node scripts/notify-telegram.mjs "$HB"
+            else
+              node scripts/notify-telegram.mjs "🏠 청약홈 확인 완료 (${{ steps.cfg.outputs.today }}) — 새 공고 0건"
+            fi
           fi
