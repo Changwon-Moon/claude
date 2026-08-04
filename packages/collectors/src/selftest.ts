@@ -50,7 +50,7 @@ import {
   joinReport as kosisJoin,
   type Series as KosisSeries,
 } from "./parse/kosis.js";
-import { buildUrl as kosisUrl, encKey as kosisEncKey, TABLES as KOSIS_TABLES, enabledTables as kosisEnabled, chunkSizeFor } from "./sources/kosis.js";
+import { buildUrl as kosisUrl, encKey as kosisEncKey, TABLES as KOSIS_TABLES, enabledTables as kosisEnabled, chunkSizeFor, rangeForTable as kosisRange } from "./sources/kosis.js";
 
 import { toSeries, regionNames, ambiguousNames, latestMonth, readPage, type RebPoint } from "./sources/rebIndex.js";
 import {
@@ -714,6 +714,29 @@ console.log("\n[청약홈 분양정보 파서]");
     const body = readFileSync(fp, "utf8");
     const leaked = /(?:apiKey|serviceKey|authKey)=(?!\*\*\*)[A-Za-z0-9%+/=_-]{8,}/i.test(body);
     check(`${f} 에 인증키가 남아 있지 않다`, !leaked, leaked ? "키로 보이는 문자열 발견" : "깨끗함");
+  }
+
+  /* ── 표마다 기간 형식이 맞아야 한다 ──
+     연간 표에 월 형식(202407)을 주면 KOSIS 가 "데이터가 존재하지 않습니다" 를 준다.
+     오류 응답이라 파서까지 못 가고, 그 지표만 조용히 빠진다.
+     실측 2026-08-04: 출생·사망이 이 한 줄 때문에 통째로 빠졌다. */
+  const yRange = kosisRange({ prdSe: "Y" }, "2026-08-04", 25);
+  check("연간 표의 기간은 YYYY", /^\d{4}$/.test(yRange.start) && /^\d{4}$/.test(yRange.end),
+    `${yRange.start}~${yRange.end}`);
+  const mRange = kosisRange({ prdSe: "M" }, "2026-08-04", 25);
+  check("월간 표의 기간은 YYYYMM", /^\d{6}$/.test(mRange.start) && /^\d{6}$/.test(mRange.end),
+    `${mRange.start}~${mRange.end}`);
+  const capped = kosisRange({ prdSe: "M", maxMonths: 13 }, "2026-08-04", 25);
+  check("maxMonths 가 기간을 실제로 줄인다", capped.periods === 14, `${capped.start}~${capped.end} (${capped.periods}시점)`);
+  /* 계산에 쓴 시점 수와 실제 요청 시점 수가 다르면 4만 셀 한도에 걸린다 — 실제로 걸렸다. */
+  for (const k of kosisEnabled()) {
+    const t = KOSIS_TABLES[k];
+    const per = t.cellsPerRegionPeriod ?? 1;
+    if (per <= 1) continue;
+    const r = kosisRange(t, "2026-08-04", 25);
+    const size = chunkSizeFor(k, r.periods);
+    check(`${k} 한 요청이 4만 셀 안에 든다`, size * r.periods * per <= 40000,
+      `${size}곳 × ${r.periods}시점 × ${per}셀 = ${size * r.periods * per}`);
   }
 
   const noNote = Object.entries(KOSIS_TABLES).filter(([, t]) => !t.note || t.note.length < 20);

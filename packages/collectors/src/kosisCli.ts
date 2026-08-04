@@ -12,7 +12,7 @@
 import { writeFileSync, mkdirSync, readFileSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
 import {
-  fetchTable, fetchTableChunked, TABLES, enabledTables, chunkSizeFor, type TableKey,
+  fetchTable, fetchTableChunked, TABLES, enabledTables, chunkSizeFor, rangeForTable, type TableKey,
 } from "./sources/kosis.js";
 import {
   normalize, seniorPoints, toSeries, milestones, streaks, topMovers, rank, joinReport,
@@ -42,6 +42,7 @@ function geoCodes(): { codes: string[]; names: Map<string, string> } {
     names: new Map(d.sgg.map((x) => [x.code, `${x.sido} ${x.name}`])),
   };
 }
+
 
 /** 최근 N개월의 YYYYMM 범위 */
 function periodRange(today: string, months: number): { start: string; end: string } {
@@ -167,7 +168,8 @@ async function main() {
   for (const t of tables) {
     const spec = TABLES[t];
     try {
-      const periods = spec.prdSe === "Y" ? Math.ceil((spec.maxMonths ?? months) / 12) + 1 : (spec.maxMonths ?? months) + 1;
+      const rng = rangeForTable(spec, today, months);
+      const periods = rng.periods;
 
       let payload: unknown;
       if (DRY) {
@@ -177,15 +179,15 @@ async function main() {
            나눌 코드는 그 표의 코드 체계로 줘야 한다. */
         const codes = regionCodesFor(t, regionMap);
         const size = chunkSizeFor(t, periods);
-        console.log(`· ${spec.metric}(${spec.tblId}) — 지역 ${codes.length}곳을 ${size}개씩 ${Math.ceil(codes.length / size)}번에 나눠 받습니다(4만 셀 한도)`);
+        console.log(`· ${spec.metric}(${spec.tblId}) — ${rng.start}~${rng.end}(${periods}시점) · 지역 ${codes.length}곳을 ${size}개씩 ${Math.ceil(codes.length / size)}번에 나눠 받습니다(4만 셀 한도)`);
         payload = await fetchTableChunked(
           t, key!,
-          { startPrdDe: start, endPrdDe: end, prdSe: spec.prdSe },
+          { startPrdDe: rng.start, endPrdDe: rng.end, prdSe: spec.prdSe },
           codes, periods,
           (d, n) => { if (d === n || d % 5 === 0) console.log(`   ${d}/${n}`); },
         );
       } else {
-        payload = await fetchTable(t, key!, { startPrdDe: start, endPrdDe: end, extraObjL: spec.extraObjL });
+        payload = await fetchTable(t, key!, { startPrdDe: rng.start, endPrdDe: rng.end, prdSe: spec.prdSe, extraObjL: spec.extraObjL });
       }
 
       /* 1세별처럼 한 지역에 여러 줄이 오는 표는 그대로 시계열로 못 쓴다 — 먼저 접는다. */

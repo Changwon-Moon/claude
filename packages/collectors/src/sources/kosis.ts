@@ -379,3 +379,37 @@ export async function fetchTableChunked(
   }
   return all;
 }
+
+/**
+ * **표마다 기간을 따로 만든다.** 하나의 범위를 전부에 쓰면 두 가지가 조용히 깨진다.
+ *
+ * ① 연간 표에 월 형식을 주면 "데이터가 존재하지 않습니다" 가 온다.
+ *    KOSIS 는 prdSe=Y 면 기간도 YYYY 로 받는다. 202407 을 주면 그런 해가 없다.
+ *    (실측 2026-08-04: 출생·사망이 이 오류로 통째로 빠졌다.)
+ *
+ * ② 무거운 표는 기간이 곧 셀 수다. 연령 표는 지역·시점당 102셀이라
+ *    24개월을 받으면 지역 23곳만 묶어도 4만 셀을 넘는다.
+ *    maxMonths 를 적어 둔 표는 그 길이만 받는다 — 고령화율에 25개월은 필요 없다.
+ *
+ * 나눠 부를 크기(chunkSizeFor)도 **여기서 나온 시점 수**로 계산해야 맞다.
+ * 계산에 쓴 시점 수와 실제로 요청하는 시점 수가 다르면 한도에 걸린다.
+ */
+export function rangeForTable(
+  spec: { prdSe: "M" | "Y"; maxMonths?: number },
+  today: string,
+  months: number,
+): { start: string; end: string; periods: number } {
+  const want = Math.min(months, spec.maxMonths ?? months);
+  const [y, m] = today.split("-").map(Number);
+
+  if (spec.prdSe === "Y") {
+    /* 연간 통계는 한두 해 늦게 나온다(출생·사망 최신이 2024년). 넉넉히 잡고 오는 만큼 받는다. */
+    const endY = y;
+    const startY = endY - Math.max(1, Math.ceil(want / 12));
+    return { start: String(startY), end: String(endY), periods: endY - startY + 1 };
+  }
+  const end = new Date(Date.UTC(y, m - 2, 1));
+  const start = new Date(Date.UTC(y, m - 1 - want, 1));
+  const ym = (d: Date) => `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
+  return { start: ym(start), end: ym(end), periods: want + 1 };
+}
