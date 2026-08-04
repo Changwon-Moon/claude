@@ -30,6 +30,7 @@
  *     node scripts/notify-telegram.mjs "$MSG"
  */
 import { readdirSync, readFileSync } from "node:fs";
+import { execSync } from "node:child_process";
 import { join } from "node:path";
 
 const DIR = ".github/workflows";
@@ -80,6 +81,37 @@ try {
   process.exit(0);
 }
 
+/* ── 예약(schedule)은 기본 브랜치에서만 깬다 (2026-08-04 사고) ──
+ * GitHub Actions 의 cron 은 **기본 브랜치에 있는 워크플로만** 실행한다.
+ * 작업 브랜치에만 올려두면 파일은 멀쩡한데 한 번도 안 돈다 — 빨간불조차 없다.
+ * 실제로 청약홈 수집을 포함해 7개 예약이 그렇게 죽어 있었고,
+ * 오너가 "오늘 텔레그램이 안 왔다"고 말하기 전까지 아무도 몰랐다.
+ * origin/HEAD 를 못 읽는 환경(막 clone 한 컨테이너 등)에서는 조용히 건너뛴다 —
+ * 검사가 없어서 못 잡는 것과, 검사가 작업을 막는 것은 다른 문제다. */
+function checkScheduleOnDefaultBranch() {
+  let head;
+  try {
+    head = execSync("git symbolic-ref --short refs/remotes/origin/HEAD", {
+      stdio: ["ignore", "pipe", "ignore"],
+    }).toString().trim(); // 예: origin/claude/xxx
+  } catch {
+    return null; // 기본 브랜치를 모른다 — 검사 생략
+  }
+  let onDefault;
+  try {
+    onDefault = new Set(
+      execSync(`git ls-tree --name-only ${head} ${DIR}/`, { stdio: ["ignore", "pipe", "ignore"] })
+        .toString().trim().split("\n").filter(Boolean).map((p) => p.split("/").pop()),
+    );
+  } catch {
+    return null;
+  }
+  const orphans = files.filter(
+    (f) => /^\s*schedule:/m.test(readFileSync(join(DIR, f), "utf8")) && !onDefault.has(f),
+  );
+  return { head, orphans };
+}
+
 let bad = 0;
 for (const f of files) {
   const problems = lint(f, readFileSync(join(DIR, f), "utf8"));
@@ -98,6 +130,14 @@ if (bad) {
   console.log("여러 줄 메시지는 1열에 붙이지 말고 printf 로 만드세요:");
   console.log("   MSG=$(printf '첫 줄\\n%s' \"$SUM\") && node scripts/notify-telegram.mjs \"$MSG\"");
   process.exit(1);
+}
+
+const sched = checkScheduleOnDefaultBranch();
+if (sched?.orphans.length) {
+  console.log(`\n⚠️ 예약이 안 도는 워크플로 ${sched.orphans.length}개 — 기본 브랜치(${sched.head})에 없습니다.`);
+  for (const f of sched.orphans) console.log(`   · ${f}`);
+  console.log("   cron 은 기본 브랜치의 워크플로만 깨웁니다. 파일은 멀쩡한데 한 번도 안 돕니다.");
+  console.log("   → 기본 브랜치를 바꾸거나(Settings → General → Default branch), 그 브랜치에도 올리세요.");
 }
 
 console.log(`✅ 워크플로 ${files.length}개 모두 정상`);
