@@ -21,3 +21,5 @@ months=25 min=45 top=8
 months=25 min=45 top=8
 # 전국 대조 가드 붙인 뒤 재수집
 months=25 min=45 top=8
+# 옛코드·현코드 합산 수정 후 재수집
+months=25 min=45 top=8

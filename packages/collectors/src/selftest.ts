@@ -758,6 +758,27 @@ console.log("\n[청약홈 분양정보 파서]");
   const gap2 = kosisGap(kosisNormalize(full), kosisNational(full));
   check("다 받았으면 차이 0%", !!gap2 && Math.abs(gap2.gapPct) < 0.001, gap2 ? `${gap2.gapPct}%` : "null");
 
+  /* ── 한 지역에 KOSIS 코드가 둘 붙는 경우 ──
+     출생·사망 표는 광역시 산하 군을 옛 코드와 현재 코드로 두 번 준다(83곳).
+     덮어쓰면 어느 쪽이 살아남는지가 응답 순서에 달리고, 실제로 울주군·달성군·
+     강화군의 2024년 출생아가 0명으로 들어와 자연감소 1위가 됐었다.
+     0명은 "그 해 아이가 한 명도 안 태어났다" 로 읽힌다 — 그대로 오보다.
+     대조표에 그런 중복이 실제로 있는지 확인한다(있어야 정상이다). */
+  if (mapExists) {
+    const rm2 = JSON.parse(readFileSync(mapPath, "utf8")) as { maps?: Record<string, Record<string, string>> };
+    for (const k of ["births", "deaths"]) {
+      const m = rm2.maps?.[k];
+      if (!m) continue;
+      const seen = new Map<string, number>();
+      for (const [src, dst] of Object.entries(m)) {
+        if (src.length !== 5) continue;
+        seen.set(dst, (seen.get(dst) ?? 0) + 1);
+      }
+      const dup = [...seen.values()].filter((n) => n > 1).length;
+      check(`${k} 대조표에 옛코드·현코드 중복이 잡혀 있다`, dup > 0, `${dup}곳`);
+    }
+  }
+
   const noNote = Object.entries(KOSIS_TABLES).filter(([, t]) => !t.note || t.note.length < 20);
   check("표마다 무엇이 미확인인지 적혀 있다", noNote.length === 0, noNote.map(([k]) => k).join(","));
   // probe 는 최근 1개 시점만 받는다 — 전 기간을 받으면 수십 MB 라 검증 목적에 안 맞는다

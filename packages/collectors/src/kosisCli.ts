@@ -116,14 +116,41 @@ function regionCodesFor(t: TableKey, rm: RegionMap): string[] {
  * 대조표에 없는 코드는 버린다 — 폐지된 행정구역·출장소·일반구의 부모 시 행이다.
  * (부모 시 행을 남기면 수원시 값이 수원시장안구 자리에 들어갈 수 있다.)
  */
-function remapRegions(points: Point[], map: Record<string, string>): Point[] {
-  if (!Object.keys(map).length) return points;
-  const out: Point[] = [];
+function remapRegions(
+  points: Point[],
+  map: Record<string, string>,
+): { points: Point[]; collisions: string[] } {
+  if (!Object.keys(map).length) return { points, collisions: [] };
+
+  /* ── 여러 KOSIS 코드가 한 지역으로 모인다 ──
+     출생·사망 표는 광역시 산하 군을 **두 코드로** 준다 — 편입 전 코드와 현재 코드다.
+     울주군 26310(옛) + 26510(현) · 달성군 22310 + 22510 · 강화군 23310 + 23510 …
+     83곳이 이렇다. 옛 코드 행은 값이 0 이고 현재 코드에 실제 값이 있다.
+
+     그냥 덮어쓰면 **어느 쪽이 살아남는지가 응답 순서에 달린다.**
+     실제로 울주군·달성군·강화군의 2024년 출생아가 0명으로 들어와 있었다.
+     0명은 "그 해 아이가 한 명도 안 태어났다" 로 읽히고, 자연감소 순위에서 1위가 된다.
+
+     그래서 덮어쓰지 않고 **더한다.** 한쪽이 0 이므로 합이 곧 실제 값이다.
+     다만 **둘 다 값이 있으면 더하는 것이 틀린다** — 그때는 목록에 담아 경고한다. */
+  const acc = new Map<string, Point>();
+  const nonZero = new Map<string, number>();
+  const collisions = new Set<string>();
+
   for (const pt of points) {
     const to = map[pt.code];
-    if (to) out.push({ ...pt, code: to });
+    if (!to) continue;
+    const k = `${to}|${pt.period}`;
+    const cur = acc.get(k);
+    if (cur) {
+      cur.value += pt.value;
+      if (pt.value !== 0 && (nonZero.get(k) ?? 0) >= 1) collisions.add(`${cur.name}(${pt.period})`);
+    } else {
+      acc.set(k, { ...pt, code: to });
+    }
+    if (pt.value !== 0) nonZero.set(k, (nonZero.get(k) ?? 0) + 1);
   }
-  return out;
+  return { points: [...acc.values()], collisions: [...collisions] };
 }
 
 async function main() {
@@ -211,8 +238,13 @@ async function main() {
         );
       }
       const before = points.length;
-      points = remapRegions(points, codeMap);
+      const mapped = remapRegions(points, codeMap);
+      points = mapped.points;
       console.log(`· ${spec.metric} 코드 변환 → 지도 코드: ${points.length}/${before}행`);
+      if (mapped.collisions.length) {
+        console.log(`::warning::${spec.metric} — 한 지역에 값이 둘 이상 들어온 곳 ${mapped.collisions.length}건: ${mapped.collisions.slice(0, 6).join(", ")}`);
+        console.log("   옛 코드와 현재 코드가 둘 다 값을 가진 경우입니다. 더하면 이중 계산이 됩니다 — 확인이 필요합니다.");
+      }
       if (!points.length && before) {
         throw new Error(`${t}: 대조표가 한 행도 못 옮겼다 — 대조표를 다시 만들어야 한다.`);
       }
