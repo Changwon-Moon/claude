@@ -54,7 +54,7 @@ const doc = {
   template: "world-capital@1",
   date,
   note: "주요 부동산 이슈 • 2026",
-  title: `<span class="hi">전세</span>가<br/>사라진<br/>자리,<br/><span class="co">글로벌</span><br/><span class="co">큰손</span>이<br/>쓸어담는다`,
+  title: `<span class="hi">전세</span>가<br/>사라진 자리,<br/><span class="co">글로벌</span><br/><span class="co">큰손</span>이<br/>쓸어담는다`,
   mapSvg,
   rows,
   source: { name: "각 사 발표·언론 보도 종합", period: "2026", verified: false },
