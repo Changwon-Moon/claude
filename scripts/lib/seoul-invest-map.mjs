@@ -98,7 +98,10 @@ export function seoulInvestSvg({ spots }) {
     `.si-pin{fill:var(--wirit-red,#e5484d);stroke:#fff;stroke-width:3}` +
     `.si-lab{font-size:25px;font-weight:800;fill:var(--wirit-ink,#141821);text-anchor:middle;` +
     `paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}` +
+    `.si-wm{font-size:40px;font-weight:800;fill:#c4c9d2;letter-spacing:-0.01em}` +
     `</style>` +
+    // 좌상단 빈공간 연회색 워터마크(BRAND 슬롯 C — 그래픽 안 @wirit_note)
+    `<text x="${(PAD + 6).toFixed(1)}" y="${(PAD + 44).toFixed(1)}" class="si-wm">@wirit_note</text>` +
     `<g>${base}</g><g>${pins}${labels}</g>` +
     `</svg>`
   );

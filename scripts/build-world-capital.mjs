@@ -53,14 +53,9 @@ mkdirSync(outDir, { recursive: true });
 const doc = {
   template: "world-capital@1",
   date,
-  note: "해외 자본의 국내 임대시장 진출 · 2026",
-  title: `전세가<br/>사라진 자리,<br/><span class="co">글로벌 자본</span>이<br/>들어온다`,
-  subtitle: "서울 임대주택을 사 모으는<br/>해외 큰손 9곳",
+  note: "주요 부동산 이슈 • 2026",
+  title: `전세가<br/>사라진<br/>자리,<br/><span class="co">글로벌</span><br/><span class="co">자본</span>이<br/>들어온다`,
   mapSvg,
-  legend: [
-    { cls: "pin", label: "투자 위치" },
-    { cls: "gu", label: "투자 유입 지역" },
-  ],
   rows,
   source: { name: "각 사 발표·언론 보도 종합", period: "2026", verified: false },
 };
