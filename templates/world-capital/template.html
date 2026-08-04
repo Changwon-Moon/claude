@@ -8,9 +8,9 @@
       .wc { padding-top: 72px; }
 
       /* 상단 히어로: 제목(좌, 크고 길게) + 지도(우, 확대) */
-      .wc-hero { display: flex; gap: 16px; align-items: stretch; margin-top: 8px; }
-      .wc-head { flex: 0 0 356px; display: flex; flex-direction: column; }
-      .wc .wirit-title { font-size: 90px; line-height: 1.04; letter-spacing: -0.03em; margin: 0; }
+      .wc-hero { display: flex; gap: 14px; align-items: stretch; margin-top: 8px; }
+      .wc-head { flex: 0 0 374px; display: flex; flex-direction: column; justify-content: center; }
+      .wc .wirit-title { font-size: 76px; line-height: 1.06; letter-spacing: -0.03em; margin: 0; }
       .wc .wirit-title .co { color: var(--wirit-cobalt); }
       .wc .wirit-title .hi { color: var(--wirit-red); }
 
@@ -21,9 +21,10 @@
       .wc-tbl { position: relative; flex: 1; min-height: 0; margin-top: 14px; display: flex; flex-direction: column; overflow: hidden; }
       .wc-wm { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 0; }
       .wc-wm span { font-size: 150px; font-weight: 900; color: rgba(20, 24, 33, 0.055); transform: rotate(-20deg); white-space: nowrap; letter-spacing: -0.03em; }
-      .wc-hrow, .wc-row { position: relative; z-index: 1; display: grid; grid-template-columns: 48px minmax(280px, 1.3fr) 1fr auto; align-items: center; gap: 12px; }
+      /* amt 를 고정폭으로 — auto 면 행마다 폭이 달라 loc(1fr) 왼쪽선이 흔들려 가운데처럼 보였다(오너 지적). */
+      .wc-hrow, .wc-row { position: relative; z-index: 1; display: grid; grid-template-columns: 48px 1.5fr 1fr 168px; align-items: center; gap: 12px; }
       .wc-hrow { padding: 0 6px 8px; font-size: 20px; font-weight: 800; color: var(--wirit-gray); }
-      .wc-hrow span:nth-child(3), .wc-loc { text-align: left; }
+      .wc-hrow span:nth-child(3), .wc-loc { text-align: left; justify-self: start; }
       .wc-hrow span:last-child, .wc-row .wc-amt { text-align: right; }
       .wc-row { flex: 1 1 0; min-height: 0; padding: 4px 6px; border-top: 2px solid var(--wirit-ink-06); }
       .wc-flag { font-size: 31px; text-align: center; line-height: 1; }
