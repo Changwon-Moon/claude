@@ -4,7 +4,7 @@
 - 조건: 최근 25개월 · 신호 문턱 45점 · 상위 8건
 - 보드 자동 등록: 끔(오너가 직접 고릅니다)
 - 결과: **실패**
-- 커밋: `4068a4e64b96894124d06bb62e19263022e51300`
+- 커밋: `b35074d451a329dd033d1b3bd7a92b06ae257ad0`
 
 ## 수집 로그
 ```
@@ -12,26 +12,39 @@
 > @wirit/collectors@0.1.0 collect-population /home/runner/work/claude/claude/packages/collectors
 > tsx src/kosisCli.ts -- --today 2026-08-04 --months 25 --min 45
 
-::error::인구(DT_1B040A3) 수집 실패 — GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T20&objL1=ALL&format=json&jsonVD=Y&prdSe=M&orgId=101&tblId=DT_1B040A3&startPrdDe=202407&endPrdDe=202607
-fetch failed
+· 인구 코드 변환 → 지도 코드: 6044/6610행
+· 인구(DT_1B040A3) — 시군구 255곳 · 시점 24개
+· 세대수 코드 변환 → 지도 코드: 6044/6610행
+· 세대수(DT_1B040B3) — 시군구 255곳 · 시점 24개
+· 이동 코드 변환 → 지도 코드: 216/254행
+· 이동(DT_1B26001_A01) — 시군구 216곳 · 시점 1개
+· 고령인구(DT_1B04006) — 지역 250곳을 23개씩 11번에 나눠 받습니다(4만 셀 한도)
+::error::고령인구(DT_1B04006) 수집 실패 — KOSIS API 오류(age):  40,000셀을 초과한 결과값은 요청하실 수 없습니다.
   → 나머지 표는 계속 받습니다. 이 표는 이번 회차 산출물에서 빠집니다.
-::error::세대수(DT_1B040B3) 수집 실패 — GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T1&objL1=ALL&format=json&jsonVD=Y&prdSe=M&orgId=101&tblId=DT_1B040B3&startPrdDe=202407&endPrdDe=202607
-fetch failed
+::error::출생(DT_1B81A03) 수집 실패 — KOSIS API 오류(births): 데이터가 존재하지 않습니다.
   → 나머지 표는 계속 받습니다. 이 표는 이번 회차 산출물에서 빠집니다.
-::error::이동(DT_1B26001_A01) 수집 실패 — GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T25&objL1=ALL&format=json&jsonVD=Y&prdSe=Y&orgId=101&tblId=DT_1B26001_A01&startPrdDe=202407&endPrdDe=202607
-fetch failed
+::error::사망(DT_1B34E13) 수집 실패 — KOSIS API 오류(deaths): 데이터가 존재하지 않습니다.
   → 나머지 표는 계속 받습니다. 이 표는 이번 회차 산출물에서 빠집니다.
-· 고령인구(DT_1B04006) — 지역 255곳을 23개씩 12번에 나눠 받습니다(4만 셀 한도)
-::error::고령인구(DT_1B04006) 수집 실패 — GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T2&objL1=11010%2B11020%2B11030%2B11040%2B11050%2B11060%2B11070%2B11080%2B11090%2B11100%2B11110%2B11120%2B11130%2B11140%2B11150%2B11160%2B11170%2B11180%2B11190%2B11200%2B11210%2B11220%2B11230&format=json&jsonVD=Y&prdSe=M&orgId=101&tblId=DT_1B04006&objL2=ALL&startPrdDe=202407&endPrdDe=202607
-fetch failed
-  → 나머지 표는 계속 받습니다. 이 표는 이번 회차 산출물에서 빠집니다.
-::error::출생(DT_1B81A03) 수집 실패 — GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T1&objL1=ALL&format=json&jsonVD=Y&prdSe=Y&orgId=101&tblId=DT_1B81A03&objL2=00&startPrdDe=202407&endPrdDe=202607
-fetch failed
-  → 나머지 표는 계속 받습니다. 이 표는 이번 회차 산출물에서 빠집니다.
-::error::사망(DT_1B34E13) 수집 실패 — GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T1&objL1=0&format=json&jsonVD=Y&prdSe=Y&orgId=101&tblId=DT_1B34E13&objL2=ALL&objL3=0&startPrdDe=202407&endPrdDe=202607
-fetch failed
-  → 나머지 표는 계속 받습니다. 이 표는 이번 회차 산출물에서 빠집니다.
-❌ 수집 실패: 인구 시계열이 비었다 — 표 ID·기간·인증키를 확인해야 한다.
+· 기준 인구 시계열 255곳 (202407~202607)
+· 지도 조인 — 맞음 255 · 지도에 없음 0 · 데이터에 없음 0
+
+✅ 2026-06 기준 · 문턱 45점 넘은 소재 32건
+    64점  [streak] 강서구, 23개월 연속 인구 감소  — 23개월 연속 감소·서울·50만 이상
+    62점  [topmove] 1년 새 인구가 가장 많이 늘어난 시군구 TOP10  — 전국 순위·1위 신안군
+    62점  [topmove] 1년 새 인구가 가장 많이 줄어든 시군구 TOP10  — 전국 순위·1위 목포시
+    59점  [streak] 은평구, 23개월 연속 인구 감소  — 23개월 연속 감소·서울
+    59점  [streak] 마포구, 23개월 연속 인구 감소  — 23개월 연속 감소·서울
+    59점  [streak] 양천구, 23개월 연속 인구 감소  — 23개월 연속 감소·서울
+    58점  [streak] 서구, 23개월 연속 인구 증가  — 23개월 연속 증가·수도권·50만 이상
+    58점  [streak] 평택시, 23개월 연속 인구 증가  — 23개월 연속 증가·수도권·50만 이상
+    58점  [streak] 파주시, 23개월 연속 인구 증가  — 23개월 연속 증가·수도권·50만 이상
+    56점  [milestone] 서대문구, 인구 30만 붕괴  — 30만 붕괴·서울·하향 돌파
+
+⚠️ 표 3개가 이번 회차에서 빠졌습니다:
+   · age(DT_1B04006) — KOSIS API 오류(age):  40,000셀을 초과한 결과값은 요청하실 수 없습니다.
+   · births(DT_1B81A03) — KOSIS API 오류(births): 데이터가 존재하지 않습니다.
+   · deaths(DT_1B34E13) — KOSIS API 오류(deaths): 데이터가 존재하지 않습니다.
+   나머지 표의 산출물은 정상적으로 기록됐습니다.
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-population: `tsx src/kosisCli.ts -- --today 2026-08-04 --months 25 --min 45`
 Exit status 1
