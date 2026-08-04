@@ -239,6 +239,13 @@
       "args": [
         "2026-08-03"
       ]
+    },
+    {
+      "label": "world-capital",
+      "cmd": "scripts/build-world-capital.mjs",
+      "args": [
+        "2026-08-05"
+      ]
     }
   ]
 }
