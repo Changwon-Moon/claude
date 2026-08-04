@@ -4,72 +4,64 @@
     <meta charset="utf-8" />
     <!--WIRIT_SHARED_CSS-->
     <style>
-      /* world-capital@1 — 세계지도(자본 출자국→서울 흐름) + 투자자 표. 종이 톤. */
+      /* world-capital@1 — 좌: 좁은 제목 세로 / 우: 수도권 투자위치 지도 확대 / 하: 투자자 표(위치·세대수). */
       .wc { padding-top: 72px; }
-      .wc .wirit-title { font-size: 60px; line-height: 1.08; letter-spacing: -0.03em; margin: 4px 0 0; }
-      .wc .wirit-title .hi { color: var(--wirit-red); }
+
+      /* 상단 히어로: 제목(좌, 좁고 길게) + 지도(우, 확대) */
+      .wc-hero { display: flex; gap: 22px; align-items: stretch; margin-top: 6px; }
+      .wc-head { flex: 0 0 300px; display: flex; flex-direction: column; }
+      .wc .wirit-title { font-size: 45px; line-height: 1.16; letter-spacing: -0.03em; margin: 0; }
       .wc .wirit-title .co { color: var(--wirit-cobalt); }
-      .wc-sub { margin-top: 30px; font-size: 27px; font-weight: 800; color: var(--wirit-gray); letter-spacing: -0.01em; }
-
-      .wc-body { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-top: 14px; }
-
-      /* 지도 밴드 — 서울 지도는 세로가 커서 높이를 제한(표 9행이 아래 들어가야 함) */
-      .wc-map { position: relative; }
-      .wc-map svg { height: 430px; width: auto; max-width: 100%; margin: 0 auto; display: block; }
-      .wc-legend { display: flex; gap: 24px; justify-content: center; margin-top: 2px;
+      .wc .wirit-title .hi { color: var(--wirit-red); }
+      .wc-sub { margin-top: 16px; font-size: 25px; font-weight: 800; color: var(--wirit-gray); letter-spacing: -0.01em; line-height: 1.35; }
+      .wc-legend { margin-top: auto; display: flex; flex-direction: column; gap: 8px;
         font-size: 21px; font-weight: 700; color: var(--wirit-gray); }
-      .wc-legend .k { display: inline-flex; align-items: center; gap: 8px; }
-      .wc-legend .d { width: 15px; height: 15px; border-radius: 50%; display: inline-block; }
-      .wc-legend .d.src { background: var(--wirit-cobalt); }
-      .wc-legend .d.dst { background: var(--wirit-red); }
-      .wc-legend .d.pin { background: var(--wirit-red); }
-      .wc-legend .d.gu { background: #c9d8ff; border-radius: 4px; }
+      .wc-legend .k { display: inline-flex; align-items: center; gap: 9px; }
+      .wc-legend .d { width: 16px; height: 16px; display: inline-block; }
+      .wc-legend .d.pin { background: var(--wirit-red); border-radius: 50%; }
+      .wc-legend .d.gu { background: #b9cdff; border-radius: 4px; }
 
-      /* 투자자 표 */
-      .wc-tbl { margin-top: 8px; display: flex; flex-direction: column; }
-      .wc-row { display: grid; grid-template-columns: 54px 1fr auto; align-items: center; gap: 14px;
-        padding: 5px 6px; border-top: 2px solid var(--wirit-ink-06); }
-      .wc-row:first-of-type { border-top: none; }
-      .wc-flag { font-size: 36px; text-align: center; line-height: 1; }
-      .wc-who .nm { font-size: 29px; font-weight: 900; letter-spacing: -0.02em; color: var(--wirit-ink); }
-      .wc-who .pt { font-size: 20px; font-weight: 700; color: var(--wirit-gray); margin-left: 12px; }
-      .wc-amt { text-align: right; white-space: nowrap; font-family: var(--font-num);
-        font-size: 32px; font-weight: 900; color: var(--wirit-cobalt); }
-      .wc-amt.muted { color: var(--wirit-gray); font-size: 26px; }
-      .wc-amt i { font-style: normal; font-size: 21px; font-weight: 800; margin-left: 1px; }
+      .wc-map { flex: 1; min-width: 0; display: flex; align-items: center; }
+      .wc-map svg { width: 100%; height: auto; display: block; }
 
-      .wc-insight { margin-top: auto; padding-top: 12px; color: var(--wirit-ink);
-        font-size: 30px; font-weight: 900; letter-spacing: -0.02em; text-align: center; }
-      .wc-insight b { color: var(--wirit-cobalt); }
+      /* 투자자 표 — 국기 · 투자자(파트너) · 투자 위치 · 세대수·규모. 아래 여백 없이 꽉 채운다. */
+      .wc-tbl { flex: 1; min-height: 0; margin-top: 18px; display: flex; flex-direction: column; }
+      .wc-hrow, .wc-row { display: grid; grid-template-columns: 52px minmax(300px, 1.35fr) 1fr auto; align-items: center; gap: 14px; }
+      .wc-hrow { padding: 0 6px 10px; font-size: 21px; font-weight: 800; color: var(--wirit-gray); }
+      .wc-hrow span:last-child, .wc-row .wc-amt { text-align: right; }
+      .wc-row { flex: 1 1 0; min-height: 0; padding: 6px 6px; border-top: 2px solid var(--wirit-ink-06); }
+      .wc-flag { font-size: 34px; text-align: center; line-height: 1; }
+      .wc-who .nm { font-size: 28px; font-weight: 900; letter-spacing: -0.02em; color: var(--wirit-ink); }
+      .wc-who .pt { font-size: 19px; font-weight: 700; color: var(--wirit-gray); margin-left: 10px; }
+      .wc-loc { font-size: 23px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.02em; }
+      .wc-amt { white-space: nowrap; font-family: var(--font-num); font-size: 29px; font-weight: 900; color: var(--wirit-cobalt); }
+      .wc-amt.muted { color: var(--wirit-gray); font-size: 25px; }
     </style>
   </head>
   <body>
     <div class="wirit-card wc">
       <div class="wirit-topcap">{{#if note}}<span>{{note}}</span>{{/if}}</div>
-      <h1 class="wirit-title">{{{title}}}</h1>
-      {{#if subtitle}}<div class="wc-sub">{{subtitle}}</div>{{/if}}
-
-      <div class="wc-body">
-        <div class="wc-map">
-          {{{mapSvg}}}
-          <div class="wc-legend">
-            {{#if legend}}{{#each legend}}<span class="k"><span class="d {{this.cls}}"></span>{{this.label}}</span>{{/each}}
-            {{else}}<span class="k"><span class="d src"></span>자본 출자국</span>
-            <span class="k"><span class="d dst"></span>서울(투자처)</span>{{/if}}
-          </div>
+      <div class="wc-hero">
+        <div class="wc-head">
+          <h1 class="wirit-title">{{{title}}}</h1>
+          {{#if subtitle}}<div class="wc-sub">{{{subtitle}}}</div>{{/if}}
+          {{#if legend}}<div class="wc-legend">
+            {{#each legend}}<span class="k"><span class="d {{this.cls}}"></span>{{this.label}}</span>{{/each}}
+          </div>{{/if}}
         </div>
+        <div class="wc-map">{{{mapSvg}}}</div>
+      </div>
 
-        <div class="wc-tbl">
-          {{#each rows}}
-          <div class="wc-row">
-            <span class="wc-flag">{{this.flag}}</span>
-            <span class="wc-who"><span class="nm">{{this.investor}}</span><span class="pt">{{this.partner}}</span></span>
-            <span class="wc-amt{{#if this.muted}} muted{{/if}}">{{this.amount}}{{#if this.unit}}<i>{{this.unit}}</i>{{/if}}</span>
-          </div>
-          {{/each}}
+      <div class="wc-tbl">
+        <div class="wc-hrow"><span></span><span>투자자</span><span>투자 위치</span><span>세대수·규모</span></div>
+        {{#each rows}}
+        <div class="wc-row">
+          <span class="wc-flag">{{this.flag}}</span>
+          <span class="wc-who"><span class="nm">{{this.investor}}</span><span class="pt">{{this.partner}}</span></span>
+          <span class="wc-loc">{{this.loc}}</span>
+          <span class="wc-amt{{#if this.muted}} muted{{/if}}">{{this.amount}}{{#if this.unit}}<i style="font-style:normal;font-size:20px;font-weight:800">{{this.unit}}</i>{{/if}}</span>
         </div>
-
-        {{#if insight}}<div class="wc-insight">{{{insight}}}</div>{{/if}}
+        {{/each}}
       </div>
 
       <div class="wirit-footer">
