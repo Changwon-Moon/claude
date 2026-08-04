@@ -1053,6 +1053,102 @@
       "status": "",
       "deadline": "2026-08-03",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910201&pblancNo=2026910201"
+    },
+    {
+      "id": "sig-2026-08-04-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "1년 만에 분양가 1억 껑충…김포 '8억 아파트' 등장에 시끌 [주간이집]",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-04-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-04-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "“세금 말고 공급 늘려야”… 與 의원들도 ‘부동산 한숨’",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-04-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-04-3",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "\"10억 번 근로자, 세금이 절반... 100억 번 부동산, 몇억 밖에\" - 머니투데이",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-04-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-04-4",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "월가 증권사들 \"SK하이닉스 저평가\"…ADR 주가 급등세",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-04-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-04-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕증시 사상최고…하닉ADR 9%급등",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-04-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-04-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "5월엔 ‘106% 대박’ 국민연금… 7월 코스피 폭락에 120조 날렸다 - 조선비즈",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-04-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-04-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "S&P500도 사상 최고 합류…반도체 폭등",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-04-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-04-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "“2.8% 물가보다 무서운 2.6%”...다시 커진 ‘8월’ 금리 인상론",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-04-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
