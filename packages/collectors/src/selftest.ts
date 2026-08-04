@@ -620,16 +620,28 @@ console.log("\n[청약홈 분양정보 파서]");
   check("켜진 표의 항목은 단일 코드(파서가 항목 축을 안 가른다)", multiItem.length === 0, multiItem.join(","));
   /* vital 코드 체계(출생·사망)는 대조표 없이 켜지면 숫자가 엉뚱한 지역에 얹힌다.
      26=울산/부산 처럼 시도부터 겹치는데 지도는 정상으로 그려져 눈으로 안 잡힌다. */
-  const vitalOn = kosisEnabled().filter((k) => KOSIS_TABLES[k].codeSystem === "vital");
+  /* ── 코드 대조표는 켜진 **모든** 표에 있어야 한다 ──
+     2026-08-04: 우리 지도(11010=종로구)와 인구표(11110=종로구)는 체계가 다르고
+     겹치는 코드가 255개 중 9개뿐인데 그 9개는 우연이다. 대조표 없이 켜면
+     9곳에 엉뚱한 숫자가 들어가고 246곳이 빈다. */
+  const vitalOn = kosisEnabled();
   const mapPath = resolve(process.env.INIT_CWD || process.cwd(), "data/geo/kosis-region-map.json");
   const mapExists = existsSync(mapPath);
-  check("vital 체계 표를 켰으면 코드 대조표가 있다", !vitalOn.length || mapExists,
+  check("켜진 표에 코드 대조표가 있다", !vitalOn.length || mapExists,
     vitalOn.length ? `${vitalOn.join(",")} → 대조표 ${mapExists ? "있음" : "없음"}` : "(해당 없음)");
   if (vitalOn.length && mapExists) {
     const rm = JSON.parse(readFileSync(mapPath, "utf8")) as { maps?: Record<string, Record<string, string>> };
     for (const k of vitalOn) {
       const n = Object.keys(rm.maps?.[k] ?? {}).length;
       check(`대조표에 ${k} 코드가 들어 있다`, n > 100, `${n}개`);
+      /* 지도를 얼마나 채우는지 — 이게 진짜 지표다. 굵은 표는 이유가 적혀 있어야 한다. */
+      const cov = (rm as unknown as { coverage?: Record<string, { mapCovered: number; mapTotal: number; knownCoarse?: string }> })
+        .coverage?.[k];
+      if (cov) {
+        const pct = (cov.mapCovered / cov.mapTotal) * 100;
+        check(`${k} 가 지도를 충분히 채운다`, pct >= 90 || !!cov.knownCoarse,
+          `${cov.mapCovered}/${cov.mapTotal}곳 (${pct.toFixed(1)}%)${cov.knownCoarse ? " · 구조적 한계 기록됨" : ""}`);
+      }
     }
   }
   /* 4만 셀 한도 — 축이 큰 표는 나눠 부를 계산이 되어 있어야 한다. */

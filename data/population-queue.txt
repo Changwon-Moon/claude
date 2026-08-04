@@ -15,3 +15,5 @@
 months=25 min=45 top=8
 # 2026-08-03 여섯 표 전부 켠 뒤 첫 실전 수집
 months=25 min=45 top=8
+# 코드 대조표 방향 바로잡은 뒤 재수집
+months=25 min=45 top=8

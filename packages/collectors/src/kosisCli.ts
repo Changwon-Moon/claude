@@ -97,18 +97,24 @@ function loadRegionMap(cwd: string): RegionMap {
   }
 }
 
-/** 나눠 부를 때 쓸 지역 코드 목록 — 그 표의 코드 체계로 준다. */
-function regionCodesFor(t: TableKey, rm: RegionMap, geoCodes: string[]): string[] {
-  const spec = TABLES[t];
-  if (spec.codeSystem === "vital") {
-    /* 대조표의 열쇠가 곧 그 표의 코드다. 5자리만 고른다(시도는 합계라 빼야 중복이 없다). */
-    const keys = Object.keys(rm.maps?.[t] ?? {}).filter((c) => c.length === 5);
-    if (keys.length) return keys;
+/**
+ * 나눠 부를 때 쓸 지역 코드 목록 — **그 표의 코드 체계로** 준다.
+ * 지도 코드를 그대로 넘기면 KOSIS 가 못 알아듣거나(11010 은 인구표에 없다)
+ * 더 나쁘게는 **다른 지역으로 알아듣는다.** 대조표의 열쇠가 곧 그 표의 코드다.
+ */
+function regionCodesFor(t: TableKey, rm: RegionMap): string[] {
+  const keys = Object.keys(rm.maps?.[t] ?? {}).filter((c) => c.length === 5);
+  if (!keys.length) {
+    throw new Error(`${t}: 대조표가 없어 나눠 부를 지역 코드를 못 만든다 — build-kosis-region-map.mjs 를 돌리세요.`);
   }
-  return geoCodes.filter((c) => c.length === 5);
+  return keys;
 }
 
-/** vital 코드를 통계청 코드로 옮긴다. 대조표에 없는 코드는 **버린다** — 대부분 폐지된 행정구역이다. */
+/**
+ * KOSIS 코드를 **지도 코드**로 옮긴다.
+ * 대조표에 없는 코드는 버린다 — 폐지된 행정구역·출장소·일반구의 부모 시 행이다.
+ * (부모 시 행을 남기면 수원시 값이 수원시장안구 자리에 들어갈 수 있다.)
+ */
 function remapRegions(points: Point[], map: Record<string, string>): Point[] {
   if (!Object.keys(map).length) return points;
   const out: Point[] = [];
@@ -169,7 +175,7 @@ async function main() {
       } else if ((spec.cellsPerRegionPeriod ?? 1) > 1) {
         /* 축이 큰 표(연령 1세별·사망원인)는 4만 셀 한도에 걸린다 — 지역을 나눠 부른다.
            나눌 코드는 그 표의 코드 체계로 줘야 한다. */
-        const codes = regionCodesFor(t, regionMap, geo.codes);
+        const codes = regionCodesFor(t, regionMap);
         const size = chunkSizeFor(t, periods);
         console.log(`· ${spec.metric}(${spec.tblId}) — 지역 ${codes.length}곳을 ${size}개씩 ${Math.ceil(codes.length / size)}번에 나눠 받습니다(4만 셀 한도)`);
         payload = await fetchTableChunked(
@@ -186,13 +192,26 @@ async function main() {
       let points = spec.derive === "senior65"
         ? seniorPoints(payload, spec.regionAxis ?? "C1")
         : normalize(payload, spec.regionAxis ?? "C1");
-      if (spec.codeSystem === "vital") {
-        const before = points.length;
-        points = remapRegions(points, regionMap.maps?.[t] ?? {});
-        console.log(`· ${spec.metric} 코드 변환(${spec.codeSystem} → 통계청): ${points.length}/${before}행`);
-        if (!points.length && before) {
-          throw new Error(`${t}: 코드 대조표가 한 행도 못 옮겼다 — data/geo/kosis-region-map.json 을 다시 만들어야 한다.`);
-        }
+
+      /* ── 코드 변환은 **모든 표**에 건다 ──
+         2026-08-04 실측: 우리 지도(11010=종로구)는 인구·세대·이동·연령 표(11110=종로구)와
+         체계가 다르다. 겹치는 코드가 255개 중 9개뿐이고 그 9개는 **우연히 같은 숫자**다.
+         변환을 안 걸면 9곳에 엉뚱한 숫자가 들어가고 246곳이 빈다 —
+         빈 지도는 "데이터가 없다"로 보이고, 채워진 9곳은 아무도 의심하지 않는다.
+         출생·사망만 변환하던 때가 있었는데, 방향이 반대였다. */
+      const codeMap = regionMap.maps?.[t] ?? {};
+      if (!Object.keys(codeMap).length) {
+        throw new Error(
+          `${t}: 코드 대조표가 없다. data/geo/kosis-region-map.json 에 '${t}' 항목이 있어야 한다.\n` +
+          "   → Actions 로 kosis-probe 를 돌린 뒤 node scripts/build-kosis-region-map.mjs 로 다시 만드세요.\n" +
+          "   대조표 없이 코드를 그대로 쓰면 엉뚱한 시군구에 숫자가 얹힙니다.",
+        );
+      }
+      const before = points.length;
+      points = remapRegions(points, codeMap);
+      console.log(`· ${spec.metric} 코드 변환 → 지도 코드: ${points.length}/${before}행`);
+      if (!points.length && before) {
+        throw new Error(`${t}: 대조표가 한 행도 못 옮겼다 — 대조표를 다시 만들어야 한다.`);
       }
       metrics[spec.metric] = toSeries(points);
       console.log(`· ${spec.metric}(${spec.tblId}) — 시군구 ${metrics[spec.metric].length}곳 · 시점 ${metrics[spec.metric][0]?.points.length ?? 0}개`);
