@@ -13,23 +13,25 @@
 
       .wc-body { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-top: 14px; }
 
-      /* 지도 밴드(가로형) */
+      /* 지도 밴드 — 서울 지도는 세로가 커서 높이를 제한(표 9행이 아래 들어가야 함) */
       .wc-map { position: relative; }
-      .wc-map svg { width: 100%; height: auto; display: block; }
+      .wc-map svg { height: 430px; width: auto; max-width: 100%; margin: 0 auto; display: block; }
       .wc-legend { display: flex; gap: 24px; justify-content: center; margin-top: 2px;
         font-size: 21px; font-weight: 700; color: var(--wirit-gray); }
       .wc-legend .k { display: inline-flex; align-items: center; gap: 8px; }
       .wc-legend .d { width: 15px; height: 15px; border-radius: 50%; display: inline-block; }
       .wc-legend .d.src { background: var(--wirit-cobalt); }
       .wc-legend .d.dst { background: var(--wirit-red); }
+      .wc-legend .d.pin { background: var(--wirit-red); }
+      .wc-legend .d.gu { background: #c9d8ff; border-radius: 4px; }
 
       /* 투자자 표 */
-      .wc-tbl { margin-top: 10px; display: flex; flex-direction: column; }
-      .wc-row { display: grid; grid-template-columns: 58px 1fr auto; align-items: center; gap: 14px;
-        padding: 9px 6px; border-top: 2px solid var(--wirit-ink-06); }
+      .wc-tbl { margin-top: 8px; display: flex; flex-direction: column; }
+      .wc-row { display: grid; grid-template-columns: 54px 1fr auto; align-items: center; gap: 14px;
+        padding: 5px 6px; border-top: 2px solid var(--wirit-ink-06); }
       .wc-row:first-of-type { border-top: none; }
-      .wc-flag { font-size: 40px; text-align: center; line-height: 1; }
-      .wc-who .nm { font-size: 30px; font-weight: 900; letter-spacing: -0.02em; color: var(--wirit-ink); }
+      .wc-flag { font-size: 36px; text-align: center; line-height: 1; }
+      .wc-who .nm { font-size: 29px; font-weight: 900; letter-spacing: -0.02em; color: var(--wirit-ink); }
       .wc-who .pt { font-size: 20px; font-weight: 700; color: var(--wirit-gray); margin-left: 12px; }
       .wc-amt { text-align: right; white-space: nowrap; font-family: var(--font-num);
         font-size: 32px; font-weight: 900; color: var(--wirit-cobalt); }
@@ -51,8 +53,9 @@
         <div class="wc-map">
           {{{mapSvg}}}
           <div class="wc-legend">
-            <span class="k"><span class="d src"></span>자본 출자국</span>
-            <span class="k"><span class="d dst"></span>서울(투자처)</span>
+            {{#if legend}}{{#each legend}}<span class="k"><span class="d {{this.cls}}"></span>{{this.label}}</span>{{/each}}
+            {{else}}<span class="k"><span class="d src"></span>자본 출자국</span>
+            <span class="k"><span class="d dst"></span>서울(투자처)</span>{{/if}}
           </div>
         </div>
 

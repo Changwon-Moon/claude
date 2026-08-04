@@ -11,21 +11,29 @@
 import { writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { worldFlowSvg } from "./lib/world-map.mjs";
+import { seoulInvestSvg } from "./lib/seoul-invest-map.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const kstToday = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const date = process.argv[2] || kstToday;
 
-// ── 출자국(자본 국적) — 지도 강조. name 은 world-countries.geojson properties.name ──
-const sources = [
-  { name: "Canada", flag: "🇨🇦" },
-  { name: "United States of America", flag: "🇺🇸" },
-  { name: "United Kingdom", flag: "🇬🇧", dx: -30, dy: -6 }, // 네덜란드와 붙어 라벨 살짝 벌림
-  { name: "Netherlands", flag: "🇳🇱", dx: 30 },
-  { name: "Singapore", flag: "🇸🇬", lon: 103.8, lat: 1.35 }, // 110m 지도엔 폴리곤 없음 → 점 표시
+// ── 투자 위치(서울 25구) — 핀 좌표는 seoul-invest-map.mjs 가 지오데이터에서 계산(손 좌표 없음) ──
+// 동을 주면 해당 동 중심, 없으면 구 중심. dx/dy 는 라벨 겹침 미세조정.
+const spots = [
+  { gu: "강동구", label: "강동" },
+  { gu: "성북구", dong: "안암", label: "안암" },
+  { gu: "동대문구", dong: "회기", label: "회기" },
+  { gu: "영등포구", dong: "양평", label: "양평" },
+  { gu: "강남구", label: "강남" },
+  { gu: "금천구", dong: "독산", label: "독산", dx: -56, dy: 2 },
+  { gu: "금천구", dong: "가산", label: "가산", dx: 40, dy: 52 },
+  { gu: "중구", dong: "명동", label: "명동", dx: -20 },
+  { gu: "중구", dong: "신당", label: "신당", dx: 24, dy: 8 },
+  { gu: "서대문구", dong: "신촌", label: "신촌" },
+  { gu: "강북구", dong: "수유", label: "수유" },
+  { gu: "서초구", dong: "방배", label: "방배" },
 ];
-const mapSvg = worldFlowSvg({ sources, dest: { name: "South Korea", lon: 126.98, lat: 37.57, label: "서울" } });
+const mapSvg = seoulInvestSvg({ spots });
 
 // ── 투자자 표(9곳) — 뉴스 소재값. cash=코발트, 자산규모=회색(muted) ──
 const rows = [
@@ -47,11 +55,15 @@ const doc = {
   date,
   note: "해외 자본의 국내 임대시장 진출 · 2026",
   title: `당신 건물주가<br/><span class="co">네덜란드 연기금</span>? 🌍`,
-  subtitle: "서울 임대주택 사 모으는 글로벌 큰손 9곳",
+  subtitle: "글로벌 자본이 사들이는 서울 곳곳 — 큰손 9곳",
   mapSvg,
+  legend: [
+    { cls: "pin", label: "글로벌 자본 투자 위치" },
+    { cls: "gu", label: "투자 유입 구" },
+  ],
+  // insight 는 공간상 생략(부제가 메시지를 가진다) — 9행 표를 온전히 넣기 위함
   rows,
-  insight: `전세가 사라진 자리, <b>글로벌 자본</b>이 들어온다`,
   source: { name: "각 사 발표·언론 보도 종합", period: "2026", verified: false },
 };
 writeFileSync(join(outDir, "world-capital.json"), JSON.stringify(doc, null, 2) + "\n", "utf8");
-console.log(`✅ world-capital — 출자국 ${sources.length}개국 · 투자자 ${rows.length}곳 · ${date}`);
+console.log(`✅ world-capital — 서울 투자 위치 ${spots.length}곳 · 투자자 ${rows.length}곳 · ${date}`);
