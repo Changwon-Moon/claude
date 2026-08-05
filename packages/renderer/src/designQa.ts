@@ -214,7 +214,10 @@ const MEASURE_JS = `(() => {
                 겹치는지 좌표로 잰다. 빠뜨리면 검사받지 않은 것이다. */
              ".nf-title,.nf-photo,.nf-src,.nf-chip,.nf-name .nm,.nf-name .role," +
              ".nf-subs-lb,.nf-sub .nm,.nf-sub .sub," +
-             ".nf-lead-h,.nf-lead-t,.nf-bar .k,.nf-bar .v";
+             ".nf-lead-h,.nf-lead-t,.nf-bar .k,.nf-bar .v," +
+             /* figure-roster — 인물 로스터(2026-08-05). 이름/대수·임기/정당 칩이 서로·푸터와
+                겹치는지, 정당 칩이 이름칸을 침범하는지 좌표로 잰다. */
+             ".fr-title,.fr-sub,.fr-rank,.fr-nm,.fr-meta,.fr-party,.fr-face,.fr-foot";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
   for (var i=0;i<leaves.length;i++) for (var j=i+1;j<leaves.length;j++) {
     var a=leaves[i], b=leaves[j];
@@ -275,7 +278,7 @@ const MEASURE_JS = `(() => {
   if(footer){
     /* .rg-note 를 빠뜨려 record-grid 에서는 이 검사가 아무것도 안 재고 있었다(AS팀 지적 2026-07-31).
        "최하단 문구 여백"은 오너가 두 번 말한 항목인데 새 템플릿에 적용되지 않은 상태였다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note,.tx-apply,.nf-bars,.nf-body");
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();

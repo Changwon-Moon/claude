@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* figure-roster@1 — 인물 로스터(역대 OO 5명 등)
+       * 각 행: 인물 자리(원형) + 이름 + 대수·임기 + 정당(색 칩+명칭).
+       * 크롬(72px 머리·wirit. 코너 뱃지·잉크 푸터·프레임)은 base.css 상속. */
+
+      .fr-topcap {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: -30px;
+        min-height: 62px;
+        padding-right: 190px;
+        color: var(--wirit-gray);
+        font-size: 28px;
+        font-weight: 600;
+      }
+      .fr-title {
+        font-family: var(--font-title);
+        margin-top: 10px;
+        font-size: 78px;
+        font-weight: 900;
+        line-height: 1.06;
+        letter-spacing: -0.03em;
+        color: var(--wirit-ink);
+      }
+      .fr-sub {
+        margin-top: 12px;
+        font-size: 30px;
+        font-weight: 600;
+        color: var(--wirit-gray);
+        letter-spacing: -0.01em;
+      }
+
+      .fr-list {
+        margin-top: 26px;
+        flex: 1;                     /* 남는 세로를 채워 행 간격을 편다(행이 적을 때) */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .fr-row {
+        display: flex;
+        align-items: center;
+        gap: 26px;
+        padding: 8px 0;
+        border-top: 1px solid var(--wirit-ink-12);
+      }
+      .fr-row:first-child { border-top: none; }
+
+      .fr-rank {
+        flex: none;
+        width: 66px;
+        text-align: center;
+        font-family: var(--font-num);
+        font-size: 30px;
+        font-weight: 800;
+        color: var(--wirit-gray);
+        letter-spacing: -0.02em;
+      }
+      .fr-face {
+        flex: none;
+        width: 104px;
+        height: 104px;
+        border-radius: 50%;
+        overflow: hidden;
+        background: linear-gradient(160deg, #e7ecf3 0%, #cfd8e4 100%);
+        border: 1px solid var(--wirit-ink-12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9aa8ba;
+      }
+      .fr-face img { width: 100%; height: 100%; object-fit: cover; }
+      .fr-face svg { width: 60px; height: 60px; }
+
+      .fr-main { flex: 1; min-width: 0; }
+      .fr-nm {
+        font-size: 46px;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        color: var(--wirit-ink);
+      }
+      .fr-meta {
+        margin-top: 4px;
+        font-size: 28px;
+        font-weight: 600;
+        color: var(--wirit-gray);
+        letter-spacing: -0.01em;
+      }
+
+      .fr-party {
+        flex: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 22px;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 30px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        white-space: nowrap;
+      }
+      .fr-party .dotm {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        flex: none;
+      }
+      /* 정당 색(당선 당시). 색만으로 안 가르고 명칭을 함께 적는다. */
+      .fr-party.p-dem { background: #152484; }       /* 더불어민주당 */
+      .fr-party.p-saenuri { background: #c9151e; }    /* 새누리당 */
+      .fr-party.p-hannara { background: #163b8c; }    /* 한나라당(2012 이전 보수) */
+      .fr-party.p-ppp { background: #e61e2b; }        /* 국민의힘 */
+      .fr-party.p-gray { background: var(--wirit-gray); }
+
+      .fr-foot {
+        margin-top: 22px;
+        margin-bottom: 26px;
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--wirit-gray);
+        letter-spacing: -0.01em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card fr">
+      {{#if topcap}}<div class="fr-topcap">{{topcap}}</div>{{/if}}
+      <h1 class="fr-title">{{{title}}}</h1>
+      {{#if subtitle}}<div class="fr-sub">{{subtitle}}</div>{{/if}}
+
+      <div class="fr-list">
+        {{#each rows}}
+          <div class="fr-row">
+            {{#if this.rank}}<div class="fr-rank">{{this.rank}}</div>{{/if}}
+            <div class="fr-face">
+              {{#if this.photo}}<img src="../_shared/photos/{{this.photo}}" alt="" />{{else}}<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12Zm0 2.2c-3.9 0-9 2-9 5.9v1.7h18v-1.7c0-3.9-5.1-5.9-9-5.9Z"/></svg>{{/if}}
+            </div>
+            <div class="fr-main">
+              <div class="fr-nm">{{this.name}}</div>
+              {{#if this.meta}}<div class="fr-meta">{{this.meta}}</div>{{/if}}
+            </div>
+            <div class="fr-party {{this.partyClass}}"><span class="dotm"></span>{{this.party}}</div>
+          </div>
+        {{/each}}
+      </div>
+
+      {{#if note}}<div class="fr-foot">{{{note}}}</div>{{/if}}
+
+      <div class="wirit-footer">
+        <span>{{#if footer}}{{footer}}{{else}}출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}}{{/if}}{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+  </body>
+</html>
