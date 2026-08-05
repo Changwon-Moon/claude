@@ -1136,6 +1136,102 @@
       "status": "",
       "deadline": "2026-08-03",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910201&pblancNo=2026910201"
+    },
+    {
+      "id": "sig-2026-08-05-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "지하주차장 ‘명당’입구자리 택배기사에 양보 아파트",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-05-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-05-2",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕 증시 최고치인데, 장중 이례적으로 치솟은 ‘공포지수’, 왜?",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-05-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-05-3",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "연일 급등 후 숨 고르기…혼조 마감 |",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-05-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-05-4",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "엔비디아 4%↑독주에 다우 최고치, 나스닥은 0.8%↓…혼조 마감",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-05-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-05-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕증시, 호르무즈 재개방 기대속 혼조 마감…나스닥 0.8%↓",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-05-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-05-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "다우 263P 상승하며 사상 최고치...스페이스X는 13.61% 폭락",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-05-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-05-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕증시, 혼조 마감...차익실현에 나스닥은 0.8% 하락",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-05-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-05-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "베선트 \"원화 과도한 변동성\" 한마디에 환율 뚝",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-05-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
