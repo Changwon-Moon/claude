@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* news-figure@1 — 인물(CEO·정치인)/뉴스 이슈 카드
+       * 좌: 헤드라인(+형광펜 강조 본문) · 우: 인물 사진 + 이름/직함
+       * 하단: 선택형 정보 바(접수기간·근무지 등)
+       * 크롬(72px 머리 · wirit. 코너 뱃지 · 잉크 푸터 · 흰/잉크 프레임)은 base.css 상속. */
+
+      .nf {
+        --hl-y: #ffe27a;   /* 노랑 형광펜 */
+        --hl-g: #cdee7a;   /* 라임 형광펜 */
+        --hl-b: #bcd6ff;   /* 코발트 톤 형광펜 */
+      }
+
+      /* ── 머리: 출처 줄(좌) + 카테고리 칩 ── */
+      .nf-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        padding-right: 200px; /* 우상단 wirit. 코너 뱃지 자리 확보 */
+        min-height: 48px;
+      }
+      .nf-src {
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--wirit-gray);
+        letter-spacing: -0.01em;
+        padding-top: 4px;
+      }
+      .nf-chip {
+        align-self: flex-start;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 24px;
+        border-radius: 6px;
+        background: var(--wirit-ink);
+        color: #fff;
+        font-size: 30px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        white-space: nowrap;
+      }
+      .nf-chip.accent { background: var(--wirit-cobalt); }
+      .nf-chip.red { background: var(--wirit-red); }
+
+      /* ── 히어로: 좌 헤드라인 / 우 인물 사진 ── */
+      .nf-hero {
+        display: flex;
+        gap: 40px;
+        margin-top: 34px;
+        align-items: flex-start;
+      }
+      .nf-right {
+        flex: none;
+        width: 372px;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .nf-title {
+        /* base .wirit-title 상속(태백체) — 여기선 좌열 폭에 맞춰 __wiritFit 이 줄인다 */
+        flex: 1;
+        min-width: 0;
+        margin-top: 0;
+        font-size: 92px;
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        white-space: pre-line;
+      }
+      .nf-title .em { color: var(--wirit-cobalt); }
+      .nf-title .red { color: var(--wirit-red); }
+
+      /* ── 인물 사진 ── */
+      .nf-photo {
+        position: relative;
+        width: 100%;
+        height: 452px;
+        border-radius: 14px;
+        overflow: hidden;
+        background: linear-gradient(160deg, #e7ecf3 0%, #cfd8e4 100%);
+        border: 1px solid var(--wirit-ink-12);
+      }
+      .nf-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      /* 사진 없을 때 실루엣 자리표시(시안용) */
+      .nf-ph {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        color: #9aa8ba;
+      }
+      .nf-ph svg { width: 168px; height: 168px; opacity: 0.9; }
+      .nf-ph .cap { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; }
+
+      /* 사진 위 스탬프(예: "🖐 확정된 바 없음") — 빈 곳 전용 */
+      .nf-stamp {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 18px;
+        border-radius: 8px;
+        background: var(--wirit-red);
+        color: #fff;
+        font-size: 27px;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+        max-width: 88%;
+      }
+
+      /* 이름/직함 태그 (사진 바로 아래) */
+      .nf-name {
+        margin-top: 16px;
+        background: var(--wirit-ink);
+        color: #fff;
+        border-radius: 8px;
+        padding: 16px 22px;
+        text-align: center;
+      }
+      .nf-name .nm { display: block; font-size: 40px; font-weight: 900; letter-spacing: -0.03em; }
+      .nf-name .role { display: block; margin-top: 4px; font-size: 25px; font-weight: 600; color: #aeb8c4; }
+
+      /* ── 본문: 형광펜 강조 문단 ── */
+      .nf-body { margin-top: 40px; display: flex; flex-direction: column; gap: 26px; }
+      .nf-lead {
+        border-left: 6px solid var(--wirit-ink);
+        padding-left: 26px;
+      }
+      .nf-lead.accent { border-color: var(--wirit-cobalt); }
+      .nf-lead-h {
+        font-size: 30px;
+        font-weight: 800;
+        color: var(--wirit-gray);
+        letter-spacing: -0.01em;
+        margin-bottom: 10px;
+      }
+      .nf-lead-t {
+        font-size: 40px;
+        font-weight: 700;
+        line-height: 1.36;
+        letter-spacing: -0.02em;
+        color: var(--wirit-ink);
+        word-break: keep-all;
+      }
+      .nf-lead-t mark {
+        background: var(--hl-y);
+        color: var(--wirit-ink);
+        padding: 0 4px;
+        border-radius: 2px;
+      }
+      .nf-lead-t mark.g { background: var(--hl-g); }
+      .nf-lead-t mark.b { background: var(--hl-b); }
+      .nf-lead-t b { font-weight: 900; }
+
+      /* ── 하단 정보 바(선택): 접수기간·근무지 등 ── */
+      .nf-bars { margin-top: 34px; display: flex; gap: 18px; }
+      .nf-bar {
+        flex: 1;
+        background: var(--wirit-ink);
+        border-radius: 6px;
+        padding: 22px 26px;
+        text-align: center;
+      }
+      .nf-bar .k {
+        display: block;
+        font-size: 25px;
+        font-weight: 700;
+        color: #aeb8c4;
+        letter-spacing: -0.01em;
+      }
+      .nf-bar .v {
+        display: block;
+        margin-top: 8px;
+        font-size: 40px;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: -0.02em;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card nf">
+      <div class="nf-head">
+        <div class="nf-src">{{#if source.name}}* 출처 : {{source.name}}{{#if source.asOf}} ({{source.asOf}}){{/if}}{{/if}}</div>
+        {{#if category}}<div class="nf-chip {{categoryStyle}}">{{category}}</div>{{/if}}
+      </div>
+
+      <div class="nf-hero">
+        <h1 class="wirit-title nf-title">{{{headline}}}</h1>
+        <div class="nf-right">
+          <div class="nf-photo">
+            {{#if figure.photo}}
+              <img src="../_shared/photos/{{figure.photo}}" alt="" />
+            {{else}}
+              <div class="nf-ph">
+                <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12Zm0 2.2c-3.9 0-9 2-9 5.9v1.7h18v-1.7c0-3.9-5.1-5.9-9-5.9Z"/></svg>
+                <span class="cap">인물 사진 자리</span>
+              </div>
+            {{/if}}
+            {{#if figure.stamp}}<div class="nf-stamp">{{figure.stamp}}</div>{{/if}}
+          </div>
+          {{#if figure.name}}
+            <div class="nf-name">
+              <span class="nm">{{figure.name}}</span>
+              {{#if figure.role}}<span class="role">{{figure.role}}</span>{{/if}}
+            </div>
+          {{/if}}
+        </div>
+      </div>
+
+      {{#if lead}}
+        <div class="nf-body">
+          {{#each lead}}
+            <div class="nf-lead {{this.style}}">
+              {{#if this.heading}}<div class="nf-lead-h">{{this.heading}}</div>{{/if}}
+              <div class="nf-lead-t">{{{this.text}}}</div>
+            </div>
+          {{/each}}
+        </div>
+      {{/if}}
+
+      {{#if bars}}
+        <div class="nf-bars">
+          {{#each bars}}
+            <div class="nf-bar">
+              <span class="k">{{this.k}}</span>
+              <span class="v">{{this.v}}</span>
+            </div>
+          {{/each}}
+        </div>
+      {{/if}}
+
+      <div class="wirit-footer">
+        <span>{{#if footer}}{{footer}}{{else}}출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}}{{/if}}{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <!-- 헤드라인 폭 맞춤: 좌열 폭 안에 들어오는 최대 폰트를 이분탐색(줄이는 방향으로만).
+         줄바꿈은 빌더가 \n 으로 지정(pre-line). 폰트 로딩 후 다시 재도록 __wiritFit 훅으로 노출. -->
+    <script>
+      window.__wiritFit = function () {
+        var el = document.querySelector(".nf-title");
+        if (!el) return;
+        var avail = el.clientWidth; // flex:1 로 배정된 좌열 폭
+        if (!avail) return;
+        var hi = parseFloat(getComputedStyle(el).fontSize) || 92;
+        var lo = 40, best = lo;
+        function widest() {
+          // pre-line 줄을 임시로 nowrap 측정: 가장 긴 줄의 폭
+          var lines = (el.textContent || "").split("\n");
+          var max = 0;
+          var probe = document.createElement("span");
+          probe.style.cssText =
+            "position:absolute;visibility:hidden;white-space:nowrap;font-family:" +
+            getComputedStyle(el).fontFamily +
+            ";font-weight:" + getComputedStyle(el).fontWeight +
+            ";letter-spacing:" + getComputedStyle(el).letterSpacing +
+            ";font-size:" + el.style.fontSize;
+          document.body.appendChild(probe);
+          for (var i = 0; i < lines.length; i++) {
+            probe.textContent = lines[i];
+            if (probe.offsetWidth > max) max = probe.offsetWidth;
+          }
+          document.body.removeChild(probe);
+          return max;
+        }
+        el.style.fontSize = hi + "px";
+        if (widest() <= avail) {
+          best = hi;
+        } else {
+          for (var i = 0; i < 24; i++) {
+            var mid = (lo + hi) / 2;
+            el.style.fontSize = mid + "px";
+            if (widest() <= avail) { best = mid; lo = mid; }
+            else hi = mid;
+          }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready)
+        document.fonts.ready.then(window.__wiritFit);
+    </script>
+  </body>
+</html>

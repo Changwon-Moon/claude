@@ -455,3 +455,61 @@ pnpm --filter @wirit/renderer qa templates/danji-cover/sample.json
 > 던지고 doctor 가 통째로 빨간불이 된다 — `confirm.mjs` 가 경고하는 '정기물을 기준값에 넣는'
 > 실수다. **판형의 약속은 "픽셀이 안 바뀐다"가 아니라 "같은 데이터면 같은 픽셀"이다.**
 > 그래서 데이터를 얼린 픽스처로 잰다.
+
+---
+
+## 12. `news-figure@1` — 인물(CEO·정치인)/뉴스 이슈 카드 (2026-08-05 시안)
+
+> 오너 지시: 참고 계정(APT_LAP)의 "인물 사진 + 큰 헤드라인 + 형광펜 본문" 이슈 카드 방식을
+> **위릿 판형으로** 한 판 잡아 달라. 크롬(72px 머리·우상단 `wirit.` 잉크 뱃지·잉크 푸터·
+> 흰/잉크 프레임)은 `base.css` 상속, 형광펜·인물 배치만 새로 만들었다.
+
+### 구조 (좌 헤드라인 / 우 인물, 하단 선택형 정보 바)
+
+- **머리**: 좌 `.nf-src`(출처 줄) + 우 `.nf-chip`(카테고리 칩, 기본 잉크 / `accent`·`red`). 칩은
+  우상단 `wirit.` 뱃지 자리(200px)를 비워 두고 왼쪽에 붙는다.
+- **히어로**: 좌 `.nf-title`(태백체, `flex:1` — `__wiritFit` 이 좌열 폭에 맞춰 이분탐색으로 줄인다.
+  줄바꿈은 빌더가 `\n` 으로 지정) / 우 `.nf-right`( `.nf-photo` 인물 사진 + `.nf-name` 이름·직함 태그).
+- **본문**: `lead[]` — 항목마다 `.nf-lead`(좌측 잉크 괘선, `accent` 면 코발트) + `.nf-lead-h`(옅은 소제목)
+  + `.nf-lead-t`(형광펜 강조). 형광펜은 `<mark>`(노랑·기본) / `<mark class="g">`(라임) / `<mark class="b">`(코발트).
+- **하단(선택)**: `bars[]` — `{k,v}` 잉크 정보 바(접수기간·근무지 등). 없으면 그리지 않는다.
+- **사진 없을 때**: `figure.photo` 미지정이면 실루엣 자리표시(`.nf-ph`)를 그린다(시안용). 실제 발행은
+  `_shared/photos/` 에 인물 사진을 넣고 파일명을 지정한다. `figure.stamp` 로 사진 위 빨강 스탬프
+  (예: "🖐 확정된 바 없음")를 빈 곳에 얹을 수 있다.
+
+### 문서 필드
+
+```json
+{
+  "template": "news-figure@1",
+  "category": "부동산 이슈", "categoryStyle": "",
+  "source": { "name": "…", "asOf": "…" },
+  "headline": "수도권\n주택공급\n<span class=\"em\">보도해명</span>",
+  "figure": { "photo": "person.jpg", "name": "○○○ 장관", "role": "국토교통부", "stamp": "🖐 확정된 바 없음" },
+  "lead": [ { "heading": "보도내용 요약", "text": "… <mark>수도권 5만호 이상</mark> …" },
+            { "heading": "부처 입장", "style": "accent", "text": "… <mark class=\"g\">확정된 바 없음.</mark>" } ],
+  "bars": [ { "k": "접수기간", "v": "8.20 ~ 26" } ],
+  "footer": "…"
+}
+```
+
+### 규칙
+
+- **오보 0**: 인물 발언·수치는 1차 출처(보도자료·공시)에서 확인한 것만. 시안(`build-news-figure.mjs`)은
+  전부 예시 문구(`verified=false`)이니, 실제 카드는 원문을 대조해 채우고 세트 note 에 근거를 적는다.
+- **강조는 형광펜으로**, 한 문단에 한 곳이 기본. 노랑/라임을 섞더라도 "무엇을 강조하는가"가 서게.
+- **인물 사진**은 실물만. 없으면 실루엣 자리표시로 두고 발행 전에 채운다(직접 그린 초상 금지).
+- 검수 등록: `designQa.ts` `LEAF` 에 `.nf-title,.nf-photo,.nf-src,.nf-chip,.nf-name .nm,.nf-name .role,`
+  `.nf-lead-h,.nf-lead-t,.nf-bar .k,.nf-bar .v` 추가, `footerGap` 위 요소에 `.nf-bars,.nf-body` 추가
+  (일부러 겹쳐 `textclip` 이 잡히는 것 확인함).
+
+### 시안
+
+```bash
+node scripts/build-news-figure.mjs         # data/out/_spike/news-figure/*.json
+pnpm --filter @wirit/renderer render -- --data <절대경로>/news-figure-demo-issue.json --out <절대경로>
+pnpm --filter @wirit/renderer qa <절대경로>/news-figure-demo-issue.json   # error 0
+```
+
+> **미확정.** 오너가 이 판형을 고르면 `builders.json`·`sets.json` 에 등록하고, 첫 실제 카드를
+> 확정할 때 판형 회귀용 `sample.json` 을 얼린다(danji-cover §11 방식). 그 전까지는 시안만 둔다.

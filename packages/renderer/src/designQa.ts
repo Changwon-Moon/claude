@@ -208,7 +208,12 @@ const MEASURE_JS = `(() => {
              ".dcv-title .ln,.dcv-fb .w,.dcv-nm .nm,.dcv-nm .loc,.dcv-ph," +
              ".dcv .lab,.dcv-facts .v,.dcv-facts .brk,.dcv-item .a,.dcv-item .p,.dcv-note," +
              /* sinbundang-loop — 노선 접이형 정보카드(2026-07-31). */
-             ".slp-stn,.slp-danji,.slp-meta,.slp-priceB,.slp-name,.slp-gu,.slp-top";
+             ".slp-stn,.slp-danji,.slp-meta,.slp-priceB,.slp-name,.slp-gu,.slp-top," +
+             /* news-figure — 인물/뉴스 이슈 카드(2026-08-05). 헤드라인(.nf-title)이 좌열을
+                넘어 우측 인물 사진(.nf-photo)을 침범하는지, 형광펜 본문·정보 바가 서로/푸터와
+                겹치는지 좌표로 잰다. 빠뜨리면 검사받지 않은 것이다. */
+             ".nf-title,.nf-photo,.nf-src,.nf-chip,.nf-name .nm,.nf-name .role," +
+             ".nf-lead-h,.nf-lead-t,.nf-bar .k,.nf-bar .v";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
   for (var i=0;i<leaves.length;i++) for (var j=i+1;j<leaves.length;j++) {
     var a=leaves[i], b=leaves[j];
@@ -269,7 +274,7 @@ const MEASURE_JS = `(() => {
   if(footer){
     /* .rg-note 를 빠뜨려 record-grid 에서는 이 검사가 아무것도 안 재고 있었다(AS팀 지적 2026-07-31).
        "최하단 문구 여백"은 오너가 두 번 말한 항목인데 새 템플릿에 적용되지 않은 상태였다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note,.tx-apply");
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note,.tx-apply,.nf-bars,.nf-body");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();
