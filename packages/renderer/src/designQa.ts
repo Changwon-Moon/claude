@@ -213,6 +213,7 @@ const MEASURE_JS = `(() => {
                 넘어 우측 인물 사진(.nf-photo)을 침범하는지, 형광펜 본문·정보 바가 서로/푸터와
                 겹치는지 좌표로 잰다. 빠뜨리면 검사받지 않은 것이다. */
              ".nf-title,.nf-photo,.nf-src,.nf-chip,.nf-name .nm,.nf-name .role," +
+             ".nf-subs-lb,.nf-sub .nm,.nf-sub .sub," +
              ".nf-lead-h,.nf-lead-t,.nf-bar .k,.nf-bar .v";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
   for (var i=0;i<leaves.length;i++) for (var j=i+1;j<leaves.length;j++) {
