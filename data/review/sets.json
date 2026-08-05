@@ -338,9 +338,9 @@
       "caption": "world-capital",
       "note": "뉴스 소재(verified:false) — 각 사 발표·언론 보도 종합. 좌 제목(세로 5줄)·우 서울 투자위치 지도(seoul-invest-map)·하 투자자 9곳 표(위치·세대수). 금액·세대수는 발표·약정·목표 혼재, 발행 전 1차 출처 재대조 필요(오보 0). CPPIB 규모 보도 상충(1,330억~5,000억)은 캡션이 병기. 지도 핀 좌표는 지오데이터에서 계산(손 좌표 0).",
       "state": "오너 확정",
-      "confirmedAt": "2026-08-04",
+      "confirmedAt": "2026-08-05",
       "confirmedMd5": [
-        "world-capital:aabd8bfe9f29"
+        "world-capital:f955b1659994"
       ]
     }
   ]

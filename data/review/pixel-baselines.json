@@ -102,11 +102,11 @@
       "label": "world-capital",
       "title": "당신 건물주가 네덜란드 연기금? (글로벌 자본의 서울 임대시장 진출)",
       "state": "오너 확정",
-      "at": "2026-08-04",
+      "at": "2026-08-05",
       "builder": "world-capital",
       "content": "data/content/2026-08-05/world-capital.json",
       "png": "world-capital-p1.png",
-      "md5": "aabd8bfe9f29f5883191da5de93d4f7c"
+      "md5": "f955b16599940c44167ed2a0e0aaa667"
     }
   ]
 }
