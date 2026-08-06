@@ -28,7 +28,9 @@ function isSafe(license) {
   const s = (license || "").toLowerCase();
   if (!s) return false;
   if (/non-?free|fair use/.test(s)) return false;
-  return /public domain|cc0|creative commons|\bcc[ -]/.test(s);
+  if (/public domain|cc0|creative commons|\bcc[ -]/.test(s)) return true;
+  // KOGL 제1유형(공공누리 1유형): 상업이용·변형 허용, 출처표시 조건 — 자유 이용 가능(정부·기관 사진 다수)
+  return /kogl[^0-9]*(type)?[^0-9]*(1|i)\b|korea open government license[^0-9]*(type)?[^0-9]*(1|i)|공공누리[^0-9]*제?1유형/.test(s);
 }
 
 const strip = (h) => (h || "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();

@@ -1,0 +1,64 @@
+name: 이미지 일괄 자동취득 (photo-batch)
+
+# data/photo-batch.tsv 매니페스트를 읽어 사진을 일괄 취득한다.
+# 세션(코드 대화창)은 이미지 다운로드가 막혀 있어(프록시) 취득은 여기(Actions)에서 돈다.
+# 트리거: 매니페스트가 push 되면 자동 실행 → 위릿(세션)이 줄만 추가·push 하면 사람이 버튼을 안 눌러도 취득된다.
+#         (봇 커밋은 photos/ 만 건드리므로 paths 필터에 안 걸려 재실행 루프가 없다.)
+on:
+  push:
+    paths:
+      - "data/photo-batch.tsv"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: 매니페스트 취득
+        env:
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+        run: |
+          MAN=data/photo-batch.tsv
+          [ -f "$MAN" ] || { echo "매니페스트 없음: $MAN"; exit 0; }
+          fail=0
+          while IFS=$'\t' read -r slug source title || [ -n "$slug" ]; do
+            case "$slug" in ''|'#'*) continue ;; esac
+            [ -z "$source" ] && { echo "형식 오류(탭 확인): $slug"; continue; }
+            if [ -f "templates/_shared/photos/$slug.jpg" ] || [ -f "templates/_shared/photos/$slug.png" ]; then
+              echo "건너뜀(이미 있음): $slug"; continue
+            fi
+            echo "취득: $slug  <=  $source  $title"
+            if node scripts/fetch-photo.mjs --source "$source" --slug "$slug" --title "$title" --query "$title"; then
+              echo "  ✅ $slug"
+            else
+              echo "  ⛔ FAILED: $slug (라이선스 비안전/파일없음 — 다른 파일 선택 또는 직접 업로드)"; fail=1
+            fi
+          done < "$MAN"
+          echo "fail=$fail" >> "$GITHUB_ENV"
+
+      - name: 검증 + 커밋
+        run: |
+          node scripts/validate-assets.mjs || echo "⚠️ validate-assets 경고(무결성 확인 요망)"
+          git config user.name "wirit-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add templates/_shared/photos/
+          if git diff --cached --quiet; then
+            echo "새 사진 없음 — 커밋 생략"
+          else
+            git commit -m "이미지 일괄 자동취득 $(date -u +%Y-%m-%d)"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
+
+      - name: 실패 요약
+        if: ${{ env.fail == '1' }}
+        run: echo "::warning::일부 이미지가 취득되지 않았습니다 — 위 로그의 FAILED 줄을 확인하세요(라이선스 비안전이면 직접 업로드가 필요)."

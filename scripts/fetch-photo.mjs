@@ -63,7 +63,9 @@ async function fromWikimedia() {
   const ii = Object.values(j.query.pages)[0].imageinfo[0];
   const m = ii.extmetadata || {};
   const lic = (m.LicenseShortName || {}).value || "";
-  if (!/public domain|cc0|creative commons|\bcc[ -]/i.test(lic)) throw new Error(`위키미디어 라이선스 비안전: ${lic}`);
+  const _lic=(lic||"").toLowerCase();
+  const _safe=/public domain|cc0|creative commons|\bcc[ -]/.test(_lic) || /kogl[^0-9]*(type)?[^0-9]*(1|i)\b|korea open government license[^0-9]*(type)?[^0-9]*(1|i)|공공누리[^0-9]*제?1유형/.test(_lic);
+  if (!_safe) throw new Error(`위키미디어 라이선스 비안전: ${lic}`);
   return { url: ii.url, license: lic, author: ((m.Artist || {}).value || "").replace(/<[^>]+>/g, "").trim(), page: `https://commons.wikimedia.org/wiki/${encodeURIComponent(title)}` };
 }
 

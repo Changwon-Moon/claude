@@ -1,0 +1,15 @@
+# 위릿 이미지 자동취득 매니페스트 — 한 줄에 이미지 하나.
+# 형식(TAB 구분):  slug<TAB>source<TAB>title_or_query
+#  - source=wikimedia : title 칸에 Commons "File:...제목" (라이선스 CC/공공/ KOGL 제1유형만 통과)
+#  - source=pexels|pixabay : title 칸에 검색어(키 필요)
+# 이 파일을 push 하면 photo-batch.yml(Actions)이 자동으로 취득→templates/_shared/photos/ 저장→catalog 등록.
+# 이미 있으면 건너뛴다. 실패(라이선스 비안전 등)는 로그에 FAILED 로 남고 나머지는 계속.
+# 카드에서 사용:  figure.photo / predecessors[].photo = "<slug>.jpg"
+
+chumiae	wikimedia	File:Choo Mi-ae (Chopped).png
+lee-jaemyung	wikimedia	File:Lee Jae-myung's Portrait (2025.6.4) (cropped).jpg
+# 아래 3명은 Commons 카테고리에서 자유 라이선스 File 을 골라 File:제목 을 채운 뒤 주석 해제:
+#   김동연 → Category:Kim Dong-yeon   /   남경필 → Category:Nam Kyung-pil   /   김문수 → Category:Kim Moon-soo
+# kim-dongyeon	wikimedia	File:...
+# nam-kyungpil	wikimedia	File:...
+# kim-moonsoo	wikimedia	File:...
