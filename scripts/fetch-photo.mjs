@@ -20,9 +20,64 @@ const title = arg("title");
 const count = Math.max(1, parseInt(arg("count", "1"), 10) || 1); // >1이면 후보 여러 장(cand/) 취득
 if (!slug) { console.error("--slug 필요"); process.exit(1); }
 
+const category = arg("category", source === "category" ? title : "");
 const PEX = process.env.PEXELS_API_KEY || "";
 const PIX = process.env.PIXABAY_API_KEY || "";
 if (source === "auto") source = PEX ? "pexels" : PIX ? "pixabay" : "wikimedia";
+
+const WM_API = "https://commons.wikimedia.org/w/api.php";
+const WM_UA = { "User-Agent": "wirit-collector/0.1 (contact: operator)" };
+// 자유 라이선스만 통과 — CC/PD/CC0 + KOGL 제1유형(공공누리 1유형: 상업이용·변형 허용).
+function licenseSafe(lic) {
+  const s = (lic || "").toLowerCase();
+  if (!s || /non-?free|fair use/.test(s)) return false;
+  if (/public domain|cc0|creative commons|\bcc[ -]/.test(s)) return true;
+  return /kogl[^0-9]*(type)?[^0-9]*(1|i)\b|korea open government license[^0-9]*(type)?[^0-9]*(1|i)|공공누리[^0-9]*제?1유형/.test(s);
+}
+async function wmImageInfo(fileTitle) {
+  const u = `${WM_API}?action=query&format=json&prop=imageinfo&iiprop=url%7Cextmetadata%7Cmime&titles=${encodeURIComponent(fileTitle)}`;
+  const r = await fetch(u, { headers: WM_UA });
+  const j = await r.json();
+  const page = Object.values(j.query.pages)[0];
+  const ii = page && page.imageinfo && page.imageinfo[0];
+  if (!ii) return null;
+  const m = ii.extmetadata || {};
+  return { url: ii.url, mime: ii.mime || "", license: (m.LicenseShortName || {}).value || "",
+    author: ((m.Artist || {}).value || "").replace(/<[^>]+>/g, "").trim(),
+    page: `https://commons.wikimedia.org/wiki/${encodeURIComponent(fileTitle)}` };
+}
+/* 인물 카테고리 → 자유 라이선스 '정면 공식 사진'을 코드가 고른다.
+ * 우선순위: 제목에 portrait/official/공식/증명 이 있는 사진 > 그 외 사진. 서명·로고·엠블럼·차트는 제외.
+ * 각 후보의 라이선스를 실제로 조회해 자유 라이선스인 첫 장을 취한다. */
+async function fromWikimediaCategory() {
+  if (!category) throw new Error("--category 필요(예: Category:Choo Mi-ae)");
+  const u = `${WM_API}?action=query&format=json&list=categorymembers&cmtype=file&cmlimit=200&cmtitle=${encodeURIComponent(category)}`;
+  const r = await fetch(u, { headers: WM_UA });
+  const j = await r.json();
+  const files = (j.query?.categorymembers || []).map((m) => m.title)
+    .filter((t) => /\.(jpe?g|png)$/i.test(t))
+    .filter((t) => !/signature|logo|emblem|symbol|sign\b|flag|chart|graph|building|공천|명함/i.test(t));
+  // 정면 공식사진 우선: portrait/official/직함(장관·지사·의원·대표·minister·governor) 있으면 가점,
+  // 얼굴 위주(cropped/head)면 추가 가점, 행사·연설·측면(speech·rally·forum) 이면 감점.
+  const score = (t) => {
+    let s = 2;
+    if (/portrait|official|공식|증명|정부|국회|profile|minister|governor|장관|지사|의원|대표/i.test(t)) s -= 1.2;
+    if (/cropped|head|face/i.test(t)) s -= 0.5;
+    if (/speech|rally|forum|meeting|visit|campaign|debate|연설|행사|유세|회의/i.test(t)) s += 0.7;
+    return s;
+  };
+  files.sort((a, b) => score(a) - score(b));
+  const tried = [];
+  for (const t of files) {
+    let info;
+    try { info = await wmImageInfo(t); } catch { continue; }
+    if (!info) continue;
+    if (!licenseSafe(info.license)) { tried.push(`${t} [${info.license || "?"}]`); continue; }
+    console.log(`  ▶ 선택: ${t} · ${info.license}`);
+    return info;
+  }
+  throw new Error(`카테고리에 자유 라이선스 사진 없음: ${category}\n  검토: ${tried.slice(0, 8).join(" / ")}`);
+}
 
 async function pexelsList() {
   if (!PEX) throw new Error("PEXELS_API_KEY 없음");
@@ -96,7 +151,10 @@ const fetchCandidates = async () => {
 
 const main = async () => {
   if (count > 1) return fetchCandidates();
-  const pick = source === "pexels" ? await fromPexels() : source === "pixabay" ? await fromPixabay() : await fromWikimedia();
+  const pick = source === "pexels" ? await fromPexels()
+    : source === "pixabay" ? await fromPixabay()
+    : source === "category" ? await fromWikimediaCategory()
+    : await fromWikimedia();
   const bin = await fetch(pick.url, { headers: { "User-Agent": "wirit-collector/0.1" } });
   if (!bin.ok) throw new Error(`다운로드 HTTP ${bin.status}`);
   const buf = Buffer.from(await bin.arrayBuffer());

@@ -66,15 +66,6 @@
       "added": "2026-08-03"
     }
   ],
-  "chumiae": {
-    "file": "chumiae.jpg",
-    "source": "wikimedia",
-    "query": "File:Choo Mi-ae (Chopped).png",
-    "license": "CC BY 3.0",
-    "author": "Transitional Justice Working Group",
-    "url": "https://commons.wikimedia.org/wiki/File%3AChoo%20Mi-ae%20(Chopped).png",
-    "fetchedFor": "wirit card"
-  },
   "lee-jaemyung": {
     "file": "lee-jaemyung.jpg",
     "source": "wikimedia",

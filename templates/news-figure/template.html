@@ -255,20 +255,24 @@
       .nf-sub .nm { font-size: 25px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.02em; }
       .nf-sub .sub { font-size: 20px; font-weight: 600; color: var(--wirit-gray); }
 
-      /* ── 본문: 형광펜 강조 문단 ── */
-      .nf-body { margin-top: 36px; margin-bottom: 30px; display: flex; flex-direction: column; gap: 24px; }
+      /* ── 본문: 신문 클리핑 카드(옅은 신문지 바탕 + 상단 괘선 + 형광펜) ── */
+      .nf-body { margin-top: 34px; margin-bottom: 30px; display: flex; flex-direction: column; gap: 20px; }
       .nf-lead {
-        border-left: 6px solid var(--wirit-ink);
-        padding-left: 26px;
+        background: #f3f1e9;                       /* 옅은 신문지 바탕 */
+        border: 1px solid var(--wirit-ink-12);
+        border-top: 3px solid var(--wirit-ink);    /* 클리핑 상단 괘선 */
+        border-radius: 2px;                        /* 각 — AI 타일 회피 */
+        padding: 18px 26px 20px;
       }
-      .nf-lead.accent { border-color: var(--wirit-cobalt); }
-      .nf-lead-h {
-        font-size: 30px;
+      .nf-lead.accent { border-top-color: var(--wirit-cobalt); }
+      .nf-lead-h {                                 /* 신문 키커 */
+        font-size: 25px;
         font-weight: 800;
         color: var(--wirit-gray);
-        letter-spacing: -0.01em;
-        margin-bottom: 10px;
+        letter-spacing: 0.01em;
+        margin-bottom: 9px;
       }
+      .nf-lead-h::before { content: "▪ "; color: var(--wirit-ink); }
       .nf-lead-t {
         font-size: 37px;
         font-weight: 700;
