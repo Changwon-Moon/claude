@@ -334,7 +334,7 @@
       <div class="nf-hero">
         {{#if titleEmblem}}
           <div class="nf-titwrap">
-            <div class="nf-emblem">{{#if titleEmblem.photo}}<img src="../_shared/photos/{{titleEmblem.photo}}" alt="" />{{else}}{{titleEmblem.label}}{{/if}}</div>
+            <div class="nf-emblem">{{#if titleEmblem.logo}}<img src="../_shared/logos/{{titleEmblem.logo}}" alt="" />{{else}}{{#if titleEmblem.photo}}<img src="../_shared/photos/{{titleEmblem.photo}}" alt="" />{{else}}{{titleEmblem.label}}{{/if}}{{/if}}</div>
             <h1 class="wirit-title nf-title">{{{headline}}}</h1>
           </div>
         {{else}}
