@@ -92,11 +92,12 @@
       "label": "sinbundang-loop",
       "title": "신분당선 역세권 34평 APT 시세 (2026.01~07)",
       "state": "오너 확정",
-      "at": "2026-08-01",
+      "at": "2026-08-06",
       "builder": "sinbundang-loop",
       "content": "data/content/2026-07-31/sinbundang-loop.json",
       "png": "sinbundang-loop-p1.png",
-      "md5": "acdaf3493e6c8b6401e12a1fbd5a2f10"
+      "md5": "7e3f24d25021e2bf61ca3c79075561ff",
+      "note": "2026-08-06 오너 재확정. 08-02 3188dbd(9개 노선 공용 렌더러)가 이 카드를 같이 바꿨는데 기준값을 안 고쳐 검사가 깨져 있었다. 오너가 새 모습을 확정해 갱신한다. 이전 md5 acdaf3493e6c… (08-01 확정본). 바뀐 것: 워터마크 2개 추가 · 구칩 연회색 · '최고가' 뱃지 제거 · 환승뱃지(GTX-C·월판) 추가 · 9호선 칩색 · 동천 14.3→14.4억(round-half-up). ⚠️ 마지막 항목은 숫자가 바뀐 것이라 이미 발행한 카드와 값이 다르다 — 발행 완료 시리즈라 그대로 둔다(오너 판단)."
     },
     {
       "label": "world-capital",
