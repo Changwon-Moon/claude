@@ -31,6 +31,7 @@
         letter-spacing: -0.01em;
         padding-top: 4px;
       }
+      .nf-src.eye { color: var(--wirit-ink); font-weight: 800; font-size: 26px; }
       .nf-chip {
         align-self: flex-start;
         display: inline-flex;
@@ -148,13 +149,13 @@
       .nf-pred .pty.p-hannara { background: #163b8c; }
       .nf-pred .pty.p-ppp { background: #e61e2b; }
       .nf-pred .cap {
-        font-size: 26px;
+        font-size: 23px;
         font-weight: 800;
         color: var(--wirit-ink);
-        letter-spacing: -0.02em;
+        letter-spacing: -0.03em;
         line-height: 1.15;
+        white-space: nowrap;
       }
-      .nf-pred .cap b { display: block; font-size: 21px; font-weight: 600; color: var(--wirit-gray); }
 
       /* ── 인물 사진 ── */
       .nf-photo {
@@ -176,6 +177,11 @@
       .nf-right.has-subs .nf-photo { height: 264px; }
       /* 전임 가로 행이 붙으면 메인 사진을 낮춰 세로를 확보 */
       .nf.has-pred .nf-photo { height: 288px; }
+      /* 누끼(배경제거) 표시: 박스·테두리 없이 인물만 종이 위에 세운다 */
+      .nf.cut .nf-photo { border: none; background: transparent; height: 312px; overflow: visible; }
+      .nf.cut .nf-photo img { object-fit: contain; object-position: bottom center; }
+      .nf.cut .nf-pred-face { border: none; background: transparent; }
+      .nf.cut .nf-pred-face img { object-fit: contain; object-position: bottom center; }
       /* 사진 없을 때 실루엣 자리표시(시안용) */
       .nf-ph {
         position: absolute;
@@ -319,9 +325,9 @@
     </style>
   </head>
   <body>
-    <div class="wirit-card nf{{#if predecessors}} has-pred{{/if}}">
+    <div class="wirit-card nf{{#if predecessors}} has-pred{{/if}}{{#if cut}} cut{{/if}}">
       <div class="nf-head">
-        <div class="nf-src">{{#if source.name}}* 출처 : {{source.name}}{{#if source.asOf}} ({{source.asOf}}){{/if}}{{/if}}</div>
+        <div class="nf-src{{#if eyebrow}} eye{{/if}}">{{#if eyebrow}}{{eyebrow}}{{else}}{{#if source.name}}* 출처 : {{source.name}}{{#if source.asOf}} ({{source.asOf}}){{/if}}{{/if}}{{/if}}</div>
         {{#if category}}<div class="nf-chip {{categoryStyle}}">{{category}}</div>{{/if}}
       </div>
 
@@ -381,7 +387,7 @@
                   {{#if this.photo}}<img src="../_shared/photos/{{this.photo}}" alt="" />{{else}}<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12Zm0 2.2c-3.9 0-9 2-9 5.9v1.7h18v-1.7c0-3.9-5.1-5.9-9-5.9Z"/></svg>{{/if}}
                 </div>
                 <span class="pty {{this.partyClass}}">{{#if this.partyLogo}}<img src="../_shared/logos/{{this.partyLogo}}" alt="" />{{else}}{{this.party}}{{/if}}</span>
-                <span class="cap">{{this.name}}<b>{{this.term}}</b></span>
+                <span class="cap">{{this.term}} {{this.name}}</span>
               </div>
             {{/each}}
           </div>
