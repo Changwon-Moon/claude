@@ -8,6 +8,7 @@ on:
   push:
     paths:
       - "data/photo-batch.tsv"
+      - "data/logo-batch.tsv"
   workflow_dispatch: {}
 
 permissions:
@@ -45,14 +46,30 @@ jobs:
           done < "$MAN"
           echo "fail=$fail" >> "$GITHUB_ENV"
 
+      - name: 로고·엠블럼 취득(라이선스 판정)
+        run: |
+          LMAN=data/logo-batch.tsv
+          [ -f "$LMAN" ] || { echo "로고 매니페스트 없음 — 건너뜀"; exit 0; }
+          while IFS=$'\t' read -r slug ltitle || [ -n "$slug" ]; do
+            case "$slug" in ''|'#'*) continue ;; esac
+            [ -z "$ltitle" ] && continue
+            echo "로고: $slug  <=  $ltitle"
+            node scripts/fetch-logo.mjs --title "$ltitle" --slug "$slug" || echo "  (자유 아님/실패: $slug — 판정 로그 참고)"
+          done < "$LMAN"
+
+      - name: 누끼(배경 제거) — 신규 사진 자동 처리
+        run: |
+          python3 -m pip install --quiet --break-system-packages rembg onnxruntime pillow || pip install --quiet rembg onnxruntime pillow
+          python3 scripts/cutout.py --missing || echo "누끼 건너뜀(도구 문제)"
+
       - name: 검증 + 커밋
         run: |
           node scripts/validate-assets.mjs || echo "⚠️ validate-assets 경고(무결성 확인 요망)"
           git config user.name "wirit-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add templates/_shared/photos/
+          git add templates/_shared/photos/ templates/_shared/logos/
           if git diff --cached --quiet; then
-            echo "새 사진 없음 — 커밋 생략"
+            echo "새 자산 없음 — 커밋 생략"
           else
             git commit -m "이미지 일괄 자동취득 $(date -u +%Y-%m-%d)"
             git pull --rebase --autostash origin ${GITHUB_REF_NAME}

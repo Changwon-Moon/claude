@@ -110,6 +110,25 @@ async function fromPixabay() {
   if (!list[0]) throw new Error("Pixabay 결과 없음");
   return list[0];
 }
+/* 위키백과 대표사진(lead image) → 파일 취득. 생존 인물 문서의 대표사진은 사실상 자유 라이선스다.
+ * source=wikipedia, title="문서 제목"(예: "Kim Moon-soo (politician)"). lang 는 --lang(기본 en). */
+async function fromWikipediaLead() {
+  const lang = arg("lang", "en");
+  const art = title;
+  if (!art) throw new Error("--title 에 위키백과 문서 제목 필요");
+  const api = `https://${lang}.wikipedia.org/w/api.php`;
+  const u = `${api}?action=query&format=json&prop=pageimages&piprop=name&titles=${encodeURIComponent(art)}`;
+  const r = await fetch(u, { headers: WM_UA });
+  const j = await r.json();
+  const page = Object.values(j.query.pages)[0];
+  const name = page && page.pageimage;
+  if (!name) throw new Error(`위키백과 대표사진 없음: ${art}`);
+  const info = await wmImageInfo("File:" + name);   // 대개 커먼즈에 있다
+  if (!info) throw new Error(`대표사진 파일 정보 없음: File:${name}`);
+  if (!licenseSafe(info.license)) throw new Error(`대표사진 라이선스 비안전: ${info.license} (File:${name})`);
+  console.log(`  ▶ 위키백과 대표사진: File:${name} · ${info.license}`);
+  return info;
+}
 async function fromWikimedia() {
   const api = "https://commons.wikimedia.org/w/api.php";
   const u = `${api}?action=query&format=json&prop=imageinfo&iiprop=url%7Cextmetadata%7Cmime&titles=${encodeURIComponent(title)}`;
@@ -154,6 +173,7 @@ const main = async () => {
   const pick = source === "pexels" ? await fromPexels()
     : source === "pixabay" ? await fromPixabay()
     : source === "category" ? await fromWikimediaCategory()
+    : source === "wikipedia" ? await fromWikipediaLead()
     : await fromWikimedia();
   const bin = await fetch(pick.url, { headers: { "User-Agent": "wirit-collector/0.1" } });
   if (!bin.ok) throw new Error(`다운로드 HTTP ${bin.status}`);

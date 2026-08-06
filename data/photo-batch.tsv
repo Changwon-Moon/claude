@@ -1,13 +1,11 @@
-# 위릿 이미지 자동취득 매니페스트 — 한 줄에 이미지 하나. TAB 구분:  slug<TAB>source<TAB>title_or_query
-#  - source=category : title 에 Commons "Category:이름" → 코드가 자유 라이선스 정면 공식사진을 자동 선택
-#  - source=wikimedia: title 에 Commons "File:...제목" (특정 파일 고정)
-#  - source=pexels|pixabay: title 에 검색어(키 필요)
-# push 하면 photo-batch.yml(Actions)이 자동 취득→photos 저장→catalog 등록. 이미 있으면 건너뜀.
-# 라이선스 게이트: CC/PD/CC0 + KOGL 제1유형만 통과. 실패는 로그 FAILED.
-# 카드에서: figure.photo / predecessors[].photo = "<slug>.jpg"
+# 위릿 이미지 자동취득 매니페스트. TAB 구분: slug<TAB>source<TAB>title_or_query
+#  source=category  : Category:이름 → 코드가 자유 라이선스 정면/공식 사진 자동 선택
+#  source=wikipedia : 위키백과 문서 제목 → 그 인물 대표사진(생존 인물은 사실상 자유 라이선스)
+#  source=wikimedia : File:제목 고정  |  source=pexels|pixabay : 검색어(키 필요)
+# push→photo-batch.yml 자동 취득→photos 저장→누끼(-cut.png)→catalog. 이미 있으면 건너뜀. 카드: photo="<slug>-cut.png"
 
 chumiae	category	Category:Choo Mi-ae
 lee-jaemyung	wikimedia	File:Lee Jae-myung's Portrait (2025.6.4) (cropped).jpg
 kim-dongyeon	category	Category:Kim Dong-yeon
-nam-kyungpil	category	Category:Nam Kyung-pil
-kim-moonsoo	category	Category:Kim Moon-soo
+nam-kyungpil	wikipedia	Nam Kyung-pil
+kim-moonsoo	wikipedia	Kim Moon-soo (politician)
