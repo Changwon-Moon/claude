@@ -431,14 +431,25 @@ node scripts/danji-card.mjs "<단지명 또는 공고번호>" --photo <조감도
 빌드 대상 목록은 **데이터셋이 정한다**(`build-danji.mjs` 가 `doc.danji` 전체를 돈다) —
 새 단지를 넣으면 그 순간 카드가 나온다. 자세한 것은 `docs/guides/청약분양-카드-기준.md` §0.
 
-### 확정본 (2026-08-03)
+### 확정본
 
-| 세트 | 카드 | kind | md5 |
-|---|---|---|---|
-| `danji-hangang` | 한강뷰 아파트 분양가 7억대? | `presale` | `3dc78a13…` |
-| `danji-songdo` | 송도 무순위 줍줍 150세대 | `remndr` | `553d4532…` |
+| 세트 | 카드 | kind | 판 | md5 |
+|---|---|---|---|---|
+| `danji-hangang` | 한강뷰 아파트 분양가 7억대? | `presale` | 분양 예정 | `3dc78a13…` |
+| `danji-songdo` | 송도 무순위 줍줍 150세대 | `remndr` | 규모 우선 | `553d4532…` |
+| `danji-jangwi` | 천지개벽 장위에 줍줍 떴다 | `remndr` | **타입·분양가** | `5af157c8…` |
 
-둘 다 **정기물**이라 `pixel-baselines.json` 이 아니라 `sets.json` 의 `confirmedMd5` 로 남긴다.
+전부 **정기물**이라 `pixel-baselines.json` 이 아니라 `sets.json` 의 `confirmedMd5` 로 남긴다.
+
+#### 무순위는 판이 둘이다 (2026-08-06)
+
+`price.byType` **유무**가 판을 가른다. 플래그를 손으로 켜지 않는다.
+
+- **없으면**(송도) — 위 단 = 전용면적별 잔여 세대, 아래 단 = 잔여/동수/층수
+- **있으면**(장위) — 위 단 = 단지 규모 4칸, 아래 단 = 타입별 세대수·최고 분양가 4칸(`.frow.four`)
+
+새 판형 CSS 는 **선택자로 가둔다**(`.frow.four`, `:has(.frow.four)`). 공통 규칙을 건드리면
+확정본이 같이 움직인다 — 판형을 고칠 때마다 위 표의 md5 를 **전부 다시 찍는다.**
 
 ### 판형 회귀 — `templates/danji-cover/sample.json`
 

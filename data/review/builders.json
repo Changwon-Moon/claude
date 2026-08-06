@@ -246,6 +246,16 @@
       "args": [
         "2026-08-05"
       ]
+    },
+    {
+      "label": "danji-jangwi",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-08-06",
+        "--only",
+        "jangwi-markone-remndr",
+        "--publish"
+      ]
     }
   ]
 }
