@@ -58,8 +58,13 @@ try {
     console.log("   원인: 이 세션의 **인가 저장소 목록**에 이 저장소가 없습니다.");
     console.log("   ⚠️ 읽기(fetch·clone)는 되면서 쓰기만 막히는 상태일 수 있습니다 — 실제로 그랬다(2026-08-06).");
     console.log("      그래서 clone 이 됐다고 안심하면 안 되고, 커밋도 전부 로컬이라 마지막까지 성공한다.");
-    console.log("   오너가 대화창 [+] → Add from GitHub → Changwon-Moon/claude 를 고르면 열립니다.");
-    console.log("   (자격증명 문제가 아니라 호스트 접근 문제라 개인 토큰으로는 못 풉니다.)");
+    console.log("   ⚠️ 코워크 대화창 [+] 메뉴에는 저장소를 붙이는 항목이 없다(2026-08-06 확인 —");
+    console.log("      파일/스킬/커넥터/플러그인 뿐. 'Add from GitHub' 는 claude.ai 채팅·프로젝트 쪽 UI다).");
+    console.log("   인가 목록은 **세션이 만들어질 때** 잡힌다. 그러니 풀리는 길은 둘뿐이다:");
+    console.log("     ① 저장소를 붙인 새 코워크 세션을 시작한다(이 세션의 작업분은 패치로 넘긴다)");
+    console.log("     ② 오너가 자기 컴퓨터에서 패치를 적용하고 직접 푸시한다");
+    console.log("   자격증명 문제가 아니라 **호스트 접근** 문제다 — 개인 토큰(PAT)으로는 안 풀린다.");
+    console.log("   프록시가 막은 것을 다른 인증 경로로 돌아가려 하지 않는다.");
   } else if (/could not read Username|terminal prompts disabled/i.test(msg)) {
     console.log("   원인: 토큰을 안 넘겼습니다 — 차단이 아닙니다.");
     console.log("   프로젝트 문서의 PAT 를 넘겨 다시 보세요:");
