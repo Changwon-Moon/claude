@@ -92,5 +92,14 @@
     "author": "Office of U.S. Treasury Secretary",
     "url": "https://commons.wikimedia.org/wiki/File%3AKim%20Dong-yeon%202018-06.jpg",
     "fetchedFor": "wirit card"
+  },
+  "nam-kyungpil": {
+    "file": "nam-kyungpil.jpg",
+    "source": "wikipedia",
+    "query": "Nam Kyung-pil",
+    "license": "CC BY-SA 2.0",
+    "author": "Korea.net / Korean Culture and Information Service (Jeon Han)",
+    "url": "https://commons.wikimedia.org/wiki/File%3ANam_Kyung-pil_at_18th_Puchon_International_Fantastic_Film_Festival%2C_July_17%2C_2014.jpg",
+    "fetchedFor": "wirit card"
   }
 }

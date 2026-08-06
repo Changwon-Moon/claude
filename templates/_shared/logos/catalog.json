@@ -262,6 +262,15 @@
       "license": "trademark-nominative",
       "note": "두산건설 아파트 브랜드 · 자동 취득 실패분(모회사 로고로 떨어짐)",
       "added": "2026-07-31"
+    },
+    {
+      "slug": "gyeonggi",
+      "name": "Emblem of Gyeonggi Province (2021).svg",
+      "kind": "logo",
+      "source": "Wikimedia Commons · File:Emblem of Gyeonggi Province (2021).svg",
+      "license": "Public domain",
+      "author": "Gyeonggi Province Government",
+      "added": "auto"
     }
   ]
 }
