@@ -162,8 +162,9 @@
             "type": "string",
             "maxLength": 24
           },
-          "minItems": 1,
-          "maxItems": 1
+          "minItems": 0,
+          "maxItems": 1,
+          "description": "표 위 회색 머리글. 빈 배열이면 줄 자체를 그리지 않는다(오너 지시 2026-08-06)"
         },
         "rows": {
           "type": "array",
@@ -257,18 +258,9 @@
       "maxLength": 40,
       "description": "조감도 바로 아래 붙는 주소(읍면동까지)"
     },
-    "specHead": {
-      "type": "string",
-      "maxLength": 30,
-      "description": "제원 줄 위 회색 머리글 — '7.3억'이 최고가인지 최저가인지 카드가 말하게 한다"
-    },
     "specFour": {
       "type": "boolean",
       "description": "제원 줄을 균등 4등분으로 — 타입이 넷인 무순위 카드"
-    },
-    "compact": {
-      "type": "boolean",
-      "description": "단이 하나 더 들어간 판형 — 마디 여백을 조금씩 줄인다. 확정본은 이 값을 쓰지 않는다"
     }
   }
 }

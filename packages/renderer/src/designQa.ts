@@ -206,8 +206,7 @@ const MEASURE_JS = `(() => {
                 글자 요소를 여기 등록해야 겹침 검사가 실제로 잰다 — 빠진 요소는 없는 것과 같다.
                 (danji-brief 는 이 판형으로 대체돼 삭제됐다) */
              ".dcv-title .ln,.dcv-fb .w,.dcv-nm .nm,.dcv-nm .loc,.dcv-ph," +
-             ".dcv .lab,.dcv-facts .v,.dcv-facts .brk,.dcv-facts .fhead," +
-             ".dcv-item .a,.dcv-item .p,.dcv-note," +
+             ".dcv .lab,.dcv-facts .v,.dcv-facts .brk,.dcv-item .a,.dcv-item .p,.dcv-note," +
              /* sinbundang-loop — 노선 접이형 정보카드(2026-07-31). */
              ".slp-stn,.slp-danji,.slp-meta,.slp-priceB,.slp-name,.slp-gu,.slp-top," +
              /* news-figure — 인물/뉴스 이슈 카드(2026-08-05). 헤드라인(.nf-title)이 좌열을

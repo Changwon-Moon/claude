@@ -395,8 +395,10 @@ function remndr(d) {
   const byType = d.price?.byType;
   const scaleFirst = Array.isArray(byType) && byType.length > 0;
 
+  /* 회색 안내 머리글은 넣지 않는다(오너 지시 2026-08-06 "안내글씨는 다 지워줘").
+     각 칸이 이미 자기 이름표를 달고 있어 머리글은 같은 말을 두 번 하는 셈이었다. */
   const scaleGrid = () => ({
-    head: ["단지 규모"],
+    head: [],
     cols: 4,
     rows: [
       { area: "총 세대수", price: `${n(d.totalComplex ?? total)}세대` },
@@ -433,7 +435,7 @@ function remndr(d) {
       : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true, shift: heroShift("seoul-apart-night.jpg") },
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
     address: addressOf(d),
-    ...(scaleFirst ? { compact: true, specHead: "타입별 세대수 · 분양가(최고가 기준)", specFour: byType.length === 4 } : {}),
+    ...(scaleFirst ? { specFour: byType.length === 4 } : {}),
     spec: scaleFirst
       ? typeCells()
       : [
