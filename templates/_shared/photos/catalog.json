@@ -74,5 +74,23 @@
     "author": "Republic of  Korea from Seoul, Republic of Korea",
     "url": "https://commons.wikimedia.org/wiki/File%3ALee%20Jae-myung's%20Portrait%20(2025.6.4)%20(cropped).jpg",
     "fetchedFor": "wirit card"
+  },
+  "chumiae": {
+    "file": "chumiae.jpg",
+    "source": "category",
+    "query": "Category:Choo Mi-ae",
+    "license": "KOGL Type 1",
+    "author": "대한민국 법무부",
+    "url": "https://commons.wikimedia.org/wiki/File%3AChoo%20Mi-ae%20ministerial%20portrait.png",
+    "fetchedFor": "wirit card"
+  },
+  "kim-dongyeon": {
+    "file": "kim-dongyeon.jpg",
+    "source": "category",
+    "query": "Category:Kim Dong-yeon",
+    "license": "Public domain",
+    "author": "Office of U.S. Treasury Secretary",
+    "url": "https://commons.wikimedia.org/wiki/File%3AKim%20Dong-yeon%202018-06.jpg",
+    "fetchedFor": "wirit card"
   }
 }
