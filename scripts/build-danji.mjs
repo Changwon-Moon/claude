@@ -386,41 +386,80 @@ function remndr(d) {
   if (d.contractDate) flags.push(`<i class="em">💡</i>계약 ${md(d.contractDate)}`);
 
   const hook = d.hook || d.location.split(" ").slice(2, 3).join("") || d.location;
+
+  /* ── 분양가를 아는 무순위 카드 (오너 지시 2026-08-06) ──
+   * 무순위는 대개 공급금액이 '사업주체 문의'로만 적혀 카드가 규모밖에 말할 게 없다.
+   * 그런데 **본청약 때 이미 값이 매겨진 단지**는 타입별 금액을 안다 — 그러면 그게 소식이다.
+   * 그때만 판을 바꾼다: 위 단은 단지 규모 4칸, 아래 단은 타입별 세대수·최고 분양가.
+   * price.byType 이 없으면 예전 판 그대로 — 확정된 카드(송도)의 픽셀은 건드리지 않는다. */
+  const byType = d.price?.byType;
+  const scaleFirst = Array.isArray(byType) && byType.length > 0;
+
+  const scaleGrid = () => ({
+    head: ["단지 규모"],
+    cols: 4,
+    rows: [
+      { area: "총 세대수", price: `${n(d.totalComplex ?? total)}세대` },
+      { area: "동수", price: d.buildings != null ? `${d.buildings}개동` : "미고지" },
+      { area: "최고 층수", price: d.topFloor != null ? `${d.topFloor}층` : "미고지" },
+      { area: "잔여", price: `${n(total)}세대`, main: true },
+    ],
+  });
+  /* 타입 칸: 회색 한 줄에 '타입 · 세대수', 그 아래 큰 글씨로 최고 분양가.
+     오너가 부른 순서(타입/세대수/분양가)를 위에서 아래로 그대로 지킨다. */
+  const typeCells = () =>
+    byType.map((t) => {
+      if (t.won == null) throw new Error(`${d.id}: ${t.type} 의 분양가(won)가 없다 — 지어내지 않는다`);
+      return { above: `${t.type} · ${n(t.units)}세대`, value: eok1(t.won), hi: !!t.main };
+    });
+  if (scaleFirst) {
+    const sum = byType.reduce((a, b) => a + (b.units || 0), 0);
+    if (sum !== total)
+      throw new Error(`${d.id}: 타입별 세대수 합 ${sum} ≠ 잔여 총 ${total} — 표가 공고와 다르다`);
+  }
+
   return {
     template: "danji-cover@1",
     date,
     kind: "remndr",
     topcap: `오늘의 주요 청약 이슈 (${date.replace(/-/g, ".")})`,
-    /* 무순위 문형(오너 확정): "{훅} 무순위 줍줍 {N}세대" — 분양가를 못 쓰니 규모가 제목을 진다. */
-    titleLines: [`<span class="hi">${hook}</span> 무순위 줍줍 <span class="hi">${n(total)}세대</span>`],
+    /* 무순위 문형(오너 확정): "{훅} 무순위 줍줍 {N}세대" — 분양가를 못 쓰니 규모가 제목을 진다.
+       단지마다 제목이 달라야 할 때가 있다(오너가 직접 쓴 제목). 그때는 데이터셋이 이긴다. */
+    titleLines: [
+      d.titleHtml || `<span class="hi">${hook}</span> 무순위 줍줍 <span class="hi">${n(total)}세대</span>`,
+    ],
     hero: d.photo
       ? { photo: d.photo.file, credit: d.photo.credit, shift: heroShift(d.photo.file) }
       : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true, shift: heroShift("seoul-apart-night.jpg") },
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
     address: addressOf(d),
-    spec: [
-      {
-        label: "잔여 세대",
-        /* 잔여 세대는 **전체 대비 얼마인지**가 있어야 크기가 읽힌다(오너 지시).
-           전체 세대수는 청약홈에 없으므로 데이터셋(totalComplex)에 있을 때만 얹는다. */
-        ...(d.totalComplex ? { above: `총 ${n(d.totalComplex)}세대 중` } : {}),
-        value: n(total),
-        unit: "세대",
-        hi: true,
-      },
-      /* 동수를 알면 동수가 낫다 — '5개 블록'은 공고 편의상의 구분이고 독자가 궁금한 건 단지 규모다. */
-      d.buildings != null
-        ? { label: "동수", pre: "총", value: String(d.buildings), unit: "개동" }
-        : blocks
-          ? { label: "블록", value: String(blocks), unit: "개 블록" }
-          : { label: "동수", value: "미고지", tbd: true },
-      d.topFloor != null
-        ? { label: "최고 층수", pre: "최고", value: String(d.topFloor), unit: "층" }
-        : { label: "최고 층수", value: "미고지", tbd: true },
-    ],
-    priceTable: priceTable(d, total),
+    ...(scaleFirst ? { compact: true, specHead: "타입별 세대수 · 분양가(최고가 기준)", specFour: byType.length === 4 } : {}),
+    spec: scaleFirst
+      ? typeCells()
+      : [
+          {
+            label: "잔여 세대",
+            /* 잔여 세대는 **전체 대비 얼마인지**가 있어야 크기가 읽힌다(오너 지시).
+               전체 세대수는 청약홈에 없으므로 데이터셋(totalComplex)에 있을 때만 얹는다. */
+            ...(d.totalComplex ? { above: `총 ${n(d.totalComplex)}세대 중` } : {}),
+            value: n(total),
+            unit: "세대",
+            hi: true,
+          },
+          /* 동수를 알면 동수가 낫다 — '5개 블록'은 공고 편의상의 구분이고 독자가 궁금한 건 단지 규모다. */
+          d.buildings != null
+            ? { label: "동수", pre: "총", value: String(d.buildings), unit: "개동" }
+            : blocks
+              ? { label: "블록", value: String(blocks), unit: "개 블록" }
+              : { label: "동수", value: "미고지", tbd: true },
+          d.topFloor != null
+            ? { label: "최고 층수", pre: "최고", value: String(d.topFloor), unit: "층" }
+            : { label: "최고 층수", value: "미고지", tbd: true },
+        ],
+    priceTable: scaleFirst ? scaleGrid() : priceTable(d, total),
     schedule,
-    notice: flags.join(" · "),
+    /* 한줄평이 있으면 그게 아래 한 줄이다 — 특이사항 나열보다 한 문장이 오래 남는다. */
+    notice: d.oneLiner ? `<i class="em">💡</i>${d.oneLiner}` : flags.join(" · "),
     source: { name: d.source.name.replace(/^한국부동산원\s+/, "") },
   };
 }
