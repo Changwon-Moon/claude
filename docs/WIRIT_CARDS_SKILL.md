@@ -57,8 +57,26 @@ cd wirit
 git remote set-url origin https://github.com/Changwon-Moon/claude.git   # URL에서 토큰 제거
 
 pnpm install --frozen-lockfile
+node scripts/check-push.mjs     # ← 작업 시작 전에 반드시. 아래 설명을 읽을 것
 node scripts/doctor.mjs
 ```
+
+### ⚠️ `check-push` 가 빨간불이면 **먼저 말한다** (2026-08-06 사고)
+
+카드 한 장을 네 번 고쳐 확정까지 끝내고 나서야 푸시가 막힌 걸 알았다. 커밋 6건이 컨테이너
+안에만 남았고, **컨테이너 안에만 있는 커밋은 없는 것과 같다** — 세션이 끝나면 회수된다.
+
+막히는 방식이 고약하다. clone 은 세션 시작에 이미 끝나 있어 성공했고, 커밋도 전부 로컬이라
+성공한다. 실패는 **맨 마지막 한 번**에 몰려서 나타난다. 그래서 먼저 물어야 한다.
+
+- 막혀 있으면 **작업을 시작하기 전에 오너에게 알린다.** 다 만들고 나서 말하면 이미 늦다.
+- 푸는 건 오너만 할 수 있다: 대화창 `[+]` → Add from GitHub → `Changwon-Moon/claude`.
+  **자격증명이 아니라 호스트 접근이 막힌 것이라 개인 토큰(PAT)으로는 못 푼다.**
+- 그래도 작업을 진행해야 하면, **한 덩어리로 몰지 말고** 의미 단위마다 커밋하고
+  매번 `git format-patch origin/<브랜치>..HEAD --stdout` 로 뽑아 오너에게 보낸다.
+- 푸시가 막히면 같이 죽는 것들: 관제탑 배포(`tower-deploy`), 수집 대기열 방아쇠
+  (세션이 Actions 버튼을 못 누르니 푸시가 유일한 손잡이), 발행 보관, 다음 세션의 기준 상속.
+  워크플로 27개 중 19개가 푸시를 방아쇠로 쓴다.
 
 ⚠️ **명세 파일은 `data/review/` 아래에 있다** — `sets.json`·`builders.json`·`pixel-baselines.json`.
 `data/sets.json` 을 찾으면 없다(2026-07-31 에 여기서 한 번 헛짚었다).
