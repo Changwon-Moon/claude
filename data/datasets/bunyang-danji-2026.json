@@ -426,6 +426,63 @@
         "credit": "출처. 케이비부동산신탁(주) 홈페이지",
         "provided": "2026-08-03 오너 제공 · 원본은 templates/_shared/photos/_source/"
       }
+    },
+    {
+      "id": "jangwi-markone-remndr",
+      "slug": "jangwi",
+      "kind": "remndr",
+      "name": "장위 푸르지오 마크원",
+      "location": "서울 성북구 장위동",
+      "hook": "장위",
+      "applyhomeNo": "2026910212",
+      "total": 39,
+      "buildings": 23,
+      "topFloor": 35,
+      "totalComplex": 1931,
+      "_areasNote": "청약홈 무순위 공고 상세의 주택형별 공급세대수 원문(039.7700A 21 · 084.8600A 8 · 084.9000C 6 · 101.7400 4)을 면적대로 옮겼다. 합 39 = 청약홈 공급 총 39세대와 일치(빌더가 다시 검산한다).",
+      "areas": [
+        {
+          "m2": 39,
+          "units": 21,
+          "types": [
+            "A"
+          ]
+        },
+        {
+          "m2": 84,
+          "units": 14,
+          "types": [
+            "A",
+            "C"
+          ]
+        },
+        {
+          "m2": 101,
+          "units": 4,
+          "types": [
+            "-"
+          ]
+        }
+      ],
+      "mainArea": {
+        "m2": 39,
+        "units": 21
+      },
+      "company": "대우건설",
+      "source": {
+        "name": "한국부동산원 청약홈 무순위 입주자모집공고",
+        "via": "청약홈 공고 상세 (2026-08-04 열람) · 단지 규모는 푸르지오 공식 홈페이지",
+        "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910212&pblancNo=2026910212"
+      },
+      "_scaleNote": "총 1,931세대·최고 35층 = 푸르지오 공식 홈페이지(1차). 23개동 = 보도 2곳(더페어·헤럴드경제) 일치 — 공고문 PDF 가 세션에서 안 열려 1차 대조를 못 했다. 발행 전 오너 확인 대상.",
+      "photo": {
+        "file": "jangwi-prugio-markone.jpg",
+        "credit": "출처. 홈페이지",
+        "provided": "2026-08-04 오너 제공(푸르지오 공식 홈페이지 화면) · 조감도 영역만 잘라 씀. 원본은 _source/"
+      },
+      "logo": "prugio.png",
+      "contractDate": "2026-08-15",
+      "_contractNote": "청약홈 무순위 공고 상세 계약일 2026-08-15(토) — 1차 출처."
     }
   ]
 }

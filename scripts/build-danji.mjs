@@ -34,9 +34,12 @@ import { fileURLToPath } from "node:url";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 /* 날짜는 인자로 받되 기본값은 오늘(KST)이다 — 오너 "날짜는 자동 연동".
    렌더 결정성을 위해 재생산 시에는 인자로 그날 날짜를 넘긴다. */
+/* ⚠️ 위치로 읽지 않는다. `--only <id>` 를 앞에 쓰면 argv[2] 가 "--only" 가 되어
+   카드 머리에 "오늘의 주요 청약 이슈 (..only)" 가 찍혔다(2026-08-04 실제 사고).
+   날짜처럼 생긴 인자만 날짜로 받는다. */
+const dateArg = process.argv.slice(2).find((a) => /^\d{4}-\d{2}-\d{2}$/.test(a));
 const date =
-  process.argv[2] ||
-  new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+  dateArg || new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const doc = JSON.parse(readFileSync(join(ROOT, "data/datasets/bunyang-danji-2026.json"), "utf8"));
 
 /* ── 조감도 크롭은 **계산한다** ──
@@ -378,6 +381,9 @@ function remndr(d) {
   if (blocks && d.blockNames?.length)
     flags.push(`<i class="em">💡</i>${blocks}개 블록(${blockLabel(d.blockNames)}) 동시 접수`);
   if (ah.priceCap) flags.push(`<i class="em">💡</i><span class="tag">분양가상한제</span> 적용`);
+  /* 무순위는 접수→발표→계약이 며칠 안에 끝난다. 계약일은 '돈이 실제로 나가는 날'인데
+     일정 칸 3개에는 안 들어간다 — 알면 아래 한 줄로 적는다. 모르면 적지 않는다. */
+  if (d.contractDate) flags.push(`<i class="em">💡</i>계약 ${md(d.contractDate)}`);
 
   const hook = d.hook || d.location.split(" ").slice(2, 3).join("") || d.location;
   return {
