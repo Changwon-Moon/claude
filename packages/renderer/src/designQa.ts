@@ -214,6 +214,7 @@ const MEASURE_JS = `(() => {
                 겹치는지 좌표로 잰다. 빠뜨리면 검사받지 않은 것이다. */
              ".nf-title,.nf-photo,.nf-src,.nf-chip,.nf-name .nm,.nf-name .role," +
              ".nf-subs-lb,.nf-sub .nm,.nf-sub .sub," +
+             ".nf-emblem,.nf-predrow-lb,.nf-pred-face,.nf-pred .pty,.nf-pred .cap," +
              ".nf-lead-h,.nf-lead-t,.nf-bar .k,.nf-bar .v," +
              /* figure-roster — 인물 로스터(2026-08-05). 이름/대수·임기/정당 칩이 서로·푸터와
                 겹치는지, 정당 칩이 이름칸을 침범하는지 좌표로 잰다. */
