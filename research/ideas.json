@@ -1315,6 +1315,102 @@
       "status": "",
       "deadline": "2026-08-05",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910208&pblancNo=2026910208"
+    },
+    {
+      "id": "sig-2026-08-07-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "토허제 효과봤나…외국인 부동산 매수 2000명 뚝, 73%가 중국인[부동산AtoZ]",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-07-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-07-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "\"10억대 몸테크 몰린다\"…중저가 재건축 단지 고가낙찰 행렬[부동산AtoZ]",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-07-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-07-3",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "판 깔아주고 나 몰라라… ‘롤러코스피’에 우는 2030",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-07-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-07-4",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "美증시, 고용 악화에 금리인상 기대 후퇴…S&P500 사상최고치 마감",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-07-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-07-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "미국 취업자 수 2만3000명 감소…연준 금리 인상 가능성 낮아져",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-07-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-07-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "정기예금 잔액 990조 시대…자금 쏠림에도 금리는 시들",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-07-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-07-7",
+      "cat": "todo",
+      "topic": "생활·통계",
+      "feed": "manual",
+      "title": "감리회 이단대책위, 감신대 퀴어 관련 조사결과 발표",
+      "why": "자동 수집 신호 · 통계·조사",
+      "source": "자동 수집 · 2026-08-07-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-07-8",
+      "cat": "todo",
+      "topic": "생활·통계",
+      "feed": "manual",
+      "title": "국표원, 484개 해외직구 제품 안전성조사 결과 발표",
+      "why": "자동 수집 신호 · 통계·조사",
+      "source": "자동 수집 · 2026-08-07-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
