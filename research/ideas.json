@@ -1232,6 +1232,102 @@
       "status": "",
       "deadline": "2026-08-12",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000323&pblancNo=2026000323"
+    },
+    {
+      "id": "sig-2026-08-07-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "2년 실거주 의무 없는 강북 아파트 청약…‘더 리치먼드 미아’ 8월 무순위 청약 시작",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-07-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-07-2",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "\"한국 증시 따라 흔들려\"...급등해도 웃지 못하는 일본 증시",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-07-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-07-3",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "美증시 약세 vs 반발매수 유입 기대…코스피 향배는",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-07-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-07-4",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "코스피 33% 급락했는데…피치가 내놓은 '뜻밖의 경고' 뭐길래",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-07-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-07-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "네비우스, 지역사회 데이터센터 반발에 주가 급락",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-07-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-07-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "이란 전쟁 발 인플레이션 우려에 미국 주택 담보 대출 금리 1년 만에 최고",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-07-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-07-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "원·달러 환율, 1.4원 내린 1422.4원 - 조선비즈",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-07-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-07-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "합수본, '통계 조작' 서울·경기·충북 선관위 등 추가 압수수색",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-07-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
