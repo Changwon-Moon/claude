@@ -88,16 +88,28 @@ function heroShift(fileName, boxH = PHOTO_BOX_H) {
 }
 
 /** 표지(사진+잉크 밴드) 한 벌. 칸을 키우면 밴드와 번짐 시작점이 같이 내려간다. */
+const BAND_H = 690 - PHOTO_BOX_H; // 244 — 사진 아래 잉크 밴드(제목이 앉는 자리)의 기본 높이
 function heroOf(d) {
   const boxH = d.photo?.boxH ?? null;
+  /* 제목 위 검은 띠가 넓다는 지적(오너 2026-08-08) → 밴드 높이도 카드가 정한다.
+     사진을 못 키우는 카드(원본 세로가 짧은 더샵)는 밴드만 줄여도 사진이 넓어 보인다. */
+  const band = d.photo?.band ?? null;
   const H = boxH ?? PHOTO_BOX_H;
-  const extra = boxH ? { boxH, coverH: 690 + (boxH - PHOTO_BOX_H), fadeTop: boxH - 180 } : {};
+  const B = band ?? BAND_H;
+  const extra = boxH || band ? { boxH: H, coverH: H + B, fadeTop: H - 180 } : {};
   return d.photo
     ? { photo: d.photo.file, credit: d.photo.credit, shift: heroShift(d.photo.file, H), ...extra }
     : {
         photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true,
         shift: heroShift("seoul-apart-night.jpg", H), ...extra,
       };
+}
+
+/** 아래 한 줄. 데이터가 이모지를 데리고 오면(`<i class="em">`) 그대로 쓴다 —
+ *  💡 가 늘 맞는 건 아니다. 규제 안내에는 ⚠️ 가 맞다(오너 지시 2026-08-08). */
+function noticeOf(d, flags) {
+  if (!d.oneLiner) return flags.join(" · ");
+  return d.oneLiner.includes('<i class="em">') ? d.oneLiner : `<i class="em">💡</i>${d.oneLiner}`;
 }
 
 const byId = (id) => {
@@ -378,7 +390,7 @@ function presale(d) {
     hero: heroOf(d),
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
     address: addressOf(d),
-    ...(plan.on ? { specFour: plan.four } : {}),
+    ...(plan.on ? { scale: true, specFour: plan.four } : {}),
     spec: plan.on ? plan.cells : specCells(d, total),
     priceTable: plan.on ? plan.grid : priceTable(d, total),
     /* 일정 4칸(오너 지시 2026-08-03) — 특공·1순위·당첨자 발표·입주 예정.
@@ -390,7 +402,7 @@ function presale(d) {
       { label: "입주 예정", date: ymKo(moveInYm), tbd: !moveInYm },
     ],
     /* 한줄평이 있으면 그게 아래 한 줄이다 — 특이사항 나열보다 한 문장이 오래 남는다. */
-    notice: d.oneLiner ? `<i class="em">💡</i>${d.oneLiner}` : flags.join(" · "),
+    notice: noticeOf(d, flags),
     source: {
       /* 푸터 출처 줄 = **1차 출처만**. 오너 지시(2026-08-03)로 보도(파이낸셜뉴스)를 뺐다.
          ⚠️ 전제: 분양가를 입주자모집공고문으로 확정한 뒤에야 이 줄이 참이 된다.
@@ -478,7 +490,7 @@ function remndr(d) {
     hero: heroOf(d),
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
     address: addressOf(d),
-    ...(plan.on ? { specFour: plan.four } : {}),
+    ...(plan.on ? { scale: true, specFour: plan.four } : {}),
     spec: plan.on
       ? plan.cells
       : [
@@ -504,7 +516,7 @@ function remndr(d) {
     priceTable: plan.on ? plan.grid : priceTable(d, total),
     schedule,
     /* 한줄평이 있으면 그게 아래 한 줄이다 — 특이사항 나열보다 한 문장이 오래 남는다. */
-    notice: d.oneLiner ? `<i class="em">💡</i>${d.oneLiner}` : flags.join(" · "),
+    notice: noticeOf(d, flags),
     source: { name: d.source.name.replace(/^한국부동산원\s+/, "") },
   };
 }

@@ -70,15 +70,15 @@
         },
         "boxH": {
           "type": "integer",
-          "minimum": 446,
+          "minimum": 300,
           "maximum": 760,
-          "description": "표지 사진 칸 높이(기본 446). 종이 단에 여백이 남을 때만 키운다"
+          "description": "표지 사진 칸 높이(기본 446). 원본 세로가 허락하는 만큼만 키울 수 있다"
         },
         "coverH": {
           "type": "integer",
-          "minimum": 690,
+          "minimum": 560,
           "maximum": 1000,
-          "description": "표지 전체(사진+잉크 밴드) 높이 — 빌더가 boxH 에서 계산한다"
+          "description": "표지 전체(사진+잉크 밴드) 높이 — 빌더가 boxH+band 로 계산한다. 기본 690"
         },
         "fadeTop": {
           "type": "integer",
@@ -279,6 +279,10 @@
     "specFour": {
       "type": "boolean",
       "description": "제원 줄을 균등 4등분으로 — 타입이 넷인 무순위 카드"
+    },
+    "scale": {
+      "type": "boolean",
+      "description": "규모 우선 판 — 종이의 남는 세로를 위아래로 나눈다"
     }
   }
 }

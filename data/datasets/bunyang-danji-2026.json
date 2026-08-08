@@ -608,12 +608,13 @@
       "photo": {
         "file": "summit-clavion.jpg",
         "credit": "출처. 홈페이지",
-        "provided": "2026-08-08 오너 제공(공식 조감도 2000×1440) · 크롭 x0-2000 · y300-1300 — 표지 칸을 540px 로 키우면서 단지 위 하늘을 더 남겼다(오너 지시). 원본은 _source/",
-        "boxH": 540
+        "provided": "2026-08-08 오너 제공(공식 조감도 2000×1440) · 크롭 x0-2000 · y255-1340 — 표지 칸 575px, 제목 위 잉크 밴드 200px(기본 244에서 줄임, 오너 지시). 원본은 _source/",
+        "boxH": 575,
+        "band": 200
       },
       "titleHtml": "<span class=\"hi\">신길 대장</span>아파트 분양가 <span class=\"hi\">18억대</span>?",
       "supplyLabel": "일반분양",
-      "oneLiner": "투기과열지구 · 전매제한 3년"
+      "oneLiner": "<i class=\"em\">⚠️</i>투기과열지구 · 전매제한 3년"
     },
     {
       "id": "xirene-chungjeongno",
@@ -705,13 +706,14 @@
       "photo": {
         "file": "xirene-chungjeongno.jpg",
         "credit": "출처. 홈페이지",
-        "provided": "2026-08-08 오너 제공(X1 rene 공식 조감도 1138×600) · 크롭 x0-1138 · y95-600 — 우상단 브랜드 워드마크만 잘라내고 나머지를 다 쓴다. 표지 칸 470px(원본 세로가 짧아 이보다 못 키운다). 원본은 _source/",
-        "boxH": 470
+        "provided": "2026-08-08 오너 제공(X1 rene 공식 조감도 1138×600) · 크롭 x0-1138 · y95-600(우상단 워드마크 제외) · 표지 칸 475px — 원본 세로가 짧아 479px 이 상한이다. 밴드 200px. 원본은 _source/",
+        "boxH": 475,
+        "band": 200
       },
       "titleHtml": "<span class=\"hi\">2·5호선</span> 더블 초역세권 <span class=\"hi\">18억대</span>?",
       "supplyLabel": "일반분양",
       "_logoNote": "자이르네 로고는 오너가 준 조감도 우상단 워드마크를 휘도 키잉으로 떼어 만들었다(원본 64×57 → 6배). 공식 로고 파일을 받으면 교체할 것.",
-      "oneLiner": "투기과열지구 · 전매제한 3년"
+      "oneLiner": "<i class=\"em\">⚠️</i>투기과열지구 · 전매제한 3년"
     },
     {
       "id": "thesharp-singil",
@@ -723,7 +725,7 @@
       "applyhomeNo": "2026000374",
       "total": 67,
       "totalComplex": 2054,
-      "titleHtml": "신길 완판 단지에서 <span class=\"hi\">추가 청약</span>이?",
+      "titleHtml": "<span class=\"hi\">신길 완판</span> 단지에서 <span class=\"hi\">추가 청약</span>이?",
       "areas": [
         {
           "m2": 51,
@@ -822,7 +824,7 @@
       },
       "company": "포스코이앤씨",
       "logo": "thesharp.png",
-      "oneLiner": "조합원 취소분 — 미분양이 아니라 자격 박탈·부적격으로 나온 물량<br>투기과열지구 · 전매제한 3년 (일반 청약과 동일)",
+      "oneLiner": "<i class=\"em\">💡</i>조합원 취소분 — 미분양이 아니라 자격 박탈·부적격으로 나온 물량<br><i class=\"em\">⚠️</i>투기과열지구 · 전매제한 3년 (일반 청약과 동일)",
       "source": {
         "name": "한국부동산원 청약홈 입주자모집공고",
         "via": "청약홈 API(일정·공급) + 본청약 분양가 교차검증 (2026-08-08)",
@@ -831,7 +833,8 @@
       "photo": {
         "file": "thesharp-singil.jpg",
         "credit": "출처. 홈페이지",
-        "provided": "2026-08-08 오너 제공 · 원본 722×300 으로 작아 3배 확대했다(선명도 손실). 더 큰 파일을 받으면 교체할 것. 원본은 _source/"
+        "provided": "2026-08-08 오너 제공 · 원본 722×300 으로 작아 3배 확대했다(선명도 손실). 더 큰 파일을 받으면 교체할 것. 원본은 _source/",
+        "band": 200
       },
       "buildings": 16,
       "topFloor": 35,
