@@ -1,0 +1,118 @@
+name: 서울 생활인구 서비스 검증 (probe)
+
+# ── 무엇을 하나 (2026-08-06)
+# 서울 열린데이터광장 서비스마다 **5행만** 받아 컬럼 이름과 값을 확인하고
+# 결과를 `data/seoul-probe.md` 에 적어 커밋한다.
+#
+# ── 왜 수집과 나눴나
+# KOSIS 에서 배운 것이다. 표 ID 를 제목까지만 확인하고 수집을 돌렸다가
+# 축 순서·코드 체계·기간 형식에서 연달아 걸렸다. 서울시 API 도 모르는 것이 셋이다:
+#   · 중국/중국외 구분 컬럼명
+#   · '총생활인구수' 가 전체 인구인지 외국인 합계인지  ← 분모가 바뀌면 비율이 통째로 달라진다
+#   · 행정동코드가 우리 지도와 같은 체계인지
+#
+# 검증되면 `packages/collectors/src/sources/seoulOpenApi.ts` 의 `enabled` 를 켠다.
+# **켜지기 전 서비스는 정기 수집에 끼지 않는다.**
+on:
+  push:
+    paths:
+      - "data/seoul-probe-queue.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seoul-living-probe
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # 키가 없어도 여기서 죽이지 않는다. 죽이면 뒤 단계가 건너뛰어져
+      # 세션 쪽에서는 "아무 일도 안 일어난 것"과 구별이 안 된다.
+      - name: 키 확인
+        id: keycheck
+        env:
+          SEOUL_OPENAPI_KEY: ${{ secrets.SEOUL_OPENAPI_KEY }}
+        run: |
+          if [ -z "$SEOUL_OPENAPI_KEY" ]; then
+            echo "::error::SEOUL_OPENAPI_KEY 가 GitHub Secrets 에 없습니다."
+            echo "has_key=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "키 확인됨 (길이 ${#SEOUL_OPENAPI_KEY})"
+            echo "has_key=yes" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 서비스 검증
+        if: steps.keycheck.outputs.has_key == 'yes'
+        continue-on-error: true
+        env:
+          SEOUL_OPENAPI_KEY: ${{ secrets.SEOUL_OPENAPI_KEY }}
+        run: pnpm --filter @wirit/collectors probe-seoul 2>&1 | tee /tmp/seoul-probe.log
+
+      # 검증이 파일을 못 남겼으면 실패 사실을 파일에 적는다.
+      # 이 저장소에서 세션의 유일한 눈은 커밋된 파일이다. 빈손으로 끝내면 원인을 못 찾는다.
+      - name: 결과 없으면 실패 기록
+        if: always()
+        run: |
+          if ! git diff --quiet -- data/seoul-probe.md 2>/dev/null; then
+            echo "검증이 파일을 갱신했다 — 그대로 둔다"; exit 0
+          fi
+          {
+            echo "# 서울 생활인구 서비스 검증 — ❌ 검증이 돌지 못했다"
+            echo
+            echo "- 실행 시각(KST): $(TZ=Asia/Seoul date '+%F %H:%M')"
+            echo "- 실행 로그: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "- 키 있음: ${{ steps.keycheck.outputs.has_key }}"
+            echo
+            echo '```'
+            tail -40 /tmp/seoul-probe.log 2>/dev/null || echo "(로그 없음 — 검증 단계까지 못 갔다)"
+            echo '```'
+          } > data/seoul-probe.md
+
+      - name: 커밋
+        if: always()
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@github.com"
+          git add -f data/seoul-probe.md || true
+          if git diff --cached --quiet; then
+            echo "바뀐 것 없음 — 커밋 생략"
+          else
+            git commit -m "서울 생활인구 서비스 검증 $(TZ=Asia/Seoul date +%F)"
+            # 이 브랜치는 여러 세션이 동시에 민다. 세 번으로는 못 이겨 결과가 유실된다.
+            for try in 1 2 3 4 5 6 7 8; do
+              git pull --rebase --autostash origin ${{ github.ref_name }} || true
+              if git push origin HEAD:${{ github.ref_name }}; then
+                echo "푸시 성공(시도 $try)"; exit 0
+              fi
+              echo "푸시 실패(시도 $try) — 리베이스 후 재시도"
+              sleep $((try * 7 + RANDOM % 10))
+            done
+            echo "::error::여덟 번 시도했으나 푸시 실패 — 검증 결과가 유실됐다"
+            exit 1
+          fi
+
+      - name: 텔레그램 알림
+        if: always()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          SUM=$(tail -3 /tmp/seoul-probe.log 2>/dev/null || echo "(로그 없음)")
+          MSG=$(printf '🔎 서울 생활인구 서비스 검증 완료 — data/seoul-probe.md 를 확인하세요\n%s' "$SUM")
+          node scripts/notify-telegram.mjs "$MSG" || echo "알림 시크릿이 없어 건너뜁니다"

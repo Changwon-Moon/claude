@@ -13,7 +13,8 @@
     "selftest": "tsx src/selftest.ts",
     "collect-applyhome": "tsx src/applyhomeCli.ts",
     "collect-population": "tsx src/kosisCli.ts",
-    "probe-kosis": "tsx src/kosisProbeCli.ts"
+    "probe-kosis": "tsx src/kosisProbeCli.ts",
+    "probe-seoul": "tsx src/seoulProbeCli.ts"
   },
   "dependencies": {},
   "devDependencies": {

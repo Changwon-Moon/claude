@@ -5,6 +5,11 @@
  */
 import { existsSync, readFileSync } from "node:fs";
 import { redactUrl } from "./http.js";
+import {
+  SERVICES as SEOUL_SERVICES,
+  buildUrl as seoulUrl,
+  redactSeoulUrl as seoulRedact,
+} from "./sources/seoulOpenApi.js";
 import { resolve } from "node:path";
 import { parseStooqDailyCsv, monthlySample } from "./parse/stooq.js";
 import { parseEcosJson } from "./parse/ecos.js";
@@ -778,6 +783,33 @@ console.log("\n[청약홈 분양정보 파서]");
       check(`${k} 대조표에 옛코드·현코드 중복이 잡혀 있다`, dup > 0, `${dup}곳`);
     }
   }
+
+  /* ══════ 서울 열린데이터광장 ══════
+     이 API 는 **인증키가 경로에 들어간다**. http.ts 의 redactUrl 은 쿼리스트링만 지우므로
+     그것만 믿으면 키가 그대로 새어 나간다 — 2026-08-03 KOSIS 키 유출을 여기서 반복하지 않는다. */
+  const leaky = "http://openapi.seoul.go.kr:8088/MYSECRETKEY123/json/SPOP_FORN_LONG_RESD_DONG/1/5/20260801";
+  check("서울 API URL 에서 경로형 인증키가 지워진다",
+    seoulRedact(leaky) === "http://openapi.seoul.go.kr:8088/***/json/SPOP_FORN_LONG_RESD_DONG/1/5/20260801",
+    seoulRedact(leaky));
+  check("일반 redactUrl 로는 경로형 키가 안 지워진다(그래서 전용 함수가 필요하다)",
+    redactUrl(leaky).includes("MYSECRETKEY123"), "확인");
+
+  /* 서비스명을 모르는 채로 부르면 조용히 빈 결과가 오거나 다른 데이터가 온다 — 던져야 한다. */
+  let noSvcThrew = false;
+  try { seoulUrl("local", "K", { start: 1, end: 5 }); } catch { noSvcThrew = true; }
+  check("서비스명이 비면 URL 을 만들지 않고 던진다", noSvcThrew, noSvcThrew ? "던짐" : "조용히 만듦 — 위험");
+
+  /* 1,000행 제한. 넘겨 부르면 서울시가 거부하거나 잘라 준다 — 잘린 줄 모르는 게 더 나쁘다. */
+  let tooManyThrew = false;
+  try { seoulUrl("foreignLong", "K", { start: 1, end: 1001, date: "20260801" }); } catch { tooManyThrew = true; }
+  check("1,000행을 넘겨 요청하면 던진다", tooManyThrew, tooManyThrew ? "던짐" : "그냥 만듦 — 위험");
+
+  const okUrl = seoulUrl("foreignLong", "K", { start: 1, end: 5, date: "20260801" });
+  check("서울 API URL 형식", okUrl.endsWith("/json/SPOP_FORN_LONG_RESD_DONG/1/5/20260801"), okUrl.replace("/K/", "/***/"));
+
+  /* 켜진 서비스는 서비스명이 있어야 한다 — 빈 이름으로 켜면 수집이 통째로 죽는다. */
+  const onNoSvc = Object.entries(SEOUL_SERVICES).filter(([, v]) => v.enabled && !v.service);
+  check("켜진 서울 서비스는 서비스명이 채워져 있다", onNoSvc.length === 0, onNoSvc.map(([k]) => k).join(","));
 
   const noNote = Object.entries(KOSIS_TABLES).filter(([, t]) => !t.note || t.note.length < 20);
   check("표마다 무엇이 미확인인지 적혀 있다", noNote.length === 0, noNote.map(([k]) => k).join(","));
