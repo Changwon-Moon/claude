@@ -65,28 +65,31 @@ export const SERVICES: Record<string, SeoulService> = {
      KOSIS 에서 표 ID 를 추측했다가 겪은 일을 여기서 반복하지 않는다.
      데이터셋 페이지의 'Open API [열기]' 탭에서 확인해 채운다. */
   foreignShort: {
-    service: "",
+    service: "SPOP_FORN_TEMP_RESD_DONG",
     label: "행정동별 서울생활인구(단기체류 외국인)",
     metric: "단기체류외국인",
     args: ["date"],
-    confidence: "추정",
+    confidence: "이름확실",
     enabled: false,
     note:
-      "서비스명 미확인. 데이터셋 OA-14993 페이지의 'Open API' 탭에서 확인할 것.\n" +
-      "장기체류가 SPOP_FORN_LONG_… 이므로 SHORT 계열로 짐작되지만 **짐작으로 넣지 않는다.**",
+      "오너가 OA-14993 데이터셋 페이지의 공식 샘플 URL 에서 확인해 준 서비스명이다(2026-08-08).\n" +
+      "  http://openapi.seoul.go.kr:8088/(인증키)/xml/SPOP_FORN_TEMP_RESD_DONG/1/5/20200617//11110515\n" +
+      "장기체류가 …_LONG_… 인 것과 달리 단기체류는 …_TEMP_… 다(SHORT 아님 — 짐작 안 하길 잘했다).\n" +
+      "**컬럼명은 아직 미확인.** probe 로 확정한 뒤 enabled 를 켠다.",
   },
   local: {
-    service: "",
+    service: "SPOP_LOCAL_RESD_DONG",
     label: "행정동별 서울생활인구(내국인)",
     metric: "내국인",
     args: ["date"],
-    confidence: "추정",
+    confidence: "이름확실",
     enabled: false,
     note:
-      "서비스명 미확인. 데이터셋 OA-14991 페이지에서 확인할 것.\n" +
+      "오너가 OA-14991 데이터셋 페이지의 공식 샘플 URL 에서 확인해 준 서비스명이다(2026-08-08).\n" +
+      "  http://openapi.seoul.go.kr:8088/(인증키)/xml/SPOP_LOCAL_RESD_DONG/1/5/20200617//11110515\n" +
       "**비율(%)을 만들려면 이게 분모로 반드시 필요하다.** 외국인 데이터만으로는 % 가 안 나온다.\n" +
       "⚠️ 외국인 표의 '총생활인구수' 가 전체 인구인지 외국인 합계인지도 probe 로 확인해야 한다 —\n" +
-      "   이걸 착각하면 분모가 바뀌어 비율이 통째로 달라진다.",
+      "   이걸 착각하면 분모가 바뀌어 비율이 통째로 달라진다. **컬럼 확정 전 enabled 금지.**",
   },
 };
 
@@ -107,6 +110,19 @@ export function redactSeoulUrl(url: string): string {
     /(openapi\.seoul\.go\.kr:\d+\/)[^/]+/i,
     "$1***",
   );
+}
+
+function ymd(ms: number): string {
+  const d = new Date(ms);
+  return `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, "0")}${String(d.getUTCDate()).padStart(2, "0")}`;
+}
+
+/** Open API 는 최근 2개월만 준다. 공개 지연이 데이터마다 다르다 —
+ * 내국인은 3~4일, 외국인 생활인구는 몇 주씩 늦기도 한다(2026-08-08 첫 probe 가
+ * 6일 전 날짜로 INFO-200 "데이터 없음"을 맞았다). 그래서 한 날짜만 보지 않고
+ * 점점 더 과거로 물러나며 데이터가 있는 첫 날짜를 쓴다. 60일(2개월) 안에서만 고른다. */
+export function candidateDates(nowMs: number = Date.now()): string[] {
+  return [4, 7, 11, 18, 25, 35, 50].map((days) => ymd(nowMs - days * 86400000));
 }
 
 /** 호출 URL. 인자 순서는 서비스마다 다르므로 args 를 따라 붙인다. */

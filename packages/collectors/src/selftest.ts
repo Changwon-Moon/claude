@@ -7,6 +7,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { redactUrl } from "./http.js";
 import {
   SERVICES as SEOUL_SERVICES,
+  candidateDates as seoulCandidateDates,
   buildUrl as seoulUrl,
   redactSeoulUrl as seoulRedact,
 } from "./sources/seoulOpenApi.js";
@@ -794,9 +795,16 @@ console.log("\n[청약홈 분양정보 파서]");
   check("일반 redactUrl 로는 경로형 키가 안 지워진다(그래서 전용 함수가 필요하다)",
     redactUrl(leaky).includes("MYSECRETKEY123"), "확인");
 
-  /* 서비스명을 모르는 채로 부르면 조용히 빈 결과가 오거나 다른 데이터가 온다 — 던져야 한다. */
+  /* 서비스명을 모르는 채로 부르면 조용히 빈 결과가 오거나 다른 데이터가 온다 — 던져야 한다.
+     실제 서비스 3종이 모두 서비스명을 갖게 됐으므로(2026-08-08), 빈 이름 항목을 잠깐 심어
+     이 가드가 여전히 살아 있는지 확인한다 — 통과만 보면 검사가 켜졌는지 알 수 없다. */
   let noSvcThrew = false;
-  try { seoulUrl("local", "K", { start: 1, end: 5 }); } catch { noSvcThrew = true; }
+  (SEOUL_SERVICES as Record<string, unknown>).__emptyProbe__ = {
+    service: "", label: "가드 테스트용 임시", metric: "x", args: [],
+    confidence: "추정", enabled: false, note: "빈 서비스명 가드가 실제로 던지는지 확인하는 임시 항목",
+  };
+  try { seoulUrl("__emptyProbe__" as never, "K", { start: 1, end: 5 }); } catch { noSvcThrew = true; }
+  delete (SEOUL_SERVICES as Record<string, unknown>).__emptyProbe__;
   check("서비스명이 비면 URL 을 만들지 않고 던진다", noSvcThrew, noSvcThrew ? "던짐" : "조용히 만듦 — 위험");
 
   /* 1,000행 제한. 넘겨 부르면 서울시가 거부하거나 잘라 준다 — 잘린 줄 모르는 게 더 나쁘다. */
@@ -810,6 +818,16 @@ console.log("\n[청약홈 분양정보 파서]");
   /* 켜진 서비스는 서비스명이 있어야 한다 — 빈 이름으로 켜면 수집이 통째로 죽는다. */
   const onNoSvc = Object.entries(SEOUL_SERVICES).filter(([, v]) => v.enabled && !v.service);
   check("켜진 서울 서비스는 서비스명이 채워져 있다", onNoSvc.length === 0, onNoSvc.map(([k]) => k).join(","));
+
+  /* probe 는 한 날짜만 보지 않고 점점 과거로 물러난다 — 외국인 생활인구는 공개 지연이 길어
+     6일 전엔 INFO-200(데이터 없음)이 나기 때문이다(2026-08-08). 날짜 후보가
+     YYYYMMDD 8자리이고, 점점 과거이며, 2개월(60일) 안에 있는지 본다. */
+  const nowMs = Date.UTC(2026, 7, 8); // 2026-08-08 고정 시각으로 결정적 검사
+  const cand = seoulCandidateDates(nowMs);
+  check("probe 날짜 후보는 YYYYMMDD 8자리다", cand.every((d) => /^\d{8}$/.test(d)), cand.join(","));
+  check("probe 날짜 후보는 점점 과거다", cand.every((d, i) => i === 0 || d < cand[i - 1]), cand.join(","));
+  const oldestOk = cand[cand.length - 1] >= "20260609"; // 60일 전(06-09)보다 뒤여야 2개월 창 안
+  check("probe 가장 이른 후보도 2개월(60일) 창 안이다", oldestOk, cand[cand.length - 1]);
 
   const noNote = Object.entries(KOSIS_TABLES).filter(([, t]) => !t.note || t.note.length < 20);
   check("표마다 무엇이 미확인인지 적혀 있다", noNote.length === 0, noNote.map(([k]) => k).join(","));

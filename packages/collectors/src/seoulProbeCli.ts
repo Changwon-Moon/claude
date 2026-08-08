@@ -15,7 +15,7 @@
  */
 import { writeFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
-import { SERVICES, fetchRows, redactSeoulUrl, type ServiceKey } from "./sources/seoulOpenApi.js";
+import { SERVICES, fetchRows, redactSeoulUrl, candidateDates, type ServiceKey } from "./sources/seoulOpenApi.js";
 
 const CWD = process.env.INIT_CWD || process.cwd();
 
@@ -24,11 +24,6 @@ function arg(name: string): string | undefined {
   return i >= 0 ? process.argv[i + 1] : undefined;
 }
 
-/** Open API 는 최근 2개월만 준다. 기본값은 넉넉히 4일 전으로 — 공개가 4일 늦기 때문이다. */
-function defaultDate(): string {
-  const d = new Date(Date.now() - 6 * 86400000);
-  return `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, "0")}${String(d.getUTCDate()).padStart(2, "0")}`;
-}
 
 async function main() {
   const apiKey = process.env.SEOUL_OPENAPI_KEY;
@@ -38,13 +33,14 @@ async function main() {
     console.error("   Secrets 에 SEOUL_OPENAPI_KEY 로 등록하세요.");
     process.exit(1);
   }
-  const date = arg("date") || defaultDate();
+  const dateArg = arg("date");
+  const dates = dateArg ? [dateArg] : candidateDates();
   const out = resolve(CWD, arg("out") ?? "data/seoul-probe.md");
 
   const L: string[] = [];
   L.push("# 서울 열린데이터광장 서비스 검증 결과");
   L.push("");
-  L.push(`> 기준일 \`${date}\` · 서비스마다 5행만 받아 **컬럼 이름과 값**을 확인한 것이다.`);
+  L.push(`> 시도 기준일 \`${dates.join("`, `")}\` (데이터 있는 첫 날짜 사용) · 서비스마다 5행만 받아 **컬럼 이름과 값**을 확인한 것이다.`);
   L.push("> 세션은 Actions 로그를 못 보므로 이 파일이 유일한 눈이다.");
   L.push("> **맞다고 확인되면 `sources/seoulOpenApi.ts` 의 `enabled` 를 켠다.**");
   L.push("");
@@ -67,13 +63,27 @@ async function main() {
     }
 
     process.stdout.write(`· ${k} (${s.service}) … `);
-    try {
-      const { rows, total } = await fetchRows(k, apiKey, { start: 1, end: 5, date });
+    let got: { rows: Array<Record<string, unknown>>; total: number; usedDate: string } | null = null;
+    let lastErr = "";
+    for (const d of dates) {
+      try {
+        const r = await fetchRows(k, apiKey, { start: 1, end: 5, date: d });
+        got = { rows: r.rows, total: r.total, usedDate: d };
+        break;
+      } catch (e) {
+        lastErr = redactSeoulUrl(e instanceof Error ? e.message : String(e));
+        // INFO-200(그 날짜엔 데이터 없음)이면 더 과거를 시도한다.
+        // 키·서비스명 오류라면 날짜를 바꿔도 소용없으니 즉시 멈춘다.
+        if (!/INFO-200|데이터가 없습니다/.test(lastErr)) break;
+      }
+    }
+    if (got) {
+      const { rows, total, usedDate } = got;
       okN++;
-      console.log(`OK ${rows.length}행 (전체 ${total.toLocaleString()}행)`);
+      console.log(`OK ${rows.length}행 (전체 ${total.toLocaleString()}행) · 기준일 ${usedDate}`);
 
       const cols = Object.keys(rows[0] ?? {});
-      L.push(`- ✅ 응답 확인 — **전체 ${total.toLocaleString()}행** · 컬럼 ${cols.length}개`);
+      L.push(`- ✅ 응답 확인 (기준일 \`${usedDate}\`) — **전체 ${total.toLocaleString()}행** · 컬럼 ${cols.length}개`);
       L.push("");
       L.push(`**컬럼 목록** — 중국/중국외 구분이 어느 이름인지, 분모로 쓸 총계가 무엇인지 여기서 고른다`);
       L.push("");
@@ -89,10 +99,9 @@ async function main() {
       L.push("");
       /* 1,000행 제한 때문에 몇 번 나눠 불러야 하는지 미리 적어 둔다. */
       L.push(`- 하루치를 받으려면 **${Math.ceil(total / 1000)}번** 나눠 불러야 한다(1,000행 제한)`);
-    } catch (e) {
-      const msg = redactSeoulUrl(e instanceof Error ? e.message : String(e));
-      console.log(`실패 — ${msg.slice(0, 120)}`);
-      L.push(`- ❌ **실패**: ${msg}`);
+    } else {
+      console.log(`실패 — ${lastErr.slice(0, 120)}`);
+      L.push(`- ❌ **실패**(시도한 기준일 ${dates.join(", ")}): ${lastErr}`);
     }
     L.push("");
   }

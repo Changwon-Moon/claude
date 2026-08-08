@@ -6,3 +6,4 @@
 #
 # ⚠️ SEOUL_OPENAPI_KEY 가 Secrets 에 있어야 돈다.
 run 2026-08-06 #1 — 첫 검증
+run 2026-08-08 #2 — 서비스명 3종 확정(내국인 SPOP_LOCAL_RESD_DONG · 단기 SPOP_FORN_TEMP_RESD_DONG · 장기 SPOP_FORN_LONG_RESD_DONG), 컬럼 검증 요청
