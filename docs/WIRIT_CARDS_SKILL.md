@@ -107,11 +107,11 @@ node scripts/danji-card.mjs "<단지명 또는 공고번호>" --photo <조감도
   `pixel-baselines` 에 넣지 않는다.** 확정본 2장: `danji-hangang` · `danji-songdo`(2026-08-03).
 4. `company/CEO.md` — 오너 판단 원칙(누적)
 5. `docs/LINE_CARDS.md` — **지하철 노선 시세 카드 시리즈**(신분당·2~9호선 「역세권 34평 APT 시세」) 단일 기준. 노선 카드 요청이면 필수.
-6. `docs/COWORK.md` — 코워크에서의 경계선(무엇을 여기서, 무엇을 GitHub Actions 에서)
-7. `prompts/{design,qa,editing,orchestrator,research}.md` — **팀별 세부 지침.**
-   CEO.md 가 "무엇을 판단하나"라면 이쪽은 "그래서 어떻게 손을 움직이나"다.
-   디자인·검수 작업을 맡으면 해당 팀 프롬프트를 읽고 시작한다.
+6. `docs/HANDOFF.md` §12 — 코워크에서의 경계선(무엇을 여기서, 무엇을 GitHub Actions 에서)
+7. `company/teams/{design,qa,editing,orchestrator,research}.md` — **팀별 일하는 방식·도구·학습 역사.**
+   CEO.md 가 "무엇을 판단하나"라면 이쪽은 "그래서 어떻게 손을 움직이나"다(작업 창구 정본은 `docs/CARD_CHECKLIST.md`).
    디자인 작업이면 `company/teams/design.md`(과거 수정지시가 왜 그렇게 굳었는지의 서사)도 함께 본다.
+   (런타임 에이전트용 `prompts/` 초안은 미도착 유령 레이어라 `docs/archive/prompts/` 로 보관했다.)
 
 이 문서들을 훑지 않고 시작하면 **오너가 이미 정해둔 기준을 다시 말하게 된다.**
 `CARD_CHECKLIST.md` 는 실제로 그 사건 때문에 생긴 단일 창구다.
@@ -231,7 +231,7 @@ git -c http.extraheader="AUTHORIZATION: basic $AUTH" push \
 | 무엇 | 어디 |
 |---|---|
 | 오너의 **판단 원칙** | `company/CEO.md` |
-| 팀의 **일하는 방식**(왜 그렇게 하나) | `company/teams/{design,qa,…}.md` + `prompts/{팀}.md` |
+| 팀의 **일하는 방식**(왜 그렇게 하나) | `company/teams/{design,qa,…}.md` |
 | **무엇을 확인하는가**(체크리스트) | `docs/CARD_CHECKLIST.md` |
 | **소재·게시물 단위 결정** | `research/DECISION_LOG.md` |
 
@@ -267,7 +267,7 @@ git -c http.extraheader="AUTHORIZATION: basic $AUTH" push \
 
 **오너가 같은 지적을 두 번 하면 그건 문서화 실패다.** 그때는 세 곳을 함께 고친다:
 ① `CARD_CHECKLIST.md` §2 에 항목 추가 ② 좌표로 잴 수 있으면 **`designQa` 검수항으로 승격**
-③ 관련 팀 학습 로그 + `prompts/{팀}.md`. 새 검수항을 넣었으면 **일부러 어긋나게 되돌려
+③ 관련 팀(`company/teams/{팀}.md`) 학습 로그. 새 검수항을 넣었으면 **일부러 어긋나게 되돌려
 실제로 잡히는지 확인**한다 — 통과만 보면 검사가 켜졌는지 알 수 없다.
 
 ### ⚠️ 검수는 "통과했다"가 아니라 "무엇을 쟀다"로 읽는다

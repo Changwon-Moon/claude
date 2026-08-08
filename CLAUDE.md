@@ -2,7 +2,7 @@
 
 ## 프로젝트 개요
 
-@flow, APT_LAP 스타일의 데이터 인포그래픽 카드뉴스를 AI 파이프라인으로 매일 자동 생산·발행하는 인스타그램 계정 시스템. **운영자는 비개발자다** — 모든 커뮤니케이션은 한국어로, 기술 용어는 쉽게 풀어서 설명한다.
+@flow, APT_LAP 스타일의 데이터 인포그래픽 카드뉴스를 **결정적으로**(같은 입력 = 같은 픽셀) 찍어내는 공장. 세션이 저장소를 열어 기준을 상속받아 카드를 만들고, **최종 인스타 발행은 오너가 직접** 한다(자동 발행은 2026-07-27 폐지). **운영자는 비개발자다** — 모든 커뮤니케이션은 한국어로, 기술 용어는 쉽게 풀어서 설명한다.
 
 > 🧳 **이 저장소를 처음 붙였다면 [docs/HANDOFF.md](docs/HANDOFF.md) 부터 읽는다.**
 > 그리고 `node scripts/doctor.mjs` 로 **이 환경에서 카드가 실제로 나오는지** 먼저 확인한다 —
@@ -10,9 +10,9 @@
 
 ## 세션 시작 시 반드시 할 일
 
-1. **STATUS.md를 읽는다** — 현재 어느 마일스톤까지 완료됐고, 지금 세션이 무엇을 해야 하는지 확인
-2. **docs/EXECUTION_PLAN.md의 해당 마일스톤 발주 내용**과 완료 확인 기준을 확인
-3. 관련 설계 문서(ARCHITECTURE.md, AGENTS.md, TEMPLATES.md, DATA_SOURCES.md)의 **계약을 따른다** — 계약을 바꿔야 한다면 임의로 바꾸지 말고 운영자에게 이유와 함께 제안한다
+1. **STATUS.md를 읽는다** — 지금 확정본·진행 중·다음 할 일 확인
+2. **[docs/HANDOFF.md](docs/HANDOFF.md)로 환경을 확인**한다 — `node scripts/doctor.mjs`로 이 환경에서 카드가 실제로 나오는지부터 본다
+3. 관련 기준 문서(TEMPLATES.md, BRAND.md, DATA_SOURCES.md, AGENTS.md)의 **계약을 따른다** — 계약을 바꿔야 한다면 임의로 바꾸지 말고 운영자에게 이유와 함께 제안한다
 4. **카드를 만들거나 고치는 작업이면 [docs/CARD_CHECKLIST.md](docs/CARD_CHECKLIST.md) 를 먼저 읽는다.**
    - 🏢 **청약·분양 소재**라면 [docs/guides/청약분양-카드-기준.md](docs/guides/청약분양-카드-기준.md) 도 **반드시** 읽는다. 판형은 `danji-cover@1` 하나뿐이고, 새 템플릿을 만들지 않는다.
      원커맨드: `node scripts/danji-card.mjs "<단지명>" --photo <조감도>` (조회→데이터셋→사진→크롭 계산→빌드→렌더→QA)
@@ -69,29 +69,30 @@ node scripts/line-card.mjs 3호선            # 문장째 넘겨도 됨: "3호�
 - 운영자가 직접 해야 하는 작업(계정, 키 발급, 결제)은 단계별 가이드를 `docs/guides/`에 작성해 안내한다
 - 운영자에게 선택지를 제시할 때는 **렌더된 이미지·실행 결과 등 눈으로 비교 가능한 형태**로
 
-## 저장소 구조 (목표 상태)
+## 저장소 구조
 
 ```
-├── CLAUDE.md, STATUS.md, README.md, ROADMAP.md
-├── docs/               # 설계 문서 (계약의 원천) + guides/ (비개발자용 가이드)
+├── CLAUDE.md, STATUS.md, README.md
+├── docs/               # 기준 문서 (계약의 원천) + guides/ (비개발자용) + archive/ (지난 계획 문서)
 ├── packages/
-│   ├── renderer/       # JSON → PNG (Playwright)
+│   ├── renderer/       # JSON → PNG (Playwright) + designQa 검수
 │   ├── collectors/     # 데이터 수집기 (결정적 코드)
-│   ├── pipeline/       # 오케스트레이터, 에이전트 러너
-│   └── dashboard/      # 승인 대시보드 (Next.js)
+│   ├── pipeline/       # 검수 rubric 등
+│   └── dashboard-static/ # 관제탑 정적 사이트 생성
 ├── templates/          # 디자인 템플릿 (TEMPLATES.md 참고)
-├── prompts/            # 런타임 에이전트 시스템 프롬프트 (버전 관리)
-└── data/               # raw / briefs / plans / content / out (gitignore 대상 판단은 M1에서)
+├── data/               # datasets / review(명세) / content / out(gitignore)
+├── research/           # 소재 결정 로그·아이디어·패턴
+└── company/            # CEO.md(판단) + teams/(팀별 방식)
 ```
 
 ## 기술 결정 사항 (이미 확정 — 재논의하지 말 것)
 
 - TypeScript + Node.js, pnpm workspace 모노레포
 - 렌더링: HTML/CSS + Playwright 스크린샷 (이미지 생성 AI 사용 금지)
-- LLM: Claude API (에이전트별 모델 등급은 AGENTS.md 표 참고)
-- 스케줄 실행: 1단계 GitHub Actions cron → 규모 확장 시 서버 이전
-- 발행: Instagram Graph API (캐러셀)
-- 승인 게이트: Telegram/Slack 봇 (M8) + 웹 대시보드 (M9)
+- LLM: Claude API (LLM 검수 없어도 코드 검수로 카드는 나온다)
+- 정기 데이터 수집·재생산: GitHub Actions cron (`docs/DATA_REFRESH.md`)
+- **발행: 오너가 직접 인스타 업로드** (자동 발행은 2026-07-27 폐지). 세션은 승인 앞까지만 준비한다.
+- 자동 발행·상주 에이전트·웹 대시보드를 가정한 초기 비전은 `docs/archive/VISION-automation.md`에 보존.
 
 ## 세션 일지 — 시작할 때와 끝날 때 한 줄씩
 

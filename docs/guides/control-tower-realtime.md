@@ -1,7 +1,7 @@
 # 관제탑을 "실시간"으로 만들기 — 단계별 안내 (비개발자용)
 
 > 2026-07-25 작성. 오너 질문 "실시간으로 관제탑을 업데이트하고 이용할 수 있는 시스템으로 만들려면?"에 대한 답.
-> 관련 문서: [control-tower-pages.md](./control-tower-pages.md)(1단계) · [control-tower-live.md](./control-tower-live.md)(3단계) · [../CONTROL_TOWER.md](../CONTROL_TOWER.md)(설계)
+> 관련 문서: [control-tower-pages.md](./control-tower-pages.md)(1단계) · [control-tower-live.md](./control-tower-live.md)(3단계) · [../archive/CONTROL_TOWER.md](../archive/CONTROL_TOWER.md)(설계 사료)
 
 ---
 

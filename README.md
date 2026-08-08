@@ -1,41 +1,69 @@
-# 인포그래픽 카드뉴스 자동화 프로젝트
+# 위릿 카드 공장 (@wirit_note)
 
-> 🧳 **새로 합류했다면 [docs/HANDOFF.md](docs/HANDOFF.md) 부터.**
+> 🧳 **새 세션은 여기부터: [docs/HANDOFF.md](docs/HANDOFF.md)**
 > 환경 확인: `pnpm install --frozen-lockfile && node scripts/doctor.mjs`
 
-@flow, APT_LAP 스타일의 데이터 기반 인포그래픽 카드뉴스를 **AI 에이전트 파이프라인**으로 매일 자동 생산하는 인스타그램 계정 구축 프로젝트.
+데이터 인포그래픽 카드뉴스(@flow·APT_LAP 스타일)를 **결정적으로**(같은 입력 = 같은 픽셀)
+찍어내는 공장이다. 부동산·경제 데이터를 원자료에서 코드로 추출해 카드로 만든다.
 
-## 최종 목표
+## 지금 실제로 어떻게 도나
 
-> 리서치팀 AI가 매일 자료를 모으고, 기획팀이 콘텐츠를 기획하고, 편집팀이 검증·편집하고, 디자인팀이 이미지를 만들어내는 전 과정을 **운영자 1인이 감독·승인**하며, 그 외 모든 과정은 자동화한다.
+세션(코워크/클로드코드)이 이 저장소를 열어 기준을 상속받고 → 데이터 확인 → 템플릿으로 카드 렌더 →
+자동 검수(designQa) → 오너에게 렌더 PNG 전송 → **오너가 직접 인스타에 올린다.**
+정기물(실거래·증시·인구 등)의 데이터 수집·재생산은 GitHub Actions가 자동으로 한다.
 
-## 문서 맵
+> "AI 여러 팀이 자동 발행까지 하는" 초기 비전은 접었다(자동 발행 2026-07-27 폐지).
+> 그 청사진 요약은 [docs/archive/VISION-automation.md](docs/archive/VISION-automation.md)에 보존.
 
-| 문서 | 내용 |
+## 문서 지도 — 각 주제의 정본(단일 기준)은 하나다
+
+주제마다 **정본 문서 하나**만 두고 나머지는 그곳을 링크한다. 같은 규칙을 두 곳에 복사하지 않는다.
+
+### 시작·규칙
+
+| 문서 | 무엇의 정본인가 |
 |---|---|
-| [STATUS.md](./STATUS.md) | **현재 진행 상황 보드** — 매 세션이 읽고 갱신하는 단일 진실 원천 |
-| [ROADMAP.md](./ROADMAP.md) | 단계별(Phase 0~4) 실행 로드맵 — **여기서부터 읽기** |
-| [docs/EXECUTION_PLAN.md](./docs/EXECUTION_PLAN.md) | **작업 진행 방법** — 세션 운영 전략, 마일스톤 M0~M12 발주서 (비개발자용) |
-| [docs/RESEARCH_WORKFLOW.md](./docs/RESEARCH_WORKFLOW.md) | **리서치·기획 워크플로우 (시스템의 척추)** — 수동 우선 → 점진 자동화(R0~R3), 소재 선정 기준 |
-| [docs/CONTENT_STRATEGY.md](./docs/CONTENT_STRATEGY.md) | 콘텐츠 전략 — 코어(부동산·주식·경제)+트래픽(범용) 믹스, 시리즈 카탈로그, 발행 캘린더 |
-| [docs/BRAND.md](./docs/BRAND.md) | 브랜드 가이드 — wirit(@wirit_note), 잉크네이비 팔레트, 컬러 사용 규칙, CSS 토큰 |
-| [docs/CONTROL_TOWER.md](./docs/CONTROL_TOWER.md) | 관제탑 설계 — 에이전트 판단·근거의 시각적 관리감독 (M9 대시보드의 원천) |
-| [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) | 시스템 아키텍처, 파이프라인 설계, 기술 스택 |
-| [docs/AGENTS.md](./docs/AGENTS.md) | **AI 팀 조직도 v2** — 9팀 닫힌 루프(수요검증·자산허브·성과학습), 팀별 미션·KPI·검수 6항 |
-| [docs/TEMPLATES.md](./docs/TEMPLATES.md) | 디자인 템플릿 시스템 설계 (무한 생산의 핵심) |
-| [docs/DATA_SOURCES.md](./docs/DATA_SOURCES.md) | 데이터 소스 카탈로그 (공공 API, 크롤링 대상) |
-| [docs/OPERATIONS.md](./docs/OPERATIONS.md) | 일일 운영 워크플로우, 승인 게이트, 리스크 관리 |
-| [CLAUDE.md](./CLAUDE.md) | 이 저장소에서 작업하는 모든 Claude 세션의 행동 지침 |
+| [docs/HANDOFF.md](docs/HANDOFF.md) | **입구.** 환경 자가진단·읽기 순서·자주 쓰는 명령·새 카드 흐름 |
+| [CLAUDE.md](CLAUDE.md) | **루트 규칙.** 절대 규칙(오보 0·픽셀 불변)·학습 프로토콜·세션 절차·원커맨드 트리거 |
+| [STATUS.md](STATUS.md) | **현재 상태.** 지금 확정본·진행 중·다음 할 일 (과거 서사는 `docs/archive/STATUS-history.md`) |
 
-## 작업 방식 (비개발자 운영자용 요약)
+### 카드 만들기
 
-- 이 프로젝트는 **한 세션에서 전부 만들지 않는다.** [docs/EXECUTION_PLAN.md](./docs/EXECUTION_PLAN.md)의 마일스톤(M0~M12)을 세션 하나당 하나씩 발주한다.
-- 세션은 오고 가지만 **이 저장소가 모든 것을 기억한다.** 새 세션은 CLAUDE.md와 STATUS.md를 읽고 즉시 이어서 일한다.
-- 운영자는 코드를 읽지 않는다. 각 마일스톤의 **"완료 확인" 체크리스트**(눈으로 검증 가능한 결과물)로 품질을 관리한다.
+| 문서 | 무엇의 정본인가 |
+|---|---|
+| [docs/CARD_CHECKLIST.md](docs/CARD_CHECKLIST.md) | **작업·검수 절차, 재발 금지 항목** — 카드를 만들거나 고치면 필수 |
+| [docs/TEMPLATES.md](docs/TEMPLATES.md) | **템플릿별 픽셀·필드 계약**(수치 규격의 정본) |
+| [docs/BRAND.md](docs/BRAND.md) | **색·타이포·워터마크 슬롯**(브랜드 규격의 정본) |
+| [docs/REVIEW_RUBRIC.md](docs/REVIEW_RUBRIC.md) | **검수 판정 등급·LLM 렌즈** (designQa 항목 목록의 정본은 `designQa.ts` 코드) |
+| [docs/LINE_CARDS.md](docs/LINE_CARDS.md) | **지하철 노선 시세 카드 시리즈** |
+
+### 자산·데이터
+
+| 문서 | 무엇의 정본인가 |
+|---|---|
+| [docs/ASSET_HUB.md](docs/ASSET_HUB.md) | **자산 등록·카탈로그·라이선스 분류**(라이선스 규칙의 정본) |
+| [docs/IMAGE_AUTOMATION.md](docs/IMAGE_AUTOMATION.md) | **자산 자동 취득**(로고·사진, push→Actions) |
+| [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md) | **데이터 소스 카탈로그**(무엇이 있고 어떻게 접근하나) |
+| [docs/DATA_REFRESH.md](docs/DATA_REFRESH.md) | **정기물 자동 갱신 운영**(무엇을 기계가·무엇을 사람이) |
+
+### 판단·조직·소재
+
+| 문서 | 무엇의 정본인가 |
+|---|---|
+| [company/CEO.md](company/CEO.md) | **오너 판단 원칙**(전략·콘텐츠·디자인·프로세스) |
+| [company/teams/](company/teams/) | **팀별 일하는 방식·도구·학습 역사**(레퍼런스) |
+| [docs/AGENTS.md](docs/AGENTS.md) | **조직 개요·6축 소재 채점 기준·검수 6항** |
+| [docs/RESEARCH_WORKFLOW.md](docs/RESEARCH_WORKFLOW.md) | **리서치 방향·소재 채점 rubric의 정본** |
+| [research/DECISION_LOG.md](research/DECISION_LOG.md) | **소재 결정 로그**(왜 골랐/버렸나 — AI 교보재) |
+| [research/PATTERN_LIBRARY.md](research/PATTERN_LIBRARY.md) | **터진 콘텐츠 재사용 공식** |
+| [docs/CONTENT_STRATEGY.md](docs/CONTENT_STRATEGY.md) | **콘텐츠 티어 믹스·시리즈·발행 리듬** |
+
+지난 계획 문서(로드맵·발주서·자동 운영 매뉴얼 등)는 [docs/archive/](docs/archive/)에 보관돼 있다.
 
 ## 핵심 설계 원칙
 
-1. **디자인은 템플릿, 데이터만 교체** — 참고 계정들의 본질. HTML/CSS 템플릿에 JSON 데이터를 바인딩해 스크린샷으로 뽑는다. 이미지 생성 AI는 쓰지 않는다(일관성·정확성 때문).
-2. **숫자는 코드가, 문장은 LLM이** — 수치·순위·날짜는 파서와 검증 코드가 처리하고, LLM은 소재 발굴·제목·요약·기획 판단에만 쓴다. 환각으로 인한 오보를 구조적으로 차단.
-3. **사람은 게이트에만 선다** — 운영자는 (1) 기획안 승인, (2) 최종 발행 승인 두 지점에서만 개입한다. 나머지는 전부 자동.
-4. **성과가 기획을 학습시킨다** — 인스타그램 인사이트(도달·저장·공유)를 매주 기획 에이전트에 피드백해 소재 선정 기준을 계속 갱신한다.
+1. **디자인은 템플릿, 데이터만 교체** — HTML/CSS 템플릿에 JSON 데이터를 바인딩해 스크린샷으로 뽑는다. 이미지 생성 AI는 쓰지 않는다(일관성·정확성).
+2. **숫자는 코드가, 문장은 LLM이** — 수치·순위·날짜는 코드가 원자료에서 추출한다. LLM은 소재·제목·요약에만. 오보를 구조적으로 차단한다(**오보 0**).
+3. **발행한 카드는 픽셀이 안 바뀐다** — 공용 템플릿을 고치면 이미 나간 카드가 조용히 바뀐다. 새 스타일은 variant로 격리한다(**픽셀 불변**).
+4. **발행은 사람이 한다** — 세션은 승인 앞까지만 준비하고, 최종 인스타 업로드는 오너가 직접 한다.
+5. **저장소가 유일한 진실 원천** — 세션은 오고 가지만 커밋된 것만 남는다. 새 세션은 이 문서 지도를 읽고 즉시 이어서 일한다.

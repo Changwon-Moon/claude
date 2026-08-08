@@ -12,8 +12,9 @@
 - (예정 M8) 상태 머신 + Telegram 게이트 / (M9 C단계) 웹 대시보드(버튼 실동작)
 
 ## 지식
-- `docs/ARCHITECTURE.md` 상태 머신 · `docs/CONTROL_TOWER.md` 판단 기록 스키마
-- 자동화 수위 L0~L3을 콘텐츠 유형별 개별 적용 (`docs/OPERATIONS.md`)
+- 판단 기록 스키마: `docs/archive/CONTROL_TOWER.md` §1 (설계 사료 — 관제탑은 현재 보고·기록 전용으로 축소)
+- 상태 머신·자동화 수위(L0~L3)는 미구현 비전 → `docs/archive/VISION-automation.md`
+- 정기물 자동화 운영 기준: `docs/DATA_REFRESH.md`
 
 ## 기본 업무 기준 (07-21 확정)
 - **콘텐츠 세트 파이프라인**: 리서치(소재·수요) → 데이터 수집/캐시 → 편집(빌더가 수치 코드추출+재계산 검증) → 디자인(렌더) → **품질검수(designQa+출처정합)** → **수치 검증(verified✓)** → 발행 대기

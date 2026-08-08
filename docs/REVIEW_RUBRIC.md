@@ -20,7 +20,8 @@
 - 이중 렌더 md5 동일. 다르면 **error**(타임스탬프·랜덤 요소 의심).
 
 ### 레이아웃 (`designQa`)
-- 정렬·여백·넘침·행겹침·**패딩 침범(padcross)**. error면 block.
+- 정렬·여백·넘침·행겹침·**패딩 침범(padcross)** 등. error면 block.
+- **검수 항목의 정본은 코드(`packages/renderer/src/designQa.ts`)다.** 문서에 목록을 복사해 두지 않는다 — 4곳에 얼어붙어 서로 다른 시점에 늙었던 문제가 있어서다. 최신 목록은 코드나 `audit-head` 산출로 확인한다.
 
 ### 캡션 린트 (`lintCaption`)
 | 항목 | 기준 | 레벨 |
