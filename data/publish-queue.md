@@ -34,6 +34,6 @@
 - [x] [26.08.03(월) 관제탑] **5호선 역세권 34평 APT 시세 (2026.01~07)** · line5-loop · 원본 data/content/2026-07-31/line5-loop.json
 - [x] [26.08.03(월) 관제탑] **6호선 역세권 34평 APT 시세 (2026.01~07)** · line6-loop · 원본 data/content/2026-07-31/line6-loop.json
 - [x] [26.08.03(월) 관제탑] **7호선 역세권 34평 APT 시세 (2026.01~07)** · line7-loop · 원본 data/content/2026-07-31/line7-loop.json
-- [ ] [26.08.03(월) 관제탑] **8호선 역세권 34평 APT 시세 (2026.01~07)** · line8-loop · 원본 data/content/2026-07-31/line8-loop.json
+- [x] [26.08.03(월) 관제탑] **8호선 역세권 34평 APT 시세 (2026.01~07)** · line8-loop · 원본 data/content/2026-07-31/line8-loop.json
 - [ ] [26.08.03(월) 관제탑] **9호선 역세권 34평 APT 시세 (2026.01~07)** · line9-loop · 원본 data/content/2026-07-31/line9-loop.json
 - [ ] [26.08.08(토) 관제탑] **서울 아파트 매매·전세 동반 연속 상승 (주간)** · streak-line · 원본 data/content/2026-08-08/jeonse-streak.json
