@@ -301,7 +301,8 @@ function presale(d) {
     kind: "presale",
     /* 고정 부제 + 날짜. 손으로 적지 않는다 — 적는 순간 다음 카드에서 날짜가 굳는다. */
     topcap: `오늘의 주요 청약 이슈 (${date.replace(/-/g, ".")})`,
-    titleLines: titleFor(d, { total, repWon }),
+    /* 단지마다 제목을 오너가 직접 쓸 때가 있다 — 그때는 데이터셋이 문형을 이긴다. */
+    titleLines: d.titleHtml ? [d.titleHtml] : titleFor(d, { total, repWon }),
     hero: d.photo
       ? { photo: d.photo.file, credit: d.photo.credit, shift: heroShift(d.photo.file) }
       : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true, shift: heroShift("seoul-apart-night.jpg") },
@@ -317,7 +318,8 @@ function presale(d) {
       { label: "당첨자 발표", date: ah?.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah?.announceDate },
       { label: "입주 예정", date: ymKo(moveInYm), tbd: !moveInYm },
     ],
-    notice: flags.join(" · "),
+    /* 한줄평이 있으면 그게 아래 한 줄이다 — 특이사항 나열보다 한 문장이 오래 남는다. */
+    notice: d.oneLiner ? `<i class="em">💡</i>${d.oneLiner}` : flags.join(" · "),
     source: {
       /* 푸터 출처 줄 = **1차 출처만**. 오너 지시(2026-08-03)로 보도(파이낸셜뉴스)를 뺐다.
          ⚠️ 전제: 분양가를 입주자모집공고문으로 확정한 뒤에야 이 줄이 참이 된다.

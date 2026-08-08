@@ -591,6 +591,180 @@
         "credit": "출처. 홈페이지",
         "provided": "2026-08-08 오너 제공(공식 조감도) · 크롭 x0-2000 · y380-1300(확대 없음, 하늘만 덜어냄). 원본은 _source/"
       }
+    },
+    {
+      "id": "xirene-chungjeongno",
+      "slug": "chungjeongno",
+      "kind": "presale",
+      "name": "충정로역 자이르네",
+      "location": "서울 중구 중림동",
+      "hook": "충정로",
+      "applyhomeNo": "2026000358",
+      "total": 186,
+      "buildings": 3,
+      "topFloor": 25,
+      "totalComplex": 299,
+      "areas": [
+        {
+          "m2": 39,
+          "units": 5,
+          "types": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "m2": 59,
+          "units": 80,
+          "types": [
+            "-"
+          ]
+        },
+        {
+          "m2": 84,
+          "units": 101,
+          "types": [
+            "A",
+            "B"
+          ]
+        }
+      ],
+      "mainArea": {
+        "m2": 84,
+        "units": 101
+      },
+      "price": {
+        "verified": true,
+        "byArea": [
+          {
+            "m2": 39,
+            "won": 1035000000
+          },
+          {
+            "m2": 59,
+            "won": 1885000000
+          },
+          {
+            "m2": 84,
+            "won": 2455000000
+          }
+        ],
+        "resaleBanYears": 3,
+        "verifiedAgainst": "타입별 공급세대·분양가(39A 2세대 10억3,500 / 39B 3세대 10억400 / 59 80세대 18억8,500 / 84A 33세대 24억5,500 / 84B 68세대 22억9,500) — 오너 제공 호갱노노 화면. 세대수 합 2+3+80+33+68 = 186 = 청약홈 API 공급 186 과 일치(교차검증). 같은 출처의 써밋 클라비온 표가 청약홈 공고 원문과 7줄 전부 글자까지 일치해, 이 출처가 공고를 그대로 전재함이 같은 날 실증됐다.",
+        "_conflict": "2차 블로그는 59㎡ 최고가를 18억4,500만으로 적었다 — 세대수 합이 안 맞아(84세대) 일반공급만 본 것으로 판단해 채택하지 않았다."
+      },
+      "company": "GS건설",
+      "logo": "xi.png",
+      "_scaleNote": "3개동·지상 25층 = 2차 출처. 총 299세대는 호갱노노·보도 일치. 청약홈은 규모를 안 준다 — 공고문 대조 대상.",
+      "source": {
+        "name": "한국부동산원 청약홈 입주자모집공고",
+        "via": "청약홈 API(일정·공급) + 타입별 분양가 교차검증 (2026-08-08)",
+        "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000358&pblancNo=2026000358"
+      },
+      "photo": {
+        "file": "xirene-chungjeongno.jpg",
+        "credit": "출처. 홈페이지",
+        "provided": "2026-08-08 오너 제공(X1 rene 공식 조감도) · 크롭 x0-770 · y100-430(상단 브랜드 로고 제외). 원본은 _source/"
+      }
+    },
+    {
+      "id": "thesharp-singil",
+      "slug": "thesharp",
+      "kind": "presale",
+      "name": "더샵 신길센트럴시티",
+      "location": "서울 영등포구 신길동",
+      "hook": "신길",
+      "applyhomeNo": "2026000374",
+      "total": 67,
+      "totalComplex": 2054,
+      "titleHtml": "<span class=\"hi\">신길</span> 대단지 <span class=\"hi\">취소분</span> 67세대",
+      "areas": [
+        {
+          "m2": 51,
+          "units": 150,
+          "types": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E"
+          ]
+        },
+        {
+          "m2": 59,
+          "units": 202,
+          "types": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "m2": 74,
+          "units": 72,
+          "types": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E"
+          ]
+        },
+        {
+          "m2": 84,
+          "units": 53,
+          "types": [
+            "A",
+            "B"
+          ]
+        }
+      ],
+      "mainArea": {
+        "m2": 59,
+        "units": 202
+      },
+      "price": {
+        "verified": true,
+        "headline": {
+          "note": "본청약 기준·최고가"
+        },
+        "byArea": [
+          {
+            "m2": 51,
+            "won": 1250000000
+          },
+          {
+            "m2": 59,
+            "won": 1460000000
+          },
+          {
+            "m2": 74,
+            "won": 1680000000
+          },
+          {
+            "m2": 84,
+            "won": 1880000000
+          }
+        ],
+        "verifiedAgainst": "본청약 타입별 분양가(51A 12억4,000 ~ 84B 18억8,000) — 오너 제공 호갱노노 화면. 타입별 공급세대 합 150+202+72+53 = 477 = 보도의 일반분양 477세대와 일치. 면적대별 최고가를 취했다.",
+        "_gate": "⚠️ 이 표는 **본청약(477세대)** 것이다. 이번 조합원 취소분 67세대에 어떤 타입이 몇 세대 나오는지는 공고문을 봐야 안다. 분양가는 같은 단지라 유효하지만, 취소분 타입 구성은 미확인 — 그래서 머리글이 \"본청약 기준\"이라고 말한다."
+      },
+      "company": "포스코이앤씨",
+      "logo": "thesharp.png",
+      "oneLiner": "2,054세대 대단지의 조합원 취소분 67세대 — 본청약 때 매겨진 값 그대로다.",
+      "source": {
+        "name": "한국부동산원 청약홈 입주자모집공고",
+        "via": "청약홈 API(일정·공급) + 본청약 분양가 교차검증 (2026-08-08)",
+        "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000374&pblancNo=2026000374"
+      },
+      "photo": {
+        "file": "thesharp-singil.jpg",
+        "credit": "출처. 홈페이지",
+        "provided": "2026-08-08 오너 제공 · 원본 722×300 으로 작아 3배 확대했다(선명도 손실). 더 큰 파일을 받으면 교체할 것. 원본은 _source/"
+      },
+      "buildings": 16,
+      "topFloor": 35,
+      "_scaleNote": "16개동·지상 최고 35층·총 2,054세대 = 한국경제(2026-01-20)·더구루(2026-07) 두 곳 일치. 청약홈은 규모를 안 준다 — 공고문 대조 대상."
     }
   ]
 }
