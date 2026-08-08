@@ -31,7 +31,7 @@
 - [x] [26.08.03(월) 관제탑] **2호선 역세권 34평 APT 시세 (2026.01~07)** · line2-loop · 원본 data/content/2026-07-31/line2-loop.json
 - [x] [26.08.03(월) 관제탑] **3호선 역세권 34평 APT 시세 (2026.01~07)** · line3-loop · 원본 data/content/2026-07-31/line3-loop.json
 - [x] [26.08.03(월) 관제탑] **4호선 역세권 34평 APT 시세 (2026.01~07)** · line4-loop · 원본 data/content/2026-07-31/line4-loop.json
-- [ ] [26.08.03(월) 관제탑] **5호선 역세권 34평 APT 시세 (2026.01~07)** · line5-loop · 원본 data/content/2026-07-31/line5-loop.json
+- [x] [26.08.03(월) 관제탑] **5호선 역세권 34평 APT 시세 (2026.01~07)** · line5-loop · 원본 data/content/2026-07-31/line5-loop.json
 - [ ] [26.08.03(월) 관제탑] **6호선 역세권 34평 APT 시세 (2026.01~07)** · line6-loop · 원본 data/content/2026-07-31/line6-loop.json
 - [ ] [26.08.03(월) 관제탑] **7호선 역세권 34평 APT 시세 (2026.01~07)** · line7-loop · 원본 data/content/2026-07-31/line7-loop.json
 - [ ] [26.08.03(월) 관제탑] **8호선 역세권 34평 APT 시세 (2026.01~07)** · line8-loop · 원본 data/content/2026-07-31/line8-loop.json
