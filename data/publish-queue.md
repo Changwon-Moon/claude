@@ -38,3 +38,4 @@
 - [x] [26.08.03(월) 관제탑] **9호선 역세권 34평 APT 시세 (2026.01~07)** · line9-loop · 원본 data/content/2026-07-31/line9-loop.json
 - [ ] [26.08.08(토) 관제탑] **서울 아파트 매매·전세 동반 연속 상승 (주간)** · streak-line · 원본 data/content/2026-08-08/jeonse-streak.json
 - [ ] [26.08.08(토) 관제탑] **수도권 지하철 노선·구간별 표정속도** · metro-2col · 원본 data/content/2026-07-20/metro-2col.json
+- [ ] [26.08.08(토) 관제탑] **당신이 아는 아파트 1위, 맞나요? (브랜드 순위 조사 5곳 비교)** · brand-rank-grid · 원본 data/content/2026-07-31/brand-rank.json
