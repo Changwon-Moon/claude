@@ -1,8 +1,8 @@
 {
   "_": "발행 이력 — scripts/archive-published.mjs 가 만든다. 손으로 고치지 말 것.",
   "_confirmed": "confirmed:true = 오너가 [✅ 올렸습니다]를 누른 건. false = 업로드용으로 만들어만 둔 옛 꾸러미.",
-  "total": 12,
-  "confirmed": 6,
+  "total": 14,
+  "confirmed": 8,
   "posts": [
     {
       "dir": "하이라이트-커버",
@@ -13,6 +13,26 @@
       "captionChars": 0,
       "verdict": "",
       "confirmed": false
+    },
+    {
+      "dir": "2026-08-03-line3-loop",
+      "label": "line3-loop",
+      "title": "3호선 역세권 34평 APT 시세 (2026.01~07)",
+      "publishedAt": "2026-08-03",
+      "pages": 1,
+      "captionChars": 769,
+      "verdict": "",
+      "confirmed": true
+    },
+    {
+      "dir": "2026-08-03-line2-loop",
+      "label": "line2-loop",
+      "title": "2호선 역세권 34평 APT 시세 (2026.01~07)",
+      "publishedAt": "2026-08-03",
+      "pages": 1,
+      "captionChars": 789,
+      "verdict": "",
+      "confirmed": true
     },
     {
       "dir": "2026-07-30-wolse-flip",
