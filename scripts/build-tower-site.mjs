@@ -68,7 +68,16 @@ writeFileSync(
 <a href="/#ideas">관제탑으로 이동</a></p>`,
 );
 
+// 3) 세션 보드 — 지금 어느 코워크 세션이 무엇을 하고 있나.
+//    관제탑 본체(dashboard-static)는 스모크 130항이 걸린 큰 앱이라 건드리지 않는다.
+//    탭 하나 넣자고 그걸 흔들면 "공용 자산 건드려 깨뜨리는" 사고를 내가 반복한다.
+//    별도 페이지로 붙이고 링크만 건다. 자리 잡으면 그때 흡수해도 늦지 않다.
+run("node", ["scripts/build-session-board.mjs"]);
+
 const kb = (p) => Math.round(statSync(p).size / 1024);
 console.log(`\n✅ _site 조립 완료`);
 console.log(`   index.html  ${kb(join(SITE, "index.html"))}KB`);
 console.log(`   ideas.html  ${kb(join(SITE, "ideas.html"))}KB`);
+if (existsSync(join(SITE, "sessions.html"))) {
+  console.log(`   sessions.html ${kb(join(SITE, "sessions.html"))}KB`);
+}

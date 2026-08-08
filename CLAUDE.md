@@ -92,3 +92,26 @@ node scripts/line-card.mjs 3호선            # 문장째 넘겨도 됨: "3호�
 - 스케줄 실행: 1단계 GitHub Actions cron → 규모 확장 시 서버 이전
 - 발행: Instagram Graph API (캐러셀)
 - 승인 게이트: Telegram/Slack 봇 (M8) + 웹 대시보드 (M9)
+
+## 세션 일지 — 시작할 때와 끝날 때 한 줄씩
+
+여러 코워크 세션이 같은 저장소를 동시에 민다. 서로 뭘 하는지 몰라서
+같은 소재를 두 번 설계하거나, 남이 확정한 카드를 건드리는 일이 있었다.
+
+**작업을 시작하면 남긴다:**
+```
+node scripts/session-log.mjs start "무슨 작업을 하는지 한 줄"
+```
+**막히면 남긴다** (무엇에 막혔는지 적을 것 — 다음 세션이 같은 벽에 부딪히지 않게):
+```
+node scripts/session-log.mjs block "저장소 푸시가 막혔다"
+```
+**끝나면 남긴다:**
+```
+node scripts/session-log.mjs done "카드 4장 확정 · 커밋 완료"
+```
+
+`data/sessions/` 에 세션별 파일로 쌓이고, 관제탑 `/sessions.html` 과
+`data/sessions/BOARD.md` 에 모여 보인다. **커밋해야 다른 세션이 본다.**
+
+> 이 일지는 **겹치는 것**을 막는다. 망가지는 것은 문지기(guard)가 막는다 — 다른 문제다.

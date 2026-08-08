@@ -1,0 +1,15 @@
+{
+ "session": "2026-08-05-청약카드",
+ "startedAt": "2026-08-08T12:18:32.366Z",
+ "task": "danji-cover 표준 확정",
+ "log": [
+  {
+   "at": "2026-08-08T12:18:32.366Z",
+   "cmd": "done",
+   "text": "danji-cover 표준 확정"
+  }
+ ],
+ "status": "끝",
+ "updatedAt": "2026-08-08T12:18:32.366Z",
+ "last": "danji-cover 표준 확정"
+}
