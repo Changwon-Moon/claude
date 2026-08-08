@@ -260,8 +260,11 @@
   </head>
   <body>
     <div class="wirit-card dcv">
-      <div class="dcv-cover">
-        <div class="dcv-photo">
+      {{! 표지 사진 칸은 카드마다 키울 수 있다(오너 지시 2026-08-08 "아래 여백이 남는 만큼 사진을 늘려줘").
+          기본 446px, 데이터가 hero.boxH 를 주면 그만큼 커지고 잉크 밴드(690px)도 같이 내려간다.
+          숫자를 CSS 에 박지 않는 이유는 늘 같다 — 카드마다 달라야 하기 때문이다. }}
+      <div class="dcv-cover"{{#if hero.coverH}} style="height:{{hero.coverH}}px"{{/if}}>
+        <div class="dcv-photo"{{#if hero.boxH}} style="height:{{hero.boxH}}px"{{/if}}>
           {{#if hero.photo}}
             <img src="../_shared/photos/{{hero.photo}}" alt=""{{#if hero.shift}} style="top:-{{hero.shift}}px"{{/if}} />
           {{else}}
@@ -271,7 +274,7 @@
           {{/if}}
           <div class="dcv-topshade"></div>
         </div>
-        <div class="dcv-fade"></div>
+        <div class="dcv-fade"{{#if hero.fadeTop}} style="top:{{hero.fadeTop}}px"{{/if}}></div>
         {{#if hero.placeholder}}<div class="dcv-ph">조감도 미확보 · 대체 이미지</div>{{/if}}
 
         <div class="wirit-topcap"><span class="tx">{{topcap}}</span></div>

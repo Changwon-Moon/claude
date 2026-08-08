@@ -1,0 +1,25 @@
+{
+  "label": "danji-thesharp",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "caption-lint",
+      "level": "info",
+      "code": "no-caption",
+      "msg": "캡션 미제공 — 캡션 검수 생략(--caption로 전달)"
+    }
+  ],
+  "cards": [
+    {
+      "file": "danji-thesharp.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}

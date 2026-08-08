@@ -67,6 +67,24 @@
           "minimum": 0,
           "maximum": 2000,
           "description": "표지 사진을 위로 끌어올릴 px. **빌더가 원본 크기에서 계산한다** — 손으로 적지 않는다"
+        },
+        "boxH": {
+          "type": "integer",
+          "minimum": 446,
+          "maximum": 760,
+          "description": "표지 사진 칸 높이(기본 446). 종이 단에 여백이 남을 때만 키운다"
+        },
+        "coverH": {
+          "type": "integer",
+          "minimum": 690,
+          "maximum": 1000,
+          "description": "표지 전체(사진+잉크 밴드) 높이 — 빌더가 boxH 에서 계산한다"
+        },
+        "fadeTop": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 800,
+          "description": "잉크 번짐 시작 y — 빌더가 boxH-180 으로 계산한다"
         }
       }
     },

@@ -69,21 +69,35 @@ function imageSize(file) {
   throw new Error(`이미지 크기를 못 읽는다(JPEG/PNG 만 지원): ${file}`);
 }
 
-/** 표지 사진의 끌어올림 px. 원본이 세로로 짧으면 칸을 못 채우므로 던진다. */
-function heroShift(fileName) {
+/** 표지 사진의 끌어올림 px. 원본이 세로로 짧으면 칸을 못 채우므로 던진다.
+ *  `boxH` 는 표지 사진 칸 높이다 — 기본 446, 카드가 키우면(오너 지시 2026-08-08) 그 값. */
+function heroShift(fileName, boxH = PHOTO_BOX_H) {
   const p = join(ROOT, "templates/_shared/photos", fileName);
   if (!existsSync(p)) throw new Error(`조감도 파일이 없다: templates/_shared/photos/${fileName}`);
   const { w, h } = imageSize(p);
   const renderH = Math.round((CARD_W * h) / w);
-  if (renderH < PHOTO_BOX_H)
+  if (renderH < boxH)
     throw new Error(
-      `조감도가 가로로 너무 길다 — 1080px 폭에 맞추면 세로가 ${renderH}px 라 표지 칸(${PHOTO_BOX_H}px)을 못 채운다: ${fileName}`,
+      `조감도가 가로로 너무 길다 — 1080px 폭에 맞추면 세로가 ${renderH}px 라 표지 칸(${boxH}px)을 못 채운다: ${fileName}`,
     );
-  const shift = Math.round((renderH - PHOTO_BOX_H) * SKY_KEEP);
+  const shift = Math.round((renderH - boxH) * SKY_KEEP);
   /* 건설사 고지문은 원본 맨 아래에 박힌다 — 보이는 창이 하단 5% 를 건드리면 알려 준다. */
-  if (shift + PHOTO_BOX_H > renderH * 0.95)
+  if (shift + boxH > renderH * 0.95)
     console.log(`   ⚠ ${fileName}: 크롭 하단이 원본 아래 5% 에 닿는다 — 건설사 고지문이 보일 수 있다`);
   return shift;
+}
+
+/** 표지(사진+잉크 밴드) 한 벌. 칸을 키우면 밴드와 번짐 시작점이 같이 내려간다. */
+function heroOf(d) {
+  const boxH = d.photo?.boxH ?? null;
+  const H = boxH ?? PHOTO_BOX_H;
+  const extra = boxH ? { boxH, coverH: 690 + (boxH - PHOTO_BOX_H), fadeTop: boxH - 180 } : {};
+  return d.photo
+    ? { photo: d.photo.file, credit: d.photo.credit, shift: heroShift(d.photo.file, H), ...extra }
+    : {
+        photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true,
+        shift: heroShift("seoul-apart-night.jpg", H), ...extra,
+      };
 }
 
 const byId = (id) => {
@@ -361,9 +375,7 @@ function presale(d) {
     topcap: `오늘의 주요 청약 이슈 (${date.replace(/-/g, ".")})`,
     /* 단지마다 제목을 오너가 직접 쓸 때가 있다 — 그때는 데이터셋이 문형을 이긴다. */
     titleLines: d.titleHtml ? [d.titleHtml] : titleFor(d, { total, repWon }),
-    hero: d.photo
-      ? { photo: d.photo.file, credit: d.photo.credit, shift: heroShift(d.photo.file) }
-      : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true, shift: heroShift("seoul-apart-night.jpg") },
+    hero: heroOf(d),
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
     address: addressOf(d),
     ...(plan.on ? { specFour: plan.four } : {}),
@@ -463,9 +475,7 @@ function remndr(d) {
     titleLines: [
       d.titleHtml || `<span class="hi">${hook}</span> 무순위 줍줍 <span class="hi">${n(total)}세대</span>`,
     ],
-    hero: d.photo
-      ? { photo: d.photo.file, credit: d.photo.credit, shift: heroShift(d.photo.file) }
-      : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true, shift: heroShift("seoul-apart-night.jpg") },
+    hero: heroOf(d),
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
     address: addressOf(d),
     ...(plan.on ? { specFour: plan.four } : {}),

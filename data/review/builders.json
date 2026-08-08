@@ -256,6 +256,36 @@
         "jangwi-markone-remndr",
         "--publish"
       ]
+    },
+    {
+      "label": "danji-thesharp",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-08-08",
+        "--only",
+        "thesharp-singil",
+        "--publish"
+      ]
+    },
+    {
+      "label": "danji-summit",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-08-08",
+        "--only",
+        "summit-clavion",
+        "--publish"
+      ]
+    },
+    {
+      "label": "danji-chungjeongno",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-08-08",
+        "--only",
+        "xirene-chungjeongno",
+        "--publish"
+      ]
     }
   ]
 }
