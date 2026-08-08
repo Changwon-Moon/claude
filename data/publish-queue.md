@@ -40,3 +40,4 @@
 - [ ] [26.08.08(토) 관제탑] **수도권 지하철 노선·구간별 표정속도** · metro-2col · 원본 data/content/2026-07-20/metro-2col.json
 - [ ] [26.08.08(토) 관제탑] **당신이 아는 아파트 1위, 맞나요? (브랜드 순위 조사 5곳 비교)** · brand-rank-grid · 원본 data/content/2026-07-31/brand-rank.json
 - [ ] [26.08.08(토) 관제탑] **당신 건물주가 네덜란드 연기금? (글로벌 자본의 서울 임대시장 진출)** · world-capital · 원본 data/content/2026-08-05/world-capital.json
+- [ ] [26.08.08(토) 관제탑] **신분당선 역세권 34평 APT 시세 (2026.01~07)** · sinbundang-loop · 원본 data/content/2026-07-31/sinbundang-loop.json
