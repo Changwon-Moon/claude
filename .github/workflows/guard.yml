@@ -1,0 +1,84 @@
+name: 문지기 (guard)
+
+# ══════════════════════════════════════════════════════════════
+# 여러 세션이 같은 저장소를 민다. 오늘(2026-08-04~06) 겪은 사고 셋은 전부
+# **"바뀐 것을 아무도 즉시 몰랐다"** 에서 나왔다.
+#
+#   ① 다른 세션이 공용 렌더러를 바꿔 오너 확정 카드의 픽셀이 달라졌다
+#      → 며칠 뒤 doctor 를 돌리고서야 알았다
+#   ② 워크플로 YAML 이 깨져 GitHub 에 등록조차 안 됐다
+#      → 실행 목록에 뜨지도 않아 몇 주간 안 돌았고, 빨간불조차 없었다
+#   ③ probe 결과가 브랜치 경합으로 유실됐다
+#
+# 셋 다 **푸시 시점에 검사가 돌았으면 그 자리에서 잡혔다.**
+# 이 워크플로가 그 문지기다. 사람이 기억해서 돌리는 검사는 언젠가 안 돈다.
+#
+# ── 무엇을 보나
+#   · 셀프테스트 (파서·규칙·가드 전부)
+#   · 워크플로 YAML (깨지면 등록조차 안 된다)
+#   · 확정 카드 픽셀 (공용 자산을 건드리면 여기서 걸린다)
+#
+# ── 왜 doctor 를 통째로 부르나
+# 셋을 따로 부르면 doctor 와 어긋난다. doctor 는 "이 환경이 카드를 만들 수 있나" 의
+# 단일 판정 기준이다. 문지기와 판정 기준이 둘이면 둘은 반드시 갈라진다.
+# ══════════════════════════════════════════════════════════════
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "packages/**"
+      - "templates/**"
+      - "scripts/**"
+      - "assets/**"
+      - ".github/workflows/**"
+      - "data/review/**"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  # 같은 브랜치에 연달아 밀면 마지막 것만 본다 — 중간 것을 검사해도 의미가 없다.
+  group: guard-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # 빠른 것부터 — 깨진 YAML 은 10초면 잡히고, 잡히면 뒤를 볼 이유가 없다.
+      - name: 워크플로 YAML
+        run: node scripts/lint-workflows.mjs
+
+      - name: 셀프테스트
+        run: pnpm --filter @wirit/collectors selftest
+
+      # 확정 카드 픽셀 — 공용 템플릿·CSS·렌더러를 건드리면 여기서 걸린다.
+      # doctor 가 빌더 → 렌더 → md5 대조 → 검수까지 한 번에 한다.
+      - name: 확정 카드 픽셀 (doctor)
+        run: node scripts/doctor.mjs
+
+      - name: 무엇이 걸렸나
+        if: failure()
+        run: |
+          echo "::error::문지기가 막았습니다. 아래 중 하나입니다:"
+          echo "  · 워크플로 YAML 이 깨졌다 → 그 워크플로는 GitHub 에 등록조차 안 됩니다"
+          echo "  · 셀프테스트가 깨졌다 → 파서·수집 규칙이 바뀌었습니다"
+          echo "  · 확정 카드 픽셀이 달라졌다 → 공용 템플릿을 건드렸을 수 있습니다"
+          echo ""
+          echo "픽셀이 걸렸다면: 의도한 변경인지 먼저 판단하세요."
+          echo "  의도했다면 오너 확인을 받고 data/review/pixel-baselines.json 을 갱신합니다."
+          echo "  기준값만 고쳐 통과시키는 것은 가드를 없애는 것과 같습니다 —"
+          echo "  무엇이 왜 바뀌었는지를 note 에 함께 적으세요."
