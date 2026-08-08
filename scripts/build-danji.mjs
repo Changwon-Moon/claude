@@ -164,6 +164,61 @@ function repPrice(d, rep) {
  * → 면적대마다 타입 하나(A·P 등 첫 실제 타입)만 뽑아 **전부** 적는다. 84A~D 를 네 줄로 늘리지 않는다.
  * 분양가가 없는 면적은 '미고지'로 남긴다 — 줄을 지우면 그 평형이 없는 줄 안다.
  */
+/**
+ * 규모 우선 판 (오너 확정 2026-08-06 장위 → 2026-08-08 분양 예정까지 확장).
+ *
+ * 위 단 = 총 세대수 / 동수 / 최고 층수 / 이번에 공급하는 물량(코발트)
+ * 아래 단 = 타입별 **세대수 · 최고 분양가** — 회색 한 줄에 '타입 · N세대', 그 아래 큰 글씨로 금액.
+ *          오너가 부른 순서(타입/세대수/분양가)를 위에서 아래로 그대로 지킨다.
+ *
+ * 켜지는 조건은 **데이터**다: `price.byType` 이 있으면 이 판, 없으면 예전 판.
+ * 사람이 "이번엔 이 판형" 하고 켜지 않는다(CARD_CHECKLIST §3).
+ *
+ * ⚠️ 마지막 칸 라벨은 카드가 무엇을 파는지에 따라 다르다 — 줍줍은 '잔여',
+ *    조합원 취소분은 '취소분', 일반 분양은 '일반분양'. `supplyLabel` 이 정한다.
+ * ⚠️ 타입별 세대수 합이 이번 공급 물량과 다를 수 있다(더샵 취소분: 표는 본청약 477세대인데
+ *    이번 물량은 67세대). 그때는 `typeSumIsSupply: false` 로 검산을 끄고 **머리글이 기준을
+ *    말하게** 한다. 끄는 것을 데이터에 적어 두는 이유는, 조용히 안 세면 다음 사람이 모른다.
+ */
+function scalePlan(d, total) {
+  const byType = d.price?.byType;
+  if (!Array.isArray(byType) || !byType.length) return { on: false };
+
+  const label = d.supplyLabel || (d.kind === "remndr" ? "잔여" : "일반분양");
+  const sum = byType.reduce((a, b) => a + (b.units || 0), 0);
+  const anyUnits = byType.some((t) => t.units != null);
+  if (anyUnits && d.typeSumIsSupply !== false && sum !== total)
+    throw new Error(
+      `${d.id}: 타입별 세대수 합 ${sum} ≠ 이번 공급 ${total} — 표가 공고와 다르다.` +
+        ` 표가 본청약 기준이라 일부러 다른 것이면 데이터에 typeSumIsSupply:false 를 적을 것`,
+    );
+
+  return {
+    on: true,
+    four: byType.length === 4,
+    /* 회색 안내 머리글은 넣지 않는다(오너 지시 2026-08-06 "안내글씨는 다 지워줘").
+       각 칸이 이미 자기 이름표를 달고 있어 머리글은 같은 말을 두 번 하는 셈이었다. */
+    grid: {
+      head: [],
+      cols: 4,
+      rows: [
+        { area: "총 세대수", price: `${n(d.totalComplex ?? total)}세대` },
+        { area: "동수", price: d.buildings != null ? `${d.buildings}개동` : "미고지" },
+        { area: "최고 층수", price: d.topFloor != null ? `${d.topFloor}층` : "미고지" },
+        { area: label, price: `${n(total)}세대`, main: true },
+      ],
+    },
+    cells: byType.map((t) => {
+      if (t.won == null) throw new Error(`${d.id}: ${t.type} 의 분양가(won)가 없다 — 지어내지 않는다`);
+      /* 세대수를 **모르는** 카드가 있다. 더샵 취소분이 그렇다 — 공고가 타입별 물량을 안 줬다.
+         그때 본청약 세대수를 얹으면 "취소분 67세대"와 "51㎡ 150세대"가 한 카드에서 싸운다.
+         모르면 **비운다.** 타입과 금액만 말하는 것이 틀린 수를 말하는 것보다 낫다. */
+      const head = t.units != null ? `${t.type} · ${n(t.units)}세대` : t.type;
+      return { above: head, value: eok1(t.won), hi: !!t.main };
+    }),
+  };
+}
+
 function priceTable(d, total) {
   if (!d.areas?.length) throw new Error(NEED_AREAS(d.id));
   /* ── 무순위(줍줍) ──
@@ -273,6 +328,9 @@ function presale(d) {
   if (d.kind !== "presale") throw new Error(`${d.id} 는 presale 이 아니다`);
   const ah = applyhome(d);
   const total = ah ? ah.supply : d.total;
+  /* 규모 우선 판은 kind 가 아니라 **데이터**가 켠다 — price.byType 이 있으면 이 판이다.
+     분양 예정 카드도 2026-08-08 오너 지시로 이 판을 쓴다(장위 카드와 같은 배치). */
+  const plan = scalePlan(d, total);
   const rep = repArea(d);
   const repWon = repPrice(d, rep);
   /* 날짜에는 요일을 붙인다(오너 지시 2026-08-03) — 청약은 평일 하루짜리라 요일이 곧 일정이다.
@@ -308,8 +366,9 @@ function presale(d) {
       : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true, shift: heroShift("seoul-apart-night.jpg") },
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
     address: addressOf(d),
-    spec: specCells(d, total),
-    priceTable: priceTable(d, total),
+    ...(plan.on ? { specFour: plan.four } : {}),
+    spec: plan.on ? plan.cells : specCells(d, total),
+    priceTable: plan.on ? plan.grid : priceTable(d, total),
     /* 일정 4칸(오너 지시 2026-08-03) — 특공·1순위·당첨자 발표·입주 예정.
        당첨자 발표일은 청약홈 PRZWNER_PRESNATN_DE 에서 수집기가 이미 읽어 둔다(announceDate). */
     schedule: [
@@ -389,38 +448,10 @@ function remndr(d) {
 
   const hook = d.hook || d.location.split(" ").slice(2, 3).join("") || d.location;
 
-  /* ── 분양가를 아는 무순위 카드 (오너 지시 2026-08-06) ──
-   * 무순위는 대개 공급금액이 '사업주체 문의'로만 적혀 카드가 규모밖에 말할 게 없다.
-   * 그런데 **본청약 때 이미 값이 매겨진 단지**는 타입별 금액을 안다 — 그러면 그게 소식이다.
-   * 그때만 판을 바꾼다: 위 단은 단지 규모 4칸, 아래 단은 타입별 세대수·최고 분양가.
-   * price.byType 이 없으면 예전 판 그대로 — 확정된 카드(송도)의 픽셀은 건드리지 않는다. */
-  const byType = d.price?.byType;
-  const scaleFirst = Array.isArray(byType) && byType.length > 0;
-
-  /* 회색 안내 머리글은 넣지 않는다(오너 지시 2026-08-06 "안내글씨는 다 지워줘").
-     각 칸이 이미 자기 이름표를 달고 있어 머리글은 같은 말을 두 번 하는 셈이었다. */
-  const scaleGrid = () => ({
-    head: [],
-    cols: 4,
-    rows: [
-      { area: "총 세대수", price: `${n(d.totalComplex ?? total)}세대` },
-      { area: "동수", price: d.buildings != null ? `${d.buildings}개동` : "미고지" },
-      { area: "최고 층수", price: d.topFloor != null ? `${d.topFloor}층` : "미고지" },
-      { area: "잔여", price: `${n(total)}세대`, main: true },
-    ],
-  });
-  /* 타입 칸: 회색 한 줄에 '타입 · 세대수', 그 아래 큰 글씨로 최고 분양가.
-     오너가 부른 순서(타입/세대수/분양가)를 위에서 아래로 그대로 지킨다. */
-  const typeCells = () =>
-    byType.map((t) => {
-      if (t.won == null) throw new Error(`${d.id}: ${t.type} 의 분양가(won)가 없다 — 지어내지 않는다`);
-      return { above: `${t.type} · ${n(t.units)}세대`, value: eok1(t.won), hi: !!t.main };
-    });
-  if (scaleFirst) {
-    const sum = byType.reduce((a, b) => a + (b.units || 0), 0);
-    if (sum !== total)
-      throw new Error(`${d.id}: 타입별 세대수 합 ${sum} ≠ 잔여 총 ${total} — 표가 공고와 다르다`);
-  }
+  /* ── 규모 우선 판 (오너 확정 2026-08-06 장위, 2026-08-08 분양 예정까지 확장) ──
+   * 위 단 = 단지 규모 4칸, 아래 단 = 타입별 세대수·최고 분양가. `scalePlan` 이 공통이다.
+   * `price.byType` 이 없으면 예전 판 그대로 — 확정된 카드(한강·송도)의 픽셀을 건드리지 않는다. */
+  const plan = scalePlan(d, total);
 
   return {
     template: "danji-cover@1",
@@ -437,9 +468,9 @@ function remndr(d) {
       : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true, shift: heroShift("seoul-apart-night.jpg") },
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
     address: addressOf(d),
-    ...(scaleFirst ? { specFour: byType.length === 4 } : {}),
-    spec: scaleFirst
-      ? typeCells()
+    ...(plan.on ? { specFour: plan.four } : {}),
+    spec: plan.on
+      ? plan.cells
       : [
           {
             label: "잔여 세대",
@@ -460,7 +491,7 @@ function remndr(d) {
             ? { label: "최고 층수", pre: "최고", value: String(d.topFloor), unit: "층" }
             : { label: "최고 층수", value: "미고지", tbd: true },
         ],
-    priceTable: scaleFirst ? scaleGrid() : priceTable(d, total),
+    priceTable: plan.on ? plan.grid : priceTable(d, total),
     schedule,
     /* 한줄평이 있으면 그게 아래 한 줄이다 — 특이사항 나열보다 한 문장이 오래 남는다. */
     notice: d.oneLiner ? `<i class="em">💡</i>${d.oneLiner}` : flags.join(" · "),
