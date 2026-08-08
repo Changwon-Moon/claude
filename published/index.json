@@ -1,8 +1,8 @@
 {
   "_": "발행 이력 — scripts/archive-published.mjs 가 만든다. 손으로 고치지 말 것.",
   "_confirmed": "confirmed:true = 오너가 [✅ 올렸습니다]를 누른 건. false = 업로드용으로 만들어만 둔 옛 꾸러미.",
-  "total": 14,
-  "confirmed": 8,
+  "total": 23,
+  "confirmed": 17,
   "posts": [
     {
       "dir": "하이라이트-커버",
@@ -13,6 +13,76 @@
       "captionChars": 0,
       "verdict": "",
       "confirmed": false
+    },
+    {
+      "dir": "2026-08-08-jeonse-streak",
+      "label": "jeonse-streak",
+      "title": "서울 아파트 매매·전세 동반 연속 상승 (주간)",
+      "publishedAt": "2026-08-08",
+      "pages": 1,
+      "captionChars": 449,
+      "verdict": "pass",
+      "confirmed": true
+    },
+    {
+      "dir": "2026-08-03-line9-loop",
+      "label": "line9-loop",
+      "title": "9호선 역세권 34평 APT 시세 (2026.01~07)",
+      "publishedAt": "2026-08-03",
+      "pages": 1,
+      "captionChars": 784,
+      "verdict": "",
+      "confirmed": true
+    },
+    {
+      "dir": "2026-08-03-line8-loop",
+      "label": "line8-loop",
+      "title": "8호선 역세권 34평 APT 시세 (2026.01~07)",
+      "publishedAt": "2026-08-03",
+      "pages": 1,
+      "captionChars": 786,
+      "verdict": "",
+      "confirmed": true
+    },
+    {
+      "dir": "2026-08-03-line7-loop",
+      "label": "line7-loop",
+      "title": "7호선 역세권 34평 APT 시세 (2026.01~07)",
+      "publishedAt": "2026-08-03",
+      "pages": 1,
+      "captionChars": 777,
+      "verdict": "",
+      "confirmed": true
+    },
+    {
+      "dir": "2026-08-03-line6-loop",
+      "label": "line6-loop",
+      "title": "6호선 역세권 34평 APT 시세 (2026.01~07)",
+      "publishedAt": "2026-08-03",
+      "pages": 1,
+      "captionChars": 784,
+      "verdict": "",
+      "confirmed": true
+    },
+    {
+      "dir": "2026-08-03-line5-loop",
+      "label": "line5-loop",
+      "title": "5호선 역세권 34평 APT 시세 (2026.01~07)",
+      "publishedAt": "2026-08-03",
+      "pages": 1,
+      "captionChars": 803,
+      "verdict": "",
+      "confirmed": true
+    },
+    {
+      "dir": "2026-08-03-line4-loop",
+      "label": "line4-loop",
+      "title": "4호선 역세권 34평 APT 시세 (2026.01~07)",
+      "publishedAt": "2026-08-03",
+      "pages": 1,
+      "captionChars": 780,
+      "verdict": "",
+      "confirmed": true
     },
     {
       "dir": "2026-08-03-line3-loop",
@@ -32,6 +102,26 @@
       "pages": 1,
       "captionChars": 789,
       "verdict": "",
+      "confirmed": true
+    },
+    {
+      "dir": "2026-08-03-jeonwolse-map",
+      "label": "jeonwolse-map",
+      "title": "월세가 전세를 넘어섰다 (토허 40곳 월세 비중)",
+      "publishedAt": "2026-08-03",
+      "pages": 1,
+      "captionChars": 716,
+      "verdict": "revise",
+      "confirmed": true
+    },
+    {
+      "dir": "2026-08-03-danji-hangang",
+      "label": "danji-hangang",
+      "title": "🌊 한강뷰 아파트 분양가 7억대? (한강 푸르지오 리버프론트)",
+      "publishedAt": "2026-08-03",
+      "pages": 1,
+      "captionChars": 643,
+      "verdict": "pass",
       "confirmed": true
     },
     {
