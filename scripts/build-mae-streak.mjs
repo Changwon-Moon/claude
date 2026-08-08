@@ -46,9 +46,12 @@ const weekLabel = (key) => {                      // "2020.6 둘째주" (부동�
 };
 const isoDate = (key) => mondayOf(key).toISOString().slice(0, 10);   // YYYY-MM-DD
 
-/* 뱃지·저장 폴더 날짜 = 최신 데이터 주(기준일). 인자를 주면 그걸로 덮어쓸 수 있다(테스트용). */
+/* 뱃지·저장 폴더 날짜 = **발행일(오늘 KST)** — '오늘의 주요 부동산 이슈' 뱃지 원칙(CEO 08-03).
+ * 배포/주간 자동생산이 도는 날로 스탬프된다. 인자를 주면 그걸로 덮어쓴다(과거 발행분 재현용).
+ * (데이터가 몇 주째인지는 weekLabel 로 범례에 따로 표기 — 뱃지 날짜와 무관.) */
 const latestKey = d.meta.asOf || ks[ks.length - 1];
-const date = process.argv[2] || isoDate(latestKey);
+const kstToday = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+const date = process.argv[2] || kstToday;
 
 /* ── 연속 상승 run 계산: 전주比 상승이 이어진 구간. base=첫 상승 직전(저점) ── */
 const runs = [];
