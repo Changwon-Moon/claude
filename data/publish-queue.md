@@ -21,10 +21,10 @@
 - [x] [26.07.26(일) 관제탑] **서울 아파트 실거래 랭킹 84㎡ (2026 상반기)** · estate-cover · 원본 data/content/2026-07-21/estate-cover-84.json
 - [x] [26.07.30(목) 오너 확정] **📉📈 미쳐버린 서울 월세 폭등 상황 (월세지수 2016~2026)** · year-bars · 원본 data/content/2026-07-30/wolse-flip-p1.json
 - [x] [26.07.30(목) 오너 확정] **🔥 토허제 40곳 월세 폭등 (지도+행정구역 표)** · singoga-map · 원본 data/content/2026-07-30/tohuh-rent-map.json
-- [ ] [26.08.03(월) 오너 확정] **🌊 한강뷰 아파트 분양가 7억대? (한강 푸르지오 리버프론트)** · danji-hangang · 원본 data/content/2026-08-03/danji-hangang.json
+- [x] [26.08.03(월) 오너 확정] **🌊 한강뷰 아파트 분양가 7억대? (한강 푸르지오 리버프론트)** · danji-hangang · 원본 data/content/2026-08-03/danji-hangang.json
 - [ ] [26.08.03(월) 오너 확정] **🏙 송도 무순위 줍줍 150세대 (더샵 송도그란테르)** · danji-songdo · 원본 data/content/2026-08-03/danji-songdo.json
 - [ ] [26.08.03(월) 관제탑] **서울 아파트 78주 연속 상승 — 상승폭 文정부의 2배** · streak-line · 원본 data/content/2026-07-27/mae-streak.json
-- [ ] [26.08.03(월) 관제탑] **한강뷰 아파트 분양가 7억대?** · danji-cover · 원본 data/content/2026-08-03/danji-hangang.json
+- [x] [26.08.03(월) 관제탑] **한강뷰 아파트 분양가 7억대?** · danji-cover · 원본 data/content/2026-08-03/danji-hangang.json
 - [ ] [26.08.03(월) 관제탑] **송도 무순위 줍줍 150세대** · danji-cover · 원본 data/content/2026-08-03/danji-songdo.json
 - [ ] [26.08.03(월) 관제탑] **서울 아파트 매매·전세 동반 78주 연속 상승** · streak-line · 원본 data/content/2026-08-03/jeonse-streak.json
 - [x] [26.08.03(월) 관제탑] **월세가 전세를 넘어섰다 (토허 40곳 월세 비중)** · singoga-map · 원본 data/content/2026-08-03/jeonwolse-map.json
