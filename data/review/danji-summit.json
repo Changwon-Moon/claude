@@ -6,8 +6,8 @@
     {
       "reviewer": "caption-lint",
       "level": "info",
-      "code": "no-caption",
-      "msg": "캡션 미제공 — 캡션 검수 생략(--caption로 전달)"
+      "code": "hook",
+      "msg": "첫 줄 후킹 질문(?) 권장 — 피드 '더보기' 전 노출 구간"
     }
   ],
   "cards": [
