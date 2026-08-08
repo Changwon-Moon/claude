@@ -1516,6 +1516,102 @@
       "status": "",
       "deadline": "2026-08-21",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000374&pblancNo=2026000374"
+    },
+    {
+      "id": "sig-2026-08-08-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "부동산 공급대책 곧 발표...물량 확대·조기 착공 '중점'",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-08-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-08-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "대규모 아파트 입주…집값 조정 가능성",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-08-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-08-3",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "韓증시, 역대급 변동성은 다소 완화…반등계기 찾나",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-08-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-08-4",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "판 깔아주고 나 몰라라… 롤러코스피에 우는 2030",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-08-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-08-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "주가 40% 빠졌는데…'다시 올라타야 하나' 개미들 들썩 [한경우의 케이스스터디]",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-08-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-08-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "주가 급락에 빚투 탈났나…청년·고령층 마통 연체 급증",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-08-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-08-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "메르세데스-벤츠 주가 재평가를 위한 조건은? 씨티의 분석",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-08-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-08-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "환율 1,600원 향하다 1,300원대 눈앞…변동성 금융위기 후 최고",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-08-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
