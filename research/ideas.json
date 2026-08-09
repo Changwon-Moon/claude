@@ -1612,6 +1612,102 @@
       "state": "",
       "status": "",
       "isNew": true
+    },
+    {
+      "id": "sig-2026-08-09-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "23억 아파트 3채 보유세… 서울 4854만원, 뉴욕 3959만원 - 조선비즈",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-09-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-09-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "주담대 막혀도 '200억 아파트' 척척…결국 살 사람은 샀다 [시장톡]",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-09-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-09-3",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "아파트 과실 입증 못했는데…정전사태 쓴 재난기금 2억 구상권은?",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-09-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-09-4",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "HUG 부동산 PF 보증잔액 20조원 넘어서…1년 반만에 2배 늘어",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-09-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-09-5",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "中 초부유층 27.4%, 베이징·상하이에 집중… 부동산·증시 한파로 자산은 소폭 감소",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-09-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-09-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "얼어붙은 코스피 투자심리…거래량·대금 올해 최저",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-09-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-09-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "\"150조 풀까\"…늪에 빠진 코스피 살릴 '삼전닉스'의 결단",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-09-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-09-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "치솟는 美 장기금리… ‘최고 채권 판매자’베선트가 꺼낸 ‘3장의 카드’",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-09-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
