@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["template", "emblem", "perHundred", "clusterSvg", "rows"],
+  "properties": {
+    "template": { "type": "string" },
+    "date": { "type": "string" },
+    "emblem": { "type": "string" },
+    "perHundred": { "type": "string" },
+    "clusterSvg": { "type": "string" },
+    "subtitle": { "type": "string" },
+    "chinaNote": { "type": "string" },
+    "footerLeft": { "type": "string" },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rank", "gu", "count", "ratioPct", "n1flag", "n1pct", "n2flag", "n2pct", "n3flag", "n3pct"],
+        "properties": {
+          "rank": { "type": "number" }, "gu": { "type": "string" },
+          "count": { "type": "string" }, "ratioPct": { "type": "string" },
+          "cls": { "type": "string" }, "medal": { "type": "string" },
+          "n1flag": { "type": "string" }, "n1pct": { "type": "string" },
+          "n2flag": { "type": "string" }, "n2pct": { "type": "string" },
+          "n3flag": { "type": "string" }, "n3pct": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

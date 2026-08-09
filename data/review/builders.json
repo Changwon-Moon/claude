@@ -246,6 +246,13 @@
       "args": [
         "2026-08-05"
       ]
+    },
+    {
+      "label": "foreign-rank",
+      "cmd": "scripts/build-foreign-rank.mjs",
+      "args": [
+        "2026-08-09"
+      ]
     }
   ]
 }

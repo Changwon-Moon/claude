@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"/>
+<!--WIRIT_SHARED_CSS-->
+<style>
+  .fr-title { display:flex; align-items:center; gap:0.24em; margin-top: 16px; width:100%;
+    font-family: var(--font-title); font-weight:900; letter-spacing:-0.03em; color:var(--wirit-ink);
+    white-space:nowrap; font-size:78px; }
+  .fr-title .em { width:1.18em; height:1.28em; flex:none; }
+  .fr-title .hi { color:#c0122a; }
+  .fr-title .emo { font-family:"Noto Color Emoji","Apple Color Emoji",sans-serif; font-weight:400; }
+
+  .fr-band { display:flex; align-items:center; gap:10px; height: 286px; margin-top: 18px; }
+  .fr-big { flex:0 0 262px; text-align:center; }
+  .fr-big .cap { font-size:29px; font-weight:800; color:var(--wirit-ink); letter-spacing:-0.01em; }
+  .fr-big .num { font-family: var(--font-num); font-size:120px; font-weight:900; color:#c0122a; line-height:1.02; letter-spacing:-0.02em; margin-top:16px; }
+  .fr-big .num i { font-style:normal; font-size:0.46em; font-weight:900; margin-left:1px; }
+  .fr-cluster { flex:1; min-width:0; height:100%; }
+  .fr-cluster svg { width:100%; height:100%; display:block; }
+
+  .mr-list { flex:1; min-height:0; display:flex; flex-direction:column; justify-content:flex-start; margin-top:12px; margin-bottom:24px; position:relative; overflow:hidden; }
+  .mr-list::before { content:"wirit."; position:absolute; left:50%; top:50%; z-index:0; pointer-events:none;
+    font-family:"Wanted Sans","Pretendard",sans-serif; font-weight:800; font-size:158px; line-height:1;
+    letter-spacing:-0.03em; white-space:nowrap; color:rgba(20,24,33,0.045); transform:translate(-50%,-50%) rotate(-24deg); }
+  .mr-list > .mr-hr, .mr-list > .mr-row { position:relative; z-index:1; }
+  /* 순위 · 구(우측 이동) · 외국인비율(왼쪽정렬) · [유연 여백] · 1·2·3위(내용폭, 왼쪽정렬, 우측 끝까지) */
+  .mr-hr, .mr-row { display:grid; grid-template-columns: 76px 210px 132px 1fr 1fr 1fr; align-items:center; gap:14px; padding:0 12px; }
+  .mr-hr { flex:0 0 auto; padding-bottom:8px; border-bottom:3px solid var(--wirit-ink); }
+  .mr-hr span { font-size:22px; font-weight:700; color:var(--wirit-gray); }
+  .mr-hr .r { text-align:center; }
+  .mr-row { flex:1 1 0; min-height:0; border-bottom:1.5px solid var(--wirit-ink-06); }
+  .mr-row:nth-child(even) { background:rgba(20,24,33,0.035); }
+  .mr-row:last-child { border-bottom:none; }
+  .mr-rank { width:50px; margin:0 auto; display:flex; align-items:center; justify-content:center; font-family:var(--font-num); font-weight:900; font-size:27px; color:var(--wirit-gray); }
+  .mr-medal { font-size:38px; line-height:1; }
+  .mr-gu { font-size:30px; font-weight:800; letter-spacing:-0.02em; color:var(--wirit-ink); white-space:nowrap; }
+  .mr-gu .pct { font-size:0.55em; font-weight:700; color:var(--wirit-gray); margin-left:2px; }
+  .mr-ratio { text-align:left; font-family:var(--font-num); font-size:30px; font-weight:900; color:#c0122a; white-space:nowrap; }
+  .mr-ratio i { font-style:normal; font-size:0.55em; font-weight:800; margin-left:1px; color:var(--wirit-gray); }
+  .mr-nat { display:inline-flex; align-items:center; justify-content:flex-start; gap:8px; }
+  .mr-nat .fl { width:36px; height:26px; border-radius:4px; overflow:hidden; flex:none; box-shadow:0 0 0 1px rgba(20,24,33,.10); display:inline-block; }
+  .mr-nat .fl svg { width:100%; height:100%; display:block; }
+  .mr-nat b { font-family:var(--font-num); font-size:23px; font-weight:800; color:var(--wirit-gray); white-space:nowrap; }
+  .mr-nat b i { font-style:normal; font-size:0.6em; font-weight:700; margin-left:1px; }
+  .fr-note { font-size:25px; font-weight:600; color:var(--wirit-gray); margin:2px 0 16px; letter-spacing:-0.01em; white-space:nowrap; width:100%; overflow:hidden; }
+</style></head>
+<body>
+  <div class="wirit-card mr">
+    <div class="wirit-topcap"><span>{{subtitle}}</span></div>
+    <div class="fr-title">{{{emblem}}}<span>서울 <span class="hi">외국인</span><span class="emo">👲🏻</span> 거주비율</span></div>
+
+    <div class="fr-band">
+      <div class="fr-big"><div class="cap">서울시민 100명 중</div><div class="num">{{perHundred}}<i>명</i></div></div>
+      <div class="fr-cluster">{{{clusterSvg}}}</div>
+    </div>
+
+    <div class="mr-list">
+      <div class="mr-hr"><span class="r">순위</span><span>구(외국인비율)</span><span>외국인 수</span><span>1위</span><span>2위</span><span>3위</span></div>
+      {{#each rows}}
+      <div class="mr-row {{this.cls}}">
+        <span class="mr-rank">{{#if this.medal}}<span class="mr-medal">{{this.medal}}</span>{{else}}{{this.rank}}{{/if}}</span>
+        <span class="mr-gu">{{this.gu}}<span class="pct">({{this.ratioPct}}%)</span></span>
+        <span class="mr-ratio">{{this.count}}<i>천명</i></span>
+        <span class="mr-nat"><span class="fl">{{{this.n1flag}}}</span><b>{{this.n1pct}}<i>천명</i></b></span>
+        <span class="mr-nat"><span class="fl">{{{this.n2flag}}}</span><b>{{this.n2pct}}<i>천명</i></b></span>
+        <span class="mr-nat"><span class="fl">{{{this.n3flag}}}</span><b>{{this.n3pct}}<i>천명</i></b></span>
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="fr-note">{{chinaNote}}</div>
+    <div class="wirit-footer">
+      <span>{{footerLeft}}</span>
+      <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+    </div>
+  </div>
+  <script>
+    window.__wiritFit = function () {
+      var t = document.querySelector(".fr-title"); if (!t) return;
+      var avail = t.clientWidth, lo = 48, hi = 150, best = lo;
+      for (var i=0;i<26;i++){ var mid=(lo+hi)/2; t.style.fontSize=mid+"px";
+        if (t.scrollWidth <= avail + 0.5){best=mid;lo=mid;} else {hi=mid;} }
+      t.style.fontSize = best.toFixed(2)+"px";
+    };
+    window.__wiritFitNote = function () {
+      var n = document.querySelector(".fr-note"); if (!n) return;
+      var av = n.clientWidth, lo = 16, hi = 40, b = lo;
+      for (var i=0;i<24;i++){ var m=(lo+hi)/2; n.style.fontSize=m+"px";
+        if (n.scrollWidth <= av + 0.5){b=m;lo=m;} else {hi=m;} }
+      n.style.fontSize = b.toFixed(2)+"px";
+    };
+    window.__wiritFit();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){window.__wiritFit();});
+  </script>
+</body></html>
