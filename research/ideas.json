@@ -1721,6 +1721,102 @@
       "state": "",
       "status": "",
       "isNew": true
+    },
+    {
+      "id": "sig-2026-08-10-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "정치권 흔드는 ’2030 부동산 분노'",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-10-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-10-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "아파트값 1억 내린 매물도...서울 강남, 무슨 일?",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-10-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-10-3",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "중소형 59㎡, 15억6천만원입니다…서울 아파트 분양가 ’전국 3배’ [뉴스더보기]",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-10-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-10-4",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "\"ISA·주가 누르기 방지 전면 재검토\"…무엇이 문제인가",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-10-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-10-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "유가 급등에 숨 고르며 CPI 경계…약세 마감",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-10-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-10-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕증시, 미·이란 협상 의구심에 약보합 마감…다우 0.1%↓(종합)",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-10-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-10-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "코스피, 반도체 ’주춤’…수급 몰린 코스닥 7% 급등",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-10-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-10-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕증시 반도체 급락…하닉ADR -1.90%",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-10-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
