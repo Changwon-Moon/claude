@@ -251,7 +251,8 @@
       "label": "foreign-rank",
       "cmd": "scripts/build-foreign-rank.mjs",
       "args": [
-        "2026-08-09"
+        "2026-08-10",
+        "2025"
       ]
     }
   ]

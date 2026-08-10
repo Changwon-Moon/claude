@@ -2,22 +2,32 @@
  * 서울 자치구별 등록외국인 거주비율 — 1줄 제목 + 밴드(전체비율·국적도넛·국기범례) + 인원 순위표. 2장.
  *   p1: 인원 1~13위 · p2: 14~25위
  * 데이터:
- *   data/datasets/seoul-foreign-2023.json  (법무부 등록외국인 2023, 국적별 — 남+여 합산)
- *   data/datasets/population/*.json         (KOSIS 주민등록인구 — 외국인비율 분모)
+ *   data/datasets/seoul-foreign-{YEAR}.json  (법무부 등록외국인, 국적별 — 남+여 합산)
+ *   data/datasets/population/*.json          (KOSIS 주민등록인구 — 외국인비율 분모)
  * 오너 결정(2026-08-08): 한국계중국인 → 중국에 합산(국적 기준). 표는 인원(수) 순, 단위 천명.
- * ⚠️ 외국인은 2023.12 기준, 인구 분모는 근접 시점(POP_PERIOD)으로 고정 → 결정적 렌더.
- * 실행: node scripts/build-foreign-rank.mjs [date]
+ * ⚠️ 외국인 기준연월에 맞는 인구 분모(POP_PERIOD)로 고정 → 결정적 렌더.
+ * 실행: node scripts/build-foreign-rank.mjs [date] [year=2025]
+ *   2023판 재현 필요시: node scripts/build-foreign-rank.mjs <date> 2023
  */
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const date = process.argv[2] || "2026-08-09";
-const POP_PERIOD = "2024-07"; // 등록외국인 2023.12 에 가장 근접한, 캐시에 존재하는 인구 시점(고정 → 결정성)
+const date = process.argv[2] || "2026-08-10";
+const YEAR = process.argv[3] || "2025";
 
-// ── 등록외국인 2023 ──
-const src = JSON.parse(readFileSync(join(ROOT, "data/datasets/seoul-foreign-2023.json"), "utf8"));
+// 연도별: 외국인 데이터 기준연월(FOR_ASOF, 사람이 읽는 표기) · 인구 분모 시점(POP_PERIOD, 캐시에 존재하는 시점)
+const YEAR_CFG = {
+  "2023": { asOf: "2023.12", popPeriod: "2024-07", sourceLabel: "법무부 등록외국인 2023 (공공데이터포털 15108413)" },
+  "2025": { asOf: "2025.12", popPeriod: "2025-12", sourceLabel: "법무부 「2025 출입국·외국인정책 통계연보」 부록(2장Ⅱ-3, 2025.12.31 기준)" },
+};
+const CFG = YEAR_CFG[YEAR];
+if (!CFG) throw new Error(`알 수 없는 YEAR: ${YEAR}`);
+const POP_PERIOD = CFG.popPeriod; // 외국인 기준연월에 맞춰 고정(결정성 유지)
+
+// ── 등록외국인 ──
+const src = JSON.parse(readFileSync(join(ROOT, `data/datasets/seoul-foreign-${YEAR}.json`), "utf8"));
 const gu = JSON.parse(JSON.stringify(src.gu)); // 원본 불변
 let hanguke = 0, forTotal = 0;
 for (const g in gu) {
@@ -102,7 +112,7 @@ const rowsAll = rows.map((r, i) => ({
 
 const base = {
   template: "foreign-rank@1", date, emblem, perHundred: per100, clusterSvg: cluster(),
-  subtitle: `출처 · 법무부 등록외국인 2023 · 인구 ${POP_PERIOD} 대비`,
+  subtitle: `출처 · 법무부 등록외국인 ${CFG.asOf.slice(0, 4)} · 인구 ${POP_PERIOD} 대비`,
   chinaNote: `💡 '중국 ${chinaComb}%'에는 한국계중국인 ${hangukePct}% 포함`,
   footerLeft: "서울 25개 자치구 · 국적별 등록외국인",
 };
@@ -116,7 +126,7 @@ const top3 = rowsAll.slice(0, 3);
 const caption =
 `서울에 사는 외국인, 어느 구에 가장 많을까? 🌏
 
-법무부 등록외국인 통계(2023) 기준,
+법무부 등록외국인 통계(${CFG.asOf}) 기준,
 서울 25개 자치구를 인원 순으로 정리했습니다.
 서울시민 100명 중 ${per100}명이 등록외국인입니다.
 
@@ -138,7 +148,7 @@ const caption =
 📌 저장 필수
 
 —
-📊 출처 : 법무부 등록외국인 통계 (2023, 공공데이터포털 15108413)
+📊 출처 : ${CFG.sourceLabel}
 ※ 외국인비율은 주민등록인구(${POP_PERIOD}) 대비 산출 · '중국'은 한국계중국인 포함(국적 기준)
 
 · · ·
