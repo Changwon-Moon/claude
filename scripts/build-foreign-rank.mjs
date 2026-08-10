@@ -112,7 +112,7 @@ const rowsAll = rows.map((r, i) => ({
 
 const base = {
   template: "foreign-rank@1", date, emblem, perHundred: per100, clusterSvg: cluster(),
-  subtitle: `출처 · 법무부 등록외국인 ${CFG.asOf.slice(0, 4)} · 인구 ${POP_PERIOD} 대비`,
+  subtitle: `출처 · 법무부 등록외국인 ${CFG.asOf.slice(0, 4)}`,
   chinaNote: `💡 '중국 ${chinaComb}%'에는 한국계중국인 ${hangukePct}% 포함`,
   footerLeft: "서울 25개 자치구 · 국적별 등록외국인",
 };
