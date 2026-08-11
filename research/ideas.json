@@ -1947,6 +1947,102 @@
       "status": "",
       "stage": "데이터확보완료 · 즉시 제작 가능",
       "isNew": true
+    },
+    {
+      "id": "sig-2026-08-11-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "부동산 민심 폭발에… 비거주 1주택자 거주 인정 요건 확대 검토",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-11-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-11-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "배달기사들이 아예 지도 만들었다…'천룡인 아파트' 법적 문제는? - 머니투데이",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-11-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-11-3",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "널뛰는 주가에 발행시장 냉기…메자닌·유증 조달 차질",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-11-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-11-4",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕증시, 호르무즈 불확실성 지속에 하락…다우 0.3%↓",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-11-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-11-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕증시 하락마감…하닉ADR 4.7%↑",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-11-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-11-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕증시, 美-이란 합의 기대에 혼조 출발 - 조선비즈",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-11-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-11-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "금값 두달만에 최고치...랠리 美 물가에 달렸다",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-11-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-11-8",
+      "cat": "todo",
+      "topic": "생활·통계",
+      "feed": "manual",
+      "title": "2023 게임 순위 발표 능력을 통한 반성: 핵심 개념과 실제 응용",
+      "why": "자동 수집 신호 · 통계·조사",
+      "source": "자동 수집 · 2026-08-11-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
