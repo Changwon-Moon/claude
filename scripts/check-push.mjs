@@ -80,6 +80,30 @@ try {
   process.exit(0);
 } catch (e) {
   const msg = String(e.stderr || e.message || "");
+
+  /* ⚠️ **"뒤처졌다"는 차단이 아니다** (2026-08-12).
+   * Actions 가 작업 중에 수집 커밋을 밀면 dry-run 이 non-fast-forward 로 거절되는데,
+   * 그걸 "프록시가 막았다"로 읽으면 있지도 않은 차단을 상대로 패닉하게 된다.
+   * 길은 열려 있다 — 원격이 앞서 있을 뿐이니 fetch 해서 얹으면 된다. */
+  if (/non-fast-forward|fetch first|behind its remote/i.test(msg)) {
+    console.log("✅ 푸시 길 자체는 열려 있습니다 — 다만 **원격이 앞서 있습니다**(차단 아님).");
+    console.log("   Actions 가 그 사이 커밋을 밀었을 겁니다. 받아서 얹은 뒤 밀면 됩니다:\n");
+    console.log("     env -u https_proxy -u HTTPS_PROXY -u no_proxy -u NO_PROXY \\");
+    console.log('       git fetch "https://x-access-token:$WIRIT_GH_PAT@github.com/Changwon-Moon/claude.git" \\');
+    console.log("       '<브랜치>:refs/remotes/origin/<브랜치>'");
+    console.log("     git rebase origin/<브랜치>   # 또는 merge");
+    console.log("\n   ⓘ fetch 도 프록시 환경변수를 뺀 채로 해야 원격 추적 ref 가 갱신됩니다.");
+    process.exit(0);
+  }
+
+  /* 토큰을 안 준 것도 차단이 아니다 — 머리글부터 구분해서 말한다(2026-08-12). */
+  if (/could not read Username|terminal prompts disabled/i.test(msg)) {
+    console.log("ⓘ 아직 확인 못 했습니다 — **토큰 미지정이지 차단이 아닙니다.**\n");
+    console.log("   프로젝트 「위릿노트」 → `[Fine-grained tokens].txt` 의 PAT 를 넘겨 다시 보세요:");
+    console.log("     WIRIT_GH_PAT=github_pat_... node scripts/check-push.mjs");
+    process.exit(1);
+  }
+
   console.log("⛔ 푸시가 막혀 있습니다. **작업을 시작하기 전에** 풀어야 합니다.\n");
   console.log(msg.split("\n").filter(Boolean).slice(0, 3).map((l) => `   ${l}`).join("\n"));
   console.log("");

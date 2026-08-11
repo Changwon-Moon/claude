@@ -239,8 +239,17 @@ try {
   pushOk = false;
   pushOut = (e.stdout || e.message || "").toString().trim();
 }
+/* ⚠️ **"토큰 미지정"과 "차단"은 다르다** (2026-08-12).
+   doctor 를 그냥 돌리면 `WIRIT_GH_PAT` 이 없어 "Username 을 못 읽는다"로 실패하는데,
+   이걸 "푸시가 막혔다"고 찍으면 새 세션이 있지도 않은 차단을 상대로 패닉한다.
+   실제로 08-06~08-11 내내 "막혔다"고 보고돼 온 것 중 일부가 이 혼동이었다. */
+const noTok = /could not read Username|terminal prompts disabled/i.test(pushOut);
 if (pushOk) ok("푸시 길", pushOut.split("\n")[0].replace(/^✅\s*/, ""));
-else {
+else if (noTok) {
+  soft("푸시 길 — 아직 확인 못 함(토큰 미지정)", "**차단이 아닙니다.** 토큰을 주고 다시 보세요");
+  console.log("     WIRIT_GH_PAT='<프로젝트 문서의 github_pat_...>' node scripts/check-push.mjs");
+  console.log("     (프로젝트 「위릿노트」 → `[Fine-grained tokens].txt`)");
+} else {
   soft("푸시가 막혀 있습니다", "작업분이 컨테이너에 갇힙니다 — 오너에게 **지금** 알리세요");
   console.log(pushOut.split("\n").map((l) => "     " + l).join("\n"));
 }
