@@ -147,6 +147,19 @@
       /* 코발트는 **금액에만**. 타입은 주력이든 아니든 전부 회색이다(오너 지시 2026-08-03) —
          타입은 금액을 읽기 위한 열쇠지 그 자체가 강조 대상이 아니다. */
       .dcv-item.main .p { color: var(--wirit-cobalt); }
+      /* '안전마진' 처럼 상승·차익 시그널을 말하는 칸 전용(오너 지시 2026-08-11).
+         빨강은 --wirit-red 의 원래 용도(상승·경고 시그널)와 맞다 — 분양가 자체에는 안 쓴다.
+         opt-in 클래스라 기존 확정 카드(main 만 쓰는 카드)의 픽셀은 그대로다. */
+      .dcv-item.warn .p { color: var(--wirit-red); }
+      /* '빛나는 카드' — 오너 지시(2026-08-11)로 이 한 칸만 예외로 튀운다.
+         판형 원칙(AI티 금지: 큰 라운드·옅은 회색 채움 상자)과는 결이 다르다는 걸 알고 쓴다 —
+         라운드를 작게, 채움 대신 얇은 글로우로 절제해 '상자'보다 '빛'에 가깝게 잡았다. */
+      .dcv-item.glow {
+        padding: 10px 6px; border-radius: 12px; margin: -10px -6px;
+        background: linear-gradient(180deg, rgba(229,72,77,.09), rgba(229,72,77,.02));
+        box-shadow: 0 0 0 1.5px rgba(229,72,77,.4), 0 6px 18px rgba(229,72,77,.22);
+      }
+      .dcv-item.glow .a { color: var(--wirit-ink); }
 
       /* ── 가운데 선: 위 단(가격)과 아래 단(제원·일정)을 가른다 ── */
       .dcv-rule { height: 1px; background: var(--wirit-ink-12); margin: 24px 0; }
@@ -304,7 +317,7 @@
         {{/if}}
         <div class="dcv-grid" style="grid-template-columns: repeat({{priceTable.cols}}, 1fr)">
           {{#each priceTable.rows}}
-          <div class="dcv-item{{#if this.main}} main{{/if}}">
+          <div class="dcv-item{{#if this.main}} main{{/if}}{{#if this.warn}} warn{{/if}}{{#if this.glow}} glow{{/if}}">
             <span class="a">{{this.area}}</span>
             <span class="p">{{this.price}}</span>
           </div>
