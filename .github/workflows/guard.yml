@@ -16,11 +16,22 @@ name: 문지기 (guard)
 # ── 무엇을 보나
 #   · 셀프테스트 (파서·규칙·가드 전부)
 #   · 워크플로 YAML (깨지면 등록조차 안 된다)
-#   · 확정 카드 픽셀 (공용 자산을 건드리면 여기서 걸린다)
 #
-# ── 왜 doctor 를 통째로 부르나
-# 셋을 따로 부르면 doctor 와 어긋난다. doctor 는 "이 환경이 카드를 만들 수 있나" 의
-# 단일 판정 기준이다. 문지기와 판정 기준이 둘이면 둘은 반드시 갈라진다.
+# ── ⚠️ 픽셀 검사는 여기서 하지 않는다 (2026-08-12 오너 결정)
+# 예전엔 `doctor.mjs` 를 통째로 불렀다. 그런데 doctor 는 **실제로 렌더한다** —
+# 이 워크플로엔 Chromium 설치 단계가 없어서(tower-deploy.yml 에는 있다) GitHub 러너에선
+# 렌더가 전량 실패했다. 그 결과 **문지기는 2026-08-08 이후 한 번도 성공하지 못했고,
+# 늘 빨간불이라 아무도 보지 않는 검사**가 됐다. 항상 실패하는 문지기는 문지기가 아니다.
+#
+# 설치 단계를 넣어 고칠 수도 있었지만 그러지 않았다. 이 공장의 규칙은
+# **「렌더 창구는 한 곳으로 고정한다」** — 여러 기계에서 번갈아 렌더하면 픽셀 기준선이
+# 갈라진다. GitHub 러너를 새 렌더 창구로 들이면 그 규칙이 깨진다.
+#
+# 그래서 픽셀은 **원래 창구에서만** 지킨다:
+#   · 작업 세션 — `node scripts/doctor.mjs` (커밋 전 필수, HANDOFF §2)
+#   · 관제탑 배포 — Chromium 을 설치하고 렌더하는 tower-deploy.yml
+# 문지기는 **브라우저 없이 확실히 판정할 수 있는 것만** 본다. 그게 늘 초록일 수 있는
+# 유일한 방법이고, 늘 초록인 검사만 빨간불에 의미가 생긴다.
 # ══════════════════════════════════════════════════════════════
 on:
   push:
@@ -65,10 +76,33 @@ jobs:
       - name: 셀프테스트
         run: pnpm --filter @wirit/collectors selftest
 
-      # 확정 카드 픽셀 — 공용 템플릿·CSS·렌더러를 건드리면 여기서 걸린다.
-      # doctor 가 빌더 → 렌더 → md5 대조 → 검수까지 한 번에 한다.
-      - name: 확정 카드 픽셀 (doctor)
-        run: node scripts/doctor.mjs
+      # ⚠️ 픽셀 검사(doctor)는 여기서 돌리지 않는다 — 맨 위 주석 참조(2026-08-12).
+      #    브라우저가 없는 러너에서 렌더를 돌려 문지기가 나흘간 상시 빨간불이었다.
+      #    픽셀은 작업 세션(doctor)과 tower-deploy 에서 지킨다.
+      #    대신 명세 파일이 깨지지 않았는지는 브라우저 없이 볼 수 있다.
+      - name: 명세 파일(JSON) 파싱
+        run: |
+          for f in data/review/sets.json data/review/builders.json data/review/pixel-baselines.json; do
+            node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" \
+              && echo "  ✅ $f" || { echo "::error::$f 가 깨졌습니다"; exit 1; }
+          done
+
+      # 세트가 가리키는 빌더 스크립트가 실제로 있는지. 없으면 그 카드는 새 clone·CI 에서
+      # 영영 안 나온다(2026-07-26 '월급 34평' 사고와 같은 계열). 브라우저 없이 잴 수 있다.
+      - name: 세트 ↔ 빌더 정합
+        run: |
+          node -e '
+            const fs=require("fs");
+            const B=JSON.parse(fs.readFileSync("data/review/builders.json","utf8")).builders||[];
+            const S=JSON.parse(fs.readFileSync("data/review/sets.json","utf8")).sets||[];
+            let bad=0;
+            for (const b of B) if (!fs.existsSync(b.cmd)) { console.log(`::error::빌더 스크립트 없음 — ${b.label} → ${b.cmd}`); bad++; }
+            const has=new Set(B.map(b=>b.label));
+            for (const s of S) if (s.state==="오너 확정" && !has.has(s.label))
+              console.log(`::warning::확정 세트인데 빌더 미등록 — ${s.label}`);
+            console.log(`  세트 ${S.length} · 빌더 ${B.length} · 빌더 파일 누락 ${bad}`);
+            process.exit(bad?1:0);
+          '
 
       - name: 무엇이 걸렸나
         if: failure()
@@ -76,9 +110,11 @@ jobs:
           echo "::error::문지기가 막았습니다. 아래 중 하나입니다:"
           echo "  · 워크플로 YAML 이 깨졌다 → 그 워크플로는 GitHub 에 등록조차 안 됩니다"
           echo "  · 셀프테스트가 깨졌다 → 파서·수집 규칙이 바뀌었습니다"
-          echo "  · 확정 카드 픽셀이 달라졌다 → 공용 템플릿을 건드렸을 수 있습니다"
+          echo "  · 명세 JSON 이 깨졌다 → sets/builders/pixel-baselines 를 확인하세요"
           echo ""
-          echo "픽셀이 걸렸다면: 의도한 변경인지 먼저 판단하세요."
-          echo "  의도했다면 오너 확인을 받고 data/review/pixel-baselines.json 을 갱신합니다."
-          echo "  기준값만 고쳐 통과시키는 것은 가드를 없애는 것과 같습니다 —"
-          echo "  무엇이 왜 바뀌었는지를 note 에 함께 적으세요."
+          echo "확정 카드 픽셀은 문지기가 보지 않습니다(2026-08-12 결정)."
+          echo "  공용 템플릿·CSS·렌더러를 건드렸다면 **작업 세션에서** 확인하세요:"
+          echo "    node scripts/doctor.mjs"
+          echo "  픽셀이 달라졌고 그게 의도한 변경이면 오너 확인을 받고"
+          echo "  data/review/pixel-baselines.json 을 갱신하되, 무엇이 왜 바뀌었는지 note 에 적으세요."
+          echo "  기준값만 고쳐 통과시키는 것은 가드를 없애는 것과 같습니다."
