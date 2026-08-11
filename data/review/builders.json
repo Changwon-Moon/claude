@@ -286,6 +286,23 @@
         "xirene-chungjeongno",
         "--publish"
       ]
+    },
+    {
+      "label": "danji-define-artia",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-08-11",
+        "--only",
+        "define-artia-remndr",
+        "--publish"
+      ]
+    },
+    {
+      "label": "danji-songpa",
+      "cmd": "scripts/build-danji-songpa-manual.mjs",
+      "args": [
+        "2026-08-11"
+      ]
     }
   ]
 }
