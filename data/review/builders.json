@@ -254,6 +254,63 @@
         "2026-08-10",
         "2025"
       ]
+    },
+    {
+      "label": "danji-jangwi",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-08-06",
+        "--only",
+        "jangwi-markone-remndr",
+        "--publish"
+      ]
+    },
+    {
+      "label": "danji-thesharp",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-08-08",
+        "--only",
+        "thesharp-singil",
+        "--publish"
+      ]
+    },
+    {
+      "label": "danji-summit",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-08-08",
+        "--only",
+        "summit-clavion",
+        "--publish"
+      ]
+    },
+    {
+      "label": "danji-chungjeongno",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-08-08",
+        "--only",
+        "xirene-chungjeongno",
+        "--publish"
+      ]
+    },
+    {
+      "label": "danji-define-artia",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-08-11",
+        "--only",
+        "define-artia-remndr",
+        "--publish"
+      ]
+    },
+    {
+      "label": "danji-songpa",
+      "cmd": "scripts/build-danji-songpa-manual.mjs",
+      "args": [
+        "2026-08-11"
+      ]
     }
   ]
 }

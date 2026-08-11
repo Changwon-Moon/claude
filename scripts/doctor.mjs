@@ -228,6 +228,23 @@ check("워크플로 YAML", wfOk, wfOk ? wfOut.replace(/^✅\s*/, "") : "깨진 �
   "node scripts/lint-workflows.mjs 로 어느 줄인지 확인하세요 — 깨진 워크플로는 조용히 안 돕니다");
 if (!wfOk) console.log(wfOut.split("\n").map((l) => "     " + l).join("\n"));
 
+/* 푸시 길 — 막혀 있으면 **작업 전에** 안다. 2026-08-06 에 카드 하나를 네 번 고쳐 확정까지
+   끝낸 뒤에야 알았고, 커밋 6건이 컨테이너 안에만 남았다. 컨테이너는 세션이 끝나면 회수된다.
+   카드 제작 자체는 막지 않으므로 **경고**로 둔다 — 다만 조용히 넘기지는 않는다.
+   워크플로 27개 중 19개가 푸시를 방아쇠로 쓴다(관제탑 배포·수집 대기열·발행 보관). */
+let pushOk = true, pushOut = "";
+try {
+  pushOut = sh("node", ["scripts/check-push.mjs"]).trim();
+} catch (e) {
+  pushOk = false;
+  pushOut = (e.stdout || e.message || "").toString().trim();
+}
+if (pushOk) ok("푸시 길", pushOut.split("\n")[0].replace(/^✅\s*/, ""));
+else {
+  soft("푸시가 막혀 있습니다", "작업분이 컨테이너에 갇힙니다 — 오너에게 **지금** 알리세요");
+  console.log(pushOut.split("\n").map((l) => "     " + l).join("\n"));
+}
+
 /* ═══════════════ 판정 ═══════════════ */
 console.log("\n" + "─".repeat(58));
 if (!fail) {

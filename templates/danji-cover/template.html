@@ -121,6 +121,13 @@
        * 타입과 금액을 **같은 크기**로 둔다(오너 지시). 위계는 크기가 아니라 색이 만든다 —
        * 타입은 회색, 금액은 잉크, 주력 면적대만 코발트. */
       .dcv-price { margin-top: 30px; }
+      /* 남는 세로를 **위아래로 나눈다** (오너 지시 2026-08-06 "정보가 제목 쪽에 붙어 있다").
+       * .dcv-note 하나만 auto 면 남는 자리가 전부 아래로 몰려 표가 제목에 달라붙는다.
+       * auto 를 하나 더 두면 free space 가 반씩 갈려 표 덩어리가 종이 한가운데에 앉는다.
+       * ⚠️ 확정본(한강·송도)에는 걸리지 않게 **규모 우선 판(.scale)에만** 준다.
+       *    처음엔 `:has(.frow.four)` 로 걸었는데 그러면 **세 칸짜리 카드가 빠진다** —
+       *    충정로가 그래서 아래 여백만 넓었다(2026-08-08 오너 지적). 판형으로 걸어야 맞다. */
+      .dcv.scale .dcv-price { margin-top: auto; }
       .dcv-price .top { display: flex; align-items: baseline; justify-content: space-between; }
       .dcv-grid { display: grid; column-gap: 22px; row-gap: 20px; }
       /* 타입과 금액은 칸 **가운데** 로 맞춘다(오너 지시 2026-08-03). 왼쪽 맞춤이면 '84A'와
@@ -140,6 +147,19 @@
       /* 코발트는 **금액에만**. 타입은 주력이든 아니든 전부 회색이다(오너 지시 2026-08-03) —
          타입은 금액을 읽기 위한 열쇠지 그 자체가 강조 대상이 아니다. */
       .dcv-item.main .p { color: var(--wirit-cobalt); }
+      /* '안전마진' 처럼 상승·차익 시그널을 말하는 칸 전용(오너 지시 2026-08-11).
+         빨강은 --wirit-red 의 원래 용도(상승·경고 시그널)와 맞다 — 분양가 자체에는 안 쓴다.
+         opt-in 클래스라 기존 확정 카드(main 만 쓰는 카드)의 픽셀은 그대로다. */
+      .dcv-item.warn .p { color: var(--wirit-red); }
+      /* '빛나는 카드' — 오너 지시(2026-08-11)로 이 한 칸만 예외로 튀운다.
+         판형 원칙(AI티 금지: 큰 라운드·옅은 회색 채움 상자)과는 결이 다르다는 걸 알고 쓴다 —
+         라운드를 작게, 채움 대신 얇은 글로우로 절제해 '상자'보다 '빛'에 가깝게 잡았다. */
+      .dcv-item.glow {
+        padding: 10px 6px; border-radius: 12px; margin: -10px -6px;
+        background: linear-gradient(180deg, rgba(229,72,77,.09), rgba(229,72,77,.02));
+        box-shadow: 0 0 0 1.5px rgba(229,72,77,.4), 0 6px 18px rgba(229,72,77,.22);
+      }
+      .dcv-item.glow .a { color: var(--wirit-ink); }
 
       /* ── 가운데 선: 위 단(가격)과 아래 단(제원·일정)을 가른다 ── */
       .dcv-rule { height: 1px; background: var(--wirit-ink-12); margin: 24px 0; }
@@ -173,6 +193,10 @@
          어느 쪽이든 두 번째 세로선은 936-312 = 624px 라 일정 줄과 계속 겹친다. */
       .dcv-facts .frow { display: grid; grid-template-columns: 1fr 1fr 1fr; }
       .dcv-facts .frow:has(.brk) { grid-template-columns: 1.15fr 0.85fr 1fr; }
+      /* 타입이 넷인 무순위 카드는 **균등 4등분**이다(오너 지시 2026-08-06). 네 값의 성격이
+         같으니 폭도 같아야 한다 — 일정 줄과 달리 유독 긴 값이 하나만 있는 게 아니다.
+         `:has(.brk)` 뒤에 둬야 .brk 가 섞여도 4등분이 이긴다. */
+      .dcv-facts .frow.four { grid-template-columns: repeat(4, 1fr); }
       /* 일정은 4칸(오너 지시). 마지막 칸만 1.5배로 넓힌다 — '2031년 1월'이 가장 긴 값이라
          균등 4열이면 이 칸이 공통 수치 크기를 통째로 끌어내린다.
          덤: 1:1:1:1.5 의 마지막 경계는 936×3/4.5 = 624px 로, 위 줄(3등분)의 두 번째
@@ -250,9 +274,12 @@
     </style>
   </head>
   <body>
-    <div class="wirit-card dcv">
-      <div class="dcv-cover">
-        <div class="dcv-photo">
+    <div class="wirit-card dcv{{#if scale}} scale{{/if}}">
+      {{! 표지 사진 칸은 카드마다 키울 수 있다(오너 지시 2026-08-08 "아래 여백이 남는 만큼 사진을 늘려줘").
+          기본 446px, 데이터가 hero.boxH 를 주면 그만큼 커지고 잉크 밴드(690px)도 같이 내려간다.
+          숫자를 CSS 에 박지 않는 이유는 늘 같다 — 카드마다 달라야 하기 때문이다. }}
+      <div class="dcv-cover"{{#if hero.coverH}} style="height:{{hero.coverH}}px"{{/if}}>
+        <div class="dcv-photo"{{#if hero.boxH}} style="height:{{hero.boxH}}px"{{/if}}>
           {{#if hero.photo}}
             <img src="../_shared/photos/{{hero.photo}}" alt=""{{#if hero.shift}} style="top:-{{hero.shift}}px"{{/if}} />
           {{else}}
@@ -262,7 +289,7 @@
           {{/if}}
           <div class="dcv-topshade"></div>
         </div>
-        <div class="dcv-fade"></div>
+        <div class="dcv-fade"{{#if hero.fadeTop}} style="top:{{hero.fadeTop}}px"{{/if}}></div>
         {{#if hero.placeholder}}<div class="dcv-ph">조감도 미확보 · 대체 이미지</div>{{/if}}
 
         <div class="wirit-topcap"><span class="tx">{{topcap}}</span></div>
@@ -282,12 +309,15 @@
       </div>
 
       <div class="dcv-price">
+        {{! 머리글이 없으면 줄 자체를 만들지 않는다 — 빈 span 도 자리는 차지한다 }}
+        {{#if priceTable.head.[0]}}
         <div class="top">
           <span class="lab">{{priceTable.head.[0]}}</span>
         </div>
+        {{/if}}
         <div class="dcv-grid" style="grid-template-columns: repeat({{priceTable.cols}}, 1fr)">
           {{#each priceTable.rows}}
-          <div class="dcv-item{{#if this.main}} main{{/if}}">
+          <div class="dcv-item{{#if this.main}} main{{/if}}{{#if this.warn}} warn{{/if}}{{#if this.glow}} glow{{/if}}">
             <span class="a">{{this.area}}</span>
             <span class="p">{{this.price}}</span>
           </div>
@@ -298,7 +328,7 @@
       <div class="dcv-rule"></div>
 
       <div class="dcv-facts">
-        <div class="frow">
+        <div class="frow{{#if specFour}} four{{/if}}">
           {{#each spec}}
           <div class="cell"><div class="box">
             {{#if this.above}}<span class="abv">{{this.above}}</span>{{/if}}

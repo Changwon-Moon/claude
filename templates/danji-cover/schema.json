@@ -67,6 +67,24 @@
           "minimum": 0,
           "maximum": 2000,
           "description": "표지 사진을 위로 끌어올릴 px. **빌더가 원본 크기에서 계산한다** — 손으로 적지 않는다"
+        },
+        "boxH": {
+          "type": "integer",
+          "minimum": 300,
+          "maximum": 760,
+          "description": "표지 사진 칸 높이(기본 446). 원본 세로가 허락하는 만큼만 키울 수 있다"
+        },
+        "coverH": {
+          "type": "integer",
+          "minimum": 560,
+          "maximum": 1000,
+          "description": "표지 전체(사진+잉크 밴드) 높이 — 빌더가 boxH+band 로 계산한다. 기본 690"
+        },
+        "fadeTop": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 800,
+          "description": "잉크 번짐 시작 y — 빌더가 boxH-180 으로 계산한다"
         }
       }
     },
@@ -162,8 +180,9 @@
             "type": "string",
             "maxLength": 24
           },
-          "minItems": 1,
-          "maxItems": 1
+          "minItems": 0,
+          "maxItems": 1,
+          "description": "표 위 회색 머리글. 빈 배열이면 줄 자체를 그리지 않는다(오너 지시 2026-08-06)"
         },
         "rows": {
           "type": "array",
@@ -206,12 +225,11 @@
     "spec": {
       "type": "array",
       "minItems": 3,
-      "maxItems": 3,
-      "description": "제원 3분할 — 전부 순수 수치. 문장형 값을 섞으면 공통 fit 에서 큰 숫자가 끌려 내려간다",
+      "maxItems": 4,
+      "description": "제원 3분할 — 전부 순수 수치. 문장형 값을 섞으면 공통 fit 에서 큰 숫자가 끌려 내려간다. 타입별 분양가를 아는 무순위 카드만 4칸(specFour)이고, 이때 label 없이 above+value 로 쓴다",
       "items": {
         "type": "object",
         "required": [
-          "label",
           "value"
         ],
         "properties": {
@@ -257,6 +275,14 @@
       "type": "string",
       "maxLength": 40,
       "description": "조감도 바로 아래 붙는 주소(읍면동까지)"
+    },
+    "specFour": {
+      "type": "boolean",
+      "description": "제원 줄을 균등 4등분으로 — 타입이 넷인 무순위 카드"
+    },
+    "scale": {
+      "type": "boolean",
+      "description": "규모 우선 판 — 종이의 남는 세로를 위아래로 나눈다"
     }
   }
 }

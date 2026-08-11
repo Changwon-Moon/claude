@@ -34,9 +34,12 @@ import { fileURLToPath } from "node:url";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 /* 날짜는 인자로 받되 기본값은 오늘(KST)이다 — 오너 "날짜는 자동 연동".
    렌더 결정성을 위해 재생산 시에는 인자로 그날 날짜를 넘긴다. */
+/* ⚠️ 위치로 읽지 않는다. `--only <id>` 를 앞에 쓰면 argv[2] 가 "--only" 가 되어
+   카드 머리에 "오늘의 주요 청약 이슈 (..only)" 가 찍혔다(2026-08-04 실제 사고).
+   날짜처럼 생긴 인자만 날짜로 받는다. */
+const dateArg = process.argv.slice(2).find((a) => /^\d{4}-\d{2}-\d{2}$/.test(a));
 const date =
-  process.argv[2] ||
-  new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+  dateArg || new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const doc = JSON.parse(readFileSync(join(ROOT, "data/datasets/bunyang-danji-2026.json"), "utf8"));
 
 /* ── 조감도 크롭은 **계산한다** ──
@@ -66,21 +69,47 @@ function imageSize(file) {
   throw new Error(`이미지 크기를 못 읽는다(JPEG/PNG 만 지원): ${file}`);
 }
 
-/** 표지 사진의 끌어올림 px. 원본이 세로로 짧으면 칸을 못 채우므로 던진다. */
-function heroShift(fileName) {
+/** 표지 사진의 끌어올림 px. 원본이 세로로 짧으면 칸을 못 채우므로 던진다.
+ *  `boxH` 는 표지 사진 칸 높이다 — 기본 446, 카드가 키우면(오너 지시 2026-08-08) 그 값. */
+function heroShift(fileName, boxH = PHOTO_BOX_H) {
   const p = join(ROOT, "templates/_shared/photos", fileName);
   if (!existsSync(p)) throw new Error(`조감도 파일이 없다: templates/_shared/photos/${fileName}`);
   const { w, h } = imageSize(p);
   const renderH = Math.round((CARD_W * h) / w);
-  if (renderH < PHOTO_BOX_H)
+  if (renderH < boxH)
     throw new Error(
-      `조감도가 가로로 너무 길다 — 1080px 폭에 맞추면 세로가 ${renderH}px 라 표지 칸(${PHOTO_BOX_H}px)을 못 채운다: ${fileName}`,
+      `조감도가 가로로 너무 길다 — 1080px 폭에 맞추면 세로가 ${renderH}px 라 표지 칸(${boxH}px)을 못 채운다: ${fileName}`,
     );
-  const shift = Math.round((renderH - PHOTO_BOX_H) * SKY_KEEP);
+  const shift = Math.round((renderH - boxH) * SKY_KEEP);
   /* 건설사 고지문은 원본 맨 아래에 박힌다 — 보이는 창이 하단 5% 를 건드리면 알려 준다. */
-  if (shift + PHOTO_BOX_H > renderH * 0.95)
+  if (shift + boxH > renderH * 0.95)
     console.log(`   ⚠ ${fileName}: 크롭 하단이 원본 아래 5% 에 닿는다 — 건설사 고지문이 보일 수 있다`);
   return shift;
+}
+
+/** 표지(사진+잉크 밴드) 한 벌. 칸을 키우면 밴드와 번짐 시작점이 같이 내려간다. */
+const BAND_H = 690 - PHOTO_BOX_H; // 244 — 사진 아래 잉크 밴드(제목이 앉는 자리)의 기본 높이
+function heroOf(d) {
+  const boxH = d.photo?.boxH ?? null;
+  /* 제목 위 검은 띠가 넓다는 지적(오너 2026-08-08) → 밴드 높이도 카드가 정한다.
+     사진을 못 키우는 카드(원본 세로가 짧은 더샵)는 밴드만 줄여도 사진이 넓어 보인다. */
+  const band = d.photo?.band ?? null;
+  const H = boxH ?? PHOTO_BOX_H;
+  const B = band ?? BAND_H;
+  const extra = boxH || band ? { boxH: H, coverH: H + B, fadeTop: H - 180 } : {};
+  return d.photo
+    ? { photo: d.photo.file, credit: d.photo.credit, shift: heroShift(d.photo.file, H), ...extra }
+    : {
+        photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true,
+        shift: heroShift("seoul-apart-night.jpg", H), ...extra,
+      };
+}
+
+/** 아래 한 줄. 데이터가 이모지를 데리고 오면(`<i class="em">`) 그대로 쓴다 —
+ *  💡 가 늘 맞는 건 아니다. 규제 안내에는 ⚠️ 가 맞다(오너 지시 2026-08-08). */
+function noticeOf(d, flags) {
+  if (!d.oneLiner) return flags.join(" · ");
+  return d.oneLiner.includes('<i class="em">') ? d.oneLiner : `<i class="em">💡</i>${d.oneLiner}`;
 }
 
 const byId = (id) => {
@@ -161,6 +190,61 @@ function repPrice(d, rep) {
  * → 면적대마다 타입 하나(A·P 등 첫 실제 타입)만 뽑아 **전부** 적는다. 84A~D 를 네 줄로 늘리지 않는다.
  * 분양가가 없는 면적은 '미고지'로 남긴다 — 줄을 지우면 그 평형이 없는 줄 안다.
  */
+/**
+ * 규모 우선 판 (오너 확정 2026-08-06 장위 → 2026-08-08 분양 예정까지 확장).
+ *
+ * 위 단 = 총 세대수 / 동수 / 최고 층수 / 이번에 공급하는 물량(코발트)
+ * 아래 단 = 타입별 **세대수 · 최고 분양가** — 회색 한 줄에 '타입 · N세대', 그 아래 큰 글씨로 금액.
+ *          오너가 부른 순서(타입/세대수/분양가)를 위에서 아래로 그대로 지킨다.
+ *
+ * 켜지는 조건은 **데이터**다: `price.byType` 이 있으면 이 판, 없으면 예전 판.
+ * 사람이 "이번엔 이 판형" 하고 켜지 않는다(CARD_CHECKLIST §3).
+ *
+ * ⚠️ 마지막 칸 라벨은 카드가 무엇을 파는지에 따라 다르다 — 줍줍은 '잔여',
+ *    조합원 취소분은 '취소분', 일반 분양은 '일반분양'. `supplyLabel` 이 정한다.
+ * ⚠️ 타입별 세대수 합이 이번 공급 물량과 다를 수 있다(더샵 취소분: 표는 본청약 477세대인데
+ *    이번 물량은 67세대). 그때는 `typeSumIsSupply: false` 로 검산을 끄고 **머리글이 기준을
+ *    말하게** 한다. 끄는 것을 데이터에 적어 두는 이유는, 조용히 안 세면 다음 사람이 모른다.
+ */
+function scalePlan(d, total) {
+  const byType = d.price?.byType;
+  if (!Array.isArray(byType) || !byType.length) return { on: false };
+
+  const label = d.supplyLabel || (d.kind === "remndr" ? "잔여" : "일반분양");
+  const sum = byType.reduce((a, b) => a + (b.units || 0), 0);
+  const anyUnits = byType.some((t) => t.units != null);
+  if (anyUnits && d.typeSumIsSupply !== false && sum !== total)
+    throw new Error(
+      `${d.id}: 타입별 세대수 합 ${sum} ≠ 이번 공급 ${total} — 표가 공고와 다르다.` +
+        ` 표가 본청약 기준이라 일부러 다른 것이면 데이터에 typeSumIsSupply:false 를 적을 것`,
+    );
+
+  return {
+    on: true,
+    four: byType.length === 4,
+    /* 회색 안내 머리글은 넣지 않는다(오너 지시 2026-08-06 "안내글씨는 다 지워줘").
+       각 칸이 이미 자기 이름표를 달고 있어 머리글은 같은 말을 두 번 하는 셈이었다. */
+    grid: {
+      head: [],
+      cols: 4,
+      rows: [
+        { area: "총 세대수", price: `${n(d.totalComplex ?? total)}세대` },
+        { area: "동수", price: d.buildings != null ? `${d.buildings}개동` : "미고지" },
+        { area: "최고 층수", price: d.topFloor != null ? `${d.topFloor}층` : "미고지" },
+        { area: label, price: `${n(total)}세대`, main: true },
+      ],
+    },
+    cells: byType.map((t) => {
+      if (t.won == null) throw new Error(`${d.id}: ${t.type} 의 분양가(won)가 없다 — 지어내지 않는다`);
+      /* 세대수를 **모르는** 카드가 있다. 더샵 취소분이 그렇다 — 공고가 타입별 물량을 안 줬다.
+         그때 본청약 세대수를 얹으면 "취소분 67세대"와 "51㎡ 150세대"가 한 카드에서 싸운다.
+         모르면 **비운다.** 타입과 금액만 말하는 것이 틀린 수를 말하는 것보다 낫다. */
+      const head = t.units != null ? `${t.type} · ${n(t.units)}세대` : t.type;
+      return { above: head, value: eok1(t.won), hi: !!t.main };
+    }),
+  };
+}
+
 function priceTable(d, total) {
   if (!d.areas?.length) throw new Error(NEED_AREAS(d.id));
   /* ── 무순위(줍줍) ──
@@ -270,6 +354,9 @@ function presale(d) {
   if (d.kind !== "presale") throw new Error(`${d.id} 는 presale 이 아니다`);
   const ah = applyhome(d);
   const total = ah ? ah.supply : d.total;
+  /* 규모 우선 판은 kind 가 아니라 **데이터**가 켠다 — price.byType 이 있으면 이 판이다.
+     분양 예정 카드도 2026-08-08 오너 지시로 이 판을 쓴다(장위 카드와 같은 배치). */
+  const plan = scalePlan(d, total);
   const rep = repArea(d);
   const repWon = repPrice(d, rep);
   /* 날짜에는 요일을 붙인다(오너 지시 2026-08-03) — 청약은 평일 하루짜리라 요일이 곧 일정이다.
@@ -298,14 +385,14 @@ function presale(d) {
     kind: "presale",
     /* 고정 부제 + 날짜. 손으로 적지 않는다 — 적는 순간 다음 카드에서 날짜가 굳는다. */
     topcap: `오늘의 주요 청약 이슈 (${date.replace(/-/g, ".")})`,
-    titleLines: titleFor(d, { total, repWon }),
-    hero: d.photo
-      ? { photo: d.photo.file, credit: d.photo.credit, shift: heroShift(d.photo.file) }
-      : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true, shift: heroShift("seoul-apart-night.jpg") },
+    /* 단지마다 제목을 오너가 직접 쓸 때가 있다 — 그때는 데이터셋이 문형을 이긴다. */
+    titleLines: d.titleHtml ? [d.titleHtml] : titleFor(d, { total, repWon }),
+    hero: heroOf(d),
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
     address: addressOf(d),
-    spec: specCells(d, total),
-    priceTable: priceTable(d, total),
+    ...(plan.on ? { scale: true, specFour: plan.four } : {}),
+    spec: plan.on ? plan.cells : specCells(d, total),
+    priceTable: plan.on ? plan.grid : priceTable(d, total),
     /* 일정 4칸(오너 지시 2026-08-03) — 특공·1순위·당첨자 발표·입주 예정.
        당첨자 발표일은 청약홈 PRZWNER_PRESNATN_DE 에서 수집기가 이미 읽어 둔다(announceDate). */
     schedule: [
@@ -314,7 +401,8 @@ function presale(d) {
       { label: "당첨자 발표", date: ah?.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah?.announceDate },
       { label: "입주 예정", date: ymKo(moveInYm), tbd: !moveInYm },
     ],
-    notice: flags.join(" · "),
+    /* 한줄평이 있으면 그게 아래 한 줄이다 — 특이사항 나열보다 한 문장이 오래 남는다. */
+    notice: noticeOf(d, flags),
     source: {
       /* 푸터 출처 줄 = **1차 출처만**. 오너 지시(2026-08-03)로 보도(파이낸셜뉴스)를 뺐다.
          ⚠️ 전제: 분양가를 입주자모집공고문으로 확정한 뒤에야 이 줄이 참이 된다.
@@ -378,43 +466,57 @@ function remndr(d) {
   if (blocks && d.blockNames?.length)
     flags.push(`<i class="em">💡</i>${blocks}개 블록(${blockLabel(d.blockNames)}) 동시 접수`);
   if (ah.priceCap) flags.push(`<i class="em">💡</i><span class="tag">분양가상한제</span> 적용`);
+  /* 무순위는 접수→발표→계약이 며칠 안에 끝난다. 계약일은 '돈이 실제로 나가는 날'인데
+     일정 칸 3개에는 안 들어간다 — 알면 아래 한 줄로 적는다. 모르면 적지 않는다. */
+  if (d.contractDate) flags.push(`<i class="em">💡</i>계약 ${md(d.contractDate)}`);
 
   const hook = d.hook || d.location.split(" ").slice(2, 3).join("") || d.location;
+
+  /* ── 규모 우선 판 (오너 확정 2026-08-06 장위, 2026-08-08 분양 예정까지 확장) ──
+   * 위 단 = 단지 규모 4칸, 아래 단 = 타입별 세대수·최고 분양가. `scalePlan` 이 공통이다.
+   * `price.byType` 이 없으면 예전 판 그대로 — 확정된 카드(한강·송도)의 픽셀을 건드리지 않는다. */
+  const plan = scalePlan(d, total);
+
   return {
     template: "danji-cover@1",
     date,
     kind: "remndr",
     topcap: `오늘의 주요 청약 이슈 (${date.replace(/-/g, ".")})`,
-    /* 무순위 문형(오너 확정): "{훅} 무순위 줍줍 {N}세대" — 분양가를 못 쓰니 규모가 제목을 진다. */
-    titleLines: [`<span class="hi">${hook}</span> 무순위 줍줍 <span class="hi">${n(total)}세대</span>`],
-    hero: d.photo
-      ? { photo: d.photo.file, credit: d.photo.credit, shift: heroShift(d.photo.file) }
-      : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true, shift: heroShift("seoul-apart-night.jpg") },
+    /* 무순위 문형(오너 확정): "{훅} 무순위 줍줍 {N}세대" — 분양가를 못 쓰니 규모가 제목을 진다.
+       단지마다 제목이 달라야 할 때가 있다(오너가 직접 쓴 제목). 그때는 데이터셋이 이긴다. */
+    titleLines: [
+      d.titleHtml || `<span class="hi">${hook}</span> 무순위 줍줍 <span class="hi">${n(total)}세대</span>`,
+    ],
+    hero: heroOf(d),
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
     address: addressOf(d),
-    spec: [
-      {
-        label: "잔여 세대",
-        /* 잔여 세대는 **전체 대비 얼마인지**가 있어야 크기가 읽힌다(오너 지시).
-           전체 세대수는 청약홈에 없으므로 데이터셋(totalComplex)에 있을 때만 얹는다. */
-        ...(d.totalComplex ? { above: `총 ${n(d.totalComplex)}세대 중` } : {}),
-        value: n(total),
-        unit: "세대",
-        hi: true,
-      },
-      /* 동수를 알면 동수가 낫다 — '5개 블록'은 공고 편의상의 구분이고 독자가 궁금한 건 단지 규모다. */
-      d.buildings != null
-        ? { label: "동수", pre: "총", value: String(d.buildings), unit: "개동" }
-        : blocks
-          ? { label: "블록", value: String(blocks), unit: "개 블록" }
-          : { label: "동수", value: "미고지", tbd: true },
-      d.topFloor != null
-        ? { label: "최고 층수", pre: "최고", value: String(d.topFloor), unit: "층" }
-        : { label: "최고 층수", value: "미고지", tbd: true },
-    ],
-    priceTable: priceTable(d, total),
+    ...(plan.on ? { scale: true, specFour: plan.four } : {}),
+    spec: plan.on
+      ? plan.cells
+      : [
+          {
+            label: "잔여 세대",
+            /* 잔여 세대는 **전체 대비 얼마인지**가 있어야 크기가 읽힌다(오너 지시).
+               전체 세대수는 청약홈에 없으므로 데이터셋(totalComplex)에 있을 때만 얹는다. */
+            ...(d.totalComplex ? { above: `총 ${n(d.totalComplex)}세대 중` } : {}),
+            value: n(total),
+            unit: "세대",
+            hi: true,
+          },
+          /* 동수를 알면 동수가 낫다 — '5개 블록'은 공고 편의상의 구분이고 독자가 궁금한 건 단지 규모다. */
+          d.buildings != null
+            ? { label: "동수", pre: "총", value: String(d.buildings), unit: "개동" }
+            : blocks
+              ? { label: "블록", value: String(blocks), unit: "개 블록" }
+              : { label: "동수", value: "미고지", tbd: true },
+          d.topFloor != null
+            ? { label: "최고 층수", pre: "최고", value: String(d.topFloor), unit: "층" }
+            : { label: "최고 층수", value: "미고지", tbd: true },
+        ],
+    priceTable: plan.on ? plan.grid : priceTable(d, total),
     schedule,
-    notice: flags.join(" · "),
+    /* 한줄평이 있으면 그게 아래 한 줄이다 — 특이사항 나열보다 한 문장이 오래 남는다. */
+    notice: noticeOf(d, flags),
     source: { name: d.source.name.replace(/^한국부동산원\s+/, "") },
   };
 }

@@ -34,9 +34,15 @@ export function lintCaption(text: string): Finding[] {
   if (!text.includes("출처"))
     f.push({ reviewer: R, level: "warn", code: "no-source", msg: "출처 표기가 없습니다(예: 국토부 실거래가)" });
 
+  /* 첫 줄 = 피드에서 '더보기' 앞에 보이는 유일한 줄이다. 여기서 멈춰 세우지 못하면 끝이다.
+   * ⚠️ 예전엔 **물음표만** 후킹으로 쳤다. 그런데 오너가 실제로 올린 캡션을 세어 보니(2026-08-08)
+   * 서술 + 이모지 하나로 끝나는 첫 줄이 더 많다 — "완판된 단지에 67세대가 다시 나왔습니다 🏢".
+   * 질문형이 아니라고 매번 잔소리하면 **맞는 캡션이 계속 걸린다**. 진짜 조건은 '멈춰 세우는가',
+   * 그 신호는 물음표 / 감탄 / 끝 이모지 셋 중 하나다. */
   const first = text.split("\n").map((s) => s.trim()).find(Boolean) || "";
-  if (!first.includes("?"))
-    f.push({ reviewer: R, level: "info", code: "hook", msg: "첫 줄 후킹 질문(?) 권장 — 피드 '더보기' 전 노출 구간" });
+  const EMOJI_END = /[\p{Extended_Pictographic}](?:️)?\s*$/u;
+  if (!/[?!]/.test(first) && !EMOJI_END.test(first))
+    f.push({ reviewer: R, level: "info", code: "hook", msg: "첫 줄이 밋밋합니다 — 질문(?)·감탄(!)이나 끝 이모지 하나로 멈춰 세우세요" });
 
   return f;
 }

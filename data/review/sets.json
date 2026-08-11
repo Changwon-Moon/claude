@@ -359,6 +359,108 @@
         "foreign-rank-p2:9661c70836a4"
       ],
       "pixelPolicy": "일회성(2025.12.31 스냅샷)·데이터 고정 → 결정적. 인구/외국인 원자료 갱신 시에만 재생산."
+    },
+    {
+      "label": "danji-jangwi",
+      "title": "🏗 천지개벽 장위에 줍줍 떴다 (장위 푸르지오 마크원 39세대)",
+      "cards": [
+        "danji-jangwi"
+      ],
+      "caption": "danji-jangwi",
+      "note": "무순위 두 번째 판형(분양가를 아는 줍줍). 위 단 = 단지 규모 4칸, 아래 단 = 타입별 세대수·최고 분양가 4칸. price.byType 이 있을 때만 이 판이 나오고, 없으면 송도처럼 면적대별 잔여 세대 판이 나온다 — 칸의 뜻은 데이터가 정한다.",
+      "state": "발행 보류 — 공고문 대조 대기",
+      "confirmedAt": "2026-08-06",
+      "confirmedMd5": [
+        "danji-jangwi:5af157c8c9cb"
+      ],
+      "pixelPolicy": "정기물 — applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다.",
+      "publishGate": [
+        "분양가 4개(7.3·17.5·17.6·19.5억) = 2차 출처. 무순위 공고는 공급금액을 \"사업주체 문의\"로만 적었다.",
+        "자격 요건(서울 거주 무주택세대구성원·청약통장 불필요) = 모집공고문 인용 2차 출처. 청약홈 무순위 상세에는 신청자격 항목이 없다.",
+        "동수 23개동 = 보도 2곳 일치, 1차 미대조.",
+        "→ 셋 다 입주자모집공고문 PDF 로 대조되면 state 를 \"발행 승인\" 으로 올린다. PDF 는 세션에서 403."
+      ]
+    },
+    {
+      "label": "danji-thesharp",
+      "title": "🏢 신길 완판 단지에서 추가 청약이? (더샵 신길센트럴시티 취소분 67세대)",
+      "cards": [
+        "danji-thesharp"
+      ],
+      "caption": "danji-thesharp",
+      "note": "조합원 취소분. 규모 우선 판(장위 판형). 타입별 세대수는 취소분 기준(51:20·59:26·74:10·84:11 = 67 = 청약홈 공급 67), 분양가는 본청약 기준 최고가다 — 취소분 가격은 본청약과 같다.",
+      "state": "발행 보류 — 공고문 대조 대기",
+      "confirmedAt": "2026-08-08",
+      "pixelPolicy": "정기물 — applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다.",
+      "publishGate": [
+        "타입별 세대수는 2차 출처(청약공고 정리 글) — 합 67 이 청약홈 API 와 일치해 채택. 공고문 대조 대상.",
+        "분양가는 본청약 표(호갱노노) 기준 최고가.",
+        "16개동·35층은 보도 2곳 일치.",
+        "전매제한 3년은 2차 출처."
+      ],
+      "confirmedMd5": [
+        "danji-thesharp:91baa196f80c"
+      ]
+    },
+    {
+      "label": "danji-summit",
+      "title": "🏗 신길 대장아파트 분양가 18억대? (써밋 클라비온 176세대)",
+      "cards": [
+        "danji-summit"
+      ],
+      "caption": "danji-summit",
+      "note": "규모 우선 판. 분양가는 **청약홈 공고 상세 원문** 7줄에서 면적대별 최고가를 취했다. 세대수 합 176 = 청약홈 공급 176.",
+      "state": "발행 보류 — 공고문 대조 대기",
+      "confirmedAt": "2026-08-08",
+      "pixelPolicy": "정기물 — applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다.",
+      "publishGate": [
+        "8개동·29층·총 812세대는 보도 1곳 — 공고문 대조 대상.",
+        "전매제한 3년은 2차 출처."
+      ],
+      "confirmedMd5": [
+        "danji-summit:5230eb427673"
+      ]
+    },
+    {
+      "label": "danji-chungjeongno",
+      "title": "🚇 2·5호선 더블 초역세권 18억대? (충정로역 자이르네 186세대)",
+      "cards": [
+        "danji-chungjeongno"
+      ],
+      "caption": "danji-chungjeongno",
+      "note": "규모 우선 판. 타입별 세대수 합 186 = 청약홈 공급 186(교차검증). 로고는 오너 제공 조감도의 워드마크를 떼어 만든 임시본 — 공식 파일을 받으면 교체.",
+      "state": "발행 보류 — 공고문 대조 대기",
+      "confirmedAt": "2026-08-08",
+      "pixelPolicy": "정기물 — applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다.",
+      "publishGate": [
+        "분양가·세대수는 2차 출처지만 합이 청약홈 공급과 일치.",
+        "3개동·25층은 2차 출처 1곳.",
+        "전매제한 3년은 2차 출처.",
+        "자이르네 로고는 임시본(조감도에서 추출)."
+      ],
+      "confirmedMd5": [
+        "danji-chungjeongno:66996821813f"
+      ]
+    },
+    {
+      "label": "danji-define-artia",
+      "title": "🏙 노량진 무순위 줍줍 15세대 (드파인 아르티아)",
+      "cards": [
+        "danji-define-artia"
+      ],
+      "caption": "danji-define-artia",
+      "note": "무순위(kind: remndr) 표준 판형. 세대수·일정은 청약홈 API(applyhomeNo 2026910214) 직접 반영, 잔여 15세대 = API 공급과 일치. 타입별 분양가는 2차 출처(mhb-blog·홈두부) — 입주자모집공고문 대조 전까지 발행 금지.",
+      "state": "시안"
+    },
+    {
+      "label": "danji-songpa",
+      "title": "🚨 송파 시그니처 롯데캐슬 재공급 줍줍! 안전마진 10.9억",
+      "cards": [
+        "danji-songpa"
+      ],
+      "caption": "danji-songpa",
+      "note": "⚠️ 예외 처리 — 청약홈 무순위 목록에 아직 공고번호(applyhomeNo)가 안 잡히는 재공급 1세대(무순위 접수 2026-08-18 예정, 데이터셋 _manual 필드 참조). remndr() 가드는 applyhomeNo 없으면 무조건 던지므로 표준 파이프라인을 못 탄다 — 대신 scripts/build-danji-songpa-manual.mjs(커밋됨)에 승인된 카드 JSON을 고정해 두고 그 스크립트가 매번 재현한다(data/content 는 gitignore 대상이라 산출물 자체는 커밋하지 않는다). 총 1,945세대(richgo·나무위키·최초 출처 3곳 일치 — 롯데건설 공식 페이지 1,577과 불일치해 다수결로 채택, 재대조 필요). 분양가 10.1억/최근 실거래 21.0억/안전마진 10.9억은 한국경제·헤럴드경제 2개 매체 교차검증(2차 출처) — 입주자모집공고문 대조 전까지 발행 금지. 오너 지시(2026-08-11)로 안전마진 강조(glow) 처리·사진 칸 확대(boxH 555)·입주 라벨을 '입주 5년차/즉시 입주'로 개편. 청약홈에 정식 공고번호가 잡히면 이 수동 빌더를 폐기하고 build-danji.mjs --only songpa-signature-remndr --publish 로 전환한다.",
+      "state": "시안"
     }
   ]
 }

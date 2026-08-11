@@ -71,7 +71,13 @@ function fillPrev(r) {
  * 서킷브레이커 두 번이 매끈한 미끄럼틀로 보인다. 없는 날을 그럴듯하게 메우지 않는다.
  * 실선 = 실측 / 점선 = 미수집(CEO.md 07-30 "박스를 둘 이상 쓰면 그 차이가 정보를 담는다"). */
 const mk = JSON.parse(readFileSync(join(ROOT, "data/datasets/kr-market-2026.json"), "utf8"));
-const base = mk.indices.kospi.series.map((p) => ({ d: p.d, c: p.c }));
+/* ⚠️ **카드가 말하는 날 이후의 데이터를 읽지 않는다** (CARD_CHECKLIST §4 — 같은 병 재발).
+ * 이 카드 제목은 "오늘(=인자로 받은 날) 국내 증시가 세운 기록들" 이다. 그런데 시계열을
+ * 통째로 읽고 있어서, 수집기가 다음 날을 채우는 순간 **이미 확정한 카드의 그래프가 조용히
+ * 뒤로 늘어났다** — 2026-08-06 에 보니 8/4 종가까지 그리고 있었다. 제목과 그림이 다른 말을
+ * 하는 것이고 픽셀 불변도 함께 깨진다. 대상일로 잘라야 몇 년 뒤에도 같은 그림이 나온다. */
+const base = mk.indices.kospi.series.filter((p) => p.d <= date).map((p) => ({ d: p.d, c: p.c }));
+if (!base.length) throw new Error(`${date} 이전의 코스피 시계열이 없다 — kr-market-2026.json 을 확인할 것`);
 const baseLast = base[base.length - 1].d;
 const byDate = new Map(base.map((p) => [p.d, p.c]));
 
@@ -88,8 +94,11 @@ for (const p of d.recentCloses.known) {
   crossChecked.push(p.d);
 }
 
-/* 수집이 아직 닿지 않은 날만 이어 붙인다(오늘 종가는 장 마감 직후라 수집에 없다). */
-const tail = d.recentCloses.known.filter((p) => p.d > baseLast).map((p) => ({ d: p.d, c: p.c }));
+/* 수집이 아직 닿지 않은 날만 이어 붙인다(오늘 종가는 장 마감 직후라 수집에 없다).
+   보도로 받아 둔 날도 **대상일까지만** 붙인다 — 위와 같은 이유다. */
+const tail = d.recentCloses.known
+  .filter((p) => p.d > baseLast && p.d <= date)
+  .map((p) => ({ d: p.d, c: p.c }));
 const series = [...base, ...tail];
 
 /* 빈 구간이 남았을 때만 점선을 긋는다. 수집이 채워졌으면 실선으로 이어야 한다 —
