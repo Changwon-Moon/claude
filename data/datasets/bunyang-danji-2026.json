@@ -916,6 +916,50 @@
       },
       "oneLiner": "서울 거주 무주택자 · 청약통장 불필요",
       "_oneLinerNote": "자격 요건은 모집공고 내용을 인용한 2차 출처(mhb-blog·newspim)에서 옮겼다. 청약홈 무순위 상세 화면에는 신청자격 항목이 없다 — 발행 전 공고문 대조 대상(분양가와 같은 게이트)."
+    },
+    {
+      "id": "songpa-signature-remndr",
+      "slug": "songpa",
+      "kind": "remndr",
+      "name": "송파 시그니처 롯데캐슬",
+      "location": "서울 송파구 거여동",
+      "hook": "송파",
+      "_manual": "⚠️ applyhomeNo 없음 — 예외 기록. 이 세션은 DATA_GO_KR_API_KEY 가 없어 청약홈 공공데이터 API로 재수집을 못 했고, 공고번호(pblancNo/houseManageNo)는 청약홈 상세 페이지가 JS 렌더라 이 세션에서 못 읽었다. 대신 청약홈 무순위 목록 페이지(applyhome.co.kr, 2026-08-11 직접 열람)에서 '송파 시그니처 롯데캐슬 / 불법행위 재공급 / 시행사 거여2재정비촉진구역1지구주택재개발정비사업조합 / 모집공고일 2026-08-10 / 청약기간 2026-08-18~2026-08-18' 행을 육안 확인했다. build-danji.mjs 의 remndr() 은 applyhomeNo 를 무조건 요구해 이 단지는 자동 빌더로 못 돌린다 — 카드 JSON(data/out/_spike/danji-songpa.json)은 이 데이터셋 기록을 바탕으로 손으로 만들었다. 다음 세션에서 정식 공고번호를 확보하면 이 엔트리에 applyhomeNo 를 채우고 표준 빌더로 재생산할 것.",
+      "total": 1,
+      "buildings": 17,
+      "topFloor": 33,
+      "totalComplex": 1577,
+      "_scaleNote": "총 1,577세대·17개동·지상 33층 = 롯데캐슬 공식 홈페이지 사업개요(lottecastle.co.kr/APT/AT00245/1447/summary/view.do, 2026-08-11 열람) — 1차에 가장 가까운 출처. 보도(homedubu)는 총세대수를 1,945세대로 달리 적었으나 동수·층수는 일치 — 공식 사업개요 쪽 총세대수를 취했다(불일치 기록).",
+      "areas": [{ "m2": 84, "units": 1, "types": ["C"] }],
+      "mainArea": { "m2": 84, "units": 1 },
+      "company": "롯데건설",
+      "source": {
+        "name": "청약홈 무순위 목록(직접 열람) · 롯데캐슬 공식 사업개요",
+        "via": "청약홈 목록 페이지 육안 확인(2026-08-11) — 공고번호 미확보 · homedubu.com/11560(2026-08-10)",
+        "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancListView.do"
+      },
+      "photo": {
+        "file": "songpa-lottecastle.jpg",
+        "credit": "출처. 오너 제공",
+        "provided": "2026-08-11 오너 제공(전경 사진) · 원본 826×630, 크롭 없이 카드 폭에 맞춰 그대로 씀. 원본은 _source/"
+      },
+      "logo": "lottecastle.png",
+      "price": {
+        "verified": false,
+        "_gate": "⚠️⚠️ 단일 출처(homedubu.com/11560) 보도값 — 교차검증 안 됨. 84C형 1세대만 재공급되는 특수 건(계약취소 재공급)이라 다른 매체 기사를 찾지 못했다. 입주자모집공고문(청약홈) 대조 전까지 발행 절대 금지 — 드파인 아르티아보다 근거가 약하다.",
+        "sources": ["homedubu.com/11560 (84C형 2904호 · 10억 1,255만원, 발코니확장·빌트인·시스템에어컨 포함가)"],
+        "byType": [{ "type": "84C", "units": 1, "won": 1012550000, "main": true }]
+      },
+      "schedule": {
+        "receiptFrom": "2026-08-18",
+        "receiptTo": "2026-08-18",
+        "receiptVerified": "청약홈 목록 페이지 직접 열람으로 확인(청약기간 2026-08-18~2026-08-18) — 이 한 값만 1차에 가깝다.",
+        "announceDate": "2026-08-21",
+        "moveInYm": "2026-09",
+        "scheduleGap": "당첨자 발표일·입주예정월은 homedubu 단일 출처 — 공고문 대조 전까지 미확정으로 취급."
+      },
+      "oneLiner": "<i class=\"em\">⚠️</i>투기과열지구 · 재당첨제한 10년",
+      "_oneLinerNote": "규제사항은 homedubu 단일 출처. 재공급 사유는 '일반공급 당첨자의 불법행위로 계약 취소된 물량'(homedubu) — 카드에는 안 넣고 캡션에 남길 것."
     }
   ]
 }
