@@ -840,6 +840,82 @@
       "topFloor": 35,
       "_scaleNote": "16개동·지상 최고 35층·총 2,054세대 = 한국경제(2026-01-20)·더구루(2026-07) 두 곳 일치. 청약홈은 규모를 안 준다 — 공고문 대조 대상.",
       "supplyLabel": "취소분"
+    },
+    {
+      "id": "define-artia-remndr",
+      "slug": "define-artia",
+      "kind": "remndr",
+      "name": "드파인 아르티아",
+      "location": "서울 동작구 노량진동",
+      "hook": "노량진",
+      "applyhomeNo": "2026910214",
+      "total": 15,
+      "buildings": 2,
+      "topFloor": 45,
+      "totalComplex": 404,
+      "_scaleNote": "404세대(지하 4층~지상 45층·2개동, 일반분양 171세대)는 이비엔뉴스·헤럴드경제·서울경제 등 SK에코플랜트 분양 보도 다수 일치. 청약홈은 규모를 안 준다 — 공고문 대조 대상.",
+      "_areasNote": "무순위 잔여 15세대의 타입 구성(84A 1·84B 9·109A 5)은 mhb-blog·homedubu 두 곳이 세대수 기준으로 일치(합 15 = 청약홈 공급 15와 일치, 빌더가 검산). 84A·84B 를 84㎡ 면적대로 묶었다.",
+      "areas": [
+        {
+          "m2": 84,
+          "units": 10,
+          "types": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "m2": 109,
+          "units": 5,
+          "types": [
+            "A"
+          ]
+        }
+      ],
+      "mainArea": {
+        "m2": 84,
+        "units": 10
+      },
+      "company": "SK에코플랜트",
+      "source": {
+        "name": "한국부동산원 청약홈 무순위 입주자모집공고",
+        "via": "청약홈 API(일정·공급) — 2026-08-08 수집분",
+        "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910214&pblancNo=2026910214"
+      },
+      "photo": {
+        "file": "define-artia.jpg",
+        "credit": "출처. SK에코플랜트",
+        "provided": "2026-08-11 오너 제공(항공뷰 조감도) · 원본 1096×891, 크롭 없이 카드 폭에 맞춰 그대로 씀. 원본은 _source/"
+      },
+      "logo": "define.png",
+      "price": {
+        "verified": false,
+        "_gate": "⚠️ 보도값이다. 무순위 공고는 공급금액을 \"사업주체 문의\"로만 적는다(본청약 6월 분양 당시 분양가). 입주자모집공고문·본청약 공급금액표 대조 전까지 발행 금지. 두 보도 사이에 타입별 가격 차이가 있어(84A 23.1~25.3억, 84B 25.0~27.6억) 각 타입의 **최고가**를 실었다(카드 표기 원칙 '최고가 기준').",
+        "sources": [
+          "mhb-blog.com/define-altia-noryangjin-subscription-guide (84A1 25.3억 · 84B1/B2 26.15~27.18억 · 109A1/A2 29.5~30.6억)",
+          "homedubu.com/10592 (84A 23.07~24.9억 · 84B 25.0~27.6억 · 109A 29.5~30.6억)"
+        ],
+        "byType": [
+          {
+            "type": "84A",
+            "units": 1,
+            "won": 2530000000
+          },
+          {
+            "type": "84B",
+            "units": 9,
+            "won": 2760000000,
+            "main": true
+          },
+          {
+            "type": "109A",
+            "units": 5,
+            "won": 3060000000
+          }
+        ]
+      },
+      "oneLiner": "서울 거주 무주택자 · 청약통장 불필요",
+      "_oneLinerNote": "자격 요건은 모집공고 내용을 인용한 2차 출처(mhb-blog·newspim)에서 옮겼다. 청약홈 무순위 상세 화면에는 신청자격 항목이 없다 — 발행 전 공고문 대조 대상(분양가와 같은 게이트)."
     }
   ]
 }
