@@ -50,9 +50,10 @@ function nowYm(): string {
   return `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
 }
 
-/** 통계표 목록: 101(통화/유동성) 하위 */
+/* 통계표 목록 — 부모코드 `101` 을 주면 INFO-200(데이터 없음)이 온다(2026-08-12 실측).
+   그래서 **전체 목록**을 받아 이름으로 거른다. */
 async function listTables(): Promise<Array<{ code: string; name: string; cycle: string }>> {
-  const url = `${BASE}/StatisticTableList/${KEY}/json/kr/1/500/101`;
+  const url = `${BASE}/StatisticTableList/${KEY}/json/kr/1/3000`;
   const data = await getJson(url);
   const rows = data?.StatisticTableList?.row ?? [];
   return rows.map((r: any) => ({
@@ -79,14 +80,44 @@ async function listItems(statCode: string): Promise<Array<{ code: string; name: 
    1차 실행에서 1000행 상한을 그 중복이 다 먹어 **81개월치만** 받아왔다(199801~200409).
    그래서 ① 상한을 크게 잡고 ② TIME 으로 묶어 접는다. 묶었는데 값이 갈리면 **던진다** —
    어느 쪽이 M2 인지 코드가 모르는 채로 숫자를 고르면 그게 오보다. */
-async function fetchSeries(statCode: string, itemCode: string, end: string) {
-  const url = `${BASE}/StatisticSearch/${KEY}/json/kr/1/100000/${statCode}/M/${START}/${end}/${itemCode}`;
+/** YYYYMM 에 n개월 더하기 */
+function addMonths(ym: string, n: number): string {
+  const y = Number(ym.slice(0, 4));
+  const m = Number(ym.slice(4, 6));
+  const t = y * 12 + (m - 1) + n;
+  return `${Math.floor(t / 12)}${String((t % 12) + 1).padStart(2, "0")}`;
+}
+
+async function fetchWindow(statCode: string, itemCode: string, s: string, e: string) {
+  const url = `${BASE}/StatisticSearch/${KEY}/json/kr/1/10000/${statCode}/M/${s}/${e}/${itemCode}`;
   const text = await fetchText(url, { retries: 3, timeoutMs: 60000 });
   const raw = JSON.parse(text);
-  if (raw?.RESULT?.CODE) throw new Error(`ECOS ${raw.RESULT.CODE}: ${raw.RESULT.MESSAGE}`);
-  const rows: any[] = raw?.StatisticSearch?.row ?? [];
-  const total = Number(raw?.StatisticSearch?.list_total_count ?? rows.length);
+  if (raw?.RESULT?.CODE) return { rows: [] as any[], total: 0, note: `${raw.RESULT.CODE}: ${raw.RESULT.MESSAGE}` };
+  return {
+    rows: (raw?.StatisticSearch?.row ?? []) as any[],
+    total: Number(raw?.StatisticSearch?.list_total_count ?? 0),
+    note: "",
+  };
+}
+
+/* 한 번에 긴 구간을 달라고 하면 앞쪽 81개월(199801~200409)만 오고 서버 집계도 81 이라고 답한다
+   (2026-08-12 실측). 왜인지는 API 가 말해 주지 않는다 — 그래서 **5년씩 잘라 여러 번 물어 붙인다.**
+   구간을 잘라 물으면 각 창이 온전히 온다. 창 경계는 겹치게 잡아 빠진 달이 있으면 드러나게 한다. */
+async function fetchSeries(statCode: string, itemCode: string, end: string) {
+  const rows: any[] = [];
+  const windows: string[] = [];
+  let s = START;
+  while (s <= end) {
+    const e = addMonths(s, 59) > end ? end : addMonths(s, 59);
+    const r = await fetchWindow(statCode, itemCode, s, e);
+    windows.push(`${s}~${e}: ${r.rows.length}행${r.note ? ` (${r.note})` : ""}`);
+    rows.push(...r.rows);
+    if (e === end) break;
+    s = addMonths(e, 1);
+  }
+  const total = rows.length;
   const unit = String(rows[0]?.UNIT_NAME ?? "");
+  log.push(...windows.map((w) => `    - ${w}`));
 
   const byTime = new Map<string, Set<number>>();
   for (const r of rows) {
@@ -223,7 +254,7 @@ async function main() {
   say(`- 통계표 \`${chosen.statCode}\` ${chosen.statName}`);
   say(`- 항목 \`${chosen.itemCode}\` ${chosen.itemName}`);
   say(`- 단위(응답) ${unit || chosen.unit || "(미표기)"}`);
-  say(`- 원본 행 ${rawRows}개 (서버 집계 ${total}) → 월로 접어 ${points.length}개월`);
+  say(`- 원본 행 ${rawRows}개(창별 합계 ${total}) → 월로 접어 ${points.length}개월`);
   say("");
   say("<details><summary>원본 행 샘플 2개</summary>");
   say("");
