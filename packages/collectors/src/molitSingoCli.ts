@@ -66,7 +66,9 @@ async function main() {
   }
   const today = arg("today") ?? new Date().toISOString().slice(0, 10);
   const nMonths = Number(arg("months") ?? 2);
-  const topN = Number(arg("top") ?? 10);
+  // 오너 요청(2026-08-13): **톡에 전체 단지가 다 보이게.** 0(기본) = 전부.
+  // 길면 notify-telegram 이 줄 단위로 나눠 보낸다 — 자르지 않는다.
+  const topArg = Number(arg("top") ?? 0);
 
   const peakDir = R("data/datasets/molit-peak");
   const uniPath = R("data/datasets/apt-universe.json");
@@ -286,9 +288,12 @@ async function main() {
   // 알림 문구 — 오너 요청: **단지명 + 평 + 실거래가**
   const lines: string[] = [];
   if (hits.length) {
-    lines.push(
-      `🔥 오늘의 신고가 ${hits.length}건${milestones.length ? ` (10억 돌파 ${milestones.length}건)` : ""} (${today} · ${baselineLabel()} 최고가 기준)`,
-    );
+    // ⚠️ "10억 돌파"라고 박아 뒀다가 실제로 20억을 넘은 날 그대로 나갔다(2026-08-13).
+    //    선은 10억 단위지만 **넘은 값은 20억·30억일 수 있다.** 넘은 선을 그대로 적는다.
+    const mlines = [...new Set(milestones.map((h) => h.milestone))].sort((a, b) => (b ?? 0) - (a ?? 0));
+    const topN = topArg > 0 ? topArg : hits.length;
+    const mtag = mlines.length ? ` (${mlines.map((m) => `${m}억`).join("·")} 돌파 ${milestones.length}건)` : "";
+    lines.push(`🔥 오늘의 신고가 ${hits.length}건${mtag} (${today} · ${baselineLabel()} 최고가 기준)`);
     lines.push("");
     for (const h of hits.slice(0, topN)) {
       // 10억 단위 돌파는 사람이 기억하는 사건이라 한 마디 붙인다 — 나머지는 오너 요청대로 단지명+평+가격만.

@@ -68,11 +68,31 @@ function composeText(st) {
   return `[wirit 관제탑] ${st.dateLabel}\n\n${parts.join("\n")}`;
 }
 
-async function sendMessage(text) {
-  // 본문 + [관제탑 열기] 버튼 하나. 텔레그램 본문 상한은 4096자라 카카오(200자)처럼 자를 일이 거의 없다.
+/**
+ * 긴 문구를 **줄 단위로** 나눈다 (2026-08-13 오너 "톡에 전체 단지가 다 보여지게 해줘").
+ *
+ * 텔레그램 본문 상한은 4,096자다. 예전엔 `slice(0, 4000)` 으로 **말없이 잘랐다** —
+ * 목록을 통째로 보내기 시작하면 그 자름이 곧 "없는 것"이 된다. 잘리는 대신 나눠 보낸다.
+ * 줄 중간에서 자르지 않는다(단지 이름이 반 토막 나면 그게 오보로 읽힌다).
+ */
+function chunkByLines(text, limit = 3800) {
+  const lines = String(text).split("\n");
+  const out = [];
+  let cur = "";
+  for (const ln of lines) {
+    const piece = ln.length > limit ? ln.slice(0, limit) : ln; // 한 줄이 상한을 넘는 건 그때만 자른다
+    if (cur && cur.length + 1 + piece.length > limit) { out.push(cur); cur = piece; }
+    else cur = cur ? `${cur}\n${piece}` : piece;
+  }
+  if (cur) out.push(cur);
+  return out.length ? out : [""];
+}
+
+async function sendOne(text) {
+  // 본문 + [관제탑 열기] 버튼 하나.
   const body = {
     chat_id: CHAT_ID,
-    text: text.slice(0, 4000),
+    text,
     disable_web_page_preview: true,
     reply_markup: { inline_keyboard: [[{ text: "관제탑 열기", url: TOWER_URL }]] },
   };
@@ -87,6 +107,17 @@ async function sendMessage(text) {
     throw new Error(`전송 실패 ${r.status} · ${String(j.description || JSON.stringify(j)).slice(0, 200)}`);
   }
   return j;
+}
+
+/** 상한을 넘으면 나눠 보낸다. 여러 통이면 머리에 (1/3) 을 붙여 순서를 알 수 있게. */
+async function sendMessage(text) {
+  const parts = chunkByLines(text);
+  for (let i = 0; i < parts.length; i++) {
+    const head = parts.length > 1 ? `(${i + 1}/${parts.length})\n` : "";
+    await sendOne(head + parts[i]);
+    if (i < parts.length - 1) await new Promise((r) => setTimeout(r, 400)); // 연속 전송 제한 회피
+  }
+  return { ok: true, parts: parts.length };
 }
 
 // ── 실행

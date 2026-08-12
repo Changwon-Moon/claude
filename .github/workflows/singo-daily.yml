@@ -20,7 +20,7 @@ on:
     - cron: "5 23 * * *"
 
   # 대기열 푸시가 방아쇠 — 세션은 Actions 버튼을 못 누른다.
-  # 한 줄 형식(전부 선택):  months=2 top=10 sort=price
+  # 한 줄 형식(전부 선택):  months=2 top=0 sort=price   (top=0 이면 전부 나열)
   push:
     paths:
       - "data/singo-queue.txt"
@@ -32,9 +32,9 @@ on:
         required: false
         default: "2"
       top:
-        description: "알림에 이름을 적을 상위 건수 (기본 10)"
+        description: "알림에 이름을 적을 상위 건수 (기본 0 = 전부)"
         required: false
-        default: "10"
+        default: "0"
       sort:
         description: "정렬 — price(거래가 큰 순, 기본) 또는 gain(갱신폭 큰 순)"
         required: false
@@ -86,7 +86,7 @@ jobs:
             done
           fi
           echo "months=${MONTHS:-2}" >> "$GITHUB_OUTPUT"
-          echo "top=${TOP:-10}" >> "$GITHUB_OUTPUT"
+          echo "top=${TOP:-0}" >> "$GITHUB_OUTPUT"
           echo "sort=${SORT:-price}" >> "$GITHUB_OUTPUT"
           echo "today=$(TZ=Asia/Seoul date +%F)" >> "$GITHUB_OUTPUT"
 
@@ -173,8 +173,8 @@ jobs:
           fi
           MSG=$(cat data/singo-alert.txt 2>/dev/null || true)
           if [ -n "$MSG" ]; then
-            # 카드 만들 때 고를 목록이 어디 있는지 한 줄 붙인다(오너가 매일 여기서 고른다)
-            MSG=$(printf '%s\n\n📋 카드 재료: docs/daily/신고가재료-%s.md' "$MSG" "${{ steps.cfg.outputs.today }}")
+            # ⚠️ md 경로 줄을 붙이지 않는다 (2026-08-13 오너 "md로 보내지말고").
+            #    톡 안에서 전체 목록이 다 보여야 한다. 길면 notify-telegram 이 나눠 보낸다.
             node scripts/notify-telegram.mjs "$MSG"
           else
             HB=$(node scripts/singo-heartbeat.mjs --today "${{ steps.cfg.outputs.today }}" 2>/dev/null || true)
