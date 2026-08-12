@@ -108,6 +108,11 @@ async function main() {
   const skipped: string[] = [];
   let fetched = 0;
   let judged = 0;
+  // ⚠️ 수집이 실패한 날의 "0건"은 **"신고가가 없었다"가 아니다.** 그 둘을 같은 문구로
+  //    보내면 오보다. 실패를 세어 알림에 그대로 싣는다(2026-08-12 첫 실전 실행에서
+  //    실거래 API 가 느려지며 이 구멍이 드러났다).
+  let failed = 0;
+  const failNotes: string[] = [];
 
   for (const { gu, lawdCd } of regions) {
     const peakPath = join(peakDir, `${lawdCd}.json`);
@@ -133,7 +138,10 @@ async function main() {
         fresh.push(...raw);
         if (!done.has(ym)) { idx.meta.doneMonths.push(ym); done.add(ym); }
       } catch (e) {
-        console.error(`⚠️ ${gu} ${ym} 수집 실패: ${e instanceof Error ? e.message : e}`);
+        failed++;
+        const msg = e instanceof Error ? e.message : String(e);
+        if (failNotes.length < 5) failNotes.push(`${gu} ${ym}: ${msg.slice(0, 120)}`);
+        console.error(`⚠️ ${gu} ${ym} 수집 실패: ${msg}`);
       }
       await new Promise((r) => setTimeout(r, 100));
     }
@@ -189,6 +197,9 @@ async function main() {
           baselineLabel: baselineLabel(),
           sortBy,
           milestoneCount: milestones.length,
+          fetchTried: fetched + failed,
+          fetchFailed: failed,
+          fetchFailNotes: failNotes,
           verified: true,
           source: "국토교통부 아파트 매매 실거래가 상세자료 · 공동주택 기본 정보(세대수)",
           note:
@@ -214,10 +225,18 @@ async function main() {
     }
     if (hits.length > topN) lines.push(`… 외 ${hits.length - topN}건`);
   }
+  // 수집이 반이라도 실패했으면 **0건이든 몇 건이든 그 사실을 먼저 말한다.**
+  // 조용한 실패는 "오늘은 신고가가 없었구나"로 읽혀 그대로 오보가 된다.
+  if (failed > 0) {
+    const head = `⚠️ 수집 실패 ${failed}/${fetched + failed}건 — 오늘 판정은 불완전합니다`;
+    if (lines.length) lines.splice(1, 0, head);
+    else lines.push(`${head} (${today})`, "", ...failNotes.map((n) => `· ${n}`));
+  }
   writeFileSync(R("data/singo-alert.txt"), lines.join("\n"));
 
   console.log(
-    `명부 ${uniItems.length}개 단지 · 판정 지역 ${judged}/${regions.length} · 수집 ${fetched}회\n` +
+    `명부 ${uniItems.length}개 단지 · 판정 지역 ${judged}/${regions.length} · ` +
+      `수집 성공 ${fetched}회 / 실패 ${failed}회\n` +
       `→ 오늘의 신고가 ${hits.length}건`,
   );
   if (skipped.length) console.log(`  제외: ${skipped.slice(0, 8).join(", ")}${skipped.length > 8 ? " …" : ""}`);
