@@ -4,7 +4,7 @@
 > 쓸 표를 고르면 `packages/collectors/src/sources/kosis.ts` 의 `TABLES` 에
 > **`enabled: false` · `confidence: "표명확실"`** 로 넣고 → `data/kosis-probe-queue.txt` 푸시(probe) → 켠다.
 
-- 실행 시각(KST): 2026. 8. 12. PM 12:40:40
+- 실행 시각(KST): 2026. 8. 12. PM 1:22:24
 - 키워드: 소비자물가 · 집세
 
 ## 「소비자물가」
