@@ -247,7 +247,8 @@ async function main() {
       say(`  ⚠️ \`${code}\` 최근 구간 조회 실패: ${(e as Error).message}`);
     }
     say(`  · \`${code}\` ${t?.name ?? ""} — 항목 \`${hit.code}\` ${hit.name} · 수록 ${hit.start}~${hit.end}(주기 ${hit.cycle}) · 실제 최근 ${lastYm || "없음"}`);
-    if (!lastYm) continue;
+    /* 최근 데이터가 없어도 **목록에는 담는다** — 구계열 표가 바로 그 모습이다.
+       (첫 시도에서 이 줄 아래에 담았다가 구계열이 통째로 빠졌다.) */
     found.push({
       statCode: code,
       statName: t?.name ?? "",
@@ -257,6 +258,7 @@ async function main() {
       start: hit.start,
       end: hit.end,
     });
+    if (!lastYm) continue;
     if (!chosen || lastYm > chosen.lastYm) {
       chosen = {
         statCode: code,
