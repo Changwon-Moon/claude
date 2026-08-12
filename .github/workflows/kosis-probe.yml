@@ -74,7 +74,9 @@ jobs:
       - name: 통계표 찾기
         if: steps.keycheck.outputs.has_key == 'yes' && steps.q.outputs.kw != ''
         continue-on-error: true
-        timeout-minutes: 8
+        # kosis.kr 은 러너에서 연결이 간헐적으로 안 잡힌다(ConnectTimeout).
+        # 문이 열릴 때까지 최대 8회×60초를 기다렸다가 검색을 태우므로 넉넉히 준다.
+        timeout-minutes: 20
         env:
           KOSIS_API_KEY: ${{ secrets.KOSIS_API_KEY }}
         run: pnpm --filter @wirit/collectors search-kosis -- --q "${{ steps.q.outputs.kw }}" 2>&1 | tee /tmp/search.log

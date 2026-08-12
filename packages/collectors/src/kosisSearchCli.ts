@@ -164,18 +164,43 @@ async function main() {
   L.push(`- 키워드: ${qs.join(" · ")}`);
   L.push("");
 
-  /* 검색을 시도하기 전에 kosis.kr 이 지금 살아 있는지부터 갈라 둔다. */
-  process.stdout.write("· 연결 확인 … ");
-  const live = await livecheck(apiKey);
-  console.log(live.ok ? `OK ${live.note}` : `실패 — ${live.note.slice(0, 120)}`);
+  /* ── 문이 열릴 때까지 기다렸다가 들어간다 (2026-08-12 실측)
+     kosis.kr 은 GitHub 러너에서 **간헐적으로 TCP 연결이 안 잡힌다**
+     (ConnectTimeoutError · kosis.kr:443 · UND_ERR_CONNECT_TIMEOUT).
+     fetchText 의 재시도는 1·2·4초라 **한 번의 나쁜 창(수 분)을 못 넘긴다** —
+     같은 실행에서 90초씩 쉬며 재시도하는 표 검증만 성공하고 검색은 실패했던 이유가 이것이다.
+     그래서 검색도 같은 인내심을 갖는다: **살아 있는 것을 확인한 다음에** 후보를 태운다.
+     닫힌 창에 후보를 태우면 전부 실패로 기록돼 "주소가 틀렸다"로 오독된다. */
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  const LIVE_ROUNDS = 8;
+  const LIVE_GAP_MS = 60_000;
+  let live = await livecheck(apiKey);
+  for (let round = 2; round <= LIVE_ROUNDS && !live.ok; round++) {
+    console.log(`· 연결 확인 ${round - 1}/${LIVE_ROUNDS} 실패 — ${LIVE_GAP_MS / 1000}초 뒤 다시`);
+    await sleep(LIVE_GAP_MS);
+    live = await livecheck(apiKey);
+  }
+  console.log(live.ok ? `· 연결 확인 OK ${live.note}` : `· 연결 확인 끝내 실패 — ${live.note.slice(0, 120)}`);
+
   L.push("## 연결 확인");
   L.push("");
   L.push(live.ok
     ? "✅ **kosis.kr 은 지금 살아 있다** (매일 도는 자료 조회 주소가 응답했다).\n"
       + "> 그러니 아래에서 검색이 실패한다면 그건 **망이 아니라 주소·파라미터 문제**다 — 다시 돌려도 같다."
-    : `❌ **kosis.kr 이 지금 러너 요청을 거부한다** — ${live.note}\n`
-      + "> 아래 실패는 주소 문제가 아닐 수 있다. **대기열에 한 줄 더 밀어 다시 돌린다.**");
+    : `❌ **kosis.kr 이 ${LIVE_ROUNDS}번(약 ${Math.round((LIVE_ROUNDS - 1) * LIVE_GAP_MS / 60000)}분) 동안 계속 거부했다** — ${live.note}\n`
+      + "> 아래 실패는 주소 문제가 **아니다.** 검색을 아예 시도하지 않았다. **대기열에 한 줄 더 밀어 다시 돌린다.**");
   L.push("");
+
+  /* 문이 닫혀 있으면 후보를 태우지 않는다 — 태워 봤자 전부 같은 이유로 실패하고,
+     그 기록이 다음 사람에게 "주소가 틀렸다"로 읽힌다. */
+  if (!live.ok) {
+    L.push("검색을 시도하지 않았다(연결 확인 실패). 다시 돌리면 된다.");
+    mkdirSync(dirname(out), { recursive: true });
+    writeFileSync(out, L.join("\n") + "\n", "utf8");
+    console.log(`\n📝 ${out}`);
+    console.error("❌ kosis.kr 연결이 끝내 안 잡혔다 — 대기열에 한 줄 더 밀어 다시 돌린다.");
+    process.exit(1);
+  }
 
   let anyOk = false;
 
