@@ -101,14 +101,14 @@ async function fetchWindow(statCode: string, itemCode: string, s: string, e: str
 }
 
 /* 한 번에 긴 구간을 달라고 하면 앞쪽 81개월(199801~200409)만 오고 서버 집계도 81 이라고 답한다
-   (2026-08-12 실측). 왜인지는 API 가 말해 주지 않는다 — 그래서 **5년씩 잘라 여러 번 물어 붙인다.**
+   (2026-08-12 실측). 왜인지는 API 가 말해 주지 않는다 — 그래서 **1년씩 잘라 여러 번 물어 붙인다.**
    구간을 잘라 물으면 각 창이 온전히 온다. 창 경계는 겹치게 잡아 빠진 달이 있으면 드러나게 한다. */
 async function fetchSeries(statCode: string, itemCode: string, end: string) {
   const rows: any[] = [];
   const windows: string[] = [];
   let s = START;
   while (s <= end) {
-    const e = addMonths(s, 59) > end ? end : addMonths(s, 59);
+    const e = addMonths(s, 11) > end ? end : addMonths(s, 11);
     const r = await fetchWindow(statCode, itemCode, s, e);
     windows.push(`${s}~${e}: ${r.rows.length}행${r.note ? ` (${r.note})` : ""}`);
     rows.push(...r.rows);
@@ -176,6 +176,7 @@ async function main() {
   // 훑기가 실패했을 때만 쓰는 예비 후보(코드가 고르는 원칙은 유지 — 순서대로 시도해 데이터가 나오는 것을 쓴다)
   const fallback = ["101Y003", "101Y004", "101Y002", "101Y001"];
   const candidates = scored.length ? scored.map((t) => t.code) : fallback;
+  // 표가 여럿 걸리므로 최근 데이터 비교 대상은 넉넉히 본다
 
   say("## 2. 후보 통계표(점수순)");
   say("");
@@ -186,10 +187,10 @@ async function main() {
   // 3) 후보별 항목 훑고 M2 항목 찾기
   say("## 3. 항목 목록 · M2 항목 선택");
   say("");
-  let chosen: { statCode: string; statName: string; itemCode: string; itemName: string; unit: string } | null = null;
+  let chosen: { statCode: string; statName: string; itemCode: string; itemName: string; unit: string; lastYm: string } | null = null;
   const itemDump: Record<string, Array<{ code: string; name: string; unit: string }>> = {};
 
-  for (const code of candidates.slice(0, 6)) {
+  for (const code of candidates.slice(0, 8)) {
     let items: Array<{ code: string; name: string; unit: string }> = [];
     try {
       items = await listItems(code);
@@ -218,18 +219,36 @@ async function main() {
       say(`  ⚠️ \`${code}\` 의 최선 항목이 평잔·원계열이 아니다 — \`${hit.code}\` ${hit.name} (건너뛴다)`);
       continue;
     }
-    if (hit && !chosen) {
-      const t = tables.find((x) => x.code === code);
+    if (!hit) continue;
+    /* ⚠️ 이름만으로 고르면 **은퇴한 표**를 집는다 (2026-08-12 실측).
+       `101Y004`(1.7.3.1.2) 와 `161Y006`(1.1.3.1.2) 는 이름이 글자까지 같은데
+       앞의 것은 2003.10~2026.05 에서 멈춘 구계열이고, 살아 있는 표는 뒤의 것이다.
+       그래서 **최근 24개월을 실제로 찔러 보고 마지막 달이 늦은 표**를 고른다 — 재서 고른다. */
+    const t = tables.find((x) => x.code === code);
+    const probeStart = addMonths(end, -23);
+    let lastYm = "";
+    try {
+      const r = await fetchWindow(code, hit.code, probeStart, end);
+      const times = r.rows.map((x: any) => String(x.TIME ?? "")).filter(Boolean).sort();
+      lastYm = times[times.length - 1] ?? "";
+    } catch (e) {
+      say(`  ⚠️ \`${code}\` 최근 구간 조회 실패: ${(e as Error).message}`);
+    }
+    say(`  · \`${code}\` ${t?.name ?? ""} — 항목 \`${hit.code}\` ${hit.name} · 최근 데이터 ${lastYm || "없음"}`);
+    if (!lastYm) continue;
+    if (!chosen || lastYm > chosen.lastYm) {
       chosen = {
         statCode: code,
         statName: t?.name ?? "(목록 미확인)",
         itemCode: hit.code,
         itemName: hit.name,
         unit: hit.unit,
+        lastYm,
       };
-      say(`  → ✅ 선택: \`${code}\` / \`${hit.code}\` ${hit.name} (${hit.unit})`);
     }
   }
+  say("");
+  if (chosen) say(`→ ✅ 선택: \`${chosen.statCode}\` ${chosen.statName} / \`${chosen.itemCode}\` ${chosen.itemName} (최근 ${chosen.lastYm})`);
   say("");
 
   fs.mkdirSync(path.join(REPO_ROOT, "data"), { recursive: true });
