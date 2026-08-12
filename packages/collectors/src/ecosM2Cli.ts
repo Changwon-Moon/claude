@@ -339,6 +339,34 @@ async function main() {
     others: {} as Record<string, { statName: string; itemCode: string; unit: string; series: Array<{ ym: string; value: number }> }>,
   };
 
+  /* ── 개편 전 기준(구 M2) — 카드가 쓰는 기준 (2026-08-12 오너 지시)
+     한국은행이 2025-12-30 통화지표를 개편해 **수익증권(펀드·ETF)을 M2 에서 뺐다**(약 -409조).
+     신·구를 1년간 병행 발표하는데, ECOS 는 같은 통계표 안에 `[참고] 구 M2` 항목으로 실어 둔다.
+     역대 정부를 한 자로 재려면 **개편 전 기준으로 통일**해야 한다 — 신 기준은 현 정부만
+     작아 보이게 만든다. 그래서 이 항목을 따로 받아 `legacyM2` 로 적는다. */
+  say("## 4b. 개편 전 기준 — [참고] 구 M2");
+  say("");
+  const legacyItem = (itemDump[chosen.statCode] ?? []).find((it: any) => /구\s*M2/.test(String(it.name)) && /평잔/.test(String(it.name)) && /원계열/.test(String(it.name)));
+  let legacy: { itemCode: string; itemName: string; series: Array<{ ym: string; value: number }> } | null = null;
+  if (!legacyItem) {
+    say("- ⚠️ `[참고] 구 M2` 항목을 못 찾았다 — 개편 전 기준 카드는 만들 수 없다");
+  } else {
+    const r = await fetchSeries(chosen.statCode, legacyItem.code, end, "200301");
+    legacy = {
+      itemCode: legacyItem.code,
+      itemName: legacyItem.name,
+      series: r.points.map((p) => ({ ym: p.time, value: p.value })),
+    };
+    say(`- \`${legacyItem.code}\` ${legacyItem.name} — ${r.points.length}개월 (${r.points[0]?.time}~${r.points[r.points.length - 1]?.time})`);
+    const lastNew = points[points.length - 1];
+    const lastOld = r.points[r.points.length - 1];
+    if (lastNew && lastOld && lastNew.time === lastOld.time) {
+      say(`- 같은 달(${lastNew.time}) 신 ${(lastNew.value / 1000).toFixed(1)}조 vs 구 ${(lastOld.value / 1000).toFixed(1)}조 — 차이 ${((lastOld.value - lastNew.value) / 1000).toFixed(1)}조`);
+    }
+  }
+  (dataset as any).legacyM2 = legacy;
+  say("");
+
   say("## 5. 다른 표(구계열 포함)도 함께 받는다");
   say("");
   for (const f of found) {
