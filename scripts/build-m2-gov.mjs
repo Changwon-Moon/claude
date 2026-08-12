@@ -207,10 +207,13 @@ const badges = runIdx >= 0
 const level = {
   x: 8,
   y: r1(TOP - 4),
-  lh: 46,
+  lh: 40,
+  /* 세 줄로 나눠 색이 각자 한 가지를 뜻하게 한다(오너 지시 2026-08-12):
+     언제(회색) · 무엇(잉크) · 얼마(레드). 한 줄에 잉크와 레드를 섞으면 구분이 안 된다. */
   lines: [
     { t: `${ymLabel(lastYm)} 기준`, fill: GRAY, size: 26, weight: 800 },
-    { t: `M2 ${Math.round(M2[lastYm]).toLocaleString("ko-KR")}조`, fill: RED, size: 44, weight: 900 },
+    { t: "M2(광의통화)", fill: INK, size: 32, weight: 900 },
+    { t: `${Math.round(M2[lastYm]).toLocaleString("ko-KR")}조`, fill: RED, size: 46, weight: 900 },
   ],
 };
 
