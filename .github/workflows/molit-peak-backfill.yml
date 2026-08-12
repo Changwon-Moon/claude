@@ -1,0 +1,174 @@
+name: 역대 최고가 인덱스 초기 수집 (신고가 기준선)
+
+# ── 무엇을 하나 (2026-08-12 오너 "오늘의 신고가 톡도 받게 해줘")
+# 신고가를 "역대 최고가를 넘었다"로 판정하려면, 넘을 대상인 **역대 최고가**가 먼저 있어야 한다.
+# 국토부 실거래는 2006-01 부터 공개되므로, 서울 25개구 + 경기 주요시의 2006-01~지난달을
+# 한 번 통째로 훑어 **단지+평형대별 최고가 한 줄씩**을 인덱스로 굳힌다.
+#
+# ── 왜 여러 번에 나눠 도나
+# 지역 66곳 × 240개월 ≈ 1.6만 회 호출이다. 공공데이터포털 일일 트래픽 한도를 넘기므로
+# 하루 예산만큼만 하고 멈춘다. 어디까지 했는지는 각 지역 파일이 알고 있어(meta.doneMonths)
+# 다음 실행이 이어서 한다. **다 끝나면 아무것도 안 하고 조용히 끝난다** — 끄러 올 필요가 없다.
+#
+# ── 원본을 안 남기는 이유
+# 2006년부터의 전 거래를 그대로 담으면 저장소가 수 GB 가 된다. 신고가 판정에 필요한 건
+# "지금까지의 최고가" 하나뿐이라 그것만 남긴다.
+on:
+  schedule:
+    # 매일 02:40 UTC (11:40 KST) — 아침 알림(23:0x UTC)과 겹치지 않는 시간대
+    - cron: "40 2 * * *"
+
+  # 대기열 푸시가 방아쇠 (molit-collect·applyhome-collect 와 같은 방식).
+  # 세션은 Actions 버튼을 못 누르므로 파일 한 줄이 유일한 손잡이다.
+  # 한 줄 형식(전부 선택):  budget=7000 from=200601 to=202607
+  push:
+    paths:
+      - "data/molit-peak-queue.txt"
+
+  workflow_dispatch:
+    inputs:
+      budget:
+        description: "이번 실행에서 쓸 최대 API 호출 수 (기본 7000)"
+        required: false
+        default: "7000"
+      from:
+        description: "시작월 YYYYMM (기본 200601 — 실거래 공개 시작월)"
+        required: false
+        default: ""
+      to:
+        description: "끝월 YYYYMM (기본: 지난달)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: molit-peak-backfill
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: 실행 조건 정하기
+        id: cfg
+        run: |
+          BUDGET="${{ github.event.inputs.budget }}"
+          FROM="${{ github.event.inputs.from }}"
+          TO="${{ github.event.inputs.to }}"
+          Q=data/molit-peak-queue.txt
+          if [ -z "$BUDGET$FROM$TO" ] && [ -f "$Q" ]; then
+            LINE=$(grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' | tail -1)
+            echo "대기열 마지막 줄: ${LINE:-(비어 있음)}"
+            for kv in $LINE; do
+              case "$kv" in
+                budget=*) BUDGET="${kv#budget=}" ;;
+                from=*)   FROM="${kv#from=}" ;;
+                to=*)     TO="${kv#to=}" ;;
+              esac
+            done
+          fi
+          echo "budget=${BUDGET:-7000}" >> "$GITHUB_OUTPUT"
+          echo "from=${FROM:-200601}" >> "$GITHUB_OUTPUT"
+          echo "to=$TO" >> "$GITHUB_OUTPUT"
+          echo "today=$(TZ=Asia/Seoul date +%F)" >> "$GITHUB_OUTPUT"
+
+      # ⚠️ 키가 없으면 여기서 멈춘다. 조용히 건너뛰면 몇 주가 지나도 아무도 모른다
+      #    (2026-07-31 알림 키 사고).
+      - name: 키 확인
+        env:
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        run: |
+          if [ -z "$MOLIT_API_KEY" ]; then
+            echo "::error::MOLIT_API_KEY 가 GitHub Secrets 에 없습니다."
+            exit 1
+          fi
+
+      - name: 이미 다 됐는지 먼저 본다
+        id: gate
+        run: |
+          DONE=$(node -e "try{const p=require('./data/datasets/molit-peak/_progress.json');console.log(p.complete?'yes':'no')}catch{console.log('no')}")
+          echo "complete=$DONE" >> "$GITHUB_OUTPUT"
+          [ "$DONE" = "yes" ] && echo "✅ 역대 인덱스가 이미 완성돼 있습니다 — 이번 실행은 할 일이 없습니다"
+          exit 0
+
+      - name: 역대 최고가 인덱스 채우기
+        if: steps.gate.outputs.complete != 'yes'
+        id: fill
+        env:
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        run: |
+          set -o pipefail
+          TO_ARG=""
+          [ -n "${{ steps.cfg.outputs.to }}" ] && TO_ARG="--to ${{ steps.cfg.outputs.to }}"
+          pnpm --filter @wirit/collectors collect-molit-peak -- \
+            --from ${{ steps.cfg.outputs.from }} $TO_ARG \
+            --budget ${{ steps.cfg.outputs.budget }} 2>&1 | tee /tmp/peak.log
+
+      - name: 실행 결과 기록
+        if: always() && steps.gate.outputs.complete != 'yes'
+        run: |
+          {
+            echo "# 역대 최고가 인덱스 — 마지막 실행"
+            echo
+            echo "- 실행: ${{ steps.cfg.outputs.today }} (KST) · 방아쇠 \`${{ github.event_name }}\`"
+            echo "- 예산: ${{ steps.cfg.outputs.budget }}회 · 시작월 ${{ steps.cfg.outputs.from }}"
+            echo "- 결과: **${{ job.status == 'success' && '성공' || '실패' }}**"
+            echo "- 커밋: \`${{ github.sha }}\`"
+            echo
+            echo '```'
+            cat /tmp/peak.log 2>/dev/null || echo "(실행되지 못했습니다)"
+            echo '```'
+          } > data/molit-peak-last.md
+
+      - name: 커밋
+        if: always() && steps.gate.outputs.complete != 'yes'
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@github.com"
+          git add -f data/molit-peak-last.md
+          git add data/datasets/molit-peak 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "바뀐 것 없음 — 커밋 생략"
+          else
+            git commit -m "역대 최고가 인덱스 ${{ steps.cfg.outputs.today }}"
+            git pull --rebase --autostash origin ${{ github.ref_name }} || true
+            git push origin HEAD:${{ github.ref_name }}
+          fi
+
+      # 초기 수집이 **끝나는 날 한 번만** 알린다. 매일 진행률을 보내면 며칠 만에 안 읽게 된다.
+      - name: 완성되면 한 번 알린다
+        if: success() && steps.gate.outputs.complete != 'yes'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          NOW=$(node -e "try{const p=require('./data/datasets/molit-peak/_progress.json');console.log(p.complete?'yes':'no')}catch{console.log('no')}")
+          if [ "$NOW" = "yes" ]; then
+            node scripts/notify-telegram.mjs "✅ 역대 최고가 기준선이 완성됐습니다 (2006년~) — 내일 아침부터 '오늘의 신고가' 알림이 정상 판정으로 옵니다"
+          fi
+
+      - name: 실패하면 알린다
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          node scripts/notify-telegram.mjs "⚠️ 역대 최고가 인덱스 수집 실패 (${{ steps.cfg.outputs.today }}) — data/molit-peak-last.md 를 확인하세요"
