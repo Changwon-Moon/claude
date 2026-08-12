@@ -137,9 +137,9 @@ const bars = rows.map((r, i) => {
    총 증가액은 막대 안으로 넣는다. (막대 높이는 그대로 총액 — 규모 자체도 사실이므로 버리지 않는다) */
 const values = rows.map((r, i) => ({
   x: cx(i), y: r1(BASE - hOf(r.delta) - 22), text: `월 ${r1(r.rate).toFixed(1)}조`,
-  /* 막대는 전부 잉크(현 정부만 옅은 레드). 최대 총액은 **숫자 색**으로만 짚는다 —
-     막대까지 물들이면 한 장 안에서 색이 두 가지를 뜻한다(오너 지시 2026-08-12, 코발트 안 철회). */
-  fill: r.rate === maxRate || r.delta === maxDelta ? RED : INK,
+  /* 레드는 **현 정부 하나**뿐이다(오너 지시 2026-08-12, 최대 총액 강조 철회).
+     한 장 안에서 레드가 두 군데면 훑어보는 독자는 둘을 같은 뜻으로 읽는다. */
+  fill: r.running ? RED : INK,
 }));
 
 /* 총 증가액 — 막대 안 위쪽(알약). 막대 높이가 뜻하는 바로 그 값이라 막대 안에 두는 게 맞다. */
@@ -172,7 +172,9 @@ const lastDelta = M2[lastYm] - M2[months[months.indexOf(lastYm) - 1]];
 const prevMax = Math.max(
   ...months.slice(1, months.length - 1).map((m, i) => M2[m] - M2[months[i]]),
 );
-const BD_FS = 25, BD_LH = 34, BD_PADX = 16, BD_PADY = 18;
+/* 25px 로 줄였더니 "글씨가 잘 안 보인다"(오너 2026-08-12). 카드는 폰에서 보는 물건이다 —
+   가운데 정렬을 지키면서 키울 수 있는 만큼 키운다(자리는 아래에서 계산해 잘리지 않게 한다). */
+const BD_FS = 34, BD_LH = 46, BD_PADX = 24, BD_PADY = 22;
 /* 줄마다 색이 다르다 — 첫 줄(언제)은 잉크, 아래 두 줄(무엇)은 레드.
    전부 레드로 두면 어디가 핵심인지 안 갈린다(오너 지시 2026-08-12). */
 const bdLines = runIdx >= 0
@@ -251,7 +253,7 @@ const card = {
      ⚠️ 분자는 `maxRate` 가 아니라 **현 정부**다. 문장이 "현 정부"라고 말하므로 숫자도 현 정부여야 한다 —
      최고 속도로 두면 현 정부가 1위가 아니게 되는 달에 문장이 조용히 거짓이 된다(QA 지적 2026-08-12).
      ".0" 은 떼고 적는다 — "2.0배"는 소수 자리가 뜻을 갖는 것처럼 읽힌다. */
-  note: `현 정부 통화량 증가속도는 문 정부 대비 <b>${(rows[rows.length - 1].rate / rows.find((r) => r.name === "문재인").rate).toFixed(1).replace(/\.0$/, "")}배 속도</b>`,
+  note: `<b>현 정부</b> 통화량 증가속도는 문 정부 대비 <b>${(rows[rows.length - 1].rate / rows.find((r) => r.name === "문재인").rate).toFixed(1).replace(/\.0$/, "")}배 속도</b>`,
   source: { name: "한국은행 ECOS(M2 평잔·원계열, 개편 전 기준)", asOf: ymLabel(lastYm) },
   meta: {
     verified: true,
