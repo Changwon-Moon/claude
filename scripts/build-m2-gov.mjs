@@ -128,7 +128,6 @@ const bars = rows.map((r, i) => {
      현 정부 막대는 **아직 안 끝난 값**이라 채도를 낮춰 옅게 칠하고 점선 테두리를 남긴다 —
      같은 레드라도 '확정된 값'과 '진행 중인 값'이 같은 무게로 보이면 안 된다. */
   if (r.running) return { ...base, fill: "rgba(229,72,77,0.42)", stroke: RED, sw: 4, dash: "14 10" };
-  if (r.delta === maxDelta) return { ...base, fill: COBALT };
   return { ...base, fill: INK };
 });
 
@@ -138,7 +137,9 @@ const bars = rows.map((r, i) => {
    총 증가액은 막대 안으로 넣는다. (막대 높이는 그대로 총액 — 규모 자체도 사실이므로 버리지 않는다) */
 const values = rows.map((r, i) => ({
   x: cx(i), y: r1(BASE - hOf(r.delta) - 22), text: `월 ${r1(r.rate).toFixed(1)}조`,
-  fill: r.rate === maxRate ? RED : r.delta === maxDelta ? COBALT : INK,
+  /* 막대는 전부 잉크(현 정부만 옅은 레드). 최대 총액은 **숫자 색**으로만 짚는다 —
+     막대까지 물들이면 한 장 안에서 색이 두 가지를 뜻한다(오너 지시 2026-08-12, 코발트 안 철회). */
+  fill: r.rate === maxRate || r.delta === maxDelta ? RED : INK,
 }));
 
 /* 총 증가액 — 막대 안 위쪽(알약). 막대 높이가 뜻하는 바로 그 값이라 막대 안에 두는 게 맞다. */
