@@ -123,8 +123,11 @@ const hOf = (d) => r1(((BASE - TOP) * d) / maxDelta);
 const bars = rows.map((r, i) => {
   const h = hOf(r.delta);
   const base = { x: r1(cx(i) - BAR_W / 2), y: r1(BASE - h), w: BAR_W, h };
-  if (r.running) return { ...base, fill: "rgba(20,24,33,0.13)", stroke: INK, sw: 4, dash: "14 10" };
-  return { ...base, fill: r.delta === maxDelta ? RED : INK };
+  /* 레드는 **현 정부 한 칸**에만 준다(오너 지시 2026-08-12). 앞서 최대 총액(문재인)에 줬더니
+     한 장 안에서 레드가 두 가지를 뜻해, 훑어보는 독자는 "제일 빨간 큰 막대"만 가져갔다.
+     진행 중이라는 사실은 색이 아니라 **점선 테두리**가 계속 말한다. */
+  if (r.running) return { ...base, fill: RED, stroke: "#8f1f23", sw: 4, dash: "14 10" };
+  return { ...base, fill: INK };
 });
 
 /* ── 무엇을 크게 보여줄 것인가 (오너 지시 2026-08-12)
@@ -144,41 +147,49 @@ const rates = rows.map((r, i) => {
     x: r1(cx(i) - PILL_W / 2), y: r1(top + 16), w: PILL_W, h: PILL_H, r: PILL_H / 2,
     /* 레드 막대 위에서는 흰 반투명이 묻히고, 점선(옅은) 막대 위에서는 흰 글자가 사라진다 —
        바탕에 맞춰 알약 바탕을 고른다. 강조는 채널마다 한 곳: 위 숫자=최고 속도, 알약=최대 총액. */
-    fill: r.delta === maxDelta ? "rgba(20,24,33,0.34)" : r.running ? "rgba(20,24,33,0.62)" : "rgba(255,255,255,0.16)",
+    fill: r.running ? "rgba(20,24,33,0.34)" : "rgba(255,255,255,0.16)",
     tx: cx(i), ty: r1(top + 16 + PILL_H / 2 + 8),
     text: `${Math.round(r.delta).toLocaleString("ko-KR")}조`,
     tfill: "#ffffff",
   };
 });
 
-/* 꼬리표 — 재임 중인 칸에만. 12개월짜리 막대를 5년짜리와 나란히 두면 오독되기 쉽다 */
-const tags = rows
-  .map((r, i) => (r.running ? { x: cx(i), y: r1(BASE - hOf(r.delta) - 80), text: "재임 중", fill: GRAY } : null))
-  .filter(Boolean);
+/* "재임 중" 꼬리표는 뺐다(오너 지시 2026-08-12) — 점선 테두리 + 아래 뱃지 + "재임 12개월"이
+   같은 말을 세 번 하고 있었다. 한 가지는 한 번만 말한다. */
+const tags = [];
 
 const ymLabel = (ym) => `${ym.slice(0, 4)}.${ym.slice(4)}`;
 
-/* ── 재임 중인 칸 **위 빈 공간**에 최신월 한 달 증가를 2줄로 적는다 (오너 지시 2026-08-12)
-   이 카드의 배수가 이 한 달에 크게 기댄다 — 271개월 중 한 달 증가폭 1위다.
-   숨기면 나중에 지적당하고, 적으면 그 자체가 소식이 된다. 수치는 계산값. */
 const runIdx = rows.findIndex((r) => r.running);
+/* ── 재임 중인 칸 **위 빈 공간**의 뱃지 (오너 지시 2026-08-12)
+   최신월 한 달 증가를 3줄 카드로 세운다. 이 카드의 배수가 이 한 달에 크게 기대므로
+   숨기지 않고 앞세운다 — 271개월 중 한 달 증가폭 1위다. 수치는 계산값.
+   글자가 카드 밖으로 나가지 않게 **자리를 빌더가 잰다**: SVG 안 글자는 designQa 넘침 검사 밖이다. */
 const lastDelta = M2[lastYm] - M2[months[months.indexOf(lastYm) - 1]];
-/* 글자가 카드 밖으로 나가지 않게 **자리를 계산해서** 정한다.
-   가운데 정렬로 두면 맨 오른쪽 칸에서 잘린다(1차 렌더에서 실제로 잘렸다).
-   SVG 안 글자는 designQa 의 넘침 검사 대상이 아니라 — 검수가 안 잡아 준다 — 빌더가 책임진다. */
-const calloutLines = runIdx >= 0
-  ? [`${ymLabel(lastYm)} 한 달`, `${r1(lastDelta).toFixed(1)}조 증가`]
+const prevMax = Math.max(
+  ...months.slice(1, months.length - 1).map((m, i) => M2[m] - M2[months[i]]),
+);
+const BD_FS = 30, BD_LH = 40, BD_PADX = 20, BD_PADY = 20;
+const bdLines = runIdx >= 0
+  ? [`'${lastYm.slice(2, 4)}.${lastYm.slice(4)} 한 달`, `+${r1(lastDelta).toFixed(1)}조 증가`,
+     lastDelta >= prevMax ? "(역대 최고)" : "(최근 최고)"]
   : [];
-const CALLOUT_FS = 32;
-const calloutW = Math.max(...calloutLines.map((t) => t.length * CALLOUT_FS * 0.56), 0);
-const callouts = runIdx >= 0
-  ? [{
-      x: cx(runIdx) + calloutW / 2 > VB_W - 6 ? VB_W - 6 : cx(runIdx),
-      anchor: cx(runIdx) + calloutW / 2 > VB_W - 6 ? "end" : "middle",
-      y: r1(BASE - hOf(rows[runIdx].delta) - 176),
-      lines: calloutLines,
-      fill: RED,
-    }]
+const bdW = Math.round(Math.max(...bdLines.map((t) => t.length * BD_FS * 0.58), 0)) + BD_PADX * 2;
+const bdH = BD_LH * bdLines.length + BD_PADY * 2 - 8;
+const badges = runIdx >= 0
+  ? (() => {
+      const wantX = cx(runIdx) - bdW / 2;
+      const x = r1(Math.min(Math.max(wantX, 4), VB_W - 4 - bdW));
+      /* 뱃지는 **막대 위 월평균 라벨보다 더 위**에 둔다.
+         34px 만 띄웠더니 옆 칸(윤석열)의 월평균 글자와 겹쳤다 — 두 막대 높이가 거의 같아서다.
+         라벨 자리(22 + 글자 37) + 숨(17) 을 합쳐 76px 을 비운다. */
+      const y = r1(BASE - hOf(rows[runIdx].delta) - 76 - bdH);
+      return [{
+        x, y, w: bdW, h: bdH, r: 18, fill: "#ffffff", stroke: RED, sw: 3,
+        tx: r1(x + bdW / 2), ty: r1(y + BD_PADY + BD_FS - 4), lh: BD_LH,
+        lines: bdLines, tfill: RED,
+      }];
+    })()
   : [];
 
 const grid = [0.25, 0.5, 0.75, 1].map((f) => ({ x1: LEFT, x2: RIGHT, y: r1(BASE - (BASE - TOP) * f) }));
@@ -202,7 +213,7 @@ const card = {
     values,
     rates,
     tags,
-    callouts,
+    badges,
     faces0: BASE,
   },
   faces: rows.map((r) => ({

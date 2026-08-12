@@ -86,9 +86,9 @@
             }
           }
         },
-        "callouts": {
+        "badges": {
           "type": "array",
-          "description": "재임 중인 칸 위 빈 공간의 2줄 꼬리표. 좌표·정렬을 빌더가 계산한다(SVG 글자는 designQa 넘침 검사 밖이다)",
+          "description": "재임 중인 칸 위 빈 공간의 3줄 뱃지. 좌표·크기를 빌더가 계산한다(SVG 글자는 designQa 넘침 검사 밖이다)",
           "items": {
             "type": "object",
             "required": ["x", "y", "lines", "fill"],

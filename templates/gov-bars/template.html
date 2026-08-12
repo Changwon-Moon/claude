@@ -53,8 +53,8 @@
       /* 월평균 뱃지 안 글자 */
       .gb-rate { font-family: var(--font-num); font-size: 23px; font-weight: 800; letter-spacing: -0.02em; }
       .gb-tag { font-family: var(--font-sans); font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
-      /* 재임 중인 칸 위 빈 공간의 2줄 꼬리표 — 최신월 한 달 증가 */
-      .gb-callout { font-family: var(--font-num); font-size: 32px; font-weight: 900; letter-spacing: -0.03em; }
+      /* 재임 중인 칸 위 빈 공간의 3줄 뱃지 — 최신월 한 달 증가 */
+      .gb-callout { font-family: var(--font-num); font-size: 30px; font-weight: 900; letter-spacing: -0.03em; }
 
       /* ── 인물 축 ── 사진은 누끼(-cut.png)를 바닥 정렬로 세운다 */
       .gb-axis { flex: 0 0 auto; display: grid; margin: 10px 0 0; }
@@ -99,7 +99,7 @@
           {{#each chart.rates}}<g><rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" rx="{{r}}" fill="{{fill}}" /><text class="gb-rate" x="{{tx}}" y="{{ty}}" fill="{{tfill}}" text-anchor="middle">{{text}}</text></g>{{/each}}
           {{#each chart.values}}<text class="gb-val" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="middle">{{text}}</text>{{/each}}
           {{#each chart.tags}}<text class="gb-tag" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="middle">{{text}}</text>{{/each}}
-          {{#each chart.callouts}}<text class="gb-callout" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="{{anchor}}">{{#each lines}}<tspan x="{{../x}}" dy="{{#if @first}}0{{else}}38{{/if}}">{{this}}</tspan>{{/each}}</text>{{/each}}
+          {{#each chart.badges}}<g><rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" rx="{{r}}" fill="{{fill}}" stroke="{{stroke}}" stroke-width="{{sw}}" /><text class="gb-callout" x="{{tx}}" y="{{ty}}" fill="{{tfill}}" text-anchor="middle">{{#each lines}}<tspan x="{{../tx}}" dy="{{#if @first}}0{{else}}{{../lh}}{{/if}}">{{this}}</tspan>{{/each}}</text></g>{{/each}}
           {{#if chart.baseline}}<line class="gb-base" x1="{{chart.baseline.x1}}" y1="{{chart.baseline.y}}" x2="{{chart.baseline.x2}}" y2="{{chart.baseline.y}}" />{{/if}}
         </svg>
       </div>
