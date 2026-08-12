@@ -312,9 +312,6 @@
             "y": {
               "type": "number"
             },
-            "lh": {
-              "type": "number"
-            },
             "lines": {
               "type": "array",
               "minItems": 1,
@@ -336,6 +333,9 @@
                     "type": "number"
                   },
                   "weight": {
+                    "type": "number"
+                  },
+                  "dy": {
                     "type": "number"
                   }
                 }

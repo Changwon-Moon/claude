@@ -206,14 +206,13 @@ const badges = runIdx >= 0
    기준은 카드 전체와 같은 개편 전 계열(구 M2). 값은 원자료의 최신월. */
 const level = {
   x: 8,
-  y: r1(TOP - 4),
-  lh: 40,
-  /* 세 줄로 나눠 색이 각자 한 가지를 뜻하게 한다(오너 지시 2026-08-12):
-     언제(회색) · 무엇(잉크) · 얼마(레드). 한 줄에 잉크와 레드를 섞으면 구분이 안 된다. */
+  y: r1(TOP - 26),
+  /* 줄마다 크기가 달라 **줄 간격도 줄마다** 준다(한 값으로 두면 큰 글자가 위 줄을 먹는다).
+     dy 는 "앞 줄 baseline 에서 이만큼 내려온다"는 뜻이다. */
   lines: [
-    { t: `${ymLabel(lastYm)} 기준`, fill: GRAY, size: 26, weight: 800 },
-    { t: "M2(광의통화)", fill: INK, size: 32, weight: 900 },
-    { t: `${Math.round(M2[lastYm]).toLocaleString("ko-KR")}조`, fill: RED, size: 46, weight: 900 },
+    { t: `${ymLabel(lastYm)} 기준`, fill: GRAY, size: 26, weight: 800, dy: 0 },
+    { t: "M2(광의통화)", fill: GRAY, size: 26, weight: 800, dy: 32 },
+    { t: `${Math.round(M2[lastYm]).toLocaleString("ko-KR")}조`, fill: RED, size: 52, weight: 900, dy: 60 },
   ],
 };
 
