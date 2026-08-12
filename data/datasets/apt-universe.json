@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "minHhld": 1000,
+    "regions": 61,
+    "regionsListed": 0,
+    "aptTotal": 0,
+    "aptChecked": 0,
+    "count": 0,
+    "complete": false,
+    "updatedAt": "2026-08-12",
+    "verified": true,
+    "source": "국토교통부 공동주택 단지 목록제공 서비스 · 공동주택 기본 정보제공 서비스(세대수)",
+    "note": "신고가 트래킹 대상 명부. 세대수는 코드가 API 에서 받아 적는다."
+  },
+  "items": []
+}
