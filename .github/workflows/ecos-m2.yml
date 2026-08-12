@@ -1,0 +1,103 @@
+name: ECOS M2 수집 (probe+collect)
+
+# ── 무엇을 하나 (2026-08-12)
+# 한국은행 ECOS 에서 M2(광의통화) 월별 시계열을 받아 `data/datasets/m2-monthly.json` 에 적는다.
+# 어떤 통계표·항목을 골랐는지는 `data/ecos-m2-probe.md` 에 통째로 남긴다.
+#
+# ── 왜 Actions 인가
+# 세션 컨테이너는 `ecos.bok.or.kr` 이 egress 허용목록 밖이라 아예 열리지 않는다.
+# 키(ECOS_API_KEY)도 GitHub Secrets 에만 있다. 그러니 여기서 돈다.
+#
+# ── 세션은 어떻게 거는가
+# `data/ecos-queue.txt` 에 한 줄 적어 푸시한다. (세션은 Actions 버튼을 못 누른다)
+on:
+  push:
+    paths:
+      - "data/ecos-queue.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ecos-m2
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # 키가 없어도 여기서 죽이지 않는다 — 죽이면 커밋 단계가 건너뛰어져
+      # 세션 쪽에서는 "아무 일도 안 일어난 것"과 구별이 안 된다.
+      - name: 키 확인
+        id: keycheck
+        env:
+          ECOS_API_KEY: ${{ secrets.ECOS_API_KEY }}
+        run: |
+          if [ -z "$ECOS_API_KEY" ]; then
+            echo "::error::ECOS_API_KEY 가 GitHub Secrets 에 없습니다."
+            echo "has_key=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "키 확인됨 (길이 ${#ECOS_API_KEY})"
+            echo "has_key=yes" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: M2 수집
+        if: steps.keycheck.outputs.has_key == 'yes'
+        continue-on-error: true
+        timeout-minutes: 12
+        env:
+          ECOS_API_KEY: ${{ secrets.ECOS_API_KEY }}
+        run: pnpm --filter @wirit/collectors collect-ecos-m2 2>&1 | tee /tmp/ecos.log
+
+      - name: 결과 없으면 실패 기록
+        if: always()
+        run: |
+          if ! git diff --quiet -- data/ecos-m2-probe.md data/datasets/m2-monthly.json data/ecos-m2-items.json 2>/dev/null; then
+            echo "수집이 파일을 갱신했다 — 그대로 둔다"; exit 0
+          fi
+          {
+            echo "# ECOS M2 — ❌ 수집이 돌지 못했다"
+            echo
+            echo "- 실행 시각(KST): $(TZ=Asia/Seoul date '+%F %H:%M')"
+            echo "- 실행 로그: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "- 키 있음: ${{ steps.keycheck.outputs.has_key }}"
+            echo
+            echo '```'
+            tail -40 /tmp/ecos.log 2>/dev/null || echo "(ecos.log 없음 — 수집 단계까지 못 갔다)"
+            echo '```'
+          } > data/ecos-m2-probe.md
+
+      - name: 커밋
+        if: always()
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@github.com"
+          git add -f data/ecos-m2-probe.md data/ecos-m2-items.json data/datasets/m2-monthly.json || true
+          if git diff --cached --quiet; then
+            echo "바뀐 것 없음 — 커밋 생략"
+          else
+            git commit -m "ECOS M2 수집 $(TZ=Asia/Seoul date +%F)"
+            for try in 1 2 3 4 5 6 7 8; do
+              git pull --rebase --autostash origin ${{ github.ref_name }} || true
+              if git push origin HEAD:${{ github.ref_name }}; then
+                echo "푸시 성공(시도 $try)"; exit 0
+              fi
+              echo "푸시 실패(시도 $try) — 리베이스 후 재시도"
+              sleep $((try * 7 + RANDOM % 10))
+            done
+            echo "::error::여덟 번 시도했으나 푸시 실패"
+            exit 1
+          fi
