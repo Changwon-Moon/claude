@@ -129,13 +129,6 @@
       ]
     },
     {
-      "label": "sinbundang-map",
-      "cmd": "scripts/build-sinbundang-map.mjs",
-      "args": [
-        "2026-07-31"
-      ]
-    },
-    {
       "label": "sinbundang-loop",
       "cmd": "scripts/build-sinbundang-loop.mjs",
       "args": [

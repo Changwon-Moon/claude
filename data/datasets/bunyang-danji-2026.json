@@ -425,7 +425,45 @@
         "file": "songdo-granter-remndr.png",
         "credit": "출처. 케이비부동산신탁(주) 홈페이지",
         "provided": "2026-08-03 오너 제공 · 원본은 templates/_shared/photos/_source/"
-      }
+      },
+      "_applyhomeSnapshot": {
+        "kind": "remndr",
+        "pblancNo": "2026910203",
+        "name": "더샵 송도그란테르",
+        "areaName": "인천",
+        "address": "인천광역시 연수구 송도동 32-1,-4 (G5-1BL)",
+        "supply": 150,
+        "noticeDate": "2026-07-30",
+        "receiptFrom": "2026-08-04",
+        "receiptTo": "2026-08-04",
+        "specialFrom": null,
+        "rank1From": null,
+        "moveInYm": "2029-08",
+        "announceDate": "2026-08-07",
+        "builder": "케이비부동산신탁(주)",
+        "priceCap": false,
+        "speculative": false,
+        "homepage": "https://더샵송도그란테르.kr",
+        "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910203&pblancNo=2026910203",
+        "blocks": 5,
+        "blockNames": [
+          "더샵 송도그란테르 G5-11블록",
+          "더샵 송도그란테르 G5-5블록",
+          "더샵 송도그란테르 G5-4블록",
+          "더샵 송도그란테르 G5-3블록",
+          "더샵 송도그란테르 G5-1블록"
+        ],
+        "score": 73,
+        "reasons": [
+          "수도권",
+          "150가구",
+          "무순위",
+          "더샵",
+          "5개 블록 합계"
+        ]
+      },
+      "_retiredAt": "2026-08-12",
+      "_retiredFrom": "latest"
     },
     {
       "id": "jangwi-markone-remndr",

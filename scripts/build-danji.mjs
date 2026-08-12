@@ -145,17 +145,43 @@ function ratio(row) {
   return shown;
 }
 
-/* ── 청약홈 1차 출처 병합 ── */
+/* ── 청약홈 1차 출처 병합 ──
+ *
+ * ⚠️ **접수가 끝난 공고는 목록에서 사라진다** — 그게 정상이다(2026-08-12).
+ * 청약홈 수집분은 "지금 접수 중인 것"만 담는다. 그래서 접수가 끝나는 순간
+ * 이미 만들어 발행까지 한 카드가 **재생산할 때마다 죽는다**. 실제로 더샵 송도그란테르가
+ * 그랬고, 그 예외 하나가 `rebuild-cards` 를 통째로 빨간불로 만들고 있었다.
+ *
+ * 카드를 못 그리게 두면 관제탑에서 그 카드가 사라진다(산출물은 gitignore 라 매번 다시 그린다).
+ * 그렇다고 검증 없이 넘어가면 오보 0 이 깨진다. 그래서 **은퇴**라는 상태를 만든다:
+ *
+ *   접수 중  → 청약홈 수집분에서 읽는다(지금까지와 같다)
+ *   접수 종료 → 데이터셋에 굳혀 둔 **마지막 판본**(`_applyhomeSnapshot`)에서 읽는다
+ *
+ * 스냅샷은 사람이 손으로 적지 않는다 — `node scripts/retire-danji.mjs <id>` 가
+ * 수집분(또는 git 이력)에서 그대로 떠서 박는다. 그래야 수치의 출처가 여전히 코드다.
+ * 스냅샷도 없이 공고가 사라졌으면 **그때는 던진다** — 조용히 넘어가지 않는다.
+ */
 function applyhome(d) {
   if (!d.applyhomeNo) return null;
   const p = join(ROOT, "data/datasets/applyhome-latest.json");
   if (!existsSync(p))
     throw new Error(`청약홈 수집 결과가 없다 — data/applyhome-queue.txt 로 수집을 먼저 건다 (${d.id})`);
   const hit = (JSON.parse(readFileSync(p, "utf8")).notices || []).find((x) => x.pblancNo === d.applyhomeNo);
-  if (!hit)
+  if (!hit) {
+    const snap = d._applyhomeSnapshot;
+    if (snap && snap.pblancNo === d.applyhomeNo) {
+      console.log(
+        `   ⏸ 접수 종료 — 청약홈 목록에서 빠졌습니다. 굳혀 둔 마지막 판본으로 그립니다` +
+          ` (${d.id} · 접수 ${snap.receiptTo || "?"} 종료 · 굳힌 날 ${d._retiredAt || "?"})`,
+      );
+      return snap;
+    }
     throw new Error(
-      `청약홈 최신 수집분에 공고번호 ${d.applyhomeNo} 가 없다 (${d.id}) — 접수가 끝나 목록에서 빠졌을 수 있다`,
+      `청약홈 최신 수집분에 공고번호 ${d.applyhomeNo} 가 없다 (${d.id}) — 접수가 끝나 목록에서 빠졌을 수 있다.\n` +
+        `   접수가 끝난 게 맞으면 마지막 판본을 굳혀 은퇴시킵니다: node scripts/retire-danji.mjs ${d.id}`,
     );
+  }
   if (d.total != null && d.total !== hit.supply)
     throw new Error(`총 세대수 불일치 — 데이터셋 ${d.total} vs 청약홈 ${hit.supply} (${d.id})`);
   return hit;
