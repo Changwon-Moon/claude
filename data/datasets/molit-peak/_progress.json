@@ -1,10 +1,11 @@
 {
-  "from": "200601",
+  "from": "202001",
+  "baselineLabel": "2020년 이후",
   "to": "202607",
   "regions": 61,
-  "monthsPerRegion": 247,
-  "regionsComplete": 1,
-  "monthsRemaining": 14771,
+  "monthsPerRegion": 79,
+  "regionsComplete": 61,
+  "monthsRemaining": -217,
   "complete": false,
   "updatedAt": "2026-08-12"
 }
