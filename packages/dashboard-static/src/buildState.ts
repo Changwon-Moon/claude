@@ -2,7 +2,7 @@
  * 상태 빌더: 저장소 산출물 → 하나의 TowerState.
  * 결정적: 동일 저장소 상태 = 동일 JSON (Date.now 미사용, 날짜는 콘텐츠에서 파생).
  */
-import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync, statSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
 import { join, basename } from "node:path";
 import { P, REPO_ROOT } from "./paths.js";
 import { STAGES, RUBRIC_LABELS } from "./types.js";
@@ -25,6 +25,48 @@ const TEAM_ORDER = [
   "marketing",
   "orchestrator",
 ];
+
+/** data-uri 의 확장자를 고른다. 축소가 되면 JPEG, 브라우저가 없어 원본이면 PNG 그대로다. */
+function extOf(uri: string): string {
+  const m = /^data:image\/([a-z0-9.+-]+);base64,/i.exec(uri);
+  const t = (m?.[1] || "jpeg").toLowerCase();
+  return t === "jpeg" || t === "jpg" ? "jpg" : t === "svg+xml" ? "svg" : t;
+}
+
+/**
+ * `images` 맵의 base64 를 파일로 뽑고, 맵의 값을 **상대 경로**로 바꿔치기한다(제자리 수정).
+ *
+ * base64 가 아닌 값(이미 `download/…jpg` 같은 경로)은 건드리지 않는다.
+ * 파일이 못 써지면 base64 를 그대로 둔다 — 무거운 게 안 뜨는 것보다 낫다.
+ * 매번 디렉터리를 비우고 다시 쓰므로 지운 카드의 썸네일이 남지 않는다(결정적).
+ */
+function writeThumbFiles(images: Record<string, string>): void {
+  const keys = Object.keys(images).filter((k) => images[k].startsWith("data:image/"));
+  if (!keys.length) return;
+  try {
+    rmSync(P.thumbsOut, { recursive: true, force: true });
+    mkdirSync(P.thumbsOut, { recursive: true });
+  } catch {
+    return; // 디렉터리를 못 만들면 base64 유지
+  }
+  let bytes = 0;
+  let wrote = 0;
+  for (const k of keys) {
+    const uri = images[k];
+    const comma = uri.indexOf(",");
+    try {
+      const buf = Buffer.from(uri.slice(comma + 1), "base64");
+      const name = `${k}.${extOf(uri)}`;
+      writeFileSync(join(P.thumbsOut, name), buf);
+      images[k] = `thumbs/${name}`;
+      bytes += buf.length;
+      wrote++;
+    } catch {
+      /* 이 장만 base64 로 남는다 */
+    }
+  }
+  if (wrote) console.log(`   썸네일 ${wrote}장을 파일로 분리: ${Math.round(bytes / 1024)}KB (HTML 밖으로)`);
+}
 
 function normTitle(s: string): string {
   return s.replace(/\s+/g, "").replace(/[·—\-]/g, "").toLowerCase();
@@ -137,6 +179,7 @@ export async function buildState(): Promise<TowerState> {
       t.caption = match.caption;
       t.review = match.review;
       t.setLabel = match.setLabel || undefined;
+      t.setState = match.setState || undefined;
       t.fmt = match.fmt || t.fmt;
       const tl: TimelineEntry = {
         team: "🎨 디자인팀",
@@ -188,6 +231,7 @@ export async function buildState(): Promise<TowerState> {
       // 파이프라인 목록에는 남기되 결정함(오늘 결정할 일)에는 올리지 않는다.
       flags: p.setLabel ? [] : ["실험"],
       setLabel: p.setLabel || undefined,
+      setState: p.setState || undefined,
       origin: "produced",
       provenance: p.contentPath,
     });
@@ -364,6 +408,20 @@ export async function buildState(): Promise<TowerState> {
     const small = shrunk.get(ck);
     if (small) images[key] = small;
   }
+
+  // ── 썸네일은 HTML 에 박지 않고 **파일로 뺀다** (2026-08-12)
+  //
+  // 200px 로 줄여도 62장이면 base64 가 1.3MB 다. 그게 그대로 index.html 안에 직렬화돼
+  // 화면 무게가 2MB 를 넘었고, `verify-live` 의 「화면 무게 적정」 검사가 2026-07-31 부터
+  // **2주간 빨간불**이었다. 카드가 늘수록 더 나빠지는 구조라 한도만 올리는 건 답이 아니다.
+  //
+  // 큰 판본(결재 캐러셀)은 이미 같은 이유로 `download/{label}-{n}.jpg` 파일 참조다
+  // (위 132·317줄 주석 — 2026-07-26 4MB 사고). 썸네일에도 같은 방식을 넓힌다.
+  //
+  // `images` 맵은 그대로 둔다 — 값만 base64 에서 **상대 경로**로 바뀐다. 화면 쪽
+  // `img()` 헬퍼(renderHtml.ts)가 이미 "맵에 있으면 그 값을 src 로 쓴다"라서 그대로 동작한다.
+  // 경로가 상대(`thumbs/…`)라 packages/dashboard/index.html 을 로컬에서 직접 열어도 맞는다.
+  writeThumbFiles(images);
 
   // 소재 풀 = 아직 안 고른 소재. 고르면(▶ 진행) stage가 붙어 파이프라인으로 빠지고,
   // 아니면 삭제된다 — 그래서 '남아 있다 = 아직 안 골랐다'가 성립한다.

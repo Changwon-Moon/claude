@@ -137,6 +137,10 @@ for (const set of sets) {
     cards: set.cards.length,
     pages: locs.reduce((a, l) => a + l.pngs.length, 0),
     state: publishState(set.title),
+    /* sets.json 의 제작 상태(시안·오너 확정·발행 승인…). 위 state 는 **발행** 상태라
+       뜻이 다르다 — 둘을 합치면 "그림이 됐나"와 "올렸나"가 섞인다(2026-08-12).
+       관제탑은 이 값으로 시안을 가려내 삭제 버튼을 붙인다. */
+    setState: set.state || "",
     // 링크로 걸 파일 = 저장소에 실제로 있는 것만. 나머지는 경로만 안내한다.
     files: {
       content: locs.map((l) => l.content).filter(inRepo),

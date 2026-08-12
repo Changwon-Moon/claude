@@ -23,4 +23,7 @@ export const P = {
   photosDir: resolve(REPO_ROOT, "templates/_shared/photos"),
   stateOut: resolve(REPO_ROOT, "packages/dashboard/tower-state.json"),
   htmlOut: resolve(REPO_ROOT, "packages/dashboard/index.html"),
+  /* 썸네일을 HTML 밖으로 뺀 자리(2026-08-12). build-tower-site 가 _site/thumbs 로 복사한다.
+     경로가 index.html 과 같은 폴더 기준이라 상대 참조 `thumbs/imgN.jpg` 가 그대로 맞는다. */
+  thumbsOut: resolve(REPO_ROOT, "packages/dashboard/thumbs"),
 } as const;

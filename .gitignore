@@ -29,6 +29,7 @@ templates/**/.render-tmp-*.html
 packages/dashboard/index.html
 packages/dashboard/tower-state.json
 packages/dashboard/artifact-body.html
+packages/dashboard/thumbs/
 
 # OS·에디터
 .DS_Store

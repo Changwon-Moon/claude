@@ -16,8 +16,24 @@ const browser = await chromium.launch(existsSync(PINNED) ? { executablePath: PIN
 const page = await browser.newPage({ viewport: { width: 1280, height: 950 } });
 
 const errors = [];
+/* ⚠️ 로컬에만 없는 파일을 오류로 세지 않는다 (2026-08-12).
+ * `download/`(완성본 JPEG)와 `thumbs/`(목록 썸네일)는 카드 PNG(data/out — gitignore)가
+ * 있어야 만들어져, CI 에서는 있지만 **갓 clone 한 로컬에는 없는 게 정상**이다.
+ * 그런데 이 시뮬은 그걸 콘솔 오류로 세서, 로컬에서 돌리면 항상 "문제 1건"이 나왔다
+ * (실제로 `download/jeonwolse-map-1.jpg` 하나 때문에 보관함 펼치기가 늘 빨간불이었다).
+ * CI 에서는 파일이 있어 통과하니 아무도 못 봤고, 로컬에서 돌린 사람은 있지도 않은
+ * 회귀를 쫓게 된다. smoke-tower 는 이미 같은 예외를 두고 있다 — 판정을 맞춘다. */
+const localOnly = [];
+const isLocalOnly = (u) => /\/(download|thumbs)\//.test(u);
+page.on("requestfailed", (r) => { if (isLocalOnly(r.url())) localOnly.push(r.url().split("/").pop()); });
 page.on("pageerror", (e) => errors.push("PAGEERROR " + String(e).slice(0, 140)));
-page.on("console", (m) => { if (m.type() === "error") errors.push("CONSOLE " + m.text().slice(0, 140)); });
+page.on("console", (m) => {
+  if (m.type() !== "error") return;
+  const txt = m.text();
+  // 위에서 걸러 둔 로컬 전용 파일의 로드 실패는 같은 순간 콘솔에도 찍힌다 — 함께 무시한다.
+  if (/Failed to load resource/.test(txt) && localOnly.length) return;
+  errors.push("CONSOLE " + txt.slice(0, 140));
+});
 page.on("dialog", (d) => d.accept(d.type() === "prompt" ? "시뮬 사유" : undefined));
 
 await page.goto(PAGE);
@@ -35,8 +51,16 @@ await page.evaluate(`
     if (path.indexOf("/actions/runs")>-1) return { workflow_runs: [] };
     if (path.indexOf("/contents/")>-1) {
       const isJson = path.indexOf(".json")>-1;
+      /* ⚠️ 경로마다 **그 파일 모양**을 돌려줘야 한다. 전부 ideas.json 모양으로 주면
+         시안 내리기(sets.json·builders.json 편집)가 파싱 단계에서 조용히 죽고,
+         시뮬은 "눌렀는데 오류 없음"이라고 거짓 초록을 준다. */
       const body = isJson
         ? (path.indexOf("pipeline-state")>-1 ? JSON.stringify({dropped:[]})
+           /* ⚠️ 화면에 **실제로 있는 label** 을 돌려준다. 가짜 label 을 주면 삭제 코드가
+              "이미 없다"고 판단해 PUT 을 건너뛰고, 시뮬은 오류 0건이라 초록을 준다 —
+              눌렸는데 아무 일도 안 한 것을 통과로 읽는 바로 그 함정이다(2026-08-12 실제로 밟음). */
+           : path.indexOf("sets.json")>-1 ? JSON.stringify({sets:(STATE.archive||[]).flatMap(f=>f.items||[]).map(w=>({label:w.label,title:w.title,cards:["a"],state:w.setState||""}))})
+           : path.indexOf("builders.json")>-1 ? JSON.stringify({builders:(STATE.builders||[]).map(l=>({label:l,cmd:"scripts/x.mjs",args:[]}))})
            : JSON.stringify({meta:{},cats:STATE.ideas.cats,ideas:STATE.ideas.items}))
         : "# 기존";
       return { sha:"sha", content: btoa(unescape(encodeURIComponent(body))) };
@@ -201,6 +225,21 @@ if (!shots && !hasFiles) note("보관함", "펼쳐도 실물도 링크도 없음
 if (!hasCap) note("보관함", "캡션 전문이 안 보임");
 if (!hasFiles) note("보관함", "저장소 원본 링크가 없음");
 
+/* 시안 내리기 — 시안이 하나도 없는 날이 정상이므로 optional 이다.
+   ⚠️ 버튼은 접힌 <details> 안에 있어 그냥 누르면 "보이지 않음"으로 타임아웃 난다.
+   그 항목을 먼저 펴고 누른다. confirm·prompt 는 위 dialog 핸들러가 자동으로 받는다. */
+await page.evaluate(`{const b=document.querySelector(".fitem .fdrop"); if(b) b.closest(".fitem").open=true;}`);
+await page.waitForTimeout(250);
+await press("시안 내리기", ".fitem[open] .fdrop", { optional: true, wait: 900 });
+/* ⚠️ "눌렀는데 오류가 없다"는 통과가 아니다 — **실제로 썼는지**를 본다.
+   처음에 목(mock)이 가짜 label 을 돌려주는 바람에 삭제 코드가 "이미 없다"고 건너뛰었고,
+   시뮬은 오류 0건이라 초록을 줬다. 아무것도 안 한 것을 통과로 읽던 것이다. */
+if (await page.$(".fitem[open] .fdrop")) {
+  const wrote = await page.evaluate(`window.__puts`);
+  if (!wrote.includes("data/review/sets.json"))
+    note("시안 내리기", "눌러도 sets.json 을 쓰지 않음 — 삭제가 실제로는 안 일어난다");
+}
+
 // ── 8. 연결 팝오버
 await press("연결 뱃지", "#connbtn");
 const popOpen = await page.evaluate(`document.getElementById("connpop").classList.contains("on")`);
@@ -215,6 +254,8 @@ console.log("\n■ 저장소 쓰기 시도:", [...new Set(puts)].join(", ") || "
 console.log("■ 워크플로 실행:", (await page.evaluate(`window.__disp.length`)) + "건");
 console.log("\n■ 발견된 문제", findings.length + "건");
 for (const f of findings) console.log("  ·", f);
+if (localOnly.length)
+  console.log(`\nℹ️  로컬에 없는 파일 ${[...new Set(localOnly)].length}개는 무시했습니다(Actions 에서 생성) — ${[...new Set(localOnly)].slice(0,3).join(", ")}`);
 console.log("\n■ 콘솔/페이지 오류", errors.length + "건");
 for (const e of [...new Set(errors)].slice(0, 8)) console.log("  ·", e);
 

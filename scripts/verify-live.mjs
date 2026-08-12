@@ -115,6 +115,9 @@ has(/id="connbtn"/, "상단 연결 뱃지");
 has(/결재 대기/, "지표 명칭 '결재 대기'");
 has(/올릴 차례/, "지표 명칭 '올릴 차례'");
 has(/data-ia="delete"/, "소재 삭제 버튼");
+/* 만들다 만 카드를 오너가 직접 내리는 자리(2026-08-12). 시안이 없는 날엔 보관함 버튼이
+   안 그려지므로, 항상 존재하는 결재 드로어 쪽 배선을 본다. */
+has(/data-drop=/, "시안 내리기 버튼(만들다 만 카드 정리)");
 check("소재 보드에 승인·보류 버튼 없음(간소화 반영)",
   !/data-ia="approve"/.test(html) && !/data-ia="hold"/.test(html));
 check("칸 나눈 입력 폼 제거(제목·이유·출처)",
@@ -208,9 +211,33 @@ if (PW) {
   }
 }
 
-// 카드 실물이 들어갔는지 — CI가 렌더한 썸네일
-const imgs = (html.match(/data:image\/(jpeg|png);base64/g) || []).length;
-check("카드 썸네일 포함", imgs > 0, `${imgs}장`);
+// ── 카드 실물이 들어갔는지 — CI가 렌더한 썸네일
+//
+// ⚠️ 2026-08-12 이전엔 `data:image/…;base64` 개수를 셌다. 그런데 썸네일을 별도 파일로
+//    빼면서(화면 무게 2MB 초과가 2주간 빨간불이었다) 그 개수가 0이 됐다. 개수 세기는
+//    **어디에 있느냐**를 잰 것이지 **열리느냐**를 잰 게 아니었다.
+//    이제 `/download/` 검사와 같은 방식으로 **실제로 한 장을 받아 본다.**
+const thumbRefs = [...html.matchAll(/["'(](thumbs\/img\d+\.(?:jpg|png|webp))["')]/g)].map((m) => m[1]);
+const inlineImgs = (html.match(/data:image\/(jpeg|png);base64/g) || []).length;
+check("카드 썸네일 포함", thumbRefs.length > 0 || inlineImgs > 0,
+  `파일 참조 ${thumbRefs.length}장 · 인라인 ${inlineImgs}장`);
+
+if (PW && thumbRefs.length) {
+  try {
+    const loginBody = new URLSearchParams({ pw: PW });
+    const lg = await fetch(URL_BASE + "/__login", { method: "POST", body: loginBody, redirect: "manual" });
+    const ck = (lg.headers.get("set-cookie") || "").split(";")[0];
+    const t0 = await fetch(URL_BASE + "/" + thumbRefs[0], { headers: { Cookie: ck } });
+    check("썸네일 파일이 실제로 열림", t0.status === 200
+      && (t0.headers.get("content-type") || "").includes("image"),
+      `HTTP ${t0.status} · ${thumbRefs[0]}`);
+    const open = await fetch(URL_BASE + "/" + thumbRefs[0]);
+    check("썸네일도 문 안쪽(비번 없인 안 열림)", /비밀번호/.test(await open.text()));
+  } catch (e) {
+    check("썸네일 확인", false, String(e).slice(0, 100));
+  }
+}
+
 check("화면 무게 적정(2MB 미만)", kb < 2048, `${kb}KB`);
 
 console.log(`\n${fail ? "❌" : "✅"} 실제 사이트 ${pass}/${pass + fail} 통과`);

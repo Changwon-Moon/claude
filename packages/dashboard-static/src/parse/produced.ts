@@ -27,10 +27,12 @@ export interface ProducedCard {
   setLead: boolean;
   /** 세트 제목 (오너가 읽을 이름) */
   setTitle: string;
+  /** sets.json 의 제작 상태(시안 · 오너 확정 · 발행 승인…). 관제탑이 시안을 가려낸다. */
+  setState: string;
 }
 
 /** data/review/sets.json — 오너가 한 번에 승인하는 단위. 없으면 세트 없음. */
-interface SetDef { label: string; title: string; cards: string[]; caption?: string; review?: string }
+interface SetDef { label: string; title: string; cards: string[]; caption?: string; review?: string; state?: string }
 function readSets(reviewDir: string): SetDef[] {
   const p = join(reviewDir, "sets.json");
   if (!existsSync(p)) return [];
@@ -141,6 +143,7 @@ export function collectProduced(contentDir: string, outDir: string, reviewDir = 
         setOrder: hit?.order ?? 0,
         setLead: !def || hit!.order === 0,
         setTitle: def?.title || "",
+        setState: def?.state || "",
       });
     }
   }

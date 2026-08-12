@@ -12,7 +12,7 @@
  * 실행: node scripts/build-tower-site.mjs
  */
 import { execFileSync } from "node:child_process";
-import { mkdirSync, rmSync, copyFileSync, writeFileSync, existsSync, statSync, cpSync } from "node:fs";
+import { mkdirSync, rmSync, copyFileSync, writeFileSync, existsSync, statSync, cpSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -32,6 +32,17 @@ run("pnpm", ["--filter", "@wirit/dashboard-static", "all"]);
 const tower = join(ROOT, "packages/dashboard/index.html");
 if (!existsSync(tower)) throw new Error("관제탑 index.html 생성 실패 — dashboard-static 확인");
 copyFileSync(tower, join(SITE, "index.html"));
+
+// 1-a) 목록 썸네일 — HTML 에 base64 로 박지 않고 별도 파일로 나른다(2026-08-12).
+//      박아 넣던 시절 62장이 1.3MB 였고, 그 탓에 화면이 2MB 를 넘어 verify-live 의
+//      「화면 무게 적정」이 2주간 빨간불이었다. 카드가 늘수록 나빠지는 구조였다.
+//      파일로 두면 브라우저가 보이는 것만(loading="lazy") 받고 다음부터는 캐시한다.
+//      결재 캐러셀 큰 판본이 `download/` 를 참조하는 것과 같은 원리다.
+const thumbsSrc = join(ROOT, "packages/dashboard/thumbs");
+if (existsSync(thumbsSrc)) {
+  cpSync(thumbsSrc, join(SITE, "thumbs"), { recursive: true });
+  console.log(`   썸네일 ${readdirSync(join(SITE, "thumbs")).length}장 → _site/thumbs/`);
+}
 
 // ⚠️ 판번호는 **페이지 자체에도** 박는다. version.txt 만 보면, 엣지에서
 // version.txt 는 새 판인데 index.html 은 옛 판을 주는 시차에 속는다

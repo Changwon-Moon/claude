@@ -53,8 +53,10 @@ page.on("console", (m) => {
 const localOnlyMissing = [];
 page.on("requestfailed", (r) => {
   const u = r.url().replace(/^file:\/\//, "");
-  /* /download/ 완성본 이미지는 Actions 에서만 만들어진다 — 로컬에 없는 게 정상 */
-  if (/\/download\//.test(u)) { localOnlyMissing.push(u.split("/").pop()); return; }
+  /* /download/ 완성본 이미지는 Actions 에서만 만들어진다 — 로컬에 없는 게 정상.
+     /thumbs/ 는 dashboard-static 이 만들지만 카드 PNG(data/out, gitignore)가 있어야
+     생긴다 — 갓 clone 한 환경에선 없는 게 정상이다(2026-08-12 썸네일 파일 분리). */
+  if (/\/(download|thumbs)\//.test(u)) { localOnlyMissing.push(u.split("/").pop()); return; }
   errors.push(`요청 실패 ${r.failure()?.errorText || "?"} · ${u.slice(-90)}`);
 });
 // prompt는 소재 삭제 사유 입력에 쓰인다 → 스모크에서는 항상 값을 준다

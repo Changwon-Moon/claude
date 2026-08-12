@@ -216,6 +216,7 @@ input,textarea,select{font-family:inherit}
   object-fit:cover;object-position:top;background:var(--band);flex:none}
 .tagx{font-size:10.5px;font-weight:700;border-radius:5px;padding:2px 6px;
   border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.tagx.draft{background:#fff4e5;border-color:#f0c98a;color:#8a5a12}
 .tagx.warn{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 40%,transparent)}
 .tagx.ok{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 35%,transparent)}
 .tagx.hot{color:var(--cobalt);border-color:color-mix(in srgb,var(--cobalt) 40%,transparent)}
@@ -1157,6 +1158,61 @@ document.addEventListener("click",(e)=>{
   if(b) runProduce(b.dataset.remake, b.dataset.remake);
 });
 
+/* ══ 시안 버리기 — 진행하다 만 것을 오너가 직접 치운다 (2026-08-12) ══
+ *
+ * ── 왜 필요한가
+ * 시안 상태로 멈춘 세트가 보관함·결재 대기에 확정본과 섞여 계속 쌓였다. 오너가 보기엔
+ * "안 할 건데 안 없어지는 것"이고, 지우려면 매번 작업 세션을 불러야 했다.
+ * 소재 보드에는 이미 🗑 이 있는데 **만들다 만 카드**에는 없었다.
+ *
+ * ── 무엇을 지우나 (그리고 무엇을 안 지우나)
+ *   지운다: data/review/sets.json 의 그 세트, data/review/builders.json 의 같은 label
+ *   안 지운다: 캡션·검수 리포트 파일, 빌더 스크립트
+ * 세트에서 빠지면 화면에서는 사라진다. 파일 삭제는 GitHub Contents DELETE 가 따로
+ * 필요한데 이 화면엔 선례가 없고, 되돌리기도 어렵다 — **세트에서 내리는 것까지만** 한다.
+ * 진짜로 지워야 하면 작업 세션이 한다. 되돌리려면 git 이력에 그대로 있다.
+ *
+ * ⚠️ 빌더도 같이 내려야 한다. 세트만 빼면 guard.yml 의 세트↔빌더 정합 검사에
+ * 고아 빌더가 남고, 보관함에 🔁 다시 제작 버튼이 유령으로 남는다.
+ */
+function dropSet(label, title){
+  if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
+  if(!confirm("시안을 보관함에서 내립니다.\n\n  "+title+"\n\n카드 파일은 지우지 않습니다(저장소 이력에 남습니다).\n계속할까요?")) return;
+  const why=prompt("왜 접나요? (회사가 학습합니다 — 비워도 됩니다)\n예: 시의성 지남 / 데이터가 약함 / 방향을 바꿈","")
+  if(why===null) return;                       // 취소 — 아무것도 건드리지 않는다
+  const w=String(why).trim();
+  setSave("saving"); jobStart("drop-"+label,"시안 내리기");
+  GH.serial(async()=>{
+    /* 두 파일을 잇달아 고친다. sets.json 이 먼저다 — 여기서 빠지면 화면에서 사라진다.
+       builders.json 이 실패해도 화면은 이미 정리된 상태라 다음에 이어서 고칠 수 있다. */
+    for(const spec of [{p:"data/review/sets.json",k:"sets"},{p:"data/review/builders.json",k:"builders"}]){
+      for(let i=0;i<5;i++){
+        const cur=await GH.getFile(spec.p);
+        let doc; try{ doc=JSON.parse(cur.text); }catch(e){ throw new Error(spec.p+" 파싱 실패"); }
+        const arr=Array.isArray(doc[spec.k])?doc[spec.k]:[];
+        const next=arr.filter(x=>x&&x.label!==label);
+        if(next.length===arr.length) break;     // 이미 없다 — 이 파일은 건너뛴다
+        doc[spec.k]=next;
+        try{ await GH.putFile(spec.p, JSON.stringify(doc,null,2)+"\n", "관제탑: 시안 내리기 — "+title, cur.sha); break; }
+        catch(e){ if(!GH.isConflict(e)||i===4) throw e;
+          await new Promise(r=>setTimeout(r,400*Math.pow(2,i))); }
+      }
+    }
+  })
+    .then(()=>GH.append("research/decisions-inbox.md",
+        "- "+ghStamp()+" 🗑 시안 내림: "+title+" ("+label+")"+(w?" — 이유: "+w:""), "관제탑: 시안 내리기"))
+    .then(()=>{
+      setSave("ok"); jobEnd("drop-"+label,"내렸습니다 — 다음 배포에서 화면에서 사라집니다");
+      const el=document.querySelector('.fitem[data-flabel="'+label+'"]');
+      if(el){ el.style.opacity=".35"; el.style.pointerEvents="none"; }
+    })
+    .catch(e=>{ const m=shortErr(e); setSave("bad","sets.json · "+m); jobEnd("drop-"+label, m, true); });
+}
+document.addEventListener("click",(e)=>{
+  const b=e.target.closest&&e.target.closest(".fdrop");
+  if(b) dropSet(b.dataset.drop, b.dataset.dtitle||b.dataset.drop);
+});
+
 /* 드로어 */
 const drawer=document.getElementById("drawer"), scrim=document.getElementById("scrim");
 let cur=null;
@@ -1245,8 +1301,14 @@ function buildDetail(t){
   if(t.stage===4){
     /* 수정지시·반려 버튼은 뺐다(2026-07-30 축소) — 여기 적어도 "접수"만 되고
      * 실행은 채팅이 한다. 같은 말을 채팅에 하면 그 자리에서 고쳐서 다시 올라온다. */
+    /* 시안인 채로 멈춘 것은 여기서 바로 내릴 수 있다(2026-08-12). 확정·발행된 것엔 안 뜬다 —
+       결재 대기에 만들다 만 카드가 확정본과 섞여 쌓이던 걸 오너가 직접 치우는 자리다. */
     acts='<div class="pubnote">수정하거나 반려할 게 있으면 <b>채팅에</b> 말씀해주세요 — 고쳐서 다시 올립니다.</div>'
-      +'<button class="btn primary" data-act="publish">🚀 발행 승인</button>'+reasonBox();
+      +'<button class="btn primary" data-act="publish">🚀 발행 승인</button>'
+      +(t.setState==="시안"&&t.setLabel
+        ? '<button class="btn danger fdrop" data-drop="'+esc(t.setLabel)+'" data-dtitle="'+esc(t.title)+'">🗑 시안 내리기</button>'
+        : "")
+      +reasonBox();
   } else if(t.stage===5){
     /* 승인은 났다. 올리는 사람은 **오너**다(2026-07-27 결정: 자동 발행 안 함).
      * 그러니 여기서 화면이 할 일은 두 가지뿐이다 —
@@ -1493,8 +1555,14 @@ function renderIdeas(){
   const box=document.getElementById("ideaBody"); if(!box) return;
   const open=IDEAS.filter(isOpenIdea);
   let html="";
+  /* ⚠️ 칸을 못 찾은 소재가 **조용히 사라지던** 자리다(2026-08-12).
+   * 예전엔 i.cat===c.key 로만 갈라서, cat 이 비었거나 없는 칸 이름을 달고 들어온 소재는
+   * 어느 그룹에도 안 잡히고 화면에서 증발했다. 소재는 저장소에 멀쩡히 있는데 보드에만 없다.
+   * 갈 곳 없는 것은 **'🆕 분류 대기'(todo)** 로 모은다 — 첫 칸이나 마지막 칸에 밀어 넣지
+   * 않는다. 그러면 '매일'이나 '일회성'처럼 뜻이 있는 칸이 오염된다. */
+  const KNOWN=new Set(ICATS.map(c=>c.key));
   ICATS.forEach(c=>{
-    const list=open.filter(i=>i.cat===c.key);
+    const list=open.filter(i=>KNOWN.has(i.cat) ? i.cat===c.key : c.key==="todo");
     if(!list.length) return;
     html+='<div class="igrp"><h4>'+esc(c.label)+'<span class="c">'+list.length+'</span></h4>'
       +(c.note?'<p class="gnote">'+esc(c.note)+'</p>':"")
@@ -1806,9 +1874,12 @@ function archiveHtml(state: TowerState): string {
             w.files.png.map((p, i) => fileLink(p, `PNG ${i + 1}`)).join("");
           const rebuilt = (w.rebuilt?.content.length || 0) + (w.rebuilt?.png.length || 0);
           const shots = w.shots || [];
-          return `<details class="fitem">
+          /* 시안 = 만들다 만 것. 오너가 직접 내릴 수 있게 🗑 를 붙인다(2026-08-12).
+             확정·발행된 것에는 절대 안 붙인다 — 실수로 지울 자리를 만들지 않는다. */
+          const draft = (w.setState || "") === "시안" && w.state !== "발행됨";
+          return `<details class="fitem" data-flabel="${esc(w.label)}">
           <summary class="fsum">
-            ${w.thumb ? `<img class="fthumb" src="${esc(state.images[w.thumb] || "")}" alt="">`
+            ${w.thumb ? `<img class="fthumb" loading="lazy" src="${esc(state.images[w.thumb] || w.thumb)}" alt="">`
                       : '<span class="fthumb"></span>'}
             <span class="fmain"><span class="ft">${esc(w.title)}</span>
               <span class="fmeta num">${esc(w.date || "-")} · 카드 ${w.cards}장${
@@ -1816,7 +1887,7 @@ function archiveHtml(state: TowerState): string {
               }${w.captionChars ? ` · 캡션 ${w.captionChars}자` : " · 캡션 없음"}${
                 w.verdict ? ` · 검수 ${esc(w.verdict)}` : ""
               }</span></span>
-            <span class="fside">${badge(w.state)}</span>
+            <span class="fside">${draft ? '<span class="tagx draft">시안</span>' : ""}${badge(w.state)}</span>
           </summary>
           <div class="fbody">
             ${shots.length
@@ -1835,6 +1906,10 @@ function archiveHtml(state: TowerState): string {
               ? `<div class="fcap"><div class="eyebrow">업로드 캡션</div><pre class="cap">${esc(w.caption)}</pre>
                  <button class="ebtn fcopy" data-cap="${esc(w.label)}">캡션 복사</button></div>`
               : `<div class="howto-note">캡션이 아직 없습니다 — 발행하려면 <code>data/review/captions/${esc(w.label)}.txt</code>가 필요합니다.</div>`}
+            ${draft
+              ? `<div class="ract" style="margin:10px 0 2px"><button class="itool fdrop" data-drop="${esc(w.label)}" data-dtitle="${esc(w.title)}">🗑 시안 내리기</button>
+                 <span class="howto-note" style="align-self:center">보관함·결재 목록에서 빼냅니다. 카드 파일은 지우지 않아요 — 저장소 이력에 남습니다.</span></div>`
+              : ""}
             ${w.reviewSummary ? `<div class="frv">${esc(w.reviewSummary)}</div>` : ""}
             <div class="ffiles"><div class="eyebrow">저장소 원본</div>
               <div class="flinks">${files || '<span class="howto-note">저장소에 남는 파일 없음</span>'}</div>

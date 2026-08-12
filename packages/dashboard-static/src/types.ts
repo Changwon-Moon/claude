@@ -80,6 +80,8 @@ export interface Ticket {
   ideaId?: string;
   /** 발행 세트 라벨(sets.json) — 원본 내려받기 링크(download/{label}-{n}.jpg)를 만들 때 씀 */
   setLabel?: string;
+  /** sets.json 의 제작 상태 — "시안"이면 결재 화면에서 🗑 로 내릴 수 있다(2026-08-12) */
+  setState?: string;
 }
 
 export interface TeamCard {
@@ -154,8 +156,12 @@ export interface ArchiveWork {
   date: string;
   cards: number;
   pages: number;
-  /** 미승인 | 발행 대기 | 발행됨 */
+  /** 미승인 | 발행 대기 | 발행됨 — **발행** 상태다 */
   state: string;
+  /** sets.json 의 **제작** 상태(시안 · 오너 확정 · 발행 승인 · 발행 보류…).
+   *  위 `state`(발행 상태)와 뜻이 다르다 — "그림이 됐나"와 "올렸나"를 섞지 않는다.
+   *  관제탑은 이 값으로 시안을 가려내 🗑 삭제 버튼을 붙인다(2026-08-12). */
+  setState?: string;
   verdict: string;
   reviewSummary?: string;
   /** 캡션 전문 — 보관함에서 바로 읽고 복사한다 */
