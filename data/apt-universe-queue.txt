@@ -24,3 +24,8 @@ budget=200 min=1000
 #   먼저 목록(61회)만 확실히 받고 세대수로 넘어가도록 예산을 작게 잡는다.
 budget=250 min=1000
 
+# 2026-08-12: 목록 61/61 성공(8,062 단지). 오퍼레이션 확정 —
+#   목록 AptListService3/getSigunguAptList3 · 기본정보 AptBasisInfoServiceV4/getAphusBassInfoV4
+#   남은 건 세대수 8,062건. 한 번에 끝내도록 예산을 넉넉히.
+budget=8300 min=1000
+

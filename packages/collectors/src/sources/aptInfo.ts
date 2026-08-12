@@ -23,9 +23,8 @@ import { parseAptList, parseAptBasis, type AptListItem, type AptBasis } from "..
 const HOST = "https://apis.data.go.kr/1613000";
 
 /**
- * 시군구 단지목록 후보 — 새 판부터 옛 판 순.
- * 서비스 경로는 오너가 포털에서 확인해 줬다(2026-08-12): `.../1613000/AptListService3`.
- * 남은 미지는 **오퍼레이션 이름**뿐이라 그 후보만 돈다.
+ * 시군구 단지목록 — **`AptListService3/getSigunguAptList3` 로 확정**(2026-08-12 실측 성공,
+ * 서울·경기 61곳 8,062 단지 수신). 아래 후보는 포털이 판을 올릴 때를 위한 대비다.
  */
 const LIST_OPS = [
   "AptListService3/getSigunguAptList3",
@@ -35,7 +34,7 @@ const LIST_OPS = [
 ];
 
 /**
- * 단지 기본정보(세대수) 후보 — 오너 확인: `.../1613000/AptBasisInfoServiceV4` (**V4**).
+ * 단지 기본정보(세대수) — **`AptBasisInfoServiceV4/getAphusBassInfoV4` 로 확정**(2026-08-12 실측).
  * 처음에 V3 로 찍었다가 61개 지역 전부 "해당 오픈API 서비스가 없거나 폐기됨"을 맞았다.
  */
 const BASIS_OPS = [
