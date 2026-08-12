@@ -344,9 +344,13 @@ async function main() {
   for (const f of found) {
     if (f.statCode === chosen.statCode) continue;
     const s0 = /^\d{4}$/.test(f.start) ? `${f.start}01` : /^\d{6}$/.test(f.start) ? f.start : START;
-    const e0 = /^\d{4}$/.test(f.end) ? `${f.end}12` : /^\d{6}$/.test(f.end) ? f.end : end;
+    /* ⚠️ END_TIME 을 믿고 자르지 않는다 (2026-08-12).
+       구지표 표(101Y004)의 항목 메타는 `1986~2003` 이라고 답하는데 실제로는 지금도 발표된다
+       — 그 말을 믿고 잘랐다가 **구M2 계열이 2003년에서 끊긴 채로** 저장됐다.
+       한국은행이 2025년 말 통화지표를 개편(수익증권 제외 등)해 신·구 두 계열이 함께 도는 중이라
+       구계열은 카드의 기준 그 자체다. 끝은 **언제나 지금**까지 물어본다. */
     try {
-      const r = await fetchSeries(f.statCode, f.itemCode, e0 > end ? end : e0, s0);
+      const r = await fetchSeries(f.statCode, f.itemCode, end, s0);
       dataset.others[f.statCode] = {
         statName: f.statName,
         itemCode: f.itemCode,
