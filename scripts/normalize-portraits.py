@@ -27,12 +27,31 @@ from PIL import Image
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PHOTOS = os.path.join(ROOT, "templates/_shared/photos")
 
-# 출력 틀 — 3:4. 얼굴이 프레임 높이의 FACE_H 를, 얼굴 중심이 위에서 FACE_CY 지점에 오게 한다.
-OUT_W, OUT_H = 480, 640
-FACE_H = 0.40      # 얼굴(검출 상자) 높이 / 프레임 높이
-FACE_CY = 0.34     # 얼굴 중심의 세로 위치(프레임 대비)
+# 출력 틀 — 얼굴 크기와 위치를 **px 로 못박는다**(비율로 두면 틀 높이를 바꿀 때 얼굴까지 따라 움직인다).
+# 아래끝은 가슴선. 원본 중 화각이 가장 짧은 사진(윤석열 공식 초상)의 아래끝에 맞췄다 —
+# 그보다 길게 잡으면 그 한 장만 빈 채로 끝나 6인의 사진 크기가 안 맞는다(오너 지적 2026-08-12).
+OUT_W, OUT_H = 480, 586
+FACE_PX = 256      # 얼굴(검출 상자) 높이, px
+FACE_CY_PX = 218   # 얼굴 중심의 세로 위치, 프레임 위에서 px
 
 CASCADE = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+
+
+def clean_halo(rgb, alpha, a_thr=250, dark=70):
+    """**반투명한 검은 띠**를 지운다 — 누끼가 덜 지운 원본 배경이다.
+
+    노무현 초상은 머리 오른쪽 위에 회색 뿔이 붙어 나왔다(오너 지적 2026-08-12).
+    정체는 원본의 검은 배경 중 **알파가 덜 깎인 부분**이다(알파 평균 98, 색 RGB 14,15,14).
+    사람 본체는 알파가 254~255 로 꽉 차 있으므로, "**반투명하면서 거의 검은**" 픽셀만 지우면
+    머리카락은 건드리지 않고 배경 잔재만 사라진다. 지운 뒤 다시 largest_component 를 태우면
+    떨어져 나간 조각도 함께 정리된다.
+    """
+    kill = (alpha < a_thr) & (rgb.max(axis=2) < dark) & (alpha > 0)
+    if not kill.any():
+        return alpha, 0
+    out = alpha.copy()
+    out[kill] = 0
+    return out, int(kill.sum())
 
 
 def dekey_white(rgb, alpha, thr=238):
@@ -107,6 +126,7 @@ def process(slug):
     arr = np.array(im)
     rgb, alpha = arr[:, :, :3], arr[:, :, 3]
 
+    alpha, haloed = clean_halo(rgb, alpha)
     alpha, dekeyed = dekey_white(rgb, alpha)
     alpha, removed = largest_component(alpha)
 
@@ -118,11 +138,11 @@ def process(slug):
     fcx, fcy = fx + fw / 2.0, fy + fh / 2.0
 
     # 얼굴 높이가 OUT_H*FACE_H 가 되도록 하는 배율
-    scale = (OUT_H * FACE_H) / fh
+    scale = FACE_PX / fh
     # 원본에서 잘라낼 창의 크기
     cw, ch = OUT_W / scale, OUT_H / scale
     x0 = fcx - cw / 2.0
-    y0 = fcy - ch * FACE_CY
+    y0 = fcy - (FACE_CY_PX / scale)
 
     # 창이 원본 밖으로 나가면 투명으로 채운다(억지로 밀어 넣으면 얼굴 위치가 어긋난다)
     canvas = np.zeros((int(round(ch)), int(round(cw)), 4), dtype=np.uint8)
@@ -140,6 +160,7 @@ def process(slug):
     dst = os.path.join(PHOTOS, f"{slug}-face.png")
     out.save(dst)
     return (f"{slug}: ✅ 얼굴 {fw}x{fh} → 배율 {scale:.3f}"
+            + (f" · 검은잔재 {haloed}px 제거" if haloed else "")
             + (f" · 흰배경 {dekeyed}px 제거" if dekeyed else "")
             + (f" · 부스러기 {removed}px 제거" if removed else "")
             + f" → {os.path.basename(dst)}")

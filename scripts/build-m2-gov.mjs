@@ -48,14 +48,23 @@ const M2 = { ...PRE, ...OLD };
 
 /* ── 정부 구간 ──
    퇴임월은 사실이고(취임·퇴임일), 시작월은 위의 규칙이 정한다. */
+/* `end` = 데이터 구간의 끝(월). `from`/`to` = **실제 취임·퇴임일**.
+   ── 왜 둘을 나누나 (기획팀 지적 2026-08-12)
+   얼굴 아래 붙은 "N개월"을 독자는 무조건 **재임 기간**으로 읽는다. 그런데 데이터 구간은
+   월 단위로 끊여 실제 재임과 최대 2개월까지 어긋난다(문재인 데이터 62개월 vs 실제 60개월).
+   그대로 두면 **인쇄된 오보**다. 그래서 라벨은 취임·퇴임일에서 계산하고,
+   월평균은 종전대로 데이터 구간으로 나눈다 — 각자 자기 자를 쓴다. */
 const GOV = [
-  { name: "노무현", photo: "roh-moohyun-face.png", start: "200301", end: "200802" },
-  { name: "이명박", photo: "lee-myungbak-face.png", end: "201302" },
-  { name: "박근혜", photo: "park-geunhye-face.png", end: "201703" },
-  { name: "문재인", photo: "moon-jaein-face.png", end: "202205" },
-  { name: "윤석열", photo: "yoon-sukyeol4-face.png", end: "202504" },
-  { name: "이재명", photo: "lee-jaemyung-face.png", end: null }, // 재임 중 — 최신월까지
+  { name: "노무현", photo: "roh-moohyun-face.png", start: "200301", end: "200802", from: "2003-02-25", to: "2008-02-24" },
+  { name: "이명박", photo: "lee-myungbak-face.png", end: "201302", from: "2008-02-25", to: "2013-02-24" },
+  { name: "박근혜", photo: "park-geunhye-face.png", end: "201703", from: "2013-02-25", to: "2017-03-10" }, // 탄핵 파면
+  { name: "문재인", photo: "moon-jaein-face.png", end: "202205", from: "2017-05-10", to: "2022-05-09" },
+  { name: "윤석열", photo: "yoon-sukyeol4-face.png", end: "202504", from: "2022-05-10", to: "2025-04-04" }, // 탄핵 파면
+  { name: "이재명", photo: "lee-jaemyung-face.png", end: null, from: "2025-06-04", to: null }, // 재임 중 — 최신월 말까지
 ];
+
+/** 두 날짜 사이 개월(평균 월 길이로 환산 후 반올림). 취임·퇴임일이 월 중순이라 달력 차이는 애매하다 */
+const monthsBetween = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 86400000 / 30.4375);
 
 const months = Object.keys(M2).sort();
 const lastYm = months[months.length - 1];
@@ -69,7 +78,10 @@ for (let i = 0; i < GOV.length; i++) {
   if (!(end in M2)) throw new Error(`${g.name}: 끝월 ${end} 값이 없다`);
   const n = (+end.slice(0, 4) * 12 + +end.slice(4)) - (+start.slice(0, 4) * 12 + +start.slice(4));
   const delta = M2[end] - M2[start];
-  rows.push({ ...g, start, end, months: n, delta, rate: delta / n, running: !g.end });
+  /* 재임 개월 — 재임 중이면 데이터 최신월의 **말일**까지 센다 */
+  const endDate = g.to ?? new Date(Date.UTC(+end.slice(0, 4), +end.slice(4), 0)).toISOString().slice(0, 10);
+  const termMonths = monthsBetween(g.from, endDate);
+  rows.push({ ...g, start, end, months: n, termMonths, delta, rate: delta / n, running: !g.end });
 }
 
 /* 합이 전체와 맞는지 — 구간 정의가 어긋나면 여기서 드러난다 */
@@ -90,7 +102,7 @@ const maxRate = Math.max(...rows.map((r) => r.rate));
 /* ── 좌표 ──
    막대는 전부 플러스라 0선 위아래가 없다. 바닥선 하나에 세운다. */
 const INK = "#141821", RED = "#e5484d", GRAY = "#5b6b7f";
-const VB_W = 1000, VB_H = 594;
+const VB_W = 1000, VB_H = 652;
 /* 좌우 여백을 0 으로 둔다 — SVG 안쪽에 여백을 주면 **자가 두 개**가 된다.
    막대는 (여백 뺀 폭)을 6등분하는데 아래 인물 축은 카드 폭을 6등분하므로
    양끝 칸에서 인물이 자기 막대 아래에 안 선다(디자인팀 실측 ±22.9px, 2026-08-12).
@@ -115,22 +127,26 @@ const bars = rows.map((r, i) => {
   return { ...base, fill: r.delta === maxDelta ? RED : INK };
 });
 
-/* 총액 라벨 — 막대 위 */
+/* ── 무엇을 크게 보여줄 것인가 (오너 지시 2026-08-12)
+   **월평균 증가액이 더 중요한 지표다.** 임기 길이가 제각각(12~62개월)이라 총액만 나란히 두면
+   오래 재임한 정부가 자동으로 커 보인다. 그래서 **막대 위 큰 숫자 = 월평균**,
+   총 증가액은 막대 안으로 넣는다. (막대 높이는 그대로 총액 — 규모 자체도 사실이므로 버리지 않는다) */
 const values = rows.map((r, i) => ({
-  x: cx(i), y: r1(BASE - hOf(r.delta) - 22), text: `${Math.round(r.delta).toLocaleString("ko-KR")}조`,
-  fill: r.delta === maxDelta ? RED : INK,
+  x: cx(i), y: r1(BASE - hOf(r.delta) - 22), text: `월 ${r1(r.rate).toFixed(1)}조`,
+  fill: r.rate === maxRate ? RED : INK,
 }));
 
-/* 월평균 뱃지 — 막대 안 위쪽(알약). 총액과 다른 채널이라 '최고 속도'를 따로 강조한다 */
+/* 총 증가액 — 막대 안 위쪽(알약). 막대 높이가 뜻하는 바로 그 값이라 막대 안에 두는 게 맞다. */
 const PILL_W = BAR_W, PILL_H = 42;
 const rates = rows.map((r, i) => {
   const top = BASE - hOf(r.delta);
   return {
     x: r1(cx(i) - PILL_W / 2), y: r1(top + 16), w: PILL_W, h: PILL_H, r: PILL_H / 2,
-    /* 레드 막대 위에서는 흰 반투명이 묻힌다 — 바탕색에 맞춰 알약 바탕을 고른다 */
-    fill: r.rate === maxRate ? RED : r.delta === maxDelta ? "rgba(20,24,33,0.30)" : "rgba(255,255,255,0.16)",
+    /* 레드 막대 위에서는 흰 반투명이 묻히고, 점선(옅은) 막대 위에서는 흰 글자가 사라진다 —
+       바탕에 맞춰 알약 바탕을 고른다. 강조는 채널마다 한 곳: 위 숫자=최고 속도, 알약=최대 총액. */
+    fill: r.delta === maxDelta ? "rgba(20,24,33,0.34)" : r.running ? "rgba(20,24,33,0.62)" : "rgba(255,255,255,0.16)",
     tx: cx(i), ty: r1(top + 16 + PILL_H / 2 + 8),
-    text: `월 ${r1(r.rate).toFixed(1)}조`,
+    text: `${Math.round(r.delta).toLocaleString("ko-KR")}조`,
     tfill: "#ffffff",
   };
 });
@@ -140,18 +156,42 @@ const tags = rows
   .map((r, i) => (r.running ? { x: cx(i), y: r1(BASE - hOf(r.delta) - 80), text: "재임 중", fill: GRAY } : null))
   .filter(Boolean);
 
+const ymLabel = (ym) => `${ym.slice(0, 4)}.${ym.slice(4)}`;
+
+/* ── 재임 중인 칸 **위 빈 공간**에 최신월 한 달 증가를 2줄로 적는다 (오너 지시 2026-08-12)
+   이 카드의 배수가 이 한 달에 크게 기댄다 — 271개월 중 한 달 증가폭 1위다.
+   숨기면 나중에 지적당하고, 적으면 그 자체가 소식이 된다. 수치는 계산값. */
+const runIdx = rows.findIndex((r) => r.running);
+const lastDelta = M2[lastYm] - M2[months[months.indexOf(lastYm) - 1]];
+/* 글자가 카드 밖으로 나가지 않게 **자리를 계산해서** 정한다.
+   가운데 정렬로 두면 맨 오른쪽 칸에서 잘린다(1차 렌더에서 실제로 잘렸다).
+   SVG 안 글자는 designQa 의 넘침 검사 대상이 아니라 — 검수가 안 잡아 준다 — 빌더가 책임진다. */
+const calloutLines = runIdx >= 0
+  ? [`${ymLabel(lastYm)} 한 달`, `${r1(lastDelta).toFixed(1)}조 증가`]
+  : [];
+const CALLOUT_FS = 32;
+const calloutW = Math.max(...calloutLines.map((t) => t.length * CALLOUT_FS * 0.56), 0);
+const callouts = runIdx >= 0
+  ? [{
+      x: cx(runIdx) + calloutW / 2 > VB_W - 6 ? VB_W - 6 : cx(runIdx),
+      anchor: cx(runIdx) + calloutW / 2 > VB_W - 6 ? "end" : "middle",
+      y: r1(BASE - hOf(rows[runIdx].delta) - 176),
+      lines: calloutLines,
+      fill: RED,
+    }]
+  : [];
+
 const grid = [0.25, 0.5, 0.75, 1].map((f) => ({ x1: LEFT, x2: RIGHT, y: r1(BASE - (BASE - TOP) * f) }));
 
-const ymLabel = (ym) => `${ym.slice(0, 4)}.${ym.slice(4)}`;
 const kstToday = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const date = process.argv[2] || kstToday;
 
 const card = {
   template: "gov-bars@1",
   date,
-  badge: `역대 정부 통화량 (${date.replace(/-/g, ".")})`,
+  /* 상단 캡션 = 이 카드의 **기준**. 날짜를 적던 자리인데, 이 소재는 "어느 M2 냐"가 숫자의 뜻을 바꾼다(오너 지시). */
+  badge: `M2(광의통화) 개편 전 기준·${ymLabel(rows[0].start)}~${ymLabel(lastYm)}`,
   title: `역대 정부 <span class="hi">통화량 증가 규모</span>`,
-  subtitle: `M2(광의통화) 개편 전 기준·${ymLabel(rows[0].start)}~${ymLabel(lastYm)}`,
   axisCount: N,
   axisGap: "0px", // 막대 칸과 같은 자를 쓴다(gap 을 주면 인물이 막대에서 밀린다)
   chart: {
@@ -162,11 +202,12 @@ const card = {
     values,
     rates,
     tags,
+    callouts,
     faces0: BASE,
   },
   faces: rows.map((r) => ({
     name: r.name,
-    term: `${r.months}개월`,
+    term: `재임 ${r.termMonths}개월`, // "재임"을 붙여 데이터 구간이 아니라 임기임을 못박는다
     photo: r.photo ?? undefined,
     hot: r.rate === maxRate,
   })),
@@ -178,7 +219,9 @@ const card = {
     verified: true,
     provenance: `${raw.meta.provenance} + ${raw.legacyM2.itemCode}(${raw.legacyM2.itemName}) + 101Y004`,
     basis: "개편 전 기준(구 M2). 2025-12-30 한국은행 통화지표 개편으로 수익증권 제외 — 신 기준은 현 정부 구간만 축소되어 역대 비교가 어긋난다",
-    segments: rows.map((r) => ({ name: r.name, start: r.start, end: r.end, months: r.months, delta: r1(r.delta), rate: r1(r.rate) })),
+    segments: rows.map((r) => ({ name: r.name, start: r.start, end: r.end, months: r.months, termMonths: r.termMonths, delta: r1(r.delta), rate: r1(r.rate) })),
+    /* 최신월 한 달 증가 — 이 카드의 배수가 이 달에 크게 기댄다는 사실을 데이터로 남긴다(오너 인지 2026-08-12) */
+    lastMonthDelta: r1(M2[lastYm] - M2[months[months.indexOf(lastYm) - 1]]),
     overlapCheckMaxDiff: r1(worst),
   },
 };
@@ -189,6 +232,6 @@ writeFileSync(join(outDir, "m2-gov.json"), JSON.stringify(card, null, 2) + "\n",
 
 console.log(`m2-gov — 개편 전 기준(구 M2) · ${ymLabel(rows[0].start)}~${ymLabel(lastYm)} · 겹침대조 최대차 ${worst.toFixed(2)}조`);
 for (const r of rows) {
-  console.log(`  ${r.name}  ${ymLabel(r.start)}→${ymLabel(r.end)}  ${r.months}개월  ${Math.round(r.delta)}조  월 ${r1(r.rate).toFixed(1)}조${r.photo ? "" : "  (사진 없음)"}`);
+  console.log(`  ${r.name}  ${ymLabel(r.start)}→${ymLabel(r.end)}  데이터 ${r.months}개월 / 재임 ${r.termMonths}개월  ${Math.round(r.delta)}조  월 ${r1(r.rate).toFixed(1)}조${r.photo ? "" : "  (사진 없음)"}`);
 }
 console.log(`  합 ${Math.round(sum)}조 = 전체 ${Math.round(whole)}조`);
