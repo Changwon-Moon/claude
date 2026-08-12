@@ -113,8 +113,16 @@ async function main() {
   //    실거래 API 가 느려지며 이 구멍이 드러났다).
   let failed = 0;
   const failNotes: string[] = [];
+  // ⚠️ **연달아 실패하면 빨리 접는다.** 2026-08-12 첫 실전 실행이 35분을 매달려 있었다 —
+  //    매일 아침 도는 일이 30분씩 붙들려 있으면 그건 실패보다 나쁘다(아무 말도 안 하니까).
+  //    엔드포인트 하나가 죽으면 122번을 전부 재시도하며 30분을 태운다. 6번 연속이면 접고
+  //    **왜 접었는지 말한다.**
+  const FAIL_STREAK_STOP = 6;
+  let failStreak = 0;
+  let bailed = false;
 
   for (const { gu, lawdCd } of regions) {
+    if (bailed) break;
     const peakPath = join(peakDir, `${lawdCd}.json`);
     if (!existsSync(peakPath)) { skipped.push(`${gu} (인덱스 없음)`); continue; }
     const idx: PeakIndex = JSON.parse(readFileSync(peakPath, "utf8"));
@@ -132,9 +140,11 @@ async function main() {
 
     const fresh: AptTrade[] = [];
     for (const ym of months) {
+      if (bailed) break;
       try {
         const raw = await fetchAptTradesMonth(lawdCd, ym, key);
         fetched++;
+        failStreak = 0;
         fresh.push(...raw);
         if (!done.has(ym)) { idx.meta.doneMonths.push(ym); done.add(ym); }
       } catch (e) {
@@ -142,6 +152,11 @@ async function main() {
         const msg = e instanceof Error ? e.message : String(e);
         if (failNotes.length < 5) failNotes.push(`${gu} ${ym}: ${msg.slice(0, 120)}`);
         console.error(`⚠️ ${gu} ${ym} 수집 실패: ${msg}`);
+        if (++failStreak >= FAIL_STREAK_STOP) {
+          bailed = true;
+          console.error(`⛔ ${FAIL_STREAK_STOP}번 연속 실패 — 실거래 API 가 응답하지 않는 것으로 보고 여기서 접습니다.\n   (계속 두드리면 30분을 태우고도 결과는 같습니다)`);
+          break;
+        }
       }
       await new Promise((r) => setTimeout(r, 100));
     }
@@ -200,6 +215,7 @@ async function main() {
           fetchTried: fetched + failed,
           fetchFailed: failed,
           fetchFailNotes: failNotes,
+          bailedOut: bailed,
           verified: true,
           source: "국토교통부 아파트 매매 실거래가 상세자료 · 공동주택 기본 정보(세대수)",
           note:
@@ -228,7 +244,9 @@ async function main() {
   // 수집이 반이라도 실패했으면 **0건이든 몇 건이든 그 사실을 먼저 말한다.**
   // 조용한 실패는 "오늘은 신고가가 없었구나"로 읽혀 그대로 오보가 된다.
   if (failed > 0) {
-    const head = `⚠️ 수집 실패 ${failed}/${fetched + failed}건 — 오늘 판정은 불완전합니다`;
+    const head = bailed
+      ? `⛔ 실거래 API 가 응답하지 않아 수집을 중단했습니다 (${failed}번 연속 실패) — 오늘 판정은 없습니다`
+      : `⚠️ 수집 실패 ${failed}/${fetched + failed}건 — 오늘 판정은 불완전합니다`;
     if (lines.length) lines.splice(1, 0, head);
     else lines.push(`${head} (${today})`, "", ...failNotes.map((n) => `· ${n}`));
   }
