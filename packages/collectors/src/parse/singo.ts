@@ -160,6 +160,19 @@ export function foldPeaks(peaks: Record<string, PeakEntry>, lawdCd: string, trad
   return updated;
 }
 
+/**
+ * **10억 단위 돌파** — 직전 최고가가 못 넘던 10억 선을 이번 거래가 넘었나 (2026-08-12 오너).
+ * 넘었으면 그 선(억 단위, 예: 30), 아니면 null.
+ *
+ * 왜 따로 재나: "신고가"는 1만원만 높아도 신고가다. 그런데 **"처음으로 30억을 넘었다"**는
+ * 사람이 기억하는 사건이다. 같은 신고가라도 소식의 크기가 다르다.
+ * 실측(2026-07): 신고가 1,098건 중 돌파는 58건 — 20분의 1로 걸러진다.
+ */
+export function milestoneCrossed(prevManwon: number, nowManwon: number): number | null {
+  const line = (m: number) => Math.floor(m / 100_000); // 10억 = 100,000만원
+  return line(nowManwon) > line(prevManwon) ? line(nowManwon) * 10 : null;
+}
+
 export interface SingoHit extends TradeLike {
   type: "59" | "84";
   pyeong: string; // "25평" · "34평"
@@ -168,6 +181,7 @@ export interface SingoHit extends TradeLike {
   prevPeakManwon: number;
   prevPeakDate: string;
   gainPct: number | null; // 직전 최고가 대비 상승률(%)
+  milestone: number | null; // 넘어선 10억 선(억). 안 넘었으면 null
 }
 
 /**
@@ -220,6 +234,7 @@ export function findSingo(
       prevPeakManwon: base.priceManwon,
       prevPeakDate: base.date,
       gainPct: base.priceManwon > 0 ? ((t.priceManwon - base.priceManwon) / base.priceManwon) * 100 : null,
+      milestone: milestoneCrossed(base.priceManwon, t.priceManwon),
     });
   }
   return hits;

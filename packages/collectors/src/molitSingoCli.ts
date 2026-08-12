@@ -165,8 +165,12 @@ async function main() {
   // 카드(「잠실 리센츠 33평 36.95억」)가 말하는 소식은 그쪽이 아니다. 갱신폭은 데이터에
   // 그대로 남겨 두어(카드가 "직전 최고가 대비 +X%"로 쓸 수 있다) 언제든 바꿀 수 있게 한다.
   const sortBy = arg("sort") ?? "price";
-  if (sortBy === "gain") hits.sort((a, b) => (b.gainPct ?? 0) - (a.gainPct ?? 0));
-  else hits.sort((a, b) => b.priceManwon - a.priceManwon);
+  const byMetric = (a: SingoHit, b: SingoHit) =>
+    sortBy === "gain" ? (b.gainPct ?? 0) - (a.gainPct ?? 0) : b.priceManwon - a.priceManwon;
+  // ⚠️ **10억 돌파는 언제나 위로.** 상위 10건만 이름이 나가는데, "처음으로 30억을 넘었다"가
+  //    더 비싼 평범한 신고가에 밀려 잘리면 그날의 진짜 소식을 놓친다.
+  hits.sort((a, b) => (a.milestone ? 0 : 1) - (b.milestone ? 0 : 1) || byMetric(a, b));
+  const milestones = hits.filter((h) => h.milestone);
 
   mkdirSync(R("data/datasets"), { recursive: true });
   writeFileSync(
@@ -184,6 +188,7 @@ async function main() {
           baselineFrom: BASELINE_FROM,
           baselineLabel: baselineLabel(),
           sortBy,
+          milestoneCount: milestones.length,
           verified: true,
           source: "국토교통부 아파트 매매 실거래가 상세자료 · 공동주택 기본 정보(세대수)",
           note:
@@ -199,10 +204,13 @@ async function main() {
   // 알림 문구 — 오너 요청: **단지명 + 평 + 실거래가**
   const lines: string[] = [];
   if (hits.length) {
-    lines.push(`🔥 오늘의 신고가 ${hits.length}건 (${today} · ${baselineLabel()} 최고가 기준)`);
+    lines.push(
+      `🔥 오늘의 신고가 ${hits.length}건${milestones.length ? ` (10억 돌파 ${milestones.length}건)` : ""} (${today} · ${baselineLabel()} 최고가 기준)`,
+    );
     lines.push("");
     for (const h of hits.slice(0, topN)) {
-      lines.push(`· ${h.aptNm} ${h.pyeong} ${manwonToEok(h.priceManwon)}`);
+      // 10억 단위 돌파는 사람이 기억하는 사건이라 한 마디 붙인다 — 나머지는 오너 요청대로 단지명+평+가격만.
+      lines.push(`· ${h.aptNm} ${h.pyeong} ${manwonToEok(h.priceManwon)}${h.milestone ? ` 🎉 ${h.milestone}억 돌파` : ""}`);
     }
     if (hits.length > topN) lines.push(`… 외 ${hits.length - topN}건`);
   }

@@ -81,6 +81,7 @@ import {
   foldPeaks as singoFoldPeaks,
   findSingo as singoFindSingo,
   manwonToEok as singoEok,
+  milestoneCrossed as singoMilestone,
   baselineLabel as singoBaseline,
   BASELINE_FROM as SINGO_FROM,
 } from "./parse/singo.js";
@@ -971,6 +972,13 @@ console.log("\n[청약홈 분양정보 파서]");
   check("남양주시는 '양주'와 다르다 — 들어 있어야 한다", regs.some((r) => r.gu === "남양주시"));
   check("성남 3개구가 모두 들어 있다", regs.filter((r) => r.gu.startsWith("성남시")).length === 3);
   check("지역 코드는 5자리 법정동 코드", regs.every((r) => /^\d{5}$/.test(r.lawdCd)));
+  // 10억 단위 돌파 — "신고가"와 "처음으로 30억을 넘었다"는 소식의 크기가 다르다
+  check("29.9억 → 30억은 30억 돌파", singoMilestone(299000, 300000) === 30, String(singoMilestone(299000, 300000)));
+  check("30.1억 → 30.5억은 돌파 아님", singoMilestone(301000, 305000) === null, String(singoMilestone(301000, 305000)));
+  check("29.9억 → 41억은 40억 돌파(두 선을 한 번에)", singoMilestone(299000, 410000) === 40, String(singoMilestone(299000, 410000)));
+  check("9.9억 → 10억은 10억 돌파", singoMilestone(99000, 100000) === 10, String(singoMilestone(99000, 100000)));
+  check("경계 직전은 돌파 아님", singoMilestone(99000, 99900) === null, String(singoMilestone(99000, 99900)));
+
   // 기준선 문구는 **값에서 자동으로 나와야 한다** — 사람이 따로 적으면 기간을 바꾼 날 어긋난다
   check("기준선 시작월은 2020-01 (오너 결정)", SINGO_FROM === "202001", SINGO_FROM);
   check("기준선 문구가 값에서 나온다", singoBaseline("202001") === "2020년 이후", singoBaseline("202001"));
