@@ -690,6 +690,11 @@ const GH={
     }catch(e){ return {sha:null,text:"",at:ref}; } },
   putFile(path,text,message,sha){ const b64=btoa(unescape(encodeURIComponent(text)));
     return this.api("/repos/"+this.owner+"/"+this.repo+"/contents/"+path,{method:"PUT",body:{message:message,content:b64,branch:this.branch,sha:sha||undefined}}); },
+  /* 파일 삭제 — sha 가 있어야만 지운다(없으면 이미 없는 파일이다).
+     되돌리기는 git 이력에 있다. 지우기 전에 반드시 사람이 확인한다. */
+  deleteFile(path,message,sha){
+    return this.api("/repos/"+this.owner+"/"+this.repo+"/contents/"+path,
+      {method:"DELETE",body:{message:message,branch:this.branch,sha:sha}}); },
   /** 쓰기 직후 GitHub이 옛 sha를 돌려줘 409가 나는 경우가 있다 → 다시 읽어 재시도 */
   isConflict(e){ return /\b409\b|\b422\b|does not match/i.test(e&&e.message||""); },
   /**
@@ -1215,9 +1220,100 @@ function dropSet(label, title, state){
     })
     .catch(e=>{ const m=shortErr(e); setSave("bad","sets.json · "+m); jobEnd("drop-"+label, m, true); });
 }
+/* ══ 완전 삭제 ══ (2026-08-13 오너: "관제탑에서 완전 삭제 가능하도록")
+ *
+ * [🗑 내리기]는 목록(sets/builders)에서만 뺀다 — 파일은 남는다. 그것만으로는
+ * data/content 와 캡션이 계속 쌓여, 다음 사람이 "이건 뭐지" 하고 다시 뒤진다.
+ * 그래서 **파일까지 지우는 길**을 따로 낸다. 두 버튼은 뜻이 다르므로 이름도 색도 나눈다.
+ *
+ * 지우는 것 : 카드 JSON · 저장소에 있는 PNG · 캡션 · 검수 리포트
+ *             + sets.json · builders.json · pixel-baselines.json 의 그 항목
+ * 안 지우는 것 : published/ (발행 이력은 사실의 기록이다) · 빌더 스크립트
+ *                (다른 세트가 쓸 수 있다 — 지우려면 작업 세션이 확인하고 지운다)
+ *
+ * 안전장치 셋:
+ *   ① 발행된 것은 아예 막는다 — 나간 물건의 기록을 화면에서 지울 수 없어야 한다
+ *   ② 지울 파일 목록을 **먼저 보여준다**
+ *   ③ "삭제"라고 직접 입력해야 진행한다(오타로 눌리지 않게)
+ * 되돌리기는 git 이력에 있다.
+ */
+function setFilesOf(label){
+  for(const f of (STATE.archive||[]))
+    for(const w of (f.items||[])) if(w.label===label) return w;
+  return null;
+}
+function purgeSet(label, title){
+  if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
+  const w=setFilesOf(label);
+  if(!w){ toast("이 세트의 파일 목록을 못 찾았습니다 — 채팅에 말씀해주세요"); return; }
+  if(w.state==="발행됨"){
+    alert("이미 발행된 건은 화면에서 지울 수 없습니다.\n\n  "+title
+      +"\n\n나간 물건의 기록(published/)은 사실이라 남겨야 합니다.\n정말 지워야 하면 채팅에 말씀해주세요.");
+    return;
+  }
+  const paths=[]
+    .concat(w.files&&w.files.content||[])
+    .concat(w.files&&w.files.png||[])
+    .concat((w.files&&w.files.caption)?[w.files.caption]:[])
+    .concat((w.files&&w.files.review)?[w.files.review]:[]);
+  if(!paths.length){
+    alert("저장소에 지울 파일이 없습니다(카드는 매번 다시 그려지는 종류입니다).\n목록에서만 내리려면 [🗑] 를 쓰세요.");
+    return;
+  }
+  if(!confirm("완전 삭제합니다 — 파일까지 지웁니다.\n\n  "+title+"\n\n지울 파일 "+paths.length+"개:\n· "
+    +paths.slice(0,8).join("\n· ")+(paths.length>8?"\n· … 외 "+(paths.length-8)+"개":"")
+    +"\n\n그리고 sets.json · builders.json · pixel-baselines.json 에서도 뺍니다."
+    +"\n(되돌리려면 git 이력에서 꺼냅니다)\n\n계속할까요?")) return;
+  const typed=prompt("정말 지우려면 아래 칸에 \u0027삭제\u0027 라고 입력하세요.","");
+  if(String(typed||"").trim()!=="삭제"){ toast("취소했습니다"); return; }
+  const why=prompt("왜 지우나요? (회사가 학습합니다 — 비워도 됩니다)","");
+  if(why===null) return;
+  const w2=String(why).trim();
+
+  setSave("saving"); jobStart("purge-"+label,"완전 삭제");
+  GH.serial(async()=>{
+    /* 1) 파일부터 지운다 — 목록(sets)을 먼저 지우면 실패했을 때 고아 파일만 남는다 */
+    for(const path of paths){
+      const cur=await GH.getFile(path);
+      if(!cur.sha) continue;                       // 이미 없다
+      await GH.deleteFile(path, "관제탑: 완전 삭제 — "+title, cur.sha);
+    }
+    /* 2) 명세 세 곳에서 뺀다 */
+    const specs=[{p:"data/review/sets.json",k:"sets"},
+                 {p:"data/review/builders.json",k:"builders"},
+                 {p:"data/review/pixel-baselines.json",k:"cards"}];
+    for(const spec of specs){
+      for(let i=0;i<5;i++){
+        const cur=await GH.getFile(spec.p);
+        if(!cur.sha) break;
+        let doc; try{ doc=JSON.parse(cur.text); }catch(e){ throw new Error(spec.p+" 파싱 실패"); }
+        const arr=Array.isArray(doc[spec.k])?doc[spec.k]:[];
+        const next=arr.filter(x=>x&&x.label!==label);
+        if(next.length===arr.length) break;
+        doc[spec.k]=next;
+        try{ await GH.putFile(spec.p, JSON.stringify(doc,null,2)+"\n", "관제탑: 완전 삭제 — "+title, cur.sha); break; }
+        catch(e){ if(!GH.isConflict(e)||i===4) throw e;
+          await new Promise(r=>setTimeout(r,400*Math.pow(2,i))); }
+      }
+    }
+  })
+    .then(()=>GH.append("research/decisions-inbox.md",
+        "- "+ghStamp()+" 🧨 완전 삭제: "+title+" ("+label+") — 파일 "+paths.length+"개"
+        +(w2?" · 이유: "+w2:""), "관제탑: 완전 삭제"))
+    .then(()=>{
+      setSave("ok"); jobEnd("purge-"+label,"지웠습니다 — 다음 배포에서 화면에서도 사라집니다");
+      const el=document.querySelector('.fitem[data-flabel="'+label+'"]');
+      if(el){ el.style.opacity=".35"; el.style.pointerEvents="none"; }
+      closeDrawer();
+    })
+    .catch(e=>{ const m=shortErr(e); setSave("bad","완전 삭제 · "+m); jobEnd("purge-"+label, m, true); });
+}
+
 document.addEventListener("click",(e)=>{
   const b=e.target.closest&&e.target.closest(".fdrop");
   if(b) dropSet(b.dataset.drop, b.dataset.dtitle||b.dataset.drop, b.dataset.dstate||"");
+  const p=e.target.closest&&e.target.closest(".fpurge");
+  if(p) purgeSet(p.dataset.purge, p.dataset.ptitle||p.dataset.purge);
 });
 
 /* 드로어 */
@@ -1318,7 +1414,9 @@ function buildDetail(t){
       +(t.setLabel
         ? '<button class="btn danger fdrop" data-drop="'+esc(t.setLabel)+'"'
           +' data-dtitle="'+esc(t.title)+'" data-dstate="'+esc(t.setState||"")+'">'
-          +(t.setState==="시안"?"🗑 시안 내리기":"🗑 목록에서 삭제")+'</button>'
+          +(t.setState==="시안"?"🗑 시안 내리기":"🗑 목록에서 내리기")+'</button>'
+          +'<button class="btn danger fpurge" data-purge="'+esc(t.setLabel)+'"'
+          +' data-ptitle="'+esc(t.title)+'">🧨 완전 삭제(파일까지)</button>'
         : '<div class="pubnote">이 건은 세트 라벨이 없어 화면에서 내릴 수 없습니다 — 채팅에 말씀해주세요.</div>')
       +reasonBox();
   } else if(t.stage===5){
@@ -1921,6 +2019,12 @@ function archiveHtml(state: TowerState): string {
             ${draft
               ? `<div class="ract" style="margin:10px 0 2px"><button class="itool fdrop" data-drop="${esc(w.label)}" data-dtitle="${esc(w.title)}">🗑 시안 내리기</button>
                  <span class="howto-note" style="align-self:center">보관함·결재 목록에서 빼냅니다. 카드 파일은 지우지 않아요 — 저장소 이력에 남습니다.</span></div>`
+              : ""}
+            ${/* 완전 삭제는 **발행 전**이면 상태와 무관하게 붙인다(2026-08-13 오너).
+                  발행된 건에는 절대 안 붙인다 — 나간 물건의 기록은 지울 자리를 만들지 않는다. */
+              w.state !== "발행됨"
+              ? `<div class="ract" style="margin:6px 0 2px"><button class="itool fpurge" data-purge="${esc(w.label)}" data-ptitle="${esc(w.title)}">🧨 완전 삭제(파일까지)</button>
+                 <span class="howto-note" style="align-self:center">카드·캡션·검수 리포트 파일을 저장소에서 지웁니다. 되돌리려면 git 이력에서 꺼냅니다.</span></div>`
               : ""}
             ${w.reviewSummary ? `<div class="frv">${esc(w.reviewSummary)}</div>` : ""}
             <div class="ffiles"><div class="eyebrow">저장소 원본</div>

@@ -368,6 +368,21 @@ if (dlTicket) {
   /* 결재 대기의 **삭제 버튼**(2026-08-13 오너: "삭제하고 싶은데 기능이 없네?").
      처음엔 시안 상태에만 달려 있어 정작 쌓여 있던 확정·승인대기 건을 화면에서 못 치웠다.
      세트 라벨이 있는 건이면 상태와 무관하게 떠야 한다 — 없으면 대기열이 장부 구실을 못 한다. */
+  /* 완전 삭제(2026-08-13 오너: "관제탑에서 완전 삭제 가능하도록").
+     목록에서 내리는 것과 파일까지 지우는 것은 뜻이 다르다 — 버튼도 둘이어야 한다. */
+  check("결재 대기에 [🧨 완전 삭제] 버튼", await q(`(function(){
+    var b=document.querySelector('#drawer .fpurge');
+    return !!b && !!b.dataset.purge && /완전 삭제/.test(b.textContent||"");
+  })()`));
+  check("완전 삭제는 파일 목록을 알고 있다(STATE.archive)", await q(`(function(){
+    var b=document.querySelector('#drawer .fpurge'); if(!b) return false;
+    var lb=b.dataset.purge, w=null;
+    (STATE.archive||[]).forEach(function(f){ (f.items||[]).forEach(function(x){ if(x.label===lb) w=x; }); });
+    if(!w||!w.files) return false;
+    var n=(w.files.content||[]).length+(w.files.png||[]).length
+      +(w.files.caption?1:0)+(w.files.review?1:0);
+    return n>0;
+  })()`));
   check("결재 대기에 [🗑 내리기] 버튼(상태 무관)", await q(`(function(){
     var b=document.querySelector('#drawer .fdrop');
     if(!b) return false;
