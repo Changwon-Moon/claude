@@ -43,3 +43,4 @@
 - [ ] [26.08.08(토) 관제탑] **신분당선 역세권 34평 APT 시세 (2026.01~07)** · sinbundang-loop · 원본 data/content/2026-07-31/sinbundang-loop.json
 - [ ] [26.08.08(토) 관제탑] **서울 아파트 매매 연속 상승 · 상승폭 文정부의 2배 (주간)** · streak-line · 원본 data/content/2026-08-08/mae-streak.json
 - [ ] [26.08.10(월) 관제탑] **🌏 서울 자치구별 외국인 거주비율 (국적별)** · foreign-rank · 원본 data/content/2026-08-10/foreign-rank-p1.json
+- [ ] [26.08.13(목) 관제탑] **💵 역대 정부 통화량 증가 규모 — 지금이 가장 빠르다** · gov-bars · 원본 data/content/2026-08-13/m2-gov.json
