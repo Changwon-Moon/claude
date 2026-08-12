@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* =========================================================
+         gov-bars@1 — 정부별 세로 막대 + 인물 사진 축 (2026-08-12)
+
+         무엇을 그리나: 정권 단위로 끊은 한 지표의 **누적 증가폭**을 세로 막대로 세우고,
+         가로축 자리에 그 정부의 인물 사진과 이름을 놓는다. 첫 사용: 역대 정부 M2 증가 규모.
+
+         왜 year-bars 를 안 쓰나: year-bars@2 는 **연도별 변화율**용이라 0선 위아래로
+         갈리고 지수 곡선이 얹힌다. 여기는 전부 플러스 누적값이고 0선 아래가 없다.
+         남의 판형에 억지로 끼우면 안 쓰는 요소가 유령처럼 남는다.
+
+         구조: [뱃지] → [제목 1줄 가운데] → [부제] → [SVG 플롯: 막대·총액·월평균 뱃지]
+               → [인물 축: 사진 + 이름 + 개월] → [푸터]
+
+         · 좌표는 전부 **빌더가 계산한다.** 템플릿은 그리기만 한다(TEMPLATES 규칙).
+         · 색: 이 카드는 전부 '늘어난 양'이라 방향 색(레드=오름)이 변별력을 잃는다.
+           그래서 막대는 잉크 단색이고 **레드는 강조 한 곳**에만 쓴다(최대 막대).
+           월평균 뱃지는 다른 채널이라 '최고 속도' 한 칸만 레드로 따로 준다.
+         ========================================================= */
+      .gb { display: flex; flex-direction: column; }
+      .gb-badge {
+        font-family: var(--font-num); font-size: 34px; font-weight: 900;
+        color: var(--wirit-gray); letter-spacing: 0.005em;
+      }
+      /* 제목은 우상단 로고 뱃지 아래에서 시작한다(다른 카드와 같은 규칙). */
+      .gb-head { padding: 0; margin: 34px 0 0; }
+      .gb .wirit-title {
+        font-size: 92px; line-height: 1.02; text-align: center; white-space: nowrap;
+        margin: 0; letter-spacing: -0.04em;
+      }
+      .gb .wirit-title .hi { color: var(--wirit-red); }
+
+      /* 부제 — 기준을 밝히는 줄. 이 카드는 '어느 M2 냐'가 숫자의 뜻을 바꾼다. */
+      .gb-sub {
+        margin: 16px 0 0; text-align: center;
+        font-family: var(--font-sans); font-size: 27px; font-weight: 700;
+        color: var(--wirit-gray); letter-spacing: -0.03em;
+      }
+
+      .gb-chart { flex: 1 1 auto; display: flex; align-items: flex-end; margin: 24px 0 0; }
+      .gb-svg { display: block; width: 100%; height: auto; }
+      .gb-base { stroke: var(--wirit-ink); stroke-width: 4; }
+      .gb-grid { stroke: var(--wirit-ink-06); stroke-width: 2; }
+      /* 총 증가액 — 이 카드의 주인공 숫자 */
+      .gb-val { font-family: var(--font-num); font-size: 52px; font-weight: 900; letter-spacing: -0.035em; }
+      /* 월평균 뱃지 안 글자 */
+      .gb-rate { font-family: var(--font-num); font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+      .gb-tag { font-family: var(--font-sans); font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
+
+      /* ── 인물 축 ── 사진은 누끼(-cut.png)를 바닥 정렬로 세운다 */
+      .gb-axis { flex: 0 0 auto; display: grid; margin: 10px 0 0; }
+      .gb-face { display: flex; flex-direction: column; align-items: center; }
+      .gb-photo {
+        width: 100%; height: 176px; display: flex; align-items: flex-end; justify-content: center;
+        overflow: hidden;
+      }
+      .gb-photo img { max-width: 100%; max-height: 176px; object-fit: contain; object-position: bottom center; }
+      /* 사진이 없는 칸도 자리를 지킨다 — 칸마다 높이가 다르면 이름 줄이 계단이 된다 */
+      .gb-photo.empty { }
+      .gb-name {
+        margin: 8px 0 0; font-family: var(--font-title); font-size: 36px; font-weight: 900;
+        color: var(--wirit-ink); letter-spacing: -0.045em; white-space: nowrap;
+      }
+      .gb-face.hot .gb-name { color: var(--wirit-red); }
+      .gb-term {
+        margin: 2px 0 0; font-family: var(--font-num); font-size: 22px; font-weight: 700;
+        color: var(--wirit-gray); letter-spacing: -0.02em; white-space: nowrap;
+      }
+
+      .gb-note {
+        flex: 0 0 auto; margin: 18px 2px 20px; font-size: 23px; font-weight: 700;
+        color: var(--wirit-gray); letter-spacing: -0.045em; line-height: 1.35;
+      }
+      .gb-note b { color: var(--wirit-red); font-weight: 900; }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card gb">
+      <div class="wirit-topcap">{{#if badge}}<span class="gb-badge">{{badge}}</span>{{/if}}</div>
+      <div class="gb-head"><h1 class="wirit-title">{{{title}}}</h1></div>
+      {{#if subtitle}}<div class="gb-sub">{{subtitle}}</div>{{/if}}
+
+      <div class="gb-chart">
+        <svg class="gb-svg" viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          {{#each chart.grid}}<line class="gb-grid" x1="{{x1}}" y1="{{y}}" x2="{{x2}}" y2="{{y}}" />{{/each}}
+          {{#each chart.bars}}<rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" rx="10" fill="{{fill}}" />{{/each}}
+          {{#each chart.rates}}<g><rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" rx="{{r}}" fill="{{fill}}" /><text class="gb-rate" x="{{tx}}" y="{{ty}}" fill="{{tfill}}" text-anchor="middle">{{text}}</text></g>{{/each}}
+          {{#each chart.values}}<text class="gb-val" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="middle">{{text}}</text>{{/each}}
+          {{#each chart.tags}}<text class="gb-tag" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="middle">{{text}}</text>{{/each}}
+          {{#if chart.baseline}}<line class="gb-base" x1="{{chart.baseline.x1}}" y1="{{chart.baseline.y}}" x2="{{chart.baseline.x2}}" y2="{{chart.baseline.y}}" />{{/if}}
+        </svg>
+      </div>
+
+      <div class="gb-axis" style="grid-template-columns: repeat({{axisCount}}, 1fr); gap: {{axisGap}};">
+        {{#each faces}}
+        <div class="gb-face{{#if hot}} hot{{/if}}">
+          <div class="gb-photo{{#unless photo}} empty{{/unless}}">{{#if photo}}<img src="../_shared/photos/{{photo}}" alt="" />{{/if}}</div>
+          <div class="gb-name">{{name}}</div>
+          <div class="gb-term">{{term}}</div>
+        </div>
+        {{/each}}
+      </div>
+
+      {{#if note}}<div class="gb-note">{{{note}}}</div>{{/if}}
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <script>
+      /* 제목을 카드 폭에 맞춰 줄인다 — 다른 카드와 같은 코드·같은 이유. */
+      window.__wiritFit = function () {
+        var el = document.querySelector(".gb .wirit-title");
+        if (!el) return;
+        var box = el.parentElement, bs = getComputedStyle(box);
+        var avail = box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
+        var lo = 34, hi = 116, best = 34;
+        for (var i = 0; i < 24; i++) {
+          var mid = (lo + hi) / 2;
+          el.style.fontSize = mid + "px";
+          if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+    </script>
+  </body>
+</html>
