@@ -176,7 +176,10 @@ async function main() {
      그래서 검색도 같은 인내심을 갖는다: **살아 있는 것을 확인한 다음에** 후보를 태운다.
      닫힌 창에 후보를 태우면 전부 실패로 기록돼 "주소가 틀렸다"로 오독된다. */
   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-  const LIVE_ROUNDS = 8;
+  /* 창은 수십 분 단위로 열렸다 닫힌다. 7분만 기다리면 절반은 헛걸음이다(08-12 실측:
+     같은 실행에서 앞의 표 검증이 성공한 직후에도 창이 다시 닫혀 있었다).
+     워크플로가 이 단계에 준 20분을 **거의 다 쓰도록** 기다린다 — 재시도 푸시가 더 비싸다. */
+  const LIVE_ROUNDS = 17;
   const LIVE_GAP_MS = 60_000;
   let live = await livecheck(apiKey);
   for (let round = 2; round <= LIVE_ROUNDS && !live.ok; round++) {
