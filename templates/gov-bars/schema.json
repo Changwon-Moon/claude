@@ -3,33 +3,98 @@
   "title": "gov-bars@1",
   "description": "정부별 누적 증가폭을 세로 막대로 세우고, 가로축 자리에 인물 사진·이름·재임 개월을 놓는다. 좌표는 전부 빌더가 계산한다(템플릿은 그리기만).",
   "type": "object",
-  "required": ["template", "title", "chart", "faces", "source"],
+  "required": [
+    "template",
+    "title",
+    "chart",
+    "faces",
+    "source"
+  ],
   "additionalProperties": true,
   "properties": {
-    "template": { "type": "string", "pattern": "^gov-bars@\\d+$" },
-    "date": { "type": "string" },
-    "badge": { "type": "string", "maxLength": 40 },
-    "title": { "type": "string", "description": "한 줄. <span class=\"hi\">…</span> 로 레드 강조." },
-    "subtitle": { "type": "string", "maxLength": 60, "description": "기준을 밝히는 줄. 이 카드는 '어느 계열이냐'가 숫자의 뜻을 바꾼다" },
-    "note": { "type": "string", "maxLength": 110 },
-    "axisCount": { "type": "integer", "minimum": 3, "maximum": 8 },
-    "axisGap": { "type": "string" },
+    "template": {
+      "type": "string",
+      "pattern": "^gov-bars@\\d+$"
+    },
+    "date": {
+      "type": "string"
+    },
+    "badge": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "title": {
+      "type": "string",
+      "description": "한 줄. <span class=\"hi\">…</span> 로 레드 강조."
+    },
+    "subtitle": {
+      "type": "string",
+      "maxLength": 60,
+      "description": "기준을 밝히는 줄. 이 카드는 '어느 계열이냐'가 숫자의 뜻을 바꾼다"
+    },
+    "note": {
+      "type": "string",
+      "maxLength": 110
+    },
+    "axisCount": {
+      "type": "integer",
+      "minimum": 3,
+      "maximum": 8
+    },
+    "axisGap": {
+      "type": "string"
+    },
     "chart": {
       "type": "object",
-      "required": ["vb", "bars", "values", "faces0"],
+      "required": [
+        "vb",
+        "bars",
+        "values",
+        "faces0"
+      ],
       "properties": {
-        "vb": { "type": "string" },
+        "vb": {
+          "type": "string"
+        },
         "baseline": {
           "type": "object",
-          "required": ["y", "x1", "x2"],
-          "properties": { "y": { "type": "number" }, "x1": { "type": "number" }, "x2": { "type": "number" } }
+          "required": [
+            "y",
+            "x1",
+            "x2"
+          ],
+          "properties": {
+            "y": {
+              "type": "number"
+            },
+            "x1": {
+              "type": "number"
+            },
+            "x2": {
+              "type": "number"
+            }
+          }
         },
         "grid": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["y", "x1", "x2"],
-            "properties": { "y": { "type": "number" }, "x1": { "type": "number" }, "x2": { "type": "number" } }
+            "required": [
+              "y",
+              "x1",
+              "x2"
+            ],
+            "properties": {
+              "y": {
+                "type": "number"
+              },
+              "x1": {
+                "type": "number"
+              },
+              "x2": {
+                "type": "number"
+              }
+            }
           }
         },
         "bars": {
@@ -38,14 +103,39 @@
           "maxItems": 8,
           "items": {
             "type": "object",
-            "required": ["x", "y", "w", "h", "fill"],
+            "required": [
+              "x",
+              "y",
+              "w",
+              "h",
+              "fill"
+            ],
             "properties": {
-              "x": { "type": "number" }, "y": { "type": "number" },
-              "w": { "type": "number" }, "h": { "type": "number" },
-              "fill": { "type": "string" },
-              "stroke": { "type": "string", "description": "진행 중 구간의 점선 테두리. 아직 끝나지 않은 막대를 모양으로 말한다" },
-              "sw": { "type": "number" },
-              "dash": { "type": "string" }
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "w": {
+                "type": "number"
+              },
+              "h": {
+                "type": "number"
+              },
+              "fill": {
+                "type": "string"
+              },
+              "stroke": {
+                "type": "string",
+                "description": "진행 중 구간의 점선 테두리. 아직 끝나지 않은 막대를 모양으로 말한다"
+              },
+              "sw": {
+                "type": "number"
+              },
+              "dash": {
+                "type": "string"
+              }
             }
           }
         },
@@ -53,10 +143,26 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["x", "y", "text", "fill"],
+            "required": [
+              "x",
+              "y",
+              "text",
+              "fill"
+            ],
             "properties": {
-              "x": { "type": "number" }, "y": { "type": "number" },
-              "text": { "type": "string", "maxLength": 10 }, "fill": { "type": "string" }
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 10
+              },
+              "fill": {
+                "type": "string"
+              }
             }
           }
         },
@@ -65,13 +171,50 @@
           "description": "월평균 속도 뱃지(알약). 총액과 다른 채널이라 강조를 따로 줄 수 있다",
           "items": {
             "type": "object",
-            "required": ["x", "y", "w", "h", "r", "fill", "tx", "ty", "text", "tfill"],
+            "required": [
+              "x",
+              "y",
+              "w",
+              "h",
+              "r",
+              "fill",
+              "tx",
+              "ty",
+              "text",
+              "tfill"
+            ],
             "properties": {
-              "x": { "type": "number" }, "y": { "type": "number" },
-              "w": { "type": "number" }, "h": { "type": "number" }, "r": { "type": "number" },
-              "fill": { "type": "string" },
-              "tx": { "type": "number" }, "ty": { "type": "number" },
-              "text": { "type": "string", "maxLength": 14 }, "tfill": { "type": "string" }
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "w": {
+                "type": "number"
+              },
+              "h": {
+                "type": "number"
+              },
+              "r": {
+                "type": "number"
+              },
+              "fill": {
+                "type": "string"
+              },
+              "tx": {
+                "type": "number"
+              },
+              "ty": {
+                "type": "number"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 14
+              },
+              "tfill": {
+                "type": "string"
+              }
             }
           }
         },
@@ -79,10 +222,26 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["x", "y", "text", "fill"],
+            "required": [
+              "x",
+              "y",
+              "text",
+              "fill"
+            ],
             "properties": {
-              "x": { "type": "number" }, "y": { "type": "number" },
-              "text": { "type": "string", "maxLength": 12 }, "fill": { "type": "string" }
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 12
+              },
+              "fill": {
+                "type": "string"
+              }
             }
           }
         },
@@ -91,16 +250,99 @@
           "description": "재임 중인 칸 위 빈 공간의 3줄 뱃지. 좌표·크기를 빌더가 계산한다(SVG 글자는 designQa 넘침 검사 밖이다)",
           "items": {
             "type": "object",
-            "required": ["x", "y", "lines", "fill"],
+            "required": [
+              "x",
+              "y",
+              "w",
+              "h",
+              "lines"
+            ],
             "properties": {
-              "x": { "type": "number" }, "y": { "type": "number" },
-              "anchor": { "type": "string" },
-              "fill": { "type": "string" },
-              "lines": { "type": "array", "minItems": 1, "maxItems": 3, "items": { "type": "string", "maxLength": 16 } }
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "anchor": {
+                "type": "string"
+              },
+              "lines": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 4,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "t"
+                  ],
+                  "properties": {
+                    "t": {
+                      "type": "string",
+                      "maxLength": 16
+                    },
+                    "fill": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "sw": {
+                "type": "number"
+              }
             }
           }
         },
-        "faces0": { "type": "number", "description": "플롯 바닥 y — 인물 축이 붙는 자리(검수용 기록)" }
+        "faces0": {
+          "type": "number",
+          "description": "플롯 바닥 y — 인물 축이 붙는 자리(검수용 기록)"
+        },
+        "level": {
+          "type": "object",
+          "description": "플롯 좌상단 빈 공간의 '현재 통화량' 블록. 막대(증가폭)와 다른 축이라 글자로만 둔다",
+          "required": [
+            "x",
+            "y",
+            "lines"
+          ],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "lh": {
+              "type": "number"
+            },
+            "lines": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4,
+              "items": {
+                "type": "object",
+                "required": [
+                  "t"
+                ],
+                "properties": {
+                  "t": {
+                    "type": "string",
+                    "maxLength": 24
+                  },
+                  "fill": {
+                    "type": "string"
+                  },
+                  "size": {
+                    "type": "number"
+                  },
+                  "weight": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "faces": {
@@ -109,21 +351,42 @@
       "maxItems": 8,
       "items": {
         "type": "object",
-        "required": ["name", "term"],
+        "required": [
+          "name",
+          "term"
+        ],
         "properties": {
-          "name": { "type": "string", "maxLength": 6 },
-          "term": { "type": "string", "maxLength": 14 },
-          "photo": { "type": "string", "description": "templates/_shared/photos/ 안의 파일명. 없으면 이름만 나간다 — 지어내지 않는다" },
-          "hot": { "type": "boolean", "description": "강조 1칸" }
+          "name": {
+            "type": "string",
+            "maxLength": 6
+          },
+          "term": {
+            "type": "string",
+            "maxLength": 14
+          },
+          "photo": {
+            "type": "string",
+            "description": "templates/_shared/photos/ 안의 파일명. 없으면 이름만 나간다 — 지어내지 않는다"
+          },
+          "hot": {
+            "type": "boolean",
+            "description": "강조 1칸"
+          }
         }
       }
     },
     "source": {
       "type": "object",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "properties": {
-        "name": { "type": "string" },
-        "asOf": { "type": "string" }
+        "name": {
+          "type": "string"
+        },
+        "asOf": {
+          "type": "string"
+        }
       }
     }
   }

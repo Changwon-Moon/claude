@@ -101,7 +101,7 @@ const maxRate = Math.max(...rows.map((r) => r.rate));
 
 /* ── 좌표 ──
    막대는 전부 플러스라 0선 위아래가 없다. 바닥선 하나에 세운다. */
-const INK = "#141821", RED = "#e5484d", GRAY = "#5b6b7f";
+const INK = "#141821", RED = "#e5484d", COBALT = "#2e6bff", GRAY = "#5b6b7f";
 const VB_W = 1000, VB_H = 652;
 /* 좌우 여백을 0 으로 둔다 — SVG 안쪽에 여백을 주면 **자가 두 개**가 된다.
    막대는 (여백 뺀 폭)을 6등분하는데 아래 인물 축은 카드 폭을 6등분하므로
@@ -123,10 +123,12 @@ const hOf = (d) => r1(((BASE - TOP) * d) / maxDelta);
 const bars = rows.map((r, i) => {
   const h = hOf(r.delta);
   const base = { x: r1(cx(i) - BAR_W / 2), y: r1(BASE - h), w: BAR_W, h };
-  /* 레드는 **현 정부 한 칸**에만 준다(오너 지시 2026-08-12). 앞서 최대 총액(문재인)에 줬더니
-     한 장 안에서 레드가 두 가지를 뜻해, 훑어보는 독자는 "제일 빨간 큰 막대"만 가져갔다.
-     진행 중이라는 사실은 색이 아니라 **점선 테두리**가 계속 말한다. */
-  if (r.running) return { ...base, fill: RED, stroke: "#8f1f23", sw: 4, dash: "14 10" };
+  /* 색이 뜻을 하나씩만 갖게 나눈다(오너 지시 2026-08-12).
+     레드 = 현 정부 · 코발트 = 최대 총액(문재인) · 잉크 = 나머지.
+     현 정부 막대는 **아직 안 끝난 값**이라 채도를 낮춰 옅게 칠하고 점선 테두리를 남긴다 —
+     같은 레드라도 '확정된 값'과 '진행 중인 값'이 같은 무게로 보이면 안 된다. */
+  if (r.running) return { ...base, fill: "rgba(229,72,77,0.42)", stroke: RED, sw: 4, dash: "14 10" };
+  if (r.delta === maxDelta) return { ...base, fill: COBALT };
   return { ...base, fill: INK };
 });
 
@@ -136,7 +138,7 @@ const bars = rows.map((r, i) => {
    총 증가액은 막대 안으로 넣는다. (막대 높이는 그대로 총액 — 규모 자체도 사실이므로 버리지 않는다) */
 const values = rows.map((r, i) => ({
   x: cx(i), y: r1(BASE - hOf(r.delta) - 22), text: `월 ${r1(r.rate).toFixed(1)}조`,
-  fill: r.rate === maxRate ? RED : INK,
+  fill: r.rate === maxRate ? RED : r.delta === maxDelta ? COBALT : INK,
 }));
 
 /* 총 증가액 — 막대 안 위쪽(알약). 막대 높이가 뜻하는 바로 그 값이라 막대 안에 두는 게 맞다. */
@@ -147,7 +149,7 @@ const rates = rows.map((r, i) => {
     x: r1(cx(i) - PILL_W / 2), y: r1(top + 16), w: PILL_W, h: PILL_H, r: PILL_H / 2,
     /* 레드 막대 위에서는 흰 반투명이 묻히고, 점선(옅은) 막대 위에서는 흰 글자가 사라진다 —
        바탕에 맞춰 알약 바탕을 고른다. 강조는 채널마다 한 곳: 위 숫자=최고 속도, 알약=최대 총액. */
-    fill: r.running ? "rgba(20,24,33,0.34)" : "rgba(255,255,255,0.16)",
+    fill: r.running ? "rgba(143,31,35,0.72)" : "rgba(255,255,255,0.16)",
     tx: cx(i), ty: r1(top + 16 + PILL_H / 2 + 8),
     text: `${Math.round(r.delta).toLocaleString("ko-KR")}조`,
     tfill: "#ffffff",
@@ -169,12 +171,17 @@ const lastDelta = M2[lastYm] - M2[months[months.indexOf(lastYm) - 1]];
 const prevMax = Math.max(
   ...months.slice(1, months.length - 1).map((m, i) => M2[m] - M2[months[i]]),
 );
-const BD_FS = 30, BD_LH = 40, BD_PADX = 20, BD_PADY = 20;
+const BD_FS = 25, BD_LH = 34, BD_PADX = 16, BD_PADY = 18;
+/* 줄마다 색이 다르다 — 첫 줄(언제)은 잉크, 아래 두 줄(무엇)은 레드.
+   전부 레드로 두면 어디가 핵심인지 안 갈린다(오너 지시 2026-08-12). */
 const bdLines = runIdx >= 0
-  ? [`'${lastYm.slice(2, 4)}.${lastYm.slice(4)} 한 달`, `+${r1(lastDelta).toFixed(1)}조 증가`,
-     lastDelta >= prevMax ? "(역대 최고)" : "(최근 최고)"]
+  ? [
+      { t: `'${lastYm.slice(2, 4)}.${lastYm.slice(4)} 한 달`, fill: INK },
+      { t: `+${r1(lastDelta).toFixed(1)}조 증가`, fill: RED },
+      { t: lastDelta >= prevMax ? "(역대 최고)" : "(최근 최고)", fill: RED },
+    ]
   : [];
-const bdW = Math.round(Math.max(...bdLines.map((t) => t.length * BD_FS * 0.58), 0)) + BD_PADX * 2;
+const bdW = Math.round(Math.max(...bdLines.map((l) => l.t.length * BD_FS * 0.58), 0)) + BD_PADX * 2;
 const bdH = BD_LH * bdLines.length + BD_PADY * 2 - 8;
 const badges = runIdx >= 0
   ? (() => {
@@ -185,12 +192,26 @@ const badges = runIdx >= 0
          라벨 자리(22 + 글자 37) + 숨(17) 을 합쳐 76px 을 비운다. */
       const y = r1(BASE - hOf(rows[runIdx].delta) - 76 - bdH);
       return [{
-        x, y, w: bdW, h: bdH, r: 18, fill: "#ffffff", stroke: RED, sw: 3,
+        x, y, w: bdW, h: bdH, r: 16, sw: 3,
         tx: r1(x + bdW / 2), ty: r1(y + BD_PADY + BD_FS - 4), lh: BD_LH,
-        lines: bdLines, tfill: RED,
+        lines: bdLines,
       }];
     })()
   : [];
+
+/* ── 플롯 좌상단 빈 공간: **지금 얼마나 풀려 있나** (오너 지시 2026-08-12)
+   막대는 '정부별로 얼마나 늘었나'만 말한다. 그 늘어난 돈이 쌓인 **현재 총량**은 다른 축이라
+   막대로 그리면 안 되고(높이가 통째로 달라진다), 빈 자리에 글자로 둔다.
+   기준은 카드 전체와 같은 개편 전 계열(구 M2). 값은 원자료의 최신월. */
+const level = {
+  x: 8,
+  y: r1(TOP - 4),
+  lh: 46,
+  lines: [
+    { t: `${ymLabel(lastYm)} 현재`, fill: GRAY, size: 26, weight: 800 },
+    { t: `M2 ${Math.round(M2[lastYm]).toLocaleString("ko-KR")}조`, fill: INK, size: 44, weight: 900 },
+  ],
+};
 
 const grid = [0.25, 0.5, 0.75, 1].map((f) => ({ x1: LEFT, x2: RIGHT, y: r1(BASE - (BASE - TOP) * f) }));
 
@@ -214,6 +235,7 @@ const card = {
     rates,
     tags,
     badges,
+    level,
     faces0: BASE,
   },
   faces: rows.map((r) => ({

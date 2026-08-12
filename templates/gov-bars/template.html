@@ -52,9 +52,11 @@
       .gb-val { font-family: var(--font-num); font-size: 37px; font-weight: 900; letter-spacing: -0.055em; }
       /* 월평균 뱃지 안 글자 */
       .gb-rate { font-family: var(--font-num); font-size: 23px; font-weight: 800; letter-spacing: -0.02em; }
+      /* 좌상단 현재 총량 — 크기·굵기는 줄마다 빌더가 정한다 */
+      .gb-level { font-family: var(--font-num); letter-spacing: -0.04em; }
       .gb-tag { font-family: var(--font-sans); font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
       /* 재임 중인 칸 위 빈 공간의 3줄 뱃지 — 최신월 한 달 증가 */
-      .gb-callout { font-family: var(--font-num); font-size: 30px; font-weight: 900; letter-spacing: -0.03em; }
+      .gb-callout { font-family: var(--font-num); font-size: 25px; font-weight: 900; letter-spacing: -0.03em; }
 
       /* ── 인물 축 ── 사진은 누끼(-cut.png)를 바닥 정렬로 세운다 */
       .gb-axis { flex: 0 0 auto; display: grid; margin: 10px 0 0; }
@@ -94,12 +96,25 @@
 
       <div class="gb-chart">
         <svg class="gb-svg" viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <!-- 뱃지 배경 그라데이션 + 네온 테두리(오너 지시 2026-08-12).
+               필터는 같은 크로미움에서 결정적으로 그려지므로 픽셀 재현성을 깨지 않는다. -->
+          <defs>
+            <linearGradient id="gbBadgeBg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ffffff" />
+              <stop offset="100%" stop-color="#fff0f1" />
+            </linearGradient>
+            <filter id="gbNeon" x="-40%" y="-40%" width="180%" height="180%">
+              <feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="#e5484d" flood-opacity="0.38" />
+              <feDropShadow dx="0" dy="3" stdDeviation="10" flood-color="#141821" flood-opacity="0.10" />
+            </filter>
+          </defs>
           {{#each chart.grid}}<line class="gb-grid" x1="{{x1}}" y1="{{y}}" x2="{{x2}}" y2="{{y}}" />{{/each}}
           {{#each chart.bars}}<rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" rx="10" fill="{{fill}}"{{#if stroke}} stroke="{{stroke}}" stroke-width="{{sw}}" stroke-dasharray="{{dash}}"{{/if}} />{{/each}}
           {{#each chart.rates}}<g><rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" rx="{{r}}" fill="{{fill}}" /><text class="gb-rate" x="{{tx}}" y="{{ty}}" fill="{{tfill}}" text-anchor="middle">{{text}}</text></g>{{/each}}
           {{#each chart.values}}<text class="gb-val" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="middle">{{text}}</text>{{/each}}
           {{#each chart.tags}}<text class="gb-tag" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="middle">{{text}}</text>{{/each}}
-          {{#each chart.badges}}<g><rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" rx="{{r}}" fill="{{fill}}" stroke="{{stroke}}" stroke-width="{{sw}}" /><text class="gb-callout" x="{{tx}}" y="{{ty}}" fill="{{tfill}}" text-anchor="middle">{{#each lines}}<tspan x="{{../tx}}" dy="{{#if @first}}0{{else}}{{../lh}}{{/if}}">{{this}}</tspan>{{/each}}</text></g>{{/each}}
+          {{#if chart.level}}<text class="gb-level" x="{{chart.level.x}}" y="{{chart.level.y}}" text-anchor="start">{{#each chart.level.lines}}<tspan x="{{../chart.level.x}}" dy="{{#if @first}}0{{else}}{{../chart.level.lh}}{{/if}}" fill="{{fill}}" font-size="{{size}}" font-weight="{{weight}}">{{t}}</tspan>{{/each}}</text>{{/if}}
+          {{#each chart.badges}}<g><rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" rx="{{r}}" fill="url(#gbBadgeBg)" stroke="#e5484d" stroke-width="{{sw}}" filter="url(#gbNeon)" /><text class="gb-callout" x="{{tx}}" y="{{ty}}" text-anchor="middle">{{#each lines}}<tspan x="{{../tx}}" dy="{{#if @first}}0{{else}}{{../lh}}{{/if}}" fill="{{fill}}">{{t}}</tspan>{{/each}}</text></g>{{/each}}
           {{#if chart.baseline}}<line class="gb-base" x1="{{chart.baseline.x1}}" y1="{{chart.baseline.y}}" x2="{{chart.baseline.x2}}" y2="{{chart.baseline.y}}" />{{/if}}
         </svg>
       </div>
