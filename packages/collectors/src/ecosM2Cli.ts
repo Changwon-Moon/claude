@@ -196,6 +196,11 @@ async function main() {
   say("");
   let chosen: { statCode: string; statName: string; itemCode: string; itemName: string; unit: string; lastYm: string; start: string; end: string } | null = null;
   const itemDump: Record<string, any[]> = {};
+  /* M2(평잔·원계열) 항목을 가진 표를 **전부** 담는다.
+     현행 표(161Y006)는 2003-10 부터라 노무현 정부 취임(2003-02) 시점 값이 없다.
+     그 이전은 구계열 표(101Y004, 1986~2003)에 있으므로 **둘 다 받아 두고**
+     겹치는 달의 값이 같은지 확인한 뒤에야 이어 붙일지 판단한다 — 몰래 잇지 않는다. */
+  const found: Array<{ statCode: string; statName: string; itemCode: string; itemName: string; unit: string; start: string; end: string }> = [];
 
   for (const code of candidates.slice(0, 8)) {
     let items: Array<{ code: string; name: string; unit: string; cycle: string; start: string; end: string }> = [];
@@ -243,6 +248,15 @@ async function main() {
     }
     say(`  · \`${code}\` ${t?.name ?? ""} — 항목 \`${hit.code}\` ${hit.name} · 수록 ${hit.start}~${hit.end}(주기 ${hit.cycle}) · 실제 최근 ${lastYm || "없음"}`);
     if (!lastYm) continue;
+    found.push({
+      statCode: code,
+      statName: t?.name ?? "",
+      itemCode: hit.code,
+      itemName: hit.name,
+      unit: hit.unit,
+      start: hit.start,
+      end: hit.end,
+    });
     if (!chosen || lastYm > chosen.lastYm) {
       chosen = {
         statCode: code,
@@ -312,7 +326,39 @@ async function main() {
       provenance: `ECOS StatisticSearch ${chosen.statCode}/M/${chosen.itemCode}`,
     },
     series: points.map((p) => ({ ym: p.time, value: p.value })),
+    /** 다른 표(구계열 포함)에서 받은 같은 항목의 시계열 — 접합 판단은 빌더가 아니라 사람이 본 뒤 결정한다 */
+    others: {} as Record<string, { statName: string; itemCode: string; unit: string; series: Array<{ ym: string; value: number }> }>,
   };
+
+  say("## 5. 다른 표(구계열 포함)도 함께 받는다");
+  say("");
+  for (const f of found) {
+    if (f.statCode === chosen.statCode) continue;
+    const s0 = /^\d{4}$/.test(f.start) ? `${f.start}01` : /^\d{6}$/.test(f.start) ? f.start : START;
+    const e0 = /^\d{4}$/.test(f.end) ? `${f.end}12` : /^\d{6}$/.test(f.end) ? f.end : end;
+    try {
+      const r = await fetchSeries(f.statCode, f.itemCode, e0 > end ? end : e0, s0);
+      dataset.others[f.statCode] = {
+        statName: f.statName,
+        itemCode: f.itemCode,
+        unit: r.unit || f.unit,
+        series: r.points.map((p) => ({ ym: p.time, value: p.value })),
+      };
+      say(`- \`${f.statCode}\` ${f.statName} — ${r.points.length}개월 (${r.points[0]?.time}~${r.points[r.points.length - 1]?.time})`);
+      // 겹치는 달 비교
+      const mine = new Map(points.map((p) => [p.time, p.value]));
+      const ov = r.points.filter((p) => mine.has(p.time));
+      if (ov.length) {
+        const diffs = ov.map((p) => Math.abs(p.value - (mine.get(p.time) as number)));
+        say(`  · 겹치는 달 ${ov.length}개 — 최대 차이 ${Math.max(...diffs).toFixed(1)} ${unit}`);
+      } else {
+        say(`  · 겹치는 달 없음 — 이어 붙이려면 단절을 감수해야 한다`);
+      }
+    } catch (e) {
+      say(`- \`${f.statCode}\` 실패: ${(e as Error).message}`);
+    }
+  }
+  say("");
   fs.mkdirSync(path.join(REPO_ROOT, "data", "datasets"), { recursive: true });
   fs.writeFileSync(
     path.join(REPO_ROOT, "data", "datasets", "m2-monthly.json"),
