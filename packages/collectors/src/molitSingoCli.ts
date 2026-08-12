@@ -248,6 +248,41 @@ async function main() {
     ) + "\n",
   );
 
+  // ── 누적 로그 — 주간 콘텐츠가 되짚을 수 있게 (2026-08-12 오너 "매주 발행 컨텐츠로 쓸거야")
+  // `singo-latest.json` 은 매일 덮어쓴다. 그것만으로는 **지난 한 주를 되짚을 수가 없다.**
+  // 그래서 히트를 월별 파일에 append 한다. `foundOn` 은 **우리가 확인한 날**이다 —
+  // 계약일이 아니다. 실거래 신고기한이 30일이라 계약일로 주간을 자르면 주간이 텅 빈다.
+  // 같은 칸이 다시 잡히면 덮어쓴다(그날의 최종 기록만 남긴다).
+  const logDir = R("data/datasets/singo-log");
+  mkdirSync(logDir, { recursive: true });
+  const logPath = join(logDir, `${today.slice(0, 7)}.json`);
+  const log: any[] = existsSync(logPath) ? JSON.parse(readFileSync(logPath, "utf8")).hits ?? [] : [];
+  const seen = new Map<string, number>();
+  log.forEach((h, i) => seen.set(`${h.foundOn}|${h.lawdCd}|${h.umdNm}|${h.aptNm}|${h.type}`, i));
+  for (const h of hits) {
+    const k = `${today}|${h.lawdCd}|${h.umdNm}|${h.aptNm}|${h.type}`;
+    const rec = { foundOn: today, ...h };
+    const at = seen.get(k);
+    if (at === undefined) { seen.set(k, log.length); log.push(rec); }
+    else log[at] = rec;
+  }
+  writeFileSync(
+    logPath,
+    JSON.stringify(
+      {
+        meta: {
+          month: today.slice(0, 7),
+          note: "매일 확인된 신고가 누적. foundOn = 우리가 확인한 날(계약일 아님). 주간 집계가 이 파일을 읽는다.",
+          baselineFrom: BASELINE_FROM,
+          source: "국토교통부 아파트 매매 실거래가 상세자료",
+        },
+        hits: log,
+      },
+      null,
+      2,
+    ) + "\n",
+  );
+
   // 알림 문구 — 오너 요청: **단지명 + 평 + 실거래가**
   const lines: string[] = [];
   if (hits.length) {
