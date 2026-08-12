@@ -128,5 +128,23 @@
     "author": "대한민국 국가기록원",
     "url": "https://commons.wikimedia.org/wiki/File%3APark_Geun-hye_presidential_portrait.png",
     "fetchedFor": "wirit card"
+  },
+  "moon-jaein": {
+    "file": "moon-jaein.jpg",
+    "source": "wikipedia",
+    "query": "Moon Jae-in",
+    "license": "KOGL Type 1",
+    "author": "Government of the Republic of Korea",
+    "url": "https://commons.wikimedia.org/wiki/File%3APresident_Moon_Jae_In.jpg",
+    "fetchedFor": "wirit card"
+  },
+  "moon-jaein2": {
+    "file": "moon-jaein2.jpg",
+    "source": "category",
+    "query": "Category:Moon Jae-in",
+    "license": "Public domain",
+    "author": "Jung Chung-rae",
+    "url": "https://commons.wikimedia.org/wiki/File%3ARethinking%20the%20History%20of%20Democracy.jpg",
+    "fetchedFor": "wirit card"
   }
 }
