@@ -2134,6 +2134,102 @@
       "status": "",
       "deadline": "2026-08-03",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910201&pblancNo=2026910201"
+    },
+    {
+      "id": "sig-2026-08-12-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "\"40억 강남 아파트 비워두겠다\"…기이한 방법 택한 집주인들 [시장톡]",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-12-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-12-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "‘라디오스타’ 이창호, 27억 청약 포기",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-12-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-12-3",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "대법, '도이치 주가조작' 이준수 상고심 선고",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-12-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-12-4",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "무난한 CPI에 떨떠름한 반응…보합권 혼조 마감",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-12-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-12-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "AI 투자 기대에 나스닥 0.54%↑…SK하이닉스 ADR 9% 급등",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-12-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-12-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕증시, 인플레 둔화 속 혼조 마감…S&P500지수 0.3%↑",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-12-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-12-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕증시, 인플레 둔화 속 혼조 마감…S&P500 0.3%↑",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-12-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-12-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "금리가 현대차 주가에 부담이라는데 - 조선비즈",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-12-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
