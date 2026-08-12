@@ -1,15 +1,19 @@
 /**
- * 역대 최고가 인덱스 구축 CLI (네트워크·키 필요 → GitHub Actions).
+ * 최고가 인덱스 구축 CLI (네트워크·키 필요 → GitHub Actions).
  *
- *   MOLIT_API_KEY=xxx tsx src/molitPeakCli.ts --from 200601 --to 202607 --budget 7000
+ *   MOLIT_API_KEY=xxx tsx src/molitPeakCli.ts --from 202001 --to 202607 --budget 5000
  *
  * ── 무엇을 만드나
- * `data/datasets/molit-peak/{lawdCd}.json` — **단지+평형대별 역대 최고가 한 줄씩**.
- * 원본 거래는 저장하지 않는다. 2006년부터의 전 거래를 그대로 담으면 저장소가 수 GB가 되는데,
+ * `data/datasets/molit-peak/{lawdCd}.json` — **단지별 전용 59·84 타입 최고가 한 줄씩**.
+ * 원본 거래는 저장하지 않는다. 전 거래를 그대로 담으면 저장소가 GB 단위가 되는데,
  * 신고가 판정에 필요한 건 "지금까지의 최고가" 하나뿐이다.
  *
+ * ── 기준선은 2020-01 이후다 (2026-08-12 오너)
+ * 2006-01 부터면 61곳 × 247개월 = 15,067회라 며칠~몇 주가 걸린다. 2020-01 부터면
+ * **79개월 × 61곳 = 4,819회** — 하루면 찬다. 정본은 `parse/singo.ts` 의 `BASELINE_FROM`.
+ *
  * ── 왜 한 번에 안 끝내나
- * 지역 66곳 × 240개월 ≈ 1.6만 회 호출이다. 공공데이터포털 일일 트래픽 한도에 걸리므로
+ * 공공데이터포털 일일 트래픽 한도에 걸리므로
  * `--budget` 만큼만 하고 멈춘다. **어디까지 했는지는 각 지역 파일의 `meta.doneMonths` 가 안다** —
  * 별도 진행판을 두면 파일과 진행판이 어긋나는 날이 온다. 진실은 한 곳에만 둔다.
  * 다시 실행하면 안 한 데부터 이어서 한다. 다 끝나면 아무것도 안 하고 끝난다(멱등).
@@ -18,7 +22,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { fetchAptTradesMonth } from "./sources/molit.js";
 import { validTrades } from "./parse/molit.js";
-import { foldPeaks, PEAK_SCHEMA, type PeakIndex } from "./parse/singo.js";
+import { foldPeaks, PEAK_SCHEMA, BASELINE_FROM, baselineLabel, type PeakIndex } from "./parse/singo.js";
 import { singoRegions, monthRange } from "./sources/singoRegions.js";
 
 const CWD = process.env.INIT_CWD || process.cwd();
@@ -28,8 +32,8 @@ function arg(name: string): string | undefined {
   return i >= 0 ? process.argv[i + 1] : undefined;
 }
 
-/** 실거래 공개 시작월. 국토부 아파트 매매 실거래 자료는 2006-01 부터다. */
-const FIRST_MONTH = "200601";
+/** 기준선 시작월 — 정본은 parse/singo.ts 의 BASELINE_FROM(2026-08-12 오너: 2020-01 이후). */
+const FIRST_MONTH = BASELINE_FROM;
 
 function prevMonth(d: Date): string {
   const y = d.getFullYear();
@@ -53,7 +57,7 @@ async function main() {
 
   const regions = singoRegions();
   const months = monthRange(from, to);
-  console.log(`역대 최고가 인덱스 — 지역 ${regions.length}곳 × ${months.length}개월, 이번 실행 예산 ${budget}회`);
+  console.log(`최고가 인덱스(${baselineLabel(from)}) — 지역 ${regions.length}곳 × ${months.length}개월, 이번 실행 예산 ${budget}회`);
 
   // 속도 제한 대응 — 값은 실측으로 조정한다(2026-08-12: 296회쯤에서 처음 막혔다)
   const gapMs = Number(arg("gap-ms") ?? 250);
@@ -78,7 +82,7 @@ async function main() {
         doneMonths: [],
         updatedAt: "",
         source:
-          "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev) — 단지별 전용 59·84 타입 역대 최고가만 보관",
+          `국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev) — 단지별 전용 59·84 타입 최고가만 보관 (${baselineLabel(from)})`,
       },
       peaks: {},
     });
@@ -151,6 +155,7 @@ async function main() {
   }
   const summary = {
     from,
+    baselineLabel: baselineLabel(from),
     to,
     regions: regions.length,
     monthsPerRegion: months.length,

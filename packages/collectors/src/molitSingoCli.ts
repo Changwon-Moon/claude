@@ -1,20 +1,21 @@
 /**
- * 오늘의 신고가(역대 최고가 경신) 수집 CLI — 매일 아침 (네트워크·키 필요 → GitHub Actions).
+ * 오늘의 신고가(기준선 이후 최고가 경신) 수집 CLI — 매일 아침 (네트워크·키 필요 → GitHub Actions).
  *
  *   MOLIT_API_KEY=xxx tsx src/molitSingoCli.ts --today 2026-08-13 [--months 2] [--top 10]
  *
  * ── 하는 일
  * ① **명부(1000세대 이상 단지)** 를 읽는다 — `data/datasets/apt-universe.json`
  * ② 대상 지역의 최근 몇 달치 실거래를 받는다(신고기한 30일이라 어제 계약이 오늘 뜨진 않는다)
- * ③ 명부에 있는 단지의 **전용 59·84 타입** 거래만 남기고, 역대 최고가 인덱스와 대조한다
+ * ③ 명부에 있는 단지의 **전용 59·84 타입** 거래만 남기고, 최고가 인덱스와 대조한다
  * ④ 넘어선 것이 오늘의 신고가 — 단지명 · 평(00평) · 실거래가
  * ⑤ 인덱스를 갱신한다 — 그래야 내일은 오늘 것이 기준이 된다
  *
  * ── 판정하지 않는 것
- * · **역대 인덱스가 아직 안 채워진 지역** — 반쪽 기준으로 "역대 최고가"라 부르면 그게 오보다
+ * · **인덱스가 아직 안 채워진 지역** — 반쪽 기준으로 "최고가"라 부르면 그게 오보다
+ * · ⚠️ 기준선은 **2020-01 이후**다(오너 결정). 2006~2019 기록은 안 본다 → "역대"라고 쓰지 않는다
  * · **명부에 없는 단지** — 1000세대 미만이거나 아직 세대수를 확인 못 한 곳
  * · **직거래** — 특수관계인 거래가 섞여 시세로 읽기 어렵다. 다만 인덱스에는 넣는다.
- *   기록에서 빼면 직거래로 세워진 고점을 모르고 "역대 최고가"라 부르게 되기 때문이다
+ *   기록에서 빼면 직거래로 세워진 고점을 모르고 최고가라 부르게 되기 때문이다
  * · **전용 59·84 이외 평형** — 오너 결정(2026-08-12). 리센츠 48평 신고가는 안 잡힌다
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
@@ -28,6 +29,8 @@ import {
   normAptName,
   manwonToEok,
   PEAK_SCHEMA,
+  BASELINE_FROM,
+  baselineLabel,
   type PeakIndex,
   type SingoHit,
 } from "./parse/singo.js";
@@ -108,13 +111,14 @@ async function main() {
 
   for (const { gu, lawdCd } of regions) {
     const peakPath = join(peakDir, `${lawdCd}.json`);
-    if (!existsSync(peakPath)) { skipped.push(`${gu} (역대 인덱스 없음)`); continue; }
+    if (!existsSync(peakPath)) { skipped.push(`${gu} (인덱스 없음)`); continue; }
     const idx: PeakIndex = JSON.parse(readFileSync(peakPath, "utf8"));
     if ((idx.meta.schemaVersion ?? 1) !== PEAK_SCHEMA) { skipped.push(`${gu} (인덱스 판번호 옛것)`); continue; }
     const done = new Set(idx.meta.doneMonths);
 
-    // 이 지역의 역대 인덱스가 실제로 "역대"인지 본다 — 2006-01 부터 지난달까지 다 차 있어야 한다
-    const need = monthRange("200601", months[months.length - 2] ?? months[0]);
+    // 이 지역의 인덱스가 기준선 시작월부터 지난달까지 **빠짐없이** 차 있는지 본다.
+    // 한 달이라도 비면 그 달의 고점을 모르는 채로 "최고가"라 부르게 된다.
+    const need = monthRange(BASELINE_FROM, months[months.length - 2] ?? months[0]);
     const missing = need.filter((m) => !done.has(m));
     const judgeable = missing.length === 0 && uniReady;
     if (missing.length) skipped.push(`${gu} (초기 수집 ${missing.length}개월 남음)`);
@@ -177,11 +181,13 @@ async function main() {
           skipped,
           universe: { ready: uniReady, count: uniItems.length, minHhld: uni?.meta?.minHhld ?? null, complete: uni?.meta?.complete ?? false },
           types: ["전용 59타입 = 25평", "전용 84타입 = 34평"],
+          baselineFrom: BASELINE_FROM,
+          baselineLabel: baselineLabel(),
           sortBy,
           verified: true,
           source: "국토교통부 아파트 매매 실거래가 상세자료 · 공동주택 기본 정보(세대수)",
           note:
-            "1000세대 이상 단지(명부)의 전용 59·84 타입 중개거래 중, 구·법정동·단지명 기준 2006-01 이후 역대 최고가를 넘어선 건. 직거래·해제거래 제외. 평 표기는 관용 환산(전용률 미공개)이라 단지에 따라 ±1평 어긋날 수 있고 원본 전용면적을 함께 남긴다.",
+            `1000세대 이상 단지(명부)의 전용 59·84 타입 중개거래 중, 구·법정동·단지명 기준 ${baselineLabel()} 최고가를 넘어선 건. 2006~2019 기록은 보지 않으므로 "역대"라고 쓰지 않는다. 직거래·해제거래 제외. 평 표기는 관용 환산(전용률 미공개)이라 단지에 따라 ±1평 어긋날 수 있고 원본 전용면적을 함께 남긴다.`,
         },
         hits,
       },
@@ -193,7 +199,7 @@ async function main() {
   // 알림 문구 — 오너 요청: **단지명 + 평 + 실거래가**
   const lines: string[] = [];
   if (hits.length) {
-    lines.push(`🔥 오늘의 신고가 ${hits.length}건 (${today})`);
+    lines.push(`🔥 오늘의 신고가 ${hits.length}건 (${today} · ${baselineLabel()} 최고가 기준)`);
     lines.push("");
     for (const h of hits.slice(0, topN)) {
       lines.push(`· ${h.aptNm} ${h.pyeong} ${manwonToEok(h.priceManwon)}`);

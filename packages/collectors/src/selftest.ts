@@ -81,6 +81,8 @@ import {
   foldPeaks as singoFoldPeaks,
   findSingo as singoFindSingo,
   manwonToEok as singoEok,
+  baselineLabel as singoBaseline,
+  BASELINE_FROM as SINGO_FROM,
 } from "./parse/singo.js";
 import { matchApt as aptMatch, parseAptList, parseAptBasis } from "./parse/aptInfo.js";
 import { singoRegions as singoRegionList, monthRange as singoMonthRange } from "./sources/singoRegions.js";
@@ -936,7 +938,21 @@ console.log("\n[청약홈 분양정보 파서]");
   check("기본정보에서 세대수를 읽는다", parseAptBasis(basisXml)?.hhldCnt === 5563, String(parseAptBasis(basisXml)?.hhldCnt));
   check("세대수가 없으면 null (0 으로 떨어뜨리지 않는다)", parseAptBasis("<response><body><item><kaptCode>A1</kaptCode></item></body></response>") === null);
   const listXml = `<response><body><items><item><kaptCode>A1</kaptCode><kaptName>리센츠</kaptName><bjdCode>1171010100</bjdCode><as1>서울특별시</as1><as2>송파구</as2><as3>잠실동</as3></item></items></body></response>`;
-  check("단지목록을 읽는다", parseAptList(listXml).length === 1 && parseAptList(listXml)[0].umd === "잠실동");
+  check("단지목록을 읽는다(XML)", parseAptList(listXml).length === 1 && parseAptList(listXml)[0].umd === "잠실동");
+
+  // ⚠️ 이 두 서비스는 포털 화면상 **JSON 이 기본**이다(2026-08-12 오너 확인).
+  //    한쪽만 읽게 두면 판이 바뀐 날 조용히 0건이 된다 — 오는 대로 읽는지 잰다.
+  const listJson = JSON.stringify({ response: { body: { items: { item: [
+    { kaptCode: "A1", kaptName: "리센츠", bjdCode: "1171010100", as1: "서울특별시", as2: "송파구", as3: "잠실동" },
+  ] } } } });
+  check("단지목록을 읽는다(JSON)", parseAptList(listJson).length === 1 && parseAptList(listJson)[0].kaptName === "리센츠");
+  const listJson1 = JSON.stringify({ response: { body: { items: { item: { kaptCode: "B1", kaptName: "은마", as3: "대치동" } } } } });
+  check("JSON 이 1건이면 배열이 아니다 — 그것도 읽는다", parseAptList(listJson1).length === 1, String(parseAptList(listJson1).length));
+  check("JSON 이 비면 빈 배열", parseAptList(JSON.stringify({ response: { body: { items: "" } } })).length === 0);
+
+  const basisJson = JSON.stringify({ response: { body: { item: { kaptCode: "A1", kaptName: "리센츠", kaptdaCnt: 5563, kaptDongCnt: 65, kaptUsedate: "20080701", kaptAddr: "서울 송파구 잠실동" } } } });
+  check("기본정보 세대수를 읽는다(JSON)", parseAptBasis(basisJson)?.hhldCnt === 5563, String(parseAptBasis(basisJson)?.hhldCnt));
+  check("JSON 에 세대수가 없으면 null", parseAptBasis(JSON.stringify({ response: { body: { item: { kaptCode: "A1" } } } })) === null);
 
   // ⑥ 레퍼런스 카드가 "36.95억" 꼴이다 — 표기를 거기에 맞췄다
   check("369,500만원 → 36.95억", singoEok(369500) === "36.95억", singoEok(369500));
@@ -955,6 +971,12 @@ console.log("\n[청약홈 분양정보 파서]");
   check("남양주시는 '양주'와 다르다 — 들어 있어야 한다", regs.some((r) => r.gu === "남양주시"));
   check("성남 3개구가 모두 들어 있다", regs.filter((r) => r.gu.startsWith("성남시")).length === 3);
   check("지역 코드는 5자리 법정동 코드", regs.every((r) => /^\d{5}$/.test(r.lawdCd)));
+  // 기준선 문구는 **값에서 자동으로 나와야 한다** — 사람이 따로 적으면 기간을 바꾼 날 어긋난다
+  check("기준선 시작월은 2020-01 (오너 결정)", SINGO_FROM === "202001", SINGO_FROM);
+  check("기준선 문구가 값에서 나온다", singoBaseline("202001") === "2020년 이후", singoBaseline("202001"));
+  check("1월이 아니면 월까지 적는다", singoBaseline("202108") === "2021년 8월 이후", singoBaseline("202108"));
+  check("기준선을 2006 으로 내리면 문구도 따라간다", singoBaseline("200601") === "2006년 이후", singoBaseline("200601"));
+
   const mr = singoMonthRange("202511", "202602");
   check("월 범위는 해를 넘어간다", mr.join(",") === "202511,202512,202601,202602", mr.join(","));
 }

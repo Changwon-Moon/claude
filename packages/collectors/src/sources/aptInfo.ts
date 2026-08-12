@@ -22,20 +22,27 @@ import { parseAptList, parseAptBasis, type AptListItem, type AptBasis } from "..
 
 const HOST = "https://apis.data.go.kr/1613000";
 
-/** 시군구 단지목록 후보 — 새 판부터 옛 판 순 */
+/**
+ * 시군구 단지목록 후보 — 새 판부터 옛 판 순.
+ * 서비스 경로는 오너가 포털에서 확인해 줬다(2026-08-12): `.../1613000/AptListService3`.
+ * 남은 미지는 **오퍼레이션 이름**뿐이라 그 후보만 돈다.
+ */
 const LIST_OPS = [
   "AptListService3/getSigunguAptList3",
   "AptListService3/getSigunguAptList",
+  "AptListService3/getTotalAptList3",
   "AptListService2/getSigunguAptList",
-  "AptListService/getSigunguAptList",
 ];
 
-/** 단지 기본정보(세대수) 후보 — 새 판부터 옛 판 순 */
+/**
+ * 단지 기본정보(세대수) 후보 — 오너 확인: `.../1613000/AptBasisInfoServiceV4` (**V4**).
+ * 처음에 V3 로 찍었다가 61개 지역 전부 "해당 오픈API 서비스가 없거나 폐기됨"을 맞았다.
+ */
 const BASIS_OPS = [
+  "AptBasisInfoServiceV4/getAphusBassInfoV4",
+  "AptBasisInfoServiceV4/getAphusBassInfoV3",
   "AptBasisInfoServiceV3/getAphusBassInfoV3",
   "AptBasisInfoServiceV2/getAphusBassInfoV2",
-  "AptBasisInfoService1/getAphusBassInfo",
-  "AptBasisInfoService/getAphusBassInfo",
 ];
 
 /** 한 번 고른 살아 있는 이름은 기억해 다시 안 뒤진다 */
@@ -101,7 +108,7 @@ async function pickOp(ops: string[], build: (op: string) => string, remember: (o
 /** 시군구코드(5자리) → 그 시군구의 공동주택 단지 목록 전건 */
 export async function fetchAptList(sigunguCode: string, key: string): Promise<AptListItem[]> {
   const url = (op: string, page: number) =>
-    `${HOST}/${op}?serviceKey=${encKey(key)}&sigunguCode=${sigunguCode}&pageNo=${page}&numOfRows=500&_type=xml`;
+    `${HOST}/${op}?serviceKey=${encKey(key)}&sigunguCode=${sigunguCode}&pageNo=${page}&numOfRows=500&_type=json`;
 
   const out: AptListItem[] = [];
   let first: string;
@@ -120,7 +127,7 @@ export async function fetchAptList(sigunguCode: string, key: string): Promise<Ap
 
 /** 단지코드 → 기본 정보(세대수). 응답이 비면 null */
 export async function fetchAptBasis(kaptCode: string, key: string): Promise<AptBasis | null> {
-  const url = (op: string) => `${HOST}/${op}?serviceKey=${encKey(key)}&kaptCode=${kaptCode}&_type=xml`;
+  const url = (op: string) => `${HOST}/${op}?serviceKey=${encKey(key)}&kaptCode=${kaptCode}&_type=json`;
   const xml = basisOp
     ? await getXml(url(basisOp))
     : await pickOp(BASIS_OPS, url, (op) => { basisOp = op; });

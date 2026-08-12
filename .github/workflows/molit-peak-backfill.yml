@@ -1,12 +1,15 @@
-name: 역대 최고가 인덱스 초기 수집 (신고가 기준선)
+name: 최고가 인덱스 초기 수집 (신고가 기준선)
 
 # ── 무엇을 하나 (2026-08-12 오너 "오늘의 신고가 톡도 받게 해줘")
-# 신고가를 "역대 최고가를 넘었다"로 판정하려면, 넘을 대상인 **역대 최고가**가 먼저 있어야 한다.
-# 국토부 실거래는 2006-01 부터 공개되므로, 서울 25개구 + 경기 주요시의 2006-01~지난달을
-# 한 번 통째로 훑어 **단지+평형대별 최고가 한 줄씩**을 인덱스로 굳힌다.
+# 신고가를 "최고가를 넘었다"로 판정하려면, 넘을 대상인 **기준 최고가**가 먼저 있어야 한다.
+# **2020-01~지난달**(2026-08-12 오너: "모든 신고가는 2020년 1월 이후로만")을 훑어
+# **단지별 전용 59·84 타입 최고가 한 줄씩**을 인덱스로 굳힌다.
+#
+# ⚠️ 그래서 "역대"라고 부르지 않는다 — 2006~2019 기록은 안 본다.
+#    문구는 코드가 `BASELINE_FROM` 에서 자동으로 만든다(사람이 따로 적지 않는다).
 #
 # ── 왜 여러 번에 나눠 도나
-# 지역 66곳 × 240개월 ≈ 1.6만 회 호출이다. 공공데이터포털 일일 트래픽 한도를 넘기므로
+# 61곳 × 79개월 = 4,819회 호출이다. 공공데이터포털 일일 트래픽 한도를 넘길 수 있으므로
 # 하루 예산만큼만 하고 멈춘다. 어디까지 했는지는 각 지역 파일이 알고 있어(meta.doneMonths)
 # 다음 실행이 이어서 한다. **다 끝나면 아무것도 안 하고 조용히 끝난다** — 끄러 올 필요가 없다.
 #
@@ -20,7 +23,7 @@ on:
 
   # 대기열 푸시가 방아쇠 (molit-collect·applyhome-collect 와 같은 방식).
   # 세션은 Actions 버튼을 못 누르므로 파일 한 줄이 유일한 손잡이다.
-  # 한 줄 형식(전부 선택):  budget=7000 from=200601 to=202607
+  # 한 줄 형식(전부 선택):  budget=5000 from=202001 to=202607
   push:
     paths:
       - "data/molit-peak-queue.txt"
@@ -28,11 +31,11 @@ on:
   workflow_dispatch:
     inputs:
       budget:
-        description: "이번 실행에서 쓸 최대 API 호출 수 (기본 7000)"
+        description: "이번 실행에서 쓸 최대 API 호출 수 (기본 5000)"
         required: false
-        default: "7000"
+        default: "5000"
       from:
-        description: "시작월 YYYYMM (기본 200601 — 실거래 공개 시작월)"
+        description: "시작월 YYYYMM (기본 202001 — 오너 결정)"
         required: false
         default: ""
       to:
@@ -85,8 +88,8 @@ jobs:
               esac
             done
           fi
-          echo "budget=${BUDGET:-7000}" >> "$GITHUB_OUTPUT"
-          echo "from=${FROM:-200601}" >> "$GITHUB_OUTPUT"
+          echo "budget=${BUDGET:-5000}" >> "$GITHUB_OUTPUT"
+          echo "from=${FROM:-202001}" >> "$GITHUB_OUTPUT"
           echo "to=$TO" >> "$GITHUB_OUTPUT"
           echo "today=$(TZ=Asia/Seoul date +%F)" >> "$GITHUB_OUTPUT"
 
@@ -126,7 +129,7 @@ jobs:
         if: always() && steps.gate.outputs.complete != 'yes'
         run: |
           {
-            echo "# 역대 최고가 인덱스 — 마지막 실행"
+            echo "# 최고가 인덱스 — 마지막 실행"
             echo
             echo "- 실행: ${{ steps.cfg.outputs.today }} (KST) · 방아쇠 \`${{ github.event_name }}\`"
             echo "- 예산: ${{ steps.cfg.outputs.budget }}회 · 시작월 ${{ steps.cfg.outputs.from }}"
@@ -148,7 +151,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "바뀐 것 없음 — 커밋 생략"
           else
-            git commit -m "역대 최고가 인덱스 ${{ steps.cfg.outputs.today }}"
+            git commit -m "최고가 인덱스 ${{ steps.cfg.outputs.today }}"
             git pull --rebase --autostash origin ${{ github.ref_name }} || true
             git push origin HEAD:${{ github.ref_name }}
           fi
@@ -162,7 +165,7 @@ jobs:
         run: |
           NOW=$(node -e "try{const p=require('./data/datasets/molit-peak/_progress.json');console.log(p.complete?'yes':'no')}catch{console.log('no')}")
           if [ "$NOW" = "yes" ]; then
-            node scripts/notify-telegram.mjs "✅ 역대 최고가 기준선이 완성됐습니다 (2006년~) — 내일 아침부터 '오늘의 신고가' 알림이 정상 판정으로 옵니다"
+            node scripts/notify-telegram.mjs "✅ 최고가 기준선이 완성됐습니다 (2020년 이후) — 내일 아침부터 '오늘의 신고가' 알림이 정상 판정으로 옵니다"
           fi
 
       - name: 실패하면 알린다
@@ -171,4 +174,4 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          node scripts/notify-telegram.mjs "⚠️ 역대 최고가 인덱스 수집 실패 (${{ steps.cfg.outputs.today }}) — data/molit-peak-last.md 를 확인하세요"
+          node scripts/notify-telegram.mjs "⚠️ 최고가 인덱스 수집 실패 (${{ steps.cfg.outputs.today }}) — data/molit-peak-last.md 를 확인하세요"

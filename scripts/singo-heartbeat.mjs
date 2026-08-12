@@ -49,7 +49,7 @@ if (universe && !uniReady) {
   // ── 기준선을 채우는 중 — 이때의 "0건"은 "없었다"가 아니라 "아직 못 잰다"다.
   //    둘을 같은 문구로 보내면 오너가 데이터를 오해한다.
   const pct = Math.round((1 - progress.monthsRemaining / (progress.regions * progress.monthsPerRegion)) * 100);
-  lines.push(`🧱 역대 최고가 기준선 채우는 중 (${today})`);
+  lines.push(`🧱 최고가 기준선(${progress.baselineLabel || "2020년 이후"}) 채우는 중 (${today})`);
   lines.push(`· 완료 ${progress.regionsComplete}/${progress.regions}개 지역 · ${pct}%`);
   lines.push(`· 다 차면 알려드리고, 그때부터 신고가 판정이 시작됩니다`);
 } else if (!universe) {
@@ -58,13 +58,13 @@ if (universe && !uniReady) {
 } else if (latest && judged === 0) {
   // 판정한 지역이 하나도 없는 날의 "0건"은 "없었다"가 아니라 "아직 못 잰다"다.
   // 진행 파일이 아직 없을 수도 있으므로(첫날) 여기서도 같은 뜻으로 갈라 준다.
-  lines.push(`🧱 역대 최고가 기준선 준비 중 (${today})`);
+  lines.push(`🧱 최고가 기준선 준비 중 (${today})`);
   lines.push(`· 아직 판정할 수 있는 지역이 없습니다 — 초기 수집이 끝나면 알려드립니다`);
 } else if (latest) {
   const m = latest.meta || {};
   lines.push(`🏙 오늘의 신고가 없음 (${today})`);
   lines.push(`· ${m.judgedRegions ?? "?"}개 지역 · 최근 ${(m.months || []).length}개월 신고분 확인`);
-  lines.push(`· 기준: 명부 ${(m.universe?.count ?? 0).toLocaleString("ko-KR")}개 단지 · 전용 59(25평)·84(34평) 역대 최고가`);
+  lines.push(`· 기준: 명부 ${(m.universe?.count ?? 0).toLocaleString("ko-KR")}개 단지 · 전용 59(25평)·84(34평) · ${m.baselineLabel || "2020년 이후"} 최고가`);
 } else {
   lines.push(`⚠️ 신고가 확인 결과 파일이 없습니다 (${today}) — data/singo-last.md 를 확인하세요`);
 }

@@ -12,6 +12,30 @@
  */
 import { normAptName } from "./singo.js";
 
+/**
+ * ⚠️ 이 두 서비스는 **JSON 이 기본**이다(2026-08-12 오너가 포털 화면 확인 — 데이터포맷: JSON).
+ * 그런데 `_type=xml` 을 받아주는 판도 있어서, **오는 대로 읽는다.**
+ * 한쪽만 읽게 만들면 포털이 판을 올린 날 조용히 0건이 된다.
+ */
+function items(body: string): any[] | null {
+  const t = body.trim();
+  if (!t.startsWith("{") && !t.startsWith("[")) return null; // XML 이다
+  try {
+    const j = JSON.parse(t);
+    // 서비스마다 껍데기가 다르다: 목록은 body.items.item[], 기본정보는 body.item{}.
+    // 한쪽만 보면 다른 쪽이 조용히 0건이 된다.
+    const b = j?.response?.body ?? j?.body ?? j;
+    const it = b?.items ?? b?.item;
+    if (it == null) return [];
+    if (Array.isArray(it)) return it;
+    if (Array.isArray(it.item)) return it.item;
+    if (it.item) return [it.item];
+    return [it];
+  } catch {
+    return null;
+  }
+}
+
 function tag(block: string, ...names: string[]): string {
   for (const n of names) {
     const m = block.match(new RegExp(`<${n}>\\s*([\\s\\S]*?)\\s*</${n}>`));
@@ -34,9 +58,27 @@ export interface AptListItem {
   umd: string;
 }
 
-/** 공동주택 단지 목록(getSigunguAptList) XML → 단지 배열 */
-export function parseAptList(xml: string): AptListItem[] {
+/** 공동주택 단지 목록 응답(JSON 또는 XML) → 단지 배열 */
+export function parseAptList(body: string): AptListItem[] {
   const out: AptListItem[] = [];
+  const js = items(body);
+  if (js) {
+    for (const o of js) {
+      const kaptCode = String(o.kaptCode ?? "").trim();
+      const kaptName = String(o.kaptName ?? "").trim();
+      if (!kaptCode || !kaptName) continue;
+      out.push({
+        kaptCode,
+        kaptName,
+        bjdCode: String(o.bjdCode ?? "").trim(),
+        sido: String(o.as1 ?? "").trim(),
+        sigungu: String(o.as2 ?? "").trim(),
+        umd: String(o.as3 ?? "").trim(),
+      });
+    }
+    return out;
+  }
+  const xml = body;
   for (const it of xml.match(/<item>[\s\S]*?<\/item>/g) ?? []) {
     const kaptCode = tag(it, "kaptCode");
     const kaptName = tag(it, "kaptName");
@@ -62,8 +104,25 @@ export interface AptBasis {
   addr: string;
 }
 
-/** 공동주택 기본 정보(getAphusBassInfoV3) XML → 세대수 등. 세대수를 못 읽으면 null */
-export function parseAptBasis(xml: string): AptBasis | null {
+/** 공동주택 기본 정보 응답(JSON 또는 XML) → 세대수 등. 세대수를 못 읽으면 null */
+export function parseAptBasis(raw: string): AptBasis | null {
+  const js = items(raw);
+  if (js) {
+    const o = js[0];
+    if (!o) return null;
+    const hhld = num(o.kaptdaCnt);
+    const code = String(o.kaptCode ?? "").trim();
+    if (!code || !Number.isFinite(hhld) || hhld <= 0) return null;
+    return {
+      kaptCode: code,
+      kaptName: String(o.kaptName ?? "").trim(),
+      hhldCnt: hhld,
+      dongCnt: num(o.kaptDongCnt) || 0,
+      useDate: String(o.kaptUsedate ?? "").trim(),
+      addr: String(o.kaptAddr ?? o.doroJuso ?? "").trim(),
+    };
+  }
+  const xml = raw;
   const body = xml.match(/<item>[\s\S]*?<\/item>/)?.[0] ?? xml;
   const kaptCode = tag(body, "kaptCode");
   const hhldCnt = num(tag(body, "kaptdaCnt"));
