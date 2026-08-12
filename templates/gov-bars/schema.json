@@ -8,7 +8,7 @@
   "properties": {
     "template": { "type": "string", "pattern": "^gov-bars@\\d+$" },
     "date": { "type": "string" },
-    "badge": { "type": "string", "maxLength": 16 },
+    "badge": { "type": "string", "maxLength": 40 },
     "title": { "type": "string", "description": "한 줄. <span class=\"hi\">…</span> 로 레드 강조." },
     "subtitle": { "type": "string", "maxLength": 60, "description": "기준을 밝히는 줄. 이 카드는 '어느 계열이냐'가 숫자의 뜻을 바꾼다" },
     "note": { "type": "string", "maxLength": 110 },

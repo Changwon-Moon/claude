@@ -53,7 +53,7 @@ const GOV = [
   { name: "이명박", photo: "lee-myungbak-cut.png", end: "201302" },
   { name: "박근혜", photo: "park-geunhye-cut.png", end: "201703" },
   { name: "문재인", photo: "moon-jaein-cut.png", end: "202205" },
-  { name: "윤석열", photo: "yoon-sukyeol-cut.png", end: "202504" },
+  { name: "윤석열", photo: "yoon-sukyeol4-cut.png", end: "202504" },
   { name: "이재명", photo: "lee-jaemyung-cut.png", end: null }, // 재임 중 — 최신월까지
 ];
 
@@ -88,11 +88,11 @@ const maxRate = Math.max(...rows.map((r) => r.rate));
 /* ── 좌표 ──
    막대는 전부 플러스라 0선 위아래가 없다. 바닥선 하나에 세운다. */
 const INK = "#141821", RED = "#e5484d", GRAY = "#5b6b7f";
-const VB_W = 1000, VB_H = 560;
-const LEFT = 24, RIGHT = VB_W - 24, BASE = VB_H - 6, TOP = 96;
+const VB_W = 1000, VB_H = 656;
+const LEFT = 24, RIGHT = VB_W - 24, BASE = VB_H - 6, TOP = 104;
 const N = rows.length;
 const slot = (RIGHT - LEFT) / N;
-const BAR_W = Math.round(slot * 0.62);
+const BAR_W = Math.round(slot * 0.68);
 const cx = (i) => r1(LEFT + slot * (i + 0.5));
 
 /* 최대 막대가 플롯 높이를 다 쓰게 — 눈금이 없는 카드라 절대 높이는 뜻이 없고 비율만 뜻이 있다 */
@@ -105,18 +105,19 @@ const bars = rows.map((r, i) => {
 
 /* 총액 라벨 — 막대 위 */
 const values = rows.map((r, i) => ({
-  x: cx(i), y: r1(BASE - hOf(r.delta) - 20), text: `${Math.round(r.delta).toLocaleString("ko-KR")}조`,
+  x: cx(i), y: r1(BASE - hOf(r.delta) - 22), text: `${Math.round(r.delta).toLocaleString("ko-KR")}조`,
   fill: r.delta === maxDelta ? RED : INK,
 }));
 
 /* 월평균 뱃지 — 막대 안 위쪽(알약). 총액과 다른 채널이라 '최고 속도'를 따로 강조한다 */
-const PILL_W = Math.round(BAR_W * 0.96), PILL_H = 44;
+const PILL_W = BAR_W, PILL_H = 42;
 const rates = rows.map((r, i) => {
   const top = BASE - hOf(r.delta);
   return {
     x: r1(cx(i) - PILL_W / 2), y: r1(top + 16), w: PILL_W, h: PILL_H, r: PILL_H / 2,
-    fill: r.rate === maxRate ? RED : "rgba(255,255,255,0.14)",
-    tx: cx(i), ty: r1(top + 16 + PILL_H / 2 + 9),
+    /* 레드 막대 위에서는 흰 반투명이 묻힌다 — 바탕색에 맞춰 알약 바탕을 고른다 */
+    fill: r.rate === maxRate ? RED : r.delta === maxDelta ? "rgba(20,24,33,0.30)" : "rgba(255,255,255,0.16)",
+    tx: cx(i), ty: r1(top + 16 + PILL_H / 2 + 8),
     text: `월 ${r1(r.rate).toFixed(1)}조`,
     tfill: "#ffffff",
   };
@@ -124,7 +125,7 @@ const rates = rows.map((r, i) => {
 
 /* 꼬리표 — 재임 중인 칸에만. 12개월짜리 막대를 5년짜리와 나란히 두면 오독되기 쉽다 */
 const tags = rows
-  .map((r, i) => (r.running ? { x: cx(i), y: r1(BASE - hOf(r.delta) - 74), text: "재임 중", fill: GRAY } : null))
+  .map((r, i) => (r.running ? { x: cx(i), y: r1(BASE - hOf(r.delta) - 80), text: "재임 중", fill: GRAY } : null))
   .filter(Boolean);
 
 const grid = [0.25, 0.5, 0.75, 1].map((f) => ({ x1: LEFT, x2: RIGHT, y: r1(BASE - (BASE - TOP) * f) }));

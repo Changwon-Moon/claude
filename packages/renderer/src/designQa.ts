@@ -221,7 +221,11 @@ const MEASURE_JS = `(() => {
              ".fr-title,.fr-sub,.fr-rank,.fr-nm,.fr-meta,.fr-party,.fr-face,.fr-foot," +
              /* foreign-rank — 서울 구별 등록외국인(2026-08-09). map-rank 상속분(.mr-hr span/.mr-rank/.mr-gu)
                 외에 밴드 대형 숫자·구 비율칩·외국인수/국적% 열을 등록해야 겹침 검사가 실제로 잰다. */
-             ".fr-big .cap,.fr-big .num,.mr-ratio,.mr-nat b,.mr-gu .pct";
+             ".fr-big .cap,.fr-big .num,.mr-ratio,.mr-nat b,.mr-gu .pct," +
+             /* gov-bars — 정부별 세로 막대 + 인물 축(2026-08-12). 사진 칸이 이름·재임개월과,
+                이름줄이 하단 문구·푸터와 겹치는지 좌표로 잰다. SVG 안의 막대·값 라벨은
+                그래프라 Range 대상이 아니다(streak-bars 와 같은 취급) — HTML 글자만 올린다. */
+             ".gb-sub,.gb-photo,.gb-name,.gb-term,.gb-note";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
   for (var i=0;i<leaves.length;i++) for (var j=i+1;j<leaves.length;j++) {
     var a=leaves[i], b=leaves[j];
@@ -282,7 +286,7 @@ const MEASURE_JS = `(() => {
   if(footer){
     /* .rg-note 를 빠뜨려 record-grid 에서는 이 검사가 아무것도 안 재고 있었다(AS팀 지적 2026-07-31).
        "최하단 문구 여백"은 오너가 두 번 말한 항목인데 새 템플릿에 적용되지 않은 상태였다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note");
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note,.gb-note");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();
