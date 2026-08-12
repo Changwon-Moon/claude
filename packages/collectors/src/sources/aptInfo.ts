@@ -54,15 +54,31 @@ export function chosenOps(): { list: string; basis: string } {
   return { list: listOp, basis: basisOp };
 }
 
-async function get(url: string, timeoutMs = 15000): Promise<{ status: number; body: string }> {
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), timeoutMs);
-  try {
-    const res = await fetch(url, { signal: ctrl.signal, headers: { "User-Agent": "wirit-collector/0.1" } });
-    return { status: res.status, body: await res.text() };
-  } finally {
-    clearTimeout(t);
+/**
+ * ⚠️ `fetch failed` 는 **아무것도 말해 주지 않는다.**
+ * 2026-08-12 에 61개 지역 전부 이 한 줄만 남기고 죽었는데, undici 는 진짜 이유를
+ * `err.cause` 에 숨겨 둔다(ECONNRESET·ENOTFOUND·TLS…). 그래서 여기서 꺼내 붙인다 —
+ * **로그가 원인을 안 말하면 다음 사람이 추측으로 고치게 된다.**
+ * 망 오류는 잠깐 그런 것일 수 있어 짧게 두 번 더 시도한다(400·403 은 재시도해도 같다).
+ */
+async function get(url: string, timeoutMs = 20000): Promise<{ status: number; body: string }> {
+  let last = "";
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), timeoutMs);
+    try {
+      const res = await fetch(url, { signal: ctrl.signal, headers: { "User-Agent": "wirit-collector/0.1" } });
+      return { status: res.status, body: await res.text() };
+    } catch (e) {
+      const cause = (e as any)?.cause;
+      const why = [cause?.code, cause?.message, (e as Error)?.message].filter(Boolean).join(" · ");
+      last = `망 오류: ${why || String(e)}`;
+      await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
+    } finally {
+      clearTimeout(t);
+    }
   }
+  throw new Error(last);
 }
 
 /** 이 응답이 "그런 서비스 없음"인가 — 이때만 다음 후보로 넘어간다(키·한도 문제와 구분) */
