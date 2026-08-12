@@ -295,9 +295,29 @@ async function main() {
     const mtag = mlines.length ? ` (${mlines.map((m) => `${m}억`).join("·")} 돌파 ${milestones.length}건)` : "";
     lines.push(`🔥 오늘의 신고가 ${hits.length}건${mtag} (${today} · ${baselineLabel()} 최고가 기준)`);
     lines.push("");
-    for (const h of hits.slice(0, topN)) {
-      // 10억 단위 돌파는 사람이 기억하는 사건이라 한 마디 붙인다 — 나머지는 오너 요청대로 단지명+평+가격만.
-      lines.push(`· ${h.aptNm} ${h.pyeong} ${manwonToEok(h.priceManwon)}${h.milestone ? ` 🎉 ${h.milestone}억 돌파` : ""}`);
+
+    // ── 금액대별 묶기 (2026-08-13 오너 "구간별 높은 순서대로 10억단위로 정리해줘")
+    // ⚠️ 구간 제목은 **그 거래가 속한 금액대**다. "10억을 이번에 넘었다"는 뜻이 아니다 —
+    //    선을 실제로 넘은 건에만 🎉 를 붙인다. 이 둘을 섞으면 그게 곧 오보다.
+    const shown = hits.slice(0, topN);
+    const band = (m: number) => Math.floor(m / 100_000) * 10;
+    const bandLabel = (b: number) => (b === 0 ? "10억 미만" : `${b}억대`);
+    const bands = new Map<number, typeof shown>();
+    for (const h of shown) {
+      const b = band(h.priceManwon);
+      if (!bands.has(b)) bands.set(b, []);
+      bands.get(b)!.push(h);
+    }
+    for (const b of [...bands.keys()].sort((a, c) => c - a)) {
+      const list = bands.get(b)!.slice().sort((a, c) => c.priceManwon - a.priceManwon);
+      lines.push(`【${bandLabel(b)}】 ${list.length}건`);
+      for (const h of list) {
+        lines.push(
+          `${h.gu} / ${h.aptNm} / ${h.pyeong} / ${manwonToEok(h.priceManwon)}` +
+            (h.milestone ? ` 🎉 ${h.milestone}억 돌파` : ""),
+        );
+      }
+      lines.push("─────────────────");
     }
     if (hits.length > topN) lines.push(`… 외 ${hits.length - topN}건`);
   }
