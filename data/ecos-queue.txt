@@ -1,0 +1,2 @@
+# ECOS M2 수집 대기열 — 한 줄 적어 푸시하면 .github/workflows/ecos-m2.yml 이 돈다
+run 2026-08-12 m2-monthly

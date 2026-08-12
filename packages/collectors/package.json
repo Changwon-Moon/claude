@@ -19,7 +19,8 @@
     "collect-population": "tsx src/kosisCli.ts",
     "probe-kosis": "tsx src/kosisProbeCli.ts",
     "search-kosis": "tsx src/kosisSearchCli.ts",
-    "probe-seoul": "tsx src/seoulProbeCli.ts"
+    "probe-seoul": "tsx src/seoulProbeCli.ts",
+    "collect-ecos-m2": "tsx src/ecosM2Cli.ts"
   },
   "dependencies": {},
   "devDependencies": {
