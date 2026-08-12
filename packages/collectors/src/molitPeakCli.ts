@@ -148,9 +148,17 @@ async function main() {
     if (existsSync(p)) {
       const f = JSON.parse(readFileSync(p, "utf8")) as PeakIndex;
       // 판번호가 다른 인덱스는 "채워진 것"으로 세지 않는다 — 다른 것을 잰 파일이다
-      if ((f.meta.schemaVersion ?? 1) === PEAK_SCHEMA) n = f.meta.doneMonths.length;
+      if ((f.meta.schemaVersion ?? 1) === PEAK_SCHEMA) {
+        // ⚠️ **창 안에 있는 달만 센다.** 2026-08-12 사고: 기준선을 2006→2020 으로 줄였더니
+        //    옛 방식으로 채운 종로구(247개월)가 창(79개월)보다 커서 `remaining` 이 **-217** 이 됐고,
+        //    `complete = remaining === 0` 이 영영 참이 되지 않았다. 61/61 이 다 찼는데도
+        //    "이어서 진행 필요"라고 말하고 있었다 — 다 된 일을 안 됐다고 말하는 것이
+        //    안 된 일을 됐다고 말하는 것만큼 나쁘다.
+        const want = new Set(months);
+        n = f.meta.doneMonths.filter((m) => want.has(m)).length;
+      }
     }
-    remaining += months.length - n;
+    remaining += Math.max(0, months.length - n);
     if (n >= months.length) ready++;
   }
   const summary = {

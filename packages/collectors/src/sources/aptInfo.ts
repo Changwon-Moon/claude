@@ -61,9 +61,25 @@ export function chosenOps(): { list: string; basis: string } {
  * **로그가 원인을 안 말하면 다음 사람이 추측으로 고치게 된다.**
  * 망 오류는 잠깐 그런 것일 수 있어 짧게 두 번 더 시도한다(400·403 은 재시도해도 같다).
  */
+/**
+ * ── 실측으로 확정된 것 (2026-08-12)
+ * 실패는 `UND_ERR_CONNECT_TIMEOUT · apis.data.go.kr:443` — **연결 자체가 안 열린다.**
+ * 응답이 늦은 게 아니라 문이 닫혀 있는 것이고, **초 단위 재시도로는 못 넘는다.**
+ * (같은 실행에서 실거래 수집은 같은 호스트로 잘 붙고 있었다 — 서비스별·시간대별로 닫힌다.)
+ *
+ * 그래서 **분 단위로 기다린다.** KOSIS 에서 같은 성질을 먼저 겪고 같은 처방을 썼다
+ * (`kosisSearchCli` 의 "문이 열릴 때까지 최대 8회 × 60초").
+ *
+ * 그리고 **`fetch failed` 한 줄로는 아무것도 못 가른다.** undici 는 연결 끊김·TLS·DNS 를
+ * 전부 그 한 줄로 말하므로 `err.cause` 를 꺼내 붙인다 — 로그가 원인을 안 말하면
+ * 다음 사람이 추측으로 고치게 된다.
+ */
+const NET_TRIES = 6;
+const NET_WAIT_MS = 60_000;
+
 async function get(url: string, timeoutMs = 20000): Promise<{ status: number; body: string }> {
   let last = "";
-  for (let attempt = 0; attempt < 3; attempt++) {
+  for (let attempt = 0; attempt < NET_TRIES; attempt++) {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), timeoutMs);
     try {
@@ -73,12 +89,15 @@ async function get(url: string, timeoutMs = 20000): Promise<{ status: number; bo
       const cause = (e as any)?.cause;
       const why = [cause?.code, cause?.message, (e as Error)?.message].filter(Boolean).join(" · ");
       last = `망 오류: ${why || String(e)}`;
-      await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
+      if (attempt < NET_TRIES - 1) {
+        console.warn(`   ⏸ ${last}\n     문이 닫힌 것으로 보고 ${NET_WAIT_MS / 1000}초 기다립니다 (${attempt + 1}/${NET_TRIES - 1})`);
+        await new Promise((r) => setTimeout(r, NET_WAIT_MS));
+      }
     } finally {
       clearTimeout(t);
     }
   }
-  throw new Error(last);
+  throw new Error(`${last} — ${NET_TRIES}번(약 ${Math.round(((NET_TRIES - 1) * NET_WAIT_MS) / 60000)}분) 시도했습니다`);
 }
 
 /** 이 응답이 "그런 서비스 없음"인가 — 이때만 다음 후보로 넘어간다(키·한도 문제와 구분) */
