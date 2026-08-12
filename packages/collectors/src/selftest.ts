@@ -978,6 +978,11 @@ console.log("\n[청약홈 분양정보 파서]");
   check("29.9억 → 41억은 40억 돌파(두 선을 한 번에)", singoMilestone(299000, 410000) === 40, String(singoMilestone(299000, 410000)));
   check("9.9억 → 10억은 10억 돌파", singoMilestone(99000, 100000) === 10, String(singoMilestone(99000, 100000)));
   check("경계 직전은 돌파 아님", singoMilestone(99000, 99900) === null, String(singoMilestone(99000, 99900)));
+  // 오너: "10억, 20억… 이렇게 해서 **100억까지**를 말한 거야" — 선을 목록으로 두지 않고
+  // 몫으로 재므로 100억도, 그 위도 그대로 잡힌다. 목록을 두면 언젠가 빠뜨린다.
+  check("99억 → 100억은 100억 돌파", singoMilestone(990000, 1000000) === 100, String(singoMilestone(990000, 1000000)));
+  check("50.5억 → 60억은 60억 돌파", singoMilestone(505000, 600000) === 60, String(singoMilestone(505000, 600000)));
+  check("100억 → 105억은 돌파 아님", singoMilestone(1000000, 1050000) === null, String(singoMilestone(1000000, 1050000)));
 
   // 기준선 문구는 **값에서 자동으로 나와야 한다** — 사람이 따로 적으면 기간을 바꾼 날 어긋난다
   check("기준선 시작월은 2020-01 (오너 결정)", SINGO_FROM === "202001", SINGO_FROM);

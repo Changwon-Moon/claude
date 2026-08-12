@@ -167,6 +167,10 @@ export function foldPeaks(peaks: Record<string, PeakEntry>, lawdCd: string, trad
  * 왜 따로 재나: "신고가"는 1만원만 높아도 신고가다. 그런데 **"처음으로 30억을 넘었다"**는
  * 사람이 기억하는 사건이다. 같은 신고가라도 소식의 크기가 다르다.
  * 실측(2026-07): 신고가 1,098건 중 돌파는 58건 — 20분의 1로 걸러진다.
+ * 1000세대 이상 명부까지 걸면 8건(전부 10억선)이었다.
+ *
+ * ⚠️ 선을 [10, 20, 30 …] 목록으로 두지 않는다. **몫으로 재면** 100억이든 그 위든 저절로
+ * 잡히고, 목록은 언젠가 빠뜨린다(오너: "10억, 20억… 100억까지를 말한 거야").
  */
 export function milestoneCrossed(prevManwon: number, nowManwon: number): number | null {
   const line = (m: number) => Math.floor(m / 100_000); // 10억 = 100,000만원
