@@ -1,32 +1,90 @@
 # 1000세대 이상 단지 명부 — 마지막 실행
 
 - 실행: 2026-08-12 (KST) · 방아쇠 `push`
-- 예산: 200회 · 최소 세대수 1000
+- 예산: 250회 · 최소 세대수 1000
 - 결과: **성공**
-- 커밋: `bbdafa720b13d1a4ff3ce2a69480a7ae0c2da8bf`
+- 커밋: `a0619d6c29a9fd01541c4d8a42ad4e983db94069`
 
 ```
 
 > @wirit/collectors@0.1.0 collect-apt-universe /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptUniverseCli.ts -- --min-hhld 1000 --budget 200
+> tsx src/aptUniverseCli.ts -- --min-hhld 1000 --budget 250
 
-호출 0회 · 목록 0/61개 지역 · 세대수 확인 0/0곳
-→ 1,000세대 이상 **0개 단지** · ⏳ 이어서 진행 필요
+· 단지목록 종로구 38곳
+· 단지목록 중구 49곳
+· 단지목록 용산구 86곳
+· 단지목록 성동구 132곳
+· 단지목록 광진구 96곳
+· 단지목록 동대문구 134곳
+· 단지목록 중랑구 136곳
+· 단지목록 성북구 146곳
+· 단지목록 강북구 56곳
+· 단지목록 도봉구 120곳
+· 단지목록 노원구 231곳
+· 단지목록 은평구 162곳
+· 단지목록 서대문구 96곳
+· 단지목록 마포구 142곳
+· 단지목록 양천구 152곳
+· 단지목록 강서구 211곳
+· 단지목록 구로구 179곳
+· 단지목록 금천구 55곳
+· 단지목록 영등포구 179곳
+· 단지목록 동작구 138곳
+· 단지목록 관악구 92곳
+· 단지목록 서초구 202곳
+· 단지목록 강남구 233곳
+· 단지목록 송파구 178곳
+· 단지목록 강동구 151곳
+· 단지목록 수원시장안구 93곳
+· 단지목록 수원시권선구 142곳
+· 단지목록 수원시팔달구 74곳
+· 단지목록 수원시영통구 138곳
+· 단지목록 성남시수정구 63곳
+· 단지목록 성남시중원구 54곳
+· 단지목록 성남시분당구 215곳
+· 단지목록 안양시만안구 91곳
+· 단지목록 안양시동안구 132곳
+· 단지목록 광명시 89곳
+· 단지목록 평택시 310곳
+· 단지목록 안산시상록구 56곳
+· 단지목록 안산시단원구 86곳
+· 단지목록 고양시덕양구 199곳
+· 단지목록 고양시일산동구 115곳
+· 단지목록 고양시일산서구 150곳
+· 단지목록 과천시 20곳
+· 단지목록 구리시 89곳
+· 단지목록 남양주시 328곳
+· 단지목록 오산시 110곳
+· 단지목록 시흥시 256곳
+· 단지목록 군포시 98곳
+· 단지목록 의왕시 87곳
+· 단지목록 하남시 123곳
+· 단지목록 용인시처인구 88곳
+· 단지목록 용인시기흥구 233곳
+· 단지목록 용인시수지구 208곳
+· 단지목록 김포시 200곳
+· 단지목록 광주시 128곳
+· 단지목록 화성시만세구 90곳
+· 단지목록 화성시효행구 71곳
+· 단지목록 화성시병점구 75곳
+· 단지목록 화성시동탄구 193곳
+· 단지목록 부천시원미구 135곳
+· 단지목록 부천시소사구 83곳
+· 단지목록 부천시오정구 46곳
 
-실패 61건 (다음 실행에서 다시 시도):
-  · 목록 종로구: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-  · 목록 중구: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-  · 목록 용산구: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-  · 목록 성동구: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-  · 목록 광진구: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-  · 목록 동대문구: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-  · 목록 중랑구: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-  · 목록 성북구: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-  · 목록 강북구: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-  · 목록 도봉구: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-  · 목록 노원구: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-  · 목록 은평구: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-  · 목록 서대문구: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-  · 목록 마포구: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-  · 목록 양천구: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
+쓴 오퍼레이션 — 목록: AptListService3/getSigunguAptList3 · 기본정보: AptBasisInfoServiceV4/getAphusBassInfoV4
+호출 250회 · 목록 61/61개 지역 · 세대수 확인 189/8062곳
+→ 1,000세대 이상 **14개 단지** · ⏳ 이어서 진행 필요
+
+세대수 상위 10:
+  · 중구 신당동 신당남산타운(분양) — 3,118세대
+  · 용산구 이촌동 한가람아파트 — 2,036세대
+  · 중구 신당동 신당남산타운임대 — 2,034세대
+  · 중구 신당동 신당약수하이츠 — 1,598세대
+  · 중구 황학동 롯데캐슬베네치아 — 1,534세대
+  · 용산구 도원동 도원삼성래미안 — 1,458세대
+  · 성동구 하왕십리동 텐즈힐1단지 — 1,369세대
+  · 중구 만리동2가 서울역센트럴자이아파트 — 1,341세대
+  · 용산구 한강로3가 용산센트럴파크 — 1,334세대
+  · 용산구 서빙고동 서빙고신동아 — 1,326세대
 ```
