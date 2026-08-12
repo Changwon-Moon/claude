@@ -17,6 +17,10 @@
  *   TOWER_PASSWORD  비밀번호 문이 걸려 있으면 필요. 없으면 문 검사만 건너뛴다.
  *
  * 실행: node scripts/verify-live.mjs
+ *
+ * ⚠️ 이 결과는 워크플로가 `docs/_health/verify-live-last.md` 에 적는다(2026-08-12).
+ * 작업 세션은 Actions 로그·아티팩트를 못 읽는다(egress 차단) — 저장소가 유일한 통로다.
+ * "관제탑 배포가 빨간불"이면 **그 파일부터 열어 본다.** 추측하지 않는다.
  */
 const URL_BASE = (process.env.TOWER_URL || "https://wirit-tower.engineerest0.workers.dev").replace(/\/$/, "");
 const PW = process.env.TOWER_PASSWORD || "";

@@ -175,6 +175,40 @@ jobs:
             echo '```'
           } >> $GITHUB_STEP_SUMMARY
 
+      # ⚠️ 요약(Summary)은 사람 눈에는 보이지만 **작업 세션은 못 읽는다** —
+      #    Summary 는 check-runs API 로만 나오고 그 API 는 토큰 권한 밖(403),
+      #    로그 zip 과 아티팩트 zip 은 egress 허용목록 밖 호스트로 리다이렉트된다
+      #    (results-receiver… / …blob.core.windows.net). 셋 다 막혀 있다.
+      #    → 그래서 **저장소에 적는다.** git 은 세션이 읽을 수 있는 유일한 통로다.
+      #    이 파일이 없었기에 이 검사의 실패 이유가 2주간 아무에게도 안 보였다.
+      #    경로를 docs/_health/ 로 둔 이유: 이 커밋이 tower-deploy·guard 의 트리거
+      #    paths 어디에도 안 걸려 배포 루프가 생기지 않는다.
+      - name: 실제 사이트 확인 — 결과를 저장소에 남긴다
+        if: always()
+        run: |
+          mkdir -p docs/_health
+          {
+            echo "# 실제 사이트 확인 — 마지막 실행 결과"
+            echo ""
+            echo "> 이 파일은 tower-deploy.yml 이 매 배포마다 덮어쓴다. 손으로 고치지 않는다."
+            echo "> 작업 세션이 Actions 로그를 못 읽어서(egress 차단) 만든 통로다."
+            echo ""
+            echo "- 실행: \`${{ github.run_id }}\` · 커밋 \`${{ github.sha }}\`"
+            echo "- 시각(UTC): $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo ""
+            echo '```'
+            cat /tmp/verify-live.txt 2>/dev/null || echo "(출력 없음 — 스크립트가 시작 전에 죽었습니다)"
+            echo '```'
+          } > docs/_health/verify-live-last.md
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/_health/verify-live-last.md
+          git diff --cached --quiet && { echo "변화 없음 — 커밋 생략"; exit 0; }
+          git commit -m "관제탑 검증 결과 기록 (run ${{ github.run_id }}) [skip ci]"
+          # 그새 다른 워크플로가 밀었을 수 있다 — 받아서 얹고 민다. 실패해도 배포를 죽이지 않는다.
+          git pull --rebase --autostash origin "${{ github.ref_name }}" || true
+          git push origin "HEAD:${{ github.ref_name }}" || echo "::warning::결과 기록 푸시 실패(배포 판정에는 영향 없음)"
+
       # ⚠️ 자동 발행 단계는 없앴다(2026-07-27 오너 결정: "인스타는 내가 수동으로 올린다").
       #    올리는 사람은 오너, 관제탑은 **올린 사실을 기록**한다:
       #    결재 화면 [JPG 내려받기]+[캡션 복사] → 오너가 앱에서 업로드 →
