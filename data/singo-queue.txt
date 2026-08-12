@@ -21,3 +21,6 @@ months=2 top=10 sort=price
 #   (오전엔 같은 API 로 4,819회를 잘 받았다). 3번 연속 실패 시 60초씩 최대 5번 기다리게 고친 뒤 재실행.
 months=2 top=10 sort=price
 
+
+# 2026-08-13: 예약(08:05 KST)이 지연돼 수동으로 당겨 돌린다.
+months=2 top=10 sort=price
