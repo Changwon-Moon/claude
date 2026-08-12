@@ -101,5 +101,32 @@
     "author": "Korea.net / Korean Culture and Information Service (Jeon Han)",
     "url": "https://commons.wikimedia.org/wiki/File%3ANam_Kyung-pil_at_18th_Puchon_International_Fantastic_Film_Festival%2C_July_17%2C_2014.jpg",
     "fetchedFor": "wirit card"
+  },
+  "roh-moohyun": {
+    "file": "roh-moohyun.jpg",
+    "source": "wikipedia",
+    "query": "Roh Moo-hyun",
+    "license": "KOGL Type 1",
+    "author": "대한민국 국가기록원",
+    "url": "https://commons.wikimedia.org/wiki/File%3ARoh_Moo-hyun_presidential_portrait.jpg",
+    "fetchedFor": "wirit card"
+  },
+  "lee-myungbak": {
+    "file": "lee-myungbak.jpg",
+    "source": "wikipedia",
+    "query": "Lee Myung-bak",
+    "license": "KOGL Type 1",
+    "author": "대한민국 국가기록원 (National Archives of Korea)",
+    "url": "https://commons.wikimedia.org/wiki/File%3ALee_Myung-bak_presidential_portrait.jpg",
+    "fetchedFor": "wirit card"
+  },
+  "park-geunhye": {
+    "file": "park-geunhye.jpg",
+    "source": "wikipedia",
+    "query": "Park Geun-hye",
+    "license": "KOGL Type 1",
+    "author": "대한민국 국가기록원",
+    "url": "https://commons.wikimedia.org/wiki/File%3APark_Geun-hye_presidential_portrait.png",
+    "fetchedFor": "wirit card"
   }
 }
