@@ -209,8 +209,8 @@ const level = {
   y: r1(TOP - 4),
   lh: 46,
   lines: [
-    { t: `${ymLabel(lastYm)} 현재`, fill: GRAY, size: 26, weight: 800 },
-    { t: `M2 ${Math.round(M2[lastYm]).toLocaleString("ko-KR")}조`, fill: INK, size: 44, weight: 900 },
+    { t: `${ymLabel(lastYm)} 기준`, fill: GRAY, size: 26, weight: 800 },
+    { t: `M2 ${Math.round(M2[lastYm]).toLocaleString("ko-KR")}조`, fill: RED, size: 44, weight: 900 },
   ],
 };
 
