@@ -20,7 +20,7 @@
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
-import { fetchAptList, fetchAptBasis } from "./sources/aptInfo.js";
+import { fetchAptList, fetchAptBasis, chosenOps } from "./sources/aptInfo.js";
 import type { AptListItem } from "./parse/aptInfo.js";
 import { normAptName } from "./parse/singo.js";
 import { singoRegions } from "./sources/singoRegions.js";
@@ -80,8 +80,8 @@ async function main() {
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       errors.push(`목록 ${gu}: ${msg}`);
-      if (/SERVICE_KEY|HTTP 40[13]/i.test(msg)) {
-        console.error(`⛔ ${msg}\n   → 공공데이터포털에서 '공동주택 단지 목록제공 서비스' 활용신청이 필요합니다.`);
+      if (/SERVICE_KEY|HTTP 40[13]|살아 있는 오퍼레이션이 없습니다/i.test(msg)) {
+        console.error(`⛔ ${msg}\n   → 활용신청 여부 또는 서비스 URL(오퍼레이션 이름)을 확인하세요.`);
         break;
       }
     }
@@ -175,8 +175,10 @@ async function main() {
     ) + "\n",
   );
 
+  const ops = chosenOps();
+  if (ops.list || ops.basis) console.log(`\n쓴 오퍼레이션 — 목록: ${ops.list || "(미정)"} · 기본정보: ${ops.basis || "(미정)"}`);
   console.log(
-    `\n호출 ${used}회 · 목록 ${listed}/${regions.length}개 지역 · 세대수 확인 ${known}/${total}곳\n` +
+    `호출 ${used}회 · 목록 ${listed}/${regions.length}개 지역 · 세대수 확인 ${known}/${total}곳\n` +
       `→ ${minHhld.toLocaleString("ko-KR")}세대 이상 **${universe.length}개 단지** · ${complete ? "✅ 명부 완성" : "⏳ 이어서 진행 필요"}`,
   );
   if (universe.length) {

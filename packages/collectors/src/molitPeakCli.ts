@@ -55,13 +55,20 @@ async function main() {
   const months = monthRange(from, to);
   console.log(`역대 최고가 인덱스 — 지역 ${regions.length}곳 × ${months.length}개월, 이번 실행 예산 ${budget}회`);
 
+  // 속도 제한 대응 — 값은 실측으로 조정한다(2026-08-12: 296회쯤에서 처음 막혔다)
+  const gapMs = Number(arg("gap-ms") ?? 250);
+  const coolOffSec = Number(arg("cool-off") ?? 90);
+  const maxCoolOffs = Number(arg("max-cool-offs") ?? 4);
+  let coolOffs = 0;
+  let stopped = false;
+
   let used = 0;
   let foldedTotal = 0;
   let regionsTouched = 0;
   const failures: string[] = [];
 
   for (const { gu, lawdCd } of regions) {
-    if (used >= budget) break;
+    if (used >= budget || stopped) break;
     const path = join(outDir, `${lawdCd}.json`);
     const fresh = (): PeakIndex => ({
       meta: {
@@ -88,7 +95,7 @@ async function main() {
 
     let touched = false;
     for (const ym of todo) {
-      if (used >= budget) break;
+      if (used >= budget || stopped) break;
       try {
         const raw = await fetchAptTradesMonth(lawdCd, ym, key);
         used++;
@@ -100,14 +107,23 @@ async function main() {
         used++;
         const msg = e instanceof Error ? e.message : String(e);
         failures.push(`${gu} ${ym}: ${msg}`);
-        // 인증·한도 문제면 더 두드려도 소용없다 — 이번 실행은 여기서 접는다
+        // ── 403/키 오류는 두 가지가 섞여 온다 (2026-08-12 실측)
+        // 종로구 247개월이 **전부 성공한 뒤** 중구에서 SERVICE_KEY_IS_NOT_REGISTERED 가 났다.
+        // 키가 진짜 미등록이면 첫 호출부터 났어야 한다 — 즉 이건 **속도 제한**에 가깝다.
+        // 그래서 바로 접지 않고 한 번 길게 쉬어 본다. 쉬고도 같으면 그때 접는다.
         if (/LIMITED_NUMBER|SERVICE_KEY|HTTP 40[13]/i.test(msg)) {
-          console.error(`⛔ ${gu} ${ym} — ${msg} · 이번 실행 중단`);
-          used = budget;
+          if (coolOffs < maxCoolOffs) {
+            coolOffs++;
+            console.warn(`⏸ ${gu} ${ym} — ${msg}\n   속도 제한으로 보고 ${coolOffSec}초 쉽니다 (${coolOffs}/${maxCoolOffs})`);
+            await new Promise((r) => setTimeout(r, coolOffSec * 1000));
+            continue; // 같은 달을 다시 시도한다
+          }
+          console.error(`⛔ ${gu} ${ym} — ${msg}\n   ${maxCoolOffs}번 쉬고도 같습니다 · 이번 실행은 여기까지 (지금까지 받은 것은 커밋됩니다)`);
+          stopped = true;
           break;
         }
       }
-      await new Promise((r) => setTimeout(r, 120));
+      await new Promise((r) => setTimeout(r, gapMs));
     }
     if (touched) {
       idx.meta.doneMonths.sort();
@@ -146,7 +162,8 @@ async function main() {
   writeFileSync(join(outDir, "_progress.json"), JSON.stringify(summary, null, 2) + "\n");
 
   console.log(
-    `\n호출 ${used}회 · 갱신된 칸 ${foldedTotal} · 손댄 지역 ${regionsTouched}곳\n` +
+    `\n실제 호출 ${used}회${stopped ? " (속도 제한으로 조기 중단)" : ""} · 쉬어감 ${coolOffs}회 · ` +
+      `갱신된 칸 ${foldedTotal} · 손댄 지역 ${regionsTouched}곳\n` +
       `완료 지역 ${ready}/${regions.length} · 남은 월 ${remaining} · ${summary.complete ? "✅ 전부 완료" : "⏳ 이어서 진행 필요"}`,
   );
   if (failures.length) {
