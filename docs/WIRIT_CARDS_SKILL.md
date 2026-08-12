@@ -177,6 +177,44 @@ B등급(API 키) 경고는 **새 데이터 수집에만** 필요하다. 없어�
 3. `docs/CARD_CHECKLIST.md` §2 — **카드를 만들거나 고치는 작업이면 필수**(재발 금지 항목)
    - 🏢 **청약·분양 소재**면 `docs/guides/청약분양-카드-기준.md` 도 필수. 판형은 `danji-cover@1` 하나,
      빌더는 `scripts/build-danji.mjs` 하나다. **분양가는 입주자모집공고문 대조 전 발행 금지.**
+   - 🔌 **새 데이터가 필요한 소재**면 `docs/API_CONNECTIONS.md` 를 **먼저** 읽는다(아래 🔌절).
+
+### 🔌 API 는 이미 연결돼 있다 — 오너에게 키를 묻지 않는다 (2026-08-12 오너 지시)
+
+> 세션이 오너에게 *"KOSIS API 키를 주세요"* 라고 물었다. 물을 일이 아니었다 —
+> 그 키는 **이미 GitHub Secrets 에 있었고 워크플로가 매일 그걸로 데이터를 받고 있었다.**
+> 오너: *"이미 KOSIS는 API 연결되어 있어. API 연결 리스트를 스킬 및 작업 기준에 반영해서
+> 다음부터 이런 질문 하지 않도록 해줘."*
+
+**세션 컨테이너에 키가 없는 것은 정상이다.** 세션은 키를 쥐지 않는다 — 외부망도 막혀 있다.
+수집은 **GitHub Actions 가** 하고, 세션은 **대기열 파일에 한 줄 밀어 푸시**해서 그걸 깨운다.
+
+`doctor.mjs` 의 `⚠️ ○○_API_KEY 없음` 은 **"이 컨테이너에 없다"**는 뜻이지
+**"저장소에 배관이 없다"**는 뜻이 **아니다.** 이 둘을 섞어 읽은 것이 오판의 원인이었다.
+
+**이미 연결된 것**(정본은 `docs/API_CONNECTIONS.md`, 의심되면 `node scripts/check-secrets.mjs`):
+
+| 무엇 | 대기열(세션이 미는 손잡이) |
+|---|---|
+| **KOSIS** 국가통계포털 — 인구·세대·이동·고령·출생·사망 (+ 표 찾기/검증) | `data/kosis-probe-queue.txt` · `data/population-queue.txt` |
+| **국토부 실거래** 매매 / 전월세 | `data/molit-queue.txt` · `data/molit-rent-queue.txt` |
+| **청약홈** 분양·무순위 (매일 08:00 KST) | `data/applyhome-queue.txt` |
+| **부동산원 R-ONE** 월간 전월세지수 / 주간지수 | `data/reb-weekly-queue.txt` |
+| **DART** 평균연봉 · **ECOS** 금리·환율 · **Yahoo/Stooq** 증시 | `data/market-queue.txt` (증시) |
+| **서울 열린데이터광장** 생활인구 — ⚠️ probe 배관까지만 | `data/seoul-probe-queue.txt` |
+| **카카오 지오코딩** · **Wikimedia/Pexels/Pixabay** 이미지 · **뉴스/트렌드 RSS** | `data/geocode-queue.txt` · `data/photo-batch.tsv` · `research/article-queue.txt` |
+
+**KOSIS 에 새 표가 필요하면 — 추측하지 말고 찾는다** (2026-08-12 신설):
+
+```
+data/kosis-probe-queue.txt 에 `run <날짜> search=소비자물가,집세 — 사유` 한 줄 → 푸시
+  → data/kosis-search.md 에 orgId·tblId·통계표명이 적혀 온다
+  → 고른 표를 sources/kosis.ts TABLES 에 enabled:false 로 넣고 다시 푸시(probe)
+  → data/kosis-probe.md 에서 itmId·분류축·행정구역 축 확인 → enabled:true → selftest
+```
+
+그전까지는 표 ID 를 **웹 검색결과 제목까지만** 보고 `추정` 으로 박았다. 그 습관이 사망표
+사인축 사고(특정 사인의 숫자가 총사망자수로 나갈 뻔한 것)를 낳았다.
 
 ### 🏢 청약·분양 카드 원커맨드
 
