@@ -3,22 +3,229 @@
   "kind": "photo",
   "items": [
     {
-      "slug": "subway-jongno3ga",
-      "name": "File:Seoul-metro-534-Jongno-3ga-station-platform-20180915-123402.jpg",
+      "slug": "chumiae",
+      "name": "Category:Choo Mi-ae",
       "kind": "photo",
-      "source": "Wikimedia Commons (https://commons.wikimedia.org/wiki/File%3ASeoul-metro-534-Jongno-3ga-station-platform-20180915-123402.jpg)",
+      "source": "category (https://commons.wikimedia.org/wiki/File%3AChoo%20Mi-ae%20ministerial%20portrait.png)",
       "license": "open-license",
-      "note": "원 라이선스: CC BY-SA 4.0 · 촬영/제작: LERK",
-      "added": "2026-07-26"
+      "note": "원 라이선스: KOGL Type 1 · 촬영/제작: 대한민국 법무부",
+      "added": "2026-08-12"
     },
     {
-      "slug": "subway-pexels",
-      "name": "seoul subway train",
+      "slug": "chumiae-cut",
+      "name": "Category:Choo Mi-ae (배경 제거본)",
       "kind": "photo",
-      "source": "pexels (https://www.pexels.com/photo/woman-waiting-at-seoul-subway-station-29673487/)",
+      "source": "category (https://commons.wikimedia.org/wiki/File%3AChoo%20Mi-ae%20ministerial%20portrait.png)",
       "license": "open-license",
-      "note": "원 라이선스: Pexels License (상업이용·표기불요) · 촬영/제작: Paul Bill",
-      "added": "2026-07-26"
+      "note": "chumiae 에서 파생 · 원 라이선스: KOGL Type 1 · 촬영/제작: 대한민국 법무부",
+      "added": "2026-08-13"
+    },
+    {
+      "slug": "hangang-prugio-riverfront",
+      "name": "한강 푸르지오 리버프론트 조감도",
+      "kind": "photo",
+      "source": "대우건설 분양 홍보자료 (오너가 직접 제공)",
+      "license": "press-material",
+      "note": "건설사 분양 홍보 이미지. 정보전달 목적의 지명적 사용이며 카드에 '출처. 대우건설 조감도'를 표기한다. 원본은 _source/ 에 보관. 이미지 하단에 '상기 이미지는 소비자의 이해를 돕기 위한 것으로 실제와 차이가 날 수 있으며…' 고지가 있으므로 크롭 시 유의.",
+      "added": "2026-08-03"
+    },
+    {
+      "slug": "hangang-prugio-riverfront-cut",
+      "name": "한강 푸르지오 리버프론트 조감도 (배경 제거본)",
+      "kind": "photo",
+      "source": "대우건설 분양 홍보자료 (오너가 직접 제공)",
+      "license": "press-material",
+      "note": "hangang-prugio-riverfront 에서 파생 · 건설사 분양 홍보 이미지. 정보전달 목적의 지명적 사용이며 카드에 '출처. 대우건설 조감도'를 표기한다. 원본은 _source/ 에 보관. 이미지 하단에 '상기 이미지는 소비자의 이해를 돕기 위한 것으로 실제와 차이가 날 수 있으며…' 고지가 있으므로 크롭 시 유의.",
+      "added": "2026-08-13"
+    },
+    {
+      "slug": "kim-dongyeon",
+      "name": "Category:Kim Dong-yeon",
+      "kind": "photo",
+      "source": "category (https://commons.wikimedia.org/wiki/File%3AKim%20Dong-yeon%202018-06.jpg)",
+      "license": "open-license",
+      "note": "원 라이선스: Public domain · 촬영/제작: Office of U.S. Treasury Secretary",
+      "added": "2026-08-12"
+    },
+    {
+      "slug": "kim-dongyeon-cut",
+      "name": "Category:Kim Dong-yeon (배경 제거본)",
+      "kind": "photo",
+      "source": "category (https://commons.wikimedia.org/wiki/File%3AKim%20Dong-yeon%202018-06.jpg)",
+      "license": "open-license",
+      "note": "kim-dongyeon 에서 파생 · 원 라이선스: Public domain · 촬영/제작: Office of U.S. Treasury Secretary",
+      "added": "2026-08-13"
+    },
+    {
+      "slug": "lee-jaemyung",
+      "name": "File:Lee Jae-myung's Portrait (2025.6.4) (cropped).jpg",
+      "kind": "photo",
+      "source": "wikimedia (https://commons.wikimedia.org/wiki/File%3ALee%20Jae-myung's%20Portrait%20(2025.6.4)%20(cropped).jpg)",
+      "license": "open-license",
+      "note": "원 라이선스: CC BY-SA 2.0 · 촬영/제작: Republic of  Korea from Seoul, Republic of Korea",
+      "added": "2026-08-12"
+    },
+    {
+      "slug": "lee-jaemyung-cut",
+      "name": "File:Lee Jae-myung's Portrait (2025.6.4) (cropped).jpg (배경 제거본)",
+      "kind": "photo",
+      "source": "wikimedia (https://commons.wikimedia.org/wiki/File%3ALee%20Jae-myung's%20Portrait%20(2025.6.4)%20(cropped).jpg)",
+      "license": "open-license",
+      "note": "lee-jaemyung 에서 파생 · 원 라이선스: CC BY-SA 2.0 · 촬영/제작: Republic of  Korea from Seoul, Republic of Korea",
+      "added": "2026-08-13"
+    },
+    {
+      "slug": "lee-jaemyung-face",
+      "name": "이재명 (얼굴 규격화 480×586)",
+      "kind": "photo",
+      "source": "wikimedia (https://commons.wikimedia.org/wiki/File%3ALee%20Jae-myung's%20Portrait%20(2025.6.4)%20(cropped).jpg)",
+      "license": "open-license",
+      "note": "lee-jaemyung 원본을 scripts/normalize-portraits.py 로 얼굴 크기·가슴선 통일 + 배경 잔재 제거. 원 라이선스: CC BY-SA 2.0 · 촬영/제작: Republic of  Korea from Seoul, Republic of Korea",
+      "added": "2026-08-12"
+    },
+    {
+      "slug": "lee-myungbak",
+      "name": "Lee Myung-bak",
+      "kind": "photo",
+      "source": "wikipedia (https://commons.wikimedia.org/wiki/File%3ALee_Myung-bak_presidential_portrait.jpg)",
+      "license": "open-license",
+      "note": "원 라이선스: KOGL Type 1 · 촬영/제작: 대한민국 국가기록원 (National Archives of Korea)",
+      "added": "2026-08-12"
+    },
+    {
+      "slug": "lee-myungbak-cut",
+      "name": "Lee Myung-bak (배경 제거본)",
+      "kind": "photo",
+      "source": "wikipedia (https://commons.wikimedia.org/wiki/File%3ALee_Myung-bak_presidential_portrait.jpg)",
+      "license": "open-license",
+      "note": "lee-myungbak 에서 파생 · 원 라이선스: KOGL Type 1 · 촬영/제작: 대한민국 국가기록원 (National Archives of Korea)",
+      "added": "2026-08-13"
+    },
+    {
+      "slug": "lee-myungbak-face",
+      "name": "이명박 (얼굴 규격화 480×586)",
+      "kind": "photo",
+      "source": "wikipedia (https://commons.wikimedia.org/wiki/File%3ALee_Myung-bak_presidential_portrait.jpg)",
+      "license": "open-license",
+      "note": "lee-myungbak 원본을 scripts/normalize-portraits.py 로 얼굴 크기·가슴선 통일 + 배경 잔재 제거. 원 라이선스: KOGL Type 1 · 촬영/제작: 대한민국 국가기록원 (National Archives of Korea)",
+      "added": "2026-08-12"
+    },
+    {
+      "slug": "moon-jaein",
+      "name": "Moon Jae-in",
+      "kind": "photo",
+      "source": "wikipedia (https://commons.wikimedia.org/wiki/File%3APresident_Moon_Jae_In.jpg)",
+      "license": "open-license",
+      "note": "원 라이선스: KOGL Type 1 · 촬영/제작: Government of the Republic of Korea",
+      "added": "2026-08-12"
+    },
+    {
+      "slug": "moon-jaein-cut",
+      "name": "Moon Jae-in (배경 제거본)",
+      "kind": "photo",
+      "source": "wikipedia (https://commons.wikimedia.org/wiki/File%3APresident_Moon_Jae_In.jpg)",
+      "license": "open-license",
+      "note": "moon-jaein 에서 파생 · 원 라이선스: KOGL Type 1 · 촬영/제작: Government of the Republic of Korea",
+      "added": "2026-08-13"
+    },
+    {
+      "slug": "moon-jaein-face",
+      "name": "문재인 (얼굴 규격화 480×586)",
+      "kind": "photo",
+      "source": "wikipedia (https://commons.wikimedia.org/wiki/File%3APresident_Moon_Jae_In.jpg)",
+      "license": "open-license",
+      "note": "moon-jaein 원본을 scripts/normalize-portraits.py 로 얼굴 크기·가슴선 통일 + 배경 잔재 제거. 원 라이선스: KOGL Type 1 · 촬영/제작: Government of the Republic of Korea",
+      "added": "2026-08-12"
+    },
+    {
+      "slug": "moon-jaein2",
+      "name": "Category:Moon Jae-in",
+      "kind": "photo",
+      "source": "category (https://commons.wikimedia.org/wiki/File%3ARethinking%20the%20History%20of%20Democracy.jpg)",
+      "license": "open-license",
+      "note": "원 라이선스: Public domain · 촬영/제작: Jung Chung-rae",
+      "added": "2026-08-12"
+    },
+    {
+      "slug": "moon-jaein2-cut",
+      "name": "Category:Moon Jae-in (배경 제거본)",
+      "kind": "photo",
+      "source": "category (https://commons.wikimedia.org/wiki/File%3ARethinking%20the%20History%20of%20Democracy.jpg)",
+      "license": "open-license",
+      "note": "moon-jaein2 에서 파생 · 원 라이선스: Public domain · 촬영/제작: Jung Chung-rae",
+      "added": "2026-08-13"
+    },
+    {
+      "slug": "nam-kyungpil",
+      "name": "Nam Kyung-pil",
+      "kind": "photo",
+      "source": "wikipedia (https://commons.wikimedia.org/wiki/File%3ANam_Kyung-pil_at_18th_Puchon_International_Fantastic_Film_Festival%2C_July_17%2C_2014.jpg)",
+      "license": "open-license",
+      "note": "원 라이선스: CC BY-SA 2.0 · 촬영/제작: Korea.net / Korean Culture and Information Service (Jeon Han)",
+      "added": "2026-08-12"
+    },
+    {
+      "slug": "nam-kyungpil-cut",
+      "name": "Nam Kyung-pil (배경 제거본)",
+      "kind": "photo",
+      "source": "wikipedia (https://commons.wikimedia.org/wiki/File%3ANam_Kyung-pil_at_18th_Puchon_International_Fantastic_Film_Festival%2C_July_17%2C_2014.jpg)",
+      "license": "open-license",
+      "note": "nam-kyungpil 에서 파생 · 원 라이선스: CC BY-SA 2.0 · 촬영/제작: Korea.net / Korean Culture and Information Service (Jeon Han)",
+      "added": "2026-08-13"
+    },
+    {
+      "slug": "park-geunhye",
+      "name": "Park Geun-hye",
+      "kind": "photo",
+      "source": "wikipedia (https://commons.wikimedia.org/wiki/File%3APark_Geun-hye_presidential_portrait.png)",
+      "license": "open-license",
+      "note": "원 라이선스: KOGL Type 1 · 촬영/제작: 대한민국 국가기록원",
+      "added": "2026-08-12"
+    },
+    {
+      "slug": "park-geunhye-cut",
+      "name": "Park Geun-hye (배경 제거본)",
+      "kind": "photo",
+      "source": "wikipedia (https://commons.wikimedia.org/wiki/File%3APark_Geun-hye_presidential_portrait.png)",
+      "license": "open-license",
+      "note": "park-geunhye 에서 파생 · 원 라이선스: KOGL Type 1 · 촬영/제작: 대한민국 국가기록원",
+      "added": "2026-08-13"
+    },
+    {
+      "slug": "park-geunhye-face",
+      "name": "박근혜 (얼굴 규격화 480×586)",
+      "kind": "photo",
+      "source": "wikipedia (https://commons.wikimedia.org/wiki/File%3APark_Geun-hye_presidential_portrait.png)",
+      "license": "open-license",
+      "note": "park-geunhye 원본을 scripts/normalize-portraits.py 로 얼굴 크기·가슴선 통일 + 배경 잔재 제거. 원 라이선스: KOGL Type 1 · 촬영/제작: 대한민국 국가기록원",
+      "added": "2026-08-12"
+    },
+    {
+      "slug": "roh-moohyun",
+      "name": "Roh Moo-hyun",
+      "kind": "photo",
+      "source": "wikipedia (https://commons.wikimedia.org/wiki/File%3ARoh_Moo-hyun_presidential_portrait.jpg)",
+      "license": "open-license",
+      "note": "원 라이선스: KOGL Type 1 · 촬영/제작: 대한민국 국가기록원",
+      "added": "2026-08-12"
+    },
+    {
+      "slug": "roh-moohyun-cut",
+      "name": "Roh Moo-hyun (배경 제거본)",
+      "kind": "photo",
+      "source": "wikipedia (https://commons.wikimedia.org/wiki/File%3ARoh_Moo-hyun_presidential_portrait.jpg)",
+      "license": "open-license",
+      "note": "roh-moohyun 에서 파생 · 원 라이선스: KOGL Type 1 · 촬영/제작: 대한민국 국가기록원",
+      "added": "2026-08-13"
+    },
+    {
+      "slug": "roh-moohyun-face",
+      "name": "노무현 (얼굴 규격화 480×586)",
+      "kind": "photo",
+      "source": "wikipedia (https://commons.wikimedia.org/wiki/File%3ARoh_Moo-hyun_presidential_portrait.jpg)",
+      "license": "open-license",
+      "note": "roh-moohyun 원본을 scripts/normalize-portraits.py 로 얼굴 크기·가슴선 통일 + 배경 잔재 제거. 원 라이선스: KOGL Type 1 · 촬영/제작: 대한민국 국가기록원",
+      "added": "2026-08-12"
     },
     {
       "slug": "seoul-apart-night",
@@ -30,13 +237,13 @@
       "added": "2026-07-26"
     },
     {
-      "slug": "stock-market-red",
-      "name": "stock market crash red chart screen",
+      "slug": "seoul-apart-night-cut",
+      "name": "seoul apartment skyline night (배경 제거본)",
       "kind": "photo",
-      "source": "pexels (https://www.pexels.com/photo/clipboard-with-statistical-data-and-digital-tablet-with-stock-market-display-on-screen-5561917/)",
+      "source": "pexels (https://www.pexels.com/photo/aerial-view-of-city-buildings-during-night-time-3142005/)",
       "license": "open-license",
-      "note": "원 라이선스: Pexels License (상업이용·표기불요) · 촬영/제작: Leeloo The First",
-      "added": "2026-07-26"
+      "note": "seoul-apart-night 에서 파생 · 원 라이선스: Pexels License (상업이용·표기불요) · 촬영/제작: Ethan Brooke",
+      "added": "2026-08-13"
     },
     {
       "slug": "stock-board",
@@ -48,6 +255,15 @@
       "added": "2026-07-26"
     },
     {
+      "slug": "stock-board-cut",
+      "name": "stock exchange market display board numbers (배경 제거본)",
+      "kind": "photo",
+      "source": "pexels (https://www.pexels.com/photo/stock-market-display-board-in-japan-36790143/)",
+      "license": "open-license",
+      "note": "stock-board 에서 파생 · 원 라이선스: Pexels License (상업이용·표기불요) · 촬영/제작: Bor Jinson",
+      "added": "2026-08-13"
+    },
+    {
       "slug": "stock-crash",
       "name": "stock market candlestick chart screen",
       "kind": "photo",
@@ -57,112 +273,112 @@
       "added": "2026-07-26"
     },
     {
-      "slug": "hangang-prugio-riverfront",
-      "name": "한강 푸르지오 리버프론트 조감도",
+      "slug": "stock-crash-cut",
+      "name": "stock market candlestick chart screen (배경 제거본)",
       "kind": "photo",
-      "source": "대우건설 분양 홍보자료 (오너가 직접 제공)",
-      "license": "press-material",
-      "note": "건설사 분양 홍보 이미지. 정보전달 목적의 지명적 사용이며 카드에 '출처. 대우건설 조감도'를 표기한다. 원본은 _source/ 에 보관. 이미지 하단에 '상기 이미지는 소비자의 이해를 돕기 위한 것으로 실제와 차이가 날 수 있으며…' 고지가 있으므로 크롭 시 유의.",
-      "added": "2026-08-03"
+      "source": "pexels (https://www.pexels.com/photo/stock-market-illustration-on-the-screen-7567223/)",
+      "license": "open-license",
+      "note": "stock-crash 에서 파생 · 원 라이선스: Pexels License (상업이용·표기불요) · 촬영/제작: Tima Miroshnichenko",
+      "added": "2026-08-13"
+    },
+    {
+      "slug": "stock-market-red",
+      "name": "stock market crash red chart screen",
+      "kind": "photo",
+      "source": "pexels (https://www.pexels.com/photo/clipboard-with-statistical-data-and-digital-tablet-with-stock-market-display-on-screen-5561917/)",
+      "license": "open-license",
+      "note": "원 라이선스: Pexels License (상업이용·표기불요) · 촬영/제작: Leeloo The First",
+      "added": "2026-07-26"
+    },
+    {
+      "slug": "stock-market-red-cut",
+      "name": "stock market crash red chart screen (배경 제거본)",
+      "kind": "photo",
+      "source": "pexels (https://www.pexels.com/photo/clipboard-with-statistical-data-and-digital-tablet-with-stock-market-display-on-screen-5561917/)",
+      "license": "open-license",
+      "note": "stock-market-red 에서 파생 · 원 라이선스: Pexels License (상업이용·표기불요) · 촬영/제작: Leeloo The First",
+      "added": "2026-08-13"
+    },
+    {
+      "slug": "subway-jongno3ga",
+      "name": "File:Seoul-metro-534-Jongno-3ga-station-platform-20180915-123402.jpg",
+      "kind": "photo",
+      "source": "Wikimedia Commons (https://commons.wikimedia.org/wiki/File%3ASeoul-metro-534-Jongno-3ga-station-platform-20180915-123402.jpg)",
+      "license": "open-license",
+      "note": "원 라이선스: CC BY-SA 4.0 · 촬영/제작: LERK",
+      "added": "2026-07-26"
+    },
+    {
+      "slug": "subway-jongno3ga-cut",
+      "name": "File:Seoul-metro-534-Jongno-3ga-station-platform-20180915-123402.jpg (배경 제거본)",
+      "kind": "photo",
+      "source": "Wikimedia Commons (https://commons.wikimedia.org/wiki/File%3ASeoul-metro-534-Jongno-3ga-station-platform-20180915-123402.jpg)",
+      "license": "open-license",
+      "note": "subway-jongno3ga 에서 파생 · 원 라이선스: CC BY-SA 4.0 · 촬영/제작: LERK",
+      "added": "2026-08-13"
+    },
+    {
+      "slug": "subway-pexels",
+      "name": "seoul subway train",
+      "kind": "photo",
+      "source": "pexels (https://www.pexels.com/photo/woman-waiting-at-seoul-subway-station-29673487/)",
+      "license": "open-license",
+      "note": "원 라이선스: Pexels License (상업이용·표기불요) · 촬영/제작: Paul Bill",
+      "added": "2026-07-26"
+    },
+    {
+      "slug": "subway-pexels-cut",
+      "name": "seoul subway train (배경 제거본)",
+      "kind": "photo",
+      "source": "pexels (https://www.pexels.com/photo/woman-waiting-at-seoul-subway-station-29673487/)",
+      "license": "open-license",
+      "note": "subway-pexels 에서 파생 · 원 라이선스: Pexels License (상업이용·표기불요) · 촬영/제작: Paul Bill",
+      "added": "2026-08-13"
+    },
+    {
+      "slug": "yoon-sukyeol3",
+      "name": "Category:Yoon Suk Yeol",
+      "kind": "photo",
+      "source": "category (https://commons.wikimedia.org/wiki/File%3A%EC%9C%A4%EC%84%9D%EC%97%B4%20%EA%B2%80%EC%B0%B0%EC%B4%9D%EC%9E%A5%20%EA%B5%AD%ED%9A%8C%EC%9D%98%EC%9E%A5%20%EB%AC%B8%ED%9D%AC%EC%83%81%20%EC%98%88%EB%B0%A91.jpg)",
+      "license": "open-license",
+      "note": "원 라이선스: KOGL Type 1 · 촬영/제작: 대한민국 국회",
+      "added": "2026-08-12"
+    },
+    {
+      "slug": "yoon-sukyeol3-cut",
+      "name": "Category:Yoon Suk Yeol (배경 제거본)",
+      "kind": "photo",
+      "source": "category (https://commons.wikimedia.org/wiki/File%3A%EC%9C%A4%EC%84%9D%EC%97%B4%20%EA%B2%80%EC%B0%B0%EC%B4%9D%EC%9E%A5%20%EA%B5%AD%ED%9A%8C%EC%9D%98%EC%9E%A5%20%EB%AC%B8%ED%9D%AC%EC%83%81%20%EC%98%88%EB%B0%A91.jpg)",
+      "license": "open-license",
+      "note": "yoon-sukyeol3 에서 파생 · 원 라이선스: KOGL Type 1 · 촬영/제작: 대한민국 국회",
+      "added": "2026-08-13"
+    },
+    {
+      "slug": "yoon-sukyeol4",
+      "name": "Yoon Suk Yeol",
+      "kind": "photo",
+      "source": "wikipedia (https://commons.wikimedia.org/wiki/File%3ASouth_Korea_President_Yoon_Suk_Yeol_portrait_(crop).jpg)",
+      "license": "open-license",
+      "note": "원 라이선스: CC BY 3.0 · 촬영/제작: 대한민국 대통령실",
+      "added": "2026-08-12"
+    },
+    {
+      "slug": "yoon-sukyeol4-cut",
+      "name": "Yoon Suk Yeol (배경 제거본)",
+      "kind": "photo",
+      "source": "wikipedia (https://commons.wikimedia.org/wiki/File%3ASouth_Korea_President_Yoon_Suk_Yeol_portrait_(crop).jpg)",
+      "license": "open-license",
+      "note": "yoon-sukyeol4 에서 파생 · 원 라이선스: CC BY 3.0 · 촬영/제작: 대한민국 대통령실",
+      "added": "2026-08-13"
+    },
+    {
+      "slug": "yoon-sukyeol4-face",
+      "name": "윤석열 (얼굴 규격화 480×586)",
+      "kind": "photo",
+      "source": "wikipedia (https://commons.wikimedia.org/wiki/File%3ASouth_Korea_President_Yoon_Suk_Yeol_portrait_(crop).jpg)",
+      "license": "open-license",
+      "note": "yoon-sukyeol4 원본을 scripts/normalize-portraits.py 로 얼굴 크기·가슴선 통일 + 배경 잔재 제거. 원 라이선스: CC BY 3.0 · 촬영/제작: 대한민국 대통령실",
+      "added": "2026-08-12"
     }
-  ],
-  "lee-jaemyung": {
-    "file": "lee-jaemyung.jpg",
-    "source": "wikimedia",
-    "query": "File:Lee Jae-myung's Portrait (2025.6.4) (cropped).jpg",
-    "license": "CC BY-SA 2.0",
-    "author": "Republic of  Korea from Seoul, Republic of Korea",
-    "url": "https://commons.wikimedia.org/wiki/File%3ALee%20Jae-myung's%20Portrait%20(2025.6.4)%20(cropped).jpg",
-    "fetchedFor": "wirit card"
-  },
-  "chumiae": {
-    "file": "chumiae.jpg",
-    "source": "category",
-    "query": "Category:Choo Mi-ae",
-    "license": "KOGL Type 1",
-    "author": "대한민국 법무부",
-    "url": "https://commons.wikimedia.org/wiki/File%3AChoo%20Mi-ae%20ministerial%20portrait.png",
-    "fetchedFor": "wirit card"
-  },
-  "kim-dongyeon": {
-    "file": "kim-dongyeon.jpg",
-    "source": "category",
-    "query": "Category:Kim Dong-yeon",
-    "license": "Public domain",
-    "author": "Office of U.S. Treasury Secretary",
-    "url": "https://commons.wikimedia.org/wiki/File%3AKim%20Dong-yeon%202018-06.jpg",
-    "fetchedFor": "wirit card"
-  },
-  "nam-kyungpil": {
-    "file": "nam-kyungpil.jpg",
-    "source": "wikipedia",
-    "query": "Nam Kyung-pil",
-    "license": "CC BY-SA 2.0",
-    "author": "Korea.net / Korean Culture and Information Service (Jeon Han)",
-    "url": "https://commons.wikimedia.org/wiki/File%3ANam_Kyung-pil_at_18th_Puchon_International_Fantastic_Film_Festival%2C_July_17%2C_2014.jpg",
-    "fetchedFor": "wirit card"
-  },
-  "roh-moohyun": {
-    "file": "roh-moohyun.jpg",
-    "source": "wikipedia",
-    "query": "Roh Moo-hyun",
-    "license": "KOGL Type 1",
-    "author": "대한민국 국가기록원",
-    "url": "https://commons.wikimedia.org/wiki/File%3ARoh_Moo-hyun_presidential_portrait.jpg",
-    "fetchedFor": "wirit card"
-  },
-  "lee-myungbak": {
-    "file": "lee-myungbak.jpg",
-    "source": "wikipedia",
-    "query": "Lee Myung-bak",
-    "license": "KOGL Type 1",
-    "author": "대한민국 국가기록원 (National Archives of Korea)",
-    "url": "https://commons.wikimedia.org/wiki/File%3ALee_Myung-bak_presidential_portrait.jpg",
-    "fetchedFor": "wirit card"
-  },
-  "park-geunhye": {
-    "file": "park-geunhye.jpg",
-    "source": "wikipedia",
-    "query": "Park Geun-hye",
-    "license": "KOGL Type 1",
-    "author": "대한민국 국가기록원",
-    "url": "https://commons.wikimedia.org/wiki/File%3APark_Geun-hye_presidential_portrait.png",
-    "fetchedFor": "wirit card"
-  },
-  "moon-jaein": {
-    "file": "moon-jaein.jpg",
-    "source": "wikipedia",
-    "query": "Moon Jae-in",
-    "license": "KOGL Type 1",
-    "author": "Government of the Republic of Korea",
-    "url": "https://commons.wikimedia.org/wiki/File%3APresident_Moon_Jae_In.jpg",
-    "fetchedFor": "wirit card"
-  },
-  "moon-jaein2": {
-    "file": "moon-jaein2.jpg",
-    "source": "category",
-    "query": "Category:Moon Jae-in",
-    "license": "Public domain",
-    "author": "Jung Chung-rae",
-    "url": "https://commons.wikimedia.org/wiki/File%3ARethinking%20the%20History%20of%20Democracy.jpg",
-    "fetchedFor": "wirit card"
-  },
-  "yoon-sukyeol3": {
-    "file": "yoon-sukyeol3.jpg",
-    "source": "category",
-    "query": "Category:Yoon Suk Yeol",
-    "license": "KOGL Type 1",
-    "author": "대한민국 국회",
-    "url": "https://commons.wikimedia.org/wiki/File%3A%EC%9C%A4%EC%84%9D%EC%97%B4%20%EA%B2%80%EC%B0%B0%EC%B4%9D%EC%9E%A5%20%EA%B5%AD%ED%9A%8C%EC%9D%98%EC%9E%A5%20%EB%AC%B8%ED%9D%AC%EC%83%81%20%EC%98%88%EB%B0%A91.jpg",
-    "fetchedFor": "wirit card"
-  },
-  "yoon-sukyeol4": {
-    "file": "yoon-sukyeol4.jpg",
-    "source": "wikipedia",
-    "query": "Yoon Suk Yeol",
-    "license": "CC BY 3.0",
-    "author": "대한민국 대통령실",
-    "url": "https://commons.wikimedia.org/wiki/File%3ASouth_Korea_President_Yoon_Suk_Yeol_portrait_(crop).jpg",
-    "fetchedFor": "wirit card"
-  }
+  ]
 }

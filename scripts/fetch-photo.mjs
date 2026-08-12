@@ -182,9 +182,38 @@ const main = async () => {
   mkdirSync(photosDir, { recursive: true });
   const file = `${slug}.jpg`;
   writeFileSync(join(photosDir, file), buf);
+  /* ── 카탈로그 기록 ── ⚠️ 자리를 틀리면 **자산이 없는 것과 같다** (2026-08-12 발견)
+     이 스크립트는 그동안 `cat[slug] = {...}` 로 **최상위 키**에 적어 왔다. 그런데 허브 스키마는
+     `{ $schema, kind, items: [...] }` 이고 `validate-assets.mjs` 는 `items[]` 만 본다.
+     그래서 취득한 사진 11장이 전부 "카탈로그에 없는 파일"이었고, 자산 검색에도 안 잡혔다 —
+     같은 사진을 다음 세션이 또 받아 오게 되는 구조였다. items[] 에 적는다.
+     겸사겸사 예전에 최상위로 새어 나간 항목도 items 로 옮긴다(한 번만 일어나고 그 뒤엔 조용하다). */
   const catPath = join(photosDir, "catalog.json");
   const cat = existsSync(catPath) ? JSON.parse(readFileSync(catPath, "utf8")) : {};
-  cat[slug] = { file, source: source, query, license: pick.license, author: pick.author || source, url: pick.page, fetchedFor: "wirit card" };
+  cat.$schema ??= "../../../docs/ASSET_HUB.md";
+  cat.kind ??= "photo";
+  cat.items ??= [];
+  const today = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+  const entryOf = (sl, v) => ({
+    slug: sl,
+    name: v.query || sl,
+    kind: "photo",
+    source: `${v.source} (${v.url || ""})`,
+    license: "open-license",
+    note: `원 라이선스: ${v.license || "?"} · 촬영/제작: ${v.author || v.source}`,
+    added: v.added || today,
+  });
+  for (const k of Object.keys(cat)) {
+    if (["$schema", "kind", "items"].includes(k)) continue;
+    const v = cat[k];
+    if (v && typeof v === "object" && !Array.isArray(v)) {
+      if (!cat.items.some((it) => it.slug === k)) cat.items.push(entryOf(k, v));
+      delete cat[k];
+    }
+  }
+  const entry = entryOf(slug, { source, query, url: pick.page, license: pick.license, author: pick.author });
+  const at = cat.items.findIndex((it) => it.slug === slug);
+  if (at >= 0) cat.items[at] = entry; else cat.items.push(entry);
   writeFileSync(catPath, JSON.stringify(cat, null, 2) + "\n");
   console.log(`✅ ${file} (${(buf.length / 1024).toFixed(0)}KB) · ${source} · ${pick.license} · ⓒ${cat[slug].author}`);
   console.log(`   ${pick.page}`);

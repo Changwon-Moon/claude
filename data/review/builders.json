@@ -304,6 +304,14 @@
       "args": [
         "2026-08-11"
       ]
+    },
+    {
+      "label": "m2-gov",
+      "cmd": "scripts/build-m2-gov.mjs",
+      "args": [
+        "--publish",
+        "2026-08-13"
+      ]
     }
   ]
 }

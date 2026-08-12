@@ -219,7 +219,7 @@ const level = {
 const grid = [0.25, 0.5, 0.75, 1].map((f) => ({ x1: LEFT, x2: RIGHT, y: r1(BASE - (BASE - TOP) * f) }));
 
 const kstToday = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
-const date = process.argv[2] || kstToday;
+const date = process.argv.find((a) => /^\d{4}-\d{2}-\d{2}$/.test(a)) || kstToday;
 
 const card = {
   template: "gov-bars@1",
@@ -245,11 +245,13 @@ const card = {
     name: r.name,
     term: `재임 ${r.termMonths}개월`, // "재임"을 붙여 데이터 구간이 아니라 임기임을 못박는다
     photo: r.photo ?? undefined,
-    hot: r.rate === maxRate,
+    hot: r.running, // 강조는 현 정부 — 하단 문구가 가리키는 대상과 같아야 한다
   })),
   /* 하단 문구 — 배수는 계산값이다(손으로 적지 않는다). 오너 확정 문안(2026-08-12).
+     ⚠️ 분자는 `maxRate` 가 아니라 **현 정부**다. 문장이 "현 정부"라고 말하므로 숫자도 현 정부여야 한다 —
+     최고 속도로 두면 현 정부가 1위가 아니게 되는 달에 문장이 조용히 거짓이 된다(QA 지적 2026-08-12).
      ".0" 은 떼고 적는다 — "2.0배"는 소수 자리가 뜻을 갖는 것처럼 읽힌다. */
-  note: `현 정부 통화량 증가속도는 문 정부 대비 <b>${(maxRate / rows.find((r) => r.name === "문재인").rate).toFixed(1).replace(/\.0$/, "")}배 속도</b>`,
+  note: `현 정부 통화량 증가속도는 문 정부 대비 <b>${(rows[rows.length - 1].rate / rows.find((r) => r.name === "문재인").rate).toFixed(1).replace(/\.0$/, "")}배 속도</b>`,
   source: { name: "한국은행 ECOS(M2 평잔·원계열, 개편 전 기준)", asOf: ymLabel(lastYm) },
   meta: {
     verified: true,
@@ -262,7 +264,11 @@ const card = {
   },
 };
 
-const outDir = join(ROOT, "data/out/_spike");
+/* 시안은 `data/out/_spike`, **확정본은 `data/content/{날짜}/`** 에 쓴다(--publish).
+   확정본은 `produce-card.mjs` 가 그 자리에서 찾아 다시 그리므로 **자리가 곧 계약**이다 —
+   시안 서랍에 둔 채 세트에만 올리면 실사이트에 카드가 영영 안 뜬다. */
+const PUBLISH = process.argv.includes("--publish");
+const outDir = PUBLISH ? join(ROOT, "data/content", date) : join(ROOT, "data/out/_spike");
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "m2-gov.json"), JSON.stringify(card, null, 2) + "\n", "utf8");
 
