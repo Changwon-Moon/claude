@@ -138,7 +138,11 @@ jobs:
           git config user.name "wirit-bot"
           git config user.email "actions@github.com"
           git add -f data/singo-last.md
-          git add data/datasets/singo-latest.json data/datasets/molit-peak data/datasets/apt-list data/datasets/apt-hhld.json 2>/dev/null || true
+          # ⚠️ 경로를 한 줄에 몰아 쓰지 않는다. 하나라도 없으면 git add 가 통째로 실패해
+          #    **아무것도 안 담긴다** (2026-08-12 첫 실행에서 singo-latest.json 이 이렇게 빠졌다).
+          for P in data/datasets/singo-latest.json data/datasets/molit-peak data/datasets/apt-list data/datasets/apt-hhld.json; do
+            [ -e "$P" ] && git add "$P" || true
+          done
           if git diff --cached --quiet; then
             echo "바뀐 것 없음 — 커밋 생략"
           else
