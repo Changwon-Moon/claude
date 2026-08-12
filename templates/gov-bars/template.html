@@ -72,9 +72,13 @@
         color: var(--wirit-gray); letter-spacing: -0.02em; white-space: nowrap;
       }
 
+      /* 하단 문구 — 카드 폭을 꽉 채운다(오너 지시 2026-08-12).
+         제목과 같은 방식으로 **폭에 맞춰 폰트를 키우고 줄인다**(__wiritFit 이 함께 처리).
+         푸터 위 여백은 24px — 체크리스트 §2 "최하단 문구 여백" 기준. */
       .gb-note {
-        flex: 0 0 auto; margin: 18px 2px 20px; font-size: 23px; font-weight: 700;
-        color: var(--wirit-gray); letter-spacing: -0.045em; line-height: 1.35;
+        flex: 0 0 auto; margin: 18px 0 24px; text-align: center; white-space: nowrap;
+        font-family: var(--font-title); font-size: 40px; font-weight: 900;
+        color: var(--wirit-ink); letter-spacing: -0.045em; line-height: 1.2;
       }
       .gb-note b { color: var(--wirit-red); font-weight: 900; }
     </style>
@@ -128,6 +132,20 @@
           if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
         }
         el.style.fontSize = best.toFixed(2) + "px";
+
+        /* 하단 문구도 같은 자로 폭을 채운다 — 제목만 맞추면 카드 아래가 헐렁해 보인다. */
+        var nt = document.querySelector(".gb .gb-note");
+        if (nt) {
+          var nb = nt.parentElement, nbs = getComputedStyle(nb);
+          var navail = nb.clientWidth - (parseFloat(nbs.paddingLeft) || 0) - (parseFloat(nbs.paddingRight) || 0);
+          var nlo = 20, nhi = 64, nbest = 20;
+          for (var k = 0; k < 24; k++) {
+            var nmid = (nlo + nhi) / 2;
+            nt.style.fontSize = nmid + "px";
+            if (nt.scrollWidth <= navail) { nbest = nmid; nlo = nmid; } else { nhi = nmid; }
+          }
+          nt.style.fontSize = nbest.toFixed(2) + "px";
+        }
       };
     </script>
   </body>

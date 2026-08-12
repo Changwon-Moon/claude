@@ -110,7 +110,12 @@ const MEASURE_JS = `(() => {
     return { name:rect(nm), nameTextRight:textRight(nm), nameTrunc:truncated(nm), val:rect(r.querySelector(".rt-val")), sub:rect(r.querySelector(".rt-sub")) };
   });
   var overflow=[];
-  Array.prototype.forEach.call(card.querySelectorAll(".rt-name,.rt-val,.rt-sub,.wirit-title,.rt-cap,.wirit-watermark"), function(el){
+  /* ⚠️ .wirit-footer 를 넣는다 (2026-08-12). 콘텐츠가 세로로 넘치면 margin-top:auto 인
+     푸터 띠 **전체가 카드 밖으로 밀려 잘리는데**, 목록에 워터마크 글자만 있어서
+     글자 밑끝은 카드 안(1341<1350)이라 검수가 "문제 없음"이라 답했다 — 25px 잘린 카드가 통과했다.
+     띠는 모든 판형에 공통이라 이 한 줄이 전 판형을 지킨다.
+     (이 주석 안에서는 역따옴표를 쓰지 않는다 — 이 블록 전체가 템플릿 리터럴이다) */
+  Array.prototype.forEach.call(card.querySelectorAll(".rt-name,.rt-val,.rt-sub,.wirit-title,.rt-cap,.wirit-watermark,.wirit-footer"), function(el){
     var r=el.getBoundingClientRect(); if(!r.width) return;
     if(r.right>cb.right+1) overflow.push({sel:el.className,by:Math.round(r.right-cb.right),side:"right"});
     if(r.bottom>cb.bottom+1) overflow.push({sel:el.className,by:Math.round(r.bottom-cb.bottom),side:"bottom"});

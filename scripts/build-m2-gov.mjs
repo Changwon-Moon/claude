@@ -49,12 +49,12 @@ const M2 = { ...PRE, ...OLD };
 /* ── 정부 구간 ──
    퇴임월은 사실이고(취임·퇴임일), 시작월은 위의 규칙이 정한다. */
 const GOV = [
-  { name: "노무현", photo: "roh-moohyun-cut.png", start: "200301", end: "200802" },
-  { name: "이명박", photo: "lee-myungbak-cut.png", end: "201302" },
-  { name: "박근혜", photo: "park-geunhye-cut.png", end: "201703" },
-  { name: "문재인", photo: "moon-jaein-cut.png", end: "202205" },
-  { name: "윤석열", photo: "yoon-sukyeol4-cut.png", end: "202504" },
-  { name: "이재명", photo: "lee-jaemyung-cut.png", end: null }, // 재임 중 — 최신월까지
+  { name: "노무현", photo: "roh-moohyun-face.png", start: "200301", end: "200802" },
+  { name: "이명박", photo: "lee-myungbak-face.png", end: "201302" },
+  { name: "박근혜", photo: "park-geunhye-face.png", end: "201703" },
+  { name: "문재인", photo: "moon-jaein-face.png", end: "202205" },
+  { name: "윤석열", photo: "yoon-sukyeol4-face.png", end: "202504" },
+  { name: "이재명", photo: "lee-jaemyung-face.png", end: null }, // 재임 중 — 최신월까지
 ];
 
 const months = Object.keys(M2).sort();
@@ -77,7 +77,9 @@ const sum = rows.reduce((a, r) => a + r.delta, 0);
 const whole = M2[rows[rows.length - 1].end] - M2[rows[0].start];
 if (Math.abs(sum - whole) > 0.5) throw new Error(`막대 합(${sum.toFixed(0)})과 전체 증가(${whole.toFixed(0)})가 다르다 — 구간에 겹침/공백이 있다`);
 
-/* 사진이 저장소에 실제로 있는 것만 건다 — 없는 파일을 걸면 빈 네모가 나간다 */
+/* 사진은 `scripts/normalize-portraits.py` 가 **얼굴 크기를 재서** 같은 틀(480×640)로 맞춘
+   `-face.png` 를 쓴다. 원본을 그대로 걸면 화각이 달라 얼굴 크기가 두 배까지 벌어진다
+   (오너 지적 2026-08-12). 저장소에 실제로 있는 것만 건다 — 없으면 이름만 나간다. */
 for (const r of rows) {
   if (r.photo && !existsSync(join(ROOT, "templates/_shared/photos", r.photo))) r.photo = null;
 }
@@ -88,8 +90,12 @@ const maxRate = Math.max(...rows.map((r) => r.rate));
 /* ── 좌표 ──
    막대는 전부 플러스라 0선 위아래가 없다. 바닥선 하나에 세운다. */
 const INK = "#141821", RED = "#e5484d", GRAY = "#5b6b7f";
-const VB_W = 1000, VB_H = 656;
-const LEFT = 24, RIGHT = VB_W - 24, BASE = VB_H - 6, TOP = 104;
+const VB_W = 1000, VB_H = 594;
+/* 좌우 여백을 0 으로 둔다 — SVG 안쪽에 여백을 주면 **자가 두 개**가 된다.
+   막대는 (여백 뺀 폭)을 6등분하는데 아래 인물 축은 카드 폭을 6등분하므로
+   양끝 칸에서 인물이 자기 막대 아래에 안 선다(디자인팀 실측 ±22.9px, 2026-08-12).
+   플롯의 좌우 끝 = 카드 패딩선 = 제목·푸터와 같은 선. */
+const LEFT = 0, RIGHT = VB_W, BASE = VB_H - 6, TOP = 80;
 const N = rows.length;
 const slot = (RIGHT - LEFT) / N;
 const BAR_W = Math.round(slot * 0.68);
@@ -145,9 +151,9 @@ const card = {
   date,
   badge: `역대 정부 통화량 (${date.replace(/-/g, ".")})`,
   title: `역대 정부 <span class="hi">통화량 증가 규모</span>`,
-  subtitle: `M2(광의통화) 평잔·원계열 · 2025년 개편 전 기준 · ${ymLabel(rows[0].start)}~${ymLabel(lastYm)}`,
+  subtitle: `M2(광의통화) 개편 전 기준·${ymLabel(rows[0].start)}~${ymLabel(lastYm)}`,
   axisCount: N,
-  axisGap: "10px",
+  axisGap: "0px", // 막대 칸과 같은 자를 쓴다(gap 을 주면 인물이 막대에서 밀린다)
   chart: {
     vb: `0 0 ${VB_W} ${VB_H}`,
     baseline: { y: BASE, x1: LEFT, x2: RIGHT },
@@ -164,8 +170,9 @@ const card = {
     photo: r.photo ?? undefined,
     hot: r.rate === maxRate,
   })),
-  /* 하단 문구 — 배수는 계산값이다(손으로 적지 않는다). 오너 확정 문안(2026-08-12). */
-  note: `<b>현 정부가 월평균 ${r1(maxRate).toFixed(1)}조</b>로 문 정부의 약 ${(maxRate / rows.find((r) => r.name === "문재인").rate).toFixed(1)}배 속도`,
+  /* 하단 문구 — 배수는 계산값이다(손으로 적지 않는다). 오너 확정 문안(2026-08-12).
+     ".0" 은 떼고 적는다 — "2.0배"는 소수 자리가 뜻을 갖는 것처럼 읽힌다. */
+  note: `현 정부 통화량 증가속도는 문 정부 대비 <b>${(maxRate / rows.find((r) => r.name === "문재인").rate).toFixed(1).replace(/\.0$/, "")}배 속도</b>`,
   source: { name: "한국은행 ECOS(M2 평잔·원계열, 개편 전 기준)", asOf: ymLabel(lastYm) },
   meta: {
     verified: true,
