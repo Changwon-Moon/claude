@@ -365,6 +365,14 @@ if (dlTicket) {
     && [...document.querySelectorAll("#drawer .dlrow a.dl")].every(a=>(a.getAttribute("href")||"").indexOf("download/")===0)`));
   check("캡션 복사 버튼", await q(`!!document.querySelector('#drawer [data-act="copycap"]')`));
   check("[🚀 발행 승인] 버튼", await q(`!!document.querySelector('#drawer [data-act="publish"]')`));
+  /* 결재 대기의 **삭제 버튼**(2026-08-13 오너: "삭제하고 싶은데 기능이 없네?").
+     처음엔 시안 상태에만 달려 있어 정작 쌓여 있던 확정·승인대기 건을 화면에서 못 치웠다.
+     세트 라벨이 있는 건이면 상태와 무관하게 떠야 한다 — 없으면 대기열이 장부 구실을 못 한다. */
+  check("결재 대기에 [🗑 내리기] 버튼(상태 무관)", await q(`(function(){
+    var b=document.querySelector('#drawer .fdrop');
+    if(!b) return false;
+    return !!b.dataset.drop && /내리기|삭제/.test(b.textContent||"");
+  })()`));
   check("수정·반려는 채팅으로 안내(버튼 없음)", await q(`
     !document.querySelector('#drawer [data-act="edit"], #drawer [data-act="reject"]')
     && /채팅/.test((document.querySelector("#drawer .pubnote")||{}).textContent||"")`));

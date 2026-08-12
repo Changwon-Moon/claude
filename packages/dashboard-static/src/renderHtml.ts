@@ -1175,13 +1175,20 @@ document.addEventListener("click",(e)=>{
  * ⚠️ 빌더도 같이 내려야 한다. 세트만 빼면 guard.yml 의 세트↔빌더 정합 검사에
  * 고아 빌더가 남고, 보관함에 🔁 다시 제작 버튼이 유령으로 남는다.
  */
-function dropSet(label, title){
+function dropSet(label, title, state){
   if(!GH.connected()){ setSave("off"); toast("GitHub 연결이 필요합니다 — 우상단 [연결 필요]"); return; }
-  if(!confirm("시안을 보관함에서 내립니다.\n\n  "+title+"\n\n카드 파일은 지우지 않습니다(저장소 이력에 남습니다).\n계속할까요?")) return;
+  /* 확정·발행된 세트는 실수로 내리면 아픈 곳이 다르다 — 문구로 한 번 더 세운다.
+     (되돌리려면 git 이력에 그대로 있다. 카드 파일 자체는 어느 경우에도 안 지운다.) */
+  const heavy = state && state!=="시안";
+  const msg = heavy
+    ? "이 세트를 목록에서 내립니다. **확정 상태("+state+")** 입니다.\n\n  "+title
+      +"\n\n· 결재 대기·보관함에서 사라집니다\n· 카드 파일과 캡션은 지우지 않습니다(git 이력에 남습니다)\n· 되살리려면 작업 세션에 말씀하세요\n\n계속할까요?"
+    : "시안을 보관함에서 내립니다.\n\n  "+title+"\n\n카드 파일은 지우지 않습니다(저장소 이력에 남습니다).\n계속할까요?";
+  if(!confirm(msg)) return;
   const why=prompt("왜 접나요? (회사가 학습합니다 — 비워도 됩니다)\n예: 시의성 지남 / 데이터가 약함 / 방향을 바꿈","")
   if(why===null) return;                       // 취소 — 아무것도 건드리지 않는다
   const w=String(why).trim();
-  setSave("saving"); jobStart("drop-"+label,"시안 내리기");
+  setSave("saving"); jobStart("drop-"+label, heavy?"목록에서 내리기":"시안 내리기");
   GH.serial(async()=>{
     /* 두 파일을 잇달아 고친다. sets.json 이 먼저다 — 여기서 빠지면 화면에서 사라진다.
        builders.json 이 실패해도 화면은 이미 정리된 상태라 다음에 이어서 고칠 수 있다. */
@@ -1193,14 +1200,14 @@ function dropSet(label, title){
         const next=arr.filter(x=>x&&x.label!==label);
         if(next.length===arr.length) break;     // 이미 없다 — 이 파일은 건너뛴다
         doc[spec.k]=next;
-        try{ await GH.putFile(spec.p, JSON.stringify(doc,null,2)+"\n", "관제탑: 시안 내리기 — "+title, cur.sha); break; }
+        try{ await GH.putFile(spec.p, JSON.stringify(doc,null,2)+"\n", "관제탑: 목록에서 내리기 — "+title, cur.sha); break; }
         catch(e){ if(!GH.isConflict(e)||i===4) throw e;
           await new Promise(r=>setTimeout(r,400*Math.pow(2,i))); }
       }
     }
   })
     .then(()=>GH.append("research/decisions-inbox.md",
-        "- "+ghStamp()+" 🗑 시안 내림: "+title+" ("+label+")"+(w?" — 이유: "+w:""), "관제탑: 시안 내리기"))
+        "- "+ghStamp()+" 🗑 "+(heavy?"목록에서 내림":"시안 내림")+": "+title+" ("+label+")"+(w?" — 이유: "+w:""), "관제탑: 목록에서 내리기"))
     .then(()=>{
       setSave("ok"); jobEnd("drop-"+label,"내렸습니다 — 다음 배포에서 화면에서 사라집니다");
       const el=document.querySelector('.fitem[data-flabel="'+label+'"]');
@@ -1210,7 +1217,7 @@ function dropSet(label, title){
 }
 document.addEventListener("click",(e)=>{
   const b=e.target.closest&&e.target.closest(".fdrop");
-  if(b) dropSet(b.dataset.drop, b.dataset.dtitle||b.dataset.drop);
+  if(b) dropSet(b.dataset.drop, b.dataset.dtitle||b.dataset.drop, b.dataset.dstate||"");
 });
 
 /* 드로어 */
@@ -1301,13 +1308,18 @@ function buildDetail(t){
   if(t.stage===4){
     /* 수정지시·반려 버튼은 뺐다(2026-07-30 축소) — 여기 적어도 "접수"만 되고
      * 실행은 채팅이 한다. 같은 말을 채팅에 하면 그 자리에서 고쳐서 다시 올라온다. */
-    /* 시안인 채로 멈춘 것은 여기서 바로 내릴 수 있다(2026-08-12). 확정·발행된 것엔 안 뜬다 —
-       결재 대기에 만들다 만 카드가 확정본과 섞여 쌓이던 걸 오너가 직접 치우는 자리다. */
+    /* 결재 대기에서 **내리는 버튼은 항상 뜬다**(2026-08-13 오너: "삭제하고 싶은데 기능이 없네?").
+       처음엔 "시안" 상태에만 달았는데, 정작 대기열에 쌓여 있던 건 확정·승인대기 건들이라
+       (이 주석 안에서는 역따옴표를 쓰지 않는다 — 이 블록 전체가 템플릿 리터럴이다)
+       화면에서 치울 방법이 하나도 없었다 — 오너가 지울 수 있어야 대기열이 장부 구실을 한다.
+       확정본은 문구와 확인창을 달리해 실수로 누르는 것을 막는다(되돌리기는 git 이력). */
     acts='<div class="pubnote">수정하거나 반려할 게 있으면 <b>채팅에</b> 말씀해주세요 — 고쳐서 다시 올립니다.</div>'
       +'<button class="btn primary" data-act="publish">🚀 발행 승인</button>'
-      +(t.setState==="시안"&&t.setLabel
-        ? '<button class="btn danger fdrop" data-drop="'+esc(t.setLabel)+'" data-dtitle="'+esc(t.title)+'">🗑 시안 내리기</button>'
-        : "")
+      +(t.setLabel
+        ? '<button class="btn danger fdrop" data-drop="'+esc(t.setLabel)+'"'
+          +' data-dtitle="'+esc(t.title)+'" data-dstate="'+esc(t.setState||"")+'">'
+          +(t.setState==="시안"?"🗑 시안 내리기":"🗑 목록에서 삭제")+'</button>'
+        : '<div class="pubnote">이 건은 세트 라벨이 없어 화면에서 내릴 수 없습니다 — 채팅에 말씀해주세요.</div>')
       +reasonBox();
   } else if(t.stage===5){
     /* 승인은 났다. 올리는 사람은 **오너**다(2026-07-27 결정: 자동 발행 안 함).
