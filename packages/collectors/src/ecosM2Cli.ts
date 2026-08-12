@@ -16,7 +16,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fetchText, redactUrl } from "./http.js";
-import { parseEcosJson } from "./parse/ecos.js";
+
 import { REPO_ROOT } from "./paths.js";
 
 const BASE = "https://ecos.bok.or.kr/api";
@@ -74,13 +74,39 @@ async function listItems(statCode: string): Promise<Array<{ code: string; name: 
   }));
 }
 
+/* 한 TIME 에 행이 여러 개 온다 (2026-08-12 실측).
+   통계표에 하위 분류축이 있어 같은 ITEM_CODE1 로도 행이 여러 벌 실린다 —
+   1차 실행에서 1000행 상한을 그 중복이 다 먹어 **81개월치만** 받아왔다(199801~200409).
+   그래서 ① 상한을 크게 잡고 ② TIME 으로 묶어 접는다. 묶었는데 값이 갈리면 **던진다** —
+   어느 쪽이 M2 인지 코드가 모르는 채로 숫자를 고르면 그게 오보다. */
 async function fetchSeries(statCode: string, itemCode: string, end: string) {
-  const url = `${BASE}/StatisticSearch/${KEY}/json/kr/1/1000/${statCode}/M/${START}/${end}/${itemCode}`;
-  const text = await fetchText(url, { retries: 3, timeoutMs: 40000 });
+  const url = `${BASE}/StatisticSearch/${KEY}/json/kr/1/100000/${statCode}/M/${START}/${end}/${itemCode}`;
+  const text = await fetchText(url, { retries: 3, timeoutMs: 60000 });
   const raw = JSON.parse(text);
-  const points = parseEcosJson(text);
-  const unit = String(raw?.StatisticSearch?.row?.[0]?.UNIT_NAME ?? "");
-  return { points, unit };
+  if (raw?.RESULT?.CODE) throw new Error(`ECOS ${raw.RESULT.CODE}: ${raw.RESULT.MESSAGE}`);
+  const rows: any[] = raw?.StatisticSearch?.row ?? [];
+  const total = Number(raw?.StatisticSearch?.list_total_count ?? rows.length);
+  const unit = String(rows[0]?.UNIT_NAME ?? "");
+
+  const byTime = new Map<string, Set<number>>();
+  for (const r of rows) {
+    const t = String(r.TIME ?? "").trim();
+    const v = Number(r.DATA_VALUE);
+    if (!t || Number.isNaN(v)) continue;
+    if (!byTime.has(t)) byTime.set(t, new Set());
+    byTime.get(t)!.add(v);
+  }
+  const conflicts = [...byTime.entries()].filter(([, s]) => s.size > 1);
+  if (conflicts.length) {
+    throw new Error(
+      `같은 월에 서로 다른 값이 왔다(${conflicts.length}개월). 예: ${conflicts[0][0]} → ${[...conflicts[0][1]].join(" / ")}`,
+    );
+  }
+  const points = [...byTime.entries()]
+    .map(([time, s]) => ({ time, value: [...s][0] }))
+    .sort((a, b) => a.time.localeCompare(b.time));
+
+  return { points, unit, rawRows: rows.length, total, sample: rows.slice(0, 2) };
 }
 
 async function main() {
@@ -144,11 +170,23 @@ async function main() {
     say(`- \`${code}\` 항목 ${items.length}개 — 앞 12개:`);
     for (const it of items.slice(0, 12)) say(`    - \`${it.code}\` ${it.name} (${it.unit})`);
 
-    // M2 총액 항목: 이름이 정확히 'M2' 이거나 'M2(광의통화)' 꼴
-    const hit =
-      items.find((it) => /^M2\s*\(?광의통화\)?$/.test(it.name.trim())) ??
-      items.find((it) => /^M2$/.test(it.name.trim())) ??
-      items.find((it) => /^M2/.test(it.name.trim()));
+    /* M2 총액 항목 고르기 — **평잔·원계열**을 명시적으로 고른다.
+       (2026-08-12 1차 실행에서 `BBHS00 M2(평잔, 계절조정계열)` 을 집어왔다.
+        카드 표기가 "평잔·원계열"이므로 계절조정계열은 다른 숫자다 — 이름으로 못박는다.) */
+    const m2s = items.filter((it) => /^M2/.test(it.name.trim()));
+    const rank = (name: string) => {
+      let s = 0;
+      if (/평잔/.test(name)) s += 10;
+      if (/원계열/.test(name)) s += 10;
+      if (/계절조정/.test(name)) s -= 50;
+      if (/말잔/.test(name)) s -= 10;
+      return s;
+    };
+    const hit = [...m2s].sort((a, b) => rank(b.name) - rank(a.name))[0];
+    if (hit && rank(hit.name) < 20) {
+      say(`  ⚠️ \`${code}\` 의 최선 항목이 평잔·원계열이 아니다 — \`${hit.code}\` ${hit.name} (건너뛴다)`);
+      continue;
+    }
     if (hit && !chosen) {
       const t = tables.find((x) => x.code === code);
       chosen = {
@@ -181,10 +219,19 @@ async function main() {
   // 4) 시계열 수집
   say("## 4. 월별 시계열");
   say("");
-  const { points, unit } = await fetchSeries(chosen.statCode, chosen.itemCode, end);
+  const { points, unit, rawRows, total, sample } = await fetchSeries(chosen.statCode, chosen.itemCode, end);
   say(`- 통계표 \`${chosen.statCode}\` ${chosen.statName}`);
   say(`- 항목 \`${chosen.itemCode}\` ${chosen.itemName}`);
   say(`- 단위(응답) ${unit || chosen.unit || "(미표기)"}`);
+  say(`- 원본 행 ${rawRows}개 (서버 집계 ${total}) → 월로 접어 ${points.length}개월`);
+  say("");
+  say("<details><summary>원본 행 샘플 2개</summary>");
+  say("");
+  say("```json");
+  say(JSON.stringify(sample, null, 2));
+  say("```");
+  say("</details>");
+  say("");
   say(`- 포인트 ${points.length}개 · 첫 ${points[0]?.time} · 끝 ${points[points.length - 1]?.time}`);
   say(`- 마지막 값 ${points[points.length - 1]?.value}`);
   say("");
