@@ -96,7 +96,30 @@ function candidates(key: string, q: string): { label: string; url: string }[] {
       label: "통계목록 statisticsList.do (vwCd=MT_ZTITLE 최상위)",
       url: `https://kosis.kr/openapi/statisticsList.do?method=getList&apiKey=${k}&vwCd=MT_ZTITLE&parentListId=&format=json&jsonVD=Y`,
     },
+    {
+      /* 자료 조회가 /openapi/Param/... 인 것을 보면 목록도 하위 경로일 수 있다 — 열어 본다. */
+      label: "통계목록 Param/statisticsList.do (하위 경로 판본)",
+      url: `https://kosis.kr/openapi/Param/statisticsList.do?method=getList&apiKey=${k}&vwCd=MT_ZTITLE&parentListId=&format=json&jsonVD=Y`,
+    },
+    {
+      label: "통계목록 statisticsList.do (parentListId=A)",
+      url: `https://kosis.kr/openapi/statisticsList.do?method=getList&apiKey=${k}&vwCd=MT_ZTITLE&parentListId=A&format=json&jsonVD=Y`,
+    },
   ];
+}
+
+/**
+ * **망이 죽은 것과 주소가 틀린 것을 가른다.**
+ * 이미 매일 돌고 있는 자료 조회 엔드포인트를 한 번 찔러 본다.
+ * 여기가 되면 kosis.kr 은 살아 있는 것이므로, 검색이 실패한 것은 **주소·파라미터 문제**다.
+ * 여기도 안 되면 그날 KOSIS 가 러너 요청을 거부하는 창에 걸린 것이니 **다시 돌리면 된다**.
+ * 이 한 줄이 없어서 2026-08-12 에 원인을 못 갈랐다.
+ */
+async function livecheck(key: string): Promise<Attempt> {
+  const url = `https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList`
+    + `&apiKey=${encKey(key)}&itmId=T20&objL1=11&format=json&jsonVD=Y&prdSe=M`
+    + `&orgId=101&tblId=DT_1B040A3&newEstPrdCnt=1`;
+  return tryUrl("연결 확인 — 자료 조회(매일 도는 그 주소)", url);
 }
 
 /** 응답 행에서 사람이 볼 다섯 칸만 고른다. 필드명이 판본마다 달라 여러 이름을 훑는다. */
@@ -139,6 +162,19 @@ async function main() {
   L.push("");
   L.push(`- 실행 시각(KST): ${new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" })}`);
   L.push(`- 키워드: ${qs.join(" · ")}`);
+  L.push("");
+
+  /* 검색을 시도하기 전에 kosis.kr 이 지금 살아 있는지부터 갈라 둔다. */
+  process.stdout.write("· 연결 확인 … ");
+  const live = await livecheck(apiKey);
+  console.log(live.ok ? `OK ${live.note}` : `실패 — ${live.note.slice(0, 120)}`);
+  L.push("## 연결 확인");
+  L.push("");
+  L.push(live.ok
+    ? "✅ **kosis.kr 은 지금 살아 있다** (매일 도는 자료 조회 주소가 응답했다).\n"
+      + "> 그러니 아래에서 검색이 실패한다면 그건 **망이 아니라 주소·파라미터 문제**다 — 다시 돌려도 같다."
+    : `❌ **kosis.kr 이 지금 러너 요청을 거부한다** — ${live.note}\n`
+      + "> 아래 실패는 주소 문제가 아닐 수 있다. **대기열에 한 줄 더 밀어 다시 돌린다.**");
   L.push("");
 
   let anyOk = false;

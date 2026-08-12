@@ -42,7 +42,19 @@ export async function fetchText(
       }
     }
   }
-  throw new Error(
-    `GET 실패(${retries + 1}회 시도): ${redactUrl(url)}\n${lastErr instanceof Error ? lastErr.message : lastErr}`,
-  );
+  /* ── 왜 원인(cause)까지 적나 (2026-08-12)
+     Node 의 fetch 는 연결이 끊기든, TLS 가 틀리든, 호스트를 못 찾든 **전부 "fetch failed"** 한 줄로만
+     말한다. 그 한 줄만 결과 파일에 남으면 다음 사람이 "망이 죽었나 / 주소가 틀렸나"를 구별하지 못하고
+     시간을 버린다 — 실제로 KOSIS 표 찾기가 실패했을 때 그랬다. 같은 실행에서 같은 호스트의 다른
+     호출(표 검증)은 성공했는데도 왜 검색만 실패했는지 알 수 없었다.
+     진짜 이유는 err.cause 에 있다(ENOTFOUND · ECONNRESET · UNABLE_TO_VERIFY_LEAF_SIGNATURE …). */
+  const detail = (e: unknown): string => {
+    if (!(e instanceof Error)) return String(e);
+    const c = (e as { cause?: unknown }).cause;
+    const cm = c instanceof Error
+      ? `${c.name}: ${c.message}${(c as { code?: string }).code ? ` (code=${(c as { code?: string }).code})` : ""}`
+      : c ? String(c) : "";
+    return cm ? `${e.message} — 원인: ${cm}` : e.message;
+  };
+  throw new Error(`GET 실패(${retries + 1}회 시도): ${redactUrl(url)}\n${detail(lastErr)}`);
 }
