@@ -18,7 +18,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { fetchAptTradesMonth } from "./sources/molit.js";
 import { validTrades } from "./parse/molit.js";
-import { foldPeaks, type PeakIndex } from "./parse/singo.js";
+import { foldPeaks, PEAK_SCHEMA, type PeakIndex } from "./parse/singo.js";
 import { singoRegions, monthRange } from "./sources/singoRegions.js";
 
 const CWD = process.env.INIT_CWD || process.cwd();
@@ -63,19 +63,25 @@ async function main() {
   for (const { gu, lawdCd } of regions) {
     if (used >= budget) break;
     const path = join(outDir, `${lawdCd}.json`);
-    const idx: PeakIndex = existsSync(path)
-      ? JSON.parse(readFileSync(path, "utf8"))
-      : {
-          meta: {
-            lawdCd,
-            gu,
-            doneMonths: [],
-            updatedAt: "",
-            source:
-              "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev) — 단지+평형대별 역대 최고가만 보관",
-          },
-          peaks: {},
-        };
+    const fresh = (): PeakIndex => ({
+      meta: {
+        lawdCd,
+        gu,
+        schemaVersion: PEAK_SCHEMA,
+        doneMonths: [],
+        updatedAt: "",
+        source:
+          "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev) — 단지별 전용 59·84 타입 역대 최고가만 보관",
+      },
+      peaks: {},
+    });
+    let idx: PeakIndex = existsSync(path) ? JSON.parse(readFileSync(path, "utf8")) : fresh();
+    // ⚠️ 판정 단위가 바뀌면 옛 인덱스는 **다른 것을 잰 것**이다. 이어 쓰면 조용히 섞인다.
+    //    판번호가 다르면 그 지역만 처음부터 다시 채운다(2026-08-12: 평형대 → 전용 59·84).
+    if ((idx.meta.schemaVersion ?? 1) !== PEAK_SCHEMA) {
+      console.log(`· ${gu} 인덱스 판번호 ${idx.meta.schemaVersion ?? 1} → ${PEAK_SCHEMA} · 처음부터 다시 채웁니다`);
+      idx = fresh();
+    }
     const done = new Set(idx.meta.doneMonths);
     const todo = months.filter((m) => !done.has(m));
     if (!todo.length) continue;
@@ -118,7 +124,12 @@ async function main() {
   let ready = 0;
   for (const { lawdCd } of regions) {
     const p = join(outDir, `${lawdCd}.json`);
-    const n = existsSync(p) ? (JSON.parse(readFileSync(p, "utf8")) as PeakIndex).meta.doneMonths.length : 0;
+    let n = 0;
+    if (existsSync(p)) {
+      const f = JSON.parse(readFileSync(p, "utf8")) as PeakIndex;
+      // 판번호가 다른 인덱스는 "채워진 것"으로 세지 않는다 — 다른 것을 잰 파일이다
+      if ((f.meta.schemaVersion ?? 1) === PEAK_SCHEMA) n = f.meta.doneMonths.length;
+    }
     remaining += months.length - n;
     if (n >= months.length) ready++;
   }

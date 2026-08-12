@@ -28,18 +28,33 @@ const read = (p) => (existsSync(join(ROOT, p)) ? JSON.parse(readFileSync(join(RO
 
 const latest = read("data/datasets/singo-latest.json");
 const progress = read("data/datasets/molit-peak/_progress.json");
+const universe = read("data/datasets/apt-universe.json");
 
 const lines = [];
 
 const judged = latest?.meta?.judgedRegions ?? 0;
 
-if (progress && !progress.complete) {
+// ── 준비가 두 갈래다: ① 1000세대 명부 ② 역대 최고가 기준선. 둘 다 차야 판정이 시작된다.
+//    "0건"이 셋 중 무엇인지(없었다 / 명부 준비중 / 기준선 준비중) 갈라 말하지 않으면
+//    오너가 데이터를 오해한다.
+const uniReady = !!universe?.meta?.complete;
+
+if (universe && !uniReady) {
+  const m = universe.meta;
+  const pct = m.aptTotal ? Math.round((m.aptChecked / m.aptTotal) * 100) : 0;
+  lines.push(`📒 1,000세대 이상 단지 명부 만드는 중 (${today})`);
+  lines.push(`· 단지 ${m.aptChecked.toLocaleString("ko-KR")}/${m.aptTotal.toLocaleString("ko-KR")}곳 확인 · ${pct}%`);
+  lines.push(`· 지금까지 ${m.count.toLocaleString("ko-KR")}개 단지가 명부에 올랐습니다`);
+} else if (progress && !progress.complete) {
   // ── 기준선을 채우는 중 — 이때의 "0건"은 "없었다"가 아니라 "아직 못 잰다"다.
   //    둘을 같은 문구로 보내면 오너가 데이터를 오해한다.
   const pct = Math.round((1 - progress.monthsRemaining / (progress.regions * progress.monthsPerRegion)) * 100);
   lines.push(`🧱 역대 최고가 기준선 채우는 중 (${today})`);
   lines.push(`· 완료 ${progress.regionsComplete}/${progress.regions}개 지역 · ${pct}%`);
   lines.push(`· 다 차면 알려드리고, 그때부터 신고가 판정이 시작됩니다`);
+} else if (!universe) {
+  lines.push(`📒 1,000세대 이상 단지 명부 준비 전 (${today})`);
+  lines.push(`· 명부가 아직 없어 판정을 시작하지 않았습니다 — data/apt-universe-last.md 확인`);
 } else if (latest && judged === 0) {
   // 판정한 지역이 하나도 없는 날의 "0건"은 "없었다"가 아니라 "아직 못 잰다"다.
   // 진행 파일이 아직 없을 수도 있으므로(첫날) 여기서도 같은 뜻으로 갈라 준다.
@@ -49,8 +64,7 @@ if (progress && !progress.complete) {
   const m = latest.meta || {};
   lines.push(`🏙 오늘의 신고가 없음 (${today})`);
   lines.push(`· ${m.judgedRegions ?? "?"}개 지역 · 최근 ${(m.months || []).length}개월 신고분 확인`);
-  lines.push(`· 기준: ${(m.minHhld ?? 1000).toLocaleString("ko-KR")}세대 이상 단지의 단지+평형대 역대 최고가`);
-  if (latest.belowThreshold) lines.push(`· 세대수 기준 미달로 제외 ${latest.belowThreshold}건`);
+  lines.push(`· 기준: 명부 ${(m.universe?.count ?? 0).toLocaleString("ko-KR")}개 단지 · 전용 59(25평)·84(34평) 역대 최고가`);
 } else {
   lines.push(`⚠️ 신고가 확인 결과 파일이 없습니다 (${today}) — data/singo-last.md 를 확인하세요`);
 }

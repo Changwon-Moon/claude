@@ -75,11 +75,12 @@ import {
 } from "./parse/applyhome.js";
 import { buildUrl as ahUrl, encKey as ahEncKey } from "./sources/applyhome.js";
 import {
-  areaBand as singoAreaBand,
+  areaType as singoAreaType,
+  pyeongLabel as singoPyeong,
   aptKey as singoAptKey,
   foldPeaks as singoFoldPeaks,
   findSingo as singoFindSingo,
-  manwonToKo as singoManwonToKo,
+  manwonToEok as singoEok,
 } from "./parse/singo.js";
 import { matchApt as aptMatch, parseAptList, parseAptBasis } from "./parse/aptInfo.js";
 import { singoRegions as singoRegionList, monthRange as singoMonthRange } from "./sources/singoRegions.js";
@@ -848,16 +849,25 @@ console.log("\n[청약홈 분양정보 파서]");
 /* ─────────────────────────────────────────────────────────────
    신고가(역대 최고가 경신) 판별 — 2026-08-12
    검사는 "통과했다"가 아니라 "무엇을 쟀다"로 읽는다. 여기서 재는 것:
-   ① 평형대 경계 ② 단지 키가 동 표기로 쪼개지지 않는다 ③ 역대 기록이 없는 칸은 판정하지 않는다
-   ④ 같은 값 재거래는 신고가가 아니다 ⑤ 같은 칸 연속 경신이면 더 높은 하나만
+   ① 전용 59·84 타입 경계와 그 밖은 판정 대상이 아니라는 것 ② 단지 키가 동 표기로 안 쪼개진다
+   ③ 역대 기록이 없는 칸은 판정하지 않는다 ④ 같은 값 재거래는 신고가가 아니다
+   ⑤ 같은 칸 연속 경신이면 더 높은 하나만 ⑥ 억 표기가 레퍼런스 카드와 같은 꼴인가
    ────────────────────────────────────────────────────────── */
 {
   console.log("\n[신고가 판별]");
-  check("전용 59.9 → 20평대", singoAreaBand(59.9) === "20평대", singoAreaBand(59.9));
-  check("전용 60.0 → 30평대", singoAreaBand(60) === "30평대", singoAreaBand(60));
-  check("전용 84.97 → 30평대", singoAreaBand(84.97) === "30평대", singoAreaBand(84.97));
-  check("전용 85.0 → 40평대", singoAreaBand(85) === "40평대", singoAreaBand(85));
-  check("면적 0 은 밴드 없음(판정 대상 아님)", singoAreaBand(0) === "", `"${singoAreaBand(0)}"`);
+  // 오너가 좁힌 판정 단위 — 전용 59·84 두 타입뿐이다(2026-08-12)
+  check("전용 59.99 → 59타입", singoAreaType(59.99) === "59", String(singoAreaType(59.99)));
+  check("전용 58.71 → 59타입(구축 표기 흔들림)", singoAreaType(58.71) === "59", String(singoAreaType(58.71)));
+  check("전용 84.99 → 84타입", singoAreaType(84.99) === "84", String(singoAreaType(84.99)));
+  check("전용 83.53 → 84타입(B타입)", singoAreaType(83.53) === "84", String(singoAreaType(83.53)));
+  check("전용 74.9 는 대상 아님", singoAreaType(74.9) === null, String(singoAreaType(74.9)));
+  check("전용 114.9 는 대상 아님(48평 신고가는 안 잡힌다)", singoAreaType(114.9) === null, String(singoAreaType(114.9)));
+  check("전용 39.6 은 대상 아님", singoAreaType(39.6) === null, String(singoAreaType(39.6)));
+  check("면적 0 은 대상 아님", singoAreaType(0) === null, String(singoAreaType(0)));
+
+  check("59타입 표기는 25평", singoPyeong(59.99) === "25평", singoPyeong(59.99));
+  check("84타입 표기는 34평", singoPyeong(84.99) === "34평", singoPyeong(84.99));
+  check("대상 밖은 평 표기가 없다", singoPyeong(101.2) === "", `"${singoPyeong(101.2)}"`);
 
   // 동 표기가 붙어도 같은 단지다 — 갈라지면 작은 쪽 최고가만 넘어도 신고가가 되어 오보가 난다
   check(
@@ -869,41 +879,47 @@ console.log("\n[청약홈 분양정보 파서]");
     singoAptKey("11680", "대치동", "래미안 대치 팰리스") === singoAptKey("11680", "대치동", "래미안대치팰리스"),
   );
 
-  const mkT = (aptNm: string, area: number, priceManwon: number, date: string, umdNm = "대치동") => ({
-    aptNm, umdNm, area, priceManwon, floor: 10, date,
+  const mkT = (aptNm: string, area: number, priceManwon: number, date: string, umdNm = "잠실동") => ({
+    aptNm, umdNm, area, priceManwon, floor: 15, date,
   });
 
   // ③ 역대 기록이 없는 칸 — 첫 거래를 신고가라 부르지 않는다
   check(
     "역대 기록이 없으면 판정하지 않는다",
-    singoFindSingo({}, "11680", "강남구", [mkT("가", 84, 300000, "2026-08-10")]).length === 0,
+    singoFindSingo({}, "11710", "송파구", [mkT("리센츠", 84.99, 369500, "2026-07-24")]).length === 0,
   );
 
   // ④ 같은 값이면 신고가가 아니다(최초로 그 값에 닿은 거래가 기록이다)
   const p1: Record<string, any> = {};
-  singoFoldPeaks(p1, "11680", [mkT("가", 84, 300000, "2026-01-05")]);
-  check("같은 금액 재거래는 신고가가 아니다", singoFindSingo({ ...p1 }, "11680", "강남구", [mkT("가", 84, 300000, "2026-08-10")]).length === 0);
-  check("1만원이라도 넘으면 신고가다", singoFindSingo({ ...p1 }, "11680", "강남구", [mkT("가", 84, 300001, "2026-08-10")]).length === 1);
+  singoFoldPeaks(p1, "11710", [mkT("리센츠", 84.99, 369500, "2026-01-05")]);
+  check("같은 금액 재거래는 신고가가 아니다", singoFindSingo({ ...p1 }, "11710", "송파구", [mkT("리센츠", 84.99, 369500, "2026-07-24")]).length === 0);
+  check("1만원이라도 넘으면 신고가다", singoFindSingo({ ...p1 }, "11710", "송파구", [mkT("리센츠", 84.99, 369501, "2026-07-24")]).length === 1);
 
-  // 밴드로 재는 것이 전용면적으로 재는 것보다 엄격하다 — 같은 밴드의 더 큰 타입 기록도 넘어야 한다
+  // 같은 타입 안의 A/B 타입은 한 칸이다 — 84.99 기록을 83.53 이 넘어야 신고가
   check(
-    "같은 밴드 안 작은 타입도 그 밴드 최고가를 넘어야 한다",
-    singoFindSingo({ ...p1 }, "11680", "강남구", [mkT("가", 60, 290000, "2026-08-10")]).length === 0,
+    "84.99 기록은 83.53 거래도 넘어야 한다(같은 84타입)",
+    singoFindSingo({ ...p1 }, "11710", "송파구", [mkT("리센츠", 83.53, 360000, "2026-07-24")]).length === 0,
+  );
+  // 59타입은 84타입과 다른 칸이다 — 서로 간섭하지 않는다
+  check(
+    "59타입은 84타입 기록과 무관하다",
+    singoFindSingo({ ...p1 }, "11710", "송파구", [mkT("리센츠", 59.99, 200000, "2026-07-24")]).length === 0,
   );
 
   // ⑤ 같은 칸에서 연달아 갱신되면 더 높은 한 건만 — 둘 다 알리면 "신고가 두 번"이 된다
   const p3: Record<string, any> = {};
-  singoFoldPeaks(p3, "11680", [mkT("가", 84, 300000, "2026-01-05")]);
-  const twice = singoFindSingo(p3, "11680", "강남구", [
-    mkT("가", 84, 310000, "2026-08-10"),
-    mkT("가", 84, 320000, "2026-08-11"),
+  singoFoldPeaks(p3, "11710", [mkT("리센츠", 84.99, 300000, "2026-01-05")]);
+  const twice = singoFindSingo(p3, "11710", "송파구", [
+    mkT("리센츠", 84.99, 310000, "2026-07-20"),
+    mkT("리센츠", 84.99, 320000, "2026-07-24"),
   ]);
   check("같은 칸 연속 경신은 최고 한 건만", twice.length === 1 && twice[0].priceManwon === 320000, `${twice.length}건`);
   check(
-    "직전 최고가·상승률이 함께 남는다",
+    "직전 최고가는 이번 묶음이 들어오기 전 기록이다",
     twice[0].prevPeakManwon === 300000 && Math.round(twice[0].gainPct ?? 0) === 7,
     String(twice[0].gainPct),
   );
+  check("히트에 평 표기가 붙는다", twice[0].pyeong === "34평", twice[0].pyeong);
 
   // 세대수 매칭 — 애매하면 붙이지 않는다(잘못 붙인 세대수는 곧 오보다)
   const list = [
@@ -916,20 +932,28 @@ console.log("\n[청약홈 분양정보 파서]");
   check("이름이 아예 다르면 null", aptMatch(list, "대치동", "선경") === null);
 
   // 응답 모양이 바뀌면 세대수가 조용히 0 이 된다 — 파서가 실제로 읽는지 본다
-  const basisXml = `<response><body><item><kaptCode>A1</kaptCode><kaptName>은마</kaptName><kaptdaCnt>4424</kaptdaCnt><kaptDongCnt>28</kaptDongCnt><kaptUsedate>19790801</kaptUsedate><kaptAddr>서울 강남구 대치동</kaptAddr></item></body></response>`;
-  check("기본정보에서 세대수를 읽는다", parseAptBasis(basisXml)?.hhldCnt === 4424, String(parseAptBasis(basisXml)?.hhldCnt));
+  const basisXml = `<response><body><item><kaptCode>A1</kaptCode><kaptName>리센츠</kaptName><kaptdaCnt>5563</kaptdaCnt><kaptDongCnt>65</kaptDongCnt><kaptUsedate>20080701</kaptUsedate><kaptAddr>서울 송파구 잠실동</kaptAddr></item></body></response>`;
+  check("기본정보에서 세대수를 읽는다", parseAptBasis(basisXml)?.hhldCnt === 5563, String(parseAptBasis(basisXml)?.hhldCnt));
   check("세대수가 없으면 null (0 으로 떨어뜨리지 않는다)", parseAptBasis("<response><body><item><kaptCode>A1</kaptCode></item></body></response>") === null);
-  const listXml = `<response><body><items><item><kaptCode>A1</kaptCode><kaptName>은마</kaptName><bjdCode>1168010600</bjdCode><as1>서울특별시</as1><as2>강남구</as2><as3>대치동</as3></item></items></body></response>`;
-  check("단지목록을 읽는다", parseAptList(listXml).length === 1 && parseAptList(listXml)[0].umd === "대치동");
+  const listXml = `<response><body><items><item><kaptCode>A1</kaptCode><kaptName>리센츠</kaptName><bjdCode>1171010100</bjdCode><as1>서울특별시</as1><as2>송파구</as2><as3>잠실동</as3></item></items></body></response>`;
+  check("단지목록을 읽는다", parseAptList(listXml).length === 1 && parseAptList(listXml)[0].umd === "잠실동");
 
-  check("만원 → 억 표기", singoManwonToKo(423500) === "42억 3,500", singoManwonToKo(423500));
-  check("딱 떨어지면 억만", singoManwonToKo(300000) === "30억", singoManwonToKo(300000));
+  // ⑥ 레퍼런스 카드가 "36.95억" 꼴이다 — 표기를 거기에 맞췄다
+  check("369,500만원 → 36.95억", singoEok(369500) === "36.95억", singoEok(369500));
+  check("딱 떨어지면 30억", singoEok(300000) === "30억", singoEok(300000));
+  check("소수 한 자리면 한 자리만", singoEok(365000) === "36.5억", singoEok(365000));
 
   // 대상 지역 목록은 코드가 쥔다 — 말로만 정해두면 어느 날 조용히 달라진다
   const regs = singoRegionList();
   const seoulN = regs.filter((r) => r.lawdCd.startsWith("11")).length;
-  check("신고가 대상 지역은 서울 25개구를 포함한다", seoulN === 25, String(seoulN));
-  check("경기 군 지역은 빠져 있다", !regs.some((r) => r.gu.endsWith("군")), regs.filter((r) => r.gu.endsWith("군")).map((r) => r.gu).join(","));
+  check("서울 25개구 전역", seoulN === 25, String(seoulN));
+  check("경기는 오너가 고른 20개 시만", regs.length - seoulN === 36, `${regs.length - seoulN}개 구·시`);
+  // ⚠️ 부분일치로 재면 "남양주시"가 "양주"에 걸린다 — 시 이름은 **머리부터** 맞춰야 한다
+  const NOT_PICKED = ["의정부시", "파주시", "이천시", "안성시", "양주시", "포천시", "동두천시", "여주시", "연천군", "가평군", "양평군"];
+  const leaked = regs.filter((r) => NOT_PICKED.some((n) => r.gu.startsWith(n))).map((r) => r.gu);
+  check("안 고른 시·군은 하나도 없다", leaked.length === 0, leaked.join(","));
+  check("남양주시는 '양주'와 다르다 — 들어 있어야 한다", regs.some((r) => r.gu === "남양주시"));
+  check("성남 3개구가 모두 들어 있다", regs.filter((r) => r.gu.startsWith("성남시")).length === 3);
   check("지역 코드는 5자리 법정동 코드", regs.every((r) => /^\d{5}$/.test(r.lawdCd)));
   const mr = singoMonthRange("202511", "202602");
   check("월 범위는 해를 넘어간다", mr.join(",") === "202511,202512,202601,202602", mr.join(","));

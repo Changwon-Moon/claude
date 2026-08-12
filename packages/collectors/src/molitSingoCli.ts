@@ -1,28 +1,36 @@
 /**
  * 오늘의 신고가(역대 최고가 경신) 수집 CLI — 매일 아침 (네트워크·키 필요 → GitHub Actions).
  *
- *   MOLIT_API_KEY=xxx tsx src/molitSingoCli.ts --today 2026-08-13 [--min-hhld 1000] [--months 2]
+ *   MOLIT_API_KEY=xxx tsx src/molitSingoCli.ts --today 2026-08-13 [--months 2] [--top 10]
  *
  * ── 하는 일
- * ① 대상 지역의 **최근 몇 달치 실거래**를 받는다(신고기한이 30일이라 어제 계약이 오늘 뜨진 않는다)
- * ② `data/datasets/molit-peak/` 의 **역대 최고가 인덱스**와 대조해 넘어선 거래만 고른다
- * ③ 단지 세대수를 붙여 **1000세대 이상**만 남긴다 (2026-08-12 오너 결정)
- * ④ 인덱스를 갱신한다 — 그래야 내일은 오늘 것이 기준이 된다
+ * ① **명부(1000세대 이상 단지)** 를 읽는다 — `data/datasets/apt-universe.json`
+ * ② 대상 지역의 최근 몇 달치 실거래를 받는다(신고기한 30일이라 어제 계약이 오늘 뜨진 않는다)
+ * ③ 명부에 있는 단지의 **전용 59·84 타입** 거래만 남기고, 역대 최고가 인덱스와 대조한다
+ * ④ 넘어선 것이 오늘의 신고가 — 단지명 · 평(00평) · 실거래가
+ * ⑤ 인덱스를 갱신한다 — 그래야 내일은 오늘 것이 기준이 된다
  *
  * ── 판정하지 않는 것
- * · **역대 인덱스가 아직 안 채워진 지역** — 반쪽 기준으로 "역대 최고가"라 부르면 그게 오보다.
- *   초기 수집(molitPeakCli)이 그 지역을 끝낼 때까지 그 지역은 조용히 건너뛴다(건너뛴 사실은 남긴다).
+ * · **역대 인덱스가 아직 안 채워진 지역** — 반쪽 기준으로 "역대 최고가"라 부르면 그게 오보다
+ * · **명부에 없는 단지** — 1000세대 미만이거나 아직 세대수를 확인 못 한 곳
  * · **직거래** — 특수관계인 거래가 섞여 시세로 읽기 어렵다. 다만 인덱스에는 넣는다.
- *   기록에서 빼면 직거래로 세워진 고점을 모르고 "역대 최고가"라 부르게 되기 때문이다.
- * · **세대수를 못 붙인 단지** — 추측해서 붙이지 않는다. 놓친 이름은 파일로 남겨 다음에 고친다.
+ *   기록에서 빼면 직거래로 세워진 고점을 모르고 "역대 최고가"라 부르게 되기 때문이다
+ * · **전용 59·84 이외 평형** — 오너 결정(2026-08-12). 리센츠 48평 신고가는 안 잡힌다
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { fetchAptTradesMonth } from "./sources/molit.js";
-import { fetchAptList, fetchAptBasis } from "./sources/aptInfo.js";
 import { validTrades, type AptTrade } from "./parse/molit.js";
-import { matchApt, type AptListItem } from "./parse/aptInfo.js";
-import { foldPeaks, findSingo, manwonToKo, type PeakIndex, type SingoHit } from "./parse/singo.js";
+import {
+  foldPeaks,
+  findSingo,
+  areaType,
+  normAptName,
+  manwonToEok,
+  PEAK_SCHEMA,
+  type PeakIndex,
+  type SingoHit,
+} from "./parse/singo.js";
 import { singoRegions, monthRange } from "./sources/singoRegions.js";
 
 const CWD = process.env.INIT_CWD || process.cwd();
@@ -43,12 +51,8 @@ function recentMonths(today: string, n: number): string[] {
   return monthRange(`${sy}${String(sm).padStart(2, "0")}`, `${y}${String(m).padStart(2, "0")}`);
 }
 
-interface HhldCache {
-  updatedAt: string;
-  note: string;
-  byKapt: Record<string, { name: string; hhld: number; addr: string }>;
-  /** 실거래 표기(구|법정동|단지명) → 단지코드. 못 찾은 것은 "" 로 남겨 매일 다시 두드리지 않는다 */
-  match: Record<string, string>;
+interface UniverseItem {
+  lawdCd: string; gu: string; umd: string; kaptCode: string; kaptName: string; norm: string; hhld: number;
 }
 
 async function main() {
@@ -58,46 +62,64 @@ async function main() {
     process.exit(1);
   }
   const today = arg("today") ?? new Date().toISOString().slice(0, 10);
-  const minHhld = Number(arg("min-hhld") ?? 1000);
   const nMonths = Number(arg("months") ?? 2);
   const topN = Number(arg("top") ?? 10);
-  const lookupBudget = Number(arg("lookup-budget") ?? 120);
 
   const peakDir = R("data/datasets/molit-peak");
-  const listDir = R("data/datasets/apt-list");
-  mkdirSync(listDir, { recursive: true });
+  const uniPath = R("data/datasets/apt-universe.json");
 
-  const hhldPath = R("data/datasets/apt-hhld.json");
-  const hhld: HhldCache = existsSync(hhldPath)
-    ? JSON.parse(readFileSync(hhldPath, "utf8"))
-    : {
-        updatedAt: "",
-        note: "국토교통부 공동주택 기본 정보(getAphusBassInfoV3)의 세대수(kaptdaCnt). 코드가 받아 적는다.",
-        byKapt: {},
-        match: {},
-      };
+  // ── 명부 — 없으면 판정할 대상 자체가 없다. 조용히 0건으로 넘어가지 않는다.
+  const uni = existsSync(uniPath) ? JSON.parse(readFileSync(uniPath, "utf8")) : null;
+  const uniItems: UniverseItem[] = uni?.items ?? [];
+  const uniReady = uniItems.length > 0;
+
+  /** 구별 명부 — 실거래 표기(법정동+단지명)로 찾기 위한 조회판 */
+  const byGu = new Map<string, UniverseItem[]>();
+  for (const it of uniItems) {
+    if (!byGu.has(it.lawdCd)) byGu.set(it.lawdCd, []);
+    byGu.get(it.lawdCd)!.push(it);
+  }
+
+  /**
+   * 실거래의 (법정동, 단지명) 이 명부에 있는지.
+   * 같은 법정동 + 정규화 이름 완전일치 → 없으면 포함관계 후보가 **하나뿐일 때만** 인정.
+   * 애매하면 붙이지 않는다 — 잘못 붙이면 1000세대 미만 단지가 알림에 섞인다.
+   */
+  function inUniverse(lawdCd: string, umdNm: string, aptNm: string): UniverseItem | null {
+    const list = byGu.get(lawdCd);
+    if (!list) return null;
+    const want = normAptName(aptNm);
+    if (!want) return null;
+    const sameUmd = list.filter((a) => a.umd === umdNm);
+    const pool = sameUmd.length ? sameUmd : list;
+    const exact = pool.filter((a) => a.norm === want);
+    if (exact.length === 1) return exact[0];
+    if (exact.length > 1) return null;
+    const part = pool.filter((a) => a.norm.length > 1 && (a.norm.includes(want) || want.includes(a.norm)));
+    return part.length === 1 ? part[0] : null;
+  }
 
   const regions = singoRegions();
   const months = recentMonths(today, nMonths);
-  const hits: SingoHit[] = [];
+  const hits: (SingoHit & { hhld: number })[] = [];
   const skipped: string[] = [];
   let fetched = 0;
+  let judged = 0;
 
   for (const { gu, lawdCd } of regions) {
     const peakPath = join(peakDir, `${lawdCd}.json`);
-    if (!existsSync(peakPath)) {
-      skipped.push(`${gu} (역대 인덱스 없음)`);
-      continue;
-    }
+    if (!existsSync(peakPath)) { skipped.push(`${gu} (역대 인덱스 없음)`); continue; }
     const idx: PeakIndex = JSON.parse(readFileSync(peakPath, "utf8"));
+    if ((idx.meta.schemaVersion ?? 1) !== PEAK_SCHEMA) { skipped.push(`${gu} (인덱스 판번호 옛것)`); continue; }
     const done = new Set(idx.meta.doneMonths);
 
-    // ── 이 지역의 역대 인덱스가 실제로 "역대"인지 본다.
-    // 2006-01 부터 지난달까지가 다 차 있어야 신고가를 판정한다.
+    // 이 지역의 역대 인덱스가 실제로 "역대"인지 본다 — 2006-01 부터 지난달까지 다 차 있어야 한다
     const need = monthRange("200601", months[months.length - 2] ?? months[0]);
     const missing = need.filter((m) => !done.has(m));
-    const judgeable = missing.length === 0;
-    if (!judgeable) skipped.push(`${gu} (초기 수집 ${missing.length}개월 남음)`);
+    const judgeable = missing.length === 0 && uniReady;
+    if (missing.length) skipped.push(`${gu} (초기 수집 ${missing.length}개월 남음)`);
+    else if (!uniReady) skipped.push(`${gu} (명부 없음)`);
+    else judged++;
 
     const fresh: AptTrade[] = [];
     for (const ym of months) {
@@ -114,76 +136,34 @@ async function main() {
     const tx = validTrades(fresh);
 
     if (judgeable) {
-      // 직거래는 알림 대상에서 뺀다(특수관계인 거래 위험). 다만 아래에서 인덱스에는 넣는다.
-      const brokered = tx.filter((t) => t.dealingGbn !== "직거래");
-      for (const h of findSingo(idx.peaks, lawdCd, gu, brokered)) hits.push(h);
+      // 전용 59·84 · 중개거래 · 명부에 있는 단지 — 세 조건을 다 만족하는 것만 판정 대상
+      const target = tx.filter((t) => areaType(t.area) && t.dealingGbn !== "직거래");
+      const inUni: { t: AptTrade; u: UniverseItem }[] = [];
+      for (const t of target) {
+        const u = inUniverse(lawdCd, t.umdNm, t.aptNm);
+        if (u) inUni.push({ t, u });
+      }
+      const found = findSingo(idx.peaks, lawdCd, gu, inUni.map((x) => x.t));
+      for (const h of found) {
+        const u = inUniverse(lawdCd, h.umdNm, h.aptNm);
+        hits.push({ ...h, hhld: u?.hhld ?? 0 });
+      }
     }
-    // 직거래 포함 전건을 인덱스에 접어 넣는다 — 기록은 기록대로 남아야 한다
+    // 직거래·타 평형 포함 전건을 인덱스에 접어 넣는다 — 기록은 기록대로 남아야 한다
     foldPeaks(idx.peaks, lawdCd, tx);
     idx.meta.doneMonths.sort();
     idx.meta.updatedAt = today;
     writeFileSync(peakPath, JSON.stringify(idx, null, 0) + "\n");
   }
 
-  // ── 세대수 붙이기 (필요한 단지만, 예산 안에서)
-  let looked = 0;
-  const unmatched: string[] = [];
-  const withHhld: (SingoHit & { hhld: number })[] = [];
-  const guOf = new Map(regions.map((r) => [r.lawdCd, r.gu]));
+  // ── 정렬: 기본은 **거래가 큰 순**.
+  // 리허설에서 갱신폭(상승률) 순으로 세워 보니 상위가 소형·저가 단지로 채워졌다. 레퍼런스
+  // 카드(「잠실 리센츠 33평 36.95억」)가 말하는 소식은 그쪽이 아니다. 갱신폭은 데이터에
+  // 그대로 남겨 두어(카드가 "직전 최고가 대비 +X%"로 쓸 수 있다) 언제든 바꿀 수 있게 한다.
+  const sortBy = arg("sort") ?? "price";
+  if (sortBy === "gain") hits.sort((a, b) => (b.gainPct ?? 0) - (a.gainPct ?? 0));
+  else hits.sort((a, b) => b.priceManwon - a.priceManwon);
 
-  for (const h of hits) {
-    const mk = `${h.lawdCd}|${h.umdNm}|${h.aptNm}`;
-    let kapt = hhld.match[mk];
-    if (kapt === undefined && looked < lookupBudget) {
-      const listPath = join(listDir, `${h.lawdCd}.json`);
-      let list: AptListItem[] = [];
-      if (existsSync(listPath)) {
-        list = JSON.parse(readFileSync(listPath, "utf8")).items;
-      } else {
-        try {
-          list = await fetchAptList(h.lawdCd, key);
-          looked++;
-          writeFileSync(
-            listPath,
-            JSON.stringify(
-              { meta: { lawdCd: h.lawdCd, gu: guOf.get(h.lawdCd) ?? "", updatedAt: today, source: "국토교통부 공동주택 단지 목록제공 서비스" }, items: list },
-              null,
-              0,
-            ) + "\n",
-          );
-        } catch (e) {
-          console.error(`⚠️ ${h.lawdCd} 단지목록 실패: ${e instanceof Error ? e.message : e}`);
-        }
-      }
-      const m = matchApt(list, h.umdNm, h.aptNm);
-      kapt = m?.kaptCode ?? "";
-      hhld.match[mk] = kapt;
-    }
-    if (!kapt) { unmatched.push(`${h.gu} ${h.umdNm} ${h.aptNm}`); continue; }
-
-    if (!hhld.byKapt[kapt] && looked < lookupBudget) {
-      try {
-        const b = await fetchAptBasis(kapt, key);
-        looked++;
-        if (b) hhld.byKapt[kapt] = { name: b.kaptName, hhld: b.hhldCnt, addr: b.addr };
-      } catch (e) {
-        console.error(`⚠️ ${kapt} 기본정보 실패: ${e instanceof Error ? e.message : e}`);
-      }
-      await new Promise((r) => setTimeout(r, 100));
-    }
-    const rec = hhld.byKapt[kapt];
-    if (!rec) { unmatched.push(`${h.gu} ${h.umdNm} ${h.aptNm} (세대수 미확인)`); continue; }
-    withHhld.push({ ...h, hhld: rec.hhld });
-  }
-
-  hhld.updatedAt = today;
-  writeFileSync(hhldPath, JSON.stringify(hhld, null, 0) + "\n");
-
-  const big = withHhld
-    .filter((h) => h.hhld >= minHhld)
-    .sort((a, b) => (b.gainPct ?? 0) - (a.gainPct ?? 0));
-
-  // ── 산출물
   mkdirSync(R("data/datasets"), { recursive: true });
   writeFileSync(
     R("data/datasets/singo-latest.json"),
@@ -191,43 +171,45 @@ async function main() {
       {
         meta: {
           today,
-          minHhld,
           months,
           regions: regions.length,
-          judgedRegions: regions.length - skipped.length,
+          judgedRegions: judged,
           skipped,
+          universe: { ready: uniReady, count: uniItems.length, minHhld: uni?.meta?.minHhld ?? null, complete: uni?.meta?.complete ?? false },
+          types: ["전용 59타입 = 25평", "전용 84타입 = 34평"],
+          sortBy,
           verified: true,
           source: "국토교통부 아파트 매매 실거래가 상세자료 · 공동주택 기본 정보(세대수)",
           note:
-            "단지+평형대(구·법정동·단지명 기준) 역대 최고가를 넘어선 중개거래만. 직거래 제외, 해제거래 제외.",
+            "1000세대 이상 단지(명부)의 전용 59·84 타입 중개거래 중, 구·법정동·단지명 기준 2006-01 이후 역대 최고가를 넘어선 건. 직거래·해제거래 제외. 평 표기는 관용 환산(전용률 미공개)이라 단지에 따라 ±1평 어긋날 수 있고 원본 전용면적을 함께 남긴다.",
         },
-        hits: big,
-        belowThreshold: withHhld.filter((h) => h.hhld < minHhld).length,
-        unmatched,
+        hits,
       },
       null,
       2,
     ) + "\n",
   );
 
-  // 알림 문구 — 오너 요청: **단지명과 거래가격**. 평형대만 함께 적는다(그게 없으면
-  // "무엇의 신고가"인지 확인할 수가 없어 오보 0 을 지킬 수 없다).
+  // 알림 문구 — 오너 요청: **단지명 + 평 + 실거래가**
   const lines: string[] = [];
-  if (big.length) {
-    lines.push(`🔥 오늘의 신고가 ${big.length}건 (${today} · ${minHhld.toLocaleString("ko-KR")}세대 이상)`);
+  if (hits.length) {
+    lines.push(`🔥 오늘의 신고가 ${hits.length}건 (${today})`);
     lines.push("");
-    for (const h of big.slice(0, topN)) {
-      lines.push(`· ${h.aptNm} ${h.band} — ${manwonToKo(h.priceManwon)}`);
+    for (const h of hits.slice(0, topN)) {
+      lines.push(`· ${h.aptNm} ${h.pyeong} ${manwonToEok(h.priceManwon)}`);
     }
-    if (big.length > topN) lines.push(`… 외 ${big.length - topN}건`);
+    if (hits.length > topN) lines.push(`… 외 ${hits.length - topN}건`);
   }
   writeFileSync(R("data/singo-alert.txt"), lines.join("\n"));
 
   console.log(
-    `신고가 후보 ${hits.length}건 → 세대수 확인 ${withHhld.length}건 → ${minHhld}세대 이상 ${big.length}건\n` +
-      `수집 ${fetched}회 · 단지조회 ${looked}회 · 판정 제외 지역 ${skipped.length}곳 · 미매칭 ${unmatched.length}건`,
+    `명부 ${uniItems.length}개 단지 · 판정 지역 ${judged}/${regions.length} · 수집 ${fetched}회\n` +
+      `→ 오늘의 신고가 ${hits.length}건`,
   );
-  if (skipped.length) console.log(`  제외: ${skipped.slice(0, 10).join(", ")}${skipped.length > 10 ? " …" : ""}`);
+  if (skipped.length) console.log(`  제외: ${skipped.slice(0, 8).join(", ")}${skipped.length > 8 ? " …" : ""}`);
+  for (const h of hits.slice(0, 15)) {
+    console.log(`  · ${h.gu} ${h.aptNm} ${h.pyeong} ${manwonToEok(h.priceManwon)} (전용 ${h.area}㎡ ${h.floor}층 ${h.date} · 직전 ${manwonToEok(h.prevPeakManwon)} ${h.prevPeakDate} · ${h.hhld.toLocaleString("ko-KR")}세대)`);
+  }
 }
 
 main().catch((e) => {

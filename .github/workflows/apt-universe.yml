@@ -1,0 +1,166 @@
+name: 1000세대 이상 단지 명부 (신고가 트래킹 대상)
+
+# ── 무엇을 하나 (2026-08-12 오너)
+# "1000세대 이상 단지만 먼저 리스트업 해놓고 **그 안에서** 신고가 발생하는지만 트래킹하자."
+#
+# 서울 25개구 + 경기 20개 시의 공동주택 단지 목록을 받고, 단지마다 세대수를 붙여
+# **1000세대 이상 명부**(`data/datasets/apt-universe.json`)를 만든다.
+#
+# ── 왜 명부를 미리 굳히나
+# 매일 아침 세대수를 그때그때 조회하면 (1) 조회가 실패한 날 알림이 통째로 비고
+# (2) 어떤 단지가 대상인지 아무도 미리 볼 수 없다. 파일로 굳혀 두면 둘 다 사라진다 —
+# **오늘 무엇을 보고 있는지 오너가 눈으로 확인할 수 있다.**
+#
+# ── 실거래 수집과 서로 안 잡아먹는다
+# 공동주택 서비스(AptListService3·AptBasisInfoServiceV3)는 실거래(RTMSDataSvc…)와
+# **다른 서비스**라 공공데이터포털 트래픽 한도도 따로 센다. 같은 날 나란히 돌아도 된다.
+on:
+  schedule:
+    # 매일 01:20 UTC (10:20 KST) — 역대 최고가 수집(11:40)보다 먼저 돌려 명부부터 채운다
+    - cron: "20 1 * * *"
+
+  # 대기열 푸시가 방아쇠 — 세션은 Actions 버튼을 못 누른다.
+  # 한 줄 형식(전부 선택):  budget=6000 min=1000
+  push:
+    paths:
+      - "data/apt-universe-queue.txt"
+
+  workflow_dispatch:
+    inputs:
+      budget:
+        description: "이번 실행에서 쓸 최대 API 호출 수 (기본 6000)"
+        required: false
+        default: "6000"
+      min:
+        description: "명부에 올릴 최소 세대수 (기본 1000)"
+        required: false
+        default: "1000"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apt-universe
+  cancel-in-progress: false
+
+jobs:
+  universe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: 실행 조건 정하기
+        id: cfg
+        run: |
+          BUDGET="${{ github.event.inputs.budget }}"
+          MIN="${{ github.event.inputs.min }}"
+          Q=data/apt-universe-queue.txt
+          if [ -z "$BUDGET$MIN" ] && [ -f "$Q" ]; then
+            LINE=$(grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' | tail -1)
+            echo "대기열 마지막 줄: ${LINE:-(비어 있음)}"
+            for kv in $LINE; do
+              case "$kv" in
+                budget=*) BUDGET="${kv#budget=}" ;;
+                min=*)    MIN="${kv#min=}" ;;
+              esac
+            done
+          fi
+          echo "budget=${BUDGET:-6000}" >> "$GITHUB_OUTPUT"
+          echo "min=${MIN:-1000}" >> "$GITHUB_OUTPUT"
+          echo "today=$(TZ=Asia/Seoul date +%F)" >> "$GITHUB_OUTPUT"
+
+      # ⚠️ 키가 없으면 여기서 멈춘다 — 조용한 실패는 몇 주가 지나도 안 보인다.
+      - name: 키 확인
+        env:
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        run: |
+          if [ -z "$MOLIT_API_KEY" ]; then
+            echo "::error::MOLIT_API_KEY 가 GitHub Secrets 에 없습니다."
+            exit 1
+          fi
+
+      - name: 이미 다 됐는지 먼저 본다
+        id: gate
+        run: |
+          DONE=$(node -e "try{const p=require('./data/datasets/apt-universe.json');console.log(p.meta.complete?'yes':'no')}catch{console.log('no')}")
+          echo "complete=$DONE" >> "$GITHUB_OUTPUT"
+          [ "$DONE" = "yes" ] && echo "✅ 명부가 이미 완성돼 있습니다 — 이번 실행은 할 일이 없습니다"
+          exit 0
+
+      - name: 명부 채우기
+        if: steps.gate.outputs.complete != 'yes'
+        env:
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        run: |
+          set -o pipefail
+          pnpm --filter @wirit/collectors collect-apt-universe -- \
+            --min-hhld ${{ steps.cfg.outputs.min }} \
+            --budget ${{ steps.cfg.outputs.budget }} 2>&1 | tee /tmp/universe.log
+
+      - name: 실행 결과 기록
+        if: always() && steps.gate.outputs.complete != 'yes'
+        run: |
+          {
+            echo "# 1000세대 이상 단지 명부 — 마지막 실행"
+            echo
+            echo "- 실행: ${{ steps.cfg.outputs.today }} (KST) · 방아쇠 \`${{ github.event_name }}\`"
+            echo "- 예산: ${{ steps.cfg.outputs.budget }}회 · 최소 세대수 ${{ steps.cfg.outputs.min }}"
+            echo "- 결과: **${{ job.status == 'success' && '성공' || '실패' }}**"
+            echo "- 커밋: \`${{ github.sha }}\`"
+            echo
+            echo '```'
+            cat /tmp/universe.log 2>/dev/null || echo "(실행되지 못했습니다)"
+            echo '```'
+          } > data/apt-universe-last.md
+
+      - name: 커밋
+        if: always() && steps.gate.outputs.complete != 'yes'
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@github.com"
+          git add -f data/apt-universe-last.md
+          # ⚠️ 경로를 한 줄에 몰아 쓰지 않는다 — 하나라도 없으면 git add 가 통째로 실패한다
+          for P in data/datasets/apt-universe.json data/datasets/apt-list data/datasets/apt-hhld.json; do
+            [ -e "$P" ] && git add "$P" || true
+          done
+          if git diff --cached --quiet; then
+            echo "바뀐 것 없음 — 커밋 생략"
+          else
+            git commit -m "단지 명부 ${{ steps.cfg.outputs.today }}"
+            git pull --rebase --autostash origin ${{ github.ref_name }} || true
+            git push origin HEAD:${{ github.ref_name }}
+          fi
+
+      # 명부가 **완성되는 날 한 번만** 알린다. 매일 진행률을 보내면 며칠 만에 안 읽게 된다.
+      - name: 완성되면 한 번 알린다
+        if: success() && steps.gate.outputs.complete != 'yes'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          NOW=$(node -e "try{const p=require('./data/datasets/apt-universe.json');console.log(p.meta.complete?p.meta.count:'no')}catch{console.log('no')}")
+          if [ "$NOW" != "no" ]; then
+            node scripts/notify-telegram.mjs "📒 1,000세대 이상 단지 명부 완성 — 총 ${NOW}개 단지를 신고가 트래킹 대상으로 잡았습니다"
+          fi
+
+      - name: 실패하면 알린다
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          node scripts/notify-telegram.mjs "⚠️ 단지 명부 수집 실패 (${{ steps.cfg.outputs.today }}) — data/apt-universe-last.md 를 확인하세요. 공동주택 단지목록·기본정보 활용신청을 확인해 주세요"

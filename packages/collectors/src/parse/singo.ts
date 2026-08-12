@@ -1,15 +1,15 @@
 /**
- * 신고가(역대 최고가) 판별 — 공통 규칙.
+ * 신고가(역대 최고가 경신) 판별 — 공통 규칙.
  *
- * ── 무엇을 재나 (2026-08-12 오너 결정)
- * "역대 최고가"는 **단지 + 평형대** 단위로 잰다. 같은 단지라도 59㎡와 84㎡은 다른 물건이라
- * 한 덩어리로 비교하면 뜻이 없기 때문이다.
+ * ── 무엇을 재나 (2026-08-12 오너 결정, 같은 날 한 번 좁혔다)
+ * 처음엔 평형대(20·30·40평대)로 묶었는데, 오너가 레퍼런스 카드(theflow.daily「잠실 리센츠 33평
+ * 36.95억」)를 보여주며 **"평형대 말고 평형. 전용 59·84 두 타입만"** 으로 좁혔다.
+ * 그래서 판정 단위는 **단지 + 전용 59타입 / 전용 84타입** 둘뿐이다.
  *
- * ── 왜 평형대(밴드)이지 전용면적 그대로가 아닌가
- * 오너가 읽을 단위가 "30평대"다. 그리고 **밴드로 재는 것이 전용면적으로 재는 것보다 엄격하다** —
- * 밴드는 그 전용면적을 부분집합으로 품으므로, 밴드 최고가를 넘었다면 같은 전용면적 최고가도
- * 반드시 넘는다. 즉 이 기준으로 "신고가"라 부른 것은 더 좁은 기준으로도 신고가다.
- * (반대로 밴드로 재면 작은 타입은 거의 안 걸린다 — 알림이 적고 강해지는 쪽이라 의도한 결과다.)
+ * ── 왜 이 둘인가
+ * 이 둘이 아파트 시장의 표준 단위다. 같은 단지·같은 타입끼리 비교해야 "얼마나 올랐나"가
+ * 뜻을 갖고, 다른 단지와도 견줄 수 있다. 나머지 평형은 단지마다 구성이 제각각이라
+ * 매일 나가는 알림의 기준으로 삼기 어렵다.
  *
  * ── 단지 키에 지번을 안 넣는 이유
  * 큰 단지는 동에 따라 지번이 갈려 신고된다. 지번까지 키에 넣으면 한 단지가 둘로 쪼개져
@@ -18,20 +18,46 @@
  * 둘이 합쳐지는데, 그건 문턱이 높아지는 방향(=보수적)이라 오보를 만들지 않는다.
  */
 
-/** 전용면적(㎡) → 평형대 라벨. 경계는 국민주택 규모(85㎡)와 실제 공급 타입 분포에 맞췄다. */
-export function areaBand(area: number): string {
-  if (!Number.isFinite(area) || area <= 0) return "";
-  if (area < 40) return "10평대";
-  if (area < 60) return "20평대";
-  if (area < 85) return "30평대";
-  if (area < 115) return "40평대";
-  if (area < 145) return "50평대";
-  return "60평대 이상";
+/** 인덱스 스키마 판번호. 판정 단위가 바뀌면 올린다 — 옛 인덱스는 자동으로 다시 채워진다. */
+export const PEAK_SCHEMA = 2;
+
+/**
+ * 전용면적(㎡) → 타입. 우리가 보는 건 59타입·84타입 둘뿐이고, 나머지는 null(판정 대상 아님).
+ *
+ * 폭을 둔 이유: 같은 "84타입"이라도 신고 값이 84.97·84.99·83.53 처럼 흔들린다(A/B/C 타입).
+ * 한 단지 안에서 이들은 같은 평형으로 거래·호가되므로 한 칸으로 묶는다.
+ * 묶으면 문턱이 올라가는 쪽(=보수적)이라 오보를 만들지 않는다.
+ */
+export function areaType(area: number): "59" | "84" | null {
+  if (!Number.isFinite(area) || area <= 0) return null;
+  if (area >= 56 && area <= 62) return "59";
+  if (area >= 82 && area <= 85.5) return "84";
+  return null;
+}
+
+/**
+ * 타입 → 공급면적 기준 평 표기 (2026-08-12 오너: "관용 환산표로 00평").
+ *
+ * ⚠️ 국토부 실거래에는 **전용면적만** 들어 있다. '33평'은 공급면적 기준이고 공급면적은
+ * 단지별 전용률(보통 72~80%)에 달려 있어 자료에 없다. 그래서 이건 **환산 관용값**이고,
+ * 단지에 따라 ±1평 어긋날 수 있다(예: 잠실 리센츠는 전용 84.99를 33평으로 부른다 — 구축이라
+ * 전용률이 높다). 원본 전용면적은 산출 파일에 그대로 남긴다.
+ * 표기를 바꾸려면 이 표 한 줄만 고친다.
+ */
+export const PYEONG_LABEL: Record<"59" | "84", string> = {
+  "59": "25평",
+  "84": "34평",
+};
+
+/** 전용면적 → "25평"/"34평". 대상 타입이 아니면 "" */
+export function pyeongLabel(area: number): string {
+  const t = areaType(area);
+  return t ? PYEONG_LABEL[t] : "";
 }
 
 /**
  * 단지명 정규화 — 같은 단지가 신고 표기에 따라 갈라지지 않게 한다.
- * 공백·괄호주석·차수 표기 흔들림을 흡수하되, **이름 자체는 지우지 않는다**(다른 단지가 합쳐지면 안 된다).
+ * 공백·괄호주석·구분기호 흔들림을 흡수하되, **이름 자체는 지우지 않는다**(다른 단지가 합쳐지면 안 된다).
  */
 export function normAptName(raw: string): string {
   return String(raw ?? "")
@@ -45,15 +71,16 @@ export function aptKey(sggCd: string, umdNm: string, aptNm: string): string {
   return `${sggCd}|${String(umdNm ?? "").trim()}|${normAptName(aptNm)}`;
 }
 
-/** 최고가 인덱스의 칸 키 — 단지 키 + 평형대. */
-export function peakKey(sggCd: string, umdNm: string, aptNm: string, area: number): string {
-  return `${aptKey(sggCd, umdNm, aptNm)}|${areaBand(area)}`;
+/** 최고가 인덱스의 칸 키 — 단지 키 + 타입(59/84). 대상 타입이 아니면 null. */
+export function peakKey(sggCd: string, umdNm: string, aptNm: string, area: number): string | null {
+  const t = areaType(area);
+  return t ? `${aptKey(sggCd, umdNm, aptNm)}|${t}` : null;
 }
 
 export interface PeakEntry {
   aptNm: string;
   umdNm: string;
-  band: string;
+  type: "59" | "84";
   priceManwon: number;
   area: number;
   floor: number;
@@ -64,6 +91,7 @@ export interface PeakIndex {
   meta: {
     lawdCd: string;
     gu: string;
+    schemaVersion: number;
     doneMonths: string[];
     updatedAt: string;
     source: string;
@@ -89,15 +117,15 @@ export interface TradeLike {
 export function foldPeaks(peaks: Record<string, PeakEntry>, lawdCd: string, trades: TradeLike[]): number {
   let updated = 0;
   for (const t of trades) {
-    const band = areaBand(t.area);
-    if (!band) continue;
-    const k = peakKey(lawdCd, t.umdNm, t.aptNm, t.area);
+    const type = areaType(t.area);
+    if (!type) continue;
+    const k = `${aptKey(lawdCd, t.umdNm, t.aptNm)}|${type}`;
     const cur = peaks[k];
     if (!cur || t.priceManwon > cur.priceManwon) {
       peaks[k] = {
         aptNm: t.aptNm,
         umdNm: t.umdNm,
-        band,
+        type,
         priceManwon: t.priceManwon,
         area: t.area,
         floor: t.floor,
@@ -110,19 +138,20 @@ export function foldPeaks(peaks: Record<string, PeakEntry>, lawdCd: string, trad
 }
 
 export interface SingoHit extends TradeLike {
-  band: string;
+  type: "59" | "84";
+  pyeong: string; // "25평" · "34평"
   lawdCd: string;
   gu: string;
-  prevPeakManwon: number | null;
-  prevPeakDate: string | null;
-  gainPct: number | null; // 직전 최고가 대비 상승률(%). 직전 기록이 없으면 null
+  prevPeakManwon: number;
+  prevPeakDate: string;
+  gainPct: number | null; // 직전 최고가 대비 상승률(%)
 }
 
 /**
  * 거래 목록 중 **직전까지의 최고가를 넘어선 것**만 고른다.
  *
- * ⚠️ 인덱스를 훑는 동안 함께 갱신한다. 같은 날 같은 밴드에서 두 건이 연달아 신고가면
- * 더 높은 쪽만 남기기 위해서다(둘 다 알리면 "신고가 두 번"이 되어 사실과 어긋난다).
+ * ⚠️ 인덱스를 훑는 동안 함께 갱신한다. 같은 칸에서 두 건이 연달아 신고가면 더 높은 쪽만
+ * 남기기 위해서다(둘 다 알리면 "신고가 두 번"이 되어 사실과 어긋난다).
  * 그래서 **거래를 시간·금액 순으로 정렬해 넣어야** 한다.
  *
  * `peaks` 에 아예 기록이 없는 칸은 신고가로 치지 않는다 — 역대 자료가 안 채워진 구간일 수
@@ -137,31 +166,32 @@ export function findSingo(
   const sorted = [...trades].sort((a, b) =>
     a.date === b.date ? a.priceManwon - b.priceManwon : a.date < b.date ? -1 : 1,
   );
+
   // 같은 칸에서 여러 건이 연달아 경신될 수 있다. 그때 **직전 최고가는 이번 묶음이 들어오기 전의
-  // 기록**이어야 한다 — 중간값을 기준으로 잡으면 "0.3% 상승" 같은 사실과 다른 상승률이 나온다.
+  // 기록**이어야 한다 — 중간값을 기준으로 잡으면 사실과 다른 상승률이 나온다.
   const before = new Map<string, PeakEntry>();
-  const best = new Map<string, { t: TradeLike; band: string }>();
+  const best = new Map<string, { t: TradeLike; type: "59" | "84" }>();
 
   for (const t of sorted) {
-    const band = areaBand(t.area);
-    if (!band) continue;
-    const k = peakKey(lawdCd, t.umdNm, t.aptNm, t.area);
+    const type = areaType(t.area);
+    if (!type) continue;
+    const k = `${aptKey(lawdCd, t.umdNm, t.aptNm)}|${type}`;
     const cur = peaks[k];
     if (!cur) continue; // 역대 기록이 없는 칸 — 판정하지 않는다
     if (!before.has(k)) before.set(k, cur);
     if (t.priceManwon <= cur.priceManwon) continue;
-    // 같은 칸의 뒤 거래는 이 값을 기준으로 본다(그래야 "신고가 두 번"이 안 생긴다)
-    peaks[k] = { aptNm: t.aptNm, umdNm: t.umdNm, band, priceManwon: t.priceManwon, area: t.area, floor: t.floor, date: t.date };
+    peaks[k] = { aptNm: t.aptNm, umdNm: t.umdNm, type, priceManwon: t.priceManwon, area: t.area, floor: t.floor, date: t.date };
     const prev = best.get(k);
-    if (!prev || t.priceManwon > prev.t.priceManwon) best.set(k, { t, band });
+    if (!prev || t.priceManwon > prev.t.priceManwon) best.set(k, { t, type });
   }
 
   const hits: SingoHit[] = [];
-  for (const [k, { t, band }] of best) {
+  for (const [k, { t, type }] of best) {
     const base = before.get(k)!;
     hits.push({
       ...t,
-      band,
+      type,
+      pyeong: PYEONG_LABEL[type],
       lawdCd,
       gu,
       prevPeakManwon: base.priceManwon,
@@ -172,11 +202,12 @@ export function findSingo(
   return hits;
 }
 
-/** 만원 → "12억 3,400" 같은 읽는 금액. 카드가 아니라 알림용 표기다. */
-export function manwonToKo(manwon: number): string {
-  const eok = Math.floor(manwon / 10000);
-  const rest = manwon % 10000;
-  if (eok <= 0) return `${manwon.toLocaleString("ko-KR")}만`;
-  if (rest === 0) return `${eok}억`;
-  return `${eok}억 ${rest.toLocaleString("ko-KR")}`;
+/**
+ * 만원 → 알림 표기. 레퍼런스 카드가 "36.95억" 꼴이라 **억 소수 둘째 자리**로 맞춘다.
+ * (369,500만원 → "36.95억", 300,000만원 → "30억")
+ */
+export function manwonToEok(manwon: number): string {
+  const eok = manwon / 10000;
+  const s = eok.toFixed(2).replace(/\.?0+$/, "");
+  return `${s}억`;
 }
