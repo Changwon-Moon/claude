@@ -147,6 +147,10 @@ async function fetchSeries(statCode: string, itemCode: string, end: string, star
   return { points, unit, rawRows: rows.length, total, sample: rows.slice(0, 2) };
 }
 
+function tableName(tables: Array<{ code: string; name: string }>, code: string): string {
+  return tables.find((t) => t.code === code)?.name ?? "";
+}
+
 async function main() {
   const end = nowYm();
   say(`# ECOS M2 수집 · 검증`);
@@ -175,7 +179,7 @@ async function main() {
       if (/평잔/.test(t.name)) s += 10;
       if (/계절조정/.test(t.name)) s -= 20;
       if (/원계열/.test(t.name)) s += 5;
-      if (/말잔/.test(t.name)) s -= 5;
+      if (/말잔/.test(t.name)) s -= 1; // 비교용으로 목록엔 남긴다
       return { ...t, score: s };
     })
     .sort((a, b) => b.score - a.score);
@@ -202,7 +206,7 @@ async function main() {
      겹치는 달의 값이 같은지 확인한 뒤에야 이어 붙일지 판단한다 — 몰래 잇지 않는다. */
   const found: Array<{ statCode: string; statName: string; itemCode: string; itemName: string; unit: string; start: string; end: string }> = [];
 
-  for (const code of candidates.slice(0, 8)) {
+  for (const code of candidates.slice(0, 12)) {
     let items: Array<{ code: string; name: string; unit: string; cycle: string; start: string; end: string }> = [];
     try {
       items = await listItems(code);
@@ -218,20 +222,22 @@ async function main() {
        (2026-08-12 1차 실행에서 `BBHS00 M2(평잔, 계절조정계열)` 을 집어왔다.
         카드 표기가 "평잔·원계열"이므로 계절조정계열은 다른 숫자다 — 이름으로 못박는다.) */
     const m2s = items.filter((it) => /^M2/.test(it.name.trim()));
+    /* 항목은 **그 표의 이름과 같은 계열**을 고른다(평잔 표면 평잔, 말잔 표면 말잔).
+       원계열이 아닌 것(계절조정)은 어느 표에서도 고르지 않는다 — 카드 표기가 원계열이다. */
+    const wantMal = /말잔/.test(tableName(tables, code));
     const rank = (name: string) => {
       let s = 0;
-      if (/평잔/.test(name)) s += 10;
       if (/원계열/.test(name)) s += 10;
       if (/계절조정/.test(name)) s -= 50;
-      if (/말잔/.test(name)) s -= 10;
+      if (wantMal ? /말잔/.test(name) : /평잔/.test(name)) s += 10;
+      else s -= 10;
       return s;
     };
     const hit = [...m2s].sort((a, b) => rank(b.name) - rank(a.name))[0];
-    if (hit && rank(hit.name) < 20) {
-      say(`  ⚠️ \`${code}\` 의 최선 항목이 평잔·원계열이 아니다 — \`${hit.code}\` ${hit.name} (건너뛴다)`);
+    if (!hit || rank(hit.name) < 20) {
+      if (hit) say(`  ⚠️ \`${code}\` 의 최선 항목이 원계열 총액이 아니다 — \`${hit.code}\` ${hit.name} (건너뛴다)`);
       continue;
     }
-    if (!hit) continue;
     /* ⚠️ 이름만으로 고르면 **은퇴한 표**를 집는다 (2026-08-12 실측).
        `101Y004`(1.7.3.1.2) 와 `161Y006`(1.1.3.1.2) 는 이름이 글자까지 같은데
        앞의 것은 2003.10~2026.05 에서 멈춘 구계열이고, 살아 있는 표는 뒤의 것이다.
@@ -259,7 +265,8 @@ async function main() {
       end: hit.end,
     });
     if (!lastYm) continue;
-    if (!chosen || lastYm > chosen.lastYm) {
+    const isPyeong = /평잔/.test(hit.name) && /원계열/.test(hit.name);
+    if (isPyeong && (!chosen || lastYm > chosen.lastYm)) {
       chosen = {
         statCode: code,
         statName: t?.name ?? "(목록 미확인)",
