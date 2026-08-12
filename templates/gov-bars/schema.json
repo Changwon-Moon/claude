@@ -42,7 +42,10 @@
             "properties": {
               "x": { "type": "number" }, "y": { "type": "number" },
               "w": { "type": "number" }, "h": { "type": "number" },
-              "fill": { "type": "string" }
+              "fill": { "type": "string" },
+              "stroke": { "type": "string", "description": "진행 중 구간의 점선 테두리. 아직 끝나지 않은 막대를 모양으로 말한다" },
+              "sw": { "type": "number" },
+              "dash": { "type": "string" }
             }
           }
         },

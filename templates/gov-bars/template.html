@@ -88,7 +88,7 @@
       <div class="gb-chart">
         <svg class="gb-svg" viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
           {{#each chart.grid}}<line class="gb-grid" x1="{{x1}}" y1="{{y}}" x2="{{x2}}" y2="{{y}}" />{{/each}}
-          {{#each chart.bars}}<rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" rx="10" fill="{{fill}}" />{{/each}}
+          {{#each chart.bars}}<rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" rx="10" fill="{{fill}}"{{#if stroke}} stroke="{{stroke}}" stroke-width="{{sw}}" stroke-dasharray="{{dash}}"{{/if}} />{{/each}}
           {{#each chart.rates}}<g><rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" rx="{{r}}" fill="{{fill}}" /><text class="gb-rate" x="{{tx}}" y="{{ty}}" fill="{{tfill}}" text-anchor="middle">{{text}}</text></g>{{/each}}
           {{#each chart.values}}<text class="gb-val" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="middle">{{text}}</text>{{/each}}
           {{#each chart.tags}}<text class="gb-tag" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="middle">{{text}}</text>{{/each}}

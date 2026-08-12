@@ -98,9 +98,15 @@ const cx = (i) => r1(LEFT + slot * (i + 0.5));
 /* 최대 막대가 플롯 높이를 다 쓰게 — 눈금이 없는 카드라 절대 높이는 뜻이 없고 비율만 뜻이 있다 */
 const hOf = (d) => r1(((BASE - TOP) * d) / maxDelta);
 
+/* 재임 중인 정부의 막대는 **점선 테두리 + 옅은 칠**로 그린다 (오너 지시 2026-08-12).
+   13개월짜리 구간을 5년짜리와 나란히 꽉 찬 막대로 세우면 "임기 다 채우고 저만큼"으로 읽힌다.
+   아직 안 끝났다는 사실을 글자('재임 중')만이 아니라 **모양으로도** 말한다 —
+   그래픽만 잘라 써도 경고가 살아 있어야 한다(year-bars 의 추정 구간에서 배운 규칙). */
 const bars = rows.map((r, i) => {
   const h = hOf(r.delta);
-  return { x: r1(cx(i) - BAR_W / 2), y: r1(BASE - h), w: BAR_W, h, fill: r.delta === maxDelta ? RED : INK };
+  const base = { x: r1(cx(i) - BAR_W / 2), y: r1(BASE - h), w: BAR_W, h };
+  if (r.running) return { ...base, fill: "rgba(20,24,33,0.13)", stroke: INK, sw: 4, dash: "14 10" };
+  return { ...base, fill: r.delta === maxDelta ? RED : INK };
 });
 
 /* 총액 라벨 — 막대 위 */
@@ -158,7 +164,8 @@ const card = {
     photo: r.photo ?? undefined,
     hot: r.rate === maxRate,
   })),
-  note: `<b>${rows.find((r) => r.rate === maxRate).name} 정부</b>가 월평균 ${r1(maxRate).toFixed(1)}조로 가장 빠릅니다 — 문재인 정부(월 ${r1(rows.find((r) => r.name === "문재인").rate).toFixed(1)}조)의 약 ${(maxRate / rows.find((r) => r.name === "문재인").rate).toFixed(1)}배.`,
+  /* 하단 문구 — 배수는 계산값이다(손으로 적지 않는다). 오너 확정 문안(2026-08-12). */
+  note: `<b>현 정부가 월평균 ${r1(maxRate).toFixed(1)}조</b>로 문 정부의 약 ${(maxRate / rows.find((r) => r.name === "문재인").rate).toFixed(1)}배 속도`,
   source: { name: "한국은행 ECOS(M2 평잔·원계열, 개편 전 기준)", asOf: ymLabel(lastYm) },
   meta: {
     verified: true,
