@@ -8,4 +8,10 @@
 # 결과를 보고 맞으면 packages/collectors/src/sources/kosis.ts 의 enabled 를 켠다.
 #
 # ⚠️ KOSIS_API_KEY 가 Secrets 에 있어야 돈다.
+#
+# ── 표 '찾기' 도 여기서 건다 (2026-08-12 신설)
+# 줄에 `search=키워드[,키워드…]` 를 넣으면 검증 전에 통계표를 훑어
+#   data/kosis-search.md 에 orgId·tblId·통계표명을 적는다.
+# 표 ID 를 웹 검색결과 제목으로 추측해 박던 것을 대신한다. 키워드가 없으면 검증만 돈다.
 run 2026-08-03 #19 — 표별 재시도 붙여 사망 지역목록 확보
+run 2026-08-12 #20 search=소비자물가,집세 — 서울 집세(전월세 포함) 카드용 표 찾기

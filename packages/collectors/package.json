@@ -14,6 +14,7 @@
     "collect-applyhome": "tsx src/applyhomeCli.ts",
     "collect-population": "tsx src/kosisCli.ts",
     "probe-kosis": "tsx src/kosisProbeCli.ts",
+    "search-kosis": "tsx src/kosisSearchCli.ts",
     "probe-seoul": "tsx src/seoulProbeCli.ts"
   },
   "dependencies": {},
