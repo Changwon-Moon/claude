@@ -85,7 +85,10 @@ jobs:
         id: q
         run: |
           LINE=$(grep -v '^\s*#' data/kosis-probe-queue.txt 2>/dev/null | grep -v '^\s*$' | tail -1 || true)
-          KW=$(printf '%s' "$LINE" | sed -n 's/.*search=\([^ ]*\).*/\1/p')
+          # 키워드에 공백이 들어가는 표 이름이 많다(예: "품목별 소비자물가지수").
+          # 따옴표로 감싼 형태를 **먼저** 본다 — 안 감싸면 공백에서 잘려 엉뚱한 키워드로 돈다.
+          KW=$(printf '%s' "$LINE" | sed -n 's/.*search="\([^"]*\)".*/\1/p')
+          if [ -z "$KW" ]; then KW=$(printf '%s' "$LINE" | sed -n 's/.*search=\([^ ]*\).*/\1/p'); fi
           echo "kw=$KW" >> "$GITHUB_OUTPUT"
           if [ -n "$KW" ]; then echo "검색 키워드: $KW"; else echo "검색 키워드 없음 — 표 검증만 돈다"; fi
 

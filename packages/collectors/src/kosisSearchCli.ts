@@ -84,13 +84,17 @@ function candidates(key: string, q: string): { label: string; url: string }[] {
   const k = encKey(key);
   const nm = encodeURIComponent(q);
   return [
+    /* ✅ 2026-08-12 실측: 이 엔드포인트가 통한다(20건 응답).
+       다만 기본 응답이 20건이라 '품목별 소비자물가지수' 같은 표가 잘려 안 보였다 →
+       **결과 수를 크게 준 판본을 먼저** 태운다. 잘린 목록을 보고 "그런 표가 없다"고
+       결론짓는 것이 이 배관에서 가장 흔한 오판이다. */
     {
-      label: "통계표 검색 statisticsSearch.do (searchNm)",
-      url: `https://kosis.kr/openapi/statisticsSearch.do?method=getList&apiKey=${k}&searchNm=${nm}&format=json&jsonVD=Y`,
+      label: "통계표 검색 statisticsSearch.do (searchNm · 100건)",
+      url: `https://kosis.kr/openapi/statisticsSearch.do?method=getList&apiKey=${k}&searchNm=${nm}&startCount=1&resultCount=100&sort=RANK&format=json&jsonVD=Y`,
     },
     {
-      label: "통계표 검색 statisticsSearch.do (searchNm + 통계표만)",
-      url: `https://kosis.kr/openapi/statisticsSearch.do?method=getList&apiKey=${k}&searchNm=${nm}&startCount=1&resultCount=100&sort=RANK&format=json&jsonVD=Y`,
+      label: "통계표 검색 statisticsSearch.do (searchNm · 기본 20건)",
+      url: `https://kosis.kr/openapi/statisticsSearch.do?method=getList&apiKey=${k}&searchNm=${nm}&format=json&jsonVD=Y`,
     },
     {
       label: "통계목록 statisticsList.do (vwCd=MT_ZTITLE 최상위)",
@@ -236,6 +240,13 @@ async function main() {
     const rows = (hit.rows ?? []).map(pick).filter((r) => r.tblId || r.tblNm);
     const matched = rows.filter((r) => r.tblNm.includes(q));
     const shown = (matched.length ? matched : rows).slice(0, 120);
+    /* 응답이 딱 20·100건이면 **잘렸을 수 있다.** 잘린 목록을 전수로 읽으면
+       "그런 표가 없다"는 틀린 결론이 나온다 — 그 가능성을 파일에 적어 둔다. */
+    if (rows.length === 20 || rows.length === 100) {
+      L.push(`> ⚠️ 응답이 정확히 ${rows.length}건이다 — **한 쪽(page) 한도에 걸려 잘렸을 수 있다.**`);
+      L.push("> 찾는 표가 안 보이면 '없다'로 읽지 말고 **키워드를 좁혀** 다시 돌린다.");
+      L.push("");
+    }
 
     L.push(`### 찾은 통계표 (${matched.length ? `이름에 「${q}」 포함 ${matched.length}건` : `${rows.length}건 전체`} 중 ${shown.length}건)`);
     L.push("");
