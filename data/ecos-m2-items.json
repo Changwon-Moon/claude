@@ -1,0 +1,713 @@
+{
+  "tables": [],
+  "items": {
+    "101Y003": [
+      {
+        "code": "BBHS00",
+        "name": "M2(평잔, 계절조정계열)",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS00",
+        "name": "M2(평잔, 계절조정계열)",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS01",
+        "name": "현금통화",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS01",
+        "name": "현금통화",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS02",
+        "name": "요구불예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS02",
+        "name": "요구불예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS03",
+        "name": "수시입출식저축성예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS03",
+        "name": "수시입출식저축성예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS04",
+        "name": "MMF",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS04",
+        "name": "MMF",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS05",
+        "name": "만기2년미만정기예적금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS05",
+        "name": "만기2년미만정기예적금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS06",
+        "name": "수익증권",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS06",
+        "name": "수익증권",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS07",
+        "name": "시장형상품 1)",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS07",
+        "name": "시장형상품 1)",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS08",
+        "name": "만기2년미만금융채",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS08",
+        "name": "만기2년미만금융채",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS09",
+        "name": "만기2년미만금전신탁",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS09",
+        "name": "만기2년미만금전신탁",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS10",
+        "name": "기타 2)",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHS10",
+        "name": "기타 2)",
+        "unit": "십억원"
+      }
+    ],
+    "101Y004": [
+      {
+        "code": "BBHA00",
+        "name": "M2(평잔, 원계열)",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA00",
+        "name": "M2(평잔, 원계열)",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA00",
+        "name": "M2(평잔, 원계열)",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA01",
+        "name": "현금통화",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA01",
+        "name": "현금통화",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA01",
+        "name": "현금통화",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA02",
+        "name": "요구불예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA02",
+        "name": "요구불예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA02",
+        "name": "요구불예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA03",
+        "name": "수시입출식저축성예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA03",
+        "name": "수시입출식저축성예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA03",
+        "name": "수시입출식저축성예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA04",
+        "name": "MMF",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA04",
+        "name": "MMF",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA04",
+        "name": "MMF",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA05",
+        "name": "만기2년미만정기예적금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA05",
+        "name": "만기2년미만정기예적금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA05",
+        "name": "만기2년미만정기예적금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA06",
+        "name": "양도성예금증서",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA06",
+        "name": "양도성예금증서",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA06",
+        "name": "양도성예금증서",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA07",
+        "name": "매출어음",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA07",
+        "name": "매출어음",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA07",
+        "name": "매출어음",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA08",
+        "name": "CMA",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA08",
+        "name": "CMA",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA08",
+        "name": "CMA",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA09",
+        "name": "수익증권",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA09",
+        "name": "수익증권",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA09",
+        "name": "수익증권",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA10",
+        "name": "만기2년미만금전신탁",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA10",
+        "name": "만기2년미만금전신탁",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA10",
+        "name": "만기2년미만금전신탁",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA11",
+        "name": "발행어음",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA11",
+        "name": "발행어음",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA11",
+        "name": "발행어음",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA12",
+        "name": "신탁형증권저축",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA12",
+        "name": "신탁형증권저축",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA12",
+        "name": "신탁형증권저축",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA13",
+        "name": "만기2년미만외화예수금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA13",
+        "name": "만기2년미만외화예수금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA13",
+        "name": "만기2년미만외화예수금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA14",
+        "name": "만기2년미만금융채",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA14",
+        "name": "만기2년미만금융채",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA14",
+        "name": "만기2년미만금융채",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA15",
+        "name": "환매조건부채권매도",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA15",
+        "name": "환매조건부채권매도",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBHA15",
+        "name": "환매조건부채권매도",
+        "unit": "십억원"
+      }
+    ],
+    "101Y002": [
+      {
+        "code": "BBGA00",
+        "name": "M2(말잔, 원계열)",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA00",
+        "name": "M2(말잔, 원계열)",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA00",
+        "name": "M2(말잔, 원계열)",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA01",
+        "name": "현금통화",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA01",
+        "name": "현금통화",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA01",
+        "name": "현금통화",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA02",
+        "name": "요구불예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA02",
+        "name": "요구불예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA02",
+        "name": "요구불예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA03",
+        "name": "수시입출식저축성예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA03",
+        "name": "수시입출식저축성예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA03",
+        "name": "수시입출식저축성예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA04",
+        "name": "MMF",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA04",
+        "name": "MMF",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA04",
+        "name": "MMF",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA05",
+        "name": "만기2년미만정기예적금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA05",
+        "name": "만기2년미만정기예적금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA05",
+        "name": "만기2년미만정기예적금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA06",
+        "name": "양도성예금증서",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA06",
+        "name": "양도성예금증서",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA06",
+        "name": "양도성예금증서",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA07",
+        "name": "매출어음",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA07",
+        "name": "매출어음",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA07",
+        "name": "매출어음",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA08",
+        "name": "CMA",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA08",
+        "name": "CMA",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA08",
+        "name": "CMA",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA09",
+        "name": "수익증권",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA09",
+        "name": "수익증권",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA09",
+        "name": "수익증권",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA10",
+        "name": "만기2년미만금전신탁",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA10",
+        "name": "만기2년미만금전신탁",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA10",
+        "name": "만기2년미만금전신탁",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA11",
+        "name": "발행어음",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA11",
+        "name": "발행어음",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA11",
+        "name": "발행어음",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA12",
+        "name": "신탁형증권저축",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA12",
+        "name": "신탁형증권저축",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA12",
+        "name": "신탁형증권저축",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA13",
+        "name": "만기2년미만외화예수금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA13",
+        "name": "만기2년미만외화예수금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA13",
+        "name": "만기2년미만외화예수금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA14",
+        "name": "만기2년미만금융채",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA14",
+        "name": "만기2년미만금융채",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA14",
+        "name": "만기2년미만금융채",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA15",
+        "name": "환매조건부채권매도",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA15",
+        "name": "환매조건부채권매도",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGA15",
+        "name": "환매조건부채권매도",
+        "unit": "십억원"
+      }
+    ],
+    "101Y001": [
+      {
+        "code": "BBGS00",
+        "name": "M2(말잔, 계절조정계열)",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS00",
+        "name": "M2(말잔, 계절조정계열)",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS01",
+        "name": "현금통화",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS01",
+        "name": "현금통화",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS02",
+        "name": "요구불예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS02",
+        "name": "요구불예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS03",
+        "name": "수시입출식저축성예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS03",
+        "name": "수시입출식저축성예금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS04",
+        "name": "MMF",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS04",
+        "name": "MMF",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS05",
+        "name": "만기2년미만정기예적금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS05",
+        "name": "만기2년미만정기예적금",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS06",
+        "name": "수익증권",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS06",
+        "name": "수익증권",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS07",
+        "name": "시장형상품 1)",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS07",
+        "name": "시장형상품 1)",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS08",
+        "name": "만기2년미만금융채",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS08",
+        "name": "만기2년미만금융채",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS09",
+        "name": "만기2년미만금전신탁",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS09",
+        "name": "만기2년미만금전신탁",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS10",
+        "name": "기타 2)",
+        "unit": "십억원"
+      },
+      {
+        "code": "BBGS10",
+        "name": "기타 2)",
+        "unit": "십억원"
+      }
+    ]
+  }
+}
