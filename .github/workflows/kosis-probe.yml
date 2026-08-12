@@ -74,15 +74,22 @@ jobs:
       - name: 통계표 찾기
         if: steps.keycheck.outputs.has_key == 'yes' && steps.q.outputs.kw != ''
         continue-on-error: true
+        timeout-minutes: 8
         env:
           KOSIS_API_KEY: ${{ secrets.KOSIS_API_KEY }}
         run: pnpm --filter @wirit/collectors search-kosis -- --q "${{ steps.q.outputs.kw }}" 2>&1 | tee /tmp/search.log
 
       # 표 하나가 실패해도 나머지 결과는 파일에 남는다(스크립트가 표별로 잡는다).
       # 다만 하나라도 실패하면 exit 1 이라 워크플로는 빨갛게 된다 — 반쪽 검증을 성공으로 읽지 않기 위해서다.
+      # ⚠️ 단계마다 시간을 못박는다 (2026-08-12).
+      # 잡 전체 한도(40분)만 두면, 표별 재시도(3회×90초)가 그걸 통째로 먹고 **잡이 취소**된다.
+      # 취소는 `if: always()` 도 안 살린다 — 그날 커밋 단계가 안 돌면 결과 파일이 통째로 사라지고,
+      # 세션은 "아무 일도 안 일어난 것"과 구별하지 못한다. 실제로 한 번 그럴 뻔했다.
+      # 검증에 25분을 주고 나머지는 반드시 커밋에 남긴다 — **반쪽 결과라도 커밋된 것이 낫다.**
       - name: 표 검증
         if: steps.keycheck.outputs.has_key == 'yes'
         continue-on-error: true
+        timeout-minutes: 25
         env:
           KOSIS_API_KEY: ${{ secrets.KOSIS_API_KEY }}
         run: pnpm --filter @wirit/collectors probe-kosis 2>&1 | tee /tmp/probe.log
