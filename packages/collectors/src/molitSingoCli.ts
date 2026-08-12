@@ -117,8 +117,17 @@ async function main() {
   //    매일 아침 도는 일이 30분씩 붙들려 있으면 그건 실패보다 나쁘다(아무 말도 안 하니까).
   //    엔드포인트 하나가 죽으면 122번을 전부 재시도하며 30분을 태운다. 6번 연속이면 접고
   //    **왜 접었는지 말한다.**
-  const FAIL_STREAK_STOP = 6;
+  // ── 실측으로 확정된 원인 (2026-08-12)
+  // 실패 문구는 `fetch failed` = `UND_ERR_CONNECT_TIMEOUT apis.data.go.kr:443` —
+  // **연결 자체가 안 열린다.** 오늘 오전엔 같은 API 로 4,819회를 잘 받았으니 키·권한 문제가
+  // 아니라 **문이 닫히는 창**이다(KOSIS·공동주택 API 에서 이미 같은 성질을 겪었다).
+  // 초 단위 재시도로는 못 넘고, 그렇다고 122번을 다 두드리면 30분을 태운다.
+  // → **3번 연속 실패하면 60초 쉬고 다시 본다. 5번 쉬고도 안 열리면 접고 이유를 말한다.**
+  const FAIL_STREAK_WAIT = 3;
+  const DOOR_WAIT_MS = 60_000;
+  const MAX_DOOR_WAITS = 5;
   let failStreak = 0;
+  let doorWaits = 0;
   let bailed = false;
 
   for (const { gu, lawdCd } of regions) {
@@ -152,9 +161,19 @@ async function main() {
         const msg = e instanceof Error ? e.message : String(e);
         if (failNotes.length < 5) failNotes.push(`${gu} ${ym}: ${msg.slice(0, 120)}`);
         console.error(`⚠️ ${gu} ${ym} 수집 실패: ${msg}`);
-        if (++failStreak >= FAIL_STREAK_STOP) {
+        if (++failStreak >= FAIL_STREAK_WAIT) {
+          if (doorWaits < MAX_DOOR_WAITS) {
+            doorWaits++;
+            failStreak = 0;
+            console.warn(`   ⏸ ${FAIL_STREAK_WAIT}번 연속 실패 — 문이 닫힌 것으로 보고 ${DOOR_WAIT_MS / 1000}초 기다립니다 (${doorWaits}/${MAX_DOOR_WAITS})`);
+            await new Promise((r) => setTimeout(r, DOOR_WAIT_MS));
+            continue; // 같은 달을 다시 시도한다
+          }
           bailed = true;
-          console.error(`⛔ ${FAIL_STREAK_STOP}번 연속 실패 — 실거래 API 가 응답하지 않는 것으로 보고 여기서 접습니다.\n   (계속 두드리면 30분을 태우고도 결과는 같습니다)`);
+          console.error(
+            `⛔ ${MAX_DOOR_WAITS}번(약 ${Math.round((MAX_DOOR_WAITS * DOOR_WAIT_MS) / 60000)}분) 기다렸는데도 안 열립니다 — 여기서 접습니다.\n` +
+              `   (계속 두드리면 30분을 태우고도 결과는 같습니다)`,
+          );
           break;
         }
       }
@@ -216,6 +235,7 @@ async function main() {
           fetchFailed: failed,
           fetchFailNotes: failNotes,
           bailedOut: bailed,
+          doorWaits,
           verified: true,
           source: "국토교통부 아파트 매매 실거래가 상세자료 · 공동주택 기본 정보(세대수)",
           note:
@@ -245,7 +265,7 @@ async function main() {
   // 조용한 실패는 "오늘은 신고가가 없었구나"로 읽혀 그대로 오보가 된다.
   if (failed > 0) {
     const head = bailed
-      ? `⛔ 실거래 API 가 응답하지 않아 수집을 중단했습니다 (${failed}번 연속 실패) — 오늘 판정은 없습니다`
+      ? `⛔ 실거래 API 가 계속 응답하지 않아 수집을 중단했습니다 (${Math.round((MAX_DOOR_WAITS * DOOR_WAIT_MS) / 60000)}분 대기 후) — 오늘 판정은 없습니다`
       : `⚠️ 수집 실패 ${failed}/${fetched + failed}건 — 오늘 판정은 불완전합니다`;
     if (lines.length) lines.splice(1, 0, head);
     else lines.push(`${head} (${today})`, "", ...failNotes.map((n) => `· ${n}`));

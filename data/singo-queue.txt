@@ -17,3 +17,7 @@ months=2 top=10 sort=price
 #   왜 접었는지 말하도록 고친 뒤 재실행.
 months=2 top=10 sort=price
 
+# 2026-08-12: 원인 확정 — `fetch failed` = 연결 타임아웃. 키 문제가 아니라 **문이 닫히는 창**이다
+#   (오전엔 같은 API 로 4,819회를 잘 받았다). 3번 연속 실패 시 60초씩 최대 5번 기다리게 고친 뒤 재실행.
+months=2 top=10 sort=price
+
