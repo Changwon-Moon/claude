@@ -64,14 +64,21 @@ async function listTables(): Promise<Array<{ code: string; name: string; cycle: 
 }
 
 /** 항목 목록 */
-async function listItems(statCode: string): Promise<Array<{ code: string; name: string; unit: string }>> {
+async function listItems(
+  statCode: string,
+): Promise<Array<{ code: string; name: string; unit: string; cycle: string; start: string; end: string }>> {
   const url = `${BASE}/StatisticItemList/${KEY}/json/kr/1/500/${statCode}`;
   const data = await getJson(url);
   const rows = data?.StatisticItemList?.row ?? [];
+  /* START_TIME·END_TIME 을 같이 받는다 — "이 표에 언제부터 언제까지 있나"를
+     창을 찔러 보며 알아내려다 헛돌았다(2026-08-12). ECOS 가 애초에 알려 준다. */
   return rows.map((r: any) => ({
     code: String(r.ITEM_CODE ?? ""),
     name: String(r.ITEM_NAME ?? ""),
     unit: String(r.UNIT_NAME ?? ""),
+    cycle: String(r.CYCLE ?? ""),
+    start: String(r.START_TIME ?? ""),
+    end: String(r.END_TIME ?? ""),
   }));
 }
 
@@ -103,10 +110,10 @@ async function fetchWindow(statCode: string, itemCode: string, s: string, e: str
 /* 한 번에 긴 구간을 달라고 하면 앞쪽 81개월(199801~200409)만 오고 서버 집계도 81 이라고 답한다
    (2026-08-12 실측). 왜인지는 API 가 말해 주지 않는다 — 그래서 **1년씩 잘라 여러 번 물어 붙인다.**
    구간을 잘라 물으면 각 창이 온전히 온다. 창 경계는 겹치게 잡아 빠진 달이 있으면 드러나게 한다. */
-async function fetchSeries(statCode: string, itemCode: string, end: string) {
+async function fetchSeries(statCode: string, itemCode: string, end: string, start = START) {
   const rows: any[] = [];
   const windows: string[] = [];
-  let s = START;
+  let s = start;
   while (s <= end) {
     const e = addMonths(s, 11) > end ? end : addMonths(s, 11);
     const r = await fetchWindow(statCode, itemCode, s, e);
@@ -187,11 +194,11 @@ async function main() {
   // 3) 후보별 항목 훑고 M2 항목 찾기
   say("## 3. 항목 목록 · M2 항목 선택");
   say("");
-  let chosen: { statCode: string; statName: string; itemCode: string; itemName: string; unit: string; lastYm: string } | null = null;
-  const itemDump: Record<string, Array<{ code: string; name: string; unit: string }>> = {};
+  let chosen: { statCode: string; statName: string; itemCode: string; itemName: string; unit: string; lastYm: string; start: string; end: string } | null = null;
+  const itemDump: Record<string, any[]> = {};
 
   for (const code of candidates.slice(0, 8)) {
-    let items: Array<{ code: string; name: string; unit: string }> = [];
+    let items: Array<{ code: string; name: string; unit: string; cycle: string; start: string; end: string }> = [];
     try {
       items = await listItems(code);
     } catch (e) {
@@ -200,7 +207,7 @@ async function main() {
     }
     itemDump[code] = items;
     say(`- \`${code}\` 항목 ${items.length}개 — 앞 12개:`);
-    for (const it of items.slice(0, 12)) say(`    - \`${it.code}\` ${it.name} (${it.unit})`);
+    for (const it of items.slice(0, 8)) say(`    - \`${it.code}\` ${it.name} (${it.unit}) [주기 ${it.cycle} · ${it.start}~${it.end}]`);
 
     /* M2 총액 항목 고르기 — **평잔·원계열**을 명시적으로 고른다.
        (2026-08-12 1차 실행에서 `BBHS00 M2(평잔, 계절조정계열)` 을 집어왔다.
@@ -234,7 +241,7 @@ async function main() {
     } catch (e) {
       say(`  ⚠️ \`${code}\` 최근 구간 조회 실패: ${(e as Error).message}`);
     }
-    say(`  · \`${code}\` ${t?.name ?? ""} — 항목 \`${hit.code}\` ${hit.name} · 최근 데이터 ${lastYm || "없음"}`);
+    say(`  · \`${code}\` ${t?.name ?? ""} — 항목 \`${hit.code}\` ${hit.name} · 수록 ${hit.start}~${hit.end}(주기 ${hit.cycle}) · 실제 최근 ${lastYm || "없음"}`);
     if (!lastYm) continue;
     if (!chosen || lastYm > chosen.lastYm) {
       chosen = {
@@ -244,6 +251,8 @@ async function main() {
         itemName: hit.name,
         unit: hit.unit,
         lastYm,
+        start: hit.start,
+        end: hit.end,
       };
     }
   }
@@ -269,7 +278,8 @@ async function main() {
   // 4) 시계열 수집
   say("## 4. 월별 시계열");
   say("");
-  const { points, unit, rawRows, total, sample } = await fetchSeries(chosen.statCode, chosen.itemCode, end);
+  const itemStart = /^\d{6}$/.test(chosen.start) && chosen.start > START ? chosen.start : START;
+  const { points, unit, rawRows, total, sample } = await fetchSeries(chosen.statCode, chosen.itemCode, end, itemStart);
   say(`- 통계표 \`${chosen.statCode}\` ${chosen.statName}`);
   say(`- 항목 \`${chosen.itemCode}\` ${chosen.itemName}`);
   say(`- 단위(응답) ${unit || chosen.unit || "(미표기)"}`);
