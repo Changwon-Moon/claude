@@ -150,11 +150,30 @@ jobs:
       # ⚠️ 여기가 핵심이다 — 지금까지 검사는 전부 '로컬 파일' 대상이었고,
       #    그래서 배포가 실패해 사이트가 옛 버전에 멈춰 있어도 아무도 몰랐다.
       #    이제 **인터넷에 올라간 그 주소**를 실제로 열어 최신 화면인지 확인한다.
+      # ⚠️ 실패 내용을 **요약 화면에 그대로 남긴다** (2026-08-12).
+      #    이 검사는 2026-07-31 이후 계속 실패해 왔는데, 무엇이 실패했는지는 로그를 열어야만
+      #    보였다. 로그 zip 은 세션의 egress 허용목록 밖이라 작업 세션이 읽을 수 없다
+      #    (results-receiver.actions.githubusercontent.com). 그래서 아무도 원인을 못 봤다.
+      #    → 요약(Summary)에 찍으면 오너도 세션도 클릭 한 번으로 본다.
+      #    ※ 게시(Cloudflare) 단계는 이 앞에서 이미 성공한다 — 이 검사가 빨간불이라고
+      #      사이트가 안 올라간 것은 아니다. 둘을 섞어 읽지 않는다.
       - name: 실제 사이트 확인
         env:
           TOWER_URL: https://wirit-tower.engineerest0.workers.dev
           TOWER_PASSWORD: ${{ secrets.TOWER_PASSWORD }}
-        run: node scripts/verify-live.mjs # 전파 대기는 스크립트가 version.txt 로 직접 확인한다
+        run: |
+          set -o pipefail
+          node scripts/verify-live.mjs 2>&1 | tee /tmp/verify-live.txt   # 전파 대기는 스크립트가 version.txt 로 확인
+      - name: 실제 사이트 확인 — 결과를 요약에 남긴다
+        if: always()
+        run: |
+          {
+            echo "### 🌐 실제 사이트 확인"
+            echo ""
+            echo '```'
+            sed -n '1,80p' /tmp/verify-live.txt 2>/dev/null || echo "(출력 없음 — 스크립트가 시작 전에 죽었습니다)"
+            echo '```'
+          } >> $GITHUB_STEP_SUMMARY
 
       # ⚠️ 자동 발행 단계는 없앴다(2026-07-27 오너 결정: "인스타는 내가 수동으로 올린다").
       #    올리는 사람은 오너, 관제탑은 **올린 사실을 기록**한다:
