@@ -266,10 +266,20 @@ export function manwonToEok(manwon: number): string {
  *    전체 목록에는 **금액대 제목을 붙이지 않는다.**
  *
  * 돌파 줄에 직전 최고가를 함께 적는다 — 톡 안에서 "왜 돌파인지"가 스스로 증명돼야 한다.
+ *
+ * `today` 를 주면 거래일을 **같은 해면 `07.24`, 해가 다르면 `25.12.30`** 으로 줄여 적는다.
+ * (2026-08-13 오너 "톡에 거래일도 포함해줘")
  */
-export function alertBody(hits: SingoHit[], topN = 0): string[] {
+export function alertBody(hits: SingoHit[], topN = 0, today?: string): string[] {
   const lines: string[] = [];
   const milestones = hits.filter((h) => h.milestone);
+  // ⚠️ 거래일은 **계약일**이다(신고일이 아니다). 그래서 오늘 알림에 7월 날짜가 섞여 있는 게 정상이다.
+  //    해가 넘어간 거래를 "07.24"로만 적으면 올해 일인 줄 읽힌다 — 그때는 연도를 붙인다.
+  const dateLabel = (d: string) => {
+    const [y, m, dd] = d.split("-");
+    if (today && y === today.slice(0, 4)) return `${m}.${dd}`;
+    return `${y.slice(2)}.${m}.${dd}`;
+  };
 
   if (milestones.length) {
     lines.push(`🎉 오늘의 돌파 ${milestones.length}건`);
@@ -285,7 +295,7 @@ export function alertBody(hits: SingoHit[], topN = 0): string[] {
       lines.push(`${m}억 돌파`);
       for (const h of list) {
         lines.push(
-          `${h.gu} / ${h.aptNm} / ${h.pyeong} / ${manwonToEok(h.priceManwon)} (직전 ${manwonToEok(h.prevPeakManwon)})`,
+          `${h.gu} / ${h.aptNm} / ${h.pyeong} / ${manwonToEok(h.priceManwon)} / ${dateLabel(h.date)} (직전 ${manwonToEok(h.prevPeakManwon)})`,
         );
       }
     }
@@ -295,10 +305,10 @@ export function alertBody(hits: SingoHit[], topN = 0): string[] {
   }
 
   const n = topN > 0 ? topN : hits.length;
-  lines.push(`📋 신고가 전체 ${hits.length}건 (거래가 큰 순)`);
+  lines.push(`📋 신고가 전체 ${hits.length}건 (거래가 큰 순 · 날짜는 계약일)`);
   for (const h of hits.slice(0, n)) {
     lines.push(
-      `${h.gu} / ${h.aptNm} / ${h.pyeong} / ${manwonToEok(h.priceManwon)}` +
+      `${h.gu} / ${h.aptNm} / ${h.pyeong} / ${manwonToEok(h.priceManwon)} / ${dateLabel(h.date)}` +
         (h.milestone ? ` 🎉 ${h.milestone}억 돌파` : ""),
     );
   }

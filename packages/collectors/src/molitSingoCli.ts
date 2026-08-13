@@ -299,7 +299,7 @@ async function main() {
 
     // 본문(돌파 먼저 → 신고가 전체)은 parse/singo.ts 의 alertBody 가 만든다.
     // 셀프테스트가 그 함수를 직접 붙잡고 있어서, 형식이 조용히 어긋나지 않는다.
-    lines.push(...alertBody(hits, topArg));
+    lines.push(...alertBody(hits, topArg, today));
   }
   // 수집이 반이라도 실패했으면 **0건이든 몇 건이든 그 사실을 먼저 말한다.**
   // 조용한 실패는 "오늘은 신고가가 없었구나"로 읽혀 그대로 오보가 된다.

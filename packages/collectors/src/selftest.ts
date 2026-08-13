@@ -998,7 +998,13 @@ console.log("\n[청약홈 분양정보 파서]");
    * 금액대(그 거래가 속한 구간)로 묶어 보냈더니 14억·11억 거래가 "10억 돌파"로 읽혔다.
    * 오너: "10억을 돌파한 단지들만 보고싶다니까. 왜 14억 11억 이런게 왜나오냐고".
    * 아래 테스트가 그 경계를 붙잡는다 — 돌파 블록에는 **선을 실제로 넘은 것만** 들어간다. */
-  const hit = (gu: string, aptNm: string, priceManwon: number, prevPeakManwon: number) => ({
+  const hit = (
+    gu: string,
+    aptNm: string,
+    priceManwon: number,
+    prevPeakManwon: number,
+    date = "2026-07-24",
+  ) => ({
     aptNm,
     umdNm: "무슨동",
     jibun: "1",
@@ -1007,7 +1013,7 @@ console.log("\n[청약홈 분양정보 파서]");
     area: 84.9,
     floor: 10,
     buildYear: 2000,
-    date: "2026-07-24",
+    date,
     dealingGbn: "중개거래",
     canceled: false,
     sggCd: "11110",
@@ -1027,7 +1033,7 @@ console.log("\n[청약홈 분양정보 파서]");
     hit("안양시동안구", "평촌트리지아", 140000, 135000), // 13.5 → 14.0 = 돌파 아님
     hit("구로구", "한마을", 119500, 116000), // 11.6 → 11.95 = 돌파 아님
     hit("동대문구", "쌍용", 103000, 98000), // 9.8 → 10.3 = 10억 돌파
-  ]);
+  ], 0, "2026-08-13");
   const cut = body.indexOf("─────────────────");
   const head = body.slice(0, cut).join("\n");
   const rest = body.slice(cut).join("\n");
@@ -1038,14 +1044,31 @@ console.log("\n[청약홈 분양정보 파서]");
   check("돌파 블록에 10.3억(9.8→10.3)이 있다", head.includes("쌍용"), head);
   check("⛔ 14억(13.5→14.0)은 돌파 블록에 없다", !head.includes("평촌트리지아"), head);
   check("⛔ 11.95억(11.6→11.95)은 돌파 블록에 없다", !head.includes("한마을"), head);
-  check("돌파 줄에 직전 최고가를 적는다", head.includes("20.7억 (직전 19.6억)"), head);
+  check("돌파 줄에 직전 최고가를 적는다", head.includes("20.7억 / 07.24 (직전 19.6억)"), head);
   check("전체 목록은 뒤에 오고 건수를 밝힌다", rest.includes("📋 신고가 전체 4건"), rest);
   check("전체 목록에는 14억도 들어간다", rest.includes("평촌트리지아"), rest);
   check("⛔ 금액대 제목(【10억대】)은 쓰지 않는다", !body.join("\n").includes("억대】"), body.join("\n"));
 
+  /* ── 거래일 (2026-08-13 오너 "톡에 거래일도 포함해줘")
+   * 거래일은 **계약일**이라 8월 알림에 7월 날짜가 섞이는 게 정상이다. 해가 넘어간 건을
+   * "12.30" 으로만 적으면 올해 일로 읽힌다 — 그때만 연도를 붙인다. */
+  check("전체 목록에 거래일이 붙는다", rest.includes("14억 / 07.24"), rest);
+  check("날짜가 계약일임을 제목에 밝힌다", rest.includes("날짜는 계약일"), rest);
+  const crossYear = singoAlertBody(
+    [hit("구로구", "한마을", 119500, 116000, "2025-12-30")],
+    0,
+    "2026-08-13",
+  );
+  check("해가 다르면 연도를 붙인다", crossYear.join("\n").includes("25.12.30"), crossYear.join("\n"));
+  check("같은 해면 연도를 안 붙인다", !rest.includes("26.07.24"), rest);
+
   // 돌파가 하나도 없는 날은 🎉 블록 자체가 없다 — 빈 제목만 남으면 그것도 오해를 만든다
-  const quiet = singoAlertBody([hit("구로구", "한마을", 119500, 116000)]);
-  check("돌파 0건이면 돌파 블록을 안 만든다", quiet[0] === "📋 신고가 전체 1건 (거래가 큰 순)", quiet[0]);
+  const quiet = singoAlertBody([hit("구로구", "한마을", 119500, 116000)], 0, "2026-08-13");
+  check(
+    "돌파 0건이면 돌파 블록을 안 만든다",
+    quiet[0] === "📋 신고가 전체 1건 (거래가 큰 순 · 날짜는 계약일)",
+    quiet[0],
+  );
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);
