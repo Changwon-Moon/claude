@@ -213,13 +213,6 @@
       ]
     },
     {
-      "label": "tax-1house",
-      "cmd": "scripts/build-tax-1house.mjs",
-      "args": [
-        "2026-08-03"
-      ]
-    },
-    {
       "label": "world-capital",
       "cmd": "scripts/build-world-capital.mjs",
       "args": [
