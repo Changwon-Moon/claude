@@ -52,13 +52,6 @@
       ]
     },
     {
-      "label": "years-to-buy",
-      "cmd": "scripts/build-years-to-buy.mjs",
-      "args": [
-        "2026-07-26"
-      ]
-    },
-    {
       "label": "estate-cover-84",
       "cmd": "scripts/build-estate-cover.mjs",
       "args": [
