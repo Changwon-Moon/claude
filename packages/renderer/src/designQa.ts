@@ -230,7 +230,13 @@ const MEASURE_JS = `(() => {
              /* gov-bars — 정부별 세로 막대 + 인물 축(2026-08-12). 사진 칸이 이름·재임개월과,
                 이름줄이 하단 문구·푸터와 겹치는지 좌표로 잰다. SVG 안의 막대·값 라벨은
                 그래프라 Range 대상이 아니다(streak-bars 와 같은 취급) — HTML 글자만 올린다. */
-             ".gb-sub,.gb-photo,.gb-name,.gb-term,.gb-note";
+             ".gb-sub,.gb-photo,.gb-name,.gb-term,.gb-note," +
+             /* singo-record — 오늘의 신고가 단일 단지(2026-08-13). 킥커·단지줄·주인공 숫자·
+                갱신폭 뱃지·팩트 3칸·기준 문구를 등록한다. 실거래가가 커지면(112.5억 꼴)
+                갱신폭 뱃지를 밀어내는 자리라 .sr-price 와 .sr-delta 는 반드시 함께 올린다.
+                SVG 안의 곡선·라벨은 Range 대상이 아니라 여기서 못 잰다 —
+                넘침은 빌더(build-singo-record.mjs)가 계산해 던진다. */
+             ".sr-kick,.sr-apt,.sr-deal,.sr-price,.sr-delta,.sr-fact .l,.sr-fact .v,.sr-fact .s,.sr-note";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
   for (var i=0;i<leaves.length;i++) for (var j=i+1;j<leaves.length;j++) {
     var a=leaves[i], b=leaves[j];
@@ -291,7 +297,7 @@ const MEASURE_JS = `(() => {
   if(footer){
     /* .rg-note 를 빠뜨려 record-grid 에서는 이 검사가 아무것도 안 재고 있었다(AS팀 지적 2026-07-31).
        "최하단 문구 여백"은 오너가 두 번 말한 항목인데 새 템플릿에 적용되지 않은 상태였다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note,.gb-note");
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note,.gb-note,.sr-note,.sr-facts");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();

@@ -1,0 +1,270 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "singo-record@1",
+  "description": "오늘의 신고가 — 단지 한 곳이 기준선 이후 최고가를 새로 쓴 사건 한 건. 월별 최고가 곡선과 넘어선 10억 선을 함께 그린다. 좌표는 전부 빌더가 계산한다(템플릿은 그리기만).",
+  "type": "object",
+  "required": [
+    "template",
+    "title",
+    "price",
+    "chart",
+    "facts",
+    "source"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "template": {
+      "type": "string",
+      "pattern": "^singo-record@\\d+$"
+    },
+    "date": {
+      "type": "string"
+    },
+    "kicker": {
+      "type": "string",
+      "maxLength": 44,
+      "description": "계약일 · 지역. 제목이 말하지 않는 '언제·어디'"
+    },
+    "title": {
+      "type": "string",
+      "description": "한 줄 또는 <br /> 로 두 줄. <span class=\"hi\">…</span> 로 레드 강조."
+    },
+    "apt": {
+      "type": "string",
+      "description": "단지명·전용면적·층·거래유형 한 줄. <b> 로 단지명 강조."
+    },
+    "price": {
+      "type": "string",
+      "maxLength": 12,
+      "description": "실거래가 (예: 20.7억)"
+    },
+    "delta": {
+      "type": "string",
+      "maxLength": 28,
+      "description": "갱신폭 (예: ▲ 1.1억 (+5.6%))"
+    },
+    "note": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "chart": {
+      "type": "object",
+      "required": [
+        "vb",
+        "paths"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "vb": {
+          "type": "string"
+        },
+        "grid": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "x1",
+              "x2",
+              "y"
+            ],
+            "properties": {
+              "x1": {
+                "type": "number"
+              },
+              "x2": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "threshold": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "넘어선 10억 선. 돌파가 아니면 null — 있지도 않은 문턱을 그리지 않는다.",
+          "required": [
+            "x1",
+            "x2",
+            "y",
+            "tx",
+            "ty",
+            "text"
+          ],
+          "properties": {
+            "x1": {
+              "type": "number"
+            },
+            "x2": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "tx": {
+              "type": "number"
+            },
+            "ty": {
+              "type": "number"
+            },
+            "text": {
+              "type": "string"
+            }
+          }
+        },
+        "paths": {
+          "type": "array",
+          "minItems": 1,
+          "description": "선 구간. 수집을 못 한 달에서 끊기므로 여러 개일 수 있다.",
+          "items": {
+            "type": "object",
+            "required": [
+              "d"
+            ],
+            "properties": {
+              "d": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "dots": {
+          "type": "array",
+          "description": "실제 거래가 있던 달. 선은 관측 사이를 이은 것일 뿐이라 점이 있어야 한다.",
+          "items": {
+            "type": "object",
+            "required": [
+              "x",
+              "y",
+              "r"
+            ],
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "r": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "axis": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "x",
+              "y",
+              "text"
+            ],
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "anchor": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "dot": {
+          "type": "object",
+          "description": "이번 거래. 카드에서 레드를 쓰는 유일한 자리.",
+          "required": [
+            "x",
+            "y",
+            "r",
+            "rOuter",
+            "tx",
+            "ty",
+            "text"
+          ],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "r": {
+              "type": "number"
+            },
+            "rOuter": {
+              "type": "number"
+            },
+            "tx": {
+              "type": "number"
+            },
+            "ty": {
+              "type": "number"
+            },
+            "anchor": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "facts": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "l",
+          "v"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "l": {
+            "type": "string",
+            "maxLength": 16
+          },
+          "v": {
+            "type": "string",
+            "maxLength": 12
+          },
+          "s": {
+            "type": "string",
+            "maxLength": 22
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "asOf": {
+          "type": "string"
+        }
+      }
+    },
+    "deal": {
+      "type": "string",
+      "maxLength": 80,
+      "description": "이번에 팔린 집 — 전용면적·층·거래유형·계약일. 단지 개요(apt)와 갈라 적는다."
+    }
+  }
+}

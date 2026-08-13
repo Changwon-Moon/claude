@@ -437,6 +437,17 @@
         "m2-gov:8ca278923208"
       ],
       "pixelPolicy": "정기물 — data/datasets/m2-monthly.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
+    },
+    {
+      "label": "singo-record",
+      "title": "🔥 오늘의 신고가 — 분당 정자동 34평이 20억을 넘었다",
+      "cards": [
+        "singo-record"
+      ],
+      "caption": "singo-record",
+      "note": "오늘의 신고가 판형 1호(2026-08-13). 세대수는 싣지 않는다 — 공동주택 대장에 이 지번 등재가 없어 확인되지 않았다. 정기물이라 픽셀 기준값 미등록",
+      "state": "시안",
+      "pixelPolicy": "정기물 — singo-log·singo-history 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀)"
     }
   ]
 }

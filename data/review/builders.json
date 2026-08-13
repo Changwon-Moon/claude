@@ -291,6 +291,18 @@
         "--publish",
         "2026-08-13"
       ]
+    },
+    {
+      "label": "singo-record",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "상록마을(라이프2차)",
+        "--type",
+        "84",
+        "--kapt",
+        "A46378521"
+      ]
     }
   ]
 }
