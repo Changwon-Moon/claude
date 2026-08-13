@@ -15,6 +15,7 @@
     "collect-molit-peak": "tsx src/molitPeakCli.ts",
     "collect-apt-universe": "tsx src/aptUniverseCli.ts",
     "collect-singo": "tsx src/molitSingoCli.ts",
+    "collect-singo-history": "tsx src/molitHistoryCli.ts",
     "collect-singo-preview": "tsx src/singoPreviewCli.ts",
     "collect-population": "tsx src/kosisCli.ts",
     "probe-kosis": "tsx src/kosisProbeCli.ts",

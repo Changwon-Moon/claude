@@ -1,0 +1,165 @@
+name: 신고가 단지 이력 (한 단지 곡선)
+
+# ── 무엇을 하나 (2026-08-13 오너 "가격 곡선을 위해 재수집한다")
+# 카드 한 장에 쓸 **한 단지·한 타입의 월별 최고가 곡선**을 받아 온다.
+# 매일 도는 인덱스(molit-peak)는 최고가 한 줄만 남겨서 곡선을 못 그린다 — 그래서 따로 훑는다.
+# 한 구 × 79개월 ≈ 80회 호출, 3~5분.
+#
+# ── 방아쇠
+# 세션은 Actions 버튼을 못 누른다. `data/singo-history-queue.txt` 에 한 줄 쓰고 푸시하면 돈다.
+#   lawd=41135 umd=정자동 apt=상록마을(라이프2차) type=84
+# (apt 는 공백을 담을 수 있으므로 **줄의 마지막**에 쓰지 않는다 — 아래 파서가 key=value 를
+#  공백으로 자르기 때문. 공백이 든 단지명은 apt="..." 로 감싼다.)
+on:
+  push:
+    paths:
+      - "data/singo-history-queue.txt"
+
+  workflow_dispatch:
+    inputs:
+      lawd:
+        description: "지역코드 5자리 (예: 41135 성남시분당구)"
+        required: true
+      apt:
+        description: "단지명 — 실거래 신고 표기 그대로 (예: 상록마을(라이프2차))"
+        required: true
+      umd:
+        description: "법정동 (예: 정자동). 비우면 구 전체에서 이름으로만 찾는다"
+        required: false
+        default: ""
+      type:
+        description: "전용 타입 — 59 또는 84"
+        required: true
+        default: "84"
+      from:
+        description: "시작월 YYYYMM (기본 202001)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: singo-history
+  cancel-in-progress: false
+
+jobs:
+  history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: 실행 조건 정하기
+        id: cfg
+        shell: bash
+        run: |
+          LAWD="${{ github.event.inputs.lawd }}"
+          APT="${{ github.event.inputs.apt }}"
+          UMD="${{ github.event.inputs.umd }}"
+          TYPE="${{ github.event.inputs.type }}"
+          FROM="${{ github.event.inputs.from }}"
+          Q=data/singo-history-queue.txt
+          if [ -z "$LAWD$APT" ] && [ -f "$Q" ]; then
+            LINE=$(grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' | tail -1)
+            echo "대기열 마지막 줄: ${LINE:-(비어 있음)}"
+            # key=value 를 하나씩 뽑는다. apt 는 따옴표로 감싼 값을 허용한다.
+            LAWD=$(printf '%s' "$LINE" | sed -n 's/.*lawd=\([0-9]\{5\}\).*/\1/p')
+            TYPE=$(printf '%s' "$LINE" | sed -n 's/.*type=\([0-9]\{2\}\).*/\1/p')
+            FROM=$(printf '%s' "$LINE" | sed -n 's/.*from=\([0-9]\{6\}\).*/\1/p')
+            UMD=$(printf '%s' "$LINE" | sed -n 's/.*umd=\([^ ]*\).*/\1/p')
+            APT=$(printf '%s' "$LINE" | sed -n 's/.*apt="\([^"]*\)".*/\1/p')
+            [ -z "$APT" ] && APT=$(printf '%s' "$LINE" | sed -n 's/.*apt=\([^ ]*\).*/\1/p')
+          fi
+          if [ -z "$LAWD" ] || [ -z "$APT" ] || [ -z "$TYPE" ]; then
+            echo "::error::lawd/apt/type 가 필요합니다. 받은 값 — lawd='$LAWD' apt='$APT' type='$TYPE'"
+            exit 1
+          fi
+          {
+            echo "lawd=$LAWD"
+            echo "apt=$APT"
+            echo "umd=$UMD"
+            echo "type=$TYPE"
+            echo "from=${FROM:-202001}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: 키 확인
+        env:
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        run: |
+          if [ -z "$MOLIT_API_KEY" ]; then
+            echo "::error::MOLIT_API_KEY 가 GitHub Secrets 에 없습니다."
+            exit 1
+          fi
+
+      - name: 이력 수집
+        env:
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        run: |
+          set -o pipefail
+          pnpm --filter @wirit/collectors collect-singo-history -- \
+            --lawd "${{ steps.cfg.outputs.lawd }}" \
+            --apt "${{ steps.cfg.outputs.apt }}" \
+            ${{ steps.cfg.outputs.umd && format('--umd "{0}"', steps.cfg.outputs.umd) || '' }} \
+            --type "${{ steps.cfg.outputs.type }}" \
+            --from "${{ steps.cfg.outputs.from }}" 2>&1 | tee /tmp/hist.log
+
+      - name: 파서 셀프테스트
+        run: pnpm --filter @wirit/collectors selftest
+
+      - name: 실행 결과 기록
+        if: always()
+        run: |
+          {
+            echo "# 신고가 단지 이력 — 마지막 실행"
+            echo
+            echo "- 단지: ${{ steps.cfg.outputs.apt }} · 전용 ${{ steps.cfg.outputs.type }}타입 · ${{ steps.cfg.outputs.lawd }}"
+            echo "- 결과: **${{ job.status == 'success' && '성공' || '실패' }}**"
+            echo
+            echo '```'
+            cat /tmp/hist.log 2>/dev/null || echo "(실행되지 못했습니다)"
+            echo '```'
+          } > data/singo-history-last.md
+
+      - name: 커밋
+        if: always()
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@github.com"
+          git add -f data/singo-history-last.md
+          # ⚠️ 경로를 한 줄에 몰아 쓰지 않는다 — 하나라도 없으면 통째로 실패해 아무것도 안 담긴다.
+          for P in data/datasets/singo-history; do
+            [ -e "$P" ] && git add "$P" || true
+          done
+          if git diff --cached --quiet; then
+            echo "바뀐 것 없음 — 커밋 생략"
+          else
+            git commit -m "신고가 단지 이력 — ${{ steps.cfg.outputs.apt }} ${{ steps.cfg.outputs.type }}타입"
+            git pull --rebase --autostash origin ${{ github.ref_name }} || true
+            git push origin HEAD:${{ github.ref_name }}
+          fi
+
+      - name: 텔레그램 알림
+        if: always()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            node scripts/notify-telegram.mjs "📈 단지 이력 수집 완료 — ${{ steps.cfg.outputs.apt }} 전용 ${{ steps.cfg.outputs.type }}타입"
+          else
+            node scripts/notify-telegram.mjs "⚠️ 단지 이력 수집 실패 — data/singo-history-last.md 확인"
+          fi
