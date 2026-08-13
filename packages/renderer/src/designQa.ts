@@ -236,7 +236,7 @@ const MEASURE_JS = `(() => {
                 갱신폭 뱃지를 밀어내는 자리라 .sr-price 와 .sr-delta 는 반드시 함께 올린다.
                 SVG 안의 곡선·라벨은 Range 대상이 아니라 여기서 못 잰다 —
                 넘침은 빌더(build-singo-record.mjs)가 계산해 던진다. */
-             ".sr-kick,.sr-apt,.sr-deal,.sr-price,.sr-delta,.sr-fact .l,.sr-fact .v,.sr-fact .s,.sr-note";
+             ".sr-kick,.sr-price,.sr-spec .l,.sr-cycle .lb,.sr-cycle .pk,.sr-cycle .wh,.sr-cycle .cl,.sr-cycle .cv,.sr-note";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
   for (var i=0;i<leaves.length;i++) for (var j=i+1;j<leaves.length;j++) {
     var a=leaves[i], b=leaves[j];
@@ -297,7 +297,7 @@ const MEASURE_JS = `(() => {
   if(footer){
     /* .rg-note 를 빠뜨려 record-grid 에서는 이 검사가 아무것도 안 재고 있었다(AS팀 지적 2026-07-31).
        "최하단 문구 여백"은 오너가 두 번 말한 항목인데 새 템플릿에 적용되지 않은 상태였다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note,.gb-note,.sr-note,.sr-facts");
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note,.gb-note,.sr-note,.sr-cycle");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();

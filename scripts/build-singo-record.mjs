@@ -106,11 +106,17 @@ if (traded.length < 3) throw new Error(`거래가 있던 달이 ${traded.length}
 
 /* ── ③ 좌표 계산 */
 const VB_W = 936; // 카드 안쪽 폭(1080 - 좌우 여백 72×2)
-const VB_H = 320;
-const PAD_T = 46; // 위 — 점 라벨이 앉을 자리
-const PAD_B = 46; // 아래 — 연도 축
-const X0 = 12;
-const X1 = VB_W - 12;
+/* ⚠️ SVG 는 width:100% + viewBox 비율로 높이가 정해진다 — **판이 남는 높이를 못 먹는다.**
+   제목이 한 줄로 낮아지면서(2026-08-13 개편) 곡선 위에 250px 짜리 빈 칸이 생겼다.
+   판 높이를 키워 그 자리를 곡선이 쓰게 한다. 여기 숫자를 바꾸면 곡선의 세로 크기가 바뀐다. */
+const VB_H = 640;
+const PAD_T = 64; // 위 — 점 라벨이 앉을 자리
+const PAD_B = 62; // 아래 — 연도 축
+/* ⚠️ 좌우 여백을 두는 이유: 2020·2026 연도 라벨이 판 끝에서 잘려 나가 **간격이 어긋나 보였다**
+   (오너 2026-08-13 "연도들끼리 간격이 안맞아"). 예전엔 끝 라벨만 왼쪽/오른쪽 정렬로 물려
+   붙였는데, 그러면 라벨이 자기 눈금에서 벗어나 더 어긋나 보인다. 여백으로 푼다. */
+const X0 = 46;
+const X1 = VB_W - 46;
 const plotTop = PAD_T;
 const plotBot = VB_H - PAD_B;
 
@@ -187,31 +193,50 @@ if (dot.ty - 34 < 0) throw new Error(`이번 거래 라벨이 판 위로 넘칩�
 if (threshold && Math.abs(threshold.ty - dot.ty) < 30 && threshold.tx + widthOf(threshold.text, 26) > dot.tx - dotLabW) {
   throw new Error(`돌파선 라벨과 거래 라벨이 겹칩니다 — 판 높이를 키우세요.`);
 }
-// 판 끝의 연도(2020·2026)는 가운데 정렬로 두면 판을 넘는다 — 그때만 끝을 물려 세운다.
+/* 연도는 **전부 가운데 정렬**이라 간격이 눈금 간격과 같다. 하나라도 판을 넘으면 여백이
+   모자란 것이니 던진다 — 끝만 슬쩍 밀어 붙이면 간격이 어긋나 보인다(오너가 바로 알아봤다). */
 for (const a of axis) {
   const w = widthOf(a.text, 24) / 2;
-  if (a.x - w < 0) {
-    a.anchor = "start";
-    a.x = 0;
-  } else if (a.x + w > VB_W) {
-    a.anchor = "end";
-    a.x = VB_W;
+  if (a.x - w < 0 || a.x + w > VB_W) {
+    throw new Error(`연도 축 "${a.text}" 이 판을 넘습니다 — X0/X1 여백을 키우세요.`);
   }
 }
-for (const a of axis) {
-  const w = widthOf(a.text, 24);
-  const left = a.anchor === "start" ? a.x : a.anchor === "end" ? a.x - w : a.x - w / 2;
-  if (left < 0 || left + w > VB_W) throw new Error(`연도 축 "${a.text}" 이 판을 넘습니다.`);
+/* 눈금 간격이 실제로 고른지 확인한다(달 수가 12로 안 떨어지면 어긋난다) */
+for (let i = 2; i < axis.length; i++) {
+  const d1 = axis[i].x - axis[i - 1].x;
+  const d0 = axis[i - 1].x - axis[i - 2].x;
+  if (Math.abs(d1 - d0) > 1) throw new Error(`연도 간격이 고르지 않습니다: ${d0} vs ${d1}`);
 }
 
-/* ── ④ 문구 — 전부 위 수치에서 나온다 */
-const days = Math.round(
-  (Date.parse(hit.date + "T00:00:00Z") - Date.parse(hit.prevPeakDate + "T00:00:00Z")) / 86400000,
-);
-const gap = hit.priceManwon - hit.prevPeakManwon;
+/* ── ④ 지난 사이클 고점 — 사람이 눈으로 고르지 않는다
+   낙폭(drawdown)이 가장 깊었던 골을 찾고, **그 골 이전의 최고가**를 지난 사이클 고점으로 본다.
+   (이 단지: 2021-03 14.8억 → 2023-04 10.9억 으로 -26% 가 최대 낙폭 → 지난 고점 14.8억)
+   ⚠️ "지난 고점"을 손으로 찍으면 단지가 바뀔 때마다 사람이 다시 골라야 하고, 그때 틀린다. */
+let runMax = -1;
+let runMaxIdx = -1;
+let worst = { dd: 0, atMaxIdx: -1 };
+traded.forEach((p, i) => {
+  if (p.maxManwon > runMax) {
+    runMax = p.maxManwon;
+    runMaxIdx = i;
+  }
+  const dd = p.maxManwon / runMax - 1;
+  if (dd < worst.dd) worst = { dd, atMaxIdx: runMaxIdx };
+});
+let cycle = null;
+if (worst.atMaxIdx >= 0) {
+  const pk = traded[worst.atMaxIdx];
+  const vs = ((hit.priceManwon - pk.maxManwon) / pk.maxManwon) * 100;
+  cycle = {
+    peak: eok(pk.maxManwon),
+    when: `${pk.ym.slice(0, 4)}.${pk.ym.slice(4)}월`,
+    vs: `${vs >= 0 ? "+" : "−"}${Math.abs(vs).toFixed(1)}%`,
+    dir: vs >= 0 ? "up" : "down",
+  };
+}
+
+/* ── ⑤ 문구 — 전부 위 수치에서 나온다 */
 const first = traded[0];
-const vsFirstPct = ((hit.priceManwon - first.maxManwon) / first.maxManwon) * 100;
-const [fy, fm] = [first.ym.slice(0, 4), String(Number(first.ym.slice(4)))];
 const fromLabel = `${hist.meta.from.slice(0, 4)}년${hist.meta.from.slice(4) === "01" ? "" : ` ${Number(hist.meta.from.slice(4))}월`}`;
 const dot2 = (d) => `${d.slice(0, 4)}.${d.slice(5, 7)}.${d.slice(8, 10)}`;
 
@@ -220,33 +245,35 @@ const dot2 = (d) => `${d.slice(0, 4)}.${d.slice(5, 7)}.${d.slice(8, 10)}`;
    ⚠️ 중구·서구처럼 한 글자만 남는 곳은 그대로 둔다("중 필동"은 말이 안 된다). */
 const guRaw = hit.gu.replace(/^[가-힣]+시(?=[가-힣]+구$)/, "");
 const guShort = /구$/.test(guRaw) && guRaw.length >= 3 ? guRaw.slice(0, -1) : guRaw;
-const region = `${guShort} ${hit.umdNm}`;
-/* 킥커는 공식 지명 그대로 — 다만 "성남시분당구"는 붙어 있어 읽기 어렵다 */
-const guFull = hit.gu.replace(/^([가-힣]+시)(?=[가-힣]+구$)/, "$1 ");
+
+/* 제원 두 줄 — 세대수 | 준공(년식) / 전용 | 층.
+   ⚠️ 준공 연도를 '년식'으로 겹쳐 적는 건 오너 지정 형식이다(2026-08-13). */
+const SEP = '<span class="sep">|</span>';
+const yy = hit.buildYear ? String(hit.buildYear).slice(2) : null;
+const specTop = [
+  kapt ? `${kapt.hhld.toLocaleString("ko-KR")}세대` : null,
+  hit.buildYear ? `${hit.buildYear}년 준공(${yy}년식)` : null,
+].filter(Boolean);
+const specBot = [`전용 ${hit.area}㎡`, `${hit.floor}층`];
+const spec = [specTop.join(SEP), specBot.join(SEP)].filter((x) => x);
 
 const card = {
   template: "singo-record@1",
   date: DATE,
-  kicker: `${dot2(hit.date)} 계약 · ${guFull} ${hit.umdNm}`,
-  title: hit.milestone
-    ? `${region} ${hit.pyeong}이<br /><span class="hi">${hit.milestone}억</span>을 넘었다`
-    : `${region} ${hit.pyeong}<br />${eok(hit.priceManwon)} 신고가`,
-  apt:
-    `<b>${hit.aptNm}</b> · ${hit.umdNm}` +
-    (hit.buildYear ? ` · ${hit.buildYear}년 준공` : "") +
-    (kapt ? ` · ${kapt.hhld.toLocaleString("ko-KR")}세대` : ""),
-  deal: `이번 거래 · 전용 ${hit.area}㎡ · ${hit.floor}층 · ${hit.dealingGbn} · ${dot2(hit.date)}`,
+  /* 킥커 — 오너 지정 문구(2026-08-13). 돌파가 아니면 '클럽 가입'이라 부를 수 없다. */
+  kicker: hit.milestone
+    ? `오늘의 ${hit.milestone}억 클럽 가입 소식 (${DATE.replace(/-/g, ".")})`
+    : `오늘의 신고가 소식 (${DATE.replace(/-/g, ".")})`,
+  /* 제목 — 지역은 회색으로 물러나고 단지·평형만 잉크. */
+  title: `<span class="rg">${guShort}</span> ${hit.aptNm} ${hit.pyeong}`,
   price: eok(hit.priceManwon),
-  delta: `▲ ${eok(gap)} (+${hit.gainPct.toFixed(1)}%)`,
+  spec,
   chart: { vb: `0 0 ${VB_W} ${VB_H}`, grid, threshold, paths: chartPaths, dots, axis, dot },
-  facts: [
-    { l: "직전 최고가", v: eok(hit.prevPeakManwon), s: dot2(hit.prevPeakDate) },
-    { l: "기록을 넘기까지", v: `${days}일`, s: `${eok(gap)} 위로` },
-    { l: `${fy}년 ${fm}월 대비`, v: `+${Math.round(vsFirstPct)}%`, s: `${eok(first.maxManwon)} → ${eok(hit.priceManwon)}` },
-  ],
+  cycle,
   note:
     `${fromLabel} 이후 이 단지 전용 ${TYPE}타입 매매 실거래 기준(직거래 제외). ` +
-    `곡선은 <b>거래가 있던 ${traded.length}개월</b>의 그달 최고가를 이은 것이다. 날짜는 계약일(신고일 아님).`,
+    `곡선은 <b>거래가 있던 ${traded.length}개월</b>의 그달 최고가를 이은 것이다. ` +
+    `직전 최고가는 ${dot2(hit.prevPeakDate)} ${eok(hit.prevPeakManwon)}. 날짜는 계약일(신고일 아님).`,
   source: { name: "국토교통부 아파트 매매 실거래가", asOf: DATE },
   meta: {
     verified: true,
@@ -259,6 +286,12 @@ const card = {
        chart 에는 픽셀 좌표뿐이라, 이게 없으면 그림이 자료와 맞는지 아무도 대조할 수 없다.
        (캡션 검수도 이 풀과 대조해 "카드에 없는 금액"을 잡는다.) */
     curve: traded.map((p) => ({ ym: p.ym, eok: eok(p.maxManwon), date: p.date, floor: p.floor })),
+    prevPeak: { eok: eok(hit.prevPeakManwon), date: hit.prevPeakDate, gainPct: Number(hit.gainPct.toFixed(2)) },
+    cycleCalc: {
+      maxDrawdownPct: Number((worst.dd * 100).toFixed(2)),
+      note: "지난 사이클 고점 = 최대 낙폭이 난 골 직전의 최고가. 코드가 계산한다(사람이 고르지 않는다).",
+    },
+    firstPoint: { ym: first.ym, eok: eok(first.maxManwon) },
     hhld: kapt
       ? {
           kaptCode: KAPT,
@@ -283,6 +316,7 @@ writeFileSync(outPath, JSON.stringify(card, null, 2) + "\n");
 
 console.log(
   `${outPath}\n` +
-    `${hit.aptNm} ${hit.pyeong} ${eok(hit.priceManwon)} · 직전 ${eok(hit.prevPeakManwon)} (${days}일 전)\n` +
+    `${hit.aptNm} ${hit.pyeong} ${eok(hit.priceManwon)} · 직전 ${eok(hit.prevPeakManwon)} ${hit.prevPeakDate}\n` +
+    (cycle ? `지난 사이클 고점 ${cycle.peak} (${cycle.when}) · 고점 대비 ${cycle.vs}\n` : "지난 사이클 고점 없음(내림 구간이 없었다)\n") +
     `곡선 ${traded.length}개월 / ${pts.length}개월 · 끊긴 구간 ${chartPaths.length - 1}곳`,
 );

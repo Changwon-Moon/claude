@@ -30,39 +30,35 @@
       }
 
       .sr-head { padding: 0; margin: 40px 0 0; } /* 뱃지 아래 30px 확보(badgeclear) */
+      /* 제목 — 이 판형의 주인공은 제목이 아니라 **가격**이다(오너 2026-08-13).
+         그래서 제목은 한 줄로 낮추고, 지역은 회색으로 물러나 단지·평형만 잉크로 남긴다. */
       .sr .wirit-title {
-        font-size: 92px; line-height: 1.06; text-align: left; white-space: nowrap;
+        font-size: 68px; line-height: 1.08; text-align: left; white-space: nowrap;
         margin: 0; letter-spacing: -0.045em;
       }
-      .sr .wirit-title .hi { color: var(--wirit-red); }
+      .sr .wirit-title .rg { color: var(--wirit-gray); }
 
-      /* 단지 한 줄 — 어떤 집이 팔렸나. 카드의 사실 근거라 흐리게 두지 않는다. */
-      .sr-apt {
-        margin: 30px 0 0; font-family: var(--font-sans); font-size: 28px; font-weight: 700;
-        color: var(--wirit-gray); letter-spacing: -0.03em; white-space: nowrap;
-      }
-      .sr-apt b { color: var(--wirit-ink); font-weight: 800; }
-
-      /* 거래 한 줄 — 개요(단지가 원래 어떤 곳인가)와 **이번에 팔린 집**을 갈라 적는다.
-         한 줄에 몰아 놓았더니 84.78㎡·16층이 단지의 성질처럼 읽혔다. */
-      .sr-deal {
-        margin: 8px 0 0; font-family: var(--font-sans); font-size: 25px; font-weight: 600;
-        color: var(--wirit-gray); letter-spacing: -0.03em; white-space: nowrap;
-      }
-
-      /* 주인공 숫자 */
-      .sr-hero { display: flex; align-items: baseline; gap: 26px; margin: 22px 0 0; }
+      /* 주인공 줄 — 왼쪽 가격, 오른쪽 단지 제원 */
+      .sr-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 34px; margin: 30px 0 0; }
       .sr-price {
         font-family: var(--font-num); font-size: 150px; font-weight: 900;
-        color: var(--wirit-ink); letter-spacing: -0.055em; line-height: 0.94; white-space: nowrap;
+        color: var(--wirit-red); letter-spacing: -0.055em; line-height: 0.94; white-space: nowrap;
       }
-      .sr-delta {
-        font-family: var(--font-num); font-size: 40px; font-weight: 900;
-        color: var(--wirit-red); letter-spacing: -0.03em; white-space: nowrap;
+      /* 제원 — 세대수 · 준공 · 전용 · 층. 가격 오른쪽에 두 줄로 접어 세운다.
+         ⚠️ "이번 거래"·"중개거래" 같은 말은 뺐다(오너 2026-08-13) — 카드가 이미 거래 이야기다. */
+      .sr-spec { text-align: right; font-family: var(--font-num); font-size: 36px; line-height: 1.32; }
+      /* 줄마다 block — inline span 은 scrollWidth 가 믿을 게 못 돼 폭 맞춤이 어긋난다.
+         크기는 .sr-spec 이 정하고 줄은 물려받는다(그래야 두 줄이 같은 크기로 붙는다). */
+      .sr-spec .l {
+        display: block; font-size: inherit; font-weight: 800; color: var(--wirit-ink);
+        letter-spacing: -0.03em; white-space: nowrap;
       }
+      .sr-spec .l .sep { color: var(--wirit-gray); font-weight: 700; padding: 0 6px; }
 
       /* 곡선 */
-      .sr-chart { flex: 1 1 auto; display: flex; align-items: flex-end; margin: 26px 0 0; min-height: 0; }
+      /* 판이 남는 높이를 다 못 먹을 때(viewBox 비율 고정) 남는 자리를 위아래로 나눈다 —
+         바닥에 붙여 두면 곡선 위에만 빈 칸이 몰려 카드가 반으로 갈려 보인다. */
+      .sr-chart { flex: 1 1 auto; display: flex; align-items: center; margin: 20px 0 0; min-height: 0; }
       .sr-svg { display: block; width: 100%; height: auto; }
       .sr-line { fill: none; stroke: var(--wirit-ink); stroke-width: 5; stroke-linejoin: round; stroke-linecap: round; }
       .sr-grid { stroke: var(--wirit-ink-06); stroke-width: 2; }
@@ -73,25 +69,36 @@
       .sr-ax { font-family: var(--font-num); font-size: 24px; font-weight: 700; fill: var(--wirit-gray); }
       .sr-dotlab { font-family: var(--font-num); font-size: 34px; font-weight: 900; fill: var(--wirit-red); }
 
-      /* 팩트 3칸 — 괘선만으로 나눈다(옅은 회색 덩어리는 'AI티'로 잡힌다) */
-      .sr-facts {
-        flex: 0 0 auto; display: grid; grid-template-columns: repeat(3, 1fr);
-        margin: 22px 0 0; border-top: 2px solid var(--wirit-ink-06);
+      /* 지난 사이클 한 줄 (오너 2026-08-13)
+         "지금이 얼마다"보다 **"지난 고점을 얼마나 넘었나"**가 이 소식의 뜻이다.
+         지난 사이클 고점은 코드가 낙폭(drawdown)이 가장 깊었던 골을 찾고,
+         그 골 **이전의 최고가**로 잡는다 — 사람이 눈으로 고르지 않는다. */
+      .sr-cycle {
+        flex: 0 0 auto; display: flex; align-items: baseline; flex-wrap: nowrap;
+        margin: 24px 0 0; padding: 22px 0 0; border-top: 2px solid var(--wirit-ink-06);
+        font-family: var(--font-num); white-space: nowrap;
       }
-      .sr-fact { padding: 20px 0 0; }
-      .sr-fact + .sr-fact { border-left: 2px solid var(--wirit-ink-06); padding-left: 26px; }
-      .sr-fact .l {
-        font-family: var(--font-sans); font-size: 23px; font-weight: 700;
-        color: var(--wirit-gray); letter-spacing: -0.03em; white-space: nowrap;
+      .sr-cycle .lb {
+        font-family: var(--font-sans); font-size: 25px; font-weight: 700;
+        color: var(--wirit-gray); letter-spacing: -0.03em;
       }
-      .sr-fact .v {
-        margin: 6px 0 0; font-family: var(--font-num); font-size: 46px; font-weight: 900;
-        color: var(--wirit-ink); letter-spacing: -0.05em; white-space: nowrap;
+      .sr-cycle .pk {
+        margin-left: 12px; font-size: 46px; font-weight: 900;
+        color: var(--wirit-ink); letter-spacing: -0.05em;
       }
-      .sr-fact .s {
-        margin: 2px 0 0; font-family: var(--font-num); font-size: 22px; font-weight: 700;
-        color: var(--wirit-gray); letter-spacing: -0.02em; white-space: nowrap;
+      .sr-cycle .wh {
+        margin-left: 10px; font-size: 24px; font-weight: 700;
+        color: var(--wirit-gray); letter-spacing: -0.02em;
       }
+      .sr-cycle .bar { margin: 0 18px; font-size: 30px; font-weight: 400; color: var(--wirit-ink-06); }
+      .sr-cycle .cl {
+        font-family: var(--font-sans); font-size: 25px; font-weight: 700;
+        color: var(--wirit-gray); letter-spacing: -0.03em;
+      }
+      /* 오름은 레드, 내림은 코발트 — 저장소의 다른 카드와 같은 약속 */
+      .sr-cycle .cv { margin-left: 12px; font-size: 46px; font-weight: 900; letter-spacing: -0.05em; }
+      .sr-cycle .cv.up { color: var(--wirit-red); }
+      .sr-cycle .cv.down { color: var(--wirit-cobalt); }
 
       /* 기준 문구 — '역대'가 아니라는 것을 카드가 스스로 밝힌다. 지우면 안 되는 줄이다. */
       .sr-note {
@@ -106,12 +113,9 @@
       <div class="wirit-topcap">{{#if kicker}}<span class="sr-kick">{{kicker}}</span>{{/if}}</div>
       <div class="sr-head"><h1 class="wirit-title">{{{title}}}</h1></div>
 
-      {{#if apt}}<div class="sr-apt">{{{apt}}}</div>{{/if}}
-      {{#if deal}}<div class="sr-deal">{{deal}}</div>{{/if}}
-
       <div class="sr-hero">
         <span class="sr-price">{{price}}</span>
-        {{#if delta}}<span class="sr-delta">{{delta}}</span>{{/if}}
+        <span class="sr-spec">{{#each spec}}<span class="l">{{{this}}}</span>{{/each}}</span>
       </div>
 
       <div class="sr-chart">
@@ -134,15 +138,13 @@
         </svg>
       </div>
 
-      <div class="sr-facts">
-        {{#each facts}}
-        <div class="sr-fact">
-          <div class="l">{{l}}</div>
-          <div class="v">{{v}}</div>
-          {{#if s}}<div class="s">{{s}}</div>{{/if}}
-        </div>
-        {{/each}}
+      {{#if cycle}}
+      <div class="sr-cycle">
+        <span class="lb">지난 사이클 고점</span><span class="pk">{{cycle.peak}}</span><span class="wh">{{cycle.when}}</span>
+        <span class="bar">|</span>
+        <span class="cl">고점 대비</span><span class="cv {{cycle.dir}}">{{cycle.vs}}</span>
       </div>
+      {{/if}}
 
       {{#if note}}<div class="sr-note">{{{note}}}</div>{{/if}}
 
@@ -153,36 +155,43 @@
     </div>
 
     <script>
-      /* 제목을 카드 폭에 맞춘다 — 다른 카드와 같은 코드·같은 이유(고정 크기는 태백체에서 넘친다).
-         두 줄 제목은 <br> 로 나뉘므로 **줄마다** 재서 더 작은 쪽에 맞춘다.
-         한 줄만 재면 긴 줄이 카드를 뚫고 나간다. */
+      /* 제목과 제원 블록을 카드 폭에 맞춘다 — 고정 크기는 태백체·긴 단지명에서 넘친다.
+         ⚠️ 제원(세대수·준공·전용·층)은 단지마다 글자 수가 달라서 **반드시 재야 한다.**
+            "3,432세대 | 2022년 준공(22년식)" 처럼 길어지면 가격을 밀어낸다. */
       window.__wiritFit = function () {
-        var el = document.querySelector(".sr .wirit-title");
-        if (!el) return;
-        var box = el.parentElement, bs = getComputedStyle(box);
-        var avail = box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
-        var lo = 34, hi = 104, best = 34;
-        for (var i = 0; i < 24; i++) {
-          var mid = (lo + hi) / 2;
-          el.style.fontSize = mid + "px";
-          /* 줄바꿈이 있어도 scrollWidth 는 가장 긴 줄을 재 준다(white-space:nowrap 이므로) */
-          if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
-        }
-        el.style.fontSize = best.toFixed(2) + "px";
-
-        /* 실거래가 숫자도 같은 자로 줄인다 — "112.5억" 처럼 자릿수가 늘면 갱신폭 뱃지를 밀어낸다. */
-        var hero = document.querySelector(".sr .sr-hero");
-        var pr = document.querySelector(".sr .sr-price");
-        if (hero && pr) {
-          var hbs = getComputedStyle(hero);
-          var hav = hero.clientWidth - (parseFloat(hbs.paddingLeft) || 0) - (parseFloat(hbs.paddingRight) || 0);
-          var plo = 60, phi = 158, pbest = 60;
-          for (var j = 0; j < 22; j++) {
-            var pmid = (plo + phi) / 2;
-            pr.style.fontSize = pmid + "px";
-            if (hero.scrollWidth <= hav) { pbest = pmid; plo = pmid; } else { phi = pmid; }
+        var fit = function (el, box, lo, hi, measure) {
+          if (!el || !box) return;
+          var bs = getComputedStyle(box);
+          var avail = box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
+          var best = lo;
+          for (var i = 0; i < 24; i++) {
+            var mid = (lo + hi) / 2;
+            el.style.fontSize = mid + "px";
+            if (measure() <= avail) { best = mid; lo = mid; } else { hi = mid; }
           }
-          pr.style.fontSize = pbest.toFixed(2) + "px";
+          el.style.fontSize = best.toFixed(2) + "px";
+        };
+
+        var title = document.querySelector(".sr .wirit-title");
+        if (title) fit(title, title.parentElement, 30, 76, function () { return title.scrollWidth; });
+
+        /* 제원은 **가격이 차지하고 남은 폭**에 맞춘다. hero 전체 scrollWidth 로 재면
+           가격까지 함께 재게 되어 둘이 서로를 밀어낸다. */
+        var hero = document.querySelector(".sr .sr-hero");
+        var spec = document.querySelector(".sr .sr-spec");
+        var price = document.querySelector(".sr .sr-price");
+        if (hero && spec && price) {
+          var gap = parseFloat(getComputedStyle(hero).columnGap || "34") || 34;
+          var room = hero.clientWidth - price.scrollWidth - gap;
+          var lo = 18, hi = 40, best = 18;
+          for (var k = 0; k < 24; k++) {
+            var mid = (lo + hi) / 2;
+            spec.style.fontSize = mid + "px";
+            var lines = spec.querySelectorAll(".l"), w = 0;
+            for (var m = 0; m < lines.length; m++) w = Math.max(w, lines[m].scrollWidth);
+            if (w <= room) { best = mid; lo = mid; } else { hi = mid; }
+          }
+          spec.style.fontSize = best.toFixed(2) + "px";
         }
       };
     </script>

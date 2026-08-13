@@ -7,8 +7,8 @@
     "template",
     "title",
     "price",
+    "spec",
     "chart",
-    "facts",
     "source"
   ],
   "additionalProperties": true,
@@ -22,26 +22,17 @@
     },
     "kicker": {
       "type": "string",
-      "maxLength": 44,
-      "description": "계약일 · 지역. 제목이 말하지 않는 '언제·어디'"
+      "maxLength": 48,
+      "description": "오늘의 N억 클럽 가입 소식 (날짜). 돌파가 아니면 '클럽 가입'이라 쓰지 않는다."
     },
     "title": {
       "type": "string",
-      "description": "한 줄 또는 <br /> 로 두 줄. <span class=\"hi\">…</span> 로 레드 강조."
-    },
-    "apt": {
-      "type": "string",
-      "description": "단지명·전용면적·층·거래유형 한 줄. <b> 로 단지명 강조."
+      "description": "지역(회색 .rg) + 단지명 + 평형. 한 줄."
     },
     "price": {
       "type": "string",
       "maxLength": 12,
-      "description": "실거래가 (예: 20.7억)"
-    },
-    "delta": {
-      "type": "string",
-      "maxLength": 28,
-      "description": "갱신폭 (예: ▲ 1.1억 (+5.6%))"
+      "description": "실거래가 (예: 20.7억). 이 판형에서 레드로 쓰는 자리."
     },
     "note": {
       "type": "string",
@@ -220,33 +211,6 @@
         }
       }
     },
-    "facts": {
-      "type": "array",
-      "minItems": 3,
-      "maxItems": 3,
-      "items": {
-        "type": "object",
-        "required": [
-          "l",
-          "v"
-        ],
-        "additionalProperties": false,
-        "properties": {
-          "l": {
-            "type": "string",
-            "maxLength": 16
-          },
-          "v": {
-            "type": "string",
-            "maxLength": 12
-          },
-          "s": {
-            "type": "string",
-            "maxLength": 22
-          }
-        }
-      }
-    },
     "source": {
       "type": "object",
       "required": [
@@ -261,10 +225,49 @@
         }
       }
     },
-    "deal": {
-      "type": "string",
-      "maxLength": 80,
-      "description": "이번에 팔린 집 — 전용면적·층·거래유형·계약일. 단지 개요(apt)와 갈라 적는다."
+    "spec": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "description": "제원 두 줄 — 세대수|준공(년식) / 전용㎡|층. <span class=\"sep\">|</span> 로 구분.",
+      "items": {
+        "type": "string",
+        "maxLength": 80
+      }
+    },
+    "cycle": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "지난 사이클 고점. 최대 낙폭이 난 골 직전의 최고가 — 코드가 계산한다. 내림 구간이 없으면 null.",
+      "required": [
+        "peak",
+        "when",
+        "vs",
+        "dir"
+      ],
+      "properties": {
+        "peak": {
+          "type": "string",
+          "maxLength": 10
+        },
+        "when": {
+          "type": "string",
+          "maxLength": 12
+        },
+        "vs": {
+          "type": "string",
+          "maxLength": 10
+        },
+        "dir": {
+          "type": "string",
+          "enum": [
+            "up",
+            "down"
+          ]
+        }
+      }
     }
   }
 }
