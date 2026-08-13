@@ -89,6 +89,47 @@ export function normAptName(raw: string): string {
     .trim();
 }
 
+/**
+ * 괄호 **안까지 살린** 이름 — 형제 단지를 가르는 데 쓴다.
+ *
+ * ⚠️ `normAptName` 은 괄호를 통째로 지운다. "(101동)" 같은 동 표기를 흡수하려는 설계인데,
+ * 분당 정자동처럼 **괄호가 단지를 가르는 곳**에서는 그게 곧 사고다 —
+ * `상록마을(라이프2차)` · `상록마을(임광)` 이 전부 `상록마을` 한 칸으로 합쳐진다.
+ * (2026-08-13 실제로 확인: 명부 매칭이 `상록마을(라이프2차)` 를 남의 단지
+ *  `정자상록마을우성 1,762세대` 에 붙였고, 세대수가 그대로 알림에 실렸다.)
+ * 그래서 **판정 키는 normAptName 을 그대로 두되**(인덱스를 통째로 다시 받아야 하므로),
+ * "같은 단지가 맞나"를 되묻는 자리에는 이 함수를 쓴다.
+ */
+export function fullAptName(raw: string): string {
+  return String(raw ?? "")
+    .replace(/[()[\]]/g, "") // 괄호 기호만 벗기고 **안의 글자는 남긴다**
+    .replace(/[\s·.\-_,]/g, "")
+    .trim();
+}
+
+/**
+ * 두 이름이 **같은 단지를 가리키나**.
+ *
+ * 실거래 표기(`가락쌍용(2차)`)와 관리대장 표기(`가락쌍용1차`)는 서로 다른 방식으로 적힌다.
+ * 한쪽이 다른 쪽을 온전히 품을 때만 같은 단지로 본다 — 명부는 앞에 동 이름을 붙이는
+ * 버릇이 있어서(`개봉한마을` ⊃ `한마을`) 포함관계는 필요하다.
+ * 다만 **차수·단지번호가 서로 어긋나면 무조건 거절**한다. `가락쌍용2차` 와 `가락쌍용1차` 는
+ * 포함관계가 없어 이미 걸리지만, `주공10` 과 `주공10단지` 처럼 붙는 경우를 위해 숫자를 따로 본다.
+ */
+export function sameApt(a: string, b: string): boolean {
+  const x = fullAptName(a);
+  const y = fullAptName(b);
+  if (!x || !y) return false;
+  if (x === y) return true;
+  if (!(x.includes(y) || y.includes(x))) return false;
+  // 숫자(차수·단지번호)가 양쪽에 다 있는데 다르면 다른 단지다.
+  const nums = (s: string) => (s.match(/\d+/g) ?? []).join(",");
+  const nx = nums(x);
+  const ny = nums(y);
+  if (nx && ny && nx !== ny) return false;
+  return true;
+}
+
 /** 단지 키 — 구 + 법정동 + 정규화 단지명. */
 export function aptKey(sggCd: string, umdNm: string, aptNm: string): string {
   return `${sggCd}|${String(umdNm ?? "").trim()}|${normAptName(aptNm)}`;
@@ -219,6 +260,11 @@ export function findSingo(
     const k = `${aptKey(lawdCd, t.umdNm, t.aptNm)}|${type}`;
     const cur = peaks[k];
     if (!cur) continue; // 역대 기록이 없는 칸 — 판정하지 않는다
+    // ⚠️ 칸 키는 괄호를 지운 이름이라 **형제 단지가 한 칸에 합쳐질 수 있다**
+    //    (`상록마을(라이프2차)` 와 `상록마을(임광)` → 둘 다 `상록마을`).
+    //    그 상태로 비교하면 남의 단지 기록을 넘은 것을 "신고가"라 부르게 된다.
+    //    이름이 다르면 **그 칸은 기록이 없는 것으로 친다** — 놓치는 편이 지어내는 편보다 낫다.
+    if (!sameApt(cur.aptNm, t.aptNm)) continue;
     if (!before.has(k)) before.set(k, cur);
     if (t.priceManwon <= cur.priceManwon) continue;
     peaks[k] = { aptNm: t.aptNm, umdNm: t.umdNm, type, priceManwon: t.priceManwon, area: t.area, floor: t.floor, date: t.date };

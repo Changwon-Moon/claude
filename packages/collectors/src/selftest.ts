@@ -82,6 +82,8 @@ import {
   findSingo as singoFindSingo,
   manwonToEok as singoEok,
   milestoneCrossed as singoMilestone,
+  sameApt as singoSameApt,
+  fullAptName as singoFullName,
   alertBody as singoAlertBody,
   baselineLabel as singoBaseline,
   BASELINE_FROM as SINGO_FROM,
@@ -993,6 +995,25 @@ console.log("\n[청약홈 분양정보 파서]");
 
   const mr = singoMonthRange("202511", "202602");
   check("월 범위는 해를 넘어간다", mr.join(",") === "202511,202512,202601,202602", mr.join(","));
+
+  /* ── 단지 동일성 — 형제 단지를 한 칸으로 합치지 않는다 (2026-08-13 사고)
+   * 괄호를 지운 이름으로 명부를 찾다가 `상록마을(라이프2차)` 가 남의 단지
+   * `정자상록마을우성(1,762세대)` 에 붙었고, **그 세대수가 그대로 알림에 실렸다.**
+   * 같은 방식으로 `가락쌍용(2차)` → `가락쌍용1차`, `효자촌(현대)` → `서현효자촌그린타운`.
+   * 아래가 그 세 건을 그대로 붙잡는다. */
+  check("괄호 안 글자를 살린다", singoFullName("상록마을(라이프2차)") === "상록마을라이프2차", singoFullName("상록마을(라이프2차)"));
+  check("⛔ 상록마을(라이프2차) ≠ 정자상록마을우성", !singoSameApt("정자상록마을우성", "상록마을(라이프2차)"), "");
+  check("⛔ 가락쌍용(2차) ≠ 가락쌍용1차", !singoSameApt("가락쌍용1차", "가락쌍용(2차)"), "");
+  check("⛔ 효자촌(현대) ≠ 서현효자촌그린타운", !singoSameApt("서현효자촌그린타운", "효자촌(현대)"), "");
+  // 명부는 앞에 동 이름을 붙이는 버릇이 있다 — 이건 같은 단지다
+  check("개봉한마을 = 한마을", singoSameApt("개봉한마을", "한마을"), "");
+  check("이문쌍용 = 쌍용", singoSameApt("이문쌍용", "쌍용"), "");
+  check("하안주공10단지 = 주공10", singoSameApt("하안주공10단지", "주공10"), "");
+  check("신내건영2차아파트 = 건영2차아파트", singoSameApt("신내건영2차아파트", "건영2차아파트"), "");
+  check("마곡13단지 힐스테이트마스터 아파트 = 마곡13단지힐스테이트마스터", singoSameApt("마곡13단지 힐스테이트마스터 아파트", "마곡13단지힐스테이트마스터"), "");
+  // 차수만 다른 형제는 거절
+  check("⛔ 주공6 ≠ 인창주공7단지", !singoSameApt("인창주공7단지", "주공6"), "");
+  check("⛔ 상록마을(임광) ≠ 상록마을(라이프2차)", !singoSameApt("상록마을(임광)", "상록마을(라이프2차)"), "");
 
   /* ── 톡 본문 — 돌파 블록과 전체 목록은 다른 말이다 (2026-08-13 사고)
    * 금액대(그 거래가 속한 구간)로 묶어 보냈더니 14억·11억 거래가 "10억 돌파"로 읽혔다.

@@ -26,7 +26,8 @@ import {
   foldPeaks,
   findSingo,
   areaType,
-  normAptName,
+  fullAptName,
+  sameApt,
   manwonToEok,
   alertBody,
   PEAK_SCHEMA,
@@ -88,21 +89,25 @@ async function main() {
 
   /**
    * 실거래의 (법정동, 단지명) 이 명부에 있는지.
-   * 같은 법정동 + 정규화 이름 완전일치 → 없으면 포함관계 후보가 **하나뿐일 때만** 인정.
-   * 애매하면 붙이지 않는다 — 잘못 붙이면 1000세대 미만 단지가 알림에 섞인다.
+   *
+   * ⚠️ 예전엔 **괄호를 지운 이름**으로 포함관계를 봤다. 그래서
+   *    `상록마을(라이프2차)` → `상록마을` → 명부의 `정자상록마을우성` 에 붙었고,
+   *    **남의 단지 세대수 1,762이 그대로 알림에 실렸다** (2026-08-13 오너 확인 요청 중 발견).
+   *    같은 방식으로 `가락쌍용(2차)` 가 `가락쌍용1차` 에, `효자촌(현대)` 가
+   *    `서현효자촌그린타운` 에 붙어 있었다.
+   *    이제는 **괄호 안까지 살린 이름**으로 `sameApt` 이 판정한다 —
+   *    차수가 어긋나거나 형제 이름이면 거절한다. 명부가 앞에 동 이름을 붙이는 경우
+   *    (`개봉한마을` ⊃ `한마을`)는 포함관계로 그대로 통과한다.
+   *    애매하면 붙이지 않는다 — 잘못 붙이면 1000세대 미만 단지가 알림에 섞인다.
    */
   function inUniverse(lawdCd: string, umdNm: string, aptNm: string): UniverseItem | null {
     const list = byGu.get(lawdCd);
     if (!list) return null;
-    const want = normAptName(aptNm);
-    if (!want) return null;
+    if (!fullAptName(aptNm)) return null;
     const sameUmd = list.filter((a) => a.umd === umdNm);
     const pool = sameUmd.length ? sameUmd : list;
-    const exact = pool.filter((a) => a.norm === want);
-    if (exact.length === 1) return exact[0];
-    if (exact.length > 1) return null;
-    const part = pool.filter((a) => a.norm.length > 1 && (a.norm.includes(want) || want.includes(a.norm)));
-    return part.length === 1 ? part[0] : null;
+    const hit = pool.filter((a) => sameApt(a.kaptName, aptNm));
+    return hit.length === 1 ? hit[0] : null;
   }
 
   const regions = singoRegions();
