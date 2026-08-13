@@ -3,8 +3,8 @@
 > 이 파일은 tower-deploy.yml 이 매 배포마다 덮어쓴다. 손으로 고치지 않는다.
 > 작업 세션이 Actions 로그를 못 읽어서(egress 차단) 만든 통로다.
 
-- 실행: `31659439427` · 커밋 `9a00f583c8bdfa0bc9447db68904d245b60838f2`
-- 시각(UTC): 2026-08-13T02:04:49Z
+- 실행: `31746784056` · 커밋 `32b246044c76dc158725efe6f021d64daabea613`
+- 시각(UTC): 2026-08-13T21:46:14Z
 
 ```
 🌐 실제 사이트 확인 — https://wirit-tower.engineerest0.workers.dev
