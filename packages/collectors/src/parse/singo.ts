@@ -253,3 +253,55 @@ export function manwonToEok(manwon: number): string {
   const s = eok.toFixed(2).replace(/\.?0+$/, "");
   return `${s}억`;
 }
+
+/**
+ * 텔레그램 본문 만들기 — **돌파 먼저, 신고가 전체는 뒤에** (2026-08-13 오너 지정).
+ *
+ * ⚠️ 여기서 **돌파는 "이번에 그 선을 처음 넘었다"**는 뜻이다.
+ *    직전 9.8억 → 이번 10.3억 = 10억 돌파. **14억 거래는 이미 예전에 10억을 넘긴 단지라
+ *    돌파 블록에 오면 안 된다.**
+ *    금액대(그 거래가 속한 구간)로 묶어 내보냈다가 오너가 바로 잡아냈다 —
+ *    "왜 14억 11억 이런게 왜나오냐고". 금액대와 돌파는 다른 말이고, 섞으면 그게 곧 오보다.
+ *    그래서 돌파 판정은 오직 `h.milestone`(= milestoneCrossed) 만 쓰고,
+ *    전체 목록에는 **금액대 제목을 붙이지 않는다.**
+ *
+ * 돌파 줄에 직전 최고가를 함께 적는다 — 톡 안에서 "왜 돌파인지"가 스스로 증명돼야 한다.
+ */
+export function alertBody(hits: SingoHit[], topN = 0): string[] {
+  const lines: string[] = [];
+  const milestones = hits.filter((h) => h.milestone);
+
+  if (milestones.length) {
+    lines.push(`🎉 오늘의 돌파 ${milestones.length}건`);
+    const byLine = new Map<number, SingoHit[]>();
+    for (const h of milestones) {
+      const m = h.milestone as number;
+      if (!byLine.has(m)) byLine.set(m, []);
+      byLine.get(m)!.push(h);
+    }
+    for (const m of [...byLine.keys()].sort((a, c) => c - a)) {
+      const list = byLine.get(m)!.slice().sort((a, c) => c.priceManwon - a.priceManwon);
+      lines.push("");
+      lines.push(`${m}억 돌파`);
+      for (const h of list) {
+        lines.push(
+          `${h.gu} / ${h.aptNm} / ${h.pyeong} / ${manwonToEok(h.priceManwon)} (직전 ${manwonToEok(h.prevPeakManwon)})`,
+        );
+      }
+    }
+    lines.push("");
+    lines.push("─────────────────");
+    lines.push("");
+  }
+
+  const n = topN > 0 ? topN : hits.length;
+  lines.push(`📋 신고가 전체 ${hits.length}건 (거래가 큰 순)`);
+  for (const h of hits.slice(0, n)) {
+    lines.push(
+      `${h.gu} / ${h.aptNm} / ${h.pyeong} / ${manwonToEok(h.priceManwon)}` +
+        (h.milestone ? ` 🎉 ${h.milestone}억 돌파` : ""),
+    );
+  }
+  if (hits.length > n) lines.push(`… 외 ${hits.length - n}건`);
+  return lines;
+}

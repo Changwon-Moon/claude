@@ -82,6 +82,7 @@ import {
   findSingo as singoFindSingo,
   manwonToEok as singoEok,
   milestoneCrossed as singoMilestone,
+  alertBody as singoAlertBody,
   baselineLabel as singoBaseline,
   BASELINE_FROM as SINGO_FROM,
 } from "./parse/singo.js";
@@ -992,6 +993,59 @@ console.log("\n[청약홈 분양정보 파서]");
 
   const mr = singoMonthRange("202511", "202602");
   check("월 범위는 해를 넘어간다", mr.join(",") === "202511,202512,202601,202602", mr.join(","));
+
+  /* ── 톡 본문 — 돌파 블록과 전체 목록은 다른 말이다 (2026-08-13 사고)
+   * 금액대(그 거래가 속한 구간)로 묶어 보냈더니 14억·11억 거래가 "10억 돌파"로 읽혔다.
+   * 오너: "10억을 돌파한 단지들만 보고싶다니까. 왜 14억 11억 이런게 왜나오냐고".
+   * 아래 테스트가 그 경계를 붙잡는다 — 돌파 블록에는 **선을 실제로 넘은 것만** 들어간다. */
+  const hit = (gu: string, aptNm: string, priceManwon: number, prevPeakManwon: number) => ({
+    aptNm,
+    umdNm: "무슨동",
+    jibun: "1",
+    priceWon: priceManwon * 10000,
+    priceManwon,
+    area: 84.9,
+    floor: 10,
+    buildYear: 2000,
+    date: "2026-07-24",
+    dealingGbn: "중개거래",
+    canceled: false,
+    sggCd: "11110",
+    type: "84" as const,
+    pyeong: "34평",
+    lawdCd: "11110",
+    gu,
+    prevPeakManwon,
+    prevPeakDate: "2026-06-01",
+    gainPct: ((priceManwon - prevPeakManwon) / prevPeakManwon) * 100,
+    milestone: singoMilestone(prevPeakManwon, priceManwon),
+  });
+
+  // 이미 10억을 넘겨 둔 단지(직전 13.5억 → 14억)와, 이번에 처음 10억을 넘은 단지(9.8 → 10.3)
+  const body = singoAlertBody([
+    hit("성남시분당구", "상록마을", 207000, 196000), // 19.6 → 20.7 = 20억 돌파
+    hit("안양시동안구", "평촌트리지아", 140000, 135000), // 13.5 → 14.0 = 돌파 아님
+    hit("구로구", "한마을", 119500, 116000), // 11.6 → 11.95 = 돌파 아님
+    hit("동대문구", "쌍용", 103000, 98000), // 9.8 → 10.3 = 10억 돌파
+  ]);
+  const cut = body.indexOf("─────────────────");
+  const head = body.slice(0, cut).join("\n");
+  const rest = body.slice(cut).join("\n");
+
+  check("돌파 블록이 맨 앞에 온다", body[0] === "🎉 오늘의 돌파 2건", body[0]);
+  check("돌파는 큰 선부터", head.indexOf("20억 돌파") < head.indexOf("10억 돌파"), head);
+  check("돌파 블록에 20.7억(19.6→20.7)이 있다", head.includes("상록마을"), head);
+  check("돌파 블록에 10.3억(9.8→10.3)이 있다", head.includes("쌍용"), head);
+  check("⛔ 14억(13.5→14.0)은 돌파 블록에 없다", !head.includes("평촌트리지아"), head);
+  check("⛔ 11.95억(11.6→11.95)은 돌파 블록에 없다", !head.includes("한마을"), head);
+  check("돌파 줄에 직전 최고가를 적는다", head.includes("20.7억 (직전 19.6억)"), head);
+  check("전체 목록은 뒤에 오고 건수를 밝힌다", rest.includes("📋 신고가 전체 4건"), rest);
+  check("전체 목록에는 14억도 들어간다", rest.includes("평촌트리지아"), rest);
+  check("⛔ 금액대 제목(【10억대】)은 쓰지 않는다", !body.join("\n").includes("억대】"), body.join("\n"));
+
+  // 돌파가 하나도 없는 날은 🎉 블록 자체가 없다 — 빈 제목만 남으면 그것도 오해를 만든다
+  const quiet = singoAlertBody([hit("구로구", "한마을", 119500, 116000)]);
+  check("돌파 0건이면 돌파 블록을 안 만든다", quiet[0] === "📋 신고가 전체 1건 (거래가 큰 순)", quiet[0]);
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);

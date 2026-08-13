@@ -28,6 +28,7 @@ import {
   areaType,
   normAptName,
   manwonToEok,
+  alertBody,
   PEAK_SCHEMA,
   BASELINE_FROM,
   baselineLabel,
@@ -296,30 +297,9 @@ async function main() {
     lines.push(`🔥 오늘의 신고가 ${hits.length}건${mtag} (${today} · ${baselineLabel()} 최고가 기준)`);
     lines.push("");
 
-    // ── 금액대별 묶기 (2026-08-13 오너 "구간별 높은 순서대로 10억단위로 정리해줘")
-    // ⚠️ 구간 제목은 **그 거래가 속한 금액대**다. "10억을 이번에 넘었다"는 뜻이 아니다 —
-    //    선을 실제로 넘은 건에만 🎉 를 붙인다. 이 둘을 섞으면 그게 곧 오보다.
-    const shown = hits.slice(0, topN);
-    const band = (m: number) => Math.floor(m / 100_000) * 10;
-    const bandLabel = (b: number) => (b === 0 ? "10억 미만" : `${b}억대`);
-    const bands = new Map<number, typeof shown>();
-    for (const h of shown) {
-      const b = band(h.priceManwon);
-      if (!bands.has(b)) bands.set(b, []);
-      bands.get(b)!.push(h);
-    }
-    for (const b of [...bands.keys()].sort((a, c) => c - a)) {
-      const list = bands.get(b)!.slice().sort((a, c) => c.priceManwon - a.priceManwon);
-      lines.push(`【${bandLabel(b)}】 ${list.length}건`);
-      for (const h of list) {
-        lines.push(
-          `${h.gu} / ${h.aptNm} / ${h.pyeong} / ${manwonToEok(h.priceManwon)}` +
-            (h.milestone ? ` 🎉 ${h.milestone}억 돌파` : ""),
-        );
-      }
-      lines.push("─────────────────");
-    }
-    if (hits.length > topN) lines.push(`… 외 ${hits.length - topN}건`);
+    // 본문(돌파 먼저 → 신고가 전체)은 parse/singo.ts 의 alertBody 가 만든다.
+    // 셀프테스트가 그 함수를 직접 붙잡고 있어서, 형식이 조용히 어긋나지 않는다.
+    lines.push(...alertBody(hits, topArg));
   }
   // 수집이 반이라도 실패했으면 **0건이든 몇 건이든 그 사실을 먼저 말한다.**
   // 조용한 실패는 "오늘은 신고가가 없었구나"로 읽혀 그대로 오보가 된다.
