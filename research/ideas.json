@@ -2274,6 +2274,102 @@
       "status": "",
       "deadline": "2026-08-12",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000323&pblancNo=2026000323"
+    },
+    {
+      "id": "sig-2026-08-14-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "금융위 \"청년에 비아파트 구입 추가 기회 제공\"",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-14-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-14-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "대출 80% 나온다고? \"아…\" 청년도 ‘아파트에 살고싶다’",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-14-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-14-3",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "레딧, 18일부터 S&P 500 지수 편입…주가 12.63% 급등",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-14-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-14-4",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕증시, 소비 둔화 우려에 숨고르기…S&P500 0.2%↓",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-14-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-14-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕증시, 소비 둔화 우려에 숨고르기…S&P500 0.2%↓(종합)",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-14-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-14-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "15일 만에 코스피 장중 7,000 탈환...외국인 3조 순매수",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-14-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-14-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "미국 30년물 금리 5.2%대 돌파…25년 만에 최고치 기록",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-14-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-14-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "아직 100% 몸 상태 아닌 안세영 \"경기 감각 위해 출전\"",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-14-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
