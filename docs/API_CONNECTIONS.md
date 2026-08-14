@@ -41,7 +41,7 @@
 | └ KOSIS 표 찾기(search) | 〃 | `kosisSearchCli.ts` | `data/kosis-search.md` | 〃 (`search=키워드` 줄) | ✅ 2026-08-12 신설 |
 | **국토부 실거래(매매)** | `MOLIT_API_KEY` | `sources/molit.ts` · `molitCli.ts` | `data/datasets/molit/{LAWD}-{YYYYMM}.json` | `molit-collect.yml` `20 3 5,20 * *` + `data/molit-queue.txt` · `collect-on-request.yml` | ✅ 실사용 |
 | **국토부 전월세 실거래** | `MOLIT_API_KEY` | `molitRentCli.ts` | `data/datasets/molit-rent/{LAWD}-{YYYYMM}.json` | `molit-rent-collect.yml` `40 3 5,20 * *` + `data/molit-rent-queue.txt` | ✅ 실사용 |
-| **청약홈 분양정보** | `DATA_GO_KR_API_KEY` | `sources/applyhome.ts` · `applyhomeCli.ts` | `data/datasets/applyhome-latest.json` · `applyhome/{날짜}.json` | `applyhome-collect.yml` `0 23 * * *` (매일 08:00 KST) | ✅ 실사용 |
+| **청약홈 분양정보** | `DATA_GO_KR_API_KEY` | `sources/applyhome.ts` · `applyhomeCli.ts` | `data/datasets/applyhome-latest.json` · `applyhome/{날짜}.json` | `applyhome-collect.yml` `0 2 * * *` (매일 11:00 KST) | ✅ 실사용 |
 | **한국부동산원 R-ONE (월간)** | `RONE_API_KEY` **또는** `REB_API_KEY` | `sources/rebIndex.ts` · `rebCli.ts` | `data/datasets/reb-rent-index.json` | `reb-collect.yml` `0 2 16 * *` | ✅ 실사용 |
 | **한국부동산원 R-ONE (주간)** | 〃 | `sources/rebWeekly.ts` · `rebWeeklyCli.ts` | `data/datasets/reb-weekly-index.json` | `reb-weekly-collect.yml` `7 1 * * 5` + `data/reb-weekly-queue.txt` | ✅ 실사용 |
 | **금감원 DART** | `DART_API_KEY` | `sources/dartSalary.ts` · `dartCli.ts` | `data/datasets/avg-salary-2025.json` | `dart-salary.yml` (dispatch 전용) | ✅ 실사용(수동) |
