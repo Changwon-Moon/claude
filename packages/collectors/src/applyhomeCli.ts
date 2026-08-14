@@ -63,7 +63,11 @@ async function main() {
      그 줄을 통째로 남긴다. */
   const GREP = arg("grep");
   if (GREP) {
-    const found = all.filter((x) => String(x.name ?? "").includes(GREP));
+    /* 이름만 보면 놓친다 — 청약홈 표기가 홍보명과 다를 수 있다("부천 상동" vs "상동역").
+       그래서 **이름과 주소를 함께** 본다. 진단은 넓게 던져야 답이 나온다. */
+    const found = all.filter(
+      (x) => String(x.name ?? "").includes(GREP) || String(x.address ?? "").includes(GREP),
+    );
     const survived = recent(found, today, within);
     mkdirSync(outDir, { recursive: true });
     writeFileSync(
