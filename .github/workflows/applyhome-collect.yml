@@ -27,7 +27,7 @@ on:
   # 작업 세션은 api.github.com 이 프록시에서 막혀(403) workflow_dispatch 버튼을 못 누른다.
   # 하지만 **푸시는 된다.** molit-collect·kr-market·geocode 와 같은 방식으로,
   # 파일 한 줄을 밀어 넣는 것이 세션이 수집을 시작하는 유일한 손잡이다.
-  # 한 줄 형식(전부 선택):  within=7 min=45
+  # 한 줄 형식(전부 선택):  within=7 min=45 grep=상동
   push:
     paths:
       - "data/applyhome-queue.txt"
@@ -42,6 +42,10 @@ on:
         description: "소재로 올릴 최소 점수(기본 45)"
         required: false
         default: "45"
+      grep:
+        description: "진단 — 이 낱말이 든 공고를 걸러지기 전 원본에서 찾아 통째로 남긴다 (예: 상동)"
+        required: false
+        default: ""
       digest:
         description: "1 이면 새것만이 아니라 지금 살아 있는 소재 전체를 알림으로 보낸다"
         required: false
@@ -78,6 +82,7 @@ jobs:
         run: |
           WITHIN="${{ github.event.inputs.within }}"
           MIN="${{ github.event.inputs.min }}"
+          GREP="${{ github.event.inputs.grep }}"
           # 대기열 푸시로 들어온 실행은 입력칸이 비어 있다 → 파일 마지막 줄에서 읽는다
           # (주석 #·빈 줄 무시. 없는 값은 기본값으로 떨어진다)
           DIGEST="${{ github.event.inputs.digest }}"
@@ -89,6 +94,7 @@ jobs:
               case "$kv" in
                 within=*) WITHIN="${kv#within=}" ;;
                 min=*)    MIN="${kv#min=}" ;;
+                grep=*)   GREP="${kv#grep=}" ;;
                 digest=*) DIGEST="${kv#digest=}" ;;
               esac
             done
@@ -99,6 +105,7 @@ jobs:
           [ "$DIGEST" = "1" ] && echo "digest=--digest" >> "$GITHUB_OUTPUT" || echo "digest=" >> "$GITHUB_OUTPUT"
           echo "within=${WITHIN:-7}" >> "$GITHUB_OUTPUT"
           echo "min=${MIN:-45}" >> "$GITHUB_OUTPUT"
+          echo "grep=$GREP" >> "$GITHUB_OUTPUT"
           echo "today=$(TZ=Asia/Seoul date +%F)" >> "$GITHUB_OUTPUT"
 
       # ⚠️ 키가 없으면 **여기서 멈춘다.** 조용히 건너뛰면 몇 주가 지나도 아무도 모른다
@@ -122,7 +129,8 @@ jobs:
           set -o pipefail
           pnpm --filter @wirit/collectors collect-applyhome -- \
             --today ${{ steps.cfg.outputs.today }} \
-            --within ${{ steps.cfg.outputs.within }} 2>&1 | tee /tmp/collect.log
+            --within ${{ steps.cfg.outputs.within }} \
+            ${{ steps.cfg.outputs.grep && format('--grep "{0}"', steps.cfg.outputs.grep) || '' }} 2>&1 | tee /tmp/collect.log
 
       - name: 소재 보드 등록 + 알림 문구
         id: register
@@ -174,6 +182,8 @@ jobs:
           #    (CARD_CHECKLIST §5 경고).
           git add -f data/applyhome-last.md
           git add data/datasets/applyhome-latest.json data/datasets/applyhome research/ideas.json 2>/dev/null || true
+          # 진단 결과(--grep)도 담는다 — 세션이 이 파일을 읽고 원인을 판정한다
+          [ -e data/datasets/applyhome-probe.json ] && git add -f data/datasets/applyhome-probe.json || true
           if git diff --cached --quiet; then
             echo "바뀐 것 없음 — 커밋 생략"
           else

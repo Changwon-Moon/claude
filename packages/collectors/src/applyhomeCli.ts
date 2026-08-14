@@ -56,6 +56,45 @@ async function main() {
     console.log(`· ${OPERATIONS[kind].label} — 전체 ${list.length}건`);
   }
 
+  /* ── 진단용 그물 (--grep 상동)
+     "왜 이 단지가 알림에 없냐"는 물음에 **추측으로 답하지 않기 위해** 만들었다
+     (2026-08-14 상동역 롯데캐슬). 원천에 아예 없는 것과, 원천엔 있는데 우리가 거른 것은
+     완전히 다른 문제고 고치는 데도 다르다. 걸러지기 **전** 목록에서 이름으로 찾아
+     그 줄을 통째로 남긴다. */
+  const GREP = arg("grep");
+  if (GREP) {
+    const found = all.filter((x) => String(x.name ?? "").includes(GREP));
+    const survived = recent(found, today, within);
+    mkdirSync(outDir, { recursive: true });
+    writeFileSync(
+      join(outDir, "applyhome-probe.json"),
+      JSON.stringify(
+        {
+          _: "진단용. --grep 으로 걸러지기 전 원본에서 이름을 찾은 결과.",
+          today,
+          within,
+          keyword: GREP,
+          totalFetched: all.length,
+          matched: found.length,
+          survivedRecentFilter: survived.length,
+          rows: found,
+        },
+        null,
+        2,
+      ) + "\n",
+    );
+    console.log(
+      `🔎 "${GREP}" — 원천 ${all.length}건 중 ${found.length}건 일치 · ` +
+        `기간 필터 통과 ${survived.length}건 → data/datasets/applyhome-probe.json`,
+    );
+    for (const x of found) {
+      console.log(
+        `   · [${x.kind}] ${x.name} | ${x.areaName} | 공고 ${x.noticeDate} | 접수 ${x.receiptFrom}~${x.receiptTo} | 세대 ${x.supply}`,
+      );
+    }
+    if (!found.length) console.log("   (원천에 없음 — 청약홈 API 가 아직 이 공고를 안 내보내고 있다)");
+  }
+
   /* 블록별로 쪼개진 공고는 합친 뒤에 점수를 매긴다 — 순서가 중요하다.
    합치기 전에 매기면 45가구짜리 다섯 줄이 되고, 합친 뒤에 매기면 150가구 한 줄이 된다. */
   const picked = rank(mergeBlocks(dedupe(recent(all, today, within))), today);
