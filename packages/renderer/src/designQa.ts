@@ -212,6 +212,10 @@ const MEASURE_JS = `(() => {
                 (danji-brief 는 이 판형으로 대체돼 삭제됐다) */
              ".dcv-title .ln,.dcv-fb .w,.dcv-nm .nm,.dcv-nm .loc,.dcv-ph," +
              ".dcv .lab,.dcv-facts .v,.dcv-facts .brk,.dcv-item .a,.dcv-item .p,.dcv-note," +
+             /* .dcv-facts .abv — 규모 우선 판(2026-08-06)의 회색 머리글("59㎡ · 491세대").
+                여기 없어 danji 5장(장위·더샵·써밋·충정로·두산)의 그 글자가 통째로 겹침 검사
+                밖이었다(AS팀 2026-08-14). 일부러 겹치게 되돌려 error 가 실제로 뜨는 것을 확인했다. */
+             ".dcv-facts .abv," +
              /* sinbundang-loop — 노선 접이형 정보카드(2026-07-31). */
              ".slp-stn,.slp-danji,.slp-meta,.slp-priceB,.slp-name,.slp-gu,.slp-top," +
              /* news-figure — 인물/뉴스 이슈 카드(2026-08-05). 헤드라인(.nf-title)이 좌열을
@@ -296,8 +300,12 @@ const MEASURE_JS = `(() => {
   var footerGap=null;
   if(footer){
     /* .rg-note 를 빠뜨려 record-grid 에서는 이 검사가 아무것도 안 재고 있었다(AS팀 지적 2026-07-31).
-       "최하단 문구 여백"은 오너가 두 번 말한 항목인데 새 템플릿에 적용되지 않은 상태였다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.db-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note,.gb-note,.sr-note,.sr-cycle");
+       "최하단 문구 여백"은 오너가 두 번 말한 항목인데 새 템플릿에 적용되지 않은 상태였다.
+       ⚠️ 2026-08-14 AS팀: 이 목록에 **danji-cover 요소가 하나도 없어**(.db-note 는 삭제된
+       danji-brief 것이다) 청약 판형 9장에서 이 검사가 **한 번도 돈 적이 없었다.** .dcv-note 가
+       특이사항 줄이다 — 이번에 그 줄이 두 줄로 늘면서 정확히 필요해진 검사다.
+       ⚠️ 이 블록은 브라우저로 넘어가는 문자열 안이다 — 주석에 백틱을 쓰면 스크립트가 깨진다. */
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.dcv-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note,.gb-note,.sr-note,.sr-cycle");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();

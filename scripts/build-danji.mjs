@@ -105,11 +105,21 @@ function heroOf(d) {
       };
 }
 
-/** 아래 한 줄. 데이터가 이모지를 데리고 오면(`<i class="em">`) 그대로 쓴다 —
- *  💡 가 늘 맞는 건 아니다. 규제 안내에는 ⚠️ 가 맞다(오너 지시 2026-08-08). */
-function noticeOf(d, flags) {
-  if (!d.oneLiner) return flags.join(" · ");
-  return d.oneLiner.includes('<i class="em">') ? d.oneLiner : `<i class="em">💡</i>${d.oneLiner}`;
+/**
+ * 아래 한 줄. 데이터가 이모지를 데리고 오면(`<i class="em">`) 그대로 쓴다 —
+ * 💡 가 늘 맞는 건 아니다. 규제 안내에는 ⚠️ 가 맞다(오너 지시 2026-08-08).
+ *
+ * `carried` 는 **카드가 표에서 뺀 정보를 받아 주는 줄**이다(희소 면적대 등). 오너가 쓴
+ * 한줄평(`oneLiner`)이 있어도 사라지면 안 된다 — 사라지면 "지운 정보가 어디로 갔는지 정한다"가
+ * 깨지고, 그 3세대 47.5~60.4억이 카드 어디에도 안 남는다.
+ * ⚠️ 처음엔 `flags` 안에서 문자열("펜트하우스")로 되찾았는데, 생산 쪽 문구만 바꿔도 줄이
+ * 조용히 증발했다(AS팀 2026-08-14 실험). 그래서 **인자를 갈라** 계약을 코드로 만든다.
+ */
+function noticeOf(d, flags, carried = []) {
+  const all = [...flags, ...carried];
+  if (!d.oneLiner) return all.join(" · ");
+  const head = d.oneLiner.includes('<i class="em">') ? d.oneLiner : `<i class="em">💡</i>${d.oneLiner}`;
+  return carried.length ? `${head}<br>${carried.join(" · ")}` : head;
 }
 
 const byId = (id) => {
@@ -185,6 +195,40 @@ function applyhome(d) {
   if (d.total != null && d.total !== hit.supply)
     throw new Error(`총 세대수 불일치 — 데이터셋 ${d.total} vs 청약홈 ${hit.supply} (${d.id})`);
   return hit;
+}
+
+/**
+ * 1차 출처 한 벌 — 세대수·일정·입주예정·규제.
+ *
+ * 기본은 청약홈 수집분이다(위 `applyhome`). 그런데 **공고 당일에는 청약홈 API 에 아직
+ * 안 실린다** — 상동역 롯데캐슬 시그니처(공고일 2026-08-14)가 그랬다. 그날 API 만 보고
+ * "일정 미고지"라고 적으면, 손에 **입주자모집공고문 원본**을 들고서 모른다고 쓰는 셈이다.
+ *
+ * 1차 출처는 **입주자모집공고문 그 자체**이고 청약홈 API 는 그 출처의 한 화면일 뿐이다
+ * (기준 문서 §5 "API 가 안 주는 값도 같은 1차 출처의 다른 화면에는 있다").
+ * 그래서 공고문에서 읽은 일정이 데이터셋에 있으면 그것을 쓴다 — 단 조건이 둘이다:
+ *
+ *   ① `scheduleSource` 로 **어디서 읽었는지 밝힌 것만** 받는다. 출처 없는 날짜는 안 받는다.
+ *   ② `applyhomeNo` 가 있으면 이 길로 오지 않는다 — 청약홈이 이기고, 어긋나면 위에서 던진다.
+ *      (공고가 API 에 실리는 순간 자동으로 그쪽으로 넘어가고, 값이 다르면 그때 잡힌다)
+ */
+function noticeFacts(d) {
+  const ah = applyhome(d);
+  if (ah) return ah;
+  if (!d.scheduleSource) return null;
+  const s = d.schedule || {};
+  return {
+    _fromNotice: true,
+    supply: d.total,
+    specialFrom: s.special ?? null,
+    rank1From: s.first ?? null,
+    announceDate: s.announce ?? null,
+    receiptFrom: s.first ?? null,
+    receiptTo: s.second ?? s.first ?? null,
+    moveInYm: d.moveIn ?? null,
+    priceCap: d.price?.capApplied ?? false,
+    speculative: d.speculative ?? false,
+  };
 }
 
 /**
@@ -271,6 +315,55 @@ function scalePlan(d, total) {
   };
 }
 
+/**
+ * 표에 들어갈 면적대와, 표에서 빼 아래 한 줄로 보낼 **희소 면적대**를 가른다.
+ *
+ * 상동역 롯데캐슬 시그니처(2026-08-14)에서 실측: 면적대가 6개면 밴드가 3열 두 줄이 되고
+ * 종이 단이 길어져 **푸터가 카드 밖으로 89px 밀려 나간다**(검수가 잡았다).
+ * 그런데 그 6개 중 셋은 펜트하우스로 **각 1세대** — 1,859세대 중 3세대(0.16%)가
+ * 밴드의 절반을 차지하는 셈이었다. 그건 자리 문제이기 전에 **카드가 파는 것을 잘못 말하는 것**이다.
+ *
+ * 그래서 표는 실제로 파는 면적대만 말하고, 뺀 것은 아래 한 줄이 받는다
+ * (기준 문서: "지운 정보가 어디로 갔는지 정한다"). **어느 칸을 뺄지는 손이 아니라 데이터가 정한다** —
+ * 총 공급의 0.5% 미만인 면적대만, 그것도 표가 한 줄에 안 들어갈 때(5개 이상)만 뺀다.
+ * 면적대가 4개 이하로 이미 한 줄에 들어가면 아무것도 빼지 않는다.
+ */
+/**
+ * 밴드에 적을 **타입 꼬리표**를 고른다 — 라벨과 금액이 같은 타입을 가리키게.
+ *
+ * 밴드가 보여 주는 금액은 그 면적대의 **최고가**다. 그런데 라벨을 `types[0]` 로 찍으면
+ * 최고가를 낸 타입이 따로 있을 때 카드가 거짓말을 한다(롯데캐슬 84㎡: 최고 16.38억은 84E 인데
+ * 라벨은 84A — 84A 의 최고는 16.30억이다). 그래서 타입별 값(`price.byTypeAll`)이 있으면
+ * **최고가를 낸 타입**을 쓰고, 없으면 종전대로 첫 타입을 쓴다.
+ * 같은 값을 낸 타입이 여럿이면 표에 먼저 나온 것을 쓴다(순서는 공고문 순서다).
+ */
+function repTypeOf(d, area) {
+  const all = (d.price?.byTypeAll || []).filter((t) => t.m2 === area.m2);
+  if (all.length) {
+    const best = all.reduce((a, b) => (b.won > a.won ? b : a));
+    const hit = d.price?.byArea?.find((x) => x.m2 === area.m2);
+    if (hit && hit.won !== best.won)
+      throw new Error(
+        `${d.id}: ${area.m2}㎡ 의 byArea(${hit.won}) 와 byTypeAll 최고가(${best.won})가 다르다 — 어느 쪽이 틀렸는지 확인할 것`,
+      );
+    /* `replace` 는 문자열 **첫 일치**를 지운다 — 청약홈 정식 표기(`084.7402A`)를 넣는 날
+       m2=84 가 "084." 안의 84 를 먹어 라벨이 `840.7402A` 로 나간다(AS팀 2026-08-14).
+       앞머리에 붙어 있을 때만 벗긴다. */
+    const t = best.type;
+    return (t.startsWith(String(area.m2)) ? t.slice(String(area.m2).length) : t) || "";
+  }
+  return (area.types || []).find((x) => x && x !== "-") || "";
+}
+
+const RARE_SHARE = 0.005;
+function splitRareAreas(d, total) {
+  const areas = d.areas || [];
+  if (areas.length <= 4 || !total) return { keep: areas, drop: [] };
+  const rare = areas.filter((a) => a.units != null && a.units / total < RARE_SHARE);
+  if (!rare.length || areas.length - rare.length < 1) return { keep: areas, drop: [] };
+  return { keep: areas.filter((a) => !rare.includes(a)), drop: rare };
+}
+
 function priceTable(d, total) {
   if (!d.areas?.length) throw new Error(NEED_AREAS(d.id));
   /* ── 무순위(줍줍) ──
@@ -290,27 +383,47 @@ function priceTable(d, total) {
        두 줄로 접히면 종이 단이 길어져 푸터를 민다(검수가 잡았다) — 열 수는 값의 길이가 정한다. */
     return { head: ["전용면적별 잔여 세대"], cols: rows.length <= 5 ? rows.length : 3, rows };
   }
-  const rows = d.areas.map((a) => {
-    const t = (a.types || []).find((x) => x && x !== "-") || "";
+  /* 면적대별 세대수 합 = 총 공급. 무순위에는 있던 검산이 분양 예정에는 없었다(AS팀 2026-08-14) —
+     `applyhomeNo` 가 없는 카드는 `총 세대수 불일치` 가드까지 죽어 검산이 하나도 안 남는다.
+     게다가 `total` 은 희소 면적대 판정의 **분모**라, 틀린 total 은 어느 칸을 뺄지까지 조용히 바꾼다. */
+  if (d.areas.every((a) => a.units != null)) {
+    const sum = d.areas.reduce((s, a) => s + a.units, 0);
+    if (sum !== total)
+      throw new Error(`${d.id}: 면적대별 세대수 합 ${sum} ≠ 총 공급 ${total} — 어느 쪽이 틀렸는지 확인할 것`);
+  }
+  const { keep, drop } = splitRareAreas(d, total);
+  const rows = keep.map((a) => {
     const hit = d.price?.byArea?.find((x) => x.m2 === a.m2);
     return {
-      area: `${a.m2}${t}`,
+      /* ⚠️ 라벨과 금액은 **같은 타입**의 것이어야 한다(2026-08-14 실측 사고).
+         롯데캐슬 84㎡ 는 A~F 여섯 타입이고 최고가는 84E(16.38억)인데, 라벨은 첫 타입 84A 를
+         찍고 있었다 — 카드가 "84A 가 16.4억"이라고 **없는 말**을 하는 셈이다(84A 최고는 16.3억).
+         타입별 값이 있으면 **최고가를 낸 그 타입**을 라벨로 쓴다. 손으로 고르지 않는다. */
+      area: `${a.m2}${repTypeOf(d, a)}`,
       price: hit ? eok1(hit.won) : "미고지",
       /* 주력 면적대 한 줄만 코발트로. 강조가 둘이면 강조가 아니다. */
       main: d.mainArea?.m2 === a.m2,
     };
   });
-  if (rows.length > 6)
-    throw new Error(`${d.id}: 면적대가 ${rows.length}개다 — 판이 카드를 넘긴다. 데이터에서 묶을 것`);
+  /* ⚠️ 방어선이 `> 6` 하나였는데, **5칸이면 이미 푸터가 47px 밀린다**(AS팀 2026-08-14 실측:
+     5칸 → error 6건). 6칸은 89px. 즉 6까지 통과시키던 옛 문턱은 렌더에서 깨지는 값을 통과시켰다.
+     밴드가 한 줄에 담는 한계는 **4칸**이다 — 그 위는 만들지 않는다. */
+  if (rows.length > 4)
+    throw new Error(
+      `${d.id}: 밴드에 넣을 면적대가 ${rows.length}개다 — 5칸부터 종이 단이 길어져 푸터를 민다(실측).` +
+        ` 데이터에서 묶거나, 희소 면적대(총 공급의 ${RARE_SHARE * 100}% 미만)로 갈라 아래 한 줄로 보낼 것`,
+    );
   /* 머리글은 한 덩어리로 쓴다(오너 지시 2026-08-03): "타입별 분양가(최고가 기준)".
      이전엔 왼쪽 라벨과 오른쪽 단서를 갈라 놨는데, 둘은 한 문장이라 붙여 읽어야 뜻이 산다. */
   const basis = d.price?.headline?.note || (d.price?.byArea ? "최고가 기준" : "");
   return {
     head: [basis ? `타입별 분양가(${basis})` : "타입별 분양가"],
-    /* 열 수는 개수가 정한다 — 4 이하면 한 줄로 펴고, 5~6이면 3열 두 줄.
+    /* 열 수는 개수가 정한다. 위에서 4칸을 넘기지 않으므로 늘 한 줄이다 —
        손으로 "2열"이라 박으면 평형이 셋인 단지에서 한 칸이 빈다. */
-    cols: rows.length <= 4 ? rows.length : 3,
+    cols: rows.length,
     rows,
+    /* 표에서 뺀 희소 면적대. presale 이 받아 아래 한 줄로 넘긴다 — 정보는 사라지지 않는다. */
+    drop,
   };
 }
 
@@ -378,7 +491,7 @@ const addressOf = (d) => d.location || "";
  * ──────────────────────────────────────────────────────────────── */
 function presale(d) {
   if (d.kind !== "presale") throw new Error(`${d.id} 는 presale 이 아니다`);
-  const ah = applyhome(d);
+  const ah = noticeFacts(d);
   const total = ah ? ah.supply : d.total;
   /* 규모 우선 판은 kind 가 아니라 **데이터**가 켠다 — price.byType 이 있으면 이 판이다.
      분양 예정 카드도 2026-08-08 오너 지시로 이 판을 쓴다(장위 카드와 같은 배치). */
@@ -405,6 +518,28 @@ function presale(d) {
   if (ah?.speculative) flags.push(`<i class="em">⚠️</i>투기과열지구`);
   /* 오피스텔은 이제 위 스트립이 말한다 — 한 카드에서 같은 말을 두 번 하지 않는다 */
 
+  /* 밴드를 한 번만 만든다 — 표에서 빠진 희소 면적대(펜트하우스 등)를 아래 한 줄이 받아야 하므로
+     결과를 들고 있어야 한다. 두 번 부르면 계산이 두 벌이 되고 언젠가 둘이 어긋난다. */
+  const band = plan.on ? plan.grid : priceTable(d, total);
+  const rare = band.drop || [];
+  /* 표에서 뺀 정보를 받아 주는 줄. flags 와 **섞지 않는다** — 섞으면 되찾을 때 문자열에 기대게 되고,
+     그러면 문구 한 낱말만 바꿔도 줄이 조용히 사라진다(AS팀 2026-08-14). */
+  const carried = [];
+  if (rare.length) {
+    /* 문구는 데이터가 만든다 — 면적·세대수·금액을 손으로 적지 않는다. */
+    const wons = rare
+      .map((a) => d.price?.byArea?.find((x) => x.m2 === a.m2)?.won)
+      .filter((w) => w != null);
+    const units = rare.reduce((s, a) => s + (a.units || 0), 0);
+    /* 면적은 **그대로 나열**한다. `153~192㎡` 로 접으면 그 사이에 다른 면적이 더 있는 것처럼
+       읽힌다(기획팀 2026-08-14) — 실제로는 셋뿐이다. */
+    const sizes = rare.map((a) => a.m2).join("·");
+    const range = wons.length
+      ? ` ${eok1(Math.min(...wons))}${wons.length > 1 ? `~${eok1(Math.max(...wons))}` : ""}`
+      : "";
+    carried.push(`<i class="em">💎</i>펜트하우스 ${n(units)}세대(${sizes}㎡)${range} 별도`);
+  }
+
   return {
     template: "danji-cover@1",
     date,
@@ -418,7 +553,9 @@ function presale(d) {
     address: addressOf(d),
     ...(plan.on ? { scale: true, specFour: plan.four } : {}),
     spec: plan.on ? plan.cells : specCells(d, total),
-    priceTable: plan.on ? plan.grid : priceTable(d, total),
+    /* `drop` 은 아래 한 줄이 이미 받아 갔다 — 카드 계약(priceTable)에 남기지 않는다.
+       템플릿이 안 쓰는 필드를 실어 보내면 판형 회귀 기준(sample.json)과 어긋날 소지가 있다. */
+    priceTable: (({ drop: _drop, ...rest }) => rest)(band),
     /* 일정 4칸(오너 지시 2026-08-03) — 특공·1순위·당첨자 발표·입주 예정.
        당첨자 발표일은 청약홈 PRZWNER_PRESNATN_DE 에서 수집기가 이미 읽어 둔다(announceDate). */
     schedule: [
@@ -428,7 +565,7 @@ function presale(d) {
       { label: "입주 예정", date: ymKo(moveInYm), tbd: !moveInYm },
     ],
     /* 한줄평이 있으면 그게 아래 한 줄이다 — 특이사항 나열보다 한 문장이 오래 남는다. */
-    notice: noticeOf(d, flags),
+    notice: noticeOf(d, flags, carried),
     source: {
       /* 푸터 출처 줄 = **1차 출처만**. 오너 지시(2026-08-03)로 보도(파이낸셜뉴스)를 뺐다.
          ⚠️ 전제: 분양가를 입주자모집공고문으로 확정한 뒤에야 이 줄이 참이 된다.
@@ -613,6 +750,10 @@ if (only && !targets.length) throw new Error(`단지 없음: ${only}`);
 
 let made = 0;
 const skipped = [];
+/* 발행 게이트는 카드마다 다르다 — 공고문으로 대조한 카드에까지 "보도값이다"라고 찍으면
+   그 경고가 거짓이 되고, 거짓 경고는 곧 안 읽히는 경고가 된다(CARD_CHECKLIST: 맞는 것을
+   매번 지적하면 지적을 안 읽게 된다). 그래서 **아직 대조 안 된 카드만** 이름을 부른다. */
+const unverified = [];
 for (const d of targets) {
   let card;
   try {
@@ -627,11 +768,23 @@ for (const d of targets) {
   const slug = `danji-${d.slug || d.id.split("-")[0]}`;
   writeFileSync(join(outDir, `${slug}.json`), JSON.stringify(card, null, 2) + "\n", "utf8");
   made++;
+  /* ⚠️ `byArea` 만 보면 **분양가를 `byType` 에만 담은 카드가 조건에서 통째로 빠진다** —
+     장위·드파인·송파(모두 `verified:false`, sets.json 은 '발행 보류')에 초록불이 켜졌다
+     (AS팀 2026-08-14). 과잉 경고를 고치려다 **거짓 안심**을 만든 것이라 더 나쁘다. */
+  const hasPrice = d.price?.byArea?.length || d.price?.byType?.length || d.price?.byTypeAll?.length;
+  if (hasPrice && !d.price?.verified) unverified.push(d.id);
   console.log(`${slug} — ${card.danji.name}`);
   console.log(`   ${card.topcap} · ${card.titleLines.join(" ").replace(/<[^>]+>/g, "")}`);
-  console.log(`   ${card.spec.map((c) => `${c.label} ${c.value}${c.unit || ""}`).join(" · ")}`);
+  /* 규모 우선 판에서는 아래의 '타입' 줄이 같은 것을 이미 찍는다 — 두 번 찍지 않는다. */
+  if (!card.scale)
+    console.log(`   ${card.spec.map((c) => `${c.label} ${c.value}${c.unit || ""}`).join(" · ")}`);
   if (card.address) console.log(`   ${card.address}`);
-  console.log(`   평형 ${card.priceTable.rows.map((r) => `${r.area} ${r.price}`).join(" · ")}`);
+  /* 규모 우선 판에서는 위 단이 '단지 규모'(area/price)고 타입·분양가는 spec 쪽으로 간다.
+     한쪽 모양만 알고 찍으면 "undefined 8.8억" 이 나온다 — 두 모양을 다 읽는다. */
+  const band = card.priceTable.rows.map((r) => `${r.area} ${r.price}`).join(" · ");
+  const types = card.scale ? card.spec.map((c) => `${c.above} ${c.value}`).join(" · ") : null;
+  console.log(`   ${card.scale ? "규모" : "평형"} ${band}`);
+  if (types) console.log(`   타입 ${types}`);
   console.log(`   일정 ${card.schedule.map((s) => `${s.label} ${s.date}`).join(" · ")}`);
 }
 
@@ -640,4 +793,8 @@ if (skipped.length) {
   for (const [id, msg] of skipped) console.log(`   · ${id}: ${msg}`);
 }
 console.log(`\n✅ ${made}장 생성 → ${PUBLISH ? `data/content/${date}/` : "data/out/_spike/"}`);
-console.log("⚠ 분양가는 보도값이다 — 입주자모집공고문 대조 전까지 발행 금지.");
+if (unverified.length)
+  console.log(
+    `⚠ 분양가가 아직 보도값인 카드 ${unverified.length}곳 — 입주자모집공고문 대조 전까지 발행 금지: ${unverified.join(", ")}`,
+  );
+else console.log("✅ 이번에 만든 카드의 분양가는 모두 입주자모집공고문으로 대조된 값입니다(price.verified).");

@@ -448,6 +448,30 @@
       "note": "오늘의 신고가 판형 1호(2026-08-13). 세대수는 싣지 않는다 — 공동주택 대장에 이 지번 등재가 없어 확인되지 않았다. 정기물이라 픽셀 기준값 미등록",
       "state": "시안",
       "pixelPolicy": "정기물 — singo-log·singo-history 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀)"
+    },
+    {
+      "label": "danji-sangdong",
+      "title": "🏙 옛 홈플러스 자리 아파트 분양가 16억대? (상동역 롯데캐슬 시그니처)",
+      "cards": [
+        "danji-sangdong"
+      ],
+      "caption": "danji-sangdong",
+      "note": "청약·분양 표준 판형 danji-cover@1. 분양가·세대수·전용면적 구성은 입주자모집공고문 PDF 를 scripts/extract-danji-notice.py 가 직접 읽었고, 공급금액 표 104행이 공급대상 표 세대수로 정확히 나눠 먹혀 합 1,859세대가 맞았다(남는 행 0). 84㎡ 1,370세대(74%)는 헤럴드경제 2026-07-27 보도와도 일치. 밴드 라벨은 최고가를 낸 타입(84E·113B)이다. 펜트하우스 3형(153P·187P·192P, 각 1세대)은 총 공급의 0.16% 라 밴드에서 빼고 아래 한 줄이 받는다.",
+      "state": "오너 확정 대기 — 3팀 선검수 통과",
+      "publishGate": "⚠️ 공고일 당일이라 청약홈 API 수집분에 이 공고(2026000354)가 아직 없다. 일정·세대수는 입주자모집공고문 PDF 단독 근거이고, 청약홈 교차검증 가드는 이 카드에 걸리지 않았다. 청약홈에 실리면 데이터셋에 applyhomeNo 를 붙여 청약홈이 이기게 할 것(다르면 빌더가 던진다).",
+      "pixelPolicy": "정기물 — pixel-baselines 에 넣지 않는다. 판형 회귀는 templates/danji-cover/sample.json 으로 잰다"
+    },
+    {
+      "label": "danji-doosanbucheon",
+      "title": "🏗 부천 소사 재개발 아파트 분양가 8억대? (두산위브더제니스 부천)",
+      "cards": [
+        "danji-doosanbucheon"
+      ],
+      "caption": "danji-doosanbucheon",
+      "note": "청약·분양 표준 판형 danji-cover@1 · 규모 우선 판(price.byType). 분양가·전용면적 구성은 입주자모집공고문 PDF 를 scripts/extract-danji-notice.py 가 직접 읽었고, 공급금액 표 38행이 공급대상 표 세대수로 정확히 나눠 먹혀 합 1,158세대 = 청약홈 API supply 와도 일치. 제목의 '8억대'는 주력 면적대 59㎡(491세대, 42%)의 최고가 8.75억이다. 카드에 '최고가 기준'이라는 말이 없는 판이라 캡션 셋째 줄이 그 말을 받는다.",
+      "state": "오너 확정 대기 — 3팀 선검수 통과",
+      "publishGate": "없음 — 청약홈 API(2026000382) 교차검증 통과, 분양가 공고문 대조 완료",
+      "pixelPolicy": "정기물 — pixel-baselines 에 넣지 않는다. 판형 회귀는 templates/danji-cover/sample.json 으로 잰다"
     }
   ]
 }

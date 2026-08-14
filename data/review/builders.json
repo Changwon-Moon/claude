@@ -303,6 +303,26 @@
         "--kapt",
         "A46378521"
       ]
+    },
+    {
+      "label": "danji-sangdong",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-08-14",
+        "--only",
+        "sangdong-lotte-castle",
+        "--publish"
+      ]
+    },
+    {
+      "label": "danji-doosanbucheon",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-08-14",
+        "--only",
+        "doosan-zenith-bucheon",
+        "--publish"
+      ]
     }
   ]
 }
