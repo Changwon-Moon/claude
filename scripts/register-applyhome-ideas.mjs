@@ -32,7 +32,14 @@ const arg = (k, d) => {
 
 const TODAY = arg("today", new Date().toISOString().slice(0, 10));
 const MIN = Number(arg("min", 45));
-const TOP = Number(arg("top", 5));
+/* 알림에 이름을 적을 건수. **0(기본) = 전부**.
+   ⚠️ 예전엔 5로 잘라 "외 N건은 관제탑 소재 탭에서" 를 붙였다. 오너가 톡에서 바로 훑고
+      싶어 하는데(2026-08-14 "잘리지 않고 전체가 오게") 링크를 눌러야 나머지가 보였다.
+      길면 notify-telegram 이 줄 단위로 나눠 보내므로 자를 이유가 없다.
+      신고가 알림도 같은 이유로 2026-08-13 에 전부 나열로 바꿨다. */
+const TOP = Number(arg("top", 0));
+/** 잘라야 할 때만 자른다 — 0 이면 통째로 준다 */
+const capped = (arr) => (TOP > 0 ? arr.slice(0, TOP) : arr);
 /* 오너가 직접 물었을 때만 켜는 모드 — 새것만이 아니라 지금 살아 있는 것 전체를 보낸다 */
 const DIGEST = process.argv.includes("--digest");
 
@@ -156,9 +163,9 @@ if (DIGEST) {
     const jup = live.filter((x) => x.kind === "remndr");
     const npd = live.filter((x) => x.kind !== "remndr");
     const parts = [head, ""];
-    if (jup.length) parts.push(`— 무순위·줍줍 ${jup.length}건 —`, ...jup.slice(0, TOP).map(line));
-    if (npd.length) parts.push("", `— 신규 분양 ${npd.length}건 —`, ...npd.slice(0, TOP).map(line));
-    const cut = Math.max(0, jup.length - TOP) + Math.max(0, npd.length - TOP);
+    if (jup.length) parts.push(`— 무순위·줍줍 ${jup.length}건 —`, ...capped(jup).map(line));
+    if (npd.length) parts.push("", `— 신규 분양 ${npd.length}건 —`, ...capped(npd).map(line));
+    const cut = TOP > 0 ? Math.max(0, jup.length - TOP) + Math.max(0, npd.length - TOP) : 0;
     if (cut) parts.push("", `외 ${cut}건은 관제탑 소재 탭에서`);
     msg = parts.join("\n");
   } else {
@@ -166,12 +173,12 @@ if (DIGEST) {
     msg = `🏠 오늘의 청약·분양 소재 (${TODAY})\n\n접수가 열려 있는 ${MIN}점 이상 공고가 없습니다.`;
   }
 } else if (fresh.length) {
-  const more = fresh.length > TOP ? `\n\n외 ${fresh.length - TOP}건` : "";
-  msg = `🏠 청약홈 새 공고 ${fresh.length}건 (${TODAY})\n\n${fresh.slice(0, TOP).map(line).join("\n")}${more}`;
+  const more = TOP > 0 && fresh.length > TOP ? `\n\n외 ${fresh.length - TOP}건` : "";
+  msg = `🏠 청약홈 새 공고 ${fresh.length}건 (${TODAY})\n\n${capped(fresh).map(line).join("\n")}${more}`;
 }
 writeFileSync(alertPath, msg, "utf8");
 
 console.log(`청약홈 소재 등록 — 새로 ${fresh.length}건 · 갱신 ${updated}건 · 지난 것 정리 ${pruned}건 · 보드 총 ${board.ideas.length}건`);
-for (const x of fresh.slice(0, TOP)) console.log(`   +${x.score}점 ${x.name} (${x.areaName})`);
+for (const x of fresh.slice(0, 10)) console.log(`   +${x.score}점 ${x.name} (${x.areaName})`);
 if (DIGEST) console.log("   📨 요약 알림(digest) 문구를 작성했습니다 — 새것 여부와 무관하게 보냅니다.");
 else if (!fresh.length) console.log("   (문턱 넘은 새 공고 없음 — 알림 보내지 않음)");

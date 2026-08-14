@@ -2261,19 +2261,6 @@
       "status": "",
       "deadline": "2026-08-10",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910209&pblancNo=2026910209"
-    },
-    {
-      "id": "ah-apt-2026000323",
-      "cat": "todo",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[신규분양] 세종 우미 린 센터파크(행정중심복합도시 5-2생활권 S1블록, 글미마을 9단지)",
-      "why": "세종 · 676세대 · 접수 ~2026-08-12 · 40점(광역시·676가구·분양가상한제)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-08-12",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000323&pblancNo=2026000323"
     }
   ]
 }
