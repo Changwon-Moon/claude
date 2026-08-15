@@ -2383,6 +2383,102 @@
       "status": "",
       "deadline": "2026-08-26",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000342&pblancNo=2026000342"
+    },
+    {
+      "id": "sig-2026-08-15-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "'1600만원 성금' 관리실 직원 살린 '용산 50억 아파트' 근황",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-15-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-15-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "“생애최초 혜택 유지된다고?”…청년 비아파트 지원 대책에 ‘눈길’",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-15-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-15-3",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "시세 21억 아파트 10억원에…'송파 롯데캐슬' 줍줍 18일 등판",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-15-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-15-4",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "8년동안 생활비 댄 아내…\"남편 명의 아파트 5억→10억 됐는데, 재산분할 안돼요?\" [이런 法]",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-15-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-15-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "Nvidia의 5,000억 달러 투자 동원이 주가에 긍정적인 이유",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-15-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-15-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "코스피 반등 못 믿는 개미…美 ETF로 피하더니 이번엔 ‘하락’ 베팅 - 조선비즈",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-15-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-15-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "보조금에서 증시로…中, 기술기업 자금줄 바꾼다[차이나는 중국] - 머니투데이",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-15-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-15-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "외국인, 코스피 80조 팔았는데…지분율 늘어난 ＇마법＇ [B급기자의 B급리포트]",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-15-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
