@@ -526,18 +526,18 @@ function presale(d) {
      그러면 문구 한 낱말만 바꿔도 줄이 조용히 사라진다(AS팀 2026-08-14). */
   const carried = [];
   if (rare.length) {
-    /* 문구는 데이터가 만든다 — 면적·세대수·금액을 손으로 적지 않는다. */
-    const wons = rare
-      .map((a) => d.price?.byArea?.find((x) => x.m2 === a.m2)?.won)
-      .filter((w) => w != null);
-    const units = rare.reduce((s, a) => s + (a.units || 0), 0);
-    /* 면적은 **그대로 나열**한다. `153~192㎡` 로 접으면 그 사이에 다른 면적이 더 있는 것처럼
-       읽힌다(기획팀 2026-08-14) — 실제로는 셋뿐이다. */
-    const sizes = rare.map((a) => a.m2).join("·");
-    const range = wons.length
-      ? ` ${eok1(Math.min(...wons))}${wons.length > 1 ? `~${eok1(Math.max(...wons))}` : ""}`
-      : "";
-    carried.push(`<i class="em">💎</i>펜트하우스 ${n(units)}세대(${sizes}㎡)${range} 별도`);
+    /* 문구는 데이터가 만든다 — 타입·금액을 손으로 적지 않는다.
+       표기는 **`타입(가격), 타입(가격)`** (오너 지시 2026-08-14). 범위(`47.5억~60.4억`)로 접으면
+       어느 타입이 얼마인지 사라지고, 면적만 나열하면 그 사이에 다른 면적이 더 있는 것처럼 읽힌다.
+       세 형뿐이라 하나씩 다 적는 것이 가장 정확하고 가장 짧다. */
+    const parts = rare.map((a) => {
+      const label = `${a.m2}${repTypeOf(d, a)}`;
+      const won =
+        (d.price?.byTypeAll || []).filter((t) => t.m2 === a.m2).reduce((m, t) => Math.max(m, t.won), 0) ||
+        d.price?.byArea?.find((x) => x.m2 === a.m2)?.won;
+      return won ? `${label}(${eok1(won)})` : label;
+    });
+    carried.push(`<i class="em">💎</i>펜트하우스 ${parts.join(", ")}`);
   }
 
   return {
