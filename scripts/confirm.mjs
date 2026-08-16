@@ -148,14 +148,21 @@ for (const [name, cmd, args] of [
      `build-foreign-rank`·`build-jeongbi-map` 등 몇몇 빌더가 캡션을 **통째로 다시 쓰는데**,
      그때 고정 서명이 딸려 나가지 않는다. 그래서 재생성 전에 통과한 검사가 재생성 직후
      깨지고, **다음 확정 시도가 매번 같은 자리에서 막혔다**(2026-08-16 실제로 두 번 막혔다).
-     → 재생성을 먼저 하고, 그 뒤에 **붙이고(멱등)**, 그 다음에 **붙었는지 검사한다.** */
+     → 재생성을 먼저 하고, 그 뒤에 **붙이고(멱등)**, 그 다음에 **붙었는지 검사한다.**
+
+     ⚠️ 2026-08-16d 에 한 겹 더 알았다 — **`doctor` 도 카드를 다시 만든다.**
+     진단이 말로 확인하지 않고 실제로 찍어 보기 때문이다. 그래서 서명을 재생성 **직후**에
+     붙여도, 뒤에 오는 doctor 가 도로 날린다. 확정을 돌릴 때마다 `tohuh-rent-map`·
+     `wolse-flip` 두 캡션이 서명을 잃은 채 남아 있었다(실측).
+     → **카드를 만드는 것들을 먼저 다 돌리고, 서명은 맨 마지막에 붙인 뒤 검사한다.**
+        "재생성 뒤"라는 규칙은 그대로다. 다만 재생성하는 것이 하나가 아니었을 뿐이다. */
   ["전 카드 재생성·검수", "node", ["scripts/rebuild-cards.mjs"]],
-  ["캡션 고정 서명 반영", "node", ["scripts/apply-signature.mjs"]],
-  ["캡션 고정 서명 확인", "node", ["scripts/apply-signature.mjs", "--check"]],
   ["관제탑 화면 생성", "node", ["scripts/build-tower-site.mjs"]],
   ["관제탑 스모크", "node", ["scripts/smoke-tower.mjs"]],
   ["머리 규격 전수", "pnpm", ["-s", "--filter", "@wirit/renderer", "audit-head"]],
   ["픽셀 회귀·자가진단", "node", ["scripts/doctor.mjs"]],
+  ["캡션 고정 서명 반영 (반드시 맨 뒤)", "node", ["scripts/apply-signature.mjs"]],
+  ["캡션 고정 서명 확인", "node", ["scripts/apply-signature.mjs", "--check"]],
 ]) {
   const r = sh(cmd, args, { quiet: true });
   const tail = (r.stdout || "").trim().split("\n").slice(-3).join("\n");
