@@ -93,8 +93,17 @@ export function chosenOps(): { list: string; basis: string; dtl: string } {
  * 전부 그 한 줄로 말하므로 `err.cause` 를 꺼내 붙인다 — 로그가 원인을 안 말하면
  * 다음 사람이 추측으로 고치게 된다.
  */
-const NET_TRIES = 6;
-const NET_WAIT_MS = 60_000;
+/**
+ * ── 2026-08-16b 보강: **기다리는 시간을 부르는 쪽이 정한다.**
+ * 이 서비스는 **몇 시간 단위로** 닫히기도 한다(그날 13:30 성공 → 15:07~ 닫힘).
+ * 그런 문 앞에서 한 실행이 5분씩 버티면, 단지 5곳이면 25분을 태우고도 빈손이다.
+ * 게다가 그 시간에 같은 호스트의 **실거래 API 는 멀쩡히 돌고 있었다** — 서비스별로 닫힌다.
+ *
+ * 그래서 **한 번에 오래 버티는 대신, 짧게 끊고 나중에 다시 온다**(워크플로 cron 이 다시 부른다).
+ * 대량 수집(단지 목록 전수)처럼 한 번에 끝내야 하는 쪽은 기본값(6회×60초)을 그대로 쓴다.
+ */
+const NET_TRIES = Number(process.env.APT_NET_TRIES || 6);
+const NET_WAIT_MS = Number(process.env.APT_NET_WAIT_MS || 60_000);
 
 async function get(url: string, timeoutMs = 20000): Promise<{ status: number; body: string }> {
   let last = "";

@@ -15,6 +15,15 @@ on:
     paths:
       - "data/apt-detail-queue.txt"
 
+  # ── 스스로 다시 온다 (2026-08-16b)
+  # 이 서비스는 **몇 시간 단위로 문이 닫힌다.** 실측: 그날 13:30 에 30초로 성공한 뒤
+  # 15:07~15:18 에는 연결 자체가 안 열렸다(UND_ERR_CONNECT_TIMEOUT). 같은 시각 같은 호스트의
+  # **실거래 API 는 멀쩡히 돌았다** — 서비스별로 닫힌다.
+  # 그래서 사람이 다시 밀어 주기를 기다리지 않고 **두 시간마다 대기열을 훑는다.**
+  # 이미 받은 건 건너뛰므로, 다 찼으면 이 실행은 몇 초 만에 끝난다.
+  schedule:
+    - cron: "17 */2 * * *"
+
   workflow_dispatch:
     inputs:
       kapt:
@@ -64,7 +73,11 @@ jobs:
           fi
           N=$(wc -l < /tmp/jobs.txt | tr -d ' ')
           echo "대기열 $N 줄:"; cat /tmp/jobs.txt
-          if [ "$N" = "0" ]; then echo "::error::대기열이 비었습니다."; exit 1; fi
+          # cron 으로 도는데 대기열이 비어 있는 건 정상이다(할 일이 없을 뿐) — 실패로 치지 않는다.
+          if [ "$N" = "0" ]; then
+            if [ "${{ github.event_name }}" = "schedule" ]; then echo "대기열이 비어 있습니다 — 할 일 없음"; exit 0; fi
+            echo "::error::대기열이 비었습니다."; exit 1
+          fi
           echo "count=$N" >> "$GITHUB_OUTPUT"
 
       - name: 키 확인
@@ -79,6 +92,10 @@ jobs:
       - name: 주차대수 받기 (대기열 전 줄)
         env:
           MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+          # ⚠️ 문 앞에서 오래 버티지 않는다. 5분씩 버티면 단지 5곳에 25분을 태우고도 빈손이다.
+          #    짧게 끊고 **두 시간 뒤 cron 이 다시 온다** — 문이 열리는 때를 기다리는 건 스케줄의 일이다.
+          APT_NET_TRIES: "2"
+          APT_NET_WAIT_MS: "20000"
         shell: bash
         run: |
           set -o pipefail
