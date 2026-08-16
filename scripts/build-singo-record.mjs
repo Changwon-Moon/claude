@@ -130,8 +130,8 @@ const hi = Math.max(...traded.map((p) => p.maxManwon));
    (2026-08-16: 가격과 곡선 사이에 130px 짜리 죽은 자리가 생겼다).
    아래쪽은 곡선이 바닥에 붙지 않게 넉넉히 둔다. */
 const span = hi - lo || hi * 0.1;
-const yMax = hi + span * 0.05;
-const yMin = Math.max(0, lo - span * 0.16);
+const yMax = hi + span * 0.09;
+const yMin = Math.max(0, lo - span * 0.14);
 const xOf = (i) => X0 + ((X1 - X0) * i) / (pts.length - 1);
 const yOf = (m) => plotBot - ((plotBot - plotTop) * (m - yMin)) / (yMax - yMin);
 const r2 = (v) => Math.round(v * 10) / 10;
@@ -246,23 +246,19 @@ const dots = pts
   .map((p, i) => (p.maxManwon != null && p.ok ? { x: r2(xOf(i)), y: r2(yOf(p.maxManwon)), r: 4.5 } : null))
   .filter(Boolean);
 
-/* 가로선은 **뜻이 있는 것만** 남긴다 — 이 판에는 문턱선 하나뿐이다.
-   ⚠️ 25/50/75% 눈금선 3줄을 깔았다가 걷어냈다: 값 라벨이 없어 **아무것도 말하지 않는 선**이었다.
-   ⚠️ 바닥선도 걷어냈다. y축이 0에서 시작하지 않는데(최저 6.15억 아래로 여유만 둔다)
-      바닥에 선이 있으면 **그게 0선으로 읽힌다** — 그건 그림이 하는 거짓말이다.
-      연도 글자가 이미 판의 바닥을 말해 준다. */
+/* 판 바탕 — 옅은 회색(오너 2026-08-16). 곡선이 놓인 '자리'를 만들어 준다.
+   ⚠️ 아주 옅게. 진해지면 카드에 회색 덩어리가 앉은 것처럼 보인다(한 번 겪었다). */
+const bg = { x: 0, y: 0, w: VB_W, h: VB_H, r: 10 };
 const floor = null;
+const band = null;
 
-/* 넘어선 선 + 그 위 영역("N억 클럽 자리") — 10억 단위 돌파가 있을 때만 */
+/* 이번에 넘은 선 — 라벨을 **오른쪽 끝(오늘 자리)** 에 둔다(오너 2026-08-16).
+   왼쪽에 두면 6년 전 자리에서 오늘 값을 말하게 된다. */
 let threshold = null;
 if (hit.milestone) {
   const ty = r2(yOf(hit.milestone * 10000));
-  threshold = { x1: X0, x2: X1, y: ty, tx: X0, ty: r2(ty - 14), text: `${hit.milestone}억` };
+  threshold = { x1: X0, x2: X1, y: ty, tx: X1, ty: r2(ty - 20), anchor: "end", text: `${hit.milestone}억` };
 }
-/* ⚠️ 문턱 **위쪽에 옅은 톤을 깔아 봤다가 걷어냈다**(2026-08-16). 잉크 4.5% 여도 종이(#FAFAF8)
-   위에서는 큰 회색 사각형으로 읽혔다 — 오너가 피하려던 바로 그 "AI티"다.
-   빨간 점이 점선 위에 올라앉은 그림이 이미 "넘었다"를 말한다. 선 하나면 충분하다. */
-const band = null;
 
 /* 이번 거래 점 */
 const lastIdx = pts.findIndex((p) => p.ym === hit.date.slice(0, 4) + hit.date.slice(5, 7));
@@ -323,12 +319,18 @@ if (worst.atMaxIdx >= 0) {
   };
 }
 
-/* ── 지난 사이클을 **그래프 안으로** 옮긴다 (오너 2026-08-16 "최하단 내용을 그래프에 붙여줘")
-   · 지난 고점 값에 맞춰 가로 점선 하나
-   · 그 선과 돌파선 사이를 세로 브래킷으로 묶고 옆에 "고점 대비 +N%"
-   두 선 사이의 **간격이 곧 그 퍼센트**다 — 숫자와 그림이 같은 것을 가리킨다. */
+/* ── 기준선 두 줄을 그래프 안에 (오너 2026-08-16)
+   · 지난 사이클 고점 : `9억(21.10월)` + 빨강 `고점 대비 +11.1%`
+   · 기준선 이후 최저점 : `6.15억(20.01월)` + 파랑 `저점 대비 +62.6%`
+   색 기준은 방향이 아니라 **무엇과 견주는가**로 고정했다(오너 지시) —
+   고점 대비는 늘 빨강, 저점 대비는 늘 파랑.
+
+   ⚠️ 세로 브래킷으로 두 선을 묶어 봤다가 걷었다. 곡선이 두 선 사이를 지나는 단지에서는
+      설 자리가 아예 없어 표시가 통째로 사라졌다(상록마을 라이프2차). 라벨 꼬리로 붙이면
+      단지가 어떻게 생겼든 항상 나온다 — **가끔 예뻐지는 것보다 늘 나오는 편이 낫다.** */
+const ymLab = (ym) => `${ym.slice(2, 4)}.${ym.slice(4)}월`;
+
 let prevLine = null;
-let gap = null;
 let old = null;
 if (cycle && worst.atMaxIdx >= 0) {
   const pk = traded[worst.atMaxIdx];
@@ -339,90 +341,52 @@ if (cycle && worst.atMaxIdx >= 0) {
     y: py,
     tx: X0,
     ty: r2(py - 14),
-    text: `지난 고점 ${cycle.peak} · ${cycle.when}`,
+    text: `${eok(pk.maxManwon)}(${ymLab(pk.ym)})`,
+    tail: ` 고점 대비 ${cycle.vs}`,
+    tone: "hi", // 고점 대비 = 빨강
   };
-
-  // 옛 고점 그 달에 빈 원을 찍어 "이 점이 그 고점"임을 말한다
   const idx = pts.findIndex((p) => p.ym === pk.ym);
   if (idx >= 0) old = { x: r2(xOf(idx)), y: py, r: 10 };
+}
 
-  /* ⚠️ 라벨을 원 오른쪽으로 밀어 봤다가 되돌렸다(2026-08-16).
-     라벨은 선 **위**에 앉고 원은 선 **위에 중심**이 있어 세로로는 절대 안 겹친다.
-     그런데 밀고 나니 라벨이 판 가운데를 차지해 **브래킷이 설 자리가 없어졌고,
-     '고점 대비' 표시가 통째로 사라졌다.** 안 겹치는 것을 피하려다 있어야 할 것을 잃었다.
-     라벨은 왼쪽 끝에 그대로 둔다. */
-
-  /* 브래킷은 **곡선이 비어 있는 x** 에 세운다. 두 선 사이를 지나는 구간을 피해야
-     글자가 곡선 위에 얹히지 않는다 — 후보 x 를 훑어 곡선과 가장 멀리 떨어진 자리를 고른다.
-     (사람이 눈으로 자리를 찍지 않는다. 단지가 바뀌면 곡선 모양도 바뀐다.) */
-  const yTop = r2(yOf(hit.milestone ? hit.milestone * 10000 : hit.priceManwon));
-  const seriesY = pts.map((p, i) => (p.maxManwon != null ? [xOf(i), yOf(p.maxManwon)] : null)).filter(Boolean);
-  const bandLo = Math.min(yTop, py);
-  const bandHi = Math.max(yTop, py);
-  /* 지난 고점 라벨도 이 띠 안에 앉아 있다 — 브래킷이 그 위를 지나면 둘 다 안 읽힌다.
-     라벨이 차지한 x 구간을 후보에서 통째로 뺀다(2026-08-16 렌더에서 실제로 스쳤다). */
-  const labW = prevLine.text.length * 26 * 0.62;
-  const labX1 = prevLine.tx - 24;
-  const labX2 = prevLine.tx + labW + 24;
-
-  /* 브래킷 + 글자가 **함께 들어갈 자리**를 찾는다. 브래킷만 피해서는 소용이 없다 —
-     글자가 곡선 위에 얹히면 둘 다 안 읽힌다(2026-08-16 첫 렌더에서 "+11.1%" 가
-     마지막 급등 구간을 밟았다). 글자 폭은 **실제 크기(34px)** 로 잡는다. */
-  const GAP_FS = 34;
-  const gapText = `고점 대비 ${cycle.vs}`;
-  const gapW = gapText.length * GAP_FS * 0.62;
-
-  let bestX = null;
-  for (let t = 0.12; t <= 0.9; t += 0.005) {
-    const gx = X0 + (X1 - X0) * t;
-    const winL = gx - 26;
-    const winR = gx + 26 + gapW;
-    if (winR > VB_W) break;                      // 판을 넘으면 더 오른쪽은 볼 것도 없다
-    if (winR > labX1 && winL < labX2) continue;  // 지난 고점 라벨과 겹치면 제외
-    let clear = true;
-    for (const [sx, sy] of seriesY) {
-      if (sx < winL - 12 || sx > winR + 12) continue;
-      if (sy >= bandLo - 10 && sy <= bandHi + 10) { clear = false; break; }
-    }
-    if (clear) { bestX = gx; break; }            // 가장 왼쪽의 빈 자리를 쓴다
-  }
-  /* ⚠️ 브래킷이 설 자리가 아예 없을 수 있다 — 곡선이 두 선 사이를 계속 지나가는 단지가 그렇다
-     (상록마을 라이프2차: 14.8억~20억 구간을 곡선이 내내 오르내린다).
-     그때 '고점 대비'를 통째로 빼면 **오너가 요구한 정보가 사라진다.**
-     그래서 지난 고점 라벨 **꼬리에 붙여** 적는다 — 자리를 못 찾았지 뜻을 버린 게 아니다. */
-  if (bestX == null) prevLine.tail = ` · 고점 대비 ${cycle.vs}`;
-
-  const bestClear = bestX == null ? -1 : 1;
-if (bestX != null && bestClear > 0) {
-    const gx = r2(bestX);
-    gap = {
-      x: gx,
-      y1: yTop,
-      y2: py,
-      tickX1: r2(gx - 14),
-      tickX2: r2(gx + 14),
-      tx: r2(gx + 22),
-      ty: r2((yTop + py) / 2 + 12),
-      anchor: "start",
-      text: gapText,
-      dir: cycle.dir,
-    };
-  }
+/* 기준선 이후 최저점 — 저점 대비 상승률. 최저점이 곧 오늘이면(내내 내림) 그릴 것이 없다. */
+let lowLine = null;
+let lowDot = null;
+const lowPt = traded.reduce((a, b) => (b.maxManwon < a.maxManwon ? b : a));
+if (lowPt.maxManwon < hit.priceManwon) {
+  const ly = r2(yOf(lowPt.maxManwon));
+  const vsLow = ((hit.priceManwon - lowPt.maxManwon) / lowPt.maxManwon) * 100;
+  lowLine = {
+    x1: X0,
+    x2: X1,
+    y: ly,
+    tx: X0,
+    /* ⚠️ 저점 라벨은 선 **아래**에 둔다. 위에 두면 최저점 빈 원과 겹친다 —
+       최저점은 곡선의 가장 아래라 그 위가 원의 자리다(2026-08-16 렌더에서 겹쳤다).
+       아래는 연도 축까지 비어 있어 자리가 넉넉하다. */
+    ty: r2(ly + 34),
+    text: `${eok(lowPt.maxManwon)}(${ymLab(lowPt.ym)})`,
+    tail: ` 저점 대비 +${vsLow.toFixed(1)}%`,
+    tone: "lo", // 저점 대비 = 파랑
+  };
+  const li = pts.findIndex((p) => p.ym === lowPt.ym);
+  if (li >= 0) lowDot = { x: r2(xOf(li)), y: ly, r: 10 };
 }
 
 /* ⚠️ SVG 글자는 designQa 가 못 잰다 — 판을 넘는지 여기서 재고, 넘으면 던진다. */
-if (prevLine) {
-  const w = widthOf(prevLine.text + (prevLine.tail ?? ""), 26);
-  if (prevLine.tx + w > VB_W) throw new Error(`지난 고점 라벨("${prevLine.text}")이 판을 넘습니다.`);
-  if (prevLine.ty - 26 < 0) throw new Error(`지난 고점 라벨이 판 위로 넘칩니다.`);
-  if (threshold && Math.abs(threshold.ty - prevLine.ty) < 34) {
-    throw new Error(`돌파선 라벨과 지난 고점 라벨이 너무 가깝습니다 — 판 높이를 키우세요.`);
-  }
+for (const L of [prevLine, lowLine]) {
+  if (!L) continue;
+  const w = widthOf(L.text + (L.tail ?? ""), 26);
+  if (L.tx + w > VB_W) throw new Error(`기준선 라벨("${L.text}${L.tail ?? ""}")이 판을 넘습니다.`);
+  if (L.ty - 26 < 0) throw new Error(`기준선 라벨이 판 위로 넘칩니다.`);
+  if (L.ty + 8 > VB_H) throw new Error(`기준선 라벨이 판 아래로 넘칩니다.`);
 }
-if (gap) {
-  // 자리 선정에서 이미 보장했지만, 계산이 어긋나면 조용히 넘치는 것보다 던지는 편이 낫다
-  const w = gap.text.length * 34 * 0.62;
-  if (gap.tx + w > VB_W) throw new Error(`고점 대비 라벨("${gap.text}")이 판을 넘습니다.`);
+/* 두 기준선이 붙어 있으면 라벨이 겹친다 — 고점 라벨을 한 단계 더 위로 올린다. */
+if (prevLine && lowLine && Math.abs(prevLine.y - lowLine.y) < 60) {
+  prevLine.ty = r2(prevLine.y - 34);
+}
+if (threshold && prevLine && Math.abs(threshold.ty - prevLine.ty) < 30) {
+  throw new Error(`돌파선 라벨과 고점 라벨이 너무 가깝습니다 — 판 높이를 키우세요.`);
 }
 
 /* ── 가까운 역 (오너 2026-08-16 "가까운 역을 뱃지로")
@@ -465,7 +429,7 @@ const SEP = '<span class="sep">|</span>';
 const yy = hit.buildYear ? String(hit.buildYear).slice(2) : null;
 const specTop = [
   kapt ? `${kapt.hhld.toLocaleString("ko-KR")}세대` : null,
-  hit.buildYear ? `${hit.buildYear}년 준공(${yy}년식)` : null,
+  hit.buildYear ? `${hit.buildYear}년 준공` : null,
 ].filter(Boolean);
 const specBot = [`전용 ${hit.area}㎡`, `${hit.floor}층`];
 const spec = [specTop.join(SEP), specBot.join(SEP)].filter((x) => x);
@@ -484,7 +448,7 @@ const card = {
   station,
   price: eok(hit.priceManwon),
   spec,
-  chart: { vb: `0 0 ${VB_W} ${VB_H}`, threshold, prevLine, gap, gapDir: cycle ? cycle.dir : null, paths: chartPaths, dots, axis, old, dot },
+  chart: { vb: `0 0 ${VB_W} ${VB_H}`, bg, threshold, prevLine, lowLine, paths: chartPaths, dots, axis, old, lowDot, dot },
   /* ⚠️ 하단 기준 문구를 걷어냈다(오너 2026-08-16). 다만 **"역대가 아니라 2020년 이후"** 라는
      단서는 오보를 막는 장치라 버릴 수 없어 **푸터 출처 줄로 옮겼다.** 카드 어딘가에는 있어야 한다. */
   /* 푸터는 한 줄이어야 한다 — asOf 까지 넣었더니 두 줄로 넘쳤다(2026-08-16).

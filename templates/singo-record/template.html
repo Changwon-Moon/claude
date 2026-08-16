@@ -33,7 +33,7 @@
       /* 제목 — 이 판형의 주인공은 제목이 아니라 **가격**이다(오너 2026-08-13).
          그래서 제목은 한 줄로 낮추고, 지역은 회색으로 물러나 단지·평형만 잉크로 남긴다. */
       .sr .wirit-title {
-        font-size: 68px; line-height: 1.08; text-align: left; white-space: nowrap;
+        font-size: 84px; line-height: 1.06; text-align: left; white-space: nowrap;
         margin: 0; letter-spacing: -0.045em;
       }
       .sr .wirit-title .rg { color: var(--wirit-gray); }
@@ -86,40 +86,35 @@
       .sr-stn .rt-line.plain { background: var(--wirit-gray); color: #fff; }
 
       /* ── 곡선 ─────────────────────────────────────────────
-         이 판형이 기억되는 자리다. 카드 아래에 따로 있던 '지난 사이클' 블록을
-         **여기로 들여왔다**(오너 2026-08-16) — 두 가로선 사이의 간격이 곧 그 퍼센트라,
-         숫자와 그림이 같은 것을 가리키게 된다.
-         · 위 점선 = 이번에 넘은 선(10억)   · 아래 점선 = 지난 사이클 고점
-         · 그 사이 세로 브래킷 = 고점 대비 상승폭
-         · 빈 원 = 지난 고점이 난 달, 찬 원 = 오늘 거래
-         곡선은 **단조 3차 보간**으로 부드럽게 잇는다 — 오버슈트가 없는 방법이라
-         "그달에 더 비쌌다"는 거짓말이 그림에 섞이지 않는다(빌더가 다시 재고 던진다). */
-      .sr-chart { flex: 1 1 auto; display: flex; align-items: center; margin: 26px 0 24px; min-height: 0; }
+         카드 아래에 따로 있던 '지난 사이클' 블록을 여기로 들여왔다(오너 2026-08-16).
+         기준선 세 줄이 이야기를 다 한다:
+           · 위  = 이번에 넘은 선(라벨은 **오늘 자리**인 오른쪽 끝에)
+           · 중간 = 지난 사이클 고점  + 빨강 '고점 대비 +N%'
+           · 아래 = 기준선 이후 최저점 + 파랑 '저점 대비 +N%'
+         색은 방향이 아니라 **무엇과 견주는가**로 고정했다 — 고점=빨강, 저점=파랑.
+         곡선은 단조 3차 보간이라 두 점 사이를 벗어나지 않는다(빌더가 다시 잰다). */
+      .sr-chart { flex: 1 1 auto; display: flex; align-items: center; margin: 24px 0 22px; min-height: 0; }
       .sr-svg { display: block; width: 100%; height: auto; }
+      /* 판 바탕 — 아주 옅게. 진해지면 회색 덩어리가 앉은 것처럼 보인다. */
+      .sr-bg { fill: var(--wirit-ink); opacity: 0.035; }
       .sr-line { fill: none; stroke: var(--wirit-ink); stroke-width: 5; stroke-linejoin: round; stroke-linecap: round; }
-      /* 관측점 — 65개월이 찍히면 구슬처럼 보인다. 선이 주인공이 되게 작게 둔다. */
       .sr-obs { fill: var(--wirit-ink); opacity: 0.45; }
       /* 이번에 넘은 선 — 진하게. 이게 이 카드의 사건이다. */
-      .sr-thr { stroke: var(--wirit-ink); stroke-width: 3; stroke-dasharray: 11 9; opacity: 0.6; }
+      .sr-thr { stroke: var(--wirit-ink); stroke-width: 3; stroke-dasharray: 11 9; opacity: 0.55; }
       .sr-thrlab {
         font-family: var(--font-num); font-size: 28px; font-weight: 900;
         fill: var(--wirit-ink); opacity: 0.7;
       }
-      /* 지난 사이클 고점 선 — 한 단계 물러난다. 두 선이 같은 무게면 무엇이 사건인지 흐려진다. */
-      .sr-prev { stroke: var(--wirit-gray); stroke-width: 3; stroke-dasharray: 7 9; opacity: 1; }
-      .sr-prevlab {
+      /* 기준선 두 줄 — 한 단계 물러난다. 셋이 같은 무게면 무엇이 사건인지 흐려진다. */
+      .sr-base { stroke: var(--wirit-gray); stroke-width: 2.5; stroke-dasharray: 6 9; opacity: 0.9; }
+      .sr-baselab {
         font-family: var(--font-num); font-size: 26px; font-weight: 800;
         fill: var(--wirit-gray);
       }
-      /* 브래킷이 설 자리가 없을 때 라벨 꼬리로 붙는 '고점 대비' — 색만 살린다 */
-      .sr-prevlab .hi { fill: var(--wirit-red); font-weight: 900; }
-      .sr-prevlab .hi.down { fill: var(--wirit-cobalt); }
+      .sr-baselab .hi { fill: var(--wirit-red); font-weight: 900; }
+      .sr-baselab .lo { fill: var(--wirit-cobalt); font-weight: 900; }
+      /* 빈 원 = 그 값이 난 달. 라벨의 숫자를 그림에서 찾게 해 준다. */
       .sr-old { fill: var(--wirit-paper); stroke: var(--wirit-ink); stroke-width: 4; }
-      /* 두 선을 묶는 브래킷 — 간격이 곧 상승폭이다 */
-      .sr-brk { stroke: var(--wirit-red); stroke-width: 3; opacity: 0.85; }
-      .sr-brk.down { stroke: var(--wirit-cobalt); }
-      .sr-gaplab { font-family: var(--font-num); font-size: 34px; font-weight: 900; fill: var(--wirit-red); }
-      .sr-gaplab.down { fill: var(--wirit-cobalt); }
       .sr-ax { font-family: var(--font-num); font-size: 23px; font-weight: 700; fill: var(--wirit-gray); }
 
     </style>
@@ -145,32 +140,33 @@
 
       <div class="sr-chart">
         <svg class="sr-svg" viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-          <!-- 지난 사이클 고점 — 아래 점선. 이번에 넘은 선보다 한 단계 물러난다. -->
+          {{#if chart.bg}}<rect class="sr-bg" x="{{chart.bg.x}}" y="{{chart.bg.y}}" width="{{chart.bg.w}}" height="{{chart.bg.h}}" rx="{{chart.bg.r}}" />{{/if}}
+          <!-- 기준선 — 지난 고점 / 기준선 이후 최저점 -->
           {{#if chart.prevLine}}
-          <line class="sr-prev" x1="{{chart.prevLine.x1}}" y1="{{chart.prevLine.y}}" x2="{{chart.prevLine.x2}}" y2="{{chart.prevLine.y}}" />
-          <text class="sr-prevlab" x="{{chart.prevLine.tx}}" y="{{chart.prevLine.ty}}" text-anchor="start">{{chart.prevLine.text}}{{#if chart.prevLine.tail}}<tspan class="hi {{chart.gapDir}}">{{chart.prevLine.tail}}</tspan>{{/if}}</text>
+          <line class="sr-base" x1="{{chart.prevLine.x1}}" y1="{{chart.prevLine.y}}" x2="{{chart.prevLine.x2}}" y2="{{chart.prevLine.y}}" />
           {{/if}}
-          <!-- 이번에 넘은 선 -->
+          {{#if chart.lowLine}}
+          <line class="sr-base" x1="{{chart.lowLine.x1}}" y1="{{chart.lowLine.y}}" x2="{{chart.lowLine.x2}}" y2="{{chart.lowLine.y}}" />
+          {{/if}}
+          <!-- 이번에 넘은 선. 라벨은 오늘 자리(오른쪽 끝)에 둔다 -->
           {{#if chart.threshold}}
           <line class="sr-thr" x1="{{chart.threshold.x1}}" y1="{{chart.threshold.y}}" x2="{{chart.threshold.x2}}" y2="{{chart.threshold.y}}" />
-          <text class="sr-thrlab" x="{{chart.threshold.tx}}" y="{{chart.threshold.ty}}" text-anchor="start">{{chart.threshold.text}}</text>
-          {{/if}}
-          <!-- 두 선을 묶는 브래킷 — 간격이 곧 '고점 대비'다 -->
-          {{#if chart.gap}}
-          <g class="sr-brk {{chart.gap.dir}}">
-            <line x1="{{chart.gap.x}}" y1="{{chart.gap.y1}}" x2="{{chart.gap.x}}" y2="{{chart.gap.y2}}" />
-            <line x1="{{chart.gap.tickX1}}" y1="{{chart.gap.y1}}" x2="{{chart.gap.tickX2}}" y2="{{chart.gap.y1}}" />
-            <line x1="{{chart.gap.tickX1}}" y1="{{chart.gap.y2}}" x2="{{chart.gap.tickX2}}" y2="{{chart.gap.y2}}" />
-          </g>
-          <text class="sr-gaplab {{chart.gap.dir}}" x="{{chart.gap.tx}}" y="{{chart.gap.ty}}" text-anchor="{{chart.gap.anchor}}">{{chart.gap.text}}</text>
+          <text class="sr-thrlab" x="{{chart.threshold.tx}}" y="{{chart.threshold.ty}}" text-anchor="{{chart.threshold.anchor}}">{{chart.threshold.text}}</text>
           {{/if}}
           {{#each chart.paths}}<path class="sr-line" d="{{d}}" />{{/each}}
           <!-- 실제 거래가 있던 달만 점으로 찍는다. 점 사이를 잇는 선은 **관측 사이를 이은 것**이지
                그 사이에 그 값이었다는 뜻이 아니다 — 점이 있어야 그 차이가 보인다. -->
           {{#each chart.dots}}<circle class="sr-obs" cx="{{x}}" cy="{{y}}" r="{{r}}" />{{/each}}
           {{#each chart.axis}}<text class="sr-ax" x="{{x}}" y="{{y}}" text-anchor="{{anchor}}">{{text}}</text>{{/each}}
-          <!-- 빈 원 = 지난 고점이 난 달 -->
+          <!-- 기준선 라벨은 선·곡선 위에 얹는다(가려지면 안 읽힌다) -->
+          {{#if chart.prevLine}}
+          <text class="sr-baselab" x="{{chart.prevLine.tx}}" y="{{chart.prevLine.ty}}" text-anchor="start" paint-order="stroke" stroke="#fafaf8" stroke-width="8" stroke-linejoin="round">{{chart.prevLine.text}}<tspan class="{{chart.prevLine.tone}}">{{chart.prevLine.tail}}</tspan></text>
+          {{/if}}
+          {{#if chart.lowLine}}
+          <text class="sr-baselab" x="{{chart.lowLine.tx}}" y="{{chart.lowLine.ty}}" text-anchor="start" paint-order="stroke" stroke="#fafaf8" stroke-width="8" stroke-linejoin="round">{{chart.lowLine.text}}<tspan class="{{chart.lowLine.tone}}">{{chart.lowLine.tail}}</tspan></text>
+          {{/if}}
           {{#if chart.old}}<circle class="sr-old" cx="{{chart.old.x}}" cy="{{chart.old.y}}" r="{{chart.old.r}}" />{{/if}}
+          {{#if chart.lowDot}}<circle class="sr-old" cx="{{chart.lowDot.x}}" cy="{{chart.lowDot.y}}" r="{{chart.lowDot.r}}" />{{/if}}
           <!-- 찬 원 = 오늘 거래. 이 판형에서 레드를 쓰는 자리 -->
           {{#if chart.dot}}
           <circle cx="{{chart.dot.x}}" cy="{{chart.dot.y}}" r="{{chart.dot.rOuter}}" fill="#fafaf8" />
@@ -204,7 +200,7 @@
         };
 
         var title = document.querySelector(".sr .wirit-title");
-        if (title) fit(title, title.parentElement, 30, 76, function () { return title.scrollWidth; });
+        if (title) fit(title, title.parentElement, 30, 92, function () { return title.scrollWidth; });
 
         /* 제원은 **가격이 차지하고 남은 폭**에 맞춘다. hero 전체 scrollWidth 로 재면
            가격까지 함께 재게 되어 둘이 서로를 밀어낸다. */

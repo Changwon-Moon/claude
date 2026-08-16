@@ -77,6 +77,9 @@
             },
             "text": {
               "type": "string"
+            },
+            "anchor": {
+              "type": "string"
             }
           }
         },
@@ -196,7 +199,6 @@
             "object",
             "null"
           ],
-          "description": "지난 사이클 고점 가로 점선 + 라벨. 내림 구간이 없으면 null.",
           "required": [
             "x1",
             "x2",
@@ -228,42 +230,39 @@
               "type": [
                 "string",
                 "null"
-              ],
-              "description": "브래킷이 설 자리가 없을 때 라벨 꼬리로 붙는 '고점 대비 ±N%'."
+              ]
+            },
+            "tone": {
+              "type": "string",
+              "enum": [
+                "hi",
+                "lo"
+              ]
             }
-          }
+          },
+          "description": "지난 사이클 고점 선 + 라벨(값(연월) + 빨강 '고점 대비 +N%')."
         },
-        "gap": {
+        "lowLine": {
           "type": [
             "object",
             "null"
           ],
-          "description": "지난 고점~이번 선 사이 브래킷. 간격이 곧 '고점 대비'다. 곡선이 그 띠를 지나 자리가 없으면 null.",
           "required": [
-            "x",
-            "y1",
-            "y2",
-            "tickX1",
-            "tickX2",
+            "x1",
+            "x2",
+            "y",
             "tx",
             "ty",
-            "text",
-            "dir"
+            "text"
           ],
           "properties": {
-            "x": {
+            "x1": {
               "type": "number"
             },
-            "y1": {
+            "x2": {
               "type": "number"
             },
-            "y2": {
-              "type": "number"
-            },
-            "tickX1": {
-              "type": "number"
-            },
-            "tickX2": {
+            "y": {
               "type": "number"
             },
             "tx": {
@@ -272,31 +271,74 @@
             "ty": {
               "type": "number"
             },
-            "anchor": {
-              "type": "string"
-            },
             "text": {
               "type": "string"
             },
-            "dir": {
+            "tail": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "tone": {
               "type": "string",
               "enum": [
-                "up",
-                "down"
+                "hi",
+                "lo"
               ]
+            }
+          },
+          "description": "기준선 이후 최저점 선 + 라벨(값(연월) + 파랑 '저점 대비 +N%')."
+        },
+        "bg": {
+          "type": "object",
+          "description": "판 바탕(옅은 회색).",
+          "required": [
+            "x",
+            "y",
+            "w",
+            "h"
+          ],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "w": {
+              "type": "number"
+            },
+            "h": {
+              "type": "number"
+            },
+            "r": {
+              "type": "number"
             }
           }
         },
-        "gapDir": {
+        "lowDot": {
           "type": [
-            "string",
+            "object",
             "null"
           ],
-          "enum": [
-            "up",
-            "down",
-            null
-          ]
+          "description": "최저점이 난 달의 빈 원.",
+          "required": [
+            "x",
+            "y",
+            "r"
+          ],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "r": {
+              "type": "number"
+            }
+          }
         }
       }
     },
