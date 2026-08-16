@@ -477,12 +477,12 @@
         "singo-광명한진타운-84"
       ],
       "caption": "singo-record",
-      "note": "오늘의 신고가 판형(singo-record@1) 첫 실전 소재. 세대수는 --kapt A42385801 로 대장 항목을 사람이 짚어 물렸다(지번 200-6 일치 확인). 3팀 검수 반영 최종본: 킥커=계약일 · 제원 회색 34px · 판 안 대각 워터마크. 기준은 docs/guides/신고가-카드-기준.md. 정기물이라 픽셀 기준값 미등록.",
+      "note": "오늘의 신고가 판형(singo-record@1) 첫 실전 소재. 세대수는 --kapt A42385801 로 대장 항목을 사람이 짚어 물렸다(지번 200-6 일치 확인). 3팀 검수 반영 최종본: 킥커=계약일 · 제원 회색 34px · 판 안 대각 워터마크. 기준은 docs/guides/신고가-카드-기준.md. 정기물이라 픽셀 기준값 미등록. / 역 뱃지 1행 개편 반영 재확정(오너 2026-08-16b)",
       "state": "오너 확정",
       "pixelPolicy": "정기물 — data/datasets/apt-station/,data/datasets/apt-detail/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
       "confirmedAt": "2026-08-16",
       "confirmedMd5": [
-        "singo-광명한진타운-84:7f875b0a2540"
+        "singo-광명한진타운-84:dc8ec24e58ac"
       ]
     }
   ]
