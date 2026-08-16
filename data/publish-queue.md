@@ -41,7 +41,7 @@
 - [ ] [26.08.08(토) 관제탑] **당신이 아는 아파트 1위, 맞나요? (브랜드 순위 조사 5곳 비교)** · brand-rank-grid · 원본 data/content/2026-07-31/brand-rank.json
 - [x] [26.08.08(토) 관제탑] **당신 건물주가 네덜란드 연기금? (글로벌 자본의 서울 임대시장 진출)** · world-capital · 원본 data/content/2026-08-05/world-capital.json
 - [ ] [26.08.08(토) 관제탑] **신분당선 역세권 34평 APT 시세 (2026.01~07)** · sinbundang-loop · 원본 data/content/2026-07-31/sinbundang-loop.json
-- [ ] [26.08.08(토) 관제탑] **서울 아파트 매매 연속 상승 · 상승폭 文정부의 2배 (주간)** · streak-line · 원본 data/content/2026-08-08/mae-streak.json
+- [x] [26.08.08(토) 관제탑] **서울 아파트 매매 연속 상승 · 상승폭 文정부의 2배 (주간)** · streak-line · 원본 data/content/2026-08-08/mae-streak.json
 - [x] [26.08.10(월) 관제탑] **🌏 서울 자치구별 외국인 거주비율 (국적별)** · foreign-rank · 원본 data/content/2026-08-10/foreign-rank-p1.json
 - [x] [26.08.13(목) 관제탑] **💵 역대 정부 통화량 증가 규모 — 지금이 가장 빠르다** · gov-bars · 원본 data/content/2026-08-13/m2-gov.json
 - [ ] [26.08.14(금) 관제탑] **🏙 부천 국평 16억 실화냐? (상동역 롯데캐슬 시그니처)** · danji-cover · 원본 data/content/2026-08-14/danji-sangdong.json
