@@ -1,4 +1,4 @@
-name: 공급면적 탐침 (1회성 조사)
+name: 공급면적 탐침 (K-apt 전용률 · 건축물대장 실측)
 
 # ── 왜 있나 (2026-08-16d 오너: "카드에는 실제 공급평수를 적어야지")
 # 지금 카드의 `34평`·`25평` 은 전용 84/59 → **고정 환산표**다. 단지별 전용률이 달라
@@ -54,12 +54,33 @@ jobs:
           KAPT: ${{ github.event.inputs.kapt || 'A44340013 A44033010 A13686302 A10028021 A10026600 A42385801' }}
         run: node scripts/probe-apt-area.mjs $KAPT
 
+      # ── 🏗️ 본선 — 건축물대장 전유공용면적(호별 실측)
+      # 위의 K-apt 탐침은 "전용률을 잴 수 있나"를 본다(차선). 이쪽은 **환산 없이 공급면적을
+      # 그대로 읽을 수 있나**를 본다. 이게 되면 위는 필요 없다.
+      - name: 건축물대장 이미 받았나
+        id: brdone
+        run: |
+          if [ -f data/bldrgst-probe.md ] && grep -q "✅ \*\*" data/bldrgst-probe.md; then
+            echo "skip=1" >> "$GITHUB_OUTPUT"; echo "이미 받았습니다"
+          else echo "skip=0" >> "$GITHUB_OUTPUT"; fi
+
+      - name: 건축물대장 탐침
+        if: steps.brdone.outputs.skip == '0'
+        env:
+          DATA_GO_KR_API_KEY: ${{ secrets.DATA_GO_KR_API_KEY }}
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+          # bjdCode:지번 — data/datasets/apt-list/*.json 의 bjdCode 와 실거래 지번에서 왔다
+          T: >-
+            4111710700:488 4111113300:333 1129013500:80
+            1165010900:143 4136011200:5869-2 4121010100:200-6
+        run: node scripts/probe-bldrgst.mjs $T
+
       - name: 결과 커밋
-        if: steps.done.outputs.skip == '0'
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f data/apt-area-probe.md
+          git add -f data/apt-area-probe.md data/bldrgst-probe.md 2>/dev/null || true
           git diff --cached --quiet || git commit -m "공급면적 탐침 — 응답 필드 전수"
           git pull --rebase --autostash || true
           git push
