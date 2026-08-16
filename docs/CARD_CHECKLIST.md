@@ -46,6 +46,17 @@ node scripts/confirm.mjs estate-84 estate-59 metro-speed --note "메모"
 
 `error` 가 하나라도 있으면 **내보내지 않는다.** `warn` 은 이유를 대고 넘길 수 있다.
 
+### ⚠️ 검수가 "통과"라고 말해도 **무엇을 검수했는지** 본다 (2026-08-16 실제 사고)
+
+`rebuild-cards`·`produce-card` 는 `data/content/<날짜>/` 를 검수·렌더한다.
+그런데 빌더가 **`--publish` 없이** 돌면 결과는 `data/out/_spike` 로 간다
+→ **옛 발행본을 검수하고 "통과"라고 말한다.** 그 상태로 판이 칸을 7px 넘긴 카드가
+초록으로 나갔고 확정 직전까지 갔다.
+
+- `builders.json` 의 args 에 **`--publish` 를 넣는다**(대부분의 빌더는 원래 `data/content` 에 쓴다).
+- 지금은 `produce-card` 가 두 파일의 mtime 을 비교해 어긋나면 **멈춘다** — 조용히 고쳐 주지 않는다.
+- 눈으로 확인할 때도 `data/content/<날짜>/` 의 옛 PNG 를 보고 "안 바뀌었다"고 판단하지 말 것.
+
 ---
 
 ## §0.5. 시안 선검수 — 오너에게 보여주기 **전에** 3팀이 먼저 본다 (08-04 오너)

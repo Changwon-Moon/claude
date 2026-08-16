@@ -11,7 +11,7 @@
  *
  * 실행: node scripts/produce-card.mjs <세트라벨>   (예: tohuh-rank)
  */
-import { readFileSync, existsSync, readdirSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -61,6 +61,23 @@ function contentOf(slug) {
   }
   return hits.pop(); // 가장 최근 날짜
 }
+/* ⚠️ 빌더가 방금 쓴 것을 렌더하는지 **확인한다.**
+   `--publish` 없이 도는 빌더는 결과를 `data/out/_spike` 에 떨구는데, 여기는 `data/content`
+   만 보므로 **옛 판본을 그리고 "재생산 완료"라고 말한다** — 그 상태로 확정까지 갔다
+   (2026-08-16 실제로 겪었다: 확정 md5 가 옛 카드의 것이 될 뻔했다).
+   조용히 고쳐 주지 않고 **멈춘다** — 어느 판본을 확정하는지는 짐작할 일이 아니다. */
+function assertFreshest(slug, contentPath) {
+  const spike = join(ROOT, "data/out/_spike", `${slug}.json`);
+  if (!existsSync(spike)) return;
+  if (statSync(spike).mtimeMs <= statSync(contentPath).mtimeMs) return;
+  console.log(
+    `::error::${slug} — 빌더가 방금 만든 것은 data/out/_spike 에 있는데 ` +
+      `렌더 대상은 더 오래된 ${contentPath.replace(ROOT + "/", "")} 입니다.\n` +
+      `   → data/review/builders.json 의 이 빌더 args 에 "--publish" 를 넣으세요.`,
+  );
+  process.exit(1);
+}
+
 const cardPaths = [];
 for (const slug of set.cards) {
   const p = contentOf(slug);
@@ -68,6 +85,7 @@ for (const slug of set.cards) {
     console.log(`::error::카드 JSON이 안 만들어졌습니다 — ${slug}`);
     process.exit(1);
   }
+  assertFreshest(slug, p);
   const outDir = join(ROOT, "data/out", dirname(p).split("/").pop());
   sh("pnpm", ["--filter", "@wirit/renderer", "render", "--", "--data", p, "--out", outDir]);
   cardPaths.push(p);

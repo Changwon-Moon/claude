@@ -310,7 +310,8 @@
 ## 지금 상태 한눈에
 
 - **운영 방식**: 세션이 저장소를 열어 카드를 만들고, **발행은 오너가 직접**(자동 발행 폐지). 정기 데이터 수집·재생산은 GitHub Actions.
-- **최근 판형 작업**: `news-figure@1`(인물·뉴스 카드) 시안 완료 — **오너 선택 대기**. 오너가 고르면 `builders.json`·`sets.json` 등록 + 첫 확정 시 `sample.json` 고정.
+- **최근 판형 작업**: `singo-record@1`(오늘의 신고가) **오너 확정 2026-08-16** — 기준은 `docs/guides/신고가-카드-기준.md`.
+- **대기 중 판형**: `news-figure@1`(인물·뉴스 카드) 시안 완료 — **오너 선택 대기**. 오너가 고르면 `builders.json`·`sets.json` 등록 + 첫 확정 시 `sample.json` 고정.
 - **인구 소재 배관**: 지역 인구 통계 자동 추출 경로와 시군구 2026년판 지도 신설(2026-08-03). KOSIS 기반, 통계청 행정구역코드로 조인.
 - **최근 소재**: 등록외국인 국적 지도, 토허제×외국인 매수 등 소재 등록·승격 진행(상세는 `research/DECISION_LOG.md`).
 
@@ -327,12 +328,15 @@
 | danji-hangang | 청약·분양 표준 `danji-cover@1` 첫 확정본 |
 | danji-songdo | 무순위(줍줍) 첫 확정본 |
 | world-capital | 뉴스 소재(verified:false — 세트 note에 명시) |
+| singo-gwangmyeong-hanjin | 「오늘의 신고가」 `singo-record@1` 첫 확정본(정기물, 2026-08-16) |
 
 > 정기물(실거래·증시·주간지수)은 "같은 데이터면 같은 픽셀"이 약속이라 `pixel-baselines.json`에 넣지 않는다 — `confirm.mjs`가 자동으로 가른다(고정물만 픽셀 고정).
 
 ## 다음 할 일 / 대기
 
 - `news-figure@1` 판형을 오너가 고르면 등록 + 첫 실제 카드(인물 실물 사진 교체) 확정.
+- 「오늘의 신고가」 사진 도입 검토(2장 캐러셀: 1장 사진 커버 · 2장 곡선) — **저작권 확인이 먼저**.
+- `danji-hangang` 빌더 실패 중 — 청약홈 최신 수집분에 공고번호 2026000367 이 없다(접수 종료로 목록에서 빠진 것으로 보임).
 - 인구 카드 시리즈 전개(자동 추출 배관 활용).
 - 소재 대기열은 `research/ideas.json`(관제탑 보드)와 `research/DECISION_LOG.md`.
 
@@ -353,7 +357,10 @@
 
 ## 정기물 자동화
 
-주간 매매·전세 지수, 청약홈 신규 분양(매일 11:00 KST), 실거래·증시 등은 GitHub Actions가 수집→재생산까지 자동으로 한다. "이건 내가 눌러야 하나?" 싶으면 `docs/DATA_REFRESH.md`부터 본다(대개 안 눌러도 된다). 세션에서 수집을 걸어야 하면 대기열 파일에 push한다(`docs/HANDOFF.md` §6).
+주간 매매·전세 지수, 청약홈 신규 분양(매일 11:00 KST), **오늘의 신고가 알림(매일 07:00 KST)**,
+실거래·증시 등은 GitHub Actions가 수집→재생산까지 자동으로 한다.
+카드 한 장에 필요한 단발 수집(곡선·가까운 역·주차대수)은 대기열 파일 한 줄로 건다 —
+`singo-history-queue.txt` / `apt-station-queue.txt` / `apt-detail-queue.txt`. "이건 내가 눌러야 하나?" 싶으면 `docs/DATA_REFRESH.md`부터 본다(대개 안 눌러도 된다). 세션에서 수집을 걸어야 하면 대기열 파일에 push한다(`docs/HANDOFF.md` §6).
 
 ---
 

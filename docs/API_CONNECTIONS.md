@@ -42,6 +42,11 @@
 | **국토부 실거래(매매)** | `MOLIT_API_KEY` | `sources/molit.ts` · `molitCli.ts` | `data/datasets/molit/{LAWD}-{YYYYMM}.json` | `molit-collect.yml` `20 3 5,20 * *` + `data/molit-queue.txt` · `collect-on-request.yml` | ✅ 실사용 |
 | **국토부 전월세 실거래** | `MOLIT_API_KEY` | `molitRentCli.ts` | `data/datasets/molit-rent/{LAWD}-{YYYYMM}.json` | `molit-rent-collect.yml` `40 3 5,20 * *` + `data/molit-rent-queue.txt` | ✅ 실사용 |
 | **청약홈 분양정보** | `DATA_GO_KR_API_KEY` | `sources/applyhome.ts` · `applyhomeCli.ts` | `data/datasets/applyhome-latest.json` · `applyhome/{날짜}.json` | `applyhome-collect.yml` `0 2 * * *` (매일 11:00 KST) | ✅ 실사용 |
+| **국토부 최고가 인덱스(신고가 판정)** | `MOLIT_API_KEY` | `molitPeakCli.ts` · `molitSingoCli.ts` | `data/datasets/molit-peak/{LAWD}.json` · `singo-log/{YYYY-MM}.json` | `molit-peak-backfill.yml` · `singo-daily.yml` `0 22 * * *` (매일 07:00 KST) | ✅ 실사용 |
+| └ 단지 월별 최고가 곡선 | 〃 | `molitHistoryCli.ts` | `data/datasets/singo-history/{LAWD}-{단지}-{타입}.json` | `singo-history.yml` (`data/singo-history-queue.txt`) | ✅ 실사용 |
+| **국토부 공동주택 기본정보(세대수)** | `MOLIT_API_KEY` | `sources/aptInfo.ts` · `aptUniverseCli.ts` | `data/datasets/apt-hhld.json` (8,062단지) | `apt-universe.yml` | ✅ 실사용 |
+| └ 공동주택 **상세**정보(주차대수) | 〃 | `aptDetailCli.ts` | `data/datasets/apt-detail/{kapt}.json` | `apt-detail.yml` (`data/apt-detail-queue.txt`) | ✅ 2026-08-16 신설 |
+| **카카오 로컬(가장 가까운 역)** | `KAKAO_REST_KEY` | `aptStationCli.ts` · `parse/station.ts` | `data/datasets/apt-station/{kapt}.json` | `apt-station.yml` (`data/apt-station-queue.txt`) | ✅ 2026-08-16 신설 |
 | **한국부동산원 R-ONE (월간)** | `RONE_API_KEY` **또는** `REB_API_KEY` | `sources/rebIndex.ts` · `rebCli.ts` | `data/datasets/reb-rent-index.json` | `reb-collect.yml` `0 2 16 * *` | ✅ 실사용 |
 | **한국부동산원 R-ONE (주간)** | 〃 | `sources/rebWeekly.ts` · `rebWeeklyCli.ts` | `data/datasets/reb-weekly-index.json` | `reb-weekly-collect.yml` `7 1 * * 5` + `data/reb-weekly-queue.txt` | ✅ 실사용 |
 | **금감원 DART** | `DART_API_KEY` | `sources/dartSalary.ts` · `dartCli.ts` | `data/datasets/avg-salary-2025.json` | `dart-salary.yml` (dispatch 전용) | ✅ 실사용(수동) |
@@ -109,6 +114,9 @@ ECOS 는 같은 통계표(`161Y006`)에 **`BBHA16 [참고] 구 M2(평잔, 원계
 | `data/molit-queue.txt` | `region=seoul gu=all months=202607 force=false` | `molit-collect.yml` |
 | `data/molit-rent-queue.txt` | `region=gyeonggi gu=과천시,… months=202604,202605` | `molit-rent-collect.yml` |
 | `data/applyhome-queue.txt` | `within=7 min=45 digest=1` | `applyhome-collect.yml` |
+| `data/singo-history-queue.txt` | `lawd=41210 umd=광명동 type=84 apt="광명한진타운"` | `singo-history.yml` |
+| `data/apt-station-queue.txt` | `kapt=A42385801` (대장에 없으면 `addr="…" key=…`) | `apt-station.yml` |
+| `data/apt-detail-queue.txt` | `kapt=A42385801` — 주차대수 | `apt-detail.yml` |
 | `data/reb-weekly-queue.txt` | 아무 줄(변경이 방아쇠) | `reb-weekly-collect.yml` |
 | `data/market-queue.txt` | 아무 줄 | `kr-market.yml` |
 | `data/seoul-probe-queue.txt` | 아무 줄 | `seoul-living-probe.yml` |
@@ -120,6 +128,10 @@ ECOS 는 같은 통계표(`161Y006`)에 **`BBHA16 [참고] 구 M2(평잔, 원계
 | `data/logo-batch.tsv` | `slug⇥File:제목` | `photo-batch.yml` |
 | `research/article-queue.txt` | 기사 URL | `fetch-article.yml` |
 | `data/publish-queue.md` | 발행 승인 체크박스 줄 | `pipeline-tick.yml` · `publish-archive.yml` |
+
+⚠️ **주차대수는 기본정보에 없다.** 세대수는 `getAphusBassInfoV4`, 주차대수는
+`getAphusDtlInfoV4`(`kaptdPcnt` 지상 + `kaptdPcntu` 지하) — **다른 오퍼레이션**이다.
+그래서 대장 `apt-hhld.json` 8,062건에는 주차대수가 아예 없고, 짚어 준 단지만 따로 받는다.
 
 ⚠️ `asset-fetch.yml` · `geocode.yml` 의 push 트리거는 브랜치가 **`claude/instagram-content-automation-roadmap-fxnb7p` 로 못박혀** 있다. 다른 브랜치에서 밀면 안 깬다.
 

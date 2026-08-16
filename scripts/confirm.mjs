@@ -142,8 +142,14 @@ writeJson("data/review/pixel-baselines.json", baselines);
 
 console.log("\n══════ 내보내기 전 검사(§0) ══════");
 for (const [name, cmd, args] of [
-  ["캡션 고정 서명", "node", ["scripts/apply-signature.mjs", "--check"]],
+  /* ⚠️ 순서가 중요하다 — 서명 검사가 **재생성보다 앞이면** 아무 의미가 없다.
+     `build-foreign-rank`·`build-jeongbi-map` 등 몇몇 빌더가 캡션을 **통째로 다시 쓰는데**,
+     그때 고정 서명이 딸려 나가지 않는다. 그래서 재생성 전에 통과한 검사가 재생성 직후
+     깨지고, **다음 확정 시도가 매번 같은 자리에서 막혔다**(2026-08-16 실제로 두 번 막혔다).
+     → 재생성을 먼저 하고, 그 뒤에 **붙이고(멱등)**, 그 다음에 **붙었는지 검사한다.** */
   ["전 카드 재생성·검수", "node", ["scripts/rebuild-cards.mjs"]],
+  ["캡션 고정 서명 반영", "node", ["scripts/apply-signature.mjs"]],
+  ["캡션 고정 서명 확인", "node", ["scripts/apply-signature.mjs", "--check"]],
   ["관제탑 화면 생성", "node", ["scripts/build-tower-site.mjs"]],
   ["관제탑 스모크", "node", ["scripts/smoke-tower.mjs"]],
   ["머리 규격 전수", "pnpm", ["-s", "--filter", "@wirit/renderer", "audit-head"]],
