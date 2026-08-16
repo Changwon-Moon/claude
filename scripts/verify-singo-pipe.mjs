@@ -60,14 +60,31 @@ head("④ 검수가 무엇을 검수하는가");
 check("produce-card: 옛 판본이면 멈춘다", read("scripts/produce-card.mjs").includes("assertFreshest"));
 check("rebuild-cards: 새로 쓰인 쪽을 검수한다", read("scripts/rebuild-cards.mjs").includes("_spike"));
 
-/* ⑤ 확정 §0 순서. 서명 검사가 재생성보다 앞이면 아무 의미가 없다
-   (몇몇 빌더가 캡션을 다시 쓰면서 고정 서명을 날린다). */
-head("⑤ 확정 §0 순서");
+/* ⑤ 확정 §0 순서 — **서명은 맨 뒤여야 한다** (2026-08-16d 에 규칙이 한 겹 깊어졌다)
+ *
+ * 예전 규칙은 "서명이 `rebuild-cards` 보다 앞이면 안 된다"였고, 이 검사도 그 셋이
+ * **연달아** 오는지만 봤다. 그런데 **재생성하는 것이 `rebuild-cards` 하나가 아니었다** —
+ * `doctor` 도 카드를 다시 만든다(진단이 말로 확인하지 않고 실제로 찍어 본다).
+ * 그래서 옛 순서를 지켜도 뒤의 doctor 가 서명을 도로 날렸고, 확정을 돌릴 때마다
+ * `tohuh-rent-map`·`wolse-flip` 두 캡션이 서명을 잃은 채 남았다(실측).
+ *
+ * 그래서 이제 **자리**를 잰다: 서명 두 줄이 **마지막 두 자리**이고, 카드를 만드는 것들
+ * (재생성·doctor)보다 **뒤**인가. 이름에 꼬리말이 붙어도 견디게 느슨하게 찾는다 —
+ * 예전 검사는 라벨을 정확히 맞춰서, 라벨만 바꿔도 거짓으로 빨간불이 났다. */
+head("⑤ 확정 §0 순서 — 서명은 맨 뒤");
 {
-  const order = [...read("scripts/confirm.mjs").matchAll(/\["(전 카드 재생성·검수|캡션 고정 서명 반영|캡션 고정 서명 확인)"/g)].map((m) => m[1]);
-  console.log(`     ${order.join(" → ") || "(못 찾음)"}`);
-  check("재생성 → 서명 반영 → 서명 확인",
-    JSON.stringify(order) === JSON.stringify(["전 카드 재생성·검수", "캡션 고정 서명 반영", "캡션 고정 서명 확인"]));
+  const steps = [...read("scripts/confirm.mjs").matchAll(/\["([^"]+)",\s*"(?:node|pnpm)"/g)].map((m) => m[1]);
+  console.log(`     ${steps.join(" → ") || "(못 찾음)"}`);
+  const at = (re) => steps.findIndex((s) => re.test(s));
+  const iApply = at(/서명 반영/), iCheck = at(/서명 확인/);
+  const iBuild = at(/재생성/), iDoctor = at(/자가진단|픽셀 회귀/);
+
+  check("서명 반영·확인이 마지막 두 자리다",
+    iApply >= 0 && iCheck === iApply + 1 && iCheck === steps.length - 1,
+    `반영 ${iApply} · 확인 ${iCheck} / 전체 ${steps.length}단계`);
+  check("서명이 카드를 만드는 것들(재생성·doctor)보다 뒤다",
+    iApply > iBuild && iBuild >= 0 && (iDoctor < 0 || iApply > iDoctor),
+    `재생성 ${iBuild} · doctor ${iDoctor} · 서명 ${iApply} — doctor 도 카드를 다시 만든다`);
 }
 
 /* ⑥ 이 판형에 안 맞는 단지를 빌더가 실제로 막는가 — 문구가 아니라 **돌려서** 확인한다. */
@@ -211,6 +228,42 @@ head("⑪ 문서가 코드와 같은 말을 하는가");
     /verify-singo-pipe[^\n]{0,80}?\d+\s*(항목|가지)|배관 (점검|약속)[^\n]{0,40}?\d+\s*(항목|가지)/.test(t)).map(([p]) => p);
   check("배관 점검 항목 수를 문서에 안 적는다", counted.length === 0,
     counted.length ? `${counted.join(", ")} — 세는 쪽(이 스크립트)이 말하게 둔다` : "");
+}
+
+/* ⑫ 세트 제목의 평이 카드와 같은가 (2026-08-16d)
+ *
+ * 카드 제목의 평은 **빌더가 실측 공급면적으로** 쓰고, 세트 제목은 **사람이 손으로** 적는다.
+ * 그래서 평이 바뀌면 둘이 갈라진다 — 실제로 갈라졌다. 카드는 33평인데 `sets.json` 과
+ * 관제탑·발행 대기열은 34평이라 말하고 있었다(고정 환산표를 실측으로 바꾼 직후).
+ *
+ * **카드가 정본이다** — 코드가 원자료에서 뽑는다. 세트 제목은 그것을 따라가야 한다.
+ * 한쪽만 고치고 잊기 딱 좋은 자리라 검사로 내린다. */
+head("⑫ 세트 제목의 평이 카드와 같은가");
+{
+  const setsRaw = (() => { try { return JSON.parse(read("data/review/sets.json")); } catch { return null; } })();
+  const sets = setsRaw ? (Array.isArray(setsRaw) ? setsRaw : setsRaw.sets ?? []) : [];
+  const cdir = join(ROOT, "data/content");
+  const dates = existsSync(cdir)
+    ? readdirSync(cdir).filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)).sort().reverse()
+    : [];
+
+  const drift = [];
+  for (const s of sets) {
+    if (!String(s.label ?? "").startsWith("singo-") || s.label === "singoga") continue;
+    const slug = s.cards?.[0];
+    if (!slug) continue;
+    let card = null;
+    for (const d of dates) {
+      const f = join(cdir, d, `${slug}.json`);
+      if (existsSync(f)) { try { card = JSON.parse(readFileSync(f, "utf8")); } catch { /* 다음 */ } break; }
+    }
+    if (!card) continue;                       // 아직 안 만든 세트는 볼 것이 없다
+    const cardPy = String(card.title).replace(/<[^>]+>/g, "").match(/(\d+)평/)?.[1];
+    const setPy = String(s.title ?? "").match(/(\d+)평/)?.[1];
+    if (cardPy && setPy && cardPy !== setPy) drift.push(`${s.label}: 카드 ${cardPy}평 ≠ 세트 ${setPy}평`);
+  }
+  check("세트 제목의 평이 카드와 같다", drift.length === 0,
+    drift.length ? `${drift.join(" · ")} — 카드가 정본이다(빌더가 실측으로 쓴다). 세트 제목을 맞춘다` : "");
 }
 
 /* 항목 수는 **세는 쪽이 말한다.** 문서에 적으면 반드시 낡는다(두 번 적었고 두 번 다 틀렸다). */
