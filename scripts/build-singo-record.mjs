@@ -706,6 +706,35 @@ if (KAPT && kapt?.hhld > 0) {
     );
   }
 }
+/* ── 제목의 평 = **실측 공급평수** (오너 2026-08-16d)
+   "전용 59, 84로만 단지서칭은 하되, 카드를 만들때에는 실제 공급평수를 적어줘야지."
+
+   예전엔 전용 84 → 34평, 59 → 25평 **고정 대응표**였다(`parse/singo.ts` 의 `PYEONG_LABEL`).
+   단지가 뭐든 같은 값이 나오니 오보 0 규칙 위반이고, 실제로 틀렸다 —
+   늘푸른벽산·래미안크리시엘·광명한진은 34평이 아니라 **33평**이었다
+   (네이버부동산 표기 109.94㎡(84.92) 와 소수점까지 대조 확인).
+
+   공급면적 = 전유 + 「주건축물」 공용. 건축물대장에서 코드가 뽑는다.
+   ⚠️ 자료가 없으면 **멈춘다.** 고정표로 되돌아가지 않는다 — 그 표가 틀려서 고친 것이다.
+      대기열에 쓸 한 줄을 찍어 주니 사람은 그걸 밀기만 하면 된다. */
+let supply = null;
+if (KAPT) {
+  const type = hit.area >= 82 ? "84" : hit.area >= 56 ? "59" : String(Math.round(hit.area));
+  const sp = P(`data/datasets/apt-supply/${KAPT}-${type}.json`);
+  if (existsSync(sp)) {
+    supply = JSON.parse(readFileSync(sp, "utf8"));
+    if (supply.pyeongLabel) hit.pyeong = supply.pyeongLabel;
+  } else {
+    throw new Error(
+      `공급면적 자료가 없습니다: data/datasets/apt-supply/${KAPT}-${type}.json\n` +
+        `→ data/apt-supply-queue.txt 에 아래 한 줄을 쓰고 푸시하세요\n` +
+        `   kapt=${KAPT} area=${hit.area}\n` +
+        `   전용 ${hit.area}㎡ 로 서칭하되 카드에는 **실제 공급평수**를 적습니다(오너 2026-08-16d).\n` +
+        `   고정 환산표로 되돌아가지 않습니다 — 그 표가 틀려서 고친 것입니다.`,
+    );
+  }
+}
+
 /* 전용면적은 소수 둘째 자리까지. 실거래 원본이 84.925 처럼 셋째 자리를 주는 단지가 있어
    카드마다 자릿수가 달라 보였다(2026-08-16b: 84.95 · 84.48 옆에 84.925). */
 const areaLab = Number(hit.area).toFixed(2).replace(/\.?0+$/, "");
@@ -798,6 +827,23 @@ const card = {
           note: "국토교통부 공동주택 **상세**정보(지상+지하). 세대당 = 총 대수 ÷ 대장 세대수.",
         }
       : { note: "주차대수 자료 없음 — 그 줄을 붙이지 않았다(data/apt-detail-queue.txt 에 kapt 를 밀면 받는다)." },
+    /* 제목의 평이 어디서 왔는지 남긴다 — 고정 환산표가 아니라 실측이라는 증거다.
+       다음 세션이 "34평 아니었나?" 하고 되돌리지 않게, 근거를 카드가 스스로 들고 있는다. */
+    supplyArea: supply
+      ? {
+          exclusive: supply.exclusive,
+          commonResidential: supply.commonResidential,
+          supply: supply.supply,
+          pyeong: supply.pyeong,
+          label: supply.pyeongLabel,
+          sample: `${supply.sampleDong} ${supply.sampleHo}`,
+          note:
+            "국토교통부 **건축물대장** 전유공용면적. 공급면적 = 전유 + 「주건축물」 공용. " +
+            "부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. " +
+            "평은 3.305785㎡ 로 나눠 반올림(오너 2026-08-16d). " +
+            "제목의 평은 전용 84→34평 같은 관용 환산표가 **아니다** — 단지마다 실제로 다르다.",
+        }
+      : { note: "공급면적 자료 없음 — --kapt 를 안 짚었다(짚으면 빌더가 대기열 줄을 찍어 준다)." },
     /* 워터마크 자리를 남긴다 — 손으로 찍지 않았다는 증거이자, 다음에 곡선이 바뀌어
        자리가 옮겨졌을 때 "왜 옮겼나"를 대조할 수 있는 값이다. */
     stamp: stamp

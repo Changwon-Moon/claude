@@ -1,0 +1,115 @@
+name: 단지 공급면적 (카드 평 표기용)
+
+# ── 무엇을 하나 (2026-08-16d 오너 "카드를 만들때에는 실제 공급평수를 적어줘야지")
+# 건축물대장 전유공용면적에서 **호별 실측**으로 공급면적을 받아 적는다.
+#   공급면적 = 전유 + 「주건축물」 공용
+# 셈법과 근거는 packages/collectors/src/sources/supplyArea.ts 머리말에 있다
+# (네이버부동산 표기 109.94㎡(84.92) 와 소수점까지 대조 완료).
+#
+# ── 왜 대장(apt-hhld.json)에 없나
+# 대장에는 전용면적만 있다. 공급면적은 **건축물대장**에 있고 오퍼레이션이 다르다.
+# 그래서 짚어 준 단지·타입만 받는다.
+#
+# ── 못 받으면 안 쓴다
+# 전용면적이 맞는 아파트 호를 못 찾으면 **파일을 만들지 않는다.** 지어내지 않는다.
+# 파일이 없으면 카드는 평 표기를 붙이지 못하고 빌더가 멈춘다 — 그게 맞다.
+#
+# ── 키
+# DATA_GO_KR_API_KEY 다. MOLIT_API_KEY 가 **아니다**(2026-08-16d 실측 — 건축물대장은 이쪽으로 열린다).
+
+on:
+  push:
+    paths:
+      - "data/apt-supply-queue.txt"
+
+  # 이 서비스도 국토부라 몇 시간 단위로 문이 닫힌다(주차대수와 같은 현상).
+  # 사람이 다시 밀기를 기다리지 않고 두 시간마다 대기열을 훑는다. 다 찼으면 몇 초에 끝난다.
+  schedule:
+    - cron: "37 */2 * * *"
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apt-supply-area
+  cancel-in-progress: false
+
+jobs:
+  supply:
+    runs-on: ${{ vars.RUNNER_LABEL || 'ubuntu-latest' }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: 파서 셀프테스트
+        run: pnpm --filter @wirit/collectors selftest
+
+      - name: 대기열 처리
+        env:
+          DATA_GO_KR_API_KEY: ${{ secrets.DATA_GO_KR_API_KEY }}
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        shell: bash
+        run: |
+          set +e
+          Q=data/apt-supply-queue.txt
+          [ -f "$Q" ] || { echo "대기열 없음 — 건너뜀"; exit 0; }
+          OKN=0; NGN=0
+          : > "$RUNNER_TEMP/supply.log"
+          while read -r LINE; do
+            case "$LINE" in ''|'#'*) continue;; esac
+            KAPT=$(echo "$LINE" | grep -oE 'kapt=A[0-9]+' | cut -d= -f2)
+            AREA=$(echo "$LINE" | grep -oE 'area=[0-9.]+'  | cut -d= -f2)
+            FORCE=$(echo "$LINE" | grep -oE 'force=1')
+            [ -n "$KAPT" ] && [ -n "$AREA" ] || continue
+            TYPE=$(python3 -c "a=float('$AREA'); print('84' if a>=82 else '59' if a>=56 else str(round(a)))")
+            OUT="data/datasets/apt-supply/$KAPT-$TYPE.json"
+            if [ -f "$OUT" ] && [ -z "$FORCE" ]; then echo "── $KAPT-$TYPE 이미 있음 — 건너뜀"; continue; fi
+            echo "── $KAPT 전용 $AREA" | tee -a "$RUNNER_TEMP/supply.log"
+            if pnpm --filter @wirit/collectors collect-supply-area -- --kapt "$KAPT" --area "$AREA" 2>&1 | tee -a "$RUNNER_TEMP/supply.log"; then
+              OKN=$((OKN+1))
+            else
+              NGN=$((NGN+1))
+            fi
+          done < "$Q"
+          echo "OKN=$OKN" >> "$GITHUB_ENV"; echo "NGN=$NGN" >> "$GITHUB_ENV"
+          exit 0
+
+      - name: 실행 결과 기록
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "# 단지 공급면적 — 마지막 실행"
+            echo
+            echo "- 성공 ${OKN:-0}건 · 실패 ${NGN:-0}건"
+            echo "- 결과는 Actions 로그가 아니라 이 파일과 data/datasets/apt-supply/ 에서 본다"
+            echo
+            echo '```'
+            tail -c 60000 "$RUNNER_TEMP/supply.log" 2>/dev/null || echo "(로그 없음)"
+            echo '```'
+          } > data/apt-supply-last.md
+
+      - name: 커밋
+        if: always()
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f data/apt-supply-last.md
+          [ -e data/datasets/apt-supply ] && git add data/datasets/apt-supply || true
+          git diff --cached --quiet || git commit -m "공급면적 수집 (실측 · 전유+주건축물공용)"
+          git pull --rebase --autostash || true
+          git push

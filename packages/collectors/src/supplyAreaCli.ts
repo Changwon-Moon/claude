@@ -1,0 +1,159 @@
+/**
+ * 🏗️ 공급면적 수집기 — 건축물대장 전유공용면적 → `data/datasets/apt-supply/{kaptCode}-{타입}.json`
+ *
+ * 오너 2026-08-16d: **"전용 59, 84로만 단지서칭은 하되, 카드를 만들때에는 실제 공급평수를 적어줘야지."**
+ * 서칭·판정은 전용면적 그대로 두고, **카드 제목의 평만** 이 값으로 바꾼다.
+ *
+ * 셈법과 근거는 `sources/supplyArea.ts` 머리말에 있다(네이버부동산 표기와 대조 완료).
+ *
+ * 실행:
+ *   tsx src/supplyAreaCli.ts --kapt A44340013 --area 84.92 [--out data/datasets/apt-supply]
+ *   키: DATA_GO_KR_API_KEY (MOLIT_API_KEY 아님 — 건축물대장은 이쪽으로 열린다)
+ *
+ * 법정동코드·지번은 **저장소에 이미 있다** — 새로 붙일 것이 없다:
+ *   · bjdCode : `data/datasets/apt-list/{시군구}.json` 의 `bjdCode`(10자리)
+ *   · 지번    : `data/datasets/singo-log/{YYYY-MM}.json` 의 `jibun`
+ */
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { supplyAreaOf } from "./sources/supplyArea.js";
+
+const arg = (n: string) => {
+  const i = process.argv.indexOf(`--${n}`);
+  return i >= 0 ? process.argv[i + 1] : "";
+};
+
+const KEY = process.env.DATA_GO_KR_API_KEY || process.env.MOLIT_API_KEY || "";
+const KAPT = arg("kapt");
+const AREA = Number(arg("area"));
+const OUT = arg("out") || "data/datasets/apt-supply";
+const ROOT = process.cwd();
+
+if (!KEY) { console.error("::error::DATA_GO_KR_API_KEY 가 없습니다 (건축물대장은 이 키로 열립니다)"); process.exit(1); }
+if (!/^A\d+$/.test(KAPT) || !Number.isFinite(AREA)) {
+  console.error("::error::사용법: --kapt A44340013 --area 84.92");
+  process.exit(1);
+}
+
+/* ── 단지코드 → bjdCode(법정동 10자리). 저장소의 단지 목록에서 찾는다 ── */
+function bjdOf(kapt: string): { bjd: string; name: string } | null {
+  const dir = join(ROOT, "data/datasets/apt-list");
+  if (!existsSync(dir)) return null;
+  for (const f of readdirSync(dir).filter((x) => x.endsWith(".json"))) {
+    let items: any[];
+    try {
+      const j = JSON.parse(readFileSync(join(dir, f), "utf8"));
+      items = Array.isArray(j) ? j : j.items ?? [];
+    } catch { continue; }
+    const hit = items.find((it) => it.kaptCode === kapt);
+    if (hit?.bjdCode) return { bjd: String(hit.bjdCode), name: String(hit.kaptName ?? "") };
+  }
+  return null;
+}
+
+/* ── 단지코드 → 지번. 신고가 로그에서 찾는다(대장 주소는 표기가 흔들린다) ── */
+function jibunOf(kapt: string): string {
+  // 대장 주소의 끝 숫자를 먼저 본다
+  const hh = join(ROOT, "data/datasets/apt-hhld.json");
+  if (existsSync(hh)) {
+    try {
+      const byKapt = JSON.parse(readFileSync(hh, "utf8")).byKapt ?? {};
+      const addr = String(byKapt[kapt]?.addr ?? "");
+      const m = addr.match(/\s(\d+(?:-\d+)?)\s/);
+      if (m) return m[1];
+    } catch { /* 무시 — 아래로 넘어간다 */ }
+  }
+  return "";
+}
+
+const pad4 = (s: string) => String(s ?? "").replace(/\D/g, "").padStart(4, "0").slice(-4);
+const encKey = (k: string) => (/%[0-9A-Fa-f]{2}/.test(k) ? k : encodeURIComponent(k));
+
+async function get(url: string): Promise<{ status: number; body: string }> {
+  for (let i = 0; i < 2; i++) {
+    try {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 15000);
+      const res = await fetch(url, { signal: ctrl.signal, headers: { "User-Agent": "wirit-collector/0.1" } });
+      clearTimeout(t);
+      return { status: res.status, body: await res.text() };
+    } catch (e) {
+      if (i === 1) return { status: 0, body: `fetch failed: ${String((e as Error)?.message ?? e)}` };
+      await new Promise((r) => setTimeout(r, 3000));
+    }
+  }
+  return { status: 0, body: "" };
+}
+
+function rowsOf(raw: string): any[] {
+  try {
+    const j = JSON.parse(raw);
+    const it = j?.response?.body?.items?.item ?? j?.response?.body?.item;
+    if (it) return Array.isArray(it) ? it : [it];
+  } catch { /* XML 로 넘어간다 */ }
+  const out: any[] = [];
+  for (const m of raw.matchAll(/<item>[\s\S]*?<\/item>/g)) {
+    const o: any = {};
+    for (const f of m[0].matchAll(/<([A-Za-z0-9_]+)>([\s\S]*?)<\/\1>/g)) o[f[1]] = f[2].trim();
+    out.push(o);
+  }
+  return out;
+}
+const totalOf = (raw: string) => {
+  try { return Number(JSON.parse(raw)?.response?.body?.totalCount) || 0; } catch { /* XML */ }
+  return Number(raw.match(/<totalCount>(\d+)<\/totalCount>/)?.[1] || 0);
+};
+
+async function main() {
+  const info = bjdOf(KAPT);
+  if (!info) { console.error(`::error::${KAPT} 를 data/datasets/apt-list 에서 못 찾았습니다 — apt-universe 를 먼저 받으세요`); process.exit(1); }
+  const jibun = jibunOf(KAPT);
+  if (!jibun) { console.error(`::error::${KAPT} 의 지번을 못 찾았습니다 — apt-hhld.json 의 addr 를 확인하세요`); process.exit(1); }
+
+  const sigunguCd = info.bjd.slice(0, 5), bjdongCd = info.bjd.slice(5, 10);
+  const [bunRaw, jiRaw] = String(jibun).split("-");
+  const bun = pad4(bunRaw), ji = pad4(jiRaw ?? "0");
+  console.log(`▶ ${info.name} (${KAPT}) · 전용 ${AREA}㎡ · ${sigunguCd}-${bjdongCd} ${bun}-${ji}`);
+
+  const all: any[] = [];
+  let total = Infinity;
+  for (let page = 1; page <= 200 && all.length < total; page++) {
+    const url = `https://apis.data.go.kr/1613000/BldRgstHubService/getBrExposPubuseAreaInfo`
+      + `?serviceKey=${encKey(KEY)}&sigunguCd=${sigunguCd}&bjdongCd=${bjdongCd}`
+      + `&platGbCd=0&bun=${bun}&ji=${ji}&numOfRows=100&pageNo=${page}&_type=json`;
+    const { status, body } = await get(url);
+    if (status !== 200) { console.error(`::error::${page}쪽 실패 — ${body.slice(0, 120)}`); process.exit(1); }
+    if (page === 1) total = totalOf(body) || 0;
+    const rs = rowsOf(body);
+    if (!rs.length) break;
+    all.push(...rs);
+  }
+  console.log(`   줄 ${all.length}개 (응답이 말하는 총 ${total})`);
+
+  const sa = supplyAreaOf(all, AREA);
+  if (!sa) {
+    // 지어내지 않는다. 못 찾았으면 파일을 만들지 않는다.
+    console.error(`::error::전용 ${AREA}㎡ 에 해당하는 아파트 호를 못 찾았습니다 — 파일을 만들지 않습니다`);
+    process.exit(1);
+  }
+
+  const type = AREA >= 82 ? "84" : AREA >= 56 ? "59" : String(Math.round(AREA));
+  const outDir = join(ROOT, OUT);
+  mkdirSync(outDir, { recursive: true });
+  const path = join(outDir, `${KAPT}-${type}.json`);
+  writeFileSync(path, JSON.stringify({
+    kaptCode: KAPT,
+    kaptName: info.name,
+    type,
+    ...sa,
+    source: "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+    note: "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. "
+        + "용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다.",
+  }, null, 2) + "\n", "utf8");
+
+  console.log(`✅ ${path}`);
+  console.log(`   전유 ${sa.exclusive} + 주거공용 ${sa.commonResidential} = 공급 ${sa.supply}㎡ = ${sa.pyeong}평 → **${sa.pyeongLabel}**`);
+  console.log(`   표본: ${sa.sampleDong} ${sa.sampleHo} (같은 전용 호 ${sa.sampleCount}개)`);
+}
+
+main().catch((e) => { console.error(`::error::${String(e?.message ?? e)}`); process.exit(1); });

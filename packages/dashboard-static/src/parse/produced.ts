@@ -148,10 +148,31 @@ export function collectProduced(contentDir: string, outDir: string, reviewDir = 
     }
   }
 
-  // 세트 묶기 — 대표 장이 세트의 모든 장을 순서대로 갖는다(캐러셀 넘겨보기용)
+  /* ── 한 세트에 산출물은 하나다 — 가장 최근 날짜만 남긴다 (2026-08-16d)
+   *
+   * 정기물은 **발행일(오늘) 폴더**에 쓴다. 그래서 자정을 넘겨 다시 만들면 같은 세트가
+   * `data/content/2026-08-16/` 과 `…/2026-08-17/` 두 곳에 생긴다. 그대로 두면 관제탑이
+   * 티켓을 두 벌 만들고, 스모크의 「같은 카드가 두 번 뜨지 않음」이 **배포를 막는다**
+   * (2026-08-16 → 17 자정에 신고가 6장이 실제로 그렇게 걸려 배포가 멈췄다).
+   *
+   * 세트는 **지금 무엇을 낼 것인가**를 가리키는 물건이라 최신 판본 하나만 유효하다.
+   * 옛 날짜 폴더는 지우지 않는다 — 발행 이력이고 확정 md5 가 그 판본을 가리킬 수 있다.
+   * 화면에 두 번 그리지 않을 뿐이다.
+   *
+   * ⚠️ 세트에 안 묶인 낱장(setLabel 없음)은 건드리지 않는다. 슬러그가 같아도 다른 날
+   *    다른 소재의 산출물일 수 있고, 그건 사람이 볼 이유가 있다. */
+  const newestBySet = new Map<string, string>();
   for (const c of out) {
+    if (!c.setLabel) continue;
+    const cur = newestBySet.get(c.setLabel);
+    if (!cur || c.date > cur) newestBySet.set(c.setLabel, c.date);
+  }
+  const current = out.filter((c) => !c.setLabel || c.date === newestBySet.get(c.setLabel));
+
+  // 세트 묶기 — 대표 장이 세트의 모든 장을 순서대로 갖는다(캐러셀 넘겨보기용)
+  for (const c of current) {
     if (c.setLabel && c.setLead) {
-      const members = out
+      const members = current
         .filter((x) => x.setLabel === c.setLabel)
         .sort((a, b) => a.setOrder - b.setOrder);
       c.pages = members.flatMap((m) => m.pages);
@@ -160,5 +181,5 @@ export function collectProduced(contentDir: string, outDir: string, reviewDir = 
     c.thumb = c.pages[0] || null;
   }
 
-  return out;
+  return current;
 }
