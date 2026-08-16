@@ -18,9 +18,11 @@ import { fileURLToPath } from "node:url";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (p) => (existsSync(join(ROOT, p)) ? readFileSync(join(ROOT, p), "utf8") : "");
 let fail = 0;
+let passed = 0;
 const check = (name, pass, why = "") => {
   console.log(`  ${pass ? "✅" : "❌"} ${name}${pass || !why ? "" : ` — ${why}`}`);
-  if (!pass) fail++;
+  if (pass) passed++;
+  else fail++;
 };
 const head = (t) => console.log(`\n${t}`);
 
@@ -172,28 +174,49 @@ head("⑪ 문서가 코드와 같은 말을 하는가");
   check("기준 문서에 Actions 결과 확인 파일이 있다", std.includes("singo-history-last.md"),
     "세션은 Actions 로그를 못 읽는다 — 저장소 파일로 봐야 한다");
   check("기준 문서에 재확정 절차가 있다", /재확정/.test(std) && std.includes("confirmedMd5"));
+  /* ⚠️ **세션이 읽는 문서를 전부 본다.** 처음엔 기준 문서와 CLAUDE.md 만 봤는데,
+     정작 낡아 있던 곳은 STATUS.md·스킬 문서·팀 로그였다(2026-08-16c 재감사).
+     그물이 좁으면 초록불이 뜨는데도 사고가 그대로 산다. */
+  const DOCS = [
+    "docs/guides/신고가-카드-기준.md", "CLAUDE.md", "STATUS.md",
+    "docs/CARD_CHECKLIST.md", "docs/HANDOFF.md", "docs/WIRIT_CARDS_SKILL.md",
+    "company/CEO.md", "company/teams/qa.md", "company/teams/design.md", "company/teams/editing.md",
+  ].map((p) => [p, read(p)]);
+
   /* 명령 블록(```) 안만 본다 — "그 인자는 무시된다"는 **경고 문장**까지 걸리면
      경고를 적을수록 검사가 화내는 이상한 그물이 된다. */
   const codeBlocks = (t) => [...t.matchAll(/```[\s\S]*?```/g)].map((m) => m[0]).join("\n");
-  check("명령 예시가 없는 렌더 인자를 안 쓴다", !/--outdir|--qa\b/.test(codeBlocks(std) + codeBlocks(claude)),
-    "렌더러 CLI 는 --data/--out 둘뿐이라 나머지는 조용히 무시된다");
+  const badArg = DOCS.filter(([, t]) => /--outdir|--qa\b/.test(codeBlocks(t))).map(([p]) => p);
+  check("명령 예시가 없는 렌더 인자를 안 쓴다", badArg.length === 0,
+    badArg.length ? `${badArg.join(", ")} — 렌더러 CLI 는 --data/--out 둘뿐이다` : "");
+
   check("STATUS.md 가 폐기된 제목 규칙을 안 가르친다",
     !/단지명이 이미 지역을 품으면 지역 라벨/.test(status),
     "세션이 제일 먼저 읽는 파일이다 — 여기가 낡으면 나머지를 다 읽어도 소용없다");
   check("체크리스트 §0 이 재생성 → 서명 순서다",
     chk.indexOf("scripts/rebuild-cards.mjs") < chk.indexOf("scripts/apply-signature.mjs"),
     "서명이 앞이면 재생성이 다시 날린다");
+
   /* 확정 md5 는 두 곳에 적히면 반드시 어긋난다 — 문서에 12자리 md5 를 박아 두지 않았는지 본다.
      (§7 표처럼 '어느 파일이 정본인가'를 적는 건 괜찮다. 값 자체를 베끼는 게 문제다.) */
-  const stale = [...std.matchAll(/`([0-9a-f]{12})`/g)].map((m) => m[1])
-    .filter((h) => !read("data/review/sets.json").includes(h) && !read("data/review/pixel-baselines.json").includes(h));
-  check("기준 문서에 어디에도 없는 md5 가 박혀 있지 않다", stale.length === 0,
+  const truth = read("data/review/sets.json") + read("data/review/pixel-baselines.json");
+  const stale = DOCS.flatMap(([p, t]) =>
+    [...t.matchAll(/`([0-9a-f]{12})`/g)].map((m) => m[1]).filter((h) => !truth.includes(h)).map((h) => `${p}:${h}`));
+  check("문서에 어디에도 없는 md5 가 박혀 있지 않다", stale.length === 0,
     stale.length ? `${stale.join(", ")} — 확정 기록과 안 맞는다` : "");
+
+  /* 항목 수를 문서에 적으면 반드시 낡는다 — 두 번 적었고 두 번 다 틀렸다.
+     "N항목/N종/N가지" 같은 말이 배관 점검·확정 §0 옆에 다시 나타나면 잡는다. */
+  const counted = DOCS.filter(([, t]) =>
+    /verify-singo-pipe[^\n]{0,80}?\d+\s*(항목|가지)|배관 (점검|약속)[^\n]{0,40}?\d+\s*(항목|가지)/.test(t)).map(([p]) => p);
+  check("배관 점검 항목 수를 문서에 안 적는다", counted.length === 0,
+    counted.length ? `${counted.join(", ")} — 세는 쪽(이 스크립트)이 말하게 둔다` : "");
 }
 
+/* 항목 수는 **세는 쪽이 말한다.** 문서에 적으면 반드시 낡는다(두 번 적었고 두 번 다 틀렸다). */
 console.log(
   fail === 0
-    ? "\n✅ 배관 이상 없음 — 다음 카드 제작을 이대로 진행해도 됩니다.\n"
-    : `\n❌ ${fail}건이 어긋납니다 — 위 항목을 고치고 다시 도세요.\n`,
+    ? `\n✅ 배관 이상 없음 (${passed}항목) — 다음 카드 제작을 이대로 진행해도 됩니다.\n`
+    : `\n❌ ${passed + fail}항목 중 ${fail}건이 어긋납니다 — 위 항목을 고치고 다시 도세요.\n`,
 );
 process.exit(fail === 0 ? 0 : 1);

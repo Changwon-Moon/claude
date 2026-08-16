@@ -149,7 +149,7 @@ const plotBot = VB_H - PAD_B;
 const lo = Math.min(...traded.map((p) => p.maxManwon));
 const hi = Math.max(...traded.map((p) => p.maxManwon));
 /* 위아래 여유는 **다르게** 준다.
-   위쪽은 '이번에 넘은 선'이 곧 최고가라 여유가 크면 판 위쪽이 통째로 빈 칸이 된다
+   위쪽은 '오늘 값 기준선'이 곧 최고가라 여유가 크면 판 위쪽이 통째로 빈 칸이 된다
    (2026-08-16: 가격과 곡선 사이에 130px 짜리 죽은 자리가 생겼다).
    아래쪽은 곡선이 바닥에 붙지 않게 넉넉히 둔다. */
 const span = hi - lo || hi * 0.1;

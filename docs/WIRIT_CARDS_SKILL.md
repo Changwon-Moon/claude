@@ -349,7 +349,9 @@ node scripts/confirm.mjs <세트라벨...> [--note "메모"]
 ```
 
 재생산 → 검수(error 면 스스로 중단) → 확정 기록(`sets.json`) → **고정물만** 픽셀 기준값 등록
-→ 내보내기 전 검사 5종(rebuild·tower·smoke·audit-head·doctor) → 커밋.
+→ 내보내기 전 검사 **7종**(rebuild-cards → apply-signature → apply-signature --check →
+  build-tower-site → smoke-tower → audit-head → doctor) → 커밋.
+  ⚠️ `apply-signature` 두 단계가 **반드시 rebuild 뒤**에 온다 — 몇몇 빌더가 재생성하며 서명을 날린다.
 푸시 명령만 마지막에 찍어 준다(토큰이 필요해 스크립트가 쥐지 않는다).
 
 ### 🔑 푸시 인증 — 실패는 세 가지고, 셋 다 원인이 다르다 (2026-08-12 확정)
