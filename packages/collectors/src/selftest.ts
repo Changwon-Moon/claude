@@ -89,6 +89,7 @@ import {
   BASELINE_FROM as SINGO_FROM,
 } from "./parse/singo.js";
 import { matchApt as aptMatch, parseAptList, parseAptBasis } from "./parse/aptInfo.js";
+import { cleanStationName, linesFromCategory } from "./parse/station.js";
 import { singoRegions as singoRegionList, monthRange as singoMonthRange } from "./sources/singoRegions.js";
 import {
   APPLYHOME_APT_JSON,
@@ -992,6 +993,29 @@ console.log("\n[청약홈 분양정보 파서]");
   check("기준선 문구가 값에서 나온다", singoBaseline("202001") === "2020년 이후", singoBaseline("202001"));
   check("1월이 아니면 월까지 적는다", singoBaseline("202108") === "2021년 8월 이후", singoBaseline("202108"));
   check("기준선을 2006 으로 내리면 문구도 따라간다", singoBaseline("200601") === "2006년 이후", singoBaseline("200601"));
+
+  /* ── 역 뱃지 (2026-08-16 오너 "가까운 역을 뱃지로")
+   * 카카오는 역 이름에 노선을 붙여 주기도 하고("철산역 7호선"), 출입구별로 여러 건을 준다.
+   * 카드에는 **역 이름만** 적고 노선은 뱃지가 말한다. */
+  check("역 이름에서 노선 꼬리를 뗀다", cleanStationName("철산역 7호선") === "철산역", cleanStationName("철산역 7호선"));
+  check("괄호 꼬리도 뗀다", cleanStationName("사당역(4호선)") === "사당역", cleanStationName("사당역(4호선)"));
+  check("멀쩡한 이름은 그대로", cleanStationName("광명사거리역") === "광명사거리역", cleanStationName("광명사거리역"));
+  check(
+    "숫자 노선을 집어낸다",
+    linesFromCategory("교통,수송 > 지하철,전철 > 수도권7호선", "철산역").join(",") === "7",
+    linesFromCategory("교통,수송 > 지하철,전철 > 수도권7호선", "철산역").join(","),
+  );
+  check(
+    "환승역은 노선이 여러 개",
+    linesFromCategory("… > 수도권2호선 … 수도권4호선", "사당역").join(",") === "2,4",
+    linesFromCategory("… > 수도권2호선 … 수도권4호선", "사당역").join(","),
+  );
+  check(
+    "이름 있는 노선도 집어낸다",
+    linesFromCategory("교통,수송 > 지하철,전철 > 신분당선", "판교역").join(",") === "신분당",
+    linesFromCategory("교통,수송 > 지하철,전철 > 신분당선", "판교역").join(","),
+  );
+  check("모르는 형태면 빈 배열", linesFromCategory("교통,수송 > 지하철,전철", "무슨역").length === 0, "");
 
   const mr = singoMonthRange("202511", "202602");
   check("월 범위는 해를 넘어간다", mr.join(",") === "202511,202512,202601,202602", mr.join(","));
