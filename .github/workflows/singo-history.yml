@@ -6,10 +6,14 @@ name: 신고가 단지 이력 (한 단지 곡선)
 # 한 구 × 79개월 ≈ 80회 호출, 3~5분.
 #
 # ── 방아쇠
-# 세션은 Actions 버튼을 못 누른다. `data/singo-history-queue.txt` 에 한 줄 쓰고 푸시하면 돈다.
-#   lawd=41135 umd=정자동 apt=상록마을(라이프2차) type=84
-# (apt 는 공백을 담을 수 있으므로 **줄의 마지막**에 쓰지 않는다 — 아래 파서가 key=value 를
-#  공백으로 자르기 때문. 공백이 든 단지명은 apt="..." 로 감싼다.)
+# 세션은 Actions 버튼을 못 누른다. `data/singo-history-queue.txt` 에 줄을 쓰고 푸시하면 돈다.
+#   lawd=41135 umd=정자동 type=84 apt="상록마을(라이프2차)"
+#
+# ── ⚠️ 대기열의 **모든 줄**을 처리한다 (2026-08-16 변경)
+# 예전엔 마지막 줄만 읽었다. 카드를 여러 장 만들 때 5장이면 5번을 **순차로** 밀어야 했고
+# (동시성 그룹 때문에 겹치지도 않는다), 그게 하루 작업을 반나절로 만들었다.
+# 이미 받아 둔 곡선은 건너뛴다 — 다시 받으려면 그 줄에 `force=1` 을 붙인다.
+# (apt 는 공백을 담을 수 있으므로 **줄의 마지막**에 쓰고 apt="..." 로 감싼다.)
 on:
   push:
     paths:
@@ -63,38 +67,33 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: 실행 조건 정하기
-        id: cfg
+      - name: 대기열 읽기
+        id: q
         shell: bash
+        env:
+          IN_LAWD: ${{ github.event.inputs.lawd }}
+          IN_APT: ${{ github.event.inputs.apt }}
+          IN_UMD: ${{ github.event.inputs.umd }}
+          IN_TYPE: ${{ github.event.inputs.type }}
+          IN_FROM: ${{ github.event.inputs.from }}
         run: |
-          LAWD="${{ github.event.inputs.lawd }}"
-          APT="${{ github.event.inputs.apt }}"
-          UMD="${{ github.event.inputs.umd }}"
-          TYPE="${{ github.event.inputs.type }}"
-          FROM="${{ github.event.inputs.from }}"
           Q=data/singo-history-queue.txt
-          if [ -z "$LAWD$APT" ] && [ -f "$Q" ]; then
-            LINE=$(grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' | tail -1)
-            echo "대기열 마지막 줄: ${LINE:-(비어 있음)}"
-            # key=value 를 하나씩 뽑는다. apt 는 따옴표로 감싼 값을 허용한다.
-            LAWD=$(printf '%s' "$LINE" | sed -n 's/.*lawd=\([0-9]\{5\}\).*/\1/p')
-            TYPE=$(printf '%s' "$LINE" | sed -n 's/.*type=\([0-9]\{2\}\).*/\1/p')
-            FROM=$(printf '%s' "$LINE" | sed -n 's/.*from=\([0-9]\{6\}\).*/\1/p')
-            UMD=$(printf '%s' "$LINE" | sed -n 's/.*umd=\([^ ]*\).*/\1/p')
-            APT=$(printf '%s' "$LINE" | sed -n 's/.*apt="\([^"]*\)".*/\1/p')
-            [ -z "$APT" ] && APT=$(printf '%s' "$LINE" | sed -n 's/.*apt=\([^ ]*\).*/\1/p')
+          : > /tmp/jobs.txt
+          if [ -n "$IN_LAWD$IN_APT" ]; then
+            # 버튼으로 부른 경우 — 한 줄짜리 대기열을 만들어 아래 루프가 똑같이 돌게 한다
+            printf 'lawd=%s umd=%s type=%s from=%s apt="%s"\n' \
+              "$IN_LAWD" "$IN_UMD" "${IN_TYPE:-84}" "$IN_FROM" "$IN_APT" >> /tmp/jobs.txt
+          elif [ -f "$Q" ]; then
+            grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' > /tmp/jobs.txt || true
           fi
-          if [ -z "$LAWD" ] || [ -z "$APT" ] || [ -z "$TYPE" ]; then
-            echo "::error::lawd/apt/type 가 필요합니다. 받은 값 — lawd='$LAWD' apt='$APT' type='$TYPE'"
+          N=$(wc -l < /tmp/jobs.txt | tr -d ' ')
+          echo "대기열 $N 줄:"
+          cat /tmp/jobs.txt
+          if [ "$N" = "0" ]; then
+            echo "::error::대기열이 비었습니다."
             exit 1
           fi
-          {
-            echo "lawd=$LAWD"
-            echo "apt=$APT"
-            echo "umd=$UMD"
-            echo "type=$TYPE"
-            echo "from=${FROM:-202001}"
-          } >> "$GITHUB_OUTPUT"
+          echo "count=$N" >> "$GITHUB_OUTPUT"
 
       - name: 키 확인
         env:
@@ -105,17 +104,40 @@ jobs:
             exit 1
           fi
 
-      - name: 이력 수집
+      - name: 이력 수집 (대기열 전 줄)
         env:
           MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        shell: bash
         run: |
           set -o pipefail
-          pnpm --filter @wirit/collectors collect-singo-history -- \
-            --lawd "${{ steps.cfg.outputs.lawd }}" \
-            --apt "${{ steps.cfg.outputs.apt }}" \
-            ${{ steps.cfg.outputs.umd && format('--umd "{0}"', steps.cfg.outputs.umd) || '' }} \
-            --type "${{ steps.cfg.outputs.type }}" \
-            --from "${{ steps.cfg.outputs.from }}" 2>&1 | tee /tmp/hist.log
+          : > /tmp/hist.log
+          FAILED=0
+          while IFS= read -r LINE; do
+            [ -z "$LINE" ] && continue
+            LAWD=$(printf '%s' "$LINE" | sed -n 's/.*lawd=\([0-9]\{5\}\).*/\1/p')
+            TYPE=$(printf '%s' "$LINE" | sed -n 's/.*type=\([0-9]\{2\}\).*/\1/p')
+            FROM=$(printf '%s' "$LINE" | sed -n 's/.*from=\([0-9]\{6\}\).*/\1/p')
+            UMD=$(printf '%s' "$LINE" | sed -n 's/.*umd=\([^ ]*\).*/\1/p')
+            APT=$(printf '%s' "$LINE" | sed -n 's/.*apt="\([^"]*\)".*/\1/p')
+            [ -z "$APT" ] && APT=$(printf '%s' "$LINE" | sed -n 's/.*apt=\([^ ]*\).*/\1/p')
+            if [ -z "$LAWD" ] || [ -z "$APT" ] || [ -z "$TYPE" ]; then
+              echo "⛔ 줄을 못 읽었습니다 — $LINE" | tee -a /tmp/hist.log
+              FAILED=1; continue
+            fi
+            FORCE=""
+            case "$LINE" in *force=1*) FORCE="--force";; esac
+            echo "" | tee -a /tmp/hist.log
+            echo "── $APT 전용 ${TYPE}타입 ($LAWD)" | tee -a /tmp/hist.log
+            # ⚠️ 한 줄이 실패해도 나머지는 계속 간다 — 5장 중 1장 때문에 4장을 잃지 않는다
+            if ! pnpm --filter @wirit/collectors collect-singo-history -- \
+                  --lawd "$LAWD" --apt "$APT" ${UMD:+--umd "$UMD"} \
+                  --type "$TYPE" --from "${FROM:-202001}" $FORCE 2>&1 | tee -a /tmp/hist.log; then
+              FAILED=1
+            fi
+          done < /tmp/jobs.txt
+          echo "" | tee -a /tmp/hist.log
+          [ "$FAILED" = "0" ] && echo "✅ 대기열 전 줄 완료" | tee -a /tmp/hist.log || echo "⚠️ 일부 줄이 실패했습니다 — 위 로그 확인" | tee -a /tmp/hist.log
+          exit $FAILED
 
       - name: 파서 셀프테스트
         run: pnpm --filter @wirit/collectors selftest
@@ -126,7 +148,7 @@ jobs:
           {
             echo "# 신고가 단지 이력 — 마지막 실행"
             echo
-            echo "- 단지: ${{ steps.cfg.outputs.apt }} · 전용 ${{ steps.cfg.outputs.type }}타입 · ${{ steps.cfg.outputs.lawd }}"
+            echo "- 대기열: ${{ steps.q.outputs.count }}줄"
             echo "- 결과: **${{ job.status == 'success' && '성공' || '실패' }}**"
             echo
             echo '```'
@@ -147,7 +169,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "바뀐 것 없음 — 커밋 생략"
           else
-            git commit -m "신고가 단지 이력 — ${{ steps.cfg.outputs.apt }} ${{ steps.cfg.outputs.type }}타입"
+            git commit -m "신고가 단지 이력 — ${{ steps.q.outputs.count }}건"
             git pull --rebase --autostash origin ${{ github.ref_name }} || true
             git push origin HEAD:${{ github.ref_name }}
           fi
@@ -159,7 +181,7 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           if [ "${{ job.status }}" = "success" ]; then
-            node scripts/notify-telegram.mjs "📈 단지 이력 수집 완료 — ${{ steps.cfg.outputs.apt }} 전용 ${{ steps.cfg.outputs.type }}타입"
+            node scripts/notify-telegram.mjs "📈 단지 이력 수집 완료 — ${{ steps.q.outputs.count }}건"
           else
             node scripts/notify-telegram.mjs "⚠️ 단지 이력 수집 실패 — data/singo-history-last.md 확인"
           fi

@@ -58,6 +58,18 @@ async function main() {
     console.error('사용법: --lawd 41135 --apt "상록마을(라이프2차)" [--umd 정자동] --type 84');
     process.exit(1);
   }
+  /* ⚠️ 이미 받아 둔 곡선은 다시 훑지 않는다 — 한 단지가 80회 호출이라, 대기열을 여러 줄
+     처리하게 되면서(2026-08-16) 이미 있는 것까지 다시 받으면 실행이 몇 배로 늘어난다.
+     새로 받고 싶으면 대기열 줄에 `force=1` 을 붙인다(워크플로가 `--force` 로 넘긴다). */
+  if (!process.argv.includes("--force")) {
+    const slugExist = fullAptName(aptNm);
+    const outExist = R(`data/datasets/singo-history/${lawdCd}-${slugExist}-${type}.json`);
+    if (existsSync(outExist)) {
+      console.log(`⏭ 이미 있음 — ${outExist.split("/").pop()} (다시 받으려면 force=1)`);
+      return;
+    }
+  }
+
   const from = arg("from") ?? BASELINE_FROM;
   const kst = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
   const to = arg("to") ?? `${kst.slice(0, 4)}${kst.slice(5, 7)}`;

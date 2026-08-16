@@ -49,22 +49,23 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: 실행 조건 정하기
-        id: cfg
+      - name: 대기열 읽기
+        id: q
         shell: bash
+        env:
+          IN_KAPT: ${{ github.event.inputs.kapt }}
         run: |
-          KAPT="${{ github.event.inputs.kapt }}"
           Q=data/apt-detail-queue.txt
-          if [ -z "$KAPT" ] && [ -f "$Q" ]; then
-            LINE=$(grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' | tail -1)
-            echo "대기열 마지막 줄: ${LINE:-(비어 있음)}"
-            KAPT=$(printf '%s' "$LINE" | sed -n 's/.*kapt=\([A-Za-z0-9]*\).*/\1/p')
+          : > /tmp/jobs.txt
+          if [ -n "$IN_KAPT" ]; then
+            printf 'kapt=%s\n' "$IN_KAPT" >> /tmp/jobs.txt
+          elif [ -f "$Q" ]; then
+            grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' > /tmp/jobs.txt || true
           fi
-          if [ -z "$KAPT" ]; then
-            echo "::error::kapt 가 필요합니다."
-            exit 1
-          fi
-          echo "kapt=$KAPT" >> "$GITHUB_OUTPUT"
+          N=$(wc -l < /tmp/jobs.txt | tr -d ' ')
+          echo "대기열 $N 줄:"; cat /tmp/jobs.txt
+          if [ "$N" = "0" ]; then echo "::error::대기열이 비었습니다."; exit 1; fi
+          echo "count=$N" >> "$GITHUB_OUTPUT"
 
       - name: 키 확인
         env:
@@ -75,13 +76,30 @@ jobs:
             exit 1
           fi
 
-      - name: 주차대수 받기
+      - name: 주차대수 받기 (대기열 전 줄)
         env:
           MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        shell: bash
         run: |
           set -o pipefail
-          pnpm --filter @wirit/collectors collect-apt-detail -- \
-            --kapt ${{ steps.cfg.outputs.kapt }} 2>&1 | tee /tmp/detail.log
+          : > /tmp/detail.log
+          FAILED=0
+          while IFS= read -r LINE; do
+            [ -z "$LINE" ] && continue
+            KAPT=$(printf '%s' "$LINE" | sed -n 's/.*kapt=\([A-Za-z0-9]*\).*/\1/p')
+            [ -z "$KAPT" ] && { echo "⛔ kapt 를 못 읽었습니다 — $LINE" | tee -a /tmp/detail.log; FAILED=1; continue; }
+            OUT="data/datasets/apt-detail/$KAPT.json"
+            case "$LINE" in *force=1*) ;; *) if [ -f "$OUT" ]; then
+                  echo "⏭ 이미 있음 — $OUT (다시 받으려면 force=1)" | tee -a /tmp/detail.log; continue; fi;; esac
+            echo "" | tee -a /tmp/detail.log
+            echo "── $KAPT" | tee -a /tmp/detail.log
+            if ! pnpm --filter @wirit/collectors collect-apt-detail -- --kapt "$KAPT" 2>&1 | tee -a /tmp/detail.log; then
+              FAILED=1
+            fi
+          done < /tmp/jobs.txt
+          echo "" | tee -a /tmp/detail.log
+          [ "$FAILED" = "0" ] && echo "✅ 대기열 전 줄 완료" | tee -a /tmp/detail.log || echo "⚠️ 일부 줄이 실패했습니다" | tee -a /tmp/detail.log
+          exit $FAILED
 
       - name: 파서 셀프테스트
         run: pnpm --filter @wirit/collectors selftest
@@ -92,7 +110,7 @@ jobs:
           {
             echo "# 단지 주차대수 — 마지막 실행"
             echo
-            echo "- 대상: \`${{ steps.cfg.outputs.kapt }}\`"
+            echo "- 대기열: ${{ steps.q.outputs.count }}줄"
             echo "- 결과: **${{ job.status == 'success' && '성공' || '실패' }}**"
             echo
             echo '```'
@@ -110,7 +128,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "바뀐 것 없음 — 커밋 생략"
           else
-            git commit -m "단지 주차대수 — ${{ steps.cfg.outputs.kapt }}"
+            git commit -m "단지 주차대수 — ${{ steps.q.outputs.count }}건"
             git pull --rebase --autostash origin ${{ github.ref_name }} || true
             git push origin HEAD:${{ github.ref_name }}
           fi

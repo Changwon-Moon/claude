@@ -54,30 +54,25 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: 실행 조건 정하기
-        id: cfg
+      - name: 대기열 읽기
+        id: q
         shell: bash
+        env:
+          IN_KAPT: ${{ github.event.inputs.kapt }}
+          IN_ADDR: ${{ github.event.inputs.addr }}
+          IN_KEY: ${{ github.event.inputs.key }}
         run: |
-          KAPT="${{ github.event.inputs.kapt }}"
-          ADDR="${{ github.event.inputs.addr }}"
-          KEY="${{ github.event.inputs.key }}"
           Q=data/apt-station-queue.txt
-          if [ -z "$KAPT$ADDR" ] && [ -f "$Q" ]; then
-            LINE=$(grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' | tail -1)
-            echo "대기열 마지막 줄: ${LINE:-(비어 있음)}"
-            KAPT=$(printf '%s' "$LINE" | sed -n 's/.*kapt=\([A-Za-z0-9]*\).*/\1/p')
-            KEY=$(printf '%s' "$LINE" | sed -n 's/.*key=\([^ ]*\).*/\1/p')
-            ADDR=$(printf '%s' "$LINE" | sed -n 's/.*addr="\([^"]*\)".*/\1/p')
+          : > /tmp/jobs.txt
+          if [ -n "$IN_KAPT$IN_ADDR" ]; then
+            printf 'kapt=%s key=%s addr="%s"\n' "$IN_KAPT" "$IN_KEY" "$IN_ADDR" >> /tmp/jobs.txt
+          elif [ -f "$Q" ]; then
+            grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' > /tmp/jobs.txt || true
           fi
-          if [ -z "$KAPT" ] && [ -z "$ADDR" ]; then
-            echo "::error::kapt 또는 addr 가 필요합니다."
-            exit 1
-          fi
-          {
-            echo "kapt=$KAPT"
-            echo "addr=$ADDR"
-            echo "key=$KEY"
-          } >> "$GITHUB_OUTPUT"
+          N=$(wc -l < /tmp/jobs.txt | tr -d ' ')
+          echo "대기열 $N 줄:"; cat /tmp/jobs.txt
+          if [ "$N" = "0" ]; then echo "::error::대기열이 비었습니다."; exit 1; fi
+          echo "count=$N" >> "$GITHUB_OUTPUT"
 
       - name: 키 확인
         env:
@@ -88,15 +83,33 @@ jobs:
             exit 1
           fi
 
-      - name: 가까운 역 찾기
+      - name: 가까운 역 찾기 (대기열 전 줄)
         env:
           KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
+        shell: bash
         run: |
           set -o pipefail
-          pnpm --filter @wirit/collectors collect-apt-station -- \
-            ${{ steps.cfg.outputs.kapt && format('--kapt {0}', steps.cfg.outputs.kapt) || '' }} \
-            ${{ steps.cfg.outputs.addr && format('--addr "{0}"', steps.cfg.outputs.addr) || '' }} \
-            ${{ steps.cfg.outputs.key && format('--key {0}', steps.cfg.outputs.key) || '' }} 2>&1 | tee /tmp/station.log
+          : > /tmp/station.log
+          FAILED=0
+          while IFS= read -r LINE; do
+            [ -z "$LINE" ] && continue
+            KAPT=$(printf '%s' "$LINE" | sed -n 's/.*kapt=\([A-Za-z0-9]*\).*/\1/p')
+            KEY=$(printf '%s' "$LINE" | sed -n 's/.*key=\([^ ]*\).*/\1/p')
+            ADDR=$(printf '%s' "$LINE" | sed -n 's/.*addr="\([^"]*\)".*/\1/p')
+            OUT="data/datasets/apt-station/${KAPT:-$KEY}.json"
+            case "$LINE" in *force=1*) ;; *) if [ -n "${KAPT}${KEY}" ] && [ -f "$OUT" ]; then
+                  echo "⏭ 이미 있음 — $OUT (다시 받으려면 force=1)" | tee -a /tmp/station.log; continue; fi;; esac
+            echo "" | tee -a /tmp/station.log
+            echo "── ${KAPT:-$ADDR}" | tee -a /tmp/station.log
+            # ⚠️ 한 줄이 실패해도 나머지는 계속 간다
+            if ! pnpm --filter @wirit/collectors collect-apt-station -- \
+                  ${KAPT:+--kapt "$KAPT"} ${ADDR:+--addr "$ADDR"} ${KEY:+--key "$KEY"} 2>&1 | tee -a /tmp/station.log; then
+              FAILED=1
+            fi
+          done < /tmp/jobs.txt
+          echo "" | tee -a /tmp/station.log
+          [ "$FAILED" = "0" ] && echo "✅ 대기열 전 줄 완료" | tee -a /tmp/station.log || echo "⚠️ 일부 줄이 실패했습니다" | tee -a /tmp/station.log
+          exit $FAILED
 
       - name: 파서 셀프테스트
         run: pnpm --filter @wirit/collectors selftest
@@ -107,7 +120,7 @@ jobs:
           {
             echo "# 단지 가까운 역 — 마지막 실행"
             echo
-            echo "- 대상: \`${{ steps.cfg.outputs.kapt }}${{ steps.cfg.outputs.addr }}\`"
+            echo "- 대기열: ${{ steps.q.outputs.count }}줄"
             echo "- 결과: **${{ job.status == 'success' && '성공' || '실패' }}**"
             echo
             echo '```'
@@ -125,7 +138,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "바뀐 것 없음 — 커밋 생략"
           else
-            git commit -m "단지 가까운 역 — ${{ steps.cfg.outputs.kapt }}${{ steps.cfg.outputs.addr }}"
+            git commit -m "단지 가까운 역 — ${{ steps.q.outputs.count }}건"
             git pull --rebase --autostash origin ${{ github.ref_name }} || true
             git push origin HEAD:${{ github.ref_name }}
           fi
