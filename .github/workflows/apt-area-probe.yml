@@ -60,7 +60,7 @@ jobs:
       - name: 건축물대장 이미 받았나
         id: brdone
         run: |
-          if [ -f data/bldrgst-probe.md ] && grep -q "✅ \*\*" data/bldrgst-probe.md; then
+          if [ -f data/bldrgst-probe.md ] && grep -q "^#### 후보 셈법" data/bldrgst-probe.md; then
             echo "skip=1" >> "$GITHUB_OUTPUT"; echo "이미 받았습니다"
           else echo "skip=0" >> "$GITHUB_OUTPUT"; fi
 
@@ -71,8 +71,8 @@ jobs:
           MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
           # bjdCode:지번 — data/datasets/apt-list/*.json 의 bjdCode 와 실거래 지번에서 왔다
           T: >-
-            4111710700:488 4111113300:333 1129013500:80
-            1165010900:143 4136011200:5869-2 4121010100:200-6
+            4111710700:488:84.92 4111113300:333:59.98 1129013500:80:84.95
+            1165010900:143:84.48 4136011200:5869-2:84.99 4121010100:200-6:84.95
         run: node scripts/probe-bldrgst.mjs $T
 
       - name: 결과 커밋
