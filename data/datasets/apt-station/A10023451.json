@@ -11,7 +11,7 @@
   "x": 127.042991145876,
   "y": 37.236685537449,
   "geoMethod": "주소",
-  "station": "망포역 수인분당선",
+  "station": "망포역",
   "lines": [
     "수인분당"
   ],
@@ -27,5 +27,6 @@
     }
   ],
   "source": "카카오 로컬 API (주소 검색 · 카테고리 SW8)",
-  "collectedFor": "2026-08-16"
+  "collectedFor": "2026-08-16",
+  "repaired": "2026-08-16 노선 꼬리 파서 수정(cleanStationName)을 저장된 rawPlaceName 에 다시 적용"
 }

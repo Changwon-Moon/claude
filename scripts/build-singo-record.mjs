@@ -574,7 +574,10 @@ if (KAPT && kapt?.hhld > 0) {
     );
   }
 }
-const specBot = [`전용 ${hit.area}㎡`, `${hit.floor}층`];
+/* 전용면적은 소수 둘째 자리까지. 실거래 원본이 84.925 처럼 셋째 자리를 주는 단지가 있어
+   카드마다 자릿수가 달라 보였다(2026-08-16b: 84.95 · 84.48 옆에 84.925). */
+const areaLab = Number(hit.area).toFixed(2).replace(/\.?0+$/, "");
+const specBot = [`전용 ${areaLab}㎡`, `${hit.floor}층`];
 /* 오너 지시는 "전용면적·층수 **아래**" — 같은 줄에 붙이지 않고 셋째 줄로 세운다. */
 const specPark = parking ? `세대당 주차 ${parking.perHhld.toFixed(1)}대` : null;
 const spec = [specTop.join(SEP), specBot.join(SEP), specPark].filter((x) => x);
