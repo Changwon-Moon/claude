@@ -39,6 +39,27 @@ node scripts/line-card.mjs 3호선            # 문장째 넘겨도 됨: "3호�
 - 새 달을 포함하려면 먼저 `node scripts/line-card.mjs <노선> --collect 202608` → push→pull 후 다시 실행.
 - **아직 없는 노선**(데이터셋 없음)은 자동 불가 — LINE_CARDS.md §7(큐레이션·에이전트 선정)을 먼저 밟는다.
 
+## ⚡ 트리거: "오늘의 신고가" 카드 (매일 07:00 텔레그램 알림 → 카드)
+
+알림이 온 단지로 카드를 만들라는 요청이면 **판형은 `singo-record@1` 하나로 고정**이다.
+기준 정본은 **[docs/guides/신고가-카드-기준.md](docs/guides/신고가-카드-기준.md)**.
+
+```bash
+node scripts/verify-singo-pipe.mjs        # ⓪ 배관 점검 — 만들기 전에 한 번 (키·망 불필요)
+# ① 대기열 3개에 줄을 쓰고 푸시 → Actions → pull  (모든 줄을 돈다. 이미 받은 건 건너뛴다)
+#    data/singo-history-queue.txt · data/apt-station-queue.txt · data/apt-detail-queue.txt
+node scripts/build-singo-record.mjs --apt "<단지>" --type 84 --kapt <A########> --publish
+node scripts/gen-singo-caption.mjs data/content/<날짜>/<카드>.json --out <세트라벨>
+node scripts/produce-card.mjs <세트라벨>   # 렌더 + 검수(캡션 금액 대조 포함)
+```
+
+이 판형에서 **손으로 하지 않는 것** (전부 코드가 한다):
+- **세대수**는 `--kapt` 로 대장 항목을 **사람이 짚어야만** 붙는다. 이름 자동 매칭 금지
+  (2026-08-13 에 남의 단지 세대수가 알림으로 나갔다).
+- **캡션 금액**은 `gen-singo-caption.mjs` 가 카드 `meta` 에서 꺼낸다. 보고 옮겨 적지 않는다.
+- **가까운 역·주차대수**는 자료 파일이 있을 때만 붙고, 없으면 그 줄이 아예 없다.
+- 관측 15개월 미만 / '지난 사이클 고점'이 12개월 이내인 단지는 **빌더가 던진다** — 다른 판형 감이다.
+
 ## 학습 프로토콜 (회사의 기억 — 필수)
 
 이 저장소는 "회사"다(`company/README.md`). **운영자의 피드백을 받으면 반드시 기록한다**:
@@ -62,6 +83,11 @@ node scripts/line-card.mjs 3호선            # 문장째 넘겨도 됨: "3호�
 - **수치를 LLM이 창작하게 하는 코드를 쓰지 않는다.** 모든 수치는 raw 데이터에서 코드로 추출하고 `provenance` 경로를 남긴다 (ARCHITECTURE.md §2)
 - **API 키·토큰을 저장소에 커밋하지 않는다.** GitHub Secrets 또는 `.env`(gitignore) 사용
 - **렌더링은 결정적이어야 한다.** 동일 입력 = 동일 픽셀. 타임스탬프·랜덤 요소 금지
+- **검수가 '통과'라고 말해도 무엇을 검수했는지 본다.** 빌더가 `--publish` 없이 돌면 결과가
+  `data/out/_spike` 로 가는데 재생산·확정은 `data/content/<날짜>/` 를 본다 → **옛 판본을 검수하고
+  통과**한다(2026-08-16 실제 사고). `builders.json` args 에 `--publish` 를 넣는다
+- **정기물에 '조건부 예외'를 두지 않는다.** "이럴 땐 이렇게, 저럴 땐 저렇게"는 결국
+  **카드마다 모양이 다른 것**으로 나타난다. 하나로 고정할 수 있는지 먼저 묻는다
 - **발행된 카드·오너가 '확정'한 카드의 픽셀은 바꾸지 않는다.** 공용 템플릿을 고치면 조용히 바뀐다 →
   새 스타일은 **카드가 요청할 때만 켜지는 variant**로 격리하고, 고친 뒤 md5 회귀를 확인한다
   (기준값: `docs/CARD_CHECKLIST.md` §5)

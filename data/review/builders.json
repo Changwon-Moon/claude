@@ -325,6 +325,76 @@
         "--publish"
       ],
       "note": "⚠️ --publish 가 반드시 있어야 한다. 이 빌더는 기본으로 data/out/_spike 에 쓰는데, 재생산·확정은 data/content/<날짜>/ 를 렌더한다 — 빼면 **옛 판본을 확정하게 된다**(2026-08-16 실제로 겪었다)."
+    },
+    {
+      "label": "singo-neulpureun-byuksan",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "늘푸른벽산",
+        "--type",
+        "84",
+        "--kapt",
+        "A44340013",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-raemian-crisiel",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "래미안크리시엘",
+        "--type",
+        "84",
+        "--kapt",
+        "A13686302",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-hwaseo-prugio",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "화서역푸르지오더에듀포레",
+        "--type",
+        "59",
+        "--kapt",
+        "A44033010",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-seocho-foresta2",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "서초포레스타2단지",
+        "--type",
+        "84",
+        "--kapt",
+        "A10028021",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-dasan-lottecastle",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "다산롯데캐슬",
+        "--type",
+        "84",
+        "--kapt",
+        "A10026600",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
     }
   ]
 }
