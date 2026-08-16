@@ -2479,6 +2479,102 @@
       "status": "",
       "deadline": "2026-08-10",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910209&pblancNo=2026910209"
+    },
+    {
+      "id": "sig-2026-08-16-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "“전세 가고 월세 왔다”…서울 아파트 월세 5만 넘어 38.1% 돌파",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-16-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-16-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "서울 아파트 '전세의 월세화'…7년새 월세 비중 7.8%p↑",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-16-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-16-3",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "미술품·부동산도 주식처럼…11월 ‘조각투자 시장’ 열린다",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-16-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-16-4",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "김영익의 도발 예언 \"지표는 거짓말 안 해, 코스피 5000 아래로 붕괴될 것\"",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-16-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-16-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "“코스피, 최악은 지났는데…” 8820조 굴리는 美금융사의 조언",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-16-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-16-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "조각투자 '증시 데뷔'…11월 신종증권시장 문 연다",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-16-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-16-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "역대급 2분기 실적 시즌, 주가 반응은 실적과 점점 괴리",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-16-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-16-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "\"금리 1.75%까지 오른다\"...'돈까스 카레 지수' 달러당 62엔",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-16-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
