@@ -240,11 +240,12 @@ const first = traded[0];
 const fromLabel = `${hist.meta.from.slice(0, 4)}년${hist.meta.from.slice(4) === "01" ? "" : ` ${Number(hist.meta.from.slice(4))}월`}`;
 const dot2 = (d) => `${d.slice(0, 4)}.${d.slice(5, 7)}.${d.slice(8, 10)}`;
 
-/* 제목에 쓸 지역 이름 — "성남시분당구 정자동"은 제목에 길다.
-   시 이름을 떼고, 남는 글자가 2자 이상일 때만 "구"까지 뗀다.
+/* 제목에 쓸 지역 이름 — "성남시분당구"·"광명시"는 제목에 길다.
+   ① 구가 붙은 시("성남시분당구")는 시 이름을 떼고 "분당구"
+   ② 끝의 "구"·"시"는 남는 글자가 2자 이상일 때만 뗀다 → "분당" · "광명"
    ⚠️ 중구·서구처럼 한 글자만 남는 곳은 그대로 둔다("중 필동"은 말이 안 된다). */
 const guRaw = hit.gu.replace(/^[가-힣]+시(?=[가-힣]+구$)/, "");
-const guShort = /구$/.test(guRaw) && guRaw.length >= 3 ? guRaw.slice(0, -1) : guRaw;
+const guShort = /[구시]$/.test(guRaw) && guRaw.length >= 3 ? guRaw.slice(0, -1) : guRaw;
 
 /* 제원 두 줄 — 세대수 | 준공(년식) / 전용 | 층.
    ⚠️ 준공 연도를 '년식'으로 겹쳐 적는 건 오너 지정 형식이다(2026-08-13). */

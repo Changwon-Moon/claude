@@ -120,8 +120,25 @@ async function main() {
   }
 
   const traded = points.filter((p) => p.maxManwon != null);
+  const okMonths = points.filter((p) => p.ok).length;
+  /* ⚠️ "거래가 없다"와 "받아오질 못했다"를 같은 문구로 말하면 엉뚱한 곳을 고치게 된다.
+     2026-08-16 에 실제로 80개월 전부 수집 실패했는데 문구는 "단지명·법정동을 확인하세요"였다 —
+     이름은 멀쩡했고 API 가 그 시간대에 죽어 있었던 것이다. 둘을 갈라 말한다. */
+  if (!okMonths) {
+    console.error(
+      `⛔ ${months.length}개월을 **한 달도 받지 못했습니다** — 단지명 문제가 아니라 실거래 API 가 응답하지 않았습니다.\n` +
+        `   잠시 뒤 대기열에 같은 줄을 다시 밀어 넣으세요(문이 닫히는 시간대가 있습니다).`,
+    );
+    process.exit(1);
+  }
+  if (failed) {
+    console.warn(`⚠️ ${failed}/${months.length}개월을 못 받았습니다 — 그 달은 곡선에서 끊깁니다.`);
+  }
   if (!traded.length) {
-    console.error(`⛔ ${aptNm} 전용 ${type}타입 거래를 한 건도 못 찾았습니다 — 단지명·법정동을 확인하세요.`);
+    console.error(
+      `⛔ ${okMonths}개월을 받았지만 ${aptNm} 전용 ${type}타입 거래가 한 건도 없습니다 — ` +
+        `단지명·법정동 표기를 확인하세요(실거래 신고 표기 그대로여야 합니다).`,
+    );
     process.exit(1);
   }
   const peak = traded.reduce((a, b) => ((b.maxManwon as number) > (a.maxManwon as number) ? b : a));
