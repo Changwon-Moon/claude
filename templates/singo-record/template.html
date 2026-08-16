@@ -54,8 +54,12 @@
       .sr-spec { text-align: right; font-family: var(--font-num); font-size: 36px; line-height: 1.32; }
       /* 줄마다 block — inline span 은 scrollWidth 가 믿을 게 못 돼 폭 맞춤이 어긋난다.
          크기는 .sr-spec 이 정하고 줄은 물려받는다(그래야 두 줄이 같은 크기로 붙는다). */
+      /* ⚠️ 잉크 800 이었을 때 제원 덩어리(414×158)가 가격 덩어리(312×141)보다 **커서**,
+         이 줄의 주인이 가격이 아니라 제원이 됐다(2026-08-16b 검수 실측).
+         글자는 40→34 로, 색은 잉크→회색으로 내린다 — 정보는 그대로 두고 무게만 낮춘다.
+         BRAND.md §4 위계에서도 라벨·캡션은 블루그레이다. */
       .sr-spec .l {
-        display: block; font-size: inherit; font-weight: 800; color: var(--wirit-ink);
+        display: block; font-size: inherit; font-weight: 700; color: var(--wirit-gray);
         letter-spacing: -0.03em; white-space: nowrap;
       }
       .sr-spec .l .sep { color: var(--wirit-gray); font-weight: 700; padding: 0 6px; }
@@ -258,7 +262,8 @@
         if (hero && spec && price) {
           var gap = parseFloat(getComputedStyle(hero).columnGap || "34") || 34;
           var room = hero.clientWidth - price.scrollWidth - gap;
-          var lo = 18, hi = 40, best = 18;
+          /* 상한 34 — 40 이면 3줄이 가격보다 높은 덩어리가 된다(2026-08-16b 검수). */
+          var lo = 18, hi = 34, best = 18;
           for (var k = 0; k < 24; k++) {
             var mid = (lo + hi) / 2;
             spec.style.fontSize = mid + "px";
