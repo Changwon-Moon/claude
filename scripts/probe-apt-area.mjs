@@ -32,16 +32,17 @@ const OPS = [
 const encKey = (k) => (/%[0-9A-Fa-f]{2}/.test(k) ? k : encodeURIComponent(k));
 
 async function get(url) {
-  for (let i = 0; i < 3; i++) {
+  // 짧게 두드리고 물러난다 — 문이 닫혀 있으면 버텨도 안 열린다(30분 뒤 스케줄이 다시 온다).
+  for (let i = 0; i < 2; i++) {
     try {
       const ctrl = new AbortController();
-      const t = setTimeout(() => ctrl.abort(), 20000);
+      const t = setTimeout(() => ctrl.abort(), 8000);
       const res = await fetch(url, { signal: ctrl.signal, headers: { "User-Agent": "wirit-collector/0.1" } });
       clearTimeout(t);
       return await res.text();
     } catch (e) {
-      if (i === 2) throw e;
-      await new Promise((r) => setTimeout(r, 20000));
+      if (i === 1) throw e;
+      await new Promise((r) => setTimeout(r, 3000));
     }
   }
 }
