@@ -9,7 +9,7 @@
  * 이 스크립트가 기계적인 부분을 대신 밟고, **판단이 필요한 것만 사람에게 남긴다.**
  *
  * ── 무엇을 하나
- *   ① 내보내기 전 검사 5종을 순서대로 (rebuild → 서명 → 관제탑 → 머리 → doctor)
+ *   ① 내보내기 전 검사를 순서대로 — **tower-deploy.yml 과 같은 순서**로, 서명은 맨 뒤
  *   ② 학습이 **원천에 적혔는지** 확인 (STATUS · CEO · teams · 체크리스트 · 결정로그)
  *   ③ 커밋 안 된 것 · 안 밀린 것 세기
  *   ④ 푸시 명령을 찍어 준다 (토큰이 필요해 이 스크립트가 쥐지 않는다)
@@ -26,7 +26,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 
 const SKIP = process.argv.includes("--skip-checks");
 const sh = (c) => execSync(c, { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
-const tryShell = (c) => { try { return { ok: true, out: sh(c) }; } catch (e) { return { ok: false, out: `${e.stdout ?? ""}${e.stderr ?? ""}` }; } };
+const tryShell = (c) => { try { return { ok: true, out: execSync(c, { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], shell: "/bin/bash" }).trim() }; } catch (e) { return { ok: false, out: `${e.stdout ?? ""}${e.stderr ?? ""}` }; } };
 
 const today = new Date().toISOString().slice(0, 10);           // UTC 기준
 const kst = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
@@ -39,23 +39,48 @@ const ok = [];
 console.log("🚪 세션 마감 점검\n");
 
 /* ─────────────────────────────────────────────────────────────
-   ① 내보내기 전 검사 5종 — 순서가 중요하다
-   `apply-signature` 는 반드시 `rebuild-cards` 뒤에 온다.
-   몇몇 빌더는 재생성하면서 캡션을 다시 써 고정 서명을 날린다(2026-08-16c 실제 사고).
+   ① 내보내기 전 검사 — **순서가 곧 규칙이다**
+
+   ⚠️ 서명은 **맨 마지막**이다 (2026-08-16d 실측으로 고침)
+   체크리스트 §0 은 `rebuild-cards` → `apply-signature` 순서만 못박고 있었다.
+   그런데 **`doctor.mjs` 도 카드를 다시 만든다** — 진단이 말로 확인하지 않고 실제로
+   찍어 보기 때문이다. 그래서 §0 순서대로 밟으면 서명을 붙인 뒤 doctor 가 다시 날린다.
+   실측: `tohuh-rent-map` · `wolse-flip` 두 캡션이 매번 서명을 잃었다.
+   → **생성하는 것들을 먼저 다 돌리고, 서명을 마지막에 붙이고, `--check` 로 증명한다.**
+
+   ⚠️ 관제탑 순서는 **`tower-deploy.yml` 과 같아야 한다** (2026-08-16d 실측으로 고침)
+   여기서 스모크가 통과해도 배포에서 깨지면 소용이 없다. 그래서 배포 워크플로가 밟는
+   순서를 그대로 밟는다. 특히 두 가지를 빠뜨리면 **스모크가 172/174 로 떨어지는데,
+   코드 문제가 아니라 생성물이 없는 것**이다:
+     · `data/out/` 은 gitignore 라 갓 clone 한 환경엔 없다 → 렌더를 먼저 돌린다
+     · 썸네일·원본은 `stage-public-cards` 가 깐다 →
+       **`build-tower-site` 가 `_site` 를 통째로 지우므로 반드시 그 뒤에** 온다
    ───────────────────────────────────────────────────────────── */
+const RENDER_ALL = `set +e; shopt -s nullglob
+for f in data/content/*/*.json; do
+  d="$(basename "$(dirname "$f")")"
+  pnpm --filter @wirit/renderer render -- --data "$PWD/$f" --out "$PWD/data/out/$d" >/dev/null 2>&1
+done
+exit 0`;
+
 const CHECKS = [
   ["전 카드 재생성 + 자동 검수", "node scripts/rebuild-cards.mjs"],
-  ["캡션 고정 서명 반영", "node scripts/apply-signature.mjs"],
+  ["카드 렌더 (PNG · 썸네일 원천)", RENDER_ALL],
+  ["보관함 색인", "node scripts/build-archive.mjs"],
   ["관제탑 화면 조립", "node scripts/build-tower-site.mjs"],
-  ["관제탑 스모크", "node scripts/smoke-tower.mjs"],
+  ["내려받기·완성본 깔기 (조립 뒤여야 한다)", "node scripts/stage-public-cards.mjs"],
+  ["관제탑 스모크", "node scripts/smoke-tower.mjs packages/tower-worker/_site/index.html"],
+  ["전 버튼 시뮬레이션", "node scripts/sim-tower.mjs packages/tower-worker/_site/index.html"],
   ["머리 규격 전수", "pnpm --filter @wirit/renderer audit-head"],
   ["발행본 픽셀 회귀 · 자가진단", "node scripts/doctor.mjs"],
+  ["캡션 고정 서명 반영 (반드시 맨 뒤)", "node scripts/apply-signature.mjs"],
+  ["서명이 제자리인지 증명", "node scripts/apply-signature.mjs --check"],
 ];
 
 if (SKIP) {
-  warn.push("검사 5종을 건너뛰었다(--skip-checks). 픽셀을 건드렸다면 반드시 돌린다");
+  warn.push("검사를 건너뛰었다(--skip-checks). 픽셀을 건드렸다면 반드시 돌린다");
 } else {
-  console.log("── ① 내보내기 전 검사\n");
+  console.log("── ① 내보내기 전 검사 (서명은 맨 뒤 — doctor 가 다시 날린다)\n");
   for (const [name, cmd] of CHECKS) {
     process.stdout.write(`   ${name} … `);
     const r = tryShell(cmd);
