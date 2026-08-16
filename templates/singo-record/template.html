@@ -112,10 +112,13 @@
       .sr-bg { fill: var(--wirit-ink); opacity: 0.035; }
       .sr-line { fill: none; stroke: var(--wirit-ink); stroke-width: 5; stroke-linejoin: round; stroke-linecap: round; }
       .sr-obs { fill: var(--wirit-ink); opacity: 0.45; }
-      /* 이번에 넘은 선 — 진하게. 이게 이 카드의 사건이다. */
+      /* 오늘 값 기준선 — 진하게. 이게 이 카드의 사건이고, 아래 두 기준선이 견주는 대상이다. */
       .sr-thr { stroke: var(--wirit-ink); stroke-width: 3; stroke-dasharray: 11 9; opacity: 0.55; }
+      /* 값은 **작게**(오너 2026-08-16c "현재 가격도 작게 잉크색으로").
+         바로 위 히어로가 같은 숫자를 크게 말하고 있으므로 여기서 크게 쓰면 같은 말을 두 번 외친다.
+         선이 어디인지만 짚어 주면 된다 — 아래 기준선 라벨(27px)보다도 한 단계 작다. */
       .sr-thrlab {
-        font-family: var(--font-num); font-size: 28px; font-weight: 900;
+        font-family: var(--font-num); font-size: 24px; font-weight: 800;
         fill: var(--wirit-ink); opacity: 0.7;
       }
       /* 기준선 두 줄 — 한 단계 물러난다. 셋이 같은 무게면 무엇이 사건인지 흐려진다. */

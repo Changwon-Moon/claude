@@ -35,7 +35,10 @@
       "description": "실거래가 (예: 20.7억). 이 판형에서 레드로 쓰는 자리."
     },
     "priceSuffix": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "maxLength": 8,
       "description": "가격 옆 한 마디(잉크). 돌파일 때만 '달성!'. 선을 넘지 않은 신고가에는 붙이지 않는다."
     },
@@ -55,7 +58,7 @@
             "object",
             "null"
           ],
-          "description": "넘어선 10억 선. 돌파가 아니면 null — 있지도 않은 문턱을 그리지 않는다.",
+          "description": "오늘 값 기준선. **모든 카드에 있다**(2026-08-16c) — 아래 두 기준선이 '무엇과 견줬는지'를 말하려면 견주는 대상인 오늘 값에도 선이 있어야 한다. 돌파 카드도 문턱(10억)이 아니라 오늘 값에 긋는다(정기물에 조건부 예외를 두지 않는다). text 는 오늘 값(예: 6.67억).",
           "required": [
             "x1",
             "x2",
@@ -199,7 +202,10 @@
             },
             "tone": {
               "type": "string",
-              "enum": ["hi", "lo"]
+              "enum": [
+                "hi",
+                "lo"
+              ]
             }
           }
         },
@@ -312,17 +318,42 @@
           "description": "기준선 이후 최저점 선 + 2행 라벨(값(연월) / 저점대비 +N%). 최우측 정렬."
         },
         "stamp": {
-          "type": ["object", "null"],
+          "type": [
+            "object",
+            "null"
+          ],
           "description": "판 안쪽 워터마크(BRAND.md 슬롯 C). 판 한가운데에 판 대각선 각도로 눕힌다. 크기는 그 각도로 돌린 글자 상자가 판에 들어가는 최대치를 빌더가 계산한다 — 손으로 찍지 않는다.",
-          "required": ["x", "y", "size", "text", "rotate", "cx", "cy"],
+          "required": [
+            "x",
+            "y",
+            "size",
+            "text",
+            "rotate",
+            "cx",
+            "cy"
+          ],
           "properties": {
-            "x": { "type": "number" },
-            "y": { "type": "number" },
-            "cx": { "type": "number" },
-            "cy": { "type": "number" },
-            "size": { "type": "number" },
-            "rotate": { "type": "number" },
-            "text": { "type": "string" }
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "cx": {
+              "type": "number"
+            },
+            "cy": {
+              "type": "number"
+            },
+            "size": {
+              "type": "number"
+            },
+            "rotate": {
+              "type": "number"
+            },
+            "text": {
+              "type": "string"
+            }
           }
         },
         "bg": {
@@ -375,7 +406,10 @@
             },
             "tone": {
               "type": "string",
-              "enum": ["hi", "lo"]
+              "enum": [
+                "hi",
+                "lo"
+              ]
             }
           }
         },

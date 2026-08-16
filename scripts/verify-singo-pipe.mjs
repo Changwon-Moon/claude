@@ -98,6 +98,10 @@ head("⑧ 라벨이 곡선을 피하는가");
   check("곡선 구간 사각형을 잰다", b.includes("segBoxes"));
   check("연도 축을 장애물로 넣는다", b.includes("const half = widthOf(a.text, 24)"));
   check("빈 자리가 없어도 던지지 않는다", b.includes("판에 빈 자리가 없습니다"), "던지면 카드가 아예 안 나온다");
+  /* 오늘 값 기준선은 조건 없이 늘 있어야 한다 — `if (hit.milestone)` 로 돌아가면
+     돌파 카드에만 선이 생기고 나머지는 견줄 대상이 없는 그림이 된다(2026-08-16c). */
+  check("오늘 값 기준선이 조건 없이 그려진다", /const threshold = \{/.test(b) && !/if \(hit\.milestone\) \{\s*\n\s*const ty/.test(b),
+    "milestone 일 때만 그리면 대부분의 카드에 오늘 선이 없다");
 }
 
 /* ⑨ 캡션 생성기 규칙 — 전부 실제 결함을 보고 넣은 것이라, 지워지면 그 결함이 돌아온다. */
