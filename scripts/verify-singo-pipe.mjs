@@ -150,6 +150,47 @@ head("⑩ 확정 카드 픽셀");
   if (moved.length) console.log(`     → 다시 낼 거면 확정을 다시 받으세요: ${moved.join(", ")}`);
 }
 
+/* ⑪ 문서가 코드와 같은 말을 하는가 (2026-08-16c 감사)
+ *
+ * 새 세션은 **문서만 읽고** 카드를 만든다. 그래서 문서가 낡으면 배관이 멀쩡해도 사고가 난다.
+ * 실제로 감사에서 나온 것들: 세트 등록 절차가 어디에도 없어 `produce-card` 가 즉시 죽었고,
+ * 렌더 명령이 존재하지 않는 인자를 쓰고 있었고, 세션이 제일 먼저 읽는 STATUS.md 가
+ * **폐기된 제목 규칙**을 가르치고 있었다.
+ *
+ * 그래서 "문서에 이 말이 있는가"를 여기서 본다 — 사람 기억이 아니라 파일이 근거다. */
+head("⑪ 문서가 코드와 같은 말을 하는가");
+{
+  const std = read("docs/guides/신고가-카드-기준.md");
+  const claude = read("CLAUDE.md");
+  const status = read("STATUS.md");
+  const chk = read("docs/CARD_CHECKLIST.md");
+
+  check("기준 문서에 세트·빌더 등록 절차가 있다", std.includes("sets.json") && std.includes("builders.json"),
+    "없으면 새 세션이 produce-card 에서 즉시 막힌다");
+  check("기준 문서에 kaptCode 찾는 법이 있다", std.includes("apt-hhld.json") && std.includes("byKapt"),
+    "규칙만 있고 방법이 없으면 --kapt 를 못 채운다");
+  check("기준 문서에 Actions 결과 확인 파일이 있다", std.includes("singo-history-last.md"),
+    "세션은 Actions 로그를 못 읽는다 — 저장소 파일로 봐야 한다");
+  check("기준 문서에 재확정 절차가 있다", /재확정/.test(std) && std.includes("confirmedMd5"));
+  /* 명령 블록(```) 안만 본다 — "그 인자는 무시된다"는 **경고 문장**까지 걸리면
+     경고를 적을수록 검사가 화내는 이상한 그물이 된다. */
+  const codeBlocks = (t) => [...t.matchAll(/```[\s\S]*?```/g)].map((m) => m[0]).join("\n");
+  check("명령 예시가 없는 렌더 인자를 안 쓴다", !/--outdir|--qa\b/.test(codeBlocks(std) + codeBlocks(claude)),
+    "렌더러 CLI 는 --data/--out 둘뿐이라 나머지는 조용히 무시된다");
+  check("STATUS.md 가 폐기된 제목 규칙을 안 가르친다",
+    !/단지명이 이미 지역을 품으면 지역 라벨/.test(status),
+    "세션이 제일 먼저 읽는 파일이다 — 여기가 낡으면 나머지를 다 읽어도 소용없다");
+  check("체크리스트 §0 이 재생성 → 서명 순서다",
+    chk.indexOf("scripts/rebuild-cards.mjs") < chk.indexOf("scripts/apply-signature.mjs"),
+    "서명이 앞이면 재생성이 다시 날린다");
+  /* 확정 md5 는 두 곳에 적히면 반드시 어긋난다 — 문서에 12자리 md5 를 박아 두지 않았는지 본다.
+     (§7 표처럼 '어느 파일이 정본인가'를 적는 건 괜찮다. 값 자체를 베끼는 게 문제다.) */
+  const stale = [...std.matchAll(/`([0-9a-f]{12})`/g)].map((m) => m[1])
+    .filter((h) => !read("data/review/sets.json").includes(h) && !read("data/review/pixel-baselines.json").includes(h));
+  check("기준 문서에 어디에도 없는 md5 가 박혀 있지 않다", stale.length === 0,
+    stale.length ? `${stale.join(", ")} — 확정 기록과 안 맞는다` : "");
+}
+
 console.log(
   fail === 0
     ? "\n✅ 배관 이상 없음 — 다음 카드 제작을 이대로 진행해도 됩니다.\n"

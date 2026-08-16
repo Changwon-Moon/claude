@@ -22,7 +22,11 @@
 5. **캡션을 쓰기 전에 `data/review/captions/` 의 최근 발행본과 `_alt/README.md` 를 읽는다.**
    `_alt/README.md` 는 오너가 **무엇을 잘라냈는지**를 적어 둔 파일이다 —
    길게 쓴 뒤 잘리는 것보다 처음부터 그 길이로 쓰는 편이 빠르다.
-   캡션은 **카드가 확정된 뒤에** 쓴다(CEO.md 원칙).
+   **캡션의 "확정 뒤"는 오너 승인 순서를 말하는 것이지, 파일이 생기는 시점이 아니다.**
+   `confirm.mjs` 는 캡션 파일이 **없으면 확정을 거부**하고, `produce-card` 도 캡션으로 금액을
+   대조한다 — 즉 **파일은 확정 전에 있어야 한다.** CEO.md §211 이 말하는 것은
+   "카드 모양이 오너 손을 떠나기 전에 캡션 문장을 다듬느라 시간 쓰지 말라"는 뜻이다.
+   생성기가 뽑은 **초안은 빌드 직후 만들고**, 문장을 다듬는 것은 카드가 굳은 뒤에 한다.
 
 ## ⚡ 트리거: "N호선/신분당 역세권 (대장) 아파트 시세" 요청
 
@@ -44,14 +48,27 @@ node scripts/line-card.mjs 3호선            # 문장째 넘겨도 됨: "3호�
 알림이 온 단지로 카드를 만들라는 요청이면 **판형은 `singo-record@1` 하나로 고정**이다.
 기준 정본은 **[docs/guides/신고가-카드-기준.md](docs/guides/신고가-카드-기준.md)**.
 
+**전체 절차는 기준 문서 §6 에 있다.** 아래는 요약이고, 처음 만든다면 §6 을 그대로 따라간다.
+
 ```bash
 node scripts/verify-singo-pipe.mjs        # ⓪ 배관 점검 — 만들기 전에 한 번 (키·망 불필요)
-# ① 대기열 3개에 줄을 쓰고 푸시 → Actions → pull  (모든 줄을 돈다. 이미 받은 건 건너뛴다)
-#    data/singo-history-queue.txt · data/apt-station-queue.txt · data/apt-detail-queue.txt
+# ① kaptCode 를 사람이 짚는다 (data/datasets/apt-hhld.json 의 byKapt — §6 에 조회 한 줄)
+# ② 빌더를 먼저 부딪친다 → 곡선 자료가 없으면 **써야 할 대기열 줄을 찍고 멈춘다**
+# ③ 대기열 3개에 줄을 쓰고 한 번에 푸시 → Actions → pull
+#    결과는 Actions 로그가 아니라 data/{singo-history,apt-station,apt-detail}-last.md 에서 본다
+# ④ sets.json · builders.json 에 세트를 등록한다  ← 없으면 produce-card 가 즉시 죽는다
 node scripts/build-singo-record.mjs --apt "<단지>" --type 84 --kapt <A########> --publish
-node scripts/gen-singo-caption.mjs data/content/<날짜>/<카드>.json --out <세트라벨>
+node scripts/gen-singo-caption.mjs data/content/<날짜>/<카드>.json --out <세트의 caption 값>
 node scripts/produce-card.mjs <세트라벨>   # 렌더 + 검수(캡션 금액 대조 포함)
 ```
+
+⚠️ 자주 밟는 지뢰 셋:
+- **`pnpm render` 를 직접 부르지 않는다.** 렌더러 CLI 인자는 `--data`/`--out` 둘뿐이라
+  옛 문서의 `--outdir`·`--qa` 는 조용히 무시되고 PNG 가 엉뚱한 곳에 떨어진다.
+- **`--out` 은 세트 라벨이 아니라 세트의 `caption` 값**이다(둘이 달라도 된다).
+  어긋나면 검수가 캡션을 못 찾는데 `produce-card` 는 **경고만 찍고 통과**한다.
+- **곡선(`singo-history`)은 선택이 아니라 필수**다. 없으면 카드를 못 만든다.
+  게다가 곡선·역 워크플로에는 cron 이 없어(주차만 있다) **실패하면 사람이 다시 밀어야 한다.**
 
 이 판형에서 **손으로 하지 않는 것** (전부 코드가 한다):
 - **세대수**는 `--kapt` 로 대장 항목을 **사람이 짚어야만** 붙는다. 이름 자동 매칭 금지

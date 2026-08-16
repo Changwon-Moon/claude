@@ -196,6 +196,10 @@ node scripts/build-tower-site.mjs && node scripts/smoke-tower.mjs
 8. **종합 검수** → `data/review/{label}.json`에 PASS
 9. **오너에게 렌더 PNG 전송** — 눈으로 볼 수 있는 형태로
 10. 오너가 "확정"하면 → `pixel-baselines.json`에 md5 추가
+    ⚠️ **정기물은 예외다.** 자료가 갱신되면 다시 그려지는 카드(신고가·노선 시세 등)는
+    `pixel-baselines` 에 넣지 않고 `sets.json` 의 `confirmedMd5` 에만 남긴다.
+    넣으면 다음 수집일에 doctor 가 통째로 빨간불이 된다 —
+    자세한 건 `docs/guides/신고가-카드-기준.md` §7.
 
 ---
 
