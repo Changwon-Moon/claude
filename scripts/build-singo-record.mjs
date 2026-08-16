@@ -538,16 +538,16 @@ const first = traded[0];
 const fromLabel = `${hist.meta.from.slice(0, 4)}년${hist.meta.from.slice(4) === "01" ? "" : ` ${Number(hist.meta.from.slice(4))}월`}`;
 const dot2 = (d) => `${d.slice(0, 4)}.${d.slice(5, 7)}.${d.slice(8, 10)}`;
 
-/* 제목에 쓸 지역 이름 — "성남시분당구"·"광명시"는 제목에 길다.
-   ① 구가 붙은 시("성남시분당구")는 시 이름을 떼고 "분당구"
-   ② 끝의 "구"·"시"는 남는 글자가 2자 이상일 때만 뗀다 → "분당" · "광명"
-   ⚠️ 중구·서구처럼 한 글자만 남는 곳은 그대로 둔다("중 필동"은 말이 안 된다). */
-const guRaw = hit.gu.replace(/^[가-힣]+시(?=[가-힣]+구$)/, "");
-const guShort = /[구시]$/.test(guRaw) && guRaw.length >= 3 ? guRaw.slice(0, -1) : guRaw;
-/* ⚠️ 단지명이 이미 지역을 품고 있으면 지역 라벨을 안 붙인다 —
-   "광명 광명한진타운"처럼 같은 말이 두 번 나온다(2026-08-16 광명한진타운 첫 실행에서 나왔다).
-   "광명한진타운"이면 어느 시인지는 이름이 이미 말한다. */
-const aptStartsWithRegion = full(hit.aptNm).startsWith(full(guShort));
+/* ── 제목에 **지역을 붙이지 않는다** (오너 2026-08-16b "이름 앞에 지역은 빼는걸로 전체 세팅")
+   예전엔 "영통 늘푸른벽산 34평"처럼 회색 지역 라벨을 앞에 뒀고, 단지명이 이미 지역을
+   품으면(광명한진타운) 생략하는 예외까지 있었다. 그 예외가 곧 카드마다 제목 모양이
+   달라지는 이유였다 — 정기물은 **한 가지 모양**이어야 한다.
+   지금 제목은 언제나 `단지명 + 평형` 두 토막이다.
+
+   ⚠️ 지역이 카드에서 사라지는 게 아니다 — 역 뱃지(길음역·다산역)와 캡션이 말한다.
+      지역을 다시 싣게 되면 제목이 아니라 **킥커 쪽**에 두는 것이 이 판형에 맞는다
+      (제목은 주인공 하나만 세우는 자리다). */
+const gu = hit.gu; // meta 에만 남긴다
 
 /* 제원 두 줄 — 세대수 | 준공(년식) / 전용 | 층.
    ⚠️ 준공 연도를 '년식'으로 겹쳐 적는 건 오너 지정 형식이다(2026-08-13). */
@@ -592,12 +592,9 @@ const card = {
   kicker: hit.milestone
     ? `오늘의 ${hit.milestone}억 클럽 (계약 ${dot2(hit.date)})`
     : `오늘의 신고가 (계약 ${dot2(hit.date)})`,
-  /* 제목 — 지역은 회색으로 물러나고 단지·평형만 잉크. */
-  /* 평형은 코발트(오너 2026-08-16b). 지역=회색, 단지명=잉크, 평형=코발트로 셋이 갈려
-     한 줄 안에서 "어디 · 무엇 · 어느 평형"이 눈으로 끊긴다. */
-  title: aptStartsWithRegion
-    ? `${hit.aptNm} <span class="py">${hit.pyeong}</span>`
-    : `<span class="rg">${guShort}</span> ${hit.aptNm} <span class="py">${hit.pyeong}</span>`,
+  /* 제목 = **단지명(잉크) + 평형(코발트)**. 지역은 붙이지 않는다(오너 2026-08-16b).
+     두 토막이라 어느 단지든 같은 모양으로 읽힌다. */
+  title: `${hit.aptNm} <span class="py">${hit.pyeong}</span>`,
   station,
   price: eok(hit.priceManwon),
   /* 가격 옆 한 마디 — 오너 지시(2026-08-16b, 자리에 있던 워터마크를 이걸로 바꿨다).
@@ -617,6 +614,14 @@ const card = {
       `singo-history: ${histPath.replace(ROOT + "/", "")} (${hist.meta.monthsTried}개월 · 실패 ${hist.meta.monthsFailed})`,
     ],
     baselineFrom: hist.meta.from,
+    /* 지역은 **카드 제목에서 뺐다**(오너 2026-08-16b). 그렇다고 자료에서까지 지우면
+       캡션 쓰는 사람이 어디 단지인지 다시 찾아야 한다 — 여기에 남긴다. */
+    region: {
+      gu,
+      umd: hit.umdNm,
+      jibun: hit.jibun ?? null,
+      note: "카드 제목에는 싣지 않는다. 지역은 역 뱃지와 캡션이 말한다.",
+    },
     /* 곡선이 그리는 값을 **글자로도** 남긴다.
        chart 에는 픽셀 좌표뿐이라, 이게 없으면 그림이 자료와 맞는지 아무도 대조할 수 없다.
        (캡션 검수도 이 풀과 대조해 "카드에 없는 금액"을 잡는다.) */

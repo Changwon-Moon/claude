@@ -27,7 +27,7 @@
     },
     "title": {
       "type": "string",
-      "description": "지역(회색 .rg) + 단지명 + 평형. 한 줄."
+      "description": "단지명 + 평형(<span class=\"py\">, 코발트). 한 줄. ⚠️ 지역은 붙이지 않는다(오너 2026-08-16b) — 지역은 역 뱃지와 캡션이 말하고, meta.region 에 남는다."
     },
     "price": {
       "type": "string",

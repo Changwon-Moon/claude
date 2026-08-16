@@ -163,6 +163,12 @@
       "singo-history: data/datasets/singo-history/41210-광명한진타운-84.json (80개월 · 실패 0)"
     ],
     "baselineFrom": "202001",
+    "region": {
+      "gu": "광명시",
+      "umd": "광명동",
+      "jibun": "200-6",
+      "note": "카드 제목에는 싣지 않는다. 지역은 역 뱃지와 캡션이 말한다."
+    },
     "curve": [
       {
         "ym": "202001",
