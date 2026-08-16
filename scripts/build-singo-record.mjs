@@ -112,8 +112,14 @@ const VB_W = 936; // 카드 안쪽 폭(1080 - 좌우 여백 72×2)
 /* ⚠️ 이 값이 곧 곡선의 세로 크기다. 위에 줄이 늘면(역 뱃지 등) **여기를 줄여야** 한다 —
    SVG 는 flex 로 안 줄어들어 자리가 모자라면 아랫줄을 그대로 덮는다.
    덮은 것은 designQa 의 `svgspill` 이 error 로 잡는다(2026-08-16 에 실제로 45px 밟았다). */
-const VB_H = 775;
-const PAD_T = 62; // 위 — 돌파선 라벨이 앉을 자리
+/* ⚠️ 775 였을 때 판이 담는 칸(`.sr-chart`, 760px)을 **7px 넘쳐** designQa 가 error 를 냈다
+   (2026-08-16b 검수). 제원이 세 줄이 되면서 히어로가 커져 칸이 그만큼 줄어든 것이다.
+   **위에 줄이 늘면 여기를 줄여야 한다** — SVG 는 flex 로 안 줄어들어 그냥 아랫줄을 덮는다. */
+const VB_H = 756;
+/* 위 — 돌파선 라벨이 앉을 자리만 남긴다. 62 였을 때 판 위쪽에 빈 띠가 남았다
+   (오너 2026-08-16b "그래프 위쪽 여백이 과해"). 아래 `yMax` 여유와 **둘이 합쳐** 그 띠를 만든다.
+   ⚠️ 라벨(28px)이 y-20 에 앉으므로 48px 아래로는 못 내린다 — 그 아래는 라벨이 판을 넘는다. */
+const PAD_T = 44;
 /* 아래 — 연도 축이 앉을 자리. 62 였을 때 곡선 바닥과 연도 사이가 통째로 비어 보였다
    (오너 2026-08-16 "연도축과 그래프 하단 사이 여백 좀 줄여줘").
    아래 `yMin` 여유와 **둘이 합쳐** 그 빈칸을 만든다 — 한쪽만 줄이면 티가 안 난다. */
@@ -133,7 +139,7 @@ const hi = Math.max(...traded.map((p) => p.maxManwon));
    (2026-08-16: 가격과 곡선 사이에 130px 짜리 죽은 자리가 생겼다).
    아래쪽은 곡선이 바닥에 붙지 않게 넉넉히 둔다. */
 const span = hi - lo || hi * 0.1;
-const yMax = hi + span * 0.09;
+const yMax = hi + span * 0.04;
 const yMin = Math.max(0, lo - span * 0.05);
 const xOf = (i) => X0 + ((X1 - X0) * i) / (pts.length - 1);
 const yOf = (m) => plotBot - ((plotBot - plotTop) * (m - yMin)) / (yMax - yMin);
@@ -245,13 +251,19 @@ function assertNoOvershoot(pts) {
 for (const sg of paths) assertNoOvershoot(sg);
 const chartPaths = paths.map((sg) => ({ d: smoothPath(sg) }));
 
-const dots = pts
-  .map((p, i) => (p.maxManwon != null && p.ok ? { x: r2(xOf(i)), y: r2(yOf(p.maxManwon)), r: 4.5 } : null))
-  .filter(Boolean);
+/* ⚠️ 달마다 찍던 관측 점(`.sr-obs`)을 걷어냈다 (2026-08-16b 검수).
+   65개월치 점이 14px 간격으로 5px 굵기 곡선 **위에** 찍히면서, "그달에 거래가 있었다"를
+   말해 주기는커녕 선 양옆에 회색 털이 붙은 것처럼 보였다. 오늘 점 자리에도 하나가 겹쳐
+   **속을 비운 링 한가운데에 회색 점이 박혔다**(오너 지시와 정반대).
+   ⚠️ 그래도 "선은 관측 사이를 이은 것"이라는 정직함은 버리지 않는다 — 수집을 못 한 달에서
+      path 를 끊는 규칙과 `meta.curve`(모든 관측을 글자로 남김)가 그 몫을 그대로 한다. */
+const dots = [];
 
 /* 판 바탕 — 옅은 회색(오너 2026-08-16). 곡선이 놓인 '자리'를 만들어 준다.
    ⚠️ 아주 옅게. 진해지면 카드에 회색 덩어리가 앉은 것처럼 보인다(한 번 겪었다). */
-const bg = { x: 0, y: 0, w: VB_W, h: VB_H, r: 10 };
+/* 모서리는 4px. CARD_CHECKLIST 의 "AI티 금지"가 "각을 세우고(≤4px)"라고 못박는다 —
+   크게 둥근 옅은 회색 판이 정확히 그 'AI티'의 표본이다(2026-08-16b 검수). */
+const bg = { x: 0, y: 0, w: VB_W, h: VB_H, r: 4 };
 const floor = null;
 const band = null;
 
@@ -357,7 +369,10 @@ if (cycle && worst.atMaxIdx >= 0) {
     ty1: r2(py - 52),
     ty2: r2(py - 16),
     text1: `${eok(pk.maxManwon)}(${ymLab(pk.ym)})`,
-    text2: `고점대비 ${cycle.vs}`,
+    /* ⚠️ "고점대비" 만 쓰면 **역대 고점 대비**로 읽힌다(2026-08-16b 검수).
+       여기 고점은 지난 사이클 고점(9억·2021.10)이고, 직전 최고가는 9.5억(2026-07-14)로 따로 있다.
+       윗줄이 값과 연월을 박아 두지만, 단어 자체가 기준을 말하게 한다. */
+    text2: `지난 고점대비 ${cycle.vs}`,
     tone: "hi",
   };
   brkHi = { x: bx, y1: thrY, y2: py, tickX1: r2(bx - 12), tickX2: r2(bx + 12), tone: "hi" };
@@ -380,7 +395,10 @@ if (lowPt.maxManwon < hit.priceManwon) {
   /* 파랑 직선은 **판 맨 오른쪽**에 세운다(오너 2026-08-16).
      오늘 자리가 곧 오른쪽 끝이라, 여기 서야 "오늘 값에서 저점까지"라는 말이 그림과 맞는다.
      그래서 라벨은 그 왼쪽으로 물린다 — 안 물리면 글자를 직선이 관통한다. */
-  const bx = X1;
+  /* ⚠️ X1(판 끝)에 세웠더니 오늘 점(x=879)을 11px 비껴 지나가, 파랑 눈금이 링 옆구리로
+     삐져나오고 세로선이 곡선과 나란히 어긋났다(2026-08-16b 검수).
+     **오늘 점 바로 그 자리**에 세운다 — "오늘 값에서 저점까지"라는 말이 그림과 맞아야 한다. */
+  const bx = dx;
   const LOW_LAB_TX = r2(X1 - 34);
   lowLine = {
     x1: X0,
@@ -526,9 +544,11 @@ const card = {
     ? `오늘의 ${hit.milestone}억 클럽 (${DATE.replace(/-/g, ".")})`
     : `오늘의 신고가 (${DATE.replace(/-/g, ".")})`,
   /* 제목 — 지역은 회색으로 물러나고 단지·평형만 잉크. */
+  /* 평형은 코발트(오너 2026-08-16b). 지역=회색, 단지명=잉크, 평형=코발트로 셋이 갈려
+     한 줄 안에서 "어디 · 무엇 · 어느 평형"이 눈으로 끊긴다. */
   title: aptStartsWithRegion
-    ? `${hit.aptNm} ${hit.pyeong}`
-    : `<span class="rg">${guShort}</span> ${hit.aptNm} ${hit.pyeong}`,
+    ? `${hit.aptNm} <span class="py">${hit.pyeong}</span>`
+    : `<span class="rg">${guShort}</span> ${hit.aptNm} <span class="py">${hit.pyeong}</span>`,
   station,
   price: eok(hit.priceManwon),
   /* 가격 옆 한 마디 — 오너 지시(2026-08-16b, 자리에 있던 워터마크를 이걸로 바꿨다).
@@ -568,11 +588,13 @@ const card = {
           kaptName: kapt.name,
           hhld: kapt.hhld,
           addr: kapt.addr,
+          /* ⚠️ 예전엔 여기에 "오너가 2026-08-13 확인했다"가 **단지와 무관하게 박혀** 있었다.
+             그 카드에서만 참인 말이 모든 카드에 붙으면, 다음 검수가 있지도 않은 확인을
+             근거로 삼는다(2026-08-16b 검수가 잡았다). **이 실행에서 참인 것만 적는다.** */
           note:
-            "공동주택 대장 값. 실거래 표기(" +
-            hit.aptNm +
-            ")와 대장 표기가 달라 **이름으로 자동 매칭하지 않고 kaptCode 로 짚었다** — " +
-            "오너가 2026-08-13 같은 단지임을 확인했다.",
+            `공동주택 대장 값. 실거래 표기(${hit.aptNm})와 대장 표기(${kapt.name})가 달라 ` +
+            `**이름으로 자동 매칭하지 않고 --kapt ${KAPT} 로 사람이 짚었다.** ` +
+            `대조 근거: 실거래 지번 ${hit.umdNm} ${hit.jibun ?? "(지번 없음)"} ↔ 대장 주소 ${kapt.addr}`,
         }
       : { note: "세대수는 싣지 않는다 — 대장 항목을 짚지 않았다(--kapt 미지정)." },
     parking: parking

@@ -15,7 +15,7 @@
  *
  * 실행: node scripts/rebuild-cards.mjs
  */
-import { readFileSync, existsSync, readdirSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -64,7 +64,14 @@ if (existsSync(SETS)) {
       const days = existsSync(join(ROOT, "data/content"))
         ? readdirSync(join(ROOT, "data/content")).filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)).sort().reverse()
         : [];
-      const hit = days.map((d) => join(ROOT, `data/content/${d}/${slug}.json`)).find((p) => existsSync(p));
+      const published = days.map((d) => join(ROOT, `data/content/${d}/${slug}.json`)).find((p) => existsSync(p));
+      /* ⚠️ 방금 돌린 빌더가 `--publish` 없이 만들면 결과는 `data/out/_spike` 에 떨어진다.
+         그런데 검수는 `data/content/<날짜>/` 만 보고 있었다 — **옛 발행본을 검수하고
+         "통과"라고 말했다**(2026-08-16 실제로 겪었다: 판이 칸을 7px 넘긴 카드가 초록으로 나갔다).
+         둘 다 있으면 **새로 쓰인 쪽**을 검수한다. 검수는 지금 만든 것을 봐야 한다. */
+      const spike = join(ROOT, `data/out/_spike/${slug}.json`);
+      const mtime = (p) => (existsSync(p) ? statSync(p).mtimeMs : -1);
+      const hit = mtime(spike) > mtime(published ?? "") ? spike : published;
       if (hit) targets.push(hit);
     }
   }

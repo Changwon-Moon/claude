@@ -37,6 +37,8 @@
         margin: 0; letter-spacing: -0.045em;
       }
       .sr .wirit-title .rg { color: var(--wirit-gray); }
+      /* 평형 — 코발트(오너 2026-08-16b). 지역(회색)·단지명(잉크)과 갈려 한 줄이 세 토막으로 읽힌다. */
+      .sr .wirit-title .py { color: var(--wirit-cobalt); }
 
       /* 주인공 줄 — 왼쪽 가격, 오른쪽 단지 제원 */
       /* 제목 바로 아래에 올 때는 28px 이상 띄운다(designQa titlegap). 역 뱃지 줄이
@@ -140,7 +142,8 @@
       /* 가격 옆 "달성!" — 잉크(오너 2026-08-16b). 레드는 가격 숫자 하나만 갖는다.
          여기까지 빨강이면 이 줄 전체가 빨강 덩어리가 되어 숫자가 안 튄다. */
       .sr-price-suffix {
-        font-family: var(--font-sans); font-size: 62px; font-weight: 900;
+        /* ⚠️ 서체는 가격과 같아야 한다 — 한 덩어리라고 적어 놓고 서체를 가르면 두 덩어리로 보인다. */
+        font-family: var(--font-num); font-size: 62px; font-weight: 900;
         color: var(--wirit-ink); letter-spacing: -0.05em;
         white-space: nowrap; margin-left: 14px; padding-bottom: 12px;
       }
