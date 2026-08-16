@@ -1,0 +1,116 @@
+name: 단지 주차대수 (카드 제원용)
+
+# ── 무엇을 하나 (2026-08-16 오너 "전용면적·층수 아래 주차대수 0.0대 추가")
+# 단지코드 하나를 받아 **국토교통부 공동주택 상세정보**에서 주차대수를 받아 적는다.
+#
+# ── 왜 대장(apt-hhld.json)에 없나
+# 세대수는 **기본정보**, 주차대수는 **상세정보** — 서로 다른 오퍼레이션이다.
+# 대장 8,062건을 다시 훑을 이유가 없어 짚어 준 단지만 받는다.
+#
+# ── 못 받으면 안 쓴다
+# 지상·지하가 둘 다 0이면 파일을 만들지 않는다. 0대인 아파트는 없다 —
+# 그건 응답이 빈 것이고, 0으로 적으면 카드에 "주차 0.0대"가 그대로 나간다.
+on:
+  push:
+    paths:
+      - "data/apt-detail-queue.txt"
+
+  workflow_dispatch:
+    inputs:
+      kapt:
+        description: "공동주택 대장 코드 (예: A42385801)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apt-detail
+  cancel-in-progress: false
+
+jobs:
+  detail:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: 실행 조건 정하기
+        id: cfg
+        shell: bash
+        run: |
+          KAPT="${{ github.event.inputs.kapt }}"
+          Q=data/apt-detail-queue.txt
+          if [ -z "$KAPT" ] && [ -f "$Q" ]; then
+            LINE=$(grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' | tail -1)
+            echo "대기열 마지막 줄: ${LINE:-(비어 있음)}"
+            KAPT=$(printf '%s' "$LINE" | sed -n 's/.*kapt=\([A-Za-z0-9]*\).*/\1/p')
+          fi
+          if [ -z "$KAPT" ]; then
+            echo "::error::kapt 가 필요합니다."
+            exit 1
+          fi
+          echo "kapt=$KAPT" >> "$GITHUB_OUTPUT"
+
+      - name: 키 확인
+        env:
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        run: |
+          if [ -z "$MOLIT_API_KEY" ]; then
+            echo "::error::MOLIT_API_KEY 가 GitHub Secrets 에 없습니다."
+            exit 1
+          fi
+
+      - name: 주차대수 받기
+        env:
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        run: |
+          set -o pipefail
+          pnpm --filter @wirit/collectors collect-apt-detail -- \
+            --kapt ${{ steps.cfg.outputs.kapt }} 2>&1 | tee /tmp/detail.log
+
+      - name: 파서 셀프테스트
+        run: pnpm --filter @wirit/collectors selftest
+
+      - name: 실행 결과 기록
+        if: always()
+        run: |
+          {
+            echo "# 단지 주차대수 — 마지막 실행"
+            echo
+            echo "- 대상: \`${{ steps.cfg.outputs.kapt }}\`"
+            echo "- 결과: **${{ job.status == 'success' && '성공' || '실패' }}**"
+            echo
+            echo '```'
+            cat /tmp/detail.log 2>/dev/null || echo "(실행되지 못했습니다)"
+            echo '```'
+          } > data/apt-detail-last.md
+
+      - name: 커밋
+        if: always()
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@github.com"
+          git add -f data/apt-detail-last.md
+          [ -e data/datasets/apt-detail ] && git add data/datasets/apt-detail || true
+          if git diff --cached --quiet; then
+            echo "바뀐 것 없음 — 커밋 생략"
+          else
+            git commit -m "단지 주차대수 — ${{ steps.cfg.outputs.kapt }}"
+            git pull --rebase --autostash origin ${{ github.ref_name }} || true
+            git push origin HEAD:${{ github.ref_name }}
+          fi

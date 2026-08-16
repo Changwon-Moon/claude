@@ -88,7 +88,7 @@ import {
   baselineLabel as singoBaseline,
   BASELINE_FROM as SINGO_FROM,
 } from "./parse/singo.js";
-import { matchApt as aptMatch, parseAptList, parseAptBasis } from "./parse/aptInfo.js";
+import { matchApt as aptMatch, parseAptList, parseAptBasis, parseAptDetail } from "./parse/aptInfo.js";
 import { cleanStationName, linesFromCategory } from "./parse/station.js";
 import { singoRegions as singoRegionList, monthRange as singoMonthRange } from "./sources/singoRegions.js";
 import {
@@ -958,6 +958,19 @@ console.log("\n[청약홈 분양정보 파서]");
   const basisJson = JSON.stringify({ response: { body: { item: { kaptCode: "A1", kaptName: "리센츠", kaptdaCnt: 5563, kaptDongCnt: 65, kaptUsedate: "20080701", kaptAddr: "서울 송파구 잠실동" } } } });
   check("기본정보 세대수를 읽는다(JSON)", parseAptBasis(basisJson)?.hhldCnt === 5563, String(parseAptBasis(basisJson)?.hhldCnt));
   check("JSON 에 세대수가 없으면 null", parseAptBasis(JSON.stringify({ response: { body: { item: { kaptCode: "A1" } } } })) === null);
+
+  /* ── 주차대수 (2026-08-16 오너 "주차대수 0.0대")
+     ⚠️ 지상·지하 **두 칸**이다. 한쪽만 읽으면 지하주차장 단지에서 "0.1대"가 나온다.
+     ⚠️ 둘 다 0이면 null — 0대인 아파트는 없다. 그건 빈 응답이고, 0으로 적으면 오보다. */
+  const dtlXml = `<response><body><item><kaptCode>A1</kaptCode><kaptdPcnt>120</kaptdPcnt><kaptdPcntu>980</kaptdPcntu></item></body></response>`;
+  check("상세정보에서 주차대수를 읽는다(XML·지상+지하)", parseAptDetail(dtlXml)?.parkTotal === 1100, String(parseAptDetail(dtlXml)?.parkTotal));
+  const dtlUnderOnly = JSON.stringify({ response: { body: { item: { kaptCode: "A1", kaptdPcnt: 0, kaptdPcntu: 980 } } } });
+  check("지상이 0이어도 지하를 읽는다", parseAptDetail(dtlUnderOnly)?.parkTotal === 980, String(parseAptDetail(dtlUnderOnly)?.parkTotal));
+  const dtlGroundOnly = JSON.stringify({ response: { body: { item: { kaptCode: "A1", kaptdPcnt: 430 } } } });
+  check("지하 칸이 아예 없어도 지상만으로 읽는다", parseAptDetail(dtlGroundOnly)?.parkTotal === 430, String(parseAptDetail(dtlGroundOnly)?.parkTotal));
+  check("둘 다 0이면 null (0대로 적지 않는다)", parseAptDetail(JSON.stringify({ response: { body: { item: { kaptCode: "A1", kaptdPcnt: 0, kaptdPcntu: 0 } } } })) === null);
+  check("주차 칸이 없으면 null", parseAptDetail("<response><body><item><kaptCode>A1</kaptCode></item></body></response>") === null);
+  check("단지코드가 없으면 null", parseAptDetail(JSON.stringify({ response: { body: { item: { kaptdPcnt: 100 } } } })) === null);
 
   // ⑥ 레퍼런스 카드가 "36.95억" 꼴이다 — 표기를 거기에 맞췄다
   check("369,500만원 → 36.95억", singoEok(369500) === "36.95억", singoEok(369500));

@@ -18,7 +18,14 @@
  */
 import { encKey } from "./molit.js";
 import { apiError } from "../parse/molit.js";
-import { parseAptList, parseAptBasis, type AptListItem, type AptBasis } from "../parse/aptInfo.js";
+import {
+  parseAptList,
+  parseAptBasis,
+  parseAptDetail,
+  type AptListItem,
+  type AptBasis,
+  type AptDetail,
+} from "../parse/aptInfo.js";
 
 const HOST = "https://apis.data.go.kr/1613000";
 
@@ -44,13 +51,26 @@ const BASIS_OPS = [
   "AptBasisInfoServiceV2/getAphusBassInfoV2",
 ];
 
+/**
+ * 단지 **상세**정보(주차대수) — 기본정보와 **다른 오퍼레이션**이다.
+ * `kaptdPcnt`(지상)·`kaptdPcntu`(지하) 는 기본정보에 없다(2026-08-16 확인).
+ * 이름 규칙은 기본정보와 같은 판올림을 타므로 후보를 같은 방식으로 둔다.
+ */
+const DTL_OPS = [
+  "AptBasisInfoServiceV4/getAphusDtlInfoV4",
+  "AptBasisInfoServiceV4/getAphusDtlInfoV3",
+  "AptBasisInfoServiceV3/getAphusDtlInfoV3",
+  "AptBasisInfoServiceV2/getAphusDtlInfoV2",
+];
+
 /** 한 번 고른 살아 있는 이름은 기억해 다시 안 뒤진다 */
 let listOp = "";
 let basisOp = "";
+let dtlOp = "";
 
 /** 이 실행에서 실제로 쓴 오퍼레이션 이름 — 로그에 남기려고 밖에서 읽는다 */
-export function chosenOps(): { list: string; basis: string } {
-  return { list: listOp, basis: basisOp };
+export function chosenOps(): { list: string; basis: string; dtl: string } {
+  return { list: listOp, basis: basisOp, dtl: dtlOp };
 }
 
 /**
@@ -166,4 +186,13 @@ export async function fetchAptBasis(kaptCode: string, key: string): Promise<AptB
     ? await getXml(url(basisOp))
     : await pickOp(BASIS_OPS, url, (op) => { basisOp = op; });
   return parseAptBasis(xml);
+}
+
+/** 단지코드 → 상세 정보(주차대수). 지상·지하가 둘 다 0이면 null(0대는 있을 수 없다) */
+export async function fetchAptDetail(kaptCode: string, key: string): Promise<AptDetail | null> {
+  const url = (op: string) => `${HOST}/${op}?serviceKey=${encKey(key)}&kaptCode=${kaptCode}&_type=json`;
+  const xml = dtlOp
+    ? await getXml(url(dtlOp))
+    : await pickOp(DTL_OPS, url, (op) => { dtlOp = op; });
+  return parseAptDetail(xml);
 }

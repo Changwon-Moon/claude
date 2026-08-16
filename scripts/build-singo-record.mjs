@@ -114,7 +114,10 @@ const VB_W = 936; // 카드 안쪽 폭(1080 - 좌우 여백 72×2)
    덮은 것은 designQa 의 `svgspill` 이 error 로 잡는다(2026-08-16 에 실제로 45px 밟았다). */
 const VB_H = 775;
 const PAD_T = 62; // 위 — 돌파선 라벨이 앉을 자리
-const PAD_B = 62; // 아래 — 연도 축
+/* 아래 — 연도 축이 앉을 자리. 62 였을 때 곡선 바닥과 연도 사이가 통째로 비어 보였다
+   (오너 2026-08-16 "연도축과 그래프 하단 사이 여백 좀 줄여줘").
+   아래 `yMin` 여유와 **둘이 합쳐** 그 빈칸을 만든다 — 한쪽만 줄이면 티가 안 난다. */
+const PAD_B = 40;
 /* ⚠️ 좌우 여백을 두는 이유: 2020·2026 연도 라벨이 판 끝에서 잘려 나가 **간격이 어긋나 보였다**
    (오너 2026-08-13 "연도들끼리 간격이 안맞아"). 예전엔 끝 라벨만 왼쪽/오른쪽 정렬로 물려
    붙였는데, 그러면 라벨이 자기 눈금에서 벗어나 더 어긋나 보인다. 여백으로 푼다. */
@@ -131,7 +134,7 @@ const hi = Math.max(...traded.map((p) => p.maxManwon));
    아래쪽은 곡선이 바닥에 붙지 않게 넉넉히 둔다. */
 const span = hi - lo || hi * 0.1;
 const yMax = hi + span * 0.09;
-const yMin = Math.max(0, lo - span * 0.14);
+const yMin = Math.max(0, lo - span * 0.05);
 const xOf = (i) => X0 + ((X1 - X0) * i) / (pts.length - 1);
 const yOf = (m) => plotBot - ((plotBot - plotTop) * (m - yMin)) / (yMax - yMin);
 const r2 = (v) => Math.round(v * 10) / 10;
@@ -257,7 +260,9 @@ const band = null;
 let threshold = null;
 if (hit.milestone) {
   const ty = r2(yOf(hit.milestone * 10000));
-  threshold = { x1: X0, x2: X1, y: ty, tx: X1, ty: r2(ty - 20), anchor: "end", text: `${hit.milestone}억` };
+  /* ⚠️ 오른쪽 끝에 딱 붙이지 않는다 — 저점 대비 파랑 직선이 **판 맨 오른쪽**에 서면서
+     그 눈금(±12px)과 이 라벨이 같은 자리를 놓고 다툰다(오너 2026-08-16). 34px 만 물린다. */
+  threshold = { x1: X0, x2: X1, y: ty, tx: X1 - 34, ty: r2(ty - 20), anchor: "end", text: `${hit.milestone}억` };
 }
 
 /* 이번 거래 점 */
@@ -272,7 +277,7 @@ const dot = { x: dx, y: dy, r: 12, rOuter: 19 };
 const axis = pts
   .map((p, i) => (p.ym.slice(4) === "01" ? { i, y: p.ym.slice(0, 4) } : null))
   .filter(Boolean)
-  .map(({ i, y }) => ({ x: r2(xOf(i)), y: VB_H - 12, anchor: "middle", text: y }));
+  .map(({ i, y }) => ({ x: r2(xOf(i)), y: VB_H - 14, anchor: "middle", text: y }));
 
 /* ⚠️ SVG 글자는 디자인 검수가 못 잰다 — 판을 넘지 않는지 여기서 확인한다.
    태백/Wanted 실측 대신 넉넉한 상한(글자당 0.62em)으로 잡는다. 넘으면 던진다. */
@@ -355,7 +360,9 @@ if (cycle && worst.atMaxIdx >= 0) {
   };
   brkHi = { x: bx, y1: thrY, y2: py, tickX1: r2(bx - 12), tickX2: r2(bx + 12), tone: "hi" };
   const idx = pts.findIndex((p) => p.ym === pk.ym);
-  if (idx >= 0) old = { x: r2(xOf(idx)), y: py, r: 10 };
+  /* 고점 점은 **빨강 채움**(오너 2026-08-16) — 빈 원 두 개는 어느 쪽이 고점인지 말해 주지 않았다.
+     색이 라벨과 같으니 그림에서 숫자를 찾는 데 한 걸음이 준다. */
+  if (idx >= 0) old = { x: r2(xOf(idx)), y: py, r: 10, tone: "hi" };
 }
 
 /* 기준선 이후 최저점. 최저점이 곧 오늘이면(내내 내림) 그릴 것이 없다. */
@@ -368,13 +375,16 @@ if (lowPt.maxManwon < hit.priceManwon) {
   const vsLow = ((hit.priceManwon - lowPt.maxManwon) / lowPt.maxManwon) * 100;
   const t1 = `${eok(lowPt.maxManwon)}(${ymLab(lowPt.ym)})`;
   const t2 = `저점대비 +${vsLow.toFixed(1)}%`;
-  const wMax = Math.max(widthOf(t1, LAB_FS), widthOf(t2, LAB_FS));
-  const bx = r2(X1 - wMax - 30); // 라벨 왼쪽에 붙여 세운다
+  /* 파랑 직선은 **판 맨 오른쪽**에 세운다(오너 2026-08-16).
+     오늘 자리가 곧 오른쪽 끝이라, 여기 서야 "오늘 값에서 저점까지"라는 말이 그림과 맞는다.
+     그래서 라벨은 그 왼쪽으로 물린다 — 안 물리면 글자를 직선이 관통한다. */
+  const bx = X1;
+  const LOW_LAB_TX = r2(X1 - 34);
   lowLine = {
     x1: X0,
     x2: X1,
     y: ly,
-    tx: X1,
+    tx: LOW_LAB_TX,
     anchor: "end",
     ty1: r2(ly - 52),
     ty2: r2(ly - 16),
@@ -384,7 +394,8 @@ if (lowPt.maxManwon < hit.priceManwon) {
   };
   brkLo = { x: bx, y1: thrY, y2: ly, tickX1: r2(bx - 12), tickX2: r2(bx + 12), tone: "lo" };
   const li = pts.findIndex((p) => p.ym === lowPt.ym);
-  if (li >= 0) lowDot = { x: r2(xOf(li)), y: ly, r: 10 };
+  /* 저점 점은 **파랑 채움** — 저점 라벨과 같은 색이라 눈이 바로 잇는다. */
+  if (li >= 0) lowDot = { x: r2(xOf(li)), y: ly, r: 10, tone: "lo" };
 }
 
 /* ⚠️ SVG 글자는 designQa 가 못 잰다 — 판을 넘는지 여기서 재고, 넘으면 던진다. */
@@ -404,6 +415,89 @@ if (prevLine && lowLine && Math.abs(prevLine.y - lowLine.y) < 110) {
 if (threshold && prevLine && prevLine.ty1 - threshold.ty < 24) {
   throw new Error(`돌파선 라벨과 고점 라벨이 너무 가깝습니다 — 판 높이를 키우세요.`);
 }
+
+/* ── 판 안쪽 워터마크 (오너 2026-08-16 "그래프에 흰색으로 크게 하나")
+   BRAND.md 슬롯 C. 이 카드는 곡선 판이 카드 높이의 절반을 넘어(775/1350 ≈ 57%)
+   **판만 잘라 재업로드**가 실제로 되는 모양이라 슬롯 C 조건을 만족한다.
+
+   ⚠️ 좌표를 손으로 찍지 않는다(BRAND.md: "스탬프 자리는 **빈 곳을 재서** 고를 것").
+      단지마다 곡선 모양이 달라 손으로 찍은 자리는 다음 단지에서 데이터를 밟는다.
+      그래서 판 안을 격자로 훑어 **잉크에서 가장 멀리 떨어진 칸**을 고르고,
+      거기에 들어가는 **가장 큰 크기**를 쓴다. 자리가 없으면 아예 안 붙인다. */
+function pickStamp(text) {
+  /* ① 피해야 할 잉크를 점으로 편다 — 곡선·점·라벨 상자·세로 직선 */
+  const ink = [];
+  for (const sg of paths) {
+    for (let i = 0; i < sg.length; i++) {
+      ink.push(sg[i]);
+      if (i < sg.length - 1) {
+        const [ax, ay] = sg[i];
+        const [bx2, by] = sg[i + 1];
+        const steps = Math.max(1, Math.ceil(Math.hypot(bx2 - ax, by - ay) / 8));
+        for (let k = 1; k < steps; k++) ink.push([ax + ((bx2 - ax) * k) / steps, ay + ((by - ay) * k) / steps]);
+      }
+    }
+  }
+  for (const c of [old, lowDot, dot].filter(Boolean)) ink.push([c.x, c.y]);
+  const boxPts = (x, y, w, h) => {
+    const out = [];
+    for (let i = 0; i <= 6; i++) for (let j = 0; j <= 3; j++) out.push([x + (w * i) / 6, y + (h * j) / 3]);
+    return out;
+  };
+  const labelBox = (L) => {
+    if (!L) return;
+    const w = Math.max(widthOf(L.text1, LAB_FS), widthOf(L.text2, LAB_FS));
+    const x = L.anchor === "end" ? L.tx - w : L.tx;
+    ink.push(...boxPts(x, L.ty1 - LAB_FS, w, L.ty2 - L.ty1 + LAB_FS));
+  };
+  labelBox(prevLine);
+  labelBox(lowLine);
+  if (threshold) {
+    const w = widthOf(threshold.text, 28);
+    ink.push(...boxPts(threshold.tx - w, threshold.ty - 28, w, 28));
+  }
+  for (const a of axis) ink.push(...boxPts(a.x - widthOf(a.text, 23) / 2, a.y - 23, widthOf(a.text, 23), 23));
+  for (const b of [brkHi, brkLo].filter(Boolean)) {
+    const y1 = Math.min(b.y1, b.y2);
+    const y2 = Math.max(b.y1, b.y2);
+    for (let y = y1; y <= y2; y += 8) ink.push([b.x, y]);
+  }
+
+  /* ② 격자를 훑는다. 큰 크기부터 시도해 **들어가는 가장 큰 것**을 쓴다. */
+  const MARGIN = 20; // 잉크와 이만큼은 떨어져야 '빈 곳'이라 부른다
+  for (const size of [104, 88, 74, 62]) {
+    const w = widthOf(text, size);
+    const h = size;
+    let best = null;
+    for (let cx = X0 + w / 2; cx <= X1 - w / 2; cx += 12) {
+      for (let cy = plotTop + h / 2; cy <= plotBot - h / 2; cy += 12) {
+        const x = cx - w / 2;
+        const y = cy - h / 2;
+        let clear = Infinity;
+        for (const [px, py] of ink) {
+          const ddx = px < x ? x - px : px > x + w ? px - (x + w) : 0;
+          const ddy = py < y ? y - py : py > y + h ? py - (y + h) : 0;
+          const d = Math.hypot(ddx, ddy);
+          if (d < clear) clear = d;
+          if (clear < MARGIN) break;
+        }
+        if (clear >= MARGIN && (!best || clear > best.clear)) best = { cx, cy, clear };
+      }
+    }
+    if (best) {
+      return {
+        x: r2(best.cx),
+        y: r2(best.cy + size * 0.34), // 가운데 정렬 → 베이스라인
+        size,
+        text,
+        clear: r2(best.clear),
+      };
+    }
+  }
+  return null; // 겹칠 자리밖에 없으면 **넣지 않는다**(BRAND.md 슬롯 C 조건 ③)
+}
+const stamp = pickStamp("@wirit_note");
+if (!stamp) console.warn("ⓘ 판 안에 빈 자리가 없어 워터마크를 생략합니다 (BRAND.md 슬롯 C 조건 ③).");
 
 /* ── 가까운 역 (오너 2026-08-16 "가까운 역을 뱃지로")
    파일이 없으면 **뱃지를 붙이지 않는다.** 내가 아는 역 이름을 적는 건 오보다 —
@@ -447,8 +541,27 @@ const specTop = [
   kapt ? `${kapt.hhld.toLocaleString("ko-KR")}세대` : null,
   hit.buildYear ? `${hit.buildYear}년 준공` : null,
 ].filter(Boolean);
+/* 주차대수 — **세대당 몇 대**로 적는다(오너 2026-08-16 "주차대수 0.0대").
+   ⚠️ 총 대수만 적으면 큰 단지가 무조건 좋아 보인다. 사람이 궁금한 건 "내 차 댈 데 있나"다.
+   ⚠️ 자료가 없으면 **줄을 안 붙인다.** 짐작해 적는 순간 오보다 —
+      `data/apt-detail-queue.txt` 에 `kapt=...` 한 줄을 밀어 코드가 받게 한다. */
+let parking = null;
+if (KAPT && kapt?.hhld > 0) {
+  const dp = P(`data/datasets/apt-detail/${KAPT}.json`);
+  if (existsSync(dp)) {
+    const d = JSON.parse(readFileSync(dp, "utf8"));
+    if (d.parkTotal > 0) parking = { ...d, perHhld: d.parkTotal / kapt.hhld };
+  } else {
+    console.warn(
+      `ⓘ 주차대수 자료가 없어 그 줄을 생략합니다. 붙이려면:\n` +
+        `   data/apt-detail-queue.txt 에  kapt=${KAPT}  한 줄을 쓰고 푸시`,
+    );
+  }
+}
 const specBot = [`전용 ${hit.area}㎡`, `${hit.floor}층`];
-const spec = [specTop.join(SEP), specBot.join(SEP)].filter((x) => x);
+/* 오너 지시는 "전용면적·층수 **아래**" — 같은 줄에 붙이지 않고 셋째 줄로 세운다. */
+const specPark = parking ? `세대당 주차 ${parking.perHhld.toFixed(1)}대` : null;
+const spec = [specTop.join(SEP), specBot.join(SEP), specPark].filter((x) => x);
 
 const card = {
   template: "singo-record@1",
@@ -464,7 +577,7 @@ const card = {
   station,
   price: eok(hit.priceManwon),
   spec,
-  chart: { vb: `0 0 ${VB_W} ${VB_H}`, bg, threshold, prevLine, lowLine, brkHi, brkLo, paths: chartPaths, dots, axis, old, lowDot, dot },
+  chart: { vb: `0 0 ${VB_W} ${VB_H}`, bg, stamp, threshold, prevLine, lowLine, brkHi, brkLo, paths: chartPaths, dots, axis, old, lowDot, dot },
   /* ⚠️ 하단 기준 문구를 걷어냈다(오너 2026-08-16). 다만 **"역대가 아니라 2020년 이후"** 라는
      단서는 오보를 막는 장치라 버릴 수 없어 **푸터 출처 줄로 옮겼다.** 카드 어딘가에는 있어야 한다. */
   /* 푸터는 한 줄이어야 한다 — asOf 까지 넣었더니 두 줄로 넘쳤다(2026-08-16).
@@ -504,6 +617,21 @@ const card = {
             "오너가 2026-08-13 같은 단지임을 확인했다.",
         }
       : { note: "세대수는 싣지 않는다 — 대장 항목을 짚지 않았다(--kapt 미지정)." },
+    parking: parking
+      ? {
+          ground: parking.parkGround,
+          under: parking.parkUnder,
+          total: parking.parkTotal,
+          hhld: kapt.hhld,
+          perHhld: Number(parking.perHhld.toFixed(3)),
+          note: "국토교통부 공동주택 **상세**정보(지상+지하). 세대당 = 총 대수 ÷ 대장 세대수.",
+        }
+      : { note: "주차대수 자료 없음 — 그 줄을 붙이지 않았다(data/apt-detail-queue.txt 에 kapt 를 밀면 받는다)." },
+    /* 워터마크 자리를 남긴다 — 손으로 찍지 않았다는 증거이자, 다음에 곡선이 바뀌어
+       자리가 옮겨졌을 때 "왜 옮겼나"를 대조할 수 있는 값이다. */
+    stamp: stamp
+      ? { ...stamp, note: "BRAND.md 슬롯 C. 판을 격자로 훑어 잉크에서 가장 먼 칸을 골랐다(clear = 잉크까지 거리 px)." }
+      : { note: "판에 빈 자리가 없어 워터마크를 붙이지 않았다(BRAND.md 슬롯 C 조건 ③)." },
   },
 };
 

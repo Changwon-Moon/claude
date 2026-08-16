@@ -176,7 +176,7 @@
             "object",
             "null"
           ],
-          "description": "지난 고점이 난 달의 빈 원.",
+          "description": "지난 고점이 난 달의 점. tone=hi → 빨강 채움(라벨과 같은 색).",
           "required": [
             "x",
             "y",
@@ -191,6 +191,10 @@
             },
             "r": {
               "type": "number"
+            },
+            "tone": {
+              "type": "string",
+              "enum": ["hi", "lo"]
             }
           }
         },
@@ -302,6 +306,18 @@
           },
           "description": "기준선 이후 최저점 선 + 2행 라벨(값(연월) / 저점대비 +N%). 최우측 정렬."
         },
+        "stamp": {
+          "type": ["object", "null"],
+          "description": "판 안쪽 워터마크(BRAND.md 슬롯 C). 빌더가 판을 격자로 훑어 잉크에서 가장 먼 빈 칸을 재서 고른다 — 손으로 좌표를 찍지 않는다. 자리가 없으면 null(안 붙인다).",
+          "required": ["x", "y", "size", "text"],
+          "properties": {
+            "x": { "type": "number" },
+            "y": { "type": "number" },
+            "size": { "type": "number" },
+            "text": { "type": "string" },
+            "clear": { "type": "number" }
+          }
+        },
         "bg": {
           "type": "object",
           "description": "판 바탕(옅은 회색).",
@@ -334,7 +350,7 @@
             "object",
             "null"
           ],
-          "description": "최저점이 난 달의 빈 원.",
+          "description": "최저점이 난 달의 점. tone=lo → 파랑 채움(라벨과 같은 색).",
           "required": [
             "x",
             "y",
@@ -349,6 +365,10 @@
             },
             "r": {
               "type": "number"
+            },
+            "tone": {
+              "type": "string",
+              "enum": ["hi", "lo"]
             }
           }
         },
@@ -449,8 +469,8 @@
     "spec": {
       "type": "array",
       "minItems": 1,
-      "maxItems": 2,
-      "description": "제원 두 줄 — 세대수|준공(년식) / 전용㎡|층. <span class=\"sep\">|</span> 로 구분.",
+      "maxItems": 3,
+      "description": "제원 — 세대수|준공 / 전용㎡|층 / 세대당 주차. <span class=\"sep\">|</span> 로 구분. 주차 줄은 자료(apt-detail)가 있을 때만.",
       "items": {
         "type": "string",
         "maxLength": 80

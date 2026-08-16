@@ -17,6 +17,7 @@
     "collect-singo": "tsx src/molitSingoCli.ts",
     "collect-singo-history": "tsx src/molitHistoryCli.ts",
     "collect-apt-station": "tsx src/aptStationCli.ts",
+    "collect-apt-detail": "tsx src/aptDetailCli.ts",
     "collect-singo-preview": "tsx src/singoPreviewCli.ts",
     "collect-population": "tsx src/kosisCli.ts",
     "probe-kosis": "tsx src/kosisProbeCli.ts",

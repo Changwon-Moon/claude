@@ -137,6 +137,46 @@ export function parseAptBasis(raw: string): AptBasis | null {
   };
 }
 
+export interface AptDetail {
+  kaptCode: string;
+  parkGround: number; // 지상 주차대수(kaptdPcnt)
+  parkUnder: number; // 지하 주차대수(kaptdPcntu)
+  parkTotal: number;
+}
+
+/**
+ * 공동주택 **상세** 정보 → 주차대수 (오너 2026-08-16 "전용면적·층수 아래 주차대수 0.0대").
+ *
+ * ⚠️ 주차대수는 **기본정보(getAphusBassInfo)에 없다.** 상세정보(getAphusDtlInfo)에만 있다 —
+ *    지상 `kaptdPcnt` + 지하 `kaptdPcntu` 두 칸으로 나뉘어 온다. 한쪽만 읽으면
+ *    지하주차장 단지에서 "0.1대"가 나온다.
+ * ⚠️ **둘 다 0이면 null 을 돌려준다.** 0대는 있을 수 없는 값이고, 응답이 빈 것을
+ *    0으로 적어 버리면 카드에 "주차 0.0대"가 그대로 나간다(그게 오보다).
+ */
+export function parseAptDetail(raw: string): AptDetail | null {
+  const readPair = (g: (k: string) => unknown) => {
+    const ground = num(g("kaptdPcnt"));
+    const under = num(g("kaptdPcntu"));
+    const a = Number.isFinite(ground) ? ground : 0;
+    const b = Number.isFinite(under) ? under : 0;
+    return { a, b };
+  };
+  const js = items(raw);
+  if (js) {
+    const o = js[0];
+    if (!o) return null;
+    const code = String(o.kaptCode ?? "").trim();
+    const { a, b } = readPair((k) => (o as Record<string, unknown>)[k]);
+    if (!code || a + b <= 0) return null;
+    return { kaptCode: code, parkGround: a, parkUnder: b, parkTotal: a + b };
+  }
+  const body = raw.match(/<item>[\s\S]*?<\/item>/)?.[0] ?? raw;
+  const code = tag(body, "kaptCode");
+  const { a, b } = readPair((k) => tag(body, k));
+  if (!code || a + b <= 0) return null;
+  return { kaptCode: code, parkGround: a, parkUnder: b, parkTotal: a + b };
+}
+
 /**
  * 실거래의 (법정동, 단지명) 을 단지 목록에서 찾는다.
  *
