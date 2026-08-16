@@ -168,17 +168,16 @@
             }
           }
         },
-        "band": {
+        "old": {
           "type": [
             "object",
             "null"
           ],
-          "description": "문턱 위 영역(=N억 클럽 자리). 돌파가 아니면 null.",
+          "description": "지난 고점이 난 달의 빈 원.",
           "required": [
             "x",
             "y",
-            "w",
-            "h"
+            "r"
           ],
           "properties": {
             "x": {
@@ -187,24 +186,24 @@
             "y": {
               "type": "number"
             },
-            "w": {
-              "type": "number"
-            },
-            "h": {
+            "r": {
               "type": "number"
             }
           }
         },
-        "floor": {
+        "prevLine": {
           "type": [
             "object",
             "null"
           ],
-          "description": "바닥 가로선. y축이 0에서 시작하지 않으므로 보통 null 이다 — 있으면 0선으로 읽힌다.",
+          "description": "지난 사이클 고점 가로 점선 + 라벨. 내림 구간이 없으면 null.",
           "required": [
             "x1",
             "x2",
-            "y"
+            "y",
+            "tx",
+            "ty",
+            "text"
           ],
           "properties": {
             "x1": {
@@ -215,31 +214,56 @@
             },
             "y": {
               "type": "number"
+            },
+            "tx": {
+              "type": "number"
+            },
+            "ty": {
+              "type": "number"
+            },
+            "text": {
+              "type": "string"
+            },
+            "tail": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "브래킷이 설 자리가 없을 때 라벨 꼬리로 붙는 '고점 대비 ±N%'."
             }
           }
         },
-        "old": {
+        "gap": {
           "type": [
             "object",
             "null"
           ],
-          "description": "옛 고점 표식(빈 원 + 라벨). 아래 '지난 사이클 고점' 숫자를 그림에서 찾게 한다.",
+          "description": "지난 고점~이번 선 사이 브래킷. 간격이 곧 '고점 대비'다. 곡선이 그 띠를 지나 자리가 없으면 null.",
           "required": [
             "x",
-            "y",
-            "r",
+            "y1",
+            "y2",
+            "tickX1",
+            "tickX2",
             "tx",
             "ty",
-            "text"
+            "text",
+            "dir"
           ],
           "properties": {
             "x": {
               "type": "number"
             },
-            "y": {
+            "y1": {
               "type": "number"
             },
-            "r": {
+            "y2": {
+              "type": "number"
+            },
+            "tickX1": {
+              "type": "number"
+            },
+            "tickX2": {
               "type": "number"
             },
             "tx": {
@@ -253,8 +277,26 @@
             },
             "text": {
               "type": "string"
+            },
+            "dir": {
+              "type": "string",
+              "enum": [
+                "up",
+                "down"
+              ]
             }
           }
+        },
+        "gapDir": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "up",
+            "down",
+            null
+          ]
         }
       }
     },
@@ -282,49 +324,14 @@
         "maxLength": 80
       }
     },
-    "cycle": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "description": "지난 사이클 고점. 최대 낙폭이 난 골 직전의 최고가 — 코드가 계산한다. 내림 구간이 없으면 null.",
-      "required": [
-        "peak",
-        "when",
-        "vs",
-        "dir"
-      ],
-      "properties": {
-        "peak": {
-          "type": "string",
-          "maxLength": 10
-        },
-        "when": {
-          "type": "string",
-          "maxLength": 12
-        },
-        "vs": {
-          "type": "string",
-          "maxLength": 10
-        },
-        "dir": {
-          "type": "string",
-          "enum": [
-            "up",
-            "down"
-          ]
-        }
-      }
-    },
     "station": {
       "type": [
         "object",
         "null"
       ],
-      "description": "가장 가까운 지하철역. 코드(카카오 로컬)가 잰 값이 있을 때만. 거리는 직선거리다.",
+      "description": "가장 가까운 지하철역. 코드(카카오 로컬)가 잰 값이 있을 때만 붙는다. 거리는 카드에 싣지 않는다(오너 2026-08-16).",
       "required": [
-        "name",
-        "dist"
+        "name"
       ],
       "properties": {
         "name": {
@@ -336,10 +343,6 @@
           "items": {
             "type": "string"
           }
-        },
-        "dist": {
-          "type": "string",
-          "maxLength": 10
         },
         "distanceM": {
           "type": "number"

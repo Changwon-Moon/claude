@@ -42,7 +42,7 @@
       /* 제목 바로 아래에 올 때는 28px 이상 띄운다(designQa titlegap). 역 뱃지 줄이
          사이에 끼면 그만큼 붙여도 된다 — 사이에 이미 한 줄이 있기 때문이다. */
       .sr-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 34px; margin: 32px 0 0; }
-      .sr-stn + .sr-hero { margin-top: 26px; }
+      .sr-stnrow + .sr-hero { margin-top: 26px; }
       .sr-price {
         font-family: var(--font-num); font-size: 150px; font-weight: 900;
         color: var(--wirit-red); letter-spacing: -0.055em; line-height: 0.94; white-space: nowrap;
@@ -58,99 +58,69 @@
       }
       .sr-spec .l .sep { color: var(--wirit-gray); font-weight: 700; padding: 0 6px; }
 
-      /* ── 가까운 역 (오너 2026-08-16 "가까운 역을 뱃지로")
-         제목과 가격 사이에 한 줄. 노선 원형 뱃지는 **다른 카드에서 쓰는 것을 그대로 상속**한다
-         (metroBadge 헬퍼 · templates/_shared/metro-lines.json) — 크롬은 짓지 않고 물려받는다.
-         ⚠️ 거리는 **직선거리**다. '도보 N분'으로 바꾸지 않는다 — 보행거리는 더 길고,
-            환산하면 그게 곧 과장이다. 카드가 '직선'이라고 스스로 밝힌다. */
-      .sr-stn { --mono: 46px; display: flex; align-items: center; gap: 12px; margin: 30px 0 0; }
+      /* ── 가까운 역 — **노선과 역 이름을 한 알약**에 (오너 2026-08-16)
+         거리는 뺐다(오너 지시). 어느 노선 어느 역인가만 남는다.
+         노선 원은 다른 카드에서 쓰는 규격을 그대로 상속한다(metroBadge · metro-lines.json). */
+      .sr-stnrow { display: flex; margin: 30px 0 0; }
+      .sr-stn {
+        --mono: 40px;
+        display: inline-flex; align-items: center; gap: 12px;
+        padding: 7px 24px 7px 7px; border-radius: 999px;
+        background: var(--wirit-ink-06);
+      }
       .sr-stn .nmx {
         font-family: var(--font-sans); font-size: 30px; font-weight: 800;
         color: var(--wirit-ink); letter-spacing: -0.035em; white-space: nowrap;
       }
-      .sr-stn .dist {
-        font-family: var(--font-num); font-size: 27px; font-weight: 700;
-        color: var(--wirit-gray); letter-spacing: -0.02em; white-space: nowrap;
-      }
-      /* 노선 뱃지 — ranking-table·metro-2col 과 같은 규격(원형·노선색·흰 글자) */
       .sr-stn .rt-line {
         width: var(--mono); height: var(--mono); border-radius: 50%;
         display: flex; align-items: center; justify-content: center; text-align: center;
-        font-family: var(--font-sans); font-weight: 800; line-height: 0.94;
-        box-shadow: 0 1px 3px rgba(20, 24, 33, 0.18); flex: 0 0 auto;
+        font-family: var(--font-sans); font-weight: 800; line-height: 0.94; flex: 0 0 auto;
       }
       .sr-stn .rt-line.ln-white { color: #fff; }
-      .sr-stn .rt-line.ln-white .num,
-      .sr-stn .rt-line.ln-white .nm { text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3); }
       .sr-stn .rt-line.ln-dark { color: #1c2431; }
-      .sr-stn .rt-line .num { font-size: calc(var(--mono) * 0.58); font-weight: 900; }
+      .sr-stn .rt-line .num { font-size: calc(var(--mono) * 0.56); font-weight: 900; }
       .sr-stn .rt-line .nm { font-size: calc(var(--mono) * 0.3); font-weight: 800; letter-spacing: -0.04em; }
       .sr-stn .rt-line .nm.two { font-size: calc(var(--mono) * 0.28); line-height: 1; }
-      /* 노선을 못 알아본 역 — 색을 짐작하지 않는다. 회색 원으로 둔다. */
+      /* 노선을 못 알아본 역 — 색을 짐작하지 않는다 */
       .sr-stn .rt-line.plain { background: var(--wirit-gray); color: #fff; }
 
       /* ── 곡선 ─────────────────────────────────────────────
-         이 판형이 기억되는 자리다. 그래서 여기만 힘을 준다.
-         · **문턱 위 영역에 옅은 톤**을 깐다 — "N억 클럽"이 들어가는 '자리'로 읽히게.
-         · 옛 고점은 **빈 원**, 오늘 거래는 **찬 원**. 아래 '지난 사이클 고점' 숫자를
-           그림에서 눈으로 찾을 수 있어야 한다(구조가 내용을 말한다).
-         · 25/50/75% 눈금선은 걷어냈다 — 값 라벨이 없어 **아무것도 말하지 않는 선**이었다.
-           남긴 가로선은 바닥 하나, 문턱 하나. 둘 다 뜻이 있다.
-         · 오늘 점 옆 "10억" 라벨도 걷어냈다 — 바로 위 큰 숫자가 이미 그 말을 한다. */
-      .sr-chart { flex: 1 1 auto; display: flex; align-items: center; margin: 22px 0 0; min-height: 0; }
+         이 판형이 기억되는 자리다. 카드 아래에 따로 있던 '지난 사이클' 블록을
+         **여기로 들여왔다**(오너 2026-08-16) — 두 가로선 사이의 간격이 곧 그 퍼센트라,
+         숫자와 그림이 같은 것을 가리키게 된다.
+         · 위 점선 = 이번에 넘은 선(10억)   · 아래 점선 = 지난 사이클 고점
+         · 그 사이 세로 브래킷 = 고점 대비 상승폭
+         · 빈 원 = 지난 고점이 난 달, 찬 원 = 오늘 거래
+         곡선은 **단조 3차 보간**으로 부드럽게 잇는다 — 오버슈트가 없는 방법이라
+         "그달에 더 비쌌다"는 거짓말이 그림에 섞이지 않는다(빌더가 다시 재고 던진다). */
+      .sr-chart { flex: 1 1 auto; display: flex; align-items: center; margin: 26px 0 24px; min-height: 0; }
       .sr-svg { display: block; width: 100%; height: auto; }
-      .sr-line { fill: none; stroke: var(--wirit-ink); stroke-width: 4.5; stroke-linejoin: round; stroke-linecap: round; }
+      .sr-line { fill: none; stroke: var(--wirit-ink); stroke-width: 5; stroke-linejoin: round; stroke-linecap: round; }
       /* 관측점 — 65개월이 찍히면 구슬처럼 보인다. 선이 주인공이 되게 작게 둔다. */
-      .sr-obs { fill: var(--wirit-ink); opacity: 0.55; }
-      /* 문턱 위 = 클럽 자리 */
-      .sr-band { fill: var(--wirit-ink); opacity: 0.045; }
-      .sr-thr { stroke: var(--wirit-ink); stroke-width: 2.5; stroke-dasharray: 10 9; opacity: 0.45; }
+      .sr-obs { fill: var(--wirit-ink); opacity: 0.45; }
+      /* 이번에 넘은 선 — 진하게. 이게 이 카드의 사건이다. */
+      .sr-thr { stroke: var(--wirit-ink); stroke-width: 3; stroke-dasharray: 11 9; opacity: 0.6; }
       .sr-thrlab {
-        font-family: var(--font-num); font-size: 27px; font-weight: 900;
-        fill: var(--wirit-ink); opacity: 0.55;
+        font-family: var(--font-num); font-size: 28px; font-weight: 900;
+        fill: var(--wirit-ink); opacity: 0.7;
       }
-      /* 바닥 — 곡선이 허공에 뜨지 않게 받쳐 주는 유일한 가로선 */
-      .sr-floor { stroke: var(--wirit-ink); stroke-width: 2.5; opacity: 0.14; }
-      /* 옛 고점 — 속이 빈 원. 오늘 점과 같은 크기면 둘이 싸운다. 한 치수 작게. */
+      /* 지난 사이클 고점 선 — 한 단계 물러난다. 두 선이 같은 무게면 무엇이 사건인지 흐려진다. */
+      .sr-prev { stroke: var(--wirit-gray); stroke-width: 3; stroke-dasharray: 7 9; opacity: 1; }
+      .sr-prevlab {
+        font-family: var(--font-num); font-size: 26px; font-weight: 800;
+        fill: var(--wirit-gray);
+      }
+      /* 브래킷이 설 자리가 없을 때 라벨 꼬리로 붙는 '고점 대비' — 색만 살린다 */
+      .sr-prevlab .hi { fill: var(--wirit-red); font-weight: 900; }
+      .sr-prevlab .hi.down { fill: var(--wirit-cobalt); }
       .sr-old { fill: var(--wirit-paper); stroke: var(--wirit-ink); stroke-width: 4; }
-      .sr-oldlab {
-        font-family: var(--font-num); font-size: 25px; font-weight: 800;
-        fill: var(--wirit-ink); opacity: 0.6;
-      }
+      /* 두 선을 묶는 브래킷 — 간격이 곧 상승폭이다 */
+      .sr-brk { stroke: var(--wirit-red); stroke-width: 3; opacity: 0.85; }
+      .sr-brk.down { stroke: var(--wirit-cobalt); }
+      .sr-gaplab { font-family: var(--font-num); font-size: 34px; font-weight: 900; fill: var(--wirit-red); }
+      .sr-gaplab.down { fill: var(--wirit-cobalt); }
       .sr-ax { font-family: var(--font-num); font-size: 23px; font-weight: 700; fill: var(--wirit-gray); }
-
-      /* ── 지난 사이클 (오너 2026-08-13 지정 · 2026-08-16 "폰트 키워줘")
-         "지금이 얼마다"보다 **"지난 고점을 얼마나 넘었나"**가 이 소식의 뜻이라
-         카드 아래 절반을 이 두 숫자에 내준다.
-         지난 고점은 코드가 낙폭이 가장 깊었던 골을 찾아 그 **직전 최고가**로 잡는다. */
-      /* 두 칸을 **왼쪽에 붙여** 한 덩어리로 묶는다. 카드 양끝으로 벌려 놨더니
-         서로 무관한 두 지표처럼 보였다 — 둘은 같은 문장이다(옛 고점, 그 대비). */
-      .sr-cycle {
-        flex: 0 0 auto; display: grid; grid-template-columns: auto auto;
-        justify-content: start; align-items: start;
-        margin: 44px 0 26px; padding: 28px 0 0; border-top: 2px solid var(--wirit-ink-06);
-        font-family: var(--font-num);
-      }
-      .sr-cycle .c { min-width: 0; }
-      .sr-cycle .c.r {
-        margin-left: 56px; padding-left: 56px; border-left: 2px solid var(--wirit-ink-06);
-      }
-      .sr-cycle .l {
-        font-family: var(--font-sans); font-size: 26px; font-weight: 700;
-        color: var(--wirit-gray); letter-spacing: -0.03em; white-space: nowrap;
-      }
-      .sr-cycle .v {
-        margin: 8px 0 0; font-size: 66px; font-weight: 900; line-height: 1;
-        color: var(--wirit-ink); letter-spacing: -0.055em; white-space: nowrap;
-      }
-      /* 시점은 값에 붙되 한 단계 물러난다 — 같은 크기면 둘 다 안 읽힌다 */
-      .sr-cycle .v .w {
-        margin-left: 14px; font-size: 30px; font-weight: 700;
-        color: var(--wirit-gray); letter-spacing: -0.02em;
-      }
-      /* 오름은 레드, 내림은 코발트 — 저장소의 다른 카드와 같은 약속 */
-      .sr-cycle .v.up { color: var(--wirit-red); }
-      .sr-cycle .v.down { color: var(--wirit-cobalt); }
 
     </style>
   </head>
@@ -160,11 +130,11 @@
       <div class="sr-head"><h1 class="wirit-title">{{{title}}}</h1></div>
 
       {{#if station}}
-      <div class="sr-stn">
-        {{#each station.lines}}{{{metroBadge this}}}{{/each}}
-        {{#unless station.lines}}<span class="rt-line plain"><span class="nm">역</span></span>{{/unless}}
-        <span class="nmx">{{station.name}}</span>
-        <span class="dist">직선 {{station.dist}}</span>
+      <div class="sr-stnrow">
+        <span class="sr-stn">
+          {{#if station.lines}}{{{metroBadge station.lines.[0]}}}{{else}}<span class="rt-line plain"><span class="nm">역</span></span>{{/if}}
+          <span class="nmx">{{station.name}}</span>
+        </span>
       </div>
       {{/if}}
 
@@ -175,43 +145,39 @@
 
       <div class="sr-chart">
         <svg class="sr-svg" viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-          <!-- 문턱 위 = "N억 클럽" 자리. 선 하나보다 '영역'이 들어간 사건을 말한다. -->
-          {{#if chart.band}}<rect class="sr-band" x="{{chart.band.x}}" y="{{chart.band.y}}" width="{{chart.band.w}}" height="{{chart.band.h}}" />{{/if}}
-          {{#if chart.floor}}<line class="sr-floor" x1="{{chart.floor.x1}}" y1="{{chart.floor.y}}" x2="{{chart.floor.x2}}" y2="{{chart.floor.y}}" />{{/if}}
+          <!-- 지난 사이클 고점 — 아래 점선. 이번에 넘은 선보다 한 단계 물러난다. -->
+          {{#if chart.prevLine}}
+          <line class="sr-prev" x1="{{chart.prevLine.x1}}" y1="{{chart.prevLine.y}}" x2="{{chart.prevLine.x2}}" y2="{{chart.prevLine.y}}" />
+          <text class="sr-prevlab" x="{{chart.prevLine.tx}}" y="{{chart.prevLine.ty}}" text-anchor="start">{{chart.prevLine.text}}{{#if chart.prevLine.tail}}<tspan class="hi {{chart.gapDir}}">{{chart.prevLine.tail}}</tspan>{{/if}}</text>
+          {{/if}}
+          <!-- 이번에 넘은 선 -->
           {{#if chart.threshold}}
           <line class="sr-thr" x1="{{chart.threshold.x1}}" y1="{{chart.threshold.y}}" x2="{{chart.threshold.x2}}" y2="{{chart.threshold.y}}" />
           <text class="sr-thrlab" x="{{chart.threshold.tx}}" y="{{chart.threshold.ty}}" text-anchor="start">{{chart.threshold.text}}</text>
+          {{/if}}
+          <!-- 두 선을 묶는 브래킷 — 간격이 곧 '고점 대비'다 -->
+          {{#if chart.gap}}
+          <g class="sr-brk {{chart.gap.dir}}">
+            <line x1="{{chart.gap.x}}" y1="{{chart.gap.y1}}" x2="{{chart.gap.x}}" y2="{{chart.gap.y2}}" />
+            <line x1="{{chart.gap.tickX1}}" y1="{{chart.gap.y1}}" x2="{{chart.gap.tickX2}}" y2="{{chart.gap.y1}}" />
+            <line x1="{{chart.gap.tickX1}}" y1="{{chart.gap.y2}}" x2="{{chart.gap.tickX2}}" y2="{{chart.gap.y2}}" />
+          </g>
+          <text class="sr-gaplab {{chart.gap.dir}}" x="{{chart.gap.tx}}" y="{{chart.gap.ty}}" text-anchor="{{chart.gap.anchor}}">{{chart.gap.text}}</text>
           {{/if}}
           {{#each chart.paths}}<path class="sr-line" d="{{d}}" />{{/each}}
           <!-- 실제 거래가 있던 달만 점으로 찍는다. 점 사이를 잇는 선은 **관측 사이를 이은 것**이지
                그 사이에 그 값이었다는 뜻이 아니다 — 점이 있어야 그 차이가 보인다. -->
           {{#each chart.dots}}<circle class="sr-obs" cx="{{x}}" cy="{{y}}" r="{{r}}" />{{/each}}
           {{#each chart.axis}}<text class="sr-ax" x="{{x}}" y="{{y}}" text-anchor="{{anchor}}">{{text}}</text>{{/each}}
-          <!-- 옛 고점(빈 원) — 아래 '지난 사이클 고점' 숫자를 그림에서 찾을 수 있게 하는 표식 -->
-          {{#if chart.old}}
-          <circle class="sr-old" cx="{{chart.old.x}}" cy="{{chart.old.y}}" r="{{chart.old.r}}" />
-          <text class="sr-oldlab" x="{{chart.old.tx}}" y="{{chart.old.ty}}" text-anchor="{{chart.old.anchor}}">{{chart.old.text}}</text>
-          {{/if}}
-          <!-- 오늘 거래(찬 원) — 이 판형에서 레드를 쓰는 자리 -->
+          <!-- 빈 원 = 지난 고점이 난 달 -->
+          {{#if chart.old}}<circle class="sr-old" cx="{{chart.old.x}}" cy="{{chart.old.y}}" r="{{chart.old.r}}" />{{/if}}
+          <!-- 찬 원 = 오늘 거래. 이 판형에서 레드를 쓰는 자리 -->
           {{#if chart.dot}}
           <circle cx="{{chart.dot.x}}" cy="{{chart.dot.y}}" r="{{chart.dot.rOuter}}" fill="#fafaf8" />
           <circle cx="{{chart.dot.x}}" cy="{{chart.dot.y}}" r="{{chart.dot.r}}" fill="#e5484d" />
           {{/if}}
         </svg>
       </div>
-
-      {{#if cycle}}
-      <div class="sr-cycle">
-        <div class="c">
-          <div class="l">지난 사이클 고점</div>
-          <div class="v">{{cycle.peak}}<span class="w">{{cycle.when}}</span></div>
-        </div>
-        <div class="c r">
-          <div class="l">고점 대비</div>
-          <div class="v {{cycle.dir}}">{{cycle.vs}}</div>
-        </div>
-      </div>
-      {{/if}}
 
       <div class="wirit-footer">
         <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
