@@ -58,19 +58,50 @@ function bjdOf(kapt: string): { bjd: string; name: string } | null {
   return null;
 }
 
-/* ── 단지코드 → 지번. 신고가 로그에서 찾는다(대장 주소는 표기가 흔들린다) ── */
-function jibunOf(kapt: string): string {
-  // 대장 주소의 끝 숫자를 먼저 본다
+/* ── 단지코드 → 지번 **후보들**
+ *
+ * ⚠️ 지번이 한 곳에서만 오지 않는다 (2026-08-16d 실측)
+ * 대장 주소와 실거래 신고 지번이 **다른 단지가 있다**:
+ *   · 서초포레스타2단지 — 대장 `내곡동 143` · 실거래 `내곡동 384`
+ *   · 다산롯데캐슬     — 대장 `다산동 5869-2` · 실거래 `다산동 6029`
+ * 대장 주소로만 물으면 이 둘은 **줄 0개**로 돌아온다(실제로 그랬다).
+ *
+ * 어느 쪽이 대지 지번인지는 단지마다 다르므로 **둘 다 후보로 두고 실제로 물어본다.**
+ * 줄이 오는 쪽이 맞는 지번이다 — 추측하지 않고 재는 쪽을 고른다. */
+function jibunCandidates(kapt: string, aptName: string): string[] {
+  const out: string[] = [];
+  const push = (v: string) => { const s = String(v ?? "").trim(); if (s && !out.includes(s)) out.push(s); };
+
+  // ① 사람이 준 것이 있으면 그것부터
+  push(arg("jibun"));
+
+  // ② 실거래 신고 지번 — 신고가 로그에서 단지명으로 찾는다
+  const logDir = join(ROOT, "data/datasets/singo-log");
+  if (aptName && existsSync(logDir)) {
+    const norm = (s: string) => String(s ?? "").replace(/[\s()·.\-_]/g, "");
+    for (const f of readdirSync(logDir).filter((x) => x.endsWith(".json"))) {
+      try {
+        const j = JSON.parse(readFileSync(join(logDir, f), "utf8"));
+        const hits = Array.isArray(j) ? j : j.hits ?? j.items ?? [];
+        for (const h of hits) {
+          if (!h?.jibun) continue;
+          const a = norm(h.aptNm), b = norm(aptName);
+          if (a && b && (a.includes(b) || b.includes(a))) push(String(h.jibun));
+        }
+      } catch { /* 다음 파일 */ }
+    }
+  }
+
+  // ③ 대장 주소의 지번
   const hh = join(ROOT, "data/datasets/apt-hhld.json");
   if (existsSync(hh)) {
     try {
       const byKapt = JSON.parse(readFileSync(hh, "utf8")).byKapt ?? {};
-      const addr = String(byKapt[kapt]?.addr ?? "");
-      const m = addr.match(/\s(\d+(?:-\d+)?)\s/);
-      if (m) return m[1];
-    } catch { /* 무시 — 아래로 넘어간다 */ }
+      const m = String(byKapt[kapt]?.addr ?? "").match(/\s(\d+(?:-\d+)?)\s/);
+      if (m) push(m[1]);
+    } catch { /* 무시 */ }
   }
-  return "";
+  return out;
 }
 
 const pad4 = (s: string) => String(s ?? "").replace(/\D/g, "").padStart(4, "0").slice(-4);
@@ -114,33 +145,43 @@ const totalOf = (raw: string) => {
 async function main() {
   const info = bjdOf(KAPT);
   if (!info) { console.error(`::error::${KAPT} 를 data/datasets/apt-list 에서 못 찾았습니다 — apt-universe 를 먼저 받으세요`); process.exit(1); }
-  const jibun = jibunOf(KAPT);
-  if (!jibun) { console.error(`::error::${KAPT} 의 지번을 못 찾았습니다 — apt-hhld.json 의 addr 를 확인하세요`); process.exit(1); }
+  const cands = jibunCandidates(KAPT, info.name);
+  if (!cands.length) { console.error(`::error::${KAPT} 의 지번 후보를 못 찾았습니다 — --jibun 으로 직접 주세요`); process.exit(1); }
 
   const sigunguCd = info.bjd.slice(0, 5), bjdongCd = info.bjd.slice(5, 10);
-  const [bunRaw, jiRaw] = String(jibun).split("-");
-  const bun = pad4(bunRaw), ji = pad4(jiRaw ?? "0");
-  console.log(`▶ ${info.name} (${KAPT}) · 전용 ${AREA}㎡ · ${sigunguCd}-${bjdongCd} ${bun}-${ji}`);
+  console.log(`▶ ${info.name} (${KAPT}) · 전용 ${AREA}㎡ · ${sigunguCd}-${bjdongCd} · 지번 후보 ${cands.join(", ")}`);
 
-  const all: any[] = [];
-  let total = Infinity;
-  for (let page = 1; page <= 200 && all.length < total; page++) {
-    const url = `https://apis.data.go.kr/1613000/BldRgstHubService/getBrExposPubuseAreaInfo`
-      + `?serviceKey=${encKey(KEY)}&sigunguCd=${sigunguCd}&bjdongCd=${bjdongCd}`
-      + `&platGbCd=0&bun=${bun}&ji=${ji}&numOfRows=100&pageNo=${page}&_type=json`;
-    const { status, body } = await get(url);
-    if (status !== 200) { console.error(`::error::${page}쪽 실패 — ${body.slice(0, 120)}`); process.exit(1); }
-    if (page === 1) total = totalOf(body) || 0;
-    const rs = rowsOf(body);
-    if (!rs.length) break;
-    all.push(...rs);
+  /* 후보를 차례로 물어보고 **줄이 오는 지번**을 쓴다. 추측하지 않고 잰다. */
+  let all: any[] = [];
+  let usedJibun = "";
+  for (const jibun of cands) {
+    const [bunRaw, jiRaw] = String(jibun).split("-");
+    const bun = pad4(bunRaw), ji = pad4(jiRaw ?? "0");
+    const rows: any[] = [];
+    let total = Infinity;
+    for (let page = 1; page <= 200 && rows.length < total; page++) {
+      const url = `https://apis.data.go.kr/1613000/BldRgstHubService/getBrExposPubuseAreaInfo`
+        + `?serviceKey=${encKey(KEY)}&sigunguCd=${sigunguCd}&bjdongCd=${bjdongCd}`
+        + `&platGbCd=0&bun=${bun}&ji=${ji}&numOfRows=100&pageNo=${page}&_type=json`;
+      const { status, body } = await get(url);
+      if (status !== 200) { console.error(`::error::${jibun} ${page}쪽 실패 — ${body.slice(0, 120)}`); process.exit(1); }
+      if (page === 1) total = totalOf(body) || 0;
+      const rs = rowsOf(body);
+      if (!rs.length) break;
+      rows.push(...rs);
+    }
+    console.log(`   지번 ${jibun} (${bun}-${ji}) → 줄 ${rows.length}개`);
+    if (rows.length) { all = rows; usedJibun = jibun; break; }
   }
-  console.log(`   줄 ${all.length}개 (응답이 말하는 총 ${total})`);
+  if (!all.length) {
+    console.error(`::error::지번 후보 ${cands.join(", ")} 전부 줄 0개입니다 — --jibun 으로 대지 지번을 직접 주세요`);
+    process.exit(1);
+  }
 
   const sa = supplyAreaOf(all, AREA);
   if (!sa) {
     // 지어내지 않는다. 못 찾았으면 파일을 만들지 않는다.
-    console.error(`::error::전용 ${AREA}㎡ 에 해당하는 아파트 호를 못 찾았습니다 — 파일을 만들지 않습니다`);
+    console.error(`::error::전용 ${AREA}㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 ${usedJibun}) — 파일을 만들지 않습니다`);
     process.exit(1);
   }
 
@@ -152,6 +193,7 @@ async function main() {
     kaptCode: KAPT,
     kaptName: info.name,
     type,
+    jibun: usedJibun,
     ...sa,
     source: "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
     note: "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. "
