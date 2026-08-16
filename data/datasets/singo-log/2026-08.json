@@ -1109,6 +1109,30 @@
       "gainPct": 3.488372093023256,
       "milestone": null,
       "hhld": 1633
+    },
+    {
+      "foundOn": "2026-08-17",
+      "aptNm": "주공7",
+      "umdNm": "하안동",
+      "jibun": "295",
+      "priceWon": 780000000,
+      "priceManwon": 78000,
+      "area": 59.39,
+      "floor": 2,
+      "buildYear": 1990,
+      "date": "2026-08-11",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "41210",
+      "type": "59",
+      "pyeong": "25평",
+      "lawdCd": "41210",
+      "gu": "광명시",
+      "prevPeakManwon": 75000,
+      "prevPeakDate": "2021-08-17",
+      "gainPct": 4,
+      "milestone": null,
+      "hhld": 1342
     }
   ]
 }
