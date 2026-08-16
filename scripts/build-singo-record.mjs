@@ -447,6 +447,123 @@ if (lowPt.maxManwon < hit.priceManwon) {
   if (li >= 0) lowDot = { x: r2(xOf(li)), y: ly, r: 10, tone: "lo" };
 }
 
+/* ── ⚠️ 곡선이 라벨을 관통하지 않게 (2026-08-16c 검수)
+ *
+ * 라벨 자리를 고정해 두면 "늘 나온다"는 장점이 있지만, **곡선이 그 자리를 지나가면
+ * 글자를 가로지른다.** 서초포레스타2단지에서 저점 라벨 "12.2억(24.10월)" 한가운데를
+ * 곡선이 뚫고 지나갔다 — 저점이 2024년 10월이라 라벨을 둔 오른쪽 아래가 곧 곡선 자리였다.
+ * 곡선 아래에 깔아도 글자가 잘리는 건 마찬가지고, designQa 는 SVG 안을 못 잰다.
+ *
+ * 그래도 **자리를 훑어 고르지는 않는다** — 예전에 빈 자리를 찾게 했더니 자리가 없는
+ * 단지에서 표시가 통째로 사라졌다(상록마을 라이프2차). 좌·우 **두 자리만** 놓고
+ * 곡선과 안 겹치는 쪽을 고른다. 둘 다 겹치면 덜 겹치는 쪽에 두고 경고를 남긴다 —
+ * 어긋나게 겹치는 것이 사라지는 것보다는 낫다.
+ *
+ * 곡선은 구간마다 단조다(위 assertNoOvershoot 가 실측으로 보장한다). 그래서 두 점 사이
+ * y 는 양 끝값을 벗어나지 않고, **구간 사각형만 재면 정확하다** — 곡선을 다시 풀 필요가 없다. */
+const segBoxes = [];
+for (const sg of paths) {
+  for (let i = 0; i < sg.length - 1; i++) {
+    segBoxes.push({
+      x0: Math.min(sg[i][0], sg[i + 1][0]),
+      x1: Math.max(sg[i][0], sg[i + 1][0]),
+      y0: Math.min(sg[i][1], sg[i + 1][1]),
+      y1: Math.max(sg[i][1], sg[i + 1][1]),
+    });
+  }
+}
+/** 두 사각형이 겹치는 넓이(px²) */
+const overlap = (a, b) => {
+  const ox = Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0);
+  const oy = Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0);
+  return ox > 0 && oy > 0 ? ox * oy : 0;
+};
+/** 곡선과 겹치는 넓이(px²). 0 이면 깨끗하다. */
+function curveClash(box) {
+  let area = 0;
+  for (const g of segBoxes) area += overlap(box, g);
+  return area;
+}
+/** 곡선 말고 피해야 할 것들(눈금·점·먼저 놓인 라벨)과 겹치는 넓이 */
+curveClash.extra = (box) => extraBoxes.reduce((s, g) => s + overlap(box, g), 0);
+/* 곡선 말고도 피해야 할 것들 — 브래킷 세로선, 점, 그리고 먼저 자리를 잡은 다른 라벨.
+   이것들을 안 넣으면 라벨이 곡선을 피해 가서 눈금 위에 앉는다. */
+const extraBoxes = [];
+for (const b of [brkHi, brkLo]) {
+  if (b) extraBoxes.push({ x0: b.tickX1, x1: b.tickX2, y0: Math.min(b.y1, b.y2), y1: Math.max(b.y1, b.y2) });
+}
+/* 오늘 점(링)만 넣는다. **고점 점·저점 점은 넣지 않는다** — 그 점은 제 라벨 바로 아래
+   기준선 위에 앉으라고 찍은 것이라, 장애물로 세면 모든 카드에서 라벨이 까닭 없이 도망간다
+   (실제로 6장 전부 고점 라벨이 움직였다). 곡선은 이미 segBoxes 가 잡는다. */
+if (dot) extraBoxes.push({ x0: dot.x - dot.rOuter, x1: dot.x + dot.rOuter, y0: dot.y - dot.rOuter, y1: dot.y + dot.rOuter });
+/* 연도 축도 피한다. 저점 라벨을 기준선 **아래**로 내리는 길을 열자마자, 둘째 줄이
+   "2021" 위에 그대로 겹쳐 앉았다(2026-08-16c 서초포레스타2단지). 축은 판 맨 아래 한 줄이라
+   x 를 아무리 옮겨도 못 피하는 자리가 있고, 그럴 땐 위쪽 후보가 이겨야 한다. */
+for (const a of axis) {
+  const half = widthOf(a.text, 24) / 2 + 6;
+  extraBoxes.push({ x0: a.x - half, x1: a.x + half, y0: a.y - 24, y1: a.y + 8 });
+}
+/* ⚠️ 기준선(점선)은 **장애물로 세지 않는다.**
+   한 번 넣어 봤더니, 곡선을 피해 내려온 라벨이 점선 위에 앉는다는 이유로 다시 곡선 쪽으로
+   되돌아갔다(서초포레스타2단지). 연한 점선이 글자 뒤로 지나가는 것과 5px 검은 실선이
+   글자를 뚫는 것은 같은 사고가 아니다. 게다가 그 점선은 **이 라벨이 가리키는 바로 그 선**이라,
+   붙어 있는 편이 오히려 읽힌다. 피해야 할 건 곡선과 연도 축이다. */
+
+/* 후보 자리: 판 가로를 따라 9칸. **훑어 고르되 반드시 하나를 고른다** —
+   빈 자리가 없으면 가장 덜 겹치는 칸을 쓴다. 예전처럼 표시가 사라지는 일은 없다.
+   같은 점수면 **원래 자리에 가까운 쪽**을 골라, 데이터가 조금 바뀌었다고 라벨이
+   판을 가로질러 튀지 않게 한다(정기물은 매번 비슷해 보여야 한다). */
+for (const [L, name] of [[prevLine, "고점"], [lowLine, "저점"]]) {
+  if (!L) continue;
+  const w = Math.max(widthOf(L.text1, LAB_FS), widthOf(L.text2, LAB_FS));
+  const homeX0 = L.anchor === "end" ? L.tx - w : L.tx;
+  const minX = X0 + 34;
+  const maxX = X1 - 34 - w;
+  /* 가로 40칸(9칸은 성긴 빈 자리를 놓쳤다) × 세로 3단.
+     세로로도 조금 올려 본다 — 서초포레스타2단지는 기준선 바로 위 띠 전체를 곡선이 훑고 지나가
+     가로로는 어디에 둬도 걸렸다. 라벨은 선 위 어디에 있든 그 선을 가리키므로,
+     **한 칸 올리는 것**이 글자가 잘리는 것보다 낫다. */
+  const STEPS = 40;
+  const cands = [];
+  /* dy 후보에 **아래쪽(+52)** 이 있는 게 중요하다. 저점 기준선 아래로는 곡선이 절대 안 내려간다
+     (그 선이 곧 최저값이다) — 그래서 저점 라벨에게는 아래가 거의 언제나 비어 있는 자리다.
+     서초포레스타2단지는 선 위 띠를 곡선이 전부 훑어, 위로는 어디에 둬도 글자가 잘렸다. */
+  for (const dy of [0, -23, -46, -69, -92, -115, -138, 26, 52]) {
+    for (let k = 0; k <= STEPS; k++) {
+      const x0 = maxX <= minX ? minX : minX + ((maxX - minX) * k) / STEPS;
+      cands.push({ x0, dy, dist: Math.abs(x0 - homeX0) });
+    }
+  }
+  /* 원래 자리도 후보에 넣는다 — 안 겹치면 dy·dist 가 0 이라 반드시 이겨서,
+     지금까지 확정한 카드의 픽셀이 안 바뀐다. */
+  cands.push({ x0: homeX0, dy: 0, dist: 0 });
+
+  const scored = cands.map((c) => {
+    const box = { x0: c.x0, x1: c.x0 + w, y0: L.ty1 + c.dy - LAB_FS, y1: L.ty2 + c.dy + 8 };
+    /* 곡선은 3배 — 검은 5px 실선이 글자를 뚫는 건 연도 축을 스치는 것과 다른 사고다.
+       경고에는 **가중치 없는 실제 겹침**을 적는다(점수를 px² 처럼 읽으면 사람이 오판한다). */
+    const raw = curveClash(box) + curveClash.extra(box);
+    return { ...c, ok: box.y0 >= 0, raw, clash: curveClash(box) * 3 + curveClash.extra(box) };
+  });
+  /* 판 위로 넘치는 후보는 제쳐 둔다(뒤의 넘침 검사가 던진다) */
+  const usable = scored.filter((c) => c.ok);
+  usable.sort((a, b) => a.clash - b.clash || Math.abs(a.dy) - Math.abs(b.dy) || a.dist - b.dist);
+  const best = usable[0] ?? scored[0];
+
+  if (Math.abs(best.x0 - homeX0) > 0.5 || best.dy !== 0) {
+    L.tx = r2(best.x0);
+    L.anchor = "start";
+    L.ty1 = r2(L.ty1 + best.dy);
+    L.ty2 = r2(L.ty2 + best.dy);
+    console.warn(`   ↔ ${name} 라벨을 옮겼습니다 — 원래 자리를 곡선·눈금이 지나갑니다`);
+  }
+  if (best.raw > 0) {
+    console.warn(`   ⚠️ ${name} 라벨이 ${Math.round(best.raw)}px² 겹칩니다 — 판에 빈 자리가 없습니다. 눈으로 확인하세요`);
+  }
+  /* 자리를 잡았으면 다음 라벨은 이 자리도 피한다. */
+  extraBoxes.push({ x0: best.x0 - 8, x1: best.x0 + w + 8, y0: L.ty1 - LAB_FS - 8, y1: L.ty2 + 16 });
+}
+
 /* ⚠️ SVG 글자는 designQa 가 못 잰다 — 판을 넘는지 여기서 재고, 넘으면 던진다. */
 for (const L of [prevLine, lowLine]) {
   if (!L) continue;

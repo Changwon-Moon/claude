@@ -12,7 +12,7 @@
  *
  * 결과: `data/review/captions/{라벨}.txt` (없으면 카드 slug 로)
  */
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -66,17 +66,39 @@ const dealDate = m.provenance?.[0] ?? "";
 const contract = card.kicker.match(/(\d{4})\.(\d{2})\.(\d{2})/);
 const contractLab = contract ? `${Number(contract[2])}월 ${Number(contract[3])}일` : "";
 
+/* ── 지역 해시태그
+ * "수원시영통구"를 그대로 쓰면 `#수원시영통아파트` 가 되는데 **아무도 그렇게 검색하지 않는다**
+ * (2026-08-16 늘푸른벽산·화서역푸르지오에서 실제로 그렇게 나갔다).
+ *
+ * 시와 구가 붙어 있으면 **시를 쓴다**(수원시영통구 → `#수원아파트`).
+ * 둘 다 내고 싶지만 캡션 검수가 해시태그를 5개로 제한한다 — 지역 태그는 한 자리뿐이고,
+ * 그 한 자리에는 사람들이 실제로 검색하는 넓은 이름이 들어가는 게 맞다.
+ * (서울은 시가 특별시 하나라 지금처럼 구를 쓴다 — 성북구 → `#성북아파트`.) */
 const gu = m.region?.gu ?? "";
-const guTag = gu.replace(/[시군구]$/, "") || "수도권";
+const guSplit = gu.match(/^(.+?시)(.+?구)$/);
+const guTag = (guSplit ? guSplit[1] : gu).replace(/[시군구]$/, "") || "수도권";
 const station = card.station?.name;
 
-/* ── 걸어온 길 — 카드 곡선에서 뽑은 마디만 적는다(없는 마디를 만들지 않는다) */
+/* "2021.09월" → 정렬용 "202109". 앞의 0 을 살려야 문자열 비교가 맞는다. */
+const cycYm = cyc ? cyc.when.replace(/^(\d{4})\.(\d+)월$/, (_, y, mm) => y + String(mm).padStart(2, "0")) : "";
+
+/* ── 걸어온 길 — 카드 곡선에서 뽑은 마디만 적는다(없는 마디를 만들지 않는다).
+ *
+ * ⚠️ 마디는 **반드시 시간순**이어야 한다 (2026-08-16b).
+ * 예전엔 시작 → 최저점 → 사이클고점 순서로 못박아 넣었는데, **최저점이 사이클 고점보다
+ * 나중인 단지가 흔하다**(2021년 고점 → 2023년 바닥 → 지금 신고가). 그러면 "걸어온 길"이
+ * 2023년 다음에 2021년을 말하며 시간을 거슬러 간다 — 그날 만든 5장 중 3장이 그랬다.
+ * 양 끝(시작·이번 신고가)은 고정이고 **가운데 마디만 날짜로 정렬**해서 넣는다. */
+const mid = [];
+if (low && low.ym !== first.ym) mid.push({ ym: low.ym, t: `· ${ym(low.ym)} ${low.eok} — 2020년 이후 최저점` });
+if (cyc) mid.push({ ym: cycYm, t: `· ${ym(cycYm)} ${cyc.peak} — 지난 사이클 고점` });
+mid.sort((a, b) => a.ym.localeCompare(b.ym));
+
 const road = [];
-road.push(`· ${ym(first.ym)} ${first.eok}`);
-if (low && low.ym !== first.ym) road.push(`· ${ym(low.ym)} ${low.eok} — 2020년 이후 최저점`);
-/* "2021.09월" → "2021년 9월". 앞의 0 을 남기면 다른 줄과 표기가 어긋난다. */
-const cycWhen = cyc ? cyc.when.replace(/^(\d{4})\.0?(\d+)월$/, (_, y, mm) => `${y}년 ${Number(mm)}월`) : "";
-if (cyc) road.push(`· ${cycWhen} ${cyc.peak} — 지난 사이클 고점`);
+/* 시작점이 곧 최저점이면 그 자리에 라벨을 붙인다 — 아래에서 "최저점"을 견주는데
+   걸어온 길에 그 마디가 없으면 근거가 붕 뜬다. */
+road.push(`· ${ym(first.ym)} ${first.eok}` + (low && low.ym === first.ym ? " — 2020년 이후 최저점" : ""));
+road.push(...mid.map((x) => x.t));
 road.push(`· ${ym(last.ym)} ${last.eok} — 이번 신고가`);
 
 const lines = [];
@@ -98,7 +120,14 @@ if (cyc) lines.push(`지난 사이클 고점 ${cyc.peak}과 견주면 ${cyc.vs}�
 if (lowPct && low) lines.push(`2020년 이후 최저점 ${low.eok}과 견주면 ${lowPct}입니다.`);
 if (m.prevPeak?.date) {
   const [py, pm, pd] = m.prevPeak.date.split("-");
-  lines.push(`직전 최고가는 ${Number(pm)}월 ${Number(pd)}일 ${m.prevPeak.eok}이었습니다.` + (py !== last.ym.slice(0, 4) ? ` (${py}년)` : ""));
+  /* 지난 사이클 고점과 **같은 거래**면 한 번만 말한다.
+     같은 사건을 두 이름으로 말하면 읽는 사람은 서로 다른 두 거래로 읽는다
+     (2026-08-16 늘푸른벽산: 2021.09 5.8억이 사이클 고점이자 직전 최고가였다). */
+  const sameAsCycle = cyc && cycYm === `${py}${pm}` && cyc.peak === m.prevPeak.eok;
+  /* 연도는 **앞에** 붙인다. 뒤에 괄호로 달면 "11월 22일 …이었습니다. (2025년)" 처럼
+     날짜를 다 읽고 나서야 연도를 알게 된다. */
+  const yPre = py !== last.ym.slice(0, 4) ? `${py}년 ` : "";
+  if (!sameAsCycle) lines.push(`직전 최고가는 ${yPre}${Number(pm)}월 ${Number(pd)}일 ${m.prevPeak.eok}이었습니다.`);
 }
 lines.push("");
 lines.push(`곡선은 거래가 있던 ${curve.length}개월의 그달 최고가를 이은 것입니다.`);
@@ -117,11 +146,32 @@ const label = arg("out") ?? basename(src, ".json");
 const outDir = join(ROOT, "data/review/captions");
 mkdirSync(outDir, { recursive: true });
 const outPath = join(outDir, `${label}.txt`);
+
+/* ── ⛔ 이미 확정된 캡션은 덮지 않는다 (2026-08-16b 사고)
+ * 이 생성기는 **초안**을 만든다. 확정된 캡션은 그 뒤에 사람이 문장을 다듬고
+ * 고정 서명까지 붙인 결과물이라, 여기서 다시 쓰면 **그 손질이 통째로 날아간다.**
+ * 실제로 광명한진타운(확정본)을 이 스크립트로 덮어써서 되살려야 했다.
+ * 그래서 sets.json 의 `state` 가 "오너 확정"이면 멈춘다 — 정말 다시 쓸 거면 --force. */
+const setsPath = join(ROOT, "data/review/sets.json");
+if (existsSync(setsPath) && !argv.includes("--force")) {
+  const raw = JSON.parse(readFileSync(setsPath, "utf8"));
+  const sets = Array.isArray(raw) ? raw : raw.sets ?? [];
+  const owner = sets.find((s) => s.caption === label && s.state === "오너 확정");
+  if (owner) {
+    console.error(
+      `⛔ '${label}' 은 이미 확정된 캡션입니다 (세트: ${owner.label}, ${owner.confirmedAt ?? "확정일 미상"}).\n` +
+        `   확정본에는 사람이 다듬은 문장과 고정 서명이 들어 있어 다시 쓰면 사라집니다.\n` +
+        `   정말 다시 만들 거면 --force 를 붙이고, 만든 뒤 서명을 다시 붙이세요.`,
+    );
+    process.exit(1);
+  }
+}
+
 writeFileSync(outPath, lines.join("\n").replace(/\n{3,}/g, "\n\n") + "\n", "utf8");
 
 console.log(
   `${outPath.replace(ROOT + "/", "")}\n` +
-    `  ${apt} ${pyeong} ${card.price} · 걸어온 길 ${road.length}마디 · 해시태그 5개\n` +
+    `  ${apt} ${pyeong} ${card.price} · 걸어온 길 ${road.length}마디 · 지역태그 #${guTag}아파트\n` +
     `  ⚠️ 초안입니다 — 카드에 없는 사실을 덧붙이지 마세요. 서명은 apply-signature 가 붙입니다.` +
     (dealDate ? `\n  판정 근거: ${dealDate}` : ""),
 );

@@ -9,7 +9,8 @@
  * 그래서 배관의 약속을 **파일에서 직접 확인한다.** 주석이나 기억이 아니라 코드가 근거다.
  * 카드 만들기 전에 한 번 돌리면 된다(수집 키·네트워크가 필요 없다).
  */
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -87,6 +88,62 @@ head("⑦ 자료가 없으면 그 줄을 안 붙이는가");
   check("주차: 파일 없으면 줄 생략", b.includes("apt-detail/") && b.includes("주차대수 자료가 없어"));
   check("역: 1,000m 넘으면 뱃지 생략", b.includes("MAX_BADGE_M"));
   check("세대수: --kapt 로 사람이 짚어야만", b.includes("이름으로 자동 매칭하지 않고"));
+}
+
+/* ⑧ 라벨이 곡선을 피하는가 (2026-08-16c) — 자리가 고정이던 시절 서초포레스타2단지에서
+   저점 라벨 한가운데를 곡선이 뚫었다. designQa 는 SVG 안을 못 재므로 여기가 유일한 그물이다. */
+head("⑧ 라벨이 곡선을 피하는가");
+{
+  const b = read("scripts/build-singo-record.mjs");
+  check("곡선 구간 사각형을 잰다", b.includes("segBoxes"));
+  check("연도 축을 장애물로 넣는다", b.includes("const half = widthOf(a.text, 24)"));
+  check("빈 자리가 없어도 던지지 않는다", b.includes("판에 빈 자리가 없습니다"), "던지면 카드가 아예 안 나온다");
+}
+
+/* ⑨ 캡션 생성기 규칙 — 전부 실제 결함을 보고 넣은 것이라, 지워지면 그 결함이 돌아온다. */
+head("⑨ 캡션 생성기");
+{
+  const g = read("scripts/gen-singo-caption.mjs");
+  check("걸어온 길을 날짜로 정렬한다", g.includes("mid.sort"), "최저점이 사이클 고점보다 나중이면 시간이 거슬러 간다");
+  check("사이클 고점 == 직전 최고가면 한 번만 말한다", g.includes("sameAsCycle"));
+  check("시+구 지명은 시를 쓴다", g.includes("guSplit"), "#수원시영통아파트 로 나간다");
+  check("확정된 캡션을 덮지 않는다", g.includes("오너 확정") && g.includes("--force"));
+}
+
+/* ⑩ 확정 카드의 픽셀이 그대로인가 — 배관을 손보면서 제일 쉽게 깨뜨리는 약속이다.
+   sets.json 의 확정 md5 와 지금 그림을 대조한다(그림이 로컬에 없으면 건너뛴다).
+
+   ⚠️ **정기물은 다르면 알리기만 한다.** 정기물의 약속은 "픽셀이 안 바뀐다"가 아니라
+      "같은 데이터면 같은 픽셀"이다 — 주간 시세물은 자료가 갱신되면 당연히 다시 그려진다.
+      그걸 실패로 세면 이 점검이 늘 빨간불이라 아무도 안 보게 된다. */
+head("⑩ 확정 카드 픽셀");
+{
+  const raw = JSON.parse(read("data/review/sets.json") || "{}");
+  const sets = Array.isArray(raw) ? raw : raw.sets ?? [];
+  /* 정기물이 아닌 카드는 `pixel-baselines.json` 이 더 최신일 수 있다 — 재확정은 그쪽을 갱신하는데
+     sets.json 을 안 고치고 지나간 적이 있다(sinbundang-loop, 08-06 재확정). 있으면 그쪽을 믿는다. */
+  const base = JSON.parse(read("data/review/pixel-baselines.json") || "{}").cards ?? [];
+  const wantOf = (slug, fallback) => (base.find((c) => c.png === `${slug}-p1.png`)?.md5 ?? "").slice(0, 12) || fallback;
+  const outRoot = join(ROOT, "data/out");
+  const dirs = existsSync(outRoot) ? readdirSync(outRoot) : [];
+  let seen = 0;
+  const moved = [];
+  for (const s of sets.filter((x) => x.state === "오너 확정" && (x.confirmedMd5 ?? []).length)) {
+    const periodic = /정기물/.test(s.pixelPolicy ?? "");
+    for (const sig of s.confirmedMd5) {
+      const [slug, recorded] = sig.split(":");
+      const want = periodic ? recorded : wantOf(slug, recorded);
+      const hit = dirs.map((d) => `data/out/${d}/${slug}-p1.png`).find((p) => existsSync(join(ROOT, p)));
+      if (!hit) continue;
+      seen++;
+      const got = createHash("md5").update(readFileSync(join(ROOT, hit))).digest("hex").slice(0, 12);
+      if (got === want) { check(slug, true); continue; }
+      if (periodic) { moved.push(`${slug}(${s.label})`); console.log(`  ℹ️  ${slug} — 확정 ${want} → 지금 ${got} · 정기물이라 자료가 바뀌면 다시 그려집니다`); }
+      else check(slug, false, `확정 ${want} → 지금 ${got} (${s.label})`);
+    }
+  }
+  if (!seen) console.log("  ⏭ 대조할 확정 그림이 로컬에 없습니다");
+  if (moved.length) console.log(`     → 다시 낼 거면 확정을 다시 받으세요: ${moved.join(", ")}`);
 }
 
 console.log(
