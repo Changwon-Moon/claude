@@ -50,6 +50,8 @@ interface Geo {
   colSkew: { tag: string; col: number; dx: number }[];
   /** 푸터 바로 위 요소와 푸터 사이 간격(px). null = 해당 요소 없음 */
   footerGap: number | null;
+  /** 그래프(svg)가 아랫줄을 밟은 곳. SVG 는 flex 로 안 줄어들어 자리가 모자라면 그대로 덮는다. */
+  svgSpill?: { sel: string; over: number }[];
   /** 말줄임으로 잘린 글자 — {sel, text, need, has} */
   clipped: { sel: string; text: string; need: number; has: number }[];
   /** 우상단 뱃지 아래 제목까지 세로 간격(px). 0~29 = 너무 붙음. null = 해당없음/겹침(별도) */
@@ -240,7 +242,7 @@ const MEASURE_JS = `(() => {
                 갱신폭 뱃지를 밀어내는 자리라 .sr-price 와 .sr-delta 는 반드시 함께 올린다.
                 SVG 안의 곡선·라벨은 Range 대상이 아니라 여기서 못 잰다 —
                 넘침은 빌더(build-singo-record.mjs)가 계산해 던진다. */
-             ".sr-kick,.sr-price,.sr-spec .l,.sr-cycle .l,.sr-cycle .v";
+             ".sr-kick,.sr-stn .nmx,.sr-stn .dist,.sr-price,.sr-spec .l,.sr-cycle .l,.sr-cycle .v";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
   for (var i=0;i<leaves.length;i++) for (var j=i+1;j<leaves.length;j++) {
     var a=leaves[i], b=leaves[j];
@@ -293,6 +295,28 @@ const MEASURE_JS = `(() => {
   Array.prototype.forEach.call(card.querySelectorAll(".mr-apt,.mr-gu,.m2-seg,.rt-name,.sm-gu,.db-nm .n,.db-nm .loc,.db-row span,.tx-cell,.tx-lb"), function(el){
     if(el.scrollWidth - el.clientWidth > 1)
       clipped.push({sel:name(el), text:(el.textContent||"").trim().slice(0,24), need:Math.ceil(el.scrollWidth), has:Math.ceil(el.clientWidth)});
+  });
+  /* ── 그래프가 제 그릇을 넘치는가 (2026-08-16 사고)
+   * SVG 는 viewBox 비율로 높이가 정해져 **flex 가 줄여도 안 줄어든다.** 담는 칸이
+   * 좁아지면 SVG 는 그대로 넘쳐 아래 요소를 덮는데, LEAF 겹침 검사는 SVG 안 글자를
+   * 대상으로 삼지 않아 그때도 "문제 없음"이라 답한다 — singo-record 에 역 뱃지 한 줄을
+   * 넣자 연도 축이 아래 '지난 사이클' 행을 밟았고 검수는 통과했다.
+   *
+   * ⚠️ 처음엔 "svg 와 뒤 형제가 겹치나"로 재 봤다가 **확정 카드 75장이 걸렸다.**
+   *    지도·차트 위에 겹쳐 놓은 덧layer 는 겹치는 게 정상이기 때문이다.
+   *    그래서 조건을 **"제 부모 칸을 넘쳤나"** 하나로 좁혔다. 이건 언제나 사고다:
+   *    부모가 자리를 못 준 것이고, 넘친 만큼은 반드시 무언가를 덮는다.
+   *    셀렉터 등록이 필요 없어 새 판형도 저절로 걸린다. */
+  var svgSpill=[];
+  Array.prototype.forEach.call(card.querySelectorAll("svg"), function(sv){
+    var box=sv.parentElement;
+    if(!box) return;
+    var cs=getComputedStyle(box);
+    if(cs.overflow!=="visible") return;            // 잘려 나가면 덮지는 않는다
+    var sr=sv.getBoundingClientRect(), br=box.getBoundingClientRect();
+    if(!sr.height||!br.height) return;
+    var over=Math.round(sr.bottom-br.bottom);
+    if(over>1) svgSpill.push({sel:name(box), over:over});
   });
   var footer=card.querySelector(".wirit-footer");
   /* 푸터 바로 위 요소와의 간격 — 붙어 있으면 답답해 보인다(오너 반복 지적).
@@ -400,7 +424,7 @@ const MEASURE_JS = `(() => {
     rows:rows, overflow:overflow, collisions:collisions,
     footerTop:footer?footer.getBoundingClientRect().top:null,
     lastRowBottom:(lastRow&&lastRow.name)?lastRow.name.bottom:null,
-    colSkew:colSkew, footerGap:footerGap, clipped:clipped, badgeClear:badgeClear
+    colSkew:colSkew, footerGap:footerGap, clipped:clipped, badgeClear:badgeClear, svgSpill:svgSpill
   };
 })()`;
 
@@ -503,6 +527,15 @@ function analyze(g: Geo): Finding[] {
   /* 2) 푸터 바로 위 요소가 푸터에 붙음 — 겹치진 않지만 답답해 보인다(오너 반복 지적).
    *    흐름 배치라 rowclip 이 못 잡는 자리다. 미학 항목이므로 warn. */
   const FOOTER_GAP_MIN = 14;
+  /* 그래프가 아랫줄을 밟았으면 **error** 다 — 글자가 가려진 채로 나가는 것이라
+     'warn 이니 넘어가자'가 성립하지 않는다. 판 높이(VB_H)를 줄이면 풀린다. */
+  for (const sp of g.svgSpill ?? [])
+    out.push({
+      level: "error",
+      code: "svgspill",
+      msg: `그래프가 담는 칸 \`${sp.sel}\` 를 ${sp.over}px 넘쳤습니다 — 넘친 만큼 아랫줄을 덮습니다. 판 높이(빌더의 VB_H)를 줄이세요`,
+    });
+
   if (g.footerGap != null && g.footerGap < FOOTER_GAP_MIN)
     out.push({
       level: "warn",

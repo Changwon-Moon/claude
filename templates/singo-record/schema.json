@@ -315,6 +315,36 @@
           ]
         }
       }
+    },
+    "station": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "가장 가까운 지하철역. 코드(카카오 로컬)가 잰 값이 있을 때만. 거리는 직선거리다.",
+      "required": [
+        "name",
+        "dist"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dist": {
+          "type": "string",
+          "maxLength": 10
+        },
+        "distanceM": {
+          "type": "number"
+        }
+      }
     }
   }
 }

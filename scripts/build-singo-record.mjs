@@ -109,7 +109,10 @@ const VB_W = 936; // 카드 안쪽 폭(1080 - 좌우 여백 72×2)
 /* ⚠️ SVG 는 width:100% + viewBox 비율로 높이가 정해진다 — **판이 남는 높이를 못 먹는다.**
    제목이 한 줄로 낮아지면서(2026-08-13 개편) 곡선 위에 250px 짜리 빈 칸이 생겼다.
    판 높이를 키워 그 자리를 곡선이 쓰게 한다. 여기 숫자를 바꾸면 곡선의 세로 크기가 바뀐다. */
-const VB_H = 720;
+/* ⚠️ 이 값이 곧 곡선의 세로 크기다. 위에 줄이 늘면(역 뱃지 등) **여기를 줄여야** 한다 —
+   SVG 는 flex 로 안 줄어들어 자리가 모자라면 아랫줄을 그대로 덮는다.
+   덮은 것은 designQa 의 `svgspill` 이 error 로 잡는다(2026-08-16 에 실제로 45px 밟았다). */
+const VB_H = 530;
 const PAD_T = 64; // 위 — 점 라벨이 앉을 자리
 const PAD_B = 62; // 아래 — 연도 축
 /* ⚠️ 좌우 여백을 두는 이유: 2020·2026 연도 라벨이 판 끝에서 잘려 나가 **간격이 어긋나 보였다**
@@ -252,6 +255,30 @@ if (old) {
   }
 }
 
+/* ── 가까운 역 (오너 2026-08-16 "가까운 역을 뱃지로")
+   파일이 없으면 **뱃지를 붙이지 않는다.** 내가 아는 역 이름을 적는 건 오보다 —
+   `data/apt-station-queue.txt` 에 `kapt=...` 한 줄을 밀어 코드가 재게 한다.
+   거리는 직선거리라 '도보 N분'으로 바꾸지 않는다(보행거리는 더 길다). */
+let station = null;
+if (KAPT) {
+  const sp = P(`data/datasets/apt-station/${KAPT}.json`);
+  if (existsSync(sp)) {
+    const st = JSON.parse(readFileSync(sp, "utf8"));
+    const m = st.distanceM;
+    station = {
+      name: st.station,
+      lines: st.lines ?? [],
+      dist: m >= 1000 ? `${(m / 1000).toFixed(1)}km` : `${m}m`,
+      distanceM: m,
+    };
+  } else {
+    console.warn(
+      `ⓘ 가까운 역 자료가 없어 뱃지를 생략합니다. 붙이려면:\n` +
+        `   data/apt-station-queue.txt 에  kapt=${KAPT}  한 줄을 쓰고 푸시`,
+    );
+  }
+}
+
 /* ── ⑤ 문구 — 전부 위 수치에서 나온다 */
 const first = traded[0];
 const fromLabel = `${hist.meta.from.slice(0, 4)}년${hist.meta.from.slice(4) === "01" ? "" : ` ${Number(hist.meta.from.slice(4))}월`}`;
@@ -290,6 +317,7 @@ const card = {
   title: aptStartsWithRegion
     ? `${hit.aptNm} ${hit.pyeong}`
     : `<span class="rg">${guShort}</span> ${hit.aptNm} ${hit.pyeong}`,
+  station,
   price: eok(hit.priceManwon),
   spec,
   chart: { vb: `0 0 ${VB_W} ${VB_H}`, band, floor, threshold, paths: chartPaths, dots, axis, old, dot },
@@ -316,6 +344,9 @@ const card = {
       note: "지난 사이클 고점 = 최대 낙폭이 난 골 직전의 최고가. 코드가 계산한다(사람이 고르지 않는다).",
     },
     firstPoint: { ym: first.ym, eok: eok(first.maxManwon) },
+    station: station
+      ? { ...station, note: "카카오 로컬이 잰 **직선거리**. 걸어간 거리가 아니다." }
+      : { note: "가까운 역 자료 없음 — 뱃지를 붙이지 않았다." },
     hhld: kapt
       ? {
           kaptCode: KAPT,

@@ -39,7 +39,10 @@
       .sr .wirit-title .rg { color: var(--wirit-gray); }
 
       /* 주인공 줄 — 왼쪽 가격, 오른쪽 단지 제원 */
-      .sr-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 34px; margin: 30px 0 0; }
+      /* 제목 바로 아래에 올 때는 28px 이상 띄운다(designQa titlegap). 역 뱃지 줄이
+         사이에 끼면 그만큼 붙여도 된다 — 사이에 이미 한 줄이 있기 때문이다. */
+      .sr-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 34px; margin: 32px 0 0; }
+      .sr-stn + .sr-hero { margin-top: 26px; }
       .sr-price {
         font-family: var(--font-num); font-size: 150px; font-weight: 900;
         color: var(--wirit-red); letter-spacing: -0.055em; line-height: 0.94; white-space: nowrap;
@@ -54,6 +57,37 @@
         letter-spacing: -0.03em; white-space: nowrap;
       }
       .sr-spec .l .sep { color: var(--wirit-gray); font-weight: 700; padding: 0 6px; }
+
+      /* ── 가까운 역 (오너 2026-08-16 "가까운 역을 뱃지로")
+         제목과 가격 사이에 한 줄. 노선 원형 뱃지는 **다른 카드에서 쓰는 것을 그대로 상속**한다
+         (metroBadge 헬퍼 · templates/_shared/metro-lines.json) — 크롬은 짓지 않고 물려받는다.
+         ⚠️ 거리는 **직선거리**다. '도보 N분'으로 바꾸지 않는다 — 보행거리는 더 길고,
+            환산하면 그게 곧 과장이다. 카드가 '직선'이라고 스스로 밝힌다. */
+      .sr-stn { --mono: 46px; display: flex; align-items: center; gap: 12px; margin: 30px 0 0; }
+      .sr-stn .nmx {
+        font-family: var(--font-sans); font-size: 30px; font-weight: 800;
+        color: var(--wirit-ink); letter-spacing: -0.035em; white-space: nowrap;
+      }
+      .sr-stn .dist {
+        font-family: var(--font-num); font-size: 27px; font-weight: 700;
+        color: var(--wirit-gray); letter-spacing: -0.02em; white-space: nowrap;
+      }
+      /* 노선 뱃지 — ranking-table·metro-2col 과 같은 규격(원형·노선색·흰 글자) */
+      .sr-stn .rt-line {
+        width: var(--mono); height: var(--mono); border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; text-align: center;
+        font-family: var(--font-sans); font-weight: 800; line-height: 0.94;
+        box-shadow: 0 1px 3px rgba(20, 24, 33, 0.18); flex: 0 0 auto;
+      }
+      .sr-stn .rt-line.ln-white { color: #fff; }
+      .sr-stn .rt-line.ln-white .num,
+      .sr-stn .rt-line.ln-white .nm { text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3); }
+      .sr-stn .rt-line.ln-dark { color: #1c2431; }
+      .sr-stn .rt-line .num { font-size: calc(var(--mono) * 0.58); font-weight: 900; }
+      .sr-stn .rt-line .nm { font-size: calc(var(--mono) * 0.3); font-weight: 800; letter-spacing: -0.04em; }
+      .sr-stn .rt-line .nm.two { font-size: calc(var(--mono) * 0.28); line-height: 1; }
+      /* 노선을 못 알아본 역 — 색을 짐작하지 않는다. 회색 원으로 둔다. */
+      .sr-stn .rt-line.plain { background: var(--wirit-gray); color: #fff; }
 
       /* ── 곡선 ─────────────────────────────────────────────
          이 판형이 기억되는 자리다. 그래서 여기만 힘을 준다.
@@ -124,6 +158,15 @@
     <div class="wirit-card sr">
       <div class="wirit-topcap">{{#if kicker}}<span class="sr-kick">{{kicker}}</span>{{/if}}</div>
       <div class="sr-head"><h1 class="wirit-title">{{{title}}}</h1></div>
+
+      {{#if station}}
+      <div class="sr-stn">
+        {{#each station.lines}}{{{metroBadge this}}}{{/each}}
+        {{#unless station.lines}}<span class="rt-line plain"><span class="nm">역</span></span>{{/unless}}
+        <span class="nmx">{{station.name}}</span>
+        <span class="dist">직선 {{station.dist}}</span>
+      </div>
+      {{/if}}
 
       <div class="sr-hero">
         <span class="sr-price">{{price}}</span>
