@@ -1,0 +1,13 @@
+{
+  "_": [
+    "국토교통부 공동주택 **상세**정보의 주차대수. 지상(kaptdPcnt)+지하(kaptdPcntu) 합이다.",
+    "세대당 대수는 여기 없다 — 세대수는 apt-hhld.json 에 있고 빌더가 나눈다.",
+    "둘 다 0이면 이 파일이 아예 없다. 카드는 그때 주차 줄을 붙이지 않는다."
+  ],
+  "kaptCode": "A44340013",
+  "parkGround": 303,
+  "parkUnder": 1565,
+  "parkTotal": 1868,
+  "source": "국토교통부 공동주택 상세정보 (AptBasisInfoServiceV4/getAphusDtlInfoV4)",
+  "collectedFor": "2026-08-16"
+}
