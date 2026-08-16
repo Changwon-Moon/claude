@@ -42,7 +42,7 @@
       /* 제목 바로 아래에 올 때는 28px 이상 띄운다(designQa titlegap). 역 뱃지 줄이
          사이에 끼면 그만큼 붙여도 된다 — 사이에 이미 한 줄이 있기 때문이다. */
       .sr-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 34px; margin: 32px 0 0; }
-      .sr-stnrow + .sr-hero { margin-top: 26px; }
+
       .sr-price {
         font-family: var(--font-num); font-size: 150px; font-weight: 900;
         color: var(--wirit-red); letter-spacing: -0.055em; line-height: 0.94; white-space: nowrap;
@@ -58,18 +58,18 @@
       }
       .sr-spec .l .sep { color: var(--wirit-gray); font-weight: 700; padding: 0 6px; }
 
-      /* ── 가까운 역 — **노선과 역 이름을 한 알약**에 (오너 2026-08-16)
-         거리는 뺐다(오너 지시). 어느 노선 어느 역인가만 남는다.
-         노선 원은 다른 카드에서 쓰는 규격을 그대로 상속한다(metroBadge · metro-lines.json). */
-      .sr-stnrow { display: flex; margin: 30px 0 0; }
+      /* ── 가까운 역 — **최상단 킥커 옆**으로 (오너 2026-08-16)
+         제목 아래에 혼자 떠 있던 것을 위로 올렸다. 킥커와 같은 줄에 있으면
+         '오늘 어디 소식인가'가 한 줄로 읽힌다. 우상단 로고 뱃지 자리는 침범하지 않는다. */
+      .wirit-topcap { display: flex; align-items: center; gap: 16px; }
       .sr-stn {
-        --mono: 40px;
-        display: inline-flex; align-items: center; gap: 12px;
-        padding: 7px 24px 7px 7px; border-radius: 999px;
-        background: var(--wirit-ink-06);
+        --mono: 34px;
+        display: inline-flex; align-items: center; gap: 10px;
+        padding: 5px 18px 5px 5px; border-radius: 999px;
+        background: var(--wirit-ink-06); flex: 0 0 auto;
       }
       .sr-stn .nmx {
-        font-family: var(--font-sans); font-size: 30px; font-weight: 800;
+        font-family: var(--font-sans); font-size: 26px; font-weight: 800;
         color: var(--wirit-ink); letter-spacing: -0.035em; white-space: nowrap;
       }
       .sr-stn .rt-line {
@@ -82,7 +82,6 @@
       .sr-stn .rt-line .num { font-size: calc(var(--mono) * 0.56); font-weight: 900; }
       .sr-stn .rt-line .nm { font-size: calc(var(--mono) * 0.3); font-weight: 800; letter-spacing: -0.04em; }
       .sr-stn .rt-line .nm.two { font-size: calc(var(--mono) * 0.28); line-height: 1; }
-      /* 노선을 못 알아본 역 — 색을 짐작하지 않는다 */
       .sr-stn .rt-line.plain { background: var(--wirit-gray); color: #fff; }
 
       /* ── 곡선 ─────────────────────────────────────────────
@@ -107,12 +106,17 @@
       }
       /* 기준선 두 줄 — 한 단계 물러난다. 셋이 같은 무게면 무엇이 사건인지 흐려진다. */
       .sr-base { stroke: var(--wirit-gray); stroke-width: 2.5; stroke-dasharray: 6 9; opacity: 0.9; }
-      .sr-baselab {
-        font-family: var(--font-num); font-size: 26px; font-weight: 800;
-        fill: var(--wirit-gray);
-      }
-      .sr-baselab .hi { fill: var(--wirit-red); font-weight: 900; }
-      .sr-baselab .lo { fill: var(--wirit-cobalt); font-weight: 900; }
+      .sr-baselab { font-family: var(--font-num); font-size: 27px; }
+      /* 1행 = 값(연월). 2행 = 무엇과 견줬는지 + 몇 % — 색은 그 기준이 정한다. */
+      .sr-baselab .v { font-weight: 800; fill: var(--wirit-ink); }
+      .sr-baselab .p { font-weight: 900; }
+      .sr-baselab .p.hi { fill: var(--wirit-red); }
+      .sr-baselab .p.lo { fill: var(--wirit-cobalt); }
+      /* 폭 표시 직선 — 두 선 사이의 **길이가 곧 그 퍼센트**다.
+         곡선 뒤에 깔아 그림의 주인공을 뺏지 않는다. */
+      .sr-brk { stroke-width: 3.5; }
+      .sr-brk.hi { stroke: var(--wirit-red); }
+      .sr-brk.lo { stroke: var(--wirit-cobalt); }
       /* 빈 원 = 그 값이 난 달. 라벨의 숫자를 그림에서 찾게 해 준다. */
       .sr-old { fill: var(--wirit-paper); stroke: var(--wirit-ink); stroke-width: 4; }
       .sr-ax { font-family: var(--font-num); font-size: 23px; font-weight: 700; fill: var(--wirit-gray); }
@@ -121,17 +125,16 @@
   </head>
   <body>
     <div class="wirit-card sr">
-      <div class="wirit-topcap">{{#if kicker}}<span class="sr-kick">{{kicker}}</span>{{/if}}</div>
-      <div class="sr-head"><h1 class="wirit-title">{{{title}}}</h1></div>
-
-      {{#if station}}
-      <div class="sr-stnrow">
+      <div class="wirit-topcap">
+        {{#if kicker}}<span class="sr-kick">{{kicker}}</span>{{/if}}
+        {{#if station}}
         <span class="sr-stn">
           {{#if station.lines}}{{{metroBadge station.lines.[0]}}}{{else}}<span class="rt-line plain"><span class="nm">역</span></span>{{/if}}
           <span class="nmx">{{station.name}}</span>
         </span>
+        {{/if}}
       </div>
-      {{/if}}
+      <div class="sr-head"><h1 class="wirit-title">{{{title}}}</h1></div>
 
       <div class="sr-hero">
         <span class="sr-price">{{price}}</span>
@@ -141,33 +144,45 @@
       <div class="sr-chart">
         <svg class="sr-svg" viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
           {{#if chart.bg}}<rect class="sr-bg" x="{{chart.bg.x}}" y="{{chart.bg.y}}" width="{{chart.bg.w}}" height="{{chart.bg.h}}" rx="{{chart.bg.r}}" />{{/if}}
-          <!-- 기준선 — 지난 고점 / 기준선 이후 최저점 -->
-          {{#if chart.prevLine}}
-          <line class="sr-base" x1="{{chart.prevLine.x1}}" y1="{{chart.prevLine.y}}" x2="{{chart.prevLine.x2}}" y2="{{chart.prevLine.y}}" />
-          {{/if}}
-          {{#if chart.lowLine}}
-          <line class="sr-base" x1="{{chart.lowLine.x1}}" y1="{{chart.lowLine.y}}" x2="{{chart.lowLine.x2}}" y2="{{chart.lowLine.y}}" />
-          {{/if}}
-          <!-- 이번에 넘은 선. 라벨은 오늘 자리(오른쪽 끝)에 둔다 -->
+          {{#if chart.prevLine}}<line class="sr-base" x1="{{chart.prevLine.x1}}" y1="{{chart.prevLine.y}}" x2="{{chart.prevLine.x2}}" y2="{{chart.prevLine.y}}" />{{/if}}
+          {{#if chart.lowLine}}<line class="sr-base" x1="{{chart.lowLine.x1}}" y1="{{chart.lowLine.y}}" x2="{{chart.lowLine.x2}}" y2="{{chart.lowLine.y}}" />{{/if}}
           {{#if chart.threshold}}
           <line class="sr-thr" x1="{{chart.threshold.x1}}" y1="{{chart.threshold.y}}" x2="{{chart.threshold.x2}}" y2="{{chart.threshold.y}}" />
           <text class="sr-thrlab" x="{{chart.threshold.tx}}" y="{{chart.threshold.ty}}" text-anchor="{{chart.threshold.anchor}}">{{chart.threshold.text}}</text>
           {{/if}}
+          <!-- 폭 표시 직선 — 곡선 **뒤**에 깐다 -->
+          {{#with chart.brkHi}}
+          <g class="sr-brk {{tone}}">
+            <line x1="{{x}}" y1="{{y1}}" x2="{{x}}" y2="{{y2}}" />
+            <line x1="{{tickX1}}" y1="{{y1}}" x2="{{tickX2}}" y2="{{y1}}" />
+            <line x1="{{tickX1}}" y1="{{y2}}" x2="{{tickX2}}" y2="{{y2}}" />
+          </g>
+          {{/with}}
+          {{#with chart.brkLo}}
+          <g class="sr-brk {{tone}}">
+            <line x1="{{x}}" y1="{{y1}}" x2="{{x}}" y2="{{y2}}" />
+            <line x1="{{tickX1}}" y1="{{y1}}" x2="{{tickX2}}" y2="{{y1}}" />
+            <line x1="{{tickX1}}" y1="{{y2}}" x2="{{tickX2}}" y2="{{y2}}" />
+          </g>
+          {{/with}}
           {{#each chart.paths}}<path class="sr-line" d="{{d}}" />{{/each}}
           <!-- 실제 거래가 있던 달만 점으로 찍는다. 점 사이를 잇는 선은 **관측 사이를 이은 것**이지
                그 사이에 그 값이었다는 뜻이 아니다 — 점이 있어야 그 차이가 보인다. -->
           {{#each chart.dots}}<circle class="sr-obs" cx="{{x}}" cy="{{y}}" r="{{r}}" />{{/each}}
           {{#each chart.axis}}<text class="sr-ax" x="{{x}}" y="{{y}}" text-anchor="{{anchor}}">{{text}}</text>{{/each}}
-          <!-- 기준선 라벨은 선·곡선 위에 얹는다(가려지면 안 읽힌다) -->
-          {{#if chart.prevLine}}
-          <text class="sr-baselab" x="{{chart.prevLine.tx}}" y="{{chart.prevLine.ty}}" text-anchor="start" paint-order="stroke" stroke="#fafaf8" stroke-width="8" stroke-linejoin="round">{{chart.prevLine.text}}<tspan class="{{chart.prevLine.tone}}">{{chart.prevLine.tail}}</tspan></text>
-          {{/if}}
-          {{#if chart.lowLine}}
-          <text class="sr-baselab" x="{{chart.lowLine.tx}}" y="{{chart.lowLine.ty}}" text-anchor="start" paint-order="stroke" stroke="#fafaf8" stroke-width="8" stroke-linejoin="round">{{chart.lowLine.text}}<tspan class="{{chart.lowLine.tone}}">{{chart.lowLine.tail}}</tspan></text>
-          {{/if}}
+          <!-- 기준선 라벨 2행. 종이색 테두리를 둘러 곡선 위에서도 읽히게 한다 -->
+          {{#with chart.prevLine}}
+          <text class="sr-baselab" x="{{tx}}" text-anchor="{{anchor}}" paint-order="stroke" stroke="#f6f6f3" stroke-width="9" stroke-linejoin="round">
+            <tspan class="v" x="{{tx}}" y="{{ty1}}">{{text1}}</tspan><tspan class="p {{tone}}" x="{{tx}}" y="{{ty2}}">{{text2}}</tspan>
+          </text>
+          {{/with}}
+          {{#with chart.lowLine}}
+          <text class="sr-baselab" x="{{tx}}" text-anchor="{{anchor}}" paint-order="stroke" stroke="#f6f6f3" stroke-width="9" stroke-linejoin="round">
+            <tspan class="v" x="{{tx}}" y="{{ty1}}">{{text1}}</tspan><tspan class="p {{tone}}" x="{{tx}}" y="{{ty2}}">{{text2}}</tspan>
+          </text>
+          {{/with}}
           {{#if chart.old}}<circle class="sr-old" cx="{{chart.old.x}}" cy="{{chart.old.y}}" r="{{chart.old.r}}" />{{/if}}
           {{#if chart.lowDot}}<circle class="sr-old" cx="{{chart.lowDot.x}}" cy="{{chart.lowDot.y}}" r="{{chart.lowDot.r}}" />{{/if}}
-          <!-- 찬 원 = 오늘 거래. 이 판형에서 레드를 쓰는 자리 -->
           {{#if chart.dot}}
           <circle cx="{{chart.dot.x}}" cy="{{chart.dot.y}}" r="{{chart.dot.rOuter}}" fill="#fafaf8" />
           <circle cx="{{chart.dot.x}}" cy="{{chart.dot.y}}" r="{{chart.dot.r}}" fill="#e5484d" />

@@ -112,7 +112,7 @@ const VB_W = 936; // 카드 안쪽 폭(1080 - 좌우 여백 72×2)
 /* ⚠️ 이 값이 곧 곡선의 세로 크기다. 위에 줄이 늘면(역 뱃지 등) **여기를 줄여야** 한다 —
    SVG 는 flex 로 안 줄어들어 자리가 모자라면 아랫줄을 그대로 덮는다.
    덮은 것은 designQa 의 `svgspill` 이 error 로 잡는다(2026-08-16 에 실제로 45px 밟았다). */
-const VB_H = 700;
+const VB_H = 775;
 const PAD_T = 62; // 위 — 돌파선 라벨이 앉을 자리
 const PAD_B = 62; // 아래 — 연도 축
 /* ⚠️ 좌우 여백을 두는 이유: 2020·2026 연도 라벨이 판 끝에서 잘려 나가 **간격이 어긋나 보였다**
@@ -319,56 +319,70 @@ if (worst.atMaxIdx >= 0) {
   };
 }
 
-/* ── 기준선 두 줄을 그래프 안에 (오너 2026-08-16)
-   · 지난 사이클 고점 : `9억(21.10월)` + 빨강 `고점 대비 +11.1%`
-   · 기준선 이후 최저점 : `6.15억(20.01월)` + 파랑 `저점 대비 +62.6%`
-   색 기준은 방향이 아니라 **무엇과 견주는가**로 고정했다(오너 지시) —
-   고점 대비는 늘 빨강, 저점 대비는 늘 파랑.
+/* ── 기준선 두 줄 + 폭 표시 직선 (오너 2026-08-16)
+   · 지난 사이클 고점 : 왼쪽에 2행 `9억(21.10월)` / 빨강 `고점대비 +11.1%`
+   · 기준선 이후 최저점 : **최우측**에 2행 `6.15억(20.01월)` / 파랑 `저점대비 +62.6%`
+   · 두 선과 오늘 선 사이를 **세로 직선**으로 잇는다 — 그 길이가 곧 퍼센트다
+     (빨강 = 고점 대비, 파랑 = 저점 대비)
 
-   ⚠️ 세로 브래킷으로 두 선을 묶어 봤다가 걷었다. 곡선이 두 선 사이를 지나는 단지에서는
-      설 자리가 아예 없어 표시가 통째로 사라졌다(상록마을 라이프2차). 라벨 꼬리로 붙이면
-      단지가 어떻게 생겼든 항상 나온다 — **가끔 예뻐지는 것보다 늘 나오는 편이 낫다.** */
+   색 기준은 방향이 아니라 **무엇과 견주는가**로 고정했다(오너 지시).
+
+   ⚠️ 직선 자리는 훑어 고르지 않는다. 예전에 곡선 빈 자리를 찾게 했더니 단지에 따라
+      자리가 없어 표시가 통째로 사라졌다(상록마을 라이프2차).
+      **각자 제 라벨 옆에 고정으로 세우고, 곡선 뒤에 깐다** — 늘 나온다. */
 const ymLab = (ym) => `${ym.slice(2, 4)}.${ym.slice(4)}월`;
+const thrY = threshold ? threshold.y : r2(yOf(hit.priceManwon));
+const LAB_FS = 27;
 
 let prevLine = null;
 let old = null;
+let brkHi = null;
 if (cycle && worst.atMaxIdx >= 0) {
   const pk = traded[worst.atMaxIdx];
   const py = r2(yOf(pk.maxManwon));
+  const bx = r2(X0 + 26);
   prevLine = {
     x1: X0,
     x2: X1,
     y: py,
-    tx: X0,
-    ty: r2(py - 14),
-    text: `${eok(pk.maxManwon)}(${ymLab(pk.ym)})`,
-    tail: ` 고점 대비 ${cycle.vs}`,
-    tone: "hi", // 고점 대비 = 빨강
+    tx: r2(bx + 26),
+    anchor: "start",
+    ty1: r2(py - 52),
+    ty2: r2(py - 16),
+    text1: `${eok(pk.maxManwon)}(${ymLab(pk.ym)})`,
+    text2: `고점대비 ${cycle.vs}`,
+    tone: "hi",
   };
+  brkHi = { x: bx, y1: thrY, y2: py, tickX1: r2(bx - 12), tickX2: r2(bx + 12), tone: "hi" };
   const idx = pts.findIndex((p) => p.ym === pk.ym);
   if (idx >= 0) old = { x: r2(xOf(idx)), y: py, r: 10 };
 }
 
-/* 기준선 이후 최저점 — 저점 대비 상승률. 최저점이 곧 오늘이면(내내 내림) 그릴 것이 없다. */
+/* 기준선 이후 최저점. 최저점이 곧 오늘이면(내내 내림) 그릴 것이 없다. */
 let lowLine = null;
 let lowDot = null;
+let brkLo = null;
 const lowPt = traded.reduce((a, b) => (b.maxManwon < a.maxManwon ? b : a));
 if (lowPt.maxManwon < hit.priceManwon) {
   const ly = r2(yOf(lowPt.maxManwon));
   const vsLow = ((hit.priceManwon - lowPt.maxManwon) / lowPt.maxManwon) * 100;
+  const t1 = `${eok(lowPt.maxManwon)}(${ymLab(lowPt.ym)})`;
+  const t2 = `저점대비 +${vsLow.toFixed(1)}%`;
+  const wMax = Math.max(widthOf(t1, LAB_FS), widthOf(t2, LAB_FS));
+  const bx = r2(X1 - wMax - 30); // 라벨 왼쪽에 붙여 세운다
   lowLine = {
     x1: X0,
     x2: X1,
     y: ly,
-    tx: X0,
-    /* ⚠️ 저점 라벨은 선 **아래**에 둔다. 위에 두면 최저점 빈 원과 겹친다 —
-       최저점은 곡선의 가장 아래라 그 위가 원의 자리다(2026-08-16 렌더에서 겹쳤다).
-       아래는 연도 축까지 비어 있어 자리가 넉넉하다. */
-    ty: r2(ly + 34),
-    text: `${eok(lowPt.maxManwon)}(${ymLab(lowPt.ym)})`,
-    tail: ` 저점 대비 +${vsLow.toFixed(1)}%`,
-    tone: "lo", // 저점 대비 = 파랑
+    tx: X1,
+    anchor: "end",
+    ty1: r2(ly - 52),
+    ty2: r2(ly - 16),
+    text1: t1,
+    text2: t2,
+    tone: "lo",
   };
+  brkLo = { x: bx, y1: thrY, y2: ly, tickX1: r2(bx - 12), tickX2: r2(bx + 12), tone: "lo" };
   const li = pts.findIndex((p) => p.ym === lowPt.ym);
   if (li >= 0) lowDot = { x: r2(xOf(li)), y: ly, r: 10 };
 }
@@ -376,16 +390,18 @@ if (lowPt.maxManwon < hit.priceManwon) {
 /* ⚠️ SVG 글자는 designQa 가 못 잰다 — 판을 넘는지 여기서 재고, 넘으면 던진다. */
 for (const L of [prevLine, lowLine]) {
   if (!L) continue;
-  const w = widthOf(L.text + (L.tail ?? ""), 26);
-  if (L.tx + w > VB_W) throw new Error(`기준선 라벨("${L.text}${L.tail ?? ""}")이 판을 넘습니다.`);
-  if (L.ty - 26 < 0) throw new Error(`기준선 라벨이 판 위로 넘칩니다.`);
-  if (L.ty + 8 > VB_H) throw new Error(`기준선 라벨이 판 아래로 넘칩니다.`);
+  const w = Math.max(widthOf(L.text1, LAB_FS), widthOf(L.text2, LAB_FS));
+  const left = L.anchor === "end" ? L.tx - w : L.tx;
+  if (left < 0 || left + w > VB_W) throw new Error(`기준선 라벨("${L.text1}")이 판을 넘습니다.`);
+  if (L.ty1 - LAB_FS < 0) throw new Error(`기준선 라벨이 판 위로 넘칩니다.`);
+  if (L.ty2 + 8 > VB_H) throw new Error(`기준선 라벨이 판 아래로 넘칩니다.`);
 }
-/* 두 기준선이 붙어 있으면 라벨이 겹친다 — 고점 라벨을 한 단계 더 위로 올린다. */
-if (prevLine && lowLine && Math.abs(prevLine.y - lowLine.y) < 60) {
-  prevLine.ty = r2(prevLine.y - 34);
+/* 두 기준선이 붙어 있으면 라벨 두 벌이 겹친다 — 그때는 고점 라벨을 더 위로 올린다. */
+if (prevLine && lowLine && Math.abs(prevLine.y - lowLine.y) < 110) {
+  prevLine.ty1 = r2(prevLine.ty1 - 44);
+  prevLine.ty2 = r2(prevLine.ty2 - 44);
 }
-if (threshold && prevLine && Math.abs(threshold.ty - prevLine.ty) < 30) {
+if (threshold && prevLine && prevLine.ty1 - threshold.ty < 24) {
   throw new Error(`돌파선 라벨과 고점 라벨이 너무 가깝습니다 — 판 높이를 키우세요.`);
 }
 
@@ -448,7 +464,7 @@ const card = {
   station,
   price: eok(hit.priceManwon),
   spec,
-  chart: { vb: `0 0 ${VB_W} ${VB_H}`, bg, threshold, prevLine, lowLine, paths: chartPaths, dots, axis, old, lowDot, dot },
+  chart: { vb: `0 0 ${VB_W} ${VB_H}`, bg, threshold, prevLine, lowLine, brkHi, brkLo, paths: chartPaths, dots, axis, old, lowDot, dot },
   /* ⚠️ 하단 기준 문구를 걷어냈다(오너 2026-08-16). 다만 **"역대가 아니라 2020년 이후"** 라는
      단서는 오보를 막는 장치라 버릴 수 없어 **푸터 출처 줄로 옮겼다.** 카드 어딘가에는 있어야 한다. */
   /* 푸터는 한 줄이어야 한다 — asOf 까지 넣었더니 두 줄로 넘쳤다(2026-08-16).
