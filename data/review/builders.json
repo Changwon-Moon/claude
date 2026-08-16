@@ -293,18 +293,6 @@
       ]
     },
     {
-      "label": "singo-record",
-      "cmd": "scripts/build-singo-record.mjs",
-      "args": [
-        "--apt",
-        "상록마을(라이프2차)",
-        "--type",
-        "84",
-        "--kapt",
-        "A46378521"
-      ]
-    },
-    {
       "label": "danji-sangdong",
       "cmd": "scripts/build-danji.mjs",
       "args": [
@@ -322,6 +310,18 @@
         "--only",
         "doosan-zenith-bucheon",
         "--publish"
+      ]
+    },
+    {
+      "label": "singo-gwangmyeong-hanjin",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "광명한진타운",
+        "--type",
+        "84",
+        "--kapt",
+        "A42385801"
       ]
     }
   ]

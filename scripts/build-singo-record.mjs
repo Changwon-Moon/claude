@@ -246,6 +246,10 @@ const dot2 = (d) => `${d.slice(0, 4)}.${d.slice(5, 7)}.${d.slice(8, 10)}`;
    ⚠️ 중구·서구처럼 한 글자만 남는 곳은 그대로 둔다("중 필동"은 말이 안 된다). */
 const guRaw = hit.gu.replace(/^[가-힣]+시(?=[가-힣]+구$)/, "");
 const guShort = /[구시]$/.test(guRaw) && guRaw.length >= 3 ? guRaw.slice(0, -1) : guRaw;
+/* ⚠️ 단지명이 이미 지역을 품고 있으면 지역 라벨을 안 붙인다 —
+   "광명 광명한진타운"처럼 같은 말이 두 번 나온다(2026-08-16 광명한진타운 첫 실행에서 나왔다).
+   "광명한진타운"이면 어느 시인지는 이름이 이미 말한다. */
+const aptStartsWithRegion = full(hit.aptNm).startsWith(full(guShort));
 
 /* 제원 두 줄 — 세대수 | 준공(년식) / 전용 | 층.
    ⚠️ 준공 연도를 '년식'으로 겹쳐 적는 건 오너 지정 형식이다(2026-08-13). */
@@ -266,7 +270,9 @@ const card = {
     ? `오늘의 ${hit.milestone}억 클럽 가입 소식 (${DATE.replace(/-/g, ".")})`
     : `오늘의 신고가 소식 (${DATE.replace(/-/g, ".")})`,
   /* 제목 — 지역은 회색으로 물러나고 단지·평형만 잉크. */
-  title: `<span class="rg">${guShort}</span> ${hit.aptNm} ${hit.pyeong}`,
+  title: aptStartsWithRegion
+    ? `${hit.aptNm} ${hit.pyeong}`
+    : `<span class="rg">${guShort}</span> ${hit.aptNm} ${hit.pyeong}`,
   price: eok(hit.priceManwon),
   spec,
   chart: { vb: `0 0 ${VB_W} ${VB_H}`, grid, threshold, paths: chartPaths, dots, axis, dot },
