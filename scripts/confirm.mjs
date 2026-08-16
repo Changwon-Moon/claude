@@ -117,7 +117,9 @@ for (const label of labels) {
   set.state = "오너 확정";
   set.confirmedAt = today;
   set.confirmedMd5 = pngs.map((x) => `${x.slug}:${x.md5.slice(0, 12)}`);
-  if (note) set.note = (set.note ? set.note + " / " : "") + note;
+  /* 같은 메모를 두 번 붙이지 않는다 — 확정을 다시 돌리면 note 가 그대로 길어져
+     다음 세션이 읽을 수 없는 줄이 된다(2026-08-16 에 같은 문장이 세 번 붙었다). */
+  if (note && !(set.note ?? "").includes(note)) set.note = (set.note ? set.note + " / " : "") + note;
 
   if (isPeriodic) {
     set.pixelPolicy = `정기물 — ${rolling.join(",")} 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)`;
