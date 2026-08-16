@@ -34,10 +34,6 @@
       "maxLength": 12,
       "description": "실거래가 (예: 20.7억). 이 판형에서 레드로 쓰는 자리."
     },
-    "note": {
-      "type": "string",
-      "maxLength": 200
-    },
     "chart": {
       "type": "object",
       "required": [
@@ -48,28 +44,6 @@
       "properties": {
         "vb": {
           "type": "string"
-        },
-        "grid": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": [
-              "x1",
-              "x2",
-              "y"
-            ],
-            "properties": {
-              "x1": {
-                "type": "number"
-              },
-              "x2": {
-                "type": "number"
-              },
-              "y": {
-                "type": "number"
-              }
-            }
-          }
         },
         "threshold": {
           "type": [
@@ -172,15 +146,12 @@
         },
         "dot": {
           "type": "object",
-          "description": "이번 거래. 카드에서 레드를 쓰는 유일한 자리.",
+          "description": "오늘 거래. 카드에서 레드를 쓰는 유일한 자리. 라벨은 없다 — 위 큰 숫자가 이미 말한다.",
           "required": [
             "x",
             "y",
             "r",
-            "rOuter",
-            "tx",
-            "ty",
-            "text"
+            "rOuter"
           ],
           "properties": {
             "x": {
@@ -193,6 +164,82 @@
               "type": "number"
             },
             "rOuter": {
+              "type": "number"
+            }
+          }
+        },
+        "band": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "문턱 위 영역(=N억 클럽 자리). 돌파가 아니면 null.",
+          "required": [
+            "x",
+            "y",
+            "w",
+            "h"
+          ],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "w": {
+              "type": "number"
+            },
+            "h": {
+              "type": "number"
+            }
+          }
+        },
+        "floor": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "바닥 가로선. y축이 0에서 시작하지 않으므로 보통 null 이다 — 있으면 0선으로 읽힌다.",
+          "required": [
+            "x1",
+            "x2",
+            "y"
+          ],
+          "properties": {
+            "x1": {
+              "type": "number"
+            },
+            "x2": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          }
+        },
+        "old": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "옛 고점 표식(빈 원 + 라벨). 아래 '지난 사이클 고점' 숫자를 그림에서 찾게 한다.",
+          "required": [
+            "x",
+            "y",
+            "r",
+            "tx",
+            "ty",
+            "text"
+          ],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "r": {
               "type": "number"
             },
             "tx": {

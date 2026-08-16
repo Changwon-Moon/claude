@@ -240,7 +240,7 @@ const MEASURE_JS = `(() => {
                 갱신폭 뱃지를 밀어내는 자리라 .sr-price 와 .sr-delta 는 반드시 함께 올린다.
                 SVG 안의 곡선·라벨은 Range 대상이 아니라 여기서 못 잰다 —
                 넘침은 빌더(build-singo-record.mjs)가 계산해 던진다. */
-             ".sr-kick,.sr-price,.sr-spec .l,.sr-cycle .lb,.sr-cycle .pk,.sr-cycle .wh,.sr-cycle .cl,.sr-cycle .cv,.sr-note";
+             ".sr-kick,.sr-price,.sr-spec .l,.sr-cycle .l,.sr-cycle .v";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
   for (var i=0;i<leaves.length;i++) for (var j=i+1;j<leaves.length;j++) {
     var a=leaves[i], b=leaves[j];
@@ -305,7 +305,7 @@ const MEASURE_JS = `(() => {
        danji-brief 것이다) 청약 판형 9장에서 이 검사가 **한 번도 돈 적이 없었다.** .dcv-note 가
        특이사항 줄이다 — 이번에 그 줄이 두 줄로 늘면서 정확히 필요해진 검사다.
        ⚠️ 이 블록은 브라우저로 넘어가는 문자열 안이다 — 주석에 백틱을 쓰면 스크립트가 깨진다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.dcv-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note,.gb-note,.sr-note,.sr-cycle");
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.dcv-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note,.gb-note,.sr-cycle");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();

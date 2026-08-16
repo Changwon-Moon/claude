@@ -109,7 +109,7 @@ const VB_W = 936; // 카드 안쪽 폭(1080 - 좌우 여백 72×2)
 /* ⚠️ SVG 는 width:100% + viewBox 비율로 높이가 정해진다 — **판이 남는 높이를 못 먹는다.**
    제목이 한 줄로 낮아지면서(2026-08-13 개편) 곡선 위에 250px 짜리 빈 칸이 생겼다.
    판 높이를 키워 그 자리를 곡선이 쓰게 한다. 여기 숫자를 바꾸면 곡선의 세로 크기가 바뀐다. */
-const VB_H = 640;
+const VB_H = 720;
 const PAD_T = 64; // 위 — 점 라벨이 앉을 자리
 const PAD_B = 62; // 아래 — 연도 축
 /* ⚠️ 좌우 여백을 두는 이유: 2020·2026 연도 라벨이 판 끝에서 잘려 나가 **간격이 어긋나 보였다**
@@ -144,37 +144,34 @@ if (seg.length > 1) paths.push(seg);
 const chartPaths = paths.map((s) => ({ d: s.map(([x, y], i) => `${i ? "L" : "M"}${x} ${y}`).join(" ") }));
 
 const dots = pts
-  .map((p, i) => (p.maxManwon != null && p.ok ? { x: r2(xOf(i)), y: r2(yOf(p.maxManwon)), r: 6 } : null))
+  .map((p, i) => (p.maxManwon != null && p.ok ? { x: r2(xOf(i)), y: r2(yOf(p.maxManwon)), r: 4.5 } : null))
   .filter(Boolean);
 
-/* 가로 눈금 — 옅게 3줄. 숫자는 붙이지 않는다(곡선 카드에 축 숫자를 두 벌 두면 시끄럽다) */
-const grid = [0.25, 0.5, 0.75].map((t) => ({
-  x1: X0,
-  x2: X1,
-  y: r2(plotTop + (plotBot - plotTop) * t),
-}));
+/* 가로선은 **뜻이 있는 것만** 남긴다 — 이 판에는 문턱선 하나뿐이다.
+   ⚠️ 25/50/75% 눈금선 3줄을 깔았다가 걷어냈다: 값 라벨이 없어 **아무것도 말하지 않는 선**이었다.
+   ⚠️ 바닥선도 걷어냈다. y축이 0에서 시작하지 않는데(최저 6.15억 아래로 여유만 둔다)
+      바닥에 선이 있으면 **그게 0선으로 읽힌다** — 그건 그림이 하는 거짓말이다.
+      연도 글자가 이미 판의 바닥을 말해 준다. */
+const floor = null;
 
-/* 넘어선 선 — 10억 단위 돌파가 있을 때만 */
+/* 넘어선 선 + 그 위 영역("N억 클럽 자리") — 10억 단위 돌파가 있을 때만 */
 let threshold = null;
 if (hit.milestone) {
   const ty = r2(yOf(hit.milestone * 10000));
-  threshold = { x1: X0, x2: X1, y: ty, tx: X0 + 4, ty: r2(ty - 12), text: `${hit.milestone}억` };
+  threshold = { x1: X0, x2: X1, y: ty, tx: X0, ty: r2(ty - 14), text: `${hit.milestone}억` };
 }
+/* ⚠️ 문턱 **위쪽에 옅은 톤을 깔아 봤다가 걷어냈다**(2026-08-16). 잉크 4.5% 여도 종이(#FAFAF8)
+   위에서는 큰 회색 사각형으로 읽혔다 — 오너가 피하려던 바로 그 "AI티"다.
+   빨간 점이 점선 위에 올라앉은 그림이 이미 "넘었다"를 말한다. 선 하나면 충분하다. */
+const band = null;
 
 /* 이번 거래 점 */
 const lastIdx = pts.findIndex((p) => p.ym === hit.date.slice(0, 4) + hit.date.slice(5, 7));
 const dx = r2(xOf(lastIdx >= 0 ? lastIdx : pts.length - 1));
 const dy = r2(yOf(hit.priceManwon));
-const dot = {
-  x: dx,
-  y: dy,
-  r: 11,
-  rOuter: 18,
-  tx: r2(dx - 20),
-  ty: r2(dy - 22),
-  anchor: "end",
-  text: eok(hit.priceManwon),
-};
+/* ⚠️ 점 옆 "10억" 라벨은 걷어냈다 — 바로 위 큰 숫자가 이미 그 말을 한다.
+   같은 말을 두 번 하면 그게 곧 '군더더기'고, 카드가 템플릿처럼 보이는 이유다. */
+const dot = { x: dx, y: dy, r: 12, rOuter: 19 };
 
 /* 연도 축 — 1월이 있는 달에만 */
 const axis = pts
@@ -185,14 +182,6 @@ const axis = pts
 /* ⚠️ SVG 글자는 디자인 검수가 못 잰다 — 판을 넘지 않는지 여기서 확인한다.
    태백/Wanted 실측 대신 넉넉한 상한(글자당 0.62em)으로 잡는다. 넘으면 던진다. */
 const widthOf = (text, size) => text.length * size * 0.62;
-const dotLabW = widthOf(dot.text, 34);
-if (dot.tx - dotLabW < X0) {
-  throw new Error(`이번 거래 라벨("${dot.text}")이 판 왼쪽을 넘습니다 — 라벨 위치를 다시 잡으세요.`);
-}
-if (dot.ty - 34 < 0) throw new Error(`이번 거래 라벨이 판 위로 넘칩니다.`);
-if (threshold && Math.abs(threshold.ty - dot.ty) < 30 && threshold.tx + widthOf(threshold.text, 26) > dot.tx - dotLabW) {
-  throw new Error(`돌파선 라벨과 거래 라벨이 겹칩니다 — 판 높이를 키우세요.`);
-}
 /* 연도는 **전부 가운데 정렬**이라 간격이 눈금 간격과 같다. 하나라도 판을 넘으면 여백이
    모자란 것이니 던진다 — 끝만 슬쩍 밀어 붙이면 간격이 어긋나 보인다(오너가 바로 알아봤다). */
 for (const a of axis) {
@@ -235,6 +224,34 @@ if (worst.atMaxIdx >= 0) {
   };
 }
 
+/* ── 옛 고점 표식 — 아래 '지난 사이클 고점' 숫자를 그림에서 찾을 수 있게 한다.
+   구조가 내용을 말해야 한다: 빈 원 = 지난 고점, 찬 원 = 오늘. 장식이 아니다. */
+let old = null;
+if (cycle && worst.atMaxIdx >= 0) {
+  const pk = traded[worst.atMaxIdx];
+  const idx = pts.findIndex((p) => p.ym === pk.ym);
+  if (idx >= 0) {
+    const ox = r2(xOf(idx));
+    const oy = r2(yOf(pk.maxManwon));
+    /* 라벨은 점 **위쪽**에 둔다 — 곡선이 이 점을 지나 아래로 꺾이므로 위가 비어 있다.
+       판 왼쪽 끝에 가까우면 오른쪽으로 눕힌다. */
+    const anchor = ox < 150 ? "start" : "middle";
+    old = { x: ox, y: oy, r: 10, tx: ox, ty: r2(oy - 26), anchor, text: `지난 고점 ${cycle.peak}` };
+  }
+}
+
+/* ⚠️ SVG 글자는 designQa 가 못 잰다 — 판을 넘는지 여기서 재고, 넘으면 던진다. */
+if (old) {
+  const w = widthOf(old.text, 25);
+  const left = old.anchor === "start" ? old.x : old.x - w / 2;
+  if (left < 0 || left + w > VB_W) throw new Error(`옛 고점 라벨("${old.text}")이 판을 넘습니다.`);
+  if (old.ty - 25 < 0) throw new Error(`옛 고점 라벨이 판 위로 넘칩니다.`);
+  // 오늘 점과 겹치면 표식이 둘 다 안 읽힌다
+  if (Math.hypot(old.x - dot.x, old.y - dot.y) < 46) {
+    throw new Error(`옛 고점 표식이 오늘 거래 점과 겹칩니다 — 표식을 생략하세요.`);
+  }
+}
+
 /* ── ⑤ 문구 — 전부 위 수치에서 나온다 */
 const first = traded[0];
 const fromLabel = `${hist.meta.from.slice(0, 4)}년${hist.meta.from.slice(4) === "01" ? "" : ` ${Number(hist.meta.from.slice(4))}월`}`;
@@ -267,21 +284,21 @@ const card = {
   date: DATE,
   /* 킥커 — 오너 지정 문구(2026-08-13). 돌파가 아니면 '클럽 가입'이라 부를 수 없다. */
   kicker: hit.milestone
-    ? `오늘의 ${hit.milestone}억 클럽 가입 소식 (${DATE.replace(/-/g, ".")})`
-    : `오늘의 신고가 소식 (${DATE.replace(/-/g, ".")})`,
+    ? `오늘의 ${hit.milestone}억 클럽 (${DATE.replace(/-/g, ".")})`
+    : `오늘의 신고가 (${DATE.replace(/-/g, ".")})`,
   /* 제목 — 지역은 회색으로 물러나고 단지·평형만 잉크. */
   title: aptStartsWithRegion
     ? `${hit.aptNm} ${hit.pyeong}`
     : `<span class="rg">${guShort}</span> ${hit.aptNm} ${hit.pyeong}`,
   price: eok(hit.priceManwon),
   spec,
-  chart: { vb: `0 0 ${VB_W} ${VB_H}`, grid, threshold, paths: chartPaths, dots, axis, dot },
+  chart: { vb: `0 0 ${VB_W} ${VB_H}`, band, floor, threshold, paths: chartPaths, dots, axis, old, dot },
   cycle,
-  note:
-    `${fromLabel} 이후 이 단지 전용 ${TYPE}타입 매매 실거래 기준(직거래 제외). ` +
-    `곡선은 <b>거래가 있던 ${traded.length}개월</b>의 그달 최고가를 이은 것이다. ` +
-    `직전 최고가는 ${dot2(hit.prevPeakDate)} ${eok(hit.prevPeakManwon)}. 날짜는 계약일(신고일 아님).`,
-  source: { name: "국토교통부 아파트 매매 실거래가", asOf: DATE },
+  /* ⚠️ 하단 기준 문구를 걷어냈다(오너 2026-08-16). 다만 **"역대가 아니라 2020년 이후"** 라는
+     단서는 오보를 막는 장치라 버릴 수 없어 **푸터 출처 줄로 옮겼다.** 카드 어딘가에는 있어야 한다. */
+  /* 푸터는 한 줄이어야 한다 — asOf 까지 넣었더니 두 줄로 넘쳤다(2026-08-16).
+     날짜는 킥커가 이미 말하므로 여기서는 **무엇을 기준으로 재는가**만 남긴다. */
+  source: { name: `국토교통부 아파트 매매 실거래가 · ${fromLabel} 이후 기준` },
   meta: {
     verified: true,
     provenance: [
