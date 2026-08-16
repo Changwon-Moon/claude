@@ -70,14 +70,14 @@ jobs:
           IN_KAPT: ${{ github.event.inputs.kapt }}
         run: |
           Q=data/apt-detail-queue.txt
-          : > /tmp/jobs.txt
+          : > "$RUNNER_TEMP/jobs.txt"
           if [ -n "$IN_KAPT" ]; then
-            printf 'kapt=%s\n' "$IN_KAPT" >> /tmp/jobs.txt
+            printf 'kapt=%s\n' "$IN_KAPT" >> "$RUNNER_TEMP/jobs.txt"
           elif [ -f "$Q" ]; then
-            grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' > /tmp/jobs.txt || true
+            grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' > "$RUNNER_TEMP/jobs.txt" || true
           fi
-          N=$(wc -l < /tmp/jobs.txt | tr -d ' ')
-          echo "대기열 $N 줄:"; cat /tmp/jobs.txt
+          N=$(wc -l < "$RUNNER_TEMP/jobs.txt" | tr -d ' ')
+          echo "대기열 $N 줄:"; cat "$RUNNER_TEMP/jobs.txt"
           # cron 으로 도는데 대기열이 비어 있는 건 정상이다(할 일이 없을 뿐) — 실패로 치지 않는다.
           if [ "$N" = "0" ]; then
             if [ "${{ github.event_name }}" = "schedule" ]; then echo "대기열이 비어 있습니다 — 할 일 없음"; exit 0; fi
@@ -88,6 +88,7 @@ jobs:
       - name: 키 확인
         env:
           MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        shell: bash
         run: |
           if [ -z "$MOLIT_API_KEY" ]; then
             echo "::error::MOLIT_API_KEY 가 GitHub Secrets 에 없습니다."
@@ -104,30 +105,32 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          : > /tmp/detail.log
+          : > "$RUNNER_TEMP/detail.log"
           FAILED=0
           while IFS= read -r LINE; do
             [ -z "$LINE" ] && continue
             KAPT=$(printf '%s' "$LINE" | sed -n 's/.*kapt=\([A-Za-z0-9]*\).*/\1/p')
-            [ -z "$KAPT" ] && { echo "⛔ kapt 를 못 읽었습니다 — $LINE" | tee -a /tmp/detail.log; FAILED=1; continue; }
+            [ -z "$KAPT" ] && { echo "⛔ kapt 를 못 읽었습니다 — $LINE" | tee -a "$RUNNER_TEMP/detail.log"; FAILED=1; continue; }
             OUT="data/datasets/apt-detail/$KAPT.json"
             case "$LINE" in *force=1*) ;; *) if [ -f "$OUT" ]; then
-                  echo "⏭ 이미 있음 — $OUT (다시 받으려면 force=1)" | tee -a /tmp/detail.log; continue; fi;; esac
-            echo "" | tee -a /tmp/detail.log
-            echo "── $KAPT" | tee -a /tmp/detail.log
-            if ! pnpm --filter @wirit/collectors collect-apt-detail -- --kapt "$KAPT" 2>&1 | tee -a /tmp/detail.log; then
+                  echo "⏭ 이미 있음 — $OUT (다시 받으려면 force=1)" | tee -a "$RUNNER_TEMP/detail.log"; continue; fi;; esac
+            echo "" | tee -a "$RUNNER_TEMP/detail.log"
+            echo "── $KAPT" | tee -a "$RUNNER_TEMP/detail.log"
+            if ! pnpm --filter @wirit/collectors collect-apt-detail -- --kapt "$KAPT" 2>&1 | tee -a "$RUNNER_TEMP/detail.log"; then
               FAILED=1
             fi
-          done < /tmp/jobs.txt
-          echo "" | tee -a /tmp/detail.log
-          [ "$FAILED" = "0" ] && echo "✅ 대기열 전 줄 완료" | tee -a /tmp/detail.log || echo "⚠️ 일부 줄이 실패했습니다" | tee -a /tmp/detail.log
+          done < "$RUNNER_TEMP/jobs.txt"
+          echo "" | tee -a "$RUNNER_TEMP/detail.log"
+          [ "$FAILED" = "0" ] && echo "✅ 대기열 전 줄 완료" | tee -a "$RUNNER_TEMP/detail.log" || echo "⚠️ 일부 줄이 실패했습니다" | tee -a "$RUNNER_TEMP/detail.log"
           exit $FAILED
 
       - name: 파서 셀프테스트
+        shell: bash
         run: pnpm --filter @wirit/collectors selftest
 
       - name: 실행 결과 기록
         if: always()
+        shell: bash
         run: |
           {
             echo "# 단지 주차대수 — 마지막 실행"
@@ -136,12 +139,13 @@ jobs:
             echo "- 결과: **${{ job.status == 'success' && '성공' || '실패' }}**"
             echo
             echo '```'
-            cat /tmp/detail.log 2>/dev/null || echo "(실행되지 못했습니다)"
+            cat "$RUNNER_TEMP/detail.log" 2>/dev/null || echo "(실행되지 못했습니다)"
             echo '```'
           } > data/apt-detail-last.md
 
       - name: 커밋
         if: always()
+        shell: bash
         run: |
           git config user.name "wirit-bot"
           git config user.email "actions@github.com"

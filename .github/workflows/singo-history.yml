@@ -83,17 +83,17 @@ jobs:
           IN_FROM: ${{ github.event.inputs.from }}
         run: |
           Q=data/singo-history-queue.txt
-          : > /tmp/jobs.txt
+          : > "$RUNNER_TEMP/jobs.txt"
           if [ -n "$IN_LAWD$IN_APT" ]; then
             # 버튼으로 부른 경우 — 한 줄짜리 대기열을 만들어 아래 루프가 똑같이 돌게 한다
             printf 'lawd=%s umd=%s type=%s from=%s apt="%s"\n' \
-              "$IN_LAWD" "$IN_UMD" "${IN_TYPE:-84}" "$IN_FROM" "$IN_APT" >> /tmp/jobs.txt
+              "$IN_LAWD" "$IN_UMD" "${IN_TYPE:-84}" "$IN_FROM" "$IN_APT" >> "$RUNNER_TEMP/jobs.txt"
           elif [ -f "$Q" ]; then
-            grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' > /tmp/jobs.txt || true
+            grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' > "$RUNNER_TEMP/jobs.txt" || true
           fi
-          N=$(wc -l < /tmp/jobs.txt | tr -d ' ')
+          N=$(wc -l < "$RUNNER_TEMP/jobs.txt" | tr -d ' ')
           echo "대기열 $N 줄:"
-          cat /tmp/jobs.txt
+          cat "$RUNNER_TEMP/jobs.txt"
           if [ "$N" = "0" ]; then
             echo "::error::대기열이 비었습니다."
             exit 1
@@ -103,6 +103,7 @@ jobs:
       - name: 키 확인
         env:
           MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        shell: bash
         run: |
           if [ -z "$MOLIT_API_KEY" ]; then
             echo "::error::MOLIT_API_KEY 가 GitHub Secrets 에 없습니다."
@@ -115,7 +116,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          : > /tmp/hist.log
+          : > "$RUNNER_TEMP/hist.log"
           FAILED=0
           while IFS= read -r LINE; do
             [ -z "$LINE" ] && continue
@@ -126,29 +127,31 @@ jobs:
             APT=$(printf '%s' "$LINE" | sed -n 's/.*apt="\([^"]*\)".*/\1/p')
             [ -z "$APT" ] && APT=$(printf '%s' "$LINE" | sed -n 's/.*apt=\([^ ]*\).*/\1/p')
             if [ -z "$LAWD" ] || [ -z "$APT" ] || [ -z "$TYPE" ]; then
-              echo "⛔ 줄을 못 읽었습니다 — $LINE" | tee -a /tmp/hist.log
+              echo "⛔ 줄을 못 읽었습니다 — $LINE" | tee -a "$RUNNER_TEMP/hist.log"
               FAILED=1; continue
             fi
             FORCE=""
             case "$LINE" in *force=1*) FORCE="--force";; esac
-            echo "" | tee -a /tmp/hist.log
-            echo "── $APT 전용 ${TYPE}타입 ($LAWD)" | tee -a /tmp/hist.log
+            echo "" | tee -a "$RUNNER_TEMP/hist.log"
+            echo "── $APT 전용 ${TYPE}타입 ($LAWD)" | tee -a "$RUNNER_TEMP/hist.log"
             # ⚠️ 한 줄이 실패해도 나머지는 계속 간다 — 5장 중 1장 때문에 4장을 잃지 않는다
             if ! pnpm --filter @wirit/collectors collect-singo-history -- \
                   --lawd "$LAWD" --apt "$APT" ${UMD:+--umd "$UMD"} \
-                  --type "$TYPE" --from "${FROM:-202001}" $FORCE 2>&1 | tee -a /tmp/hist.log; then
+                  --type "$TYPE" --from "${FROM:-202001}" $FORCE 2>&1 | tee -a "$RUNNER_TEMP/hist.log"; then
               FAILED=1
             fi
-          done < /tmp/jobs.txt
-          echo "" | tee -a /tmp/hist.log
-          [ "$FAILED" = "0" ] && echo "✅ 대기열 전 줄 완료" | tee -a /tmp/hist.log || echo "⚠️ 일부 줄이 실패했습니다 — 위 로그 확인" | tee -a /tmp/hist.log
+          done < "$RUNNER_TEMP/jobs.txt"
+          echo "" | tee -a "$RUNNER_TEMP/hist.log"
+          [ "$FAILED" = "0" ] && echo "✅ 대기열 전 줄 완료" | tee -a "$RUNNER_TEMP/hist.log" || echo "⚠️ 일부 줄이 실패했습니다 — 위 로그 확인" | tee -a "$RUNNER_TEMP/hist.log"
           exit $FAILED
 
       - name: 파서 셀프테스트
+        shell: bash
         run: pnpm --filter @wirit/collectors selftest
 
       - name: 실행 결과 기록
         if: always()
+        shell: bash
         run: |
           {
             echo "# 신고가 단지 이력 — 마지막 실행"
@@ -157,12 +160,13 @@ jobs:
             echo "- 결과: **${{ job.status == 'success' && '성공' || '실패' }}**"
             echo
             echo '```'
-            cat /tmp/hist.log 2>/dev/null || echo "(실행되지 못했습니다)"
+            cat "$RUNNER_TEMP/hist.log" 2>/dev/null || echo "(실행되지 못했습니다)"
             echo '```'
           } > data/singo-history-last.md
 
       - name: 커밋
         if: always()
+        shell: bash
         run: |
           git config user.name "wirit-bot"
           git config user.email "actions@github.com"
@@ -184,6 +188,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        shell: bash
         run: |
           if [ "${{ job.status }}" = "success" ]; then
             node scripts/notify-telegram.mjs "📈 단지 이력 수집 완료 — ${{ steps.q.outputs.count }}건"

@@ -68,20 +68,21 @@ jobs:
           IN_KEY: ${{ github.event.inputs.key }}
         run: |
           Q=data/apt-station-queue.txt
-          : > /tmp/jobs.txt
+          : > "$RUNNER_TEMP/jobs.txt"
           if [ -n "$IN_KAPT$IN_ADDR" ]; then
-            printf 'kapt=%s key=%s addr="%s"\n' "$IN_KAPT" "$IN_KEY" "$IN_ADDR" >> /tmp/jobs.txt
+            printf 'kapt=%s key=%s addr="%s"\n' "$IN_KAPT" "$IN_KEY" "$IN_ADDR" >> "$RUNNER_TEMP/jobs.txt"
           elif [ -f "$Q" ]; then
-            grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' > /tmp/jobs.txt || true
+            grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' > "$RUNNER_TEMP/jobs.txt" || true
           fi
-          N=$(wc -l < /tmp/jobs.txt | tr -d ' ')
-          echo "대기열 $N 줄:"; cat /tmp/jobs.txt
+          N=$(wc -l < "$RUNNER_TEMP/jobs.txt" | tr -d ' ')
+          echo "대기열 $N 줄:"; cat "$RUNNER_TEMP/jobs.txt"
           if [ "$N" = "0" ]; then echo "::error::대기열이 비었습니다."; exit 1; fi
           echo "count=$N" >> "$GITHUB_OUTPUT"
 
       - name: 키 확인
         env:
           KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
+        shell: bash
         run: |
           if [ -z "$KAKAO_REST_KEY" ]; then
             echo "::error::KAKAO_REST_KEY 가 GitHub Secrets 에 없습니다."
@@ -94,7 +95,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          : > /tmp/station.log
+          : > "$RUNNER_TEMP/station.log"
           FAILED=0
           while IFS= read -r LINE; do
             [ -z "$LINE" ] && continue
@@ -103,24 +104,26 @@ jobs:
             ADDR=$(printf '%s' "$LINE" | sed -n 's/.*addr="\([^"]*\)".*/\1/p')
             OUT="data/datasets/apt-station/${KAPT:-$KEY}.json"
             case "$LINE" in *force=1*) ;; *) if [ -n "${KAPT}${KEY}" ] && [ -f "$OUT" ]; then
-                  echo "⏭ 이미 있음 — $OUT (다시 받으려면 force=1)" | tee -a /tmp/station.log; continue; fi;; esac
-            echo "" | tee -a /tmp/station.log
-            echo "── ${KAPT:-$ADDR}" | tee -a /tmp/station.log
+                  echo "⏭ 이미 있음 — $OUT (다시 받으려면 force=1)" | tee -a "$RUNNER_TEMP/station.log"; continue; fi;; esac
+            echo "" | tee -a "$RUNNER_TEMP/station.log"
+            echo "── ${KAPT:-$ADDR}" | tee -a "$RUNNER_TEMP/station.log"
             # ⚠️ 한 줄이 실패해도 나머지는 계속 간다
             if ! pnpm --filter @wirit/collectors collect-apt-station -- \
-                  ${KAPT:+--kapt "$KAPT"} ${ADDR:+--addr "$ADDR"} ${KEY:+--key "$KEY"} 2>&1 | tee -a /tmp/station.log; then
+                  ${KAPT:+--kapt "$KAPT"} ${ADDR:+--addr "$ADDR"} ${KEY:+--key "$KEY"} 2>&1 | tee -a "$RUNNER_TEMP/station.log"; then
               FAILED=1
             fi
-          done < /tmp/jobs.txt
-          echo "" | tee -a /tmp/station.log
-          [ "$FAILED" = "0" ] && echo "✅ 대기열 전 줄 완료" | tee -a /tmp/station.log || echo "⚠️ 일부 줄이 실패했습니다" | tee -a /tmp/station.log
+          done < "$RUNNER_TEMP/jobs.txt"
+          echo "" | tee -a "$RUNNER_TEMP/station.log"
+          [ "$FAILED" = "0" ] && echo "✅ 대기열 전 줄 완료" | tee -a "$RUNNER_TEMP/station.log" || echo "⚠️ 일부 줄이 실패했습니다" | tee -a "$RUNNER_TEMP/station.log"
           exit $FAILED
 
       - name: 파서 셀프테스트
+        shell: bash
         run: pnpm --filter @wirit/collectors selftest
 
       - name: 실행 결과 기록
         if: always()
+        shell: bash
         run: |
           {
             echo "# 단지 가까운 역 — 마지막 실행"
@@ -129,12 +132,13 @@ jobs:
             echo "- 결과: **${{ job.status == 'success' && '성공' || '실패' }}**"
             echo
             echo '```'
-            cat /tmp/station.log 2>/dev/null || echo "(실행되지 못했습니다)"
+            cat "$RUNNER_TEMP/station.log" 2>/dev/null || echo "(실행되지 못했습니다)"
             echo '```'
           } > data/apt-station-last.md
 
       - name: 커밋
         if: always()
+        shell: bash
         run: |
           git config user.name "wirit-bot"
           git config user.email "actions@github.com"
