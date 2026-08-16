@@ -76,6 +76,36 @@ Handlebars.registerHelper("metroBadge", (key: unknown) => {
   );
 });
 
+/**
+ * 노선 이름을 **한 행으로 길게** — `{{{metroWide "수인분당"}}}` → 노란 알약에 "수인분당선".
+ *
+ * ── 왜 metroBadge 와 따로 두나 (오너 2026-08-16b "2줄 아닌 1행으로 길게 늘여써")
+ * `metroBadge` 는 **원형 심볼**이라 이름이 길면 두 줄로 접는다("수인/분당"). 노선 표에서는
+ * 그게 맞다 — 여러 노선이 세로로 늘어서는 자리라 폭이 고정돼야 하기 때문이다.
+ * 그런데 역 뱃지는 **한 줄에 노선 하나**뿐이라 접을 이유가 없고, 접으니 글자만 작아졌다.
+ *
+ * ⚠️ **metroBadge 를 고치지 않는다.** 확정된 노선 카드 수십 장이 그걸 쓰고 있어
+ *    손대는 순간 그 픽셀이 전부 바뀐다(픽셀 불변). 그래서 헬퍼를 하나 더 둔다.
+ *
+ * 표기: 번호는 `7호선`, 2행짜리는 붙여서 `수인분당선`, 단문은 `신분당선`, GTX 는 `GTX-A`.
+ */
+Handlebars.registerHelper("metroWide", (key: unknown) => {
+  const k = String(key);
+  const m = METRO_LINES[k];
+  if (!m) return new Handlebars.SafeString(`<span class="rt-wide plain">${k}</span>`);
+  const cls = m.text === "dark" ? "ln-dark" : "ln-white";
+  const label = m.num
+    ? `${m.num}호선`
+    : m.gtx
+      ? `GTX-${m.gtx}`
+      : Array.isArray(m.lines)
+        ? `${m.lines.join("")}선`
+        : `${m.label || k}선`;
+  return new Handlebars.SafeString(
+    `<span class="rt-wide ${cls}" style="background:${m.color}">${label}</span>`,
+  );
+});
+
 /* ── 노선색 글자(metroInk) ─────────────────────────────────────────────
  * 오너 지시(2026-07-31): "구간들은 노선 색깔과 동일한 폰트로." → 이어서 "테두리가 이상하다.
  * 알아서 두께 조절해서 가독성 높여봐."

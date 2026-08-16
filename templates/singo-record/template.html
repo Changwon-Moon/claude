@@ -70,27 +70,33 @@
          제목 아래에 혼자 떠 있던 것을 위로 올렸다. 킥커와 같은 줄에 있으면
          '오늘 어디 소식인가'가 한 줄로 읽힌다. 우상단 로고 뱃지 자리는 침범하지 않는다. */
       .wirit-topcap { display: flex; align-items: center; gap: 16px; }
+      /* ── 역 뱃지 — **한 행으로 길게, 우상단 wirit. 뱃지와 같은 키** (오너 2026-08-16b)
+         예전엔 34px 원 안에 노선 이름을 두 줄로 접어 넣었다("수인/분당"). 접히니 글자가
+         작아져 노선이 뭔지 읽히지 않았다. 원을 버리고 **알약 두 개가 한 줄로** 서게 한다.
+
+         높이 62px = `.wirit-corner`(패딩 13+13 + 글자 36) 와 같은 값이다.
+         우상단 로고와 같은 키로 서야 최상단 줄이 한 줄로 읽힌다.
+         ⚠️ 공용 `.wirit-topcap` 의 min-height 도 62px 이라 이 크기까지는 아래 레이아웃이
+            그대로다. 더 키우면 곡선 판(VB_H)을 그만큼 줄여야 한다(svgspill 이 잡는다). */
       .sr-stn {
-        --mono: 34px;
-        display: inline-flex; align-items: center; gap: 10px;
-        padding: 5px 18px 5px 5px; border-radius: 999px;
+        display: inline-flex; align-items: center; gap: 12px;
+        height: 62px; padding: 0 24px 0 8px; border-radius: 999px;
         background: var(--wirit-ink-06); flex: 0 0 auto;
       }
       .sr-stn .nmx {
-        font-family: var(--font-sans); font-size: 26px; font-weight: 800;
+        font-family: var(--font-sans); font-size: 34px; font-weight: 800;
         color: var(--wirit-ink); letter-spacing: -0.035em; white-space: nowrap;
       }
-      .sr-stn .rt-line {
-        width: var(--mono); height: var(--mono); border-radius: 50%;
-        display: flex; align-items: center; justify-content: center; text-align: center;
-        font-family: var(--font-sans); font-weight: 800; line-height: 0.94; flex: 0 0 auto;
+      /* 노선 알약 — 한 행("7호선"·"수인분당선"). 접지 않으므로 폭은 이름이 정한다. */
+      .sr-stn .rt-wide {
+        display: inline-flex; align-items: center; justify-content: center;
+        height: 46px; padding: 0 16px; border-radius: 999px;
+        font-family: var(--font-sans); font-size: 27px; font-weight: 800;
+        letter-spacing: -0.04em; line-height: 1; white-space: nowrap; flex: 0 0 auto;
       }
-      .sr-stn .rt-line.ln-white { color: #fff; }
-      .sr-stn .rt-line.ln-dark { color: #1c2431; }
-      .sr-stn .rt-line .num { font-size: calc(var(--mono) * 0.56); font-weight: 900; }
-      .sr-stn .rt-line .nm { font-size: calc(var(--mono) * 0.3); font-weight: 800; letter-spacing: -0.04em; }
-      .sr-stn .rt-line .nm.two { font-size: calc(var(--mono) * 0.28); line-height: 1; }
-      .sr-stn .rt-line.plain { background: var(--wirit-gray); color: #fff; }
+      .sr-stn .rt-wide.ln-white { color: #fff; }
+      .sr-stn .rt-wide.ln-dark { color: #1c2431; }
+      .sr-stn .rt-wide.plain { background: var(--wirit-gray); color: #fff; }
 
       /* ── 곡선 ─────────────────────────────────────────────
          카드 아래에 따로 있던 '지난 사이클' 블록을 여기로 들여왔다(오너 2026-08-16).
@@ -162,7 +168,7 @@
         {{#if kicker}}<span class="sr-kick">{{kicker}}</span>{{/if}}
         {{#if station}}
         <span class="sr-stn">
-          {{#if station.lines}}{{{metroBadge station.lines.[0]}}}{{else}}<span class="rt-line plain"><span class="nm">역</span></span>{{/if}}
+          {{#if station.lines}}{{{metroWide station.lines.[0]}}}{{else}}<span class="rt-wide plain">지하철</span>{{/if}}
           <span class="nmx">{{station.name}}</span>
         </span>
         {{/if}}
