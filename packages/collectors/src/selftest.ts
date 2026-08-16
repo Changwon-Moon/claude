@@ -1012,6 +1012,13 @@ console.log("\n[청약홈 분양정보 파서]");
    * 카드에는 **역 이름만** 적고 노선은 뱃지가 말한다. */
   check("역 이름에서 노선 꼬리를 뗀다", cleanStationName("철산역 7호선") === "철산역", cleanStationName("철산역 7호선"));
   check("괄호 꼬리도 뗀다", cleanStationName("사당역(4호선)") === "사당역", cleanStationName("사당역(4호선)"));
+  /* ⚠️ "호선"이 안 붙는 노선이 있다 — 2026-08-16 실제 수집분에서 그대로 나왔고,
+     뱃지가 노선 동그라미 옆에 노선 이름을 한 번 더 적고 있었다. */
+  check("수인분당선 꼬리를 뗀다", cleanStationName("망포역 수인분당선") === "망포역", cleanStationName("망포역 수인분당선"));
+  check("신분당선 꼬리를 뗀다", cleanStationName("청계산입구역 신분당선") === "청계산입구역", cleanStationName("청계산입구역 신분당선"));
+  check("경의중앙선 꼬리를 뗀다", cleanStationName("서울역 경의중앙선") === "서울역", cleanStationName("서울역 경의중앙선"));
+  check("⛔ 역 이름 자체는 건드리지 않는다", cleanStationName("선릉역") === "선릉역", cleanStationName("선릉역"));
+  check("⛔ 노선 꼬리가 없으면 그대로", cleanStationName("망포역") === "망포역", cleanStationName("망포역"));
   check("멀쩡한 이름은 그대로", cleanStationName("광명사거리역") === "광명사거리역", cleanStationName("광명사거리역"));
   check(
     "숫자 노선을 집어낸다",

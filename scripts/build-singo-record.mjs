@@ -103,6 +103,20 @@ if (hist.meta.peak.manwon !== hit.priceManwon) {
 const pts = hist.points;
 const traded = pts.filter((p) => p.maxManwon != null);
 if (traded.length < 3) throw new Error(`거래가 있던 달이 ${traded.length}개뿐이라 곡선을 그릴 수 없습니다.`);
+/* ⚠️ **이 판형에 맞지 않는 단지를 거른다** (2026-08-16b).
+   판은 2020-01 부터 6년을 그린다. 그런데 새 단지는 관측이 맨 오른쪽 끝에만 몰려
+   판의 80%가 텅 빈 채로 나간다 — 반정아이파크캐슬5단지는 첫 거래가 2025-11 이라
+   80개월 판에 점이 6개였다. 그림이 거짓말을 하는 건 아니지만 **할 말이 없는 그림**이고,
+   그 상태로도 "지난 사이클 고점"을 4개월 전 값으로 적게 된다(아래 가드가 그걸 막는다).
+   → 이런 단지는 이 판형으로 만들지 않는다. 다른 판형이 필요하다는 뜻이다. */
+const MIN_MONTHS = 15;
+if (traded.length < MIN_MONTHS) {
+  throw new Error(
+    `거래가 있던 달이 ${traded.length}개월뿐입니다(첫 거래 ${traded[0].ym}) — ` +
+      `이 판형은 2020년부터 6년을 그리므로 최소 ${MIN_MONTHS}개월이 필요합니다.\n` +
+      `→ 새 단지라 이력이 짧습니다. 이 소재는 다른 판형으로 다루세요.`,
+  );
+}
 
 /* ── ③ 좌표 계산 */
 const VB_W = 936; // 카드 안쪽 폭(1080 - 좌우 여백 72×2)
@@ -329,6 +343,21 @@ traded.forEach((p, i) => {
 let cycle = null;
 if (worst.atMaxIdx >= 0) {
   const pk = traded[worst.atMaxIdx];
+  /* ⚠️ **몇 달 전 값을 "지난 사이클 고점"이라 부르지 않는다** (2026-08-16b).
+     낙폭 계산은 관측이 몇 개든 답을 내놓는다 — 반정아이파크캐슬5단지는 4개월 전(2026.04)
+     값을 지난 사이클 고점으로 집었다. 넉 달은 사이클이 아니다. 그 말이 카드에 나가면
+     독자는 한 번의 오르내림을 시장 사이클로 읽는다. */
+  const MIN_CYCLE_MONTHS = 12;
+  const monthsApart = (a, b) =>
+    (Number(b.slice(0, 4)) - Number(a.slice(0, 4))) * 12 + (Number(b.slice(4)) - Number(a.slice(4)));
+  const gap = monthsApart(pk.ym, `${hit.date.slice(0, 4)}${hit.date.slice(5, 7)}`);
+  if (gap < MIN_CYCLE_MONTHS) {
+    throw new Error(
+      `지난 사이클 고점으로 집힌 ${pk.ym} 이 이번 거래(${hit.date})에서 ${gap}개월밖에 안 됐습니다 — ` +
+        `그건 사이클이 아닙니다(최소 ${MIN_CYCLE_MONTHS}개월).\n` +
+        `→ 오르내림이 한 번뿐인 단지입니다. 이 소재는 다른 판형으로 다루세요.`,
+    );
+  }
   const vs = ((hit.priceManwon - pk.maxManwon) / pk.maxManwon) * 100;
   cycle = {
     peak: eok(pk.maxManwon),
@@ -477,11 +506,25 @@ if (!stamp) console.warn("ⓘ 판이 작아 워터마크를 생략합니다.");
    `data/apt-station-queue.txt` 에 `kapt=...` 한 줄을 밀어 코드가 재게 한다.
    ⚠️ 거리는 카드에서 뺐다(오너 2026-08-16) — 노선과 역 이름만 알약 하나에 담는다. */
 let station = null;
+let stationRaw = null; // 뱃지를 생략하더라도 **잰 값은 meta 에 남긴다**
 if (KAPT) {
   const sp = P(`data/datasets/apt-station/${KAPT}.json`);
   if (existsSync(sp)) {
     const st = JSON.parse(readFileSync(sp, "utf8"));
-    station = { name: st.station, lines: st.lines ?? [], distanceM: st.distanceM };
+    /* ⚠️ 거리를 카드에서 뺐기 때문에(오너 2026-08-16) 뱃지는 **"가깝다"는 말**이 된다.
+       그러면 먼 역을 붙이는 순간 그 자체가 과장이다 — 반정아이파크캐슬5단지는
+       가장 가까운 역이 1,614m 였다(걸어서 20분 이상). 그건 역세권이라 부를 거리가 아니다.
+       그래서 **직선 1,000m 를 넘으면 뱃지를 안 붙인다.** 수집은 그대로 남는다(meta 에 기록). */
+    const MAX_BADGE_M = 1000;
+    stationRaw = { name: st.station, lines: st.lines ?? [], distanceM: st.distanceM };
+    if (st.distanceM != null && st.distanceM > MAX_BADGE_M) {
+      console.warn(
+        `ⓘ 가장 가까운 역이 ${st.station} ${st.distanceM}m — ${MAX_BADGE_M}m 를 넘어 뱃지를 생략합니다.`,
+      );
+      station = null;
+    } else {
+      station = { name: st.station, lines: st.lines ?? [], distanceM: st.distanceM };
+    }
   } else {
     console.warn(
       `ⓘ 가까운 역 자료가 없어 뱃지를 생략합니다. 붙이려면:\n` +
@@ -584,7 +627,12 @@ const card = {
     firstPoint: { ym: first.ym, eok: eok(first.maxManwon) },
     station: station
       ? { ...station, note: "카카오 로컬이 잰 **직선거리**. 걸어간 거리가 아니다." }
-      : { note: "가까운 역 자료 없음 — 뱃지를 붙이지 않았다." },
+      : stationRaw
+        ? {
+            ...stationRaw,
+            note: `가장 가까운 역이 직선 ${stationRaw.distanceM}m 로 1,000m 를 넘어 **뱃지를 붙이지 않았다.** 거리를 안 싣는 판형이라 먼 역을 붙이면 그 자체가 과장이 된다.`,
+          }
+        : { note: "가까운 역 자료 없음 — 뱃지를 붙이지 않았다." },
     hhld: kapt
       ? {
           kaptCode: KAPT,
