@@ -271,7 +271,9 @@ const dx = r2(xOf(lastIdx >= 0 ? lastIdx : pts.length - 1));
 const dy = r2(yOf(hit.priceManwon));
 /* ⚠️ 점 옆 "10억" 라벨은 걷어냈다 — 바로 위 큰 숫자가 이미 그 말을 한다.
    같은 말을 두 번 하면 그게 곧 '군더더기'고, 카드가 템플릿처럼 보이는 이유다. */
-const dot = { x: dx, y: dy, r: 12, rOuter: 19 };
+/* 오늘 점은 **채우기 없이 잉크 테두리**(오너 2026-08-16b). 빨강으로 채웠더니 고점 점과
+   같은 색이라 어느 쪽이 오늘인지 흐렸다 — 속이 빈 원 하나면 오늘만 다르게 읽힌다. */
+const dot = { x: dx, y: dy, r: 13, rOuter: 20 };
 
 /* 연도 축 — 1월이 있는 달에만 */
 const axis = pts
@@ -416,88 +418,41 @@ if (threshold && prevLine && prevLine.ty1 - threshold.ty < 24) {
   throw new Error(`돌파선 라벨과 고점 라벨이 너무 가깝습니다 — 판 높이를 키우세요.`);
 }
 
-/* ── 판 안쪽 워터마크 (오너 2026-08-16 "그래프에 흰색으로 크게 하나")
+/* ── 판 안쪽 워터마크 (오너 2026-08-16b "더 키워서 대각선으로 기울여서 중앙배치")
    BRAND.md 슬롯 C. 이 카드는 곡선 판이 카드 높이의 절반을 넘어(775/1350 ≈ 57%)
    **판만 잘라 재업로드**가 실제로 되는 모양이라 슬롯 C 조건을 만족한다.
 
-   ⚠️ 좌표를 손으로 찍지 않는다(BRAND.md: "스탬프 자리는 **빈 곳을 재서** 고를 것").
-      단지마다 곡선 모양이 달라 손으로 찍은 자리는 다음 단지에서 데이터를 밟는다.
-      그래서 판 안을 격자로 훑어 **잉크에서 가장 멀리 떨어진 칸**을 고르고,
-      거기에 들어가는 **가장 큰 크기**를 쓴다. 자리가 없으면 아예 안 붙인다. */
-function pickStamp(text) {
-  /* ① 피해야 할 잉크를 점으로 편다 — 곡선·점·라벨 상자·세로 직선 */
-  const ink = [];
-  for (const sg of paths) {
-    for (let i = 0; i < sg.length; i++) {
-      ink.push(sg[i]);
-      if (i < sg.length - 1) {
-        const [ax, ay] = sg[i];
-        const [bx2, by] = sg[i + 1];
-        const steps = Math.max(1, Math.ceil(Math.hypot(bx2 - ax, by - ay) / 8));
-        for (let k = 1; k < steps; k++) ink.push([ax + ((bx2 - ax) * k) / steps, ay + ((by - ay) * k) / steps]);
-      }
-    }
-  }
-  for (const c of [old, lowDot, dot].filter(Boolean)) ink.push([c.x, c.y]);
-  const boxPts = (x, y, w, h) => {
-    const out = [];
-    for (let i = 0; i <= 6; i++) for (let j = 0; j <= 3; j++) out.push([x + (w * i) / 6, y + (h * j) / 3]);
-    return out;
-  };
-  const labelBox = (L) => {
-    if (!L) return;
-    const w = Math.max(widthOf(L.text1, LAB_FS), widthOf(L.text2, LAB_FS));
-    const x = L.anchor === "end" ? L.tx - w : L.tx;
-    ink.push(...boxPts(x, L.ty1 - LAB_FS, w, L.ty2 - L.ty1 + LAB_FS));
-  };
-  labelBox(prevLine);
-  labelBox(lowLine);
-  if (threshold) {
-    const w = widthOf(threshold.text, 28);
-    ink.push(...boxPts(threshold.tx - w, threshold.ty - 28, w, 28));
-  }
-  for (const a of axis) ink.push(...boxPts(a.x - widthOf(a.text, 23) / 2, a.y - 23, widthOf(a.text, 23), 23));
-  for (const b of [brkHi, brkLo].filter(Boolean)) {
-    const y1 = Math.min(b.y1, b.y2);
-    const y2 = Math.max(b.y1, b.y2);
-    for (let y = y1; y <= y2; y += 8) ink.push([b.x, y]);
-  }
+   ⚠️ 처음엔 "빈 곳을 재서" 고르게 했는데(BRAND.md 원칙), 오너가 **중앙 고정**으로 바꿨다.
+      자리를 재면 단지마다 워터마크가 다른 데 앉아 카드가 매번 달라 보인다 — 정기물에는
+      그게 더 나쁘다. 대신 **흰색 + 모든 데이터 아래**라 무엇을 밟아도 가려지지 않는다.
 
-  /* ② 격자를 훑는다. 큰 크기부터 시도해 **들어가는 가장 큰 것**을 쓴다. */
-  const MARGIN = 20; // 잉크와 이만큼은 떨어져야 '빈 곳'이라 부른다
-  for (const size of [104, 88, 74, 62]) {
-    const w = widthOf(text, size);
-    const h = size;
-    let best = null;
-    for (let cx = X0 + w / 2; cx <= X1 - w / 2; cx += 12) {
-      for (let cy = plotTop + h / 2; cy <= plotBot - h / 2; cy += 12) {
-        const x = cx - w / 2;
-        const y = cy - h / 2;
-        let clear = Infinity;
-        for (const [px, py] of ink) {
-          const ddx = px < x ? x - px : px > x + w ? px - (x + w) : 0;
-          const ddy = py < y ? y - py : py > y + h ? py - (y + h) : 0;
-          const d = Math.hypot(ddx, ddy);
-          if (d < clear) clear = d;
-          if (clear < MARGIN) break;
-        }
-        if (clear >= MARGIN && (!best || clear > best.clear)) best = { cx, cy, clear };
-      }
-    }
-    if (best) {
-      return {
-        x: r2(best.cx),
-        y: r2(best.cy + size * 0.34), // 가운데 정렬 → 베이스라인
-        size,
-        text,
-        clear: r2(best.clear),
-      };
-    }
-  }
-  return null; // 겹칠 자리밖에 없으면 **넣지 않는다**(BRAND.md 슬롯 C 조건 ③)
+   기울기는 손으로 찍지 않는다. **판 자신의 대각선 각도**를 쓰고, 크기는 그 각도로
+   돌린 글자 상자가 판 안에 들어가는 **최대치**를 계산해 쓴다 — 판 비율이 바뀌어도 따라온다. */
+function centerStamp(text) {
+  const MARGIN = 24;
+  const deg = (Math.atan2(VB_H, VB_W) * 180) / Math.PI; // 판 대각선
+  const th = (deg * Math.PI) / 180;
+  const availW = VB_W - MARGIN * 2;
+  const availH = VB_H - MARGIN * 2;
+  /* 돌린 글자 상자의 외접 크기:  W' = w·cosθ + h·sinθ ,  H' = w·sinθ + h·cosθ
+     (w = 글자 폭 = len·size·0.62, h = size) → size 에 대해 1차식이라 바로 풀린다. */
+  const k = text.length * 0.62;
+  const perW = k * Math.cos(th) + Math.sin(th);
+  const perH = k * Math.sin(th) + Math.cos(th);
+  const size = Math.floor(Math.min(availW / perW, availH / perH));
+  if (size < 40) return null; // 이만큼도 안 들어가면 안 붙인다
+  return {
+    x: r2(VB_W / 2),
+    y: r2(VB_H / 2 + size * 0.34), // 가운데 정렬 → 베이스라인
+    cx: r2(VB_W / 2),
+    cy: r2(VB_H / 2),
+    size,
+    text,
+    rotate: -r2(deg), // 오른쪽 위로 올라가는 대각선
+  };
 }
-const stamp = pickStamp("@wirit_note");
-if (!stamp) console.warn("ⓘ 판 안에 빈 자리가 없어 워터마크를 생략합니다 (BRAND.md 슬롯 C 조건 ③).");
+const stamp = centerStamp("@wirit_note");
+if (!stamp) console.warn("ⓘ 판이 작아 워터마크를 생략합니다.");
 
 /* ── 가까운 역 (오너 2026-08-16 "가까운 역을 뱃지로")
    파일이 없으면 **뱃지를 붙이지 않는다.** 내가 아는 역 이름을 적는 건 오보다 —
@@ -576,6 +531,9 @@ const card = {
     : `<span class="rg">${guShort}</span> ${hit.aptNm} ${hit.pyeong}`,
   station,
   price: eok(hit.priceManwon),
+  /* 가격 옆 한 마디 — 오너 지시(2026-08-16b, 자리에 있던 워터마크를 이걸로 바꿨다).
+     ⚠️ **돌파일 때만 붙인다.** 선을 넘지 않은 그냥 신고가에 "달성!"은 말이 안 된다. */
+  priceSuffix: hit.milestone ? "달성!" : null,
   spec,
   chart: { vb: `0 0 ${VB_W} ${VB_H}`, bg, stamp, threshold, prevLine, lowLine, brkHi, brkLo, paths: chartPaths, dots, axis, old, lowDot, dot },
   /* ⚠️ 하단 기준 문구를 걷어냈다(오너 2026-08-16). 다만 **"역대가 아니라 2020년 이후"** 라는

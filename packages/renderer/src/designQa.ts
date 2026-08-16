@@ -242,7 +242,7 @@ const MEASURE_JS = `(() => {
                 갱신폭 뱃지를 밀어내는 자리라 .sr-price 와 .sr-delta 는 반드시 함께 올린다.
                 SVG 안의 곡선·라벨은 Range 대상이 아니라 여기서 못 잰다 —
                 넘침은 빌더(build-singo-record.mjs)가 계산해 던진다. */
-             ".sr-kick,.sr-stn .nmx,.sr-price,.sr-spec .l";
+             ".sr-kick,.sr-stn .nmx,.sr-price,.sr-price-suffix,.sr-spec .l";
   var leaves = Array.prototype.slice.call(card.querySelectorAll(LEAF));
   for (var i=0;i<leaves.length;i++) for (var j=i+1;j<leaves.length;j++) {
     var a=leaves[i], b=leaves[j];
