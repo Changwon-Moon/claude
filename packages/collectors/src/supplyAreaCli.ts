@@ -15,7 +15,8 @@
  *   · 지번    : `data/datasets/singo-log/{YYYY-MM}.json` 의 `jibun`
  */
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { supplyAreaOf } from "./sources/supplyArea.js";
 
 const arg = (n: string) => {
@@ -27,7 +28,13 @@ const KEY = process.env.DATA_GO_KR_API_KEY || process.env.MOLIT_API_KEY || "";
 const KAPT = arg("kapt");
 const AREA = Number(arg("area"));
 const OUT = arg("out") || "data/datasets/apt-supply";
-const ROOT = process.cwd();
+
+/* ⚠️ `process.cwd()` 를 쓰지 않는다 — 이 저장소의 알려진 함정이다.
+   `pnpm --filter @wirit/collectors …` 로 부르면 **작업 폴더가 packages/collectors 로 바뀐다.**
+   그러면 data/datasets 를 못 찾고 "apt-universe 를 먼저 받으세요"라는 엉뚱한 말을 하게 된다
+   (2026-08-16d 에 실제로 6건 전부 이 이유로 실패했다).
+   모듈 위치에서 저장소 뿌리를 거슬러 올라간다 — 어디서 불러도 같다. */
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 
 if (!KEY) { console.error("::error::DATA_GO_KR_API_KEY 가 없습니다 (건축물대장은 이 키로 열립니다)"); process.exit(1); }
 if (!/^A\d+$/.test(KAPT) || !Number.isFinite(AREA)) {
