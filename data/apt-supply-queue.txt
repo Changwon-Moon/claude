@@ -6,6 +6,6 @@
 kapt=A44340013 area=84.92
 kapt=A13686302 area=84.95
 kapt=A44033010 area=59.98
-kapt=A10028021 area=84.48
-kapt=A10026600 area=84.99
+kapt=A10028021 area=84.48 force=1
+kapt=A10026600 area=84.99 force=1
 kapt=A42385801 area=84.95
