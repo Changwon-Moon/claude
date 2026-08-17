@@ -1,9 +1,9 @@
 {
   "meta": {
-    "today": "2026-08-17",
-    "from": "2026-08-17",
+    "today": "2026-08-18",
+    "from": "2026-08-18",
     "days": 1,
-    "weekLabel": "2026-08-17 ~ 2026-08-17",
+    "weekLabel": "2026-08-18 ~ 2026-08-18",
     "note": "foundOn(확인한 날) 기준 주간. milestone 은 일간이 판정 시점의 직전 최고가로 계산한 값을 그대로 옮긴 것 — 여기서 다시 재지 않는다.",
     "baselineLabel": "2020년 이후",
     "types": [
@@ -21,32 +21,7 @@
   },
   "conceptB": {
     "title": "개별 카드 후보",
-    "count": 1,
-    "items": [
-      {
-        "foundOn": "2026-08-17",
-        "aptNm": "주공7",
-        "umdNm": "하안동",
-        "jibun": "295",
-        "priceWon": 780000000,
-        "priceManwon": 78000,
-        "area": 59.39,
-        "floor": 2,
-        "buildYear": 1990,
-        "date": "2026-08-11",
-        "dealingGbn": "중개거래",
-        "canceled": false,
-        "sggCd": "41210",
-        "type": "59",
-        "pyeong": "25평",
-        "lawdCd": "41210",
-        "gu": "광명시",
-        "prevPeakManwon": 75000,
-        "prevPeakDate": "2021-08-17",
-        "gainPct": 4,
-        "milestone": null,
-        "hhld": 1342
-      }
-    ]
+    "count": 0,
+    "items": []
   }
 }
