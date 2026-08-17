@@ -492,9 +492,13 @@
         "singo-늘푸른벽산-84"
       ],
       "caption": "singo-neulpureun-byuksan",
-      "note": "2026-08 계약 신고가(갱신폭 상위). 세대수는 --kapt A44340013 로 대장 항목을 사람이 짚어 물렸다(세대수·법정동 대조). 기준은 docs/guides/신고가-카드-기준.md",
-      "state": "시안",
-      "pixelPolicy": "정기물 — singo-history·apt-station·apt-detail 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+      "note": "2026-08 계약 신고가(갱신폭 상위). 세대수는 --kapt A44340013 로 대장 항목을 사람이 짚어 물렸다(세대수·법정동 대조). 기준은 docs/guides/신고가-카드-기준.md / 실측 공급평수 판본으로 확정. 셈법 = 전유 + 주건축물 공용(건축물대장), 평은 3.305785 로 나눠 반올림(오너 2026-08-16d). 늘푸른벽산 109.94㎡ 는 네이버부동산 표기와 소수점까지 일치함을 오너가 화면으로 대조했다. 주차대수 포함 제원 3줄.",
+      "state": "오너 확정",
+      "pixelPolicy": "정기물 — data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+      "confirmedAt": "2026-08-17",
+      "confirmedMd5": [
+        "singo-늘푸른벽산-84:4557694c6aa9"
+      ]
     },
     {
       "label": "singo-raemian-crisiel",
@@ -503,9 +507,13 @@
         "singo-래미안크리시엘-84"
       ],
       "caption": "singo-raemian-crisiel",
-      "note": "2026-08 계약 신고가(갱신폭 상위). 세대수는 --kapt A13686302 로 대장 항목을 사람이 짚어 물렸다(세대수·법정동 대조). 기준은 docs/guides/신고가-카드-기준.md",
-      "state": "시안",
-      "pixelPolicy": "정기물 — singo-history·apt-station·apt-detail 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+      "note": "2026-08 계약 신고가(갱신폭 상위). 세대수는 --kapt A13686302 로 대장 항목을 사람이 짚어 물렸다(세대수·법정동 대조). 기준은 docs/guides/신고가-카드-기준.md / 실측 공급평수 판본으로 확정. 셈법 = 전유 + 주건축물 공용(건축물대장), 평은 3.305785 로 나눠 반올림(오너 2026-08-16d). 늘푸른벽산 109.94㎡ 는 네이버부동산 표기와 소수점까지 일치함을 오너가 화면으로 대조했다. 주차대수 포함 제원 3줄.",
+      "state": "오너 확정",
+      "pixelPolicy": "정기물 — data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+      "confirmedAt": "2026-08-17",
+      "confirmedMd5": [
+        "singo-래미안크리시엘-84:8ac5552b46a8"
+      ]
     },
     {
       "label": "singo-hwaseo-prugio",
@@ -514,13 +522,17 @@
         "singo-화서역푸르지오더에듀포레-59"
       ],
       "caption": "singo-hwaseo-prugio",
-      "note": "2026-08 계약 신고가(갱신폭 상위). 세대수는 --kapt A44033010 로 대장 항목을 사람이 짚어 물렸다(세대수·법정동 대조). 기준은 docs/guides/신고가-카드-기준.md",
-      "state": "시안",
-      "pixelPolicy": "정기물 — singo-history·apt-station·apt-detail 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+      "note": "2026-08 계약 신고가(갱신폭 상위). 세대수는 --kapt A44033010 로 대장 항목을 사람이 짚어 물렸다(세대수·법정동 대조). 기준은 docs/guides/신고가-카드-기준.md / 실측 공급평수 판본으로 확정. 셈법 = 전유 + 주건축물 공용(건축물대장), 평은 3.305785 로 나눠 반올림(오너 2026-08-16d). 늘푸른벽산 109.94㎡ 는 네이버부동산 표기와 소수점까지 일치함을 오너가 화면으로 대조했다. 주차대수 포함 제원 3줄.",
+      "state": "오너 확정",
+      "pixelPolicy": "정기물 — data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+      "confirmedAt": "2026-08-17",
+      "confirmedMd5": [
+        "singo-화서역푸르지오더에듀포레-59:cc9742d91e90"
+      ]
     },
     {
       "label": "singo-seocho-foresta2",
-      "title": "🔥 서초포레스타2단지 34평, 19.9억 신고가",
+      "title": "🔥 서초포레스타2단지 38평, 19.9억 신고가",
       "cards": [
         "singo-서초포레스타2단지-84"
       ],
@@ -531,7 +543,7 @@
     },
     {
       "label": "singo-dasan-lottecastle",
-      "title": "🔥 다산롯데캐슬 34평, 11.95억 신고가",
+      "title": "🔥 다산롯데캐슬 35평, 11.95억 신고가",
       "cards": [
         "singo-다산롯데캐슬-84"
       ],

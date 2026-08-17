@@ -159,12 +159,23 @@ async function main() {
     const bun = pad4(bunRaw), ji = pad4(jiRaw ?? "0");
     const rows: any[] = [];
     let total = Infinity;
-    for (let page = 1; page <= 200 && rows.length < total; page++) {
+    for (let page = 1; page <= 30 && rows.length < total; page++) {
+      /* ⚠️ 한 쪽에 **1000줄**을 받는다 (2026-08-16d 실측으로 고침)
+         100줄로 받았더니 큰 단지 하나에 100번 가까이 호출했고, 6단지를 두 번 돌리자
+         공공데이터포털이 `SERVICE_KEY_IS_NOT_REGISTERED_ERROR` 로 막았다 —
+         키가 잘못된 게 아니라 **일일 호출 한도**다. 문구가 원인을 가린다.
+         1000줄이면 같은 단지를 10번이면 다 받는다. */
       const url = `https://apis.data.go.kr/1613000/BldRgstHubService/getBrExposPubuseAreaInfo`
         + `?serviceKey=${encKey(KEY)}&sigunguCd=${sigunguCd}&bjdongCd=${bjdongCd}`
-        + `&platGbCd=0&bun=${bun}&ji=${ji}&numOfRows=100&pageNo=${page}&_type=json`;
+        + `&platGbCd=0&bun=${bun}&ji=${ji}&numOfRows=1000&pageNo=${page}&_type=json`;
       const { status, body } = await get(url);
-      if (status !== 200) { console.error(`::error::${jibun} ${page}쪽 실패 — ${body.slice(0, 120)}`); process.exit(1); }
+      if (status !== 200 || /SERVICE_KEY_IS_NOT_REGISTERED|LIMITED_NUMBER_OF_SERVICE_REQUESTS/.test(body)) {
+        const quota = /SERVICE_KEY_IS_NOT_REGISTERED|LIMITED_NUMBER_OF_SERVICE_REQUESTS/.test(body);
+        console.error(quota
+          ? `::error::공공데이터포털 **일일 호출 한도**에 걸렸습니다(문구는 SERVICE_KEY_IS_NOT_REGISTERED 로 나오지만 키 문제가 아닙니다). 내일 cron 이 다시 받습니다.`
+          : `::error::${jibun} ${page}쪽 실패 — ${body.slice(0, 120)}`);
+        process.exit(1);
+      }
       if (page === 1) total = totalOf(body) || 0;
       const rs = rowsOf(body);
       if (!rs.length) break;
