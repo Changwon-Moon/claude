@@ -2575,6 +2575,102 @@
       "state": "",
       "status": "",
       "isNew": true
+    },
+    {
+      "id": "sig-2026-08-17-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "11월부터 미술품·부동산 조각투자도 주식처럼 거래",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-17-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-17-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "'9억대 송파 아파트' 1가구 나온다⋯송파 시그니처 롯데캐슬 청약",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-17-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-17-3",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "부동산 정책의 오만과 편견",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-17-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-17-4",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "김민석 민주당, 부동산 손질하고 李 공소취소·개헌 속도 낼 듯",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-17-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-17-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "국제유가, 중동 긴장 재고조 우려에 급등‥뉴욕증시 3대 지수도 일제히 하락",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-17-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-17-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "美·이란 긴장에 유가 3% 급등… 뉴욕증시 일제히 하락",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-17-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-17-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "美국채 매도세에 30년물 금리 5.31%…2007년 이후 최고치",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-17-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-17-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "베어 스팁…유가 급등 속 30년물 금리 2007년 이후 최고",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-17-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
