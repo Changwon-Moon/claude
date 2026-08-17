@@ -28,9 +28,22 @@ const SKIP = process.argv.includes("--skip-checks");
 const sh = (c) => execSync(c, { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
 const tryShell = (c) => { try { return { ok: true, out: execSync(c, { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], shell: "/bin/bash" }).trim() }; } catch (e) { return { ok: false, out: `${e.stdout ?? ""}${e.stderr ?? ""}` }; } };
 
-const today = new Date().toISOString().slice(0, 10);           // UTC 기준
-const kst = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
-const DATES = [...new Set([today, kst])];                        // 자정 근처를 흘리지 않는다
+/* ── 어느 날짜를 "오늘"로 볼 것인가
+ *
+ * ⚠️ 세션은 자정을 넘긴다 (2026-08-17 실측)
+ * 08-16 저녁에 시작한 세션이 새벽까지 이어졌는데, 그 순간 이 검사가 **다섯 항목을 전부
+ * ⬜ 로** 바꿔 놨다. 어제 적은 학습이 오늘 날짜가 아니라는 이유로 안 보인 것이다.
+ * 사람은 "적었는데?" 하고 검사를 의심하게 되고, 의심받는 검사는 곧 안 보는 검사가 된다.
+ *
+ * 그래서 **어제까지 인정한다.** 느슨해 보이지만 이 검사의 목적은 "빈칸을 가리키는 것"이지
+ * 날짜를 심판하는 것이 아니다. 이틀 전 것까지 인정하면 그건 정말 안 적은 것을 놓친다. */
+const ymd = (ms) => new Date(ms).toISOString().slice(0, 10);
+const now = Date.now(), KST = 9 * 3600 * 1000, DAY = 86400 * 1000;
+const DATES = [...new Set([
+  ymd(now), ymd(now + KST),                 // UTC·KST 오늘 — 컨테이너 시계가 UTC 다
+  ymd(now - DAY), ymd(now + KST - DAY),     // 어제 — 자정을 넘긴 세션을 살린다
+])];
+const kst = ymd(now + KST);
 
 const bad = [];   // 닫으면 안 되는 것
 const warn = [];  // 이유를 대면 넘길 수 있는 것
@@ -99,7 +112,7 @@ if (SKIP) {
    여기서 "적혔다"의 기준은 **오늘 날짜가 그 파일에 있다**로 잡는다.
    느슨하지만, 없으면 확실히 안 적은 것이다(빈칸을 가리키는 것이 목적).
    ───────────────────────────────────────────────────────────── */
-console.log("── ② 배움이 원천에 적혔나\n");
+console.log("── ② 배움이 원천에 적혔나  (오늘·어제 날짜로 잰다 — 세션은 자정을 넘긴다)\n");
 
 const hasToday = (p) => existsSync(p) && DATES.some((d) => readFileSync(p, "utf8").includes(d));
 const mark = (cond, label, why) => {
