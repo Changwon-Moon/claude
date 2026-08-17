@@ -48,6 +48,16 @@ export type SupplyArea = {
   sampleHo: string;
   /** 같은 전용면적 호가 몇 개였나 — 1개뿐이면 표본이 약하다는 뜻 */
   sampleCount: number;
+  /** 전용률(전유÷공급). **눈으로 의심할 자리**를 만든다 — 아래 note 참고 */
+  ratio: number;
+  /**
+   * 주거공용을 이룬 줄들 — 용도별로. **합계만 남기면 나중에 의심할 수가 없다.**
+   * 실제로 이 목록이 없었으면 서초포레스타2단지의 주거공용 39.87㎡(전용률 68%)를
+   * "그런가 보다" 하고 넘길 뻔했다.
+   */
+  parts: { purpose: string; floor: string; area: number }[];
+  /** 전용률이 흔한 범위(70~85%) 밖이면 경고를 남긴다 — 막지는 않는다(사람이 본다) */
+  warn?: string;
 };
 
 export const PY_M2 = 3.305785;
@@ -104,13 +114,22 @@ export function supplyAreaOf(rows: Row[], wantExclusive: number, tolerance = 0.6
   hits.sort((a, b) => Math.abs(a.ex - wantExclusive) - Math.abs(b.ex - wantExclusive));
   const best = hits[0];
 
-  const common = best.rs
-    .filter((r) => !isExclusive(r) && isMainBld(r))
-    .reduce((a, r) => a + num(r.area), 0);
+  const commonRows = best.rs.filter((r) => !isExclusive(r) && isMainBld(r));
+  const common = commonRows.reduce((a, r) => a + num(r.area), 0);
   if (common <= 0) return null;   // 주거공용이 0인 아파트는 없다 — 응답이 빈 것이다
 
   const supply = best.ex + common;
+  const ratio = best.ex / supply;
   const [dong, ho] = best.key.split("|");
+
+  /* 전용률이 흔한 범위 밖이면 **말한다.** 막지는 않는다 — 진짜 그런 단지도 있다.
+     다만 조용히 넘어가면 사람이 볼 기회가 없다. 실제로 서초포레스타2단지가
+     68%(주거공용 39.87㎡)로 나왔고, 그건 84타입 공급평이 38평이라는 뜻이었다. */
+  const warn = ratio < 0.70 || ratio > 0.85
+    ? `전용률 ${(ratio * 100).toFixed(1)}% — 흔한 범위(70~85%) 밖이다. `
+      + `parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것`
+    : undefined;
+
   return {
     exclusive: Number(best.ex.toFixed(3)),
     commonResidential: Number(common.toFixed(3)),
@@ -120,5 +139,12 @@ export function supplyAreaOf(rows: Row[], wantExclusive: number, tolerance = 0.6
     sampleDong: dong,
     sampleHo: ho,
     sampleCount: hits.length,
+    ratio: Number(ratio.toFixed(4)),
+    parts: commonRows.map((r) => ({
+      purpose: `${r.mainPurpsCdNm ?? ""}${(r as any).etcPurps ? ` / ${(r as any).etcPurps}` : ""}`.trim(),
+      floor: `${(r as any).flrGbCdNm ?? ""} ${(r as any).flrNoNm ?? ""}`.trim(),
+      area: num(r.area),
+    })).sort((a, b) => b.area - a.area),
+    ...(warn ? { warn } : {}),
   };
 }

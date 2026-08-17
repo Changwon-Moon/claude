@@ -202,7 +202,9 @@ async function main() {
 
   console.log(`✅ ${path}`);
   console.log(`   전유 ${sa.exclusive} + 주거공용 ${sa.commonResidential} = 공급 ${sa.supply}㎡ = ${sa.pyeong}평 → **${sa.pyeongLabel}**`);
-  console.log(`   표본: ${sa.sampleDong} ${sa.sampleHo} (같은 전용 호 ${sa.sampleCount}개)`);
+  console.log(`   표본: ${sa.sampleDong} ${sa.sampleHo} (같은 전용 호 ${sa.sampleCount}개) · 전용률 ${(sa.ratio * 100).toFixed(1)}%`);
+  for (const p of sa.parts) console.log(`     · ${p.purpose} [${p.floor}] ${p.area}`);
+  if (sa.warn) console.log(`   ⚠️ ${sa.warn}`);
 }
 
 main().catch((e) => { console.error(`::error::${String(e?.message ?? e)}`); process.exit(1); });
