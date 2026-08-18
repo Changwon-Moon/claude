@@ -1,6 +1,6 @@
 {
   "meta": {
-    "today": "2026-08-18",
+    "today": "2026-08-19",
     "months": [
       "202607",
       "202608"
@@ -25,11 +25,11 @@
     "fetchTried": 18,
     "fetchFailed": 18,
     "fetchFailNotes": [
-      "종로구 202607: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version=\"1.0\" encoding=\"UTF-8\"?> <OpenAPI_ServiceResponse> <cm",
-      "종로구 202608: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version=\"1.0\" encoding=\"UTF-8\"?> <OpenAPI_ServiceResponse> <cm",
-      "중구 202607: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version=\"1.0\" encoding=\"UTF-8\"?> <OpenAPI_ServiceResponse> <cm",
-      "중구 202608: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version=\"1.0\" encoding=\"UTF-8\"?> <OpenAPI_ServiceResponse> <cm",
-      "용산구 202607: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version=\"1.0\" encoding=\"UTF-8\"?> <OpenAPI_ServiceResponse> <cm"
+      "종로구 202607: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed\n↳ 403이면: (a) 방금 신청한 키의 전파 지",
+      "종로구 202608: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed\n↳ 403이면: (a) 방금 신청한 키의 전파 지",
+      "중구 202607: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed\n↳ 403이면: (a) 방금 신청한 키의 전파 지",
+      "중구 202608: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed\n↳ 403이면: (a) 방금 신청한 키의 전파 지",
+      "용산구 202607: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed\n↳ 403이면: (a) 방금 신청한 키의 전파 지"
     ],
     "bailedOut": true,
     "doorWaits": 5,
