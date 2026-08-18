@@ -169,8 +169,18 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
+          # ⚠️ 실패한 날에도 **이유를 그대로 보낸다** (2026-08-19).
+          #    수집 0건인 날을 빨간불로 만들면서(molitSingoCli) 이 가지를 안 고쳤다면,
+          #    오너가 받던 "⛔ 실거래 API 가 계속 응답하지 않아 …" 상세 문구가 짧은
+          #    "확인 실패"로 바뀌어 **원인이 사라졌을 것**이다. 수집기는 죽기 전에
+          #    singo-alert.txt 를 이미 써 두므로, 있으면 그것을 보내고 없을 때만 한 줄로 알린다.
           if [ "${{ job.status }}" != "success" ]; then
-            node scripts/notify-telegram.mjs "⚠️ 신고가 확인 실패 (${{ steps.cfg.outputs.today }}) — data/singo-last.md 를 확인하세요"
+            MSG=$(cat data/singo-alert.txt 2>/dev/null || true)
+            if [ -n "$MSG" ]; then
+              node scripts/notify-telegram.mjs "$MSG"
+            else
+              node scripts/notify-telegram.mjs "⚠️ 신고가 확인 실패 (${{ steps.cfg.outputs.today }}) — data/singo-last.md 를 확인하세요"
+            fi
             exit 0
           fi
           MSG=$(cat data/singo-alert.txt 2>/dev/null || true)

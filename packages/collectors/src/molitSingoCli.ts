@@ -323,6 +323,30 @@ async function main() {
       `→ 오늘의 신고가 ${hits.length}건`,
   );
   if (skipped.length) console.log(`  제외: ${skipped.slice(0, 8).join(", ")}${skipped.length > 8 ? " …" : ""}`);
+
+  /* ── 한 건도 못 받았으면 **실패로 끝낸다** (2026-08-19) ──
+   *
+   * 지금까지는 문이 완전히 닫혀 수집 0회여도 종료코드가 0이라 워크플로가 **초록불**이었다.
+   * 텔레그램 본문에는 "⛔ … 오늘 판정은 없습니다"라고 크게 적혀 나갔지만 Actions 목록과
+   * 관제탑에는 아무 표시가 없어, **오너가 알림 본문을 끝까지 읽어야만** 알 수 있었다.
+   * 실제로 08-12·13·15·18·19 다섯 번이 그렇게 지나갔고, 오너가 알림을 읽고서야 물었다.
+   *
+   * 저장소 규칙: 초록불은 "일을 했다"는 뜻이어야지 "죽지 않고 끝났다"는 뜻이면 안 된다.
+   *
+   * 일부만 실패한 날(fetched > 0)은 그대로 0 으로 끝낸다 — 판정이 불완전할 뿐 데이터는 왔고
+   * 그 사실은 위에서 이미 알림 첫 줄로 말한다. 부분 실패까지 빨간불로 만들면 빨간불이 흔해져
+   * 안 읽히게 된다(맞는 것을 매번 지적하면 지적을 안 읽는다).
+   */
+  if (fetched === 0 && failed > 0) {
+    console.error(
+      `\n❌ 실거래 API 에서 한 건도 받지 못했습니다 (${failed}회 시도 전부 실패) — 오늘 판정은 없습니다.\n` +
+        `   알림은 이미 나갔지만, 수집이 0건인 날을 초록불로 끝내지 않습니다.\n` +
+        `   첫 실패 사유: ${failNotes[0] ?? "(기록 없음)"}\n` +
+        `   ↳ 403/401 이면 공공데이터포털 마이페이지에서 **활용신청 상태와 만료일**을 확인하세요.`,
+    );
+    process.exit(1);
+  }
+
   for (const h of hits.slice(0, 15)) {
     console.log(`  · ${h.gu} ${h.aptNm} ${h.pyeong} ${manwonToEok(h.priceManwon)} (전용 ${h.area}㎡ ${h.floor}층 ${h.date} · 직전 ${manwonToEok(h.prevPeakManwon)} ${h.prevPeakDate} · ${h.hhld.toLocaleString("ko-KR")}세대)`);
   }
