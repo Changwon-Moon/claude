@@ -2671,6 +2671,102 @@
       "state": "",
       "status": "",
       "isNew": true
+    },
+    {
+      "id": "sig-2026-08-18-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "\"앉아서 11억 번다\"...송파 '로또 청약' 딱 1가구에 9만명 우르르 - 머니투데이",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-18-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-18-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "수도권 집값 자극 예고한 삼전닉스 성과급…부동산 안정대책 '사각지대' 평가",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-18-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-18-3",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "서울 6억 이하 아파트 4건 중 1건도 안돼⋯결혼 페널티 없애도 '좁은 문'",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-18-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-18-4",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "오세훈, 이대통령 앞에서 “용산공원 아파트 반대”…“왜 엉뚱한 땅 찾나”",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-18-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-18-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "글로벌 금리 상승에 '도망쳐'…필리 지수 5%↓",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-18-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-18-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕증시, 사흘 연속 내리막…나스닥 1.3%↓",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-18-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-18-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "몸집 키운 주가조작 합동대응단…증거능력 논란·시장 변동성에 '고전'",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-18-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-18-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "美 30년물 금리, 19년 만에 '최고'…시장 파장은?",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-18-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
