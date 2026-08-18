@@ -1,3 +1,4 @@
 # 대기열 — 오늘의 신고가
 # 형식: months=2 top=0 sort=price   (top=0 = 전부 나열)
 months=2 top=0 sort=price
+# 상태점검 2026-08-19 07:45 — 실거래 키 진단
