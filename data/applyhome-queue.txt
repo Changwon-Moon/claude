@@ -6,3 +6,5 @@ within=14 min=40 digest=1
 within=14 min=40 digest=1
 # 진단 08:21 — DATA_GO_KR vs MOLIT 키 가르기
 within=14 min=40 digest=1
+# 인증방식 2종 시도 적용 확인 08:27
+within=14 min=40 digest=1
