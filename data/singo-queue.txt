@@ -2,3 +2,5 @@
 # 형식: months=2 top=0 sort=price   (top=0 = 전부 나열)
 months=2 top=0 sort=price
 # 상태점검 2026-08-19 07:45 — 실거래 키 진단
+# 재검증 2026-08-19 08:39 — 청약홈 운영계정 전환 후 실거래 동시 확인
+months=2 top=0 sort=price

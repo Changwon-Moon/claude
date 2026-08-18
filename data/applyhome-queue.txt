@@ -8,3 +8,5 @@ within=14 min=40 digest=1
 within=14 min=40 digest=1
 # 인증방식 2종 시도 적용 확인 08:27
 within=14 min=40 digest=1
+# 재검증 2026-08-19 08:39 — 청약홈 운영계정 전환 후
+within=14 min=40 digest=1
