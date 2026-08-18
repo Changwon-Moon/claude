@@ -132,6 +132,32 @@ jobs:
             --within ${{ steps.cfg.outputs.within }} \
             ${{ steps.cfg.outputs.grep && format('--grep "{0}"', steps.cfg.outputs.grep) || '' }} 2>&1 | tee /tmp/collect.log
 
+      # ── ⏱ 임시 진단 (2026-08-19) — 결과 확인 후 **바로 뺀다** ──
+      # 401 의 원인이 (A) DATA_GO_KR_API_KEY 값 문제인지 (B) 청약홈 서비스 신청 문제인지
+      # 가른다. 청약홈은 개발계정, 실거래는 운영계정이고 **서로 다른 Secret** 을 쓰므로,
+      # 같은 API 를 MOLIT_API_KEY 로 한 번 불러 보면 둘이 갈린다.
+      #   성공 → (A) DATA_GO_KR_API_KEY 값만 갈아 끼우면 된다
+      #   401  → (B) 청약홈 활용신청 자체가 끊겼다
+      - name: 「진단」 같은 API 를 MOLIT_API_KEY 로 호출
+        if: always()
+        continue-on-error: true
+        env:
+          DATA_GO_KR_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        run: |
+          echo "── MOLIT_API_KEY 로 청약홈 API 호출 (진단 전용, 결과는 커밋하지 않는다)"
+          pnpm --filter @wirit/collectors collect-applyhome -- \
+            --today ${{ steps.cfg.outputs.today }} --within 1 2>&1 | tail -12 | tee /tmp/diag.log || true
+          # 세션은 Actions 로그 본문을 못 읽는다 — **저장소 파일이 유일한 눈**이다.
+          if grep -q "HTTP 401" /tmp/diag.log; then
+            V="(B) MOLIT_API_KEY 로도 401 — 청약홈 활용신청 자체가 문제입니다"
+          elif grep -qE "수집 완료|공고|저장" /tmp/diag.log; then
+            V="(A) MOLIT_API_KEY 로는 됩니다 — DATA_GO_KR_API_KEY 값만 갈아 끼우면 됩니다"
+          else
+            V="(?) 판정 불가 — 로그를 보세요"
+          fi
+          echo "$V"
+          { echo "$V"; echo; echo '--- 진단 로그'; cat /tmp/diag.log; } > /tmp/diag.verdict
+
       - name: 소재 보드 등록 + 알림 문구
         id: register
         run: |
@@ -164,6 +190,11 @@ jobs:
             echo '## 수집 로그'
             echo '```'
             cat /tmp/collect.log 2>/dev/null || echo "(수집 단계가 실행되지 못했습니다 — 키 확인 단계에서 멈췄을 수 있습니다)"
+            echo '```'
+            echo
+            echo '## 「진단」 MOLIT_API_KEY 로 같은 API 호출 (임시 · 2026-08-19)'
+            echo '```'
+            cat /tmp/diag.verdict 2>/dev/null || echo "(진단 스텝이 실행되지 못했습니다)"
             echo '```'
             echo
             echo '## 소재 등록'

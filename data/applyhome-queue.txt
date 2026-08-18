@@ -4,3 +4,5 @@ within=14 min=45 grep=부천
 within=14 min=40 digest=1
 # 상태점검 2026-08-19 07:45 — 키 거부 진단(청약홈 401)
 within=14 min=40 digest=1
+# 진단 08:21 — DATA_GO_KR vs MOLIT 키 가르기
+within=14 min=40 digest=1
