@@ -2,8 +2,8 @@
 
 - 실행: 2026-08-19 (KST) · 방아쇠 `push`
 - 기준: 1000세대 이상 명부 · 전용 59·84 타입 · 최근 2개월 신고분
-- 결과: **성공**
-- 커밋: `5b4cd26631df6a7b2928728819c760c20495602a`
+- 결과: **실패**
+- 커밋: `afd79e2759ed1c8170f1b5b1270a8ce815cad002`
 
 ```
 
@@ -55,9 +55,13 @@
    (계속 두드리면 30분을 태우고도 결과는 같습니다)
 명부 1147개 단지 · 판정 지역 9/61 · 수집 성공 0회 / 실패 18회
 → 오늘의 신고가 0건
-기간 2026-08-19
-신고가 0건 · 돌파 0건
-→ /home/runner/work/claude/claude/docs/daily/신고가재료-2026-08-19.md
-→ data/datasets/singo-digest.json
-→ data/singo-digest-alert.txt
+
+❌ 실거래 API 에서 한 건도 받지 못했습니다 (18회 시도 전부 실패) — 오늘 판정은 없습니다.
+   알림은 이미 나갔지만, 수집이 0건인 날을 초록불로 끝내지 않습니다.
+   첫 실패 사유: 종로구 202607: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+   ↳ 403/401 이면 공공데이터포털 마이페이지에서 **활용신청 상태와 만료일**을 확인하세요.
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-singo: `tsx src/molitSingoCli.ts -- --today 2026-08-19 --months 2 --top 0 --sort price`
+Exit status 1
 ```
