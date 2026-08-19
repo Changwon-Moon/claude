@@ -125,6 +125,9 @@ jobs:
         id: collect
         env:
           DATA_GO_KR_API_KEY: ${{ secrets.DATA_GO_KR_API_KEY }}
+          # 값이 아니라 **지문(해시 앞 8자)** 만 비교하려고 함께 넘긴다 —
+          # 두 Secret 이 같은 키인지 값을 안 보고 아는 유일한 방법이다(2026-08-19).
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
         run: |
           set -o pipefail
           pnpm --filter @wirit/collectors collect-applyhome -- \

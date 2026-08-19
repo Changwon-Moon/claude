@@ -37,6 +37,7 @@ import {
   type SingoHit,
 } from "./parse/singo.js";
 import { singoRegions, monthRange } from "./sources/singoRegions.js";
+import { inspectKey, describeKey } from "./keyHygiene.js";
 
 const CWD = process.env.INIT_CWD || process.cwd();
 const R = (p: string) => resolve(CWD, p);
@@ -61,7 +62,11 @@ interface UniverseItem {
 }
 
 async function main() {
-  const key = process.env.MOLIT_API_KEY || process.env.DATA_GO_KR_API_KEY;
+  /* 키는 **다듬어서** 쓴다 — Secrets 에 딸려 들어간 줄바꿈은 화면에 안 보이는데
+     그대로 실으면 서버가 "모르는 키"라고 답한다(2026-08-19 추적). 값은 안 찍고 모양만 찍는다. */
+  const kr = inspectKey(process.env.MOLIT_API_KEY || process.env.DATA_GO_KR_API_KEY);
+  const key = kr.key || undefined;
+  if (key) console.log(describeKey("MOLIT_API_KEY", kr));
   if (!key) {
     console.error("MOLIT_API_KEY 환경변수가 없습니다 (GitHub Secrets에 등록).");
     process.exit(1);

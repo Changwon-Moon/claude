@@ -6,3 +6,5 @@ months=2 top=0 sort=price
 months=2 top=0 sort=price
 # 키 갱신 후 재검증 2026-08-19 09:18
 months=2 top=0 sort=price
+# 키 지문 확인 09:34
+months=1 top=0 sort=price

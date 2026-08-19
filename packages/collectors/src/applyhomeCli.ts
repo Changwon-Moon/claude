@@ -15,6 +15,7 @@ import { resolve, join } from "node:path";
 import { fetchNotices, OPERATIONS } from "./sources/applyhome.js";
 import { normalize, recent, dedupe, mergeBlocks, rank, type Kind, type Notice } from "./parse/applyhome.js";
 import { APPLYHOME_APT_JSON, APPLYHOME_REMNDR_JSON } from "./__fixtures__/fixtures.js";
+import { inspectKey, describeKey } from "./keyHygiene.js";
 
 const CWD = process.env.INIT_CWD || process.cwd();
 
@@ -30,7 +31,18 @@ function arg(name: string): string | undefined {
 const DRY = process.argv.includes("--dry");
 
 async function main() {
-  const key = process.env.DATA_GO_KR_API_KEY;
+  /* 키는 **다듬어서** 쓴다. Secrets 에 붙여넣을 때 딸려 들어간 줄바꿈은 화면에 안 보이는데,
+     그대로 URL 에 실으면 %0A 가 되어 서버가 "모르는 키"라고 답한다(2026-08-19 401 추적). */
+  const kr = inspectKey(process.env.DATA_GO_KR_API_KEY);
+  const key = kr.key || undefined;
+  if (key) console.log(describeKey("DATA_GO_KR_API_KEY", kr));
+  /* 같은 계정의 다른 Secret 과 **값이 같은지**를 값 없이 비교한다 —
+     이번 사고에서 "키 문제냐 서비스 문제냐"를 가르는 데 이 비교가 필요했다. */
+  if (process.env.MOLIT_API_KEY) {
+    const mk = inspectKey(process.env.MOLIT_API_KEY);
+    console.log(describeKey("MOLIT_API_KEY(참고)", mk));
+    console.log(`   ↳ 두 Secret 은 ${mk.fingerprint === kr.fingerprint ? "**같은 키**입니다" : "서로 다른 키입니다"}`);
+  }
   if (!key && !DRY) {
     console.error("❌ DATA_GO_KR_API_KEY 가 없습니다.");
     console.error("   공공데이터포털에서 '한국부동산원_청약홈 분양정보 조회 서비스' 활용신청 후");
