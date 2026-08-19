@@ -2,8 +2,8 @@
 
 - 실행: 2026-08-19 (KST) · 방아쇠 `push`
 - 조건: 최근 14일 이내 · 소재 문턱 40점
-- 결과: **실패**
-- 커밋: `6657c2040406dc7b34fd014fe05277e1092dc016`
+- 결과: **성공**
+- 커밋: `e85655cd60584a57d0f6c4d46f775a4382333158`
 
 ## 수집 로그
 ```
@@ -14,16 +14,24 @@
    🔑 DATA_GO_KR_API_KEY: 166b… (64자) · 지문 4e34245e · 인코딩 안 됨
    🔑 MOLIT_API_KEY(참고): 166b… (64자) · 지문 4e34245e · 인코딩 안 됨
    ↳ 두 Secret 은 **같은 키**입니다
-❌ 수집 실패: 청약홈 인증이 두 방식 모두 거부됐습니다 — header: GET 실패(1회 시도): https://api.odcloud.kr/api/ApplyhomeInfoDetailSvc/v1/getAPTLttotPblancDetail?page=1&perPage=1
-HTTP 401 https://api.odcloud.kr/api/ApplyhomeInfoDetailSvc/v1/getAPTLttotPblancDetail?page=1&perPage=1 | query: GET 실패(1회 시도): https://api.odcloud.kr/api/ApplyhomeInfoDetailSvc/v1/getAPTLttotPblancDetail?page=1&perPage=1&serviceKey=***
-HTTP 401 https://api.odcloud.kr/api/ApplyhomeInfoDetailSvc/v1/getAPTLttotPblancDetail?page=1&perPage=1&serviceKey=***
-   ↳ 401 이면 키가 아니라 **활용신청/게이트웨이** 문제일 수 있습니다 (2026-08-19 에 서로 다른 두 키가 똑같이 401 이었습니다).
-/home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-applyhome: `tsx src/applyhomeCli.ts -- --today 2026-08-19 --within 14`
-Exit status 1
+   🔑 청약홈 인증 방식: Authorization 헤더
+· APT 분양정보 — 전체 2851건
+   🔑 청약홈 인증 방식: Authorization 헤더
+· APT 무순위/잔여세대 — 전체 1660건
+
+✅ 2026-08-19 기준 최근 14일 이내·접수중 25건
+    79점  [줍줍] 장위 푸르지오 마크원 (서울) ~2026-08-10  서울·39가구·무순위·푸르지오
+    74점  [줍줍] 천왕역 모아엘가 트레뷰(11차) (서울) ~2026-08-19  서울·무순위·오늘 마감
+    73점  [줍줍] 더샵 검단레이크파크 (인천) ~2026-08-12 [2개 블록]  수도권·452가구·무순위·더샵·2개 블록 합계
+    73점  [줍줍] 드파인 아르티아 (서울) ~2026-08-12  서울·무순위·드파인
+    69점  [줍줍] 송파 시그니처 롯데캐슬 (서울) ~2026-08-18  서울·무순위·롯데캐슬
+    68점  [신규] 두산위브더제니스 부천 (경기) ~2026-08-21  수도권·1,158가구 대단지·D-2·위브
+    66점  [신규] 써밋 클라비온 (서울) ~2026-08-21  서울·D-2·써밋·투기과열지구
+    66점  [신규] 충정로역자이르네 (서울) ~2026-08-21  서울·D-2·자이·투기과열지구
 ```
 
 ## 소재 등록
 ```
-(등록 단계가 실행되지 못했습니다)
+청약홈 소재 등록 — 새로 0건 · 갱신 10건 · 지난 것 정리 11건 · 보드 총 224건
+   📨 요약 알림(digest) 문구를 작성했습니다 — 새것 여부와 무관하게 보냅니다.
 ```
