@@ -10,3 +10,5 @@ within=14 min=40 digest=1
 within=14 min=40 digest=1
 # 재검증 2026-08-19 08:39 — 청약홈 운영계정 전환 후
 within=14 min=40 digest=1
+# 키 갱신 후 재검증 2026-08-19 09:18
+within=14 min=40 digest=1
