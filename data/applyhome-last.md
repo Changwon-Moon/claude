@@ -3,7 +3,7 @@
 - 실행: 2026-08-19 (KST) · 방아쇠 `push`
 - 조건: 최근 14일 이내 · 소재 문턱 40점
 - 결과: **실패**
-- 커밋: `75c3a45772b873c17e050a66904dc4b6f20f56aa`
+- 커밋: `6657c2040406dc7b34fd014fe05277e1092dc016`
 
 ## 수집 로그
 ```
@@ -11,8 +11,8 @@
 > @wirit/collectors@0.1.0 collect-applyhome /home/runner/work/claude/claude/packages/collectors
 > tsx src/applyhomeCli.ts -- --today 2026-08-19 --within 14
 
-   🔑 DATA_GO_KR_API_KEY: 64자 · 지문 4e34245e · 인코딩 안 됨
-   🔑 MOLIT_API_KEY(참고): 64자 · 지문 4e34245e · 인코딩 안 됨
+   🔑 DATA_GO_KR_API_KEY: 166b… (64자) · 지문 4e34245e · 인코딩 안 됨
+   🔑 MOLIT_API_KEY(참고): 166b… (64자) · 지문 4e34245e · 인코딩 안 됨
    ↳ 두 Secret 은 **같은 키**입니다
 ❌ 수집 실패: 청약홈 인증이 두 방식 모두 거부됐습니다 — header: GET 실패(1회 시도): https://api.odcloud.kr/api/ApplyhomeInfoDetailSvc/v1/getAPTLttotPblancDetail?page=1&perPage=1
 HTTP 401 https://api.odcloud.kr/api/ApplyhomeInfoDetailSvc/v1/getAPTLttotPblancDetail?page=1&perPage=1 | query: GET 실패(1회 시도): https://api.odcloud.kr/api/ApplyhomeInfoDetailSvc/v1/getAPTLttotPblancDetail?page=1&perPage=1&serviceKey=***
