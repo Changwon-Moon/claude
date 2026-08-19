@@ -1,14 +1,14 @@
 # 오늘의 신고가 — 마지막 실행
 
-- 실행: 2026-08-19 (KST) · 방아쇠 `push`
+- 실행: 2026-08-20 (KST) · 방아쇠 `schedule`
 - 기준: 1000세대 이상 명부 · 전용 59·84 타입 · 최근 1개월 신고분
 - 결과: **실패**
-- 커밋: `bcef078bded4651b954fa2af322674d070a813e9`
+- 커밋: `4965b11c9eecd98e51e83c3dcf242c3b34bda4bf`
 
 ```
 
 > @wirit/collectors@0.1.0 collect-singo /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitSingoCli.ts -- --today 2026-08-19 --months 1 --top 0 --sort price
+> tsx src/molitSingoCli.ts -- --today 2026-08-20 --months 1 --top 0 --sort price
 
    🔑 MOLIT_API_KEY: 166b… (64자) · 지문 4e34245e · 인코딩 안 됨
 ⚠️ 종로구 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
@@ -63,6 +63,6 @@
 ↳ 403이면: (a) 방금 신청한 키의 전파 지
    ↳ 403/401 이면 공공데이터포털 마이페이지에서 **활용신청 상태와 만료일**을 확인하세요.
 /home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-singo: `tsx src/molitSingoCli.ts -- --today 2026-08-19 --months 1 --top 0 --sort price`
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-singo: `tsx src/molitSingoCli.ts -- --today 2026-08-20 --months 1 --top 0 --sort price`
 Exit status 1
 ```
