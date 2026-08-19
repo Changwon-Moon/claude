@@ -10,8 +10,7 @@
 > tsx src/supplyAreaCli.ts -- --kapt A10028021 --area 84.48
 
 ▶ 서초포레스타2단지아파트 (A10028021) · 전용 84.48㎡ · 11650-10900 · 지번 후보 384, 143
-   지번 384 (0384-0000) → 줄 0개
-::error::143 1쪽 실패 — {
+::error::384 1쪽 실패 — {
   "OpenAPI_ServiceResponse": {
     "cmmMsgHeader": {
       "errMsg": "SERVICETIMEOUT_ERROR",
