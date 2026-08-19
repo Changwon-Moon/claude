@@ -14,3 +14,5 @@ within=14 min=40 digest=1
 within=14 min=40 digest=1
 # 키 지문 확인 09:34
 within=14 min=40 digest=1
+# 키 앞자리 확인 09:43 — 08/16 재발급분인지
+within=14 min=40 digest=1
