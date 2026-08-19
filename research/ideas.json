@@ -2741,6 +2741,102 @@
       "status": "",
       "deadline": "2026-08-10",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910209&pblancNo=2026910209"
+    },
+    {
+      "id": "sig-2026-08-19-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "부동산 대책 잔혹사",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-19-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-19-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "배민, '과도한 출입통제' 아파트 실태조사…\"대응안 검토\"",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-19-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-19-3",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "아파트에서 배우는 ‘우리’",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-19-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-19-4",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "모더나, 피부암 백신 효과에 주가 폭등…128%↑",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-19-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-19-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "美국채 금리 진정에 뉴욕증시 반등…모더나 177% 폭등",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-19-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-19-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "증시 뒤흔든 미 국채 급등세에 미 재무부 '제동'",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-19-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-19-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "“물가 안 잡히면 금리 더 올려야”…연준 내부 ‘인상론’ 예상보다 강했다",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-19-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-19-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "'고공행진' 환율, 1천300원대로…11개월 만에 최저",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-19-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
