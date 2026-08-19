@@ -16,3 +16,5 @@ within=14 min=40 digest=1
 within=14 min=40 digest=1
 # 키 앞자리 확인 09:43 — 08/16 재발급분인지
 within=14 min=40 digest=1
+# 청약홈 활용신청 승인 후 재검증 10:08 — 08-16 이후 밀린 공고까지
+within=14 min=40 digest=1
