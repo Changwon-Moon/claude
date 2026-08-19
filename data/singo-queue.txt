@@ -8,3 +8,5 @@ months=2 top=0 sort=price
 months=2 top=0 sort=price
 # 키 지문 확인 09:34
 months=1 top=0 sort=price
+# 실거래 단독 재검증 09:50 — 키 확인 완료(166b) 후
+months=1 top=0 sort=price
