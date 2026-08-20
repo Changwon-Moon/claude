@@ -2811,6 +2811,102 @@
       "status": "",
       "deadline": "2026-08-18",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930026&pblancNo=2026930026"
+    },
+    {
+      "id": "sig-2026-08-20-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "6월 서울 아파트값 한달새 2.5%↑…5년 만에 최대폭 상승",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-20-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-20-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "서울 아파트값 5년 만에 최대 상승…6월 실거래가 2.5% ‘쑥’",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-20-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-20-3",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "6월 서울 아파트 매매 실거래가격 2.5%↑ 5년來 최고치 - 머니투데이",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-20-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-20-4",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "강남·서초 아파트 값, 2주째 하락세 이어져",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-20-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-20-5",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "6월 서울 아파트 실거래가 치솟아…5년 만 월간 상승률 최고치",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-20-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-20-6",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "\"99억 찍던 아파트 78억에 내놨다\"…다급해진 강남 집주인들",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-20-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-20-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "'40조 주주환원' 하이닉스 13% 폭등...코스피 5.9%↑",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-20-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-20-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "'삼전'도 100조 주주환원?…기대감에 코스피 '활짝'",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-20-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
