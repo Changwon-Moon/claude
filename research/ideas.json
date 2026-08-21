@@ -2920,6 +2920,102 @@
       "status": "",
       "deadline": "2026-08-25",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910219&pblancNo=2026910219"
+    },
+    {
+      "id": "sig-2026-08-21-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "\"국회의사당 밀면 용적률 500%, 아파트 1.5만채\"…'닥공' 역제안 화제",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-21-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-21-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "(보도설명) 정부는 조정대상지역 매입임대 아파트 등에 대한 과세특례를 합리화하면서 임대차기간, 재개발·재건축 등 다양한 상황을 종합 고려하여 개편안을 마련하였습니",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-21-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-21-3",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "서울 아파트 청약 경쟁률 9개월째 ‘세 자릿수’인데… 전국은 3년 만에 최저 - 조선비즈",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-21-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-21-4",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "'신혼특공 vs 생애최초'…당첨에 더 유리한 선택은",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-21-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-21-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "비트코인 관련주 급등 속 다우 517P 상승",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-21-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-21-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "\"코스피 올해 9300 재돌파\"...지금 팔면 땅치고 후회?[부꾸미] - 머니투데이",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-21-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-21-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "삼전닉스 주주환원 기대에 코스피↑…코스닥은 4%대 ’뚝’",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-21-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-21-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕증시, 강한 경기지표에 반등…다우 0.98%↑[뉴욕마감]",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-21-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
