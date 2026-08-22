@@ -23,7 +23,7 @@
 > tsx src/supplyAreaCli.ts -- --kapt A10026600 --area 84.99
 
 ▶ 다산 롯데캐슬아파트 (A10026600) · 전용 84.99㎡ · 41360-11200 · 지번 후보 6029, 5869-2
-::error::6029 25쪽 실패 — {
+::error::6029 3쪽 실패 — {
   "OpenAPI_ServiceResponse": {
     "cmmMsgHeader": {
       "errMsg": "SERVICETIMEOUT_ERROR",
