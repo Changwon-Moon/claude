@@ -2951,6 +2951,102 @@
       "status": "",
       "deadline": "2026-09-02",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000404&pblancNo=2026000404"
+    },
+    {
+      "id": "sig-2026-08-22-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "바다 대신 아파트 벽… 강릉 ‘오션뷰’ 주민들 소송 나선다 - 조선비즈",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-22-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-22-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "\"신축 부럽지 않아요\"…45억 쏟은 19년차 잠실 아파트 '대반전' [시장톡]",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-22-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-22-3",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "“100억 압구정 아파트, 이젠 85억이라는데 찾아보니 신고가?”강남 집값 무슨 일이 [부동산360]",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-22-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-22-4",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "“아파트 먼저냐, 타워도 같이냐”…6조 대한방직 개발 9월 결판",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-22-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-22-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "삼전닉스 반등에도 투심은 '냉랭'…코스피 회전율 연중 최저",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-22-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-22-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "엔비디아 실적 발표·美 국채금리에 ‘쏠린 눈’ - 조선비즈",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-22-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-22-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "삼전·SK하닉 ‘150조’ 역대급 환원…시선은 코스피로",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-22-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-22-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "기준금리 전망 '혼조'…\"7·8월 연속 인상\" vs \"숨 고르기\"",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-22-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
