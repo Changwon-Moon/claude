@@ -3047,6 +3047,102 @@
       "status": "",
       "deadline": "2026-08-21",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000382&pblancNo=2026000382"
+    },
+    {
+      "id": "sig-2026-08-23-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "'줍줍 무순위 청약' 사라지나요?",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-23-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-23-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "키맞추는 강북아파트, 중위값 10억 찍었다 - 머니투데이",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-23-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-23-3",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "서울 평균 아파트값 16억 돌파…중위값은?",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-23-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-23-4",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "지지율 떨어지자… 與, 부동산 증세 핵심 내용들 수정 요구",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-23-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-23-5",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "서울 아파트 매물 8.7% 늘었는데…강남은 쌓이고 중저가는 뛴다",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-23-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-23-6",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "4억 이하 비아파트 사라고 했는데…빌라 평균 4억2852만 원",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-23-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-23-7",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "서울 거주자의 경기 아파트 매수 5년만에 최대… 서울 아파트 평균값 첫 16억 넘어",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-23-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-23-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "‘사상 최대 주주환원’ 꺼낸 삼전닉스… 코스피 반등 이끌까",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-23-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
