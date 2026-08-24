@@ -53,8 +53,10 @@ jobs:
       github.event.workflow_run.event == 'schedule'
     uses: ./.github/workflows/singo-daily.yml
     with:
-      # ⚠️ months·top·sort 를 **여기에 적지 않는다.** 비워 두면 호출된 워크플로가
-      #    예약 런과 똑같이 `data/singo-queue.txt` 의 마지막 줄을 읽는다 —
-      #    값을 여기 박으면 예약 런이 쓴 조건과 조용히 갈라진다.
+      # ⚠️ months·top·sort 를 **여기에 적지 않는다.** 비워 두면 예약 런과 똑같이
+      #    **문서에 적힌 기본값**(months=2)으로 돈다. 값을 여기 박으면 예약 런의 기준과
+      #    조용히 갈라진다 — 아침에 못 받은 것을 재시도가 다른 자로 재게 된다.
+      # ⚠️ 대기열(`data/singo-queue.txt`)은 예약 런도 재시도도 **읽지 않는다**
+      #    (2026-08-24 오너: 일회용 손잡이가 상시 설정이 되어 5일간 기준이 좁아져 있었다).
       retry: true
     secrets: inherit

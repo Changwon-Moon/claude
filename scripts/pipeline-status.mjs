@@ -117,6 +117,27 @@ if (process.argv.includes("--json")) {
     );
     if (r.why) console.log(`      ↳ ${r.why.slice(0, 110)}`);
   }
+  /* ── 기준 드리프트 검사 (2026-08-24)
+     배관이 **도는데도** 기준이 조용히 좁아져 있을 수 있다. 실제로 그랬다:
+     08-19 진단용으로 대기열에 민 `months=1` 한 줄이 예약 런의 상시 설정이 되어
+     5일간 알림이 1개월치만 봤고, 전월 계약분(신고기한 30일 안에 뒤늦게 드러나는 건)이
+     매일 0건이 됐다. **그동안 초록불이었다** — 늦지도, 실패하지도, 빈손도 아니었으니까.
+     그래서 '언제 돌았나' 옆에 **'무엇을 재고 돌았나'**를 같이 본다. */
+  const singoLast = R("data/singo-last.md");
+  if (existsSync(singoLast)) {
+    const t = readFileSync(singoLast, "utf8");
+    const m = t.match(/최근\s*(\d+)\s*개월/);
+    const trig = t.match(/방아쇠\s*`([^`]+)`/)?.[1] ?? "?";
+    const auto = trig === "schedule" || trig === "workflow_run"; // 예약·자동 재시도
+    if (m && auto && m[1] !== "2") {
+      console.log(
+        `\n   🔎 오늘의 신고가 — 마지막 자동 런이 **${m[1]}개월**치로 돌았습니다 (기준은 2개월).\n` +
+          `      신고기한이 계약 후 30일이라 1개월이면 **전월 계약분이 통째로 빠집니다.**\n` +
+          `      정본은 docs/guides/신고가-알림-기준.md.`,
+      );
+    }
+  }
+
   const bad = rows.filter((r) => r.state !== "ok");
   console.log("");
   if (!bad.length) console.log("   ✅ 전부 제때 돌고 있습니다\n");
