@@ -156,6 +156,8 @@ Exit status 1
 > @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptDetailCli.ts -- --kapt A12285703
 
+   ⏸ 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
+     문이 닫힌 것으로 보고 20초 기다립니다 (1/1)
 Error: 살아 있는 오퍼레이션이 없습니다 — 시도: AptBasisInfoServiceV4/getAphusDtlInfoV4, AptBasisInfoServiceV4/getAphusDtlInfoV3, AptBasisInfoServiceV3/getAphusDtlInfoV3, AptBasisInfoServiceV2/getAphusDtlInfoV2 · 공공데이터포털에서 서비스 URL 을 확인하세요
     at pickOp (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:168:9)
     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
