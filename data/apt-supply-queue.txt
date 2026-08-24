@@ -13,3 +13,24 @@ kapt=A42385801 area=84.95
 kapt=A42385801 area=59.93
 kapt=A10023875 area=59.97
 kapt=A10023875 area=84.92
+
+# 2026-08-25 신고가 19건 일괄 — 오너 "오늘 뜬 이 신고가 단지들 카드 만들어줘"
+kapt=A10025412 area=84.9126
+kapt=A10024453 area=84.91
+kapt=A10024488 area=59.1
+kapt=A10023991 area=84.98
+kapt=A15005705 area=84.84
+kapt=A10024831 area=59.97
+kapt=A10025621 area=84.69
+kapt=A44693813 area=84.819
+kapt=A10027344 area=59.98
+kapt=A13984004 area=59.94
+kapt=A44347021 area=84.96
+kapt=A10023833 area=84.9264
+kapt=A13922114 area=58.46
+kapt=A44033010 area=84.89
+kapt=A10023329 area=59.9801
+kapt=A12285703 area=83.27
+kapt=A15380403 area=59.84
+kapt=A44347020 area=59.99
+kapt=A10023740 area=59.9958
