@@ -133,6 +133,17 @@ const last = bottom[bottom.length - 1];
 // 그래픽 안 서울 로고를 제목 앞에 얹는다(저장소 자산 상속)
 const seoulLogo = "data:image/svg+xml;base64," + readFileSync(join(ROOT, "data/assets/seoul/seoul-logo.svg")).toString("base64");
 
+/* 제목은 데이터에 맞춘다(오보 0). '넘어섰다'는 월세>전세(비중≥50)일 때만 쓴다.
+ *   · 전체 계약도 50% 넘음 → 원 헤드라인(시장 전체가 넘어섬)
+ *   · 신규(최근 3개월)만 50% 넘음 → '신규 계약' 으로 범위를 못박는다(전체 막대와 모순 방지)
+ *   · 둘 다 아직 → 넘어섰다 대신 '절반 넘본다'로 톤을 낮춘다
+ * 이렇게 두면 매달 데이터가 굴러도 카드 안 막대와 제목이 어긋나지 않는다. */
+const LOGO = `<img class="tlogo" src="${seoulLogo}" alt="" />`;
+const titleHtml =
+  allWolse >= 50 ? `${LOGO}<span class="hi">월세</span>가 전세를 넘어섰다`
+  : newWolse >= 50 ? `${LOGO}신규 계약, <span class="hi">월세</span>가 전세를 넘어섰다`
+  : `${LOGO}<span class="hi">월세</span>, 전세 절반을 넘본다`;
+
 const outDir = join(ROOT, `data/content/${date}`);
 mkdirSync(outDir, { recursive: true });
 const doc = {
@@ -144,7 +155,7 @@ const doc = {
   hideFooterId: true, // 아이디는 지도 안 스탬프에 있다 — 푸터 중복 제거(BRAND: 카드당 1개)
   date,
   note: `오늘의 주요 부동산 이슈 (${date.replace(/-/g, ".")})`,
-  title: `<img class="tlogo" src="${seoulLogo}" alt="" /><span class="hi">월세</span>가 전세를 넘어섰다`,
+  title: titleHtml,
   head: { l: "지역", r: "월세 비중" },
   unit: "%",
   mapSvg,
