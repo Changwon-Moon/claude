@@ -3156,6 +3156,102 @@
       "status": "",
       "deadline": "2026-08-26",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000383&pblancNo=2026000383"
+    },
+    {
+      "id": "sig-2026-08-24-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "이헌욱 부동산원장 “세계 도시 경쟁력 순위, ‘도시 올림픽’ 결과 내년 초 공개”",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-24-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-24-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "“악어 120만원에 택배로 받았어요”…아파트에 나일왕도마뱀이 왜 나와",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-24-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-24-3",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "쏟아지는 주가 ‘하향’ 보고서... 삼전닉스 목표주가도 3배 차이",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-24-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-24-4",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "미국 반도체주 하락…한국 ETF 2.6% ↓",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-24-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-24-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕증시, 기술주 하락세에 혼조 마감…나스닥·S&P500↓",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-24-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-24-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "반도체주 덮친 AI 비용 우려…달러↑주식·채권 혼조",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-24-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-24-7",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "증시 조정에 소비심리 넉 달 만에 후퇴…집값 기대도 꺾였다",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-24-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-24-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕 증시, 기술주 하락세에 혼조세로 마감",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-24-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
