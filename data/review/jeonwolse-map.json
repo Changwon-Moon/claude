@@ -2,14 +2,7 @@
   "label": "jeonwolse-map",
   "verdict": "revise",
   "summary": "REVISE — error 0 · warn 2 · 카드 1장 · 코드 검수만",
-  "findings": [
-    {
-      "reviewer": "caption-lint",
-      "level": "info",
-      "code": "no-caption",
-      "msg": "캡션 미제공 — 캡션 검수 생략(--caption로 전달)"
-    }
-  ],
+  "findings": [],
   "cards": [
     {
       "file": "jeonwolse-map.json",
