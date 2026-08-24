@@ -10,3 +10,5 @@ months=2 top=0 sort=price
 months=1 top=0 sort=price
 # 실거래 단독 재검증 09:50 — 키 확인 완료(166b) 후
 months=1 top=0 sort=price
+# 08-24 아침 실패(전 지역 fetch failed) 재시도 — 새 러너로 다시 두드린다 13:26 KST
+months=1 top=0 sort=price
