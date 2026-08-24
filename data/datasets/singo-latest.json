@@ -5,7 +5,7 @@
       "202608"
     ],
     "regions": 61,
-    "judgedRegions": 18,
+    "judgedRegions": 61,
     "skipped": [],
     "universe": {
       "ready": true,
@@ -21,17 +21,11 @@
     "baselineLabel": "2020년 이후",
     "sortBy": "price",
     "milestoneCount": 0,
-    "fetchTried": 18,
-    "fetchFailed": 18,
-    "fetchFailNotes": [
-      "종로구 202608: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed\n↳ 403이면: (a) 방금 신청한 키의 전파 지",
-      "중구 202608: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed\n↳ 403이면: (a) 방금 신청한 키의 전파 지",
-      "용산구 202608: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed\n↳ 403이면: (a) 방금 신청한 키의 전파 지",
-      "성동구 202608: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed\n↳ 403이면: (a) 방금 신청한 키의 전파 지",
-      "광진구 202608: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed\n↳ 403이면: (a) 방금 신청한 키의 전파 지"
-    ],
-    "bailedOut": true,
-    "doorWaits": 5,
+    "fetchTried": 61,
+    "fetchFailed": 0,
+    "fetchFailNotes": [],
+    "bailedOut": false,
+    "doorWaits": 0,
     "verified": true,
     "source": "국토교통부 아파트 매매 실거래가 상세자료 · 공동주택 기본 정보(세대수)",
     "note": "1000세대 이상 단지(명부)의 전용 59·84 타입 중개거래 중, 구·법정동·단지명 기준 2020년 이후 최고가를 넘어선 건. 2006~2019 기록은 보지 않으므로 \"역대\"라고 쓰지 않는다. 직거래·해제거래 제외. 평 표기는 관용 환산(전용률 미공개)이라 단지에 따라 ±1평 어긋날 수 있고 원본 전용면적을 함께 남긴다."
