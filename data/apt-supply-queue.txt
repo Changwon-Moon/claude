@@ -9,3 +9,7 @@ kapt=A44033010 area=59.98
 kapt=A10028021 area=84.48 force=1
 kapt=A10026600 area=84.99 force=1
 kapt=A42385801 area=84.95
+# 신고가 카드 후보 — 오너 요청 2026-08-24 (한진타운·DMC센트럴자이)
+kapt=A42385801 area=59.93
+kapt=A10023875 area=59.97
+kapt=A10023875 area=84.92
