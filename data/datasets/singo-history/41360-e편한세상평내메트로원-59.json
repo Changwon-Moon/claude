@@ -1,0 +1,743 @@
+{
+  "meta": {
+    "lawdCd": "41360",
+    "umdNm": "평내동",
+    "aptNm": "e편한세상평내메트로원",
+    "type": "59",
+    "from": "202001",
+    "to": "202608",
+    "monthsTried": 80,
+    "monthsFailed": 0,
+    "monthsTraded": 34,
+    "peak": {
+      "manwon": 52000,
+      "date": "2026-08-21",
+      "area": 59.9958,
+      "floor": 14
+    },
+    "source": "국토교통부 아파트 매매 실거래가 상세자료",
+    "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
+  },
+  "points": [
+    {
+      "ym": "202001",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202002",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202003",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202004",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202005",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202006",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202007",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202008",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202009",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202010",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202011",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202012",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202101",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202102",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202103",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202104",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202105",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202106",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202107",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202108",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202109",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202110",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202111",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202112",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202201",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202202",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202203",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202204",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202205",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202206",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202207",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202208",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202209",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202210",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202211",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202212",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202301",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202302",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202303",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202304",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202305",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202306",
+      "maxManwon": 46000,
+      "count": 2,
+      "area": 59.9917,
+      "floor": 14,
+      "date": "2023-06-30",
+      "ok": true
+    },
+    {
+      "ym": "202307",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202308",
+      "maxManwon": 49000,
+      "count": 2,
+      "area": 59.9958,
+      "floor": 13,
+      "date": "2023-08-19",
+      "ok": true
+    },
+    {
+      "ym": "202309",
+      "maxManwon": 45000,
+      "count": 1,
+      "area": 59.9917,
+      "floor": 3,
+      "date": "2023-09-25",
+      "ok": true
+    },
+    {
+      "ym": "202310",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202311",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202312",
+      "maxManwon": 36500,
+      "count": 6,
+      "area": 59.9958,
+      "floor": 4,
+      "date": "2023-12-14",
+      "ok": true
+    },
+    {
+      "ym": "202401",
+      "maxManwon": 45000,
+      "count": 1,
+      "area": 59.9917,
+      "floor": 16,
+      "date": "2024-01-06",
+      "ok": true
+    },
+    {
+      "ym": "202402",
+      "maxManwon": 44800,
+      "count": 2,
+      "area": 59.9958,
+      "floor": 16,
+      "date": "2024-02-17",
+      "ok": true
+    },
+    {
+      "ym": "202403",
+      "maxManwon": 42000,
+      "count": 2,
+      "area": 59.9917,
+      "floor": 18,
+      "date": "2024-03-31",
+      "ok": true
+    },
+    {
+      "ym": "202404",
+      "maxManwon": 39000,
+      "count": 2,
+      "area": 59.9958,
+      "floor": 6,
+      "date": "2024-04-01",
+      "ok": true
+    },
+    {
+      "ym": "202405",
+      "maxManwon": 43500,
+      "count": 5,
+      "area": 59.9917,
+      "floor": 14,
+      "date": "2024-05-17",
+      "ok": true
+    },
+    {
+      "ym": "202406",
+      "maxManwon": 43600,
+      "count": 4,
+      "area": 59.9917,
+      "floor": 7,
+      "date": "2024-06-12",
+      "ok": true
+    },
+    {
+      "ym": "202407",
+      "maxManwon": 45000,
+      "count": 5,
+      "area": 59.9615,
+      "floor": 16,
+      "date": "2024-07-15",
+      "ok": true
+    },
+    {
+      "ym": "202408",
+      "maxManwon": 44000,
+      "count": 4,
+      "area": 59.9958,
+      "floor": 14,
+      "date": "2024-08-31",
+      "ok": true
+    },
+    {
+      "ym": "202409",
+      "maxManwon": 43900,
+      "count": 1,
+      "area": 59.9917,
+      "floor": 25,
+      "date": "2024-09-02",
+      "ok": true
+    },
+    {
+      "ym": "202410",
+      "maxManwon": 45000,
+      "count": 3,
+      "area": 59.9917,
+      "floor": 23,
+      "date": "2024-10-03",
+      "ok": true
+    },
+    {
+      "ym": "202411",
+      "maxManwon": 45000,
+      "count": 2,
+      "area": 59.9958,
+      "floor": 11,
+      "date": "2024-11-04",
+      "ok": true
+    },
+    {
+      "ym": "202412",
+      "maxManwon": 43250,
+      "count": 2,
+      "area": 59.9615,
+      "floor": 18,
+      "date": "2024-12-17",
+      "ok": true
+    },
+    {
+      "ym": "202501",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202502",
+      "maxManwon": 47500,
+      "count": 7,
+      "area": 59.9917,
+      "floor": 27,
+      "date": "2025-02-15",
+      "ok": true
+    },
+    {
+      "ym": "202503",
+      "maxManwon": 44700,
+      "count": 1,
+      "area": 59.9917,
+      "floor": 17,
+      "date": "2025-03-15",
+      "ok": true
+    },
+    {
+      "ym": "202504",
+      "maxManwon": 46500,
+      "count": 4,
+      "area": 59.9917,
+      "floor": 13,
+      "date": "2025-04-22",
+      "ok": true
+    },
+    {
+      "ym": "202505",
+      "maxManwon": 48000,
+      "count": 4,
+      "area": 59.9917,
+      "floor": 17,
+      "date": "2025-05-20",
+      "ok": true
+    },
+    {
+      "ym": "202506",
+      "maxManwon": 49500,
+      "count": 6,
+      "area": 59.9958,
+      "floor": 13,
+      "date": "2025-06-24",
+      "ok": true
+    },
+    {
+      "ym": "202507",
+      "maxManwon": 49600,
+      "count": 4,
+      "area": 59.9917,
+      "floor": 20,
+      "date": "2025-07-15",
+      "ok": true
+    },
+    {
+      "ym": "202508",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202509",
+      "maxManwon": 48700,
+      "count": 1,
+      "area": 59.9958,
+      "floor": 24,
+      "date": "2025-09-03",
+      "ok": true
+    },
+    {
+      "ym": "202510",
+      "maxManwon": 51000,
+      "count": 4,
+      "area": 59.9917,
+      "floor": 25,
+      "date": "2025-10-29",
+      "ok": true
+    },
+    {
+      "ym": "202511",
+      "maxManwon": 47800,
+      "count": 3,
+      "area": 59.9917,
+      "floor": 12,
+      "date": "2025-11-20",
+      "ok": true
+    },
+    {
+      "ym": "202512",
+      "maxManwon": 45000,
+      "count": 2,
+      "area": 59.9958,
+      "floor": 7,
+      "date": "2025-12-06",
+      "ok": true
+    },
+    {
+      "ym": "202601",
+      "maxManwon": 48000,
+      "count": 2,
+      "area": 59.9615,
+      "floor": 12,
+      "date": "2026-01-07",
+      "ok": true
+    },
+    {
+      "ym": "202602",
+      "maxManwon": 49000,
+      "count": 4,
+      "area": 59.9917,
+      "floor": 5,
+      "date": "2026-02-26",
+      "ok": true
+    },
+    {
+      "ym": "202603",
+      "maxManwon": 49400,
+      "count": 8,
+      "area": 59.9917,
+      "floor": 25,
+      "date": "2026-03-26",
+      "ok": true
+    },
+    {
+      "ym": "202604",
+      "maxManwon": 49500,
+      "count": 5,
+      "area": 59.9917,
+      "floor": 11,
+      "date": "2026-04-23",
+      "ok": true
+    },
+    {
+      "ym": "202605",
+      "maxManwon": 49500,
+      "count": 7,
+      "area": 59.9917,
+      "floor": 6,
+      "date": "2026-05-25",
+      "ok": true
+    },
+    {
+      "ym": "202606",
+      "maxManwon": 49800,
+      "count": 8,
+      "area": 59.9917,
+      "floor": 12,
+      "date": "2026-06-02",
+      "ok": true
+    },
+    {
+      "ym": "202607",
+      "maxManwon": 51000,
+      "count": 7,
+      "area": 59.9917,
+      "floor": 8,
+      "date": "2026-07-23",
+      "ok": true
+    },
+    {
+      "ym": "202608",
+      "maxManwon": 52000,
+      "count": 3,
+      "area": 59.9958,
+      "floor": 14,
+      "date": "2026-08-21",
+      "ok": true
+    }
+  ]
+}
