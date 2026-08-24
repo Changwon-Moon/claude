@@ -1,0 +1,29 @@
+{
+  "kaptCode": "A44347021",
+  "kaptName": "영통에듀파크",
+  "type": "84",
+  "jibun": "957-6",
+  "exclusive": 84.96,
+  "commonResidential": 24.148,
+  "supply": 109.11,
+  "pyeong": 33.01,
+  "pyeongLabel": "33평",
+  "sampleDong": "322동",
+  "sampleHo": "604호",
+  "sampleCount": 311,
+  "ratio": 0.7787,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단,복도,승강기",
+      "floor": "각층 각층",
+      "area": 15.722
+    },
+    {
+      "purpose": "아파트 / 지하대피소",
+      "floor": "지하 지1",
+      "area": 8.426
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
