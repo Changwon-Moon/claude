@@ -304,7 +304,10 @@ async function main() {
     const mlines = [...new Set(milestones.map((h) => h.milestone))].sort((a, b) => (b ?? 0) - (a ?? 0));
     const topN = topArg > 0 ? topArg : hits.length;
     const mtag = mlines.length ? ` (${mlines.map((m) => `${m}억`).join("·")} 돌파 ${milestones.length}건)` : "";
-    lines.push(`🔥 오늘의 신고가 ${hits.length}건${mtag} (${today} · ${baselineLabel()} 최고가 기준)`);
+    // ⚠️ "**새로 확인된**" 이 다섯 글자가 빠져 있어서 오너가 두 번 되물었다 (2026-08-24).
+    //    목록의 계약일이 흩어져 보이는 것은 며칠치를 모아 보내서가 아니라 신고기한(최대 30일)
+    //    탓인데, 문구가 그걸 안 적으니 읽는 사람이 알 길이 없었다. **재는 것과 말하는 것을 맞춘다.**
+    lines.push(`🔥 오늘 새로 확인된 신고가 ${hits.length}건${mtag} (${today} · ${baselineLabel()} 최고가 기준)`);
     lines.push("");
 
     // 본문(돌파 먼저 → 신고가 전체)은 parse/singo.ts 의 alertBody 가 만든다.
