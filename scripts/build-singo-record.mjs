@@ -722,14 +722,50 @@ if (KAPT) {
        가장 가까운 역이 1,614m 였다(걸어서 20분 이상). 그건 역세권이라 부를 거리가 아니다.
        그래서 **직선 1,000m 를 넘으면 뱃지를 안 붙인다.** 수집은 그대로 남는다(meta 에 기록). */
     const MAX_BADGE_M = 1000;
-    stationRaw = { name: st.station, lines: st.lines ?? [], distanceM: st.distanceM };
+
+    /* ── 같은 역이 노선별로 쪼개져 오면 **노선을 합친다** (2026-08-24)
+     *
+     * 카카오는 환승역을 노선별 POI 로 준다: `디지털미디어시티역 경의중앙선`(386m) 과
+     * `디지털미디어시티역 공항철도`(576m) 가 **다른 항목**으로 온다. 가장 가까운 하나만
+     * 쓰면 뱃지가 「경의중앙 · 디지털미디어시티역」이 되어 **환승역이 단일 노선역으로 읽힌다.**
+     * 환승 뱃지 누락은 오너의 반복 지적이다(노선 카드 2026-08-02).
+     *
+     * ⚠️ **없는 노선을 채워 넣지 않는다.** DMC역은 6호선도 지나지만 카카오 응답에 그 항목이
+     *    없어 여기서도 싣지 않는다 — 아는 것을 적는 게 아니라 **받은 것을 적는다**(오보 0).
+     *    빠진 노선이 문제면 고칠 곳은 이 빌더가 아니라 **수집기**다.
+     *
+     * 합치는 조건은 **이름이 같은 역**뿐이다(공백 앞 첫 토막 대조). 증산역처럼 이름이 다른
+     * 역은 다른 역이므로 절대 합치지 않는다 — 합치면 그게 곧 가짜 환승역이다. */
+    const stem = (s) => String(s ?? "").split(/\s+/)[0];
+    const sameStation = (st.others ?? []).filter((o) => stem(o.station) === stem(st.station));
+    const lines = [...new Set([...(st.lines ?? []), ...sameStation.flatMap((o) => o.lines ?? [])])];
+    if (lines.length > (st.lines ?? []).length) {
+      console.log(
+        `↔︎ 환승역 노선 합침: ${stem(st.station)} · ${lines.join("+")} ` +
+          `(카카오가 노선별로 나눠 준 ${1 + sameStation.length}개 항목)`,
+      );
+    }
+
+    stationRaw = { name: st.station, lines, distanceM: st.distanceM };
     if (st.distanceM != null && st.distanceM > MAX_BADGE_M) {
       console.warn(
         `ⓘ 가장 가까운 역이 ${st.station} ${st.distanceM}m — ${MAX_BADGE_M}m 를 넘어 뱃지를 생략합니다.`,
       );
       station = null;
     } else {
-      station = { name: st.station, lines: st.lines ?? [], distanceM: st.distanceM };
+      /* ── 역 이름이 길면 뱃지를 한 치수 줄인다 (2026-08-24)
+       *
+       * 최상단 줄은 `[킥커] [역 뱃지]` 이고 그 오른쪽 끝에 `wirit.` 로고가 절대위치로 앉아 있다.
+       * 「디지털미디어시티역」(9자)이 오자 줄이 로고를 **가로 21px 침범**했다(designQa `badgeclip`).
+       * 판형이 「광명사거리역」·「길음역」 같은 짧은 이름을 전제로 잡혀 있었던 것이다.
+       *
+       * 글자 수로 가른다 — 폭을 em 으로 어림하는 방식은 실측과 30px 씩 어긋나 믿을 수 없었다.
+       * 8자 이상이면 줄인다. 지금 확정본들의 역 이름은 전부 6자 이하라(광명사거리역·청계산입구역
+       * 6자 · 길음역·화서역·다산역·망포역 3자) **한 장도 픽셀이 변하지 않는다.**
+       * 새 CSS 는 `.sr-stn.compact` 로 가둬 이 플래그가 없으면 아예 안 켜진다(픽셀 불변). */
+      const compact = String(st.station ?? "").length >= 8;
+      if (compact) console.log(`ⓘ 역 이름이 길어(${st.station}) 뱃지를 compact 로 그립니다.`);
+      station = { name: st.station, lines, distanceM: st.distanceM, compact };
     }
   } else {
     console.warn(
@@ -828,8 +864,13 @@ const card = {
     ? `오늘의 ${hit.milestone}억 클럽 (계약 ${dot2(hit.date)})`
     : `오늘의 신고가 (계약 ${dot2(hit.date)})`,
   /* 제목 = **단지명(잉크) + 평형(코발트)**. 지역은 붙이지 않는다(오너 2026-08-16b).
-     두 토막이라 어느 단지든 같은 모양으로 읽힌다. */
-  title: `${hit.aptNm} <span class="py">${hit.pyeong}</span>`,
+     두 토막이라 어느 단지든 같은 모양으로 읽힌다.
+
+     ⚠️ `--merge-blocks` 면 **합친 이름**을 쓴다(hit.aptNm 이 아니라 APT).
+        DMC센트럴자이는 1~4단지를 합쳐 판정했으므로 제목에 「(2단지)」를 달면 안 된다 —
+        아래 제원의 세대수 1,256 이 **단지 전체 값**이라, 2단지라고 적으면 그 순간 오보가 된다.
+        무엇을 합쳐 셌는지와 무엇이라 부르는지가 같아야 한다. */
+  title: `${MERGE ? APT : hit.aptNm} <span class="py">${hit.pyeong}</span>`,
   station,
   price: eok(hit.priceManwon),
   /* 가격 옆 한 마디 — 오너 지시(2026-08-16b, 자리에 있던 워터마크를 이걸로 바꿨다).

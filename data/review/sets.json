@@ -559,6 +559,17 @@
       "confirmedMd5": [
         "singo-다산롯데캐슬-84:16d5de227c56"
       ]
+    },
+    {
+      "label": "singo-dmc-centralxi",
+      "title": "🔥 DMC센트럴자이 25평, 15.95억 신고가",
+      "cards": [
+        "singo-DMC센트럴자이-59"
+      ],
+      "caption": "singo-record",
+      "note": "오늘의 신고가 판형(singo-record@1). 1~4단지 통합 — 같은 지번(증산동 258)·같은 준공(2023)·명부 1건(1,256세대)이라 실거래만 블록별로 신고된다. 판정(최고가 인덱스)은 원래 합쳐 보고 있었고 빌더만 엄격했다(--merge-blocks 신설, 원자료로 지번 1종 확인). 제목에 (2단지)를 안 붙이는 이유는 세대수 1,256 이 단지 전체 값이기 때문이다. / 역 뱃지: 디지털미디어시티역 386m — 카카오가 노선별로 나눠 준 항목을 합쳐 경의중앙+공항철도. ⚠️ 6호선은 카카오 응답에 없어 싣지 않았다(오보 0 — 아는 것이 아니라 받은 것을 적는다). / 평 25평은 건축물대장 실측(공급 81.77㎡ = 24.74평). 정기물이라 픽셀 기준값 미등록.",
+      "state": "검수 대기",
+      "pixelPolicy": "정기물 — data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
     }
   ]
 }

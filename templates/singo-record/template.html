@@ -94,6 +94,20 @@
         font-family: var(--font-sans); font-size: 27px; font-weight: 800;
         letter-spacing: -0.04em; line-height: 1; white-space: nowrap; flex: 0 0 auto;
       }
+      /* ── compact — 역 이름이 8자 이상일 때만 (2026-08-24)
+         「디지털미디어시티역」(9자)이 최상단 줄에서 우상단 로고를 가로 21px 침범했다
+         (designQa `badgeclip`). 판형이 「광명사거리역」·「길음역」 같은 짧은 이름을
+         전제로 잡혀 있었다.
+
+         ⚠️ **높이 62px 은 건드리지 않는다.** 그 값은 `.wirit-corner` 와 같은 키로 서기
+            위한 것이고, 공용 `.wirit-topcap` 의 min-height 도 같은 값이라 줄이면
+            최상단 줄이 로고와 어긋난다. 줄이는 것은 **가로를 먹는 것들뿐**이다.
+         ⚠️ 이 규칙은 `.compact` 안에 갇혀 있다 — 플래그가 없으면 한 픽셀도 안 움직인다.
+            확정본 6장의 역 이름은 전부 6자 이하라 아무 영향이 없다(재확인 완료). */
+      .sr-stn.compact { gap: 10px; padding: 0 18px 0 6px; }
+      .sr-stn.compact .nmx { font-size: 28px; letter-spacing: -0.045em; }
+      .sr-stn.compact .rt-wide { height: 42px; padding: 0 12px; font-size: 23px; }
+
       .sr-stn .rt-wide.ln-white { color: #fff; }
       .sr-stn .rt-wide.ln-dark { color: #1c2431; }
       .sr-stn .rt-wide.plain { background: var(--wirit-gray); color: #fff; }
@@ -170,7 +184,7 @@
       <div class="wirit-topcap">
         {{#if kicker}}<span class="sr-kick">{{kicker}}</span>{{/if}}
         {{#if station}}
-        <span class="sr-stn">
+        <span class="sr-stn{{#if station.compact}} compact{{/if}}">
           {{#if station.lines}}{{{metroWide station.lines.[0]}}}{{else}}<span class="rt-wide plain">지하철</span>{{/if}}
           <span class="nmx">{{station.name}}</span>
         </span>
