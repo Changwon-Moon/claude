@@ -25,6 +25,17 @@ name: 오늘의 신고가 — 자동 재시도
 #      "오늘의 신고가 (daily)" 런을 새로 만들지 않으므로 자기 자신을 다시 부를 수 없다.
 #   ③ 설령 ②가 바뀌어도 ①이 막는다: 재시도의 event 는 `schedule` 이 아니다.
 # 문을 하나 더 늘리고 싶으면 이 세 줄을 먼저 다시 읽는다.
+#
+# ── 실제로 도는지 **되돌려 확인했다** (2026-08-24)
+# 재시도는 실패한 날에만 도는 장치라, 진짜 실패를 기다리면 5~6일 뒤에야 켜졌는지 알게 된다.
+# 그래서 **조건만 뒤집어**(`success` + `workflow_dispatch`) 배선을 시험했다:
+#   · 04:40 성공 런  → 04:52 재시도가 **떴고** singo-daily 를 호출해 61/61 수집까지 갔다.
+#     `data/singo-last.md` 에 「방아쇠 workflow_run · **자동 재시도**」가 찍혔다.
+#   · 04:39 실패 런  → 04:51 재시도가 **skipped**. 조건이 실제로 **거른다**는 증거다.
+# 뜨는 것만 봐서는 조건이 켜졌는지 알 수 없다 — **안 뜨는 쪽도** 봐야 한다.
+#
+# ⚠️ 시험 도중 덤으로 잡힌 것: 04:39 와 04:40 은 **1분 차이 · 같은 키 · 같은 인자**인데
+#    앞은 수집 실패, 뒤는 61/61 성공이었다. 이 워크플로가 왜 필요한지의 가장 짧은 증거다.
 
 on:
   workflow_run:
@@ -36,11 +47,10 @@ permissions:
 
 jobs:
   retry:
-    # ⛔ 임시 시험용 조건 — 확인 뒤 즉시 되돌린다 (2026-08-24)
     # ⚠️ 조건 셋 다 필요하다. 하나라도 빠지면 재시도가 엉뚱한 데서 돈다.
     if: >-
-      github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.event == 'workflow_dispatch'
+      github.event.workflow_run.conclusion == 'failure' &&
+      github.event.workflow_run.event == 'schedule'
     uses: ./.github/workflows/singo-daily.yml
     with:
       # ⚠️ months·top·sort 를 **여기에 적지 않는다.** 비워 두면 호출된 워크플로가
