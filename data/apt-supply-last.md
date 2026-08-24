@@ -1,6 +1,6 @@
 # 단지 공급면적 — 마지막 실행
 
-- 성공 2건 · 실패 2건
+- 성공 2건 · 실패 4건
 - 결과는 Actions 로그가 아니라 이 파일과 data/datasets/apt-supply/ 에서 본다
 
 ```
@@ -30,6 +30,29 @@
      · 아파트 / 코아 [지상 각층] 21.6163
      · 아파트 / 외벽 [지상 14층] 6.14
      · 부대시설 / 지하코아 [지하 지1] 1.3295
+── A10023833 전용 84.9264
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10023833 --area 84.9264
+
+▶ 지제역 더샵 센트럴시티 (A10023833) · 전용 84.9264㎡ · 41220-12100 · 지번 후보 가-
+   지번 가- (0000-0000) → 줄 0개
+::error::지번 후보 가- 전부 줄 0개입니다 — --jibun 으로 대지 지번을 직접 주세요
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10023833 --area 84.9264`
+Exit status 1
+── A12285703 전용 83.27
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A12285703 --area 83.27
+
+▶ 미성아파트(불광동) (A12285703) · 전용 83.27㎡ · 11380-10300 · 지번 후보 140-1, 248
+   지번 140-1 (0140-0001) → 줄 0개
+   지번 248 (0248-0000) → 줄 3000개
+::error::전용 83.27㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 248) — 파일을 만들지 않습니다
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A12285703 --area 83.27`
+Exit status 1
 ── A10023833 전용 84.9264
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
