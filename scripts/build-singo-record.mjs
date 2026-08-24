@@ -37,6 +37,35 @@ const full = (s) =>
     .replace(/[\s·.\-_,]/g, "")
     .trim();
 
+/* ── 괄호를 **지우는** 쪽 — 수집기의 normAptName 과 같은 규칙.
+      DMC센트럴자이(2단지) → DMC센트럴자이. `--merge-blocks` 일 때만 쓴다. */
+const norm = (s) =>
+  String(s ?? "")
+    .replace(/\([^)]*\)/g, "")
+    .replace(/[\s·.\-_]/g, "")
+    .trim();
+
+/* ── `--merge-blocks` — 한 단지가 블록별로 나뉘어 신고될 때 합쳐서 한 장으로 그린다
+ *
+ * ── 왜 (2026-08-24 오너 "DMC 통합으로 해서")
+ * DMC센트럴자이는 **1~4단지가 전부 같은 지번(증산동 258)·같은 준공(2023)의 한 단지**인데
+ * 실거래만 블록별로 나뉘어 신고된다. 명부에도 `DMC센트럴자이` 1,256세대 **한 건**이다.
+ * 판정(최고가 인덱스)은 이미 `normAptName` 으로 넷을 합쳐서 보고 있었다 — 그런데 이 빌더만
+ * `fullAptName` 으로 엄격히 봐서 "로그에 없다"고 멈췄다. **판정과 그림이 다른 자를 쓰고 있었다.**
+ *
+ * ── 그런데 왜 기본값으로 켜지 않나
+ * 괄호를 지우면 **다른 단지가 합쳐질 수 있다.** 분당 상록마을이 그 사고였다(2026-08-13):
+ * 라이프1차·라이프2차·보성·우성1·임광이 전부 `상록마을` 한 칸이 된다. 실제로 지번이
+ * 124·125·181·121 로 **다 다르다** — 남남이다. 합치면 가짜 신고가가 난다.
+ *
+ * ── 그래서 두 겹으로 막는다
+ *   ① **사람이 켜야 한다**(기본 꺼짐). 어느 카드에서 합쳤는지가 `builders.json` 에 남는다.
+ *   ② 켜도 **자료가 반대하면 거부한다** — 합칠 신고명들의 지번이 하나가 아니면 던진다.
+ *      상록마을을 `--merge-blocks` 로 부르면 여기서 멈춘다(지번 4종).
+ * 사람의 의도만 믿지 않고, **자료로 한 번 더 되묻는다.** */
+const MERGE = flag("merge-blocks");
+const nameEq = (a, b) => (MERGE ? norm(a) === norm(b) : full(a) === full(b));
+
 const eok = (manwon) => {
   const v = manwon / 10000;
   return `${v.toFixed(2).replace(/\.?0+$/, "")}억`;
@@ -66,12 +95,14 @@ if (KAPT) {
 /* ── ① 판정 결과 찾기 — 누적 로그에서 그 단지·그 타입의 건 */
 const logDir = P("data/datasets/singo-log");
 let hit = null;
+const merged = [];
 if (existsSync(logDir)) {
   for (const f of readdirSync(logDir).sort().reverse()) {
     if (!f.endsWith(".json")) continue;
     const log = JSON.parse(readFileSync(join(logDir, f), "utf8"));
     for (const h of log.hits) {
-      if (full(h.aptNm) === full(APT) && String(h.type) === String(TYPE)) {
+      if (nameEq(h.aptNm, APT) && String(h.type) === String(TYPE)) {
+        merged.push(h);
         if (!hit || h.date > hit.date) hit = h;
       }
     }
@@ -79,7 +110,50 @@ if (existsSync(logDir)) {
   }
 }
 if (!hit) {
-  throw new Error(`신고가 로그에서 "${APT}" 전용 ${TYPE}타입 건을 못 찾았습니다 — data/datasets/singo-log 를 확인하세요.`);
+  throw new Error(
+    `신고가 로그에서 "${APT}" 전용 ${TYPE}타입 건을 못 찾았습니다 — data/datasets/singo-log 를 확인하세요.` +
+      (MERGE ? "" : `\n→ 한 단지가 (2단지)처럼 블록별로 신고된 곳이면 --merge-blocks 를 붙여 보세요.`),
+  );
+}
+
+/* ── ①-b 합쳤다면 **정말 한 단지가 맞는지 자료에 되묻는다**
+   사람이 --merge-blocks 를 켰다는 것만으로는 부족하다. 신고명이 갈린 건들이 **같은 지번**을
+   가리켜야 한 단지다. 지번이 갈리면 남남이다(상록마을: 124·125·181·121). */
+if (MERGE) {
+  /* ⚠️ **신고가 로그가 아니라 원자료 전체**를 본다.
+     로그에는 그날 문턱을 넘은 건만 있어서, 다섯 단지 중 하나만 신고가를 찍은 날이면
+     지번이 1종으로 보인다 — 통과시켜 놓고 곡선은 다섯 단지를 섞어 그리게 된다.
+     합쳐질 **모든 거래**를 세야 진짜 답이 나온다. */
+  const dir = P("data/datasets/molit");
+  const seen = new Map(); // 지번 → 신고명 집합
+  if (existsSync(dir)) {
+    for (const f of readdirSync(dir).filter((f) => f.startsWith(`${hit.lawdCd}-`))) {
+      for (const t of JSON.parse(readFileSync(join(dir, f), "utf8")).trades) {
+        if (norm(t.aptNm) !== norm(APT)) continue;
+        if (String(t.umdNm) !== String(hit.umdNm)) continue;
+        const j = String(t.jibun ?? "");
+        if (!seen.has(j)) seen.set(j, new Set());
+        seen.get(j).add(t.aptNm);
+      }
+    }
+  }
+  const jibuns = [...seen.keys()].filter(Boolean);
+  const names = [...new Set([...seen.values()].flatMap((s) => [...s]))];
+  if (!jibuns.length) {
+    throw new Error(`⛔ --merge-blocks 검증 실패 — ${hit.lawdCd} 원자료에서 "${APT}" 거래를 못 찾았습니다.`);
+  }
+  if (jibuns.length > 1) {
+    throw new Error(
+      `⛔ --merge-blocks 를 켰지만 **한 단지가 아닙니다.**\n` +
+        `   합쳐질 신고명: ${names.join(" · ")}\n` +
+        `   지번이 ${jibuns.length}종입니다: ${jibuns.join(", ")}\n` +
+        `   지번이 다르면 다른 단지입니다(분당 상록마을 사고 2026-08-13 — 라이프1차·라이프2차·\n` +
+        `   보성·우성1·임광이 지번 124·125·181·121 로 남남이다). 블록 이름을 그대로 지정하세요.`,
+    );
+  }
+  console.log(
+    `↔︎ 블록 통합 확인: ${names.join(" + ")} → "${APT}" · 지번 ${jibuns[0]} 하나 (원자료 대조)`,
+  );
 }
 
 /* ── ② 곡선 자료 */
