@@ -1,9 +1,9 @@
 {
   "meta": {
-    "today": "2026-08-23",
-    "from": "2026-08-23",
+    "today": "2026-08-24",
+    "from": "2026-08-24",
     "days": 1,
-    "weekLabel": "2026-08-23 ~ 2026-08-23",
+    "weekLabel": "2026-08-24 ~ 2026-08-24",
     "note": "foundOn(확인한 날) 기준 주간. milestone 은 일간이 판정 시점의 직전 최고가로 계산한 값을 그대로 옮긴 것 — 여기서 다시 재지 않는다.",
     "baselineLabel": "2020년 이후",
     "types": [
@@ -21,56 +21,7 @@
   },
   "conceptB": {
     "title": "개별 카드 후보",
-    "count": 2,
-    "items": [
-      {
-        "foundOn": "2026-08-23",
-        "aptNm": "광교자이더클래스",
-        "umdNm": "상현동",
-        "jibun": "1134",
-        "priceWon": 1685000000,
-        "priceManwon": 168500,
-        "area": 84.938,
-        "floor": 10,
-        "buildYear": 2012,
-        "date": "2026-08-01",
-        "dealingGbn": "중개거래",
-        "canceled": false,
-        "sggCd": "41465",
-        "type": "84",
-        "pyeong": "34평",
-        "lawdCd": "41465",
-        "gu": "용인시수지구",
-        "prevPeakManwon": 165000,
-        "prevPeakDate": "2026-07-18",
-        "gainPct": 2.1212121212121215,
-        "milestone": null,
-        "hhld": 1035
-      },
-      {
-        "foundOn": "2026-08-23",
-        "aptNm": "성복역롯데캐슬클라시엘",
-        "umdNm": "성복동",
-        "jibun": "819",
-        "priceWon": 1450000000,
-        "priceManwon": 145000,
-        "area": 84.91,
-        "floor": 4,
-        "buildYear": 2021,
-        "date": "2026-08-13",
-        "dealingGbn": "중개거래",
-        "canceled": false,
-        "sggCd": "41465",
-        "type": "84",
-        "pyeong": "34평",
-        "lawdCd": "41465",
-        "gu": "용인시수지구",
-        "prevPeakManwon": 139500,
-        "prevPeakDate": "2026-07-01",
-        "gainPct": 3.942652329749104,
-        "milestone": null,
-        "hhld": 1094
-      }
-    ]
+    "count": 0,
+    "items": []
   }
 }
