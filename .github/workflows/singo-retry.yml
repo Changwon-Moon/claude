@@ -36,10 +36,11 @@ permissions:
 
 jobs:
   retry:
+    # ⛔ 임시 시험용 조건 — 확인 뒤 즉시 되돌린다 (2026-08-24)
     # ⚠️ 조건 셋 다 필요하다. 하나라도 빠지면 재시도가 엉뚱한 데서 돈다.
     if: >-
-      github.event.workflow_run.conclusion == 'failure' &&
-      github.event.workflow_run.event == 'schedule'
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'workflow_dispatch'
     uses: ./.github/workflows/singo-daily.yml
     with:
       # ⚠️ months·top·sort 를 **여기에 적지 않는다.** 비워 두면 호출된 워크플로가
