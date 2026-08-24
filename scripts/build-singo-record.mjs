@@ -103,7 +103,16 @@ if (existsSync(logDir)) {
     for (const h of log.hits) {
       if (nameEq(h.aptNm, APT) && String(h.type) === String(TYPE)) {
         merged.push(h);
-        if (!hit || h.date > hit.date) hit = h;
+        /* ⚠️ **가장 비싼 건**을 고른다. 예전엔 계약일이 가장 늦은 건을 골랐는데 그건 틀렸다
+           (2026-08-25). 이 카드가 그리는 것은 「최고가 기록」이고, 기록은 **값**으로 정해진다.
+           신고 순서와 계약 순서가 어긋나기 때문에 늦게 드러난 건이 더 **이른** 계약일 수 있다:
+             · 성복역롯데캐슬클라시엘 — 08-23 확인 14.5억(계약 08-13) vs 08-25 확인 14.9억(계약 07-22)
+             · 꿈의숲아이파크        — 08-22 확인 14.6억(계약 08-07) vs 08-25 확인 14.7억(계약 07-30)
+           계약일로 고르면 둘 다 **기록이 아닌 건**을 카드에 싣는다.
+           값이 같으면 늦게 계약된 쪽을 쓴다(더 최근 소식). */
+        if (!hit || h.priceManwon > hit.priceManwon || (h.priceManwon === hit.priceManwon && h.date > hit.date)) {
+          hit = h;
+        }
       }
     }
     if (hit) break;

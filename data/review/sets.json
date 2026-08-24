@@ -570,6 +570,171 @@
       "note": "오늘의 신고가 판형(singo-record@1). 1~4단지 통합 — 같은 지번(증산동 258)·같은 준공(2023)·명부 1건(1,256세대)이라 실거래만 블록별로 신고된다. 판정(최고가 인덱스)은 원래 합쳐 보고 있었고 빌더만 엄격했다(--merge-blocks 신설, 원자료로 지번 1종 확인). 제목에 (2단지)를 안 붙이는 이유는 세대수 1,256 이 단지 전체 값이기 때문이다. / 역 뱃지: 디지털미디어시티역 386m — 카카오가 노선별로 나눠 준 항목을 합쳐 경의중앙+공항철도. ⚠️ 6호선은 카카오 응답에 없어 싣지 않았다(오보 0 — 아는 것이 아니라 받은 것을 적는다). / 평 25평은 건축물대장 실측(공급 81.77㎡ = 24.74평). 정기물이라 픽셀 기준값 미등록.",
       "state": "검수 대기",
       "pixelPolicy": "정기물 — data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "singo-seongbok-goldtown",
+      "title": "🔥 성복역롯데캐슬골드타운 34평, 18.7억 신고가",
+      "cards": [
+        "singo-성복역롯데캐슬골드타운-84"
+      ],
+      "caption": "singo-record",
+      "state": "검수 대기",
+      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10025412 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 14.95억 (2021.01월) · 최대 낙폭 -29.77%. 정기물이라 픽셀 기준값 미등록.",
+      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "singo-seongbok-clasiel",
+      "title": "🔥 성복역롯데캐슬클라시엘 34평, 14.9억 신고가",
+      "cards": [
+        "singo-성복역롯데캐슬클라시엘-84"
+      ],
+      "caption": "singo-record",
+      "state": "검수 대기",
+      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10024453 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 11.82억 (2021.04월) · 최대 낙폭 -28.11%. 정기물이라 픽셀 기준값 미등록.",
+      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "singo-kkumesup-ipark",
+      "title": "🔥 꿈의숲아이파크 26평, 14.7억 신고가",
+      "cards": [
+        "singo-꿈의숲아이파크-59"
+      ],
+      "caption": "singo-record",
+      "state": "검수 대기",
+      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10024488 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 9.1억 (2023.10월) · 최대 낙폭 -10.99%. 정기물이라 픽셀 기준값 미등록.",
+      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "singo-taereung-harrington",
+      "title": "🔥 태릉해링턴플레이스 33평, 14.45억 신고가",
+      "cards": [
+        "singo-태릉해링턴플레이스-84"
+      ],
+      "caption": "singo-record",
+      "state": "검수 대기",
+      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10023991 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 11.5억 (2024.08월) · 최대 낙폭 -10.43%. 정기물이라 픽셀 기준값 미등록.",
+      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "singo-singil-samhwan",
+      "title": "🔥 삼환 32평, 14.4억 신고가",
+      "cards": [
+        "singo-삼환-84"
+      ],
+      "caption": "singo-record",
+      "state": "검수 대기",
+      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A15005705 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 12억 (2021.08월) · 최대 낙폭 -21.25%. 정기물이라 픽셀 기준값 미등록.",
+      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "singo-nokbeon-castle",
+      "title": "🔥 녹번역e편한세상캐슬 25평, 14.2억 신고가",
+      "cards": [
+        "singo-녹번역e편한세상캐슬-59"
+      ],
+      "caption": "singo-record",
+      "state": "검수 대기",
+      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10024831 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 11.85억 (2021.05월) · 최대 낙폭 -34.18%. 정기물이라 픽셀 기준값 미등록.",
+      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "singo-yeongtong-iparkcastle1",
+      "title": "🔥 영통아이파크캐슬1단지 33평, 13.9억 신고가",
+      "cards": [
+        "singo-영통아이파크캐슬1단지-84"
+      ],
+      "caption": "singo-record",
+      "state": "검수 대기",
+      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10025621 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 10.7억 (2021.10월) · 최대 낙폭 -39.25%. 정기물이라 픽셀 기준값 미등록.",
+      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "singo-guseong-blooming",
+      "title": "🔥 블루밍구성더센트럴 33평, 12.4억 신고가",
+      "cards": [
+        "singo-블루밍구성더센트럴-84"
+      ],
+      "caption": "singo-record",
+      "state": "검수 대기",
+      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A44693813 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 7.39억 (2020.02월) · 최대 낙폭 -52.64%. 정기물이라 픽셀 기준값 미등록.",
+      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "singo-misa-centriver",
+      "title": "🔥 미사강변 센트리버 25평, 11.88억 신고가",
+      "cards": [
+        "singo-미사강변센트리버-59"
+      ],
+      "caption": "singo-record",
+      "state": "검수 대기",
+      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10027344 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 9.47억 (2021.11월) · 최대 낙폭 -28.19%. 정기물이라 픽셀 기준값 미등록.",
+      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "singo-wolgye-grandvill",
+      "title": "🔥 한진한화그랑빌 23평, 11.5억 신고가",
+      "cards": [
+        "singo-한진한화그랑빌-59"
+      ],
+      "caption": "singo-record",
+      "state": "검수 대기",
+      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A13984004 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 9.2억 (2021.08월) · 최대 낙폭 -42.39%. 정기물이라 픽셀 기준값 미등록.",
+      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "singo-yeongtong-edupark",
+      "title": "🔥 영통에듀파크(331동~337동) 33평, 9.45억 신고가",
+      "cards": [
+        "singo-영통에듀파크331동~337동-84"
+      ],
+      "caption": "singo-record",
+      "state": "검수 대기",
+      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A44347021 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 9.05억 (2021.10월) · 최대 낙폭 -39.56%. 정기물이라 픽셀 기준값 미등록.",
+      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "singo-hwaseo-prugio-84",
+      "title": "🔥 화서역푸르지오더에듀포레 33평, 8.95억 신고가",
+      "cards": [
+        "singo-화서역푸르지오더에듀포레-84"
+      ],
+      "caption": "singo-record",
+      "state": "검수 대기",
+      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A44033010 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 8.5억 (2021.08월) · 최대 낙폭 -32.12%. 정기물이라 픽셀 기준값 미등록.",
+      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "singo-sindongtan-forezai",
+      "title": "🔥 신동탄포레자이 25평, 8.6억 신고가",
+      "cards": [
+        "singo-신동탄포레자이-59"
+      ],
+      "caption": "singo-record",
+      "state": "검수 대기",
+      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10023329 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 7억 (2024.11월) · 최대 낙폭 -3.93%. 정기물이라 픽셀 기준값 미등록.",
+      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "singo-yeongtong-centralparkview",
+      "title": "🔥 영통센트럴파크뷰 24평, 6억 신고가",
+      "cards": [
+        "singo-영통센트럴파크뷰-59"
+      ],
+      "caption": "singo-record",
+      "state": "검수 대기",
+      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A44347020 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 5.7억 (2021.09월) · 최대 낙폭 -36.84%. 정기물이라 픽셀 기준값 미등록.",
+      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "singo-pyeongnae-metrowon",
+      "title": "🔥 e편한세상평내메트로원 25평, 5.2억 신고가",
+      "cards": [
+        "singo-e편한세상평내메트로원-59"
+      ],
+      "caption": "singo-record",
+      "state": "검수 대기",
+      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10023740 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 4.9억 (2023.08월) · 최대 낙폭 -25.51%. 정기물이라 픽셀 기준값 미등록.",
+      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
     }
   ]
 }

@@ -410,6 +410,216 @@
         "--publish"
       ],
       "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). / ⚠️ --merge-blocks 필수 — 1~4단지가 같은 지번(증산동 258)·준공(2023)의 한 단지라 실거래만 블록별로 신고된다. 빼면 '로그에 없다'로 멈춘다. 빌더가 원자료로 지번이 하나인지 되물어 확인한다(오너 지시 2026-08-24 'DMC 통합으로')."
+    },
+    {
+      "label": "singo-seongbok-goldtown",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "성복역롯데캐슬골드타운",
+        "--type",
+        "84",
+        "--kapt",
+        "A10025412",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-seongbok-clasiel",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "성복역롯데캐슬클라시엘",
+        "--type",
+        "84",
+        "--kapt",
+        "A10024453",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-kkumesup-ipark",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "꿈의숲아이파크",
+        "--type",
+        "59",
+        "--kapt",
+        "A10024488",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-taereung-harrington",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "태릉해링턴플레이스",
+        "--type",
+        "84",
+        "--kapt",
+        "A10023991",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-singil-samhwan",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "삼환",
+        "--type",
+        "84",
+        "--kapt",
+        "A15005705",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-nokbeon-castle",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "녹번역e편한세상캐슬",
+        "--type",
+        "59",
+        "--kapt",
+        "A10024831",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-yeongtong-iparkcastle1",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "영통아이파크캐슬1단지",
+        "--type",
+        "84",
+        "--kapt",
+        "A10025621",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-guseong-blooming",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "블루밍구성더센트럴",
+        "--type",
+        "84",
+        "--kapt",
+        "A44693813",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-misa-centriver",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "미사강변 센트리버",
+        "--type",
+        "59",
+        "--kapt",
+        "A10027344",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-wolgye-grandvill",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "한진한화그랑빌",
+        "--type",
+        "59",
+        "--kapt",
+        "A13984004",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-yeongtong-edupark",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "영통에듀파크(331동~337동)",
+        "--type",
+        "84",
+        "--kapt",
+        "A44347021",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-hwaseo-prugio-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "화서역푸르지오더에듀포레",
+        "--type",
+        "84",
+        "--kapt",
+        "A44033010",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-sindongtan-forezai",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "신동탄포레자이",
+        "--type",
+        "59",
+        "--kapt",
+        "A10023329",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-yeongtong-centralparkview",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "영통센트럴파크뷰",
+        "--type",
+        "59",
+        "--kapt",
+        "A44347020",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-pyeongnae-metrowon",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "e편한세상평내메트로원",
+        "--type",
+        "59",
+        "--kapt",
+        "A10023740",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
     }
   ]
 }
