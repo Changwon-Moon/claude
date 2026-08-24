@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "gu": "동대문구",
+    "lawdCd": "11230",
+    "dealYmd": "202607",
+    "source": "국토교통부 아파트 전월세 실거래가 (getRTMSDataSvcAptRent)",
+    "sourceUrl": "https://www.data.go.kr",
+    "collectedAt": "2026-08-24",
+    "verified": true,
+    "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존)."
+  },
+  "agg": {
+    "total": 717,
+    "jeonse": 321,
+    "wolse": 396,
+    "wolseRatio": 55.2,
+    "newTotal": 467,
+    "newJeonse": 165,
+    "newWolse": 302,
+    "newWolseRatio": 64.7,
+    "renewTotal": 236,
+    "renewJeonse": 146,
+    "renewWolse": 90,
+    "typedTotal": 703
+  }
+}
