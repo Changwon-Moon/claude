@@ -418,7 +418,20 @@ await q(`
     return {};
   };
 `);
-await page.click(".fremake[data-remake]");
+/* ⚠️ **보이는 버튼**을 누른다. 예전엔 첫 DOM 요소를 눌렀는데, 보관함 폴더는 접혀 있을 수
+   있어서 첫 버튼이 안 보이면 그대로 시간 초과가 난다 — 2026-08-25 에 하루치를 한 세트로
+   묶으며 목록 차례가 바뀌자 바로 물렸다(로컬 192/192 인데 배포에서만 실패했다).
+   이 시험이 알고 싶은 것은 "어떤 재제작 버튼이든 눌리면 워크플로가 걸리나"이지
+   "첫 번째 요소가 눌리나"가 아니다. */
+/* ⚠️ 보관함 항목은 `<details class="fitem">` 라 **접혀 있으면 버튼이 안 보인다.**
+   예전엔 첫 DOM 요소를 그냥 눌렀는데, 2026-08-25 에 하루치를 한 세트로 묶어 목록 차례가
+   바뀌자 첫 버튼이 접힌 항목 안으로 들어가 **시간 초과**가 났다
+   (로컬 192/192 인데 배포에서만 실패 — 그때 `build-archive` 를 안 돌렸던 탓에 로컬에선 안 보였다).
+   이 시험이 알고 싶은 것은 "재제작 버튼을 누르면 워크플로가 걸리나"이지
+   "첫 번째 요소가 눌리나"가 아니다. **펼쳐 놓고 누른다.** */
+await q(`document.querySelectorAll("details.fitem").forEach(d=>d.open=true)`);
+await page.waitForTimeout(200);
+await page.click(".fremake[data-remake] >> visible=true");
 await page.waitForTimeout(900);
 check("버튼을 누르면 제작 워크플로가 실제로 걸림", await q(`
   window.__made.some(p=>p.indexOf("produce-card.yml")>-1)`), await q(`JSON.stringify(window.__made)`));
