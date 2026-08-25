@@ -45,6 +45,14 @@ const LIST_OPS = [
  * 처음에 V3 로 찍었다가 61개 지역 전부 "해당 오픈API 서비스가 없거나 폐기됨"을 맞았다.
  */
 const BASIS_OPS = [
+  /* ⚠️ 2026-08-25 — 포털이 **V5 로 판을 올렸고 V2~V4 가 통째로 사라졌다.**
+     주차대수(DTL) 가 먼저 죽어 드러났다: 네 후보를 다 두드려 전부 "없음"이 나왔다.
+     오너가 포털 화면을 캡처해 줘서 확인 — End Point `AptBasisInfoServiceV5`,
+     오퍼레이션 `getAphusBassInfoV5` · `getAphusDtlInfoV5`.
+     **키 문제도 연결 문제도 아니었다** — 우리가 아는 주소가 낡았던 것이다.
+     기본정보(세대수)는 아직 V4 로 돌고 있지만 같은 서비스라 곧 같이 죽는다.
+     그래서 죽기 전에 V5 를 맨 앞에 세운다. */
+  "AptBasisInfoServiceV5/getAphusBassInfoV5",
   "AptBasisInfoServiceV4/getAphusBassInfoV4",
   "AptBasisInfoServiceV4/getAphusBassInfoV3",
   "AptBasisInfoServiceV3/getAphusBassInfoV3",
@@ -57,6 +65,8 @@ const BASIS_OPS = [
  * 이름 규칙은 기본정보와 같은 판올림을 타므로 후보를 같은 방식으로 둔다.
  */
 const DTL_OPS = [
+  /* 2026-08-25 신설 — 위 BASIS_OPS 주석 참고. 이게 죽어서 판올림을 알아챘다. */
+  "AptBasisInfoServiceV5/getAphusDtlInfoV5",
   "AptBasisInfoServiceV4/getAphusDtlInfoV4",
   "AptBasisInfoServiceV4/getAphusDtlInfoV3",
   "AptBasisInfoServiceV3/getAphusDtlInfoV3",
