@@ -610,6 +610,49 @@ function presale(d) {
  *   제원      : 총 세대수 → **잔여 세대 · 블록 수**
  *   일정      : 특공·1순위 → **접수 · 당첨자 발표 · 입주**(접수가 하루면 칸이 셋)
  * ──────────────────────────────────────────────────────────────── */
+/**
+ * 줍줍 **기본 판형** — 분양가 · 시세 · 안전마진 세 칸 (오너 확정 2026-08-26).
+ *
+ * 정본은 송파 시그니처 롯데캐슬 카드(2026-08-11)다. 그 카드는 손으로 만들었고,
+ * 오너가 그걸 "줍줍 기본 템플릿"으로 승격시켰다 — 그래서 여기로 옮겨 코드가 만든다.
+ * 손으로 만들면 안전마진을 손으로 빼게 되고, 빼기는 언젠가 틀린다.
+ *
+ * ── 이 함수가 지키는 것 (오보 0)
+ * ① **안전마진은 코드가 뺀다.** 데이터셋에 안전마진을 적는 칸을 만들지 않았다.
+ * ② **비교값의 이름을 반드시 받는다.** `margin.market.label` 이 없으면 던진다.
+ *    "최근 실거래가"와 "최근 호가"는 다른 말이다 — 호가를 실거래라 적으면 그게 오보다.
+ *    구리역(2026-08-26)에서 실제로 갈렸다: 호가 14억이면 5.2억, 같은 단지 분양권
+ *    실거래 11.87억이면 3.1억. 카드가 어느 쪽인지 말하지 않으면 독자는 실거래로 읽는다.
+ * ③ 안전마진이 0 이하면 던진다 — 마이너스 마진을 '안전마진'이라 부를 수는 없다.
+ */
+function marginBand(d) {
+  const m = d.margin;
+  if (!m) return null;
+  const priceWon = m.priceWon ?? (d.price?.byType || []).find((t) => t.main)?.won;
+  if (!priceWon)
+    throw new Error(`${d.id}: 안전마진 판은 분양가가 있어야 한다 (margin.priceWon 또는 price.byType[].main)`);
+  if (!m.market?.label || m.market?.won == null)
+    throw new Error(
+      `${d.id}: 안전마진 판은 비교값의 **이름과 금액**이 둘 다 있어야 한다 (margin.market.label / margin.market.won).` +
+        ` '최근 실거래가'인지 '최근 호가'인지 카드가 스스로 말해야 한다 — 안 적으면 독자는 실거래로 읽는다.`,
+    );
+  if (!m.market.source)
+    throw new Error(`${d.id}: 비교값의 출처(margin.market.source)가 있어야 한다 — 카드 밖에서라도 되짚을 수 있어야 한다`);
+  const gap = m.market.won - priceWon;
+  if (gap <= 0)
+    throw new Error(`${d.id}: 안전마진이 0 이하다 (비교값 ${m.market.won} ≤ 분양가 ${priceWon}) — 이 판형을 쓸 수 없다`);
+  return {
+    head: [],
+    cols: 3,
+    rows: [
+      { area: m.priceLabel || "분양가", price: eok1(priceWon), main: true },
+      { area: m.market.label, price: eok1(m.market.won) },
+      { area: "안전마진", price: eok1(gap), warn: true, glow: true },
+    ],
+    gap,
+  };
+}
+
 function remndr(d) {
   const ah = applyhome(d);
   if (!ah) throw new Error(`${d.id}: 무순위 카드는 청약홈 공고(applyhomeNo)가 있어야 한다`);
@@ -664,6 +707,10 @@ function remndr(d) {
    * `price.byType` 이 없으면 예전 판 그대로 — 확정된 카드(한강·송도)의 픽셀을 건드리지 않는다. */
   const plan = scalePlan(d, total);
 
+  /* 줍줍 기본 판형(분양가·시세·안전마진)이 있으면 그게 이긴다 — 오너가 정본으로 세운 판이다.
+     없는 단지는 예전 판 그대로다(확정된 카드의 픽셀을 건드리지 않는다). */
+  const margin = marginBand(d);
+
   return {
     template: "danji-cover@1",
     date,
@@ -672,13 +719,30 @@ function remndr(d) {
     /* 무순위 문형(오너 확정): "{훅} 무순위 줍줍 {N}세대" — 분양가를 못 쓰니 규모가 제목을 진다.
        단지마다 제목이 달라야 할 때가 있다(오너가 직접 쓴 제목). 그때는 데이터셋이 이긴다. */
     titleLines: [
-      d.titleHtml || `<span class="hi">${hook}</span> 무순위 줍줍 <span class="hi">${n(total)}세대</span>`,
+      d.titleHtml ||
+        /* 안전마진 판이면 제목도 안전마진이 진다 — 표에서 빨간 칸이 말하는 것을 제목이 되받는다.
+           금액은 `up`(빨강)이다. `hi`(코발트)로 적으면 표의 빨간 칸과 색이 어긋난다. */
+        (margin
+          ? `<span class="hi">${hook}</span> 안전마진 <span class="up">${eok1(margin.gap)}</span> 줍줍!`
+          : `<span class="hi">${hook}</span> 무순위 줍줍 <span class="hi">${n(total)}세대</span>`),
     ],
     hero: heroOf(d),
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
     address: addressOf(d),
-    ...(plan.on ? { scale: true, specFour: plan.four } : {}),
-    spec: plan.on
+    ...(plan.on && !margin ? { scale: true, specFour: plan.four } : {}),
+    /* 안전마진 판에서는 위 단이 이미 '돈' 세 칸이라, 아래 단은 **단지 규모**가 맡는다
+       (송파 정본과 같은 자리). 잔여 세대수는 아래 한 줄이 받는다 — 카드에서 사라지지 않는다. */
+    spec: margin
+      ? [
+          { label: "세대수", pre: "총", value: n(d.totalComplex ?? total), unit: "세대" },
+          d.buildings != null
+            ? { label: "동수", pre: "총", value: String(d.buildings), unit: "개동" }
+            : { label: "동수", value: "미고지", tbd: true },
+          d.topFloor != null
+            ? { label: "최고 층수", pre: "최고", value: String(d.topFloor), unit: "층" }
+            : { label: "최고 층수", value: "미고지", tbd: true },
+        ]
+      : plan.on
       ? plan.cells
       : [
           {
@@ -700,7 +764,12 @@ function remndr(d) {
             ? { label: "최고 층수", pre: "최고", value: String(d.topFloor), unit: "층" }
             : { label: "최고 층수", value: "미고지", tbd: true },
         ],
-    priceTable: plan.on ? plan.grid : priceTable(d, total),
+    /* `gap` 은 제목이 이미 받아 갔다 — 카드 계약에 남기지 않는다(템플릿이 안 쓰는 필드). */
+    priceTable: margin
+      ? (({ gap: _gap, ...rest }) => rest)(margin)
+      : plan.on
+        ? plan.grid
+        : priceTable(d, total),
     schedule,
     /* 한줄평이 있으면 그게 아래 한 줄이다 — 특이사항 나열보다 한 문장이 오래 남는다. */
     notice: noticeOf(d, flags),
