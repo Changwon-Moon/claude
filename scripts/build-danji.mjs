@@ -279,6 +279,12 @@ function repPrice(d, rep) {
 function scalePlan(d, total) {
   const byType = d.price?.byType;
   if (!Array.isArray(byType) || !byType.length) return { on: false };
+  /* ⚠️ 장위형은 **아래 단이 타입 칸**이라 판형 스키마가 요구하는 3칸을 못 채우면 성립하지 않는다
+     (`spec` minItems 3). 구리역 롯데캐슬(잔여 1세대·타입 1개)에서 렌더가
+     "/spec must NOT have fewer than 3 items" 로 죽었다(2026-08-26).
+     타입이 한둘이면 **송도형으로 떨어뜨린다** — 그쪽 아래 단은 잔여/동수/최고층수 3칸이라 찬다.
+     분양가를 아는 카드라면 그 값은 아래 `priceTable` 밴드가 받는다(정보는 안 사라진다). */
+  if (byType.length < 3) return { on: false };
 
   const label = d.supplyLabel || (d.kind === "remndr" ? "잔여" : "일반분양");
   const sum = byType.reduce((a, b) => a + (b.units || 0), 0);
@@ -374,6 +380,24 @@ function priceTable(d, total) {
   if (d.kind === "remndr") {
     /* 여기서는 주력 면적대를 칠하지 않는다 — 이 카드의 강조는 제원의 '150세대' 하나다.
        밴드와 제원 양쪽을 칠하면 강조가 둘이 되어 어느 쪽도 강조가 아니게 된다(BRAND 규칙). */
+    /* ── 밴드가 무엇을 말하나 (2026-08-26) ──
+     * 무순위는 보통 분양가를 청약홈이 감춰서("사업주체 문의") 밴드가 **잔여 세대**를 말한다.
+     * 그런데 **공급금액이 공고에 찍혀 나오는 줍줍**이 있다(구리역 롯데캐슬: 82B 1세대 8억7,710만원).
+     * 그런 카드에서 밴드가 "82㎡ 1세대"를 말하면, 바로 아래 제원 줄이 같은 '1세대'를 또 말해
+     * **한 카드가 같은 수를 두 번** 하게 된다. 독자가 먼저 묻는 것도 "얼마냐"다.
+     * → 타입별 금액을 알면 밴드는 **금액**을 말하고, 잔여 세대는 아래 제원 줄이 맡는다.
+     * 금액을 모르면(송도) 지금까지처럼 잔여 세대를 말한다 — 확정본 픽셀은 그대로다. */
+    const priced = (d.price?.byType || []).filter((t) => t.won != null);
+    if (priced.length) {
+      const sumP = priced.reduce((a, b) => a + (b.units || 0), 0);
+      if (priced.some((t) => t.units != null) && sumP !== total)
+        throw new Error(`${d.id}: 타입별 세대수 합 ${sumP} ≠ 총 공급 ${total} — 표가 공고와 다르다`);
+      return {
+        head: ["타입별 공급금액"],
+        cols: Math.min(priced.length, 4),
+        rows: priced.map((t) => ({ area: t.type, price: eok1(t.won), main: !!t.main })),
+      };
+    }
     const rows = d.areas.map((a) => ({ area: `${a.m2}㎡`, price: `${n(a.units)}세대` }));
     const sum = d.areas.reduce((s, a) => s + a.units, 0);
     if (sum !== total)
