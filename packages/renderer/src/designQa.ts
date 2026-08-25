@@ -52,6 +52,8 @@ interface Geo {
   footerGap: number | null;
   /** 그래프(svg)가 아랫줄을 밟은 곳. SVG 는 flex 로 안 줄어들어 자리가 모자라면 그대로 덮는다. */
   svgSpill?: { sel: string; over: number }[];
+  /** SVG 안에서 **글자가 기준선을 관통**한 곳 — {text, line, over} */
+  lineCross?: { text: string; line: string; over: number }[];
   /** 말줄임으로 잘린 글자 — {sel, text, need, has} */
   clipped: { sel: string; text: string; need: number; has: number }[];
   /** 우상단 뱃지 아래 제목까지 세로 간격(px). 0~29 = 너무 붙음. null = 해당없음/겹침(별도) */
@@ -318,6 +320,70 @@ const MEASURE_JS = `(() => {
     var over=Math.round(sr.bottom-br.bottom);
     if(over>1) svgSpill.push({sel:name(box), over:over});
   });
+  /* ── SVG 안 글자가 **기준선을 관통**하는가 (2026-08-25)
+   * 2026-08-17 부터 남아 있던 미해결 항목이다 — 그때 서초포레스타2 저점 라벨이 기준선에
+   * 걸치는 것을 **사람 눈으로** 찾았고, 검수는 PASS 였다. 08-25 에 중계주공5·가산두산위브에서
+   * 똑같이 재발했다(신고가와 지난 고점이 +0.3%·+1.4% 차이라 두 선이 붙었다).
+   *
+   * 왜 기존 검사가 못 잡나 — LEAF 겹침 검사는 **HTML 요소끼리**만 잰다. SVG 안의
+   * text 와 line 은 둘 다 대상이 아니다. svgSpill 은 판이 **그릇을 넘쳤나**만 본다.
+   * ⚠️ 이 블록은 **템플릿 리터럴 안**이다 — 백틱이나 달러-중괄호를 쓰면 문자열이 거기서
+   *    끊긴다. 2026-08-25 에 두 번 다 밟았다: 주석에 백틱을 넣어 측정 코드가 통째로 깨졌고,
+   *    그걸 설명하는 주석에 달러-중괄호를 써서 또 깨뜨렸다. **주석도 코드 안이다.**
+   * 즉 판 **안쪽**에서 벌어지는 겹침은 지금까지 **아무도 안 재고 있었다.**
+   *
+   * ⚠️ 라벨이 제 기준선 **바로 위/아래**에 앉는 것은 정상이다 — 그건 겹침이 아니다.
+   *    그래서 **실제로 파고든 세로 겹침**만 센다(TOL 만큼은 봐준다).
+   * ⚠️ 선의 x 구간 밖에 있는 글자는 겹치지 않는다 — 가로도 같이 본다. */
+  var lineCross=[];
+  Array.prototype.forEach.call(card.querySelectorAll("svg"), function(sv){
+    var texts=Array.prototype.slice.call(sv.querySelectorAll("text"));
+    var lines=Array.prototype.slice.call(sv.querySelectorAll("line"));
+    if(!texts.length||!lines.length) return;
+    function cls(el){ var c=el.getAttribute("class")||""; return c?"."+c.trim().split(/\s+/).join("."):el.tagName; }
+    texts.forEach(function(tx){
+      var t=(tx.textContent||"").trim();
+      if(!t) return;
+      /* 워터마크는 **모든 데이터 아래**에 깔리도록 설계된 것이다 — 선을 지나는 게 정상이다.
+         판을 가로지르는 큰 글자라 빼지 않으면 모든 카드가 걸린다. */
+      if(/wmk|stamp|watermark/i.test(tx.getAttribute("class")||"")) return;
+      var tr=tx.getBoundingClientRect();
+      if(tr.height<6||tr.width<6) return;
+      /* 라벨이 제 기준선 **바로 위/아래**에 붙는 것은 설계다 — 그건 관통이 아니다.
+         관통은 선이 글자의 **속살**을 지날 때다. 그래서 겹침 양이 아니라
+         **선 중심이 글자 안쪽 띠에 들어왔는지**로 가른다(위아래 20%는 가장자리로 본다).
+         ⚠️ 겹침 px 로 재면 안 된다 — 선 두께가 3px 이라 한가운데를 지나도 3px 이고
+            아래를 스쳐도 3px 이다. 두 경우가 구분되지 않는다(2026-08-25 실측). */
+      var band0=tr.top+tr.height*0.2, band1=tr.bottom-tr.height*0.2;
+      lines.forEach(function(ln){
+        /* ── **또렷한 선만** 기준선으로 친다 (2026-08-25)
+         * 판 뒤에 깔리는 격자선(.gb-grid·.sl-grid 등)은 wirit-ink-06 즉 **잉크 6%** 로
+         * 그린다 — 글자가 그 위를 지나는 것이 설계다. 이걸 안 걸러 내면 m2-gov·streak-line
+         * 같은 확정 카드가 통째로 걸린다(실제로 걸렸다).
+         * 클래스 목록으로 빼지 않는다 — 목록은 새 판형이 생길 때마다 빠지고, 그게 LEAF 가
+         * 밟은 실패다. 대신 **보이는 진하기**로 가른다: 데이터 선은 잉크/회색을 0.55~0.9 로
+         * 쓰고, 장식 선은 0.06 이다. 사이가 넓어 경계가 흔들리지 않는다. */
+        var lcs=getComputedStyle(ln);
+        var m=/rgba?\(([^)]+)\)/.exec(lcs.stroke||"");
+        var sa=m?(m[1].split(",")[3]!==undefined?parseFloat(m[1].split(",")[3]):1):1;
+        var eff=sa*(parseFloat(lcs.opacity)||1);
+        if(eff<0.25) return;
+        var lr=ln.getBoundingClientRect();
+        if(lr.width<6) return;
+        var ly=(lr.top+lr.bottom)/2;
+        if(ly<=band0||ly>=band1) return;
+        var ovX=Math.min(tr.right,lr.right)-Math.max(tr.left,lr.left);
+        if(ovX<=2) return;
+        /* 띠 가장자리를 **스치는** 것과 한가운데를 **뚫는** 것을 가른다.
+         * 라벨이 제 기준선에 붙는 것은 설계다(빌더 주석 참고) — 그때 선은 띠 경계 근처에
+         * 오고 파고든 깊이가 0~3px 이다. 남의 선이 글자를 가로지르면 10px 안팎이 된다.
+         * 빌더가 남의 선을 이미 피하므로, 여기 남는 것은 대개 제 선이다 — 6px 로 가른다. */
+        var deep=Math.round(Math.min(ly-band0,band1-ly));
+        if(deep<=6) return;
+        lineCross.push({text:t.slice(0,20),line:cls(ln),over:deep});
+      });
+    });
+  });
   var footer=card.querySelector(".wirit-footer");
   /* 푸터 바로 위 요소와의 간격 — 붙어 있으면 답답해 보인다(오너 반복 지적).
    * 흐름 배치라 '겹침'은 안 생기므로 기존 rowclip 이 못 잡는다. */
@@ -424,7 +490,8 @@ const MEASURE_JS = `(() => {
     rows:rows, overflow:overflow, collisions:collisions,
     footerTop:footer?footer.getBoundingClientRect().top:null,
     lastRowBottom:(lastRow&&lastRow.name)?lastRow.name.bottom:null,
-    colSkew:colSkew, footerGap:footerGap, clipped:clipped, badgeClear:badgeClear, svgSpill:svgSpill
+    colSkew:colSkew, footerGap:footerGap, clipped:clipped, badgeClear:badgeClear, svgSpill:svgSpill,
+    lineCross:lineCross
   };
 })()`;
 
@@ -535,6 +602,19 @@ function analyze(g: Geo): Finding[] {
       code: "svgspill",
       msg: `그래프가 담는 칸 \`${sp.sel}\` 를 ${sp.over}px 넘쳤습니다 — 넘친 만큼 아랫줄을 덮습니다. 판 높이(빌더의 VB_H)를 줄이세요`,
     });
+
+  /* 글자가 기준선을 관통했으면 **error** — 읽는 사람 눈에 선이 글자를 가로지른다.
+     선 하나에 두 줄이 걸리면 같은 라벨이 두 번 나오므로 라벨 기준으로 한 번만 알린다. */
+  const crossSeen = new Set<string>();
+  for (const lc of g.lineCross ?? []) {
+    if (crossSeen.has(lc.text)) continue;
+    crossSeen.add(lc.text);
+    out.push({
+      level: "error",
+      code: "linecross",
+      msg: `기준선 \`${lc.line}\` 이 글자 "${lc.text}" 를 ${lc.over}px 관통합니다 — 라벨 자리를 옮기거나, 두 기준선이 붙는 소재면 카드로 만들지 마세요`,
+    });
+  }
 
   if (g.footerGap != null && g.footerGap < FOOTER_GAP_MIN)
     out.push({

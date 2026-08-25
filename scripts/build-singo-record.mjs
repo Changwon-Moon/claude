@@ -224,10 +224,12 @@ const VB_W = 936; // 카드 안쪽 폭(1080 - 좌우 여백 72×2)
 /* ⚠️ 2026-08-25 — 제원에 **주소 줄**이 붙어 위가 한 줄 더 늘었다(오너 지시).
    그래서 위 경고대로 여기를 줄인다. 안 줄였더니 designQa `svgspill` 이 8장에서
    최대 15px 넘침을 잡았다 — 넘친 만큼 아랫줄(연도 축)을 덮는다.
-   768 → 738. 748 로 잡았더니 4줄짜리가 아직 5px 넘쳐 한 번 더 내렸다. 주차 줄까지 있는 4줄짜리에서도 여유가 남는 값으로 잡았다.
+   768 → 738 으로 내렸다가, 같은 날 오후 오너가 제원을 **세 줄**로 다시 잡으면서
+   (주차가 제 줄을 버리고 세대수 줄로 올라갔다) 위가 한 줄 줄어 **768 로 되돌렸다.**
+   ⚠️ 이 값은 위의 줄 수와 한 몸이다 — 제원 줄이 늘면 여기를 줄이고, 줄면 되돌린다.
    ⚠️ 이 값은 singo-record 전 카드에 걸린다. 바꾸면 확정본 픽셀도 같이 움직인다 —
       이번에는 주소 줄 자체가 전 카드에 걸리는 변경이라 어차피 함께 다시 확정해야 한다. */
-const VB_H = 738;
+const VB_H = 768;
 /* 위 — 돌파선 라벨이 앉을 자리만 남긴다. 62 였을 때 판 위쪽에 빈 띠가 남았다
    (오너 2026-08-16b "그래프 위쪽 여백이 과해"). 아래 `yMax` 여유와 **둘이 합쳐** 그 띠를 만든다.
    ⚠️ 라벨(28px)이 y-20 에 앉으므로 48px 아래로는 못 내린다 — 그 아래는 라벨이 판을 넘는다. */
@@ -453,6 +455,7 @@ traded.forEach((p, i) => {
   if (dd < worst.dd) worst = { dd, atMaxIdx: runMaxIdx };
 });
 let cycle = null;
+let cycleDropped = null;
 if (worst.atMaxIdx >= 0) {
   const pk = traded[worst.atMaxIdx];
   /* ⚠️ **몇 달 전 값을 "지난 사이클 고점"이라 부르지 않는다** (2026-08-16b).
@@ -470,6 +473,30 @@ if (worst.atMaxIdx >= 0) {
         `→ 오르내림이 한 번뿐인 단지입니다. 이 소재는 다른 판형으로 다루세요.`,
     );
   }
+  /* ── ⚠️ **골이 얕으면 사이클이 아니다** (2026-08-24 오너 제기 → 08-25 승인)
+   *
+   * 위 검사는 **시간**만 본다(12개월). 그런데 신축은 시간은 충분해도 **2021~22 사이클을
+   * 겪지 않았다.** 그러면 낙폭 계산이 준공 직후의 잔물결 꼭대기를 "지난 사이클 고점"으로 집는다.
+   *
+   * 실측(2026-08-24): 확정본 6장은 지난 고점이 전부 2021~22 정점이고 최대 낙폭이 −27~−43% 다.
+   * 그런데 DMC센트럴자이(2023년 준공)는 2024.03 꼭대기에 낙폭 **−7.6%** 였다.
+   * 같은 「지난 고점대비」 문구가 카드마다 **다른 것**을 가리키게 된다 — 정기물에서 이건 사고다.
+   *
+   * 그래서 **낙폭이 얕으면 그 줄을 아예 뺀다.** 던지지 않는다 —
+   * 곡선도 신고가도 저점 대비도 다 멀쩡하고, **말할 수 없는 것 하나만 안 말하면 된다.**
+   * (위 시간 검사가 던지는 것은 곡선 자체가 너무 짧은 경우라 사정이 다르다.) */
+  const MIN_CYCLE_DROP = 0.15;
+  if (Math.abs(worst.dd) < MIN_CYCLE_DROP) {
+    console.warn(
+      `   ⓘ 최대 낙폭이 ${(Math.abs(worst.dd) * 100).toFixed(1)}% 라 「지난 고점대비」 줄을 뺍니다 ` +
+        `(사이클이라 부를 골이 없습니다 · 기준 ${MIN_CYCLE_DROP * 100}%).`,
+    );
+    cycleDropped = { maxDrawdownPct: Number((worst.dd * 100).toFixed(2)), minPct: MIN_CYCLE_DROP * 100 };
+    worst.atMaxIdx = -1;
+  }
+}
+if (worst.atMaxIdx >= 0) {
+  const pk = traded[worst.atMaxIdx];
   const vs = ((hit.priceManwon - pk.maxManwon) / pk.maxManwon) * 100;
   cycle = {
     peak: eok(pk.maxManwon),
@@ -615,11 +642,29 @@ for (const a of axis) {
   const half = widthOf(a.text, 24) / 2 + 6;
   extraBoxes.push({ x0: a.x - half, x1: a.x + half, y0: a.y - 24, y1: a.y + 8 });
 }
-/* ⚠️ 기준선(점선)은 **장애물로 세지 않는다.**
-   한 번 넣어 봤더니, 곡선을 피해 내려온 라벨이 점선 위에 앉는다는 이유로 다시 곡선 쪽으로
-   되돌아갔다(서초포레스타2단지). 연한 점선이 글자 뒤로 지나가는 것과 5px 검은 실선이
-   글자를 뚫는 것은 같은 사고가 아니다. 게다가 그 점선은 **이 라벨이 가리키는 바로 그 선**이라,
-   붙어 있는 편이 오히려 읽힌다. 피해야 할 건 곡선과 연도 축이다. */
+/* ── 기준선 — **자기 선은 빼고, 남의 선만** 장애물로 센다 (2026-08-25 정정)
+ *
+ * 예전 판단은 "기준선은 장애물로 세지 않는다"였고, 근거가 분명했다:
+ *   한 번 전부 넣어 봤더니 곡선을 피해 내려온 라벨이 점선 위에 앉는다는 이유로 다시
+ *   곡선 쪽으로 되돌아갔다(서초포레스타2단지). 그리고 **그 점선은 이 라벨이 가리키는
+ *   바로 그 선**이라 붙어 있는 편이 오히려 읽힌다. 그 판단은 지금도 맞다.
+ *
+ * 틀린 것은 **전부-아니면-전무**였다. 라벨이 제 선에 붙는 것은 읽히지만,
+ * **남의 선**(특히 진한 돌파선)이 글자를 가로지르는 것은 그냥 사고다.
+ * 2026-08-17 에 서초포레스타2 저점 라벨이 기준선에 걸치는 것을 사람 눈으로 찾았고,
+ * 08-25 에 중계주공5·영통센트럴파크뷰·영통에듀파크에서 같은 것이 재발했다.
+ * 셋 다 **자기 선이 아니라 남의 선**에 걸렸다.
+ *
+ * 그래서 아래 `otherLines` 로, 라벨마다 **자기 선을 뺀 나머지**만 장애물로 넣는다.
+ * 옛 판단(자기 선은 봐준다)은 그대로 살아 있다. */
+const lineBands = [];
+/* ⚠️ 띠를 넓히지 않는다. 가산두산위브가 돌파선에 스치길래 20px 로 넓혀 봤더니, 라벨이
+   그걸 피하느라 **제 기준선 한가운데로** 밀려 12px 관통했다(2026-08-25 실측, 세 장에서).
+   피할 자리가 없는 판에서 한쪽을 더 세게 밀면 반대쪽이 깨진다 —
+   **자리가 없는 것은 배치로 못 푼다.** 그런 소재는 카드로 만들지 않는 것이 답이다. */
+if (threshold) lineBands.push({ y: threshold.y, w: 4 });
+if (prevLine) lineBands.push({ y: prevLine.y, w: 3 });
+if (lowLine) lineBands.push({ y: lowLine.y, w: 3 });
 
 /* 후보 자리: 판 가로 41칸 × 세로 9단(아래 STEPS·dy 목록이 실제 값이다).
    **훑어 고르되 반드시 하나를 고른다** —
@@ -651,12 +696,25 @@ for (const [L, name] of [[prevLine, "고점"], [lowLine, "저점"]]) {
      지금까지 확정한 카드의 픽셀이 안 바뀐다. */
   cands.push({ x0: homeX0, dy: 0, dist: 0 });
 
+  /* 이 라벨이 가리키는 선은 빼고, 남의 선만 피한다(위 주석). */
+  const otherLines = lineBands
+    .filter((b) => Math.abs(b.y - L.y) > 0.5)
+    .map((b) => ({ x0: X0, x1: X1, y0: b.y - b.w, y1: b.y + b.w }));
+  const lineClash = (box) => otherLines.reduce((t, g) => t + overlap(box, g), 0);
+
   const scored = cands.map((c) => {
     const box = { x0: c.x0, x1: c.x0 + w, y0: L.ty1 + c.dy - LAB_FS, y1: L.ty2 + c.dy + 8 };
     /* 곡선은 3배 — 검은 5px 실선이 글자를 뚫는 건 연도 축을 스치는 것과 다른 사고다.
        경고에는 **가중치 없는 실제 겹침**을 적는다(점수를 px² 처럼 읽으면 사람이 오판한다). */
-    const raw = curveClash(box) + curveClash.extra(box);
-    return { ...c, ok: box.y0 >= 0, raw, clash: curveClash(box) * 3 + curveClash.extra(box) };
+    const raw = curveClash(box) + curveClash.extra(box) + lineClash(box);
+    /* 남의 기준선은 곡선(×3)과 눈금(×1) 사이 무게로 둔다 — 글자를 가로지르는 건 사고지만,
+       곡선이 글자를 뚫는 것보다는 덜 나쁘다. 그래야 둘 다 피할 수 없을 때 곡선을 먼저 피한다. */
+    return {
+      ...c,
+      ok: box.y0 >= 0,
+      raw,
+      clash: curveClash(box) * 3 + curveClash.extra(box) + lineClash(box) * 2,
+    };
   });
   /* 판 위로 넘치는 후보는 제쳐 둔다(뒤의 넘침 검사가 던진다) */
   const usable = scored.filter((c) => c.ok);
@@ -842,14 +900,25 @@ const dot2 = (d) => `${d.slice(0, 4)}.${d.slice(5, 7)}.${d.slice(8, 10)}`;
       (제목은 주인공 하나만 세우는 자리다). */
 const gu = hit.gu; // meta 에만 남긴다
 
-/* 제원 두 줄 — 세대수 | 준공(년식) / 전용 | 층.
-   ⚠️ 준공 연도를 '년식'으로 겹쳐 적는 건 오너 지정 형식이다(2026-08-13). */
-const SEP = '<span class="sep">|</span>';
+/* ── 제원 **세 줄** (오너 2026-08-25 지정 형식)
+ *
+ *   서울 노원구 공릉동
+ *   1,308세대 / '22년 준공 / 주차 1.2대
+ *   전용 84.98㎡ / 4층
+ *
+ * 바뀐 것 셋 — 오너가 준 모양 그대로다:
+ *   ① 구분자 `|` → `/`
+ *   ② 준공 `2022년 준공` → `'22년 준공` (두 자리 + 어깨따옴표)
+ *   ③ 주차가 **제 줄을 버리고** 세대수 줄로 올라왔다: `세대당 주차 1.2대` → `주차 1.2대`
+ *
+ * ⚠️ ③ 때문에 줄 수가 4 → 3 으로 **줄었다.** 위가 줄면 곡선 판(VB_H)을 **키울 수 있다** —
+ *    같은 날 오전 주소 줄이 늘면서 768→738 로 내렸던 것을 되돌린다(VB_H 주석 참고).
+ * ⚠️ `주차 1.2대` 는 여전히 **세대당** 값이다(총 대수 아님). 라벨에서 '세대당'이 빠졌지만
+ *    0.6·1.2 같은 값이라 총 대수로 읽힐 수 없다. 총 대수는 meta.parking 에 그대로 남는다.
+ * ⚠️ 세 값이 한 줄에 서므로 이 줄이 제일 길다. 넘치면 designQa 가 잡는다 — 그때는 글자를
+ *    줄이지 말고 **무엇을 뺄지**를 정한다(한 행의 폭은 제로섬이다). */
+const SEP = '<span class="sep">/</span>';
 const yy = hit.buildYear ? String(hit.buildYear).slice(2) : null;
-const specTop = [
-  kapt ? `${kapt.hhld.toLocaleString("ko-KR")}세대` : null,
-  hit.buildYear ? `${hit.buildYear}년 준공` : null,
-].filter(Boolean);
 
 /* ── 주소 — 제원의 **맨 윗줄** (오너 2026-08-25)
  *   "서울 송파구 잠실동" · "수원시 영통구 이의동"
@@ -930,9 +999,14 @@ if (KAPT) {
    카드마다 자릿수가 달라 보였다(2026-08-16b: 84.95 · 84.48 옆에 84.925). */
 const areaLab = Number(hit.area).toFixed(2).replace(/\.?0+$/, "");
 const specBot = [`전용 ${areaLab}㎡`, `${hit.floor}층`];
-/* 오너 지시는 "전용면적·층수 **아래**" — 같은 줄에 붙이지 않고 셋째 줄로 세운다. */
-const specPark = parking ? `세대당 주차 ${parking.perHhld.toFixed(1)}대` : null;
-const spec = [specAddr, specTop.join(SEP), specBot.join(SEP), specPark].filter((x) => x);
+/* 세대수 / 준공 / 주차 — 셋이 한 줄. 없는 값은 자리를 안 차지한다(구분자도 같이 사라진다).
+   ⚠️ 주차는 **세대당**이다. 총 대수는 meta.parking 에 남는다 — 라벨만 짧아졌다. */
+const specMid = [
+  kapt ? `${kapt.hhld.toLocaleString("ko-KR")}세대` : null,
+  yy ? `'${yy}년 준공` : null,
+  parking ? `주차 ${parking.perHhld.toFixed(1)}대` : null,
+].filter(Boolean);
+const spec = [specAddr, specMid.join(SEP), specBot.join(SEP)].filter((x) => x);
 
 const card = {
   template: "singo-record@1",
@@ -991,6 +1065,15 @@ const card = {
     cycleCalc: {
       maxDrawdownPct: Number((worst.dd * 100).toFixed(2)),
       note: "지난 사이클 고점 = 최대 낙폭이 난 골 직전의 최고가. 코드가 계산한다(사람이 고르지 않는다).",
+      ...(cycleDropped
+        ? {
+            dropped: true,
+            why:
+              `최대 낙폭 ${cycleDropped.maxDrawdownPct}% 로 기준 ${cycleDropped.minPct}% 에 못 미쳐 ` +
+              `「지난 고점대비」 줄을 뺐다(2026-08-25 오너 승인). 사이클이라 부를 골이 없는 단지다 — ` +
+              `대개 2021~22 사이클 뒤에 준공한 신축이다.`,
+          }
+        : {}),
     },
     firstPoint: { ym: first.ym, eok: eok(first.maxManwon) },
     station: station

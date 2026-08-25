@@ -475,7 +475,36 @@
         "provided": "2026-08-03 오너 제공 · 원본은 templates/_shared/photos/_source/"
       },
       "hook": "한강뷰",
-      "slug": "hangang"
+      "slug": "hangang",
+      "_applyhomeSnapshot": {
+        "kind": "apt",
+        "pblancNo": "2026000367",
+        "name": "한강 푸르지오 리버프론트",
+        "areaName": "경기",
+        "address": "경기도 김포시 고촌읍 향산리 588-45번지 일원",
+        "supply": 2432,
+        "noticeDate": "2026-07-30",
+        "receiptFrom": "2026-08-11",
+        "receiptTo": "2026-08-12",
+        "specialFrom": "2026-08-10",
+        "rank1From": "2026-08-11",
+        "moveInYm": "2031-01",
+        "announceDate": "2026-08-20",
+        "builder": "(주)대우건설",
+        "priceCap": true,
+        "speculative": false,
+        "homepage": "https://prugio-riverfront.com/",
+        "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000367&pblancNo=2026000367",
+        "score": 65,
+        "reasons": [
+          "수도권",
+          "2,432가구 대단지",
+          "푸르지오",
+          "분양가상한제"
+        ]
+      },
+      "_retiredAt": "2026-08-13",
+      "_retiredFrom": "git:54c8130c"
     },
     {
       "id": "songdo-granter-remndr",
@@ -677,7 +706,36 @@
         ]
       },
       "oneLiner": "서울 거주 무주택세대구성원 · 청약통장 불필요",
-      "_oneLinerNote": "자격 요건은 모집공고문을 인용한 2차 출처(mhb-blog)에서 옮겼다. 청약홈 무순위 상세 화면에는 신청자격 항목이 없다 — 발행 전 공고문 대조 대상(분양가와 같은 게이트)."
+      "_oneLinerNote": "자격 요건은 모집공고문을 인용한 2차 출처(mhb-blog)에서 옮겼다. 청약홈 무순위 상세 화면에는 신청자격 항목이 없다 — 발행 전 공고문 대조 대상(분양가와 같은 게이트).",
+      "_applyhomeSnapshot": {
+        "kind": "remndr",
+        "pblancNo": "2026910212",
+        "name": "장위 푸르지오 마크원",
+        "areaName": "서울",
+        "address": "서울특별시 성북구 장위동 68-37 일대",
+        "supply": 39,
+        "noticeDate": "2026-08-05",
+        "receiptFrom": "2026-08-10",
+        "receiptTo": "2026-08-10",
+        "specialFrom": null,
+        "rank1From": null,
+        "moveInYm": "2030-09",
+        "announceDate": "2026-08-13",
+        "builder": "장위10구역주택재개발정비사업조합",
+        "priceCap": false,
+        "speculative": false,
+        "homepage": "https://www.prugio.com/hb/2026/markone/",
+        "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910212&pblancNo=2026910212",
+        "score": 79,
+        "reasons": [
+          "서울",
+          "39가구",
+          "무순위",
+          "푸르지오"
+        ]
+      },
+      "_retiredAt": "2026-08-19",
+      "_retiredFrom": "git:1bf184dc"
     },
     {
       "id": "summit-clavion",
@@ -777,7 +835,36 @@
       },
       "titleHtml": "<span class=\"hi\">신길 대장</span>아파트 분양가 <span class=\"hi\">18억대</span>?",
       "supplyLabel": "일반분양",
-      "oneLiner": "<i class=\"em\">⚠️</i>투기과열지구 · 전매제한 3년"
+      "oneLiner": "<i class=\"em\">⚠️</i>투기과열지구 · 전매제한 3년",
+      "_applyhomeSnapshot": {
+        "kind": "apt",
+        "pblancNo": "2026000364",
+        "name": "써밋 클라비온",
+        "areaName": "서울",
+        "address": "서울특별시 영등포구 신길동 3590번지 일원",
+        "supply": 176,
+        "noticeDate": "2026-08-07",
+        "receiptFrom": "2026-08-19",
+        "receiptTo": "2026-08-21",
+        "specialFrom": "2026-08-18",
+        "rank1From": "2026-08-19",
+        "moveInYm": "2030-01",
+        "announceDate": "2026-08-28",
+        "builder": "(주)대우건설",
+        "priceCap": false,
+        "speculative": true,
+        "homepage": "https://summitclavion.com/",
+        "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000364&pblancNo=2026000364",
+        "score": 66,
+        "reasons": [
+          "서울",
+          "오늘 마감",
+          "써밋",
+          "투기과열지구"
+        ]
+      },
+      "_retiredAt": "2026-08-21",
+      "_retiredFrom": "git:3c0cbc65"
     },
     {
       "id": "xirene-chungjeongno",
@@ -876,7 +963,36 @@
       "titleHtml": "<span class=\"hi\">2·5호선</span> 더블 초역세권 <span class=\"hi\">18억대</span>?",
       "supplyLabel": "일반분양",
       "_logoNote": "자이르네 로고는 오너가 준 조감도 우상단 워드마크를 휘도 키잉으로 떼어 만들었다(원본 64×57 → 6배). 공식 로고 파일을 받으면 교체할 것.",
-      "oneLiner": "<i class=\"em\">⚠️</i>투기과열지구 · 전매제한 3년"
+      "oneLiner": "<i class=\"em\">⚠️</i>투기과열지구 · 전매제한 3년",
+      "_applyhomeSnapshot": {
+        "kind": "apt",
+        "pblancNo": "2026000358",
+        "name": "충정로역자이르네",
+        "areaName": "서울",
+        "address": "서울특별시 중구 중림동 157-2번지 일원",
+        "supply": 186,
+        "noticeDate": "2026-08-07",
+        "receiptFrom": "2026-08-19",
+        "receiptTo": "2026-08-21",
+        "specialFrom": "2026-08-18",
+        "rank1From": "2026-08-19",
+        "moveInYm": "2030-05",
+        "announceDate": "2026-08-31",
+        "builder": "자이에스앤디(주), 지에스건설(주)",
+        "priceCap": false,
+        "speculative": true,
+        "homepage": "https://충정로역자이르네.com",
+        "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000358&pblancNo=2026000358",
+        "score": 66,
+        "reasons": [
+          "서울",
+          "오늘 마감",
+          "자이",
+          "투기과열지구"
+        ]
+      },
+      "_retiredAt": "2026-08-21",
+      "_retiredFrom": "git:3c0cbc65"
     },
     {
       "id": "thesharp-singil",
@@ -1002,7 +1118,36 @@
       "buildings": 16,
       "topFloor": 35,
       "_scaleNote": "16개동·지상 최고 35층·총 2,054세대 = 한국경제(2026-01-20)·더구루(2026-07) 두 곳 일치. 청약홈은 규모를 안 준다 — 공고문 대조 대상.",
-      "supplyLabel": "취소분"
+      "supplyLabel": "취소분",
+      "_applyhomeSnapshot": {
+        "kind": "apt",
+        "pblancNo": "2026000374",
+        "name": "더샵 신길센트럴시티(조합원 취소분)",
+        "areaName": "서울",
+        "address": "서울특별시 영등포구 신길동 413-8번지 일원",
+        "supply": 67,
+        "noticeDate": "2026-08-07",
+        "receiptFrom": "2026-08-19",
+        "receiptTo": "2026-08-21",
+        "specialFrom": "2026-08-18",
+        "rank1From": "2026-08-19",
+        "moveInYm": "2029-07",
+        "announceDate": "2026-08-27",
+        "builder": "(주) 포스코이앤씨",
+        "priceCap": false,
+        "speculative": true,
+        "homepage": "https://더샵신길센트럴시티.kr",
+        "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000374&pblancNo=2026000374",
+        "score": 62,
+        "reasons": [
+          "서울",
+          "오늘 마감",
+          "더샵",
+          "투기과열지구"
+        ]
+      },
+      "_retiredAt": "2026-08-21",
+      "_retiredFrom": "git:3c0cbc65"
     },
     {
       "id": "define-artia-remndr",
@@ -1078,7 +1223,35 @@
         ]
       },
       "oneLiner": "서울 거주 무주택자 · 청약통장 불필요",
-      "_oneLinerNote": "자격 요건은 모집공고 내용을 인용한 2차 출처(mhb-blog·newspim)에서 옮겼다. 청약홈 무순위 상세 화면에는 신청자격 항목이 없다 — 발행 전 공고문 대조 대상(분양가와 같은 게이트)."
+      "_oneLinerNote": "자격 요건은 모집공고 내용을 인용한 2차 출처(mhb-blog·newspim)에서 옮겼다. 청약홈 무순위 상세 화면에는 신청자격 항목이 없다 — 발행 전 공고문 대조 대상(분양가와 같은 게이트).",
+      "_applyhomeSnapshot": {
+        "kind": "remndr",
+        "pblancNo": "2026910214",
+        "name": "드파인 아르티아",
+        "areaName": "서울",
+        "address": "서울특별시 동작구 노량진동 312-75번지 일대",
+        "supply": 15,
+        "noticeDate": "2026-08-07",
+        "receiptFrom": "2026-08-12",
+        "receiptTo": "2026-08-12",
+        "specialFrom": null,
+        "rank1From": null,
+        "moveInYm": "2029-11",
+        "announceDate": "2026-08-18",
+        "builder": "노량진2재정비촉진구역재개발정비사업조합",
+        "priceCap": false,
+        "speculative": false,
+        "homepage": "https://altia.skdefine.com",
+        "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910214&pblancNo=2026910214",
+        "score": 73,
+        "reasons": [
+          "서울",
+          "무순위",
+          "드파인"
+        ]
+      },
+      "_retiredAt": "2026-08-21",
+      "_retiredFrom": "git:3c0cbc65"
     },
     {
       "id": "songpa-signature-remndr",
