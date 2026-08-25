@@ -12,6 +12,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { writeCaption } from "./lib/caption-signature.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const date = process.argv[2] || "2026-08-10";
@@ -151,13 +152,11 @@ const caption =
 📊 출처 : ${CFG.sourceLabel}
 ※ 외국인비율은 주민등록인구(${POP_PERIOD}) 대비 산출 · '중국'은 한국계중국인 포함(국적 기준)
 
-· · ·
-부동산·경제·트렌드를 한 눈에, 위릿.
-매일 한 장, 내 맘속에 저장. 🫶
-
 #서울 #외국인 #등록외국인 #인구통계 #국적 #구로구 #대림동 #부동산`;
-mkdirSync(join(ROOT, "data/review/captions"), { recursive: true });
-writeFileSync(join(ROOT, "data/review/captions/foreign-rank.txt"), caption + "\n");
+/* ⚠️ 서명 3줄을 여기 손으로 적지 않는다 — 적혀 있던 판본은 「정확한 데이터, 감각적인 카드.」
+   한 줄이 빠져 있었고(2026-08-25 실측) 아무도 눈치채지 못했다.
+   원천은 `data/review/captions/_signature.txt` 하나다. */
+writeCaption("foreign-rank", caption); // ⚠️ 서명은 writeCaption 이 붙인다 (lib/caption-signature.mjs)
 
 console.log(`✅ foreign-rank 2장 — 서울 ${per100}% · 중국 ${chinaComb}%(한국계 ${hangukePct}%) · 인원1위 ${rowsAll[0].gu} ${rowsAll[0].count}천명 · 인구 ${POP_PERIOD}`);
 console.log(`   → data/content/${date}/foreign-rank-p1.json,p2.json · 캡션 data/review/captions/foreign-rank.txt`);

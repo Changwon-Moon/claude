@@ -20,6 +20,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { writeCaption } from "./lib/caption-signature.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const date = process.argv[2] || "2026-07-31";
@@ -126,7 +127,7 @@ const caption = [
   ``,
   `#부동산 #재건축 #재개발 #도시정비사업 #건설사 #압구정 #성수동 #목동재건축 #부동산정보 #위릿`,
 ].join("\n");
-writeFileSync(join(capDir, "jeongbi-rank.txt"), caption + "\n", "utf8");
+writeCaption("jeongbi-rank", caption); // ⚠️ 서명은 writeCaption 이 붙인다 (lib/caption-signature.mjs)
 
 console.log(`🃏 jeongbi-rank — ${sorted.length}개사`);
 console.log(`   제목: ${title}`);

@@ -52,6 +52,22 @@ node scripts/apply-signature.mjs --check   # 붙었는지 증명
 → **카드를 만드는 것들을 먼저 다 돌리고, 서명을 마지막에 붙이고, `--check` 로 증명한다.**
 `confirm.mjs`·`close-session.mjs` 둘 다 이 순서로 고쳤다.
 
+**그런데 순서를 문서로만 지키면 언젠가 빠진다(2026-08-25 실측).** 배포 순서를 손으로
+재현하다(`rebuild-cards` → `build-archive` → `build-tower-site` → `stage-public-cards` →
+`smoke-tower`) 서명 단계를 빼먹었고, 캡션 4개가 서명을 잃은 채 커밋됐다(`dfd5c89`).
+검사 7종은 전부 초록이었다 — **아무도 안 보는 자리였다.**
+
+→ **세 번째 재발이라 자리를 바꿨다.** 서명은 이제 **캡션을 쓰는 순간** 붙는다:
+`scripts/lib/caption-signature.mjs` 의 `writeCaption()` 을 빌더가 쓴다
+(`jeongbi-map` · `jeongbi-rank` · `tohuh-rent-map` · `wolse-flip` · `foreign-rank`).
+**캡션 파일에 `writeFileSync` 를 직접 쓰지 않는다.**
+
+⚠️ 그렇다고 `apply-signature` 가 없어지는 건 아니다. 빌더가 붙이는 건 **제가 쓴 캡션**이고,
+`apply-signature --check` 는 **손으로 고친 것까지 61개 전수**를 증명한다. 마감 절차에 남긴다.
+⚠️ 그리고 서명을 **캡션 본문에 손으로 적지 않는다** — `foreign-rank` 에 적혀 있던 판본은
+「정확한 데이터, 감각적인 카드.」 한 줄이 빠져 있었고 몇 주 동안 아무도 몰랐다.
+원천은 `data/review/captions/_signature.txt` **하나**다.
+
 **오너가 "확정할게" 라고 하면 위 줄들을 따로 치지 않는다 — 확정 스크립트가 다 한다:**
 
 ```bash

@@ -25,6 +25,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { writeCaption } from "./lib/caption-signature.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const date = process.argv[2] || "2026-07-30";
@@ -469,7 +470,7 @@ const caption = nl(
   `#부동산 #월세 #서울아파트 #월세지수 #임대차`,
 );
 mkdirSync(join(ROOT, "data/review/captions"), { recursive: true });
-writeFileSync(join(ROOT, "data/review/captions/wolse-flip.txt"), caption + "\n", "utf8");
+writeCaption("wolse-flip", caption); // ⚠️ 서명은 writeCaption 이 붙인다 (lib/caption-signature.mjs)
 
 console.log(
   `✅ 월세 뒤집힌 해 3장 — ` +

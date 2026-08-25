@@ -89,6 +89,35 @@ if (existsSync(SETS)) {
   }
 }
 
+/* ── 캡션 고정 서명을 **여기서 다시 붙인다** (2026-08-25)
+ *
+ * 몇몇 빌더(`build-jeongbi-map` · `build-tohuh-rent-map` · `build-wolse-flip` ·
+ * `build-foreign-rank`)는 캡션 파일을 **통째로 새로 쓴다**. 그래서 재생성이 돌 때마다
+ * 맨 아래 위릿노트 3줄이 **조용히 사라진다**.
+ *
+ * 「`apply-signature` 는 `rebuild-cards` 뒤」라는 규칙은 체크리스트에도 `confirm.mjs`
+ * 에도 적혀 있었다. 그런데 2026-08-25 에 배포 순서를 **손으로** 재현하면서
+ * (rebuild → build-archive → build-tower-site → stage → smoke) 그 한 단계를 빼먹었고,
+ * 캡션 4개가 서명을 잃은 채 커밋됐다(`dfd5c89`). 사람이 diff 를 세다 발견했다.
+ *
+ * **순서를 문서로만 지키면 언젠가 빠진다.** 서명 붙이기는 멱등이므로 재생성이 끝나는
+ * 자리에서 스스로 붙인다 — 뒤에 `apply-signature --check` 가 또 와도 그대로 통과한다.
+ *
+ * ⚠️ 진짜 고침은 **한 층 아래**에 있다: 빌더는 이제 `scripts/lib/caption-signature.mjs`
+ *    의 `writeCaption()` 으로 캡션을 써서 **쓰는 순간 서명이 붙는다.** 여기 남긴 이 단계는
+ *    그걸 안 쓰고 `writeFileSync` 로 직접 쓰는 빌더가 새로 생겼을 때를 위한 **그물**이다.
+ *    평소엔 「61개 전부 제자리」만 찍고 지나간다 — 무언가 반영됐다고 나오면 그 빌더를 찾아
+ *    `writeCaption` 으로 옮긴다.
+ * ⚠️ `--check` 는 마감 절차에 남겨 둔다. 여기서 붙이는 것은 **재생성이 지운 것의 복구**이고,
+ *    `--check` 는 손으로 고친 캡션까지 포함해 61개 전수를 **증명**하는 자리다. */
+{
+  const sig = spawnSync("node", ["scripts/apply-signature.mjs"], { cwd: ROOT, stdio: "inherit" });
+  if (sig.status !== 0) {
+    console.log("::warning::캡션 고정 서명을 붙이지 못했습니다 — apply-signature 를 직접 확인하세요");
+    qaBad = true;
+  }
+}
+
 /* ── 빌더가 죽으면 **빨간불**이다 (2026-08-25 오너 지시)
  *
  * 예전엔 실패해도 `::warning::` 만 남기고 종료코드 0 이었다. "나머지 카드는 정상이니

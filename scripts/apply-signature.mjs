@@ -14,19 +14,16 @@
  *   --check  고칠 것이 있으면 종료코드 1 (CI·확정 스크립트에서 쓴다)
  *
  * 되돌려 붙여도 안전하다(멱등) — 이미 있으면 그 자리에서 최신 문구로 갈아끼운다.
+ *
+ * ⚠️ **붙이는 법 자체는 여기 없다** — `scripts/lib/caption-signature.mjs` 가 정본이다.
+ *    빌더들도 같은 함수로 캡션을 쓴다(`writeCaption`). 이 스크립트가 하는 일은
+ *    **전수 훑기와 증명**이다: 손으로 고친 캡션까지 포함해 61개를 다 본다.
  */
 import { readFileSync, writeFileSync, readdirSync } from "node:fs";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
+import { applySignature, CAPTION_DIR as DIR } from "./lib/caption-signature.mjs";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const DIR = join(ROOT, "data/review/captions");
-const SIG_FILE = join(DIR, "_signature.txt");
 const checkOnly = process.argv.includes("--check");
-
-const SIG = readFileSync(SIG_FILE, "utf8").trim();
-/** 서명 첫 줄(구분자)로 기존 서명 블록을 찾는다 — 문구가 바뀌어도 자리를 잡는다 */
-const MARK = SIG.split("\n")[0];
 
 const files = readdirSync(DIR).filter((f) => f.endsWith(".txt") && !f.startsWith("_"));
 let changed = 0;
@@ -34,18 +31,7 @@ let changed = 0;
 for (const f of files) {
   const p = join(DIR, f);
   const orig = readFileSync(p, "utf8");
-  const lines = orig.replace(/\s+$/, "").split("\n");
-
-  // ① 기존 서명 블록 제거 (구분자 줄부터 서명 줄 수만큼)
-  const at = lines.findIndex((l) => l.trim() === MARK);
-  if (at >= 0) lines.splice(at, SIG.split("\n").length);
-
-  // ② 해시태그 줄 찾기 — 없으면 맨 끝
-  let tagAt = lines.findIndex((l) => /^\s*#\S/.test(l));
-  const body = (tagAt >= 0 ? lines.slice(0, tagAt) : lines).join("\n").replace(/\s+$/, "");
-  const tags = tagAt >= 0 ? lines.slice(tagAt).join("\n").trim() : "";
-
-  const next = `${body}\n\n${SIG}\n${tags ? "\n" + tags + "\n" : ""}`;
+  const next = applySignature(orig);
   if (next !== orig) {
     changed++;
     if (!checkOnly) writeFileSync(p, next, "utf8");
