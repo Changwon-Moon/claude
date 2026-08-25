@@ -1,0 +1,25 @@
+{
+  "label": "singo-singil-samhwan",
+  "verdict": "block",
+  "summary": "BLOCK — error 1 · warn 0 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "caption-number",
+      "level": "error",
+      "code": "number-mismatch",
+      "msg": "캡션 금액 6.15억, 6.6억, 8.95억이(가) 카드 수치에 없습니다 — 오보 위험, 카드와 대조 필요"
+    }
+  ],
+  "cards": [
+    {
+      "file": "singo-삼환-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}
