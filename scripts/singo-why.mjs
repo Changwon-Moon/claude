@@ -83,15 +83,53 @@ const readJson = (p) => JSON.parse(readFileSync(p, "utf8"));
 const out = { query, findings: [], verdict: null };
 const say = (s) => { if (!flag("json")) console.log(s); };
 
-/* ── ① 1000세대 명부 */
+/* ── ① 1000세대 명부
+ *
+ * ⚠️ **대장 이름으로만 찾으면 틀린 답을 한다** (2026-08-25 실제로 틀렸다).
+ * 오너가 「위례24단지(꿈에그린)」를 물었을 때 이 진단기는 "명부에 없습니다"라고 답했다.
+ * 그런데 있었다 — 명부의 이름이 「송파꿈에그린아파트」였을 뿐이다.
+ * **틀린 답은 답이 없는 것보다 나쁘다.** 그래서 세 갈래로 찾는다:
+ *   ⑴ 대장 이름  ⑵ 실거래 신고명(원자료에서 되짚어 대장으로)  ⑶ 지번
+ * 어느 길로 찾았는지 화면에 적는다 — 그게 곧 "왜 못 이었나"의 답이기도 하다. */
 const universe = readJson(join(D, "apt-universe.json"));
+const hhldAll = existsSync(join(D, "apt-hhld.json")) ? readJson(join(D, "apt-hhld.json")).byKapt : {};
 const q = normAptName(query);
-const inRoster = universe.items.filter((it) => normAptName(it.kaptName).includes(q));
+
+/** 대장 주소 → 지번 (수집기의 jibunFromAddr 과 같은 규칙) */
+const jibunFromAddr = (addr) => {
+  const toks = String(addr ?? "").trim().split(/\s+/);
+  const i = toks.findIndex((t) => /[가동읍면리]$/.test(t));
+  if (i < 0) return null;
+  const t = toks[i + 1];
+  return t && /^\d+(-\d+)?-?$/.test(t) ? t.replace(/-+$/, "") : null;
+};
+
+const byName = universe.items.filter((it) => normAptName(it.kaptName).includes(q));
+
+/* ⑵·⑶ — 실거래 신고명이 질의와 맞는 거래를 원자료에서 찾아, 그 지번으로 명부를 되짚는다. */
+const viaTrade = new Map();
+const molitDir = join(D, "molit");
+if (existsSync(molitDir)) {
+  for (const f of readdirSync(molitDir).filter((f) => f.endsWith(".json"))) {
+    for (const t of readJson(join(molitDir, f)).trades) {
+      if (!normAptName(t.aptNm).includes(q)) continue;
+      const lawd = f.split("-")[0];
+      const jb = String(t.jibun ?? "").replace(/-+$/, "");
+      for (const it of universe.items) {
+        if (it.lawdCd !== lawd || it.umd !== t.umdNm) continue;
+        if (jibunFromAddr(hhldAll[it.kaptCode]?.addr) !== jb) continue;
+        viaTrade.set(it.kaptCode, { it, tradeName: t.aptNm, jibun: jb });
+      }
+    }
+  }
+}
+const inRoster = [...byName, ...[...viaTrade.values()].map((v) => v.it).filter((it) => !byName.some((b) => b.kaptCode === it.kaptCode))];
 
 say(`\n🔎 "${query}" — 신고가 알림 진단  (기준: ${BASELINE_LABEL} · ${universe.meta.minHhld}세대 이상 명부 · 전용 59·84 타입)\n`);
 
 if (!inRoster.length) {
   say(`① 명부  ⛔ **1000세대 이상 명부에 없습니다** — 애초에 판정 대상이 아닙니다.`);
+  say(`        (대장 이름·실거래 신고명·지번 세 갈래로 다 찾아봤습니다.)`);
   say(`        (명부 ${universe.meta.count}개 단지 · 갱신 ${universe.meta.updatedAt})`);
   out.verdict = "명부에 없음";
   out.findings.push({ step: "roster", ok: false });
@@ -99,7 +137,12 @@ if (!inRoster.length) {
   process.exit(0);
 }
 for (const it of inRoster) {
+  const v = viaTrade.get(it.kaptCode);
+  const how = byName.some((b) => b.kaptCode === it.kaptCode)
+    ? "대장 이름으로 찾음"
+    : `⚠️ **이름으로는 못 찾고 지번으로 찾음** — 실거래 「${v.tradeName}」 ↔ 대장 「${it.kaptName}」 (지번 ${v.jibun})`;
   say(`① 명부  ✅ ${it.gu} ${it.umd} · ${it.kaptName} · ${man(it.hhld)}세대`);
+  say(`        ${how}`);
 }
 out.findings.push({ step: "roster", ok: true, items: inRoster });
 
@@ -113,13 +156,17 @@ for (const it of inRoster) {
     continue;
   }
   const pk = readJson(peakPath);
-  const norm = normAptName(it.kaptName);
+  /* ⚠️ 인덱스·원자료의 키는 **실거래 신고명**이다(대장 이름이 아니다).
+     지번으로 찾은 단지는 두 이름이 다르므로, 여기서 대장 이름을 쓰면
+     "인덱스에 없습니다"라는 **또 한 번의 틀린 답**이 나온다(2026-08-25에 실제로 그랬다). */
+  const vt = viaTrade.get(it.kaptCode);
+  const norm = normAptName(vt ? vt.tradeName : it.kaptName);
   const mine = Object.entries(pk.peaks).filter(([k]) => {
     const [, , nm] = k.split("|");
     return nm === norm;
   });
 
-  say(`\n② 문턱  ${it.kaptName} 의 ${BASELINE_LABEL} 최고가 (인덱스 갱신 ${pk.meta.updatedAt} · ${pk.meta.doneMonths.length}개월 반영)`);
+  say(`\n② 문턱  ${vt ? `${vt.tradeName}(대장: ${it.kaptName})` : it.kaptName} 의 ${BASELINE_LABEL} 최고가 (인덱스 갱신 ${pk.meta.updatedAt} · ${pk.meta.doneMonths.length}개월 반영)`);
   if (!mine.length) {
     say(`        ⚠️ 인덱스에 이 단지가 없습니다 — 59·84 타입 거래가 아직 한 건도 안 잡혔거나, 이름 표기가 다릅니다.`);
   }

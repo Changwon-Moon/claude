@@ -88,7 +88,14 @@ import {
   baselineLabel as singoBaseline,
   BASELINE_FROM as SINGO_FROM,
 } from "./parse/singo.js";
-import { matchApt as aptMatch, parseAptList, parseAptBasis, parseAptDetail } from "./parse/aptInfo.js";
+import {
+  matchApt as aptMatch,
+  parseAptList,
+  parseAptBasis,
+  parseAptDetail,
+  jibunFromAddr,
+  normJibun,
+} from "./parse/aptInfo.js";
 import { cleanStationName, linesFromCategory } from "./parse/station.js";
 import { singoRegions as singoRegionList, monthRange as singoMonthRange } from "./sources/singoRegions.js";
 import {
@@ -1142,6 +1149,20 @@ console.log("\n[청약홈 분양정보 파서]");
   const tail = quiet.join("\n");
   check("계약일 기준이 아님을 목록이 스스로 밝힌다", tail.includes("오늘 새로 드러난"), quiet.at(-2));
   check("계약일이 흩어지는 이유(신고기한)를 적는다", tail.includes("30일"), quiet.at(-1));
+
+  /* ── 지번으로 명부를 잇는 길 (2026-08-25)
+     이름으로 못 잇는 단지가 명부의 43% 였다 — 실거래 「위례24단지(꿈에그린)」 ↔
+     대장 「송파꿈에그린아파트」. 지번(장지동 901)은 양쪽이 같다.
+     ⚠️ 법정동 이름에도 숫자가 붙는다("신문로2가") — 그 숫자를 지번으로 집으면 통째로 어긋난다. */
+  check("대장 주소에서 지번을 뽑는다", jibunFromAddr("서울특별시 송파구 장지동 901 송파꿈에그린아파트") === "901");
+  check("끝의 '-' 를 뗀다", jibunFromAddr("서울특별시 강동구 둔촌동 633- 올림픽파크포레온") === "633");
+  check(
+    "법정동의 숫자(신문로2가)를 지번으로 착각하지 않는다",
+    jibunFromAddr("서울특별시 종로구 신문로2가 1-434 광화문스페이스본 아파트") === "1-434",
+  );
+  check("지번이 없는 주소는 null", jibunFromAddr("경기도 성남시 분당구 정자동 상록마을") === null);
+  check("문자 지번은 버린다", normJibun("가-") === null);
+  check("부번은 살린다", normJibun("5869-2") === "5869-2");
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);

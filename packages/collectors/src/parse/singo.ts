@@ -200,6 +200,8 @@ export interface TradeLike {
   floor: number;
   date: string;
   sggCd?: string;
+  /** 지번 — 이름이 흔들려도 안 흔들리는 열쇠. 명부 매칭의 두 번째 길이다(2026-08-25). */
+  jibun?: string;
 }
 
 /**

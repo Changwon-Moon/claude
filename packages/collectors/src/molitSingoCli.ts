@@ -36,6 +36,7 @@ import {
   type PeakIndex,
   type SingoHit,
 } from "./parse/singo.js";
+import { jibunFromAddr, normJibun } from "./parse/aptInfo.js";
 import { singoRegions, monthRange } from "./sources/singoRegions.js";
 import { inspectKey, describeKey } from "./keyHygiene.js";
 
@@ -92,6 +93,33 @@ async function main() {
     byGu.get(it.lawdCd)!.push(it);
   }
 
+  /* ── 지번 조회판 (2026-08-25 오너 승인)
+   *
+   * 이름으로 못 잇는 단지가 **명부의 43%** 였다(실측 2026-08-25):
+   *   실거래 「위례24단지(꿈에그린)」 ↔ 대장 「송파꿈에그린아파트」 — 어떤 규칙으로도 안 맞는다.
+   *   「SK북한산시티아파트」↔「에스케이북한산시티」, 「수원SK스카이뷰」↔「수원 SK SKY VIEW」…
+   * 그런데 **지번은 흔들리지 않는다.** 대장 주소에 들어 있다(장지동 901).
+   * 이름 → 실패 시 지번, 두 단계로 잇는다. 실측 652 → 834개(56.8% → 72.7%).
+   *
+   * ⚠️ **한 지번에 명부 단지가 둘 이상이면 버린다(null).** 어느 쪽인지 모르는 채로 붙이면
+   *    그게 상록마을 사고다 — 남의 단지 세대수가 알림에 실린다. 못 잇는 편이 낫다.
+   * ⚠️ 지번은 `apt-hhld.json` 의 주소에서 뽑는다. 명부(apt-universe)에는 주소가 없다. */
+  const hhldPath = R("data/datasets/apt-hhld.json");
+  const byKapt = existsSync(hhldPath)
+    ? (JSON.parse(readFileSync(hhldPath, "utf8")).byKapt as Record<string, { addr?: string }>)
+    : {};
+  const byJibun = new Map<string, UniverseItem | null>();
+  for (const it of uniItems) {
+    const j = jibunFromAddr(byKapt[it.kaptCode]?.addr ?? "");
+    if (!j) continue;
+    const k = `${it.lawdCd}|${it.umd}|${j}`;
+    byJibun.set(k, byJibun.has(k) ? null : it); // 겹치면 버린다
+  }
+  const jibunDupes = [...byJibun.values()].filter((v) => v === null).length;
+  console.log(
+    `명부 지번 조회판 ${byJibun.size - jibunDupes}칸 (지번 겹쳐 버린 것 ${jibunDupes}칸)`,
+  );
+
   /**
    * 실거래의 (법정동, 단지명) 이 명부에 있는지.
    *
@@ -105,14 +133,25 @@ async function main() {
    *    (`개봉한마을` ⊃ `한마을`)는 포함관계로 그대로 통과한다.
    *    애매하면 붙이지 않는다 — 잘못 붙이면 1000세대 미만 단지가 알림에 섞인다.
    */
-  function inUniverse(lawdCd: string, umdNm: string, aptNm: string): UniverseItem | null {
+  function inUniverse(
+    lawdCd: string,
+    umdNm: string,
+    aptNm: string,
+    jibun?: string | null,
+  ): UniverseItem | null {
     const list = byGu.get(lawdCd);
     if (!list) return null;
-    if (!fullAptName(aptNm)) return null;
-    const sameUmd = list.filter((a) => a.umd === umdNm);
-    const pool = sameUmd.length ? sameUmd : list;
-    const hit = pool.filter((a) => sameApt(a.kaptName, aptNm));
-    return hit.length === 1 ? hit[0] : null;
+    if (fullAptName(aptNm)) {
+      const sameUmd = list.filter((a) => a.umd === umdNm);
+      const pool = sameUmd.length ? sameUmd : list;
+      const hit = pool.filter((a) => sameApt(a.kaptName, aptNm));
+      if (hit.length === 1) return hit[0];
+    }
+    /* 이름으로 못 이었으면 **지번**으로 다시 물어본다 (위 조회판 주석 참고).
+       ⚠️ 이름이 여럿 걸려 애매했던 경우도 여기로 온다 — 지번은 하나뿐이라 애매하지 않다.
+          단, 그 지번에 명부 단지가 둘이면 조회판이 이미 null 로 버려 뒀다. */
+    const j = normJibun(jibun ?? "");
+    return j ? (byJibun.get(`${lawdCd}|${umdNm}|${j}`) ?? null) : null;
   }
 
   const regions = singoRegions();
@@ -199,12 +238,12 @@ async function main() {
       const target = tx.filter((t) => areaType(t.area) && t.dealingGbn !== "직거래");
       const inUni: { t: AptTrade; u: UniverseItem }[] = [];
       for (const t of target) {
-        const u = inUniverse(lawdCd, t.umdNm, t.aptNm);
+        const u = inUniverse(lawdCd, t.umdNm, t.aptNm, t.jibun);
         if (u) inUni.push({ t, u });
       }
       const found = findSingo(idx.peaks, lawdCd, gu, inUni.map((x) => x.t));
       for (const h of found) {
-        const u = inUniverse(lawdCd, h.umdNm, h.aptNm);
+        const u = inUniverse(lawdCd, h.umdNm, h.aptNm, h.jibun);
         hits.push({ ...h, hhld: u?.hhld ?? 0 });
       }
     }

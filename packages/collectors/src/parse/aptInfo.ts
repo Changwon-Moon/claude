@@ -201,3 +201,39 @@ export function matchApt(list: AptListItem[], umdNm: string, aptNm: string): Apt
   });
   return part.length === 1 ? part[0] : null;
 }
+
+/**
+ * 공동주택 대장 주소에서 **지번**을 뽑는다.
+ *   "서울특별시 송파구 장지동 901 송파꿈에그린아파트"   → "901"
+ *   "서울특별시 강동구 둔촌동 633- 올림픽파크포레온"     → "633"
+ *   "서울특별시 종로구 신문로2가 1-434 광화문스페이스본"  → "1-434"
+ *
+ * ── 왜 필요한가 (2026-08-25)
+ * 실거래 신고명과 대장명이 **아예 다른** 단지가 있다:
+ *   실거래 「위례24단지(꿈에그린)」  ↔  대장 「송파꿈에그린아파트」
+ * 이름으로는 어떤 규칙으로도 못 잇는다. 그런데 **지번은 둘 다 장지동 901** 이다.
+ * 실측하니 명부 1,147개 중 이름으로 이어진 것이 652개(56.8%)뿐이었고,
+ * 지번을 덧대면 834개(72.7%)가 된다 — **182개가 되살아난다.**
+ *
+ * ⚠️ 법정동 이름에도 숫자가 붙는다("신문로2가"). 그래서 **동 이름 토막을 건너뛴 뒤**의
+ *    첫 숫자 토막만 본다 — '가'·'동'·'읍'·'면'·'리' 로 끝나는 토막까지는 주소다.
+ * ⚠️ 끝의 '-' 는 떼고 돌려준다(대장은 "633-" 처럼 부번 없이 남기기도 한다).
+ *    실거래 지번과 맞대려면 양쪽을 같은 모양으로 만들어야 한다 — 그건 normJibun 이 한다.
+ */
+export function jibunFromAddr(addr: string): string | null {
+  const toks = String(addr ?? "").trim().split(/\s+/);
+  let i = toks.findIndex((t) => /[가동읍면리]$/.test(t));
+  if (i < 0) return null;
+  for (let k = i + 1; k < toks.length; k++) {
+    const t = toks[k];
+    if (/^\d+(-\d+)?-?$/.test(t)) return normJibun(t);
+    break; // 숫자가 바로 안 나오면 지번이 없는 주소다
+  }
+  return null;
+}
+
+/** 지번 표기 통일 — 끝의 '-' 를 떼고 앞뒤 공백을 없앤다. 빈 값·문자 지번은 null. */
+export function normJibun(raw: string): string | null {
+  const s = String(raw ?? "").trim().replace(/-+$/, "");
+  return /^\d+(-\d+)?$/.test(s) ? s : null;
+}
