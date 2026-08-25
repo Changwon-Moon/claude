@@ -66,3 +66,29 @@ git add -- data/content data/review     # ← data/content 는 .gitignore 대상
 두드리는 일이고, 실제로 공공데이터포털 **일일 호출 한도**를 태우는 데 한몫했다.
 → 조사가 끝나면 cron 을 뺀다. **탐침과 수집기는 수명이 다르다** — 수집기는 계속 돌지만
    탐침은 답을 얻는 순간 일이 끝난다. 만들 때 그 차이를 적어 두지 않으면 아무도 안 끈다.
+
+## 학습 로그 — 2026-08-25 세션이 워크플로를 **띄울 수 있다**
+
+`POST /actions/workflows/{file}/dispatches` 가 **204** 로 통한다(프록시 우회 `--noproxy '*'`).
+저장소 문서는 오래 "세션은 Actions 버튼을 못 누른다"로 되어 있었다 — 토큰에 권한이 들어왔다.
+
+```bash
+curl -s --noproxy '*' -X POST -H "Authorization: Bearer $TOK" \
+  https://api.github.com/repos/Changwon-Moon/claude/actions/workflows/singo-daily.yml/dispatches \
+  -d '{"ref":"<브랜치>","inputs":{"months":"1","top":"0","sort":"price"}}'
+```
+
+이 덕에 08-25 에 곡선·공급면적·역·주차 수집을 **대기열 푸시를 기다리지 않고** 바로 걸었고,
+러너 IP 로 죽은 런을 즉시 새 러너에서 다시 돌렸다.
+
+⚠️ **워크플로가 워크플로를 부르는 데는 못 쓴다.** 그건 GITHUB_TOKEN 이라 막힌다 —
+자동 재시도는 `workflow_run` → `workflow_call` 로 간다(08-24).
+**세션이 손으로 쓸 때만 되는 길이다.**
+
+⚠️ 필수 입력이 있는 워크플로는 `inputs` 없이 부르면 **422** 다. 실패 코드를 읽고 넣는다.
+
+## 학습 로그 — 2026-08-25 오래 도는 수집은 **끝을 보고** 다음을 건다
+
+곡선 수집(단지당 80개월)은 19단지에 한 시간 가까이 걸린다. 워크플로 `timeout-minutes: 60`
+안에 들어갔고 커밋은 **맨 끝에 한 번** 나므로, 중간에는 저장소에 아무것도 안 보인다.
+"진행이 없다"고 판단해 다시 걸면 앞선 것을 버리게 된다 — **런 상태를 API 로 보고 기다린다.**

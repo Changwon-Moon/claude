@@ -1,11 +1,11 @@
 {
-  "label": "singo-misa-centriver",
+  "label": "singo-yeongtong-centralparkview",
   "verdict": "pass",
   "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
-      "file": "singo-미사강변센트리버-59.json",
+      "file": "singo-영통센트럴파크뷰-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []

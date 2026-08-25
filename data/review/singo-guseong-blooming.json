@@ -1,15 +1,8 @@
 {
   "label": "singo-guseong-blooming",
-  "verdict": "block",
-  "summary": "BLOCK — error 1 · warn 0 · 카드 1장 · 코드 검수만",
-  "findings": [
-    {
-      "reviewer": "caption-number",
-      "level": "error",
-      "code": "number-mismatch",
-      "msg": "캡션 금액 6.15억, 6.6억, 8.95억이(가) 카드 수치에 없습니다 — 오보 위험, 카드와 대조 필요"
-    }
-  ],
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "findings": [],
   "cards": [
     {
       "file": "singo-블루밍구성더센트럴-84.json",

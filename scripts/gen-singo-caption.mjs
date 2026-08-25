@@ -55,12 +55,33 @@ const low = [...curve].sort((a, b) => parseFloat(a.eok) - parseFloat(b.eok))[0];
 const lowLine = card.chart?.lowLine;
 const lowPct = lowLine ? lowLine.text2.replace(/^저점대비\s*/, "") : null;
 
-const specPlain = (card.spec ?? []).map((x) => x.replace(/<[^>]+>/g, " | "));
+/* ⚠️ **제원 줄의 자리로 읽지 않는다** (2026-08-25 에 실제로 깨졌다).
+   예전엔 `specPlain[0]`=세대수·준공, `[1]`=전용·층, `[2]`=주차 로 **줄 번호를 박아** 읽었다.
+   오너가 제원을 3줄(주소 / 세대수·준공·주차 / 전용·층)로 재편하자 자리가 밀려
+   캡션이 `전용 undefined㎡ undefined층` 으로 나갔다 — 준공년도도 통째로 빠졌다.
+   판형이 바뀌면 조용히 틀리는 방식이다.
+
+   이제 **제원 전체를 한 덩어리로 놓고 뜻으로 찾는다.** 줄이 몇 번째든, 몇 줄이든 상관없다.
+   ⚠️ 준공은 `2022년 준공` 과 `'22년 준공` 두 표기가 다 있다(08-25 에 두 자리로 바뀌었다).
+      두 자리면 2000년대로 편다 — 아파트 준공년도라 1900년대는 두 자리로 안 적는다.
+   ⚠️ 그래도 가장 믿을 것은 `meta` 다. 있으면 meta 를 먼저 쓴다. */
+const specAll = (card.spec ?? []).map((x) => x.replace(/<[^>]+>/g, " | ")).join(" | ");
 const hhld = m.hhld?.hhld ? `${m.hhld.hhld.toLocaleString("ko-KR")}세대 단지입니다.` : "";
-const buildYear = (specPlain[0] ?? "").match(/(\d{4})년 준공/)?.[1];
-const area = (specPlain[1] ?? "").match(/전용 ([\d.]+)/)?.[1];
-const floor = (specPlain[1] ?? "").match(/(\d+)층/)?.[1];
-const park = (specPlain[2] ?? "").match(/([\d.]+)대/)?.[1];
+const yy2 = specAll.match(/'(\d{2})년 준공/)?.[1];
+const buildYear = specAll.match(/(\d{4})년 준공/)?.[1] ?? (yy2 ? `20${yy2}` : undefined);
+const area = m.supplyArea?.exclusive ?? specAll.match(/전용 ([\d.]+)/)?.[1];
+const floor = specAll.match(/(\d+)층/)?.[1];
+const park = m.parking?.perHhld
+  ? Number(m.parking.perHhld).toFixed(1)
+  : specAll.match(/주차 ([\d.]+)대/)?.[1];
+if (!area || !floor) {
+  console.error(
+    `⛔ 캡션에 실을 전용면적·층을 제원에서 못 읽었습니다 (전용=${area} 층=${floor}).\n` +
+      `   제원: ${specAll}\n` +
+      `   → 판형의 제원 형식이 바뀌었을 수 있습니다. 자리(줄 번호)가 아니라 뜻으로 찾는지 확인하세요.`,
+  );
+  process.exit(1);
+}
 
 const dealDate = m.provenance?.[0] ?? "";
 const contract = card.kicker.match(/(\d{4})\.(\d{2})\.(\d{2})/);
