@@ -691,8 +691,35 @@ if (prevLine && lowLine && Math.abs(prevLine.y - lowLine.y) < 110) {
   prevLine.ty1 = r2(prevLine.ty1 - 44);
   prevLine.ty2 = r2(prevLine.ty2 - 44);
 }
-if (threshold && prevLine && prevLine.ty1 - threshold.ty < 24) {
-  throw new Error(`돌파선 라벨과 고점 라벨이 너무 가깝습니다 — 판 높이를 키우세요.`);
+/* ── 돌파선 라벨(오늘 값) × 고점 라벨이 **실제로** 겹치나 (2026-08-25 정정)
+ *
+ * 예전엔 **세로 간격만** 봤다. 그런데 두 라벨은 가로로도 멀리 떨어져 있다 —
+ * 돌파선 라벨은 오른쪽 끝(`X1-34`, end 앵커)이고, 고점 라벨은 자리를 재서 대개 왼쪽에 선다.
+ * 그래서 신고가와 직전 최고가가 거의 같은 단지에서 **겹치지도 않는데 던졌다**:
+ *   · 중계주공5        8.97억 → 9억   (+0.3%)
+ *   · 가산두산위브      7.45억 → 7.5억 (+0.67%)
+ *   · 영통센트럴파크뷰   5.95억 → 6억   (+0.84%)
+ * 셋 다 그림에는 아무 문제가 없었고, **오탐 때문에 카드가 안 나왔다.**
+ *
+ * 이제 **두 축이 다 겹칠 때만** 던진다. 이 가드는 자리를 옮기지 않고 판정만 하므로
+ * **통과하던 카드의 픽셀은 한 픽셀도 안 움직인다** — 막히던 카드만 풀린다.
+ * (VB_H 를 738 로 줄이며 세로가 좁아져 영통센트럴파크뷰가 새로 걸렸고,
+ *  그 덕에 옛 가드가 가로를 안 본다는 사실이 드러났다.) */
+if (threshold && prevLine) {
+  const THR_FS = 24; // .sr-thrlab
+  const thrW = widthOf(threshold.text, THR_FS);
+  const thrBox = { x0: threshold.tx - thrW, x1: threshold.tx, y0: threshold.ty - THR_FS, y1: threshold.ty + 8 };
+  const prvW = Math.max(widthOf(prevLine.text1, LAB_FS), widthOf(prevLine.text2, LAB_FS));
+  const prvX0 = prevLine.anchor === "end" ? prevLine.tx - prvW : prevLine.tx;
+  const prvBox = { x0: prvX0, x1: prvX0 + prvW, y0: prevLine.ty1 - LAB_FS, y1: prevLine.ty2 + 8 };
+  const GAP = 16;
+  const overlapX = prvBox.x0 < thrBox.x1 + GAP && thrBox.x0 < prvBox.x1 + GAP;
+  const overlapY = prvBox.y0 < thrBox.y1 + GAP && thrBox.y0 < prvBox.y1 + GAP;
+  if (overlapX && overlapY) {
+    throw new Error(
+      `돌파선 라벨("${threshold.text}")과 고점 라벨("${prevLine.text1}")이 겹칩니다 — 판 높이(VB_H)를 줄이거나 고점 라벨 자리를 옮기세요.`,
+    );
+  }
 }
 
 /* ── 판 안쪽 워터마크 (오너 2026-08-16b "더 키워서 대각선으로 기울여서 중앙배치")

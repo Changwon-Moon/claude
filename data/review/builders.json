@@ -622,6 +622,34 @@
         "--publish"
       ],
       "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-junggye-jugong5",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "주공5",
+        "--type",
+        "59",
+        "--kapt",
+        "A13922114",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수. / 신고가와 직전 최고가 차이가 작아 옛 가드(세로만 보던 판정)에 오탐으로 막혀 있던 카드다 — 2026-08-25 가드를 2축으로 고쳐 풀렸다."
+    },
+    {
+      "label": "singo-gasan-doosan",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "두산",
+        "--type",
+        "59",
+        "--kapt",
+        "A15380403",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수. / 신고가와 직전 최고가 차이가 작아 옛 가드(세로만 보던 판정)에 오탐으로 막혀 있던 카드다 — 2026-08-25 가드를 2축으로 고쳐 풀렸다."
     }
   ]
 }
