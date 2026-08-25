@@ -64,6 +64,15 @@ const norm = (s) =>
  *      상록마을을 `--merge-blocks` 로 부르면 여기서 멈춘다(지번 4종).
  * 사람의 의도만 믿지 않고, **자료로 한 번 더 되묻는다.** */
 const MERGE = flag("merge-blocks");
+
+/* ── `--name` — 카드에 찍을 이름만 바꾼다 (2026-08-25 오너 "영통에듀파크(331~7동) 33평으로")
+ *
+ * 실거래 신고명이 `영통에듀파크(331동~337동)` 처럼 길어 제목이 답답할 때 쓴다.
+ * ⚠️ **판정·조회는 신고명 그대로** 돌고, 바뀌는 것은 제목 글자뿐이다.
+ *    원래 이름은 `meta.provenance` 에 남는다 — 카드에서 이름을 줄였다는 사실 자체가
+ *    자료에 남아야, 나중에 "이 단지 맞나"를 되물을 수 있다.
+ * ⚠️ 이걸로 **다른 단지 이름을 적지 않는다.** 줄여 쓰는 자리이지 고쳐 쓰는 자리가 아니다. */
+const NAME_OVERRIDE = arg("name") || null;
 const nameEq = (a, b) => (MERGE ? norm(a) === norm(b) : full(a) === full(b));
 
 const eok = (manwon) => {
@@ -212,7 +221,13 @@ const VB_W = 936; // 카드 안쪽 폭(1080 - 좌우 여백 72×2)
 /* ⚠️ 775 였을 때 판이 담는 칸(`.sr-chart`, 760px)을 **7px 넘쳐** designQa 가 error 를 냈다
    (2026-08-16b 검수). 제원이 세 줄이 되면서 히어로가 커져 칸이 그만큼 줄어든 것이다.
    **위에 줄이 늘면 여기를 줄여야 한다** — SVG 는 flex 로 안 줄어들어 그냥 아랫줄을 덮는다. */
-const VB_H = 768;
+/* ⚠️ 2026-08-25 — 제원에 **주소 줄**이 붙어 위가 한 줄 더 늘었다(오너 지시).
+   그래서 위 경고대로 여기를 줄인다. 안 줄였더니 designQa `svgspill` 이 8장에서
+   최대 15px 넘침을 잡았다 — 넘친 만큼 아랫줄(연도 축)을 덮는다.
+   768 → 738. 748 로 잡았더니 4줄짜리가 아직 5px 넘쳐 한 번 더 내렸다. 주차 줄까지 있는 4줄짜리에서도 여유가 남는 값으로 잡았다.
+   ⚠️ 이 값은 singo-record 전 카드에 걸린다. 바꾸면 확정본 픽셀도 같이 움직인다 —
+      이번에는 주소 줄 자체가 전 카드에 걸리는 변경이라 어차피 함께 다시 확정해야 한다. */
+const VB_H = 738;
 /* 위 — 돌파선 라벨이 앉을 자리만 남긴다. 62 였을 때 판 위쪽에 빈 띠가 남았다
    (오너 2026-08-16b "그래프 위쪽 여백이 과해"). 아래 `yMax` 여유와 **둘이 합쳐** 그 띠를 만든다.
    ⚠️ 라벨(28px)이 y-20 에 앉으므로 48px 아래로는 못 내린다 — 그 아래는 라벨이 판을 넘는다. */
@@ -808,6 +823,36 @@ const specTop = [
   kapt ? `${kapt.hhld.toLocaleString("ko-KR")}세대` : null,
   hit.buildYear ? `${hit.buildYear}년 준공` : null,
 ].filter(Boolean);
+
+/* ── 주소 — 제원의 **맨 윗줄** (오너 2026-08-25)
+ *   "서울 송파구 잠실동" · "수원시 영통구 이의동"
+ *
+ * ⚠️ 이것은 2026-08-16b「제목에 지역을 붙이지 않는다」를 뒤집는 게 아니다.
+ *    그때 정한 것은 **제목은 주인공(단지명+평형) 하나만 세운다**였고, 지역은 역 뱃지·캡션·
+ *    meta.region 이 말하기로 했다. 그 문서에 이미 적혀 있다 —
+ *    *"다시 싣게 되면 제목이 아니라 킥커 쪽에 둔다."* 제원 맨 윗줄이 그 자리다.
+ *    제목은 여전히 두 토막이고, 카드마다 모양이 달라지지 않는다.
+ *
+ * 표기 규칙 — 오너가 준 두 예시에서 그대로 뽑았다:
+ *   · 서울(lawdCd 11xxx) → `서울 은평구 증산동`   ← 시도 이름을 붙인다
+ *   · 경기(41xxx)        → `수원시 영통구 이의동` ← 시도(경기)는 안 붙이고 시·구를 띄운다
+ *     (`gu` 가 `수원시영통구` 처럼 붙어 오므로 '시' 뒤에서 한 번만 끊는다.
+ *      `하남시` 처럼 구가 없는 곳은 그대로 `하남시 선동`)
+ * ⚠️ 코드가 `gu`·`umdNm` 에서 만든다. 사람이 손으로 적지 않는다 — 15장을 손으로 적으면
+ *    한 장은 반드시 틀린다. */
+function addressLine(lawdCd, guName, umd) {
+  const g = String(guName ?? "").trim();
+  const u = String(umd ?? "").trim();
+  if (!g || !u) return null;
+  if (String(lawdCd).startsWith("11")) return `서울 ${g} ${u}`;
+  // 「수원시영통구」→「수원시 영통구」. '시' 뒤에 글자가 더 있을 때만 끊는다.
+  const m = g.match(/^(.+?시)(.+구)$/);
+  return m ? `${m[1]} ${m[2]} ${u}` : `${g} ${u}`;
+}
+const specAddr = addressLine(hit.lawdCd, hit.gu, hit.umdNm);
+
+/* 카드에 찍을 이름 — `--name` 이 있으면 그것, `--merge-blocks` 면 합친 이름, 없으면 신고명. */
+const DISPLAY_NAME = NAME_OVERRIDE || (MERGE ? APT : hit.aptNm);
 /* 주차대수 — **세대당 몇 대**로 적는다(오너 2026-08-16 "주차대수 0.0대").
    ⚠️ 총 대수만 적으면 큰 단지가 무조건 좋아 보인다. 사람이 궁금한 건 "내 차 댈 데 있나"다.
    ⚠️ 자료가 없으면 **줄을 안 붙인다.** 짐작해 적는 순간 오보다 —
@@ -860,7 +905,7 @@ const areaLab = Number(hit.area).toFixed(2).replace(/\.?0+$/, "");
 const specBot = [`전용 ${areaLab}㎡`, `${hit.floor}층`];
 /* 오너 지시는 "전용면적·층수 **아래**" — 같은 줄에 붙이지 않고 셋째 줄로 세운다. */
 const specPark = parking ? `세대당 주차 ${parking.perHhld.toFixed(1)}대` : null;
-const spec = [specTop.join(SEP), specBot.join(SEP), specPark].filter((x) => x);
+const spec = [specAddr, specTop.join(SEP), specBot.join(SEP), specPark].filter((x) => x);
 
 const card = {
   template: "singo-record@1",
@@ -879,7 +924,7 @@ const card = {
         DMC센트럴자이는 1~4단지를 합쳐 판정했으므로 제목에 「(2단지)」를 달면 안 된다 —
         아래 제원의 세대수 1,256 이 **단지 전체 값**이라, 2단지라고 적으면 그 순간 오보가 된다.
         무엇을 합쳐 셌는지와 무엇이라 부르는지가 같아야 한다. */
-  title: `${MERGE ? APT : hit.aptNm} <span class="py">${hit.pyeong}</span>`,
+  title: `${DISPLAY_NAME} <span class="py">${hit.pyeong}</span>`,
   station,
   price: eok(hit.priceManwon),
   /* 가격 옆 한 마디 — 오너 지시(2026-08-16b, 자리에 있던 워터마크를 이걸로 바꿨다).
@@ -897,6 +942,9 @@ const card = {
     provenance: [
       `singo-log: ${hit.foundOn ?? DATE} 판정`,
       `singo-history: ${histPath.replace(ROOT + "/", "")} (${hist.meta.monthsTried}개월 · 실패 ${hist.meta.monthsFailed})`,
+      ...(NAME_OVERRIDE
+        ? [`⚠️ 카드 이름을 줄여 적었다: 실거래 신고명 "${hit.aptNm}" → 카드 "${NAME_OVERRIDE}" (--name, 오너 지시)`]
+        : []),
     ],
     baselineFrom: hist.meta.from,
     /* 지역은 **카드 제목에서 뺐다**(오너 2026-08-16b). 그렇다고 자료에서까지 지우면

@@ -12,7 +12,9 @@
   "y": 37.5081540942389,
   "geoMethod": "주소",
   "station": "서울지방병무청역",
-  "lines": [],
+  "lines": [
+    "신림"
+  ],
   "distanceM": 378,
   "rawPlaceName": "서울지방병무청역 신림선",
   "others": [

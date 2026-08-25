@@ -510,8 +510,8 @@
     "spec": {
       "type": "array",
       "minItems": 1,
-      "maxItems": 3,
-      "description": "제원 — 세대수|준공 / 전용㎡|층 / 세대당 주차. <span class=\"sep\">|</span> 로 구분. 주차 줄은 자료(apt-detail)가 있을 때만.",
+      "maxItems": 4,
+      "description": "제원 — 세대수|준공 / 전용㎡|층 / 세대당 주차. <span class=\"sep\">|</span> 로 구분. 주차 줄은 자료(apt-detail)가 있을 때만. 최대 4줄 — 주소 / 세대수|준공 / 전용|층 / 세대당 주차. 주소 줄은 2026-08-25 오너 지시로 맨 위에 붙었다. ⚠️ 여기를 늘릴 때는 빌더의 VB_H 도 같이 줄여야 한다 — 위가 늘면 곡선 판이 아랫줄을 덮는다(designQa svgspill).",
       "items": {
         "type": "string",
         "maxLength": 80
