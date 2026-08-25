@@ -22,6 +22,7 @@
  * 정기물의 약속은 "픽셀이 안 바뀐다"가 아니라 **"같은 데이터면 같은 픽셀"**(결정성)이다.
  */
 import { readFileSync, writeFileSync, existsSync, readdirSync, mkdirSync } from "node:fs";
+import { buildersForSet } from "./lib/builders-for-set.mjs";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { join, dirname } from "node:path";
@@ -98,9 +99,10 @@ for (const label of labels) {
   if (r.status !== 0) die(`${label} 재생산·검수 실패 — 확정하지 않습니다`);
 
   // 렌더 산출물의 md5 (render-sets 가 data/out 에 남긴 것을 쓴다)
-  const mine = builders.filter(
-    (b) => b.label === label || set.cards.some((c) => c.startsWith(b.label) || b.label.startsWith(base(c)))
-  );
+  /* 판단은 정본 하나에 있다 — scripts/lib/builders-for-set.mjs
+     (여기 따로 적었다가 2026-08-25 에 정기물을 고정물로 판정하는 사고가 났다) */
+  const mine = buildersForSet(set, builders);
+
   const deps = [...new Set(mine.flatMap(depsOf))];
   const rolling = deps.filter((d) => REFRESHED.some((rf) => d.startsWith(rf) || rf.startsWith(d)));
   const isPeriodic = rolling.length > 0;

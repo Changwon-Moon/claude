@@ -12,6 +12,7 @@
  * 실행: node scripts/produce-card.mjs <세트라벨>   (예: tohuh-rank)
  */
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
+import { buildersForSet } from "./lib/builders-for-set.mjs";
 import { spawnSync } from "node:child_process";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -32,11 +33,8 @@ if (!set) {
   process.exit(1);
 }
 
-// 이 세트를 만드는 빌더 = 라벨이 같거나, 세트 카드 slug 와 접두로 대응되는 것
-const base = (c) => c.replace(/-p\d+$/, "");
-const mine = builders.filter(
-  (b) => b.label === label || set.cards.some((c) => c.startsWith(b.label) || b.label.startsWith(base(c)))
-);
+/* 이 세트를 만드는 빌더 — 판단은 정본 하나에 있다(scripts/lib/builders-for-set.mjs). */
+const mine = buildersForSet(set, builders);
 if (!mine.length) {
   console.log(`::error::이 세트를 만드는 빌더가 없습니다 — "${label}". 새 소재의 첫 제작은 작업 세션(사람)이 필요합니다.`);
   process.exit(1);

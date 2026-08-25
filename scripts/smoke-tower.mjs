@@ -19,6 +19,7 @@
  * 실행: node scripts/smoke-tower.mjs [관제탑.html]
  */
 import { existsSync } from "node:fs";
+import { setFullyCovered } from "./lib/builders-for-set.mjs";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
@@ -76,8 +77,9 @@ page.on("dialog", (d) => d.accept(d.type() === "prompt" ? "스모크 이유" : u
       const capName = st.caption || st.label;
       const hasCap = ex(join(ROOT, "data/review/captions", capName + ".txt"));
       if (!hasCap) continue; // 캡션 없는 세트는 아직 발행 후보가 아니다
-      const covered = bLabels.has(st.label)
-        || st.cards.every((c) => [...bLabels].some((b) => c.startsWith(b) || b.startsWith(c.replace(/-p\d+$/, ""))));
+      /* 판단은 정본 하나에 있다 — scripts/lib/builders-for-set.mjs
+         (여기 따로 적혀 있어서 2026-08-25 에 세 곳이 나란히 어긋났다) */
+      const covered = setFullyCovered(st, builders);
       check(`발행 세트 '${st.label}' 에 카드 재생성 빌더가 있다`, covered,
         "builders.json 에 등록하세요 — 없으면 실사이트에 카드가 안 뜹니다");
     }

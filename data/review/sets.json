@@ -576,229 +576,47 @@
       ]
     },
     {
-      "label": "singo-seongbok-goldtown",
-      "title": "🔥 성복역롯데캐슬골드타운 34평, 18.7억 신고가",
+      "label": "singo-daily-2026-08-25",
+      "title": "🔥 8월 25일 신고가 15곳",
       "cards": [
-        "singo-성복역롯데캐슬골드타운-84"
-      ],
-      "caption": "singo-seongbok-goldtown",
-      "state": "오너 확정",
-      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10025412 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 14.95억 (2021.01월) · 최대 낙폭 -29.77%. 정기물이라 픽셀 기준값 미등록. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-성복역롯데캐슬골드타운-84:90dab0445cb0"
-      ]
-    },
-    {
-      "label": "singo-seongbok-clasiel",
-      "title": "🔥 성복역롯데캐슬클라시엘 34평, 14.9억 신고가",
-      "cards": [
-        "singo-성복역롯데캐슬클라시엘-84"
-      ],
-      "caption": "singo-seongbok-clasiel",
-      "state": "오너 확정",
-      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10024453 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 11.82억 (2021.04월) · 최대 낙폭 -28.11%. 정기물이라 픽셀 기준값 미등록. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-성복역롯데캐슬클라시엘-84:611555e4bb64"
-      ]
-    },
-    {
-      "label": "singo-kkumesup-ipark",
-      "title": "🔥 꿈의숲아이파크 26평, 14.7억 신고가",
-      "cards": [
-        "singo-꿈의숲아이파크-59"
-      ],
-      "caption": "singo-kkumesup-ipark",
-      "state": "오너 확정",
-      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10024488 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 9.1억 (2023.10월) · 최대 낙폭 -10.99%. 정기물이라 픽셀 기준값 미등록. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-꿈의숲아이파크-59:4befdf413917"
-      ]
-    },
-    {
-      "label": "singo-taereung-harrington",
-      "title": "🔥 태릉해링턴플레이스 33평, 14.45억 신고가",
-      "cards": [
-        "singo-태릉해링턴플레이스-84"
-      ],
-      "caption": "singo-taereung-harrington",
-      "state": "오너 확정",
-      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10023991 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 11.5억 (2024.08월) · 최대 낙폭 -10.43%. 정기물이라 픽셀 기준값 미등록. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-태릉해링턴플레이스-84:1e7cf29db026"
-      ]
-    },
-    {
-      "label": "singo-singil-samhwan",
-      "title": "🔥 삼환 32평, 14.4억 신고가",
-      "cards": [
-        "singo-삼환-84"
-      ],
-      "caption": "singo-singil-samhwan",
-      "state": "오너 확정",
-      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A15005705 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 12억 (2021.08월) · 최대 낙폭 -21.25%. 정기물이라 픽셀 기준값 미등록. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-삼환-84:69d656ee67d2"
-      ]
-    },
-    {
-      "label": "singo-nokbeon-castle",
-      "title": "🔥 녹번역e편한세상캐슬 25평, 14.2억 신고가",
-      "cards": [
-        "singo-녹번역e편한세상캐슬-59"
-      ],
-      "caption": "singo-nokbeon-castle",
-      "state": "오너 확정",
-      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10024831 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 11.85억 (2021.05월) · 최대 낙폭 -34.18%. 정기물이라 픽셀 기준값 미등록. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-녹번역e편한세상캐슬-59:fdcafbde48dd"
-      ]
-    },
-    {
-      "label": "singo-yeongtong-iparkcastle1",
-      "title": "🔥 영통아이파크캐슬1단지 33평, 13.9억 신고가",
-      "cards": [
-        "singo-영통아이파크캐슬1단지-84"
-      ],
-      "caption": "singo-yeongtong-iparkcastle1",
-      "state": "오너 확정",
-      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10025621 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 10.7억 (2021.10월) · 최대 낙폭 -39.25%. 정기물이라 픽셀 기준값 미등록. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-영통아이파크캐슬1단지-84:20b9c2f75737"
-      ]
-    },
-    {
-      "label": "singo-guseong-blooming",
-      "title": "🔥 블루밍구성더센트럴 33평, 12.4억 신고가",
-      "cards": [
-        "singo-블루밍구성더센트럴-84"
-      ],
-      "caption": "singo-guseong-blooming",
-      "state": "오너 확정",
-      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A44693813 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 7.39억 (2020.02월) · 최대 낙폭 -52.64%. 정기물이라 픽셀 기준값 미등록. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-블루밍구성더센트럴-84:cd6e0788566d"
-      ]
-    },
-    {
-      "label": "singo-misa-centriver",
-      "title": "🔥 미사강변 센트리버 25평, 11.88억 신고가",
-      "cards": [
-        "singo-미사강변센트리버-59"
-      ],
-      "caption": "singo-misa-centriver",
-      "state": "오너 확정",
-      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10027344 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 9.47억 (2021.11월) · 최대 낙폭 -28.19%. 정기물이라 픽셀 기준값 미등록. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-미사강변센트리버-59:24458a264c75"
-      ]
-    },
-    {
-      "label": "singo-wolgye-grandvill",
-      "title": "🔥 한진한화그랑빌 23평, 11.5억 신고가",
-      "cards": [
-        "singo-한진한화그랑빌-59"
-      ],
-      "caption": "singo-wolgye-grandvill",
-      "state": "오너 확정",
-      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A13984004 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 9.2억 (2021.08월) · 최대 낙폭 -42.39%. 정기물이라 픽셀 기준값 미등록. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-한진한화그랑빌-59:3de1fd127679"
-      ]
-    },
-    {
-      "label": "singo-yeongtong-edupark",
-      "title": "🔥 영통에듀파크(331~7동) 33평, 9.45억 신고가",
-      "cards": [
-        "singo-영통에듀파크331동~337동-84"
-      ],
-      "caption": "singo-yeongtong-edupark",
-      "state": "오너 확정",
-      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A44347021 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 9.05억 (2021.10월) · 최대 낙폭 -39.56%. 정기물이라 픽셀 기준값 미등록. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-영통에듀파크331동~337동-84:34f70419ed16"
-      ]
-    },
-    {
-      "label": "singo-hwaseo-prugio-84",
-      "title": "🔥 화서역푸르지오더에듀포레 33평, 8.95억 신고가",
-      "cards": [
-        "singo-화서역푸르지오더에듀포레-84"
-      ],
-      "caption": "singo-hwaseo-prugio-84",
-      "state": "오너 확정",
-      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A44033010 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 8.5억 (2021.08월) · 최대 낙폭 -32.12%. 정기물이라 픽셀 기준값 미등록. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-화서역푸르지오더에듀포레-84:20a141e61107"
-      ]
-    },
-    {
-      "label": "singo-sindongtan-forezai",
-      "title": "🔥 신동탄포레자이 25평, 8.6억 신고가",
-      "cards": [
-        "singo-신동탄포레자이-59"
-      ],
-      "caption": "singo-sindongtan-forezai",
-      "state": "오너 확정",
-      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10023329 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 7억 (2024.11월) · 최대 낙폭 -3.93%. 정기물이라 픽셀 기준값 미등록. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-신동탄포레자이-59:f33bf4836995"
-      ]
-    },
-    {
-      "label": "singo-yeongtong-centralparkview",
-      "title": "🔥 영통센트럴파크뷰 24평, 6억 신고가",
-      "cards": [
-        "singo-영통센트럴파크뷰-59"
-      ],
-      "caption": "singo-yeongtong-centralparkview",
-      "state": "오너 확정",
-      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A44347020 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 5.7억 (2021.09월) · 최대 낙폭 -36.84%. 정기물이라 픽셀 기준값 미등록. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-영통센트럴파크뷰-59:9d612b8f6d11"
-      ]
-    },
-    {
-      "label": "singo-pyeongnae-metrowon",
-      "title": "🔥 e편한세상평내메트로원 25평, 5.2억 신고가",
-      "cards": [
+        "singo-성복역롯데캐슬골드타운-84",
+        "singo-성복역롯데캐슬클라시엘-84",
+        "singo-꿈의숲아이파크-59",
+        "singo-태릉해링턴플레이스-84",
+        "singo-삼환-84",
+        "singo-녹번역e편한세상캐슬-59",
+        "singo-영통아이파크캐슬1단지-84",
+        "singo-블루밍구성더센트럴-84",
+        "singo-미사강변센트리버-59",
+        "singo-한진한화그랑빌-59",
+        "singo-영통에듀파크331동~337동-84",
+        "singo-화서역푸르지오더에듀포레-84",
+        "singo-신동탄포레자이-59",
+        "singo-영통센트럴파크뷰-59",
         "singo-e편한세상평내메트로원-59"
       ],
-      "caption": "singo-pyeongnae-metrowon",
+      "caption": "singo-daily-2026-08-25",
       "state": "오너 확정",
-      "note": "오늘의 신고가 판형(singo-record@1) · 2026-08-25 일괄. 평은 건축물대장 실측. kaptCode A10023740 는 이름이 아니라 (지역+법정동+세대수)로 물렸다. 지난 사이클 고점 4.9억 (2023.08월) · 최대 낙폭 -25.51%. 정기물이라 픽셀 기준값 미등록. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
+      "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 15개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 하루치 캐러셀 한 게시물로 묶음(오너 2026-08-25) / 하루치를 캐러셀 한 게시물로 묶음(오너 2026-08-25). 장 순서 = 거래가 큰 순.",
       "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
       "confirmedMd5": [
+        "singo-성복역롯데캐슬골드타운-84:90dab0445cb0",
+        "singo-성복역롯데캐슬클라시엘-84:611555e4bb64",
+        "singo-꿈의숲아이파크-59:4befdf413917",
+        "singo-태릉해링턴플레이스-84:1e7cf29db026",
+        "singo-삼환-84:69d656ee67d2",
+        "singo-녹번역e편한세상캐슬-59:fdcafbde48dd",
+        "singo-영통아이파크캐슬1단지-84:20b9c2f75737",
+        "singo-블루밍구성더센트럴-84:cd6e0788566d",
+        "singo-미사강변센트리버-59:24458a264c75",
+        "singo-한진한화그랑빌-59:3de1fd127679",
+        "singo-영통에듀파크331동~337동-84:34f70419ed16",
+        "singo-화서역푸르지오더에듀포레-84:20a141e61107",
+        "singo-신동탄포레자이-59:f33bf4836995",
+        "singo-영통센트럴파크뷰-59:9d612b8f6d11",
         "singo-e편한세상평내메트로원-59:5637cfd6e1bd"
-      ]
+      ],
+      "confirmedAt": "2026-08-25"
     }
   ]
 }
