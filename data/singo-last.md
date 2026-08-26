@@ -1,9 +1,9 @@
 # 오늘의 신고가 — 마지막 실행
 
-- 실행: 2026-08-26 (KST) · 방아쇠 `workflow_dispatch`
+- 실행: 2026-08-26 (KST) · 방아쇠 `workflow_dispatch` · 🔇 조용
 - 기준: 1000세대 이상 명부 · 전용 59·84 타입 · 최근 2개월 신고분
-- 결과: **실패**
-- 커밋: `4a8d1a3488e7d3853d7f9f77acf646930ceb5d93`
+- 결과: **성공**
+- 커밋: `2f1cbeaec0e130eabf6f6cf3ae55de18c4d85337`
 
 ```
 
@@ -12,58 +12,26 @@
 
    🔑 MOLIT_API_KEY: 166b… (64자) · 지문 4e34245e · 인코딩 안 됨
 명부 지번 조회판 1050칸 (지번 겹쳐 버린 것 9칸)
-⚠️ 종로구 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-⚠️ 종로구 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-⚠️ 중구 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-   ⏸ 3번 연속 실패 — 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 중구 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-⚠️ 용산구 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-⚠️ 용산구 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-   ⏸ 3번 연속 실패 — 문이 닫힌 것으로 보고 60초 기다립니다 (2/5)
-⚠️ 성동구 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-⚠️ 성동구 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-⚠️ 광진구 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-   ⏸ 3번 연속 실패 — 문이 닫힌 것으로 보고 60초 기다립니다 (3/5)
-⚠️ 광진구 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-⚠️ 동대문구 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-⚠️ 동대문구 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-   ⏸ 3번 연속 실패 — 문이 닫힌 것으로 보고 60초 기다립니다 (4/5)
-⚠️ 중랑구 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-⚠️ 중랑구 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-⚠️ 성북구 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-   ⏸ 3번 연속 실패 — 문이 닫힌 것으로 보고 60초 기다립니다 (5/5)
-⚠️ 성북구 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-⚠️ 강북구 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-⚠️ 강북구 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.
-⛔ 5번(약 5분) 기다렸는데도 안 열립니다 — 여기서 접습니다.
-   (계속 두드리면 30분을 태우고도 결과는 같습니다)
-명부 1147개 단지 · 판정 지역 9/61 · 수집 성공 0회 / 실패 18회
-→ 오늘의 신고가 0건
-
-❌ 실거래 API 에서 한 건도 받지 못했습니다 (18회 시도 전부 실패) — 오늘 판정은 없습니다.
-   알림은 이미 나갔지만, 수집이 0건인 날을 초록불로 끝내지 않습니다.
-   첫 실패 사유: 종로구 202607: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지
-   ↳ 403/401 이면 공공데이터포털 마이페이지에서 **활용신청 상태와 만료일**을 확인하세요.
-/home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-singo: `tsx src/molitSingoCli.ts -- --today 2026-08-26 --months 2 --top 0 --sort price`
-Exit status 1
+명부 1147개 단지 · 판정 지역 61/61 · 수집 성공 122회 / 실패 0회
+→ 오늘의 신고가 20건
+  · 남양주시 다산반도유보라메이플타운 34평 10.02억 (전용 82.1967㎡ 21층 2026-08-24 · 직전 9.98억 2026-08-08 · 1,140세대)
+  · 마포구 신촌숲아이파크 34평 25.9억 (전용 84.932㎡ 27층 2026-07-30 · 직전 25.2억 2026-01-22 · 1,015세대)
+  · 용산구 강촌 25평 25억 (전용 59.12㎡ 21층 2026-07-17 · 직전 24.5억 2026-02-13 · 1,001세대)
+  · 서초구 서초힐스 25평 18.4억 (전용 59.97㎡ 6층 2026-08-04 · 직전 18억 2026-01-28 · 1,082세대)
+  · 동작구 신동아 34평 16.1억 (전용 84.46㎡ 4층 2026-08-25 · 직전 15.7억 2026-07-17 · 1,696세대)
+  · 동작구 신동아리버파크 25평 15.3억 (전용 59.67㎡ 17층 2026-07-31 · 직전 15.28억 2026-05-13 · 1,696세대)
+  · 구로구 신도림태영타운 34평 14.45억 (전용 84.87㎡ 10층 2026-07-29 · 직전 14.1억 2026-06-22 · 1,252세대)
+  · 안양시동안구 초원마을대림 34평 14억 (전용 84.92㎡ 16층 2026-08-08 · 직전 13.34억 2026-07-11 · 1,035세대)
+  · 강서구 등촌동아이파크 34평 13.7억 (전용 84.9958㎡ 20층 2026-08-20 · 직전 12.95억 2022-03-22 · 1,653세대)
+  · 중랑구 한신아파트상가동유치원동(103~109) 34평 10.8억 (전용 84.03㎡ 22층 2026-07-25 · 직전 10.05억 2026-06-16 · 1,544세대)
+  · 광주시 광주역자연앤자이 34평 9.8억 (전용 84.5516㎡ 26층 2026-08-01 · 직전 9.5억 2026-06-25 · 1,031세대)
+  · 남양주시 다산자연앤e편한세상3차 25평 9.4억 (전용 59.9806㎡ 5층 2026-08-22 · 직전 8.95억 2026-07-08 · 1,394세대)
+  · 성북구 동아에코빌 25평 8.82억 (전용 59.95㎡ 16층 2026-08-12 · 직전 8.75억 2026-07-30 · 1,253세대)
+  · 노원구 장미(시영6) 25평 8.8억 (전용 59.22㎡ 10층 2026-08-07 · 직전 8.5억 2026-07-29 · 1,880세대)
+  · 구로구 한진 34평 8.4억 (전용 84.96㎡ 10층 2026-08-13 · 직전 7.8억 2022-03-17 · 1,371세대)
+기간 2026-08-26
+신고가 20건 · 돌파 1건
+→ /home/runner/work/claude/claude/docs/daily/신고가재료-2026-08-26.md
+→ data/datasets/singo-digest.json
+→ data/singo-digest-alert.txt
 ```
