@@ -1,0 +1,35 @@
+{
+  "kaptCode": "A10025331",
+  "kaptName": "다산자연&e편한세상 3차아파트",
+  "type": "59",
+  "jibun": "6132",
+  "exclusive": 59.981,
+  "commonResidential": 26.438,
+  "supply": 86.42,
+  "pyeong": 26.14,
+  "pyeongLabel": "26평",
+  "sampleDong": "5306동",
+  "sampleHo": "1003",
+  "sampleCount": 229,
+  "ratio": 0.6941,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단실",
+      "floor": "지상 각층",
+      "area": 18.0848
+    },
+    {
+      "purpose": "아파트 / 벽체",
+      "floor": "지상 10층",
+      "area": 7.411
+    },
+    {
+      "purpose": "아파트 / 지하층 계단실",
+      "floor": "지하 지1",
+      "area": 0.942
+    }
+  ],
+  "warn": "전용률 69.4% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것",
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
