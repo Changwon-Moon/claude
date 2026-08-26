@@ -37,3 +37,24 @@ kapt=A10023740 area=59.9958
 # 08-25 누락분 재투입
 kapt=A10023833 area=84.9264
 kapt=A12285703 area=83.27
+
+# ── 2026-08-26 신고가 19건 (하루치 캐러셀)
+kapt=A10024974 area=84.93
+kapt=A14003106 area=59.12
+kapt=A13778204 area=59.97
+kapt=A15605103 area=59.67
+kapt=A15205513 area=84.87
+kapt=A43174208 area=84.92
+kapt=A15703204 area=85.00
+kapt=A13187702 area=84.03
+kapt=A10026388 area=82.20
+kapt=A10024040 area=84.55
+kapt=A10025331 area=59.98
+kapt=A13612002 area=59.95
+kapt=A13987304 area=59.22
+kapt=A15209305 area=84.96
+kapt=A43176406 area=59.98
+kapt=A10026380 area=59.64
+kapt=A10027267 area=59.98
+kapt=A13202312 area=84.87
+kapt=A42084908 area=59.98

@@ -141,10 +141,23 @@ async function main() {
   ): UniverseItem | null {
     const list = byGu.get(lawdCd);
     if (!list) return null;
+    /* ⚠️ **이름은 같은 법정동 안에서만 잇는다** (2026-08-26).
+       예전엔 그 동에 명부 단지가 하나도 없으면 **구 전체**를 뒤졌다(`sameUmd.length ? sameUmd : list`).
+       그게 이번 달에 세 번, **전부 남의 단지에** 붙었다:
+         · 신동아(동작구 **본동** 481, 765세대) → 신동아리버파크(**노량진동**, 1,696세대)
+           → 1000세대 미만 단지가 명부를 통과해 **08-26 알림 20건 중 1건이 오보였다**
+         · 미성(은평구 **신사동** 140-1) → 미성아파트(불광동)(**불광동**, 1,340세대)
+           → 08-25 에 "카드를 만들다 만" 그 단지다. 못 만든 게 아니라 **애초에 다른 단지**였다
+         · 현대3차(영등포구 **문래동5가** 21) → 대림현대3차(**대림동**, 1,162세대)
+       **한 건도 옳게 이은 적이 없다.** 이 폴백은 지우는 것이 맞다.
+       동이 다른데 이름이 비슷한 것은 **형제 단지가 아니라 남**이다 — 서울 한 구에
+       `신동아`·`미성`·`현대N차` 는 여러 동에 흩어져 있다.
+       못 이은 것은 아래 **지번**이 받는다. 지번도 `동|지번` 키라 동을 넘지 않는다.
+       ⚠️ 되살리고 싶으면 위 세 건부터 다시 본다 — 「명부가 커진다」는 이유로는 안 된다.
+          잘못 이으면 커지는 게 아니라 **틀린다**. */
     if (fullAptName(aptNm)) {
       const sameUmd = list.filter((a) => a.umd === umdNm);
-      const pool = sameUmd.length ? sameUmd : list;
-      const hit = pool.filter((a) => sameApt(a.kaptName, aptNm));
+      const hit = sameUmd.filter((a) => sameApt(a.kaptName, aptNm));
       if (hit.length === 1) return hit[0];
     }
     /* 이름으로 못 이었으면 **지번**으로 다시 물어본다 (위 조회판 주석 참고).
