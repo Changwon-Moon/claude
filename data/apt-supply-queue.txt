@@ -60,3 +60,4 @@ kapt=A13202312 area=84.87
 kapt=A42084908 area=59.98
 # 2026-08-26 04:30 UTC — SERVICETIMEOUT 로 못 받은 4건 재시도(장미·개봉한진·호계2차·방학신동아1)
 # 2026-08-26 04:40 UTC — SERVICETIMEOUT 재시도 2차(호계2차·방학신동아1)
+# 2026-08-26 04:32 UTC — 개봉한진 24쪽 SERVICETIMEOUT 재시도 3차
