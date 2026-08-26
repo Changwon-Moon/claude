@@ -1,0 +1,29 @@
+{
+  "kaptCode": "A14003106",
+  "kaptName": "이촌강촌아파트",
+  "type": "59",
+  "jibun": "402",
+  "exclusive": 59.12,
+  "commonResidential": 24.946,
+  "supply": 84.07,
+  "pyeong": 25.43,
+  "pyeongLabel": "25평",
+  "sampleDong": "109동",
+  "sampleHo": "501호",
+  "sampleCount": 112,
+  "ratio": 0.7033,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단,복도,승강기",
+      "floor": "각층 각층",
+      "area": 18.48
+    },
+    {
+      "purpose": "부대시설 / 지하대피소",
+      "floor": "지하 지층",
+      "area": 6.466
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
