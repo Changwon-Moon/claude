@@ -1,7 +1,7 @@
 # 단지 가까운 역 — 마지막 실행
 
-- 대기열: 25줄
-- 결과: **성공**
+- 대기열: 44줄
+- 결과: **실패**
 
 ```
 ⏭ 이미 있음 — data/datasets/apt-station/A44340013.json (다시 받으려면 force=1)
@@ -10,184 +10,219 @@
 ⏭ 이미 있음 — data/datasets/apt-station/A10028021.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-station/A10026600.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-station/A10023875.json (다시 받으려면 force=1)
-
-── A10023329
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A10023329
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A10023329.json
-신동탄포레자이아파트 (주소로 좌표) → 망포역 직선 1046m · 노선 수인분당
-   다음: 영통역 1517m
-
-── A10023740
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A10023740
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A10023740.json
-e편한세상 평내 메트로원 (주소로 좌표) → 평내호평역 직선 840m · 노선 경춘
-
-
-── A10023833
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A10023833
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A10023833.json
-지제역 더샵 센트럴시티 (이름로 좌표) → 평택지제역 직선 522m · 노선 1
-
-
-── A10023991
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A10023991
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A10023991.json
-태릉해링턴플레이스 (주소로 좌표) → 화랑대역 직선 676m · 노선 6
-   다음: 공릉역 888m
-   다음: 태릉입구역 1070m
-   다음: 봉화산역 1200m
-
-── A10024453
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A10024453
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A10024453.json
-성복역 롯데캐슬 클라시엘 아파트 (이름로 좌표) → 성복역 직선 658m · 노선 신분당
-   다음: 상현역 1765m
-
-── A10024488
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A10024488
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A10024488.json
-꿈의숲아이파크아파트 (이름로 좌표) → 돌곶이역 직선 1162m · 노선 6
-   다음: 광운대역 1291m
-   다음: 상월곡역 1367m
-   다음: 석계역 1580m
-
-── A10024831
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A10024831
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A10024831.json
-녹번역e편한세상캐슬 (주소로 좌표) → 녹번역 직선 469m · 노선 3
-   다음: 역촌역 1054m
-   다음: 불광역 1203m
-   다음: 응암역 1359m
-
-── A10025412
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A10025412
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A10025412.json
-성복역 롯데캐슬 골드타운 (주소로 좌표) → 성복역 직선 243m · 노선 신분당
-   다음: 수지구청역 1533m
-
-── A10025621
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A10025621
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A10025621.json
-영통아이파크캐슬1단지 (주소로 좌표) → 매탄권선역 직선 1100m · 노선 수인분당
-   다음: 망포역 1118m
-
-── A10027344
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A10027344
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A10027344.json
-미사강변센트리버 (주소로 좌표) → 미사역 직선 1451m · 노선 5
-   다음: 강일역 1937m
-
-── A12285703
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A12285703
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A12285703.json
-미성아파트(불광동) (주소로 좌표) → 불광역 직선 453m · 노선 6
-   다음: 독바위역 594m
-   다음: 연신내역 782m
-
-── A13922114
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A13922114
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A13922114.json
-중계주공5단지 (주소로 좌표) → 상계역 직선 903m · 노선 4
-   다음: 노원역 1167m
-   다음: 중계역 1350m
-   다음: 하계역 1945m
-
-── A13984004
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A13984004
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A13984004.json
-그랑빌 (주소로 좌표) → 석계역 직선 350m · 노선 6
-   다음: 태릉입구역 562m
-   다음: 광운대역 869m
-
-── A15005705
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A15005705
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A15005705.json
-신길삼환 (주소로 좌표) → 서울지방병무청역 직선 378m · 노선 미상
-   다음: 대방역 746m
-   다음: 보라매역 876m
-
-── A15380403
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A15380403
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A15380403.json
-가산두산위브 (주소로 좌표) → 가산디지털단지역 직선 935m · 노선 7
-   다음: 독산역 1134m
-   다음: 남구로역 1196m
-   다음: 구로디지털단지역 1338m
+⏭ 이미 있음 — data/datasets/apt-station/A10023329.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A10023740.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A10023833.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A10023991.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A10024453.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A10024488.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A10024831.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A10025412.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A10025621.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A10027344.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A12285703.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A13922114.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A13984004.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A15005705.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A15380403.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-station/A44033010.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A44347020.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A44347021.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A44693813.json (다시 받으려면 force=1)
 
-── A44347020
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A44347020
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A44347020.json
-영통센트럴파크뷰 (주소로 좌표) → 청명역 직선 708m · 노선 수인분당
-   다음: 영통역 1761m
-
-── A44347021
+── A10024974
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A44347021
+> tsx src/aptStationCli.ts -- --kapt A10024974
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A44347021.json
-영통에듀파크 (주소로 좌표) → 청명역 직선 416m · 노선 수인분당
-   다음: 영통역 758m
+/home/runner/work/claude/claude/data/datasets/apt-station/A10024974.json
+마포 아이파크 포레 아파트 (주소로 좌표) → 서강대역 직선 162m · 노선 경의중앙
+   다음: 광흥창역 446m
+   다음: 신촌역 514m
+   다음: 대흥역 828m
 
-── A44693813
+── A14003106
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A44693813
+> tsx src/aptStationCli.ts -- --kapt A14003106
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A44693813.json
-블루밍 구성 더센트럴 (주소로 좌표) → 구성역 직선 496m · 노선 수인분당
-   다음: 구성역 GTX-A 642m
-   다음: 보정역 1334m
-   다음: 신갈역 1638m
+/home/runner/work/claude/claude/data/datasets/apt-station/A14003106.json
+이촌강촌아파트 (주소로 좌표) → 이촌역 직선 434m · 노선 4
+   다음: 서빙고역 968m
+   다음: 신용산역 1394m
+   다음: 용산역 1608m
 
-✅ 대기열 전 줄 완료
+── A13778204
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A13778204
+
+/home/runner/work/claude/claude/data/datasets/apt-station/A13778204.json
+서초힐스 (주소로 좌표) → 선바위역 직선 1535m · 노선 4
+   다음: 경마공원역 1744m
+
+── A15605103
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A15605103
+
+/home/runner/work/claude/claude/data/datasets/apt-station/A15605103.json
+신동아리버파크 (주소로 좌표) → 상도역 직선 562m · 노선 7
+   다음: 장승배기역 604m
+   다음: 노량진역 779m
+   다음: 노들역 914m
+
+── A15205513
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A15205513
+
+/home/runner/work/claude/claude/data/datasets/apt-station/A15205513.json
+신도림태영타운 (주소로 좌표) → 신도림역 직선 355m · 노선 2
+   다음: 구로역 635m
+   다음: 도림천역 1074m
+   다음: 문래역 1428m
+
+── A43174208
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A43174208
+
+/home/runner/work/claude/claude/data/datasets/apt-station/A43174208.json
+초원대림 (주소로 좌표) → 평촌역 직선 709m · 노선 4
+   다음: 범계역 1245m
+   다음: 인덕원역 1848m
+
+── A15703204
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A15703204
+
+/home/runner/work/claude/claude/data/datasets/apt-station/A15703204.json
+등촌IPARK (주소로 좌표) → 등촌역 직선 904m · 노선 9
+   다음: 염창역 1359m
+   다음: 증미역 1580m
+   다음: 화곡역 1743m
+
+── A13187702
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A13187702
+
+/home/runner/work/claude/claude/data/datasets/apt-station/A13187702.json
+중화한신아파트 (주소로 좌표) → 상봉역 직선 281m · 노선 경춘
+   다음: 중랑역 506m
+
+── A10026388
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A10026388
+
+/home/runner/work/claude/claude/data/datasets/apt-station/A10026388.json
+다산반도유보라메이플타운 (주소로 좌표) → 다산역 직선 715m · 노선 8
+
+
+── A10024040
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A10024040
+
+/home/runner/work/claude/claude/data/datasets/apt-station/A10024040.json
+광주역 자연앤자이 아파트 (이름로 좌표) → 경기광주역 직선 493m · 노선 경강
+
+
+── A10025331
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A10025331
+
+/home/runner/work/claude/claude/data/datasets/apt-station/A10025331.json
+다산자연&e편한세상 3차아파트 (주소로 좌표) → 다산역 직선 771m · 노선 8
+   다음: 도농역 1274m
+   다음: 동구릉역 1863m
+
+── A13612002
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A13612002
+
+/home/runner/work/claude/claude/data/datasets/apt-station/A13612002.json
+성북동아에코빌 (주소로 좌표) → 상월곡역 직선 335m · 노선 6
+   다음: 월곡역 761m
+   다음: 돌곶이역 1015m
+   다음: 미아사거리역 1479m
+
+── A13987304
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A13987304
+
+/home/runner/work/claude/claude/data/datasets/apt-station/A13987304.json
+하계 6단지 장미아파트 (주소로 좌표) → 하계역 직선 308m · 노선 7
+   다음: 월계역 796m
+   다음: 공릉역 1013m
+   다음: 광운대역 1203m
+
+── A15209305
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A15209305
+
+/home/runner/work/claude/claude/data/datasets/apt-station/A15209305.json
+개봉한진 (주소로 좌표) → 광명사거리역 직선 651m · 노선 7
+   다음: 천왕역 1204m
+   다음: 오류동역 1249m
+   다음: 개봉역 1257m
+
+── A43176406
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A43176406
+
+/home/runner/work/claude/claude/data/datasets/apt-station/A43176406.json
+호계2차현대홈타운 (주소로 좌표) → 군포역 직선 1565m · 노선 1
+   다음: 금정역 1770m
+
+── A10026380
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A10026380
+
+⛔ 반경 2000m 안에 지하철역이 없습니다 — 뱃지를 붙이지 않습니다.
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A10026380`
+Exit status 1
+
+── A10027267
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A10027267
+
+/home/runner/work/claude/claude/data/datasets/apt-station/A10027267.json
+이스트힐아파트 (주소로 좌표) → 갈매역 직선 548m · 노선 경춘
+   다음: 별내역 987m
+
+── A13202312
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A13202312
+
+/home/runner/work/claude/claude/data/datasets/apt-station/A13202312.json
+방학신동아1단지 (주소로 좌표) → 북한산우이역 직선 1251m · 노선 우이신설
+   다음: 솔밭공원역 1308m
+   다음: 쌍문역 1543m
+   다음: 4.19민주묘지역 1709m
+
+── A42084908
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A42084908
+
+/home/runner/work/claude/claude/data/datasets/apt-station/A42084908.json
+중동덕유마을주공4단지 (주소로 좌표) → 부천시청역 직선 533m · 노선 7
+   다음: 상동역 1175m
+   다음: 신중동역 1208m
+   다음: 춘의역 1977m
+
+⚠️ 일부 줄이 실패했습니다
 ```
