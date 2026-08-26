@@ -45,9 +45,27 @@ on:
 permissions:
   contents: write
 
+# ── 한 번이 아니라 **사다리**다 (2026-08-26 오너 승인)
+#
+# 08-24 의 교훈은 "새 러너면 열린다"였다. 그래서 재시도를 **딱 1회**로 두었다.
+# 08-26 아침이 그 가정을 깼다: 07:14(예약) · 07:25(자동재시도) · 07:57 · 08:09 · 09:06 —
+# **다섯 러너, 두 시간 넘게 전부 `fetch failed`.** HTTP 응답이 한 번도 없었다.
+# 08-24 에 실제로 회복까지 걸린 시간도 **1시간 17분**이었다. 11분 뒤 한 번 더 두드리는 것은
+# **같은 주사위를 너무 빨리 다시 굴리는 것**이었다.
+#
+# 그래서 칸을 넷으로 늘린다 — **바로 · +20분 · +1시간 · +2시간**.
+#   · 열리는 칸에서 멈춘다(`if: failure()` 가 다음 칸을 안 띄운다).
+#   · 중간 칸의 실패는 **조용하다**(`quiet: true`). 안 그러면 ⛔ 가 다섯 통 쌓인다.
+#   · 마지막 칸만 "여기까지입니다"를 말한다.
+#
+# ⚠️ 기다리는 칸은 **잡 하나를 재워 두는 것**이다(공개 저장소라 러너 시간은 무료).
+#    `uses:` 잡에는 `steps` 를 못 달아서 sleep 을 따로 세운 것이지, 다른 뜻은 없다.
+# ⚠️ 무한루프 방지는 그대로다 — 이 사다리는 전부 이 **한 런 안의 잡**이고,
+#    `workflow_call` 은 "오늘의 신고가 (daily)" 런을 새로 만들지 않는다.
 jobs:
-  retry:
-    # ⚠️ 조건 셋 다 필요하다. 하나라도 빠지면 재시도가 엉뚱한 데서 돈다.
+  # ── 1칸: 바로 (지금까지의 동작)
+  try1:
+    # ⚠️ 조건 둘 다 필요하다. 하나라도 빠지면 재시도가 엉뚱한 데서 돈다.
     if: >-
       github.event.workflow_run.conclusion == 'failure' &&
       github.event.workflow_run.event == 'schedule'
@@ -59,4 +77,53 @@ jobs:
       # ⚠️ 대기열(`data/singo-queue.txt`)은 예약 런도 재시도도 **읽지 않는다**
       #    (2026-08-24 오너: 일회용 손잡이가 상시 설정이 되어 5일간 기준이 좁아져 있었다).
       retry: true
+      quiet: true
+      rung: "1/4"
+    secrets: inherit
+
+  # ── 2칸: +20분
+  wait2:
+    needs: try1
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 1200
+  try2:
+    needs: wait2
+    uses: ./.github/workflows/singo-daily.yml
+    with:
+      retry: true
+      quiet: true
+      rung: "2/4"
+    secrets: inherit
+
+  # ── 3칸: +1시간
+  wait3:
+    needs: try2
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 2400
+  try3:
+    needs: wait3
+    uses: ./.github/workflows/singo-daily.yml
+    with:
+      retry: true
+      quiet: true
+      rung: "3/4"
+    secrets: inherit
+
+  # ── 4칸: +2시간 — **마지막이라 조용하지 않다.** 여기서 실패하면 오너에게 말한다.
+  wait4:
+    needs: try3
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 3600
+  try4:
+    needs: wait4
+    uses: ./.github/workflows/singo-daily.yml
+    with:
+      retry: true
+      rung: "4/4"
     secrets: inherit

@@ -38,19 +38,37 @@ async function getRaw(url: string, timeoutMs = 15000): Promise<{ status: number;
   }
 }
 
-/** 한 페이지 요청 — endpoint·key·params → 정상 XML 본문. 실패 시 사유 throw */
+/**
+ * 한 페이지 요청 — endpoint·key·params → 정상 XML 본문. 실패 시 사유 throw
+ *
+ * ⚠️ **연결 실패도 재시도한다** (2026-08-26).
+ * 예전엔 `getRaw` 가 던지면(=`fetch failed`, 응답이 아예 없음) 이 루프를 **그대로 빠져나갔다.**
+ * 그래서 **HTTP 500 은 3번 두드리고, 연결 실패는 1번**이었다 — 정확히 거꾸로다.
+ * 백오프가 필요한 쪽은 「서버가 답은 했는데 500」보다 「연결 자체가 안 열림」이다.
+ *
+ * 2026-08-26 아침 신고가가 이 자리에서 무너졌다: 18회 시도가 전부 `fetch failed` 였고
+ * 한 번도 다시 두드리지 않았다. 그날 예약·자동재시도·수동 4번이 모두 같은 이유로 접혔다.
+ *
+ * ⚠️ 그래도 **인증 오류(401/403)는 재시도하지 않는다** — 키 문제는 두드려도 안 열린다.
+ */
 async function fetchPage(endpoint: string, key: string, lawdCd: string, dealYmd: string, page: number, rows: number): Promise<string> {
   const url = `${endpoint}?serviceKey=${encKey(key)}&LAWD_CD=${lawdCd}&DEAL_YMD=${dealYmd}&pageNo=${page}&numOfRows=${rows}`;
   let last = "";
   for (let attempt = 0; attempt < 3; attempt++) {
-    const { status, body } = await getRaw(url);
-    if (status === 200) {
-      const err = apiError(body);
-      if (err) throw new Error(`API본문오류: ${err}`);
-      return body;
+    try {
+      const { status, body } = await getRaw(url);
+      if (status === 200) {
+        const err = apiError(body);
+        if (err) throw new Error(`API본문오류: ${err}`);
+        return body;
+      }
+      last = `HTTP ${status}${body ? " · " + body.replace(/\s+/g, " ").slice(0, 160) : ""}`;
+      if (status === 403 || status === 401) break; // 인증 문제는 재시도 무의미
+    } catch (e) {
+      /* 본문이 200 인데 API 가 오류를 적어 보낸 경우는 재시도해도 같다 — 그대로 올린다. */
+      if (e instanceof Error && e.message.startsWith("API본문오류:")) throw e;
+      last = e instanceof Error ? e.message : String(e);
     }
-    last = `HTTP ${status}${body ? " · " + body.replace(/\s+/g, " ").slice(0, 160) : ""}`;
-    if (status === 403 || status === 401) break; // 인증 문제는 재시도 무의미
     await new Promise((r) => setTimeout(r, 2 ** attempt * 1000));
   }
   throw new Error(last || "요청 실패");
