@@ -37,8 +37,12 @@ jobs:
           URL="https://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev?serviceKey=${MOLIT_API_KEY}&LAWD_CD=11110&DEAL_YMD=${YM}&pageNo=1&numOfRows=5"
           # ⚠️ 키가 로그에 찍히지 않게 -o 로 본문만 파일에 담는다
           CODE=$(curl -sS --max-time 20 -o /tmp/body.xml -w '%{http_code}' "$URL" 2>/tmp/err.txt || echo "000")
-          RESULT=$(grep -o '<resultCode>[^<]*</resultCode>' /tmp/body.xml 2>/dev/null | head -1 | sed 's/<[^>]*>//g')
-          ROWS=$(grep -c '<item>' /tmp/body.xml 2>/dev/null || echo 0)
+          # ⚠️ `|| true` 가 꼭 있어야 한다. Actions 의 bash 는 `set -eo pipefail` 로 돌아서
+          #    **grep 이 못 찾으면 종료코드 1 → 스텝이 그대로 죽는다.** 여기서 "못 찾음"은
+          #    오류가 아니라 **답**이다(문이 닫히면 본문이 비어 있다). 2026-08-26 첫 실행이 이렇게 죽었다.
+          RESULT=$(grep -o '<resultCode>[^<]*</resultCode>' /tmp/body.xml 2>/dev/null | head -1 | sed 's/<[^>]*>//g' || true)
+          ROWS=$(grep -c '<item>' /tmp/body.xml 2>/dev/null || true)
+          ROWS=${ROWS:-0}
           echo "http=$CODE resultCode=$RESULT items=$ROWS"
           if [ "$CODE" = "000" ]; then
             M="🚪 실거래 API — ❌ **연결 자체가 안 열립니다**"$'\n'"   ($(head -c 120 /tmp/err.txt))"$'\n\n'"수집을 돌려도 지금은 0건입니다. 20~30분 뒤 다시 눌러 보세요."
