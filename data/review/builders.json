@@ -313,6 +313,16 @@
       ]
     },
     {
+      "label": "danji-guri",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-08-26",
+        "--only",
+        "guri-lotte-castle-remndr",
+        "--publish"
+      ]
+    },
+    {
       "label": "singo-gwangmyeong-hanjin",
       "cmd": "scripts/build-singo-record.mjs",
       "args": [

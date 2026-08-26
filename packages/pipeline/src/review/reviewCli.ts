@@ -24,6 +24,42 @@ function md5(p: string): string {
   return createHash("md5").update(readFileSync(p)).digest("hex");
 }
 
+/**
+ * 관제탑(`data/review/sets.json`)에서 이 세트의 캡션 교차검증 허용값을 읽는다.
+ *
+ * 형식: `"captionCrossCheck": [{ "value": "3.1", "why": "같은 평형 분양권 실거래 기준 마진" }]`
+ * `why` 가 없는 항목은 **허용하지 않고 error 로 올린다** — 예외에는 항상 이유가 붙어야 한다.
+ * 파일이 없거나 세트가 없으면 조용히 빈 목록이다(검사는 원래대로 깐깐하게 돈다).
+ */
+function readCaptionCrossCheck(label: string): { ok: { value: string; why: string }[]; bad: string[] } {
+  /* ⚠️ 이 CLI 는 `packages/pipeline` 을 cwd 로 돌아간다(produce-card.mjs). 저장소 루트를
+     가정하면 파일을 못 찾고 **조용히 빈 목록**이 된다 — 예외가 안 먹힌 채 통과처럼 보인다.
+     그래서 위로 올라가며 찾는다. */
+  let path = "";
+  for (let dir = CWD, i = 0; i < 6; i++, dir = join(dir, "..")) {
+    const cand = join(dir, "data/review/sets.json");
+    if (existsSync(cand)) { path = cand; break; }
+  }
+  if (!path) return { ok: [], bad: [] };
+  try {
+    const doc = JSON.parse(readFileSync(path, "utf8")) as { sets?: { label: string; captionCrossCheck?: unknown }[] };
+    const raw = doc.sets?.find((s) => s.label === label)?.captionCrossCheck;
+    if (!Array.isArray(raw)) return { ok: [], bad: [] };
+    const ok: { value: string; why: string }[] = [];
+    const bad: string[] = [];
+    for (const e of raw as { value?: unknown; why?: unknown }[]) {
+      const value = e?.value == null ? "" : String(e.value);
+      const why = typeof e?.why === "string" ? e.why.trim() : "";
+      if (!value) continue;
+      if (why) ok.push({ value, why });
+      else bad.push(value);
+    }
+    return { ok, bad };
+  } catch {
+    return { ok: [], bad: [] };
+  }
+}
+
 async function main() {
   const argv = process.argv.slice(2);
   const cards: string[] = [];
@@ -95,7 +131,17 @@ async function main() {
   // 4) 캡션 검수(세트 레벨)
   if (captionText) {
     setFindings.push(...lintCaption(captionText));
-    setFindings.push(...captionNumberMatch(captionText, cardDocs));
+    /* 캡션이 카드에 없는 억 금액을 말해야 할 때가 있다 — 안전마진 판형에서 카드가 호가로
+       가면 캡션이 실거래 기준을 함께 실어야 한다(오보를 막는 장치다). 그건 정의상 카드에
+       없다. 검사를 끄는 대신 **관제탑에 값과 이유를 적게** 한다. 이유가 없으면 안 통과한다. */
+    const cross = readCaptionCrossCheck(label);
+    for (const c of cross.bad)
+      setFindings.push({ reviewer: "caption-number", level: "error", code: "crosscheck-no-reason",
+        msg: `sets.json 의 captionCrossCheck 항목 "${c}" 에 이유(why)가 없습니다 — 이유 없는 예외는 통과시키지 않습니다` });
+    for (const c of cross.ok)
+      setFindings.push({ reviewer: "caption-number", level: "info", code: "crosscheck-allowed",
+        msg: `캡션 교차검증값 ${c.value}억 허용 — ${c.why}` });
+    setFindings.push(...captionNumberMatch(captionText, cardDocs, cross.ok.map((c) => c.value)));
     if (llm.ok && cardResults[0]?.png) {
       const { results } = await reviewImage(cardResults[0].png, captionText, ["copy"]);
       results.forEach((lr) => setFindings.push(...lr.findings));

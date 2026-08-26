@@ -1,0 +1,31 @@
+{
+  "label": "danji-guri",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 11억 허용 — 같은 평형(82B) 분양권 실거래 11억8,681만원(2025-12, 14층, 뉴스핌) — 카드는 호가로 갔으므로 캡션이 실거래를 받는다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 3.1억 허용 — 위 실거래 기준 마진 11.87억 − 8.771억 = 3.1억. 독자가 호가 기준과 실거래 기준을 나란히 보고 판단하게 한다"
+    }
+  ],
+  "cards": [
+    {
+      "file": "danji-guri.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}

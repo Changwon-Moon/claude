@@ -70,11 +70,24 @@ function collectNumbers(docs: unknown[]): Set<string> {
   return pool;
 }
 
-/** 캡션의 '억' 금액이 카드 수치에 존재하는지 대조 → 없으면 오보 위험(error) */
-export function captionNumberMatch(text: string, cardDocs: unknown[]): Finding[] {
+/**
+ * 캡션의 '억' 금액이 카드 수치에 존재하는지 대조 → 없으면 오보 위험(error)
+ *
+ * ── 예외 통로 `allow` (2026-08-26 신설, 구리역)
+ * 원래 이 검사는 "캡션은 카드가 말한 숫자만 다시 말한다"를 전제로 했다. 안전마진 판형이
+ * 그 전제를 깼다 — 카드가 **호가**를 기준으로 안전마진을 말하면, 캡션은 카드가 일부러
+ * 안 실은 **실거래** 기준을 함께 실어야 한다(그게 오보를 막는 장치다). 그 숫자는 정의상
+ * 카드에 없다. 그렇다고 검사를 끄면 진짜 오타가 같이 통과한다.
+ *
+ * 그래서 **관제탑(sets.json)의 `captionCrossCheck` 에 값과 이유를 적어야만** 통과한다.
+ * 이유 없는 값은 여기까지 오지 않는다(reviewCli 가 거른다). 통과한 값은 info 로 찍혀
+ * 리포트에 남는다 — 조용히 넘어가는 예외는 만들지 않는다.
+ */
+export function captionNumberMatch(text: string, cardDocs: unknown[], allow: string[] = []): Finding[] {
   const pool = collectNumbers(cardDocs);
+  const allowed = new Set(allow.map((a) => String(a)));
   const capVals = [...text.matchAll(/(\d+(?:\.\d+)?)\s*억/g)].map((m) => m[1]);
-  const missing = [...new Set(capVals)].filter((v) => !pool.has(v));
+  const missing = [...new Set(capVals)].filter((v) => !pool.has(v) && !allowed.has(v));
   if (missing.length)
     return [{
       reviewer: "caption-number",
