@@ -641,16 +641,17 @@ function marginBand(d) {
   const gap = m.market.won - priceWon;
   if (gap <= 0)
     throw new Error(`${d.id}: 안전마진이 0 이하다 (비교값 ${m.market.won} ≤ 분양가 ${priceWon}) — 이 판형을 쓸 수 없다`);
-  return {
-    head: [],
-    cols: 3,
-    rows: [
-      { area: m.priceLabel || "분양가", price: eok1(priceWon), main: true },
-      { area: m.market.label, price: eok1(m.market.won) },
-      { area: "안전마진", price: eok1(gap), warn: true, glow: true },
-    ],
-    gap,
-  };
+  /* 타입 칸(오너 지시 2026-08-26) — 값 셋이 전부 '억'이라 **무엇의 값인지**가 안 보였다.
+     맨 왼쪽에 타입을 세우면 세 금액이 전부 그 타입의 것임이 한눈에 읽힌다.
+     타입은 데이터가 주거나(margin.type) 주력 타입에서 온다 — 손으로 적지 않는다. */
+  const type = m.type ?? (d.price?.byType || []).find((t) => t.main)?.type ?? null;
+  const rows = [
+    ...(type ? [{ area: "타입", price: type }] : []),
+    { area: m.priceLabel || "분양가", price: eok1(priceWon), main: true },
+    { area: m.market.label, price: eok1(m.market.won) },
+    { area: "안전마진", price: eok1(gap), warn: true, glow: true },
+  ];
+  return { head: [], cols: rows.length, rows, gap };
 }
 
 function remndr(d) {
@@ -729,11 +730,14 @@ function remndr(d) {
     hero: heroOf(d),
     danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
     address: addressOf(d),
-    ...(plan.on && !margin ? { scale: true, specFour: plan.four } : {}),
+    ...(margin ? { specFour: true } : plan.on ? { scale: true, specFour: plan.four } : {}),
     /* 안전마진 판에서는 위 단이 이미 '돈' 세 칸이라, 아래 단은 **단지 규모**가 맡는다
        (송파 정본과 같은 자리). 잔여 세대수는 아래 한 줄이 받는다 — 카드에서 사라지지 않는다. */
     spec: margin
       ? [
+          /* 잔여 세대 칸(오너 지시 2026-08-26). 처음엔 아래 한 줄로 내렸는데, 줍줍에서
+             '몇 세대 남았나'는 규모와 나란히 읽혀야 하는 값이라 제원 줄 맨 앞으로 올렸다. */
+          { label: "잔여", value: n(total), unit: "세대", pre: "잔여" },
           { label: "세대수", pre: "총", value: n(d.totalComplex ?? total), unit: "세대" },
           d.buildings != null
             ? { label: "동수", pre: "총", value: String(d.buildings), unit: "개동" }
