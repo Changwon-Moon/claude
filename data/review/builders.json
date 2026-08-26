@@ -698,6 +698,280 @@
       "produces": [
         "singo-e편한세상평내메트로원-59"
       ]
+    },
+    {
+      "label": "singo-sinchon-forest-ipark",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "신촌숲아이파크",
+        "--type",
+        "84",
+        "--kapt",
+        "A10024974",
+        "--publish"
+      ],
+      "produces": [
+        "singo-신촌숲아이파크-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-ichon-gangchon",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "강촌",
+        "--type",
+        "59",
+        "--kapt",
+        "A14003106",
+        "--publish"
+      ],
+      "produces": [
+        "singo-강촌-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-seocho-hills",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "서초힐스",
+        "--type",
+        "59",
+        "--kapt",
+        "A13778204",
+        "--publish"
+      ],
+      "produces": [
+        "singo-서초힐스-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-sindonga-riverpark",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "신동아리버파크",
+        "--type",
+        "59",
+        "--kapt",
+        "A15605103",
+        "--publish"
+      ],
+      "produces": [
+        "singo-신동아리버파크-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-sindorim-taeyoung",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "신도림태영타운",
+        "--type",
+        "84",
+        "--kapt",
+        "A15205513",
+        "--publish"
+      ],
+      "produces": [
+        "singo-신도림태영타운-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-chowon-daerim",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "초원마을대림",
+        "--type",
+        "84",
+        "--kapt",
+        "A43174208",
+        "--publish"
+      ],
+      "produces": [
+        "singo-초원마을대림-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-deungchon-ipark",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "등촌동아이파크",
+        "--type",
+        "84",
+        "--kapt",
+        "A15703204",
+        "--publish"
+      ],
+      "produces": [
+        "singo-등촌동아이파크-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-junghwa-hanshin",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "한신아파트상가동유치원동(103~109)",
+        "--type",
+        "84",
+        "--kapt",
+        "A13187702",
+        "--publish",
+        "--name",
+        "한신(103~109동)"
+      ],
+      "produces": [
+        "singo-한신아파트상가동유치원동103~109-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-dasan-yubora-maple",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "다산반도유보라메이플타운",
+        "--type",
+        "84",
+        "--kapt",
+        "A10026388",
+        "--publish"
+      ],
+      "produces": [
+        "singo-다산반도유보라메이플타운-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-gwangjuyeok-xi",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "광주역자연앤자이",
+        "--type",
+        "84",
+        "--kapt",
+        "A10024040",
+        "--publish"
+      ],
+      "produces": [
+        "singo-광주역자연앤자이-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-seongbuk-ecoville",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "동아에코빌",
+        "--type",
+        "59",
+        "--kapt",
+        "A13612002",
+        "--publish"
+      ],
+      "produces": [
+        "singo-동아에코빌-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-hagye-jangmi",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "장미(시영6)",
+        "--type",
+        "59",
+        "--kapt",
+        "A13987304",
+        "--publish"
+      ],
+      "produces": [
+        "singo-장미시영6-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-gaebong-hanjin",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "한진",
+        "--type",
+        "84",
+        "--kapt",
+        "A15209305",
+        "--publish"
+      ],
+      "produces": [
+        "singo-한진-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-hogye2-hometown",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "호계2차현대홈타운",
+        "--type",
+        "59",
+        "--kapt",
+        "A43176406",
+        "--publish"
+      ],
+      "produces": [
+        "singo-호계2차현대홈타운-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-galmae-easthill",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "엘에이치이스트힐",
+        "--type",
+        "59",
+        "--kapt",
+        "A10027267",
+        "--publish"
+      ],
+      "produces": [
+        "singo-엘에이치이스트힐-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-jungdong-deokyu4",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "덕유마을(주공4)",
+        "--type",
+        "59",
+        "--kapt",
+        "A42084908",
+        "--publish"
+      ],
+      "produces": [
+        "singo-덕유마을주공4-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
     }
   ]
 }
