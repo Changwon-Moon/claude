@@ -58,3 +58,4 @@ kapt=A10026380 area=59.64
 kapt=A10027267 area=59.98
 kapt=A13202312 area=84.87
 kapt=A42084908 area=59.98
+# 2026-08-26 04:30 UTC — SERVICETIMEOUT 로 못 받은 4건 재시도(장미·개봉한진·호계2차·방학신동아1)
