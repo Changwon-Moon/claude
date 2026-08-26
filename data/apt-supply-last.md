@@ -1,6 +1,6 @@
 # 단지 공급면적 — 마지막 실행
 
-- 성공 2건 · 실패 6건
+- 성공 1건 · 실패 6건
 - 결과는 Actions 로그가 아니라 이 파일과 data/datasets/apt-supply/ 에서 본다
 
 ```
@@ -10,7 +10,7 @@
 > tsx src/supplyAreaCli.ts -- --kapt A10028021 --area 84.48
 
 ▶ 서초포레스타2단지아파트 (A10028021) · 전용 84.48㎡ · 11650-10900 · 지번 후보 384, 143
-   지번 384 (0384-0000) → 줄 200개
+   지번 384 (0384-0000) → 줄 100개
 ✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10028021-84.json
    전유 84.48 + 주거공용 39.87 = 공급 124.35㎡ = 37.62평 → **38평**
    표본: 202동 1302 (같은 전용 호 2개) · 전용률 67.9%
@@ -49,8 +49,11 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A12285703 --area 83.27
 
 ▶ 미성아파트(불광동) (A12285703) · 전용 83.27㎡ · 11380-10300 · 지번 후보 248
-   지번 248 (0248-0000) → 줄 100개
-::error::전용 83.27㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 248) — 파일을 만들지 않습니다
+::error::248 1쪽 실패 — {
+  "OpenAPI_ServiceResponse": {
+    "cmmMsgHeader": {
+      "errMsg": "SERVICETIMEOUT_ERROR",
+      "returnAuthMsg": "서
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A12285703 --area 83.27`
 Exit status 1
@@ -74,7 +77,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A12285703 --area 83.27
 
 ▶ 미성아파트(불광동) (A12285703) · 전용 83.27㎡ · 11380-10300 · 지번 후보 248
-::error::248 1쪽 실패 — {
+::error::248 2쪽 실패 — {
   "OpenAPI_ServiceResponse": {
     "cmmMsgHeader": {
       "errMsg": "SERVICETIMEOUT_ERROR",
@@ -82,18 +85,6 @@ Exit status 1
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A12285703 --area 83.27`
 Exit status 1
-── A15209305 전용 84.96
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A15209305 --area 84.96
-
-▶ 개봉한진 (A15209305) · 전용 84.96㎡ · 11530-10700 · 지번 후보 478
-   지번 478 (0478-0000) → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A15209305-84.json
-   전유 84.96 + 주거공용 25.16 = 공급 110.12㎡ = 33.31평 → **33평**
-   표본: 105동 1701호 (같은 전용 호 216개) · 전용률 77.1%
-     · 부대시설 / 계단,복도,승강기 [1-22층] 16.3
-     · 부대시설 / 지하대피소 [지하 지1] 8.86
 ── A13202312 전용 84.87
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
