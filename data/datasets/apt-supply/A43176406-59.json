@@ -1,0 +1,29 @@
+{
+  "kaptCode": "A43176406",
+  "kaptName": "호계2차현대홈타운",
+  "type": "59",
+  "jibun": "811",
+  "exclusive": 59.977,
+  "commonResidential": 22.191,
+  "supply": 82.17,
+  "pyeong": 24.86,
+  "pyeongLabel": "25평",
+  "sampleDong": "217동",
+  "sampleHo": "1004",
+  "sampleCount": 1,
+  "ratio": 0.7299,
+  "parts": [
+    {
+      "purpose": "부대시설 / 계단실, 복도",
+      "floor": "각층 각층",
+      "area": 16.295
+    },
+    {
+      "purpose": "부대시설 / 벽체면적",
+      "floor": "각층 각층",
+      "area": 5.896
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
