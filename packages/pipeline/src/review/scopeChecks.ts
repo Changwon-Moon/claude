@@ -53,10 +53,28 @@ function regionNames(docs: unknown[]): string[] {
   return out;
 }
 
+/**
+ * 제목이 **범위를 말하지 않는** 판형 — 제목에서 지역을 읽으면 안 된다.
+ *
+ * ⚠️ 2026-08-27 실측: 하루치 신고가 캐러셀 14장이 이 검사에 막혔다.
+ *    범인은 **단지 이름**이었다 — 「서울숲리버뷰자이」의 '서울' 이 제목 정규식에 걸렸고,
+ *    같은 세트의 광명시·수원시·용인시·하남시가 「서울 밖」으로 잡혔다.
+ *
+ * 신고가 카드의 제목은 **단지명 + 평형뿐**이다(기준 §1 "제목에 지역을 붙이지 않는다").
+ * 지역은 제원 줄에 있다. 그래서 이 판형의 제목에서 범위를 읽는 것은 **구조적으로 틀렸다** —
+ * 「서울대입구역푸르지오」·「신서울아파트」도 같은 자리에서 걸린다.
+ *
+ * ⚠️ 검사를 통째로 끄지 않는다. 이 판형의 **제목만** 안 읽는다.
+ *    같은 세트에 「서울 신고가 지도」(`singoga-map`)가 들어오면 그건 그대로 검사한다 —
+ *    그 판형은 제목이 정말로 범위를 말한다.
+ */
+const NO_SCOPE_IN_TITLE = new Set(["singo-record@1"]);
+
 function titleOf(docs: unknown[]): string {
   return docs
     .map((d) => {
       const o = (d || {}) as Record<string, unknown>;
+      if (typeof o.template === "string" && NO_SCOPE_IN_TITLE.has(o.template)) return "";
       return [o.title, o.subtitle, (o.meta as Record<string, unknown>)?.title]
         .filter((x) => typeof x === "string")
         .join(" ");

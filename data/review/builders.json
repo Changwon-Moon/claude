@@ -972,6 +972,244 @@
         "singo-덕유마을주공4-59"
       ],
       "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-raemian-leadersone",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "래미안 리더스원",
+        "--type",
+        "84",
+        "--kapt",
+        "A10024552",
+        "--publish"
+      ],
+      "produces": [
+        "singo-래미안리더스원-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-seoulforest-riverview",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "서울숲리버뷰자이",
+        "--type",
+        "84",
+        "--kapt",
+        "A10026207",
+        "--publish"
+      ],
+      "produces": [
+        "singo-서울숲리버뷰자이-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-godeok-jugong9",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "고덕주공9",
+        "--type",
+        "84",
+        "--kapt",
+        "A13482706",
+        "--publish"
+      ],
+      "produces": [
+        "singo-고덕주공9-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-guui-hyundai-prime",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "현대프라임",
+        "--type",
+        "59",
+        "--kapt",
+        "A14320304",
+        "--publish"
+      ],
+      "produces": [
+        "singo-현대프라임-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-yaksu-heights",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "약수하이츠",
+        "--type",
+        "59",
+        "--kapt",
+        "A10045404",
+        "--publish"
+      ],
+      "produces": [
+        "singo-약수하이츠-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-godeok-rienpark3",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "고덕리엔파크3단지",
+        "--type",
+        "84",
+        "--kapt",
+        "A13472701",
+        "--publish"
+      ],
+      "produces": [
+        "singo-고덕리엔파크3단지-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-gwanak-dream",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "관악드림(삼성)",
+        "--type",
+        "59",
+        "--kapt",
+        "A15180705",
+        "--publish"
+      ],
+      "produces": [
+        "singo-관악드림삼성-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-gm-centvert",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "광명푸르지오센트베르",
+        "--type",
+        "59",
+        "--kapt",
+        "A10023536",
+        "--publish"
+      ],
+      "produces": [
+        "singo-광명푸르지오센트베르-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-imun-ssangyong",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "쌍용",
+        "--type",
+        "59",
+        "--kapt",
+        "A13082704",
+        "--publish"
+      ],
+      "produces": [
+        "singo-쌍용-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-gaebong-hanmaeul",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "한마을",
+        "--type",
+        "59",
+        "--kapt",
+        "A15209002",
+        "--publish"
+      ],
+      "produces": [
+        "singo-한마을-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-maegyo-hillstate",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "힐스테이트푸르지오수원",
+        "--type",
+        "84",
+        "--kapt",
+        "A10023630",
+        "--publish"
+      ],
+      "produces": [
+        "singo-힐스테이트푸르지오수원-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-jinsan-santeville",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "진산마을성원상떼빌아파트",
+        "--type",
+        "84",
+        "--kapt",
+        "A44851611",
+        "--publish"
+      ],
+      "produces": [
+        "singo-진산마을성원상떼빌아파트-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-jeonnong-woosung",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "전농우성",
+        "--type",
+        "59",
+        "--kapt",
+        "A13084803",
+        "--publish"
+      ],
+      "produces": [
+        "singo-전농우성-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-changwoo-booyoung",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "부영",
+        "--type",
+        "59",
+        "--kapt",
+        "A46571004",
+        "--publish"
+      ],
+      "produces": [
+        "singo-부영-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
     }
   ]
 }

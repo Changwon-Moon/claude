@@ -1,0 +1,96 @@
+{
+  "label": "singo-daily-2026-08-27",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 14장 · 코드 검수만",
+  "findings": [],
+  "cards": [
+    {
+      "file": "singo-래미안리더스원-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-서울숲리버뷰자이-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-고덕주공9-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-현대프라임-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-약수하이츠-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-고덕리엔파크3단지-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-관악드림삼성-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-광명푸르지오센트베르-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-쌍용-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-한마을-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-힐스테이트푸르지오수원-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-진산마을성원상떼빌아파트-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-전농우성-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-부영-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}
