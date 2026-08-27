@@ -1,0 +1,24 @@
+{
+  "kaptCode": "A13472701",
+  "kaptName": "고덕리엔파크3단지",
+  "type": "84",
+  "jibun": "490",
+  "exclusive": 84.87,
+  "commonResidential": 26.91,
+  "supply": 111.78,
+  "pyeong": 33.81,
+  "pyeongLabel": "34평",
+  "sampleDong": "334동",
+  "sampleHo": "1004",
+  "sampleCount": 109,
+  "ratio": 0.7593,
+  "parts": [
+    {
+      "purpose": "아파트 / 벽체,계단실,승강기,홀",
+      "floor": "각층 각층",
+      "area": 26.91
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

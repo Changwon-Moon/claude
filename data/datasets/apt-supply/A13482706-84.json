@@ -1,0 +1,39 @@
+{
+  "kaptCode": "A13482706",
+  "kaptName": "고덕주공9단지",
+  "type": "84",
+  "jibun": "257",
+  "exclusive": 83.52,
+  "commonResidential": 25.87,
+  "supply": 109.39,
+  "pyeong": 33.09,
+  "pyeongLabel": "33평",
+  "sampleDong": "901동",
+  "sampleHo": "607호",
+  "sampleCount": 563,
+  "ratio": 0.7635,
+  "parts": [
+    {
+      "purpose": "아파트 / 지하실",
+      "floor": "지하 지1층",
+      "area": 18.77
+    },
+    {
+      "purpose": "아파트 / 복도",
+      "floor": "각층 각층",
+      "area": 4.095
+    },
+    {
+      "purpose": "아파트 / 코아",
+      "floor": "각층 각층",
+      "area": 2.677
+    },
+    {
+      "purpose": "아파트 / 경비실",
+      "floor": "지상 지상1층",
+      "area": 0.328
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
