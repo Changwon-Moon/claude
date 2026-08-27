@@ -57,8 +57,11 @@ const PIPES = [
   { name: "인구 수집", mode: "periodic", everyDays: 31, last: "data/population-last.md", data: null, tg: true },
   { name: "1000세대 명부", mode: "untilDone", last: "data/apt-universe-last.md", data: "data/datasets/apt-universe.json", tg: true, key: "MOLIT_API_KEY" },
   { name: "최고가 인덱스", mode: "untilDone", last: "data/molit-peak-last.md", data: null, tg: true, key: "MOLIT_API_KEY" },
-  { name: "실거래 수집(국토부)", mode: "untilDone", last: null, data: "data/datasets/molit", tg: false, key: "MOLIT_API_KEY" },
-  { name: "전월세 실거래", mode: "untilDone", last: null, data: "data/datasets/molit-rent", tg: false, key: "MOLIT_API_KEY" },
+  /* ⚠️ 이 둘은 `last` 가 null 이었다 — 읽을 기록이 없으니 표가 **볼 것이 없었고**,
+     완료형이라 늦음도 안 재서 **8/5·8/20 두 번 연속 실패가 초록불로 지나갔다**(2026-08-27).
+     워크플로가 이제 기록을 남긴다. 기록이 실패라고 하면 표가 빨간불을 켠다. */
+  { name: "실거래 수집(국토부)", mode: "untilDone", last: "data/molit-last.md", data: "data/datasets/molit", tg: true, key: "MOLIT_API_KEY" },
+  { name: "전월세 실거래", mode: "untilDone", last: "data/molit-rent-last.md", data: "data/datasets/molit-rent", tg: true, key: "MOLIT_API_KEY" },
   { name: "신고가 단지 이력", mode: "onDemand", last: "data/singo-history-last.md", data: null, tg: true, key: "MOLIT_API_KEY" },
 ];
 

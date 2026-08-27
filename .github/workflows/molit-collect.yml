@@ -66,9 +66,25 @@ jobs:
           REGION="${{ github.event.inputs.region }}"
           MONTHS="${{ github.event.inputs.months }}"
           FORCE_IN="${{ github.event.inputs.force }}"
+          # ── ⛔ 예약 런은 대기열을 **읽지 않는다** (2026-08-27, 신고가와 같은 규칙)
+          #
+          # 대기열은 세션이 "지금 한 번 돌려 봐"라고 미는 **일회용 손잡이**다. 그런데
+          # 예약 런까지 마지막 줄을 읽는 바람에 **상시 설정**이 되어 있었다.
+          # 8/1 에 민 `months=202607` 한 줄이 그대로 굳어, 8/5·8/20 정기 수집이
+          # **7월 한 달만** 보고 돌았다 — 원래 의도는 **최근 6개월**이다.
+          # 실거래는 신고기한이 계약 후 30일이라, 5일·20일 **두 번** 도는 이유가
+          # 바로 "늦게 들어온 신고를 잡으려고"인데 그게 통째로 무력해졌다.
+          # 게다가 이 배관은 텔레그램이 없어 **틀린 범위로 도는 동안 아무도 몰랐다.**
+          #
+          # 신고가에서 08-24 에 똑같은 일이 있었고 같은 방식으로 막았다
+          # (`singo-daily.yml` 의 같은 자리). 여기도 맞춘다:
+          # **대기열은 사람이 민 런(push)과 손으로 누른 런(workflow_dispatch)에서만 읽는다.**
+          EVT="${{ github.event_name }}"
           # 대기열 푸시로 들어온 실행은 입력칸이 비어 있다 → 파일 마지막 줄에서 읽는다.
           # (주석 #·빈 줄 무시. 값이 없는 항목은 아래 기본값으로 떨어진다)
-          if [ -f data/molit-queue.txt ]; then
+          if [ "$EVT" != "push" ] && [ "$EVT" != "workflow_dispatch" ]; then
+            echo "방아쇠 '$EVT' — 대기열을 읽지 않고 기본 기준(서울 25개구 · 최근 6개월)으로 돕니다"
+          elif [ -f data/molit-queue.txt ]; then
             LINE=$(grep -v '^[[:space:]]*#' data/molit-queue.txt | grep -v '^[[:space:]]*$' | tail -1)
             echo "대기열 마지막 줄: $LINE"
             [ -z "$REGION" ] && REGION=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^region=//p')
@@ -94,6 +110,7 @@ jobs:
           #    반영이 안 되고, 그러면 5일·20일 두 번 도는 의미가 없다.
           if [ "${{ github.event_name }}" = "schedule" ]; then FORCE="--force"; fi
           echo "수집: region=$REGION · 구=$GU · 월=$MONTHS $FORCE"
+          echo "REGION=$REGION" >> "$GITHUB_ENV"; echo "GU=$GU" >> "$GITHUB_ENV"; echo "MONTHS=$MONTHS" >> "$GITHUB_ENV"
           pnpm --filter @wirit/collectors exec tsx src/molitCli.ts \
             --region "$REGION" --gu "$GU" --months "$MONTHS" \
             --out "$GITHUB_WORKSPACE/data/datasets/molit" $FORCE
@@ -112,3 +129,44 @@ jobs:
             git pull --rebase --autostash origin ${GITHUB_REF_NAME}
             git push origin HEAD:${GITHUB_REF_NAME}
           fi
+
+      # ── 실행 결과를 **저장소에 남긴다** (2026-08-27)
+      #
+      # 이 배관은 8/5·8/20 정기 실행이 **두 번 연속 실패했는데 아무도 몰랐다.**
+      # 이유가 둘이었다: ① 텔레그램이 없다 ② `data/*-last.md` 기록이 없어서
+      # 배관 상태 표(`scripts/pipeline-status.mjs`)가 볼 것이 없었다 —
+      # '다 채우면 쉬는 배관'으로 분류돼 **실패해도 초록불**이었다.
+      #
+      # 다른 배관과 같은 형식으로 남긴다. 이 파일 하나로 표가 실패를 본다.
+      - name: 실행 결과 기록
+        if: always()
+        run: |
+          {
+            echo "# 실거래 수집(국토부) — 마지막 실행"
+            echo
+            echo "- 실행: $(TZ=Asia/Seoul date +%F) (KST) · 방아쇠 \`${{ github.event_name }}\`"
+            echo "- 기준: $REGION / $GU · 월 $MONTHS"
+            echo "- 결과: **${{ job.status == 'success' && '성공' || '실패' }}**"
+            echo "- 커밋: \`${{ github.sha }}\`"
+            echo
+            echo "> 예약 런은 대기열(data/molit-queue.txt)을 읽지 않습니다 — 기본 기준으로만 돕니다(2026-08-27)."
+          } > data/molit-last.md
+          git config user.name "wirit-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -f data/molit-last.md
+          git diff --cached --quiet || {
+            git commit -m "실거래 수집(국토부) 기록 — $(TZ=Asia/Seoul date +%F)"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          }
+
+      - name: 실패하면 말한다
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          # ⚠️ **성공은 말하지 않는다.** 월 2회짜리 배관이라 실패만 말해도 1년에 몇 통이다.
+          #    맞는 것을 매번 알리면 알림을 안 읽게 되고, 그러면 진짜 실패도 안 읽힌다.
+          MSG=$(printf '⛔ 실거래 수집(국토부) 실패\n\n· 범위: %s / %s\n· 월: %s\n\n자세한 것은 data/molit-last.md 를 보세요.' "$REGION" "$GU" "$MONTHS")
+          node scripts/notify-telegram.mjs "$MSG"

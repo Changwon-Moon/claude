@@ -1,4 +1,8 @@
 # 국토부 실거래 수집 요청 대기열 — 이 파일이 바뀌면 molit-collect.yml 이 돈다.
 # 한 줄 형식: region=seoul gu=all months=202607 force=false
 # (작업 세션은 GitHub API 가 막혀 Run workflow 버튼을 못 누른다 — 푸시가 유일한 손잡이)
-region=seoul gu=all months=202607 force=false
+# (2026-08-27 지난 요청 — 주석 처리) region=seoul gu=all months=202607 force=false
+
+# ⚠️ 2026-08-27 부터 **예약 런은 이 파일을 읽지 않습니다.**
+#    8/1 에 민 한 줄이 상시 설정이 되어 정기 실거래 수집이 엉뚱한 범위로 돌았습니다.
+#    이 파일은 이제 '지금 한 번 돌려 봐'라는 **일회용 손잡이**입니다 — 밀면 그 줄로 한 번 돕니다.
