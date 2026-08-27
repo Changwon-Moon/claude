@@ -5,8 +5,8 @@
     "dealYmd": "202604",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-07-22",
-    "count": 203,
+    "collectedAt": "2026-08-27",
+    "count": 202,
     "rawCount": 205,
     "verified": true,
     "note": "API 응답 원본을 코드로 정규화(해제 거래 제외). 1차 출처."
@@ -176,20 +176,6 @@
       "floor": 9,
       "buildYear": 1998,
       "date": "2026-04-29",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11305"
-    },
-    {
-      "aptNm": "주공4단지",
-      "umdNm": "번동",
-      "jibun": "234",
-      "priceWon": 690000000,
-      "priceManwon": 69000,
-      "area": 84.79,
-      "floor": 11,
-      "buildYear": 1991,
-      "date": "2026-04-30",
       "dealingGbn": "중개거래",
       "canceled": false,
       "sggCd": "11305"

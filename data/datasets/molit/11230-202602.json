@@ -5,7 +5,7 @@
     "dealYmd": "202602",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-07-22",
+    "collectedAt": "2026-08-27",
     "count": 232,
     "rawCount": 243,
     "verified": true,
@@ -671,7 +671,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 568000000,
@@ -825,7 +825,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 550000000,
@@ -1133,7 +1133,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 545000000,
@@ -1665,7 +1665,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 565000000,
@@ -3177,7 +3177,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 558000000,

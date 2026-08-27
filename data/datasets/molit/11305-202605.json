@@ -5,9 +5,9 @@
     "dealYmd": "202605",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-07-22",
-    "count": 192,
-    "rawCount": 193,
+    "collectedAt": "2026-08-27",
+    "count": 193,
+    "rawCount": 194,
     "verified": true,
     "note": "API 응답 원본을 코드로 정규화(해제 거래 제외). 1차 출처."
   },
@@ -36,6 +36,20 @@
       "floor": 12,
       "buildYear": 2006,
       "date": "2026-05-26",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11305"
+    },
+    {
+      "aptNm": "성북프라자",
+      "umdNm": "미아동",
+      "jibun": "318-5",
+      "priceWon": 474000000,
+      "priceManwon": 47400,
+      "area": 68.675,
+      "floor": 5,
+      "buildYear": 2009,
+      "date": "2026-05-01",
       "dealingGbn": "중개거래",
       "canceled": false,
       "sggCd": "11305"
@@ -797,6 +811,20 @@
       "sggCd": "11305"
     },
     {
+      "aptNm": "주공1단지",
+      "umdNm": "번동",
+      "jibun": "242",
+      "priceWon": 500000000,
+      "priceManwon": 50000,
+      "area": 41.3,
+      "floor": 7,
+      "buildYear": 1991,
+      "date": "2026-05-27",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11305"
+    },
+    {
       "aptNm": "벽산라이브파크",
       "umdNm": "미아동",
       "jibun": "1354",
@@ -1464,20 +1492,6 @@
       "floor": 13,
       "buildYear": 2003,
       "date": "2026-05-08",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11305"
-    },
-    {
-      "aptNm": "성북프라자",
-      "umdNm": "미아동",
-      "jibun": "318-5",
-      "priceWon": 513000000,
-      "priceManwon": 51300,
-      "area": 68.675,
-      "floor": 11,
-      "buildYear": 2009,
-      "date": "2026-05-13",
       "dealingGbn": "중개거래",
       "canceled": false,
       "sggCd": "11305"

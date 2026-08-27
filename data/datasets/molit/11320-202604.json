@@ -5,13 +5,27 @@
     "dealYmd": "202604",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-07-22",
-    "count": 390,
-    "rawCount": 400,
+    "collectedAt": "2026-08-27",
+    "count": 391,
+    "rawCount": 401,
     "verified": true,
     "note": "API 응답 원본을 코드로 정규화(해제 거래 제외). 1차 출처."
   },
   "trades": [
+    {
+      "aptNm": "한신",
+      "umdNm": "도봉동",
+      "jibun": "30-1",
+      "priceWon": 650000000,
+      "priceManwon": 65000,
+      "area": 84.94,
+      "floor": 16,
+      "buildYear": 1995,
+      "date": "2026-04-27",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11320"
+    },
     {
       "aptNm": "신동아아파트1",
       "umdNm": "방학동",

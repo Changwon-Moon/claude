@@ -5,13 +5,27 @@
     "dealYmd": "202606",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-07-22",
+    "collectedAt": "2026-08-27",
     "count": 57,
-    "rawCount": 59,
+    "rawCount": 60,
     "verified": true,
     "note": "API 응답 원본을 코드로 정규화(해제 거래 제외). 1차 출처."
   },
   "trades": [
+    {
+      "aptNm": "롯데캐슬",
+      "umdNm": "황학동",
+      "jibun": "2545",
+      "priceWon": 1010000000,
+      "priceManwon": 101000,
+      "area": 59.91,
+      "floor": 14,
+      "buildYear": 2008,
+      "date": "2026-06-01",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11140"
+    },
     {
       "aptNm": "진양상가",
       "umdNm": "충무로4가",
@@ -573,6 +587,20 @@
       "sggCd": "11140"
     },
     {
+      "aptNm": "SK리더스뷰남산",
+      "umdNm": "회현동1가",
+      "jibun": "206",
+      "priceWon": 2120000000,
+      "priceManwon": 212000,
+      "area": 137.53,
+      "floor": 15,
+      "buildYear": 2010,
+      "date": "2026-06-04",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11140"
+    },
+    {
       "aptNm": "청구e편한세상",
       "umdNm": "신당동",
       "jibun": "852",
@@ -609,20 +637,6 @@
       "area": 84.88,
       "floor": 16,
       "buildYear": 2002,
-      "date": "2026-06-11",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11140"
-    },
-    {
-      "aptNm": "황학동코아루",
-      "umdNm": "황학동",
-      "jibun": "882",
-      "priceWon": 1040000000,
-      "priceManwon": 104000,
-      "area": 84.95,
-      "floor": 5,
-      "buildYear": 2010,
       "date": "2026-06-11",
       "dealingGbn": "중개거래",
       "canceled": false,
@@ -680,20 +694,6 @@
       "floor": 19,
       "buildYear": 2016,
       "date": "2026-06-05",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11140"
-    },
-    {
-      "aptNm": "롯데캐슬",
-      "umdNm": "황학동",
-      "jibun": "2545",
-      "priceWon": 1010000000,
-      "priceManwon": 101000,
-      "area": 59.91,
-      "floor": 14,
-      "buildYear": 2008,
-      "date": "2026-06-01",
       "dealingGbn": "중개거래",
       "canceled": false,
       "sggCd": "11140"

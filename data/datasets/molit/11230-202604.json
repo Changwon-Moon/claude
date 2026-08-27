@@ -5,13 +5,69 @@
     "dealYmd": "202604",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-07-22",
-    "count": 373,
-    "rawCount": 386,
+    "collectedAt": "2026-08-27",
+    "count": 369,
+    "rawCount": 389,
     "verified": true,
     "note": "API 응답 원본을 코드로 정규화(해제 거래 제외). 1차 출처."
   },
   "trades": [
+    {
+      "aptNm": "한신아파트",
+      "umdNm": "제기동",
+      "jibun": "1212",
+      "priceWon": 1100000000,
+      "priceManwon": 110000,
+      "area": 84.76,
+      "floor": 3,
+      "buildYear": 2004,
+      "date": "2026-04-27",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11230"
+    },
+    {
+      "aptNm": "휘경리오포레아파트(1단지)",
+      "umdNm": "휘경동",
+      "jibun": "57",
+      "priceWon": 900000000,
+      "priceManwon": 90000,
+      "area": 84.82,
+      "floor": 8,
+      "buildYear": 2001,
+      "date": "2026-04-26",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11230"
+    },
+    {
+      "aptNm": "청량리역롯데캐슬 SKY-L65",
+      "umdNm": "전농동",
+      "jibun": "620-47",
+      "priceWon": 2000000000,
+      "priceManwon": 200000,
+      "area": 84.981,
+      "floor": 62,
+      "buildYear": 2023,
+      "date": "2026-04-16",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11230"
+    },
+    {
+      "aptNm": "르메이에르장안타운6차",
+      "umdNm": "장안동",
+      "jibun": "342-3",
+      "priceWon": 642000000,
+      "priceManwon": 64200,
+      "area": 84.92,
+      "floor": 8,
+      "buildYear": 2005,
+      "date": "2026-04-13",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11230"
+    },
     {
       "aptNm": "한신아파트",
       "umdNm": "제기동",
@@ -181,20 +237,6 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "은하수드림필",
-      "umdNm": "장안동",
-      "jibun": "572",
-      "priceWon": 565000000,
-      "priceManwon": 56500,
-      "area": 84.98,
-      "floor": 1,
-      "buildYear": 2006,
-      "date": "2026-04-30",
-      "dealingGbn": "직거래",
-      "canceled": false,
-      "sggCd": "11230"
-    },
-    {
       "aptNm": "전농우성",
       "umdNm": "전농동",
       "jibun": "6",
@@ -273,20 +315,6 @@
       "area": 59.4,
       "floor": 14,
       "buildYear": 2002,
-      "date": "2026-04-30",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11230"
-    },
-    {
-      "aptNm": "청량리역롯데캐슬 SKY-L65",
-      "umdNm": "전농동",
-      "jibun": "620-47",
-      "priceWon": 2040000000,
-      "priceManwon": 204000,
-      "area": 84.993,
-      "floor": 32,
-      "buildYear": 2023,
       "date": "2026-04-30",
       "dealingGbn": "중개거래",
       "canceled": false,
@@ -391,20 +419,6 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공1",
-      "umdNm": "휘경동",
-      "jibun": "57",
-      "priceWon": 900000000,
-      "priceManwon": 90000,
-      "area": 84.82,
-      "floor": 8,
-      "buildYear": 2001,
-      "date": "2026-04-28",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11230"
-    },
-    {
       "aptNm": "전농동삼성래미안",
       "umdNm": "전농동",
       "jibun": "155",
@@ -433,7 +447,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공1",
+      "aptNm": "휘경리오포레아파트(1단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 1070000000,
@@ -783,7 +797,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 820000000,
@@ -937,20 +951,6 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "청량리역롯데캐슬 SKY-L65",
-      "umdNm": "전농동",
-      "jibun": "620-47",
-      "priceWon": 2000000000,
-      "priceManwon": 200000,
-      "area": 84.981,
-      "floor": 62,
-      "buildYear": 2023,
-      "date": "2026-04-16",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11230"
-    },
-    {
       "aptNm": "한신아파트",
       "umdNm": "제기동",
       "jibun": "1212",
@@ -1063,7 +1063,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 550000000,
@@ -1245,7 +1245,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 500000000,
@@ -1392,20 +1392,6 @@
       "priceManwon": 68300,
       "area": 80.37,
       "floor": 13,
-      "buildYear": 2004,
-      "date": "2026-04-27",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11230"
-    },
-    {
-      "aptNm": "한신아파트",
-      "umdNm": "제기동",
-      "jibun": "1212",
-      "priceWon": 1100000000,
-      "priceManwon": 110000,
-      "area": 84.76,
-      "floor": 3,
       "buildYear": 2004,
       "date": "2026-04-27",
       "dealingGbn": "중개거래",
@@ -1987,20 +1973,6 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "전농SK",
-      "umdNm": "전농동",
-      "jibun": "10",
-      "priceWon": 1260000000,
-      "priceManwon": 126000,
-      "area": 114.3,
-      "floor": 21,
-      "buildYear": 2000,
-      "date": "2026-04-25",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11230"
-    },
-    {
       "aptNm": "대림e-편한세상",
       "umdNm": "이문동",
       "jibun": "225",
@@ -2323,6 +2295,20 @@
       "sggCd": "11230"
     },
     {
+      "aptNm": "래미안 허브리츠",
+      "umdNm": "용두동",
+      "jibun": "792",
+      "priceWon": 1530000000,
+      "priceManwon": 153000,
+      "area": 84.97,
+      "floor": 4,
+      "buildYear": 2011,
+      "date": "2026-04-18",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11230"
+    },
+    {
       "aptNm": "답십리청솔우성",
       "umdNm": "답십리동",
       "jibun": "80",
@@ -2533,7 +2519,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공1",
+      "aptNm": "휘경리오포레아파트(1단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 760000000,
@@ -2701,7 +2687,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 577000000,
@@ -2710,20 +2696,6 @@
       "floor": 19,
       "buildYear": 2001,
       "date": "2026-04-20",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11230"
-    },
-    {
-      "aptNm": "현대리노빌103동",
-      "umdNm": "장안동",
-      "jibun": "350-5",
-      "priceWon": 600000000,
-      "priceManwon": 60000,
-      "area": 84.68,
-      "floor": 5,
-      "buildYear": 2004,
-      "date": "2026-04-17",
       "dealingGbn": "중개거래",
       "canceled": false,
       "sggCd": "11230"
@@ -3527,7 +3499,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 815000000,
@@ -3550,20 +3522,6 @@
       "floor": 5,
       "buildYear": 1992,
       "date": "2026-04-14",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11230"
-    },
-    {
-      "aptNm": "르메이에르장안타운6차",
-      "umdNm": "장안동",
-      "jibun": "342-3",
-      "priceWon": 642000000,
-      "priceManwon": 64200,
-      "area": 84.92,
-      "floor": 8,
-      "buildYear": 2005,
-      "date": "2026-04-13",
       "dealingGbn": "중개거래",
       "canceled": false,
       "sggCd": "11230"
@@ -4297,20 +4255,6 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "일성트루엘",
-      "umdNm": "장안동",
-      "jibun": "581",
-      "priceWon": 885000000,
-      "priceManwon": 88500,
-      "area": 84.9216,
-      "floor": 3,
-      "buildYear": 2012,
-      "date": "2026-04-09",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11230"
-    },
-    {
       "aptNm": "한신",
       "umdNm": "청량리동",
       "jibun": "60",
@@ -4465,7 +4409,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공1",
+      "aptNm": "휘경리오포레아파트(1단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 958000000,
@@ -4605,7 +4549,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공1",
+      "aptNm": "휘경리오포레아파트(1단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 1140000000,
@@ -4829,7 +4773,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 790000000,
@@ -4913,7 +4857,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 573000000,
@@ -5207,7 +5151,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 568000000,

@@ -5,13 +5,27 @@
     "dealYmd": "202605",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-07-22",
-    "count": 272,
+    "collectedAt": "2026-08-27",
+    "count": 269,
     "rawCount": 277,
     "verified": true,
     "note": "API 응답 원본을 코드로 정규화(해제 거래 제외). 1차 출처."
   },
   "trades": [
+    {
+      "aptNm": "신촌금호",
+      "umdNm": "창전동",
+      "jibun": "438",
+      "priceWon": 1360000000,
+      "priceManwon": 136000,
+      "area": 84.87,
+      "floor": 2,
+      "buildYear": 2001,
+      "date": "2026-05-04",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11440"
+    },
     {
       "aptNm": "한강밤섬자이",
       "umdNm": "하중동",
@@ -652,20 +666,6 @@
       "floor": 4,
       "buildYear": 2010,
       "date": "2026-05-08",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11440"
-    },
-    {
-      "aptNm": "한강밤섬자이",
-      "umdNm": "하중동",
-      "jibun": "101",
-      "priceWon": 3020000000,
-      "priceManwon": 302000,
-      "area": 168.63,
-      "floor": 5,
-      "buildYear": 2010,
-      "date": "2026-05-29",
       "dealingGbn": "중개거래",
       "canceled": false,
       "sggCd": "11440"
@@ -2099,20 +2099,6 @@
       "sggCd": "11440"
     },
     {
-      "aptNm": "마포한강아이파크",
-      "umdNm": "망원동",
-      "jibun": "521",
-      "priceWon": 2180000000,
-      "priceManwon": 218000,
-      "area": 111.2884,
-      "floor": 13,
-      "buildYear": 2019,
-      "date": "2026-05-18",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11440"
-    },
-    {
       "aptNm": "우성",
       "umdNm": "도화동",
       "jibun": "82",
@@ -2387,20 +2373,6 @@
       "area": 59.4,
       "floor": 20,
       "buildYear": 1999,
-      "date": "2026-05-16",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11440"
-    },
-    {
-      "aptNm": "대상3",
-      "umdNm": "망원동",
-      "jibun": "491",
-      "priceWon": 850000000,
-      "priceManwon": 85000,
-      "area": 84.9,
-      "floor": 5,
-      "buildYear": 2000,
       "date": "2026-05-16",
       "dealingGbn": "중개거래",
       "canceled": false,
@@ -3648,20 +3620,6 @@
       "floor": 3,
       "buildYear": 2016,
       "date": "2026-05-02",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11440"
-    },
-    {
-      "aptNm": "신촌금호",
-      "umdNm": "창전동",
-      "jibun": "438",
-      "priceWon": 1360000000,
-      "priceManwon": 136000,
-      "area": 84.87,
-      "floor": 2,
-      "buildYear": 2001,
-      "date": "2026-05-04",
       "dealingGbn": "중개거래",
       "canceled": false,
       "sggCd": "11440"

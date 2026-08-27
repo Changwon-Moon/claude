@@ -5,13 +5,27 @@
     "dealYmd": "202603",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-07-22",
+    "collectedAt": "2026-08-27",
     "count": 234,
-    "rawCount": 241,
+    "rawCount": 242,
     "verified": true,
     "note": "API 응답 원본을 코드로 정규화(해제 거래 제외). 1차 출처."
   },
   "trades": [
+    {
+      "aptNm": "동서울한양",
+      "umdNm": "답십리동",
+      "jibun": "41",
+      "priceWon": 750000000,
+      "priceManwon": 75000,
+      "area": 76.41,
+      "floor": 2,
+      "buildYear": 1989,
+      "date": "2026-03-27",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11230"
+    },
     {
       "aptNm": "전농동신성미소지움",
       "umdNm": "전농동",
@@ -125,7 +139,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공1",
+      "aptNm": "휘경리오포레아파트(1단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 947000000,
@@ -223,7 +237,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 515000000,
@@ -643,7 +657,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공1",
+      "aptNm": "휘경리오포레아파트(1단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 1080000000,
@@ -657,7 +671,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공1",
+      "aptNm": "휘경리오포레아파트(1단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 910000000,
@@ -1002,20 +1016,6 @@
       "floor": 19,
       "buildYear": 2015,
       "date": "2026-03-18",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11230"
-    },
-    {
-      "aptNm": "동서울한양",
-      "umdNm": "답십리동",
-      "jibun": "41",
-      "priceWon": 750000000,
-      "priceManwon": 75000,
-      "area": 76.41,
-      "floor": 2,
-      "buildYear": 1989,
-      "date": "2026-03-27",
       "dealingGbn": "중개거래",
       "canceled": false,
       "sggCd": "11230"
@@ -2211,7 +2211,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 542000000,
@@ -2253,7 +2253,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공1",
+      "aptNm": "휘경리오포레아파트(1단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 950000000,
@@ -2281,7 +2281,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 546000000,
@@ -2337,7 +2337,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 850000000,
@@ -2603,7 +2603,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공1",
+      "aptNm": "휘경리오포레아파트(1단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 925000000,
@@ -2617,7 +2617,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 465000000,
@@ -2631,7 +2631,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 530000000,
@@ -2645,7 +2645,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 540000000,
@@ -2771,7 +2771,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공2",
+      "aptNm": "휘경리오포레아파트(2단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 544000000,
@@ -3051,7 +3051,7 @@
       "sggCd": "11230"
     },
     {
-      "aptNm": "주공1",
+      "aptNm": "휘경리오포레아파트(1단지)",
       "umdNm": "휘경동",
       "jibun": "57",
       "priceWon": 1050000000,

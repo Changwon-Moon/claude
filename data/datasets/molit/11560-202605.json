@@ -5,13 +5,27 @@
     "dealYmd": "202605",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-07-22",
+    "collectedAt": "2026-08-27",
     "count": 312,
-    "rawCount": 319,
+    "rawCount": 320,
     "verified": true,
     "note": "API 응답 원본을 코드로 정규화(해제 거래 제외). 1차 출처."
   },
   "trades": [
+    {
+      "aptNm": "당산계룡리슈빌3단지",
+      "umdNm": "당산동3가",
+      "jibun": "565",
+      "priceWon": 850000000,
+      "priceManwon": 85000,
+      "area": 49.993,
+      "floor": 3,
+      "buildYear": 2014,
+      "date": "2026-05-08",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11560"
+    },
     {
       "aptNm": "순복음(초원)",
       "umdNm": "여의도동",
@@ -3382,20 +3396,6 @@
       "floor": 7,
       "buildYear": 1997,
       "date": "2026-05-09",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11560"
-    },
-    {
-      "aptNm": "당산계룡리슈빌3단지",
-      "umdNm": "당산동3가",
-      "jibun": "565",
-      "priceWon": 850000000,
-      "priceManwon": 85000,
-      "area": 49.993,
-      "floor": 3,
-      "buildYear": 2014,
-      "date": "2026-05-08",
       "dealingGbn": "중개거래",
       "canceled": false,
       "sggCd": "11560"

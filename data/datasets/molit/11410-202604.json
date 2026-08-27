@@ -5,8 +5,8 @@
     "dealYmd": "202604",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-07-22",
-    "count": 317,
+    "collectedAt": "2026-08-27",
+    "count": 315,
     "rawCount": 328,
     "verified": true,
     "note": "API 응답 원본을 코드로 정규화(해제 거래 제외). 1차 출처."
@@ -1777,20 +1777,6 @@
       "sggCd": "11410"
     },
     {
-      "aptNm": "홍제에스피엘",
-      "umdNm": "홍제동",
-      "jibun": "322-138",
-      "priceWon": 476270000,
-      "priceManwon": 47627,
-      "area": 84.278,
-      "floor": 1,
-      "buildYear": 2023,
-      "date": "2026-04-03",
-      "dealingGbn": "직거래",
-      "canceled": false,
-      "sggCd": "11410"
-    },
-    {
       "aptNm": "DMC한양",
       "umdNm": "북가좌동",
       "jibun": "431",
@@ -1801,20 +1787,6 @@
       "buildYear": 1987,
       "date": "2026-04-15",
       "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11410"
-    },
-    {
-      "aptNm": "홍제에스피엘",
-      "umdNm": "홍제동",
-      "jibun": "322-138",
-      "priceWon": 475200000,
-      "priceManwon": 47520,
-      "area": 84.067,
-      "floor": 1,
-      "buildYear": 2023,
-      "date": "2026-04-03",
-      "dealingGbn": "직거래",
       "canceled": false,
       "sggCd": "11410"
     },

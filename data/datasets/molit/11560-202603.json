@@ -5,13 +5,27 @@
     "dealYmd": "202603",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-07-22",
+    "collectedAt": "2026-08-27",
     "count": 261,
-    "rawCount": 270,
+    "rawCount": 271,
     "verified": true,
     "note": "API 응답 원본을 코드로 정규화(해제 거래 제외). 1차 출처."
   },
   "trades": [
+    {
+      "aptNm": "삼부",
+      "umdNm": "여의도동",
+      "jibun": "30-2",
+      "priceWon": 2980000000,
+      "priceManwon": 298000,
+      "area": 92.13,
+      "floor": 13,
+      "buildYear": 1975,
+      "date": "2026-03-29",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11560"
+    },
     {
       "aptNm": "시범",
       "umdNm": "여의도동",
@@ -779,20 +793,6 @@
       "buildYear": 1998,
       "date": "2026-03-13",
       "dealingGbn": "직거래",
-      "canceled": false,
-      "sggCd": "11560"
-    },
-    {
-      "aptNm": "삼부",
-      "umdNm": "여의도동",
-      "jibun": "30-2",
-      "priceWon": 2980000000,
-      "priceManwon": 298000,
-      "area": 92.13,
-      "floor": 13,
-      "buildYear": 1975,
-      "date": "2026-03-29",
-      "dealingGbn": "중개거래",
       "canceled": false,
       "sggCd": "11560"
     },

@@ -5,13 +5,27 @@
     "dealYmd": "202604",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-07-22",
-    "count": 384,
-    "rawCount": 394,
+    "collectedAt": "2026-08-27",
+    "count": 383,
+    "rawCount": 395,
     "verified": true,
     "note": "API 응답 원본을 코드로 정규화(해제 거래 제외). 1차 출처."
   },
   "trades": [
+    {
+      "aptNm": "동성3",
+      "umdNm": "신내동",
+      "jibun": "618",
+      "priceWon": 715000000,
+      "priceManwon": 71500,
+      "area": 84.08,
+      "floor": 20,
+      "buildYear": 1997,
+      "date": "2026-04-08",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11260"
+    },
     {
       "aptNm": "라온프라이빗",
       "umdNm": "면목동",
@@ -806,20 +820,6 @@
       "floor": 9,
       "buildYear": 2013,
       "date": "2026-04-29",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11260"
-    },
-    {
-      "aptNm": "극동늘푸른",
-      "umdNm": "묵동",
-      "jibun": "379",
-      "priceWon": 695000000,
-      "priceManwon": 69500,
-      "area": 84.08,
-      "floor": 9,
-      "buildYear": 1999,
-      "date": "2026-04-20",
       "dealingGbn": "중개거래",
       "canceled": false,
       "sggCd": "11260"
@@ -4124,20 +4124,6 @@
       "floor": 9,
       "buildYear": 2000,
       "date": "2026-04-06",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11260"
-    },
-    {
-      "aptNm": "동성3",
-      "umdNm": "신내동",
-      "jibun": "618",
-      "priceWon": 715000000,
-      "priceManwon": 71500,
-      "area": 84.08,
-      "floor": 20,
-      "buildYear": 1997,
-      "date": "2026-04-08",
       "dealingGbn": "중개거래",
       "canceled": false,
       "sggCd": "11260"

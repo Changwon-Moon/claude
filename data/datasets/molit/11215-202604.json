@@ -5,13 +5,41 @@
     "dealYmd": "202604",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-07-22",
-    "count": 122,
-    "rawCount": 131,
+    "collectedAt": "2026-08-27",
+    "count": 121,
+    "rawCount": 133,
     "verified": true,
     "note": "API 응답 원본을 코드로 정규화(해제 거래 제외). 1차 출처."
   },
   "trades": [
+    {
+      "aptNm": "브라운스톤",
+      "umdNm": "화양동",
+      "jibun": "21-2",
+      "priceWon": 695000000,
+      "priceManwon": 69500,
+      "area": 58.24,
+      "floor": 13,
+      "buildYear": 2006,
+      "date": "2026-04-18",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11215"
+    },
+    {
+      "aptNm": "e편한세상광진그랜드파크",
+      "umdNm": "구의동",
+      "jibun": "680",
+      "priceWon": 2190000000,
+      "priceManwon": 219000,
+      "area": 84.9716,
+      "floor": 32,
+      "buildYear": 2021,
+      "date": "2026-04-09",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11215"
+    },
     {
       "aptNm": "현대프라임",
       "umdNm": "구의동",
@@ -881,20 +909,6 @@
       "sggCd": "11215"
     },
     {
-      "aptNm": "브라운스톤",
-      "umdNm": "화양동",
-      "jibun": "21-2",
-      "priceWon": 695000000,
-      "priceManwon": 69500,
-      "area": 58.24,
-      "floor": 13,
-      "buildYear": 2006,
-      "date": "2026-04-18",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11215"
-    },
-    {
       "aptNm": "자양우성7",
       "umdNm": "자양동",
       "jibun": "783-1",
@@ -1231,20 +1245,6 @@
       "sggCd": "11215"
     },
     {
-      "aptNm": "중곡2단지",
-      "umdNm": "중곡동",
-      "jibun": "190-26",
-      "priceWon": 620000000,
-      "priceManwon": 62000,
-      "area": 55.87,
-      "floor": 3,
-      "buildYear": 1976,
-      "date": "2026-04-03",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11215"
-    },
-    {
       "aptNm": "워커힐푸르지오",
       "umdNm": "광장동",
       "jibun": "148-4",
@@ -1421,20 +1421,6 @@
       "area": 47.24,
       "floor": 3,
       "buildYear": 2018,
-      "date": "2026-04-09",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "11215"
-    },
-    {
-      "aptNm": "e편한세상광진그랜드파크",
-      "umdNm": "구의동",
-      "jibun": "680",
-      "priceWon": 2190000000,
-      "priceManwon": 219000,
-      "area": 84.9716,
-      "floor": 32,
-      "buildYear": 2021,
       "date": "2026-04-09",
       "dealingGbn": "중개거래",
       "canceled": false,

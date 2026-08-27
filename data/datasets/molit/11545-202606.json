@@ -5,13 +5,27 @@
     "dealYmd": "202606",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-07-22",
-    "count": 102,
-    "rawCount": 102,
+    "collectedAt": "2026-08-27",
+    "count": 104,
+    "rawCount": 104,
     "verified": true,
     "note": "API 응답 원본을 코드로 정규화(해제 거래 제외). 1차 출처."
   },
   "trades": [
+    {
+      "aptNm": "관악산벽산타운5",
+      "umdNm": "시흥동",
+      "jibun": "1013",
+      "priceWon": 480000000,
+      "priceManwon": 48000,
+      "area": 114.84,
+      "floor": 1,
+      "buildYear": 2004,
+      "date": "2026-06-04",
+      "dealingGbn": "직거래",
+      "canceled": false,
+      "sggCd": "11545"
+    },
     {
       "aptNm": "두산",
       "umdNm": "가산동",
@@ -36,6 +50,20 @@
       "floor": 9,
       "buildYear": 2002,
       "date": "2026-06-23",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11545"
+    },
+    {
+      "aptNm": "가산지웰에스테이트",
+      "umdNm": "가산동",
+      "jibun": "140-9",
+      "priceWon": 98000000,
+      "priceManwon": 9800,
+      "area": 15.52,
+      "floor": 11,
+      "buildYear": 2013,
+      "date": "2026-06-22",
       "dealingGbn": "중개거래",
       "canceled": false,
       "sggCd": "11545"

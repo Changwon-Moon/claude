@@ -5,13 +5,27 @@
     "dealYmd": "202604",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-07-22",
-    "count": 138,
-    "rawCount": 141,
+    "collectedAt": "2026-08-27",
+    "count": 140,
+    "rawCount": 143,
     "verified": true,
     "note": "API 응답 원본을 코드로 정규화(해제 거래 제외). 1차 출처."
   },
   "trades": [
+    {
+      "aptNm": "산호",
+      "umdNm": "원효로4가",
+      "jibun": "118-16",
+      "priceWon": 2330000000,
+      "priceManwon": 233000,
+      "area": 78.06,
+      "floor": 4,
+      "buildYear": 1977,
+      "date": "2026-04-13",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11170"
+    },
     {
       "aptNm": "용산파크e-편한세상",
       "umdNm": "한강로2가",
@@ -694,6 +708,20 @@
       "floor": 8,
       "buildYear": 2002,
       "date": "2026-04-27",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11170"
+    },
+    {
+      "aptNm": "삼익",
+      "umdNm": "이촌동",
+      "jibun": "300-301",
+      "priceWon": 2800000000,
+      "priceManwon": 280000,
+      "area": 104.86,
+      "floor": 8,
+      "buildYear": 1979,
+      "date": "2026-04-30",
       "dealingGbn": "중개거래",
       "canceled": false,
       "sggCd": "11170"
