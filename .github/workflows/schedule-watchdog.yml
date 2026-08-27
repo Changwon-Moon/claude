@@ -50,44 +50,61 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
-      singo_stale: ${{ steps.check.outputs.singo_stale }}
+      singo_stale: ${{ steps.singo.outputs.stale }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: 마지막 예약 런을 묻는다
+      - name: 오늘 신고가가 돌았나 (증거 파일로 본다)
+        id: singo
+        shell: bash
+        run: |
+          # ⚠️ **API 로 「마지막 예약 런」을 보면 안 된다** (2026-08-27 실측).
+          #    파수꾼이 대신 띄운 런은 `singo-daily.yml` 의 런이 아니라 **파수꾼 워크플로의
+          #    런**이라 그 목록에 안 뜬다. 그래서 API 로 재면 파수꾼이 매시간 다시 띄운다.
+          #    옳은 열쇠는 **그 런이 남긴 증거**다 — 누가 띄웠든 여기에 오늘 날짜가 찍힌다.
+          TODAY=$(TZ=Asia/Seoul date +%F)
+          HOUR=$(TZ=Asia/Seoul date +%H)
+          LAST=$(sed -n 's/^- 실행: \([0-9-]\{10\}\).*/\1/p' data/singo-last.md 2>/dev/null | head -1)
+          echo "오늘(KST) $TODAY ${HOUR}시 · 마지막 실행 기록 ${LAST:-(없음)}"
+          # 예약은 07:00 KST 다. 늦게 뜨는 것이 정상이라(실측 최대 40분) **08:30 까지 기다린다.**
+          # 그 전에는 「아직 안 왔다」와 「안 뜬다」를 구분할 수 없다.
+          if [ "$LAST" = "$TODAY" ]; then
+            echo "stale=0" >> "$GITHUB_OUTPUT"; echo "· 오늘 이미 돌았습니다"
+          elif [ "$HOUR" -lt 8 ]; then
+            echo "stale=0" >> "$GITHUB_OUTPUT"; echo "· 아직 08시 전 — 기다립니다"
+          else
+            echo "stale=1" >> "$GITHUB_OUTPUT"; echo "⚠️ 오늘 신고가가 안 돌았습니다"
+          fi
+
+      - name: 다른 일일 예약도 살핀다 (말만 한다)
         id: check
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
-          # 지켜보는 것 — 하루에 한 번 도는 예약들. `파일|이름|최대공백시간`
-          WATCH="singo-daily.yml|오늘의 신고가|26
-          tower-deploy.yml|관제탑 배포|26
-          collect.yml|데이터 수집|74
-          research-digest.yml|소재 보드 수집|26
-          pipeline-tick.yml|파이프라인 진행|26"
+          # 지켜보는 것 — `파일|이름|최대공백분`
+          # ⚠️ **분**으로 잰다. 시간 단위로 자르면 26시간 22분이 「26」이 되어 문턱을 못 넘는다
+          #    (2026-08-27 첫 실행이 정확히 그래서 조용히 넘어갔다).
           # ⚠️ 데이터 수집은 **평일(1-5)만** 돈다 — 주말을 끼면 최대 74시간이 정상이다.
           #    같은 잣대로 재면 월요일 아침마다 거짓 경보가 난다.
+          WATCH="tower-deploy.yml|관제탑 배포|1530
+          collect.yml|데이터 수집|4440
+          research-digest.yml|소재 보드 수집|1530
+          pipeline-tick.yml|파이프라인 진행|1530"
           NOW=$(date -u +%s)
           STALE=""
-          SINGO=0
-          while IFS='|' read -r FILE NAME MAXH; do
+          while IFS='|' read -r FILE NAME MAXM; do
             [ -z "$FILE" ] && continue
-            FILE=$(echo "$FILE" | tr -d ' ')
+            FILE=$(echo "$FILE" | tr -d ' '); MAXM=$(echo "$MAXM" | tr -d ' ')
             LAST=$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/${FILE}/runs?event=schedule&per_page=1" \
                      --jq '.workflow_runs[0].created_at // empty' 2>/dev/null || true)
-            if [ -z "$LAST" ]; then
-              echo "· ${NAME} — 예약 런 기록이 아예 없습니다(건너뜁니다)"
-              continue
-            fi
-            AGE=$(( (NOW - $(date -u -d "$LAST" +%s)) / 3600 ))
-            echo "· ${NAME} — 마지막 예약 ${LAST} (${AGE}시간 전 / 한계 ${MAXH})"
-            if [ "$AGE" -gt "$MAXH" ]; then
-              STALE="${STALE}"$'\n'"· ${NAME} — ${AGE}시간째 예약이 안 떴습니다"
-              case "$FILE" in singo-daily.yml) SINGO=1;; esac
+            if [ -z "$LAST" ]; then echo "· ${NAME} — 예약 런 기록이 없습니다(건너뜁니다)"; continue; fi
+            AGE=$(( (NOW - $(date -u -d "$LAST" +%s)) / 60 ))
+            echo "· ${NAME} — 마지막 예약 ${LAST} (${AGE}분 전 / 한계 ${MAXM})"
+            if [ "$AGE" -gt "$MAXM" ]; then
+              STALE="${STALE}"$'\n'"· ${NAME} — $((AGE/60))시간째 예약이 안 떴습니다"
             fi
           done <<< "$WATCH"
-          echo "singo_stale=$SINGO" >> "$GITHUB_OUTPUT"
           {
             echo "stale<<EOF"
             echo "$STALE"
@@ -95,17 +112,22 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: 말한다
-        if: steps.check.outputs.stale != ''
+        if: steps.check.outputs.stale != '' || steps.singo.outputs.stale == '1'
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         shell: bash
         run: |
           EXTRA=""
-          if [ "${{ steps.check.outputs.singo_stale }}" = "1" ]; then
+          if [ "${{ steps.singo.outputs.stale }}" = "1" ]; then
             EXTRA=$'\n\n신고가는 파수꾼이 지금 대신 돌립니다 — 잠시 뒤 목록이 옵니다.'
           fi
-          node scripts/notify-telegram.mjs "🐕 예약이 안 떴습니다 (GitHub Actions 쪽 문제입니다)${{ steps.check.outputs.stale }}${EXTRA}"
+          HEAD="🐕 예약이 안 떴습니다 (GitHub Actions 쪽 문제입니다)"
+          SINGO=""
+          if [ "${{ steps.singo.outputs.stale }}" = "1" ]; then
+            SINGO=$'\n'"· 오늘의 신고가 — 07시 예약이 안 떴습니다"
+          fi
+          node scripts/notify-telegram.mjs "${HEAD}${SINGO}${{ steps.check.outputs.stale }}${EXTRA}"
 
   # ── 신고가만 대신 띄운다. 나머지는 말만 한다(사람이 정한다).
   singo:
