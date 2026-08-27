@@ -32,9 +32,14 @@ on:
     - cron: "23 * * * *"
   workflow_dispatch:
 
+# ⚠️ `contents: write` 가 필요하다 — 이 파수꾼 자신은 아무것도 커밋하지 않지만,
+#    아래에서 **부르는** 신고가 워크플로가 결과를 커밋한다. 불려 가는 워크플로의 권한은
+#    **부르는 쪽의 권한을 넘을 수 없다.** `contents: read` 로 뒀더니 런이 잡 하나 없이
+#    `startup_failure` 로 죽었다(2026-08-27 실측) — 스텝이 안 생기니 로그도 없다.
+#    `actions: read` 는 「마지막 예약 런이 언제였나」를 API 로 묻는 데 쓴다.
 permissions:
-  contents: read
-  actions: write
+  contents: write
+  actions: read
 
 concurrency:
   group: schedule-watchdog
