@@ -38,12 +38,20 @@ const todayKst = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 1
  *   periodic  N일 주기. 주기의 두 배가 지나면 늦은 것으로 본다
  *   untilDone 다 채우면 쉰다. '실제 호출 0회'가 **정상**이다(전부 완료)
  *   onDemand  큐를 밀 때만 돈다. 조용한 게 기본값이다
+ *   paused    **일부러 멈춰 둔 것**. 안 도는 게 정답이다 — `why` 에 이유를 적는다
+ *
+ * ⚠️ `paused` 는 2026-08-27 에 생겼다. 오너가 "오늘 청약 메시지를 못 받았다"고 물어
+ * 이 표를 열었더니 **국내 증시가 '늦음'으로 10일째 빨간불**이었다. 고장이 아니었다 —
+ * 08-16 에 그 수집기가 지난 거래일을 지워서(오너 확정 카드의 근거가 사라졌다)
+ * **사람이 일부러 cron 을 주석 처리해 둔 것**이었다. 맞는 것을 매일 지적하면
+ * 지적을 안 읽게 되고, 그러면 진짜 고장도 같이 안 읽힌다. 그래서 상태를 나눈다.
  */
 const PIPES = [
   { name: "청약홈 수집", mode: "daily", everyDays: 1, last: "data/applyhome-last.md", data: "data/datasets/applyhome-latest.json", tg: true, key: "DATA_GO_KR_API_KEY" },
   { name: "오늘의 신고가", mode: "daily", everyDays: 1, last: "data/singo-last.md", data: "data/datasets/singo-latest.json", tg: true, key: "MOLIT_API_KEY" },
   { name: "소재 보드 수집", mode: "daily", everyDays: 1, last: null, data: "research/ideas.json", tg: false },
-  { name: "국내 증시", mode: "daily", everyDays: 1, last: null, data: "data/datasets/kr-market-2026.json", tg: false },
+  { name: "국내 증시", mode: "paused", last: null, data: "data/datasets/kr-market-2026.json", tg: false,
+    why: "2026-08-16 사람이 cron 을 껐다 — 수집기가 지난 거래일을 지워 kospi-record 카드의 근거가 사라졌다.\n           코드는 그날 고쳤지만(합치기), 지켜 내는지 사람이 눈으로 본 뒤 다시 켠다. .github/workflows/kr-market.yml" },
   { name: "주간 매매·전세 지수", mode: "periodic", everyDays: 7, last: null, data: "data/datasets/reb-weekly-index.json", tg: true, key: "RONE_API_KEY" },
   { name: "전세·월세 지수(월간)", mode: "periodic", everyDays: 31, last: null, data: "data/datasets/reb-rent-index.json", tg: false, key: "RONE_API_KEY" },
   { name: "인구 수집", mode: "periodic", everyDays: 31, last: "data/population-last.md", data: null, tg: true },
@@ -88,6 +96,8 @@ const rows = PIPES.map((p) => {
   const age = seen ? dayDiff(todayKst, seen) : null;
 
   let state = "ok";
+  /* 일부러 멈춘 배관은 '늦음'을 재지 않는다 — 안 도는 게 정답이라 잴 것이 없다. */
+  if (p.mode === "paused") return { ...p, seen, age, state: "paused", why: p.why || null };
   /* 늦음 판정은 **매일·주기물에만** 건다. 다 채우면 쉬는 배관과 큐로만 도는 배관은
      조용한 게 정상이라, 여기에 늦음을 걸면 늘 경고가 떠 있게 된다. */
   if (p.mode === "daily" || p.mode === "periodic") {
@@ -104,9 +114,9 @@ const rows = PIPES.map((p) => {
 if (process.argv.includes("--json")) {
   console.log(JSON.stringify({ today: todayKst, rows }, null, 2));
 } else {
-  const MARK = { ok: "✅", stale: "⏳", fail: "❌", empty: "⚠️ " };
-  const WORD = { ok: "정상", stale: "늦음", fail: "실패", empty: "빈손" };
-  const MODE = { daily: "매일", periodic: "주기", untilDone: "완료형", onDemand: "요청형" };
+  const MARK = { ok: "✅", stale: "⏳", fail: "❌", empty: "⚠️ ", paused: "⏸" };
+  const WORD = { ok: "정상", stale: "늦음", fail: "실패", empty: "빈손", paused: "멈춤(의도)" };
+  const MODE = { daily: "매일", periodic: "주기", untilDone: "완료형", onDemand: "요청형", paused: "멈춤" };
   console.log(`\n🔧 배관 상태 — ${todayKst} (KST)\n`);
   console.log(`   ${"".padEnd(2)} ${"배관".padEnd(22)} ${"마지막".padEnd(12)} ${"경과".padEnd(6)} ${"주기".padEnd(7)} 알림  키`);
   console.log(`   ${"─".repeat(76)}`);
@@ -115,7 +125,11 @@ if (process.argv.includes("--json")) {
       `   ${MARK[r.state]} ${r.name.padEnd(22)} ${(r.seen || "기록 없음").padEnd(12)} ` +
         `${(r.age == null ? "?" : `${r.age}일`).padEnd(6)} ${MODE[r.mode].padEnd(7)} ${r.tg ? "TG " : "   "}  ${r.key || ""}`,
     );
-    if (r.why) console.log(`      ↳ ${r.why.slice(0, 110)}`);
+    /* 이유는 여러 줄일 수 있다(멈춘 배관의 사유). 줄바꿈을 살려 들여쓴다 —
+       한 줄로 자르면 "왜 멈췄나"가 딱 잘려 이유가 아니라 수수께끼가 된다. */
+    if (r.why)
+      for (const line of String(r.why).split("\n").map((x) => x.trim()).filter(Boolean))
+        console.log(`      ↳ ${line}`);
   }
   /* ── 기준 드리프트 검사 (2026-08-24)
      배관이 **도는데도** 기준이 조용히 좁아져 있을 수 있다. 실제로 그랬다:
@@ -138,7 +152,8 @@ if (process.argv.includes("--json")) {
     }
   }
 
-  const bad = rows.filter((r) => r.state !== "ok");
+  /* 일부러 멈춘 것은 "손봐야 할 것"이 아니다 — 아래에 따로 한 줄로 알린다. */
+  const bad = rows.filter((r) => r.state !== "ok" && r.state !== "paused");
   console.log("");
   if (!bad.length) console.log("   ✅ 전부 제때 돌고 있습니다\n");
   else {
@@ -151,4 +166,4 @@ if (process.argv.includes("--json")) {
   }
 }
 
-if (process.argv.includes("--strict") && rows.some((r) => r.state !== "ok")) process.exit(1);
+if (process.argv.includes("--strict") && rows.some((r) => r.state !== "ok" && r.state !== "paused")) process.exit(1);
