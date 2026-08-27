@@ -96,14 +96,22 @@ jobs:
           #    첫 판에는 청약홈이 빠져 있었다 — 그런데 오너가 그날 처음 물은 것이
           #    "오늘 청약 메시지를 못 받았어"였다. 오너가 **매일 눈으로 기다리는 알림**이
           #    감시 밖에 있으면, 안 온 날 물어보는 사람이 오너가 된다.
-          #    청약홈(11:00) · 1000세대 명부(10:20) · 최고가 인덱스(11:40) 셋 다 톡이 온다.
+          #    청약홈(11:04) · 1000세대 명부(10:20) · 최고가 인덱스(11:40) 셋 다 톡이 온다.
+          #
+          # ⚠️ 이 셋은 `schedule` 이 아니라 **`any`** 로 잰다. 08-27 에 청약홈 예약이 또 안 떠서
+          #    세션이 대기열로 대신 돌렸는데, `schedule` 로 재면 **톡이 이미 갔는데도**
+          #    파수꾼이 "예약이 안 떴다"고 계속 보챈다. 관제탑 배포에서 이미 배운 것이다 —
+          #    **그 일이 됐는지**를 물어야지 **어느 문으로 들어왔는지**를 물으면 안 된다.
+          # ⚠️ 1620 → **1530분**(25.5시간). 청약홈은 11:04 예약이라 실제 도착이 12시 안팎인데,
+          #    1620(27시간)이면 오늘 안 온 것을 **다음 날 15시**에야 말한다 — 매일 오는 알림에
+          #    하루 늦은 경보는 없는 것과 같다.
           WATCH="tower-deploy.yml|관제탑 배포|1530|any
           collect.yml|데이터 수집|4440|schedule
           research-digest.yml|소재 보드 수집|1530|schedule
           pipeline-tick.yml|파이프라인 진행|1530|schedule
-          applyhome-collect.yml|청약홈 수집|1620|schedule
-          apt-universe.yml|1000세대 명부|1620|schedule
-          molit-peak-backfill.yml|최고가 인덱스|1620|schedule"
+          applyhome-collect.yml|청약홈 수집|1530|any
+          apt-universe.yml|1000세대 명부|1530|any
+          molit-peak-backfill.yml|최고가 인덱스|1530|any"
           NOW=$(date -u +%s)
           STALE=""
           while IFS='|' read -r FILE NAME MAXM EVT; do

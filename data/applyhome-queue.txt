@@ -18,3 +18,5 @@ within=14 min=40 digest=1
 within=14 min=40 digest=1
 # 청약홈 활용신청 승인 후 재검증 10:08 — 08-16 이후 밀린 공고까지
 within=14 min=40 digest=1
+# 2026-08-27 12:58 — 예약(11:04 KST)이 또 안 떴다. 오너 알림이 밀려 세션이 대신 돌린다.
+within=14 min=40 digest=1

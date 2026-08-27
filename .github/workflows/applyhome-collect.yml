@@ -93,7 +93,17 @@ jobs:
           # (주석 #·빈 줄 무시. 없는 값은 기본값으로 떨어진다)
           DIGEST="${{ github.event.inputs.digest }}"
           Q=data/applyhome-queue.txt
-          if [ -z "$WITHIN$MIN$DIGEST" ] && [ -f "$Q" ]; then
+          # ── ⛔ 예약 런은 대기열을 **읽지 않는다** (2026-08-27, 신고가·실거래와 같은 규칙)
+          #
+          # 대기열은 세션이 "지금 한 번 돌려 봐"라고 미는 **일회용 손잡이**다. 예약 런까지
+          # 마지막 줄을 읽으면 그게 **상시 설정**이 된다 — 신고가(`months=1`, 5일간)와
+          # 실거래(`months=202607`, 26일간)가 실제로 그렇게 조용히 좁아져 있었다.
+          # 이 파일에도 `grep=부천` 같은 진단용 줄이 남아 있었다. 지금은 마지막 줄이
+          # 우연히 기본값과 같아서 티가 안 났을 뿐, 다음 진단 한 줄이면 똑같이 굳는다.
+          EVT="${{ github.event_name }}"
+          if [ "$EVT" != "push" ] && [ "$EVT" != "workflow_dispatch" ]; then
+            echo "방아쇠 '$EVT' — 대기열을 읽지 않고 기본 기준(within=7 · min=45 · digest)으로 돕니다"
+          elif [ -z "$WITHIN$MIN$DIGEST" ] && [ -f "$Q" ]; then
             LINE=$(grep -v '^\s*#' "$Q" | grep -v '^\s*$' | tail -1)
             echo "대기열 마지막 줄: ${LINE:-(비어 있음)}"
             for kv in $LINE; do
