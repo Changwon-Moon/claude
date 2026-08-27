@@ -61,3 +61,20 @@ kapt=A42084908 area=59.98
 # 2026-08-26 04:30 UTC — SERVICETIMEOUT 로 못 받은 4건 재시도(장미·개봉한진·호계2차·방학신동아1)
 # 2026-08-26 04:40 UTC — SERVICETIMEOUT 재시도 2차(호계2차·방학신동아1)
 # 2026-08-26 04:32 UTC — 개봉한진 24쪽 SERVICETIMEOUT 재시도 3차
+
+# ── 2026-08-27 신고가 15건 (하루치 캐러셀)
+kapt=A10024552 area=84.94
+kapt=A10026207 area=84.96
+kapt=A13482706 area=83.52
+kapt=A14320304 area=59.82
+kapt=A10045404 area=57.63
+kapt=A13472701 area=84.87
+kapt=A15180705 area=60.00
+kapt=A10023536 area=59.36
+kapt=A13082704 area=59.99
+kapt=A15209002 area=59.57
+kapt=A10023630 area=84.91
+kapt=A44851611 area=84.96
+kapt=A13084803 area=59.78
+kapt=A46571004 area=59.97
+kapt=A10027421 area=59.87
