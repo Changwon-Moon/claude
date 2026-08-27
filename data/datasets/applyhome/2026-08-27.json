@@ -11,7 +11,7 @@
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
     "collectedFor": "2026-08-27",
-    "withinDays": 14,
+    "withinDays": 7,
     "totals": {
       "APT 분양정보": 2854,
       "APT 무순위/잔여세대": 1665
@@ -132,57 +132,6 @@
     },
     {
       "kind": "remndr",
-      "pblancNo": "2026910218",
-      "name": "천왕역 모아엘가 트레뷰(11차)",
-      "areaName": "서울",
-      "address": "서울특별시 구로구 오리로1165",
-      "supply": 3,
-      "noticeDate": "2026-08-14",
-      "receiptFrom": "2026-08-19",
-      "receiptTo": "2026-08-19",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-08",
-      "announceDate": "2026-08-24",
-      "builder": "주식회사 이레에이치앤씨",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://천왕역모아엘가트레뷰.net",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910218&pblancNo=2026910218",
-      "score": 59,
-      "reasons": [
-        "서울",
-        "무순위"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910217",
-      "name": "춘천 리버뷰 아이파크",
-      "areaName": "강원",
-      "address": "강원특별자치도 춘천시 동면 장학리 883번지 일원",
-      "supply": 180,
-      "noticeDate": "2026-08-19",
-      "receiptFrom": "2026-08-24",
-      "receiptTo": "2026-08-24",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2029-03",
-      "announceDate": "2026-08-27",
-      "builder": "아이파크현대산업개발주식회사",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.i-park.com/chuncheon",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910217&pblancNo=2026910217",
-      "score": 59,
-      "reasons": [
-        "180가구",
-        "무순위",
-        "아이파크"
-      ]
-    },
-    {
-      "kind": "remndr",
       "pblancNo": "2026930028",
       "name": "구리역 롯데캐슬 시그니처",
       "areaName": "경기",
@@ -204,32 +153,6 @@
       "reasons": [
         "수도권",
         "무순위",
-        "롯데캐슬"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000354",
-      "name": "상동역 롯데캐슬 시그니처",
-      "areaName": "경기",
-      "address": "경기도 부천시 원미구 상동 540-1번지",
-      "supply": 1859,
-      "noticeDate": "2026-08-14",
-      "receiptFrom": "2026-08-25",
-      "receiptTo": "2026-08-26",
-      "specialFrom": "2026-08-24",
-      "rank1From": "2026-08-25",
-      "moveInYm": "2032-03",
-      "announceDate": "2026-09-01",
-      "builder": "롯데건설(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.lottecastle.co.kr/APT/AT00430/main/index.do",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000354&pblancNo=2026000354",
-      "score": 53,
-      "reasons": [
-        "수도권",
-        "1,859가구 대단지",
         "롯데캐슬"
       ]
     },
@@ -284,33 +207,6 @@
         "서울",
         "오늘 마감",
         "투기과열지구"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000342",
-      "name": "제일풍경채 첨단3지구(A6BL)",
-      "areaName": "광주",
-      "address": "광주연구개발특구 첨단3지구 A6블록(전남광주통합특별시 북구 월출동)",
-      "supply": 638,
-      "noticeDate": "2026-08-14",
-      "receiptFrom": "2026-08-25",
-      "receiptTo": "2026-08-26",
-      "specialFrom": "2026-08-24",
-      "rank1From": "2026-08-25",
-      "moveInYm": "2029-08",
-      "announceDate": "2026-09-01",
-      "builder": "제일건설 주식회사",
-      "priceCap": true,
-      "speculative": false,
-      "homepage": "https://첨단3지구제일풍경채.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000342&pblancNo=2026000342",
-      "score": 50,
-      "reasons": [
-        "광역시",
-        "638가구",
-        "제일풍경채",
-        "분양가상한제"
       ]
     },
     {
@@ -387,76 +283,6 @@
       "reasons": [
         "무순위"
       ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000383",
-      "name": "포레나힐스테이트 진주",
-      "areaName": "경남",
-      "address": "경상남도 진주시 이현동 10-1번지 외 13필지",
-      "supply": 398,
-      "noticeDate": "2026-08-14",
-      "receiptFrom": "2026-08-25",
-      "receiptTo": "2026-08-26",
-      "specialFrom": "2026-08-24",
-      "rank1From": "2026-08-25",
-      "moveInYm": "2029-09",
-      "announceDate": "2026-09-01",
-      "builder": "주식회사 한화, 현대건설 주식회사",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://jinju.forena.co.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000383&pblancNo=2026000383",
-      "score": 26,
-      "reasons": [
-        "힐스테이트"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000365",
-      "name": "오남역 서희스타힐스 여의재 1단지",
-      "areaName": "경기",
-      "address": "경기도 남양주시 오남읍 양지리 101번지 일원",
-      "supply": 180,
-      "noticeDate": "2026-08-13",
-      "receiptFrom": "2026-08-25",
-      "receiptTo": "2026-08-26",
-      "specialFrom": "2026-08-24",
-      "rank1From": "2026-08-25",
-      "moveInYm": "2030-08",
-      "announceDate": "2026-09-01",
-      "builder": "(주)서희건설",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://오남역서희스타힐스1단지.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000365&pblancNo=2026000365",
-      "score": 24,
-      "reasons": [
-        "수도권"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000368",
-      "name": "아르티엠 라 테라스",
-      "areaName": "전북",
-      "address": "전북특별자치도 전주시 덕진구 우아동3가 752-41 일원",
-      "supply": 300,
-      "noticeDate": "2026-08-14",
-      "receiptFrom": "2026-08-25",
-      "receiptTo": "2026-08-26",
-      "specialFrom": "2026-08-24",
-      "rank1From": "2026-08-25",
-      "moveInYm": "2029-05",
-      "announceDate": "2026-09-01",
-      "builder": "세영건설 주식회사",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://www.아르티엠.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000368&pblancNo=2026000368",
-      "score": 16,
-      "reasons": []
     }
   ]
 }

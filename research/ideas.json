@@ -3246,30 +3246,17 @@
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910229&pblancNo=2026910229"
     },
     {
-      "id": "ah-remndr-2026910218",
-      "cat": "hot",
+      "id": "ah-apt-2026000409",
+      "cat": "todo",
       "topic": "부동산",
       "feed": "auto",
-      "title": "[줍줍] 천왕역 모아엘가 트레뷰(11차)",
-      "why": "서울 · 3세대 · 접수 ~2026-08-19 · 59점(서울·무순위)",
+      "title": "[신규분양] 의정부우정 A2블록 공공분양주택(본청약)",
+      "why": "경기 · 463세대 · 접수 ~2026-09-17(D-21) · 42점(수도권·분양가상한제)",
       "source": "한국부동산원 청약홈 API",
       "state": "",
       "status": "",
-      "deadline": "2026-08-19",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910218&pblancNo=2026910218"
-    },
-    {
-      "id": "ah-remndr-2026910217",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 춘천 리버뷰 아이파크",
-      "why": "강원 · 180세대 · 접수 ~2026-08-24 · 59점(180가구·무순위·아이파크)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-08-24",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910217&pblancNo=2026910217"
+      "deadline": "2026-09-17",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000409&pblancNo=2026000409"
     },
     {
       "id": "ah-remndr-2026930028",
@@ -3283,45 +3270,6 @@
       "status": "",
       "deadline": "2026-08-26",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930028&pblancNo=2026930028"
-    },
-    {
-      "id": "ah-apt-2026000354",
-      "cat": "todo",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[신규분양] 상동역 롯데캐슬 시그니처",
-      "why": "경기 · 1,859세대 · 접수 ~2026-08-26 · 53점(수도권·1,859가구 대단지·롯데캐슬)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-08-26",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000354&pblancNo=2026000354"
-    },
-    {
-      "id": "ah-apt-2026000342",
-      "cat": "todo",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[신규분양] 제일풍경채 첨단3지구(A6BL)",
-      "why": "광주 · 638세대 · 접수 ~2026-08-26 · 50점(광역시·638가구·제일풍경채·분양가상한제)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-08-26",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000342&pblancNo=2026000342"
-    },
-    {
-      "id": "ah-apt-2026000409",
-      "cat": "todo",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[신규분양] 의정부우정 A2블록 공공분양주택(본청약)",
-      "why": "경기 · 463세대 · 접수 ~2026-09-17(D-21) · 42점(수도권·분양가상한제)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-09-17",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000409&pblancNo=2026000409"
     }
   ]
 }
