@@ -90,3 +90,4 @@ kapt=A13987306 area=84.85
 kapt=A10027281 area=59.99
 kapt=A14210002 area=59.76
 # 2026-08-28 — SERVICETIMEOUT 재시도(구리덕현·삼각산아이원)
+# 2026-08-28 재시도 — fetch failed 2건(구리덕현·삼각산아이원)

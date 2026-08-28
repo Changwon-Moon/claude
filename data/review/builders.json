@@ -1210,6 +1210,74 @@
         "singo-부영-59"
       ],
       "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-gwanak-byuksan-blooming",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "벽산블루밍",
+        "--type",
+        "84",
+        "--kapt",
+        "A15178201",
+        "--publish"
+      ],
+      "produces": [
+        "singo-벽산블루밍-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-raemian-wolgok",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "래미안월곡",
+        "--type",
+        "84",
+        "--kapt",
+        "A13613007",
+        "--publish"
+      ],
+      "produces": [
+        "singo-래미안월곡-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-chowon-daerim-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "초원마을대림",
+        "--type",
+        "59",
+        "--kapt",
+        "A43174208",
+        "--publish"
+      ],
+      "produces": [
+        "singo-초원마을대림-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-dt2-housed-lake",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "동탄2하우스디더레이크",
+        "--type",
+        "59",
+        "--kapt",
+        "A10027281",
+        "--publish"
+      ],
+      "produces": [
+        "singo-동탄2하우스디더레이크-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
     }
   ]
 }
