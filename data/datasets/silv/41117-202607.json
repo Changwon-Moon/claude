@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "gu": "수원시영통구",
+    "lawdCd": "41117",
+    "dealYmd": "202607",
+    "source": "국토교통부 아파트 분양권전매 실거래가 (getRTMSDataSvcSilvTrade)",
+    "sourceUrl": "https://www.data.go.kr/data/15126471/openapi.do",
+    "collectedAt": "2026-08-28",
+    "verified": true,
+    "totalCount": 0,
+    "counts": {
+      "raw": 0,
+      "valid": 0,
+      "분양권": 0,
+      "입주권": 0,
+      "미상": 0
+    },
+    "unit": {
+      "price": "만원",
+      "area": "㎡(전용)"
+    },
+    "note": "분양권과 입주권은 다른 물건이다(청약 당첨분 vs 조합원분) — kind 로 갈라 쓴다. 해제 거래는 canceled=true 로 남겨 두되 집계에서 뺀다. 프리미엄은 여기 값만으로 못 구한다: 같은 타입 분양가가 있어야 뺄 수 있다."
+  },
+  "trades": []
+}

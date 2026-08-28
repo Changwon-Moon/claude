@@ -1,0 +1,82 @@
+{
+  "meta": {
+    "gu": "수원시영통구",
+    "lawdCd": "41117",
+    "dealYmd": "202606",
+    "source": "국토교통부 아파트 분양권전매 실거래가 (getRTMSDataSvcSilvTrade)",
+    "sourceUrl": "https://www.data.go.kr/data/15126471/openapi.do",
+    "collectedAt": "2026-08-28",
+    "verified": true,
+    "totalCount": 4,
+    "counts": {
+      "raw": 4,
+      "valid": 4,
+      "분양권": 0,
+      "입주권": 0,
+      "미상": 4
+    },
+    "unit": {
+      "price": "만원",
+      "area": "㎡(전용)"
+    },
+    "note": "분양권과 입주권은 다른 물건이다(청약 당첨분 vs 조합원분) — kind 로 갈라 쓴다. 해제 거래는 canceled=true 로 남겨 두되 집계에서 뺀다. 프리미엄은 여기 값만으로 못 구한다: 같은 타입 분양가가 있어야 뺄 수 있다."
+  },
+  "trades": [
+    {
+      "aptNm": "영통자이 센트럴파크",
+      "umdNm": "영통동",
+      "jibun": "961-11",
+      "priceManwon": 140000,
+      "priceWon": 1400000000,
+      "area": 84.9243,
+      "floor": 3,
+      "date": "2026-06-30",
+      "kind": "미상",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "41117"
+    },
+    {
+      "aptNm": "영통자이 센트럴파크",
+      "umdNm": "영통동",
+      "jibun": "961-11",
+      "priceManwon": 133212,
+      "priceWon": 1332120000,
+      "area": 84.9243,
+      "floor": 12,
+      "date": "2026-06-28",
+      "kind": "미상",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "41117"
+    },
+    {
+      "aptNm": "영통자이 센트럴파크",
+      "umdNm": "영통동",
+      "jibun": "961-11",
+      "priceManwon": 104782,
+      "priceWon": 1047820000,
+      "area": 84.9243,
+      "floor": 2,
+      "date": "2026-06-14",
+      "kind": "미상",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "41117"
+    },
+    {
+      "aptNm": "영통자이 센트럴파크",
+      "umdNm": "영통동",
+      "jibun": "961-11",
+      "priceManwon": 136990,
+      "priceWon": 1369900000,
+      "area": 84.9243,
+      "floor": 24,
+      "date": "2026-06-12",
+      "kind": "미상",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "41117"
+    }
+  ]
+}
