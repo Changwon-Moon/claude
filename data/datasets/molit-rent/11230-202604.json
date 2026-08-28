@@ -5,22 +5,22 @@
     "dealYmd": "202604",
     "source": "국토교통부 아파트 전월세 실거래가 (getRTMSDataSvcAptRent)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-08-03",
+    "collectedAt": "2026-08-28",
     "verified": true,
     "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존)."
   },
   "agg": {
-    "total": 642,
-    "jeonse": 304,
-    "wolse": 338,
-    "wolseRatio": 52.6,
-    "newTotal": 430,
-    "newJeonse": 176,
-    "newWolse": 254,
-    "newWolseRatio": 59.1,
+    "total": 650,
+    "jeonse": 309,
+    "wolse": 341,
+    "wolseRatio": 52.5,
+    "newTotal": 438,
+    "newJeonse": 181,
+    "newWolse": 257,
+    "newWolseRatio": 58.7,
     "renewTotal": 193,
     "renewJeonse": 116,
     "renewWolse": 77,
-    "typedTotal": 623
+    "typedTotal": 631
   }
 }
