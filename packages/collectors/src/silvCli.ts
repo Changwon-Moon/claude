@@ -15,7 +15,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { fetchSilvTradesMonth } from "./sources/silv.js";
-import { validSilvTrades, countByKind, type SilvTrade } from "./parse/silv.js";
+import { validSilvTrades, countByKind, censusKindRaw, tagNames, type SilvTrade } from "./parse/silv.js";
 
 const CWD = process.env.INIT_CWD || process.cwd();
 const HERE = resolve(fileURLToPath(import.meta.url), "..");
@@ -62,8 +62,10 @@ async function main() {
   let ok = 0, skip = 0, failed = 0, totalTx = 0;
   const kindTotal = { 분양권: 0, 입주권: 0, 미상: 0 };
   const fails: { where: string; reason: string }[] = [];
+  const rawCensus = new Map<string, number>();
   let sample = "";
   let sampleFrom = "";
+  let sampleTags: string[] = [];
 
   for (const gu of guList) {
     const code = LAWD[gu];
@@ -78,7 +80,12 @@ async function main() {
         kindTotal.분양권 += kinds.분양권;
         kindTotal.입주권 += kinds.입주권;
         kindTotal.미상 += kinds.미상;
-        if (!sample && sampleItem) { sample = sampleItem; sampleFrom = `${gu} ${ym}`; }
+        if (!sample && sampleItem) {
+          sample = sampleItem;
+          sampleFrom = `${gu} ${ym}`;
+          sampleTags = tagNames(sampleItem);
+        }
+        for (const [k, n] of censusKindRaw(trades)) rawCensus.set(k, (rawCensus.get(k) ?? 0) + n);
 
         writeFileSync(
           outPath,
@@ -140,8 +147,21 @@ async function main() {
         `- 태그 판정: ${verdict}`,
         "",
         "> 이 대조표가 있는 이유: 세션 컨테이너는 data.go.kr 이 막혀 있어 이 API 를 한 번도",
-        "> 직접 불러 본 적이 없다. 파서의 태그 이름은 **매매 API 에서 유추한 것**이고,",
-        "> 유추가 맞았는지는 응답을 봐야 안다. 파서가 빈 값을 채우고 조용히 통과하는 것을 막는다.",
+        "> 직접 불러 본 적이 없다. 파서의 태그 이름은 **유추로 시작했고 실제로 한 번 틀렸다**",
+        "> (2026-08-28: `dealTypeNm` 을 찾았는데 실제 칸은 `ownershipGbn` 이었다).",
+        "> 그래서 무엇이 왔는지를 코드가 아니라 **응답이** 말하게 한다.",
+        "",
+        "## 구분 칸에 실제로 들어온 값",
+        "",
+        "| 원값 | 건수 |",
+        "|---|---|",
+        ...[...rawCensus.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12).map(([k, n]) => `| \`${k}\` | ${n} |`),
+        "",
+        "## 응답에 있던 태그 이름 전부",
+        "",
+        "```",
+        sampleTags.join(" · "),
+        "```",
         "",
         "## 원본 item 한 건",
         "",

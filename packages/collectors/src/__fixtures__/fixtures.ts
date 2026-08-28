@@ -167,20 +167,24 @@ export const KOSIS_POP_SHAPE_CHANGED_JSON = JSON.stringify([
   { REGION_CD: "11010", REGION_NM: "종로구", PERIOD: "202606", VALUE: "140,880" },
 ]);
 
-/* ── 국토부 분양권전매 실거래(getRTMSDataSvcSilvTrade) 응답 모사 ──────────────
- * ⚠️ **이 표본이 실물과 같다는 보장은 없다.** 세션은 data.go.kr 이 막혀 있어 이 API 를
- * 한 번도 직접 불러 본 적이 없고, 태그 이름은 매매·전월세 API 에서 유추한 것이다.
- * 그래서 파서는 한글·영문 태그를 모두 후보로 두고, 첫 실제 수집이 원본 item 한 건을
- * `data/silv-probe.md` 에 남겨 사람이 대조한다(silvCli).
- * 여기서는 **유추가 맞았을 때 무엇이 나와야 하는지**를 못박는다: 분양권/입주권 구분,
- * 해제 거래 제외, 같은 타입의 최신 거래 고르기. */
+/* ── 국토부 분양권전매 실거래(getRTMSDataSvcSilvTrade) 응답 ────────────────────
+ * ✅ **2026-08-28 실측 응답으로 교체했다.** 처음엔 매매 API 에서 유추한 표본이었고,
+ * 그 유추는 틀렸다 — `dealTypeNm`·`구분` 같은 태그는 응답에 아예 없었고(평택 171건 전부
+ * '미상'으로 파싱됐다), 분양권/입주권을 담는 칸은 **`ownershipGbn`** 이었다.
+ * 항목 이름은 평택시 202607 실제 응답을 그대로 따랐다:
+ *   aptNm · buyerGbn · cdealDay · cdealType · dealAmount · dealDay · dealMonth · dealYear ·
+ *   dealingGbn · estateAgentSggNm · excluUseAr · floor · jibun · ownershipGbn ·
+ *   sggCd · sggNm · slerGbn · umdNm
+ * 한글 태그 item 은 **일부러 남겨 뒀다** — 국토부는 판올림마다 한/영을 오간다(매매에서 겪었다).
+ * 마지막 item 의 `ownershipGbn` 공백은 실측에서 실제로 본 모양이다: 빈칸은 '미상'이고
+ * 미상은 카드에 못 쓴다. */
 export const MOLIT_SILV_XML = `<?xml version="1.0" encoding="UTF-8"?>
 <response><header><resultCode>00</resultCode><resultMsg>NORMAL SERVICE.</resultMsg></header>
 <body><items>
-  <item><aptNm>가상센트럴파크</aptNm><umdNm>상암동</umdNm><jibun>1500</jibun><dealAmount>130,000</dealAmount><excluUseAr>84.97</excluUseAr><floor>18</floor><dealYear>2026</dealYear><dealMonth>7</dealMonth><dealDay>4</dealDay><dealTypeNm>분양권</dealTypeNm><dealingGbn>중개거래</dealingGbn><sggCd>11440</sggCd></item>
-  <item><aptNm>가상센트럴파크</aptNm><umdNm>상암동</umdNm><jibun>1500</jibun><dealAmount>128,000</dealAmount><excluUseAr>84.97</excluUseAr><floor>7</floor><dealYear>2026</dealYear><dealMonth>6</dealMonth><dealDay>21</dealDay><dealTypeNm>분양권</dealTypeNm><dealingGbn>중개거래</dealingGbn><sggCd>11440</sggCd></item>
+  <item><aptNm>가상센트럴파크</aptNm><buyerGbn>개인</buyerGbn><cdealDay> </cdealDay><cdealType> </cdealType><dealAmount>130,000</dealAmount><dealDay>4</dealDay><dealMonth>7</dealMonth><dealYear>2026</dealYear><dealingGbn>중개거래</dealingGbn><excluUseAr>84.97</excluUseAr><floor>18</floor><jibun>1500</jibun><ownershipGbn>분양권</ownershipGbn><sggCd>11440</sggCd><sggNm>마포구</sggNm><slerGbn>개인</slerGbn><umdNm>상암동</umdNm></item>
+  <item><aptNm>가상센트럴파크</aptNm><buyerGbn>개인</buyerGbn><dealAmount>128,000</dealAmount><dealDay>21</dealDay><dealMonth>6</dealMonth><dealYear>2026</dealYear><dealingGbn>중개거래</dealingGbn><excluUseAr>84.97</excluUseAr><floor>7</floor><jibun>1500</jibun><ownershipGbn>분양권</ownershipGbn><sggCd>11440</sggCd><sggNm>마포구</sggNm><slerGbn>개인</slerGbn><umdNm>상암동</umdNm></item>
   <item><단지>가상한강자이</단지><법정동>망원동</법정동><지번>200</지번><거래금액>95,500</거래금액><전용면적>59.98</전용면적><층>11</층><년>2026</년><월>7</월><일>2</일><구분>입주권</구분><지역코드>11440</지역코드></item>
-  <item><aptNm>해제된분양권</aptNm><umdNm>합정동</umdNm><dealAmount>200,000</dealAmount><excluUseAr>84.97</excluUseAr><floor>3</floor><dealYear>2026</dealYear><dealMonth>7</dealMonth><dealDay>1</dealDay><dealTypeNm>분양권</dealTypeNm><cdealType>O</cdealType><sggCd>11440</sggCd></item>
-  <item><aptNm>구분없는거래</aptNm><umdNm>연남동</umdNm><dealAmount>77,000</dealAmount><excluUseAr>49.5</excluUseAr><floor>4</floor><dealYear>2026</dealYear><dealMonth>7</dealMonth><dealDay>9</dealDay><sggCd>11440</sggCd></item>
+  <item><aptNm>해제된분양권</aptNm><dealAmount>200,000</dealAmount><dealDay>1</dealDay><dealMonth>7</dealMonth><dealYear>2026</dealYear><excluUseAr>84.97</excluUseAr><floor>3</floor><ownershipGbn>분양권</ownershipGbn><cdealType>O</cdealType><sggCd>11440</sggCd><umdNm>합정동</umdNm></item>
+  <item><aptNm>구분빈칸거래</aptNm><buyerGbn>개인</buyerGbn><dealAmount>77,000</dealAmount><dealDay>9</dealDay><dealMonth>7</dealMonth><dealYear>2026</dealYear><dealingGbn>직거래</dealingGbn><excluUseAr>49.5</excluUseAr><floor>4</floor><ownershipGbn> </ownershipGbn><sggCd>11440</sggCd><sggNm>마포구</sggNm><slerGbn>개인</slerGbn><umdNm>연남동</umdNm></item>
 </items>
 <totalCount>5</totalCount></body></response>`;

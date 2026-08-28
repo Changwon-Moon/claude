@@ -47,7 +47,9 @@ import {
   validSilvTrades,
   latestPerAptType,
   countByKind,
+  censusKindRaw,
   firstItemRaw,
+  tagNames,
   toKind,
 } from "./parse/silv.js";
 import {
@@ -406,17 +408,23 @@ console.log("\n[국토부 분양권전매 파서 — MOLIT Silv]");
 {
   /* 여기서 지키는 것은 **분양권과 입주권을 섞지 않는 것**이다.
    * 둘은 분양가 기준이 아예 달라(청약 당첨분 vs 조합원분) 섞으면 프리미엄이 통째로 틀어진다.
-   * 태그 이름 자체가 맞는지는 이 테스트가 증명하지 못한다 — 그건 첫 실제 수집의
-   * `data/silv-probe.md` 가 사람에게 보여 준다. */
+   *
+   * ⚠️ 이 표본은 2026-08-28 **실측 응답**으로 교체됐다. 그전에는 매매 API 에서 유추한
+   * 표본이었고 그 유추는 틀렸다 — 구분 칸은 `dealTypeNm` 이 아니라 **`ownershipGbn`** 이다.
+   * 유추 표본으로 짠 테스트는 그때도 전부 초록이었다. **표본이 틀리면 테스트는 틀린 것을
+   * 지킨다** — 그래서 실물이 오면 표본부터 갈아 끼운다. */
   const txs = parseSilvTrades(MOLIT_SILV_XML);
   check("item 5건 파싱", txs.length === 5, `got ${txs.length}`);
   check("거래금액 콤마 제거 → 만원", txs[0].priceManwon === 130000, String(txs[0].priceManwon));
   check("만원 → 원 환산", txs[0].priceWon === 1300000000, String(txs[0].priceWon));
   check("계약일 0패딩 2026-07-04", txs[0].date === "2026-07-04", txs[0].date);
-  check("영문태그 구분 → 분양권", txs[0].kind === "분양권", txs[0].kind);
+  check("구분은 ownershipGbn 에서 읽는다 → 분양권", txs[0].kind === "분양권", txs[0].kind);
   check("한글태그 구분 → 입주권", txs[2].kind === "입주권", txs[2].kind);
   check("한글태그 단지명 파싱", txs[2].aptNm === "가상한강자이", txs[2].aptNm);
-  check("구분 칸이 없으면 미상(임의로 분양권에 넣지 않는다)", txs[4].kind === "미상", txs[4].kind);
+  check("매도·매수 구분 보존", txs[0].sellerGbn === "개인" && txs[0].buyerGbn === "개인");
+  check("시군구명 보존", txs[0].sggNm === "마포구", txs[0].sggNm);
+  check("구분 칸이 **공백**이면 미상(임의로 분양권에 넣지 않는다)", txs[4].kind === "미상", txs[4].kind);
+  check("구분 원값을 그대로 남긴다(태그 재조사의 증거)", txs[4].kindRaw.trim() === "", JSON.stringify(txs[4].kindRaw));
   check("해제 거래 canceled=true", txs[3].canceled === true);
 
   const valid = validSilvTrades(txs);
@@ -426,6 +434,12 @@ console.log("\n[국토부 분양권전매 파서 — MOLIT Silv]");
   const kinds = countByKind(txs);
   check("구분 집계 분양권 2 / 입주권 1 / 미상 1", kinds.분양권 === 2 && kinds.입주권 === 1 && kinds.미상 === 1,
     `${kinds.분양권}/${kinds.입주권}/${kinds.미상}`);
+
+  const census = censusKindRaw(txs);
+  check("원값 분포에 '(빈칸)' 이 잡힌다", census.some(([k]) => k === "(빈칸)"), JSON.stringify(census));
+
+  const names = tagNames(MOLIT_SILV_XML);
+  check("응답 태그 이름을 뽑는다(ownershipGbn 포함)", names.includes("ownershipGbn"), names.join(","));
 
   const latest = latestPerAptType(txs);
   check("같은 단지·같은 전용면적은 1건으로 접힌다", latest.filter((t) => t.aptNm === "가상센트럴파크").length === 1);
