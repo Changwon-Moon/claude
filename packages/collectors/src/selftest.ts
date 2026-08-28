@@ -53,6 +53,13 @@ import {
   toKind,
 } from "./parse/silv.js";
 import {
+  parseTypePrices,
+  letterFromHouseType,
+  matchType,
+  premiumManwon,
+  rowKeys,
+} from "./parse/bunyangPrice.js";
+import {
   normalize as kosisNormalize,
   seniorPoints as kosisSenior,
   nationalByPeriod as kosisNational,
@@ -120,6 +127,7 @@ import {
   MOLIT_RENT_XML,
   MOLIT_SILV_XML,
   MOLIT_ERROR_XML,
+  BUNYANG_PRICE_JSON,
   KOSIS_POP_JSON,
   KOSIS_POP_SHAPE_CHANGED_JSON,
 } from "./__fixtures__/fixtures.js";
@@ -449,6 +457,40 @@ console.log("\n[국토부 분양권전매 파서 — MOLIT Silv]");
   check("toKind: 공백 섞인 값도 읽는다", toKind(" 분 양 권 ") === "분양권");
   check("toKind: 빈 값은 미상", toKind("") === "미상");
   check("firstItemRaw: 원본 item 을 그대로 떠 온다", firstItemRaw(MOLIT_SILV_XML).includes("가상센트럴파크"));
+}
+
+console.log("\n[청약홈 주택형별 분양가 — 프리미엄의 뺄셈 상대]");
+{
+  /* 지키는 것 둘.
+   * ① 주택형(`084.9721A`)에서 전용면적을 뽑아야 실거래(`excluUseAr`)와 이어진다.
+   * ② **애매하면 안 잇는다.** 후보가 둘이면 null 이다 — 상록마을 사고(2026-08-13)와 같은 자리.
+   *    틀린 타입에 붙으면 프리미엄이 통째로 다른 숫자가 된다. */
+  const rows = JSON.parse(BUNYANG_PRICE_JSON).data;
+  const types = parseTypePrices(rows);
+  check("4행 파싱", types.length === 4, `got ${types.length}`);
+  check("공급금액 콤마 제거 → 만원", types[0].topPriceManwon === 98700, String(types[0].topPriceManwon));
+  check("주택형에서 전용면적 84.9721", types[0].exclusiveArea === 84.9721, String(types[0].exclusiveArea));
+  check("타입 글자 A 추출", letterFromHouseType("084.9721A") === "A", letterFromHouseType("084.9721A"));
+  check("타입 글자 없는 주택형은 빈 문자열", letterFromHouseType("059.9800") === "");
+  check("공급면적 보존", types[0].supplyArea === 112.3456, String(types[0].supplyArea));
+
+  const notice = types.filter((t) => t.houseManageNo === "2023000123");
+  check("한 공고에 타입 3개", notice.length === 3, String(notice.length));
+
+  // 실거래 84.97 → 84.9721A 하나만 허용오차 안에 든다(84.99B 는 0.02 차이라 둘 다 든다)
+  check("전용 59.98 은 하나만 맞아 이어진다", matchType(notice, 59.98)?.modelNo === "03");
+  check("전용 84.97 은 후보가 둘이라 **안 잇는다**(null)", matchType(notice, 84.97) === null);
+  check("허용오차 밖(70㎡)은 null", matchType(notice, 70.0) === null);
+  /* 허용오차를 못박는 자리 — 84.93 은 84.9721(0.042 차) 하나만 들어오고 84.99(0.06 차)는 밖이다.
+     오차를 좁히면 0개가 되고 넓히면 2개가 된다. 어느 쪽으로 흔들려도 이 줄이 빨개진다. */
+  check("허용오차 0.05 를 못박는다 — 84.93 은 84.9721A 하나만", matchType(notice, 84.93)?.modelNo === "01",
+    String(matchType(notice, 84.93)?.modelNo));
+
+  const t59 = matchType(notice, 59.98)!;
+  check("프리미엄 = 실거래 − 분양최고금액", premiumManwon(95000, t59) === 22500, String(premiumManwon(95000, t59)));
+  check("실거래가 분양가보다 낮으면 음수(마이너스 피)", premiumManwon(70000, t59) === -2500);
+
+  check("응답 키 목록을 뽑는다", rowKeys(rows).includes("공급금액(분양최고금액)"), rowKeys(rows).join(","));
 }
 
 console.log("\n[부동산원 전세·월세 지수 — R-ONE]");
