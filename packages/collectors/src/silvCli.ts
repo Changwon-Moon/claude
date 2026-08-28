@@ -61,6 +61,7 @@ async function main() {
 
   let ok = 0, skip = 0, failed = 0, totalTx = 0;
   const kindTotal = { 분양권: 0, 입주권: 0, 미상: 0 };
+  const fails: { where: string; reason: string }[] = [];
   let sample = "";
   let sampleFrom = "";
 
@@ -103,31 +104,42 @@ async function main() {
         console.log(`✅ ${gu} ${ym} — ${valid.length}건 (분양권 ${kinds.분양권}/입주권 ${kinds.입주권}/미상 ${kinds.미상}) → ${code}-${ym}.json`);
         ok++; totalTx += valid.length;
       } catch (e) {
-        console.error(`❌ ${gu} ${ym}: ${e instanceof Error ? e.message : e}`);
+        const reason = (e instanceof Error ? e.message : String(e)).split("\n")[0];
+        console.error(`❌ ${gu} ${ym}: ${reason}`);
+        fails.push({ where: `${gu} ${ym}`, reason });
         failed++;
       }
     }
   }
 
-  // ── 태그 대조표 — 추측한 파서가 맞았는지 사람이 1초에 보게 한다
-  if (sample) {
-    const guessed = kindTotal.미상;
-    const known = kindTotal.분양권 + kindTotal.입주권;
-    const verdict = known === 0
-      ? "🔴 구분 칸을 **하나도 못 읽었다** — 태그 이름이 틀렸다. 아래 원본에서 실제 이름을 찾아 parse/silv.ts 의 toKind 후보에 넣을 것"
-      : guessed > known
-        ? "🟠 '미상'이 더 많다 — 값 표기가 예상과 다르다. 아래 원본 확인"
-        : "🟢 구분 칸을 읽고 있다";
-    writeFileSync(
-      probePath,
-      [
-        "# 분양권전매 API — 응답 태그 대조",
-        "",
-        `- 실행: ${new Date().toISOString().slice(0, 10)} · 표본: ${sampleFrom}`,
+  // ── 보고서 — **성공했을 때만 쓰지 않는다.**
+  //
+  // 세션은 Actions 의 로그 본문(zip)을 못 받는다(egress 허용목록 밖). 그래서 실패했을 때
+  // 저장소에 남는 것이 "실패"라는 네 글자뿐이면, 다음 사람은 **무엇이 실패했는지 모르는 채**
+  // 같은 벽을 다시 민다. 2026-08-26 에 배운 것을 그대로 지킨다:
+  // 「'우리가 못 만들었다'와 '애초에 없는 것이었다'는 다르다.」
+  {
+    const lines: string[] = [
+      "# 분양권전매 API — 수집 보고",
+      "",
+      `- 실행: ${new Date().toISOString().slice(0, 10)}`,
+      `- 결과: 수집 ${ok} · 스킵 ${skip} · 실패 ${failed} · 유효거래 ${totalTx.toLocaleString()}건`,
+      "",
+    ];
+
+    if (sample) {
+      const known = kindTotal.분양권 + kindTotal.입주권;
+      const verdict = known === 0
+        ? "🔴 구분 칸을 **하나도 못 읽었다** — 태그 이름이 틀렸다. 아래 원본에서 실제 이름을 찾아 parse/silv.ts 의 toKind 후보에 넣을 것"
+        : kindTotal.미상 > known
+          ? "🟠 '미상'이 더 많다 — 값 표기가 예상과 다르다. 아래 원본 확인"
+          : "🟢 구분 칸을 읽고 있다";
+      lines.push(
+        `- 표본: ${sampleFrom}`,
         `- 구분 집계: 분양권 ${kindTotal.분양권} · 입주권 ${kindTotal.입주권} · 미상 ${kindTotal.미상}`,
-        `- 판정: ${verdict}`,
+        `- 태그 판정: ${verdict}`,
         "",
-        "> 이 파일이 있는 이유: 세션 컨테이너는 data.go.kr 이 막혀 있어 이 API 를 한 번도",
+        "> 이 대조표가 있는 이유: 세션 컨테이너는 data.go.kr 이 막혀 있어 이 API 를 한 번도",
         "> 직접 불러 본 적이 없다. 파서의 태그 이름은 **매매 API 에서 유추한 것**이고,",
         "> 유추가 맞았는지는 응답을 봐야 안다. 파서가 빈 값을 채우고 조용히 통과하는 것을 막는다.",
         "",
@@ -137,10 +149,34 @@ async function main() {
         sample,
         "```",
         "",
-      ].join("\n"),
-    );
-    console.log(`\n🔎 태그 대조표 → ${probePath}`);
-    console.log(`   ${verdict}`);
+      );
+      console.log(`   태그 판정: ${verdict}`);
+    }
+
+    if (fails.length) {
+      // 같은 사유가 수십 줄 반복되는 것이 보통이다 — 사유별로 접어서 **무엇이 다른지**만 보인다.
+      const byReason = new Map<string, string[]>();
+      for (const f of fails) {
+        const arr = byReason.get(f.reason) ?? [];
+        arr.push(f.where);
+        byReason.set(f.reason, arr);
+      }
+      lines.push("## 실패한 것과 그 이유", "");
+      for (const [reason, wheres] of byReason) {
+        lines.push(`### ${wheres.length}건 — ${wheres.slice(0, 4).join(", ")}${wheres.length > 4 ? " 외" : ""}`, "", "```", reason, "```", "");
+      }
+      if (ok === 0) {
+        lines.push(
+          "> **한 건도 못 받았다.** 사유가 전부 403 이면 키 문제가 아니라 **활용신청**을 본다 —",
+          "> '아파트 분양권전매 실거래가 자료'(data.go.kr 15126471)는 매매·전월세와 **별도 승인**이다.",
+          "> 공공데이터포털 마이페이지에서 이 API 의 승인 상태를 확인해야 한다.",
+          "",
+        );
+      }
+    }
+
+    writeFileSync(probePath, lines.join("\n"));
+    console.log(`\n🔎 수집 보고 → ${probePath}`);
   }
 
   console.log(`\n요약: 수집 ${ok} · 스킵 ${skip} · 실패 ${failed} · 유효거래 ${totalTx.toLocaleString()}건`);
