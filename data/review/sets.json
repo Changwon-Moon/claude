@@ -731,48 +731,29 @@
       ]
     },
     {
-      "label": "singo-gwanak-byuksan-blooming",
-      "title": "🔥 벽산블루밍 13.05억 신고가",
+      "label": "singo-daily-2026-08-28",
+      "title": "🔥 8월 28일 신고가 6곳",
       "cards": [
-        "singo-벽산블루밍-84"
-      ],
-      "caption": "singo-gwanak-byuksan-blooming",
-      "note": "2026-08-28 판정. 세대수·역·주차는 --kapt A15178201(관악벽산블루밍 2105세대) 로 사람이 짚었다. 기준은 docs/guides/신고가-카드-기준.md",
-      "state": "시안",
-      "pixelPolicy": "정기물 — singo-history·apt-station·apt-detail 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
-    },
-    {
-      "label": "singo-raemian-wolgok",
-      "title": "🔥 래미안월곡 12.70억 신고가",
-      "cards": [
-        "singo-래미안월곡-84"
-      ],
-      "caption": "singo-raemian-wolgok",
-      "note": "2026-08-28 판정. 세대수·역·주차는 --kapt A13613007(래미안월곡 1372세대) 로 사람이 짚었다. 기준은 docs/guides/신고가-카드-기준.md",
-      "state": "시안",
-      "pixelPolicy": "정기물 — singo-history·apt-station·apt-detail 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
-    },
-    {
-      "label": "singo-chowon-daerim-59",
-      "title": "🔥 초원마을대림 10.40억 신고가",
-      "cards": [
-        "singo-초원마을대림-59"
-      ],
-      "caption": "singo-chowon-daerim-59",
-      "note": "2026-08-28 판정. 세대수·역·주차는 --kapt A43174208(초원대림 1035세대) 로 사람이 짚었다. 기준은 docs/guides/신고가-카드-기준.md",
-      "state": "시안",
-      "pixelPolicy": "정기물 — singo-history·apt-station·apt-detail 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
-    },
-    {
-      "label": "singo-dt2-housed-lake",
-      "title": "🔥 동탄2하우스디더레이크 9.50억 신고가",
-      "cards": [
+        "singo-힐스테이트상도센트럴파크-84",
+        "singo-벽산블루밍-84",
+        "singo-래미안월곡-84",
+        "singo-초원마을대림-59",
+        "singo-덕현-84",
         "singo-동탄2하우스디더레이크-59"
       ],
-      "caption": "singo-dt2-housed-lake",
-      "note": "2026-08-28 판정. 세대수·역·주차는 --kapt A10027281(동탄2신도시 하우스디 더 레이크 1552세대) 로 사람이 짚었다. 기준은 docs/guides/신고가-카드-기준.md",
-      "state": "시안",
-      "pixelPolicy": "정기물 — singo-history·apt-station·apt-detail 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+      "caption": "singo-daily-2026-08-28",
+      "state": "오너 확정",
+      "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 6개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 2026-08-28 신고가 6장 — 하루치 캐러셀",
+      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+      "confirmedAt": "2026-08-28",
+      "confirmedMd5": [
+        "singo-힐스테이트상도센트럴파크-84:a58acf9e9b1e",
+        "singo-벽산블루밍-84:122693e0541c",
+        "singo-래미안월곡-84:d31c54aebce5",
+        "singo-초원마을대림-59:489bf3e42507",
+        "singo-덕현-84:1dcfd87d7eae",
+        "singo-동탄2하우스디더레이크-59:bf6556022ae0"
+      ]
     }
   ]
 }

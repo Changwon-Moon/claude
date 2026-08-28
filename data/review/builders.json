@@ -1158,7 +1158,8 @@
       "produces": [
         "singo-힐스테이트푸르지오수원-84"
       ],
-      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16).",
+      "frozen": "2026-08-27 캐러셀로 발행한 판본(9.58억). 08-28 에 같은 단지·84타입이 9.80억으로 또 신고가를 써서 곡선과 어긋난다. 다시 그리면 카드는 9.80억이 되는데 그날 캡션은 9.58억이라 캡션과 카드가 어긋난다 — 그래서 그날 판본을 그대로 둔다. 새 기록을 싣고 싶으면 이걸 푸는 게 아니라 새 카드로 만든다."
     },
     {
       "label": "singo-jinsan-santeville",
@@ -1276,6 +1277,40 @@
       ],
       "produces": [
         "singo-동탄2하우스디더레이크-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-sangdo-hillstate",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "힐스테이트 상도 센트럴파크",
+        "--type",
+        "84",
+        "--kapt",
+        "A15678103",
+        "--publish"
+      ],
+      "produces": [
+        "singo-힐스테이트상도센트럴파크-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-guri-deokhyeon",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "덕현",
+        "--type",
+        "84",
+        "--kapt",
+        "A47170801",
+        "--publish"
+      ],
+      "produces": [
+        "singo-덕현-84"
       ],
       "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
     }
