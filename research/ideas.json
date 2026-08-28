@@ -3270,6 +3270,102 @@
       "status": "",
       "deadline": "2026-08-26",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930028&pblancNo=2026930028"
+    },
+    {
+      "id": "sig-2026-08-28-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "오세훈 \"부동산 정책 목적이 오세훈 힘 빼기입니까\"",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-28-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-28-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "“이제는 아파트 현관 앞까지”…드론과 자율주행 로봇 연계 배송 실증",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-28-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-28-3",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "9월 전국 아파트 입주 1만4174채…5년5개월 만에 최저",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-28-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-28-4",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "코스피, 1%대 하락세…삼전닉스 1~2%대↓",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-28-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-28-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "뉴욕증시, 엔비디아 급등에 동반 상승",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-28-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-28-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "코스피 7000 재돌파할까…다음주 증시 향방 가를 3대 변수는?",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-28-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-28-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "아시아 증시 혼조, 워시 연설 앞두고 코스피지수 하락",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-28-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-28-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "\"엔비디아 호재는 어제 선반영\"…코스피, 엔비디아 8.7% 폭등에도 약세 출발",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-28-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
