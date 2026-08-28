@@ -78,3 +78,14 @@ kapt=A44851611 area=84.96
 kapt=A13084803 area=59.78
 kapt=A46571004 area=59.97
 kapt=A10027421 area=59.87
+
+# ── 2026-08-28 신고가 9건 (하루치 캐러셀)
+kapt=A15678103 area=84.61
+kapt=A15178201 area=84.99
+kapt=A13613007 area=84.59
+kapt=A13615003 area=84.90
+kapt=A43174208 area=59.74
+kapt=A47170801 area=84.57
+kapt=A13987306 area=84.85
+kapt=A10027281 area=59.99
+kapt=A14210002 area=59.76
