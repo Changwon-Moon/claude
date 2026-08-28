@@ -17,6 +17,10 @@ name: 실거래 문 열렸나 (한 번 두드려 본다)
 on:
   workflow_dispatch:
 
+# 답을 `data/molit-door-last.md` 로 커밋하므로 쓰기 권한이 필요하다
+permissions:
+  contents: write
+
 jobs:
   knock:
     runs-on: ubuntu-latest
@@ -58,6 +62,35 @@ jobs:
             echo "$M"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
+
+      # ── 답을 **파일로도 남긴다** (2026-08-28)
+      # 톡만 보내면 오너는 보는데 **세션은 못 본다** — 세션은 Actions 로그를 못 읽는다.
+      # 실제로 08-28 에 이 버튼을 눌러 놓고 답을 못 읽어서 다시 두드려야 했다.
+      # 다른 배관이 전부 `data/*-last.md` 로 답하는 것과 같은 자리다.
+      - name: 답을 파일로 남긴다
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "# 실거래 문 — 마지막 두드림"
+            echo
+            echo "- 시각(UTC): $(date -u +%FT%TZ)"
+            echo "- 실행: \`${{ github.run_id }}\`"
+            echo
+            echo '```'
+            echo "${{ steps.knock.outputs.MSG }}"
+            echo '```'
+          } > data/molit-door-last.md
+          git config user.name "wirit-bot"
+          git config user.email "actions@github.com"
+          git add -f data/molit-door-last.md
+          if git diff --cached --quiet; then
+            echo "바뀐 것 없음"
+          else
+            git commit -m "실거래 문 두드림 결과 [skip ci]"
+            git pull --rebase --autostash origin ${{ github.ref_name }} || true
+            git push origin HEAD:${{ github.ref_name }}
+          fi
 
       - name: 텔레그램으로 알린다
         if: always()
