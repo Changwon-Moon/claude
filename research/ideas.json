@@ -3342,32 +3342,6 @@
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910224&pblancNo=2026910224"
     },
     {
-      "id": "ah-remndr-2026910218",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 천왕역 모아엘가 트레뷰(11차)",
-      "why": "서울 · 3세대 · 접수 ~2026-08-19 · 59점(서울·무순위)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-08-19",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910218&pblancNo=2026910218"
-    },
-    {
-      "id": "ah-remndr-2026910217",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 춘천 리버뷰 아이파크",
-      "why": "강원 · 180세대 · 접수 ~2026-08-24 · 59점(180가구·무순위·아이파크)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-08-24",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910217&pblancNo=2026910217"
-    },
-    {
       "id": "ah-remndr-2026910226",
       "cat": "todo",
       "topic": "부동산",
@@ -3394,19 +3368,6 @@
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910221&pblancNo=2026910221"
     },
     {
-      "id": "ah-remndr-2026930028",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 구리역 롯데캐슬 시그니처",
-      "why": "경기 · 1세대 · 접수 ~2026-08-26 · 57점(수도권·무순위·롯데캐슬)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-08-26",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930028&pblancNo=2026930028"
-    },
-    {
       "id": "ah-remndr-2026910223",
       "cat": "todo",
       "topic": "부동산",
@@ -3420,32 +3381,6 @@
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910223&pblancNo=2026910223"
     },
     {
-      "id": "ah-apt-2026000354",
-      "cat": "todo",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[신규분양] 상동역 롯데캐슬 시그니처",
-      "why": "경기 · 1,859세대 · 접수 ~2026-08-26 · 53점(수도권·1,859가구 대단지·롯데캐슬)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-08-26",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000354&pblancNo=2026000354"
-    },
-    {
-      "id": "ah-apt-2026000342",
-      "cat": "todo",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[신규분양] 제일풍경채 첨단3지구(A6BL)",
-      "why": "광주 · 638세대 · 접수 ~2026-08-26 · 50점(광역시·638가구·제일풍경채·분양가상한제)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-08-26",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000342&pblancNo=2026000342"
-    },
-    {
       "id": "ah-apt-2026000416",
       "cat": "todo",
       "topic": "부동산",
@@ -3457,6 +3392,19 @@
       "status": "",
       "deadline": "2026-09-17",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000416&pblancNo=2026000416"
+    },
+    {
+      "id": "ah-remndr-2026930028",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 구리역 롯데캐슬 시그니처",
+      "why": "경기 · 1세대 · 접수 ~2026-08-26 · 57점(수도권·무순위·롯데캐슬)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-08-26",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930028&pblancNo=2026930028"
     }
   ]
 }
