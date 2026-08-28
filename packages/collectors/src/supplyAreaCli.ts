@@ -154,7 +154,27 @@ async function main() {
   /* 후보를 차례로 물어보고 **줄이 오는 지번**을 쓴다. 추측하지 않고 잰다. */
   let all: any[] = [];
   let usedJibun = "";
-  for (const jibun of cands) {
+  /* ⚠️ **대지구분(`platGbCd`)도 후보로 돈다** (2026-08-28)
+   *
+   * 예전엔 `platGbCd=0`(일반 대지)만 물어봤다. 그래서 산번지·블록으로 등재된 단지는
+   * 지번이 맞아도 **「줄 0개」**로 떨어졌다. 08-28 에 세 단지가 그렇게 막혔다
+   * (힐스테이트상도 531 · 석관두산 769,10 · 하계극동건영벽산 271-3) — 대장 주소 지번도
+   * 실거래 지번도 안 먹었는데, 둘 다 맞는 지번이었을 수 있다. **물어본 적이 없는 값**이 있었다.
+   *
+   * 0 = 대지 · 1 = 산 · 2 = 블록. 줄이 오는 첫 조합에서 멈춘다.
+   *
+   * ⚠️ 「더 많이 찾으니 무조건 좋다」가 아니다 — 같은 번지의 **다른 필지**를 집을 수 있다.
+   *    그래서 아래 `supplyAreaOf` 가 **전용면적이 정확히 맞는 호**를 못 찾으면 여전히
+   *    파일을 안 만든다. 그리고 어떤 조합으로 받았는지 로그와 meta 에 남긴다 —
+   *    나중에 값이 이상하면 무엇을 물어본 결과인지 되짚을 수 있어야 한다. */
+  const PLAT_GB = [
+    { cd: "0", nm: "대지" },
+    { cd: "1", nm: "산" },
+    { cd: "2", nm: "블록" },
+  ];
+  let usedPlat = "0";
+  for (const cand of cands.flatMap((j) => PLAT_GB.map((p) => ({ jibun: j, plat: p })))) {
+    const jibun = cand.jibun;
     const [bunRaw, jiRaw] = String(jibun).split("-");
     const bun = pad4(bunRaw), ji = pad4(jiRaw ?? "0");
     const rows: any[] = [];
@@ -167,7 +187,7 @@ async function main() {
          1000줄이면 같은 단지를 10번이면 다 받는다. */
       const url = `https://apis.data.go.kr/1613000/BldRgstHubService/getBrExposPubuseAreaInfo`
         + `?serviceKey=${encKey(KEY)}&sigunguCd=${sigunguCd}&bjdongCd=${bjdongCd}`
-        + `&platGbCd=0&bun=${bun}&ji=${ji}&numOfRows=1000&pageNo=${page}&_type=json`;
+        + `&platGbCd=${cand.plat.cd}&bun=${bun}&ji=${ji}&numOfRows=1000&pageNo=${page}&_type=json`;
       const { status, body } = await get(url);
       if (status !== 200 || /SERVICE_KEY_IS_NOT_REGISTERED|LIMITED_NUMBER_OF_SERVICE_REQUESTS/.test(body)) {
         const quota = /SERVICE_KEY_IS_NOT_REGISTERED|LIMITED_NUMBER_OF_SERVICE_REQUESTS/.test(body);
@@ -181,11 +201,16 @@ async function main() {
       if (!rs.length) break;
       rows.push(...rs);
     }
-    console.log(`   지번 ${jibun} (${bun}-${ji}) → 줄 ${rows.length}개`);
-    if (rows.length) { all = rows; usedJibun = jibun; break; }
+    if (rows.length || cand.plat.cd === "0") {
+      console.log(`   지번 ${jibun} (${bun}-${ji}) · ${cand.plat.nm} → 줄 ${rows.length}개`);
+    }
+    if (rows.length) { all = rows; usedJibun = jibun; usedPlat = cand.plat.cd; break; }
   }
   if (!all.length) {
-    console.error(`::error::지번 후보 ${cands.join(", ")} 전부 줄 0개입니다 — --jibun 으로 대지 지번을 직접 주세요`);
+    console.error(
+      `::error::지번 후보 ${cands.join(", ")} × 대지구분(대지·산·블록) 전부 줄 0개입니다 — ` +
+        `--jibun 으로 대지 지번을 직접 주세요`,
+    );
     process.exit(1);
   }
 
@@ -207,6 +232,7 @@ async function main() {
     jibun: usedJibun,
     ...sa,
     source: "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+    platGbCd: usedPlat, // 0=대지 1=산 2=블록 — 어떤 필지를 물어본 결과인지 남긴다
     note: "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. "
         + "용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다.",
   }, null, 2) + "\n", "utf8");
