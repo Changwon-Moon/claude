@@ -1,0 +1,102 @@
+name: 주택형별 분양가 수집 (청약홈)
+
+# 청약홈 「APT 주택형별 분양정보」(data.go.kr 15101047)에서 **분양최고금액**을 받아 온다.
+# 프리미엄 = 분양권 실거래가(국토부) − 같은 타입 분양가(여기). 둘 중 하나라도 사람이
+# 옮겨 적으면 오보 0 이 깨진다.
+#
+# ⚠️ 우리가 매일 쓰는 청약홈 조회 서비스(15098547)와 **다른 데이터셋**이고 활용신청도 별개다.
+#    401/403 이면 키가 아니라 승인을 먼저 본다.
+# ⚠️ 원본이 **연 1회 갱신**이다(마지막 2025-11-28 · 차기 2026-11-28). 그래서 예약도 연 1회다 —
+#    매일 돌려 봐야 같은 파일을 다시 받을 뿐이고, 그러면 커밋만 늘고 아무도 안 읽는다.
+on:
+  push:
+    paths:
+      - "data/bunyang-price-queue.txt"
+      - ".github/workflows/bunyang-price.yml"
+      - "packages/collectors/src/bunyangPriceCli.ts"
+      - "packages/collectors/src/sources/bunyangPrice.ts"
+      - "packages/collectors/src/parse/bunyangPrice.ts"
+  workflow_dispatch:
+  schedule:
+    # 원본 차기 등록 예정일이 11-28 이다. 그 뒤 첫 주에 한 번 받는다.
+    - cron: "0 2 3 12 *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bunyang-price
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: 파서 셀프테스트
+        run: pnpm --filter @wirit/collectors selftest
+
+      - name: 주택형별 분양가 수집
+        env:
+          DATA_GO_KR_API_KEY: ${{ secrets.DATA_GO_KR_API_KEY }}
+        run: |
+          if [ -z "$DATA_GO_KR_API_KEY" ]; then echo "::error::DATA_GO_KR_API_KEY 시크릿이 없습니다"; exit 1; fi
+          pnpm --filter @wirit/collectors exec tsx src/bunyangPriceCli.ts \
+            --out "$GITHUB_WORKSPACE/data/datasets" \
+            --probe "$GITHUB_WORKSPACE/data/bunyang-price-probe.md"
+
+      - name: 수집분·보고서 커밋
+        if: always()
+        run: |
+          # always() — 실패했을 때가 보고서가 가장 필요한 순간이다(세션은 Actions 로그 본문을 못 받는다).
+          git config user.name "wirit-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/datasets/bunyang-price-by-type.json 2>/dev/null || true
+          git add -f data/bunyang-price-probe.md 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+          else
+            git commit -m "주택형별 분양가(청약홈 15101047)"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
+
+      - name: 실행 결과 기록
+        if: always()
+        run: |
+          {
+            echo "# 주택형별 분양가 수집 — 마지막 실행"
+            echo
+            echo "- 실행: $(TZ=Asia/Seoul date +%F) (KST) · 방아쇠 \`${{ github.event_name }}\`"
+            echo "- 결과: **${{ job.status == 'success' && '성공' || '실패' }}**"
+            echo "- 커밋: \`${{ github.sha }}\`"
+            echo
+            echo "> 컬럼 대조표는 \`data/bunyang-price-probe.md\` 입니다 — 판정이 🔴/🟠 면 파서를 고쳐야 합니다."
+            echo "> 원본은 연 1회 갱신입니다(차기 2026-11-28)."
+          } > data/bunyang-price-last.md
+          git config user.name "wirit-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -f data/bunyang-price-last.md
+          git diff --cached --quiet || {
+            git commit -m "주택형별 분양가 수집 기록 — $(TZ=Asia/Seoul date +%F)"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          }
+
+      - name: 실패하면 말한다
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          MSG=$(printf '⛔ 주택형별 분양가 수집 실패\n\n401/403 이면 키가 아니라 활용신청(data.go.kr 15101047)을 먼저 보세요.\n청약홈 조회 서비스(15098547)와 별개 승인입니다.')
+          node scripts/notify-telegram.mjs "$MSG"
