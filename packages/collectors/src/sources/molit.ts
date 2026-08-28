@@ -50,8 +50,12 @@ async function getRaw(url: string, timeoutMs = 15000): Promise<{ status: number;
  * 한 번도 다시 두드리지 않았다. 그날 예약·자동재시도·수동 4번이 모두 같은 이유로 접혔다.
  *
  * ⚠️ 그래도 **인증 오류(401/403)는 재시도하지 않는다** — 키 문제는 두드려도 안 열린다.
+ *
+ * 📤 **export 인 이유**: 분양권전매 수집기(`sources/silv.ts`)가 같은 서비스(1613000)의
+ * 같은 파라미터 꼴(LAWD_CD·DEAL_YMD)을 쓴다. 재시도·백오프·인증오류 판단을 복사하면
+ * 위의 08-26 교훈이 한쪽에만 남는다 — 실제로 곡선 수집기가 그렇게 갈라져 60분을 태웠다.
  */
-async function fetchPage(endpoint: string, key: string, lawdCd: string, dealYmd: string, page: number, rows: number): Promise<string> {
+export async function fetchPage(endpoint: string, key: string, lawdCd: string, dealYmd: string, page: number, rows: number): Promise<string> {
   const url = `${endpoint}?serviceKey=${encKey(key)}&LAWD_CD=${lawdCd}&DEAL_YMD=${dealYmd}&pageNo=${page}&numOfRows=${rows}`;
   let last = "";
   for (let attempt = 0; attempt < 3; attempt++) {

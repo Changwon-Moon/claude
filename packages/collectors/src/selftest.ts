@@ -43,6 +43,14 @@ import {
 } from "./parse/molit.js";
 import { encKey } from "./sources/molit.js";
 import {
+  parseSilvTrades,
+  validSilvTrades,
+  latestPerAptType,
+  countByKind,
+  firstItemRaw,
+  toKind,
+} from "./parse/silv.js";
+import {
   normalize as kosisNormalize,
   seniorPoints as kosisSenior,
   nationalByPeriod as kosisNational,
@@ -108,6 +116,7 @@ import {
   ECOS_ERROR_JSON,
   MOLIT_APT_XML,
   MOLIT_RENT_XML,
+  MOLIT_SILV_XML,
   MOLIT_ERROR_XML,
   KOSIS_POP_JSON,
   KOSIS_POP_SHAPE_CHANGED_JSON,
@@ -391,6 +400,41 @@ console.log("\n[국토부 전월세 파서 — MOLIT Rent]");
   check("신규 중 월세비중 33.3%", a.newWolseRatio === 33.3, String(a.newWolseRatio));
   check("갱신 2건", a.renewTotal === 2, String(a.renewTotal));
   check("계약구분 있는 건 5건(무구분 1 제외)", a.typedTotal === 5, String(a.typedTotal));
+}
+
+console.log("\n[국토부 분양권전매 파서 — MOLIT Silv]");
+{
+  /* 여기서 지키는 것은 **분양권과 입주권을 섞지 않는 것**이다.
+   * 둘은 분양가 기준이 아예 달라(청약 당첨분 vs 조합원분) 섞으면 프리미엄이 통째로 틀어진다.
+   * 태그 이름 자체가 맞는지는 이 테스트가 증명하지 못한다 — 그건 첫 실제 수집의
+   * `data/silv-probe.md` 가 사람에게 보여 준다. */
+  const txs = parseSilvTrades(MOLIT_SILV_XML);
+  check("item 5건 파싱", txs.length === 5, `got ${txs.length}`);
+  check("거래금액 콤마 제거 → 만원", txs[0].priceManwon === 130000, String(txs[0].priceManwon));
+  check("만원 → 원 환산", txs[0].priceWon === 1300000000, String(txs[0].priceWon));
+  check("계약일 0패딩 2026-07-04", txs[0].date === "2026-07-04", txs[0].date);
+  check("영문태그 구분 → 분양권", txs[0].kind === "분양권", txs[0].kind);
+  check("한글태그 구분 → 입주권", txs[2].kind === "입주권", txs[2].kind);
+  check("한글태그 단지명 파싱", txs[2].aptNm === "가상한강자이", txs[2].aptNm);
+  check("구분 칸이 없으면 미상(임의로 분양권에 넣지 않는다)", txs[4].kind === "미상", txs[4].kind);
+  check("해제 거래 canceled=true", txs[3].canceled === true);
+
+  const valid = validSilvTrades(txs);
+  check("해제 1건 제외 → 4건", valid.length === 4, String(valid.length));
+  check("해제된 20억이 유효거래에 없다", valid.every((t) => t.priceManwon !== 200000));
+
+  const kinds = countByKind(txs);
+  check("구분 집계 분양권 2 / 입주권 1 / 미상 1", kinds.분양권 === 2 && kinds.입주권 === 1 && kinds.미상 === 1,
+    `${kinds.분양권}/${kinds.입주권}/${kinds.미상}`);
+
+  const latest = latestPerAptType(txs);
+  check("같은 단지·같은 전용면적은 1건으로 접힌다", latest.filter((t) => t.aptNm === "가상센트럴파크").length === 1);
+  check("접힐 때 최고가가 아니라 **최신** 거래가 남는다(7/4 13.0억)",
+    latest.find((t) => t.aptNm === "가상센트럴파크")?.date === "2026-07-04");
+
+  check("toKind: 공백 섞인 값도 읽는다", toKind(" 분 양 권 ") === "분양권");
+  check("toKind: 빈 값은 미상", toKind("") === "미상");
+  check("firstItemRaw: 원본 item 을 그대로 떠 온다", firstItemRaw(MOLIT_SILV_XML).includes("가상센트럴파크"));
 }
 
 console.log("\n[부동산원 전세·월세 지수 — R-ONE]");

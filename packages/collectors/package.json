@@ -24,7 +24,8 @@
     "search-kosis": "tsx src/kosisSearchCli.ts",
     "probe-seoul": "tsx src/seoulProbeCli.ts",
     "collect-ecos-m2": "tsx src/ecosM2Cli.ts",
-    "collect-supply-area": "tsx src/supplyAreaCli.ts"
+    "collect-supply-area": "tsx src/supplyAreaCli.ts",
+    "collect-silv": "tsx src/silvCli.ts"
   },
   "dependencies": {},
   "devDependencies": {
