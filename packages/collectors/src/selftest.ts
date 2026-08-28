@@ -61,6 +61,7 @@ import {
   parseCsv,
   decodeKoreanCsv,
 } from "./parse/bunyangPrice.js";
+import { parseBunyangNotices, movingInSince, normName } from "./parse/bunyangNotice.js";
 import {
   normalize as kosisNormalize,
   seniorPoints as kosisSenior,
@@ -520,6 +521,36 @@ console.log("\n[청약홈 주택형별 분양가 — 프리미엄의 뺄셈 상�
   const dec = decodeKoreanCsv(eucKr);
   check("EUC-KR 을 알아보고 되살린다", dec.encoding === "euc-kr" && dec.text === "주택형",
     `${dec.encoding} / ${dec.text}`);
+}
+
+console.log("\n[청약홈 APT 분양정보 — 27년 이후 입주를 코드가 가른다]");
+{
+  /* 이 파일이 「27년 이후 입주」 목록의 원천이다. 목록을 사람이 고르면 그게 곧
+     커뮤니티 글과 같아진다 — 반려한 그 캡처처럼. 여기서는 입주예정월로 코드가 가른다. */
+  const rows = parseCsv(
+    "주택관리번호,공고번호,주택명,공급지역명,공급위치,공급규모,모집공고일,건설업체명_시공사,사업주체명_시행사,주택구분코드명,입주예정월,분양가상한제,투기과열지구,조정대상지역,정비사업\n" +
+    '2024000279,2024000279,"마포자이힐스테이트 라첼스",서울,"서울 마포구",463,2024-06-01,"지에스건설","시행사A",민영,2027-03,N,N,N,Y\n' +
+    '2020000295,2020000295,"영통자이",경기,"경기 수원",123,2020-03-01,"지에스건설","시행사B",민영,2022-08,N,N,N,N\n' +
+    '9999999999,9999999999,"입주월없음",서울,"서울 어딘가",100,2025-01-01,"건설사","시행사C",민영,,,,,\n'
+  );
+  const notices = parseBunyangNotices(rows);
+  check("3건 파싱", notices.length === 3, String(notices.length));
+  check("입주예정월 읽는다", notices[0].moveInYm === "2027-03", notices[0].moveInYm);
+  check("공급규모 숫자화", notices[0].supply === 463, String(notices[0].supply));
+  check("정비사업 Y → true", notices[0].redevelopment === true);
+  check("분양가상한제 N → false", notices[0].priceCap === false);
+  check("빈 칸은 false 가 아니라 **null**(모르는 것을 아니라고 하지 않는다)", notices[2].priceCap === null);
+
+  const since = movingInSince(notices, "2027-01");
+  check("2027년 이후만 남는다 — 1건", since.length === 1, String(since.length));
+  check("2022년 입주는 빠진다", since.every((n) => n.name !== "영통자이"));
+  check("입주월이 비면 **뺀다**(모르는 것을 이후에 넣지 않는다)", since.every((n) => n.name !== "입주월없음"));
+
+  /* 이름 정규화 — 청약홈은 띄어쓰기가 있고 실거래는 없다. 다만 **숫자는 남긴다**:
+     08-13 상록마을 사고가 괄호 안까지 지운 이름이 남의 단지에 붙어 생겼다. */
+  check("공백·괄호를 지운다", normName("마포자이힐스테이트 라첼스") === "마포자이힐스테이트라첼스");
+  check("단지 번호는 **남긴다** — 1단지와 4단지는 다른 단지다",
+    normName("송도자이풍경채 그라노블 1단지") !== normName("송도자이풍경채 그라노블 4단지"));
 }
 
 console.log("\n[부동산원 전세·월세 지수 — R-ONE]");

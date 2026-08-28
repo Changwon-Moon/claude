@@ -26,7 +26,7 @@
     "collect-ecos-m2": "tsx src/ecosM2Cli.ts",
     "collect-supply-area": "tsx src/supplyAreaCli.ts",
     "collect-silv": "tsx src/silvCli.ts",
-    "collect-bunyang-price": "tsx src/bunyangPriceCli.ts"
+    "read-bunyang-csv": "tsx src/bunyangCsvCli.ts"
   },
   "dependencies": {},
   "devDependencies": {
