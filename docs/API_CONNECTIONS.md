@@ -41,6 +41,7 @@
 | └ KOSIS 표 찾기(search) | 〃 | `kosisSearchCli.ts` | `data/kosis-search.md` | 〃 (`search=키워드` 줄) | ✅ 2026-08-12 신설 |
 | **국토부 실거래(매매)** | `MOLIT_API_KEY` | `sources/molit.ts` · `molitCli.ts` | `data/datasets/molit/{LAWD}-{YYYYMM}.json` | `molit-collect.yml` `20 3 5,20 * *` + `data/molit-queue.txt` · `collect-on-request.yml` | ✅ 실사용 |
 | **국토부 전월세 실거래** | `MOLIT_API_KEY` | `molitRentCli.ts` | `data/datasets/molit-rent/{LAWD}-{YYYYMM}.json` | `molit-rent-collect.yml` `40 3 5,20 * *` + `data/molit-rent-queue.txt` | ✅ 실사용 |
+| **국토부 분양권전매 실거래** | `MOLIT_API_KEY` | `sources/silv.ts` · `parse/silv.ts` · `silvCli.ts` | `data/datasets/silv/{LAWD}-{YYYYMM}.json` · 태그 대조 `data/silv-probe.md` | `silv-collect.yml` `0 4 5,20 * *` + `data/silv-queue.txt` | 🆕 2026-08-28 신설 — **첫 실행 미확인** |
 | **청약홈 분양정보** | `DATA_GO_KR_API_KEY` | `sources/applyhome.ts` · `applyhomeCli.ts` | `data/datasets/applyhome-latest.json` · `applyhome/{날짜}.json` | `applyhome-collect.yml` `0 2 * * *` (매일 11:00 KST) | ✅ 실사용 |
 | **국토부 최고가 인덱스(신고가 판정)** | `MOLIT_API_KEY` | `molitPeakCli.ts` · `molitSingoCli.ts` | `data/datasets/molit-peak/{LAWD}.json` · `singo-log/{YYYY-MM}.json` | `molit-peak-backfill.yml` · `singo-daily.yml` `0 22 * * *` (매일 07:00 KST) | ✅ 실사용 |
 | └ 단지 월별 최고가 곡선 | 〃 | `molitHistoryCli.ts` | `data/datasets/singo-history/{LAWD}-{단지}-{타입}.json` | `singo-history.yml` (`data/singo-history-queue.txt`) | ✅ 실사용 |
@@ -60,6 +61,39 @@
 | **Anthropic (LLM 검수)** | `ANTHROPIC_API_KEY` | `packages/pipeline/src/review/llmReview.ts` | `data/review/*` | `review.yml` (dispatch) | 선택 — 없으면 코드 검수만 |
 | **Instagram Graph** | `IG_ACCESS_TOKEN` · `IG_USER_ID` | `scripts/collect-insights.mjs` | `data/performance.md` | `pipeline-tick.yml` `0 22 * * *` | ⛔ **미사용** — 자동 발행 폐지(2026-07-27). 키 없으면 조용히 `exit 0` |
 | **GitHub (세션용 PAT)** | `WIRIT_GH_PAT` (프로젝트 문서에 보관) | `scripts/check-push.mjs` | — | — | ✅ 푸시·Actions 조회. `Actions: Read` 있음 / `Checks: Read` 없음 |
+
+## 1a. 국토부 분양권전매 실거래 — **프리미엄은 아직 못 구한다** (2026-08-28 신설)
+
+| | |
+|---|---|
+| 키 | `MOLIT_API_KEY` (매매와 같은 키). ⚠️ **활용신청은 별도 승인**(data.go.kr 15126471) |
+| 엔드포인트 | `https://apis.data.go.kr/1613000/RTMSDataSvcSilvTrade/getRTMSDataSvcSilvTrade` |
+| 수집기 | `packages/collectors/src/silvCli.ts` (`pnpm --filter @wirit/collectors collect-silv`) |
+| 거는 법 | `data/silv-queue.txt` 에 한 줄 적어 푸시 |
+| 산출 | `data/datasets/silv/{LAWD}-{YYYYMM}.json` · 태그 대조표 `data/silv-probe.md` |
+| 지역표 | 서울·경기에 더해 **인천**(`lawd-incheon.json`, 개편 예고 3구는 제외) |
+
+**왜 놓았나.** 준공 전 단지에는 매매 실거래가 없다. 가장 가까운 실거래가 분양권 전매인데
+그 값을 **보도에서 옮겨** 쓰고 있었다(구리역 롯데캐슬 시그니처 11억8,681만원 = 뉴스핌
+2026-08-26). 오보 0 은 '남이 쓴 숫자 베끼기'가 아니라 '원자료에서 직접 세기'다.
+
+### ⚠️ 이 API 만으로 **프리미엄은 못 만든다**
+
+응답에 분양가가 없다. 프리미엄 = 분양권 실거래가 − **같은 타입 분양가**인데, 뒤의 값은
+청약홈 「타입별 공급금액」에 있다. 지금 우리 청약홈 수집기는 **최근 7일 공고만 남기고 버린다**
+(`withinDays: 7`). API 응답 자체에는 APT 공고가 2,854건 들어 있다 — *없는 게 아니라 안 받아온 것*이다.
+
+→ 프리미엄 카드를 만들려면 **과거 공고의 타입별 분양가를 받는 갈래가 하나 더** 필요하다.
+그 전까지 이 데이터로 만들 수 있는 것은 **「분양권이 얼마에 팔렸나」**이고, 카드 칸 이름도
+그렇게 적는다 — `분양권 실거래`. 호가·프리미엄과 성격이 다르면 이름이 달라야 한다
+(`docs/guides/청약분양-카드-기준.md` 「호가를 실거래라고 적지 않는다」).
+
+### ⚠️ 파서의 태그 이름은 **유추다** — 첫 실행이 시험이다
+
+세션 컨테이너는 `apis.data.go.kr` 이 막혀 있어 이 API 를 한 번도 직접 불러 본 적이 없다.
+`parse/silv.ts` 의 태그 후보(`dealTypeNm`/`구분` 등)는 매매·전월세 API 에서 유추한 것이다.
+그래서 첫 수집이 **원본 `<item>` 한 건을 `data/silv-probe.md` 에 그대로** 남기고
+구분 칸을 읽었는지 🟢/🟠/🔴 로 판정한다. 🔴 면 파서가 조용히 빈 값을 채우고 있는 것이다.
 
 ## 1b. 한국은행 ECOS — M2(통화량) (2026-08-12 신설)
 

@@ -1,0 +1,151 @@
+name: 분양권전매 실거래 수집 (국토부)
+
+# 국토교통부 **아파트 분양권전매** 실거래를 구·월 단위로 받아 거래 원본으로 커밋한다.
+# 1차 출처(오보 0). MOLIT_API_KEY(매매와 같은 키) 필요 → GitHub Secrets.
+# ⚠️ '아파트 분양권전매 실거래가 자료'(data.go.kr 15126471)는 매매·전월세와 **별도 승인**이다.
+#    403 이면 키가 아니라 활용신청 승인 상태를 먼저 본다.
+#
+# 왜 필요한가: 준공 전 단지에는 매매 실거래가 없다. 가장 가까운 실거래가 분양권 전매인데
+# 그동안 그 값을 보도에서 옮겨 썼다(구리역 카드 2026-08-26). 그 구멍을 메우는 배관이다.
+on:
+  # 대기열 파일 한 줄 푸시가 세션이 수집을 거는 유일한 손잡이(세션은 Run 버튼 못 누름).
+  #   한 줄 형식:  region=seoul gu=all months=202608 force=false
+  push:
+    paths:
+      - "data/silv-queue.txt"
+      - ".github/workflows/silv-collect.yml"
+      - "packages/collectors/src/silvCli.ts"
+      - "packages/collectors/src/sources/silv.ts"
+      - "packages/collectors/src/parse/silv.ts"
+  workflow_dispatch:
+    inputs:
+      region:
+        description: "지역 코드표 (seoul/gyeonggi/incheon/all)"
+        required: false
+        default: "seoul"
+      gu:
+        description: "구·시 목록(콤마) 또는 all"
+        required: false
+        default: "all"
+      months:
+        description: "수집 월(YYYYMM,콤마). 비우면 최근 3개월 자동"
+        required: false
+        default: ""
+      force:
+        description: "캐시 무시 재수집 (true/false)"
+        required: false
+        default: "false"
+  schedule:
+    # 분양권도 신고기한 30일 → 매월 5일·20일. 매매(03:20)·전월세(03:40)와 겹치지 않게 04:00 UTC.
+    - cron: "0 4 5,20 * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: silv-collect
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: 파서 셀프테스트
+        run: pnpm --filter @wirit/collectors selftest
+
+      - name: 분양권전매 실거래 수집
+        env:
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        run: |
+          if [ -z "$MOLIT_API_KEY" ]; then echo "::error::MOLIT_API_KEY 시크릿이 없습니다"; exit 1; fi
+          GU="${{ github.event.inputs.gu }}"
+          REGION="${{ github.event.inputs.region }}"
+          MONTHS="${{ github.event.inputs.months }}"
+          FORCE_IN="${{ github.event.inputs.force }}"
+          # ⛔ 예약 런은 대기열을 **읽지 않는다** (2026-08-27 규칙, 전월세·신고가와 동일).
+          #    대기열은 '지금 한 번 돌려 봐'라는 일회용 손잡이지 상시 설정이 아니다.
+          EVT="${{ github.event_name }}"
+          if [ "$EVT" != "push" ] && [ "$EVT" != "workflow_dispatch" ]; then
+            echo "방아쇠 '$EVT' — 대기열을 읽지 않고 기본 기준(서울 25개구 · 최근 3개월)으로 돕니다"
+          elif [ -f data/silv-queue.txt ]; then
+            LINE=$(grep -v '^[[:space:]]*#' data/silv-queue.txt | grep -v '^[[:space:]]*$' | tail -1)
+            echo "대기열 마지막 줄: $LINE"
+            [ -z "$REGION" ]  && REGION=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^region=//p')
+            [ -z "$GU" ]      && GU=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^gu=//p')
+            [ -z "$MONTHS" ]  && MONTHS=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^months=//p')
+            [ -z "$FORCE_IN" ] && FORCE_IN=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^force=//p')
+          fi
+          GU="${GU:-all}"; REGION="${REGION:-seoul}"
+          if [ -z "$MONTHS" ]; then
+            MONTHS=""
+            for i in 1 2 3; do MONTHS="$MONTHS,$(date -u -d "$i month ago" +%Y%m)"; done
+            MONTHS="${MONTHS#,}"
+          fi
+          FORCE=""
+          if [ "$FORCE_IN" = "true" ]; then FORCE="--force"; fi
+          if [ "$EVT" = "schedule" ]; then FORCE="--force"; fi
+          echo "수집: region=$REGION · 구=$GU · 월=$MONTHS $FORCE"
+          echo "REGION=$REGION" >> "$GITHUB_ENV"; echo "GU=$GU" >> "$GITHUB_ENV"; echo "MONTHS=$MONTHS" >> "$GITHUB_ENV"
+          pnpm --filter @wirit/collectors exec tsx src/silvCli.ts \
+            --region "$REGION" --gu "$GU" --months "$MONTHS" \
+            --out "$GITHUB_WORKSPACE/data/datasets/silv" \
+            --probe "$GITHUB_WORKSPACE/data/silv-probe.md" $FORCE
+
+      - name: 수집분 커밋
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/datasets/silv/*.json
+          git add -f data/silv-probe.md || true
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+          else
+            git commit -m "분양권전매 실거래(국토부) — ${REGION} / ${GU} / ${MONTHS}"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
+
+      # 실행 결과를 저장소에 남긴다 — 배관 상태 표(scripts/pipeline-status.mjs)가 볼 것을 준다.
+      # 전월세가 두 번 연속 실패하고도 초록불이던 이유가 이 파일이 없어서였다(2026-08-27).
+      - name: 실행 결과 기록
+        if: always()
+        run: |
+          {
+            echo "# 분양권전매 실거래 수집 — 마지막 실행"
+            echo
+            echo "- 실행: $(TZ=Asia/Seoul date +%F) (KST) · 방아쇠 \`${{ github.event_name }}\`"
+            echo "- 기준: $REGION / $GU · 월 $MONTHS"
+            echo "- 결과: **${{ job.status == 'success' && '성공' || '실패' }}**"
+            echo "- 커밋: \`${{ github.sha }}\`"
+            echo
+            echo "> 태그 대조표는 \`data/silv-probe.md\` 입니다 — 판정이 🔴/🟠 면 파서를 고쳐야 합니다."
+            echo "> 예약 런은 대기열(data/silv-queue.txt)을 읽지 않습니다."
+          } > data/silv-last.md
+          git config user.name "wirit-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -f data/silv-last.md
+          git diff --cached --quiet || {
+            git commit -m "분양권전매 수집 기록 — $(TZ=Asia/Seoul date +%F)"
+            git pull --rebase --autostash origin ${GITHUB_REF_NAME}
+            git push origin HEAD:${GITHUB_REF_NAME}
+          }
+
+      - name: 실패하면 말한다
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          # 성공은 말하지 않는다 — 월 2회짜리 배관이라 실패만 말해도 충분하다.
+          MSG=$(printf '⛔ 분양권전매 실거래 수집 실패\n\n· 범위: %s / %s\n· 월: %s\n\n403 이면 키가 아니라 활용신청 승인(data.go.kr 15126471)을 먼저 보세요.' "$REGION" "$GU" "$MONTHS")
+          node scripts/notify-telegram.mjs "$MSG"

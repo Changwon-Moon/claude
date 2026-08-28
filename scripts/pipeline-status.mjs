@@ -64,6 +64,9 @@ const PIPES = [
   { name: "실거래 수집(국토부)", mode: "untilDone", last: "data/molit-last.md", data: "data/datasets/molit", tg: true, key: "MOLIT_API_KEY" },
   { name: "전월세 실거래", mode: "untilDone", last: "data/molit-rent-last.md", data: "data/datasets/molit-rent", tg: true, key: "MOLIT_API_KEY" },
   { name: "신고가 단지 이력", mode: "onDemand", last: "data/singo-history-last.md", data: null, tg: true, key: "MOLIT_API_KEY" },
+  /* 2026-08-28 신설. 만들자마자 여기 등록한다 — 등록을 미루면 위의 두 배관처럼
+     "실패했는데 표가 볼 것이 없어 초록불"이 된다. 배관을 놓는 것과 표에 올리는 것은 한 벌이다. */
+  { name: "분양권전매 실거래", mode: "untilDone", last: "data/silv-last.md", data: "data/datasets/silv", tg: true, key: "MOLIT_API_KEY" },
 ];
 
 /** 파일이 마지막으로 **커밋된** 날. 워크플로가 커밋으로만 결과를 남기므로 이게 곧 "언제 일했나"다. */
