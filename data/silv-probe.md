@@ -1,18 +1,16 @@
 # 분양권전매 API — 수집 보고
 
 - 실행: 2026-08-28
-- 결과: 수집 6 · 스킵 0 · 실패 0 · 유효거래 171건
+- 결과: 수집 0 · 스킵 0 · 실패 231 · 유효거래 0건
 
-- 표본: 평택시 202607
-- 구분 집계: 분양권 0 · 입주권 0 · 미상 171
-- 태그 판정: 🔴 구분 칸을 **하나도 못 읽었다** — 태그 이름이 틀렸다. 아래 원본에서 실제 이름을 찾아 parse/silv.ts 의 toKind 후보에 넣을 것
+## 실패한 것과 그 이유
 
-> 이 대조표가 있는 이유: 세션 컨테이너는 data.go.kr 이 막혀 있어 이 API 를 한 번도
-> 직접 불러 본 적이 없다. 파서의 태그 이름은 **매매 API 에서 유추한 것**이고,
-> 유추가 맞았는지는 응답을 봐야 안다. 파서가 빈 값을 채우고 조용히 통과하는 것을 막는다.
+### 231건 — 종로구 202608, 종로구 202607, 종로구 202606, 중구 202608 외
 
-## 원본 item 한 건
-
-```xml
-<item><aptNm>평택화양 서희스타힐스 센트럴파크</aptNm><buyerGbn>개인</buyerGbn><cdealDay> </cdealDay><cdealType> </cdealType><dealAmount>37,400</dealAmount><dealDay>20</dealDay><dealMonth>7</dealMonth><dealYear>2026</dealYear><dealingGbn>직거래</dealingGbn><estateAgentSggNm> </estateAgentSggNm><excluUseAr>84.6048</excluUseAr><floor>12</floor><jibun>산184-2</jibun><ownershipGbn> </ownershipGbn><sggCd>41220</sggCd><sggNm>평택시</sggNm><slerGbn>개인</slerGbn><umdNm>현덕면 화양리</umdNm></item>
 ```
+분양권전매 엔드포인트 실패 — getRTMSDataSvcSilvTrade: fetch failed
+```
+
+> **한 건도 못 받았다.** 사유가 전부 403 이면 키 문제가 아니라 **활용신청**을 본다 —
+> '아파트 분양권전매 실거래가 자료'(data.go.kr 15126471)는 매매·전월세와 **별도 승인**이다.
+> 공공데이터포털 마이페이지에서 이 API 의 승인 상태를 확인해야 한다.
