@@ -1463,7 +1463,35 @@
       },
       "oneLiner": "<i class=\"em\">🔒</i>전매제한 1년 · 비규제지역 · 분양가상한제 미적용<br><i class=\"em\">💡</i>총 1,728세대(조합원 409 · 임대 144 · 보류지 17 포함) 중 일반분양",
       "hookSource": "사업주체가 소사본1의1구역 재개발정비사업조합(공고문 시행사 표)이라 재개발 사업이 맞다. '부천 49층'은 같은 날 나가는 상동역 롯데캐슬(7개동·49층)에도 그대로 참이라 두 카드를 못 가른다.",
-      "unitsNote": "공급규모 원문: 지하 8층, 지상 49층, 7개동 총 1,728세대(조합원 409세대, 임대 144세대, 보류지 17세대 포함) 중 일반분양 1,158세대. 409+144+17+1,158 = 1,728 로 검산됨."
+      "unitsNote": "공급규모 원문: 지하 8층, 지상 49층, 7개동 총 1,728세대(조합원 409세대, 임대 144세대, 보류지 17세대 포함) 중 일반분양 1,158세대. 409+144+17+1,158 = 1,728 로 검산됨.",
+      "_applyhomeSnapshot": {
+        "kind": "apt",
+        "pblancNo": "2026000382",
+        "name": "두산위브더제니스 부천",
+        "areaName": "경기",
+        "address": "경기도 부천시 소사구 소사본동 88-39번지 일대",
+        "supply": 1158,
+        "noticeDate": "2026-08-12",
+        "receiptFrom": "2026-08-20",
+        "receiptTo": "2026-08-21",
+        "specialFrom": "2026-08-19",
+        "rank1From": "2026-08-20",
+        "moveInYm": "2032-02",
+        "announceDate": "2026-08-28",
+        "builder": "두산건설 주식회사, 쌍용건설(주)",
+        "priceCap": false,
+        "speculative": false,
+        "homepage": "https://두산위브더제니스부천.com",
+        "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000382&pblancNo=2026000382",
+        "score": 53,
+        "reasons": [
+          "수도권",
+          "1,158가구 대단지",
+          "위브"
+        ]
+      },
+      "_retiredAt": "2026-08-26",
+      "_retiredFrom": "git:d53d95cb"
     },
     {
       "id": "guri-lotte-castle-remndr",
