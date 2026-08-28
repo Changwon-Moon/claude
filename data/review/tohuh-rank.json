@@ -1,14 +1,21 @@
 {
   "label": "tohuh-rank",
-  "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "verdict": "revise",
+  "summary": "REVISE — error 0 · warn 1 · 카드 1장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
       "file": "tohuh-rank.json",
       "deterministic": true,
       "qaErrors": 0,
-      "findings": []
+      "findings": [
+        {
+          "reviewer": "design-qa",
+          "level": "warn",
+          "code": "titlegap",
+          "msg": "제목과 바로 아래 요소의 간격이 20px 입니다 (제목 56px) — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다"
+        }
+      ]
     }
   ],
   "llm": {

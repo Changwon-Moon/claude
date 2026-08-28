@@ -16,36 +16,6 @@
   ],
   "cards": [
     {
-      "label": "tohuh-rank",
-      "title": "2026년 6월 신고가 쏟아진 지역은? (토허제 기준)",
-      "state": "발행",
-      "at": "2026-07-26",
-      "builder": "tohuh-rank",
-      "content": "data/content/2026-07-23/tohuh-rank.json",
-      "png": "tohuh-rank-p1.png",
-      "md5": "572b4238dd87968e8f604f3f6caff68d"
-    },
-    {
-      "label": "tohuh-rent-map",
-      "title": "1년 만에 월세 38만원 더 낸다",
-      "state": "오너 확정",
-      "at": "2026-07-30",
-      "builder": "tohuh-rent-map",
-      "content": "data/content/2026-07-30/tohuh-rent-map.json",
-      "png": "tohuh-rent-map-p1.png",
-      "md5": "ec4cad52505fcdbba9bb1bf76e33c9b6"
-    },
-    {
-      "label": "wolse-flip",
-      "title": "미쳐버린 서울 월세 폭등 상황",
-      "state": "오너 확정",
-      "at": "2026-07-30",
-      "builder": "wolse-flip",
-      "content": "data/content/2026-07-30/wolse-flip-p1.json",
-      "png": "wolse-flip-p1-p1.png",
-      "md5": "87ef2d006936e7629d593c747e466843"
-    },
-    {
       "label": "jeongbi-board",
       "title": "올해 서울 정비사업 수주 1위는?",
       "state": "오너 확정",

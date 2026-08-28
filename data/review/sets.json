@@ -20,7 +20,14 @@
         "tohuh-rank"
       ],
       "caption": "tohuh-rank",
-      "review": "토허제 신고가 지도"
+      "review": "토허제 신고가 지도",
+      "state": "오너 확정",
+      "confirmedAt": "2026-08-28",
+      "confirmedMd5": [
+        "tohuh-rank:bd5cd11638ce"
+      ],
+      "note": "한국부동산원 월세지수 기준시점 재설정(2026년 6월=100) 반영. 오너 재확정 2026-08-28.",
+      "pixelPolicy": "정기물 — data/datasets/molit 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
     },
     {
       "label": "index-2026",
@@ -85,7 +92,13 @@
         "wolse-flip-p1"
       ],
       "caption": "wolse-flip",
-      "note": "오너 확정(2026-07-30) — 단일 카드. 자치구 25곳 표(p2·p3)는 기준 시점이 달라(2020-07 임대차2법 이후 누적) 같은 캐러셀에 섞으면 독자가 두 기준을 헷갈린다. 빌더는 그대로 두었으니 별도 소재로 낼 때 되살릴 수 있다."
+      "note": "오너 확정(2026-07-30) — 단일 카드. 자치구 25곳 표(p2·p3)는 기준 시점이 달라(2020-07 임대차2법 이후 누적) 같은 캐러셀에 섞으면 독자가 두 기준을 헷갈린다. 빌더는 그대로 두었으니 별도 소재로 낼 때 되살릴 수 있다. / 한국부동산원이 월세지수 기준시점을 2026년 6월=100 으로 다시 잡았다(rebasing). 지수 레벨이 전부 내려앉고(103.9→101.2 · 90.9→87.5 · 88.0→84.7) 기준월도 6월→7월로 늘었다. 연간 변화율은 그대로다(+1.7/+2.0/+1.8/+2.3/+4.5). 연말 추정은 오너가 정한 규칙 그대로 YTD 5.91% x 12/7 = +10.1%. 오너 재확정 2026-08-28. / 한국부동산원 월세지수 기준시점 재설정(2026년 6월=100) 반영. 오너 재확정 2026-08-28.",
+      "state": "오너 확정",
+      "confirmedAt": "2026-08-28",
+      "confirmedMd5": [
+        "wolse-flip-p1:8ee99ef28108"
+      ],
+      "pixelPolicy": "정기물 — data/datasets/reb-rent-index.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
     },
     {
       "label": "tohuh-rent-map",
@@ -93,7 +106,14 @@
       "cards": [
         "tohuh-rent-map"
       ],
-      "caption": "tohuh-rent-map"
+      "caption": "tohuh-rent-map",
+      "state": "오너 확정",
+      "confirmedAt": "2026-08-28",
+      "confirmedMd5": [
+        "tohuh-rent-map:f38e400d34c3"
+      ],
+      "note": "한국부동산원 월세지수 기준시점 재설정(2026년 6월=100) 반영. 오너 재확정 2026-08-28.",
+      "pixelPolicy": "정기물 — data/datasets/reb-rent-index.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
     },
     {
       "label": "jeongbi-board",

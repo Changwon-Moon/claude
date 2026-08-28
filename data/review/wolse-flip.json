@@ -1,21 +1,21 @@
 {
   "label": "wolse-flip",
-  "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
-  "findings": [
-    {
-      "reviewer": "caption-lint",
-      "level": "info",
-      "code": "hook",
-      "msg": "첫 줄 후킹 질문(?) 권장 — 피드 '더보기' 전 노출 구간"
-    }
-  ],
+  "verdict": "revise",
+  "summary": "REVISE — error 0 · warn 1 · 카드 1장 · 코드 검수만",
+  "findings": [],
   "cards": [
     {
       "file": "wolse-flip-p1.json",
       "deterministic": true,
       "qaErrors": 0,
-      "findings": []
+      "findings": [
+        {
+          "reviewer": "design-qa",
+          "level": "warn",
+          "code": "titlegap",
+          "msg": "제목과 바로 아래 요소의 간격이 22px 입니다 (제목 75px) — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다"
+        }
+      ]
     }
   ],
   "llm": {

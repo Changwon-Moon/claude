@@ -124,6 +124,22 @@ for (const label of labels) {
   if (note && !(set.note ?? "").includes(note)) set.note = (set.note ? set.note + " / " : "") + note;
 
   if (isPeriodic) {
+    /* ⚠️ **정기물로 판정했으면 옛 기준값도 걷어낸다** (2026-08-28)
+     *
+     * 「넣지 않는다」만으로는 모자랐다 — 이미 들어가 있는 줄은 그대로 남기 때문이다.
+     * wolse-flip · tohuh-rent-map · tohuh-rank 는 07월에 고정물로 등록됐는데(그때는
+     * 이 판정이 없었다) 08-28 에 한국부동산원이 월세지수 **기준시점을 다시 잡자**
+     * (2026년 6월=100) 셋이 한꺼번에 빨간불이 됐다. 자료가 갱신되면 다시 그려지는 게
+     * **정상인 카드**인데, 옛 기준값이 남아 그걸 사고로 신고하고 있었다.
+     *
+     * 정기물의 정본은 `sets.json` 의 `confirmedMd5` 다(기준 문서 §7 표). 두 곳에 두면
+     * 반드시 어긋나고, 어긋나는 쪽이 매번 이긴다. 그래서 여기서 한 줄로 지운다. */
+    const drop = new Set(pngs.map((x) => `${x.slug}-p1.png`));
+    const before = baselines.cards.length;
+    baselines.cards = baselines.cards.filter((c) => !drop.has(c.png));
+    if (baselines.cards.length < before) {
+      console.log(`   🧹 옛 픽셀 기준값 ${before - baselines.cards.length}건을 걷어냈습니다 — 정기물의 정본은 sets.json 입니다`);
+    }
     set.pixelPolicy = `정기물 — ${rolling.join(",")} 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)`;
     console.log(`\n📌 ${label}: **정기물** (${rolling.join(", ")}) → 픽셀 기준값에 넣지 않습니다`);
     console.log(`   확정 판본 md5 는 sets.json 에 증거로 남겼습니다: ${set.confirmedMd5.join(" · ")}`);
