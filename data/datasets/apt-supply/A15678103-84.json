@@ -1,0 +1,25 @@
+{
+  "kaptCode": "A15678103",
+  "kaptName": "힐스테이트상도센트럴파크",
+  "type": "84",
+  "jibun": "531",
+  "exclusive": 84.61,
+  "commonResidential": 24.582,
+  "supply": 109.19,
+  "pyeong": 33.03,
+  "pyeongLabel": "33평",
+  "sampleDong": "102동",
+  "sampleHo": "301",
+  "sampleCount": 18,
+  "ratio": 0.7749,
+  "parts": [
+    {
+      "purpose": "아파트 / 벽체,계단,복도",
+      "floor": "지상 각층",
+      "area": 24.5823
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

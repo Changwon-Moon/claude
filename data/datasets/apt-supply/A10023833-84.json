@@ -1,0 +1,30 @@
+{
+  "kaptCode": "A10023833",
+  "kaptName": "지제역 더샵 센트럴시티",
+  "type": "84",
+  "jibun": "가-",
+  "exclusive": 84.926,
+  "commonResidential": 25.659,
+  "supply": 110.59,
+  "pyeong": 33.45,
+  "pyeongLabel": "33평",
+  "sampleDong": "113",
+  "sampleHo": "1804",
+  "sampleCount": 20,
+  "ratio": 0.768,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단실",
+      "floor": "지상 각층",
+      "area": 19.7594
+    },
+    {
+      "purpose": "아파트 / 벽체",
+      "floor": "지상 18층",
+      "area": 5.8996
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "2",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
