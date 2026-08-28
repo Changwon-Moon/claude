@@ -5,10 +5,15 @@
  *   프리미엄 = 분양권 실거래가 − 같은 타입 분양가
  * 뒤의 값을 사람이 옮겨 적으면 그 순간 오보 0 이 깨진다.
  *
- * ⚠️ **컬럼 이름은 유추하지 않는다.** 포털 화면의 항목표에 한글 이름만 적혀 있고
- * 영문명 칸은 비어 있다(2026-08-28 확인). 자동변환 API 가 한글 키를 그대로 낼지
- * 영문으로 바꿔 낼지는 **응답을 봐야 안다** — 분양권 수집기에서 유추가 한 번 틀렸던
- * 바로 그 자리다. 그래서 후보를 나열하고, 첫 수집이 원본 한 행과 키 목록을 남긴다.
+ * ── 원천은 **CSV 파일**이다 (2026-08-28 오너 지적으로 바로잡음)
+ * 이 데이터셋은 오픈API 로 등록된 것이 아니라 **파일데이터(CSV)** 다. 포털이 파일데이터를
+ * 오픈API 로 자동변환해 주기는 하지만 그건 곁가지고, 활용신청도 따로 받아야 하며 실제로
+ * 401 이 났다. **연 1회 갱신되는 정지된 파일에 API 를 붙이는 것은 과하다** —
+ * 키도 승인도 필요 없는 CSV 를 그냥 읽는 편이 배관이 하나 줄고 고장날 자리도 하나 준다.
+ *
+ * 그래서 파서는 **행(row) 객체를 받는다** — CSV 에서 왔든 API 에서 왔든 같은 함수로 읽는다.
+ * 컬럼 이름 후보를 나열하는 것도 같은 이유다: 포털 항목표에는 한글 이름만 있고
+ * 영문명 칸이 비어 있어(2026-08-28 확인) 어느 쪽으로 올지 확정할 수 없다.
  */
 
 /** 후보 중 값이 있는 첫 키. 없으면 "" */
@@ -106,4 +111,65 @@ export function premiumManwon(dealManwon: number, type: TypePrice): number {
 /** 응답 첫 행의 키 이름 전부. 유추가 틀렸을 때 답을 찾는 자리. */
 export function rowKeys(rows: Record<string, unknown>[]): string[] {
   return rows.length ? Object.keys(rows[0]) : [];
+}
+
+/* ─────────────────────────── CSV 읽기 ───────────────────────────
+ * 공공데이터포털 CSV 를 그대로 읽는다. 라이브러리를 안 쓰는 이유는
+ * 이 저장소가 수집기에 의존성을 두지 않기 때문이다(`@wirit/collectors` dependencies: {}).
+ * 대신 여기서 다루는 것만 정확히 다룬다: 따옴표로 감싼 칸, 칸 안의 콤마, 이스케이프된 따옴표, CRLF.
+ */
+
+/** 한 줄을 칸으로 쪼갠다. 따옴표 안의 콤마·줄바꿈은 구분자가 아니다. */
+export function parseCsv(text: string): Record<string, string>[] {
+  // BOM 제거 — 붙어 있으면 첫 컬럼 이름이 통째로 안 맞는다(가장 조용한 실패 중 하나다)
+  const src = text.replace(/^\uFEFF/, "");
+  const rows: string[][] = [];
+  let row: string[] = [];
+  let cell = "";
+  let quoted = false;
+
+  for (let i = 0; i < src.length; i++) {
+    const c = src[i];
+    if (quoted) {
+      if (c === '"') {
+        if (src[i + 1] === '"') { cell += '"'; i++; }  // "" → 따옴표 한 개
+        else quoted = false;
+      } else cell += c;
+      continue;
+    }
+    if (c === '"') { quoted = true; continue; }
+    if (c === ",") { row.push(cell); cell = ""; continue; }
+    if (c === "\r") continue;
+    if (c === "\n") { row.push(cell); rows.push(row); row = []; cell = ""; continue; }
+    cell += c;
+  }
+  if (cell !== "" || row.length) { row.push(cell); rows.push(row); }
+
+  if (!rows.length) return [];
+  const header = rows[0].map((h) => h.trim());
+  const out: Record<string, string>[] = [];
+  for (const r of rows.slice(1)) {
+    if (r.every((v) => v.trim() === "")) continue;   // 빈 줄은 건너뛴다
+    const o: Record<string, string> = {};
+    header.forEach((h, i) => { o[h] = (r[i] ?? "").trim(); });
+    out.push(o);
+  }
+  return out;
+}
+
+/**
+ * 공공데이터포털 CSV 는 **EUC-KR 인 경우가 많다.** UTF-8 로 읽으면 한글 컬럼 이름이
+ * 깨지고, 그러면 파서는 "컬럼을 못 찾았다"고만 말한다 — 원인이 인코딩인지 이름인지
+ * 구분이 안 된다. 그래서 **디코딩을 두 번 해 보고 한글이 살아 있는 쪽**을 쓴다.
+ */
+export function decodeKoreanCsv(buf: Uint8Array): { text: string; encoding: string } {
+  const utf8 = new TextDecoder("utf-8", { fatal: false }).decode(buf);
+  // U+FFFD(대체문자)가 있으면 UTF-8 이 아니다
+  if (!utf8.includes("\uFFFD")) return { text: utf8, encoding: "utf-8" };
+  try {
+    const euc = new TextDecoder("euc-kr").decode(buf);
+    return { text: euc, encoding: "euc-kr" };
+  } catch {
+    return { text: utf8, encoding: "utf-8(대체문자 있음)" };
+  }
 }

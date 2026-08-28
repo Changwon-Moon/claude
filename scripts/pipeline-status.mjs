@@ -67,8 +67,9 @@ const PIPES = [
   /* 2026-08-28 신설. 만들자마자 여기 등록한다 — 등록을 미루면 위의 두 배관처럼
      "실패했는데 표가 볼 것이 없어 초록불"이 된다. 배관을 놓는 것과 표에 올리는 것은 한 벌이다. */
   { name: "분양권전매 실거래", mode: "untilDone", last: "data/silv-last.md", data: "data/datasets/silv", tg: true, key: "MOLIT_API_KEY" },
-  /* 원본이 연 1회 갱신이라 '늦음'을 날짜로 재면 늘 빨간불이 된다 — 완료형으로 둔다. */
-  { name: "주택형별 분양가", mode: "untilDone", last: "data/bunyang-price-last.md", data: "data/datasets/bunyang-price-by-type.json", tg: true, key: "DATA_GO_KR_API_KEY" },
+  /* 주택형별 분양가는 **배관이 아니다** — 연 1회 갱신되는 CSV 를 저장소에 두고 코드가 읽는다
+     (2026-08-28). 워크플로가 없으니 이 표에 두지 않는다. 여기 두면 '기록 없음'으로 영원히 남고,
+     그런 줄이 하나씩 늘면 표 자체를 안 보게 된다. 갱신 시점은 STATUS.md 가 기억한다. */
 ];
 
 /** 파일이 마지막으로 **커밋된** 날. 워크플로가 커밋으로만 결과를 남기므로 이게 곧 "언제 일했나"다. */

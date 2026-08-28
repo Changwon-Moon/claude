@@ -58,6 +58,8 @@ import {
   matchType,
   premiumManwon,
   rowKeys,
+  parseCsv,
+  decodeKoreanCsv,
 } from "./parse/bunyangPrice.js";
 import {
   normalize as kosisNormalize,
@@ -491,6 +493,33 @@ console.log("\n[청약홈 주택형별 분양가 — 프리미엄의 뺄셈 상�
   check("실거래가 분양가보다 낮으면 음수(마이너스 피)", premiumManwon(70000, t59) === -2500);
 
   check("응답 키 목록을 뽑는다", rowKeys(rows).includes("공급금액(분양최고금액)"), rowKeys(rows).join(","));
+
+  /* CSV 읽기 — 원천이 파일이라 여기가 실제 입구다(2026-08-28 오너 지적으로 갈아탐).
+     공공데이터포털 CSV 에서 실제로 밟게 되는 것만 정확히 다룬다:
+     BOM · 따옴표로 감싼 칸 · 칸 안의 콤마 · 이스케이프된 따옴표 · CRLF · 빈 줄. */
+  const csv = '\uFEFF주택관리번호,공고번호,주택형,"공급금액(분양최고금액)"\r\n' +
+    '2023000123,2023000123,084.9721A,"98,700"\r\n' +
+    '2023000123,2023000123,059.9800,"72,500"\r\n' +
+    '\r\n' +
+    '2024000456,2024000456,"074.9500A","81,000"\r\n';
+  const parsedCsv = parseCsv(csv);
+  check("CSV 3행 파싱(빈 줄 제외)", parsedCsv.length === 3, String(parsedCsv.length));
+  check("BOM 을 지운다 — 첫 컬럼 이름이 살아 있다", parsedCsv[0]["주택관리번호"] === "2023000123",
+    JSON.stringify(Object.keys(parsedCsv[0])[0]));
+  check("따옴표 안의 콤마는 구분자가 아니다", parsedCsv[0]["공급금액(분양최고금액)"] === "98,700",
+    parsedCsv[0]["공급금액(분양최고금액)"]);
+  const fromCsv = parseTypePrices(parsedCsv);
+  check("CSV 행도 같은 파서로 읽힌다", fromCsv.length === 3 && fromCsv[0].topPriceManwon === 98700,
+    String(fromCsv.length));
+  check("CSV 에서도 전용면적을 뽑는다", fromCsv[0].exclusiveArea === 84.9721, String(fromCsv[0].exclusiveArea));
+
+  /* 인코딩 — 포털 CSV 는 EUC-KR 인 경우가 많다. UTF-8 로 읽으면 한글 컬럼이 깨지고
+     그러면 파서는 "컬럼을 못 찾았다"고만 말한다(원인이 인코딩인지 이름인지 구분이 안 된다). */
+  check("UTF-8 은 UTF-8 로 읽는다", decodeKoreanCsv(new TextEncoder().encode("주택형")).encoding === "utf-8");
+  const eucKr = new Uint8Array([0xc1, 0xd6, 0xc5, 0xc3, 0xc7, 0xfc]); // "주택형" EUC-KR
+  const dec = decodeKoreanCsv(eucKr);
+  check("EUC-KR 을 알아보고 되살린다", dec.encoding === "euc-kr" && dec.text === "주택형",
+    `${dec.encoding} / ${dec.text}`);
 }
 
 console.log("\n[부동산원 전세·월세 지수 — R-ONE]");

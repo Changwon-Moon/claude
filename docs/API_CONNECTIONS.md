@@ -42,7 +42,6 @@
 | **국토부 실거래(매매)** | `MOLIT_API_KEY` | `sources/molit.ts` · `molitCli.ts` | `data/datasets/molit/{LAWD}-{YYYYMM}.json` | `molit-collect.yml` `20 3 5,20 * *` + `data/molit-queue.txt` · `collect-on-request.yml` | ✅ 실사용 |
 | **국토부 전월세 실거래** | `MOLIT_API_KEY` | `molitRentCli.ts` | `data/datasets/molit-rent/{LAWD}-{YYYYMM}.json` | `molit-rent-collect.yml` `40 3 5,20 * *` + `data/molit-rent-queue.txt` | ✅ 실사용 |
 | **국토부 분양권전매 실거래** | `MOLIT_API_KEY` | `sources/silv.ts` · `parse/silv.ts` · `silvCli.ts` | `data/datasets/silv/{LAWD}-{YYYYMM}.json` · 태그 대조 `data/silv-probe.md` | `silv-collect.yml` `0 4 5,20 * *` + `data/silv-queue.txt` | ✅ 2026-08-28 신설·수집 확인 |
-| **청약홈 주택형별 분양가** | `DATA_GO_KR_API_KEY` | `sources/bunyangPrice.ts` · `parse/bunyangPrice.ts` · `bunyangPriceCli.ts` | `data/datasets/bunyang-price-by-type.json` · 컬럼 대조 `data/bunyang-price-probe.md` | `bunyang-price.yml` `0 2 3 12 *` + `data/bunyang-price-queue.txt` | 🆕 2026-08-28 신설 — **활용신청 대기(15101047)** |
 | **청약홈 분양정보** | `DATA_GO_KR_API_KEY` | `sources/applyhome.ts` · `applyhomeCli.ts` | `data/datasets/applyhome-latest.json` · `applyhome/{날짜}.json` | `applyhome-collect.yml` `0 2 * * *` (매일 11:00 KST) | ✅ 실사용 |
 | **국토부 최고가 인덱스(신고가 판정)** | `MOLIT_API_KEY` | `molitPeakCli.ts` · `molitSingoCli.ts` | `data/datasets/molit-peak/{LAWD}.json` · `singo-log/{YYYY-MM}.json` | `molit-peak-backfill.yml` · `singo-daily.yml` `0 22 * * *` (매일 07:00 KST) | ✅ 실사용 |
 | └ 단지 월별 최고가 곡선 | 〃 | `molitHistoryCli.ts` | `data/datasets/singo-history/{LAWD}-{단지}-{타입}.json` | `singo-history.yml` (`data/singo-history-queue.txt`) | ✅ 실사용 |
@@ -96,30 +95,39 @@
 그래서 첫 수집이 **원본 `<item>` 한 건을 `data/silv-probe.md` 에 그대로** 남기고
 구분 칸을 읽었는지 🟢/🟠/🔴 로 판정한다. 🔴 면 파서가 조용히 빈 값을 채우고 있는 것이다.
 
-## 1a-2. 청약홈 주택형별 분양가 — **프리미엄의 뺄셈 상대** (2026-08-28 신설)
+## 1a-2. 청약홈 주택형별 분양가 — **API 가 아니라 CSV 다** (2026-08-28)
+
+프리미엄 = 분양권 실거래가(§1a) − **같은 타입 분양가**. 뒤의 값이 여기 있다.
 
 | | |
 |---|---|
-| 키 | `DATA_GO_KR_API_KEY` (청약홈과 같은 키). ⚠️ **활용신청은 별도**(data.go.kr **15101047**) |
-| 엔드포인트 | `https://api.odcloud.kr/api/15101047/v1/uddi:69236f4f-13ff-4ecb-a429-ed5398f2b459` |
-| 수집기 | `packages/collectors/src/bunyangPriceCli.ts` (`collect-bunyang-price`) |
-| 거는 법 | `data/bunyang-price-queue.txt` 를 건드려 푸시 |
-| 산출 | `data/datasets/bunyang-price-by-type.json` · 컬럼 대조 `data/bunyang-price-probe.md` |
+| 원천 | **CSV 파일** — 「한국부동산원_청약홈_APT 주택형별 분양정보」(data.go.kr **15101047**) |
+| 받는 법 | 포털 → 파일데이터 탭 → 다운로드. **로그인·키·활용신청 전부 불필요** |
+| 두는 자리 | `data/raw/bunyang-price.csv` |
+| 읽는 법 | `pnpm --filter @wirit/collectors collect-bunyang-price` (기본 경로를 읽는다) |
+| 산출 | `data/datasets/bunyang-price-by-type.json` · 읽기 보고 `data/bunyang-price-probe.md` |
+| 갱신 | **연 1회**(마지막 2025-11-28 · 차기 2026-11-28). 그때 새 CSV 를 같은 자리에 두고 다시 돌린다 |
 
-**우리가 매일 쓰는 청약홈 조회 서비스(15098547)에는 분양가가 없다.** 오퍼레이션이 다섯 개
-(APT·오피스텔·무순위·공공지원민간임대·도시형)뿐이고 주택형별 금액을 주는 갈래가 없다.
-분양가는 **파일데이터를 오픈API 로 자동변환한 별도 데이터셋**에 있고, 주소 모양도
-(`/api/{id}/v1/uddi:…`) 활용신청도 다르다.
+### ⚠️ 여기서 한 번 헛짚었다 — 배관을 놓을 자리가 아니었다
 
-프리미엄 = **분양권 실거래가(§1a) − 같은 타입 분양가(여기)**. 둘 중 하나라도 사람이
-옮겨 적으면 오보 0 이 깨진다.
+처음엔 이 데이터셋에 **오픈API 배관**(워크플로·대기열·실패알림)을 붙였다. 포털이 파일데이터를
+오픈API 로 자동변환해 주기 때문인데, 그 API 는 **활용신청이 따로**라 401 이 났다.
+오너가 *"이건 api가 아니라 csv 파일인데?"* 라고 짚었고 그게 맞다.
+
+**연 1회 갱신되는 정지된 파일에 키·승인·재시도·알림이 달린 배관을 붙이는 것은 과하다.**
+고장날 자리만 늘린다. CSV 를 저장소에 두고 코드가 읽으면 승인도 네트워크도 필요 없고,
+세션에서 바로 돌려 눈으로 확인할 수 있다. 오보 0 은 그대로다 — 1차 출처 파일에서
+코드가 뽑고 원본은 `data/raw/` 에 남아 언제든 대조된다.
+
+→ **판단 기준**: *얼마나 자주 바뀌는가*를 먼저 묻는다. 매일·매달 바뀌면 배관(Actions),
+1년에 한 번이면 파일. 「우리가 매일 쓰는 API 가 있으니 이것도 API 겠지」로 넘어가지 않는다.
 
 ### ⚠️ 이 값에는 두 가지 한계가 있다 — 카드에 적어야 한다
 
 1. **「분양최고금액」이다.** 그 타입에서 가장 비싼 층의 값이라, 여기서 빼면 프리미엄이
    **실제보다 작게** 나온다 — 하한이다. 오히려 안전한 방향이고(오너 판단 08-26
    「최저호가를 쓰는 게 더 강한 말」과 같은 결), 카드는 그 사실을 밝힌다.
-2. **연 1회 갱신이다**(마지막 2025-11-28 · 차기 2026-11-28). **2026년 공고의 분양가는 없다.**
+2. **2026년 공고의 분양가는 없다**(연 1회 갱신이라 2025-11 이후 분이 안 들어 있다).
    최신 공고는 여전히 입주자모집공고문 대조가 정본이다(`docs/guides/청약분양-카드-기준.md`).
 
 ### 실거래와 잇는 열쇠는 **전용면적**이다
