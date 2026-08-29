@@ -3989,6 +3989,30 @@
       "gainPct": 9.523809523809524,
       "milestone": null,
       "hhld": 1380
+    },
+    {
+      "foundOn": "2026-08-30",
+      "aptNm": "대림1",
+      "umdNm": "신도림동",
+      "jibun": "642",
+      "priceWon": 1380000000,
+      "priceManwon": 138000,
+      "area": 59.9,
+      "floor": 8,
+      "buildYear": 1999,
+      "date": "2026-07-29",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "11530",
+      "type": "59",
+      "pyeong": "25평",
+      "lawdCd": "11530",
+      "gu": "구로구",
+      "prevPeakManwon": 135500,
+      "prevPeakDate": "2026-07-25",
+      "gainPct": 1.8450184501845017,
+      "milestone": null,
+      "hhld": 2298
     }
   ]
 }
