@@ -73,6 +73,12 @@ jobs:
       - name: 워크플로 YAML
         run: node scripts/lint-workflows.mjs
 
+      # 문서를 archive 로 옮기면 남은 문서가 옛 주소를 가리킨 채 남는다(2026-08-30).
+      # 다음 세션이 "그 문서를 읽어라"를 따라갔다가 없는 파일에 부딪힌다.
+      # 브라우저 없이 확실히 판정되는 검사라 문지기가 볼 수 있다.
+      - name: 문서 링크
+        run: node scripts/check-doc-links.mjs
+
       - name: 셀프테스트
         run: pnpm --filter @wirit/collectors selftest
 

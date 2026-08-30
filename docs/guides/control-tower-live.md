@@ -1,4 +1,11 @@
-# 관제탑을 "진짜 동작하는 도구"로 — 라이브 모드 설정
+# 관제탑 운영 — 라이브 모드 설정 (정본)
+
+> 🔒 **관제탑 문서는 이 한 장이 정본이다.** 2026-08-30 이전엔 네 장이었는데
+> 그중 셋은 **전제가 무너져 사실과 반대를 가르치고 있었다** — 저장소가 비공개라
+> GitHub Pages 가 유료라는 전제로 쓰였는데, 저장소는 2026-08-16 에 **공개로 전환**됐고
+> 배포는 처음부터 **Cloudflare Workers** 다. 셋은 `docs/archive/` 로 옮겼다
+> (`control-tower-pages` · `control-tower-hosting` · `control-tower-realtime`).
+
 
 지금까지 관제탑은 **읽기 전용**이었습니다(버튼을 눌러도 "지시 전달함 → 요약 복사 → Claude" 우회). 라이브 모드를 켜면 관제탑이 **GitHub를 직접 조작**해서, 복사-붙여넣기 없이 실제로 동작합니다.
 
@@ -15,14 +22,15 @@
 
 ## 왜 두 가지가 필요한가
 
-1. **GitHub Pages에서 열어야 합니다.** claude.ai 아티팩트는 보안상 외부 통신을 전부 막아서(그래서 복사 버튼도 거기선 안 먹혔던 것) API 호출이 불가능합니다. Pages는 됩니다.
+1. **관제탑 주소에서 열어야 합니다.** claude.ai 아티팩트는 보안상 외부 통신을 전부 막아서(그래서 복사 버튼도 거기선 안 먹혔던 것) API 호출이 불가능합니다. Cloudflare Workers 에 올라간 관제탑은 됩니다.
 2. **GitHub 토큰**이 필요합니다. 관제탑이 오너 대신 GitHub에 명령하려면 열쇠가 있어야 해요. 토큰은 **이 브라우저에만 저장**되고 GitHub 외 어디로도 안 나갑니다.
 
 ## 설정 (1회, 약 5분)
 
 ### ① 관제탑 주소 (이미 완료 · 2026-07-26)
-`https://wirit-tower.engineerest0.workers.dev/` — Cloudflare Workers에 상시 배포되고, 비밀번호 문이 걸려 있습니다.
-설정 경위는 [control-tower-hosting.md](./control-tower-hosting.md).
+`https://wirit-tower.engineerest0.workers.dev/` — Cloudflare Workers 에 상시 배포되고, 비밀번호 문이 걸려 있습니다.
+배포는 `tower-deploy.yml` 이 하고 **푸시가 방아쇠**입니다(조립 ≠ 배포 — `CLAUDE.md` §7).
+설정 경위는 사료에 있습니다: [archive/control-tower-hosting.md](../archive/control-tower-hosting.md).
 
 ### ② 저장소 전용 토큰 만들기
 1. **github.com/settings/tokens?type=beta** 접속 (또는 Settings → Developer settings → **Fine-grained tokens**)
