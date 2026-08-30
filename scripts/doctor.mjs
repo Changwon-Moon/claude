@@ -228,6 +228,25 @@ check("워크플로 YAML", wfOk, wfOk ? wfOut.replace(/^✅\s*/, "") : "깨진 �
   "node scripts/lint-workflows.mjs 로 어느 줄인지 확인하세요 — 깨진 워크플로는 조용히 안 돕니다");
 if (!wfOk) console.log(wfOut.split("\n").map((l) => "     " + l).join("\n"));
 
+/* 문서 정합 — 2026-08-30 신설.
+   ① 살아있는 문서가 없는 파일을 가리키면 세션이 지시를 따라갔다가 벽에 부딪힌다.
+   ② 계정 스킬과 저장소본이 갈라지면, 계정 스킬을 읽고 시작한 세션이 **옛말을 배운다**.
+      실제로 65줄 갈라진 채였고 그 세션이 오너에게 이미 있는 API 키를 물었다.
+   둘 다 카드 제작은 막지 않으므로 경고로 둔다 — 다만 조용히 넘기지는 않는다. */
+let linkOk = true, linkOut = "";
+try { linkOut = sh("node", ["scripts/check-doc-links.mjs"]).trim(); }
+catch (e) { linkOk = false; linkOut = (e.stdout || e.message || "").toString().trim(); }
+if (linkOk) check("문서 링크", true, "깨진 링크 없음");
+else soft("문서 링크가 깨졌습니다", "node scripts/check-doc-links.mjs — 옮긴 문서라면 새 주소로");
+
+let skillOut = "";
+try { skillOut = sh("node", ["scripts/check-skill-sync.mjs"]).trim(); }
+catch (e) { skillOut = (e.stdout || e.message || "").toString().trim(); }
+if (skillOut.startsWith("✅")) check("스킬 동기", true, skillOut.replace(/^✅\s*/, ""));
+else if (skillOut.startsWith("⏭")) { /* 계정 스킬이 없는 환경 — 아무 말 안 한다 */ }
+else soft("계정 스킬이 저장소본과 갈라졌습니다",
+  "node scripts/check-skill-sync.mjs — 오너가 계정 스킬을 docs/WIRIT_CARDS_SKILL.md 로 교체해야 합니다");
+
 /* 푸시 길 — 막혀 있으면 **작업 전에** 안다. 2026-08-06 에 카드 하나를 네 번 고쳐 확정까지
    끝낸 뒤에야 알았고, 커밋 6건이 컨테이너 안에만 남았다. 컨테이너는 세션이 끝나면 회수된다.
    카드 제작 자체는 막지 않으므로 **경고**로 둔다 — 다만 조용히 넘기지는 않는다.
@@ -259,7 +278,7 @@ console.log("\n" + "─".repeat(58));
 if (!fail) {
   console.log("✅ 이 환경은 카드를 만들 수 있습니다.");
   console.log(`   필수 ${pass}항 통과 · 선택 경고 ${warn}건`);
-  console.log("\n   다음: docs/HANDOFF.md 를 읽고 시작하세요.");
+  console.log("\n   다음: CLAUDE.md 를 읽고 시작하세요.");
   console.log("   카드 작업 전에는 docs/CARD_CHECKLIST.md §2 를 훑습니다.");
 } else {
   console.log("❌ 이 환경에서는 카드를 만들 수 없습니다 — 아래를 먼저 고쳐야 합니다.\n");

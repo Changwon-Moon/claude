@@ -602,7 +602,7 @@
 주간 매매·전세 지수, 청약홈 신규 분양(매일 11:00 KST), **오늘의 신고가 알림(매일 07:00 KST)**,
 실거래·증시 등은 GitHub Actions가 수집→재생산까지 자동으로 한다.
 카드 한 장에 필요한 단발 수집(곡선·가까운 역·주차대수)은 대기열 파일 한 줄로 건다 —
-`singo-history-queue.txt` / `apt-station-queue.txt` / `apt-detail-queue.txt`. "이건 내가 눌러야 하나?" 싶으면 `docs/DATA_REFRESH.md`부터 본다(대개 안 눌러도 된다). 세션에서 수집을 걸어야 하면 대기열 파일에 push한다(`docs/HANDOFF.md` §6).
+`singo-history-queue.txt` / `apt-station-queue.txt` / `apt-detail-queue.txt`. "이건 내가 눌러야 하나?" 싶으면 `docs/DATA_REFRESH.md`부터 본다(대개 안 눌러도 된다). 세션에서 수집을 걸어야 하면 대기열 파일에 push한다(`CLAUDE.md` §6).
 
 ---
 

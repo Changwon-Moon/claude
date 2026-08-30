@@ -196,7 +196,7 @@ head("⑪ 문서가 코드와 같은 말을 하는가");
      그물이 좁으면 초록불이 뜨는데도 사고가 그대로 산다. */
   const DOCS = [
     "docs/guides/신고가-카드-기준.md", "CLAUDE.md", "STATUS.md",
-    "docs/CARD_CHECKLIST.md", "docs/HANDOFF.md", "docs/WIRIT_CARDS_SKILL.md",
+    "docs/CARD_CHECKLIST.md", "docs/WIRIT_CARDS_SKILL.md",
     "company/CEO.md", "company/teams/qa.md", "company/teams/design.md", "company/teams/editing.md",
   ].map((p) => [p, read(p)]);
 

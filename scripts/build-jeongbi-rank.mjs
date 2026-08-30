@@ -103,7 +103,7 @@ mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "jeongbi-rank.json"), JSON.stringify(card, null, 2) + "\n", "utf8");
 
 /* ── 캡션도 코드가 만든다 ──
- * 손으로 적으면 다음 갱신에 카드와 어긋난다(HANDOFF §5). */
+ * 손으로 적으면 다음 갱신에 카드와 어긋난다(CLAUDE.md §4). */
 const capDir = join(ROOT, "data/review/captions");
 mkdirSync(capDir, { recursive: true });
 const caption = [

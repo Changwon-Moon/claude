@@ -28,7 +28,7 @@ name: 문지기 (guard)
 # 갈라진다. GitHub 러너를 새 렌더 창구로 들이면 그 규칙이 깨진다.
 #
 # 그래서 픽셀은 **원래 창구에서만** 지킨다:
-#   · 작업 세션 — `node scripts/doctor.mjs` (커밋 전 필수, HANDOFF §2)
+#   · 작업 세션 — `node scripts/doctor.mjs` (커밋 전 필수, CLAUDE.md §1)
 #   · 관제탑 배포 — Chromium 을 설치하고 렌더하는 tower-deploy.yml
 # 문지기는 **브라우저 없이 확실히 판정할 수 있는 것만** 본다. 그게 늘 초록일 수 있는
 # 유일한 방법이고, 늘 초록인 검사만 빨간불에 의미가 생긴다.

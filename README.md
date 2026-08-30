@@ -1,7 +1,7 @@
 # 위릿 카드 공장 (@wirit_note)
 
 > 🗺 **문서가 어디 있는지 모르겠으면: [WIRIT.md](WIRIT.md)** — 규칙별 정본 지도
-> 🧳 **새 세션은 여기부터: [docs/HANDOFF.md](docs/HANDOFF.md)**
+> 🧳 **새 세션은 여기부터: [CLAUDE.md](CLAUDE.md)** — 세션 규칙 정본
 > 환경 확인: `pnpm install --frozen-lockfile && node scripts/doctor.mjs`
 
 데이터 인포그래픽 카드뉴스(@flow·APT_LAP 스타일)를 **결정적으로**(같은 입력 = 같은 픽셀)
@@ -24,8 +24,8 @@
 
 | 문서 | 무엇의 정본인가 |
 |---|---|
-| [docs/HANDOFF.md](docs/HANDOFF.md) | **입구.** 환경 자가진단·읽기 순서·자주 쓰는 명령·새 카드 흐름 |
-| [CLAUDE.md](CLAUDE.md) | **루트 규칙.** 절대 규칙(오보 0·픽셀 불변)·학습 프로토콜·세션 절차·원커맨드 트리거 |
+| [CLAUDE.md](CLAUDE.md) | **세션 규칙 정본.** 환경 자가진단·읽기 순서·공장 구조·자주 쓰는 명령·새 카드 흐름·트리거·데이터 수집·절대 규칙·학습 프로토콜·세션 종료 |
+| [WIRIT.md](WIRIT.md) | **문서 지도.** 어느 규칙의 정본이 어디인지 |
 | [STATUS.md](STATUS.md) | **현재 상태.** 지금 확정본·진행 중·다음 할 일 (과거 서사는 `docs/archive/STATUS-history.md`) |
 
 ### 카드 만들기

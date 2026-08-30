@@ -64,7 +64,7 @@ let bad = 0;
 for (const t of targets) {
   const outDir = join(ROOT, "data/out", t.date);
   mkdirSync(outDir, { recursive: true });
-  // 렌더러는 절대경로를 요구한다(HANDOFF §4)
+  // 렌더러는 절대경로를 요구한다(CLAUDE.md §3)
   const r = spawnSync(
     "pnpm",
     ["-s", "--filter", "@wirit/renderer", "render", "--data", t.path, "--out", outDir],
