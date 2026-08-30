@@ -1,5 +1,6 @@
 # 위릿 카드 공장 (@wirit_note)
 
+> 🗺 **문서가 어디 있는지 모르겠으면: [WIRIT.md](WIRIT.md)** — 규칙별 정본 지도
 > 🧳 **새 세션은 여기부터: [docs/HANDOFF.md](docs/HANDOFF.md)**
 > 환경 확인: `pnpm install --frozen-lockfile && node scripts/doctor.mjs`
 
