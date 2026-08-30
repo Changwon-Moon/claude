@@ -80,6 +80,7 @@
 | `scripts/prune-auto-docs.mjs` | 자동생성물이 무한히 쌓이는 것 | 워크플로가 매일 |
 | `scripts/check-doc-links.mjs` | 살아있는 문서가 없는 파일을 가리키는 것 | 문지기 + doctor |
 | `scripts/check-skill-sync.mjs` | 계정 스킬이 저장소본과 갈라지는 것 | doctor(세션만 가능) |
+| `scripts/check-orphan-scripts.mjs` | 아무도 안 부르는 스크립트가 쌓이는 것 | doctor |
 
 > **자동생성물은 손으로 지우지 않는다.** `node scripts/prune-auto-docs.mjs` 가
 > 14일 넘은 것을 정리하고, `research-digest.yml` 이 매일 자동으로 부른다(2026-08-30 신설).

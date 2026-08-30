@@ -239,8 +239,21 @@ catch (e) { linkOk = false; linkOut = (e.stdout || e.message || "").toString().t
 if (linkOk) check("문서 링크", true, "깨진 링크 없음");
 else soft("문서 링크가 깨졌습니다", "node scripts/check-doc-links.mjs — 옮긴 문서라면 새 주소로");
 
-let skillOut = "";
-try { skillOut = sh("node", ["scripts/check-skill-sync.mjs"]).trim(); }
+/* 고아 스크립트 — 2026-08-30 신설. 132개 중 18개(2,006줄)가 아무도 안 부르는 상태였다.
+   원인은 '빌더는 쓰고 builders.json 등록은 잊는다'로 모인다. 등록을 안 하면 실사이트에도
+   안 뜨고 아무도 다시 안 본다 — 「대장 도감」 25편 시리즈가 그렇게 1화에서 멈춰 있었다.
+   고아 자체는 죄가 아니고, 고아인 줄 모르는 게 문제라 **세기만** 한다. */
+let orphOut = "";
+try { orphOut = sh("node", ["scripts/check-orphan-scripts.mjs"]).trim(); }
+catch (e) { orphOut = (e.stdout || e.message || "").toString().trim(); }
+if (orphOut.includes("✅")) check("고아 스크립트", true, "모두 어딘가에서 불립니다");
+else {
+  const n = (orphOut.match(/안 부르는 스크립트 (\d+)개/) || [, "?"])[1];
+  soft(`아무도 안 부르는 스크립트 ${n}개`,
+    "node scripts/check-orphan-scripts.mjs — 살릴 것은 builders.json 에 등록, 끝난 것은 삭제");
+}
+
+let skillOut = "";try { skillOut = sh("node", ["scripts/check-skill-sync.mjs"]).trim(); }
 catch (e) { skillOut = (e.stdout || e.message || "").toString().trim(); }
 if (skillOut.startsWith("✅")) check("스킬 동기", true, skillOut.replace(/^✅\s*/, ""));
 else if (skillOut.startsWith("⏭")) { /* 계정 스킬이 없는 환경 — 아무 말 안 한다 */ }
