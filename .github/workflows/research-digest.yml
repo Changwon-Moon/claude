@@ -66,11 +66,18 @@ jobs:
       - name: 신호 → 소재 보드 반영
         run: node scripts/ingest-signals.mjs
 
+      # 자동으로 늘어나는 것은 자동으로 줄어야 한다(2026-08-30).
+      # 이걸 걸기 전엔 브리프 29개 중 28개가 아무도 안 읽는 채로 쌓여 있었다 —
+      # 관제탑은 `latestBrief()` 로 가장 최근 하나만 읽는다.
+      - name: 옛 보드 가지치기
+        run: node scripts/prune-auto-docs.mjs --apply
+
       - name: 보드 커밋
         run: |
           git config user.name "wirit-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add research/briefs/*.md research/ideas.json
+          git add -A research/briefs docs/daily
+          git add research/ideas.json
           if git diff --cached --quiet; then
             echo "변경 없음 — 커밋 생략"
           else
