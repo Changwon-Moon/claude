@@ -3527,6 +3527,102 @@
       "status": "",
       "deadline": "2026-09-02",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930029&pblancNo=2026930029"
+    },
+    {
+      "id": "sig-2026-08-30-1",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "택배기사 엘베 흠집내면 2천100만원?…아파트단지 부과 권한 없어",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-30-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-30-2",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "manual",
+      "title": "한국 부동산과 닮은꼴 오클랜드…‘집값 25%’ 뚝 떨어뜨린 묘수",
+      "why": "자동 수집 신호 · 부동산",
+      "source": "자동 수집 · 2026-08-30-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-30-3",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "개인, 7~8월 美 주식 10조원 순매수…코스피 보다 3천억 더 샀다",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-30-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-30-4",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "잭슨홀에서 나온 매파 발언… 산업동향·수출 지표에 촉각 - 조선비즈",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-30-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-30-5",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "'시총 5200억 증발' 메디톡스…목표주가 줄줄이 하향",
+      "why": "자동 수집 신호 · 주식·증시",
+      "source": "자동 수집 · 2026-08-30-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-30-6",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "원·달러 환율 13개월 만에 ‘최저’…얼마나 더 내릴까",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-30-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-30-7",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "워시 연준 의장, 첫 잭슨홀 연설서 9월 금리 인상 시사… “우리에겐 할 일이 있다” - 조선비즈",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-30-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
+    },
+    {
+      "id": "sig-2026-08-30-8",
+      "cat": "todo",
+      "topic": "증시·경제",
+      "feed": "manual",
+      "title": "“이자 감당 안되는데 110만원 더 내라뇨”…눈물 쏟는 자영업자, 연체는 ‘불보듯’",
+      "why": "자동 수집 신호 · 경제·금리",
+      "source": "자동 수집 · 2026-08-30-auto.md",
+      "state": "",
+      "status": "",
+      "isNew": true
     }
   ]
 }
