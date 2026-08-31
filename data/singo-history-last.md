@@ -1,7 +1,7 @@
 # 신고가 단지 이력 — 마지막 실행
 
-- 대기열: 81줄
-- 결과: **성공**
+- 대기열: 83줄
+- 결과: **실패**
 
 ```
 
@@ -486,130 +486,193 @@
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41450 --apt '미사강변푸르지오' --umd '망월동' --type 84 --from 202001
 
-미사강변푸르지오 · 전용 84타입 · 41450 · 202001~202608 (80개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41450-미사강변푸르지오-84.json
-거래 있던 달 64/80 · 수집 실패 0개월
-최고가 15.9억 (2026-08-18 · 전용 84.9852㎡ 21층)
+⏭ 이미 있음 — 41450-미사강변푸르지오-84.json (다시 받으려면 force=1)
 
 ── 대림1 전용 59타입 (11530)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 11530 --apt '대림1' --umd '신도림동' --type 59 --from 202001
 
-대림1 · 전용 59타입 · 11530 · 202001~202608 (80개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/11530-대림1-59.json
-거래 있던 달 70/80 · 수집 실패 0개월
-최고가 13.8억 (2026-07-29 · 전용 59.9㎡ 8층)
+⏭ 이미 있음 — 11530-대림1-59.json (다시 받으려면 force=1)
 
 ── 관악푸르지오 전용 84타입 (11620)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 11620 --apt '관악푸르지오' --umd '봉천동' --type 84 --from 202001
 
-관악푸르지오 · 전용 84타입 · 11620 · 202001~202608 (80개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/11620-관악푸르지오-84.json
-거래 있던 달 57/80 · 수집 실패 0개월
-최고가 13.4억 (2026-08-16 · 전용 84.2㎡ 16층)
+⏭ 이미 있음 — 11620-관악푸르지오-84.json (다시 받으려면 force=1)
 
 ── 동천자이 전용 84타입 (41465)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41465 --apt '동천자이' --umd '동천동' --type 84 --from 202001
 
-동천자이 · 전용 84타입 · 41465 · 202001~202608 (80개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41465-동천자이-84.json
-거래 있던 달 56/80 · 수집 실패 0개월
-최고가 13.4억 (2026-08-28 · 전용 84.949㎡ 22층)
+⏭ 이미 있음 — 41465-동천자이-84.json (다시 받으려면 force=1)
 
 ── 죽현마을아이파크 전용 84타입 (41463)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41463 --apt '죽현마을아이파크' --umd '보정동' --type 84 --from 202001
 
-죽현마을아이파크 · 전용 84타입 · 41463 · 202001~202608 (80개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41463-죽현마을아이파크-84.json
-거래 있던 달 71/80 · 수집 실패 0개월
-최고가 12.4억 (2026-08-26 · 전용 84.7616㎡ 21층)
+⏭ 이미 있음 — 41463-죽현마을아이파크-84.json (다시 받으려면 force=1)
 
 ── 미사강변루나리움 전용 59타입 (41450)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41450 --apt '미사강변루나리움' --umd '망월동' --type 59 --from 202001
 
-미사강변루나리움 · 전용 59타입 · 41450 · 202001~202608 (80개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41450-미사강변루나리움-59.json
-거래 있던 달 56/80 · 수집 실패 0개월
-최고가 11.87억 (2026-08-05 · 전용 59.84㎡ 16층)
+⏭ 이미 있음 — 41450-미사강변루나리움-59.json (다시 받으려면 force=1)
 
 ── 수원하늘채더퍼스트2단지 전용 84타입 (41113)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41113 --apt '수원하늘채더퍼스트2단지' --umd '곡반정동' --type 84 --from 202001
 
-수원하늘채더퍼스트2단지 · 전용 84타입 · 41113 · 202001~202608 (80개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41113-수원하늘채더퍼스트2단지-84.json
-거래 있던 달 35/80 · 수집 실패 0개월
-최고가 8.25억 (2026-08-27 · 전용 84.96㎡ 14층)
+⏭ 이미 있음 — 41113-수원하늘채더퍼스트2단지-84.json (다시 받으려면 force=1)
 
 ── 병점역아이파크캐슬 전용 59타입 (41595)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41595 --apt '병점역아이파크캐슬' --umd '병점동' --type 59 --from 202001
 
-병점역아이파크캐슬 · 전용 59타입 · 41595 · 202001~202608 (80개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41595-병점역아이파크캐슬-59.json
-거래 있던 달 31/80 · 수집 실패 0개월
-최고가 7.8억 (2026-08-22 · 전용 59.89㎡ 12층)
+⏭ 이미 있음 — 41595-병점역아이파크캐슬-59.json (다시 받으려면 force=1)
 
 ── e편한세상반월나노시티역 전용 59타입 (41595)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41595 --apt 'e편한세상반월나노시티역' --umd '반월동' --type 59 --from 202001
 
-e편한세상반월나노시티역 · 전용 59타입 · 41595 · 202001~202608 (80개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41595-e편한세상반월나노시티역-59.json
-거래 있던 달 58/80 · 수집 실패 0개월
-최고가 7.5억 (2026-08-27 · 전용 58.92㎡ 14층)
+⏭ 이미 있음 — 41595-e편한세상반월나노시티역-59.json (다시 받으려면 force=1)
 
 ── 수원시청역SKVIEW 전용 84타입 (41113)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41113 --apt '수원시청역SKVIEW' --umd '권선동' --type 84 --from 202001
 
-수원시청역SKVIEW · 전용 84타입 · 41113 · 202001~202608 (80개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41113-수원시청역SKVIEW-84.json
-거래 있던 달 61/80 · 수집 실패 0개월
-최고가 7.25억 (2026-08-22 · 전용 84.64㎡ 13층)
+⏭ 이미 있음 — 41113-수원시청역SKVIEW-84.json (다시 받으려면 force=1)
 
 ── 수원하늘채더퍼스트2단지 전용 59타입 (41113)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41113 --apt '수원하늘채더퍼스트2단지' --umd '곡반정동' --type 59 --from 202001
 
-수원하늘채더퍼스트2단지 · 전용 59타입 · 41113 · 202001~202608 (80개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41113-수원하늘채더퍼스트2단지-59.json
-거래 있던 달 45/80 · 수집 실패 0개월
-최고가 7억 (2026-08-23 · 전용 59.96㎡ 4층)
+⏭ 이미 있음 — 41113-수원하늘채더퍼스트2단지-59.json (다시 받으려면 force=1)
 
 ── 황골마을주공1 전용 59타입 (41117)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '황골마을주공1' --umd '영통동' --type 59 --from 202001
 
-황골마을주공1 · 전용 59타입 · 41117 · 202001~202608 (80개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41117-황골마을주공1-59.json
-거래 있던 달 80/80 · 수집 실패 0개월
-최고가 6.94억 (2026-08-19 · 전용 59.99㎡ 9층)
+⏭ 이미 있음 — 41117-황골마을주공1-59.json (다시 받으려면 force=1)
 
 ── 늘푸른벽산 전용 59타입 (41117)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '늘푸른벽산' --umd '망포동' --type 59 --from 202001
 
-늘푸른벽산 · 전용 59타입 · 41117 · 202001~202608 (80개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41117-늘푸른벽산-59.json
-거래 있던 달 65/80 · 수집 실패 0개월
-최고가 5.75억 (2026-08-28 · 전용 59.884㎡ 4층)
+⏭ 이미 있음 — 41117-늘푸른벽산-59.json (다시 받으려면 force=1)
 
-✅ 대기열 전 줄 완료
+── 성복역롯데캐슬골드타운 전용 84타입 (41465)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41465 --apt '성복역롯데캐슬골드타운' --umd '성복동' --type 84 --from 202001 --force
+
+성복역롯데캐슬골드타운 · 전용 84타입 · 41465 · 202001~202608 (80개월)
+⚠️ 202001 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202002 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202003 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
+⚠️ 202003 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202004 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202005 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (2/5)
+⚠️ 202005 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202006 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202007 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (3/5)
+⚠️ 202007 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202008 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202009 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (4/5)
+⚠️ 202009 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202010 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202011 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (5/5)
+⚠️ 202011 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+
+⛔ 60초씩 5번 기다렸는데도 안 열립니다 — 여기서 접습니다.
+   (남은 70개월을 계속 두드리면 잡 시간만 태우고 결과는 같습니다)
+   대기열은 그대로 남습니다. API 가 열린 뒤 다시 미세요.
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-singo-history: `tsx src/molitHistoryCli.ts -- --lawd 41465 --apt '성복역롯데캐슬골드타운' --umd '성복동' --type 84 --from 202001 --force`
+Exit status 1
+
+── 화서역푸르지오더에듀포레 전용 59타입 (41111)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41111 --apt '화서역푸르지오더에듀포레' --umd '천천동' --type 59 --from 202001 --force
+
+화서역푸르지오더에듀포레 · 전용 59타입 · 41111 · 202001~202608 (80개월)
+⚠️ 202001 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202002 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202003 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
+⚠️ 202003 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202004 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202005 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (2/5)
+⚠️ 202005 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202006 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202007 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (3/5)
+⚠️ 202007 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202008 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202009 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (4/5)
+⚠️ 202009 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202010 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+⚠️ 202011 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (5/5)
+⚠️ 202011 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+
+⛔ 60초씩 5번 기다렸는데도 안 열립니다 — 여기서 접습니다.
+   (남은 70개월을 계속 두드리면 잡 시간만 태우고 결과는 같습니다)
+   대기열은 그대로 남습니다. API 가 열린 뒤 다시 미세요.
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-singo-history: `tsx src/molitHistoryCli.ts -- --lawd 41111 --apt '화서역푸르지오더에듀포레' --umd '천천동' --type 59 --from 202001 --force`
+Exit status 1
+
+⚠️ 일부 줄이 실패했습니다 — 위 로그 확인
 ```
