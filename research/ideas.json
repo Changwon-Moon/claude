@@ -94,17 +94,6 @@
       "status": "done"
     },
     {
-      "id": "dogam01",
-      "cat": "weekly",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "🏆 대장 도감 No.01 강남구",
-      "why": "구별 대장 아파트 콜렉션. 매주 다음 구 1편(25구 연재)",
-      "source": "제작 완료",
-      "state": "",
-      "status": "done"
-    },
-    {
       "id": "dong",
       "cat": "weekly",
       "topic": "부동산",
