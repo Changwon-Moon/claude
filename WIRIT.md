@@ -29,7 +29,8 @@
 | **세션 규칙 전부**(시작·구조·명령·트리거·수집·관제탑·절대규칙·학습·종료) | `CLAUDE.md` | ✅ 2026-08-30 통합 완료 — 넷을 하나로 |
 | 카드 만들 때 확인할 것 | `docs/CARD_CHECKLIST.md` | 재발 금지 항목 |
 | 오너의 판단 원칙 | `company/CEO.md` | 날짜별 누적 |
-| 팀이 무엇을 보는가 | `company/teams/{팀}.md` | design·qa·planning·research·editing·orchestrator·marketing·trend-analysis·asset-hub |
+| 팀이 무엇을 보는가 / **안 보는가** | `company/teams/{팀}.md` | 9개 전부 §① 경계 선언 + §④ 최근 놓친 것 (2026-08-31 재작성) |
+| **캡션 규칙** | `docs/CAPTION.md` | 🔒 2026-08-31 신설 — marketing·editing·CEO 세 곳에 흩어져 있던 것을 통합 |
 | 판형 치수·구조 | `docs/TEMPLATES.md` | 판형 신설 시 필수 |
 | 색·서체·워터마크 | `docs/BRAND.md` | |
 | 소재를 왜 골랐나 | `research/DECISION_LOG.md` | 게시물 단위 결정 |
