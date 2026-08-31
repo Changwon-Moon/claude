@@ -228,7 +228,11 @@ check("워크플로 YAML", wfOk, wfOk ? wfOut.replace(/^✅\s*/, "") : "깨진 �
   "node scripts/lint-workflows.mjs 로 어느 줄인지 확인하세요 — 깨진 워크플로는 조용히 안 돕니다");
 if (!wfOk) console.log(wfOut.split("\n").map((l) => "     " + l).join("\n"));
 
-/* 문서 정합 — 2026-08-30 신설.
+/* 문서 정합 — 2026-08-30 신설, 2026-08-31 **경고 → 필수**로 승격.
+   처음엔 성공하면 check(), 실패하면 soft() 로 짰다. 그러면 **깨졌을 때 필수 목록에서
+   아예 사라지고** 「✅ 카드를 만들 수 있습니다」가 그대로 뜬다 — 필수 28항이 27항으로
+   줄 뿐이고 아무도 그 숫자를 세지 않는다. 일부러 링크를 깨뜨려 확인했다.
+   이 저장소 규칙은 "초록불은 일을 했다는 뜻이어야지 죽지 않고 끝났다는 뜻이면 안 된다"이다.
    ① 살아있는 문서가 없는 파일을 가리키면 세션이 지시를 따라갔다가 벽에 부딪힌다.
    ② 계정 스킬과 저장소본이 갈라지면, 계정 스킬을 읽고 시작한 세션이 **옛말을 배운다**.
       실제로 65줄 갈라진 채였고 그 세션이 오너에게 이미 있는 API 키를 물었다.
@@ -236,38 +240,45 @@ if (!wfOk) console.log(wfOut.split("\n").map((l) => "     " + l).join("\n"));
 let linkOk = true, linkOut = "";
 try { linkOut = sh("node", ["scripts/check-doc-links.mjs"]).trim(); }
 catch (e) { linkOk = false; linkOut = (e.stdout || e.message || "").toString().trim(); }
-if (linkOk) check("문서 링크", true, "깨진 링크 없음");
-else soft("문서 링크가 깨졌습니다", "node scripts/check-doc-links.mjs — 옮긴 문서라면 새 주소로");
+check("문서 링크", linkOk, linkOk ? "깨진 링크 없음" : "살아있는 문서가 없는 파일을 가리킵니다",
+  "node scripts/check-doc-links.mjs — 옮긴 문서라면 새 주소로, 없앤 문서라면 링크를 지웁니다");
 
 /* 고아 스크립트 — 2026-08-30 신설. 132개 중 18개(2,006줄)가 아무도 안 부르는 상태였다.
    원인은 '빌더는 쓰고 builders.json 등록은 잊는다'로 모인다. 등록을 안 하면 실사이트에도
    안 뜨고 아무도 다시 안 본다 — 「대장 도감」 25편 시리즈가 그렇게 1화에서 멈춰 있었다.
    고아 자체는 죄가 아니고, 고아인 줄 모르는 게 문제라 **세기만** 한다. */
-let orphOut = "";
-try { orphOut = sh("node", ["scripts/check-orphan-scripts.mjs"]).trim(); }
-catch (e) { orphOut = (e.stdout || e.message || "").toString().trim(); }
-if (orphOut.includes("✅")) check("고아 스크립트", true, "모두 어딘가에서 불립니다");
-else {
+let orphOut = "", orphOk = true;
+try { orphOut = sh("node", ["scripts/check-orphan-scripts.mjs", "--strict"]).trim(); }
+catch (e) { orphOk = false; orphOut = (e.stdout || e.message || "").toString().trim(); }
+{
   const n = (orphOut.match(/안 부르는 스크립트 (\d+)개/) || [, "?"])[1];
-  soft(`아무도 안 부르는 스크립트 ${n}개`,
+  check("고아 스크립트", orphOk, orphOk ? "모두 어딘가에서 불립니다" : `아무도 안 부르는 스크립트 ${n}개`,
     "node scripts/check-orphan-scripts.mjs — 살릴 것은 builders.json 에 등록, 끝난 것은 삭제");
 }
 
 /* STATUS 부피 — 2026-08-08 에 비웠는데 3주 만에 578줄이 다시 쌓였다.
    문서가 자기 규칙("여기엔 지금 상태만 둔다")을 어기는데 아무도 재지 않았다. */
-let statusOut = "";
-try { statusOut = sh("node", ["scripts/prune-status.mjs"]).trim(); }
-catch (e) { statusOut = (e.stdout || e.message || "").toString().trim(); }
-if (statusOut.includes("✅")) check("STATUS 부피", true, "'지금 상태'로 유지되고 있습니다");
-else soft("STATUS 가 다시 부풀고 있습니다",
-  "node scripts/prune-status.mjs — 굳은 규칙을 정본으로 승격한 뒤 서사를 archive 로");
+/* ⚠️ 판정은 **종료코드**로 한다. 출력에 "✅ 가 있으면 통과"로 읽었더니, 넘친 블록 목록에
+   딸려 나온 제목의 ✅ 를 성공으로 오인해 **초록불이 났다**(2026-08-31 시험에서 잡음). */
+let stOk = true;
+try { sh("node", ["scripts/prune-status.mjs"]); }
+catch { stOk = false; }
+{
+  check("STATUS 부피", stOk, stOk ? "'지금 상태'로 유지되고 있습니다" : "다시 서사 창고가 되고 있습니다",
+    "node scripts/prune-status.mjs — 굳은 규칙을 정본으로 승격한 뒤 서사를 archive 로");
+}
 
 let skillOut = "";try { skillOut = sh("node", ["scripts/check-skill-sync.mjs"]).trim(); }
 catch (e) { skillOut = (e.stdout || e.message || "").toString().trim(); }
 if (skillOut.startsWith("✅")) check("스킬 동기", true, skillOut.replace(/^✅\s*/, ""));
-else if (skillOut.startsWith("⏭")) { /* 계정 스킬이 없는 환경 — 아무 말 안 한다 */ }
-else soft("계정 스킬이 저장소본과 갈라졌습니다",
-  "node scripts/check-skill-sync.mjs — 오너가 계정 스킬을 docs/WIRIT_CARDS_SKILL.md 로 교체해야 합니다");
+else if (skillOut.startsWith("⏭")) { /* 계정 스킬이 없는 환경(Actions 러너) — 잴 수 없다 */ }
+/* ⚠️ 이것만 경고로 둔다. 나머지 셋(링크·고아·STATUS)은 **세션이 스스로 고칠 수 있어서**
+   필수다 — 고치라고 막는 것이 말이 된다. 스킬 갈라짐은 **오너만 고칠 수 있고**
+   (계정 파일이라 저장소가 못 건드린다) 카드 제작 능력과도 무관하다.
+   필수로 두면 오너가 교체할 때까지 모든 세션이 "카드 만들지 마라"를 듣는다 —
+   그러면 그 말이 무뎌져서 진짜 막아야 할 때 안 읽힌다. */
+else soft("계정 스킬이 저장소본과 갈라졌습니다 — 오너가 교체해야 합니다",
+  "node scripts/check-skill-sync.mjs · 교체본은 docs/WIRIT_CARDS_SKILL.md");
 
 /* 푸시 길 — 막혀 있으면 **작업 전에** 안다. 2026-08-06 에 카드 하나를 네 번 고쳐 확정까지
    끝낸 뒤에야 알았고, 커밋 6건이 컨테이너 안에만 남았다. 컨테이너는 세션이 끝나면 회수된다.

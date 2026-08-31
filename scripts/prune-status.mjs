@@ -54,7 +54,9 @@ if (!over) {
 
 console.log(`\n⚠️  STATUS 가 다시 부풀고 있습니다.\n`);
 for (const b of blocks.slice(MAX_BLOCKS)) {
-  console.log(`    ${b.replace(/^>\s*##\s*/, "").slice(0, 70)}`);
+  // ⚠️ 블록 제목의 이모지를 지우고 찍는다 — 2026-08-31: 제목의 ✅ 가 출력에 섞여
+  //    doctor 가 "출력에 ✅ 가 있으면 통과"로 읽어 **넘친 상태를 초록불로 봤다.**
+  console.log(`    ${b.replace(/^>\s*##\s*/, "").replace(/[✅🟠🔴🔥⚠️]/gu, "").trim().slice(0, 70)}`);
 }
 console.log(`
   옮기기 전에 **먼저 건져낸다** — 이 순서를 뒤집으면 규칙이 사료에 묻힌다:
@@ -64,4 +66,7 @@ console.log(`
    ② 남은 서사를 docs/archive/STATUS-history.md 로 이동
    ③ STATUS.md 에는 '지금 상태 + 다음 할 일'만 남긴다
 `);
-process.exit(process.argv.includes("--strict") ? 1 : 0);
+/* ⚠️ 넘치면 **항상** 종료코드 1 이다. 예전엔 --strict 를 줘야 1 이었는데,
+   부르는 쪽(doctor)이 종료코드를 못 믿으니 출력 문자열로 판정하게 됐고 그게 오판을 낳았다.
+   판정은 종료코드 하나로 한다. */
+process.exit(1);
