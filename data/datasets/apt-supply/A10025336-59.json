@@ -1,0 +1,30 @@
+{
+  "kaptCode": "A10025336",
+  "kaptName": "평촌더샵아이파크아파트",
+  "type": "59",
+  "jibun": "1287",
+  "exclusive": 59.94,
+  "commonResidential": 22.215,
+  "supply": 82.15,
+  "pyeong": 24.85,
+  "pyeongLabel": "25평",
+  "sampleDong": "105동",
+  "sampleHo": "201",
+  "sampleCount": 7,
+  "ratio": 0.7296,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단실,승강기,홀",
+      "floor": "각층 각층",
+      "area": 16.9248
+    },
+    {
+      "purpose": "아파트 / 벽체",
+      "floor": "지상 2층",
+      "area": 5.29
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

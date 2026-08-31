@@ -1,0 +1,30 @@
+{
+  "kaptCode": "A15701007",
+  "kaptName": "강서힐스테이트아파트",
+  "type": "59",
+  "jibun": "1165",
+  "exclusive": 59.99,
+  "commonResidential": 22.14,
+  "supply": 82.13,
+  "pyeong": 24.84,
+  "pyeongLabel": "25평",
+  "sampleDong": "123동",
+  "sampleHo": "602",
+  "sampleCount": 60,
+  "ratio": 0.7304,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단실,승강기,홀",
+      "floor": "각층 각층",
+      "area": 17.04
+    },
+    {
+      "purpose": "아파트 / 벽체",
+      "floor": "지상 6층",
+      "area": 5.1
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
