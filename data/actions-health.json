@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-31T08:26:54.891Z",
+  "generatedAt": "2026-08-31T13:35:28.929Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -526,9 +526,9 @@
       "file": "seoul-living-probe.yml",
       "name": "서울 생활인구 서비스 검증 (probe)",
       "lastRun": "2026-08-08",
-      "daysAgo": 22,
+      "daysAgo": 23,
       "lastOk": "2026-08-08",
-      "okDaysAgo": 22,
+      "okDaysAgo": 23,
       "fails30": 0,
       "runs30": 2
     },
@@ -649,7 +649,7 @@
       "daysAgo": 0,
       "lastOk": "2026-08-31",
       "okDaysAgo": 0,
-      "fails30": 79,
+      "fails30": 77,
       "runs30": 100
     },
     {
@@ -700,7 +700,7 @@
       "lastOk": "2026-08-31",
       "okDaysAgo": 0,
       "fails30": 11,
-      "runs30": 75
+      "runs30": 76
     },
     {
       "file": "population-collect.yml",
@@ -779,7 +779,7 @@
       "daysAgo": 0,
       "lastOk": "2026-08-31",
       "okDaysAgo": 0,
-      "fails30": 24,
+      "fails30": 21,
       "runs30": 100
     }
   ]
