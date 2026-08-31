@@ -169,6 +169,7 @@ node scripts/prune-status.mjs           # STATUS 가 다시 서사 창고가 됐
 node scripts/check-schedule-docs.mjs    # 문서가 없는 예약을 가르치나
 node scripts/ideas-health.mjs           # 소재가 쌓이기만 하나
 node scripts/ideas-groups.mjs           # 소재를 묶어 보기 (--plan → --apply 로 일괄 정리)
+node scripts/monthly-review.mjs --write # 월간 회고 — 쌓인 판단을 되읽어 보고서로
 node scripts/template-usage.mjs --write # 어느 판형이 쓰이는지 실측해 TEMPLATES.md 에 굽는다
 
 # 어느 달의 신고가 목록을 뽑는다 (월간 회고 재료 · 결과는 docs/archive 로)
@@ -393,6 +394,21 @@ git commit -am "기사 요청" && git push        # ← 이 푸시가 워크플�
 | 특정 팀의 일하는 방식 | `company/teams/{팀}.md` 학습 로그 |
 | 소재 선택 이유 | `research/DECISION_LOG.md` |
 | 터진 콘텐츠 패턴 | `research/PATTERN_LIBRARY.md` |
+
+### 달이 바뀌면 되읽는다 (2026-08-31 신설)
+
+기록은 쌓기만 하면 일기지 학습이 아니다. 실제로 그래서 생긴 일 —
+자동 수집이 증시 뉴스를 절반 가까이 긁어오고 있었는데(안 고른 278건 중 131건)
+**아무도 그 편식을 세지 않아 6주간 그대로였다.**
+
+```bash
+node scripts/monthly-review.mjs --write   # data/review-{YYYY-MM}.md
+```
+
+승인만 되고 안 올린 것 · 버려진 소재의 주제 분포 · 지금 보드의 편식을 보고한다.
+⚠️ **규칙을 자동으로 바꾸지 않는다.** 기계가 발굴 규칙을 고치면 왜 바뀌었는지 아무도 모르게 되고,
+그때부터 보드에 뜨는 소재를 오너가 믿을 수 없다. 회고에서 정한 것은 **`CEO.md` 에 남긴다** —
+안 남기면 다음 달에 또 같은 것을 정한다.
 
 **오너가 같은 지적을 두 번 하면 그건 문서화 실패다.** 그때는 세 곳을 함께 고친다:
 ① `docs/CARD_CHECKLIST.md` §2 에 항목 추가

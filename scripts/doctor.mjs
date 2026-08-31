@@ -284,6 +284,19 @@ try { sh("node", ["scripts/ideas-health.mjs", "--strict"]); }
 catch { soft("소재가 고르는 속도보다 빨리 쌓이고 있습니다",
   "node scripts/ideas-health.mjs — 지우기 전에 먼저 보이게 만듭니다"); }
 
+/* 이번 달 회고를 했나 — 2026-08-31 신설.
+   기록은 쌓기만 하면 일기다. 실제로 자동 수집의 증시 편식(278건 중 131건)을
+   6주간 아무도 안 셌다. **경고로 둔다** — 회고는 판단이라 세션이 대신 못 하고,
+   카드 제작과도 무관하다. */
+{
+  const ym = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 7);
+  const f = join(ROOT, `data/review-${ym}.md`);
+  if (!existsSync(f)) {
+    soft(`이번 달(${ym}) 회고를 아직 안 했습니다`,
+      "node scripts/monthly-review.mjs --write — 쌓인 판단을 되읽습니다");
+  } else check("월간 회고", true, `${ym} 작성됨`);
+}
+
 let skillOut = "";try { skillOut = sh("node", ["scripts/check-skill-sync.mjs"]).trim(); }
 catch (e) { skillOut = (e.stdout || e.message || "").toString().trim(); }
 if (skillOut.startsWith("✅")) check("스킬 동기", true, skillOut.replace(/^✅\s*/, ""));
