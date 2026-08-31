@@ -1,5 +1,14 @@
 # 🔌 이미 연결된 API — 단일 창구
 
+> ⚠️ **키는 만료된다 (2026-08-31 실측)**
+> `KOSIS_API_KEY` 가 만료돼 인구·세대수·이동 수집이 **08-08 부터 27일간 전부 실패**하고
+> 있었다(마지막 성공 08-04). 오류는 `유효하지 않은 인증KEY입니다`.
+> 오너가 키를 교체해 복구했다(`population/2026-07.json` 수신 확인).
+>
+> **왜 27일간 아무도 몰랐나** — 이 배관은 실패해도 텔레그램이 없다. 조용히 실패했다.
+> 관제탑 **「배관」 탭**이 없었으면 지금도 몰랐을 것이다.
+> 「이미 연결돼 있다」는 **한 번 확인한 사실이지 영구적인 사실이 아니다.**
+
 > **이 문서가 있는 이유** (2026-08-12 오너 지시)
 > 세션이 오너에게 **"API 키를 주세요"라고 물었다.** 물을 일이 아니었다 — 그 키는 이미
 > GitHub Secrets 에 있었고 워크플로가 매일 그걸로 데이터를 받아오고 있었다.
@@ -36,7 +45,7 @@
 
 | API | 시크릿/환경변수 | 수집기 | 산출 데이터 | 워크플로 (cron은 UTC) | 상태 |
 |---|---|---|---|---|---|
-| **KOSIS 국가통계포털** | `KOSIS_API_KEY` | `sources/kosis.ts` · `kosisCli.ts` | `data/datasets/population-latest.json` · `population/{YYYY-MM}.json` | `population-collect.yml` `0 0 3 * *` + `data/population-queue.txt` | 🔴 **키 무효(2026-08-31 확인)** |
+| **KOSIS 국가통계포털** | `KOSIS_API_KEY` | `sources/kosis.ts` · `kosisCli.ts` | `data/datasets/population-latest.json` · `population/{YYYY-MM}.json` | `population-collect.yml` `0 0 3 * *` + `data/population-queue.txt` | ✅ 실사용(2026-08-31 키 교체) |
 | └ KOSIS 표 검증(probe) | 〃 | `kosisProbeCli.ts` | `data/kosis-probe.md` · `kosis-probe-raw.json` | `kosis-probe.yml` (`data/kosis-probe-queue.txt`) | ✅ 실사용 |
 | └ KOSIS 표 찾기(search) | 〃 | `kosisSearchCli.ts` | `data/kosis-search.md` | 〃 (`search=키워드` 줄) | ✅ 2026-08-12 신설 |
 | **국토부 실거래(매매)** | `MOLIT_API_KEY` | `sources/molit.ts` · `molitCli.ts` | `data/datasets/molit/{LAWD}-{YYYYMM}.json` | `molit-collect.yml` `20 3 5,20 * *` + `data/molit-queue.txt` · `collect-on-request.yml` | ✅ 실사용 |
