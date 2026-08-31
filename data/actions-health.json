@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-31T07:50:19.505Z",
+  "generatedAt": "2026-08-31T08:18:15.121Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -379,15 +379,15 @@
         },
         {
           "day": "08-31",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "17:15",
+          "delay": 375
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-08-30",
-      "lastOk": "2026-08-30",
+      "medianDelay": 375,
+      "maxDelay": 375,
+      "lastRun": "2026-08-31",
+      "lastOk": "2026-08-31",
       "okDaysAgo": 0
     }
   ],
@@ -649,7 +649,7 @@
       "daysAgo": 0,
       "lastOk": "2026-08-31",
       "okDaysAgo": 0,
-      "fails30": 80,
+      "fails30": 79,
       "runs30": 100
     },
     {
@@ -779,7 +779,7 @@
       "daysAgo": 0,
       "lastOk": "2026-08-31",
       "okDaysAgo": 0,
-      "fails30": 27,
+      "fails30": 25,
       "runs30": 100
     }
   ]
