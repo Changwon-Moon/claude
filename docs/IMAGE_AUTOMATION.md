@@ -13,7 +13,7 @@
    slug<TAB>source<TAB>title_or_query
    예)  chumiae   wikimedia   File:Choo Mi-ae (Chopped).png
    ```
-2. push 되면 **`.github/workflows/photo-batch.yml` 이 자동 실행** → 매니페스트를 읽어
+2. push 되면 **`.github/workflows/photo-batch.yml` 이 실행**(푸시가 방아쇠, 예약 없음) → 매니페스트를 읽어
    `scripts/fetch-photo.mjs` 로 취득 → `templates/_shared/photos/<slug>.jpg` 저장 +
    `photos/catalog.json` 에 출처·라이선스 기록 → 봇이 커밋·push.
 3. 세션은 `git pull` 로 받아 카드 JSON 에 `figure.photo` / `predecessors[].photo = "<slug>.jpg"` 만 지정.

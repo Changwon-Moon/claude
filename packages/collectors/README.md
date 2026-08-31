@@ -48,7 +48,7 @@ src/
 
 ## 자동 실행 (GitHub Actions)
 
-[.github/workflows/collect.yml](../../.github/workflows/collect.yml) 이 매일 06:30 KST(평일) + 수동 버튼으로 실행. 키는 GitHub Secrets(`ECOS_API_KEY` 등)에서 주입. 수집 결과는 workflow 아티팩트(`raw-data`)로 업로드.
+[.github/workflows/collect.yml](../../.github/workflows/collect.yml) 은 **수동·푸시 방아쇠**로 실행한다(2026-08-31 예약 해제 — 매일 도는 예약은 알림 2건과 그 재료 4개만 남겼다). 키는 GitHub Secrets(`ECOS_API_KEY` 등)에서 주입. 수집 결과는 workflow 아티팩트(`raw-data`)로 업로드.
 
 ## 알아둘 것
 

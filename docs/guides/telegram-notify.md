@@ -130,7 +130,7 @@ node scripts/notify-telegram.mjs "테스트입니다"
 
 | 워크플로 | 언제 | 무엇을 |
 |---|---|---|
-| `pipeline-tick.yml` | 매일 **07:00 KST** + 저장소가 바뀔 때 | 발행 승인 대기·고를 소재가 **있을 때만** |
+| `pipeline-tick.yml` | **저장소가 바뀔 때만** (예약은 2026-08-31 해제) | 발행 승인 대기·고를 소재가 **있을 때만** |
 | `auto-produce.yml` | 데이터가 바뀌어 카드가 재생산될 때 | 결재 대기에 올라갔다는 알림 |
 | `applyhome-collect.yml` | 매일 **11:00 KST** | 청약홈 **새 공고가 있을 때만** (줍줍·신규분양) · 수집 실패 시에도 |
 | `telegram-test.yml` | `data/telegram-test.txt` 푸시 | 연결 확인 한 통 |

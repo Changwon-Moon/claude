@@ -166,6 +166,7 @@ node scripts/check-doc-links.mjs        # 살아있는 문서의 깨진 링크
 node scripts/check-orphan-scripts.mjs   # 아무도 안 부르는 스크립트
 node scripts/check-skill-sync.mjs       # 계정 스킬 ↔ 저장소본 갈라짐
 node scripts/prune-status.mjs           # STATUS 가 다시 서사 창고가 됐나
+node scripts/check-schedule-docs.mjs    # 문서가 없는 예약을 가르치나
 ```
 
 **`error` 가 하나라도 있으면 내보내지 않는다.** `warn` 은 이유를 대고 넘길 수 있다.
@@ -227,7 +228,7 @@ node scripts/danji-card.mjs "<단지명>" --photo <조감도>
 조회→데이터셋 항목→사진 설치→크롭 재계산→빌드→렌더→QA 가 한 번에 돈다.
 판형은 `danji-cover@1` **하나뿐이고 새 템플릿을 만들지 않는다.**
 
-### 🏆 "오늘의 신고가" (매일 07:00 텔레그램 알림 → 카드)
+### 🏆 "오늘의 신고가" (매일 04:55 KST 예약 → 텔레그램 알림 → 카드)
 
 판형은 `singo-record@1` 하나로 고정. **전체 절차는 `docs/guides/신고가-카드-기준.md` §6 에 있다.**
 

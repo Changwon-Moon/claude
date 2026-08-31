@@ -94,6 +94,9 @@ jobs:
       - name: STATUS 부피
         run: node scripts/prune-status.mjs
 
+      - name: 문서 ↔ 배관 정합
+        run: node scripts/check-schedule-docs.mjs
+
       - name: 셀프테스트
         run: pnpm --filter @wirit/collectors selftest
 

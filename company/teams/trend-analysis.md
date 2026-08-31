@@ -34,7 +34,7 @@
 
 ## 도구 (구현됨)
 - 급상승 검색어 수집 + 소재 수요신호(📈) 대조: `packages/collectors/src/sources/researchSignals.ts` (extractTrendKeywords/matchDemand)
-- 매일 07:00 자동 실행: `.github/workflows/research-digest.yml`
+- ~~매일 07:00 자동 실행~~ → **2026-08-31 예약 해제, 수동·푸시 방아쇠만**
 - 스크랩 접수: 오너가 "스크랩: 링크+반응" 전달 → 세션이 패턴 분해
 - 관제탑 선정/탈락 학습신호: 라이브 모드에서 `research/decisions-inbox.md`에 기록 → 수요 가중치 보정 원료(주제 비중 부동산30·경제20·주식15·기타35 반영)
 

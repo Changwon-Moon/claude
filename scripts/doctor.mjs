@@ -260,6 +260,15 @@ catch (e) { orphOk = false; orphOut = (e.stdout || e.message || "").toString().t
    문서가 자기 규칙("여기엔 지금 상태만 둔다")을 어기는데 아무도 재지 않았다. */
 /* ⚠️ 판정은 **종료코드**로 한다. 출력에 "✅ 가 있으면 통과"로 읽었더니, 넘친 블록 목록에
    딸려 나온 제목의 ✅ 를 성공으로 오인해 **초록불이 났다**(2026-08-31 시험에서 잡음). */
+/* 문서가 없는 예약을 가르치는가 — 배관을 바꿀 때 설명을 같이 안 고치면 생긴다.
+   2026-08-31 에 예약을 16→4개로 줄였는데 문서 12곳이 옛 시각을 가르치고 있었다. */
+let schedOk = true;
+try { sh("node", ["scripts/check-schedule-docs.mjs"]); }
+catch { schedOk = false; }
+check("문서 ↔ 배관 정합", schedOk,
+  schedOk ? "문서가 없는 예약을 가르치지 않습니다" : "문서가 없는 예약을 가르치고 있습니다",
+  "node scripts/check-schedule-docs.mjs — 배관을 바꿨으면 설명도 같이 바꿉니다");
+
 let stOk = true;
 try { sh("node", ["scripts/prune-status.mjs"]); }
 catch { stOk = false; }

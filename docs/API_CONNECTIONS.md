@@ -42,8 +42,8 @@
 | **국토부 실거래(매매)** | `MOLIT_API_KEY` | `sources/molit.ts` · `molitCli.ts` | `data/datasets/molit/{LAWD}-{YYYYMM}.json` | `molit-collect.yml` `20 3 5,20 * *` + `data/molit-queue.txt` · `collect-on-request.yml` | ✅ 실사용 |
 | **국토부 전월세 실거래** | `MOLIT_API_KEY` | `molitRentCli.ts` | `data/datasets/molit-rent/{LAWD}-{YYYYMM}.json` | `molit-rent-collect.yml` `40 3 5,20 * *` + `data/molit-rent-queue.txt` | ✅ 실사용 |
 | **국토부 분양권전매 실거래** | `MOLIT_API_KEY` | `sources/silv.ts` · `parse/silv.ts` · `silvCli.ts` | `data/datasets/silv/{LAWD}-{YYYYMM}.json` · 태그 대조 `data/silv-probe.md` | `silv-collect.yml` `0 4 5,20 * *` + `data/silv-queue.txt` | ✅ 2026-08-28 신설·수집 확인 |
-| **청약홈 분양정보** | `DATA_GO_KR_API_KEY` | `sources/applyhome.ts` · `applyhomeCli.ts` | `data/datasets/applyhome-latest.json` · `applyhome/{날짜}.json` | `applyhome-collect.yml` `0 2 * * *` (매일 11:00 KST) | ✅ 실사용 |
-| **국토부 최고가 인덱스(신고가 판정)** | `MOLIT_API_KEY` | `molitPeakCli.ts` · `molitSingoCli.ts` | `data/datasets/molit-peak/{LAWD}.json` · `singo-log/{YYYY-MM}.json` | `molit-peak-backfill.yml` · `singo-daily.yml` `0 22 * * *` (매일 07:00 KST) | ✅ 실사용 |
+| **청약홈 분양정보** | `DATA_GO_KR_API_KEY` | `sources/applyhome.ts` · `applyhomeCli.ts` | `data/datasets/applyhome-latest.json` · `applyhome/{날짜}.json` | `applyhome-collect.yml` `0 1 * * *` (매일 **10:00 KST**, 2026-08-31 변경) | ✅ 실사용 |
+| **국토부 최고가 인덱스(신고가 판정)** | `MOLIT_API_KEY` | `molitPeakCli.ts` · `molitSingoCli.ts` | `data/datasets/molit-peak/{LAWD}.json` · `singo-log/{YYYY-MM}.json` | `molit-peak-backfill.yml` (매일 11:00 KST) · `singo-daily.yml` `55 19 * * *` (매일 **04:55 KST**, 2026-08-31 변경) | ✅ 실사용 |
 | └ 단지 월별 최고가 곡선 | 〃 | `molitHistoryCli.ts` | `data/datasets/singo-history/{LAWD}-{단지}-{타입}.json` | `singo-history.yml` (`data/singo-history-queue.txt`) | ✅ 실사용 |
 | **국토부 공동주택 기본정보(세대수)** | `MOLIT_API_KEY` | `sources/aptInfo.ts` · `aptUniverseCli.ts` | `data/datasets/apt-hhld.json` (8,062단지) | `apt-universe.yml` | ✅ 실사용 |
 | └ 공동주택 **상세**정보(주차대수) | 〃 | `aptDetailCli.ts` | `data/datasets/apt-detail/{kapt}.json` | `apt-detail.yml` (`data/apt-detail-queue.txt`) | ✅ 2026-08-16 신설 |
