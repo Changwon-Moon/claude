@@ -1,6 +1,6 @@
 # 단지 공급면적 — 마지막 실행
 
-- 성공 0건 · 실패 9건
+- 성공 0건 · 실패 10건
 - 결과는 Actions 로그가 아니라 이 파일과 data/datasets/apt-supply/ 에서 본다
 
 ```
@@ -53,6 +53,16 @@ Exit status 1
 ::error::271-1 1쪽 실패 — fetch failed: fetch failed
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13202312 --area 84.87`
+Exit status 1
+── A44656712 전용 84.7616
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A44656712 --area 84.7616
+
+▶ 죽현마을아이파크1차 (A44656712) · 전용 84.7616㎡ · 41463-11800 · 지번 후보 1267
+::error::1267 1쪽 실패 — fetch failed: fetch failed
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A44656712 --area 84.7616`
 Exit status 1
 ── A44656712 전용 84.7616
 
