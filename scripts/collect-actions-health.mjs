@@ -115,6 +115,14 @@ for (const f of files) {
   const last = runs.length
     ? runs.map((r) => r.created_at).sort().slice(-1)[0]
     : null;
+  /* ⚠️ **실행 ≠ 성공** (2026-08-31 실측으로 알게 됐다).
+     인구 수집의 lastRun 은 08-08 이었지만 그날 실패했고, 마지막 **성공**은 08-04 였다.
+     계기판이 "22일 전"이라 보여줬는데 실제로 데이터가 안 들어온 것은 27일이었다 —
+     KOSIS 키 만료를 그만큼 늦게 발견했다. 둘을 나눠 담는다. */
+  const okRuns = runs.filter((r) => r.conclusion === "success");
+  const lastOk = okRuns.length
+    ? okRuns.map((r) => r.created_at).sort().slice(-1)[0]
+    : null;
 
   if (!crons.length) {
     manual.push({
@@ -122,6 +130,10 @@ for (const f of files) {
       lastRun: last ? ymd(kst(last)) : null,
       // 마지막 실행이 언제인지가 핵심 — "수동"이 "안 함"이 되는 것을 잡는다
       daysAgo: last ? Math.floor((Date.now() - Date.parse(last)) / 86400000) : null,
+      // 그리고 **성공**이 언제인지가 더 중요하다 — 돌기만 하고 계속 실패할 수 있다
+      lastOk: lastOk ? ymd(kst(lastOk)) : null,
+      okDaysAgo: lastOk ? Math.floor((Date.now() - Date.parse(lastOk)) / 86400000) : null,
+      fails30: runs.filter((r) => r.conclusion === "failure").length,
       runs30: runs.length,
     });
     continue;
@@ -171,6 +183,8 @@ for (const f of files) {
     medianDelay: delays.length ? delays[Math.floor(delays.length / 2)] : null,
     maxDelay: delays.length ? delays[delays.length - 1] : null,
     lastRun: last ? ymd(kst(last)) : null,
+    lastOk: lastOk ? ymd(kst(lastOk)) : null,
+    okDaysAgo: lastOk ? Math.floor((Date.now() - Date.parse(lastOk)) / 86400000) : null,
   });
 }
 

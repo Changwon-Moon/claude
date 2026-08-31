@@ -297,6 +297,21 @@ catch { soft("소재가 고르는 속도보다 빨리 쌓이고 있습니다",
   } else check("월간 회고", true, `${ym} 작성됨`);
 }
 
+/* 조용히 죽은 배관 — 2026-08-31 신설. 43개 중 25개가 실패해도 말할 입이 없다.
+   **경고로 둔다** — 남의 배관이 아픈 것이지 이 환경이 카드를 못 만드는 건 아니다.
+   매일은 신고가 워크플로가 보고 텔레그램으로 알린다. */
+{
+  const hp = join(ROOT, "data/actions-health.json");
+  if (existsSync(hp)) {
+    const out = (() => { try { return sh("node", ["scripts/silent-pipes.mjs"]); } catch { return ""; } })();
+    if (out.includes("✅")) check("배관 침묵", true, "조용히 죽은 배관 없음");
+    else {
+      const n = (out.match(/⚠️/g) || []).length;
+      soft(`조용히 멈춘 배관 ${n}건`, "node scripts/silent-pipes.mjs — 돌지만 계속 실패하는 것들입니다");
+    }
+  }
+}
+
 let skillOut = "";try { skillOut = sh("node", ["scripts/check-skill-sync.mjs"]).trim(); }
 catch (e) { skillOut = (e.stdout || e.message || "").toString().trim(); }
 if (skillOut.startsWith("✅")) check("스킬 동기", true, skillOut.replace(/^✅\s*/, ""));

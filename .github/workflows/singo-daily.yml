@@ -260,6 +260,22 @@ jobs:
             git push origin HEAD:${{ github.ref_name }}
           fi
 
+      # ── 조용히 죽은 배관을 하루 한 번 모아서 알린다 (2026-08-31 신설) ──
+      # KOSIS 키가 만료돼 인구 수집이 27일간 실패했는데 아무도 몰랐다 — 그 워크플로에
+      # 텔레그램이 없어서다. 세어 보니 43개 중 25개가 실패해도 말할 입이 없다.
+      # 25곳에 각각 붙이면 시끄러워져 안 읽힌다 → 계기판을 굽고 **문제가 있을 때만** 한 통.
+      # 이 워크플로가 매일 확실히 도는 유일한 자리라 여기 붙인다.
+      - name: 조용히 멈춘 배관 확인
+        if: always()
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          node scripts/collect-actions-health.mjs || true
+          node scripts/silent-pipes.mjs --notify || true
+
       - name: 텔레그램 알림 (조용한 날도 한 줄은 보낸다)
         if: always()
         env:

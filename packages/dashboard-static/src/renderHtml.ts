@@ -138,7 +138,8 @@ input,textarea,select{font-family:inherit}
 .hleg{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.9}
 .hman{list-style:none;padding:0;margin:0;font-size:13px}
 .hman li{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--hair)}
-.hman li span{color:var(--text)}
+.hman li span{color:var(--text);display:flex;flex-direction:column;gap:2px}
+.hman li span i{font-size:11px;color:var(--muted);font-style:normal}
 .hman li b{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
 .hman li.ok b{color:#16a34a}
 .hman li.warn b{color:#d97706}
@@ -2168,11 +2169,19 @@ function healthHtml(state: TowerState): string {
   }).join("");
 
   // 수동 전환분 — "수동"이 "안 함"이 되는 것을 잡는 자리다
+  /* ⚠️ **실행 ≠ 성공** (2026-08-31). 인구 수집이 "22일 전"으로 떴는데 그날 실패했고
+     마지막 성공은 27일 전이었다 — KOSIS 키 만료를 그만큼 늦게 발견했다.
+     그래서 **성공일**을 기준으로 색을 칠하고, 실행일과 다르면 그 사실을 함께 보여준다. */
   const man = (h.manual || []).filter((m: any) => m.runs30 > 0 || m.lastRun)
-    .slice(0, 14).map((m: any) => {
-      const d = m.daysAgo;
+    .slice(0, 16).map((m: any) => {
+      const d = m.okDaysAgo ?? null;                    // 색은 **성공** 기준
       const cls = d == null ? "old" : d > 30 ? "old" : d > 7 ? "warn" : "ok";
-      return `<li class="${cls}"><span>${esc(m.name)}</span><b>${m.lastRun ? esc(m.lastRun) + (d != null ? ` · ${d}일 전` : "") : "기록 없음"}</b></li>`;
+      const gap = m.lastOk && m.lastRun !== m.lastOk;   // 돌긴 했는데 실패한 상태
+      const main = m.lastOk ? `${esc(m.lastOk)} · ${d}일 전` : "성공 기록 없음";
+      const sub = gap
+        ? `<i>마지막 실행 ${esc(m.lastRun)}${m.fails30 ? ` · 30일 실패 ${m.fails30}회` : ""}</i>`
+        : (!m.lastOk && m.lastRun ? `<i>실행은 ${esc(m.lastRun)} — 전부 실패</i>` : "");
+      return `<li class="${cls}"><span>${esc(m.name)}${sub}</span><b>${main}</b></li>`;
     }).join("");
 
   return `<div class="inbox">
@@ -2186,7 +2195,8 @@ function healthHtml(state: TowerState): string {
       점이 ✕ 나 · 로 이어지면 채팅에 알려주세요.</span>
     </div>
     <h2 style="margin-top:22px">수동 워크플로 — 마지막 실행</h2>
-    <p class="hnote">2026-08-31 에 예약을 뗐다. <b>"수동"이 "안 함"이 되지 않는지</b> 여기서 본다.</p>
+    <p class="hnote">2026-08-31 에 예약을 뗐다. <b>"수동"이 "안 함"이 되지 않는지</b> 여기서 본다.<br>
+      날짜는 <b>마지막 성공</b>이다 — 돌기만 하고 실패하는 것을 놓치지 않기 위해서다.</p>
     <ul class="hman">${man}</ul>
   </div>`;
 }

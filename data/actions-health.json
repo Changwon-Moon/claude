@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-31T02:27:58.214Z",
+  "generatedAt": "2026-08-31T07:50:19.505Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -95,7 +95,9 @@
       ],
       "medianDelay": 262,
       "maxDelay": 262,
-      "lastRun": "2026-08-31"
+      "lastRun": "2026-08-31",
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 0
     },
     {
       "file": "applyhome-collect.yml",
@@ -183,14 +185,16 @@
         },
         {
           "day": "08-31",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "15:52",
+          "delay": 353
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-08-30"
+      "medianDelay": 353,
+      "maxDelay": 353,
+      "lastRun": "2026-08-31",
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 0
     },
     {
       "file": "apt-universe.yml",
@@ -285,7 +289,9 @@
       ],
       "medianDelay": null,
       "maxDelay": null,
-      "lastRun": "2026-08-30"
+      "lastRun": "2026-08-30",
+      "lastOk": "2026-08-30",
+      "okDaysAgo": 1
     },
     {
       "file": "molit-peak-backfill.yml",
@@ -380,7 +386,9 @@
       ],
       "medianDelay": null,
       "maxDelay": null,
-      "lastRun": "2026-08-30"
+      "lastRun": "2026-08-30",
+      "lastOk": "2026-08-30",
+      "okDaysAgo": 0
     }
   ],
   "manual": [
@@ -389,6 +397,9 @@
       "name": "로고 자동 취득 (Wikimedia)",
       "lastRun": null,
       "daysAgo": null,
+      "lastOk": null,
+      "okDaysAgo": null,
+      "fails30": 0,
       "runs30": 0
     },
     {
@@ -396,6 +407,9 @@
       "name": "평균연봉 수집 (DART)",
       "lastRun": null,
       "daysAgo": null,
+      "lastOk": null,
+      "okDaysAgo": null,
+      "fails30": 0,
       "runs30": 0
     },
     {
@@ -403,6 +417,9 @@
       "name": "기사 읽어오기",
       "lastRun": null,
       "daysAgo": null,
+      "lastOk": null,
+      "okDaysAgo": null,
+      "fails30": 0,
       "runs30": 0
     },
     {
@@ -410,6 +427,9 @@
       "name": "폰트 변환 (OTF → WOFF2, OTS 통과용)",
       "lastRun": null,
       "daysAgo": null,
+      "lastOk": null,
+      "okDaysAgo": null,
+      "fails30": 0,
       "runs30": 0
     },
     {
@@ -417,6 +437,9 @@
       "name": "경계 데이터 취득 (GeoJSON)",
       "lastRun": null,
       "daysAgo": null,
+      "lastOk": null,
+      "okDaysAgo": null,
+      "fails30": 0,
       "runs30": 0
     },
     {
@@ -424,6 +447,9 @@
       "name": "좌표 지오코딩 (카카오 로컬)",
       "lastRun": null,
       "daysAgo": null,
+      "lastOk": null,
+      "okDaysAgo": null,
+      "fails30": 0,
       "runs30": 0
     },
     {
@@ -431,6 +457,9 @@
       "name": "사진 자동 취득 (Pexels/Pixabay/Wikimedia)",
       "lastRun": null,
       "daysAgo": null,
+      "lastOk": null,
+      "okDaysAgo": null,
+      "fails30": 0,
       "runs30": 0
     },
     {
@@ -438,6 +467,9 @@
       "name": "콘텐츠 검수 (에이전트)",
       "lastRun": null,
       "daysAgo": null,
+      "lastOk": null,
+      "okDaysAgo": null,
+      "fails30": 0,
       "runs30": 0
     },
     {
@@ -445,6 +477,9 @@
       "name": "SVG 자산 취득 (공개)",
       "lastRun": null,
       "daysAgo": null,
+      "lastOk": null,
+      "okDaysAgo": null,
+      "fails30": 0,
       "runs30": 0
     },
     {
@@ -452,6 +487,9 @@
       "name": "실거래 수집 (요청 파일 push 트리거)",
       "lastRun": "2026-08-02",
       "daysAgo": 28,
+      "lastOk": "2026-08-02",
+      "okDaysAgo": 28,
+      "fails30": 1,
       "runs30": 7
     },
     {
@@ -459,6 +497,9 @@
       "name": "시군구 경계 갱신 (GeoJSON)",
       "lastRun": "2026-08-03",
       "daysAgo": 28,
+      "lastOk": "2026-08-03",
+      "okDaysAgo": 28,
+      "fails30": 0,
       "runs30": 1
     },
     {
@@ -466,6 +507,9 @@
       "name": "텔레그램 연결 확인",
       "lastRun": "2026-08-03",
       "daysAgo": 28,
+      "lastOk": "2026-08-03",
+      "okDaysAgo": 28,
+      "fails30": 0,
       "runs30": 3
     },
     {
@@ -473,34 +517,29 @@
       "name": "카드 제작 (관제탑 버튼)",
       "lastRun": "2026-08-08",
       "daysAgo": 23,
+      "lastOk": "2026-08-08",
+      "okDaysAgo": 23,
+      "fails30": 0,
       "runs30": 2
-    },
-    {
-      "file": "population-collect.yml",
-      "name": "인구 수집 (monthly)",
-      "lastRun": "2026-08-08",
-      "daysAgo": 22,
-      "runs30": 7
     },
     {
       "file": "seoul-living-probe.yml",
       "name": "서울 생활인구 서비스 검증 (probe)",
       "lastRun": "2026-08-08",
       "daysAgo": 22,
+      "lastOk": "2026-08-08",
+      "okDaysAgo": 22,
+      "fails30": 0,
       "runs30": 2
-    },
-    {
-      "file": "ecos-m2.yml",
-      "name": "ECOS M2 수집 (probe+collect)",
-      "lastRun": "2026-08-12",
-      "daysAgo": 18,
-      "runs30": 10
     },
     {
       "file": "kosis-probe.yml",
       "name": "KOSIS 표 검증 (probe)",
       "lastRun": "2026-08-12",
-      "daysAgo": 18,
+      "daysAgo": 19,
+      "lastOk": "2026-08-12",
+      "okDaysAgo": 19,
+      "fails30": 6,
       "runs30": 30
     },
     {
@@ -508,6 +547,9 @@
       "name": "이미지 일괄 자동취득 (photo-batch)",
       "lastRun": "2026-08-12",
       "daysAgo": 18,
+      "lastOk": "2026-08-12",
+      "okDaysAgo": 18,
+      "fails30": 0,
       "runs30": 7
     },
     {
@@ -515,27 +557,19 @@
       "name": "텔레그램 한 통 보내기",
       "lastRun": "2026-08-14",
       "daysAgo": 17,
+      "lastOk": "2026-08-14",
+      "okDaysAgo": 17,
+      "fails30": 0,
       "runs30": 4
-    },
-    {
-      "file": "kr-market.yml",
-      "name": "국내 증시 수집 (코스피·코스닥)",
-      "lastRun": "2026-08-17",
-      "daysAgo": 14,
-      "runs30": 11
-    },
-    {
-      "file": "publish-archive.yml",
-      "name": "완성본 보관 (발행 완료)",
-      "lastRun": "2026-08-16",
-      "daysAgo": 14,
-      "runs30": 53
     },
     {
       "file": "apt-area-probe.yml",
       "name": "공급면적 탐침 (K-apt 전용률 · 건축물대장 실측)",
       "lastRun": "2026-08-17",
-      "daysAgo": 13,
+      "daysAgo": 14,
+      "lastOk": "2026-08-17",
+      "okDaysAgo": 14,
+      "fails30": 0,
       "runs30": 25
     },
     {
@@ -543,34 +577,39 @@
       "name": "실거래 수집 (국토부)",
       "lastRun": "2026-08-27",
       "daysAgo": 4,
+      "lastOk": "2026-08-27",
+      "okDaysAgo": 4,
+      "fails30": 2,
       "runs30": 5
     },
     {
       "file": "molit-door.yml",
       "name": "실거래 문 열렸나 (한 번 두드려 본다)",
       "lastRun": "2026-08-28",
-      "daysAgo": 2,
+      "daysAgo": 3,
+      "lastOk": "2026-08-28",
+      "okDaysAgo": 3,
+      "fails30": 1,
       "runs30": 3
     },
     {
       "file": "collect.yml",
       "name": "데이터 수집 (daily)",
       "lastRun": "2026-08-29",
-      "daysAgo": 1,
+      "daysAgo": 2,
+      "lastOk": "2026-08-29",
+      "okDaysAgo": 2,
+      "fails30": 0,
       "runs30": 20
-    },
-    {
-      "file": "pipeline-tick.yml",
-      "name": "파이프라인 진행 (승인 → 실행)",
-      "lastRun": "2026-08-30",
-      "daysAgo": 1,
-      "runs30": 72
     },
     {
       "file": "research-digest.yml",
       "name": "소재 보드 수집 (daily)",
       "lastRun": "2026-08-30",
       "daysAgo": 1,
+      "lastOk": "2026-08-30",
+      "okDaysAgo": 1,
+      "fails30": 3,
       "runs30": 28
     },
     {
@@ -578,6 +617,9 @@
       "name": "단지 주차대수 (카드 제원용)",
       "lastRun": "2026-08-31",
       "daysAgo": 0,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 0,
+      "fails30": 4,
       "runs30": 100
     },
     {
@@ -585,6 +627,9 @@
       "name": "단지 가까운 역 (카드 뱃지용)",
       "lastRun": "2026-08-31",
       "daysAgo": 0,
+      "lastOk": "2026-08-25",
+      "okDaysAgo": 6,
+      "fails30": 7,
       "runs30": 12
     },
     {
@@ -592,34 +637,99 @@
       "name": "단지 공급면적 (카드 평 표기용)",
       "lastRun": "2026-08-31",
       "daysAgo": 0,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 0,
+      "fails30": 0,
       "runs30": 100
     },
     {
       "file": "auto-produce.yml",
       "name": "데이터 바뀌면 카드 자동 재생산",
-      "lastRun": "2026-08-30",
+      "lastRun": "2026-08-31",
       "daysAgo": 0,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 0,
+      "fails30": 80,
       "runs30": 100
+    },
+    {
+      "file": "ecos-m2.yml",
+      "name": "ECOS M2 수집 (probe+collect)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 0,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 0,
+      "fails30": 0,
+      "runs30": 11
     },
     {
       "file": "guard.yml",
       "name": "문지기 (guard)",
       "lastRun": "2026-08-31",
       "daysAgo": 0,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 0,
+      "fails30": 0,
       "runs30": 100
+    },
+    {
+      "file": "kr-market.yml",
+      "name": "국내 증시 수집 (코스피·코스닥)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 0,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 0,
+      "fails30": 0,
+      "runs30": 12
     },
     {
       "file": "molit-rent-collect.yml",
       "name": "전월세 실거래 수집 (국토부)",
       "lastRun": "2026-08-31",
       "daysAgo": 0,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 0,
+      "fails30": 2,
       "runs30": 13
+    },
+    {
+      "file": "pipeline-tick.yml",
+      "name": "파이프라인 진행 (승인 → 실행)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 0,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 0,
+      "fails30": 11,
+      "runs30": 75
+    },
+    {
+      "file": "population-collect.yml",
+      "name": "인구 수집 (monthly)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 0,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 0,
+      "fails30": 6,
+      "runs30": 9
+    },
+    {
+      "file": "publish-archive.yml",
+      "name": "완성본 보관 (발행 완료)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 0,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 0,
+      "fails30": 8,
+      "runs30": 54
     },
     {
       "file": "reb-collect.yml",
       "name": "전세·월세 지수 수집 (한국부동산원)",
       "lastRun": "2026-08-31",
       "daysAgo": 0,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 0,
+      "fails30": 0,
       "runs30": 4
     },
     {
@@ -627,6 +737,9 @@
       "name": "주간 매매·전세 지수 수집 (한국부동산원)",
       "lastRun": "2026-08-31",
       "daysAgo": 0,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 0,
+      "fails30": 0,
       "runs30": 7
     },
     {
@@ -634,6 +747,9 @@
       "name": "분양권전매 실거래 수집 (국토부)",
       "lastRun": "2026-08-31",
       "daysAgo": 0,
+      "lastOk": "2026-08-28",
+      "okDaysAgo": 3,
+      "fails30": 4,
       "runs30": 6
     },
     {
@@ -641,6 +757,9 @@
       "name": "신고가 단지 이력 (한 단지 곡선)",
       "lastRun": "2026-08-31",
       "daysAgo": 0,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 0,
+      "fails30": 3,
       "runs30": 17
     },
     {
@@ -648,6 +767,9 @@
       "name": "오늘의 신고가 — 자동 재시도",
       "lastRun": "2026-08-31",
       "daysAgo": 0,
+      "lastOk": "2026-08-25",
+      "okDaysAgo": 6,
+      "fails30": 1,
       "runs30": 17
     },
     {
@@ -655,6 +777,9 @@
       "name": "관제탑 배포 (Cloudflare)",
       "lastRun": "2026-08-31",
       "daysAgo": 0,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 0,
+      "fails30": 27,
       "runs30": 100
     }
   ]

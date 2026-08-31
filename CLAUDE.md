@@ -170,6 +170,7 @@ node scripts/check-schedule-docs.mjs    # 문서가 없는 예약을 가르치�
 node scripts/ideas-health.mjs           # 소재가 쌓이기만 하나
 node scripts/ideas-groups.mjs           # 소재를 묶어 보기 (--plan → --apply 로 일괄 정리)
 node scripts/monthly-review.mjs --write # 월간 회고 — 쌓인 판단을 되읽어 보고서로
+node scripts/silent-pipes.mjs           # 조용히 죽은 배관 (신고가가 매일 자동으로 본다)
 node scripts/template-usage.mjs --write # 어느 판형이 쓰이는지 실측해 TEMPLATES.md 에 굽는다
 
 # 어느 달의 신고가 목록을 뽑는다 (월간 회고 재료 · 결과는 docs/archive 로)

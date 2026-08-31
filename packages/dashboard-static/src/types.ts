@@ -278,10 +278,14 @@ export interface TowerState {
       dueKst: string | null;
       dots: { day: string; state: "ontime" | "ok" | "late" | "fail" | "none";
               at: string | null; delay: number | null }[];
-      medianDelay: number | null; maxDelay: number | null; lastRun: string | null;
+      medianDelay: number | null; maxDelay: number | null;
+      /** ⚠️ 실행 ≠ 성공. lastRun 은 돌긴 한 날, lastOk 는 **성공한** 날이다 —
+       *  인구 수집이 "22일 전"으로 떴는데 그날 실패했고 성공은 27일 전이었다(2026-08-31). */
+      lastRun: string | null; lastOk: string | null; okDaysAgo: number | null;
     }[];
-    manual: { file: string; name: string; lastRun: string | null;
-              daysAgo: number | null; runs30: number }[];
+    manual: { file: string; name: string; lastRun: string | null; daysAgo: number | null;
+              lastOk: string | null; okDaysAgo: number | null;
+              fails30: number; runs30: number }[];
   } | null;
   /** 소재 보드 — 관제탑 '소재' 탭에서 마이닝과 한 화면으로 통합된다. */
   ideas: { path: string; cats: IdeaCat[]; items: Idea[] };
