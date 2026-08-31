@@ -1,8 +1,7 @@
 # 단지 주차대수 — 마지막 실행
 
-- 대기열: 68줄
+- 대기열: 79줄
 - 결과: **성공**
-- ⚠️ 이번 실행은 **국토부에 붙지 않았습니다**(전부 이미 있음) — API 가 살아 있다는 증거로 쓰지 마세요
 
 ```
 ⏭ 이미 있음 — data/datasets/apt-detail/A44340013.json (다시 받으려면 force=1)
@@ -74,7 +73,94 @@
 ⏭ 이미 있음 — data/datasets/apt-detail/A10027281.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A14210002.json (다시 받으려면 force=1)
 
-실제로 받아 본 단지 0곳 · 이미 있어 건너뛴 것 68곳
-ⓘ 이번 실행은 **국토부에 한 번도 붙지 않았습니다** — 이 초록불은 API 가 살아 있다는 증거가 아닙니다.
+── A10027514
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10027514
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10027514.json
+A10027514 주차 지상 70 + 지하 1351 = **1421대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A15288814
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A15288814
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A15288814.json
+A15288814 주차 지상 556 + 지하 2228 = **2784대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A15105302
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A15105302
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A15105302.json
+A15105302 주차 지상 120 + 지하 1990 = **2110대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A10026065
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10026065
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10026065.json
+A10026065 주차 지상 0 + 지하 1847 = **1847대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A44656712
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A44656712
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A44656712.json
+A44656712 주차 지상 464 + 지하 1086 = **1550대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A10027782
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10027782
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10027782.json
+A10027782 주차 지상 4 + 지하 1339 = **1343대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A10023989
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10023989
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10023989.json
+A10023989 주차 지상 0 + 지하 2384 = **2384대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A10024349
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10024349
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10024349.json
+A10024349 주차 지상 0 + 지하 3437 = **3437대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A10027114
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10027114
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10027114.json
+A10027114 주차 지상 0 + 지하 1713 = **1713대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A44182326
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A44182326
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A44182326.json
+A44182326 주차 지상 0 + 지하 1435 = **1435대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A44347026
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A44347026
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A44347026.json
+A44347026 주차 지상 1139 + 지하 1672 = **2811대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+실제로 받아 본 단지 11곳 · 이미 있어 건너뛴 것 68곳
 ✅ 대기열 전 줄 완료
 ```
