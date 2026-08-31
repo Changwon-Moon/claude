@@ -85,3 +85,18 @@ lawd=11350 umd=하계동 type=84 apt="벽산"
 lawd=41597 umd=송동 type=59 apt="동탄2하우스디더레이크"
 lawd=11305 umd=미아동 type=59 apt="삼각산아이원"
 # 2026-08-28 14:10 KST — 곡선 재수집(앞선 런은 60분 타임아웃으로 0건, 잡 시간을 180분으로 늘렸다)
+
+# ── 2026-08-29~31 밀린 사흘치 15건 (예약이 이틀 안 떠서 밀렸다 · 오너 지시 "사흘치를 한 데 묶어서")
+lawd=41450 umd=망월동 type=84 apt="미사강변푸르지오"
+lawd=11530 umd=신도림동 type=59 apt="대림1"
+lawd=11620 umd=봉천동 type=84 apt="관악푸르지오"
+lawd=41465 umd=동천동 type=84 apt="동천자이"
+lawd=41463 umd=보정동 type=84 apt="죽현마을아이파크"
+lawd=41450 umd=망월동 type=59 apt="미사강변루나리움"
+lawd=41113 umd=곡반정동 type=84 apt="수원하늘채더퍼스트2단지"
+lawd=41595 umd=병점동 type=59 apt="병점역아이파크캐슬"
+lawd=41595 umd=반월동 type=59 apt="e편한세상반월나노시티역"
+lawd=41113 umd=권선동 type=84 apt="수원시청역SKVIEW"
+lawd=41113 umd=곡반정동 type=59 apt="수원하늘채더퍼스트2단지"
+lawd=41117 umd=영통동 type=59 apt="황골마을주공1"
+lawd=41117 umd=망포동 type=59 apt="늘푸른벽산"
