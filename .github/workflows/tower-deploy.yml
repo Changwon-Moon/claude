@@ -27,6 +27,7 @@ on:
       - "data/publish-queue.md"
       - "data/performance.md"
       - "scripts/build-tower-site.mjs"
+      - "scripts/collect-actions-health.mjs"
       - "scripts/smoke-tower.mjs"
       - "scripts/sim-tower.mjs"
       - "scripts/verify-live.mjs"
@@ -117,6 +118,15 @@ jobs:
       # 완성 작업물을 주제별로 정리한 색인 — 관제탑 보관함 탭이 이걸 읽는다
       - name: 보관함 색인
         run: node scripts/build-archive.mjs
+
+      # 배관 계기판 재료 — 예약이 제때 왔는지 날짜별로 굽는다(2026-08-31).
+      # ⚠️ 조립 **직전**에 둔다. 뒤에 두면 이번 배포 화면에는 지난번 숫자가 실린다.
+      # 실패해도 배포를 막지 않는다 — 계기판이 없다고 관제탑을 못 올리면 본말전도다.
+      - name: 배관 계기판 재료
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/collect-actions-health.mjs
 
       - name: 사이트 조립
         run: node scripts/build-tower-site.mjs

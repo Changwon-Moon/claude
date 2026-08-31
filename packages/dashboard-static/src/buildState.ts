@@ -614,6 +614,13 @@ export async function buildState(): Promise<TowerState> {
     perf: { rows: perfRows, path: "data/performance.md" },
     requests,
     builders: builderLabels,
+    /* 배관 계기판 — scripts/collect-actions-health.mjs 가 배포 때 구워 둔 파일.
+       없으면 null 이고 화면은 그 칸을 안 그린다(토큰 없는 로컬 빌드에서도 배포는 돌아야 한다). */
+    health: (() => {
+      const hp = join(REPO_ROOT, "data/actions-health.json");
+      if (!existsSync(hp)) return null;
+      try { return JSON.parse(readFileSync(hp, "utf8")); } catch { return null; }
+    })(),
     mining: {
       weights: [
         { label: "부동산", pct: 30 },

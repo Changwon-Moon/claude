@@ -266,6 +266,23 @@ export interface TowerState {
   images: Record<string, string>;
   /** 컨텐츠 마이닝 설정 — 주제 비중(합 100 지향). 마이닝 요청 시 이 비중을 실어 보낸다. */
   mining: { weights: { label: string; pct: number }[] };
+  /** 배관 계기판 — `scripts/collect-actions-health.mjs` 가 배포 때 구워 둔 실행 이력.
+   *  토큰이 없는 환경에서는 null 이고, 그때 화면은 이 칸을 아예 안 그린다.
+   *  ⚠️ 비율이 아니라 **날짜별 점**을 담는다 — 평균은 "언제부터 아픈지"를 지운다
+   *     (2026-08-31: 실행률 53% 하나가 08-26 까지 멀쩡했던 사실을 감추고 있었다). */
+  health: {
+    generatedAt: string;
+    windowDays: number;
+    scheduled: {
+      file: string; name: string; cron: string; cronChangedOn: string | null;
+      dueKst: string | null;
+      dots: { day: string; state: "ontime" | "ok" | "late" | "fail" | "none";
+              at: string | null; delay: number | null }[];
+      medianDelay: number | null; maxDelay: number | null; lastRun: string | null;
+    }[];
+    manual: { file: string; name: string; lastRun: string | null;
+              daysAgo: number | null; runs30: number }[];
+  } | null;
   /** 소재 보드 — 관제탑 '소재' 탭에서 마이닝과 한 화면으로 통합된다. */
   ideas: { path: string; cats: IdeaCat[]; items: Idea[] };
   /** 최근 오너가 소재를 지우며 남긴 사유 — 다음 발굴에 "피할 것"으로 실린다. */

@@ -121,6 +121,30 @@ input,textarea,select{font-family:inherit}
 .view.on{display:block}
 .notice{font-size:12px;color:var(--muted);padding:10px 20px 0;display:flex;gap:10px;flex-wrap:wrap}
 
+/* ══ 배관 계기판 ══ 점 하나가 하루다. 비율 대신 모양을 본다 */
+.hnote{font-size:12px;color:var(--muted);margin:-4px 0 12px}
+.htab{width:100%;border-collapse:collapse;font-size:13px}
+.htab td{padding:9px 0;border-bottom:1px solid var(--hair);vertical-align:middle}
+.hw{width:44%}
+.hw b{display:block;font-size:13px;font-variant-numeric:tabular-nums}
+.hw span{display:block;font-size:11.5px;color:var(--muted);margin-top:1px}
+.hdots{white-space:nowrap;letter-spacing:1.5px;font-size:15px}
+.hdly{text-align:right;font-size:11.5px;color:var(--muted);white-space:nowrap}
+.hd.s-ontime{color:#16a34a}
+.hd.s-ok{color:#64748b}
+.hd.s-late{color:#d97706}
+.hd.s-fail{color:#dc2626}
+.hd.s-none{color:var(--hair)}
+.hleg{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.9}
+.hman{list-style:none;padding:0;margin:0;font-size:13px}
+.hman li{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--hair)}
+.hman li span{color:var(--text)}
+.hman li b{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.hman li.ok b{color:#16a34a}
+.hman li.warn b{color:#d97706}
+.hman li.old b{color:#dc2626}
+@media(max-width:520px){ .hw{width:38%} .hdots{font-size:13px;letter-spacing:.5px} .hdly{display:none} }
+
 /* ══ 결정함 — 첫 화면 ══ */
 .inbox{padding:18px 20px 24px;max-width:1040px}
 .inbox h2{font-size:16px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:9px;margin-bottom:12px}
@@ -2107,6 +2131,61 @@ function publishedHtml(state: TowerState): string {
   return out;
 }
 
+/** 배관 계기판 — 예약이 제때 왔나, 수동은 언제 마지막으로 돌았나.
+ *
+ * ⚠️ **비율을 쓰지 않는다.** 2026-08-31 에 신고가 실행률을 "53%" 하나로 봤을 때
+ *    08-14~08-26 이 멀쩡했고 08-27 부터 무너졌다는 사실이 통째로 감춰져 있었다.
+ *    날짜별 점으로 **모양**을 보여야 언제부터 아픈지가 보인다.
+ *
+ * ⚠️ 이 화면은 **실시간이 아니다.** tower-deploy(푸시가 방아쇠) 때 구운 스냅샷이라
+ *    기준 시각을 맨 위에 적는다. 안 적으면 낡은 화면을 최신으로 읽는다. */
+function healthHtml(state: TowerState): string {
+  const h: any = (state as any).health;
+  if (!h) return "";
+  const DOT: Record<string, [string, string]> = {
+    ontime: ["●", "제때 왔다"],
+    ok:     ["○", "왔다(그때 예약 시각을 몰라 지연은 안 잰다)"],
+    late:   ["◐", "왔지만 30분 넘게 늦었다"],
+    fail:   ["✕", "돌다가 실패했다"],
+    none:   ["·", "아예 안 떴다"],
+  };
+  const when = new Date(Date.parse(h.generatedAt) + 9 * 3600 * 1000)
+    .toISOString().replace("T", " ").slice(0, 16);
+
+  const rows = (h.scheduled || []).map((w: any) => {
+    const dots = (w.dots || []).map((d: any) => {
+      const [ch, label] = DOT[d.state] || ["·", ""];
+      const t = d.at ? `${d.day} ${d.at}${d.delay != null ? ` (${d.delay}분 늦음)` : ""}` : `${d.day} — 없음`;
+      return `<span class="hd s-${d.state}" title="${esc(t)} · ${esc(label)}">${ch}</span>`;
+    }).join("");
+    const delay = w.medianDelay == null ? "—"
+      : `중앙값 ${w.medianDelay}분 · 최대 ${w.maxDelay}분`;
+    return `<tr>
+      <td class="hw"><b>${esc(w.dueKst || "—")}</b><span>${esc(w.name)}</span></td>
+      <td class="hdots">${dots}</td>
+      <td class="hdly">${esc(delay)}</td>
+    </tr>`;
+  }).join("");
+
+  // 수동 전환분 — "수동"이 "안 함"이 되는 것을 잡는 자리다
+  const man = (h.manual || []).filter((m: any) => m.runs30 > 0 || m.lastRun)
+    .slice(0, 14).map((m: any) => {
+      const d = m.daysAgo;
+      const cls = d == null ? "old" : d > 30 ? "old" : d > 7 ? "warn" : "ok";
+      return `<li class="${cls}"><span>${esc(m.name)}</span><b>${m.lastRun ? esc(m.lastRun) + (d != null ? ` · ${d}일 전` : "") : "기록 없음"}</b></li>`;
+    }).join("");
+
+  return `<div class="inbox">
+    <h2>배관 계기판 <span class="n">${(h.scheduled || []).length}</span></h2>
+    <p class="hnote">기준 ${esc(when)} KST · 최근 ${h.windowDays}일 · 푸시할 때마다 갱신됩니다(실시간 아님)</p>
+    <table class="htab">${rows}</table>
+    <p class="hleg">${Object.entries(DOT).map(([k, v]) => `<span class="hd s-${k}">${v[0]}</span> ${esc(v[1])}`).join(" &nbsp; ")}</p>
+    <h2 style="margin-top:22px">수동 워크플로 — 마지막 실행</h2>
+    <p class="hnote">2026-08-31 에 예약을 뗐다. <b>"수동"이 "안 함"이 되지 않는지</b> 여기서 본다.</p>
+    <ul class="hman">${man}</ul>
+  </div>`;
+}
+
 function assetsHtml(state: TowerState): string {
   const groups = state.assets.groups
     .map(
@@ -2163,6 +2242,7 @@ export function renderTowerBody(state: TowerState): string {
   <button class="tab" data-v="archive">보관함</button>
   <button class="tab" data-v="company">회사</button>
   <button class="tab" data-v="assets">자산</button>
+  <button class="tab" data-v="health">배관</button>
 </nav>
 
 <section id="view-publish" class="view on">
@@ -2182,6 +2262,7 @@ export function renderTowerBody(state: TowerState): string {
 <section id="view-archive" class="view">${archiveHtml(state)}</section>
 <section id="view-company" class="view">${companyHtml(state)}</section>
 <section id="view-assets" class="view">${assetsHtml(state)}</section>
+<section id="view-health" class="view">${healthHtml(state)}</section>
 
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" aria-label="티켓 상세"></aside>
