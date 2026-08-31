@@ -51,6 +51,11 @@ export interface ReviewInfo {
   summary: string;
   errors: number;
   warns: number;
+  /** ⚠️ **누가 무엇을 봤나** (2026-08-31 신설).
+   *  verdict 한 단어만으로는 오너가 무엇을 고쳐야 할지 모른다 —
+   *  "REVISE · warn 7" 을 보고 세션이 7건을 하나씩 풀어 설명해야 했다.
+   *  팀별로 묶어 보여주면 "디자인은 넘기고 캡션은 고친다"를 그 자리에서 판단한다. */
+  teams?: { team: string; level: string; msgs: string[] }[];
 }
 
 /** 소재 1건 = 티켓 1장. */

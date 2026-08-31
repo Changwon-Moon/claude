@@ -167,7 +167,30 @@ export async function buildState(): Promise<TowerState> {
     if (match) {
       usedProduced.add(match.slug + "@" + match.date);
       const key = intern(match.thumb);
-      t.stage = 4; // 승인대기 (렌더 완료·발행 전)
+      /* ⚠️ **채팅에서 확정한 것이 관제탑에 안 떴다** (2026-08-31 실측).
+       * sets.json 의 state 를 여기서 안 봐서, `confirm.mjs` 로 "오너 확정"이 된 35개가
+       * 계속 「승인대기」로 남고 오너가 관제탑에서 **같은 판단을 다시** 눌러야 했다.
+       * 실제로 확정 35 vs 발행 승인 2 — 아무도 두 번째 버튼을 안 눌렀다.
+       *
+       * 승인은 **한 번이면 된다.** 채팅에서 확정했으면 관제탑에서도 확정이다.
+       *   오너 확정      → 5 (올릴 차례)
+       *   발행 승인      → 5 (같은 뜻이다. 옛 값 호환)
+       *   그 외/시안     → 4 (검토 중) */
+      const st = String((match as any).setState || "");
+      t.stage = /오너 확정|발행 승인/.test(st) ? 5 : 4;
+      if (t.stage === 5) { t.flags = t.flags || []; if (!t.flags.includes("업로드 대기")) t.flags.push("업로드 대기"); }
+      /* 청약 접수가 끝났으면 말해 준다 (2026-08-31).
+         한강뷰가 19일, 송도가 27일째 승인 대기에 남아 있었다 — 끝난 청약을 올리면
+         팔로워가 헛걸음한다. 자동으로 지우지는 않는다(오너 판단이다). */
+      const ends = (match as any).applyEndsAt as string | null | undefined;
+      if (ends) {
+        const today = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+        if (ends < today) {
+          t.flags = t.flags || [];
+          const d = Math.round((Date.parse(today) - Date.parse(ends)) / 86400000);
+          t.flags.push(`기한 지남 — 접수 ${ends} 종료(${d}일 전)`);
+        }
+      }
       t.thumb = key;
       // 캡션이 있는 세트 = 실제 발행 후보 → 상세에서 읽을 수 있게 큰 판본을 싣는다.
       // 나머지는 목록에서 알아보기만 하면 되므로 큰 판본을 만들지 않는다.

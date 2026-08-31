@@ -1,0 +1,25 @@
+{
+  "label": "brand-rank",
+  "verdict": "revise",
+  "summary": "REVISE — error 0 · warn 1 · 카드 1장 · 코드 검수만",
+  "findings": [],
+  "cards": [
+    {
+      "file": "brand-rank.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": [
+        {
+          "reviewer": "design-qa",
+          "level": "warn",
+          "code": "badgeclear",
+          "msg": "제목이 우상단 로고 뱃지 아래 26px 로 붙어 있습니다 — 세로 30px 이상 띄우세요(제목 블록 위 여백↑ 또는 제목 축소). CARD_CHECKLIST §2"
+        }
+      ]
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}

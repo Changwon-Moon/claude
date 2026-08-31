@@ -121,6 +121,16 @@ input,textarea,select{font-family:inherit}
 .view.on{display:block}
 .notice{font-size:12px;color:var(--muted);padding:10px 20px 0;display:flex;gap:10px;flex-wrap:wrap}
 
+/* ══ 검수 팀별 펼침 ══ 무엇을 고쳐야 할지 그 자리에서 보이게 */
+.rvteams{display:flex;flex-direction:column;gap:8px;margin:8px 0 4px}
+.rvt{border-left:3px solid var(--hair);padding:6px 0 6px 10px;font-size:12.5px}
+.rvt.e{border-left-color:#dc2626}
+.rvt.w{border-left-color:#d97706}
+.rvt b{font-weight:700}
+.rvt span{color:var(--muted);font-size:11.5px;margin-left:6px}
+.rvt ul{margin:4px 0 0;padding-left:16px;color:var(--muted);line-height:1.65}
+.rvt ul li{font-size:11.5px}
+
 /* ══ 배관 계기판 ══ 점 하나가 하루다. 비율 대신 모양을 본다 */
 .hnote{font-size:12px;color:var(--muted);margin:-4px 0 12px}
 .htab{width:100%;border-collapse:collapse;font-size:13px}
@@ -1408,6 +1418,18 @@ function buildDetail(t){
       +(rv?(rv.verdict==="pass"?"✓ 자동검수 통과":"⚠ 자동검수 "+esc(rv.verdict))
            +" — "+esc(rv.summary||("오류 "+rv.errors+" · 경고 "+rv.warns))
          :"자동검수 리포트 없음 — 수치·레이아웃 확인을 오너가 직접 해야 합니다")+'</div>';
+    /* ⚠️ **누가 무엇을 봤는지**를 펼친다 (2026-08-31).
+       그전엔 "⚠ 자동검수 revise — warn 7" 한 줄뿐이라 오너가 무엇을 고쳐야 할지 몰랐다.
+       팀별로 묶어 보여주면 "디자인은 넘기고 캡션은 고친다"를 그 자리에서 판단한다. */
+    if(rv && rv.teams && rv.teams.length){
+      proof+='<div class="rvteams">';
+      for(const g of rv.teams){
+        proof+='<div class="rvt '+(g.level==="error"?"e":"w")+'">'
+          +'<b>'+esc(g.team)+'</b><span>'+(g.level==="error"?"막힘":"경고")+' '+g.msgs.length+'건</span>'
+          +'<ul>'+g.msgs.map(function(m){return '<li>'+esc(m)+'</li>';}).join("")+'</ul></div>';
+      }
+      proof+='</div>';
+    }
     proof+='<div class="pv"><div class="ph">✍️ 업로드 캡션</div>'
       +(t.caption?'<div class="cap">'+esc(t.caption)+'</div>'
                  :'<div class="cap empty">캡션이 아직 없습니다 — 발행 전에 작성이 필요합니다.</div>')+'</div>';

@@ -15,12 +15,15 @@ export interface ProducedCard {
   thumb: string | null; // data-uri (p1)
   pages: string[]; // 캐러셀 전 장 data-uri (p1, p2, …)
   caption: string; // 업로드 캡션 전문
-  review: { verdict: string; summary: string; errors: number; warns: number } | null;
+  review: { verdict: string; summary: string; errors: number; warns: number;
+            teams?: { team: string; level: string; msgs: string[] }[] } | null;
   source: string;
   contentPath: string;
   itemCount: number;
   /** 발행 세트 라벨 (data/review/sets.json). 없으면 "" = 실험·중간 산출물 */
   setLabel: string;
+  /** 청약 접수 마감일(YYYY-MM-DD) — 지나면 관제탑이 「기한 지남」으로 표시한다. 청약 카드만 있다. */
+  applyEndsAt?: string | null;
   /** 세트 안에서의 순서 (캐러셀 장 번호) */
   setOrder: number;
   /** 이 카드가 세트의 대표(첫 장)인가 — 대표만 발행 후보 티켓이 된다 */
@@ -80,12 +83,32 @@ function readReview(reviewDir: string, label: string): ProducedCard["review"] {
     if (existsSync(p)) {
     try {
       const j = JSON.parse(readFileSync(p, "utf8"));
-      const f: { level?: string }[] = Array.isArray(j.findings) ? j.findings : [];
+      const f: { level?: string; reviewer?: string; msg?: string }[] = Array.isArray(j.findings) ? j.findings : [];
+      /* ⚠️ **누가 무엇을 봤는지**까지 싣는다 (2026-08-31).
+       * 그전엔 verdict 한 단어("revise")만 실었다. 그러면 오너는 화면에서
+       * "REVISE — warn 7" 만 보고 **무엇을 고쳐야 할지 모른다** — 실제로 세션이
+       * 7건을 하나씩 풀어 설명해야 했다.
+       * findings 에는 이미 `reviewer` 가 있다(design-qa·caption-lint·determinism…).
+       * 팀별로 묶으면 "디자인은 넘겨도 되고 캡션은 고쳐야겠다"를 오너가 바로 판단한다. */
+      const TEAM: Record<string, string> = {
+        "design-qa": "🎨 디자인", "caption-lint": "✍️ 캡션",
+        "caption-number": "🔍 수치 대조", determinism: "🔍 결정성",
+        pixel: "🔒 픽셀", llm: "🤖 LLM 검수",
+      };
+      const byTeam: Record<string, { level: string; msgs: string[] }> = {};
+      for (const x of f) {
+        if (x.level !== "error" && x.level !== "warn") continue;
+        const k = TEAM[String(x.reviewer || "")] || `· ${x.reviewer || "기타"}`;
+        const cur = (byTeam[k] ||= { level: "warn", msgs: [] });
+        if (x.level === "error") cur.level = "error";
+        if (cur.msgs.length < 4) cur.msgs.push(String(x.msg || "").slice(0, 90));
+      }
       return {
         verdict: String(j.verdict || "unknown"),
         summary: String(j.summary || ""),
         errors: f.filter((x) => x.level === "error").length,
         warns: f.filter((x) => x.level === "warn").length,
+        teams: Object.entries(byTeam).map(([team, v]) => ({ team, level: v.level, msgs: v.msgs })),
       };
     } catch {
       return null;
@@ -144,6 +167,26 @@ export function collectProduced(contentDir: string, outDir: string, reviewDir = 
         setLead: !def || hit!.order === 0,
         setTitle: def?.title || "",
         setState: def?.state || "",
+        /* ⚠️ **접수가 끝난 청약 카드가 승인 대기에 남아 있었다** (2026-08-31 실측).
+         * 한강뷰는 19일, 송도는 27일째였다. 청약 카드는 "지금 넣을 수 있다"가 전제라
+         * 끝난 청약을 올리면 팔로워가 헛걸음한다.
+         * 카드 JSON 의 schedule 에 접수일이 있으니(예: "8/26(수)") 그것을 읽어 만료를 표시한다.
+         * ⚠️ 연도가 없다 — 카드가 만들어진 날(date)의 연도로 읽고, 12월→1월처럼
+         *    해를 넘긴 경우만 +1 한다. 없는 정보를 지어내지 않는다. */
+        applyEndsAt: (() => {
+          try {
+            const sch = (json as any)?.schedule;
+            if (!Array.isArray(sch)) return null;
+            const row = sch.find((r: any) => /접수/.test(String(r?.label || "")) && !r?.tbd);
+            const m = String(row?.date || "").match(/(\d{1,2})\/(\d{1,2})/);
+            if (!m) return null;
+            let y = Number(date.slice(0, 4));
+            const mm = Number(m[1]);
+            const cardMonth = Number(date.slice(5, 7)) || mm;
+            if (cardMonth >= 11 && mm <= 2) y += 1;   // 12월 카드의 1월 접수
+            return `${y}-${String(mm).padStart(2, "0")}-${String(Number(m[2])).padStart(2, "0")}`;
+          } catch { return null; }
+        })(),
       });
     }
   }
