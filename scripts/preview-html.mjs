@@ -98,6 +98,11 @@ if (!cardPaths.length) {
 const { loadTemplate } = await import("../packages/renderer/src/loadTemplate.ts");
 const { renderPageHtml } = await import("../packages/renderer/src/renderHtml.ts");
 const { validateAgainstTemplate } = await import("../packages/renderer/src/validate.ts");
+const { getBrowser, closeBrowser, findChromiumExecutable } = await import(
+  "../packages/renderer/src/screenshot.ts"
+);
+const { pathToFileURL } = await import("node:url");
+const { unlinkSync } = await import("node:fs");
 
 /** 문서 공통 필드 + 페이지 필드 (renderContent.ts 의 mergePageContext 와 같은 규칙) */
 const mergePage = (doc, page) => {
@@ -109,6 +114,20 @@ const mergePage = (doc, page) => {
 const styles = []; // 중복 없이 모은 <style> 내용
 const seenStyle = new Set();
 const cards = []; // { name, body, w, h }
+
+/* ⚠️ 판형의 `__wiritFit` 을 **반드시 돌린 뒤** 마크업을 떠 온다.
+ *
+ * 제목·제원은 고정 크기가 아니다 — 폰트가 다 온 뒤 실제 글자폭으로 크기를 다시 재는
+ * 스크립트가 판형 안에 들어 있고, 렌더러(screenshot.ts)도 캡처 직전에 그걸 부른다.
+ * 그 스크립트를 안 돌리고 마크업만 떠 오면 **긴 단지명이 카드 밖으로 잘려 보인다** —
+ * 실물 PNG 는 멀쩡한데 미리보기만 깨지는 것이라, 있지도 않은 사고를 고치러 가게 된다
+ * (2026-08-31 에 실제로 「수원하늘채더퍼스트2단지」·「e편한세상반월나노시티역」 두 장에서 겪었다).
+ *
+ * 그래서 카드마다 렌더러와 **같은 방식으로** 브라우저에 띄우고(템플릿 폴더 안 임시 파일 →
+ * file:// · 상대경로 자산이 살아야 폰트 폭이 실물과 같다), 폰트를 기다리고, `__wiritFit` 을
+ * 부른 다음, 그 결과가 인라인 style 로 박힌 DOM 을 떠 온다. 그러면 미리보기는 스크립트가
+ * 필요 없고 — 스크립트 없이도 실물과 같은 그림이 된다. */
+const browser = await getBrowser();
 
 for (const p of cardPaths) {
   const doc = JSON.parse(readFileSync(p, "utf8"));
@@ -126,15 +145,42 @@ for (const p of cardPaths) {
         styles.push(css);
       }
     }
-    const body = /<body[^>]*>([\s\S]*?)<\/body>/i.exec(html)?.[1] ?? html;
+
+    const ctx = await browser.newContext({
+      viewport: { width: template.config.width, height: template.config.height },
+      deviceScaleFactor: 1, // 폭 계산에만 쓰므로 2배로 그릴 필요가 없다
+    });
+    const page = await ctx.newPage();
+    const tmpPath = join(template.dir, `.preview-tmp-${process.pid}-${cards.length}.html`);
+    writeFileSync(tmpPath, html, "utf8");
+    let body;
+    try {
+      await page.goto(pathToFileURL(tmpPath).href, { waitUntil: "networkidle" });
+      await page.evaluate(() => document.fonts?.ready);
+      await page.evaluate(() => window.__wiritFit && window.__wiritFit());
+      body = await page.evaluate(() => {
+        for (const s of document.querySelectorAll("script")) s.remove();
+        return document.body.innerHTML;
+      });
+    } finally {
+      await ctx.close();
+      try {
+        unlinkSync(tmpPath);
+      } catch {
+        /* 이미 지워졌으면 무시 */
+      }
+    }
+
     cards.push({
       name: p.split("/").pop().replace(/\.json$/, "") + (pages.length > 1 ? ` (${i + 1}쪽)` : ""),
-      body: body.replace(/<script[\s\S]*?<\/script>/gi, ""),
+      body,
       w: template.config.width,
       h: template.config.height,
     });
   }
 }
+
+await closeBrowser();
 
 /* ── ③ 폰트를 data: URI 로 박는다 ────────────────────────────────────── */
 
