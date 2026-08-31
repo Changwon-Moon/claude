@@ -621,13 +621,19 @@ export async function buildState(): Promise<TowerState> {
       if (!existsSync(hp)) return null;
       try { return JSON.parse(readFileSync(hp, "utf8")); } catch { return null; }
     })(),
+    /* 주제 비중의 정본은 data/topic-quota.json 하나다 (2026-08-31 통합).
+       그전엔 여기·monthly-review·ingest-signals·teams/trend-analysis 네 곳에 있었고
+       **이미 갈라져 있었다** — 여기는 '경제일반20·주식15', 회고는 '증시·경제35'로
+       주제 이름조차 달랐다. 여기 숫자를 다시 적지 않는다. */
     mining: {
-      weights: [
-        { label: "부동산", pct: 30 },
-        { label: "경제일반", pct: 20 },
-        { label: "주식", pct: 15 },
-        { label: "기타", pct: 35 },
-      ],
+      weights: (() => {
+        const qp = join(REPO_ROOT, "data/topic-quota.json");
+        if (!existsSync(qp)) return [];
+        try {
+          return JSON.parse(readFileSync(qp, "utf8")).topics
+            .map((t: { key: string; targetPct: number }) => ({ label: t.key, pct: t.targetPct }));
+        } catch { return []; }
+      })(),
     },
   };
 }

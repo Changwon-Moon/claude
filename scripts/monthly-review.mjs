@@ -118,8 +118,9 @@ const ideas = JSON.parse(read("research/ideas.json") || '{"ideas":[]}');
 const open = (ideas.ideas || []).filter((i) => !(i.status === "done" || Number(i.stage || 0) > 0));
 const byTopic = {};
 for (const i of open) byTopic[i.topic || "(없음)"] = (byTopic[i.topic || "(없음)"] || 0) + 1;
-/* 관제탑이 들고 있는 목표 비중 — 수집기 쿼터도 여기서 나왔다 */
-const TARGET = { "부동산": 30, "증시·경제": 35, "돈·연봉": 10, "교통·생활": 10, "생활·통계": 15 };
+/* 목표 비중의 정본은 data/topic-quota.json 하나다 (2026-08-31 통합) */
+const QUOTA_DOC = JSON.parse(read("data/topic-quota.json") || '{"topics":[]}');
+const TARGET = Object.fromEntries(QUOTA_DOC.topics.map((t) => [t.key, t.targetPct]));
 
 say(`## ③ 지금 보드의 주제 배분 — 안 고른 것 ${open.length}건`);
 say("");

@@ -40,6 +40,10 @@ const arg = (k, d) => {
 };
 const MODE = process.argv.includes("--apply") ? "apply" : process.argv.includes("--plan") ? "plan" : "show";
 const OLDER = Number(arg("older", 21));
+/* 주제를 좁혀 정리한다 — 2026-08-31 오너 지시로 증시 비중을 35→10% 로 내리면서 필요해졌다.
+   갈래마다 사정이 다르다: 증시는 지나간 헤드라인이라 7일이면 낡지만,
+   부동산은 코어라 같은 잣대로 자르면 안 된다. **한 자로 전부 재지 않는다.** */
+const ONLY = arg("topic", "");
 
 const today = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const ageOf = (i) => {
@@ -85,18 +89,20 @@ if (MODE === "plan") {
     if (Number(i.stage || 0) > 0) return false;
     const auto = i.feed === "auto" || /자동 수집/.test(String(i.source || ""));
     if (!auto) return false;                              // 오너·세션이 넣은 것도 안 건드린다
+    if (ONLY && (i.topic || "") !== ONLY) return false;    // --topic 을 주면 그 갈래만
     const age = ageOf(i);
     return age != null && age > OLDER;                    // 나이를 모르면 안 자른다
   });
   mkdirSync(dirname(PLAN), { recursive: true });
   writeFileSync(PLAN, JSON.stringify({
     madeAt: today, olderThan: OLDER,
-    rule: "자동수집 + 나이 확인됨 + approve 아님 + 진행 안 함",
+    rule: `자동수집 + 나이 확인됨 + approve 아님 + 진행 안 함${ONLY ? ` + 주제=${ONLY}` : ""}`,
+    topic: ONLY || "(전체)",
     count: drop.length,
     ids: drop.map((i) => i.id),
     preview: drop.slice(0, 20).map((i) => ({ id: i.id, at: ageOf(i) + "일", title: (i.title || "").slice(0, 60) })),
   }, null, 2) + "\n");
-  console.log(`\n📝 정리안 작성 — ${drop.length}건 (${OLDER}일 초과 자동수집)`);
+  console.log(`\n📝 정리안 작성 — ${drop.length}건 (${OLDER}일 초과 자동수집${ONLY ? ` · 주제 ${ONLY}` : ""})`);
   console.log(`   ${PLAN}\n`);
   for (const i of drop.slice(0, 15)) console.log(`   ${String(ageOf(i)).padStart(3)}일  ${(i.title || "").slice(0, 58)}`);
   if (drop.length > 15) console.log(`   … 외 ${drop.length - 15}건 (정리안 파일에 전부 있습니다)`);
