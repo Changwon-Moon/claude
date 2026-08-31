@@ -6,7 +6,7 @@
       "202608"
     ],
     "regions": 61,
-    "judgedRegions": 9,
+    "judgedRegions": 61,
     "skipped": [],
     "universe": {
       "ready": true,
@@ -22,20 +22,61 @@
     "baselineLabel": "2020년 이후",
     "sortBy": "price",
     "milestoneCount": 0,
-    "fetchTried": 18,
-    "fetchFailed": 18,
-    "fetchFailNotes": [
-      "종로구 202607: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed\n↳ 403이면: (a) 방금 신청한 키의 전파 지",
-      "종로구 202608: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed\n↳ 403이면: (a) 방금 신청한 키의 전파 지",
-      "중구 202607: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed\n↳ 403이면: (a) 방금 신청한 키의 전파 지",
-      "중구 202608: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed\n↳ 403이면: (a) 방금 신청한 키의 전파 지",
-      "용산구 202607: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed\n↳ 403이면: (a) 방금 신청한 키의 전파 지"
-    ],
-    "bailedOut": true,
-    "doorWaits": 5,
+    "fetchTried": 122,
+    "fetchFailed": 0,
+    "fetchFailNotes": [],
+    "bailedOut": false,
+    "doorWaits": 0,
     "verified": true,
     "source": "국토교통부 아파트 매매 실거래가 상세자료 · 공동주택 기본 정보(세대수)",
     "note": "1000세대 이상 단지(명부)의 전용 59·84 타입 중개거래 중, 구·법정동·단지명 기준 2020년 이후 최고가를 넘어선 건. 2006~2019 기록은 보지 않으므로 \"역대\"라고 쓰지 않는다. 직거래·해제거래 제외. 평 표기는 관용 환산(전용률 미공개)이라 단지에 따라 ±1평 어긋날 수 있고 원본 전용면적을 함께 남긴다."
   },
-  "hits": []
+  "hits": [
+    {
+      "aptNm": "성복역롯데캐슬골드타운",
+      "umdNm": "성복동",
+      "jibun": "789",
+      "priceWon": 1900000000,
+      "priceManwon": 190000,
+      "area": 84.9126,
+      "floor": 26,
+      "buildYear": 2019,
+      "date": "2026-08-22",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "41465",
+      "type": "84",
+      "pyeong": "34평",
+      "lawdCd": "41465",
+      "gu": "용인시수지구",
+      "prevPeakManwon": 187000,
+      "prevPeakDate": "2026-07-26",
+      "gainPct": 1.6042780748663104,
+      "milestone": null,
+      "hhld": 2356
+    },
+    {
+      "aptNm": "동천자이",
+      "umdNm": "동천동",
+      "jibun": "가-",
+      "priceWon": 1340000000,
+      "priceManwon": 134000,
+      "area": 84.949,
+      "floor": 22,
+      "buildYear": 2018,
+      "date": "2026-08-28",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "41465",
+      "type": "84",
+      "pyeong": "34평",
+      "lawdCd": "41465",
+      "gu": "용인시수지구",
+      "prevPeakManwon": 127000,
+      "prevPeakDate": "2021-11-27",
+      "gainPct": 5.511811023622047,
+      "milestone": null,
+      "hhld": 1437
+    }
+  ]
 }
