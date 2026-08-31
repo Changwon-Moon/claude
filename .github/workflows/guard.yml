@@ -97,6 +97,10 @@ jobs:
       - name: 문서 ↔ 배관 정합
         run: node scripts/check-schedule-docs.mjs
 
+      # 구역을 나누지 않고 전부 본다 — 개별 검사가 놓치는 사이를 메운다
+      - name: 전수 검사
+        run: node scripts/audit-all.mjs --strict
+
       - name: 셀프테스트
         run: pnpm --filter @wirit/collectors selftest
 

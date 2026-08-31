@@ -312,6 +312,19 @@ catch { soft("소재가 고르는 속도보다 빨리 쌓이고 있습니다",
   }
 }
 
+/* 전수 검사 — 2026-08-31 신설. 오너 지적: "요청할 때마다 정리 안 된 오류가 계속 튀어나온다."
+   개별 검사는 각자 자기 구역만 본다(문서는 문서, 배관은 배관). 이건 **구역을 안 나눈다** —
+   워크플로→스크립트, 빌더 명세, 세트↔캡션, 템플릿, 데이터셋 verified, package.json, 문서 참조.
+   605개 항목을 훑는다. ❌ 만 필수로 막고 ⚠️ 는 경고다. */
+let auditOk = true, auditOut = "";
+try { auditOut = sh("node", ["scripts/audit-all.mjs", "--strict"]); }
+catch (e) { auditOk = false; auditOut = (e.stdout || "").toString(); }
+{
+  const n = (auditOut.match(/❌ (\d+)건/) || [, "?"])[1];
+  check("전수 검사", auditOk, auditOk ? "저장소 전체 정합" : `${n}건 어긋남`,
+    "node scripts/audit-all.mjs — 참조·명세·캡션·데이터셋을 한 번에 봅니다");
+}
+
 let skillOut = "";try { skillOut = sh("node", ["scripts/check-skill-sync.mjs"]).trim(); }
 catch (e) { skillOut = (e.stdout || e.message || "").toString().trim(); }
 if (skillOut.startsWith("✅")) check("스킬 동기", true, skillOut.replace(/^✅\s*/, ""));

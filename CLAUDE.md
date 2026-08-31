@@ -163,6 +163,7 @@ node scripts/preview-html.mjs --set <세트라벨>
 
 # ── 아래는 **외울 필요가 없다.** doctor 하나가 전부 대신 본다(33초).
 #    따로 부르는 건 doctor 가 빨간불을 냈을 때 **그 항목만 자세히 볼 때**다.
+node scripts/audit-all.mjs              # ⭐ 전수 검사 — 저장소 전체를 한 번에(605항목)
 node scripts/check-doc-links.mjs        # 살아있는 문서의 깨진 링크
 node scripts/check-orphan-scripts.mjs   # 아무도 안 부르는 스크립트
 node scripts/check-skill-sync.mjs       # 계정 스킬 ↔ 저장소본 갈라짐
