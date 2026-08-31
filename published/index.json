@@ -1,8 +1,8 @@
 {
   "_": "발행 이력 — scripts/archive-published.mjs 가 만든다. 손으로 고치지 말 것.",
   "_confirmed": "confirmed:true = 오너가 [✅ 올렸습니다]를 누른 건. false = 업로드용으로 만들어만 둔 옛 꾸러미.",
-  "total": 23,
-  "confirmed": 17,
+  "total": 27,
+  "confirmed": 21,
   "posts": [
     {
       "dir": "하이라이트-커버",
@@ -13,6 +13,46 @@
       "captionChars": 0,
       "verdict": "",
       "confirmed": false
+    },
+    {
+      "dir": "2026-08-13-m2-gov",
+      "label": "m2-gov",
+      "title": "💵 역대 정부 통화량 증가 규모 — 지금이 가장 빠르다",
+      "publishedAt": "2026-08-13",
+      "pages": 1,
+      "captionChars": 955,
+      "verdict": "pass",
+      "confirmed": true
+    },
+    {
+      "dir": "2026-08-10-foreign-rank",
+      "label": "foreign-rank",
+      "title": "🌏 서울 자치구별 외국인 거주비율 (국적별)",
+      "publishedAt": "2026-08-10",
+      "pages": 2,
+      "captionChars": 651,
+      "verdict": "",
+      "confirmed": true
+    },
+    {
+      "dir": "2026-08-08-world-capital",
+      "label": "world-capital",
+      "title": "당신 건물주가 네덜란드 연기금? (글로벌 자본의 서울 임대시장 진출)",
+      "publishedAt": "2026-08-08",
+      "pages": 1,
+      "captionChars": 730,
+      "verdict": "revise",
+      "confirmed": true
+    },
+    {
+      "dir": "2026-08-08-mae-streak",
+      "label": "mae-streak",
+      "title": "서울 아파트 매매 연속 상승 · 상승폭 文정부의 2배 (주간)",
+      "publishedAt": "2026-08-08",
+      "pages": 1,
+      "captionChars": 482,
+      "verdict": "pass",
+      "confirmed": true
     },
     {
       "dir": "2026-08-08-jeonse-streak",
