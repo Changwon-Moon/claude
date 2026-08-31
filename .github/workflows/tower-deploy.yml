@@ -145,6 +145,12 @@ jobs:
       # 배관 계기판 재료 — 예약이 제때 왔는지 날짜별로 굽는다(2026-08-31).
       # ⚠️ 조립 **직전**에 둔다. 뒤에 두면 이번 배포 화면에는 지난번 숫자가 실린다.
       # 실패해도 배포를 막지 않는다 — 계기판이 없다고 관제탑을 못 올리면 본말전도다.
+      # 판형 사용 현황도 같이 굽는다 (2026-08-31). 세트가 늘면 표가 낡는데,
+      # 손으로 다시 돌리는 일은 언젠가 멈춘다 — 이 저장소가 오늘 하루에 세 번 확인했다.
+      - name: 판형 사용 현황
+        continue-on-error: true
+        run: node scripts/template-usage.mjs --write
+
       - name: 배관 계기판 재료
         continue-on-error: true
         env:
@@ -246,8 +252,11 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/_health/verify-live-last.md
+          # 판형 사용 현황도 같이 남긴다 — 굽기만 하고 커밋 안 하면 저장소엔 옛 표가 남는다
+          # (2026-08-31: 배선해 놓고 이 줄을 빠뜨릴 뻔했다)
+          git add docs/TEMPLATES.md data/actions-health.json 2>/dev/null || true
           git diff --cached --quiet && { echo "변화 없음 — 커밋 생략"; exit 0; }
-          git commit -m "관제탑 검증 결과 기록 (run ${{ github.run_id }}) [skip ci]"
+          git commit -m "관제탑 검증·판형 현황 기록 (run ${{ github.run_id }}) [skip ci]"
           # 그새 다른 워크플로가 밀었을 수 있다 — 받아서 얹고 민다. 실패해도 배포를 죽이지 않는다.
           git pull --rebase --autostash origin "${{ github.ref_name }}" || true
           git push origin "HEAD:${{ github.ref_name }}" || echo "::warning::결과 기록 푸시 실패(배포 판정에는 영향 없음)"

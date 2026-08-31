@@ -161,17 +161,20 @@ node scripts/prune-auto-docs.mjs
 # 카드를 PNG 전에 HTML 한 장으로 모아 보기 (오너 2026-08-31 "작업은 html로 먼저")
 node scripts/preview-html.mjs --set <세트라벨>
 
-# 배관·문서 상태 검사 — doctor 가 부르지만 따로도 돈다
+# ── 아래는 **외울 필요가 없다.** doctor 하나가 전부 대신 본다(33초).
+#    따로 부르는 건 doctor 가 빨간불을 냈을 때 **그 항목만 자세히 볼 때**다.
 node scripts/check-doc-links.mjs        # 살아있는 문서의 깨진 링크
 node scripts/check-orphan-scripts.mjs   # 아무도 안 부르는 스크립트
 node scripts/check-skill-sync.mjs       # 계정 스킬 ↔ 저장소본 갈라짐
 node scripts/prune-status.mjs           # STATUS 가 다시 서사 창고가 됐나
 node scripts/check-schedule-docs.mjs    # 문서가 없는 예약을 가르치나
 node scripts/ideas-health.mjs           # 소재가 쌓이기만 하나
+node scripts/silent-pipes.mjs           # 조용히 죽은 배관 (신고가가 매일 자동으로 본다)
+
+# ── 사람이 직접 부르는 정리 도구 (doctor 가 "해야 한다"고 알려줄 때 쓴다)
 node scripts/ideas-groups.mjs           # 소재를 묶어 보기 (--plan → --apply 로 일괄 정리)
 node scripts/monthly-review.mjs --write # 월간 회고 — 쌓인 판단을 되읽어 보고서로
-node scripts/silent-pipes.mjs           # 조용히 죽은 배관 (신고가가 매일 자동으로 본다)
-node scripts/template-usage.mjs --write # 어느 판형이 쓰이는지 실측해 TEMPLATES.md 에 굽는다
+node scripts/template-usage.mjs --write # 판형 사용 현황 (배포가 매번 자동으로 굽는다)
 
 # 어느 달의 신고가 목록을 뽑는다 (월간 회고 재료 · 결과는 docs/archive 로)
 node scripts/singo-july-md.mjs --ym 2026-08
