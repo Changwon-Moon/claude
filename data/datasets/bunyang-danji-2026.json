@@ -1563,7 +1563,35 @@
         "_choice": "오너 지시 2026-08-26 「현 동 타입 최저호가 14.5억을 기준으로」. 안전마진 = 14.5억 − 8.771억 = 5.7억(코드가 뺀다). ⚠️ 기준이 **호가**라서 칸 이름을 '최근 실거래가'가 아니라 '현재 최저호가'로 적는다 — 송파 정본은 실거래 21.0억이었다. **최저**호가를 고른 것은 오너 판단이다: 평균·상단 호가보다 보수적이라 카드가 부풀지 않는다. 검산되는 대안 둘(카드엔 안 씀): ①같은 단지 82B 분양권 실거래 11억8,681만원(2025-12, 14층, 뉴스핌) → 3.1억 ②인근 신축 e편한세상인창어반포레 85㎡ 실거래 13.5억(2026-06-03 8층, 국토부 원본 data/datasets/molit/41310-202606.json) → 4.7억. ②는 다른 단지라 이 칸에 넣으면 같은 단지 시세로 읽힌다."
       },
       "titleHtml": "<span class=\"hi\">구리역</span> 안전마진 <span class=\"up\">5억대</span> 줍줍",
-      "titleNote": "오너 작성 2026-08-26. 안전마진 문형은 코드가 정확한 금액(5.7억)을 넣지만, 오너가 '5억대'로 눌렀다 — 호가 기준이라 소수점까지 단정하지 않는 편이 정직하다. 표의 안전마진 칸은 5.7억을 그대로 쓴다. 금액은 up(빨강)으로 표의 빨간 칸과 색을 맞춘다."
+      "titleNote": "오너 작성 2026-08-26. 안전마진 문형은 코드가 정확한 금액(5.7억)을 넣지만, 오너가 '5억대'로 눌렀다 — 호가 기준이라 소수점까지 단정하지 않는 편이 정직하다. 표의 안전마진 칸은 5.7억을 그대로 쓴다. 금액은 up(빨강)으로 표의 빨간 칸과 색을 맞춘다.",
+      "_applyhomeSnapshot": {
+        "kind": "remndr",
+        "pblancNo": "2026930028",
+        "name": "구리역 롯데캐슬 시그니처",
+        "areaName": "경기",
+        "address": "경기도 구리시 인창동 289-29번지 일원",
+        "supply": 1,
+        "noticeDate": "2026-08-21",
+        "receiptFrom": "2026-08-26",
+        "receiptTo": "2026-08-26",
+        "specialFrom": null,
+        "rank1From": null,
+        "moveInYm": "2026-09",
+        "announceDate": "2026-08-31",
+        "builder": "인창씨구역주택재개발정비사업조합",
+        "priceCap": false,
+        "speculative": false,
+        "homepage": "https://www.lottecastle.co.kr/APT/AT00383/main/index.do",
+        "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930028&pblancNo=2026930028",
+        "score": 57,
+        "reasons": [
+          "수도권",
+          "무순위",
+          "롯데캐슬"
+        ]
+      },
+      "_retiredAt": "2026-08-28",
+      "_retiredFrom": "git:dbab509f"
     }
   ]
 }

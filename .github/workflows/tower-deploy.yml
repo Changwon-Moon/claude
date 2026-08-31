@@ -93,11 +93,34 @@ jobs:
         run: pnpm --filter @wirit/renderer exec playwright-core install --with-deps chromium chromium-headless-shell
 
       # 썸네일 복구 — 재료(data/datasets)에서 카드를 다시 그린다.
-      # 개별 빌더가 실패해도 배포는 계속(관제탑의 나머지 정보는 정상 표시).
       # ⚠️ 빌더 목록을 여기 하드코딩하지 않는다 — data/review/builders.json 이 단일 원천.
       #    하드코딩하던 시절, 새 카드('월급 34평')가 목록에 빠져 실사이트에 카드가 없었다.
+      #
+      # ── 2026-08-31: 주석은 "개별 빌더가 실패해도 배포는 계속"이라 적혀 있었는데
+      #    `continue-on-error` 가 없어 실제로는 **통째로 멈췄다.** 의도와 코드가 갈라져 있었다.
+      #    구리 롯데캐슬 하나가 접수 종료로 죽자 8/30~8/31 배포가 전부 접혔고,
+      #    조립·계기판·게시가 다 건너뛰어져 **관제탑 화면이 이틀간 낡은 채로 있었다.**
+      #    카드 한 장이 관제탑 전체를 인질로 잡으면 안 된다.
+      #
+      # ⚠️ 그렇다고 조용히 넘기지는 않는다 — 이 저장소 규칙은
+      #    "초록불은 일을 했다는 뜻이어야지 죽지 않고 끝났다는 뜻이면 안 된다" 이다.
+      #    실패하면 **텔레그램으로 말하고** 요약을 배포 화면에 남긴다.
+      #    낡은 카드가 조용히 실리는 것이 실패보다 나쁘다.
       - name: 카드 재생성
+        id: rebuild
+        continue-on-error: true
         run: node scripts/rebuild-cards.mjs
+
+      - name: 재생성 실패 알림
+        if: steps.rebuild.outcome == 'failure'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          node scripts/notify-telegram.mjs \
+            "⚠️ 카드 재생성 실패 — 관제탑은 올라가지만 **일부 카드가 낡은 판본**입니다.
+          Actions 로그의 '빌더 실패' 줄을 보세요. 청약 접수가 끝난 단지면:
+          node scripts/retire-danji.mjs <라벨>" || true
 
       - name: 카드 렌더(PNG)
         continue-on-error: true
