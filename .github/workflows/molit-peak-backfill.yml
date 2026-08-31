@@ -19,7 +19,7 @@ name: 최고가 인덱스 초기 수집 (신고가 기준선)
 on:
   schedule:
     # 매일 02:40 UTC (11:40 KST) — 아침 알림(23:0x UTC)과 겹치지 않는 시간대
-    - cron: "40 2 * * *"
+    - cron: "0 2 * * *"
 
   # 대기열 푸시가 방아쇠 (molit-collect·applyhome-collect 와 같은 방식).
   # 세션은 Actions 버튼을 못 누르므로 파일 한 줄이 유일한 손잡이다.

@@ -21,8 +21,13 @@ on:
   # **실거래 API 는 멀쩡히 돌았다** — 서비스별로 닫힌다.
   # 그래서 사람이 다시 밀어 주기를 기다리지 않고 **두 시간마다 대기열을 훑는다.**
   # 이미 받은 건 건너뛰므로, 다 찼으면 이 실행은 몇 초 만에 끝난다.
-  schedule:
-    - cron: "17 */2 * * *"
+  # schedule:  ← 2026-08-31 해제(아래 주석 참고)
+  #    - cron: "17 */2 * * *"
+  # ── 2026-08-31 예약 해제 — 수동(workflow_dispatch)·푸시 방아쇠로만 돈다.
+  #    30일 실측에서 예약이 몰린 시간대일수록 스케줄러가 건너뛰었다(파수꾼 7%).
+  #    매일 도는 예약은 텔레그램 알림 2건과 그 재료 4개만 남긴다:
+  #      applyhome-collect(10:00) · singo-daily(07:30) · molit-peak-backfill(11:00) · apt-universe(매달 1일)
+  #    깨우는 법: 대기열 파일에 한 줄 쓰고 push (CLAUDE.md §6) 또는 Actions 에서 Run workflow.
 
   workflow_dispatch:
     inputs:

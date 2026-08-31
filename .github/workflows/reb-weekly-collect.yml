@@ -29,10 +29,15 @@ on:
         description: "probe 일 때 조회 형태를 실측할 표 ID"
         required: false
         default: ""
-  schedule:
+  # schedule:  ← 2026-08-31 해제(아래 주석 참고)
     # 부동산원 주간 아파트가격동향은 목요일 공표 → 금요일 01:07 UTC(10:07 KST)에 돈다
-    - cron: "7 1 * * 5"
+  #    - cron: "7 1 * * 5"
   # 대기열 한 줄 push 또는 소스 변경으로 등록·트리거된다(세션은 Run 버튼을 못 눌러 push 가 유일한 손잡이)
+  # ── 2026-08-31 예약 해제 — 수동(workflow_dispatch)·푸시 방아쇠로만 돈다.
+  #    30일 실측에서 예약이 몰린 시간대일수록 스케줄러가 건너뛰었다(파수꾼 7%).
+  #    매일 도는 예약은 텔레그램 알림 2건과 그 재료 4개만 남긴다:
+  #      applyhome-collect(10:00) · singo-daily(07:30) · molit-peak-backfill(11:00) · apt-universe(매달 1일)
+  #    깨우는 법: 대기열 파일에 한 줄 쓰고 push (CLAUDE.md §6) 또는 Actions 에서 Run workflow.
   push:
     branches:
       - claude/instagram-content-automation-roadmap-fxnb7p

@@ -35,9 +35,14 @@ on:
         description: "캐시 무시 재수집 (true/false)"
         required: false
         default: "false"
-  schedule:
+  # schedule:  ← 2026-08-31 해제(아래 주석 참고)
     # 분양권도 신고기한 30일 → 매월 5일·20일. 매매(03:20)·전월세(03:40)와 겹치지 않게 04:00 UTC.
-    - cron: "0 4 5,20 * *"
+  #    - cron: "0 4 5,20 * *"
+  # ── 2026-08-31 예약 해제 — 수동(workflow_dispatch)·푸시 방아쇠로만 돈다.
+  #    30일 실측에서 예약이 몰린 시간대일수록 스케줄러가 건너뛰었다(파수꾼 7%).
+  #    매일 도는 예약은 텔레그램 알림 2건과 그 재료 4개만 남긴다:
+  #      applyhome-collect(10:00) · singo-daily(07:30) · molit-peak-backfill(11:00) · apt-universe(매달 1일)
+  #    깨우는 법: 대기열 파일에 한 줄 쓰고 push (CLAUDE.md §6) 또는 Actions 에서 Run workflow.
 
 permissions:
   contents: write
