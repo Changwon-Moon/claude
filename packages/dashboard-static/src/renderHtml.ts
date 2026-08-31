@@ -2180,6 +2180,11 @@ function healthHtml(state: TowerState): string {
     <p class="hnote">기준 ${esc(when)} KST · 최근 ${h.windowDays}일 · 푸시할 때마다 갱신됩니다(실시간 아님)</p>
     <table class="htab">${rows}</table>
     <p class="hleg">${Object.entries(DOT).map(([k, v]) => `<span class="hd s-${k}">${v[0]}</span> ${esc(v[1])}`).join(" &nbsp; ")}</p>
+    <div class="allclear" style="margin:14px 0">
+      <span class="t">여기는 누를 것이 없습니다</span>
+      <span class="w">배관이 지금 어떤지 <b>보는 화면</b>입니다. 고치는 일은 채팅(작업 세션)이 합니다 —
+      점이 ✕ 나 · 로 이어지면 채팅에 알려주세요.</span>
+    </div>
     <h2 style="margin-top:22px">수동 워크플로 — 마지막 실행</h2>
     <p class="hnote">2026-08-31 에 예약을 뗐다. <b>"수동"이 "안 함"이 되지 않는지</b> 여기서 본다.</p>
     <ul class="hman">${man}</ul>
