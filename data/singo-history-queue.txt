@@ -106,3 +106,24 @@ lawd=41465 umd=성복동 type=84 apt="성복역롯데캐슬골드타운" force=1
 lawd=41111 umd=천천동 type=59 apt="화서역푸르지오더에듀포레" force=1
 # 2026-08-31 재시도 — 위 force=1 두 줄은 실거래 문이 닫혀 못 받았다(60초×5 뒤 접음).
 # 줄은 위에 그대로 있으므로 이 푸시가 방아쇠 역할만 한다.
+
+# 2026-09-01 신고가 18건 일괄 — 오너 "신고가 카드 작업 진행하자"
+lawd=11470 umd=신정동 type=59 apt="목동힐스테이트"
+lawd=11500 umd=화곡동 type=84 apt="우장산아이파크,이편한세상"
+lawd=41210 umd=철산동 type=84 apt="주공13"
+lawd=41117 umd=원천동 type=84 apt="광교호반베르디움"
+lawd=11500 umd=화곡동 type=59 apt="강서힐스테이트"
+lawd=41173 umd=관양동 type=59 apt="평촌더샵센트럴시티"
+lawd=41173 umd=호계동 type=59 apt="평촌센텀퍼스트"
+lawd=41173 umd=호계동 type=59 apt="평촌더샵아이파크"
+lawd=41597 umd=반송동 type=84 apt="동탄시범다은마을 월드메르디앙 반도유보라"
+lawd=41595 umd=반정동 type=84 apt="반정아이파크캐슬5단지"
+lawd=41595 umd=병점동 type=84 apt="병점역아이파크캐슬"
+lawd=41113 umd=곡반정동 type=84 apt="수원하늘채더퍼스트1단지"
+lawd=41171 umd=안양동 type=59 apt="아르테자이"
+lawd=41173 umd=호계동 type=84 apt="호계2차현대홈타운"
+lawd=41113 umd=곡반정동 type=59 apt="수원하늘채더퍼스트1단지"
+lawd=41192 umd=중동 type=59 apt="보람마을(아주)"
+# ↓ 곡선이 이미 있으나 옛 판이라 신고가 판정과 어긋난다 → force=1 (인수인계 08-31 §3③)
+lawd=11530 umd=구로동 type=84 apt="신도림태영타운" force=1
+lawd=41595 umd=반월동 type=59 apt="신동탄포레자이" force=1
