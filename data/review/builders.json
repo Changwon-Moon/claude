@@ -443,7 +443,7 @@
       ]
     },
     {
-      "label": "singo-seongbok-goldtown",
+      "label": "singo-seongbok-goldtown-0831",
       "cmd": "scripts/build-singo-record.mjs",
       "args": [
         "--apt",
@@ -1313,6 +1313,212 @@
         "singo-덕현-84"
       ],
       "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-misa-prugio",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "미사강변푸르지오",
+        "--type",
+        "84",
+        "--kapt",
+        "A10027514",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16).",
+      "produces": [
+        "singo-미사강변푸르지오-84"
+      ]
+    },
+    {
+      "label": "singo-sindorim-daerim1",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "대림1",
+        "--type",
+        "59",
+        "--kapt",
+        "A15288814",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16).",
+      "produces": [
+        "singo-대림1-59"
+      ]
+    },
+    {
+      "label": "singo-dongcheon-xi",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "동천자이",
+        "--type",
+        "84",
+        "--kapt",
+        "A10026065",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16).",
+      "produces": [
+        "singo-동천자이-84"
+      ]
+    },
+    {
+      "label": "singo-gwanak-prugio",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "관악푸르지오",
+        "--type",
+        "84",
+        "--kapt",
+        "A15105302",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16).",
+      "produces": [
+        "singo-관악푸르지오-84"
+      ]
+    },
+    {
+      "label": "singo-misa-lunarium",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "미사강변루나리움",
+        "--type",
+        "59",
+        "--kapt",
+        "A10027782",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16).",
+      "produces": [
+        "singo-미사강변루나리움-59"
+      ]
+    },
+    {
+      "label": "singo-haneulchae2-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "수원하늘채더퍼스트2단지",
+        "--type",
+        "84",
+        "--kapt",
+        "A10023989",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16).",
+      "produces": [
+        "singo-수원하늘채더퍼스트2단지-84"
+      ]
+    },
+    {
+      "label": "singo-byeongjeom-ipark",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "병점역아이파크캐슬",
+        "--type",
+        "59",
+        "--kapt",
+        "A10024349",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16).",
+      "produces": [
+        "singo-병점역아이파크캐슬-59"
+      ]
+    },
+    {
+      "label": "singo-banwol-nano",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "e편한세상반월나노시티역",
+        "--type",
+        "59",
+        "--kapt",
+        "A10027114",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16).",
+      "produces": [
+        "singo-e편한세상반월나노시티역-59"
+      ]
+    },
+    {
+      "label": "singo-suwoncity-skview",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "수원시청역SKVIEW",
+        "--type",
+        "84",
+        "--kapt",
+        "A44182326",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16).",
+      "produces": [
+        "singo-수원시청역SKVIEW-84"
+      ]
+    },
+    {
+      "label": "singo-haneulchae2-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "수원하늘채더퍼스트2단지",
+        "--type",
+        "59",
+        "--kapt",
+        "A10023989",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16).",
+      "produces": [
+        "singo-수원하늘채더퍼스트2단지-59"
+      ]
+    },
+    {
+      "label": "singo-yeongtong-foreparkwon",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "황골마을주공1",
+        "--type",
+        "59",
+        "--kapt",
+        "A44347026",
+        "--name",
+        "영통포레파크원",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16).",
+      "produces": [
+        "singo-황골마을주공1-59"
+      ]
+    },
+    {
+      "label": "singo-neulpureun-byuksan-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "늘푸른벽산",
+        "--type",
+        "59",
+        "--kapt",
+        "A44340013",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16).",
+      "produces": [
+        "singo-늘푸른벽산-59"
+      ]
     }
   ]
 }

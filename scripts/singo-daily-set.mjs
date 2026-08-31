@@ -2,6 +2,7 @@
  * 「오늘의 신고가」 하루치를 **캐러셀 한 게시물**로 묶는다.
  *
  *   node scripts/singo-daily-set.mjs [--date 2026-08-25] [--max 20]
+ *   node scripts/singo-daily-set.mjs --from 2026-08-29 --date 2026-08-31   ← 며칠치를 한 게시물로
  *
  * ── 왜 (2026-08-25 오너)
  * *"지금은 관제탑에 각각의 컨텐츠로 표기되는데, 하루에 제작되는 카드들은 1개로 묶어서 올리도록."*
@@ -39,6 +40,31 @@ const arg = (n) => {
 };
 
 const DATE = arg("date") ?? new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+
+/* ── `--from` : 며칠치를 **한 게시물**로 묶는다 (오너 2026-08-31 "사흘치를 한 데 묶어서")
+ *
+ * 왜 필요한가: 깃허브 예약이 안 떠서 08-29·08-30 이 통째로 밀렸다. 하루씩 티켓 세 개로 내면
+ * 오너는 같은 소식을 세 번 결재하고 인스타에도 세 번 올린다 — 08-25 에 하루치를 묶은 것과
+ * 정확히 같은 이유다. **예약이 빠지는 날은 앞으로도 생기므로** 이건 이번만의 예외가 아니라
+ * 판형이 원래 가졌어야 할 손잡이다(정기물에 조건부 예외를 두지 않는다 — CEO.md 08-16).
+ *
+ * `--from` 이 없으면 예전과 똑같이 하루치로 돈다. */
+const FROM = arg("from") ?? DATE;
+if (FROM > DATE) {
+  console.error(`⛔ --from(${FROM}) 이 --date(${DATE}) 보다 뒤입니다.`);
+  process.exit(1);
+}
+/** 묶을 판정일들 — FROM..DATE 를 하루씩. 하루치면 [DATE] 하나다. */
+const DAYS = [];
+for (
+  let d = new Date(FROM + "T00:00:00Z");
+  d <= new Date(DATE + "T00:00:00Z");
+  d.setUTCDate(d.getUTCDate() + 1)
+)
+  DAYS.push(d.toISOString().slice(0, 10));
+const DAYSET = new Set(DAYS);
+const MULTI = DAYS.length > 1;
+
 /** 인스타 캐러셀 상한. 넘으면 상위 N 장만 싣고 뺀 것을 말한다. */
 const MAX = Number(arg("max") ?? 20);
 
@@ -72,7 +98,7 @@ for (const f of readdirSync(contentDir).filter((f) => f.endsWith(".json"))) {
   const foundOn = (j.meta?.provenance ?? [])
     .map((x) => /singo-log:\s*(\d{4}-\d{2}-\d{2})/.exec(String(x))?.[1])
     .find(Boolean);
-  if (foundOn !== DATE) continue; // 그날 드러난 건이 아니다
+  if (!DAYSET.has(foundOn)) continue; // 이 기간에 드러난 건이 아니다
   if (!inSomeSet.has(slug)) {
     console.warn(`   ⓘ ${slug} — 세트에 없어 뺍니다(내려진 카드)`);
     continue;
@@ -87,7 +113,7 @@ for (const f of readdirSync(contentDir).filter((f) => f.endsWith(".json"))) {
 }
 if (!cards.length) {
   console.error(
-    `⛔ ${DATE} 에 **그날 드러난** 신고가 카드가 없습니다.\n` +
+    `⛔ ${MULTI ? `${FROM}~${DATE} 에` : `${DATE} 에`} **그때 드러난** 신고가 카드가 없습니다.\n` +
       `   (판정일은 카드의 meta.provenance 의 "singo-log: 날짜 판정" 입니다 —\n` +
       `    그날 폴더에 있는 것과 그날 드러난 것은 다릅니다.)`,
   );
@@ -106,9 +132,17 @@ if (dropped.length) {
 
 /* ── ② 묶음 캡션 */
 const strip = (s) => String(s ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-const label = `singo-daily-${DATE}`;
+const label = MULTI ? `singo-daily-${FROM}_${DATE}` : `singo-daily-${DATE}`;
 const md = Number(DATE.slice(5, 7));
 const dd = Number(DATE.slice(8, 10));
+const fmd = Number(FROM.slice(5, 7));
+const fdd = Number(FROM.slice(8, 10));
+/** 사람이 읽는 기간 — 같은 달이면 "8월 29~31일", 달이 넘으면 "8월 30일~9월 1일" */
+const periodKo = !MULTI
+  ? `${md}월 ${dd}일`
+  : fmd === md
+    ? `${md}월 ${fdd}~${dd}일`
+    : `${fmd}월 ${fdd}일~${md}월 ${dd}일`;
 
 const rows = kept.map((c, i) => {
   const t = strip(c.doc.title); // "태릉해링턴플레이스 33평"
@@ -117,16 +151,16 @@ const rows = kept.map((c, i) => {
 });
 
 const cap = [];
-cap.push(`${md}월 ${dd}일, 신고가 ${kept.length}곳 🔥`);
+cap.push(`${periodKo}, 신고가 ${kept.length}곳 🔥`);
 cap.push("");
-cap.push("오늘 새로 확인된 신고가입니다.");
+cap.push(MULTI ? `${periodKo} 사이 새로 확인된 신고가입니다.` : "오늘 새로 확인된 신고가입니다.");
 cap.push("한 장씩 넘겨 보세요 →");
 cap.push("");
 cap.push(...rows);
 cap.push("");
 /* ⚠️ 이 두 줄은 알림 본문과 **같은 말**이어야 한다(2026-08-25). 계약일이 흩어져 보이는
    이유를 카드도 캡션도 안 적으면 읽는 사람은 매번 되묻는다. */
-cap.push("※ 계약일 기준이 아니라 「오늘 새로 드러난」 건입니다.");
+cap.push(MULTI ? "※ 계약일 기준이 아니라 「그 기간에 새로 드러난」 건입니다." : "※ 계약일 기준이 아니라 「오늘 새로 드러난」 건입니다.");
 cap.push("   실거래 신고까지 최대 30일 걸려 지난달 계약이 섞입니다.");
 cap.push("");
 cap.push("출처 · 국토교통부 아파트 매매 실거래가 · 2020년 이후 기준");
@@ -162,12 +196,14 @@ const anyConfirmed = absorbed.some((s) => s.state === "오너 확정");
 
 const daily = {
   label,
-  title: `🔥 ${md}월 ${dd}일 신고가 ${kept.length}곳`,
+  title: `🔥 ${periodKo} 신고가 ${kept.length}곳`,
   cards: kept.map((c) => c.slug),
   caption: label,
   state: anyConfirmed ? "오너 확정" : "검수 대기",
   note:
-    `하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 "하루에 제작되는 카드들은 1개로 묶어서"). ` +
+    (MULTI
+      ? `${FROM}~${DATE} ${DAYS.length}일치를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-31 "사흘치를 한 데 묶어서"). 예약이 안 떠 밀린 날을 하루씩 따로 내면 같은 소식을 여러 번 결재·발행하게 된다. `
+      : `하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 "하루에 제작되는 카드들은 1개로 묶어서"). `) +
     `장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 ${MAX}장.` +
     (dropped.length ? ` ⚠️ 상한을 넘어 ${dropped.length}장을 뺐다: ${dropped.map((c) => c.slug).join(", ")}.` : "") +
     ` 흡수한 개별 세트 ${absorbed.length}개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다.` +
