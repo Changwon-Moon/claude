@@ -253,6 +253,15 @@ else {
     "node scripts/check-orphan-scripts.mjs — 살릴 것은 builders.json 에 등록, 끝난 것은 삭제");
 }
 
+/* STATUS 부피 — 2026-08-08 에 비웠는데 3주 만에 578줄이 다시 쌓였다.
+   문서가 자기 규칙("여기엔 지금 상태만 둔다")을 어기는데 아무도 재지 않았다. */
+let statusOut = "";
+try { statusOut = sh("node", ["scripts/prune-status.mjs"]).trim(); }
+catch (e) { statusOut = (e.stdout || e.message || "").toString().trim(); }
+if (statusOut.includes("✅")) check("STATUS 부피", true, "'지금 상태'로 유지되고 있습니다");
+else soft("STATUS 가 다시 부풀고 있습니다",
+  "node scripts/prune-status.mjs — 굳은 규칙을 정본으로 승격한 뒤 서사를 archive 로");
+
 let skillOut = "";try { skillOut = sh("node", ["scripts/check-skill-sync.mjs"]).trim(); }
 catch (e) { skillOut = (e.stdout || e.message || "").toString().trim(); }
 if (skillOut.startsWith("✅")) check("스킬 동기", true, skillOut.replace(/^✅\s*/, ""));

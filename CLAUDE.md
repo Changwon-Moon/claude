@@ -6,7 +6,7 @@
 > 이 공장은 같은 판단이 두 곳에 있으면 갈라진다는 것을 세 번 배웠다
 > (마감 절차 4곳·빌더 찾기 3곳·캡션 서명 2곳).
 >
-> 🗺 **다른 규칙의 정본이 어디인지는 [WIRIT.md](WIRIT.md) 가 가리킨다.**
+> 🗺 **다른 규칙의 정본이 어디인지는 이 문서 §13** 이 가리킨다.
 > 📦 **저장소를 아직 안 열었다면** `wirit-cards` 스킬이 먼저다(토큰·clone·푸시 개통).
 > 🔒 **세션 종료 절차의 정본은 [`docs/CARD_CHECKLIST.md` §7](docs/CARD_CHECKLIST.md)** — §11 엔 요약만 둔다.
 
@@ -110,7 +110,7 @@ node scripts/doctor.mjs            # 3~5분. 실제로 카드를 만들어 본�
 | **명세** | `data/review/{builders,sets,pixel-baselines}.json` | 무엇을 만들고·무엇을 발행하고·픽셀 기준이 뭔지 |
 
 ```
-├── CLAUDE.md(세션 정본) · WIRIT.md(문서 지도) · STATUS.md · README.md
+├── CLAUDE.md(세션 정본 + §13 문서 지도) · STATUS.md(지금 상태) · README.md(소개)
 ├── docs/                # 기준 문서 + guides/(비개발자용) + archive/(사료)
 ├── packages/            # renderer · collectors · pipeline · dashboard-static
 ├── templates/           # 디자인 템플릿
@@ -165,6 +165,7 @@ node scripts/preview-html.mjs --set <세트라벨>
 node scripts/check-doc-links.mjs        # 살아있는 문서의 깨진 링크
 node scripts/check-orphan-scripts.mjs   # 아무도 안 부르는 스크립트
 node scripts/check-skill-sync.mjs       # 계정 스킬 ↔ 저장소본 갈라짐
+node scripts/prune-status.mjs           # STATUS 가 다시 서사 창고가 됐나
 ```
 
 **`error` 가 하나라도 있으면 내보내지 않는다.** `warn` 은 이유를 대고 넘길 수 있다.
@@ -303,6 +304,19 @@ orgId·tblId 가 적혀 온다 → `sources/kosis.ts` 에 `enabled:false` 로 �
 > 등록된 적 없이 몇 주가 지난 것을 발견했다. 스크립트는 키가 없으면 "건너뜁니다" 하고 정상 종료한다.
 
 수집한 데이터는 `verified: false` 로 들어오고, 1차 출처 대조 후에야 `true` 로 올린다.
+
+### 재시도와 포기는 **짝이다** (2026-08-26)
+
+`molit.ts` 에 「연결 실패도 3번 재시도」만 넣었더니 같은 날 오후 곡선 수집기가
+**60분 잡 시간을 통째로 태웠다.** 이제 곡선도 「5번 쉬고도 안 열리면 접는다」를 한다.
+**한쪽을 세게 하면 반대쪽이 받아 줘야 한다.**
+
+그리고 **두 실패를 같은 것으로 세지 않는다**:
+`SERVICETIMEOUT` 은 다시 밀면 오고(기다림), 「호를 못 찾았다」는 다시 밀어도 같다(조사).
+08-26 공급면적 4건이 정확히 둘로 갈렸다.
+
+> ⚠️ 같은 실행 안에서 기다려도 **IP 가 안 바뀐다.** 필요한 것은 대기가 아니라 **새 러너**다
+> — 그래서 신고가는 `singo-retry.yml` 사다리(+20분·+1시간·+3시간)로 받는다.
 
 ### 오너가 기사 링크를 줬을 때
 
@@ -447,3 +461,63 @@ node scripts/close-session.mjs      # 실행은 wirit-close 스킬이 이끈다
 
 **무인 스케줄은 승인 앞까지만.** 정해진 API 를 정해진 시각에 긁는 것은 Actions,
 **판단이 필요한 일**(소재 후보 추리기, 정기물 재생산→결재 대기)은 코워크 스케줄.
+
+---
+
+## §13. 문서 지도 — 어느 규칙의 정본이 어디인가
+
+주제마다 **정본 문서 하나**만 두고 나머지는 그곳을 링크한다. 같은 규칙을 두 곳에 복사하지 않는다.
+
+### 시작·규칙
+
+| 문서 | 무엇의 정본인가 |
+|---|---|
+| **이 문서** | **세션 규칙 정본.** 환경 자가진단·읽기 순서·공장 구조·자주 쓰는 명령·새 카드 흐름·트리거·데이터 수집·절대 규칙·학습 프로토콜·세션 종료 |
+| [STATUS.md](STATUS.md) | **현재 상태.** 지금 확정본·진행 중·다음 할 일 (과거 서사는 `docs/archive/STATUS-history.md`) |
+
+### 카드 만들기
+
+| 문서 | 무엇의 정본인가 |
+|---|---|
+| [docs/CARD_CHECKLIST.md](docs/CARD_CHECKLIST.md) | **작업·검수 절차, 재발 금지 항목** — 카드를 만들거나 고치면 필수 |
+| [docs/TEMPLATES.md](docs/TEMPLATES.md) | **템플릿별 픽셀·필드 계약**(수치 규격의 정본) |
+| [docs/BRAND.md](docs/BRAND.md) | **색·타이포·워터마크 슬롯**(브랜드 규격의 정본) |
+| [docs/REVIEW_RUBRIC.md](docs/REVIEW_RUBRIC.md) | **검수 판정 등급·LLM 렌즈** (designQa 항목 목록의 정본은 `designQa.ts` 코드) |
+| [docs/LINE_CARDS.md](docs/LINE_CARDS.md) | **지하철 노선 시세 카드 시리즈** |
+| [docs/CAPTION.md](docs/CAPTION.md) | **캡션 규칙**(포맷·금지어·서명·생성) — 2026-08-31 통합 |
+| [docs/guides/프로필-세팅안.md](docs/guides/프로필-세팅안.md) | **인스타·스레드 프로필 운영** |
+| [docs/guides/릴스-제작-기준.md](docs/guides/릴스-제작-기준.md) | **릴스 판형·파이프라인** |
+| [docs/guides/control-tower-live.md](docs/guides/control-tower-live.md) | **관제탑 운영·라이브 모드** |
+
+### 자산·데이터
+
+| 문서 | 무엇의 정본인가 |
+|---|---|
+| [docs/ASSET_HUB.md](docs/ASSET_HUB.md) | **자산 등록·카탈로그·라이선스 분류**(라이선스 규칙의 정본) |
+| [docs/IMAGE_AUTOMATION.md](docs/IMAGE_AUTOMATION.md) | **자산 자동 취득**(로고·사진, push→Actions) |
+| [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md) | **데이터 소스 카탈로그**(무엇이 있고 어떻게 접근하나) |
+| [docs/DATA_REFRESH.md](docs/DATA_REFRESH.md) | **정기물 자동 갱신 운영**(무엇을 기계가·무엇을 사람이) |
+
+### 판단·조직·소재
+
+| 문서 | 무엇의 정본인가 |
+|---|---|
+| [company/CEO.md](company/CEO.md) | **오너 판단 원칙**(전략·콘텐츠·디자인·프로세스) |
+| [company/teams/](company/teams/) | **팀별 일하는 방식·도구·학습 역사**(레퍼런스) |
+| [docs/AGENTS.md](docs/AGENTS.md) | **조직 개요·6축 소재 채점 기준·검수 6항** |
+| [docs/RESEARCH_WORKFLOW.md](docs/RESEARCH_WORKFLOW.md) | **리서치 방향·소재 채점 rubric의 정본** |
+| [research/DECISION_LOG.md](research/DECISION_LOG.md) | **소재 결정 로그**(왜 골랐/버렸나 — AI 교보재) |
+| [research/PATTERN_LIBRARY.md](research/PATTERN_LIBRARY.md) | **터진 콘텐츠 재사용 공식** |
+| [docs/CONTENT_STRATEGY.md](docs/CONTENT_STRATEGY.md) | **콘텐츠 티어 믹스·시리즈·발행 리듬** |
+
+지난 계획 문서(로드맵·발주서·자동 운영 매뉴얼 등)는 [docs/archive/](docs/archive/)에 보관돼 있다.
+
+> ⚠️ **새 문서를 만들면 여기 한 줄을 넣는다.** 안 넣으면 없는 문서다.
+> 그리고 **같은 규칙이 두 곳에 생기면 그 자리에서 합친다.** 나중은 없다 —
+> 이 공장은 그렇게 다섯 번 갈라졌다(마감 절차 4곳·빌더 찾기 3곳·캡션 서명 2곳·
+> 세션 규칙 4곳·캡션 규칙 3곳).
+
+**문서가 아닌 것** — `data/*.md`(배관 상태) · `research/briefs/`·`docs/daily/`(자동생성,
+14일 뒤 자동 정리) · `docs/archive/`·`docs/history/`(사료)는 읽는 물건이 아니라 도구다.
+
+---
