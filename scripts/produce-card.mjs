@@ -103,7 +103,16 @@ if (existsSync(capPath)) {
     process.exit(1);
   }
 } else {
-  console.log(`ℹ️ 캡션 없음(${capName}.txt) — 검수는 캡션 작성 후에 돕니다`);
+  /* ⚠️ 2026-08-31: 여기서 "ℹ️ 캡션 없음" 을 찍고 **초록불로 끝냈다.**
+     그러면 초록불이 "검수를 통과했다"가 아니라 **"검수를 안 했다"** 를 뜻하게 된다 —
+     이 저장소 규칙("초록불은 일을 했다는 뜻이어야지 죽지 않고 끝났다는 뜻이면 안 된다")과
+     정면으로 어긋난다. 지금은 47/47 세트에 캡션이 있어 사고가 안 났지만,
+     위험한 자리는 **새 카드**다 — 캡션 전에 이 명령을 돌리면 통과한 것처럼 보인다.
+     → 카드를 그린 사실은 알리되, **종료코드 1 로 끝낸다.** */
+  console.log(`\n⚠️ 카드 ${cardPaths.length}장은 그렸지만 **검수를 못 했습니다** — 캡션이 없습니다(${capName}.txt).`);
+  console.log(`   캡션은 카드의 두 반쪽 중 하나입니다(docs/CAPTION.md §1).`);
+  console.log(`   캡션을 만든 뒤 다시 도세요:  node scripts/gen-singo-caption.mjs <카드.json> --out ${capName}`);
+  process.exit(1);
 }
 
 console.log(`\n✅ 재생산 완료 — ${label} · ${cardPaths.length}장. 배포가 관제탑·내려받기에 반영합니다.`);
