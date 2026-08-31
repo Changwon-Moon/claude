@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-31T13:35:28.929Z",
+  "generatedAt": "2026-08-31T14:05:50.736Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -486,9 +486,9 @@
       "file": "collect-on-request.yml",
       "name": "실거래 수집 (요청 파일 push 트리거)",
       "lastRun": "2026-08-02",
-      "daysAgo": 28,
+      "daysAgo": 29,
       "lastOk": "2026-08-02",
-      "okDaysAgo": 28,
+      "okDaysAgo": 29,
       "fails30": 1,
       "runs30": 7
     },
@@ -546,9 +546,9 @@
       "file": "photo-batch.yml",
       "name": "이미지 일괄 자동취득 (photo-batch)",
       "lastRun": "2026-08-12",
-      "daysAgo": 18,
+      "daysAgo": 19,
       "lastOk": "2026-08-12",
-      "okDaysAgo": 18,
+      "okDaysAgo": 19,
       "fails30": 0,
       "runs30": 7
     },
@@ -779,7 +779,7 @@
       "daysAgo": 0,
       "lastOk": "2026-08-31",
       "okDaysAgo": 0,
-      "fails30": 21,
+      "fails30": 20,
       "runs30": 100
     }
   ]
