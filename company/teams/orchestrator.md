@@ -35,9 +35,11 @@
 
 ## 도구 (구현됨/예정)
 - 파일 계약 파이프라인: data/{raw→content→out} (가동)
-- Actions cron 2종: 데이터 수집(06:30)·소재 보드(07:00) + 소재 보드 후 관제탑 재생성·아티팩트 업로드
+- ~~Actions cron 2종: 데이터 수집(06:30)·소재 보드(07:00)~~ → **2026-08-31 둘 다 예약 해제.**
+  지금 매일 도는 예약은 넷뿐이다: 신고가(04:55)·청약홈(10:00)·명부(매달 1일)·최고가 인덱스(11:00).
+  나머지는 수동·푸시 방아쇠. **현재 상태의 정본은 관제탑 「배관」 탭이다.**
 - **정적 관제탑 생성기**: `packages/dashboard-static` — 저장소 산출물 → `tower-state.json` → `index.html` (B단계 가동)
-- **관제탑 라이브 레이어(구현)**: 생성된 index.html에 GitHub 백엔드 연동(파인그레인드 토큰, 브라우저 localStorage 저장) — 워크플로 dispatch·파일 커밋/append·실행현황 조회를 버튼으로 직접. 배포 워크플로 `.github/workflows/pages.yml`(→ GitHub Pages)
+- **관제탑 라이브 레이어(구현)**: 생성된 index.html에 GitHub 백엔드 연동(파인그레인드 토큰, 브라우저 localStorage 저장) — 워크플로 dispatch·파일 커밋/append·실행현황 조회를 버튼으로 직접. 배포 워크플로 `tower-deploy.yml`(→ Cloudflare Workers, 푸시가 방아쇠). ~~pages.yml~~ 는 폐기
   · ⚠️ **작동 조건**: 라이브 버튼은 **본인 브라우저에서 파일 직접 열기** 또는 **Pages 주소**에서만 동작(Claude 미리보기·아티팩트는 CSP로 외부통신 차단). Pages 게시는 저장소 **Settings→Pages=GitHub Actions** 설정이 전제(미설정 시 배포가 404 실패 — 이번 세션 확인 사항)
 - (예정 M8) 상태 머신 + Telegram 게이트 / (M9 C단계) 웹 대시보드(버튼 실동작)
 

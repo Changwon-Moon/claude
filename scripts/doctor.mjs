@@ -277,6 +277,13 @@ catch { stOk = false; }
     "node scripts/prune-status.mjs — 굳은 규칙을 정본으로 승격한 뒤 서사를 archive 로");
 }
 
+/* 소재 보드 — 고르는 속도보다 빨리 쌓이는가.
+   ⚠️ **경고로 둔다.** 무엇을 지울지는 오너 판단이고, 세션이 스스로 못 고친다.
+      필수로 막으면 소재가 많다는 이유로 카드를 못 만들게 된다 — 말이 안 된다. */
+try { sh("node", ["scripts/ideas-health.mjs", "--strict"]); }
+catch { soft("소재가 고르는 속도보다 빨리 쌓이고 있습니다",
+  "node scripts/ideas-health.mjs — 지우기 전에 먼저 보이게 만듭니다"); }
+
 let skillOut = "";try { skillOut = sh("node", ["scripts/check-skill-sync.mjs"]).trim(); }
 catch (e) { skillOut = (e.stdout || e.message || "").toString().trim(); }
 if (skillOut.startsWith("✅")) check("스킬 동기", true, skillOut.replace(/^✅\s*/, ""));

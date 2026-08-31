@@ -212,6 +212,10 @@ for (const c of cands) {
     source: c.ask ? `지시 수집 · ${c.file}` : `자동 수집 · ${c.file}`,
     state: "",
     status: "",
+    // ⚠️ 들어온 날을 남긴다 (2026-08-31). 이걸 안 남겨서 소재 298건 중 **278건이 언제
+    //    들어왔는지 모르는 상태**가 됐다 — 나이를 모르면 무엇을 지울지 정할 수가 없고,
+    //    그래서 계속 쌓인다. `scripts/ideas-health.mjs` 가 이 비율을 잰다.
+    at: new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10),
     isNew: true, // 관제탑 '오늘' 탭이 이걸 보고 "새로 발굴된 소재"로 부른다
     ...(c.ask ? { ask: c.ask } : {}), // 어떤 지시에 대한 답인지 — 관제탑이 되짚어 보여준다
   };

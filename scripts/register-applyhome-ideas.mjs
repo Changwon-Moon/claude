@@ -121,7 +121,7 @@ let updated = 0;
 for (const x of passing) {
   const e = entryOf(x);
   const cur = byId.get(e.id);
-  if (!cur) { board.ideas.push(e); continue; }
+  if (!cur) { board.ideas.push({ ...e, at: TODAY }); continue; }  // at = 들어온 날(2026-08-31 추가)
   if (cur.feed !== "auto" || cur.state !== "" || cur.status) continue; // 오너의 것은 건드리지 않는다
   if (cur.title === e.title && cur.why === e.why && cur.deadline === e.deadline) continue;
   Object.assign(cur, { cat: e.cat, title: e.title, why: e.why, deadline: e.deadline, url: e.url });

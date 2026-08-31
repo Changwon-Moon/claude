@@ -167,6 +167,7 @@ node scripts/check-orphan-scripts.mjs   # 아무도 안 부르는 스크립트
 node scripts/check-skill-sync.mjs       # 계정 스킬 ↔ 저장소본 갈라짐
 node scripts/prune-status.mjs           # STATUS 가 다시 서사 창고가 됐나
 node scripts/check-schedule-docs.mjs    # 문서가 없는 예약을 가르치나
+node scripts/ideas-health.mjs           # 소재가 쌓이기만 하나
 ```
 
 **`error` 가 하나라도 있으면 내보내지 않는다.** `warn` 은 이유를 대고 넘길 수 있다.
