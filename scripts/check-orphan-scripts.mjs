@@ -33,6 +33,10 @@ const STRICT = process.argv.includes("--strict");
 
 /** 참조를 찾을 곳 — 여기 어디에도 이름이 없으면 고아다 */
 const HAYSTACK_DIRS = [".github/workflows", "scripts", "packages", "data", "docs", "research", "company", "templates"];
+/* ⚠️ 최상위 문서를 빠뜨리면 안 된다 — 세션 규칙 정본(CLAUDE.md)과 문서 지도(WIRIT.md)가
+   거기 있다. 2026-08-31 에 preview-html.mjs 를 CLAUDE.md §3 에 등재했는데도 계속
+   고아로 잡혔다. 검사가 **정본을 안 보고 있었다.** */
+const HAYSTACK_ROOT_FILES = ["CLAUDE.md", "WIRIT.md", "STATUS.md", "README.md"];
 const HAYSTACK_EXT = [".yml", ".yaml", ".mjs", ".js", ".ts", ".json", ".md"];
 /** 사료는 보지 않는다 — 옛 문서가 옛 스크립트를 적어 둔 건 참조가 아니라 기록이다 */
 const HAYSTACK_SKIP = ["docs/archive", "docs/history", "node_modules", ".git"];
@@ -50,7 +54,10 @@ function collect(dir, out = []) {
   return out;
 }
 
-const haystack = HAYSTACK_DIRS.flatMap((d) => collect(join(ROOT, d)));
+const haystack = [
+  ...HAYSTACK_DIRS.flatMap((d) => collect(join(ROOT, d))),
+  ...HAYSTACK_ROOT_FILES.map((f) => join(ROOT, f)).filter((p) => existsSync(p)),
+];
 const scripts = readdirSync(join(ROOT, "scripts"))
   .filter((f) => f.endsWith(".mjs"))
   .map((f) => `scripts/${f}`);

@@ -157,6 +157,14 @@ cd packages/pipeline && pnpm -s review /절대경로/카드.json \
 
 # 자동생성 문서 가지치기(14일 초과) — 워크플로가 매일 자동으로 부른다
 node scripts/prune-auto-docs.mjs
+
+# 카드를 PNG 전에 HTML 한 장으로 모아 보기 (오너 2026-08-31 "작업은 html로 먼저")
+node scripts/preview-html.mjs --set <세트라벨>
+
+# 배관·문서 상태 검사 — doctor 가 부르지만 따로도 돈다
+node scripts/check-doc-links.mjs        # 살아있는 문서의 깨진 링크
+node scripts/check-orphan-scripts.mjs   # 아무도 안 부르는 스크립트
+node scripts/check-skill-sync.mjs       # 계정 스킬 ↔ 저장소본 갈라짐
 ```
 
 **`error` 가 하나라도 있으면 내보내지 않는다.** `warn` 은 이유를 대고 넘길 수 있다.
