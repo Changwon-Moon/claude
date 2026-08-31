@@ -1,6 +1,6 @@
 # 단지 주차대수 — 마지막 실행
 
-- 대기열: 79줄
+- 대기열: 96줄
 - 결과: **성공**
 
 ```
@@ -72,95 +72,128 @@
 ⏭ 이미 있음 — data/datasets/apt-detail/A13987306.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A10027281.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A14210002.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A10027514.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A15288814.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A15105302.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A10026065.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A44656712.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A10027782.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A10023989.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A10024349.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A10027114.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A44182326.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A44347026.json (다시 받으려면 force=1)
 
-── A10027514
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A10027514
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A10027514.json
-A10027514 주차 지상 70 + 지하 1351 = **1421대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
-
-── A15288814
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A15288814
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A15288814.json
-A15288814 주차 지상 556 + 지하 2228 = **2784대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
-
-── A15105302
+── A10027375
 
 > @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A15105302
+> tsx src/aptDetailCli.ts -- --kapt A10027375
 
-/home/runner/work/claude/claude/data/datasets/apt-detail/A15105302.json
-A15105302 주차 지상 120 + 지하 1990 = **2110대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10027375.json
+A10027375 주차 지상 18 + 지하 1319 = **1337대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
 
-── A10026065
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A10026065
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A10026065.json
-A10026065 주차 지상 0 + 지하 1847 = **1847대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
-
-── A44656712
+── A15701003
 
 > @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A44656712
+> tsx src/aptDetailCli.ts -- --kapt A15701003
 
-/home/runner/work/claude/claude/data/datasets/apt-detail/A44656712.json
-A44656712 주차 지상 464 + 지하 1086 = **1550대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+/home/runner/work/claude/claude/data/datasets/apt-detail/A15701003.json
+A15701003 주차 지상 3134 + 지하 116 = **3250대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
 
-── A10027782
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A10027782
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A10027782.json
-A10027782 주차 지상 4 + 지하 1339 = **1343대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
-
-── A10023989
+── A42383508
 
 > @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A10023989
+> tsx src/aptDetailCli.ts -- --kapt A42383508
 
-/home/runner/work/claude/claude/data/datasets/apt-detail/A10023989.json
-A10023989 주차 지상 0 + 지하 2384 = **2384대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+/home/runner/work/claude/claude/data/datasets/apt-detail/A42383508.json
+A42383508 주차 지상 1369 + 지하 0 = **1369대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
 
-── A10024349
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A10024349
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A10024349.json
-A10024349 주차 지상 0 + 지하 3437 = **3437대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
-
-── A10027114
+── A44377204
 
 > @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A10027114
+> tsx src/aptDetailCli.ts -- --kapt A44377204
 
-/home/runner/work/claude/claude/data/datasets/apt-detail/A10027114.json
-A10027114 주차 지상 0 + 지하 1713 = **1713대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+/home/runner/work/claude/claude/data/datasets/apt-detail/A44377204.json
+A44377204 주차 지상 5 + 지하 1585 = **1590대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+⏭ 이미 있음 — data/datasets/apt-detail/A15205513.json (다시 받으려면 force=1)
 
-── A44182326
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A44182326
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A44182326.json
-A44182326 주차 지상 0 + 지하 1435 = **1435대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
-
-── A44347026
+── A15701007
 
 > @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A44347026
+> tsx src/aptDetailCli.ts -- --kapt A15701007
 
-/home/runner/work/claude/claude/data/datasets/apt-detail/A44347026.json
-A44347026 주차 지상 1139 + 지하 1672 = **2811대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+/home/runner/work/claude/claude/data/datasets/apt-detail/A15701007.json
+A15701007 주차 지상 5 + 지하 4413 = **4418대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
 
-실제로 받아 본 단지 11곳 · 이미 있어 건너뛴 것 68곳
+── A10027233
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10027233
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10027233.json
+A10027233 주차 지상 8 + 지하 1898 = **1906대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A10022907
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10022907
+
+   ⏸ 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
+     문이 닫힌 것으로 보고 20초 기다립니다 (1/1)
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10022907.json
+A10022907 주차 지상 0 + 지하 4202 = **4202대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A10025336
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10025336
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10025336.json
+A10025336 주차 지상 0 + 지하 1535 = **1535대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A44573621
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A44573621
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A44573621.json
+A44573621 주차 지상 63 + 지하 1511 = **1574대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A10023451
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10023451
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10023451.json
+A10023451 주차 지상 12 + 지하 1724 = **1736대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+⏭ 이미 있음 — data/datasets/apt-detail/A10024349.json (다시 받으려면 force=1)
+
+── A10024000
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10024000
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10024000.json
+A10024000 주차 지상 4 + 지하 1838 = **1842대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+⏭ 이미 있음 — data/datasets/apt-detail/A10023329.json (다시 받으려면 force=1)
+
+── A10023653
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10023653
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10023653.json
+A10023653 주차 지상 0 + 지하 1274 = **1274대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+⏭ 이미 있음 — data/datasets/apt-detail/A43176406.json (다시 받으려면 force=1)
+
+── A42085309
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A42085309
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A42085309.json
+A42085309 주차 지상 489 + 지하 749 = **1238대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+실제로 받아 본 단지 13곳 · 이미 있어 건너뛴 것 83곳
 ✅ 대기열 전 줄 완료
 ```
