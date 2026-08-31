@@ -158,8 +158,10 @@ cd packages/pipeline && pnpm -s review /절대경로/카드.json \
 # 자동생성 문서 가지치기(14일 초과) — 워크플로가 매일 자동으로 부른다
 node scripts/prune-auto-docs.mjs
 
-# 카드를 PNG 전에 HTML 한 장으로 모아 보기 (오너 2026-08-31 "작업은 html로 먼저")
-node scripts/preview-html.mjs --set <세트라벨>
+# ── 오너에게 넘기는 순서: HTML → 확정 → JPG ZIP (오너 2026-09-01 · 정본은 CARD_CHECKLIST §0-A)
+node scripts/preview-html.mjs --set <세트라벨>    # ① PNG 전에 HTML 한 장으로 훑는다
+node scripts/confirm.mjs <세트라벨>               # ② 오너 확정 — PNG md5 가 확정 증거로 박힌다
+node scripts/deliver-set.mjs --set <세트라벨>     # ③ 확정본 그대로 JPG → ZIP 하나로
 
 # ── 아래는 **외울 필요가 없다.** doctor 하나가 전부 대신 본다(33초).
 #    따로 부르는 건 doctor 가 빨간불을 냈을 때 **그 항목만 자세히 볼 때**다.
@@ -195,6 +197,10 @@ node scripts/singo-july-md.mjs --ym 2026-08
 > ⚠️ **단계마다 오너 승인을 받는다**(2026-07-31 오너 지적).
 > ① 어떤 소재로 갈지 → ② 어떤 형태·제목으로 그릴지 → ③ 제작 → ④ **확정 후** 캡션 손질.
 > 한 번에 완성해 넘기면 오너는 되돌릴 수 없는 상태로 받는다.
+>
+> 📦 **넘기는 형태는 고정이다: HTML 로 먼저 보고 → 확정 → JPG ZIP**(오너 2026-09-01).
+> 정본은 [`docs/CARD_CHECKLIST.md` §0-A](docs/CARD_CHECKLIST.md). PNG 는 버리지 않는다 —
+> 「픽셀 불변」의 증거가 PNG 의 md5 이고 JPG 는 전달용 사본이다.
 
 1. **소재 확정** — `research/ideas.json` 에 있거나 오너가 채팅으로 준다
 2. **데이터 확인** — `data/datasets/` 에 있나? 없으면 수집부터(§6). `verified: true` 인가?
@@ -264,7 +270,15 @@ node scripts/verify-singo-pipe.mjs        # ⓪ 배관 점검 (키·망 불필�
 node scripts/build-singo-record.mjs --apt "<단지>" --type 84 --kapt <A########> --publish
 node scripts/gen-singo-caption.mjs data/content/<날짜>/<카드>.json --out <세트의 caption 값>
 node scripts/produce-card.mjs <세트라벨>
+# ⑤ 하루치를 캐러셀 한 게시물로 묶는다 — **여기서 중복 문지기가 자동으로 돈다**
+node scripts/singo-daily-set.mjs --date <날짜> [--from <시작일>]
 ```
+
+**⑤ 의 중복 문지기(오너 2026-09-01)**: 이미 낸 세트에 **같은 단지·타입·가격**의 장이 있으면
+거기서 **멈춘다**. 그 밖의 전부는 그냥 통과하고 다른 장과 똑같은 판형·절차로 간다
+(*"진짜 중복만 아니면 다 똑같은 템플릿으로"*). 통과시켜야 하면 `--allow-dupe <슬러그>` 로
+**그 장만** 명시한다 — 통째로 끄는 스위치는 없다. 따로 부르는 검사 도구로 만들지 않은 이유는
+**따로 부르는 것은 안 부르게 되기** 때문이다.
 
 **자주 밟는 지뢰 셋:**
 - `pnpm render` 를 직접 부르지 않는다. 렌더러 CLI 인자는 `--data`/`--out` 둘뿐이라

@@ -121,6 +121,88 @@ if (!cards.length) {
 }
 cards.sort((a, b) => b.manwon - a.manwon);
 
+/* ── ①-b 이미 낸 단지·타입인가 — **중복 문지기** (오너 2026-09-01 "중복되어 들어가지는 않았는지")
+ *
+ * 2026-08-31 에 성복역롯데캐슬골드타운 34평·화서역푸르지오더에듀포레 26평이 **이미 낸
+ * 단지·타입인데 다시 들어왔다.** 코드는 아무 말도 안 했고 **오너가 눈으로 잡았다.**
+ * 셀 수 있는 것을 사람 눈에 맡기면 언젠가 놓친다 — 그래서 묶는 자리에 문지기를 놓는다.
+ * 따로 부르는 검사 도구로 만들지 않은 이유는 간단하다: **따로 부르는 것은 안 부르게 된다.**
+ *
+ * 두 갈래뿐이다 (오너 2026-09-01 *"진짜 중복만 아니면 다 똑같은 템플릿으로 진행해줘"*):
+ *   🔴 같은 슬러그 + **같은 가격** → 진짜 중복. 같은 그림을 두 번 내는 것이라 **막는다.**
+ *      정말 다시 내야 하면 `--allow-dupe <슬러그>` 로 그 장만 명시해 통과시킨다.
+ *   ✅ 그 밖의 전부 → **그냥 통과.** 같은 단지가 또 신고가를 썼어도 값이 다르면 새 사건이고,
+ *      새 사건은 다른 장과 **똑같은 판형·똑같은 절차**로 간다. 여기서 따로 알리거나
+ *      특별 취급하지 않는다 — 정기물에 조건부 예외를 두지 않는다(CEO.md 2026-08-16).
+ *
+ * 「이미 냈다」의 근거는 `sets.json` 에 그 슬러그를 담은 **다른 세트**가 있다는 것이다.
+ * 세트에 올랐다는 건 결재 대기든 확정이든 **내보내는 목록에 있었다**는 뜻이다. */
+const SET_LABEL = MULTI ? `singo-daily-${FROM}_${DATE}` : `singo-daily-${DATE}`;
+const ALLOW_DUPE = new Set(
+  (() => {
+    const out = [];
+    for (let i = 0; i < process.argv.length; i++)
+      if (process.argv[i] === "--allow-dupe")
+        for (let j = i + 1; j < process.argv.length && !process.argv[j].startsWith("--"); j++)
+          out.push(process.argv[j]);
+    return out;
+  })(),
+);
+/** 슬러그 → 그 슬러그를 이미 담고 있는 다른 세트들 */
+const priorSets = new Map();
+for (const s of setsEarly) {
+  if (s.label === SET_LABEL) continue; // 오늘 세트를 다시 도는 것은 중복이 아니다
+  /* 개별 세트(카드 1장)는 이 스크립트가 **흡수해 없앨** 것들이라 중복이 아니다 */
+  if ((s.cards ?? []).length === 1) continue;
+  for (const c of s.cards ?? []) {
+    if (!priorSets.has(c)) priorSets.set(c, []);
+    priorSets.get(c).push(s);
+  }
+}
+/** 그 세트의 캡션에서 이 단지가 얼마였는지 찾아 본다(못 찾으면 null — 없다고 막지 않는다) */
+function priorPrice(set, doc) {
+  const capFile = R(`data/review/captions/${set.caption ?? set.label}.txt`);
+  if (!existsSync(capFile)) return null;
+  const name = String(doc.title ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  const head = name.split(" ")[0];
+  if (!head) return null;
+  for (const line of readFileSync(capFile, "utf8").split("\n")) {
+    if (!line.includes(head)) continue;
+    const m = /([\d.]+억)/.exec(line);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+const dupeBlocked = [];
+for (const c of cards) {
+  const prior = priorSets.get(c.slug);
+  if (!prior?.length) continue;
+  const now = String(c.doc.price ?? "").replace(/<[^>]+>/g, "").trim();
+  for (const s of prior) {
+    const was = priorPrice(s, c.doc);
+    if (was && was === now) dupeBlocked.push({ card: c, set: s, was, now });
+  }
+}
+const reallyBlocked = dupeBlocked.filter((d) => !ALLOW_DUPE.has(d.card.slug));
+if (reallyBlocked.length) {
+  console.error(
+    `\n🔴 이미 낸 것과 **단지·타입·가격이 모두 같은** 장이 ${reallyBlocked.length}개 있습니다 —`,
+  );
+  for (const d of reallyBlocked)
+    console.error(
+      `   · ${d.card.slug.replace(/^singo-/, "")} ${d.now} — 「${d.set.label}」 에 이미 있습니다`,
+    );
+  console.error(`\n   같은 그림을 두 번 내는 것이라 여기서 멈춥니다.`);
+  console.error(`   정말 다시 내야 하면 그 장만 명시하세요:`);
+  console.error(
+    `     node scripts/singo-daily-set.mjs … --allow-dupe ${reallyBlocked.map((d) => d.card.slug).join(" ")}`,
+  );
+  process.exit(1);
+}
+if (ALLOW_DUPE.size) console.warn(`\n⚠️ --allow-dupe 로 통과시킨 중복: ${[...ALLOW_DUPE].join(", ")}`);
+if (!dupeBlocked.length) console.log(`✅ 중복 검사 ${cards.length}장 — 이미 낸 것과 같은 장은 없습니다`);
+
 const kept = cards.slice(0, MAX);
 const dropped = cards.slice(MAX);
 if (dropped.length) {
@@ -132,7 +214,7 @@ if (dropped.length) {
 
 /* ── ② 묶음 캡션 */
 const strip = (s) => String(s ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-const label = MULTI ? `singo-daily-${FROM}_${DATE}` : `singo-daily-${DATE}`;
+const label = SET_LABEL;
 const md = Number(DATE.slice(5, 7));
 const dd = Number(DATE.slice(8, 10));
 const fmd = Number(FROM.slice(5, 7));
