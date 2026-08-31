@@ -15,7 +15,7 @@ export const STAGES = [
   "성과",
 ] as const;
 
-/** 6축 rubric 라벨 (docs/AGENTS.md / RESEARCH_WORKFLOW). 수요·데이터 이중축의 5개 세부. */
+/** 6축 rubric 라벨 (정본: docs/RESEARCH_WORKFLOW.md §3-2). 수요·데이터 이중축의 5개 세부. */
 export const RUBRIC_LABELS = [
   "시의성",
   "데이터",

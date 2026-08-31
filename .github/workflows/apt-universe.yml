@@ -133,8 +133,12 @@ jobs:
           git config user.name "wirit-bot"
           git config user.email "actions@github.com"
           git add -f data/apt-universe-last.md
+          # 사람이 읽는 명부 md 를 같이 다시 만든다 (2026-08-31 배선).
+          # 그전엔 이 스크립트를 **아무도 자동으로 안 불렀다** — 명부가 바뀌면 손으로 돌려야 했고,
+          # 손으로 하는 일은 언젠가 멈춘다. 명부가 바뀌는 그 자리에서 문서도 따라오게 한다.
+          node scripts/apt-universe-md.mjs || true
           # ⚠️ 경로를 한 줄에 몰아 쓰지 않는다 — 하나라도 없으면 git add 가 통째로 실패한다
-          for P in data/datasets/apt-universe.json data/datasets/apt-list data/datasets/apt-hhld.json; do
+          for P in data/datasets/apt-universe.json data/datasets/apt-list data/datasets/apt-hhld.json docs/guides/명부-1000세대.md; do
             [ -e "$P" ] && git add "$P" || true
           done
           if git diff --cached --quiet; then

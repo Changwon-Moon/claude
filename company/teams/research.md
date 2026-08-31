@@ -42,7 +42,7 @@
 - RSS 파서(테스트 28종): `packages/collectors/src/parse/rss.ts`
 
 ## 지식
-- 6축 rubric: `docs/AGENTS.md` — 수요·시의성·데이터·저장가치·관심폭·우리다움
+- 6축 rubric: `docs/RESEARCH_WORKFLOW.md` §3-2(정본) — 수요·시의성·데이터·저장가치·관심폭·우리다움
 - 수치는 신호일 뿐, 카드 제작 시 1차 출처 재확인 (오보 방지)
 
 ## 기본 업무 기준 (07-21 확정)

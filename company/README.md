@@ -22,7 +22,6 @@
 |---|---|
 | [CEO.md](./CEO.md) | **CEO의 뇌** — 오너에게 배운 판단 원칙의 누적. 모든 팀이 일하기 전 참조 |
 | [teams/*.md](./teams/) | 팀별 사원 카드 — 가치관·책임·도구·지식·**학습 로그**·KPI |
-| [../docs/AGENTS.md](../docs/AGENTS.md) | 조직 스펙(입출력 계약·프롬프트 골격) — 팀 파일의 기술적 상세 |
 | [../research/DECISION_LOG.md](../research/DECISION_LOG.md) | 오너의 소재 결정 기록 (CEO 학습의 1차 원료) |
 | [../research/PATTERN_LIBRARY.md](../research/PATTERN_LIBRARY.md) | 터진 콘텐츠 패턴 (트렌드분석팀 지식) |
 

@@ -11,7 +11,7 @@
  * 그래서 뒤돌아보는 돌파 판정은 확정이 안 된다 — 매일 도는 알림은 판정 시점의 인덱스 값이
  * 곧 직전 최고가라 정확히 계산한다.
  *
- * 실행: node scripts/singo-july-md.mjs [--ym 2026-07] [--out docs/guides/신고가-2026-07.md]
+ * 실행: node scripts/singo-july-md.mjs [--ym 2026-07] [--out docs/archive/신고가-2026-07.md]
  */
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -23,7 +23,7 @@ const arg = (n) => {
   return i >= 0 ? process.argv[i + 1] : undefined;
 };
 const ym = arg("ym") ?? "2026-07";
-const outPath = join(ROOT, arg("out") ?? `docs/guides/신고가-${ym}.md`);
+const outPath = join(ROOT, arg("out") ?? `docs/archive/신고가-${ym}.md`);
 
 const D = join(ROOT, "data/datasets");
 const uniAll = JSON.parse(readFileSync(join(D, "apt-universe.json"), "utf8"));

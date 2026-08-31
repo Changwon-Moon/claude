@@ -168,6 +168,9 @@ node scripts/check-skill-sync.mjs       # 계정 스킬 ↔ 저장소본 갈라�
 node scripts/prune-status.mjs           # STATUS 가 다시 서사 창고가 됐나
 node scripts/check-schedule-docs.mjs    # 문서가 없는 예약을 가르치나
 node scripts/ideas-health.mjs           # 소재가 쌓이기만 하나
+
+# 어느 달의 신고가 목록을 뽑는다 (월간 회고 재료 · 결과는 docs/archive 로)
+node scripts/singo-july-md.mjs --ym 2026-08
 ```
 
 **`error` 가 하나라도 있으면 내보내지 않는다.** `warn` 은 이유를 대고 넘길 수 있다.
@@ -522,7 +525,8 @@ node scripts/close-session.mjs      # 실행은 wirit-close 스킬이 이끈다
 |---|---|
 | [company/CEO.md](company/CEO.md) | **오너 판단 원칙**(전략·콘텐츠·디자인·프로세스) |
 | [company/teams/](company/teams/) | **팀별 일하는 방식·도구·학습 역사**(레퍼런스) |
-| [docs/AGENTS.md](docs/AGENTS.md) | **조직 개요·6축 소재 채점 기준·검수 6항** |
+| [docs/RESEARCH_WORKFLOW.md](docs/RESEARCH_WORKFLOW.md) | **6축 소재 채점 기준**(§3-2 가 정본) |
+| [docs/REVIEW_RUBRIC.md](docs/REVIEW_RUBRIC.md) | **검수 6항 게이트 · 판정 등급** |
 | [docs/RESEARCH_WORKFLOW.md](docs/RESEARCH_WORKFLOW.md) | **리서치 방향·소재 채점 rubric의 정본** |
 | [research/DECISION_LOG.md](research/DECISION_LOG.md) | **소재 결정 로그**(왜 골랐/버렸나 — AI 교보재) |
 | [research/PATTERN_LIBRARY.md](research/PATTERN_LIBRARY.md) | **터진 콘텐츠 재사용 공식** |
