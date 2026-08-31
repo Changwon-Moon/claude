@@ -1533,6 +1533,20 @@
         "dogam-01/2-top",
         "dogam-01/3-why"
       ]
+    },
+    {
+      "label": "dogam-02-seocho",
+      "cmd": "scripts/build-dogam-card.mjs",
+      "args": [
+        "dogam-seocho-2026.json",
+        "2026-08-31"
+      ],
+      "note": "「대장 도감」 2화 서초구. 수치는 국토부 실거래 캐시(11650)에서 코드가 뽑았다 — 1화는 보도 출처였다.",
+      "produces": [
+        "dogam-02/1-cover",
+        "dogam-02/2-top",
+        "dogam-02/3-why"
+      ]
     }
   ]
 }
