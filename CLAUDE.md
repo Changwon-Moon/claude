@@ -232,6 +232,16 @@ node scripts/line-card.mjs 3호선     # 문장째 넘겨도 됨
 - 새 달을 포함하려면 `--collect 202608` → push → pull 후 다시 실행
 - **아직 없는 노선**은 자동 불가 — `docs/LINE_CARDS.md` §7(큐레이션)을 먼저 밟는다
 
+### 📈 "주간 상승률 카드" (매매·전세 연속 상승)
+
+```bash
+node scripts/weekly-card.mjs              # 매매 + 전세 2장
+node scripts/weekly-card.mjs --only mae   # 하나만
+```
+자료 신선도 확인 → 빌드 → 렌더 → 검수가 한 번에 돈다.
+⚠️ **수집은 여기서 못 한다** — 세션은 외부망이 막혀 R-ONE 을 직접 못 부른다.
+자료가 8일 넘게 낡았으면 명령이 먼저 말해 준다(`data/reb-weekly-queue.txt` 에 한 줄 → 푸시).
+
 ### 🏢 "OO 단지 청약 카드"
 
 ```bash

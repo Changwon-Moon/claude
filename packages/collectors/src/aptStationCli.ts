@@ -96,8 +96,41 @@ async function main() {
   );
   const docs: any[] = s.documents ?? [];
   if (!docs.length) {
-    console.error(`⛔ 반경 ${RADIUS}m 안에 지하철역이 없습니다 — 뱃지를 붙이지 않습니다.`);
-    process.exit(1);
+    /* ⚠️ **"역이 없다"는 사실이지 실패가 아니다** (2026-08-31).
+     *
+     * 그전엔 여기서 종료코드 1 로 끝냈다. 그러면 한 줄 때문에 워크플로 전체가 빨간불이 되고
+     * (대기열 79줄이 다 성공해도), 30일 실패 7회로 찍혀 계기판이 "돌지만 계속 실패"라고 말했다.
+     * 이 저장소 규칙은 그 반대다 — **빨간불은 "일을 못 했다"를 뜻해야지
+     * "역이 없다"를 뜻하면 안 된다.**
+     *
+     * 그리고 파일을 안 남기니 **다음 회차에 또 조회했다.** 없다는 것도 알아낸 사실이다.
+     * `station: null` 로 기록하면 빌더가 뱃지를 안 붙이고, 수집기는 다시 안 부른다. */
+    const outDir = R("data/datasets/apt-station");
+    mkdirSync(outDir, { recursive: true });
+    writeFileSync(
+      join(outDir, `${outKey}.json`),
+      JSON.stringify({
+        _: [
+          "반경 안에 지하철역이 없어 뱃지를 붙이지 않는 단지다.",
+          "**이것도 알아낸 사실이다** — 파일을 안 남기면 다음 회차에 또 조회한다.",
+          "빌더는 station 이 null 이면 그 줄을 아예 그리지 않는다(2026-08-31).",
+        ],
+        key: outKey,
+        kaptCode: kapt ?? null,
+        name: name ?? null,
+        addr,
+        x: Number(x),
+        y: Number(y),
+        geoMethod: method,
+        station: null,
+        distanceM: null,
+        radiusM: RADIUS,
+        checkedAt: new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10),
+      }, null, 2) + "\n",
+      "utf8",
+    );
+    console.log(`ⓘ 반경 ${RADIUS}m 안에 지하철역이 없습니다 — 뱃지 없이 기록했습니다(다시 조회하지 않습니다).`);
+    process.exit(0);
   }
 
   /* 같은 역이 출입구별로 여러 건 오기도 한다. 이름으로 접어 **가장 가까운 한 건**만 남긴다. */

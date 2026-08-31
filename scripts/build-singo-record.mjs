@@ -852,7 +852,15 @@ let station = null;
 let stationRaw = null; // 뱃지를 생략하더라도 **잰 값은 meta 에 남긴다**
 if (KAPT) {
   const sp = P(`data/datasets/apt-station/${KAPT}.json`);
-  if (existsSync(sp)) {
+  /* ⚠️ station 이 null 인 파일은 **반경 안에 역이 없다고 확인한 기록**이다(2026-08-31 신설).
+     그전엔 그런 단지에 파일을 안 남겨 매번 다시 조회했고, 수집기가 종료코드 1 로 끝나
+     워크플로 전체가 빨간불이 됐다(30일 실패 7회). 여기서는 없는 것처럼 지나간다 —
+     뱃지를 안 붙이는 것이 정답이고, 아래 블록은 역이 있을 때만 돌면 된다. */
+  const stationKnownMissing = existsSync(sp)
+    && (JSON.parse(readFileSync(sp, "utf8")).station == null);
+  if (stationKnownMissing) {
+    console.log(`ⓘ ${KAPT} — 반경 안에 역이 없다고 확인된 단지입니다. 뱃지 생략.`);
+  } else if (existsSync(sp)) {
     const st = JSON.parse(readFileSync(sp, "utf8"));
     /* ⚠️ 거리를 카드에서 뺐기 때문에(오너 2026-08-16) 뱃지는 **"가깝다"는 말**이 된다.
        그러면 먼 역을 붙이는 순간 그 자체가 과장이다 — 반정아이파크캐슬5단지는
