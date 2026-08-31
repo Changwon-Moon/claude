@@ -126,11 +126,18 @@ for (const t of TABS) {
   await page.waitForTimeout(350);
   const shown = await page.evaluate(`document.getElementById("view-${t}").classList.contains("on")`);
   if (!shown) note(`탭:${t}`, "탭을 눌러도 화면이 안 바뀜");
-  // 이 화면에 아무것도 없으면 최소한 "왜 비었는지"는 말해줘야 한다.
-  // (결정함이 비는 건 정상이다 — 대신 "오늘 결정할 것 없음"이 떠 있어야 한다)
+  /* 이 화면에 아무것도 없으면 최소한 "왜 비었는지"는 말해줘야 한다.
+   * (결정함이 비는 건 정상이다 — 대신 "오늘 결정할 것 없음"이 떠 있어야 한다)
+   *
+   * ⚠️ 누를 것만 세면 **읽기 전용 화면이 빈 화면으로 잡힌다**(2026-08-31).
+   *    배관 계기판은 표와 목록만 있고 버튼이 하나도 없다 — 자료가 가득 차 있는데도
+   *    "아무것도 없다"로 보고돼 배포를 막았다. 이 검사가 묻는 것은 "누를 게 있나"가 아니라
+   *    **"보여준 게 있나"**다. 그러니 그려진 내용(표 줄·목록 항목)도 함께 센다. */
   const alive = await page.evaluate(`
     [...document.querySelectorAll("#view-${t} button")].filter(b=>b.offsetParent!==null).length
-    + document.querySelectorAll("#view-${t} .allclear, #view-${t} .empty").length`);
+    + document.querySelectorAll("#view-${t} .allclear, #view-${t} .empty").length
+    + [...document.querySelectorAll("#view-${t} table tr, #view-${t} ul li")]
+        .filter(e=>e.offsetParent!==null).length`);
   if (alive === 0 && t !== "assets") note(`탭:${t}`, "아무것도 없고 왜 비었는지 설명도 없음");
 }
 

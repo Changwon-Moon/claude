@@ -18,8 +18,8 @@
           "files": {
             "content": [],
             "png": [],
-            "caption": "",
-            "review": ""
+            "caption": "data/review/captions/singo-daily-2026-08-29_2026-08-31.txt",
+            "review": "data/review/singo-daily-2026-08-29_2026-08-31.json"
           },
           "rebuilt": {
             "content": [
