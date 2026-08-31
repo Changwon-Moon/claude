@@ -1,0 +1,25 @@
+{
+  "kaptCode": "A44182326",
+  "kaptName": "수원시청역SK뷰",
+  "type": "84",
+  "jibun": "1035",
+  "exclusive": 84.64,
+  "commonResidential": 26.61,
+  "supply": 111.25,
+  "pyeong": 33.65,
+  "pyeongLabel": "34평",
+  "sampleDong": "214동",
+  "sampleHo": "604",
+  "sampleCount": 73,
+  "ratio": 0.7608,
+  "parts": [
+    {
+      "purpose": "아파트 / EV홀,계단,초과발코니,세대벽체",
+      "floor": "지상 각층",
+      "area": 26.61
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
