@@ -84,7 +84,10 @@
 - `news-figure@1` 판형을 오너가 고르면 등록 + 첫 실제 카드(인물 실물 사진 교체) 확정
 - 「오늘의 신고가」 사진 도입 검토(2장 캐러셀: 사진 커버 + 곡선) — **저작권 확인이 먼저**
 - 인구 카드 시리즈 전개(자동 추출 배관 활용)
-- 🔴 **낡은 수집 채우기** — 인구 22일·KOSIS 18일·ECOS 18일째 안 돎(관제탑 「배관」 탭)
+- 🔴 **`KOSIS_API_KEY` 무효 — 오너 조치 필요.** 인구·세대수·이동 수집이 2026-08-08 부터
+  27일째 전부 실패 중이었다(마지막 성공 08-04). 키 재발급 후 Secrets 교체 →
+  `data/population-queue.txt` 에 한 줄. 자세히는 `docs/API_CONNECTIONS.md` 맨 위
+- ✅ 증시·ECOS 수집은 2026-08-31 재개했다
 - ⭐ **「대장 도감」 25편 시리즈 되살릴지 결정** — 빌더는 `docs/archive/RETIRED_SCRIPTS.md`
 - 소재 대기열: `research/ideas.json`(관제탑 보드) · `research/DECISION_LOG.md`
 

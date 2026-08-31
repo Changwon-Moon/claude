@@ -36,7 +36,7 @@
 
 | API | 시크릿/환경변수 | 수집기 | 산출 데이터 | 워크플로 (cron은 UTC) | 상태 |
 |---|---|---|---|---|---|
-| **KOSIS 국가통계포털** | `KOSIS_API_KEY` | `sources/kosis.ts` · `kosisCli.ts` | `data/datasets/population-latest.json` · `population/{YYYY-MM}.json` | `population-collect.yml` `0 0 3 * *` + `data/population-queue.txt` | ✅ 실사용 |
+| **KOSIS 국가통계포털** | `KOSIS_API_KEY` | `sources/kosis.ts` · `kosisCli.ts` | `data/datasets/population-latest.json` · `population/{YYYY-MM}.json` | `population-collect.yml` `0 0 3 * *` + `data/population-queue.txt` | 🔴 **키 무효(2026-08-31 확인)** |
 | └ KOSIS 표 검증(probe) | 〃 | `kosisProbeCli.ts` | `data/kosis-probe.md` · `kosis-probe-raw.json` | `kosis-probe.yml` (`data/kosis-probe-queue.txt`) | ✅ 실사용 |
 | └ KOSIS 표 찾기(search) | 〃 | `kosisSearchCli.ts` | `data/kosis-search.md` | 〃 (`search=키워드` 줄) | ✅ 2026-08-12 신설 |
 | **국토부 실거래(매매)** | `MOLIT_API_KEY` | `sources/molit.ts` · `molitCli.ts` | `data/datasets/molit/{LAWD}-{YYYYMM}.json` | `molit-collect.yml` `20 3 5,20 * *` + `data/molit-queue.txt` · `collect-on-request.yml` | ✅ 실사용 |
