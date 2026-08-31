@@ -1519,6 +1519,20 @@
       "produces": [
         "singo-늘푸른벽산-59"
       ]
+    },
+    {
+      "label": "dogam-01-gangnam",
+      "cmd": "scripts/build-dogam-card.mjs",
+      "args": [
+        "dogam-gangnam-2026.json",
+        "2026-07-21"
+      ],
+      "note": "「대장 도감」 25편 시리즈 1화. 2026-08-31 되살림 — 빌더가 명세에 없어 시스템이 이 시리즈의 존재를 몰랐다.",
+      "produces": [
+        "dogam-01/1-cover",
+        "dogam-01/2-top",
+        "dogam-01/3-why"
+      ]
     }
   ]
 }

@@ -87,7 +87,8 @@
 - ✅ **낡은 수집 3개 재개 완료(2026-08-31)** — 인구·증시·ECOS 전부 성공.
   인구는 KOSIS 키 만료로 27일간 조용히 실패 중이었고, 오너가 키를 교체해 복구했다
   (`population/2026-07.json` 수신). 교훈은 `docs/API_CONNECTIONS.md` 맨 위
-- ⭐ **「대장 도감」 25편 시리즈 되살릴지 결정** — 빌더는 `docs/archive/RETIRED_SCRIPTS.md`
+- ⭐ **「대장 도감」 되살렸다(2026-08-31)** — 1화(강남구) 재생산 확인, `builders.json` 등록 완료.
+  **다음: 2화(서초구) 데이터셋을 만들면 시리즈가 이어진다.** 매주 한 구씩 25주 치 콘텐츠
 - 소재 대기열: `research/ideas.json`(관제탑 보드) · `research/DECISION_LOG.md`
 
 ## 키 · 정기물 · 배관

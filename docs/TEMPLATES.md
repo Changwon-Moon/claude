@@ -6,6 +6,67 @@
 
 참고 계정(@flow, APT_LAP)의 비밀은 화려한 디자인이 아니라 **철저한 템플릿화**다. 같은 레이아웃에 데이터만 갈아끼우기 때문에 매일 생산이 가능하고, 팔로워는 "익숙한 틀 + 새로운 정보"로 즉시 소비한다. 우리 시스템은 이것을 코드로 구현한다.
 
+## 0. 지금 어느 판형이 쓰이고 있나
+
+<!-- template-usage -->
+> 이 표는 `node scripts/template-usage.mjs --write` 가 **실측해서 씁니다.**
+> 손으로 고치지 마세요 — 세트가 늘면 다음 실행 때 덮어씁니다.
+
+**템플릿 40종** · 🟢 카드가 나오는 것 23 · 🟡 빌더는 있음 5 · ⚪ 잠자는 것 12
+
+| 판형 | 상태 | 쓰는 세트 |
+|---|---|---|
+| `brand-rank-grid` | 🟢 1세트 | brand-rank |
+| `danji-cover` | 🟢 11세트 | danji-hangang, danji-songdo, danji-jangwi 외 8 |
+| `foreign-rank` | 🟢 1세트 | foreign-rank |
+| `gov-bars` | 🟢 1세트 | m2-gov |
+| `index-2026` | 🟢 1세트 | index-2026 |
+| `line2-loop` | 🟢 1세트 | line2-loop |
+| `line3-loop` | 🟢 1세트 | line3-loop |
+| `line4-loop` | 🟢 1세트 | line4-loop |
+| `line5-loop` | 🟢 1세트 | line5-loop |
+| `line6-loop` | 🟢 1세트 | line6-loop |
+| `line7-loop` | 🟢 1세트 | line7-loop |
+| `line8-loop` | 🟢 1세트 | line8-loop |
+| `line9-loop` | 🟢 1세트 | line9-loop |
+| `map-board` | 🟢 1세트 | jeongbi-board |
+| `map-rank` | 🟢 2세트 | estate-84, estate-59 |
+| `metro-2col` | 🟢 1세트 | metro-speed |
+| `record-grid` | 🟢 1세트 | kospi-record |
+| `sinbundang-loop` | 🟢 1세트 | sinbundang-loop |
+| `singo-record` | 🟢 11세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 8 |
+| `singoga-map` | 🟢 3세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map |
+| `streak-line` | 🟢 2세트 | mae-streak, jeonse-streak |
+| `world-capital` | 🟢 1세트 | world-capital |
+| `year-bars` | 🟢 1세트 | wolse-flip |
+| `dogam-cover` | 🟡 빌더 있음·세트 없음 | — |
+| `estate-cover` | 🟡 빌더 있음·세트 없음 | — |
+| `insight-points` | 🟡 빌더 있음·세트 없음 | — |
+| `metro-cover-photo` | 🟡 빌더 있음·세트 없음 | — |
+| `ranking-table` | 🟡 빌더 있음·세트 없음 | — |
+| `dummy-card` | ⚪ 잠자는 중 | — |
+| `figure-roster` | ⚪ 잠자는 중 | — |
+| `highlight-cover` | ⚪ 잠자는 중 | — |
+| `index-cover` | ⚪ 잠자는 중 | — |
+| `map-choropleth` | ⚪ 잠자는 중 | — |
+| `market-daily` | ⚪ 잠자는 중 | — |
+| `news-figure` | ⚪ 잠자는 중 | — |
+| `sinbundang-geomap` | ⚪ 잠자는 중 | — |
+| `sinbundang-map` | ⚪ 잠자는 중 | — |
+| `streak-bars` | ⚪ 잠자는 중 | — |
+| `tax-matrix` | ⚪ 잠자는 중 | — |
+| `tohuh-map` | ⚪ 잠자는 중 | — |
+
+> 🟡 는 **죽은 것이 아니라 발행 단위로 등록되지 않은 것**이다. 「대장 도감」이 그렇게
+> 1화에서 멈춰 있었다 — 빌더는 있는데 `builders.json`·`sets.json` 에 없어서
+> 시스템이 그 시리즈의 존재를 몰랐다.
+
+> ⚪ 를 함부로 지우지 않는다. 판형은 HTML·CSS·schema·config 한 벌이고,
+> 지우면 그 판형으로 낸 발행본을 **다시 그릴 수 없다**. 읽는 부담도 없다(이 표만 보면 된다).
+<!-- template-usage -->
+
+---
+
 ## 1. 렌더링 방식
 
 **HTML/CSS 템플릿 + JSON 데이터 바인딩 → Playwright(headless Chromium) 스크린샷 → 1080×1350 PNG**
