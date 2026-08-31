@@ -43,7 +43,12 @@ const items = data.ideas || data.items || (Array.isArray(data) ? data : []);
 
 const done = items.filter((i) => i.status === "done" || Number(i.stage || 0) > 0);
 const open = items.filter((i) => !(i.status === "done" || Number(i.stage || 0) > 0));
-const undated = open.filter((i) => !i.at);
+/* ⚠️ `at` 이 없어도 `source` 에 날짜가 박혀 있는 것이 많다
+   ("자동 수집 · 2026-08-07-auto.md"). 2026-08-31 실측: 278건 중 208건(75%)을
+   여기서 캤다. `at` 만 보면 "100% 모름"으로 읽혀 정리가 불가능해 보인다 —
+   실제로는 4분의 3을 나이로 자를 수 있었다. **없다고 단정하기 전에 다른 데를 본다.** */
+const ageKnown = (i) => !!(i.at || String(i.source || "").match(/\d{4}-\d{2}-\d{2}/));
+const undated = open.filter((i) => !ageKnown(i));
 const unstated = open.filter((i) => !i.state);
 
 /* 주제별 — 한 갈래로 쏠려 있으면 발굴이 편식하고 있다는 뜻이다 */

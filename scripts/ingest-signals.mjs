@@ -193,19 +193,40 @@ function answersAsk(title, ask) {
 
 const added = [];
 const offTopic = [];
+const overQuota = [];
 let n = 0;
+
+/* ── 주제 쿼터 (2026-08-31 신설) ──
+ * 하루 8건 상한은 있었지만 **주제 배분이 없었다.** 8건이 전부 증시 뉴스여도 그대로 들어왔다.
+ * 실측(08-31): 안 고른 소재 278건 중 증시·경제가 131건(47%) — 정리한 55건도 대부분
+ * "잉글랜드은행 기준금리 동결" 같은 **지나간 기사 헤드라인**이었다. 카드가 될 일이 없다.
+ *
+ * 관제탑은 이미 목표 비중을 갖고 있었다(부동산30·경제20·주식15·기타35) — 수집기가 그걸
+ * 몰랐을 뿐이다. **정해 둔 규칙을 코드가 모르면 없는 규칙이다.**
+ *
+ * ⚠️ 막지 않고 **뒤로 미룬다.** 쿼터를 넘은 후보는 버리는 게 아니라 이번 회차에서만 빠진다 —
+ *    다음 날 자리가 있으면 들어온다. 좋은 소재를 주제 때문에 영영 잃으면 안 된다. */
+const QUOTA = { "부동산": 3, "증시·경제": 2, "돈·연봉": 1, "교통·생활": 1, "생활·통계": 2 };
+const perTopic = {};
+
 for (const c of cands) {
   if (added.length >= MAX_INGEST) break; // 한 번에 쏟아붓지 않는다 — 오너가 볼 수 있는 양만
   const key = norm(clean(c.title));
   if (!key || key.length < 4 || known.has(key)) continue;
   if ([...droppedTitles].some((d) => d && (d.includes(key) || key.includes(d)))) continue;
   if (c.ask && !answersAsk(c.title, c.ask)) { offTopic.push(clean(c.title)); continue; }
+  const topic = pickTopic(c);
+  if (!c.ask && (perTopic[topic] || 0) >= (QUOTA[topic] ?? 2)) {
+    overQuota.push(`${topic} · ${clean(c.title).slice(0, 40)}`);
+    continue; // 지시로 찾은 것(c.ask)은 쿼터를 안 본다 — 오너가 콕 집어 시킨 것이다
+  }
+  perTopic[topic] = (perTopic[topic] || 0) + 1;
   known.add(key);
   const id = `sig-${latestDate}-${++n}`;
   const item = {
     id,
     cat: pickCat(),
-    topic: pickTopic(c),
+    topic,   // 위에서 쿼터를 재며 이미 구했다 — 두 번 계산하지 않는다
     feed: "manual", // 뉴스에서 온 신호는 자료 갱신 통로가 없다 — 정기물로 만들려면 수집기부터
     title: clean(c.title).slice(0, 90),
     why: c.ask ? `지시 "${c.ask}"로 찾은 소재` : clean(c.why).slice(0, 140),
@@ -236,3 +257,8 @@ for (const a of added) console.log(`   · ${a.title}`);
 if (offTopic.length) {
   console.log(`   (지시와 무관해 제외 ${offTopic.length}건: ${offTopic.slice(0, 3).join(" / ")})`);
 }
+if (overQuota.length) {
+  console.log(`   (주제 쿼터로 다음 회차로 미룸 ${overQuota.length}건: ${overQuota.slice(0, 3).join(" / ")})`);
+  console.log(`   쿼터: ${Object.entries(QUOTA).map(([k, v]) => `${k} ${v}`).join(" · ")} — 한 갈래가 보드를 차지하지 않게 합니다`);
+}
+console.log(`   이번 회차 주제 배분: ${Object.entries(perTopic).map(([k, v]) => `${k} ${v}`).join(" · ") || "(없음)"}`);
