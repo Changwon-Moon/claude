@@ -144,6 +144,11 @@ const mapSvg = tohuhMapSvg({
   twoLine: true,
   labelWidth: 118,
   placement: "nearest",
+  /* 지도 안 @wirit_note 스탬프를 끈다. 이 모듈은 스탬프를 **2개** 찍는데 BRAND.md 는
+   * 「아이디는 카드당 1개」다. 우리는 푸터 워터마크(슬롯 B, 모든 카드 기본)를 쓰므로 여기는 끈다.
+   * — 오너 지적 2026-09-01 "푸터에 위릿노트가 안 들어가 있다". 앞선 판은 월세 카드의
+   *   hideFooterId 를 근거 없이 따라 했고, 그 결과 카드에 아이디가 2개(지도) + 0개(푸터) 였다. */
+  stamps: false,
   /* 색은 판형 기본값(옅은 빨강 → 진한 빨강)을 쓴다 — 오너 지시 2026-09-01.
    * colorLo/colorHi 를 주지 않으면 tohuh-map 모듈의 기본 그라데이션이 그대로 걸린다. */
   /* 최저값이 0 이 아니라 4억대라 [0,max] 정규화하면 색이 다 비슷해진다 → [min,max] 로 편다 */
@@ -166,7 +171,7 @@ const ranked = [...AREAS].sort((a, b) => eokOf(b.geoName) - eokOf(a.geoName));
 const MEDALS = ["🥇", "🥈", "🥉"];
 /* 제목이 커진 만큼 표가 짧아져야 한다(오너 2026-09-01). 값은 렌더 실측으로 맞춘다 —
  * 넘치면 QA 가 잡고, 너무 적으면 표 아래가 빈다. */
-const HEAD_N = Number(process.env.WIRIT_HEAD_N || 15);
+const HEAD_N = Number(process.env.WIRIT_HEAD_N || 14);
 const TAIL_N = 3;
 if (AREAS.length <= HEAD_N + TAIL_N) throw new Error("지역이 20곳 이하면 꼬리를 만들 이유가 없다 — 전부 싣는다");
 const rows = ranked.slice(0, HEAD_N).map((a, i) => ({
@@ -215,12 +220,14 @@ const card = {
    * 대신 `centerBody` 를 켠다: 판형이 행 높이를 줄이고 본문을 세로 가운데로 맞춘다
    * (`.sm-cb.sm-c .sm-row` — 월세 비중 지도가 같은 17+3 행에서 쓰는 조합이다). */
   centerBody: true,
+  /* centerBody 는 상단 패딩을 72px 로 내려 제목이 우상단 뱃지 아래 11px 로 붙는다.
+   * CARD_CHECKLIST §2 는 세로 30px 이상을 요구하고 designQa 의 badgeclear 가 그걸 잰다. */
+  topGap: true,
   /* 강조색은 **빨강**(판형 기본값) — 오너 지시 2026-09-01.
    * 처음엔 코발트로 냈다: 빨강은 상승·과열 전용이고(docs/BRAND.md) 이 카드는 '수준'을
    * 말한다는 이유였다. 오너가 이 카드에서는 빨강으로 정했고, 그러면 지도 그라데이션도
    * 같이 빨강이어야 한다 — 한쪽만 바꾸면 카드 안에 색이 둘 남는다.
    * (판형의 `accent: "cobalt"` 변형은 그대로 남아 있다. 지금은 아무 카드도 쓰지 않는다.) */
-  hideFooterId: true, // 아이디는 지도 안 스탬프에 있다
   note: `2026.06~07월 실거래 · 수도권 토지거래허가구역 40곳`,
   /* 숫자를 손으로 적지 않는다 — 수집이 갱신되면 제목도 따라 바뀐다.
    * '국평'·'25평' 같은 통칭 대신 **전용 ○○㎡** 로 쓴다. 통칭은 공급면적 기준이라

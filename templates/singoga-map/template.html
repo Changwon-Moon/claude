@@ -21,6 +21,12 @@
       /* 상위 3행 배경과 범례 막대도 같이 옮긴다 — 한 곳만 바꾸면 카드 안에 두 색이 남는다 */
       .sm-a-cobalt .sm-row.top { background: rgba(46,107,255,0.06); }
       .sm-a-cobalt .sm-legend .bar { background: linear-gradient(90deg, rgb(226,235,255), rgb(26,62,150)); }
+      /* ── (옵션) 제목 위 여백 — `topGap: true` 를 준 카드에만. 2026-09-01 신설.
+       * `centerBody`(.sm-cb)는 상단 패딩을 92 → 72px 로 내린다. 제목이 큰 카드에서는 그 20px
+       * 때문에 제목이 우상단 로고 뱃지 아래 11px 로 붙는다 — CARD_CHECKLIST §2 는 「겹치지
+       * 않는 것만으론 부족, 세로 30px 이상」이라고 못박고 있고 designQa 의 badgeclear 가 그걸 잰다.
+       * 발행본은 이 필드가 없어 규칙이 안 걸린다(픽셀 불변). */
+      .sm-tg.sm-cb.sm-c { padding-top: 100px; }
       /* (옵션) 제목 앞 로고 — title HTML 에 <img class="tlogo"> 를 넣은 카드만. 없으면 영향 없음. */
       .sm .wirit-title img.tlogo { height: 0.8em; width: auto; vertical-align: -0.03em; margin-right: 0.22em; }
       .sm-sub { margin-top: 8px; font-size: 27px; font-weight: 800; color: var(--wirit-gray); letter-spacing: -0.01em; }
@@ -150,7 +156,7 @@
     </style>
   </head>
   <body>
-    <div class="wirit-card sm{{#if compact}} sm-c{{/if}}{{#if spread}} sm-spread{{/if}}{{#if head.c}} sm-h3{{/if}}{{#if centerBody}} sm-cb{{/if}}{{#if accent}} sm-a-{{accent}}{{/if}}"{{#if fitTitle}} data-fit="1"{{/if}}>
+    <div class="wirit-card sm{{#if compact}} sm-c{{/if}}{{#if spread}} sm-spread{{/if}}{{#if head.c}} sm-h3{{/if}}{{#if centerBody}} sm-cb{{/if}}{{#if accent}} sm-a-{{accent}}{{/if}}{{#if topGap}} sm-tg{{/if}}"{{#if fitTitle}} data-fit="1"{{/if}}>
       <div class="wirit-topcap">{{#if note}}<span>{{note}}</span>{{/if}}</div>
       <h1 class="wirit-title">{{{title}}}</h1>
       {{#if subtitle}}<div class="sm-sub">{{subtitle}}</div>{{/if}}

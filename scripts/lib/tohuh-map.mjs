@@ -82,6 +82,10 @@ export function tohuhMapSvg({
   colorLo = [255, 226, 219],
   colorHi = [176, 11, 30],
   textThreshold = 0.5,
+  /** 지도 안 @wirit_note 스탬프. 기본은 켬(발행 카드 픽셀 불변).
+   * ⚠️ 이 모듈은 스탬프를 **2개** 찍는데 BRAND.md 는 「아이디는 카드당 1개」다.
+   * 푸터 워터마크를 켜는 카드는 여기를 꺼야 한 장에 하나가 된다(2026-09-01). */
+  stamps: withStamps = true,
   labelWidth = 140,
   twoLine = false,
   /** 라벨 배치 방식. "down"(기본) = 아래로만 밀기 · "nearest" = 중앙에서 가장 가까운 빈 자리.
@@ -272,7 +276,9 @@ export function tohuhMapSvg({
     `<clipPath id="tkOutSeoul"><path clip-rule="evenodd" d="M0,0H${VW}V${VH}H0Z${seoulD}"/></clipPath>` +
     `<path class="tk-seoul" d="${seoulD}" clip-path="url(#tkOutSeoul)"/>`;
 
-  const stamps = STAMP_AT.map(([x, y]) => `<text class="tk-stamp" x="${x}" y="${y}">@wirit_note</text>`).join("");
+  const stamps = withStamps
+    ? STAMP_AT.map(([x, y]) => `<text class="tk-stamp" x="${x}" y="${y}">@wirit_note</text>`).join("")
+    : "";
 
   return (
     `<svg viewBox="0 0 ${VW} ${VH}" xmlns="http://www.w3.org/2000/svg">` +
