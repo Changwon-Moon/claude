@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["template", "title", "mapSvg", "rows"],
+  "properties": {
+    "template": { "type": "string" },
+    "date": { "type": "string" },
+    "note": { "type": "string" },
+    "title": { "type": "string" },
+    "subtitle": { "type": "string" },
+    "mapSvg": { "type": "string" },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["n", "name", "grade", "price"],
+        "properties": {
+          "n": { "type": "number" },
+          "name": { "type": "string" },
+          "grade": { "type": "number" },
+          "price": { "type": "string" },
+          "trades": { "type": "string" },
+          "tohuh": { "type": "boolean" }
+        }
+      }
+    },
+    "insight": { "type": "string" },
+    "caveat": { "type": "string" },
+    "legend": { "type": "object" },
+    "source": { "type": "object" }
+  },
+  "additionalProperties": true
+}

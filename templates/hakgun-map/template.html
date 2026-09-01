@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* hakgun-map@1 — 좌: 학군지 19곳 급지·34평 중위가 표 / 우: 수도권 시군구 지도(토허제 면 + 번호 핀). 종이 톤. */
+      .hg { padding-top: 72px; }
+      .hg .wirit-title { font-size: 58px; line-height: 1.06; letter-spacing: -0.03em; margin: 2px 0 0; }
+      .hg .wirit-title .hi { color: var(--wirit-cobalt); }
+      .hg-sub { margin-top: 28px; font-size: 22px; font-weight: 800; color: var(--wirit-gray); letter-spacing: -0.015em; }
+
+      .hg-body { flex: 1; min-height: 0; display: flex; gap: 16px; margin: 12px 0 0; }
+
+      /* ── 좌: 19줄 표 ── */
+      .hg-tbl { flex: 0 0 448px; display: flex; flex-direction: column; min-height: 0; }
+      .hg-hrow {
+        display: grid; grid-template-columns: 34px 1fr 62px 108px; align-items: center; gap: 8px;
+        padding: 0 4px 7px; font-size: 18px; font-weight: 800; color: var(--wirit-gray);
+      }
+      .hg-hrow span:nth-child(3) { text-align: center; }
+      .hg-hrow span:last-child { text-align: right; }
+      .hg-row {
+        display: grid; grid-template-columns: 34px 1fr 62px 108px; align-items: center; gap: 8px;
+        flex: 1 1 0; min-height: 0; padding: 0 4px; border-top: 1.5px solid var(--wirit-ink-06);
+      }
+      .hg-n { font-family: var(--font-num); font-size: 20px; font-weight: 900; color: var(--wirit-gray); }
+      .hg-nm { font-size: 25px; font-weight: 900; letter-spacing: -0.025em; color: var(--wirit-ink); white-space: nowrap; }
+      .hg-nm i { font-style: normal; font-size: 17px; font-weight: 800; color: #c8102e; margin-left: 6px; vertical-align: 2px; }
+      .hg-g { justify-self: center; font-size: 17px; font-weight: 900; color: #fff; border-radius: 999px; padding: 3px 9px; letter-spacing: -0.02em; }
+      .hg-g.g1 { background: #141821; }
+      .hg-g.g2 { background: #2e6bff; }
+      .hg-g.g3 { background: #8f9bad; }
+      .hg-p { text-align: right; white-space: nowrap; font-family: var(--font-num); font-size: 27px; font-weight: 900; color: var(--wirit-ink); }
+      .hg-p i { font-style: normal; font-size: 18px; font-weight: 800; margin-left: 1px; color: var(--wirit-gray); }
+
+      /* ── 우: 지도 + 범례 + 결론 ── */
+      .hg-right { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+      .hg-map { flex: 1; min-height: 0; display: flex; align-items: center; }
+      .hg-map svg { width: 100%; height: auto; max-height: 100%; display: block; }
+
+      .hg-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; justify-content: center; margin-top: 4px;
+        font-size: 18px; font-weight: 700; color: var(--wirit-gray); }
+      .hg-legend span { display: inline-flex; align-items: center; gap: 5px; }
+      .hg-legend b { width: 17px; height: 12px; border-radius: 3px; display: inline-block; }
+      .hg-legend em { width: 15px; height: 15px; border-radius: 999px; display: inline-block; }
+      .hg-legend .hit b { background: #f6c9cd; }
+      .hg-legend .off b { background: #e7e9ee; }
+      .hg-legend .l1 em { background: #141821; }
+      .hg-legend .l2 em { background: #2e6bff; }
+      .hg-legend .l3 em { background: #8f9bad; }
+
+      .hg-ins { margin-top: 12px; background: var(--wirit-ink); color: #fff; border-radius: 18px; padding: 17px 19px; }
+      .hg-ins .t { font-size: 20px; font-weight: 800; color: #9aa7b6; letter-spacing: -0.01em; }
+      .hg-ins .b { margin-top: 7px; font-size: 25px; font-weight: 800; line-height: 1.34; letter-spacing: -0.02em; }
+      .hg-ins .b b { color: #ff9aa0; font-weight: 900; }
+
+      .hg-caveat { margin-top: 9px; font-size: 17px; font-weight: 600; color: var(--wirit-gray); line-height: 1.36; }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card hg">
+      <div class="wirit-topcap">{{#if note}}<span>{{note}}</span>{{/if}}</div>
+      <h1 class="wirit-title">{{{title}}}</h1>
+      <div class="hg-sub">{{subtitle}}</div>
+
+      <div class="hg-body">
+        <div class="hg-tbl">
+          <div class="hg-hrow"><span></span><span>학군지</span><span>급지</span><span>34평 중위</span></div>
+          {{#each rows}}
+          <div class="hg-row">
+            <span class="hg-n">{{this.n}}</span>
+            <span class="hg-nm">{{this.name}}{{#unless this.tohuh}}<i>허가구역 밖</i>{{/unless}}</span>
+            <span class="hg-g g{{this.grade}}">{{this.grade}}급</span>
+            <span class="hg-p">{{this.price}}<i>억</i></span>
+          </div>
+          {{/each}}
+        </div>
+
+        <div class="hg-right">
+          <div class="hg-map">{{{mapSvg}}}</div>
+          <div class="hg-legend">
+            <span class="hit"><b></b>{{legend.hit}}</span>
+            <span class="off"><b></b>{{legend.off}}</span>
+            <span class="l1"><em></em>{{legend.g1}}</span>
+            <span class="l2"><em></em>{{legend.g2}}</span>
+            <span class="l3"><em></em>{{legend.g3}}</span>
+          </div>
+          <div class="hg-ins">
+            <div class="t">지도가 말하는 것</div>
+            <div class="b">{{{insight}}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hg-caveat">※ {{caveat}}</div>
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.period}} · {{source.period}}{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+  </body>
+</html>
