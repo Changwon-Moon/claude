@@ -12,13 +12,14 @@
          margin-top -30 · padding-right 190(로고 자리)을 공용 규격에서 그대로 받는다. */
       .hg .wirit-topcap { font-size: 20px; font-weight: 700; letter-spacing: -0.015em; }
 
+      /* 제목은 로고 라인 바로 아래에 붙지 않게 titleGap 만큼 띄운다(오너 2026-09-01). */
       .hg-title {
-        margin: 0; text-align: center; white-space: nowrap;
-        font-size: 78px; font-weight: 900; line-height: 1.08;
+        margin: var(--titleGap) 0 0; text-align: center; white-space: nowrap;
+        font-size: var(--titleFs); font-weight: 900; line-height: 1.08;
         letter-spacing: -0.04em; color: var(--wirit-ink);
       }
       .hg-title .hi { color: var(--wirit-cobalt); }
-      .hg-body { position: relative; margin: 22px 0 0; width: 100%; height: var(--bodyH); }
+      .hg-body { position: relative; margin: var(--bodyGap) 0 0; width: 100%; height: var(--bodyH); }
 
       /* ── 좌: 급지별 3개 표 ── */
       .hg-tbl { position: absolute; left: 0; top: 0; width: var(--tableW); }
@@ -33,6 +34,9 @@
       .hg-grp.g1 .hg-hdr em { background: #c8102e; }
       .hg-grp.g2 .hg-hdr em { background: #141821; }
       .hg-grp.g3 .hg-hdr em { background: #8f9bad; }
+      .hg-grp.g1 .hg-hdr .lb { color: #c8102e; }
+      .hg-grp.g2 .hg-hdr .lb { color: #141821; }
+      .hg-grp.g3 .hg-hdr .lb { color: #8f9bad; }
 
       .hg-row {
         height: var(--rowH);
@@ -54,7 +58,8 @@
       .hg-map svg { width: 100%; height: auto; display: block; }
 
       .hg-legend {
-        position: absolute; left: var(--mapX); width: var(--mapW); bottom: 0; height: var(--legendH);
+        position: absolute; left: var(--mapX); width: var(--mapW); height: var(--legendH);
+        top: calc(var(--mapH) + var(--legendGap));
         display: flex; flex-wrap: wrap; align-items: center; gap: 4px 13px; justify-content: center;
         font-size: 18px; font-weight: 700; color: var(--wirit-gray);
       }
@@ -72,14 +77,17 @@
     </style>
   </head>
   <body>
-    <div class="wirit-card hg">
+    <div
+      class="wirit-card hg"
+      style="--titleFs:{{layout.titleFs}}px;--titleGap:{{layout.titleGap}}px;--bodyGap:{{layout.bodyGap}}px"
+    >
       <div class="wirit-topcap"><span>{{subtitle}}</span></div>
 
       <h1 class="hg-title">{{{title}}}</h1>
 
       <div
         class="hg-body"
-        style="--bodyH:{{layout.bodyH}}px;--tableW:{{layout.tableW}}px;--rowH:{{layout.rowH}}px;--hdrH:{{layout.hdrH}}px;--grpGap:{{layout.grpGap}}px;--mapX:{{layout.mapX}}px;--mapY:{{layout.mapY}}px;--mapW:{{layout.mapW}}px;--legendH:{{layout.legendH}}px"
+        style="--bodyH:{{layout.bodyH}}px;--tableW:{{layout.tableW}}px;--rowH:{{layout.rowH}}px;--hdrH:{{layout.hdrH}}px;--grpGap:{{layout.grpGap}}px;--mapX:{{layout.mapX}}px;--mapY:{{layout.mapY}}px;--mapW:{{layout.mapW}}px;--mapH:{{layout.mapH}}px;--legendH:{{layout.legendH}}px;--legendGap:{{layout.legendGap}}px"
       >
         <div class="hg-map">{{{mapSvg}}}</div>
 

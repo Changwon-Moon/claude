@@ -32,15 +32,23 @@ const AREA_MIN = 79, AREA_MAX = 86; // 전용 84㎡대(국민평형) = 통칭 34
 const MIN_TRADES = 20;              // 이보다 적으면 중위값이 흔들린다 — 던진다
 
 // ── 판형 치수(카드 안쪽 936px 기준) ─────────────────────────────────
-// bodyH 는 1350 에서 머리(여백 72 + 로고 라인 32 + 제목 85) · 본문 위 여백 22 · 푸터 94 를 뺀
-// 나머지다. 이 계산이 어긋나면 표가 아래 요소를 밟는다(2026-09-01 실제로 밟았다).
-// 부제는 로고 라인으로 올라가고 범례는 지도 아래로 내려왔다(오너 2026-09-01).
-const LEGEND_H = 32;
+// ── 판형 치수 — 카드 세로 1350 을 여기서 전부 나눈다 ────────────────
+// 머리(여백·로고라인·제목)와 푸터를 뺀 나머지가 본문이고, 본문 높이는 **지도 높이가 정한다**
+// (오너 2026-09-01: 표 세로를 지도에 맞추고, 범례는 지도 바로 밑에).
+// 남는 아래 여백이 MIN_BOTTOM_GAP 보다 좁으면 던진다 — 푸터에 붙는 사고를 두 번 냈다.
+const CARD_H = 1350;
+const HEAD = { padTop: 72, topcap: 32, titleGap: 24, titleFs: 76, bodyGap: 22 };
+HEAD.titleH = Math.round(HEAD.titleFs * 1.08);
+const FOOTER_H = 94;
+const LEGEND_H = 32, LEGEND_GAP = 10;
+const MIN_BOTTOM_GAP = 40;
+
 const LAYOUT = {
-  bodyW: 936, bodyH: 1046,
-  tableW: 300, gutter: 20,       // 표는 내용에 맞춰 좁히고, 남는 폭은 전부 지도에 준다
-  rowH: 45, hdrH: 36, grpGap: 16,
-  legendH: LEGEND_H,
+  bodyW: 936,
+  tableW: 286, gutter: 16,        // 표는 내용 폭까지만. 남는 폭은 전부 지도가 가져간다
+  hdrH: 36, grpGap: 16,
+  legendH: LEGEND_H, legendGap: LEGEND_GAP,
+  titleFs: HEAD.titleFs, titleGap: HEAD.titleGap, bodyGap: HEAD.bodyGap,
 };
 LAYOUT.mapX = LAYOUT.tableW + LAYOUT.gutter;
 
@@ -108,13 +116,14 @@ if (flat.length !== calc.length) throw new Error("급지로 나눈 뒤 개수가
 // LABEL = 이름표만 옮긴다(핀 위치는 그대로). 서울 학군지가 붙어 있어 기본 자리(핀 오른쪽)로는 겹친다.
 const NUDGE = { 평촌: { dx: 17 }, 산본: { dx: -17 } };
 const LABEL = {
-  잠실: { anchor: "middle", ly: -30 },       // 방이 핀에 가렸다
+  잠실: { anchor: "middle", lx: -28, ly: -32 }, // 방이 핀에 닿았다
+  광장: { anchor: "end", lx: -4 },              // 고덕 핀에 닿았다
   "반포·서초": { anchor: "end", lx: -4 },   // 이름표 끝을 대치 핀이 덮었다
   대치: { anchor: "middle", ly: 34 },    // 반포·서초 이름표와 겹쳤다
   산본: { anchor: "end", lx: -4 },       // 평촌 핀에 가렸다
   판교: { anchor: "end", lx: -4 },       // 분당 핀에 닿았다
 };
-const { svg: mapSvg, resolved, pinsXY, viewBox } = sudogwonMapSvg({
+const { svg: mapSvg, resolved, collisions, viewBox } = sudogwonMapSvg({
   pins: flat.map((r) => {
     const a = calc.find((x) => x.name === r.key);
     return { n: r.n, key: r.key, label: r.name, geoName: a.geoName, pinDong: a.pinDong, grade: r.grade, ...(NUDGE[r.key] || {}), ...(LABEL[r.key] || {}) };
@@ -123,17 +132,32 @@ const { svg: mapSvg, resolved, pinsXY, viewBox } = sudogwonMapSvg({
   showLabels: true,
 });
 for (const r of resolved) if (r.by === "sgg") console.log(`  ⚠️ ${r.label} — 동(${r.dong})을 못 찾아 시군구 중심에 찍었습니다.`);
+// 이름표가 겹치면 그림에서는 '사라진 것'처럼 보인다 — 조용한 실패라 여기서 던진다.
+// designQa 는 SVG 안의 글자를 재지 않으므로 이 검사는 여기 말고 있을 자리가 없다.
+if (collisions.length)
+  throw new Error(`지도 이름표가 겹칩니다 (${collisions.length}건):\n  · ${collisions.join("\n  · ")}\n  → LABEL 에서 해당 이름표의 anchor/lx/ly 를 옮기세요.`);
 
 // ── 6. 표가 본문에 들어가는지 잰다 ──────────────────────────────────
-// 지도는 남은 폭을 다 쓰되, 세로가 넘치면 세로에 맞춘다 — 넘치면 범례를 밀어낸다.
-const availW = LAYOUT.bodyW - LAYOUT.mapX;
-const availH = LAYOUT.bodyH - LEGEND_H;
-const mapW = Math.min(availW, (availH * viewBox.w) / viewBox.h);
+// 지도는 남은 폭을 전부 쓴다. 본문 높이는 지도 + 범례로 정해진다.
+const mapW = LAYOUT.bodyW - LAYOUT.mapX;
 const mapH = (mapW * viewBox.h) / viewBox.w;
 LAYOUT.mapW = Math.round(mapW * 10) / 10;
 LAYOUT.mapH = Math.round(mapH * 10) / 10;
-LAYOUT.mapX = Math.round((LAYOUT.mapX + (availW - mapW) / 2) * 10) / 10;
-LAYOUT.mapY = Math.round(Math.max(0, (availH - mapH) / 2) * 10) / 10;
+LAYOUT.mapY = 0;                       // 지도와 표를 같은 높이에서 시작한다
+LAYOUT.bodyH = Math.round(mapH + LEGEND_GAP + LEGEND_H);
+
+// 표 세로를 지도 세로에 맞춘다 — 행 높이를 거기서 역산한다.
+LAYOUT.rowH = Math.floor((mapH - 3 * LAYOUT.hdrH - 2 * LAYOUT.grpGap) / flat.length);
+if (LAYOUT.rowH < 30) throw new Error(`행 높이가 ${LAYOUT.rowH}px 로 너무 낮습니다 — 지도가 작거나 학군지가 너무 많습니다.`);
+
+const headH = HEAD.padTop + HEAD.topcap + HEAD.titleGap + HEAD.titleH + HEAD.bodyGap;
+const bottomGap = CARD_H - (headH + LAYOUT.bodyH + FOOTER_H);
+if (bottomGap < MIN_BOTTOM_GAP)
+  throw new Error(
+    `본문이 푸터에 붙습니다(아래 여백 ${bottomGap}px < ${MIN_BOTTOM_GAP}px). ` +
+      `머리 ${headH} + 본문 ${LAYOUT.bodyH} + 푸터 ${FOOTER_H} = ${headH + LAYOUT.bodyH + FOOTER_H} / ${CARD_H}. ` +
+      `표 폭을 넓혀 지도를 줄이거나 제목을 줄이세요.`,
+  );
 
 let offset = 0;
 const rowY = new Map();
@@ -143,14 +167,14 @@ for (const g of groups) {
   offset += g.rows.length * LAYOUT.rowH + LAYOUT.grpGap;
 }
 const usedH = offset - LAYOUT.grpGap;
-if (usedH > LAYOUT.bodyH)
-  throw new Error(`표가 본문보다 깁니다(${usedH}px > ${LAYOUT.bodyH}px). rowH/hdrH 를 줄이세요.`);
+if (usedH > LAYOUT.mapH + 4)
+  throw new Error(`표(${usedH}px)가 지도(${LAYOUT.mapH}px)보다 깁니다. 행 높이 역산을 확인하세요.`);
 
 // ── 7. 카드 ──────────────────────────────────────────────────────────
 const base = {
   template: "hakgun-map@1",
   date,
-  title: '수도권 <span class="hi">학군지</span> 등급 &amp; 국평 시세',
+  title: '수도권 <span class="hi">학군지 19곳</span>, 국평 시세',
   subtitle: "『대한민국 학군지도』 급지분류 · 국토부 실거래 전용 84㎡ 중위값",
   mapSvg,
   groups,

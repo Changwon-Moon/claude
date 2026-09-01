@@ -123,9 +123,15 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, show
 
   // 핀 — 위에서 잡은 좌표를 화면 좌표로. dx/dy 는 겹칠 때의 미세조정(픽셀).
   // pinsXY 는 **viewBox 좌표**다. 카드 픽셀로 옮기는 계산은 빌더가 한다(연결선용).
+  const LAB_FS = 30, PIN_R = 22;
+  // 이름표 폭을 글자 수로 잰다(한글 1em · 가운뎃점 0.45em · 자간 -0.03em).
+  // 정확한 폰트 메트릭은 아니지만 **겹침을 찾기에는 충분히 넉넉한** 근사다.
+  const labWidth = (t) => [...t].reduce((w, ch) => w + (ch === "·" ? 0.45 : 1), 0) * LAB_FS * 0.97;
+
   let marks = "";
   let labels = "";
   const pinsXY = [];
+  const labBoxes = [];
   for (const p of placed) {
     const x = px(p.lon) + (p.dx || 0);
     const y = py(p.lat) + (p.dy || 0);
@@ -139,8 +145,27 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, show
       const off = anchor === "end" ? -30 : anchor === "middle" ? 0 : 30;
       const lx = x + off + (p.lx || 0);
       const ly = y + 11 + (p.ly || 0);
+      const w = labWidth(p.label);
+      const x0 = anchor === "end" ? lx - w : anchor === "middle" ? lx - w / 2 : lx;
+      labBoxes.push({ key: p.key ?? p.label, x0, x1: x0 + w, y0: ly - LAB_FS * 0.78, y1: ly + LAB_FS * 0.24 });
       labels +=
         `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" class="sg-lab" text-anchor="${anchor}">${p.label}</text>`;
+    }
+  }
+
+  // ── 이름표 겹침 판정 ──────────────────────────────────────────────
+  // designQa 는 SVG 안을 재지 않는다. 그래서 좌표를 아는 여기서 잰다.
+  // 겹친 이름표는 그림에서 '그냥 사라진 것'처럼 보이므로 조용한 실패다.
+  const GAP = 10;                      // 이만큼 떨어져 있어야 붙지 않은 것으로 본다(viewBox 단위)
+  const collisions = [];
+  const hit = (a, b) => a.x0 < b.x1 + GAP && b.x0 < a.x1 + GAP && a.y0 < b.y1 + GAP && b.y0 < a.y1 + GAP;
+  for (let i = 0; i < labBoxes.length; i++) {
+    for (let j = i + 1; j < labBoxes.length; j++)
+      if (hit(labBoxes[i], labBoxes[j])) collisions.push(`이름표 ${labBoxes[i].key} ↔ 이름표 ${labBoxes[j].key}`);
+    for (const p of pinsXY) {
+      if (p.key === labBoxes[i].key) continue;
+      const pb = { x0: p.x - PIN_R, x1: p.x + PIN_R, y0: p.y - PIN_R, y1: p.y + PIN_R };
+      if (hit(labBoxes[i], pb)) collisions.push(`이름표 ${labBoxes[i].key} ↔ 핀 ${p.key}`);
     }
   }
 
@@ -155,15 +180,21 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, show
     `.sg-lab{font-size:30px;font-weight:800;fill:#141821;letter-spacing:-0.03em;` +
     `paint-order:stroke;stroke:#fff;stroke-width:6px;stroke-linejoin:round}` +
     `.sg-wm{font-size:34px;font-weight:800;fill:#c4c9d2;letter-spacing:-0.01em}` +
+    `.sg-wm2{font-size:34px;font-weight:800;fill:#ffffff;letter-spacing:-0.01em}` +
     `</style>` +
     // 워터마크는 면(base) **뒤에** 그린다. 앞에 두면 폴리곤이 덮어 조용히 사라진다
     // — 화면을 좁게 자른 뒤 실제로 그렇게 사라졌다(2026-09-01).
     // 두 개를 좌상단·좌하단 빈 코너에 둔다(오너 2026-09-01). 데이터 위에는 올리지 않는다.
     `<g>${base}</g>` +
     `<text x="${(PAD + VW * 0.035).toFixed(1)}" y="${(PAD + VH * 0.05).toFixed(1)}" class="sg-wm">@wirit_note</text>` +
-    `<text x="${(PAD + VW * 0.035).toFixed(1)}" y="${(PAD + VH * 0.93).toFixed(1)}" class="sg-wm">@wirit_note</text>` +
+    `<text x="${(PAD + VW * 0.17).toFixed(1)}" y="${(PAD + VH * 0.93).toFixed(1)}" class="sg-wm2">@wirit_note</text>` +
     `<g>${labels}</g><g>${marks}</g>` +
     `</svg>`;
 
-  return { svg, resolved, pinsXY, viewBox: { w: VW, h: VH } };
+  // viewBox 가 깨지면 브라우저가 SVG 를 기본 크기(300×150)로 그린다 — 지도가 띠처럼 잘리는데
+  // designQa 는 '넘침 없음'으로 통과시킨다. 실제로 그렇게 한 번 나갔다(2026-09-01).
+  if (!new RegExp(`^<svg viewBox="0 0 ${VW} ${VH}" `).test(svg))
+    throw new Error("지도 SVG 의 viewBox 가 깨졌습니다 — 이대로 두면 지도가 300×150 으로 줄어 잘립니다.");
+
+  return { svg, resolved, pinsXY, collisions, viewBox: { w: VW, h: VH } };
 }
