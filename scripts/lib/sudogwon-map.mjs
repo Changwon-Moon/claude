@@ -15,6 +15,7 @@
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { hanRiverPoints } from "./han-river.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 
@@ -115,11 +116,21 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, show
 
   // 면 — 허가구역 / 미지정 두 갈래
   let base = "";
+  let landD = "";                 // 그린 땅 전체 — 한강을 이 위에만 보이게 자른다
   for (const f of sgg) {
     const d = pathOf(f.geometry);
     if (!d) continue;
     base += `<path d="${d}" class="${hitSgg.has(f.properties.name) ? "sg-hit" : "sg-off"}"/>`;
+    landD += d;
   }
+
+  // 한강 — 손으로 그리지 않는다. 토허제 지도와 **같은 모듈**(lib/han-river.mjs)을 쓴다.
+  // 강 모양이 카드마다 다르면 같은 계정의 지도로 안 보인다.
+  const riverPts = hanRiverPoints(sgg.map((f) => ({ name: f.properties.name, rings: rings(f.geometry) })));
+  const riverD = "M" + riverPts.map(([lo, la]) => `${px(lo).toFixed(1)},${py(la).toFixed(1)}`).join("L");
+  const riverSvg =
+    `<clipPath id="sgLand"><path d="${landD}"/></clipPath>` +
+    `<path class="sg-river" d="${riverD}" clip-path="url(#sgLand)"/>`;
 
   // ── 핀 그리기 ────────────────────────────────────────────────────
   // pinsXY 는 **viewBox 좌표**다. 카드 픽셀로 옮기는 계산은 빌더가 한다.
@@ -146,7 +157,11 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, show
   //   ① 이미 놓인 이름표  ② **모든 핀(자기 핀 포함)**  ③ 지도 테두리.
   // ②의 '자기 핀 포함'이 핵심이다 — 예전엔 자기 핀을 건너뛰어서
   // 이름표가 제 마커를 밟는 것을 한 번도 못 잡았다.
-  const GAP = 12;                        // 이만큼 떨어져야 붙지 않은 것으로 본다(viewBox 단위)
+  // GAP = '붙지 않았다'고 볼 최소 여유. **배치 거리와 다른 값이다** —
+  // 예전엔 둘을 같은 12 로 써서, 가장 가까운 후보가 늘 GAP 검사에 걸려 한 칸씩 더 밀려났다.
+  // 그래서 이름표가 필요 이상으로 멀어졌다(오너 2026-09-01). 이제 여유는 좁게, 후보는 그 여유
+  // 바로 바깥에 두어 **겹치지 않는 선에서 가장 가까이** 붙는다.
+  const GAP = 6;                         // viewBox 단위(카드 픽셀로 약 3.7px)
   const PIN_OUT = PIN_R + PIN_STROKE / 2;
   const overlaps = (a, b) => a.x0 < b.x1 + GAP && b.x0 < a.x1 + GAP && a.y0 < b.y1 + GAP && b.y0 < a.y1 + GAP;
   const pinBox = (p) => ({ x0: p.x - PIN_OUT, x1: p.x + PIN_OUT, y0: p.y - PIN_OUT, y1: p.y + PIN_OUT });
@@ -157,21 +172,32 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, show
     y1: y + LAB_FS * 0.26,
   });
 
-  /** 핀 둘레 후보 자리 — 가까운 순. 오른쪽·왼쪽을 먼저 써야 읽기 흐름이 안 깨진다. */
-  const candidates = (x, y, ring) => {
-    const o = PIN_OUT + 8 + ring * 16;              // 가로 여백
-    const up = PIN_OUT + LAB_FS * 0.30 + ring * 14; // 위: 글자 아랫선이 핀에 안 닿게
-    const dn = PIN_OUT + LAB_FS * 0.86 + ring * 14; // 아래: 글자 윗선이 핀에 안 닿게
-    return [
-      { x: x + o, y: y + LAB_FS * 0.34, anchor: "start" },
-      { x: x - o, y: y + LAB_FS * 0.34, anchor: "end" },
-      { x, y: y - up, anchor: "middle" },
-      { x, y: y + dn, anchor: "middle" },
-      { x: x + o * 0.75, y: y - up * 0.8, anchor: "start" },
-      { x: x - o * 0.75, y: y - up * 0.8, anchor: "end" },
-      { x: x + o * 0.75, y: y + dn * 0.8, anchor: "start" },
-      { x: x - o * 0.75, y: y + dn * 0.8, anchor: "end" },
-    ];
+  /** 핀 둘레 후보 자리 전부(방향 12 × 반경 3). 고른 순서가 아니라 **거리로** 정한다. */
+  const candidates = (x, y) => {
+    const list = [];
+    for (let ring = 0; ring < 3; ring++) {
+      const o = PIN_OUT + GAP + 2 + ring * 13;                   // 좌우
+      const up = PIN_OUT + GAP + LAB_FS * 0.26 + 2 + ring * 12;  // 위: 글자 아랫선 기준
+      const dn = PIN_OUT + GAP + LAB_FS * 0.80 + 2 + ring * 12;  // 아래: 글자 윗선 기준
+      const mid = y + LAB_FS * 0.34;
+      list.push(
+        { x: x + o, y: mid, anchor: "start", w: 1.00 },
+        { x: x - o, y: mid, anchor: "end", w: 1.00 },
+        { x, y: y - up, anchor: "middle", w: 1.06 },
+        { x, y: y + dn, anchor: "middle", w: 1.06 },
+        // 얕은 대각(가로로 더 뻗고 세로는 조금) — 좌우 다음으로 자연스럽다
+        { x: x + o * 0.92, y: y - up * 0.55, anchor: "start", w: 1.10 },
+        { x: x - o * 0.92, y: y - up * 0.55, anchor: "end", w: 1.10 },
+        { x: x + o * 0.92, y: y + dn * 0.55, anchor: "start", w: 1.10 },
+        { x: x - o * 0.92, y: y + dn * 0.55, anchor: "end", w: 1.10 },
+        // 깊은 대각
+        { x: x + o * 0.72, y: y - up * 0.86, anchor: "start", w: 1.16 },
+        { x: x - o * 0.72, y: y - up * 0.86, anchor: "end", w: 1.16 },
+        { x: x + o * 0.72, y: y + dn * 0.86, anchor: "start", w: 1.16 },
+        { x: x - o * 0.72, y: y + dn * 0.86, anchor: "end", w: 1.16 },
+      );
+    }
+    return list;
   };
 
   let labels = "";
@@ -193,15 +219,24 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, show
         const off = anchor === "end" ? -(PIN_OUT + 8) : anchor === "middle" ? 0 : PIN_OUT + 8;
         chosen = { x: p.x + off + p.force.lx, y: p.y + LAB_FS * 0.34 + p.force.ly, anchor };
       } else {
-        for (let ring = 0; ring < 3 && !chosen; ring++)
-          for (const c of candidates(p.x, p.y, ring)) {
+        // **가장 가까운 자리부터** 본다. 고정 순서로 훑으면 오른쪽이 막혔을 때
+        // 곧장 먼 반경으로 뛰어 이름표가 필요 이상으로 떨어진다(오너 2026-09-01).
+        // 거리에 방향 가중치(w)를 곱해, 같은 거리면 좌우 > 위아래 > 대각 순으로 고른다.
+        const scored = candidates(p.x, p.y)
+          .map((c) => {
             const b = boxOf(c.x, c.y, c.anchor, w);
-            if (b.x0 < 2 || b.x1 > VW - 2 || b.y0 < 2 || b.y1 > VH - 2) continue;   // 지도 밖
-            if (pinsXY.some((q) => overlaps(b, pinBox(q)))) continue;               // 자기 핀 포함
-            if (labBoxes.some((lb) => overlaps(b, lb))) continue;
-            chosen = c;
-            break;
-          }
+            const cx = (b.x0 + b.x1) / 2, cy = (b.y0 + b.y1) / 2;
+            return { c, b, d: Math.hypot(cx - p.x, cy - p.y) * c.w };
+          })
+          .sort((a, b2) => a.d - b2.d);
+        for (const s2 of scored) {
+          const b = s2.b;
+          if (b.x0 < 2 || b.x1 > VW - 2 || b.y0 < 2 || b.y1 > VH - 2) continue;   // 지도 밖
+          if (pinsXY.some((q) => overlaps(b, pinBox(q)))) continue;               // 자기 핀 포함
+          if (labBoxes.some((lb) => overlaps(b, lb))) continue;
+          chosen = s2.c;
+          break;
+        }
       }
 
       if (!chosen) { unplaced.push(p.label); continue; }
@@ -229,6 +264,7 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, show
     `<svg viewBox="0 0 ${VW} ${VH}" xmlns="http://www.w3.org/2000/svg">` +
     `<style>` +
     `.sg-off{fill:#e7e9ee;stroke:#fff;stroke-width:1.6}` +
+    `.sg-river{fill:none;stroke:#8fbfe0;stroke-width:9;stroke-linecap:round;stroke-linejoin:round}` +
     `.sg-hit{fill:#f6c9cd;stroke:#fff;stroke-width:1.6}` +
     `.sg-pin{stroke:#fff;stroke-width:3.5}` +
     `.sg-pin.g1{fill:#c8102e}.sg-pin.g2{fill:#141821}.sg-pin.g3{fill:#8f9bad}` +
@@ -241,7 +277,7 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, show
     // 워터마크는 면(base) **뒤에** 그린다. 앞에 두면 폴리곤이 덮어 조용히 사라진다
     // — 화면을 좁게 자른 뒤 실제로 그렇게 사라졌다(2026-09-01).
     // 두 개를 좌상단·좌하단 빈 코너에 둔다(오너 2026-09-01). 데이터 위에는 올리지 않는다.
-    `<g>${base}</g>` +
+    `<g>${base}</g>${riverSvg}` +
     `<text x="${(PAD + VW * 0.035).toFixed(1)}" y="${(PAD + VH * 0.05).toFixed(1)}" class="sg-wm">@wirit_note</text>` +
     `<text x="${(PAD + VW * 0.17).toFixed(1)}" y="${(PAD + VH * 0.93).toFixed(1)}" class="sg-wm2">@wirit_note</text>` +
     `<g>${labels}</g><g>${marks}</g>` +

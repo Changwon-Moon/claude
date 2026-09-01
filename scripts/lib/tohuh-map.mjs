@@ -12,6 +12,7 @@
  * 결정적: 같은 입력 → 같은 SVG 문자열.
  */
 import { readFileSync } from "node:fs";
+import { hanRiverPoints } from "./han-river.mjs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -19,18 +20,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "../..");
 const rings = (g) =>
   g.type === "Polygon" ? g.coordinates : g.type === "MultiPolygon" ? g.coordinates.flat() : [];
 
-/** 한강 = '이북 구'와 '이남 구'가 공유하는 경계 정점. 구리=이북, 하남·강동=이남으로 둔다. */
-const NORTH = new Set([
-  "종로구", "중구", "용산구", "성동구", "광진구", "동대문구", "중랑구",
-  "성북구", "강북구", "도봉구", "노원구", "은평구", "서대문구", "마포구", "구리시",
-]);
-const SOUTH = new Set([
-  "양천구", "강서구", "구로구", "금천구", "영등포구", "동작구", "관악구",
-  "서초구", "강남구", "송파구", "강동구", "하남시",
-]);
-/** 양 끝단은 서울/경기 '시계'라 공유 정점이 없다 → 해당 구의 북쪽 링 정점을 이어붙인다. */
-const WEST_TAIL = [[126.807, 37.6012], [126.8225, 37.588]]; // 강서구 북쪽 링(건너편 고양시)
-const EAST_TAIL = [[127.2014, 37.5883], [127.2364, 37.5549]]; // 하남시 북쪽 링(건너편 남양주)
+/* 한강 북/남 구 명단·꼬리 좌표·정점 추출은 lib/han-river.mjs 하나가 정본이다(2026-09-01 분리). */
 
 /** 아이덴티티 스탬프 위치 — 지도 '안'의 빈 여백 2곳(뷰박스 좌표라 지도 밖으로 안 나간다) */
 const STAMP_AT = [[120, 1020], [720, 110]];
@@ -249,20 +239,12 @@ export function tohuhMapSvg({
 
   /* 한강 — 손으로 그리지 않는다. 이북·이남 구가 공유하는 정점을 경도순으로 이으면
    * 선이 정확히 구 경계 위에 놓인다. */
-  const vkey = (p) => `${p[0].toFixed(6)},${p[1].toFixed(6)}`;
-  const nPts = new Map(), sPts = new Map();
-  for (const part of parts) {
-    const nm = part.info.geoName;
-    const bag = NORTH.has(nm) ? nPts : SOUTH.has(nm) ? sPts : null;
-    if (!bag) continue;
-    for (const f of part.features) for (const r of rings(f.geometry)) for (const p of r) bag.set(vkey(p), p);
-  }
-  const riverCore = [...nPts.keys()]
-    .filter((k) => sPts.has(k))
-    .map((k) => nPts.get(k))
-    .sort((a, b) => a[0] - b[0]);
-  if (riverCore.length < 8) throw new Error(`한강 경계 정점 부족(${riverCore.length}) — 경계 데이터 확인`);
-  const riverPts = [...WEST_TAIL, ...riverCore, ...EAST_TAIL];
+  const riverPts = hanRiverPoints(
+    parts.map((part) => ({
+      name: part.info.geoName,
+      rings: part.features.flatMap((f) => rings(f.geometry)),
+    })),
+  );
   const riverD = "M" + riverPts.map(([lo, la]) => `${px(lo).toFixed(1)},${py(la).toFixed(1)}`).join("L");
   const riverSvg =
     `<clipPath id="tkLand"><path d="${clipD}"/></clipPath>` +
