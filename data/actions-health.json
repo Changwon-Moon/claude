@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T10:59:33.407Z",
+  "generatedAt": "2026-09-01T13:19:26.108Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -710,7 +710,7 @@
       "lastOk": "2026-09-01",
       "okDaysAgo": 0,
       "fails30": 60,
-      "runs30": 85
+      "runs30": 86
     },
     {
       "file": "guard.yml",
@@ -729,8 +729,8 @@
       "daysAgo": 0,
       "lastOk": "2026-09-01",
       "okDaysAgo": 0,
-      "fails30": 3,
-      "runs30": 6
+      "fails30": 4,
+      "runs30": 8
     },
     {
       "file": "molit-rent-collect.yml",
