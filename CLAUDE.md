@@ -166,6 +166,9 @@ node scripts/deliver-set.mjs --set <세트라벨>     # ③ 확정본 그대로 
 # 카톡 공유용 짧은 캡션 (인스타 캡션과 다른 물건 — 정본은 docs/CAPTION.md §9)
 node scripts/gen-kakao-caption.mjs --set <세트라벨> [--rename "주공13=철산주공13"] [--areas "신도림,화곡,…"]
 
+# M2 통화량 카드 4종(m2-gov·m2-gap·m2-rate·m2-trend) 캡션 — 빌더가 아니라 사람이 부르는 도구다
+node scripts/gen-m2-caption.mjs [--date YYYY-MM-DD] [--only m2-gap,m2-rate]
+
 # ── 아래는 **외울 필요가 없다.** doctor 하나가 전부 대신 본다(33초).
 #    따로 부르는 건 doctor 가 빨간불을 냈을 때 **그 항목만 자세히 볼 때**다.
 node scripts/audit-all.mjs              # ⭐ 전수 검사 — 저장소 전체를 한 번에(605항목)

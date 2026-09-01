@@ -6,13 +6,22 @@
  * 지역 정의·지도 경계는 data/datasets/tohuh-2026.json + scripts/lib/tohuh-map.mjs (토허 카드 공용).
  * 월세비중 = 월세건수/전체 (월세금액 0=전세, >0=월세로 수집기가 분류). 손으로 적은 숫자 0개.
  *
+ * ── 캡션도 여기서 만든다 (2026-09-01 신설)
+ * 그전까지 이 카드의 캡션만 **손으로 적혀** 있었다. 정기물인데 캡션은 안 굴러서,
+ * 8/28 확정 뒤 7월분이 다시 수집되자(collectedAt 8/31) 캡션의 수치가 카드와 갈라졌다
+ * — 캡션 "구로 74.0 · 중랑 67.9 · 종로 62.6", 카드 "74.2 · 68.3 · 66.3".
+ * 순위까지 뒤집혀 있었다(금천>관악 → 관악>금천). CAPTION.md §2 가 금지하는 바로 그 자리다.
+ * 이제 캡션 숫자는 카드와 **같은 변수**에서 나온다. 손으로 적은 숫자 0개.
+ * 제목 3갈래 게이트도 캡션 첫 줄이 같이 따라간다(카드와 캡션이 서로 다른 말을 못 한다).
+ *
  * 실행: node scripts/build-jeonwolse-map.mjs [latestMonth=202606] [date=오늘]
- * 출력: data/content/{date}/jeonwolse-map.json
+ * 출력: data/content/{date}/jeonwolse-map.json + data/review/captions/jeonwolse-map.txt
  */
 import { readFileSync, writeFileSync, mkdirSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tohuhParts, tohuhMapSvg } from "./lib/tohuh-map.mjs";
+import { writeCaption } from "./lib/caption-signature.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 // latest 월: 인자로 주면 그걸, 없으면 수집된 파일 중 최신 월 자동 감지(정기물 — 수집이 늘면 따라 올라간다).
@@ -165,5 +174,55 @@ const doc = {
   source: { name: "국토부 아파트 전월세 실거래 · 서울시 행정경계", period: latestPrefix, verified },
 };
 writeFileSync(join(outDir, "jeonwolse-map.json"), JSON.stringify(doc, null, 2) + "\n", "utf8");
+
+// ── 캡션 (숫자는 위에서 쓴 것과 같은 변수에서만 온다 — CAPTION.md §2) ──
+const je = (w) => Math.round((100 - w) * 10) / 10;   // 카드 막대의 전세쪽과 같은 계산
+const monthLabel = `${latest.slice(0, 4)}년 ${+latest.slice(4, 6)}월`;
+const rankLine = (a, i) => `${i + 1}. ${a.label} ${ratioOf(a.geoName).toFixed(1)}%`;
+const top10 = ranked.slice(0, 10).map(rankLine).join("\n");
+// 하위 3곳은 카드 표와 같은 순서(38→40위)로 적는다 — 카드와 캡션의 줄 순서가 어긋나지 않게
+const bottomLines = bottom.map((a) => `· ${a.label} ${ratioOf(a.geoName).toFixed(1)}%`).join("\n");
+
+/* 첫 줄은 제목과 같은 3갈래를 탄다. 제목이 '신규 계약'으로 범위를 못박은 달에
+   캡션만 "시장 전체가 넘어섰다"고 말하면 카드와 캡션이 서로 다른 말을 하게 된다. */
+const hook =
+  allWolse >= 50 ? "아파트 임대차, 이제 월세가 전세보다 많습니다. 🔥"
+  : newWolse >= 50 ? "새로 맺는 계약은, 이제 월세가 더 많습니다. 🔥"
+  : "아파트 월세 비중이 전세의 절반을 넘보고 있습니다. 🔥";
+const closing =
+  allWolse >= 50
+    ? "전체 계약에서도 월세가 전세를 앞질렀습니다."
+    : newWolse >= 50
+      ? "전체로 보면 아직 전세가 앞서지만,\n새로 맺는 계약에서는 이미 월세가 전세를 넘어섰습니다."
+      : "아직은 전세가 앞서 있지만, 격차가 줄고 있습니다.";
+
+writeCaption("jeonwolse-map", `${hook}
+
+국토부 아파트 전월세 실거래 기준(${monthLabel}),
+토지거래허가구역 40곳(서울 25구 + 경기 15곳)의
+아파트 계약을 전세 / 월세로 나눠 봤습니다.
+
+· 전체 계약 : 전세 ${je(allWolse)}% vs 월세 ${allWolse}%
+· 신규 계약(최근 3개월) : 전세 ${je(newWolse)}% vs 월세 ${newWolse}%
+
+${closing}
+
+[월세 비중 높은 곳 TOP 10]
+${top10}
+
+[아직 전세가 우세한 곳]
+${bottomLines}
+
+전세 대출 부담, 역전세 우려가 겹치며
+'전세의 월세화'가 숫자로 나타나고 있습니다.
+
+📌 저장해두고 우리 동네 흐름 확인하기
+
+—
+📊 출처 : 국토부 아파트 전월세 실거래 · 서울시 행정경계
+※ 월세 비중·전세/월세 구분은 실거래 월세금액(0=전세)에서 계산한 값입니다
+※ 신규 : 최근 3개월 신고 계약 기준
+
+#월세 #전세 #서울아파트 #부동산 #위릿노트`);
 
 console.log(`✅ 월세비중 토허지도 40곳 — 전체 월세 ${allWolse}%(신규 ${newWolse}%) · 1위 ${ranked[0].label} ${ratioOf(ranked[0].geoName)}% · 40위 ${last.label} ${ratioOf(last.geoName)}% · 검증=${verified}`);
