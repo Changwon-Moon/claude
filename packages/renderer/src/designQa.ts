@@ -506,6 +506,9 @@ const MEASURE_JS = `(() => {
     var isDeco=function(t){
       var c=(t.getAttribute("class")||"");
       if(/wm\d?$|wm[\s-]|watermark|stamp/i.test(c)) return true;
+      /* 계정 손잡이 자체가 브랜드 스탬프다(BRAND.md 슬롯 C) — 신고가 판형은 클래스도 없고
+       * 불투명도도 낮지 않은 채 판 가운데를 가로지른다. 글자로 알아본다(2026-09-01). */
+      if(/^@?wirit(_note)?\.?$/i.test((t.textContent||"").trim())) return true;
       var cs2=getComputedStyle(t);
       var op=parseFloat(cs2.opacity||"1"); if(isNaN(op)) op=1;
       var fo=parseFloat(cs2.fillOpacity||t.getAttribute("fill-opacity")||"1"); if(isNaN(fo)) fo=1;

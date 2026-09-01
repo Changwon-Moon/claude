@@ -62,7 +62,7 @@ function inside(pt, geom) {
  * @param {Set}    o.hitSgg 토지거래허가구역으로 칠할 시군구명 집합(korea-sgg-2026 의 name)
  * @param {boolean} o.showLabels 핀 옆에 학군지 이름을 적을지
  */
-export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, showLabels = false }) {
+export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, focusPadX = null, showLabels = false }) {
   const sgg = JSON.parse(readFileSync(join(ROOT, "data/geo/korea-sgg-2026.geojson"), "utf8"))
     .features.filter((f) => ["서울특별시", "경기도", "인천광역시"].includes(f.properties.sido));
   const dongs = JSON.parse(readFileSync(join(ROOT, "data/geo/korea-submunicipalities.geojson"), "utf8")).features;
@@ -99,7 +99,9 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, show
     if (p.lon < minLon) minLon = p.lon; if (p.lon > maxLon) maxLon = p.lon;
     if (p.lat < minLat) minLat = p.lat; if (p.lat > maxLat) maxLat = p.lat;
   }
-  const padLon = (maxLon - minLon) * focusPad, padLat = (maxLat - minLat) * focusPad;
+  // 가로 여백을 따로 줄 수 있다 — 핀이 동서로 퍼지면 지도가 납작해져 옆 표의 행 높이가 눌린다.
+  // 인천(송도)을 넣자 실제로 그렇게 됐다(2026-09-01).
+  const padLon = (maxLon - minLon) * (focusPadX ?? focusPad), padLat = (maxLat - minLat) * focusPad;
   minLon -= padLon; maxLon += padLon; minLat -= padLat; maxLat += padLat;
 
   const kx = Math.cos((((minLat + maxLat) / 2) * Math.PI) / 180);

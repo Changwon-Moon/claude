@@ -44,7 +44,7 @@ const MIN_BOTTOM_GAP = 40;
 
 const LAYOUT = {
   bodyW: 936,
-  tableW: 286, gutter: 16,        // 표는 내용 폭까지만. 남는 폭은 전부 지도가 가져간다
+  tableW: 272, gutter: 16,        // 표는 내용 폭까지만. 남는 폭은 전부 지도가 가져간다
   hdrH: 36, grpGap: 16,
   legendH: LEGEND_H, legendGap: LEGEND_GAP,
   titleFs: HEAD.titleFs, titleGap: HEAD.titleGap, bodyGap: HEAD.bodyGap,
@@ -123,6 +123,9 @@ const { svg: mapSvg, resolved, collisions, viewBox } = sudogwonMapSvg({
   }),
   hitSgg,
   showLabels: true,
+  // 가로 여백을 좁게 — 인천을 넣으며 동서로 넓어진 지도를 다시 세로로 세운다.
+  // 지도가 납작하면 옆 표의 행 높이가 눌린다(빌더가 rowH 26px 로 던졌다).
+  focusPadX: 0.03,
 });
 for (const r of resolved) if (r.by === "sgg") console.log(`  ⚠️ ${r.label} — 동(${r.dong})을 못 찾아 시군구 중심에 찍었습니다.`);
 // 배치기가 자리를 못 찾았거나, 놓고 나서 잰 결과가 겹치면 여기서 멈춘다.
@@ -170,7 +173,7 @@ if (usedH > LAYOUT.mapH + 4)
 const base = {
   template: "hakgun-map@1",
   date,
-  title: '수도권 <span class="hi">학군지 19곳</span>, 국평 시세',
+  title: `수도권 <span class="hi">학군지 ${flat.length}곳</span>, 국평 시세`,   // 곳 수는 데이터에서 — 손으로 적으면 어긋난다
   subtitle: "『대한민국 학군지도』 급지분류 · 국토부 실거래 전용 84㎡ 중위값",
   mapSvg,
   groups,
