@@ -10,41 +10,41 @@
     "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존). agg.price 는 전세 계약의 금액·면적 집계이며 **전용면적 기준**이다 — 실거래에는 공급면적이 없다(공급 평당가로 읽으면 30%쯤 부풀려진다)."
   },
   "agg": {
-    "total": 741,
-    "jeonse": 328,
-    "wolse": 413,
-    "wolseRatio": 55.7,
+    "total": 744,
+    "jeonse": 330,
+    "wolse": 414,
+    "wolseRatio": 55.6,
     "newTotal": 487,
     "newJeonse": 169,
     "newWolse": 318,
     "newWolseRatio": 65.3,
-    "renewTotal": 239,
-    "renewJeonse": 148,
-    "renewWolse": 91,
-    "typedTotal": 726,
+    "renewTotal": 242,
+    "renewJeonse": 150,
+    "renewWolse": 92,
+    "typedTotal": 729,
     "price": {
       "unit": "만원 · 전용면적(㎡) 기준",
-      "n": 328,
-      "depositSum": 17393521,
-      "areaSum": 21808.99,
-      "avgDeposit": 53029.03,
-      "avgArea": 66.49,
-      "perM2": 797.54,
-      "perPyeong": 2636.49,
-      "perPyeongSimple": 2720.03,
+      "n": 330,
+      "depositSum": 17515521,
+      "areaSum": 21953.94,
+      "avgDeposit": 53077.34,
+      "avgArea": 66.53,
+      "perM2": 797.83,
+      "perPyeong": 2637.46,
+      "perPyeongSimple": 2721.62,
       "kp84": {
         "loM2": 82,
         "hiM2": 86,
-        "n": 92,
-        "avgDeposit": 64269.71,
+        "n": 93,
+        "avgDeposit": 64084.01,
         "avgArea": 84.88
       },
       "kp59": {
         "loM2": 57,
         "hiM2": 61,
-        "n": 93,
-        "avgDeposit": 57829.22,
-        "avgArea": 59.76
+        "n": 94,
+        "avgDeposit": 58011.88,
+        "avgArea": 59.77
       }
     }
   }
