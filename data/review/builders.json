@@ -1771,6 +1771,26 @@
       "args": [
         "--publish"
       ]
+    },
+    {
+      "label": "jeonse84-map",
+      "cmd": "scripts/build-jeonse-band-map.mjs",
+      "args": [
+        "--type",
+        "84",
+        "--date",
+        "2026-09-01"
+      ]
+    },
+    {
+      "label": "jeonse59-map",
+      "cmd": "scripts/build-jeonse-band-map.mjs",
+      "args": [
+        "--type",
+        "59",
+        "--date",
+        "2026-09-01"
+      ]
     }
   ]
 }

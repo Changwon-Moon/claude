@@ -47,7 +47,27 @@ export function lintCaption(text: string): Finding[] {
   return f;
 }
 
-/** 카드 문서들에서 의미 있는 숫자 풀을 모은다(SVG 좌표·문구 제외) */
+/**
+ * 지도 SVG 에서 **눈에 보이는 글자만** 뽑는다 — `<text>…</text>` 사이의 내용.
+ *
+ * ── 왜 (2026-09-01)
+ * `mapSvg` 는 통째로 숫자 풀에서 빠져 있었다. 좌표·경로가 수천 개라 무엇이든 맞아 버려
+ * 검사가 무의미해지기 때문이다. 그런데 코로플레스 카드는 **40곳의 값을 지도 위에 찍는다.**
+ * 그래서 "40곳 전체는 캡션에" 라는 우리 규칙(월세 카드부터의 관례)을 지키는 순간,
+ * 캡션의 값 대부분이 「카드에 없는 숫자」로 잡혀 발행이 통째로 막혔다 —
+ * **카드에 큼직하게 찍혀 있는데도.**
+ *
+ * 검사를 끄지 않고 **눈을 고쳤다.** 태그 사이의 글자만 읽으면 좌표(`x=`·`d=` 속성)는
+ * 애초에 들어오지 않는다. 지도에 안 찍힌 숫자는 여전히 잡힌다.
+ */
+function svgTextNumbers(svg: string, pool: Set<string>): void {
+  for (const m of svg.matchAll(/>([^<>]+)</g)) {
+    const nums = m[1].match(/\d+(?:\.\d+)?/g);
+    if (nums) nums.forEach((x) => pool.add(x));
+  }
+}
+
+/** 카드 문서들에서 의미 있는 숫자 풀을 모은다(SVG 좌표·문구 제외, 단 지도 라벨 글자는 포함) */
 function collectNumbers(docs: unknown[]): Set<string> {
   const pool = new Set<string>();
   const walk = (v: unknown) => {
@@ -61,6 +81,7 @@ function collectNumbers(docs: unknown[]): Set<string> {
       v.forEach(walk);
     } else if (typeof v === "object") {
       for (const [k, val] of Object.entries(v as Record<string, unknown>)) {
+        if (k === "mapSvg" && typeof val === "string") { svgTextNumbers(val, pool); continue; }
         if (NUMBER_POOL_SKIP_KEYS.has(k)) continue;
         walk(val);
       }

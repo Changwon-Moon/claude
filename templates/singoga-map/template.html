@@ -11,6 +11,16 @@
       .sm { padding-top: 72px; }
       .sm .wirit-title { font-size: 66px; line-height: 1.05; letter-spacing: -0.03em; margin: 2px 0 0; }
       .sm .wirit-title .hi { color: var(--wirit-red); }
+      /* ── (옵션) 강조색 변형 — `accent: "cobalt"` 를 준 카드에만 걸린다. 2026-09-01 신설.
+       * 빨강(--wirit-red)은 **상승·과열 시그널 전용**이다(docs/BRAND.md). 이 판형을 쓰는
+       * 신고가·월세 카드는 '올랐다'를 말하므로 빨강이 맞지만, 전세 **수준** 지도처럼
+       * 오른 것이 아니라 지금 얼마인지를 말하는 카드에서 빨강은 없는 신호를 만든다.
+       * 발행본은 이 필드가 없어 규칙이 아예 안 걸린다 — 픽셀 불변(§8)을 지키는 방식이다. */
+      .sm-a-cobalt .wirit-title .hi,
+      .sm-a-cobalt .sm-val .h { color: var(--wirit-cobalt); }
+      /* 상위 3행 배경과 범례 막대도 같이 옮긴다 — 한 곳만 바꾸면 카드 안에 두 색이 남는다 */
+      .sm-a-cobalt .sm-row.top { background: rgba(46,107,255,0.06); }
+      .sm-a-cobalt .sm-legend .bar { background: linear-gradient(90deg, rgb(226,235,255), rgb(26,62,150)); }
       /* (옵션) 제목 앞 로고 — title HTML 에 <img class="tlogo"> 를 넣은 카드만. 없으면 영향 없음. */
       .sm .wirit-title img.tlogo { height: 0.8em; width: auto; vertical-align: -0.03em; margin-right: 0.22em; }
       .sm-sub { margin-top: 8px; font-size: 27px; font-weight: 800; color: var(--wirit-gray); letter-spacing: -0.01em; }
@@ -140,7 +150,7 @@
     </style>
   </head>
   <body>
-    <div class="wirit-card sm{{#if compact}} sm-c{{/if}}{{#if spread}} sm-spread{{/if}}{{#if head.c}} sm-h3{{/if}}{{#if centerBody}} sm-cb{{/if}}"{{#if fitTitle}} data-fit="1"{{/if}}>
+    <div class="wirit-card sm{{#if compact}} sm-c{{/if}}{{#if spread}} sm-spread{{/if}}{{#if head.c}} sm-h3{{/if}}{{#if centerBody}} sm-cb{{/if}}{{#if accent}} sm-a-{{accent}}{{/if}}"{{#if fitTitle}} data-fit="1"{{/if}}>
       <div class="wirit-topcap">{{#if note}}<span>{{note}}</span>{{/if}}</div>
       <h1 class="wirit-title">{{{title}}}</h1>
       {{#if subtitle}}<div class="sm-sub">{{subtitle}}</div>{{/if}}

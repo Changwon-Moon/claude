@@ -46,6 +46,10 @@ function regionNames(docs: unknown[]): string[] {
     }
     for (const [k, val] of Object.entries(o)) {
       if (k === "mapSvg" || k === "emblem") continue; // 좌표·경로 덩어리는 볼 필요 없다
+      /* `source.name` 은 지역이 아니라 **출처 문구**다. 그런데 아래 후보 필터가
+       * 「구·시·군 으로 끝나는 값」이라, "…허가구역 고시" 처럼 '시'로 끝나는 출처가
+       * 지역명으로 잡혀 서울 밖으로 신고됐다(2026-09-01 실측). 출처는 아예 보지 않는다. */
+      if (k === "source") continue;
       walk(val);
     }
   };

@@ -1,14 +1,60 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": ["template", "title", "mapSvg", "rows"],
+  "required": [
+    "template",
+    "title",
+    "mapSvg",
+    "rows"
+  ],
   "properties": {
-    "template": { "type": "string" }, "date": { "type": "string" }, "note": { "type": "string" },
-    "title": { "type": "string" }, "subtitle": { "type": "string" },
-    "mapSvg": { "type": "string" }, "rows": { "type": "array", "items": { "type": "object" } },
-    "totalHits": { "type": "number" }, "source": { "type": "object" },
-    "unit": { "type": "string", "maxLength": 4, "description": "값 뒤 단위. 없으면 '건'(기존 카드 호환)" },
-    "subUnit": { "type": "string", "maxLength": 8, "description": "보조값(ratio) 앞에 붙일 말. 없으면 뒤에 '%'" }
+    "template": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string"
+    },
+    "note": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "mapSvg": {
+      "type": "string"
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "totalHits": {
+      "type": "number"
+    },
+    "source": {
+      "type": "object"
+    },
+    "unit": {
+      "type": "string",
+      "maxLength": 4,
+      "description": "값 뒤 단위. 없으면 '건'(기존 카드 호환)"
+    },
+    "subUnit": {
+      "type": "string",
+      "maxLength": 8,
+      "description": "보조값(ratio) 앞에 붙일 말. 없으면 뒤에 '%'"
+    },
+    "accent": {
+      "type": "string",
+      "enum": [
+        "cobalt"
+      ],
+      "description": "강조색 변형. 없으면 빨강(기존 카드 호환). '수준'을 말하는 카드는 cobalt — 빨강은 상승·과열 전용"
+    }
   },
   "additionalProperties": true
 }
