@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T13:19:26.108Z",
+  "generatedAt": "2026-09-01T14:30:32.780Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -486,9 +486,9 @@
       "file": "collect-on-request.yml",
       "name": "실거래 수집 (요청 파일 push 트리거)",
       "lastRun": "2026-08-02",
-      "daysAgo": 29,
+      "daysAgo": 30,
       "lastOk": "2026-08-02",
-      "okDaysAgo": 29,
+      "okDaysAgo": 30,
       "fails30": 1,
       "runs30": 2
     },
@@ -526,9 +526,9 @@
       "file": "seoul-living-probe.yml",
       "name": "서울 생활인구 서비스 검증 (probe)",
       "lastRun": "2026-08-08",
-      "daysAgo": 23,
+      "daysAgo": 24,
       "lastOk": "2026-08-08",
-      "okDaysAgo": 23,
+      "okDaysAgo": 24,
       "fails30": 0,
       "runs30": 2
     },
@@ -546,9 +546,9 @@
       "file": "photo-batch.yml",
       "name": "이미지 일괄 자동취득 (photo-batch)",
       "lastRun": "2026-08-12",
-      "daysAgo": 19,
+      "daysAgo": 20,
       "lastOk": "2026-08-12",
-      "okDaysAgo": 19,
+      "okDaysAgo": 20,
       "fails30": 0,
       "runs30": 7
     },
@@ -621,6 +621,16 @@
       "okDaysAgo": 1,
       "fails30": 0,
       "runs30": 12
+    },
+    {
+      "file": "pipeline-tick.yml",
+      "name": "파이프라인 진행 (승인 → 실행)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 1,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 1,
+      "fails30": 11,
+      "runs30": 76
     },
     {
       "file": "population-collect.yml",
@@ -743,16 +753,6 @@
       "runs30": 15
     },
     {
-      "file": "pipeline-tick.yml",
-      "name": "파이프라인 진행 (승인 → 실행)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 0,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 0,
-      "fails30": 11,
-      "runs30": 76
-    },
-    {
       "file": "singo-history.yml",
       "name": "신고가 단지 이력 (한 단지 곡선)",
       "lastRun": "2026-09-01",
@@ -779,7 +779,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-01",
       "okDaysAgo": 0,
-      "fails30": 16,
+      "fails30": 15,
       "runs30": 100
     }
   ]
