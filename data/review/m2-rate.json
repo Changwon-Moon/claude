@@ -1,0 +1,25 @@
+{
+  "label": "m2-rate",
+  "verdict": "revise",
+  "summary": "REVISE — error 0 · warn 1 · 카드 1장 · 코드 검수만",
+  "findings": [],
+  "cards": [
+    {
+      "file": "m2-rate.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": [
+        {
+          "reviewer": "design-qa",
+          "level": "warn",
+          "code": "titlegap",
+          "msg": "제목과 바로 아래 요소의 간격이 22px 입니다 (제목 58px) — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다"
+        }
+      ]
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}

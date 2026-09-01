@@ -289,7 +289,7 @@
       "cmd": "scripts/build-m2-gov.mjs",
       "args": [
         "--publish",
-        "2026-08-13"
+        "2026-09-01"
       ]
     },
     {
@@ -1740,6 +1740,30 @@
         "singo-보람마을아주-59"
       ],
       "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "m2-gap",
+      "cmd": "scripts/build-m2-gap.mjs",
+      "args": [
+        "--publish",
+        "2026-09-01"
+      ]
+    },
+    {
+      "label": "m2-rate",
+      "cmd": "scripts/build-m2-rate.mjs",
+      "args": [
+        "--publish",
+        "2026-09-01"
+      ]
+    },
+    {
+      "label": "m2-trend",
+      "cmd": "scripts/build-m2-trend.mjs",
+      "args": [
+        "--publish",
+        "2026-09-01"
+      ]
     }
   ]
 }

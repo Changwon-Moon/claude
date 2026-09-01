@@ -23,28 +23,16 @@
  *
  * 실행: node scripts/build-m2-gov.mjs [YYYY-MM-DD]
  */
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+/* ⚠️ 계열 접합·대조 규칙은 **`scripts/lib/m2.mjs` 한 곳**에 있다(2026-09-01 통합).
+   그전엔 이 파일 안에 같은 코드가 들어 있었는데, M2 카드가 넷으로 늘면서 같은 규칙이
+   네 곳에 복사될 참이었다 — 이 공장이 이미 다섯 번 갈라진 모양이다(CLAUDE.md §13). */
+import { loadM2, r1 } from "./lib/m2.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const raw = JSON.parse(readFileSync(join(ROOT, "data/datasets/m2-monthly.json"), "utf8"));
-
-const r1 = (v) => Math.round(v * 10) / 10;
-
-/* ── 계열 두 벌 → 조원 맵 ── */
-if (!raw.legacyM2) throw new Error("m2-monthly.json 에 legacyM2([참고] 구 M2)가 없다 — ECOS 수집을 먼저 돌린다");
-const OLD = Object.fromEntries(raw.legacyM2.series.map((r) => [r.ym, r.value / 1000]));
-const PRE_SRC = raw.others?.["101Y004"];
-if (!PRE_SRC) throw new Error("m2-monthly.json 에 구지표 표(101Y004)가 없다");
-const PRE = Object.fromEntries(PRE_SRC.series.map((r) => [r.ym, r.value / 1000]));
-
-/* 겹치는 달을 매번 대조한다 — 같아야만 잇는다 */
-const overlap = Object.keys(PRE).filter((k) => k in OLD);
-if (overlap.length < 3) throw new Error(`두 계열이 겹치는 달이 ${overlap.length}개뿐 — 이어 붙일 근거가 없다`);
-const worst = Math.max(...overlap.map((k) => Math.abs(PRE[k] - OLD[k])));
-if (worst > 0.05) throw new Error(`겹치는 달의 값이 다르다(최대 ${worst.toFixed(2)}조) — 접합 불가`);
-const M2 = { ...PRE, ...OLD };
+const { raw, M2, NEW, months, lastYm, worst } = loadM2();
 
 /* ── 정부 구간 ──
    퇴임월은 사실이고(취임·퇴임일), 시작월은 위의 규칙이 정한다. */
@@ -66,8 +54,6 @@ const GOV = [
 /** 두 날짜 사이 개월(평균 월 길이로 환산 후 반올림). 취임·퇴임일이 월 중순이라 달력 차이는 애매하다 */
 const monthsBetween = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 86400000 / 30.4375);
 
-const months = Object.keys(M2).sort();
-const lastYm = months[months.length - 1];
 
 const rows = [];
 for (let i = 0; i < GOV.length; i++) {
@@ -165,28 +151,39 @@ const ymLabel = (ym) => `${ym.slice(0, 4)}.${ym.slice(4)}`;
 
 const runIdx = rows.findIndex((r) => r.running);
 /* ── 재임 중인 칸 **위 빈 공간**의 뱃지 (오너 지시 2026-08-12)
-   최신월 한 달 증가를 3줄 카드로 세운다. 이 카드의 배수가 이 한 달에 크게 기대므로
-   숨기지 않고 앞세운다 — 271개월 중 한 달 증가폭 1위다. 수치는 계산값.
+   한 달 증가폭 1위를 3줄 카드로 세운다. 이 카드의 배수가 그 한 달에 크게 기대므로
+   숨기지 않고 앞세운다. 수치는 계산값.
    글자가 카드 밖으로 나가지 않게 **자리를 빌더가 잰다**: SVG 안 글자는 designQa 넘침 검사 밖이다. */
-const lastDelta = M2[lastYm] - M2[months[months.indexOf(lastYm) - 1]];
-const prevMax = Math.max(
-  ...months.slice(1, months.length - 1).map((m, i) => M2[m] - M2[months[i]]),
-);
+/* ── 어느 달을 세울 것인가 (2026-09-01 수정) ──
+ * 원래는 **최신월**의 한 달 증가를 세우고, 그것이 과거 최대 이상이면 "(역대 최고)"를 붙였다.
+ * 2026-08 까지는 최신월이 곧 역대 1위여서 둘이 같았는데, 2026-06 자료가 들어오며 **갈라졌다**
+ * (역대 1위는 2026-05 +85.9조, 최신월 2026-06 은 +64.9조로 2위).
+ * 옛 로직대로면 뱃지가 "'26.6 한 달 +64.9조 증가 (최근 최고)"를 찍는다 — **거짓이다.**
+ * 이 뱃지의 원래 뜻은 주석대로 "한 달 증가폭 1위를 앞세운다"였으므로,
+ * **최대 증가 달**을 주제로 삼고 그 달이 재임 중 구간 안에 있을 때만 세운다.
+ * "(역대 최고)"는 계산이 확인했을 때만 나간다(CLAUDE.md §8).
+ */
+const deltas = months.slice(1).map((m, i) => ({ ym: m, d: M2[m] - M2[months[i]] }));
+const peakMo = deltas.reduce((a, b) => (b.d > a.d ? b : a));
+const runRow = runIdx >= 0 ? rows[runIdx] : null;
+const peakInRun = !!runRow && peakMo.ym > runRow.start && peakMo.ym <= runRow.end;
+const lastDelta = deltas[deltas.length - 1].d;
+
 /* 25px 로 줄였더니 "글씨가 잘 안 보인다"(오너 2026-08-12). 카드는 폰에서 보는 물건이다 —
    가운데 정렬을 지키면서 키울 수 있는 만큼 키운다(자리는 아래에서 계산해 잘리지 않게 한다). */
 const BD_FS = 34, BD_LH = 46, BD_PADX = 24, BD_PADY = 22;
 /* 줄마다 색이 다르다 — 첫 줄(언제)은 잉크, 아래 두 줄(무엇)은 레드.
    전부 레드로 두면 어디가 핵심인지 안 갈린다(오너 지시 2026-08-12). */
-const bdLines = runIdx >= 0
+const bdLines = peakInRun
   ? [
-      { t: `'${lastYm.slice(2, 4)}.${lastYm.slice(4)} 한 달`, fill: INK },
-      { t: `+${r1(lastDelta).toFixed(1)}조 증가`, fill: RED },
-      { t: lastDelta >= prevMax ? "(역대 최고)" : "(최근 최고)", fill: RED },
+      { t: `'${peakMo.ym.slice(2, 4)}.${peakMo.ym.slice(4)} 한 달`, fill: INK },
+      { t: `+${r1(peakMo.d).toFixed(1)}조 증가`, fill: RED },
+      { t: "(역대 최고)", fill: RED },
     ]
   : [];
 const bdW = Math.round(Math.max(...bdLines.map((l) => l.t.length * BD_FS * 0.58), 0)) + BD_PADX * 2;
 const bdH = BD_LH * bdLines.length + BD_PADY * 2 - 8;
-const badges = runIdx >= 0
+const badges = peakInRun
   ? (() => {
       const wantX = cx(runIdx) - bdW / 2;
       const x = r1(Math.min(Math.max(wantX, 4), VB_W - 4 - bdW));
@@ -259,9 +256,12 @@ const card = {
     verified: true,
     provenance: `${raw.meta.provenance} + ${raw.legacyM2.itemCode}(${raw.legacyM2.itemName}) + 101Y004`,
     basis: "개편 전 기준(구 M2). 2025-12-30 한국은행 통화지표 개편으로 수익증권 제외 — 신 기준은 현 정부 구간만 축소되어 역대 비교가 어긋난다",
-    segments: rows.map((r) => ({ name: r.name, start: r.start, end: r.end, months: r.months, termMonths: r.termMonths, delta: r1(r.delta), rate: r1(r.rate) })),
+    /* delta 는 카드 알약에 찍히는 정수와 **같은 값**이어야 한다 — 캡션이 다시 반올림하면 어긋난다 */
+    segments: rows.map((r) => ({ name: r.name, start: r.start, end: r.end, months: r.months, termMonths: r.termMonths, delta: Math.round(r.delta), rate: r1(r.rate) })),
     /* 최신월 한 달 증가 — 이 카드의 배수가 이 달에 크게 기댄다는 사실을 데이터로 남긴다(오너 인지 2026-08-12) */
-    lastMonthDelta: r1(M2[lastYm] - M2[months[months.indexOf(lastYm) - 1]]),
+    lastMonthDelta: r1(lastDelta),
+    peakMonth: { ym: peakMo.ym, delta: r1(peakMo.d), inCurrentTerm: peakInRun },
+    shown: { level: Math.round(M2[lastYm]), levelNewBasis: NEW && lastYm in NEW ? Math.round(NEW[lastYm]) : null },
     overlapCheckMaxDiff: r1(worst),
   },
 };
