@@ -409,15 +409,20 @@ const MEASURE_JS = `(() => {
    * 검은 판에서 투명 글자로 바꿔 놨다. **다른 발행본과 윗부분이 눈에 띄게 달라졌고**
    * 오너가 나란히 놓고서야 알아챘다. 좌표로 잴 수 있는 것은 사람 눈에 맡기지 않는다.
    * 배경색·뱃지 글자 크기·카드 위 패딩 셋을 재서 공용 기본값과 대조한다. */
-  var head=null;
+  /* ⚠️ 뱃지가 **없을 때도** head 를 만든다. 예전엔 if(badge) 안에서만 만들어서, 로고가 통째로
+   * 빠지면 검사가 전부 건너뛰고 「문제 없음」이 나왔다 — 실패가 검사를 끄는 구조였다(2026-09-01). */
+  var head;
   if(badge){
     var bcs=getComputedStyle(badge);
     var markEl=badge.querySelector(".mark");
     head={
+      missing: false,
       badgeBg: bcs.backgroundColor,
       badgeMarkPx: markEl ? Math.round(parseFloat(getComputedStyle(markEl).fontSize)) : null,
       cardPadTop: Math.round(parseFloat(cs.paddingTop)||0)
     };
+  } else {
+    head={ missing: true, badgeBg: null, badgeMarkPx: null, cardPadTop: Math.round(parseFloat(cs.paddingTop)||0) };
   }
   /* ── 제목 아래 숨 ──
    * 2026-07-31 오너 지적 "제목과 표 헤드라인이 너무 붙어있어".
@@ -543,7 +548,10 @@ function analyze(g: Geo): Finding[] {
       msg: `기록 문구 ${hr.claimPx}px 가 수치 ${hr.figPx}px 에 비해 작습니다 — 이 카드의 주인공은 '역대 1위' 같은 문구이고 수치는 증거입니다(CEO.md). 문구를 수치의 1.15배 이상으로 두세요` });
 
   const h = (g as any).head;
-  if (h) {
+  if (h && h.missing) {
+    out.push({ level: "error", code: "brandhead",
+      msg: "우상단 wirit 로고 뱃지가 없습니다 — 렌더러가 카드 여는 태그 뒤에 자동으로 넣습니다. 템플릿의 `.wirit-card` 여는 태그를 확인하세요" });
+  } else if (h) {
     const transparent = !h.badgeBg || /rgba\(\s*0\s*,\s*0\s*,\s*0\s*,\s*0\s*\)|transparent/.test(h.badgeBg);
     if (transparent)
       out.push({ level: "warn", code: "brandhead",

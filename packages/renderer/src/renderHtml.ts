@@ -255,10 +255,15 @@ export function renderPageHtml(
   }
 
   // 모든 카드에 우상단 원형 로고(wirit.)를 자동 삽입 — 카드 여는 태그 바로 뒤.
-  html = html.replace(
-    /(<div class="wirit-card[^>]*>)/,
-    `$1${CORNER_LOGO}`,
-  );
+  // ⚠️ 예전 정규식은 `<div class="wirit-card` 처럼 **속성 순서와 줄바꿈까지** 정확히 맞아야 했다.
+  //    템플릿에서 여는 태그를 여러 줄로 쪼갰더니 매칭이 빗나가 **로고가 조용히 사라졌다**(2026-09-01).
+  //    이제 속성 순서·줄바꿈과 무관하게 찾고, 못 찾으면 **던진다** — 로고 없는 카드는 브랜드 사고다.
+  const cardOpen = /<div\b[^>]*class="[^"]*\bwirit-card\b[^"]*"[^>]*>/;
+  if (!cardOpen.test(html))
+    throw new Error(
+      "카드 여는 태그(.wirit-card)를 찾지 못해 우상단 wirit 로고를 넣을 수 없습니다 — 템플릿의 여는 태그를 확인하세요.",
+    );
+  html = html.replace(cardOpen, (m) => `${m}${CORNER_LOGO}`);
 
   return html;
 }
