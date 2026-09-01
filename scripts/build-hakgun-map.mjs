@@ -147,7 +147,7 @@ const NUDGE = { 평촌: { dx: 17 }, 산본: { dx: -17 } };
 // ⚠️ 이름표 자리는 **손으로 정하지 않는다.** sudogwonMapSvg 가 핀 둘레 후보 중
 //    아무것과도 안 겹치는 자리를 골라 놓고, 놓은 뒤 전수로 다시 잰다.
 //    손으로 정하던 시절에 사람이 놓친 겹침이 세 번 나갔다(2026-09-01).
-const { svg: mapSvg, resolved, collisions, viewBox, labBoxes, pinsXY, pinR } = sudogwonMapSvg({
+const { svg: mapSvg, resolved, collisions, viewBox, labBoxes, pinsXY, pinR, hitMinXInBand } = sudogwonMapSvg({
   pins: flat.map((r) => {
     const a = calc.find((x) => x.name === r.key);
     return { n: r.n, key: r.key, label: r.name, geoName: a.geoName, pinDong: a.pinDong, grade: r.grade, ...(NUDGE[r.key] || {}) };
@@ -195,7 +195,6 @@ LAYOUT.mapY = 0;                       // 지도와 표를 같은 높이에서 �
   if (LAYOUT.jbW > mapW * 0.72)
     throw new Error(`지방 블록이 너무 넓습니다(${LAYOUT.jbW}px > 지도 폭의 72%). 이름이 길어졌는지 확인하세요.`);
 }
-LAYOUT.jbX = Math.round(LAYOUT.mapX + 12);             // 빈 바다 왼쪽 끝에 붙인다 — 넓어진 폭을 왼쪽으로 흡수
 LAYOUT.jbY = Math.round(mapH * 0.79);                  // 더 아래로 — 빈 바다 아래쪽에 앉힌다(오너 2026-09-01)
 LAYOUT.bodyH = Math.round(mapH + LEGEND_GAP + LEGEND_H);
 
@@ -208,6 +207,22 @@ LAYOUT.bodyH = Math.round(mapH + LEGEND_GAP + LEGEND_H);
   const JB_HDR = 30, JB_ROW = 21, JB_PAD_Y = 19;
   const jbH = JB_HDR + Math.ceil(jibangRows.length / 2) * JB_ROW + JB_PAD_Y;
   LAYOUT.jbH = jbH;                                    // 기록용 — 템플릿은 내용 높이를 쓴다
+  // ── 가로 자리: 지도 왼쪽 테두리와 **토허제(분홍) 면** 사이 빈 바다의 한가운데(오너 2026-09-01).
+  // 눈으로 어림하지 않는다 — 분홍 면의 왼쪽 끝을 블록이 앉을 세로 띠에서 지도에게 직접 물어본다.
+  // 지도를 다시 자르면 어림값은 어긋나지만 이 값은 같이 움직인다.
+  const hitLeftVb = hitMinXInBand(LAYOUT.jbY / sc, (LAYOUT.jbY + jbH) / sc);
+  if (hitLeftVb == null)
+    throw new Error("블록이 앉을 세로 띠에 토허제 면이 없습니다 — jbY 를 확인하세요(가운데를 잡을 기준이 사라졌습니다).");
+  const hitLeft = LAYOUT.mapX + hitLeftVb * sc;
+  // 실제 블록 폭은 브라우저가 정한다(width:max-content). 그래서 **중심점**을 넘기고
+  // 템플릿이 translateX(-50%) 로 앉힌다 — 어림 폭으로 왼쪽 좌표를 계산하면 그만큼 왼쪽으로 밀린다.
+  LAYOUT.jbCx = Math.round((LAYOUT.mapX + hitLeft) / 2);
+  LAYOUT.jbX = Math.round(LAYOUT.jbCx - LAYOUT.jbW / 2);   // 겹침 검사용 안전선(어림 폭 기준이라 넉넉하다)
+  if (LAYOUT.jbX < LAYOUT.mapX)
+    throw new Error(
+      `지방 블록이 지도 왼쪽으로 넘칩니다(${LAYOUT.jbX}px < 지도 왼쪽 ${LAYOUT.mapX}px). ` +
+        `빈 바다 폭 ${Math.round(hitLeft - LAYOUT.mapX)}px 보다 블록(${LAYOUT.jbW}px)이 넓습니다 — 이름을 줄이세요.`,
+    );
   const jb = { x0: LAYOUT.jbX, x1: LAYOUT.jbX + LAYOUT.jbW, y0: LAYOUT.jbY, y1: LAYOUT.jbY + jbH };
   const toCard = (b) => ({ x0: LAYOUT.mapX + b.x0 * sc, x1: LAYOUT.mapX + b.x1 * sc, y0: b.y0 * sc, y1: b.y1 * sc });
   const hit = (a, b) => a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1;

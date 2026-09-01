@@ -123,12 +123,24 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, focu
   // 면 — 허가구역 / 미지정 두 갈래
   let base = "";
   let landD = "";                 // 그린 땅 전체 — 한강을 이 위에만 보이게 자른다
+  const hitPts = [];              // 허가구역 면의 점들(viewBox 좌표) — 아래 hitMinXInBand 용
   for (const f of sgg) {
     const d = pathOf(f.geometry);
     if (!d) continue;
-    base += `<path d="${d}" class="${hitSgg.has(f.properties.name) ? "sg-hit" : "sg-off"}"/>`;
+    const isHit = hitSgg.has(f.properties.name);
+    base += `<path d="${d}" class="${isHit ? "sg-hit" : "sg-off"}"/>`;
     landD += d;
+    if (isHit) for (const r of rings(f.geometry)) for (const [lo, la] of r) hitPts.push([px(lo), py(la)]);
   }
+
+  /** 주어진 세로 띠에서 **허가구역(분홍 면)의 가장 왼쪽 x**. 없으면 null.
+   *  빌더가 지도 왼쪽 테두리와 분홍 면 사이 빈 바다의 한가운데를 잡는 데 쓴다(오너 2026-09-01).
+   *  눈으로 어림하지 않는다 — 지도를 다시 자르면 어림값이 그대로 어긋난다. */
+  const hitMinXInBand = (y0, y1) => {
+    let min = Infinity;
+    for (const [x, y] of hitPts) if (y >= y0 && y <= y1 && x < min) min = x;
+    return Number.isFinite(min) ? min : null;
+  };
 
   // 한강 — 손으로 그리지 않는다. 토허제 지도와 **같은 모듈**(lib/han-river.mjs)을 쓴다.
   // 강 모양이 카드마다 다르면 같은 계정의 지도로 안 보인다.
@@ -313,5 +325,5 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, focu
   // labBoxes/pinsXY 는 **viewBox 좌표**다. 빌더가 카드 픽셀로 옮겨,
   // 지도 위에 얹는 HTML 블록(지방 학군지 패널)이 글자를 밟는지 잰다 —
   // designQa 는 SVG 안쪽만 재므로 그 겹침은 못 잡는다(2026-09-01).
-  return { svg, resolved, pinsXY, labBoxes, collisions, placements, pinR: PIN_OUT, viewBox: { w: VW, h: VH } };
+  return { svg, resolved, pinsXY, labBoxes, collisions, placements, pinR: PIN_OUT, hitMinXInBand, viewBox: { w: VW, h: VH } };
 }

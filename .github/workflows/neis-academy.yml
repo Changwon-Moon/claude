@@ -59,10 +59,14 @@ jobs:
           #    저장소에 안 남으면 진단을 못 한다(2026-09-01 인천 수집에서 실제로 겪었다).
           #    인증키가 섞여 나올 수 있으므로 KEY= 는 지우고 남긴다.
           set -o pipefail
+          # 키 진단을 **먼저** 돌려 로그에 남긴다. 수집이 죽었을 때 "키가 문제냐 서비스가 문제냐"를
+          # 다음 런 없이 바로 알 수 있다(2026-09-01 ERROR-290 진단에 런을 한 번 더 썼다).
+          pnpm --filter @wirit/collectors exec tsx src/neisAcademyCli.ts --probe 2>&1 \
+            | sed -E 's/(KEY=)[^&[:space:]"]+/\1<hidden>/g' | tee /tmp/neis-run.log
           pnpm --filter @wirit/collectors exec tsx src/neisAcademyCli.ts \
             $ARGS --out "$GITHUB_WORKSPACE/data/datasets/neis-academy" $FORCE 2>&1 \
             | sed -E 's/(KEY=)[^&[:space:]"]+/\1<hidden>/g' \
-            | tee /tmp/neis-run.log
+            | tee -a /tmp/neis-run.log
 
       - name: 캐시 커밋
         run: |

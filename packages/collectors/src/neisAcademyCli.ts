@@ -66,6 +66,37 @@ async function main() {
   if (!rep.key) { console.error("NEIS_API_KEY 환경변수가 없습니다 (GitHub Secrets 에 등록)."); process.exit(1); }
   console.log(describeKey("NEIS_API_KEY", rep));
 
+  /* ── 키가 죽었는지, 이 서비스만 안 되는지 가른다 (2026-09-01)
+     첫 수집이 전 시도 ERROR-290("인증키가 유효하지 않습니다")로 죽었다. 그 메시지만으로는
+     ① 키 자체가 만료·폐기됐다 ② 이 서비스만 못 쓴다 ③ 파라미터가 틀렸다 를 구별할 수 없다.
+     그래서 **같은 키로 다른 서비스(학교기본정보)** 를 한 번 부르고, **키 없이** 학원 서비스를
+     한 번 부른다. 키 없는 호출은 5건만 주지만 정상 응답한다 — 이 둘의 조합이 범인을 지목한다.
+     값은 절대 찍지 않는다(keyHygiene 이 모양만 찍는다). */
+  if (process.argv.includes("--probe")) {
+    const say = async (label: string, url: string) => {
+      try {
+        const raw = await fetchText(url, { timeoutMs: 20000, retries: 1 });
+        const doc = JSON.parse(raw);
+        const r = doc.RESULT ?? doc[Object.keys(doc)[0]]?.[0]?.head?.[1]?.RESULT;
+        console.log(`   · ${label}: ${r ? `${r.CODE} ${r.MESSAGE}` : "정상(행 있음)"}`);
+      } catch (e) {
+        console.log(`   · ${label}: 호출 실패 — ${e instanceof Error ? e.message : e}`);
+      }
+    };
+    console.log("🔎 키 진단");
+    await say("학원(acaInsTiInfo) · 키 없이", `${BASE}?Type=json&pIndex=1&pSize=1&ATPT_OFCDC_SC_CODE=B10`);
+    await say("학원(acaInsTiInfo) · 이 키로", `${BASE}?KEY=${encodeURIComponent(rep.key)}&Type=json&pIndex=1&pSize=1&ATPT_OFCDC_SC_CODE=B10`);
+    await say(
+      "학교기본정보(schoolInfo) · 이 키로",
+      `https://open.neis.go.kr/hub/schoolInfo?KEY=${encodeURIComponent(rep.key)}&Type=json&pIndex=1&pSize=1&ATPT_OFCDC_SC_CODE=B10`,
+    );
+    console.log(
+      "   판정법 — 키 없이만 정상이면 **키 문제**(만료·폐기·오타). 셋 다 실패면 **망/주소 문제**.\n" +
+        "            학교기본정보만 정상이면 이 서비스만 못 쓰는 것이다.",
+    );
+    return;
+  }
+
   const sidoArg = arg("sido") ?? Object.keys(SIDO).join(",");
   const codes = sidoArg.split(",").map((s) => s.trim()).filter(Boolean);
   const outDir = resolve(CWD, arg("out") ?? "data/datasets/neis-academy");

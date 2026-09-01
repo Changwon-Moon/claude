@@ -82,7 +82,9 @@
            빌더의 jbW 는 글자 폭을 어림한 값이라 늘 실제보다 넉넉하다 — 그 차이가 오른쪽에
            빈 띠로 남았다. 어림값은 max-width(지도를 덮는지 재는 안전선)로만 쓰고,
            실제 폭은 브라우저가 잰 내용 폭을 쓴다. 겹침 검사는 넉넉한 쪽으로 틀리므로 안전하다. */
-        position: absolute; left: var(--jbX); top: var(--jbY);
+        /* 가로 자리는 **중심점**으로 받는다(--jbCx). 폭이 내용에 따라 달라지므로 왼쪽 좌표로
+           앉히면 어림 폭만큼 밀린다 — 빌더가 잡은 '빈 바다 한가운데'에 정확히 서게 한다. */
+        position: absolute; left: var(--jbCx); top: var(--jbY); transform: translateX(-50%);
         width: max-content; max-width: var(--jbW);
         background: var(--wirit-paper); border: 2px solid var(--wirit-ink-12);
         border-radius: 4px; padding: 9px 11px 10px;
@@ -121,7 +123,7 @@
 
       <div
         class="hg-body"
-        style="--bodyH:{{layout.bodyH}}px;--tableW:{{layout.tableW}}px;--rowH:{{layout.rowH}}px;--hdrH:{{layout.hdrH}}px;--grpGap:{{layout.grpGap}}px;--mapX:{{layout.mapX}}px;--mapY:{{layout.mapY}}px;--mapW:{{layout.mapW}}px;--mapH:{{layout.mapH}}px;--legendH:{{layout.legendH}}px;--legendGap:{{layout.legendGap}}px;--jbX:{{layout.jbX}}px;--jbY:{{layout.jbY}}px;--jbW:{{layout.jbW}}px"
+        style="--bodyH:{{layout.bodyH}}px;--tableW:{{layout.tableW}}px;--rowH:{{layout.rowH}}px;--hdrH:{{layout.hdrH}}px;--grpGap:{{layout.grpGap}}px;--mapX:{{layout.mapX}}px;--mapY:{{layout.mapY}}px;--mapW:{{layout.mapW}}px;--mapH:{{layout.mapH}}px;--legendH:{{layout.legendH}}px;--legendGap:{{layout.legendGap}}px;--jbX:{{layout.jbX}}px;--jbCx:{{layout.jbCx}}px;--jbY:{{layout.jbY}}px;--jbW:{{layout.jbW}}px"
       >
         <div class="hg-map">{{{mapSvg}}}</div>
 
