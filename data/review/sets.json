@@ -822,9 +822,27 @@
         "singo-보람마을아주-59"
       ],
       "caption": "singo-daily-2026-09-01",
-      "state": "검수 대기",
+      "state": "오너 확정",
       "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 0개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록.",
-      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply/molit 갱신 시 다시 그려진다"
+      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+      "confirmedAt": "2026-09-01",
+      "confirmedMd5": [
+        "singo-목동힐스테이트-59:5558836963b9",
+        "singo-주공13-84:d73636772d9b",
+        "singo-광교호반베르디움-84:13ef62403dcd",
+        "singo-신도림태영타운-84:8dc971c2131e",
+        "singo-강서힐스테이트-59:7ed5caedf29c",
+        "singo-평촌더샵센트럴시티-59:754162c81f49",
+        "singo-평촌센텀퍼스트-59:3e9767f435d4",
+        "singo-평촌더샵아이파크-59:877cc2a02787",
+        "singo-동탄시범다은마을월드메르디앙반도유보라-84:90932c608d40",
+        "singo-반정아이파크캐슬5단지-84:276d1add9f8f",
+        "singo-병점역아이파크캐슬-84:60c492cef210",
+        "singo-신동탄포레자이-59:d8dad3f9507f",
+        "singo-아르테자이-59:11d43676e632",
+        "singo-수원하늘채더퍼스트1단지-59:1d684c658a3f",
+        "singo-보람마을아주-59:75d2abdbfa1a"
+      ]
     }
   ]
 }
