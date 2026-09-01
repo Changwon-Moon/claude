@@ -20,6 +20,9 @@ const REGION_FILES: Record<string, string> = {
   seoul: "lawd-seoul.json",
   gyeonggi: "lawd-gyeonggi.json",
   incheon: "lawd-incheon.json",
+  // 지방은 2026-09-01 에 붙였다(학군지 카드의 『대한민국 학군지도』 지방 10곳).
+  // 코드는 data/geo/korea-sgg-2026.geojson 의 lawd 를 코드가 그대로 옮긴 값이다.
+  jibang: "lawd-jibang.json",
 };
 const loadCodes = (f: string) =>
   JSON.parse(readFileSync(join(HERE, "data", f), "utf8")).codes as Record<string, string>;
@@ -40,13 +43,13 @@ async function main() {
   const LAWD: Record<string, string> = {};
   for (const r of regions) {
     const f = REGION_FILES[r];
-    if (!f) { console.error(`알 수 없는 region: ${r} (seoul|gyeonggi|incheon|all)`); process.exit(1); }
+    if (!f) { console.error(`알 수 없는 region: ${r} (seoul|gyeonggi|incheon|jibang|all)`); process.exit(1); }
     Object.assign(LAWD, loadCodes(f));
   }
   const guArg = arg("gu") ?? "강남구";
   const monthsArg = arg("months");
   if (!monthsArg) {
-    console.error("사용법: [--region seoul|gyeonggi|incheon|all] --gu 강남구,서초구|all --months 202606,202607 [--out dir] [--force]");
+    console.error("사용법: [--region seoul|gyeonggi|incheon|jibang|all] --gu 강남구,서초구|all --months 202606,202607 [--out dir] [--force]");
     process.exit(1);
   }
   const guList = guArg === "all" ? Object.keys(LAWD) : guArg.split(",").map((s) => s.trim());
