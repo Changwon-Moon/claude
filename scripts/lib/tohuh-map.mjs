@@ -61,6 +61,77 @@ export function tohuhParts(areas) {
  * @param twoLine  라벨을 2줄로(이름 / 값). 좁은 도형에서 1줄보다 훨씬 잘 들어간다.
  *                 폭이 절반쯤으로 줄어드니 labelWidth 도 함께 줄인다.
  */
+/* ── 라벨을 경계에서 떼어 놓기 위한 기하 도우미 (2026-09-01, `centerFit` 전용) ──
+ * 무게중심은 "가운데"가 아니다. 오목한 구(중구·성동구)에서는 무게중심이 경계 바로 옆이나
+ * 아예 옆 구 위에 떨어진다. 여기서 쓰는 것은 **최대 내접원의 중심**(polylabel) —
+ * 다각형 안에서 **경계까지의 거리가 최대**인 점이다. 정의상 가장 넉넉한 자리다.
+ * 격자·분할 순서가 고정돼 있어 같은 입력 → 같은 좌표(결정적 렌더의 전제). */
+
+/** 점 → 선분 최단거리의 제곱 */
+function seg2(x, y, x1, y1, x2, y2) {
+  let dx = x2 - x1, dy = y2 - y1;
+  if (dx || dy) {
+    const t = ((x - x1) * dx + (y - y1) * dy) / (dx * dx + dy * dy);
+    if (t > 1) { x1 = x2; y1 = y2; } else if (t > 0) { x1 += dx * t; y1 += dy * t; }
+  }
+  dx = x - x1; dy = y - y1;
+  return dx * dx + dy * dy;
+}
+
+/** 링 안이면 +, 밖이면 − 인 경계까지의 거리 */
+function edgeDist(rs, x, y) {
+  let inside = false, best = Infinity;
+  for (const r of rs)
+    for (let i = 0, j = r.length - 1; i < r.length; j = i++) {
+      const [xi, yi] = r[i], [xj, yj] = r[j];
+      if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
+      best = Math.min(best, seg2(x, y, xj, yj, xi, yi));
+    }
+  return (inside ? 1 : -1) * Math.sqrt(best);
+}
+
+/** 정점이 너무 촘촘하면 거리 계산이 느려진다 — 최소 간격으로 솎는다(모양은 유지) */
+function thin(r, minGap = 2) {
+  const out = [r[0]];
+  for (const q of r) {
+    const [px0, py0] = out[out.length - 1];
+    if (Math.hypot(q[0] - px0, q[1] - py0) >= minGap) out.push(q);
+  }
+  if (out.length < 4) return r;
+  return out;
+}
+
+/** 최대 내접원 중심 — 격자를 잘라 가며 좁힌다(polylabel 축약판) */
+function poleOfInaccessibility(rs, precision = 1) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const r of rs) for (const [x, y] of r) {
+    minX = Math.min(minX, x); minY = Math.min(minY, y);
+    maxX = Math.max(maxX, x); maxY = Math.max(maxY, y);
+  }
+  const w = maxX - minX, h = maxY - minY;
+  let cell = Math.min(w, h) / 2 || 1;
+  let best = null;
+  /** 한 칸의 중심 점수 = 경계거리, 잠재력 = 점수 + 칸 대각 반지름 */
+  const mk = (x, y, hw) => { const d = edgeDist(rs, x, y); return { x, y, hw, d, max: d + hw * Math.SQRT2 }; };
+  let queue = [];
+  for (let x = minX; x < maxX; x += cell)
+    for (let y = minY; y < maxY; y += cell) queue.push(mk(x + cell / 2, y + cell / 2, cell / 2));
+  for (const c of queue) if (!best || c.d > best.d) best = c;
+  let guard = 0;
+  while (queue.length && guard++ < 4000) {
+    queue.sort((a, b) => b.max - a.max);
+    const c = queue.shift();
+    if (c.max - best.d <= precision) break;
+    const hw = c.hw / 2;
+    for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+      const q = mk(c.x + sx * hw, c.y + sy * hw, hw);
+      if (q.d > best.d) best = q;
+      queue.push(q);
+    }
+  }
+  return best ? { x: best.x, y: best.y, r: best.d } : null;
+}
+
 export function tohuhMapSvg({
   parts,
   valueOf,
@@ -76,6 +147,15 @@ export function tohuhMapSvg({
    * ⚠️ 이 모듈은 스탬프를 **2개** 찍는데 BRAND.md 는 「아이디는 카드당 1개」다.
    * 푸터 워터마크를 켜는 카드는 여기를 꺼야 한 장에 하나가 된다(2026-09-01). */
   stamps: withStamps = true,
+  /** 지도 글자를 전부 잉크색으로. 기본은 끔(진한 칸은 흰 글자 — 발행 카드 픽셀 불변).
+   * ⚠️ 켜려면 `colorHi` 를 밝은 쪽으로 줘야 한다. 기본 진한끝 rgb(176,11,30) 위의 잉크는
+   * 대비 2.46 으로 WCAG 큰글자 AA(3.0)에도 못 미친다. 계정 레드 #E5484D 를 진한끝으로
+   * 쓰면 전 구간 4.54 이상이 나온다(2026-09-01 실측). */
+  labelInk = false,
+  /** 라벨을 **경계에서 가장 먼 안쪽 점**(최대 내접원 중심)에 놓고, 글자 상자가 경계선에
+   * 닿으면 벌점을 준다. 기본은 끔 — 켜면 배치가 달라져 발행 카드 픽셀이 바뀐다.
+   * `placement:"nearest"` 와 함께 쓴다(무게중심 대신 그 점을 기준으로 겨룬다). */
+  centerFit = false,
   labelWidth = 140,
   twoLine = false,
   /** 라벨 배치 방식. "down"(기본) = 아래로만 밀기 · "nearest" = 중앙에서 가장 가까운 빈 자리.
@@ -112,7 +192,7 @@ export function tohuhMapSvg({
     const t = norm(v);
     return `rgb(${lerp(C_LO[0], C_HI[0], t)},${lerp(C_LO[1], C_HI[1], t)},${lerp(C_LO[2], C_HI[2], t)})`;
   };
-  const textCol = (v) => (norm(v) > textThreshold ? "#ffffff" : "#26303d");
+  const textCol = (v) => (labelInk ? "#141821" : norm(v) > textThreshold ? "#ffffff" : "#26303d");
 
   let paths = "";
   let clipD = ""; // 표시 지역 전체(한강 클리핑 — 그린 땅 위에만 강이 보이게)
@@ -151,7 +231,17 @@ export function tohuhMapSvg({
     const projRings = [];
     for (const f of part.features)
       for (const ring of rings(f.geometry)) projRings.push(ring.map(([lo, la]) => [px(lo), py(la)]));
-    placed.push({ cx, cy, v, area, rings: projRings, label: info.mapLabel || info.label });
+    /* `centerFit` 이면 무게중심 대신 **최대 내접원 중심**을 기준점으로 삼는다.
+     * 링은 솎아서 넘긴다 — 정점이 수백 개면 거리 계산이 40곳 × 후보격자만큼 반복된다. */
+    const thinRings = centerFit ? projRings.map((r) => thin(r)) : projRings;
+    const pole = centerFit ? poleOfInaccessibility(thinRings) : null;
+    placed.push({
+      cx: pole ? pole.x : cx,
+      cy: pole ? pole.y : cy,
+      inR: pole ? pole.r : 0,
+      v, area, rings: projRings, thinRings,
+      label: info.mapLabel || info.label,
+    });
   }
 
   /* 라벨 충돌 회피: 위→아래로 배치하며 너무 가까우면 아래로 밀어낸다.
@@ -179,7 +269,12 @@ export function tohuhMapSvg({
      * 큰 구부터 자리를 잡는다 — 작은 구는 어차피 밀리므로 큰 구의 중앙을 지켜준다.
      * 결정적: 격자·순서가 고정돼 있어 같은 입력 → 같은 배치. */
     const OUT_PEN = 300; // 도형 밖으로 완전히 나간 라벨의 벌점(px 환산)
-    const OVER_PEN = 560; // 라벨 하나와 완전히 겹쳤을 때의 벌점(px 환산)
+    /* ⚠️ centerFit 을 켜면 겹침 벌점을 올린다. 안 그러면 좁은 구(중구)가 "제자리에 가깝고
+     * 경계 여유도 그럭저럭"인 자리를 골라 **옆 구 라벨과 겹친 채로** 끝난다
+     * (2026-09-01 첫 판에서 중구가 종로의 "9.6억" 위에 앉았다). 겹침이 여유보다 눈에 띈다. */
+    const OVER_PEN = centerFit ? 1100 : 560; // 라벨 하나와 완전히 겹쳤을 때의 벌점(px 환산)
+    const CLEAR_PEN = 420; // 경계에 완전히 붙었을 때의 벌점(centerFit 전용)
+    const NEED = twoLine ? 16 : 11; // 글자 상자 끝에서 경계까지 바라는 여유(px)
     /* 라벨 글자 상자의 세로 표본점 — 2줄이면 위/가운데/아래를 다 본다(앵커 기준 상대 좌표) */
     const PROBE = twoLine ? [-22, 0, 14] : [0];
     const inPoly = (rs, x, y) => {
@@ -191,8 +286,18 @@ export function tohuhMapSvg({
         }
       return c;
     };
-    placed.sort((a, b) => b.area - a.area || a.cy - b.cy || a.cx - b.cx);
-    const SX = LW / 12, SY = 6, RX = 8, RY = 11; // 격자 간격·범위(중앙에서 ±79px, ±66px)
+    /* ── 배치 순서
+     * 기존: **큰 구부터** — "작은 구는 어차피 밀리니 큰 구의 중앙을 지켜준다"는 판단이었다.
+     * centerFit 에서는 뒤집는다: **여유가 좁은 구부터**(내접원 반지름 오름차순).
+     * 좁은 구는 갈 곳이 없고 넓은 구는 비켜 줄 자리가 있기 때문이다.
+     * 실측(2026-09-01): 큰 구 우선일 때 성북이 먼저 앉아 종로를 24px 남쪽으로 밀었고,
+     * 밀린 종로가 다시 중구를 덮었다(중구 내접원 26px — 40곳 중 가장 좁다).
+     * ⚠️ `placement:"nearest"` + centerFit 을 안 켠 카드는 예전 순서 그대로다(픽셀 불변). */
+    if (centerFit) placed.sort((a, b) => a.inR - b.inR || a.cy - b.cy || a.cx - b.cx);
+    else placed.sort((a, b) => b.area - a.area || a.cy - b.cy || a.cx - b.cx);
+    /* 격자 간격·범위. centerFit 은 좁은 구가 자기 안에서 빈 자리를 더 멀리까지 찾아야 해서
+     * 세로 범위를 넓힌다(중구·성동구처럼 가늘고 긴 도형). */
+    const SX = LW / 12, SY = 6, RX = 8, RY = centerFit ? 16 : 11;
     for (const p of placed) {
       let best = null;
       for (let iy = -RY; iy <= RY; iy++)
@@ -207,11 +312,32 @@ export function tohuhMapSvg({
             const fy = Math.max(0, LH - Math.abs(q.y - y)) / LH;
             ov += fx * fy;
           }
-          const score = Math.hypot(x - p.cx, y - p.cy) + (out / PROBE.length) * OUT_PEN + ov * OVER_PEN;
+          /* ── 경계 여유 (centerFit 전용, 2026-09-01 오너 지시)
+           * "도형 안에 있다"만 보면 라벨이 경계선에 붙는다(중구·성동구가 그랬다).
+           * 글자 상자의 **가로 끝·세로 끝**에서 경계까지의 거리를 재서, 필요한 여유보다
+           * 모자란 만큼 벌점을 준다. 좁은 구는 애초에 여유가 없으니 `inR` 로 눈높이를 낮춘다
+           * — 안 그러면 좁은 구가 벌점을 피하려고 자기 도형을 떠난다. */
+          let clr = 0;
+          if (centerFit) {
+            const need = Math.min(NEED, p.inR * 0.75);
+            let worst = Infinity;
+            for (const dx of [-LW * 0.34, 0, LW * 0.34])
+              for (const dy of PROBE) worst = Math.min(worst, edgeDist(p.thinRings, x + dx, y + dy));
+            if (worst < need) clr = (need - worst) / Math.max(need, 1);
+          }
+          const score =
+            Math.hypot(x - p.cx, y - p.cy) + (out / PROBE.length) * OUT_PEN + ov * OVER_PEN + clr * CLEAR_PEN;
           if (!best || score < best.score) best = { x, y, score };
         }
       p.x = best.x;
       p.y = best.y;
+      /* 라벨이 왜 거기 앉았는지 보려면 `WIRIT_MAP_DEBUG=1` — 기준점(내접원 중심)·반지름·최종 좌표.
+       * 눈으로 "겹쳤다"만 보고 상수를 흔들면 다른 구가 깨진다. 수치를 보고 고친다. */
+      if (process.env.WIRIT_MAP_DEBUG)
+        console.error(
+          `[map] ${String(p.label).padEnd(8)} pole=(${p.cx.toFixed(0)},${p.cy.toFixed(0)}) inR=${p.inR.toFixed(0)}` +
+            ` → (${p.x.toFixed(0)},${p.y.toFixed(0)}) 이동 ${Math.hypot(p.x - p.cx, p.y - p.cy).toFixed(0)}px`,
+        );
       done.push({ x: p.x, y: p.y });
     }
   } else {
