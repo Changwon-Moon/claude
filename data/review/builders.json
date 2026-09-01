@@ -1802,6 +1802,30 @@
         "--date",
         "2026-09-01"
       ]
+    },
+    {
+      "label": "mae84-map",
+      "cmd": "scripts/build-band-map.mjs",
+      "args": [
+        "--kind",
+        "mae",
+        "--type",
+        "84",
+        "--date",
+        "2026-09-01"
+      ]
+    },
+    {
+      "label": "mae59-map",
+      "cmd": "scripts/build-band-map.mjs",
+      "args": [
+        "--kind",
+        "mae",
+        "--type",
+        "59",
+        "--date",
+        "2026-09-01"
+      ]
     }
   ]
 }

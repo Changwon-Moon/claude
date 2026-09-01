@@ -1,0 +1,25 @@
+{
+  "label": "mae84-map",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "scope",
+      "level": "info",
+      "code": "scope-acked",
+      "msg": "제목은 '서울'이고 서울 25개 자치구 밖 5곳이 함께 실려 있습니다(승인됨) — 오너 확정(2026-09-01): 제목의 주어는 서울이고 값도 서울 25구 평균이다. 표·지도는 수도권 토지거래허가구역 40곳을 함께 보여 주며, 카드 맨 위 회색 줄이 그 범위를 밝힌다. 아래 15곳은 그 경기 지역이며, 명단에 없는 이름이 새로 끼면 검사가 그대로 막는다(07-27 캐시 오염 사고 방어는 유지)."
+    }
+  ],
+  "cards": [
+    {
+      "file": "mae84-map.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}
