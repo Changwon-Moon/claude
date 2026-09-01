@@ -1,6 +1,6 @@
 # 신고가 단지 이력 — 마지막 실행
 
-- 대기열: 83줄
+- 대기열: 101줄
 - 결과: **성공**
 
 ```
@@ -577,9 +577,9 @@
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41465 --apt '성복역롯데캐슬골드타운' --umd '성복동' --type 84 --from 202001 --force
 
-성복역롯데캐슬골드타운 · 전용 84타입 · 41465 · 202001~202608 (80개월)
+성복역롯데캐슬골드타운 · 전용 84타입 · 41465 · 202001~202609 (81개월)
 /home/runner/work/claude/claude/data/datasets/singo-history/41465-성복역롯데캐슬골드타운-84.json
-거래 있던 달 68/80 · 수집 실패 0개월
+거래 있던 달 68/81 · 수집 실패 0개월
 최고가 19억 (2026-08-22 · 전용 84.9126㎡ 26층)
 
 ── 화서역푸르지오더에듀포레 전용 59타입 (41111)
@@ -587,10 +587,190 @@
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41111 --apt '화서역푸르지오더에듀포레' --umd '천천동' --type 59 --from 202001 --force
 
-화서역푸르지오더에듀포레 · 전용 59타입 · 41111 · 202001~202608 (80개월)
+화서역푸르지오더에듀포레 · 전용 59타입 · 41111 · 202001~202609 (81개월)
 /home/runner/work/claude/claude/data/datasets/singo-history/41111-화서역푸르지오더에듀포레-59.json
-거래 있던 달 69/80 · 수집 실패 0개월
+거래 있던 달 69/81 · 수집 실패 0개월
 최고가 7.9억 (2026-08-24 · 전용 59.98㎡ 10층)
+
+── 목동힐스테이트 전용 59타입 (11470)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11470 --apt '목동힐스테이트' --umd '신정동' --type 59 --from 202001
+
+목동힐스테이트 · 전용 59타입 · 11470 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11470-목동힐스테이트-59.json
+거래 있던 달 39/81 · 수집 실패 0개월
+최고가 18.6억 (2026-08-29 · 전용 59.95㎡ 18층)
+
+── 우장산아이파크,이편한세상 전용 84타입 (11500)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11500 --apt '우장산아이파크,이편한세상' --umd '화곡동' --type 84 --from 202001
+
+우장산아이파크,이편한세상 · 전용 84타입 · 11500 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11500-우장산아이파크이편한세상-84.json
+거래 있던 달 61/81 · 수집 실패 0개월
+최고가 16.4억 (2026-08-10 · 전용 84.97㎡ 7층)
+
+── 주공13 전용 84타입 (41210)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41210 --apt '주공13' --umd '철산동' --type 84 --from 202001
+
+주공13 · 전용 84타입 · 41210 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41210-주공13-84.json
+거래 있던 달 68/81 · 수집 실패 0개월
+최고가 15.8억 (2026-08-14 · 전용 84.77㎡ 7층)
+
+── 광교호반베르디움 전용 84타입 (41117)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '광교호반베르디움' --umd '원천동' --type 84 --from 202001
+
+광교호반베르디움 · 전용 84타입 · 41117 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41117-광교호반베르디움-84.json
+거래 있던 달 43/81 · 수집 실패 0개월
+최고가 15억 (2026-08-21 · 전용 84.9424㎡ 16층)
+
+── 강서힐스테이트 전용 59타입 (11500)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11500 --apt '강서힐스테이트' --umd '화곡동' --type 59 --from 202001
+
+강서힐스테이트 · 전용 59타입 · 11500 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11500-강서힐스테이트-59.json
+거래 있던 달 64/81 · 수집 실패 0개월
+최고가 14.3억 (2026-08-21 · 전용 59.99㎡ 2층)
+
+── 평촌더샵센트럴시티 전용 59타입 (41173)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '평촌더샵센트럴시티' --umd '관양동' --type 59 --from 202001
+
+평촌더샵센트럴시티 · 전용 59타입 · 41173 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41173-평촌더샵센트럴시티-59.json
+거래 있던 달 51/81 · 수집 실패 0개월
+최고가 12.97억 (2026-08-20 · 전용 59.997㎡ 20층)
+
+── 평촌센텀퍼스트 전용 59타입 (41173)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '평촌센텀퍼스트' --umd '호계동' --type 59 --from 202001
+
+평촌센텀퍼스트 · 전용 59타입 · 41173 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41173-평촌센텀퍼스트-59.json
+거래 있던 달 19/81 · 수집 실패 0개월
+최고가 12.1억 (2026-08-25 · 전용 59.997㎡ 10층)
+
+── 평촌더샵아이파크 전용 59타입 (41173)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '평촌더샵아이파크' --umd '호계동' --type 59 --from 202001
+
+평촌더샵아이파크 · 전용 59타입 · 41173 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41173-평촌더샵아이파크-59.json
+거래 있던 달 61/81 · 수집 실패 0개월
+최고가 11억 (2026-08-19 · 전용 59.94㎡ 4층)
+
+── 동탄시범다은마을 월드메르디앙 반도유보라 전용 84타입 (41597)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41597 --apt '동탄시범다은마을 월드메르디앙 반도유보라' --umd '반송동' --type 84 --from 202001
+
+동탄시범다은마을 월드메르디앙 반도유보라 · 전용 84타입 · 41597 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41597-동탄시범다은마을월드메르디앙반도유보라-84.json
+거래 있던 달 57/81 · 수집 실패 0개월
+최고가 10.75억 (2026-08-29 · 전용 84.68㎡ 23층)
+
+── 반정아이파크캐슬5단지 전용 84타입 (41595)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41595 --apt '반정아이파크캐슬5단지' --umd '반정동' --type 84 --from 202001
+
+반정아이파크캐슬5단지 · 전용 84타입 · 41595 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41595-반정아이파크캐슬5단지-84.json
+거래 있던 달 27/81 · 수집 실패 0개월
+최고가 9.7억 (2026-08-29 · 전용 84.73㎡ 2층)
+
+── 병점역아이파크캐슬 전용 84타입 (41595)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41595 --apt '병점역아이파크캐슬' --umd '병점동' --type 84 --from 202001
+
+병점역아이파크캐슬 · 전용 84타입 · 41595 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41595-병점역아이파크캐슬-84.json
+거래 있던 달 45/81 · 수집 실패 0개월
+최고가 9.38억 (2026-08-29 · 전용 84.98㎡ 20층)
+
+── 수원하늘채더퍼스트1단지 전용 84타입 (41113)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41113 --apt '수원하늘채더퍼스트1단지' --umd '곡반정동' --type 84 --from 202001
+
+수원하늘채더퍼스트1단지 · 전용 84타입 · 41113 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41113-수원하늘채더퍼스트1단지-84.json
+거래 있던 달 34/81 · 수집 실패 0개월
+최고가 8.9억 (2026-08-28 · 전용 84.96㎡ 11층)
+
+── 아르테자이 전용 59타입 (41171)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41171 --apt '아르테자이' --umd '안양동' --type 59 --from 202001
+
+아르테자이 · 전용 59타입 · 41171 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41171-아르테자이-59.json
+거래 있던 달 25/81 · 수집 실패 0개월
+최고가 8.2억 (2026-08-29 · 전용 59.97㎡ 22층)
+
+── 호계2차현대홈타운 전용 84타입 (41173)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '호계2차현대홈타운' --umd '호계동' --type 84 --from 202001
+
+호계2차현대홈타운 · 전용 84타입 · 41173 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41173-호계2차현대홈타운-84.json
+거래 있던 달 68/81 · 수집 실패 0개월
+최고가 8.1억 (2026-08-19 · 전용 84.973㎡ 13층)
+
+── 수원하늘채더퍼스트1단지 전용 59타입 (41113)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41113 --apt '수원하늘채더퍼스트1단지' --umd '곡반정동' --type 59 --from 202001
+
+수원하늘채더퍼스트1단지 · 전용 59타입 · 41113 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41113-수원하늘채더퍼스트1단지-59.json
+거래 있던 달 39/81 · 수집 실패 0개월
+최고가 7.5억 (2026-08-30 · 전용 59.96㎡ 9층)
+
+── 보람마을(아주) 전용 59타입 (41192)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41192 --apt '보람마을(아주)' --umd '중동' --type 59 --from 202001
+
+보람마을(아주) · 전용 59타입 · 41192 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41192-보람마을아주-59.json
+거래 있던 달 58/81 · 수집 실패 0개월
+최고가 6.27억 (2026-08-29 · 전용 59.94㎡ 12층)
+
+── 신도림태영타운 전용 84타입 (11530)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11530 --apt '신도림태영타운' --umd '구로동' --type 84 --from 202001 --force
+
+신도림태영타운 · 전용 84타입 · 11530 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11530-신도림태영타운-84.json
+거래 있던 달 59/81 · 수집 실패 0개월
+최고가 14.75억 (2026-08-07 · 전용 84.87㎡ 21층)
+
+── 신동탄포레자이 전용 59타입 (41595)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41595 --apt '신동탄포레자이' --umd '반월동' --type 59 --from 202001 --force
+
+신동탄포레자이 · 전용 59타입 · 41595 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41595-신동탄포레자이-59.json
+거래 있던 달 25/81 · 수집 실패 0개월
+최고가 8.83억 (2026-08-29 · 전용 59.9801㎡ 26층)
 
 ✅ 대기열 전 줄 완료
 ```

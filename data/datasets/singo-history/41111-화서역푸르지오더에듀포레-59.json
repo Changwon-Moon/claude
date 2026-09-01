@@ -5,8 +5,8 @@
     "aptNm": "화서역푸르지오더에듀포레",
     "type": "59",
     "from": "202001",
-    "to": "202608",
-    "monthsTried": 80,
+    "to": "202609",
+    "monthsTried": 81,
     "monthsFailed": 0,
     "monthsTraded": 69,
     "peak": {
@@ -737,6 +737,15 @@
       "area": 59.98,
       "floor": 10,
       "date": "2026-08-24",
+      "ok": true
+    },
+    {
+      "ym": "202609",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
       "ok": true
     }
   ]

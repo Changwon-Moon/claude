@@ -5,8 +5,8 @@
     "aptNm": "성복역롯데캐슬골드타운",
     "type": "84",
     "from": "202001",
-    "to": "202608",
-    "monthsTried": 80,
+    "to": "202609",
+    "monthsTried": 81,
     "monthsFailed": 0,
     "monthsTraded": 68,
     "peak": {
@@ -737,6 +737,15 @@
       "area": 84.9126,
       "floor": 26,
       "date": "2026-08-22",
+      "ok": true
+    },
+    {
+      "ym": "202609",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
       "ok": true
     }
   ]
