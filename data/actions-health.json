@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T00:57:28.730Z",
+  "generatedAt": "2026-09-01T01:37:06.130Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -576,9 +576,9 @@
       "file": "molit-collect.yml",
       "name": "실거래 수집 (국토부)",
       "lastRun": "2026-08-27",
-      "daysAgo": 4,
+      "daysAgo": 5,
       "lastOk": "2026-08-27",
-      "okDaysAgo": 4,
+      "okDaysAgo": 5,
       "fails30": 2,
       "runs30": 4
     },
@@ -779,7 +779,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-01",
       "okDaysAgo": 0,
-      "fails30": 18,
+      "fails30": 17,
       "runs30": 100
     }
   ]
