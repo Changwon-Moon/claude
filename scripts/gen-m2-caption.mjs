@@ -195,7 +195,7 @@ ${bullets}
 
 ⚡ ${pk.inCurrentTerm ? `특히 ${kor(pk.ym)} 한 달에만 ${pk.delta.toFixed(1)}조가 늘었습니다.\n${firstYm.slice(0, 4)}년 집계 이후 한 달 증가폭 1위입니다.` : `한 달 증가폭 1위는 ${kor(pk.ym)}의 ${pk.delta.toFixed(1)}조입니다.`}
 
-${est ? `📈 12월 예상 ${num(est.shown)}조
+${est ? `📈 '${est.ym.slice(2, 4)}년 말 예상 약 ${num(est.shown)}조
 올해 들어 ${num(est.ytd)}조가 늘었습니다(${est.monthsDone}개월, 월평균 ${est.perMonth}조).
 그 속도가 남은 ${est.remMonths}개월에도 이어진다고 본 값입니다.\n` : ""}
 📌 저장해두고 통화량 흐름 확인하기
@@ -209,9 +209,9 @@ ${est ? `📈 12월 예상 ${num(est.shown)}조
    이 카드는 정부 간 비교를 위해 전 구간을 개편 전 기준으로 통일했습니다.
 ※ 얼굴 아래 개월 수는 실제 재임 기간, 월평균은 데이터 구간 기준입니다.
 ※ ${ymLabel(cur.end)} 기준 M2 총량은 ${num(m.shown.level)}조입니다(개편 전 기준, 개편 후 기준은 ${num(m.shown.levelNewBasis)}조).${est ? `
-※ 카드 왼쪽 회색 글씨 ${num(est.shown)}조는 예상치입니다 — 한국은행이 발표한 값이 아닙니다.
-   ${ymLabel(cur.end)}까지의 실적 ${num(est.ytd)}조 ÷ ${est.monthsDone}개월 = 월 ${est.perMonth}조를 남은 ${est.remMonths}개월에 그대로 더한 값이고,
-   통화정책·자금흐름이 바뀌면 달라집니다.` : ""}
+※ 카드 왼쪽 회색 글씨 약 ${num(est.shown)}조는 예상치입니다 — 한국은행이 발표한 값이 아닙니다.
+   ${ymLabel(cur.end)}까지의 실적 ${num(est.ytd)}조 ÷ ${est.monthsDone}개월 = 월 ${est.perMonth}조를 남은 ${est.remMonths}개월에 그대로 더하면 ${num(est.exact)}조이고,
+   카드에는 ${est.roundTo}조 단위로 반올림해 적었습니다. 통화정책·자금흐름이 바뀌면 달라집니다.` : ""}
 
 ${TAGS}`;
 }
