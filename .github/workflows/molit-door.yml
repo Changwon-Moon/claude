@@ -52,6 +52,12 @@ jobs:
           # 전부 403 "등록되지 않은 서비스키" 였는데 같은 키로 수집기는 전날 정상이었다.
           # 그래서 **정규화·날것 둘 다** 두드려 어느 쪽이 문제인지 한 번에 가른다.
           KEY_ENC=$(node -e 'const k=process.env.MOLIT_API_KEY;let d;try{d=decodeURIComponent(k)}catch{d=k};process.stdout.write(encodeURIComponent(d))')
+          # ── 키의 **모양**을 남긴다 (2026-09-02). 값은 절대 찍지 않는다.
+          # 403 "등록되지 않은 서비스키" 는 (a) 만료 (b) **다른 키가 덮어써짐** 을 구별해 주지 않는다.
+          # 공공데이터포털 키는 80자 넘는 Base64 인데 NEIS 키는 32자 hex 다 — 길이만 봐도 갈린다.
+          # (오너가 같은 날 NEIS 키를 갈아 끼웠으므로 덮어쓰기를 반드시 배제해야 한다.)
+          KEYSHAPE=$(node -e 'const c=require("crypto");const k=(process.env.MOLIT_API_KEY||"").trim();process.stdout.write(`${k.length}자 · 지문 ${k?c.createHash("sha256").update(k).digest("hex").slice(0,8):"(빈값)"} · ${/%[0-9A-Fa-f]{2}/.test(k)?"%XX 인코딩됨":"인코딩 안 됨"}`)')
+          echo "MOLIT_API_KEY 모양: $KEYSHAPE"
           # 대기열이 있으면 그 줄이 무엇을 두드릴지 정한다(세션이 미는 손잡이).
           LAWD=11110; MONTHS=$(TZ=Asia/Seoul date +%Y%m); WHO="종로구"
           if [ -f data/molit-door-queue.txt ]; then
@@ -105,7 +111,7 @@ jobs:
             ANYHTTP="$CODE"
           done
           done
-          SUM=$(cat /tmp/knock.txt)
+          SUM=$(printf '\n🔑 MOLIT_API_KEY 모양: %s' "$KEYSHAPE"; cat /tmp/knock.txt)
           echo "lawd=$LAWD months=$MONTHS anyRow=$ANYROW"
           if [ "$ANYHTTP" = "000" ]; then
             M="🚪 실거래 API — ❌ **연결 자체가 안 열립니다**"$'\n'"   ($(head -c 120 /tmp/err.txt))"$'\n\n'"수집을 돌려도 지금은 0건입니다. 20~30분 뒤 다시 눌러 보세요."
