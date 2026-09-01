@@ -4,8 +4,10 @@
  * 1장(hakgun-map)은 **값**을, 이 장은 **학원 수**를 같은 21곳·같은 지도에 얹는다.
  * 두 장을 나란히 놓으면 「급지 ≠ 값 ≠ 학원」이 한눈에 보인다.
  *
- * ⚠️ 1장과 달리 **학원 수 순으로 새로 번호를 매긴다.** 핀 색은 급지 그대로다 —
- *    2번 자리에 회색(3급지) 핀이 서는 것이 이 카드의 전부다(동탄).
+ * ⚠️ **판형은 1장과 완전히 같다**(오너 2026-09-02 "지난 카드 형태 그대로"). 급지별 3개 표 ·
+ *    급지 안에서 값 순 · 번호는 표마다 1번부터 · 지도·범례·지방 블록까지 그대로다.
+ *    바뀌는 것은 **값 하나뿐이다** — 국평 시세 → 입시·보습 학원 수.
+ *    두 장을 겹쳐 보면 같은 자리의 숫자만 갈리므로, 순위가 어떻게 흐트러지는지가 바로 보인다.
  *
  * 세는 기준: 분야 「입시·검정 및 보습」의 **학원**만. 교습소는 뺀다(오너 2026-09-02).
  *   교습소는 1인 운영·일시수용 9명 상한이라 대형 학원과 한 줄로 세면 동네마다 다른 것을 센다
@@ -40,6 +42,7 @@ const MIN_BOTTOM_GAP = 40;
 const LAYOUT = {
   bodyW: 936,
   tableW: 272, gutter: 16,
+  hdrH: 36, grpGap: 16,
   legendH: LEGEND_H, legendGap: LEGEND_GAP,
   titleFs: HEAD.titleFs, titleGap: HEAD.titleGap, bodyGap: HEAD.bodyGap,
 };
@@ -70,18 +73,29 @@ const count = (a) => {
 const calc = ds.areas.map(count);
 const jibangCalc = (ds.jibangAreas || []).map(count);
 
-// 학원 수 내림차순. 같으면 이름순으로 못박아 **다시 돌려도 같은 그림**이 나오게 한다.
-calc.sort((x, y) => y.aca - x.aca || x.name.localeCompare(y.name, "ko"));
-jibangCalc.sort((x, y) => y.aca - x.aca || x.name.localeCompare(y.name, "ko"));
+// 지방 블록은 급지 → 학원 수 순. 같으면 이름순으로 못박아 다시 돌려도 같은 그림이 나온다.
+jibangCalc.sort((x, y) => x.grade - y.grade || y.aca - x.aca || x.name.localeCompare(y.name, "ko"));
 
-const flat = calc.map((a, i) => ({
-  n: i + 1,
-  key: a.name,
-  name: a.name,
-  grade: a.grade,
-  aca: a.aca.toLocaleString("ko-KR"),
-  tohuh: hitSgg.has(a.geoName),
-}));
+// 급지별 3개 표. **급지 안에서 학원 수 순**, 번호는 표마다 1번부터 — 1장과 같은 규칙이다.
+const GRADES = [1, 2, 3];
+const groups = GRADES.map((g) => {
+  const list = calc.filter((a) => a.grade === g).sort((x, y) => y.aca - x.aca || x.name.localeCompare(y.name, "ko"));
+  if (!list.length) throw new Error(`${g}급지에 학군지가 하나도 없습니다 — 데이터셋을 확인하세요.`);
+  return {
+    grade: g,
+    label: `${g}급지`,
+    rows: list.map((a, i) => ({
+      n: i + 1,
+      key: a.name,
+      name: a.name,
+      grade: g,
+      aca: a.aca.toLocaleString("ko-KR"),
+      tohuh: hitSgg.has(a.geoName),
+    })),
+  };
+});
+const flat = groups.flatMap((g) => g.rows);
+if (flat.length !== calc.length) throw new Error("급지로 나눈 뒤 개수가 달라졌습니다 — 급지 값을 확인하세요.");
 
 // 1장과 같은 규칙 — 「광역시 + 학군지」. full 을 뒤집어 만든다(손으로 다시 적지 않는다).
 const jibangName = (a) => {
@@ -117,11 +131,10 @@ LAYOUT.mapH = Math.round(mapH * 10) / 10;
 LAYOUT.mapY = 0;
 LAYOUT.bodyH = Math.round(mapH + LEGEND_GAP + LEGEND_H);
 
-// 표는 머리줄 하나 + 21행. 급지로 나누지 않으므로 행이 넉넉하다.
-LAYOUT.hdrH = 36;
-LAYOUT.rowH = Math.floor((mapH - LAYOUT.hdrH) / flat.length);
+// 표 세로를 지도 세로에 맞춘다 — 1장과 같은 역산이다(머리 3개 + 그룹 사이 2칸).
+LAYOUT.rowH = Math.floor((mapH - 3 * LAYOUT.hdrH - 2 * LAYOUT.grpGap) / flat.length);
 if (LAYOUT.rowH < 30) throw new Error(`행 높이가 ${LAYOUT.rowH}px 로 너무 낮습니다.`);
-const usedH = LAYOUT.hdrH + LAYOUT.rowH * flat.length;
+const usedH = 3 * LAYOUT.hdrH + 2 * LAYOUT.grpGap + LAYOUT.rowH * flat.length;
 if (usedH > LAYOUT.mapH + 4) throw new Error(`표(${usedH}px)가 지도(${LAYOUT.mapH}px)보다 깁니다.`);
 
 // 지방 블록 — 1장과 같은 자리·같은 방식(빈 바다 한가운데). 폭은 가장 긴 행을 재서 정한다.
@@ -161,29 +174,35 @@ if (bottomGap < MIN_BOTTOM_GAP) throw new Error(`본문이 푸터에 붙습니�
 
 // ── 4. 카드 ─────────────────────────────────────────────────────────
 const collectedAt = [...new Set(sido.map((s) => s.collectedAt))].sort().at(-1);
+// 제목의 곳 수는 **세어서** 넣는다 — 손으로 적으면 지방이 하나 늘어도 제목이 안 따라온다.
+const TOP_N = flat.length + jibangRows.length;
 const minCov = Math.min(...sido.map((s) => s.coverage));
 
 /* 상단 캡션은 **한 줄**이어야 한다. 공용 규격 28px 에 로고 자리를 뺀 746px 가 전부다.
    첫 판이 두 줄로 접혀 머리가 통째로 내려앉았다(2026-09-02) — designQa 는 넘침이 아니라
    줄바꿈이라 못 잡는다. 그래서 **빌더가 글자 폭을 재서** 넘치면 던진다. */
 const CAP_BUDGET = 746, CAP_FS = 28;
+// 계수 0.848 은 **실측 보정**이다 — 1장의 부제를 브라우저가 699px 로 그렸는데 이 어림은 824 를
+// 냈다(2026-09-02). 보정 없이 두면 들어갈 문구를 못 들어간다고 던진다.
+const CAP_K = 0.848;
 const capW = (t) =>
-  [...t].reduce((w, ch) => w + (/[ ·.]/.test(ch) ? 0.36 : /[0-9A-Za-z()]/.test(ch) ? 0.55 : 1), 0) * CAP_FS * 0.97;
-const subtitle = "나이스 학원 원장 · 입시·보습 분야 학원(교습소 제외)";
+  [...t].reduce((w, ch) => w + (/[ ·.]/.test(ch) ? 0.36 : /[0-9A-Za-z()]/.test(ch) ? 0.55 : 1), 0) * CAP_FS * 0.97 * CAP_K;
+/* 오너 원문은 「『대한민국 학군지도』 급지 분류표 · NEIS 입시·보습 분야 학원 수(교습소 제외)」였다.
+   28px 로 843px 라 한 줄에 안 들어간다(자리 746px). 뜻이 안 바뀌는 세 낱말만 덜어 726px 로 맞췄다:
+   「분야」·「표」·「수」. 글자를 줄이는 대신 문구를 줄인다 — 상단 캡션 28px/600 은 137장 공용 규격이다. */
+const subtitle = "「대한민국 학군지도」 급지분류 · NEIS 입시·보습 학원(교습소 제외)";
 if (capW(subtitle) > CAP_BUDGET)
   throw new Error(`상단 캡션이 한 줄에 안 들어갑니다(${Math.round(capW(subtitle))}px > ${CAP_BUDGET}px): "${subtitle}"`);
 
 const base = {
   template: "hakgun-academy@1",
   date,
-  // 「21곳」은 **학군지 수**다. 학원 수(937곳)와 같은 단위가 카드에 둘 있으므로
-  // 제목에서 순서를 바꿔 「학군지 21곳」이 먼저 읽히게 둔다.
-  title: `대표 학군지 <span class="hot">${flat.length}곳</span>, <span class="hi">입시학원 수</span>`,
+  title: `대한민국 <span class="hi">대표 학군지</span> <span class="hot">Top ${TOP_N}</span>`,
   subtitle,
   mapSvg,
+  groups,
   rows: flat,
   layout: LAYOUT,
-  head: { rank: "순위", name: "학군지", val: "학원" },
   legend: { hit: "토지거래허가구역", off: "미지정", g1: "1급지", g2: "2급지", g3: "3급지" },
   jibang: { label: `지방 학군지 ${jibangRows.length}곳`, rows: jibangRows },
   source: { name: "나이스 교육정보 개방 포털 · 『대한민국 학군지도』", period: collectedAt, verified: false },
@@ -196,7 +215,8 @@ const base = {
     counts: calc.map((a) => `${a.name} 학원 ${a.aca} · 교습소 ${a.gyoseup} · 정원적힘 ${a.jeongwonPct}%`),
     jibang: jibangCalc.map((a) => `${a.name} 학원 ${a.aca} · 교습소 ${a.gyoseup}`),
     pinResolution: resolved,
-    numbering: "학원 수 내림차순 1부터(동수는 이름순)",
+    numbering: "급지별 1부터 · 급지 안에서 학원 수 내림차순(동수는 이름순)",
+    total: `수도권 ${flat.length} + 지방 ${jibangRows.length} = ${TOP_N}곳`,
   },
 };
 
@@ -204,7 +224,6 @@ const outDir = publish ? join(ROOT, `data/content/${date}`) : join(ROOT, "data/o
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "hakgun-academy.json"), JSON.stringify(base, null, 2) + "\n", "utf8");
 
-const top = flat[0], bot = flat.at(-1);
-console.log(`✅ hakgun-academy — ${flat.length}곳 · ${top.name} ${top.aca}곳 → ${bot.name} ${bot.aca}곳`);
+console.log(`✅ hakgun-academy — 급지 ${groups.map((g) => `${g.label} ${g.rows.length}곳`).join(" · ")} + 지방 ${jibangRows.length}곳 = Top ${TOP_N}`);
 console.log(`   교습소 제외 · 법정동 커버리지 최저 ${minCov}% · 표 높이 ${usedH}/${LAYOUT.bodyH}px · 행 ${LAYOUT.rowH}px`);
 console.log(`   → ${outDir}/hakgun-academy.json${publish ? "" : "  ※ --publish 없이 스파이크"}`);

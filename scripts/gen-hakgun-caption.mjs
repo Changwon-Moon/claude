@@ -21,7 +21,8 @@ const c = JSON.parse(readFileSync(cardPath, "utf8"));
 const groups = c.groups;
 const flat = c.rows;
 const period = c.source.period;
-const num = (r) => Number(r.price);
+const num2 = (r) => Number(r.price);
+const byPrice = new Map(flat.map((r) => [r.name, r]));
 
 const lines = [];
 lines.push("학군 1급지가 값도 1등은 아니었습니다 🏫");
@@ -41,7 +42,7 @@ const flips = [];
 for (let i = 0; i < groups.length - 1; i++) {
   const lo = groups[i].rows.at(-1);      // 위 급지의 맨 아래
   const hi = groups[i + 1].rows[0];      // 아래 급지의 맨 위
-  if (num(lo) < num(hi))
+  if (num2(lo) < num2(hi))
     flips.push(
       `· ${groups[i].label} 맨 아래 ${lo.name} ${lo.price}억 < ${groups[i + 1].label} 맨 위 ${hi.name} ${hi.price}억`,
     );
@@ -56,7 +57,7 @@ if (flips.length) {
 // ── 토지거래허가구역과 겹쳐 보면 ────────────────────────────────────
 const outside = flat.filter((r) => !r.tohuh);
 if (outside.length) {
-  const cap = Math.ceil(Math.max(...outside.map(num)));
+  const cap = Math.ceil(Math.max(...outside.map(num2)));
   lines.push("[토지거래허가구역과 겹쳐 보면]");
   lines.push(`· ${flat.length}곳 중 ${flat.length - outside.length}곳이 허가구역 안입니다`);
   lines.push(`· 밖은 ${outside.map((r) => r.name).join(" · ")} ${outside.length}곳뿐이고, 전부 ${cap}억 미만입니다`);
@@ -73,24 +74,35 @@ if (c.jibang && c.jibang.rows && c.jibang.rows.length) {
 // ── 2장째(학원 수) — 카드 JSON 에서 그대로 읽는다. 캡션이 숫자를 다시 세지 않는다.
 if (acaPath) {
   const A = JSON.parse(readFileSync(acaPath, "utf8"));
-  const a = A.rows;
-  const byName = new Map(flat.map((r) => [r.name, r]));
-  lines.push("[2장째 — 입시·보습 학원 수]");
-  for (const r of a.slice(0, 5)) lines.push(`${r.n}. ${r.name} — ${r.aca}곳`);
-  lines.push(`… ${a.at(-1).n}. ${a.at(-1).name} ${a.at(-1).aca}곳까지`);
+  lines.push(`[2장째 — 입시·보습 학원 수 (${A.rows.length + A.jibang.rows.length}곳)]`);
+  for (const g of A.groups) {
+    lines.push(`· ${g.label} — ${g.rows.map((r) => `${r.name} ${r.aca}`).join(" · ")}`);
+  }
+  lines.push(`· 지방 — ${A.jibang.rows.map((r) => `${r.name} ${r.aca}`).join(" · ")}`);
   lines.push("");
+
   // 값 순위와 학원 순위가 가장 크게 어긋난 곳을 **계산해서** 고른다.
+  // 두 카드에 다 있는 곳만 본다 — 봉선은 실거래가 없어 1장에 없다.
+  const num = (t) => Number(String(t).replace(/,/g, ""));
+  const aFlat = A.rows;
+  const both = aFlat.filter((r) => byPrice.has(r.name));
   const priceRank = new Map(
     [...flat].sort((x, y) => Number(y.price) - Number(x.price)).map((r, i) => [r.name, i + 1]),
   );
-  const gap = a
-    .map((r) => ({ name: r.name, aca: r.n, price: priceRank.get(r.name), d: (priceRank.get(r.name) ?? 0) - r.n }))
-    .filter((r) => r.price != null);
-  const up = [...gap].sort((x, y) => y.d - x.d)[0];   // 값보다 학원이 앞선 곳
-  const down = [...gap].sort((x, y) => x.d - y.d)[0]; // 학원보다 값이 앞선 곳
+  const acaRank = new Map(
+    [...both].sort((x, y) => num(y.aca) - num(x.aca)).map((r, i) => [r.name, i + 1]),
+  );
+  const gap = both.map((r) => ({
+    name: r.name,
+    aca: acaRank.get(r.name),
+    price: priceRank.get(r.name),
+    d: priceRank.get(r.name) - acaRank.get(r.name),
+  }));
+  const up = [...gap].sort((x, y) => y.d - x.d)[0];
+  const down = [...gap].sort((x, y) => x.d - y.d)[0];
   lines.push("[값 순위와 학원 순위가 어긋나는 곳]");
-  lines.push(`· ${up.name} — 값 ${up.price}위인데 학원은 ${up.aca}위 (${byName.get(up.name).price}억)`);
-  lines.push(`· ${down.name} — 값 ${down.price}위인데 학원은 ${down.aca}위 (${byName.get(down.name).price}억)`);
+  lines.push(`· ${up.name} — 값 ${up.price}위인데 학원은 ${up.aca}위 (${byPrice.get(up.name).price}억)`);
+  lines.push(`· ${down.name} — 값 ${down.price}위인데 학원은 ${down.aca}위 (${byPrice.get(down.name).price}억)`);
   lines.push("");
 }
 

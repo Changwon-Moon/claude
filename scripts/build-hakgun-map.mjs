@@ -92,7 +92,14 @@ const calc = ds.areas.map((a) => {
 // ── 3-b. 지방 학군지 10곳 — 지도에는 안 찍고 값만 낸다 ─────────────
 // 지도는 수도권만 그린다(토허제·한강이 얹힌 판이라 전국으로 못 바꾼다).
 // 그래서 지방은 핀 없이 **지도 좌하단 별도 블록**에 값만 적는다(오너 2026-09-01).
-const jibangCalc = (ds.jibangAreas || []).map((a) => {
+// ⚠️ 실거래가 안 잡히는 곳은 **시세 카드에서만** 뺀다(학원 카드에는 있다).
+//    데이터셋의 priceUnavailable 이 이유를 들고 있다 — 빌더가 이유를 지어내지 않는다.
+const jibangPriced = (ds.jibangAreas || []).filter((a) => {
+  if (!a.priceUnavailable) return true;
+  console.log(`  ⚠️ ${a.name} — 시세 카드에서 제외: ${a.priceUnavailable}`);
+  return false;
+});
+const jibangCalc = jibangPriced.map((a) => {
   const codes = [a.sggCd, ...(a.alsoSggCd || [])];
   const sel = rows.filter(
     (r) => codes.includes(r.sggCd) && a.dongs.includes(r.umdNm) && r.area >= AREA_MIN && r.area <= AREA_MAX,

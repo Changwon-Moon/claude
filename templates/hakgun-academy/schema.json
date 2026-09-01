@@ -5,7 +5,7 @@
     "template",
     "title",
     "mapSvg",
-    "rows",
+    "groups",
     "layout"
   ],
   "properties": {
@@ -65,13 +65,60 @@
     "source": {
       "type": "object"
     },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "grade",
+          "label",
+          "rows"
+        ],
+        "properties": {
+          "grade": {
+            "type": "number"
+          },
+          "label": {
+            "type": "string"
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "n",
+                "name",
+                "aca"
+              ],
+              "properties": {
+                "n": {
+                  "type": "number"
+                },
+                "key": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "grade": {
+                  "type": "number"
+                },
+                "aca": {
+                  "type": "string"
+                },
+                "tohuh": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "layout": {
       "type": "object"
     },
     "jibang": {
-      "type": "object"
-    },
-    "head": {
       "type": "object"
     }
   },

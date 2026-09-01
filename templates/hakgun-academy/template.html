@@ -4,12 +4,18 @@
     <meta charset="utf-8" />
     <!--WIRIT_SHARED_CSS-->
     <style>
-      /* hakgun-academy@1 — 급지 카드의 2장째. 좌: 학원 수 순위 한 덩어리 표 / 우: 같은 수도권 지도.
-         ⚠️ 치수는 빌더의 LAYOUT 하나가 정본이다. 여기선 CSS 변수로 받아 쓰기만 한다.
-         ⚠️ .wirit-card 여는 태그는 **한 줄**이어야 한다 — 렌더러가 정규식으로 로고를 넣는다.
-         ⚠️ 상단 캡션(.wirit-topcap)은 공용 규격 28px/600 을 그대로 받는다. 여기서 다시 정의하지 않는다. */
+      /* hakgun-academy@1 — 로고 라인에 범례 / 제목 1행(가운데) / 좌: 급지별 3개 표 / 우: 수도권 시군구 지도.
+         ⚠️ 치수는 빌더의 LAYOUT 하나가 정본이다. 여기선 CSS 변수로 받아 쓰기만 한다. */
       .ha { padding-top: 72px; }
 
+      /* 부제(출처·기준)를 우상단 로고와 같은 줄에(오너 2026-09-01). .wirit-topcap 이 그 자리다 —
+         margin-top -30 · min-height 62 · padding-right 190(로고 자리) · 28px/600 을
+         공용 규격(_shared/base.css)에서 **그대로** 받는다. 여기서 다시 정의하지 않는다.
+         ⚠️ 한때 20px/700 으로 줄여 뒀었다. 전 카드를 재보니 61장이 28px/600 인데 이 카드만
+            20px 이었다 — 같은 계정의 카드로 안 보인다(오너 2026-09-01 지적).
+            28px 로 재도 글자 폭 699px < 자리 746px 라 한 줄에 들어간다. 줄일 이유가 없었다. */
+
+      /* 제목은 로고 라인 바로 아래에 붙지 않게 titleGap 만큼 띄운다(오너 2026-09-01). */
       .ha-title {
         margin: var(--titleGap) 0 0; text-align: center; white-space: nowrap;
         font-size: var(--titleFs); font-weight: 900; line-height: 1.08;
@@ -19,28 +25,37 @@
       .ha-title .hot { color: #c8102e; }
       .ha-body { position: relative; margin: var(--bodyGap) 0 0; width: 100%; height: var(--bodyH); }
 
-      /* ── 좌: 학원 수 순위 (급지로 나누지 않는다 — 순위가 곧 이야기다) ── */
+      /* ── 좌: 급지별 3개 표 ── */
       .ha-tbl { position: absolute; left: 0; top: 0; width: var(--tableW); }
+      .ha-grp + .ha-grp { margin-top: var(--grpGap); }
       .ha-hdr {
-        height: var(--hdrH); display: grid; grid-template-columns: 32px 1fr auto;
-        align-items: center; column-gap: 7px; border-bottom: 2.5px solid var(--wirit-ink);
-        font-size: 17px; font-weight: 700; color: var(--wirit-gray);
+        height: var(--hdrH); display: flex; align-items: center; gap: 9px;
+        border-bottom: 2.5px solid var(--wirit-ink);
       }
-      .ha-hdr .v { text-align: right; }
+      .ha-hdr em { width: 15px; height: 15px; border-radius: 999px; display: inline-block; }
+      .ha-hdr .lb { font-size: 24px; font-weight: 900; letter-spacing: -0.02em; color: var(--wirit-ink); }
+      .ha-hdr .ct { margin-left: auto; font-size: 17px; font-weight: 700; color: var(--wirit-gray); }
+      .ha-grp.g1 .ha-hdr em { background: #c8102e; }
+      .ha-grp.g2 .ha-hdr em { background: #141821; }
+      .ha-grp.g3 .ha-hdr em { background: #8f9bad; }
+      .ha-grp.g1 .ha-hdr .lb { color: #c8102e; }
+      .ha-grp.g2 .ha-hdr .lb { color: #141821; }
+      .ha-grp.g3 .ha-hdr .lb { color: #8f9bad; }
+
       .ha-row {
         height: var(--rowH);
-        display: grid; grid-template-columns: 32px 1fr auto; align-items: center; column-gap: 7px;
+        display: grid; grid-template-columns: 28px 1fr auto; align-items: center; column-gap: 7px;
         border-bottom: 1.5px solid var(--wirit-ink-06);
       }
-      .ha-n { font-family: var(--font-num); font-size: 21px; font-weight: 900; color: var(--wirit-gray); }
-      /* 급지는 이름 앞의 점으로만 말한다 — 표를 나누지 않고도 색이 급지를 실어 나른다. */
-      .ha-nm { display: flex; align-items: center; gap: 7px; font-size: 26px; font-weight: 900; letter-spacing: -0.03em; color: var(--wirit-ink); white-space: nowrap; }
-      .ha-nm em { width: 11px; height: 11px; border-radius: 999px; display: inline-block; flex: none; }
-      .ha-row.g1 .ha-nm em { background: #c8102e; }
-      .ha-row.g2 .ha-nm em { background: #141821; }
-      .ha-row.g3 .ha-nm em { background: #8f9bad; }
-      .ha-v { text-align: right; white-space: nowrap; font-family: var(--font-num); font-size: 27px; font-weight: 900; color: var(--wirit-ink); }
-      .ha-v i { font-style: normal; font-size: 18px; font-weight: 800; margin-left: 1px; color: var(--wirit-gray); }
+      .ha-n { font-family: var(--font-num); font-size: 20px; font-weight: 900; color: var(--wirit-gray); }
+      .ha-nm { font-size: 26px; font-weight: 900; letter-spacing: -0.03em; color: var(--wirit-ink); white-space: nowrap; }
+      .ha-nm i {
+        font-style: normal; font-size: 15px; font-weight: 800; letter-spacing: -0.01em;
+        color: #7a8698; background: rgba(20, 24, 33, 0.07); border-radius: 6px;
+        padding: 2px 7px; margin-left: 7px; vertical-align: 3px;
+      }
+      .ha-p { text-align: right; white-space: nowrap; font-family: var(--font-num); font-size: 27px; font-weight: 900; color: var(--wirit-ink); }
+      .ha-p i { font-style: normal; font-size: 18px; font-weight: 800; margin-left: 1px; color: var(--wirit-gray); }
 
       /* ── 우: 지도 + 그 아래 범례 ── */
       .ha-map { position: absolute; left: var(--mapX); top: var(--mapY); width: var(--mapW); }
@@ -61,12 +76,20 @@
       .ha-legend .l2 em { background: #141821; }
       .ha-legend .l3 em { background: #8f9bad; }
 
-      /* ── 지방 학군지 블록 — 1장과 같은 자리·같은 규격 ── */
+      /* ── 지방 학군지 블록 — 지도 좌하단 빈 바다 자리(오너 2026-09-01) ── */
       .ha-jb {
+        /* 폭은 **내용에 딱 맞춘다**(오너 2026-09-01 "우측 여백이 너무 크다").
+           빌더의 jbW 는 글자 폭을 어림한 값이라 늘 실제보다 넉넉하다 — 그 차이가 오른쪽에
+           빈 띠로 남았다. 어림값은 max-width(지도를 덮는지 재는 안전선)로만 쓰고,
+           실제 폭은 브라우저가 잰 내용 폭을 쓴다. 겹침 검사는 넉넉한 쪽으로 틀리므로 안전하다. */
+        /* 가로 자리는 **중심점**으로 받는다(--jbCx). 폭이 내용에 따라 달라지므로 왼쪽 좌표로
+           앉히면 어림 폭만큼 밀린다 — 빌더가 잡은 '빈 바다 한가운데'에 정확히 서게 한다. */
         position: absolute; left: var(--jbCx); top: var(--jbY); transform: translateX(-50%);
         width: max-content; max-width: var(--jbW);
         background: var(--wirit-paper); border: 2px solid var(--wirit-ink-12);
         border-radius: 4px; padding: 9px 11px 10px;
+        /* 입체감(오너 2026-09-01) — 각은 세운 채(4px) 그림자로만 띄운다.
+           큰 라운드 + 옅은 회색 채움은 'AI티'로 읽힌다(CARD_CHECKLIST §2 디자인 톤). */
         box-shadow: 0 2px 0 rgba(20, 24, 33, 0.10), 0 12px 26px rgba(20, 24, 33, 0.16);
       }
       .ha-jb .t {
@@ -74,6 +97,10 @@
         border-bottom: 2px solid var(--wirit-ink); margin-bottom: 6px;
       }
       .ha-jb .t b { font-size: 19px; font-weight: 900; letter-spacing: -0.02em; color: var(--wirit-ink); }
+      .ha-jb .t i { font-style: normal; margin-left: auto; font-size: 14px; font-weight: 700; color: var(--wirit-gray); }
+      /* 두 칸을 1fr 로 반씩 나누면, 왼칸의 긴 이름(「부산 해운대·동래」)이 오른칸까지 넓혀
+         「대전 둔산」과 값 사이가 텅 빈다(오너 2026-09-01). 칸마다 제 내용만큼만 잡는다.
+         칸 너비는 빌더가 열별로 따로 재서 jbW 를 정한다 — 두 곳의 계산이 같아야 한다. */
       .ha-jb .g { display: grid; grid-template-columns: max-content max-content; column-gap: 14px; row-gap: 2px; }
       .ha-jb .r { display: grid; grid-template-columns: 9px 1fr auto; align-items: center; column-gap: 5px; }
       .ha-jb .r em { width: 9px; height: 9px; border-radius: 999px; display: inline-block; }
@@ -84,6 +111,7 @@
       .ha-jb .r .v { font-family: var(--font-num); font-size: 17px; font-weight: 900; color: var(--wirit-ink); white-space: nowrap; }
       .ha-jb .r .v i { font-style: normal; font-size: 12px; font-weight: 800; color: var(--wirit-gray); margin-left: 1px; }
 
+      /* 푸터는 공용 규격의 상자 크기를 유지하고, 글자만 줄여 한 줄에 앉힌다(오너 2026-09-01). */
       .ha .wirit-footer { font-size: 19px; letter-spacing: -0.015em; }
     </style>
   </head>
@@ -95,24 +123,28 @@
 
       <div
         class="ha-body"
-        style="--bodyH:{{layout.bodyH}}px;--tableW:{{layout.tableW}}px;--rowH:{{layout.rowH}}px;--hdrH:{{layout.hdrH}}px;--mapX:{{layout.mapX}}px;--mapY:{{layout.mapY}}px;--mapW:{{layout.mapW}}px;--mapH:{{layout.mapH}}px;--legendH:{{layout.legendH}}px;--legendGap:{{layout.legendGap}}px;--jbCx:{{layout.jbCx}}px;--jbY:{{layout.jbY}}px;--jbW:{{layout.jbW}}px"
+        style="--bodyH:{{layout.bodyH}}px;--tableW:{{layout.tableW}}px;--rowH:{{layout.rowH}}px;--hdrH:{{layout.hdrH}}px;--grpGap:{{layout.grpGap}}px;--mapX:{{layout.mapX}}px;--mapY:{{layout.mapY}}px;--mapW:{{layout.mapW}}px;--mapH:{{layout.mapH}}px;--legendH:{{layout.legendH}}px;--legendGap:{{layout.legendGap}}px;--jbX:{{layout.jbX}}px;--jbCx:{{layout.jbCx}}px;--jbY:{{layout.jbY}}px;--jbW:{{layout.jbW}}px"
       >
         <div class="ha-map">{{{mapSvg}}}</div>
 
         <div class="ha-tbl">
-          <div class="ha-hdr"><span>{{head.rank}}</span><span>{{head.name}}</span><span class="v">{{head.val}}</span></div>
-          {{#each rows}}
-          <div class="ha-row g{{this.grade}}">
-            <span class="ha-n">{{this.n}}</span>
-            <span class="ha-nm"><em></em>{{this.name}}</span>
-            <span class="ha-v">{{this.aca}}<i>곳</i></span>
+          {{#each groups}}
+          <div class="ha-grp g{{this.grade}}">
+            <div class="ha-hdr"><em></em><span class="lb">{{this.label}}</span><span class="ct">{{this.rows.length}}곳</span></div>
+            {{#each this.rows}}
+            <div class="ha-row">
+              <span class="ha-n">{{this.n}}</span>
+              <span class="ha-nm">{{this.name}}{{#unless this.tohuh}}<i>비규제</i>{{/unless}}</span>
+              <span class="ha-p">{{this.aca}}<i>곳</i></span>
+            </div>
+            {{/each}}
           </div>
           {{/each}}
         </div>
 
         {{#if jibang}}
         <div class="ha-jb">
-          <div class="t"><b>{{jibang.label}}</b></div>
+          <div class="t"><b>{{jibang.label}}</b>{{#if jibang.note}}<i>{{jibang.note}}</i>{{/if}}</div>
           <div class="g">
             {{#each jibang.rows}}
             <div class="r g{{this.grade}}"><em></em><span class="n">{{this.name}}</span><span class="v">{{this.aca}}<i>곳</i></span></div>
