@@ -47,7 +47,11 @@ function assertNumbersMatch(label, card, caption) {
      level 에 들어갔는데 게이트는 제목만 보고 있어서 캡션이 그 숫자를 빠뜨려도 통과할 뻔했다.
      막대 라벨까지 다 넣으면 캡션이 비대해지므로 **얼굴로 읽히는 블록**까지만 본다. */
   const levelText = (card.chart?.level?.lines ?? []).map((l) => l.t).join(" ");
-  const src = `${strip(card.title)} ${strip(card.note)} ${levelText}`;
+  /* 2026-09-01 2차: m2-trend 가 범례를 **하단 표(scen)**로 내리고 수준을 **뱃지**로 옮기면서
+     얼굴의 숫자가 제목 밖으로 나갔다. 게이트가 제목만 보면 그 숫자들이 캡션과 갈라져도 통과한다. */
+  const scenText = (card.scen ?? []).map((r) => `${r.rate} ${r.value}`).join(" ");
+  const badgeText = (card.chart?.badge?.lines ?? []).map((l) => l.t).join(" ");
+  const src = `${strip(card.title)} ${strip(card.note)} ${levelText} ${scenText} ${badgeText}`;
   const want = [...new Set(src.match(/\d[\d,]*(?:\.\d+)?/g) ?? [])].filter((t) => t.length > 1);
   const missing = want.filter((t) => !caption.includes(t));
   if (missing.length) {
@@ -141,15 +145,15 @@ function capTrend(m) {
 ${kor(m.range.to)} 대한민국 M2(광의통화)는 ${num(m.current.shown)}조입니다.
 ${m.range.from.slice(0, 4)}년 이후 한 번도 줄어든 적이 없습니다.
 
-📊 앞으로 4년 반, 두 가지 속도로 재봤습니다
-· 지난 ${yrsOf(lo.from, lo.to)}년 평균 속도(연 ${lo.rate}%)라면 → ${num(lo.shown)}조
-· 현 정부 구간 속도(연 ${hi.rate}%)라면 → ${num(hi.shown)}조
+📊 앞으로 ${p.years}년, 두 가지 속도로 재봤습니다
+· ${lo.name} 연 ${lo.rate}% → ${num(lo.shown)}조
+· ${hi.name} 연 ${hi.rate}% → ${num(hi.shown)}조
 
 지금의 ${lo.times}배 ~ ${hi.times}배입니다.
 
 두 숫자 모두 우리가 정한 값이 아니라 과거가 실제로 그랬던 속도입니다.
-· 연 ${lo.rate}% = ${ymLabel(lo.from)}~${ymLabel(lo.to)} 연평균 증가율
-· 연 ${hi.rate}% = ${ymLabel(hi.from)}~${ymLabel(hi.to)} 연평균 증가율
+· 연 ${lo.rate}% = ${ymLabel(lo.from)}~${ymLabel(lo.to)} 연평균 증가율(${yrsOf(lo.from, lo.to)}년)
+· 연 ${hi.rate}% = ${ymLabel(hi.from)}~${ymLabel(hi.to)} 전년동월비(1년)
 
 👉 어느 쪽이든 2030년엔 지금보다 훨씬 많은 돈이 돌아갑니다.
 
@@ -159,8 +163,9 @@ ${m.range.from.slice(0, 4)}년 이후 한 번도 줄어든 적이 없습니다.
 📊 출처 : 한국은행 ECOS (M2 평잔·원계열, 개편 전 기준)
 📅 실측 : ${ymLabel(m.range.from)} ~ ${ymLabel(m.range.to)} (${m.range.months}개월)
 ※ 점선 오른쪽은 예측입니다 — 한국은행이 발표한 값이 아닙니다.
-   ${kor(m.range.to)} 실측값에 각 연평균 증가율을 ${p.years}년간 복리로 적용한 값이고,
+   ${kor(m.range.to)} 실측값에 각 증가율을 ${p.years}년간 복리로 적용한 값이고,
    금리·통화정책·자금흐름이 바뀌면 달라집니다. 맞히려는 수치가 아니라 속도를 비교하는 그림입니다.
+※ 그래프의 세로 점선까지가 실측이고, 그 왼쪽은 회색 한 가지로만 그렸습니다.
 ※ 이 카드는 개편 전 기준(구 M2)입니다. 한국은행이 2025년 12월 M2에서 수익증권을 제외했습니다.
 
 ${TAGS}`;

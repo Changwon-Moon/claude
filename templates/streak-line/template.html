@@ -22,6 +22,30 @@
       }
       .sl .wirit-title .tl + .tl { margin-top: 6px; }
       .sl .wirit-title .hi { color: var(--wirit-red); }
+      /* 코발트 강조 — 2026-09-01. 이 판형에서만 제목에 두 색을 쓴다(오너 지시).
+         BRAND §「코발트 1개 축」의 예외이고, market-daily 가 이미 연 예외(상승 레드·하락 코발트)와 같은 결이다. */
+      .sl .wirit-title .hb { color: var(--wirit-cobalt); }
+
+      /* ── (옵션) 그래프 아래 시나리오 표 — 범례를 아래로 내린 자리(2026-09-01 오너 지시).
+         주지 않으면 아무 것도 안 그린다 → 기존 발행본 픽셀 불변. */
+      .sl-scen { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+      .sl-scen-row {
+        display: grid; grid-template-columns: 26px 1fr auto auto; align-items: center;
+        column-gap: 18px; padding: 0 6px;
+      }
+      .sl-scen .dot { width: 26px; height: 26px; border-radius: 3px; }
+      .sl-scen .nm {
+        font-family: var(--font-title); font-size: 44px; font-weight: 900;
+        color: var(--wirit-ink); letter-spacing: -0.04em; white-space: nowrap;
+      }
+      .sl-scen .rt {
+        font-family: var(--font-num); font-size: 34px; font-weight: 800;
+        color: #9aa3af; white-space: nowrap; padding-right: 10px;
+      }
+      .sl-scen .vl {
+        font-family: var(--font-num); font-size: 52px; font-weight: 900;
+        letter-spacing: -0.03em; white-space: nowrap;
+      }
 
       /* (옵션) 제목 리드 줄 — 본 제목의 절반 크기·진회색·가운데(양옆 여백 허용). 로고를 앞에 얹는다.
          titleLead 를 주지 않는 카드(예: mae-streak)엔 영향 없음(픽셀 불변). 크기는 __wiritFit 가 본줄의 1/2로 맞춘다. */
@@ -82,6 +106,10 @@
             {{#each chart.arrow.heads}}<polygon points="{{points}}" fill="{{fill}}" />{{/each}}
             <text class="sl-arw" x="{{chart.arrow.lx}}" y="{{chart.arrow.ly}}" fill="{{chart.arrow.color}}" text-anchor="middle">{{chart.arrow.text}}</text>
           {{/if}}
+          {{#if chart.badge}}
+            <rect x="{{chart.badge.x}}" y="{{chart.badge.y}}" width="{{chart.badge.w}}" height="{{chart.badge.h}}" rx="{{chart.badge.r}}" fill="#fff" stroke="{{chart.badge.stroke}}" stroke-width="{{chart.badge.sw}}" />
+            <text x="{{chart.badge.tx}}" y="{{chart.badge.ty}}" text-anchor="middle" style="font-family:var(--font-num)">{{#each chart.badge.lines}}<tspan x="{{../chart.badge.tx}}" dy="{{dy}}" fill="{{fill}}" font-size="{{size}}" font-weight="{{weight}}">{{t}}</tspan>{{/each}}</text>
+          {{/if}}
           {{#each chart.legend}}
             <line x1="{{sx1}}" y1="{{sy}}" x2="{{sx2}}" y2="{{sy}}" stroke="{{color}}" stroke-width="11" stroke-linecap="round" />
             <text class="sl-lg" x="{{tx}}" y="{{ty}}" fill="{{fill}}">{{text}}</text>
@@ -90,7 +118,10 @@
         </svg>
       </div>
 
-      <div class="sl-notewrap">{{#if note}}<div class="sl-note">{{{note}}}</div>{{/if}}</div>
+      <div class="sl-notewrap">
+        {{#if scen}}<div class="sl-scen">{{#each scen}}<div class="sl-scen-row"><span class="dot" style="background:{{color}}"></span><span class="nm">{{name}}</span><span class="rt">{{rate}}</span><span class="vl" style="color:{{color}}">{{value}}</span></div>{{/each}}</div>{{/if}}
+        {{#if note}}<div class="sl-note">{{{note}}}</div>{{/if}}
+      </div>
 
       <div class="wirit-footer">
         <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>

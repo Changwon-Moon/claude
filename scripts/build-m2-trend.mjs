@@ -16,23 +16,29 @@
  *   ④ **캡션에 산술 가정** — 두 연평균 증가율이 어느 구간에서 나온 값인지 그대로 적는다
  *
  * ⚠️ 두 시나리오는 **우리가 고른 숫자가 아니라 과거가 실제로 그랬던 속도**다.
- *    ① 역사적 평균 : 2003.10 ~ 2025.06 연평균 증가율
- *    ② 현 정부 속도 : 2025.04 ~ 최신월 연평균 증가율
+ *    ① 역사적 평균  : 2003.10 ~ 2025.06 연평균 증가율
+ *    ② 최근 1년 속도 : 최신월의 전년동월비(1년 그대로)
  *    자의적인 낙관·비관을 세우지 않는 것이 이 카드가 방어되는 유일한 근거다.
  *
- * ⚠️ 오너 메모는 "李정부 평균 12.3%" 였는데 **계산값은 11.8%** 다. 12.3% 는 최신월의
- *    전년동월비(=최근 1년)이지 정부 구간의 연평균이 아니다. 계산값을 쓰고 차이를 보고했다
- *    (CLAUDE.md §8 「오너 메모의 수치를 그대로 받아 적지 않는다」).
+ * ⚠️ ②의 이름과 숫자는 **짝이다**(오너 확정 2026-09-01). 처음엔 "현 정부 속도"라 부르며
+ *    12.3% 를 쓰려 했는데 그건 최신월 전년동월비지 정부 구간(2025.04~) 연평균(11.8%)이 아니다.
+ *    이름을 「최근 1년 속도」로 맞춰 12.3% 가 정확한 값이 됐다. **이름을 바꾸면 숫자도 바꾼다.**
+ *
+ * ── 색 (오너 지시 2026-09-01)
+ *    실측 = 회색 / 역사적 평균 아래 = 코발트 / 그 위 최근1년까지 = 레드.
+ *    과거는 무채색으로 두고 **미래만 두 색으로 갈린다** — 이 카드가 말하는 것이 앞날이라서다.
+ *    BRAND 의 「코발트 1개 축」에 대한 예외이고, market-daily(상승 레드·하락 코발트)와 같은 결이다.
  *
  * 실행: node scripts/build-m2-trend.mjs [YYYY-MM-DD] [--publish]
  */
 import { writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadM2, yearTicks, ymLabel, jo, r1, shownJo, INK, RED, SLATE, MUTE } from "./lib/m2.mjs";
+import { loadM2, yearTicks, yoy, ymLabel, jo, r1, shownJo, INK, RED, SLATE, MUTE } from "./lib/m2.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const { OLD, lastYm, raw } = loadM2();
+const COBALT = "#2e6bff";
 
 /* 접합하지 않는다 — 개편 전 계열(BBHA16) 하나만 쓴다 */
 const hist = Object.keys(OLD).sort().filter((m) => m <= lastYm);
@@ -51,15 +57,17 @@ const cagr = (a, b) => {
 };
 
 /* ── 시나리오 둘 (오너 확정 2026-09-01) ── */
-const GOV_START = "202504";                               // 현 정부 구간 시작(전임 퇴임월) — m2-gov 와 같은 자
+const yearAgo = `${+lastYm.slice(0, 4) - 1}${lastYm.slice(4)}`;
 const SCEN = [
-  { key: "hist", name: "역사적 평균", from: firstYm, to: "202506", color: SLATE },
-  { key: "now", name: "현 정부 속도", from: GOV_START, to: lastYm, color: RED },
+  { key: "hist", name: "역사적 평균", from: firstYm, to: "202506", color: COBALT },
+  { key: "now", name: "최근 1년 속도", from: yearAgo, to: lastYm, color: RED },
 ].map((s) => {
   const rate = cagr(s.from, s.to);
   return { ...s, rate, value: cur * Math.pow(1 + rate / 100, yrsBetween(lastYm, TO_YM)) };
 });
-if (SCEN[1].rate <= SCEN[0].rate) throw new Error("현 정부 속도가 역사적 평균보다 낮다 — 위/아래 배치와 문구를 다시 짠다");
+if (SCEN[1].rate <= SCEN[0].rate) throw new Error("최근 1년 속도가 역사적 평균보다 낮다 — 위/아래 배치와 색을 다시 짠다");
+/* 「최근 1년 속도」는 정의상 전년동월비와 같아야 한다 — 이름과 숫자가 갈라지지 않게 대조한다 */
+if (Math.abs(SCEN[1].rate - yoy(OLD, lastYm)) > 0.05) throw new Error("최근 1년 CAGR 이 전년동월비와 다르다 — 구간을 다시 본다");
 
 const lo = SCEN[0], hi = SCEN[1];
 
@@ -69,7 +77,8 @@ const lo = SCEN[0], hi = SCEN[1];
    (SVG 안 글자는 designQa 검사 밖이라 그림에서만 드러난다).
    폭은 실측으로 정했다 — "7,988조"(6자·54px)가 194px 이라 820 에서는 카드를 넘쳤고,
    가드가 그것을 잡아 780 까지 당겼다. 값이 자릿수를 더 먹으면 가드가 다시 잡는다. */
-const AXIS_X = 172, RIGHT = 780, LBL_X = 792, TOP = 70, BASE = 782, VB_H = 850;
+/* 좌축 눈금을 없앴으므로(오너 지시) 왼쪽 여백이 필요 없다 — 곡선을 그만큼 크게 쓴다. */
+const AXIS_X = 24, RIGHT = 780, LBL_X = 792, TOP = 60, BASE = 742, VB_H = 800;
 const YMAX = 9000;   // 상단 시나리오(약 8,000조) 위에 끝값 라벨 한 줄이 앉을 여유까지 잡은 값
 if (hi.value > YMAX) throw new Error(`상단 시나리오 ${r1(hi.value)}조 가 Y축 상한 ${YMAX}조를 넘었다 — 눈금을 올린다`);
 
@@ -96,26 +105,28 @@ const projPts = (rate) => {
 };
 const loPts = projPts(lo.rate), hiPts = projPts(hi.rate);
 
+/* 좌축 **값은 그리지 않는다**(오너 지시 2026-09-01). 수준은 뱃지와 끝값 라벨이 말한다.
+   격자선은 남긴다 — 눈금 없이도 높이를 견주는 바탕은 있어야 한다. */
 const grid = [3000, 6000, 9000].map((v) => ({ x1: AXIS_X, x2: RIGHT, y: yv(v) }));
-const ylabels = [0, 3000, 6000, 9000].map((v) => ({
-  x: AXIS_X - 18, y: yv(v) + 11, text: v.toLocaleString("ko-KR"),
-}));
+const ylabels = [];
 
-/* 두 시나리오 **사이**만 옅게 칠한다 — 예측은 점이 아니라 **범위**라는 말을 색으로 한다.
-   실측 아래는 칠하지 않는다(칠하면 어디까지가 사실인지가 흐려진다). */
-const areas = [{
-  points: `${hiPts.join(" ")} ${loPts.slice().reverse().join(" ")}`,
-  fill: RED, opacity: 0.1,
-}];
+/* ── 칠하기 (오너 지시 2026-09-01) ──
+   ① 역사적 평균 곡선 **아래** = 코발트  ② 그 위 최근1년까지 = 레드
+   실측 아래는 칠하지 않는다 — 과거를 무채색으로 두어야 "색이 갈리는 곳 = 미래"가 된다. */
+const x0 = xm(lastYm), x1 = RIGHT, yBase = yv(0);
+const areas = [
+  { points: `${loPts.join(" ")} ${x1},${yBase} ${x0},${yBase}`, fill: COBALT, opacity: 0.14 },
+  { points: `${hiPts.join(" ")} ${loPts.slice().reverse().join(" ")}`, fill: RED, opacity: 0.16 },
+];
 const polylines = [
-  { points: loPts.join(" "), color: SLATE, width: 7, dash: "18 14" },
+  { points: loPts.join(" "), color: COBALT, width: 7, dash: "18 14" },
   { points: hiPts.join(" "), color: RED, width: 7, dash: "18 14" },
-  { points: histPts.join(" "), color: RED, width: 8 },     // 실측은 맨 위 레이어·실선
+  { points: histPts.join(" "), color: SLATE, width: 8 },   // 실측 = 회색 실선, 맨 위 레이어
 ];
 
 const dots = [
-  { x: xm(lastYm), y: yv(cur), color: RED, r: 15 },
-  { x: RIGHT, y: yv(lo.value), color: SLATE, r: 14 },
+  { x: xm(lastYm), y: yv(cur), color: SLATE, r: 15 },
+  { x: RIGHT, y: yv(lo.value), color: COBALT, r: 14 },
   { x: RIGHT, y: yv(hi.value), color: RED, r: 14 },
 ];
 
@@ -126,7 +137,7 @@ const yHi = r1(yv(hi.value) + 18), yLo = r1(yv(lo.value) + 18);
 const hiT = `${jo(hi.value)}조`, loT = `${jo(lo.value)}조`;
 const vlabels = [
   { x: LBL_X, y: yHi, text: hiT, fill: RED, anchor: "start" },
-  { x: LBL_X, y: yLo, text: loT, fill: SLATE, anchor: "start" },
+  { x: LBL_X, y: yLo, text: loT, fill: COBALT, anchor: "start" },
 ];
 const wOf = (t) => t.length * LB * CW;
 for (const [t, y] of [[hiT, yHi], [loT, yLo]]) {
@@ -145,14 +156,38 @@ const xlabels = [
   { x: RIGHT, y: BASE + 46, text: "2030", fill: INK, anchor: "end" },
 ];
 
-/* ⚠️ 설명줄은 짧게. "연 7.6% · 2003~2025 평균"으로 길게 뒀더니 끝 글자가
-   실측/예측 경계 세로선에 닿았다(실측 폭 ~360px, 경계선 x=678). 구간은 캡션이 밝힌다. */
-const legend = [
-  { sx1: 232, sx2: 310, sy: 142, color: RED, tx: 328, ty: 132, text: `실측 2003~${lastYm.slice(0, 4)}`, fill: INK, sub: `${jo(cur)}조 (${ymLabel(lastYm)})`, sty: 178 },
-  { sx1: 232, sx2: 310, sy: 232, color: RED, tx: 328, ty: 222, text: `예측 · ${hi.name}`, fill: INK, sub: `연 ${hi.rate.toFixed(1)}% · 현 정부`, sty: 268 },
-  { sx1: 232, sx2: 310, sy: 322, color: SLATE, tx: 328, ty: 312, text: `예측 · ${lo.name}`, fill: INK, sub: `연 ${lo.rate.toFixed(1)}% · ${Math.round(yrsBetween(lo.from, lo.to))}년 평균`, sty: 358 },
+/* ── 「지금 여기」 뱃지 (오너 지시 2026-09-01: 그래프 안, 경계선 왼쪽) ──
+   좌축 눈금을 없앴으므로 **수준을 말하는 것은 이 뱃지 하나**다. 그래서 실측 곡선이 끝나는
+   지점 바로 옆에 세운다. 글자가 카드 밖으로 나가지 않게 **자리를 빌더가 잰다**
+   (SVG 안 글자는 designQa 넘침 검사 밖이다). */
+const BD_FS = 34, BD_LH = 46, BD_PADX = 26, BD_PADY = 22;
+const bdLines = [
+  { t: "지금 M2", fill: MUTE, size: 27, weight: 800 },
+  { t: `${jo(cur)}조`, fill: INK, size: 52, weight: 900 },
+  { t: ymLabel(lastYm), fill: MUTE, size: 26, weight: 800 },
 ];
-const wm = { x: 250, y: 560, size: 40, text: "@wirit_note", fill: INK, opacity: 0.14, anchor: "start" };
+const bdW = Math.round(Math.max(...bdLines.map((l) => l.t.length * l.size * 0.62))) + BD_PADX * 2;
+const bdH = BD_LH * bdLines.length + BD_PADY * 2 - 6;
+/* 경계선 **왼쪽**에 붙인다. 곡선(2026 끝값)보다 위로 띄워 데이터를 덮지 않는다. */
+const bdX = r1(Math.max(AXIS_X + 6, xm(lastYm) - 18 - bdW));
+const bdY = r1(yv(cur) - 40 - bdH);
+if (bdY < TOP - 20) throw new Error(`뱃지가 카드 위로 넘친다(y=${bdY})`);
+if (bdX < AXIS_X) throw new Error(`뱃지가 왼쪽으로 넘친다(x=${bdX})`);
+const badge = {
+  x: bdX, y: bdY, w: bdW, h: bdH, r: 16, stroke: "#c9cdd4", sw: 3,
+  tx: r1(bdX + bdW / 2), ty: r1(bdY + BD_PADY + 24),
+  lines: bdLines.map((l, i) => ({ ...l, dy: i === 0 ? 0 : BD_LH })),
+};
+
+/* 워터마크는 곡선이 아직 낮은 좌상단 빈 칸 — 데이터 위에 얹지 않는다(base.css 규칙) */
+const wm = { x: 60, y: 250, size: 40, text: "@wirit_note", fill: INK, opacity: 0.14, anchor: "start" };
+
+/* 범례는 **하단 표로 내렸다**(오너 지시) — 그래프 안이 비어 곡선을 그만큼 크게 쓴다.
+   숫자는 전부 계산값이고, 색은 곡선·영역과 같은 색을 그대로 쓴다(같은 것을 두 색으로 부르지 않는다). */
+const scen = [
+  { color: COBALT, name: lo.name, rate: `연 ${lo.rate.toFixed(1)}%`, value: `${jo(lo.value)}조` },
+  { color: RED, name: hi.name, rate: `연 ${hi.rate.toFixed(1)}%`, value: `${jo(hi.value)}조` },
+];
 
 const kstToday = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const date = process.argv.find((a) => /^\d{4}-\d{2}-\d{2}$/.test(a)) || kstToday;
@@ -161,15 +196,16 @@ const card = {
   template: "streak-line@1",
   date,
   badge: `M2(광의통화) 개편 전 기준 · 평잔·원계열 · 단위 조원`,
-  title: `<span class="tl">2030 대한민국 M2통화량은?</span>`,
+  /* 「2030년」 코발트 · 「M2 통화량」 레드 (오너 지시 2026-09-01) */
+  title: `<span class="tl"><span class="hb">2030년</span> 대한민국 <span class="hi">M2 통화량</span>?</span>`,
   chart: {
     vb: `0 0 1000 ${VB_H}`,
     wm,
     base: { y: yv(0), x1: AXIS_X, x2: RIGHT },
-    grid, areas, ylabels, vmarks, polylines, dots, vlabels, xlabels, legend,
+    grid, areas, ylabels, vmarks, polylines, dots, vlabels, xlabels, badge,
   },
-  /* 점 하나가 아니라 **범위**로 말한다 — 예측을 단정하지 않는 가장 짧은 방법이다 */
-  note: `2030년 <b>${jo(lo.value)}~${jo(hi.value)}조</b>`,
+  /* 범례 대신 **하단 표** — 두 시나리오를 나눠서 적는다(오너 지시 2026-09-01) */
+  scen,
   source: { name: "한국은행 ECOS(M2 평잔·원계열, 개편 전 기준)", asOf: ymLabel(lastYm) },
   meta: {
     verified: true,
