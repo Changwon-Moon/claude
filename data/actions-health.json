@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T00:00:23.674Z",
+  "generatedAt": "2026-09-01T00:33:24.459Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -82,9 +82,9 @@
         },
         {
           "day": "08-31",
-          "state": "late",
+          "state": "ok",
           "at": "09:16",
-          "delay": 262
+          "delay": null
         },
         {
           "day": "09-01",
@@ -93,8 +93,8 @@
           "delay": 212
         }
       ],
-      "medianDelay": 262,
-      "maxDelay": 262,
+      "medianDelay": 212,
+      "maxDelay": 212,
       "lastRun": "2026-09-01",
       "lastOk": "2026-09-01",
       "okDaysAgo": 0
@@ -179,9 +179,9 @@
         },
         {
           "day": "08-31",
-          "state": "late",
+          "state": "ok",
           "at": "15:52",
-          "delay": 353
+          "delay": null
         },
         {
           "day": "09-01",
@@ -190,8 +190,8 @@
           "delay": null
         }
       ],
-      "medianDelay": 353,
-      "maxDelay": 353,
+      "medianDelay": null,
+      "maxDelay": null,
       "lastRun": "2026-08-31",
       "lastOk": "2026-08-31",
       "okDaysAgo": 0
@@ -373,9 +373,9 @@
         },
         {
           "day": "08-31",
-          "state": "late",
+          "state": "ok",
           "at": "17:15",
-          "delay": 375
+          "delay": null
         },
         {
           "day": "09-01",
@@ -384,8 +384,8 @@
           "delay": null
         }
       ],
-      "medianDelay": 375,
-      "maxDelay": 375,
+      "medianDelay": null,
+      "maxDelay": null,
       "lastRun": "2026-08-31",
       "lastOk": "2026-08-31",
       "okDaysAgo": 0
@@ -490,7 +490,17 @@
       "lastOk": "2026-08-02",
       "okDaysAgo": 29,
       "fails30": 1,
-      "runs30": 7
+      "runs30": 2
+    },
+    {
+      "file": "telegram-test.yml",
+      "name": "텔레그램 연결 확인",
+      "lastRun": "2026-08-03",
+      "daysAgo": 29,
+      "lastOk": "2026-08-03",
+      "okDaysAgo": 29,
+      "fails30": 0,
+      "runs30": 3
     },
     {
       "file": "sgg-geo-refresh.yml",
@@ -501,16 +511,6 @@
       "okDaysAgo": 28,
       "fails30": 0,
       "runs30": 1
-    },
-    {
-      "file": "telegram-test.yml",
-      "name": "텔레그램 연결 확인",
-      "lastRun": "2026-08-03",
-      "daysAgo": 28,
-      "lastOk": "2026-08-03",
-      "okDaysAgo": 28,
-      "fails30": 0,
-      "runs30": 3
     },
     {
       "file": "produce-card.yml",
@@ -556,9 +556,9 @@
       "file": "notify-once.yml",
       "name": "텔레그램 한 통 보내기",
       "lastRun": "2026-08-14",
-      "daysAgo": 17,
+      "daysAgo": 18,
       "lastOk": "2026-08-14",
-      "okDaysAgo": 17,
+      "okDaysAgo": 18,
       "fails30": 0,
       "runs30": 4
     },
@@ -580,7 +580,7 @@
       "lastOk": "2026-08-27",
       "okDaysAgo": 4,
       "fails30": 2,
-      "runs30": 5
+      "runs30": 4
     },
     {
       "file": "molit-door.yml",
@@ -606,11 +606,51 @@
       "file": "research-digest.yml",
       "name": "소재 보드 수집 (daily)",
       "lastRun": "2026-08-30",
-      "daysAgo": 1,
+      "daysAgo": 2,
       "lastOk": "2026-08-30",
+      "okDaysAgo": 2,
+      "fails30": 2,
+      "runs30": 27
+    },
+    {
+      "file": "molit-rent-collect.yml",
+      "name": "전월세 실거래 수집 (국토부)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 1,
+      "lastOk": "2026-08-31",
       "okDaysAgo": 1,
-      "fails30": 3,
-      "runs30": 28
+      "fails30": 2,
+      "runs30": 13
+    },
+    {
+      "file": "reb-collect.yml",
+      "name": "전세·월세 지수 수집 (한국부동산원)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 1,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 1,
+      "fails30": 0,
+      "runs30": 4
+    },
+    {
+      "file": "reb-weekly-collect.yml",
+      "name": "주간 매매·전세 지수 수집 (한국부동산원)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 1,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 1,
+      "fails30": 0,
+      "runs30": 7
+    },
+    {
+      "file": "silv-collect.yml",
+      "name": "분양권전매 실거래 수집 (국토부)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 1,
+      "lastOk": "2026-08-28",
+      "okDaysAgo": 3,
+      "fails30": 4,
+      "runs30": 6
     },
     {
       "file": "apt-detail.yml",
@@ -649,8 +689,8 @@
       "daysAgo": 0,
       "lastOk": "2026-08-31",
       "okDaysAgo": 0,
-      "fails30": 77,
-      "runs30": 100
+      "fails30": 60,
+      "runs30": 83
     },
     {
       "file": "ecos-m2.yml",
@@ -683,16 +723,6 @@
       "runs30": 12
     },
     {
-      "file": "molit-rent-collect.yml",
-      "name": "전월세 실거래 수집 (국토부)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 0,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 0,
-      "fails30": 2,
-      "runs30": 13
-    },
-    {
       "file": "pipeline-tick.yml",
       "name": "파이프라인 진행 (승인 → 실행)",
       "lastRun": "2026-08-31",
@@ -723,41 +753,11 @@
       "runs30": 54
     },
     {
-      "file": "reb-collect.yml",
-      "name": "전세·월세 지수 수집 (한국부동산원)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 0,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 0,
-      "fails30": 0,
-      "runs30": 4
-    },
-    {
-      "file": "reb-weekly-collect.yml",
-      "name": "주간 매매·전세 지수 수집 (한국부동산원)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 0,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 0,
-      "fails30": 0,
-      "runs30": 7
-    },
-    {
-      "file": "silv-collect.yml",
-      "name": "분양권전매 실거래 수집 (국토부)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 0,
-      "lastOk": "2026-08-28",
-      "okDaysAgo": 3,
-      "fails30": 4,
-      "runs30": 6
-    },
-    {
       "file": "singo-history.yml",
       "name": "신고가 단지 이력 (한 단지 곡선)",
       "lastRun": "2026-09-01",
       "daysAgo": 0,
-      "lastOk": "2026-08-31",
+      "lastOk": "2026-09-01",
       "okDaysAgo": 0,
       "fails30": 3,
       "runs30": 18
@@ -777,9 +777,9 @@
       "name": "관제탑 배포 (Cloudflare)",
       "lastRun": "2026-09-01",
       "daysAgo": 0,
-      "lastOk": "2026-08-31",
+      "lastOk": "2026-09-01",
       "okDaysAgo": 0,
-      "fails30": 19,
+      "fails30": 18,
       "runs30": 100
     }
   ]
