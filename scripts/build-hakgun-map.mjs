@@ -32,15 +32,17 @@ const AREA_MIN = 79, AREA_MAX = 86; // 전용 84㎡대(국민평형) = 통칭 34
 const MIN_TRADES = 20;              // 이보다 적으면 중위값이 흔들린다 — 던진다
 
 // ── 판형 치수(카드 안쪽 936px 기준) ─────────────────────────────────
-// bodyH 는 1350 에서 머리(여백 72 + 로고 라인 32 + 제목 85 + 부제 53) · 본문 위 여백 14 ·
-// 푸터 94 를 뺀 나머지다. 이 계산이 어긋나면 표가 아래 요소를 밟는다(2026-09-01 실제로 밟았다).
+// bodyH 는 1350 에서 머리(여백 72 + 로고 라인 32 + 제목 85) · 본문 위 여백 22 · 푸터 94 를 뺀
+// 나머지다. 이 계산이 어긋나면 표가 아래 요소를 밟는다(2026-09-01 실제로 밟았다).
+// 부제는 로고 라인으로 올라가고 범례는 지도 아래로 내려왔다(오너 2026-09-01).
+const LEGEND_H = 32;
 const LAYOUT = {
-  bodyW: 936, bodyH: 975,
-  tableW: 372, gutter: 26,
-  rowH: 43, hdrH: 36, grpGap: 16,
+  bodyW: 936, bodyH: 1046,
+  tableW: 300, gutter: 20,       // 표는 내용에 맞춰 좁히고, 남는 폭은 전부 지도에 준다
+  rowH: 45, hdrH: 36, grpGap: 16,
+  legendH: LEGEND_H,
 };
 LAYOUT.mapX = LAYOUT.tableW + LAYOUT.gutter;
-LAYOUT.mapW = LAYOUT.bodyW - LAYOUT.mapX;
 
 const J = (p) => JSON.parse(readFileSync(join(ROOT, p), "utf8"));
 
@@ -103,22 +105,35 @@ if (flat.length !== calc.length) throw new Error("급지로 나눈 뒤 개수가
 // ── 5. 지도 ──────────────────────────────────────────────────────────
 // NUDGE = 핀이 실제로 붙어 있어 번호를 못 읽는 쌍만 라벨을 밀어 준다(지도 viewBox 좌표).
 // 위치를 지어내는 게 아니라 겹침만 푼다 — 평촌(안양 호계)과 산본(군포)은 실제로 2km 거리다.
+// LABEL = 이름표만 옮긴다(핀 위치는 그대로). 서울 학군지가 붙어 있어 기본 자리(핀 오른쪽)로는 겹친다.
 const NUDGE = { 평촌: { dx: 17 }, 산본: { dx: -17 } };
+const LABEL = {
+  잠실: { anchor: "middle", ly: -30 },       // 방이 핀에 가렸다
+  "반포·서초": { anchor: "end", lx: -4 },   // 이름표 끝을 대치 핀이 덮었다
+  대치: { anchor: "middle", ly: 34 },    // 반포·서초 이름표와 겹쳤다
+  산본: { anchor: "end", lx: -4 },       // 평촌 핀에 가렸다
+  판교: { anchor: "end", lx: -4 },       // 분당 핀에 닿았다
+};
 const { svg: mapSvg, resolved, pinsXY, viewBox } = sudogwonMapSvg({
   pins: flat.map((r) => {
     const a = calc.find((x) => x.name === r.key);
-    return { n: r.n, key: r.key, label: r.name, geoName: a.geoName, pinDong: a.pinDong, grade: r.grade, ...(NUDGE[r.key] || {}) };
+    return { n: r.n, key: r.key, label: r.name, geoName: a.geoName, pinDong: a.pinDong, grade: r.grade, ...(NUDGE[r.key] || {}), ...(LABEL[r.key] || {}) };
   }),
   hitSgg,
+  showLabels: true,
 });
 for (const r of resolved) if (r.by === "sgg") console.log(`  ⚠️ ${r.label} — 동(${r.dong})을 못 찾아 시군구 중심에 찍었습니다.`);
 
 // ── 6. 표가 본문에 들어가는지 잰다 ──────────────────────────────────
-const s = LAYOUT.mapW / viewBox.w;                 // 지도 viewBox → 카드 픽셀 배율
-const mapH = viewBox.h * s;
-const mapY = Math.max(0, (LAYOUT.bodyH - mapH) / 2);
-LAYOUT.mapY = Math.round(mapY * 10) / 10;
+// 지도는 남은 폭을 다 쓰되, 세로가 넘치면 세로에 맞춘다 — 넘치면 범례를 밀어낸다.
+const availW = LAYOUT.bodyW - LAYOUT.mapX;
+const availH = LAYOUT.bodyH - LEGEND_H;
+const mapW = Math.min(availW, (availH * viewBox.w) / viewBox.h);
+const mapH = (mapW * viewBox.h) / viewBox.w;
+LAYOUT.mapW = Math.round(mapW * 10) / 10;
 LAYOUT.mapH = Math.round(mapH * 10) / 10;
+LAYOUT.mapX = Math.round((LAYOUT.mapX + (availW - mapW) / 2) * 10) / 10;
+LAYOUT.mapY = Math.round(Math.max(0, (availH - mapH) / 2) * 10) / 10;
 
 let offset = 0;
 const rowY = new Map();

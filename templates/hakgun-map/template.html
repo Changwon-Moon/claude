@@ -8,17 +8,9 @@
          ⚠️ 치수는 빌더의 LAYOUT 하나가 정본이다. 여기선 CSS 변수로 받아 쓰기만 한다. */
       .hg { padding-top: 72px; }
 
-      /* 범례를 우상단 로고와 같은 줄에(오너 2026-09-01). .wirit-topcap 이 그 자리다 —
+      /* 부제(출처·기준)를 우상단 로고와 같은 줄에(오너 2026-09-01). .wirit-topcap 이 그 자리다 —
          margin-top -30 · padding-right 190(로고 자리)을 공용 규격에서 그대로 받는다. */
-      .hg .wirit-topcap { font-size: 19px; font-weight: 700; gap: 14px; flex-wrap: wrap; }
-      .hg .wirit-topcap span { display: inline-flex; align-items: center; gap: 5px; }
-      .hg .wirit-topcap b { width: 16px; height: 11px; border-radius: 3px; display: inline-block; }
-      .hg .wirit-topcap em { width: 14px; height: 14px; border-radius: 999px; display: inline-block; }
-      .hg .wirit-topcap .hit b { background: #f6c9cd; }
-      .hg .wirit-topcap .off b { background: #e7e9ee; }
-      .hg .wirit-topcap .l1 em { background: #c8102e; }
-      .hg .wirit-topcap .l2 em { background: #141821; }
-      .hg .wirit-topcap .l3 em { background: #8f9bad; }
+      .hg .wirit-topcap { font-size: 20px; font-weight: 700; letter-spacing: -0.015em; }
 
       .hg-title {
         margin: 0; text-align: center; white-space: nowrap;
@@ -26,12 +18,7 @@
         letter-spacing: -0.04em; color: var(--wirit-ink);
       }
       .hg-title .hi { color: var(--wirit-cobalt); }
-      .hg-sub {
-        margin-top: 24px; text-align: center;
-        font-size: 21px; font-weight: 800; color: var(--wirit-gray); letter-spacing: -0.015em;
-      }
-
-      .hg-body { position: relative; margin: 14px 0 0; width: 100%; height: var(--bodyH); }
+      .hg-body { position: relative; margin: 22px 0 0; width: 100%; height: var(--bodyH); }
 
       /* ── 좌: 급지별 3개 표 ── */
       .hg-tbl { position: absolute; left: 0; top: 0; width: var(--tableW); }
@@ -62,9 +49,23 @@
       .hg-p { text-align: right; white-space: nowrap; font-family: var(--font-num); font-size: 27px; font-weight: 900; color: var(--wirit-ink); }
       .hg-p i { font-style: normal; font-size: 18px; font-weight: 800; margin-left: 1px; color: var(--wirit-gray); }
 
-      /* ── 우: 지도 ── */
+      /* ── 우: 지도 + 그 아래 범례 ── */
       .hg-map { position: absolute; left: var(--mapX); top: var(--mapY); width: var(--mapW); }
       .hg-map svg { width: 100%; height: auto; display: block; }
+
+      .hg-legend {
+        position: absolute; left: var(--mapX); width: var(--mapW); bottom: 0; height: var(--legendH);
+        display: flex; flex-wrap: wrap; align-items: center; gap: 4px 13px; justify-content: center;
+        font-size: 18px; font-weight: 700; color: var(--wirit-gray);
+      }
+      .hg-legend span { display: inline-flex; align-items: center; gap: 5px; }
+      .hg-legend b { width: 16px; height: 11px; border-radius: 3px; display: inline-block; }
+      .hg-legend em { width: 14px; height: 14px; border-radius: 999px; display: inline-block; }
+      .hg-legend .hit b { background: #f6c9cd; }
+      .hg-legend .off b { background: #e7e9ee; }
+      .hg-legend .l1 em { background: #c8102e; }
+      .hg-legend .l2 em { background: #141821; }
+      .hg-legend .l3 em { background: #8f9bad; }
 
       /* 푸터는 공용 규격의 상자 크기를 유지하고, 글자만 줄여 한 줄에 앉힌다(오너 2026-09-01). */
       .hg .wirit-footer { font-size: 19px; letter-spacing: -0.015em; }
@@ -72,20 +73,13 @@
   </head>
   <body>
     <div class="wirit-card hg">
-      <div class="wirit-topcap">
-        <span class="hit"><b></b>{{legend.hit}}</span>
-        <span class="off"><b></b>{{legend.off}}</span>
-        <span class="l1"><em></em>{{legend.g1}}</span>
-        <span class="l2"><em></em>{{legend.g2}}</span>
-        <span class="l3"><em></em>{{legend.g3}}</span>
-      </div>
+      <div class="wirit-topcap"><span>{{subtitle}}</span></div>
 
       <h1 class="hg-title">{{{title}}}</h1>
-      <div class="hg-sub">{{subtitle}}</div>
 
       <div
         class="hg-body"
-        style="--bodyH:{{layout.bodyH}}px;--tableW:{{layout.tableW}}px;--rowH:{{layout.rowH}}px;--hdrH:{{layout.hdrH}}px;--grpGap:{{layout.grpGap}}px;--mapX:{{layout.mapX}}px;--mapY:{{layout.mapY}}px;--mapW:{{layout.mapW}}px"
+        style="--bodyH:{{layout.bodyH}}px;--tableW:{{layout.tableW}}px;--rowH:{{layout.rowH}}px;--hdrH:{{layout.hdrH}}px;--grpGap:{{layout.grpGap}}px;--mapX:{{layout.mapX}}px;--mapY:{{layout.mapY}}px;--mapW:{{layout.mapW}}px;--legendH:{{layout.legendH}}px"
       >
         <div class="hg-map">{{{mapSvg}}}</div>
 
@@ -102,6 +96,14 @@
             {{/each}}
           </div>
           {{/each}}
+        </div>
+
+        <div class="hg-legend">
+          <span class="hit"><b></b>{{legend.hit}}</span>
+          <span class="off"><b></b>{{legend.off}}</span>
+          <span class="l1"><em></em>{{legend.g1}}</span>
+          <span class="l2"><em></em>{{legend.g2}}</span>
+          <span class="l3"><em></em>{{legend.g3}}</span>
         </div>
       </div>
 

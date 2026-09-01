@@ -55,10 +55,13 @@ function inside(pt, geom) {
 
 /**
  * @param {object} o
- * @param {Array}  o.pins   [{ n, label, geoName, pinDong?, dx?, dy? }] — n=지도에 찍을 번호
+ * @param {Array}  o.pins   [{ n, label, geoName, pinDong?, dx?, dy?, lx?, ly?, anchor? }]
+ *                          n=지도에 찍을 번호, label=핀 옆에 적을 학군지 이름
+ *                          lx/ly=이름만 미세조정, anchor=start|end|middle(기본 start)
  * @param {Set}    o.hitSgg 토지거래허가구역으로 칠할 시군구명 집합(korea-sgg-2026 의 name)
+ * @param {boolean} o.showLabels 핀 옆에 학군지 이름을 적을지
  */
-export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16 }) {
+export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, showLabels = false }) {
   const sgg = JSON.parse(readFileSync(join(ROOT, "data/geo/korea-sgg-2026.geojson"), "utf8"))
     .features.filter((f) => ["서울특별시", "경기도"].includes(f.properties.sido));
   const dongs = JSON.parse(readFileSync(join(ROOT, "data/geo/korea-submunicipalities.geojson"), "utf8")).features;
@@ -121,6 +124,7 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16 }) {
   // 핀 — 위에서 잡은 좌표를 화면 좌표로. dx/dy 는 겹칠 때의 미세조정(픽셀).
   // pinsXY 는 **viewBox 좌표**다. 카드 픽셀로 옮기는 계산은 빌더가 한다(연결선용).
   let marks = "";
+  let labels = "";
   const pinsXY = [];
   for (const p of placed) {
     const x = px(p.lon) + (p.dx || 0);
@@ -129,6 +133,15 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16 }) {
     marks +=
       `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="22" class="sg-pin g${p.grade}"/>` +
       `<text x="${x.toFixed(1)}" y="${(y + 9).toFixed(1)}" class="sg-num">${p.n}</text>`;
+    if (showLabels && p.label) {
+      // 이름은 기본으로 핀 오른쪽. 겹치는 곳만 lx/ly/anchor 로 옮긴다(위치를 지어내지 않는다).
+      const anchor = p.anchor || "start";
+      const off = anchor === "end" ? -30 : anchor === "middle" ? 0 : 30;
+      const lx = x + off + (p.lx || 0);
+      const ly = y + 11 + (p.ly || 0);
+      labels +=
+        `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" class="sg-lab" text-anchor="${anchor}">${p.label}</text>`;
+    }
   }
 
   const svg =
@@ -139,6 +152,8 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16 }) {
     `.sg-pin{stroke:#fff;stroke-width:3.5}` +
     `.sg-pin.g1{fill:#c8102e}.sg-pin.g2{fill:#141821}.sg-pin.g3{fill:#8f9bad}` +
     `.sg-num{font-size:24px;font-weight:900;fill:#fff;text-anchor:middle}` +
+    `.sg-lab{font-size:30px;font-weight:800;fill:#141821;letter-spacing:-0.03em;` +
+    `paint-order:stroke;stroke:#fff;stroke-width:6px;stroke-linejoin:round}` +
     `.sg-wm{font-size:34px;font-weight:800;fill:#c4c9d2;letter-spacing:-0.01em}` +
     `</style>` +
     // 워터마크는 면(base) **뒤에** 그린다. 앞에 두면 폴리곤이 덮어 조용히 사라진다
@@ -147,7 +162,7 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16 }) {
     `<g>${base}</g>` +
     `<text x="${(PAD + VW * 0.035).toFixed(1)}" y="${(PAD + VH * 0.05).toFixed(1)}" class="sg-wm">@wirit_note</text>` +
     `<text x="${(PAD + VW * 0.035).toFixed(1)}" y="${(PAD + VH * 0.93).toFixed(1)}" class="sg-wm">@wirit_note</text>` +
-    `<g>${marks}</g>` +
+    `<g>${labels}</g><g>${marks}</g>` +
     `</svg>`;
 
   return { svg, resolved, pinsXY, viewBox: { w: VW, h: VH } };
