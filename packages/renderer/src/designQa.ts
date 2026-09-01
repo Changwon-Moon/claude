@@ -58,6 +58,8 @@ interface Geo {
   clipped: { sel: string; text: string; need: number; has: number }[];
   /** 우상단 뱃지 아래 제목까지 세로 간격(px). 0~29 = 너무 붙음. null = 해당없음/겹침(별도) */
   badgeClear: number | null;
+  /** SVG 안 이름표가 다른 이름표·마커와 겹친 곳 — {a, b, ratio} (실측 bbox) */
+  svgLabelHits?: { a: string; b: string; ratio: number }[];
 }
 interface Rect {
   left: number;
@@ -487,8 +489,56 @@ const MEASURE_JS = `(() => {
       figPx:   Math.round(parseFloat(getComputedStyle(figEl).fontSize)||0)
     };
   }
+  /* ── SVG 안 이름표 겹침 — **렌더된 글자를 실제로 잰다** ──
+   * 빌더의 겹침 계산은 글자 수로 폭을 어림한 근사다. 근사가 틀리면 못 잡는다.
+   * 여기서는 브라우저가 그린 뒤의 bbox 를 재므로 폰트가 무엇이든 진짜 겹침만 나온다.
+   * 마커 안에 든 번호(글자 중심이 원 안)는 **일부러 겹친 것**이라 건너뛴다. */
+  var svgLabelHits=[];
+  var svgs=card.querySelectorAll("svg");
+  for(var si=0;si<svgs.length;si++){
+    var texts=[].slice.call(svgs[si].querySelectorAll("text"));
+    var circles=[].slice.call(svgs[si].querySelectorAll("circle"));
+    /* 워터마크·스탬프는 **일부러 그림 뒤에 깔아 둔 장식**이라 겹침 대상이 아니다
+     * (BRAND.md 슬롯 C). 클래스 이름 약속으로 걸러낸다 — sg-wm / wirit-watermark / wirit-stamp. */
+    /* 장식 판정 두 갈래 — 클래스 약속(sg-wm / watermark / stamp) 또는 **거의 투명한 글자**.
+     * 신분당 판형처럼 클래스 없이 fill-opacity 0.09 로만 깔아 둔 워터마크가 있어서
+     * 클래스만 보면 못 거른다(2026-09-01 실측으로 확인). */
+    var isDeco=function(t){
+      var c=(t.getAttribute("class")||"");
+      if(/wm\d?$|wm[\s-]|watermark|stamp/i.test(c)) return true;
+      var cs2=getComputedStyle(t);
+      var op=parseFloat(cs2.opacity||"1"); if(isNaN(op)) op=1;
+      var fo=parseFloat(cs2.fillOpacity||t.getAttribute("fill-opacity")||"1"); if(isNaN(fo)) fo=1;
+      return op*fo<0.35;
+    };
+    var tb=texts.filter(function(t){ return !isDeco(t); })
+                .map(function(t){ return {el:t, s:(t.textContent||"").trim(), r:t.getBoundingClientRect()}; })
+                .filter(function(o){ return o.s && o.r.width>0 && o.r.height>0; });
+    var inCircle=function(r,c){ var cx=(r.left+r.right)/2, cy=(r.top+r.bottom)/2;
+      var ccx=(c.left+c.right)/2, ccy=(c.top+c.bottom)/2, rad=Math.max(c.width,c.height)/2;
+      return Math.hypot(cx-ccx,cy-ccy)<=rad; };
+    var ovArea=function(a,b){ var x=Math.min(a.right,b.right)-Math.max(a.left,b.left);
+      var y=Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top);
+      return (x>0&&y>0)?x*y:0; };
+    for(var i=0;i<tb.length;i++){
+      for(var j=i+1;j<tb.length;j++){
+        var ov=ovArea(tb[i].r,tb[j].r); if(!ov) continue;
+        var mn=Math.min(tb[i].r.width*tb[i].r.height, tb[j].r.width*tb[j].r.height);
+        if(ov/mn>0.10) svgLabelHits.push({a:tb[i].s,b:tb[j].s,ratio:Math.round(ov/mn*100)});
+      }
+      for(var k=0;k<circles.length;k++){
+        var cr=circles[k].getBoundingClientRect(); if(!cr.width) continue;
+        if(inCircle(tb[i].r,cr)) continue;                 /* 마커 안 번호 — 일부러 겹친 것 */
+        var ov2=ovArea(tb[i].r,cr); if(!ov2) continue;
+        var mn2=tb[i].r.width*tb[i].r.height;
+        if(ov2/mn2>0.10) svgLabelHits.push({a:tb[i].s,b:"마커",ratio:Math.round(ov2/mn2*100)});
+      }
+    }
+  }
+
   var lastRow=rows.length?rows[rows.length-1]:null;
   return {
+    svgLabelHits:svgLabelHits,
     head:head, titleGap:titleGap, titlePx:titlePx, aiTiles:tiles, hier:hier,
     card:{left:cb.left,right:cb.right,top:cb.top,bottom:cb.bottom,width:cb.width},
     innerW:cb.width-padL-padR, innerLeft:cb.left+padL, innerRight:cb.right-padR,
@@ -566,6 +616,17 @@ function analyze(g: Geo): Finding[] {
       out.push({ level: "warn", code: "brandhead",
         msg: `카드 위 여백 ${h.cardPadTop}px — 공용 규격 72px 보다 좁습니다. 그래픽을 키우려고 머리를 줄이지 않습니다` });
   }
+
+  /* SVG 안 이름표 겹침 — 지도·차트 위 글자는 겹치면 '사라진 것'처럼 보인다.
+   * 빌더의 근사 계산과 **다른 방법**(실측)으로 한 번 더 잰다. 같은 방법으로 두 번 재면
+   * 같은 실수를 두 번 한다. */
+  /* 등급을 나눈다: 35% 이상이면 글자를 못 읽으니 **error**, 그 아래는 **warn**.
+   * 전부 error 로 두면 발행 확정본(world-capital 의 '독산' 21%)이 영구히 빨간불이 되고,
+   * 확정본 픽셀은 절대 규칙상 못 고친다 → 빨간불이 흔해져 아무도 안 읽게 된다(CLAUDE.md §9). */
+  ((g as any).svgLabelHits || []).forEach((h: any) =>
+    out.push({ level: h.ratio >= 35 ? "error" : "warn", code: "svglabel",
+      msg: `지도·차트 위 글자 「${h.a}」가 ${h.b === "마커" ? "마커" : `「${h.b}」`} 와 ${h.ratio}% 겹침 — 이름표 자리를 옮기세요(자동 배치라면 후보 자리를 넓히세요)` })
+  );
 
   // 0) 넘침·겹침 — 템플릿 종류와 무관하게 항상 검사한다
   g.overflow.forEach((o) =>

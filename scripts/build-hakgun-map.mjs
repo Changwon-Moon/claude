@@ -31,7 +31,6 @@ const publish = process.argv.includes("--publish");
 const AREA_MIN = 79, AREA_MAX = 86; // 전용 84㎡대(국민평형) = 통칭 34평
 const MIN_TRADES = 20;              // 이보다 적으면 중위값이 흔들린다 — 던진다
 
-// ── 판형 치수(카드 안쪽 936px 기준) ─────────────────────────────────
 // ── 판형 치수 — 카드 세로 1350 을 여기서 전부 나눈다 ────────────────
 // 머리(여백·로고라인·제목)와 푸터를 뺀 나머지가 본문이고, 본문 높이는 **지도 높이가 정한다**
 // (오너 2026-09-01: 표 세로를 지도에 맞추고, 범례는 지도 바로 밑에).
@@ -111,31 +110,28 @@ const flat = groups.flatMap((g) => g.rows);
 if (flat.length !== calc.length) throw new Error("급지로 나눈 뒤 개수가 달라졌습니다 — 급지 값을 확인하세요.");
 
 // ── 5. 지도 ──────────────────────────────────────────────────────────
-// NUDGE = 핀이 실제로 붙어 있어 번호를 못 읽는 쌍만 라벨을 밀어 준다(지도 viewBox 좌표).
+// NUDGE = 핀이 실제로 붙어 있어 번호를 못 읽는 쌍만 **핀**을 밀어 준다(지도 viewBox 좌표).
 // 위치를 지어내는 게 아니라 겹침만 푼다 — 평촌(안양 호계)과 산본(군포)은 실제로 2km 거리다.
-// LABEL = 이름표만 옮긴다(핀 위치는 그대로). 서울 학군지가 붙어 있어 기본 자리(핀 오른쪽)로는 겹친다.
 const NUDGE = { 평촌: { dx: 17 }, 산본: { dx: -17 } };
-const LABEL = {
-  잠실: { anchor: "middle", lx: -28, ly: -32 }, // 방이 핀에 닿았다
-  광장: { anchor: "end", lx: -4 },              // 고덕 핀에 닿았다
-  "반포·서초": { anchor: "end", lx: -4 },   // 이름표 끝을 대치 핀이 덮었다
-  대치: { anchor: "middle", ly: 34 },    // 반포·서초 이름표와 겹쳤다
-  산본: { anchor: "end", lx: -4 },       // 평촌 핀에 가렸다
-  판교: { anchor: "end", lx: -4 },       // 분당 핀에 닿았다
-};
+// ⚠️ 이름표 자리는 **손으로 정하지 않는다.** sudogwonMapSvg 가 핀 둘레 후보 중
+//    아무것과도 안 겹치는 자리를 골라 놓고, 놓은 뒤 전수로 다시 잰다.
+//    손으로 정하던 시절에 사람이 놓친 겹침이 세 번 나갔다(2026-09-01).
 const { svg: mapSvg, resolved, collisions, viewBox } = sudogwonMapSvg({
   pins: flat.map((r) => {
     const a = calc.find((x) => x.name === r.key);
-    return { n: r.n, key: r.key, label: r.name, geoName: a.geoName, pinDong: a.pinDong, grade: r.grade, ...(NUDGE[r.key] || {}), ...(LABEL[r.key] || {}) };
+    return { n: r.n, key: r.key, label: r.name, geoName: a.geoName, pinDong: a.pinDong, grade: r.grade, ...(NUDGE[r.key] || {}) };
   }),
   hitSgg,
   showLabels: true,
 });
 for (const r of resolved) if (r.by === "sgg") console.log(`  ⚠️ ${r.label} — 동(${r.dong})을 못 찾아 시군구 중심에 찍었습니다.`);
-// 이름표가 겹치면 그림에서는 '사라진 것'처럼 보인다 — 조용한 실패라 여기서 던진다.
-// designQa 는 SVG 안의 글자를 재지 않으므로 이 검사는 여기 말고 있을 자리가 없다.
+// 배치기가 자리를 못 찾았거나, 놓고 나서 잰 결과가 겹치면 여기서 멈춘다.
+// 겹친 이름표는 그림에서 '사라진 것'처럼 보이므로 조용한 실패다.
 if (collisions.length)
-  throw new Error(`지도 이름표가 겹칩니다 (${collisions.length}건):\n  · ${collisions.join("\n  · ")}\n  → LABEL 에서 해당 이름표의 anchor/lx/ly 를 옮기세요.`);
+  throw new Error(
+    `지도 이름표 배치에 실패했습니다 (${collisions.length}건):\n  · ${collisions.join("\n  · ")}\n` +
+      `  → 후보 자리를 넓히거나(sudogwon-map.mjs candidates/ring), 지도를 키우거나, 핀을 NUDGE 로 벌리세요.`,
+  );
 
 // ── 6. 표가 본문에 들어가는지 잰다 ──────────────────────────────────
 // 지도는 남은 폭을 전부 쓴다. 본문 높이는 지도 + 범례로 정해진다.

@@ -121,52 +121,108 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, show
     base += `<path d="${d}" class="${hitSgg.has(f.properties.name) ? "sg-hit" : "sg-off"}"/>`;
   }
 
-  // 핀 — 위에서 잡은 좌표를 화면 좌표로. dx/dy 는 겹칠 때의 미세조정(픽셀).
-  // pinsXY 는 **viewBox 좌표**다. 카드 픽셀로 옮기는 계산은 빌더가 한다(연결선용).
-  const LAB_FS = 30, PIN_R = 22;
-  // 이름표 폭을 글자 수로 잰다(한글 1em · 가운뎃점 0.45em · 자간 -0.03em).
-  // 정확한 폰트 메트릭은 아니지만 **겹침을 찾기에는 충분히 넉넉한** 근사다.
-  const labWidth = (t) => [...t].reduce((w, ch) => w + (ch === "·" ? 0.45 : 1), 0) * LAB_FS * 0.97;
+  // ── 핀 그리기 ────────────────────────────────────────────────────
+  // pinsXY 는 **viewBox 좌표**다. 카드 픽셀로 옮기는 계산은 빌더가 한다.
+  const LAB_FS = 30, PIN_R = 22, PIN_STROKE = 3.5;
+  // 이름표 폭을 글자 수로 잰다(한글 1em · 가운뎃점 0.45em · 자간 -0.03em) + 8% 여유.
+  // 정확한 폰트 메트릭이 아니므로 **넉넉하게 잡아 틀리더라도 겹침 쪽으로 틀리게** 한다.
+  const labWidth = (t) => [...t].reduce((w, ch) => w + (ch === "·" ? 0.45 : 1), 0) * LAB_FS * 0.97 * 1.08;
 
   let marks = "";
-  let labels = "";
   const pinsXY = [];
-  const labBoxes = [];
   for (const p of placed) {
     const x = px(p.lon) + (p.dx || 0);
     const y = py(p.lat) + (p.dy || 0);
-    pinsXY.push({ key: p.key ?? p.label, n: p.n, x, y });
+    pinsXY.push({ key: p.key ?? p.label, n: p.n, x, y, label: p.label, force: p.anchor ? { anchor: p.anchor, lx: p.lx || 0, ly: p.ly || 0 } : null });
     marks +=
-      `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="22" class="sg-pin g${p.grade}"/>` +
+      `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${PIN_R}" class="sg-pin g${p.grade}"/>` +
       `<text x="${x.toFixed(1)}" y="${(y + 9).toFixed(1)}" class="sg-num">${p.n}</text>`;
-    if (showLabels && p.label) {
-      // 이름은 기본으로 핀 오른쪽. 겹치는 곳만 lx/ly/anchor 로 옮긴다(위치를 지어내지 않는다).
-      const anchor = p.anchor || "start";
-      const off = anchor === "end" ? -30 : anchor === "middle" ? 0 : 30;
-      const lx = x + off + (p.lx || 0);
-      const ly = y + 11 + (p.ly || 0);
+  }
+
+  // ── 이름표 자동 배치 ──────────────────────────────────────────────
+  // 손으로 자리를 정하면 사람이 놓친 겹침이 그대로 나간다(2026-09-01 에 세 번 났다).
+  // 그래서 **코드가 자리를 고른다**: 핀 둘레 8방향 × 두 반경 = 16개 후보 중
+  // 아무것과도 안 겹치는 첫 자리를 쓴다. 검사 대상은
+  //   ① 이미 놓인 이름표  ② **모든 핀(자기 핀 포함)**  ③ 지도 테두리.
+  // ②의 '자기 핀 포함'이 핵심이다 — 예전엔 자기 핀을 건너뛰어서
+  // 이름표가 제 마커를 밟는 것을 한 번도 못 잡았다.
+  const GAP = 12;                        // 이만큼 떨어져야 붙지 않은 것으로 본다(viewBox 단위)
+  const PIN_OUT = PIN_R + PIN_STROKE / 2;
+  const overlaps = (a, b) => a.x0 < b.x1 + GAP && b.x0 < a.x1 + GAP && a.y0 < b.y1 + GAP && b.y0 < a.y1 + GAP;
+  const pinBox = (p) => ({ x0: p.x - PIN_OUT, x1: p.x + PIN_OUT, y0: p.y - PIN_OUT, y1: p.y + PIN_OUT });
+  const boxOf = (x, y, anchor, w) => ({
+    x0: anchor === "end" ? x - w : anchor === "middle" ? x - w / 2 : x,
+    x1: (anchor === "end" ? x - w : anchor === "middle" ? x - w / 2 : x) + w,
+    y0: y - LAB_FS * 0.80,
+    y1: y + LAB_FS * 0.26,
+  });
+
+  /** 핀 둘레 후보 자리 — 가까운 순. 오른쪽·왼쪽을 먼저 써야 읽기 흐름이 안 깨진다. */
+  const candidates = (x, y, ring) => {
+    const o = PIN_OUT + 8 + ring * 16;              // 가로 여백
+    const up = PIN_OUT + LAB_FS * 0.30 + ring * 14; // 위: 글자 아랫선이 핀에 안 닿게
+    const dn = PIN_OUT + LAB_FS * 0.86 + ring * 14; // 아래: 글자 윗선이 핀에 안 닿게
+    return [
+      { x: x + o, y: y + LAB_FS * 0.34, anchor: "start" },
+      { x: x - o, y: y + LAB_FS * 0.34, anchor: "end" },
+      { x, y: y - up, anchor: "middle" },
+      { x, y: y + dn, anchor: "middle" },
+      { x: x + o * 0.75, y: y - up * 0.8, anchor: "start" },
+      { x: x - o * 0.75, y: y - up * 0.8, anchor: "end" },
+      { x: x + o * 0.75, y: y + dn * 0.8, anchor: "start" },
+      { x: x - o * 0.75, y: y + dn * 0.8, anchor: "end" },
+    ];
+  };
+
+  let labels = "";
+  const labBoxes = [];
+  const placements = [];
+  const unplaced = [];
+  if (showLabels) {
+    // 붐비는 곳부터 놓는다 — 여유 있는 곳은 나중에도 자리가 남는다.
+    const crowd = (p) => pinsXY.filter((q) => q !== p && Math.hypot(q.x - p.x, q.y - p.y) < 220).length;
+    const order = [...pinsXY].filter((p) => p.label).sort((a, b) => crowd(b) - crowd(a));
+
+    for (const p of order) {
       const w = labWidth(p.label);
-      const x0 = anchor === "end" ? lx - w : anchor === "middle" ? lx - w / 2 : lx;
-      labBoxes.push({ key: p.key ?? p.label, x0, x1: x0 + w, y0: ly - LAB_FS * 0.78, y1: ly + LAB_FS * 0.24 });
+      let chosen = null;
+
+      if (p.force) {
+        // 오너가 자리를 지정한 경우에만 그 자리를 쓴다(그래도 아래 겹침 검사는 그대로 받는다).
+        const anchor = p.force.anchor;
+        const off = anchor === "end" ? -(PIN_OUT + 8) : anchor === "middle" ? 0 : PIN_OUT + 8;
+        chosen = { x: p.x + off + p.force.lx, y: p.y + LAB_FS * 0.34 + p.force.ly, anchor };
+      } else {
+        for (let ring = 0; ring < 3 && !chosen; ring++)
+          for (const c of candidates(p.x, p.y, ring)) {
+            const b = boxOf(c.x, c.y, c.anchor, w);
+            if (b.x0 < 2 || b.x1 > VW - 2 || b.y0 < 2 || b.y1 > VH - 2) continue;   // 지도 밖
+            if (pinsXY.some((q) => overlaps(b, pinBox(q)))) continue;               // 자기 핀 포함
+            if (labBoxes.some((lb) => overlaps(b, lb))) continue;
+            chosen = c;
+            break;
+          }
+      }
+
+      if (!chosen) { unplaced.push(p.label); continue; }
+      const b = boxOf(chosen.x, chosen.y, chosen.anchor, w);
+      b.key = p.key;
+      labBoxes.push(b);
+      placements.push({ key: p.key, anchor: chosen.anchor });
       labels +=
-        `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" class="sg-lab" text-anchor="${anchor}">${p.label}</text>`;
+        `<text x="${chosen.x.toFixed(1)}" y="${chosen.y.toFixed(1)}" class="sg-lab" text-anchor="${chosen.anchor}">${p.label}</text>`;
     }
   }
 
-  // ── 이름표 겹침 판정 ──────────────────────────────────────────────
-  // designQa 는 SVG 안을 재지 않는다. 그래서 좌표를 아는 여기서 잰다.
-  // 겹친 이름표는 그림에서 '그냥 사라진 것'처럼 보이므로 조용한 실패다.
-  const GAP = 10;                      // 이만큼 떨어져 있어야 붙지 않은 것으로 본다(viewBox 단위)
-  const collisions = [];
-  const hit = (a, b) => a.x0 < b.x1 + GAP && b.x0 < a.x1 + GAP && a.y0 < b.y1 + GAP && b.y0 < a.y1 + GAP;
+  // ── 배치 결과 검증 — 놓은 뒤에 다시 전수로 잰다 ────────────────────
+  // 배치기가 맞게 짰는지까지 여기서 확인한다. 배치와 검증을 같은 코드로 하지 않는다.
+  const collisions = unplaced.map((n) => `이름표 ${n} — 놓을 자리를 못 찾았습니다(주변이 너무 붐빕니다)`);
   for (let i = 0; i < labBoxes.length; i++) {
     for (let j = i + 1; j < labBoxes.length; j++)
-      if (hit(labBoxes[i], labBoxes[j])) collisions.push(`이름표 ${labBoxes[i].key} ↔ 이름표 ${labBoxes[j].key}`);
-    for (const p of pinsXY) {
-      if (p.key === labBoxes[i].key) continue;
-      const pb = { x0: p.x - PIN_R, x1: p.x + PIN_R, y0: p.y - PIN_R, y1: p.y + PIN_R };
-      if (hit(labBoxes[i], pb)) collisions.push(`이름표 ${labBoxes[i].key} ↔ 핀 ${p.key}`);
-    }
+      if (overlaps(labBoxes[i], labBoxes[j])) collisions.push(`이름표 ${labBoxes[i].key} ↔ 이름표 ${labBoxes[j].key}`);
+    for (const p of pinsXY)
+      if (overlaps(labBoxes[i], pinBox(p)))
+        collisions.push(`이름표 ${labBoxes[i].key} ↔ 핀 ${p.key}${p.key === labBoxes[i].key ? " (자기 핀)" : ""}`);
   }
 
   const svg =
@@ -196,5 +252,5 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, show
   if (!new RegExp(`^<svg viewBox="0 0 ${VW} ${VH}" `).test(svg))
     throw new Error("지도 SVG 의 viewBox 가 깨졌습니다 — 이대로 두면 지도가 300×150 으로 줄어 잘립니다.");
 
-  return { svg, resolved, pinsXY, collisions, viewBox: { w: VW, h: VH } };
+  return { svg, resolved, pinsXY, collisions, placements, viewBox: { w: VW, h: VH } };
 }
