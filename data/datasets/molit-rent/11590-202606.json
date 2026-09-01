@@ -33,9 +33,18 @@
       "perPyeong": 2897.58,
       "perPyeongSimple": 2975.75,
       "kp84": {
+        "loM2": 82,
+        "hiM2": 86,
         "n": 155,
         "avgDeposit": 76197.25,
         "avgArea": 84.86
+      },
+      "kp59": {
+        "loM2": 57,
+        "hiM2": 61,
+        "n": 100,
+        "avgDeposit": 59197.61,
+        "avgArea": 59.84
       }
     }
   }
