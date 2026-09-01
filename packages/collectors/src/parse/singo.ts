@@ -409,3 +409,56 @@ export function alertBody(hits: SingoHit[], topN = 0, today?: string): string[] 
   lines.push("   신고까지 최대 30일 걸려 지난달 계약이 섞입니다.");
   return lines;
 }
+
+/* ────────────────────────────────────────────────────────────────────────────
+ * 명부 잇기 — 이름과 지번이 **서로를 검사한다** (2026-09-02)
+ * ──────────────────────────────────────────────────────────────────────────── */
+
+/** 명부 잇기에 필요한 최소 모양 — 실제 `UniverseItem` 은 더 많은 칸을 갖는다. */
+export interface UniverseLike {
+  kaptCode: string;
+  kaptName: string;
+}
+
+/**
+ * 실거래 한 건을 명부 단지에 잇는다. **이름 → 지번 두 갈래를 붙이되, 서로 어긋나면 버린다.**
+ *
+ * ── 왜 이 함수가 생겼나 (2026-09-02)
+ * 노원구 **하계동 284 「청구」** 9.65억이 같은 동의 **「하계학여울청구」(지번 354, 1,476세대)** 에
+ * 이름 부분일치로 붙었다. 하계동 284 는 하계청구(660세대)·하계한신(1,200세대)이 있는 **다른 필지**다.
+ * → **남의 세대수 1,476이 재료 문서에 실렸다.**
+ *
+ * 이건 2026-08-13(상록마을)·2026-08-26(신동아·미성·현대3차) 과 **같은 종류의 사고**다.
+ * 그때 고친 것은 각각 「괄호 지운 이름으로 포함관계」와 「구 전체 폴백」이었고,
+ * 이번은 **같은 동 안에서의 부분일치**라 그 두 수리가 닿지 않았다.
+ *
+ * ── 규칙 (셋뿐이다)
+ * | 이름으로 찾은 것 | 지번으로 찾은 것 | 결과 |
+ * |---|---|---|
+ * | A | 없음 | **A** — 실거래 지번이 대장에 없는 정상 케이스(강서힐스테이트: 실거래 1165 · 대장 1025-33) |
+ * | 없음 | B | **B** — 이름이 안 맞는 43%를 지번이 받는다(2026-08-25) |
+ * | A | B (A≠B) | **버린다(null)** ← 이번에 넣은 것 |
+ * | A | B (A=B) | **A** |
+ *
+ * **「어느 쪽인지 모르는 채로 붙이지 않는다」**는 지번 조회판이 이미 지키던 원칙
+ * (한 지번에 명부 단지가 둘이면 null)을 **이름 쪽에도 똑같이 적용**한 것이다.
+ * 못 잇는 편이 낫다 — 잘못 이으면 명부에 없어야 할 단지가 알림에 섞이고 세대수가 틀린다.
+ *
+ * @param sameUmd   같은 **법정동**의 명부 단지들 (동을 넘지 않는다 — 2026-08-26)
+ * @param byJibunHit 그 지번이 가리키는 명부 단지. 지번이 겹쳐 버린 칸이면 `null`
+ */
+export function pickUniverse<T extends UniverseLike>(
+  aptNm: string,
+  sameUmd: T[],
+  byJibunHit: T | null | undefined,
+): T | null {
+  let byName: T | null = null;
+  if (fullAptName(aptNm)) {
+    const hit = sameUmd.filter((a) => sameApt(a.kaptName, aptNm));
+    if (hit.length === 1) byName = hit[0];
+  }
+  const byJibun = byJibunHit ?? null;
+
+  if (byName && byJibun) return byName.kaptCode === byJibun.kaptCode ? byName : null;
+  return byName ?? byJibun;
+}

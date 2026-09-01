@@ -21,7 +21,7 @@
   },
   "conceptB": {
     "title": "개별 카드 후보",
-    "count": 20,
+    "count": 19,
     "items": [
       {
         "foundOn": "2026-09-02",
@@ -382,30 +382,6 @@
         "gainPct": 4,
         "milestone": null,
         "hhld": 1800
-      },
-      {
-        "foundOn": "2026-09-02",
-        "aptNm": "청구",
-        "umdNm": "하계동",
-        "jibun": "284",
-        "priceWon": 965000000,
-        "priceManwon": 96500,
-        "area": 84.97,
-        "floor": 9,
-        "buildYear": 1988,
-        "date": "2026-08-08",
-        "dealingGbn": "중개거래",
-        "canceled": false,
-        "sggCd": "11350",
-        "type": "84",
-        "pyeong": "34평",
-        "lawdCd": "11350",
-        "gu": "노원구",
-        "prevPeakManwon": 90000,
-        "prevPeakDate": "2026-07-03",
-        "gainPct": 7.222222222222221,
-        "milestone": null,
-        "hhld": 1476
       },
       {
         "foundOn": "2026-09-02",

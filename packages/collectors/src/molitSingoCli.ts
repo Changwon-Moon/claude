@@ -26,8 +26,7 @@ import {
   foldPeaks,
   findSingo,
   areaType,
-  fullAptName,
-  sameApt,
+  pickUniverse,
   manwonToEok,
   alertBody,
   PEAK_SCHEMA,
@@ -155,16 +154,13 @@ async function main() {
        못 이은 것은 아래 **지번**이 받는다. 지번도 `동|지번` 키라 동을 넘지 않는다.
        ⚠️ 되살리고 싶으면 위 세 건부터 다시 본다 — 「명부가 커진다」는 이유로는 안 된다.
           잘못 이으면 커지는 게 아니라 **틀린다**. */
-    if (fullAptName(aptNm)) {
-      const sameUmd = list.filter((a) => a.umd === umdNm);
-      const hit = sameUmd.filter((a) => sameApt(a.kaptName, aptNm));
-      if (hit.length === 1) return hit[0];
-    }
-    /* 이름으로 못 이었으면 **지번**으로 다시 물어본다 (위 조회판 주석 참고).
-       ⚠️ 이름이 여럿 걸려 애매했던 경우도 여기로 온다 — 지번은 하나뿐이라 애매하지 않다.
-          단, 그 지번에 명부 단지가 둘이면 조회판이 이미 null 로 버려 뒀다. */
+    /* 판단은 `parse/singo.ts` 의 **`pickUniverse` 하나**가 한다 — 여기선 재료만 모은다.
+       이름과 지번을 **서로 검사**시키는 규칙이 그 안에 있고, 자가검사가 그것을 잰다
+       (2026-09-02 하계동 284 「청구」 → 「하계학여울청구」 오매칭). */
+    const sameUmd = list.filter((a) => a.umd === umdNm);
     const j = normJibun(jibun ?? "");
-    return j ? (byJibun.get(`${lawdCd}|${umdNm}|${j}`) ?? null) : null;
+    const byJ = j ? byJibun.get(`${lawdCd}|${umdNm}|${j}`) : null;
+    return pickUniverse(aptNm, sameUmd, byJ);
   }
 
   const regions = singoRegions();

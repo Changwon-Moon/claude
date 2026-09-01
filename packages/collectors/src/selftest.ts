@@ -106,6 +106,7 @@ import {
   milestoneCrossed as singoMilestone,
   sameApt as singoSameApt,
   fullAptName as singoFullName,
+  pickUniverse as singoPickUniverse,
   alertBody as singoAlertBody,
   baselineLabel as singoBaseline,
   BASELINE_FROM as SINGO_FROM,
@@ -1269,6 +1270,42 @@ console.log("\n[청약홈 분양정보 파서]");
   // 차수만 다른 형제는 거절
   check("⛔ 주공6 ≠ 인창주공7단지", !singoSameApt("인창주공7단지", "주공6"), "");
   check("⛔ 상록마을(임광) ≠ 상록마을(라이프2차)", !singoSameApt("상록마을(임광)", "상록마을(라이프2차)"), "");
+
+  /* ── 명부 잇기 — 이름과 지번이 **서로를 검사한다** (2026-09-02 하계동 284 「청구」)
+   * 실거래 「청구」(노원구 하계동 284)가 같은 동의 「하계학여울청구」(지번 354·1,476세대)에
+   * 이름 부분일치로 붙어 **남의 세대수가 재료 문서에 실렸다.** 하계동 284 는
+   * 하계청구(660)·하계한신(1,200)이 있는 다른 필지다.
+   * 「어느 쪽인지 모르는 채로 붙이지 않는다」를 지번 쪽에만 두었던 것이 원인이다. */
+  const U = (code: string, name: string) => ({ kaptCode: code, kaptName: name });
+  const 하계 = [U("A13987305", "하계학여울청구"), U("A13993503", "하계한신")];
+  check(
+    "⛔ 하계동 284 「청구」 — 이름은 학여울청구, 지번은 하계한신 → 어긋나니 버린다",
+    singoPickUniverse("청구", 하계, U("A13993503", "하계한신")) === null,
+    JSON.stringify(singoPickUniverse("청구", 하계, U("A13993503", "하계한신"))),
+  );
+  check(
+    "이름만 맞고 지번은 대장에 없다 → 이름을 쓴다 (강서힐스테이트: 실거래 1165 · 대장 1025-33)",
+    singoPickUniverse("강서힐스테이트", [U("A15701007", "강서힐스테이트아파트")], null)?.kaptCode ===
+      "A15701007",
+    "",
+  );
+  check(
+    "이름은 못 잇고 지번만 맞다 → 지번을 쓴다 (이름이 안 맞는 43%를 지번이 받는다)",
+    singoPickUniverse("위례24단지(꿈에그린)", [U("A1", "송파꿈에그린아파트")], U("A1", "송파꿈에그린아파트"))
+      ?.kaptCode === "A1",
+    "",
+  );
+  check(
+    "둘이 같은 곳을 가리키면 통과",
+    singoPickUniverse("네이처포레", [U("A10026125", "네이처포레 아파트")], U("A10026125", "네이처포레 아파트"))
+      ?.kaptCode === "A10026125",
+    "",
+  );
+  check(
+    "이름도 지번도 없으면 안 잇는다",
+    singoPickUniverse("없는단지", [U("A9", "다른단지")], null) === null,
+    "",
+  );
 
   /* ── 톡 본문 — 돌파 블록과 전체 목록은 다른 말이다 (2026-08-13 사고)
    * 금액대(그 거래가 속한 구간)로 묶어 보냈더니 14억·11억 거래가 "10억 돌파"로 읽혔다.
