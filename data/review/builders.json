@@ -1781,8 +1781,10 @@
     },
     {
       "label": "jeonse84-map",
-      "cmd": "scripts/build-jeonse-band-map.mjs",
+      "cmd": "scripts/build-band-map.mjs",
       "args": [
+        "--kind",
+        "jeonse",
         "--type",
         "84",
         "--date",
@@ -1791,8 +1793,10 @@
     },
     {
       "label": "jeonse59-map",
-      "cmd": "scripts/build-jeonse-band-map.mjs",
+      "cmd": "scripts/build-band-map.mjs",
       "args": [
+        "--kind",
+        "jeonse",
         "--type",
         "59",
         "--date",

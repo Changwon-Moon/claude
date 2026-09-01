@@ -1,8 +1,21 @@
 /**
- * 🏠 토허제 40곳 · 전용 84㎡ / 59㎡ 아파트 전세 실거래 평균 — 지도 + 순위표 1장. (singoga-map@1)
+ * 🏠 토허제 40곳 · 전용 84㎡ / 59㎡ 아파트 **전세·매매** 실거래 평균 — 지도 + 순위표 1장.
+ * (singoga-map@1)
  *
- * 실행: node scripts/build-jeonse-band-map.mjs --type 84|59 [--date YYYY-MM-DD]
- * 출력: data/content/{date}/jeonse{84|59}-map.json + 캡션
+ * 실행: node scripts/build-band-map.mjs --kind jeonse|mae --type 84|59 [--months …] [--date …]
+ * 출력: data/content/{date}/{jeonse|mae}{84|59}-map.json + 캡션
+ *
+ * ── 전세와 매매는 **원자료의 모양이 다르다**
+ *   전세(`molit-rent`) : 수집기가 **집계만** 저장한다(원거래 미보존). 면적대 평균은
+ *                        `agg.price.kp84/kp59` 에 이미 들어 있어 그대로 읽는다.
+ *   매매(`molit`)      : **원거래를 그대로** 저장한다. 여기서 면적대로 걸러 직접 센다.
+ *                        그래서 매매는 수집 왕복 없이 면적대를 바꿔 볼 수 있다.
+ *
+ * ── 매매만의 규칙: **직거래·해제거래 제외** (저장소 확립 기준)
+ * 신고가 카드가 「2020년 이후 최고가 · 직거래·해제거래 제외」로 굳어 있다
+ * (`gen-singo-caption.mjs`·`singo-digest.mjs`). 같은 매매 실거래를 쓰는 카드가 서로 다른
+ * 모집단을 말하면 두 카드가 다른 세계가 된다. 실제로 중랑구는 2026.06~07 매매의 **43%가
+ * 직거래**였다(다른 구는 한 자릿수 %) — 안 걸러내면 그 구 평균만 딴 데로 간다.
  *
  * ── 왜 '평당가 × 34평' 이 아닌가 (2026-09-01 오너 문답, 실측으로 닫음)
  * 오너가 KOSIS 「아파트 전세 실거래 평균가격」에서 서울 2026.06 = 895.5만원/㎡ 를 보고
@@ -39,7 +52,14 @@ const arg = (n) => {
 };
 const TYPE = arg("type") ?? "84";
 if (TYPE !== "84" && TYPE !== "59") throw new Error(`--type 은 84 또는 59 다 (받은 값: ${TYPE})`);
+const KIND = arg("kind") ?? "jeonse";
+if (KIND !== "jeonse" && KIND !== "mae") throw new Error(`--kind 는 jeonse 또는 mae 다 (받은 값: ${KIND})`);
 const KEY = TYPE === "84" ? "kp84" : "kp59";
+/** 면적대 창 — 전세는 수집기의 AREA_BANDS 가 데이터에 실어 주고, 매매는 여기서 같은 값을 쓴다.
+ *  ⚠️ 두 곳이 갈라지면 같은 '84㎡'가 카드마다 다른 것을 세게 된다. 값을 바꿀 일이 생기면
+ *  `packages/collectors/src/parse/molit.ts` 의 AREA_BANDS 와 **함께** 바꾼다. */
+const BAND = TYPE === "84" ? [82, 86] : [57, 61];
+const KIND_KO = KIND === "mae" ? "매매" : "전세";
 const date = arg("date") ?? new Date().toISOString().slice(0, 10);
 
 /** 집계에 넣을 달. `--months 202606` 처럼 넘긴다.
@@ -74,24 +94,47 @@ if (noCode.length) {
  * 면적대 평균은 **건수 가중**으로 두 달을 합친다(단순평균하면 거래가 적은 달이 같은 무게를 갖는다). */
 const band = new Map();
 let winLo = null, winHi = null, collectedAt = null;
+let excluded = 0; // 매매에서 걸러낸 직거래·해제 건수 — 캡션이 밝힌다
 for (const a of AREAS) {
   const code = LAWD[a.geoName];
   let d = 0, n = 0;
   for (const ym of MONTHS) {
-    const f = join(ROOT, `data/datasets/molit-rent/${code}-${ym}.json`);
+    const dir = KIND === "mae" ? "molit" : "molit-rent";
+    const queue = KIND === "mae" ? "data/molit-queue.txt" : "data/molit-rent-queue.txt";
+    const f = join(ROOT, `data/datasets/${dir}/${code}-${ym}.json`);
     if (!existsSync(f)) {
       throw new Error(
-        `${a.geoName}(${code}) ${ym} 집계 파일이 없다: ${f}\n` +
-          `  data/molit-rent-queue.txt 에 한 줄 밀고 푸시하세요 (CLAUDE.md §6).`,
+        `${a.geoName}(${code}) ${ym} 파일이 없다: ${f}\n` +
+          `  ${queue} 에 한 줄 밀고 푸시하세요 (CLAUDE.md §6).\n` +
+          `  ⚠️ 없는 달을 빼고 만들면 **그 지역만 기간이 짧은 지도**가 된다 — 그건 오보다.`,
       );
     }
     const doc = JSON.parse(readFileSync(f, "utf8"));
     if (doc.meta?.verified !== true) throw new Error(`${a.geoName} ${ym} meta.verified 가 true 가 아니다`);
+    collectedAt = doc.meta.collectedAt;
+
+    if (KIND === "mae") {
+      /* ── 매매: 원거래에서 직접 센다 ──
+       * 저장소 확립 기준대로 **직거래·해제거래는 뺀다**(신고가 카드와 같은 모집단).
+       * 금액·면적이 비어 오는 건도 세지 않는다 — 0 은 평균을 끌어내린다. */
+      if (winLo == null) { winLo = BAND[0]; winHi = BAND[1]; }
+      for (const tr of doc.trades ?? []) {
+        if (tr.canceled) { excluded++; continue; }
+        if (tr.dealingGbn === "직거래") { excluded++; continue; }
+        const ar = tr.area, pr = tr.priceManwon;
+        if (!(ar > 0) || !(pr > 0)) continue;
+        if (ar < BAND[0] || ar > BAND[1]) continue;
+        d += pr; n++;
+      }
+      continue;
+    }
+
+    /* ── 전세: 수집기가 이미 낸 면적대 집계를 읽는다(원거래 미보존) ── */
     const p = doc.agg?.price;
     if (!p) {
       throw new Error(
         `${a.geoName} ${ym} 에 agg.price 가 없다 — 금액·면적 집계 이전에 받은 옛 파일이다.\n` +
-          `  force=true 로 다시 수집해야 합니다 (data/molit-rent-queue.txt).`,
+          `  force=true 로 다시 수집해야 합니다 (${queue}).`,
       );
     }
     const b = p[KEY];
@@ -106,12 +149,11 @@ for (const a of AREAS) {
     }
     d += b.avgDeposit * b.n;
     n += b.n;
-    collectedAt = doc.meta.collectedAt;
   }
   if (n === 0) {
     throw new Error(
-      `${a.geoName}: ${MONTHS.join("·")} 두 달 모두 전용 ${TYPE}㎡ 전세 거래가 0건이다 — 구멍 난 지도는 오보다.\n` +
-        `  달을 늘리거나(MONTHS) 이 면적대를 포기해야 합니다.`,
+      `${a.geoName}: ${MONTHS.join("·")} 전 기간 전용 ${TYPE}㎡ ${KIND_KO} 거래가 0건이다 — 구멍 난 지도는 오보다.\n` +
+        `  달을 늘리거나(--months) 이 면적대를 포기해야 합니다.`,
     );
   }
   band.set(a.geoName, { eok: d / n / 10000, n });
@@ -249,6 +291,9 @@ const card = {
    * 같이 빨강이어야 한다 — 한쪽만 바꾸면 카드 안에 색이 둘 남는다.
    * (판형의 `accent: "cobalt"` 변형은 그대로 남아 있다. 지금은 아무 카드도 쓰지 않는다.) */
   /* 기간은 **집계한 달에서 만든다** — 손으로 적으면 달을 바꿀 때 카드가 거짓말을 한다 */
+  /* ⚠️ 여기에 「전세」/「매매」를 넣지 않는다. **제목이 이미 말한다**(「서울 34평 평균 전세 …」).
+   * 넣었더니 확정된 전세 카드의 픽셀이 바뀌었다(2026-09-01) — 픽셀 불변(§8) 위반이다.
+   * 같은 빌더로 두 종류를 찍을 때는 **공통 자리를 건드리지 말고 종류별 자리에만** 쓴다. */
   note: `${monthsLabel} 실거래 · 수도권 토지거래허가구역 40곳`,
   /* 숫자를 손으로 적지 않는다 — 수집이 갱신되면 제목도 따라 바뀐다.
    * '국평'·'25평' 같은 통칭 대신 **전용 ○○㎡** 로 쓴다. 통칭은 공급면적 기준이라
@@ -264,14 +309,14 @@ const card = {
   /* 강조 둘: **평형은 파랑(hi-b)**, **금액은 빨강(hi)** — 오너 2026-09-01.
    * 한 문장의 주어(어떤 집)와 술어(얼마)라 강조가 둘이어도 초점이 갈리지 않는다
    * (청약 카드의 「훅 + 금액 둘 다 코발트」와 같은 판단 — 청약분양-카드-기준 §2). */
-  title: `서울 <span class="hi-b">${PYEONG_NAME}</span> 평균 전세 <span class="hi">${seoul.eok.toFixed(1)}억</span>`,
+  title: `서울 <span class="hi-b">${PYEONG_NAME}</span> 평균 ${KIND_KO} <span class="hi">${seoul.eok.toFixed(1)}억</span>`,
   fitTitle: true,
   unit: "억",
   /* 머리글은 **2열**(지역 / 값)이다. 3열(`head.c`)로 두면 판형이 `sm-h3` 를 켜 값 칸을
    * **176px 로 못박고**, 남은 폭에 「성남시 분당구」·「용인시 기흥구」가 두 줄로 접혀
    * 20행 표가 카드 밖으로 236px 넘쳤다(2026-09-01 실측). 월세 비중 지도가 2열인 이유가 이것이다.
    * 3열은 8행짜리 카드(월세 상승분)에서만 성립한다. */
-  head: { l: "지역", r: `전용 ${TYPE}㎡ 전세` },
+  head: { l: "지역", r: `전용 ${TYPE}㎡ ${KIND_KO}` },
   mapSvg,
   rows,
   tail,
@@ -280,12 +325,12 @@ const card = {
   /* ⚠️ 캡션이 말하는 억 단위 값은 **카드에도 있어야 한다**(caption-number 게이트).
    * 경기 평균을 여기서 뺐더니 캡션의 「경기 평균 4.2억」이 카드에 없는 숫자로 잡혀 막혔다
    * (84 카드는 4.2억이 우연히 지도에 있어 안 걸렸다 — 우연에 기대지 않는다). */
-  source: { name: "국토교통부 아파트 전월세 실거래가 · 서울시·경기도 허가구역 고시" },
+  source: { name: `국토교통부 아파트 ${KIND === "mae" ? "매매" : "전월세"} 실거래가 · 서울시·경기도 허가구역 고시` },
 };
 
 const outDir = join(ROOT, `data/content/${date}`);
 mkdirSync(outDir, { recursive: true });
-const slug = `jeonse${TYPE}-map`;
+const slug = `${KIND === "mae" ? "mae" : "jeonse"}${TYPE}-map`;
 writeFileSync(join(outDir, `${slug}.json`), JSON.stringify(card, null, 2) + "\n", "utf8");
 
 /* ── 캡션 ── 숫자는 전부 위 계산값 */
@@ -294,11 +339,11 @@ const seoulRanked = ranked.filter((a) => a.region === "서울");
 const nm = (a) => a.label;
 const line = (a) => `${eokTxt(eokOf(a.geoName))} (${band.get(a.geoName).n.toLocaleString()}건)`;
 const caption = [
-  `전용 ${TYPE}㎡ 전세, 서울 평균 ${seoul.eok.toFixed(1)}억. 🏠`,
+  `전용 ${TYPE}㎡ ${KIND_KO}, 서울 평균 ${seoul.eok.toFixed(1)}억. 🏠`,
   `가장 비싼 곳과 가장 싼 곳이 ${gap.toFixed(1)}배 벌어집니다.`,
   ``,
   `서울 25개 자치구 전역 + 경기 15곳,`,
-  `토지거래허가구역 40곳의 아파트 전세 실거래를`,
+  `토지거래허가구역 40곳의 아파트 ${KIND_KO} 실거래를`,
   `전용 ${winLo}~${winHi}㎡ 만 골라 평균했습니다.`,
   `(2026년 6~7월 신고분 ${totalN.toLocaleString()}건)`,
   ``,
@@ -312,14 +357,16 @@ const caption = [
   `· 경기 최고 : ${nm(ggRanked[0])} ${line(ggRanked[0])}`,
   `· 서울 최저 : ${nm(seoulRanked.at(-1))} ${line(seoulRanked.at(-1))}`,
   ``,
-  `[40곳 전체 · 전용 ${TYPE}㎡ 전세 평균]`,
+  `[40곳 전체 · 전용 ${TYPE}㎡ ${KIND_KO} 평균]`,
   ...ranked.map((a, i) => `${i + 1}. ${nm(a)} ${eokTxt(eokOf(a.geoName))}`),
   ``,
   `📌 저장해두고 우리 동네가 몇 위인지 확인하기`,
   ``,
   `—`,
-  `📊 출처 · 국토교통부 아파트 전월세 실거래가`,
-  `   2026년 6~7월 신고분 · 전세(월세 0원) 계약만`,
+  `📊 출처 · 국토교통부 아파트 ${KIND === "mae" ? "매매" : "전월세"} 실거래가`,
+  ...(KIND === "mae"
+    ? [`   ${monthsLabel} 신고분 · 직거래·해제거래 제외 (${excluded.toLocaleString()}건)`]
+    : [`   ${monthsLabel} 신고분 · 전세(월세 0원) 계약만`]),
   `🗂 허가구역 : 서울시·경기도 토지거래허가구역 지정 고시`,
   `   서울 25개 자치구 전역(2025년 10월) · 경기 15곳(기존 12곳 + 2026년 7월 신규 3곳 ⚡)`,
   ``,
@@ -332,13 +379,15 @@ const caption = [
   `※ 신규·갱신 계약이 모두 섞여 있습니다 (갱신은 5% 상한이 걸린 건이 있습니다)`,
   `※ 시·군·구 경계 기준이며, 실제 허가구역이 일부인 곳이 있습니다`,
   ``,
-  `#부동산 #전세 #전세가 #토지거래허가구역 #데이터시각화`,
+  KIND === "mae"
+    ? `#부동산 #아파트 #매매가 #토지거래허가구역 #데이터시각화`
+    : `#부동산 #전세 #전세가 #토지거래허가구역 #데이터시각화`,
 ].join("\n");
 mkdirSync(join(ROOT, "data/review/captions"), { recursive: true });
 writeCaption(slug, caption);
 
 console.log(
-  `✅ 토허제 40곳 전용 ${TYPE}㎡ 전세 (${winLo}~${winHi}㎡ · ${MONTHS.join(",")}) — ` +
+  `✅ 토허제 40곳 전용 ${TYPE}㎡ ${KIND_KO} (${winLo}~${winHi}㎡ · ${MONTHS.join(",")}) — ` +
     `서울 ${seoul.eok.toFixed(2)}억 · 경기 ${gg.eok.toFixed(2)}억 · 실거래 ${totalN.toLocaleString()}건`,
 );
 console.log(
