@@ -5,22 +5,38 @@
     "dealYmd": "202606",
     "source": "국토교통부 아파트 전월세 실거래가 (getRTMSDataSvcAptRent)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-08-03",
+    "collectedAt": "2026-09-01",
     "verified": true,
-    "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존)."
+    "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존). agg.price 는 전세 계약의 금액·면적 집계이며 **전용면적 기준**이다 — 실거래에는 공급면적이 없다(공급 평당가로 읽으면 30%쯤 부풀려진다)."
   },
   "agg": {
-    "total": 1093,
-    "jeonse": 508,
-    "wolse": 585,
-    "wolseRatio": 53.5,
-    "newTotal": 578,
-    "newJeonse": 293,
-    "newWolse": 285,
-    "newWolseRatio": 49.3,
-    "renewTotal": 500,
-    "renewJeonse": 202,
-    "renewWolse": 298,
-    "typedTotal": 1078
+    "total": 1136,
+    "jeonse": 535,
+    "wolse": 601,
+    "wolseRatio": 52.9,
+    "newTotal": 609,
+    "newJeonse": 312,
+    "newWolse": 297,
+    "newWolseRatio": 48.8,
+    "renewTotal": 511,
+    "renewJeonse": 210,
+    "renewWolse": 301,
+    "typedTotal": 1120,
+    "price": {
+      "unit": "만원 · 전용면적(㎡) 기준",
+      "n": 535,
+      "depositSum": 23103317,
+      "areaSum": 43006.3,
+      "avgDeposit": 43183.77,
+      "avgArea": 80.39,
+      "perM2": 537.21,
+      "perPyeong": 1775.89,
+      "perPyeongSimple": 1789.78,
+      "kp84": {
+        "n": 223,
+        "avgDeposit": 44614.39,
+        "avgArea": 84.72
+      }
+    }
   }
 }

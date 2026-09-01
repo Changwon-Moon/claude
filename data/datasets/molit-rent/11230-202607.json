@@ -5,22 +5,38 @@
     "dealYmd": "202607",
     "source": "국토교통부 아파트 전월세 실거래가 (getRTMSDataSvcAptRent)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-08-31",
+    "collectedAt": "2026-09-01",
     "verified": true,
-    "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존)."
+    "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존). agg.price 는 전세 계약의 금액·면적 집계이며 **전용면적 기준**이다 — 실거래에는 공급면적이 없다(공급 평당가로 읽으면 30%쯤 부풀려진다)."
   },
   "agg": {
-    "total": 736,
+    "total": 741,
     "jeonse": 328,
-    "wolse": 408,
-    "wolseRatio": 55.4,
-    "newTotal": 482,
+    "wolse": 413,
+    "wolseRatio": 55.7,
+    "newTotal": 487,
     "newJeonse": 169,
-    "newWolse": 313,
-    "newWolseRatio": 64.9,
+    "newWolse": 318,
+    "newWolseRatio": 65.3,
     "renewTotal": 239,
     "renewJeonse": 148,
     "renewWolse": 91,
-    "typedTotal": 721
+    "typedTotal": 726,
+    "price": {
+      "unit": "만원 · 전용면적(㎡) 기준",
+      "n": 328,
+      "depositSum": 17393521,
+      "areaSum": 21808.99,
+      "avgDeposit": 53029.03,
+      "avgArea": 66.49,
+      "perM2": 797.54,
+      "perPyeong": 2636.49,
+      "perPyeongSimple": 2720.03,
+      "kp84": {
+        "n": 92,
+        "avgDeposit": 64269.71,
+        "avgArea": 84.88
+      }
+    }
   }
 }
