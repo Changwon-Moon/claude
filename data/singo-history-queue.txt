@@ -127,3 +127,24 @@ lawd=41192 umd=중동 type=59 apt="보람마을(아주)"
 # ↓ 곡선이 이미 있으나 옛 판이라 신고가 판정과 어긋난다 → force=1 (인수인계 08-31 §3③)
 lawd=11530 umd=구로동 type=84 apt="신도림태영타운" force=1
 lawd=41595 umd=반월동 type=59 apt="신동탄포레자이" force=1
+
+# 2026-09-02 신고가 19건 일괄 (「청구」는 명부 오매칭으로 제외 — 아래 세션 기록 참고)
+lawd=11200 umd=하왕십리동 type=84 apt="텐즈힐(1단지)"
+lawd=11200 umd=금호동3가 type=84 apt="두산"
+lawd=41131 umd=창곡동 type=84 apt="위례더힐55"
+lawd=11500 umd=마곡동 type=59 apt="마곡엠밸리9단지"
+lawd=41131 umd=신흥동 type=59 apt="산성역자이푸르지오1단지"
+lawd=41360 umd=다산동 type=84 apt="다산롯데캐슬" force=1
+lawd=41210 umd=하안동 type=84 apt="주공12"
+lawd=41210 umd=하안동 type=59 apt="이편한세상센트레빌"
+lawd=41117 umd=망포동 type=59 apt="영통아이파크캐슬1단지"
+lawd=11230 umd=휘경동 type=84 apt="휘경리오포레아파트(1단지)"
+lawd=41111 umd=정자동 type=84 apt="북수원자이렉스비아"
+lawd=41463 umd=구갈동 type=84 apt="기흥역센트럴푸르지오"
+lawd=41465 umd=풍덕천동 type=59 apt="현대"
+lawd=41597 umd=청계동 type=59 apt="동탄역센트럴푸르지오"
+lawd=41173 umd=비산동 type=84 apt="관악"
+lawd=41210 umd=철산동 type=59 apt="도덕파크타운1단지"
+lawd=41465 umd=상현동 type=84 apt="만현마을9단지엘지자이"
+lawd=41461 umd=고림동 type=84 apt="힐스테이트용인고진역2단지"
+lawd=41390 umd=은행동 type=59 apt="네이처포레"
