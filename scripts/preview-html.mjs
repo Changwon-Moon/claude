@@ -240,9 +240,20 @@ const page = `<!doctype html>
 ${css}
 </style>
 <style>
-  /* ── 미리보기 껍데기. 카드 안쪽 CSS 와 겹치지 않게 pv- 접두사만 쓴다. */
-  html,body{margin:0;background:#20242e;color:#e7ebf2;
+  /* ── 미리보기 껍데기. 카드 안쪽 CSS 와 겹치지 않게 pv- 접두사만 쓴다.
+   *
+   * ⚠️ 껍데기 글꼴을 body 에 걸지 않는다 (2026-09-01 오너 지적: "PNG는 멀쩡한데 HTML은
+   * 왜 여백 레이아웃이 깨지지?"). font:14px/1.6 … 한 줄이 **카드 안까지 상속**됐다.
+   * 실제 렌더의 body 에는 base.css 뿐이라 글자 16px · line-height normal(≈1.2) 인데,
+   * 미리보기에선 14px · 22.4px 이 되어 줄높이가 카드 전체에 퍼졌다. 카드가 1350px 틀 안에서
+   * **1519px** 로 자라 40위 줄과 출처 푸터가 잘렸다 — 색도 같은 경로로 새고 있었다(#e7ebf2).
+   * PNG 는 멀쩡한데 미리보기만 깨져 보이는, 이 파일 머리말이 경고한 바로 그 함정이다.
+   * → ① 껍데기 글꼴·색은 껍데기 요소에만 걸고, ② 카드 안쪽은 렌더 기본값으로 되돌린다. */
+  html,body{margin:0;background:#20242e;}
+  .pv-head,.pv-cap{color:#e7ebf2;
     font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Pretendard,sans-serif;}
+  /* 카드 안쪽 = 렌더러 뷰포트와 같은 상속값. 껍데기가 뭘 걸든 여기서 끊는다. */
+  .pv-scale{font-size:16px;line-height:normal;color:var(--wirit-ink);font-family:var(--font-sans);}
   .pv-head{padding:20px 24px 8px;}
   .pv-head h1{margin:0 0 4px;font-size:18px;font-weight:700;}
   .pv-head p{margin:0;opacity:.65;font-size:13px;}
@@ -279,4 +290,35 @@ writeFileSync(out, page);
 console.log(`✅ 미리보기 ${cards.length}장 → ${out.replace(ROOT + "/", "")}`);
 console.log(`   폰트 ${inlined}개 · 그림 ${imgInlined}개 인라인 · 파일 ${(Buffer.byteLength(page) / 1024 / 1024).toFixed(1)}MB`);
 if (missing.size) console.warn(`   ⛔ 그림 ${missing.size}종이 빠졌습니다 — 이 미리보기로는 확정하지 마세요`);
+
+/* ── ⑤ 조립한 파일을 **실제로 열어** 카드가 틀 안에 들어갔는지 잰다 (2026-09-01 신설)
+ *
+ * 왜 여기냐: 카드 하나하나는 ② 에서 렌더러와 같은 조건으로 띄웠으니 멀쩡했다. 깨진 것은
+ * **합친 뒤**였다 — 껍데기 CSS 가 카드 안까지 상속돼 줄높이가 퍼졌다. 그러니 재는 자리도
+ * 합친 뒤여야 한다. 카드 한 장씩 재면 영원히 초록불이 뜬다.
+ * 넘치면 ⛔ 를 찍고 **종료코드 1** 로 나간다(출력 문자열로 판정하지 않는다). */
+const verifyBrowser = await getBrowser();
+const vctx = await verifyBrowser.newContext({ viewport: { width: 1440, height: 1200 } });
+const vpage = await vctx.newPage();
+await vpage.goto(pathToFileURL(out).href, { waitUntil: "networkidle" });
+await vpage.evaluate(() => document.fonts?.ready);
+const overflow = await vpage.evaluate(() =>
+  [...document.querySelectorAll(".pv-scale")]
+    .map((el, i) => ({ i, want: el.offsetHeight, got: el.scrollHeight }))
+    .filter((r) => r.got > r.want + 1),
+);
+await vctx.close();
+await closeBrowser();
+
+if (overflow.length) {
+  console.error(
+    `\n⛔ 미리보기가 실물과 다릅니다 — 카드 ${overflow.length}장이 틀 밖으로 넘쳤습니다.\n` +
+      overflow.map((o) => `   · ${cards[o.i]?.name ?? o.i + 1} — ${o.want}px 틀에 ${o.got}px`).join("\n") +
+      `\n   껍데기 CSS(글꼴·줄높이·색)가 카드 안으로 샜을 때 이렇게 됩니다.\n` +
+      `   이 미리보기로 확정하지 마세요 — 실물 PNG 는 멀쩡할 수 있습니다.`,
+  );
+  process.exit(1);
+}
+console.log(`   ✓ ${cards.length}장 모두 틀 안에 들어갑니다(넘침 0)`);
+
 console.log(`\n⚠️ 이것은 눈으로 먼저 보는 자리입니다. 검수는 node scripts/produce-card.mjs <세트라벨> 가 합니다.`);
