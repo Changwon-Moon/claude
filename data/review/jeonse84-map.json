@@ -1,7 +1,7 @@
 {
   "label": "jeonse84-map",
   "verdict": "revise",
-  "summary": "REVISE — error 0 · warn 1 · 카드 1장 · 코드 검수만",
+  "summary": "REVISE — error 0 · warn 2 · 카드 1장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
@@ -13,7 +13,13 @@
           "reviewer": "design-qa",
           "level": "warn",
           "code": "titlegap",
-          "msg": "제목과 바로 아래 요소의 간격이 20px 입니다 (제목 57px) — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다"
+          "msg": "제목과 바로 아래 요소의 간격이 15px 입니다 (제목 57px) — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다"
+        },
+        {
+          "reviewer": "design-qa",
+          "level": "warn",
+          "code": "badgeclear",
+          "msg": "제목이 우상단 로고 뱃지 아래 11px 로 붙어 있습니다 — 세로 30px 이상 띄우세요(제목 블록 위 여백↑ 또는 제목 축소). CARD_CHECKLIST §2"
         }
       ]
     }

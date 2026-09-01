@@ -152,17 +152,40 @@ const mapSvg = tohuhMapSvg({
   minValue: Math.min(...AREAS.map((a) => eokOf(a.geoName))),
 });
 
-/* ── 표 ── 상위 8곳. 40곳 전체는 캡션에 있다(월세 카드와 같은 규칙). */
+/* ── 표 ── **1~17위 + ··· + 38~40위** (오너 2026-09-01: *"위에서 열 몇 개 + … + 하위 3개"*)
+ *
+ * 이 판형의 40곳 카드는 원래 이 모양이었다 — `build-jeonwolse-map.mjs`(월세 비중 지도)가
+ * 같은 20행 구조를 쓴다. 처음에 상위 8곳만 실었던 것은 **월세 상승분 카드**(`tohuh-rent-map`)를
+ * 따라간 것인데, 그 카드는 제목을 키운 대가로 표를 줄인 별개 판단이었다(2026-07-30).
+ * 40곳 지도의 기본은 20행이고, 지도에서 우리 동네를 찾은 사람이 **순위까지 같이 보는 것**이
+ * 이 카드의 값이다.
+ *
+ * ⚠️ 꼬리 행은 템플릿이 `ratio`(보조값)를 렌더하지 않는다. 17행에만 건수를 달면 꼬리 3행과
+ * 모양이 갈리고, 20행 전부에 달면 두 줄짜리 행이 20개라 표가 넘친다.
+ * → **표에서 건수를 빼고** 얇은 표본은 하단 주석과 캡션이 말한다(아래 footnote 의 minN).
+ */
 const ranked = [...AREAS].sort((a, b) => eokOf(b.geoName) - eokOf(a.geoName));
 const MEDALS = ["🥇", "🥈", "🥉"];
-const rows = ranked.slice(0, 8).map((a, i) => ({
+const HEAD_N = 17;
+const TAIL_N = 3;
+if (AREAS.length <= HEAD_N + TAIL_N) throw new Error("지역이 20곳 이하면 꼬리를 만들 이유가 없다 — 전부 싣는다");
+const rows = ranked.slice(0, HEAD_N).map((a, i) => ({
   rank: i + 1,
   medal: MEDALS[i] || "",
   top: i < 3,
   gu: a.label + (a.isNew ? " ⚡" : ""),
   hits: eokOf(a.geoName).toFixed(1),
-  ratio: `${band.get(a.geoName).n.toLocaleString()}건`,
 }));
+/* 하위 3곳 — 순위 번호는 **전체 곳수에서 센다**(38·39·40). 손으로 적지 않는다. */
+const bottom = ranked.slice(-TAIL_N);
+const tail = {
+  rows: bottom.map((a, i) => ({
+    rank: AREAS.length - TAIL_N + 1 + i,
+    gu: a.label + (a.isNew ? " ⚡" : ""),
+    hits: eokOf(a.geoName).toFixed(1),
+  })),
+  /* 브래킷 주석은 넣지 않는다 — 표 오른쪽이 지도라 겹친다(월세 비중 카드도 같은 이유로 뺐다) */
+};
 
 /* 권역 평균 — 건수 가중. 제목이 쓰는 값이라 반드시 계산으로 낸다. */
 const avgOf = (reg) => {
@@ -174,6 +197,9 @@ const avgOf = (reg) => {
 const seoul = avgOf("서울");
 const gg = avgOf("경기");
 const totalN = seoul.n + gg.n;
+/** 표에서 건수를 뺀 대신, 표본이 가장 얇은 곳을 하단 주석이 밝힌다 */
+const minSample = AREAS.map((a) => ({ label: a.label, n: band.get(a.geoName).n }))
+  .sort((x, y) => x.n - y.n)[0];
 const top1 = ranked[0];
 const last = ranked.at(-1);
 const gap = eokOf(top1.geoName) / eokOf(last.geoName);
@@ -182,7 +208,10 @@ const card = {
   template: "singoga-map@1",
   date,
   compact: true,
-  spread: true,
+  /* 20행짜리 표에는 `spread`(행 간격 펴기)를 쓰지 않는다 — 행이 적은 카드용이라 넘친다.
+   * 대신 `centerBody` 를 켠다: 판형이 행 높이를 줄이고 본문을 세로 가운데로 맞춘다
+   * (`.sm-cb.sm-c .sm-row` — 월세 비중 지도가 같은 17+3 행에서 쓰는 조합이다). */
+  centerBody: true,
   /* 빨강은 상승·과열 전용이다(docs/BRAND.md). 이 카드는 오른 것이 아니라 **지금 얼마인지**를
    * 말하므로 강조를 코발트로 옮긴다 — 지도 그라데이션과도 같은 축이 된다. */
   accent: "cobalt",
@@ -198,12 +227,21 @@ const card = {
   title: `수도권 전용 ${TYPE}㎡ 전세, 서울 평균 <span class="hi">${seoul.eok.toFixed(1)}억</span>`,
   fitTitle: true,
   unit: "억",
-  subUnit: "실거래",
-  head: { c: ["순위", "지역", `전용 ${TYPE}㎡ 전세`] },
+  /* 머리글은 **2열**(지역 / 값)이다. 3열(`head.c`)로 두면 판형이 `sm-h3` 를 켜 값 칸을
+   * **176px 로 못박고**, 남은 폭에 「성남시 분당구」·「용인시 기흥구」가 두 줄로 접혀
+   * 20행 표가 카드 밖으로 236px 넘쳤다(2026-09-01 실측). 월세 비중 지도가 2열인 이유가 이것이다.
+   * 3열은 8행짜리 카드(월세 상승분)에서만 성립한다. */
+  head: { l: "지역", r: `전용 ${TYPE}㎡ 전세` },
   asOfNote: `2026년 6~7월 실거래 기준`,
   mapSvg,
   rows,
-  footnote: `전용 ${winLo}~${winHi}㎡ 전세 실거래 ${totalN.toLocaleString()}건 평균 · 경기 15곳 평균 ${gg.eok.toFixed(1)}억 · 공급면적(평) 기준이 아님`,
+  tail,
+  /* 표에서 건수를 뺐으므로 **표본의 얇은 쪽**을 여기서 말한다. 가장 적은 곳을 밝히면
+   * 나머지는 그보다 두껍다는 뜻이 되어, 40줄을 적지 않고도 독자가 평균의 무게를 잰다. */
+  /* ⚠️ 캡션이 말하는 억 단위 값은 **카드에도 있어야 한다**(caption-number 게이트).
+   * 경기 평균을 여기서 뺐더니 캡션의 「경기 평균 4.2억」이 카드에 없는 숫자로 잡혀 막혔다
+   * (84 카드는 4.2억이 우연히 지도에 있어 안 걸렸다 — 우연에 기대지 않는다). */
+  footnote: `전용 ${winLo}~${winHi}㎡ 전세 ${totalN.toLocaleString()}건 평균 · 경기 15곳 ${gg.eok.toFixed(1)}억 · 최소 표본 ${minSample.n}건 · 공급면적(평) 기준 아님`,
   source: { name: "국토교통부 아파트 전월세 실거래가 · 서울시·경기도 허가구역 고시" },
 };
 
