@@ -42,8 +42,11 @@ if (TYPE !== "84" && TYPE !== "59") throw new Error(`--type 은 84 또는 59 다
 const KEY = TYPE === "84" ? "kp84" : "kp59";
 const date = arg("date") ?? new Date().toISOString().slice(0, 10);
 
-/** 집계에 넣을 달. 실거래는 신고기한이 30일이라 한 달만 쓰면 표본이 얇은 구가 생긴다. */
-const MONTHS = ["202606", "202607"];
+/** 집계에 넣을 달. `--months 202606` 처럼 넘긴다.
+ * ⚠️ 실거래는 신고기한이 30일이라 **한 달만 쓰면 표본이 얇은 구가 생긴다.**
+ * 실측(2026-09-01): 종로구 전용 59㎡ 는 06월 9건 7.41억 / 07월 11건 5.63억 — 한 달 차이로
+ * 1.8억이 움직인다. 두 달을 합치면 20건 6.43억이다. 아래 표본 하한이 그래서 있다. */
+const MONTHS = (arg("months") || "202606,202607").split(",").map((s) => s.trim());
 
 /* ── 지역 명단 ── 토허제 지정 현황의 원천은 이 데이터셋 하나다 */
 const tohuh = JSON.parse(readFileSync(join(ROOT, "data/datasets/tohuh-2026.json"), "utf8"));
@@ -171,7 +174,7 @@ const ranked = [...AREAS].sort((a, b) => eokOf(b.geoName) - eokOf(a.geoName));
 const MEDALS = ["🥇", "🥈", "🥉"];
 /* 제목이 커진 만큼 표가 짧아져야 한다(오너 2026-09-01). 값은 렌더 실측으로 맞춘다 —
  * 넘치면 QA 가 잡고, 너무 적으면 표 아래가 빈다. */
-const HEAD_N = Number(process.env.WIRIT_HEAD_N || 14);
+const HEAD_N = Number(process.env.WIRIT_HEAD_N || 16);
 const TAIL_N = 3;
 if (AREAS.length <= HEAD_N + TAIL_N) throw new Error("지역이 20곳 이하면 꼬리를 만들 이유가 없다 — 전부 싣는다");
 const rows = ranked.slice(0, HEAD_N).map((a, i) => ({
@@ -199,6 +202,13 @@ const avgOf = (reg) => {
   const d = list.reduce((s, a) => s + band.get(a.geoName).eok * band.get(a.geoName).n, 0);
   return { eok: d / n, n };
 };
+/** "2026.06월" / "2026.06~07월" — MONTHS 에서 만든다 */
+const monthsLabel = (() => {
+  const ms = [...MONTHS].sort();
+  const mm = (x) => x.slice(4, 6);
+  return ms.length === 1 ? `${ms[0].slice(0, 4)}.${mm(ms[0])}월`
+    : `${ms[0].slice(0, 4)}.${mm(ms[0])}~${mm(ms.at(-1))}월`;
+})();
 const seoul = avgOf("서울");
 const gg = avgOf("경기");
 const totalN = seoul.n + gg.n;
@@ -207,7 +217,7 @@ const minSample = AREAS.map((a) => ({ label: a.label, n: band.get(a.geoName).n }
   .sort((x, y) => x.n - y.n)[0];
 /** 평형 통칭 — 전용 84㎡ = 공급 34평(국평), 전용 59㎡ = 공급 25평. **같은 집을 가리키는 다른 이름**이라
  * 통칭을 써도 오보가 아니다. 오보였던 것은 「전용 평당가에 34(공급평)를 곱하는 것」이지 호칭이 아니었다. */
-const PYEONG_NAME = TYPE === "84" ? "국평" : "25평";
+const PYEONG_NAME = TYPE === "84" ? "34평" : "25평";
 const top1 = ranked[0];
 const last = ranked.at(-1);
 const gap = eokOf(top1.geoName) / eokOf(last.geoName);
@@ -228,7 +238,8 @@ const card = {
    * 말한다는 이유였다. 오너가 이 카드에서는 빨강으로 정했고, 그러면 지도 그라데이션도
    * 같이 빨강이어야 한다 — 한쪽만 바꾸면 카드 안에 색이 둘 남는다.
    * (판형의 `accent: "cobalt"` 변형은 그대로 남아 있다. 지금은 아무 카드도 쓰지 않는다.) */
-  note: `2026.06~07월 실거래 · 수도권 토지거래허가구역 40곳`,
+  /* 기간은 **집계한 달에서 만든다** — 손으로 적으면 달을 바꿀 때 카드가 거짓말을 한다 */
+  note: `${monthsLabel} 실거래 · 수도권 토지거래허가구역 40곳`,
   /* 숫자를 손으로 적지 않는다 — 수집이 갱신되면 제목도 따라 바뀐다.
    * '국평'·'25평' 같은 통칭 대신 **전용 ○○㎡** 로 쓴다. 통칭은 공급면적 기준이라
    * 이 카드의 수치(전용)와 기준이 어긋난다(2026-09-01).
@@ -240,7 +251,7 @@ const card = {
    * 표·지도는 수도권 40곳이라 범위 검사가 막는 자리인데, 오너가 알고 고른 것이므로
    * 관제탑(sets.json)의 `scopeAck` 에 경기 15곳 명단과 이유를 적어 통과시킨다.
    * 명단에 없는 지역이 새로 끼면 그대로 막힌다 — 07-27 의 캐시 오염 사고는 여전히 잡힌다. */
-  title: `서울 ${PYEONG_NAME} 평균 전세가 <span class="hi">${Math.floor(seoul.eok)}억 시대</span>`,
+  title: `서울 <span class="hi-b">${PYEONG_NAME}</span> 평균 전세 ${seoul.eok.toFixed(1)}억`,
   fitTitle: true,
   unit: "억",
   /* 머리글은 **2열**(지역 / 값)이다. 3열(`head.c`)로 두면 판형이 `sm-h3` 를 켜 값 칸을
@@ -256,9 +267,6 @@ const card = {
   /* ⚠️ 캡션이 말하는 억 단위 값은 **카드에도 있어야 한다**(caption-number 게이트).
    * 경기 평균을 여기서 뺐더니 캡션의 「경기 평균 4.2억」이 카드에 없는 숫자로 잡혀 막혔다
    * (84 카드는 4.2억이 우연히 지도에 있어 안 걸렸다 — 우연에 기대지 않는다). */
-  /* ⚠️ 한 줄을 넘기면 낱말이 끊긴다("공/급면적"). 항목을 줄이는 쪽으로 맞춘다.
-   * 「공급면적 기준 아님」은 맨 앞의 **전용 ○○~○○㎡** 가 대신한다 — 같은 말을 두 번 하지 않는다. */
-  footnote: `전세 실거래 ${totalN.toLocaleString()}건 평균 · 전용 ${winLo}~${winHi}㎡ · 서울 ${seoul.eok.toFixed(1)}억 · 경기 ${gg.eok.toFixed(1)}억 · 최소 표본 ${minSample.n}건`,
   source: { name: "국토교통부 아파트 전월세 실거래가 · 서울시·경기도 허가구역 고시" },
 };
 
@@ -281,8 +289,11 @@ const caption = [
   `전용 ${winLo}~${winHi}㎡ 만 골라 평균했습니다.`,
   `(2026년 6~7월 신고분 ${totalN.toLocaleString()}건)`,
   ``,
+  /* ⚠️ 캡션의 억 단위 값은 **카드에도 있어야 한다**(caption-number 게이트).
+   * 서울 평균은 제목에 있으니 괜찮지만, 하단 주석을 뺀 뒤로 **경기 평균은 카드 어디에도 없다**
+   * — 그래서 평균 대신 카드에 찍혀 있는 경기 최고·최저로 말한다(2026-09-01). */
   `· 서울 평균 : ${seoul.eok.toFixed(1)}억 (${seoul.n.toLocaleString()}건)`,
-  `· 경기 평균 : ${gg.eok.toFixed(1)}억 (${gg.n.toLocaleString()}건)`,
+  `· 경기 15곳 : ${eokTxt(eokOf(ggRanked.at(-1).geoName))} ~ ${eokTxt(eokOf(ggRanked[0].geoName))} (${gg.n.toLocaleString()}건)`,
   `· 최고 : ${nm(top1)} ${line(top1)}`,
   `· 최저 : ${nm(last)} ${line(last)}`,
   `· 경기 최고 : ${nm(ggRanked[0])} ${line(ggRanked[0])}`,
