@@ -4,92 +4,133 @@
     <meta charset="utf-8" />
     <!--WIRIT_SHARED_CSS-->
     <style>
-      /* hakgun-map@1 — 좌: 학군지 19곳 급지·34평 중위가 표 / 우: 수도권 시군구 지도(토허제 면 + 번호 핀). 종이 톤. */
-      .hg { padding-top: 72px; }
-      .hg .wirit-title { font-size: 58px; line-height: 1.06; letter-spacing: -0.03em; margin: 2px 0 0; }
-      .hg .wirit-title .hi { color: var(--wirit-cobalt); }
-      .hg-sub { margin-top: 28px; font-size: 22px; font-weight: 800; color: var(--wirit-gray); letter-spacing: -0.015em; }
+      /* hakgun-map@1 — 제목 1행(가운데) / 좌: 급지별 3개 표 / 우: 수도권 시군구 지도.
+         leaders 가 있으면 표 행과 지도 핀을 잇는 꺾은 선을 덧그린다(두 판본).
+         ⚠️ 치수는 빌더의 LAYOUT 하나가 정본이다. 여기선 CSS 변수로 받아 쓰기만 한다. */
+      /* 로고(우상단 y40~94)를 피해 제목을 내린다 — 72 면 제목이 로고에 걸린다. */
+      .hg { padding-top: 112px; }
 
-      .hg-body { flex: 1; min-height: 0; display: flex; gap: 16px; margin: 12px 0 0; }
-
-      /* ── 좌: 19줄 표 ── */
-      .hg-tbl { flex: 0 0 448px; display: flex; flex-direction: column; min-height: 0; }
-      .hg-hrow {
-        display: grid; grid-template-columns: 34px 1fr 62px 108px; align-items: center; gap: 8px;
-        padding: 0 4px 7px; font-size: 18px; font-weight: 800; color: var(--wirit-gray);
+      .hg-title {
+        margin: 0; text-align: center; white-space: nowrap;
+        font-size: 76px; font-weight: 900; line-height: 1.08;
+        letter-spacing: -0.035em; color: var(--wirit-ink);
       }
-      .hg-hrow span:nth-child(3) { text-align: center; }
-      .hg-hrow span:last-child { text-align: right; }
+      .hg-sub {
+        margin-top: 26px; text-align: center;
+        font-size: 21px; font-weight: 800; color: var(--wirit-gray); letter-spacing: -0.015em;
+      }
+
+      .hg-body { position: relative; margin: 14px 0 0; width: 100%; height: var(--bodyH); }
+
+      /* ── 좌: 급지별 3개 표 ── */
+      .hg-tbl { position: absolute; left: 0; top: 0; width: var(--tableW); }
+      .hg-grp + .hg-grp { margin-top: var(--grpGap); }
+      .hg-hdr {
+        height: var(--hdrH); display: flex; align-items: center; gap: 9px;
+        border-bottom: 2.5px solid var(--wirit-ink);
+      }
+      .hg-hdr em { width: 15px; height: 15px; border-radius: 999px; display: inline-block; }
+      .hg-hdr .lb { font-size: 24px; font-weight: 900; letter-spacing: -0.02em; color: var(--wirit-ink); }
+      .hg-hdr .ct { margin-left: auto; font-size: 17px; font-weight: 700; color: var(--wirit-gray); }
+      .hg-grp.g1 .hg-hdr em { background: #141821; }
+      .hg-grp.g2 .hg-hdr em { background: #2e6bff; }
+      .hg-grp.g3 .hg-hdr em { background: #8f9bad; }
+
       .hg-row {
-        display: grid; grid-template-columns: 34px 1fr 62px 108px; align-items: center; gap: 8px;
-        flex: 1 1 0; min-height: 0; padding: 0 4px; border-top: 1.5px solid var(--wirit-ink-06);
+        height: var(--rowH);
+        display: grid; grid-template-columns: 28px 1fr auto; align-items: center; column-gap: 7px;
+        border-bottom: 1.5px solid var(--wirit-ink-06);
       }
       .hg-n { font-family: var(--font-num); font-size: 20px; font-weight: 900; color: var(--wirit-gray); }
-      .hg-nm { font-size: 25px; font-weight: 900; letter-spacing: -0.025em; color: var(--wirit-ink); white-space: nowrap; }
-      .hg-nm i { font-style: normal; font-size: 17px; font-weight: 800; color: #c8102e; margin-left: 6px; vertical-align: 2px; }
-      .hg-g { justify-self: center; font-size: 17px; font-weight: 900; color: #fff; border-radius: 999px; padding: 3px 9px; letter-spacing: -0.02em; }
-      .hg-g.g1 { background: #141821; }
-      .hg-g.g2 { background: #2e6bff; }
-      .hg-g.g3 { background: #8f9bad; }
+      .hg-nm { font-size: 26px; font-weight: 900; letter-spacing: -0.03em; color: var(--wirit-ink); white-space: nowrap; }
+      .hg-nm i {
+        font-style: normal; font-size: 15px; font-weight: 800; letter-spacing: -0.01em;
+        color: #7a8698; background: rgba(20, 24, 33, 0.07); border-radius: 6px;
+        padding: 2px 7px; margin-left: 7px; vertical-align: 3px;
+      }
       .hg-p { text-align: right; white-space: nowrap; font-family: var(--font-num); font-size: 27px; font-weight: 900; color: var(--wirit-ink); }
       .hg-p i { font-style: normal; font-size: 18px; font-weight: 800; margin-left: 1px; color: var(--wirit-gray); }
 
-      /* ── 우: 지도 + 범례 + 결론 ── */
-      .hg-right { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-      .hg-map { flex: 1; min-height: 0; display: flex; align-items: center; }
-      .hg-map svg { width: 100%; height: auto; max-height: 100%; display: block; }
+      /* ── 우: 지도 ── */
+      .hg-map { position: absolute; left: var(--mapX); top: var(--mapY); width: var(--mapW); }
+      .hg-map svg { width: 100%; height: auto; display: block; }
 
-      .hg-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; justify-content: center; margin-top: 4px;
-        font-size: 18px; font-weight: 700; color: var(--wirit-gray); }
+      /* ── 연결선(있는 판본만) ── */
+      .hg-lead { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+      .hg-lead path { fill: none; stroke-width: 0.9; opacity: 0.32; }
+      .hg-lead circle.tip { stroke: none; }
+      .hg-lead .g1 { stroke: #141821; fill: #141821; }
+      .hg-lead .g2 { stroke: #2e6bff; fill: #2e6bff; }
+      .hg-lead .g3 { stroke: #8f9bad; fill: #8f9bad; }
+      /* 핀을 선 위에 다시 그린다 — 좌표가 지도 안의 핀과 같아 겹쳐도 어긋나지 않는다. */
+      .hg-lead circle.pin { stroke: #fff; }
+      .hg-lead text.pin { font-weight: 900; fill: #fff; text-anchor: middle; }
+
+      .hg-legend {
+        position: absolute; left: var(--mapX); width: var(--mapW); bottom: 0;
+        display: flex; flex-wrap: wrap; gap: 5px 13px; justify-content: center;
+        font-size: 17px; font-weight: 700; color: var(--wirit-gray);
+      }
       .hg-legend span { display: inline-flex; align-items: center; gap: 5px; }
-      .hg-legend b { width: 17px; height: 12px; border-radius: 3px; display: inline-block; }
-      .hg-legend em { width: 15px; height: 15px; border-radius: 999px; display: inline-block; }
+      .hg-legend b { width: 16px; height: 11px; border-radius: 3px; display: inline-block; }
+      .hg-legend em { width: 14px; height: 14px; border-radius: 999px; display: inline-block; }
       .hg-legend .hit b { background: #f6c9cd; }
       .hg-legend .off b { background: #e7e9ee; }
       .hg-legend .l1 em { background: #141821; }
       .hg-legend .l2 em { background: #2e6bff; }
       .hg-legend .l3 em { background: #8f9bad; }
 
-      .hg-ins { margin-top: 12px; background: var(--wirit-ink); color: #fff; border-radius: 18px; padding: 17px 19px; }
-      .hg-ins .t { font-size: 20px; font-weight: 800; color: #9aa7b6; letter-spacing: -0.01em; }
-      .hg-ins .b { margin-top: 7px; font-size: 25px; font-weight: 800; line-height: 1.34; letter-spacing: -0.02em; }
-      .hg-ins .b b { color: #ff9aa0; font-weight: 900; }
+      .hg-caveat { margin-top: 10px; font-size: 17px; font-weight: 600; color: var(--wirit-gray); line-height: 1.36; }
 
-      .hg-caveat { margin-top: 9px; font-size: 17px; font-weight: 600; color: var(--wirit-gray); line-height: 1.36; }
+      /* 푸터는 공용 규격의 상자 크기를 유지하고, 글자만 줄여 한 줄에 앉힌다(오너 2026-09-01). */
+      .hg .wirit-footer { font-size: 19px; letter-spacing: -0.015em; }
     </style>
   </head>
   <body>
     <div class="wirit-card hg">
-      <div class="wirit-topcap">{{#if note}}<span>{{note}}</span>{{/if}}</div>
-      <h1 class="wirit-title">{{{title}}}</h1>
+      <h1 class="hg-title">{{title}}</h1>
       <div class="hg-sub">{{subtitle}}</div>
 
-      <div class="hg-body">
+      <div
+        class="hg-body"
+        style="--bodyH:{{layout.bodyH}}px;--tableW:{{layout.tableW}}px;--rowH:{{layout.rowH}}px;--hdrH:{{layout.hdrH}}px;--grpGap:{{layout.grpGap}}px;--mapX:{{layout.mapX}}px;--mapY:{{layout.mapY}}px;--mapW:{{layout.mapW}}px"
+      >
+        <div class="hg-map">{{{mapSvg}}}</div>
+
         <div class="hg-tbl">
-          <div class="hg-hrow"><span></span><span>학군지</span><span>급지</span><span>34평 중위</span></div>
-          {{#each rows}}
-          <div class="hg-row">
-            <span class="hg-n">{{this.n}}</span>
-            <span class="hg-nm">{{this.name}}{{#unless this.tohuh}}<i>허가구역 밖</i>{{/unless}}</span>
-            <span class="hg-g g{{this.grade}}">{{this.grade}}급</span>
-            <span class="hg-p">{{this.price}}<i>억</i></span>
+          {{#each groups}}
+          <div class="hg-grp g{{this.grade}}">
+            <div class="hg-hdr"><em></em><span class="lb">{{this.label}}</span><span class="ct">{{this.rows.length}}곳</span></div>
+            {{#each this.rows}}
+            <div class="hg-row">
+              <span class="hg-n">{{this.n}}</span>
+              <span class="hg-nm">{{this.name}}{{#unless this.tohuh}}<i>비규제</i>{{/unless}}</span>
+              <span class="hg-p">{{this.price}}<i>억</i></span>
+            </div>
+            {{/each}}
           </div>
           {{/each}}
         </div>
 
-        <div class="hg-right">
-          <div class="hg-map">{{{mapSvg}}}</div>
-          <div class="hg-legend">
-            <span class="hit"><b></b>{{legend.hit}}</span>
-            <span class="off"><b></b>{{legend.off}}</span>
-            <span class="l1"><em></em>{{legend.g1}}</span>
-            <span class="l2"><em></em>{{legend.g2}}</span>
-            <span class="l3"><em></em>{{legend.g3}}</span>
-          </div>
-          <div class="hg-ins">
-            <div class="t">지도가 말하는 것</div>
-            <div class="b">{{{insight}}}</div>
-          </div>
+        {{#if leaders}}
+        <svg class="hg-lead" viewBox="0 0 {{layout.bodyW}} {{layout.bodyH}}" preserveAspectRatio="none">
+          {{#each leaders}}
+          <path class="g{{this.grade}}" d="{{this.d}}"/>
+          <circle class="tip g{{this.grade}}" cx="{{this.dotX}}" cy="{{this.dotY}}" r="3"/>
+          {{/each}}
+          {{#each pinsCard}}
+          <circle class="pin g{{this.grade}}" cx="{{this.x}}" cy="{{this.y}}" r="{{../layout.pinR}}" stroke-width="{{../layout.pinStroke}}"/>
+          <text class="pin" x="{{this.x}}" y="{{this.y}}" dy="0.34em" font-size="{{../layout.pinFont}}">{{this.n}}</text>
+          {{/each}}
+        </svg>
+        {{/if}}
+
+        <div class="hg-legend">
+          <span class="hit"><b></b>{{legend.hit}}</span>
+          <span class="off"><b></b>{{legend.off}}</span>
+          <span class="l1"><em></em>{{legend.g1}}</span>
+          <span class="l2"><em></em>{{legend.g2}}</span>
+          <span class="l3"><em></em>{{legend.g3}}</span>
         </div>
       </div>
 

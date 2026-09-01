@@ -119,10 +119,13 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16 }) {
   }
 
   // 핀 — 위에서 잡은 좌표를 화면 좌표로. dx/dy 는 겹칠 때의 미세조정(픽셀).
+  // pinsXY 는 **viewBox 좌표**다. 카드 픽셀로 옮기는 계산은 빌더가 한다(연결선용).
   let marks = "";
+  const pinsXY = [];
   for (const p of placed) {
     const x = px(p.lon) + (p.dx || 0);
     const y = py(p.lat) + (p.dy || 0);
+    pinsXY.push({ key: p.key ?? p.label, n: p.n, x, y });
     marks +=
       `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="22" class="sg-pin g${p.grade}"/>` +
       `<text x="${x.toFixed(1)}" y="${(y + 9).toFixed(1)}" class="sg-num">${p.n}</text>`;
@@ -145,5 +148,5 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16 }) {
     `<g>${marks}</g>` +
     `</svg>`;
 
-  return { svg, resolved };
+  return { svg, resolved, pinsXY, viewBox: { w: VW, h: VH } };
 }

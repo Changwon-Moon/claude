@@ -879,12 +879,23 @@
     },
     {
       "label": "hakgun-map",
-      "title": "🏫 수도권 학군지 19곳, 34평은 얼마인가",
+      "title": "🏫 수도권 학군지 19곳 34평 시세 (연결선 없음)",
       "cards": [
         "hakgun-map"
       ],
       "caption": "hakgun-map",
-      "note": "좌 표(19줄 급지·34평 중위) + 우 수도권 시군구 지도(토허제 면 + 번호 핀). 급지는 『대한민국 학군지도』 인용(verified:false) · 값은 국토부 실거래 2026.01~07 을 빌더가 집계. 인천·지방 제외. 실거래가 갱신되면 다시 그려지는 정기물이라 픽셀 기준값 미등록",
+      "note": "좌 급지별 3개 표(급지 안에서 국평 시세 순·번호는 표마다 1번부터) + 우 수도권 시군구 지도(토허제 면 + 급지색 번호 핀). 급지는 『대한민국 학군지도』 인용(verified:false) · 값은 국토부 실거래를 빌더가 집계. 인천·지방 제외. 연결선 판본은 hakgun-map-lines — 오너가 둘을 비교해 고른다",
+      "state": "시안",
+      "pixelPolicy": "정기물 — 실거래 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "hakgun-map-lines",
+      "title": "🏫 수도권 학군지 19곳 34평 시세 (연결선 있음)",
+      "cards": [
+        "hakgun-map-lines"
+      ],
+      "caption": "hakgun-map-lines",
+      "note": "hakgun-map 과 같은 내용이고, 표의 각 행과 지도 핀을 잇는 꺾은 선만 다르다. 선 좌표는 빌더가 표 행 위치와 핀 위치를 둘 다 계산해 만든다. 둘 중 하나만 발행한다",
       "state": "시안",
       "pixelPolicy": "정기물 — 실거래 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
     },
