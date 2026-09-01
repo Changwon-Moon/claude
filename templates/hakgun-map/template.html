@@ -72,6 +72,28 @@
       .hg-legend .l2 em { background: #141821; }
       .hg-legend .l3 em { background: #8f9bad; }
 
+      /* ── 지방 학군지 블록 — 지도 좌하단 빈 바다 자리(오너 2026-09-01) ── */
+      .hg-jb {
+        position: absolute; left: var(--jbX); top: var(--jbY); width: var(--jbW);
+        background: rgba(250, 249, 246, 0.94); border: 2px solid var(--wirit-ink-12);
+        border-radius: 4px; padding: 9px 11px 10px;
+      }
+      .hg-jb .t {
+        display: flex; align-items: baseline; gap: 7px; padding-bottom: 6px;
+        border-bottom: 2px solid var(--wirit-ink); margin-bottom: 6px;
+      }
+      .hg-jb .t b { font-size: 19px; font-weight: 900; letter-spacing: -0.02em; color: var(--wirit-ink); }
+      .hg-jb .t i { font-style: normal; margin-left: auto; font-size: 14px; font-weight: 700; color: var(--wirit-gray); }
+      .hg-jb .g { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; row-gap: 2px; }
+      .hg-jb .r { display: grid; grid-template-columns: 9px 1fr auto; align-items: center; column-gap: 5px; }
+      .hg-jb .r em { width: 9px; height: 9px; border-radius: 999px; display: inline-block; }
+      .hg-jb .r.g1 em { background: #c8102e; }
+      .hg-jb .r.g2 em { background: #141821; }
+      .hg-jb .r.g3 em { background: #8f9bad; }
+      .hg-jb .r .n { font-size: 17px; font-weight: 800; letter-spacing: -0.03em; color: var(--wirit-ink); white-space: nowrap; }
+      .hg-jb .r .v { font-family: var(--font-num); font-size: 17px; font-weight: 900; color: var(--wirit-ink); white-space: nowrap; }
+      .hg-jb .r .v i { font-style: normal; font-size: 12px; font-weight: 800; color: var(--wirit-gray); margin-left: 1px; }
+
       /* 푸터는 공용 규격의 상자 크기를 유지하고, 글자만 줄여 한 줄에 앉힌다(오너 2026-09-01). */
       .hg .wirit-footer { font-size: 19px; letter-spacing: -0.015em; }
     </style>
@@ -84,7 +106,7 @@
 
       <div
         class="hg-body"
-        style="--bodyH:{{layout.bodyH}}px;--tableW:{{layout.tableW}}px;--rowH:{{layout.rowH}}px;--hdrH:{{layout.hdrH}}px;--grpGap:{{layout.grpGap}}px;--mapX:{{layout.mapX}}px;--mapY:{{layout.mapY}}px;--mapW:{{layout.mapW}}px;--mapH:{{layout.mapH}}px;--legendH:{{layout.legendH}}px;--legendGap:{{layout.legendGap}}px"
+        style="--bodyH:{{layout.bodyH}}px;--tableW:{{layout.tableW}}px;--rowH:{{layout.rowH}}px;--hdrH:{{layout.hdrH}}px;--grpGap:{{layout.grpGap}}px;--mapX:{{layout.mapX}}px;--mapY:{{layout.mapY}}px;--mapW:{{layout.mapW}}px;--mapH:{{layout.mapH}}px;--legendH:{{layout.legendH}}px;--legendGap:{{layout.legendGap}}px;--jbX:{{layout.jbX}}px;--jbY:{{layout.jbY}}px;--jbW:{{layout.jbW}}px"
       >
         <div class="hg-map">{{{mapSvg}}}</div>
 
@@ -102,6 +124,17 @@
           </div>
           {{/each}}
         </div>
+
+        {{#if jibang}}
+        <div class="hg-jb">
+          <div class="t"><b>{{jibang.label}}</b><i>{{jibang.note}}</i></div>
+          <div class="g">
+            {{#each jibang.rows}}
+            <div class="r g{{this.grade}}"><em></em><span class="n">{{this.name}}</span><span class="v">{{this.price}}<i>억</i></span></div>
+            {{/each}}
+          </div>
+        </div>
+        {{/if}}
 
         <div class="hg-legend">
           <span class="hit"><b></b>{{legend.hit}}</span>

@@ -120,6 +120,9 @@
     },
     "layout": {
       "type": "object"
+    },
+    "jibang": {
+      "type": "object"
     }
   },
   "additionalProperties": true

@@ -61,10 +61,17 @@ if (outside.length) {
   lines.push("");
 }
 
+// 지방은 지도에 못 얹으므로 카드에서도 별도 블록이다 — 캡션도 같은 순서로 적는다.
+if (c.jibang && c.jibang.rows && c.jibang.rows.length) {
+  lines.push(`[${c.jibang.label}]`);
+  for (const r of c.jibang.rows) lines.push(`· ${r.name} (${r.grade}급지) — ${r.price}억`);
+  lines.push("");
+}
+
 lines.push("👉 급지는 학교와 학원가를 보고 나눈 것이고, 값은 시장이 매긴 것입니다. 둘이 늘 같이 가지는 않습니다.");
 lines.push("");
 lines.push(`※ 출처 — 급지 분류는 『대한민국 학군지도』, 값은 국토교통부 아파트 매매 실거래가 ${period}입니다.`);
-lines.push("※ 청라(인천 서구)와 지방 학군지는 실거래 수집 범위 밖이라 뺐습니다.");
+lines.push("※ 청라(인천 서구)는 행정구역 개편 예고로 코드표에 없어 뺐습니다. 봉선(광주)은 실거래 API 가 올해 내내 0건을 돌려줘 이번 판에서 뺐습니다.");
 lines.push("※ 번호는 급지별로 새로 매겼습니다. 학군지 경계는 행정구역이 아니라 생활권이라, 넣은 법정동을 데이터셋에 공개합니다.");
 lines.push("");
 lines.push("더 보기 👉 @wirit_note");

@@ -87,6 +87,20 @@ const calc = ds.areas.map((a) => {
   return { ...a, n: sel.length, med: median(sel.map((r) => r.priceManwon)), tohuh: hitSgg.has(a.geoName) };
 });
 
+// ── 3-b. 지방 학군지 10곳 — 지도에는 안 찍고 값만 낸다 ─────────────
+// 지도는 수도권만 그린다(토허제·한강이 얹힌 판이라 전국으로 못 바꾼다).
+// 그래서 지방은 핀 없이 **지도 좌하단 별도 블록**에 값만 적는다(오너 2026-09-01).
+const jibangCalc = (ds.jibangAreas || []).map((a) => {
+  const codes = [a.sggCd, ...(a.alsoSggCd || [])];
+  const sel = rows.filter(
+    (r) => codes.includes(r.sggCd) && a.dongs.includes(r.umdNm) && r.area >= AREA_MIN && r.area <= AREA_MAX,
+  );
+  if (sel.length < MIN_TRADES)
+    throw new Error(`${a.name}(지방): 국평 거래가 ${sel.length}건뿐입니다(최소 ${MIN_TRADES}건). 수집이 끝났는지 확인하세요.`);
+  return { ...a, n: sel.length, med: median(sel.map((r) => r.priceManwon)) };
+});
+jibangCalc.sort((x, y) => x.grade - y.grade || y.med - x.med);
+
 // ── 4. 급지별로 나누고, 급지 안에서 값 순으로 번호를 새로 매긴다 ────
 const GRADES = [1, 2, 3];
 const groups = GRADES.map((g) => {
@@ -143,6 +157,11 @@ const mapH = (mapW * viewBox.h) / viewBox.w;
 LAYOUT.mapW = Math.round(mapW * 10) / 10;
 LAYOUT.mapH = Math.round(mapH * 10) / 10;
 LAYOUT.mapY = 0;                       // 지도와 표를 같은 높이에서 시작한다
+// 지방 블록 — 지도 좌하단의 빈 바다 자리(오너가 그 자리를 지정했다).
+// 치수도 여기서 정해 템플릿이 CSS 변수로 받는다.
+LAYOUT.jbW = Math.round(mapW * 0.46);
+LAYOUT.jbX = Math.round(LAYOUT.mapX + mapW * 0.045);
+LAYOUT.jbY = Math.round(mapH * 0.60);
 LAYOUT.bodyH = Math.round(mapH + LEGEND_GAP + LEGEND_H);
 
 // 표 세로를 지도 세로에 맞춘다 — 행 높이를 거기서 역산한다.
@@ -180,9 +199,15 @@ const base = {
   rows: flat,
   layout: LAYOUT,
   legend: { hit: "토지거래허가구역", off: "미지정", g1: "1급지", g2: "2급지", g3: "3급지" },
+  jibang: {
+    label: `지방 학군지 ${jibangCalc.length}곳`,
+    note: "지도에는 수도권만",
+    rows: jibangCalc.map((a) => ({ name: a.name, grade: a.grade, price: (a.med / 10000).toFixed(2), trades: a.n.toLocaleString("ko-KR") })),
+  },
   source: { name: "국토부 실거래가 · 『대한민국 학군지도』", period, verified: false },
   provenance: {
     trades: rows.length,
+    jibang: jibangCalc.map((a) => `${a.name} ${a.n}건`),
     months: ms,
     areaFilter: `전용 ${AREA_MIN}~${AREA_MAX}㎡`,
     stat: "median",
