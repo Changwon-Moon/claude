@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T08:46:40.743Z",
+  "generatedAt": "2026-09-01T09:39:44.897Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -573,16 +573,6 @@
       "runs30": 25
     },
     {
-      "file": "molit-collect.yml",
-      "name": "실거래 수집 (국토부)",
-      "lastRun": "2026-08-27",
-      "daysAgo": 5,
-      "lastOk": "2026-08-27",
-      "okDaysAgo": 5,
-      "fails30": 2,
-      "runs30": 4
-    },
-    {
       "file": "molit-door.yml",
       "name": "실거래 문 열렸나 (한 번 두드려 본다)",
       "lastRun": "2026-08-28",
@@ -731,6 +721,16 @@
       "okDaysAgo": 0,
       "fails30": 2,
       "runs30": 100
+    },
+    {
+      "file": "molit-collect.yml",
+      "name": "실거래 수집 (국토부)",
+      "lastRun": "2026-09-01",
+      "daysAgo": 0,
+      "lastOk": "2026-08-27",
+      "okDaysAgo": 5,
+      "fails30": 2,
+      "runs30": 5
     },
     {
       "file": "molit-rent-collect.yml",
