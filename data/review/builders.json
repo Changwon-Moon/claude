@@ -1519,6 +1519,227 @@
       "produces": [
         "singo-늘푸른벽산-59"
       ]
+    },
+    {
+      "label": "singo-mokdong-hillstate-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "목동힐스테이트",
+        "--type",
+        "59",
+        "--kapt",
+        "A10027375",
+        "--publish"
+      ],
+      "produces": [
+        "singo-목동힐스테이트-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-cheolsan-jugong13",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "주공13",
+        "--type",
+        "84",
+        "--kapt",
+        "A42383508",
+        "--publish"
+      ],
+      "produces": [
+        "singo-주공13-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-gwanggyo-hoban",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "광교호반베르디움",
+        "--type",
+        "84",
+        "--kapt",
+        "A44377204",
+        "--publish"
+      ],
+      "produces": [
+        "singo-광교호반베르디움-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-gangseo-hillstate-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "강서힐스테이트",
+        "--type",
+        "59",
+        "--kapt",
+        "A15701007",
+        "--publish"
+      ],
+      "produces": [
+        "singo-강서힐스테이트-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-pyeongchon-dshop-central",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "평촌더샵센트럴시티",
+        "--type",
+        "59",
+        "--kapt",
+        "A10027233",
+        "--publish"
+      ],
+      "produces": [
+        "singo-평촌더샵센트럴시티-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-pyeongchon-centumfirst",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "평촌센텀퍼스트",
+        "--type",
+        "59",
+        "--kapt",
+        "A10022907",
+        "--publish"
+      ],
+      "produces": [
+        "singo-평촌센텀퍼스트-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-pyeongchon-dshop-ipark",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "평촌더샵아이파크",
+        "--type",
+        "59",
+        "--kapt",
+        "A10025336",
+        "--publish"
+      ],
+      "produces": [
+        "singo-평촌더샵아이파크-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-dongtan-daeun-world",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "동탄시범다은마을 월드메르디앙 반도유보라",
+        "--type",
+        "84",
+        "--kapt",
+        "A44573621",
+        "--publish"
+      ],
+      "produces": [
+        "singo-동탄시범다은마을월드메르디앙반도유보라-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-banjeong-iparkcastle5",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "반정아이파크캐슬5단지",
+        "--type",
+        "84",
+        "--kapt",
+        "A10023451",
+        "--publish"
+      ],
+      "produces": [
+        "singo-반정아이파크캐슬5단지-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-byeongjeomyeok-iparkcastle",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "병점역아이파크캐슬",
+        "--type",
+        "84",
+        "--kapt",
+        "A10024349",
+        "--publish"
+      ],
+      "produces": [
+        "singo-병점역아이파크캐슬-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-haneulchae1-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "수원하늘채더퍼스트1단지",
+        "--type",
+        "59",
+        "--kapt",
+        "A10024000",
+        "--publish"
+      ],
+      "produces": [
+        "singo-수원하늘채더퍼스트1단지-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-anyang-artexi-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "아르테자이",
+        "--type",
+        "59",
+        "--kapt",
+        "A10023653",
+        "--publish"
+      ],
+      "produces": [
+        "singo-아르테자이-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-bucheon-boram-aju",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "보람마을(아주)",
+        "--type",
+        "59",
+        "--kapt",
+        "A42085309",
+        "--publish"
+      ],
+      "produces": [
+        "singo-보람마을아주-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
     }
   ]
 }
