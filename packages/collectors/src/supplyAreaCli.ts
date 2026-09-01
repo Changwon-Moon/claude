@@ -18,6 +18,9 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { supplyAreaOf } from "./sources/supplyArea.js";
+/* 게이트웨이 오류 분류의 **정본은 parse/molit.ts** 하나다 — 수집기마다 따로 적으면 갈라진다.
+   실제로 실거래엔 재시도가 있고 여기엔 없어서 09-02 에 한쪽만 죽었다. */
+import { RETRIABLE_BODY, TERMINAL_BODY } from "./parse/molit.js";
 
 const arg = (n: string) => {
   const i = process.argv.indexOf(`--${n}`);
@@ -107,20 +110,38 @@ function jibunCandidates(kapt: string, aptName: string): string[] {
 const pad4 = (s: string) => String(s ?? "").replace(/\D/g, "").padStart(4, "0").slice(-4);
 const encKey = (k: string) => (/%[0-9A-Fa-f]{2}/.test(k) ? k : encodeURIComponent(k));
 
+/**
+ * 실거래 쪽(`sources/molit.ts`)과 **같은 사다리**를 쓴다 — 3번 · 지수 백오프 · 본문 오류도 재시도.
+ *
+ * ── 왜 맞췄나 (2026-09-02)
+ * 08-26 에 「연결 실패도 3번 재시도」를 실거래에 넣으면서 **건축물대장 쪽은 2번 · 평 백오프 ·
+ * 본문 오류 무재시도**로 남았다. 그래서 게이트웨이가 아픈 날 같은 시각에
+ * **실거래는 살고 공급면적은 절반이 죽었다**(09-02: 25건 중 14건 실패).
+ * `SERVICETIMEOUT_ERROR` 는 HTTP **200 몸통**으로 오기 때문에 예전 코드는 그것을 한 번도
+ * 다시 묻지 않았다 — 그런데 그건 「다시 밀면 오는 것」의 대표 문구다.
+ *
+ * ⚠️ **재시도를 세게 했으면 반대쪽이 받아 줘야 한다**(CLAUDE.md §6). 여기선
+ * **한도·키 오류를 즉시 포기하는 것**이 그 반대쪽이다 — 안 그러면 한도만 더 태우고 답은 같다.
+ * (`SERVICE_KEY_IS_NOT_REGISTERED_ERROR` 는 문구와 달리 **일일 호출 한도**다 — 2026-08-16d)
+ */
 async function get(url: string): Promise<{ status: number; body: string }> {
-  for (let i = 0; i < 2; i++) {
+  let last = { status: 0, body: "" };
+  for (let i = 0; i < 3; i++) {
     try {
       const ctrl = new AbortController();
       const t = setTimeout(() => ctrl.abort(), 15000);
       const res = await fetch(url, { signal: ctrl.signal, headers: { "User-Agent": "wirit-collector/0.1" } });
       clearTimeout(t);
-      return { status: res.status, body: await res.text() };
+      const body = await res.text();
+      last = { status: res.status, body };
+      if (TERMINAL_BODY.test(body) || res.status === 401 || res.status === 403) return last;
+      if (res.status === 200 && !RETRIABLE_BODY.test(body)) return last;
     } catch (e) {
-      if (i === 1) return { status: 0, body: `fetch failed: ${String((e as Error)?.message ?? e)}` };
-      await new Promise((r) => setTimeout(r, 3000));
+      last = { status: 0, body: `fetch failed: ${String((e as Error)?.message ?? e)}` };
     }
+    if (i < 2) await new Promise((r) => setTimeout(r, 2 ** i * 1000));
   }
-  return { status: 0, body: "" };
+  return last;
 }
 
 function rowsOf(raw: string): any[] {

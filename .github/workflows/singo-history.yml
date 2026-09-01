@@ -124,6 +124,9 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
+          # 루프 안에서 단지마다 커밋하므로 신원을 여기서 먼저 세운다(아래 커밋 스텝과 같은 값)
+          git config user.name "wirit-bot"
+          git config user.email "actions@github.com"
           : > "$RUNNER_TEMP/hist.log"
           FAILED=0
           while IFS= read -r LINE; do
@@ -147,6 +150,29 @@ jobs:
                   --lawd "$LAWD" --apt "$APT" ${UMD:+--umd "$UMD"} \
                   --type "$TYPE" --from "${FROM:-202001}" $FORCE 2>&1 | tee -a "$RUNNER_TEMP/hist.log"; then
               FAILED=1
+            fi
+            # ── 🔒 한 단지 끝날 때마다 **바로 밀어 둔다** (2026-09-02 오너 "단지마다 바로 커밋")
+            #
+            # 왜: 이 잡은 원래 **맨 끝에 한 번만** 커밋했다. 그런데 한 단지가 81개월이라
+            # 20단지면 1,620회 호출이고, 게이트웨이가 반쯤 죽은 날엔 실패 호출 하나가
+            # 15초 타임아웃 × 3회 + 백오프로 48초를 문다. 그러면 180분 제한을 넘고,
+            # **제한으로 죽는 잡은 `if: always()` 스텝도 안 돈다** — 받아 둔 것까지 통째로 사라진다.
+            # 09-02 에 실제로 그렇게 됐다: 한 시간 반을 돌고도 저장소엔 아무 기록이 없었다.
+            # 「시간을 넉넉히 준다」는 처방(주석 62줄)은 문이 반쯤 닫힌 날엔 얼마를 줘도 모자란다.
+            #
+            # 이제 잃는 것은 **마지막 한 단지뿐**이다.
+            # ⚠️ 다른 워크플로가 같은 브랜치를 밀고 있을 수 있어 rebase 후 재시도한다.
+            if [ -d data/datasets/singo-history ]; then
+              git add data/datasets/singo-history || true
+              if ! git diff --cached --quiet; then
+                git commit -q -m "곡선 — $APT 전용${TYPE} ($LAWD)" || true
+                for TRY in 1 2 3; do
+                  git pull --rebase --autostash -q origin ${{ github.ref_name }} || true
+                  if git push -q origin HEAD:${{ github.ref_name }}; then break; fi
+                  echo "   ⏸ 푸시 충돌 — 다시 시도 ($TRY/3)" | tee -a "$RUNNER_TEMP/hist.log"
+                  sleep 5
+                done
+              fi
             fi
           done < "$RUNNER_TEMP/jobs.txt"
           echo "" | tee -a "$RUNNER_TEMP/hist.log"

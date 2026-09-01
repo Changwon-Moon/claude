@@ -285,3 +285,20 @@ export function aggregateRents(rents: AptRent[]): RentAgg {
     ...(price ? { price } : {}),
   };
 }
+
+/* ────────────────────────────────────────────────────────────────────────────
+ * 공공데이터포털 게이트웨이 오류 — 「다시 물으면 달라지나」로 가른다 (2026-09-02)
+ *
+ * 이 공장은 실패를 두 얼굴로 나눠 본다: **기다림 쪽**(다시 밀면 온다)과
+ * **조사 쪽**(다시 밀어도 같다). 그 판단을 수집기마다 따로 적어 두면 갈라진다 —
+ * 실제로 실거래 쪽엔 재시도가 있고 건축물대장 쪽엔 없어서, 게이트웨이가 아픈 날
+ * 같은 시각에 한쪽만 죽었다(09-02: 공급면적 25건 중 14건).
+ * ──────────────────────────────────────────────────────────────────────────── */
+
+/** 다시 물으면 **달라질 수 있는** 몸통. `SERVICETIMEOUT_ERROR` 는 HTTP **200 몸통**으로 온다. */
+export const RETRIABLE_BODY = /SERVICETIMEOUT|SERVICE_TIMEOUT|INTERNAL[_ ]?ERROR|TEMPORAR|HTTP[_ ]?ERROR|UNKNOWN[_ ]?ERROR/i;
+
+/** 다시 물어도 같은 답 — 오히려 **일일 한도만 더 태운다.** 즉시 포기한다.
+ *  ⚠️ `SERVICE_KEY_IS_NOT_REGISTERED_ERROR` 는 문구와 달리 **일일 호출 한도**다(2026-08-16d 실측).
+ *     문구가 원인을 가리므로, 이것을 「키가 틀렸다」로 읽지 않는다. */
+export const TERMINAL_BODY = /SERVICE_KEY_IS_NOT_REGISTERED|LIMITED_NUMBER_OF_SERVICE_REQUESTS|DEADLINE_HAS_EXPIRED|UNREGISTERED_IP/i;

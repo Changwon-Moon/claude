@@ -120,6 +120,8 @@ import {
   normJibun,
 } from "./parse/aptInfo.js";
 import { cleanStationName, linesFromCategory } from "./parse/station.js";
+import { RETRIABLE_BODY as supplyRetriable, TERMINAL_BODY as supplyTerminal } from "./parse/molit.js";
+
 import { singoRegions as singoRegionList, monthRange as singoMonthRange } from "./sources/singoRegions.js";
 import {
   APPLYHOME_APT_JSON,
@@ -1306,6 +1308,25 @@ console.log("\n[청약홈 분양정보 파서]");
     singoPickUniverse("없는단지", [U("A9", "다른단지")], null) === null,
     "",
   );
+
+  /* ── 재시도 사다리 — 「기다림 쪽」과 「조사 쪽」을 문구로 가른다 (2026-09-02)
+   * 공급면적 수집기가 `SERVICETIMEOUT_ERROR`(HTTP 200 몸통)를 **한 번도 다시 묻지 않아**
+   * 게이트웨이가 아픈 날 25건 중 14건이 그대로 죽었다. 실거래 쪽은 같은 시각에 살아 있었다.
+   * ⚠️ 한도·키 오류는 다시 물으면 **한도만 더 태운다** — 즉시 포기가 맞다. */
+  check("SERVICETIMEOUT 은 다시 묻는다", supplyRetriable.test("<errMsg>SERVICETIMEOUT_ERROR</errMsg>"), "");
+  check("INTERNAL_ERROR 는 다시 묻는다", supplyRetriable.test("INTERNAL_ERROR"), "");
+  check(
+    "⛔ 일일 한도(SERVICE_KEY_IS_NOT_REGISTERED)는 다시 묻지 않는다",
+    supplyTerminal.test("SERVICE_KEY_IS_NOT_REGISTERED_ERROR") &&
+      !supplyRetriable.test("SERVICE_KEY_IS_NOT_REGISTERED_ERROR"),
+    "",
+  );
+  check(
+    "⛔ 호출 초과도 다시 묻지 않는다",
+    supplyTerminal.test("LIMITED_NUMBER_OF_SERVICE_REQUESTS_EXCEEDS_ERROR"),
+    "",
+  );
+  check("정상 응답은 재시도 대상이 아니다", !supplyRetriable.test('{"response":{"body":{"totalCount":3}}}'), "");
 
   /* ── 톡 본문 — 돌파 블록과 전체 목록은 다른 말이다 (2026-08-13 사고)
    * 금액대(그 거래가 속한 구간)로 묶어 보냈더니 14억·11억 거래가 "10억 돌파"로 읽혔다.
