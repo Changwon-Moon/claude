@@ -16,7 +16,9 @@
  * 절차는 그대로다: 빌드 → 캡션 → `produce-card`(렌더+검수) → 오너 확정.
  *
  * ── 자족(self-contained) 한 파일로 만든다
- * 오너는 이 파일 하나를 브라우저로 연다. 그래서 폰트(woff2)를 data: URI 로 박아 넣는다.
+ * 오너는 이 파일 하나를 브라우저로 연다. 그래서 폰트(woff2)**와 그림(사진·로고·국기)**을
+ * data: URI 로 박아 넣는다. 그림을 빠뜨리면 카드가 망가진 것처럼 보인다 —
+ * 2026-09-01 에 m2-gov 미리보기에서 대통령 사진 6장이 빈칸으로 나가 실제로 그렇게 읽혔다.
  * 폰트가 없으면 글자 폭이 달라져 **실물과 다른 그림**을 보게 되는데, 그러면 미리보기가
  * 거짓말을 하는 셈이라 미리보기가 아니라 함정이 된다.
  */
@@ -202,6 +204,28 @@ css = css.replace(/url\(\s*["']?\.\.\/_shared\/fonts\/([^"')]+)["']?\s*\)/g, (wh
 const leftovers = [...css.matchAll(/url\(\s*["']?(\.\.\/_shared\/[^"')]+)["']?\s*\)/g)].map((m) => m[1]);
 for (const l of new Set(leftovers)) console.warn(`   ⚠️ 인라인하지 못한 자산: ${l}`);
 
+/* ── ③-2 **본문의 이미지**도 data: URI 로 박는다 (2026-09-01) ────────────
+ * 여기가 조용히 깨지던 자리다. 폰트는 CSS `url()` 이라 위에서 잡혔는데,
+ * 판형이 `<img src="../_shared/photos/…">` 로 거는 사진은 **손대지도 경고하지도 않았다.**
+ * 그래서 오너가 연 m2-gov 미리보기에서 **대통령 사진 6장이 통째로 빈칸**이 됐고,
+ * 카드가 망가진 것처럼 보였다(실제 렌더 PNG 는 멀쩡했다).
+ * danji-cover 계열(조감도)·국기 판형도 같은 방식이라 같이 살아난다.
+ * 상대경로는 `templates/` 안 자산만 허용한다 — 바깥 파일을 미리보기에 담지 않는다. */
+const TPL = R("templates");
+const MIME = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp", svg: "image/svg+xml", gif: "image/gif" };
+let imgInlined = 0;
+const missing = new Set();
+const inlineAttrs = (markup) =>
+  markup.replace(/(\b(?:src|href|xlink:href)=)"(\.\.\/_shared\/[^"]+)"/g, (whole, attr, rel) => {
+    const fp = join(TPL, rel.replace(/^\.\.\//, ""));
+    const ext = (rel.split(".").pop() || "").toLowerCase();
+    if (!existsSync(fp) || !MIME[ext]) { missing.add(rel); return whole; }
+    imgInlined++;
+    return `${attr}"data:${MIME[ext]};base64,${readFileSync(fp).toString("base64")}"`;
+  });
+for (const c of cards) c.body = inlineAttrs(c.body);
+for (const m of missing) console.warn(`   ⚠️ 인라인하지 못한 그림: ${m} — 미리보기에서 빈칸으로 보입니다`);
+
 /* ── ④ 한 장으로 조립 ───────────────────────────────────────────────── */
 
 const out = arg("out") ?? R(`data/out/preview-${setLabel ?? "cards"}.html`);
@@ -253,5 +277,6 @@ ${cards
 
 writeFileSync(out, page);
 console.log(`✅ 미리보기 ${cards.length}장 → ${out.replace(ROOT + "/", "")}`);
-console.log(`   폰트 ${inlined}개 인라인 · 파일 ${(Buffer.byteLength(page) / 1024 / 1024).toFixed(1)}MB`);
+console.log(`   폰트 ${inlined}개 · 그림 ${imgInlined}개 인라인 · 파일 ${(Buffer.byteLength(page) / 1024 / 1024).toFixed(1)}MB`);
+if (missing.size) console.warn(`   ⛔ 그림 ${missing.size}종이 빠졌습니다 — 이 미리보기로는 확정하지 마세요`);
 console.log(`\n⚠️ 이것은 눈으로 먼저 보는 자리입니다. 검수는 node scripts/produce-card.mjs <세트라벨> 가 합니다.`);
