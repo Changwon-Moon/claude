@@ -12,7 +12,7 @@
 > 이 표는 `node scripts/template-usage.mjs --write` 가 **실측해서 씁니다.**
 > 손으로 고치지 마세요 — 세트가 늘면 다음 실행 때 덮어씁니다.
 
-**템플릿 39종** · 🟢 카드가 나오는 것 24 · 🟡 빌더는 있음 3 · ⚪ 잠자는 것 12
+**템플릿 40종** · 🟢 카드가 나오는 것 25 · 🟡 빌더는 있음 3 · ⚪ 잠자는 것 12
 
 | 판형 | 상태 | 쓰는 세트 |
 |---|---|---|
@@ -20,6 +20,7 @@
 | `danji-cover` | 🟢 11세트 | danji-hangang, danji-songdo, danji-jangwi 외 8 |
 | `foreign-rank` | 🟢 1세트 | foreign-rank |
 | `gov-bars` | 🟢 1세트 | m2-gov |
+| `hakgun-academy` | 🟢 1세트 | hakgun-map |
 | `hakgun-map` | 🟢 1세트 | hakgun-map |
 | `index-2026` | 🟢 1세트 | index-2026 |
 | `line2-loop` | 🟢 1세트 | line2-loop |
@@ -35,7 +36,7 @@
 | `metro-2col` | 🟢 1세트 | metro-speed |
 | `record-grid` | 🟢 1세트 | kospi-record |
 | `sinbundang-loop` | 🟢 1세트 | sinbundang-loop |
-| `singo-record` | 🟢 12세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 9 |
+| `singo-record` | 🟢 11세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 8 |
 | `singoga-map` | 🟢 5세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map 외 2 |
 | `streak-line` | 🟢 4세트 | mae-streak, jeonse-streak, m2-gap 외 1 |
 | `world-capital` | 🟢 1세트 | world-capital |

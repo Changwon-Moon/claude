@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T15:10:48.814Z",
+  "generatedAt": "2026-09-01T22:51:11.319Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -88,15 +88,15 @@
         },
         {
           "day": "09-02",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "07:06",
+          "delay": 131
         }
       ],
       "medianDelay": 212,
       "maxDelay": 212,
-      "lastRun": "2026-09-01",
-      "lastOk": "2026-09-01",
+      "lastRun": "2026-09-02",
+      "lastOk": "2026-09-02",
       "okDaysAgo": 0
     },
     {
@@ -573,16 +573,6 @@
       "runs30": 25
     },
     {
-      "file": "molit-door.yml",
-      "name": "실거래 문 열렸나 (한 번 두드려 본다)",
-      "lastRun": "2026-08-28",
-      "daysAgo": 4,
-      "lastOk": "2026-08-28",
-      "okDaysAgo": 4,
-      "fails30": 1,
-      "runs30": 3
-    },
-    {
       "file": "collect.yml",
       "name": "데이터 수집 (daily)",
       "lastRun": "2026-08-29",
@@ -685,9 +675,9 @@
     {
       "file": "apt-detail.yml",
       "name": "단지 주차대수 (카드 제원용)",
-      "lastRun": "2026-09-01",
+      "lastRun": "2026-09-02",
       "daysAgo": 0,
-      "lastOk": "2026-09-01",
+      "lastOk": "2026-09-02",
       "okDaysAgo": 0,
       "fails30": 4,
       "runs30": 100
@@ -695,19 +685,19 @@
     {
       "file": "apt-station.yml",
       "name": "단지 가까운 역 (카드 뱃지용)",
-      "lastRun": "2026-09-01",
+      "lastRun": "2026-09-02",
       "daysAgo": 0,
-      "lastOk": "2026-09-01",
+      "lastOk": "2026-09-02",
       "okDaysAgo": 0,
       "fails30": 7,
-      "runs30": 13
+      "runs30": 14
     },
     {
       "file": "apt-supply-area.yml",
       "name": "단지 공급면적 (카드 평 표기용)",
-      "lastRun": "2026-09-01",
+      "lastRun": "2026-09-02",
       "daysAgo": 0,
-      "lastOk": "2026-09-01",
+      "lastOk": "2026-09-02",
       "okDaysAgo": 0,
       "fails30": 0,
       "runs30": 100
@@ -715,12 +705,12 @@
     {
       "file": "auto-produce.yml",
       "name": "데이터 바뀌면 카드 자동 재생산",
-      "lastRun": "2026-09-01",
+      "lastRun": "2026-09-02",
       "daysAgo": 0,
       "lastOk": "2026-09-01",
       "okDaysAgo": 0,
-      "fails30": 60,
-      "runs30": 86
+      "fails30": 61,
+      "runs30": 87
     },
     {
       "file": "guard.yml",
@@ -735,12 +725,22 @@
     {
       "file": "molit-collect.yml",
       "name": "실거래 수집 (국토부)",
-      "lastRun": "2026-09-01",
+      "lastRun": "2026-09-02",
       "daysAgo": 0,
       "lastOk": "2026-09-01",
       "okDaysAgo": 0,
-      "fails30": 4,
-      "runs30": 8
+      "fails30": 5,
+      "runs30": 9
+    },
+    {
+      "file": "molit-door.yml",
+      "name": "실거래 문 열렸나 (한 번 두드려 본다)",
+      "lastRun": "2026-09-02",
+      "daysAgo": 0,
+      "lastOk": "2026-09-02",
+      "okDaysAgo": 0,
+      "fails30": 1,
+      "runs30": 6
     },
     {
       "file": "molit-rent-collect.yml",
@@ -757,37 +757,37 @@
       "name": "학원 수집 (나이스)",
       "lastRun": "2026-09-02",
       "daysAgo": 0,
-      "lastOk": null,
-      "okDaysAgo": null,
+      "lastOk": "2026-09-02",
+      "okDaysAgo": 0,
       "fails30": 2,
-      "runs30": 2
+      "runs30": 4
     },
     {
       "file": "singo-history.yml",
       "name": "신고가 단지 이력 (한 단지 곡선)",
-      "lastRun": "2026-09-01",
+      "lastRun": "2026-09-02",
       "daysAgo": 0,
       "lastOk": "2026-09-01",
       "okDaysAgo": 0,
       "fails30": 3,
-      "runs30": 18
+      "runs30": 19
     },
     {
       "file": "singo-retry.yml",
       "name": "오늘의 신고가 — 자동 재시도",
-      "lastRun": "2026-09-01",
+      "lastRun": "2026-09-02",
       "daysAgo": 0,
       "lastOk": "2026-08-25",
-      "okDaysAgo": 7,
+      "okDaysAgo": 8,
       "fails30": 1,
-      "runs30": 18
+      "runs30": 19
     },
     {
       "file": "tower-deploy.yml",
       "name": "관제탑 배포 (Cloudflare)",
       "lastRun": "2026-09-02",
       "daysAgo": 0,
-      "lastOk": "2026-09-01",
+      "lastOk": "2026-09-02",
       "okDaysAgo": 0,
       "fails30": 15,
       "runs30": 100
