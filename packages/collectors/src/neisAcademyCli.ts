@@ -46,7 +46,12 @@ function arg(name: string): string | undefined {
   return i >= 0 ? process.argv[i + 1] : undefined;
 }
 
-type Agg = { sido: string; sgg: string; dong: string; aca: number; gyoseup: number; total: number; ipsi: number; ipsiJeongwon: number; jeongwon: number };
+/* ipsi 를 **학원/교습소로 갈라** 센다 (2026-09-02).
+   교습소는 1인 운영이고 일시수용 9명이 상한이다 — 대형 학원과 한 줄로 세면 동네마다
+   전혀 다른 것을 세게 된다(실측: 전 분야 학원 비중이 대치 78% · 중계 51% 로 갈렸다).
+   jeongwonN = 정원이 0 이 아닌 곳 수. 정원 필드는 교습소에서 자주 비어 있어,
+   합계만 보면 곳당 정원이 61~660 명으로 11배 벌어진다 — **결측을 세야 믿을지 말지 판단한다.** */
+type Agg = { sido: string; sgg: string; dong: string; aca: number; gyoseup: number; total: number; ipsi: number; ipsiAca: number; ipsiGyoseup: number; ipsiJeongwon: number; ipsiJeongwonN: number; jeongwon: number };
 
 async function fetchPage(code: string, key: string, pIndex: number): Promise<any[]> {
   const url = `${BASE}?KEY=${encodeURIComponent(key)}&Type=json&pIndex=${pIndex}&pSize=${PAGE}&ATPT_OFCDC_SC_CODE=${code}`;
@@ -126,14 +131,18 @@ async function main() {
           if (!dong) { noDong++; continue; }
           const k = `${sgg}|${dong}`;
           let a = map.get(k);
-          if (!a) { a = { sido: want, sgg, dong, aca: 0, gyoseup: 0, total: 0, ipsi: 0, ipsiJeongwon: 0, jeongwon: 0 }; map.set(k, a); }
+          if (!a) { a = { sido: want, sgg, dong, aca: 0, gyoseup: 0, total: 0, ipsi: 0, ipsiAca: 0, ipsiGyoseup: 0, ipsiJeongwon: 0, ipsiJeongwonN: 0, jeongwon: 0 }; map.set(k, a); }
           const isAca = String(r.ACA_INSTI_SC_NM || "").includes("학원");
           const jw = Number(r.TOFOR_SMTOT) || 0;
           // 분야명은 응답에 '입시.검정 및 보습' 으로 온다. 점·공백이 흔들려도 걸리게 느슨히 본다.
           const isIpsi = /입시.*보습|보습/.test(String(r.REALM_SC_NM || ""));
           a.total++; a.jeongwon += jw;
           if (isAca) a.aca++; else a.gyoseup++;
-          if (isIpsi) { a.ipsi++; a.ipsiJeongwon += jw; }
+          if (isIpsi) {
+            a.ipsi++; a.ipsiJeongwon += jw;
+            if (isAca) a.ipsiAca++; else a.ipsiGyoseup++;
+            if (jw > 0) a.ipsiJeongwonN++;
+          }
         }
         if (rows.length < PAGE) break;
         page++;
@@ -141,7 +150,7 @@ async function main() {
       if (seenName && seenName !== want)
         throw new Error(`코드-이름이 어긋납니다: ${code} 를 ${want} 로 알고 있었는데 응답은 "${seenName}" 입니다.`);
 
-      const rows = [...map.values()].sort((a, b) => b.ipsi - a.ipsi || a.sgg.localeCompare(b.sgg));
+      const rows = [...map.values()].sort((a, b) => b.ipsiAca - a.ipsiAca || a.sgg.localeCompare(b.sgg));
       writeFileSync(
         outPath,
         JSON.stringify(
@@ -160,6 +169,7 @@ async function main() {
               coverage: raw ? Math.round(((raw - noDong) / raw) * 1000) / 10 : 0,
               note:
                 "행별 집계다(원장 미보존). aca=학원 · gyoseup=교습소 · ipsi=분야가 '입시.검정 및 보습' 인 곳 · " +
+                "ipsiAca/ipsiGyoseup=입시·보습을 학원/교습소로 가른 수 · ipsiJeongwonN=그중 정원이 0 이 아닌 곳 수. " +
                 "jeongwon=정원합계(TOFOR_SMTOT) 합. 시군구는 도로명주소에서, 법정동은 도로명 상세의 괄호 참고항목에서 뽑았다. " +
                 "괄호에 법정동이 없는 행(dongMissing)은 집계에서 빠졌다 — coverage 를 보고 숫자를 읽어야 한다. " +
                 "등록상태(개원/휴원/폐원)는 가리지 않았다 — 원장에 남은 곳을 모두 센다.",
@@ -170,6 +180,10 @@ async function main() {
           2,
         ) + "\n",
       );
+      const ipsiAca = rows.reduce((s2, r) => s2 + r.ipsiAca, 0);
+      const ipsiAll = rows.reduce((s2, r) => s2 + r.ipsi, 0);
+      const jwN = rows.reduce((s2, r) => s2 + r.ipsiJeongwonN, 0);
+      console.log(`   입시·보습 ${ipsiAll.toLocaleString()}곳(학원 ${ipsiAca.toLocaleString()} · 교습소 ${(ipsiAll - ipsiAca).toLocaleString()}) · 정원 적힌 곳 ${ipsiAll ? Math.round((jwN / ipsiAll) * 100) : 0}%`);
       console.log(`✅ ${code} ${want} — 원장 ${raw.toLocaleString()}건 · 법정동 확인 ${(raw - noDong).toLocaleString()}건(${Math.round(((raw - noDong) / raw) * 1000) / 10}%) · 동 ${rows.length}곳 → ${code}.json`);
       okSido++;
     } catch (e) {
