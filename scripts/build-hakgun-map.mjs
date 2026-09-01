@@ -36,7 +36,9 @@ const MIN_TRADES = 20;              // 이보다 적으면 중위값이 흔들�
 // (오너 2026-09-01: 표 세로를 지도에 맞추고, 범례는 지도 바로 밑에).
 // 남는 아래 여백이 MIN_BOTTOM_GAP 보다 좁으면 던진다 — 푸터에 붙는 사고를 두 번 냈다.
 const CARD_H = 1350;
-const HEAD = { padTop: 72, topcap: 32, titleGap: 24, titleFs: 76, bodyGap: 22 };
+// bodyGap 은 제목과 본문 사이 여백이다. 아래 여백(bottomGap)과 **같은 값이 되도록** 잡는다 —
+// 22 / 90 으로 어긋나 있었고 오너가 그걸 봤다(2026-09-01). 아래에서 실제로 계산해 검사한다.
+const HEAD = { padTop: 72, topcap: 32, titleGap: 24, titleFs: 76, bodyGap: 56 };
 HEAD.titleH = Math.round(HEAD.titleFs * 1.08);
 const FOOTER_H = 94;
 const LEGEND_H = 32, LEGEND_GAP = 10;
@@ -161,7 +163,7 @@ LAYOUT.mapY = 0;                       // 지도와 표를 같은 높이에서 �
 // 치수도 여기서 정해 템플릿이 CSS 변수로 받는다.
 LAYOUT.jbW = Math.round(mapW * 0.46);
 LAYOUT.jbX = Math.round(LAYOUT.mapX + mapW * 0.105);   // 살짝 우측으로(오너 2026-09-01)
-LAYOUT.jbY = Math.round(mapH * 0.70);                  // 더 아래로 — 빈 바다 한가운데에 앉힌다
+LAYOUT.jbY = Math.round(mapH * 0.79);                  // 더 아래로 — 빈 바다 아래쪽에 앉힌다(오너 2026-09-01)
 LAYOUT.bodyH = Math.round(mapH + LEGEND_GAP + LEGEND_H);
 
 // 표 세로를 지도 세로에 맞춘다 — 행 높이를 거기서 역산한다.
@@ -170,6 +172,9 @@ if (LAYOUT.rowH < 30) throw new Error(`행 높이가 ${LAYOUT.rowH}px 로 너무
 
 const headH = HEAD.padTop + HEAD.topcap + HEAD.titleGap + HEAD.titleH + HEAD.bodyGap;
 const bottomGap = CARD_H - (headH + LAYOUT.bodyH + FOOTER_H);
+// 위아래 여백이 크게 어긋나면 알린다 — 눈으로만 보면 놓친다.
+if (Math.abs(bottomGap - HEAD.bodyGap) > 12)
+  console.log(`  ⚠️ 본문 위 여백 ${HEAD.bodyGap}px · 아래 여백 ${bottomGap}px — 어긋납니다. HEAD.bodyGap 을 ${bottomGap}px 쪽으로 맞추세요.`);
 if (bottomGap < MIN_BOTTOM_GAP)
   throw new Error(
     `본문이 푸터에 붙습니다(아래 여백 ${bottomGap}px < ${MIN_BOTTOM_GAP}px). ` +
@@ -192,7 +197,8 @@ if (usedH > LAYOUT.mapH + 4)
 const base = {
   template: "hakgun-map@1",
   date,
-  title: `수도권 <span class="hi">학군지 ${flat.length}곳</span>, 국평 시세`,   // 곳 수는 데이터에서 — 손으로 적으면 어긋난다
+  // 곳 수는 데이터에서 센다 — 손으로 적으면 어긋난다.
+  title: `서울 수도권 <span class="hi">대표 학군지</span> <span class="hot">${flat.length}곳</span>`,
   subtitle: "『대한민국 학군지도』 급지분류 · 국토부 실거래 전용 84㎡ 중위값",
   mapSvg,
   groups,
