@@ -4,19 +4,30 @@
     <meta charset="utf-8" />
     <!--WIRIT_SHARED_CSS-->
     <style>
-      /* hakgun-map@1 — 제목 1행(가운데) / 좌: 급지별 3개 표 / 우: 수도권 시군구 지도.
-         leaders 가 있으면 표 행과 지도 핀을 잇는 꺾은 선을 덧그린다(두 판본).
+      /* hakgun-map@1 — 로고 라인에 범례 / 제목 1행(가운데) / 좌: 급지별 3개 표 / 우: 수도권 시군구 지도.
          ⚠️ 치수는 빌더의 LAYOUT 하나가 정본이다. 여기선 CSS 변수로 받아 쓰기만 한다. */
-      /* 로고(우상단 y40~94)를 피해 제목을 내린다 — 72 면 제목이 로고에 걸린다. */
-      .hg { padding-top: 112px; }
+      .hg { padding-top: 72px; }
+
+      /* 범례를 우상단 로고와 같은 줄에(오너 2026-09-01). .wirit-topcap 이 그 자리다 —
+         margin-top -30 · padding-right 190(로고 자리)을 공용 규격에서 그대로 받는다. */
+      .hg .wirit-topcap { font-size: 19px; font-weight: 700; gap: 14px; flex-wrap: wrap; }
+      .hg .wirit-topcap span { display: inline-flex; align-items: center; gap: 5px; }
+      .hg .wirit-topcap b { width: 16px; height: 11px; border-radius: 3px; display: inline-block; }
+      .hg .wirit-topcap em { width: 14px; height: 14px; border-radius: 999px; display: inline-block; }
+      .hg .wirit-topcap .hit b { background: #f6c9cd; }
+      .hg .wirit-topcap .off b { background: #e7e9ee; }
+      .hg .wirit-topcap .l1 em { background: #c8102e; }
+      .hg .wirit-topcap .l2 em { background: #141821; }
+      .hg .wirit-topcap .l3 em { background: #8f9bad; }
 
       .hg-title {
         margin: 0; text-align: center; white-space: nowrap;
-        font-size: 76px; font-weight: 900; line-height: 1.08;
-        letter-spacing: -0.035em; color: var(--wirit-ink);
+        font-size: 78px; font-weight: 900; line-height: 1.08;
+        letter-spacing: -0.04em; color: var(--wirit-ink);
       }
+      .hg-title .hi { color: var(--wirit-cobalt); }
       .hg-sub {
-        margin-top: 26px; text-align: center;
+        margin-top: 24px; text-align: center;
         font-size: 21px; font-weight: 800; color: var(--wirit-gray); letter-spacing: -0.015em;
       }
 
@@ -32,8 +43,8 @@
       .hg-hdr em { width: 15px; height: 15px; border-radius: 999px; display: inline-block; }
       .hg-hdr .lb { font-size: 24px; font-weight: 900; letter-spacing: -0.02em; color: var(--wirit-ink); }
       .hg-hdr .ct { margin-left: auto; font-size: 17px; font-weight: 700; color: var(--wirit-gray); }
-      .hg-grp.g1 .hg-hdr em { background: #141821; }
-      .hg-grp.g2 .hg-hdr em { background: #2e6bff; }
+      .hg-grp.g1 .hg-hdr em { background: #c8102e; }
+      .hg-grp.g2 .hg-hdr em { background: #141821; }
       .hg-grp.g3 .hg-hdr em { background: #8f9bad; }
 
       .hg-row {
@@ -55,40 +66,21 @@
       .hg-map { position: absolute; left: var(--mapX); top: var(--mapY); width: var(--mapW); }
       .hg-map svg { width: 100%; height: auto; display: block; }
 
-      /* ── 연결선(있는 판본만) ── */
-      .hg-lead { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
-      .hg-lead path { fill: none; stroke-width: 0.9; opacity: 0.32; }
-      .hg-lead circle.tip { stroke: none; }
-      .hg-lead .g1 { stroke: #141821; fill: #141821; }
-      .hg-lead .g2 { stroke: #2e6bff; fill: #2e6bff; }
-      .hg-lead .g3 { stroke: #8f9bad; fill: #8f9bad; }
-      /* 핀을 선 위에 다시 그린다 — 좌표가 지도 안의 핀과 같아 겹쳐도 어긋나지 않는다. */
-      .hg-lead circle.pin { stroke: #fff; }
-      .hg-lead text.pin { font-weight: 900; fill: #fff; text-anchor: middle; }
-
-      .hg-legend {
-        position: absolute; left: var(--mapX); width: var(--mapW); bottom: 0;
-        display: flex; flex-wrap: wrap; gap: 5px 13px; justify-content: center;
-        font-size: 17px; font-weight: 700; color: var(--wirit-gray);
-      }
-      .hg-legend span { display: inline-flex; align-items: center; gap: 5px; }
-      .hg-legend b { width: 16px; height: 11px; border-radius: 3px; display: inline-block; }
-      .hg-legend em { width: 14px; height: 14px; border-radius: 999px; display: inline-block; }
-      .hg-legend .hit b { background: #f6c9cd; }
-      .hg-legend .off b { background: #e7e9ee; }
-      .hg-legend .l1 em { background: #141821; }
-      .hg-legend .l2 em { background: #2e6bff; }
-      .hg-legend .l3 em { background: #8f9bad; }
-
-      .hg-caveat { margin-top: 10px; font-size: 17px; font-weight: 600; color: var(--wirit-gray); line-height: 1.36; }
-
       /* 푸터는 공용 규격의 상자 크기를 유지하고, 글자만 줄여 한 줄에 앉힌다(오너 2026-09-01). */
       .hg .wirit-footer { font-size: 19px; letter-spacing: -0.015em; }
     </style>
   </head>
   <body>
     <div class="wirit-card hg">
-      <h1 class="hg-title">{{title}}</h1>
+      <div class="wirit-topcap">
+        <span class="hit"><b></b>{{legend.hit}}</span>
+        <span class="off"><b></b>{{legend.off}}</span>
+        <span class="l1"><em></em>{{legend.g1}}</span>
+        <span class="l2"><em></em>{{legend.g2}}</span>
+        <span class="l3"><em></em>{{legend.g3}}</span>
+      </div>
+
+      <h1 class="hg-title">{{{title}}}</h1>
       <div class="hg-sub">{{subtitle}}</div>
 
       <div
@@ -111,30 +103,7 @@
           </div>
           {{/each}}
         </div>
-
-        {{#if leaders}}
-        <svg class="hg-lead" viewBox="0 0 {{layout.bodyW}} {{layout.bodyH}}" preserveAspectRatio="none">
-          {{#each leaders}}
-          <path class="g{{this.grade}}" d="{{this.d}}"/>
-          <circle class="tip g{{this.grade}}" cx="{{this.dotX}}" cy="{{this.dotY}}" r="3"/>
-          {{/each}}
-          {{#each pinsCard}}
-          <circle class="pin g{{this.grade}}" cx="{{this.x}}" cy="{{this.y}}" r="{{../layout.pinR}}" stroke-width="{{../layout.pinStroke}}"/>
-          <text class="pin" x="{{this.x}}" y="{{this.y}}" dy="0.34em" font-size="{{../layout.pinFont}}">{{this.n}}</text>
-          {{/each}}
-        </svg>
-        {{/if}}
-
-        <div class="hg-legend">
-          <span class="hit"><b></b>{{legend.hit}}</span>
-          <span class="off"><b></b>{{legend.off}}</span>
-          <span class="l1"><em></em>{{legend.g1}}</span>
-          <span class="l2"><em></em>{{legend.g2}}</span>
-          <span class="l3"><em></em>{{legend.g3}}</span>
-        </div>
       </div>
-
-      <div class="hg-caveat">※ {{caveat}}</div>
 
       <div class="wirit-footer">
         <span>출처 · {{source.name}}{{#if source.period}} · {{source.period}}{{/if}}</span>

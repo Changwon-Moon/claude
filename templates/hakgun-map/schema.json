@@ -59,9 +59,6 @@
         }
       }
     },
-    "caveat": {
-      "type": "string"
-    },
     "legend": {
       "type": "object"
     },
@@ -123,12 +120,6 @@
     },
     "layout": {
       "type": "object"
-    },
-    "leaders": {
-      "type": [
-        "array",
-        "null"
-      ]
     }
   },
   "additionalProperties": true

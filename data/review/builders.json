@@ -1791,13 +1791,6 @@
         "--date",
         "2026-09-01"
       ]
-    },
-    {
-      "label": "hakgun-map-lines",
-      "cmd": "scripts/build-hakgun-map.mjs",
-      "args": [
-        "--publish"
-      ]
     }
   ]
 }

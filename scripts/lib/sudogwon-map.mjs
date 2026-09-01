@@ -137,14 +137,16 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16 }) {
     `.sg-off{fill:#e7e9ee;stroke:#fff;stroke-width:1.6}` +
     `.sg-hit{fill:#f6c9cd;stroke:#fff;stroke-width:1.6}` +
     `.sg-pin{stroke:#fff;stroke-width:3.5}` +
-    `.sg-pin.g1{fill:#141821}.sg-pin.g2{fill:#2e6bff}.sg-pin.g3{fill:#8f9bad}` +
+    `.sg-pin.g1{fill:#c8102e}.sg-pin.g2{fill:#141821}.sg-pin.g3{fill:#8f9bad}` +
     `.sg-num{font-size:24px;font-weight:900;fill:#fff;text-anchor:middle}` +
     `.sg-wm{font-size:34px;font-weight:800;fill:#c4c9d2;letter-spacing:-0.01em}` +
     `</style>` +
     // 워터마크는 면(base) **뒤에** 그린다. 앞에 두면 폴리곤이 덮어 조용히 사라진다
     // — 화면을 좁게 자른 뒤 실제로 그렇게 사라졌다(2026-09-01).
+    // 두 개를 좌상단·좌하단 빈 코너에 둔다(오너 2026-09-01). 데이터 위에는 올리지 않는다.
     `<g>${base}</g>` +
     `<text x="${(PAD + VW * 0.035).toFixed(1)}" y="${(PAD + VH * 0.05).toFixed(1)}" class="sg-wm">@wirit_note</text>` +
+    `<text x="${(PAD + VW * 0.035).toFixed(1)}" y="${(PAD + VH * 0.93).toFixed(1)}" class="sg-wm">@wirit_note</text>` +
     `<g>${marks}</g>` +
     `</svg>`;
 
