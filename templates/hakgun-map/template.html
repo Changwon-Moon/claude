@@ -9,8 +9,11 @@
       .hg { padding-top: 72px; }
 
       /* 부제(출처·기준)를 우상단 로고와 같은 줄에(오너 2026-09-01). .wirit-topcap 이 그 자리다 —
-         margin-top -30 · padding-right 190(로고 자리)을 공용 규격에서 그대로 받는다. */
-      .hg .wirit-topcap { font-size: 20px; font-weight: 700; letter-spacing: -0.015em; }
+         margin-top -30 · min-height 62 · padding-right 190(로고 자리) · 28px/600 을
+         공용 규격(_shared/base.css)에서 **그대로** 받는다. 여기서 다시 정의하지 않는다.
+         ⚠️ 한때 20px/700 으로 줄여 뒀었다. 전 카드를 재보니 61장이 28px/600 인데 이 카드만
+            20px 이었다 — 같은 계정의 카드로 안 보인다(오너 2026-09-01 지적).
+            28px 로 재도 글자 폭 699px < 자리 746px 라 한 줄에 들어간다. 줄일 이유가 없었다. */
 
       /* 제목은 로고 라인 바로 아래에 붙지 않게 titleGap 만큼 띄운다(오너 2026-09-01). */
       .hg-title {
@@ -88,7 +91,10 @@
       }
       .hg-jb .t b { font-size: 19px; font-weight: 900; letter-spacing: -0.02em; color: var(--wirit-ink); }
       .hg-jb .t i { font-style: normal; margin-left: auto; font-size: 14px; font-weight: 700; color: var(--wirit-gray); }
-      .hg-jb .g { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; row-gap: 2px; }
+      /* 두 칸을 1fr 로 반씩 나누면, 왼칸의 긴 이름(「부산 해운대·동래」)이 오른칸까지 넓혀
+         「대전 둔산」과 값 사이가 텅 빈다(오너 2026-09-01). 칸마다 제 내용만큼만 잡는다.
+         칸 너비는 빌더가 열별로 따로 재서 jbW 를 정한다 — 두 곳의 계산이 같아야 한다. */
+      .hg-jb .g { display: grid; grid-template-columns: max-content max-content; column-gap: 14px; row-gap: 2px; }
       .hg-jb .r { display: grid; grid-template-columns: 9px 1fr auto; align-items: center; column-gap: 5px; }
       .hg-jb .r em { width: 9px; height: 9px; border-radius: 999px; display: inline-block; }
       .hg-jb .r.g1 em { background: #c8102e; }

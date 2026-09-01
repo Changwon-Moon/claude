@@ -184,11 +184,14 @@ LAYOUT.mapY = 0;                       // 지도와 표를 같은 높이에서 �
 {
   const NM_FS = 17, VAL_FS = 17;                     // 템플릿 .hg-jb .r .n / .v 와 같은 값
   const tw = (t, fs) => [...t].reduce((w, ch) => w + (ch === "·" ? 0.45 : /[ ]/.test(ch) ? 0.32 : /[0-9.]/.test(ch) ? 0.58 : 1), 0) * fs * 0.97 * 1.06;
-  const colW = Math.max(
-    ...jibangRows.map((r) => 9 + 5 + tw(r.name, NM_FS) + 8 + tw(r.price, VAL_FS) + tw("억", 12)),
-  );
-  const JB_PAD_X = 11, JB_COL_GAP = 12;
-  LAYOUT.jbW = Math.ceil(colW * 2 + JB_COL_GAP + JB_PAD_X * 2 + 4);
+  // 칸은 **열별로 따로** 잰다. 두 열을 같은 폭으로 두면 왼쪽의 긴 이름이 오른쪽까지 넓혀
+  // 「대전 둔산」과 값 사이가 텅 빈다(오너 2026-09-01). 템플릿도 max-content 로 맞춰 뒀다.
+  // 행은 좌→우 순서로 채워지므로(row-major) 짝수번째가 왼쪽 열, 홀수번째가 오른쪽 열이다.
+  const rowW = (r) => 9 + 5 + tw(r.name, NM_FS) + 8 + tw(r.price, VAL_FS) + tw("억", 12);
+  const colOf = (k) => jibangRows.filter((_, i) => i % 2 === k).map(rowW);
+  const col1 = Math.max(...colOf(0)), col2 = Math.max(...colOf(1));
+  const JB_PAD_X = 11, JB_COL_GAP = 14;
+  LAYOUT.jbW = Math.ceil(col1 + col2 + JB_COL_GAP + JB_PAD_X * 2 + 4);
   if (LAYOUT.jbW > mapW * 0.72)
     throw new Error(`지방 블록이 너무 넓습니다(${LAYOUT.jbW}px > 지도 폭의 72%). 이름이 길어졌는지 확인하세요.`);
 }

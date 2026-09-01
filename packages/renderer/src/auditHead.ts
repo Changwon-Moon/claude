@@ -24,7 +24,14 @@ const MEASURE = `(() => {
   var af = getComputedStyle(card, "::after");
   var b = card.querySelector(".wirit-corner");
   var m = b && b.querySelector(".mark");
+  /* 로고 라인의 상단 캡션(.wirit-topcap)도 '머리'다. 템플릿이 제 맘대로 줄여도
+     카드 한 장만 보면 멀쩡해 보인다 — 61장을 나란히 놓고서야 hakgun-map 하나가
+     20px 인 게 드러났다(오너 2026-09-01 지적). 그래서 전수 표에 넣는다. */
+  var tc = card.querySelector(".wirit-topcap");
+  var tcs = tc ? getComputedStyle(tc) : null;
   return {
+    capPx: tc && tc.textContent.trim() ? Math.round(parseFloat(tcs.fontSize)) : null,
+    capWeight: tc && tc.textContent.trim() ? String(tcs.fontWeight) : null,
     padTop: Math.round(parseFloat(cs.paddingTop) || 0),
     padSide: Math.round(parseFloat(cs.paddingLeft) || 0),
     badgeBg: b ? getComputedStyle(b).backgroundColor : "(뱃지 없음)",
@@ -91,15 +98,18 @@ async function main() {
      붙지 않게 일부러 내림)은 머리를 깎은 게 아니므로 허용하고 ⬆ 로 표시한다. */
   const okPad = (r: any) => r.padTop >= 72;
   const okBorder = (r: any) => r.afterBorder.startsWith("3px") && r.afterBorder.includes("255, 255, 255");
+  /* 상단 캡션은 _shared/base.css 의 28px/600 이 정본이다. 글자가 없는 카드는 검사 대상이 아니다.
+     길다고 줄이지 않는다 — 자리는 746px 라 28px 로도 대부분 한 줄에 들어간다. 안 들어가면 문구를 줄인다. */
+  const okCap = (r: any) => r.capPx === null || (r.capPx === 28 && r.capWeight === "600");
 
-  console.log("\n📐 머리 규격 전수 점검 — 공용 기준: 위 여백 ≥72px · 뱃지 잉크네이비 · 글자 36px · 흰 테두리 3px");
+  console.log("\n📐 머리 규격 전수 점검 — 공용 기준: 위 여백 ≥72px · 뱃지 잉크네이비 · 글자 36px · 흰 테두리 3px · 상단 캡션 28px/600");
   console.log("   (표지형 전면 사진 카드는 예외 — 흰 판 뱃지·패딩 0 이 정상)\n");
-  console.log("카드".padEnd(24) + "템플릿".padEnd(22) + "위여백  뱃지판   글자   흰테두리");
-  console.log("─".repeat(88));
+  console.log("카드".padEnd(24) + "템플릿".padEnd(22) + "위여백  뱃지판   글자   흰테두리  상단캡션");
+  console.log("─".repeat(100));
   let bad = 0;
   for (const r of rows) {
     const cover = isCover(r);
-    const violated = !cover && [okPad(r), okBadge(r), okMark(r), okBorder(r)].some((f) => !f);
+    const violated = !cover && [okPad(r), okBadge(r), okMark(r), okBorder(r), okCap(r)].some((f) => !f);
     if (violated) bad++;
     const pad = cover ? " 표지 " : okPad(r) ? (r.padTop === 72 ? "  ✅  " : ` ⬆${String(r.padTop).padStart(3)} `) : ` ❌${String(r.padTop).padStart(3)} `;
     console.log(
@@ -108,10 +118,11 @@ async function main() {
         pad +
         (cover ? " 표지  " : okBadge(r) ? "  ✅   " : "  ❌   ") +
         (okMark(r) ? " ✅  " : ` ❌${String(r.markPx ?? "-").padStart(3)}`) +
-        (okBorder(r) ? "   ✅" : "   ❌ " + r.afterBorder),
+        (okBorder(r) ? "   ✅" : "   ❌ " + r.afterBorder) +
+        (r.capPx === null ? "     ―" : okCap(r) ? "     ✅" : `     ❌${r.capPx}/${r.capWeight}`),
     );
   }
-  console.log("─".repeat(88));
+  console.log("─".repeat(100));
   console.log(`총 ${rows.length}장 · 규격 위반 ${bad}장 (표지형 예외 ${rows.filter(isCover).length}장 제외)\n`);
   process.exit(bad > 0 ? 1 : 0);
 }
