@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-31T14:05:50.736Z",
+  "generatedAt": "2026-09-01T00:00:23.674Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -8,12 +8,6 @@
       "cron": "55 19 * * *",
       "dueKst": "04:55",
       "dots": [
-        {
-          "day": "08-18",
-          "state": "ok",
-          "at": "07:11",
-          "delay": null
-        },
         {
           "day": "08-19",
           "state": "ok",
@@ -91,12 +85,18 @@
           "state": "late",
           "at": "09:16",
           "delay": 262
+        },
+        {
+          "day": "09-01",
+          "state": "late",
+          "at": "08:26",
+          "delay": 212
         }
       ],
       "medianDelay": 262,
       "maxDelay": 262,
-      "lastRun": "2026-08-31",
-      "lastOk": "2026-08-31",
+      "lastRun": "2026-09-01",
+      "lastOk": "2026-09-01",
       "okDaysAgo": 0
     },
     {
@@ -105,12 +105,6 @@
       "cron": "0 1 * * *",
       "dueKst": "10:00",
       "dots": [
-        {
-          "day": "08-18",
-          "state": "fail",
-          "at": "11:58",
-          "delay": null
-        },
         {
           "day": "08-19",
           "state": "ok",
@@ -188,6 +182,12 @@
           "state": "late",
           "at": "15:52",
           "delay": 353
+        },
+        {
+          "day": "09-01",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": 353,
@@ -202,12 +202,6 @@
       "cron": "20 1 1 * *",
       "dueKst": "10:20",
       "dots": [
-        {
-          "day": "08-18",
-          "state": "ok",
-          "at": "11:30",
-          "delay": null
-        },
         {
           "day": "08-19",
           "state": "ok",
@@ -285,6 +279,12 @@
           "state": "none",
           "at": null,
           "delay": null
+        },
+        {
+          "day": "09-01",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": null,
@@ -299,12 +299,6 @@
       "cron": "0 2 * * *",
       "dueKst": "11:00",
       "dots": [
-        {
-          "day": "08-18",
-          "state": "ok",
-          "at": "12:24",
-          "delay": null
-        },
         {
           "day": "08-19",
           "state": "ok",
@@ -382,6 +376,12 @@
           "state": "late",
           "at": "17:15",
           "delay": 375
+        },
+        {
+          "day": "09-01",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": 375,
@@ -516,9 +516,9 @@
       "file": "produce-card.yml",
       "name": "카드 제작 (관제탑 버튼)",
       "lastRun": "2026-08-08",
-      "daysAgo": 23,
+      "daysAgo": 24,
       "lastOk": "2026-08-08",
-      "okDaysAgo": 23,
+      "okDaysAgo": 24,
       "fails30": 0,
       "runs30": 2
     },
@@ -615,9 +615,9 @@
     {
       "file": "apt-detail.yml",
       "name": "단지 주차대수 (카드 제원용)",
-      "lastRun": "2026-08-31",
+      "lastRun": "2026-09-01",
       "daysAgo": 0,
-      "lastOk": "2026-08-31",
+      "lastOk": "2026-09-01",
       "okDaysAgo": 0,
       "fails30": 4,
       "runs30": 100
@@ -625,19 +625,19 @@
     {
       "file": "apt-station.yml",
       "name": "단지 가까운 역 (카드 뱃지용)",
-      "lastRun": "2026-08-31",
+      "lastRun": "2026-09-01",
       "daysAgo": 0,
-      "lastOk": "2026-08-25",
-      "okDaysAgo": 6,
+      "lastOk": "2026-09-01",
+      "okDaysAgo": 0,
       "fails30": 7,
-      "runs30": 12
+      "runs30": 13
     },
     {
       "file": "apt-supply-area.yml",
       "name": "단지 공급면적 (카드 평 표기용)",
-      "lastRun": "2026-08-31",
+      "lastRun": "2026-09-01",
       "daysAgo": 0,
-      "lastOk": "2026-08-31",
+      "lastOk": "2026-09-01",
       "okDaysAgo": 0,
       "fails30": 0,
       "runs30": 100
@@ -665,9 +665,9 @@
     {
       "file": "guard.yml",
       "name": "문지기 (guard)",
-      "lastRun": "2026-08-31",
+      "lastRun": "2026-09-01",
       "daysAgo": 0,
-      "lastOk": "2026-08-31",
+      "lastOk": "2026-09-01",
       "okDaysAgo": 0,
       "fails30": 0,
       "runs30": 100
@@ -755,31 +755,31 @@
     {
       "file": "singo-history.yml",
       "name": "신고가 단지 이력 (한 단지 곡선)",
-      "lastRun": "2026-08-31",
+      "lastRun": "2026-09-01",
       "daysAgo": 0,
       "lastOk": "2026-08-31",
       "okDaysAgo": 0,
       "fails30": 3,
-      "runs30": 17
+      "runs30": 18
     },
     {
       "file": "singo-retry.yml",
       "name": "오늘의 신고가 — 자동 재시도",
-      "lastRun": "2026-08-31",
+      "lastRun": "2026-09-01",
       "daysAgo": 0,
       "lastOk": "2026-08-25",
-      "okDaysAgo": 6,
+      "okDaysAgo": 7,
       "fails30": 1,
-      "runs30": 17
+      "runs30": 18
     },
     {
       "file": "tower-deploy.yml",
       "name": "관제탑 배포 (Cloudflare)",
-      "lastRun": "2026-08-31",
+      "lastRun": "2026-09-01",
       "daysAgo": 0,
       "lastOk": "2026-08-31",
       "okDaysAgo": 0,
-      "fails30": 20,
+      "fails30": 19,
       "runs30": 100
     }
   ]
