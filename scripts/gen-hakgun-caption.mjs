@@ -11,6 +11,8 @@ import { readFileSync } from "node:fs";
 import { writeCaption } from "./lib/caption-signature.mjs";
 
 const cardPath = process.argv[2];
+const acaIdx = process.argv.indexOf("--academy");
+const acaPath = acaIdx >= 0 ? process.argv[acaIdx + 1] : null;
 const outIdx = process.argv.indexOf("--out");
 const out = outIdx >= 0 ? process.argv[outIdx + 1] : "hakgun-map";
 if (!cardPath) throw new Error("사용법: node scripts/gen-hakgun-caption.mjs <카드.json> [--out 라벨]");
@@ -68,9 +70,38 @@ if (c.jibang && c.jibang.rows && c.jibang.rows.length) {
   lines.push("");
 }
 
+// ── 2장째(학원 수) — 카드 JSON 에서 그대로 읽는다. 캡션이 숫자를 다시 세지 않는다.
+if (acaPath) {
+  const A = JSON.parse(readFileSync(acaPath, "utf8"));
+  const a = A.rows;
+  const byName = new Map(flat.map((r) => [r.name, r]));
+  lines.push("[2장째 — 입시·보습 학원 수]");
+  for (const r of a.slice(0, 5)) lines.push(`${r.n}. ${r.name} — ${r.aca}곳`);
+  lines.push(`… ${a.at(-1).n}. ${a.at(-1).name} ${a.at(-1).aca}곳까지`);
+  lines.push("");
+  // 값 순위와 학원 순위가 가장 크게 어긋난 곳을 **계산해서** 고른다.
+  const priceRank = new Map(
+    [...flat].sort((x, y) => Number(y.price) - Number(x.price)).map((r, i) => [r.name, i + 1]),
+  );
+  const gap = a
+    .map((r) => ({ name: r.name, aca: r.n, price: priceRank.get(r.name), d: (priceRank.get(r.name) ?? 0) - r.n }))
+    .filter((r) => r.price != null);
+  const up = [...gap].sort((x, y) => y.d - x.d)[0];   // 값보다 학원이 앞선 곳
+  const down = [...gap].sort((x, y) => x.d - y.d)[0]; // 학원보다 값이 앞선 곳
+  lines.push("[값 순위와 학원 순위가 어긋나는 곳]");
+  lines.push(`· ${up.name} — 값 ${up.price}위인데 학원은 ${up.aca}위 (${byName.get(up.name).price}억)`);
+  lines.push(`· ${down.name} — 값 ${down.price}위인데 학원은 ${down.aca}위 (${byName.get(down.name).price}억)`);
+  lines.push("");
+}
+
 lines.push("👉 급지는 학교와 학원가를 보고 나눈 것이고, 값은 시장이 매긴 것입니다. 둘이 늘 같이 가지는 않습니다.");
 lines.push("");
 lines.push(`※ 출처 — 급지 분류는 『대한민국 학군지도』, 값은 국토교통부 아파트 매매 실거래가 ${period}입니다.`);
+if (acaPath)
+  lines.push(
+    "※ 학원 수는 나이스 교육정보 개방 포털의 학원·교습소 원장에서 분야가 「입시·검정 및 보습」인 **학원**만 센 것입니다. " +
+      "교습소(1인 운영·일시수용 9명)는 뺐습니다. 정원은 신고 편차가 커 쓰지 않았습니다.",
+  );
 lines.push("※ 청라(인천 서구)는 행정구역 개편 예고로 코드표에 없어 뺐습니다. 봉선(광주)은 실거래 API 가 올해 내내 0건을 돌려줘 이번 판에서 뺐습니다.");
 lines.push("※ 번호는 급지별로 새로 매겼습니다. 학군지 경계는 행정구역이 아니라 생활권이라, 넣은 법정동을 데이터셋에 공개합니다.");
 lines.push("");

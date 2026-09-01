@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* hakgun-academy@1 — 급지 카드의 2장째. 좌: 학원 수 순위 한 덩어리 표 / 우: 같은 수도권 지도.
+         ⚠️ 치수는 빌더의 LAYOUT 하나가 정본이다. 여기선 CSS 변수로 받아 쓰기만 한다.
+         ⚠️ .wirit-card 여는 태그는 **한 줄**이어야 한다 — 렌더러가 정규식으로 로고를 넣는다.
+         ⚠️ 상단 캡션(.wirit-topcap)은 공용 규격 28px/600 을 그대로 받는다. 여기서 다시 정의하지 않는다. */
+      .ha { padding-top: 72px; }
+
+      .ha-title {
+        margin: var(--titleGap) 0 0; text-align: center; white-space: nowrap;
+        font-size: var(--titleFs); font-weight: 900; line-height: 1.08;
+        letter-spacing: -0.04em; color: var(--wirit-ink);
+      }
+      .ha-title .hi { color: var(--wirit-cobalt); }
+      .ha-title .hot { color: #c8102e; }
+      .ha-body { position: relative; margin: var(--bodyGap) 0 0; width: 100%; height: var(--bodyH); }
+
+      /* ── 좌: 학원 수 순위 (급지로 나누지 않는다 — 순위가 곧 이야기다) ── */
+      .ha-tbl { position: absolute; left: 0; top: 0; width: var(--tableW); }
+      .ha-hdr {
+        height: var(--hdrH); display: grid; grid-template-columns: 32px 1fr auto;
+        align-items: center; column-gap: 7px; border-bottom: 2.5px solid var(--wirit-ink);
+        font-size: 17px; font-weight: 700; color: var(--wirit-gray);
+      }
+      .ha-hdr .v { text-align: right; }
+      .ha-row {
+        height: var(--rowH);
+        display: grid; grid-template-columns: 32px 1fr auto; align-items: center; column-gap: 7px;
+        border-bottom: 1.5px solid var(--wirit-ink-06);
+      }
+      .ha-n { font-family: var(--font-num); font-size: 21px; font-weight: 900; color: var(--wirit-gray); }
+      /* 급지는 이름 앞의 점으로만 말한다 — 표를 나누지 않고도 색이 급지를 실어 나른다. */
+      .ha-nm { display: flex; align-items: center; gap: 7px; font-size: 26px; font-weight: 900; letter-spacing: -0.03em; color: var(--wirit-ink); white-space: nowrap; }
+      .ha-nm em { width: 11px; height: 11px; border-radius: 999px; display: inline-block; flex: none; }
+      .ha-row.g1 .ha-nm em { background: #c8102e; }
+      .ha-row.g2 .ha-nm em { background: #141821; }
+      .ha-row.g3 .ha-nm em { background: #8f9bad; }
+      .ha-v { text-align: right; white-space: nowrap; font-family: var(--font-num); font-size: 27px; font-weight: 900; color: var(--wirit-ink); }
+      .ha-v i { font-style: normal; font-size: 18px; font-weight: 800; margin-left: 1px; color: var(--wirit-gray); }
+
+      /* ── 우: 지도 + 그 아래 범례 ── */
+      .ha-map { position: absolute; left: var(--mapX); top: var(--mapY); width: var(--mapW); }
+      .ha-map svg { width: 100%; height: auto; display: block; }
+
+      .ha-legend {
+        position: absolute; left: var(--mapX); width: var(--mapW); height: var(--legendH);
+        top: calc(var(--mapH) + var(--legendGap));
+        display: flex; flex-wrap: wrap; align-items: center; gap: 4px 13px; justify-content: center;
+        font-size: 18px; font-weight: 700; color: var(--wirit-gray);
+      }
+      .ha-legend span { display: inline-flex; align-items: center; gap: 5px; }
+      .ha-legend b { width: 16px; height: 11px; border-radius: 3px; display: inline-block; }
+      .ha-legend em { width: 14px; height: 14px; border-radius: 999px; display: inline-block; }
+      .ha-legend .hit b { background: #f6c9cd; }
+      .ha-legend .off b { background: #e7e9ee; }
+      .ha-legend .l1 em { background: #c8102e; }
+      .ha-legend .l2 em { background: #141821; }
+      .ha-legend .l3 em { background: #8f9bad; }
+
+      /* ── 지방 학군지 블록 — 1장과 같은 자리·같은 규격 ── */
+      .ha-jb {
+        position: absolute; left: var(--jbCx); top: var(--jbY); transform: translateX(-50%);
+        width: max-content; max-width: var(--jbW);
+        background: var(--wirit-paper); border: 2px solid var(--wirit-ink-12);
+        border-radius: 4px; padding: 9px 11px 10px;
+        box-shadow: 0 2px 0 rgba(20, 24, 33, 0.10), 0 12px 26px rgba(20, 24, 33, 0.16);
+      }
+      .ha-jb .t {
+        display: flex; align-items: baseline; gap: 7px; padding-bottom: 6px;
+        border-bottom: 2px solid var(--wirit-ink); margin-bottom: 6px;
+      }
+      .ha-jb .t b { font-size: 19px; font-weight: 900; letter-spacing: -0.02em; color: var(--wirit-ink); }
+      .ha-jb .g { display: grid; grid-template-columns: max-content max-content; column-gap: 14px; row-gap: 2px; }
+      .ha-jb .r { display: grid; grid-template-columns: 9px 1fr auto; align-items: center; column-gap: 5px; }
+      .ha-jb .r em { width: 9px; height: 9px; border-radius: 999px; display: inline-block; }
+      .ha-jb .r.g1 em { background: #c8102e; }
+      .ha-jb .r.g2 em { background: #141821; }
+      .ha-jb .r.g3 em { background: #8f9bad; }
+      .ha-jb .r .n { font-size: 17px; font-weight: 800; letter-spacing: -0.03em; color: var(--wirit-ink); white-space: nowrap; }
+      .ha-jb .r .v { font-family: var(--font-num); font-size: 17px; font-weight: 900; color: var(--wirit-ink); white-space: nowrap; }
+      .ha-jb .r .v i { font-style: normal; font-size: 12px; font-weight: 800; color: var(--wirit-gray); margin-left: 1px; }
+
+      .ha .wirit-footer { font-size: 19px; letter-spacing: -0.015em; }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card ha" style="--titleFs:{{layout.titleFs}}px;--titleGap:{{layout.titleGap}}px;--bodyGap:{{layout.bodyGap}}px">
+      <div class="wirit-topcap"><span>{{subtitle}}</span></div>
+
+      <h1 class="ha-title">{{{title}}}</h1>
+
+      <div
+        class="ha-body"
+        style="--bodyH:{{layout.bodyH}}px;--tableW:{{layout.tableW}}px;--rowH:{{layout.rowH}}px;--hdrH:{{layout.hdrH}}px;--mapX:{{layout.mapX}}px;--mapY:{{layout.mapY}}px;--mapW:{{layout.mapW}}px;--mapH:{{layout.mapH}}px;--legendH:{{layout.legendH}}px;--legendGap:{{layout.legendGap}}px;--jbCx:{{layout.jbCx}}px;--jbY:{{layout.jbY}}px;--jbW:{{layout.jbW}}px"
+      >
+        <div class="ha-map">{{{mapSvg}}}</div>
+
+        <div class="ha-tbl">
+          <div class="ha-hdr"><span>{{head.rank}}</span><span>{{head.name}}</span><span class="v">{{head.val}}</span></div>
+          {{#each rows}}
+          <div class="ha-row g{{this.grade}}">
+            <span class="ha-n">{{this.n}}</span>
+            <span class="ha-nm"><em></em>{{this.name}}</span>
+            <span class="ha-v">{{this.aca}}<i>곳</i></span>
+          </div>
+          {{/each}}
+        </div>
+
+        {{#if jibang}}
+        <div class="ha-jb">
+          <div class="t"><b>{{jibang.label}}</b></div>
+          <div class="g">
+            {{#each jibang.rows}}
+            <div class="r g{{this.grade}}"><em></em><span class="n">{{this.name}}</span><span class="v">{{this.aca}}<i>곳</i></span></div>
+            {{/each}}
+          </div>
+        </div>
+        {{/if}}
+
+        <div class="ha-legend">
+          <span class="hit"><b></b>{{legend.hit}}</span>
+          <span class="off"><b></b>{{legend.off}}</span>
+          <span class="l1"><em></em>{{legend.g1}}</span>
+          <span class="l2"><em></em>{{legend.g2}}</span>
+          <span class="l3"><em></em>{{legend.g3}}</span>
+        </div>
+      </div>
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.period}} · {{source.period}}{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "label": "hakgun-academy",
+  "verdict": "block",
+  "summary": "BLOCK — error 1 · warn 0 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "caption-number",
+      "level": "error",
+      "code": "number-mismatch",
+      "msg": "캡션 금액 37.00억, 33.25억, 32.00억, 18.10억, 14.30억, 8.70억, 21.30억, 19.26억, 18.50억, 18.20억, 9.35억, 8.90억, 7.25억, 6.30억, 14.00억, 11.51억, 7.42억, 6.85억, 6.40억, 5.95억, 4.10억, 7.58억, 4.48억, 5.45억, 5.39억, 4.85억, 4.23억, 6.20억, 5.70억이(가) 카드 수치에 없습니다 — 오보 위험, 카드와 대조 필요"
+    }
+  ],
+  "cards": [
+    {
+      "file": "hakgun-academy.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}

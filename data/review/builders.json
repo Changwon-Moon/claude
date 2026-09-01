@@ -1773,6 +1773,13 @@
       ]
     },
     {
+      "label": "hakgun-academy",
+      "cmd": "scripts/build-hakgun-academy.mjs",
+      "args": [
+        "--publish"
+      ]
+    },
+    {
       "label": "jeonse84-map",
       "cmd": "scripts/build-jeonse-band-map.mjs",
       "args": [
