@@ -43,7 +43,11 @@ const num = (n) => Number(n).toLocaleString("ko-KR");
  */
 function assertNumbersMatch(label, card, caption) {
   const strip = (h) => String(h ?? "").replace(/<[^>]*>/g, "");
-  const src = `${strip(card.title)} ${strip(card.note)}`;
+  /* 제목·마무리 문구 + **좌상단 강조 블록(level)**. 2026-09-01 에 연말 예상치(5,143조)가
+     level 에 들어갔는데 게이트는 제목만 보고 있어서 캡션이 그 숫자를 빠뜨려도 통과할 뻔했다.
+     막대 라벨까지 다 넣으면 캡션이 비대해지므로 **얼굴로 읽히는 블록**까지만 본다. */
+  const levelText = (card.chart?.level?.lines ?? []).map((l) => l.t).join(" ");
+  const src = `${strip(card.title)} ${strip(card.note)} ${levelText}`;
   const want = [...new Set(src.match(/\d[\d,]*(?:\.\d+)?/g) ?? [])].filter((t) => t.length > 1);
   const missing = want.filter((t) => !caption.includes(t));
   if (missing.length) {
@@ -173,7 +177,7 @@ function capGov(m) {
   const bullets = seg
     .map((s) => `· ${s.name} 월평균 ${s.rate.toFixed(1)}조 (총 ${num(s.delta)}조${s === top ? " — 총액 1위" : ""}${s === cur ? " — 재임 중" : ""})`)
     .join("\n");
-  const pk = m.peakMonth;
+  const pk = m.peakMonth, est = m.yearEndEstimate;
   return `돈이 가장 빨리 풀린 정부는 지금입니다 💵
 
 역대 정부의 통화량(M2) 증가 규모를 세어봤습니다.
@@ -191,6 +195,9 @@ ${bullets}
 
 ⚡ ${pk.inCurrentTerm ? `특히 ${kor(pk.ym)} 한 달에만 ${pk.delta.toFixed(1)}조가 늘었습니다.\n${firstYm.slice(0, 4)}년 집계 이후 한 달 증가폭 1위입니다.` : `한 달 증가폭 1위는 ${kor(pk.ym)}의 ${pk.delta.toFixed(1)}조입니다.`}
 
+${est ? `📈 12월 예상 ${num(est.shown)}조
+올해 들어 ${num(est.ytd)}조가 늘었습니다(${est.monthsDone}개월, 월평균 ${est.perMonth}조).
+그 속도가 남은 ${est.remMonths}개월에도 이어진다고 본 값입니다.\n` : ""}
 📌 저장해두고 통화량 흐름 확인하기
 
 —
@@ -201,7 +208,10 @@ ${bullets}
 ※ 한국은행이 2025년 12월 통화지표를 개편해 수익증권 등을 M2에서 제외했습니다.
    이 카드는 정부 간 비교를 위해 전 구간을 개편 전 기준으로 통일했습니다.
 ※ 얼굴 아래 개월 수는 실제 재임 기간, 월평균은 데이터 구간 기준입니다.
-※ ${ymLabel(cur.end)} 기준 M2 총량은 ${num(m.shown.level)}조입니다(개편 전 기준, 개편 후 기준은 ${num(m.shown.levelNewBasis)}조).
+※ ${ymLabel(cur.end)} 기준 M2 총량은 ${num(m.shown.level)}조입니다(개편 전 기준, 개편 후 기준은 ${num(m.shown.levelNewBasis)}조).${est ? `
+※ 카드 왼쪽 회색 글씨 ${num(est.shown)}조는 예상치입니다 — 한국은행이 발표한 값이 아닙니다.
+   ${ymLabel(cur.end)}까지의 실적 ${num(est.ytd)}조 ÷ ${est.monthsDone}개월 = 월 ${est.perMonth}조를 남은 ${est.remMonths}개월에 그대로 더한 값이고,
+   통화정책·자금흐름이 바뀌면 달라집니다.` : ""}
 
 ${TAGS}`;
 }

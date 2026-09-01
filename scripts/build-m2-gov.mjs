@@ -87,7 +87,7 @@ const maxRate = Math.max(...rows.map((r) => r.rate));
 
 /* ── 좌표 ──
    막대는 전부 플러스라 0선 위아래가 없다. 바닥선 하나에 세운다. */
-const INK = "#141821", RED = "#e5484d", COBALT = "#2e6bff", GRAY = "#5b6b7f";
+const INK = "#141821", RED = "#e5484d", COBALT = "#2e6bff", GRAY = "#5b6b7f", MUTE = "#9aa3af";
 const VB_W = 1000, VB_H = 652;
 /* 좌우 여백을 0 으로 둔다 — SVG 안쪽에 여백을 주면 **자가 두 개**가 된다.
    막대는 (여백 뺀 폭)을 6등분하는데 아래 인물 축은 카드 폭을 6등분하므로
@@ -203,6 +203,36 @@ const badges = peakInRun
    막대는 '정부별로 얼마나 늘었나'만 말한다. 그 늘어난 돈이 쌓인 **현재 총량**은 다른 축이라
    막대로 그리면 안 되고(높이가 통째로 달라진다), 빈 자리에 글자로 둔다.
    기준은 카드 전체와 같은 개편 전 계열(구 M2). 값은 원자료의 최신월. */
+/* ── 연말 예상치 (오너 지시 2026-09-01) ──
+   **원자료에 없는 숫자다.** 그래서 CARD_CHECKLIST 「추정치」의 네 가지를 다 건다:
+     ① 색으로 가른다 — 실측은 레드, 추정은 회색(같은 색이면 같은 무게로 읽힌다)
+     ② '예상'과 **가정을 카드에 적는다**("올해 속도 유지 가정")
+     ③ 줄을 나눠 실측 블록과 시각적으로 분리한다
+     ④ 캡션에 산술 가정을 그대로 적는다(gen-m2-caption.mjs)
+   ⚠️ 점선·사선으로 갈라 놓는 막대와 달리 여기는 글자다 — 그래픽만 잘라 써도
+      "예상"이라는 말과 회색이 함께 남게 문구 안에 넣는다.
+
+   셈법: **올해 들어 늘어난 만큼이 남은 달에도 이어진다**고 본다.
+   `연말 = 최신월 + (올해 증가액 ÷ 경과 개월) × 남은 개월`
+   wolse-flip 이 쓰는 「12 ÷ 지난 개월수」 배수와 같은 규칙이다 — 판형마다 다른 자를 쓰지 않는다. */
+const yEnd = `${lastYm.slice(0, 4)}12`;
+const prevDec = `${+lastYm.slice(0, 4) - 1}12`;
+const monthsDone = +lastYm.slice(4);
+const remMonths = 12 - monthsDone;
+const est = (() => {
+  if (remMonths <= 0) return null;                        // 12월 자료가 오면 추정할 게 없다
+  if (!(prevDec in M2)) return null;                      // 올해 증가액을 못 잰다
+  const ytd = M2[lastYm] - M2[prevDec];
+  const perMonth = ytd / monthsDone;
+  const value = M2[lastYm] + perMonth * remMonths;
+  if (value <= M2[lastYm]) return null;                   // 줄어드는 국면이면 이 문구가 안 맞는다
+  return { ym: yEnd, value, perMonth, ytd, monthsDone, remMonths };
+})();
+
+/* ── 플롯 좌상단 빈 공간: **지금 얼마나 풀려 있나** (오너 지시 2026-08-12)
+   막대는 '정부별로 얼마나 늘었나'만 말한다. 그 늘어난 돈이 쌓인 **현재 총량**은 다른 축이라
+   막대로 그리면 안 되고(높이가 통째로 달라진다), 빈 자리에 글자로 둔다.
+   기준은 카드 전체와 같은 개편 전 계열(구 M2). 값은 원자료의 최신월. */
 const level = {
   x: 8,
   y: r1(TOP - 26),
@@ -212,6 +242,13 @@ const level = {
     { t: `${ymLabel(lastYm)} 기준`, fill: GRAY, size: 26, weight: 800, dy: 0 },
     { t: "M2(광의통화)", fill: GRAY, size: 26, weight: 800, dy: 32 },
     { t: `${Math.round(M2[lastYm]).toLocaleString("ko-KR")}조`, fill: RED, size: 52, weight: 900, dy: 60 },
+    /* 아래 두 줄이 추정이다 — 위 실측(레드)과 색·크기로 갈린다 */
+    ...(est
+      ? [
+          { t: `12월 예상 ${Math.round(est.value).toLocaleString("ko-KR")}조`, fill: GRAY, size: 32, weight: 800, dy: 52 },
+          { t: "(올해 속도 유지 가정)", fill: MUTE, size: 23, weight: 700, dy: 30 },
+        ]
+      : []),
   ],
 };
 
@@ -263,6 +300,12 @@ const card = {
     peakMonth: { ym: peakMo.ym, delta: r1(peakMo.d), inCurrentTerm: peakInRun },
     shown: { level: Math.round(M2[lastYm]), levelNewBasis: NEW && lastYm in NEW ? Math.round(NEW[lastYm]) : null },
     overlapCheckMaxDiff: r1(worst),
+    /* 카드에 찍은 추정치와 그 산술 가정 — 캡션이 이걸 그대로 옮겨 적는다 */
+    yearEndEstimate: est
+      ? { ym: est.ym, shown: Math.round(est.value), ytd: r1(est.ytd), perMonth: r1(est.perMonth),
+          monthsDone: est.monthsDone, remMonths: est.remMonths,
+          basis: "올해 들어 늘어난 금액을 경과 개월로 나눈 월평균이 남은 달에도 이어진다고 본 값" }
+      : null,
   },
 };
 
