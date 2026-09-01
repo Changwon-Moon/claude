@@ -45,6 +45,13 @@ jobs:
           if [ -z "$MOLIT_API_KEY" ]; then
             echo "MSG=⛔ MOLIT_API_KEY 가 Secrets 에 없습니다" >> "$GITHUB_OUTPUT"; exit 0
           fi
+          # ── 키를 **수집기와 똑같이 다듬는다** (2026-09-02)
+          # 이 버튼은 여태 `serviceKey=${MOLIT_API_KEY}` 로 **날것 그대로** 실었다. 수집기는
+          # `encKey()`(디코드→인코드)로 정규화해 쓴다 — 두 길이 다르면 **버튼과 수집기가 서로 다른
+          # 것을 묻는 셈**이라 이 워크플로가 존재하는 이유가 사라진다. 실제로 09-02 두드림이
+          # 전부 403 "등록되지 않은 서비스키" 였는데 같은 키로 수집기는 전날 정상이었다.
+          # 그래서 **정규화·날것 둘 다** 두드려 어느 쪽이 문제인지 한 번에 가른다.
+          KEY_ENC=$(node -e 'const k=process.env.MOLIT_API_KEY;let d;try{d=decodeURIComponent(k)}catch{d=k};process.stdout.write(encodeURIComponent(d))')
           # 대기열이 있으면 그 줄이 무엇을 두드릴지 정한다(세션이 미는 손잡이).
           LAWD=11110; MONTHS=$(TZ=Asia/Seoul date +%Y%m); WHO="종로구"
           if [ -f data/molit-door-queue.txt ]; then
@@ -60,7 +67,9 @@ jobs:
           : > /tmp/knock.txt; ANYROW=0; ANYHTTP=""
           for LC in $(echo "$LAWD" | tr ',' ' '); do
           for YM in $(echo "$MONTHS" | tr ',' ' '); do
-            URL="https://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev?serviceKey=${MOLIT_API_KEY}&LAWD_CD=${LC}&DEAL_YMD=${YM}&pageNo=1&numOfRows=5"
+            BASEQ="https://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev?LAWD_CD=${LC}&DEAL_YMD=${YM}&pageNo=1&numOfRows=5"
+            # 정규화한 키로 먼저 묻는다(수집기가 쓰는 그 길).
+            URL="${BASEQ}&serviceKey=${KEY_ENC}"
             # ⚠️ 키가 로그에 찍히지 않게 -o 로 본문만 파일에 담는다
             CODE=$(curl -sS --max-time 20 -o /tmp/body.xml -w '%{http_code}' "$URL" 2>/tmp/err.txt || echo "000")
             # ⚠️ `|| true` 가 꼭 있어야 한다. Actions 의 bash 는 `set -eo pipefail` 로 돌아서
@@ -70,14 +79,27 @@ jobs:
             MSGX=$(grep -o '<resultMsg>[^<]*</resultMsg>' /tmp/body.xml 2>/dev/null | head -1 | sed 's/<[^>]*>//g' || true)
             TOTAL=$(grep -o '<totalCount>[^<]*</totalCount>' /tmp/body.xml 2>/dev/null | head -1 | sed 's/<[^>]*>//g' || true)
             ROWS=$(grep -c '<item>' /tmp/body.xml 2>/dev/null || true); ROWS=${ROWS:-0}
+            HOW="정규화"
+            if [ "${ROWS:-0}" -eq 0 ]; then
+              CODE2=$(curl -sS --max-time 20 -o /tmp/body2.xml -w '%{http_code}' "${BASEQ}&serviceKey=${MOLIT_API_KEY}" 2>/dev/null || echo "000")
+              ROWS2=$(grep -c '<item>' /tmp/body2.xml 2>/dev/null || true); ROWS2=${ROWS2:-0}
+              if [ "${ROWS2:-0}" -gt 0 ]; then
+                cp /tmp/body2.xml /tmp/body.xml; CODE="$CODE2"; ROWS="$ROWS2"; HOW="날것"
+                RESULT=$(grep -o '<resultCode>[^<]*</resultCode>' /tmp/body.xml 2>/dev/null | head -1 | sed 's/<[^>]*>//g' || true)
+                TOTAL=$(grep -o '<totalCount>[^<]*</totalCount>' /tmp/body.xml 2>/dev/null | head -1 | sed 's/<[^>]*>//g' || true)
+                MSGX=$(grep -o '<resultMsg>[^<]*</resultMsg>' /tmp/body.xml 2>/dev/null | head -1 | sed 's/<[^>]*>//g' || true)
+              else
+                HOW="정규화·날것 모두 0(날것 HTTP ${CODE2})"
+              fi
+            fi
             # 0건일 때가 진짜 궁금한 자리다 — 본문 앞머리를 남겨 「정상인데 0」인지
             # 「우리가 못 읽은 오류」인지 눈으로 가른다. 키가 섞여 나올 수 있어 지운다.
             HEAD=""
             if [ "${ROWS:-0}" -eq 0 ]; then
               HEAD=$(tr -d '\n' < /tmp/body.xml | sed -E 's/(serviceKey=)[^&"<]*/\1<hidden>/g' | head -c 200)
             fi
-            printf '\n· %s %s — HTTP %s · resultCode %s %s · totalCount %s · item %s건' \
-              "$LC" "$YM" "$CODE" "${RESULT:-?}" "${MSGX:-}" "${TOTAL:-?}" "$ROWS" >> /tmp/knock.txt
+            printf '\n· %s %s [%s] — HTTP %s · resultCode %s %s · totalCount %s · item %s건' \
+              "$LC" "$YM" "$HOW" "$CODE" "${RESULT:-?}" "${MSGX:-}" "${TOTAL:-?}" "$ROWS" >> /tmp/knock.txt
             [ -n "$HEAD" ] && printf '\n    본문: %s' "$HEAD" >> /tmp/knock.txt
             [ "${ROWS:-0}" -gt 0 ] && ANYROW=1
             ANYHTTP="$CODE"
