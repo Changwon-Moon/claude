@@ -90,6 +90,32 @@ const setsRawEarly = JSON.parse(readFileSync(setsPathEarly, "utf8"));
 const setsEarly = Array.isArray(setsRawEarly.sets) ? setsRawEarly.sets : setsRawEarly;
 const inSomeSet = new Set(setsEarly.flatMap((s) => s.cards ?? []));
 
+/* ── `--also <슬러그…>` : **늦게 온 자료 때문에 지난날 못 낸 장**을 오늘 묶음에 붙인다
+ *
+ * 왜 필요한가 (2026-09-02): 09-01 에 우장산아이파크·수원하늘채더퍼스트1단지 두 장이
+ * 건축물대장 문이 닫혀 **공급면적을 못 받아** 빠졌다. 다음날 자료가 왔고 오너 판단은
+ * *"늦게 온 2장은 내일 캐러셀에 붙인다"* 였다 — 신고가는 「그날 드러난 것」 기준이라
+ * 하루 늦어도 소식이 죽지 않기 때문이다.
+ *
+ * `--from` 으로는 안 된다. `--from 2026-09-01` 은 그날 판정된 **열다섯 장을 통째로** 다시
+ * 끌어오고, 그건 이미 확정·발행한 세트다 — 중복 문지기가 막는 것이 맞다.
+ * 필요한 것은 **그 두 장만** 집어 오는 손잡이다.
+ *
+ * ⚠️ 붙여도 **중복 문지기는 그대로 돈다.** 이미 낸 것과 같은 값이면 여기서도 막힌다.
+ * ⚠️ 자리 순서는 다른 장과 똑같이 **거래가 큰 순**이다 — 늦게 왔다고 뒤로 보내지 않는다.
+ *    (정기물에 조건부 예외를 두지 않는다 — CEO.md 2026-08-16) */
+const ALSO = new Set(
+  (() => {
+    const out = [];
+    for (let i = 0; i < process.argv.length; i++)
+      if (process.argv[i] === "--also")
+        for (let j = i + 1; j < process.argv.length && !process.argv[j].startsWith("--"); j++)
+          out.push(process.argv[j]);
+    return out;
+  })(),
+);
+const alsoSeen = new Set();
+
 const cards = [];
 for (const f of readdirSync(contentDir).filter((f) => f.endsWith(".json"))) {
   const j = JSON.parse(readFileSync(join(contentDir, f), "utf8"));
@@ -98,7 +124,10 @@ for (const f of readdirSync(contentDir).filter((f) => f.endsWith(".json"))) {
   const foundOn = (j.meta?.provenance ?? [])
     .map((x) => /singo-log:\s*(\d{4}-\d{2}-\d{2})/.exec(String(x))?.[1])
     .find(Boolean);
-  if (!DAYSET.has(foundOn)) continue; // 이 기간에 드러난 건이 아니다
+  if (ALSO.has(slug)) {
+    alsoSeen.add(slug);
+    console.log(`   ➕ ${slug} — --also 로 붙입니다 (판정일 ${foundOn})`);
+  } else if (!DAYSET.has(foundOn)) continue; // 이 기간에 드러난 건이 아니다
   if (!inSomeSet.has(slug)) {
     console.warn(`   ⓘ ${slug} — 세트에 없어 뺍니다(내려진 카드)`);
     continue;
@@ -111,6 +140,14 @@ for (const f of readdirSync(contentDir).filter((f) => f.endsWith(".json"))) {
       : 0;
   cards.push({ slug, doc: j, manwon });
 }
+/* --also 로 부른 슬러그가 그날 폴더에 없으면 **조용히 빠지지 않게** 말한다.
+   빌드를 깜빡한 채 넘어가면 "붙였다"고 믿고 한 장 모자란 묶음을 내게 된다. */
+for (const s of ALSO)
+  if (!alsoSeen.has(s)) {
+    console.error(`⛔ --also ${s} — data/content/${DATE}/ 에 그 카드가 없습니다.`);
+    console.error(`   먼저 빌더를 --publish 로 돌려 그날 폴더에 만들어 두세요.`);
+    process.exit(1);
+  }
 if (!cards.length) {
   console.error(
     `⛔ ${MULTI ? `${FROM}~${DATE} 에` : `${DATE} 에`} **그때 드러난** 신고가 카드가 없습니다.\n` +
