@@ -13,7 +13,7 @@ import { tmpdir } from "node:os";
 import { join, resolve, basename } from "node:path";
 import { renderContentFile, runDesignQa, closeBrowser } from "@wirit/renderer";
 import { lintCaption, captionNumberMatch } from "./captionChecks.js";
-import { scopeMatch } from "./scopeChecks.js";
+import { scopeMatch, type ScopeAck } from "./scopeChecks.js";
 import { llmAvailability, reviewImage } from "./llmReview.js";
 import { decideVerdict } from "./types.js";
 import type { Finding, CardResult, ReviewReport } from "./types.js";
@@ -31,19 +31,28 @@ function md5(p: string): string {
  * `why` 가 없는 항목은 **허용하지 않고 error 로 올린다** — 예외에는 항상 이유가 붙어야 한다.
  * 파일이 없거나 세트가 없으면 조용히 빈 목록이다(검사는 원래대로 깐깐하게 돈다).
  */
-function readCaptionCrossCheck(label: string): { ok: { value: string; why: string }[]; bad: string[] } {
-  /* ⚠️ 이 CLI 는 `packages/pipeline` 을 cwd 로 돌아간다(produce-card.mjs). 저장소 루트를
-     가정하면 파일을 못 찾고 **조용히 빈 목록**이 된다 — 예외가 안 먹힌 채 통과처럼 보인다.
-     그래서 위로 올라가며 찾는다. */
+/** 이 세트의 관제탑 항목(`data/review/sets.json` 의 한 줄)을 읽는다.
+ *  ⚠️ 이 CLI 는 `packages/pipeline` 을 cwd 로 돌아간다(produce-card.mjs). 저장소 루트를
+ *  가정하면 파일을 못 찾고 **조용히 빈 값**이 된다 — 예외가 안 먹힌 채 통과처럼 보인다.
+ *  그래서 위로 올라가며 찾는다. */
+function readSetSpec(label: string): Record<string, unknown> | null {
   let path = "";
   for (let dir = CWD, i = 0; i < 6; i++, dir = join(dir, "..")) {
     const cand = join(dir, "data/review/sets.json");
     if (existsSync(cand)) { path = cand; break; }
   }
-  if (!path) return { ok: [], bad: [] };
+  if (!path) return null;
   try {
-    const doc = JSON.parse(readFileSync(path, "utf8")) as { sets?: { label: string; captionCrossCheck?: unknown }[] };
-    const raw = doc.sets?.find((s) => s.label === label)?.captionCrossCheck;
+    const doc = JSON.parse(readFileSync(path, "utf8")) as { sets?: Record<string, unknown>[] };
+    return doc.sets?.find((s) => s.label === label) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function readCaptionCrossCheck(label: string): { ok: { value: string; why: string }[]; bad: string[] } {
+  try {
+    const raw = readSetSpec(label)?.captionCrossCheck;
     if (!Array.isArray(raw)) return { ok: [], bad: [] };
     const ok: { value: string; why: string }[] = [];
     const bad: string[] = [];
@@ -126,7 +135,9 @@ async function main() {
   }
 
   // 4-0) 범위 정합 — 캡션과 무관하다. 캡션이 없어도 반드시 본다.
-  setFindings.push(...scopeMatch(cardDocs));
+  /* 오너가 알고서 넓은 표에 좁은 제목을 다는 경우가 있다 — 검사를 끄는 대신 관제탑에
+     지역 명단과 이유를 적게 한다. 명단에 없는 이름이 새로 끼면 그대로 막힌다. */
+  setFindings.push(...scopeMatch(cardDocs, readSetSpec(label)?.scopeAck as ScopeAck | undefined));
 
   // 4) 캡션 검수(세트 레벨)
   if (captionText) {

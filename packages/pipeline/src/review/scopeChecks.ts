@@ -86,11 +86,34 @@ function titleOf(docs: unknown[]): string {
     .join(" ");
 }
 
+/**
+ * 예외 통로 `scopeAck` (2026-09-01 신설, 전세 지도)
+ *
+ * 오너가 **알고서** 넓은 표에 좁은 제목을 다는 경우가 있다 — 「서울 국평 평균 전세가 7억 시대」
+ * 는 서울 평균이 헤드라인이고, 표·지도는 수도권 40곳을 보여 준다(카드 맨 위 회색 줄이
+ * "수도권 토지거래허가구역 40곳"이라고 밝힌다). 이건 07-27 의 사고(빌더가 캐시를 전부 읽어
+ * **조용히** 경기가 섞인 것)와 다른 물건이다.
+ *
+ * 그래도 검사를 끄지 않는다. **그 지역 이름들을 명단으로 적고 이유를 붙여야** 통과한다:
+ *   "scopeAck": { "why": "…", "outside": ["과천시", "성남시 수정구", …] }
+ *
+ * 핵심은 **명단에 없는 이름이 새로 나타나면 그대로 막힌다**는 것이다. 빌더가 캐시를 잘못
+ * 읽어 엉뚱한 시가 끼면 그 이름은 명단에 없으므로 07-27 사고는 여전히 잡힌다.
+ * 이유 없는 `scopeAck` 는 통과시키지 않는다(caption-number 의 captionCrossCheck 와 같은 규칙).
+ */
+export interface ScopeAck {
+  why?: string;
+  outside?: string[];
+}
+
 /** 제목이 특정 지역을 말하는데 항목에 그 밖이 섞였으면 error */
-export function scopeMatch(cardDocs: unknown[]): Finding[] {
+export function scopeMatch(cardDocs: unknown[], ack?: ScopeAck): Finding[] {
   const title = titleOf(cardDocs);
   const names = regionNames(cardDocs);
   if (!title || !names.length) return [];
+
+  const why = typeof ack?.why === "string" ? ack.why.trim() : "";
+  const acked = new Set((ack?.outside ?? []).map((s) => String(s).trim()));
 
   for (const reg of REGIONS) {
     if (!reg.titleRe.test(title) || reg.excludeRe.test(title)) continue;
@@ -98,14 +121,26 @@ export function scopeMatch(cardDocs: unknown[]): Finding[] {
     const candidates = [...new Set(names.filter((n) => /(구|시|군)$/.test(n.trim())))];
     if (!candidates.length) continue;
     const outside = candidates.filter((n) => !reg.isInside(n));
-    if (outside.length) {
+    if (!outside.length) continue;
+
+    if (acked.size && !why) {
+      return [{ reviewer: R, level: "error", code: "scope-ack-no-reason",
+        msg: `sets.json 의 scopeAck 에 이유(why)가 없습니다 — 이유 없는 예외는 통과시키지 않습니다` }];
+    }
+    const unlisted = outside.filter((n) => !acked.has(n.trim()));
+    if (unlisted.length) {
       return [{
         reviewer: R,
         level: "error",
         code: "scope-mismatch",
-        msg: `제목은 '${reg.key}'인데 ${reg.hint} 밖이 ${outside.length}건 섞였습니다 — ${outside.slice(0, 5).join(", ")}${outside.length > 5 ? " 외" : ""} (빌더의 지역 필터 확인)`,
+        msg:
+          `제목은 '${reg.key}'인데 ${reg.hint} 밖이 ${unlisted.length}건 섞였습니다 — ` +
+          `${unlisted.slice(0, 5).join(", ")}${unlisted.length > 5 ? " 외" : ""} (빌더의 지역 필터 확인` +
+          `${acked.size ? " · sets.json 의 scopeAck 명단에 없는 이름입니다" : ""})`,
       }];
     }
+    return [{ reviewer: R, level: "info", code: "scope-acked",
+      msg: `제목은 '${reg.key}'이고 ${reg.hint} 밖 ${outside.length}곳이 함께 실려 있습니다(승인됨) — ${why}` }];
   }
   return [];
 }

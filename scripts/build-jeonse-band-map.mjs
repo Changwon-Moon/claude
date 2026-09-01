@@ -164,7 +164,9 @@ const mapSvg = tohuhMapSvg({
  */
 const ranked = [...AREAS].sort((a, b) => eokOf(b.geoName) - eokOf(a.geoName));
 const MEDALS = ["🥇", "🥈", "🥉"];
-const HEAD_N = 17;
+/* 제목이 커진 만큼 표가 짧아져야 한다(오너 2026-09-01). 값은 렌더 실측으로 맞춘다 —
+ * 넘치면 QA 가 잡고, 너무 적으면 표 아래가 빈다. */
+const HEAD_N = Number(process.env.WIRIT_HEAD_N || 15);
 const TAIL_N = 3;
 if (AREAS.length <= HEAD_N + TAIL_N) throw new Error("지역이 20곳 이하면 꼬리를 만들 이유가 없다 — 전부 싣는다");
 const rows = ranked.slice(0, HEAD_N).map((a, i) => ({
@@ -202,8 +204,6 @@ const minSample = AREAS.map((a) => ({ label: a.label, n: band.get(a.geoName).n }
  * 통칭을 써도 오보가 아니다. 오보였던 것은 「전용 평당가에 34(공급평)를 곱하는 것」이지 호칭이 아니었다. */
 const PYEONG_NAME = TYPE === "84" ? "국평" : "25평";
 const top1 = ranked[0];
-/** 제목에 넣을 짧은 이름 — "성남시 분당구" 같은 긴 이름이 1위면 제목이 한 줄을 넘긴다 */
-top1.short = top1.mapLabel || top1.label;
 const last = ranked.at(-1);
 const gap = eokOf(top1.geoName) / eokOf(last.geoName);
 
@@ -229,7 +229,11 @@ const card = {
    * ⚠️ 맨 앞의 '수도권'을 빼지 않는다. 이 카드는 경기 15곳을 함께 싣는데 제목이 '서울'만
    * 말하면 **표 3위에 과천시가 앉는다** — 범위 검사(scope)가 실제로 그것을 막았다.
    * '서울 평균'은 그 범위 안에서 고른 대표값이라는 뜻이고, 범위 자체는 수도권이다. */
-  title: `수도권 ${PYEONG_NAME} 전세 <span class="hi">${Math.floor(seoul.eok)}억 시대</span>, ${top1.short} ${eokTxt(eokOf(top1.geoName))}`,
+  /* 오너 확정 문안(2026-09-01). 주어는 **서울**이고 값도 서울 25구 평균이다.
+   * 표·지도는 수도권 40곳이라 범위 검사가 막는 자리인데, 오너가 알고 고른 것이므로
+   * 관제탑(sets.json)의 `scopeAck` 에 경기 15곳 명단과 이유를 적어 통과시킨다.
+   * 명단에 없는 지역이 새로 끼면 그대로 막힌다 — 07-27 의 캐시 오염 사고는 여전히 잡힌다. */
+  title: `서울 ${PYEONG_NAME} 평균 전세가 <span class="hi">${Math.floor(seoul.eok)}억 시대</span>`,
   fitTitle: true,
   unit: "억",
   /* 머리글은 **2열**(지역 / 값)이다. 3열(`head.c`)로 두면 판형이 `sm-h3` 를 켜 값 칸을
@@ -237,7 +241,6 @@ const card = {
    * 20행 표가 카드 밖으로 236px 넘쳤다(2026-09-01 실측). 월세 비중 지도가 2열인 이유가 이것이다.
    * 3열은 8행짜리 카드(월세 상승분)에서만 성립한다. */
   head: { l: "지역", r: `전용 ${TYPE}㎡ 전세` },
-  asOfNote: `2026년 6~7월 실거래 기준`,
   mapSvg,
   rows,
   tail,

@@ -1,20 +1,21 @@
 {
   "label": "jeonse84-map",
   "verdict": "revise",
-  "summary": "REVISE — error 0 · warn 2 · 카드 1장 · 코드 검수만",
-  "findings": [],
+  "summary": "REVISE — error 0 · warn 1 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "scope",
+      "level": "info",
+      "code": "scope-acked",
+      "msg": "제목은 '서울'이고 서울 25개 자치구 밖 5곳이 함께 실려 있습니다(승인됨) — 오너 확정(2026-09-01): 제목의 주어는 서울이고 값도 서울 25구 평균이다. 표·지도는 수도권 토지거래허가구역 40곳을 함께 보여 주며, 카드 맨 위 회색 줄이 그 범위를 밝힌다. 아래 15곳은 그 경기 지역이며, 명단에 없는 이름이 새로 끼면 검사가 그대로 막는다(07-27 캐시 오염 사고 방어는 유지)."
+    }
+  ],
   "cards": [
     {
       "file": "jeonse84-map.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": [
-        {
-          "reviewer": "design-qa",
-          "level": "warn",
-          "code": "titlegap",
-          "msg": "제목과 바로 아래 요소의 간격이 15px 입니다 (제목 57px) — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다"
-        },
         {
           "reviewer": "design-qa",
           "level": "warn",
