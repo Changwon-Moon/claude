@@ -16,6 +16,14 @@ name: 실거래 문 열렸나 (한 번 두드려 본다)
 #    받아 온 것을 저장하지도 않는다(수집은 수집기의 일이다).
 on:
   workflow_dispatch:
+  # ── 세션도 두드릴 수 있게 (2026-09-02)
+  # 이 워크플로는 오너가 누르는 버튼이었다. 그런데 세션은 GitHub API 가 막혀 버튼을 못 누른다.
+  # 「광주 남구(29155)가 7개월 내내 0건」 같은 물음은 **수집이 아니라 두드림**으로 답해야 하는데
+  # 세션에겐 그 손잡이가 없어서, 수집을 한 번 더 돌리고도 같은 답만 받았다(2026-09-01).
+  # 대기열 한 줄:  lawd=29155 months=202601,202604,202607   (없으면 종로구·이번 달)
+  push:
+    paths:
+      - "data/molit-door-queue.txt"
 
 # 답을 `data/molit-door-last.md` 로 커밋하므로 쓰기 권한이 필요하다
 permissions:
@@ -37,25 +45,52 @@ jobs:
           if [ -z "$MOLIT_API_KEY" ]; then
             echo "MSG=⛔ MOLIT_API_KEY 가 Secrets 에 없습니다" >> "$GITHUB_OUTPUT"; exit 0
           fi
-          YM=$(TZ=Asia/Seoul date +%Y%m)
-          URL="https://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev?serviceKey=${MOLIT_API_KEY}&LAWD_CD=11110&DEAL_YMD=${YM}&pageNo=1&numOfRows=5"
-          # ⚠️ 키가 로그에 찍히지 않게 -o 로 본문만 파일에 담는다
-          CODE=$(curl -sS --max-time 20 -o /tmp/body.xml -w '%{http_code}' "$URL" 2>/tmp/err.txt || echo "000")
-          # ⚠️ `|| true` 가 꼭 있어야 한다. Actions 의 bash 는 `set -eo pipefail` 로 돌아서
-          #    **grep 이 못 찾으면 종료코드 1 → 스텝이 그대로 죽는다.** 여기서 "못 찾음"은
-          #    오류가 아니라 **답**이다(문이 닫히면 본문이 비어 있다). 2026-08-26 첫 실행이 이렇게 죽었다.
-          RESULT=$(grep -o '<resultCode>[^<]*</resultCode>' /tmp/body.xml 2>/dev/null | head -1 | sed 's/<[^>]*>//g' || true)
-          ROWS=$(grep -c '<item>' /tmp/body.xml 2>/dev/null || true)
-          ROWS=${ROWS:-0}
-          echo "http=$CODE resultCode=$RESULT items=$ROWS"
-          if [ "$CODE" = "000" ]; then
+          # 대기열이 있으면 그 줄이 무엇을 두드릴지 정한다(세션이 미는 손잡이).
+          LAWD=11110; MONTHS=$(TZ=Asia/Seoul date +%Y%m); WHO="종로구"
+          if [ -f data/molit-door-queue.txt ]; then
+            LINE=$(grep -v '^[[:space:]]*#' data/molit-door-queue.txt | grep -v '^[[:space:]]*$' | tail -1 || true)
+            echo "대기열 마지막 줄: $LINE"
+            L=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^lawd=//p'); [ -n "$L" ] && { LAWD="$L"; WHO="LAWD $L"; }
+            M2=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^months=//p'); [ -n "$M2" ] && MONTHS="$M2"
+          fi
+          # ⚠️ 여러 달을 두드릴 수 있다. 「어느 달은 되고 어느 달은 0」인지가 곧 진단이다 —
+          #    전 기간 0 이면 코드/구역 문제, 특정 달만 0 이면 그 달에 거래가 없던 것이다.
+          # lawd 도 여럿 둘 수 있다. **이웃 구를 같이 두드리는 것**이 핵심 진단이다 —
+          # 옆 구는 나오는데 이 구만 0 이면 코드나 구역 문제, 둘 다 0 이면 키·기간 문제다.
+          : > /tmp/knock.txt; ANYROW=0; ANYHTTP=""
+          for LC in $(echo "$LAWD" | tr ',' ' '); do
+          for YM in $(echo "$MONTHS" | tr ',' ' '); do
+            URL="https://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev?serviceKey=${MOLIT_API_KEY}&LAWD_CD=${LC}&DEAL_YMD=${YM}&pageNo=1&numOfRows=5"
+            # ⚠️ 키가 로그에 찍히지 않게 -o 로 본문만 파일에 담는다
+            CODE=$(curl -sS --max-time 20 -o /tmp/body.xml -w '%{http_code}' "$URL" 2>/tmp/err.txt || echo "000")
+            # ⚠️ `|| true` 가 꼭 있어야 한다. Actions 의 bash 는 `set -eo pipefail` 로 돌아서
+            #    **grep 이 못 찾으면 종료코드 1 → 스텝이 그대로 죽는다.** 여기서 "못 찾음"은
+            #    오류가 아니라 **답**이다(문이 닫히면 본문이 비어 있다). 2026-08-26 첫 실행이 이렇게 죽었다.
+            RESULT=$(grep -o '<resultCode>[^<]*</resultCode>' /tmp/body.xml 2>/dev/null | head -1 | sed 's/<[^>]*>//g' || true)
+            MSGX=$(grep -o '<resultMsg>[^<]*</resultMsg>' /tmp/body.xml 2>/dev/null | head -1 | sed 's/<[^>]*>//g' || true)
+            TOTAL=$(grep -o '<totalCount>[^<]*</totalCount>' /tmp/body.xml 2>/dev/null | head -1 | sed 's/<[^>]*>//g' || true)
+            ROWS=$(grep -c '<item>' /tmp/body.xml 2>/dev/null || true); ROWS=${ROWS:-0}
+            # 0건일 때가 진짜 궁금한 자리다 — 본문 앞머리를 남겨 「정상인데 0」인지
+            # 「우리가 못 읽은 오류」인지 눈으로 가른다. 키가 섞여 나올 수 있어 지운다.
+            HEAD=""
+            if [ "${ROWS:-0}" -eq 0 ]; then
+              HEAD=$(tr -d '\n' < /tmp/body.xml | sed -E 's/(serviceKey=)[^&"<]*/\1<hidden>/g' | head -c 200)
+            fi
+            printf '\n· %s %s — HTTP %s · resultCode %s %s · totalCount %s · item %s건' \
+              "$LC" "$YM" "$CODE" "${RESULT:-?}" "${MSGX:-}" "${TOTAL:-?}" "$ROWS" >> /tmp/knock.txt
+            [ -n "$HEAD" ] && printf '\n    본문: %s' "$HEAD" >> /tmp/knock.txt
+            [ "${ROWS:-0}" -gt 0 ] && ANYROW=1
+            ANYHTTP="$CODE"
+          done
+          done
+          SUM=$(cat /tmp/knock.txt)
+          echo "lawd=$LAWD months=$MONTHS anyRow=$ANYROW"
+          if [ "$ANYHTTP" = "000" ]; then
             M="🚪 실거래 API — ❌ **연결 자체가 안 열립니다**"$'\n'"   ($(head -c 120 /tmp/err.txt))"$'\n\n'"수집을 돌려도 지금은 0건입니다. 20~30분 뒤 다시 눌러 보세요."
-          elif [ "$CODE" = "200" ] && [ "${ROWS:-0}" -gt 0 ]; then
-            M="🚪 실거래 API — ✅ **열려 있습니다**"$'\n'"   종로구 ${YM} 표본 ${ROWS}건 정상 수신"$'\n\n'"지금 수집을 돌리면 됩니다."
-          elif [ "$CODE" = "200" ]; then
-            M="🚪 실거래 API — ⚠️ 응답은 왔는데 자료가 없습니다 (resultCode=${RESULT:-?})"$'\n\n'"키 승인 상태를 확인해 주세요(공공데이터포털 마이페이지)."
+          elif [ "$ANYROW" = "1" ]; then
+            M="🚪 실거래 API — ✅ **열려 있습니다** (${WHO})${SUM}"$'\n\n'"지금 수집을 돌리면 됩니다."
           else
-            M="🚪 실거래 API — ⚠️ HTTP ${CODE} (resultCode=${RESULT:-?})"$'\n\n'"401·403 이면 키 문제입니다. 그 밖이면 포털 쪽 오류입니다."
+            M="🚪 실거래 API — ⚠️ 응답은 왔는데 **${WHO} 는 전 기간 0건**입니다${SUM}"$'\n\n'"resultCode 가 00 인데 0건이면 그 구역·기간에 신고된 거래가 없다는 뜻입니다."
           fi
           {
             echo "MSG<<EOF"
