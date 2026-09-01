@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T14:30:32.780Z",
+  "generatedAt": "2026-09-01T15:10:48.814Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -8,12 +8,6 @@
       "cron": "55 19 * * *",
       "dueKst": "04:55",
       "dots": [
-        {
-          "day": "08-19",
-          "state": "ok",
-          "at": "07:10",
-          "delay": null
-        },
         {
           "day": "08-20",
           "state": "fail",
@@ -91,6 +85,12 @@
           "state": "late",
           "at": "08:26",
           "delay": 212
+        },
+        {
+          "day": "09-02",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": 212,
@@ -105,12 +105,6 @@
       "cron": "0 1 * * *",
       "dueKst": "10:00",
       "dots": [
-        {
-          "day": "08-19",
-          "state": "ok",
-          "at": "12:00",
-          "delay": null
-        },
         {
           "day": "08-20",
           "state": "ok",
@@ -188,6 +182,12 @@
           "state": "late",
           "at": "15:10",
           "delay": 310
+        },
+        {
+          "day": "09-02",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": 310,
@@ -202,12 +202,6 @@
       "cron": "20 1 1 * *",
       "dueKst": "10:20",
       "dots": [
-        {
-          "day": "08-19",
-          "state": "ok",
-          "at": "11:33",
-          "delay": null
-        },
         {
           "day": "08-20",
           "state": "ok",
@@ -285,6 +279,12 @@
           "state": "late",
           "at": "15:16",
           "delay": 296
+        },
+        {
+          "day": "09-02",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": 296,
@@ -299,12 +299,6 @@
       "cron": "0 2 * * *",
       "dueKst": "11:00",
       "dots": [
-        {
-          "day": "08-19",
-          "state": "ok",
-          "at": "12:26",
-          "delay": null
-        },
         {
           "day": "08-20",
           "state": "ok",
@@ -382,6 +376,12 @@
           "state": "late",
           "at": "16:25",
           "delay": 325
+        },
+        {
+          "day": "09-02",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": 325,
@@ -725,9 +725,9 @@
     {
       "file": "guard.yml",
       "name": "문지기 (guard)",
-      "lastRun": "2026-09-01",
+      "lastRun": "2026-09-02",
       "daysAgo": 0,
-      "lastOk": "2026-09-01",
+      "lastOk": "2026-09-02",
       "okDaysAgo": 0,
       "fails30": 2,
       "runs30": 100
@@ -753,6 +753,16 @@
       "runs30": 15
     },
     {
+      "file": "neis-academy.yml",
+      "name": "학원 수집 (나이스)",
+      "lastRun": "2026-09-02",
+      "daysAgo": 0,
+      "lastOk": null,
+      "okDaysAgo": null,
+      "fails30": 2,
+      "runs30": 2
+    },
+    {
       "file": "singo-history.yml",
       "name": "신고가 단지 이력 (한 단지 곡선)",
       "lastRun": "2026-09-01",
@@ -775,7 +785,7 @@
     {
       "file": "tower-deploy.yml",
       "name": "관제탑 배포 (Cloudflare)",
-      "lastRun": "2026-09-01",
+      "lastRun": "2026-09-02",
       "daysAgo": 0,
       "lastOk": "2026-09-01",
       "okDaysAgo": 0,
