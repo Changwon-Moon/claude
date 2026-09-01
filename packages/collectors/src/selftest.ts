@@ -30,6 +30,7 @@ import {
   isLicenseSafe,
 } from "./sources/logoFetch.js";
 import { parseEmpSttus, parseCorpCodeXml, findCorpCode } from "./parse/dart.js";
+import { sggOf, dongOf } from "./parse/neisAcademy.js";
 import { parseBrandLogos, pickBestLogoFormat, DOMAIN_MAP } from "./sources/brandfetchLogo.js";
 import {
   parseAptTrades,
@@ -1366,6 +1367,27 @@ console.log("\n[청약홈 분양정보 파서]");
   check("지번이 없는 주소는 null", jibunFromAddr("경기도 성남시 분당구 정자동 상록마을") === null);
   check("문자 지번은 버린다", normJibun("가-") === null);
   check("부번은 살린다", normJibun("5869-2") === "5869-2");
+}
+
+/* ── 나이스 학원 주소 쪼개기 (2026-09-01)
+   학원 원장에는 법정동 칸이 없다. 시군구는 도로명주소 앞머리에서, 법정동은 도로명 상세의
+   **괄호 참고항목**에서 뽑는다 — 도로명주소 표기법이 괄호에 법정동을 적게 되어 있다.
+   여기 예문은 전부 실제 응답에서 그대로 옮겨 왔다(서울 B10·경기 J10 표본). */
+{
+  check("서울은 구 하나", sggOf("서울특별시 강남구 개포로82길 7") === "강남구");
+  check("경기 일반시+구를 붙여 읽는다", sggOf("경기도 성남시 분당구 판교로 255") === "성남시분당구");
+  check("읍·면에서 끊는다", sggOf("경기도 가평군 가평읍 석봉로 163") === "가평군");
+  check("세종은 시 하나", sggOf("세종특별자치시 도움5로 20") === "세종특별자치시");
+  check("제주는 도+시", sggOf("제주특별자치도 제주시 노형로 25") === "제주시");
+
+  check("괄호 앞이 법정동", dongOf(", 158호(대치동,한보종합상가)") === "대치동");
+  check("공백 있는 괄호도 읽는다", dongOf(", 3층 301호 (개포동, 삼성빌딩)") === "개포동");
+  check("상세만 있는 괄호", dongOf("3층 302호(논현동)") === "논현동");
+  check("읍·면은 법정동이 아니다", dongOf(", 102호 (가평읍)") === "");
+  check("괄호가 없으면 빈값", dongOf("25, 1층") === "");
+  check("괄호가 안 닫혀도 읽는다", dongOf(", B215호(대평동, 해들마을6단지 판매시설-2))") === "대평동");
+  check("괄호가 둘이면 뒤가 이긴다", dongOf("204호(아름동, 세종시 아카데미타워)(아름동)") === "아름동");
+  check("'가'로 끝나는 법정동도 읽는다", dongOf("(신문로2가, 광화문빌딩)") === "신문로2가");
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);

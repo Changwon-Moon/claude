@@ -78,7 +78,12 @@
 
       /* ── 지방 학군지 블록 — 지도 좌하단 빈 바다 자리(오너 2026-09-01) ── */
       .hg-jb {
-        position: absolute; left: var(--jbX); top: var(--jbY); width: var(--jbW);
+        /* 폭은 **내용에 딱 맞춘다**(오너 2026-09-01 "우측 여백이 너무 크다").
+           빌더의 jbW 는 글자 폭을 어림한 값이라 늘 실제보다 넉넉하다 — 그 차이가 오른쪽에
+           빈 띠로 남았다. 어림값은 max-width(지도를 덮는지 재는 안전선)로만 쓰고,
+           실제 폭은 브라우저가 잰 내용 폭을 쓴다. 겹침 검사는 넉넉한 쪽으로 틀리므로 안전하다. */
+        position: absolute; left: var(--jbX); top: var(--jbY);
+        width: max-content; max-width: var(--jbW);
         background: var(--wirit-paper); border: 2px solid var(--wirit-ink-12);
         border-radius: 4px; padding: 9px 11px 10px;
         /* 입체감(오너 2026-09-01) — 각은 세운 채(4px) 그림자로만 띄운다.
