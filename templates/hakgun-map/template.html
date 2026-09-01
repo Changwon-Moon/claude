@@ -131,7 +131,7 @@
 
         {{#if jibang}}
         <div class="hg-jb">
-          <div class="t"><b>{{jibang.label}}</b><i>{{jibang.note}}</i></div>
+          <div class="t"><b>{{jibang.label}}</b>{{#if jibang.note}}<i>{{jibang.note}}</i>{{/if}}</div>
           <div class="g">
             {{#each jibang.rows}}
             <div class="r g{{this.grade}}"><em></em><span class="n">{{this.name}}</span><span class="v">{{this.price}}<i>억</i></span></div>

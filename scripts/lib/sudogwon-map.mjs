@@ -61,8 +61,12 @@ function inside(pt, geom) {
  *                          lx/ly=이름만 미세조정, anchor=start|end|middle(기본 start)
  * @param {Set}    o.hitSgg 토지거래허가구역으로 칠할 시군구명 집합(korea-sgg-2026 의 name)
  * @param {boolean} o.showLabels 핀 옆에 학군지 이름을 적을지
+ * @param {string} o.wm2LeftOf  두 번째 워터마크를 **이 핀의 왼쪽**에 앉힌다(핀 key). 없으면 안 그린다.
+ *                          자리를 비율(0.17 같은 수)로 잡던 시절, 화면을 다시 자르자 그 자리가
+ *                          회색 육지에서 흰 바다로 바뀌어 흰 글자가 조용히 사라졌다(2026-09-01).
+ *                          그래서 **데이터에 붙여** 잡는다 — 핀은 지도를 다시 잘라도 같은 땅 위에 있다.
  */
-export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, focusPadX = null, showLabels = false }) {
+export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, focusPadX = null, showLabels = false, wm2LeftOf = null }) {
   const sgg = JSON.parse(readFileSync(join(ROOT, "data/geo/korea-sgg-2026.geojson"), "utf8"))
     .features.filter((f) => ["서울특별시", "경기도", "인천광역시"].includes(f.properties.sido));
   const dongs = JSON.parse(readFileSync(join(ROOT, "data/geo/korea-submunicipalities.geojson"), "utf8")).features;
@@ -262,6 +266,24 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, focu
         collisions.push(`이름표 ${labBoxes[i].key} ↔ 핀 ${p.key}${p.key === labBoxes[i].key ? " (자기 핀)" : ""}`);
   }
 
+  // ── 두 번째 워터마크 — 지정한 핀의 왼쪽(오너 2026-09-01) ──────────────
+  // 회색으로 그린다. 흰색은 바다 위에 앉으면 그대로 사라진다(실제로 한 판 그렇게 나갔다).
+  let wm2 = "";
+  if (wm2LeftOf) {
+    const anchorPin = pinsXY.find((p) => p.key === wm2LeftOf);
+    if (!anchorPin) throw new Error(`워터마크 기준 핀을 못 찾았습니다: ${wm2LeftOf} — 핀 key 와 대조하세요.`);
+    const WM_FS = 34;
+    const wmW = [...`@wirit_note`].reduce((w, ch) => w + (ch === "_" || ch === "@" ? 0.62 : 0.55), 0) * WM_FS * 1.08;
+    const wmX = anchorPin.x - PIN_OUT - 18;                 // 핀 왼쪽에 붙인다(text-anchor:end)
+    const wmY = anchorPin.y + WM_FS * 0.34;
+    const wmBox = { x0: wmX - wmW, x1: wmX, y0: wmY - WM_FS * 0.8, y1: wmY + WM_FS * 0.26, key: "워터마크" };
+    // 워터마크도 이름표·핀과 같은 자로 잰다 — 장식이라고 검사를 빼면 조용히 겹친다.
+    if (wmBox.x0 < 2) collisions.push(`워터마크 — 지도 왼쪽 밖으로 나갑니다(${wm2LeftOf} 핀이 너무 왼쪽입니다)`);
+    for (const lb of labBoxes) if (overlaps(wmBox, lb)) collisions.push(`워터마크 ↔ 이름표 ${lb.key}`);
+    for (const p of pinsXY) if (overlaps(wmBox, pinBox(p))) collisions.push(`워터마크 ↔ 핀 ${p.key}`);
+    wm2 = `<text x="${wmX.toFixed(1)}" y="${wmY.toFixed(1)}" class="sg-wm" text-anchor="end">@wirit_note</text>`;
+  }
+
   const svg =
     `<svg viewBox="0 0 ${VW} ${VH}" xmlns="http://www.w3.org/2000/svg">` +
     `<style>` +
@@ -274,14 +296,12 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, focu
     `.sg-lab{font-size:30px;font-weight:800;fill:#141821;letter-spacing:-0.03em;` +
     `paint-order:stroke;stroke:#fff;stroke-width:6px;stroke-linejoin:round}` +
     `.sg-wm{font-size:34px;font-weight:800;fill:#c4c9d2;letter-spacing:-0.01em}` +
-    `.sg-wm2{font-size:34px;font-weight:800;fill:#ffffff;letter-spacing:-0.01em}` +
     `</style>` +
-    // 워터마크는 면(base) **뒤에** 그린다. 앞에 두면 폴리곤이 덮어 조용히 사라진다
-    // — 화면을 좁게 자른 뒤 실제로 그렇게 사라졌다(2026-09-01).
-    // 두 개를 좌상단·좌하단 빈 코너에 둔다(오너 2026-09-01). 데이터 위에는 올리지 않는다.
+    // 워터마크는 면(base) **뒤에** 그리지 않는다 — 폴리곤이 덮어 조용히 사라진다(2026-09-01).
+    // 면 위에 회색으로 얹되, 자리는 빈 코너와 핀 왼쪽이라 데이터를 가리지 않는다.
     `<g>${base}</g>${riverSvg}` +
     `<text x="${(PAD + VW * 0.035).toFixed(1)}" y="${(PAD + VH * 0.05).toFixed(1)}" class="sg-wm">@wirit_note</text>` +
-    `<text x="${(PAD + VW * 0.17).toFixed(1)}" y="${(PAD + VH * 0.93).toFixed(1)}" class="sg-wm2">@wirit_note</text>` +
+    wm2 +
     `<g>${labels}</g><g>${marks}</g>` +
     `</svg>`;
 
@@ -290,5 +310,8 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, focu
   if (!new RegExp(`^<svg viewBox="0 0 ${VW} ${VH}" `).test(svg))
     throw new Error("지도 SVG 의 viewBox 가 깨졌습니다 — 이대로 두면 지도가 300×150 으로 줄어 잘립니다.");
 
-  return { svg, resolved, pinsXY, collisions, placements, viewBox: { w: VW, h: VH } };
+  // labBoxes/pinsXY 는 **viewBox 좌표**다. 빌더가 카드 픽셀로 옮겨,
+  // 지도 위에 얹는 HTML 블록(지방 학군지 패널)이 글자를 밟는지 잰다 —
+  // designQa 는 SVG 안쪽만 재므로 그 겹침은 못 잡는다(2026-09-01).
+  return { svg, resolved, pinsXY, labBoxes, collisions, placements, pinR: PIN_OUT, viewBox: { w: VW, h: VH } };
 }

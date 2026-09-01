@@ -103,6 +103,21 @@ const jibangCalc = (ds.jibangAreas || []).map((a) => {
 });
 jibangCalc.sort((x, y) => x.grade - y.grade || y.med - x.med);
 
+// 카드에 적을 이름은 「광역시 + 학군지」다 — '수성'만 적으면 어디 수성인지 모른다(오너 2026-09-01).
+// 손으로 다시 적지 않는다. 데이터셋의 full("수성(대구)")을 뒤집어 만든다 — 괄호가 없으면(세종) 그대로.
+const jibangName = (a) => {
+  const m = /^(.+?)\((.+)\)$/.exec(a.full || "");
+  if (!m) return a.name;
+  if (m[1] !== a.name) throw new Error(`지방 학군지 이름이 어긋납니다: name=${a.name} · full=${a.full}`);
+  return `${m[2]} ${m[1]}`;
+};
+const jibangRows = jibangCalc.map((a) => ({
+  name: jibangName(a),
+  grade: a.grade,
+  price: (a.med / 10000).toFixed(2),
+  trades: a.n.toLocaleString("ko-KR"),
+}));
+
 // ── 4. 급지별로 나누고, 급지 안에서 값 순으로 번호를 새로 매긴다 ────
 const GRADES = [1, 2, 3];
 const groups = GRADES.map((g) => {
@@ -132,7 +147,7 @@ const NUDGE = { 평촌: { dx: 17 }, 산본: { dx: -17 } };
 // ⚠️ 이름표 자리는 **손으로 정하지 않는다.** sudogwonMapSvg 가 핀 둘레 후보 중
 //    아무것과도 안 겹치는 자리를 골라 놓고, 놓은 뒤 전수로 다시 잰다.
 //    손으로 정하던 시절에 사람이 놓친 겹침이 세 번 나갔다(2026-09-01).
-const { svg: mapSvg, resolved, collisions, viewBox } = sudogwonMapSvg({
+const { svg: mapSvg, resolved, collisions, viewBox, labBoxes, pinsXY, pinR } = sudogwonMapSvg({
   pins: flat.map((r) => {
     const a = calc.find((x) => x.name === r.key);
     return { n: r.n, key: r.key, label: r.name, geoName: a.geoName, pinDong: a.pinDong, grade: r.grade, ...(NUDGE[r.key] || {}) };
@@ -142,6 +157,9 @@ const { svg: mapSvg, resolved, collisions, viewBox } = sudogwonMapSvg({
   // 가로 여백을 좁게 — 인천을 넣으며 동서로 넓어진 지도를 다시 세로로 세운다.
   // 지도가 납작하면 옆 표의 행 높이가 눌린다(빌더가 rowH 26px 로 던졌다).
   focusPadX: 0.03,
+  // 두 번째 워터마크는 산본 핀 왼쪽 회색 육지 위에(오너 2026-09-01).
+  // 비율로 잡지 않는다 — 화면을 다시 자르면 그 자리가 바다로 바뀐다(그래서 한 판 사라졌다).
+  wm2LeftOf: "산본",
 });
 for (const r of resolved) if (r.by === "sgg") console.log(`  ⚠️ ${r.label} — 동(${r.dong})을 못 찾아 시군구 중심에 찍었습니다.`);
 // 배치기가 자리를 못 찾았거나, 놓고 나서 잰 결과가 겹치면 여기서 멈춘다.
@@ -161,10 +179,46 @@ LAYOUT.mapH = Math.round(mapH * 10) / 10;
 LAYOUT.mapY = 0;                       // 지도와 표를 같은 높이에서 시작한다
 // 지방 블록 — 지도 좌하단의 빈 바다 자리(오너가 그 자리를 지정했다).
 // 치수도 여기서 정해 템플릿이 CSS 변수로 받는다.
-LAYOUT.jbW = Math.round(mapW * 0.46);
-LAYOUT.jbX = Math.round(LAYOUT.mapX + mapW * 0.105);   // 살짝 우측으로(오너 2026-09-01)
+// 폭은 **가장 긴 행을 재서** 정한다. 고정 46% 로 두면 이름이 길어질 때(「부산 해운대·동래」)
+// 글자가 칸 밖으로 새는데, 그건 designQa 가 SVG 밖이라 못 잡는다.
+{
+  const NM_FS = 17, VAL_FS = 17;                     // 템플릿 .hg-jb .r .n / .v 와 같은 값
+  const tw = (t, fs) => [...t].reduce((w, ch) => w + (ch === "·" ? 0.45 : /[ ]/.test(ch) ? 0.32 : /[0-9.]/.test(ch) ? 0.58 : 1), 0) * fs * 0.97 * 1.06;
+  const colW = Math.max(
+    ...jibangRows.map((r) => 9 + 5 + tw(r.name, NM_FS) + 8 + tw(r.price, VAL_FS) + tw("억", 12)),
+  );
+  const JB_PAD_X = 11, JB_COL_GAP = 12;
+  LAYOUT.jbW = Math.ceil(colW * 2 + JB_COL_GAP + JB_PAD_X * 2 + 4);
+  if (LAYOUT.jbW > mapW * 0.72)
+    throw new Error(`지방 블록이 너무 넓습니다(${LAYOUT.jbW}px > 지도 폭의 72%). 이름이 길어졌는지 확인하세요.`);
+}
+LAYOUT.jbX = Math.round(LAYOUT.mapX + 12);             // 빈 바다 왼쪽 끝에 붙인다 — 넓어진 폭을 왼쪽으로 흡수
 LAYOUT.jbY = Math.round(mapH * 0.79);                  // 더 아래로 — 빈 바다 아래쪽에 앉힌다(오너 2026-09-01)
 LAYOUT.bodyH = Math.round(mapH + LEGEND_GAP + LEGEND_H);
+
+// ── 지방 블록이 지도 글자를 밟는지 **잰다** ─────────────────────────
+// 이 블록은 HTML 이라 지도(SVG) 안에 없다 → designQa 의 라벨 겹침 검사가 못 본다.
+// 이름이 길어지면(「부산 해운대·동래」) 블록이 넓어져 조용히 오른쪽 핀을 덮는다 — 실제로 덮었다.
+// 그래서 지도가 돌려준 **진짜 이름표·핀 상자**를 카드 픽셀로 옮겨 여기서 대조한다.
+{
+  const sc = mapW / viewBox.w;
+  const JB_HDR = 30, JB_ROW = 21, JB_PAD_Y = 19;
+  const jbH = JB_HDR + Math.ceil(jibangRows.length / 2) * JB_ROW + JB_PAD_Y;
+  LAYOUT.jbH = jbH;                                    // 기록용 — 템플릿은 내용 높이를 쓴다
+  const jb = { x0: LAYOUT.jbX, x1: LAYOUT.jbX + LAYOUT.jbW, y0: LAYOUT.jbY, y1: LAYOUT.jbY + jbH };
+  const toCard = (b) => ({ x0: LAYOUT.mapX + b.x0 * sc, x1: LAYOUT.mapX + b.x1 * sc, y0: b.y0 * sc, y1: b.y1 * sc });
+  const hit = (a, b) => a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1;
+  const hits = [];
+  for (const b of labBoxes) if (hit(jb, toCard(b))) hits.push(`이름표 ${b.key}`);
+  for (const p of pinsXY)
+    if (hit(jb, toCard({ x0: p.x - pinR, x1: p.x + pinR, y0: p.y - pinR, y1: p.y + pinR }))) hits.push(`핀 ${p.key}`);
+  if (hits.length)
+    throw new Error(
+      `지방 블록이 지도를 덮습니다 (${hits.length}건): ${hits.join(" · ")}\n` +
+        `  블록 ${LAYOUT.jbX}~${jb.x1}px · ${LAYOUT.jbY}~${jb.y1}px / 지도 ${LAYOUT.mapX}~${LAYOUT.mapX + Math.round(mapW)}px\n` +
+        `  → 이름을 줄이거나(데이터셋 full), 블록 글자를 줄이거나, jbY 를 올려 빈 바다 안으로 넣으세요.`,
+    );
+}
 
 // 표 세로를 지도 세로에 맞춘다 — 행 높이를 거기서 역산한다.
 LAYOUT.rowH = Math.floor((mapH - 3 * LAYOUT.hdrH - 2 * LAYOUT.grpGap) / flat.length);
@@ -207,8 +261,8 @@ const base = {
   legend: { hit: "토지거래허가구역", off: "미지정", g1: "1급지", g2: "2급지", g3: "3급지" },
   jibang: {
     label: `지방 학군지 ${jibangCalc.length}곳`,
-    note: "지도에는 수도권만",
-    rows: jibangCalc.map((a) => ({ name: a.name, grade: a.grade, price: (a.med / 10000).toFixed(2), trades: a.n.toLocaleString("ko-KR") })),
+    // 「지도에는 수도권만」 단서는 뺐다(오너 2026-09-01) — 제목이 이미 '서울 수도권'이라 겹친다.
+    rows: jibangRows,
   },
   source: { name: "국토부 실거래가 · 『대한민국 학군지도』", period, verified: false },
   provenance: {
