@@ -75,8 +75,11 @@
       /* ── 지방 학군지 블록 — 지도 좌하단 빈 바다 자리(오너 2026-09-01) ── */
       .hg-jb {
         position: absolute; left: var(--jbX); top: var(--jbY); width: var(--jbW);
-        background: rgba(250, 249, 246, 0.94); border: 2px solid var(--wirit-ink-12);
+        background: var(--wirit-paper); border: 2px solid var(--wirit-ink-12);
         border-radius: 4px; padding: 9px 11px 10px;
+        /* 입체감(오너 2026-09-01) — 각은 세운 채(4px) 그림자로만 띄운다.
+           큰 라운드 + 옅은 회색 채움은 'AI티'로 읽힌다(CARD_CHECKLIST §2 디자인 톤). */
+        box-shadow: 0 2px 0 rgba(20, 24, 33, 0.10), 0 12px 26px rgba(20, 24, 33, 0.16);
       }
       .hg-jb .t {
         display: flex; align-items: baseline; gap: 7px; padding-bottom: 6px;

@@ -160,8 +160,8 @@ LAYOUT.mapY = 0;                       // 지도와 표를 같은 높이에서 �
 // 지방 블록 — 지도 좌하단의 빈 바다 자리(오너가 그 자리를 지정했다).
 // 치수도 여기서 정해 템플릿이 CSS 변수로 받는다.
 LAYOUT.jbW = Math.round(mapW * 0.46);
-LAYOUT.jbX = Math.round(LAYOUT.mapX + mapW * 0.045);
-LAYOUT.jbY = Math.round(mapH * 0.60);
+LAYOUT.jbX = Math.round(LAYOUT.mapX + mapW * 0.105);   // 살짝 우측으로(오너 2026-09-01)
+LAYOUT.jbY = Math.round(mapH * 0.70);                  // 더 아래로 — 빈 바다 한가운데에 앉힌다
 LAYOUT.bodyH = Math.round(mapH + LEGEND_GAP + LEGEND_H);
 
 // 표 세로를 지도 세로에 맞춘다 — 행 높이를 거기서 역산한다.
