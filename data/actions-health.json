@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T06:28:37.418Z",
+  "generatedAt": "2026-09-01T06:49:46.797Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -715,12 +715,12 @@
     {
       "file": "auto-produce.yml",
       "name": "데이터 바뀌면 카드 자동 재생산",
-      "lastRun": "2026-08-31",
+      "lastRun": "2026-09-01",
       "daysAgo": 0,
-      "lastOk": "2026-08-31",
+      "lastOk": "2026-09-01",
       "okDaysAgo": 0,
       "fails30": 60,
-      "runs30": 83
+      "runs30": 84
     },
     {
       "file": "guard.yml",
