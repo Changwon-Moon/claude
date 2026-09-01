@@ -144,10 +144,8 @@ const mapSvg = tohuhMapSvg({
   twoLine: true,
   labelWidth: 118,
   placement: "nearest",
-  /* 전세는 '상승' 신호가 아니라 '수준' 이다 — 빨강(상승 전용색)을 쓰지 않고 계정 코발트로 간다.
-   * 낮은 쪽은 옅은 코발트, 높은 쪽은 진한 코발트. (docs/BRAND.md — 빨강은 상승·과열 전용) */
-  colorLo: [226, 235, 255],
-  colorHi: [26, 62, 150],
+  /* 색은 판형 기본값(옅은 빨강 → 진한 빨강)을 쓴다 — 오너 지시 2026-09-01.
+   * colorLo/colorHi 를 주지 않으면 tohuh-map 모듈의 기본 그라데이션이 그대로 걸린다. */
   /* 최저값이 0 이 아니라 4억대라 [0,max] 정규화하면 색이 다 비슷해진다 → [min,max] 로 편다 */
   minValue: Math.min(...AREAS.map((a) => eokOf(a.geoName))),
 });
@@ -173,7 +171,7 @@ const rows = ranked.slice(0, HEAD_N).map((a, i) => ({
   rank: i + 1,
   medal: MEDALS[i] || "",
   top: i < 3,
-  gu: a.label + (a.isNew ? " ⚡" : ""),
+  gu: a.label,
   hits: eokOf(a.geoName).toFixed(1),
 }));
 /* 하위 3곳 — 순위 번호는 **전체 곳수에서 센다**(38·39·40). 손으로 적지 않는다. */
@@ -181,7 +179,7 @@ const bottom = ranked.slice(-TAIL_N);
 const tail = {
   rows: bottom.map((a, i) => ({
     rank: AREAS.length - TAIL_N + 1 + i,
-    gu: a.label + (a.isNew ? " ⚡" : ""),
+    gu: a.label,
     hits: eokOf(a.geoName).toFixed(1),
   })),
   /* 브래킷 주석은 넣지 않는다 — 표 오른쪽이 지도라 겹친다(월세 비중 카드도 같은 이유로 뺐다) */
@@ -200,7 +198,12 @@ const totalN = seoul.n + gg.n;
 /** 표에서 건수를 뺀 대신, 표본이 가장 얇은 곳을 하단 주석이 밝힌다 */
 const minSample = AREAS.map((a) => ({ label: a.label, n: band.get(a.geoName).n }))
   .sort((x, y) => x.n - y.n)[0];
+/** 평형 통칭 — 전용 84㎡ = 공급 34평(국평), 전용 59㎡ = 공급 25평. **같은 집을 가리키는 다른 이름**이라
+ * 통칭을 써도 오보가 아니다. 오보였던 것은 「전용 평당가에 34(공급평)를 곱하는 것」이지 호칭이 아니었다. */
+const PYEONG_NAME = TYPE === "84" ? "국평" : "25평";
 const top1 = ranked[0];
+/** 제목에 넣을 짧은 이름 — "성남시 분당구" 같은 긴 이름이 1위면 제목이 한 줄을 넘긴다 */
+top1.short = top1.mapLabel || top1.label;
 const last = ranked.at(-1);
 const gap = eokOf(top1.geoName) / eokOf(last.geoName);
 
@@ -212,11 +215,13 @@ const card = {
    * 대신 `centerBody` 를 켠다: 판형이 행 높이를 줄이고 본문을 세로 가운데로 맞춘다
    * (`.sm-cb.sm-c .sm-row` — 월세 비중 지도가 같은 17+3 행에서 쓰는 조합이다). */
   centerBody: true,
-  /* 빨강은 상승·과열 전용이다(docs/BRAND.md). 이 카드는 오른 것이 아니라 **지금 얼마인지**를
-   * 말하므로 강조를 코발트로 옮긴다 — 지도 그라데이션과도 같은 축이 된다. */
-  accent: "cobalt",
+  /* 강조색은 **빨강**(판형 기본값) — 오너 지시 2026-09-01.
+   * 처음엔 코발트로 냈다: 빨강은 상승·과열 전용이고(docs/BRAND.md) 이 카드는 '수준'을
+   * 말한다는 이유였다. 오너가 이 카드에서는 빨강으로 정했고, 그러면 지도 그라데이션도
+   * 같이 빨강이어야 한다 — 한쪽만 바꾸면 카드 안에 색이 둘 남는다.
+   * (판형의 `accent: "cobalt"` 변형은 그대로 남아 있다. 지금은 아무 카드도 쓰지 않는다.) */
   hideFooterId: true, // 아이디는 지도 안 스탬프에 있다
-  note: `2026.06~07 실거래 · 수도권 토지거래허가구역 40곳`,
+  note: `2026.06~07월 실거래 · 수도권 토지거래허가구역 40곳`,
   /* 숫자를 손으로 적지 않는다 — 수집이 갱신되면 제목도 따라 바뀐다.
    * '국평'·'25평' 같은 통칭 대신 **전용 ○○㎡** 로 쓴다. 통칭은 공급면적 기준이라
    * 이 카드의 수치(전용)와 기준이 어긋난다(2026-09-01).
@@ -224,7 +229,7 @@ const card = {
    * ⚠️ 맨 앞의 '수도권'을 빼지 않는다. 이 카드는 경기 15곳을 함께 싣는데 제목이 '서울'만
    * 말하면 **표 3위에 과천시가 앉는다** — 범위 검사(scope)가 실제로 그것을 막았다.
    * '서울 평균'은 그 범위 안에서 고른 대표값이라는 뜻이고, 범위 자체는 수도권이다. */
-  title: `수도권 전용 ${TYPE}㎡ 전세, 서울 평균 <span class="hi">${seoul.eok.toFixed(1)}억</span>`,
+  title: `수도권 ${PYEONG_NAME} 전세 <span class="hi">${Math.floor(seoul.eok)}억 시대</span>, ${top1.short} ${eokTxt(eokOf(top1.geoName))}`,
   fitTitle: true,
   unit: "억",
   /* 머리글은 **2열**(지역 / 값)이다. 3열(`head.c`)로 두면 판형이 `sm-h3` 를 켜 값 칸을
@@ -241,7 +246,9 @@ const card = {
   /* ⚠️ 캡션이 말하는 억 단위 값은 **카드에도 있어야 한다**(caption-number 게이트).
    * 경기 평균을 여기서 뺐더니 캡션의 「경기 평균 4.2억」이 카드에 없는 숫자로 잡혀 막혔다
    * (84 카드는 4.2억이 우연히 지도에 있어 안 걸렸다 — 우연에 기대지 않는다). */
-  footnote: `전용 ${winLo}~${winHi}㎡ 전세 ${totalN.toLocaleString()}건 평균 · 경기 15곳 ${gg.eok.toFixed(1)}억 · 최소 표본 ${minSample.n}건 · 공급면적(평) 기준 아님`,
+  /* ⚠️ 한 줄을 넘기면 낱말이 끊긴다("공/급면적"). 항목을 줄이는 쪽으로 맞춘다.
+   * 「공급면적 기준 아님」은 맨 앞의 **전용 ○○~○○㎡** 가 대신한다 — 같은 말을 두 번 하지 않는다. */
+  footnote: `전세 실거래 ${totalN.toLocaleString()}건 평균 · 전용 ${winLo}~${winHi}㎡ · 서울 ${seoul.eok.toFixed(1)}억 · 경기 ${gg.eok.toFixed(1)}억 · 최소 표본 ${minSample.n}건`,
   source: { name: "국토교통부 아파트 전월세 실거래가 · 서울시·경기도 허가구역 고시" },
 };
 

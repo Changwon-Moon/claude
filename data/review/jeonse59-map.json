@@ -13,7 +13,7 @@
           "reviewer": "design-qa",
           "level": "warn",
           "code": "titlegap",
-          "msg": "제목과 바로 아래 요소의 간격이 15px 입니다 (제목 57px) — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다"
+          "msg": "제목과 바로 아래 요소의 간격이 14px 입니다 (제목 58px) — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다"
         },
         {
           "reviewer": "design-qa",
