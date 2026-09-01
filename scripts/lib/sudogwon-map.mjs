@@ -1,8 +1,8 @@
 /**
- * 수도권(서울 25구 + 경기 47곳) 시군구 경계 지도 + 학군지 번호 핀.
+ * 수도권(서울·경기·인천) 시군구 경계 지도 + 학군지 번호 핀.
  *
  * 좌표는 전부 지오데이터에서 계산한다 — 손으로 찍은 좌표는 0개다.
- *  - 시군구 경계: data/geo/korea-sgg-2026.geojson (sido = 서울특별시 / 경기도)
+ *  - 시군구 경계: data/geo/korea-sgg-2026.geojson (sido = 서울특별시 / 경기도 / 인천광역시)
  *  - 핀 좌표: pinDong(행정동, 분동은 평균) 중심. 단 **그 시군구 폴리곤 안에 든 것만** 쓴다.
  *            같은 이름의 동이 여러 시군구에 있기 때문이다(장지동=송파·화성, 목동=양천·화성,
  *            상동=부천·여러 곳). 이름만으로 고르면 엉뚱한 곳에 핀이 박히고,
@@ -64,7 +64,7 @@ function inside(pt, geom) {
  */
 export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, showLabels = false }) {
   const sgg = JSON.parse(readFileSync(join(ROOT, "data/geo/korea-sgg-2026.geojson"), "utf8"))
-    .features.filter((f) => ["서울특별시", "경기도"].includes(f.properties.sido));
+    .features.filter((f) => ["서울특별시", "경기도", "인천광역시"].includes(f.properties.sido));
   const dongs = JSON.parse(readFileSync(join(ROOT, "data/geo/korea-submunicipalities.geojson"), "utf8")).features;
 
   const sggOf0 = (name) => sgg.find((f) => f.properties.name === name);
