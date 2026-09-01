@@ -11,7 +11,7 @@
     "dongMissing": 700,
     "sggMissing": 0,
     "coverage": 81,
-    "note": "행별 집계다(원장 미보존). aca=학원 · gyoseup=교습소 · ipsi=분야가 '입시.검정 및 보습' 인 곳 · jeongwon=정원합계(TOFOR_SMTOT) 합. 시군구는 도로명주소에서, 법정동은 도로명 상세의 괄호 참고항목에서 뽑았다. 괄호에 법정동이 없는 행(dongMissing)은 집계에서 빠졌다 — coverage 를 보고 숫자를 읽어야 한다. 등록상태(개원/휴원/폐원)는 가리지 않았다 — 원장에 남은 곳을 모두 센다."
+    "note": "행별 집계다(원장 미보존). aca=학원 · gyoseup=교습소 · ipsi=분야가 '입시.검정 및 보습' 인 곳 · ipsiAca/ipsiGyoseup=입시·보습을 학원/교습소로 가른 수 · ipsiJeongwonN=그중 정원이 0 이 아닌 곳 수. jeongwon=정원합계(TOFOR_SMTOT) 합. 시군구는 도로명주소에서, 법정동은 도로명 상세의 괄호 참고항목에서 뽑았다. 괄호에 법정동이 없는 행(dongMissing)은 집계에서 빠졌다 — coverage 를 보고 숫자를 읽어야 한다. 등록상태(개원/휴원/폐원)는 가리지 않았다 — 원장에 남은 곳을 모두 센다."
   },
   "rows": [
     {
@@ -22,7 +22,10 @@
       "gyoseup": 44,
       "total": 320,
       "ipsi": 201,
+      "ipsiAca": 171,
+      "ipsiGyoseup": 30,
       "ipsiJeongwon": 47326,
+      "ipsiJeongwonN": 192,
       "jeongwon": 74476
     },
     {
@@ -33,7 +36,10 @@
       "gyoseup": 82,
       "total": 235,
       "ipsi": 132,
+      "ipsiAca": 80,
+      "ipsiGyoseup": 52,
       "ipsiJeongwon": 17348,
+      "ipsiJeongwonN": 112,
       "jeongwon": 1030724
     },
     {
@@ -44,7 +50,10 @@
       "gyoseup": 109,
       "total": 309,
       "ipsi": 121,
+      "ipsiAca": 65,
+      "ipsiGyoseup": 56,
       "ipsiJeongwon": 13901,
+      "ipsiJeongwonN": 104,
       "jeongwon": 38967
     },
     {
@@ -55,7 +64,10 @@
       "gyoseup": 48,
       "total": 176,
       "ipsi": 95,
+      "ipsiAca": 65,
+      "ipsiGyoseup": 30,
       "ipsiJeongwon": 13233,
+      "ipsiJeongwonN": 85,
       "jeongwon": 27395
     },
     {
@@ -66,7 +78,10 @@
       "gyoseup": 49,
       "total": 195,
       "ipsi": 90,
+      "ipsiAca": 60,
+      "ipsiGyoseup": 30,
       "ipsiJeongwon": 14018,
+      "ipsiJeongwonN": 78,
       "jeongwon": 30697
     },
     {
@@ -77,19 +92,11 @@
       "gyoseup": 31,
       "total": 126,
       "ipsi": 86,
+      "ipsiAca": 60,
+      "ipsiGyoseup": 26,
       "ipsiJeongwon": 17978,
+      "ipsiJeongwonN": 76,
       "jeongwon": 26282
-    },
-    {
-      "sido": "울산광역시교육청",
-      "sgg": "동구",
-      "dong": "전하동",
-      "aca": 83,
-      "gyoseup": 31,
-      "total": 114,
-      "ipsi": 68,
-      "ipsiJeongwon": 11689,
-      "jeongwon": 17765
     },
     {
       "sido": "울산광역시교육청",
@@ -99,41 +106,25 @@
       "gyoseup": 26,
       "total": 104,
       "ipsi": 67,
+      "ipsiAca": 47,
+      "ipsiGyoseup": 20,
       "ipsiJeongwon": 11368,
+      "ipsiJeongwonN": 64,
       "jeongwon": 16889
     },
     {
       "sido": "울산광역시교육청",
-      "sgg": "북구",
-      "dong": "산하동",
-      "aca": 39,
-      "gyoseup": 41,
-      "total": 80,
-      "ipsi": 51,
-      "ipsiJeongwon": 6116,
-      "jeongwon": 8733
-    },
-    {
-      "sido": "울산광역시교육청",
-      "sgg": "중구",
-      "dong": "반구동",
-      "aca": 71,
-      "gyoseup": 12,
-      "total": 83,
-      "ipsi": 51,
-      "ipsiJeongwon": 11474,
-      "jeongwon": 15737
-    },
-    {
-      "sido": "울산광역시교육청",
-      "sgg": "중구",
-      "dong": "유곡동",
-      "aca": 65,
-      "gyoseup": 28,
-      "total": 93,
-      "ipsi": 51,
-      "ipsiJeongwon": 7666,
-      "jeongwon": 12470
+      "sgg": "동구",
+      "dong": "전하동",
+      "aca": 83,
+      "gyoseup": 31,
+      "total": 114,
+      "ipsi": 68,
+      "ipsiAca": 45,
+      "ipsiGyoseup": 23,
+      "ipsiJeongwon": 11689,
+      "ipsiJeongwonN": 65,
+      "jeongwon": 17765
     },
     {
       "sido": "울산광역시교육청",
@@ -143,8 +134,25 @@
       "gyoseup": 11,
       "total": 76,
       "ipsi": 50,
+      "ipsiAca": 41,
+      "ipsiGyoseup": 9,
       "ipsiJeongwon": 10289,
+      "ipsiJeongwonN": 45,
       "jeongwon": 14959
+    },
+    {
+      "sido": "울산광역시교육청",
+      "sgg": "중구",
+      "dong": "반구동",
+      "aca": 71,
+      "gyoseup": 12,
+      "total": 83,
+      "ipsi": 51,
+      "ipsiAca": 39,
+      "ipsiGyoseup": 12,
+      "ipsiJeongwon": 11474,
+      "ipsiJeongwonN": 49,
+      "jeongwon": 15737
     },
     {
       "sido": "울산광역시교육청",
@@ -154,8 +162,25 @@
       "gyoseup": 21,
       "total": 89,
       "ipsi": 47,
+      "ipsiAca": 35,
+      "ipsiGyoseup": 12,
       "ipsiJeongwon": 8339,
+      "ipsiJeongwonN": 39,
       "jeongwon": 15259
+    },
+    {
+      "sido": "울산광역시교육청",
+      "sgg": "중구",
+      "dong": "유곡동",
+      "aca": 65,
+      "gyoseup": 28,
+      "total": 93,
+      "ipsi": 51,
+      "ipsiAca": 35,
+      "ipsiGyoseup": 16,
+      "ipsiJeongwon": 7666,
+      "ipsiJeongwonN": 48,
+      "jeongwon": 12470
     },
     {
       "sido": "울산광역시교육청",
@@ -165,7 +190,10 @@
       "gyoseup": 21,
       "total": 71,
       "ipsi": 41,
+      "ipsiAca": 29,
+      "ipsiGyoseup": 12,
       "ipsiJeongwon": 7101,
+      "ipsiJeongwonN": 36,
       "jeongwon": 11202
     },
     {
@@ -176,8 +204,25 @@
       "gyoseup": 12,
       "total": 58,
       "ipsi": 38,
+      "ipsiAca": 28,
+      "ipsiGyoseup": 10,
       "ipsiJeongwon": 5766,
+      "ipsiJeongwonN": 36,
       "jeongwon": 8630
+    },
+    {
+      "sido": "울산광역시교육청",
+      "sgg": "북구",
+      "dong": "호계동",
+      "aca": 47,
+      "gyoseup": 6,
+      "total": 53,
+      "ipsi": 27,
+      "ipsiAca": 24,
+      "ipsiGyoseup": 3,
+      "ipsiJeongwon": 5678,
+      "ipsiJeongwonN": 25,
+      "jeongwon": 8983
     },
     {
       "sido": "울산광역시교육청",
@@ -187,8 +232,25 @@
       "gyoseup": 16,
       "total": 59,
       "ipsi": 34,
+      "ipsiAca": 24,
+      "ipsiGyoseup": 10,
       "ipsiJeongwon": 4546,
+      "ipsiJeongwonN": 26,
       "jeongwon": 7259
+    },
+    {
+      "sido": "울산광역시교육청",
+      "sgg": "북구",
+      "dong": "산하동",
+      "aca": 39,
+      "gyoseup": 41,
+      "total": 80,
+      "ipsi": 51,
+      "ipsiAca": 23,
+      "ipsiGyoseup": 28,
+      "ipsiJeongwon": 6116,
+      "ipsiJeongwonN": 40,
+      "jeongwon": 8733
     },
     {
       "sido": "울산광역시교육청",
@@ -198,7 +260,10 @@
       "gyoseup": 16,
       "total": 51,
       "ipsi": 30,
+      "ipsiAca": 21,
+      "ipsiGyoseup": 9,
       "ipsiJeongwon": 8439,
+      "ipsiJeongwonN": 28,
       "jeongwon": 10815
     },
     {
@@ -209,19 +274,11 @@
       "gyoseup": 9,
       "total": 52,
       "ipsi": 28,
+      "ipsiAca": 21,
+      "ipsiGyoseup": 7,
       "ipsiJeongwon": 5435,
+      "ipsiJeongwonN": 27,
       "jeongwon": 8193
-    },
-    {
-      "sido": "울산광역시교육청",
-      "sgg": "북구",
-      "dong": "호계동",
-      "aca": 47,
-      "gyoseup": 6,
-      "total": 53,
-      "ipsi": 27,
-      "ipsiJeongwon": 5678,
-      "jeongwon": 8983
     },
     {
       "sido": "울산광역시교육청",
@@ -231,7 +288,10 @@
       "gyoseup": 11,
       "total": 48,
       "ipsi": 26,
+      "ipsiAca": 20,
+      "ipsiGyoseup": 6,
       "ipsiJeongwon": 5701,
+      "ipsiJeongwonN": 20,
       "jeongwon": 8840
     },
     {
@@ -242,41 +302,11 @@
       "gyoseup": 10,
       "total": 47,
       "ipsi": 25,
+      "ipsiAca": 20,
+      "ipsiGyoseup": 5,
       "ipsiJeongwon": 6849,
+      "ipsiJeongwonN": 23,
       "jeongwon": 10235
-    },
-    {
-      "sido": "울산광역시교육청",
-      "sgg": "남구",
-      "dong": "달동",
-      "aca": 78,
-      "gyoseup": 15,
-      "total": 93,
-      "ipsi": 24,
-      "ipsiJeongwon": 2875,
-      "jeongwon": 1013600
-    },
-    {
-      "sido": "울산광역시교육청",
-      "sgg": "북구",
-      "dong": "신천동",
-      "aca": 23,
-      "gyoseup": 15,
-      "total": 38,
-      "ipsi": 23,
-      "ipsiJeongwon": 3777,
-      "jeongwon": 5031
-    },
-    {
-      "sido": "울산광역시교육청",
-      "sgg": "동구",
-      "dong": "동부동",
-      "aca": 27,
-      "gyoseup": 14,
-      "total": 41,
-      "ipsi": 22,
-      "ipsiJeongwon": 2849,
-      "jeongwon": 5393
     },
     {
       "sido": "울산광역시교육청",
@@ -286,8 +316,39 @@
       "gyoseup": 7,
       "total": 32,
       "ipsi": 21,
+      "ipsiAca": 16,
+      "ipsiGyoseup": 5,
       "ipsiJeongwon": 4328,
+      "ipsiJeongwonN": 20,
       "jeongwon": 5475
+    },
+    {
+      "sido": "울산광역시교육청",
+      "sgg": "동구",
+      "dong": "동부동",
+      "aca": 27,
+      "gyoseup": 14,
+      "total": 41,
+      "ipsi": 22,
+      "ipsiAca": 14,
+      "ipsiGyoseup": 8,
+      "ipsiJeongwon": 2849,
+      "ipsiJeongwonN": 21,
+      "jeongwon": 5393
+    },
+    {
+      "sido": "울산광역시교육청",
+      "sgg": "북구",
+      "dong": "신천동",
+      "aca": 23,
+      "gyoseup": 15,
+      "total": 38,
+      "ipsi": 23,
+      "ipsiAca": 14,
+      "ipsiGyoseup": 9,
+      "ipsiJeongwon": 3777,
+      "ipsiJeongwonN": 20,
+      "jeongwon": 5031
     },
     {
       "sido": "울산광역시교육청",
@@ -297,8 +358,25 @@
       "gyoseup": 12,
       "total": 43,
       "ipsi": 19,
+      "ipsiAca": 14,
+      "ipsiGyoseup": 5,
       "ipsiJeongwon": 2825,
+      "ipsiJeongwonN": 19,
       "jeongwon": 5256
+    },
+    {
+      "sido": "울산광역시교육청",
+      "sgg": "남구",
+      "dong": "달동",
+      "aca": 78,
+      "gyoseup": 15,
+      "total": 93,
+      "ipsi": 24,
+      "ipsiAca": 12,
+      "ipsiGyoseup": 12,
+      "ipsiJeongwon": 2875,
+      "ipsiJeongwonN": 20,
+      "jeongwon": 1013600
     },
     {
       "sido": "울산광역시교육청",
@@ -308,19 +386,11 @@
       "gyoseup": 12,
       "total": 34,
       "ipsi": 16,
+      "ipsiAca": 10,
+      "ipsiGyoseup": 6,
       "ipsiJeongwon": 3493,
+      "ipsiJeongwonN": 10,
       "jeongwon": 5553
-    },
-    {
-      "sido": "울산광역시교육청",
-      "sgg": "중구",
-      "dong": "약사동",
-      "aca": 20,
-      "gyoseup": 6,
-      "total": 26,
-      "ipsi": 14,
-      "ipsiJeongwon": 1719,
-      "jeongwon": 2815
     },
     {
       "sido": "울산광역시교육청",
@@ -330,7 +400,10 @@
       "gyoseup": 4,
       "total": 18,
       "ipsi": 13,
+      "ipsiAca": 10,
+      "ipsiGyoseup": 3,
       "ipsiJeongwon": 2083,
+      "ipsiJeongwonN": 10,
       "jeongwon": 2622
     },
     {
@@ -341,19 +414,25 @@
       "gyoseup": 10,
       "total": 31,
       "ipsi": 13,
+      "ipsiAca": 10,
+      "ipsiGyoseup": 3,
       "ipsiJeongwon": 1672,
+      "ipsiJeongwonN": 13,
       "jeongwon": 3201
     },
     {
       "sido": "울산광역시교육청",
       "sgg": "중구",
-      "dong": "장현동",
-      "aca": 16,
-      "gyoseup": 7,
-      "total": 23,
-      "ipsi": 13,
-      "ipsiJeongwon": 1802,
-      "jeongwon": 3722
+      "dong": "약사동",
+      "aca": 20,
+      "gyoseup": 6,
+      "total": 26,
+      "ipsi": 14,
+      "ipsiAca": 10,
+      "ipsiGyoseup": 4,
+      "ipsiJeongwon": 1719,
+      "ipsiJeongwonN": 13,
+      "jeongwon": 2815
     },
     {
       "sido": "울산광역시교육청",
@@ -363,8 +442,25 @@
       "gyoseup": 5,
       "total": 23,
       "ipsi": 11,
+      "ipsiAca": 8,
+      "ipsiGyoseup": 3,
       "ipsiJeongwon": 2480,
+      "ipsiJeongwonN": 11,
       "jeongwon": 3922
+    },
+    {
+      "sido": "울산광역시교육청",
+      "sgg": "중구",
+      "dong": "장현동",
+      "aca": 16,
+      "gyoseup": 7,
+      "total": 23,
+      "ipsi": 13,
+      "ipsiAca": 8,
+      "ipsiGyoseup": 5,
+      "ipsiJeongwon": 1802,
+      "ipsiJeongwonN": 11,
+      "jeongwon": 3722
     },
     {
       "sido": "울산광역시교육청",
@@ -374,7 +470,10 @@
       "gyoseup": 9,
       "total": 23,
       "ipsi": 10,
+      "ipsiAca": 6,
+      "ipsiGyoseup": 4,
       "ipsiJeongwon": 1640,
+      "ipsiJeongwonN": 10,
       "jeongwon": 3102
     },
     {
@@ -385,41 +484,11 @@
       "gyoseup": 2,
       "total": 16,
       "ipsi": 7,
+      "ipsiAca": 5,
+      "ipsiGyoseup": 2,
       "ipsiJeongwon": 1083,
+      "ipsiJeongwonN": 6,
       "jeongwon": 2529
-    },
-    {
-      "sido": "울산광역시교육청",
-      "sgg": "북구",
-      "dong": "효문동",
-      "aca": 2,
-      "gyoseup": 12,
-      "total": 14,
-      "ipsi": 7,
-      "ipsiJeongwon": 414,
-      "jeongwon": 487
-    },
-    {
-      "sido": "울산광역시교육청",
-      "sgg": "북구",
-      "dong": "연암동",
-      "aca": 7,
-      "gyoseup": 7,
-      "total": 14,
-      "ipsi": 5,
-      "ipsiJeongwon": 691,
-      "jeongwon": 1284
-    },
-    {
-      "sido": "울산광역시교육청",
-      "sgg": "북구",
-      "dong": "달천동",
-      "aca": 1,
-      "gyoseup": 4,
-      "total": 5,
-      "ipsi": 4,
-      "ipsiJeongwon": 747,
-      "jeongwon": 782
     },
     {
       "sido": "울산광역시교육청",
@@ -429,8 +498,25 @@
       "gyoseup": 2,
       "total": 14,
       "ipsi": 4,
+      "ipsiAca": 4,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 968,
+      "ipsiJeongwonN": 4,
       "jeongwon": 2189
+    },
+    {
+      "sido": "울산광역시교육청",
+      "sgg": "북구",
+      "dong": "연암동",
+      "aca": 7,
+      "gyoseup": 7,
+      "total": 14,
+      "ipsi": 5,
+      "ipsiAca": 3,
+      "ipsiGyoseup": 2,
+      "ipsiJeongwon": 691,
+      "ipsiJeongwonN": 5,
+      "jeongwon": 1284
     },
     {
       "sido": "울산광역시교육청",
@@ -440,8 +526,25 @@
       "gyoseup": 1,
       "total": 10,
       "ipsi": 4,
+      "ipsiAca": 3,
+      "ipsiGyoseup": 1,
       "ipsiJeongwon": 366,
+      "ipsiJeongwonN": 4,
       "jeongwon": 885
+    },
+    {
+      "sido": "울산광역시교육청",
+      "sgg": "북구",
+      "dong": "효문동",
+      "aca": 2,
+      "gyoseup": 12,
+      "total": 14,
+      "ipsi": 7,
+      "ipsiAca": 2,
+      "ipsiGyoseup": 5,
+      "ipsiJeongwon": 414,
+      "ipsiJeongwonN": 3,
+      "jeongwon": 487
     },
     {
       "sido": "울산광역시교육청",
@@ -451,19 +554,11 @@
       "gyoseup": 0,
       "total": 6,
       "ipsi": 2,
+      "ipsiAca": 2,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 744,
+      "ipsiJeongwonN": 2,
       "jeongwon": 1228
-    },
-    {
-      "sido": "울산광역시교육청",
-      "sgg": "남구",
-      "dong": "두왕동",
-      "aca": 2,
-      "gyoseup": 3,
-      "total": 5,
-      "ipsi": 1,
-      "ipsiJeongwon": 0,
-      "jeongwon": 302
     },
     {
       "sido": "울산광역시교육청",
@@ -473,7 +568,10 @@
       "gyoseup": 1,
       "total": 6,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 204,
+      "ipsiJeongwonN": 1,
       "jeongwon": 798
     },
     {
@@ -484,19 +582,25 @@
       "gyoseup": 0,
       "total": 2,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 78,
+      "ipsiJeongwonN": 1,
       "jeongwon": 174
     },
     {
       "sido": "울산광역시교육청",
-      "sgg": "울주군",
-      "dong": "상가동",
-      "aca": 0,
-      "gyoseup": 1,
-      "total": 1,
-      "ipsi": 1,
-      "ipsiJeongwon": 0,
-      "jeongwon": 0
+      "sgg": "북구",
+      "dong": "달천동",
+      "aca": 1,
+      "gyoseup": 4,
+      "total": 5,
+      "ipsi": 4,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 3,
+      "ipsiJeongwon": 747,
+      "ipsiJeongwonN": 3,
+      "jeongwon": 782
     },
     {
       "sido": "울산광역시교육청",
@@ -506,7 +610,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 462,
+      "ipsiJeongwonN": 1,
       "jeongwon": 462
     },
     {
@@ -517,19 +624,25 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 240,
+      "ipsiJeongwonN": 1,
       "jeongwon": 240
     },
     {
       "sido": "울산광역시교육청",
-      "sgg": "중구",
-      "dong": "상가",
-      "aca": 0,
-      "gyoseup": 2,
-      "total": 2,
+      "sgg": "남구",
+      "dong": "두왕동",
+      "aca": 2,
+      "gyoseup": 3,
+      "total": 5,
       "ipsi": 1,
-      "ipsiJeongwon": 63,
-      "jeongwon": 111
+      "ipsiAca": 0,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
+      "jeongwon": 302
     },
     {
       "sido": "울산광역시교육청",
@@ -539,7 +652,10 @@
       "gyoseup": 1,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 21
     },
     {
@@ -550,7 +666,10 @@
       "gyoseup": 1,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 45
     },
     {
@@ -561,7 +680,10 @@
       "gyoseup": 0,
       "total": 7,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 1041
     },
     {
@@ -572,8 +694,39 @@
       "gyoseup": 1,
       "total": 2,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 90
+    },
+    {
+      "sido": "울산광역시교육청",
+      "sgg": "울주군",
+      "dong": "상가동",
+      "aca": 0,
+      "gyoseup": 1,
+      "total": 1,
+      "ipsi": 1,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
+      "jeongwon": 0
+    },
+    {
+      "sido": "울산광역시교육청",
+      "sgg": "중구",
+      "dong": "상가",
+      "aca": 0,
+      "gyoseup": 2,
+      "total": 2,
+      "ipsi": 1,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 63,
+      "ipsiJeongwonN": 1,
+      "jeongwon": 111
     },
     {
       "sido": "울산광역시교육청",
@@ -583,7 +736,10 @@
       "gyoseup": 0,
       "total": 17,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 2103
     },
     {
@@ -594,7 +750,10 @@
       "gyoseup": 0,
       "total": 3,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 408
     }
   ]

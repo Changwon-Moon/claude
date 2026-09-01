@@ -11,7 +11,7 @@
     "dongMissing": 181,
     "sggMissing": 14,
     "coverage": 97.4,
-    "note": "행별 집계다(원장 미보존). aca=학원 · gyoseup=교습소 · ipsi=분야가 '입시.검정 및 보습' 인 곳 · jeongwon=정원합계(TOFOR_SMTOT) 합. 시군구는 도로명주소에서, 법정동은 도로명 상세의 괄호 참고항목에서 뽑았다. 괄호에 법정동이 없는 행(dongMissing)은 집계에서 빠졌다 — coverage 를 보고 숫자를 읽어야 한다. 등록상태(개원/휴원/폐원)는 가리지 않았다 — 원장에 남은 곳을 모두 센다."
+    "note": "행별 집계다(원장 미보존). aca=학원 · gyoseup=교습소 · ipsi=분야가 '입시.검정 및 보습' 인 곳 · ipsiAca/ipsiGyoseup=입시·보습을 학원/교습소로 가른 수 · ipsiJeongwonN=그중 정원이 0 이 아닌 곳 수. jeongwon=정원합계(TOFOR_SMTOT) 합. 시군구는 도로명주소에서, 법정동은 도로명 상세의 괄호 참고항목에서 뽑았다. 괄호에 법정동이 없는 행(dongMissing)은 집계에서 빠졌다 — coverage 를 보고 숫자를 읽어야 한다. 등록상태(개원/휴원/폐원)는 가리지 않았다 — 원장에 남은 곳을 모두 센다."
   },
   "rows": [
     {
@@ -22,7 +22,10 @@
       "gyoseup": 231,
       "total": 992,
       "ipsi": 591,
+      "ipsiAca": 457,
+      "ipsiGyoseup": 134,
       "ipsiJeongwon": 75933,
+      "ipsiJeongwonN": 277,
       "jeongwon": 351336
     },
     {
@@ -33,19 +36,11 @@
       "gyoseup": 138,
       "total": 582,
       "ipsi": 377,
+      "ipsiAca": 296,
+      "ipsiGyoseup": 81,
       "ipsiJeongwon": 118352,
+      "ipsiJeongwonN": 218,
       "jeongwon": 169167
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "검단구",
-      "dong": "원당동",
-      "aca": 217,
-      "gyoseup": 103,
-      "total": 320,
-      "ipsi": 199,
-      "ipsiJeongwon": 38765,
-      "jeongwon": 79042
     },
     {
       "sido": "인천광역시교육청",
@@ -55,8 +50,25 @@
       "gyoseup": 69,
       "total": 300,
       "ipsi": 199,
+      "ipsiAca": 155,
+      "ipsiGyoseup": 44,
       "ipsiJeongwon": 33414,
+      "ipsiJeongwonN": 142,
       "jeongwon": 57557
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "검단구",
+      "dong": "원당동",
+      "aca": 217,
+      "gyoseup": 103,
+      "total": 320,
+      "ipsi": 199,
+      "ipsiAca": 136,
+      "ipsiGyoseup": 63,
+      "ipsiJeongwon": 38765,
+      "ipsiJeongwonN": 72,
+      "jeongwon": 79042
     },
     {
       "sido": "인천광역시교육청",
@@ -66,7 +78,10 @@
       "gyoseup": 60,
       "total": 276,
       "ipsi": 147,
+      "ipsiAca": 113,
+      "ipsiGyoseup": 34,
       "ipsiJeongwon": 14953,
+      "ipsiJeongwonN": 91,
       "jeongwon": 45190
     },
     {
@@ -77,30 +92,11 @@
       "gyoseup": 66,
       "total": 217,
       "ipsi": 141,
+      "ipsiAca": 99,
+      "ipsiGyoseup": 42,
       "ipsiJeongwon": 61647,
+      "ipsiJeongwonN": 100,
       "jeongwon": 76917
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "연수구",
-      "dong": "동춘동",
-      "aca": 126,
-      "gyoseup": 90,
-      "total": 216,
-      "ipsi": 141,
-      "ipsiJeongwon": 24064,
-      "jeongwon": 30525
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "부평구",
-      "dong": "삼산동",
-      "aca": 141,
-      "gyoseup": 54,
-      "total": 195,
-      "ipsi": 130,
-      "ipsiJeongwon": 75897,
-      "jeongwon": 98227
     },
     {
       "sido": "인천광역시교육청",
@@ -110,19 +106,25 @@
       "gyoseup": 55,
       "total": 213,
       "ipsi": 129,
+      "ipsiAca": 96,
+      "ipsiGyoseup": 33,
       "ipsiJeongwon": 57275,
+      "ipsiJeongwonN": 70,
       "jeongwon": 79008
     },
     {
       "sido": "인천광역시교육청",
-      "sgg": "미추홀구",
-      "dong": "용현동",
-      "aca": 128,
-      "gyoseup": 59,
-      "total": 187,
-      "ipsi": 121,
-      "ipsiJeongwon": 32627,
-      "jeongwon": 45354
+      "sgg": "부평구",
+      "dong": "삼산동",
+      "aca": 141,
+      "gyoseup": 54,
+      "total": 195,
+      "ipsi": 130,
+      "ipsiAca": 94,
+      "ipsiGyoseup": 36,
+      "ipsiJeongwon": 75897,
+      "ipsiJeongwonN": 93,
+      "jeongwon": 98227
     },
     {
       "sido": "인천광역시교육청",
@@ -132,8 +134,39 @@
       "gyoseup": 26,
       "total": 165,
       "ipsi": 109,
+      "ipsiAca": 92,
+      "ipsiGyoseup": 17,
       "ipsiJeongwon": 12916,
+      "ipsiJeongwonN": 70,
       "jeongwon": 21962
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "연수구",
+      "dong": "동춘동",
+      "aca": 126,
+      "gyoseup": 90,
+      "total": 216,
+      "ipsi": 141,
+      "ipsiAca": 88,
+      "ipsiGyoseup": 53,
+      "ipsiJeongwon": 24064,
+      "ipsiJeongwonN": 104,
+      "jeongwon": 30525
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "미추홀구",
+      "dong": "용현동",
+      "aca": 128,
+      "gyoseup": 59,
+      "total": 187,
+      "ipsi": 121,
+      "ipsiAca": 80,
+      "ipsiGyoseup": 41,
+      "ipsiJeongwon": 32627,
+      "ipsiJeongwonN": 72,
+      "jeongwon": 45354
     },
     {
       "sido": "인천광역시교육청",
@@ -143,7 +176,10 @@
       "gyoseup": 43,
       "total": 160,
       "ipsi": 105,
+      "ipsiAca": 78,
+      "ipsiGyoseup": 27,
       "ipsiJeongwon": 21382,
+      "ipsiJeongwonN": 45,
       "jeongwon": 35153
     },
     {
@@ -154,7 +190,10 @@
       "gyoseup": 48,
       "total": 157,
       "ipsi": 101,
+      "ipsiAca": 68,
+      "ipsiGyoseup": 33,
       "ipsiJeongwon": 35652,
+      "ipsiJeongwonN": 48,
       "jeongwon": 63801
     },
     {
@@ -165,7 +204,10 @@
       "gyoseup": 56,
       "total": 177,
       "ipsi": 99,
+      "ipsiAca": 67,
+      "ipsiGyoseup": 32,
       "ipsiJeongwon": 19207,
+      "ipsiJeongwonN": 79,
       "jeongwon": 27518
     },
     {
@@ -176,7 +218,10 @@
       "gyoseup": 59,
       "total": 201,
       "ipsi": 92,
+      "ipsiAca": 65,
+      "ipsiGyoseup": 27,
       "ipsiJeongwon": 42048,
+      "ipsiJeongwonN": 63,
       "jeongwon": 94161
     },
     {
@@ -187,8 +232,25 @@
       "gyoseup": 21,
       "total": 111,
       "ipsi": 77,
+      "ipsiAca": 62,
+      "ipsiGyoseup": 15,
       "ipsiJeongwon": 32881,
+      "ipsiJeongwonN": 54,
       "jeongwon": 42015
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "남동구",
+      "dong": "간석동",
+      "aca": 106,
+      "gyoseup": 33,
+      "total": 139,
+      "ipsi": 70,
+      "ipsiAca": 60,
+      "ipsiGyoseup": 10,
+      "ipsiJeongwon": 8393,
+      "ipsiJeongwonN": 47,
+      "jeongwon": 17784
     },
     {
       "sido": "인천광역시교육청",
@@ -198,7 +260,10 @@
       "gyoseup": 41,
       "total": 203,
       "ipsi": 73,
+      "ipsiAca": 55,
+      "ipsiGyoseup": 18,
       "ipsiJeongwon": 38962,
+      "ipsiJeongwonN": 49,
       "jeongwon": 326877
     },
     {
@@ -209,19 +274,11 @@
       "gyoseup": 34,
       "total": 128,
       "ipsi": 73,
+      "ipsiAca": 53,
+      "ipsiGyoseup": 20,
       "ipsiJeongwon": 41696,
+      "ipsiJeongwonN": 56,
       "jeongwon": 62962
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "남동구",
-      "dong": "간석동",
-      "aca": 106,
-      "gyoseup": 33,
-      "total": 139,
-      "ipsi": 70,
-      "ipsiJeongwon": 8393,
-      "jeongwon": 17784
     },
     {
       "sido": "인천광역시교육청",
@@ -231,19 +288,11 @@
       "gyoseup": 27,
       "total": 111,
       "ipsi": 62,
+      "ipsiAca": 48,
+      "ipsiGyoseup": 14,
       "ipsiJeongwon": 27439,
+      "ipsiJeongwonN": 45,
       "jeongwon": 36727
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "미추홀구",
-      "dong": "학익동",
-      "aca": 64,
-      "gyoseup": 33,
-      "total": 97,
-      "ipsi": 60,
-      "ipsiJeongwon": 23043,
-      "jeongwon": 27705
     },
     {
       "sido": "인천광역시교육청",
@@ -253,8 +302,53 @@
       "gyoseup": 19,
       "total": 88,
       "ipsi": 55,
+      "ipsiAca": 44,
+      "ipsiGyoseup": 11,
       "ipsiJeongwon": 33314,
+      "ipsiJeongwonN": 42,
       "jeongwon": 42594
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "계양구",
+      "dong": "용종동",
+      "aca": 53,
+      "gyoseup": 12,
+      "total": 65,
+      "ipsi": 48,
+      "ipsiAca": 41,
+      "ipsiGyoseup": 7,
+      "ipsiJeongwon": 27127,
+      "ipsiJeongwonN": 32,
+      "jeongwon": 35826
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "미추홀구",
+      "dong": "학익동",
+      "aca": 64,
+      "gyoseup": 33,
+      "total": 97,
+      "ipsi": 60,
+      "ipsiAca": 37,
+      "ipsiGyoseup": 23,
+      "ipsiJeongwon": 23043,
+      "ipsiJeongwonN": 35,
+      "jeongwon": 27705
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "연수구",
+      "dong": "옥련동",
+      "aca": 56,
+      "gyoseup": 20,
+      "total": 76,
+      "ipsi": 47,
+      "ipsiAca": 37,
+      "ipsiGyoseup": 10,
+      "ipsiJeongwon": 4663,
+      "ipsiJeongwonN": 34,
+      "jeongwon": 7610
     },
     {
       "sido": "인천광역시교육청",
@@ -264,7 +358,10 @@
       "gyoseup": 32,
       "total": 82,
       "ipsi": 53,
+      "ipsiAca": 35,
+      "ipsiGyoseup": 18,
       "ipsiJeongwon": 12932,
+      "ipsiJeongwonN": 12,
       "jeongwon": 15011
     },
     {
@@ -275,30 +372,11 @@
       "gyoseup": 33,
       "total": 105,
       "ipsi": 50,
+      "ipsiAca": 34,
+      "ipsiGyoseup": 16,
       "ipsiJeongwon": 22531,
+      "ipsiJeongwonN": 37,
       "jeongwon": 35372
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "계양구",
-      "dong": "용종동",
-      "aca": 53,
-      "gyoseup": 12,
-      "total": 65,
-      "ipsi": 48,
-      "ipsiJeongwon": 27127,
-      "jeongwon": 35826
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "연수구",
-      "dong": "옥련동",
-      "aca": 56,
-      "gyoseup": 20,
-      "total": 76,
-      "ipsi": 47,
-      "ipsiJeongwon": 4663,
-      "jeongwon": 7610
     },
     {
       "sido": "인천광역시교육청",
@@ -308,41 +386,11 @@
       "gyoseup": 13,
       "total": 64,
       "ipsi": 43,
+      "ipsiAca": 34,
+      "ipsiGyoseup": 9,
       "ipsiJeongwon": 8284,
+      "ipsiJeongwonN": 21,
       "jeongwon": 11994
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "서해구",
-      "dong": "신현동",
-      "aca": 52,
-      "gyoseup": 13,
-      "total": 65,
-      "ipsi": 40,
-      "ipsiJeongwon": 19671,
-      "jeongwon": 26141
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "연수구",
-      "dong": "연수동",
-      "aca": 46,
-      "gyoseup": 30,
-      "total": 76,
-      "ipsi": 40,
-      "ipsiJeongwon": 412576,
-      "jeongwon": 420804
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "부평구",
-      "dong": "청천동",
-      "aca": 40,
-      "gyoseup": 32,
-      "total": 72,
-      "ipsi": 39,
-      "ipsiJeongwon": 16568,
-      "jeongwon": 23935
     },
     {
       "sido": "인천광역시교육청",
@@ -352,19 +400,25 @@
       "gyoseup": 12,
       "total": 64,
       "ipsi": 39,
+      "ipsiAca": 33,
+      "ipsiGyoseup": 6,
       "ipsiJeongwon": 25762,
+      "ipsiJeongwonN": 28,
       "jeongwon": 34880
     },
     {
       "sido": "인천광역시교육청",
-      "sgg": "중구",
-      "dong": "운서동",
-      "aca": 37,
-      "gyoseup": 18,
-      "total": 55,
-      "ipsi": 35,
-      "ipsiJeongwon": 18408,
-      "jeongwon": 21867
+      "sgg": "서해구",
+      "dong": "신현동",
+      "aca": 52,
+      "gyoseup": 13,
+      "total": 65,
+      "ipsi": 40,
+      "ipsiAca": 32,
+      "ipsiGyoseup": 8,
+      "ipsiJeongwon": 19671,
+      "ipsiJeongwonN": 27,
+      "jeongwon": 26141
     },
     {
       "sido": "인천광역시교육청",
@@ -374,8 +428,53 @@
       "gyoseup": 16,
       "total": 65,
       "ipsi": 33,
+      "ipsiAca": 26,
+      "ipsiGyoseup": 7,
       "ipsiJeongwon": 9062,
+      "ipsiJeongwonN": 20,
       "jeongwon": 14362
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "연수구",
+      "dong": "연수동",
+      "aca": 46,
+      "gyoseup": 30,
+      "total": 76,
+      "ipsi": 40,
+      "ipsiAca": 25,
+      "ipsiGyoseup": 15,
+      "ipsiJeongwon": 412576,
+      "ipsiJeongwonN": 28,
+      "jeongwon": 420804
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "중구",
+      "dong": "운서동",
+      "aca": 37,
+      "gyoseup": 18,
+      "total": 55,
+      "ipsi": 35,
+      "ipsiAca": 23,
+      "ipsiGyoseup": 12,
+      "ipsiJeongwon": 18408,
+      "ipsiJeongwonN": 26,
+      "jeongwon": 21867
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "부평구",
+      "dong": "청천동",
+      "aca": 40,
+      "gyoseup": 32,
+      "total": 72,
+      "ipsi": 39,
+      "ipsiAca": 22,
+      "ipsiGyoseup": 17,
+      "ipsiJeongwon": 16568,
+      "ipsiJeongwonN": 15,
+      "jeongwon": 23935
     },
     {
       "sido": "인천광역시교육청",
@@ -385,7 +484,10 @@
       "gyoseup": 12,
       "total": 63,
       "ipsi": 28,
+      "ipsiAca": 22,
+      "ipsiGyoseup": 6,
       "ipsiJeongwon": 7897,
+      "ipsiJeongwonN": 20,
       "jeongwon": 18155
     },
     {
@@ -396,41 +498,11 @@
       "gyoseup": 14,
       "total": 37,
       "ipsi": 25,
+      "ipsiAca": 17,
+      "ipsiGyoseup": 8,
       "ipsiJeongwon": 8706,
+      "ipsiJeongwonN": 18,
       "jeongwon": 9716
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "미추홀구",
-      "dong": "관교동",
-      "aca": 17,
-      "gyoseup": 15,
-      "total": 32,
-      "ipsi": 22,
-      "ipsiJeongwon": 6055,
-      "jeongwon": 7614
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "검단구",
-      "dong": "왕길동",
-      "aca": 26,
-      "gyoseup": 10,
-      "total": 36,
-      "ipsi": 21,
-      "ipsiJeongwon": 6164,
-      "jeongwon": 11128
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "중구",
-      "dong": "운남동",
-      "aca": 30,
-      "gyoseup": 12,
-      "total": 42,
-      "ipsi": 21,
-      "ipsiJeongwon": 2833,
-      "jeongwon": 4118
     },
     {
       "sido": "인천광역시교육청",
@@ -440,8 +512,25 @@
       "gyoseup": 11,
       "total": 37,
       "ipsi": 20,
+      "ipsiAca": 15,
+      "ipsiGyoseup": 5,
       "ipsiJeongwon": 15560,
+      "ipsiJeongwonN": 17,
       "jeongwon": 20816
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "검단구",
+      "dong": "왕길동",
+      "aca": 26,
+      "gyoseup": 10,
+      "total": 36,
+      "ipsi": 21,
+      "ipsiAca": 14,
+      "ipsiGyoseup": 7,
+      "ipsiJeongwon": 6164,
+      "ipsiJeongwonN": 13,
+      "jeongwon": 11128
     },
     {
       "sido": "인천광역시교육청",
@@ -451,19 +540,25 @@
       "gyoseup": 9,
       "total": 26,
       "ipsi": 18,
+      "ipsiAca": 14,
+      "ipsiGyoseup": 4,
       "ipsiJeongwon": 10431,
+      "ipsiJeongwonN": 16,
       "jeongwon": 11176
     },
     {
       "sido": "인천광역시교육청",
-      "sgg": "서해구",
-      "dong": "석남동",
-      "aca": 20,
-      "gyoseup": 11,
-      "total": 31,
-      "ipsi": 16,
-      "ipsiJeongwon": 8160,
-      "jeongwon": 9736
+      "sgg": "중구",
+      "dong": "운남동",
+      "aca": 30,
+      "gyoseup": 12,
+      "total": 42,
+      "ipsi": 21,
+      "ipsiAca": 14,
+      "ipsiGyoseup": 7,
+      "ipsiJeongwon": 2833,
+      "ipsiJeongwonN": 9,
+      "jeongwon": 4118
     },
     {
       "sido": "인천광역시교육청",
@@ -473,19 +568,11 @@
       "gyoseup": 3,
       "total": 24,
       "ipsi": 14,
+      "ipsiAca": 13,
+      "ipsiGyoseup": 1,
       "ipsiJeongwon": 64,
+      "ipsiJeongwonN": 1,
       "jeongwon": 104
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "계양구",
-      "dong": "동양동",
-      "aca": 17,
-      "gyoseup": 6,
-      "total": 23,
-      "ipsi": 14,
-      "ipsiJeongwon": 10160,
-      "jeongwon": 10998
     },
     {
       "sido": "인천광역시교육청",
@@ -495,8 +582,53 @@
       "gyoseup": 5,
       "total": 25,
       "ipsi": 14,
+      "ipsiAca": 12,
+      "ipsiGyoseup": 2,
       "ipsiJeongwon": 19503,
+      "ipsiJeongwonN": 11,
       "jeongwon": 31145
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "계양구",
+      "dong": "동양동",
+      "aca": 17,
+      "gyoseup": 6,
+      "total": 23,
+      "ipsi": 14,
+      "ipsiAca": 11,
+      "ipsiGyoseup": 3,
+      "ipsiJeongwon": 10160,
+      "ipsiJeongwonN": 11,
+      "jeongwon": 10998
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "미추홀구",
+      "dong": "관교동",
+      "aca": 17,
+      "gyoseup": 15,
+      "total": 32,
+      "ipsi": 22,
+      "ipsiAca": 11,
+      "ipsiGyoseup": 11,
+      "ipsiJeongwon": 6055,
+      "ipsiJeongwonN": 19,
+      "jeongwon": 7614
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "서해구",
+      "dong": "석남동",
+      "aca": 20,
+      "gyoseup": 11,
+      "total": 31,
+      "ipsi": 16,
+      "ipsiAca": 11,
+      "ipsiGyoseup": 5,
+      "ipsiJeongwon": 8160,
+      "ipsiJeongwonN": 13,
+      "jeongwon": 9736
     },
     {
       "sido": "인천광역시교육청",
@@ -506,41 +638,11 @@
       "gyoseup": 3,
       "total": 19,
       "ipsi": 13,
+      "ipsiAca": 10,
+      "ipsiGyoseup": 3,
       "ipsiJeongwon": 5565,
+      "ipsiJeongwonN": 11,
       "jeongwon": 7659
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "연수구",
-      "dong": "선학동",
-      "aca": 16,
-      "gyoseup": 10,
-      "total": 26,
-      "ipsi": 13,
-      "ipsiJeongwon": 1705,
-      "jeongwon": 3550
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "계양구",
-      "dong": "병방동",
-      "aca": 12,
-      "gyoseup": 6,
-      "total": 18,
-      "ipsi": 11,
-      "ipsiJeongwon": 8628,
-      "jeongwon": 9988
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "부평구",
-      "dong": "일신동",
-      "aca": 10,
-      "gyoseup": 8,
-      "total": 18,
-      "ipsi": 11,
-      "ipsiJeongwon": 9162,
-      "jeongwon": 10256
     },
     {
       "sido": "인천광역시교육청",
@@ -550,8 +652,25 @@
       "gyoseup": 2,
       "total": 20,
       "ipsi": 10,
+      "ipsiAca": 10,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 5923,
+      "ipsiJeongwonN": 6,
       "jeongwon": 8759
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "연수구",
+      "dong": "선학동",
+      "aca": 16,
+      "gyoseup": 10,
+      "total": 26,
+      "ipsi": 13,
+      "ipsiAca": 9,
+      "ipsiGyoseup": 4,
+      "ipsiJeongwon": 1705,
+      "ipsiJeongwonN": 12,
+      "jeongwon": 3550
     },
     {
       "sido": "인천광역시교육청",
@@ -561,8 +680,25 @@
       "gyoseup": 4,
       "total": 16,
       "ipsi": 10,
+      "ipsiAca": 8,
+      "ipsiGyoseup": 2,
       "ipsiJeongwon": 4976,
+      "ipsiJeongwonN": 7,
       "jeongwon": 5582
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "계양구",
+      "dong": "병방동",
+      "aca": 12,
+      "gyoseup": 6,
+      "total": 18,
+      "ipsi": 11,
+      "ipsiAca": 7,
+      "ipsiGyoseup": 4,
+      "ipsiJeongwon": 8628,
+      "ipsiJeongwonN": 9,
+      "jeongwon": 9988
     },
     {
       "sido": "인천광역시교육청",
@@ -572,8 +708,25 @@
       "gyoseup": 5,
       "total": 20,
       "ipsi": 9,
+      "ipsiAca": 7,
+      "ipsiGyoseup": 2,
       "ipsiJeongwon": 7272,
+      "ipsiJeongwonN": 7,
       "jeongwon": 10050
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "부평구",
+      "dong": "일신동",
+      "aca": 10,
+      "gyoseup": 8,
+      "total": 18,
+      "ipsi": 11,
+      "ipsiAca": 7,
+      "ipsiGyoseup": 4,
+      "ipsiJeongwon": 9162,
+      "ipsiJeongwonN": 8,
+      "jeongwon": 10256
     },
     {
       "sido": "인천광역시교육청",
@@ -583,7 +736,10 @@
       "gyoseup": 6,
       "total": 22,
       "ipsi": 9,
+      "ipsiAca": 7,
+      "ipsiGyoseup": 2,
       "ipsiJeongwon": 3855,
+      "ipsiJeongwonN": 8,
       "jeongwon": 5074
     },
     {
@@ -594,19 +750,11 @@
       "gyoseup": 6,
       "total": 17,
       "ipsi": 8,
+      "ipsiAca": 5,
+      "ipsiGyoseup": 3,
       "ipsiJeongwon": 1045,
+      "ipsiJeongwonN": 7,
       "jeongwon": 1680
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "계양구",
-      "dong": "박촌동",
-      "aca": 6,
-      "gyoseup": 7,
-      "total": 13,
-      "ipsi": 7,
-      "ipsiJeongwon": 2056,
-      "jeongwon": 2841
     },
     {
       "sido": "인천광역시교육청",
@@ -616,30 +764,53 @@
       "gyoseup": 4,
       "total": 9,
       "ipsi": 6,
+      "ipsiAca": 4,
+      "ipsiGyoseup": 2,
       "ipsiJeongwon": 2052,
+      "ipsiJeongwonN": 4,
       "jeongwon": 2192
     },
     {
       "sido": "인천광역시교육청",
-      "sgg": "영종구",
-      "dong": "중산동",
-      "aca": 6,
-      "gyoseup": 2,
-      "total": 8,
-      "ipsi": 5,
-      "ipsiJeongwon": 0,
-      "jeongwon": 0
+      "sgg": "서해구",
+      "dong": "연희동",
+      "aca": 8,
+      "gyoseup": 3,
+      "total": 11,
+      "ipsi": 4,
+      "ipsiAca": 4,
+      "ipsiGyoseup": 0,
+      "ipsiJeongwon": 2385,
+      "ipsiJeongwonN": 4,
+      "jeongwon": 3462
     },
     {
       "sido": "인천광역시교육청",
-      "sgg": "검단구",
-      "dong": "상가동",
-      "aca": 0,
-      "gyoseup": 4,
-      "total": 4,
-      "ipsi": 4,
-      "ipsiJeongwon": 40,
-      "jeongwon": 40
+      "sgg": "계양구",
+      "dong": "박촌동",
+      "aca": 6,
+      "gyoseup": 7,
+      "total": 13,
+      "ipsi": 7,
+      "ipsiAca": 3,
+      "ipsiGyoseup": 4,
+      "ipsiJeongwon": 2056,
+      "ipsiJeongwonN": 5,
+      "jeongwon": 2841
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "계양구",
+      "dong": "서운동",
+      "aca": 4,
+      "gyoseup": 1,
+      "total": 5,
+      "ipsi": 3,
+      "ipsiAca": 3,
+      "ipsiGyoseup": 0,
+      "ipsiJeongwon": 936,
+      "ipsiJeongwonN": 2,
+      "jeongwon": 1215
     },
     {
       "sido": "인천광역시교육청",
@@ -649,7 +820,10 @@
       "gyoseup": 3,
       "total": 10,
       "ipsi": 4,
+      "ipsiAca": 3,
+      "ipsiGyoseup": 1,
       "ipsiJeongwon": 742,
+      "ipsiJeongwonN": 4,
       "jeongwon": 1652
     },
     {
@@ -660,41 +834,25 @@
       "gyoseup": 1,
       "total": 9,
       "ipsi": 4,
+      "ipsiAca": 3,
+      "ipsiGyoseup": 1,
       "ipsiJeongwon": 645,
+      "ipsiJeongwonN": 3,
       "jeongwon": 1004
     },
     {
       "sido": "인천광역시교육청",
-      "sgg": "동구",
-      "dong": "화수동",
-      "aca": 3,
-      "gyoseup": 3,
-      "total": 6,
-      "ipsi": 4,
-      "ipsiJeongwon": 2279,
-      "jeongwon": 2354
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "서해구",
-      "dong": "연희동",
-      "aca": 8,
-      "gyoseup": 3,
-      "total": 11,
-      "ipsi": 4,
-      "ipsiJeongwon": 2385,
-      "jeongwon": 3462
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "중구",
-      "dong": "답동",
+      "sgg": "영종구",
+      "dong": "중산동",
       "aca": 6,
-      "gyoseup": 4,
-      "total": 10,
-      "ipsi": 4,
-      "ipsiJeongwon": 1658,
-      "jeongwon": 5506
+      "gyoseup": 2,
+      "total": 8,
+      "ipsi": 5,
+      "ipsiAca": 3,
+      "ipsiGyoseup": 2,
+      "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
+      "jeongwon": 0
     },
     {
       "sido": "인천광역시교육청",
@@ -704,63 +862,25 @@
       "gyoseup": 1,
       "total": 6,
       "ipsi": 4,
+      "ipsiAca": 3,
+      "ipsiGyoseup": 1,
       "ipsiJeongwon": 1641,
+      "ipsiJeongwonN": 3,
       "jeongwon": 1839
     },
     {
       "sido": "인천광역시교육청",
-      "sgg": "계양구",
-      "dong": "서운동",
-      "aca": 4,
-      "gyoseup": 1,
-      "total": 5,
-      "ipsi": 3,
-      "ipsiJeongwon": 936,
-      "jeongwon": 1215
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "영종구",
-      "dong": "운서동",
-      "aca": 1,
-      "gyoseup": 2,
-      "total": 3,
-      "ipsi": 3,
-      "ipsiJeongwon": 0,
-      "jeongwon": 0
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "중구",
-      "dong": "항동7가",
-      "aca": 2,
-      "gyoseup": 3,
-      "total": 5,
-      "ipsi": 3,
-      "ipsiJeongwon": 1113,
-      "jeongwon": 1128
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "검단구",
-      "dong": "상가3동",
-      "aca": 0,
-      "gyoseup": 2,
-      "total": 2,
-      "ipsi": 2,
-      "ipsiJeongwon": 0,
-      "jeongwon": 0
-    },
-    {
-      "sido": "인천광역시교육청",
       "sgg": "동구",
-      "dong": "만석동",
-      "aca": 1,
-      "gyoseup": 2,
-      "total": 3,
-      "ipsi": 2,
-      "ipsiJeongwon": 210,
-      "jeongwon": 270
+      "dong": "화수동",
+      "aca": 3,
+      "gyoseup": 3,
+      "total": 6,
+      "ipsi": 4,
+      "ipsiAca": 2,
+      "ipsiGyoseup": 2,
+      "ipsiJeongwon": 2279,
+      "ipsiJeongwonN": 4,
+      "jeongwon": 2354
     },
     {
       "sido": "인천광역시교육청",
@@ -770,8 +890,25 @@
       "gyoseup": 0,
       "total": 4,
       "ipsi": 2,
+      "ipsiAca": 2,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 6966,
+      "ipsiJeongwonN": 1,
       "jeongwon": 8062
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "중구",
+      "dong": "답동",
+      "aca": 6,
+      "gyoseup": 4,
+      "total": 10,
+      "ipsi": 4,
+      "ipsiAca": 2,
+      "ipsiGyoseup": 2,
+      "ipsiJeongwon": 1658,
+      "ipsiJeongwonN": 4,
+      "jeongwon": 5506
     },
     {
       "sido": "인천광역시교육청",
@@ -781,19 +918,11 @@
       "gyoseup": 1,
       "total": 2,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 639,
+      "ipsiJeongwonN": 1,
       "jeongwon": 666
-    },
-    {
-      "sido": "인천광역시교육청",
-      "sgg": "계양구",
-      "dong": "방축동",
-      "aca": 0,
-      "gyoseup": 1,
-      "total": 1,
-      "ipsi": 1,
-      "ipsiJeongwon": 0,
-      "jeongwon": 0
     },
     {
       "sido": "인천광역시교육청",
@@ -803,7 +932,10 @@
       "gyoseup": 1,
       "total": 2,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 1360,
+      "ipsiJeongwonN": 1,
       "jeongwon": 1368
     },
     {
@@ -814,19 +946,25 @@
       "gyoseup": 1,
       "total": 4,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 817,
+      "ipsiJeongwonN": 1,
       "jeongwon": 826
     },
     {
       "sido": "인천광역시교육청",
-      "sgg": "부평구",
-      "dong": "구산동",
-      "aca": 0,
-      "gyoseup": 4,
-      "total": 4,
-      "ipsi": 1,
-      "ipsiJeongwon": 0,
-      "jeongwon": 138
+      "sgg": "동구",
+      "dong": "만석동",
+      "aca": 1,
+      "gyoseup": 2,
+      "total": 3,
+      "ipsi": 2,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 210,
+      "ipsiJeongwonN": 2,
+      "jeongwon": 270
     },
     {
       "sido": "인천광역시교육청",
@@ -836,7 +974,10 @@
       "gyoseup": 0,
       "total": 2,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 158
     },
     {
@@ -847,7 +988,10 @@
       "gyoseup": 1,
       "total": 2,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 364,
+      "ipsiJeongwonN": 1,
       "jeongwon": 380
     },
     {
@@ -858,7 +1002,24 @@
       "gyoseup": 1,
       "total": 2,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
+      "jeongwon": 0
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "영종구",
+      "dong": "운서동",
+      "aca": 1,
+      "gyoseup": 2,
+      "total": 3,
+      "ipsi": 3,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 2,
+      "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 0
     },
     {
@@ -869,7 +1030,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 0
     },
     {
@@ -880,7 +1044,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 0
     },
     {
@@ -891,8 +1058,25 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 0
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "중구",
+      "dong": "항동7가",
+      "aca": 2,
+      "gyoseup": 3,
+      "total": 5,
+      "ipsi": 3,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 2,
+      "ipsiJeongwon": 1113,
+      "ipsiJeongwonN": 3,
+      "jeongwon": 1128
     },
     {
       "sido": "인천광역시교육청",
@@ -902,7 +1086,10 @@
       "gyoseup": 0,
       "total": 2,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 260,
+      "ipsiJeongwonN": 1,
       "jeongwon": 854
     },
     {
@@ -913,7 +1100,10 @@
       "gyoseup": 0,
       "total": 2,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 324,
+      "ipsiJeongwonN": 1,
       "jeongwon": 484
     },
     {
@@ -924,7 +1114,10 @@
       "gyoseup": 0,
       "total": 2,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 495,
+      "ipsiJeongwonN": 1,
       "jeongwon": 1401
     },
     {
@@ -935,7 +1128,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 360,
+      "ipsiJeongwonN": 1,
       "jeongwon": 360
     },
     {
@@ -946,8 +1142,39 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 167
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "검단구",
+      "dong": "상가3동",
+      "aca": 0,
+      "gyoseup": 2,
+      "total": 2,
+      "ipsi": 2,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 2,
+      "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
+      "jeongwon": 0
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "검단구",
+      "dong": "상가동",
+      "aca": 0,
+      "gyoseup": 4,
+      "total": 4,
+      "ipsi": 4,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 4,
+      "ipsiJeongwon": 40,
+      "ipsiJeongwonN": 1,
+      "jeongwon": 40
     },
     {
       "sido": "인천광역시교육청",
@@ -957,7 +1184,10 @@
       "gyoseup": 1,
       "total": 4,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 1202
     },
     {
@@ -968,7 +1198,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 0
     },
     {
@@ -979,7 +1212,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 134
     },
     {
@@ -990,8 +1226,25 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 115
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "계양구",
+      "dong": "방축동",
+      "aca": 0,
+      "gyoseup": 1,
+      "total": 1,
+      "ipsi": 1,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
+      "jeongwon": 0
     },
     {
       "sido": "인천광역시교육청",
@@ -1001,7 +1254,10 @@
       "gyoseup": 1,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 20
     },
     {
@@ -1012,7 +1268,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 0
     },
     {
@@ -1023,7 +1282,10 @@
       "gyoseup": 1,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 28
     },
     {
@@ -1034,7 +1296,10 @@
       "gyoseup": 0,
       "total": 2,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 269
     },
     {
@@ -1045,7 +1310,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 0
     },
     {
@@ -1056,8 +1324,25 @@
       "gyoseup": 1,
       "total": 2,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 50
+    },
+    {
+      "sido": "인천광역시교육청",
+      "sgg": "부평구",
+      "dong": "구산동",
+      "aca": 0,
+      "gyoseup": 4,
+      "total": 4,
+      "ipsi": 1,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
+      "jeongwon": 138
     },
     {
       "sido": "인천광역시교육청",
@@ -1067,7 +1352,10 @@
       "gyoseup": 0,
       "total": 2,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 1571
     },
     {
@@ -1078,7 +1366,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 1049
     },
     {
@@ -1089,7 +1380,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 20
     },
     {
@@ -1100,7 +1394,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 120
     }
   ]

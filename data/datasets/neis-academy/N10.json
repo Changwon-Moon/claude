@@ -11,7 +11,7 @@
     "dongMissing": 1635,
     "sggMissing": 11,
     "coverage": 63.6,
-    "note": "행별 집계다(원장 미보존). aca=학원 · gyoseup=교습소 · ipsi=분야가 '입시.검정 및 보습' 인 곳 · jeongwon=정원합계(TOFOR_SMTOT) 합. 시군구는 도로명주소에서, 법정동은 도로명 상세의 괄호 참고항목에서 뽑았다. 괄호에 법정동이 없는 행(dongMissing)은 집계에서 빠졌다 — coverage 를 보고 숫자를 읽어야 한다. 등록상태(개원/휴원/폐원)는 가리지 않았다 — 원장에 남은 곳을 모두 센다."
+    "note": "행별 집계다(원장 미보존). aca=학원 · gyoseup=교습소 · ipsi=분야가 '입시.검정 및 보습' 인 곳 · ipsiAca/ipsiGyoseup=입시·보습을 학원/교습소로 가른 수 · ipsiJeongwonN=그중 정원이 0 이 아닌 곳 수. jeongwon=정원합계(TOFOR_SMTOT) 합. 시군구는 도로명주소에서, 법정동은 도로명 상세의 괄호 참고항목에서 뽑았다. 괄호에 법정동이 없는 행(dongMissing)은 집계에서 빠졌다 — coverage 를 보고 숫자를 읽어야 한다. 등록상태(개원/휴원/폐원)는 가리지 않았다 — 원장에 남은 곳을 모두 센다."
   },
   "rows": [
     {
@@ -22,7 +22,10 @@
       "gyoseup": 111,
       "total": 592,
       "ipsi": 324,
+      "ipsiAca": 269,
+      "ipsiGyoseup": 55,
       "ipsiJeongwon": 67274,
+      "ipsiJeongwonN": 293,
       "jeongwon": 123382
     },
     {
@@ -33,7 +36,10 @@
       "gyoseup": 32,
       "total": 186,
       "ipsi": 91,
+      "ipsiAca": 74,
+      "ipsiGyoseup": 17,
       "ipsiJeongwon": 16655,
+      "ipsiJeongwonN": 78,
       "jeongwon": 30099
     },
     {
@@ -44,7 +50,10 @@
       "gyoseup": 32,
       "total": 149,
       "ipsi": 75,
+      "ipsiAca": 61,
+      "ipsiGyoseup": 14,
       "ipsiJeongwon": 11979,
+      "ipsiJeongwonN": 68,
       "jeongwon": 23906
     },
     {
@@ -55,7 +64,10 @@
       "gyoseup": 38,
       "total": 148,
       "ipsi": 74,
+      "ipsiAca": 57,
+      "ipsiGyoseup": 17,
       "ipsiJeongwon": 13745,
+      "ipsiJeongwonN": 65,
       "jeongwon": 24921
     },
     {
@@ -66,7 +78,10 @@
       "gyoseup": 23,
       "total": 109,
       "ipsi": 58,
+      "ipsiAca": 46,
+      "ipsiGyoseup": 12,
       "ipsiJeongwon": 11529,
+      "ipsiJeongwonN": 53,
       "jeongwon": 22976
     },
     {
@@ -77,19 +92,11 @@
       "gyoseup": 22,
       "total": 105,
       "ipsi": 54,
+      "ipsiAca": 43,
+      "ipsiGyoseup": 11,
       "ipsiJeongwon": 11409,
+      "ipsiJeongwonN": 51,
       "jeongwon": 20791
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "서산시",
-      "dong": "예천동",
-      "aca": 69,
-      "gyoseup": 29,
-      "total": 98,
-      "ipsi": 49,
-      "ipsiJeongwon": 6521,
-      "jeongwon": 14371
     },
     {
       "sido": "충청남도교육청",
@@ -99,8 +106,25 @@
       "gyoseup": 9,
       "total": 87,
       "ipsi": 47,
+      "ipsiAca": 42,
+      "ipsiGyoseup": 5,
       "ipsiJeongwon": 9711,
+      "ipsiJeongwonN": 44,
       "jeongwon": 18488
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "서산시",
+      "dong": "예천동",
+      "aca": 69,
+      "gyoseup": 29,
+      "total": 98,
+      "ipsi": 49,
+      "ipsiAca": 39,
+      "ipsiGyoseup": 10,
+      "ipsiJeongwon": 6521,
+      "ipsiJeongwonN": 45,
+      "jeongwon": 14371
     },
     {
       "sido": "충청남도교육청",
@@ -110,7 +134,10 @@
       "gyoseup": 20,
       "total": 83,
       "ipsi": 45,
+      "ipsiAca": 34,
+      "ipsiGyoseup": 11,
       "ipsiJeongwon": 3994,
+      "ipsiJeongwonN": 34,
       "jeongwon": 7217
     },
     {
@@ -121,30 +148,11 @@
       "gyoseup": 17,
       "total": 77,
       "ipsi": 44,
+      "ipsiAca": 33,
+      "ipsiGyoseup": 11,
       "ipsiJeongwon": 8031,
+      "ipsiJeongwonN": 40,
       "jeongwon": 12500
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "천안시동남구",
-      "dong": "용곡동",
-      "aca": 49,
-      "gyoseup": 15,
-      "total": 64,
-      "ipsi": 37,
-      "ipsiJeongwon": 7755,
-      "jeongwon": 12545
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "천안시동남구",
-      "dong": "신부동",
-      "aca": 87,
-      "gyoseup": 23,
-      "total": 110,
-      "ipsi": 36,
-      "ipsiJeongwon": 5418,
-      "jeongwon": 24279
     },
     {
       "sido": "충청남도교육청",
@@ -154,52 +162,25 @@
       "gyoseup": 9,
       "total": 65,
       "ipsi": 35,
+      "ipsiAca": 30,
+      "ipsiGyoseup": 5,
       "ipsiJeongwon": 7402,
+      "ipsiJeongwonN": 34,
       "jeongwon": 12918
     },
     {
       "sido": "충청남도교육청",
-      "sgg": "당진시",
-      "dong": "읍내동",
-      "aca": 62,
-      "gyoseup": 14,
-      "total": 76,
-      "ipsi": 31,
-      "ipsiJeongwon": 3853,
-      "jeongwon": 10832
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "서산시",
-      "dong": "동문동",
-      "aca": 61,
-      "gyoseup": 19,
-      "total": 80,
-      "ipsi": 31,
-      "ipsiJeongwon": 3400,
-      "jeongwon": 9554
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "보령시",
-      "dong": "동대동",
-      "aca": 50,
-      "gyoseup": 22,
-      "total": 72,
-      "ipsi": 30,
-      "ipsiJeongwon": 3632,
-      "jeongwon": 6906
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "당진시",
-      "dong": "원당동",
-      "aca": 36,
-      "gyoseup": 10,
-      "total": 46,
-      "ipsi": 29,
-      "ipsiJeongwon": 5435,
-      "jeongwon": 7815
+      "sgg": "천안시동남구",
+      "dong": "용곡동",
+      "aca": 49,
+      "gyoseup": 15,
+      "total": 64,
+      "ipsi": 37,
+      "ipsiAca": 27,
+      "ipsiGyoseup": 10,
+      "ipsiJeongwon": 7755,
+      "ipsiJeongwonN": 27,
+      "jeongwon": 12545
     },
     {
       "sido": "충청남도교육청",
@@ -209,30 +190,81 @@
       "gyoseup": 9,
       "total": 57,
       "ipsi": 29,
+      "ipsiAca": 25,
+      "ipsiGyoseup": 4,
       "ipsiJeongwon": 3789,
+      "ipsiJeongwonN": 25,
       "jeongwon": 7224
     },
     {
       "sido": "충청남도교육청",
+      "sgg": "당진시",
+      "dong": "읍내동",
+      "aca": 62,
+      "gyoseup": 14,
+      "total": 76,
+      "ipsi": 31,
+      "ipsiAca": 24,
+      "ipsiGyoseup": 7,
+      "ipsiJeongwon": 3853,
+      "ipsiJeongwonN": 28,
+      "jeongwon": 10832
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "천안시동남구",
+      "dong": "신부동",
+      "aca": 87,
+      "gyoseup": 23,
+      "total": 110,
+      "ipsi": 36,
+      "ipsiAca": 24,
+      "ipsiGyoseup": 12,
+      "ipsiJeongwon": 5418,
+      "ipsiJeongwonN": 25,
+      "jeongwon": 24279
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "당진시",
+      "dong": "원당동",
+      "aca": 36,
+      "gyoseup": 10,
+      "total": 46,
+      "ipsi": 29,
+      "ipsiAca": 23,
+      "ipsiGyoseup": 6,
+      "ipsiJeongwon": 5435,
+      "ipsiJeongwonN": 28,
+      "jeongwon": 7815
+    },
+    {
+      "sido": "충청남도교육청",
       "sgg": "보령시",
-      "dong": "명천동",
-      "aca": 24,
-      "gyoseup": 18,
-      "total": 42,
-      "ipsi": 22,
-      "ipsiJeongwon": 2281,
-      "jeongwon": 3993
+      "dong": "동대동",
+      "aca": 50,
+      "gyoseup": 22,
+      "total": 72,
+      "ipsi": 30,
+      "ipsiAca": 23,
+      "ipsiGyoseup": 7,
+      "ipsiJeongwon": 3632,
+      "ipsiJeongwonN": 27,
+      "jeongwon": 6906
     },
     {
       "sido": "충청남도교육청",
       "sgg": "서산시",
-      "dong": "석림동",
-      "aca": 35,
-      "gyoseup": 14,
-      "total": 49,
-      "ipsi": 22,
-      "ipsiJeongwon": 3974,
-      "jeongwon": 6553
+      "dong": "동문동",
+      "aca": 61,
+      "gyoseup": 19,
+      "total": 80,
+      "ipsi": 31,
+      "ipsiAca": 20,
+      "ipsiGyoseup": 11,
+      "ipsiJeongwon": 3400,
+      "ipsiJeongwonN": 27,
+      "jeongwon": 9554
     },
     {
       "sido": "충청남도교육청",
@@ -242,8 +274,39 @@
       "gyoseup": 7,
       "total": 41,
       "ipsi": 22,
+      "ipsiAca": 20,
+      "ipsiGyoseup": 2,
       "ipsiJeongwon": 5339,
+      "ipsiJeongwonN": 21,
       "jeongwon": 8027
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "서산시",
+      "dong": "석림동",
+      "aca": 35,
+      "gyoseup": 14,
+      "total": 49,
+      "ipsi": 22,
+      "ipsiAca": 17,
+      "ipsiGyoseup": 5,
+      "ipsiJeongwon": 3974,
+      "ipsiJeongwonN": 19,
+      "jeongwon": 6553
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "보령시",
+      "dong": "명천동",
+      "aca": 24,
+      "gyoseup": 18,
+      "total": 42,
+      "ipsi": 22,
+      "ipsiAca": 12,
+      "ipsiGyoseup": 10,
+      "ipsiJeongwon": 2281,
+      "ipsiJeongwonN": 18,
+      "jeongwon": 3993
     },
     {
       "sido": "충청남도교육청",
@@ -253,52 +316,11 @@
       "gyoseup": 2,
       "total": 19,
       "ipsi": 13,
+      "ipsiAca": 12,
+      "ipsiGyoseup": 1,
       "ipsiJeongwon": 2404,
+      "ipsiJeongwonN": 12,
       "jeongwon": 3007
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "공주시",
-      "dong": "중동",
-      "aca": 12,
-      "gyoseup": 6,
-      "total": 18,
-      "ipsi": 12,
-      "ipsiJeongwon": 1073,
-      "jeongwon": 1561
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "논산시",
-      "dong": "취암동",
-      "aca": 23,
-      "gyoseup": 8,
-      "total": 31,
-      "ipsi": 12,
-      "ipsiJeongwon": 866,
-      "jeongwon": 2243
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "당진시",
-      "dong": "채운동",
-      "aca": 16,
-      "gyoseup": 5,
-      "total": 21,
-      "ipsi": 10,
-      "ipsiJeongwon": 1014,
-      "jeongwon": 2200
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "아산시",
-      "dong": "온천동",
-      "aca": 32,
-      "gyoseup": 3,
-      "total": 35,
-      "ipsi": 10,
-      "ipsiJeongwon": 2735,
-      "jeongwon": 6863
     },
     {
       "sido": "충청남도교육청",
@@ -308,19 +330,25 @@
       "gyoseup": 0,
       "total": 19,
       "ipsi": 10,
+      "ipsiAca": 10,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 2492,
+      "ipsiJeongwonN": 10,
       "jeongwon": 3878
     },
     {
       "sido": "충청남도교육청",
-      "sgg": "천안시서북구",
-      "dong": "차암동",
-      "aca": 20,
+      "sgg": "공주시",
+      "dong": "중동",
+      "aca": 12,
       "gyoseup": 6,
-      "total": 26,
-      "ipsi": 10,
-      "ipsiJeongwon": 1546,
-      "jeongwon": 4493
+      "total": 18,
+      "ipsi": 12,
+      "ipsiAca": 8,
+      "ipsiGyoseup": 4,
+      "ipsiJeongwon": 1073,
+      "ipsiJeongwonN": 10,
+      "jeongwon": 1561
     },
     {
       "sido": "충청남도교육청",
@@ -330,8 +358,39 @@
       "gyoseup": 4,
       "total": 18,
       "ipsi": 9,
+      "ipsiAca": 8,
+      "ipsiGyoseup": 1,
       "ipsiJeongwon": 1027,
+      "ipsiJeongwonN": 9,
       "jeongwon": 1491
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "아산시",
+      "dong": "온천동",
+      "aca": 32,
+      "gyoseup": 3,
+      "total": 35,
+      "ipsi": 10,
+      "ipsiAca": 8,
+      "ipsiGyoseup": 2,
+      "ipsiJeongwon": 2735,
+      "ipsiJeongwonN": 9,
+      "jeongwon": 6863
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "당진시",
+      "dong": "채운동",
+      "aca": 16,
+      "gyoseup": 5,
+      "total": 21,
+      "ipsi": 10,
+      "ipsiAca": 7,
+      "ipsiGyoseup": 3,
+      "ipsiJeongwon": 1014,
+      "ipsiJeongwonN": 9,
+      "jeongwon": 2200
     },
     {
       "sido": "충청남도교육청",
@@ -341,30 +400,39 @@
       "gyoseup": 7,
       "total": 21,
       "ipsi": 9,
+      "ipsiAca": 7,
+      "ipsiGyoseup": 2,
       "ipsiJeongwon": 1573,
+      "ipsiJeongwonN": 8,
       "jeongwon": 2759
     },
     {
       "sido": "충청남도교육청",
-      "sgg": "계룡시",
-      "dong": "금암동",
-      "aca": 10,
-      "gyoseup": 8,
-      "total": 18,
-      "ipsi": 7,
-      "ipsiJeongwon": 431,
-      "jeongwon": 2516
+      "sgg": "천안시서북구",
+      "dong": "차암동",
+      "aca": 20,
+      "gyoseup": 6,
+      "total": 26,
+      "ipsi": 10,
+      "ipsiAca": 7,
+      "ipsiGyoseup": 3,
+      "ipsiJeongwon": 1546,
+      "ipsiJeongwonN": 9,
+      "jeongwon": 4493
     },
     {
       "sido": "충청남도교육청",
-      "sgg": "서산시",
-      "dong": "읍내동",
-      "aca": 21,
-      "gyoseup": 11,
-      "total": 32,
-      "ipsi": 7,
-      "ipsiJeongwon": 336,
-      "jeongwon": 3419
+      "sgg": "논산시",
+      "dong": "취암동",
+      "aca": 23,
+      "gyoseup": 8,
+      "total": 31,
+      "ipsi": 12,
+      "ipsiAca": 6,
+      "ipsiGyoseup": 6,
+      "ipsiJeongwon": 866,
+      "ipsiJeongwonN": 11,
+      "jeongwon": 2243
     },
     {
       "sido": "충청남도교육청",
@@ -374,52 +442,11 @@
       "gyoseup": 2,
       "total": 11,
       "ipsi": 7,
+      "ipsiAca": 6,
+      "ipsiGyoseup": 1,
       "ipsiJeongwon": 1318,
+      "ipsiJeongwonN": 6,
       "jeongwon": 1810
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "천안시동남구",
-      "dong": "청수동",
-      "aca": 9,
-      "gyoseup": 3,
-      "total": 12,
-      "ipsi": 7,
-      "ipsiJeongwon": 1007,
-      "jeongwon": 2025
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "천안시동남구",
-      "dong": "성황동",
-      "aca": 10,
-      "gyoseup": 2,
-      "total": 12,
-      "ipsi": 7,
-      "ipsiJeongwon": 1235,
-      "jeongwon": 1763
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "공주시",
-      "dong": "월송동",
-      "aca": 7,
-      "gyoseup": 1,
-      "total": 8,
-      "ipsi": 6,
-      "ipsiJeongwon": 1466,
-      "jeongwon": 1705
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "보령시",
-      "dong": "대천동",
-      "aca": 21,
-      "gyoseup": 8,
-      "total": 29,
-      "ipsi": 6,
-      "ipsiJeongwon": 535,
-      "jeongwon": 2532
     },
     {
       "sido": "충청남도교육청",
@@ -429,30 +456,53 @@
       "gyoseup": 2,
       "total": 22,
       "ipsi": 6,
+      "ipsiAca": 6,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 1034,
+      "ipsiJeongwonN": 6,
       "jeongwon": 3224
     },
     {
       "sido": "충청남도교육청",
       "sgg": "공주시",
-      "dong": "금흥동",
-      "aca": 1,
-      "gyoseup": 6,
-      "total": 7,
-      "ipsi": 5,
-      "ipsiJeongwon": 228,
-      "jeongwon": 338
+      "dong": "월송동",
+      "aca": 7,
+      "gyoseup": 1,
+      "total": 8,
+      "ipsi": 6,
+      "ipsiAca": 5,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 1466,
+      "ipsiJeongwonN": 6,
+      "jeongwon": 1705
     },
     {
       "sido": "충청남도교육청",
-      "sgg": "당진시",
-      "dong": "대덕동",
-      "aca": 7,
+      "sgg": "서산시",
+      "dong": "읍내동",
+      "aca": 21,
+      "gyoseup": 11,
+      "total": 32,
+      "ipsi": 7,
+      "ipsiAca": 5,
+      "ipsiGyoseup": 2,
+      "ipsiJeongwon": 336,
+      "ipsiJeongwonN": 5,
+      "jeongwon": 3419
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "천안시동남구",
+      "dong": "청수동",
+      "aca": 9,
       "gyoseup": 3,
-      "total": 10,
-      "ipsi": 5,
-      "ipsiJeongwon": 601,
-      "jeongwon": 1011
+      "total": 12,
+      "ipsi": 7,
+      "ipsiAca": 5,
+      "ipsiGyoseup": 2,
+      "ipsiJeongwon": 1007,
+      "ipsiJeongwonN": 6,
+      "jeongwon": 2025
     },
     {
       "sido": "충청남도교육청",
@@ -462,8 +512,67 @@
       "gyoseup": 2,
       "total": 13,
       "ipsi": 5,
+      "ipsiAca": 5,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 876,
+      "ipsiJeongwonN": 5,
       "jeongwon": 1666
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "천안시동남구",
+      "dong": "성황동",
+      "aca": 10,
+      "gyoseup": 2,
+      "total": 12,
+      "ipsi": 7,
+      "ipsiAca": 5,
+      "ipsiGyoseup": 2,
+      "ipsiJeongwon": 1235,
+      "ipsiJeongwonN": 7,
+      "jeongwon": 1763
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "계룡시",
+      "dong": "금암동",
+      "aca": 10,
+      "gyoseup": 8,
+      "total": 18,
+      "ipsi": 7,
+      "ipsiAca": 4,
+      "ipsiGyoseup": 3,
+      "ipsiJeongwon": 431,
+      "ipsiJeongwonN": 6,
+      "jeongwon": 2516
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "당진시",
+      "dong": "대덕동",
+      "aca": 7,
+      "gyoseup": 3,
+      "total": 10,
+      "ipsi": 5,
+      "ipsiAca": 4,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 601,
+      "ipsiJeongwonN": 4,
+      "jeongwon": 1011
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "보령시",
+      "dong": "대천동",
+      "aca": 21,
+      "gyoseup": 8,
+      "total": 29,
+      "ipsi": 6,
+      "ipsiAca": 4,
+      "ipsiGyoseup": 2,
+      "ipsiJeongwon": 535,
+      "ipsiJeongwonN": 6,
+      "jeongwon": 2532
     },
     {
       "sido": "충청남도교육청",
@@ -473,7 +582,10 @@
       "gyoseup": 1,
       "total": 6,
       "ipsi": 4,
+      "ipsiAca": 3,
+      "ipsiGyoseup": 1,
       "ipsiJeongwon": 402,
+      "ipsiJeongwonN": 4,
       "jeongwon": 572
     },
     {
@@ -484,30 +596,11 @@
       "gyoseup": 0,
       "total": 8,
       "ipsi": 3,
+      "ipsiAca": 3,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 1025,
+      "ipsiJeongwonN": 3,
       "jeongwon": 1869
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "천안시서북구",
-      "dong": "부대동",
-      "aca": 3,
-      "gyoseup": 3,
-      "total": 6,
-      "ipsi": 3,
-      "ipsiJeongwon": 304,
-      "jeongwon": 409
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "논산시",
-      "dong": "부창동",
-      "aca": 3,
-      "gyoseup": 2,
-      "total": 5,
-      "ipsi": 2,
-      "ipsiJeongwon": 180,
-      "jeongwon": 338
     },
     {
       "sido": "충청남도교육청",
@@ -517,19 +610,11 @@
       "gyoseup": 1,
       "total": 3,
       "ipsi": 2,
+      "ipsiAca": 2,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 180,
+      "ipsiJeongwonN": 1,
       "jeongwon": 200
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "서산시",
-      "dong": "석남동",
-      "aca": 7,
-      "gyoseup": 3,
-      "total": 10,
-      "ipsi": 2,
-      "ipsiJeongwon": 192,
-      "jeongwon": 1702
     },
     {
       "sido": "충청남도교육청",
@@ -539,63 +624,39 @@
       "gyoseup": 0,
       "total": 3,
       "ipsi": 2,
+      "ipsiAca": 2,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 440,
+      "ipsiJeongwonN": 2,
       "jeongwon": 935
     },
     {
       "sido": "충청남도교육청",
-      "sgg": "천안시동남구",
-      "dong": "다가동",
-      "aca": 4,
-      "gyoseup": 3,
-      "total": 7,
-      "ipsi": 2,
-      "ipsiJeongwon": 290,
-      "jeongwon": 814
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "천안시동남구",
-      "dong": "삼룡동",
-      "aca": 1,
-      "gyoseup": 2,
-      "total": 3,
-      "ipsi": 2,
-      "ipsiJeongwon": 196,
-      "jeongwon": 196
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "천안시동남구",
-      "dong": "문화동",
+      "sgg": "천안시서북구",
+      "dong": "부대동",
       "aca": 3,
       "gyoseup": 3,
       "total": 6,
-      "ipsi": 2,
-      "ipsiJeongwon": 205,
-      "jeongwon": 550
+      "ipsi": 3,
+      "ipsiAca": 2,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 304,
+      "ipsiJeongwonN": 2,
+      "jeongwon": 409
     },
     {
       "sido": "충청남도교육청",
-      "sgg": "천안시동남구",
-      "dong": "안서동",
-      "aca": 4,
-      "gyoseup": 1,
-      "total": 5,
-      "ipsi": 2,
-      "ipsiJeongwon": 165,
-      "jeongwon": 1073
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "천안시서북구",
-      "dong": "와촌동",
-      "aca": 0,
-      "gyoseup": 5,
-      "total": 5,
-      "ipsi": 2,
-      "ipsiJeongwon": 76,
-      "jeongwon": 100
+      "sgg": "공주시",
+      "dong": "금흥동",
+      "aca": 1,
+      "gyoseup": 6,
+      "total": 7,
+      "ipsi": 5,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 4,
+      "ipsiJeongwon": 228,
+      "ipsiJeongwonN": 5,
+      "jeongwon": 338
     },
     {
       "sido": "충청남도교육청",
@@ -605,7 +666,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 80,
+      "ipsiJeongwonN": 1,
       "jeongwon": 80
     },
     {
@@ -616,7 +680,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 255,
+      "ipsiJeongwonN": 1,
       "jeongwon": 255
     },
     {
@@ -627,7 +694,10 @@
       "gyoseup": 0,
       "total": 2,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 150,
+      "ipsiJeongwonN": 1,
       "jeongwon": 210
     },
     {
@@ -638,8 +708,25 @@
       "gyoseup": 1,
       "total": 4,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 81,
+      "ipsiJeongwonN": 1,
       "jeongwon": 177
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "논산시",
+      "dong": "부창동",
+      "aca": 3,
+      "gyoseup": 2,
+      "total": 5,
+      "ipsi": 2,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 180,
+      "ipsiJeongwonN": 1,
+      "jeongwon": 338
     },
     {
       "sido": "충청남도교육청",
@@ -649,8 +736,25 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 140,
+      "ipsiJeongwonN": 1,
       "jeongwon": 140
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "서산시",
+      "dong": "석남동",
+      "aca": 7,
+      "gyoseup": 3,
+      "total": 10,
+      "ipsi": 2,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 192,
+      "ipsiJeongwonN": 1,
+      "jeongwon": 1702
     },
     {
       "sido": "충청남도교육청",
@@ -660,52 +764,11 @@
       "gyoseup": 0,
       "total": 3,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 161,
+      "ipsiJeongwonN": 1,
       "jeongwon": 300
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "아산시",
-      "dong": "배미동",
-      "aca": 0,
-      "gyoseup": 1,
-      "total": 1,
-      "ipsi": 1,
-      "ipsiJeongwon": 45,
-      "jeongwon": 45
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "아산시",
-      "dong": "우방아이유쉘1차상가",
-      "aca": 0,
-      "gyoseup": 1,
-      "total": 1,
-      "ipsi": 1,
-      "ipsiJeongwon": 0,
-      "jeongwon": 0
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "아산시",
-      "dong": "방축동",
-      "aca": 1,
-      "gyoseup": 2,
-      "total": 3,
-      "ipsi": 1,
-      "ipsiJeongwon": 54,
-      "jeongwon": 183
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "아산시",
-      "dong": "아산풍기이지더원상가",
-      "aca": 0,
-      "gyoseup": 1,
-      "total": 1,
-      "ipsi": 1,
-      "ipsiJeongwon": 0,
-      "jeongwon": 0
     },
     {
       "sido": "충청남도교육청",
@@ -715,7 +778,10 @@
       "gyoseup": 0,
       "total": 3,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 168,
+      "ipsiJeongwonN": 1,
       "jeongwon": 378
     },
     {
@@ -726,7 +792,10 @@
       "gyoseup": 0,
       "total": 2,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 390,
+      "ipsiJeongwonN": 1,
       "jeongwon": 502
     },
     {
@@ -737,7 +806,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 190,
+      "ipsiJeongwonN": 1,
       "jeongwon": 190
     },
     {
@@ -748,7 +820,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 200,
+      "ipsiJeongwonN": 1,
       "jeongwon": 200
     },
     {
@@ -759,8 +834,25 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 170,
+      "ipsiJeongwonN": 1,
       "jeongwon": 170
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "천안시동남구",
+      "dong": "다가동",
+      "aca": 4,
+      "gyoseup": 3,
+      "total": 7,
+      "ipsi": 2,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 290,
+      "ipsiJeongwonN": 2,
+      "jeongwon": 814
     },
     {
       "sido": "충청남도교육청",
@@ -770,8 +862,53 @@
       "gyoseup": 1,
       "total": 6,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 250,
+      "ipsiJeongwonN": 1,
       "jeongwon": 774
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "천안시동남구",
+      "dong": "삼룡동",
+      "aca": 1,
+      "gyoseup": 2,
+      "total": 3,
+      "ipsi": 2,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 196,
+      "ipsiJeongwonN": 1,
+      "jeongwon": 196
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "천안시동남구",
+      "dong": "문화동",
+      "aca": 3,
+      "gyoseup": 3,
+      "total": 6,
+      "ipsi": 2,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 205,
+      "ipsiJeongwonN": 2,
+      "jeongwon": 550
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "천안시동남구",
+      "dong": "안서동",
+      "aca": 4,
+      "gyoseup": 1,
+      "total": 5,
+      "ipsi": 2,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 165,
+      "ipsiJeongwonN": 2,
+      "jeongwon": 1073
     },
     {
       "sido": "충청남도교육청",
@@ -781,7 +918,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 120,
+      "ipsiJeongwonN": 1,
       "jeongwon": 120
     },
     {
@@ -792,30 +932,11 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 130,
+      "ipsiJeongwonN": 1,
       "jeongwon": 130
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "태안군",
-      "dong": "상가",
-      "aca": 0,
-      "gyoseup": 1,
-      "total": 1,
-      "ipsi": 1,
-      "ipsiJeongwon": 54,
-      "jeongwon": 54
-    },
-    {
-      "sido": "충청남도교육청",
-      "sgg": "홍성군",
-      "dong": "상가동",
-      "aca": 0,
-      "gyoseup": 2,
-      "total": 2,
-      "ipsi": 1,
-      "ipsiJeongwon": 0,
-      "jeongwon": 27
     },
     {
       "sido": "충청남도교육청",
@@ -825,7 +946,10 @@
       "gyoseup": 3,
       "total": 3,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 82
     },
     {
@@ -836,7 +960,10 @@
       "gyoseup": 1,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 12
     },
     {
@@ -847,7 +974,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 29
     },
     {
@@ -858,7 +988,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 240
     },
     {
@@ -869,7 +1002,10 @@
       "gyoseup": 1,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 45
     },
     {
@@ -880,7 +1016,10 @@
       "gyoseup": 1,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 49
     },
     {
@@ -891,7 +1030,10 @@
       "gyoseup": 0,
       "total": 3,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 297
     },
     {
@@ -902,7 +1044,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 210
     },
     {
@@ -913,7 +1058,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 130
     },
     {
@@ -924,7 +1072,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 60
     },
     {
@@ -935,7 +1086,10 @@
       "gyoseup": 1,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 60
     },
     {
@@ -946,8 +1100,53 @@
       "gyoseup": 0,
       "total": 2,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 309
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "아산시",
+      "dong": "배미동",
+      "aca": 0,
+      "gyoseup": 1,
+      "total": 1,
+      "ipsi": 1,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 45,
+      "ipsiJeongwonN": 1,
+      "jeongwon": 45
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "아산시",
+      "dong": "우방아이유쉘1차상가",
+      "aca": 0,
+      "gyoseup": 1,
+      "total": 1,
+      "ipsi": 1,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
+      "jeongwon": 0
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "아산시",
+      "dong": "방축동",
+      "aca": 1,
+      "gyoseup": 2,
+      "total": 3,
+      "ipsi": 1,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 54,
+      "ipsiJeongwonN": 1,
+      "jeongwon": 183
     },
     {
       "sido": "충청남도교육청",
@@ -957,7 +1156,10 @@
       "gyoseup": 1,
       "total": 2,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 279
     },
     {
@@ -968,7 +1170,10 @@
       "gyoseup": 1,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 0
     },
     {
@@ -979,8 +1184,25 @@
       "gyoseup": 1,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 24
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "아산시",
+      "dong": "아산풍기이지더원상가",
+      "aca": 0,
+      "gyoseup": 1,
+      "total": 1,
+      "ipsi": 1,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
+      "jeongwon": 0
     },
     {
       "sido": "충청남도교육청",
@@ -990,7 +1212,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 108
     },
     {
@@ -1001,7 +1226,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 180
     },
     {
@@ -1012,7 +1240,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 200
     },
     {
@@ -1023,7 +1254,10 @@
       "gyoseup": 0,
       "total": 8,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 1806
     },
     {
@@ -1034,8 +1268,25 @@
       "gyoseup": 0,
       "total": 3,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 818
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "천안시서북구",
+      "dong": "와촌동",
+      "aca": 0,
+      "gyoseup": 5,
+      "total": 5,
+      "ipsi": 2,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 2,
+      "ipsiJeongwon": 76,
+      "ipsiJeongwonN": 2,
+      "jeongwon": 100
     },
     {
       "sido": "충청남도교육청",
@@ -1045,8 +1296,39 @@
       "gyoseup": 1,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 0
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "태안군",
+      "dong": "상가",
+      "aca": 0,
+      "gyoseup": 1,
+      "total": 1,
+      "ipsi": 1,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 54,
+      "ipsiJeongwonN": 1,
+      "jeongwon": 54
+    },
+    {
+      "sido": "충청남도교육청",
+      "sgg": "홍성군",
+      "dong": "상가동",
+      "aca": 0,
+      "gyoseup": 2,
+      "total": 2,
+      "ipsi": 1,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
+      "jeongwon": 27
     }
   ]
 }

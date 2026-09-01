@@ -11,7 +11,7 @@
     "dongMissing": 90,
     "sggMissing": 0,
     "coverage": 94.9,
-    "note": "행별 집계다(원장 미보존). aca=학원 · gyoseup=교습소 · ipsi=분야가 '입시.검정 및 보습' 인 곳 · jeongwon=정원합계(TOFOR_SMTOT) 합. 시군구는 도로명주소에서, 법정동은 도로명 상세의 괄호 참고항목에서 뽑았다. 괄호에 법정동이 없는 행(dongMissing)은 집계에서 빠졌다 — coverage 를 보고 숫자를 읽어야 한다. 등록상태(개원/휴원/폐원)는 가리지 않았다 — 원장에 남은 곳을 모두 센다."
+    "note": "행별 집계다(원장 미보존). aca=학원 · gyoseup=교습소 · ipsi=분야가 '입시.검정 및 보습' 인 곳 · ipsiAca/ipsiGyoseup=입시·보습을 학원/교습소로 가른 수 · ipsiJeongwonN=그중 정원이 0 이 아닌 곳 수. jeongwon=정원합계(TOFOR_SMTOT) 합. 시군구는 도로명주소에서, 법정동은 도로명 상세의 괄호 참고항목에서 뽑았다. 괄호에 법정동이 없는 행(dongMissing)은 집계에서 빠졌다 — coverage 를 보고 숫자를 읽어야 한다. 등록상태(개원/휴원/폐원)는 가리지 않았다 — 원장에 남은 곳을 모두 센다."
   },
   "rows": [
     {
@@ -22,7 +22,10 @@
       "gyoseup": 21,
       "total": 214,
       "ipsi": 130,
+      "ipsiAca": 119,
+      "ipsiGyoseup": 11,
       "ipsiJeongwon": 23284,
+      "ipsiJeongwonN": 124,
       "jeongwon": 33866
     },
     {
@@ -33,7 +36,10 @@
       "gyoseup": 21,
       "total": 177,
       "ipsi": 102,
+      "ipsiAca": 92,
+      "ipsiGyoseup": 10,
       "ipsiJeongwon": 20800,
+      "ipsiJeongwonN": 95,
       "jeongwon": 35216
     },
     {
@@ -44,7 +50,10 @@
       "gyoseup": 49,
       "total": 175,
       "ipsi": 100,
+      "ipsiAca": 78,
+      "ipsiGyoseup": 22,
       "ipsiJeongwon": 14873,
+      "ipsiJeongwonN": 87,
       "jeongwon": 22613
     },
     {
@@ -55,7 +64,10 @@
       "gyoseup": 60,
       "total": 183,
       "ipsi": 99,
+      "ipsiAca": 69,
+      "ipsiGyoseup": 30,
       "ipsiJeongwon": 16888,
+      "ipsiJeongwonN": 82,
       "jeongwon": 26023
     },
     {
@@ -66,7 +78,10 @@
       "gyoseup": 79,
       "total": 188,
       "ipsi": 85,
+      "ipsiAca": 56,
+      "ipsiGyoseup": 29,
       "ipsiJeongwon": 14048,
+      "ipsiJeongwonN": 64,
       "jeongwon": 26051
     },
     {
@@ -77,7 +92,10 @@
       "gyoseup": 52,
       "total": 148,
       "ipsi": 82,
+      "ipsiAca": 54,
+      "ipsiGyoseup": 28,
       "ipsiJeongwon": 12267,
+      "ipsiJeongwonN": 66,
       "jeongwon": 20737
     },
     {
@@ -88,7 +106,10 @@
       "gyoseup": 35,
       "total": 120,
       "ipsi": 67,
+      "ipsiAca": 48,
+      "ipsiGyoseup": 19,
       "ipsiJeongwon": 10049,
+      "ipsiJeongwonN": 58,
       "jeongwon": 16760
     },
     {
@@ -99,7 +120,10 @@
       "gyoseup": 28,
       "total": 88,
       "ipsi": 51,
+      "ipsiAca": 37,
+      "ipsiGyoseup": 14,
       "ipsiJeongwon": 6502,
+      "ipsiJeongwonN": 39,
       "jeongwon": 11906
     },
     {
@@ -110,7 +134,10 @@
       "gyoseup": 26,
       "total": 90,
       "ipsi": 47,
+      "ipsiAca": 35,
+      "ipsiGyoseup": 12,
       "ipsiJeongwon": 6989,
+      "ipsiJeongwonN": 37,
       "jeongwon": 12632
     },
     {
@@ -121,7 +148,10 @@
       "gyoseup": 20,
       "total": 78,
       "ipsi": 38,
+      "ipsiAca": 30,
+      "ipsiGyoseup": 8,
       "ipsiJeongwon": 6293,
+      "ipsiJeongwonN": 33,
       "jeongwon": 11267
     },
     {
@@ -132,41 +162,11 @@
       "gyoseup": 6,
       "total": 41,
       "ipsi": 23,
+      "ipsiAca": 21,
+      "ipsiGyoseup": 2,
       "ipsiJeongwon": 4419,
+      "ipsiJeongwonN": 21,
       "jeongwon": 6813
-    },
-    {
-      "sido": "세종특별자치시교육청",
-      "sgg": "세종특별자치시",
-      "dong": "한솔동",
-      "aca": 19,
-      "gyoseup": 16,
-      "total": 35,
-      "ipsi": 17,
-      "ipsiJeongwon": 1497,
-      "jeongwon": 3136
-    },
-    {
-      "sido": "세종특별자치시교육청",
-      "sgg": "세종특별자치시",
-      "dong": "대평동",
-      "aca": 22,
-      "gyoseup": 25,
-      "total": 47,
-      "ipsi": 16,
-      "ipsiJeongwon": 1946,
-      "jeongwon": 4546
-    },
-    {
-      "sido": "세종특별자치시교육청",
-      "sgg": "세종특별자치시",
-      "dong": "산울동",
-      "aca": 3,
-      "gyoseup": 32,
-      "total": 35,
-      "ipsi": 15,
-      "ipsiJeongwon": 180,
-      "jeongwon": 530
     },
     {
       "sido": "세종특별자치시교육청",
@@ -176,8 +176,53 @@
       "gyoseup": 13,
       "total": 38,
       "ipsi": 13,
+      "ipsiAca": 11,
+      "ipsiGyoseup": 2,
       "ipsiJeongwon": 1948,
+      "ipsiJeongwonN": 12,
       "jeongwon": 5361
+    },
+    {
+      "sido": "세종특별자치시교육청",
+      "sgg": "세종특별자치시",
+      "dong": "대평동",
+      "aca": 22,
+      "gyoseup": 25,
+      "total": 47,
+      "ipsi": 16,
+      "ipsiAca": 9,
+      "ipsiGyoseup": 7,
+      "ipsiJeongwon": 1946,
+      "ipsiJeongwonN": 12,
+      "jeongwon": 4546
+    },
+    {
+      "sido": "세종특별자치시교육청",
+      "sgg": "세종특별자치시",
+      "dong": "한솔동",
+      "aca": 19,
+      "gyoseup": 16,
+      "total": 35,
+      "ipsi": 17,
+      "ipsiAca": 9,
+      "ipsiGyoseup": 8,
+      "ipsiJeongwon": 1497,
+      "ipsiJeongwonN": 13,
+      "jeongwon": 3136
+    },
+    {
+      "sido": "세종특별자치시교육청",
+      "sgg": "세종특별자치시",
+      "dong": "산울동",
+      "aca": 3,
+      "gyoseup": 32,
+      "total": 35,
+      "ipsi": 15,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 14,
+      "ipsiJeongwon": 180,
+      "ipsiJeongwonN": 1,
+      "jeongwon": 530
     },
     {
       "sido": "세종특별자치시교육청",
@@ -187,7 +232,10 @@
       "gyoseup": 5,
       "total": 6,
       "ipsi": 3,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 2,
       "ipsiJeongwon": 90,
+      "ipsiJeongwonN": 1,
       "jeongwon": 120
     }
   ]

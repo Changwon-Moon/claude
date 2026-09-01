@@ -11,7 +11,7 @@
     "dongMissing": 336,
     "sggMissing": 0,
     "coverage": 81,
-    "note": "행별 집계다(원장 미보존). aca=학원 · gyoseup=교습소 · ipsi=분야가 '입시.검정 및 보습' 인 곳 · jeongwon=정원합계(TOFOR_SMTOT) 합. 시군구는 도로명주소에서, 법정동은 도로명 상세의 괄호 참고항목에서 뽑았다. 괄호에 법정동이 없는 행(dongMissing)은 집계에서 빠졌다 — coverage 를 보고 숫자를 읽어야 한다. 등록상태(개원/휴원/폐원)는 가리지 않았다 — 원장에 남은 곳을 모두 센다."
+    "note": "행별 집계다(원장 미보존). aca=학원 · gyoseup=교습소 · ipsi=분야가 '입시.검정 및 보습' 인 곳 · ipsiAca/ipsiGyoseup=입시·보습을 학원/교습소로 가른 수 · ipsiJeongwonN=그중 정원이 0 이 아닌 곳 수. jeongwon=정원합계(TOFOR_SMTOT) 합. 시군구는 도로명주소에서, 법정동은 도로명 상세의 괄호 참고항목에서 뽑았다. 괄호에 법정동이 없는 행(dongMissing)은 집계에서 빠졌다 — coverage 를 보고 숫자를 읽어야 한다. 등록상태(개원/휴원/폐원)는 가리지 않았다 — 원장에 남은 곳을 모두 센다."
   },
   "rows": [
     {
@@ -22,7 +22,10 @@
       "gyoseup": 49,
       "total": 216,
       "ipsi": 146,
+      "ipsiAca": 108,
+      "ipsiGyoseup": 38,
       "ipsiJeongwon": 25599,
+      "ipsiJeongwonN": 127,
       "jeongwon": 37068
     },
     {
@@ -33,7 +36,10 @@
       "gyoseup": 42,
       "total": 230,
       "ipsi": 133,
+      "ipsiAca": 106,
+      "ipsiGyoseup": 27,
       "ipsiJeongwon": 25339,
+      "ipsiJeongwonN": 129,
       "jeongwon": 39352
     },
     {
@@ -44,7 +50,10 @@
       "gyoseup": 31,
       "total": 166,
       "ipsi": 95,
+      "ipsiAca": 78,
+      "ipsiGyoseup": 17,
       "ipsiJeongwon": 16231,
+      "ipsiJeongwonN": 89,
       "jeongwon": 27029
     },
     {
@@ -55,7 +64,10 @@
       "gyoseup": 43,
       "total": 109,
       "ipsi": 68,
+      "ipsiAca": 39,
+      "ipsiGyoseup": 29,
       "ipsiJeongwon": 8640,
+      "ipsiJeongwonN": 63,
       "jeongwon": 12570
     },
     {
@@ -66,7 +78,10 @@
       "gyoseup": 28,
       "total": 95,
       "ipsi": 58,
+      "ipsiAca": 37,
+      "ipsiGyoseup": 21,
       "ipsiJeongwon": 7140,
+      "ipsiJeongwonN": 52,
       "jeongwon": 10913
     },
     {
@@ -77,7 +92,10 @@
       "gyoseup": 21,
       "total": 85,
       "ipsi": 48,
+      "ipsiAca": 37,
+      "ipsiGyoseup": 11,
       "ipsiJeongwon": 7382,
+      "ipsiJeongwonN": 40,
       "jeongwon": 11855
     },
     {
@@ -88,7 +106,10 @@
       "gyoseup": 13,
       "total": 62,
       "ipsi": 35,
+      "ipsiAca": 29,
+      "ipsiGyoseup": 6,
       "ipsiJeongwon": 6099,
+      "ipsiJeongwonN": 31,
       "jeongwon": 8829
     },
     {
@@ -99,30 +120,11 @@
       "gyoseup": 4,
       "total": 36,
       "ipsi": 24,
+      "ipsiAca": 22,
+      "ipsiGyoseup": 2,
       "ipsiJeongwon": 4450,
+      "ipsiJeongwonN": 23,
       "jeongwon": 5907
-    },
-    {
-      "sido": "제주특별자치도교육청",
-      "sgg": "서귀포시",
-      "dong": "서홍동",
-      "aca": 21,
-      "gyoseup": 22,
-      "total": 43,
-      "ipsi": 23,
-      "ipsiJeongwon": 1845,
-      "jeongwon": 4614
-    },
-    {
-      "sido": "제주특별자치도교육청",
-      "sgg": "제주시",
-      "dong": "화북일동",
-      "aca": 40,
-      "gyoseup": 12,
-      "total": 52,
-      "ipsi": 23,
-      "ipsiJeongwon": 3591,
-      "jeongwon": 8507
     },
     {
       "sido": "제주특별자치도교육청",
@@ -132,7 +134,10 @@
       "gyoseup": 5,
       "total": 34,
       "ipsi": 21,
+      "ipsiAca": 20,
+      "ipsiGyoseup": 1,
       "ipsiJeongwon": 4238,
+      "ipsiJeongwonN": 19,
       "jeongwon": 5892
     },
     {
@@ -143,41 +148,25 @@
       "gyoseup": 1,
       "total": 30,
       "ipsi": 18,
+      "ipsiAca": 18,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 4881,
+      "ipsiJeongwonN": 18,
       "jeongwon": 7866
     },
     {
       "sido": "제주특별자치도교육청",
-      "sgg": "서귀포시",
-      "dong": "서귀동",
-      "aca": 19,
-      "gyoseup": 6,
-      "total": 25,
-      "ipsi": 13,
-      "ipsiJeongwon": 2046,
-      "jeongwon": 3891
-    },
-    {
-      "sido": "제주특별자치도교육청",
       "sgg": "제주시",
-      "dong": "이도일동",
-      "aca": 22,
-      "gyoseup": 13,
-      "total": 35,
-      "ipsi": 12,
-      "ipsiJeongwon": 649,
-      "jeongwon": 3434
-    },
-    {
-      "sido": "제주특별자치도교육청",
-      "sgg": "제주시",
-      "dong": "도남동",
-      "aca": 19,
-      "gyoseup": 8,
-      "total": 27,
-      "ipsi": 12,
-      "ipsiJeongwon": 2182,
-      "jeongwon": 4616
+      "dong": "화북일동",
+      "aca": 40,
+      "gyoseup": 12,
+      "total": 52,
+      "ipsi": 23,
+      "ipsiAca": 15,
+      "ipsiGyoseup": 8,
+      "ipsiJeongwon": 3591,
+      "ipsiJeongwonN": 21,
+      "jeongwon": 8507
     },
     {
       "sido": "제주특별자치도교육청",
@@ -187,41 +176,39 @@
       "gyoseup": 4,
       "total": 29,
       "ipsi": 12,
+      "ipsiAca": 11,
+      "ipsiGyoseup": 1,
       "ipsiJeongwon": 2097,
+      "ipsiJeongwonN": 12,
       "jeongwon": 4133
     },
     {
       "sido": "제주특별자치도교육청",
-      "sgg": "서귀포시",
-      "dong": "서호동",
-      "aca": 13,
-      "gyoseup": 4,
-      "total": 17,
-      "ipsi": 9,
-      "ipsiJeongwon": 1463,
-      "jeongwon": 2270
-    },
-    {
-      "sido": "제주특별자치도교육청",
-      "sgg": "서귀포시",
-      "dong": "중문동",
-      "aca": 16,
-      "gyoseup": 3,
-      "total": 19,
-      "ipsi": 8,
-      "ipsiJeongwon": 1191,
-      "jeongwon": 2544
-    },
-    {
-      "sido": "제주특별자치도교육청",
       "sgg": "제주시",
-      "dong": "외도이동",
-      "aca": 9,
-      "gyoseup": 3,
-      "total": 12,
-      "ipsi": 8,
-      "ipsiJeongwon": 1393,
-      "jeongwon": 1759
+      "dong": "도남동",
+      "aca": 19,
+      "gyoseup": 8,
+      "total": 27,
+      "ipsi": 12,
+      "ipsiAca": 10,
+      "ipsiGyoseup": 2,
+      "ipsiJeongwon": 2182,
+      "ipsiJeongwonN": 11,
+      "jeongwon": 4616
+    },
+    {
+      "sido": "제주특별자치도교육청",
+      "sgg": "서귀포시",
+      "dong": "서귀동",
+      "aca": 19,
+      "gyoseup": 6,
+      "total": 25,
+      "ipsi": 13,
+      "ipsiAca": 9,
+      "ipsiGyoseup": 4,
+      "ipsiJeongwon": 2046,
+      "ipsiJeongwonN": 13,
+      "jeongwon": 3891
     },
     {
       "sido": "제주특별자치도교육청",
@@ -231,8 +218,67 @@
       "gyoseup": 0,
       "total": 13,
       "ipsi": 8,
+      "ipsiAca": 8,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 1847,
+      "ipsiJeongwonN": 8,
       "jeongwon": 2493
+    },
+    {
+      "sido": "제주특별자치도교육청",
+      "sgg": "서귀포시",
+      "dong": "서홍동",
+      "aca": 21,
+      "gyoseup": 22,
+      "total": 43,
+      "ipsi": 23,
+      "ipsiAca": 7,
+      "ipsiGyoseup": 16,
+      "ipsiJeongwon": 1845,
+      "ipsiJeongwonN": 21,
+      "jeongwon": 4614
+    },
+    {
+      "sido": "제주특별자치도교육청",
+      "sgg": "서귀포시",
+      "dong": "중문동",
+      "aca": 16,
+      "gyoseup": 3,
+      "total": 19,
+      "ipsi": 8,
+      "ipsiAca": 7,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 1191,
+      "ipsiJeongwonN": 8,
+      "jeongwon": 2544
+    },
+    {
+      "sido": "제주특별자치도교육청",
+      "sgg": "서귀포시",
+      "dong": "서호동",
+      "aca": 13,
+      "gyoseup": 4,
+      "total": 17,
+      "ipsi": 9,
+      "ipsiAca": 6,
+      "ipsiGyoseup": 3,
+      "ipsiJeongwon": 1463,
+      "ipsiJeongwonN": 9,
+      "jeongwon": 2270
+    },
+    {
+      "sido": "제주특별자치도교육청",
+      "sgg": "제주시",
+      "dong": "외도이동",
+      "aca": 9,
+      "gyoseup": 3,
+      "total": 12,
+      "ipsi": 8,
+      "ipsiAca": 6,
+      "ipsiGyoseup": 2,
+      "ipsiJeongwon": 1393,
+      "ipsiJeongwonN": 8,
+      "jeongwon": 1759
     },
     {
       "sido": "제주특별자치도교육청",
@@ -242,19 +288,25 @@
       "gyoseup": 10,
       "total": 22,
       "ipsi": 7,
+      "ipsiAca": 5,
+      "ipsiGyoseup": 2,
       "ipsiJeongwon": 748,
+      "ipsiJeongwonN": 6,
       "jeongwon": 1943
     },
     {
       "sido": "제주특별자치도교육청",
-      "sgg": "서귀포시",
-      "dong": "하효동",
-      "aca": 2,
-      "gyoseup": 5,
-      "total": 7,
-      "ipsi": 4,
-      "ipsiJeongwon": 141,
-      "jeongwon": 277
+      "sgg": "제주시",
+      "dong": "이도일동",
+      "aca": 22,
+      "gyoseup": 13,
+      "total": 35,
+      "ipsi": 12,
+      "ipsiAca": 3,
+      "ipsiGyoseup": 9,
+      "ipsiJeongwon": 649,
+      "ipsiJeongwonN": 5,
+      "jeongwon": 3434
     },
     {
       "sido": "제주특별자치도교육청",
@@ -264,19 +316,25 @@
       "gyoseup": 4,
       "total": 9,
       "ipsi": 4,
+      "ipsiAca": 3,
+      "ipsiGyoseup": 1,
       "ipsiJeongwon": 737,
+      "ipsiJeongwonN": 4,
       "jeongwon": 1248
     },
     {
       "sido": "제주특별자치도교육청",
       "sgg": "제주시",
-      "dong": "삼도이동",
-      "aca": 5,
-      "gyoseup": 3,
-      "total": 8,
-      "ipsi": 4,
-      "ipsiJeongwon": 420,
-      "jeongwon": 1174
+      "dong": "용담일동",
+      "aca": 4,
+      "gyoseup": 1,
+      "total": 5,
+      "ipsi": 3,
+      "ipsiAca": 3,
+      "ipsiGyoseup": 0,
+      "ipsiJeongwon": 628,
+      "ipsiJeongwonN": 3,
+      "jeongwon": 858
     },
     {
       "sido": "제주특별자치도교육청",
@@ -286,8 +344,25 @@
       "gyoseup": 1,
       "total": 4,
       "ipsi": 4,
+      "ipsiAca": 3,
+      "ipsiGyoseup": 1,
       "ipsiJeongwon": 270,
+      "ipsiJeongwonN": 2,
       "jeongwon": 270
+    },
+    {
+      "sido": "제주특별자치도교육청",
+      "sgg": "제주시",
+      "dong": "삼도이동",
+      "aca": 5,
+      "gyoseup": 3,
+      "total": 8,
+      "ipsi": 4,
+      "ipsiAca": 2,
+      "ipsiGyoseup": 2,
+      "ipsiJeongwon": 420,
+      "ipsiJeongwonN": 4,
+      "jeongwon": 1174
     },
     {
       "sido": "제주특별자치도교육청",
@@ -297,7 +372,10 @@
       "gyoseup": 2,
       "total": 5,
       "ipsi": 3,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 2,
       "ipsiJeongwon": 165,
+      "ipsiJeongwonN": 2,
       "jeongwon": 315
     },
     {
@@ -308,52 +386,11 @@
       "gyoseup": 4,
       "total": 10,
       "ipsi": 3,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 2,
       "ipsiJeongwon": 205,
+      "ipsiJeongwonN": 2,
       "jeongwon": 778
-    },
-    {
-      "sido": "제주특별자치도교육청",
-      "sgg": "제주시",
-      "dong": "용담일동",
-      "aca": 4,
-      "gyoseup": 1,
-      "total": 5,
-      "ipsi": 3,
-      "ipsiJeongwon": 628,
-      "jeongwon": 858
-    },
-    {
-      "sido": "제주특별자치도교육청",
-      "sgg": "서귀포시",
-      "dong": "토평동",
-      "aca": 1,
-      "gyoseup": 2,
-      "total": 3,
-      "ipsi": 1,
-      "ipsiJeongwon": 42,
-      "jeongwon": 302
-    },
-    {
-      "sido": "제주특별자치도교육청",
-      "sgg": "서귀포시",
-      "dong": "법환동",
-      "aca": 0,
-      "gyoseup": 1,
-      "total": 1,
-      "ipsi": 1,
-      "ipsiJeongwon": 0,
-      "jeongwon": 0
-    },
-    {
-      "sido": "제주특별자치도교육청",
-      "sgg": "제주시",
-      "dong": "상가동",
-      "aca": 0,
-      "gyoseup": 1,
-      "total": 1,
-      "ipsi": 1,
-      "ipsiJeongwon": 0,
-      "jeongwon": 0
     },
     {
       "sido": "제주특별자치도교육청",
@@ -363,7 +400,10 @@
       "gyoseup": 1,
       "total": 4,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 280,
+      "ipsiJeongwonN": 1,
       "jeongwon": 662
     },
     {
@@ -374,7 +414,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 200,
+      "ipsiJeongwonN": 1,
       "jeongwon": 200
     },
     {
@@ -385,8 +428,25 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 1,
+      "ipsiAca": 1,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 180,
+      "ipsiJeongwonN": 1,
       "jeongwon": 180
+    },
+    {
+      "sido": "제주특별자치도교육청",
+      "sgg": "서귀포시",
+      "dong": "하효동",
+      "aca": 2,
+      "gyoseup": 5,
+      "total": 7,
+      "ipsi": 4,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 4,
+      "ipsiJeongwon": 141,
+      "ipsiJeongwonN": 3,
+      "jeongwon": 277
     },
     {
       "sido": "제주특별자치도교육청",
@@ -396,8 +456,39 @@
       "gyoseup": 1,
       "total": 2,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 110
+    },
+    {
+      "sido": "제주특별자치도교육청",
+      "sgg": "서귀포시",
+      "dong": "토평동",
+      "aca": 1,
+      "gyoseup": 2,
+      "total": 3,
+      "ipsi": 1,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 42,
+      "ipsiJeongwonN": 1,
+      "jeongwon": 302
+    },
+    {
+      "sido": "제주특별자치도교육청",
+      "sgg": "서귀포시",
+      "dong": "법환동",
+      "aca": 0,
+      "gyoseup": 1,
+      "total": 1,
+      "ipsi": 1,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
+      "jeongwon": 0
     },
     {
       "sido": "제주특별자치도교육청",
@@ -407,7 +498,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 0
     },
     {
@@ -418,8 +512,25 @@
       "gyoseup": 2,
       "total": 3,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 190
+    },
+    {
+      "sido": "제주특별자치도교육청",
+      "sgg": "제주시",
+      "dong": "상가동",
+      "aca": 0,
+      "gyoseup": 1,
+      "total": 1,
+      "ipsi": 1,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 1,
+      "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
+      "jeongwon": 0
     },
     {
       "sido": "제주특별자치도교육청",
@@ -429,7 +540,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 420
     },
     {
@@ -440,7 +554,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 150
     },
     {
@@ -451,7 +568,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 112
     },
     {
@@ -462,7 +582,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 350
     },
     {
@@ -473,7 +596,10 @@
       "gyoseup": 0,
       "total": 3,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 615
     },
     {
@@ -484,7 +610,10 @@
       "gyoseup": 0,
       "total": 2,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 330
     },
     {
@@ -495,7 +624,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 150
     },
     {
@@ -506,7 +638,10 @@
       "gyoseup": 0,
       "total": 1,
       "ipsi": 0,
+      "ipsiAca": 0,
+      "ipsiGyoseup": 0,
       "ipsiJeongwon": 0,
+      "ipsiJeongwonN": 0,
       "jeongwon": 125
     }
   ]
