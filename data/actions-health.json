@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T05:34:15.828Z",
+  "generatedAt": "2026-09-01T06:28:37.418Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -185,15 +185,15 @@
         },
         {
           "day": "09-01",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "15:10",
+          "delay": 310
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-08-31",
-      "lastOk": "2026-08-31",
+      "medianDelay": 310,
+      "maxDelay": 310,
+      "lastRun": "2026-09-01",
+      "lastOk": "2026-09-01",
       "okDaysAgo": 0
     },
     {
@@ -282,16 +282,16 @@
         },
         {
           "day": "09-01",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "15:16",
+          "delay": 296
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-08-30",
-      "lastOk": "2026-08-30",
-      "okDaysAgo": 1
+      "medianDelay": 296,
+      "maxDelay": 296,
+      "lastRun": "2026-09-01",
+      "lastOk": "2026-09-01",
+      "okDaysAgo": 0
     },
     {
       "file": "molit-peak-backfill.yml",
@@ -633,14 +633,14 @@
       "runs30": 12
     },
     {
-      "file": "molit-rent-collect.yml",
-      "name": "전월세 실거래 수집 (국토부)",
+      "file": "population-collect.yml",
+      "name": "인구 수집 (monthly)",
       "lastRun": "2026-08-31",
       "daysAgo": 1,
       "lastOk": "2026-08-31",
       "okDaysAgo": 1,
-      "fails30": 2,
-      "runs30": 13
+      "fails30": 6,
+      "runs30": 9
     },
     {
       "file": "publish-archive.yml",
@@ -733,6 +733,16 @@
       "runs30": 100
     },
     {
+      "file": "molit-rent-collect.yml",
+      "name": "전월세 실거래 수집 (국토부)",
+      "lastRun": "2026-09-01",
+      "daysAgo": 0,
+      "lastOk": "2026-09-01",
+      "okDaysAgo": 0,
+      "fails30": 2,
+      "runs30": 15
+    },
+    {
       "file": "pipeline-tick.yml",
       "name": "파이프라인 진행 (승인 → 실행)",
       "lastRun": "2026-08-31",
@@ -741,16 +751,6 @@
       "okDaysAgo": 0,
       "fails30": 11,
       "runs30": 76
-    },
-    {
-      "file": "population-collect.yml",
-      "name": "인구 수집 (monthly)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 0,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 0,
-      "fails30": 6,
-      "runs30": 9
     },
     {
       "file": "singo-history.yml",
