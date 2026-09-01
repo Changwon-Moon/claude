@@ -114,9 +114,13 @@ export function yearTicks({ months, x, right, lastText, every, fs = 40, gap = 24
   const first = +months[0].slice(0, 4);
   const out = [];
   let cursor = -Infinity;                            // 직전에 놓인 라벨의 오른쪽 끝
+  /* 후보는 **그 해의 첫 가용월**이다. 예전엔 1월만 봤는데, 구 M2 계열은 2003-10 부터라
+     첫 해(2003)가 통째로 후보에서 빠졌다 — 축이 2008 부터 시작하는 것처럼 보였다(2026-09-01 실측). */
+  const seen = new Set();
   months.forEach((m, i) => {
-    if (m.slice(4) !== "01") return;
     const y = +m.slice(0, 4);
+    if (seen.has(y)) return;
+    seen.add(y);
     if ((y - first) % every !== 0) return;
     const text = String(y);
     const anchor = out.length === 0 ? "start" : "middle";

@@ -134,36 +134,34 @@ ${TAGS}`;
 
 /* ─────────────────────────────────────────────── m2-trend */
 function capTrend(m) {
-  const dec = m.decades
-    /* '년말'을 붙인다 — 본문은 1986년 **1월**(43조), 이 표는 1986년 **말**(54조)이라
-       그냥 "1986"이라고만 쓰면 같은 해에 두 값이 나온 것처럼 읽힌다(2026-09-01 실측).
-       배수는 소수 한 자리로 통일한다 — 한 줄만 "2배"면 독자가 정밀도를 의심한다. */
-    .map((d) => `· ${d.from}년말 → ${d.partialTo ? `${d.to}년 ${+d.partialTo.slice(4)}월` : `${d.to}년말`} : ${num(d.fromV)}조 → ${num(d.toV)}조 (${d.times.toFixed(1)}배)`)
-    .join("\n");
-  const first = m.decades[0], ly = m.lastFullYearAdd, sh = m.shown;
-  return `40년 동안 통화량은 ${sh.times}배가 됐습니다 💵
+  const p = m.projection, hi = p.scenarios.find((x) => x.key === "now"), lo = p.scenarios.find((x) => x.key === "hist");
+  const yrsOf = (a, b) => Math.round(((+b.slice(0, 4) * 12 + +b.slice(4)) - (+a.slice(0, 4) * 12 + +a.slice(4))) / 12);
+  return `2030년 통화량은 얼마가 되어 있을까요 💵
 
-${kor(m.range.from)} ${num(sh.first)}조였던 대한민국 M2(광의통화)는
-${kor(m.range.to)} ${num(sh.last)}조가 됐습니다.
+${kor(m.range.to)} 대한민국 M2(광의통화)는 ${num(m.current.shown)}조입니다.
+${m.range.from.slice(0, 4)}년 이후 한 번도 줄어든 적이 없습니다.
 
-📊 10년 단위로 보면
-${dec}
+📊 앞으로 4년 반, 두 가지 속도로 재봤습니다
+· 지난 ${yrsOf(lo.from, lo.to)}년 평균 속도(연 ${lo.rate}%)라면 → ${num(lo.shown)}조
+· 현 정부 구간 속도(연 ${hi.rate}%)라면 → ${num(hi.shown)}조
 
-증가율은 계단처럼 낮아졌는데, 늘어나는 금액은 오히려 커졌습니다.${ly ? `
-${first.from}~${first.to}년 10년 동안 늘어난 돈이 ${num(first.add)}조,
-${ly.year}년 한 해에 늘어난 돈이 ${num(ly.add)}조입니다.` : ""}
+지금의 ${lo.times}배 ~ ${hi.times}배입니다.
 
-👉 같은 비율이라도 모수가 커지면 금액은 훨씬 커집니다.
+두 숫자 모두 우리가 정한 값이 아니라 과거가 실제로 그랬던 속도입니다.
+· 연 ${lo.rate}% = ${ymLabel(lo.from)}~${ymLabel(lo.to)} 연평균 증가율
+· 연 ${hi.rate}% = ${ymLabel(hi.from)}~${ymLabel(hi.to)} 연평균 증가율
+
+👉 어느 쪽이든 2030년엔 지금보다 훨씬 많은 돈이 돌아갑니다.
 
 📌 저장해두고 통화량 흐름 확인하기
 
 —
 📊 출처 : 한국은행 ECOS (M2 평잔·원계열, 개편 전 기준)
-📅 기간 : ${ymLabel(m.range.from)} ~ ${ymLabel(m.range.to)} (${m.range.months}개월)
-※ ${ymLabel(m.range.from)}~${ymLabel(m.joinAt)} 구간은 한국은행 구지표 통계표, 그 뒤는 ECOS '[참고] 구 M2'입니다.
-   겹치는 12개월의 값이 소수점까지 같아 이어 붙였습니다(최대 차이 ${m.overlapCheckMaxDiff.toFixed(2)}조).
-※ 10년 단위 비교는 각 해 12월 평잔 기준이고, 마지막 마디만 ${kor(m.range.to)}까지입니다.
-※ 한국은행이 2025년 12월 M2에서 수익증권을 제외했습니다. 이 카드는 전 구간을 개편 전 기준으로 통일했습니다.
+📅 실측 : ${ymLabel(m.range.from)} ~ ${ymLabel(m.range.to)} (${m.range.months}개월)
+※ 점선 오른쪽은 예측입니다 — 한국은행이 발표한 값이 아닙니다.
+   ${kor(m.range.to)} 실측값에 각 연평균 증가율을 ${p.years}년간 복리로 적용한 값이고,
+   금리·통화정책·자금흐름이 바뀌면 달라집니다. 맞히려는 수치가 아니라 속도를 비교하는 그림입니다.
+※ 이 카드는 개편 전 기준(구 M2)입니다. 한국은행이 2025년 12월 M2에서 수익증권을 제외했습니다.
 
 ${TAGS}`;
 }
