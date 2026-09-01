@@ -413,6 +413,42 @@ console.log("\n[국토부 전월세 파서 — MOLIT Rent]");
   check("신규 중 월세비중 33.3%", a.newWolseRatio === 33.3, String(a.newWolseRatio));
   check("갱신 2건", a.renewTotal === 2, String(a.renewTotal));
   check("계약구분 있는 건 5건(무구분 1 제외)", a.typedTotal === 5, String(a.typedTotal));
+
+  /* ── 전세 금액·면적 집계 (2026-09-01 신설)
+   * 기대값은 표본 3건(84.9㎡/5.0억 · 59.9㎡/4.0억 · 114.0㎡/6.0억)에서 손으로 계산한 것이다.
+   * 코드와 같은 식을 테스트가 다시 쓰면 둘이 같이 틀려도 초록이 뜬다 — 그래서 상수로 박는다. */
+  const p = a.price!;
+  check("전세 금액집계가 붙는다", !!p, "price 없음");
+  check("월세는 세지 않는다 — 전세 3건만", p.n === 3, String(p.n));
+  check("보증금 합 150,000만원", p.depositSum === 150000, String(p.depositSum));
+  check("전용면적 합 258.8㎡", p.areaSum === 258.8, String(p.areaSum));
+  check("평균 보증금 50,000만원", p.avgDeposit === 50000, String(p.avgDeposit));
+  check("평균 전용면적 86.27㎡", p.avgArea === 86.27, String(p.avgArea));
+  check("전용 ㎡당 579.6만원(면적가중)", p.perM2 === 579.6, String(p.perM2));
+  check("전용 평당 1,916.03만원", p.perPyeong === 1916.03, String(p.perPyeong));
+  check(
+    "계약별 평당가 단순평균은 면적가중과 다르다(1,964.76)",
+    p.perPyeongSimple === 1964.76 && p.perPyeongSimple !== p.perPyeong,
+    String(p.perPyeongSimple),
+  );
+  check("국평(전용 82~86㎡) 1건만 잡힌다", p.kp84?.n === 1, String(p.kp84?.n));
+  check("국평 평균 보증금 50,000만원", p.kp84?.avgDeposit === 50000, String(p.kp84?.avgDeposit));
+  check("114㎡는 국평이 아니다(kp84 면적 84.9)", p.kp84?.avgArea === 84.9, String(p.kp84?.avgArea));
+
+  /* 보증금 0·면적 0 은 평균을 끌어내린다 — 세지 않는지 **깨뜨려 확인**한다.
+   * (전세로 신고됐지만 금액이나 면적이 비어 오는 건이 실제로 있다) */
+  const dirty = aggregateRents([
+    ...rents,
+    { ...rents[0], deposit: 0 },
+    { ...rents[0], area: 0 },
+  ]);
+  check("보증금 0·면적 0 전세는 금액집계에서 빠진다", dirty.price!.n === 3, String(dirty.price!.n));
+  check("빠졌으므로 평당가가 흔들리지 않는다", dirty.price!.perPyeong === p.perPyeong, String(dirty.price!.perPyeong));
+  check("다만 건수(jeonse)에는 그대로 남는다", dirty.jeonse === 5, String(dirty.jeonse));
+
+  /* 전세가 하나도 없는 달이면 price 를 만들지 않는다 — 0 을 찍으면 '전세가 공짜'로 읽힌다 */
+  const wolseOnly = aggregateRents(rents.filter((r) => !r.isJeonse));
+  check("전세 0건이면 price 를 만들지 않는다", wolseOnly.price === undefined, JSON.stringify(wolseOnly.price));
 }
 
 console.log("\n[국토부 분양권전매 파서 — MOLIT Silv]");

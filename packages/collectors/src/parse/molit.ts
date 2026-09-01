@@ -177,22 +177,79 @@ export interface RentAgg {
   newTotal: number; newJeonse: number; newWolse: number; newWolseRatio: number | null; // 신규계약 중 월세비중(%)
   renewTotal: number; renewJeonse: number; renewWolse: number;
   typedTotal: number; // 계약구분이 있는 건수(신규+갱신) — 전월세신고제 커버리지
+  /** 전세 금액·면적 집계 (2026-09-01 신설). 전세(월세금액 0) 계약만 */
+  price?: RentPriceAgg;
 }
 
-/** 전월세 계약 배열 → 전세/월세·신규/갱신 집계(비중 포함). 수치는 코드가 센다(오보 0) */
+/**
+ * 전세 금액·면적 집계 — **전용면적 기준**이다.
+ *
+ * ⚠️ 국토부 실거래(`excluUseAr`)에는 **전용면적만** 있고 공급면적은 없다.
+ * 그래서 여기서 나오는 평당가는 전부 **전용 평당가**다. 공급 평당가로 읽으면 30%쯤 부풀려진다
+ * (전용 84.98㎡ = 25.7 전용평 vs 공급 112.4㎡ = 34 공급평).
+ * 공급면적이 필요하면 건축물대장(`apt-supply`)에서 단지별로 받아야 한다 — 여기서 추정하지 않는다.
+ *
+ * 평당가는 **면적가중**(보증금 합 ÷ 면적 합)이다. 이는 「평균 보증금 ÷ 평균 면적」과 항등이라
+ * 통계표에서 평균가를 평균면적으로 나누는 방식과 같은 정의다. 계약별 평당가의 단순평균
+ * (`perPyeongSimple`)은 소형 계약에 가중이 실려 값이 달라지므로 **대조용으로만** 함께 적어 둔다.
+ */
+export interface RentPriceAgg {
+  unit: "만원 · 전용면적(㎡) 기준";
+  /** 금액·면적이 모두 유효한 전세 계약 수 */
+  n: number;
+  depositSum: number;   // 보증금 합(만원)
+  areaSum: number;      // 전용면적 합(㎡)
+  avgDeposit: number;   // 평균 보증금(만원)
+  avgArea: number;      // 평균 전용면적(㎡)
+  perM2: number;        // 전용 ㎡당(만원) = depositSum / areaSum
+  perPyeong: number;    // 전용 평당(만원) = perM2 × 3.3057851
+  perPyeongSimple: number; // 계약별 평당가의 단순평균(만원) — 대조용
+  /** 국평(전용 84±2㎡) 전세만 — 평당가를 곱하지 않고 직접 잰 값 */
+  kp84: { n: number; avgDeposit: number; avgArea: number } | null;
+}
+
+/** 1평 = 400/121 ㎡ ≈ 3.3057851. 여기 한 곳에만 둔다 */
+const PYEONG_M2 = 400 / 121;
+
+/** 전월세 계약 배열 → 전세/월세·신규/갱신 집계(비중 포함) + 전세 금액·면적 집계. 수치는 코드가 센다(오보 0) */
 export function aggregateRents(rents: AptRent[]): RentAgg {
   let jeonse = 0, wolse = 0, nT = 0, nJ = 0, nW = 0, rT = 0, rJ = 0, rW = 0;
+  let pn = 0, dSum = 0, aSum = 0, ppSum = 0;
+  let k84n = 0, k84d = 0, k84a = 0;
   for (const r of rents) {
     if (r.isJeonse) jeonse++; else wolse++;
     if (r.contractType === "신규") { nT++; r.isJeonse ? nJ++ : nW++; }
     else if (r.contractType === "갱신") { rT++; r.isJeonse ? rJ++ : rW++; }
+    // ── 전세 금액·면적: 전세이면서 보증금·면적이 둘 다 양수인 것만 (0·결측은 세지 않는다)
+    if (!r.isJeonse) continue;
+    if (!(r.deposit > 0) || !(r.area > 0)) continue;
+    pn++; dSum += r.deposit; aSum += r.area;
+    ppSum += (r.deposit / r.area) * PYEONG_M2;
+    if (r.area >= 82 && r.area <= 86) { k84n++; k84d += r.deposit; k84a += r.area; }
   }
   const total = rents.length;
   const pct = (a: number, b: number) => (b > 0 ? Math.round((a / b) * 1000) / 10 : 0);
+  const r2 = (v: number) => Math.round(v * 100) / 100;
+  const price: RentPriceAgg | undefined =
+    pn > 0
+      ? {
+          unit: "만원 · 전용면적(㎡) 기준",
+          n: pn,
+          depositSum: r2(dSum),
+          areaSum: r2(aSum),
+          avgDeposit: r2(dSum / pn),
+          avgArea: r2(aSum / pn),
+          perM2: r2(dSum / aSum),
+          perPyeong: r2((dSum / aSum) * PYEONG_M2),
+          perPyeongSimple: r2(ppSum / pn),
+          kp84: k84n > 0 ? { n: k84n, avgDeposit: r2(k84d / k84n), avgArea: r2(k84a / k84n) } : null,
+        }
+      : undefined;
   return {
     total, jeonse, wolse, wolseRatio: pct(wolse, total),
     newTotal: nT, newJeonse: nJ, newWolse: nW, newWolseRatio: nT > 0 ? pct(nW, nT) : null,
     renewTotal: rT, renewJeonse: rJ, renewWolse: rW,
     typedTotal: nT + rT,
+    ...(price ? { price } : {}),
   };
 }

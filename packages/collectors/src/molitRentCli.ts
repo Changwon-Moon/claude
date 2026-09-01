@@ -66,7 +66,7 @@ async function main() {
                 sourceUrl: "https://www.data.go.kr",
                 collectedAt: new Date().toISOString().slice(0, 10),
                 verified: true,
-                note: "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존).",
+                note: "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존). agg.price 는 전세 계약의 금액·면적 집계이며 **전용면적 기준**이다 — 실거래에는 공급면적이 없다(공급 평당가로 읽으면 30%쯤 부풀려진다).",
               },
               agg,
             },
@@ -74,7 +74,8 @@ async function main() {
             2,
           ) + "\n",
         );
-        console.log(`✅ ${gu} ${ym} — 계약 ${agg.total}건 (전세 ${agg.jeonse}/월세 ${agg.wolse}, 월세비중 ${agg.wolseRatio}%${agg.newWolseRatio != null ? `, 신규월세 ${agg.newWolseRatio}%` : ""}) → ${code}-${ym}.json`);
+        const p = agg.price;
+        console.log(`✅ ${gu} ${ym} — 계약 ${agg.total}건 (전세 ${agg.jeonse}/월세 ${agg.wolse}, 월세비중 ${agg.wolseRatio}%${agg.newWolseRatio != null ? `, 신규월세 ${agg.newWolseRatio}%` : ""})${p ? ` · 전세 전용평당 ${p.perPyeong.toLocaleString()}만 (평균 ${p.avgArea}㎡·${p.avgDeposit.toLocaleString()}만, 84㎡ ${p.kp84 ? `${p.kp84.n}건 ${p.kp84.avgDeposit.toLocaleString()}만` : "없음"})` : ""} → ${code}-${ym}.json`);
         ok++; totalTx += agg.total;
       } catch (e) {
         console.error(`❌ ${gu} ${ym}: ${e instanceof Error ? e.message : e}`);
