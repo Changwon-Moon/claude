@@ -75,7 +75,7 @@ async function main() {
           ) + "\n",
         );
         const p = agg.price;
-        console.log(`✅ ${gu} ${ym} — 계약 ${agg.total}건 (전세 ${agg.jeonse}/월세 ${agg.wolse}, 월세비중 ${agg.wolseRatio}%${agg.newWolseRatio != null ? `, 신규월세 ${agg.newWolseRatio}%` : ""})${p ? ` · 전세 전용평당 ${p.perPyeong.toLocaleString()}만 (평균 ${p.avgArea}㎡·${p.avgDeposit.toLocaleString()}만, 84㎡ ${p.kp84 ? `${p.kp84.n}건 ${p.kp84.avgDeposit.toLocaleString()}만` : "없음"})` : ""} → ${code}-${ym}.json`);
+        console.log(`✅ ${gu} ${ym} — 계약 ${agg.total}건 (전세 ${agg.jeonse}/월세 ${agg.wolse}, 월세비중 ${agg.wolseRatio}%${agg.newWolseRatio != null ? `, 신규월세 ${agg.newWolseRatio}%` : ""})${p ? ` · 전세 전용평당 ${p.perPyeong.toLocaleString()}만 (평균 ${p.avgArea}㎡·${p.avgDeposit.toLocaleString()}만, 84㎡ ${p.kp84 ? `${p.kp84.n}건 ${p.kp84.avgDeposit.toLocaleString()}만` : "없음"} · 59㎡ ${p.kp59 ? `${p.kp59.n}건 ${p.kp59.avgDeposit.toLocaleString()}만` : "없음"})` : ""} → ${code}-${ym}.json`);
         ok++; totalTx += agg.total;
       } catch (e) {
         console.error(`❌ ${gu} ${ym}: ${e instanceof Error ? e.message : e}`);

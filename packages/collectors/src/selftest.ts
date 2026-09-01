@@ -40,6 +40,7 @@ import {
   toEok,
   parseAptRents,
   aggregateRents,
+  AREA_BANDS,
 } from "./parse/molit.js";
 import { encKey } from "./sources/molit.js";
 import {
@@ -434,6 +435,12 @@ console.log("\n[국토부 전월세 파서 — MOLIT Rent]");
   check("국평(전용 82~86㎡) 1건만 잡힌다", p.kp84?.n === 1, String(p.kp84?.n));
   check("국평 평균 보증금 50,000만원", p.kp84?.avgDeposit === 50000, String(p.kp84?.avgDeposit));
   check("114㎡는 국평이 아니다(kp84 면적 84.9)", p.kp84?.avgArea === 84.9, String(p.kp84?.avgArea));
+  check("국평 창을 데이터가 스스로 밝힌다(82~86)", p.kp84?.loM2 === 82 && p.kp84?.hiM2 === 86, `${p.kp84?.loM2}~${p.kp84?.hiM2}`);
+  check("25평형(전용 57~61㎡) 1건만 잡힌다", p.kp59?.n === 1, String(p.kp59?.n));
+  check("25평형 평균 보증금 40,000만원", p.kp59?.avgDeposit === 40000, String(p.kp59?.avgDeposit));
+  check("25평형 평균 면적 59.9㎡", p.kp59?.avgArea === 59.9, String(p.kp59?.avgArea));
+  check("25평형 창을 데이터가 스스로 밝힌다(57~61)", p.kp59?.loM2 === 57 && p.kp59?.hiM2 === 61, `${p.kp59?.loM2}~${p.kp59?.hiM2}`);
+  check("84 창과 59 창은 겹치지 않는다", AREA_BANDS.kp59[1] < AREA_BANDS.kp84[0], JSON.stringify(AREA_BANDS));
 
   /* 보증금 0·면적 0 은 평균을 끌어내린다 — 세지 않는지 **깨뜨려 확인**한다.
    * (전세로 신고됐지만 금액이나 면적이 비어 오는 건이 실제로 있다) */

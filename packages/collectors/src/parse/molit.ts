@@ -204,18 +204,40 @@ export interface RentPriceAgg {
   perM2: number;        // 전용 ㎡당(만원) = depositSum / areaSum
   perPyeong: number;    // 전용 평당(만원) = perM2 × 3.3057851
   perPyeongSimple: number; // 계약별 평당가의 단순평균(만원) — 대조용
-  /** 국평(전용 84±2㎡) 전세만 — 평당가를 곱하지 않고 직접 잰 값 */
-  kp84: { n: number; avgDeposit: number; avgArea: number } | null;
+  /**
+   * 면적대별 전세 평균 — **평당가를 곱해 만든 값이 아니라 그 면적대 계약만 직접 잰 값**이다.
+   * 환산(㎡당 × 84.98)은 그 구의 면적 구성에 흔들린다. 실제로 종로는 환산 7.83억인데
+   * 84㎡ 실측은 9.59억이었다(2026-09-01 실측). 카드에 쓰는 것은 **실측** 쪽이다.
+   * 표본이 얇은 구가 생기므로 `n`(건수)을 반드시 함께 읽는다.
+   */
+  kp84: AreaBandAgg | null; // 전용 82~86㎡ (국평·34평형)
+  kp59: AreaBandAgg | null; // 전용 57~61㎡ (25평형)
+}
+
+export interface AreaBandAgg {
+  /** 면적대 하한·상한(㎡, 포함) — 카드가 "어디까지를 그 평형으로 셌나"를 말할 수 있게 함께 둔다 */
+  loM2: number;
+  hiM2: number;
+  n: number;
+  avgDeposit: number; // 만원
+  avgArea: number;    // ㎡
 }
 
 /** 1평 = 400/121 ㎡ ≈ 3.3057851. 여기 한 곳에만 둔다 */
 const PYEONG_M2 = 400 / 121;
 
+/**
+ * 면적대 창(㎡, 양끝 포함). **여기 한 곳에만 둔다** — 빌더가 자기 숫자를 따로 쓰면
+ * 카드마다 "몇 ㎡까지를 84로 셌나"가 갈린다.
+ * 84 는 82~86(84.9x·85.0 을 담는다), 59 는 57~61(59.7x~60.0 을 담는다).
+ */
+export const AREA_BANDS = { kp84: [82, 86], kp59: [57, 61] } as const;
+
 /** 전월세 계약 배열 → 전세/월세·신규/갱신 집계(비중 포함) + 전세 금액·면적 집계. 수치는 코드가 센다(오보 0) */
 export function aggregateRents(rents: AptRent[]): RentAgg {
   let jeonse = 0, wolse = 0, nT = 0, nJ = 0, nW = 0, rT = 0, rJ = 0, rW = 0;
   let pn = 0, dSum = 0, aSum = 0, ppSum = 0;
-  let k84n = 0, k84d = 0, k84a = 0;
+  const band = { kp84: { n: 0, d: 0, a: 0 }, kp59: { n: 0, d: 0, a: 0 } };
   for (const r of rents) {
     if (r.isJeonse) jeonse++; else wolse++;
     if (r.contractType === "신규") { nT++; r.isJeonse ? nJ++ : nW++; }
@@ -225,11 +247,20 @@ export function aggregateRents(rents: AptRent[]): RentAgg {
     if (!(r.deposit > 0) || !(r.area > 0)) continue;
     pn++; dSum += r.deposit; aSum += r.area;
     ppSum += (r.deposit / r.area) * PYEONG_M2;
-    if (r.area >= 82 && r.area <= 86) { k84n++; k84d += r.deposit; k84a += r.area; }
+    for (const k of ["kp84", "kp59"] as const) {
+      const [lo, hi] = AREA_BANDS[k];
+      if (r.area >= lo && r.area <= hi) { band[k].n++; band[k].d += r.deposit; band[k].a += r.area; }
+    }
   }
   const total = rents.length;
   const pct = (a: number, b: number) => (b > 0 ? Math.round((a / b) * 1000) / 10 : 0);
   const r2 = (v: number) => Math.round(v * 100) / 100;
+  const bandOf = (k: "kp84" | "kp59"): AreaBandAgg | null => {
+    const b = band[k];
+    if (b.n === 0) return null;
+    const [loM2, hiM2] = AREA_BANDS[k];
+    return { loM2, hiM2, n: b.n, avgDeposit: r2(b.d / b.n), avgArea: r2(b.a / b.n) };
+  };
   const price: RentPriceAgg | undefined =
     pn > 0
       ? {
@@ -242,7 +273,8 @@ export function aggregateRents(rents: AptRent[]): RentAgg {
           perM2: r2(dSum / aSum),
           perPyeong: r2((dSum / aSum) * PYEONG_M2),
           perPyeongSimple: r2(ppSum / pn),
-          kp84: k84n > 0 ? { n: k84n, avgDeposit: r2(k84d / k84n), avgArea: r2(k84a / k84n) } : null,
+          kp84: bandOf("kp84"),
+          kp59: bandOf("kp59"),
         }
       : undefined;
   return {
