@@ -890,8 +890,8 @@
       "pixelPolicy": "정기물 — data/datasets/molit/,data/datasets/molit,data/datasets/neis-academy/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
       "confirmedAt": "2026-09-02",
       "confirmedMd5": [
-        "hakgun-map:44e1bd14e909",
-        "hakgun-academy:cd0aa235b00f"
+        "hakgun-map:400b3350584a",
+        "hakgun-academy:7b3f4429bec8"
       ]
     },
     {

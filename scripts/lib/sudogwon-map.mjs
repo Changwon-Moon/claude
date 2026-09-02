@@ -303,7 +303,9 @@ export function sudogwonMapSvg({ pins, hitSgg = new Set(), focusPad = 0.16, focu
     `.sg-river{fill:none;stroke:#8fbfe0;stroke-width:9;stroke-linecap:round;stroke-linejoin:round}` +
     `.sg-hit{fill:#f6c9cd;stroke:#fff;stroke-width:1.6}` +
     `.sg-pin{stroke:#fff;stroke-width:3.5}` +
-    `.sg-pin.g1{fill:#c8102e}.sg-pin.g2{fill:#141821}.sg-pin.g3{fill:#8f9bad}` +
+    // 급지 1 은 브랜드 레드(--wirit-red). 인라인 SVG 라 카드의 CSS 변수가 그대로 내려온다 —
+    // 값을 여기 또 적으면 팔레트가 두 곳이 되고, 언젠가 한쪽만 바뀐다(2026-09-02 #c8102e 사고).
+    `.sg-pin.g1{fill:var(--wirit-red)}.sg-pin.g2{fill:#141821}.sg-pin.g3{fill:#8f9bad}` +
     `.sg-num{font-size:24px;font-weight:900;fill:#fff;text-anchor:middle}` +
     `.sg-lab{font-size:30px;font-weight:800;fill:#141821;letter-spacing:-0.03em;` +
     `paint-order:stroke;stroke:#fff;stroke-width:6px;stroke-linejoin:round}` +
