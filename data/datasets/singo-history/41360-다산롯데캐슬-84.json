@@ -5,15 +5,15 @@
     "aptNm": "다산롯데캐슬",
     "type": "84",
     "from": "202001",
-    "to": "202608",
-    "monthsTried": 80,
+    "to": "202609",
+    "monthsTried": 81,
     "monthsFailed": 0,
     "monthsTraded": 69,
     "peak": {
-      "manwon": 119500,
-      "date": "2026-08-09",
-      "area": 84.99,
-      "floor": 23
+      "manwon": 124500,
+      "date": "2026-08-21",
+      "area": 84.97,
+      "floor": 18
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -732,11 +732,20 @@
     },
     {
       "ym": "202608",
-      "maxManwon": 119500,
-      "count": 2,
-      "area": 84.99,
-      "floor": 23,
-      "date": "2026-08-09",
+      "maxManwon": 124500,
+      "count": 4,
+      "area": 84.97,
+      "floor": 18,
+      "date": "2026-08-21",
+      "ok": true
+    },
+    {
+      "ym": "202609",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
       "ok": true
     }
   ]
