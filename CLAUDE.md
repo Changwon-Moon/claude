@@ -65,6 +65,7 @@ node scripts/doctor.mjs            # 3~5분. 실제로 카드를 만들어 본�
    - 🏢 청약·분양이면 **`docs/guides/청약분양-카드-기준.md`** 도 필수(판형 `danji-cover@1` 하나뿐)
    - 🚇 노선 시세면 **`docs/LINE_CARDS.md`**
    - 🏆 신고가면 **`docs/guides/신고가-카드-기준.md`**
+   - ⚖️ 격차 맞대결(같은 값에서 출발한 두 단지)이면 **`docs/GAP_CARDS.md`**
 3. **`company/CEO.md`** — 오너 판단 원칙 100여 개(전략·콘텐츠·디자인·프로세스)
 4. **`docs/DATA_REFRESH.md`** — 정기물이 사람 없이 굴러가는 배관.
    "이건 내가 눌러야 하나?" 싶으면 여기부터 본다(대개 안 눌러도 된다)
@@ -565,6 +566,7 @@ node scripts/close-session.mjs      # 실행은 wirit-close 스킬이 이끈다
 | [docs/BRAND.md](docs/BRAND.md) | **색·타이포·워터마크 슬롯**(브랜드 규격의 정본) |
 | [docs/REVIEW_RUBRIC.md](docs/REVIEW_RUBRIC.md) | **검수 판정 등급·LLM 렌즈** (designQa 항목 목록의 정본은 `designQa.ts` 코드) |
 | [docs/LINE_CARDS.md](docs/LINE_CARDS.md) | **지하철 노선 시세 카드 시리즈** |
+| [docs/GAP_CARDS.md](docs/GAP_CARDS.md) | **격차 맞대결 시리즈** — 같은 값에서 출발한 두 단지 (`find-gap-pairs.mjs`) |
 | [docs/CAPTION.md](docs/CAPTION.md) | **캡션 규칙**(포맷·금지어·서명·생성) — 2026-08-31 통합 |
 | [docs/guides/프로필-세팅안.md](docs/guides/프로필-세팅안.md) | **인스타·스레드 프로필 운영** |
 | [docs/guides/릴스-제작-기준.md](docs/guides/릴스-제작-기준.md) | **릴스 판형·파이프라인** |
