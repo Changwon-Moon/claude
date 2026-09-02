@@ -1,6 +1,6 @@
 # 단지 공급면적 — 마지막 실행
 
-- 성공 0건 · 실패 17건
+- 성공 0건 · 실패 20건
 - 결과는 Actions 로그가 아니라 이 파일과 data/datasets/apt-supply/ 에서 본다
 
 ```
@@ -53,6 +53,36 @@ Exit status 1
 ::error::271-1 1쪽 실패 — fetch failed: fetch failed
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13202312 --area 84.87`
+Exit status 1
+── A13380703 전용 84.99
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A13380703 --area 84.99
+
+▶ 금호두산 (A13380703) · 전용 84.99㎡ · 11200-11100 · 지번 후보 769, 10, 1331
+::error::769 1쪽 실패 — fetch failed: fetch failed
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13380703 --area 84.99`
+Exit status 1
+── A10022845 전용 59.98
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10022845 --area 59.98
+
+▶ 산성역자이푸르지오1단지 (A10022845) · 전용 59.98㎡ · 41131-10100 · 지번 후보 6961
+::error::6961 1쪽 실패 — fetch failed: fetch failed
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10022845 --area 59.98`
+Exit status 1
+── A43181606 전용 84.945
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43181606 --area 84.945
+
+▶ 평촌관악타운 (A43181606) · 전용 84.945㎡ · 41173-10100 · 지번 후보 1102
+::error::1102 1쪽 실패 — fetch failed: fetch failed
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A43181606 --area 84.945`
 Exit status 1
 ── A13380703 전용 84.99
 
