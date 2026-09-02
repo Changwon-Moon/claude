@@ -37,7 +37,7 @@
 | `record-grid` | 🟢 1세트 | kospi-record |
 | `sinbundang-loop` | 🟢 1세트 | sinbundang-loop |
 | `singo-record` | 🟢 11세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 8 |
-| `singoga-map` | 🟢 5세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map 외 2 |
+| `singoga-map` | 🟢 7세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map 외 4 |
 | `streak-line` | 🟢 4세트 | mae-streak, jeonse-streak, m2-gap 외 1 |
 | `world-capital` | 🟢 1세트 | world-capital |
 | `year-bars` | 🟢 2세트 | wolse-flip, m2-rate |
