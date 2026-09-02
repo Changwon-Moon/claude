@@ -81,6 +81,24 @@ export function apiError(xml: string): string | null {
   return null;
 }
 
+/**
+ * 오류 문구를 **사람이 읽을 말**로 바꾼다 — 문구가 원인을 가리는 것을 여기서 끊는다.
+ *
+ * `SERVICE_KEY_IS_NOT_REGISTERED_ERROR`(등록되지 않은 서비스키)는 **키 문제가 아니라
+ * 일일 호출 한도**다(2026-08-16d 실측). 이 사실을 저장소는 알고 있었는데 문구가 그대로
+ * 로그에 나가는 바람에 09-02 에 또 키를 의심하며 반나절을 썼다.
+ * 「무엇을 재는가」만큼 「무엇이라 말하는가」도 배관의 일부다.
+ */
+export function explainApiError(msg: string): string {
+  if (/SERVICE_KEY_IS_NOT_REGISTERED|LIMITED_NUMBER_OF_SERVICE_REQUESTS/i.test(msg))
+    return `${msg}  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다`;
+  if (/DEADLINE_HAS_EXPIRED/i.test(msg)) return `${msg}  ← ⚠️ 활용신청 **기간이 끝났습니다**(재신청 필요)`;
+  if (/UNREGISTERED_IP/i.test(msg)) return `${msg}  ← ⚠️ **IP 등록**이 필요한 서비스입니다`;
+  if (/fetch failed|CONNECT_TIMEOUT|ECONNRESET/i.test(msg))
+    return `${msg}  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다`;
+  return msg;
+}
+
 const key = (t: AptTrade) => `${t.aptNm}|${t.umdNm}`;
 
 /** 유효 거래(해제 제외) */

@@ -21,7 +21,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { fetchAptTradesMonth } from "./sources/molit.js";
-import { validTrades, type AptTrade } from "./parse/molit.js";
+import { validTrades, explainApiError, type AptTrade } from "./parse/molit.js";
 import {
   foldPeaks,
   findSingo,
@@ -36,6 +36,8 @@ import {
   type SingoHit,
 } from "./parse/singo.js";
 import { jibunFromAddr, normJibun } from "./parse/aptInfo.js";
+import { foldMonth, needsRefresh } from "./parse/monthCache.js";
+import { hasMonth, writeMonth } from "./monthCacheIo.js";
 import { singoRegions, monthRange } from "./sources/singoRegions.js";
 import { inspectKey, describeKey } from "./keyHygiene.js";
 
@@ -217,11 +219,22 @@ async function main() {
         failStreak = 0;
         fresh.push(...raw);
         if (!done.has(ym)) { idx.meta.doneMonths.push(ym); done.add(ym); }
+        /* ── 📦 「구 × 월」 캐시도 **같이** 채운다 (2026-09-02)
+         *
+         * 이 응답은 곡선 수집기가 받는 것과 **완전히 같은 것**이다 — 그 구의 그 달 전체 거래.
+         * 지금까지는 「역대 최고가 한 줄」로만 접고 나머지를 버렸고, 그래서 곡선을 그릴 때마다
+         * 같은 달을 다시 받아야 했다(단지 19곳이면 약 1,500회 · 아침 알림 전체가 122회다).
+         *
+         * **추가 호출은 0회다.** 이미 손에 있는 것을 한 번 더 접어 두는 것뿐이다.
+         * 하루가 지날수록 캐시가 저절로 자라고, 그만큼 곡선이 국토부를 덜 부른다. */
+        if (uniReady && needsRefresh(ym, today, hasMonth(lawdCd, ym))) {
+          writeMonth(lawdCd, ym, foldMonth(raw, (umd, apt, jibun) => !!inUniverse(lawdCd, umd, apt, jibun)));
+        }
       } catch (e) {
         failed++;
         const msg = e instanceof Error ? e.message : String(e);
         if (failNotes.length < 5) failNotes.push(`${gu} ${ym}: ${msg.slice(0, 120)}`);
-        console.error(`⚠️ ${gu} ${ym} 수집 실패: ${msg}`);
+        console.error(`⚠️ ${gu} ${ym} 수집 실패: ${explainApiError(msg)}`);
         if (++failStreak >= FAIL_STREAK_WAIT) {
           if (doorWaits < MAX_DOOR_WAITS) {
             doorWaits++;

@@ -1,0 +1,83 @@
+name: 「구 × 월」 캐시 백필 (곡선을 호출 없이 그리기 위한 적재)
+
+# ── 무엇을 하나 (2026-09-02)
+#
+# 곡선 수집기는 「그 단지의 이력」이 아니라 **「그 구의 그 달 전체 거래」**를 받아
+# 우리 단지만 골라낸다. 그래서 카드 19장에 약 **1,500회**가 들었다 —
+# 아침 신고가 알림 전체가 122회다. 09-02 에 그것 하나가 하루 예산을 태워
+# 낮에는 모든 국토부 배관이 막혔다(문구는 `등록되지 않은 서비스키`, 실은 **일일 한도**).
+#
+# 받아 둔 달을 `data/datasets/molit-monthly/{구}/{연월}.json` 에 접어 두면
+# 곡선은 **호출 0회**로 그려진다. 과거 달의 값은 변하지 않기 때문이다.
+#
+# ── 왜 매일 조금씩인가
+# 처음 한 번 채우는 값이 61구 × 79개월 ≈ **4,900회**다. 하루에 다 하면 09-02 가 되풀이된다.
+# 그래서 **하루 예산만큼만** 채우고 접는다. 사나흘이면 다 찬다.
+#
+# ⚠️ 아침 신고가(04:55 KST)를 지키는 것이 1순위다 — 그게 계정의 심장이다.
+#    그래서 이 예약은 아침 알림이 **끝난 뒤**에 돌고, 예산을 넘기지 않는다.
+on:
+  schedule:
+    # 06:40 KST = 21:40 UTC — 아침 알림(04:55 KST)이 끝난 뒤, 한도가 리셋된 같은 날 안에서
+    - cron: "40 21 * * *"
+  workflow_dispatch:
+    inputs:
+      budget:
+        description: "오늘 쓸 호출 수 (기본 1200)"
+        required: false
+        default: "1200"
+      lawd:
+        description: "특정 구만 (비우면 전부)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: month-backfill
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 10 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+
+      - name: 백필
+        env:
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        shell: bash
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@github.com"
+          B="${{ github.event.inputs.budget }}"; [ -z "$B" ] && B=1200
+          L="${{ github.event.inputs.lawd }}"
+          pnpm --filter @wirit/collectors collect-month-backfill -- \
+            --budget "$B" ${L:+--lawd "$L"} 2>&1 | tee "$RUNNER_TEMP/bf.log"
+
+      - name: 커밋
+        if: always()
+        shell: bash
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@github.com"
+          for P in data/datasets/molit-monthly data/molit-monthly-last.md; do
+            [ -e "$P" ] && git add "$P" || true
+          done
+          if git diff --cached --quiet; then
+            echo "바뀐 것 없음 — 커밋 생략"
+          else
+            git commit -m "「구 × 월」 캐시 백필"
+            for TRY in 1 2 3; do
+              git pull --rebase --autostash -q origin ${{ github.ref_name }} || true
+              if git push -q origin HEAD:${{ github.ref_name }}; then break; fi
+              sleep 5
+            done
+          fi

@@ -120,7 +120,8 @@ import {
   normJibun,
 } from "./parse/aptInfo.js";
 import { cleanStationName, linesFromCategory } from "./parse/station.js";
-import { RETRIABLE_BODY as supplyRetriable, TERMINAL_BODY as supplyTerminal } from "./parse/molit.js";
+import { foldMonth as mcFold, pickRow as mcPick, needsRefresh as mcNeeds } from "./parse/monthCache.js";
+import { RETRIABLE_BODY as supplyRetriable, TERMINAL_BODY as supplyTerminal, explainApiError } from "./parse/molit.js";
 
 import { singoRegions as singoRegionList, monthRange as singoMonthRange } from "./sources/singoRegions.js";
 import {
@@ -1327,6 +1328,54 @@ console.log("\n[청약홈 분양정보 파서]");
     "",
   );
   check("정상 응답은 재시도 대상이 아니다", !supplyRetriable.test('{"response":{"body":{"totalCount":3}}}'), "");
+
+  /* ── 「구 × 월」 최고가 캐시 (2026-09-02)
+   * 곡선 한 번이 1,500회를 써서 하루 예산을 통째로 태웠다. 받아 둔 달을 다시 안 받으면 0이 된다.
+   * ⚠️ 접는 조건이 곡선과 **한 글자라도 다르면** 캐시로 그린 곡선과 API 로 그린 곡선이 갈린다. */
+  const T = (o: Partial<any>) => ({
+    aptNm: "가", umdNm: "나동", jibun: "1", priceWon: 0, priceManwon: 100000,
+    area: 84.9, floor: 3, buildYear: 2000, date: "2024-03-01",
+    dealingGbn: "중개거래", canceled: false, sggCd: "41210", ...o,
+  });
+  const yes = () => true;
+  check("같은 단지·타입의 그 달 **최고가**만 남는다",
+    mcFold([T({ priceManwon: 90000 }), T({ priceManwon: 112000, floor: 9 })], yes)[0]?.max === 112000, "");
+  check("건수는 그대로 센다",
+    mcFold([T({ priceManwon: 90000 }), T({ priceManwon: 112000 })], yes)[0]?.count === 2, "");
+  check("⛔ 직거래는 안 담는다(곡선과 같은 조건)",
+    mcFold([T({ dealingGbn: "직거래" })], yes).length === 0, "");
+  check("⛔ 해제거래는 안 담는다",
+    mcFold([T({ canceled: true })], yes).length === 0, "");
+  check("⛔ 59·84 아닌 타입은 안 담는다",
+    mcFold([T({ area: 114.9 })], yes).length === 0, "");
+  check("⛔ 명부에 없는 단지는 안 담는다",
+    mcFold([T({})], () => false).length === 0, "");
+  check("같은 이름이라도 법정동이 다르면 다른 칸이다",
+    mcFold([T({ umdNm: "가동" }), T({ umdNm: "나동" })], yes).length === 2, "");
+  const rows = mcFold([T({ aptNm: "주공12", umdNm: "하안동", priceManwon: 116000 })], yes);
+  check("캐시에서 꺼낼 때 법정동이 다르면 안 집는다",
+    mcPick(rows, "주공12", "84", "철산동", (a, b) => a === b) === null, "");
+  check("캐시에서 제대로 집는다",
+    mcPick(rows, "주공12", "84", "하안동", (a, b) => a === b)?.max === 116000, "");
+  /* 신고기한 30일 — 이번 달·지난달은 뒤늦게 들어오는 계약이 있어 덮어쓴다 */
+  check("없으면 무조건 받는다", mcNeeds("202403", "2026-09-02", false), "");
+  check("이번 달은 있어도 다시 받는다", mcNeeds("202609", "2026-09-02", true), "");
+  check("지난달도 다시 받는다", mcNeeds("202608", "2026-09-02", true), "");
+  check("⛔ 두 달 전부터는 안 받는다", !mcNeeds("202607", "2026-09-02", true), "");
+  check("⛔ 오래된 달도 안 받는다", !mcNeeds("202001", "2026-09-02", true), "");
+
+  /* ── 문구가 원인을 가리지 않게 (2026-09-02)
+   * 저장소는 08-16d 에 이미 「등록되지 않은 서비스키 = 일일 한도」를 알아냈는데,
+   * 그 문구가 로그에 그대로 나가는 바람에 09-02 에 또 키를 의심하며 반나절을 썼다. */
+  check("「등록되지 않은 서비스키」를 **일일 한도**라고 말한다",
+    /일일 호출 한도/.test(explainApiError("SERVICE_KEY_IS_NOT_REGISTERED_ERROR")), "");
+  check("호출 초과도 같은 말로 푼다",
+    /일일 호출 한도/.test(explainApiError("LIMITED_NUMBER_OF_SERVICE_REQUESTS_EXCEEDS_ERROR")), "");
+  check("기간 만료는 재신청이라고 말한다",
+    /재신청/.test(explainApiError("DEADLINE_HAS_EXPIRED_ERROR")), "");
+  check("fetch failed 는 「응답이 없다」로 푼다",
+    /응답 자체가 없습니다/.test(explainApiError("fetch failed")), "");
+  check("모르는 문구는 그대로 둔다", explainApiError("뭔가 다른 오류") === "뭔가 다른 오류", "");
 
   /* ── 톡 본문 — 돌파 블록과 전체 목록은 다른 말이다 (2026-08-13 사고)
    * 금액대(그 거래가 속한 구간)로 묶어 보냈더니 14억·11억 거래가 "10억 돌파"로 읽혔다.

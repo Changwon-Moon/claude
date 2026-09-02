@@ -163,6 +163,10 @@ node scripts/preview-html.mjs --set <세트라벨>    # ① PNG 전에 HTML 한 
 node scripts/confirm.mjs <세트라벨>               # ② 오너 확정 — PNG md5 가 확정 증거로 박힌다
 node scripts/deliver-set.mjs --set <세트라벨>     # ③ 확정본 그대로 JPG → ZIP 하나로
 
+# 「구 × 월」 캐시 백필 — 곡선을 호출 없이 그리기 위한 적재 (정본은 docs/DATA_REFRESH.md)
+#   ⚠️ 곡선 한 번이 약 1,500회다(아침 알림 전체가 122회). 캐시가 차면 0회가 된다.
+pnpm --filter @wirit/collectors collect-month-backfill -- --budget 1200
+
 # 카톡 공유용 짧은 캡션 (인스타 캡션과 다른 물건 — 정본은 docs/CAPTION.md §9)
 node scripts/gen-kakao-caption.mjs --set <세트라벨> [--rename "주공13=철산주공13"] [--areas "신도림,화곡,…"]
 

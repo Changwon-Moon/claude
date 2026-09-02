@@ -20,8 +20,11 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { fetchAptTradesMonth } from "./sources/molit.js";
-import { validTrades } from "./parse/molit.js";
+import { validTrades, explainApiError } from "./parse/molit.js";
 import { areaType, sameApt, fullAptName, BASELINE_FROM, manwonToEok } from "./parse/singo.js";
+import { pickRow, foldMonth } from "./parse/monthCache.js";
+import { readMonth, writeMonth } from "./monthCacheIo.js";
+import { buildUniverseLookup } from "./universeIndex.js";
 import { monthRange } from "./sources/singoRegions.js";
 
 const CWD = process.env.INIT_CWD || process.cwd();
@@ -84,14 +87,46 @@ async function main() {
   let failStreak = 0;
   let doorWaits = 0;
 
+  /* 캐시는 **명부 단지만** 담는다(scope: "universe"). 그래서 담을 때도 그 조건으로 거른다 —
+     조회판을 못 만들면 캐시에 **쓰지 않는다.** 덜 담긴 캐시는 「거래가 없던 달」로 읽혀 오보가 된다. */
+  const uniLookup = buildUniverseLookup();
+
   const points: MonthPoint[] = [];
   let failed = 0;
+  let fromCache = 0;
+  let fromApi = 0;
 
   for (const ym of months) {
+    /* ── 📦 캐시 먼저 본다 (2026-09-02)
+     *
+     * 국토부에는 「그 단지의 이력」 창구가 없어서, 이 수집기는 **그 구의 그 달 전체 거래**를
+     * 받아 우리 단지만 골라낸다. 그 말은 **같은 (구, 달)을 단지마다 다시 받는다**는 뜻이고,
+     * 그래서 카드 19장에 약 1,500회가 들었다(아침 알림 전체가 122회다).
+     * 09-02 에 그것 하나가 하루 예산을 태워 낮에는 모든 국토부 배관이 막혔다.
+     *
+     * 아침 알림이 매일 그 응답을 이미 받아 **월별로 접어 두므로**(molitSingoCli),
+     * 여기서는 그것을 읽기만 하면 된다. 과거 달의 값은 변하지 않는다.
+     * 캐시에 없는 달만 물어본다 — 캐시가 다 차면 **호출 0회**가 된다. */
+    const cached = readMonth(lawdCd, ym);
+    if (cached) {
+      const r = pickRow(cached, aptNm, type, umdNm, sameApt);
+      points.push({
+        ym,
+        maxManwon: r ? r.max : null,
+        count: r ? r.count : 0,
+        area: r ? r.area : null,
+        floor: r ? r.floor : null,
+        date: r ? r.date : null,
+        ok: true,
+      });
+      fromCache++;
+      continue;
+    }
     let done = false;
     while (!done) {
       try {
         const raw = await fetchAptTradesMonth(lawdCd, ym, key);
+        fromApi++;
         failStreak = 0;
         const tx = validTrades(raw).filter(
           (t) =>
@@ -111,10 +146,17 @@ async function main() {
           date: best ? best.date : null,
           ok: true,
         });
+        /* 받아 온 김에 **캐시에도 담는다** — 같은 대기열의 다음 단지가 같은 구·같은 달이면
+           그 단지는 이 달을 안 받는다. 09-02 에 카드 19장의 구는 14곳뿐이었고
+           광명시 하나에 3단지가 있어 광명시 81개월치를 **세 번** 받았다. */
+        try {
+          if (uniLookup)
+            writeMonth(lawdCd, ym, foldMonth(raw, (umd, apt, jb) => !!uniLookup(lawdCd, umd, apt, jb)));
+        } catch { /* 캐시는 거들 뿐 — 실패해도 곡선은 그대로 간다 */ }
         done = true;
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
-        console.error(`⚠️ ${ym} 수집 실패: ${msg.slice(0, 120)}`);
+        console.error(`⚠️ ${ym} 수집 실패: ${explainApiError(msg).slice(0, 200)}`);
         if (++failStreak >= FAIL_STREAK_WAIT && doorWaits < MAX_DOOR_WAITS) {
           doorWaits++;
           failStreak = 0;
@@ -211,6 +253,8 @@ async function main() {
   console.log(
     `${outPath}\n` +
       `거래 있던 달 ${traded.length}/${months.length} · 수집 실패 ${failed}개월\n` +
+      `📦 캐시에서 ${fromCache}개월 · 국토부에 물은 것 ${fromApi}개월` +
+      (fromApi === 0 ? "  ← **호출 0회**" : "") + `\n` +
       `최고가 ${manwonToEok(peak.maxManwon as number)} (${peak.date} · 전용 ${peak.area}㎡ ${peak.floor}층)`,
   );
   if (existsSync(outPath)) process.exitCode = 0;
