@@ -1,0 +1,31 @@
+{
+  "label": "gap-ep1-5",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 5.6억 허용 — 단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 8.5억 허용 — 곡선 위에서 읽히는 연도별 고점이다. 카드는 끝값 셋만 찍지만 캡션은 갈라지는 시점을 설명해야 하므로 곡선의 값을 인용한다 — 같은 캐시에서 코드가 뽑았다."
+    }
+  ],
+  "cards": [
+    {
+      "file": "gap-ep1-5.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}

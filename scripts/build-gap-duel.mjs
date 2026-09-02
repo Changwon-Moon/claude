@@ -75,6 +75,8 @@ const INK = "#141821", PAPER = "#fafaf8";
 const THEME = arg("theme", "light") === "dark" ? "dark" : "light";
 /** 톱니 문턱 — 이웃한 두 달 사이 15% 넘게 튄 쌍의 비율. series() 의 주석 참고 */
 const NOISE = process.argv.includes("--allow-noisy") ? 1 : Number(arg("noise", 12)) / 100;
+/** 관측이 이만큼 넘게 끊기면 그 구간은 곡선이 아니라 **직선 추측**이다 — series() 참고 */
+const MAXGAP = process.argv.includes("--allow-gaps") ? 999 : Number(arg("maxgap", 20));
 const T = THEME === "dark"
   ? { panel: INK, text: PAPER, mid: PAPER, mute: "#9aa3af",
       grid: "rgba(255,255,255,0.10)", wm: "#ffffff", wmOp: 0.13,
@@ -143,6 +145,27 @@ function series(unit, months) {
     if (mi(pts[k].ym) - mi(pts[k - 1].ym) !== 1) continue;
     adj++;
     if (Math.abs(pts[k].v - pts[k - 1].v) / pts[k - 1].v > 0.15) jump++;
+  }
+  /* ── 긴 공백 가드 (2026-09-03, 4호 첫 판에서 눈으로 잡았다)
+     중랑 면목한신 25 는 2021.10 다음 관측이 2023.12 다 — **26개월이 비었다.**
+     그 사이를 선으로 이으면 「2년 동안 완만히 내렸다」는 그림이 되는데,
+     우리는 그 2년에 아무것도 모른다. **모르는 구간을 아는 것처럼 그리는 것**이다.
+     (같은 이유로 후보 10 의 서대문 홍은동벽산은 70개월이 비어 차트 폭 전체가 직선이다.)
+
+     문턱 20개월: 확정본 1호의 분당 시범우성이 18개월로 가장 길다 — 그건 살리고
+     26·70 은 버리는 선이다. ⚠️ 1호가 문턱에 가깝다는 것은 기록해 둔다.
+     기준을 조일 일이 있으면 1호를 다시 그려야 한다. */
+  let hole = 0, holeAt = "";
+  for (let k = 1; k < pts.length; k++) {
+    const g = mi(pts[k].ym) - mi(pts[k - 1].ym);
+    if (g > hole) { hole = g; holeAt = `${pts[k - 1].ym}→${pts[k].ym}`; }
+  }
+  if (hole > MAXGAP) {
+    throw new Error(
+      `${unit.gu} ${unit.apt} ${unit.type} — 관측이 ${hole}개월 끊깁니다 (${holeAt}).\n` +
+        `   그 구간은 곡선이 아니라 **직선 추측**입니다 — 모르는 때를 아는 것처럼 그리게 됩니다.\n` +
+        `   (관측 ${pts.length}/${months.length}개월 · 문턱 ${MAXGAP}개월 · 그래도 그리려면 --allow-gaps)`,
+    );
   }
   const noise = adj >= 12 ? jump / adj : 0;
   if (noise > NOISE) {

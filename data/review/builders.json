@@ -2130,6 +2130,34 @@
         "--label",
         "gap-ep1-3"
       ]
+    },
+    {
+      "label": "gap-ep1-4",
+      "cmd": "scripts/build-gap-duel.mjs",
+      "args": [
+        "--set",
+        "gap-ep1",
+        "--danji",
+        "가양6단지,돈암동삼성,한라비발디",
+        "--no",
+        "4",
+        "--label",
+        "gap-ep1-4"
+      ]
+    },
+    {
+      "label": "gap-ep1-5",
+      "cmd": "scripts/build-gap-duel.mjs",
+      "args": [
+        "--set",
+        "gap-ep1",
+        "--danji",
+        "현대성우8차,블루밍구성더센트럴,호반베르디움더프라임",
+        "--no",
+        "5",
+        "--label",
+        "gap-ep1-5"
+      ]
     }
   ]
 }

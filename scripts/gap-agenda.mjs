@@ -46,6 +46,8 @@ const DONE = [
   { no: 1, danji: ["시범우성", "길음뉴타운1단지(래미안길음1차)", "파크푸르지오"] },
   { no: 2, danji: ["두산", "초원마을대림", "수원 SK SKY VIEW"] },
   { no: 3, danji: ["벽산", "길음동동부센트레빌(1278-0)", "갈매역아이파크"] },
+  { no: 4, danji: ["가양6단지", "돈암동삼성", "한라비발디"] },
+  { no: 5, danji: ["현대성우8차", "블루밍구성더센트럴", "호반베르디움더프라임"] },
 ];
 /** 이 묶음이 이미 나간 카드인가 — 나갔으면 발행 번호를, 아니면 null */
 const doneNo = (r) => {
@@ -96,6 +98,9 @@ function unitNoise(u) {
     if (r) pts.push({ ym, v: r.max });
   }
   const mi = (ym) => (+ym.slice(0, 4)) * 12 + (+ym.slice(4));
+  /* 가장 긴 공백 — 관측이 끊긴 구간은 선이 아니라 직선 추측이다(빌더 문턱 20개월) */
+  let hole = 0;
+  for (let k = 1; k < pts.length; k++) hole = Math.max(hole, mi(pts[k].ym) - mi(pts[k - 1].ym));
   let adj = 0, jump = 0;
   for (let k = 1; k < pts.length; k++) {
     if (mi(pts[k].ym) - mi(pts[k - 1].ym) !== 1) continue;
@@ -103,7 +108,7 @@ function unitNoise(u) {
     if (Math.abs(pts[k].v - pts[k - 1].v) / pts[k - 1].v > 0.15) jump++;
   }
   /* 이웃달 쌍이 12개도 안 되면 「아직 모른다」다 — 0%로 적어 통과시키지 않는다 */
-  const out = adj < 12 ? null : jump / adj;
+  const out = { noise: adj < 12 ? null : jump / adj, hole: pts.length ? hole : null };
   seriesCache.set(key, out);
   return out;
 }
@@ -143,7 +148,7 @@ for (const [set, band] of [["gap-ep1", "그때 10억 이하"], ["gap-ep2", "그�
       gapEok: g.gapEok, ratioGap: g.ratioGap ?? 0, baseFrom: g.baseFrom, baseTo: g.baseTo,
       members: g.members,
       calls: lawds.reduce((s, l) => s + holes(l), 0),
-      noise: g.members.map(unitNoise),
+      stat: g.members.map(unitNoise),
       lawds,
     });
   });
@@ -171,6 +176,8 @@ L.push("| **상승률차** | 1위와 3위의 배수 차이(2.52 − 1.14 = 1.38)
 L.push("| 금액차 | 지금 값의 차이(억). 참고용 |");
 L.push("| 그때 | 2019.11~2020.03 실거래 최고가 — 세 단지가 ±3% 안에서 겹칩니다 |");
 L.push("| 자료 | 곡선을 그리려면 더 받아야 하는 국토부 호출 수. 🟢 0회면 바로 나옵니다 |");
+L.push("| 공백 | 관측이 가장 오래 끊긴 구간(개월). 그 사이는 선이 아니라 **직선 추측**입니다 — **20개월 넘으면 빌더가 던집니다** |");
+L.push("| … | 「자료」가 남은 묶음은 **아직 재지 않았습니다.** 덜 찬 캐시로 재면 「나쁜 자료」와 「아직 안 받은 자료」가 같은 얼굴이 됩니다 |");
 L.push("| 톱니 | 이웃한 두 달 사이 15% 넘게 튄 비율(가장 심한 단지). 발행본은 0~9%, **12% 넘으면 빌더가 던집니다** — 값은 맞아도 선이 이야기를 못 합니다 |");
 L.push("| 만들 때 | `build-gap-duel.mjs --set … --pick …` 에 넣는 값 |");
 L.push("");
@@ -188,17 +195,24 @@ L.push("");
 const cell = (m) => `${shortGu(m.gu)} ${dedupCity(m.gu, shortName(m.apt))} ${m.pyeong} **${m.ratio.toFixed(2)}배**`;
 const row = (r, no) => {
   const tag = doneNo(r) !== null ? `✅ #${doneNo(r)} 완료` : r.calls === 0 ? "🟢 바로" : `🟡 ${r.calls}회`;
-  const known = r.noise.filter((n) => n !== null);
+  /* ⚠️ 캐시가 덜 찬 묶음은 **재지 않는다.** 가운데 달이 통째로 없으면 공백이 70개월로
+     나오고 톱니도 몇 안 되는 관측으로 계산돼, 「나쁜 자료」와 「아직 안 받은 자료」가
+     같은 얼굴이 된다 — 이 표에서 가장 하면 안 되는 일이다(§5 와 같은 원칙). */
+  const measured = r.calls === 0;
+  const known = measured ? r.stat.map((x) => x.noise).filter((n) => n !== null) : [];
   const worst = known.length ? Math.max(...known) : null;
-  const saw = worst === null ? "—"
+  const saw = worst === null ? "…"
     : worst > 0.12 ? `⛔ ${Math.round(worst * 100)}%`
     : `${Math.round(worst * 100)}%`;
+  const holes = measured ? r.stat.map((x) => x.hole).filter((h) => h !== null) : [];
+  const bigHole = holes.length ? Math.max(...holes) : null;
+  const gapCell = bigHole === null ? "…" : bigHole > 20 ? `⛔ ${bigHole}개월` : `${bigHole}개월`;
   const mid = r.members.length === 3 ? cell(r.members[1]) : "—";
-  return `| ${no} | **${r.ratioGap.toFixed(2)}배** | ${r.gapEok.toFixed(1)}억 | ${eok(r.baseFrom)}~${eok(r.baseTo)}억 | ${cell(r.members[0])} | ${mid} | ${cell(r.members[r.members.length - 1])} | ${tag} | ${saw} | \`${r.set} ${r.pick}\` |`;
+  return `| ${no} | **${r.ratioGap.toFixed(2)}배** | ${r.gapEok.toFixed(1)}억 | ${eok(r.baseFrom)}~${eok(r.baseTo)}억 | ${cell(r.members[0])} | ${mid} | ${cell(r.members[r.members.length - 1])} | ${tag} | ${saw} | ${gapCell} | \`${r.set} ${r.pick}\` |`;
 };
 
-L.push("| # | 상승률차 | 금액차 | 그때 | 🔺 가장 많이 오른 곳 | 가운데 | 🔻 가장 덜 오른 곳 | 자료 | 톱니 | 만들 때 |");
-L.push("|--:|--:|--:|--:|---|---|---|---|--:|---|");
+L.push("| # | 상승률차 | 금액차 | 그때 | 🔺 가장 많이 오른 곳 | 가운데 | 🔻 가장 덜 오른 곳 | 자료 | 톱니 | 공백 | 만들 때 |");
+L.push("|--:|--:|--:|--:|---|---|---|---|--:|--:|---|");
 shown.forEach((r, i) => L.push(row(r, i + 1)));
 L.push("");
 
