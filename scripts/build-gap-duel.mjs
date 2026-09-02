@@ -158,22 +158,50 @@ const VB_H = 900, AXIS_X = 132, RIGHT = 776, TOP = 250, BASE = 796;
 const PANEL = { x: 18, y: 14, w: 964, h: 858, r: 36 };
 const allV = members.flatMap((m) => m.pts.map((p) => p.v));
 const vmaxRaw = Math.max(...allV), vminRaw = Math.min(...allV);
-/* 축 눈금은 억 단위로 떨어지게 — 5억 이상 폭이면 5억, 아니면 2억 간격 */
-const step = (eok(vmaxRaw) - eok(vminRaw)) > 14 ? 100000 : 50000;
+/* ── 축 눈금 간격 (2026-09-02 고침)
+   ⚠️ 예전 규칙은 「폭이 14억을 넘으면 10억, 아니면 5억」이었다. 그러면 값이 4~12억인
+   카드에서 YMIN 이 `floor(4.2/5)*5 = 0` 으로 떨어져 **곡선이 판 아래 1/3 에 눌리고
+   위쪽 절반이 통째로 빈다**(안건 2번에서 실제로 그렇게 나왔다).
+
+   간격은 **데이터가 정해야** 한다: 1·2·5·10억 중에서 **칸이 4개를 넘지 않는 가장 촘촘한
+   간격**을 고른다. 그러면 아래위가 데이터에 붙고 눈금은 다섯 줄을 안 넘는다.
+   ⚠️ 처음엔 6칸까지 허용했는데, 그러면 1호가 5억→2억 간격으로 바뀌어 **확정본 픽셀이
+   깨졌다**(md5 대조로 잡았다). 4칸으로 조이면 1호는 다시 5억 간격이 뽑힌다. */
+const STEPS = [10000, 20000, 50000, 100000];   // 1억 · 2억 · 5억 · 10억
+const step = STEPS.find((s) => Math.ceil(vmaxRaw / s) - Math.floor(vminRaw / s) <= 4) ?? STEPS[STEPS.length - 1];
 const YMAX = Math.ceil(vmaxRaw / step) * step;
-const YMIN = Math.floor(vminRaw / step) * step;
+/* ⚠️ **바닥은 0 으로 떨어뜨리지 않는다** (2026-09-02, 안건 4번 실측).
+   최저값이 4.9억일 때 5억 간격으로 내림하면 바닥이 0 이 된다. 그러면 4칸 규칙은 통과하는데
+   화면에서는 **아래 4분의 1 이 통째로 비고** 곡선이 위로 몰린다 — 게다가 「0」 눈금은
+   집값 곡선에서 아무 뜻이 없다(0원에 팔린 집은 없다).
+   바닥이 0 이 되는 카드만 **정수 억으로 내림**해 다시 잡는다. 바닥이 0 이 아닌 카드는
+   손대지 않는다 — 확정본 1호(바닥 5억)의 픽셀이 그대로여야 하기 때문이다. */
+const YMIN = Math.floor(vminRaw / step) * step || Math.floor(vminRaw / 10000) * 10000;
 const xi = (ym) => r1(AXIS_X + (months.indexOf(ym) / (months.length - 1)) * (RIGHT - AXIS_X));
 const yv = (v) => r1(BASE - ((v - YMIN) / (YMAX - YMIN)) * (BASE - TOP));
 
+/* 눈금은 **간격의 배수**에만 찍는다. 바닥을 정수 억으로 올린 카드는 YMIN 이 간격의
+   배수가 아니므로(예: 4억, 간격 5억) 첫 눈금을 올림해서 시작한다 — 안 그러면
+   4·9·14·19억 같은 눈금이 나온다. 바닥이 배수인 카드는 YMIN 그대로다(1호 불변). */
 const ticks = [];
-for (let v = YMIN; v <= YMAX + 1; v += step) ticks.push(v);
+for (let v = Math.ceil(YMIN / step) * step; v <= YMAX + 1; v += step) ticks.push(v);
 /* 격자 기본값은 잉크 6% 라 다크 패널에서 안 보인다 → 흰색 10% 로 덮는다 */
 /* ⚠️ **맨 위 눈금선은 안 그린다.** 그 선이 「20」과 「(억)」을 가로지른다(2026-09-02 실측,
    연회색 안에서 특히 두드러졌다). 위아래 끝선이 없어도 눈금 숫자가 높이를 말한다. */
 const grid = ticks.filter((v) => v > YMIN && v < YMAX).map((v) => ({ x1: AXIS_X, x2: RIGHT, y: yv(v), stroke: T.grid }));
 /* 축 숫자는 작게(오너 2026-09-02) — 판형 기본 32px 는 곡선보다 눈에 먼저 들어왔다.
    `size` 는 이 판형에 새로 연 선택 키라 안 주는 카드는 32px 그대로다. */
-const ylabels = ticks.map((v) => ({ x: AXIS_X - 14, y: yv(v) + 7, text: `${eok(v).toFixed(0)}`, size: 24 }));
+/* ⚠️ 출발점 반투명 원은 좌축에 걸터앉는다(첫 달이 곧 좌축이므로). 그 높이에 눈금 숫자가
+   있으면 원이 숫자를 덮는다 — 안건 2번에서 `designQa` 가 「6」과 40% 겹침으로 잡았다.
+   **겹치는 눈금만** 원 왼쪽으로 물린다. 안 겹치는 카드는 자리가 그대로다(1호 픽셀 불변). */
+const _startYs = members.map((m) => yv(m.pts[0].v));
+const _startR = Math.max(34, r1((Math.max(..._startYs) - Math.min(..._startYs)) / 2 + 26));
+const _startCy = r1((Math.max(..._startYs) + Math.min(..._startYs)) / 2);
+const ylabels = ticks.map((v) => {
+  const y = yv(v) + 7;
+  const hit = Math.abs(y - 7 - _startCy) < _startR + 12;
+  return { x: hit ? r1(AXIS_X - _startR - 18) : AXIS_X - 14, y, text: `${eok(v).toFixed(0)}`, size: 24 };
+});
 /* 단위는 맨 위 눈금과 **같은 줄, 축 오른쪽**에 둔다. 세 번 옮긴 끝의 자리다:
    판 안 아래쪽은 「7.0억」과 붙었고, 눈금 위는 「20」과 붙었고, 더 올리면 범례에 닿는다.
    맨 위 눈금 오른쪽은 곡선이 닿지 않는 데다 「20」과 나란히 읽혀 뜻도 맞다. */
@@ -226,10 +254,8 @@ const vmarks = [];
 /* 세 곡선이 붙어 있던 자리에 **반투명 원**을 얹는다(오너 2026-09-02).
    이 카드의 축은 「여기서 같이 출발했다」이고, 그 사실은 그림에서 한 점으로 보여야 한다.
    원의 자리·크기는 실제 시작값 셋의 위·아래 끝에서 잰다 — 손으로 찍지 않는다. */
-const startYs = members.map((m) => yv(m.pts[0].v));
 const startX = xi(months[0]);
-const startR = Math.max(34, r1((Math.max(...startYs) - Math.min(...startYs)) / 2 + 26));
-const startCy = r1((Math.max(...startYs) + Math.min(...startYs)) / 2);
+const startR = _startR, startCy = _startCy;
 const halos = [{ x: startX, y: startCy, r: startR, fill: T.halo, opacity: T.haloOp }];
 
 /* 출발점 값 — 원 바로 위. 이 카드에서 가장 먼저 읽혀야 하는 숫자라 크게 두되
@@ -250,6 +276,14 @@ vmarks.push({ x: startX, y1: r1(startLabelY + 16), y2: r1(startCy - startR - 4),
    ⚠️ 이름의 괄호 별칭은 뗀다 — 「길음뉴타운1단지(래미안길음1차)」는 판 폭을 넘어
    다음 줄을 밀어낸다. 지역이 sub 에 있으므로 어느 단지인지는 흐려지지 않는다. */
 const shortName = (s) => s.replace(/\s*\([^)]*\)\s*$/, "").trim() || s;
+/* ⚠️ 지역 이름표와 단지명이 **같은 말로 시작하면** 그 말을 한 번만 쓴다.
+   「수원 장안」 + 「수원 SK SKY VIEW」 는 「수원 장안 수원 SK SKY VIEW」가 되어
+   한 줄이 판을 넘고, 읽는 사람 눈에는 오타로 보인다(2026-09-02 안건 4번 실측).
+   → 「수원 장안 SK SKY VIEW」. 지역 이름표에 없는 말은 손대지 않는다. */
+const dedupCity = (gu, name) => {
+  const city = /^(.+?)시/.exec(gu)?.[1] ?? gu.replace(/[시구군]$/, "");
+  return city && name.startsWith(city) ? name.slice(city.length).trim() || name : name;
+};
 /* ⚠️ 지역은 **이름 앞에 짧게** 붙인다 — 「성남시분당구」가 아니라 「분당」.
    한 줄에 다 넣기로 했으므로(오너 2026-09-02) 행정구역 정식명칭을 그대로 쓰면 줄이 넘친다.
    어느 동인지는 캡션이 말한다. 짧은 이름표는 **읽는 사람이 실제로 쓰는 말**이기도 하다. */
@@ -266,7 +300,7 @@ const legend = members.map((m, i) => ({
   sx1: 118, sx2: 190, sy: 72 + i * 62,
   color: m.color,
   tx: 208, ty: 84 + i * 62,
-  text: `${shortGu(m.gu)} ${shortName(m.apt)} ${m.pyeong}`,
+  text: `${shortGu(m.gu)} ${dedupCity(m.gu, shortName(m.apt))} ${m.pyeong}`,
   fill: T.text, size: 38,
   /* 배수를 이름 옆에 **같은 크기·회색**으로(오너 2026-09-02). 「그때 → 지금」 두 값은
      곡선 양 끝이 이미 말하므로 여기서 되풀이하지 않는다. */

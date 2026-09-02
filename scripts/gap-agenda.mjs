@@ -34,7 +34,15 @@ const CURVE_TO = arg("to", "202607");
 const OUT = R(arg("out", "data/gap-안건.md"));
 
 /** 이미 만들어 확정한 카드 — 안건표에서 「완료」로 표시한다 */
-const DONE = new Set(["gap-ep1-1"]);
+/**
+ * 이미 만든 카드 — 「후보 자리」 → 「발행 번호」.
+ *
+ * ⚠️ 이 둘은 **다른 번호다**. 왼쪽은 이 표에서 몇 번째 묶음이냐(`--pick`)이고,
+ * 오른쪽은 카드 위에 찍히는 「출발선은 같았다 #N」이다. 후보 순서는 규칙을 손볼 때마다
+ * 바뀌지만(스파이크 방어를 넣자 한 묶음이 통째로 빠지며 뒤가 한 칸씩 당겨졌다)
+ * 발행 번호는 한 번 나가면 안 바뀐다 — 그래서 따로 적는다.
+ */
+const DONE = new Map([["gap-ep1-1", 1], ["gap-ep1-4", 2]]);
 
 function monthRange(from, to) {
   const out = [];
@@ -70,6 +78,12 @@ const SHORT_GU = { 성남시분당구: "분당", 성남시중원구: "성남중�
   부천시원미구: "부천", 부천시소사구: "부천", 부천시오정구: "부천" };
 const shortGu = (g) => SHORT_GU[g] ?? g.replace(/시$/, "");
 const shortName = (s) => s.replace(/\s*\([^)]*\)\s*$/, "").trim() || s;
+/* 「수원장안 수원 SK SKY VIEW」처럼 지역 이름표와 단지명이 같은 시(市) 이름으로
+   시작하면 한 번만 쓴다 — 빌더(build-gap-duel.mjs)와 같은 규칙이다. */
+const dedupCity = (gu, name) => {
+  const city = /^(.+?)시/.exec(gu)?.[1] ?? gu.replace(/[시구군]$/, "");
+  return city && name.startsWith(city) ? name.slice(city.length).trim() || name : name;
+};
 
 const rows = [];
 for (const [set, band] of [["gap-ep1", "그때 10억 이하"], ["gap-ep2", "그때 15억 이상"]]) {
@@ -123,9 +137,9 @@ L.push("");
 /* ⚠️ 한 건 = **한 줄**이다(오너 2026-09-02). 블록으로 늘어놓으면 43건이 300줄이 되어
    위아래로 훑어야 고를 수 있다. 표로 접으면 한 화면에서 비교된다.
    단지 칸은 「지역 단지명 평형 (배수)」로 접는다 — 줄이 넘치지 않게 이름의 괄호는 뗀다. */
-const cell = (m) => `${shortGu(m.gu)} ${shortName(m.apt)} ${m.pyeong} **${m.ratio.toFixed(2)}배**`;
+const cell = (m) => `${shortGu(m.gu)} ${dedupCity(m.gu, shortName(m.apt))} ${m.pyeong} **${m.ratio.toFixed(2)}배**`;
 const row = (r, no) => {
-  const tag = DONE.has(r.label) ? "✅ 완료" : r.calls === 0 ? "🟢 바로" : `🟡 ${r.calls}회`;
+  const tag = DONE.has(r.label) ? `✅ #${DONE.get(r.label)} 완료` : r.calls === 0 ? "🟢 바로" : `🟡 ${r.calls}회`;
   const mid = r.members.length === 3 ? cell(r.members[1]) : "—";
   return `| ${no} | **${r.ratioGap.toFixed(2)}배** | ${r.gapEok.toFixed(1)}억 | ${eok(r.baseFrom)}~${eok(r.baseTo)}억 | ${cell(r.members[0])} | ${mid} | ${cell(r.members[r.members.length - 1])} | ${tag} | \`${r.set} ${r.pick}\` |`;
 };

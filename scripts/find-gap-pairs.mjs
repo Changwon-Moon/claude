@@ -80,6 +80,8 @@ const DISTINCT_GU = !process.argv.includes("--allow-same-gu");
 const LIMIT = Number(arg("limit", 40));
 const MIN_MONTHS = Number(arg("min-months", 2));  // 창마다 거래가 있던 달
 const MIN_TRADES = Number(arg("min-trades", 3));  // 창마다 거래 건수
+/** 「한 건짜리 달」이 나머지보다 이만큼 넘게 높으면 그 달을 버린다 — settle() 참고 */
+const SPIKE = Number(arg("spike", 15)) / 100;
 /** 같은 평형끼리만 짝지을까 — 오너 기본은 **섞기**(다른 평형도 짝짓는다) */
 const SAME_TYPE = process.argv.includes("--same-type");
 /** 카드 한 장에 몇 단지 (오너 2026-09-02: 2~3) */
@@ -123,22 +125,49 @@ function collect(months) {
       monthsSeen.add(ym);
       for (const r of cell.rows ?? []) {
         const key = `${lawd}|${r.umd}|${r.apt}|${r.type}`;
-        const cur = best.get(key);
+        let cur = best.get(key);
         if (!cur) {
-          best.set(key, {
-            lawd, umd: r.umd, apt: r.apt, type: r.type,
-            max: r.max, area: r.area, floor: r.floor, date: r.date, ym,
-            months: 1, trades: r.count,
-          });
-          continue;
+          cur = { lawd, umd: r.umd, apt: r.apt, type: r.type, by: [] };
+          best.set(key, cur);
         }
-        cur.months += 1;
-        cur.trades += r.count;
-        if (r.max > cur.max) { cur.max = r.max; cur.area = r.area; cur.floor = r.floor; cur.date = r.date; cur.ym = ym; }
+        cur.by.push({ ym, max: r.max, count: r.count, area: r.area, floor: r.floor, date: r.date });
       }
     }
   }
+  for (const [, u] of best) settle(u);
   return { best, monthsSeen: [...monthsSeen].sort() };
+}
+
+/**
+ * 창 안의 달들을 하나의 값으로 접는다 — **최고가**다(오너 확정 기준).
+ *
+ * ⚠️ 다만 「단 한 건짜리 달」이 나머지 달들보다 터무니없이 높으면 그 달은 버린다.
+ *
+ * 왜: 관악 신림동 현대 84 는 2019.11 에 4.35억(5건), 2020.03 에 4.50억(2건)인데
+ * 2020.02 에 **딱 한 건 5.60억**(5층)이 찍혔다. 그 한 건을 「그때 값」으로 쓰면
+ * 이 단지는 2020년에 5.6억이었다가 지금 5.55억이라는, 6년간 제자리라는 카드가 된다.
+ * 실제로는 4.4억대에서 5.5억대로 오른 단지다 — 카드가 거짓말을 하게 된다.
+ *
+ * 기준을 15% 로 둔 이유: 확정 카드 #1 의 안산 파크푸르지오는 마지막 달이 1건 7.00억인데
+ * 앞 달이 6.50억(+7.7%)이고, 5.68→5.88→6.20→6.50→7.00 으로 **꾸준히 오르는 끝**이라
+ * 튄 값이 아니다. 7.7% 는 살리고 24% 는 버리는 선이 15% 다.
+ * (한 건이어도 흐름의 끝이면 남기고, 혼자 솟은 것만 버린다.)
+ */
+function settle(u) {
+  let rows = u.by;
+  if (rows.length > 1) {
+    const top = rows.reduce((a, b) => (b.max > a.max ? b : a));
+    if (top.count === 1) {
+      const restMax = Math.max(...rows.filter((r) => r !== top).map((r) => r.max));
+      if (top.max > restMax * (1 + SPIKE)) rows = rows.filter((r) => r !== top);
+    }
+  }
+  const top = rows.reduce((a, b) => (b.max > a.max ? b : a));
+  u.max = top.max; u.area = top.area; u.floor = top.floor; u.date = top.date; u.ym = top.ym;
+  u.months = rows.length;
+  u.trades = rows.reduce((s, r) => s + r.count, 0);
+  u.dropped = u.by.length - rows.length;
+  delete u.by;
 }
 
 function main() {
