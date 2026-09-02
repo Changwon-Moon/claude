@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T01:34:17.933Z",
+  "generatedAt": "2026-09-02T01:53:05.942Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -687,8 +687,8 @@
       "runs30": 0
     },
     {
-      "file": "telegram-test.yml",
-      "name": "텔레그램 연결 확인",
+      "file": "sgg-geo-refresh.yml",
+      "name": "시군구 경계 갱신 (GeoJSON)",
       "lastRun": "2026-08-03",
       "daysAgo": 30,
       "lastOk": "2026-08-03",
@@ -697,12 +697,12 @@
       "runs30": 1
     },
     {
-      "file": "sgg-geo-refresh.yml",
-      "name": "시군구 경계 갱신 (GeoJSON)",
+      "file": "telegram-test.yml",
+      "name": "텔레그램 연결 확인",
       "lastRun": "2026-08-03",
-      "daysAgo": 29,
+      "daysAgo": 30,
       "lastOk": "2026-08-03",
-      "okDaysAgo": 29,
+      "okDaysAgo": 30,
       "fails30": 0,
       "runs30": 1
     },
@@ -964,7 +964,7 @@
       "lastOk": "2026-09-01",
       "okDaysAgo": 1,
       "fails30": 3,
-      "runs30": 21
+      "runs30": 22
     },
     {
       "file": "singo-retry.yml",
