@@ -118,6 +118,38 @@ jobs:
             done
           fi
 
+      # ── 실패해도 **저장소에 흔적을 남긴다** (2026-09-02 신설)
+      #
+      # 수집기는 `data/molit-monthly-last.md` 를 **끝까지 돈 뒤에만** 쓴다. 그래서 잡이
+      # 중간에 죽으면 기록이 통째로 없고, 세션은 Actions 로그를 못 읽으므로
+      # **「아직 도는 중」과 「죽었다」를 구별할 방법이 없다.** 실제로 09-02 에 그 상태로
+      # 한 시간을 기다렸다. 실패하면 여기서 대신 적는다.
+      - name: 실패를 기록에 남긴다
+        if: failure()
+        shell: bash
+        run: |
+          {
+            echo "# 「구 × 월」 캐시 백필 — 마지막 실행"
+            echo
+            echo "- 실행: $(TZ=Asia/Seoul date +'%F %H:%M') (KST) · 방아쇠 \`${{ github.event_name }}\`"
+            echo "- 결과: **실패** — 아래 로그를 보세요"
+            echo
+            echo '```'
+            tail -25 "$RUNNER_TEMP/bf.log" 2>/dev/null || echo "(로그 없음 — 설치 단계에서 죽었을 수 있습니다)"
+            echo '```'
+          } > data/molit-monthly-last.md
+          git config user.name "wirit-bot"
+          git config user.email "actions@github.com"
+          git add -f data/molit-monthly-last.md
+          git diff --cached --quiet || {
+            git commit -m "「구 × 월」 캐시 백필 실패 기록"
+            for TRY in 1 2 3; do
+              git pull --rebase --autostash -q origin ${{ github.ref_name }} || true
+              if git push -q origin HEAD:${{ github.ref_name }}; then break; fi
+              sleep 5
+            done
+          }
+
       # ── 실패하면 말한다 (2026-09-02 신설)
       #
       # 이 배관은 매일 도는 예약인데 실패 알림이 없었다 — 전수 검사가 경고로 잡고 있었다.
