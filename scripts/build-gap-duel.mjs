@@ -217,10 +217,22 @@ const polylines = members.map((m) => ({
    숫자를 바꾸지 않는다 — 곡선 좌표는 그대로다. */
 const glowlines = polylines.map((l) => ({ ...l, width: l.width + 16, opacity: T.glowOp }));
 
-/* 끝점 — 지금 값. 라벨은 곡선 위에 올린다(겹치면 아래 §라벨 밀기가 민다). */
+/* ── 끝점 — **「지금 값」이 찍힌 달에 놓는다.** 곡선의 마지막 달이 아니다.
+   ⚠️ 2026-09-03 발각. 예전에는 마지막 달의 점을 찍었는데, 카드가 말하는 「지금 값」은
+   오너 확정 기준으로 **최근 6개월의 최고가**다. 두 달이 다르면 카드가 자기 안에서
+   어긋난다 — 2호에서 실제로 그랬다:
+
+     범례 1.15배 (= 7.9억 → **9.1억**)   ↔   곡선 끝 라벨 **8.9억**
+     제목 「8.6억 격차」 (= 17.7 − 9.1)  ↔   읽는 사람이 라벨로 세면 8.8억
+
+   읽는 사람이 카드 위의 두 숫자를 빼 보면 제목과 다른 값이 나오는 것이다. 그건
+   디자인 흠이 아니라 **오보**다. 그래서 점과 라벨을 최근창 최고가가 난 달로 옮긴다.
+   그 달이 곡선 끝보다 앞이면 점이 선 안쪽에 앉는데, 그게 사실이다.
+   (`now` 가 곡선 구간 밖이면 — 예: 캐시가 안 찬 달 — 마지막 달로 물러난다) */
 const ends = members.map((m) => {
-  const last = m.pts[m.pts.length - 1];
-  return { m, x: xi(last.ym), y: yv(last.v), v: last.v };
+  const target = m.now;
+  const hit = [...m.pts].reverse().find((p) => p.v === target) ?? m.pts[m.pts.length - 1];
+  return { m, x: xi(hit.ym), y: yv(hit.v), v: hit.v };
 });
 const dots = ends.map((e) => ({ x: e.x, y: e.y, r: e.m.color === SLATE ? 13 : 15, color: e.m.color }));
 
