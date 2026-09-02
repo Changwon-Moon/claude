@@ -82,7 +82,11 @@ const shortName = (s) => s.replace(/\s*\([^)]*\)\s*$/, "").trim() || s;
    시작하면 한 번만 쓴다 — 빌더(build-gap-duel.mjs)와 같은 규칙이다. */
 const dedupCity = (gu, name) => {
   const city = /^(.+?)시/.exec(gu)?.[1] ?? gu.replace(/[시구군]$/, "");
-  return city && name.startsWith(city) ? name.slice(city.length).trim() || name : name;
+  /* ⚠️ **띄어쓰기가 있을 때만** 뗀다. 붙어 있으면 그건 시 이름이 아니라 단지 이름의
+     일부다 — 「오산대역세교자이」에서 「오산」을 떼면 「대역세교자이」가 되고(역 이름이
+     오산대역이다), 「김포한강신도시…」도 마찬가지로 망가진다. 실제로 그렇게 나왔다.
+     「수원 SK SKY VIEW」처럼 원래 이름에 이미 칸이 있는 것만 안전하다. */
+  return city && name.startsWith(`${city} `) ? name.slice(city.length).trim() || name : name;
 };
 
 const rows = [];

@@ -282,7 +282,11 @@ const shortName = (s) => s.replace(/\s*\([^)]*\)\s*$/, "").trim() || s;
    → 「수원 장안 SK SKY VIEW」. 지역 이름표에 없는 말은 손대지 않는다. */
 const dedupCity = (gu, name) => {
   const city = /^(.+?)시/.exec(gu)?.[1] ?? gu.replace(/[시구군]$/, "");
-  return city && name.startsWith(city) ? name.slice(city.length).trim() || name : name;
+  /* ⚠️ **띄어쓰기가 있을 때만** 뗀다. 붙어 있으면 그건 시 이름이 아니라 단지 이름의
+     일부다 — 「오산대역세교자이」에서 「오산」을 떼면 「대역세교자이」가 되고(역 이름이
+     오산대역이다), 「김포한강신도시…」도 마찬가지로 망가진다. 실제로 그렇게 나왔다.
+     「수원 SK SKY VIEW」처럼 원래 이름에 이미 칸이 있는 것만 안전하다. */
+  return city && name.startsWith(`${city} `) ? name.slice(city.length).trim() || name : name;
 };
 /* ⚠️ 지역은 **이름 앞에 짧게** 붙인다 — 「성남시분당구」가 아니라 「분당」.
    한 줄에 다 넣기로 했으므로(오너 2026-09-02) 행정구역 정식명칭을 그대로 쓰면 줄이 넘친다.
