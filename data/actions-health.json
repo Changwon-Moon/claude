@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T04:52:36.760Z",
+  "generatedAt": "2026-09-02T05:29:51.893Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -787,6 +787,26 @@
       "runs30": 26
     },
     {
+      "file": "ecos-m2.yml",
+      "name": "ECOS M2 수집 (probe+collect)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 2,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 2,
+      "fails30": 0,
+      "runs30": 11
+    },
+    {
+      "file": "kr-market.yml",
+      "name": "국내 증시 수집 (코스피·코스닥)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 2,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 2,
+      "fails30": 0,
+      "runs30": 11
+    },
+    {
       "file": "publish-archive.yml",
       "name": "완성본 보관 (발행 완료)",
       "lastRun": "2026-08-31",
@@ -822,29 +842,9 @@
       "lastRun": "2026-08-31",
       "daysAgo": 2,
       "lastOk": "2026-08-28",
-      "okDaysAgo": 4,
+      "okDaysAgo": 5,
       "fails30": 4,
       "runs30": 6
-    },
-    {
-      "file": "ecos-m2.yml",
-      "name": "ECOS M2 수집 (probe+collect)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 1,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 1,
-      "fails30": 0,
-      "runs30": 11
-    },
-    {
-      "file": "kr-market.yml",
-      "name": "국내 증시 수집 (코스피·코스닥)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 1,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 1,
-      "fails30": 0,
-      "runs30": 11
     },
     {
       "file": "pipeline-tick.yml",
@@ -904,7 +904,7 @@
       "lastOk": "2026-09-02",
       "okDaysAgo": 0,
       "fails30": 31,
-      "runs30": 59
+      "runs30": 60
     },
     {
       "file": "guard.yml",
