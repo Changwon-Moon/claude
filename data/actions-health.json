@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T01:05:26.563Z",
+  "generatedAt": "2026-09-02T01:22:42.904Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -98,6 +98,103 @@
       "lastRun": "2026-09-02",
       "lastOk": "2026-09-02",
       "okDaysAgo": 0
+    },
+    {
+      "file": "tohuh-price-monthly.yml",
+      "name": "토허제 가격지도 월간 (수집 걸기)",
+      "cron": "10 20 8 * *",
+      "dueKst": "05:10",
+      "dots": [
+        {
+          "day": "08-20",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "08-21",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "08-22",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "08-23",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "08-24",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "08-25",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "08-26",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "08-27",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "08-28",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "08-29",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "08-30",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "08-31",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "09-01",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "09-02",
+          "state": "none",
+          "at": null,
+          "delay": null
+        }
+      ],
+      "medianDelay": null,
+      "maxDelay": null,
+      "lastRun": null,
+      "lastOk": null,
+      "okDaysAgo": null
     },
     {
       "file": "month-backfill.yml",
@@ -867,7 +964,7 @@
       "lastOk": "2026-09-01",
       "okDaysAgo": 1,
       "fails30": 3,
-      "runs30": 20
+      "runs30": 21
     },
     {
       "file": "singo-retry.yml",
