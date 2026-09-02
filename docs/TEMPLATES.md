@@ -38,7 +38,7 @@
 | `sinbundang-loop` | 🟢 1세트 | sinbundang-loop |
 | `singo-record` | 🟢 12세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 9 |
 | `singoga-map` | 🟢 4세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map 외 1 |
-| `streak-line` | 🟢 5세트 | mae-streak, jeonse-streak, m2-gap 외 2 |
+| `streak-line` | 🟢 6세트 | mae-streak, jeonse-streak, m2-gap, **gap-ep1-1** 외 2 — 2026-09-02 에 선택 키를 열었다(제목 `.tg` 회색 줄 · 축 라벨 크기 · 끝값 둘째 줄 · 한 줄 범례 · 반투명 원). **안 주면 기존 카드 픽셀 불변** |
 | `world-capital` | 🟢 1세트 | world-capital |
 | `year-bars` | 🟢 2세트 | wolse-flip, m2-rate |
 | `estate-cover` | 🟡 빌더 있음·세트 없음 | — |

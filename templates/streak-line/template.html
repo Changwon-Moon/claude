@@ -25,6 +25,9 @@
       /* 코발트 강조 — 2026-09-01. 이 판형에서만 제목에 두 색을 쓴다(오너 지시).
          BRAND §「코발트 1개 축」의 예외이고, market-daily 가 이미 연 예외(상승 레드·하락 코발트)와 같은 결이다. */
       .sl .wirit-title .hb { color: var(--wirit-cobalt); }
+      /* 회색 줄 — 2026-09-02. 두 줄 제목에서 **윗줄을 물리고 아랫줄을 세우는** 용도(오너 지시).
+         이 클래스를 안 쓰는 기존 카드(mae-streak·jeonse-streak)는 픽셀이 안 바뀐다. */
+      .sl .wirit-title .tg { color: #9aa3af; }
 
       /* ── (옵션) 그래프 아래 시나리오 표 — 범례를 아래로 내린 자리(2026-09-01 오너 지시).
          주지 않으면 아무 것도 안 그린다 → 기존 발행본 픽셀 불변. */
@@ -96,10 +99,11 @@
           {{#if chart.base}}<line class="sl-axis" x1="{{chart.base.x1}}" y1="{{chart.base.y}}" x2="{{chart.base.x2}}" y2="{{chart.base.y}}" />{{/if}}
           {{#each chart.vmarks}}<line x1="{{x}}" y1="{{y1}}" x2="{{x}}" y2="{{y2}}" stroke="{{color}}" stroke-width="2.5" stroke-dasharray="8 8" opacity="0.55" />{{/each}}
           {{#if chart.yunit}}<text class="sl-unit" x="{{chart.yunit.x}}" y="{{chart.yunit.y}}" text-anchor="middle">{{chart.yunit.text}}</text>{{/if}}
-          {{#each chart.ylabels}}<text class="sl-yl" x="{{x}}" y="{{y}}" text-anchor="end">{{text}}</text>{{/each}}
+          {{#each chart.ylabels}}<text class="sl-yl" x="{{x}}" y="{{y}}" text-anchor="end"{{#if size}} font-size="{{size}}"{{/if}}>{{text}}</text>{{/each}}
+          {{#each chart.halos}}<circle cx="{{x}}" cy="{{y}}" r="{{r}}" fill="{{fill}}" opacity="{{opacity}}" />{{/each}}
           {{#each chart.polylines}}<polyline points="{{points}}" fill="none" stroke="{{color}}" stroke-width="{{width}}" stroke-linejoin="round" stroke-linecap="round"{{#if dash}} stroke-dasharray="{{dash}}"{{/if}} />{{/each}}
           {{#each chart.dots}}<circle cx="{{x}}" cy="{{y}}" r="{{r}}" fill="#fff" stroke="{{color}}" stroke-width="7" />{{/each}}
-          {{#each chart.vlabels}}<text class="sl-vl" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="{{anchor}}">{{text}}</text>{{/each}}
+          {{#each chart.vlabels}}<text class="sl-vl" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="{{anchor}}"{{#if size}} font-size="{{size}}"{{/if}}>{{text}}{{#if sub}}<tspan x="{{x}}" dy="{{subDy}}" fill="{{subFill}}" font-size="{{subSize}}" font-weight="700">{{sub}}</tspan>{{/if}}</text>{{/each}}
           {{#each chart.xlabels}}<text class="sl-xl" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="{{anchor}}">{{text}}</text>{{/each}}
           {{#if chart.arrow}}
             <line x1="{{chart.arrow.x1}}" y1="{{chart.arrow.y}}" x2="{{chart.arrow.x2}}" y2="{{chart.arrow.y}}" stroke="{{chart.arrow.color}}" stroke-width="5" />
@@ -112,8 +116,12 @@
           {{/if}}
           {{#each chart.legend}}
             <line x1="{{sx1}}" y1="{{sy}}" x2="{{sx2}}" y2="{{sy}}" stroke="{{color}}" stroke-width="11" stroke-linecap="round" />
-            <text class="sl-lg" x="{{tx}}" y="{{ty}}" fill="{{fill}}">{{text}}</text>
-            {{#if sub}}<text class="sl-lgs" x="{{tx}}" y="{{sty}}" fill="#9aa3af">{{sub}}</text>{{/if}}
+            {{#if inline}}
+              <text class="sl-lg" x="{{tx}}" y="{{ty}}" fill="{{fill}}"{{#if size}} font-size="{{size}}"{{/if}}>{{text}}{{#if sub}}<tspan class="sl-lgs" fill="#9aa3af" dx="{{subDx}}"{{#if subSize}} font-size="{{subSize}}"{{/if}}>{{sub}}</tspan>{{/if}}</text>
+            {{else}}
+              <text class="sl-lg" x="{{tx}}" y="{{ty}}" fill="{{fill}}">{{text}}</text>
+              {{#if sub}}<text class="sl-lgs" x="{{tx}}" y="{{sty}}" fill="#9aa3af">{{sub}}</text>{{/if}}
+            {{/if}}
           {{/each}}
         </svg>
       </div>
