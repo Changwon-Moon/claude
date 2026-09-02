@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T05:46:43.271Z",
+  "generatedAt": "2026-09-02T06:08:03.024Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -807,6 +807,16 @@
       "runs30": 11
     },
     {
+      "file": "population-collect.yml",
+      "name": "인구 수집 (monthly)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 2,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 2,
+      "fails30": 6,
+      "runs30": 9
+    },
+    {
       "file": "publish-archive.yml",
       "name": "완성본 보관 (발행 완료)",
       "lastRun": "2026-08-31",
@@ -857,16 +867,6 @@
       "runs30": 74
     },
     {
-      "file": "population-collect.yml",
-      "name": "인구 수집 (monthly)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 1,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 1,
-      "fails30": 6,
-      "runs30": 9
-    },
-    {
       "file": "apt-detail.yml",
       "name": "단지 주차대수 (카드 제원용)",
       "lastRun": "2026-09-02",
@@ -904,7 +904,7 @@
       "lastOk": "2026-09-02",
       "okDaysAgo": 0,
       "fails30": 31,
-      "runs30": 60
+      "runs30": 61
     },
     {
       "file": "guard.yml",
@@ -983,7 +983,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-02",
       "okDaysAgo": 0,
-      "fails30": 10,
+      "fails30": 9,
       "runs30": 100
     }
   ]
