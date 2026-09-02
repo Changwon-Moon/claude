@@ -38,7 +38,7 @@
 | `sinbundang-loop` | 🟢 1세트 | sinbundang-loop |
 | `singo-record` | 🟢 12세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 9 |
 | `singoga-map` | 🟢 4세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map 외 1 |
-| `streak-line` | 🟢 6세트 | mae-streak, jeonse-streak, m2-gap 외 3 |
+| `streak-line` | 🟢 5세트 | mae-streak, jeonse-streak, m2-gap 외 2 |
 | `world-capital` | 🟢 1세트 | world-capital |
 | `year-bars` | 🟢 2세트 | wolse-flip, m2-rate |
 | `estate-cover` | 🟡 빌더 있음·세트 없음 | — |

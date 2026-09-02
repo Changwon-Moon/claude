@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T13:37:57.071Z",
+  "generatedAt": "2026-09-02T13:52:17.759Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -740,9 +740,9 @@
       "file": "photo-batch.yml",
       "name": "이미지 일괄 자동취득 (photo-batch)",
       "lastRun": "2026-08-12",
-      "daysAgo": 20,
+      "daysAgo": 21,
       "lastOk": "2026-08-12",
-      "okDaysAgo": 20,
+      "okDaysAgo": 21,
       "fails30": 0,
       "runs30": 7
     },
@@ -983,7 +983,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-02",
       "okDaysAgo": 0,
-      "fails30": 4,
+      "fails30": 3,
       "runs30": 100
     }
   ]
