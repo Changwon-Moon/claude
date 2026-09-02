@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T06:49:15.896Z",
+  "generatedAt": "2026-09-02T09:02:27.020Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -573,15 +573,15 @@
         },
         {
           "day": "09-02",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "15:53",
+          "delay": 294
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-09-01",
-      "lastOk": "2026-09-01",
+      "medianDelay": 294,
+      "maxDelay": 294,
+      "lastRun": "2026-09-02",
+      "lastOk": "2026-09-02",
       "okDaysAgo": 0
     }
   ],
@@ -730,9 +730,9 @@
       "file": "kosis-probe.yml",
       "name": "KOSIS 표 검증 (probe)",
       "lastRun": "2026-08-12",
-      "daysAgo": 20,
+      "daysAgo": 21,
       "lastOk": "2026-08-12",
-      "okDaysAgo": 20,
+      "okDaysAgo": 21,
       "fails30": 6,
       "runs30": 30
     },
@@ -983,7 +983,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-02",
       "okDaysAgo": 0,
-      "fails30": 8,
+      "fails30": 7,
       "runs30": 100
     }
   ]
