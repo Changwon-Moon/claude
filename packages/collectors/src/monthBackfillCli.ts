@@ -115,6 +115,12 @@ async function main() {
   let filled = 0;
   let failedCalls = 0;
   let quotaHit = false;
+  /* ⚠️ **첫 실패의 문구를 기록에 남긴다.** 예전 기록은 「실패 11회」만 적었다.
+     그러면 로그를 열 수 없는 사람(코워크 세션은 api.github.com 이 막혀 있다)은
+     한도인지·코드가 없는 건지·API 가 그 달을 안 주는 건지 구분할 수 없고,
+     같은 대기열을 다시 밀어 보는 것 말고 할 수 있는 일이 없다.
+     2026-09-02~03 에 오산 202607 이 세 번 실패하는 동안 실제로 그렇게 됐다. */
+  let firstFail = "";
 
   outer: for (const ym of months) {
     /* 오래된 달부터 — 최근 달은 아침 알림이 매일 채우므로 뒤로 미룰수록 이득이다 */
@@ -140,6 +146,7 @@ async function main() {
           );
           break outer;
         }
+        if (!firstFail) firstFail = `${gu.get(lawdCd) ?? lawdCd} ${ym} — ${msg.slice(0, 160)}`;
         if (failedCalls <= 5) console.error(`⚠️ ${gu.get(lawdCd)} ${ym}: ${msg.slice(0, 100)}`);
       }
       await new Promise((r) => setTimeout(r, 120));
@@ -154,7 +161,8 @@ async function main() {
     `- 실행: ${kst} (KST)\n` +
     `- 예산: ${BUDGET}회 · 쓴 호출: ${used}회 · 채운 칸: ${filled}개 · 실패: ${failedCalls}회\n` +
     `- 남은 빈 칸: **${left}개** ${left ? `(하루 ${BUDGET}회면 약 ${Math.ceil(left / Math.max(filled || 1, 1))}일)` : "— 다 찼습니다 🎉"}\n` +
-    (quotaHit ? `- ⚠️ **일일 한도**에 걸려 중간에 접었습니다(키 문제 아님)\n` : "");
+    (quotaHit ? `- ⚠️ **일일 한도**에 걸려 중간에 접었습니다(키 문제 아님)\n` : "") +
+    (firstFail ? `- 첫 실패: \`${firstFail.replace(/`/g, "'")}\`\n` : "");
   writeFileSync(R("data/molit-monthly-last.md"), `# 「구 × 월」 캐시 백필 — 마지막 실행\n\n${line}`);
 
   console.log(`\n${line}`);
