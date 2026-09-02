@@ -159,7 +159,32 @@ function series(unit, months) {
 const setPath = R(`data/datasets/${SET}.json`);
 if (!existsSync(setPath)) throw new Error(`${SET}.json 이 없습니다 — 먼저 node scripts/find-gap-pairs.mjs --out ${SET}`);
 const data = JSON.parse(readFileSync(setPath, "utf8"));
-const group = data.picks[PICK];
+/**
+ * ── 묶음 고르기 — **번호가 아니라 단지로** 고를 수 있다 (2026-09-03, 사고 뒤 신설)
+ *
+ * `--pick N` 은 안건표의 줄번호다. 그런데 그 줄번호는 **캐시가 차면 바뀐다** —
+ * 새 구가 채워지면 새 후보가 끼어들어 뒤가 밀린다. 실제로 중랑·기흥·김포·시흥 네 구를
+ * 채우자 확정본 3호가 6번에서 5번으로 밀렸고, `builders.json` 에 박아 둔 `--pick 6` 은
+ * **다른 묶음**(분당 장미마을)을 가리키게 됐다. 그대로 두면 관제탑이 3호를 재생산할 때
+ * 조용히 다른 카드를 만든다 — 확정한 픽셀과 다른 것이 같은 이름으로 나가는 것이다.
+ *
+ * 그래서 **발행한 카드는 `--danji` 로 박는다.** 단지 셋의 이름을 적으면 그 셋을 그대로
+ * 가진 묶음을 찾는다. 후보 순서가 어떻게 바뀌든 같은 카드가 나온다.
+ * (고르는 단계에서는 `--pick` 이 편하다 — 그건 그대로 둔다.)
+ */
+let PICK_SHOWN = PICK;
+const DANJI = (arg("danji") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+let group;
+if (DANJI.length) {
+  const has = (g) => DANJI.every((n) => g.members.some((m) => m.apt === n));
+  const hits = data.picks.filter((g) => has(g) && g.members.length === DANJI.length);
+  if (!hits.length) throw new Error(`${SET} 에 「${DANJI.join(" · ")}」 를 가진 묶음이 없습니다 — 기준이 바뀌어 이 묶음이 사라졌을 수 있습니다. 안건표를 다시 보세요`);
+  if (hits.length > 1) throw new Error(`${SET} 에 「${DANJI.join(" · ")}」 묶음이 ${hits.length}개입니다 — 단지 이름으로 하나를 못 짚습니다`);
+  group = hits[0];
+  PICK_SHOWN = data.picks.indexOf(group);
+} else {
+  group = data.picks[PICK];
+}
 if (!group) throw new Error(`${SET} 에 ${PICK + 1}번 묶음이 없습니다 (${data.picks.length}개 있음)`);
 
 const months = monthRange(CURVE_FROM, CURVE_TO);
@@ -417,6 +442,6 @@ const outDir = R(join("data/content", DATE));
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, `${label}.json`), JSON.stringify(card, null, 2) + "\n", "utf8");
 
-console.log(`⚖️ ${label} — ${SET} ${PICK + 1}번 묶음 · 곡선 ${members.length}개 (${months.length}개월)`);
+console.log(`⚖️ ${label} — ${SET} ${PICK_SHOWN + 1}번 묶음 · 곡선 ${members.length}개 (${months.length}개월)`);
 members.forEach((m) => console.log(`   ${m.color === RED ? "🔺" : m.color === COBALT ? "🔻" : "· "} ${m.gu} ${m.apt} ${m.pyeong} — ${fmtEok(m.base)} → ${fmtEok(m.now)} (${m.ratio.toFixed(2)}배) · 관측 ${m.pts.length}개월`));
 console.log(`   → ${join("data/content", DATE, `${label}.json`)}`);

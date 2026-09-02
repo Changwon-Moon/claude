@@ -35,14 +35,24 @@ const OUT = R(arg("out", "data/gap-안건.md"));
 
 /** 이미 만들어 확정한 카드 — 안건표에서 「완료」로 표시한다 */
 /**
- * 이미 만든 카드 — 「후보 자리」 → 「발행 번호」.
+ * 이미 만든 카드 — **단지 이름**으로 짚는다 (2026-09-03 고침).
  *
- * ⚠️ 이 둘은 **다른 번호다**. 왼쪽은 이 표에서 몇 번째 묶음이냐(`--pick`)이고,
- * 오른쪽은 카드 위에 찍히는 「출발선은 같았다 #N」이다. 후보 순서는 규칙을 손볼 때마다
- * 바뀌지만(스파이크 방어를 넣자 한 묶음이 통째로 빠지며 뒤가 한 칸씩 당겨졌다)
- * 발행 번호는 한 번 나가면 안 바뀐다 — 그래서 따로 적는다.
+ * ⚠️ 전에는 「후보 자리(gap-ep1-6)」를 열쇠로 썼는데, 그 번호는 **캐시가 차면 바뀐다**.
+ * 실제로 네 구를 채우자 3호가 6번에서 5번으로 밀렸고, 표는 엉뚱한 줄에 「#3 완료」를
+ * 달았다. 발행한 카드는 단지가 바뀌지 않으므로 단지로 짚는 것이 옳다
+ * (빌더도 같은 이유로 `--danji` 를 쓴다 — build-gap-duel.mjs 참고).
  */
-const DONE = new Map([["gap-ep1-1", 1], ["gap-ep1-4", 2], ["gap-ep1-6", 3]]);
+const DONE = [
+  { no: 1, danji: ["시범우성", "길음뉴타운1단지(래미안길음1차)", "파크푸르지오"] },
+  { no: 2, danji: ["두산", "초원마을대림", "수원 SK SKY VIEW"] },
+  { no: 3, danji: ["벽산", "길음동동부센트레빌(1278-0)", "갈매역아이파크"] },
+];
+/** 이 묶음이 이미 나간 카드인가 — 나갔으면 발행 번호를, 아니면 null */
+const doneNo = (r) => {
+  const names = r.members.map((m) => m.apt);
+  const hit = DONE.find((d) => d.danji.length === names.length && d.danji.every((n) => names.includes(n)));
+  return hit ? hit.no : null;
+};
 
 function monthRange(from, to) {
   const out = [];
@@ -144,10 +154,10 @@ for (const [set, band] of [["gap-ep1", "그때 10억 이하"], ["gap-ep2", "그�
 rows.sort((a, b) => b.ratioGap - a.ratioGap);
 /* `--top N` — 다 보여 주면 41건이라 고르기 어려울 때 잘라 낸다.
    ⚠️ 이미 만든 카드는 잘라 내지 않는다(무엇이 끝났는지가 안 보이면 표가 거짓말을 한다). */
-const shown = rows.filter((r, i) => i < TOP || DONE.has(r.label));
+const shown = rows.filter((r, i) => i < TOP || doneNo(r) !== null);
 
-const ready = shown.filter((r) => r.calls === 0 && !DONE.has(r.label));
-const done = shown.filter((r) => DONE.has(r.label));
+const ready = shown.filter((r) => r.calls === 0 && !doneNo(r) !== null);
+const done = shown.filter((r) => doneNo(r) !== null);
 
 const L = [];
 L.push("# 「출발선은 같았다」 — 카드 안건표");
@@ -177,7 +187,7 @@ L.push("");
    단지 칸은 「지역 단지명 평형 (배수)」로 접는다 — 줄이 넘치지 않게 이름의 괄호는 뗀다. */
 const cell = (m) => `${shortGu(m.gu)} ${dedupCity(m.gu, shortName(m.apt))} ${m.pyeong} **${m.ratio.toFixed(2)}배**`;
 const row = (r, no) => {
-  const tag = DONE.has(r.label) ? `✅ #${DONE.get(r.label)} 완료` : r.calls === 0 ? "🟢 바로" : `🟡 ${r.calls}회`;
+  const tag = doneNo(r) !== null ? `✅ #${doneNo(r)} 완료` : r.calls === 0 ? "🟢 바로" : `🟡 ${r.calls}회`;
   const known = r.noise.filter((n) => n !== null);
   const worst = known.length ? Math.max(...known) : null;
   const saw = worst === null ? "—"
