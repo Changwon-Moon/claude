@@ -277,7 +277,16 @@ const _startR = Math.max(34, r1((Math.max(..._startYs) - Math.min(..._startYs)) 
 const _startCy = r1((Math.max(..._startYs) + Math.min(..._startYs)) / 2);
 const ylabels = ticks.map((v) => {
   const y = yv(v) + 7;
-  const hit = Math.abs(y - 7 - _startCy) < _startR + 12;
+  /* ⚠️ **어림짐작이 아니라 실제 겹침 폭으로 판정한다** (2026-09-03 고침).
+     예전 조건은 「눈금 높이와 원 중심의 거리가 반지름+12 보다 가까우면」이었는데,
+     4호에서 그 거리가 59.8, 문턱이 59.6 이라 **0.2px 차이로 빗나갔다** —
+     그런데 실제로는 글자가 원에 6.8px 물려 있었고 designQa 가 「5가 마커와 12% 겹침」으로 잡았다.
+     문턱을 키우면 다른 카드가 딸려 움직인다(확정본 넷의 픽셀이 걸려 있다).
+     그래서 글자 상자(밑선에서 위로 26px)와 원의 세로 구간이 **몇 px 겹치는지**를 직접 잰다.
+     4px 는 눈에 안 보이는 스침이다 — 1호가 1.2px 스치는데 그건 안 밀어야 한다. */
+  const glyphTop = y - 26, glyphBot = y;
+  const overlap = Math.min(glyphBot, _startCy + _startR) - Math.max(glyphTop, _startCy - _startR);
+  const hit = overlap > 4;
   return { x: hit ? r1(AXIS_X - _startR - 18) : AXIS_X - 14, y, text: `${eok(v).toFixed(0)}`, size: 24 };
 });
 /* 단위는 맨 위 눈금과 **같은 줄, 축 오른쪽**에 둔다. 세 번 옮긴 끝의 자리다:
