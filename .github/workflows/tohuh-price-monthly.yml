@@ -1,0 +1,141 @@
+name: 토허제 가격지도 월간 (수집 걸기)
+
+# ── 무엇을 하나 (오너 2026-09-02 "월간으로 만들 수 있도록 기준화해줘")
+# 「토허제 40곳 가격 지도」 4장 캐러셀의 **재료를 매달 스스로 챙긴다.**
+# 이 워크플로는 카드를 만들지 않는다 — `--queue` 로 돌아서
+#   ① 이번에 쓸 두 달을 정하고
+#   ② 40곳 × 2달 × 매매·전세 자료가 다 있는지 세고
+#   ③ 모자라면 수집 대기열(molit-queue / molit-rent-queue)에 줄을 밀어 커밋한다.
+# 그 커밋이 molit-collect / molit-rent-collect 를 깨우고, 수집이 끝나면 자료가 채워진다.
+#
+# ── 왜 카드는 여기서 안 만드나
+# 카드는 **오너가 눈으로 보고 확정**해야 나간다(배포 기준 §0-A). 자동으로 그려 두면
+# 아무도 안 본 판본이 관제탑 결재함에 쌓이고, 어느 것이 최신인지 흐려진다.
+# 그래서 배관은 **재료까지**만 자동이고, 만드는 것은 세션이 한 줄로 한다:
+#   node scripts/tohuh-price-monthly.mjs
+#
+# ── 언제 도나
+# 매달 8일. 실거래 신고기한이 30일이라 지지난달 숫자가 그때쯤 굳는다
+# (molit-collect 가 5일·20일 기준으로 잡혀 있던 것과 같은 이유).
+# 대기열이 밀린 채로 다음 달이 오지 않게, 사람은 언제든 Run workflow 로 다시 걸 수 있다.
+#
+# ── ⚠️ 두 대기열을 **따로** 커밋한다
+# 수집 워크플로는 대기열의 **마지막 비주석 줄 하나**만 읽는다. 매매·전세 줄을 한 커밋에
+# 넣으면 한쪽만 돈다. 그래서 커밋을 나눠서 두 번 푸시한다.
+on:
+  schedule:
+    - cron: "10 20 8 * *" # 매달 8일 05:10 KST
+  workflow_dispatch:
+    inputs:
+      month:
+        description: "끝 달 (YYYY-MM). 비우면 자료가 있는 최신 달"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tohuh-price-monthly
+  cancel-in-progress: false
+
+jobs:
+  queue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: 자료 점검 — 모자라면 대기열에 줄을 민다
+        id: check
+        run: |
+          set +e
+          ARGS="--queue"
+          [ -n "${{ github.event.inputs.month }}" ] && ARGS="$ARGS --month ${{ github.event.inputs.month }}"
+          node scripts/tohuh-price-monthly.mjs $ARGS 2>&1 | tee /tmp/tohuh.log
+          RC=${PIPESTATUS[0]}
+          echo "rc=$RC" >> "$GITHUB_OUTPUT"
+          # 0 = 자료가 다 있다 / 2 = 모자라서 대기열에 밀었다 / 그 밖 = 진짜 실패
+          [ "$RC" = "0" ] || [ "$RC" = "2" ]
+
+      # 대기열 두 파일을 **따로** 커밋한다 — 수집 워크플로가 마지막 줄 하나만 읽기 때문이다.
+      - name: 대기열 커밋 (매매)
+        if: steps.check.outputs.rc == '2'
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "bot@wirit.local"
+          if ! git diff --quiet -- data/molit-queue.txt; then
+            git add data/molit-queue.txt
+            git commit -m "수집: 토허제 가격지도 월간 — 매매 재료"
+            git push
+          else
+            echo "매매 대기열은 그대로입니다(자료가 다 있거나 이미 밀려 있음)"
+          fi
+
+      - name: 대기열 커밋 (전세)
+        if: steps.check.outputs.rc == '2'
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "bot@wirit.local"
+          git pull --rebase
+          if ! git diff --quiet -- data/molit-rent-queue.txt; then
+            git add data/molit-rent-queue.txt
+            git commit -m "수집: 토허제 가격지도 월간 — 전세 재료"
+            git push
+          else
+            echo "전세 대기열은 그대로입니다(자료가 다 있거나 이미 밀려 있음)"
+          fi
+
+      # 예약으로 도는 배관은 **실패를 알릴 입**이 있어야 한다 — 부재는 조용하다.
+      # 성공도 한 줄 알린다: 이 카드는 사람이 손으로 만들어야 넘어가므로, "재료가 준비됐다"가
+      # 곧 할 일 알림이다. 알림이 없으면 자료만 채워진 채 몇 주가 지나간다.
+      - name: 텔레그램 알림
+        if: always()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if [ "${{ job.status }}" != "success" ]; then
+            node scripts/notify-telegram.mjs "⚠️ 토허제 가격지도 월간 — 자료 점검이 실패했습니다. Actions 로그를 보세요."
+          elif [ "${{ steps.check.outputs.rc }}" = "0" ]; then
+            node scripts/notify-telegram.mjs "🗺 토허제 가격지도 월간 — 재료가 다 모였습니다. 카드 4장을 만들 차례입니다: node scripts/tohuh-price-monthly.mjs"
+          else
+            node scripts/notify-telegram.mjs "📥 토허제 가격지도 월간 — 자료가 모자라 실거래 수집을 걸었습니다. 수집이 끝나면 카드를 만듭니다."
+          fi
+
+      - name: 요약
+        if: always()
+        run: |
+          {
+            echo "## 토허제 가격지도 월간"
+            echo
+            if [ "${{ steps.check.outputs.rc }}" = "0" ]; then
+              echo "✅ **자료가 다 있습니다.** 세션에서 카드를 만드세요:"
+              echo '```'
+              echo "node scripts/tohuh-price-monthly.mjs"
+              echo "node scripts/confirm.mjs tohuh-price-map"
+              echo "node scripts/deliver-set.mjs --set tohuh-price-map"
+              echo '```'
+            else
+              echo "📥 **자료가 모자라 수집을 걸었습니다.** 수집이 끝나면 위 명령으로 만듭니다."
+            fi
+            echo
+            echo '```'
+            tail -30 /tmp/tohuh.log || true
+            echo '```'
+            echo
+            echo "기준 문서 · \`docs/guides/토허제-가격지도-기준.md\`"
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -25,6 +25,7 @@
 import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { join, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import { buildersForSet } from "./lib/builders-for-set.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const R = (p) => join(ROOT, p);
@@ -63,7 +64,12 @@ const sets = setsDoc?.sets || setsDoc || [];
 const builderLabels = new Set(builders.map((b) => b.label));
 for (const s of sets) {
   checked += 2;
-  const mine = builders.filter((b) => b.label === s.label || (b.produces || []).some((p) => (s.cards || []).includes(p)));
+  /* ⚠️ 「이 세트를 만드는 빌더는 무엇인가」는 **정본 하나**에서만 판단한다 —
+     scripts/lib/builders-for-set.mjs. 여기 따로 적혀 있던 좁은 판정(라벨 일치 또는
+     produces 만) 때문에 2026-09-02 에 tohuh-price-map 이 「빌더가 없다」로 잡혔다.
+     produce-card·confirm 은 정본을 써서 멀쩡히 돌고 있었다 — 전수 검사만 다른 말을 했다.
+     (같은 판단이 두 곳에 있으면 언젠가 갈라진다 — 08-25 에 셋이 갈라진 그 자리다.) */
+  const mine = buildersForSet(s, builders);
   if (!mine.length) warn("세트", `${s.label} — 이 세트를 만드는 빌더가 없다`, "재생산이 안 됩니다(수동 제작본일 수 있음)");
   const cap = `data/review/captions/${s.caption || s.label}.txt`;
   if (!has(cap)) bad("세트", `${s.label} — 캡션 없음(${cap})`, "캡션이 없으면 검수도 확정도 못 합니다");

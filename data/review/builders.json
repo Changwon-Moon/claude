@@ -1787,9 +1787,15 @@
         "jeonse",
         "--type",
         "84",
+        "--months",
+        "202606,202607",
         "--date",
-        "2026-09-01"
-      ]
+        "2026-09-02"
+      ],
+      "produces": [
+        "jeonse84-map"
+      ],
+      "note": "월간 정기물 「토허제 40곳 가격 지도」 4장 중 하나. 인자(--months·--date)는 scripts/tohuh-price-monthly.mjs 가 매달 맞춘다 — 손으로 고치지 않는다. 기준: docs/guides/토허제-가격지도-기준.md"
     },
     {
       "label": "jeonse59-map",
@@ -1799,9 +1805,15 @@
         "jeonse",
         "--type",
         "59",
+        "--months",
+        "202606,202607",
         "--date",
-        "2026-09-01"
-      ]
+        "2026-09-02"
+      ],
+      "produces": [
+        "jeonse59-map"
+      ],
+      "note": "월간 정기물 「토허제 40곳 가격 지도」 4장 중 하나. 인자(--months·--date)는 scripts/tohuh-price-monthly.mjs 가 매달 맞춘다 — 손으로 고치지 않는다. 기준: docs/guides/토허제-가격지도-기준.md"
     },
     {
       "label": "mae84-map",
@@ -1811,9 +1823,15 @@
         "mae",
         "--type",
         "84",
+        "--months",
+        "202606,202607",
         "--date",
-        "2026-09-01"
-      ]
+        "2026-09-02"
+      ],
+      "produces": [
+        "mae84-map"
+      ],
+      "note": "월간 정기물 「토허제 40곳 가격 지도」 4장 중 하나. 인자(--months·--date)는 scripts/tohuh-price-monthly.mjs 가 매달 맞춘다 — 손으로 고치지 않는다. 기준: docs/guides/토허제-가격지도-기준.md"
     },
     {
       "label": "mae59-map",
@@ -1823,9 +1841,15 @@
         "mae",
         "--type",
         "59",
+        "--months",
+        "202606,202607",
         "--date",
-        "2026-09-01"
-      ]
+        "2026-09-02"
+      ],
+      "produces": [
+        "mae59-map"
+      ],
+      "note": "월간 정기물 「토허제 40곳 가격 지도」 4장 중 하나. 인자(--months·--date)는 scripts/tohuh-price-monthly.mjs 가 매달 맞춘다 — 손으로 고치지 않는다. 기준: docs/guides/토허제-가격지도-기준.md"
     }
   ]
 }

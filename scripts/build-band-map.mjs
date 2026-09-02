@@ -39,7 +39,7 @@
  * R-ONE 은 동탄구 계열이 짧아 월세 카드가 **화성시 전체**로 갈음했는데, 국토부 실거래는
  * 동탄구(41597)가 독립 법정코드라 **경계와 수치가 일치한다.** 그 갈음 주석이 여기엔 없다.
  */
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tohuhParts, tohuhMapSvg } from "./lib/tohuh-map.mjs";
@@ -60,13 +60,46 @@ const KEY = TYPE === "84" ? "kp84" : "kp59";
  *  `packages/collectors/src/parse/molit.ts` 의 AREA_BANDS 와 **함께** 바꾼다. */
 const BAND = TYPE === "84" ? [82, 86] : [57, 61];
 const KIND_KO = KIND === "mae" ? "매매" : "전세";
+
+/** 이 빌더가 읽는 실거래 데이터셋 폴더.
+ *
+ * ⚠️ **경로를 문자열로 온전히 적어 둔다.** `data/datasets/${dir}` 처럼 끼워 넣으면
+ * `confirm.mjs` 의 `depsOf` 가 소스에서 경로를 못 읽는다 — 정규식이 `${` 앞에서 끊긴다.
+ * 그러면 "워크플로가 갱신하는 데이터셋을 안 읽는다" = **고정물**로 판정되고,
+ * 이 정기물 4장이 `pixel-baselines.json` 에 등록돼 **다음 수집일에 doctor 가 통째로 빨간불**이
+ * 된다(2026-09-02 실제로 그렇게 등록됐다 — 08-25 에 같은 사고가 다른 경로로 한 번 더 났다).
+ * 정기물의 약속은 "픽셀이 안 바뀐다"가 아니라 **"같은 데이터면 같은 픽셀"**이다. */
+const DS_MAE = "data/datasets/molit";
+const DS_RENT = "data/datasets/molit-rent";
+const DS_DIR = KIND === "mae" ? DS_MAE : DS_RENT;
 const date = arg("date") ?? new Date().toISOString().slice(0, 10);
 
-/** 집계에 넣을 달. `--months 202606` 처럼 넘긴다.
+/** 집계에 넣을 달. `--months 202606,202607` 처럼 넘긴다.
  * ⚠️ 실거래는 신고기한이 30일이라 **한 달만 쓰면 표본이 얇은 구가 생긴다.**
  * 실측(2026-09-01): 종로구 전용 59㎡ 는 06월 9건 7.41억 / 07월 11건 5.63억 — 한 달 차이로
- * 1.8억이 움직인다. 두 달을 합치면 20건 6.43억이다. 아래 표본 하한이 그래서 있다. */
-const MONTHS = (arg("months") || "202606,202607").split(",").map((s) => s.trim());
+ * 1.8억이 움직인다. 두 달을 합치면 20건 6.43억이다. 아래 표본 하한이 그래서 있다.
+ *
+ * ⚠️ **기본값에 달을 못박지 않는다** (월간 기준화 2026-09-02).
+ * 예전 기본값은 `"202606,202607"` 이었다. 정기물에 굳은 달을 박아 두면 다음 달에
+ * `--months` 를 빠뜨린 사람이 **지난달 카드를 이번 달 카드인 줄 알고** 낸다 — 조용히 틀린다.
+ * 이제 기본값은 **자료가 있는 가장 최근 두 달**이고, 무엇을 골랐는지 반드시 찍는다.
+ * (실제 제작은 `scripts/tohuh-price-monthly.mjs` 가 달을 정해 넘긴다.) */
+const MONTHS = (() => {
+  const given = arg("months");
+  if (given) return given.split(",").map((s) => s.trim());
+  const dir = join(ROOT, DS_DIR);
+  const yms = existsSync(dir)
+    ? [...new Set(readdirSync(dir).map((f) => /-(\d{6})\.json$/.exec(f)?.[1]).filter(Boolean))].sort()
+    : [];
+  if (yms.length < 2)
+    throw new Error(
+      `--months 를 안 줬는데 ${dir} 에 달이 ${yms.length}개뿐입니다 — 두 달이 필요합니다.\n` +
+        `  node scripts/tohuh-price-monthly.mjs 로 만드세요(달을 정해 넘깁니다).`,
+    );
+  const picked = yms.slice(-2);
+  console.log(`ⓘ --months 미지정 — 자료가 있는 가장 최근 두 달을 씁니다: ${picked.join(",")}`);
+  return picked;
+})();
 
 /* ── 지역 명단 ── 토허제 지정 현황의 원천은 이 데이터셋 하나다 */
 const tohuh = JSON.parse(readFileSync(join(ROOT, "data/datasets/tohuh-2026.json"), "utf8"));
@@ -99,9 +132,8 @@ for (const a of AREAS) {
   const code = LAWD[a.geoName];
   let d = 0, n = 0;
   for (const ym of MONTHS) {
-    const dir = KIND === "mae" ? "molit" : "molit-rent";
     const queue = KIND === "mae" ? "data/molit-queue.txt" : "data/molit-rent-queue.txt";
-    const f = join(ROOT, `data/datasets/${dir}/${code}-${ym}.json`);
+    const f = join(ROOT, DS_DIR, `${code}-${ym}.json`);
     if (!existsSync(f)) {
       throw new Error(
         `${a.geoName}(${code}) ${ym} 파일이 없다: ${f}\n` +
@@ -229,7 +261,16 @@ const mapSvg = tohuhMapSvg({
  * 모양이 갈리고, 20행 전부에 달면 두 줄짜리 행이 20개라 표가 넘친다.
  * → **표에서 건수를 빼고** 얇은 표본은 하단 주석과 캡션이 말한다(아래 footnote 의 minN).
  */
-const ranked = [...AREAS].sort((a, b) => eokOf(b.geoName) - eokOf(a.geoName));
+/* 값이 **완전히 같으면** 이름순으로 고정한다(2026-09-02).
+ * 왜: 같은 값인데 순서가 배열 순서에 기대면, 관계없는 지역이 하나 늘거나 데이터셋 순서가
+ * 바뀔 때 **표에서 두 줄이 자리를 맞바꾼다.** 카드는 둘 다 같은 숫자를 보여 주므로
+ * 보는 사람에겐 이유 없는 변화이고, 「같은 데이터면 같은 픽셀」도 그만큼 헐거워진다.
+ * (진짜로 값이 갈린 경우는 여기서 손대지 않는다 — 그건 자료가 바뀐 것이라 바뀌는 게 맞다.
+ *  실제로 09-02 아침 전월세 재수집으로 성동 6.94 / 강남 6.93 이 뒤집혔고, 둘 다 표시는
+ *  6.9억이다. 그건 이 규칙이 고칠 일이 아니라 **말해야 할 일**이다.) */
+const ranked = [...AREAS].sort(
+  (a, b) => eokOf(b.geoName) - eokOf(a.geoName) || a.geoName.localeCompare(b.geoName, "ko"),
+);
 const MEDALS = ["🥇", "🥈", "🥉"];
 /* 제목이 커진 만큼 표가 짧아져야 한다(오너 2026-09-01). 값은 렌더 실측으로 맞춘다 —
  * 넘치면 QA 가 잡고, 너무 적으면 표 아래가 빈다. */
@@ -267,6 +308,18 @@ const monthsLabel = (() => {
   const mm = (x) => x.slice(4, 6);
   return ms.length === 1 ? `${ms[0].slice(0, 4)}.${mm(ms[0])}월`
     : `${ms[0].slice(0, 4)}.${mm(ms[0])}~${mm(ms.at(-1))}월`;
+})();
+/** 캡션 본문용 말투 — "2026년 6~7월". 카드 위 회색 줄(monthsLabel)과 **같은 달**에서 만든다.
+ * ⚠️ 여기 「2026년 6~7월」이 문자열로 박혀 있었다(2026-09-02 발견). 카드 위 줄은 MONTHS 에서
+ * 만드는데 캡션만 손으로 적혀 있어서, 다음 달에 카드와 캡션이 **다른 기간을 말하게** 된다.
+ * 정기물에서 손으로 적은 날짜는 시한폭탄이다 — 세는 것은 전부 코드가 센다. */
+/** "2025-10-20" → "2025년 10월" — 허가구역 지정 시기를 데이터셋에서 읽어 쓴다 */
+const desigKo = (iso) => `${iso.slice(0, 4)}년 ${Number(iso.slice(5, 7))}월`;
+const monthsKo = (() => {
+  const ms = [...MONTHS].sort();
+  const m = (x) => Number(x.slice(4, 6));
+  const y = ms[0].slice(0, 4);
+  return ms.length === 1 ? `${y}년 ${m(ms[0])}월` : `${y}년 ${m(ms[0])}~${m(ms.at(-1))}월`;
 })();
 const seoul = avgOf("서울");
 const gg = avgOf("경기");
@@ -354,7 +407,7 @@ const caption = [
   `서울 25개 자치구 전역 + 경기 15곳,`,
   `토지거래허가구역 40곳의 아파트 ${KIND_KO} 실거래를`,
   `전용 ${winLo}~${winHi}㎡ 만 골라 평균했습니다.`,
-  `(2026년 6~7월 신고분 ${totalN.toLocaleString()}건)`,
+  `(${monthsKo} 신고분 ${totalN.toLocaleString()}건)`,
   ``,
   /* ⚠️ 캡션의 억 단위 값은 **카드에도 있어야 한다**(caption-number 게이트).
    * 서울 평균은 제목에 있으니 괜찮지만, 하단 주석을 뺀 뒤로 **경기 평균은 카드 어디에도 없다**
@@ -377,7 +430,11 @@ const caption = [
     ? [`   ${monthsLabel} 신고분 · 직거래·해제거래 제외 (${excluded.toLocaleString()}건)`]
     : [`   ${monthsLabel} 신고분 · 전세(월세 0원) 계약만`]),
   `🗂 허가구역 : 서울시·경기도 토지거래허가구역 지정 고시`,
-  `   서울 25개 자치구 전역(2025년 10월) · 경기 15곳(기존 12곳 + 2026년 7월 신규 3곳 ⚡)`,
+  /* 지정 시기·곳수도 **데이터셋에서 읽는다.** 손으로 적혀 있었는데(2026-09-02 발견),
+   * 토허제는 지정이 풀리거나 늘어나는 물건이라 다음 갱신 때 캡션만 옛말이 된다. */
+  `   서울 25개 자치구 전역(${desigKo(tohuh.seoul.effectiveFrom)}) · ` +
+    `경기 ${tohuh.newly.areas.length + tohuh.existing.areas.length}곳` +
+    `(기존 ${tohuh.existing.areas.length}곳 + ${desigKo(tohuh.newly.effectiveFrom)} 신규 ${tohuh.newly.areas.length}곳 ⚡)`,
   ``,
   `※ 면적은 전부 전용면적입니다. 실거래 신고에는 공급면적이 없습니다`,
   `   — '${TYPE === "84" ? "34" : "25"}평'으로 부르는 그 평형이지만, 평(공급) 기준으로 곱한 값이 아닙니다`,
