@@ -59,9 +59,27 @@ const MEASURE = `(() => {
     var key = kind + " rgb(" + r + ", " + g + ", " + b + ")";
     accents[key] = (accents[key] || 0) + 1;
   }
+  /* ── 코로플레스 **면색**은 강조색이 아니다 (2026-09-02)
+     이 검사의 대상은 머리말대로 「빨강·파랑 자리에 앉은 진한 색」이고, 지도의 면색은
+     대상이 아니라고 이미 적혀 있었다. 그런데 코드가 실제로 거르지는 않아서, 전세 지도를
+     파랑 램프로 바꾸자 **중간 톤 40칸이 전부 「규격 밖 코발트」로** 잡혔다.
+     빨강 램프가 안 걸린 건 규칙이 맞아서가 아니라 중간 톤이 옅은 분홍이라 채도 문턱에
+     못 미쳤을 뿐이다 — 즉 이 검사는 램프 색에 따라 우연히 통과하고 있었다.
+
+     램프는 **정의상 규격색의 농담**이고, 양 끝은 규격색 그 자체다
+     (전세 rgb(232,238,255)→rgb(46,107,255) · 매매 rgb(255,235,232)→rgb(229,72,77)).
+     농담을 「규격 밖」이라 부르면 코로플레스를 아예 못 그린다.
+
+     ⚠️ **면(fill)만** 뺀다. 같은 요소의 글자색·테두리는 그대로 본다 — 지도 위 라벨이
+     규격 밖 빨강으로 새는 것은 여전히 잡혀야 한다. 램프의 양 끝이 규격색인지는
+     빌더가 상수로 들고 있고 기준 문서(토허제-가격지도-기준 §2⑥)가 지킨다. */
+  var isChoropleth = function (el) {
+    return el.classList && el.classList.contains("tk-geo");
+  };
   Array.prototype.forEach.call(card.querySelectorAll("*"), function (el) {
     var cs2 = getComputedStyle(el);
-    look(cs2.color); look(cs2.backgroundColor); look(cs2.fill); look(cs2.borderTopColor);
+    look(cs2.color); look(cs2.backgroundColor); look(cs2.borderTopColor);
+    if (!isChoropleth(el)) look(cs2.fill);
   });
   return {
     accents: accents,
