@@ -163,7 +163,12 @@ jobs:
             # 이제 잃는 것은 **마지막 한 단지뿐**이다.
             # ⚠️ 다른 워크플로가 같은 브랜치를 밀고 있을 수 있어 rebase 후 재시도한다.
             if [ -d data/datasets/singo-history ]; then
-              git add data/datasets/singo-history || true
+              # ⚠️ **캐시도 같이 담는다.** 곡선은 받아 온 달을 「구 × 월」 캐시에도 접어 두는데
+              #    (2026-09-02), 그 폴더를 add 에서 빠뜨리면 러너 안에서만 만들어졌다 사라진다 —
+              #    그러면 다음 단지·내일 세션이 같은 달을 **또** 받는다. 이 잡이 존재하는 이유가
+              #    바로 그 「또 받기」를 없애는 것이다.
+              git add data/datasets/singo-history data/datasets/molit-monthly 2>/dev/null || \
+                git add data/datasets/singo-history || true
               if ! git diff --cached --quiet; then
                 git commit -q -m "곡선 — $APT 전용${TYPE} ($LAWD)" || true
                 for TRY in 1 2 3; do
