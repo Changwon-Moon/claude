@@ -1,0 +1,276 @@
+{
+  "_": "강조색 기준선 — 여기 적힌 카드·색은 '이미 나간 옛 판본'이라 픽셀 불변으로 못 고친다. 새로 어긋난 것만 잡으려고 둔다.",
+  "_만드는법": "pnpm --filter @wirit/renderer audit-head -- --write-accent-baseline",
+  "_주의": "새 카드를 여기 넣어 통과시키지 말 것. 새 카드는 var(--wirit-red)/var(--wirit-cobalt) 를 쓰면 된다.",
+  "updatedAt": "2026-09-02",
+  "cards": {
+    "brand-rank": [
+      "cobalt rgb(1, 64, 153)",
+      "red rgb(151, 25, 52)"
+    ],
+    "danji-chungjeongno": [
+      "cobalt rgb(122, 166, 255)"
+    ],
+    "danji-define-artia": [
+      "cobalt rgb(122, 166, 255)"
+    ],
+    "danji-doosanbucheon": [
+      "cobalt rgb(122, 166, 255)"
+    ],
+    "danji-guri": [
+      "cobalt rgb(122, 166, 255)",
+      "red rgb(255, 138, 142)"
+    ],
+    "danji-hangang": [
+      "cobalt rgb(122, 166, 255)"
+    ],
+    "danji-jangwi": [
+      "cobalt rgb(122, 166, 255)"
+    ],
+    "danji-sangdong": [
+      "cobalt rgb(122, 166, 255)"
+    ],
+    "danji-songdo": [
+      "cobalt rgb(122, 166, 255)"
+    ],
+    "danji-songpa": [
+      "cobalt rgb(122, 166, 255)",
+      "red rgb(255, 138, 142)"
+    ],
+    "danji-summit": [
+      "cobalt rgb(122, 166, 255)"
+    ],
+    "danji-thesharp": [
+      "cobalt rgb(122, 166, 255)"
+    ],
+    "estate-cover-59": [
+      "red rgb(190, 17, 53)"
+    ],
+    "estate-cover-84": [
+      "red rgb(190, 17, 53)"
+    ],
+    "foreign-rank-p1": [
+      "cobalt rgb(0, 0, 149)",
+      "cobalt rgb(0, 57, 166)",
+      "cobalt rgb(25, 47, 93)",
+      "red rgb(188, 0, 45)",
+      "red rgb(189, 61, 68)",
+      "red rgb(190, 17, 53)",
+      "red rgb(192, 18, 42)",
+      "red rgb(206, 0, 0)",
+      "red rgb(213, 43, 30)",
+      "red rgb(218, 32, 50)",
+      "red rgb(218, 37, 29)",
+      "red rgb(222, 41, 16)",
+      "red rgb(238, 28, 37)",
+      "red rgb(255, 0, 0)"
+    ],
+    "foreign-rank-p2": [
+      "cobalt rgb(0, 0, 145)",
+      "cobalt rgb(0, 0, 149)",
+      "cobalt rgb(25, 47, 93)",
+      "red rgb(188, 0, 45)",
+      "red rgb(189, 61, 68)",
+      "red rgb(190, 17, 53)",
+      "red rgb(192, 18, 42)",
+      "red rgb(218, 32, 50)",
+      "red rgb(218, 37, 29)",
+      "red rgb(222, 41, 16)",
+      "red rgb(225, 0, 15)",
+      "red rgb(238, 28, 37)",
+      "red rgb(255, 0, 0)"
+    ],
+    "jeongbi-board": [
+      "red rgb(151, 25, 52)",
+      "red rgb(224, 0, 42)",
+      "red rgb(240, 78, 62)"
+    ],
+    "jeongbi-map": [
+      "red rgb(176, 11, 30)",
+      "red rgb(202, 83, 93)",
+      "red rgb(216, 119, 125)",
+      "red rgb(229, 154, 156)"
+    ],
+    "jeonse59-map": [
+      "red rgb(235, 110, 113)",
+      "red rgb(238, 125, 128)",
+      "red rgb(238, 126, 128)",
+      "red rgb(239, 135, 137)",
+      "red rgb(239, 136, 138)",
+      "red rgb(240, 140, 142)",
+      "red rgb(240, 143, 144)",
+      "red rgb(240, 144, 145)",
+      "red rgb(242, 154, 155)"
+    ],
+    "jeonse84-map": [
+      "red rgb(234, 101, 104)",
+      "red rgb(235, 108, 111)",
+      "red rgb(236, 116, 119)",
+      "red rgb(237, 122, 124)",
+      "red rgb(239, 137, 139)",
+      "red rgb(240, 141, 143)",
+      "red rgb(240, 143, 144)",
+      "red rgb(241, 149, 150)"
+    ],
+    "jeonwolse-map": [
+      "red rgb(224, 96, 100)",
+      "red rgb(225, 114, 118)",
+      "red rgb(225, 115, 119)",
+      "red rgb(227, 138, 142)",
+      "red rgb(227, 145, 148)",
+      "red rgb(227, 146, 149)",
+      "red rgb(227, 147, 151)",
+      "red rgb(228, 154, 157)",
+      "red rgb(228, 158, 161)",
+      "red rgb(228, 160, 164)",
+      "red rgb(228, 161, 165)",
+      "red rgb(228, 164, 167)",
+      "red rgb(228, 165, 169)",
+      "red rgb(229, 166, 170)",
+      "red rgb(229, 167, 170)"
+    ],
+    "line2-loop": [
+      "cobalt rgb(13, 54, 146)"
+    ],
+    "line4-loop": [
+      "cobalt rgb(13, 54, 146)"
+    ],
+    "line6-loop": [
+      "cobalt rgb(13, 54, 146)"
+    ],
+    "line7-loop": [
+      "cobalt rgb(13, 54, 146)"
+    ],
+    "line9-loop": [
+      "cobalt rgb(13, 54, 146)"
+    ],
+    "m2-gov": [
+      "red rgb(143, 31, 35)"
+    ],
+    "m2-rate": [
+      "red rgb(165, 18, 31)"
+    ],
+    "mae59-map": [
+      "red rgb(231, 83, 88)",
+      "red rgb(234, 103, 107)",
+      "red rgb(234, 104, 107)",
+      "red rgb(239, 133, 135)",
+      "red rgb(239, 134, 136)"
+    ],
+    "mae84-map": [
+      "red rgb(231, 84, 88)",
+      "red rgb(235, 111, 114)",
+      "red rgb(236, 119, 122)",
+      "red rgb(239, 132, 134)",
+      "red rgb(241, 150, 151)",
+      "red rgb(242, 155, 156)"
+    ],
+    "maprank-59-p1": [
+      "red rgb(176, 11, 30)",
+      "red rgb(190, 17, 53)",
+      "red rgb(192, 18, 42)",
+      "red rgb(197, 68, 80)",
+      "red rgb(203, 84, 94)",
+      "red rgb(207, 94, 103)",
+      "red rgb(216, 119, 125)",
+      "red rgb(221, 132, 136)",
+      "red rgb(222, 135, 139)",
+      "red rgb(224, 140, 144)",
+      "red rgb(224, 141, 145)",
+      "red rgb(228, 151, 153)"
+    ],
+    "maprank-59-p2": [
+      "red rgb(190, 17, 53)",
+      "red rgb(192, 18, 42)"
+    ],
+    "maprank-84-p1": [
+      "red rgb(176, 11, 30)",
+      "red rgb(183, 31, 47)",
+      "red rgb(187, 42, 57)",
+      "red rgb(190, 17, 53)",
+      "red rgb(192, 18, 42)",
+      "red rgb(210, 103, 111)",
+      "red rgb(214, 114, 120)",
+      "red rgb(222, 135, 139)",
+      "red rgb(225, 142, 145)",
+      "red rgb(229, 153, 155)",
+      "red rgb(232, 161, 162)"
+    ],
+    "maprank-84-p2": [
+      "red rgb(190, 17, 53)",
+      "red rgb(192, 18, 42)"
+    ],
+    "metro-2col": [
+      "red rgb(214, 40, 40)",
+      "red rgb(225, 29, 72)"
+    ],
+    "metro-cover-photo": [
+      "cobalt rgb(138, 180, 255)"
+    ],
+    "metro-speed-cover": [
+      "red rgb(214, 40, 40)"
+    ],
+    "metro-speed-hl": [
+      "red rgb(214, 40, 40)"
+    ],
+    "sinbundang-loop": [
+      "cobalt rgb(0, 61, 165)"
+    ],
+    "singo-광주역자연앤자이-84": [
+      "cobalt rgb(0, 61, 165)"
+    ],
+    "singoga-map": [
+      "red rgb(176, 11, 30)",
+      "red rgb(200, 75, 86)",
+      "red rgb(206, 92, 101)",
+      "red rgb(211, 105, 113)",
+      "red rgb(217, 124, 129)",
+      "red rgb(220, 132, 136)",
+      "red rgb(225, 145, 148)",
+      "red rgb(226, 147, 150)",
+      "red rgb(227, 149, 151)",
+      "red rgb(228, 151, 153)",
+      "red rgb(229, 155, 157)",
+      "red rgb(229, 157, 158)",
+      "red rgb(231, 160, 161)",
+      "red rgb(255, 107, 112)"
+    ],
+    "tohuh-rank": [
+      "red rgb(176, 11, 30)",
+      "red rgb(222, 138, 141)"
+    ],
+    "tohuh-rent-map": [
+      "red rgb(176, 11, 30)",
+      "red rgb(179, 20, 38)",
+      "red rgb(186, 37, 53)",
+      "red rgb(195, 63, 76)",
+      "red rgb(196, 65, 77)",
+      "red rgb(206, 93, 102)",
+      "red rgb(207, 94, 103)",
+      "red rgb(214, 114, 121)",
+      "red rgb(215, 118, 124)",
+      "red rgb(217, 122, 128)",
+      "red rgb(219, 127, 132)",
+      "red rgb(220, 130, 135)",
+      "red rgb(221, 134, 138)",
+      "red rgb(223, 140, 143)",
+      "red rgb(224, 143, 146)",
+      "red rgb(225, 145, 148)",
+      "red rgb(226, 147, 149)",
+      "red rgb(228, 151, 153)",
+      "red rgb(228, 152, 154)",
+      "red rgb(229, 156, 158)",
+      "red rgb(230, 159, 160)",
+      "red rgb(231, 160, 161)",
+      "red rgb(231, 162, 162)",
+      "red rgb(232, 163, 163)"
+    ],
+    "wolse-flip-p1": [
+      "red rgb(165, 18, 31)",
+      "red rgb(192, 39, 45)"
+    ],
+    "wolse-flip-p3": [
+      "red rgb(214, 40, 40)"
+    ]
+  }
+}

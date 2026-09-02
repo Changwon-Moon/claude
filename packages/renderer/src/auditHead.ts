@@ -29,7 +29,42 @@ const MEASURE = `(() => {
      20px 인 게 드러났다(오너 2026-09-01 지적). 그래서 전수 표에 넣는다. */
   var tc = card.querySelector(".wirit-topcap");
   var tcs = tc ? getComputedStyle(tc) : null;
+  /* ── 강조색을 **렌더된 픽셀에서** 훑는다 (2026-09-02)
+     정적 grep 은 템플릿에 적힌 hex 만 본다. 빌더가 SVG 에 넣는 색·계산해서 넣는 색은 못 본다.
+     여기서는 카드 안 모든 요소의 color/배경/fill 을 실제 계산값으로 읽으므로 빠져나갈 자리가 없다.
+     '빨강·파랑 자리에 앉은 진한 색'만 모은다 — 노선색·면색·회색은 대상이 아니다. */
+  var accents = {};
+  function hsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    var mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn, h = 0;
+    if (d) {
+      if (mx === r) h = ((g - b) / d) % 6; else if (mx === g) h = (b - r) / d + 2; else h = (r - g) / d + 4;
+      h *= 60; if (h < 0) h += 360;
+    }
+    var l = (mx + mn) / 2;
+    return { h: h, s: d ? d / (1 - Math.abs(2 * l - 1)) : 0, l: l };
+  }
+  function look(v) {
+    if (!v) return;
+    /* ⚠️ 이 문자열은 **템플릿 리터럴 안**이다. 정규식의 역슬래시를 한 번만 쓰면
+       TS 가 컴파일 때 먹어 버려 브라우저에는 /rgba?((d+)...)/ 가 도착한다 — 아무것도 안 걸리고
+       "위반 0장"이라는 **거짓 초록불**이 뜬다(2026-09-02 실제로 그랬다). 그래서 두 번 쓴다. */
+    var m = String(v).match(/rgba?\\((\\d+),\\s*(\\d+),\\s*(\\d+)(?:,\\s*([\\d.]+))?\\)/);
+    if (!m) return;
+    if (m[4] !== undefined && parseFloat(m[4]) < 0.5) return;   // 거의 투명한 것은 색이 아니다
+    var r = +m[1], g = +m[2], b = +m[3], c = hsl(r, g, b);
+    if (c.s < 0.45 || c.l < 0.18 || c.l > 0.78) return;
+    var kind = (c.h >= 345 || c.h <= 15) ? "red" : (c.h >= 215 && c.h <= 245) ? "cobalt" : null;
+    if (!kind) return;
+    var key = kind + " rgb(" + r + ", " + g + ", " + b + ")";
+    accents[key] = (accents[key] || 0) + 1;
+  }
+  Array.prototype.forEach.call(card.querySelectorAll("*"), function (el) {
+    var cs2 = getComputedStyle(el);
+    look(cs2.color); look(cs2.backgroundColor); look(cs2.fill); look(cs2.borderTopColor);
+  });
   return {
+    accents: accents,
     capPx: tc && tc.textContent.trim() ? Math.round(parseFloat(tcs.fontSize)) : null,
     capWeight: tc && tc.textContent.trim() ? String(tcs.fontWeight) : null,
     padTop: Math.round(parseFloat(cs.paddingTop) || 0),
@@ -124,6 +159,54 @@ async function main() {
   }
   console.log("─".repeat(100));
   console.log(`총 ${rows.length}장 · 규격 위반 ${bad}장 (표지형 예외 ${rows.filter(isCover).length}장 제외)\n`);
-  process.exit(bad > 0 ? 1 : 0);
+
+  /* ── 강조색 전수 (2026-09-02 오너 "블루, 레드 폰트 컬러들이 조금 기준하고 다른것 같은데")
+     렌더된 픽셀에서 읽었으므로 빌더가 넣은 색·SVG 안의 색도 다 걸린다.
+     옛 카드는 픽셀 불변이라 못 고친다 → **기준선(baseline)** 에 적어 두고,
+     기준선에 없는 카드가 새로 어긋나면 그때 빨간불이 켜진다. 새 드리프트만 막는 방식이다. */
+  const RED = "rgb(229, 72, 77)", COBALT = "rgb(46, 107, 255)";
+  const BASE = path.join(ROOT, "data/review/accent-baseline.json");
+  const baseline: Record<string, string[]> = fs.existsSync(BASE)
+    ? JSON.parse(fs.readFileSync(BASE, "utf8")).cards ?? {}
+    : {};
+  const offenders: Record<string, string[]> = {};
+  for (const r of rows) {
+    const bad2 = Object.keys(r.accents ?? {})
+      .filter((k) => !(k === `red ${RED}` || k === `cobalt ${COBALT}`))
+      .sort();
+    if (bad2.length) offenders[r.slug] = bad2;
+  }
+  const fresh = Object.entries(offenders).filter(([slug, list]) => {
+    const known = baseline[slug] ?? [];
+    return list.some((c) => !known.includes(c));
+  });
+
+  console.log(`🎨 강조색 전수 — 규격 레드 ${RED} · 코발트 ${COBALT}`);
+  console.log("   (빨강·파랑 자리의 진한 색만 봅니다. 노선색·면색·회색은 대상이 아닙니다)");
+  if (process.argv.includes("--write-accent-baseline")) {
+    fs.writeFileSync(
+      BASE,
+      JSON.stringify(
+        {
+          _: "강조색 기준선 — 여기 적힌 카드·색은 '이미 나간 옛 판본'이라 픽셀 불변으로 못 고친다. 새로 어긋난 것만 잡으려고 둔다.",
+          _만드는법: "pnpm --filter @wirit/renderer audit-head -- --write-accent-baseline",
+          _주의: "새 카드를 여기 넣어 통과시키지 말 것. 새 카드는 var(--wirit-red)/var(--wirit-cobalt) 를 쓰면 된다.",
+          updatedAt: new Date().toISOString().slice(0, 10),
+          cards: offenders,
+        },
+        null,
+        2,
+      ) + "\n",
+      "utf8",
+    );
+    console.log(`   ✍️ 기준선을 다시 썼습니다 — ${Object.keys(offenders).length}장`);
+  } else if (!fresh.length) {
+    console.log(`   ✅ 새로 어긋난 카드 없음 (기준선에 옛 카드 ${Object.keys(baseline).length}장)`);
+  } else {
+    console.log(`   ❌ 새로 어긋난 카드 ${fresh.length}장 — 토큰(var(--wirit-red)/var(--wirit-cobalt))을 쓰세요`);
+    for (const [slug, list] of fresh) console.log(`      ${slug} — ${list.join(" · ")}`);
+  }
+  console.log("");
+  process.exit(bad > 0 || fresh.length > 0 ? 1 : 0);
 }
 main();
