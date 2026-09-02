@@ -45,6 +45,19 @@ if (!KEY) {
 const BUDGET = Number(arg("budget") ?? 1200);
 const FROM = arg("from") ?? BASELINE_FROM;
 const ONLY = arg("lawd");
+/**
+ * 어디까지 채울까 — 비우면 「두 달 전」까지(정기 백필의 기본).
+ *
+ * ⚠️ 왜 달았나 (2026-09-02 · 「같은 값에서 출발한 두 단지」 카드)
+ * 그 카드는 **기준창 다섯 달(2019-11~2020-03)과 최근 몇 달**만 있으면 된다. 그런데 백필은
+ * `FROM` 부터 **끝까지** 훑으므로 `--from 201911` 을 주면 그 사이 83개월이 전부 대상이 된다
+ * (61구 × 83 ≈ 5,000회 · 나흘). 창을 좁히면 **수백 회**로 끝난다.
+ * 정기 백필이 어차피 며칠에 걸쳐 전부 채우므로, 이건 **급한 창만 앞당기는 손잡이**다.
+ *
+ * ⚠️ 넘긴 값이 「두 달 전」보다 뒤면 무시한다 — 최근 두 달은 아침 알림의 몫이고,
+ *    덜 들어온 달을 캐시에 굳히면 「그 달은 원래 그만큼이었다」로 읽힌다.
+ */
+const TO = arg("to");
 
 async function main() {
   const uniPath = R("data/datasets/apt-universe.json");
@@ -64,7 +77,12 @@ async function main() {
   /* 최근 두 달은 아침 알림의 몫이다 — 여기서 건드리면 같은 것을 두 번 받는 셈이다. */
   const kst = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
   const cur = Number(kst.slice(0, 4)) * 12 + Number(kst.slice(5, 7)) - 1;
-  const lastYm = `${Math.floor((cur - 2) / 12)}${String(((cur - 2) % 12) + 1).padStart(2, "0")}`;
+  const cap = `${Math.floor((cur - 2) / 12)}${String(((cur - 2) % 12) + 1).padStart(2, "0")}`;
+  /* `--to` 는 창을 **좁힐 때만** 듣는다. 늘려 달라는 요청은 조용히 무시하지 않고 말한다. */
+  const lastYm = TO && TO < cap ? TO : cap;
+  if (TO && TO > cap) {
+    console.log(`ⓘ --to ${TO} 는 최근 두 달 안이라 ${cap} 까지만 채웁니다(그 두 달은 아침 알림의 몫입니다)`);
+  }
   const months = monthRange(FROM, lastYm);
 
   const targets = (ONLY ? lawds.filter((l) => l === ONLY) : lawds);

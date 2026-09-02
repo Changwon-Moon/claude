@@ -20,6 +20,20 @@ on:
   schedule:
     # 06:40 KST = 21:40 UTC — 아침 알림(04:55 KST)이 끝난 뒤, 한도가 리셋된 같은 날 안에서
     - cron: "40 21 * * *"
+  # ── 대기열 방아쇠 (2026-09-02 신설)
+  #
+  # 이 워크플로에는 방아쇠가 예약과 버튼뿐이었다. 그런데 **작업 세션은 버튼을 못 누른다**
+  # (api.github.com 이 프록시에서 403 — CLAUDE.md §6). 그래서 세션이 급한 창을 먼저
+  # 채우고 싶어도 **다음 날 아침까지 기다리는 수밖에** 없었다. 다른 배관과 같은 방식으로
+  # 손잡이를 단다: 파일 한 줄을 밀면 그 줄로 한 번 돈다.
+  #
+  #   한 줄 형식:  budget=600 from=201911 to=202003 [lawd=41210]
+  #
+  # ⚠️ 예약 런은 이 파일을 **읽지 않는다** — 8/1 에 민 한 줄이 상시 설정이 되어 정기 실거래
+  #    수집이 두 주 동안 엉뚱한 범위로 돌았다(molit-collect.yml 의 같은 자리 참고).
+  push:
+    paths:
+      - "data/month-backfill-queue.txt"
   workflow_dispatch:
     inputs:
       budget:
@@ -28,6 +42,14 @@ on:
         default: "1200"
       lawd:
         description: "특정 구만 (비우면 전부)"
+        required: false
+        default: ""
+      from:
+        description: "시작월 YYYYMM (비우면 2020-01)"
+        required: false
+        default: ""
+      to:
+        description: "끝월 YYYYMM (비우면 두 달 전까지)"
         required: false
         default: ""
 
@@ -57,10 +79,24 @@ jobs:
         run: |
           git config user.name "wirit-bot"
           git config user.email "actions@github.com"
-          B="${{ github.event.inputs.budget }}"; [ -z "$B" ] && B=1200
+          B="${{ github.event.inputs.budget }}"
           L="${{ github.event.inputs.lawd }}"
+          F="${{ github.event.inputs.from }}"
+          T="${{ github.event.inputs.to }}"
+          # ⛔ 예약 런은 대기열을 읽지 않는다 — 한 번 민 줄이 상시 설정이 되면 안 된다.
+          EVT="${{ github.event_name }}"
+          if { [ "$EVT" = "push" ] || [ "$EVT" = "workflow_dispatch" ]; } && [ -f data/month-backfill-queue.txt ]; then
+            LINE=$(grep -v '^[[:space:]]*#' data/month-backfill-queue.txt | grep -v '^[[:space:]]*$' | tail -1)
+            echo "대기열 마지막 줄: $LINE"
+            [ -z "$B" ] && B=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^budget=//p')
+            [ -z "$L" ] && L=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^lawd=//p')
+            [ -z "$F" ] && F=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^from=//p')
+            [ -z "$T" ] && T=$(echo "$LINE" | tr ' ' '\n' | sed -n 's/^to=//p')
+          fi
+          [ -z "$B" ] && B=1200
+          echo "백필: 예산 $B · 창 ${F:-기본}~${T:-두 달 전} ${L:+· 구 $L}"
           pnpm --filter @wirit/collectors collect-month-backfill -- \
-            --budget "$B" ${L:+--lawd "$L"} 2>&1 | tee "$RUNNER_TEMP/bf.log"
+            --budget "$B" ${L:+--lawd "$L"} ${F:+--from "$F"} ${T:+--to "$T"} 2>&1 | tee "$RUNNER_TEMP/bf.log"
 
       - name: 커밋
         if: always()
@@ -81,3 +117,19 @@ jobs:
               sleep 5
             done
           fi
+
+      # ── 실패하면 말한다 (2026-09-02 신설)
+      #
+      # 이 배관은 매일 도는 예약인데 실패 알림이 없었다 — 전수 검사가 경고로 잡고 있었다.
+      # 캐시가 안 차면 곡선이 다시 API 를 두드리고, 그러면 09-02 의 한도 사고가 되풀이된다.
+      # **성공은 말하지 않는다** — 매일 오는 알림은 읽지 않게 되고, 그러면 진짜 실패도 안 읽힌다.
+      - name: 실패하면 말한다
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        shell: bash
+        run: |
+          TAIL=$(tail -12 "$RUNNER_TEMP/bf.log" 2>/dev/null || echo "(로그 없음)")
+          MSG=$(printf '⛔ 「구 × 월」 캐시 백필 실패\n\n캐시가 안 차면 곡선이 다시 국토부를 두드립니다.\n\n%s' "$TAIL")
+          node scripts/notify-telegram.mjs "$MSG"

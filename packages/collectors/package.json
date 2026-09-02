@@ -27,7 +27,8 @@
     "collect-supply-area": "tsx src/supplyAreaCli.ts",
     "collect-silv": "tsx src/silvCli.ts",
     "read-bunyang-csv": "tsx src/bunyangCsvCli.ts",
-    "collect-month-backfill": "tsx src/monthBackfillCli.ts"
+    "collect-month-backfill": "tsx src/monthBackfillCli.ts",
+    "fold-month-cache": "tsx src/monthFoldCli.ts"
   },
   "dependencies": {},
   "devDependencies": {
