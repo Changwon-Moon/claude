@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T13:52:17.759Z",
+  "generatedAt": "2026-09-02T15:37:11.985Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -8,12 +8,6 @@
       "cron": "55 19 * * *",
       "dueKst": "04:55",
       "dots": [
-        {
-          "day": "08-20",
-          "state": "fail",
-          "at": "07:12",
-          "delay": null
-        },
         {
           "day": "08-21",
           "state": "ok",
@@ -91,6 +85,12 @@
           "state": "late",
           "at": "07:06",
           "delay": 131
+        },
+        {
+          "day": "09-03",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": 131,
@@ -105,12 +105,6 @@
       "cron": "10 20 8 * *",
       "dueKst": "05:10",
       "dots": [
-        {
-          "day": "08-20",
-          "state": "none",
-          "at": null,
-          "delay": null
-        },
         {
           "day": "08-21",
           "state": "none",
@@ -185,6 +179,12 @@
         },
         {
           "day": "09-02",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "09-03",
           "state": "none",
           "at": null,
           "delay": null
@@ -203,12 +203,6 @@
       "dueKst": "06:40",
       "dots": [
         {
-          "day": "08-20",
-          "state": "none",
-          "at": null,
-          "delay": null
-        },
-        {
           "day": "08-21",
           "state": "none",
           "at": null,
@@ -285,12 +279,18 @@
           "state": "none",
           "at": null,
           "delay": null
+        },
+        {
+          "day": "09-03",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": null,
       "maxDelay": null,
-      "lastRun": "2026-09-02",
-      "lastOk": "2026-09-02",
+      "lastRun": "2026-09-03",
+      "lastOk": "2026-09-03",
       "okDaysAgo": 0
     },
     {
@@ -299,12 +299,6 @@
       "cron": "0 1 * * *",
       "dueKst": "10:00",
       "dots": [
-        {
-          "day": "08-20",
-          "state": "ok",
-          "at": "12:00",
-          "delay": null
-        },
         {
           "day": "08-21",
           "state": "ok",
@@ -382,6 +376,12 @@
           "state": "late",
           "at": "14:36",
           "delay": 277
+        },
+        {
+          "day": "09-03",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": 277,
@@ -396,12 +396,6 @@
       "cron": "20 1 1 * *",
       "dueKst": "10:20",
       "dots": [
-        {
-          "day": "08-20",
-          "state": "ok",
-          "at": "11:32",
-          "delay": null
-        },
         {
           "day": "08-21",
           "state": "ok",
@@ -479,6 +473,12 @@
           "state": "none",
           "at": null,
           "delay": null
+        },
+        {
+          "day": "09-03",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": null,
@@ -493,12 +493,6 @@
       "cron": "0 2 * * *",
       "dueKst": "11:00",
       "dots": [
-        {
-          "day": "08-20",
-          "state": "ok",
-          "at": "12:26",
-          "delay": null
-        },
         {
           "day": "08-21",
           "state": "ok",
@@ -576,6 +570,12 @@
           "state": "late",
           "at": "15:53",
           "delay": 294
+        },
+        {
+          "day": "09-03",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": 294,
@@ -899,19 +899,19 @@
     {
       "file": "auto-produce.yml",
       "name": "데이터 바뀌면 카드 자동 재생산",
-      "lastRun": "2026-09-02",
+      "lastRun": "2026-09-03",
       "daysAgo": 0,
       "lastOk": "2026-09-02",
       "okDaysAgo": 0,
-      "fails30": 32,
-      "runs30": 62
+      "fails30": 33,
+      "runs30": 65
     },
     {
       "file": "guard.yml",
       "name": "문지기 (guard)",
-      "lastRun": "2026-09-02",
+      "lastRun": "2026-09-03",
       "daysAgo": 0,
-      "lastOk": "2026-09-02",
+      "lastOk": "2026-09-03",
       "okDaysAgo": 0,
       "fails30": 3,
       "runs30": 100
@@ -979,11 +979,11 @@
     {
       "file": "tower-deploy.yml",
       "name": "관제탑 배포 (Cloudflare)",
-      "lastRun": "2026-09-02",
+      "lastRun": "2026-09-03",
       "daysAgo": 0,
       "lastOk": "2026-09-02",
       "okDaysAgo": 0,
-      "fails30": 3,
+      "fails30": 0,
       "runs30": 100
     }
   ]
