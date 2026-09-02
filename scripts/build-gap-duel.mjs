@@ -39,6 +39,23 @@ const CURVE_TO = arg("to", "202607");
 const kstToday = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const DATE = arg("date", kstToday);
 
+/**
+ * 시리즈명 (오너 2026-09-02 확정) — 상단 회색 줄에 **이것과 번호만** 나간다.
+ *
+ * 왜 이 이름인가: 전제(「같은 값에서 출발했다」)가 이름 안에 다 들어가 첫 장이 그것을
+ * 또 설명하지 않아도 된다. 그리고 **카드가 재지 않은 것을 약속하지 않는다** —
+ * 후보였던 「입지의 중요성」·「가격 차이가 나는 이유」는 값이 왜 갈렸는지를 약속하는데,
+ * 이 카드가 재는 것은 **갈렸다는 사실**뿐이라 그 이름은 지킬 수 없는 약속이 된다.
+ *
+ * ⚠️ 시리즈명에 숫자를 넣지 않는다. 기준창을 2021-10 으로 바꾼 편이 나오는 순간
+ *    「벌어진 6년」 같은 이름은 그날로 틀린 말이 된다.
+ */
+const SERIES = "출발선은 같았다";
+/** 연재 번호 — 편이 갈려도 **계정 전체에서 하나로** 이어간다(기본은 묶음 순번). */
+const NO = Number(arg("no", PICK + 1));
+const CIRCLED = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳";
+const numeral = (n) => (n >= 1 && n <= 20 ? CIRCLED[n - 1] : `${n}화`);
+
 /* BRAND — 레드 = 가장 많이 오른 쪽, 코발트 = 가장 덜 오른 쪽, 슬레이트 = 가운데.
    색이 방향(오름/내림)이 아니라 **순위**를 말한다. 곡선 셋이 부채로 벌어지는 그림이라
    양 끝에 두 강조색을 두고 가운데는 무채색으로 물러난다. */
@@ -179,8 +196,8 @@ const baseLabel = fmtEok(Math.round((group.baseFrom + group.baseTo) / 2));
 const card = {
   template: "streak-line@1",
   date: DATE,
-  /* 뱃지가 측정 정의를 말한다 — 푸터에 넣으면 줄이 넘치고, 제목은 주인공 하나만 세우는 자리다 */
-  badge: `같은 값에서 출발한 집들 · 월별 최고가`,
+  /* 상단은 **시리즈명과 번호만**(오너 2026-09-02). 측정 정의는 푸터로 내렸다 */
+  badge: `${SERIES} ${numeral(NO)}`,
   title:
     `<span class="tl">2020년 초, 셋 다 <span class="hi">${baseLabel}</span>이었다</span>`.replace(
       "셋",
@@ -198,9 +215,10 @@ const card = {
   note: group.typeMix
     ? `평형은 달라도, 그때 값은 <b>같았다</b>`
     : `${shortName(hi.apt)} <b>${hi.ratio.toFixed(2)}배</b> · ${shortName(lo.apt)} <b>${lo.ratio.toFixed(2)}배</b>`,
-  /* ⚠️ asOf 는 짧게 — 「월별 최고가」까지 넣었더니 푸터가 두 줄로 넘쳐 워터마크를 밀었다.
-     측정 정의(월별 최고가)는 위 뱃지가 말한다. */
-  source: { name: "국토교통부 아파트 실거래가", asOf: `${CURVE_FROM.slice(0, 4)}.${+CURVE_FROM.slice(4)}~${CURVE_TO.slice(0, 4)}.${+CURVE_TO.slice(4)}` },
+  /* 측정 정의(월별 최고가)가 여기 산다 — 상단은 시리즈명과 번호만 두기로 했다(오너 09-02).
+     ⚠️ **기간은 안 적는다.** 기간·정의를 둘 다 넣으면 푸터가 두 줄로 넘쳐 워터마크를 민다
+     (09-02 실측). 기간은 이미 가로축이 양 끝에 적고 있다 — 같은 말을 두 번 하지 않는다. */
+  source: { name: "국토교통부 아파트 실거래가", asOf: "월별 최고가" },
   meta: {
     set: SET, pick: PICK + 1,
     /* 캡션 쓰는 사람이 다시 찾지 않게 남긴다 — 신고가 카드의 meta.region 과 같은 취지 */
