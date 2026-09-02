@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T02:49:09.266Z",
+  "generatedAt": "2026-09-02T04:52:36.760Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -289,9 +289,9 @@
       ],
       "medianDelay": null,
       "maxDelay": null,
-      "lastRun": null,
-      "lastOk": null,
-      "okDaysAgo": null
+      "lastRun": "2026-09-02",
+      "lastOk": "2026-09-02",
+      "okDaysAgo": 0
     },
     {
       "file": "applyhome-collect.yml",
@@ -760,9 +760,9 @@
       "file": "apt-area-probe.yml",
       "name": "공급면적 탐침 (K-apt 전용률 · 건축물대장 실측)",
       "lastRun": "2026-08-17",
-      "daysAgo": 15,
+      "daysAgo": 16,
       "lastOk": "2026-08-17",
-      "okDaysAgo": 15,
+      "okDaysAgo": 16,
       "fails30": 0,
       "runs30": 25
     },
@@ -770,9 +770,9 @@
       "file": "collect.yml",
       "name": "데이터 수집 (daily)",
       "lastRun": "2026-08-29",
-      "daysAgo": 3,
+      "daysAgo": 4,
       "lastOk": "2026-08-29",
-      "okDaysAgo": 3,
+      "okDaysAgo": 4,
       "fails30": 0,
       "runs30": 20
     },
@@ -785,6 +785,16 @@
       "okDaysAgo": 3,
       "fails30": 1,
       "runs30": 26
+    },
+    {
+      "file": "publish-archive.yml",
+      "name": "완성본 보관 (발행 완료)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 2,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 2,
+      "fails30": 8,
+      "runs30": 54
     },
     {
       "file": "reb-collect.yml",
@@ -857,16 +867,6 @@
       "runs30": 9
     },
     {
-      "file": "publish-archive.yml",
-      "name": "완성본 보관 (발행 완료)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 1,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 1,
-      "fails30": 8,
-      "runs30": 54
-    },
-    {
       "file": "apt-detail.yml",
       "name": "단지 주차대수 (카드 제원용)",
       "lastRun": "2026-09-02",
@@ -903,8 +903,8 @@
       "daysAgo": 0,
       "lastOk": "2026-09-02",
       "okDaysAgo": 0,
-      "fails30": 30,
-      "runs30": 57
+      "fails30": 31,
+      "runs30": 59
     },
     {
       "file": "guard.yml",
@@ -983,7 +983,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-02",
       "okDaysAgo": 0,
-      "fails30": 11,
+      "fails30": 10,
       "runs30": 100
     }
   ]
