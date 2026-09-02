@@ -66,6 +66,38 @@ function holes(lawd) {
   return n;
 }
 
+/* ── 톱니 지수 — **고르기 전에** 보이게 한다 (2026-09-03)
+   3호 후보의 오산대역세교자이는 값이 다 맞는데도 곡선이 톱니라 카드가 못 됐다.
+   그걸 렌더를 보고서야 알면 이미 고른 뒤다 — 표에 숫자로 세워 둔다.
+   재는 법은 빌더와 같다: **붙어 있는 두 달**끼리만, 15% 넘게 튄 쌍의 비율.
+   (띄엄띄엄 거래되는 단지는 관측 사이가 멀어 커 보이는 게 당연하다.)
+   실측: 발행본들 0~9% · 오산 18%. 12% 위면 빌더가 던진다. */
+const seriesCache = new Map();
+function unitNoise(u) {
+  const key = `${u.lawd}|${u.umd}|${u.apt}|${u.type}`;
+  if (seriesCache.has(key)) return seriesCache.get(key);
+  const pts = [];
+  for (const ym of MONTHS) {
+    const p = R(`data/datasets/molit-monthly/${u.lawd}/${ym}.json`);
+    if (!existsSync(p)) continue;
+    let c; try { c = JSON.parse(readFileSync(p, "utf8")); } catch { continue; }
+    if (c.scope !== "universe") continue;
+    const r = (c.rows ?? []).find((r) => r.umd === u.umd && r.apt === u.apt && r.type === u.type);
+    if (r) pts.push({ ym, v: r.max });
+  }
+  const mi = (ym) => (+ym.slice(0, 4)) * 12 + (+ym.slice(4));
+  let adj = 0, jump = 0;
+  for (let k = 1; k < pts.length; k++) {
+    if (mi(pts[k].ym) - mi(pts[k - 1].ym) !== 1) continue;
+    adj++;
+    if (Math.abs(pts[k].v - pts[k - 1].v) / pts[k - 1].v > 0.15) jump++;
+  }
+  /* 이웃달 쌍이 12개도 안 되면 「아직 모른다」다 — 0%로 적어 통과시키지 않는다 */
+  const out = adj < 12 ? null : jump / adj;
+  seriesCache.set(key, out);
+  return out;
+}
+
 const eok = (m) => (m / 10000).toFixed(1);
 const pad = (s, n) => String(s) + " ".repeat(Math.max(0, n - [...String(s)].reduce((w, c) => w + (c.charCodeAt(0) > 0x1100 ? 2 : 1), 0)));
 
@@ -101,6 +133,7 @@ for (const [set, band] of [["gap-ep1", "그때 10억 이하"], ["gap-ep2", "그�
       gapEok: g.gapEok, ratioGap: g.ratioGap ?? 0, baseFrom: g.baseFrom, baseTo: g.baseTo,
       members: g.members,
       calls: lawds.reduce((s, l) => s + holes(l), 0),
+      noise: g.members.map(unitNoise),
       lawds,
     });
   });
@@ -128,6 +161,7 @@ L.push("| **상승률차** | 1위와 3위의 배수 차이(2.52 − 1.14 = 1.38)
 L.push("| 금액차 | 지금 값의 차이(억). 참고용 |");
 L.push("| 그때 | 2019.11~2020.03 실거래 최고가 — 세 단지가 ±3% 안에서 겹칩니다 |");
 L.push("| 자료 | 곡선을 그리려면 더 받아야 하는 국토부 호출 수. 🟢 0회면 바로 나옵니다 |");
+L.push("| 톱니 | 이웃한 두 달 사이 15% 넘게 튄 비율(가장 심한 단지). 발행본은 0~9%, **12% 넘으면 빌더가 던집니다** — 값은 맞아도 선이 이야기를 못 합니다 |");
 L.push("| 만들 때 | `build-gap-duel.mjs --set … --pick …` 에 넣는 값 |");
 L.push("");
 L.push("");
@@ -144,12 +178,17 @@ L.push("");
 const cell = (m) => `${shortGu(m.gu)} ${dedupCity(m.gu, shortName(m.apt))} ${m.pyeong} **${m.ratio.toFixed(2)}배**`;
 const row = (r, no) => {
   const tag = DONE.has(r.label) ? `✅ #${DONE.get(r.label)} 완료` : r.calls === 0 ? "🟢 바로" : `🟡 ${r.calls}회`;
+  const known = r.noise.filter((n) => n !== null);
+  const worst = known.length ? Math.max(...known) : null;
+  const saw = worst === null ? "—"
+    : worst > 0.12 ? `⛔ ${Math.round(worst * 100)}%`
+    : `${Math.round(worst * 100)}%`;
   const mid = r.members.length === 3 ? cell(r.members[1]) : "—";
-  return `| ${no} | **${r.ratioGap.toFixed(2)}배** | ${r.gapEok.toFixed(1)}억 | ${eok(r.baseFrom)}~${eok(r.baseTo)}억 | ${cell(r.members[0])} | ${mid} | ${cell(r.members[r.members.length - 1])} | ${tag} | \`${r.set} ${r.pick}\` |`;
+  return `| ${no} | **${r.ratioGap.toFixed(2)}배** | ${r.gapEok.toFixed(1)}억 | ${eok(r.baseFrom)}~${eok(r.baseTo)}억 | ${cell(r.members[0])} | ${mid} | ${cell(r.members[r.members.length - 1])} | ${tag} | ${saw} | \`${r.set} ${r.pick}\` |`;
 };
 
-L.push("| # | 상승률차 | 금액차 | 그때 | 🔺 가장 많이 오른 곳 | 가운데 | 🔻 가장 덜 오른 곳 | 자료 | 만들 때 |");
-L.push("|--:|--:|--:|--:|---|---|---|---|---|");
+L.push("| # | 상승률차 | 금액차 | 그때 | 🔺 가장 많이 오른 곳 | 가운데 | 🔻 가장 덜 오른 곳 | 자료 | 톱니 | 만들 때 |");
+L.push("|--:|--:|--:|--:|---|---|---|---|--:|---|");
 shown.forEach((r, i) => L.push(row(r, i + 1)));
 L.push("");
 

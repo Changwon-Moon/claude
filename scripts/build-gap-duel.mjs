@@ -73,6 +73,8 @@ const INK = "#141821", PAPER = "#fafaf8";
    BRAND: 「다크 변형은 허용하되 **시리즈 단위로 통일**」 — 이 시리즈 41장은 전부 연회색이다.
    `--theme dark` 는 남겨 두지만 **이 시리즈에서는 쓰지 않는다**(다른 시리즈가 쓸 수 있게 둔다). */
 const THEME = arg("theme", "light") === "dark" ? "dark" : "light";
+/** 톱니 문턱 — 이웃한 두 달 사이 15% 넘게 튄 쌍의 비율. series() 의 주석 참고 */
+const NOISE = process.argv.includes("--allow-noisy") ? 1 : Number(arg("noise", 12)) / 100;
 const T = THEME === "dark"
   ? { panel: INK, text: PAPER, mid: PAPER, mute: "#9aa3af",
       grid: "rgba(255,255,255,0.10)", wm: "#ffffff", wmOp: 0.13,
@@ -123,6 +125,34 @@ function series(unit, months) {
     );
   }
   if (pts.length < 12) throw new Error(`${unit.gu} ${unit.apt} — 거래가 있던 달이 ${pts.length}개뿐입니다(12개 미만이면 곡선이 아니라 점입니다)`);
+  /* ── 톱니 가드 (2026-09-03, 3호 후보에서 눈으로 먼저 잡고 수치로 확인했다)
+     오산대역세교자이 84 는 평소 5.3~5.8억인데 가끔 7억대가 찍힌다(전용면적은 같다).
+     곡선이 톱니로 나와서 카드가 「이 그래프 왜 이래?」를 먼저 부른다 — 값이 틀린 게
+     아니라 **선이 이야기를 못 한다.**
+
+     재는 법: **붙어 있는 두 달**끼리만 본다. 띄엄띄엄 거래되는 단지는 관측 사이가
+     멀어 커 보이는 게 당연하므로, 달이 이어지지 않은 쌍은 세지 않는다.
+     (이 구분을 안 했을 때는 1호의 분당 시범우성이 14%로 오산 17% 옆에 붙어 보였다.
+      이웃달만 세면 9% 대 18% 로 갈린다 — 재는 법이 답을 바꾼 것이다.)
+
+     실측(발행본·후보 15칸): 오산만 18%, 나머지는 전부 0~9%.
+     12% 에 금을 그으면 오산만 걸리고 확정본은 건드리지 않는다. */
+  const mi = (ym) => (+ym.slice(0, 4)) * 12 + (+ym.slice(4));
+  let adj = 0, jump = 0;
+  for (let k = 1; k < pts.length; k++) {
+    if (mi(pts[k].ym) - mi(pts[k - 1].ym) !== 1) continue;
+    adj++;
+    if (Math.abs(pts[k].v - pts[k - 1].v) / pts[k - 1].v > 0.15) jump++;
+  }
+  const noise = adj >= 12 ? jump / adj : 0;
+  if (noise > NOISE) {
+    throw new Error(
+      `${unit.gu} ${unit.apt} ${unit.type} — 곡선이 톱니입니다: 이웃한 두 달 사이 15% 넘게 튄 쌍이 ` +
+        `${jump}/${adj} (${Math.round(noise * 100)}%). 발행본들은 0~9% 입니다.\n` +
+        `   값이 틀린 게 아니라 **선이 이야기를 못 합니다** — 다른 묶음을 고르세요.\n` +
+        `   그래도 그리려면: --allow-noisy`,
+    );
+  }
   return pts;
 }
 
