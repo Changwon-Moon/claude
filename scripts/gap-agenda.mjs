@@ -42,7 +42,7 @@ const OUT = R(arg("out", "data/gap-안건.md"));
  * 바뀌지만(스파이크 방어를 넣자 한 묶음이 통째로 빠지며 뒤가 한 칸씩 당겨졌다)
  * 발행 번호는 한 번 나가면 안 바뀐다 — 그래서 따로 적는다.
  */
-const DONE = new Map([["gap-ep1-1", 1], ["gap-ep1-4", 2]]);
+const DONE = new Map([["gap-ep1-1", 1], ["gap-ep1-4", 2], ["gap-ep1-6", 3]]);
 
 function monthRange(from, to) {
   const out = [];

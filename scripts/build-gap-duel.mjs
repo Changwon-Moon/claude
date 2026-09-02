@@ -307,10 +307,18 @@ const halos = [{ x: startX, y: startCy, r: startR, fill: T.halo, opacity: T.halo
    겹쳤고, 원 위 왼쪽정렬은 2020년 상반기 상승 곡선을 가로질렀고, 원 옆은 그림이 답답했다.
    **위로 충분히 올리면** 그 높이(첫 달 x 자리)에는 아무 곡선도 없다 — 곡선은 오른쪽으로만
    간다. 대신 값과 원이 멀어지므로 점선이 그 둘을 묶는다. */
+/* ⚠️ 원 위의 값과 **제목의 값은 같은 숫자여야 한다** (2026-09-03 고침).
+   예전에는 원 위에 `members[0].base`(가장 많이 오른 곳의 출발가)를, 제목에는 묶음
+   구간의 가운데를 적었다. 셋의 출발가가 ±3% 안에서 조금씩 다르면 두 숫자가 갈린다 —
+   3호에서 제목 「똑같은 7.6억」 옆에 원 라벨 「7.8억」이 붙었다.
+   **「똑같은 X억」이라 말해 놓고 그림에 다른 값을 적으면 그 말이 무너진다.**
+   1·2호는 셋의 출발가가 같거나 반올림이 겹쳐 우연히 맞았다(픽셀 불변).
+   묶음을 대표하는 값(구간의 가운데) 하나로 통일한다. */
+const baseLabel = fmtEok(Math.round((group.baseFrom + group.baseTo) / 2));
 const startLabelY = r1(TOP + 150);   // 오너 2026-09-02: 조금 더 내린다
 vlabels.push({
   x: r1(startX + 10), y: startLabelY,
-  text: fmtEok(members[0].base), fill: T.text, anchor: "start", size: 44,
+  text: baseLabel, fill: T.text, anchor: "start", size: 44,
 });
 vmarks.push({ x: startX, y1: r1(startLabelY + 16), y2: r1(startCy - startR - 4), color: T.text });
 
@@ -355,7 +363,6 @@ const legend = members.map((m, i) => ({
 }));
 
 const hi = members[0], lo = members[members.length - 1];
-const baseLabel = fmtEok(Math.round((group.baseFrom + group.baseTo) / 2));
 
 const card = {
   template: "streak-line@1",

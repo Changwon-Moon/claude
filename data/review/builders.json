@@ -2114,6 +2114,20 @@
         "--label",
         "gap-ep1-2"
       ]
+    },
+    {
+      "label": "gap-ep1-3",
+      "cmd": "scripts/build-gap-duel.mjs",
+      "args": [
+        "--set",
+        "gap-ep1",
+        "--pick",
+        "6",
+        "--no",
+        "3",
+        "--label",
+        "gap-ep1-3"
+      ]
     }
   ]
 }
