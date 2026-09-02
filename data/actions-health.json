@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T05:29:51.893Z",
+  "generatedAt": "2026-09-02T05:46:43.271Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -379,15 +379,15 @@
         },
         {
           "day": "09-02",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "14:36",
+          "delay": 277
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-09-01",
-      "lastOk": "2026-09-01",
+      "medianDelay": 277,
+      "maxDelay": 277,
+      "lastRun": "2026-09-02",
+      "lastOk": "2026-09-02",
       "okDaysAgo": 0
     },
     {
