@@ -55,6 +55,16 @@ const MIN_MONTHS = Number(arg("min-months", 2));  // 창마다 거래가 있던 
 const MIN_TRADES = Number(arg("min-trades", 3));  // 창마다 거래 건수
 /** 같은 평형끼리만 짝지을까 — 오너 기본은 **섞기**(다른 평형도 짝짓는다) */
 const SAME_TYPE = process.argv.includes("--same-type");
+/** 카드 한 장에 몇 단지 (오너 2026-09-02: 2~3) */
+const GROUP = Math.max(2, Math.min(3, Number(arg("group", 3))));
+/**
+ * 기준가 구간 — 두 편으로 가르는 손잡이 (오너 2026-09-02).
+ * 금액 차이로 줄을 세우면 강남·서초 20~30억대가 위를 다 차지한다. 그건 사실이지만
+ * 「그때 7억이면 살 수 있던 두 집」과 한 게시물에 섞이면 둘 다 흐려진다 — 편을 나눈다.
+ *   1편: --base-max 10   2편: --base-min 15
+ */
+const BASE_MIN = arg("base-min") ? Number(arg("base-min")) * 10000 : 0;
+const BASE_MAX = arg("base-max") ? Number(arg("base-max")) * 10000 : Infinity;
 
 const PYEONG = { 59: "25평", 84: "34평" };
 const eok = (manwon) => manwon / 10000;
@@ -142,6 +152,7 @@ function main() {
     const n = now.best.get(key);
     if (!n) continue;
     if (b.months < MIN_MONTHS || b.trades < MIN_TRADES || n.months < MIN_MONTHS || n.trades < MIN_TRADES) { thin++; continue; }
+    if (b.max < BASE_MIN || b.max > BASE_MAX) continue;   // 편 나누기
     const [lawd, umd, apt, type] = key.split("|");
     units.push({
       key, lawd, gu: guBy.get(lawd) ?? lawd, umd, apt, type,
@@ -155,26 +166,47 @@ function main() {
   }
   units.sort((a, b) => a.base - b.base || a.key.localeCompare(b.key));
 
-  /* 기준가가 ±TOL 안에서 겹치는 모든 짝. 정렬돼 있으므로 앞으로만 훑는다. */
-  const pairs = [];
+  /* ── 묶음을 만든다 (오너 2026-09-02: 카드 한 장에 2~3개 단지)
+     한 칸을 왼쪽 끝으로 잡고, 그 값의 +TOL 안에 들어오는 칸들을 **한 창**으로 본다.
+     그 창에서 지금 값이 가장 높은 칸과 가장 낮은 칸이 그 창의 폭이다. */
+  const groups = [];
   for (let i = 0; i < units.length; i++) {
-    for (let j = i + 1; j < units.length; j++) {
-      const a = units[i], b = units[j];
-      if (b.base / a.base > 1 + TOL) break;           // 더 가도 멀어지기만 한다
-      if (a.danji === b.danji) continue;              // 같은 단지의 59 vs 84 는 맞대결이 아니다
-      if (SAME_TYPE && a.type !== b.type) continue;
-      const gap = Math.abs(a.now - b.now);
-      if (eok(gap) < MIN_GAP) continue;
-      const [hi, lo] = a.now >= b.now ? [a, b] : [b, a];
-      pairs.push({
-        hi, lo, gapManwon: gap, gapEok: +eok(gap).toFixed(2),
-        baseGapPct: +(((b.base / a.base) - 1) * 100).toFixed(2),
-        /* ⚠️ 평형이 다른 짝이라는 표시. 카드·캡션이 이걸 보고 반드시 평형을 함께 적는다 */
-        typeMix: a.type !== b.type,
-      });
+    const win = [];
+    for (let j = i; j < units.length; j++) {
+      if (units[j].base / units[i].base > 1 + TOL) break;
+      if (SAME_TYPE && units[j].type !== units[i].type) continue;
+      win.push(units[j]);
     }
+    if (win.length < 2) continue;
+    /* 같은 단지는 창 안에서 하나만 남긴다(59·84 가 같이 들어오면 자기끼리 벌어진 것처럼 보인다) */
+    const seen = new Set();
+    const uniq = win.filter((u) => (seen.has(u.danji) ? false : (seen.add(u.danji), true)));
+    if (uniq.length < 2) continue;
+    const sorted = [...uniq].sort((a, b) => b.now - a.now);
+    const hi = sorted[0], lo = sorted[sorted.length - 1];
+    const gap = hi.now - lo.now;
+    if (eok(gap) < MIN_GAP) continue;
+
+    /* 세 번째 자리는 **가운데** 칸이다 — 곡선 세 개가 부채처럼 벌어져야 그림이 산다.
+       가장 높은 것 둘을 넣으면 두 곡선이 겹쳐 보이고 카드가 할 말을 잃는다. */
+    const members = [hi];
+    if (GROUP >= 3 && sorted.length >= 3) {
+      const mid = (hi.now + lo.now) / 2;
+      const cand = sorted.slice(1, -1).sort((a, b) => Math.abs(a.now - mid) - Math.abs(b.now - mid))[0];
+      if (cand) members.push(cand);
+    }
+    members.push(lo);
+
+    groups.push({
+      baseFrom: Math.min(...members.map((m) => m.base)),
+      baseTo: Math.max(...members.map((m) => m.base)),
+      gapManwon: gap,
+      gapEok: +eok(gap).toFixed(2),
+      typeMix: new Set(members.map((m) => m.type)).size > 1,
+      members,
+    });
   }
-  pairs.sort((x, y) => y.gapManwon - x.gapManwon);
+  groups.sort((x, y) => y.gapManwon - x.gapManwon);
 
   /* 카드로 쓸 목록은 **한 단지가 한 번만** 나오게 고른다.
      ⚠️ 칸(단지+평형)이 아니라 **단지**로 잡는다 — 칸으로 잡았더니 첫 결과에
@@ -182,10 +214,10 @@ function main() {
      캐러셀은 한 게시물이라 같은 이름이 두 번 넘어가면 되풀이로 읽힌다. */
   const used = new Set();
   const picks = [];
-  for (const p of pairs) {
-    if (used.has(p.hi.danji) || used.has(p.lo.danji)) continue;
-    used.add(p.hi.danji); used.add(p.lo.danji);
-    picks.push(p);
+  for (const g of groups) {
+    if (g.members.some((m) => used.has(m.danji))) continue;
+    g.members.forEach((m) => used.add(m.danji));
+    picks.push(g);
     if (picks.length >= LIMIT) break;
   }
 
@@ -199,44 +231,55 @@ function main() {
     minMonthsPerWindow: MIN_MONTHS,
     minTradesPerWindow: MIN_TRADES,
     sameTypeOnly: SAME_TYPE,
+    groupSize: GROUP,
+    baseBandEok: [BASE_MIN / 10000, BASE_MAX === Infinity ? null : BASE_MAX / 10000],
     universe: uni.items.length,
     unitsBothWindows: units.length,
     unitsDroppedThin: thin,
-    pairsFound: pairs.length,
-    pairsTypeMixed: pairs.filter((p) => p.typeMix).length,
+    groupsFound: groups.length,
+    groupsTypeMixed: groups.filter((g) => g.typeMix).length,
     picks: picks.length,
+    lawdsNeeded: [...new Set(picks.flatMap((g) => g.members.map((m) => m.lawd)))].sort(),
     source: "국토교통부 아파트 매매 실거래가 (「구 × 월」 캐시)",
     builtAt: new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10),
-    note: "전용 59·84 를 한 풀에 섞어 **가격만으로** 짝지었다. 같은 집끼리의 비교가 아니라 「그때 같은 돈이면 살 수 있던 두 집」이므로 카드는 두 단지의 평형을 반드시 함께 적는다.",
+    note: "전용 59·84 를 한 풀에 섞어 **가격만으로** 묶었다. 같은 집끼리의 비교가 아니라 「그때 같은 돈이면 살 수 있던 집들」이므로 카드는 각 단지의 평형을 반드시 함께 적는다.",
   };
 
+  const OUT = arg("out", "gap-pairs");
   mkdirSync(R("data/datasets"), { recursive: true });
-  writeFileSync(R("data/datasets/gap-pairs.json"), JSON.stringify({ meta, picks, units }, null, 0) + "\n");
+  writeFileSync(R(`data/datasets/${OUT}.json`), JSON.stringify({ meta, picks, units }, null, 0) + "\n");
 
   /* 사람이 읽는 판 */
   const line = (u) => `${u.gu} ${u.umd} ${u.apt} ${u.pyeong}`;
+  const band = BASE_MAX === Infinity && !BASE_MIN
+    ? "전 구간"
+    : `${BASE_MIN ? `${BASE_MIN / 10000}억 이상` : ""}${BASE_MIN && BASE_MAX !== Infinity ? " · " : ""}${BASE_MAX === Infinity ? "" : `${BASE_MAX / 10000}억 이하`}`;
   const md = [
-    `# 「같은 값에서 출발한 두 단지」 — 후보 목록`,
+    `# 「같은 값에서 출발한 단지들」 — 후보 묶음 (기준가 ${band})`,
     ``,
     `- 기준창 **${BASE_FROM}~${BASE_TO}** (캐시에 있는 달 ${base.monthsSeen.length}개) · 최근창 **${NOW_FROM}~${NOW_TO}** (${now.monthsSeen.length}개)`,
-    `- 명부 ${uni.items.length}단지 → 두 창에 모두 거래가 있는 칸 **${units.length}개** (전용 59·84 각각 한 칸)`,
+    `- 명부 ${uni.items.length}단지 → 두 창에 모두 거래가 있고 이 구간에 드는 칸 **${units.length}개**`,
     `- 거래가 얇아 던진 칸 ${thin}개 (창마다 ${MIN_MONTHS}개월·${MIN_TRADES}건 미만)`,
-    `- 기준가 ±${TOL * 100}% · 지금 차이 ${MIN_GAP}억 이상 → 짝 **${pairs.length}개** · 겹치지 않게 고른 **${picks.length}개**`,
+    `- 기준가 ±${TOL * 100}% · 지금 차이 ${MIN_GAP}억 이상 → 묶음 **${groups.length}개** · 겹치지 않게 고른 **${picks.length}개** (카드 한 장 = ${GROUP}단지)`,
     ``,
-    `> ⚠️ 평형을 섞어 짝지었다(짝 ${pairs.filter((p) => p.typeMix).length}개가 평형이 다르다).`,
-    `> 「같은 집」이 아니라 **「그때 같은 돈이면 살 수 있던 두 집」**이다 — 카드는 두 평형을 반드시 함께 적는다.`,
+    `> ⚠️ 평형을 섞어 묶었다(묶음 ${groups.filter((g) => g.typeMix).length}개가 평형이 다르다).`,
+    `> 「같은 집」이 아니라 **「그때 같은 돈이면 살 수 있던 집들」**이다 — 카드는 각 평형을 반드시 함께 적는다.`,
     ``,
-    `| # | 그때 | 더 간 쪽 | 덜 간 쪽 | 지금 차이 |`,
-    `|--:|---|---|---|--:|`,
-    ...picks.map((p, i) =>
-      `| ${i + 1} | ${fmtEok(p.lo.base)} / ${fmtEok(p.hi.base)} | ${line(p.hi)} — ${fmtEok(p.hi.now)} (${p.hi.ratio.toFixed(2)}배) | ${line(p.lo)} — ${fmtEok(p.lo.now)} (${p.lo.ratio.toFixed(2)}배) | **${p.gapEok.toFixed(1)}억** |`,
-    ),
-    ``,
+    ...picks.flatMap((g, i) => [
+      `### ${i + 1}. 그때 ${fmtEok(g.baseFrom)}~${fmtEok(g.baseTo)} → 지금 **${g.gapEok.toFixed(1)}억** 벌어졌다`,
+      ``,
+      `| | 단지 | 그때 | 지금 | |`,
+      `|---|---|--:|--:|--:|`,
+      ...g.members.map((m, k) =>
+        `| ${k === 0 ? "🔺" : k === g.members.length - 1 ? "🔻" : "·"} | ${line(m)} | ${fmtEok(m.base)} | **${fmtEok(m.now)}** | ${m.ratio.toFixed(2)}배 |`,
+      ),
+      ``,
+    ]),
   ].join("\n");
-  writeFileSync(R("data/gap-pairs.md"), md);
+  writeFileSync(R(`data/${OUT}.md`), md);
 
-  console.log(md.slice(0, 4000));
-  console.log(`\n→ data/datasets/gap-pairs.json · data/gap-pairs.md`);
+  console.log(md);
+  console.log(`\n→ data/datasets/${OUT}.json · data/${OUT}.md`);
   if (process.argv.includes("--json")) console.log(JSON.stringify(meta, null, 2));
 }
 

@@ -44,7 +44,12 @@ if (!KEY) {
 /** 하루에 쓸 호출 수. 아침 알림(약 122회)과 그날의 곡선 몫을 남겨 둔다. */
 const BUDGET = Number(arg("budget") ?? 1200);
 const FROM = arg("from") ?? BASELINE_FROM;
-const ONLY = arg("lawd");
+/**
+ * 특정 구만 — **콤마로 여럿**을 받는다(2026-09-02).
+ * 격차 카드는 곡선을 그릴 구가 열두 곳이었다. 하나씩만 받으면 대기열을 열두 번 밀어야 하는데,
+ * 대기열은 **마지막 줄만** 읽으므로 그건 애초에 안 되는 방법이었다.
+ */
+const ONLY = (arg("lawd") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
 /**
  * 어디까지 채울까 — 비우면 「두 달 전」까지(정기 백필의 기본).
  *
@@ -85,7 +90,15 @@ async function main() {
   }
   const months = monthRange(FROM, lastYm);
 
-  const targets = (ONLY ? lawds.filter((l) => l === ONLY) : lawds);
+  const targets = ONLY.length ? lawds.filter((l) => ONLY.includes(l)) : lawds;
+  /* ⚠️ 넘긴 코드가 명부에 없으면 **말한다.** 조용히 0곳으로 돌면 「빈 칸이 없다」는
+     초록 메시지가 나오고, 그건 「다 찼다」로 읽힌다 — 그 둘은 다른 뜻이다. */
+  const unknown = ONLY.filter((l) => !lawds.includes(l));
+  if (unknown.length) console.warn(`⚠️ 명부에 없는 구 코드 ${unknown.length}개: ${unknown.join(",")}`);
+  if (ONLY.length && !targets.length) {
+    console.error("::error::넘긴 구 코드가 명부에 하나도 없습니다 — 여기서 멈춥니다");
+    process.exit(1);
+  }
   let holes = 0;
   for (const l of targets) for (const m of months) if (!hasMonth(l, m)) holes++;
 
