@@ -69,7 +69,10 @@ const numeral = (n) => `#${n}`;
    (BRAND: 비슷한 빨강·파랑을 새로 만들지 않는다). */
 const RED = "#e5484d", COBALT = "#2e6bff";
 const INK = "#141821", PAPER = "#fafaf8";
-const THEME = arg("theme", "dark") === "light" ? "light" : "dark";
+/* ⚠️ **연회색이 기본이다** — 오너가 2026-09-02 에 두 안을 나란히 보고 B안(연회색)으로 확정했다.
+   BRAND: 「다크 변형은 허용하되 **시리즈 단위로 통일**」 — 이 시리즈 41장은 전부 연회색이다.
+   `--theme dark` 는 남겨 두지만 **이 시리즈에서는 쓰지 않는다**(다른 시리즈가 쓸 수 있게 둔다). */
+const THEME = arg("theme", "light") === "dark" ? "dark" : "light";
 const T = THEME === "dark"
   ? { panel: INK, text: PAPER, mid: PAPER, mute: "#9aa3af",
       grid: "rgba(255,255,255,0.10)", wm: "#ffffff", wmOp: 0.13,
@@ -320,7 +323,9 @@ const card = {
   },
 };
 
-const label = arg("label", `${SET}-${PICK + 1}`) + (THEME === "light" ? "-light" : "");
+/* 라벨에 테마를 붙이지 않는다 — 연회색이 기본이 됐으므로 `gap-ep1-1` 이 곧 확정본이다.
+   두 안을 나란히 볼 때만 `--label ...-dark` 처럼 손으로 갈라 부른다. */
+const label = arg("label", `${SET}-${PICK + 1}`);
 const outDir = R(join("data/content", DATE));
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, `${label}.json`), JSON.stringify(card, null, 2) + "\n", "utf8");

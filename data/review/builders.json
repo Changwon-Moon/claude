@@ -2100,20 +2100,6 @@
         "--label",
         "gap-ep1-1"
       ]
-    },
-    {
-      "label": "gap-ep1-1-light",
-      "cmd": "scripts/build-gap-duel.mjs",
-      "args": [
-        "--set",
-        "gap-ep1",
-        "--pick",
-        "1",
-        "--label",
-        "gap-ep1-1",
-        "--theme",
-        "light"
-      ]
     }
   ]
 }

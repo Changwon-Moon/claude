@@ -1,18 +1,113 @@
 {
   "_": "완성 작업물 색인 — scripts/build-archive.mjs 가 만든다. 손으로 고치지 말 것(다음 실행에 덮어씀).",
-  "total": 48,
+  "total": 54,
   "folders": [
     {
       "topic": "기타",
-      "count": 41,
+      "count": 46,
       "items": [
+        {
+          "label": "gap-ep1-1",
+          "title": "출발선은 같았다 #1 — 2020년 초 똑같은 7.0억, 지금은 9.8억 격차 (분당 시범우성·성북 길음뉴타운1·안산 파크푸르지오)",
+          "topic": "기타",
+          "date": "2026-09-02",
+          "cards": 1,
+          "pages": 1,
+          "state": "미승인",
+          "setState": "오너 확정",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/gap-ep1-1.txt",
+            "review": ""
+          },
+          "rebuilt": {
+            "content": [
+              "data/content/2026-09-02/gap-ep1-1.json"
+            ],
+            "png": [
+              "data/out/2026-09-02/gap-ep1-1-p1.png"
+            ]
+          },
+          "verdict": "pass",
+          "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+          "caption": "2020년 초, 이 셋은 전부 7억이면 살 수 있었습니다. 6년 뒤 지금은 어떨까요 👀\n\n국토교통부 실거래가 기준, 2019년 11월~2020년 3월에 세 곳 다 최고가 7.0억이었습니다.\n\n· 분당 시범우성 25평 : 7.0억 → 17.8억 (2.52배)\n· 성북 길음뉴타운1단지 25평 : 7.0억 → 12.5억 (1.77배)\n· 안산 파크푸르지오 34평 : 7.0억 → 8.0억 (1.14배)\n\n가장 많이 오른 곳과 가장 덜 오른 곳의 차이가 9.8억입니다.\n같은 돈으로 시작했는데, 6년 뒤 한 채 값이 더 벌어진 셈입니다.\n\n한 가지 짚고 갑니다.\n세 곳은 평형이 다릅니다. 25평 둘, 34평 하나입니다.\n'같은 집끼리의 비교'가 아니라 '그때 같은 돈이면 살 수 있던 집들'의 비교입니다.\n그래서 이 카드가 말하는 건 어느 아파트가 더 좋으냐가 아니라,\n그 돈을 어디에 넣었느냐로 지금이 갈렸다는 것입니다.\n\n📌 저장해두고 우리 동네 단지와 비교해보기\n\n—\n📊 출처 : 국토교통부 아파트 매매 실거래가\n※ 1,000세대 이상 단지 · 전용 59·84 기준, 월별 최고가로 그린 곡선입니다\n※ 그때 값은 2019.11~2020.3, 지금 값은 최근 6개월의 최고가입니다\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#부동산 #아파트 #집값 #실거래가 #위릿노트",
+          "captionChars": 702
+        },
+        {
+          "label": "singo-daily-2026-09-02",
+          "title": "🔥 9월 2일 신고가 15곳",
+          "topic": "기타",
+          "date": "2026-09-02",
+          "cards": 15,
+          "pages": 0,
+          "state": "미승인",
+          "setState": "오너 확정",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/singo-daily-2026-09-02.txt",
+            "review": "data/review/singo-daily-2026-09-02.json"
+          },
+          "rebuilt": {
+            "content": [
+              "data/content/2026-09-02/singo-텐즈힐1단지-84.json",
+              "data/content/2026-09-02/singo-위례더힐55-84.json",
+              "data/content/2026-09-02/singo-우장산아이파크이편한세상-84.json",
+              "data/content/2026-09-02/singo-마곡엠밸리9단지-59.json",
+              "data/content/2026-09-02/singo-다산롯데캐슬-84.json",
+              "data/content/2026-09-02/singo-주공12-84.json",
+              "data/content/2026-09-02/singo-이편한세상센트레빌-59.json",
+              "data/content/2026-09-02/singo-영통아이파크캐슬1단지-59.json",
+              "data/content/2026-09-02/singo-휘경리오포레아파트1단지-84.json",
+              "data/content/2026-09-02/singo-기흥역센트럴푸르지오-84.json",
+              "data/content/2026-09-02/singo-동탄역센트럴푸르지오-59.json",
+              "data/content/2026-09-02/singo-도덕파크타운1단지-59.json",
+              "data/content/2026-09-02/singo-만현마을9단지엘지자이-84.json",
+              "data/content/2026-09-02/singo-수원하늘채더퍼스트1단지-84.json",
+              "data/content/2026-09-02/singo-네이처포레-59.json"
+            ],
+            "png": []
+          },
+          "verdict": "pass",
+          "reviewSummary": "PASS — error 0 · warn 0 · 카드 15장 · 코드 검수만",
+          "caption": "9월 2일, 신고가 15곳 🔥\n\n오늘 새로 확인된 신고가입니다.\n한 장씩 넘겨 보세요 →\n\n1. 텐즈힐(1단지) 32평 22.9억 (서울 성동구 하왕십리동)\n2. 위례더힐55 36평 17.6억 (성남시 수정구 창곡동)\n3. 우장산아이파크,이편한세상 33평 16.4억 (서울 강서구 화곡동)\n4. 마곡엠밸리9단지 25평 15.6억 (서울 강서구 마곡동)\n5. 다산롯데캐슬 35평 12.45억 (남양주시 다산동)\n6. 주공12 32평 11.6억 (광명시 하안동)\n7. 이편한세상센트레빌 26평 11.5억 (광명시 하안동)\n8. 영통아이파크캐슬1단지 24평 11.2억 (수원시 영통구 망포동)\n9. 휘경리오포레아파트(1단지) 33평 11억 (서울 동대문구 휘경동)\n10. 기흥역센트럴푸르지오 36평 10.95억 (용인시 기흥구 구갈동)\n11. 동탄역센트럴푸르지오 25평 10.8억 (화성시 동탄구 청계동)\n12. 도덕파크타운1단지 24평 9억 (광명시 철산동)\n13. 만현마을9단지엘지자이 35평 9억 (용인시 수지구 상현동)\n14. 수원하늘채더퍼스트1단지 34평 8.9억 (수원시 권선구 곡반정동)\n15. 네이처포레 25평 4.85억 (시흥시 은행동)\n\n※ 계약일 기준이 아니라 「오늘 새로 드러난」 건입니다.\n   실거래 신고까지 최대 30일 걸려 지난달 계약이 섞입니다.\n\n출처 · 국토교통부 아파트 매매 실거래가 · 2020년 이후 기준\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#광명아파트 #신고가 #아파트실거래가 #부동산 #위릿노트",
+          "captionChars": 795
+        },
+        {
+          "label": "hakgun-map",
+          "title": "🏫 대한민국 대표 학군지 Top 31 — 시세 & 학원 (2장)",
+          "topic": "기타",
+          "date": "2026-09-02",
+          "cards": 2,
+          "pages": 0,
+          "state": "미승인",
+          "setState": "오너 확정",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/hakgun-map.txt",
+            "review": "data/review/hakgun-map.json"
+          },
+          "rebuilt": {
+            "content": [
+              "data/content/2026-09-02/hakgun-map.json",
+              "data/content/2026-09-02/hakgun-academy.json"
+            ],
+            "png": []
+          },
+          "verdict": "pass",
+          "reviewSummary": "PASS — error 0 · warn 0 · 카드 2장 · 코드 검수만",
+          "caption": "학군 1급지가 값도 1등은 아니었습니다 🏫\n\n『대한민국 학군지도』가 나눈 학군지 가운데 수도권 21곳을 골라,\n국민평형(전용 84㎡) 실거래를 2026.01~07 전부 세어 중위값을 냈습니다.\n\n[1급지 6곳]\n1. 대치 — 37.00억\n2. 반포·서초 — 33.25억\n3. 잠실 — 32.00억\n4. 분당 — 18.10억\n5. 목동 — 14.30억\n6. 중계 — 8.70억\n\n[2급지 8곳]\n1. 광장 — 21.30억\n2. 방이 — 19.26억\n3. 판교 — 18.50억\n4. 고덕 — 18.20억\n5. 수지 — 9.35억\n6. 평촌 — 8.90억\n7. 송도 — 7.25억 (비규제)\n8. 일산 — 6.30억 (비규제)\n\n[3급지 7곳]\n1. 위례 — 14.00억\n2. 광교 — 11.51억\n3. 동탄 — 7.45억\n4. 상동 — 6.85억 (비규제)\n5. 영통 — 6.40억\n6. 산본 — 5.95억 (비규제)\n7. 부평 — 4.10억 (비규제)\n\n[급지 경계가 뒤집히는 곳]\n· 1급지 맨 아래 중계 8.70억 < 2급지 맨 위 광장 21.30억\n· 2급지 맨 아래 일산 6.30억 < 3급지 맨 위 위례 14.00억\n· 폭은 대치 37.00억부터 부평 4.10억까지입니다\n\n[토지거래허가구역과 겹쳐 보면]\n· 21곳 중 16곳이 허가구역 안입니다\n· 밖은 송도 · 일산 · 상동 · 산본 · 부평 5곳뿐이고, 전부 8억 미만입니다\n\n[지방 학군지 9곳]\n· 대구 수성 (1급지) — 7.58억\n· 대전 둔산 (1급지) — 4.48억\n· 부산 해운대·동래 (2급지) — 6.30억\n· 울산 옥동 (2급지) — 5.45억\n· 천안 불당 (2급지) — 5.39억\n· 제주 노형 (2급지) — 4.85억\n· 대구 월배 (2급지) — 4.23억\n· 세종 (3급지) — 6.20억\n· 대전 노은·도안 (3급지) — 5.70억\n\n[2장째 — 입시·보습 학원 수 (31곳)]\n· 1급지 — 대치 937 · 분당 739 · 반포·서초 376 · 목동 366 · 중계 213 · 잠실 124\n· 2급지 — 수지 553 · 송도 457 · 평촌 353 · 고덕 262 · 일산 225 · 방이 204 · 판교 90 · 광장 30\n· 3급지 — 동탄 816 · 영통 406 · 상동 370 · 부평 338 · 산본 186 · 광교 174 · 위례 92\n· 지방 — 대구 수성 519 · 대전 둔산 297 · 부산 해운대·동래 659 · 대구 월배 399 · 천안 불당 269 · 광주 봉선 244 · 울산 옥동 236 · 제주 노형 184 · 세종 669 · 대전 노은·도안 261\n\n[값 순위와 학원 순위가 어긋나는 곳]\n· 동탄 — 값 15위인데 학원은 2위 (7.45억)\n· 광장 — 값 4위인데 학원은 21위 (21.30억)\n\n👉 급지는 학교와 학원가를 보고 나눈 것이고, 값은 시장이 매긴 것입니다. 둘이 늘 같이 가지는 않습니다.\n\n※ 출처 — 급지 분류는 『대한민국 학군지도』, 값은 국토교통부 아파트 매매 실거래가 2026.01~07입니다.\n※ 학원 수는 나이스 교육정보 개방 포털의 학원·교습소 원장에서 분야가 「입시·검정 및 보습」인 **학원**만 센 것입니다. 교습소(1인 운영·일시수용 9명)는 뺐습니다. 정원은 신고 편차가 커 쓰지 않았습니다.\n※ 청라(인천 서구)는 행정구역 개편 예고로 코드표에 없어 뺐습니다. 봉선(광주)은 실거래가 올해 내내 0건이라 1장(시세)에는 없고 2장(학원)에만 있습니다.\n※ 번호는 급지별로 새로 매겼습니다. 학군지 경계는 행정구역이 아니라 생활권이라, 넣은 법정동을 데이터셋에 공개합니다.\n\n더 보기 👉 @wirit_note\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#학군지 #학원가 #대치동 #목동 #위릿",
+          "captionChars": 1869
+        },
         {
           "label": "singo-daily-2026-09-01",
           "title": "🔥 9월 1일 신고가 15곳",
           "topic": "기타",
-          "date": "2026-09-01",
+          "date": "2026-09-02",
           "cards": 15,
-          "pages": 15,
+          "pages": 0,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -23,39 +118,23 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-01/singo-목동힐스테이트-59.json",
-              "data/content/2026-09-01/singo-주공13-84.json",
-              "data/content/2026-09-01/singo-광교호반베르디움-84.json",
-              "data/content/2026-09-01/singo-신도림태영타운-84.json",
-              "data/content/2026-09-01/singo-강서힐스테이트-59.json",
-              "data/content/2026-09-01/singo-평촌더샵센트럴시티-59.json",
-              "data/content/2026-09-01/singo-평촌센텀퍼스트-59.json",
-              "data/content/2026-09-01/singo-평촌더샵아이파크-59.json",
-              "data/content/2026-09-01/singo-동탄시범다은마을월드메르디앙반도유보라-84.json",
-              "data/content/2026-09-01/singo-반정아이파크캐슬5단지-84.json",
-              "data/content/2026-09-01/singo-병점역아이파크캐슬-84.json",
-              "data/content/2026-09-01/singo-신동탄포레자이-59.json",
-              "data/content/2026-09-01/singo-아르테자이-59.json",
-              "data/content/2026-09-01/singo-수원하늘채더퍼스트1단지-59.json",
-              "data/content/2026-09-01/singo-보람마을아주-59.json"
+              "data/content/2026-09-02/singo-목동힐스테이트-59.json",
+              "data/content/2026-09-02/singo-주공13-84.json",
+              "data/content/2026-09-02/singo-광교호반베르디움-84.json",
+              "data/content/2026-09-02/singo-신도림태영타운-84.json",
+              "data/content/2026-09-02/singo-강서힐스테이트-59.json",
+              "data/content/2026-09-02/singo-평촌더샵센트럴시티-59.json",
+              "data/content/2026-09-02/singo-평촌센텀퍼스트-59.json",
+              "data/content/2026-09-02/singo-평촌더샵아이파크-59.json",
+              "data/content/2026-09-02/singo-동탄시범다은마을월드메르디앙반도유보라-84.json",
+              "data/content/2026-09-02/singo-반정아이파크캐슬5단지-84.json",
+              "data/content/2026-09-02/singo-병점역아이파크캐슬-84.json",
+              "data/content/2026-09-02/singo-신동탄포레자이-59.json",
+              "data/content/2026-09-02/singo-아르테자이-59.json",
+              "data/content/2026-09-02/singo-수원하늘채더퍼스트1단지-59.json",
+              "data/content/2026-09-02/singo-보람마을아주-59.json"
             ],
-            "png": [
-              "data/out/2026-09-01/singo-목동힐스테이트-59-p1.png",
-              "data/out/2026-09-01/singo-주공13-84-p1.png",
-              "data/out/2026-09-01/singo-광교호반베르디움-84-p1.png",
-              "data/out/2026-09-01/singo-신도림태영타운-84-p1.png",
-              "data/out/2026-09-01/singo-강서힐스테이트-59-p1.png",
-              "data/out/2026-09-01/singo-평촌더샵센트럴시티-59-p1.png",
-              "data/out/2026-09-01/singo-평촌센텀퍼스트-59-p1.png",
-              "data/out/2026-09-01/singo-평촌더샵아이파크-59-p1.png",
-              "data/out/2026-09-01/singo-동탄시범다은마을월드메르디앙반도유보라-84-p1.png",
-              "data/out/2026-09-01/singo-반정아이파크캐슬5단지-84-p1.png",
-              "data/out/2026-09-01/singo-병점역아이파크캐슬-84-p1.png",
-              "data/out/2026-09-01/singo-신동탄포레자이-59-p1.png",
-              "data/out/2026-09-01/singo-아르테자이-59-p1.png",
-              "data/out/2026-09-01/singo-수원하늘채더퍼스트1단지-59-p1.png",
-              "data/out/2026-09-01/singo-보람마을아주-59-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 15장 · 코드 검수만",
@@ -66,9 +145,9 @@
           "label": "singo-daily-2026-08-29_2026-08-31",
           "title": "🔥 8월 29~31일 신고가 14곳",
           "topic": "기타",
-          "date": "2026-09-01",
+          "date": "2026-09-02",
           "cards": 14,
-          "pages": 14,
+          "pages": 0,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -79,37 +158,22 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-01/singo-성복역롯데캐슬골드타운-84.json",
-              "data/content/2026-09-01/singo-미사강변푸르지오-84.json",
-              "data/content/2026-09-01/singo-대림1-59.json",
-              "data/content/2026-09-01/singo-관악푸르지오-84.json",
-              "data/content/2026-09-01/singo-동천자이-84.json",
-              "data/content/2026-09-01/singo-미사강변루나리움-59.json",
-              "data/content/2026-09-01/singo-수원하늘채더퍼스트2단지-84.json",
-              "data/content/2026-09-01/singo-화서역푸르지오더에듀포레-59.json",
-              "data/content/2026-09-01/singo-병점역아이파크캐슬-59.json",
-              "data/content/2026-09-01/singo-e편한세상반월나노시티역-59.json",
-              "data/content/2026-09-01/singo-수원시청역SKVIEW-84.json",
-              "data/content/2026-09-01/singo-수원하늘채더퍼스트2단지-59.json",
-              "data/content/2026-09-01/singo-황골마을주공1-59.json",
-              "data/content/2026-09-01/singo-늘푸른벽산-59.json"
+              "data/content/2026-09-02/singo-성복역롯데캐슬골드타운-84.json",
+              "data/content/2026-09-02/singo-미사강변푸르지오-84.json",
+              "data/content/2026-09-02/singo-대림1-59.json",
+              "data/content/2026-09-02/singo-관악푸르지오-84.json",
+              "data/content/2026-09-02/singo-동천자이-84.json",
+              "data/content/2026-09-02/singo-미사강변루나리움-59.json",
+              "data/content/2026-09-02/singo-수원하늘채더퍼스트2단지-84.json",
+              "data/content/2026-09-02/singo-화서역푸르지오더에듀포레-59.json",
+              "data/content/2026-09-02/singo-병점역아이파크캐슬-59.json",
+              "data/content/2026-09-02/singo-e편한세상반월나노시티역-59.json",
+              "data/content/2026-09-02/singo-수원시청역SKVIEW-84.json",
+              "data/content/2026-09-02/singo-수원하늘채더퍼스트2단지-59.json",
+              "data/content/2026-09-02/singo-황골마을주공1-59.json",
+              "data/content/2026-09-02/singo-늘푸른벽산-59.json"
             ],
-            "png": [
-              "data/out/2026-09-01/singo-성복역롯데캐슬골드타운-84-p1.png",
-              "data/out/2026-09-01/singo-미사강변푸르지오-84-p1.png",
-              "data/out/2026-09-01/singo-대림1-59-p1.png",
-              "data/out/2026-09-01/singo-관악푸르지오-84-p1.png",
-              "data/out/2026-09-01/singo-동천자이-84-p1.png",
-              "data/out/2026-09-01/singo-미사강변루나리움-59-p1.png",
-              "data/out/2026-09-01/singo-수원하늘채더퍼스트2단지-84-p1.png",
-              "data/out/2026-09-01/singo-화서역푸르지오더에듀포레-59-p1.png",
-              "data/out/2026-09-01/singo-병점역아이파크캐슬-59-p1.png",
-              "data/out/2026-09-01/singo-e편한세상반월나노시티역-59-p1.png",
-              "data/out/2026-09-01/singo-수원시청역SKVIEW-84-p1.png",
-              "data/out/2026-09-01/singo-수원하늘채더퍼스트2단지-59-p1.png",
-              "data/out/2026-09-01/singo-황골마을주공1-59-p1.png",
-              "data/out/2026-09-01/singo-늘푸른벽산-59-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 14장 · 코드 검수만",
@@ -120,9 +184,9 @@
           "label": "singo-daily-2026-08-28",
           "title": "🔥 8월 28일 신고가 6곳",
           "topic": "기타",
-          "date": "2026-09-01",
+          "date": "2026-09-02",
           "cards": 6,
-          "pages": 6,
+          "pages": 0,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -133,21 +197,14 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-01/singo-힐스테이트상도센트럴파크-84.json",
-              "data/content/2026-09-01/singo-벽산블루밍-84.json",
-              "data/content/2026-09-01/singo-래미안월곡-84.json",
-              "data/content/2026-09-01/singo-초원마을대림-59.json",
-              "data/content/2026-09-01/singo-덕현-84.json",
-              "data/content/2026-09-01/singo-동탄2하우스디더레이크-59.json"
+              "data/content/2026-09-02/singo-힐스테이트상도센트럴파크-84.json",
+              "data/content/2026-09-02/singo-벽산블루밍-84.json",
+              "data/content/2026-09-02/singo-래미안월곡-84.json",
+              "data/content/2026-09-02/singo-초원마을대림-59.json",
+              "data/content/2026-09-02/singo-덕현-84.json",
+              "data/content/2026-09-02/singo-동탄2하우스디더레이크-59.json"
             ],
-            "png": [
-              "data/out/2026-09-01/singo-힐스테이트상도센트럴파크-84-p1.png",
-              "data/out/2026-09-01/singo-벽산블루밍-84-p1.png",
-              "data/out/2026-09-01/singo-래미안월곡-84-p1.png",
-              "data/out/2026-09-01/singo-초원마을대림-59-p1.png",
-              "data/out/2026-09-01/singo-덕현-84-p1.png",
-              "data/out/2026-09-01/singo-동탄2하우스디더레이크-59-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 6장 · 코드 검수만",
@@ -158,9 +215,9 @@
           "label": "singo-daily-2026-08-27",
           "title": "🔥 8월 27일 신고가 14곳",
           "topic": "기타",
-          "date": "2026-09-01",
+          "date": "2026-09-02",
           "cards": 14,
-          "pages": 13,
+          "pages": 0,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -171,35 +228,21 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-01/singo-래미안리더스원-84.json",
-              "data/content/2026-09-01/singo-서울숲리버뷰자이-84.json",
-              "data/content/2026-09-01/singo-고덕주공9-84.json",
-              "data/content/2026-09-01/singo-현대프라임-59.json",
-              "data/content/2026-09-01/singo-약수하이츠-59.json",
-              "data/content/2026-09-01/singo-고덕리엔파크3단지-84.json",
-              "data/content/2026-09-01/singo-관악드림삼성-59.json",
-              "data/content/2026-09-01/singo-광명푸르지오센트베르-59.json",
-              "data/content/2026-09-01/singo-쌍용-59.json",
-              "data/content/2026-09-01/singo-한마을-59.json",
-              "data/content/2026-09-01/singo-진산마을성원상떼빌아파트-84.json",
-              "data/content/2026-09-01/singo-전농우성-59.json",
-              "data/content/2026-09-01/singo-부영-59.json"
+              "data/content/2026-09-02/singo-래미안리더스원-84.json",
+              "data/content/2026-09-02/singo-서울숲리버뷰자이-84.json",
+              "data/content/2026-09-02/singo-고덕주공9-84.json",
+              "data/content/2026-09-02/singo-현대프라임-59.json",
+              "data/content/2026-09-02/singo-약수하이츠-59.json",
+              "data/content/2026-09-02/singo-고덕리엔파크3단지-84.json",
+              "data/content/2026-09-02/singo-관악드림삼성-59.json",
+              "data/content/2026-09-02/singo-광명푸르지오센트베르-59.json",
+              "data/content/2026-09-02/singo-쌍용-59.json",
+              "data/content/2026-09-02/singo-한마을-59.json",
+              "data/content/2026-09-02/singo-진산마을성원상떼빌아파트-84.json",
+              "data/content/2026-09-02/singo-전농우성-59.json",
+              "data/content/2026-09-02/singo-부영-59.json"
             ],
-            "png": [
-              "data/out/2026-09-01/singo-래미안리더스원-84-p1.png",
-              "data/out/2026-09-01/singo-서울숲리버뷰자이-84-p1.png",
-              "data/out/2026-09-01/singo-고덕주공9-84-p1.png",
-              "data/out/2026-09-01/singo-현대프라임-59-p1.png",
-              "data/out/2026-09-01/singo-약수하이츠-59-p1.png",
-              "data/out/2026-09-01/singo-고덕리엔파크3단지-84-p1.png",
-              "data/out/2026-09-01/singo-관악드림삼성-59-p1.png",
-              "data/out/2026-09-01/singo-광명푸르지오센트베르-59-p1.png",
-              "data/out/2026-09-01/singo-쌍용-59-p1.png",
-              "data/out/2026-09-01/singo-한마을-59-p1.png",
-              "data/out/2026-09-01/singo-진산마을성원상떼빌아파트-84-p1.png",
-              "data/out/2026-09-01/singo-전농우성-59-p1.png",
-              "data/out/2026-09-01/singo-부영-59-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 14장 · 코드 검수만",
@@ -210,9 +253,9 @@
           "label": "singo-daily-2026-08-26",
           "title": "🔥 8월 26일 신고가 16곳",
           "topic": "기타",
-          "date": "2026-09-01",
+          "date": "2026-09-02",
           "cards": 16,
-          "pages": 16,
+          "pages": 0,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -223,41 +266,24 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-01/singo-신촌숲아이파크-84.json",
-              "data/content/2026-09-01/singo-강촌-59.json",
-              "data/content/2026-09-01/singo-서초힐스-59.json",
-              "data/content/2026-09-01/singo-신동아리버파크-59.json",
-              "data/content/2026-09-01/singo-신도림태영타운-84.json",
-              "data/content/2026-09-01/singo-초원마을대림-84.json",
-              "data/content/2026-09-01/singo-등촌동아이파크-84.json",
-              "data/content/2026-09-01/singo-한신아파트상가동유치원동103~109-84.json",
-              "data/content/2026-09-01/singo-다산반도유보라메이플타운-84.json",
-              "data/content/2026-09-01/singo-광주역자연앤자이-84.json",
-              "data/content/2026-09-01/singo-동아에코빌-59.json",
-              "data/content/2026-09-01/singo-장미시영6-59.json",
-              "data/content/2026-09-01/singo-한진-84.json",
-              "data/content/2026-09-01/singo-호계2차현대홈타운-59.json",
-              "data/content/2026-09-01/singo-엘에이치이스트힐-59.json",
-              "data/content/2026-09-01/singo-덕유마을주공4-59.json"
+              "data/content/2026-09-02/singo-신촌숲아이파크-84.json",
+              "data/content/2026-09-02/singo-강촌-59.json",
+              "data/content/2026-09-02/singo-서초힐스-59.json",
+              "data/content/2026-09-02/singo-신동아리버파크-59.json",
+              "data/content/2026-09-02/singo-신도림태영타운-84.json",
+              "data/content/2026-09-02/singo-초원마을대림-84.json",
+              "data/content/2026-09-02/singo-등촌동아이파크-84.json",
+              "data/content/2026-09-02/singo-한신아파트상가동유치원동103~109-84.json",
+              "data/content/2026-09-02/singo-다산반도유보라메이플타운-84.json",
+              "data/content/2026-09-02/singo-광주역자연앤자이-84.json",
+              "data/content/2026-09-02/singo-동아에코빌-59.json",
+              "data/content/2026-09-02/singo-장미시영6-59.json",
+              "data/content/2026-09-02/singo-한진-84.json",
+              "data/content/2026-09-02/singo-호계2차현대홈타운-59.json",
+              "data/content/2026-09-02/singo-엘에이치이스트힐-59.json",
+              "data/content/2026-09-02/singo-덕유마을주공4-59.json"
             ],
-            "png": [
-              "data/out/2026-09-01/singo-신촌숲아이파크-84-p1.png",
-              "data/out/2026-09-01/singo-강촌-59-p1.png",
-              "data/out/2026-09-01/singo-서초힐스-59-p1.png",
-              "data/out/2026-09-01/singo-신동아리버파크-59-p1.png",
-              "data/out/2026-09-01/singo-신도림태영타운-84-p1.png",
-              "data/out/2026-09-01/singo-초원마을대림-84-p1.png",
-              "data/out/2026-09-01/singo-등촌동아이파크-84-p1.png",
-              "data/out/2026-09-01/singo-한신아파트상가동유치원동103~109-84-p1.png",
-              "data/out/2026-09-01/singo-다산반도유보라메이플타운-84-p1.png",
-              "data/out/2026-09-01/singo-광주역자연앤자이-84-p1.png",
-              "data/out/2026-09-01/singo-동아에코빌-59-p1.png",
-              "data/out/2026-09-01/singo-장미시영6-59-p1.png",
-              "data/out/2026-09-01/singo-한진-84-p1.png",
-              "data/out/2026-09-01/singo-호계2차현대홈타운-59-p1.png",
-              "data/out/2026-09-01/singo-엘에이치이스트힐-59-p1.png",
-              "data/out/2026-09-01/singo-덕유마을주공4-59-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 16장 · 코드 검수만",
@@ -268,9 +294,9 @@
           "label": "singo-daily-2026-08-25",
           "title": "🔥 8월 25일 신고가 15곳",
           "topic": "기타",
-          "date": "2026-09-01",
+          "date": "2026-09-02",
           "cards": 15,
-          "pages": 15,
+          "pages": 0,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -281,39 +307,23 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-01/singo-성복역롯데캐슬골드타운-84.json",
-              "data/content/2026-09-01/singo-성복역롯데캐슬클라시엘-84.json",
-              "data/content/2026-09-01/singo-꿈의숲아이파크-59.json",
-              "data/content/2026-09-01/singo-태릉해링턴플레이스-84.json",
-              "data/content/2026-09-01/singo-삼환-84.json",
-              "data/content/2026-09-01/singo-녹번역e편한세상캐슬-59.json",
-              "data/content/2026-09-01/singo-영통아이파크캐슬1단지-84.json",
-              "data/content/2026-09-01/singo-블루밍구성더센트럴-84.json",
-              "data/content/2026-09-01/singo-미사강변센트리버-59.json",
-              "data/content/2026-09-01/singo-한진한화그랑빌-59.json",
-              "data/content/2026-09-01/singo-영통에듀파크331동~337동-84.json",
-              "data/content/2026-09-01/singo-화서역푸르지오더에듀포레-84.json",
-              "data/content/2026-09-01/singo-신동탄포레자이-59.json",
-              "data/content/2026-09-01/singo-영통센트럴파크뷰-59.json",
-              "data/content/2026-09-01/singo-e편한세상평내메트로원-59.json"
+              "data/content/2026-09-02/singo-성복역롯데캐슬골드타운-84.json",
+              "data/content/2026-09-02/singo-성복역롯데캐슬클라시엘-84.json",
+              "data/content/2026-09-02/singo-꿈의숲아이파크-59.json",
+              "data/content/2026-09-02/singo-태릉해링턴플레이스-84.json",
+              "data/content/2026-09-02/singo-삼환-84.json",
+              "data/content/2026-09-02/singo-녹번역e편한세상캐슬-59.json",
+              "data/content/2026-09-02/singo-영통아이파크캐슬1단지-84.json",
+              "data/content/2026-09-02/singo-블루밍구성더센트럴-84.json",
+              "data/content/2026-09-02/singo-미사강변센트리버-59.json",
+              "data/content/2026-09-02/singo-한진한화그랑빌-59.json",
+              "data/content/2026-09-02/singo-영통에듀파크331동~337동-84.json",
+              "data/content/2026-09-02/singo-화서역푸르지오더에듀포레-84.json",
+              "data/content/2026-09-02/singo-신동탄포레자이-59.json",
+              "data/content/2026-09-02/singo-영통센트럴파크뷰-59.json",
+              "data/content/2026-09-02/singo-e편한세상평내메트로원-59.json"
             ],
-            "png": [
-              "data/out/2026-09-01/singo-성복역롯데캐슬골드타운-84-p1.png",
-              "data/out/2026-09-01/singo-성복역롯데캐슬클라시엘-84-p1.png",
-              "data/out/2026-09-01/singo-꿈의숲아이파크-59-p1.png",
-              "data/out/2026-09-01/singo-태릉해링턴플레이스-84-p1.png",
-              "data/out/2026-09-01/singo-삼환-84-p1.png",
-              "data/out/2026-09-01/singo-녹번역e편한세상캐슬-59-p1.png",
-              "data/out/2026-09-01/singo-영통아이파크캐슬1단지-84-p1.png",
-              "data/out/2026-09-01/singo-블루밍구성더센트럴-84-p1.png",
-              "data/out/2026-09-01/singo-미사강변센트리버-59-p1.png",
-              "data/out/2026-09-01/singo-한진한화그랑빌-59-p1.png",
-              "data/out/2026-09-01/singo-영통에듀파크331동~337동-84-p1.png",
-              "data/out/2026-09-01/singo-화서역푸르지오더에듀포레-84-p1.png",
-              "data/out/2026-09-01/singo-신동탄포레자이-59-p1.png",
-              "data/out/2026-09-01/singo-영통센트럴파크뷰-59-p1.png",
-              "data/out/2026-09-01/singo-e편한세상평내메트로원-59-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 15장 · 코드 검수만",
@@ -324,9 +334,9 @@
           "label": "singo-dmc-centralxi",
           "title": "🔥 DMC센트럴자이 25평, 15.95억 신고가",
           "topic": "기타",
-          "date": "2026-09-01",
+          "date": "2026-09-02",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -337,11 +347,9 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-01/singo-DMC센트럴자이-59.json"
+              "data/content/2026-09-02/singo-DMC센트럴자이-59.json"
             ],
-            "png": [
-              "data/out/2026-09-01/singo-DMC센트럴자이-59-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -349,40 +357,12 @@
           "captionChars": 591
         },
         {
-          "label": "singo-dasan-lottecastle",
-          "title": "🔥 다산롯데캐슬 35평, 11.95억 신고가",
-          "topic": "기타",
-          "date": "2026-09-01",
-          "cards": 1,
-          "pages": 1,
-          "state": "미승인",
-          "setState": "오너 확정",
-          "files": {
-            "content": [],
-            "png": [],
-            "caption": "data/review/captions/singo-dasan-lottecastle.txt",
-            "review": "data/review/singo-dasan-lottecastle.json"
-          },
-          "rebuilt": {
-            "content": [
-              "data/content/2026-09-01/singo-다산롯데캐슬-84.json"
-            ],
-            "png": [
-              "data/out/2026-09-01/singo-다산롯데캐슬-84-p1.png"
-            ]
-          },
-          "verdict": "pass",
-          "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
-          "caption": "다산롯데캐슬 35평, 11.95억 신고가입니다 🔥\n\n8월 9일, 다산롯데캐슬 전용 84.99㎡ 23층이\n11.95억에 팔렸습니다. 2017년 준공, 1,186세대 단지입니다.\n세대당 주차는 1.2대입니다.\n가장 가까운 역은 다산역입니다.\n\n📈 이 집이 걸어온 길\n· 2020년 1월 7.45억\n· 2021년 12월 10.3억 — 지난 사이클 고점\n· 2023년 1월 6.9억 — 2020년 이후 최저점\n· 2026년 8월 11.95억 — 이번 신고가\n\n지난 사이클 고점 10.3억과 견주면 +16.0%입니다.\n2020년 이후 최저점 6.9억과 견주면 +73.2%입니다.\n직전 최고가는 7월 5일 11억이었습니다.\n\n곡선은 거래가 있던 69개월의 그달 최고가를 이은 것입니다.\n같은 평형도 층·향에 따라 값이 다릅니다.\n\n📌 저장해두고 우리 동네 신고가 확인하기\n\n—\n📊 출처 : 국토교통부 아파트 매매 실거래가 (상세자료)\n📅 기간 : 2020.01 ~ 2026.08 (계약일 기준, 직거래 제외)\n📐 35평 = 공급면적 114.08㎡ · 전용 84.99㎡ (건축물대장 기준)\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#남양주아파트 #다산롯데캐슬 #신고가 #아파트실거래가 #위릿노트",
-          "captionChars": 657
-        },
-        {
           "label": "singo-seocho-foresta2",
           "title": "🔥 서초포레스타2단지 38평, 19.9억 신고가",
           "topic": "기타",
-          "date": "2026-09-01",
+          "date": "2026-09-02",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -393,11 +373,9 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-01/singo-서초포레스타2단지-84.json"
+              "data/content/2026-09-02/singo-서초포레스타2단지-84.json"
             ],
-            "png": [
-              "data/out/2026-09-01/singo-서초포레스타2단지-84-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -408,9 +386,9 @@
           "label": "singo-raemian-crisiel",
           "title": "🔥 래미안크리시엘 33평, 지난 고점 대비 +21% 신고가",
           "topic": "기타",
-          "date": "2026-09-01",
+          "date": "2026-09-02",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -421,11 +399,9 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-01/singo-래미안크리시엘-84.json"
+              "data/content/2026-09-02/singo-래미안크리시엘-84.json"
             ],
-            "png": [
-              "data/out/2026-09-01/singo-래미안크리시엘-84-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -436,9 +412,9 @@
           "label": "singo-neulpureun-byuksan",
           "title": "🔥 늘푸른벽산 33평, 저점 대비 +108% 신고가",
           "topic": "기타",
-          "date": "2026-09-01",
+          "date": "2026-09-02",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -449,11 +425,9 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-01/singo-늘푸른벽산-84.json"
+              "data/content/2026-09-02/singo-늘푸른벽산-84.json"
             ],
-            "png": [
-              "data/out/2026-09-01/singo-늘푸른벽산-84-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -464,9 +438,9 @@
           "label": "jeonwolse-map",
           "title": "토허 40곳 전세·월세 비중 (월세화 추이·월간)",
           "topic": "기타",
-          "date": "2026-09-01",
+          "date": "2026-09-02",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -477,24 +451,22 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-01/jeonwolse-map.json"
+              "data/content/2026-09-02/jeonwolse-map.json"
             ],
-            "png": [
-              "data/out/2026-09-01/jeonwolse-map-p1.png"
-            ]
+            "png": []
           },
           "verdict": "revise",
           "reviewSummary": "REVISE — error 0 · warn 2 · 카드 1장 · 코드 검수만",
-          "caption": "새로 맺는 계약은, 이제 월세가 더 많습니다. 🔥\n\n국토부 아파트 전월세 실거래 기준(2026년 7월),\n토지거래허가구역 40곳(서울 25구 + 경기 15곳)의\n아파트 계약을 전세 / 월세로 나눠 봤습니다.\n\n· 전체 계약 : 전세 52% vs 월세 48%\n· 신규 계약(최근 3개월) : 전세 46.4% vs 월세 53.6%\n\n전체로 보면 아직 전세가 근소하게 앞서지만,\n새로 맺는 계약에서는 이미 월세가 전세를 넘어섰습니다.\n\n[월세 비중 높은 곳 TOP]\n1. 구로구 74.0%\n2. 중랑구 67.9%\n3. 종로구 62.6%\n4. 화성시 동탄구 61.2%\n5. 금천구 58.7%\n6. 관악구 57.9%\n7. 중구 55.9%\n8. 동대문구 55.2%\n9. 용산구 54.4%\n10. 영등포구 52.8%\n\n[아직 전세가 우세한 곳]\n· 과천시 28.7%\n· 안양시 동안구 34.4%\n· 광명시 35.2%\n\n전세 대출 부담, 역전세 우려가 겹치며\n'전세의 월세화'가 숫자로 나타나고 있습니다.\n\n📌 저장해두고 우리 동네 흐름 확인하기\n\n—\n📊 출처 : 국토부 아파트 전월세 실거래 · 서울시 행정경계\n※ 월세 비중·전세/월세 구분은 실거래 월세금액(0=전세)에서 계산한 값입니다\n※ 신규 : 최근 3개월 신고 계약 기준\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#월세 #전세 #서울아파트 #부동산 #위릿노트",
-          "captionChars": 723
+          "caption": "새로 맺는 계약은, 이제 월세가 더 많습니다. 🔥\n\n국토부 아파트 전월세 실거래 기준(2026년 7월),\n토지거래허가구역 40곳(서울 25구 + 경기 15곳)의\n아파트 계약을 전세 / 월세로 나눠 봤습니다.\n\n· 전체 계약 : 전세 51.5% vs 월세 48.5%\n· 신규 계약(최근 3개월) : 전세 45.8% vs 월세 54.2%\n\n전체로 보면 아직 전세가 앞서지만,\n새로 맺는 계약에서는 이미 월세가 전세를 넘어섰습니다.\n\n[월세 비중 높은 곳 TOP 10]\n1. 구로구 74.4%\n2. 중랑구 68.6%\n3. 종로구 68.1%\n4. 화성시 동탄구 60.7%\n5. 관악구 58.5%\n6. 금천구 58.2%\n7. 중구 57.8%\n8. 동대문구 55.6%\n9. 용산구 54.3%\n10. 강남구 53.4%\n\n[아직 전세가 우세한 곳]\n· 광명시 35.5%\n· 안양시 동안구 34.7%\n· 과천시 28.8%\n\n전세 대출 부담, 역전세 우려가 겹치며\n'전세의 월세화'가 숫자로 나타나고 있습니다.\n\n📌 저장해두고 우리 동네 흐름 확인하기\n\n—\n📊 출처 : 국토부 아파트 전월세 실거래 · 서울시 행정경계\n※ 월세 비중·전세/월세 구분은 실거래 월세금액(0=전세)에서 계산한 값입니다\n※ 신규 : 최근 3개월 신고 계약 기준\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#월세 #전세 #서울아파트 #부동산 #위릿노트",
+          "captionChars": 724
         },
         {
           "label": "jeonse-streak",
           "title": "서울 아파트 매매·전세 동반 연속 상승 (주간)",
           "topic": "기타",
-          "date": "2026-09-01",
+          "date": "2026-09-02",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행됨",
           "setState": "오너 확정",
           "files": {
@@ -505,11 +477,9 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-01/jeonse-streak.json"
+              "data/content/2026-09-02/jeonse-streak.json"
             ],
-            "png": [
-              "data/out/2026-09-01/jeonse-streak-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -520,9 +490,9 @@
           "label": "mae-streak",
           "title": "서울 아파트 매매 연속 상승 · 상승폭 文정부의 2배 (주간)",
           "topic": "기타",
-          "date": "2026-09-01",
+          "date": "2026-09-02",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행됨",
           "setState": "오너 확정",
           "files": {
@@ -533,11 +503,9 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-01/mae-streak.json"
+              "data/content/2026-09-02/mae-streak.json"
             ],
-            "png": [
-              "data/out/2026-09-01/mae-streak-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -545,12 +513,116 @@
           "captionChars": 482
         },
         {
+          "label": "m2-trend",
+          "title": "💵 2030 대한민국 M2통화량은?",
+          "topic": "기타",
+          "date": "2026-09-01",
+          "cards": 1,
+          "pages": 0,
+          "state": "미승인",
+          "setState": "시안",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/m2-trend.txt",
+            "review": "data/review/m2-trend.json"
+          },
+          "rebuilt": {
+            "content": [
+              "data/content/2026-09-01/m2-trend.json"
+            ],
+            "png": []
+          },
+          "verdict": "pass",
+          "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+          "caption": "2030년 통화량은 얼마가 되어 있을까요 💵\n\n2026년 6월 대한민국 M2(광의통화)는 4,831조입니다.\n2003년 이후 한 번도 줄어든 적이 없습니다.\n\n📊 앞으로 4.5년, 두 가지 속도로 재봤습니다\n· 역사적 평균 연 7.6% → 6,710조\n· 최근 1년 속도 연 12.3% → 8,128조\n\n지금의 1.4배 ~ 1.7배입니다.\n\n두 숫자 모두 우리가 정한 값이 아니라 과거가 실제로 그랬던 속도입니다.\n· 연 7.6% = 2003.10~2025.06 연평균 증가율(22년)\n· 연 12.3% = 2025.06~2026.06 전년동월비(1년)\n\n👉 어느 쪽이든 2030년엔 지금보다 훨씬 많은 돈이 돌아갑니다.\n\n📌 저장해두고 통화량 흐름 확인하기\n\n—\n📊 출처 : 한국은행 ECOS (M2 평잔·원계열, 개편 전 기준)\n📅 실측 : 2003.10 ~ 2026.06 (273개월)\n※ 점선 오른쪽은 예측입니다 — 한국은행이 발표한 값이 아닙니다.\n   2026년 6월 실측값에 각 증가율을 4.5년간 복리로 적용한 값이고,\n   금리·통화정책·자금흐름이 바뀌면 달라집니다. 맞히려는 수치가 아니라 속도를 비교하는 그림입니다.\n※ 그래프의 세로 점선까지가 실측이고, 그 왼쪽은 회색 한 가지로만 그렸습니다.\n※ 이 카드는 개편 전 기준(구 M2)입니다. 한국은행이 2025년 12월 M2에서 수익증권을 제외했습니다.\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#통화량 #M2 #한국은행 #유동성 #경제상식",
+          "captionChars": 786
+        },
+        {
+          "label": "m2-rate",
+          "title": "💵 통화량 증가율 추이 — 각 해 6월 기준",
+          "topic": "기타",
+          "date": "2026-09-01",
+          "cards": 1,
+          "pages": 0,
+          "state": "미승인",
+          "setState": "시안",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/m2-rate.txt",
+            "review": "data/review/m2-rate.json"
+          },
+          "rebuilt": {
+            "content": [
+              "data/content/2026-09-01/m2-rate.json"
+            ],
+            "png": []
+          },
+          "verdict": "revise",
+          "reviewSummary": "REVISE — error 0 · warn 1 · 카드 1장 · 코드 검수만",
+          "caption": "통화량 증가율이 12.3%까지 올라왔습니다 💵\n\n2026년 6월 M2(광의통화)는 1년 전보다 12.3% 늘었습니다.\n2022년 1월(12.7%) 이후 53개월 만에 가장 높습니다.\n\n📊 각 해 6월 전년동월비\n· 2016년 +7.1%\n· 2017년 +5.9%\n· 2018년 +6.1%\n· 2019년 +6.7%\n· 2020년 +9.9%\n· 2021년 +10.9%\n· 2022년 +9.0%\n· 2023년 +2.2%\n· 2024년 +6.1%\n· 2025년 +6.7%\n· 2026년 +12.3%\n\n바닥은 2023년 6월의 2.2%였습니다.\n3년 사이 증가율이 5.6배가 됐습니다(통화량이 아니라 증가 속도입니다).\n\n💰 1년 사이 늘어난 돈은 527조입니다.\n\n👉 통화량이 다시 빠르게 늘고 있습니다.\n\n📌 저장해두고 통화량 흐름 확인하기\n\n—\n📊 출처 : 한국은행 ECOS (M2 평잔·원계열, 개편 전 기준)\n📅 기간 : 2016.06 ~ 2026.06 (각 해 6월 전년동월비)\n※ 모든 해를 6월로 맞췄습니다. 최신 자료가 2026년 6월이라 12월 기준과 섞으면 비교가 어긋납니다.\n※ 한국은행이 2025년 12월 M2에서 수익증권을 제외했습니다. 이 카드는 개편 전 기준이고,\n   개편 후 기준으로 같은 달을 재면 6.0%입니다.\n※ 2026년 6월 M2 총량은 4,831조입니다(개편 전 기준).\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#통화량 #M2 #한국은행 #유동성 #경제상식",
+          "captionChars": 776
+        },
+        {
+          "label": "m2-gap",
+          "title": "💵 M2 통계 개편 — 같은 달, 두 개의 통화량",
+          "topic": "기타",
+          "date": "2026-09-01",
+          "cards": 1,
+          "pages": 0,
+          "state": "미승인",
+          "setState": "시안",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/m2-gap.txt",
+            "review": "data/review/m2-gap.json"
+          },
+          "rebuilt": {
+            "content": [
+              "data/content/2026-09-01/m2-gap.json"
+            ],
+            "png": []
+          },
+          "verdict": "pass",
+          "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+          "caption": "같은 달 통화량이 두 개입니다 💵\n\n2025년 12월 30일, 한국은행이 통화·유동성 통계를 개편했습니다.\nM2(광의통화)에서 펀드·ETF 같은 수익증권이 빠졌습니다.\n\n📊 2026년 6월 M2\n· 개편 전 기준 4,831조\n· 개편 후 기준 4,210조\n· 차이 621조\n\n둘 다 한국은행이 발표한 공식 숫자입니다.\n어느 하나가 틀린 게 아니라, 무엇을 '통화'로 볼지가 달라진 것입니다.\n\n📈 차이는 계속 벌어지고 있습니다.\n2016년 이후 가장 작았을 때가 110조였는데,\n2026년 6월에는 621조가 됐습니다.\n\n👉 어느 기준으로 보느냐에 따라 통화량 이야기가 달라집니다.\n\n📌 신·구 두 계열은 2026년 12월까지만 함께 발표됩니다.\n\n—\n📊 출처 : 한국은행 ECOS (M2 평잔·원계열, 신·구 병행 공표분)\n📅 기간 : 2016.01 ~ 2026.06 (월별)\n※ 개편 내용 : 수익증권(펀드·ETF) 제외, 초대형 IB 발행어음·일부 CMA 포함, 경제주체 분류 개편\n※ 카드의 621조는 카드에 적힌 두 값(4,831 − 4,210)의 차이입니다. 원값끼리 빼면 621.6조입니다.\n※ 개편 기준은 2026년 1월 공표분(2025년 11월 통계)부터 적용됐습니다.\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#통화량 #M2 #한국은행 #유동성 #경제상식",
+          "captionChars": 709
+        },
+        {
+          "label": "m2-gov",
+          "title": "💵 역대 정부 통화량 증가 규모 — 지금이 가장 빠르다",
+          "topic": "기타",
+          "date": "2026-09-01",
+          "cards": 1,
+          "pages": 0,
+          "state": "발행됨",
+          "setState": "오너 확정",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/m2-gov.txt",
+            "review": "data/review/m2-gov.json"
+          },
+          "rebuilt": {
+            "content": [
+              "data/content/2026-09-01/m2-gov.json"
+            ],
+            "png": []
+          },
+          "verdict": "pass",
+          "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+          "caption": "돈이 가장 빨리 풀린 정부는 지금입니다 💵\n\n역대 정부의 통화량(M2) 증가 규모를 세어봤습니다.\n\n📊 정부별 M2 증가폭\n· 노무현 월평균 7.0조 (총 429조)\n· 이명박 월평균 9.1조 (총 548조)\n· 박근혜 월평균 11.8조 (총 580조)\n· 문재인 월평균 20.4조 (총 1,262조 — 총액 1위)\n· 윤석열 월평균 15.5조 (총 542조)\n· 이재명 월평균 42.2조 (총 591조 — 재임 중)\n\n총액은 문재인 정부가 가장 큽니다. 1,262조가 늘었습니다.\n\n그런데 속도로 보면 이야기가 달라집니다.\n현 정부는 14개월 만에 591조가 늘었습니다.\n월평균 42.2조 — 문재인 정부(20.4조)의 2.1배입니다.\n\n임기 길이가 제각각이라 총액보다 월평균이 더 정확한 비교입니다.\n\n⚡ 특히 2026년 5월 한 달에만 85.9조가 늘었습니다.\n1986년 집계 이후 한 달 증가폭 1위입니다.\n\n📈 '26년 말 예상 약 5,150조\n올해 들어 311.4조가 늘었습니다(6개월, 월평균 51.9조).\n그 속도가 남은 6개월에도 이어진다고 본 값입니다.\n\n📌 저장해두고 통화량 흐름 확인하기\n\n—\n📊 출처 : 한국은행 ECOS (M2 평잔·원계열, 개편 전 기준)\n📅 기간 : 2003.01 ~ 2026.06 (월별)\n※ 각 정부 구간은 '전임 정부 퇴임월 → 자기 퇴임월'로 끊었습니다.\n   겹치는 달이 없어 막대를 다 더하면 전체 증가와 정확히 맞습니다.\n※ 한국은행이 2025년 12월 통화지표를 개편해 수익증권 등을 M2에서 제외했습니다.\n   이 카드는 정부 간 비교를 위해 전 구간을 개편 전 기준으로 통일했습니다.\n※ 얼굴 아래 개월 수는 실제 재임 기간, 월평균은 데이터 구간 기준입니다.\n※ 2026.06 기준 M2 총량은 4,831조입니다(개편 전 기준, 개편 후 기준은 4,210조).\n※ 카드 왼쪽 회색 글씨 약 5,150조는 예상치입니다 — 한국은행이 발표한 값이 아닙니다.\n   2026.06까지의 실적 311.4조 ÷ 6개월 = 월 51.9조를 남은 6개월에 그대로 더하면 5,142.8조이고,\n   카드에는 50조 단위로 반올림해 적었습니다. 통화정책·자금흐름이 바뀌면 달라집니다.\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#통화량 #M2 #한국은행 #유동성 #경제상식",
+          "captionChars": 1181
+        },
+        {
           "label": "danji-guri",
           "title": "🚨 구리역 안전마진 5억대 줍줍 (구리역 롯데캐슬 시그니처)",
           "topic": "기타",
           "date": "2026-08-26",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -563,9 +635,7 @@
             "content": [
               "data/content/2026-08-26/danji-guri.json"
             ],
-            "png": [
-              "data/out/2026-08-26/danji-guri-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -578,7 +648,7 @@
           "topic": "기타",
           "date": "2026-08-16",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -591,9 +661,7 @@
             "content": [
               "data/content/2026-08-16/singo-광명한진타운-84.json"
             ],
-            "png": [
-              "data/out/2026-08-16/singo-광명한진타운-84-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -606,7 +674,7 @@
           "topic": "기타",
           "date": "2026-08-14",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행 대기",
           "setState": "오너 확정",
           "files": {
@@ -619,9 +687,7 @@
             "content": [
               "data/content/2026-08-14/danji-doosanbucheon.json"
             ],
-            "png": [
-              "data/out/2026-08-14/danji-doosanbucheon-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -634,7 +700,7 @@
           "topic": "기타",
           "date": "2026-08-14",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행 대기",
           "setState": "오너 확정",
           "files": {
@@ -647,9 +713,7 @@
             "content": [
               "data/content/2026-08-14/danji-sangdong.json"
             ],
-            "png": [
-              "data/out/2026-08-14/danji-sangdong-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -657,40 +721,12 @@
           "captionChars": 866
         },
         {
-          "label": "m2-gov",
-          "title": "💵 역대 정부 통화량 증가 규모 — 지금이 가장 빠르다",
-          "topic": "기타",
-          "date": "2026-08-13",
-          "cards": 1,
-          "pages": 1,
-          "state": "발행됨",
-          "setState": "오너 확정",
-          "files": {
-            "content": [],
-            "png": [],
-            "caption": "data/review/captions/m2-gov.txt",
-            "review": "data/review/m2-gov.json"
-          },
-          "rebuilt": {
-            "content": [
-              "data/content/2026-08-13/m2-gov.json"
-            ],
-            "png": [
-              "data/out/2026-08-13/m2-gov-p1.png"
-            ]
-          },
-          "verdict": "pass",
-          "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
-          "caption": "돈이 가장 빨리 풀린 정부는 지금입니다 💵\n\n역대 정부의 통화량(M2) 증가 규모를 세어봤습니다.\n\n📊 정부별 M2 증가폭\n· 노무현 월평균 7.0조 (총 429조)\n· 이명박 월평균 9.1조 (총 548조)\n· 박근혜 월평균 11.8조 (총 580조)\n· 문재인 월평균 20.4조 (총 1,262조 — 총액 1위)\n· 윤석열 월평균 15.5조 (총 542조)\n· 이재명 월평균 40.8조 (총 530조 — 재임 중)\n\n총액은 문재인 정부가 압도적입니다. 5년 넘게 1,262조가 늘었으니까요.\n\n그런데 속도로 보면 이야기가 달라집니다.\n현 정부는 13개월 만에 530조가 늘었습니다.\n월평균 40.8조 — 문재인 정부(20.4조)의 약 2배입니다.\n\n임기 길이가 12개월부터 62개월까지 제각각이라\n총액보다 월평균이 더 정확한 비교입니다.\n\n⚡ 특히 2026년 5월 한 달에만 90.6조가 늘었습니다.\n2003년 이후 271개월 중 한 달 증가폭 역대 1위입니다.\n(2위는 2024년 3월 63.8조)\n\n📌 저장해두고 통화량 흐름 확인하기\n\n—\n📊 출처 : 한국은행 ECOS (M2 상품별 구성내역, 평잔·원계열)\n📅 기간 : 2003.01 ~ 2026.05 (월별)\n※ 각 정부 구간은 '전임 정부 퇴임월 → 자기 퇴임월'로 끊었습니다.\n   겹치는 달이 없어 막대를 다 더하면 전체 증가와 정확히 맞습니다.\n※ 한국은행이 2025년 12월 통화지표를 개편해 수익증권 등을 M2에서 제외했습니다.\n   이 카드는 정부 간 비교를 위해 전 구간을 개편 전 기준으로 통일했습니다.\n※ 얼굴 아래 개월 수는 실제 재임 기간, 월평균은 데이터 구간 기준입니다.\n※ 2026.05 기준 M2 총량은 4,771조입니다(개편 전 기준).\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#통화량 #M2 #한국은행 #유동성 #경제상식",
-          "captionChars": 955
-        },
-        {
           "label": "danji-songpa",
           "title": "🚨 송파 시그니처 롯데캐슬 재공급 줍줍! 안전마진 10.9억",
           "topic": "기타",
           "date": "2026-08-11",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "미승인",
           "setState": "시안",
           "files": {
@@ -703,9 +739,7 @@
             "content": [
               "data/content/2026-08-11/danji-songpa.json"
             ],
-            "png": [
-              "data/out/2026-08-11/danji-songpa-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -718,7 +752,7 @@
           "topic": "기타",
           "date": "2026-08-11",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "미승인",
           "setState": "시안",
           "files": {
@@ -731,9 +765,7 @@
             "content": [
               "data/content/2026-08-11/danji-define-artia.json"
             ],
-            "png": [
-              "data/out/2026-08-11/danji-define-artia-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -746,7 +778,7 @@
           "topic": "기타",
           "date": "2026-08-10",
           "cards": 2,
-          "pages": 2,
+          "pages": 0,
           "state": "발행됨",
           "setState": "오너 확정",
           "files": {
@@ -760,10 +792,7 @@
               "data/content/2026-08-10/foreign-rank-p1.json",
               "data/content/2026-08-10/foreign-rank-p2.json"
             ],
-            "png": [
-              "data/out/2026-08-10/foreign-rank-p1-p1.png",
-              "data/out/2026-08-10/foreign-rank-p2-p1.png"
-            ]
+            "png": []
           },
           "verdict": "",
           "reviewSummary": "",
@@ -776,7 +805,7 @@
           "topic": "기타",
           "date": "2026-08-08",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "미승인",
           "setState": "발행 보류 — 공고문 대조 대기",
           "files": {
@@ -789,9 +818,7 @@
             "content": [
               "data/content/2026-08-08/danji-chungjeongno.json"
             ],
-            "png": [
-              "data/out/2026-08-08/danji-chungjeongno-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -804,7 +831,7 @@
           "topic": "기타",
           "date": "2026-08-08",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "미승인",
           "setState": "발행 보류 — 공고문 대조 대기",
           "files": {
@@ -817,9 +844,7 @@
             "content": [
               "data/content/2026-08-08/danji-summit.json"
             ],
-            "png": [
-              "data/out/2026-08-08/danji-summit-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -832,7 +857,7 @@
           "topic": "기타",
           "date": "2026-08-08",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "미승인",
           "setState": "발행 보류 — 공고문 대조 대기",
           "files": {
@@ -845,9 +870,7 @@
             "content": [
               "data/content/2026-08-08/danji-thesharp.json"
             ],
-            "png": [
-              "data/out/2026-08-08/danji-thesharp-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -860,7 +883,7 @@
           "topic": "기타",
           "date": "2026-08-06",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "미승인",
           "setState": "발행 보류 — 공고문 대조 대기",
           "files": {
@@ -873,9 +896,7 @@
             "content": [
               "data/content/2026-08-06/danji-jangwi.json"
             ],
-            "png": [
-              "data/out/2026-08-06/danji-jangwi-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -888,7 +909,7 @@
           "topic": "기타",
           "date": "2026-08-05",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행됨",
           "setState": "오너 확정",
           "files": {
@@ -901,9 +922,7 @@
             "content": [
               "data/content/2026-08-05/world-capital.json"
             ],
-            "png": [
-              "data/out/2026-08-05/world-capital-p1.png"
-            ]
+            "png": []
           },
           "verdict": "revise",
           "reviewSummary": "REVISE — error 0 · warn 1 · 카드 1장 · 코드 검수만",
@@ -916,7 +935,7 @@
           "topic": "기타",
           "date": "2026-08-03",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행 대기",
           "setState": "발행 승인",
           "files": {
@@ -929,9 +948,7 @@
             "content": [
               "data/content/2026-08-03/danji-songdo.json"
             ],
-            "png": [
-              "data/out/2026-08-03/danji-songdo-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -944,7 +961,7 @@
           "topic": "기타",
           "date": "2026-08-03",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행됨",
           "setState": "발행 승인",
           "files": {
@@ -957,9 +974,7 @@
             "content": [
               "data/content/2026-08-03/danji-hangang.json"
             ],
-            "png": [
-              "data/out/2026-08-03/danji-hangang-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -972,7 +987,7 @@
           "topic": "기타",
           "date": "2026-07-31",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행됨",
           "setState": "오너 확정",
           "files": {
@@ -985,9 +1000,7 @@
             "content": [
               "data/content/2026-07-31/line9-loop.json"
             ],
-            "png": [
-              "data/out/2026-07-31/line9-loop-p1.png"
-            ]
+            "png": []
           },
           "verdict": "",
           "reviewSummary": "",
@@ -1000,7 +1013,7 @@
           "topic": "기타",
           "date": "2026-07-31",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행됨",
           "setState": "오너 확정",
           "files": {
@@ -1013,9 +1026,7 @@
             "content": [
               "data/content/2026-07-31/line8-loop.json"
             ],
-            "png": [
-              "data/out/2026-07-31/line8-loop-p1.png"
-            ]
+            "png": []
           },
           "verdict": "",
           "reviewSummary": "",
@@ -1028,7 +1039,7 @@
           "topic": "기타",
           "date": "2026-07-31",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행됨",
           "setState": "오너 확정",
           "files": {
@@ -1041,9 +1052,7 @@
             "content": [
               "data/content/2026-07-31/line7-loop.json"
             ],
-            "png": [
-              "data/out/2026-07-31/line7-loop-p1.png"
-            ]
+            "png": []
           },
           "verdict": "",
           "reviewSummary": "",
@@ -1056,7 +1065,7 @@
           "topic": "기타",
           "date": "2026-07-31",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행됨",
           "setState": "오너 확정",
           "files": {
@@ -1069,9 +1078,7 @@
             "content": [
               "data/content/2026-07-31/line6-loop.json"
             ],
-            "png": [
-              "data/out/2026-07-31/line6-loop-p1.png"
-            ]
+            "png": []
           },
           "verdict": "",
           "reviewSummary": "",
@@ -1084,7 +1091,7 @@
           "topic": "기타",
           "date": "2026-07-31",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행됨",
           "setState": "오너 확정",
           "files": {
@@ -1097,9 +1104,7 @@
             "content": [
               "data/content/2026-07-31/line5-loop.json"
             ],
-            "png": [
-              "data/out/2026-07-31/line5-loop-p1.png"
-            ]
+            "png": []
           },
           "verdict": "",
           "reviewSummary": "",
@@ -1112,7 +1117,7 @@
           "topic": "기타",
           "date": "2026-07-31",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행됨",
           "setState": "오너 확정",
           "files": {
@@ -1125,9 +1130,7 @@
             "content": [
               "data/content/2026-07-31/line4-loop.json"
             ],
-            "png": [
-              "data/out/2026-07-31/line4-loop-p1.png"
-            ]
+            "png": []
           },
           "verdict": "",
           "reviewSummary": "",
@@ -1140,7 +1143,7 @@
           "topic": "기타",
           "date": "2026-07-31",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행됨",
           "setState": "오너 확정",
           "files": {
@@ -1153,9 +1156,7 @@
             "content": [
               "data/content/2026-07-31/line3-loop.json"
             ],
-            "png": [
-              "data/out/2026-07-31/line3-loop-p1.png"
-            ]
+            "png": []
           },
           "verdict": "",
           "reviewSummary": "",
@@ -1168,7 +1169,7 @@
           "topic": "기타",
           "date": "2026-07-31",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행됨",
           "setState": "오너 확정",
           "files": {
@@ -1181,9 +1182,7 @@
             "content": [
               "data/content/2026-07-31/line2-loop.json"
             ],
-            "png": [
-              "data/out/2026-07-31/line2-loop-p1.png"
-            ]
+            "png": []
           },
           "verdict": "",
           "reviewSummary": "",
@@ -1196,7 +1195,7 @@
           "topic": "기타",
           "date": "2026-07-31",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행 대기",
           "setState": "오너 확정",
           "files": {
@@ -1209,9 +1208,7 @@
             "content": [
               "data/content/2026-07-31/sinbundang-loop.json"
             ],
-            "png": [
-              "data/out/2026-07-31/sinbundang-loop-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -1224,7 +1221,7 @@
           "topic": "기타",
           "date": "2026-07-31",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "미승인",
           "setState": "",
           "files": {
@@ -1237,9 +1234,7 @@
             "content": [
               "data/content/2026-07-31/kospi-record.json"
             ],
-            "png": [
-              "data/out/2026-07-31/kospi-record-p1.png"
-            ]
+            "png": []
           },
           "verdict": "revise",
           "reviewSummary": "REVISE — error 0 · warn 1 · 카드 1장 · 코드 검수만",
@@ -1252,7 +1247,7 @@
           "topic": "기타",
           "date": "2026-07-31",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행 대기",
           "setState": "",
           "files": {
@@ -1265,9 +1260,7 @@
             "content": [
               "data/content/2026-07-31/brand-rank.json"
             ],
-            "png": [
-              "data/out/2026-07-31/brand-rank-p1.png"
-            ]
+            "png": []
           },
           "verdict": "revise",
           "reviewSummary": "REVISE — error 0 · warn 1 · 카드 1장 · 코드 검수만",
@@ -1280,7 +1273,7 @@
           "topic": "기타",
           "date": "2026-07-31",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "미승인",
           "setState": "",
           "files": {
@@ -1293,9 +1286,7 @@
             "content": [
               "data/content/2026-07-31/jeongbi-board.json"
             ],
-            "png": [
-              "data/out/2026-07-31/jeongbi-board-p1.png"
-            ]
+            "png": []
           },
           "verdict": "",
           "reviewSummary": "",
@@ -1306,15 +1297,44 @@
     },
     {
       "topic": "부동산",
-      "count": 5,
+      "count": 6,
       "items": [
+        {
+          "label": "tohuh-price-map",
+          "title": "🗺 토허제 40곳 가격 지도 — 매매·전세 × 34평·25평 (2026.06~07)",
+          "topic": "부동산",
+          "date": "2026-09-02",
+          "cards": 4,
+          "pages": 0,
+          "state": "미승인",
+          "setState": "오너 확정",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/tohuh-price-map.txt",
+            "review": "data/review/tohuh-price-map.json"
+          },
+          "rebuilt": {
+            "content": [
+              "data/content/2026-09-02/mae84-map.json",
+              "data/content/2026-09-02/jeonse84-map.json",
+              "data/content/2026-09-02/mae59-map.json",
+              "data/content/2026-09-02/jeonse59-map.json"
+            ],
+            "png": []
+          },
+          "verdict": "pass",
+          "reviewSummary": "PASS — error 0 · warn 0 · 카드 4장 · 코드 검수만",
+          "caption": "우리 동네 34평, 사면 13.1억 · 빌리면 7.3억 🏠\n\n토지거래허가구역 40곳(서울 25개 자치구 전역 + 경기 15곳)의\n아파트 실거래를 전용면적대별로 평균했습니다.\n(2026년 6~7월 신고분)\n\n1️⃣ 34평(전용 84㎡) 매매 — 서울 평균 13.1억\n2️⃣ 34평(전용 84㎡) 전세 — 서울 평균 7.3억\n3️⃣ 25평(전용 59㎡) 매매 — 서울 평균 10.5억\n4️⃣ 25평(전용 59㎡) 전세 — 서울 평균 5.5억\n\n· 34평 전세가율 56% · 25평 전세가율 52%\n· 34평 매매는 1위와 40위가 4.5배 벌어집니다\n\n[34평 매매 · 40곳 전체]\n1. 강남구 30.6억\n2. 서초구 28.8억\n3. 송파구 24.9억\n4. 과천시 23.7억\n5. 용산구 21.9억\n6. 성동구 19.2억\n7. 성남시 분당구 18.4억\n8. 광진구 17.7억\n9. 마포구 16.8억\n10. 동작구 16.2억\n11. 중구 15.5억\n12. 강동구 15.3억\n13. 영등포구 14.1억\n14. 종로구 14.0억\n15. 성남시 수정구 12.8억\n16. 서대문구 12.7억\n17. 동대문구 12.5억\n18. 양천구 12.3억\n19. 하남시 11.6억\n20. 강서구 10.9억\n21. 용인시 수지구 10.8억\n22. 성북구 10.5억\n23. 광명시 10.4억\n24. 관악구 10.1억\n25. 은평구 9.8억\n26. 안양시 동안구 9.6억\n27. 성남시 중원구 9.3억\n28. 수원시 영통구 9.1억\n29. 구로구 8.9억\n30. 노원구 8.7억\n31. 중랑구 8.5억\n32. 화성시 동탄구 8.4억\n33. 강북구 8.3억\n34. 의왕시 8.3억\n35. 금천구 8.1억\n36. 구리시 8.0억\n37. 수원시 팔달구 7.7억\n38. 수원시 장안구 7.0억\n39. 용인시 기흥구 6.9억\n40. 도봉구 6.8억\n\n📌 저장해두고 우리 동네가 몇 위인지 확인하기\n\n—\n📊 출처 · 국토교통부 아파트 매매·전월세 실거래가 (2026.06~07월 신고분)\n   매매는 직거래·해제거래 제외 · 전세는 월세 0원 계약만\n🗂 허가구역 : 서울시·경기도 토지거래허가구역 지정 고시\n\n※ 면적은 전부 전용면적입니다. 실거래 신고에는 공급면적이 없습니다\n   — '34평'·'25평'으로 부르는 그 평형이지만, 평(공급) 기준으로 곱한 값이 아닙니다\n※ 두 달을 합쳤습니다 — 실거래 신고기한이 30일이라 한 달만 보면 거래가 적은 곳이 크게 흔들립니다\n※ 평균은 그 두 달에 계약된 단지 구성에 흔들립니다\n※ 전세는 신규·갱신이 섞여 있습니다 (갱신은 5% 상한이 걸린 건이 있습니다)\n※ 시·군·구 경계 기준이며, 실제 허가구역이 일부인 곳이 있습니다\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#부동산 #아파트 #매매가 #전세가 #토지거래허가구역",
+          "captionChars": 1412
+        },
         {
           "label": "tohuh-rent-map",
           "title": "🔥 토허제 40곳 월세 폭등 (지도+행정구역 표)",
           "topic": "부동산",
           "date": "2026-07-30",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행됨",
           "setState": "오너 확정",
           "files": {
@@ -1327,9 +1347,7 @@
             "content": [
               "data/content/2026-07-30/tohuh-rent-map.json"
             ],
-            "png": [
-              "data/out/2026-07-30/tohuh-rent-map-p1.png"
-            ]
+            "png": []
           },
           "verdict": "revise",
           "reviewSummary": "REVISE — error 0 · warn 1 · 카드 1장 · 코드 검수만",
@@ -1342,7 +1360,7 @@
           "topic": "부동산",
           "date": "2026-07-30",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행됨",
           "setState": "오너 확정",
           "files": {
@@ -1355,9 +1373,7 @@
             "content": [
               "data/content/2026-07-30/wolse-flip-p1.json"
             ],
-            "png": [
-              "data/out/2026-07-30/wolse-flip-p1-p1.png"
-            ]
+            "png": []
           },
           "verdict": "revise",
           "reviewSummary": "REVISE — error 0 · warn 1 · 카드 1장 · 코드 검수만",
@@ -1370,7 +1386,7 @@
           "topic": "부동산",
           "date": "2026-07-23",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행됨",
           "setState": "오너 확정",
           "files": {
@@ -1383,9 +1399,7 @@
             "content": [
               "data/content/2026-07-23/tohuh-rank.json"
             ],
-            "png": [
-              "data/out/2026-07-23/tohuh-rank-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
@@ -1398,7 +1412,7 @@
           "topic": "부동산",
           "date": "2026-07-21",
           "cards": 2,
-          "pages": 2,
+          "pages": 0,
           "state": "발행됨",
           "setState": "오너 확정",
           "files": {
@@ -1412,10 +1426,7 @@
               "data/content/2026-07-21/maprank-59-p1.json",
               "data/content/2026-07-21/maprank-59-p2.json"
             ],
-            "png": [
-              "data/out/2026-07-21/maprank-59-p1-p1.png",
-              "data/out/2026-07-21/maprank-59-p2-p1.png"
-            ]
+            "png": []
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 2장 · 코드 검수만",
@@ -1428,7 +1439,7 @@
           "topic": "부동산",
           "date": "2026-07-21",
           "cards": 2,
-          "pages": 2,
+          "pages": 0,
           "state": "발행됨",
           "setState": "오너 확정",
           "files": {
@@ -1442,13 +1453,10 @@
               "data/content/2026-07-21/maprank-84-p1.json",
               "data/content/2026-07-21/maprank-84-p2.json"
             ],
-            "png": [
-              "data/out/2026-07-21/maprank-84-p1-p1.png",
-              "data/out/2026-07-21/maprank-84-p2-p1.png"
-            ]
+            "png": []
           },
-          "verdict": "pass",
-          "reviewSummary": "PASS — error 0 · warn 0 · 카드 2장 · 코드 검수만",
+          "verdict": "block",
+          "reviewSummary": "BLOCK — error 1 · warn 0 · 카드 2장 · 코드 검수만",
           "caption": "서울에서 가장 비싼 '국민평형' 34평은 어디일까요? 🏙️\n\n전용 84㎡ 기준, 서울 25개 자치구의 '대장 아파트'를\n2026년 1~7월 국토부 실거래가로 전부 뽑아봤습니다.\n\n🥇 서초 · 래미안원베일리 71.5억\n🥈 강남 · 현대14차 66억\n🥉 성동 · 트리마제 63억\n…\n25위 도봉 11.5억\n\n1위(71.5억)와 25위(11.5억)의 차이는 무려 6.2배.\n\n📌 저장해두고 우리 구 순위 찾아보기\n\n—\n📊 출처 : 국토교통부 아파트 매매 실거래가\n(2026년 1~7월 · 각 구 전용 84㎡ 최고 실거래 기준)\n※ 7월 계약분은 신고기한(30일)이 남아 있어 이후 순위가 바뀔 수 있습니다\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#내집마련 #국민평형 #84제곱미터 #34평 #부동산",
           "captionChars": 440
         }
@@ -1464,7 +1472,7 @@
           "topic": "교통·생활",
           "date": "2026-07-20",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행 대기",
           "setState": "오너 확정",
           "files": {
@@ -1477,9 +1485,7 @@
             "content": [
               "data/content/2026-07-20/metro-2col.json"
             ],
-            "png": [
-              "data/out/2026-07-20/metro-2col-p1.png"
-            ]
+            "png": []
           },
           "verdict": "revise",
           "reviewSummary": "REVISE — error 0 · warn 1 · 카드 1장 · 코드 검수만",
@@ -1498,7 +1504,7 @@
           "topic": "증시·경제",
           "date": "2026-07-26",
           "cards": 1,
-          "pages": 1,
+          "pages": 0,
           "state": "발행됨",
           "setState": "",
           "files": {
@@ -1511,9 +1517,7 @@
             "content": [
               "data/content/2026-07-26/index-2026.json"
             ],
-            "png": [
-              "data/out/2026-07-26/index-2026-p1.png"
-            ]
+            "png": []
           },
           "verdict": "revise",
           "reviewSummary": "REVISE — error 0 · warn 2 · 카드 1장 · 코드 검수만",
