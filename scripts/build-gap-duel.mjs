@@ -59,14 +59,27 @@ const numeral = (n) => `#${n}`;
 /* BRAND — 레드 = 가장 많이 오른 쪽, 코발트 = 가장 덜 오른 쪽, 슬레이트 = 가운데.
    색이 방향(오름/내림)이 아니라 **순위**를 말한다. 곡선 셋이 부채로 벌어지는 그림이라
    양 끝에 두 강조색을 두고 가운데는 무채색으로 물러난다. */
-/* ⚠️ 이 카드는 **다크 패널** 위에 그린다(오너 2026-09-02). BRAND 가 허용한 변형이다 —
-   「잉크네이비 배경 + 웜화이트 텍스트, 단 시리즈 단위로 통일」.
-   가운데 계열의 블루그레이(#5B6B7F)는 잉크 위에서 거의 사라진다 → **웜화이트로 반전**한다.
-   레드·코발트는 토큰 그대로 쓴다(BRAND: 비슷한 빨강·파랑을 새로 만들지 않는다). */
+/* ── 두 벌의 판면 (오너 2026-09-02: 다크·연회색 두 안을 놓고 고른다)
+   `--theme dark`(기본) / `--theme light`. BRAND 가 「다크 카드 변형(잉크네이비 배경 +
+   웜화이트 텍스트)은 허용하되 **시리즈 단위로 통일**」이라 했으므로, 한 시리즈 안에서
+   섞어 쓰지 않는다 — 고른 쪽 하나로 41장을 간다.
+
+   ⚠️ 가운데 계열만 테마를 탄다. 블루그레이(#5B6B7F)는 잉크 위에서 거의 사라지고,
+   웜화이트는 연회색 위에서 사라진다. **레드·코발트는 양쪽 다 토큰 그대로** 쓴다
+   (BRAND: 비슷한 빨강·파랑을 새로 만들지 않는다). */
 const RED = "#e5484d", COBALT = "#2e6bff";
-const INK = "#141821", PAPER = "#fafaf8", MUTE = "#9aa3af";
-const SERIES_COLORS = [RED, PAPER, COBALT];
-const SLATE = PAPER;   // 가운데 계열 — 다크 패널에서는 웜화이트가 중립색이다
+const INK = "#141821", PAPER = "#fafaf8";
+const THEME = arg("theme", "dark") === "light" ? "light" : "dark";
+const T = THEME === "dark"
+  ? { panel: INK, text: PAPER, mid: PAPER, mute: "#9aa3af",
+      grid: "rgba(255,255,255,0.10)", wm: "#ffffff", wmOp: 0.13,
+      halo: "#ffffff", haloOp: 0.16, glowOp: 0.26, glowBlur: 9 }
+  : { panel: "#edeff2", text: INK, mid: "#5b6b7f", mute: "#7c8794",
+      grid: "rgba(20,24,33,0.09)", wm: INK, wmOp: 0.09,
+      halo: INK, haloOp: 0.10, glowOp: 0.20, glowBlur: 8 };
+const MUTE = T.mute;
+const SERIES_COLORS = [RED, T.mid, COBALT];
+const SLATE = T.mid;
 
 const r1 = (v) => Math.round(v * 10) / 10;
 const eok = (m) => m / 10000;
@@ -134,7 +147,12 @@ const members = group.members.map((m, i) => {
    범례가 한 줄씩으로 줄어(세 줄 × 92px → 세 줄 × 62px) 위쪽도 함께 벌었다. */
 /* ⚠️ VB_H 는 **검수가 정한 값**이다. 960 으로 키웠더니 푸터가 카드 아래로 30px 넘쳤다
    (`designQa` overflow). 920 이 이 판형에서 넘치지 않는 최대치다 — 임의로 올리지 않는다. */
-const VB_H = 920, AXIS_X = 118, RIGHT = 792, TOP = 262, BASE = 852;
+/* ⚠️ 여백은 **판 안쪽**에서 준다(오너 2026-09-02 「우측·하단 여백이 너무 없다」).
+   패널을 카드 폭 끝까지 붙이지 않고 좌우 18 씩 물리고, 끝값 라벨이 패널 오른쪽 안에
+   들어오도록 판을 776 에서 끊는다. 아래로도 가로축 라벨 밑에 숨 쉴 자리를 남긴다.
+   VB_H 는 검수가 정한다 — 960 은 푸터를 카드 밖으로 30px 밀었다(designQa overflow). */
+const VB_H = 900, AXIS_X = 132, RIGHT = 776, TOP = 250, BASE = 796;
+const PANEL = { x: 18, y: 14, w: 964, h: 858, r: 36 };
 const allV = members.flatMap((m) => m.pts.map((p) => p.v));
 const vmaxRaw = Math.max(...allV), vminRaw = Math.min(...allV);
 /* 축 눈금은 억 단위로 떨어지게 — 5억 이상 폭이면 5억, 아니면 2억 간격 */
@@ -147,20 +165,26 @@ const yv = (v) => r1(BASE - ((v - YMIN) / (YMAX - YMIN)) * (BASE - TOP));
 const ticks = [];
 for (let v = YMIN; v <= YMAX + 1; v += step) ticks.push(v);
 /* 격자 기본값은 잉크 6% 라 다크 패널에서 안 보인다 → 흰색 10% 로 덮는다 */
-const grid = ticks.filter((v) => v > YMIN).map((v) => ({ x1: AXIS_X, x2: RIGHT, y: yv(v), stroke: "rgba(255,255,255,0.10)" }));
+/* ⚠️ **맨 위 눈금선은 안 그린다.** 그 선이 「20」과 「(억)」을 가로지른다(2026-09-02 실측,
+   연회색 안에서 특히 두드러졌다). 위아래 끝선이 없어도 눈금 숫자가 높이를 말한다. */
+const grid = ticks.filter((v) => v > YMIN && v < YMAX).map((v) => ({ x1: AXIS_X, x2: RIGHT, y: yv(v), stroke: T.grid }));
 /* 축 숫자는 작게(오너 2026-09-02) — 판형 기본 32px 는 곡선보다 눈에 먼저 들어왔다.
    `size` 는 이 판형에 새로 연 선택 키라 안 주는 카드는 32px 그대로다. */
 const ylabels = ticks.map((v) => ({ x: AXIS_X - 14, y: yv(v) + 7, text: `${eok(v).toFixed(0)}`, size: 24 }));
 /* 단위는 맨 위 눈금과 **같은 줄, 축 오른쪽**에 둔다. 세 번 옮긴 끝의 자리다:
    판 안 아래쪽은 「7.0억」과 붙었고, 눈금 위는 「20」과 붙었고, 더 올리면 범례에 닿는다.
    맨 위 눈금 오른쪽은 곡선이 닿지 않는 데다 「20」과 나란히 읽혀 뜻도 맞다. */
-const yunit = { x: AXIS_X + 50, y: TOP + 7, text: "(억)", fill: MUTE };
+const yunit = { x: AXIS_X + 46, y: TOP + 7, text: "(억)", fill: MUTE };
 
 const polylines = members.map((m) => ({
   points: m.pts.map((p) => `${xi(p.ym)},${yv(p.v)}`).join(" "),
   color: m.color,
   width: m.color === SLATE ? 6 : 8,
 }));
+/* 빛나는 효과(오너 2026-09-02) — 같은 선을 **두껍게·흐리게** 한 벌 더 깔고 그 위에 본선을 얹는다.
+   SVG 필터(feGaussianBlur) 한 개만 쓴다. 값이 아니라 **선의 존재감**을 키우는 장치라
+   숫자를 바꾸지 않는다 — 곡선 좌표는 그대로다. */
+const glowlines = polylines.map((l) => ({ ...l, width: l.width + 16, opacity: T.glowOp }));
 
 /* 끝점 — 지금 값. 라벨은 곡선 위에 올린다(겹치면 아래 §라벨 밀기가 민다). */
 const ends = members.map((m) => {
@@ -173,7 +197,7 @@ const dots = ends.map((e) => ({ x: e.x, y: e.y, r: e.m.color === SLATE ? 13 : 15
    구간과 겹친다(2026-09-02 첫 렌더에서 실제로 겹쳤다). 서로 겹치는 것은 **코드가 막는다** —
    손으로 자리를 정하면 사람이 놓친 겹침이 그대로 나간다(09-01 학군지 사고). */
 /* 한 줄로 돌아왔으므로 최소 간격도 줄인다 */
-const LABEL_GAP = 74;
+const LABEL_GAP = 68;
 const sorted = [...ends].sort((a, b) => a.y - b.y);
 let prevY = -Infinity;
 for (const e of sorted) {
@@ -184,7 +208,8 @@ for (const e of sorted) {
 }
 /* ⚠️ 배수는 **범례로 옮겼다**(오너 2026-09-02). 곡선 끝에는 값 하나만 둔다 —
    같은 숫자를 두 곳에서 말하면 어느 쪽이 주인공인지 흐려진다. */
-const vlabels = ends.map((e) => ({ x: RIGHT + 22, y: e.ly, text: fmtEok(e.v), fill: e.m.color, anchor: "start" }));
+/* 가격 폰트를 판형 기본 54 에서 46 으로 줄였다 — 오른쪽 여백을 만드는 가장 확실한 손잡이다 */
+const vlabels = ends.map((e) => ({ x: RIGHT + 20, y: e.ly, text: fmtEok(e.v), fill: e.m.color, anchor: "start", size: 46 }));
 
 const xlabels = [
   { x: AXIS_X, y: BASE + 44, text: `${CURVE_FROM.slice(0, 4)}.${+CURVE_FROM.slice(4)}`, fill: MUTE, anchor: "start", size: 24 },
@@ -202,7 +227,7 @@ const startYs = members.map((m) => yv(m.pts[0].v));
 const startX = xi(months[0]);
 const startR = Math.max(34, r1((Math.max(...startYs) - Math.min(...startYs)) / 2 + 26));
 const startCy = r1((Math.max(...startYs) + Math.min(...startYs)) / 2);
-const halos = [{ x: startX, y: startCy, r: startR, fill: "#ffffff", opacity: 0.16 }];
+const halos = [{ x: startX, y: startCy, r: startR, fill: T.halo, opacity: T.haloOp }];
 
 /* 출발점 값 — 원 바로 위. 이 카드에서 가장 먼저 읽혀야 하는 숫자라 크게 두되
    곡선보다는 물러나게 잉크로 둔다(레드는 「가장 많이 오른 쪽」의 자리다). */
@@ -211,12 +236,12 @@ const halos = [{ x: startX, y: startCy, r: startR, fill: "#ffffff", opacity: 0.1
    겹쳤고, 원 위 왼쪽정렬은 2020년 상반기 상승 곡선을 가로질렀고, 원 옆은 그림이 답답했다.
    **위로 충분히 올리면** 그 높이(첫 달 x 자리)에는 아무 곡선도 없다 — 곡선은 오른쪽으로만
    간다. 대신 값과 원이 멀어지므로 점선이 그 둘을 묶는다. */
-const startLabelY = r1(TOP + 96);
+const startLabelY = r1(TOP + 150);   // 오너 2026-09-02: 조금 더 내린다
 vlabels.push({
   x: r1(startX + 10), y: startLabelY,
-  text: fmtEok(members[0].base), fill: PAPER, anchor: "start", size: 46,
+  text: fmtEok(members[0].base), fill: T.text, anchor: "start", size: 44,
 });
-vmarks.push({ x: startX, y1: r1(startLabelY + 16), y2: r1(startCy - startR - 4), color: PAPER });
+vmarks.push({ x: startX, y1: r1(startLabelY + 16), y2: r1(startCy - startR - 4), color: T.text });
 
 /* 범례 — 단지명 + **평형**(필수) · 옆에 배수.
    ⚠️ 이름의 괄호 별칭은 뗀다 — 「길음뉴타운1단지(래미안길음1차)」는 판 폭을 넘어
@@ -239,7 +264,7 @@ const legend = members.map((m, i) => ({
   color: m.color,
   tx: 208, ty: 84 + i * 62,
   text: `${shortGu(m.gu)} ${shortName(m.apt)} ${m.pyeong}`,
-  fill: PAPER, size: 38,
+  fill: T.text, size: 38,
   /* 배수를 이름 옆에 **같은 크기·회색**으로(오너 2026-09-02). 「그때 → 지금」 두 값은
      곡선 양 끝이 이미 말하므로 여기서 되풀이하지 않는다. */
   sub: `(${fmtX(m.ratio)})`,
@@ -265,18 +290,28 @@ const card = {
     base: { y: BASE, x1: AXIS_X, x2: RIGHT },
     /* 판 안 워터마크 — BRAND §4b 슬롯 C. 곡선이 지나지 않는 왼쪽 가운데에 옅게 */
     /* 다크 배경의 워터마크는 **흰색 opacity .26** — BRAND §슬롯 규격. 크기는 오너 지시로 키웠다. */
-    wm: { x: AXIS_X + 90, y: TOP + 210, size: 62, text: "@wirit_note", fill: "#ffffff", opacity: 0.16, anchor: "start" },
+    wm: { x: AXIS_X + 70, y: TOP + 250, size: 50, text: "@wirit_note", fill: T.wm, opacity: T.wmOp, anchor: "start" },
     /* 다크 패널 — 범례부터 가로축까지 한 덩어리로 감싼다(오너 2026-09-02).
        BRAND 가 허용한 「잉크네이비 배경 + 웜화이트 텍스트」 변형이고, **시리즈 단위로 통일**한다. */
-    panel: { x: 2, y: 16, w: 996, h: VB_H - 26, r: 34, fill: INK },
-    grid, ylabels, yunit, vmarks, halos, polylines, dots, vlabels, xlabels, legend,
+    panel: { ...PANEL, fill: T.panel },
+    glow: T.glowBlur,
+    grid, ylabels, yunit, vmarks, halos, glowlines, polylines, dots, vlabels, xlabels, legend,
   },
   /* 하단 마무리 문구는 두지 않는다(오너 2026-09-02) — 그 높이를 그래프가 가져갔다.
      ⚠️ 평형을 섞었다는 사실은 **범례의 평형 표기**와 **캡션**이 계속 말한다. */
   /* 측정 정의(월별 최고가)가 여기 산다 — 상단은 시리즈명과 번호만 두기로 했다(오너 09-02).
      ⚠️ **기간은 안 적는다.** 기간·정의를 둘 다 넣으면 푸터가 두 줄로 넘쳐 워터마크를 민다
      (09-02 실측). 기간은 이미 가로축이 양 끝에 적고 있다 — 같은 말을 두 번 하지 않는다. */
-  source: { name: "국토교통부 아파트 실거래가", asOf: "월별 최고가" },
+  /* ⚠️ 기간은 **실제 곡선 구간**을 그대로 적는다. 오너는 2026.8 로 적어 달라고 했지만
+     캐시에 든 마지막 달은 2026.7 이다 — 카드에 적힌 기간이 그린 기간과 다르면 그게 오보다.
+     2026.8 이 채워지면 `--to 202608` 로 다시 그리면 이 줄도 함께 바뀐다(코드가 쓴다). */
+  source: {
+    /* ⚠️ 푸터는 **한 줄**이어야 한다 — 넘치면 두 줄이 되어 워터마크를 민다(09-02 실측).
+       기간까지 넣으라는 지시를 지키려고 이름에서 「아파트」를 뺐다. 정확한 출처 전체 이름은
+       캡션의 ※ 줄이 적는다(「국토교통부 아파트 매매 실거래가」). */
+    name: "국토교통부 실거래가",
+    asOf: `${CURVE_FROM.slice(0, 4)}.${+CURVE_FROM.slice(4)}~${CURVE_TO.slice(0, 4)}.${+CURVE_TO.slice(4)} 월별 최고가`,
+  },
   meta: {
     set: SET, pick: PICK + 1,
     /* 캡션 쓰는 사람이 다시 찾지 않게 남긴다 — 신고가 카드의 meta.region 과 같은 취지 */
@@ -285,7 +320,7 @@ const card = {
   },
 };
 
-const label = arg("label", `${SET}-${PICK + 1}`);
+const label = arg("label", `${SET}-${PICK + 1}`) + (THEME === "light" ? "-light" : "");
 const outDir = R(join("data/content", DATE));
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, `${label}.json`), JSON.stringify(card, null, 2) + "\n", "utf8");

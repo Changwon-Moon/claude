@@ -96,6 +96,7 @@
 
       <div class="sl-chart">
         <svg class="sl-svg" viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          {{#if chart.glow}}<defs><filter id="slGlow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="{{chart.glow}}" /></filter></defs>{{/if}}
           {{#if chart.panel}}<rect x="{{chart.panel.x}}" y="{{chart.panel.y}}" width="{{chart.panel.w}}" height="{{chart.panel.h}}" rx="{{chart.panel.r}}" fill="{{chart.panel.fill}}" />{{/if}}
           {{#if chart.bgImage}}<image href="{{chart.bgImage.href}}" x="{{chart.bgImage.x}}" y="{{chart.bgImage.y}}" width="{{chart.bgImage.w}}" height="{{chart.bgImage.h}}" opacity="{{chart.bgImage.opacity}}" preserveAspectRatio="xMidYMid meet" />{{/if}}
           {{#if chart.wm}}<text x="{{chart.wm.x}}" y="{{chart.wm.y}}" font-size="{{chart.wm.size}}" fill="{{chart.wm.fill}}" opacity="{{chart.wm.opacity}}" text-anchor="{{chart.wm.anchor}}" font-weight="900" style="font-family:var(--font-title)">{{chart.wm.text}}</text>{{/if}}
@@ -106,6 +107,7 @@
           {{#if chart.yunit}}<text class="sl-unit" x="{{chart.yunit.x}}" y="{{chart.yunit.y}}" text-anchor="middle"{{#if chart.yunit.fill}} fill="{{chart.yunit.fill}}"{{/if}}>{{chart.yunit.text}}</text>{{/if}}
           {{#each chart.ylabels}}<text class="sl-yl" x="{{x}}" y="{{y}}" text-anchor="end"{{#if size}} style="font-size:{{size}}px"{{/if}}{{#if fill}} fill="{{fill}}"{{/if}}>{{text}}</text>{{/each}}
           {{#each chart.halos}}<circle cx="{{x}}" cy="{{y}}" r="{{r}}" fill="{{fill}}" opacity="{{opacity}}" />{{/each}}
+          {{#each chart.glowlines}}<polyline points="{{points}}" fill="none" stroke="{{color}}" stroke-width="{{width}}" stroke-linejoin="round" stroke-linecap="round" opacity="{{opacity}}" filter="url(#slGlow)" />{{/each}}
           {{#each chart.polylines}}<polyline points="{{points}}" fill="none" stroke="{{color}}" stroke-width="{{width}}" stroke-linejoin="round" stroke-linecap="round"{{#if dash}} stroke-dasharray="{{dash}}"{{/if}} />{{/each}}
           {{#each chart.dots}}<circle cx="{{x}}" cy="{{y}}" r="{{r}}" fill="#fff" stroke="{{color}}" stroke-width="7" />{{/each}}
           {{#each chart.vlabels}}<text class="sl-vl" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="{{anchor}}"{{#if size}} style="font-size:{{size}}px"{{/if}}>{{text}}{{#if sub}}<tspan x="{{x}}" dy="{{subDy}}" fill="{{subFill}}" style="font-size:{{subSize}}px" font-weight="700">{{sub}}</tspan>{{/if}}</text>{{/each}}

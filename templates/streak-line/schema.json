@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "streak-line@1",
-  "description": "두세 개의 시계열 곡선을 한 판에 비교한다. 원래는 두 국면의 '누적 상승률 궤적'용이었고(mae-streak·jeonse-streak), 2026-09-02 에 격차 맞대결 카드(gap-*)가 같은 계약을 그대로 썼다 — 새 판형을 세우는 대신. 좌표·문구는 전부 빌더가 계산한다(템플릿은 숫자를 만들지 않는다).\n선택 키(안 주면 기존 카드 픽셀 불변): badgeInk(시리즈 줄을 잉크로) · 제목 `.tg`(회색 줄)·`.ti`(회색 줄 안 잉크 강조) · chart.panel(다크 패널 — 맨 아래에 깔린다) · chart.halos[](반투명 원) · grid[].stroke · ylabels[].size/fill · yunit.fill · xlabels[].size · vlabels[].size/sub/subDy/subFill/subSize · legend[].inline/size/subDx/subSize/subFill(한 줄형).\n⚠️ 글자 크기 덮어쓰기는 **속성이 아니라 style 로** 나간다 — 클래스 CSS 가 presentation attribute 를 이기기 때문이다(2026-09-02 에 font-size 속성이 통째로 무시되는 것을 렌더로 확인했다).",
+  "description": "두세 개의 시계열 곡선을 한 판에 비교한다. 원래는 두 국면의 '누적 상승률 궤적'용이었고(mae-streak·jeonse-streak), 2026-09-02 에 격차 맞대결 카드(gap-*)가 같은 계약을 그대로 썼다 — 새 판형을 세우는 대신. 좌표·문구는 전부 빌더가 계산한다(템플릿은 숫자를 만들지 않는다).\n선택 키(안 주면 기존 카드 픽셀 불변): badgeInk(시리즈 줄을 잉크로) · 제목 `.tg`(회색 줄)·`.ti`(회색 줄 안 잉크 강조) · chart.panel(배경 패널 — 맨 아래에 깔린다) · chart.glow(feGaussianBlur 반지름) + chart.glowlines[](빛나는 복제선) · chart.halos[](반투명 원) · grid[].stroke · ylabels[].size/fill · yunit.fill · xlabels[].size · vlabels[].size/sub/subDy/subFill/subSize · legend[].inline/size/subDx/subSize/subFill(한 줄형).\n⚠️ 글자 크기 덮어쓰기는 **속성이 아니라 style 로** 나간다 — 클래스 CSS 가 presentation attribute 를 이기기 때문이다(2026-09-02 에 font-size 속성이 통째로 무시되는 것을 렌더로 확인했다).",
   "type": "object",
   "required": [
     "template",
