@@ -1850,6 +1850,244 @@
         "mae59-map"
       ],
       "note": "월간 정기물 「토허제 40곳 가격 지도」 4장 중 하나. 인자(--months·--date)는 scripts/tohuh-price-monthly.mjs 가 매달 맞춘다 — 손으로 고치지 않는다. 기준: docs/guides/토허제-가격지도-기준.md"
+    },
+    {
+      "label": "singo-tenzhill1",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "텐즈힐(1단지)",
+        "--type",
+        "84",
+        "--kapt",
+        "A10027920",
+        "--publish"
+      ],
+      "produces": [
+        "singo-텐즈힐1단지-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-wirye-thehill55",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "위례더힐55",
+        "--type",
+        "84",
+        "--kapt",
+        "A10027692",
+        "--publish"
+      ],
+      "produces": [
+        "singo-위례더힐55-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-magok-mvalley9",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "마곡엠밸리9단지",
+        "--type",
+        "59",
+        "--kapt",
+        "A10024426",
+        "--publish"
+      ],
+      "produces": [
+        "singo-마곡엠밸리9단지-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-haan-jugong12",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "주공12",
+        "--type",
+        "84",
+        "--kapt",
+        "A42385005",
+        "--publish"
+      ],
+      "produces": [
+        "singo-주공12-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-haan-echoworld-centreville",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "이편한세상센트레빌",
+        "--type",
+        "59",
+        "--kapt",
+        "A42374402",
+        "--publish"
+      ],
+      "produces": [
+        "singo-이편한세상센트레빌-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-yeongtong-iparkcastle1-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "영통아이파크캐슬1단지",
+        "--type",
+        "59",
+        "--kapt",
+        "A10025621",
+        "--publish"
+      ],
+      "produces": [
+        "singo-영통아이파크캐슬1단지-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-hwigyeong-rioforet1",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "휘경리오포레아파트(1단지)",
+        "--type",
+        "84",
+        "--kapt",
+        "A13009002",
+        "--publish"
+      ],
+      "produces": [
+        "singo-휘경리오포레아파트1단지-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-giheungyeok-central-prugio",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "기흥역센트럴푸르지오",
+        "--type",
+        "84",
+        "--kapt",
+        "A10026215",
+        "--publish"
+      ],
+      "produces": [
+        "singo-기흥역센트럴푸르지오-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-dongtanyeok-central-prugio",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "동탄역센트럴푸르지오",
+        "--type",
+        "59",
+        "--kapt",
+        "A10027928",
+        "--publish"
+      ],
+      "produces": [
+        "singo-동탄역센트럴푸르지오-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-dodeok-parktown1",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "도덕파크타운1단지",
+        "--type",
+        "59",
+        "--kapt",
+        "A10027643",
+        "--publish"
+      ],
+      "produces": [
+        "singo-도덕파크타운1단지-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-manhyeon9-lgxi",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "만현마을9단지엘지자이",
+        "--type",
+        "84",
+        "--kapt",
+        "A44851612",
+        "--publish"
+      ],
+      "produces": [
+        "singo-만현마을9단지엘지자이-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-siheung-natureforet",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "네이처포레",
+        "--type",
+        "59",
+        "--kapt",
+        "A10026125",
+        "--publish"
+      ],
+      "produces": [
+        "singo-네이처포레-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-ujangsan-ipark-echo",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "우장산아이파크,이편한세상",
+        "--type",
+        "84",
+        "--kapt",
+        "A15701003",
+        "--publish"
+      ],
+      "produces": [
+        "singo-우장산아이파크이편한세상-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-haneulchae1-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "수원하늘채더퍼스트1단지",
+        "--type",
+        "84",
+        "--kapt",
+        "A10024000",
+        "--publish"
+      ],
+      "produces": [
+        "singo-수원하늘채더퍼스트1단지-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
     }
   ]
 }

@@ -1,0 +1,102 @@
+{
+  "label": "singo-daily-2026-09-02",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 15장 · 코드 검수만",
+  "findings": [],
+  "cards": [
+    {
+      "file": "singo-텐즈힐1단지-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-위례더힐55-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-우장산아이파크이편한세상-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-마곡엠밸리9단지-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-다산롯데캐슬-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-주공12-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-이편한세상센트레빌-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-영통아이파크캐슬1단지-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-휘경리오포레아파트1단지-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-기흥역센트럴푸르지오-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-동탄역센트럴푸르지오-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-도덕파크타운1단지-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-만현마을9단지엘지자이-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-수원하늘채더퍼스트1단지-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-네이처포레-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}
