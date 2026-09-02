@@ -13,6 +13,8 @@
         font-family: var(--font-num); font-size: 31px; font-weight: 800;
         color: var(--wirit-gray); letter-spacing: -0.01em;
       }
+      /* 시리즈 줄을 잉크로 세울 때(2026-09-02 오너). 안 주면 기존처럼 블루그레이. */
+      .sl-badge.ink { color: var(--wirit-ink); }
       .sl-head { padding: 0; margin: 34px 0 0; }
       /* 제목 두 줄 — 각 줄(.tl)을 카드 폭에 꽉 차게 개별 확대해 좌우 여백을 맞춘다(빡빡). */
       .sl .wirit-title { margin: 0; }
@@ -28,6 +30,8 @@
       /* 회색 줄 — 2026-09-02. 두 줄 제목에서 **윗줄을 물리고 아랫줄을 세우는** 용도(오너 지시).
          이 클래스를 안 쓰는 기존 카드(mae-streak·jeonse-streak)는 픽셀이 안 바뀐다. */
       .sl .wirit-title .tg { color: #9aa3af; }
+      /* 회색 줄 안에서 **숫자만 잉크로** 세울 때(2026-09-02 오너). 안 쓰면 기존 카드 불변. */
+      .sl .wirit-title .ti { color: var(--wirit-ink); }
 
       /* ── (옵션) 그래프 아래 시나리오 표 — 범례를 아래로 내린 자리(2026-09-01 오너 지시).
          주지 않으면 아무 것도 안 그린다 → 기존 발행본 픽셀 불변. */
@@ -84,7 +88,7 @@
   </head>
   <body>
     <div class="wirit-card sl">
-      <div class="wirit-topcap">{{#if badge}}<span class="sl-badge">{{badge}}</span>{{/if}}</div>
+      <div class="wirit-topcap">{{#if badge}}<span class="sl-badge{{#if badgeInk}} ink{{/if}}">{{badge}}</span>{{/if}}</div>
       <div class="sl-head">
         {{#if titleLead}}<div class="sl-lead">{{#if titleLead.logo}}<img class="sl-lead-logo" src="{{titleLead.logo.href}}" alt="" />{{/if}}<span>{{titleLead.text}}</span></div>{{/if}}
         <h1 class="wirit-title">{{{title}}}</h1>
@@ -92,19 +96,20 @@
 
       <div class="sl-chart">
         <svg class="sl-svg" viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          {{#if chart.panel}}<rect x="{{chart.panel.x}}" y="{{chart.panel.y}}" width="{{chart.panel.w}}" height="{{chart.panel.h}}" rx="{{chart.panel.r}}" fill="{{chart.panel.fill}}" />{{/if}}
           {{#if chart.bgImage}}<image href="{{chart.bgImage.href}}" x="{{chart.bgImage.x}}" y="{{chart.bgImage.y}}" width="{{chart.bgImage.w}}" height="{{chart.bgImage.h}}" opacity="{{chart.bgImage.opacity}}" preserveAspectRatio="xMidYMid meet" />{{/if}}
           {{#if chart.wm}}<text x="{{chart.wm.x}}" y="{{chart.wm.y}}" font-size="{{chart.wm.size}}" fill="{{chart.wm.fill}}" opacity="{{chart.wm.opacity}}" text-anchor="{{chart.wm.anchor}}" font-weight="900" style="font-family:var(--font-title)">{{chart.wm.text}}</text>{{/if}}
-          {{#each chart.grid}}<line class="sl-grid" x1="{{x1}}" y1="{{y}}" x2="{{x2}}" y2="{{y}}" />{{/each}}
+          {{#each chart.grid}}<line class="sl-grid" x1="{{x1}}" y1="{{y}}" x2="{{x2}}" y2="{{y}}"{{#if stroke}} stroke="{{stroke}}"{{/if}} />{{/each}}
           {{#each chart.areas}}<polygon points="{{points}}" fill="{{fill}}" opacity="{{opacity}}" />{{/each}}
           {{#if chart.base}}<line class="sl-axis" x1="{{chart.base.x1}}" y1="{{chart.base.y}}" x2="{{chart.base.x2}}" y2="{{chart.base.y}}" />{{/if}}
           {{#each chart.vmarks}}<line x1="{{x}}" y1="{{y1}}" x2="{{x}}" y2="{{y2}}" stroke="{{color}}" stroke-width="2.5" stroke-dasharray="8 8" opacity="0.55" />{{/each}}
-          {{#if chart.yunit}}<text class="sl-unit" x="{{chart.yunit.x}}" y="{{chart.yunit.y}}" text-anchor="middle">{{chart.yunit.text}}</text>{{/if}}
-          {{#each chart.ylabels}}<text class="sl-yl" x="{{x}}" y="{{y}}" text-anchor="end"{{#if size}} font-size="{{size}}"{{/if}}>{{text}}</text>{{/each}}
+          {{#if chart.yunit}}<text class="sl-unit" x="{{chart.yunit.x}}" y="{{chart.yunit.y}}" text-anchor="middle"{{#if chart.yunit.fill}} fill="{{chart.yunit.fill}}"{{/if}}>{{chart.yunit.text}}</text>{{/if}}
+          {{#each chart.ylabels}}<text class="sl-yl" x="{{x}}" y="{{y}}" text-anchor="end"{{#if size}} style="font-size:{{size}}px"{{/if}}{{#if fill}} fill="{{fill}}"{{/if}}>{{text}}</text>{{/each}}
           {{#each chart.halos}}<circle cx="{{x}}" cy="{{y}}" r="{{r}}" fill="{{fill}}" opacity="{{opacity}}" />{{/each}}
           {{#each chart.polylines}}<polyline points="{{points}}" fill="none" stroke="{{color}}" stroke-width="{{width}}" stroke-linejoin="round" stroke-linecap="round"{{#if dash}} stroke-dasharray="{{dash}}"{{/if}} />{{/each}}
           {{#each chart.dots}}<circle cx="{{x}}" cy="{{y}}" r="{{r}}" fill="#fff" stroke="{{color}}" stroke-width="7" />{{/each}}
-          {{#each chart.vlabels}}<text class="sl-vl" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="{{anchor}}"{{#if size}} font-size="{{size}}"{{/if}}>{{text}}{{#if sub}}<tspan x="{{x}}" dy="{{subDy}}" fill="{{subFill}}" font-size="{{subSize}}" font-weight="700">{{sub}}</tspan>{{/if}}</text>{{/each}}
-          {{#each chart.xlabels}}<text class="sl-xl" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="{{anchor}}">{{text}}</text>{{/each}}
+          {{#each chart.vlabels}}<text class="sl-vl" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="{{anchor}}"{{#if size}} style="font-size:{{size}}px"{{/if}}>{{text}}{{#if sub}}<tspan x="{{x}}" dy="{{subDy}}" fill="{{subFill}}" style="font-size:{{subSize}}px" font-weight="700">{{sub}}</tspan>{{/if}}</text>{{/each}}
+          {{#each chart.xlabels}}<text class="sl-xl" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="{{anchor}}"{{#if size}} style="font-size:{{size}}px"{{/if}}>{{text}}</text>{{/each}}
           {{#if chart.arrow}}
             <line x1="{{chart.arrow.x1}}" y1="{{chart.arrow.y}}" x2="{{chart.arrow.x2}}" y2="{{chart.arrow.y}}" stroke="{{chart.arrow.color}}" stroke-width="5" />
             {{#each chart.arrow.heads}}<polygon points="{{points}}" fill="{{fill}}" />{{/each}}
@@ -117,7 +122,7 @@
           {{#each chart.legend}}
             <line x1="{{sx1}}" y1="{{sy}}" x2="{{sx2}}" y2="{{sy}}" stroke="{{color}}" stroke-width="11" stroke-linecap="round" />
             {{#if inline}}
-              <text class="sl-lg" x="{{tx}}" y="{{ty}}" fill="{{fill}}"{{#if size}} font-size="{{size}}"{{/if}}>{{text}}{{#if sub}}<tspan class="sl-lgs" fill="#9aa3af" dx="{{subDx}}"{{#if subSize}} font-size="{{subSize}}"{{/if}}>{{sub}}</tspan>{{/if}}</text>
+              <text class="sl-lg" x="{{tx}}" y="{{ty}}" fill="{{fill}}"{{#if size}} style="font-size:{{size}}px"{{/if}}>{{text}}{{#if sub}}<tspan class="sl-lgs" fill="{{#if subFill}}{{subFill}}{{else}}#9aa3af{{/if}}" dx="{{subDx}}"{{#if subSize}} style="font-size:{{subSize}}px"{{/if}}>{{sub}}</tspan>{{/if}}</text>
             {{else}}
               <text class="sl-lg" x="{{tx}}" y="{{ty}}" fill="{{fill}}">{{text}}</text>
               {{#if sub}}<text class="sl-lgs" x="{{tx}}" y="{{sty}}" fill="#9aa3af">{{sub}}</text>{{/if}}

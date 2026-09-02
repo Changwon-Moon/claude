@@ -59,15 +59,22 @@ const numeral = (n) => `#${n}`;
 /* BRAND — 레드 = 가장 많이 오른 쪽, 코발트 = 가장 덜 오른 쪽, 슬레이트 = 가운데.
    색이 방향(오름/내림)이 아니라 **순위**를 말한다. 곡선 셋이 부채로 벌어지는 그림이라
    양 끝에 두 강조색을 두고 가운데는 무채색으로 물러난다. */
-const RED = "#e5484d", COBALT = "#2f5bd7", SLATE = "#5b6b7f";
-const INK = "#141821", MUTE = "#9aa3af";
-const SERIES_COLORS = [RED, SLATE, COBALT];
+/* ⚠️ 이 카드는 **다크 패널** 위에 그린다(오너 2026-09-02). BRAND 가 허용한 변형이다 —
+   「잉크네이비 배경 + 웜화이트 텍스트, 단 시리즈 단위로 통일」.
+   가운데 계열의 블루그레이(#5B6B7F)는 잉크 위에서 거의 사라진다 → **웜화이트로 반전**한다.
+   레드·코발트는 토큰 그대로 쓴다(BRAND: 비슷한 빨강·파랑을 새로 만들지 않는다). */
+const RED = "#e5484d", COBALT = "#2e6bff";
+const INK = "#141821", PAPER = "#fafaf8", MUTE = "#9aa3af";
+const SERIES_COLORS = [RED, PAPER, COBALT];
+const SLATE = PAPER;   // 가운데 계열 — 다크 패널에서는 웜화이트가 중립색이다
 
 const r1 = (v) => Math.round(v * 10) / 10;
 const eok = (m) => m / 10000;
 const fmtEok = (m) => `${eok(m).toFixed(1)}억`;
-/** 배수는 **소수 1자리**(오너 2026-09-02) — 2.52배가 아니라 2.5배 */
-const fmtX = (r) => `${r.toFixed(1)}배`;
+/** 배수 표기 — 오너가 범례 문안으로 「(2.52배)」를 적어 줬다(2026-09-02).
+   곡선 끝의 회색 배수를 지우면서 배수를 말하는 자리가 **범례 하나**로 줄었으므로,
+   한 카드 안에서 자릿수가 갈릴 일은 없다. */
+const fmtX = (r) => `${r.toFixed(2)}배`;
 
 function monthRange(from, to) {
   const out = [];
@@ -139,14 +146,15 @@ const yv = (v) => r1(BASE - ((v - YMIN) / (YMAX - YMIN)) * (BASE - TOP));
 
 const ticks = [];
 for (let v = YMIN; v <= YMAX + 1; v += step) ticks.push(v);
-const grid = ticks.filter((v) => v > YMIN).map((v) => ({ x1: AXIS_X, x2: RIGHT, y: yv(v) }));
+/* 격자 기본값은 잉크 6% 라 다크 패널에서 안 보인다 → 흰색 10% 로 덮는다 */
+const grid = ticks.filter((v) => v > YMIN).map((v) => ({ x1: AXIS_X, x2: RIGHT, y: yv(v), stroke: "rgba(255,255,255,0.10)" }));
 /* 축 숫자는 작게(오너 2026-09-02) — 판형 기본 32px 는 곡선보다 눈에 먼저 들어왔다.
    `size` 는 이 판형에 새로 연 선택 키라 안 주는 카드는 32px 그대로다. */
 const ylabels = ticks.map((v) => ({ x: AXIS_X - 14, y: yv(v) + 7, text: `${eok(v).toFixed(0)}`, size: 24 }));
-/* 단위는 **판 안 왼쪽 위**에 둔다. 축 위(TOP-8)에 두면 맨 위 눈금 「20」과 겹치고,
-   더 올리면 이번엔 범례 셋째 줄과 부딪힌다 — 판 안 왼쪽 위는 곡선이 지나지 않는 자리다
-   (세 곡선 모두 2020년엔 7억대라 아래쪽에 있다). */
-const yunit = { x: AXIS_X + 36, y: TOP + 34, text: "(억)" };
+/* 단위는 맨 위 눈금과 **같은 줄, 축 오른쪽**에 둔다. 세 번 옮긴 끝의 자리다:
+   판 안 아래쪽은 「7.0억」과 붙었고, 눈금 위는 「20」과 붙었고, 더 올리면 범례에 닿는다.
+   맨 위 눈금 오른쪽은 곡선이 닿지 않는 데다 「20」과 나란히 읽혀 뜻도 맞다. */
+const yunit = { x: AXIS_X + 50, y: TOP + 7, text: "(억)", fill: MUTE };
 
 const polylines = members.map((m) => ({
   points: m.pts.map((p) => `${xi(p.ym)},${yv(p.v)}`).join(" "),
@@ -164,26 +172,24 @@ const dots = ends.map((e) => ({ x: e.x, y: e.y, r: e.m.color === SLATE ? 13 : 15
 /* ⚠️ 끝값 라벨은 **판 밖 오른쪽 여백**에 세로로 세운다. 곡선 위에 얹으면 마지막 급등
    구간과 겹친다(2026-09-02 첫 렌더에서 실제로 겹쳤다). 서로 겹치는 것은 **코드가 막는다** —
    손으로 자리를 정하면 사람이 놓친 겹침이 그대로 나간다(09-01 학군지 사고). */
-/* 두 줄이 됐으므로(값 + 배수) 최소 간격도 그만큼 넓힌다 */
-const LABEL_GAP = 108;
+/* 한 줄로 돌아왔으므로 최소 간격도 줄인다 */
+const LABEL_GAP = 74;
 const sorted = [...ends].sort((a, b) => a.y - b.y);
 let prevY = -Infinity;
 for (const e of sorted) {
-  let ly = e.y + 4;                                    // 점 높이에 맞춘다(윗줄 기준)
+  let ly = e.y + 14;                                    // 점 높이에 맞춘다(윗줄 기준)
   if (ly - prevY < LABEL_GAP) ly = prevY + LABEL_GAP;
   e.ly = ly;
   prevY = ly;
 }
-const vlabels = ends.map((e) => ({
-  x: RIGHT + 22, y: e.ly, text: fmtEok(e.v), fill: e.m.color, anchor: "start",
-  /* 둘째 줄 = 배수. 작고 회색(오너 2026-09-02) — 값이 주인공이고 배수는 그 옆 설명이다 */
-  sub: `(${fmtX(e.m.ratio)})`, subDy: 44, subFill: MUTE, subSize: 34,
-}));
+/* ⚠️ 배수는 **범례로 옮겼다**(오너 2026-09-02). 곡선 끝에는 값 하나만 둔다 —
+   같은 숫자를 두 곳에서 말하면 어느 쪽이 주인공인지 흐려진다. */
+const vlabels = ends.map((e) => ({ x: RIGHT + 22, y: e.ly, text: fmtEok(e.v), fill: e.m.color, anchor: "start" }));
 
 const xlabels = [
-  { x: AXIS_X, y: BASE + 52, text: `${CURVE_FROM.slice(0, 4)}.${+CURVE_FROM.slice(4)}`, fill: MUTE, anchor: "start" },
-  { x: r1((AXIS_X + RIGHT) / 2), y: BASE + 52, text: "2023.1", fill: MUTE, anchor: "middle" },
-  { x: RIGHT, y: BASE + 52, text: `${CURVE_TO.slice(0, 4)}.${+CURVE_TO.slice(4)}`, fill: MUTE, anchor: "end" },
+  { x: AXIS_X, y: BASE + 44, text: `${CURVE_FROM.slice(0, 4)}.${+CURVE_FROM.slice(4)}`, fill: MUTE, anchor: "start", size: 24 },
+  { x: r1((AXIS_X + RIGHT) / 2), y: BASE + 44, text: "2023.1", fill: MUTE, anchor: "middle", size: 24 },
+  { x: RIGHT, y: BASE + 44, text: `${CURVE_TO.slice(0, 4)}.${+CURVE_TO.slice(4)}`, fill: MUTE, anchor: "end", size: 24 },
 ];
 
 /* 출발점 세로선은 두지 않는다 — 곡선 셋이 모두 좌축에서 시작하므로 축선과 겹쳐 아무 말도 안 한다 */
@@ -196,21 +202,23 @@ const startYs = members.map((m) => yv(m.pts[0].v));
 const startX = xi(months[0]);
 const startR = Math.max(34, r1((Math.max(...startYs) - Math.min(...startYs)) / 2 + 26));
 const startCy = r1((Math.max(...startYs) + Math.min(...startYs)) / 2);
-const halos = [{ x: startX, y: startCy, r: startR, fill: INK, opacity: 0.1 }];
+const halos = [{ x: startX, y: startCy, r: startR, fill: "#ffffff", opacity: 0.16 }];
 
 /* 출발점 값 — 원 바로 위. 이 카드에서 가장 먼저 읽혀야 하는 숫자라 크게 두되
    곡선보다는 물러나게 잉크로 둔다(레드는 「가장 많이 오른 쪽」의 자리다). */
-/* 출발점 값 라벨 자리 — 두 번 헛짚고 세 번째에 앉혔다(2026-09-02 실측):
-     ① 원 위 가운데정렬 → 글자 절반이 축 왼쪽으로 넘어가 y축 눈금 「10」과 겹쳤다
-     ② 원 위 왼쪽정렬  → 이번엔 2020년 상반기 상승 구간의 곡선을 가로질렀다
-     ③ **원 오른쪽·같은 높이** → 그 높이의 오른쪽은 곡선이 이미 위로 올라간 뒤라 비어 있다
-   위도 아래도 자리가 없다(원 아래는 5억 축까지 46px 도 안 남는다) — 옆이 유일한 빈자리다. */
+/* 출발점 값 라벨 — **곡선 위로 올리고 원과 점선으로 잇는다**(오너 2026-09-02).
+   자리를 세 번 옮겨 본 끝의 답이다: 원 위 가운데정렬은 축 왼쪽으로 넘어가 눈금 「10」과
+   겹쳤고, 원 위 왼쪽정렬은 2020년 상반기 상승 곡선을 가로질렀고, 원 옆은 그림이 답답했다.
+   **위로 충분히 올리면** 그 높이(첫 달 x 자리)에는 아무 곡선도 없다 — 곡선은 오른쪽으로만
+   간다. 대신 값과 원이 멀어지므로 점선이 그 둘을 묶는다. */
+const startLabelY = r1(TOP + 96);
 vlabels.push({
-  x: r1(startX + startR + 20), y: r1(startCy + 14),
-  text: fmtEok(members[0].base), fill: INK, anchor: "start", size: 44,
+  x: r1(startX + 10), y: startLabelY,
+  text: fmtEok(members[0].base), fill: PAPER, anchor: "start", size: 46,
 });
+vmarks.push({ x: startX, y1: r1(startLabelY + 16), y2: r1(startCy - startR - 4), color: PAPER });
 
-/* 범례 — 단지명 + **평형**(필수) · 지역과 그때→지금은 sub 로.
+/* 범례 — 단지명 + **평형**(필수) · 옆에 배수.
    ⚠️ 이름의 괄호 별칭은 뗀다 — 「길음뉴타운1단지(래미안길음1차)」는 판 폭을 넘어
    다음 줄을 밀어낸다. 지역이 sub 에 있으므로 어느 단지인지는 흐려지지 않는다. */
 const shortName = (s) => s.replace(/\s*\([^)]*\)\s*$/, "").trim() || s;
@@ -231,10 +239,11 @@ const legend = members.map((m, i) => ({
   color: m.color,
   tx: 208, ty: 84 + i * 62,
   text: `${shortGu(m.gu)} ${shortName(m.apt)} ${m.pyeong}`,
-  fill: INK, size: 38,
-  /* 이름 옆에 작고 회색으로 — 「그때 → 지금」 한 눈에 */
-  sub: `${fmtEok(m.base)} → ${fmtEok(m.now)}`,
-  subDx: 18, subSize: 32,
+  fill: PAPER, size: 38,
+  /* 배수를 이름 옆에 **같은 크기·회색**으로(오너 2026-09-02). 「그때 → 지금」 두 값은
+     곡선 양 끝이 이미 말하므로 여기서 되풀이하지 않는다. */
+  sub: `(${fmtX(m.ratio)})`,
+  subDx: 18, subSize: 38, subFill: MUTE,
 }));
 
 const hi = members[0], lo = members[members.length - 1];
@@ -245,16 +254,21 @@ const card = {
   date: DATE,
   /* 상단은 **시리즈명과 번호만**(오너 2026-09-02). 측정 정의는 푸터로 내렸다 */
   badge: `${SERIES} ${numeral(NO)}`,
+  badgeInk: true,
   /* 두 줄 제목 (오너 2026-09-02 문안 지정):
      윗줄은 **회색으로 물리고**(전제) 아랫줄을 잉크로 세운다(결과). 강조는 두 줄 다 레드 숫자. */
   title:
-    `<span class="tl tg">2020년 초, 똑같은 <span class="hi">${baseLabel}</span>에서</span>` +
+    `<span class="tl tg">2020년 초, 똑같은 <span class="ti">${baseLabel}</span>에서</span>` +
     `<span class="tl">지금은 무려 <span class="hi">${group.gapEok.toFixed(1)}억</span> 격차</span>`,
   chart: {
     vb: `0 0 1000 ${VB_H}`,
     base: { y: BASE, x1: AXIS_X, x2: RIGHT },
     /* 판 안 워터마크 — BRAND §4b 슬롯 C. 곡선이 지나지 않는 왼쪽 가운데에 옅게 */
-    wm: { x: AXIS_X + 60, y: TOP + 120, size: 40, text: "@wirit_note", fill: INK, opacity: 0.12, anchor: "start" },
+    /* 다크 배경의 워터마크는 **흰색 opacity .26** — BRAND §슬롯 규격. 크기는 오너 지시로 키웠다. */
+    wm: { x: AXIS_X + 90, y: TOP + 210, size: 62, text: "@wirit_note", fill: "#ffffff", opacity: 0.16, anchor: "start" },
+    /* 다크 패널 — 범례부터 가로축까지 한 덩어리로 감싼다(오너 2026-09-02).
+       BRAND 가 허용한 「잉크네이비 배경 + 웜화이트 텍스트」 변형이고, **시리즈 단위로 통일**한다. */
+    panel: { x: 2, y: 16, w: 996, h: VB_H - 26, r: 34, fill: INK },
     grid, ylabels, yunit, vmarks, halos, polylines, dots, vlabels, xlabels, legend,
   },
   /* 하단 마무리 문구는 두지 않는다(오너 2026-09-02) — 그 높이를 그래프가 가져갔다.
