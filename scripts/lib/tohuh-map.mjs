@@ -156,6 +156,20 @@ export function tohuhMapSvg({
    * 닿으면 벌점을 준다. 기본은 끔 — 켜면 배치가 달라져 발행 카드 픽셀이 바뀐다.
    * `placement:"nearest"` 와 함께 쓴다(무게중심 대신 그 점을 기준으로 겨룬다). */
   centerFit = false,
+  /** 한강에 **흰 테두리(케이싱)**를 두른다. 기본은 끔(발행 카드 픽셀 불변).
+   *
+   * ── 왜 (오너 2026-09-02 확인 → 반영)
+   * 강 색 `#8fbfe0` 은 **빨강 지도에서는 색상 대비**로 또렷하다(파랑 선 vs 붉은 면).
+   * 그런데 전세 지도를 파랑 램프로 바꾸자 **파랑 선 vs 파랑 면**이 되어 색상 대비가
+   * 사라지고 명도 대비만 남았다 — 실측(전세 84 성동 칸) 강 0.487 / 면 0.377 로 **1.26:1**,
+   * 사실상 안 보이는 값이다. 강이 흐려지면 지도가 방위를 잃는다(한강은 이 지도의 축이다).
+   *
+   * ⚠️ 강 색 자체를 바꾸지 않는다. 그러면 발행본(월세 비중 지도)의 픽셀이 함께 바뀐다.
+   * 대신 **지도학의 표준 해법인 케이싱**을 쓴다 — 굵은 흰 선을 아래에 깔고 그 위에 강을
+   * 그린다. 밝은 면 위에서도 어두운 면 위에서도 **면과 강 사이에 흰 띠**가 생기므로
+   * 램프 색이 무엇이든 분리가 유지된다. 구 경계선도 이미 흰색(`.tk-geo` stroke)이라
+   * 새 요소처럼 보이지 않고 같은 언어로 읽힌다. */
+  riverCasing = false,
   labelWidth = 140,
   twoLine = false,
   /** 라벨 배치 방식. "down"(기본) = 아래로만 밀기 · "nearest" = 중앙에서 가장 가까운 빈 자리.
@@ -374,6 +388,8 @@ export function tohuhMapSvg({
   const riverD = "M" + riverPts.map(([lo, la]) => `${px(lo).toFixed(1)},${py(la).toFixed(1)}`).join("L");
   const riverSvg =
     `<clipPath id="tkLand"><path d="${clipD}"/></clipPath>` +
+    /* 케이싱을 **먼저** 그린다(아래에 깔린다). 같은 클립을 쓰므로 바다로는 안 번진다. */
+    (riverCasing ? `<path class="tk-river-case" d="${riverD}" clip-path="url(#tkLand)"/>` : "") +
     `<path class="tk-river" d="${riverD}" clip-path="url(#tkLand)"/>`;
 
   /* 서울 시 경계만 남기기 — 25구 링 전체를 굵게 stroke 하고, "서울 바깥"만 남기는
@@ -393,6 +409,11 @@ export function tohuhMapSvg({
     `<style>.tk-geo{stroke:#fff;stroke-width:2.5}.tk-merged{stroke:none}` +
     `.tk-seoul{fill:none;stroke:#54636f;stroke-width:9;stroke-linejoin:round;opacity:.62}` +
     `.tk-river{fill:none;stroke:#8fbfe0;stroke-width:11;stroke-linecap:round;stroke-linejoin:round}` +
+    /* 케이싱 폭 17 = 강 11 + 양쪽 3px 흰 띠. 구 경계선(2.5px 흰색)보다 살짝 굵어
+       강이 경계선의 일부가 아니라 **그 위를 지나는 물**로 읽힌다. */
+    (riverCasing
+      ? `.tk-river-case{fill:none;stroke:#fff;stroke-width:17;stroke-linecap:round;stroke-linejoin:round}`
+      : "") +
     `.tk-stamp{font-size:38px;font-weight:800;fill:#141821;opacity:.17;letter-spacing:-0.01em}` +
     `.tk-lab{text-anchor:middle;paint-order:stroke;stroke:rgba(255,255,255,.65);stroke-width:3.5px;stroke-linejoin:round}` +
     `.tk-lab .n{font-size:21px;font-weight:800}` +
