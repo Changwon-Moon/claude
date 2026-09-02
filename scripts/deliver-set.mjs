@@ -33,6 +33,10 @@
  * `01_<슬러그>.jpg` · `02_…` — `sets.json` 의 `cards` 순서 그대로다(거래가 큰 순).
  * 오너는 ZIP 을 풀어 **번호 순서대로** 올리면 된다. 캡션은 같은 ZIP 안 `캡션.txt`.
  *
+ * ⚠️ **ZIP 에는 올릴 것만 넣는다** (오너 2026-09-02 *"zip에 목록은 없어도 돼"*) —
+ *    JPG 와 인스타 캡션 둘뿐이다. 확정본 목록(md5)은 ZIP **옆에** `<라벨>-목록.txt` 로 둔다.
+ *    **카톡 캡션은 ZIP 에 안 넣는다** — 채팅 텍스트로 바로 드린다(복사해 붙이는 물건이다).
+ *
  * ── JPG 인코더는 사다리로 고른다
  * sharp → ImageMagick(convert) → 파이썬 PIL 순으로 있는 것을 쓴다. 셋 다 없으면 멈춘다.
  * **어느 것을 썼는지 매니페스트에 적는다** — 인코더가 다르면 JPG 바이트가 달라지는데,
@@ -195,9 +199,14 @@ const capPath = P(`data/review/captions/${capName}.txt`);
 if (existsSync(capPath)) writeFileSync(join(work, "캡션.txt"), readFileSync(capPath, "utf8"));
 else console.log(`⚠️  캡션 파일이 없습니다: data/review/captions/${capName}.txt`);
 
-/* 무엇을 넣었는지 적어 둔다 — 나중에 "이 ZIP 이 어느 확정본이었나"를 답할 수 있게 */
+/* 무엇을 넣었는지 적어 둔다 — 나중에 "이 ZIP 이 어느 확정본이었나"를 답할 수 있게.
+ *
+ * ⚠️ **ZIP 안에는 넣지 않는다** (오너 2026-09-02 *"zip에 목록은 없어도 돼"*).
+ *    오너가 여는 것은 올릴 그림과 캡션뿐이고, 이 파일은 **우리가 나중에 되짚을 때**만 쓴다.
+ *    그래서 ZIP **옆에** 둔다 — 없애 버리면 「이 ZIP 이 어느 확정본이었나」에 답할 길이 사라진다.
+ *    (확정 증거의 정본은 여전히 `sets.json` 의 `confirmedMd5` 다. 이건 그 사본이다.) */
 writeFileSync(
-  join(work, "목록.txt"),
+  join(OUTDIR, `${stem}-목록.txt`),
   [
     `${set.title || LABEL}`,
     `세트: ${LABEL} · 상태: ${set.state ?? "-"}${DRAFT ? " · ⚠️ 확정 전 초안" : ""}`,
@@ -220,4 +229,5 @@ if (z.status !== 0) {
 console.log(`✅ ${manifest.length}장 → JPG(품질 ${QUALITY} · ${enc.name})`);
 for (const m of manifest) console.log(`   ${pad(m.n)}. ${m.file}`);
 console.log(`\n📦 ${zipPath}`);
+console.log(`   (안에 든 것: JPG ${manifest.length}장 + 캡션.txt · 목록은 ZIP 밖 ${stem}-목록.txt 에)`);
 console.log(`   (원본 PNG 는 그대로 둡니다 — 확정 증거는 PNG 의 md5 입니다)`);
