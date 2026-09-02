@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T13:09:25.659Z",
+  "generatedAt": "2026-09-02T13:37:57.071Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -720,9 +720,9 @@
       "file": "seoul-living-probe.yml",
       "name": "서울 생활인구 서비스 검증 (probe)",
       "lastRun": "2026-08-08",
-      "daysAgo": 24,
+      "daysAgo": 25,
       "lastOk": "2026-08-08",
-      "okDaysAgo": 24,
+      "okDaysAgo": 25,
       "fails30": 0,
       "runs30": 2
     },
@@ -807,6 +807,16 @@
       "runs30": 11
     },
     {
+      "file": "pipeline-tick.yml",
+      "name": "파이프라인 진행 (승인 → 실행)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 2,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 2,
+      "fails30": 11,
+      "runs30": 74
+    },
+    {
       "file": "population-collect.yml",
       "name": "인구 수집 (monthly)",
       "lastRun": "2026-08-31",
@@ -855,16 +865,6 @@
       "okDaysAgo": 5,
       "fails30": 4,
       "runs30": 6
-    },
-    {
-      "file": "pipeline-tick.yml",
-      "name": "파이프라인 진행 (승인 → 실행)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 1,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 1,
-      "fails30": 11,
-      "runs30": 74
     },
     {
       "file": "apt-detail.yml",
@@ -983,7 +983,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-02",
       "okDaysAgo": 0,
-      "fails30": 5,
+      "fails30": 4,
       "runs30": 100
     }
   ]
