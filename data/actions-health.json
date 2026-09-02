@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T21:57:28.411Z",
+  "generatedAt": "2026-09-02T22:35:58.031Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -88,16 +88,16 @@
         },
         {
           "day": "09-03",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "fail",
+          "at": "07:01",
+          "delay": 126
         }
       ],
       "medianDelay": 131,
       "maxDelay": 131,
-      "lastRun": "2026-09-02",
+      "lastRun": "2026-09-03",
       "lastOk": "2026-09-02",
-      "okDaysAgo": 0
+      "okDaysAgo": 1
     },
     {
       "file": "tohuh-price-monthly.yml",
@@ -870,9 +870,9 @@
       "file": "apt-detail.yml",
       "name": "단지 주차대수 (카드 제원용)",
       "lastRun": "2026-09-02",
-      "daysAgo": 0,
+      "daysAgo": 1,
       "lastOk": "2026-09-02",
-      "okDaysAgo": 0,
+      "okDaysAgo": 1,
       "fails30": 4,
       "runs30": 100
     },
@@ -880,11 +880,21 @@
       "file": "apt-station.yml",
       "name": "단지 가까운 역 (카드 뱃지용)",
       "lastRun": "2026-09-02",
-      "daysAgo": 0,
+      "daysAgo": 1,
       "lastOk": "2026-09-02",
-      "okDaysAgo": 0,
+      "okDaysAgo": 1,
       "fails30": 7,
       "runs30": 14
+    },
+    {
+      "file": "neis-academy.yml",
+      "name": "학원 수집 (나이스)",
+      "lastRun": "2026-09-02",
+      "daysAgo": 1,
+      "lastOk": "2026-09-02",
+      "okDaysAgo": 1,
+      "fails30": 2,
+      "runs30": 4
     },
     {
       "file": "apt-supply-area.yml",
@@ -901,10 +911,10 @@
       "name": "데이터 바뀌면 카드 자동 재생산",
       "lastRun": "2026-09-03",
       "daysAgo": 0,
-      "lastOk": "2026-09-02",
+      "lastOk": "2026-09-03",
       "okDaysAgo": 0,
       "fails30": 33,
-      "runs30": 65
+      "runs30": 66
     },
     {
       "file": "guard.yml",
@@ -947,16 +957,6 @@
       "runs30": 17
     },
     {
-      "file": "neis-academy.yml",
-      "name": "학원 수집 (나이스)",
-      "lastRun": "2026-09-02",
-      "daysAgo": 0,
-      "lastOk": "2026-09-02",
-      "okDaysAgo": 0,
-      "fails30": 2,
-      "runs30": 4
-    },
-    {
       "file": "singo-history.yml",
       "name": "신고가 단지 이력 (한 단지 곡선)",
       "lastRun": "2026-09-02",
@@ -969,12 +969,12 @@
     {
       "file": "singo-retry.yml",
       "name": "오늘의 신고가 — 자동 재시도",
-      "lastRun": "2026-09-02",
+      "lastRun": "2026-09-03",
       "daysAgo": 0,
       "lastOk": "2026-08-25",
-      "okDaysAgo": 8,
+      "okDaysAgo": 9,
       "fails30": 1,
-      "runs30": 19
+      "runs30": 20
     },
     {
       "file": "tower-deploy.yml",
