@@ -941,9 +941,27 @@
         "singo-네이처포레-59"
       ],
       "caption": "singo-daily-2026-09-02",
-      "state": "검수 대기",
+      "state": "오너 확정",
       "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 15개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록.",
-      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply/molit 갱신 시 다시 그려진다"
+      "pixelPolicy": "정기물 — data/datasets/singo-history/,data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+      "confirmedAt": "2026-09-02",
+      "confirmedMd5": [
+        "singo-텐즈힐1단지-84:9fb900857805",
+        "singo-위례더힐55-84:ddb38eba1df5",
+        "singo-우장산아이파크이편한세상-84:9e9e3764bcb5",
+        "singo-마곡엠밸리9단지-59:6fe15c418c04",
+        "singo-다산롯데캐슬-84:ee1c0bf87733",
+        "singo-주공12-84:2ccadf3a1026",
+        "singo-이편한세상센트레빌-59:5f1d4446431b",
+        "singo-영통아이파크캐슬1단지-59:c272de642f55",
+        "singo-휘경리오포레아파트1단지-84:aeee7ce692d9",
+        "singo-기흥역센트럴푸르지오-84:e089e554987d",
+        "singo-동탄역센트럴푸르지오-59:d269f94f69fd",
+        "singo-도덕파크타운1단지-59:ba01e372ad02",
+        "singo-만현마을9단지엘지자이-84:c05bc59fc84b",
+        "singo-수원하늘채더퍼스트1단지-84:7d5fc7498659",
+        "singo-네이처포레-59:8e2093594d1f"
+      ]
     }
   ]
 }
