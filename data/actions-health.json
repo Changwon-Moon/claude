@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T01:53:05.942Z",
+  "generatedAt": "2026-09-02T02:49:09.266Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -961,8 +961,8 @@
       "name": "신고가 단지 이력 (한 단지 곡선)",
       "lastRun": "2026-09-02",
       "daysAgo": 0,
-      "lastOk": "2026-09-01",
-      "okDaysAgo": 1,
+      "lastOk": "2026-09-02",
+      "okDaysAgo": 0,
       "fails30": 3,
       "runs30": 22
     },
@@ -983,7 +983,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-02",
       "okDaysAgo": 0,
-      "fails30": 15,
+      "fails30": 11,
       "runs30": 100
     }
   ]
