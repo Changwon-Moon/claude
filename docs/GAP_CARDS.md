@@ -153,6 +153,7 @@ A/B 로 만들었던 다크 세트(`gap-ep1-1-light`)는 **은퇴**시켰다 —
 | 창마다 **거래가 있던 달 2개 미만 · 거래 3건 미만** | 아래 §4 |
 | 같은 단지의 59 vs 84 | 맞대결이 아니라 한 단지의 평형 비교다 |
 | 캐러셀 안에서 같은 **단지**가 두 번 | 한 게시물이라 되풀이로 읽힌다. 칸(단지+평형)이 아니라 **단지**로 잡는다 |
+| **한 카드 안에 같은 구가 두 번** | 오너 2026-09-02. 같은 구 안에서 갈린 것을 보여 주면 「어디에 넣었느냐로 갈렸다」는 이 카드의 말이 흐려지고, 읽는 사람은 「같은 동네인데 왜?」를 먼저 묻는다 — 그건 이 카드가 답할 수 없는 질문이다. 폭은 최대한 살린다: 1위는 그대로, 꼴찌는 **다른 구 중 가장 낮은 칸**, 가운데는 앞의 둘과 겹치지 않는 구 중 중간값에 가까운 칸. `--allow-same-gu` 로 끈다 |
 
 ## 4. ⚠️ 거래 두께 가드 — 왜 붙였나 (2026-09-02 실측)
 
@@ -203,7 +204,7 @@ node scripts/find-gap-pairs.mjs --same-type                             # 같은
 
 # ⑤ 오너가 고를 안건표를 낸다 (네트워크 불필요) — 두 편을 번호 하나로 합치고,
 #    카드마다 「곡선을 그리려면 몇 회가 더 드는지」를 세어 적는다
-node scripts/gap-agenda.mjs            # → data/gap-안건.txt
+node scripts/gap-agenda.mjs            # → data/gap-안건.md (한 건 = 한 줄인 표)
 node scripts/gap-agenda.mjs --top 20   # 상위 20건만
 
 # ⑥ 카드를 만든다 (네트워크 불필요) — 기본 판면은 연회색(오너 확정)
@@ -215,12 +216,14 @@ node scripts/build-gap-duel.mjs --set gap-ep1 --pick 1 --label gap-ep1-1
 | 자리 | 무엇 |
 |---|---|
 | `data/datasets/gap-ep{n}.json` | 묶음 목록 + 칸 전체 (빌더가 읽는다) · `meta.lawdsNeeded` 에 채울 구 |
-| `data/gap-ep{n}.md` | 사람이 읽는 판 — 오너가 여기서 고른다 |
+| `data/gap-ep{n}.md` | 편별 상세(사람이 읽는 판) |
+| **`data/gap-안건.md`** | **오너가 고르는 표 한 장** — 두 편을 번호 하나로, 한 건이 한 줄. `gap-agenda.mjs` 가 만든다 |
 | `data/content/{날짜}/gap-ep{n}-{k}.json` | 카드 한 장 |
 
 옵션(`find-gap-pairs`): `--base 201911-202003` · `--now 202603-202608` · `--tol 5`(%) ·
 `--min-gap 3`(억) · `--min-months 2` · `--min-trades 3` · `--group 3` ·
-`--base-min`/`--base-max`(억) · `--limit 40` · `--same-type` · `--out gap-ep1`
+`--base-min`/`--base-max`(억) · `--limit 40` · `--same-type` · `--out gap-ep1` ·
+`--rank ratio|amount` · `--allow-same-gu`
 
 ## 6-1. 판형은 **새로 세우지 않았다** — `streak-line@1` 재사용
 

@@ -2,7 +2,7 @@
 /**
  * 📋 「출발선은 같았다」 안건표 — 오너가 **여기서 골라** 다음 카드를 정한다
  *
- *   node scripts/gap-agenda.mjs            → data/gap-안건.txt
+ *   node scripts/gap-agenda.mjs            → data/gap-안건.md (표 한 장)
  *   node scripts/gap-agenda.mjs --top 20   → 상위 20건만
  *
  * ── 왜 따로 만드나
@@ -31,7 +31,7 @@ const arg = (n, d) => {
 const TOP = Number(arg("top", 999));
 const CURVE_FROM = arg("from", "202001");
 const CURVE_TO = arg("to", "202607");
-const OUT = R(arg("out", "data/gap-안건.txt"));
+const OUT = R(arg("out", "data/gap-안건.md"));
 
 /** 이미 만들어 확정한 카드 — 안건표에서 「완료」로 표시한다 */
 const DONE = new Set(["gap-ep1-1"]);
@@ -99,57 +99,51 @@ const ready = shown.filter((r) => r.calls === 0 && !DONE.has(r.label));
 const done = shown.filter((r) => DONE.has(r.label));
 
 const L = [];
-L.push("「출발선은 같았다」 — 카드 안건표");
-L.push(`만든 날 ${new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10)} (KST) · 이 파일은 node scripts/gap-agenda.mjs 가 만든다`);
+L.push("# 「출발선은 같았다」 — 카드 안건표");
+L.push(`> ${new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10)} (KST) · \`node scripts/gap-agenda.mjs\` 가 만든다 — 손으로 고치지 말 것`);
 L.push("");
-L.push("고르는 법 — [ ] 안의 **선택번호**만 말씀하시면 그 카드를 만듭니다.");
-L.push("(선택번호는 이 표에서만 쓰는 번호입니다. 카드에 찍히는 연재번호 #N 은 발행 순서대로 따로 붙습니다)");
+L.push("**고르는 법 — `#` 열의 번호만 말씀하시면 그 카드를 만듭니다.**");
 L.push("");
-L.push("각 줄의 뜻");
-L.push("  · 「상승률차」= 1위와 3위의 **배수 차이**(2.52배 − 1.14배 = 1.38). **이 순서로 줄 세웠습니다**");
-L.push("  · 「금액차」  = 지금 값의 차이(억). 참고로만 적습니다");
-L.push("  · 「그때」  = 2019.11~2020.03 실거래 최고가. 세 단지가 ±3% 안에서 겹칩니다");
-L.push("  · 「자료」  = 곡선을 그리려면 더 받아야 하는 국토부 호출 수.");
-L.push("             0 이면 지금 바로 만들 수 있고, 그 외에는 수집을 한 번 걸어야 합니다");
-L.push("             (100회당 대략 2~3분. 하루 예산은 아침 알림 몫을 빼고 약 1,000회)");
+L.push("| 열 | 뜻 |");
+L.push("|---|---|");
+L.push("| **상승률차** | 1위와 3위의 배수 차이(2.52 − 1.14 = 1.38). **이 순서로 줄 세웠습니다** |");
+L.push("| 금액차 | 지금 값의 차이(억). 참고용 |");
+L.push("| 그때 | 2019.11~2020.03 실거래 최고가 — 세 단지가 ±3% 안에서 겹칩니다 |");
+L.push("| 자료 | 곡선을 그리려면 더 받아야 하는 국토부 호출 수. 🟢 0회면 바로 나옵니다 |");
+L.push("| 만들 때 | `build-gap-duel.mjs --set … --pick …` 에 넣는 값 |");
 L.push("");
-L.push("⚠️ 이 카드는 평형을 섞어 묶습니다(25평·34평이 함께 나옵니다).");
-L.push("   「같은 집끼리의 비교」가 아니라 **그때 같은 돈이면 살 수 있던 집들** 의 비교입니다.");
 L.push("");
-L.push(`총 ${shown.length}건 · 지금 바로 만들 수 있는 것 ${ready.length}건 · 완료 ${done.length}건`);
-L.push("=".repeat(78));
+L.push("> ⚠️ 이 카드는 **평형을 섞어** 묶습니다(25평·34평이 함께 나옵니다).");
+L.push("> 「같은 집끼리의 비교」가 아니라 **그때 같은 돈이면 살 수 있던 집들** 의 비교입니다.");
+L.push("> 한 카드 안에 **같은 구는 두 번 나오지 않습니다** (오너 2026-09-02).");
+L.push("");
+L.push(`**총 ${shown.length}건** · 지금 바로 만들 수 있는 것 ${ready.length}건 · 완료 ${done.length}건`);
 L.push("");
 
-const block = (r, no) => {
-  const tag = DONE.has(r.label) ? "✅ 완료" : r.calls === 0 ? "🟢 바로 가능" : `🟡 자료 ${r.calls}회`;
-  const out = [];
-  out.push(`[${String(no).padStart(2)}] 상승률차 ${pad(r.ratioGap.toFixed(2) + "배", 7)} · 금액차 ${pad(r.gapEok.toFixed(1) + "억", 7)} · 그때 ${eok(r.baseFrom)}~${eok(r.baseTo)}억 · ${r.band} · ${tag}`);
-  r.members.forEach((m, k) => {
-    const mark = k === 0 ? "  ▲" : k === r.members.length - 1 ? "  ▼" : "  ·";
-    out.push(`${mark} ${pad(`${shortGu(m.gu)} ${shortName(m.apt)} ${m.pyeong}`, 34)} ${pad(eok(m.base) + "억", 7)} → ${pad(eok(m.now) + "억", 8)} (${m.ratio.toFixed(2)}배)`);
-  });
-  if (DONE.has(r.label)) {
-    out.push(`     → 발행 준비 끝. 「출발선은 같았다 #1」 (확정 md5 1c508ee2bec5 · ZIP 전달 완료)`);
-  } else {
-    out.push(`     만들기: node scripts/build-gap-duel.mjs --set ${r.set} --pick ${r.pick} --label ${r.label}`);
-    if (r.calls) out.push(`     먼저 수집: ${r.lawds.length}개 구 · 약 ${r.calls}회`);
-  }
-  out.push("");
-  return out;
+/* ⚠️ 한 건 = **한 줄**이다(오너 2026-09-02). 블록으로 늘어놓으면 43건이 300줄이 되어
+   위아래로 훑어야 고를 수 있다. 표로 접으면 한 화면에서 비교된다.
+   단지 칸은 「지역 단지명 평형 (배수)」로 접는다 — 줄이 넘치지 않게 이름의 괄호는 뗀다. */
+const cell = (m) => `${shortGu(m.gu)} ${shortName(m.apt)} ${m.pyeong} **${m.ratio.toFixed(2)}배**`;
+const row = (r, no) => {
+  const tag = DONE.has(r.label) ? "✅ 완료" : r.calls === 0 ? "🟢 바로" : `🟡 ${r.calls}회`;
+  const mid = r.members.length === 3 ? cell(r.members[1]) : "—";
+  return `| ${no} | **${r.ratioGap.toFixed(2)}배** | ${r.gapEok.toFixed(1)}억 | ${eok(r.baseFrom)}~${eok(r.baseTo)}억 | ${cell(r.members[0])} | ${mid} | ${cell(r.members[r.members.length - 1])} | ${tag} | \`${r.set} ${r.pick}\` |`;
 };
 
-shown.forEach((r, i) => L.push(...block(r, i + 1)));
-
-L.push("=".repeat(78));
-L.push("고르실 때 참고");
+L.push("| # | 상승률차 | 금액차 | 그때 | 🔺 가장 많이 오른 곳 | 가운데 | 🔻 가장 덜 오른 곳 | 자료 | 만들 때 |");
+L.push("|--:|--:|--:|--:|---|---|---|---|---|");
+shown.forEach((r, i) => L.push(row(r, i + 1)));
 L.push("");
-L.push("· 상승률 격차로 줄을 세우면 **출발가가 얼마였든 얼마나 갈렸나**가 앞에 옵니다.");
+
+L.push("## 고르실 때 참고");
+L.push("");
+L.push("- 상승률 격차로 줄을 세우면 **출발가가 얼마였든 얼마나 갈렸나**가 앞에 옵니다.");
 L.push("  금액으로 세우던 때는 강남·서초 20~30억대가 위를 차지했는데, 그건 묶음 안에서 셋이");
 L.push("  거의 같은 값에서 출발하므로 **금액 차이가 출발가에 비례**하기 때문이었습니다.");
-L.push("· 한 게시물(캐러셀)로 묶으실 거면 **같은 구가 두 번 나오지 않게** 고르시는 편이 낫습니다.");
-L.push("· 「🟡 자료 N회」가 여럿이어도 **구가 겹치면 한 번에 받습니다** — 골라 주시면 묶어서 겁니다.");
+L.push("- 한 게시물(캐러셀)로 묶으실 거면 **같은 구가 두 번 나오지 않게** 고르시는 편이 낫습니다.");
+L.push("- 「🟡 자료 N회」가 여럿이어도 **구가 겹치면 한 번에 받습니다** — 골라 주시면 묶어서 겁니다.");
 L.push("");
-L.push(`· 지금 캐시가 찬 구는 세 곳뿐입니다(분당·성북·안산). 나머지는 구마다 69개월이 비어 있어`);
+L.push(`- 지금 캐시가 찬 구는 세 곳뿐입니다(분당·성북·안산). 나머지는 구마다 69개월이 비어 있어`);
 L.push(`  한 구당 69회가 듭니다. 매일 06:40 정기 백필이 나흘에 걸쳐 전부 채우면 이 표의`);
 L.push(`  「자료」 칸은 모두 0 이 됩니다 — 급하지 않으시면 기다리는 편이 호출을 아낍니다.`);
 L.push("");

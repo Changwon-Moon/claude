@@ -70,6 +70,13 @@ const MIN_GAP = Number(arg("min-gap", 3));    // 억 — 이보다 작은 차이
  * ⚠️ 금액 최소선(`--min-gap`)은 그대로 둔다. 배수가 커도 「1.5억 벌어졌다」는 카드가 안 된다.
  */
 const RANK = arg("rank", "ratio") === "amount" ? "amount" : "ratio";
+/**
+ * 한 카드 안에서 **구가 겹치지 않게** 한다 (오너 2026-09-02 · 기본 켬).
+ * 같은 구 안에서 갈린 것을 보여 주면 「어디에 넣었느냐로 갈렸다」는 이 카드의 말이 흐려지고,
+ * 읽는 사람은 「같은 동네인데 왜?」를 먼저 묻게 된다 — 그건 이 카드가 답할 수 없는 질문이다.
+ * `--allow-same-gu` 로 끌 수 있다.
+ */
+const DISTINCT_GU = !process.argv.includes("--allow-same-gu");
 const LIMIT = Number(arg("limit", 40));
 const MIN_MONTHS = Number(arg("min-months", 2));  // 창마다 거래가 있던 달
 const MIN_TRADES = Number(arg("min-trades", 3));  // 창마다 거래 건수
@@ -206,16 +213,27 @@ function main() {
        구성원은 금액으로 고르면, 표의 1위가 카드 안의 1위와 다른 칸이 될 수 있다. */
     const key = RANK === "ratio" ? (u) => u.ratio : (u) => u.now;
     const sorted = [...uniq].sort((a, b) => key(b) - key(a));
-    const hi = sorted[0], lo = sorted[sorted.length - 1];
+
+    /* ⚠️ **한 카드에 같은 구를 두 번 넣지 않는다** (오너 2026-09-02).
+       같은 구 안에서 갈린 것을 보여 주면 이 카드가 하려는 말(어디에 넣었느냐로 갈렸다)이
+       흐려진다 — 읽는 사람은 「같은 동네인데 왜?」를 먼저 묻게 된다.
+       구를 나눠 고르되 **폭은 최대한 살린다**: 1위는 그대로 두고, 꼴찌는 1위와 다른 구
+       중에서 가장 낮은 칸, 가운데는 앞의 둘과 겹치지 않는 구 중에서 중간값에 가까운 칸. */
+    const hi = sorted[0];
+    const rest = DISTINCT_GU ? sorted.filter((u) => u.lawd !== hi.lawd) : sorted.slice(1);
+    if (!rest.length) continue;
+    const lo = rest[rest.length - 1];
     const gap = hi.now - lo.now;
     if (eok(gap) < MIN_GAP) continue;
 
     /* 세 번째 자리는 **가운데** 칸이다 — 곡선 세 개가 부채처럼 벌어져야 그림이 산다.
        가장 높은 것 둘을 넣으면 두 곡선이 겹쳐 보이고 카드가 할 말을 잃는다. */
     const members = [hi];
-    if (GROUP >= 3 && sorted.length >= 3) {
+    if (GROUP >= 3) {
+      const used = new Set([hi.lawd, lo.lawd]);
+      const pool = rest.slice(0, -1).filter((u) => !DISTINCT_GU || !used.has(u.lawd));
       const mid = (key(hi) + key(lo)) / 2;
-      const cand = sorted.slice(1, -1).sort((a, b) => Math.abs(key(a) - mid) - Math.abs(key(b) - mid))[0];
+      const cand = pool.sort((a, b) => Math.abs(key(a) - mid) - Math.abs(key(b) - mid))[0];
       if (cand) members.push(cand);
     }
     members.push(lo);
@@ -257,6 +275,7 @@ function main() {
     minTradesPerWindow: MIN_TRADES,
     sameTypeOnly: SAME_TYPE,
     rankBy: RANK,
+    distinctGu: DISTINCT_GU,
     groupSize: GROUP,
     baseBandEok: [BASE_MIN / 10000, BASE_MAX === Infinity ? null : BASE_MAX / 10000],
     universe: uni.items.length,
