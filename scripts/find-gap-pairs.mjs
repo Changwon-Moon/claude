@@ -57,6 +57,19 @@ const [BASE_FROM, BASE_TO] = arg("base", "201911-202003").split("-");
 const [NOW_FROM, NOW_TO] = arg("now", "202603-202608").split("-");
 const TOL = Number(arg("tol", 5)) / 100;      // 기준가 유사 판정 폭
 const MIN_GAP = Number(arg("min-gap", 3));    // 억 — 이보다 작은 차이는 카드가 안 된다
+/**
+ * 줄 세우는 기준 (오너 2026-09-02 변경: 금액 → **상승률 격차**)
+ *   ratio  = 1위와 꼴찌의 **배수 차이**(2.52배 − 1.14배 = 1.38)  ← 기본
+ *   amount = 지금 **금액 차이(억)**                                (이전 기본)
+ *
+ * ⚠️ 왜 순서가 크게 바뀌나: 묶음 안에서는 셋이 거의 같은 값에서 출발하므로 금액 차이는
+ * **출발가에 비례**한다. 20억대에서 갈린 짝은 배수가 작아도 금액이 크고, 7억대에서 갈린
+ * 짝은 배수가 커도 금액이 작다. 그래서 금액으로 세우면 강남·서초가 위를 차지하고,
+ * 배수로 세우면 **얼마에서 출발했든 얼마나 갈렸나**가 앞에 온다.
+ *
+ * ⚠️ 금액 최소선(`--min-gap`)은 그대로 둔다. 배수가 커도 「1.5억 벌어졌다」는 카드가 안 된다.
+ */
+const RANK = arg("rank", "ratio") === "amount" ? "amount" : "ratio";
 const LIMIT = Number(arg("limit", 40));
 const MIN_MONTHS = Number(arg("min-months", 2));  // 창마다 거래가 있던 달
 const MIN_TRADES = Number(arg("min-trades", 3));  // 창마다 거래 건수
@@ -189,7 +202,10 @@ function main() {
     const seen = new Set();
     const uniq = win.filter((u) => (seen.has(u.danji) ? false : (seen.add(u.danji), true)));
     if (uniq.length < 2) continue;
-    const sorted = [...uniq].sort((a, b) => b.now - a.now);
+    /* 양 끝과 가운데를 **줄 세우는 기준과 같은 축**으로 고른다 — 배수로 줄 세우면서
+       구성원은 금액으로 고르면, 표의 1위가 카드 안의 1위와 다른 칸이 될 수 있다. */
+    const key = RANK === "ratio" ? (u) => u.ratio : (u) => u.now;
+    const sorted = [...uniq].sort((a, b) => key(b) - key(a));
     const hi = sorted[0], lo = sorted[sorted.length - 1];
     const gap = hi.now - lo.now;
     if (eok(gap) < MIN_GAP) continue;
@@ -198,8 +214,8 @@ function main() {
        가장 높은 것 둘을 넣으면 두 곡선이 겹쳐 보이고 카드가 할 말을 잃는다. */
     const members = [hi];
     if (GROUP >= 3 && sorted.length >= 3) {
-      const mid = (hi.now + lo.now) / 2;
-      const cand = sorted.slice(1, -1).sort((a, b) => Math.abs(a.now - mid) - Math.abs(b.now - mid))[0];
+      const mid = (key(hi) + key(lo)) / 2;
+      const cand = sorted.slice(1, -1).sort((a, b) => Math.abs(key(a) - mid) - Math.abs(key(b) - mid))[0];
       if (cand) members.push(cand);
     }
     members.push(lo);
@@ -209,11 +225,13 @@ function main() {
       baseTo: Math.max(...members.map((m) => m.base)),
       gapManwon: gap,
       gapEok: +eok(gap).toFixed(2),
+      /** 1위와 꼴찌의 배수 차이 — 오너 2026-09-02 부터 이것이 줄 세우는 값이다 */
+      ratioGap: +(hi.ratio - lo.ratio).toFixed(3),
       typeMix: new Set(members.map((m) => m.type)).size > 1,
       members,
     });
   }
-  groups.sort((x, y) => y.gapManwon - x.gapManwon);
+  groups.sort((x, y) => (RANK === "ratio" ? y.ratioGap - x.ratioGap : y.gapManwon - x.gapManwon));
 
   /* 카드로 쓸 목록은 **한 단지가 한 번만** 나오게 고른다.
      ⚠️ 칸(단지+평형)이 아니라 **단지**로 잡는다 — 칸으로 잡았더니 첫 결과에
@@ -238,6 +256,7 @@ function main() {
     minMonthsPerWindow: MIN_MONTHS,
     minTradesPerWindow: MIN_TRADES,
     sameTypeOnly: SAME_TYPE,
+    rankBy: RANK,
     groupSize: GROUP,
     baseBandEok: [BASE_MIN / 10000, BASE_MAX === Infinity ? null : BASE_MAX / 10000],
     universe: uni.items.length,
@@ -271,12 +290,13 @@ function main() {
     `- 명부 ${uni.items.length}단지 → 두 창에 모두 거래가 있고 이 구간에 드는 칸 **${units.length}개**`,
     `- 거래가 얇아 던진 칸 ${thin}개 (창마다 ${MIN_MONTHS}개월·${MIN_TRADES}건 미만)`,
     `- 기준가 ±${TOL * 100}% · 지금 차이 ${MIN_GAP}억 이상 → 묶음 **${groups.length}개** · 겹치지 않게 고른 **${picks.length}개** (카드 한 장 = ${GROUP}단지)`,
+    `- 줄 세운 기준: **${RANK === "ratio" ? "1위와 꼴찌의 상승률(배수) 격차" : "지금 금액 차이(억)"}**`,
     ``,
     `> ⚠️ 평형을 섞어 묶었다(묶음 ${groups.filter((g) => g.typeMix).length}개가 평형이 다르다).`,
     `> 「같은 집」이 아니라 **「그때 같은 돈이면 살 수 있던 집들」**이다 — 카드는 각 평형을 반드시 함께 적는다.`,
     ``,
     ...picks.flatMap((g, i) => [
-      `### ${i + 1}. 그때 ${fmtEok(g.baseFrom)}~${fmtEok(g.baseTo)} → 지금 **${g.gapEok.toFixed(1)}억** 벌어졌다`,
+      `### ${i + 1}. 그때 ${fmtEok(g.baseFrom)}~${fmtEok(g.baseTo)} → 상승률 **${g.ratioGap.toFixed(2)}배** 차이 (금액 ${g.gapEok.toFixed(1)}억)`,
       ``,
       `| | 단지 | 그때 | 지금 | |`,
       `|---|---|--:|--:|--:|`,

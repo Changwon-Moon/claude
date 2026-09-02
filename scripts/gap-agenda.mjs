@@ -80,14 +80,17 @@ for (const [set, band] of [["gap-ep1", "그때 10억 이하"], ["gap-ep2", "그�
     const lawds = [...new Set(g.members.map((m) => m.lawd))];
     rows.push({
       set, band, pick: i + 1, label: `${set}-${i + 1}`,
-      gapEok: g.gapEok, baseFrom: g.baseFrom, baseTo: g.baseTo,
+      gapEok: g.gapEok, ratioGap: g.ratioGap ?? 0, baseFrom: g.baseFrom, baseTo: g.baseTo,
       members: g.members,
       calls: lawds.reduce((s, l) => s + holes(l), 0),
       lawds,
     });
   });
 }
-rows.sort((a, b) => b.gapEok - a.gapEok);
+/* 줄 세우는 값은 **1위와 꼴찌의 상승률(배수) 격차**다(오너 2026-09-02 변경).
+   금액으로 세우면 출발가가 큰 강남·서초가 위를 차지한다 — 묶음 안에서는 셋이 거의 같은
+   값에서 출발하므로 금액 차이가 출발가에 비례하기 때문이다. */
+rows.sort((a, b) => b.ratioGap - a.ratioGap);
 /* `--top N` — 다 보여 주면 41건이라 고르기 어려울 때 잘라 낸다.
    ⚠️ 이미 만든 카드는 잘라 내지 않는다(무엇이 끝났는지가 안 보이면 표가 거짓말을 한다). */
 const shown = rows.filter((r, i) => i < TOP || DONE.has(r.label));
@@ -103,7 +106,8 @@ L.push("고르는 법 — [ ] 안의 **선택번호**만 말씀하시면 그 카
 L.push("(선택번호는 이 표에서만 쓰는 번호입니다. 카드에 찍히는 연재번호 #N 은 발행 순서대로 따로 붙습니다)");
 L.push("");
 L.push("각 줄의 뜻");
-L.push("  · 「격차」  = 가장 많이 오른 곳과 가장 덜 오른 곳의 지금 값 차이. 이 순서로 줄 세웠습니다");
+L.push("  · 「상승률차」= 1위와 3위의 **배수 차이**(2.52배 − 1.14배 = 1.38). **이 순서로 줄 세웠습니다**");
+L.push("  · 「금액차」  = 지금 값의 차이(억). 참고로만 적습니다");
 L.push("  · 「그때」  = 2019.11~2020.03 실거래 최고가. 세 단지가 ±3% 안에서 겹칩니다");
 L.push("  · 「자료」  = 곡선을 그리려면 더 받아야 하는 국토부 호출 수.");
 L.push("             0 이면 지금 바로 만들 수 있고, 그 외에는 수집을 한 번 걸어야 합니다");
@@ -119,7 +123,7 @@ L.push("");
 const block = (r, no) => {
   const tag = DONE.has(r.label) ? "✅ 완료" : r.calls === 0 ? "🟢 바로 가능" : `🟡 자료 ${r.calls}회`;
   const out = [];
-  out.push(`[${String(no).padStart(2)}] 격차 ${pad(r.gapEok.toFixed(1) + "억", 7)} · 그때 ${eok(r.baseFrom)}~${eok(r.baseTo)}억 · ${r.band} · ${tag}`);
+  out.push(`[${String(no).padStart(2)}] 상승률차 ${pad(r.ratioGap.toFixed(2) + "배", 7)} · 금액차 ${pad(r.gapEok.toFixed(1) + "억", 7)} · 그때 ${eok(r.baseFrom)}~${eok(r.baseTo)}억 · ${r.band} · ${tag}`);
   r.members.forEach((m, k) => {
     const mark = k === 0 ? "  ▲" : k === r.members.length - 1 ? "  ▼" : "  ·";
     out.push(`${mark} ${pad(`${shortGu(m.gu)} ${shortName(m.apt)} ${m.pyeong}`, 34)} ${pad(eok(m.base) + "억", 7)} → ${pad(eok(m.now) + "억", 8)} (${m.ratio.toFixed(2)}배)`);
@@ -139,8 +143,9 @@ shown.forEach((r, i) => L.push(...block(r, i + 1)));
 L.push("=".repeat(78));
 L.push("고르실 때 참고");
 L.push("");
-L.push("· 격차가 큰 순서지만, **공감이 큰 것이 반드시 위에 있지는 않습니다.**");
-L.push("  그때 7억대에서 갈린 이야기가 20억대에서 갈린 이야기보다 반응이 클 수 있습니다.");
+L.push("· 상승률 격차로 줄을 세우면 **출발가가 얼마였든 얼마나 갈렸나**가 앞에 옵니다.");
+L.push("  금액으로 세우던 때는 강남·서초 20~30억대가 위를 차지했는데, 그건 묶음 안에서 셋이");
+L.push("  거의 같은 값에서 출발하므로 **금액 차이가 출발가에 비례**하기 때문이었습니다.");
 L.push("· 한 게시물(캐러셀)로 묶으실 거면 **같은 구가 두 번 나오지 않게** 고르시는 편이 낫습니다.");
 L.push("· 「🟡 자료 N회」가 여럿이어도 **구가 겹치면 한 번에 받습니다** — 골라 주시면 묶어서 겁니다.");
 L.push("");
