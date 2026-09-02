@@ -2088,6 +2088,18 @@
         "singo-수원하늘채더퍼스트1단지-84"
       ],
       "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "gap-ep1-1",
+      "cmd": "scripts/build-gap-duel.mjs",
+      "args": [
+        "--set",
+        "gap-ep1",
+        "--pick",
+        "1",
+        "--label",
+        "gap-ep1-1"
+      ]
     }
   ]
 }

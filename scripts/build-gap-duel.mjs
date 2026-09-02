@@ -96,8 +96,15 @@ const members = group.members.map((m, i) => {
   return { ...m, color: SERIES_COLORS[i === group.members.length - 1 ? 2 : i], pts: series(m, months) };
 });
 
-/* ── 좌표 (streak-line 과 같은 뷰박스·자) ── */
-const VB_H = 715, AXIS_X = 118, RIGHT = 915, TOP = 300, BASE = 640;
+/* ── 좌표
+   ⚠️ 범례가 세 줄이라 streak-line 의 두 줄 자를 그대로 쓰면 안 된다(2026-09-02 실측).
+   한 줄이 이름(40px)+지역(31px) 두 층이라 92px 를 먹는다 — 68px 로 뒀더니 아랫줄 이름이
+   윗줄 지역 위에 얹혔다. 범례가 끝나는 자리(y≈340) 아래에서 그래프를 시작한다.
+
+   그리고 **끝값 라벨은 판 밖 오른쪽 여백에 세운다.** 곡선 위에 얹으면 마지막 급등 구간과
+   겹친다(첫 렌더에서 12.5억·8.0억이 회색·파랑 곡선을 가로질렀다). 판을 800 에서 끊고
+   남는 200px 를 라벨 자리로 준다 — 세로로만 서로 밀면 되므로 겹침 계산이 단순해진다. */
+const VB_H = 790, AXIS_X = 118, RIGHT = 800, TOP = 366, BASE = 700;
 const allV = members.flatMap((m) => m.pts.map((p) => p.v));
 const vmaxRaw = Math.max(...allV), vminRaw = Math.min(...allV);
 /* 축 눈금은 억 단위로 떨어지게 — 5억 이상 폭이면 5억, 아니면 2억 간격 */
@@ -111,7 +118,10 @@ const ticks = [];
 for (let v = YMIN; v <= YMAX + 1; v += step) ticks.push(v);
 const grid = ticks.filter((v) => v > YMIN).map((v) => ({ x1: AXIS_X, x2: RIGHT, y: yv(v) }));
 const ylabels = ticks.map((v) => ({ x: AXIS_X - 16, y: yv(v) + 9, text: `${eok(v).toFixed(0)}` }));
-const yunit = { x: AXIS_X - 16, y: TOP - 8, text: "(억)" };
+/* 단위는 **판 안 왼쪽 위**에 둔다. 축 위(TOP-8)에 두면 맨 위 눈금 「20」과 겹치고,
+   더 올리면 이번엔 범례 셋째 줄과 부딪힌다 — 판 안 왼쪽 위는 곡선이 지나지 않는 자리다
+   (세 곡선 모두 2020년엔 7억대라 아래쪽에 있다). */
+const yunit = { x: AXIS_X + 42, y: TOP + 40, text: "(억)" };
 
 const polylines = members.map((m) => ({
   points: m.pts.map((p) => `${xi(p.ym)},${yv(p.v)}`).join(" "),
@@ -126,18 +136,19 @@ const ends = members.map((m) => {
 });
 const dots = ends.map((e) => ({ x: e.x, y: e.y, r: e.m.color === SLATE ? 13 : 15, color: e.m.color }));
 
-/* ⚠️ 끝점 라벨이 서로 겹치는 것을 **코드가 막는다.** 손으로 자리를 정하면 사람이 놓친 겹침이
-   그대로 나간다(CARD_CHECKLIST 2026-09-01 학군지 사고). 위에서부터 최소 간격을 강제한다. */
-const LABEL_GAP = 62;
+/* ⚠️ 끝값 라벨은 **판 밖 오른쪽 여백**에 세로로 세운다. 곡선 위에 얹으면 마지막 급등
+   구간과 겹친다(2026-09-02 첫 렌더에서 실제로 겹쳤다). 서로 겹치는 것은 **코드가 막는다** —
+   손으로 자리를 정하면 사람이 놓친 겹침이 그대로 나간다(09-01 학군지 사고). */
+const LABEL_GAP = 66;
 const sorted = [...ends].sort((a, b) => a.y - b.y);
 let prevY = -Infinity;
 for (const e of sorted) {
-  let ly = e.y - 30;
+  let ly = e.y + 16;                                   // 점 높이에 맞춘다
   if (ly - prevY < LABEL_GAP) ly = prevY + LABEL_GAP;
   e.ly = ly;
   prevY = ly;
 }
-const vlabels = ends.map((e) => ({ x: e.x + 10, y: e.ly, text: fmtEok(e.v), fill: e.m.color, anchor: "end" }));
+const vlabels = ends.map((e) => ({ x: RIGHT + 24, y: e.ly, text: fmtEok(e.v), fill: e.m.color, anchor: "start" }));
 
 const xlabels = [
   { x: AXIS_X, y: BASE + 46, text: `${CURVE_FROM.slice(0, 4)}.${+CURVE_FROM.slice(4)}`, fill: MUTE, anchor: "start" },
@@ -145,19 +156,21 @@ const xlabels = [
   { x: RIGHT, y: BASE + 46, text: `${CURVE_TO.slice(0, 4)}.${+CURVE_TO.slice(4)}`, fill: MUTE, anchor: "end" },
 ];
 
-/* 출발점 — 곡선들이 붙어 있던 자리에 세로 눈금 하나. 「여기서 같이 출발했다」가 이 카드의 축이다. */
-const startX = xi(months[0]);
-const vmarks = [{ x: startX, y1: TOP - 10, y2: BASE, color: INK }];
+/* 출발점 세로선은 두지 않는다 — 곡선 셋이 모두 좌축에서 시작하므로 축선과 겹쳐 아무 말도 안 한다 */
+const vmarks = [];
 
-/* 범례 — 단지명 + **평형**(필수) · 지역과 그때 값은 sub 로 */
+/* 범례 — 단지명 + **평형**(필수) · 지역과 그때→지금은 sub 로.
+   ⚠️ 이름의 괄호 별칭은 뗀다 — 「길음뉴타운1단지(래미안길음1차)」는 판 폭을 넘어
+   다음 줄을 밀어낸다. 지역이 sub 에 있으므로 어느 단지인지는 흐려지지 않는다. */
+const shortName = (s) => s.replace(/\s*\([^)]*\)\s*$/, "").trim() || s;
 const legend = members.map((m, i) => ({
-  sx1: 118, sx2: 196, sy: 92 + i * 68,
+  sx1: 118, sx2: 196, sy: 118 + i * 92,
   color: m.color,
-  tx: 214, ty: 82 + i * 68,
-  text: `${m.apt} ${m.pyeong}`,
+  tx: 214, ty: 108 + i * 92,
+  text: `${shortName(m.apt)} ${m.pyeong}`,
   fill: INK,
-  sub: `${m.gu} ${m.umd} · 그때 ${fmtEok(m.base)} → ${m.ratio.toFixed(2)}배`,
-  sty: 124 + i * 68,
+  sub: `${m.gu} ${m.umd} · ${fmtEok(m.base)} → ${fmtEok(m.now)} (${m.ratio.toFixed(2)}배)`,
+  sty: 152 + i * 92,
 }));
 
 const hi = members[0], lo = members[members.length - 1];
@@ -166,7 +179,8 @@ const baseLabel = fmtEok(Math.round((group.baseFrom + group.baseTo) / 2));
 const card = {
   template: "streak-line@1",
   date: DATE,
-  badge: `같은 값에서 출발한 집들 (${DATE.replace(/-/g, ".")})`,
+  /* 뱃지가 측정 정의를 말한다 — 푸터에 넣으면 줄이 넘치고, 제목은 주인공 하나만 세우는 자리다 */
+  badge: `같은 값에서 출발한 집들 · 월별 최고가`,
   title:
     `<span class="tl">2020년 초, 셋 다 <span class="hi">${baseLabel}</span>이었다</span>`.replace(
       "셋",
@@ -175,10 +189,18 @@ const card = {
   chart: {
     vb: `0 0 1000 ${VB_H}`,
     base: { y: BASE, x1: AXIS_X, x2: RIGHT },
+    /* 판 안 워터마크 — BRAND §4b 슬롯 C. 곡선이 지나지 않는 왼쪽 가운데에 옅게 */
+    wm: { x: AXIS_X + 24, y: TOP + 150, size: 40, text: "@wirit_note", fill: INK, opacity: 0.12, anchor: "start" },
     grid, ylabels, yunit, vmarks, polylines, dots, vlabels, xlabels, legend,
   },
-  note: `${hi.apt} <b>${hi.ratio.toFixed(2)}배</b> · ${lo.apt} <b>${lo.ratio.toFixed(2)}배</b>`,
-  source: { name: "국토교통부 아파트 매매 실거래가", asOf: `${CURVE_FROM.slice(0, 4)}.${+CURVE_FROM.slice(4)}~${CURVE_TO.slice(0, 4)}.${+CURVE_TO.slice(4)} 월별 최고가` },
+  /* ⚠️ 마무리 줄은 범례가 이미 말한 것을 되풀이하지 않는다. 평형을 섞은 카드에서는
+     **그 사실 자체**가 마무리로 가야 한다 — 안 적으면 같은 크기끼리의 비교로 읽힌다. */
+  note: group.typeMix
+    ? `평형은 달라도, 그때 값은 <b>같았다</b>`
+    : `${shortName(hi.apt)} <b>${hi.ratio.toFixed(2)}배</b> · ${shortName(lo.apt)} <b>${lo.ratio.toFixed(2)}배</b>`,
+  /* ⚠️ asOf 는 짧게 — 「월별 최고가」까지 넣었더니 푸터가 두 줄로 넘쳐 워터마크를 밀었다.
+     측정 정의(월별 최고가)는 위 뱃지가 말한다. */
+  source: { name: "국토교통부 아파트 실거래가", asOf: `${CURVE_FROM.slice(0, 4)}.${+CURVE_FROM.slice(4)}~${CURVE_TO.slice(0, 4)}.${+CURVE_TO.slice(4)}` },
   meta: {
     set: SET, pick: PICK + 1,
     /* 캡션 쓰는 사람이 다시 찾지 않게 남긴다 — 신고가 카드의 meta.region 과 같은 취지 */
