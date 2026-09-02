@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T06:08:03.024Z",
+  "generatedAt": "2026-09-02T06:49:15.896Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -485,7 +485,7 @@
       "maxDelay": null,
       "lastRun": "2026-09-01",
       "lastOk": "2026-09-01",
-      "okDaysAgo": 0
+      "okDaysAgo": 1
     },
     {
       "file": "molit-peak-backfill.yml",
@@ -903,8 +903,8 @@
       "daysAgo": 0,
       "lastOk": "2026-09-02",
       "okDaysAgo": 0,
-      "fails30": 31,
-      "runs30": 61
+      "fails30": 32,
+      "runs30": 62
     },
     {
       "file": "guard.yml",
@@ -924,7 +924,7 @@
       "lastOk": "2026-09-02",
       "okDaysAgo": 0,
       "fails30": 6,
-      "runs30": 11
+      "runs30": 12
     },
     {
       "file": "molit-door.yml",
@@ -983,7 +983,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-02",
       "okDaysAgo": 0,
-      "fails30": 9,
+      "fails30": 8,
       "runs30": 100
     }
   ]
