@@ -51,6 +51,11 @@ function pagesOf(slug) {
   if (!existsSync(RENDERS)) return [];
   const out = [];
   for (const d of readdirSync(RENDERS).sort()) {
+    /* ⚠️ `_spike` 는 **작업용 스크래치**다 — `--publish` 없이 돌린 빌더의 산출이 거기 떨어진다.
+       그걸 날짜 폴더와 똑같이 훑으면 같은 카드가 두 번 잡혀 **1장짜리가 2장으로 나간다**
+       (2026-09-03 실측: danji-mokdong 이 2장으로 찍히고 결재 화면에 없는 2번째 장 링크가 걸렸다).
+       밑줄로 시작하는 폴더는 날짜가 아니다 — 건너뛴다. */
+    if (d.startsWith("_")) continue;
     const dir = join(RENDERS, d);
     let fs2 = [];
     try {
