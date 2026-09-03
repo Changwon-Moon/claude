@@ -108,8 +108,14 @@
         font-family: var(--font-title); font-size: 1em; font-weight: 900; line-height: 1.08;
         letter-spacing: -0.035em; color: #fff; white-space: nowrap; width: max-content; max-width: 100%;
       }
-      .dcv-title .hi { color: #7aa6ff; }
-      .dcv-title .up { color: #ff8a8e; }
+      /* 제목 강조는 **브랜드 토큰**이다(오너 확정 2026-09-03: "원래 기준대로 코발트지").
+         종전엔 잉크 배경용이라며 밝은 틴트(#7aa6ff / #ff8a8e)를 따로 썼는데, 그건 판형이
+         만든 제3의 색이었다 — `audit-head` 의 강조색 전수가 이것을 잡았고(danji 카드 11장이
+         전부 같은 값으로 기준선에 면제돼 있었다), 기준선 파일도 "새 카드는 토큰을 쓰면 된다"
+         고 못박고 있다. 잉크(#141821) 위 대비는 코발트 4.1:1 · 레드 3.6:1 로,
+         둘 다 큰 볼드 글자(WCAG 대형 텍스트 3:1)에 충분하다. */
+      .dcv-title .hi { color: var(--wirit-cobalt); }
+      .dcv-title .up { color: var(--wirit-red); }
 
       /* 단지명 · 주소 · 로고를 **한 행**에 두고 아랫단을 맞춘다(오너 지시 2026-08-03).
          주소가 단지명 아래 두 번째 줄일 때는 로고만 오른쪽에 홀로 떠 있었다 —
