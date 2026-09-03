@@ -105,7 +105,18 @@ function heroOf(d) {
      하는 일은 "이 사진을 늘리지 않고 쓸 수 있는 최대 높이"를 재는 것이다.
      가로로 너무 긴 사진(기본 칸도 못 채우는)은 여기서 여전히 던진다. */
   const renderH = heroShift(name, d.photo?.boxH ?? PHOTO_BOX_H);
-  const extra = { coverH: minCover, coverMax: renderH + band, ...(d.photo?.band ? { band } : {}) };
+  /* ⚠️ **오너가 `photo.boxH` 를 직접 맞춰 둔 카드는 늘리지 않는다.**
+     송파·구리 줍줍은 사진 칸을 손으로 딱 맞춰 종이가 빈틈없이 차 있다. 거기서 표지를
+     `renderH` 까지 더 늘리자 종이가 밀려 **푸터가 1px·10px 카드 밖으로 나갔다**(전수 검사가 잡았다).
+     늘릴 자리가 있는 카드만 늘린다 — `boxH` 가 있으면 상한을 그 값으로 묶는다. */
+  const pinned = d.photo?.boxH != null;
+  const extra = {
+    coverH: minCover,
+    coverMax: pinned ? minCover : renderH + band,
+    /* 고정 갈래 — 오너가 boxH 를 정한 카드는 옛 방식 그대로 높이가 박힌다(위 CSS 주석 참조) */
+    ...(pinned ? { fixed: true } : {}),
+    ...(d.photo?.band ? { band } : {}),
+  };
   return d.photo
     ? { photo: d.photo.file, credit: d.photo.credit, ...extra }
     : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true, ...extra };

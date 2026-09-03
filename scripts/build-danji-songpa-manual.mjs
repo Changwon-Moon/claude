@@ -46,7 +46,7 @@ const card = {
     credit: "오너 제공",
     shift: 114,
     boxH: 555,
-    coverH: 799,
+    coverH: 799, fixed: true /* 손으로 맞춘 표지 — 판형이 늘리지 않는다(2026-09-03) */,
     fadeTop: 375,
   },
   danji: { name: "송파 시그니처 롯데캐슬", logo: "lottecastle.png", company: "롯데건설" },

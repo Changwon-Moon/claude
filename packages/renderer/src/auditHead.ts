@@ -183,14 +183,26 @@ async function main() {
      옛 카드는 픽셀 불변이라 못 고친다 → **기준선(baseline)** 에 적어 두고,
      기준선에 없는 카드가 새로 어긋나면 그때 빨간불이 켜진다. 새 드리프트만 막는 방식이다. */
   const RED = "rgb(229, 72, 77)", COBALT = "rgb(46, 107, 255)";
+  /* ── 표지형 제목의 잉크용 틴트는 **규격색이다** (오너 확정 2026-09-03) ──
+     `danji-cover@1` 의 제목은 어두운 잉크 밴드 위에 앉는다. 그 자리에서만 쓰는 이 두 값은
+     2026-08-03 부터 청약 카드 11장이 써 온 판형의 색이고, 오너가 "청약은 원래 블루가 맞는
+     컬러"라고 확정했다(브랜드 토큰으로 옮겼다가 되돌렸다).
+
+     ⚠️ **기준선(accent-baseline)에 새 카드를 끼워 넣는 것과 다르다.** 기준선은 "이미 나가서
+     못 고치는 옛 카드"를 적는 곳이고, 여기는 "이 판형에서는 이 색이 맞다"를 적는 곳이다.
+     허용이 코드에 있으니 다음 사람이 이유를 찾을 수 있고, **판형 밖에서 같은 색이 새면
+     여전히 걸린다.** 표지형 이외의 템플릿에는 적용되지 않는다. */
+  const DANJI_TITLE_TINT = new Set(["cobalt rgb(122, 166, 255)", "red rgb(255, 138, 142)"]);
   const BASE = path.join(ROOT, "data/review/accent-baseline.json");
   const baseline: Record<string, string[]> = fs.existsSync(BASE)
     ? JSON.parse(fs.readFileSync(BASE, "utf8")).cards ?? {}
     : {};
   const offenders: Record<string, string[]> = {};
   for (const r of rows) {
+    const coverTitle = String(r.template ?? "").startsWith("danji-cover");
     const bad2 = Object.keys(r.accents ?? {})
       .filter((k) => !(k === `red ${RED}` || k === `cobalt ${COBALT}`))
+      .filter((k) => !(coverTitle && DANJI_TITLE_TINT.has(k)))
       .sort();
     if (bad2.length) offenders[r.slug] = bad2;
   }

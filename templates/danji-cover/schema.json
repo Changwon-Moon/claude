@@ -89,6 +89,10 @@
         "coverMax": {
           "type": "integer",
           "description": "표지가 늘어날 수 있는 한계 — 원본이 폭 1080 에서 갖는 높이 + 잉크 밴드. 그 위로는 사진을 늘리게 된다."
+        },
+        "fixed": {
+          "type": "boolean",
+          "description": "표지 높이를 고정한다(오너가 photo.boxH 를 직접 맞춘 카드). 없으면 표지가 남는 세로만큼 늘어난다."
         }
       }
     },

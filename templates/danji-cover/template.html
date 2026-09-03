@@ -64,6 +64,11 @@
       /* 사진 칸은 표지에서 잉크 밴드를 뺀 나머지 전부다 — 표지가 늘어나면 같이 늘어난다.
          높이를 px 로 박지 않으므로 `hero.boxH`·`hero.fadeTop`·`hero.shift` 가 필요 없어졌다. */
       .dcv-photo { position: absolute; left: 0; right: 0; top: 0; bottom: 244px; overflow: hidden; }
+      /* ⚠️ **손으로 맞춰 둔 표지는 늘리지 않는다.** 송파·구리 줍줍은 오너가 `photo.boxH` 를
+         종이에 딱 맞게 잡아 둔 카드라, 표지를 조금이라도 늘리면 종이가 밀려 **푸터가 카드 밖으로
+         나간다**(전수 검사가 1px·10px 로 잡았다). 그런 카드는 옛 방식 그대로 — 높이 고정이다.
+         늘어나는 것은 `boxH` 를 안 정한 카드, 즉 판형에게 맡긴 카드뿐이다. */
+      .dcv-cover.fixed { flex: none; height: var(--cover-h); min-height: 0; max-height: none; }
       /* 끌어올림은 이제 **`object-position` 이 한다.** 종전엔 빌더가 `shift = (렌더높이 − 칸높이)
          × 42.5%` 를 계산해 `top:-Npx` 로 실어 보냈는데, 칸 높이가 카드마다 달라지면서 그 값이
          카드가 그려지기 전에는 정해지지 않게 됐다. `object-fit:cover` + `object-position:50% 42.5%`
@@ -108,14 +113,15 @@
         font-family: var(--font-title); font-size: 1em; font-weight: 900; line-height: 1.08;
         letter-spacing: -0.035em; color: #fff; white-space: nowrap; width: max-content; max-width: 100%;
       }
-      /* 제목 강조는 **브랜드 토큰**이다(오너 확정 2026-09-03: "원래 기준대로 코발트지").
-         종전엔 잉크 배경용이라며 밝은 틴트(#7aa6ff / #ff8a8e)를 따로 썼는데, 그건 판형이
-         만든 제3의 색이었다 — `audit-head` 의 강조색 전수가 이것을 잡았고(danji 카드 11장이
-         전부 같은 값으로 기준선에 면제돼 있었다), 기준선 파일도 "새 카드는 토큰을 쓰면 된다"
-         고 못박고 있다. 잉크(#141821) 위 대비는 코발트 4.1:1 · 레드 3.6:1 로,
-         둘 다 큰 볼드 글자(WCAG 대형 텍스트 3:1)에 충분하다. */
-      .dcv-title .hi { color: var(--wirit-cobalt); }
-      .dcv-title .up { color: var(--wirit-red); }
+      /* 제목 강조는 **잉크 위 전용 틴트**다 — 오너 확정 2026-09-03: "청약은 원래 블루가 맞는 컬러네."
+         한 번 브랜드 토큰(var(--wirit-cobalt)/var(--wirit-red))으로 옮겨 봤다가 되돌렸다.
+         이 두 색은 표지형의 어두운 잉크 밴드 위에서만 쓰이는 값이고, 청약 카드 11장이
+         2026-08-03 부터 이 색으로 나갔다 — 판형의 정체성에 가깝다.
+         ⚠️ 그래서 `audit-head` 가 이 둘을 **표지형에 한해** 규격색으로 인정한다
+         (packages/renderer/src/auditHead.ts 의 DANJI_TITLE_TINT). 기준선에 끼워 넣어
+         통과시키는 것과 다르다 — 허용이 코드에 적혀 있고 판형 밖에서는 여전히 걸린다. */
+      .dcv-title .hi { color: #7aa6ff; }
+      .dcv-title .up { color: #ff8a8e; }
 
       /* 단지명 · 주소 · 로고를 **한 행**에 두고 아랫단을 맞춘다(오너 지시 2026-08-03).
          주소가 단지명 아래 두 번째 줄일 때는 로고만 오른쪽에 홀로 떠 있었다 —
@@ -289,12 +295,16 @@
       /* 한 급 작은 판(오너 지시 2026-09-03) — 두 줄짜리 특이사항은 34px 이면 무게가 커서
          종이의 마지막 말이 표보다 세진다. **옵트인**이라 기존 확정본 픽셀은 건드리지 않는다. */
       .dcv-note.sm { font-size: 30px; }
-      /* ⚠️ `margin-top: auto` 를 뺐다(2026-09-03). 그게 있으면 남는 세로를 이 줄이 전부 먹어
-         표지가 못 늘어난다 — 플렉스에서 auto 여백은 flex-grow 보다 먼저 자리를 가져간다.
-         표지가 한계까지 늘어난 뒤에도 남는 세로는 공용 푸터의 auto 가 받으므로,
-         "문구가 푸터에 붙는다"는 원래 의도는 그대로 지켜진다. */
+      /* ⚠️ **표지가 늘어나는 카드에서만** 이 줄의 `margin-top:auto` 를 뺀다.
+         플렉스에서 auto 여백은 `flex-grow` **보다 먼저** 남는 자리를 먹는다 — 그게 있으면
+         표지는 1px 도 못 늘어난다. 그렇다고 통째로 빼면 **손으로 맞춘 카드가 깨진다**:
+         송파·구리 줍줍에서 푸터가 1px·10px 카드 밖으로 나갔다(전수 검사가 잡았다).
+         그래서 판을 보고 가른다 — 고정 표지(.fixed)는 옛 동작 그대로, 탄력 표지만 뺀다.
+         탄력 표지가 한계까지 늘어난 뒤 남는 세로는 공용 푸터의 auto 가 받으므로
+         "문구가 푸터에 붙는다"는 원래 의도는 지켜진다. */
+      .dcv:has(.dcv-cover:not(.fixed)) .dcv-note { margin-top: 24px; }
       .dcv-note {
-        margin: 24px 0 22px; font-family: var(--font-sans); font-size: 34px; font-weight: 700;
+        margin: 24px 0 22px; margin-top: auto; font-family: var(--font-sans); font-size: 34px; font-weight: 700;
         letter-spacing: -0.02em; color: var(--wirit-ink); line-height: 1.25; word-break: keep-all;
       }
       .dcv-note .tag { color: var(--wirit-cobalt); }
@@ -320,7 +330,7 @@
       {{! 표지는 **늘어난다** — 종이가 안 쓰는 세로를 사진이 가져간다.
           빌더가 주는 것은 상한(`hero.coverMax` = 원본 렌더 높이 + 밴드) 하나뿐이다.
           그 위로 늘리면 사진을 잡아 늘이는 셈이라 브라우저가 거기서 멈춘다. }}
-      <div class="dcv-cover" style="min-height:{{#if hero.coverH}}{{hero.coverH}}{{else}}690{{/if}}px{{#if hero.coverMax}};max-height:{{hero.coverMax}}px{{/if}}">
+      <div class="dcv-cover{{#if hero.fixed}} fixed{{/if}}" style="--cover-h:{{#if hero.coverH}}{{hero.coverH}}{{else}}690{{/if}}px;min-height:{{#if hero.coverH}}{{hero.coverH}}{{else}}690{{/if}}px{{#if hero.coverMax}};max-height:{{hero.coverMax}}px{{/if}}">
         <div class="dcv-photo"{{#if hero.band}} style="bottom:{{hero.band}}px"{{/if}}>
           {{#if hero.photo}}
             <img src="../_shared/photos/{{hero.photo}}" alt="" />
