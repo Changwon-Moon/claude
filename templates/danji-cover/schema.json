@@ -66,25 +66,29 @@
           "type": "integer",
           "minimum": 0,
           "maximum": 2000,
-          "description": "표지 사진을 위로 끌어올릴 px. **빌더가 원본 크기에서 계산한다** — 손으로 적지 않는다"
+          "description": "표지 사진을 위로 끌어올릴 px. **빌더가 원본 크기에서 계산한다** — 손으로 적지 않는다 ⚠️ 2026-09-03 이후 빌더가 보내지 않는다 — 끌어올림은 object-position 이 한다."
         },
         "boxH": {
           "type": "integer",
           "minimum": 300,
           "maximum": 760,
-          "description": "표지 사진 칸 높이(기본 446). 원본 세로가 허락하는 만큼만 키울 수 있다"
+          "description": "표지 사진 칸 높이(기본 446). 원본 세로가 허락하는 만큼만 키울 수 있다 ⚠️ 2026-09-03 이후 빌더가 보내지 않는다 — 끌어올림은 object-position 이 한다."
         },
         "coverH": {
           "type": "integer",
           "minimum": 560,
           "maximum": 1000,
-          "description": "표지 전체(사진+잉크 밴드) 높이 — 빌더가 boxH+band 로 계산한다. 기본 690"
+          "description": "표지 최소 높이(기본 690)."
         },
         "fadeTop": {
           "type": "integer",
           "minimum": 100,
           "maximum": 800,
-          "description": "잉크 번짐 시작 y — 빌더가 boxH-180 으로 계산한다"
+          "description": "잉크 번짐 시작 y — 빌더가 boxH-180 으로 계산한다 ⚠️ 2026-09-03 이후 빌더가 보내지 않는다 — 끌어올림은 object-position 이 한다."
+        },
+        "coverMax": {
+          "type": "integer",
+          "description": "표지가 늘어날 수 있는 한계 — 원본이 폭 1080 에서 갖는 높이 + 잉크 밴드. 그 위로는 사진을 늘리게 된다."
         }
       }
     },

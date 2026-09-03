@@ -80,29 +80,35 @@ function heroShift(fileName, boxH = PHOTO_BOX_H) {
     throw new Error(
       `조감도가 가로로 너무 길다 — 1080px 폭에 맞추면 세로가 ${renderH}px 라 표지 칸(${boxH}px)을 못 채운다: ${fileName}`,
     );
-  const shift = Math.round((renderH - boxH) * SKY_KEEP);
-  /* 건설사 고지문은 원본 맨 아래에 박힌다 — 보이는 창이 하단 5% 를 건드리면 알려 준다. */
-  if (shift + boxH > renderH * 0.95)
-    console.log(`   ⚠ ${fileName}: 크롭 하단이 원본 아래 5% 에 닿는다 — 건설사 고지문이 보일 수 있다`);
-  return shift;
+  return renderH;
 }
 
 /** 표지(사진+잉크 밴드) 한 벌. 칸을 키우면 밴드와 번짐 시작점이 같이 내려간다. */
 const BAND_H = 690 - PHOTO_BOX_H; // 244 — 사진 아래 잉크 밴드(제목이 앉는 자리)의 기본 높이
 function heroOf(d) {
-  const boxH = d.photo?.boxH ?? null;
-  /* 제목 위 검은 띠가 넓다는 지적(오너 2026-08-08) → 밴드 높이도 카드가 정한다.
-     사진을 못 키우는 카드(원본 세로가 짧은 더샵)는 밴드만 줄여도 사진이 넓어 보인다. */
-  const band = d.photo?.band ?? null;
-  const H = boxH ?? PHOTO_BOX_H;
-  const B = band ?? BAND_H;
-  const extra = boxH || band ? { boxH: H, coverH: H + B, fadeTop: H - 180 } : {};
+  /* ── 표지는 **늘어난다**(오너 지시 2026-09-03: "내용이 적을수록 사진이 더 크게") ──
+   * 종전에는 카드마다 `photo.boxH` 를 손으로 정해 사진 칸을 키웠다. 그 방식의 문제는 늘 같았다:
+   * 종이가 얼마나 남기는지는 **그려 봐야 알고**, 손으로 정한 값은 다음 카드에서 다시 틀린다
+   * (목동 카드에서 105px 을 재고도 102px 을 올리자 특이사항이 2px 겹쳐 검수가 막았다).
+   *
+   * 그래서 판형이 스스로 하게 바꿨다. 표지는 `flex:1` 로 남는 세로를 먹고, 사진 칸은 표지에서
+   * 잉크 밴드를 뺀 나머지 전부다. 빌더가 주는 것은 **상한 하나**뿐이다 —
+   * 원본이 폭 1080 에서 갖는 높이(+밴드). 그 위로 늘리면 사진을 잡아 늘이는 셈이다.
+   *
+   * `boxH`/`shift`/`fadeTop` 은 더 이상 보내지 않는다. 끌어올림(남는 세로의 42.5%)은
+   * 템플릿의 `object-position: 50% 42.5%` 가 레이아웃 시점에 같은 규칙으로 한다. */
+  const band = d.photo?.band ?? BAND_H;
+  const minCover = (d.photo?.boxH ?? PHOTO_BOX_H) + band;
+  const file = d.photo?.photo ?? d.photo?.file ?? null;
+  const name = file ?? "seoul-apart-night.jpg";
+  /* heroShift 는 이제 원본이 폭 1080 에서 갖는 높이를 돌려준다 — 이름은 옛것이지만
+     하는 일은 "이 사진을 늘리지 않고 쓸 수 있는 최대 높이"를 재는 것이다.
+     가로로 너무 긴 사진(기본 칸도 못 채우는)은 여기서 여전히 던진다. */
+  const renderH = heroShift(name, d.photo?.boxH ?? PHOTO_BOX_H);
+  const extra = { coverH: minCover, coverMax: renderH + band, ...(d.photo?.band ? { band } : {}) };
   return d.photo
-    ? { photo: d.photo.file, credit: d.photo.credit, shift: heroShift(d.photo.file, H), ...extra }
-    : {
-        photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true,
-        shift: heroShift("seoul-apart-night.jpg", H), ...extra,
-      };
+    ? { photo: d.photo.file, credit: d.photo.credit, ...extra }
+    : { photo: "seoul-apart-night.jpg", credit: "조감도 미확보", placeholder: true, ...extra };
 }
 
 /**
