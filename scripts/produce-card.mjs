@@ -12,7 +12,7 @@
  * 실행: node scripts/produce-card.mjs <세트라벨>   (예: tohuh-rank)
  */
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
-import { buildersForSet } from "./lib/builders-for-set.mjs";
+import { buildersForSet, setFullyCovered } from "./lib/builders-for-set.mjs";
 import { spawnSync } from "node:child_process";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -37,6 +37,45 @@ if (!set) {
 const mine = buildersForSet(set, builders);
 if (!mine.length) {
   console.log(`::error::이 세트를 만드는 빌더가 없습니다 — "${label}". 새 소재의 첫 제작은 작업 세션(사람)이 필요합니다.`);
+  process.exit(1);
+}
+
+/* ── ⚠️ **한 장도 빠짐없이 덮여야 한다** (2026-09-03)
+ *
+ * 위 검사는 「빌더가 **하나라도** 있나」만 본다. 전부 빠졌을 때는 잡지만
+ * **여러 장 중 한 장만** 빠졌을 때는 통과시킨다. 그때 벌어지는 일이 진짜 사고다:
+ *   ① 그 한 장은 안 만들어진다
+ *   ② 그런데 아래 `contentOf(slug)` 는 **옛 날짜 폴더의 JSON** 을 집어 온다
+ *   ③ `assertFreshest` 는 `_spike` 하고만 견주므로 그 옛 판본을 통과시킨다
+ *   ④ 렌더가 옛 그림을 그리고, `confirm` 이 **그 md5 를 확정 증거로 박는다**
+ * 「`--publish` 를 빼면 옛 판본을 확정한다」와 **똑같은 사고**인데,
+ * `--publish` 는 코드가 막고 있었고 이쪽은 아무도 안 막고 있었다.
+ *
+ * 신고가 빌더는 라벨이 로마자(`singo-gwanggyo-…`)이고 카드 이름은 한글
+ * (`singo-광교중흥에스클래스-84`)이라, 세트가 빌더를 찾는 길은 **`produces` 하나뿐**이다.
+ * 등록할 때 그 한 줄을 빠뜨리기 쉽다 — 09-03 에 11개를 전부 빠뜨려 확정이 통째로 막혔다.
+ * 그때는 크게 막혀서 바로 알았지만 **하나만 빠뜨렸으면 몰랐을 것이다.**
+ *
+ * `setFullyCovered` 는 `builders-for-set.mjs` 에 **이미 있었다**(관제탑 스모크만 쓰고 있었다).
+ * 배포 직전에 잡는 것보다 **만드는 자리에서** 잡는 것이 맞다 — 여기서 부른다. */
+if (!setFullyCovered(set, builders)) {
+  const base = (c) => String(c).replace(/-p\d+$/, "");
+  const naked = (set.cards ?? []).filter(
+    (c) =>
+      !builders.some(
+        (b) =>
+          (Array.isArray(b.produces) && b.produces.includes(c)) ||
+          c.startsWith(b.label) ||
+          b.label.startsWith(base(c)),
+      ),
+  );
+  console.log(
+    `::error::세트의 카드 ${naked.length}장을 만드는 빌더가 없습니다 — "${label}"\n` +
+      naked.map((c) => `   · ${c}`).join("\n") +
+      `\n→ data/review/builders.json 의 해당 항목에 "produces": ["<카드이름>"] 을 넣으세요.\n` +
+      `   빌더 라벨은 로마자·카드 이름은 한글이라 produces 말고는 서로를 찾을 길이 없습니다.\n` +
+      `   이대로 두면 그 장은 **어제 판본이 그대로 렌더돼 확정 증거로 박힙니다**.`,
+  );
   process.exit(1);
 }
 

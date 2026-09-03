@@ -69,6 +69,11 @@ jobs:
 
   gate2:
     needs: try1
+    # ⚠️ `always()` — 앞 칸이 **실패해도** 이어받는다 (2026-09-03)
+    #    공급면적 워크플로가 실패 시 빨간불로 끝나도록 바뀌었다. `always()` 가 없으면
+    #    `needs` 가 실패한 순간 이 문지기가 건너뛰어져 **사다리가 첫 칸에서 끊긴다** —
+    #    사다리는 원래 '실패했을 때' 쓰는 것이므로 그건 정반대다.
+    if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs: { go: "${{ steps.q.outputs.go }}" }
@@ -97,6 +102,11 @@ jobs:
 
   gate3:
     needs: try2
+    # ⚠️ `always()` — 앞 칸이 **실패해도** 이어받는다 (2026-09-03)
+    #    공급면적 워크플로가 실패 시 빨간불로 끝나도록 바뀌었다. `always()` 가 없으면
+    #    `needs` 가 실패한 순간 이 문지기가 건너뛰어져 **사다리가 첫 칸에서 끊긴다** —
+    #    사다리는 원래 '실패했을 때' 쓰는 것이므로 그건 정반대다.
+    if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs: { go: "${{ steps.q.outputs.go }}" }

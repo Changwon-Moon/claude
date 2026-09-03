@@ -69,7 +69,14 @@ jobs:
           BUDGET="${{ github.event.inputs.budget }}"
           MIN="${{ github.event.inputs.min }}"
           Q=data/apt-universe-queue.txt
-          if [ -z "$BUDGET$MIN" ] && [ -f "$Q" ]; then
+          # ⛔ **예약 런은 대기열을 읽지 않는다** (2026-09-03)
+          #    여기는 특히 위험하다 — 명부 문서가 오너에게 "문턱을 바꾸려면 `min=1500` 한 줄을
+          #    밀어 넣는다"고 가르친다. 그 줄이 남아 있으면 **매월 1일 예약이 명부를 영구히
+          #    1,500세대로 좁힌다.** 한 번 민 쪽지가 상시 설정이 되는 것이다
+          #    (2026-08-19 `months=1` 사고와 같은 모양).
+          EVT="${{ github.event_name }}"
+          if [ -z "$BUDGET$MIN" ] && [ -f "$Q" ] \
+             && { [ "$EVT" = "push" ] || [ "$EVT" = "workflow_dispatch" ]; }; then
             LINE=$(grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' | tail -1)
             echo "대기열 마지막 줄: ${LINE:-(비어 있음)}"
             for kv in $LINE; do
