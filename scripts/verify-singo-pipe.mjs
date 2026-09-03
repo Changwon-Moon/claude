@@ -114,6 +114,25 @@ head("⑦ 자료가 없으면 그 줄을 안 붙이는가");
   check("세대수: 이름으로 자동 매칭하지 않는다", b.includes("이름으로 자동 매칭하지 않"));
   check("세대수: 열쇠는 --kapt 또는 판정 로그에서만 온다", b.includes("KAPT_ARG ?? hit.kaptCode"));
   check("세대수: 열쇠가 어디서 왔는지 카드에 남긴다", b.includes("KAPT_FROM") && b.includes("keyFrom"));
+  /* ── 이름 사전 (2026-09-03) — 오너가 고친 제목이 다음 달에 조용히 되돌아가지 않게 */
+  check("이름: 사전을 대장 코드로 짚는다", b.includes("nameBook[KAPT]"));
+  check("이름: --name 이 사전보다 앞이다", b.includes("NAME_OVERRIDE || (MERGE ? APT : BOOK_HIT?.name"));
+  check("이름: 바꿔 적었으면 원래 신고명을 카드에 남긴다", b.includes("이름 사전으로 바꿔 적었다"));
+  {
+    const bk = join(ROOT, "data/review/apt-names.json");
+    if (!existsSync(bk)) check("이름 사전 파일이 있다", false);
+    else {
+      const names = JSON.parse(readFileSync(bk, "utf8")).names ?? {};
+      const hh = join(ROOT, "data/datasets/apt-hhld.json");
+      const byKapt = existsSync(hh) ? JSON.parse(readFileSync(hh, "utf8")).byKapt ?? {} : {};
+      /* ⚠️ 대장에 없는 코드는 **영영 안 듣는 항목**이다 — 오타 하나면 조용히 죽는다 */
+      const ghost = Object.keys(names).filter((k) => Object.keys(byKapt).length && !byKapt[k]);
+      check(`이름 사전의 코드가 전부 대장에 있다 (${Object.keys(names).length}건)`, !ghost.length, ghost.join(", "));
+      /* ⚠️ 이유 없는 항목은 몇 주 뒤 누군가 무심코 지운다 */
+      const noWhy = Object.entries(names).filter(([, v]) => !v.why).map(([k]) => k);
+      check("이름 사전 항목마다 왜 고쳤는지가 적혀 있다", !noWhy.length, noWhy.join(", "));
+    }
+  }
 }
 
 /* ⑧ 라벨이 곡선을 피하는가 (2026-08-16c) — 자리가 고정이던 시절 서초포레스타2단지에서

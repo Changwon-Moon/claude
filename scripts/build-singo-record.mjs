@@ -1005,8 +1005,34 @@ function addressLine(lawdCd, guName, umd) {
 }
 const specAddr = addressLine(hit.lawdCd, hit.gu, hit.umdNm);
 
-/* 카드에 찍을 이름 — `--name` 이 있으면 그것, `--merge-blocks` 면 합친 이름, 없으면 신고명. */
-const DISPLAY_NAME = NAME_OVERRIDE || (MERGE ? APT : hit.aptNm);
+/* ── 카드에 찍을 이름 — **이름 사전**이 그 사이에 있다 (2026-09-03 오너 지시)
+ *
+ * 오너: *"안그래도 단지명을 내가 수정해야 하는 상황들도 생길 것 같고."*
+ *
+ * 예전엔 오너가 고친 제목이 **그 빌더 한 줄에만** 붙었다(`--name`). 그러면 같은 단지가
+ * 다음 달에 **다른 평형으로** 또 신고가를 쓸 때 원래 신고명으로 되돌아간다 —
+ * 오너가 같은 지적을 두 번 하게 되는 자리다. 이 공장이 이미 배운 것이 있다:
+ * **두 번 받은 지적은 코드로 내린다.**
+ *
+ * 그래서 `data/review/apt-names.json` 에 **대장 코드로** 적어 둔다. 이름이 아니라 코드로
+ * 짚는 이유는 늘 같다 — 이름으로 짚으면 남의 단지에 붙는다(상록마을 2026-08-13).
+ *
+ * 우선순위: ① `--name`(그 한 장만 · 언제나 이김) → ② 사전 → ③ 실거래 신고명 그대로
+ * ⚠️ `--merge-blocks` 로 합친 이름은 사전보다 앞이다 — 그건 이름이 아니라 **무엇을 합쳤나**다. */
+const nameBook = (() => {
+  const bp = P("data/review/apt-names.json");
+  if (!existsSync(bp)) return {};
+  try {
+    return JSON.parse(readFileSync(bp, "utf8")).names ?? {};
+  } catch {
+    console.warn("⚠️ 이름 사전을 읽지 못했습니다(apt-names.json) — 신고명 그대로 갑니다");
+    return {};
+  }
+})();
+const BOOK_HIT = !NAME_OVERRIDE && !MERGE && KAPT ? nameBook[KAPT] : null;
+const DISPLAY_NAME = NAME_OVERRIDE || (MERGE ? APT : BOOK_HIT?.name || hit.aptNm);
+if (BOOK_HIT && BOOK_HIT.name !== hit.aptNm)
+  console.log(`ⓘ 이름 사전 — 「${hit.aptNm}」 → 「${BOOK_HIT.name}」 (${BOOK_HIT.why ?? "이유 미기재"} · ${BOOK_HIT.by ?? "?"} ${BOOK_HIT.at ?? ""})`);
 /* 주차대수 — **세대당 몇 대**로 적는다(오너 2026-08-16 "주차대수 0.0대").
    ⚠️ 총 대수만 적으면 큰 단지가 무조건 좋아 보인다. 사람이 궁금한 건 "내 차 댈 데 있나"다.
    ⚠️ 자료가 없으면 **줄을 안 붙인다.** 짐작해 적는 순간 오보다 —
@@ -1154,6 +1180,11 @@ const card = {
       `singo-history: ${histPath.replace(ROOT + "/", "")} (${hist.meta.monthsTried}개월 · 실패 ${hist.meta.monthsFailed})`,
       ...(NAME_OVERRIDE
         ? [`⚠️ 카드 이름을 줄여 적었다: 실거래 신고명 "${hit.aptNm}" → 카드 "${NAME_OVERRIDE}" (--name, 오너 지시)`]
+        : []),
+      /* 사전이 이름을 바꿨으면 **원래 신고명과 이유를 같이 남긴다.**
+         "이 단지 맞나"를 나중에 되물을 수 있어야 한다 — 바뀐 이름만 남으면 되짚을 길이 없다. */
+      ...(BOOK_HIT && BOOK_HIT.name !== hit.aptNm
+        ? [`⚠️ 이름 사전으로 바꿔 적었다: 실거래 신고명 "${hit.aptNm}" → 카드 "${BOOK_HIT.name}" (${BOOK_HIT.why ?? "이유 미기재"} · ${BOOK_HIT.by ?? "?"} ${BOOK_HIT.at ?? ""} · data/review/apt-names.json)`]
         : []),
     ],
     baselineFrom: hist.meta.from,
