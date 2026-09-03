@@ -14,6 +14,24 @@
  * 다만 무엇이 실패했는지 ::warning 으로 소리 낸다 — 조용히 빠뜨리지 않는다.
  *
  * 실행: node scripts/rebuild-cards.mjs
+ *      node scripts/rebuild-cards.mjs --only "카드슬러그,카드슬러그"
+ *
+ * ── ⚠️ `--only` — **판정만** 좁힌다. 만드는 것도 검수하는 것도 여전히 전부다 (2026-09-03)
+ *
+ * 이 단계는 `confirm.mjs` 안에서도 돈다. 그런데 전수라서 **남의 카드 한 장이 내 세트의
+ * 확정을 통째로 막았다.** 09-03 실측 두 건:
+ *   · 다른 세션이 `danji-cover` 판형을 고치자 `danji-songpa`·`danji-guri` 가 푸터 넘침으로
+ *     빨간불 → 신고가 11장 확정이 막혔다
+ *   · 같은 세션의 `danji-mokdong` 이 강조색 전수에 걸려 → 또 막혔다
+ * 둘 다 **남이 확정한/검토 중인 카드**라 이쪽에서 고칠 수 없다(저장소 규칙). 그래서
+ * 손으로 커밋했는데, **손으로 커밋한다는 것은 그 뒤 검사를 아무도 안 돌린다는 뜻**이다.
+ * 문지기가 사람을 우회하게 만들면 그 문지기는 이미 진 것이다.
+ *
+ * → 그래서 판정 범위만 좁힌다:
+ *   · 내 세트 카드가 깨지면 → ❌ 막는다 (예전과 똑같다)
+ *   · 남의 카드가 깨지면    → ⚠️ **이름을 적어 알린다.** 막지는 않는다.
+ *     그 카드는 자기 확정 차례와 세션 마감(`--only` 없이 도는 자리)에서 막힌다.
+ *   · `--only` 없이 돌리면 예전 그대로 **전부** 막는다 — 공장 전체를 보는 자리는 거기다.
  */
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { spawnSync } from "node:child_process";
@@ -28,10 +46,25 @@ if (!existsSync(MANIFEST)) {
   process.exit(0);
 }
 
+/** `--only a,b,c` — 판정 대상 카드 슬러그. 없으면 전부가 판정 대상이다(예전 동작). */
+const ONLY = (() => {
+  const i = process.argv.indexOf("--only");
+  const v = i >= 0 ? process.argv[i + 1] : undefined;
+  if (!v || v.startsWith("--")) return null;
+  const s = new Set(v.split(",").map((x) => x.trim()).filter(Boolean));
+  return s.size ? s : null;
+})();
+/** 이 빌더가 내 판정 범위 안인가 — `produces` 에 적힌 카드로 본다(이름 규칙을 추측하지 않는다). */
+const builderInScope = (b) =>
+  !ONLY || (Array.isArray(b.produces) ? b.produces.some((c) => ONLY.has(c)) : ONLY.has(b.label));
+const slugOfPath = (p) => p.split("/").pop().replace(/\.json$/, "");
+
 const { builders } = JSON.parse(readFileSync(MANIFEST, "utf8"));
 let ok = 0;
 let bad = 0;
 let qaBad = false;
+/** 판정 밖(다른 세트)에서 깨진 것들 — 막지는 않지만 **반드시 이름을 적는다** */
+const otherBad = [];
 for (const b of Array.isArray(builders) ? builders : []) {
   /* ── 굳힌 카드는 **다시 그리지 않는다** (2026-08-28)
    *
@@ -59,7 +92,7 @@ for (const b of Array.isArray(builders) ? builders : []) {
   const cmd = join(ROOT, b.cmd);
   if (!existsSync(cmd)) {
     console.log(`::warning::빌더 파일 없음 — ${b.label}: ${b.cmd}`);
-    bad++;
+    if (builderInScope(b)) bad++; else otherBad.push(`${b.label} (빌더 파일 없음)`);
     continue;
   }
   console.log(`▶ ${b.label} — node ${b.cmd} ${(b.args || []).join(" ")}`);
@@ -67,7 +100,7 @@ for (const b of Array.isArray(builders) ? builders : []) {
   if (r.status === 0) ok++;
   else {
     console.log(`::warning::빌더 실패 — ${b.label} (exit ${r.status})`);
-    bad++;
+    if (builderInScope(b)) bad++; else otherBad.push(`${b.label} (빌더 실패)`);
   }
 }
 console.log(`\n🃏 카드 재생성 — 성공 ${ok} · 실패 ${bad}`);
@@ -107,7 +140,26 @@ if (existsSync(SETS)) {
     });
     if (r.status !== 0) {
       console.log("::warning::디자인 검수에서 문제가 발견됐습니다 — 위 항목을 고치세요");
-      qaBad = true;
+      if (!ONLY) qaBad = true;
+      else {
+        /* ⚠️ 검수는 **전수로 이미 돌았다**(위 표에 다 찍혔다). 여기서는 「내 카드도 깨졌나」만
+           다시 잰다 — 내 카드만 놓고 한 번 더 돌린다. 실패했을 때만 도는 두 번째 판이다.
+           남의 카드가 깨진 것은 아래에서 이름을 적어 알린다 — 조용히 넘기지 않는다. */
+        const mine = targets.filter((p) => ONLY.has(slugOfPath(p)));
+        if (mine.length) {
+          console.log(`\n🧐 디자인 검수(판정 범위만) ${mine.length}장`);
+          const r2 = spawnSync("pnpm", ["-s", "--filter", "@wirit/renderer", "qa", ...mine], {
+            cwd: ROOT,
+            stdio: "inherit",
+          });
+          if (r2.status !== 0) qaBad = true;
+          else otherBad.push("디자인 검수 — 판정 밖 카드에서 실패(위 표 참고)");
+        } else {
+          /* 넘긴 슬러그가 검수 대상에 하나도 없다 = 판정할 것이 없다. 그건 초록불이 아니다. */
+          console.log("::warning::--only 로 넘긴 카드가 검수 대상에 없습니다 — 판정할 것이 없어 실패로 봅니다");
+          qaBad = true;
+        }
+      }
     }
   }
 }
@@ -157,6 +209,14 @@ if (existsSync(SETS)) {
  *    그래서 "빨간불"은 여기서 **한 번에** 낸다. 앞에서 던지지 않는다.
  * ⚠️ 접수가 끝난 청약 카드처럼 **다시는 안 만들어지는 것**은 고칠 게 아니라 은퇴시킨다:
  *    `node scripts/retire-danji.mjs <라벨>` — 그러면 목록에서 빠져 빨간불도 사라진다. */
+/* 판정 밖에서 깨진 것은 **반드시 적는다.** 안 보이게 하는 순간 이 예외는 구멍이 된다. */
+if (otherBad.length) {
+  console.log(
+    `\n⚠️ 판정 밖(다른 세트)에서 ${otherBad.length}건 깨졌습니다 — 여기서는 막지 않습니다:\n` +
+      otherBad.map((x) => `   · ${x}`).join("\n") +
+      `\n   그 카드는 자기 확정 차례와 세션 마감(--only 없이 도는 자리)에서 막힙니다.`,
+  );
+}
 if (bad > 0 || qaBad) {
   console.log(
     `\n⛔ 재생성 실패 ${bad}건${qaBad ? " · 디자인 검수 실패" : ""} — 종료코드 1 로 끝냅니다.\n` +

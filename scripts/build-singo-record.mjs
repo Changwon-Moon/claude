@@ -1027,8 +1027,40 @@ if (KAPT) {
      * 자료가 스스로 "이건 이상하다"고 말하는데 그 말이 카드까지 못 오면, 그 경고는 없는 것이다.
      *
      * 그래서 **멈춘다.** 정말 그런 단지라면 사람이 확인하고 `--accept-supply-warn` 로 통과시키고,
-     * 그 사실은 meta 에 남는다 — 나중에 "왜 29평이지?" 를 되짚을 수 있어야 한다. */
-    if (supply.warn && !flag("accept-supply-warn")) {
+     * 그 사실은 meta 에 남는다 — 나중에 "왜 29평이지?" 를 되짚을 수 있어야 한다.
+     *
+     * ── ⚠️⚠️ **새 기준은 앞으로 만들 카드에만 적용한다** (오너 2026-09-03)
+     *
+     * *"기존에 이미 발행한 카드를 왜 소급해? 확정된 카드는 이미 인스타 올라간 거야.
+     *   기준 바꾸면 새롭게 만들어지는 것에 대해서만 적용해야지."*
+     *
+     * 이 문지기를 단 날, **이미 오너가 확정해 인스타에 올라간 카드 9장**이 소급해서 막혔다
+     * (서초포레스타2단지·꿈의숲아이파크·개봉 한마을 등 — 전용률 58~70%). 그 카드들은
+     * **그때 기준으로 오너가 그 평 표기를 보고 확정한 것**이다. 나중에 생긴 잣대로 되짚어
+     * 「너는 틀렸다」고 하는 것은 문지기가 할 일이 아니다 — 이미 나간 것은 고칠 수도 없다.
+     *
+     * → 그래서 `sets.json` 에서 **이 카드가 이미 「오너 확정」인지** 보고, 그렇다면 통과시킨다.
+     *   대신 ⓘ 로 한 줄 적는다 — 조용히 넘기지는 않는다.
+     * ⚠️ **아직 확정 안 된 카드에는 그대로 막는다.** 그게 이 문지기의 자리다.
+     * ⚠️ 이 예외는 「확정됐다」는 사실 하나로만 열린다. 그 사실은 사람이 못 위조한다 —
+     *    확정은 `confirm.mjs` 만 쓰고, 그때 md5 증거가 함께 박힌다. */
+    const publishedSlug = `singo-${full(APT)}-${TYPE}`;
+    const alreadyConfirmed = (() => {
+      try {
+        const S = JSON.parse(readFileSync(P("data/review/sets.json"), "utf8"));
+        return (S.sets ?? []).some((s) => s.state === "오너 확정" && (s.cards ?? []).includes(publishedSlug));
+      } catch {
+        return false;
+      }
+    })();
+    if (supply.warn && alreadyConfirmed) {
+      console.log(
+        `ⓘ 공급면적 경고가 있지만 **이미 오너가 확정·발행한 카드**라 그대로 그립니다 — ${publishedSlug}\n` +
+          `   (${supply.warn})\n` +
+          `   새 기준은 앞으로 만들 카드에만 적용합니다(오너 2026-09-03).`,
+      );
+    }
+    if (supply.warn && !alreadyConfirmed && !flag("accept-supply-warn")) {
       throw new Error(
         `공급면적 자료에 경고가 붙어 있습니다: ${sp}\n` +
           `   ⚠️ ${supply.warn}\n` +

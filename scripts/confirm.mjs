@@ -160,6 +160,20 @@ for (const label of labels) {
 writeJson("data/review/sets.json", sets);
 writeJson("data/review/pixel-baselines.json", baselines);
 
+/* ── 「머리 규격 전수」의 **판정 범위** — 지금 확정하는 세트의 카드들 (2026-09-03 오너 지시)
+ *
+ * 이 검사는 `data/content` 전체를 훑는데, 그대로 두면 **남의 카드 한 장이 내 세트의 확정을
+ * 통째로 막는다.** 09-03 에 신고가 11장이 `danji-mokdong`(다른 세션이 그날 만든, 아직
+ * 「오너 검토 대기」인 카드) 때문에 막혔다. 남이 확정한 카드는 건드리지 않는 게 규칙이라
+ * 고칠 수도 없어 **손으로 커밋**했는데, 손으로 커밋한다는 것은 **그 뒤 검사를 아무도
+ * 안 돌린다**는 뜻이다. 문지기가 사람을 우회하게 만들면 그 문지기는 이미 진 것이다.
+ *
+ * 그래서 판정만 좁힌다. 표는 여전히 전수이고 남의 위반도 ⚠️ 로 크게 찍힌다 —
+ * 그 카드는 **자기 확정 차례**와 **세션 마감**(`close-session.mjs`, --only 없이 돈다)에서 막힌다. */
+const scopeCards = [...new Set(labels.flatMap((l) => (sets.sets || []).find((s) => s.label === l)?.cards ?? []))];
+if (!scopeCards.length) die("확정하려는 세트에 카드가 없습니다 — 판정 범위를 만들 수 없습니다");
+console.log(`\n   ⓘ 판정 범위: 이 세트의 카드 ${scopeCards.length}장 (남의 카드가 깨진 것은 알림으로만 — 막지 않습니다)`);
+
 console.log("\n══════ 내보내기 전 검사(§0) ══════");
 for (const [name, cmd, args] of [
   /* ⚠️ 순서가 중요하다 — 서명 검사가 **재생성보다 앞이면** 아무 의미가 없다.
@@ -174,18 +188,22 @@ for (const [name, cmd, args] of [
      `wolse-flip` 두 캡션이 서명을 잃은 채 남아 있었다(실측).
      → **카드를 만드는 것들을 먼저 다 돌리고, 서명은 맨 마지막에 붙인 뒤 검사한다.**
         "재생성 뒤"라는 규칙은 그대로다. 다만 재생성하는 것이 하나가 아니었을 뿐이다. */
-  ["전 카드 재생성·검수", "node", ["scripts/rebuild-cards.mjs"]],
+  ["전 카드 재생성·검수", "node", ["scripts/rebuild-cards.mjs", "--only", scopeCards.join(",")]],
   ["관제탑 화면 생성", "node", ["scripts/build-tower-site.mjs"]],
   ["관제탑 스모크", "node", ["scripts/smoke-tower.mjs"]],
-  ["머리 규격 전수", "pnpm", ["-s", "--filter", "@wirit/renderer", "audit-head"]],
+  ["머리 규격 전수", "pnpm", ["-s", "--filter", "@wirit/renderer", "audit-head", "--", "--only", scopeCards.join(",")]],
   ["픽셀 회귀·자가진단", "node", ["scripts/doctor.mjs"]],
   ["캡션 고정 서명 반영 (반드시 맨 뒤)", "node", ["scripts/apply-signature.mjs"]],
   ["캡션 고정 서명 확인", "node", ["scripts/apply-signature.mjs", "--check"]],
 ]) {
   const r = sh(cmd, args, { quiet: true });
-  const tail = (r.stdout || "").trim().split("\n").slice(-3).join("\n");
+  const lines = (r.stdout || "").trim().split("\n");
   console.log(`${r.status === 0 ? "✅" : "❌"} ${name}`);
-  if (r.status !== 0) { console.log(tail); die(`${name} 실패 — 확정 기록은 남았지만 커밋하지 않습니다`); }
+  /* ⚠️ **통과해도 경고는 보여 준다.** 「판정 밖(다른 세트)」 위반이 여기 실려 오는데,
+     quiet 로 삼켜 버리면 「알림으로 넘긴다」가 「없는 셈 친다」가 된다(2026-09-03). */
+  for (const l of lines) if (/⚠️|⛔/.test(l)) console.log(`   ${l.trim()}`);
+  /* 실패는 꼬리 열두 줄 — 세 줄이면 어긋난 카드 목록이 잘려 나가 무엇이 문제인지 안 보였다. */
+  if (r.status !== 0) { console.log(lines.slice(-12).join("\n")); die(`${name} 실패 — 확정 기록은 남았지만 커밋하지 않습니다`); }
 }
 
 if (noCommit) { console.log("\n(--no-commit) 커밋하지 않았습니다."); process.exit(0); }

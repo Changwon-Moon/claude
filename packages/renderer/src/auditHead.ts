@@ -7,6 +7,29 @@
  * 나란히 놓고서야 보이는 이 문제를 아무도 못 잡았다. 전수 표로 한눈에 비교한다.
  *
  * 실행: pnpm --filter @wirit/renderer audit-head
+ *      pnpm --filter @wirit/renderer audit-head -- --only "카드슬러그,카드슬러그"
+ *
+ * ── ⚠️ `--only` — **판정만** 좁힌다. 표는 언제나 전수다 (2026-09-03 오너 지시)
+ *
+ * 이 검사는 `data/content` 의 **모든 카드**를 훑는다. 그게 맞다 — 여러 장을 나란히 놓고서야
+ * 보이는 문제를 잡는 검사이기 때문이다. 그런데 `confirm.mjs` 가 이걸 그대로 쓰면서
+ * **한 세트의 확정이 남의 카드 때문에 막히는** 일이 생겼다.
+ *
+ * 2026-09-03 실측: 신고가 11장을 확정하는데 `danji-mokdong` 한 장이 빨간불이었다.
+ * 그 카드는 **다른 세션이 그날 만든, 아직 「오너 검토 대기」인 카드**다. 남이 확정한 카드는
+ * 건드리지 않는다는 규칙 때문에 고칠 수도 없고, 그래서 내 세트는 손으로 커밋할 수밖에 없었다.
+ * **손으로 커밋한다는 것은 그 뒤의 검사를 아무도 안 돌린다는 뜻이다** — 문지기가 사람을
+ * 우회하게 만들면 그 문지기는 이미 진 것이다.
+ *
+ * 그래서 판정을 **확정하려는 세트의 카드로** 좁힌다. 규칙은 이렇다:
+ *   · 내 세트 카드가 어긋나면 → ❌ 막는다 (예전과 똑같다)
+ *   · 남의 카드가 어긋나면    → ⚠️ **크게 적어서 알린다.** 막지는 않는다.
+ *     그 카드의 확정은 어차피 자기 차례에 이 검사에 걸린다.
+ *   · `--only` 없이 돌리면(세션 마감 `close-session.mjs`) 예전 그대로 **전부** 막는다 —
+ *     공장 전체가 깨끗한지 보는 자리는 거기다.
+ *
+ * ⚠️ 「알림으로 넘긴다」를 「없는 셈 친다」로 만들지 말 것. 남의 카드도 표에 그대로 찍히고
+ *    끝에 이름이 다시 나온다. 안 보이게 하는 순간 이 예외는 구멍이 된다.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -17,6 +40,16 @@ import { getBrowser, closeBrowser } from "./screenshot.js";
 
 const ROOT = path.resolve(process.cwd(), "../..");
 const CONTENT = path.join(ROOT, "data/content");
+
+/** `--only a,b,c` — 판정 대상 카드. 없으면 전부가 판정 대상이다(예전 동작). */
+const ONLY: Set<string> | null = (() => {
+  const i = process.argv.indexOf("--only");
+  const v = i >= 0 ? process.argv[i + 1] : undefined;
+  if (!v || v.startsWith("--")) return null;
+  const s = new Set(v.split(",").map((x) => x.trim()).filter(Boolean));
+  return s.size ? s : null;
+})();
+const inScope = (slug: string) => !ONLY || ONLY.has(slug);
 
 const MEASURE = `(() => {
   var card = document.querySelector(".wirit-card");
@@ -160,10 +193,11 @@ async function main() {
   console.log("카드".padEnd(24) + "템플릿".padEnd(22) + "위여백  뱃지판   글자   흰테두리  상단캡션");
   console.log("─".repeat(100));
   let bad = 0;
+  const badOther: string[] = [];
   for (const r of rows) {
     const cover = isCover(r);
     const violated = !cover && [okPad(r), okBadge(r), okMark(r), okBorder(r), okCap(r)].some((f) => !f);
-    if (violated) bad++;
+    if (violated) { if (inScope(r.slug)) bad++; else badOther.push(r.slug); }
     const pad = cover ? " 표지 " : okPad(r) ? (r.padTop === 72 ? "  ✅  " : ` ⬆${String(r.padTop).padStart(3)} `) : ` ❌${String(r.padTop).padStart(3)} `;
     console.log(
       r.slug.padEnd(24) +
@@ -177,6 +211,11 @@ async function main() {
   }
   console.log("─".repeat(100));
   console.log(`총 ${rows.length}장 · 규격 위반 ${bad}장 (표지형 예외 ${rows.filter(isCover).length}장 제외)\n`);
+  if (badOther.length)
+    console.log(
+      `   ⚠️ 판정 밖(다른 세트) 규격 위반 ${badOther.length}장 — ${badOther.join(", ")}\n` +
+        `      여기서는 막지 않습니다. 그 세트를 확정할 때 그쪽에서 막힙니다.\n`,
+    );
 
   /* ── 강조색 전수 (2026-09-02 오너 "블루, 레드 폰트 컬러들이 조금 기준하고 다른것 같은데")
      렌더된 픽셀에서 읽었으므로 빌더가 넣은 색·SVG 안의 색도 다 걸린다.
@@ -206,10 +245,12 @@ async function main() {
       .sort();
     if (bad2.length) offenders[r.slug] = bad2;
   }
-  const fresh = Object.entries(offenders).filter(([slug, list]) => {
+  const freshAll = Object.entries(offenders).filter(([slug, list]) => {
     const known = baseline[slug] ?? [];
     return list.some((c) => !known.includes(c));
   });
+  const fresh = freshAll.filter(([slug]) => inScope(slug));
+  const freshOther = freshAll.filter(([slug]) => !inScope(slug));
 
   console.log(`🎨 강조색 전수 — 규격 레드 ${RED} · 코발트 ${COBALT}`);
   console.log("   (빨강·파랑 자리의 진한 색만 봅니다. 노선색·면색·회색은 대상이 아닙니다)");
@@ -235,6 +276,24 @@ async function main() {
   } else {
     console.log(`   ❌ 새로 어긋난 카드 ${fresh.length}장 — 토큰(var(--wirit-red)/var(--wirit-cobalt))을 쓰세요`);
     for (const [slug, list] of fresh) console.log(`      ${slug} — ${list.join(" · ")}`);
+  }
+  /* 판정 밖이라도 **반드시 적는다.** 안 보이게 하는 순간 이 예외는 구멍이 된다. */
+  if (freshOther.length) {
+    console.log(`   ⚠️ 판정 밖(다른 세트) 새로 어긋난 카드 ${freshOther.length}장 — 여기서는 막지 않습니다`);
+    for (const [slug, list] of freshOther) console.log(`      ${slug} — ${list.join(" · ")}`);
+    console.log(`      그 카드를 확정할 때 그쪽에서 막힙니다. 세션 마감(--only 없이 도는 자리)에서도 막힙니다.`);
+  }
+  if (ONLY) {
+    const seen = new Set(rows.map((r) => r.slug));
+    const unknown = [...ONLY].filter((s) => !seen.has(s));
+    /* 넘긴 슬러그가 하나도 안 맞으면 **판정할 것이 없다** — 그건 초록불이 아니라 사고다.
+       (백필의 「명부에 없는 구 코드」와 같은 자리: 조용히 0건으로 도는 초록불이 제일 위험하다.) */
+    if (unknown.length) console.log(`   ⚠️ --only 에 넘긴 카드 ${unknown.length}장이 data/content 에 없습니다: ${unknown.join(", ")}`);
+    if (unknown.length === ONLY.size) {
+      console.log(`   ⛔ --only 로 넘긴 카드가 하나도 없습니다 — 판정할 것이 없어 여기서 멈춥니다`);
+      console.log("");
+      process.exit(1);
+    }
   }
   console.log("");
   process.exit(bad > 0 || fresh.length > 0 ? 1 : 0);
