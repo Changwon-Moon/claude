@@ -4,7 +4,31 @@
     <meta charset="utf-8" />
     <!--WIRIT_SHARED_CSS-->
     <style>
-      /* danji-cover@1 — 청약·분양 카드 **표준 판형** (오너 확정 2026-08-03)
+      /* danji-cover-split@1 — 청약·분양 카드 **좌우 판형** (오너 확정 2026-09-03)
+       *
+       * ⚠️ 이것은 `danji-cover@1` 의 **자매 판형**이지 후속이 아니다. 오너 지시:
+       *    "기본 템플릿을 2가지로 가져가려고 해(현재 구도와 좌우구도)".
+       *    표지형은 조감도가 카드를 압도하는 판이고, 이 판은 **제목이 주인공**이다 —
+       *    제목이 세 줄로 서고 사진은 그 옆에서 '어디인지'를 말한다.
+       *
+       * ── 표지형과 다른 곳은 **표지 690px 안쪽뿐**이다.
+       *    종이(밴드·제원·일정·특이사항·푸터)는 한 글자도 다르지 않다 — 그래야 두 판형이
+       *    같은 카드의 두 구도로 읽히고, 종이 쪽 규칙을 두 번 고치지 않는다.
+       *
+       * ── 표지 안 배치
+       *    [부제]
+       *    [사진 452px, 카드 왼쪽 가장자리까지] [제목 3줄]
+       *    [단지명 · 주소 · 로고]  ← 표지형과 같은 행, 같은 규칙
+       *
+       * ── 사진은 **통째로 보인다**(오너 지시 2026-09-03: "축소해서 아래 상가부분과 단지 위
+       *    하늘 부분도 충분히 보이게"). 표지형처럼 끌어올려 자르지 않는다 — 폭만 맞추고
+       *    높이는 비율대로 둔다. 그래서 이 판형에는 `hero.shift` 가 **없다.**
+       *    ⚠️ 같은 데이터로 두 판형을 다 그릴 수 있어야 하므로 shift 를 **무시**할 뿐
+       *       빌더가 안 보내게 하지는 않는다.
+       *
+       * 아래 원본 주석은 `danji-cover@1` 의 것이고, 종이 쪽은 그대로 유효하다.
+       *
+       * danji-cover@1 — 청약·분양 카드 **표준 판형** (오너 확정 2026-08-03)
        *
        * 이 템플릿이 앞으로 청약·분양 카드의 기본이다. 시안 A·B·C 중 C(표지형)가 채택돼
        * 마감 지시 12건을 거쳐 확정됐다. 판형을 바꾸려면 오너 승인이 필요하다
@@ -90,8 +114,12 @@
         font-family: var(--font-title); font-size: 1em; font-weight: 900; line-height: 1.08;
         letter-spacing: -0.035em; color: #fff; white-space: nowrap; width: max-content; max-width: 100%;
       }
-      .dcv-title .hi { color: #7aa6ff; }
-      .dcv-title .up { color: #ff8a8e; }
+      /* ⚠️ 표지형은 여기에 밝은 틴트(#7aa6ff / #ff8a8e)를 쓴다. 그 카드들은 이미 나갔으므로
+         픽셀 불변으로 두지만, **새 판형은 브랜드 토큰을 쓴다** — `audit-head` 의 강조색 전수가
+         정확히 이것을 잡았고(2026-09-03), 기준선 파일도 "새 카드를 여기 넣어 통과시키지 말 것"
+         이라고 못박고 있다. 잉크(#141821) 위에서 코발트 대비는 4.1:1 로, 70px 볼드에는 충분하다. */
+      .dcv-title .hi { color: var(--wirit-cobalt); }
+      .dcv-title .up { color: var(--wirit-red); }
 
       /* 단지명 · 주소 · 로고를 **한 행**에 두고 아랫단을 맞춘다(오너 지시 2026-08-03).
          주소가 단지명 아래 두 번째 줄일 때는 로고만 오른쪽에 홀로 떠 있었다 —
@@ -117,6 +145,63 @@
         filter: brightness(0) invert(1); opacity: 0.95;
       }
 
+      /* ══ 좌우 판형의 표지 ═════════════════════════════════════════════
+       * 표지형은 절대배치(사진 뒤 / 글자 앞)였다. 좌우형은 **흐름 배치**다 —
+       * 부제 · [사진|제목] · 단지명 세 덩어리가 위에서 아래로 쌓인다.
+       * 높이는 **620px** 로 표지형(690)보다 낮다. 표지형은 사진이 표지를 꽉 채우지만 이 판은
+       * 사진이 제 비율대로 앉으므로, 690 을 그대로 쓰면 사진 아래에 잉크만 120px 넘게 남는다
+       * (첫 시안에서 실제로 그랬다). 줄인 70px 은 종이가 가져가고, 최하단 문구의 `margin-top:auto`
+       * 가 그 여유를 흡수한다 — 푸터는 그대로 바닥에 붙는다. */
+      .dcs-cover {
+        position: relative; flex: none; height: 620px; margin: -72px -72px 0;
+        padding: 0 72px 34px; overflow: hidden; background: var(--ink);
+        display: flex; flex-direction: column;
+      }
+      /* 표지형의 부제는 사진 위에 떠 있어 절대배치 + 그림자가 필요했다.
+         여기서는 잉크 위에 그냥 앉으므로 흐름으로 되돌리고 그림자를 뺀다. */
+      .dcs-cover .wirit-topcap {
+        position: static; left: auto; right: auto; top: auto;
+        margin: 0; padding: 46px 0 0; color: rgba(255, 255, 255, 0.82); text-shadow: none;
+      }
+      /* 사진과 제목이 나눠 쓰는 줄. 남는 세로를 이 줄이 먹고, 둘은 가운데에서 만난다. */
+      .dcs-row {
+        flex: 1; min-height: 0; display: flex; align-items: center; gap: 44px;
+      }
+      /* 사진은 **카드 왼쪽 가장자리까지** 나간다(margin-left 로 패딩을 되돌린다).
+         안쪽에 띄우면 잉크 위에 얹힌 '떠 있는 상자'가 되고, 그건 이 브랜드가 버린 그림이다
+         (기준 문서 §3 "떠 있는 상자를 만들지 않는다"). 가장자리에 붙으면 상자가 아니라 **면**이 된다. */
+      /* 폭 500 → 이 조감도(1100×750)에서 세로 341px. 표지 안 사진 줄(418px)을 거의 채워
+         잉크가 뜨지 않는다. 더 키우면 제목 칸이 좁아져 세 줄이 작아지고, 더 줄이면 아래가 빈다. */
+      .dcs-photo { flex: none; width: 500px; margin-left: -72px; line-height: 0; }
+      /* 폭만 맞추고 높이는 비율대로 — 자르지 않으므로 조감도가 통째로 보인다. */
+      .dcs-photo img { display: block; width: 100%; height: auto; }
+      /* 조감도가 없을 때. 표지형과 같은 경고를 쓰되 자리만 이 판에 맞춘다 —
+         출처를 지우는 것과 거짓을 허용하는 것은 다르다(표지형 주석과 같은 이유). */
+      .dcs-photo .dcs-fb {
+        width: 100%; aspect-ratio: 3 / 2; display: flex; align-items: center; justify-content: center;
+        background: #1b202b;
+      }
+      .dcs-photo .dcs-fb .w {
+        font-family: var(--font-title); font-size: 54px; font-weight: 900;
+        color: rgba(255, 255, 255, 0.9); line-height: 1.1; text-align: center; padding: 0 20px;
+      }
+      .dcs-ph {
+        position: absolute; left: 0; top: 118px; padding: 8px 16px; border-radius: 4px;
+        background: rgba(255, 196, 0, 0.92); color: #1a1400;
+        font-size: 22px; font-weight: 800; letter-spacing: -0.01em;
+      }
+      /* 제목 칸. 표지형의 `.dcv-title` 규칙(태백·900·자동 맞춤)을 그대로 쓴다 —
+         다른 것은 **폭**뿐이고, 폭이 좁아진 만큼 __wiritFit 이 알아서 작게 잡는다. */
+      .dcs-ttl { flex: 1; min-width: 0; }
+      /* ⚠️ 표지형의 제목은 **한 줄**이라 줄 간격이 문제가 되지 않았다(1.08). 세 줄로 세우면
+         태백의 위아래 삐침이 이웃 줄을 3px 침범해 검수(textclip)가 막는다 — 실제로 막혔다.
+         1.18 은 그 침범이 사라지는 최소치다. 더 벌리면 세 줄이 한 덩어리로 안 읽힌다. */
+      .dcs-ttl .dcv-title .ln { line-height: 1.18; }
+
+      /* 단지명 행은 표지형과 **같은 규칙**이다(오너 지시: "그 아래 단지명 + 위치 + 로고는 유지").
+         절대배치 안에 있던 것을 흐름으로 꺼내면서 위 여백만 다시 준다. */
+      .dcs-cover .dcv-nm { margin-top: 26px; }
+
       /* ── 종이 위 단: 타입 · 분양가 ──
        * 타입과 금액을 **같은 크기**로 둔다(오너 지시). 위계는 크기가 아니라 색이 만든다 —
        * 타입은 회색, 금액은 잉크, 주력 면적대만 코발트. */
@@ -128,6 +213,11 @@
        *    처음엔 `:has(.frow.four)` 로 걸었는데 그러면 **세 칸짜리 카드가 빠진다** —
        *    충정로가 그래서 아래 여백만 넓었다(2026-08-08 오너 지적). 판형으로 걸어야 맞다. */
       .dcv.scale .dcv-price { margin-top: auto; }
+      /* 좌우 판형은 표지가 620px 이라 종이가 70px 더 넓다. 미는 쪽이 `.dcv-note` 하나뿐이면
+         그 여유가 **전부 아래로 몰려** 일정 줄과 특이사항 사이에 구멍이 난다(첫 시안에서 그랬다).
+         여기에도 auto 를 하나 더 두면 남는 세로를 둘이 반씩 갈라 표가 종이 한가운데에 앉는다 —
+         표지형의 `.scale` 판이 이미 쓰는 방법이고, 오너가 승인한 그림이다(2026-08-06). */
+      .dcs .dcv-price { margin-top: auto; }
       .dcv-price .top { display: flex; align-items: baseline; justify-content: space-between; }
       .dcv-grid { display: grid; column-gap: 22px; row-gap: 20px; }
       /* 타입과 금액은 칸 **가운데** 로 맞춘다(오너 지시 2026-08-03). 왼쪽 맞춤이면 '84A'와
@@ -147,6 +237,14 @@
       /* 코발트는 **금액에만**. 타입은 주력이든 아니든 전부 회색이다(오너 지시 2026-08-03) —
          타입은 금액을 읽기 위한 열쇠지 그 자체가 강조 대상이 아니다. */
       .dcv-item.main .p { color: var(--wirit-cobalt); }
+      /* 범위 라벨(`114~115㎡`)은 대표타입 라벨(`84A`)의 두 배 길이다. 금액과 같은 크기로 두면
+         이 칸이 공통 수치 크기를 통째로 끌어내린다 — 범위일 때만 작게 찍는다(오너 지시 2026-09-03).
+         크기는 CSS 가 아니라 __wiritFit 이 공통 크기의 비율로 정한다(아래 SMALL_A). */
+      .dcv-item .a.sm { letter-spacing: -0.02em; }
+      /* 강조는 원래 금액에만 준다. 꼬리표가 붙은 주력 칸만 예외 — `(국평)` 은 금액을 읽는
+         열쇠가 아니라 **이 카드가 하는 말**이라 라벨까지 코발트로 간다(오너 지시 2026-09-03). */
+      .dcv-item .a.hia { color: var(--wirit-cobalt); }
+      .dcv-item .a .nt { font-size: 0.86em; font-weight: 800; }
       /* '안전마진' 처럼 상승·차익 시그널을 말하는 칸 전용(오너 지시 2026-08-11).
          빨강은 --wirit-red 의 원래 용도(상승·경고 시그널)와 맞다 — 분양가 자체에는 안 쓴다.
          opt-in 클래스라 기존 확정 카드(main 만 쓰는 카드)의 픽셀은 그대로다. */
@@ -274,36 +372,38 @@
     </style>
   </head>
   <body>
-    <div class="wirit-card dcv{{#if scale}} scale{{/if}}">
+    <div class="wirit-card dcv dcs{{#if scale}} scale{{/if}}">
       {{! 표지 사진 칸은 카드마다 키울 수 있다(오너 지시 2026-08-08 "아래 여백이 남는 만큼 사진을 늘려줘").
           기본 446px, 데이터가 hero.boxH 를 주면 그만큼 커지고 잉크 밴드(690px)도 같이 내려간다.
           숫자를 CSS 에 박지 않는 이유는 늘 같다 — 카드마다 달라야 하기 때문이다. }}
-      <div class="dcv-cover"{{#if hero.coverH}} style="height:{{hero.coverH}}px"{{/if}}>
-        <div class="dcv-photo"{{#if hero.boxH}} style="height:{{hero.boxH}}px"{{/if}}>
-          {{#if hero.photo}}
-            <img src="../_shared/photos/{{hero.photo}}" alt=""{{#if hero.shift}} style="top:-{{hero.shift}}px"{{/if}} />
-          {{else}}
-            <div class="dcv-fb"{{#if hero.fallbackColor}} style="background:{{hero.fallbackColor}}"{{/if}}>
-              <span class="w">{{#if hero.fallbackWord}}{{hero.fallbackWord}}{{else}}{{danji.name}}{{/if}}</span>
-            </div>
-          {{/if}}
-          <div class="dcv-topshade"></div>
-        </div>
-        <div class="dcv-fade"{{#if hero.fadeTop}} style="top:{{hero.fadeTop}}px"{{/if}}></div>
-        {{#if hero.placeholder}}<div class="dcv-ph">조감도 미확보 · 대체 이미지</div>{{/if}}
-
+      {{! ── 좌우 표지 ──
+          부제 · [사진 | 제목 3줄] · 단지명 세 덩어리가 위에서 아래로 쌓인다.
+          사진은 자르지 않는다(폭만 맞추고 높이는 비율대로) — 조감도가 통째로 보이는 것이
+          이 판형의 요점이다. 그래서 hero.shift / hero.boxH / hero.fadeTop 을 쓰지 않는다. }}
+      <div class="dcv-cover dcs-cover">
         <div class="wirit-topcap"><span class="tx">{{topcap}}</span></div>
 
-        <div class="dcv-head">
-          <div class="dcv-title">
-            {{#each titleLines}}<div class="ln">{{{this}}}</div>{{/each}}
+        <div class="dcs-row">
+          <div class="dcs-photo">
+            {{#if hero.photo}}
+              <img src="../_shared/photos/{{hero.photo}}" alt="" />
+            {{else}}
+              <div class="dcs-fb"><span class="w">{{#if hero.fallbackWord}}{{hero.fallbackWord}}{{else}}{{danji.name}}{{/if}}</span></div>
+            {{/if}}
+            {{#if hero.placeholder}}<div class="dcs-ph">조감도 미확보 · 대체 이미지</div>{{/if}}
           </div>
-          <div class="dcv-nm">
-            <span class="nm">{{danji.name}}</span>
-            <div class="rt">
-              {{#if address}}<span class="loc">{{address}}</span>{{/if}}
-              {{#if danji.logo}}<img class="lg" src="../_shared/logos/{{danji.logo}}" alt="" />{{/if}}
+          <div class="dcs-ttl">
+            <div class="dcv-title">
+              {{#each titleLines}}<div class="ln">{{{this}}}</div>{{/each}}
             </div>
+          </div>
+        </div>
+
+        <div class="dcv-nm">
+          <span class="nm">{{danji.name}}</span>
+          <div class="rt">
+            {{#if address}}<span class="loc">{{address}}</span>{{/if}}
+            {{#if danji.logo}}<img class="lg" src="../_shared/logos/{{danji.logo}}" alt="" />{{/if}}
           </div>
         </div>
       </div>

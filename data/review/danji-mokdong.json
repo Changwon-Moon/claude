@@ -13,7 +13,7 @@
       "reviewer": "caption-number",
       "level": "info",
       "code": "crosscheck-allowed",
-      "msg": "캡션 교차검증값 444억 허용 — 114~115㎡ 실수 — 카드 밴드는 면적대와 금액만 싣는다(면적대별 실수는 캡션이 받는다)"
+      "msg": "캡션 교차검증값 444억 허용 — 114~115㎡ 실수 — 카드 밴드는 면적대와 금액만 싣는다"
     },
     {
       "reviewer": "caption-number",
@@ -25,7 +25,31 @@
       "reviewer": "caption-number",
       "level": "info",
       "code": "crosscheck-allowed",
-      "msg": "캡션 교차검증값 27억 허용 — 198~203㎡ 실수 — 같은 이유. 세 값의 합 444+180+27 = 651 = 카드의 총 실수"
+      "msg": "캡션 교차검증값 27억 허용 — 198~203㎡ 실수 — 같은 이유. 합 444+180+27 = 651 = 카드의 총 실수"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 84억 허용 — 아파트 국민평형 84㎡ — '국평'이라는 카드 위 한 낱말의 근거. 카드에는 이 수가 없다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 40억 허용 — 114B 실사용 약 40평(이데일리 르포 2026) — 같은 근거 줄"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 4억 허용 — 114B 방 4개(이데일리 르포) — 같은 근거 줄"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 2억 허용 — 114B 욕실 2개(이데일리 르포) — 같은 근거 줄"
     },
     {
       "reviewer": "caption-number",

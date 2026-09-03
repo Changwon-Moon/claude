@@ -434,9 +434,19 @@ function priceTable(d, total) {
          그걸 대표타입 하나로 찍으면 카드가 나머지 세 면적을 없는 것으로 만든다. 면적대에
          `m2To` 가 있으면 **범위**로 말한다 — 범위도 코드가 데이터에서 만든다(손으로 안 적는다). */
       area: a.m2To && a.m2To !== a.m2 ? `${a.m2}~${a.m2To}㎡` : `${a.m2}${repType}`,
+      /* 범위 라벨(`114~115㎡`)은 대표타입 라벨(`84A`)의 두 배 길이다. 금액과 같은 크기로 두면
+         이 칸 하나가 공통 수치 크기를 통째로 끌어내린다 — 그래서 범위일 때만 작게 찍는다
+         (오너 지시 2026-09-03). 판단은 데이터가 한다: 범위인가 아닌가. */
+      ...(a.m2To && a.m2To !== a.m2 ? { small: true } : {}),
+      /* 면적대에 붙는 꼬리표 — `114~115㎡ (국평)`. 데이터가 준 말만 붙인다(코드가 짓지 않는다). */
+      ...(a.note ? { note: a.note } : {}),
       price: hit ? eok1(hit.won) : "미고지",
       /* 주력 면적대 한 줄만 코발트로. 강조가 둘이면 강조가 아니다. */
       main: d.mainArea?.m2 === a.m2,
+      /* 강조는 원래 **금액에만** 준다(타입은 금액을 읽는 열쇠일 뿐이라 회색). 다만 꼬리표가
+         붙은 주력 칸은 다르다 — `(국평)` 은 열쇠가 아니라 **이 카드가 하는 말**이라
+         라벨까지 코발트로 간다(오너 지시 2026-09-03). 꼬리표 없는 칸은 종전 그대로 회색. */
+      ...(d.mainArea?.m2 === a.m2 && a.note ? { hiArea: true } : {}),
     };
   });
   /* ⚠️ 방어선이 `> 6` 하나였는데, **5칸이면 이미 푸터가 47px 밀린다**(AS팀 2026-08-14 실측:
@@ -497,6 +507,10 @@ function specCells(d, aptTotal) {
   return [
     {
       label: unit === "실" ? "실수" : "세대수",
+      /* '651실' 만으로는 이번 공급분인지 단지 전체인지 카드가 말하지 못한다 — 층수의 `최고`
+         와 같은 자리에 `총` 을 붙인다(오너 지시 2026-09-03). 아파트는 종전 그대로 둔다:
+         확정본 픽셀이 걸려 있고, 거기서는 '2,432세대'가 이미 전체로 읽힌다. */
+      ...(unit === "실" ? { pre: "총" } : {}),
       value: n(aptTotal + ot),
       unit,
       /* 내역은 값 바로 아래 회색 한 줄(오너 지정 표기 2026-08-03: "(APT 0000세대, OT 000실)").
@@ -587,15 +601,22 @@ function presale(d) {
   }
 
   return {
-    template: "danji-cover@1",
+    /* 판형은 둘이다(오너 확정 2026-09-03): 표지형 `danji-cover@1` 과 좌우형 `danji-cover-split@1`.
+       고르는 것은 데이터이고, 안 고르면 표지형이다 — 기존 확정본이 전부 그 판이기 때문이다. */
+    template: d.template || "danji-cover@1",
     date,
     kind: "presale",
     /* 고정 부제 + 날짜. 손으로 적지 않는다 — 적는 순간 다음 카드에서 날짜가 굳는다. */
     topcap: `오늘의 주요 청약 이슈 (${date.replace(/-/g, ".")})`,
-    /* 단지마다 제목을 오너가 직접 쓸 때가 있다 — 그때는 데이터셋이 문형을 이긴다. */
-    titleLines: d.titleHtml ? [d.titleHtml] : titleFor(d, { total, repWon }),
+    /* 단지마다 제목을 오너가 직접 쓸 때가 있다 — 그때는 데이터셋이 문형을 이긴다.
+       셋 중 위에서부터 이긴다: 줄까지 나눈 `titleLines`(좌우 판형은 세 줄이다) →
+       한 줄 `titleHtml` → 코드가 만드는 문형. */
+    titleLines: d.titleLines?.length ? d.titleLines : d.titleHtml ? [d.titleHtml] : titleFor(d, { total, repWon }),
     hero: heroOf(d),
-    danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
+    /* 카드에 적는 이름 — 공고상의 정식 명칭이 길면 `displayName` 이 이긴다(오너 지시 2026-09-03:
+       "목동윤슬자이 오피스텔" → "목동윤슬자이"). 데이터의 `name` 은 공고와 대조하는 열쇠라
+       그대로 두고, **보이는 이름만** 바꾼다 — 둘을 한 필드로 합치면 대조가 헐거워진다. */
+    danji: { name: d.displayName || d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
     address: addressOf(d),
     ...(plan.on ? { scale: true, specFour: plan.four } : {}),
     spec: plan.on ? plan.cells : specCells(d, total),
@@ -745,7 +766,9 @@ function remndr(d) {
   const margin = marginBand(d);
 
   return {
-    template: "danji-cover@1",
+    /* 판형은 둘이다(오너 확정 2026-09-03): 표지형 `danji-cover@1` 과 좌우형 `danji-cover-split@1`.
+       고르는 것은 데이터이고, 안 고르면 표지형이다 — 기존 확정본이 전부 그 판이기 때문이다. */
+    template: d.template || "danji-cover@1",
     date,
     kind: "remndr",
     topcap: `오늘의 주요 청약 이슈 (${date.replace(/-/g, ".")})`,
@@ -760,7 +783,10 @@ function remndr(d) {
           : `<span class="hi">${hook}</span> 무순위 줍줍 <span class="hi">${n(total)}세대</span>`),
     ],
     hero: heroOf(d),
-    danji: { name: d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
+    /* 카드에 적는 이름 — 공고상의 정식 명칭이 길면 `displayName` 이 이긴다(오너 지시 2026-09-03:
+       "목동윤슬자이 오피스텔" → "목동윤슬자이"). 데이터의 `name` 은 공고와 대조하는 열쇠라
+       그대로 두고, **보이는 이름만** 바꾼다 — 둘을 한 필드로 합치면 대조가 헐거워진다. */
+    danji: { name: d.displayName || d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
     address: addressOf(d),
     ...(margin ? { specFour: true } : plan.on ? { scale: true, specFour: plan.four } : {}),
     /* 안전마진 판에서는 위 단이 이미 '돈' 세 칸이라, 아래 단은 **단지 규모**가 맡는다
@@ -833,7 +859,9 @@ function result(d) {
   if (d.record) flags.push(d.record.claim);
 
   return {
-    template: "danji-cover@1",
+    /* 판형은 둘이다(오너 확정 2026-09-03): 표지형 `danji-cover@1` 과 좌우형 `danji-cover-split@1`.
+       고르는 것은 데이터이고, 안 고르면 표지형이다 — 기존 확정본이 전부 그 판이기 때문이다. */
+    template: d.template || "danji-cover@1",
     date,
     kind: "result",
     topcap: `오늘의 주요 청약 이슈 (${date.replace(/-/g, ".")})`,
