@@ -1,0 +1,30 @@
+{
+  "kaptCode": "A10025310",
+  "kaptName": "백련산 에스케이뷰 아이파크",
+  "type": "59",
+  "jibun": "767",
+  "exclusive": 59.934,
+  "commonResidential": 24.396,
+  "supply": 84.33,
+  "pyeong": 25.51,
+  "pyeongLabel": "26평",
+  "sampleDong": "105동",
+  "sampleHo": "1804",
+  "sampleCount": 8,
+  "ratio": 0.7107,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단실",
+      "floor": "각층 각층",
+      "area": 18.2279
+    },
+    {
+      "purpose": "아파트 / 벽체",
+      "floor": "지상 18층",
+      "area": 6.1685
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
