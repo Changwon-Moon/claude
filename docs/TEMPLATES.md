@@ -36,7 +36,7 @@
 | `metro-2col` | 🟢 1세트 | metro-speed |
 | `record-grid` | 🟢 1세트 | kospi-record |
 | `sinbundang-loop` | 🟢 1세트 | sinbundang-loop |
-| `singo-record` | 🟢 12세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 9 |
+| `singo-record` | 🟢 13세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 10 |
 | `singoga-map` | 🟢 4세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map 외 1 |
 | `streak-line` | 🟢 9세트 | mae-streak, jeonse-streak, m2-gap 외 6 |
 | `world-capital` | 🟢 1세트 | world-capital |
