@@ -1,32 +1,22 @@
 {
-  "kaptCode": "A10026600",
-  "kaptName": "다산 롯데캐슬아파트",
+  "kaptCode": "A10027686",
+  "kaptName": "위례롯데캐슬아파트",
   "type": "84",
-  "jibun": "6029",
-  "exclusive": 84.99,
-  "commonResidential": 29.086,
-  "supply": 114.08,
-  "pyeong": 34.51,
+  "jibun": "672",
+  "exclusive": 84.98,
+  "commonResidential": 29.25,
+  "supply": 114.23,
+  "pyeong": 34.55,
   "pyeongLabel": "35평",
-  "sampleDong": "2206동",
-  "sampleHo": "1403",
-  "sampleCount": 107,
-  "ratio": 0.745,
+  "sampleDong": "6408동",
+  "sampleHo": "1101",
+  "sampleCount": 29,
+  "ratio": 0.7439,
   "parts": [
     {
-      "purpose": "아파트 / 코아",
+      "purpose": "아파트 / 벽체,계단",
       "floor": "지상 각층",
-      "area": 21.6163
-    },
-    {
-      "purpose": "아파트 / 외벽",
-      "floor": "지상 14층",
-      "area": 6.14
-    },
-    {
-      "purpose": "부대시설 / 지하코아",
-      "floor": "지하 지1",
-      "area": 1.3295
+      "area": 29.2504
     }
   ],
   "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",

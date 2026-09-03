@@ -1,0 +1,35 @@
+{
+  "kaptCode": "A10026881",
+  "kaptName": "서울역센트럴자이아파트",
+  "type": "59",
+  "jibun": "273",
+  "exclusive": 59.943,
+  "commonResidential": 24.775,
+  "supply": 84.72,
+  "pyeong": 25.63,
+  "pyeongLabel": "26평",
+  "sampleDong": "102동",
+  "sampleHo": "2302",
+  "sampleCount": 91,
+  "ratio": 0.7076,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단실",
+      "floor": "각층 각층",
+      "area": 18.7891
+    },
+    {
+      "purpose": "아파트 / 벽체",
+      "floor": "지상 23층",
+      "area": 5.6013
+    },
+    {
+      "purpose": "부대시설 / 지하계단실",
+      "floor": "지하 지1층",
+      "area": 0.3849
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
