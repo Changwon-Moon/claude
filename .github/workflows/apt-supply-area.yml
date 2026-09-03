@@ -80,10 +80,19 @@ jobs:
           set +e
           Q=data/apt-supply-queue.txt
           [ -f "$Q" ] || { echo "대기열 없음 — 건너뜀"; exit 0; }
-          OKN=0; NGN=0
+          OKN=0; NGN=0; SKIPN=0
           : > "$RUNNER_TEMP/supply.log"
+          # ⚠️ **시간 예산 20분** (2026-09-03)
+          #    재시도 사다리(3번·지수 대기)를 붙인 뒤로 「전부 실패」하는 날에는 한 줄에 수십 초가 든다.
+          #    대기열이 184줄이라 30분 제한에 걸려 잡이 **죽었고**, 죽으면 `if: always()` 기록·커밋
+          #    단계가 아예 안 돈다(09-02 곡선에서 똑같이 두 시간을 통째로 날렸다).
+          #    그래서 20분에서 스스로 접는다 — 접어야 「실패 N건」이 기록되고, 그래야 사다리가 이어받는다.
+          BUDGET=1200
+          # ⚠️ **새 줄부터** 훑는다(tac). 대기열은 아래로 쌓이고, 오늘 카드가 기다리는 것은 **맨 아래 묶음**이다.
+          #    위에서부터 훑으면 예산이 옛 줄에 다 타고 오늘 것은 손도 못 댄다.
           while read -r LINE; do
             case "$LINE" in ''|'#'*) continue;; esac
+            if [ "$SECONDS" -ge "$BUDGET" ]; then SKIPN=$((SKIPN+1)); continue; fi
             KAPT=$(echo "$LINE" | grep -oE 'kapt=A[0-9]+' | cut -d= -f2)
             AREA=$(echo "$LINE" | grep -oE 'area=[0-9.]+'  | cut -d= -f2)
             FORCE=$(echo "$LINE" | grep -oE 'force=1')
@@ -97,8 +106,9 @@ jobs:
             else
               NGN=$((NGN+1))
             fi
-          done < "$Q"
-          echo "OKN=$OKN" >> "$GITHUB_ENV"; echo "NGN=$NGN" >> "$GITHUB_ENV"
+          done < <(tac "$Q")
+          [ "$SKIPN" -gt 0 ] && echo "⏳ 시간 예산(${BUDGET}초)에 닿아 ${SKIPN}줄은 다음 칸으로 미룹니다" | tee -a "$RUNNER_TEMP/supply.log"
+          echo "OKN=$OKN" >> "$GITHUB_ENV"; echo "NGN=$NGN" >> "$GITHUB_ENV"; echo "SKIPN=$SKIPN" >> "$GITHUB_ENV"
           exit 0
 
       - name: 실행 결과 기록
@@ -108,7 +118,7 @@ jobs:
           {
             echo "# 단지 공급면적 — 마지막 실행"
             echo
-            echo "- 성공 ${OKN:-0}건 · 실패 ${NGN:-0}건"
+            echo "- 성공 ${OKN:-0}건 · 실패 ${NGN:-0}건 · 미룸 ${SKIPN:-0}줄"
             echo "- 결과는 Actions 로그가 아니라 이 파일과 data/datasets/apt-supply/ 에서 본다"
             echo
             echo '```'

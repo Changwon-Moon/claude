@@ -51,8 +51,11 @@ jobs:
           #    파일 전체에서 「실패」를 찾으면 로그 속 글자에 걸린다(09-03 에 신고가 문지기에서 겪었다).
           N=$(printf '%s' "$BODY" | head -4 | grep -oE '실패 [0-9]+건' | grep -oE '[0-9]+' | head -1)
           N=${N:-0}
-          if [ "$N" -gt 0 ]; then echo "실패 ${N}건 — 새 러너로 다시 두드립니다"; echo "go=1" >> "$GITHUB_OUTPUT";
-          else echo "✅ 실패 0건 — 재시도할 것이 없습니다"; echo "go=0" >> "$GITHUB_OUTPUT"; fi
+          # ⚠️ 시간 예산에 걸려 **미룬 줄**도 아직 안 끝난 것이다 — 사다리가 이어받아야 한다(2026-09-03)
+          S=$(printf '%s' "$BODY" | head -4 | grep -oE '미룸 [0-9]+줄' | grep -oE '[0-9]+' | head -1)
+          N=$((N + ${S:-0}))
+          if [ "$N" -gt 0 ]; then echo "남은 ${N}건(실패+미룸) — 새 러너로 다시 두드립니다"; echo "go=1" >> "$GITHUB_OUTPUT";
+          else echo "✅ 남은 것 0건 — 재시도할 것이 없습니다"; echo "go=0" >> "$GITHUB_OUTPUT"; fi
 
   wait1:
     needs: gate1
@@ -78,6 +81,9 @@ jobs:
           BODY=$(git show origin/${{ github.event.workflow_run.head_branch }}:data/apt-supply-last.md 2>/dev/null || cat data/apt-supply-last.md 2>/dev/null || true)
           N=$(printf '%s' "$BODY" | head -4 | grep -oE '실패 [0-9]+건' | grep -oE '[0-9]+' | head -1)
           N=${N:-0}
+          # ⚠️ 시간 예산에 걸려 **미룬 줄**도 아직 안 끝난 것이다 — 사다리가 이어받아야 한다(2026-09-03)
+          S=$(printf '%s' "$BODY" | head -4 | grep -oE '미룸 [0-9]+줄' | grep -oE '[0-9]+' | head -1)
+          N=$((N + ${S:-0}))
           if [ "$N" -gt 0 ]; then echo "go=1" >> "$GITHUB_OUTPUT"; else echo "✅ 다 찼습니다"; echo "go=0" >> "$GITHUB_OUTPUT"; fi
   wait2:
     needs: gate2
@@ -103,6 +109,9 @@ jobs:
           BODY=$(git show origin/${{ github.event.workflow_run.head_branch }}:data/apt-supply-last.md 2>/dev/null || cat data/apt-supply-last.md 2>/dev/null || true)
           N=$(printf '%s' "$BODY" | head -4 | grep -oE '실패 [0-9]+건' | grep -oE '[0-9]+' | head -1)
           N=${N:-0}
+          # ⚠️ 시간 예산에 걸려 **미룬 줄**도 아직 안 끝난 것이다 — 사다리가 이어받아야 한다(2026-09-03)
+          S=$(printf '%s' "$BODY" | head -4 | grep -oE '미룸 [0-9]+줄' | grep -oE '[0-9]+' | head -1)
+          N=$((N + ${S:-0}))
           if [ "$N" -gt 0 ]; then echo "go=1" >> "$GITHUB_OUTPUT"; else echo "✅ 다 찼습니다"; echo "go=0" >> "$GITHUB_OUTPUT"; fi
   wait3:
     needs: gate3
