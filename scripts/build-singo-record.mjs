@@ -1019,6 +1019,25 @@ if (KAPT) {
   const sp = P(`data/datasets/apt-supply/${KAPT}-${type}.json`);
   if (existsSync(sp)) {
     supply = JSON.parse(readFileSync(sp, "utf8"));
+    /* ── ⚠️ **수집기가 스스로 단 경고는 카드까지 따라와야 한다** (2026-09-03)
+     *
+     * 금호두산 전용 84.99 의 공급면적이 97.52㎡(29평)로 왔다. 수집기는 그때 이미
+     * `warn: 전용률 87.2% — 흔한 범위(70~85%) 밖이다` 를 파일에 적어 뒀는데,
+     * **빌더가 그 줄을 읽지 않아** 29평이 그대로 제목에 실릴 뻔했다.
+     * 자료가 스스로 "이건 이상하다"고 말하는데 그 말이 카드까지 못 오면, 그 경고는 없는 것이다.
+     *
+     * 그래서 **멈춘다.** 정말 그런 단지라면 사람이 확인하고 `--accept-supply-warn` 로 통과시키고,
+     * 그 사실은 meta 에 남는다 — 나중에 "왜 29평이지?" 를 되짚을 수 있어야 한다. */
+    if (supply.warn && !flag("accept-supply-warn")) {
+      throw new Error(
+        `공급면적 자료에 경고가 붙어 있습니다: ${sp}\n` +
+          `   ⚠️ ${supply.warn}\n` +
+          `   전유 ${supply.exclusive}㎡ + 주건축물공용 ${supply.commonResidential}㎡ = ${supply.supply}㎡ (${supply.pyeongLabel})\n` +
+          `   parts: ${(supply.parts ?? []).map((p) => `${p.purpose} ${p.area}㎡`).join(" · ")}\n` +
+          `→ 사람이 실제 분양 평형과 대조한 뒤에만 --accept-supply-warn 로 통과시킵니다.\n` +
+          `   대조 없이 통과시키면 제목에 틀린 평이 박힙니다 — 그게 오보 0 이 깨지는 지점입니다.`,
+      );
+    }
     if (supply.pyeongLabel) hit.pyeong = supply.pyeongLabel;
   } else {
     throw new Error(
@@ -1155,6 +1174,10 @@ const card = {
           pyeong: supply.pyeong,
           label: supply.pyeongLabel,
           sample: `${supply.sampleDong} ${supply.sampleHo}`,
+          /* 경고를 달고도 통과시켰다면 **카드가 그 사실을 들고 있는다** — 나중에 되짚을 수 있어야 한다 */
+          ...(supply.warn
+            ? { warn: supply.warn, warnAccepted: "사람이 실제 분양 평형과 대조한 뒤 --accept-supply-warn 로 통과시켰다" }
+            : {}),
           note:
             "국토교통부 **건축물대장** 전유공용면적. 공급면적 = 전유 + 「주건축물」 공용. " +
             "부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. " +

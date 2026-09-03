@@ -2168,6 +2168,162 @@
         "mokdong-yunseul-xi",
         "--publish"
       ]
+    },
+    {
+      "label": "singo-gwanggyo-jungheung-sclass",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "광교중흥에스클래스",
+        "--type",
+        "84",
+        "--kapt",
+        "A10025483",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-echeonse-sinchon2",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "e편한세상신촌2단지",
+        "--type",
+        "59",
+        "--kapt",
+        "A10026370",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-raemian-hillstate-godeok",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "래미안힐스테이트고덕",
+        "--type",
+        "59",
+        "--kapt",
+        "A10027207",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-lotte-castle-winner",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "롯데캐슬위너",
+        "--type",
+        "84",
+        "--kapt",
+        "A15805303",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-misa-starhills",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "미사강변스타힐스아파트",
+        "--type",
+        "84",
+        "--kapt",
+        "A10027180",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-gwangmyeong-doosan-weve",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "광명 두산위브 트레지움",
+        "--type",
+        "59",
+        "--kapt",
+        "A42374401",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-kkumdongsan-shinan",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "꿈동산신안",
+        "--type",
+        "84",
+        "--kapt",
+        "A46571103",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-dongtan-daeun-meridian",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "동탄시범다은마을 월드메르디앙 반도유보라",
+        "--type",
+        "59",
+        "--kapt",
+        "A44573621",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-jayeon-n-desiang",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "자연앤데시앙",
+        "--type",
+        "84",
+        "--kapt",
+        "A44532015",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-sanseongyeok-xi-prugio1",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "산성역자이푸르지오1단지",
+        "--type",
+        "59",
+        "--kapt",
+        "A10022845",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+    },
+    {
+      "label": "singo-pyeongchon-gwanak-town",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "관악",
+        "--type",
+        "84",
+        "--kapt",
+        "A43181606",
+        "--name",
+        "평촌관악타운",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
     }
   ]
 }
