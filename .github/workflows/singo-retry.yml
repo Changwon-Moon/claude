@@ -87,7 +87,15 @@ permissions:
 # ⚠️ 무한루프 방지는 그대로다 — 사다리는 전부 이 **한 런 안의 잡**이고,
 #    `workflow_call` 은 "오늘의 신고가 (daily)" 런을 새로 만들지 않는다.
 jobs:
-  # ── 1칸: +20분
+  # ── 1칸: +3분
+  #
+  # ⚠️ **앞칸을 확 당겼다** (2026-09-03). 실측한 회복 시간이 예상보다 훨씬 짧다:
+  #   · 08-31: 00:22 실패 → **1분 뒤** 00:23 성공
+  #   · 09-02: 23:29 백필 69회 전부 실패 → **16분 뒤** 1,200회 전부 성공
+  #   · 08-24: 1시간 17분
+  # 막히는 것은 **실행 단위**이지 시간대가 아니다. 그러니 첫 재시도가 20분 뒤일 이유가 없다 —
+  # 3분이면 새 러너를 잡는다. 09-03 에 20분·60분 칸이 둘 다 헛돌고
+  # **사람이 손으로 밀어야** 했던 것이 이 간격 때문이다.
   wait1:
     # ⚠️ 조건 둘 다 필요하다. 하나라도 빠지면 재시도가 엉뚱한 데서 돈다.
     if: >-
@@ -96,7 +104,7 @@ jobs:
        github.event.workflow_run.event == 'workflow_dispatch')
     runs-on: ubuntu-latest
     steps:
-      - run: sleep 1200
+      - run: sleep 180
   try1:
     needs: wait1
     uses: ./.github/workflows/singo-daily.yml
@@ -108,36 +116,56 @@ jobs:
       #    (2026-08-24 오너: 일회용 손잡이가 상시 설정이 되어 5일간 기준이 좁아져 있었다).
       retry: true
       quiet: true
-      rung: "1/3"
+      rung: "1/4"
     secrets: inherit
 
-  # ── 2칸: +1시간
+  # ── 2칸: +10분
   wait2:
     needs: try1
     if: failure()
     runs-on: ubuntu-latest
     steps:
-      - run: sleep 2400
+      - run: sleep 600
   try2:
     needs: wait2
     uses: ./.github/workflows/singo-daily.yml
     with:
       retry: true
       quiet: true
-      rung: "2/3"
+      rung: "2/4"
     secrets: inherit
 
-  # ── 3칸: +2시간 — **마지막이라 조용하지 않다.** 여기서 실패하면 오너에게 말한다.
+  # ── 3칸: +30분
   wait3:
     needs: try2
     if: failure()
     runs-on: ubuntu-latest
     steps:
-      - run: sleep 3600
+      - run: sleep 1800
   try3:
     needs: wait3
     uses: ./.github/workflows/singo-daily.yml
     with:
       retry: true
-      rung: "3/3"
+      quiet: true
+      rung: "3/4"
+    secrets: inherit
+
+  # ── 4칸: +1시간 30분 — **마지막이라 조용하지 않다.** 여기서 실패하면 오너에게 말한다.
+  #
+  # 칸을 넷으로 늘리면서 **앞은 촘촘하게, 뒤는 넓게** 두었다(3분·10분·30분·90분).
+  # 회복이 1~16분이면 앞칸이 잡고, 08-24 처럼 1시간 17분이 걸리면 뒷칸이 잡는다.
+  # 누적 2시간 13분으로 **예전(2시간)과 거의 같은데 기회는 세 번에서 네 번**이 됐다.
+  wait4:
+    needs: try3
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 5400
+  try4:
+    needs: wait4
+    uses: ./.github/workflows/singo-daily.yml
+    with:
+      retry: true
+      rung: "4/4"
     secrets: inherit

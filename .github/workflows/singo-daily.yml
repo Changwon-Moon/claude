@@ -33,6 +33,22 @@ on:
     #    (자신의 실행률이 7%였다 — 같은 배 안에서 배에 구멍 났는지 보는 구조).
     #    지금 자동 안전망은 `singo-retry.yml` 사다리 하나다.
     - cron: "55 19 * * *"
+    # ── 예약을 넷으로 (2026-09-03) — **문이 열린 순간을 잡기 위해서다**
+    #
+    # 실측(09-02 UTC): 백필이 23:29 에 69회 **전부 실패**하고, **16분 뒤** 23:45 에
+    # 1,200회를 **전부 성공**했다. 그 1분 뒤 신고가도 122/122 성공.
+    # 08-31 엔 00:22 실패 → **1분 뒤** 00:23 성공.
+    # → 막히는 것은 **실행 단위**다. 호출량도, 다른 예약과의 충돌도 아니다
+    #   (1,200회를 연속으로 쏴도 전부 성공한 실행이 있다).
+    #
+    # 그러니 답은 「덜 부르기」가 아니라 **「다른 실행으로 다시 두드리기」**다.
+    # 예약을 흩어 두면 지각(09-03 에 2시간 34분 늦게 떴다)의 영향도 같이 준다.
+    #
+    # ⚠️ 성공한 날 뒤 예약은 **호출 0회**로 끝난다 — 아래 「이미 성공했나」 가드가 막는다.
+    #    그 가드가 없으면 예약을 늘리는 것이 그대로 호출 네 배가 된다.
+    - cron: "40 20 * * *"   # 05:40 KST
+    - cron: "25 21 * * *"   # 06:25 KST
+    - cron: "10 22 * * *"   # 07:10 KST
 
   # 대기열 푸시가 방아쇠 — 세션은 Actions 버튼을 못 누른다.
   # 한 줄 형식(전부 선택):  months=2 top=0 sort=price   (top=0 이면 전부 나열)
@@ -119,7 +135,59 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # ── 🔒 문지기 — 오늘 이미 성공했으면 **본 잡을 아예 안 띄운다** (2026-09-03)
+  #
+  # 예약이 넷·재시도가 넷이라 하루에 최대 여덟 번 들어올 수 있다. 성공한 날에도 전부 돌면
+  # **호출이 여덟 배**가 되고, 그건 이 배관이 고치려던 문제를 새로 만드는 것이다.
+  #
+  # 스텝마다 `if:` 를 다는 대신 **잡을 나눈 이유**: 스텝이 스무 개가 넘어서 하나라도 빠뜨리면
+  # 「건너뛴다면서 실제로는 도는」 상태가 된다. 잡 하나가 통째로 안 뜨는 편이 셀 수 있다.
+  #
+  # 판정 근거는 `data/singo-last.md` — 워크플로가 매 실행 끝에 커밋하는 그 파일이다.
+  # 「실행: <오늘> (KST)」와 「결과: **성공**」이 같이 있으면 오늘 몫은 끝난 것이다.
+  #
+  # ⚠️ **checkout 판본은 낡을 수 있다.** 앞선 예약이 방금 커밋했으면 그 커밋은 원격에만 있다.
+  #    그래서 파일을 보기 전에 원격을 당긴다 — 안 당기면 「아직 안 했다」로 읽고 여덟 번을 다 돈다.
+  # ⚠️ 손으로 부른 실행(`workflow_dispatch`)과 대기열 푸시는 **막지 않는다.**
+  #    사람이 「지금 다시 돌려라」라고 한 것을 코드가 거절하면 손잡이가 사라진다.
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      skip: ${{ steps.done.outputs.skip }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - name: 오늘 이미 성공했나
+        id: done
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" != "schedule" ] && [ "${{ github.event_name }}" != "workflow_run" ]; then
+            echo "손으로 부른 실행(${{ github.event_name }}) — 문지기를 지나갑니다"
+            echo "skip=0" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          git fetch --quiet origin ${{ github.ref_name }} || true
+          # ⚠️ **머리 8줄만 본다.** 이 파일은 머리(실행·결과) 아래에 **수집기 로그를 통째로** 담는다.
+          #    파일 전체에서 「결과: **성공**」을 찾으면 로그 안의 글자에 걸릴 수 있고,
+          #    그러면 실패한 날을 성공으로 읽어 **그날 알림을 통째로 건너뛴다.**
+          #    (2026-09-03 에 이 로직을 일부러 깨뜨려 보다가 찾았다 — 통과만 봤으면 못 봤다.)
+          HEAD8=$(git show origin/${{ github.ref_name }}:data/singo-last.md 2>/dev/null || cat data/singo-last.md 2>/dev/null || true)
+          HEAD8=$(printf '%s' "$HEAD8" | head -8)
+          TODAY=$(TZ=Asia/Seoul date +%Y-%m-%d)
+          # 그리고 **줄머리를 고정**해서 본다(`^- 실행:` · `^- 결과:`). 로그 줄은 그 모양이 아니다.
+          # 머리 자르기와 줄머리 고정, **둘 다** 둔다 — 하나가 뚫려도 다른 하나가 받는다.
+          if printf '%s' "$HEAD8" | grep -q "^- 실행: ${TODAY} (KST)" && printf '%s' "$HEAD8" | grep -q '^- 결과: \*\*성공\*\*'; then
+            echo "✅ ${TODAY} 은 이미 성공했습니다 — 호출 0회로 끝냅니다"
+            echo "skip=1" >> "$GITHUB_OUTPUT"
+          else
+            echo "오늘(${TODAY}) 성공 기록이 없습니다 — 진행합니다"
+            echo "skip=0" >> "$GITHUB_OUTPUT"
+          fi
+
   singo:
+    needs: gate
+    if: needs.gate.outputs.skip != '1'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
