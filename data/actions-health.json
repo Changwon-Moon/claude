@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-03T04:29:53.728Z",
+  "generatedAt": "2026-09-03T05:34:24.822Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -787,6 +787,36 @@
       "runs30": 25
     },
     {
+      "file": "ecos-m2.yml",
+      "name": "ECOS M2 수집 (probe+collect)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 3,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 3,
+      "fails30": 0,
+      "runs30": 11
+    },
+    {
+      "file": "kr-market.yml",
+      "name": "국내 증시 수집 (코스피·코스닥)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 3,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 3,
+      "fails30": 0,
+      "runs30": 10
+    },
+    {
+      "file": "publish-archive.yml",
+      "name": "완성본 보관 (발행 완료)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 3,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 3,
+      "fails30": 8,
+      "runs30": 40
+    },
+    {
       "file": "reb-collect.yml",
       "name": "전세·월세 지수 수집 (한국부동산원)",
       "lastRun": "2026-08-31",
@@ -812,29 +842,9 @@
       "lastRun": "2026-08-31",
       "daysAgo": 3,
       "lastOk": "2026-08-28",
-      "okDaysAgo": 5,
+      "okDaysAgo": 6,
       "fails30": 4,
       "runs30": 6
-    },
-    {
-      "file": "ecos-m2.yml",
-      "name": "ECOS M2 수집 (probe+collect)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 2,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 2,
-      "fails30": 0,
-      "runs30": 11
-    },
-    {
-      "file": "kr-market.yml",
-      "name": "국내 증시 수집 (코스피·코스닥)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 2,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 2,
-      "fails30": 0,
-      "runs30": 10
     },
     {
       "file": "pipeline-tick.yml",
@@ -855,16 +865,6 @@
       "okDaysAgo": 2,
       "fails30": 3,
       "runs30": 6
-    },
-    {
-      "file": "publish-archive.yml",
-      "name": "완성본 보관 (발행 완료)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 2,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 2,
-      "fails30": 8,
-      "runs30": 40
     },
     {
       "file": "molit-door.yml",
@@ -944,7 +944,7 @@
       "lastOk": "2026-09-03",
       "okDaysAgo": 0,
       "fails30": 17,
-      "runs30": 47
+      "runs30": 48
     },
     {
       "file": "guard.yml",
