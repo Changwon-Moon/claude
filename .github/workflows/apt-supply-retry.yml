@@ -1,0 +1,115 @@
+name: 공급면적 — 자동 재시도
+
+# ── 무엇을 하나 (2026-09-03)
+#
+# 건축물대장(공급면적)이 실패하면 **새 러너로 다시 두드린다.**
+#
+# 왜 이게 답인가 — 09-02~03 실측:
+#   · 09-03 09:08 런: 33건 **전부** `fetch failed`. 한도 문구(`SERVICE_KEY_IS_NOT_REGISTERED`)는 **0건**
+#   · 같은 날 실거래 쪽에서도 69회 전부 실패 → **16분 뒤** 1,200회 전부 성공
+#   → 막히는 것은 **실행 단위**다. 기다림이 아니라 **다른 러너**가 필요하다.
+#
+# 그런데 신고가에는 08-24 에 이 사다리를 달아 두고 **공급면적에는 안 달았다.**
+# 그 결과 09-01·09-02·09-03 **사흘 연속** 공급면적이 카드를 막았고 매번 사람이 밀었다.
+# 같은 고장에 같은 처방을 **한쪽에만** 단 것 — 09-02 명부 잇기와 똑같은 실수다.
+#
+# ── 칸은 셋, 앞을 촘촘히: +3분 · +10분 · +30분
+# 신고가 사다리와 같은 간격이다(실측 회복이 1분·16분이었다).
+#
+# ── ⚠️ 다 찼으면 **돌지 않는다**
+# 매 칸 앞에 문지기를 두고 `data/apt-supply-last.md` 의 「실패 N건」을 본다.
+# N=0 이면 거기서 멈춘다 — 다 찬 대기열을 다시 훑는 것은 호출은 안 쓰지만 잡을 낭비한다.
+#
+# ⚠️ `workflow_call` 로 부르는 것은 **호출한 런 안에서** 도므로 `workflow_run` 을 새로 띄우지
+#    않는다. 그래서 사다리가 자기를 다시 부르는 고리가 생기지 않는다(singo-retry 와 같은 구조).
+
+on:
+  workflow_run:
+    workflows: ["단지 공급면적 (카드 평 표기용)"]
+    types: [completed]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apt-supply-retry
+  cancel-in-progress: false
+
+jobs:
+  gate1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs: { go: "${{ steps.q.outputs.go }}" }
+    steps:
+      - uses: actions/checkout@v4
+      - id: q
+        shell: bash
+        run: |
+          git fetch --quiet origin ${{ github.event.workflow_run.head_branch }} || true
+          BODY=$(git show origin/${{ github.event.workflow_run.head_branch }}:data/apt-supply-last.md 2>/dev/null || cat data/apt-supply-last.md 2>/dev/null || true)
+          # ⚠️ 머리 4줄만 본다 — 이 파일은 아래에 수집기 로그를 통째로 담는다.
+          #    파일 전체에서 「실패」를 찾으면 로그 속 글자에 걸린다(09-03 에 신고가 문지기에서 겪었다).
+          N=$(printf '%s' "$BODY" | head -4 | grep -oE '실패 [0-9]+건' | grep -oE '[0-9]+' | head -1)
+          N=${N:-0}
+          if [ "$N" -gt 0 ]; then echo "실패 ${N}건 — 새 러너로 다시 두드립니다"; echo "go=1" >> "$GITHUB_OUTPUT";
+          else echo "✅ 실패 0건 — 재시도할 것이 없습니다"; echo "go=0" >> "$GITHUB_OUTPUT"; fi
+
+  wait1:
+    needs: gate1
+    if: needs.gate1.outputs.go == '1'
+    runs-on: ubuntu-latest
+    steps: [{ run: sleep 180 }]
+  try1:
+    needs: wait1
+    uses: ./.github/workflows/apt-supply-area.yml
+    secrets: inherit
+
+  gate2:
+    needs: try1
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs: { go: "${{ steps.q.outputs.go }}" }
+    steps:
+      - uses: actions/checkout@v4
+      - id: q
+        shell: bash
+        run: |
+          git fetch --quiet origin ${{ github.event.workflow_run.head_branch }} || true
+          BODY=$(git show origin/${{ github.event.workflow_run.head_branch }}:data/apt-supply-last.md 2>/dev/null || cat data/apt-supply-last.md 2>/dev/null || true)
+          N=$(printf '%s' "$BODY" | head -4 | grep -oE '실패 [0-9]+건' | grep -oE '[0-9]+' | head -1)
+          N=${N:-0}
+          if [ "$N" -gt 0 ]; then echo "go=1" >> "$GITHUB_OUTPUT"; else echo "✅ 다 찼습니다"; echo "go=0" >> "$GITHUB_OUTPUT"; fi
+  wait2:
+    needs: gate2
+    if: needs.gate2.outputs.go == '1'
+    runs-on: ubuntu-latest
+    steps: [{ run: sleep 600 }]
+  try2:
+    needs: wait2
+    uses: ./.github/workflows/apt-supply-area.yml
+    secrets: inherit
+
+  gate3:
+    needs: try2
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs: { go: "${{ steps.q.outputs.go }}" }
+    steps:
+      - uses: actions/checkout@v4
+      - id: q
+        shell: bash
+        run: |
+          git fetch --quiet origin ${{ github.event.workflow_run.head_branch }} || true
+          BODY=$(git show origin/${{ github.event.workflow_run.head_branch }}:data/apt-supply-last.md 2>/dev/null || cat data/apt-supply-last.md 2>/dev/null || true)
+          N=$(printf '%s' "$BODY" | head -4 | grep -oE '실패 [0-9]+건' | grep -oE '[0-9]+' | head -1)
+          N=${N:-0}
+          if [ "$N" -gt 0 ]; then echo "go=1" >> "$GITHUB_OUTPUT"; else echo "✅ 다 찼습니다"; echo "go=0" >> "$GITHUB_OUTPUT"; fi
+  wait3:
+    needs: gate3
+    if: needs.gate3.outputs.go == '1'
+    runs-on: ubuntu-latest
+    steps: [{ run: sleep 1800 }]
+  try3:
+    needs: wait3
+    uses: ./.github/workflows/apt-supply-area.yml
+    secrets: inherit
