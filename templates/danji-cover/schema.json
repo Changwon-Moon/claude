@@ -283,6 +283,10 @@
     "scale": {
       "type": "boolean",
       "description": "규모 우선 판 — 종이의 남는 세로를 위아래로 나눈다"
+    },
+    "noteSmall": {
+      "type": "boolean",
+      "description": "최하단 문구를 한 급 작게(34→30px). 옵트인 — 없으면 종전 크기."
     }
   }
 }
