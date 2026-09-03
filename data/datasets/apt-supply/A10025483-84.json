@@ -1,32 +1,32 @@
 {
-  "kaptCode": "A10026600",
-  "kaptName": "다산 롯데캐슬아파트",
+  "kaptCode": "A10025483",
+  "kaptName": "광교 중흥S-클래스 아파트",
   "type": "84",
-  "jibun": "6029",
-  "exclusive": 84.99,
-  "commonResidential": 29.086,
-  "supply": 114.08,
-  "pyeong": 34.51,
+  "jibun": "589",
+  "exclusive": 84.901,
+  "commonResidential": 32.213,
+  "supply": 117.11,
+  "pyeong": 35.43,
   "pyeongLabel": "35평",
-  "sampleDong": "2206동",
-  "sampleHo": "1403",
-  "sampleCount": 237,
-  "ratio": 0.745,
+  "sampleDong": "102동",
+  "sampleHo": "605",
+  "sampleCount": 124,
+  "ratio": 0.7249,
   "parts": [
     {
-      "purpose": "아파트 / 코아",
+      "purpose": "아파트 / 계단실,승강기,홀",
       "floor": "지상 각층",
-      "area": 21.6163
+      "area": 21.6336
     },
     {
-      "purpose": "아파트 / 외벽",
-      "floor": "지상 14층",
-      "area": 6.14
+      "purpose": "아파트 / 벽체",
+      "floor": "지상 6층",
+      "area": 10.0416
     },
     {
-      "purpose": "부대시설 / 지하코아",
-      "floor": "지하 지1",
-      "area": 1.3295
+      "purpose": "아파트 / 피난안전구역",
+      "floor": "각층 22층,24층,26층,29층",
+      "area": 0.5382
     }
   ],
   "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
