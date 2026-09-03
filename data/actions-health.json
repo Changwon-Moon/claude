@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-03T01:16:34.514Z",
+  "generatedAt": "2026-09-03T01:36:02.522Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -953,7 +953,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-03",
       "okDaysAgo": 0,
-      "fails30": 3,
+      "fails30": 2,
       "runs30": 100
     },
     {
