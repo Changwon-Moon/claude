@@ -2158,6 +2158,16 @@
         "--label",
         "gap-ep1-5"
       ]
+    },
+    {
+      "label": "danji-mokdong",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-09-03",
+        "--only",
+        "mokdong-yunseul-xi",
+        "--publish"
+      ]
     }
   ]
 }

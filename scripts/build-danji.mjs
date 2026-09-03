@@ -223,8 +223,12 @@ function noticeFacts(d) {
     specialFrom: s.special ?? null,
     rank1From: s.first ?? null,
     announceDate: s.announce ?? null,
-    receiptFrom: s.first ?? null,
-    receiptTo: s.second ?? s.first ?? null,
+    /* 오피스텔은 특별공급·순위가 없고 접수가 하루다 — 그 하루를 `receipt` 로 따로 받는다.
+       `first`(1순위)에 실어 보내면 APT 의 순위 개념이 오피스텔 카드에 묻는다. */
+    receiptFrom: s.receipt ?? s.first ?? null,
+    receiptTo: s.second ?? s.receipt ?? s.first ?? null,
+    /* 계약체결일 — APT 카드는 안 쓰지만 오피스텔은 일정 넷째 칸이 이것이다(§오피스텔). */
+    contractFrom: s.contract ?? null,
     moveInYm: d.moveIn ?? null,
     priceCap: d.price?.capApplied ?? false,
     speculative: d.speculative ?? false,
@@ -418,12 +422,18 @@ function priceTable(d, total) {
   const { keep, drop } = splitRareAreas(d, total);
   const rows = keep.map((a) => {
     const hit = d.price?.byArea?.find((x) => x.m2 === a.m2);
+    /* 검산은 라벨을 안 쓰는 칸에서도 돌린다 — 아래 `m2To` 가 있는 칸은 라벨로 쓰지 않지만,
+       byArea 와 byTypeAll 최고가가 어긋나면 여기서 던져야 한다(그게 이 함수의 안전장치다). */
+    const repType = repTypeOf(d, a);
     return {
       /* ⚠️ 라벨과 금액은 **같은 타입**의 것이어야 한다(2026-08-14 실측 사고).
          롯데캐슬 84㎡ 는 A~F 여섯 타입이고 최고가는 84E(16.38억)인데, 라벨은 첫 타입 84A 를
          찍고 있었다 — 카드가 "84A 가 16.4억"이라고 **없는 말**을 하는 셈이다(84A 최고는 16.3억).
          타입별 값이 있으면 **최고가를 낸 그 타입**을 라벨로 쓴다. 손으로 고르지 않는다. */
-      area: `${a.m2}${repTypeOf(d, a)}`,
+      /* ⚠️ 오피스텔은 한 '군' 안에 전용면적이 조금씩 다른 타입이 섞인다(4군: 117·118·119·120㎡).
+         그걸 대표타입 하나로 찍으면 카드가 나머지 세 면적을 없는 것으로 만든다. 면적대에
+         `m2To` 가 있으면 **범위**로 말한다 — 범위도 코드가 데이터에서 만든다(손으로 안 적는다). */
+      area: a.m2To && a.m2To !== a.m2 ? `${a.m2}~${a.m2To}㎡` : `${a.m2}${repType}`,
       price: hit ? eok1(hit.won) : "미고지",
       /* 주력 면적대 한 줄만 코발트로. 강조가 둘이면 강조가 아니다. */
       main: d.mainArea?.m2 === a.m2,
@@ -480,11 +490,15 @@ function titleFor(d, { total, repWon }) {
  */
 function specCells(d, aptTotal) {
   const ot = d.extra?.officetel ?? 0;
+  /* 단위는 '세대'로 통일한다(오너 지시) — 단, 그건 **주택** 카드의 규칙이다.
+     오피스텔은 공고문도 법도 '실'로 센다. 651실을 '651세대'라 적으면 카드가 틀린 말을 한다.
+     그래서 오피스텔에서만 '실'이고, 그 판단은 propertyType 이 한다 — 손으로 적지 않는다. */
+  const unit = isOfficetel(d) ? "실" : "세대";
   return [
     {
-      label: "세대수",
+      label: unit === "실" ? "실수" : "세대수",
       value: n(aptTotal + ot),
-      unit: "세대",
+      unit,
       /* 내역은 값 바로 아래 회색 한 줄(오너 지정 표기 2026-08-03: "(APT 0000세대, OT 000실)").
          오피스텔이 없으면 만들지 않는다 — "OT 0실"은 0실 공급으로 읽힌다. */
       ...(ot ? { breakdown: `(APT ${n(aptTotal)}세대, OT ${n(ot)}실)` } : {}),
@@ -513,8 +527,16 @@ const addressOf = (d) => d.location || "";
 /* ────────────────────────────────────────────────────────────────
  * 분양 예정 카드
  * ──────────────────────────────────────────────────────────────── */
+/* 오피스텔인가 — 판형은 그대로 두고 **칸의 뜻만** 바뀐다(무순위 카드가 이미 쓰는 방식).
+   손으로 "이번엔 오피스텔 판" 하고 켜지 않는다. 데이터의 propertyType 하나가 정한다. */
+const isOfficetel = (d) => d.propertyType === "officetel";
+
 function presale(d) {
   if (d.kind !== "presale") throw new Error(`${d.id} 는 presale 이 아니다`);
+  /* 오피스텔에는 특별공급도 순위도 없다(「건축물의 분양에 관한 법률」). 데이터에 그 값이 들어와
+     있으면 APT 공고를 오피스텔로 잘못 표시한 것이다 — 조용히 무시하지 않고 던진다. */
+  if (isOfficetel(d) && (d.schedule?.special || d.schedule?.first))
+    throw new Error(`${d.id}: 오피스텔에는 특별공급·1순위가 없다 — schedule.receipt 로 접수일 하루를 적을 것`);
   const ah = noticeFacts(d);
   const total = ah ? ah.supply : d.total;
   /* 규모 우선 판은 kind 가 아니라 **데이터**가 켠다 — price.byType 이 있으면 이 판이다.
@@ -582,12 +604,22 @@ function presale(d) {
     priceTable: (({ drop: _drop, ...rest }) => rest)(band),
     /* 일정 4칸(오너 지시 2026-08-03) — 특공·1순위·당첨자 발표·입주 예정.
        당첨자 발표일은 청약홈 PRZWNER_PRESNATN_DE 에서 수집기가 이미 읽어 둔다(announceDate). */
-    schedule: [
-      { label: "특별공급", date: ah?.specialFrom ? md(ah.specialFrom) : "미고지", tbd: !ah?.specialFrom },
-      { label: "1순위", date: ah?.rank1From ? md(ah.rank1From) : "미고지", tbd: !ah?.rank1From },
-      { label: "당첨자 발표", date: ah?.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah?.announceDate },
-      { label: "입주 예정", date: ymKo(moveInYm), tbd: !moveInYm },
-    ],
+    /* 오피스텔은 앞의 두 칸이 다른 것을 말한다(오너 확정 2026-09-03).
+       특별공급·1순위가 없는 대신 **접수 하루**와 **계약체결**이 독자의 실제 일정이다 —
+       오피스텔 계약금은 청약 나흘 뒤에 걸리므로 계약일이 카드에 있어야 한다. */
+    schedule: isOfficetel(d)
+      ? [
+          { label: "청약접수", date: ah?.receiptFrom ? md(ah.receiptFrom) : "미고지", tbd: !ah?.receiptFrom },
+          { label: "당첨자 발표", date: ah?.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah?.announceDate },
+          { label: "계약체결", date: ah?.contractFrom ? md(ah.contractFrom) : "미고지", tbd: !ah?.contractFrom },
+          { label: "입주 예정", date: ymKo(moveInYm), tbd: !moveInYm },
+        ]
+      : [
+          { label: "특별공급", date: ah?.specialFrom ? md(ah.specialFrom) : "미고지", tbd: !ah?.specialFrom },
+          { label: "1순위", date: ah?.rank1From ? md(ah.rank1From) : "미고지", tbd: !ah?.rank1From },
+          { label: "당첨자 발표", date: ah?.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah?.announceDate },
+          { label: "입주 예정", date: ymKo(moveInYm), tbd: !moveInYm },
+        ],
     /* 한줄평이 있으면 그게 아래 한 줄이다 — 특이사항 나열보다 한 문장이 오래 남는다. */
     notice: noticeOf(d, flags, carried),
     source: {

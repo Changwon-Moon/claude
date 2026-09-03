@@ -1,0 +1,79 @@
+{
+  "label": "danji-mokdong",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 24.6억 허용 — 최저 공급금액(114B 24.60억) — 카드 밴드는 최고가만 싣는다. 진입가를 캡션이 받는다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 444억 허용 — 114~115㎡ 실수 — 카드 밴드는 면적대와 금액만 싣는다(면적대별 실수는 캡션이 받는다)"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 180억 허용 — 117~120㎡ 실수 — 같은 이유"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 27억 허용 — 198~203㎡ 실수 — 같은 이유. 세 값의 합 444+180+27 = 651 = 카드의 총 실수"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 900억 허용 — 예비당첨자 900%(공고문 1p) — 카드 아래 한 줄이 자격 요건만 싣느라 뺐다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 1,206억 허용 — 주차 1,206대(공고문 2p) — 카드 제원 3칸에 자리가 없다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 1.85억 허용 — 실당 주차 1.85대(공고문 2p) — 같은 이유"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 6억 허용 — 지하 6층(공고문 2p) — 카드는 '최고 48층'만 싣는다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 16억 허용 — 당첨자 발표 16시 이후(공고문 1p) — 카드는 날짜만 싣는다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 14억 허용 — 계약 마감 9/14(월) — 카드는 계약 시작일만 싣는다"
+    }
+  ],
+  "cards": [
+    {
+      "file": "danji-mokdong.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}

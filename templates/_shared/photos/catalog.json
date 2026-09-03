@@ -379,6 +379,15 @@
       "license": "open-license",
       "note": "yoon-sukyeol4 원본을 scripts/normalize-portraits.py 로 얼굴 크기·가슴선 통일 + 배경 잔재 제거. 원 라이선스: CC BY 3.0 · 촬영/제작: 대한민국 대통령실",
       "added": "2026-08-12"
+    },
+    {
+      "slug": "mokdong-yunseul-xi",
+      "name": "목동윤슬자이 오피스텔 조감도",
+      "kind": "photo",
+      "source": "GS건설 분양 홍보자료 (오너가 직접 제공)",
+      "license": "press-material",
+      "note": "건설사 분양 홍보 이미지. 정보전달 목적의 지명적 사용이며 카드 푸터에 '출처 · GS건설 조감도'를 표기한다. 원본(1100×750)은 _source/mokdong-yunseul-xi.png. 저장본은 (0,0,1100,645) 크롭 — X1 첨탑이 카드 잉크 테두리에 물리지 않게 하단을 걷은 것이다.",
+      "added": "2026-09-03"
     }
   ]
 }
