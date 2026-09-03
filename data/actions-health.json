@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-03T00:52:26.828Z",
+  "generatedAt": "2026-09-03T01:16:34.514Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -587,16 +587,6 @@
   ],
   "manual": [
     {
-      "file": "apt-supply-retry.yml",
-      "name": "공급면적 — 자동 재시도",
-      "lastRun": null,
-      "daysAgo": null,
-      "lastOk": null,
-      "okDaysAgo": null,
-      "fails30": 0,
-      "runs30": 0
-    },
-    {
       "file": "asset-fetch.yml",
       "name": "로고 자동 취득 (Wikimedia)",
       "lastRun": null,
@@ -887,6 +877,16 @@
       "runs30": 7
     },
     {
+      "file": "molit-rent-collect.yml",
+      "name": "전월세 실거래 수집 (국토부)",
+      "lastRun": "2026-09-02",
+      "daysAgo": 1,
+      "lastOk": "2026-09-02",
+      "okDaysAgo": 1,
+      "fails30": 2,
+      "runs30": 13
+    },
+    {
       "file": "neis-academy.yml",
       "name": "학원 수집 (나이스)",
       "lastRun": "2026-09-02",
@@ -927,14 +927,24 @@
       "runs30": 100
     },
     {
+      "file": "apt-supply-retry.yml",
+      "name": "공급면적 — 자동 재시도",
+      "lastRun": "2026-09-03",
+      "daysAgo": 0,
+      "lastOk": null,
+      "okDaysAgo": null,
+      "fails30": 0,
+      "runs30": 2
+    },
+    {
       "file": "auto-produce.yml",
       "name": "데이터 바뀌면 카드 자동 재생산",
       "lastRun": "2026-09-03",
       "daysAgo": 0,
       "lastOk": "2026-09-03",
       "okDaysAgo": 0,
-      "fails30": 14,
-      "runs30": 42
+      "fails30": 15,
+      "runs30": 43
     },
     {
       "file": "guard.yml",
@@ -957,16 +967,6 @@
       "runs30": 12
     },
     {
-      "file": "molit-rent-collect.yml",
-      "name": "전월세 실거래 수집 (국토부)",
-      "lastRun": "2026-09-02",
-      "daysAgo": 0,
-      "lastOk": "2026-09-02",
-      "okDaysAgo": 0,
-      "fails30": 2,
-      "runs30": 13
-    },
-    {
       "file": "singo-history.yml",
       "name": "신고가 단지 이력 (한 단지 곡선)",
       "lastRun": "2026-09-03",
@@ -983,7 +983,7 @@
       "daysAgo": 0,
       "lastOk": "2026-08-25",
       "okDaysAgo": 9,
-      "fails30": 1,
+      "fails30": 2,
       "runs30": 21
     },
     {
