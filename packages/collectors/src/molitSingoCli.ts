@@ -167,7 +167,7 @@ async function main() {
 
   const regions = singoRegions();
   const months = recentMonths(today, nMonths);
-  const hits: (SingoHit & { hhld: number })[] = [];
+  const hits: (SingoHit & { hhld: number; kaptCode: string | null })[] = [];
   const skipped: string[] = [];
   let fetched = 0;
   let judged = 0;
@@ -266,7 +266,21 @@ async function main() {
       const found = findSingo(idx.peaks, lawdCd, gu, inUni.map((x) => x.t));
       for (const h of found) {
         const u = inUniverse(lawdCd, h.umdNm, h.aptNm, h.jibun);
-        hits.push({ ...h, hhld: u?.hhld ?? 0 });
+        /* ── ⚠️ **명부 열쇠(kaptCode)를 버리지 않는다** (2026-09-03 오너 지시)
+         *
+         * 여기서 `u` 는 `pickUniverse` 가 **이름과 지번이 서로를 검사하게** 해서 물린 항목이다
+         * (09-02 강화판 — 어느 한쪽만 맞으면 붙이지 않는다). 이 배관에서 가장 믿을 만한 매칭이다.
+         *
+         * 그런데 예전엔 여기서 **세대수만 베끼고 `kaptCode` 는 버렸다.** 그래서 카드를 만들 때
+         * 사람이 `apt-hhld.json` 을 원라이너로 뒤져 주소·세대수를 눈으로 대조하며 **매일 열댓 번**
+         * 같은 답을 다시 찾았다. **코드가 이미 정확히 안 것을 사람이 다시 찾는 자리**였다.
+         *
+         * ⚠️ 이것은 「이름으로 자동 매칭」이 **아니다.** 그 금지 규칙(상록마을 사고)이 막는 것은
+         *    카드 만들 때 이름만 보고 갖다 붙이는 것이고, 여기서 잇는 값은 **판정이 지번까지
+         *    대조해 물린 그 항목**이다. 붙이는 것이 아니라 **이미 붙어 있던 것을 안 놓치는 것**이다.
+         * ⚠️ 못 물린 건은 `null` 이다 — 0 이나 빈 문자열로 채우지 않는다.
+         *    「모른다」와 「없다」가 같은 얼굴이 되면 그게 다음 오보의 자리다. */
+        hits.push({ ...h, hhld: u?.hhld ?? 0, kaptCode: u?.kaptCode ?? null });
       }
     }
     // 직거래·타 평형 포함 전건을 인덱스에 접어 넣는다 — 기록은 기록대로 남아야 한다

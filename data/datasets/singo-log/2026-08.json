@@ -3,7 +3,10 @@
     "month": "2026-08",
     "note": "매일 확인된 신고가 누적. foundOn = 우리가 확인한 날(계약일 아님). 주간 집계가 이 파일을 읽는다.",
     "baselineFrom": "202001",
-    "source": "국토교통부 아파트 매매 실거래가 상세자료"
+    "source": "국토교통부 아파트 매매 실거래가 상세자료",
+    "backfills": [
+      "2026-09-03: kaptCode 166건을 되돌려 채웠다. 새 판단이 아니라 그때와 같은 함수(pickUniverse)로 다시 계산한 값이다. 못 물린 건과 세대수가 달라진 건은 비워 뒀다."
+    ]
   },
   "hits": [
     {
@@ -52,7 +55,8 @@
       "prevPeakDate": "2026-05-23",
       "gainPct": 6.111111111111111,
       "milestone": null,
-      "hhld": 1256
+      "hhld": 1256,
+      "kaptCode": "A10023875"
     },
     {
       "foundOn": "2026-08-13",
@@ -100,7 +104,8 @@
       "prevPeakDate": "2026-03-06",
       "gainPct": 1.8404907975460123,
       "milestone": null,
-      "hhld": 1194
+      "hhld": 1194,
+      "kaptCode": "A10026879"
     },
     {
       "foundOn": "2026-08-13",
@@ -148,7 +153,8 @@
       "prevPeakDate": "2026-07-07",
       "gainPct": 1.8867924528301887,
       "milestone": null,
-      "hhld": 1223
+      "hhld": 1223,
+      "kaptCode": "A10023079"
     },
     {
       "foundOn": "2026-08-13",
@@ -172,7 +178,8 @@
       "prevPeakDate": "2026-06-09",
       "gainPct": 0.9584664536741214,
       "milestone": null,
-      "hhld": 1256
+      "hhld": 1256,
+      "kaptCode": "A10023875"
     },
     {
       "foundOn": "2026-08-13",
@@ -196,7 +203,8 @@
       "prevPeakDate": "2026-07-11",
       "gainPct": 0.3225806451612903,
       "milestone": null,
-      "hhld": 1188
+      "hhld": 1188,
+      "kaptCode": "A10027514"
     },
     {
       "foundOn": "2026-08-13",
@@ -220,7 +228,8 @@
       "prevPeakDate": "2026-07-24",
       "gainPct": 0.32573289902280134,
       "milestone": null,
-      "hhld": 1505
+      "hhld": 1505,
+      "kaptCode": "A10024741"
     },
     {
       "foundOn": "2026-08-13",
@@ -244,7 +253,8 @@
       "prevPeakDate": "2026-06-19",
       "gainPct": 0.7194244604316548,
       "milestone": null,
-      "hhld": 2417
+      "hhld": 2417,
+      "kaptCode": "A10022268"
     },
     {
       "foundOn": "2026-08-13",
@@ -268,7 +278,8 @@
       "prevPeakDate": "2026-06-05",
       "gainPct": 0.37174721189591076,
       "milestone": null,
-      "hhld": 1164
+      "hhld": 1164,
+      "kaptCode": "A15701602"
     },
     {
       "foundOn": "2026-08-13",
@@ -292,7 +303,8 @@
       "prevPeakDate": "2026-07-11",
       "gainPct": 1.5267175572519083,
       "milestone": null,
-      "hhld": 1174
+      "hhld": 1174,
+      "kaptCode": "A15005705"
     },
     {
       "foundOn": "2026-08-13",
@@ -316,7 +328,8 @@
       "prevPeakDate": "2026-05-16",
       "gainPct": 14.414414414414415,
       "milestone": null,
-      "hhld": 1168
+      "hhld": 1168,
+      "kaptCode": "A13686302"
     },
     {
       "foundOn": "2026-08-13",
@@ -340,7 +353,8 @@
       "prevPeakDate": "2026-07-30",
       "gainPct": 1.694915254237288,
       "milestone": null,
-      "hhld": 4250
+      "hhld": 4250,
+      "kaptCode": "A10027336"
     },
     {
       "foundOn": "2026-08-13",
@@ -364,7 +378,8 @@
       "prevPeakDate": "2026-07-05",
       "gainPct": 8.636363636363637,
       "milestone": null,
-      "hhld": 1186
+      "hhld": 1186,
+      "kaptCode": "A10026600"
     },
     {
       "foundOn": "2026-08-13",
@@ -388,7 +403,8 @@
       "prevPeakDate": "2026-04-18",
       "gainPct": 3.508771929824561,
       "milestone": null,
-      "hhld": 1164
+      "hhld": 1164,
+      "kaptCode": "A10027782"
     },
     {
       "foundOn": "2026-08-13",
@@ -412,7 +428,8 @@
       "prevPeakDate": "2026-07-14",
       "gainPct": 2.803738317757009,
       "milestone": null,
-      "hhld": 1983
+      "hhld": 1983,
+      "kaptCode": "A15209002"
     },
     {
       "foundOn": "2026-08-13",
@@ -436,7 +453,8 @@
       "prevPeakDate": "2026-06-29",
       "gainPct": 3.8834951456310676,
       "milestone": null,
-      "hhld": 1783
+      "hhld": 1783,
+      "kaptCode": "A10025621"
     },
     {
       "foundOn": "2026-08-13",
@@ -460,7 +478,8 @@
       "prevPeakDate": "2026-07-06",
       "gainPct": 2.2549019607843137,
       "milestone": null,
-      "hhld": 1318
+      "hhld": 1318,
+      "kaptCode": "A13082704"
     },
     {
       "foundOn": "2026-08-13",
@@ -484,7 +503,8 @@
       "prevPeakDate": "2026-07-18",
       "gainPct": 0.8080808080808081,
       "milestone": null,
-      "hhld": 1140
+      "hhld": 1140,
+      "kaptCode": "A10026388"
     },
     {
       "foundOn": "2026-08-13",
@@ -508,7 +528,8 @@
       "prevPeakDate": "2026-07-25",
       "gainPct": 4.761904761904762,
       "milestone": null,
-      "hhld": 1258
+      "hhld": 1258,
+      "kaptCode": "A46270901"
     },
     {
       "foundOn": "2026-08-13",
@@ -532,7 +553,8 @@
       "prevPeakDate": "2026-07-29",
       "gainPct": 5.113636363636364,
       "milestone": null,
-      "hhld": 2666
+      "hhld": 2666,
+      "kaptCode": "A10024349"
     },
     {
       "foundOn": "2026-08-13",
@@ -556,7 +578,8 @@
       "prevPeakDate": "2026-02-27",
       "gainPct": 1.7045454545454544,
       "milestone": null,
-      "hhld": 1541
+      "hhld": 1541,
+      "kaptCode": "A46271104"
     },
     {
       "foundOn": "2026-08-13",
@@ -580,7 +603,8 @@
       "prevPeakDate": "2021-07-17",
       "gainPct": 1.366742596810934,
       "milestone": null,
-      "hhld": 1113
+      "hhld": 1113,
+      "kaptCode": "A13185607"
     },
     {
       "foundOn": "2026-08-13",
@@ -604,7 +628,8 @@
       "prevPeakDate": "2026-07-20",
       "gainPct": 6.097560975609756,
       "milestone": null,
-      "hhld": 1800
+      "hhld": 1800,
+      "kaptCode": "A43181606"
     },
     {
       "foundOn": "2026-08-13",
@@ -628,7 +653,8 @@
       "prevPeakDate": "2026-07-24",
       "gainPct": 0.9523809523809524,
       "milestone": null,
-      "hhld": 2586
+      "hhld": 2586,
+      "kaptCode": "A10023630"
     },
     {
       "foundOn": "2026-08-13",
@@ -652,7 +678,8 @@
       "prevPeakDate": "2026-06-25",
       "gainPct": 2.8125,
       "milestone": null,
-      "hhld": 2607
+      "hhld": 2607,
+      "kaptCode": "A10022677"
     },
     {
       "foundOn": "2026-08-13",
@@ -676,7 +703,8 @@
       "prevPeakDate": "2026-07-21",
       "gainPct": 1.8633540372670807,
       "milestone": null,
-      "hhld": 2032
+      "hhld": 2032,
+      "kaptCode": "A42384503"
     },
     {
       "foundOn": "2026-08-13",
@@ -700,7 +728,8 @@
       "prevPeakDate": "2026-07-16",
       "gainPct": 3.896103896103896,
       "milestone": null,
-      "hhld": 3432
+      "hhld": 3432,
+      "kaptCode": "A10023085"
     },
     {
       "foundOn": "2026-08-13",
@@ -724,7 +753,8 @@
       "prevPeakDate": "2026-07-06",
       "gainPct": 6.164383561643835,
       "milestone": null,
-      "hhld": 2571
+      "hhld": 2571,
+      "kaptCode": "A44033010"
     },
     {
       "foundOn": "2026-08-13",
@@ -748,7 +778,8 @@
       "prevPeakDate": "2026-06-16",
       "gainPct": 1.3245033112582782,
       "milestone": null,
-      "hhld": 1018
+      "hhld": 1018,
+      "kaptCode": "A47174523"
     },
     {
       "foundOn": "2026-08-13",
@@ -772,7 +803,8 @@
       "prevPeakDate": "2021-09-13",
       "gainPct": 15,
       "milestone": null,
-      "hhld": 1380
+      "hhld": 1380,
+      "kaptCode": "A44340013"
     },
     {
       "foundOn": "2026-08-13",
@@ -796,7 +828,8 @@
       "prevPeakDate": "2021-10-28",
       "gainPct": 1.7006802721088436,
       "milestone": null,
-      "hhld": 1835
+      "hhld": 1835,
+      "kaptCode": "A44382404"
     },
     {
       "foundOn": "2026-08-13",
@@ -820,7 +853,8 @@
       "prevPeakDate": "2026-06-30",
       "gainPct": 3.0303030303030303,
       "milestone": null,
-      "hhld": 1068
+      "hhld": 1068,
+      "kaptCode": "A10020128"
     },
     {
       "foundOn": "2026-08-14",
@@ -844,7 +878,8 @@
       "prevPeakDate": "2025-11-22",
       "gainPct": 11.1731843575419,
       "milestone": null,
-      "hhld": 1077
+      "hhld": 1077,
+      "kaptCode": "A10028021"
     },
     {
       "foundOn": "2026-08-14",
@@ -868,7 +903,8 @@
       "prevPeakDate": "2026-07-16",
       "gainPct": 1.1764705882352942,
       "milestone": null,
-      "hhld": 1080
+      "hhld": 1080,
+      "kaptCode": "A15681502"
     },
     {
       "foundOn": "2026-08-14",
@@ -892,7 +928,8 @@
       "prevPeakDate": "2026-04-06",
       "gainPct": 3.278688524590164,
       "milestone": null,
-      "hhld": 2176
+      "hhld": 2176,
+      "kaptCode": "A15792602"
     },
     {
       "foundOn": "2026-08-14",
@@ -916,7 +953,8 @@
       "prevPeakDate": "2026-07-24",
       "gainPct": 4.3,
       "milestone": null,
-      "hhld": 1234
+      "hhld": 1234,
+      "kaptCode": "A13084803"
     },
     {
       "foundOn": "2026-08-14",
@@ -940,7 +978,8 @@
       "prevPeakDate": "2026-07-06",
       "gainPct": 2.083333333333333,
       "milestone": null,
-      "hhld": 2412
+      "hhld": 2412,
+      "kaptCode": "A15209207"
     },
     {
       "foundOn": "2026-08-14",
@@ -964,7 +1003,8 @@
       "prevPeakDate": "2026-04-24",
       "gainPct": 11.22754491017964,
       "milestone": null,
-      "hhld": 1378
+      "hhld": 1378,
+      "kaptCode": "A10023451"
     },
     {
       "foundOn": "2026-08-14",
@@ -988,7 +1028,8 @@
       "prevPeakDate": "2021-07-31",
       "gainPct": 4.444444444444445,
       "milestone": null,
-      "hhld": 1977
+      "hhld": 1977,
+      "kaptCode": "A43176406"
     },
     {
       "foundOn": "2026-08-16",
@@ -1012,7 +1053,8 @@
       "prevPeakDate": "2026-07-14",
       "gainPct": 5.263157894736842,
       "milestone": 10,
-      "hhld": 1633
+      "hhld": 1633,
+      "kaptCode": "A42385801"
     },
     {
       "foundOn": "2026-08-16",
@@ -1036,7 +1078,8 @@
       "prevPeakDate": "2026-02-07",
       "gainPct": 1.4705882352941175,
       "milestone": null,
-      "hhld": 1824
+      "hhld": 1824,
+      "kaptCode": "A10024473"
     },
     {
       "foundOn": "2026-08-16",
@@ -1060,7 +1103,8 @@
       "prevPeakDate": "2026-07-18",
       "gainPct": 0.6711409395973155,
       "milestone": null,
-      "hhld": 2198
+      "hhld": 2198,
+      "kaptCode": "A15728009"
     },
     {
       "foundOn": "2026-08-16",
@@ -1084,7 +1128,8 @@
       "prevPeakDate": "2026-07-16",
       "gainPct": 5.982905982905983,
       "milestone": null,
-      "hhld": 1162
+      "hhld": 1162,
+      "kaptCode": "A10025715"
     },
     {
       "foundOn": "2026-08-16",
@@ -1108,7 +1153,8 @@
       "prevPeakDate": "2026-07-02",
       "gainPct": 3.488372093023256,
       "milestone": null,
-      "hhld": 1633
+      "hhld": 1633,
+      "kaptCode": "A42385801"
     },
     {
       "foundOn": "2026-08-17",
@@ -1132,7 +1178,8 @@
       "prevPeakDate": "2021-08-17",
       "gainPct": 4,
       "milestone": null,
-      "hhld": 1342
+      "hhld": 1342,
+      "kaptCode": "A42385302"
     },
     {
       "foundOn": "2026-08-19",
@@ -1156,7 +1203,8 @@
       "prevPeakDate": "2026-05-30",
       "gainPct": 0.3048780487804878,
       "milestone": null,
-      "hhld": 1215
+      "hhld": 1215,
+      "kaptCode": "A15010502"
     },
     {
       "foundOn": "2026-08-19",
@@ -1180,7 +1228,8 @@
       "prevPeakDate": "2026-08-02",
       "gainPct": 0.949367088607595,
       "milestone": null,
-      "hhld": 1256
+      "hhld": 1256,
+      "kaptCode": "A10023875"
     },
     {
       "foundOn": "2026-08-19",
@@ -1204,7 +1253,8 @@
       "prevPeakDate": "2026-04-08",
       "gainPct": 3.1746031746031744,
       "milestone": null,
-      "hhld": 2072
+      "hhld": 2072,
+      "kaptCode": "A42370301"
     },
     {
       "foundOn": "2026-08-19",
@@ -1228,7 +1278,8 @@
       "prevPeakDate": "2026-07-08",
       "gainPct": 1.574803149606299,
       "milestone": null,
-      "hhld": 1044
+      "hhld": 1044,
+      "kaptCode": "A44898708"
     },
     {
       "foundOn": "2026-08-19",
@@ -1252,7 +1303,8 @@
       "prevPeakDate": "2026-06-23",
       "gainPct": 2,
       "milestone": null,
-      "hhld": 1305
+      "hhld": 1305,
+      "kaptCode": "A10025310"
     },
     {
       "foundOn": "2026-08-19",
@@ -1276,7 +1328,8 @@
       "prevPeakDate": "2026-07-15",
       "gainPct": 1.276595744680851,
       "milestone": null,
-      "hhld": 1330
+      "hhld": 1330,
+      "kaptCode": "A44377204"
     },
     {
       "foundOn": "2026-08-19",
@@ -1300,7 +1353,8 @@
       "prevPeakDate": "2026-07-11",
       "gainPct": 0.9090909090909091,
       "milestone": null,
-      "hhld": 1372
+      "hhld": 1372,
+      "kaptCode": "A13613007"
     },
     {
       "foundOn": "2026-08-19",
@@ -1324,7 +1378,8 @@
       "prevPeakDate": "2026-03-09",
       "gainPct": 2.803738317757009,
       "milestone": null,
-      "hhld": 1569
+      "hhld": 1569,
+      "kaptCode": "A10027619"
     },
     {
       "foundOn": "2026-08-19",
@@ -1348,7 +1403,8 @@
       "prevPeakDate": "2026-06-16",
       "gainPct": 0.9523809523809524,
       "milestone": null,
-      "hhld": 1155
+      "hhld": 1155,
+      "kaptCode": "A12012203"
     },
     {
       "foundOn": "2026-08-19",
@@ -1372,7 +1428,8 @@
       "prevPeakDate": "2026-07-18",
       "gainPct": 1.06951871657754,
       "milestone": null,
-      "hhld": 1378
+      "hhld": 1378,
+      "kaptCode": "A10023451"
     },
     {
       "foundOn": "2026-08-19",
@@ -1396,7 +1453,8 @@
       "prevPeakDate": "2026-08-03",
       "gainPct": 1.1235955056179776,
       "milestone": null,
-      "hhld": 1113
+      "hhld": 1113,
+      "kaptCode": "A13185607"
     },
     {
       "foundOn": "2026-08-19",
@@ -1420,7 +1478,8 @@
       "prevPeakDate": "2026-07-04",
       "gainPct": 1.2658227848101267,
       "milestone": null,
-      "hhld": 1021
+      "hhld": 1021,
+      "kaptCode": "A10023653"
     },
     {
       "foundOn": "2026-08-19",
@@ -1444,7 +1503,8 @@
       "prevPeakDate": "2026-07-30",
       "gainPct": 4.964539007092199,
       "milestone": null,
-      "hhld": 3391
+      "hhld": 3391,
+      "kaptCode": "A44384808"
     },
     {
       "foundOn": "2026-08-19",
@@ -1468,7 +1528,8 @@
       "prevPeakDate": "2022-01-13",
       "gainPct": 6.315789473684211,
       "milestone": null,
-      "hhld": 1371
+      "hhld": 1371,
+      "kaptCode": "A15209305"
     },
     {
       "foundOn": "2026-08-19",
@@ -1492,7 +1553,8 @@
       "prevPeakDate": "2026-06-25",
       "gainPct": 0.3236245954692557,
       "milestone": null,
-      "hhld": 1300
+      "hhld": 1300,
+      "kaptCode": "A10026603"
     },
     {
       "foundOn": "2026-08-19",
@@ -1516,7 +1578,8 @@
       "prevPeakDate": "2025-09-18",
       "gainPct": 1.7857142857142856,
       "milestone": null,
-      "hhld": 1872
+      "hhld": 1872,
+      "kaptCode": "A10023051"
     },
     {
       "foundOn": "2026-08-19",
@@ -1540,7 +1603,8 @@
       "prevPeakDate": "2026-04-30",
       "gainPct": 3.669724770642202,
       "milestone": null,
-      "hhld": 1594
+      "hhld": 1594,
+      "kaptCode": "A10026125"
     },
     {
       "foundOn": "2026-08-19",
@@ -1564,7 +1628,8 @@
       "prevPeakDate": "2021-10-02",
       "gainPct": 0.9615384615384616,
       "milestone": null,
-      "hhld": 1380
+      "hhld": 1380,
+      "kaptCode": "A44340013"
     },
     {
       "foundOn": "2026-08-21",
@@ -1588,7 +1653,8 @@
       "prevPeakDate": "2025-10-18",
       "gainPct": 3.255813953488372,
       "milestone": null,
-      "hhld": 2128
+      "hhld": 2128,
+      "kaptCode": "A10024433"
     },
     {
       "foundOn": "2026-08-21",
@@ -1612,7 +1678,8 @@
       "prevPeakDate": "2026-07-15",
       "gainPct": 1.8691588785046727,
       "milestone": null,
-      "hhld": 1221
+      "hhld": 1221,
+      "kaptCode": "A10026816"
     },
     {
       "foundOn": "2026-08-21",
@@ -1636,7 +1703,8 @@
       "prevPeakDate": "2026-04-09",
       "gainPct": 0.8264462809917356,
       "milestone": null,
-      "hhld": 1559
+      "hhld": 1559,
+      "kaptCode": "A15678103"
     },
     {
       "foundOn": "2026-08-21",
@@ -1660,7 +1728,8 @@
       "prevPeakDate": "2026-07-21",
       "gainPct": 0.3448275862068966,
       "milestone": null,
-      "hhld": 2517
+      "hhld": 2517,
+      "kaptCode": "A15701003"
     },
     {
       "foundOn": "2026-08-21",
@@ -1684,7 +1753,8 @@
       "prevPeakDate": "2026-07-16",
       "gainPct": 2.418207681365576,
       "milestone": null,
-      "hhld": 2140
+      "hhld": 2140,
+      "kaptCode": "A10026799"
     },
     {
       "foundOn": "2026-08-21",
@@ -1708,7 +1778,8 @@
       "prevPeakDate": "2026-07-03",
       "gainPct": 2.158273381294964,
       "milestone": null,
-      "hhld": 1711
+      "hhld": 1711,
+      "kaptCode": "A10024488"
     },
     {
       "foundOn": "2026-08-21",
@@ -1732,7 +1803,8 @@
       "prevPeakDate": "2021-09-03",
       "gainPct": 1.083032490974729,
       "milestone": null,
-      "hhld": 1174
+      "hhld": 1174,
+      "kaptCode": "A10025336"
     },
     {
       "foundOn": "2026-08-21",
@@ -1756,7 +1828,8 @@
       "prevPeakDate": "2026-04-19",
       "gainPct": 3.3457249070631967,
       "milestone": null,
-      "hhld": 2283
+      "hhld": 2283,
+      "kaptCode": "A13472701"
     },
     {
       "foundOn": "2026-08-21",
@@ -1780,7 +1853,8 @@
       "prevPeakDate": "2026-06-25",
       "gainPct": 1.1278195488721803,
       "milestone": null,
-      "hhld": 1852
+      "hhld": 1852,
+      "kaptCode": "A10022845"
     },
     {
       "foundOn": "2026-08-21",
@@ -1804,7 +1878,8 @@
       "prevPeakDate": "2026-07-12",
       "gainPct": 2.5841816758026623,
       "milestone": null,
-      "hhld": 1135
+      "hhld": 1135,
+      "kaptCode": "A10023503"
     },
     {
       "foundOn": "2026-08-21",
@@ -1828,7 +1903,8 @@
       "prevPeakDate": "2025-06-22",
       "gainPct": 2.766798418972332,
       "milestone": null,
-      "hhld": 2739
+      "hhld": 2739,
+      "kaptCode": "A10022506"
     },
     {
       "foundOn": "2026-08-21",
@@ -1852,7 +1928,8 @@
       "prevPeakDate": "2026-07-19",
       "gainPct": 4.098360655737705,
       "milestone": null,
-      "hhld": 2355
+      "hhld": 2355,
+      "kaptCode": "A10024170"
     },
     {
       "foundOn": "2026-08-21",
@@ -1876,7 +1953,8 @@
       "prevPeakDate": "2026-07-11",
       "gainPct": 0.6339144215530903,
       "milestone": null,
-      "hhld": 3850
+      "hhld": 3850,
+      "kaptCode": "A10023559"
     },
     {
       "foundOn": "2026-08-21",
@@ -1900,7 +1978,8 @@
       "prevPeakDate": "2026-07-30",
       "gainPct": 0.9174311926605505,
       "milestone": null,
-      "hhld": 1236
+      "hhld": 1236,
+      "kaptCode": "A10025946"
     },
     {
       "foundOn": "2026-08-21",
@@ -1924,7 +2003,8 @@
       "prevPeakDate": "2026-06-19",
       "gainPct": 0.5639097744360901,
       "milestone": null,
-      "hhld": 2412
+      "hhld": 2412,
+      "kaptCode": "A15209207"
     },
     {
       "foundOn": "2026-08-21",
@@ -1948,7 +2028,8 @@
       "prevPeakDate": "2026-07-21",
       "gainPct": 3.3398821218074657,
       "milestone": null,
-      "hhld": 4250
+      "hhld": 4250,
+      "kaptCode": "A10027336"
     },
     {
       "foundOn": "2026-08-21",
@@ -1972,7 +2053,8 @@
       "prevPeakDate": "2021-10-05",
       "gainPct": 5.147058823529411,
       "milestone": null,
-      "hhld": 1829
+      "hhld": 1829,
+      "kaptCode": "A44370614"
     },
     {
       "foundOn": "2026-08-21",
@@ -1996,7 +2078,8 @@
       "prevPeakDate": "2026-06-27",
       "gainPct": 5,
       "milestone": null,
-      "hhld": 1070
+      "hhld": 1070,
+      "kaptCode": "A44695804"
     },
     {
       "foundOn": "2026-08-21",
@@ -2020,7 +2103,8 @@
       "prevPeakDate": "2026-07-04",
       "gainPct": 0.8695652173913043,
       "milestone": null,
-      "hhld": 1245
+      "hhld": 1245,
+      "kaptCode": "A10022331"
     },
     {
       "foundOn": "2026-08-22",
@@ -2044,7 +2128,8 @@
       "prevPeakDate": "2026-06-26",
       "gainPct": 2.857142857142857,
       "milestone": null,
-      "hhld": 1482
+      "hhld": 1482,
+      "kaptCode": "A10024615"
     },
     {
       "foundOn": "2026-08-22",
@@ -2068,7 +2153,8 @@
       "prevPeakDate": "2026-08-03",
       "gainPct": 2.8169014084507045,
       "milestone": null,
-      "hhld": 1711
+      "hhld": 1711,
+      "kaptCode": "A10024488"
     },
     {
       "foundOn": "2026-08-22",
@@ -2092,7 +2178,8 @@
       "prevPeakDate": "2026-05-08",
       "gainPct": 1.9230769230769231,
       "milestone": null,
-      "hhld": 1786
+      "hhld": 1786,
+      "kaptCode": "A13010005"
     },
     {
       "foundOn": "2026-08-22",
@@ -2116,7 +2203,8 @@
       "prevPeakDate": "2026-06-04",
       "gainPct": 0.564516129032258,
       "milestone": null,
-      "hhld": 1104
+      "hhld": 1104,
+      "kaptCode": "A10026619"
     },
     {
       "foundOn": "2026-08-22",
@@ -2140,7 +2228,8 @@
       "prevPeakDate": "2026-06-08",
       "gainPct": 0.819672131147541,
       "milestone": null,
-      "hhld": 1192
+      "hhld": 1192,
+      "kaptCode": "A10024828"
     },
     {
       "foundOn": "2026-08-22",
@@ -2164,7 +2253,8 @@
       "prevPeakDate": "2026-06-30",
       "gainPct": 5.263157894736842,
       "milestone": null,
-      "hhld": 1187
+      "hhld": 1187,
+      "kaptCode": "A10024231"
     },
     {
       "foundOn": "2026-08-23",
@@ -2188,7 +2278,8 @@
       "prevPeakDate": "2026-07-18",
       "gainPct": 2.1212121212121215,
       "milestone": null,
-      "hhld": 1035
+      "hhld": 1035,
+      "kaptCode": "A44851511"
     },
     {
       "foundOn": "2026-08-23",
@@ -2212,7 +2303,8 @@
       "prevPeakDate": "2026-07-01",
       "gainPct": 3.942652329749104,
       "milestone": null,
-      "hhld": 1094
+      "hhld": 1094,
+      "kaptCode": "A10024453"
     },
     {
       "foundOn": "2026-08-25",
@@ -2236,7 +2328,8 @@
       "prevPeakDate": "2026-07-29",
       "gainPct": 0.5376344086021506,
       "milestone": null,
-      "hhld": 2356
+      "hhld": 2356,
+      "kaptCode": "A10025412"
     },
     {
       "foundOn": "2026-08-25",
@@ -2260,7 +2353,8 @@
       "prevPeakDate": "2026-08-13",
       "gainPct": 2.7586206896551726,
       "milestone": null,
-      "hhld": 1094
+      "hhld": 1094,
+      "kaptCode": "A10024453"
     },
     {
       "foundOn": "2026-08-25",
@@ -2284,7 +2378,8 @@
       "prevPeakDate": "2026-08-07",
       "gainPct": 0.684931506849315,
       "milestone": null,
-      "hhld": 1711
+      "hhld": 1711,
+      "kaptCode": "A10024488"
     },
     {
       "foundOn": "2026-08-25",
@@ -2308,7 +2403,8 @@
       "prevPeakDate": "2026-07-02",
       "gainPct": 12.890625,
       "milestone": null,
-      "hhld": 1308
+      "hhld": 1308,
+      "kaptCode": "A10023991"
     },
     {
       "foundOn": "2026-08-25",
@@ -2332,7 +2428,8 @@
       "prevPeakDate": "2026-02-28",
       "gainPct": 6.666666666666667,
       "milestone": null,
-      "hhld": 1174
+      "hhld": 1174,
+      "kaptCode": "A15005705"
     },
     {
       "foundOn": "2026-08-25",
@@ -2356,7 +2453,8 @@
       "prevPeakDate": "2026-07-11",
       "gainPct": 1.4285714285714286,
       "milestone": null,
-      "hhld": 2569
+      "hhld": 2569,
+      "kaptCode": "A10024831"
     },
     {
       "foundOn": "2026-08-25",
@@ -2380,7 +2478,8 @@
       "prevPeakDate": "2026-07-16",
       "gainPct": 4.747550866616428,
       "milestone": null,
-      "hhld": 1783
+      "hhld": 1783,
+      "kaptCode": "A10025621"
     },
     {
       "foundOn": "2026-08-25",
@@ -2404,7 +2503,8 @@
       "prevPeakDate": "2026-06-03",
       "gainPct": 12.115732368896925,
       "milestone": null,
-      "hhld": 1576
+      "hhld": 1576,
+      "kaptCode": "A44693813"
     },
     {
       "foundOn": "2026-08-25",
@@ -2428,7 +2528,8 @@
       "prevPeakDate": "2026-02-26",
       "gainPct": 2.413793103448276,
       "milestone": null,
-      "hhld": 1145
+      "hhld": 1145,
+      "kaptCode": "A10027344"
     },
     {
       "foundOn": "2026-08-25",
@@ -2452,7 +2553,8 @@
       "prevPeakDate": "2026-04-27",
       "gainPct": 8.49056603773585,
       "milestone": null,
-      "hhld": 3003
+      "hhld": 3003,
+      "kaptCode": "A13984004"
     },
     {
       "foundOn": "2026-08-25",
@@ -2476,7 +2578,8 @@
       "prevPeakDate": "2021-10-08",
       "gainPct": 4.41988950276243,
       "milestone": null,
-      "hhld": 1242
+      "hhld": 1242,
+      "kaptCode": "A44347021"
     },
     {
       "foundOn": "2026-08-25",
@@ -2500,7 +2603,8 @@
       "prevPeakDate": "2026-07-29",
       "gainPct": 2.197802197802198,
       "milestone": null,
-      "hhld": 1999
+      "hhld": 1999,
+      "kaptCode": "A10023833"
     },
     {
       "foundOn": "2026-08-25",
@@ -2524,7 +2628,8 @@
       "prevPeakDate": "2021-07-19",
       "gainPct": 0.33444816053511706,
       "milestone": null,
-      "hhld": 2328
+      "hhld": 2328,
+      "kaptCode": "A13922114"
     },
     {
       "foundOn": "2026-08-25",
@@ -2548,7 +2653,8 @@
       "prevPeakDate": "2026-07-06",
       "gainPct": 0.5617977528089888,
       "milestone": null,
-      "hhld": 2571
+      "hhld": 2571,
+      "kaptCode": "A44033010"
     },
     {
       "foundOn": "2026-08-25",
@@ -2572,7 +2678,8 @@
       "prevPeakDate": "2026-07-04",
       "gainPct": 1.1764705882352942,
       "milestone": null,
-      "hhld": 1297
+      "hhld": 1297,
+      "kaptCode": "A10023329"
     },
     {
       "foundOn": "2026-08-25",
@@ -2596,7 +2703,8 @@
       "prevPeakDate": "2022-04-05",
       "gainPct": 0.6711409395973155,
       "milestone": null,
-      "hhld": 1495
+      "hhld": 1495,
+      "kaptCode": "A15380403"
     },
     {
       "foundOn": "2026-08-25",
@@ -2620,7 +2728,8 @@
       "prevPeakDate": "2026-07-28",
       "gainPct": 0.8403361344537815,
       "milestone": null,
-      "hhld": 1190
+      "hhld": 1190,
+      "kaptCode": "A44347020"
     },
     {
       "foundOn": "2026-08-25",
@@ -2644,7 +2753,8 @@
       "prevPeakDate": "2025-10-29",
       "gainPct": 1.9607843137254901,
       "milestone": null,
-      "hhld": 1108
+      "hhld": 1108,
+      "kaptCode": "A10023740"
     },
     {
       "foundOn": "2026-08-26",
@@ -2668,7 +2778,8 @@
       "prevPeakDate": "2026-08-08",
       "gainPct": 0.4008016032064128,
       "milestone": 10,
-      "hhld": 1140
+      "hhld": 1140,
+      "kaptCode": "A10026388"
     },
     {
       "foundOn": "2026-08-26",
@@ -2692,7 +2803,8 @@
       "prevPeakDate": "2026-01-22",
       "gainPct": 2.7777777777777777,
       "milestone": null,
-      "hhld": 1015
+      "hhld": 1015,
+      "kaptCode": "A10024974"
     },
     {
       "foundOn": "2026-08-26",
@@ -2716,7 +2828,8 @@
       "prevPeakDate": "2026-02-13",
       "gainPct": 2.0408163265306123,
       "milestone": null,
-      "hhld": 1001
+      "hhld": 1001,
+      "kaptCode": "A14003106"
     },
     {
       "foundOn": "2026-08-26",
@@ -2740,7 +2853,8 @@
       "prevPeakDate": "2026-01-28",
       "gainPct": 2.2222222222222223,
       "milestone": null,
-      "hhld": 1082
+      "hhld": 1082,
+      "kaptCode": "A13778204"
     },
     {
       "foundOn": "2026-08-26",
@@ -2764,7 +2878,8 @@
       "prevPeakDate": "2026-05-13",
       "gainPct": 0.13089005235602094,
       "milestone": null,
-      "hhld": 1696
+      "hhld": 1696,
+      "kaptCode": "A15605103"
     },
     {
       "foundOn": "2026-08-26",
@@ -2788,7 +2903,8 @@
       "prevPeakDate": "2026-06-22",
       "gainPct": 2.4822695035460995,
       "milestone": null,
-      "hhld": 1252
+      "hhld": 1252,
+      "kaptCode": "A15205513"
     },
     {
       "foundOn": "2026-08-26",
@@ -2812,7 +2928,8 @@
       "prevPeakDate": "2026-07-11",
       "gainPct": 4.94752623688156,
       "milestone": null,
-      "hhld": 1035
+      "hhld": 1035,
+      "kaptCode": "A43174208"
     },
     {
       "foundOn": "2026-08-26",
@@ -2836,7 +2953,8 @@
       "prevPeakDate": "2022-03-22",
       "gainPct": 5.7915057915057915,
       "milestone": null,
-      "hhld": 1653
+      "hhld": 1653,
+      "kaptCode": "A15703204"
     },
     {
       "foundOn": "2026-08-26",
@@ -2860,7 +2978,8 @@
       "prevPeakDate": "2026-06-16",
       "gainPct": 7.462686567164178,
       "milestone": null,
-      "hhld": 1544
+      "hhld": 1544,
+      "kaptCode": "A13187702"
     },
     {
       "foundOn": "2026-08-26",
@@ -2884,7 +3003,8 @@
       "prevPeakDate": "2026-06-25",
       "gainPct": 3.1578947368421053,
       "milestone": null,
-      "hhld": 1031
+      "hhld": 1031,
+      "kaptCode": "A10024040"
     },
     {
       "foundOn": "2026-08-26",
@@ -2908,7 +3028,8 @@
       "prevPeakDate": "2026-07-08",
       "gainPct": 5.027932960893855,
       "milestone": null,
-      "hhld": 1394
+      "hhld": 1394,
+      "kaptCode": "A10025331"
     },
     {
       "foundOn": "2026-08-26",
@@ -2932,7 +3053,8 @@
       "prevPeakDate": "2026-07-30",
       "gainPct": 0.8,
       "milestone": null,
-      "hhld": 1253
+      "hhld": 1253,
+      "kaptCode": "A13612002"
     },
     {
       "foundOn": "2026-08-26",
@@ -2956,7 +3078,8 @@
       "prevPeakDate": "2026-07-29",
       "gainPct": 3.5294117647058822,
       "milestone": null,
-      "hhld": 1880
+      "hhld": 1880,
+      "kaptCode": "A13987304"
     },
     {
       "foundOn": "2026-08-26",
@@ -2980,7 +3103,8 @@
       "prevPeakDate": "2022-03-17",
       "gainPct": 7.6923076923076925,
       "milestone": null,
-      "hhld": 1371
+      "hhld": 1371,
+      "kaptCode": "A15209305"
     },
     {
       "foundOn": "2026-08-26",
@@ -3004,7 +3128,8 @@
       "prevPeakDate": "2026-07-10",
       "gainPct": 5.673758865248227,
       "milestone": null,
-      "hhld": 1977
+      "hhld": 1977,
+      "kaptCode": "A43176406"
     },
     {
       "foundOn": "2026-08-26",
@@ -3028,7 +3153,8 @@
       "prevPeakDate": "2026-07-24",
       "gainPct": 0.40705563093622793,
       "milestone": null,
-      "hhld": 1067
+      "hhld": 1067,
+      "kaptCode": "A10026380"
     },
     {
       "foundOn": "2026-08-26",
@@ -3052,7 +3178,8 @@
       "prevPeakDate": "2026-06-27",
       "gainPct": 2.2388059701492535,
       "milestone": null,
-      "hhld": 1444
+      "hhld": 1444,
+      "kaptCode": "A10027267"
     },
     {
       "foundOn": "2026-08-26",
@@ -3076,7 +3203,8 @@
       "prevPeakDate": "2026-02-21",
       "gainPct": 8.064516129032258,
       "milestone": null,
-      "hhld": 3169
+      "hhld": 3169,
+      "kaptCode": "A13202312"
     },
     {
       "foundOn": "2026-08-26",
@@ -3100,7 +3228,8 @@
       "prevPeakDate": "2021-09-10",
       "gainPct": 5.454545454545454,
       "milestone": null,
-      "hhld": 1046
+      "hhld": 1046,
+      "kaptCode": "A42084908"
     },
     {
       "foundOn": "2026-08-27",
@@ -3124,7 +3253,8 @@
       "prevPeakDate": "2026-07-03",
       "gainPct": 0.25,
       "milestone": null,
-      "hhld": 1317
+      "hhld": 1317,
+      "kaptCode": "A10024552"
     },
     {
       "foundOn": "2026-08-27",
@@ -3148,7 +3278,8 @@
       "prevPeakDate": "2025-10-15",
       "gainPct": 1.4814814814814816,
       "milestone": null,
-      "hhld": 1034
+      "hhld": 1034,
+      "kaptCode": "A10026207"
     },
     {
       "foundOn": "2026-08-27",
@@ -3172,7 +3303,8 @@
       "prevPeakDate": "2026-02-19",
       "gainPct": 0.53475935828877,
       "milestone": null,
-      "hhld": 1320
+      "hhld": 1320,
+      "kaptCode": "A13482706"
     },
     {
       "foundOn": "2026-08-27",
@@ -3196,7 +3328,8 @@
       "prevPeakDate": "2026-02-06",
       "gainPct": 3.3333333333333335,
       "milestone": null,
-      "hhld": 1592
+      "hhld": 1592,
+      "kaptCode": "A14320304"
     },
     {
       "foundOn": "2026-08-27",
@@ -3220,7 +3353,8 @@
       "prevPeakDate": "2026-03-21",
       "gainPct": 5.844155844155844,
       "milestone": null,
-      "hhld": 1598
+      "hhld": 1598,
+      "kaptCode": "A10045404"
     },
     {
       "foundOn": "2026-08-27",
@@ -3244,7 +3378,8 @@
       "prevPeakDate": "2026-08-05",
       "gainPct": 4.028776978417266,
       "milestone": null,
-      "hhld": 2283
+      "hhld": 2283,
+      "kaptCode": "A13472701"
     },
     {
       "foundOn": "2026-08-27",
@@ -3268,7 +3403,8 @@
       "prevPeakDate": "2026-07-16",
       "gainPct": 0.08340283569641367,
       "milestone": null,
-      "hhld": 3544
+      "hhld": 3544,
+      "kaptCode": "A15180705"
     },
     {
       "foundOn": "2026-08-27",
@@ -3292,7 +3428,8 @@
       "prevPeakDate": "2026-07-09",
       "gainPct": 2.8947368421052633,
       "milestone": null,
-      "hhld": 1335
+      "hhld": 1335,
+      "kaptCode": "A10023536"
     },
     {
       "foundOn": "2026-08-27",
@@ -3316,7 +3453,8 @@
       "prevPeakDate": "2026-08-08",
       "gainPct": 5.465004793863854,
       "milestone": null,
-      "hhld": 1318
+      "hhld": 1318,
+      "kaptCode": "A13082704"
     },
     {
       "foundOn": "2026-08-27",
@@ -3340,7 +3478,8 @@
       "prevPeakDate": "2026-07-18",
       "gainPct": 2.2615535889872174,
       "milestone": null,
-      "hhld": 1983
+      "hhld": 1983,
+      "kaptCode": "A15209002"
     },
     {
       "foundOn": "2026-08-27",
@@ -3364,7 +3503,8 @@
       "prevPeakDate": "2026-05-29",
       "gainPct": 0.8421052631578947,
       "milestone": null,
-      "hhld": 2586
+      "hhld": 2586,
+      "kaptCode": "A10023630"
     },
     {
       "foundOn": "2026-08-27",
@@ -3388,7 +3528,8 @@
       "prevPeakDate": "2026-07-23",
       "gainPct": 3.076923076923077,
       "milestone": null,
-      "hhld": 1744
+      "hhld": 1744,
+      "kaptCode": "A44851611"
     },
     {
       "foundOn": "2026-08-27",
@@ -3412,7 +3553,8 @@
       "prevPeakDate": "2026-07-13",
       "gainPct": 3.5294117647058822,
       "milestone": null,
-      "hhld": 1234
+      "hhld": 1234,
+      "kaptCode": "A13084803"
     },
     {
       "foundOn": "2026-08-27",
@@ -3436,7 +3578,8 @@
       "prevPeakDate": "2026-06-18",
       "gainPct": 0.36719706242350064,
       "milestone": null,
-      "hhld": 2055
+      "hhld": 2055,
+      "kaptCode": "A46571004"
     },
     {
       "foundOn": "2026-08-27",
@@ -3460,7 +3603,8 @@
       "prevPeakDate": "2021-09-18",
       "gainPct": 0.15151515151515152,
       "milestone": null,
-      "hhld": 1596
+      "hhld": 1596,
+      "kaptCode": "A10027421"
     },
     {
       "foundOn": "2026-08-28",
@@ -3484,7 +3628,8 @@
       "prevPeakDate": "2026-06-30",
       "gainPct": 0.5025125628140703,
       "milestone": 20,
-      "hhld": 1559
+      "hhld": 1559,
+      "kaptCode": "A15678103"
     },
     {
       "foundOn": "2026-08-28",
@@ -3508,7 +3653,8 @@
       "prevPeakDate": "2026-04-02",
       "gainPct": 10.59322033898305,
       "milestone": null,
-      "hhld": 2105
+      "hhld": 2105,
+      "kaptCode": "A15178201"
     },
     {
       "foundOn": "2026-08-28",
@@ -3532,7 +3678,8 @@
       "prevPeakDate": "2026-07-23",
       "gainPct": 5.833333333333333,
       "milestone": null,
-      "hhld": 1372
+      "hhld": 1372,
+      "kaptCode": "A13613007"
     },
     {
       "foundOn": "2026-08-28",
@@ -3556,7 +3703,8 @@
       "prevPeakDate": "2026-06-03",
       "gainPct": 7.6923076923076925,
       "milestone": null,
-      "hhld": 1998
+      "hhld": 1998,
+      "kaptCode": "A13615003"
     },
     {
       "foundOn": "2026-08-28",
@@ -3580,7 +3728,8 @@
       "prevPeakDate": "2026-07-24",
       "gainPct": 3.1746031746031744,
       "milestone": null,
-      "hhld": 1035
+      "hhld": 1035,
+      "kaptCode": "A43174208"
     },
     {
       "foundOn": "2026-08-28",
@@ -3604,7 +3753,8 @@
       "prevPeakDate": "2026-05-27",
       "gainPct": 3.6999999999999997,
       "milestone": null,
-      "hhld": 1077
+      "hhld": 1077,
+      "kaptCode": "A47170801"
     },
     {
       "foundOn": "2026-08-28",
@@ -3628,7 +3778,8 @@
       "prevPeakDate": "2021-07-31",
       "gainPct": 1.7000000000000002,
       "milestone": null,
-      "hhld": 1980
+      "hhld": 1980,
+      "kaptCode": "A13987306"
     },
     {
       "foundOn": "2026-08-28",
@@ -3652,7 +3803,8 @@
       "prevPeakDate": "2026-08-08",
       "gainPct": 2.2964509394572024,
       "milestone": null,
-      "hhld": 2586
+      "hhld": 2586,
+      "kaptCode": "A10023630"
     },
     {
       "foundOn": "2026-08-28",
@@ -3676,7 +3828,8 @@
       "prevPeakDate": "2026-06-13",
       "gainPct": 0.5291005291005291,
       "milestone": null,
-      "hhld": 1552
+      "hhld": 1552,
+      "kaptCode": "A10027281"
     },
     {
       "foundOn": "2026-08-28",
@@ -3700,7 +3853,8 @@
       "prevPeakDate": "2026-05-30",
       "gainPct": 1.875,
       "milestone": null,
-      "hhld": 1344
+      "hhld": 1344,
+      "kaptCode": "A14210002"
     },
     {
       "foundOn": "2026-08-29",
@@ -3724,7 +3878,8 @@
       "prevPeakDate": "2026-08-05",
       "gainPct": 2.2508038585209005,
       "milestone": null,
-      "hhld": 1188
+      "hhld": 1188,
+      "kaptCode": "A10027514"
     },
     {
       "foundOn": "2026-08-29",
@@ -3748,7 +3903,8 @@
       "prevPeakDate": "2026-02-24",
       "gainPct": 2.2900763358778624,
       "milestone": null,
-      "hhld": 2104
+      "hhld": 2104,
+      "kaptCode": "A15105302"
     },
     {
       "foundOn": "2026-08-29",
@@ -3772,7 +3928,8 @@
       "prevPeakDate": "2026-06-24",
       "gainPct": 3.3333333333333335,
       "milestone": null,
-      "hhld": 1466
+      "hhld": 1466,
+      "kaptCode": "A44656712"
     },
     {
       "foundOn": "2026-08-29",
@@ -3796,7 +3953,8 @@
       "prevPeakDate": "2026-07-19",
       "gainPct": 0.5932203389830508,
       "milestone": null,
-      "hhld": 1164
+      "hhld": 1164,
+      "kaptCode": "A10027782"
     },
     {
       "foundOn": "2026-08-29",
@@ -3820,7 +3978,8 @@
       "prevPeakDate": "2026-07-17",
       "gainPct": 3.7735849056603774,
       "milestone": null,
-      "hhld": 1833
+      "hhld": 1833,
+      "kaptCode": "A10023989"
     },
     {
       "foundOn": "2026-08-29",
@@ -3844,7 +4003,8 @@
       "prevPeakDate": "2026-08-06",
       "gainPct": 1.935483870967742,
       "milestone": null,
-      "hhld": 2571
+      "hhld": 2571,
+      "kaptCode": "A44033010"
     },
     {
       "foundOn": "2026-08-29",
@@ -3868,7 +4028,8 @@
       "prevPeakDate": "2026-07-08",
       "gainPct": 9.859154929577464,
       "milestone": null,
-      "hhld": 2666
+      "hhld": 2666,
+      "kaptCode": "A10024349"
     },
     {
       "foundOn": "2026-08-29",
@@ -3892,7 +4053,8 @@
       "prevPeakDate": "2026-07-28",
       "gainPct": 5.633802816901409,
       "milestone": null,
-      "hhld": 1387
+      "hhld": 1387,
+      "kaptCode": "A10027114"
     },
     {
       "foundOn": "2026-08-29",
@@ -3916,7 +4078,8 @@
       "prevPeakDate": "2026-06-15",
       "gainPct": 3.571428571428571,
       "milestone": null,
-      "hhld": 1018
+      "hhld": 1018,
+      "kaptCode": "A44182326"
     },
     {
       "foundOn": "2026-08-29",
@@ -3940,7 +4103,8 @@
       "prevPeakDate": "2026-07-06",
       "gainPct": 7.6923076923076925,
       "milestone": null,
-      "hhld": 1833
+      "hhld": 1833,
+      "kaptCode": "A10023989"
     },
     {
       "foundOn": "2026-08-29",
@@ -3964,7 +4128,8 @@
       "prevPeakDate": "2026-07-30",
       "gainPct": 7.596899224806202,
       "milestone": null,
-      "hhld": 3129
+      "hhld": 3129,
+      "kaptCode": "A44347026"
     },
     {
       "foundOn": "2026-08-29",
@@ -3988,7 +4153,8 @@
       "prevPeakDate": "2026-08-08",
       "gainPct": 9.523809523809524,
       "milestone": null,
-      "hhld": 1380
+      "hhld": 1380,
+      "kaptCode": "A44340013"
     },
     {
       "foundOn": "2026-08-30",
@@ -4012,7 +4178,8 @@
       "prevPeakDate": "2026-07-25",
       "gainPct": 1.8450184501845017,
       "milestone": null,
-      "hhld": 2298
+      "hhld": 2298,
+      "kaptCode": "A15288814"
     },
     {
       "foundOn": "2026-08-31",
@@ -4036,7 +4203,8 @@
       "prevPeakDate": "2026-07-26",
       "gainPct": 1.6042780748663104,
       "milestone": null,
-      "hhld": 2356
+      "hhld": 2356,
+      "kaptCode": "A10025412"
     },
     {
       "foundOn": "2026-08-31",
@@ -4060,7 +4228,8 @@
       "prevPeakDate": "2021-11-27",
       "gainPct": 5.511811023622047,
       "milestone": null,
-      "hhld": 1437
+      "hhld": 1437,
+      "kaptCode": "A10026065"
     }
   ]
 }

@@ -88,18 +88,11 @@ if (!APT) {
 }
 const DATE = arg("date") ?? new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 
-/* ── 단지 개요를 실을 때 쓰는 대장 열쇠 (--kapt A46378521)
-   ⚠️ 이름으로 자동 매칭하지 않는다. 그러다 `상록마을(라이프2차)` 가 남의 단지
+/* ── 단지 개요를 실을 때 쓰는 대장 열쇠
+   ⚠️ **이름으로 자동 매칭하지 않는다.** 그러다 `상록마을(라이프2차)` 가 남의 단지
       `정자상록마을우성(1,762세대)` 에 붙어 세대수가 그대로 알림에 나갔다(2026-08-13).
-      대장 항목은 **사람이 짚어 준 kaptCode 로만** 물린다 — 어느 단지인지 카드 meta 에 남는다. */
-const KAPT = arg("kapt");
-let kapt = null;
-if (KAPT) {
-  const hp = P("data/datasets/apt-hhld.json");
-  if (!existsSync(hp)) throw new Error("data/datasets/apt-hhld.json 이 없습니다 — 대장 세대수를 물릴 수 없습니다.");
-  kapt = JSON.parse(readFileSync(hp, "utf8")).byKapt[KAPT];
-  if (!kapt) throw new Error(`공동주택 대장에 ${KAPT} 가 없습니다.`);
-}
+      이 규칙은 그대로다 — 아래에서 열쇠를 어디서 얻는지 보라. */
+const KAPT_ARG = arg("kapt");
 
 /* ── ① 판정 결과 찾기 — 누적 로그에서 그 단지·그 타입의 건 */
 const logDir = P("data/datasets/singo-log");
@@ -132,6 +125,35 @@ if (!hit) {
     `신고가 로그에서 "${APT}" 전용 ${TYPE}타입 건을 못 찾았습니다 — data/datasets/singo-log 를 확인하세요.` +
       (MERGE ? "" : `\n→ 한 단지가 (2단지)처럼 블록별로 신고된 곳이면 --merge-blocks 를 붙여 보세요.`),
   );
+}
+
+/* ── ①-a 대장 열쇠(kaptCode) 정하기 — **판정이 물려 둔 것을 잇는다** (2026-09-03 오너 지시)
+ *
+ * 예전엔 `--kapt` 로 **사람이 짚은 것만** 썼다. 그 규칙의 이유는 「이름으로 갖다 붙이면
+ * 남의 단지가 붙는다」(상록마을 2026-08-13)였고, 그건 지금도 맞다.
+ *
+ * 그런데 아침 판정기가 **이미 그 열쇠를 정확히 물려 놓는다** — `pickUniverse` 가
+ * **이름과 지번이 서로를 검사**하게 해서(09-02 강화판, 한쪽만 맞으면 안 붙인다) 고른 항목이다.
+ * 그걸 로그에 남기지 않고 버리는 바람에, 카드를 만들 때 사람이 원라이너로 대장을 뒤져
+ * 주소·세대수를 눈으로 대조하며 **매일 열댓 번 같은 답을 다시 찾았다.**
+ * 그 손작업이야말로 금지된 「이름 매칭」에 가까운 방식이었다(19건 중 8건이 빗나갔던 그 방식).
+ *
+ * → 그래서 순서를 이렇게 둔다:
+ *     ⑴ `--kapt` 를 줬으면 **그것이 이긴다** (사람이 짚은 것이 언제나 우선)
+ *     ⑵ 없으면 **로그의 `kaptCode`** 를 쓴다 — 판정이 지번까지 대조해 물린 값
+ *     ⑶ 둘 다 없으면 예전처럼 `null` — 세대수·주차·평이 빠지고, 공급면적 문지기가 막는다
+ *
+ * ⚠️ 어느 쪽에서 왔는지 **카드 meta 에 남긴다.** 나중에 "이 단지 맞나"를 되물을 수 있어야 한다.
+ * ⚠️ 옛 로그(09-03 이전)에는 `kaptCode` 가 없다 — 그때는 ⑶ 으로 떨어진다. 정상이다. */
+const KAPT = KAPT_ARG ?? hit.kaptCode ?? null;
+const KAPT_FROM = KAPT_ARG ? "사람이 짚었다(--kapt)" : hit.kaptCode ? "판정이 물린 값(singo-log 의 kaptCode · 이름+지번 대조)" : null;
+let kapt = null;
+if (KAPT) {
+  const hp = P("data/datasets/apt-hhld.json");
+  if (!existsSync(hp)) throw new Error("data/datasets/apt-hhld.json 이 없습니다 — 대장 세대수를 물릴 수 없습니다.");
+  kapt = JSON.parse(readFileSync(hp, "utf8")).byKapt[KAPT];
+  if (!kapt) throw new Error(`공동주택 대장에 ${KAPT} 가 없습니다.`);
+  if (!KAPT_ARG) console.log(`ⓘ 대장 열쇠를 판정 결과에서 이어받았습니다 — ${KAPT} (${kapt.name} · ${kapt.hhld.toLocaleString("ko-KR")}세대)`);
 }
 
 /* ── ①-b 합쳤다면 **정말 한 단지가 맞는지 자료에 되묻는다**
@@ -1180,12 +1202,15 @@ const card = {
           /* ⚠️ 예전엔 여기에 "오너가 2026-08-13 확인했다"가 **단지와 무관하게 박혀** 있었다.
              그 카드에서만 참인 말이 모든 카드에 붙으면, 다음 검수가 있지도 않은 확인을
              근거로 삼는다(2026-08-16b 검수가 잡았다). **이 실행에서 참인 것만 적는다.** */
+          /* 열쇠가 **어디서 왔는지** 남긴다 — 사람이 짚었나, 판정이 물린 것을 이었나.
+             둘 다 이름 매칭이 아니지만 근거가 다르므로 되짚을 때 구분돼야 한다(2026-09-03). */
+          keyFrom: KAPT_FROM,
           note:
             `공동주택 대장 값. 실거래 표기(${hit.aptNm})와 대장 표기(${kapt.name})가 달라 ` +
-            `**이름으로 자동 매칭하지 않고 --kapt ${KAPT} 로 사람이 짚었다.** ` +
+            `**이름으로 자동 매칭하지 않았다** — 열쇠 ${KAPT} 는 ${KAPT_FROM}. ` +
             `대조 근거: 실거래 지번 ${hit.umdNm} ${hit.jibun ?? "(지번 없음)"} ↔ 대장 주소 ${kapt.addr}`,
         }
-      : { note: "세대수는 싣지 않는다 — 대장 항목을 짚지 않았다(--kapt 미지정)." },
+      : { note: "세대수는 싣지 않는다 — 대장 열쇠가 없다(--kapt 미지정이고 판정 로그에도 kaptCode 가 없다)." },
     parking: parking
       ? {
           ground: parking.parkGround,
