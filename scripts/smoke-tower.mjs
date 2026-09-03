@@ -37,9 +37,11 @@ const { chromium } = require("playwright-core");
 
 let pass = 0;
 let fail = 0;
+/* 실패한 검사의 이름 — 맨 아래에서 "왜 실패했나"를 짚어 주는 데 쓴다(2026-09-03) */
+const failedNames = [];
 const check = (name, ok, detail) => {
   if (ok) { pass++; console.log(`  ✅ ${name}`); }
-  else { fail++; console.log(`  ❌ ${name}${detail ? ` — ${detail}` : ""}`); }
+  else { fail++; failedNames.push(name); console.log(`  ❌ ${name}${detail ? ` — ${detail}` : ""}`); }
 };
 
 // 사전 설치 경로가 있으면 그걸 쓰고(로컬), 없으면 playwright 기본 탐색(CI)
@@ -568,4 +570,21 @@ if (localOnlyMissing.length) {
 
 await browser.close();
 console.log(`\n${fail ? "❌" : "✅"} ${pass}/${pass + fail} 통과`);
+/* ── 새 컨테이너에서 늘 걸리던 두 개 (2026-09-03) ──
+ * 카드 PNG(`data/out`)와 콘텐츠 JSON(`data/content`)은 gitignore 라 clone 직후엔 없다.
+ * 그러면 썸네일도 결재 화면 실물도 만들 수 없어 이 두 검사만 빨간불이 되고,
+ * **`confirm.mjs` 가 그 자리에서 멈춰 어떤 카드도 확정되지 않는다.**
+ * 원인이 관제탑이 아니라 "아직 안 그렸다"는 것이라 다음 사람이 관제탑 코드를 파게 된다.
+ * 그래서 여기서 직접 말해 준다 — 고치는 법은 관제탑이 아니라 렌더다. */
+if (fail) {
+  const thumbish = /썸네일|실물/;
+  if (failedNames.some((n) => thumbish.test(n))) {
+    console.log(
+      "\n   ℹ️  썸네일·실물이 비어 있으면 관제탑 잘못이 아니라 **아직 안 그린 것**입니다.\n" +
+        "      카드 PNG 는 data/out(gitignore)에 있고 clone 직후엔 비어 있습니다. 먼저 그리세요:\n" +
+        "        node scripts/render-sets.mjs && node scripts/build-archive.mjs && node scripts/build-tower-site.mjs\n" +
+        "      (170장 렌더에 10분 안팎 걸립니다. Actions 는 이 순서를 이미 밟습니다)",
+    );
+  }
+}
 process.exit(fail ? 1 : 0);

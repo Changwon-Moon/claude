@@ -146,6 +146,13 @@ node scripts/smoke-tower.mjs
 # 관제탑 다시 생성 — 이걸 쓴다(폰트 복사 + _site 조립까지 한 번에)
 node scripts/build-tower-site.mjs
 
+# ⚠️ 새 컨테이너에서 스모크가 「309/311 · 썸네일·실물 2건」으로 막히면 관제탑 잘못이 아니다.
+#    카드 PNG(data/out)가 gitignore 라 clone 직후엔 비어 있어서다 — 먼저 그린다.
+#    (rebuild-cards 로는 안 된다. 그건 data/out 에 PNG 를 남기지 않는다)
+#    자세한 것: docs/guides/관제탑-썸네일.md
+node scripts/render-sets.mjs && node scripts/build-archive.mjs \
+  && node scripts/stage-public-cards.mjs && node scripts/build-tower-site.mjs
+
 # 카드 한 장만 렌더 (경로는 절대경로로!)
 pnpm -s --filter @wirit/renderer render --data /절대경로/카드.json --out /출력폴더
 
