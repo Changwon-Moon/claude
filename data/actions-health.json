@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-03T01:36:02.522Z",
+  "generatedAt": "2026-09-03T02:38:43.060Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -931,9 +931,9 @@
       "name": "공급면적 — 자동 재시도",
       "lastRun": "2026-09-03",
       "daysAgo": 0,
-      "lastOk": null,
-      "okDaysAgo": null,
-      "fails30": 0,
+      "lastOk": "2026-09-03",
+      "okDaysAgo": 0,
+      "fails30": 1,
       "runs30": 2
     },
     {
@@ -943,8 +943,8 @@
       "daysAgo": 0,
       "lastOk": "2026-09-03",
       "okDaysAgo": 0,
-      "fails30": 15,
-      "runs30": 43
+      "fails30": 17,
+      "runs30": 46
     },
     {
       "file": "guard.yml",
@@ -953,7 +953,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-03",
       "okDaysAgo": 0,
-      "fails30": 2,
+      "fails30": 1,
       "runs30": 100
     },
     {
@@ -993,7 +993,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-03",
       "okDaysAgo": 0,
-      "fails30": 0,
+      "fails30": 2,
       "runs30": 100
     }
   ]
