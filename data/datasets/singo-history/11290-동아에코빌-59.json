@@ -5,15 +5,15 @@
     "aptNm": "동아에코빌",
     "type": "59",
     "from": "202001",
-    "to": "202608",
-    "monthsTried": 80,
+    "to": "202609",
+    "monthsTried": 81,
     "monthsFailed": 0,
     "monthsTraded": 62,
     "peak": {
-      "manwon": 88200,
-      "date": "2026-08-12",
+      "manwon": 94000,
+      "date": "2026-08-13",
       "area": 59.95,
-      "floor": 16
+      "floor": 13
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -714,11 +714,11 @@
     },
     {
       "ym": "202606",
-      "maxManwon": 85000,
-      "count": 5,
+      "maxManwon": 91500,
+      "count": 6,
       "area": 59.95,
-      "floor": 3,
-      "date": "2026-06-26",
+      "floor": 17,
+      "date": "2026-06-13",
       "ok": true
     },
     {
@@ -732,11 +732,20 @@
     },
     {
       "ym": "202608",
-      "maxManwon": 88200,
-      "count": 1,
+      "maxManwon": 94000,
+      "count": 2,
       "area": 59.95,
-      "floor": 16,
-      "date": "2026-08-12",
+      "floor": 13,
+      "date": "2026-08-13",
+      "ok": true
+    },
+    {
+      "ym": "202609",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
       "ok": true
     }
   ]
