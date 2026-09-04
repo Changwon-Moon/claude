@@ -184,7 +184,11 @@ export function supplyAreaOf(rows: Row[], wantExclusive: number, tolerance = 0.6
     ...(excluded.length
       ? {
           excludedFromCommon: excluded
-            .map((r) => ({ purpose: String(r.mainPurpsCdNm ?? ""), area: num(r.area) }))
+            /* 큰 갈래만 적으면 「부대시설 20.5」가 되어 무엇을 뺐는지 안 보인다 — 구체 용도까지 적는다 */
+            .map((r) => ({
+              purpose: `${r.mainPurpsCdNm ?? ""}${(r as { etcPurps?: string }).etcPurps ? ` / ${(r as { etcPurps?: string }).etcPurps}` : ""}`.trim(),
+              area: num(r.area),
+            }))
             .sort((a, b) => b.area - a.area),
           excludedNote:
             "대장이 「주건축물」로 적었지만 주차장·대피소는 기타공용이라 공급면적에서 뺐다(2026-09-05). " +

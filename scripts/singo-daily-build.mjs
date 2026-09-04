@@ -165,7 +165,7 @@ for (const h of hits) {
     noKey.push({ h, slug, type });
     continue;
   }
-  const t = { h, slug, type, kapt: h.kaptCode };
+  const t = { h, slug, type, kapt: h.kaptCode, base };
   targets.push(t);
 
   const sup = `data/datasets/apt-supply/${h.kaptCode}-${areaType(h.area)}.json`;
@@ -254,14 +254,41 @@ if (blocked) {
 }
 
 /* ── ③ 카드 만들기 ────────────────────────────────────────────────────────── */
+/* ⚠️ **이미 등록된 빌더에 사람이 붙여 둔 손잡이를 여기서도 이어받는다** (2026-09-05)
+ *
+ * 아래 ④ 는 등록할 때 `--name`·`--accept-supply-warn` 같은 사람의 판단을 지키는데,
+ * **만드는 여기서는 안 봤다.** 그래서 오너가 「그래도 내자」고 통과시킨 카드(산성역·석수)를
+ * 다시 돌릴 때마다 가드가 또 막고, 화면에는 「못 만든 2건」으로 나왔다 —
+ * 세트에는 멀쩡히 들어 있는데도. **사람의 판단은 한 곳에서만 지키면 새는 곳이 생긴다.** */
+const humanFlags = (() => {
+  try {
+    const B = JSON.parse(readFileSync(P("data/review/builders.json"), "utf8"));
+    const map = new Map();
+    for (const b of B.builders ?? []) {
+      const a = b.args ?? [];
+      const keep = [];
+      const ni = a.indexOf("--name");
+      if (ni >= 0 && a[ni + 1]) keep.push("--name", a[ni + 1]);
+      for (const f of ["--accept-supply-warn", "--accept-cycle-guard", "--merge-blocks"]) if (a.includes(f)) keep.push(f);
+      if (keep.length) for (const pr of b.produces ?? []) map.set(pr, keep);
+    }
+    return map;
+  } catch {
+    return new Map();
+  }
+})();
+
 const made = [];
 const skipped = [];
 for (const t of targets) {
+  const carried = humanFlags.get(t.slug) ?? [];
+  if (carried.length) console.log(`   ⓘ ${t.h.aptNm} — 사람이 붙여 둔 손잡이를 이어받습니다: ${carried.join(" ")}`);
   const r = sh("node", [
     "scripts/build-singo-record.mjs",
     "--apt", t.h.aptNm, "--type", t.type, "--kapt", t.kapt,
     /* 이름표를 가른 건만 `--slug` 를 넘긴다 — 안 가른 건은 빌더 기본값 그대로다 */
     ...(t.slug === `singo-${full(t.h.aptNm)}-${t.type}` ? [] : ["--slug", t.slug]),
+    ...carried,
     "--publish",
   ]);
   if (r.status === 0) {
@@ -308,20 +335,46 @@ for (const t of made) {
     const nameIdx = old.indexOf("--name");
     const carry = [];
     if (nameIdx >= 0 && old[nameIdx + 1]) carry.push("--name", old[nameIdx + 1]);
-    for (const f of ["--accept-supply-warn", "--merge-blocks"]) if (old.includes(f)) carry.push(f);
+    for (const f of ["--accept-supply-warn", "--accept-cycle-guard", "--merge-blocks"]) if (old.includes(f)) carry.push(f);
     b.args = [...args.slice(0, -1), ...carry, "--publish"];
   } else {
     /* 새 빌더의 라벨은 **대장 열쇠로 짓는다** — 기계가 지어도 겹치지 않고, 한글 카드 이름과
        달리 로마자라 파일·URL 어디에 놔도 안전하다. 읽기 좋은 이름은 사람이 나중에 바꿔도 된다
-       (`produces` 가 짝을 들고 있으므로 라벨을 바꿔도 안 깨진다). */
+       (`produces` 가 짝을 들고 있으므로 라벨을 바꿔도 안 깨진다).
+       ⚠️ **같은 단지가 새 이름표로 또 올 때 라벨이 겹친다.** 09-05 에 실제로
+          `singo-A44347023-59` 가 **두 개** 생겼다 — 라벨은 세트가 빌더를 찾는 열쇠 중 하나라
+          겹치면 어느 쪽이 잡힐지 알 수 없다. 이미 있으면 뒤에 날짜를 붙인다. */
+    let label = `singo-${t.kapt}-${t.type}`;
+    if (barr.some((x) => x.label === label)) label = `${label}-${DATE.slice(5).replace("-", "")}`;
     b = {
-      label: `singo-${t.kapt}-${t.type}`,
+      label,
       cmd: "scripts/build-singo-record.mjs",
       args,
       produces: [t.slug],
       note: "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03).",
     };
     barr.push(b);
+  }
+
+  /* ── ❄️ 새 이름표를 만들었으면 **옛 빌더를 굳힌다** (2026-09-05)
+   *
+   * 새 이름표 규칙(09-04)의 머리말은 *"지난 카드는 건드리지 않는다(그 빌더는 frozen 으로
+   * 굳힌다)"* 고 적었는데 **굳히는 코드가 없었다.** 그래서 09-05 에 이렇게 됐다:
+   *   · 옛 빌더 `singo-벽적골9단지주공-59` 가 그대로 살아 있어 **오늘 값(7.3억)으로 다시 그려졌다**
+   *   · 그 카드는 09-04 에 오너가 **확정해 발행한** 카드다 — 픽셀 불변이 깨졌다
+   *   · 게다가 그 카드의 판정일이 오늘이 되어 **오늘 묶음에 같은 단지가 두 장** 들어갔다
+   *
+   * 카드 이름표에는 날짜가 없다. 그래서 굳히지 않으면 **어제 그림이 오늘 숫자로 덮인다** —
+   * 인스타에 올라간 것과 저장소가 갈리는 자리다(08-26 동아에코빌과 같은 사고).
+   *
+   * ⚠️ 굳히는 이유를 반드시 적는다. 이유 없는 `frozen` 은 몇 주 뒤 「왜 이건 안 그리지」가 되고,
+   *    그러면 누군가 무심코 푼다. */
+  if (t.slug !== t.base) {
+    const oldB = barr.find((x) => Array.isArray(x.produces) && x.produces.includes(t.base));
+    if (oldB && !oldB.frozen) {
+      oldB.frozen = `${DATE}: 같은 단지·타입이 또 신고가를 써 새 이름표(${t.slug})로 냈다. 이 빌더를 그대로 두면 **이미 발행한 카드가 새 값으로 덮인다**(카드 이름표에 날짜가 없다). 그날의 판본을 그대로 둔다.`;
+      console.log(`❄️ 옛 빌더를 굳혔습니다 — ${oldB.label} (${t.base})`);
+    }
   }
 
   let st = sarr.find((x) => (x.cards ?? []).length === 1 && x.cards[0] === t.slug);

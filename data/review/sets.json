@@ -1409,15 +1409,26 @@
       "publishedAt": "2026-09-04"
     },
     {
-      "label": "singo-A10022845-84",
-      "title": "🔥 산성역자이푸르지오1단지 33평, 14.7억 신고가",
+      "label": "singo-daily-2026-09-05",
+      "title": "🔥 9월 5일 신고가 12곳",
       "cards": [
-        "singo-산성역자이푸르지오1단지-84"
+        "singo-산성역자이푸르지오1단지-84",
+        "singo-진산마을삼성5차-84",
+        "singo-인덕원센트럴자이1단지-84",
+        "singo-동천디이스트-84",
+        "singo-광명푸르지오센트베르-59-0905",
+        "singo-래미안트리베라1단지-84",
+        "singo-반정아이파크캐슬5단지-84-0905",
+        "singo-꿈동산신안-84-0905",
+        "singo-화서주공4단지-59",
+        "singo-벽적골9단지주공-59-0905",
+        "singo-석수e편한세상-59",
+        "singo-권선자이e편한세상-59"
       ],
-      "caption": "singo-A10022845-84",
-      "note": "2026-09-05 판정. 사이클 가드는 오너 판단으로 넘겼다(meta.cycleCalc.guardWaived).",
-      "state": "시안",
-      "pixelPolicy": "정기물 — singo-history·molit·apt-station·apt-detail·apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+      "caption": "singo-daily-2026-09-05",
+      "state": "검수 대기",
+      "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 12개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록.",
+      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply/molit 갱신 시 다시 그려진다"
     }
   ]
 }

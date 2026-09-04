@@ -1,11 +1,11 @@
 {
-  "label": "singo-A10022845-84",
+  "label": "singo-A43070506-59",
   "verdict": "pass",
   "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
-      "file": "singo-산성역자이푸르지오1단지-84.json",
+      "file": "singo-석수e편한세상-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []

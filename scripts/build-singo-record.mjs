@@ -478,17 +478,34 @@ traded.forEach((p, i) => {
 });
 let cycle = null;
 let cycleDropped = null;
+let cycleGuardWaived = null;
 if (worst.atMaxIdx >= 0) {
   const pk = traded[worst.atMaxIdx];
   /* ⚠️ **몇 달 전 값을 "지난 사이클 고점"이라 부르지 않는다** (2026-08-16b).
      낙폭 계산은 관측이 몇 개든 답을 내놓는다 — 반정아이파크캐슬5단지는 4개월 전(2026.04)
      값을 지난 사이클 고점으로 집었다. 넉 달은 사이클이 아니다. 그 말이 카드에 나가면
      독자는 한 번의 오르내림을 시장 사이클로 읽는다. */
+  /* ── 🔓 `--accept-cycle-guard` — **오너가 그림을 보고** 사이클 가드를 넘긴 자리 (2026-09-05)
+   *
+   * 아래 두 가드는 「판이 이 소재를 제대로 못 그린다」고 말한다. 옳은 가드다 —
+   * 08-27 수원아이파크시티7단지(+0.2%)가 검수를 통과해 나갈 뻔한 것을 이 가드가 막았다.
+   *
+   * 그런데 **가드는 그림을 예측할 뿐 보지는 못한다.** 오너가 실제 그림을 보고
+   * 「이 정도면 낸다」고 판단하는 것은 가드보다 나은 정보에 근거한 판단이다.
+   * 그래서 손잡이를 열되 **무엇을 넘겼는지 카드가 들고 있게** 한다(meta.cycleGuardWaived).
+   *
+   * ⚠️ 습관처럼 붙이지 않는다. 붙일 때마다 **렌더를 눈으로 보고** 결정한다 —
+   *    그게 이 손잡이가 가드보다 나은 유일한 이유다.
+   * ⚠️ 「12개월」 쪽은 그림이 아니라 **말**의 문제다. 6개월 전 꼭대기를 「지난 사이클 고점」이라
+   *    부르는 것이 맞는지는 오너가 판단한다 — 코드가 대신 정할 일이 아니지만, 조용히 넘기지도 않는다. */
   const MIN_CYCLE_MONTHS = 12;
   const monthsApart = (a, b) =>
     (Number(b.slice(0, 4)) - Number(a.slice(0, 4))) * 12 + (Number(b.slice(4)) - Number(a.slice(4)));
   const gap = monthsApart(pk.ym, `${hit.date.slice(0, 4)}${hit.date.slice(5, 7)}`);
-  if (gap < MIN_CYCLE_MONTHS) {
+  if (gap < MIN_CYCLE_MONTHS && flag("accept-cycle-guard")) {
+    cycleGuardWaived = `지난 고점(${pk.ym})이 ${gap}개월 전이라 「사이클」이라 부르기 이르다(기준 ${MIN_CYCLE_MONTHS}개월). 오너가 그림을 보고 통과시켰다.`;
+    console.log(`⚠️ 사이클 가드를 넘깁니다 — ${cycleGuardWaived}`);
+  } else if (gap < MIN_CYCLE_MONTHS) {
     throw new Error(
       `지난 사이클 고점으로 집힌 ${pk.ym} 이 이번 거래(${hit.date})에서 ${gap}개월밖에 안 됐습니다 — ` +
         `그건 사이클이 아닙니다(최소 ${MIN_CYCLE_MONTHS}개월).\n` +
@@ -539,7 +556,10 @@ if (worst.atMaxIdx >= 0) {
    *    「사이클이 없었다」라 말할 것이 없는 경우지만, 이쪽은 **사이클이 있었는데 이제 막
    *    되돌아온** 경우다. 그 사실이 곧 소식인데 판이 그것을 못 그린다 → 소재를 접는다. */
   const MIN_VS_CYCLE = 3;
-  if (Math.abs(vs) < MIN_VS_CYCLE) {
+  if (Math.abs(vs) < MIN_VS_CYCLE && flag("accept-cycle-guard")) {
+    cycleGuardWaived = `신고가와 지난 고점이 ${Math.abs(vs).toFixed(1)}% 차이라 두 기준선이 겹친다(기준 ${MIN_VS_CYCLE}%). 오너가 그림을 보고 통과시켰다.`;
+    console.log(`⚠️ 사이클 가드를 넘깁니다 — ${cycleGuardWaived}`);
+  } else if (Math.abs(vs) < MIN_VS_CYCLE) {
     throw new Error(
       `신고가(${eok(hit.priceManwon)})와 지난 사이클 고점(${eok(pk.maxManwon)} · ` +
         `${pk.ym.slice(0, 4)}.${pk.ym.slice(4)}월)이 ${Math.abs(vs).toFixed(1)}% 차이입니다 — ` +
@@ -548,12 +568,29 @@ if (worst.atMaxIdx >= 0) {
         `   자리가 없는 판은 배치로 못 풉니다 — 08-25 에 회피 띠를 넓혀 봤다가 세 장이 더 나빠졌습니다.`,
     );
   }
-  cycle = {
-    peak: eok(pk.maxManwon),
-    when: `${pk.ym.slice(0, 4)}.${pk.ym.slice(4)}월`,
-    vs: `${vs >= 0 ? "+" : "−"}${Math.abs(vs).toFixed(1)}%`,
-    dir: vs >= 0 ? "up" : "down",
-  };
+  /* ── 🔓 가드를 넘긴 카드는 **그 줄을 빼고** 그린다 (2026-09-05 오너 "그냥 만들어줘")
+   *
+   * 오너가 그림을 보고 「그래도 내자」고 했을 때, 두 기준선을 **겹친 채로** 그리면
+   * 선이 글자를 뚫는다 — 09-05 산성역자이푸르지오1단지에서 검수가 12px 관통을 잡았다.
+   * 그건 오너가 원한 「카드를 내자」가 아니라 **깨진 카드를 내자**가 된다.
+   *
+   * 낙폭 15% 규칙이 이미 답을 알려 준다: *"말할 수 없는 것 하나만 안 말하면 된다."*
+   * 「지난 고점대비」 줄만 빼면 신고가·곡선·저점 대비는 전부 멀쩡하고 판도 깨끗하다.
+   * 빠졌다는 사실과 이유는 meta 에 남는다 — 조용히 사라지지 않는다.
+   *
+   * ⚠️ 시간(12개월) 쪽 가드를 넘긴 경우는 이 줄을 **그대로 그린다.** 그건 그림이 아니라
+   *    **말**의 문제였고(6개월 전을 「사이클」이라 부를 것인가), 오너가 그 말을 판단했다. */
+  if (cycleGuardWaived && Math.abs(vs) < MIN_VS_CYCLE) {
+    cycleDropped = { overlapPct: Number(Math.abs(vs).toFixed(2)), reason: "두 기준선이 겹친다" };
+    console.log(`   ⓘ 두 기준선이 겹쳐(${Math.abs(vs).toFixed(1)}%) 「지난 고점대비」 줄을 뺍니다 — 판이 깨지지 않게.`);
+  } else {
+    cycle = {
+      peak: eok(pk.maxManwon),
+      when: `${pk.ym.slice(0, 4)}.${pk.ym.slice(4)}월`,
+      vs: `${vs >= 0 ? "+" : "−"}${Math.abs(vs).toFixed(1)}%`,
+      dir: vs >= 0 ? "up" : "down",
+    };
+  }
 }
 
 /* ── 기준선 두 줄 + 폭 표시 직선 (오너 2026-08-16)
@@ -1264,13 +1301,18 @@ const card = {
     cycleCalc: {
       maxDrawdownPct: Number((worst.dd * 100).toFixed(2)),
       note: "지난 사이클 고점 = 최대 낙폭이 난 골 직전의 최고가. 코드가 계산한다(사람이 고르지 않는다).",
+      /* 가드를 넘겼으면 **무엇을 넘겼는지 카드가 들고 있는다** — 나중에 「왜 이건 냈지」를 되짚을 수 있어야 한다 */
+      ...(cycleGuardWaived ? { guardWaived: cycleGuardWaived, by: "--accept-cycle-guard" } : {}),
       ...(cycleDropped
         ? {
             dropped: true,
-            why:
-              `최대 낙폭 ${cycleDropped.maxDrawdownPct}% 로 기준 ${cycleDropped.minPct}% 에 못 미쳐 ` +
-              `「지난 고점대비」 줄을 뺐다(2026-08-25 오너 승인). 사이클이라 부를 골이 없는 단지다 — ` +
-              `대개 2021~22 사이클 뒤에 준공한 신축이다.`,
+            why: cycleDropped.overlapPct
+              ? `신고가와 지난 고점이 ${cycleDropped.overlapPct}% 차이라 두 기준선이 겹쳐 ` +
+                `「지난 고점대비」 줄을 뺐다(2026-09-05). 겹친 채로 그리면 선이 글자를 뚫는다 — ` +
+                `말할 수 없는 것 하나만 안 말하고, 나머지는 그대로 그린다.`
+              : `최대 낙폭 ${cycleDropped.maxDrawdownPct}% 로 기준 ${cycleDropped.minPct}% 에 못 미쳐 ` +
+                `「지난 고점대비」 줄을 뺐다(2026-08-25 오너 승인). 사이클이라 부를 골이 없는 단지다 — ` +
+                `대개 2021~22 사이클 뒤에 준공한 신축이다.`,
           }
         : {}),
     },
