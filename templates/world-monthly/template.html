@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* =========================================================
+         world-monthly@1 — 나라 × 달 성적표 행렬 (히트맵)
+         2026-09-04: 세계 주요국 월별 증시 성적표용.
+
+         ⚠️ 왜 tax-matrix 를 안 쓰나 (한 번 헛짚고 정정한 자리)
+         tax-matrix 는 구조는 같은 행렬이지만 **2~4열 · 숫자 46~86px** 로 잡혀 있다.
+         여기는 **9열(8개월 + 누적)** 이라 그 자를 그대로 쓰면 칸이 76px 인데 숫자가 46px 라
+         옆 칸을 덮는다. 열이 두 배로 늘면 그건 같은 판형의 변형이 아니라 **다른 판형**이다.
+         (CARD_CHECKLIST §2 「열을 늘리기 전에 값의 길이를 잰다」)
+
+         ⚠️ 이 판형이 지키는 것
+         ① **색은 토큰뿐이다.** 상승=레드 · 하락=코발트(BRAND 파생규칙 — 증시 등락 표기).
+            농도는 color-mix 로 종이색과 섞어 만든다. 비슷한 빨강·파랑을 새로 만들지 않는다
+            (lint-accent·audit-head 가 잡는다).
+         ② **부호를 색에만 맡기지 않는다.** 칸마다 +/− 를 글자로 적는다. 색맹·흑백 캡처·
+            스크린샷 압축 어디서도 오르내림이 뒤집히면 안 된다 — 그건 디자인이 아니라 오보다.
+         ③ **빈 칸은 빈 칸으로 그린다.** 자료가 없는 달은 회색 '—' 다. 0.0% 로 그리면
+            "안 움직였다"가 되고, 이 카드에는 **진짜 0.0% 인 칸이 있다**(한국 6월).
+         ========================================================= */
+
+      /* 상단 캡션 — 이 카드는 측정 정의가 필요하다(현지통화·월말 기준).
+         제목이 말하지 않는 것이라 CARD_CHECKLIST 「상단 캡션은 안 쓰는 게 기본」의 예외에 든다. */
+      .wm .wirit-title { font-size: 76px; line-height: 1.06; letter-spacing: -0.035em; margin: 0; white-space: nowrap; }
+      .wm .wirit-title .hi { color: var(--wirit-red); }
+      .wm .wirit-title .ac { color: var(--wirit-cobalt); }
+      /* 제목은 우상단 로고 뱃지에서 세로 30px 이상 떨어져야 한다 — 겹치지 않는 것만으론
+         부족하다는 게 오너가 두 번 말한 항목이다(CARD_CHECKLIST §2 「붙어 보이지도 않게」).
+         10px 로 두었더니 designQa 가 badgeclear 로 잡았다(2026-09-04). */
+      .wm-head { margin-top: 34px; }
+
+      /* 표 — 라벨 1열 + 달 8열 + 누적 1열.
+         폭 936px 을 라벨 200 · 달 8×74 = 592 · 누적 144 로 나눈다(합 936). */
+      .wm-grid {
+        flex: 1; min-height: 0; display: flex; flex-direction: column;
+        margin: 30px 0 0; position: relative; /* 제목 아래 숨 — 28px 미만이면 titlegap 경고 */
+      }
+      .wm-hr, .wm-row {
+        display: grid;
+        grid-template-columns: 200px repeat(8, 1fr) 144px;
+        align-items: stretch; column-gap: 4px;
+      }
+      .wm-hr { flex: 0 0 auto; padding-bottom: 10px; border-bottom: 3px solid var(--wirit-ink); }
+      .wm-hr span {
+        font-size: 27px; font-weight: 800; color: var(--wirit-gray);
+        text-align: center; letter-spacing: -0.02em; align-self: end;
+      }
+      .wm-hr .lb { text-align: left; }
+      /* 누적 열 머리는 표의 결론이라 잉크로 세운다 */
+      .wm-hr .ytd { color: var(--wirit-ink); }
+
+      .wm-row { flex: 1 1 0; min-height: 0; border-bottom: 1.5px solid var(--wirit-ink-06); }
+      .wm-row:last-child { border-bottom: none; }
+
+      /* 나라 칸 — 국기 + 국가명(2글자) + 지수명(작게).
+         국가명이 전부 두 글자라 국기와 나란히 두어도 폭이 안 흔들린다. */
+      .wm-lb { display: flex; align-items: center; gap: 12px; padding-left: 2px; }
+      .wm-flag {
+        width: 52px; height: 39px; flex: 0 0 auto; border-radius: 4px; overflow: hidden;
+        /* 흰 바탕 국기(일본)가 종이색에 묻히지 않게 아주 얇은 테두리 */
+        box-shadow: inset 0 0 0 1px rgba(20, 24, 33, 0.18);
+      }
+      .wm-flag img { width: 100%; height: 100%; display: block; object-fit: cover; }
+      .wm-nm { min-width: 0; }
+      .wm-nm b { display: block; font-size: 33px; font-weight: 800; letter-spacing: -0.03em; color: var(--wirit-ink); line-height: 1.1; }
+      .wm-nm i {
+        display: block; font-style: normal; font-size: 20px; font-weight: 600;
+        color: var(--wirit-gray); letter-spacing: -0.02em; line-height: 1.2; margin-top: 3px;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+
+      /* 히트맵 칸 — 농도는 빌더가 --a(0~100) 로 준다. 색은 토큰과 종이색을 섞어 만든다. */
+      .wm-c {
+        display: flex; align-items: center; justify-content: center;
+        font-family: var(--font-num); font-size: 23px; font-weight: 800;
+        letter-spacing: -0.04em; white-space: nowrap;
+        margin: 5px 0; border-radius: 7px; color: var(--wirit-ink);
+        /* ⚠️ 26px 로 두었더니 「+24.0」(5글자)이 74px 칸을 꽉 채워 옆 칸 숫자와 붙어 보였다
+           (2026-09-04 첫 렌더). 칸을 넓힐 자리가 없으니 글자를 줄인다 —
+           64칸이 서로 구별되는 것이 이 카드의 전부다. */
+      }
+      .wm-c.up   { background: color-mix(in srgb, var(--wirit-red)    calc(var(--a) * 1%), var(--wirit-paper)); }
+      .wm-c.down { background: color-mix(in srgb, var(--wirit-cobalt) calc(var(--a) * 1%), var(--wirit-paper)); }
+      /* 진한 칸에서는 잉크 글씨가 묻힌다 — 흰 글씨로 뒤집는다(빌더가 .ink 를 붙인다) */
+      .wm-c.ink { color: #fff; }
+      /* 자료가 없는 칸. 0.0% 와 절대 같아 보이면 안 된다 */
+      .wm-c.na { color: var(--wirit-ink-30, #b3b9c2); font-weight: 700; background: none; }
+
+      /* 누적 열 — 표의 결론. 한 단계 크게, 칸 전체를 채운다 */
+      .wm-c.ytd { font-size: 29px; font-weight: 900; margin-left: 8px; }
+
+      /* 아래 설명 줄 — 측정 정의. 푸터와 숨(≥14px)을 둔다 */
+      .wm-note {
+        flex: 0 0 auto; margin-top: 20px; margin-bottom: 26px;
+        font-size: 22px; font-weight: 700; color: var(--wirit-gray); letter-spacing: -0.015em;
+        display: flex; align-items: center; gap: 16px; white-space: nowrap;
+        /* ⚠️ 한 줄이어야 한다. 두 줄이 되면 범례를 아래로 밀고 푸터와의 숨(≥14px)을 먹는다
+           — 「출발선은 같았다」 푸터가 워터마크를 밀었던 것과 같은 자리다(09-02). */
+      }
+      .wm-note b { color: var(--wirit-ink); font-weight: 800; }
+      /* 범례 — 색이 무엇을 뜻하는지. 색만 보고 읽는 사람을 위해 부호도 같이 적는다 */
+      .wm-key { display: inline-flex; align-items: center; gap: 14px; margin-left: auto; flex: 0 0 auto; }
+      .wm-key i { font-style: normal; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+      .wm-key s { text-decoration: none; display: inline-block; width: 26px; height: 20px; border-radius: 4px; }
+      .wm-key s.u { background: color-mix(in srgb, var(--wirit-red) 60%, var(--wirit-paper)); }
+      .wm-key s.d { background: color-mix(in srgb, var(--wirit-cobalt) 60%, var(--wirit-paper)); }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card wm">
+      {{#if subtitle}}<div class="wirit-topcap"><span>{{subtitle}}</span></div>{{/if}}
+
+      <div class="wm-head"><h1 class="wirit-title">{{{title}}}</h1></div>
+
+      <div class="wm-grid">
+        <div class="wm-hr">
+          <span class="lb">{{lead}}</span>
+          {{#each cols}}<span>{{this}}</span>{{/each}}
+          <span class="ytd">{{ytdLabel}}</span>
+        </div>
+        {{#each rows}}
+        <div class="wm-row">
+          <span class="wm-lb">
+            <span class="wm-flag"><img src="{{this.flag}}" alt="" /></span>
+            <span class="wm-nm"><b>{{this.country}}</b><i>{{this.index}}</i></span>
+          </span>
+          {{#each this.cells}}
+          <span class="wm-c {{this.cls}}{{#if this.ink}} ink{{/if}}" style="--a:{{this.a}}">{{this.v}}</span>
+          {{/each}}
+          <span class="wm-c ytd {{this.ytd.cls}}{{#if this.ytd.ink}} ink{{/if}}" style="--a:{{this.ytd.a}}">{{this.ytd.v}}</span>
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="wm-note">
+        <span>{{{note}}}</span>
+        <span class="wm-key">
+          <i><s class="u"></s>오름(+)</i>
+          <i><s class="d"></s>내림(−)</i>
+        </span>
+      </div>
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}}{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+    <!-- 제목 폭 맞춤 — 고정 크기로 두지 않는다(CARD_CHECKLIST §2 「폭에 맞춰 크게」) -->
+    <script>
+      window.__wiritFit = function () {
+        var el = document.querySelector(".wm .wirit-title");
+        if (!el) return;
+        var head = el.parentElement;
+        var hs = getComputedStyle(head);
+        var avail = head.clientWidth - (parseFloat(hs.paddingLeft) || 0) - (parseFloat(hs.paddingRight) || 0);
+        if (/<br|\n/.test(el.innerHTML)) return;
+        var lo = 40, hi = 96, best = lo;
+        for (var i = 0; i < 22; i++) {
+          var mid = (lo + hi) / 2;
+          el.style.fontSize = mid + "px";
+          if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(window.__wiritFit);
+    </script>
+  </body>
+</html>

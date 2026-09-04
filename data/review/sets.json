@@ -1185,6 +1185,17 @@
         "singo-동탄시범다은마을월드메르디앙반도유보라-59:73d15c5da29b",
         "singo-자연앤데시앙-84:8e38576567e5"
       ]
+    },
+    {
+      "label": "world-monthly",
+      "title": "🌏 세계 1등은 한국 — 8개국 월별 성적표 (2026.01~08)",
+      "cards": [
+        "world-monthly"
+      ],
+      "caption": "world-monthly",
+      "review": "세계 주요국 월별 증시 성적표",
+      "state": "시안",
+      "note": "오너 확정 8개국(원래 베트남 → 야후에 VN-Index 가 없어 대만으로 교체). 현지통화 기준."
     }
   ]
 }

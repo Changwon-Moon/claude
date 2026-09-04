@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "world-monthly@1",
+  "description": "나라 × 달 성적표 행렬(히트맵). 행=나라(국기+지수), 열=달 8개 + 누적 1개. 부호는 색이 아니라 글자가 말한다.",
+  "type": "object",
+  "required": ["template", "title", "lead", "cols", "ytdLabel", "rows", "note", "source"],
+  "properties": {
+    "template": { "type": "string", "pattern": "^world-monthly@\\d+$" },
+    "date": { "type": "string" },
+    "subtitle": { "type": "string", "maxLength": 46, "description": "상단 회색 캡션. 제목이 말하지 않는 측정 정의가 있을 때만" },
+    "title": { "type": "string", "description": "한 줄. 템플릿이 폭에 맞춰 자동으로 키운다. <span class=\"hi\">레드</span>·<span class=\"ac\">코발트</span> 강조 가능(BRAND: 제목 한 줄 안에서만, 각 색 한 덩어리씩)" },
+    "lead": { "type": "string", "maxLength": 10, "description": "라벨 열 머리(예: 나라)" },
+    "cols": {
+      "type": "array", "minItems": 8, "maxItems": 8,
+      "items": { "type": "string", "maxLength": 4 },
+      "description": "달 머리 8칸. 8칸 고정이다 — 늘리려면 grid-template-columns 를 함께 고친다(칸 폭이 74px 다)"
+    },
+    "ytdLabel": { "type": "string", "maxLength": 8 },
+    "rows": {
+      "type": "array", "minItems": 2, "maxItems": 9,
+      "items": {
+        "type": "object",
+        "required": ["country", "index", "flag", "cells", "ytd"],
+        "properties": {
+          "country": { "type": "string", "maxLength": 4, "description": "두 글자가 기준이다. 길어지면 라벨 열 200px 를 다시 잰다" },
+          "index": { "type": "string", "maxLength": 12, "description": "지수명. 넘치면 말줄임된다" },
+          "flag": { "type": "string", "pattern": "^data:image/svg\\+xml;base64,", "description": "flag-icons 인라인 SVG 의 data URI. 런타임 외부 fetch 금지(결정성)" },
+          "cells": {
+            "type": "array", "minItems": 8, "maxItems": 8,
+            "items": {
+              "type": "object",
+              "required": ["v", "cls", "a"],
+              "properties": {
+                "v": { "type": "string", "maxLength": 6, "description": "부호를 포함한 표시 문자열. 색에만 맡기지 않는다" },
+                "cls": { "enum": ["up", "down", "na"] },
+                "a": { "type": "number", "minimum": 0, "maximum": 100, "description": "히트맵 농도(%). color-mix 로 토큰과 종이색을 섞는다" },
+                "ink": { "type": "boolean" }
+              },
+              "additionalProperties": true
+            }
+          },
+          "ytd": {
+            "type": "object",
+            "required": ["v", "cls", "a"],
+            "properties": {
+              "v": { "type": "string", "maxLength": 7 },
+              "cls": { "enum": ["up", "down", "na"] },
+              "a": { "type": "number", "minimum": 0, "maximum": 100 }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "note": { "type": "string", "description": "측정 정의 한 줄. 이 카드에서는 통화 기준이 반드시 들어간다" },
+    "source": {
+      "type": "object",
+      "required": ["name"],
+      "properties": { "name": { "type": "string" }, "asOf": { "type": "string" } },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
