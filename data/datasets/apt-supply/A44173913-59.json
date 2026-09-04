@@ -1,0 +1,35 @@
+{
+  "kaptCode": "A44173913",
+  "kaptName": "권선자이e편한세상",
+  "type": "59",
+  "jibun": "1330",
+  "exclusive": 59.963,
+  "commonResidential": 24.4,
+  "supply": 84.36,
+  "pyeong": 25.52,
+  "pyeongLabel": "26평",
+  "sampleDong": "126동",
+  "sampleHo": "1201",
+  "sampleCount": 104,
+  "ratio": 0.7108,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단실,승강기",
+      "floor": "각층 각층",
+      "area": 17.0801
+    },
+    {
+      "purpose": "아파트 / 벽체",
+      "floor": "지상 12층",
+      "area": 4.5954
+    },
+    {
+      "purpose": "아파트 / 발코니",
+      "floor": "지상 12층",
+      "area": 2.7242
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
