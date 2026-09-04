@@ -231,9 +231,21 @@ if (GROUP_FILE) {
 if (!group) throw new Error(`${SET} 에 ${PICK + 1}번 묶음이 없습니다 (${data.picks.length}개 있음)`);
 
 const months = monthRange(CURVE_FROM, CURVE_TO);
+/**
+ * ⚠️ **못 박은 묶음에 곡선이 들어 있으면 그것을 쓴다** (2026-09-04, 두 번째 사고 뒤)
+ *
+ * 묶음만 못 박는 것으로는 부족했다. **실거래 데이터 자체가 나중에 정정된다** —
+ * 늦게 신고된 거래가 들어오면 지난달의 최고가가 바뀐다. 실제로 10호의 호매실스타힐스는
+ * 2026-07 이 4.40억이었는데 하루 뒤 4.45억으로 갱신됐고, 그 순간 카드의 끝값·격차·제목이
+ * 전부 달라졌다(4.4→4.5억, 격차 3.7→3.6억). **이미 인스타에 나간 카드와 다른 그림이 된다.**
+ *
+ * 그래서 발행본은 **곡선의 점까지** 핀에 적는다. 캐시가 어떻게 갱신되든 발행본은 그대로다.
+ * (핀에 곡선이 없는 옛 파일은 캐시에서 읽는다 — 하위호환)
+ */
 const members = group.members.map((m, i) => {
   if (!m.pyeong) throw new Error(`${m.apt} 에 평형이 없습니다 — 평형을 섞는 카드라 평형 없이는 만들지 않습니다`);
-  return { ...m, color: SERIES_COLORS[i === group.members.length - 1 ? 2 : i], pts: series(m, months) };
+  const pts = m.pts?.length ? m.pts : series(m, months);
+  return { ...m, color: SERIES_COLORS[i === group.members.length - 1 ? 2 : i], pts };
 });
 
 /* ── 좌표
@@ -516,7 +528,10 @@ writeFileSync(join(outDir, `${label}.json`), JSON.stringify(card, null, 2) + "\n
 if (!GROUP_FILE) {
   const pinDir = R("data/datasets/gap-published");
   mkdirSync(pinDir, { recursive: true });
-  writeFileSync(join(pinDir, `${label}.json`), JSON.stringify(group, null, 2) + "\n", "utf8");
+  /* 곡선의 점까지 함께 적는다 — 캐시가 정정돼도 발행본이 흔들리지 않게 */
+  const pinned = { ...group, curveFrom: CURVE_FROM, curveTo: CURVE_TO,
+    members: group.members.map((m, i) => ({ ...m, pts: members[i].pts })) };
+  writeFileSync(join(pinDir, `${label}.json`), JSON.stringify(pinned, null, 2) + "\n", "utf8");
   console.log(`   📌 묶음을 못 박았습니다 — data/datasets/gap-published/${label}.json`);
   console.log(`      발행하면 builders.json 을 --group 으로 바꾸세요(GAP_CARDS §19)`);
 }
