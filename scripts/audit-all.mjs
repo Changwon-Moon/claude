@@ -73,6 +73,27 @@ for (const s of sets) {
   if (!mine.length) warn("세트", `${s.label} — 이 세트를 만드는 빌더가 없다`, "재생산이 안 됩니다(수동 제작본일 수 있음)");
   const cap = `data/review/captions/${s.caption || s.label}.txt`;
   if (!has(cap)) bad("세트", `${s.label} — 캡션 없음(${cap})`, "캡션이 없으면 검수도 확정도 못 합니다");
+
+  /* ── 「출발선은 같았다」 세트는 **묶음이 못 박혀 있어야** 한다 (2026-09-04 사고 뒤)
+     이 시리즈의 후보 묶음은 캐시가 자라면 **판이 다시 깔린다** — 매일 도는 실거래 수집이
+     최근 달을 갱신하므로 하루만 지나도 묶음 구성이 달라진다.
+     그래서 `--pick`(줄번호)도 `--danji`(단지 이름)도 발행본을 못 붙든다:
+     2026-09-04 에 3·4·10호가 「그 묶음이 없습니다」로 **다시 그릴 수 없게** 됐다.
+     data/content 와 data/out 은 둘 다 gitignore 라, 새로 clone 하면 남는 것이 없었다.
+
+     → 발행본은 `data/datasets/gap-published/{라벨}.json` 에 묶음을 통째로 적고
+       빌더를 `--group` 으로 건다. 그 파일은 저장소에 커밋된다. */
+  if (/^gap-ep\d+-\d+$/.test(s.label)) {
+    checked += 2;
+    const pin = `data/datasets/gap-published/${s.label}.json`;
+    if (!has(pin)) {
+      bad("세트", `${s.label} — 묶음이 못 박혀 있지 않다(${pin})`,
+        "후보 목록은 캐시가 자라면 다시 깔립니다 — 핀이 없으면 발행본을 다시 못 그립니다(GAP_CARDS §19)");
+    } else if (mine.length && !mine.some((b) => (b.args || []).includes("--group"))) {
+      bad("세트", `${s.label} — 빌더가 --group 을 안 씁니다`,
+        `--pick·--danji 는 후보 목록이 바뀌면 어긋납니다. --group ${pin} 으로 거세요(GAP_CARDS §19)`);
+    }
+  }
 }
 
 /* ── ④ 템플릿이 갖춰져 있나 ──

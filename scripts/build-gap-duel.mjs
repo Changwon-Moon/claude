@@ -196,9 +196,29 @@ const data = JSON.parse(readFileSync(setPath, "utf8"));
  * (고르는 단계에서는 `--pick` 이 편하다 — 그건 그대로 둔다.)
  */
 let PICK_SHOWN = PICK;
+/**
+ * ── 발행한 카드는 **묶음을 파일로 못 박는다** (2026-09-04, 사고 뒤 신설)
+ *
+ * `--danji` 는 `gap-ep1.json` 에서 그 단지들을 가진 묶음을 **찾는다**. 그런데 묶음 자체가
+ * 사라질 수 있다 — 캐시가 차면 새 단지가 ±3% 띠에 들어오고, 묶음은 단지를 하나씩 나눠 갖는
+ * 방식으로 짜이므로 **판이 통째로 다시 깔린다.**
+ *
+ * 실제로 2026-09-04 에 캐시를 다 채우자 발행본 **3호와 4호의 묶음이 없어졌다.**
+ * `--danji` 가 「그 묶음이 없습니다」로 던졌다 — 이미 인스타에 나간 카드를 **다시 그릴 수
+ * 없게 된 것**이다. `data/out` 은 gitignore 라 새로 clone 하면 PNG 조차 없다.
+ *
+ * → 카드를 만들 때 그 묶음을 `data/datasets/gap-published/{라벨}.json` 에 통째로 적는다.
+ *   발행한 카드는 그 파일로 그린다(`--group`). **후보 목록이 어떻게 뒤집히든 상관없다.**
+ *   (고르는 단계에서는 `--pick`·`--danji` 가 편하니 그대로 둔다 — 그때 핀 파일이 자동으로 남는다.)
+ */
+const GROUP_FILE = arg("group");
 const DANJI = (arg("danji") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
 let group;
-if (DANJI.length) {
+if (GROUP_FILE) {
+  const gp = GROUP_FILE.startsWith("/") ? GROUP_FILE : R(GROUP_FILE);
+  if (!existsSync(gp)) throw new Error(`못 박은 묶음 파일이 없습니다 — ${GROUP_FILE}`);
+  group = JSON.parse(readFileSync(gp, "utf8"));
+} else if (DANJI.length) {
   const has = (g) => DANJI.every((n) => g.members.some((m) => m.apt === n));
   const hits = data.picks.filter((g) => has(g) && g.members.length === DANJI.length);
   if (!hits.length) throw new Error(`${SET} 에 「${DANJI.join(" · ")}」 를 가진 묶음이 없습니다 — 기준이 바뀌어 이 묶음이 사라졌을 수 있습니다. 안건표를 다시 보세요`);
@@ -490,6 +510,16 @@ const label = arg("label", `${SET}-${PICK + 1}`);
 const outDir = R(join("data/content", DATE));
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, `${label}.json`), JSON.stringify(card, null, 2) + "\n", "utf8");
+
+/* 이 카드가 쓴 묶음을 **그대로 못 박는다** — 후보 목록이 뒤집혀도 다시 그릴 수 있게.
+   `--group` 으로 그린 경우는 이미 핀에서 읽은 것이므로 덮어쓰지 않는다(원본이 정본이다). */
+if (!GROUP_FILE) {
+  const pinDir = R("data/datasets/gap-published");
+  mkdirSync(pinDir, { recursive: true });
+  writeFileSync(join(pinDir, `${label}.json`), JSON.stringify(group, null, 2) + "\n", "utf8");
+  console.log(`   📌 묶음을 못 박았습니다 — data/datasets/gap-published/${label}.json`);
+  console.log(`      발행하면 builders.json 을 --group 으로 바꾸세요(GAP_CARDS §19)`);
+}
 
 console.log(`⚖️ ${label} — ${SET} ${PICK_SHOWN + 1}번 묶음 · 곡선 ${members.length}개 (${months.length}개월)`);
 members.forEach((m) => console.log(`   ${m.color === RED ? "🔺" : m.color === COBALT ? "🔻" : "· "} ${m.gu} ${m.apt} ${m.pyeong} — ${fmtEok(m.base)} → ${fmtEok(m.now)} (${m.ratio.toFixed(2)}배) · 관측 ${m.pts.length}개월`));
