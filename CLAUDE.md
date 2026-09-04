@@ -184,6 +184,10 @@ node scripts/gen-m2-caption.mjs [--date YYYY-MM-DD] [--only m2-gap,m2-rate]
 # 학군지 지도 카드 캡션 — 순위·급지·금액·반전 문장을 전부 카드 JSON 에서 계산한다
 node scripts/gen-hakgun-caption.mjs data/content/<날짜>/hakgun-map.json --out hakgun-map
 
+# 세계 월별 성적표 캡션 — 순위·「여덟 나라가 같이 움직인 달」까지 카드 JSON 에서 세어 쓴다
+#   칸이 64개라 손으로 옮기면 언젠가 한 칸이 어긋난다. 조사(이/가)도 받침을 보고 고른다.
+node scripts/gen-world-caption.mjs [--card data/content/<날짜>/world-monthly.json]
+
 # ── 아래는 **외울 필요가 없다.** doctor 하나가 전부 대신 본다(33초).
 #    따로 부르는 건 doctor 가 빨간불을 냈을 때 **그 항목만 자세히 볼 때**다.
 node scripts/audit-all.mjs              # ⭐ 전수 검사 — 저장소 전체를 한 번에(605항목)
