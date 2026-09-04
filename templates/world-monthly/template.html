@@ -34,15 +34,18 @@
          10px 로 두었더니 designQa 가 badgeclear 로 잡았다(2026-09-04). */
       .wm-head { margin-top: 34px; }
 
-      /* 표 — 라벨 1열 + 달 8열 + 누적 1열.
-         폭 936px 을 라벨 200 · 달 8×74 = 592 · 누적 144 로 나눈다(합 936). */
+      /* 표 — 순위 1열 + 라벨 1열 + 달 8열 + 누적 1열 (오너 2026-09-04 「나라 앞에 순위 열」).
+         폭 936px 을 순위 44 · 라벨 172 · 누적 128 · 열간격 4×10=40 으로 떼고
+         남은 552 를 달 8칸이 나눈다(칸당 69px). 순위 열을 넣느라 달 칸이 69.5→69px 로 줄었다 —
+         값이 가장 긴 「−19.1」이 23px 에서 약 60px 이라 아직 여유가 있다.
+         ⚠️ 열을 더 늘리려면 **먼저 값의 길이를 잰다**(CARD_CHECKLIST §2). */
       .wm-grid {
         flex: 1; min-height: 0; display: flex; flex-direction: column;
         margin: 30px 0 0; position: relative; /* 제목 아래 숨 — 28px 미만이면 titlegap 경고 */
       }
       .wm-hr, .wm-row {
         display: grid;
-        grid-template-columns: 200px repeat(8, 1fr) 144px;
+        grid-template-columns: 44px 172px repeat(8, 1fr) 128px;
         align-items: stretch; column-gap: 4px;
       }
       .wm-hr { flex: 0 0 auto; padding-bottom: 10px; border-bottom: 3px solid var(--wirit-ink); }
@@ -51,6 +54,10 @@
         text-align: center; letter-spacing: -0.02em; align-self: end;
       }
       .wm-hr .lb { text-align: left; }
+      /* 순위 머리 — 「순위」는 44px 에 안 들어간다. 기호 하나로 둔다.
+         ⚠️ 빈 칸으로 두지 않는다. 글자가 없으면 designQa 가 Range 대신 상자 전체로 재서
+            엉뚱한 겹침을 잡는다(빈 .wirit-topcap 이 실제로 그랬다 · 07-31). */
+      .wm-hr .rk { text-align: center; }
       /* 누적 열 머리는 표의 결론이라 잉크로 세운다 */
       .wm-hr .ytd { color: var(--wirit-ink); }
 
@@ -59,6 +66,15 @@
 
       /* 나라 칸 — 국기 + 국가명(2글자) + 지수명(작게).
          국가명이 전부 두 글자라 국기와 나란히 두어도 폭이 안 흔들린다. */
+      /* 순위 — 히트맵이 레드·코발트 한 축을 이미 다 쓰고 있다. 여기에 색을 더 얹으면
+         「한 카드에 강조색은 한 축」이 깨진다(BRAND). 그래서 순위는 잉크·회색만 쓴다.
+         1위만 잉크로 세우고 나머지는 회색 — 크기가 아니라 **농도**로 가른다. */
+      .wm-rk {
+        display: flex; align-items: center; justify-content: center;
+        font-family: var(--font-num); font-size: 30px; font-weight: 800;
+        letter-spacing: -0.03em; color: var(--wirit-gray);
+      }
+      .wm-rk.top { color: var(--wirit-ink); font-weight: 900; }
       .wm-lb { display: flex; align-items: center; gap: 12px; padding-left: 2px; }
       .wm-flag {
         width: 52px; height: 39px; flex: 0 0 auto; border-radius: 4px; overflow: hidden;
@@ -119,12 +135,14 @@
 
       <div class="wm-grid">
         <div class="wm-hr">
+          <span class="rk">#</span>
           <span class="lb">{{lead}}</span>
           {{#each cols}}<span>{{this}}</span>{{/each}}
           <span class="ytd">{{ytdLabel}}</span>
         </div>
         {{#each rows}}
         <div class="wm-row">
+          <span class="wm-rk{{#if this.top}} top{{/if}}">{{this.rank}}</span>
           <span class="wm-lb">
             <span class="wm-flag"><img src="{{this.flag}}" alt="" /></span>
             <span class="wm-nm"><b>{{this.country}}</b><i>{{this.index}}</i></span>
