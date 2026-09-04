@@ -17,7 +17,7 @@
  *
  * 이 스크립트는 **읽기만 한다** — 네트워크도, 수집도 하지 않는다.
  */
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -84,6 +84,21 @@ function holes(lawd) {
    재는 법은 빌더와 같다: **붙어 있는 두 달**끼리만, 15% 넘게 튄 쌍의 비율.
    (띄엄띄엄 거래되는 단지는 관측 사이가 멀어 커 보이는 게 당연하다.)
    실측: 발행본들 0~9% · 오산 18%. 12% 위면 빌더가 던진다. */
+/* ── 이미 나간 단지 (2026-09-04)
+   발행본의 묶음은 캐시가 자라면 후보 목록에서 사라진다(§19) — 그래서 「완료」 표시만으로는
+   부족하다. **그 단지가 다른 묶음에 끼어 다시 나올 수 있다.**
+   43건 중 10건이 이미 나간 단지를 품고 있었다. 막지는 않는다(오너가 정할 일이다) —
+   대신 표에 ♻️ 로 보여 준다. 같은 단지가 두 번 나가는 것을 모르고 내보내는 것만 막으면 된다. */
+const PUBLISHED = new Set();
+try {
+  for (const f of readdirSync(R("data/datasets/gap-published"))) {
+    if (!f.endsWith(".json")) continue;
+    for (const m of JSON.parse(readFileSync(R(`data/datasets/gap-published/${f}`), "utf8")).members ?? [])
+      PUBLISHED.add(`${m.lawd}|${m.umd}|${m.apt}`);
+  }
+} catch { /* 아직 발행본이 없으면 빈 채로 둔다 */ }
+const reused = (r) => r.members.filter((m) => PUBLISHED.has(`${m.lawd}|${m.umd}|${m.apt}`)).map((m) => m.apt);
+
 const seriesCache = new Map();
 function unitNoise(u) {
   const key = `${u.lawd}|${u.umd}|${u.apt}|${u.type}`;
@@ -176,6 +191,7 @@ L.push("| **상승률차** | 1위와 3위의 배수 차이(2.52 − 1.14 = 1.38)
 L.push("| 금액차 | 지금 값의 차이(억). 참고용 |");
 L.push("| 그때 | 2019.11~2020.03 실거래 최고가 — 세 단지가 ±3% 안에서 겹칩니다 |");
 L.push("| 자료 | 곡선을 그리려면 더 받아야 하는 국토부 호출 수. 🟢 0회면 바로 나옵니다 |");
+L.push("| ♻️ | **이미 나간 단지**가 이 묶음에 들어 있습니다. 막지는 않습니다 — 같은 단지를 또 내보낼지는 고르시는 분이 정합니다 |");
 L.push("| 공백 | 관측이 가장 오래 끊긴 구간(개월). 그 사이는 선이 아니라 **직선 추측**입니다 — **20개월 넘으면 빌더가 던집니다** |");
 L.push("| … | 「자료」가 남은 묶음은 **아직 재지 않았습니다.** 덜 찬 캐시로 재면 「나쁜 자료」와 「아직 안 받은 자료」가 같은 얼굴이 됩니다 |");
 L.push("| 톱니 | 이웃한 두 달 사이 15% 넘게 튄 비율(가장 심한 단지). 발행본은 0~9%, **12% 넘으면 빌더가 던집니다** — 값은 맞아도 선이 이야기를 못 합니다 |");
@@ -206,9 +222,10 @@ const row = (r, no) => {
     : `${Math.round(worst * 100)}%`;
   const holes = measured ? r.stat.map((x) => x.hole).filter((h) => h !== null) : [];
   const bigHole = holes.length ? Math.max(...holes) : null;
+  const again = reused(r);
   const gapCell = bigHole === null ? "…" : bigHole > 20 ? `⛔ ${bigHole}개월` : `${bigHole}개월`;
   const mid = r.members.length === 3 ? cell(r.members[1]) : "—";
-  return `| ${no} | **${r.ratioGap.toFixed(2)}배** | ${r.gapEok.toFixed(1)}억 | ${eok(r.baseFrom)}~${eok(r.baseTo)}억 | ${cell(r.members[0])} | ${mid} | ${cell(r.members[r.members.length - 1])} | ${tag} | ${saw} | ${gapCell} | \`${r.set} ${r.pick}\` |`;
+  return `| ${no} | **${r.ratioGap.toFixed(2)}배** | ${r.gapEok.toFixed(1)}억 | ${eok(r.baseFrom)}~${eok(r.baseTo)}억 | ${cell(r.members[0])} | ${mid} | ${cell(r.members[r.members.length - 1])} | ${tag}${again.length ? ` ♻️` : ""} | ${saw} | ${gapCell} | \`${r.set} ${r.pick}\` |`;
 };
 
 L.push("| # | 상승률차 | 금액차 | 그때 | 🔺 가장 많이 오른 곳 | 가운데 | 🔻 가장 덜 오른 곳 | 자료 | 톱니 | 공백 | 만들 때 |");
