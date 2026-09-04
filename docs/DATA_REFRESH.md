@@ -119,7 +119,8 @@ node scripts/deliver-set.mjs --set tohuh-price-map
 
 | | |
 |---|---|
-| 워크플로 | `.github/workflows/applyhome-collect.yml` — 매일 **08:00 KST**(`0 23 * * *` UTC) · 대기열 푸시로도 즉시 실행 |
+| 워크플로 | `.github/workflows/applyhome-collect.yml` — 매일 **두 판**: 1판 **07:10 KST**(`10 22 * * *`) · 2판 **10:00 KST**(`0 1 * * *`) · 대기열 푸시로도 즉시 실행 |
+| 왜 두 판인가 | 예약 하나로는 **도착** 시각을 못 고른다(깃허브 예약은 줄을 서는 시각이다). 1판은 지연이 짧은 UTC 창이라 **아침에 도착**하고 요약 알림은 이 판만 보낸다. 2판은 **그날 오전 늦게 뜬 공고**를 잡는 보충판이라 새 공고가 있을 때만 알린다. 실측 근거는 워크플로 파일 맨 위 주석(2026-09-04) |
 | 키 | `DATA_GO_KR_API_KEY` (공공데이터포털) |
 | 오퍼레이션 | `getAPTLttotPblancDetail`(신규 APT) · `getRemndrLttotPblancDetail`(무순위·잔여세대) |
 | 산출 | `data/datasets/applyhome-latest.json` + `data/datasets/applyhome/{날짜}.json` |
