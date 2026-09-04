@@ -2687,6 +2687,24 @@
         "--label",
         "gap-ep1-10"
       ]
+    },
+    {
+      "label": "singo-A10022845-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "산성역자이푸르지오1단지",
+        "--type",
+        "84",
+        "--kapt",
+        "A10022845",
+        "--accept-cycle-guard",
+        "--publish"
+      ],
+      "produces": [
+        "singo-산성역자이푸르지오1단지-84"
+      ],
+      "note": "⚠️ --publish 필수. ⚠️ produces 필수. ⚠️ --accept-cycle-guard — 지난 고점이 6개월 전이라 빌더가 막던 것을 오너가 그림을 보고 통과시켰다(2026-09-05)."
     }
   ]
 }

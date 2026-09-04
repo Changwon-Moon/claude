@@ -123,6 +123,7 @@ import {
 } from "./parse/aptInfo.js";
 import { cleanStationName, linesFromCategory } from "./parse/station.js";
 import { foldMonth as mcFold, pickRow as mcPick, needsRefresh as mcNeeds } from "./parse/monthCache.js";
+import { supplyAreaOf } from "./sources/supplyArea.js";
 import { RETRIABLE_BODY as supplyRetriable, TERMINAL_BODY as supplyTerminal, explainApiError } from "./parse/molit.js";
 
 import { singoRegions as singoRegionList, monthRange as singoMonthRange } from "./sources/singoRegions.js";
@@ -526,7 +527,6 @@ console.log("\n[청약홈 주택형별 분양가 — 프리미엄의 뺄셈 상�
   check("타입 글자 A 추출", letterFromHouseType("084.9721A") === "A", letterFromHouseType("084.9721A"));
   check("타입 글자 없는 주택형은 빈 문자열", letterFromHouseType("059.9800") === "");
   check("공급면적 보존", types[0].supplyArea === 112.3456, String(types[0].supplyArea));
-
   const notice = types.filter((t) => t.houseManageNo === "2023000123");
   check("한 공고에 타입 3개", notice.length === 3, String(notice.length));
 
@@ -571,6 +571,34 @@ console.log("\n[청약홈 주택형별 분양가 — 프리미엄의 뺄셈 상�
   const dec = decodeKoreanCsv(eucKr);
   check("EUC-KR 을 알아보고 되살린다", dec.encoding === "euc-kr" && dec.text === "주택형",
     `${dec.encoding} / ${dec.text}`);
+}
+
+/* ── 공급면적: 「주건축물」로 적힌 주차장·대피소를 빼는가 (2026-09-05) ── */
+{
+  const ho = (purpose: string, area: number, gbn = "공용") => ({
+    dongNm: "101동", hoNm: "101호", exposPubuseGbCdNm: gbn,
+    mainAtchGbCd: "0", mainAtchGbCdNm: "주건축물", mainPurpsCdNm: purpose, area,
+  });
+  const rows = [
+    { ...ho("아파트", 60, "전유") },
+    ho("계단,승강기,홀", 14.938),
+    ho("지하주차장", 20.504),   // ← 「주건축물」로 적혀 있지만 기타공용이다
+    ho("지하대피소", 5.263),    // ← 마찬가지
+  ];
+  const r = supplyAreaOf(rows as never, 60);
+  check("주차장·대피소를 공급면적에서 뺀다", !!r && Math.abs(r.commonResidential - 14.938) < 0.001,
+    String(r?.commonResidential));
+  check("뺀 것을 기록에 남긴다", !!r && (r as never as { excludedFromCommon?: unknown[] }).excludedFromCommon?.length === 2);
+  /* ⚠️ 「승강**기계**단」 오탐이 다시 안 나는지 — 이 파일 머리말이 경고한 그 자리다 */
+  const rows2 = [
+    { ...ho("아파트", 60, "전유") },
+    ho("승강기계단", 12.5),
+    ho("기계실", 2.0),
+  ];
+  const r2 = supplyAreaOf(rows2 as never, 60);
+  check("승강기계단·기계실은 그대로 둔다(주차·대피만 뺀다)", !!r2 && Math.abs(r2.commonResidential - 14.5) < 0.001,
+    String(r2?.commonResidential));
+
 }
 
 console.log("\n[청약홈 APT 분양정보 — 27년 이후 입주를 코드가 가른다]");

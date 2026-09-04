@@ -85,6 +85,31 @@ const isMainBld = (r: Row) =>
   String(r.mainAtchGbCd ?? "") === "0" || String(r.mainAtchGbCdNm ?? "").includes("주건축물");
 
 /**
+ * ⚠️ **주차장·대피소는 「주건축물」로 적혀 있어도 주거공용이 아니다** (2026-09-05)
+ *
+ * 위 `mainAtchGbCd` 규칙은 대부분 맞지만 **전부는 아니다.** 어떤 단지는 지하주차장을
+ * `주건축물` 칸에 넣어 두는데, 그러면 그 면적이 통째로 주거공용에 더해진다.
+ * 그 결과가 이렇다 — 전용 59~60㎡ 72곳의 표기 중앙값이 **25평**인데:
+ *
+ *   · 석수e-편한세상   지하주차장 20.5 + 대피소 5.3 → **30평** (전용률 59.6%)
+ *   · 개봉 한마을      지하주차장 22.0 + 대피소 5.8 → **31평** (전용률 58.1%)
+ *   · 철산주공(A42385801) 주차장 15.1            → **28평** (전용률 64.0%)
+ *
+ * 09-05 에 석수 카드를 만들다 드러났다. 「30평」이 제목에 박히면 그게 곧 오보다.
+ *
+ * ── 왜 이번엔 이름으로 거르나
+ * 이 파일 머리말은 *"용도 이름으로 거르지 않는다 — 「승강**기계**단」이 `기계` 에 걸렸다"* 고
+ * 적어 두었고 그 교훈은 **그대로 유효하다.** 그래서 넓게 거르지 않는다.
+ * `주차` 와 `대피` 두 낱말만 본다 — 주거공용 용도에 이 두 글자가 들어가는 이름은 없다
+ * (계단·복도·엘리베이터·홀·기계실·전기실 어디에도 안 걸린다).
+ *
+ * ⚠️ 이미 받아 둔 파일은 **다시 계산하지 않는다.** 그 값으로 이미 나간 카드가 있고,
+ *    발행된 그림을 소급해 바꾸지 않는 것이 이 공장의 규칙이다(2026-09-03 오너).
+ *    새로 받는 것부터 바르게 나온다. 되받고 싶으면 대기열에 `force=1` 을 붙인다.
+ */
+const isOtherCommon = (r: Row) => /주차|대피/.test(String(r.mainPurpsCdNm ?? ""));
+
+/**
  * 전유공용면적 줄 전부 → 찾는 전용면적에 해당하는 호의 공급면적.
  *
  * `wantExclusive` 에 가장 가까운 **아파트 전유**를 가진 호를 고른다.
@@ -114,7 +139,10 @@ export function supplyAreaOf(rows: Row[], wantExclusive: number, tolerance = 0.6
   hits.sort((a, b) => Math.abs(a.ex - wantExclusive) - Math.abs(b.ex - wantExclusive));
   const best = hits[0];
 
-  const commonRows = best.rs.filter((r) => !isExclusive(r) && isMainBld(r));
+  const commonAll = best.rs.filter((r) => !isExclusive(r) && isMainBld(r));
+  /* 「주건축물」로 적혀 있어도 주차장·대피소는 기타공용이다 — 뺀 것을 기록에 남긴다 */
+  const excluded = commonAll.filter(isOtherCommon);
+  const commonRows = commonAll.filter((r) => !isOtherCommon(r));
   const common = commonRows.reduce((a, r) => a + num(r.area), 0);
   if (common <= 0) return null;   // 주거공용이 0인 아파트는 없다 — 응답이 빈 것이다
 
@@ -145,6 +173,18 @@ export function supplyAreaOf(rows: Row[], wantExclusive: number, tolerance = 0.6
       floor: `${(r as any).flrGbCdNm ?? ""} ${(r as any).flrNoNm ?? ""}`.trim(),
       area: num(r.area),
     })).sort((a, b) => b.area - a.area),
+    /* ⚠️ **뺀 것도 남긴다.** 「왜 이 단지만 평이 작지」를 나중에 되짚을 수 있어야 한다 —
+       빼 놓고 말 안 하면 그건 조용히 값을 바꾼 것이다. */
+    ...(excluded.length
+      ? {
+          excludedFromCommon: excluded
+            .map((r) => ({ purpose: String(r.mainPurpsCdNm ?? ""), area: num(r.area) }))
+            .sort((a, b) => b.area - a.area),
+          excludedNote:
+            "대장이 「주건축물」로 적었지만 주차장·대피소는 기타공용이라 공급면적에서 뺐다(2026-09-05). " +
+            "이 줄을 넣으면 전용 60㎡ 가 30평으로 나온다 — 같은 타입 72곳의 중앙값은 25평이다.",
+        }
+      : {}),
     ...(warn ? { warn } : {}),
   };
 }

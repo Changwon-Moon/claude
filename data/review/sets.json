@@ -1407,6 +1407,17 @@
         "gap-ep1-10:a516ea341402"
       ],
       "publishedAt": "2026-09-04"
+    },
+    {
+      "label": "singo-A10022845-84",
+      "title": "🔥 산성역자이푸르지오1단지 33평, 14.7억 신고가",
+      "cards": [
+        "singo-산성역자이푸르지오1단지-84"
+      ],
+      "caption": "singo-A10022845-84",
+      "note": "2026-09-05 판정. 사이클 가드는 오너 판단으로 넘겼다(meta.cycleCalc.guardWaived).",
+      "state": "시안",
+      "pixelPolicy": "정기물 — singo-history·molit·apt-station·apt-detail·apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
     }
   ]
 }
