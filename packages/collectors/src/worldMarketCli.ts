@@ -47,10 +47,15 @@ export const WORLD_INDICES = [
   { key: "hongkong", label: "홍콩", index: "항셍", flag: "hk", yahoo: ["^HSI"] },
   { key: "germany", label: "독일", index: "DAX", flag: "de", yahoo: ["^GDAXI"] },
   { key: "india", label: "인도", index: "니프티50", flag: "in", yahoo: ["^NSEI", "^BSESN"] },
-  /* 베트남은 2026-09-04 첫 실행에서 셋 다 떨어졌다 —
-     ^VNINDEX·VNINDEX.VN 은 HTTP 실패, ^VNI 는 응답은 왔는데 **시세 행 0건**이었다.
-     그래서 후보를 넓히고, 그래도 안 되면 아래 `probeSymbol()` 이 야후에 직접 물어본다. */
-  { key: "vietnam", label: "베트남", index: "VN-Index", flag: "vn", yahoo: ["^VNINDEX", "VNINDEX.VN", "^VNI", "VNINDEX", "VNI.VN"], probeQuery: "Vietnam VN Index Ho Chi Minh stock" },
+  /* ⚠️ 8번째 나라는 원래 **베트남**이었다(오너 1차 확정 2026-09-04).
+     야후가 VN-Index 를 안 갖고 있다 — 심볼 후보 6개(^VNINDEX · VNINDEX.VN · ^VNI ·
+     VNINDEX · ^VNINDEX.VN · VNI.VN)를 실제로 다 눌러 봤고, 야후 검색 엔드포인트에
+     한글·영문 질의를 둘 다 던져도 쓸 만한 게 안 나왔다(^VNINDEX.VN 은 연내 1건짜리 껍데기).
+     같은 날 오너가 **대만으로 교체**를 확정했다 — 아시아 신흥·반도체 축이라 한국과
+     나란히 놓는 그림이 오히려 강해진다.
+     ⛔ 베트남을 되살리려면 야후가 아니라 **다른 소스를 붙이는 일**이다. 심볼을 하나 더
+        찍어 보는 것으로는 안 된다 — 이미 여섯 번 해 봤다. */
+  { key: "taiwan", label: "대만", index: "가권", flag: "tw", yahoo: ["^TWII"] },
 ] as const;
 
 const r2 = (v: number) => Math.round(v * 100) / 100;
