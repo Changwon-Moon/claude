@@ -196,3 +196,13 @@ lawd=11290 umd=상월곡동 type=59 force=1 apt="동아에코빌"
 lawd=41220 umd=지제동 type=84 force=1 apt="지제역더샵센트럴시티"
 lawd=41210 umd=하안동 type=59 force=1 apt="주공9"
 lawd=41117 umd=영통동 type=59 force=1 apt="벽적골9단지주공"
+
+# 2026-09-05 singo-daily-build 가 채운 줄
+lawd=41131 umd=신흥동 type=84 apt="산성역자이푸르지오1단지"
+lawd=41465 umd=풍덕천동 type=84 apt="진산마을삼성5차"
+lawd=41430 umd=내손동 type=84 apt="인덕원 센트럴 자이 1단지"
+lawd=41465 umd=동천동 type=84 apt="동천디이스트"
+lawd=11305 umd=미아동 type=84 apt="래미안트리베라1단지"
+lawd=41115 umd=화서동 type=59 apt="화서주공4단지"
+lawd=41171 umd=석수동 type=59 apt="석수e-편한세상"
+lawd=41113 umd=권선동 type=59 apt="권선자이e편한세상"
