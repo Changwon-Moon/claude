@@ -8,11 +8,11 @@
     "to": "202609",
     "monthsTried": 81,
     "monthsFailed": 0,
-    "monthsTraded": 68,
+    "monthsTraded": 69,
     "peak": {
-      "manwon": 80000,
-      "date": "2026-06-27",
-      "area": 59.39,
+      "manwon": 82000,
+      "date": "2026-08-28",
+      "area": 58.01,
       "floor": 6
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
@@ -732,11 +732,11 @@
     },
     {
       "ym": "202608",
-      "maxManwon": null,
-      "count": 0,
-      "area": null,
-      "floor": null,
-      "date": null,
+      "maxManwon": 82000,
+      "count": 1,
+      "area": 58.01,
+      "floor": 6,
+      "date": "2026-08-28",
       "ok": true
     },
     {
