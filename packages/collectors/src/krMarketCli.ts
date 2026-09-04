@@ -11,6 +11,11 @@
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fetchText } from "./http.js";
+/* 파서는 parse/yahooChart.ts 로 옮겼다 (2026-09-04) — 이 파일은 맨 아래에서 main() 을 무조건
+   부르기 때문에, 세계 지수 수집기가 함수 하나를 import 하면 국내 수집이 통째로 돌아 버렸다.
+   기존 이름은 그대로 쓸 수 있게 재수출한다. */
+import { parseYahooChart, type Day } from "./parse/yahooChart.js";
+export { parseYahooChart };
 
 const CWD = process.env.INIT_CWD || process.cwd();
 
@@ -20,29 +25,6 @@ const INDICES = [
 ];
 
 const r2 = (v: number) => Math.round(v * 100) / 100;
-
-interface Day {
-  date: string;
-  close: number;
-}
-
-/** 야후 차트 JSON → 일간 종가 배열 */
-export function parseYahooChart(json: string): Day[] {
-  const doc = JSON.parse(json);
-  const res = doc?.chart?.result?.[0];
-  if (!res) throw new Error(`야후 응답에 chart.result 없음: ${json.slice(0, 200)}`);
-  const ts: number[] = res.timestamp || [];
-  const closes: (number | null)[] = res.indicators?.quote?.[0]?.close || [];
-  const tz: string = res.meta?.exchangeTimezoneName || "Asia/Seoul";
-  const fmt = new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit" });
-  const rows: Day[] = [];
-  for (let i = 0; i < ts.length; i++) {
-    const c = closes[i];
-    if (c == null || Number.isNaN(c)) continue;
-    rows.push({ date: fmt.format(new Date(ts[i] * 1000)), close: c });
-  }
-  return rows;
-}
 
 function summarize(rows: Day[], year: string) {
   const yr = rows.filter((r) => r.date.startsWith(year));

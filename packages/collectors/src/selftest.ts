@@ -13,6 +13,8 @@ import {
 } from "./sources/seoulOpenApi.js";
 import { resolve } from "node:path";
 import { parseStooqDailyCsv, monthlySample } from "./parse/stooq.js";
+import { parseYahooChart } from "./parse/yahooChart.js";
+import { WORLD_INDICES, monthEnds, monthlyReturns } from "./worldMarketCli.js";
 import { parseEcosJson } from "./parse/ecos.js";
 import { parseRss, dedupeByTitle } from "./parse/rss.js";
 import {
@@ -1495,6 +1497,79 @@ console.log("\n[청약홈 분양정보 파서]");
   check("괄호가 안 닫혀도 읽는다", dongOf(", B215호(대평동, 해들마을6단지 판매시설-2))") === "대평동");
   check("괄호가 둘이면 뒤가 이긴다", dongOf("204호(아름동, 세종시 아카데미타워)(아름동)") === "아름동");
   check("'가'로 끝나는 법정동도 읽는다", dongOf("(신문로2가, 광화문빌딩)") === "신문로2가");
+}
+
+/* ── 세계 주요국 월별 성적표 (2026-09-04)
+   세션은 야후에 못 닿는다(외부망 차단). 그러니 **셈은 여기서 증명한다** —
+   월말을 어디로 잡는지, 1월의 밑이 전년 12월인지, 밑이 없을 때 0 을 만들지 않는지.
+   이 셋이 틀리면 카드의 모든 칸이 조용히 틀린다. */
+{
+  console.log("\n[세계 지수 — 월말·월별 등락률]");
+  const rows = [
+    /* 전년 12월(1월 등락률의 밑) */
+    { date: "2025-12-29", close: 100 },
+    { date: "2025-12-30", close: 200 }, // 12월 마지막 거래일 ← 이게 밑이어야 한다
+    /* 1월: 마지막 거래일이 월중 최고가 아니다(최고를 잡으면 안 된다) */
+    { date: "2026-01-15", close: 260 },
+    { date: "2026-01-30", close: 220 },
+    /* 2월 */
+    { date: "2026-02-27", close: 198 },
+    /* 3월은 거래 없음 — 칸을 지어내지 않는다 */
+    { date: "2026-04-30", close: 297 },
+  ];
+  const ends = monthEnds(rows);
+  check("달 수 = 4 (거래 없는 달은 안 만든다)", ends.length === 4, `got ${ends.length}`);
+  check("월말은 그 달 마지막 거래일", ends[1].d === "2026-01-30" && ends[1].c === 220, JSON.stringify(ends[1]));
+  check("3월 칸은 없다", !ends.some((e) => e.m === "2026-03"));
+
+  const { base, months } = monthlyReturns(ends, "2026");
+  check("1월의 밑은 전년 12월 말", base?.d === "2025-12-30" && base?.c === 200, JSON.stringify(base));
+  check("1월 +10% (220/200)", months[0].pct === 10, `got ${months[0].pct}`);
+  check("2월 -10% (198/220)", months[1].pct === -10, `got ${months[1].pct}`);
+  check("건너뛴 달 다음은 직전 관측이 밑 (297/198=+50%)", months[2].pct === 50, `got ${months[2].pct}`);
+  check("연내 달만 센다", months.length === 3, `got ${months.length}`);
+
+  /* 밑이 없으면 0 이 아니라 빈칸이어야 한다 — 0% 는 "안 움직였다"는 거짓말이다 */
+  const noBase = monthlyReturns(monthEnds(rows.filter((r) => !r.date.startsWith("2025"))), "2026");
+  check("전년 12월이 없으면 1월은 null", noBase.months[0].pct === null, `got ${noBase.months[0].pct}`);
+  check("밑이 없어도 2월은 계산된다", noBase.months[1].pct === -10, `got ${noBase.months[1].pct}`);
+
+  check("오너 확정 8개국", WORLD_INDICES.length === 8, `got ${WORLD_INDICES.length}`);
+  check(
+    "나라 키가 안 겹친다",
+    new Set(WORLD_INDICES.map((i) => i.key)).size === WORLD_INDICES.length,
+  );
+  check("모든 나라에 국기 코드가 있다", WORLD_INDICES.every((i) => /^[a-z]{2}$/.test(i.flag)));
+
+  /* 파서가 거래소 시간대를 쓰는지 — UTC 로 자르면 도쿄 종가가 하루 밀린다 */
+  const tokyo = parseYahooChart(
+    JSON.stringify({
+      chart: {
+        result: [
+          {
+            meta: { exchangeTimezoneName: "Asia/Tokyo" },
+            timestamp: [1767225600], // 2026-01-01 00:00 UTC = 2026-01-01 09:00 도쿄
+            indicators: { quote: [{ close: [40000] }] },
+          },
+        ],
+      },
+    }),
+  );
+  check("거래소 시간대로 날짜를 찍는다", tokyo[0]?.date === "2026-01-01", `got ${tokyo[0]?.date}`);
+  const withNull = parseYahooChart(
+    JSON.stringify({
+      chart: {
+        result: [
+          {
+            meta: { exchangeTimezoneName: "Asia/Seoul" },
+            timestamp: [1767225600, 1767312000],
+            indicators: { quote: [{ close: [null, 3000] }] },
+          },
+        ],
+      },
+    }),
+  );
+  check("종가 null 인 날은 버린다(0 으로 안 채운다)", withNull.length === 1, `got ${withNull.length}`);
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);

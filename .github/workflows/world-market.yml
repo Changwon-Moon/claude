@@ -1,0 +1,123 @@
+name: 세계 지수 수집 (8개국 월별 성적표)
+
+# 한국·미국·일본·중국·홍콩·독일·인도·베트남 대표지수의 일간 종가를 받아
+# **월별 등락률·YTD**(현지통화 기준)를 산출해 커밋한다.
+# 카드 빌더(build-world-monthly.mjs)가 이 캐시를 소비한다.
+#
+# ── 왜 Actions 인가
+# 작업 세션은 외부망이 막혀 있다(2026-09-04 실측: query1.finance.yahoo.com 이 allowlist 밖).
+# 국내 증시 수집기(kr-market.yml)와 같은 이유·같은 소스다.
+#
+# ── ⛔ 예약(schedule)을 두지 않는다 — 이건 취향이 아니라 사고 이력이다
+# 2026-08-16 에 국내 증시 수집기가 **지난 거래일을 지웠다.** 야후의 range 창이 고정이 아니라
+# 어떤 날은 지난 날을 빼고 주는데, 수집기가 받은 것을 그대로 덮어썼다. 그 바람에
+# 오너 확정 카드(kospi-record)의 근거가 사라졌고, 오너는 08-17 에 증시 자동 수집을 멈췄다.
+# 세계 수집기는 그 처방(합치기·지난 점 지키기)을 처음부터 갖고 태어났지만,
+# **고친 코드가 실제로 지켜 내는지 사람이 한 번 보기 전까지는 자동으로 돌리지 않는다.**
+# 어차피 월별 성적표는 달이 바뀔 때 한 번 받으면 되는 물건이라 예약이 급하지도 않다.
+#
+# 손잡이는 둘: `data/world-market-queue.txt` 에 한 줄 push · Actions 의 workflow_dispatch.
+on:
+  push:
+    paths:
+      - "data/world-market-queue.txt"
+  workflow_dispatch:
+    inputs:
+      year:
+        description: "대상 연도"
+        required: true
+        default: "2026"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: world-market
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # 파서 셀프테스트는 **수집 뒤가 아니라 앞**이다 — 이 수집기는 셈(월말·등락률)이
+      # 곧 산출물이라, 셈이 틀린 채로 받아 봐야 틀린 파일을 커밋할 뿐이다.
+      # (증시 수집이 셀프테스트 실패로 며칠 죽었던 2026-07-31 사고와는 결이 다르다:
+      #  그때는 검사가 *수집*을 막았고, 여기서는 검사가 *계산*을 지킨다.)
+      - name: 파서 셀프테스트
+        run: pnpm --filter @wirit/collectors selftest
+
+      - name: 실행 조건 정하기
+        id: cfg
+        run: |
+          YEAR="${{ github.event.inputs.year }}"
+          # ⛔ 예약 런은 대기열을 읽지 않는다 — 이 저장소의 공통 규칙(2026-08-27).
+          #    지금은 예약이 없지만, 나중에 켜는 사람이 이 갈래를 지우지 않도록 남겨 둔다.
+          Q=data/world-market-queue.txt
+          if [ -z "$YEAR" ] && [ "${{ github.event_name }}" = "push" ] && [ -f "$Q" ]; then
+            LINE=$(grep -v '^\s*#' "$Q" | grep -v '^\s*$' | tail -1)
+            echo "대기열 마지막 줄: ${LINE:-(비어 있음)}"
+            for kv in $LINE; do
+              case "$kv" in year=*) YEAR="${kv#year=}" ;; esac
+            done
+          fi
+          echo "year=${YEAR:-2026}" >> "$GITHUB_OUTPUT"
+
+      - name: 세계 지수 수집
+        id: collect
+        run: |
+          set -o pipefail
+          pnpm --filter @wirit/collectors collect-world-market -- \
+            --year "${{ steps.cfg.outputs.year }}" \
+            --out "$GITHUB_WORKSPACE/data/datasets/world-market-${{ steps.cfg.outputs.year }}.json" \
+            2>&1 | tee /tmp/world.log
+
+      # ── 세션의 유일한 눈 ──
+      # 세션은 Actions 로그 본문(zip)을 못 받는다. 그래서 결과를 파일에 적어 커밋한다.
+      # 심볼이 틀려 실패했을 때 **어느 나라의 어떤 심볼이 죽었는지**가 여기 남아야
+      # 다음 세션이 후보를 고쳐 다시 밀 수 있다.
+      - name: 실행 결과 기록
+        if: always()
+        run: |
+          {
+            echo "# 세계 지수 수집 마지막 실행"
+            echo
+            echo "- 대상 연도: ${{ steps.cfg.outputs.year }} · 방아쇠 \`${{ github.event_name }}\`"
+            echo "- 결과: **${{ job.status == 'success' && '성공' || '실패' }}**"
+            echo "- 커밋: \`${{ github.sha }}\`"
+            echo
+            echo '```'
+            cat /tmp/world.log 2>/dev/null || echo "(수집 단계가 실행되지 못했습니다)"
+            echo '```'
+          } > data/world-market-last.md
+
+      - name: 커밋
+        if: always()
+        run: |
+          git config user.name "wirit-bot"
+          git config user.email "actions@github.com"
+          # ⚠️ 폴더를 통째로 쓸어 담지 않는다 — confirm.mjs 가 워크플로의 git add 경로를 읽어
+          #    '정기물'을 가르기 때문이다(CARD_CHECKLIST §5).
+          git add -f data/world-market-last.md
+          git add data/datasets/world-market-*.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "바뀐 것 없음 — 커밋 생략"
+          else
+            git commit -m "세계 지수 수집 ${{ steps.cfg.outputs.year }}"
+            git pull --rebase --autostash origin ${{ github.ref_name }} || true
+            git push origin HEAD:${{ github.ref_name }}
+          fi
