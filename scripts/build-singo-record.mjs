@@ -1029,8 +1029,53 @@ const nameBook = (() => {
     return {};
   }
 })();
-const BOOK_HIT = !NAME_OVERRIDE && !MERGE && KAPT ? nameBook[KAPT] : null;
-const DISPLAY_NAME = NAME_OVERRIDE || (MERGE ? APT : BOOK_HIT?.name || hit.aptNm);
+/* ── ✂️ 「아파트」는 카드 제목에서 뺀다 (오너 2026-09-04 기준 확정)
+ *
+ * 오너: *"이 외에도 '아파트'는 항상 단지명에서 빼는 것을 기준으로 해."*
+ *
+ * 실거래 신고명에는 「신길센트럴자이**아파트**」처럼 종별이 붙어 오는 단지가 많다.
+ * 카드에서 그 세 글자는 아무것도 알려 주지 않으면서 제목 폭만 먹는다.
+ *
+ * ⚠️ **사전과 `--name` 은 건드리지 않는다.** 그 둘은 사람이 정한 이름이라
+ *    「아파트」가 들어 있다면 일부러 넣은 것이다. 이 손질은 **③ 신고명 그대로**에만 건다.
+ * ⚠️ 빼고 나서 **두 글자가 안 되면 빼지 않는다** — 이름이 사라지는 것보다 낫다. */
+const dropAptSuffix = (s) => {
+  const out = String(s ?? "")
+    .replace(/아파트/g, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+  return out.length >= 2 ? out : String(s ?? "");
+};
+/* ── ⛔ **이름은 지나간 것을 소급하지 않는다** (오너 2026-09-03 · 공급면적 문지기와 같은 규칙)
+ *
+ * *"기존에 이미 발행한 카드를 왜 소급해? 확정된 카드는 이미 인스타 올라간 거야."*
+ *
+ * 이름 사전도 「아파트」 손질도 **제목을 바꾼다 = 픽셀을 바꾼다.** 이미 확정·발행된 카드에
+ * 걸면 그날 인스타에 올라간 그림과 저장소가 갈리고, `deliver-set` 의 확정 md5 게이트가
+ * 나중에 영문 모를 이유로 막힌다.
+ *   · 2026-09-04 실측: 「동아에코빌」→「월곡 동아에코빌」이 **08-26 확정 세트**의 캡션을 고쳤고,
+ *     「아파트」 손질은 같은 세트의 `singo-한신아파트상가동유치원동103~109-84` 를 건드릴 참이었다.
+ * → 그래서 **이 카드가 이미 「오너 확정」이면 신고명 그대로 그린다.** ⓘ 로 한 줄 남긴다.
+ * ⚠️ `--name` 은 예외다 — 사람이 이 판을 지금 그렇게 그리라고 지시한 것이다. */
+const nameSlug = `singo-${full(APT)}-${TYPE}`;
+const nameAlreadyConfirmed = (() => {
+  try {
+    const S = JSON.parse(readFileSync(P("data/review/sets.json"), "utf8"));
+    return (S.sets ?? []).some((s) => s.state === "오너 확정" && (s.cards ?? []).includes(nameSlug));
+  } catch {
+    return false;
+  }
+})();
+const BOOK_HIT = !NAME_OVERRIDE && !MERGE && KAPT && !nameAlreadyConfirmed ? nameBook[KAPT] : null;
+const RAW_NAME = nameAlreadyConfirmed ? hit.aptNm : BOOK_HIT?.name || dropAptSuffix(hit.aptNm);
+const DISPLAY_NAME = NAME_OVERRIDE || (MERGE ? APT : RAW_NAME);
+if (nameAlreadyConfirmed && !NAME_OVERRIDE && !MERGE && (nameBook[KAPT] || dropAptSuffix(hit.aptNm) !== hit.aptNm))
+  console.log(
+    `ⓘ 이름 규칙(사전·「아파트」 손질)이 있지만 **이미 오너가 확정·발행한 카드**라 신고명 그대로 그립니다 — ${nameSlug}\n` +
+      `   기준을 바꿔도 이미 나간 카드는 소급하지 않습니다(오너 2026-09-03). 새 카드부터 적용됩니다.`,
+  );
+if (!NAME_OVERRIDE && !MERGE && !BOOK_HIT && RAW_NAME !== hit.aptNm)
+  console.log(`ⓘ 「아파트」를 뺐습니다 — 「${hit.aptNm}」 → 「${RAW_NAME}」 (기준 · 오너 2026-09-04)`);
 if (BOOK_HIT && BOOK_HIT.name !== hit.aptNm)
   console.log(`ⓘ 이름 사전 — 「${hit.aptNm}」 → 「${BOOK_HIT.name}」 (${BOOK_HIT.why ?? "이유 미기재"} · ${BOOK_HIT.by ?? "?"} ${BOOK_HIT.at ?? ""})`);
 /* 주차대수 — **세대당 몇 대**로 적는다(오너 2026-08-16 "주차대수 0.0대").
