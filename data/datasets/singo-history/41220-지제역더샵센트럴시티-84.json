@@ -5,15 +5,15 @@
     "aptNm": "지제역더샵센트럴시티",
     "type": "84",
     "from": "202001",
-    "to": "202608",
-    "monthsTried": 80,
+    "to": "202609",
+    "monthsTried": 81,
     "monthsFailed": 0,
     "monthsTraded": 38,
     "peak": {
-      "manwon": 93000,
-      "date": "2026-08-23",
+      "manwon": 94000,
+      "date": "2026-08-22",
       "area": 84.9264,
-      "floor": 6
+      "floor": 21
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -697,7 +697,7 @@
     {
       "ym": "202604",
       "maxManwon": 86500,
-      "count": 10,
+      "count": 9,
       "area": 84.9247,
       "floor": 25,
       "date": "2026-04-28",
@@ -706,7 +706,7 @@
     {
       "ym": "202605",
       "maxManwon": 86500,
-      "count": 13,
+      "count": 12,
       "area": 84.9206,
       "floor": 8,
       "date": "2026-05-23",
@@ -732,11 +732,20 @@
     },
     {
       "ym": "202608",
-      "maxManwon": 93000,
-      "count": 3,
+      "maxManwon": 94000,
+      "count": 4,
       "area": 84.9264,
-      "floor": 6,
-      "date": "2026-08-23",
+      "floor": 21,
+      "date": "2026-08-22",
+      "ok": true
+    },
+    {
+      "ym": "202609",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
       "ok": true
     }
   ]
