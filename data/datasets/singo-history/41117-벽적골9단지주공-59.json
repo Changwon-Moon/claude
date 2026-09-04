@@ -8,10 +8,10 @@
     "to": "202609",
     "monthsTried": 81,
     "monthsFailed": 0,
-    "monthsTraded": 75,
+    "monthsTraded": 76,
     "peak": {
-      "manwon": 70500,
-      "date": "2026-07-29",
+      "manwon": 71800,
+      "date": "2026-08-22",
       "area": 59.39,
       "floor": 7
     },
@@ -723,29 +723,29 @@
     },
     {
       "ym": "202607",
-      "maxManwon": 70500,
-      "count": 9,
+      "maxManwon": 71500,
+      "count": 12,
       "area": 59.39,
-      "floor": 7,
-      "date": "2026-07-29",
+      "floor": 17,
+      "date": "2026-07-30",
       "ok": true
     },
     {
       "ym": "202608",
-      "maxManwon": 69000,
-      "count": 3,
+      "maxManwon": 71800,
+      "count": 4,
       "area": 59.39,
-      "floor": 15,
-      "date": "2026-08-10",
+      "floor": 7,
+      "date": "2026-08-22",
       "ok": true
     },
     {
       "ym": "202609",
-      "maxManwon": null,
-      "count": 0,
-      "area": null,
-      "floor": null,
-      "date": null,
+      "maxManwon": 71000,
+      "count": 1,
+      "area": 59.39,
+      "floor": 12,
+      "date": "2026-09-01",
       "ok": true
     }
   ]
