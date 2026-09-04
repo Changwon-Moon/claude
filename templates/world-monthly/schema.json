@@ -10,7 +10,6 @@
     "cols",
     "ytdLabel",
     "rows",
-    "note",
     "source"
   ],
   "properties": {
@@ -159,7 +158,7 @@
     },
     "note": {
       "type": "string",
-      "description": "측정 정의 한 줄. 이 카드에서는 통화 기준이 반드시 들어간다"
+      "description": "측정 정의 한 줄(선택). 2026-09-04 오너 지시로 이 카드에서는 비운다 — 정의는 상단 캡션과 인스타 캡션이 맡는다"
     },
     "source": {
       "type": "object",

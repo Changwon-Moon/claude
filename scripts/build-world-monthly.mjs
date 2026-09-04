@@ -141,7 +141,11 @@ const asOf = rows.map((r) => r.asOf).sort().at(-1);
 const doc = {
   template: "world-monthly@1",
   date: DATE,
-  subtitle: `각국 대표지수 · 현지통화 기준 · ${YEAR}.01~${String(THROUGH).padStart(2, "0")}`,
+  /* 최하단 문구를 뺐다(오너 2026-09-04). 그런데 「월말 종가로 잰다」는 **버릴 수 없는 정의**다 —
+     같은 달을 일평균으로 재면 숫자가 통째로 달라진다. 그래서 상단 캡션이 받는다.
+     카드에서 뺀 나머지(누적의 밑이 전년 12월 말이라는 것)는 캡션이 적는다
+     — 「카드는 한 가지만 또렷하게 말하고 나머지는 캡션으로 내린다」(CARD_CHECKLIST §2). */
+  subtitle: `각국 대표지수 · 현지통화 · 월말 종가 · ${YEAR}.01~${String(THROUGH).padStart(2, "0")}`,
   title,
   lead: "나라",
   cols: Array.from({ length: 8 }, (_, i) => `${i + 1}월`),
@@ -150,9 +154,6 @@ const doc = {
      손으로 적지 않는다: 누적을 재는 기준이 바뀌면 순서가 바뀌고, 실제로 이 카드에서
      한 번 바뀌었다(오늘까지로 재면 대만이 1위, 8월 말로 재면 한국이 1위). */
   rows: rows.map(({ key, ytdNum, asOf, ...r }, i) => ({ rank: i + 1, top: i === 0, ...r })),
-  /* 한 줄로 끝나야 한다(판형 주석 참고). 「환율 미반영」은 상단 캡션의 「현지통화 기준」이
-     이미 말한다 — 같은 말을 두 번 하면 줄이 넘치고, 넘치면 범례가 밀린다. */
-  note: `달마다 <b>그 나라 마지막 거래일 종가</b>로 잰 등락률 · 누적은 <b>전년 말 대비</b>`,
   source: { name: ds.meta.source, asOf: `${asOf} 기준` },
 };
 

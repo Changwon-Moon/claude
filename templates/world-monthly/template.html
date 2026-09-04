@@ -120,7 +120,10 @@
       }
       .wm-note b { color: var(--wirit-ink); font-weight: 800; }
       /* 범례 — 색이 무엇을 뜻하는지. 색만 보고 읽는 사람을 위해 부호도 같이 적는다 */
-      .wm-key { display: inline-flex; align-items: center; gap: 14px; margin-left: auto; flex: 0 0 auto; }
+      .wm-key { display: inline-flex; align-items: center; gap: 14px; flex: 0 0 auto; }
+      /* 설명 문구가 있을 때만 범례를 오른쪽 끝으로 민다. 문구를 뺀 판(2026-09-04 오너)에서는
+         범례가 왼쪽에 선다 — 혼자 남은 것을 오른쪽 끝에 붙여 두면 줄 전체가 비어 보인다. */
+      .wm-note > span:first-child + .wm-key { margin-left: auto; }
       .wm-key i { font-style: normal; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
       .wm-key s { text-decoration: none; display: inline-block; width: 26px; height: 20px; border-radius: 4px; }
       .wm-key s.u { background: color-mix(in srgb, var(--wirit-red) 60%, var(--wirit-paper)); }
@@ -156,7 +159,7 @@
       </div>
 
       <div class="wm-note">
-        <span>{{{note}}}</span>
+        {{#if note}}<span>{{{note}}}</span>{{/if}}
         <span class="wm-key">
           <i><s class="u"></s>오름(+)</i>
           <i><s class="d"></s>내림(−)</i>
