@@ -186,3 +186,13 @@ lawd=41310 umd=갈매동 type=59 apt="갈매6단지"
 # 2026-09-04 — 성북 동아에코빌 59 곡선이 신고가 판정보다 낮다(곡선 최고 8.82억 vs 판정 9.4억).
 #   rebuild-cards 가 이 한 장에서 멈춘다. 곡선 캐시에 최근 달이 빠진 것으로 보인다.
 lawd=11290 umd=길음동 type=59 apt="동아에코빌"
+
+# 2026-09-04 — 곡선 최고가가 오늘 신고가 판정보다 낮아 7장이 막혔다. 캐시에 최근 달이 빠졌다.
+#   force=1 로 다시 받는다(세션 11:00 KST).
+lawd=41450 umd=학암동 type=84 force=1 apt="위례롯데캐슬"
+lawd=41450 umd=망월동 type=84 force=1 apt="미사강변 골든 센트로"
+lawd=11620 umd=신림동 type=84 force=1 apt="신림푸르지오"
+lawd=11290 umd=길음동 type=59 force=1 apt="동아에코빌"
+lawd=41220 umd=지제동 type=84 force=1 apt="지제역더샵센트럴시티"
+lawd=41210 umd=하안동 type=59 force=1 apt="주공9"
+lawd=41117 umd=영통동 type=59 force=1 apt="벽적골9단지주공"
