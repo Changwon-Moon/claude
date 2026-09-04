@@ -1,7 +1,7 @@
 {
   "label": "gap-ep1-10",
-  "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "verdict": "block",
+  "summary": "BLOCK — error 1 · warn 0 · 카드 1장 · 코드 검수만",
   "findings": [
     {
       "reviewer": "caption-lint",
@@ -20,6 +20,12 @@
       "level": "info",
       "code": "crosscheck-allowed",
       "msg": "캡션 교차검증값 4.5억 허용 — 단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "error",
+      "code": "number-mismatch",
+      "msg": "캡션 금액 6.3억이(가) 카드 수치에 없습니다 — 오보 위험, 카드와 대조 필요"
     }
   ],
   "cards": [
