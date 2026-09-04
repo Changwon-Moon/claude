@@ -1064,7 +1064,18 @@ const nameSlug = arg("slug") ?? `singo-${full(APT)}-${TYPE}`;
 const nameAlreadyConfirmed = (() => {
   try {
     const S = JSON.parse(readFileSync(P("data/review/sets.json"), "utf8"));
-    return (S.sets ?? []).some((s) => s.state === "오너 확정" && (s.cards ?? []).includes(nameSlug));
+    /* ⚠️ **오늘 확정한 세트는 「지나간 것」이 아니다.** 이 조건이 없으면 확정하는 순간
+       그 세트의 카드가 다음 재생산에서 사전 이름을 잃고 신고명으로 되돌아간다 —
+       그러면 확정 md5 와 어긋나 `deliver-set` 이 나중에 영문 모르게 막힌다.
+       09-04 실측: 확정 직후 「대방대림」이 카드 JSON 에서 「대림아파트」로 되돌아갔다.
+       그래서 **이 판을 그리는 날(DATE)보다 먼저 확정된 세트**만 소급 금지 대상으로 본다. */
+    return (S.sets ?? []).some(
+      (s) =>
+        s.state === "오너 확정" &&
+        (s.cards ?? []).includes(nameSlug) &&
+        String(s.confirmedAt ?? "") !== "" &&
+        String(s.confirmedAt) < DATE,
+    );
   } catch {
     return false;
   }
