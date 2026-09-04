@@ -143,76 +143,13 @@
 ⏭ 이미 있음 — data/datasets/apt-station/A42384502.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-station/A44347023.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-station/A10026043.json (다시 받으려면 force=1)
-
-── A44878510
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A44878510
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A44878510.json
-진산마을삼성5차아파트 (주소로 좌표) → 수지구청역 직선 672m · 노선 신분당
-   다음: 성복역 1281m
-   다음: 보정역 1303m
-   다음: 죽전역 1459m
-
-── A43708008
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A43708008
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A43708008.json
-인덕원센트럴자이 (주소로 좌표) → 평촌역 직선 1418m · 노선 4
-   다음: 인덕원역 1860m
-
-── A44812014
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A44812014
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A44812014.json
-동천디이스트 (주소로 좌표) → 동천역 직선 627m · 노선 신분당
-   다음: 오리역 1054m
-   다음: 미금역 1424m
-
-── A14272309
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A14272309
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A14272309.json
-래미안트리베라1차 (주소로 좌표) → 삼양사거리역 직선 819m · 노선 우이신설
-   다음: 미아사거리역 829m
-   다음: 솔샘역 945m
-   다음: 북한산보국문역 1118m
-
-── A44278215
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A44278215
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A44278215.json
-화서주공4단지 (주소로 좌표) → 화서역 직선 265m · 노선 1
-
-
-── A43070506
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A43070506
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A43070506.json
-석수e편한세상 (주소로 좌표) → 관악역 직선 715m · 노선 1
-   다음: 안양역 1656m
-
-── A44173913
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A44173913
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A44173913.json
-권선자이e편한세상 (주소로 좌표) → 수원시청역 직선 1072m · 노선 수인분당
-   다음: 매탄권선역 1278m
-   다음: 세류역 1504m
-   다음: 매교역 1675m
+⏭ 이미 있음 — data/datasets/apt-station/A44878510.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A43708008.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A44812014.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A14272309.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A44278215.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A43070506.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-station/A44173913.json (다시 받으려면 force=1)
 
 ✅ 대기열 전 줄 완료
 ```
