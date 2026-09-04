@@ -47,7 +47,10 @@ export const WORLD_INDICES = [
   { key: "hongkong", label: "홍콩", index: "항셍", flag: "hk", yahoo: ["^HSI"] },
   { key: "germany", label: "독일", index: "DAX", flag: "de", yahoo: ["^GDAXI"] },
   { key: "india", label: "인도", index: "니프티50", flag: "in", yahoo: ["^NSEI", "^BSESN"] },
-  { key: "vietnam", label: "베트남", index: "VN-Index", flag: "vn", yahoo: ["^VNINDEX", "VNINDEX.VN", "^VNI"] },
+  /* 베트남은 2026-09-04 첫 실행에서 셋 다 떨어졌다 —
+     ^VNINDEX·VNINDEX.VN 은 HTTP 실패, ^VNI 는 응답은 왔는데 **시세 행 0건**이었다.
+     그래서 후보를 넓히고, 그래도 안 되면 아래 `probeSymbol()` 이 야후에 직접 물어본다. */
+  { key: "vietnam", label: "베트남", index: "VN-Index", flag: "vn", yahoo: ["^VNINDEX", "VNINDEX.VN", "^VNI", "VNINDEX", "^VNINDEX.VN", "VNI.VN"] },
 ] as const;
 
 const r2 = (v: number) => Math.round(v * 100) / 100;
@@ -119,6 +122,33 @@ function summarize(rows: Day[], year: string) {
 const yahooUrl = (sym: string) =>
   `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?range=2y&interval=1d`;
 
+/**
+ * 실패한 지수를 **야후에게 직접 물어본다** (2026-09-04).
+ *
+ * 세션은 외부망이 막혀 심볼을 미리 확인할 수 없다. 그래서 후보를 찍어 밀고, 떨어지면
+ * 후보를 하나 더 찍어 또 미는 식이 된다 — 한 번 왕복에 몇 분씩 걸리는 짓이다.
+ * 야후에는 검색 엔드포인트가 있으니, **실패한 그 실행이 답까지 물어 오게** 한다.
+ * 다음 세션은 로그에서 진짜 심볼을 읽어 후보 맨 앞에 넣기만 하면 된다.
+ *
+ * 검색 결과를 **자동으로 쓰지는 않는다** — 이름이 비슷한 다른 상품(ETF·선물)이 1위로
+ * 올라오면 조용히 남의 지수를 그리게 된다. 사람이 보고 고르는 자리다.
+ */
+async function probeSymbol(query: string): Promise<string> {
+  try {
+    const json = await fetchText(
+      `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=10&newsCount=0`,
+      { retries: 1, headers: { Accept: "application/json", "User-Agent": "Mozilla/5.0 (wirit-collector)" } },
+    );
+    const quotes: any[] = JSON.parse(json)?.quotes ?? [];
+    if (!quotes.length) return `      (야후 검색 "${query}" — 결과 없음)`;
+    return quotes
+      .map((q) => `      · ${q.symbol}  [${q.quoteType ?? "?"}] ${q.shortname ?? q.longname ?? ""} ${q.exchange ?? ""}`)
+      .join("\n");
+  } catch (e) {
+    return `      (야후 검색도 실패: ${String((e as Error).message ?? e).slice(0, 80)})`;
+  }
+}
+
 async function tryFetch(sym: string): Promise<Day[]> {
   const json = await fetchText(yahooUrl(sym), {
     retries: 2,
@@ -154,7 +184,7 @@ async function main() {
 
   const indices: Record<string, any> = {};
   const symbols: Record<string, string> = {};
-  const failed: { label: string; tried: string[]; why: string }[] = [];
+  const failed: { label: string; tried: string[]; why: string; probe: string }[] = [];
 
   for (const idx of WORLD_INDICES) {
     const candidates = pinned[idx.key] ? [pinned[idx.key]] : [...idx.yahoo];
@@ -173,8 +203,11 @@ async function main() {
       }
     }
     if (!rows) {
-      failed.push({ label: `${idx.label} ${idx.index}`, tried: candidates, why: why.join(" / ") });
+      /* 떨어진 그 자리에서 야후에게 진짜 심볼을 물어본다 — 다음 왕복을 아끼려고 */
+      const probe = await probeSymbol(`${idx.index} ${idx.label}`);
+      failed.push({ label: `${idx.label} ${idx.index}`, tried: candidates, why: why.join(" / "), probe });
       console.error(`   ❌ ${idx.label} 실패 — ${why.join(" / ")}`);
+      console.error(`   🔎 야후 검색 결과 — 이 중에 맞는 것이 있는지 사람이 고릅니다:\n${probe}`);
       continue;
     }
     const s = summarize(rows, year);
@@ -188,7 +221,10 @@ async function main() {
   /* ── 한 나라라도 빠지면 **쓰지 않는다** (위 ④) ── */
   if (failed.length) {
     console.error("\n⛔ 수집 실패 — 파일을 쓰지 않습니다. 빠진 나라로 8개국 카드를 그리면 그게 오보입니다.\n");
-    for (const f of failed) console.error(`   · ${f.label} — 시도한 심볼: ${f.tried.join(", ")}\n     ${f.why}`);
+    for (const f of failed) {
+      console.error(`   · ${f.label} — 시도한 심볼: ${f.tried.join(", ")}\n     ${f.why}`);
+      console.error(`     🔎 야후가 아는 것:\n${f.probe}`);
+    }
     console.error(
       "\n   → 심볼이 틀렸다면 packages/collectors/src/worldMarketCli.ts 의 WORLD_INDICES 후보에 추가하세요.\n" +
         "     (야후 심볼 표기는 시장마다 갈립니다. 세션은 외부망이 막혀 미리 확인할 수 없어\n" +
