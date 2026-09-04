@@ -214,7 +214,7 @@ const MEASURE_JS = `(() => {
                 겹치면 옆 칸 숫자와 붙어 값을 잘못 읽게 된다. 실제로 첫 렌더에서 숫자가 칸을 꽉
                 채워 붙어 보였고(26px→23px 로 줄여 고쳤다), 그건 디자인 취향이 아니라 오독이다.
                 (.wm-key 의 색칩은 글자가 아니라 색 견본이라 넣지 않는다) */
-             ".wm-hr span,.wm-nm b,.wm-nm i,.wm-c,.wm-note>span,.wm-key i," +
+             ".wm-hr span,.wm-rk,.wm-nm b,.wm-nm i,.wm-c," +
              /* sinbundang-map — 노선도형 지도 카드(2026-07-31). 새 템플릿을 만들면 글자 요소를
                 여기 등록해야 겹침 검사가 실제로 잰다(빠뜨리면 검사받지 않은 것). */
              ".sbm-stn,.sbm-danji,.sbm-price .v,.sbm-price .sz,.sbm-note," +
@@ -402,7 +402,7 @@ const MEASURE_JS = `(() => {
        danji-brief 것이다) 청약 판형 9장에서 이 검사가 **한 번도 돈 적이 없었다.** .dcv-note 가
        특이사항 줄이다 — 이번에 그 줄이 두 줄로 늘면서 정확히 필요해진 검사다.
        ⚠️ 이 블록은 브라우저로 넘어가는 문자열 안이다 — 주석에 백틱을 쓰면 스크립트가 깨진다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.dcv-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note,.gb-note,.sr-chart,.wm-note");
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.dcv-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note,.gb-note,.sr-chart,.wm-grid");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();

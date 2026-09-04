@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "world-monthly@1",
-  "description": "나라 × 달 성적표 행렬(히트맵). 행=나라(국기+지수), 열=달 8개 + 누적 1개. 부호는 색이 아니라 글자가 말한다.",
+  "description": "나라 × 달 성적표 행렬(히트맵). 행=순위+나라(국기+지수), 열=달 8개 + 누적 1개. 부호는 색이 아니라 글자가 말한다.",
   "type": "object",
   "required": [
     "template",
@@ -155,10 +155,6 @@
         },
         "additionalProperties": true
       }
-    },
-    "note": {
-      "type": "string",
-      "description": "측정 정의 한 줄(선택). 2026-09-04 오너 지시로 이 카드에서는 비운다 — 정의는 상단 캡션과 인스타 캡션이 맡는다"
     },
     "source": {
       "type": "object",
