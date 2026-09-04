@@ -2512,6 +2512,91 @@
         "singo-갈매6단지-59"
       ],
       "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10027686-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "위례롯데캐슬",
+        "--type",
+        "84",
+        "--kapt",
+        "A10027686",
+        "--publish"
+      ],
+      "produces": [
+        "singo-위례롯데캐슬-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10028139-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "미사강변 골든 센트로",
+        "--type",
+        "84",
+        "--kapt",
+        "A10028139",
+        "--publish"
+      ],
+      "produces": [
+        "singo-미사강변골든센트로-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10023833-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "지제역더샵센트럴시티",
+        "--type",
+        "84",
+        "--kapt",
+        "A10023833",
+        "--publish"
+      ],
+      "produces": [
+        "singo-지제역더샵센트럴시티-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A42384502-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "주공9",
+        "--type",
+        "59",
+        "--kapt",
+        "A42384502",
+        "--publish"
+      ],
+      "produces": [
+        "singo-주공9-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A44347023-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "벽적골9단지주공",
+        "--type",
+        "59",
+        "--kapt",
+        "A44347023",
+        "--publish"
+      ],
+      "produces": [
+        "singo-벽적골9단지주공-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
     }
   ]
 }
