@@ -372,6 +372,23 @@ const halos = [{ x: startX, y: startCy, r: startR, fill: T.halo, opacity: T.halo
    1·2호는 셋의 출발가가 같거나 반올림이 겹쳐 우연히 맞았다(픽셀 불변).
    묶음을 대표하는 값(구간의 가운데) 하나로 통일한다. */
 const baseLabel = fmtEok(Math.round((group.baseFrom + group.baseTo) / 2));
+
+/* ⚠️ 제목의 격차는 **카드에 찍힌 두 끝 라벨의 뺄셈**이어야 한다 (2026-09-04 발각).
+   §11 이 끝점 「달」을 고쳐 「범례 배수 ↔ 끝 라벨」을 맞췄는데, 같은 계열의 어긋남이
+   **반올림**에서 한 번 더 나왔다. 발행 #8(안건 10)에서 실제로:
+
+     원값     11.95억 − 6.20억 = 5.75  →  제목 「5.8억 격차」
+     카드 라벨 「11.9억」 · 「6.2억」    →  읽는 사람이 세면 **5.7억**
+
+   0.1억이지만 §13 이 세라고 한 바로 그 자리이고, 읽는 사람이 카드 위에서 직접
+   검산할 수 있는 유일한 숫자다. 그러니 **눈에 보이는 것끼리 맞춘다** —
+   제목은 원값이 아니라 라벨에서 낸다.
+   (확정본 1~5호와 #6·#7·#9·#10 은 두 식의 값이 같아 픽셀 불변 — 실측 확인했다.) */
+const endLabelEok = (m) => Number(eok(m).toFixed(1));
+const gapLabel =
+  (endLabelEok(group.members[0].now) -
+    endLabelEok(group.members[group.members.length - 1].now)).toFixed(1);
+
 const startLabelY = r1(TOP + 150);   // 오너 2026-09-02: 조금 더 내린다
 vlabels.push({
   x: r1(startX + 10), y: startLabelY,
@@ -431,7 +448,7 @@ const card = {
      윗줄은 **회색으로 물리고**(전제) 아랫줄을 잉크로 세운다(결과). 강조는 두 줄 다 레드 숫자. */
   title:
     `<span class="tl tg">2020년 초, 똑같은 <span class="ti">${baseLabel}</span>에서</span>` +
-    `<span class="tl">지금은 무려 <span class="hi">${group.gapEok.toFixed(1)}억</span> 격차</span>`,
+    `<span class="tl">지금은 무려 <span class="hi">${gapLabel}억</span> 격차</span>`,
   chart: {
     vb: `0 0 1000 ${VB_H}`,
     base: { y: BASE, x1: AXIS_X, x2: RIGHT },

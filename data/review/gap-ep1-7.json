@@ -1,0 +1,31 @@
+{
+  "label": "gap-ep1-7",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "caption-lint",
+      "level": "info",
+      "code": "hook",
+      "msg": "첫 줄이 밋밋합니다 — 질문(?)·감탄(!)이나 끝 이모지 하나로 멈춰 세우세요"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 8.5억 허용 — 단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    }
+  ],
+  "cards": [
+    {
+      "file": "gap-ep1-7.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}
