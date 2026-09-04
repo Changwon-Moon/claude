@@ -20,6 +20,21 @@ name: 신고가 재료 미리 걸기 (아침 판정 직후)
 # ── ⚠️ 카드를 만들지 않는다
 # `--enqueue-only` 는 대기열까지만 채우고 멈춘다. 카드 제작·확정은 그대로 세션과 오너의 일이다
 # (확정은 오너가 그림을 보고 하는 판단이다 — 2026-09-03).
+#
+# ── ⛔⛔ 2026-09-05 — **이 워크플로는 첫날부터 아무것도 못 깨우고 있었다**
+#
+# 위 머리말이 *"대기열이 커밋되면 수집기 넷이 그 자리에서 움직인다"* 고 적었는데 **안 움직였다.**
+# 깃허브에는 **기본 `GITHUB_TOKEN` 으로 민 push 는 새 워크플로 실행을 만들지 않는다**는 규칙이
+# 있다(무한 반복 방지). 이 워크플로는 `wirit-bot` 으로 커밋·푸시하므로 그 규칙에 정확히 걸린다.
+#
+# 09-05 아침 실측: 06:54 에 대기열을 걸었는데 **40분 동안 수집기 넷이 하나도 안 돌았다.**
+# 09-04 에 안 드러난 이유는 그 뒤에 **세션이 손으로 밀었기** 때문이다 —
+# 「미리 걸어서 빨라졌다」로 보였지만 실제로 일한 것은 사람의 푸시였다.
+# **초록불이 「일했다」를 뜻하지 않은 또 한 자리다**(08-19 신고가·09-03 공급면적과 같은 계열).
+#
+# → 고침: 커밋으로 깨우려 하지 않고 **수집기를 직접 부른다**(`workflow_call`).
+#   같은 실행 안에서 도니 방아쇠 규칙에 걸릴 것이 없다. 커밋은 그대로 남긴다 —
+#   대기열은 기록이기도 하고, 수집기가 그 파일을 읽기 때문이다.
 
 on:
   workflow_run:
@@ -85,3 +100,30 @@ jobs:
         shell: bash
         run: |
           { echo "### 신고가 재료 미리 걸기"; echo; sed -n '1,40p' /tmp/prep.log; } >> "$GITHUB_STEP_SUMMARY"
+
+  # ── 수집기 넷을 **직접 부른다** (2026-09-05)
+  #
+  # ⚠️ `needs: prep` — 대기열 커밋이 **먼저** 저장소에 닿아야 한다. 수집기는 그 파일을 읽는다.
+  # ⚠️ `if: always()` 를 쓰지 않는다 — 대기열을 못 걸었으면 부를 이유가 없다.
+  # ⚠️ 넷을 **나란히** 부른다. 서로 다른 API 라 줄 세울 이유가 없고,
+  #    하나가 죽어도 나머지는 받아 온다(공급면적은 자기 재시도 사다리가 따로 받는다).
+  supply:
+    name: 공급면적
+    needs: prep
+    uses: ./.github/workflows/apt-supply-area.yml
+    secrets: inherit
+  history:
+    name: 곡선
+    needs: prep
+    uses: ./.github/workflows/singo-history.yml
+    secrets: inherit
+  station:
+    name: 가까운 역
+    needs: prep
+    uses: ./.github/workflows/apt-station.yml
+    secrets: inherit
+  detail:
+    name: 주차
+    needs: prep
+    uses: ./.github/workflows/apt-detail.yml
+    secrets: inherit

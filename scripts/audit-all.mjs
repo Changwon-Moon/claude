@@ -48,6 +48,39 @@ for (const f of readdirSync(R(".github/workflows")).filter((x) => x.endsWith(".y
   for (const m of t.matchAll(/uses:\s*\.\/(\.github\/workflows\/[a-z0-9-]+\.yml)/g)) {
     checked++;
     if (!has(m[1])) bad("워크플로", `${f} → ${m[1]} 없음(workflow_call)`);
+    /* ⚠️ **파일만 있으면 되는 게 아니다** — 불리는 쪽에 `workflow_call:` 이 없으면
+       실행이 통째로 죽는다. 파일 존재만 재고 있었다(2026-09-05). */
+    else if (!read(m[1]).includes("workflow_call:"))
+      bad("워크플로", `${f} 가 ${m[1]} 를 부르는데 그쪽에 workflow_call: 이 없습니다`, "없으면 실행이 통째로 죽습니다");
+  }
+  /* ── ⚠️ **봇 커밋으로 다른 워크플로를 깨우려는 자리** (2026-09-05 실제로 겪었다)
+   *
+   * 깃허브는 기본 `GITHUB_TOKEN` 으로 민 push 로는 **새 워크플로 실행을 만들지 않는다**
+   * (무한 반복 방지). 그런데 이 저장소의 수집기 넷은 **대기열 파일 push** 를 방아쇠로 쓴다.
+   * 그래서 「대기열을 쓰고 봇으로 커밋·푸시하는 워크플로」는 **아무것도 못 깨운다** —
+   * `singo-prep` 이 정확히 그랬고, 09-05 아침에 40분을 그렇게 흘려보냈다.
+   * 초록불이 떠 있었기 때문에 이틀 동안 아무도 몰랐다.
+   *
+   * 고치는 법은 `workflow_call` 로 **직접 부르는 것**이다. 그래서 그 짝이 있으면 통과시킨다. */
+  /* ⚠️ **자기 대기열을 비우고 커밋하는 것은 이 덫이 아니다.** 그건 소비자다(asset-fetch·
+     fetch-article·geocode 가 그렇다). 덫은 **남의 대기열**에 줄을 써 놓고 그 push 로
+     그 워크플로가 깨어나기를 기대하는 것이다. 그래서 **자기 방아쇠 경로에 없는** 대기열만 센다. */
+  const ownPaths = new Set([...t.matchAll(/^\s*-\s*"([^"]*-queue\.txt)"/gm)].map((m) => m[1]));
+  const touched = new Set(
+    [...t.matchAll(/([A-Za-z0-9_./-]*-queue\.txt)/g)].map((m) => m[1]).filter((q) => /git add|>>/.test(t)),
+  );
+  const foreign = [...touched].filter(
+    (q) => !ownPaths.has(q) && new RegExp(`git add[^\n]*${q.replace(/[.]/g, "\\.")}|${q.replace(/[.]/g, "\\.")}[^\n]*>>`).test(t),
+  );
+  const pushesAsBot = /git push/.test(t) && !/extraheader|x-access-token|PAT|_TOKEN\s*}}/.test(t);
+  const callsCollector = /uses:\s*\.\/\.github\/workflows\//.test(t);
+  if (foreign.length && pushesAsBot && !callsCollector) {
+    checked++;
+    bad(
+      "워크플로",
+      `${f} 가 남의 대기열(${foreign.join(", ")})을 봇으로 커밋해 깨우려 합니다 — 그 push 는 워크플로를 안 깨웁니다`,
+      "workflow_call 로 수집기를 직접 부르세요(2026-09-05 singo-prep)",
+    );
   }
 }
 

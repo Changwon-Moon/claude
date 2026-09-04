@@ -169,11 +169,16 @@ for (const h of hits) {
   targets.push(t);
 
   const sup = `data/datasets/apt-supply/${h.kaptCode}-${areaType(h.area)}.json`;
-  if (!existsSync(P(sup))) need.supply.push(`kapt=${h.kaptCode} area=${h.area}   # ${h.aptNm} 전용${type}`);
+  if (!existsSync(P(sup))) {
+    need.supply.push(`kapt=${h.kaptCode} area=${h.area}   # ${h.aptNm} 전용${type}`);
+    t.short = true;
+  }
 
   const hp = `data/datasets/singo-history/${h.lawdCd}-${full(h.aptNm)}-${type}.json`;
-  if (!existsSync(P(hp)))
+  if (!existsSync(P(hp))) {
     need.hist.push(`lawd=${h.lawdCd} umd=${h.umdNm} type=${type} apt="${h.aptNm}"`);
+    t.short = true;
+  }
 
   if (!existsSync(P(`data/datasets/apt-station/${h.kaptCode}.json`)))
     need.station.push(`kapt=${h.kaptCode}   # ${h.aptNm}`);
@@ -223,7 +228,10 @@ if (noKey.length) {
 }
 
 if (ENQUEUE_ONLY) {
-  const short = need.supply.length + need.hist.length;
+  /* ⚠️ **단지 수로 센다.** 예전엔 대기열 줄 수를 뺐는데, 공급면적과 곡선이 **둘 다** 없는
+     단지는 두 번 빠져 「만들 수 있는 것 -4장」 같은 음수가 나왔다(2026-09-05 실제로 봤다).
+     화면에 음수가 나오면 읽는 사람은 그 줄 전체를 안 믿게 된다. */
+  const short = targets.filter((t) => t.short).length;
   console.log(
     `\n(--enqueue-only) 대기열까지만 채웠습니다. 만들 수 있는 것 ${targets.length - short}장 / 대상 ${targets.length}장\n` +
       (short ? `   재료 ${short}건이 오면 세션이 만듭니다.` : `   재료가 이미 다 있습니다 — 세션이 바로 만들 수 있습니다.`),
@@ -231,7 +239,9 @@ if (ENQUEUE_ONLY) {
   process.exit(0);
 }
 if (DRY) {
-  console.log(`\n(--dry) 아무것도 안 고쳤습니다. 만들 수 있는 것 ${targets.length - need.supply.length - need.hist.length}장 / 대상 ${targets.length}장`);
+  console.log(
+    `\n(--dry) 아무것도 안 고쳤습니다. 만들 수 있는 것 ${targets.filter((t) => !t.short).length}장 / 대상 ${targets.length}장`,
+  );
   process.exit(0);
 }
 if (blocked) {
