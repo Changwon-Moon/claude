@@ -575,12 +575,15 @@ console.log("\n[청약홈 주택형별 분양가 — 프리미엄의 뺄셈 상�
 
 /* ── 공급면적: 「주건축물」로 적힌 주차장·대피소를 빼는가 (2026-09-05) ── */
 {
-  const ho = (purpose: string, area: number, gbn = "공용") => ({
+  /* ⚠️ **실제 응답의 모양을 따른다.** 대장은 큰 갈래를 `mainPurpsCdNm`(「부대시설」·「아파트」)에,
+     구체 용도를 `etcPurps`(「지하주차장」)에 넣는다. 09-05 첫 판은 이 시험 자료를 내 짐작대로
+     `mainPurpsCdNm` 에 「지하주차장」을 넣어 만들었고, **시험은 통과했는데 실물은 안 걸러졌다.** */
+  const ho = (purpose: string, area: number, gbn = "공용", big = "부대시설") => ({
     dongNm: "101동", hoNm: "101호", exposPubuseGbCdNm: gbn,
-    mainAtchGbCd: "0", mainAtchGbCdNm: "주건축물", mainPurpsCdNm: purpose, area,
+    mainAtchGbCd: "0", mainAtchGbCdNm: "주건축물", mainPurpsCdNm: big, etcPurps: purpose, area,
   });
   const rows = [
-    { ...ho("아파트", 60, "전유") },
+    { ...ho("", 60, "전유", "아파트") },
     ho("계단,승강기,홀", 14.938),
     ho("지하주차장", 20.504),   // ← 「주건축물」로 적혀 있지만 기타공용이다
     ho("지하대피소", 5.263),    // ← 마찬가지
@@ -591,7 +594,7 @@ console.log("\n[청약홈 주택형별 분양가 — 프리미엄의 뺄셈 상�
   check("뺀 것을 기록에 남긴다", !!r && (r as never as { excludedFromCommon?: unknown[] }).excludedFromCommon?.length === 2);
   /* ⚠️ 「승강**기계**단」 오탐이 다시 안 나는지 — 이 파일 머리말이 경고한 그 자리다 */
   const rows2 = [
-    { ...ho("아파트", 60, "전유") },
+    { ...ho("", 60, "전유", "아파트") },
     ho("승강기계단", 12.5),
     ho("기계실", 2.0),
   ];
