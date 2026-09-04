@@ -50,7 +50,7 @@ export const WORLD_INDICES = [
   /* 베트남은 2026-09-04 첫 실행에서 셋 다 떨어졌다 —
      ^VNINDEX·VNINDEX.VN 은 HTTP 실패, ^VNI 는 응답은 왔는데 **시세 행 0건**이었다.
      그래서 후보를 넓히고, 그래도 안 되면 아래 `probeSymbol()` 이 야후에 직접 물어본다. */
-  { key: "vietnam", label: "베트남", index: "VN-Index", flag: "vn", yahoo: ["^VNINDEX", "VNINDEX.VN", "^VNI", "VNINDEX", "^VNINDEX.VN", "VNI.VN"] },
+  { key: "vietnam", label: "베트남", index: "VN-Index", flag: "vn", yahoo: ["^VNINDEX", "VNINDEX.VN", "^VNI", "VNINDEX", "VNI.VN"], probeQuery: "Vietnam VN Index Ho Chi Minh stock" },
 ] as const;
 
 const r2 = (v: number) => Math.round(v * 100) / 100;
@@ -220,7 +220,7 @@ async function main() {
     }
     if (!rows) {
       /* 떨어진 그 자리에서 야후에게 진짜 심볼을 물어본다 — 다음 왕복을 아끼려고 */
-      const probe = await probeSymbol(`${idx.index} ${idx.label}`);
+      const probe = await probeSymbol((idx as any).probeQuery ?? idx.index);
       failed.push({ label: `${idx.label} ${idx.index}`, tried: candidates, why: why.join(" / "), probe });
       console.error(`   ❌ ${idx.label} 실패 — ${why.join(" / ")}`);
       console.error(`   🔎 야후 검색 결과 — 이 중에 맞는 것이 있는지 사람이 고릅니다:\n${probe}`);
@@ -233,7 +233,7 @@ async function main() {
     try {
       s = summarize(rows, year);
     } catch (e) {
-      const probe = await probeSymbol(`${idx.index} ${idx.label}`);
+      const probe = await probeSymbol((idx as any).probeQuery ?? idx.index);
       const msg = `${used}: 받았지만 셈이 안 됩니다 — ${String((e as Error).message ?? e).slice(0, 90)}`;
       failed.push({ label: `${idx.label} ${idx.index}`, tried: candidates, why: msg, probe });
       console.error(`   ❌ ${idx.label} — ${msg}`);
