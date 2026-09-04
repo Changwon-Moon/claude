@@ -124,9 +124,33 @@ const need = { supply: [], hist: [], station: [], detail: [] };
 const noKey = [];
 const targets = [];
 
+/* ── 🔖 이미 발행한 이름표는 다시 쓰지 않는다 (오너 2026-09-04 "동아에코빌은 새 카드로 만들어")
+ *
+ * 카드 이름표에는 날짜가 없다(`singo-<단지>-<타입>`). 그래서 같은 단지·같은 타입이 **또**
+ * 신고가를 쓰면 새 카드가 **지난 카드를 덮는다.** 09-04 에 실제로 났다 —
+ * 성북 동아에코빌 59 는 08-26 에 8.82억으로 발행됐는데, 08-13 계약 9.4억이 9월에 신고되자
+ * 그날 카드의 캡션이 9.4억으로 덮였다. **인스타에 올라간 그림과 저장소가 갈렸다.**
+ *
+ * → 이름표가 **이미 「오너 확정」 세트에 들어 있으면** 날짜를 붙여 **새 카드**로 만든다.
+ *   지난 카드는 건드리지 않는다(그 빌더는 `frozen` 으로 굳힌다).
+ * ⚠️ 「확정」이라는 사실 하나로만 가른다 — 그 사실은 `confirm.mjs` 만 만들고 md5 가 함께 박힌다. */
+const confirmedSlugs = (() => {
+  try {
+    const S = JSON.parse(readFileSync(P("data/review/sets.json"), "utf8"));
+    const out = new Set();
+    for (const s of S.sets ?? []) if (s.state === "오너 확정") for (const c of s.cards ?? []) out.add(c);
+    return out;
+  } catch {
+    return new Set();
+  }
+})();
+
 for (const h of hits) {
   const type = String(h.type);
-  const slug = `singo-${full(h.aptNm)}-${type}`;
+  const base = `singo-${full(h.aptNm)}-${type}`;
+  const slug = confirmedSlugs.has(base) ? `${base}-${DATE.slice(5).replace("-", "")}` : base;
+  if (slug !== base)
+    console.log(`🔖 ${h.aptNm} 전용${type} — 「${base}」는 이미 발행한 카드라 새 이름표로 만듭니다: ${slug}`);
   /* 대장 열쇠가 없는 건은 **사람이 짚어야 한다.** 여기서 이름으로 갖다 붙이지 않는다
      — 그게 상록마을 사고(2026-08-13)의 경로다. 명령을 찍어 주고 넘어간다. */
   if (!h.kaptCode) {
@@ -197,7 +221,10 @@ const skipped = [];
 for (const t of targets) {
   const r = sh("node", [
     "scripts/build-singo-record.mjs",
-    "--apt", t.h.aptNm, "--type", t.type, "--kapt", t.kapt, "--publish",
+    "--apt", t.h.aptNm, "--type", t.type, "--kapt", t.kapt,
+    /* 이름표를 가른 건만 `--slug` 를 넘긴다 — 안 가른 건은 빌더 기본값 그대로다 */
+    ...(t.slug === `singo-${full(t.h.aptNm)}-${t.type}` ? [] : ["--slug", t.slug]),
+    "--publish",
   ]);
   if (r.status === 0) {
     made.push(t);
@@ -225,7 +252,11 @@ for (const t of made) {
   const card = JSON.parse(readFileSync(P(`data/content/${DATE}/${t.slug}.json`), "utf8"));
   /* 제목·가격은 **카드에서** 뽑는다. 손으로 옮겨 적으면 배관 점검 ⑫ 가 잡는 그 어긋남이 난다. */
   const plain = card.title.replace(/<[^>]+>/g, "");
-  const args = ["--apt", t.h.aptNm, "--type", t.type, "--kapt", t.kapt, "--publish"];
+  const args = [
+    "--apt", t.h.aptNm, "--type", t.type, "--kapt", t.kapt,
+    ...(t.slug === `singo-${full(t.h.aptNm)}-${t.type}` ? [] : ["--slug", t.slug]),
+    "--publish",
+  ];
 
   /* 이미 있는 빌더는 **`produces` 로 찾는다** — 라벨은 사람이 지은 것이 이미 있을 수 있다.
      찾으면 인자만 갱신하고 라벨은 그대로 둔다(세트가 그 라벨을 가리키고 있을 수 있다). */

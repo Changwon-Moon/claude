@@ -1057,7 +1057,10 @@ const dropAptSuffix = (s) => {
  *     「아파트」 손질은 같은 세트의 `singo-한신아파트상가동유치원동103~109-84` 를 건드릴 참이었다.
  * → 그래서 **이 카드가 이미 「오너 확정」이면 신고명 그대로 그린다.** ⓘ 로 한 줄 남긴다.
  * ⚠️ `--name` 은 예외다 — 사람이 이 판을 지금 그렇게 그리라고 지시한 것이다. */
-const nameSlug = `singo-${full(APT)}-${TYPE}`;
+/* ⚠️ **이 카드의 실제 이름표**로 재야 한다(`--slug` 포함). 기본 이름표로 재면,
+   같은 단지가 또 신고가를 써서 새 이름표로 갈라 만든 **새 카드까지** 「이미 발행됨」으로
+   잘못 읽혀 사전이 안 걸린다 — 09-04 동아에코빌에서 실제로 그랬다. */
+const nameSlug = arg("slug") ?? `singo-${full(APT)}-${TYPE}`;
 const nameAlreadyConfirmed = (() => {
   try {
     const S = JSON.parse(readFileSync(P("data/review/sets.json"), "utf8"));
@@ -1326,7 +1329,18 @@ const card = {
   },
 };
 
-const slug = `singo-${full(APT)}-${TYPE}`;
+/* ── 🔖 카드 이름표 — 기본은 「단지+타입」, 필요하면 `--slug` 로 가른다 (2026-09-04)
+ *
+ * 기본 이름표에는 **날짜가 없다.** 그래서 같은 단지·같은 타입이 **또** 신고가를 쓰면
+ * 새 카드가 지난번 카드를 **덮는다.** 09-04 에 실제로 났다:
+ *   성북 동아에코빌 59 — 08-26 에 8.82억으로 발행했는데, 08-13 계약 9.4억이 9월에 신고되자
+ *   오늘 빌드가 **그날 카드의 캡션을 9.4억으로 덮어썼다.** 인스타에 올라간 그림과 저장소가 갈렸다.
+ *
+ * 오너 판단(2026-09-04): *"동아에코빌은 새 카드로 만들어."*
+ * → 지난 카드는 그대로 두고(`builders.json` 의 `frozen`), 새 기록은 **다른 이름표**로 새 카드를 만든다.
+ *   `singo-daily-build` 가 이 충돌을 알아서 재고 `--slug` 를 붙인다(그 파일 참조).
+ * ⚠️ 이름표는 파일 이름이자 세트의 카드 목록 키다 — 한번 발행한 이름표는 다시 쓰지 않는다. */
+const slug = arg("slug") ?? `singo-${full(APT)}-${TYPE}`;
 const outDir = flag("publish") ? P(join("data/content", DATE)) : P("data/out/_spike");
 mkdirSync(outDir, { recursive: true });
 const outPath = join(outDir, `${slug}.json`);
