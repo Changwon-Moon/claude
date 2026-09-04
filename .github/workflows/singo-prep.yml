@@ -1,0 +1,87 @@
+name: 신고가 재료 미리 걸기 (아침 판정 직후)
+
+# ── 무엇을 하나 (2026-09-04 오너 "매일 너무 늦게 진행되는데, 오전 중에 제작 완료하도록")
+#
+# 아침 판정이 끝나면 **그날 카드에 필요한 재료를 바로 대기열에 건다.**
+# 대기열이 커밋되면 수집기 넷(공급면적·곡선·역·주차)이 그 자리에서 움직인다.
+#
+# ── 왜 필요한가 — 09-04 아침이 이렇게 흘렀다
+#   07:10  신고가 판정 끝
+#   07:40  세션 시작                    ← 30분을 그냥 빈 채로 보냈다
+#   07:43  세션이 재료 부족을 발견하고 **그제야** 대기열을 밀었다
+#   08:45  공급면적 완충
+#   10:55  곡선 완충
+#   12:00  카드 완성
+#
+# 재료 수집이 **사람(세션)을 기다렸다.** 재료는 사람을 기다릴 이유가 없다 —
+# 무엇이 필요한지는 판정이 끝난 순간 이미 정해져 있다.
+# 이 워크플로가 그 30분을 없애고, 세션은 재료가 다 찬 뒤에 와서 **만들기만** 한다.
+#
+# ── ⚠️ 카드를 만들지 않는다
+# `--enqueue-only` 는 대기열까지만 채우고 멈춘다. 카드 제작·확정은 그대로 세션과 오너의 일이다
+# (확정은 오너가 그림을 보고 하는 판단이다 — 2026-09-03).
+
+on:
+  workflow_run:
+    workflows: ["오늘의 신고가 (daily)"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: singo-prep
+  cancel-in-progress: false
+
+jobs:
+  prep:
+    # 판정이 성공했을 때만 — 실패한 판정 뒤에 거는 재료는 어제 것이거나 빈 것이다
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch || github.ref_name }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: 재료 걸기
+        shell: bash
+        run: |
+          # ⚠️ 종료코드 2 는 「재료가 덜 왔다」는 **정상 신호**다 — 여기서는 실패가 아니다.
+          #    3 은 「이미 확정된 날」이라 역시 정상이다.
+          set +e
+          node scripts/singo-daily-build.mjs --enqueue-only | tee /tmp/prep.log
+          C=${PIPESTATUS[0]}
+          set -e
+          echo "종료코드 $C"
+          [ "$C" = "0" ] || [ "$C" = "2" ] || [ "$C" = "3" ] || exit "$C"
+
+      - name: 대기열 커밋 (수집기의 방아쇠다)
+        shell: bash
+        run: |
+          git config user.name  "wirit-bot"
+          git config user.email "actions@github.com"
+          git add data/apt-supply-queue.txt data/singo-history-queue.txt \
+                  data/apt-station-queue.txt data/apt-detail-queue.txt 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "ⓘ 새로 걸 재료가 없습니다 — 오늘 신고가에 필요한 것이 이미 다 있습니다"
+            exit 0
+          fi
+          git commit -m "신고가 재료 미리 걸기 $(TZ=Asia/Seoul date +%F) (아침 판정 직후)"
+          git push origin HEAD:${{ github.event.workflow_run.head_branch || github.ref_name }}
+
+      - name: 무엇을 걸었나
+        if: always()
+        shell: bash
+        run: |
+          { echo "### 신고가 재료 미리 걸기"; echo; sed -n '1,40p' /tmp/prep.log; } >> "$GITHUB_STEP_SUMMARY"

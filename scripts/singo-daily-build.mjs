@@ -54,6 +54,14 @@ const DATE = arg("date") ?? new Date(Date.now() + 9 * 3600 * 1000).toISOString()
 const MAX = arg("max");
 const ALSO = list("also");
 const DRY = flag("dry");
+/* ── ⏱️ `--enqueue-only` — 재료만 걸고 멈춘다 (2026-09-04 오너 "오전 중에 제작 완료")
+ *
+ * 지금까지 재료 수집은 **세션이 대기열을 밀어야** 시작됐다. 그래서 아침이 이렇게 흘렀다:
+ *   07:10 신고가 판정 → (30분 빈다) → 07:40 세션 시작 → 07:43 재료 부족을 발견하고 그제야 푸시
+ * 수집이 늦게 시작하니 카드도 늦다. **재료는 사람을 기다릴 이유가 없다.**
+ * 판정이 끝나면 Actions 가 이 모드로 돌려 대기열만 채우고, 수집기들이 바로 움직인다.
+ * 세션은 재료가 다 찬 뒤에 와서 만들기만 하면 된다. */
+const ENQUEUE_ONLY = flag("enqueue-only");
 
 /* 이름 정규화 — 빌더(`build-singo-record.mjs` 의 `full`)와 **같은 규칙**이어야 한다.
    여기서 다르게 만들면 슬러그가 갈려 「만든 카드를 못 찾는」 일이 난다. */
@@ -188,12 +196,24 @@ for (const [name, path, lines, required] of QUEUES) {
   console.log(`${required ? "⛔" : "⚠️"} ${name} — ${lines.length}건 없음${required ? " (이게 없으면 카드를 못 만듭니다)" : " (없어도 카드는 나옵니다 — 그 줄만 빠집니다)"}`);
   if (required) blocked = true;
   if (!DRY) {
-    appendFileSync(
-      P(path),
-      `\n# ${DATE} singo-daily-build 가 채운 줄\n${lines.join("\n")}\n`,
-      "utf8",
+    /* ⚠️ **이미 있는 줄은 다시 쓰지 않는다** (2026-09-04).
+       재료가 안 와 exit 2 로 멈출 때마다 같은 줄을 또 붙였다 — 세 번 돌리면 42줄이 됐고
+       09-04 에는 세션이 매번 `git checkout --` 로 지웠다. 사람이 없는 예약에서는
+       그 손이 없으니 대기열이 끝없이 부푼다. 수집기는 대기열 **전체**를 훑으므로
+       부푼 대기열은 곧 느린 아침이다. */
+    const have = new Set(
+      (existsSync(P(path)) ? readFileSync(P(path), "utf8") : "")
+        .split("\n")
+        .map((l) => l.trim())
+        .filter((l) => l && !l.startsWith("#")),
     );
-    console.log(`   → ${path} 에 썼습니다`);
+    const fresh = lines.filter((l) => !have.has(l.trim()));
+    if (!fresh.length) {
+      console.log(`   → ${path} — 이미 걸려 있는 줄뿐이라 더 쓰지 않았습니다`);
+    } else {
+      appendFileSync(P(path), `\n# ${DATE} singo-daily-build 가 채운 줄\n${fresh.join("\n")}\n`, "utf8");
+      console.log(`   → ${path} 에 ${fresh.length}줄 썼습니다${fresh.length < lines.length ? ` (${lines.length - fresh.length}줄은 이미 있었습니다)` : ""}`);
+    }
   }
 }
 if (noKey.length) {
@@ -202,6 +222,14 @@ if (noKey.length) {
     console.log(`   · ${n.h.gu} ${n.h.aptNm} 전용${n.type} — kaptCode 를 찾아 이렇게 만드세요:\n     node scripts/build-singo-record.mjs --apt "${n.h.aptNm}" --type ${n.type} --kapt <코드> --publish`);
 }
 
+if (ENQUEUE_ONLY) {
+  const short = need.supply.length + need.hist.length;
+  console.log(
+    `\n(--enqueue-only) 대기열까지만 채웠습니다. 만들 수 있는 것 ${targets.length - short}장 / 대상 ${targets.length}장\n` +
+      (short ? `   재료 ${short}건이 오면 세션이 만듭니다.` : `   재료가 이미 다 있습니다 — 세션이 바로 만들 수 있습니다.`),
+  );
+  process.exit(0);
+}
 if (DRY) {
   console.log(`\n(--dry) 아무것도 안 고쳤습니다. 만들 수 있는 것 ${targets.length - need.supply.length - need.hist.length}장 / 대상 ${targets.length}장`);
   process.exit(0);

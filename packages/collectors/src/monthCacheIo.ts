@@ -19,9 +19,34 @@ export const MONTH_DIR = join(ROOT, "data/datasets/molit-monthly");
 export const monthPath = (lawd: string, ym: string) => join(MONTH_DIR, lawd, `${ym}.json`);
 export const hasMonth = (lawd: string, ym: string) => existsSync(monthPath(lawd, ym));
 
+/* ── ⚠️⚠️ **최근 달은 캐시를 믿지 않는다** (2026-09-04 실측)
+ *
+ * 이 캐시는 「과거 달의 값은 변하지 않는다」는 가정 위에 서 있었다. **그게 틀렸다.**
+ * 실거래 신고는 **최대 30일** 늦다 — 지난 달·지지난 달 값은 계속 자란다.
+ *
+ * 09-04 에 이것 하나로 카드 **7장**이 막혔다:
+ *   캐시 41117/202608(savedAt 2026-09-02) 은 벽적골9단지주공 59 의 8월 최고를 6.9억이라 했는데,
+ *   그날 신고가 판정은 **8월 22일 계약 7.18억**을 집었다. 9월에 신고된 8월 계약이라
+ *   09-02 에 접어 둔 캐시에는 있을 수가 없었다. 곡선이 신고가보다 낮으니 빌더가 멈췄다.
+ *   대기열의 `force=1` 로 다시 받아도 **월 캐시를 먼저 읽어** 숫자가 그대로였다.
+ *   캐시 17칸을 손으로 지우자 8장이 14장이 됐다.
+ *
+ * → **오늘로부터 RECENT_MONTHS 안쪽 달은 캐시가 있어도 없는 것으로 본다**(다시 받는다).
+ *   호출 절감 효과는 거의 그대로다 — 바뀌는 것은 최근 몇 달뿐이고, 나머지 70여 달은 캐시가 받는다.
+ * ⚠️ 이 값을 줄이려면 「신고 지연이 30일」이라는 사실부터 뒤집어야 한다. 함부로 줄이지 않는다. */
+export const RECENT_MONTHS = 3;
+
+/** 오늘 기준 `RECENT_MONTHS` 안쪽 달인가 — 그렇다면 캐시를 안 믿는다. */
+export function isRecentMonth(ym: string, today = new Date(Date.now() + 9 * 3600 * 1000)): boolean {
+  const cur = today.getUTCFullYear() * 12 + today.getUTCMonth();
+  const m = Number(ym.slice(0, 4)) * 12 + Number(ym.slice(4, 6)) - 1;
+  return cur - m < RECENT_MONTHS;
+}
+
 export function readMonth(lawd: string, ym: string): MonthRow[] | null {
   const p = monthPath(lawd, ym);
   if (!existsSync(p)) return null;
+  if (isRecentMonth(ym)) return null; // ← 최근 달은 캐시를 건너뛰고 API 에서 새로 받는다
   try {
     const j = JSON.parse(readFileSync(p, "utf8")) as MonthCache;
     /* ⚠️ scope 가 안 적힌 옛 파일은 **믿지 않는다.** 무엇을 걸러 담았는지 모르는 캐시로
