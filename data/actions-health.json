@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T23:24:52.484Z",
+  "generatedAt": "2026-09-04T23:44:10.760Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -943,7 +943,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-03",
       "okDaysAgo": 1,
-      "fails30": 6,
+      "fails30": 7,
       "runs30": 8
     },
     {
@@ -1011,7 +1011,7 @@
       "name": "관제탑 배포 (Cloudflare)",
       "lastRun": "2026-09-05",
       "daysAgo": 0,
-      "lastOk": "2026-09-04",
+      "lastOk": "2026-09-05",
       "okDaysAgo": 0,
       "fails30": 3,
       "runs30": 100
