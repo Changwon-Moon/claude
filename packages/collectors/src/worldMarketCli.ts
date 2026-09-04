@@ -149,13 +149,29 @@ async function probeSymbol(query: string): Promise<string> {
   }
 }
 
-async function tryFetch(sym: string): Promise<Day[]> {
+/**
+ * 후보 심볼 하나를 **끝까지** 재 본다 — 받고, 세어 보고, 셈까지 해 본다.
+ *
+ * ⚠️ 2026-09-04 두 번째 실행에서 배운 것: `^VNINDEX.VN` 은 응답도 오고 행도 있었다.
+ *    그런데 **연내 1건**이었다. 「행이 0건이 아니다」만 보고 후보로 채택해 버리는 바람에
+ *    그 뒤 summarize 가 던졌고, 그 예외는 후보 루프 **밖**이라 8개국 수집 전체가 죽었다.
+ *    후보 검증이 얕으면 껍데기 심볼이 통과한다 — **여기서 다 재고 넘긴다.**
+ *
+ * 문턱을 60거래일로 둔 이유: 진짜 지수는 한 해에 240일 안팎 거래한다. 60일이면
+ * 약 석 달치라, 「연중 성적표」를 그릴 수 있는 최소치이면서 껍데기는 확실히 걸러진다.
+ */
+const MIN_YEAR_ROWS = 60;
+
+async function tryFetch(sym: string, year: string): Promise<Day[]> {
   const json = await fetchText(yahooUrl(sym), {
     retries: 2,
     headers: { Accept: "application/json", "User-Agent": "Mozilla/5.0 (wirit-collector)" },
   });
   const rows = parseYahooChart(json);
   if (!rows.length) throw new Error("시세 행 0건");
+  const inYear = rows.filter((r) => r.date.startsWith(year)).length;
+  if (inYear < MIN_YEAR_ROWS)
+    throw new Error(`${year}년 거래일이 ${inYear}일뿐 (최소 ${MIN_YEAR_ROWS}일) — 지수가 아니거나 빈 심볼입니다`);
   return rows;
 }
 
@@ -195,7 +211,7 @@ async function main() {
     for (const sym of candidates) {
       try {
         console.log(`📥 ${idx.label} ${idx.index} (${sym}) 수집...`);
-        rows = await tryFetch(sym);
+        rows = await tryFetch(sym, year);
         used = sym;
         break;
       } catch (e) {
@@ -210,7 +226,19 @@ async function main() {
       console.error(`   🔎 야후 검색 결과 — 이 중에 맞는 것이 있는지 사람이 고릅니다:\n${probe}`);
       continue;
     }
-    const s = summarize(rows, year);
+    /* ⚠️ summarize 도 후보 루프처럼 **가둬서** 부른다. 09-04 에 이게 밖에 있어서
+       한 나라의 셈 실패가 8개국 수집 전체를 죽였다 — 아무것도 못 건지고 로그만 남았다.
+       가둬 두면 나머지 일곱 나라는 끝까지 재고, 실패는 아래 한 자리에 모여 나온다. */
+    let s: ReturnType<typeof summarize>;
+    try {
+      s = summarize(rows, year);
+    } catch (e) {
+      const probe = await probeSymbol(`${idx.index} ${idx.label}`);
+      const msg = `${used}: 받았지만 셈이 안 됩니다 — ${String((e as Error).message ?? e).slice(0, 90)}`;
+      failed.push({ label: `${idx.label} ${idx.index}`, tried: candidates, why: msg, probe });
+      console.error(`   ❌ ${idx.label} — ${msg}`);
+      continue;
+    }
     indices[idx.key] = { label: idx.label, index: idx.index, flag: idx.flag, ...s };
     symbols[idx.key] = used;
     const shown = s.monthly.map((m) => `${+m.m.slice(5)}월 ${m.pct === null ? "—" : (m.pct > 0 ? "+" : "") + m.pct}%`);
