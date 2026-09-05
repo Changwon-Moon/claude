@@ -21,11 +21,11 @@
   ],
   "excludedFromCommon": [
     {
-      "purpose": "부대시설",
+      "purpose": "부대시설 / 지하주차장",
       "area": 20.504
     },
     {
-      "purpose": "부대시설",
+      "purpose": "부대시설 / 지하대피소",
       "area": 5.263
     }
   ],
