@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T23:44:10.760Z",
+  "generatedAt": "2026-09-05T00:02:05.357Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -282,15 +282,15 @@
         },
         {
           "day": "09-05",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "08:57",
+          "delay": 108
         }
       ],
       "medianDelay": 452,
       "maxDelay": 452,
-      "lastRun": "2026-09-04",
-      "lastOk": "2026-09-04",
+      "lastRun": "2026-09-05",
+      "lastOk": "2026-09-05",
       "okDaysAgo": 0
     },
     {
@@ -774,7 +774,7 @@
       "lastOk": "2026-08-29",
       "okDaysAgo": 6,
       "fails30": 0,
-      "runs30": 18
+      "runs30": 17
     },
     {
       "file": "research-digest.yml",
@@ -784,7 +784,7 @@
       "lastOk": "2026-08-30",
       "okDaysAgo": 5,
       "fails30": 0,
-      "runs30": 24
+      "runs30": 23
     },
     {
       "file": "ecos-m2.yml",
@@ -804,7 +804,7 @@
       "lastOk": "2026-08-31",
       "okDaysAgo": 4,
       "fails30": 0,
-      "runs30": 9
+      "runs30": 8
     },
     {
       "file": "pipeline-tick.yml",
@@ -814,7 +814,7 @@
       "lastOk": "2026-08-31",
       "okDaysAgo": 4,
       "fails30": 8,
-      "runs30": 59
+      "runs30": 58
     },
     {
       "file": "population-collect.yml",
@@ -867,6 +867,16 @@
       "runs30": 6
     },
     {
+      "file": "molit-door.yml",
+      "name": "실거래 문 열렸나 (한 번 두드려 본다)",
+      "lastRun": "2026-09-02",
+      "daysAgo": 3,
+      "lastOk": "2026-09-02",
+      "okDaysAgo": 3,
+      "fails30": 1,
+      "runs30": 7
+    },
+    {
       "file": "neis-academy.yml",
       "name": "학원 수집 (나이스)",
       "lastRun": "2026-09-02",
@@ -883,18 +893,8 @@
       "daysAgo": 2,
       "lastOk": "2026-09-02",
       "okDaysAgo": 2,
-      "fails30": 6,
-      "runs30": 12
-    },
-    {
-      "file": "molit-door.yml",
-      "name": "실거래 문 열렸나 (한 번 두드려 본다)",
-      "lastRun": "2026-09-02",
-      "daysAgo": 2,
-      "lastOk": "2026-09-02",
-      "okDaysAgo": 2,
-      "fails30": 1,
-      "runs30": 7
+      "fails30": 5,
+      "runs30": 11
     },
     {
       "file": "molit-rent-collect.yml",
@@ -904,7 +904,7 @@
       "lastOk": "2026-09-02",
       "okDaysAgo": 2,
       "fails30": 2,
-      "runs30": 13
+      "runs30": 12
     },
     {
       "file": "apt-detail.yml",
@@ -963,7 +963,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-05",
       "okDaysAgo": 0,
-      "fails30": 20,
+      "fails30": 21,
       "runs30": 100
     },
     {
@@ -994,7 +994,7 @@
       "lastOk": "2026-09-05",
       "okDaysAgo": 0,
       "fails30": 1,
-      "runs30": 3
+      "runs30": 4
     },
     {
       "file": "singo-retry.yml",
@@ -1004,7 +1004,7 @@
       "lastOk": "2026-08-25",
       "okDaysAgo": 11,
       "fails30": 2,
-      "runs30": 28
+      "runs30": 29
     },
     {
       "file": "tower-deploy.yml",
