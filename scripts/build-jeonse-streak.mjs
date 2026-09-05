@@ -64,7 +64,7 @@ const date = process.argv[2] || kstToday;
 
 /* ── 좌표 (매매 카드와 동일 규격 상속) ── */
 const RED = "#e5484d", COBALT = "#2e6bff", INK = "#141821", MUTE = "#9aa3af";
-const AXIS_X = 95, RIGHT = 915, TOP = 70, BASE = 650, VB_H = 715;
+const AXIS_X = 95, RIGHT = 915, TOP = 70, BASE = 560, VB_H = 625;   // 리드 확대(좌우 꽉참)에 맞춰 그래프 높이 낮춤
 const WMAX = N, YMAX = 17;
 const xw = (w) => r1(AXIS_X + ((w - 1) / (WMAX - 1)) * (RIGHT - AXIS_X));
 const yp = (p) => r1(BASE - (p / YMAX) * (BASE - TOP));

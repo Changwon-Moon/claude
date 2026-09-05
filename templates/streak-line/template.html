@@ -161,9 +161,17 @@
           }
           el.style.fontSize = best.toFixed(2) + "px";
         }
-        /* (옵션) 리드 줄이 있으면 본 제목(마지막 .tl)의 절반 크기로. 없으면 아무 것도 안 한다. */
+        /* (옵션) 리드 줄이 있으면 본 제목처럼 카드 폭에 꽉 차게 개별 확대(좌우 꽉참). 없으면 아무 것도 안 한다. */
         var lead = document.querySelector(".sl .sl-lead");
-        if (lead) lead.style.fontSize = (best / 2).toFixed(2) + "px";
+        if (lead) {
+          var llo = 30, lhi = 150, lbest = 30;
+          for (var j = 0; j < 26; j++) {
+            var lmid = (llo + lhi) / 2;
+            lead.style.fontSize = lmid + "px";
+            if (lead.scrollWidth <= avail) { lbest = lmid; llo = lmid; } else { lhi = lmid; }
+          }
+          lead.style.fontSize = lbest.toFixed(2) + "px";
+        }
       };
     </script>
   </body>

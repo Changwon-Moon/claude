@@ -1,14 +1,21 @@
 {
   "label": "mae-streak",
-  "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "verdict": "revise",
+  "summary": "REVISE — error 0 · warn 1 · 카드 1장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
       "file": "mae-streak.json",
       "deterministic": true,
       "qaErrors": 0,
-      "findings": []
+      "findings": [
+        {
+          "reviewer": "design-qa",
+          "level": "warn",
+          "code": "svglabel",
+          "msg": "지도·차트 위 글자 「0」가 「1주차」 와 23% 겹침 — 이름표 자리를 옮기세요(자동 배치라면 후보 자리를 넓히세요)"
+        }
+      ]
     }
   ],
   "llm": {

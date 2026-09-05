@@ -152,7 +152,7 @@ const card = {
   date,
   badge: `오늘의 주요 부동산 이슈 (${date.replace(/-/g, ".")})`,
   title: `<span class="tl">서울 아파트 <span class="hi">${current.weeks}주 연속</span> 상승</span>` +
-         `<span class="tl">상승폭은 이미 文정부의 <span class="hi">${ratio.toFixed(0)}배</span></span>`,
+         `<span class="tl">이미 文정부의 <span class="hi">${ratio.toFixed(1)}배</span> 상승</span>`,
   chart: { vb: `0 0 1000 ${VB_H}`, bgImage, wm, base: { y: y0, x1: AXIS_X, x2: RIGHT }, grid, areas, ylabels, yunit, vmarks, polylines, dots, vlabels, xlabels, arrow, legend },
   note: `역사상 최장 기간 연속 상승까지, 단 <b>${gap}주</b>`,
   source: { name: "한국부동산원 주간 아파트가격동향" },
