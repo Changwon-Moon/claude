@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T00:27:41.671Z",
+  "generatedAt": "2026-09-05T02:16:38.832Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -777,6 +777,16 @@
       "runs30": 17
     },
     {
+      "file": "research-digest.yml",
+      "name": "소재 보드 수집 (daily)",
+      "lastRun": "2026-08-30",
+      "daysAgo": 6,
+      "lastOk": "2026-08-30",
+      "okDaysAgo": 6,
+      "fails30": 0,
+      "runs30": 23
+    },
+    {
       "file": "reb-collect.yml",
       "name": "전세·월세 지수 수집 (한국부동산원)",
       "lastRun": "2026-08-31",
@@ -795,16 +805,6 @@
       "okDaysAgo": 5,
       "fails30": 0,
       "runs30": 5
-    },
-    {
-      "file": "research-digest.yml",
-      "name": "소재 보드 수집 (daily)",
-      "lastRun": "2026-08-30",
-      "daysAgo": 5,
-      "lastOk": "2026-08-30",
-      "okDaysAgo": 5,
-      "fails30": 0,
-      "runs30": 23
     },
     {
       "file": "silv-collect.yml",
@@ -877,6 +877,16 @@
       "runs30": 7
     },
     {
+      "file": "molit-rent-collect.yml",
+      "name": "전월세 실거래 수집 (국토부)",
+      "lastRun": "2026-09-02",
+      "daysAgo": 3,
+      "lastOk": "2026-09-02",
+      "okDaysAgo": 3,
+      "fails30": 2,
+      "runs30": 12
+    },
+    {
       "file": "neis-academy.yml",
       "name": "학원 수집 (나이스)",
       "lastRun": "2026-09-02",
@@ -897,14 +907,14 @@
       "runs30": 11
     },
     {
-      "file": "molit-rent-collect.yml",
-      "name": "전월세 실거래 수집 (국토부)",
-      "lastRun": "2026-09-02",
-      "daysAgo": 2,
-      "lastOk": "2026-09-02",
-      "okDaysAgo": 2,
-      "fails30": 2,
-      "runs30": 12
+      "file": "world-market.yml",
+      "name": "세계 지수 수집 (8개국 월별 성적표)",
+      "lastRun": "2026-09-04",
+      "daysAgo": 1,
+      "lastOk": "2026-09-04",
+      "okDaysAgo": 1,
+      "fails30": 4,
+      "runs30": 5
     },
     {
       "file": "apt-detail.yml",
@@ -932,7 +942,7 @@
       "lastRun": "2026-09-05",
       "daysAgo": 0,
       "lastOk": "2026-09-03",
-      "okDaysAgo": 1,
+      "okDaysAgo": 2,
       "fails30": 6,
       "runs30": 100
     },
@@ -942,7 +952,7 @@
       "lastRun": "2026-09-05",
       "daysAgo": 0,
       "lastOk": "2026-09-03",
-      "okDaysAgo": 1,
+      "okDaysAgo": 2,
       "fails30": 7,
       "runs30": 8
     },
@@ -963,7 +973,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-05",
       "okDaysAgo": 0,
-      "fails30": 22,
+      "fails30": 23,
       "runs30": 100
     },
     {
@@ -993,7 +1003,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-05",
       "okDaysAgo": 0,
-      "fails30": 1,
+      "fails30": 2,
       "runs30": 4
     },
     {
@@ -1015,16 +1025,6 @@
       "okDaysAgo": 0,
       "fails30": 3,
       "runs30": 100
-    },
-    {
-      "file": "world-market.yml",
-      "name": "세계 지수 수집 (8개국 월별 성적표)",
-      "lastRun": "2026-09-04",
-      "daysAgo": 0,
-      "lastOk": "2026-09-04",
-      "okDaysAgo": 0,
-      "fails30": 4,
-      "runs30": 5
     }
   ]
 }
