@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T00:02:05.357Z",
+  "generatedAt": "2026-09-05T00:27:41.671Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -82,9 +82,9 @@
         },
         {
           "day": "09-04",
-          "state": "late",
-          "at": "06:55",
-          "delay": 120
+          "state": "ok",
+          "at": "09:01",
+          "delay": null
         },
         {
           "day": "09-05",
@@ -93,8 +93,8 @@
           "delay": 117
         }
       ],
-      "medianDelay": 120,
-      "maxDelay": 120,
+      "medianDelay": 117,
+      "maxDelay": 117,
       "lastRun": "2026-09-05",
       "lastOk": "2026-09-05",
       "okDaysAgo": 0
@@ -276,9 +276,9 @@
         },
         {
           "day": "09-04",
-          "state": "late",
+          "state": "ok",
           "at": "14:42",
-          "delay": 452
+          "delay": null
         },
         {
           "day": "09-05",
@@ -287,8 +287,8 @@
           "delay": 108
         }
       ],
-      "medianDelay": 452,
-      "maxDelay": 452,
+      "medianDelay": 108,
+      "maxDelay": 108,
       "lastRun": "2026-09-05",
       "lastOk": "2026-09-05",
       "okDaysAgo": 0
@@ -470,9 +470,9 @@
         },
         {
           "day": "09-04",
-          "state": "late",
+          "state": "ok",
           "at": "15:29",
-          "delay": 290
+          "delay": null
         },
         {
           "day": "09-05",
@@ -481,8 +481,8 @@
           "delay": null
         }
       ],
-      "medianDelay": 290,
-      "maxDelay": 290,
+      "medianDelay": null,
+      "maxDelay": null,
       "lastRun": "2026-09-04",
       "lastOk": "2026-09-04",
       "okDaysAgo": 0
@@ -567,9 +567,9 @@
         },
         {
           "day": "09-04",
-          "state": "late",
+          "state": "ok",
           "at": "16:01",
-          "delay": 301
+          "delay": null
         },
         {
           "day": "09-05",
@@ -578,8 +578,8 @@
           "delay": null
         }
       ],
-      "medianDelay": 301,
-      "maxDelay": 301,
+      "medianDelay": null,
+      "maxDelay": null,
       "lastRun": "2026-09-04",
       "lastOk": "2026-09-04",
       "okDaysAgo": 0
@@ -750,9 +750,9 @@
       "file": "notify-once.yml",
       "name": "텔레그램 한 통 보내기",
       "lastRun": "2026-08-14",
-      "daysAgo": 21,
+      "daysAgo": 22,
       "lastOk": "2026-08-14",
-      "okDaysAgo": 21,
+      "okDaysAgo": 22,
       "fails30": 0,
       "runs30": 4
     },
@@ -777,6 +777,26 @@
       "runs30": 17
     },
     {
+      "file": "reb-collect.yml",
+      "name": "전세·월세 지수 수집 (한국부동산원)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 5,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 5,
+      "fails30": 0,
+      "runs30": 3
+    },
+    {
+      "file": "reb-weekly-collect.yml",
+      "name": "주간 매매·전세 지수 수집 (한국부동산원)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 5,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 5,
+      "fails30": 0,
+      "runs30": 5
+    },
+    {
       "file": "research-digest.yml",
       "name": "소재 보드 수집 (daily)",
       "lastRun": "2026-08-30",
@@ -785,6 +805,16 @@
       "okDaysAgo": 5,
       "fails30": 0,
       "runs30": 23
+    },
+    {
+      "file": "silv-collect.yml",
+      "name": "분양권전매 실거래 수집 (국토부)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 5,
+      "lastOk": "2026-08-28",
+      "okDaysAgo": 7,
+      "fails30": 4,
+      "runs30": 6
     },
     {
       "file": "ecos-m2.yml",
@@ -835,36 +865,6 @@
       "okDaysAgo": 4,
       "fails30": 8,
       "runs30": 40
-    },
-    {
-      "file": "reb-collect.yml",
-      "name": "전세·월세 지수 수집 (한국부동산원)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 4,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 4,
-      "fails30": 0,
-      "runs30": 3
-    },
-    {
-      "file": "reb-weekly-collect.yml",
-      "name": "주간 매매·전세 지수 수집 (한국부동산원)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 4,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 4,
-      "fails30": 0,
-      "runs30": 5
-    },
-    {
-      "file": "silv-collect.yml",
-      "name": "분양권전매 실거래 수집 (국토부)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 4,
-      "lastOk": "2026-08-28",
-      "okDaysAgo": 7,
-      "fails30": 4,
-      "runs30": 6
     },
     {
       "file": "molit-door.yml",
@@ -963,7 +963,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-05",
       "okDaysAgo": 0,
-      "fails30": 21,
+      "fails30": 22,
       "runs30": 100
     },
     {
