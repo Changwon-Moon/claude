@@ -82,7 +82,15 @@ const baselines = readJson("data/review/pixel-baselines.json");
 const REFRESHED = autoRefreshedDatasets();
 console.log(`🔁 정기 갱신 데이터셋: ${REFRESHED.join(", ") || "(없음)"}\n`);
 
-const today = new Date().toISOString().slice(0, 10);
+/* ⚠️ **한국 날짜로 찍는다** (2026-09-05)
+ *
+ * 예전엔 `new Date().toISOString()` — 그건 **UTC** 다. 한국시간 오전 9시 **전**에 확정하면
+ * 날짜가 하루 전으로 박힌다. 09-05 08:5x KST 에 확정한 12장이 `confirmedAt: 2026-09-04` 가 됐고,
+ * 그러면 「9월 5일 신고가」 세트가 「9월 4일에 확정」으로 남는다 — 되짚을 때 어긋난다.
+ *
+ * 아침 카드는 **원래 오전 9시 전에 만든다.** 그러니 이건 가끔이 아니라 **거의 매일** 틀렸을 자리다
+ * (저장소의 다른 스크립트는 이미 +9시간을 더해 쓴다 — 여기만 안 맞춰져 있었다). */
+const today = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const md5 = (p) => createHash("md5").update(readFileSync(p)).digest("hex");
 const base = (c) => c.replace(/-p\d+$/, "");
 
