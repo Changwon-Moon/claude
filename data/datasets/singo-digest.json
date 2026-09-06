@@ -1,9 +1,9 @@
 {
   "meta": {
-    "today": "2026-09-06",
-    "from": "2026-09-06",
+    "today": "2026-09-07",
+    "from": "2026-09-07",
     "days": 1,
-    "weekLabel": "2026-09-06 ~ 2026-09-06",
+    "weekLabel": "2026-09-07 ~ 2026-09-07",
     "note": "foundOn(확인한 날) 기준 주간. milestone 은 일간이 판정 시점의 직전 최고가로 계산한 값을 그대로 옮긴 것 — 여기서 다시 재지 않는다.",
     "baselineLabel": "2020년 이후",
     "types": [
@@ -21,7 +21,33 @@
   },
   "conceptB": {
     "title": "개별 카드 후보",
-    "count": 0,
-    "items": []
+    "count": 1,
+    "items": [
+      {
+        "foundOn": "2026-09-07",
+        "aptNm": "현대",
+        "umdNm": "마장동",
+        "jibun": "818",
+        "priceWon": 1380000000,
+        "priceManwon": 138000,
+        "area": 59.91,
+        "floor": 19,
+        "buildYear": 1998,
+        "date": "2026-08-28",
+        "dealingGbn": "중개거래",
+        "canceled": false,
+        "sggCd": "11200",
+        "type": "59",
+        "pyeong": "25평",
+        "lawdCd": "11200",
+        "gu": "성동구",
+        "prevPeakManwon": 134500,
+        "prevPeakDate": "2026-03-27",
+        "gainPct": 2.6022304832713754,
+        "milestone": null,
+        "hhld": 1017,
+        "kaptCode": "A13381608"
+      }
+    ]
   }
 }
