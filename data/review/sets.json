@@ -1444,6 +1444,17 @@
         "singo-석수e편한세상-59:b6d7f4008d41",
         "singo-권선자이e편한세상-59:860a56fb5d69"
       ]
+    },
+    {
+      "label": "seongsu-zones",
+      "title": "성수 1~4지구, 누가 짓나 (시공사 지도)",
+      "cards": [
+        "seongsu-zones"
+      ],
+      "caption": "seongsu-zones",
+      "review": "성수전략정비구역 시공사 지도",
+      "note": "2026-09-06 기준. 2·3지구는 시공사 미확정('유력') — 총회 결과가 나오면 데이터셋의 status·statusKind 를 고치고 다시 그린다.",
+      "pixelPolicy": "정기물에 준한다 — 선정총회 결과가 나오면 다시 그려진다. pixel-baselines 에 넣지 않는다."
     }
   ]
 }

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* seongsu-zones@1 — 상 제목 / 중 지도(번호 핀) / 하 구역 4칸.
+         ── 왜 map-board 를 안 쓰나
+         map-board 의 아래 칸은 **시공사 순위**(메달·수주액·사업지 목록)를 말하는 판이다.
+         이 카드가 말하는 것은 순위가 아니라 **한 구역의 상태**다. 남의 자를 빌려 쓰면
+         메달 자리에 지구 번호를 끼워 넣게 되고, 그건 다음 사람이 못 읽는 카드가 된다.
+         머리·지도·푸터 규격은 map-board 를 그대로 따른다 — 한 계정의 카드는 윗부분이 같아야 한다.
+
+         ── 확정과 미확정을 어떻게 가르나 (오너 2026-09-06 "유력으로 적는다")
+         '선정 완료'와 '유력'을 같은 모양으로 그리면 카드가 거짓말을 한다.
+         **실선 배지 = 확정 / 점선 배지 = 미확정.** CARD_CHECKLIST 의 실측/추정 규칙과 같은 문법이다.
+         점선을 실선으로 바꾸는 순간 미확정이 확정이 된다 — 바꾸지 않는다. */
+      .sz { display: flex; flex-direction: column; }
+
+      .sz-head { padding: 0; margin: 36px 0 0; }
+      .sz .wirit-title {
+        font-size: 76px; line-height: 1.02; text-align: left; white-space: nowrap;
+        margin: 0; letter-spacing: -0.035em;
+      }
+      .sz .wirit-title .hi { color: var(--wirit-red); }
+
+      /* 지도는 남는 세로를 갖되 상한을 둔다 — 상한이 없으면 아래 칸과 맞닿는다. */
+      .sz-map { flex: 1 1 auto; min-height: 0; max-height: 706px; display: flex; align-items: center; justify-content: center; margin: 30px 0 0; }
+      .sz-map svg { width: 100%; height: 100%; display: block; }
+
+      /* ── 아래 4칸 ── 상자가 아니라 브랜드색 굵은 선으로 칸을 연다(AI티 금지). */
+      .sz-cards {
+        flex: 0 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+        column-gap: 22px; margin: 18px 0 0;
+      }
+      .sz-c { display: flex; flex-direction: column; gap: 7px; padding-top: 10px; border-top: 5px solid var(--c); }
+
+      /* 조감도 띠 — 네 칸 전부 있을 때만 그린다. 한 칸만 비면 줄이 어긋난다. */
+      .sz-c .ph { width: 100%; height: 96px; object-fit: cover; display: block; border-radius: 2px; }
+
+      .sz-c .zn { display: flex; align-items: baseline; gap: 7px; }
+      .sz-c .zn .n {
+        flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%; background: var(--c); color: #fff;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 16px; font-weight: 800; letter-spacing: -0.05em; align-self: center;
+      }
+      .sz-c .zn .t { font-size: 25px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.05em; line-height: 1; }
+
+      .sz-c .bl {
+        font-family: "Wanted Sans", "Pretendard", sans-serif;
+        font-size: 33px; font-weight: 900; color: var(--c); letter-spacing: -0.045em; line-height: 1;
+        white-space: nowrap;
+      }
+      .sz-c .br { font-size: 17px; font-weight: 700; color: var(--wirit-gray); letter-spacing: -0.05em; line-height: 1.1; min-height: 19px; }
+
+      /* 배지 — 실선(확정) / 점선(미확정). 색은 칸 색을 따른다. */
+      .sz-c .bg {
+        align-self: flex-start; font-size: 16px; font-weight: 800; letter-spacing: -0.04em; line-height: 1;
+        padding: 6px 10px; border-radius: 2px;
+      }
+      .sz-c .bg.on { background: var(--c); color: #fff; }
+      .sz-c .bg.off { border: 2px dashed var(--c); color: var(--c); background: transparent; }
+
+      .sz-c .ct {
+        font-family: "Wanted Sans", "Pretendard", sans-serif;
+        font-size: 22px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.03em; line-height: 1;
+        white-space: nowrap;
+      }
+      .sz-c .ct i { font-style: normal; font-size: 15px; font-weight: 700; color: var(--wirit-gray); margin-left: 4px; }
+
+      /* 각주 — 푸터와 숨을 준다(footergap ≥ 14px). */
+      .sz-note {
+        flex: 0 0 auto; font-size: 17px; font-weight: 600; color: var(--wirit-gray);
+        letter-spacing: -0.04em; line-height: 1.4; margin: 18px 0 22px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card sz">
+      <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
+      <div class="sz-head"><h1 class="wirit-title">{{{title}}}</h1></div>
+
+      <div class="sz-map">{{{mapSvg}}}</div>
+
+      <div class="sz-cards">
+        {{#each zones}}
+        <div class="sz-c" style="--c: {{this.color}}">
+          {{#if this.photo}}<img class="ph" src="../_shared/photos/{{this.photo}}" alt="" />{{/if}}
+          <span class="zn"><span class="n">{{this.no}}</span><span class="t">{{this.name}}</span></span>
+          <span class="bl">{{this.builder}}</span>
+          <span class="br">{{#if this.brand}}{{this.brand}}{{/if}}</span>
+          <span class="bg {{#if this.fixed}}on{{else}}off{{/if}}">{{this.status}}</span>
+          <span class="ct">{{this.cost}}{{#if this.costKind}}<i>{{this.costKind}}</i>{{/if}}</span>
+        </div>
+        {{/each}}
+      </div>
+
+      {{#if note}}<div class="sz-note">{{note}}</div>{{/if}}
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <!-- 제목 맞춤 — 카드 폭을 채운다(map-board 와 같은 규칙). 상한은 제목이 짧은 날을 위한 것. -->
+    <script>
+      window.__wiritFit = function () {
+        var el = document.querySelector(".sz .wirit-title");
+        if (!el) return;
+        var box = el.parentElement;
+        var bs = getComputedStyle(box);
+        var avail = box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
+        var MINPX = 34, MAXPX = 96;
+        var lo = MINPX, hi = MAXPX, best = MINPX;
+        for (var i = 0; i < 24; i++) {
+          var mid = (lo + hi) / 2;
+          el.style.fontSize = mid + "px";
+          if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(window.__wiritFit);
+    </script>
+  </body>
+</html>

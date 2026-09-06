@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "seongsu-zones@1",
+  "description": "상 제목 / 중 지도(번호 핀) / 하 구역 4칸. 지도에는 번호만, 이름은 칸이 말한다(map-board@1 과 같은 원칙). 확정과 미확정을 **실선/점선**으로 가른다 — 이 둘이 같아 보이면 그 자체가 오보다.",
+  "type": "object",
+  "required": ["template", "title", "mapSvg", "zones", "source"],
+  "properties": {
+    "template": { "type": "string", "pattern": "^seongsu-zones@\\d+$" },
+    "date": { "type": "string" },
+    "title": {
+      "type": "string",
+      "maxLength": 90,
+      "description": "제목. <span class=\"hi\">…</span> 로 일부 강조. 한 줄이다 — 두 줄로 쓰지 않는다."
+    },
+    "subtitle": { "type": "string", "maxLength": 70 },
+    "mapSvg": { "type": "string" },
+    "zones": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["no", "name", "builder", "status", "fixed", "color", "cost"],
+        "properties": {
+          "no": { "type": "integer" },
+          "name": { "type": "string", "maxLength": 6, "description": "\"1지구\"" },
+          "builder": { "type": "string", "maxLength": 8 },
+          "brand": { "type": ["string", "null"], "maxLength": 14 },
+          "status": { "type": "string", "maxLength": 6, "description": "\"선정 완료\" / \"유력\"" },
+          "fixed": { "type": "boolean", "description": "true=시공사 확정(실선 배지) / false=미확정(점선 배지)" },
+          "cost": { "type": "string", "maxLength": 12, "description": "\"2조 1,540억\"" },
+          "costKind": { "type": "string", "maxLength": 4, "description": "\"계약\" / \"예정\"" },
+          "color": { "type": "string" },
+          "photo": {
+            "type": ["string", "null"],
+            "description": "조감도 파일명(templates/_shared/photos/ 아래). 네 칸 **전부** 있을 때만 사진 띠를 그린다 — 한 칸만 비면 줄이 어긋난다."
+          }
+        }
+      }
+    },
+    "note": { "type": "string", "maxLength": 130, "description": "각주 — 무엇이 실측이고 무엇이 개념도인지, 공사비의 성격" },
+    "source": {
+      "type": "object",
+      "required": ["name"],
+      "properties": { "name": { "type": "string" }, "asOf": { "type": "string" } }
+    }
+  }
+}
