@@ -12,7 +12,7 @@
 > 이 표는 `node scripts/template-usage.mjs --write` 가 **실측해서 씁니다.**
 > 손으로 고치지 마세요 — 세트가 늘면 다음 실행 때 덮어씁니다.
 
-**템플릿 41종** · 🟢 카드가 나오는 것 26 · 🟡 빌더는 있음 3 · ⚪ 잠자는 것 12
+**템플릿 42종** · 🟢 카드가 나오는 것 27 · 🟡 빌더는 있음 3 · ⚪ 잠자는 것 12
 
 | 판형 | 상태 | 쓰는 세트 |
 |---|---|---|
@@ -35,6 +35,7 @@
 | `map-rank` | 🟢 2세트 | estate-84, estate-59 |
 | `metro-2col` | 🟢 1세트 | metro-speed |
 | `record-grid` | 🟢 1세트 | kospi-record |
+| `seongsu-zones` | 🟢 1세트 | seongsu-zones |
 | `sinbundang-loop` | 🟢 1세트 | sinbundang-loop |
 | `singo-record` | 🟢 16세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 13 |
 | `singoga-map` | 🟢 4세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map 외 1 |

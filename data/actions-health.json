@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-06T22:25:28.805Z",
+  "generatedAt": "2026-09-06T23:15:12.694Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -647,16 +647,6 @@
       "runs30": 0
     },
     {
-      "file": "geocode.yml",
-      "name": "좌표 지오코딩 (카카오 로컬)",
-      "lastRun": null,
-      "daysAgo": null,
-      "lastOk": null,
-      "okDaysAgo": null,
-      "fails30": 0,
-      "runs30": 0
-    },
-    {
       "file": "photo-fetch.yml",
       "name": "사진 자동 취득 (Pexels/Pixabay/Wikimedia)",
       "lastRun": null,
@@ -867,6 +857,16 @@
       "runs30": 6
     },
     {
+      "file": "neis-academy.yml",
+      "name": "학원 수집 (나이스)",
+      "lastRun": "2026-09-02",
+      "daysAgo": 5,
+      "lastOk": "2026-09-02",
+      "okDaysAgo": 5,
+      "fails30": 2,
+      "runs30": 4
+    },
+    {
       "file": "molit-collect.yml",
       "name": "실거래 수집 (국토부)",
       "lastRun": "2026-09-02",
@@ -897,14 +897,44 @@
       "runs30": 12
     },
     {
-      "file": "neis-academy.yml",
-      "name": "학원 수집 (나이스)",
-      "lastRun": "2026-09-02",
-      "daysAgo": 4,
-      "lastOk": "2026-09-02",
-      "okDaysAgo": 4,
-      "fails30": 2,
-      "runs30": 4
+      "file": "apt-detail.yml",
+      "name": "단지 주차대수 (카드 제원용)",
+      "lastRun": "2026-09-05",
+      "daysAgo": 2,
+      "lastOk": "2026-09-05",
+      "okDaysAgo": 2,
+      "fails30": 4,
+      "runs30": 100
+    },
+    {
+      "file": "apt-station.yml",
+      "name": "단지 가까운 역 (카드 뱃지용)",
+      "lastRun": "2026-09-05",
+      "daysAgo": 2,
+      "lastOk": "2026-09-05",
+      "okDaysAgo": 2,
+      "fails30": 7,
+      "runs30": 17
+    },
+    {
+      "file": "singo-history-retry.yml",
+      "name": "곡선 — 자동 재시도",
+      "lastRun": "2026-09-05",
+      "daysAgo": 2,
+      "lastOk": "2026-09-05",
+      "okDaysAgo": 2,
+      "fails30": 0,
+      "runs30": 2
+    },
+    {
+      "file": "singo-history.yml",
+      "name": "신고가 단지 이력 (한 단지 곡선)",
+      "lastRun": "2026-09-05",
+      "daysAgo": 2,
+      "lastOk": "2026-09-05",
+      "okDaysAgo": 2,
+      "fails30": 4,
+      "runs30": 30
     },
     {
       "file": "world-market.yml",
@@ -915,26 +945,6 @@
       "okDaysAgo": 2,
       "fails30": 4,
       "runs30": 5
-    },
-    {
-      "file": "apt-detail.yml",
-      "name": "단지 주차대수 (카드 제원용)",
-      "lastRun": "2026-09-05",
-      "daysAgo": 1,
-      "lastOk": "2026-09-05",
-      "okDaysAgo": 1,
-      "fails30": 4,
-      "runs30": 100
-    },
-    {
-      "file": "apt-station.yml",
-      "name": "단지 가까운 역 (카드 뱃지용)",
-      "lastRun": "2026-09-05",
-      "daysAgo": 1,
-      "lastOk": "2026-09-05",
-      "okDaysAgo": 1,
-      "fails30": 7,
-      "runs30": 17
     },
     {
       "file": "apt-supply-area.yml",
@@ -957,26 +967,6 @@
       "runs30": 8
     },
     {
-      "file": "singo-history-retry.yml",
-      "name": "곡선 — 자동 재시도",
-      "lastRun": "2026-09-05",
-      "daysAgo": 1,
-      "lastOk": "2026-09-05",
-      "okDaysAgo": 1,
-      "fails30": 0,
-      "runs30": 2
-    },
-    {
-      "file": "singo-history.yml",
-      "name": "신고가 단지 이력 (한 단지 곡선)",
-      "lastRun": "2026-09-05",
-      "daysAgo": 1,
-      "lastOk": "2026-09-05",
-      "okDaysAgo": 1,
-      "fails30": 4,
-      "runs30": 30
-    },
-    {
       "file": "auto-produce.yml",
       "name": "데이터 바뀌면 카드 자동 재생산",
       "lastRun": "2026-09-07",
@@ -984,7 +974,17 @@
       "lastOk": "2026-09-07",
       "okDaysAgo": 0,
       "fails30": 18,
-      "runs30": 52
+      "runs30": 54
+    },
+    {
+      "file": "geocode.yml",
+      "name": "좌표 지오코딩 (카카오 로컬)",
+      "lastRun": "2026-09-07",
+      "daysAgo": 0,
+      "lastOk": "2026-09-07",
+      "okDaysAgo": 0,
+      "fails30": 0,
+      "runs30": 2
     },
     {
       "file": "guard.yml",
@@ -993,7 +993,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-05",
       "okDaysAgo": 1,
-      "fails30": 24,
+      "fails30": 27,
       "runs30": 100
     },
     {
@@ -1002,9 +1002,9 @@
       "lastRun": "2026-09-07",
       "daysAgo": 0,
       "lastOk": "2026-09-05",
-      "okDaysAgo": 1,
+      "okDaysAgo": 2,
       "fails30": 6,
-      "runs30": 10
+      "runs30": 11
     },
     {
       "file": "singo-retry.yml",
@@ -1014,15 +1014,15 @@
       "lastOk": "2026-09-06",
       "okDaysAgo": 1,
       "fails30": 2,
-      "runs30": 35
+      "runs30": 36
     },
     {
       "file": "tower-deploy.yml",
       "name": "관제탑 배포 (Cloudflare)",
       "lastRun": "2026-09-07",
       "daysAgo": 0,
-      "lastOk": "2026-09-05",
-      "okDaysAgo": 1,
+      "lastOk": "2026-09-07",
+      "okDaysAgo": 0,
       "fails30": 3,
       "runs30": 100
     }
