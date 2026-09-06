@@ -16,6 +16,8 @@ on:
       - "data/geocode-queue.txt"
       - ".github/workflows/geocode.yml"
       - "scripts/geocode-sites.mjs"
+      - "scripts/geocode-extra.mjs"
+      - "scripts/lib/kakao-geo.mjs"
 
 permissions:
   contents: write
@@ -42,6 +44,12 @@ jobs:
 
       # continue-on-error + always(): 실패해도 결과를 저장소에 남긴다.
       # 세션은 Actions 로그를 못 보므로 이 파일이 유일한 눈이다.
+      # 대기열에 적힌 아무 데이터셋이나 (geocode-extra) → 그 다음 정비사업 붙박이 (geocode-sites).
+      #
+      # ⚠️ geocode-sites 는 `jeongbi-order-2026-07.json` 을 통째로 다시 쓴다. 그 파일은 확정본
+      #    카드(jeongbi-board)의 재료라, 카카오가 예전과 한 글자라도 다른 결과를 주면 발행본
+      #    픽셀이 바뀐다. 그래서 **대기열에 `jeongbi` 라고 적었을 때나 수동 실행일 때만** 돈다
+      #    (2026-09-06). 그전에는 아무 대기열 푸시에나 같이 돌았다.
       - name: 지오코딩
         id: geo
         continue-on-error: true
@@ -49,7 +57,15 @@ jobs:
           KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
         run: |
           set -o pipefail
-          node scripts/geocode-sites.mjs 2>&1 | tee /tmp/geo.log
+          {
+            node scripts/geocode-extra.mjs
+            if [ "${{ github.event_name }}" = "workflow_dispatch" ] || grep -qi 'jeongbi' data/geocode-queue.txt; then
+              echo "── 정비사업 붙박이(jeongbi-order) 지오코딩 ──"
+              node scripts/geocode-sites.mjs
+            else
+              echo "⏭ jeongbi-order 는 건너뜁니다 (대기열에 'jeongbi' 없음 · 확정본 카드 재료 보호)"
+            fi
+          } 2>&1 | tee /tmp/geo.log
 
       - name: 결과 기록 + 커밋
         if: always()

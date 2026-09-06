@@ -1,0 +1,105 @@
+{
+  "meta": {
+    "title": "성수전략정비구역 1~4지구 시공사 현황",
+    "asOf": "2026-09-06",
+    "unit": "억원",
+    "verified": true,
+    "verifyNote": "지구별로 **서로 다른 매체 2곳 이상**을 대조해 일치하는 값만 담았다. 매체마다 갈린 값(세대수·최고층수·구역면적)은 아래 conflicts 에 적고 **카드에 쓰지 않는다.** 확정(선정 완료)과 미확정(유력)을 status 로 갈라 놓았다 — 이 둘을 같은 색으로 그리면 그 자체가 오보다.",
+    "provenance": {
+      "1지구": [
+        "위클리한국주택경제신문 2026-04 「GS건설, 성수 최대 재개발 1지구 시공권 확보」 https://www.arunews.com/news/articleView.html?idxno=62060",
+        "뉴시스 2026-04-26 「GS건설, '2.1조원 규모' 성수1지구 재개발 시공사 선정」 https://www.newsis.com/view/NISX20260426_0003606404",
+        "하우징헤럴드 「서울 성수1~4지구 재개발 시공자 선정」 https://www.housingherald.co.kr/news/articleView.html?idxno=50176"
+      ],
+      "2지구": [
+        "하우징타임즈 「성수2지구 재개발, DL이앤씨 단독 참여 유찰돼」 https://www.housingtimes.co.kr/news/articleView.html?idxno=2452",
+        "더구루 2026-09-02 「DL이앤씨·GS건설, 성수·목동에서 '무혈입성' 가능성 높아져」 https://www.theguru.co.kr/news/article.html?no=106596"
+      ],
+      "3지구": [
+        "매일일보 「[정비사업탐방] '1.8조' 성수3지구, 시공사 선정 속도」 https://www.m-i.kr/news/articleView.html?idxno=1385775",
+        "뉴스핌 2026-07-13 「삼성물산, 성수3지구 재개발 수의계약 수주 유력」 https://www.newspim.com/news/view/20260713000804",
+        "브릿지경제 2026-09-06 「삼성물산, 성수3지구 '래미안 레비르 성수' 공개 …19일 선정 총회」 https://www.viva100.com/article/20260906500444 (제목까지만 확인 — 본문은 robots.txt 로 못 읽었다)"
+      ],
+      "4지구": [
+        "더구루 2026-07 「롯데건설, 1.3조 '성수4지구' 품었다」 https://www.theguru.co.kr/news/article.html?no=103993",
+        "파이낸셜뉴스 2026-07-05 「롯데건설, 성수4지구 품었다…1조3000억원 시공권 수주」 https://www.fnnews.com/news/202607051848320961",
+        "위클리한국주택경제신문 「성수4지구, 최고 64층 아파트로 재개발」 https://www.arunews.com/news/articleView.html?idxno=60173"
+      ]
+    },
+    "conflicts": [
+      "2지구 세대수 — 하우징타임즈(2026-08 입찰공고 기준) 2,381가구 vs 하우징헤럴드 2,609가구. 갈려 있어 카드에 쓰지 않는다.",
+      "4지구 세대수 — 위클리한국주택경제(건축심의) 1,439세대(공공임대 267 포함) vs 더구루 1,447가구. 갈려 있어 카드에 쓰지 않는다.",
+      "4지구 구역면적 — 위클리한국주택경제 89,828㎡ vs 더구루 88,928㎡. 자릿수 뒤집힘으로 보이나 어느 쪽이 원본인지 확인 못 했다.",
+      "1지구 최고층 — 위클리한국주택경제 지상 64층 vs 하우징헤럴드 65층. 갈려 있어 카드에 쓰지 않는다.",
+      "4지구 공사비 — 계약 1조 3,492억 vs 입찰 예정가 1조 3,628억. 카드에는 **계약액**을 쓴다."
+    ],
+    "_": [
+      "cost 는 지구마다 성격이 다르다: 1·4지구는 시공사가 선정된 **계약 공사비**, 2·3지구는 조합이 내건 **입찰 예정 공사비**다. 카드 각주에 반드시 이 구분을 적는다.",
+      "lon/lat 은 `scripts/geocode-extra.mjs` 가 카카오 로컬 주소검색으로 넣는다. 손으로 찍지 않는다.",
+      "1지구·4지구 좌표는 jeongbi-order-2026-07.json 이 이미 같은 배관으로 받아 둔 값과 대조할 수 있다 (1지구 127.0485/37.5382 · 4지구 127.0539/37.5389)."
+    ]
+  },
+  "geocodedAt": null,
+  "zones": [
+    {
+      "id": 1,
+      "name": "성수1지구",
+      "short": "1지구",
+      "gu": "성동구",
+      "query": "성수전략정비구역1지구",
+      "addrOverride": "서울 성동구 성수동1가 72-10",
+      "builder": "GS건설",
+      "brand": "리베니크 자이",
+      "status": "선정 완료",
+      "statusKind": "fixed",
+      "statusDetail": "2026-04-25 시공자 선정 총회",
+      "cost": 21540,
+      "costKind": "계약"
+    },
+    {
+      "id": 2,
+      "name": "성수2지구",
+      "short": "2지구",
+      "gu": "성동구",
+      "query": "성수전략정비구역2지구",
+      "addrOverride": "서울 성동구 성수동2가 506",
+      "builder": "DL이앤씨",
+      "brand": null,
+      "status": "유력",
+      "statusKind": "likely",
+      "statusDetail": "1차 입찰 단독응찰로 유찰(8/31) · 2차 입찰 진행",
+      "cost": 20137,
+      "costKind": "예정"
+    },
+    {
+      "id": 3,
+      "name": "성수3지구",
+      "short": "3지구",
+      "gu": "성동구",
+      "query": "성수전략정비구역3지구",
+      "addrOverride": "서울 성동구 성수동2가 572-7",
+      "builder": "삼성물산",
+      "brand": "래미안 레비르 성수",
+      "status": "유력",
+      "statusKind": "likely",
+      "statusDetail": "단독응찰 · 수의계약 수순 · 9월 선정총회 예정",
+      "cost": 18275,
+      "costKind": "예정"
+    },
+    {
+      "id": 4,
+      "name": "성수4지구",
+      "short": "4지구",
+      "gu": "성동구",
+      "query": "성수전략정비구역 제4지구주택재개발사업조합",
+      "addrOverride": "서울 성동구 성수동2가 219-4",
+      "builder": "롯데건설",
+      "brand": "성수르엘 S70",
+      "status": "선정 완료",
+      "statusKind": "fixed",
+      "statusDetail": "2026-07-05 총회 · 449표(72.4%)",
+      "cost": 13492,
+      "costKind": "계약"
+    }
+  ]
+}
