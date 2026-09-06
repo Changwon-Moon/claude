@@ -1,8 +1,7 @@
 # 단지 주차대수 — 마지막 실행
 
-- 대기열: 146줄
-- 결과: **성공**
-- ⚠️ 이번 실행은 **국토부에 붙지 않았습니다**(전부 이미 있음) — API 가 살아 있다는 증거로 쓰지 마세요
+- 대기열: 147줄
+- 결과: **실패**
 
 ```
 ⏭ 이미 있음 — data/datasets/apt-detail/A44340013.json (다시 받으려면 force=1)
@@ -152,7 +151,23 @@
 ⏭ 이미 있음 — data/datasets/apt-detail/A43070506.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A44173913.json (다시 받으려면 force=1)
 
-실제로 받아 본 단지 0곳 · 이미 있어 건너뛴 것 146곳
-ⓘ 이번 실행은 **국토부에 한 번도 붙지 않았습니다** — 이 초록불은 API 가 살아 있다는 증거가 아닙니다.
-✅ 대기열 전 줄 완료
+── A13381608
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A13381608
+
+   ⏸ 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
+     문이 닫힌 것으로 보고 20초 기다립니다 (1/1)
+Error: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed — 2번(약 0분) 시도했습니다
+    at get (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:138:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async pickOp (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:170:30)
+    at async fetchAptDetail (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:215:7)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptDetailCli.ts:44:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-detail: `tsx src/aptDetailCli.ts -- --kapt A13381608`
+Exit status 1
+
+실제로 받아 본 단지 1곳 · 이미 있어 건너뛴 것 146곳
+⚠️ 일부 줄이 실패했습니다
 ```
