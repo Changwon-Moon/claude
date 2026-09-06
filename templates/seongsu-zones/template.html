@@ -25,18 +25,26 @@
       .sz .wirit-title .hi { color: var(--wirit-red); }
 
       /* 지도는 남는 세로를 갖되 상한을 둔다 — 상한이 없으면 아래 칸과 맞닿는다. */
-      .sz-map { flex: 1 1 auto; min-height: 0; max-height: 706px; display: flex; align-items: center; justify-content: center; margin: 30px 0 0; }
+      .sz-map { flex: 1 1 auto; min-height: 0; max-height: 470px; display: flex; align-items: center; justify-content: center; margin: 30px 0 0; }
       .sz-map svg { width: 100%; height: 100%; display: block; }
+
+      /* 지도와 네 칸 사이 요약 한 줄 — 빈 자리를 **데이터로** 채운다(CARD_CHECKLIST §2 여백).
+         문구가 아니라 코드가 더한 값이라, 자료가 바뀌면 이 줄도 같이 바뀐다. */
+      .sz-sum {
+        flex: 0 0 auto; margin: 20px 0 0; padding: 0 0 2px;
+        font-size: 30px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.045em; line-height: 1;
+      }
+      .sz-sum b { font-family: "Wanted Sans", "Pretendard", sans-serif; font-weight: 900; color: var(--wirit-red); }
 
       /* ── 아래 4칸 ── 상자가 아니라 브랜드색 굵은 선으로 칸을 연다(AI티 금지). */
       .sz-cards {
         flex: 0 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-        column-gap: 22px; margin: 18px 0 0;
+        column-gap: 22px; margin: 14px 0 0;
       }
       .sz-c { display: flex; flex-direction: column; gap: 7px; padding-top: 10px; border-top: 5px solid var(--c); }
 
       /* 조감도 띠 — 네 칸 전부 있을 때만 그린다. 한 칸만 비면 줄이 어긋난다. */
-      .sz-c .ph { width: 100%; height: 96px; object-fit: cover; display: block; border-radius: 2px; }
+      .sz-c .ph { width: 100%; height: 196px; object-fit: cover; display: block; border-radius: 2px; }
 
       .sz-c .zn { display: flex; align-items: baseline; gap: 7px; }
       .sz-c .zn .n {
@@ -81,6 +89,8 @@
       <div class="sz-head"><h1 class="wirit-title">{{{title}}}</h1></div>
 
       <div class="sz-map">{{{mapSvg}}}</div>
+
+      {{#if summary}}<div class="sz-sum">{{{summary}}}</div>{{/if}}
 
       <div class="sz-cards">
         {{#each zones}}

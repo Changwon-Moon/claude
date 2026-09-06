@@ -17,7 +17,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { seongsuMapSvg } from "./lib/seongsu-map.mjs";
+import { seongsuAerialSvg } from "./lib/seongsu-aerial.mjs";
 import { writeCaption } from "./lib/caption-signature.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -59,11 +59,16 @@ const allPhotos = zones.every((z) => photoOf(z));
 const fixedN = zones.filter((z) => z.statusKind === "fixed").length;
 const totalCost = zones.reduce((a, z) => a + z.cost, 0);
 
-const { svg: mapSvg, scale } = seongsuMapSvg({
+/* ── 지도 ──
+ * 오너가 준 3D 항공 화면 위에 구역별 시공사를 얹는다. **위경도를 얹지 않는다** —
+ * 왜 그 길을 접었고 구역 자리를 어떻게 정했는지는 데이터셋 `aerial._` 에 적어 두었다. */
+const aerial = doc.aerial;
+if (!aerial?.file) throw new Error("데이터셋에 aerial(지도 그림)이 없다");
+if (!existsSync(join(photoDir, aerial.file))) throw new Error(`지도 그림이 없다: ${aerial.file}`);
+const { svg: mapSvg, w: mapW, h: mapH } = seongsuAerialSvg({
   zones: zones.map((z) => ({ ...z, color: colorOf(z.builder) })),
-  landmarks,
-  /* 지도 왼쪽 위 빈 자리를 데이터로 채운다 — 문구가 아니라 합계다(코드가 더한 값). */
-  headline: { top: `한강변 네 개 구역, 합쳐서`, big: `공사비 ${won(totalCost)}` },
+  aerial,
+  href: `../_shared/photos/${aerial.file}`,
 });
 
 const card = {
@@ -72,6 +77,8 @@ const card = {
   /* 제목은 한 줄. 두 줄 제목은 이 계정에서 titlegap 으로 떨어진다(2026-09-06 A군 경험). */
   title: `성수 1~4지구, <span class="hi">누가 짓나</span>`,
   mapSvg,
+  /* 요약 한 줄 — 손으로 적지 않는다. 코드가 더한 값이다. */
+  summary: `네 곳 합쳐 공사비 <b>${won(totalCost)}</b> · 시공사 확정 ${fixedN}곳 · 진행 중 ${zones.length - fixedN}곳`,
   zones: zones.map((z) => ({
     no: z.id,
     name: z.short,
@@ -87,7 +94,7 @@ const card = {
   /* 각주는 **한 줄**이다 — 두 줄이 되면 푸터와의 숨(footergap)을 먹는다. */
   note:
     `실선 = 시공사 확정 · 점선 = 미확정 · 공사비는 확정 구역만 계약액 · ` +
-    `위치는 실제 좌표(강안선은 개념도) · 조감도: 각 사 제공`,
+    `구역 표시는 구간 표시입니다 · 지도: 네이버 지도 · 조감도: 각 사 제공`,
   source: { name: "각 조합·건설사 발표 및 업계 보도 종합", asOf: doc.meta.asOf },
 };
 
@@ -113,7 +120,7 @@ const caption = [
   `   조합 총회에서 뒤집힐 수 있습니다. ${doc.meta.asOf} 기준입니다.`,
   `※ 공사비는 시공사가 정해진 곳은 계약액, 아직인 곳은 조합이 내건 입찰 예정가입니다.`,
   `※ 세대수·최고층수는 매체마다 값이 갈려 카드에 넣지 않았습니다.`,
-  `※ 지도의 구역·다리·역 위치는 실제 주소 좌표로 찍었고, 강안선은 개념도입니다.`,
+  `※ 지도의 구역 표시는 정확한 경계가 아니라 구간 표시입니다. 구역 경계의 정본은 서울시 「성수전략정비구역 지구단위계획 결정도」입니다.`,
   `※ 출처: 각 조합·건설사 발표 및 업계 보도 종합 — 2026년 4월 1지구 선정부터 ${doc.meta.asOf} 까지의 진행 상황입니다.`,
   ``,
   /* 해시태그는 5개까지(CAPTION_MAX_TAGS). 늘리려면 기준을 먼저 바꾼다. */
@@ -122,5 +129,5 @@ const caption = [
 writeCaption("seongsu-zones", caption); // ⚠️ 서명은 writeCaption 이 붙인다
 
 console.log(`🗺  seongsu-zones — 지구 ${zones.length} · 확정 ${fixedN} · 공사비 합 ${won(totalCost)}`);
-console.log(`   좌표: 확인 주소로 잡은 것 ${byAddr}/${zones.length + landmarks.length} · 축척 ${scale}`);
+console.log(`   지도: ${aerial.file} ${mapW}×${mapH} · 구역 자리는 조감도 비율 + 단지명 앵커(데이터셋 aerial._ 참고)`);
 console.log(`   조감도: ${allPhotos ? "네 칸 모두 있음" : `아직 없음(${zones.filter((z) => !photoOf(z)).map((z) => z.short).join(", ")}) — 사진 띠 없이 그린다`}`);
