@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "name": "도이체방크 세계 물가 지도 2026",
+    "source": "Deutsche Bank Research Institute, Mapping the World's Prices 2026 (10th edition)",
+    "sourceDate": "2026-07-13",
+    "sourceUrl": "https://www.dbresearch.com/PROD/IE-PROD/PROD0000000000633983.xhtml",
+    "cities": 69,
+    "unit": "USD (달러 환산 기준)",
+    "verified": false,
+    "provenance": "2026-09-05 앞 세션이 정리한 「A군 카드 초안 8장」 문서에서 복원했다. 그 세션은 PDF를 파싱해 뽑았다고 밝혔으나 data/datasets/world-prices-2026.json 과 parse-world-prices.mjs 가 저장소에 커밋되지 않아 이 컨테이너에는 없다. 이 세션은 dbresearch.com PDF 본문에 접근하지 못했다(WebFetch 가 표를 못 읽음).",
+    "verifyTodo": "발행 전 도이체방크 PDF 원문(Figure 29~39)과 대조하고 verified 를 true 로 올린다. 대조 전에는 _spike 시안까지만 만든다(CLAUDE.md §8 — verified:true 인 것만 카드가 된다).",
+    "caveat": "원자료는 각 도시 거주자가 입력한 크라우드소싱(Numbeo)이다. 보고서도 개별 수치보다 방향을 보라고 밝히고 있다. 이 단서를 모든 카드 하단에 단다.",
+    "fxCaveat": "전부 달러 환산 기준이다. 원화 약세가 섞여 있으므로 '원화로도 내렸다/올랐다'로 쓰면 오보다. 보고서는 서울 집값에 대해 원화 기준 상승폭이 더 크다고 명시한다."
+  },
+
+  "seoul": {
+    "aptSqm":        { "rank": 3,  "value": 25545, "unit": "USD/㎡", "chg10y": 128.5, "value2016": 11178 },
+    "rent3room":     { "rank": 44, "value": 2282,  "unit": "USD/월",  "chg10y": -6.3,  "value2016": 2434 },
+    "rent1room":     { "rank": 55, "value": 776,   "unit": "USD/월",  "chg10y": -11.4, "value2016": 875 },
+    "netSalary":     { "rank": 35, "value": 3015,  "unit": "USD/월",  "chg10y": 32.4 },
+    "disposable":    { "rank": 25, "value": 3748,  "unit": "USD/월",  "chg10y": 76.9 },
+    "mortgageBurden":{ "rank": 10, "value": 186,   "unit": "지수",     "chg10y": 85.0, "chgUnit": "%p", "value2016": 101 },
+    "groceryIndex":  { "rank": 10, "value": 81,    "unit": "뉴욕=100", "chg10y": -11.4 },
+    "utilities85":   { "rank": 42, "value": 165,   "unit": "USD/월",  "chg10y": 3.6 },
+    "mortgageRate":  { "rank": 44, "value": 4.1,   "unit": "%",       "chg10y": 0.8, "chgUnit": "%p" },
+    "qualityOfLife": { "rank": 31, "unit": "종합" }
+  },
+
+  "seoulQolBreakdown": [
+    { "item": "의료",        "rank": 2 },
+    { "item": "구매력",      "rank": 12 },
+    { "item": "안전",        "rank": 14 },
+    { "item": "오염",        "rank": 31 },
+    { "item": "통근",        "rank": 36 },
+    { "item": "생활비",      "rank": 37 },
+    { "item": "기후",        "rank": 52 },
+    { "item": "집값 대비 소득", "rank": 62 }
+  ],
+  "qolNote": "69개 도시 중 순위. 낮을수록 좋다.",
+
+  "aptSqmTop": [
+    { "rank": 1, "city": "홍콩",     "value": 27753 },
+    { "rank": 2, "city": "취리히",   "value": 26727 },
+    { "rank": 3, "city": "서울",     "value": 25545, "highlight": true },
+    { "rank": 4, "city": "싱가포르", "value": 22933 },
+    { "rank": 5, "city": "제네바",   "value": 22677 }
+  ],
+  "aptSqmRef": [
+    { "city": "런던", "value": 20113 },
+    { "city": "뉴욕", "value": 18192 },
+    { "city": "도쿄", "value": 10492, "rank": 25 }
+  ],
+
+  "rent3roomTop": [
+    { "rank": 1,  "city": "뉴욕",         "value": 8873 },
+    { "rank": 2,  "city": "취리히",       "value": 6285 },
+    { "rank": 3,  "city": "샌프란시스코", "value": 6071 },
+    { "rank": 44, "city": "서울",         "value": 2282, "highlight": true }
+  ],
+
+  "mortgageBurdenTop": [
+    { "rank": 1,  "city": "부에노스아이레스", "value": 511 },
+    { "rank": 2,  "city": "모스크바",         "value": 374 },
+    { "rank": 3,  "city": "이스탄불",         "value": 324 },
+    { "rank": 4,  "city": "마닐라",           "value": 267 },
+    { "rank": 5,  "city": "뭄바이",           "value": 246 },
+    { "rank": 6,  "city": "리우데자네이루",   "value": 245 },
+    { "rank": 7,  "city": "자카르타",         "value": 241 },
+    { "rank": 8,  "city": "방콕",             "value": 241 },
+    { "rank": 9,  "city": "카이로",           "value": 207 },
+    { "rank": 10, "city": "서울",             "value": 186, "highlight": true },
+    { "rank": 11, "city": "홍콩",             "value": 185 },
+    { "rank": 12, "city": "상하이",           "value": 167 }
+  ],
+  "mortgageBurdenRef": [
+    { "rank": 21, "city": "런던", "value": 109 },
+    { "rank": 28, "city": "뉴욕", "value": 86 },
+    { "rank": 31, "city": "도쿄", "value": 80 }
+  ],
+  "mortgageBurdenDef": "도심 90㎡ · 계약금 20% · 맞벌이 2인 기준, 원리금이 소득에서 차지하는 비율",
+
+  "aptChg10yTop": [
+    { "rank": 1,  "city": "부다페스트",   "chg10y": 209.0, "from": 1980,  "to": 6116 },
+    { "rank": 2,  "city": "마닐라",       "chg10y": 168.2, "from": 1622,  "to": 4351 },
+    { "rank": 3,  "city": "프라하",       "chg10y": 151.9, "from": 3868,  "to": 9744 },
+    { "rank": 4,  "city": "아테네",       "chg10y": 149.3, "from": 1611,  "to": 4016 },
+    { "rank": 5,  "city": "리야드",       "chg10y": 145.8, "from": 1205,  "to": 2961 },
+    { "rank": 6,  "city": "서울",         "chg10y": 128.5, "from": 11178, "to": 25545, "highlight": true },
+    { "rank": 7,  "city": "바르샤바",     "chg10y": 127.1, "from": 2796,  "to": 6350 },
+    { "rank": 8,  "city": "모스크바",     "chg10y": 118.3, "from": 5012,  "to": 10940 },
+    { "rank": 9,  "city": "멕시코시티",   "chg10y": 118.2, "from": 1775,  "to": 3874 },
+    { "rank": 10, "city": "텔아비브",     "chg10y": 116.4, "from": 9604,  "to": 20786 }
+  ],
+
+  "rentFell10y": [
+    { "city": "자카르타",       "chg10y": -36.5 },
+    { "city": "도쿄",           "chg10y": -22.7 },
+    { "city": "리우데자네이루", "chg10y": -18.1 },
+    { "city": "베이징",         "chg10y": -12.5 },
+    { "city": "상하이",         "chg10y": -11.7 },
+    { "city": "샌프란시스코",   "chg10y": -9.3 },
+    { "city": "요하네스버그",   "chg10y": -7.4 },
+    { "city": "서울",           "chg10y": -6.3, "highlight": true }
+  ],
+
+  "rankMoveDown": [
+    { "city": "뉴욕",     "salaryRank": 5,  "disposableRank": 39, "move": -34 },
+    { "city": "싱가포르", "salaryRank": 19, "disposableRank": 41, "move": -22 },
+    { "city": "홍콩",     "salaryRank": 30, "disposableRank": 50, "move": -20 },
+    { "city": "시드니",   "salaryRank": 14, "disposableRank": 29, "move": -15 },
+    { "city": "런던",     "salaryRank": 13, "disposableRank": 27, "move": -14 }
+  ],
+  "rankMoveUp": [
+    { "city": "오클랜드", "salaryRank": 34, "disposableRank": 19, "move": 15 },
+    { "city": "버밍엄",   "salaryRank": 18, "disposableRank": 6,  "move": 12 },
+    { "city": "서울",     "salaryRank": 35, "disposableRank": 25, "move": 10, "highlight": true },
+    { "city": "빈",       "salaryRank": 25, "disposableRank": 15, "move": 10 },
+    { "city": "헬싱키",   "salaryRank": 33, "disposableRank": 23, "move": 10 }
+  ],
+
+  "tokyoVsSeoul": [
+    { "item": "아파트 ㎡당",   "tokyoRank": 25, "tokyo": "$10,492", "seoulRank": 3,  "seoul": "$25,545", "tokyoChg10y": -24.3 },
+    { "item": "3룸 월세",      "tokyoRank": 40, "tokyo": "$2,361",  "seoulRank": 44, "seoul": "$2,282",  "tokyoChg10y": -22.7 },
+    { "item": "세후 월급",     "tokyoRank": 39, "tokyo": "$2,394",  "seoulRank": 35, "seoul": "$3,015",  "tokyoChg10y": -18.4 },
+    { "item": "식료품 지수",   "tokyoRank": 38, "tokyo": "63",      "seoulRank": 10, "seoul": "81",      "tokyoChg10y": -31.0 },
+    { "item": "주담대 금리",   "tokyoRank": null, "tokyo": "2.0%",  "seoulRank": null, "seoul": "4.1%",  "tokyoChg10y": null }
+  ],
+  "tokyoNote": "일본 PPP 물가수준 173(1990년대 중반) → 125(2012) → 60(현재). 엔화는 2012년 대비 -51%. 도쿄 아파트값은 69개 도시 중 10년 하락폭 1위. ⚠️ 이 문단은 표 밖 본문 인용이라 PDF 대조가 별도로 필요하다."
+}
