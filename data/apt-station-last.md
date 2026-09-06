@@ -150,17 +150,7 @@
 ⏭ 이미 있음 — data/datasets/apt-station/A44278215.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-station/A43070506.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-station/A44173913.json (다시 받으려면 force=1)
-
-── A13381608
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A13381608
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A13381608.json
-청계현대아파트 (주소로 좌표) → 마장역 직선 370m · 노선 5
-   다음: 신답역 402m
-   다음: 용두역 635m
-   다음: 왕십리역 901m
+⏭ 이미 있음 — data/datasets/apt-station/A13381608.json (다시 받으려면 force=1)
 
 ✅ 대기열 전 줄 완료
 ```
