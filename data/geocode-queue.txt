@@ -1,0 +1,2 @@
+data/datasets/seongsu-jeongbi-2026.json#zones
+data/datasets/seongsu-jeongbi-2026.json#landmarks

@@ -50,6 +50,8 @@ jobs:
       #    카드(jeongbi-board)의 재료라, 카카오가 예전과 한 글자라도 다른 결과를 주면 발행본
       #    픽셀이 바뀐다. 그래서 **대기열에 `jeongbi` 라고 적었을 때나 수동 실행일 때만** 돈다
       #    (2026-09-06). 그전에는 아무 대기열 푸시에나 같이 돌았다.
+      #    ⚠️ 표시는 `#jeongbi-order` 한 줄이다. 그냥 'jeongbi' 로 찾으면 파일 이름에 그 글자가
+      #       든 대기열 줄(seongsu-jeongbi-…)에 걸려 원치 않게 같이 돈다 — 실제로 걸렸다.
       - name: 지오코딩
         id: geo
         continue-on-error: true
@@ -59,7 +61,7 @@ jobs:
           set -o pipefail
           {
             node scripts/geocode-extra.mjs
-            if [ "${{ github.event_name }}" = "workflow_dispatch" ] || grep -qi 'jeongbi' data/geocode-queue.txt; then
+            if [ "${{ github.event_name }}" = "workflow_dispatch" ] || grep -qx '#jeongbi-order' data/geocode-queue.txt; then
               echo "── 정비사업 붙박이(jeongbi-order) 지오코딩 ──"
               node scripts/geocode-sites.mjs
             else

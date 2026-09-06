@@ -188,9 +188,9 @@ for (const [, group] of at) {
 }
 
 doc.seoulSites.geocodedAt = new Date().toISOString().slice(0, 10);
-doc.seoulSites._.push(
-  "lon/lat 은 카카오 로컬 검색 결과다. geo.method 가 '동 이름(근사)'인 것은 구역 중심이 아니라 동 중심이므로 정확도가 낮다.",
-);
+/* 같은 문장을 매 실행마다 밀어 넣어 다섯 줄이 됐다(2026-09-06 발견). 없을 때만 넣는다. */
+const NOTE = "lon/lat 은 카카오 로컬 검색 결과다. geo.method 가 '동 이름(근사)'인 것은 구역 중심이 아니라 동 중심이므로 정확도가 낮다.";
+doc.seoulSites._ = [...new Set([...doc.seoulSites._, NOTE])];
 writeFileSync(FILE, JSON.stringify(doc, null, 2) + "\n", "utf8");
 
 console.log(`\n📍 지오코딩 — 성공 ${ok} · 실패 ${failed} / ${sites.length}`);
