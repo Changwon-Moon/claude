@@ -276,3 +276,6 @@ kapt=A44173913 area=59.963   # 권선자이e편한세상 전용59
 kapt=A43070506 area=60 force=1   # 석수e-편한세상 전용59
 
 kapt=A43070506 area=60 force=1   # 석수e-편한세상 전용59 — etcPurps 고침 뒤 다시
+
+# 2026-09-07 singo-daily-build 가 채운 줄
+kapt=A13381608 area=59.91   # 현대 전용59

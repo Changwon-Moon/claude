@@ -213,3 +213,6 @@ lawd=41113 umd=권선동 type=59 apt="권선자이e편한세상"
 lawd=41210 umd=광명동 type=59 apt="광명푸르지오센트베르" force=1
 lawd=41595 umd=반정동 type=84 apt="반정아이파크캐슬5단지" force=1
 lawd=41450 umd=창우동 type=84 apt="꿈동산신안" force=1
+
+# 2026-09-07 singo-daily-build 가 채운 줄
+lawd=11200 umd=마장동 type=59 apt="현대"
