@@ -82,6 +82,15 @@
       }
       .tm-tab .r { border-bottom: 1px solid var(--wirit-ink-12); }
       .tm-tab .r:last-child { border-bottom: 0; }
+      /* 묶음 표시 — 트리맵에서 **한 칸으로 합쳐진** 행들. 색만으로는 「이 다섯 줄이 저 한 칸」을
+         못 말한다(같은 색은 '비슷한 값'으로도 읽힌다). 왼쪽에 세로선을 그어 묶음을 보인다. */
+      .tm-tab .r.grp { position: relative; padding-left: 11px; }
+      .tm-tab .r.grp::before {
+        content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+        width: 3px; background: var(--wirit-ink-12);
+      }
+      .tm-tab .r.grp:first-of-type::before { top: 6px; }
+      .tm-tab .r.grp:last-child::before { bottom: 6px; }
       /* 아주 옅은 칸 색(#DEE9FF 등)은 종이 위에서 칩이 사라진다 — 얇은 안쪽 선으로 테두리를 준다.
          면색을 바꾸지 않으므로 「면적=비율」도, 램프 예외도 그대로다. */
       .tm-tab .r i { width: 14px; height: 14px; border-radius: 2px; box-shadow: inset 0 0 0 1px rgba(20, 24, 33, 0.16); }
@@ -140,12 +149,11 @@
             <span></span><span class="h1">{{table.head.[0]}}</span><span class="h2">{{table.head.[1]}}</span>{{#if table.head.[2]}}<span class="h3">{{table.head.[2]}}</span>{{/if}}
           </div>
           {{#each table.rows}}
-          <div class="r" style="grid-template-columns:{{../table.cols}}; flex:{{../table.rowFlex}}; min-height:{{../table.rowH}}px">
+          <div class="r{{#if this.grp}} grp{{/if}}" style="grid-template-columns:{{../table.cols}}; flex:{{../table.rowFlex}}; min-height:{{../table.rowH}}px">
             <i class="wirit-ramp" style="background:{{this.bg}}"></i>
             <span class="nm" style="font-size:{{../table.nmPx}}px">{{this.label}}</span>
             <span class="v1" style="font-size:{{../table.v1Px}}px">{{this.v1}}</span>
-            {{#if this.v2}}<span class="v2" style="font-size:{{../table.v2Px}}px">{{this.v2}}</span>{{/if}}
-          </div>
+                      </div>
           {{/each}}
         </div>
       </div>

@@ -174,9 +174,6 @@
         "v1Px": {
           "type": "number"
         },
-        "v2Px": {
-          "type": "number"
-        },
         "rows": {
           "type": "array",
           "minItems": 2,
@@ -197,13 +194,13 @@
                 "type": "string",
                 "maxLength": 10
               },
-              "v2": {
-                "type": "string",
-                "maxLength": 10
-              },
               "bg": {
                 "type": "string",
                 "pattern": "^#[0-9A-Fa-f]{6}$"
+              },
+              "grp": {
+                "type": "boolean",
+                "description": "트리맵에서 한 칸으로 묶인 행 — 템플릿이 왼쪽에 묶음선을 그린다"
               }
             }
           }

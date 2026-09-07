@@ -60,14 +60,39 @@ const popOne = (OWN * oneShare) / 100;
 const popMulti = (OWN * multiSum) / 100;
 if (Math.abs(popOne + popMulti - OWN) > 1e-9) throw new Error(`검산 실패: ${popOne} + ${popMulti} ≠ ${OWN}`);
 
-/* ── ② 구간 묶기 — 10채 이상을 한 칸으로 ───────────────────── */
-const TAIL_KEYS = ["10", "11-20", "21-30", "31-40", "41-50", "51-100", "101+"];
-const head = MULTI.filter((m) => !TAIL_KEYS.includes(m.key));
-const tail = MULTI.filter((m) => TAIL_KEYS.includes(m.key));
-if (head.length !== 8 || tail.length !== 7) throw new Error(`구간 묶기 전제가 깨졌다: 앞 ${head.length} · 뒤 ${tail.length}`);
+/* ── ② 구간 ───────────────────────────────────────────────────
+ * **1채를 넣는다**(오너 2026-09-07). 그러면 값이 곧 등기정보광장 공표값이 되어
+ * 재정규화가 사라진다 — '원지수' 라는 (내가 지어낸) 열도 함께 사라졌다.
+ *   1채 = 100 − 다소유지수 합. 포털 유의사항이 그렇게 하라고 적어 둔 계산이다.
+ *
+ * ⚠️ 그런데 1채가 84% 라 **나머지가 짓눌린다.** 2~9채를 개별 칸으로 두면
+ * 7·8·9채가 20px 안팎이 돼 채수조차 못 적는다(실측 스윕).
+ * 그래서 **트리맵은 5칸(1·2·3·4·5채 이상), 표는 10행 전부**로 나눈다 —
+ * 그림은 크기를 말하고, 표가 세부를 잃지 않는다. 묶인 다섯 행은 표에서
+ * 같은 색과 묶음선으로 「이 다섯 줄이 저 한 칸」임을 보인다. */
+const TAB_TAIL = ["10", "11-20", "21-30", "31-40", "41-50", "51-100", "101+"];
+const tail = MULTI.filter((m) => TAB_TAIL.includes(m.key));
 const tailV = r3(tail.reduce((a, m) => a + m.v, 0));
-const GROUPS = [...head.map((m) => ({ key: m.key, label: m.label, v: m.v })), { key: "10+", label: "10채 이상", v: tailV }];
-if (Math.abs(GROUPS.reduce((a, g) => a + g.v, 0) - multiSum) > 1e-9) throw new Error("묶은 뒤 합이 원래 합과 다르다");
+
+/* 표 — 1채 + 2~9채 + 10채 이상 = 10행. 값은 전부 공표값 그대로다. */
+const TABLE_ROWS = [
+  { key: "1", label: "1채", v: oneShare },
+  ...MULTI.filter((m) => !TAB_TAIL.includes(m.key)).map((m) => ({ key: m.key, label: m.label, v: m.v })),
+  { key: "10+", label: "10채 이상", v: tailV },
+];
+if (Math.abs(TABLE_ROWS.reduce((a, g) => a + g.v, 0) - 100) > 1e-9) throw new Error("표 합이 100이 아니다");
+
+/* 트리맵 — 5칸. PLOT_KEYS 안의 것만 제 칸을 갖고, 나머지는 마지막 칸으로 묶인다. */
+const PLOT_KEYS = ["1", "2", "3", "4"];
+const mergedV = r3(TABLE_ROWS.filter((g) => !PLOT_KEYS.includes(g.key)).reduce((a, g) => a + g.v, 0));
+const GROUPS = [
+  ...TABLE_ROWS.filter((g) => PLOT_KEYS.includes(g.key)),
+  { key: "5+", label: "5채 이상", v: mergedV },
+];
+if (Math.abs(GROUPS.reduce((a, g) => a + g.v, 0) - 100) > 1e-9) throw new Error("묶은 뒤 합이 100이 아니다");
+/* 표의 어느 행이 트리맵의 어느 칸에 속하는지 — 색과 묶음선이 이걸 따른다. */
+const TAIL_KEY = "5+"; /* 묶인 마지막 칸의 키 — 배합이 이걸로 「꼬리」를 알아본다 */
+const groupOf = (key) => (PLOT_KEYS.includes(key) ? key : TAIL_KEY);
 
 /* ── ③ 색 배합 ─────────────────────────────────────────────────
  * BRAND.md: 레드는 '상승·경고' 시그널 전용이라 여기 쓰지 않는다. 코발트·잉크·중립만 쓴다.
@@ -118,20 +143,20 @@ const PALETTES = {
   /* C. 중립 + 포인트 — 2~9채는 회색 계단, 「10채 이상」만 코발트.
      시선이 꼬리로 간다. 색이 곧 「여기를 보라」다. */
   monoAccent: {
-    name: "중립 회색 + 10채 이상만 코발트",
+    name: "중립 회색 + 마지막 칸만 코발트",
     fn: (() => {
       const r = rampOf([{ t: 0, c: "#E7E4DC" }, { t: 1, c: "#6E6A60" }]);
-      return (i, n, key) => (key === "10+" ? COBALT : r(i / (n - 2)));
+      return (i, n, key) => (key === TAIL_KEY ? COBALT : r(i / (n - 2)));
     })(),
   },
   /* D. 이산 계단 — 보간 없이 그룹마다 한 색. 「2채 / 3~4채 / 5~9채 / 10채 이상」이 눈에 묶인다. */
   steps: {
-    name: "4단 계단 (2 / 3~4 / 5~9 / 10+)",
+    name: "4단 계단 (1 / 2 / 3~4 / 5채↑)",
     fn: (i, n, key) => {
-      if (key === "2") return "#DEE9FF";
-      if (key === "3" || key === "4") return "#93B8FF";
-      if (key === "10+") return "#16223F";
-      return COBALT;
+      if (key === "1") return "#DEE9FF";
+      if (key === "2") return "#93B8FF";
+      if (key === TAIL_KEY) return "#16223F";
+      return COBALT; /* 3·4채 */
     },
   },
 };
@@ -183,7 +208,8 @@ function tierFor(wPx, hPx, label, value) {
   return null;
 }
 
-const pct = (n, d = 2) => `${n.toFixed(d)}%`;
+/* 소수 자릿수는 카드 안에서 통일한다(CARD_CHECKLIST §2). 공표값이 소수 셋째 자리까지라 3으로 맞춘다. */
+const pct = (n, d = 3) => `${n.toFixed(d)}%`;
 
 /* ── ⑤ 트리맵 ─────────────────────────────────────────────── */
 function buildPlot(rows, plotW, plotH) {
@@ -220,51 +246,35 @@ function buildPlot(rows, plotW, plotH) {
  * 그때마다 「이름이 말줄임(…)으로 잘렸다」로 designQa 가 막는다(실제로 겪었다).
  * 후보를 큰 것부터 대 보고 **전부 들어가는 첫 조합**을 고른다 — 자리가 바뀌면 알아서 줄어든다. */
 const PRESETS = {
-  few: [{ hd: 19, nm: 30, v1: 44, v2: 26, cols: "14px 1fr 128px" }],
-  mid: [
-    { hd: 17, nm: 26, v1: 26, v2: 19, cols: "14px 1fr 118px 106px" },
-    { hd: 17, nm: 23, v1: 24, v2: 18, cols: "14px 1fr 110px 100px" },
-    { hd: 16, nm: 21, v1: 22, v2: 17, cols: "14px 1fr 100px 94px" },
-  ],
-  many: [
-    { hd: 17, nm: 21, v1: 21, v2: 18, cols: "14px 1fr 92px 96px" },
-    { hd: 16, nm: 19, v1: 19, v2: 16, cols: "14px 1fr 84px 88px" },
-  ],
+  few:  [{ hd: 19, nm: 30, v1: 40, w1: 150 }, { hd: 18, nm: 26, v1: 34, w1: 130 }],
+  mid:  [{ hd: 17, nm: 26, v1: 26, w1: 134 }, { hd: 17, nm: 23, v1: 23, w1: 122 }, { hd: 16, nm: 21, v1: 21, w1: 112 }],
+  many: [{ hd: 16, nm: 19, v1: 19, w1: 94 }, { hd: 15, nm: 17, v1: 17, w1: 86 }],
 };
 function buildTable(rows, head, plotH, tabW) {
   const n = rows.length;
-  const hasV2 = rows.some((r) => r.rawTxt);
   const cands = n <= 5 ? PRESETS.few : n <= 10 ? PRESETS.mid : PRESETS.many;
-
   const fits = (P) => {
-    const cols = hasV2 ? P.cols : "14px 1fr 128px";
-    const fixed = cols.split(" ").filter((c) => c.endsWith("px")).reduce((a, c) => a + parseFloat(c), 0);
-    const colW = cols.split(" ").filter((c) => c.endsWith("px")).map(parseFloat);
-    const nameW = tabW - fixed - (cols.split(" ").length - 1) * 10;
+    const cols = "14px 1fr " + P.w1 + "px";
+    const nameW = tabW - 14 - P.w1 - 20;
     if (nameW < 60) return null;
     for (const r of rows) {
       if (textW(r.label, P.nm) > nameW) return null;
-      if (textW(r.valueTxt, P.v1) > colW[1]) return null;
-      if (r.rawTxt && textW(r.rawTxt, P.v2) > colW[2]) return null;
+      if (textW(r.valueTxt, P.v1) > P.w1) return null;
     }
-    for (let i = 0; i < head.length; i++) {
-      const w = i === 0 ? nameW : colW[i];
-      if (textW(head[i], P.hd) > w) return null;
-    }
+    if (textW(head[0], P.hd) > nameW || textW(head[1], P.hd) > P.w1) return null;
     return cols;
   };
-
   for (const P of cands) {
     const cols = fits(P);
     if (!cols) continue;
     if ((plotH - (P.hd + 11)) / n < 30) continue;
-    const t = {
+    return {
       cols, head, hdPx: P.hd, nmPx: P.nm, v1Px: P.v1,
       rowH: 0, rowFlex: "1 1 0",
-      rows: rows.map((r) => ({ label: r.label, v1: r.valueTxt, ...(r.rawTxt ? { v2: r.rawTxt } : {}), bg: r.bg })),
+      /* grp = 트리맵에서 한 칸으로 묶인 행. 템플릿이 왼쪽에 묶음선을 그린다 —
+       * 「이 다섯 줄이 저 한 칸」이라는 것을 색만으로는 못 말한다. */
+      rows: rows.map((r) => ({ label: r.label, v1: r.valueTxt, bg: r.bg, ...(r.grp ? { grp: true } : {}) })),
     };
-    if (hasV2) t.v2Px = P.v2;
-    return t;
   }
   throw new Error(`표가 폭 ${tabW}px 에 안 들어간다 (행 ${n}개) — 판 폭을 줄이거나 구간을 묶는다`);
 }
@@ -306,7 +316,7 @@ function noHousingWord(card) {
  * 판이 **전부** 가져간다. 제목 상자를 고정 높이로 못박았으므로 이 값은 제목 길이와 무관하다. */
 /* 판 폭 520 — 490 이면 「10채 이상」 칸이 81px 라 채수만 들어간다(실측 스윕).
  * 520 에서 147×84 가 되어 아홉 칸 전부가 채수 + 비중을 담는다. 표는 남는 390px 를 쓴다. */
-const PLOT_W = 520, PLOT_GAP = 26, PLOT_H = 786;
+const PLOT_W = 600, PLOT_GAP = 26, PLOT_H = 786;
 
 /* 제목 후보 — 오너가 고른다(--title <번호>). 전부 **계산이 확인한 말**만 쓴다:
  *   「열에 일곱」 = 2채 69.19%  ·  「열에 아홉」 = 2+3+4채 90.64%  ·  「100명 중 3명」 = 10채 이상 2.95% */
@@ -329,35 +339,35 @@ const SRC = { name: "법원 등기정보광장 등기지수", asOf: "2026년 8�
 function makeCard(palKey) {
   const pal = PALETTES[palKey];
   if (!pal) throw new Error(`없는 배합: ${palKey} — ${Object.keys(PALETTES).join(", ")}`);
-  const rows = GROUPS.map((g, i) => ({
-    value: (g.v / multiSum) * 100,
-    label: g.label,
-    valueTxt: pct((g.v / multiSum) * 100),
-    rawTxt: `${r3(g.v)}%`, /* 원지수 — 포털에서 그대로 대조되는 공표값 */
-    bg: pal.fn(i, GROUPS.length, g.key),
-  }));
-  /* ⚠️ 트리맵만 **값 내림차순**으로 넘긴다(표는 채수 순 그대로).
-   * 채수 순으로 그리면 「10채 이상」(2.95%)이 5~9채(0.49~2.72%) **뒤에** 와서
-   * squarify 가 남은 자리를 얇게 저미고, 9채가 82×23px 이 돼 채수를 못 적는다(실측).
-   * 칸마다 채수를 적으니 그림에서 읽는 순서는 색이 맡고, 순서는 옆 표가 맡는다. */
-  const plot = buildPlot(rows.slice().sort((a, b) => b.value - a.value), PLOT_W, PLOT_H);
-  const two = rows[0].value, three = rows[1].value, ten = rows.at(-1).value;
 
+  /* 칸 색 — 트리맵 5칸이 기준이고, 표의 각 행은 제가 속한 칸의 색을 그대로 쓴다.
+   * 색이 곧 「이 줄은 저 칸」이라는 연결선이다. */
+  const tileBg = {};
+  GROUPS.forEach((g, i) => { tileBg[g.key] = pal.fn(i, GROUPS.length, g.key); });
+
+  const plotRows = GROUPS.map((g) => ({
+    value: g.v, label: g.label, valueTxt: pct(g.v), bg: tileBg[g.key],
+  }));
+  const plot = buildPlot(plotRows.slice().sort((a, b) => b.value - a.value), PLOT_W, PLOT_H);
+
+  const tableRows = TABLE_ROWS.map((g) => ({
+    label: g.label, valueTxt: pct(g.v), bg: tileBg[groupOf(g.key)],
+    grp: !PLOT_KEYS.includes(g.key),
+  }));
+
+  const one = TABLE_ROWS[0].v, two = TABLE_ROWS[1].v;
   const card = {
     template: "daso-treemap@1",
     date,
     subtitle: "집합건물 다소유지수 ('26.08월 기준)",
     title: TITLES[titleArg],
-    /* 표가 왼쪽, 트리맵이 오른쪽 (오너 2026-09-07) */
     plot: { w: PLOT_W, h: PLOT_H, gap: PLOT_GAP, side: "right" },
     tiles: plot.tiles,
-    table: buildTable(rows, ["보유 채수", "비중", "원지수"], PLOT_H, 936 - PLOT_W - PLOT_GAP),
-    /* 제목이 「비율?」을 물으므로 **답이 첫머리에** 온다. 그 다음이 속을 연 결과다.
-     * 두 값 모두 위에서 계산한 것이다 — 손으로 적지 않는다.
-     * ⚠️ **한 줄을 넘기지 않는다.** 넘치면 마지막 값만 둘째 줄에 홀로 떨어져 보기 흉하다
-     * (실제로 그랬다). 아래 fitsOneLine() 이 폭을 재서 막는다. */
+    table: buildTable(tableRows, ["보유 채수", "소유자 중"], PLOT_H, 936 - PLOT_W - PLOT_GAP),
+    /* 제목의 질문에 **답이 첫머리에** 온다. 두 값 모두 위에서 계산한 것이다.
+     * ⚠️ 한 줄을 넘기지 않는다 — fitsOneLine() 이 폭을 재서 막는다. */
     summary:
-      `소유자의 <b>${multiSum.toFixed(1)}%</b>가 2채 이상 · 그중 <b>${two.toFixed(1)}%</b>는 2채`,
+      `100명 중 <b>${Math.round(one)}명</b>이 1채 · 2채 이상은 <b>${multiSum.toFixed(1)}%</b>`,
     notes: [
       `※ <b>집합건물</b> : 아파트 · 오피스텔 · 연립 · 다세대 등 구분소유 건물 (단독주택 제외)`,
       `※ <b>다소유지수</b> : 집합건물 소유자 중 2채 이상 보유자 비율`,
