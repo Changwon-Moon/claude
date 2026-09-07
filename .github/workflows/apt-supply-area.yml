@@ -91,6 +91,8 @@ jobs:
           Q=data/apt-supply-queue.txt
           [ -f "$Q" ] || { echo "대기열 없음 — 건너뜀"; exit 0; }
           OKN=0; NGN=0; SKIPN=0
+          # 연달아 이만큼 연결이 안 열리면 문이 닫힌 것으로 본다. 한두 건은 그 단지 사정일 수 있다.
+          DEAD=0; DEAD_MAX=6; CLOSED=0
           : > "$RUNNER_TEMP/supply.log"
           # ⚠️ **시간 예산 20분** (2026-09-03)
           #    재시도 사다리(3번·지수 대기)를 붙인 뒤로 「전부 실패」하는 날에는 한 줄에 수십 초가 든다.
@@ -134,13 +136,46 @@ jobs:
             OUT="data/datasets/apt-supply/$KAPT-$TYPE.json"
             if [ -f "$OUT" ] && [ -z "$FORCE" ]; then echo "── $KAPT-$TYPE 이미 있음 — 건너뜀"; continue; fi
             echo "── $KAPT 전용 $AREA" | tee -a "$RUNNER_TEMP/supply.log"
-            if pnpm --filter @wirit/collectors collect-supply-area -- --kapt "$KAPT" --area "$AREA" 2>&1 | tee -a "$RUNNER_TEMP/supply.log"; then
-              OKN=$((OKN+1))
+            : > "$RUNNER_TEMP/one.log"
+            if pnpm --filter @wirit/collectors collect-supply-area -- --kapt "$KAPT" --area "$AREA" 2>&1 | tee "$RUNNER_TEMP/one.log"; then
+              OKN=$((OKN+1)); DEAD=0
             else
               NGN=$((NGN+1))
+              # ── ⛔ **문이 닫힌 것을 알면 그만 두드린다** (2026-09-07)
+              #
+              # `fetch failed` 는 **연결 자체가 안 열린다**는 뜻이다(응답이 늦은 게 아니다).
+              # 이건 이 단지의 문제가 아니라 **서비스 전체가 닫힌 것**이라, 다음 줄도 똑같이 실패한다.
+              #
+              # 09-07 실측: 「미리 채우기」로 예산을 110분으로 늘린 판이 **197건을 시도해
+              # 성공 0건**으로 끝났다. 전부 fetch failed 였다 — 닫힌 문을 두 시간 두드린 셈이다.
+              # 20분 판이었으면 일찍 접고 새 러너에서 다시 두드렸을 것이다.
+              # **예산을 늘린 것이 오히려 손해가 되는 자리**가 여기였다.
+              #
+              # ⚠️ 「줄 0개」·「찾지 못했다」는 **세지 않는다.** 그건 그 단지만의 사정이고
+              #    다음 줄은 멀쩡히 될 수 있다. 연결이 안 열리는 것만 문 닫힘으로 본다.
+              # ⚠️ 접어도 **여기까지 받은 것은 그대로 커밋된다**(아래 기록·커밋 단계).
+              #    남은 줄은 「미룸」으로 세어 재시도 사다리가 이어받는다.
+              if grep -q "fetch failed" "$RUNNER_TEMP/one.log"; then
+                DEAD=$((DEAD+1))
+              else
+                DEAD=0
+              fi
+            fi
+            cat "$RUNNER_TEMP/one.log" >> "$RUNNER_TEMP/supply.log"
+            if [ "$DEAD" -ge "$DEAD_MAX" ]; then
+              echo "⛔ 연결이 ${DEAD}번 연달아 안 열렸습니다 — 문이 닫혔습니다. 여기서 접고 새 러너에 넘깁니다." | tee -a "$RUNNER_TEMP/supply.log"
+              CLOSED=1
+              break
             fi
           done < <(tac "$Q")
-          [ "$SKIPN" -gt 0 ] && echo "⏳ 시간 예산(${BUDGET}초)에 닿아 ${SKIPN}줄은 다음 칸으로 미룹니다" | tee -a "$RUNNER_TEMP/supply.log"
+          # 접었으면 아직 안 본 줄이 남는다 — 「미룸」으로 세야 사다리가 이어받는다
+          if [ "${CLOSED:-0}" = "1" ]; then
+            LEFT=$(grep -cE '^[[:space:]]*kapt=A[0-9]+' "$Q" || true)
+            SKIPN=$(( LEFT - OKN - NGN ))
+            [ "$SKIPN" -lt 0 ] && SKIPN=0
+            echo "⏳ 문이 닫혀 접었습니다 — 남은 ${SKIPN}줄은 다음 칸으로 미룹니다" | tee -a "$RUNNER_TEMP/supply.log"
+          fi
+          [ "$SKIPN" -gt 0 ] && [ "${CLOSED:-0}" != "1" ] && echo "⏳ 시간 예산(${BUDGET}초)에 닿아 ${SKIPN}줄은 다음 칸으로 미룹니다" | tee -a "$RUNNER_TEMP/supply.log"
           echo "OKN=$OKN" >> "$GITHUB_ENV"; echo "NGN=$NGN" >> "$GITHUB_ENV"; echo "SKIPN=$SKIPN" >> "$GITHUB_ENV"
           exit 0
 
