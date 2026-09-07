@@ -1,0 +1,36 @@
+{
+  "kaptCode": "A10025502",
+  "kaptName": "시흥배곧신도시 대방노블랜드엘리트시티",
+  "type": "59",
+  "jibun": "55",
+  "exclusive": 59.942,
+  "commonResidential": 25.997,
+  "supply": 85.94,
+  "pyeong": 26,
+  "pyeongLabel": "26평",
+  "sampleDong": "607동",
+  "sampleHo": "2301",
+  "sampleCount": 333,
+  "ratio": 0.6975,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단실",
+      "floor": "지상 각층",
+      "area": 16.3707
+    },
+    {
+      "purpose": "아파트 / 벽체",
+      "floor": "지상 각층",
+      "area": 6.3497
+    },
+    {
+      "purpose": "부대시설 / 지하창고",
+      "floor": "지하 지1",
+      "area": 3.2762
+    }
+  ],
+  "warn": "전용률 69.7% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것",
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

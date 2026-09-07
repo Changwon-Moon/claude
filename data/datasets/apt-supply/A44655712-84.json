@@ -1,0 +1,37 @@
+{
+  "kaptCode": "A44655712",
+  "kaptName": "삼성래미안1차",
+  "type": "84",
+  "jibun": "629",
+  "exclusive": 84.99,
+  "commonResidential": 30.009,
+  "supply": 115,
+  "pyeong": 34.79,
+  "pyeongLabel": "35평",
+  "sampleDong": "102동",
+  "sampleHo": "504호",
+  "sampleCount": 69,
+  "ratio": 0.739,
+  "parts": [
+    {
+      "purpose": "아파트 / 복도,계단,승강기",
+      "floor": "각층",
+      "area": 21.707
+    },
+    {
+      "purpose": "아파트 / 벽체",
+      "floor": "각층",
+      "area": 8.302
+    }
+  ],
+  "excludedFromCommon": [
+    {
+      "purpose": "아파트 / 지하대피소",
+      "area": 7.305
+    }
+  ],
+  "excludedNote": "대장이 「주건축물」로 적었지만 주차장·대피소는 기타공용이라 공급면적에서 뺐다(2026-09-05). 이 줄을 넣으면 전용 60㎡ 가 30평으로 나온다 — 같은 타입 72곳의 중앙값은 25평이다.",
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

@@ -1,0 +1,30 @@
+{
+  "kaptCode": "A42983405",
+  "kaptName": "월곶풍림1차아파트",
+  "type": "84",
+  "jibun": "1010-4",
+  "exclusive": 84.86,
+  "commonResidential": 15.997,
+  "supply": 100.86,
+  "pyeong": 30.51,
+  "pyeongLabel": "31평",
+  "sampleDong": "101동",
+  "sampleHo": "1602호",
+  "sampleCount": 6,
+  "ratio": 0.8414,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단실,승강기",
+      "floor": "각층",
+      "area": 14.877
+    },
+    {
+      "purpose": "아파트 / 피디",
+      "floor": "각층",
+      "area": 1.12
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

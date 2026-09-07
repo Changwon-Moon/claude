@@ -1,1014 +1,1017 @@
 # 단지 공급면적 — 마지막 실행
 
-- 성공 96건 · 실패 17건 · 미룸 1275줄
+- 성공 86건 · 실패 25건 · 미룸 1180줄
 - 결과는 Actions 로그가 아니라 이 파일과 data/datasets/apt-supply/ 에서 본다
 
 ```
-보 494
-   지번 494 (0494-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026985-84.json
-   전유 84.839 + 주거공용 25.305 = 공급 110.14㎡ = 33.32평 → **33평**
-   표본: 1911동 1302 (같은 전용 호 319개) · 전용률 77.0%
-     · 아파트 / 벽체,계단실 [지상 각층] 25.3048
-── A44532014 전용 84.3079
+㎡ · 41461-10600 · 지번 후보 503-38
+   지번 503-38 (0503-0038) · 대지 → 줄 0개
+::error::지번 후보 503-38 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
+   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
+   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
+   --jibun 으로 대지 지번을 직접 주세요.
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10022829 --area 59.8007`
+Exit status 1
+── A10022690 전용 84.8409
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44532014 --area 84.3079
+> tsx src/supplyAreaCli.ts -- --kapt A10022690 --area 84.8409
 
-▶ 푸른마을포스코더샵2차 (A44532014) · 전용 84.3079㎡ · 41597-10100 · 지번 후보 1134-0000
-   지번 1134-0000 (1134-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44532014-84.json
-   전유 84.308 + 주거공용 26.899 = 공급 111.21㎡ = 33.64평 → **34평**
-   표본: 907동 2601 (같은 전용 호 187개) · 전용률 75.8%
-     · 아파트 / 계단실,ELEV.,전실 [각층 각층] 20.324
-     · 아파트 / 벽체면적 [각층 각층] 6.5747
-── A44532015 전용 59.52
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44532015 --area 59.52
-
-▶ 숲속마을자연앤데시앙아파트 (A44532015) · 전용 59.52㎡ · 41597-10100 · 지번 후보 1131, 1131-0000
-   지번 1131 (1131-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44532015-59.json
-   전유 59.52 + 주거공용 17.762 = 공급 77.28㎡ = 23.38평 → **23평**
-   표본: 871동 204 (같은 전용 호 93개) · 전용률 77.0%
-     · 아파트 / 벽체,계단실,승강기,홀 [각층 각층] 17.762
-── A10023451 전용 59.92
+▶ 용인보평역서희스타힐스리버파크 (A10022690) · 전용 84.8409㎡ · 41461-10500 · 지번 후보 330-1
+   지번 330-1 (0330-0001) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10022690-84.json
+   전유 84.841 + 주거공용 31.608 = 공급 116.45㎡ = 35.23평 → **35평**
+   표본: 117동 1901 (같은 전용 호 27개) · 전용률 72.9%
+     · 아파트 / 계단실,복도 [지상 각층] 24.5257
+     · 아파트 / 벽체공용 [지상 19층] 7.0821
+── A10022690 전용 59.9806
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10023451 --area 59.92
+> tsx src/supplyAreaCli.ts -- --kapt A10022690 --area 59.9806
 
-▶ 반정아이파크캐슬5단지 (A10023451) · 전용 59.92㎡ · 41595-10600 · 지번 후보 637
-   지번 637 (0637-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10023451-59.json
-   전유 59.92 + 주거공용 21.46 = 공급 81.38㎡ = 24.62평 → **25평**
-   표본: 502동 303 (같은 전용 호 5개) · 전용률 73.6%
-     · 아파트 / 계단실,승강기,홀 [지상 각층] 14.29
-     · 아파트 / 벽체 [지상 3층] 7.17
-── A10023329 전용 84.9777
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10023329 --area 84.9777
-
-▶ 신동탄포레자이아파트 (A10023329) · 전용 84.9777㎡ · 41595-10500 · 지번 후보 974
-   지번 974 (0974-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10023329-84.json
-   전유 84.978 + 주거공용 23.568 = 공급 108.55㎡ = 32.83평 → **33평**
-   표본: 104동 2301 (같은 전용 호 181개) · 전용률 78.3%
-     · 아파트 / 계단실 [지상 각층] 17.9498
-     · 아파트 / 벽체 [지상 23층] 5.6179
-── A44572703 전용 84.914
+▶ 용인보평역서희스타힐스리버파크 (A10022690) · 전용 59.9806㎡ · 41461-10500 · 지번 후보 330-1
+   지번 330-1 (0330-0001) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10022690-59.json
+   전유 59.981 + 주거공용 23.179 = 공급 83.16㎡ = 25.16평 → **25평**
+   표본: 111동 503 (같은 전용 호 214개) · 전용률 72.1%
+     · 아파트 / 계단실,복도 [지상 각층] 17.3391
+     · 아파트 / 벽체공용 [지상 5층] 5.8397
+── A10023051 전용 84.4547
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44572703 --area 84.914
+> tsx src/supplyAreaCli.ts -- --kapt A10023051 --area 84.4547
 
-▶ 행복마을참누리 (A44572703) · 전용 84.914㎡ · 41595-10400 · 지번 후보 467
-   지번 467 (0467-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44572703-84.json
-   전유 84.914 + 주거공용 23.653 = 공급 108.57㎡ = 32.84평 → **33평**
-   표본: 108동 1505호 (같은 전용 호 248개) · 전용률 78.2%
-     · 아파트 / 계단실,승강기 [각층 각층] 18.352
-     · 아파트 / 벽체 [지상 15층] 5.301
-── A44598521 전용 84.918
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44598521 --area 84.918
-
-▶ 병점한신 (A44598521) · 전용 84.918㎡ · 41595-10200 · 지번 후보 485
-   지번 485 (0485-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44598521-84.json
-   전유 84.918 + 주거공용 12.191 = 공급 97.11㎡ = 29.38평 → **29평**
-   표본: 110동 108호 (같은 전용 호 178개) · 전용률 87.5%
-     · 아파트 / 공동주택 [각층 각층] 12.191
-   ⚠️ 전용률 87.4% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것
-── A44598521 전용 59.808
+▶ 역북동 서희스타힐스포레스트아파트 (A10023051) · 전용 84.4547㎡ · 41461-10200 · 지번 후보 826, 233
+   지번 826 (0826-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10023051-84.json
+   전유 84.455 + 주거공용 28.88 = 공급 113.33㎡ = 34.28평 → **34평**
+   표본: 205동 1602 (같은 전용 호 45개) · 전용률 74.5%
+     · 아파트 / 계단실,승강기,홀 [지상 각층] 21.7509
+     · 아파트 / 벽체 [지상 16층] 7.1293
+── A10023051 전용 59.9957
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44598521 --area 59.808
+> tsx src/supplyAreaCli.ts -- --kapt A10023051 --area 59.9957
 
-▶ 병점한신 (A44598521) · 전용 59.808㎡ · 41595-10200 · 지번 후보 485
-   지번 485 (0485-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44598521-59.json
-   전유 59.808 + 주거공용 11.973 = 공급 71.78㎡ = 21.71평 → **22평**
-   표본: 102동 1511호 (같은 전용 호 173개) · 전용률 83.3%
-     · 아파트 / 공동주택 [각층 각층] 11.973
-── A44598820 전용 59.47
+▶ 역북동 서희스타힐스포레스트아파트 (A10023051) · 전용 59.9957㎡ · 41461-10200 · 지번 후보 826, 233
+   지번 826 (0826-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10023051-59.json
+   전유 59.996 + 주거공용 21.497 = 공급 81.49㎡ = 24.65평 → **25평**
+   표본: 207동 804 (같은 전용 호 130개) · 전용률 73.6%
+     · 아파트 / 계단실,승강기,홀 [지상 각층] 15.4516
+     · 아파트 / 벽체 [지상 8층] 6.0454
+── A10025660 전용 84.9704
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44598820 --area 59.47
+> tsx src/supplyAreaCli.ts -- --kapt A10025660 --area 84.9704
 
-▶ 태안주공1단지 (A44598820) · 전용 59.47㎡ · 41595-10200 · 지번 후보 809
+▶ 양우내안애에듀퍼스트 (A10025660) · 전용 84.9704㎡ · 41461-10600 · 지번 후보 1014
+   지번 1014 (1014-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10025660-84.json
+   전유 84.97 + 주거공용 31.689 = 공급 116.66㎡ = 35.29평 → **35평**
+   표본: 209동 1904 (같은 전용 호 97개) · 전용률 72.8%
+     · 아파트 / 계단실,승강기,홀 [지상 각층] 23.6604
+     · 아파트 / 벽체 [지상 19층] 8.0288
+── A10026630 전용 84.9894
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10026630 --area 84.9894
+
+▶ 우미 린 센트럴파크 (A10026630) · 전용 84.9894㎡ · 41461-10200 · 지번 후보 736
+   지번 736 (0736-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026630-84.json
+   전유 84.989 + 주거공용 29.245 = 공급 114.23㎡ = 34.56평 → **35평**
+   표본: 109동 803 (같은 전용 호 187개) · 전용률 74.4%
+     · 아파트 / 계단실,승강기,홀 [지상 각층] 21.0483
+     · 아파트 / 벽체 [지상 8층] 8.1966
+── A10026630 전용 59.9809
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10026630 --area 59.9809
+
+▶ 우미 린 센트럴파크 (A10026630) · 전용 59.9809㎡ · 41461-10200 · 지번 후보 736
+   지번 736 (0736-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026630-59.json
+   전유 59.981 + 주거공용 20.711 = 공급 80.69㎡ = 24.41평 → **24평**
+   표본: 103동 605 (같은 전용 호 79개) · 전용률 74.3%
+     · 아파트 / 계단실,승강기,홀 [지상 각층] 14.8547
+     · 아파트 / 벽체 [지상 6층] 5.8567
+── A10026640 전용 84.8492
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10026640 --area 84.8492
+
+▶ 역북 푸르지오 (A10026640) · 전용 84.8492㎡ · 41461-10200 · 지번 후보 809
    지번 809 (0809-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44598820-59.json
-   전유 59.47 + 주거공용 16.804 = 공급 76.27㎡ = 23.07평 → **23평**
-   표본: 112동 1601호 (같은 전용 호 345개) · 전용률 78.0%
-     · 아파트 / 복도,계단,승강기등 [] 16.8043
-── A44536022 전용 84.925
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026640-84.json
+   전유 84.849 + 주거공용 29.394 = 공급 114.24㎡ = 34.56평 → **35평**
+   표본: 103동 102 (같은 전용 호 114개) · 전용률 74.3%
+     · 아파트 / 계단실,전실 [지상 각층] 22.5452
+     · 아파트 / 벽체 [지상 1층] 6.8486
+── A10026640 전용 59.9272
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44536022 --area 84.925
+> tsx src/supplyAreaCli.ts -- --kapt A10026640 --area 59.9272
+
+▶ 역북 푸르지오 (A10026640) · 전용 59.9272㎡ · 41461-10200 · 지번 후보 809
+   지번 809 (0809-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026640-59.json
+   전유 59.927 + 주거공용 21.005 = 공급 80.93㎡ = 24.48평 → **24평**
+   표본: 105동 2405 (같은 전용 호 86개) · 전용률 74.1%
+     · 아파트 / 계단실,전실 [지상 각층] 15.9232
+     · 아파트 / 벽체 [지상 24층] 5.0813
+── A10026784 전용 59.83
 
-▶ 병점역센트럴허브시티 (A44536022) · 전용 84.925㎡ · 41595-10200 · 지번 후보 817
-   지번 817 (0817-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44536022-84.json
-   전유 84.925 + 주거공용 24.622 = 공급 109.55㎡ = 33.14평 → **33평**
-   표본: 106동 605호 (같은 전용 호 259개) · 전용률 77.5%
-     · 아파트 / 계단실,승강기 [각층 각층] 11.578
-     · 아파트 / 코아전실 [각층 각층] 7.432
-     · 아파트 / 벽체 [각층 각층] 5.612
-── A44536022 전용 59.997
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44536022 --area 59.997
-
-▶ 병점역센트럴허브시티 (A44536022) · 전용 59.997㎡ · 41595-10200 · 지번 후보 817
-   지번 817 (0817-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44536022-59.json
-   전유 59.997 + 주거공용 25.269 = 공급 85.27㎡ = 25.79평 → **26평**
-   표본: 120동 1007호 (같은 전용 호 43개) · 전용률 70.4%
-     · 아파트 / 계단실,승강기 [각층 각층] 12.225
-     · 아파트 / 코아전실 [각층 각층] 7.954
-     · 아파트 / 벽체 [각층 각층] 5.09
-── A44598308 전용 84.99
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44598308 --area 84.99
-
-▶ 신영통현대2단지 (A44598308) · 전용 84.99㎡ · 41595-10500 · 지번 후보 1932-6, 481, 700-1, 818, 868
-   지번 1932-6 (1932-0006) · 대지 → 줄 0개
-   지번 481 (0481-0000) · 대지 → 줄 0개
-   지번 700-1 (0700-0001) · 대지 → 줄 0개
-   지번 818 (0818-0000) · 대지 → 줄 0개
-   지번 868 (0868-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44598308-84.json
-   전유 84.99 + 주거공용 17.195 = 공급 102.19㎡ = 30.91평 → **31평**
-   표본: 208동 1403호 (같은 전용 호 243개) · 전용률 83.2%
-     · 부대시설 / 계단실,승강기 [각층 각층] 17.195
-── A10027114 전용 84.8
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10027114 --area 84.8
-
-▶ 이편한세상 반월나노시티역 (A10027114) · 전용 84.8㎡ · 41595-10500 · 지번 후보 960
-   지번 960 (0960-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10027114-84.json
-   전유 84.8 + 주거공용 28.82 = 공급 113.62㎡ = 34.37평 → **34평**
-   표본: 105동 2603 (같은 전용 호 193개) · 전용률 74.6%
-     · 아파트 / 계단실 [지상 각층] 22.98
-     · 아파트 / 벽체 [지상 각층] 5.84
-── A44599008 전용 84.2119
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44599008 --area 84.2119
-
-▶ 서동탄역우남퍼스트빌 (A44599008) · 전용 84.2119㎡ · 41595-10300 · 지번 후보 1039-0000
-   지번 1039-0000 (1039-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44599008-84.json
-   전유 84.212 + 주거공용 19.123 = 공급 103.34㎡ = 31.26평 → **31평**
-   표본: 1001동 1001호 (같은 전용 호 375개) · 전용률 81.5%
-     · 부대시설 / 계단실,엘리베이터 [각층 각층] 13.0097
-     · 아파트 / 벽체 [각층 각층] 6.1136
-── A44572703 전용 59.911
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44572703 --area 59.911
-
-▶ 행복마을참누리 (A44572703) · 전용 59.911㎡ · 41595-10400 · 지번 후보 467
-   지번 467 (0467-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44572703-59.json
-   전유 59.911 + 주거공용 20.153 = 공급 80.06㎡ = 24.22평 → **24평**
-   표본: 107동 502호 (같은 전용 호 74개) · 전용률 74.8%
-     · 아파트 / 계단실,승강기 [각층 각층] 15.183
-     · 아파트 / 벽체 [지상 5층] 4.97
-── A10026893 전용 84.9815
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10026893 --area 84.9815
-
-▶ SK VIEW Park 2차 아파트 (A10026893) · 전용 84.9815㎡ · 41595-10400 · 지번 후보 476
-   지번 476 (0476-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026893-84.json
-   전유 84.981 + 주거공용 26.455 = 공급 111.44㎡ = 33.71평 → **34평**
-   표본: 213동 1202 (같은 전용 호 310개) · 전용률 76.3%
-     · 아파트 / 벽체,계단실 [지상 각층] 26.4548
-── A10026893 전용 59.9901
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10026893 --area 59.9901
-
-▶ SK VIEW Park 2차 아파트 (A10026893) · 전용 59.9901㎡ · 41595-10400 · 지번 후보 476
-   지번 476 (0476-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026893-59.json
-   전유 59.99 + 주거공용 24.981 = 공급 84.97㎡ = 25.7평 → **26평**
-   표본: 208동 801 (같은 전용 호 189개) · 전용률 70.6%
-     · 아파트 / 벽체,계단실 [지상 각층] 24.9808
-── A44577705 전용 84.8008
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44577705 --area 84.8008
-
-▶ 기안마을풍성신미주 (A44577705) · 전용 84.8008㎡ · 41593-10200 · 지번 후보 895
-   지번 895 (0895-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44577705-84.json
-   전유 84.801 + 주거공용 29.759 = 공급 114.56㎡ = 34.65평 → **35평**
-   표본: 112동 902 (같은 전용 호 312개) · 전용률 74.0%
-     · 아파트 / 계단,승강기,외벽,복도 [각층 각층] 23.384
-     · 아파트 / 동지하,계단실 [각층 각층] 6.3748
-── A10026773 전용 84.86
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10026773 --area 84.86
-
-▶ 한강센트럴블루힐 (A10026773) · 전용 84.86㎡ · 41570-10800 · 지번 후보 637-3
-   지번 637-3 (0637-0003) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026773-84.json
-   전유 84.86 + 주거공용 29.163 = 공급 114.02㎡ = 34.49평 → **34평**
-   표본: 513동 1003 (같은 전용 호 105개) · 전용률 74.4%
-     · 아파트 / 계단실,승강기,홀 [각층 각층] 29.1632
-── A10024689 전용 84.969
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10024689 --area 84.969
-
-▶ 한강메트로자이 1단지 (A10024689) · 전용 84.969㎡ · 41570-10200 · 지번 후보 1595
-   지번 1595 (1595-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10024689-84.json
-   전유 84.969 + 주거공용 28.55 = 공급 113.52㎡ = 34.34평 → **34평**
-   표본: 102동 3403호 (같은 전용 호 233개) · 전용률 74.9%
-     · 아파트 / 계단실,승강기 [지상 각층] 19.5185
-     · 아파트 / 벽체 [지상 34층] 9.0319
-── A10024689 전용 59.9538
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10024689 --area 59.9538
-
-▶ 한강메트로자이 1단지 (A10024689) · 전용 59.9538㎡ · 41570-10200 · 지번 후보 1595
-   지번 1595 (1595-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10024689-59.json
-   전유 59.954 + 주거공용 25.777 = 공급 85.73㎡ = 25.93평 → **26평**
-   표본: 104동 2602호 (같은 전용 호 20개) · 전용률 69.9%
-     · 아파트 / 계단실,승강기 [지상 각층] 18.3102
-     · 아파트 / 벽체 [지상 26층] 7.4667
-   ⚠️ 전용률 69.9% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것
-── A10024486 전용 84.9584
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10024486 --area 84.9584
-
-▶ 한강동일스위트더파크뷰1단지아파트 (A10024486) · 전용 84.9584㎡ · 41570-10800 · 지번 후보 638-4
-   지번 638-4 (0638-0004) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10024486-84.json
-   전유 84.958 + 주거공용 25.714 = 공급 110.67㎡ = 33.48평 → **33평**
-   표본: 608동 1601 (같은 전용 호 479개) · 전용률 76.8%
-     · 아파트 / 계단실 [지상 각층] 17.9934
-     · 아파트 / 벽체 [지상 16층] 7.7209
-── A10024763 전용 84.9402
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10024763 --area 84.9402
-
-▶ 한강메트로자이2단지 아파트 (A10024763) · 전용 84.9402㎡ · 41570-10200 · 지번 후보 180
-   지번 180 (0180-0000) · 대지 → 줄 0개
-::error::지번 후보 180 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
-   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
-   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
-   --jibun 으로 대지 지번을 직접 주세요.
-/home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10024763 --area 84.9402`
-Exit status 1
-── A10024763 전용 59.9496
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10024763 --area 59.9496
-
-▶ 한강메트로자이2단지 아파트 (A10024763) · 전용 59.9496㎡ · 41570-10200 · 지번 후보 180
-   지번 180 (0180-0000) · 대지 → 줄 0개
-::error::지번 후보 180 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
-   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
-   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
-   --jibun 으로 대지 지번을 직접 주세요.
-/home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10024763 --area 59.9496`
-Exit status 1
-── A10026284 전용 84.92
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10026284 --area 84.92
-
-▶ 김포 사우 아이파크 (A10026284) · 전용 84.92㎡ · 41570-10600 · 지번 후보 1481
-   지번 1481 (1481-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026284-84.json
-   전유 84.92 + 주거공용 27.38 = 공급 112.3㎡ = 33.97평 → **34평**
-   표본: 105동 1204 (같은 전용 호 118개) · 전용률 75.6%
-     · 아파트 / 계단실,승강기,홀 [지상 각층] 21.1
-     · 아파트 / 벽체 [지상 12층] 6.28
-── A10027488 전용 84.9975
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10027488 --area 84.9975
-
-▶ 김포풍무푸르지오 (A10027488) · 전용 84.9975㎡ · 41570-10700 · 지번 후보 1060
-   지번 1060 (1060-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10027488-84.json
-   전유 84.998 + 주거공용 28.831 = 공급 113.83㎡ = 34.43평 → **34평**
-   표본: 122동 301 (같은 전용 호 201개) · 전용률 74.7%
-     · 아파트 / 벽체,계단실 [지상 각층] 28.8312
-── A10027488 전용 59.9935
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10027488 --area 59.9935
-
-▶ 김포풍무푸르지오 (A10027488) · 전용 59.9935㎡ · 41570-10700 · 지번 후보 1060
-   지번 1060 (1060-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10027488-59.json
-   전유 59.993 + 주거공용 22.996 = 공급 82.99㎡ = 25.1평 → **25평**
-   표본: 116동 2005 (같은 전용 호 63개) · 전용률 72.3%
-     · 아파트 / 벽체,계단실 [지상 각층] 22.9958
-── A10026165 전용 84.9706
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10026165 --area 84.9706
-
-▶ 풍무센트럴푸르지오 (A10026165) · 전용 84.9706㎡ · 41570-10700 · 지번 후보 289
-   지번 289 (0289-0000) · 대지 → 줄 0개
-::error::지번 후보 289 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
-   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
-   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
-   --jibun 으로 대지 지번을 직접 주세요.
-/home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10026165 --area 84.9706`
-Exit status 1
-── A10026165 전용 59.9669
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10026165 --area 59.9669
-
-▶ 풍무센트럴푸르지오 (A10026165) · 전용 59.9669㎡ · 41570-10700 · 지번 후보 289
-   지번 289 (0289-0000) · 대지 → 줄 0개
-::error::지번 후보 289 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
-   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
-   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
-   --jibun 으로 대지 지번을 직접 주세요.
-/home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10026165 --area 59.9669`
-Exit status 1
-── A41507010 전용 84.96
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41507010 --area 84.96
-
-▶ 풍무유현마을현대프라임빌 (A41507010) · 전용 84.96㎡ · 41570-10700 · 지번 후보 1932-6, 481, 631-1, 700-1, 818, 759
-   지번 1932-6 (1932-0006) · 대지 → 줄 0개
-   지번 481 (0481-0000) · 대지 → 줄 0개
-   지번 631-1 (0631-0001) · 대지 → 줄 0개
-   지번 700-1 (0700-0001) · 대지 → 줄 0개
-   지번 818 (0818-0000) · 대지 → 줄 0개
-   지번 759 (0759-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41507010-84.json
-   전유 84.96 + 주거공용 28.604 = 공급 113.56㎡ = 34.35평 → **34평**
-   표본: 202동 1801 (같은 전용 호 28개) · 전용률 74.8%
-     · 아파트 / 계단실,승강기 [각층 각층] 28.565
-     · 부대시설 / 문고 [각층 각층] 0.039
-── A41507008 전용 84.91
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41507008 --area 84.91
-
-▶ 풍무유현마을신동아 (A41507008) · 전용 84.91㎡ · 41570-10700 · 지번 후보 583-6
-   지번 583-6 (0583-0006) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41507008-84.json
-   전유 84.91 + 주거공용 13.395 = 공급 98.3㎡ = 29.74평 → **30평**
-   표본: 107동 603호 (같은 전용 호 130개) · 전용률 86.4%
-     · 부대시설 / 계단실,엘리베이터 [각층 각층] 13.395
-   ⚠️ 전용률 86.4% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것
-── A41507008 전용 59.93
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41507008 --area 59.93
-
-▶ 풍무유현마을신동아 (A41507008) · 전용 59.93㎡ · 41570-10700 · 지번 후보 583-6
-   지번 583-6 (0583-0006) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41507008-59.json
-   전유 59.93 + 주거공용 14.276 = 공급 74.21㎡ = 22.45평 → **22평**
-   표본: 112동 507호 (같은 전용 호 42개) · 전용률 80.8%
-     · 부대시설 / 계단실,엘리베이터 [각층 각층] 14.276
-── A41574413 전용 59.9695
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41574413 --area 59.9695
-
-▶ 한강호반베르디움 (A41574413) · 전용 59.9695㎡ · 41570-10400 · 지번 후보 1885-6
-   지번 1885-6 (1885-0006) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41574413-59.json
-   전유 59.969 + 주거공용 23.377 = 공급 83.35㎡ = 25.21평 → **25평**
-   표본: 501동 1003 (같은 전용 호 427개) · 전용률 72.0%
-     · 아파트 / 벽체,계단실 [지상 10층] 23.3767
-── A41574412 전용 84.9935
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41574412 --area 84.9935
-
-▶ 초당마을중흥S클래스리버티 (A41574412) · 전용 84.9935㎡ · 41570-10400 · 지번 후보 2058-1
-   지번 2058-1 (2058-0001) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41574412-84.json
-   전유 84.993 + 주거공용 24.71 = 공급 109.7㎡ = 33.19평 → **33평**
-   표본: 302동 803 (같은 전용 호 345개) · 전용률 77.5%
-     · 아파트 / 계단실,승강기,홀,벽체 [지상 각층] 24.7098
-── A10027199 전용 84.9699
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10027199 --area 84.9699
-
-▶ 한강센트럴자이1단지 (A10027199) · 전용 84.9699㎡ · 41570-10400 · 지번 후보 2128-1
-   지번 2128-1 (2128-0001) · 대지 → 줄 0개
-::error::지번 후보 2128-1 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
-   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
-   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
-   --jibun 으로 대지 지번을 직접 주세요.
-/home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10027199 --area 84.9699`
-Exit status 1
-── A41574416 전용 84.536
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41574416 --area 84.536
-
-▶ 청송마을모아미래도엘가 (A41574416) · 전용 84.536㎡ · 41570-10400 · 지번 후보 1869-5
-   지번 1869-5 (1869-0005) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41574416-84.json
-   전유 84.536 + 주거공용 26.363 = 공급 110.9㎡ = 33.55평 → **34평**
-   표본: 509동 901 (같은 전용 호 374개) · 전용률 76.2%
-     · 아파트 / 벽체,계단실 [지상 각층] 26.3634
-── A41506013 전용 84.281
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41506013 --area 84.281
-
-▶ 청송현대홈타운2단지 (A41506013) · 전용 84.281㎡ · 41570-10400 · 지번 후보 1932-6, 481, 700-1, 818, 1342
-   지번 1932-6 (1932-0006) · 대지 → 줄 0개
-   지번 481 (0481-0000) · 대지 → 줄 0개
-   지번 700-1 (0700-0001) · 대지 → 줄 0개
-   지번 818 (0818-0000) · 대지 → 줄 0개
-   지번 1342 (1342-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41506013-84.json
-   전유 84.281 + 주거공용 17.312 = 공급 101.59㎡ = 30.73평 → **31평**
-   표본: 211동 1403호 (같은 전용 호 129개) · 전용률 83.0%
-     · 부대시설 / 계단실,엘리베이터 [각층 각층] 16.624
-     · 아파트 / 에이디,피디 [각층 각층] 0.688
-── A41574405 전용 84.752
-
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41574405 --area 84.752
-
-▶ 쌍용예가 (A41574405) · 전용 84.752㎡ · 41570-10400 · 지번 후보 64, 2004-4
-   지번 64 (0064-0000) · 대지 → 줄 0개
-   지번 2004-4 (2004-0004) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41574405-84.json
-   전유 84.752 + 주거공용 25.824 = 공급 110.58㎡ = 33.45평 → **33평**
-   표본: 115 304 (같은 전용 호 300개) · 전용률 76.6%
-     · 아파트 / 승강장,계단실 [지상 각층] 19.024
-     · 아파트 / 벽체 [지상 각층] 6.8
-── A41574408 전용 84.8834
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41574408 --area 84.8834
-
-▶ 김포한양수자인리버팰리스 (A41574408) · 전용 84.8834㎡ · 41570-10400 · 지번 후보 1885-10
-   지번 1885-10 (1885-0010) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41574408-84.json
-   전유 84.883 + 주거공용 27.026 = 공급 111.91㎡ = 33.85평 → **34평**
-   표본: 603동 1301 (같은 전용 호 417개) · 전용률 75.8%
-     · 아파트 / 벽체,계단실 [지상 각층] 27.0258
-── A41574410 전용 59.959
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41574410 --area 59.959
-
-▶ 고창마을KCC스위첸 (A41574410) · 전용 59.959㎡ · 41570-10400 · 지번 후보 1886-2
-   지번 1886-2 (1886-0002) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41574410-59.json
-   전유 59.959 + 주거공용 21.69 = 공급 81.65㎡ = 24.7평 → **25평**
-   표본: 406동 1402 (같은 전용 호 427개) · 전용률 73.4%
-     · 아파트 / 세대내공용,계단실 [지상 각층] 21.69
-── A10026216 전용 84.96
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10026216 --area 84.96
-
-▶ 한강신도시2차 KCC 스위첸 아파트 (A10026216) · 전용 84.96㎡ · 41570-10300 · 지번 후보 1331-1
-   지번 1331-1 (1331-0001) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026216-84.json
-   전유 84.96 + 주거공용 28.558 = 공급 113.52㎡ = 34.34평 → **34평**
-   표본: 106동 2203 (같은 전용 호 598개) · 전용률 74.8%
-     · 아파트 / 계단실 [지상 각층] 21.0583
-     · 아파트 / 벽체 [지상 각층] 7.5
-── A41574207 전용 84.9823
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41574207 --area 84.9823
-
-▶ 한강신도시롯데캐슬 (A41574207) · 전용 84.9823㎡ · 41570-10300 · 지번 후보 1301-1
-   지번 1301-1 (1301-0001) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41574207-84.json
-   전유 84.982 + 주거공용 26.398 = 공급 111.38㎡ = 33.69평 → **34평**
-   표본: 306동 605 (같은 전용 호 182개) · 전용률 76.3%
-     · 아파트 / 계단실 [지상 각층] 20.092
-     · 아파트 / 벽 체 [지상 각층] 6.3059
-── A41574206 전용 84.97
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41574206 --area 84.97
-
-▶ 풍경마을 래미안 한강2차 (A41574206) · 전용 84.97㎡ · 41570-10300 · 지번 후보 1304-5
-   지번 1304-5 (1304-0005) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41574206-84.json
-   전유 84.97 + 주거공용 28.215 = 공급 113.18㎡ = 34.24평 → **34평**
-   표본: 515동 702 (같은 전용 호 279개) · 전용률 75.1%
-     · 아파트 / 계단실,복도등 [지상 각층] 20.5348
-     · 아파트 / 벽체 [지상 각층] 7.68
-── A41506012 전용 84.252
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41506012 --area 84.252
-
-▶ 김포전원마을월드1단지 (A41506012) · 전용 84.252㎡ · 41570-10300 · 지번 후보 1436
-   지번 1436 (1436-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41506012-84.json
-   전유 84.252 + 주거공용 17.103 = 공급 101.36㎡ = 30.66평 → **31평**
-   표본: 107동 801호 (같은 전용 호 101개) · 전용률 83.1%
-     · 부대시설 / 계단실 [각층 각층] 17.1033
-── A41506012 전용 59.5305
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41506012 --area 59.5305
-
-▶ 김포전원마을월드1단지 (A41506012) · 전용 59.5305㎡ · 41570-10300 · 지번 후보 1436
-   지번 1436 (1436-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41506012-59.json
-   전유 59.531 + 주거공용 15.679 = 공급 75.21㎡ = 22.75평 → **23평**
-   표본: 102동 501호 (같은 전용 호 146개) · 전용률 79.1%
-     · 부대시설 / 계단실 [각층 각층] 15.6789
-── A41574205 전용 59.1119
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41574205 --area 59.1119
-
-▶ 김포한강신도시반도유보라2차 (A41574205) · 전용 59.1119㎡ · 41570-10300 · 지번 후보 1300-3
-   지번 1300-3 (1300-0003) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41574205-59.json
-   전유 59.112 + 주거공용 21.968 = 공급 81.08㎡ = 24.53평 → **25평**
-   표본: 703동 902 (같은 전용 호 427개) · 전용률 72.9%
-     · 아파트 / 계단실 [지상 각층] 16.7391
-     · 아파트 / 벽 체 [지상 각층] 5.2293
-── A10026284 전용 59.98
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10026284 --area 59.98
-
-▶ 김포 사우 아이파크 (A10026284) · 전용 59.98㎡ · 41570-10600 · 지번 후보 1481
-   지번 1481 (1481-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026284-59.json
-   전유 59.98 + 주거공용 20.09 = 공급 80.07㎡ = 24.22평 → **24평**
-   표본: 111동 1204 (같은 전용 호 100개) · 전용률 74.9%
-     · 아파트 / 계단실,승강기,홀 [지상 각층] 14.91
-     · 아파트 / 벽체 [지상 12층] 5.18
-── A41576916 전용 84.9238
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41576916 --area 84.9238
-
-▶ 한강힐스테이트아파트 (A41576916) · 전용 84.9238㎡ · 41570-10800 · 지번 후보 636-1
-   지번 636-1 (0636-0001) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41576916-84.json
-   전유 84.924 + 주거공용 25.142 = 공급 110.07㎡ = 33.29평 → **33평**
-   표본: 503동 2404 (같은 전용 호 498개) · 전용률 77.2%
-     · 아파트 / 계단실,승강기,홀 [지상 각층] 18.5658
-     · 아파트 / 벽체 [지상 각층] 6.5757
-── A41576915 전용 84.9759
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41576915 --area 84.9759
-
-▶ 호수마을e편한세상 (A41576915) · 전용 84.9759㎡ · 41570-10900 · 지번 후보 6874-17
-   지번 6874-17 (6874-0017) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41576915-84.json
-   전유 84.976 + 주거공용 24.902 = 공급 109.88㎡ = 33.24평 → **33평**
-   표본: 202동 1805 (같은 전용 호 333개) · 전용률 77.3%
-     · 아파트 / 계단실,승강기,홀,벽체 [지상 각층] 24.9023
-── A10027014 전용 59.539
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10027014 --area 59.539
-
-▶ 한강신도시3차푸르지오 (A10027014) · 전용 59.539㎡ · 41570-10900 · 지번 후보 6895-2
-   지번 6895-2 (6895-0002) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10027014-59.json
-   전유 59.539 + 주거공용 22.435 = 공급 81.97㎡ = 24.8평 → **25평**
-   표본: 513동 2005 (같은 전용 호 375개) · 전용률 72.6%
-     · 아파트 / 복도,계단실 [지상 각층] 16.8595
-     · 아파트 / 벽체 [지상 각층] 5.5757
-── A10026448 전용 84.9592
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10026448 --area 84.9592
-
-▶ 김포한강아이파크 (A10026448) · 전용 84.9592㎡ · 41570-10900 · 지번 후보 6874-20
-   지번 6874-20 (6874-0020) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026448-84.json
-   전유 84.959 + 주거공용 27.07 = 공급 112.03㎡ = 33.89평 → **34평**
-   표본: 304동 405 (같은 전용 호 232개) · 전용률 75.8%
-     · 아파트 / 계단실,승강기,홀 [지상 각층] 20.8391
-     · 아파트 / 벽체 [지상 4층] 6.2305
-── A41501010 전용 84.886
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41501010 --area 84.886
-
-▶ 푸른마을신안실크벨리1차 (A41501010) · 전용 84.886㎡ · 41570-10500 · 지번 후보 685
-   지번 685 (0685-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41501010-84.json
-   전유 84.886 + 주거공용 17.853 = 공급 102.74㎡ = 31.08평 → **31평**
-   표본: 102동 1203호 (같은 전용 호 161개) · 전용률 82.6%
-     · 부대시설 / 계단실,엘리베이터 [각층] 17.8526
-── A41501010 전용 59.794
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41501010 --area 59.794
-
-▶ 푸른마을신안실크벨리1차 (A41501010) · 전용 59.794㎡ · 41570-10500 · 지번 후보 685
-   지번 685 (0685-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41501010-59.json
-   전유 59.794 + 주거공용 13.283 = 공급 73.08㎡ = 22.11평 → **22평**
-   표본: 108동 1506호 (같은 전용 호 75개) · 전용률 81.8%
-     · 부대시설 / 계단실,엘리베이터 [각층] 13.2827
-── A41570101 전용 84.8674
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A41570101 --area 84.8674
-
-▶ 신안실크밸리3차 (A41570101) · 전용 84.8674㎡ · 41570-10500 · 지번 후보 696
-   지번 696 (0696-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A41570101-84.json
-   전유 84.867 + 주거공용 28.888 = 공급 113.76㎡ = 34.41평 → **34평**
-   표본: 305동 902 (같은 전용 호 346개) · 전용률 74.6%
-     · 아파트 / 계단,ELEV,복도,벽체 [지상 각층] 28.8881
-── A10025481 전용 59.9772
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10025481 --area 59.9772
-
-▶ 동천센트럴자이아파트 (A10025481) · 전용 59.9772㎡ · 41465-10300 · 지번 후보 164-4
-   지번 164-4 (0164-0004) · 대지 → 줄 0개
-::error::지번 후보 164-4 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
-   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
-   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
-   --jibun 으로 대지 지번을 직접 주세요.
-/home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10025481 --area 59.9772`
-Exit status 1
-── A10025481 전용 84.8152
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10025481 --area 84.8152
-
-▶ 동천센트럴자이아파트 (A10025481) · 전용 84.8152㎡ · 41465-10300 · 지번 후보 164-4
-   지번 164-4 (0164-0004) · 대지 → 줄 0개
-::error::지번 후보 164-4 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
-   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
-   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
-   --jibun 으로 대지 지번을 직접 주세요.
-/home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10025481 --area 84.8152`
-Exit status 1
-── A44899209 전용 59.99
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44899209 --area 59.99
-
-▶ 현대성우 (A44899209) · 전용 59.99㎡ · 41465-10100 · 지번 후보 1932-6, 481, 700-1, 818, 1112
-   지번 1932-6 (1932-0006) · 대지 → 줄 0개
-   지번 481 (0481-0000) · 대지 → 줄 0개
-   지번 700-1 (0700-0001) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44899209-59.json
-   전유 60.03 + 주거공용 9.67 = 공급 69.7㎡ = 21.08평 → **21평**
-   표본: 101동 1402호 (같은 전용 호 74개) · 전용률 86.1%
-     · 아파트 / 복도.계단 [지상 14층] 9.67
-   ⚠️ 전용률 86.1% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것
-── A44878309 전용 84.51
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44878309 --area 84.51
-
-▶ 수지현대아파트 (A44878309) · 전용 84.51㎡ · 41465-10100 · 지번 후보 1932-6, 481, 700-1, 818
-   지번 1932-6 (1932-0006) · 대지 → 줄 0개
-   지번 481 (0481-0000) · 대지 → 줄 0개
-   지번 700-1 (0700-0001) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44878309-84.json
-   전유 84.51 + 주거공용 13.614 = 공급 98.12㎡ = 29.68평 → **30평**
-   표본: 104동 902호 (같은 전용 호 253개) · 전용률 86.1%
-     · 아파트 / 복도.계단 [지상 9층] 13.614
-   ⚠️ 전용률 86.1% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것
-── A44876510 전용 59.76
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44876510 --area 59.76
-
-▶ 초입마을삼익풍림동아 (A44876510) · 전용 59.76㎡ · 41465-10100 · 지번 후보 664
-   지번 664 (0664-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44876510-59.json
-   전유 59.76 + 주거공용 15.793 = 공급 75.55㎡ = 22.85평 → **23평**
-   표본: 104동 502호 (같은 전용 호 419개) · 전용률 79.1%
-     · 아파트 / 복도.계단 [각층] 15.793
-── A44898708 전용 59.39
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44898708 --area 59.39
-
-▶ 신정마을주공1단지아파트 (A44898708) · 전용 59.39㎡ · 41465-10100 · 지번 후보 1065
-   지번 1065 (1065-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44898708-59.json
-   전유 59.39 + 주거공용 17.767 = 공급 77.16㎡ = 23.34평 → **23평**
-   표본: 107동 1801호 (같은 전용 호 375개) · 전용률 77.0%
-     · 아파트 / 계단실,승강기등 [각층] 17.7671
-── A44876411 전용 59.76
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44876411 --area 59.76
-
-▶ 수지4차삼성 (A44876411) · 전용 59.76㎡ · 41465-10100 · 지번 후보 663-1
-   지번 663-1 (0663-0001) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44876411-59.json
-   전유 59.76 + 주거공용 23.019 = 공급 82.78㎡ = 25.04평 → **25평**
-   표본: 103동 1204호 (같은 전용 호 374개) · 전용률 72.2%
-     · 아파트 / 엘리베이터실,계단실,복도 [각층] 16.4741
-     · 아파트 / 지하실 [각층] 5.2549
-     · 아파트 / 비상계단 [각층] 1.2056
-     · 부대시설 / 주현관.경비실 [각층] 0.0847
-── A10026839 전용 84.943
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10026839 --area 84.943
-
-▶ e편한세상 수지아파트 (A10026839) · 전용 84.943㎡ · 41465-10100 · 지번 후보 1209
-   지번 1209 (1209-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026839-84.json
-   전유 84.943 + 주거공용 28.716 = 공급 113.66㎡ = 34.38평 → **34평**
-   표본: 107동 504 (같은 전용 호 338개) · 전용률 74.7%
-     · 아파트 / 계단,복도,측벽 [지상 각층] 21.332
-     · 아파트 / 벽체 [지상 각층] 7.384
-── A44897120 전용 84.9959
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44897120 --area 84.9959
-
-▶ 새터마을죽전힐스테이트 (A44897120) · 전용 84.9959㎡ · 41465-10200 · 지번 후보 1165
-   지번 1165 (1165-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44897120-84.json
-   전유 84.996 + 주거공용 26.301 = 공급 111.3㎡ = 33.67평 → **34평**
-   표본: 715동 904 (같은 전용 호 374개) · 전용률 76.4%
-     · 아파트 / 벽체,계단실,승강기홀 [각층 각층] 26.3008
-── A44853819 전용 84.5773
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44853819 --area 84.5773
-
-▶ 죽전건영캐스빌 (A44853819) · 전용 84.5773㎡ · 41465-10200 · 지번 후보 1182
-   지번 1182 (1182-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44853819-84.json
-   전유 84.577 + 주거공용 28.469 = 공급 113.05㎡ = 34.2평 → **34평**
-   표본: 904동 702 (같은 전용 호 120개) · 전용률 74.8%
-     · 아파트 / 계단,승강기,벽체,전실 [각층 각층] 27.5527
-     · 부대시설 / 휀룸 [지하 지1층] 0.9161
-── A44815010 전용 82.409
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44815010 --area 82.409
-
-▶ 엘지신봉자이2차 (A44815010) · 전용 82.409㎡ · 41465-10500 · 지번 후보 911
-   지번 911 (0911-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44815010-84.json
-   전유 82.409 + 주거공용 26.922 = 공급 109.33㎡ = 33.07평 → **33평**
-   표본: 207동 805 (같은 전용 호 83개) · 전용률 75.4%
-     · 아파트 / 벽체,계단실,승강기홀 [각층 각층] 26.922
-── A44815011 전용 83.278
+> tsx src/supplyAreaCli.ts -- --kapt A10026784 --area 59.83
+
+▶ 미사강변해링턴플레이스아파트 (A10026784) · 전용 59.83㎡ · 41450-10900 · 지번 후보 1170
+   지번 1170 (1170-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026784-59.json
+   전유 59.83 + 주거공용 22.483 = 공급 82.31㎡ = 24.9평 → **25평**
+   표본: 2910동 205 (같은 전용 호 98개) · 전용률 72.7%
+     · 아파트 / 계단실,승강기,홀 [각층 각층] 21.7526
+     · 아파트 / 지하주출입구연결통로 [지하 지1] 0.7306
+── A10026784 전용 84.92
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44815011 --area 83.278
+> tsx src/supplyAreaCli.ts -- --kapt A10026784 --area 84.92
 
-▶ 엘지자이1차 (A44815011) · 전용 83.278㎡ · 41465-10500 · 지번 후보 873
-   지번 873 (0873-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44815011-84.json
-   전유 83.278 + 주거공용 27.197 = 공급 110.48㎡ = 33.42평 → **33평**
-   표본: 106동 1906 (같은 전용 호 94개) · 전용률 75.4%
-     · 아파트 / 벽체,계단실,승강기홀 [각층 각층] 27.197
-── A44851611 전용 59.99
+▶ 미사강변해링턴플레이스아파트 (A10026784) · 전용 84.92㎡ · 41450-10900 · 지번 후보 1170
+   지번 1170 (1170-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026784-84.json
+   전유 84.92 + 주거공용 31.912 = 공급 116.83㎡ = 35.34평 → **35평**
+   표본: 2905동 1401 (같은 전용 호 102개) · 전용률 72.7%
+     · 아파트 / 계단실,승강기,홀 [각층 각층] 30.8746
+     · 아파트 / 지하주출입구연결통로 [지하 지1] 1.0369
+── A10026619 전용 84.9917
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44851611 --area 59.99
+> tsx src/supplyAreaCli.ts -- --kapt A10026619 --area 84.9917
 
-▶ 진산마을성원상떼빌아파트 (A44851611) · 전용 59.99㎡ · 41465-10700 · 지번 후보 30
-   지번 30 (0030-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44851611-59.json
-   전유 59.99 + 주거공용 14.809 = 공급 74.8㎡ = 22.63평 → **23평**
-   표본: 114동 1703호 (같은 전용 호 143개) · 전용률 80.2%
-     · 아파트 / 계단실 [각층] 14.809
-── A44851511 전용 84.938
+▶ 미사 레스티아 아파트 (A10026619) · 전용 84.9917㎡ · 41450-10900 · 지번 후보 1177
+   지번 1177 (1177-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026619-84.json
+   전유 84.992 + 주거공용 28.765 = 공급 113.76㎡ = 34.41평 → **34평**
+   표본: 3107동 204 (같은 전용 호 314개) · 전용률 74.7%
+     · 아파트 / 계단실,승강기,홀 [지상 각층] 21.2663
+     · 아파트 / 벽체 [지상 2층] 7.4989
+── A10026619 전용 60.8988
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44851511 --area 84.938
+> tsx src/supplyAreaCli.ts -- --kapt A10026619 --area 60.8988
 
-▶ 광교자이 더 클래스 (A44851511) · 전용 84.938㎡ · 41465-10700 · 지번 후보 1134
-   지번 1134 (1134-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44851511-84.json
-   전유 84.938 + 주거공용 26.529 = 공급 111.47㎡ = 33.72평 → **34평**
-   표본: 4210동 2501 (같은 전용 호 210개) · 전용률 76.2%
-     · 아파트 / 계단실,ELEV,복도 [지상 각층] 20.703
-     · 아파트 / 벽체 [지상 각층] 5.826
-── A44851511 전용 59.902
+▶ 미사 레스티아 아파트 (A10026619) · 전용 60.8988㎡ · 41450-10900 · 지번 후보 1177
+   지번 1177 (1177-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026619-59.json
+   전유 60.899 + 주거공용 23.577 = 공급 84.48㎡ = 25.55평 → **26평**
+   표본: 3110동 1304 (같은 전용 호 60개) · 전용률 72.1%
+     · 아파트 / 계단실,승강기,홀 [지상 각층] 17.5189
+     · 아파트 / 벽체 [지상 13층] 6.0577
+── A46572201 전용 84.83
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44851511 --area 59.902
+> tsx src/supplyAreaCli.ts -- --kapt A46572201 --area 84.83
 
-▶ 광교자이 더 클래스 (A44851511) · 전용 59.902㎡ · 41465-10700 · 지번 후보 1134
-   지번 1134 (1134-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44851511-59.json
-   전유 59.902 + 주거공용 23.452 = 공급 83.35㎡ = 25.21평 → **25평**
-   표본: 4207동 2505 (같은 전용 호 164개) · 전용률 71.9%
-     · 아파트 / 계단실,ELEV,복도 [지상 각층] 18.468
-     · 아파트 / 벽체 [지상 각층] 4.984
-── A44851113 전용 84.975
+▶ 하남대명강변타운 (A46572201) · 전용 84.83㎡ · 41450-10600 · 지번 후보 569
+   지번 569 (0569-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A46572201-84.json
+   전유 84.83 + 주거공용 26.764 = 공급 111.59㎡ = 33.76평 → **34평**
+   표본: 102동 702 (같은 전용 호 336개) · 전용률 76.0%
+     · 아파트 / 계단,승강기 [각층 각층] 15.3338
+     · 아파트 / 벽체,전실,발코니 [각층 각층] 11.43
+── A10027344 전용 84.89
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44851113 --area 84.975
+> tsx src/supplyAreaCli.ts -- --kapt A10027344 --area 84.89
 
-▶ 동천마을현대2차홈타운 (A44851113) · 전용 84.975㎡ · 41465-10300 · 지번 후보 1932-6, 481, 700-1, 818, 862
-   지번 1932-6 (1932-0006) · 대지 → 줄 0개
-   지번 481 (0481-0000) · 대지 → 줄 0개
-   지번 700-1 (0700-0001) · 대지 → 줄 0개
-   지번 818 (0818-0000) · 대지 → 줄 0개
-   지번 862 (0862-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44851113-84.json
-   전유 84.975 + 주거공용 29.924 = 공급 114.9㎡ = 34.76평 → **35평**
-   표본: 203동 705호 (같은 전용 호 368개) · 전용률 74.0%
-     · 아파트 / 계단실 [각층] 29.9237
-── A10024231 전용 84.8682
+▶ 미사강변센트리버 (A10027344) · 전용 84.89㎡ · 41450-11200 · 지번 후보 436
+   지번 436 (0436-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10027344-84.json
+   전유 84.89 + 주거공용 30.45 = 공급 115.34㎡ = 34.89평 → **35평**
+   표본: 708동 803 (같은 전용 호 184개) · 전용률 73.6%
+     · 아파트 / 계단실,승강기,홀 등 [각층 각층] 30.4503
+── A10027180 전용 59.79
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10024231 --area 84.8682
+> tsx src/supplyAreaCli.ts -- --kapt A10027180 --area 59.79
 
-▶ 용인동백두산위브더제니스 (A10024231) · 전용 84.8682㎡ · 41463-11500 · 지번 후보 694, 769, 10, 1331, 1708
-   지번 694 (0694-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10024231-84.json
-   전유 84.868 + 주거공용 26.494 = 공급 111.36㎡ = 33.69평 → **34평**
-   표본: 104동 2304 (같은 전용 호 157개) · 전용률 76.2%
-     · 아파트 / 홀,계단 [지상 각층] 19.3818
-     · 아파트 / 벽체 [지상 23층] 7.1118
-── A10025541 전용 84.8998
+▶ 미사강변스타힐스 (A10027180) · 전용 59.79㎡ · 41450-10900 · 지번 후보 956
+   지번 956 (0956-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10027180-59.json
+   전유 59.79 + 주거공용 22.688 = 공급 82.48㎡ = 24.95평 → **25평**
+   표본: 801동 1301 (같은 전용 호 70개) · 전용률 72.5%
+     · 아파트 / 계단실,승강기,홀 [각층 각층] 22.6883
+── A10027782 전용 84.96
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10025541 --area 84.8998
+> tsx src/supplyAreaCli.ts -- --kapt A10027782 --area 84.96
 
-▶ 신흥덕 롯데캐슬레이시티 (A10025541) · 전용 84.8998㎡ · 41463-10100 · 지번 후보 736
-   지번 736 (0736-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10025541-84.json
-   전유 84.9 + 주거공용 30.374 = 공급 115.27㎡ = 34.87평 → **35평**
-   표본: 109동 1704 (같은 전용 호 47개) · 전용률 73.7%
-     · 아파트 / 홀,계단(주거공용) [지상 각층] 22.0259
-     · 아파트 / 벽체 [지상 17층] 6.1677
-     · 부대시설 / 홀,계단(기타공용) [각층 지3~지1] 2.1808
-── A44694209 전용 84.895
+▶ 미사강변 루나리움 (A10027782) · 전용 84.96㎡ · 41450-10900 · 지번 후보 1034
+   지번 1034 (1034-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10027782-84.json
+   전유 84.96 + 주거공용 27.586 = 공급 112.55㎡ = 34.05평 → **34평**
+   표본: 503동 2301 (같은 전용 호 198개) · 전용률 75.5%
+     · 아파트 / 계단실,승강기,홀 등 [각층 각층] 27.5857
+── A10027379 전용 84.85
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44694209 --area 84.895
+> tsx src/supplyAreaCli.ts -- --kapt A10027379 --area 84.85
 
-▶ 수원동마을쌍용아파트 (A44694209) · 전용 84.895㎡ · 41463-11700 · 지번 후보 64, 621
-   지번 64 (0064-0000) · 대지 → 줄 0개
-   지번 621 (0621-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44694209-84.json
-   전유 84.895 + 주거공용 30.985 = 공급 115.88㎡ = 35.05평 → **35평**
-   표본: 306동 606호 (같은 전용 호 165개) · 전용률 73.3%
-     · 아파트 / 계단,승강기 [각층] 16.879
-     · 아파트 / 대 피 소 [지하 지1층] 7.148
-     · 아파트 / 벽체 [각층] 6.958
-── A44694013 전용 84.545
+▶ 미사강변 센텀팰리스 (A10027379) · 전용 84.85㎡ · 41450-10900 · 지번 후보 1050
+   지번 1050 (1050-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10027379-84.json
+   전유 84.85 + 주거공용 26.58 = 공급 111.43㎡ = 33.71평 → **34평**
+   표본: 1806동 1401 (같은 전용 호 258개) · 전용률 76.1%
+     · 아파트 / 계단실,승강기,홀 등 [각층 각층] 26.5803
+── A10028139 전용 59.8
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44694013 --area 84.545
+> tsx src/supplyAreaCli.ts -- --kapt A10028139 --area 59.8
 
-▶ 동아솔레시티 (A44694013) · 전용 84.545㎡ · 41463-11800 · 지번 후보 1162
+▶ 미사강변골든센트로 (A10028139) · 전용 59.8㎡ · 41450-10900 · 지번 후보 1162
    지번 1162 (1162-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44694013-84.json
-   전유 84.545 + 주거공용 17.952 = 공급 102.5㎡ = 31.01평 → **31평**
-   표본: 107동 1601호 (같은 전용 호 28개) · 전용률 82.5%
-     · 아파트 / 계단실,승강기 [각층] 17.7813
-     · 부대시설 / 경비실,공중화장실 [지1층,1층] 0.1711
-── A10025933 전용 84.981
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10028139-59.json
+   전유 59.8 + 주거공용 22.452 = 공급 82.25㎡ = 24.88평 → **25평**
+   표본: 2805동 802 (같은 전용 호 147개) · 전용률 72.7%
+     · 아파트 / 계단실,승강기,홀 등 [각층 각층] 22.4517
+── A10025188 전용 84.9858
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10025933 --area 84.981
+> tsx src/supplyAreaCli.ts -- --kapt A10025188 --area 84.9858
 
-▶ 기흥역 더샵 아파트 (A10025933) · 전용 84.981㎡ · 41463-10200 · 지번 후보 234-5
-   지번 234-5 (0234-0005) · 대지 → 줄 0개
-::error::지번 후보 234-5 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
+▶ 인덕원푸르지오 엘센트로아파트 (A10025188) · 전용 84.9858㎡ · 41430-10900 · 지번 후보 487-22
+   지번 487-22 (0487-0022) · 대지 → 줄 0개
+::error::지번 후보 487-22 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
    ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
    먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
    --jibun 으로 대지 지번을 직접 주세요.
 /home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10025933 --area 84.981`
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10025188 --area 84.9858`
 Exit status 1
-── A44672601 전용 84.99
+── A43772723 전용 84.94
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44672601 --area 84.99
+> tsx src/supplyAreaCli.ts -- --kapt A43772723 --area 84.94
 
-▶ 청명호수마을신안인스빌1,2단지 (A44672601) · 전용 84.99㎡ · 41463-10400 · 지번 후보 631
-   지번 631 (0631-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44672601-84.json
-   전유 84.99 + 주거공용 24.18 = 공급 109.17㎡ = 33.02평 → **33평**
-   표본: 102동 803 (같은 전용 호 182개) · 전용률 77.8%
-     · 아파트 / 벽체,계단실,승강기,홀 [지상 각층] 22.991
-     · 아파트 / 지하계단실(지2-지1) [지상 각층] 1.189
-── A44659201 전용 84.9852
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44659201 --area 84.9852
-
-▶ 자봉마을써니밸리 (A44659201) · 전용 84.9852㎡ · 41463-10600 · 지번 후보 704
-   지번 704 (0704-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44659201-84.json
-   전유 84.985 + 주거공용 29.215 = 공급 114.2㎡ = 34.55평 → **35평**
-   표본: 101동 401호 (같은 전용 호 300개) · 전용률 74.4%
-     · 아파트 / 계단실,승강기 [각층 각층] 29.2148
-── A44675301 전용 84.85
+▶ 의왕동백 (A43772723) · 전용 84.94㎡ · 41430-10500 · 지번 후보 849
+   지번 849 (0849-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43772723-84.json
+   전유 84.94 + 주거공용 14.674 = 공급 99.61㎡ = 30.13평 → **30평**
+   표본: 112동 706호 (같은 전용 호 410개) · 전용률 85.3%
+     · 부대시설 / 계단,복도 [각층] 14.674
+   ⚠️ 전용률 85.3% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것
+── A10025761 전용 84.9973
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44675301 --area 84.85
+> tsx src/supplyAreaCli.ts -- --kapt A10025761 --area 84.9973
 
-▶ 신동백롯데캐슬에코1단지 (A44675301) · 전용 84.85㎡ · 41463-11600 · 지번 후보 1096
-   지번 1096 (1096-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44675301-84.json
-   전유 84.85 + 주거공용 28.088 = 공급 112.94㎡ = 34.16평 → **34평**
-   표본: 102동 1504 (같은 전용 호 279개) · 전용률 75.1%
-     · 아파트 / 벽체,계단실 [지상 각층] 28.0876
-── A10025587 전용 84.92
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10025587 --area 84.92
-
-▶ 용인기흥 효성해링턴플레이스아파트 (A10025587) · 전용 84.92㎡ · 41463-11100 · 지번 후보 1267
-   지번 1267 (1267-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10025587-84.json
-   전유 84.92 + 주거공용 30.637 = 공급 115.56㎡ = 34.96평 → **35평**
-   표본: 108동 1202 (같은 전용 호 161개) · 전용률 73.5%
-     · 아파트 / 계단 [지상 각층] 21.8375
-     · 아파트 / 벽체 [지상 12층] 6.57
-     · 부대시설 / 지하로비 [각층 지5~지1] 2.2298
-── A44657207 전용 84.98
+▶ 의왕역 푸르지오 라포레 (A10025761) · 전용 84.9973㎡ · 41430-10300 · 지번 후보 38
+   지번 38 (0038-0000) · 대지 → 줄 0개
+::error::지번 후보 38 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
+   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
+   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
+   --jibun 으로 대지 지번을 직접 주세요.
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10025761 --area 84.9973`
+Exit status 1
+── A43708008 전용 59.951
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44657207 --area 84.98
+> tsx src/supplyAreaCli.ts -- --kapt A43708008 --area 59.951
 
-▶ 장미마을 삼성래미안2차 (A44657207) · 전용 84.98㎡ · 41463-11200 · 지번 후보 495
-   지번 495 (0495-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44657207-84.json
-   전유 84.98 + 주거공용 28.07 = 공급 113.05㎡ = 34.2평 → **34평**
-   표본: 216동 2002호 (같은 전용 호 245개) · 전용률 75.2%
-     · 아파트 / 계단실,승강기 [각층 각층] 28.07
-── A44657207 전용 59.85
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44657207 --area 59.85
-
-▶ 장미마을 삼성래미안2차 (A44657207) · 전용 59.85㎡ · 41463-11200 · 지번 후보 495
-   지번 495 (0495-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44657207-59.json
-   전유 59.85 + 주거공용 24.6 = 공급 84.45㎡ = 25.55평 → **26평**
-   표본: 212동 204호 (같은 전용 호 50개) · 전용률 70.9%
-     · 아파트 / 계단실,승강기 [각층 각층] 24.6
-── A10025541 전용 59.5731
+▶ 인덕원센트럴자이 (A43708008) · 전용 59.951㎡ · 41430-10700 · 지번 후보 844
+   지번 844 (0844-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43708008-59.json
+   전유 59.951 + 주거공용 25.839 = 공급 85.79㎡ = 25.95평 → **26평**
+   표본: 203동 704 (같은 전용 호 100개) · 전용률 69.9%
+     · 아파트 / 계단실,승강기 [지상 각층] 20.839
+     · 아파트 / 벽체 [지상 각층] 5
+   ⚠️ 전용률 69.9% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것
+── A43770703 전용 84.761
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10025541 --area 59.5731
+> tsx src/supplyAreaCli.ts -- --kapt A43770703 --area 84.761
 
-▶ 신흥덕 롯데캐슬레이시티 (A10025541) · 전용 59.5731㎡ · 41463-10100 · 지번 후보 736
-   지번 736 (0736-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10025541-59.json
-   전유 59.573 + 주거공용 27.916 = 공급 87.49㎡ = 26.47평 → **26평**
-   표본: 101동 1803 (같은 전용 호 212개) · 전용률 68.1%
-     · 아파트 / 홀,계단(주거공용) [지상 각층] 20.2256
-     · 아파트 / 벽체 [지상 18층] 6.1605
-     · 부대시설 / 홀,계단(기타공용) [각층 지3~지1] 1.5302
-   ⚠️ 전용률 68.1% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것
-── A44695804 전용 59.97
+▶ 이편한세상인덕원더퍼스트 (A43770703) · 전용 84.761㎡ · 41430-10700 · 지번 후보 846
+   지번 846 (0846-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43770703-84.json
+   전유 84.761 + 주거공용 33.744 = 공급 118.5㎡ = 35.85평 → **36평**
+   표본: 1405동 504 (같은 전용 호 155개) · 전용률 71.5%
+     · 아파트 / 계단실/ELEV [각층 각층] 20.331
+     · 아파트 / 초과발코니 [각층 각층] 7.692
+     · 아파트 / 벽체 [각층 각층] 5.721
+── A43770703 전용 59.707
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44695804 --area 59.97
+> tsx src/supplyAreaCli.ts -- --kapt A43770703 --area 59.707
 
-▶ 금화마을주공3단지 (A44695804) · 전용 59.97㎡ · 41463-10300 · 지번 후보 481
-   지번 481 (0481-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44695804-59.json
-   전유 59.97 + 주거공용 18.583 = 공급 78.55㎡ = 23.76평 → **24평**
-   표본: 304동 1001호 (같은 전용 호 227개) · 전용률 76.3%
-     · 아파트 / 복도,계단,승강기등 [각층] 18.5833
-⏳ 시간 예산(1200초)에 닿아 1275줄은 다음 칸으로 미룹니다
+▶ 이편한세상인덕원더퍼스트 (A43770703) · 전용 59.707㎡ · 41430-10700 · 지번 후보 846
+   지번 846 (0846-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43770703-59.json
+   전유 59.707 + 주거공용 25.06 = 공급 84.77㎡ = 25.64평 → **26평**
+   표본: 1403동 2402 (같은 전용 호 58개) · 전용률 70.4%
+     · 아파트 / 계단실/ELEV [각층 각층] 16.523
+     · 아파트 / 벽체 [각층 각층] 6.401
+     · 아파트 / 초과발코니 [각층 각층] 2.136
+── A43571004 전용 84.209
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43571004 --area 84.209
+
+▶ 광정목련한양 (A43571004) · 전용 84.209㎡ · 41410-10400 · 지번 후보 1088
+   지번 1088 (1088-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43571004-84.json
+   전유 84.209 + 주거공용 11.62 = 공급 95.83㎡ = 28.99평 → **29평**
+   표본: 1228동 103호 (같은 전용 호 1개) · 전용률 87.9%
+     · / 계단, 복도 [각층] 11.62
+   ⚠️ 전용률 87.9% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것
+── A43575403 전용 84.209
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43575403 --area 84.209
+
+▶ 수리한양 (A43575403) · 전용 84.209㎡ · 41410-10400 · 지번 후보 1151-5
+   지번 1151-5 (1151-0005) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43575403-84.json
+   전유 84.209 + 주거공용 12.227 = 공급 96.44㎡ = 29.17평 → **29평**
+   표본: 804동 103호 (같은 전용 호 1개) · 전용률 87.3%
+     · / 계단, 복도 [지상 1층] 12.227
+   ⚠️ 전용률 87.3% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것
+── A43576005 전용 59.98
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43576005 --area 59.98
+
+▶ 산본한라2차 (A43576005) · 전용 59.98㎡ · 41410-10400 · 지번 후보 1156-15
+   지번 1156-15 (1156-0015) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43576005-59.json
+   전유 59.98 + 주거공용 21.315 = 공급 81.29㎡ = 24.59평 → **25평**
+   표본: 412동 602호 (같은 전용 호 338개) · 전용률 73.8%
+     · 아파트 / 복도,계단,승강기등 [] 21.3147
+── A43575904 전용 59.97
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43575904 --area 59.97
+
+▶ 산본4단지한라1차 (A43575904) · 전용 59.97㎡ · 41410-10400 · 지번 후보 1156-1
+   지번 1156-1 (1156-0001) · 대지 → 줄 2496개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43575904-59.json
+   전유 59.97 + 주거공용 28.42 = 공급 88.39㎡ = 26.74평 → **27평**
+   표본: 408동 1401호 (같은 전용 호 45개) · 전용률 67.8%
+     · / [] 28.42
+   ⚠️ 전용률 67.8% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것
+── A43504005 전용 58.19
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43504005 --area 58.19
+
+▶ 산본금강1차 (A43504005) · 전용 58.19㎡ · 41410-10400 · 지번 후보 1148-4
+   지번 1148-4 (1148-0004) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43504005-59.json
+   전유 58.19 + 주거공용 22.74 = 공급 80.93㎡ = 24.48평 → **24평**
+   표본: 903동 404호 (같은 전용 호 264개) · 전용률 71.9%
+     · 아파트 / 복도,계단,승강기등 [] 17.71
+     · 부대시설 / 지하층 [] 5.03
+── A43574805 전용 58.01
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43574805 --area 58.01
+
+▶ 산본11단지주공 (A43574805) · 전용 58.01㎡ · 41410-10400 · 지번 후보 1052
+   지번 1052 (1052-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43574805-59.json
+   전유 58.01 + 주거공용 22.17 = 공급 80.18㎡ = 24.25평 → **24평**
+   표본: 1109동 1301호 (같은 전용 호 415개) · 전용률 72.4%
+     · / [] 22.17
+── A43573107 전용 84.9
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43573107 --area 84.9
+
+▶ 산본7단지 우륵아파트 (A43573107) · 전용 84.9㎡ · 41410-10400 · 지번 후보 1146-11
+   지번 1146-11 (1146-0011) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43573107-84.json
+   전유 84.9 + 주거공용 21.13 = 공급 106.03㎡ = 32.07평 → **32평**
+   표본: 708동 1604호 (같은 전용 호 37개) · 전용률 80.1%
+     · / 복도,계단,승강기 등 [] 16.96
+     · 부대시설 / 지하층 [] 4.17
+── A43573107 전용 58.71
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43573107 --area 58.71
+
+▶ 산본7단지 우륵아파트 (A43573107) · 전용 58.71㎡ · 41410-10400 · 지번 후보 1146-11
+   지번 1146-11 (1146-0011) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43573107-59.json
+   전유 58.71 + 주거공용 22.77 = 공급 81.48㎡ = 24.65평 → **25평**
+   표본: 712동 402호 (같은 전용 호 447개) · 전용률 72.0%
+     · / 복도, 계단, 승강기등 [] 22.77
+── A43504006 전용 84.9
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43504006 --area 84.9
+
+▶ 산본세종 (A43504006) · 전용 84.9㎡ · 41410-10400 · 지번 후보 1145
+   지번 1145 (1145-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43504006-84.json
+   전유 84.9 + 주거공용 16.96 = 공급 101.86㎡ = 30.81평 → **31평**
+   표본: 633동 1003호 (같은 전용 호 62개) · 전용률 83.4%
+     · 부대시설 / 복도,계단,승강기 [] 16.96
+── A43504006 전용 58.71
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43504006 --area 58.71
+
+▶ 산본세종 (A43504006) · 전용 58.71㎡ · 41410-10400 · 지번 후보 1145
+   지번 1145 (1145-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43504006-59.json
+   전유 58.71 + 주거공용 22.77 = 공급 81.48㎡ = 24.65평 → **25평**
+   표본: 650동 601호 (같은 전용 호 414개) · 전용률 72.0%
+     · / 복도, 계단, 승강기등 [] 22.77
+── A43576808 전용 84.95
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43576808 --area 84.95
+
+▶ 산본래미안하이어스 (A43576808) · 전용 84.95㎡ · 41410-10400 · 지번 후보 1240
+   지번 1240 (1240-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43576808-84.json
+   전유 84.95 + 주거공용 27.926 = 공급 112.88㎡ = 34.14평 → **34평**
+   표본: 110동 1501 (같은 전용 호 176개) · 전용률 75.3%
+     · 아파트 / 벽체,계단실,복도 [각층 각층] 27.926
+── A43576808 전용 59.94
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43576808 --area 59.94
+
+▶ 산본래미안하이어스 (A43576808) · 전용 59.94㎡ · 41410-10400 · 지번 후보 1240
+   지번 1240 (1240-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43576808-59.json
+   전유 59.94 + 주거공용 27.714 = 공급 87.65㎡ = 26.52평 → **27평**
+   표본: 114동 1103 (같은 전용 호 84개) · 전용률 68.4%
+     · 아파트 / 벽체,계단실,복도 [각층 각층] 27.714
+   ⚠️ 전용률 68.4% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것
+── A43576807 전용 59.98
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43576807 --area 59.98
+
+▶ 산본13단지개나리 (A43576807) · 전용 59.98㎡ · 41410-10400 · 지번 후보 1066
+   지번 1066 (1066-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43576807-59.json
+   전유 59.98 + 주거공용 17.63 = 공급 77.61㎡ = 23.48평 → **23평**
+   표본: 1331동 202호 (같은 전용 호 278개) · 전용률 77.3%
+     · 부대시설 / 복도,계단,승강기 [지상 2층] 17.63
+── A43574905 전용 58.46
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43574905 --area 58.46
+
+▶ 가야1차 (A43574905) · 전용 58.46㎡ · 41410-10400 · 지번 후보 1155
+   지번 1155 (1155-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43574905-59.json
+   전유 58.46 + 주거공용 16.78 = 공급 75.24㎡ = 22.76평 → **23평**
+   표본: 514동 1004호 (같은 전용 호 91개) · 전용률 77.7%
+     · 부대시설 / 복도,계단,승강기 [] 16.78
+── A43501009 전용 84.969
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43501009 --area 84.969
+
+▶ 당동용호마을e편한세상 (A43501009) · 전용 84.969㎡ · 41410-10100 · 지번 후보 979-1
+   지번 979-1 (0979-0001) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43501009-84.json
+   전유 84.969 + 주거공용 24.763 = 공급 109.73㎡ = 33.19평 → **33평**
+   표본: 120동 204 (같은 전용 호 189개) · 전용률 77.4%
+     · 아파트 / 계단실,승강기,홀 [각층 각층] 18.86
+     · 아파트 / 벽체 [각층 각층] 5.293
+     · 아파트 / 경로당,문고,주민공동시설 [지하 지1층] 0.61
+── A43501009 전용 59.895
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43501009 --area 59.895
+
+▶ 당동용호마을e편한세상 (A43501009) · 전용 59.895㎡ · 41410-10100 · 지번 후보 979-1
+   지번 979-1 (0979-0001) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43501009-59.json
+   전유 59.895 + 주거공용 19.887 = 공급 79.78㎡ = 24.13평 → **24평**
+   표본: 115동 1404 (같은 전용 호 82개) · 전용률 75.1%
+     · 아파트 / 계단실,승강기,홀 [각층 각층] 14.892
+     · 아파트 / 벽체 [각층 각층] 4.566
+     · 아파트 / 경로당,문고,주민공동시설 [지하 지1층] 0.429
+── A43576205 전용 58.65
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43576205 --area 58.65
+
+▶ 산본무궁화주공1단지 (A43576205) · 전용 58.65㎡ · 41410-10500 · 지번 후보 849
+   지번 849 (0849-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43576205-59.json
+   전유 58.65 + 주거공용 22.63 = 공급 81.28㎡ = 24.59평 → **25평**
+   표본: 107동 1403호 (같은 전용 호 88개) · 전용률 72.2%
+     · / [] 22.63
+── A43575706 전용 59.97
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A43575706 --area 59.97
+
+▶ 군포율곡 (A43575706) · 전용 59.97㎡ · 41410-10500 · 지번 후보 876
+   지번 876 (0876-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A43575706-59.json
+   전유 59.97 + 주거공용 17.933 = 공급 77.9㎡ = 23.57평 → **24평**
+   표본: 347동 1004호 (같은 전용 호 41개) · 전용률 77.0%
+     · / 복도, 계단, 승강기, 경비실 [] 17.9334
+── A10026125 전용 84.87
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10026125 --area 84.87
+
+▶ 네이처포레 아파트 (A10026125) · 전용 84.87㎡ · 41390-10600 · 지번 후보 632
+   지번 632 (0632-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026125-84.json
+   전유 84.87 + 주거공용 32.577 = 공급 117.45㎡ = 35.53평 → **36평**
+   표본: 1110동 2804 (같은 전용 호 57개) · 전용률 72.3%
+     · 아파트 / 계단실,승강기,홀 [각층 각층] 32.5772
+── A10025502 전용 59.9419
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10025502 --area 59.9419
+
+▶ 시흥배곧신도시 대방노블랜드엘리트시티 (A10025502) · 전용 59.9419㎡ · 41390-13500 · 지번 후보 55
+   지번 55 (0055-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10025502-59.json
+   전유 59.942 + 주거공용 25.997 = 공급 85.94㎡ = 26평 → **26평**
+   표본: 607동 2301 (같은 전용 호 333개) · 전용률 69.8%
+     · 아파트 / 계단실 [지상 각층] 16.3707
+     · 아파트 / 벽체 [지상 각층] 6.3497
+     · 부대시설 / 지하창고 [지하 지1] 3.2762
+   ⚠️ 전용률 69.7% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것
+── A10024498 전용 59.96
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10024498 --area 59.96
+
+▶ 은계파크자이아파트 (A10024498) · 전용 59.96㎡ · 41390-10600 · 지번 후보 647
+   지번 647 (0647-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10024498-59.json
+   전유 59.96 + 주거공용 24.064 = 공급 84.02㎡ = 25.42평 → **25평**
+   표본: 602동 1703 (같은 전용 호 146개) · 전용률 71.4%
+     · 아파트 / 벽체,계단실 [각층 각층] 23.3042
+     · 아파트 / 지하계단 [지하 지1] 0.7597
+── A10024498 전용 84.95
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10024498 --area 84.95
+
+▶ 은계파크자이아파트 (A10024498) · 전용 84.95㎡ · 41390-10600 · 지번 후보 647
+   지번 647 (0647-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10024498-84.json
+   전유 84.95 + 주거공용 32.813 = 공급 117.76㎡ = 35.62평 → **36평**
+   표본: 606동 1103 (같은 전용 호 184개) · 전용률 72.1%
+     · 아파트 / 벽체,계단실 [각층 각층] 31.7362
+     · 아파트 / 지하계단 [지하 지1] 1.0763
+── A10024845 전용 84.941
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10024845 --area 84.941
+
+▶ 시흥센트럴푸르지오아파트 (A10024845) · 전용 84.941㎡ · 41390-10100 · 지번 후보 418-21
+   지번 418-21 (0418-0021) · 대지 → 줄 0개
+::error::지번 후보 418-21 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
+   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
+   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
+   --jibun 으로 대지 지번을 직접 주세요.
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10024845 --area 84.941`
+Exit status 1
+── A10024845 전용 59.948
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10024845 --area 59.948
+
+▶ 시흥센트럴푸르지오아파트 (A10024845) · 전용 59.948㎡ · 41390-10100 · 지번 후보 418-21
+   지번 418-21 (0418-0021) · 대지 → 줄 0개
+::error::지번 후보 418-21 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
+   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
+   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
+   --jibun 으로 대지 지번을 직접 주세요.
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10024845 --area 59.948`
+Exit status 1
+── A10025841 전용 84.6698
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10025841 --area 84.6698
+
+▶ 시흥은계한양수자인더클래스아파트 (A10025841) · 전용 84.6698㎡ · 41390-10600 · 지번 후보 217-14
+   지번 217-14 (0217-0014) · 대지 → 줄 0개
+::error::지번 후보 217-14 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
+   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
+   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
+   --jibun 으로 대지 지번을 직접 주세요.
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10025841 --area 84.6698`
+Exit status 1
+── A42983405 전용 84.86
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A42983405 --area 84.86
+
+▶ 월곶풍림1차아파트 (A42983405) · 전용 84.86㎡ · 41390-13100 · 지번 후보 1010-4
+   지번 1010-4 (1010-0004) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A42983405-84.json
+   전유 84.86 + 주거공용 15.997 = 공급 100.86㎡ = 30.51평 → **31평**
+   표본: 101동 1602호 (같은 전용 호 6개) · 전용률 84.1%
+     · 아파트 / 계단실,승강기 [각층] 14.877
+     · 아파트 / 피디 [각층] 1.12
+── A10025100 전용 84.74
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10025100 --area 84.74
+
+▶ 은계어반리더스아파트 (A10025100) · 전용 84.74㎡ · 41390-10100 · 지번 후보 659
+   지번 659 (0659-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10025100-84.json
+   전유 84.74 + 주거공용 26.944 = 공급 111.68㎡ = 33.78평 → **34평**
+   표본: 108동 401 (같은 전용 호 156개) · 전용률 75.9%
+     · 아파트 / 계단실,승강기,홀 [각층 각층] 26.9443
+── A42979803 전용 84.48
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A42979803 --area 84.48
+
+▶ 하상연꽃마을대우삼호 (A42979803) · 전용 84.48㎡ · 41390-12000 · 지번 후보 368
+   지번 368 (0368-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A42979803-84.json
+   전유 84.48 + 주거공용 15.439 = 공급 99.92㎡ = 30.23평 → **30평**
+   표본: 315동 1203호 (같은 전용 호 52개) · 전용률 84.5%
+     · 아파트 / 승강기,계단실 [각층] 15.439
+── A42980007 전용 59.72
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A42980007 --area 59.72
+
+▶ 거모동보 (A42980007) · 전용 59.72㎡ · 41390-12700 · 지번 후보 612-1
+   지번 612-1 (0612-0001) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A42980007-59.json
+   전유 59.72 + 주거공용 14.604 = 공급 74.32㎡ = 22.48평 → **22평**
+   표본: 107동 201호 (같은 전용 호 63개) · 전용률 80.3%
+     · 아파트 / 코아 [각층] 14.6042
+── A10026419 전용 84.7387
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10026419 --area 84.7387
+
+▶ 한라비발디캠퍼스2차아파트 (A10026419) · 전용 84.7387㎡ · 41390-13500 · 지번 후보 245
+   지번 245 (0245-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026419-84.json
+   전유 84.739 + 주거공용 34.256 = 공급 118.99㎡ = 36평 → **36평**
+   표본: 208동 303 (같은 전용 호 186개) · 전용률 71.2%
+     · 아파트 / 계단실,승강기,홀 [지상 각층] 25.6244
+     · 아파트 / 벽체 [지상 3층] 8.6317
+── A42979803 전용 59.88
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A42979803 --area 59.88
+
+▶ 하상연꽃마을대우삼호 (A42979803) · 전용 59.88㎡ · 41390-12000 · 지번 후보 368
+   지번 368 (0368-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A42979803-59.json
+   전유 59.88 + 주거공용 14.042 = 공급 73.92㎡ = 22.36평 → **22평**
+   표본: 318동 1701호 (같은 전용 호 273개) · 전용률 81.0%
+     · 아파트 / 승강기,계단실 [각층] 14.042
+── A42946002 전용 84.99
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A42946002 --area 84.99
+
+▶ 시흥6차푸르지오1단지 (A42946002) · 전용 84.99㎡ · 41390-13300 · 지번 후보 759
+   지번 759 (0759-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A42946002-84.json
+   전유 84.99 + 주거공용 28.275 = 공급 113.26㎡ = 34.26평 → **34평**
+   표본: 106동 1004 (같은 전용 호 298개) · 전용률 75.0%
+     · 아파트 / 계단실,복도 [지상 각층] 22.395
+     · 아파트 / 벽체 [지상 각층] 5.88
+── A42946002 전용 59.98
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A42946002 --area 59.98
+
+▶ 시흥6차푸르지오1단지 (A42946002) · 전용 59.98㎡ · 41390-13300 · 지번 후보 759
+   지번 759 (0759-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A42946002-59.json
+   전유 59.98 + 주거공용 24.017 = 공급 84㎡ = 25.41평 → **25평**
+   표본: 117동 2202 (같은 전용 호 74개) · 전용률 71.4%
+     · 아파트 / 계단실,복도 [지상 각층] 18.7368
+     · 아파트 / 벽체 [지상 각층] 5.28
+── A42984208 전용 59.965
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A42984208 --area 59.965
+
+▶ 숲속마을벽산신화 (A42984208) · 전용 59.965㎡ · 41390-13000 · 지번 후보 271-3, 807
+   지번 271-3 (0271-0003) · 대지 → 줄 0개
+   지번 807 (0807-0000) · 대지 → 줄 3000개
+::error::전용 59.965㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 807) — 파일을 만들지 않습니다
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A42984208 --area 59.965`
+Exit status 1
+── A10026569 전용 84.88
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10026569 --area 84.88
+
+▶ 은계센트럴타운 (A10026569) · 전용 84.88㎡ · 41390-10600 · 지번 후보 619
+   지번 619 (0619-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026569-84.json
+   전유 84.88 + 주거공용 31.585 = 공급 116.47㎡ = 35.23평 → **35평**
+   표본: 511동 102 (같은 전용 호 110개) · 전용률 72.9%
+     · 아파트 / 계단실,승강기,홀 [각층 각층] 31.5851
+── A42987813 전용 84.7561
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A42987813 --area 84.7561
+
+▶ 은행4차푸르지오 (A42987813) · 전용 84.7561㎡ · 41390-10600 · 지번 후보 599-1
+   지번 599-1 (0599-0001) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A42987813-84.json
+   전유 84.756 + 주거공용 22.343 = 공급 107.1㎡ = 32.4평 → **32평**
+   표본: 415동 502호 (같은 전용 호 201개) · 전용률 79.1%
+     · 아파트 / 계단실,승강기,벽체 [각층 각층] 21.4068
+     · 아파트 / 홀 [지하 지1층] 0.9366
+── A42983404 전용 84.829
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A42983404 --area 84.829
+
+▶ 월곶2차풍림아이원 (A42983404) · 전용 84.829㎡ · 41390-13100 · 지번 후보 1010-1
+   지번 1010-1 (1010-0001) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A42983404-84.json
+   전유 84.829 + 주거공용 25.705 = 공급 110.53㎡ = 33.44평 → **33평**
+   표본: 203동 1301 (같은 전용 호 95개) · 전용률 76.7%
+     · 아파트 / 계단실,승강기,홀 [각층 각층] 17.04
+     · 아파트 / 벽체 [각층 각층] 8.665
+── A42983404 전용 59.989
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A42983404 --area 59.989
+
+▶ 월곶2차풍림아이원 (A42983404) · 전용 59.989㎡ · 41390-13100 · 지번 후보 1010-1
+   지번 1010-1 (1010-0001) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A42983404-59.json
+   전유 59.989 + 주거공용 21.503 = 공급 81.49㎡ = 24.65평 → **25평**
+   표본: 212동 1701 (같은 전용 호 130개) · 전용률 73.6%
+     · 아파트 / 계단실,승강기,홀 [각층 각층] 17.258
+     · 아파트 / 벽체 [각층 각층] 4.245
+── A42983405 전용 59.965
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A42983405 --area 59.965
+
+▶ 월곶풍림1차아파트 (A42983405) · 전용 59.965㎡ · 41390-13100 · 지번 후보 1010-4
+   지번 1010-4 (1010-0004) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A42983405-59.json
+   전유 59.965 + 주거공용 15.844 = 공급 75.81㎡ = 22.93평 → **23평**
+   표본: 114동 1503호 (같은 전용 호 73개) · 전용률 79.1%
+     · 아파트 / 계단실,승강기 [각층] 14.879
+     · 아파트 / 피디 [각층] 0.965
+── A10026631 전용 84.8957
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10026631 --area 84.8957
+
+▶ 호반베르디움센트로하임아파트 (A10026631) · 전용 84.8957㎡ · 41390-13500 · 지번 후보 174
+   지번 174 (0174-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026631-84.json
+   전유 84.896 + 주거공용 27.824 = 공급 112.72㎡ = 34.1평 → **34평**
+   표본: 1108동 2101 (같은 전용 호 402개) · 전용률 75.3%
+     · 아파트 / 벽체,계단실 [지상 각층] 27.8238
+── A10027300 전용 84.4646
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10027300 --area 84.4646
+
+▶ 배곧호반베르디움더프라임아파트 (A10027300) · 전용 84.4646㎡ · 41390-13500 · 지번 후보 150
+   지번 150 (0150-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10027300-84.json
+   전유 84.465 + 주거공용 28.585 = 공급 113.05㎡ = 34.2평 → **34평**
+   표본: 912동 504 (같은 전용 호 225개) · 전용률 74.7%
+     · 아파트 / 계단실,승강기,복도 [지상 각층] 28.5851
+── A10026012 전용 84.9973
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10026012 --area 84.9973
+
+▶ 한라비발디캠퍼스3차 (A10026012) · 전용 84.9973㎡ · 41390-13500 · 지번 후보 262
+   지번 262 (0262-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026012-84.json
+   전유 84.997 + 주거공용 33.682 = 공급 118.68㎡ = 35.9평 → **36평**
+   표본: 301동 1305 (같은 전용 호 321개) · 전용률 71.6%
+     · 아파트 / 계단실,승강기,홀 [지상 각층] 25.1445
+     · 아파트 / 벽체 [지상 13층] 8.5376
+── A10026846 전용 84.9906
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10026846 --area 84.9906
+
+▶ 한라비발디캠퍼스 (A10026846) · 전용 84.9906㎡ · 41390-13500 · 지번 후보 243
+   지번 243 (0243-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026846-84.json
+   전유 84.991 + 주거공용 33.7 = 공급 118.69㎡ = 35.9평 → **36평**
+   표본: 108동 3301 (같은 전용 호 169개) · 전용률 71.6%
+     · 아파트 / 계단실,승강기,홀 [지상 각층] 25.6987
+     · 아파트 / 벽체 [지상 33층] 8.0009
+── A10026534 전용 84.9734
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10026534 --area 84.9734
+
+▶ 시흥배곧한신더휴 (A10026534) · 전용 84.9734㎡ · 41390-13500 · 지번 후보 155
+   지번 155 (0155-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026534-84.json
+   전유 84.973 + 주거공용 29.963 = 공급 114.94㎡ = 34.77평 → **35평**
+   표본: 1012동 2302 (같은 전용 호 173개) · 전용률 73.9%
+     · 아파트 / 계단실,승강기,홀 [지상 각층] 23.1001
+     · 아파트 / 벽체 [지상 23층] 6.8624
+── A10025651 전용 84.8656
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10025651 --area 84.8656
+
+▶ 배곧 중흥S-클래스아파트 (A10025651) · 전용 84.8656㎡ · 41390-13500 · 지번 후보 5
+   지번 5 (0005-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10025651-84.json
+   전유 84.866 + 주거공용 27.716 = 공급 112.58㎡ = 34.06평 → **34평**
+   표본: 112동 901 (같은 전용 호 278개) · 전용률 75.4%
+     · 아파트 / 계단실,승강기,홀 [지상 각층] 20.0966
+     · 아파트 / 벽체 [지상 9층] 7.6194
+── A10027886 전용 84.2612
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10027886 --area 84.2612
+
+▶ 호반 베르디움 센트럴파크 (A10027886) · 전용 84.2612㎡ · 41390-13500 · 지번 후보 139
+   지번 139 (0139-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10027886-84.json
+   전유 84.261 + 주거공용 28.442 = 공급 112.7㎡ = 34.09평 → **34평**
+   표본: 814동 604 (같은 전용 호 168개) · 전용률 74.8%
+     · 아파트 / 계단실,승강기,홀 [지상 각층] 19.8377
+     · 아파트 / 벽체 [지상 6층] 8.6046
+── A10027950 전용 84.9805
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10027950 --area 84.9805
+
+▶ 시흥 배곧 SK VIEW 아파트 (A10027950) · 전용 84.9805㎡ · 41390-13500 · 지번 후보 135
+   지번 135 (0135-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10027950-84.json
+   전유 84.981 + 주거공용 28.525 = 공급 113.51㎡ = 34.34평 → **34평**
+   표본: 711동 2402 (같은 전용 호 165개) · 전용률 74.9%
+     · 아파트 / 계단실,승강기,홀 [지상 각층] 20.651
+     · 아파트 / 벽체 [지상 24층] 7.8739
+── A42980007 전용 84.965
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A42980007 --area 84.965
+
+▶ 거모동보 (A42980007) · 전용 84.965㎡ · 41390-12700 · 지번 후보 612-1
+   지번 612-1 (0612-0001) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A42980007-84.json
+   전유 84.965 + 주거공용 14.604 = 공급 99.57㎡ = 30.12평 → **30평**
+   표본: 105동 703호 (같은 전용 호 35개) · 전용률 85.3%
+     · 아파트 / 코아 [각층] 14.6042
+   ⚠️ 전용률 85.3% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것
+── A10020128 전용 84.8976
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10020128 --area 84.8976
+
+▶ 세교파라곤 (A10020128) · 전용 84.8976㎡ · 41370-10400 · 지번 후보 826
+   지번 826 (0826-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10020128-84.json
+   전유 84.898 + 주거공용 29.642 = 공급 114.54㎡ = 34.65평 → **35평**
+   표본: 402동 302 (같은 전용 호 348개) · 전용률 74.1%
+     · 아파트 / 계단실,로비 [지상 각층] 20.5362
+     · 아파트 / 벽체 [지상 3층] 9.1057
+── A10022331 전용 84.9865
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10022331 --area 84.9865
+
+▶ 오산세교2중흥S클래스에듀파크아파트 (A10022331) · 전용 84.9865㎡ · 41370-10400 · 지번 후보 824
+   지번 824 (0824-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10022331-84.json
+   전유 84.987 + 주거공용 31.324 = 공급 116.31㎡ = 35.18평 → **35평**
+   표본: 505동 703 (같은 전용 호 94개) · 전용률 73.1%
+     · 아파트 / 계단실,승강기홀 [지상 각층] 19.9676
+     · 아파트 / 벽체 [지상 7층] 11.3561
+── A10022331 전용 59.9784
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10022331 --area 59.9784
+
+▶ 오산세교2중흥S클래스에듀파크아파트 (A10022331) · 전용 59.9784㎡ · 41370-10400 · 지번 후보 824
+   지번 824 (0824-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10022331-59.json
+   전유 59.978 + 주거공용 21.029 = 공급 81.01㎡ = 24.5평 → **25평**
+   표본: 502동 802 (같은 전용 호 136개) · 전용률 74.0%
+     · 아파트 / 계단실,승강기홀 [지상 각층] 14.0919
+     · 아파트 / 벽체 [지상 8층] 6.9368
+── A10022789 전용 84.9967
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10022789 --area 84.9967
+
+▶ 오산롯데캐슬스카이파크 (A10022789) · 전용 84.9967㎡ · 41370-10300 · 지번 후보 921
+   지번 921 (0921-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10022789-84.json
+   전유 84.997 + 주거공용 27.418 = 공급 112.42㎡ = 34.01평 → **34평**
+   표본: 310동 703 (같은 전용 호 244개) · 전용률 75.6%
+     · 아파트 / 계단실 [지상 각층] 20.7937
+     · 아파트 / 벽체 [지상 7층] 6.6246
+── A10026366 전용 59.9841
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10026366 --area 59.9841
+
+▶ e편한세상 오산세교 아파트 (A10026366) · 전용 59.9841㎡ · 41370-11400 · 지번 후보 577
+   지번 577 (0577-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026366-59.json
+   전유 59.984 + 주거공용 25.142 = 공급 85.13㎡ = 25.75평 → **26평**
+   표본: 106동 301 (같은 전용 호 216개) · 전용률 70.5%
+     · 아파트 / 계단실 [지상 각층] 20.2814
+     · 아파트 / 벽체 [지상 3층] 4.8603
+── A44729004 전용 84.948
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A44729004 --area 84.948
+
+▶ 오산대우 (A44729004) · 전용 84.948㎡ · 41370-10800 · 지번 후보 514
+   지번 514 (0514-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44729004-84.json
+   전유 84.948 + 주거공용 11.552 = 공급 96.5㎡ = 29.19평 → **29평**
+   표본: 제116동 1201호 (같은 전용 호 159개) · 전용률 88.0%
+     · 부대시설 / 계단 [지상 12층] 11.552
+   ⚠️ 전용률 88.0% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것
+── A44772901 전용 84.0525
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A44772901 --area 84.0525
+
+▶ 오산자이아파트 (A44772901) · 전용 84.0525㎡ · 41370-12300 · 지번 후보 321
+   지번 321 (0321-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44772901-84.json
+   전유 84.052 + 주거공용 26.449 = 공급 110.5㎡ = 33.43평 → **33평**
+   표본: 105동 1604 (같은 전용 호 235개) · 전용률 76.1%
+     · 아파트 / 벽체,전실,계단실,승강기,홀 [각층 각층] 25.2998
+     · 아파트 / 지하계단실 [지하 지1층] 1.1495
+── A10026366 전용 84.9828
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A10026366 --area 84.9828
+
+▶ e편한세상 오산세교 아파트 (A10026366) · 전용 84.9828㎡ · 41370-11400 · 지번 후보 577
+   지번 577 (0577-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10026366-84.json
+   전유 84.983 + 주거공용 27.911 = 공급 112.89㎡ = 34.15평 → **34평**
+   표본: 109동 702 (같은 전용 호 227개) · 전용률 75.3%
+     · 아파트 / 계단실 [지상 각층] 22.0245
+     · 아파트 / 벽체 [지상 7층] 5.8864
+── A44772116 전용 59.99
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A44772116 --area 59.99
+
+▶ 운암주공5단지 (A44772116) · 전용 59.99㎡ · 41370-10300 · 지번 후보 359-1, 815-1
+   지번 359-1 (0359-0001) · 대지 → 줄 0개
+   지번 815-1 (0815-0001) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44772116-59.json
+   전유 59.99 + 주거공용 17.058 = 공급 77.05㎡ = 23.31평 → **23평**
+   표본: 509동 1501호 (같은 전용 호 353개) · 전용률 77.9%
+     · 부대시설 / 계단실 [각층] 17.0584
+── A44774617 전용 84.9703
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A44774617 --area 84.9703
+
+▶ 오산역이편한세상2단지 (A44774617) · 전용 84.9703㎡ · 41370-10300 · 지번 후보 900
+   지번 900 (0900-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44774617-84.json
+   전유 84.97 + 주거공용 24.631 = 공급 109.6㎡ = 33.15평 → **33평**
+   표본: 204동 1902 (같은 전용 호 224개) · 전용률 77.5%
+     · 아파트 / 벽체,발코니초과,계단실,승강기,홀 [각층 각층] 24.6307
+── A44774513 전용 84.8245
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A44774513 --area 84.8245
+
+▶ 오산역e편한세상1단지 (A44774513) · 전용 84.8245㎡ · 41370-10300 · 지번 후보 888
+   지번 888 (0888-0000) · 대지 → 줄 3000개
+✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44774513-84.json
+   전유 84.825 + 주거공용 25.17 = 공급 109.99㎡ = 33.27평 → **33평**
+   표본: 103동 701 (같은 전용 호 217개) · 전용률 77.1%
+     · 아파트 / 벽체,발코니초과,계단실,승강기,홀 [각층 각층] 25.1702
+⏳ 시간 예산(1200초)에 닿아 1180줄은 다음 칸으로 미룹니다
 ```
