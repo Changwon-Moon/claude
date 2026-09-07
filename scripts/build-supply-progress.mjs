@@ -156,43 +156,55 @@ const outDir = publish ? join(ROOT, "data/content", date) : join(ROOT, "data/out
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "supply-progress.json"), JSON.stringify(card, null, 2) + "\n", "utf8");
 
-/* ── 캡션 — 수치는 전부 위에서 계산한 값이다. 카드를 보고 옮겨 적지 않는다. ── */
+/* ── 인스타 캡션 (CAPTION.md §4 형식) ────────────────────────
+ * 훅 한 줄(이모지) → 핵심 수치 한 줄 → 이모지 섹션 + 불릿 → 👉 takeaway
+ *   → 해석 차단 한 줄 → 출처 → CTA → 해시태그 5개
+ *
+ * ⚠️ **카드가 말하는 것을 옮겨 적지 않는다.** 연도별 목표 여섯 줄은 카드의 막대가
+ *    이미 다 보여준다 — 캡션이 카드를 베끼면 읽을 이유가 준다(_alt/README.md,
+ *    오너가 jeongbi-board 에서 실제로 잘라낸 것이 그 문단이었다).
+ * ⚠️ 단서는 **한 줄만** 남긴다. 「짚고 갈 점」 다섯 줄도 오너가 잘라냈다.
+ *    다만 분모가 둘인 것은 §6 「해석 차단 문장」에 해당해 지운다 —
+ *    안 적으면 "막대 다섯 개 더하면 147만호"라는 틀린 해석이 댓글에 붙는다.
+ * ⚠️ 숫자는 전부 위에서 계산한 값이다. 보고 옮겨 적지 않는다(§2).
+ */
+/* period 는 "2026-01~07 누계" 꼴이다. 사람이 읽는 기간 문구는 여기서 조립한다 —
+ * 문자열 치환으로 만들면 "2026년 01월~07 누계월" 같은 것이 조용히 나간다(2026-09-07 실제로 겪었다). */
+const PERIOD = doc.actual.period.match(/^(\d{4})-(\d{2})~(\d{2})/);
+if (!PERIOD) throw new Error(`기간을 못 읽었다: ${doc.actual.period}`);
+const [, pYear, pFrom, pTo] = PERIOD;
+const periodText = `${pYear}년 ${Number(pFrom)}~${Number(pTo)}월`;
+const MONTHS_DONE = Number(pTo) - Number(pFrom) + 1;
+if (!(MONTHS_DONE >= 1 && MONTHS_DONE <= 12)) throw new Error(`경과 개월이 이상하다: ${MONTHS_DONE}`);
+const timePct = (MONTHS_DONE / 12) * 100;
+const peakYear = BY_YEAR.reduce((a, y) => (y.ho > a.ho ? y : a), BY_YEAR[0]);
+
 const caption = [
-  `1년 전 정부가 약속한 ${Math.round(man(totalGoal))}만호, 지금 얼마나 지어졌을까요?`,
+  `🏗 1년 전 정부가 약속한 ${Math.round(man(totalGoal))}만호, 지금 얼마나 지어졌을까요?`,
   ``,
-  `2025년 9월 7일, 정부는 「주택공급 확대방안」을 냈습니다.`,
-  `2026년부터 2030년까지 수도권에 ${f1(man(planSum))}만호를 새로 착공하겠다는 계획이었습니다.`,
-  `이 대책의 핵심은 물량보다 기준이었습니다 — 관리 잣대를 인허가가 아니라 '착공'으로 바꿨거든요.`,
-  `짓겠다고 허가만 내주는 게 아니라 삽을 뜬 것만 세겠다는 뜻입니다.`,
+  `국토부 통계로 세어 보니 ${f1(man(ACT))}만호. 목표의 ${f1(rate)}%입니다.`,
   ``,
-  `올해 8월 13일에는 ${f1(man(ADD.ho))}만호가 더 붙어 총 ${Math.round(man(totalGoal))}만호가 됐습니다.`,
+  `📊 수도권 착공 성적표 (${periodText})`,
+  `· 총목표 ${Math.round(man(totalGoal))}만호 중 착공 ${f1(man(ACT))}만호 — 달성률 ${f1(rate)}%`,
+  `· 올해 목표 ${f1(man(firstYear.ho))}만호 대비 ${f1(firstRate)}%`,
+  `· 남은 물량 ${f1(man(remain))}만호`,
   ``,
-  `그래서 지금까지 얼마나 지어졌을까요.`,
+  `⏳ 올해는 ${MONTHS_DONE}개월, ${f1(timePct)}%가 지났습니다.`,
+  `   시간의 절반 속도로 가고 있는 셈입니다.`,
   ``,
-  `국토교통부 주택통계 기준, 올해 1~7월 수도권 착공은 ${f1(man(ACT))}만호입니다.`,
-  `총목표 ${Math.round(man(totalGoal))}만호의 ${f1(rate)}%. 남은 물량이 ${f1(man(remain))}만호입니다.`,
+  `👉 가장 큰 물량 ${f1(man(peakYear.ho))}만호는 ${peakYear.year}년,`,
+  `   임기 마지막 해에 잡혀 있습니다.`,
   ``,
-  `올해 목표만 떼어 봐도 ${f1(man(firstYear.ho))}만호 중 ${f1(firstRate)}%입니다.`,
-  `1년의 7개월, 그러니까 시간은 58.3%가 지났는데 실적은 그 절반쯤에 서 있습니다.`,
+  `※ 8·13 대책 ${Math.round(man(ADD.ho))}만호는 어느 해에 지을지가 아직 안 정해져`,
+  `   카드에서 별도 칸으로 뒀습니다. 막대 다섯 개의 합은 ${f1(man(planSum))}만호입니다.`,
+  `📌 출처 · 국토교통부 「’${doc.actual.asOf.slice(2, 4)}년 ${Number(doc.actual.asOf.slice(5))}월 주택통계」 (수도권 신규 착공 기준)`,
   ``,
-  `연도별 목표는 이렇습니다.`,
-  ...BY_YEAR.map((y) => `· ${y.year}년 ${f1(man(y.ho))}만호`),
-  `· 8·13 추가분 ${f1(man(ADD.ho))}만호 — 연도별 배분은 아직 발표되지 않았습니다`,
+  `더 보기 👉 @wirit_note`,
   ``,
-  `${BY_YEAR[BY_YEAR.length - 1].year}년에 ${f1(man(BY_YEAR[BY_YEAR.length - 1].ho))}만호가 몰려 있습니다.`,
-  `가장 큰 물량이 임기 마지막 해에 잡혀 있다는 뜻입니다.`,
-  ``,
-  `※ 카드 아래 막대 다섯 개의 합은 ${f1(man(planSum))}만호입니다. 위 진행바의 분모(${Math.round(man(totalGoal))}만호)와 다릅니다 —`,
-  `   8·13 대책 ${f1(man(ADD.ho))}만호는 어느 해에 지을지가 아직 정해지지 않아 별도 칸으로 뒀습니다.`,
-  `   5년에 고르게 나눠 그리면 올해 목표가 없던 물량만큼 늘어나 달성률이 달라집니다. 그건 정부가 발표한 배분표가 아닙니다.`,
-  `※ 9·7 대책은 2025년 9월 발표지만 목표 기간은 2026~2030년입니다. '발표 1주년'과 '계획 1년차'는 다릅니다.`,
-  `※ 대책의 착공 목표와 국토부 월간 통계의 착공 실적이 완전히 같은 집계 기준인지는 정부가 공식 확인한 바 없습니다.`,
-  `   주요 매체가 쓰는 비교 방식을 따랐고, 카드에 '국토부 주택통계 기준'을 병기했습니다.`,
-  `※ 출처: 국토교통부 「’26년 7월 주택통계」 · 9·7 주택공급 확대방안 · 8·13 주택공급대책.`,
-  ``,
-  `#부동산정책 #주택공급 #수도권 #착공 #위릿`,
-].join("\n");
-writeCaption("supply-progress", caption); // ⚠️ 서명은 writeCaption 이 붙인다
+  `#부동산정책 #주택공급 #수도권아파트 #착공 #위릿`,
+];
+
+writeCaption("supply-progress", caption.join("\n")); // ⚠️ 서명은 writeCaption 이 붙인다
 
 /* ── 카톡 공유용 — 인스타 캡션과 다른 물건이다(CAPTION.md §9) ──
  * 카톡은 링크 미리보기 없이 글자만으로 눈에 들어와야 하고 이미지가 글 위에 붙는다.
