@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* =========================================================
+         supply-progress@1 — 총량 진행바 + 연도별 목표 기둥 (2026-09-07 오너 확정)
+
+         이 카드가 말하는 것: 「총목표 중 얼마나 채웠나」를 위에서 한 줄로 끝내고,
+         아래에서 그 총목표를 연도별로 쪼개 보여준다. 위아래의 **분모가 다르므로**
+         각주가 반드시 그 차이를 적는다(빌더가 footnote 를 강제한다).
+
+         ⭐ 폰트 — 카드 루트에 `font-taebaek-pretendard` 를 붙인다(2026-09-07 오너 확정).
+            제목만 태백체, 숫자를 포함한 나머지는 전부 Pretendard 다. 규격 정본은 BRAND.md §4.
+            **글꼴로 강조하지 않는다** — 강조는 색(레드)과 크기가 맡는다.
+
+         ── 두 줄 제목은 줄마다 폰트를 따로 준다
+         같은 크기로 두면 글자 수 차이만큼 오른쪽 끝이 들쭉날쭉하다. 빌더가 줄별 크기를
+         계약값으로 넘기고, 아래 __wiritFit 이 **넘칠 때만** 줄인다(키우지 않는다).
+
+         ── 콜아웃 카드는 칸 전체 폭을 쓴다
+         `left:0; right:0` 이라 칸이 어떻게 변해도 막대와 중심선이 자동으로 맞는다.
+         좌표를 손으로 박지 않는다(CEO.md 「"이 칸"을 손으로 지정하지 않는다」).
+         ========================================================= */
+
+      .sp { padding-top: 72px; }
+
+      /* 머리 — 공용 규격 그대로. margin-top 만 -36(오너 2026-09-07 「위로 올려줘」) */
+      .sp > .wirit-topcap { margin-top: -36px; }
+
+      .sp-title { margin-top: 22px; text-align: center; font-family: var(--font-title);
+        font-weight: 900; line-height: 1.26; letter-spacing: -0.035em; color: var(--wirit-ink); }
+      .sp-title .l1, .sp-title .l2 { display: block; white-space: nowrap; }
+      .sp-title .hi { color: var(--wirit-cobalt); }   /* 주제 */
+      .sp-title .hot { color: var(--wirit-red); }     /* 수치 */
+
+      .sp-sub { margin-top: 28px; text-align: center; font-size: 29px; font-weight: 600;
+        color: var(--wirit-gray); letter-spacing: -0.01em; }
+      .sp-rule { height: 3px; background: var(--wirit-ink); margin-top: 24px; }
+
+      .sp-body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+
+      /* ── 총량 진행바 ── */
+      .sp-total { padding: 20px 0 2px; }
+      .sp-total .lb { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 15px; }
+      .sp-total .k { font-size: 35px; font-weight: 700; color: var(--wirit-gray); }
+      .sp-total .k b { color: var(--wirit-ink); font-weight: 800; }
+      .sp-total .v { font-size: 78px; font-weight: 800; line-height: 0.88;
+        letter-spacing: -0.035em; color: var(--wirit-red); }
+      .sp-total .v small { display: block; text-align: right; margin-bottom: 10px;
+        font-size: 27px; font-weight: 700; letter-spacing: 0; color: var(--wirit-gray); }
+      .sp-total .track { height: 40px; background: rgba(20, 24, 33, 0.08); position: relative; }
+      .sp-total .fill { height: 100%; background: var(--wirit-red); }
+      .sp-total .ft { display: flex; justify-content: space-between; margin-top: 13px;
+        font-size: 32px; font-weight: 700; color: var(--wirit-gray); }
+      .sp-total .ft b { color: var(--wirit-ink); font-weight: 800; }
+
+      /* ── 연도별 기둥 ── */
+      .sp-years { flex: 1; min-height: 0; display: flex; flex-direction: column; padding-top: 34px; }
+      .sp-plot { flex: 1; display: flex; align-items: stretch; gap: 26px; min-height: 0; position: relative; }
+
+      /* 눈금은 막대 뒤(z-index 0). bottom 은 축 라벨 블록(96px)을 뺀 높이 기준이다. */
+      .sp-grid { position: absolute; left: 0; right: 0; top: 0; bottom: 96px; pointer-events: none; z-index: 0; }
+      .sp-gl { position: absolute; left: 0; right: 0; height: 0; border-top: 3px dotted rgba(20, 24, 33, 0.3); }
+      .sp-gl span { position: absolute; right: 0; top: -31px; font-size: 22px; font-weight: 700;
+        color: var(--wirit-gray); opacity: 0.55; background: var(--wirit-paper); padding-left: 12px; }
+
+      .sp-col { flex: 1; display: flex; flex-direction: column; min-height: 0; position: relative; }
+      .sp-box { flex: 1; position: relative; min-height: 0; }
+
+      /* 값 라벨은 막대 **바깥 위**. 칸보다 살짝 넓게 잡아(-8px) 긴 라벨이 접히지 않게 한다. */
+      .sp-val { position: absolute; left: -8px; right: -8px; bottom: var(--h); margin-bottom: 14px;
+        text-align: center; line-height: 1; white-space: nowrap; }
+      .sp-val .n { font-size: 38px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.025em; }
+      .sp-val .u { font-size: 22px; font-weight: 700; color: var(--wirit-gray); margin-left: 3px; }
+
+      .sp-bar { position: absolute; left: 50%; transform: translateX(-50%); bottom: 0;
+        height: var(--h); width: var(--bw); background: rgba(20, 24, 33, 0.15);
+        display: flex; flex-direction: column; justify-content: flex-end; }
+      /* 점선 윤곽 = 연도 배분이 아직 없는 칸. 실선(면)과 다른 뜻이라 장식이 아니다. */
+      .sp-bar.dash { background: none; border: 3px dashed rgba(20, 24, 33, 0.32); border-bottom: none; }
+      .sp-fill { background: var(--wirit-red); }
+
+      /* 콜아웃 — m2-gov 뱃지 규격(흰→연분홍 그라데 · 레드 3px · 레드 네온 + 잉크 그림자) */
+      .sp-callout { position: absolute; left: 0; right: 0; bottom: var(--cb); z-index: 9;
+        background: linear-gradient(180deg, #ffffff 0%, #fff0f1 100%);
+        border: 3px solid var(--wirit-red); border-radius: 16px; padding: 15px 16px 17px;
+        text-align: center; box-shadow: 0 0 14px rgba(229, 72, 77, 0.38), 0 3px 20px rgba(20, 24, 33, 0.1); }
+      .sp-callout .cap { font-size: 27px; font-weight: 800; letter-spacing: -0.02em;
+        color: var(--wirit-red); line-height: 1; }
+      .sp-callout .val { font-size: 46px; font-weight: 900; letter-spacing: -0.035em;
+        color: var(--wirit-red); line-height: 1; margin-top: 10px; }
+
+      /* 축 라벨 블록은 높이를 고정한다 — 보조줄이 있는 칸과 없는 칸의 축선을 맞추기 위해서다. */
+      .sp-lab { flex: none; height: 96px; padding-top: 15px; text-align: center;
+        border-top: 2px solid var(--wirit-ink); }
+      .sp-lab .y { font-size: 36px; font-weight: 800; color: var(--wirit-gray);
+        line-height: 1; letter-spacing: -0.02em; }
+      .sp-lab .y.alt { font-size: 30px; }
+      .sp-col.hero .sp-lab .y { color: var(--wirit-ink); }
+      .sp-lab .nt { margin-top: 10px; font-size: 23px; font-weight: 700;
+        color: var(--wirit-gray); line-height: 1; white-space: nowrap; }
+
+      .sp-fn { font-size: 22px; font-weight: 600; color: var(--wirit-gray);
+        padding: 16px 0 18px; line-height: 1.45; white-space: nowrap; }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card sp font-taebaek-pretendard">
+      <div class="wirit-topcap">{{#if topcap}}<span>{{topcap}}</span>{{/if}}</div>
+
+      <h1 class="sp-title">
+        <span class="l1" style="font-size:{{title.fs1}}px">{{{title.l1}}}</span>
+        <span class="l2" style="font-size:{{title.fs2}}px">{{{title.l2}}}</span>
+      </h1>
+      {{#if subtitle}}<div class="sp-sub">{{subtitle}}</div>{{/if}}
+      <div class="sp-rule"></div>
+
+      <div class="sp-body">
+        <div class="sp-total">
+          <div class="lb">
+            <div class="k">{{{total.label}}}</div>
+            <div class="v">{{#if total.rateCap}}<small>{{total.rateCap}}</small>{{/if}}{{total.rate}}</div>
+          </div>
+          <div class="track"><div class="fill" style="width:{{total.fillPct}}%"></div></div>
+          <div class="ft"><span>{{{total.leftFoot}}}</span><span>{{{total.rightFoot}}}</span></div>
+        </div>
+
+        <div class="sp-years">
+          <div class="sp-plot">
+            {{#if grid}}<div class="sp-grid">
+              {{#each grid}}<div class="sp-gl" style="bottom:{{bottom}}%"><span>{{label}}</span></div>{{/each}}
+            </div>{{/if}}
+            {{#each years}}
+            <div class="sp-col{{#if callout}} hero{{/if}}"{{#if wide}} style="flex:{{wide}}"{{/if}}>
+              <div class="sp-box" style="--h:{{h}}%;--bw:{{barPct}}%">
+                <div class="sp-val"><span class="n">{{value}}</span><span class="u">{{unit}}</span></div>
+                <div class="sp-bar{{#if dash}} dash{{/if}}">{{#if fillPct}}<div class="sp-fill" style="height:{{fillPct}}%"></div>{{/if}}</div>
+                {{#if callout}}<div class="sp-callout" style="--cb:{{callout.bottom}}%">
+                  <div class="cap">{{callout.cap}}</div><div class="val">{{callout.value}}</div>
+                </div>{{/if}}
+              </div>
+              <div class="sp-lab">
+                <div class="y{{#if keyAlt}} alt{{/if}}">{{key}}</div>
+                {{#if keyNote}}<div class="nt">{{keyNote}}</div>{{/if}}
+              </div>
+            </div>
+            {{/each}}
+          </div>
+        </div>
+
+        {{#if footnote}}<div class="sp-fn">{{footnote}}</div>{{/if}}
+      </div>
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <script>
+      /* 제목 두 줄은 **각자** 폭에 맞춘다. 빌더가 준 크기를 상한으로 두고 넘칠 때만 줄인다
+       * — 키우지 않는 이유: 두 줄의 좌우를 맞춘 계약값이라 임의로 키우면 그 정렬이 깨진다. */
+      window.__wiritFit = function () {
+        var box = document.querySelector(".sp .sp-title");
+        if (!box) return;
+        var bs = getComputedStyle(box);
+        var avail = box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
+        ["l1", "l2"].forEach(function (cls) {
+          var el = box.querySelector("." + cls);
+          if (!el) return;
+          var start = parseFloat(el.style.fontSize) || 70;
+          if (el.scrollWidth <= avail) return;
+          var lo = 30, hi = start, best = 30;
+          for (var i = 0; i < 24; i++) {
+            var mid = (lo + hi) / 2;
+            el.style.fontSize = mid + "px";
+            if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
+          }
+          el.style.fontSize = best.toFixed(2) + "px";
+        });
+      };
+    </script>
+  </body>
+</html>

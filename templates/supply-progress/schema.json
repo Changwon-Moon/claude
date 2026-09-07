@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "supply-progress@1",
+  "description": "총량 진행바 + 연도별 목표 기둥. 「얼마나 채웠나」를 위에서 한 줄로 말하고, 아래에서 연도별로 쪼갠다. 좌표·비율은 전부 빌더가 계산한다(템플릿은 그리기만).",
+  "type": "object",
+  "required": ["template", "title", "total", "years", "source"],
+  "additionalProperties": true,
+  "properties": {
+    "template": { "type": "string", "pattern": "^supply-progress@\\d+$" },
+    "date": { "type": "string" },
+    "topcap": { "type": "string", "maxLength": 46, "description": "우상단 로고와 같은 줄. 공용 .wirit-topcap 규격(28px/600)을 그대로 쓴다" },
+    "title": {
+      "type": "object",
+      "required": ["l1", "l2"],
+      "description": "두 줄 제목. **줄마다 폰트 크기를 따로 준다** — 같은 크기로 두면 글자 수 차이만큼 오른쪽 끝이 들쭉날쭉하다(CARD_CHECKLIST §2). fs 는 빌더가 실측 대신 계약값으로 넘기고, __wiritFit 이 폭을 넘으면 줄인다.",
+      "properties": {
+        "l1": { "type": "string" },
+        "l2": { "type": "string" },
+        "fs1": { "type": "number" },
+        "fs2": { "type": "number" }
+      }
+    },
+    "subtitle": { "type": "string", "maxLength": 60, "description": "제목 아래 회색 한 줄 — 총목표가 무엇의 합인지" },
+    "total": {
+      "type": "object",
+      "required": ["label", "rate", "fillPct", "leftFoot", "rightFoot"],
+      "properties": {
+        "label": { "type": "string", "description": "진행바 왼쪽 라벨(HTML 허용)" },
+        "rateCap": { "type": "string", "maxLength": 8, "description": "큰 수치 위 작은 캡션(예: 달성률)" },
+        "rate": { "type": "string", "maxLength": 8 },
+        "fillPct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "leftFoot": { "type": "string" },
+        "rightFoot": { "type": "string" }
+      }
+    },
+    "grid": {
+      "type": "array",
+      "maxItems": 6,
+      "description": "가로 눈금. bottom 은 플롯 높이 대비 %",
+      "items": {
+        "type": "object",
+        "required": ["label", "bottom"],
+        "properties": { "label": { "type": "string" }, "bottom": { "type": "number" } }
+      }
+    },
+    "years": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "required": ["key", "value", "unit", "h"],
+        "properties": {
+          "key": { "type": "string", "maxLength": 8, "description": "축 라벨(연도 등)" },
+          "keyNote": { "type": "string", "maxLength": 14, "description": "축 라벨 아래 작은 보조줄" },
+          "keyAlt": { "type": "boolean", "description": "축 라벨이 연도가 아닐 때(폰트 축소)" },
+          "value": { "type": "string", "maxLength": 6 },
+          "unit": { "type": "string", "maxLength": 4 },
+          "h": { "type": "number", "minimum": 0, "maximum": 100, "description": "막대 높이(플롯 대비 %)" },
+          "dash": { "type": "boolean", "description": "점선 윤곽 — 연도 배분이 정해지지 않은 칸" },
+          "fillPct": { "type": "number", "description": "막대 안 실적 채움(막대 높이 대비 %)" },
+          "callout": {
+            "type": "object",
+            "description": "막대 위에 덮이는 콜아웃 카드(m2-gov 뱃지 규격). 칸 전체 폭을 써서 막대와 중심이 자동으로 맞는다.",
+            "required": ["cap", "value", "bottom"],
+            "properties": {
+              "cap": { "type": "string", "maxLength": 10 },
+              "value": { "type": "string", "maxLength": 8 },
+              "bottom": { "type": "number" }
+            }
+          },
+          "wide": { "type": "number", "description": "이 칸의 flex 배수. 콜아웃이 들어가는 칸만 넓힌다" },
+          "barPct": { "type": "number", "description": "막대 폭(칸 대비 %). 넓힌 칸도 막대 굵기는 같게 맞추려고 빌더가 계산한다" }
+        }
+      }
+    },
+    "footnote": { "type": "string" },
+    "source": {
+      "type": "object",
+      "required": ["name"],
+      "properties": { "name": { "type": "string" }, "asOf": { "type": "string" } }
+    }
+  }
+}

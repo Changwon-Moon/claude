@@ -1,18 +1,74 @@
 {
   "_": "완성 작업물 색인 — scripts/build-archive.mjs 가 만든다. 손으로 고치지 말 것(다음 실행에 덮어씀).",
-  "total": 69,
+  "total": 80,
   "folders": [
     {
       "topic": "기타",
-      "count": 61,
+      "count": 72,
       "items": [
+        {
+          "label": "supply-progress",
+          "title": "李정부 수도권 공급정책 1주년 — 147만호 중 5.3%",
+          "topic": "기타",
+          "date": "2026-09-07",
+          "cards": 1,
+          "pages": 1,
+          "state": "미승인",
+          "setState": "오너 확정",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "",
+            "review": ""
+          },
+          "rebuilt": {
+            "content": [
+              "data/content/2026-09-07/supply-progress.json"
+            ],
+            "png": [
+              "data/out/2026-09-07/supply-progress-p1.png"
+            ]
+          },
+          "verdict": "",
+          "reviewSummary": "",
+          "caption": "1년 전 정부가 약속한 147만호, 지금 얼마나 지어졌을까요?\n\n2025년 9월 7일, 정부는 「주택공급 확대방안」을 냈습니다.\n2026년부터 2030년까지 수도권에 134.9만호를 새로 착공하겠다는 계획이었습니다.\n이 대책의 핵심은 물량보다 기준이었습니다 — 관리 잣대를 인허가가 아니라 '착공'으로 바꿨거든요.\n짓겠다고 허가만 내주는 게 아니라 삽을 뜬 것만 세겠다는 뜻입니다.\n\n올해 8월 13일에는 12.0만호가 더 붙어 총 147만호가 됐습니다.\n\n그래서 지금까지 얼마나 지어졌을까요.\n\n국토교통부 주택통계 기준, 올해 1~7월 수도권 착공은 7.8만호입니다.\n총목표 147만호의 5.3%. 남은 물량이 139.1만호입니다.\n\n올해 목표만 떼어 봐도 26.9만호 중 29.0%입니다.\n1년의 7개월, 그러니까 시간은 58.3%가 지났는데 실적은 그 절반쯤에 서 있습니다.\n\n연도별 목표는 이렇습니다.\n· 2026년 26.9만호\n· 2027년 24.6만호\n· 2028년 25.0만호\n· 2029년 24.9만호\n· 2030년 33.5만호\n· 8·13 추가분 12.0만호 — 연도별 배분은 아직 발표되지 않았습니다\n\n2030년에 33.5만호가 몰려 있습니다.\n가장 큰 물량이 임기 마지막 해에 잡혀 있다는 뜻입니다.\n\n※ 카드 아래 막대 다섯 개의 합은 134.9만호입니다. 위 진행바의 분모(147만호)와 다릅니다 —\n   8·13 대책 12.0만호는 어느 해에 지을지가 아직 정해지지 않아 별도 칸으로 뒀습니다.\n   5년에 고르게 나눠 그리면 올해 목표가 없던 물량만큼 늘어나 달성률이 달라집니다. 그건 정부가 발표한 배분표가 아닙니다.\n※ 9·7 대책은 2025년 9월 발표지만 목표 기간은 2026~2030년입니다. '발표 1주년'과 '계획 1년차'는 다릅니다.\n※ 대책의 착공 목표와 국토부 월간 통계의 착공 실적이 완전히 같은 집계 기준인지는 정부가 공식 확인한 바 없습니다.\n   주요 매체가 쓰는 비교 방식을 따랐고, 카드에 '국토부 주택통계 기준'을 병기했습니다.\n※ 출처: 국토교통부 「’26년 7월 주택통계」 · 9·7 주택공급 확대방안 · 8·13 주택공급대책.\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#부동산정책 #주택공급 #수도권 #착공 #위릿",
+          "captionChars": 1152
+        },
+        {
+          "label": "daso-treemap",
+          "title": "2026년 현재, 다주택자 비율? (집합건물 다소유지수 트리맵)",
+          "topic": "기타",
+          "date": "2026-09-07",
+          "cards": 1,
+          "pages": 1,
+          "state": "미승인",
+          "setState": "",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/daso-treemap.txt",
+            "review": ""
+          },
+          "rebuilt": {
+            "content": [
+              "data/content/2026-09-07/daso-treemap.json"
+            ],
+            "png": [
+              "data/out/2026-09-07/daso-treemap-p1.png"
+            ]
+          },
+          "verdict": "",
+          "reviewSummary": "",
+          "caption": "집합건물을 여러 채 가진 사람은 몇 채씩 갖고 있을까요?\n\n법원 등기정보광장은 매달 두 가지 지수를 냅니다.\n· 소유지수 — 전체 국민 중 집합건물 소유명의인 비율. 2026년 8월 28.46%\n· 다소유지수 — 그 소유자 중 2채 이상 보유자 비율. 같은 달 합계 16.019%\n\n국민 100명으로 환산하면 23.9명이 1채, 4.6명이 2채 이상입니다.\n이 카드는 그 '2채 이상' 100명을 열어 본 것입니다.\n\n· 2채 69.19% (원지수 11.083% · 국민 1만명당 315명)\n· 3채 15.69% (원지수 2.514% · 국민 1만명당 72명)\n· 4채 5.76% (원지수 0.923% · 국민 1만명당 26명)\n· 5채 2.72% (원지수 0.435% · 국민 1만명당 12명)\n· 6채 1.54% (원지수 0.246% · 국민 1만명당 7.0명)\n· 7채 0.99% (원지수 0.158% · 국민 1만명당 4.5명)\n· 8채 0.68% (원지수 0.109% · 국민 1만명당 3.1명)\n· 9채 0.49% (원지수 0.078% · 국민 1만명당 2.2명)\n· 10채 이상 2.95% (원지수 0.473% · 국민 1만명당 13명)\n\n2채가 69.2%입니다. 여러 채를 가진 사람 열에 일곱은 딱 두 채입니다.\n\n※ '10채 이상'은 원자료의 일곱 구간을 묶은 것입니다. 내역은 이렇습니다 —\n   10채 0.062% · 11~20채 0.266% · 21~30채 0.072% · 31~40채 0.025% · 41~50채 0.013% · 51~100채 0.022% · 101채 이상 0.013% (원지수 기준)\n※ '주택'이 아니라 '집합건물'입니다. 아파트·연립·다세대·오피스텔 등이 들어가고\n   단독주택은 빠집니다. 오피스텔·상가도 집합건물이라 여기 잡힙니다.\n※ 그래서 국가데이터처 주택소유통계의 다보유 비율(2024년 14.9%)과는 다른 통계입니다.\n   모집단이 다르니 두 숫자를 나란히 놓고 비교하지 마세요.\n※ 소유명의인 기준입니다(내국인·재외국민).\n※ 최신월은 잠정치입니다 — 포털도 \"신청 후 등기가 완료되지 않은 소유명의인이 존재할 수 있다\"고 적어 둡니다.\n※ 출처: 법원 등기정보광장 집합건물 소유지수·다소유지수, 2026년 8월 기준.\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#등기정보광장 #집합건물 #부동산통계 #오피스텔 #위릿",
+          "captionChars": 1208
+        },
         {
           "label": "singo-daily-2026-09-05",
           "title": "🔥 9월 5일 신고가 12곳",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 12,
-          "pages": 0,
+          "pages": 12,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -23,18 +79,33 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/singo-산성역자이푸르지오1단지-84.json",
-              "data/content/2026-09-05/singo-진산마을삼성5차-84.json",
-              "data/content/2026-09-05/singo-인덕원센트럴자이1단지-84.json",
-              "data/content/2026-09-05/singo-동천디이스트-84.json",
-              "data/content/2026-09-05/singo-래미안트리베라1단지-84.json",
-              "data/content/2026-09-05/singo-반정아이파크캐슬5단지-84-0905.json",
-              "data/content/2026-09-05/singo-꿈동산신안-84-0905.json",
-              "data/content/2026-09-05/singo-화서주공4단지-59.json",
-              "data/content/2026-09-05/singo-석수e편한세상-59.json",
-              "data/content/2026-09-05/singo-권선자이e편한세상-59.json"
+              "data/content/2026-09-07/singo-산성역자이푸르지오1단지-84.json",
+              "data/content/2026-09-07/singo-진산마을삼성5차-84.json",
+              "data/content/2026-09-07/singo-인덕원센트럴자이1단지-84.json",
+              "data/content/2026-09-07/singo-동천디이스트-84.json",
+              "data/content/2026-09-07/singo-광명푸르지오센트베르-59-0905.json",
+              "data/content/2026-09-07/singo-래미안트리베라1단지-84.json",
+              "data/content/2026-09-07/singo-반정아이파크캐슬5단지-84-0905.json",
+              "data/content/2026-09-07/singo-꿈동산신안-84-0905.json",
+              "data/content/2026-09-07/singo-화서주공4단지-59.json",
+              "data/content/2026-09-07/singo-벽적골9단지주공-59-0905.json",
+              "data/content/2026-09-07/singo-석수e편한세상-59.json",
+              "data/content/2026-09-07/singo-권선자이e편한세상-59.json"
             ],
-            "png": []
+            "png": [
+              "data/out/2026-09-07/singo-산성역자이푸르지오1단지-84-p1.png",
+              "data/out/2026-09-07/singo-진산마을삼성5차-84-p1.png",
+              "data/out/2026-09-07/singo-인덕원센트럴자이1단지-84-p1.png",
+              "data/out/2026-09-07/singo-동천디이스트-84-p1.png",
+              "data/out/2026-09-07/singo-광명푸르지오센트베르-59-0905-p1.png",
+              "data/out/2026-09-07/singo-래미안트리베라1단지-84-p1.png",
+              "data/out/2026-09-07/singo-반정아이파크캐슬5단지-84-0905-p1.png",
+              "data/out/2026-09-07/singo-꿈동산신안-84-0905-p1.png",
+              "data/out/2026-09-07/singo-화서주공4단지-59-p1.png",
+              "data/out/2026-09-07/singo-벽적골9단지주공-59-0905-p1.png",
+              "data/out/2026-09-07/singo-석수e편한세상-59-p1.png",
+              "data/out/2026-09-07/singo-권선자이e편한세상-59-p1.png"
+            ]
           },
           "verdict": "pass",
           "reviewSummary": "PASS — error 0 · warn 0 · 카드 12장 · 코드 검수만",
@@ -45,7 +116,7 @@
           "label": "gap-ep1-10",
           "title": "출발선은 같았다 #10 — 2020년 초 똑같은 4.4억, 지금은 3.7억 격차 (광명 주공10·수원장안 한일타운우성·수원권선 호매실스타힐스)",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "미승인",
@@ -58,10 +129,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/gap-ep1-10.json"
+              "data/content/2026-09-07/gap-ep1-10.json"
             ],
             "png": [
-              "data/out/2026-09-05/gap-ep1-10-p1.png"
+              "data/out/2026-09-07/gap-ep1-10-p1.png"
             ]
           },
           "verdict": "block",
@@ -73,7 +144,7 @@
           "label": "gap-ep1-9",
           "title": "출발선은 같았다 #9 — 2020년 초 똑같은 8.1억, 지금은 6.5억 격차 (분당 시범한양·평촌 인덕원마을·기흥 기흥역더샵)",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "미승인",
@@ -86,10 +157,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/gap-ep1-9.json"
+              "data/content/2026-09-07/gap-ep1-9.json"
             ],
             "png": [
-              "data/out/2026-09-05/gap-ep1-9-p1.png"
+              "data/out/2026-09-07/gap-ep1-9-p1.png"
             ]
           },
           "verdict": "pass",
@@ -101,7 +172,7 @@
           "label": "gap-ep1-8",
           "title": "출발선은 같았다 #8 — 2020년 초 똑같은 6.1억, 지금은 5.7억 격차 (동탄 동탄역센트럴상록아파트·서대문 홍은동벽산·시흥 한라비발디캠퍼스)",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "미승인",
@@ -114,10 +185,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/gap-ep1-8.json"
+              "data/content/2026-09-07/gap-ep1-8.json"
             ],
             "png": [
-              "data/out/2026-09-05/gap-ep1-8-p1.png"
+              "data/out/2026-09-07/gap-ep1-8-p1.png"
             ]
           },
           "verdict": "pass",
@@ -129,7 +200,7 @@
           "label": "gap-ep1-7",
           "title": "출발선은 같았다 #7 — 2020년 초 똑같은 8.5억, 지금은 7.7억 격차 (성동 대림강변타운·강서 마곡수명산파크1단지·금천 남서울힐스테이트)",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "미승인",
@@ -142,10 +213,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/gap-ep1-7.json"
+              "data/content/2026-09-07/gap-ep1-7.json"
             ],
             "png": [
-              "data/out/2026-09-05/gap-ep1-7-p1.png"
+              "data/out/2026-09-07/gap-ep1-7-p1.png"
             ]
           },
           "verdict": "pass",
@@ -157,7 +228,7 @@
           "label": "gap-ep1-6",
           "title": "출발선은 같았다 #6 — 2020년 초 똑같은 5.9억, 지금은 6.2억 격차 (분당 장미마을·강북 삼각산아이원·시흥 한라비발디캠퍼스2차)",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "미승인",
@@ -170,10 +241,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/gap-ep1-6.json"
+              "data/content/2026-09-07/gap-ep1-6.json"
             ],
             "png": [
-              "data/out/2026-09-05/gap-ep1-6-p1.png"
+              "data/out/2026-09-07/gap-ep1-6-p1.png"
             ]
           },
           "verdict": "pass",
@@ -185,9 +256,9 @@
           "label": "singo-daily-2026-09-04",
           "title": "🔥 9월 4일 신고가 14곳",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 14,
-          "pages": 8,
+          "pages": 13,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -198,24 +269,34 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/singo-마포래미안푸르지오2단지-84.json",
-              "data/content/2026-09-05/singo-서울역센트럴자이-59.json",
-              "data/content/2026-09-05/singo-대림아파트-84.json",
-              "data/content/2026-09-05/singo-신길센트럴자이아파트-59.json",
-              "data/content/2026-09-05/singo-산성역자이푸르지오2단지-59.json",
-              "data/content/2026-09-05/singo-상암월드컵파크9단지-84.json",
-              "data/content/2026-09-05/singo-백련산에스케이뷰아이파크-59.json",
-              "data/content/2026-09-05/singo-갈매6단지-59.json"
+              "data/content/2026-09-07/singo-마포래미안푸르지오2단지-84.json",
+              "data/content/2026-09-07/singo-서울역센트럴자이-59.json",
+              "data/content/2026-09-07/singo-대림아파트-84.json",
+              "data/content/2026-09-07/singo-신길센트럴자이아파트-59.json",
+              "data/content/2026-09-07/singo-위례롯데캐슬-84.json",
+              "data/content/2026-09-07/singo-미사강변골든센트로-84.json",
+              "data/content/2026-09-07/singo-산성역자이푸르지오2단지-59.json",
+              "data/content/2026-09-07/singo-상암월드컵파크9단지-84.json",
+              "data/content/2026-09-07/singo-백련산에스케이뷰아이파크-59.json",
+              "data/content/2026-09-07/singo-동아에코빌-59-0904.json",
+              "data/content/2026-09-07/singo-지제역더샵센트럴시티-84.json",
+              "data/content/2026-09-07/singo-주공9-59.json",
+              "data/content/2026-09-07/singo-갈매6단지-59.json"
             ],
             "png": [
-              "data/out/2026-09-05/singo-마포래미안푸르지오2단지-84-p1.png",
-              "data/out/2026-09-05/singo-서울역센트럴자이-59-p1.png",
-              "data/out/2026-09-05/singo-대림아파트-84-p1.png",
-              "data/out/2026-09-05/singo-신길센트럴자이아파트-59-p1.png",
-              "data/out/2026-09-05/singo-산성역자이푸르지오2단지-59-p1.png",
-              "data/out/2026-09-05/singo-상암월드컵파크9단지-84-p1.png",
-              "data/out/2026-09-05/singo-백련산에스케이뷰아이파크-59-p1.png",
-              "data/out/2026-09-05/singo-갈매6단지-59-p1.png"
+              "data/out/2026-09-07/singo-마포래미안푸르지오2단지-84-p1.png",
+              "data/out/2026-09-07/singo-서울역센트럴자이-59-p1.png",
+              "data/out/2026-09-07/singo-대림아파트-84-p1.png",
+              "data/out/2026-09-07/singo-신길센트럴자이아파트-59-p1.png",
+              "data/out/2026-09-07/singo-위례롯데캐슬-84-p1.png",
+              "data/out/2026-09-07/singo-미사강변골든센트로-84-p1.png",
+              "data/out/2026-09-07/singo-산성역자이푸르지오2단지-59-p1.png",
+              "data/out/2026-09-07/singo-상암월드컵파크9단지-84-p1.png",
+              "data/out/2026-09-07/singo-백련산에스케이뷰아이파크-59-p1.png",
+              "data/out/2026-09-07/singo-동아에코빌-59-0904-p1.png",
+              "data/out/2026-09-07/singo-지제역더샵센트럴시티-84-p1.png",
+              "data/out/2026-09-07/singo-주공9-59-p1.png",
+              "data/out/2026-09-07/singo-갈매6단지-59-p1.png"
             ]
           },
           "verdict": "pass",
@@ -227,7 +308,7 @@
           "label": "singo-A15106901-84",
           "title": "🔥 두산 34평, 18.5억 신고가",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "미승인",
@@ -240,10 +321,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/singo-두산-84.json"
+              "data/content/2026-09-07/singo-두산-84.json"
             ],
             "png": [
-              "data/out/2026-09-05/singo-두산-84-p1.png"
+              "data/out/2026-09-07/singo-두산-84-p1.png"
             ]
           },
           "verdict": "pass",
@@ -255,7 +336,7 @@
           "label": "world-monthly",
           "title": "🌏 26년 세계 증시 1등, 한국 +61.8% — 8개국 월별 성적표 (2026.01~08)",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "미승인",
@@ -268,10 +349,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/world-monthly.json"
+              "data/content/2026-09-07/world-monthly.json"
             ],
             "png": [
-              "data/out/2026-09-05/world-monthly-p1.png"
+              "data/out/2026-09-07/world-monthly-p1.png"
             ]
           },
           "verdict": "",
@@ -283,7 +364,7 @@
           "label": "singo-daily-2026-09-03",
           "title": "🔥 9월 3일 신고가 11곳",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 11,
           "pages": 10,
           "state": "미승인",
@@ -296,28 +377,28 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/singo-광교중흥에스클래스-84.json",
-              "data/content/2026-09-05/singo-e편한세상신촌2단지-59.json",
-              "data/content/2026-09-05/singo-래미안힐스테이트고덕-59.json",
-              "data/content/2026-09-05/singo-롯데캐슬위너-84.json",
-              "data/content/2026-09-05/singo-미사강변스타힐스아파트-84.json",
-              "data/content/2026-09-05/singo-산성역자이푸르지오1단지-59.json",
-              "data/content/2026-09-05/singo-광명두산위브트레지움-59.json",
-              "data/content/2026-09-05/singo-관악-84.json",
-              "data/content/2026-09-05/singo-동탄시범다은마을월드메르디앙반도유보라-59.json",
-              "data/content/2026-09-05/singo-자연앤데시앙-84.json"
+              "data/content/2026-09-07/singo-광교중흥에스클래스-84.json",
+              "data/content/2026-09-07/singo-e편한세상신촌2단지-59.json",
+              "data/content/2026-09-07/singo-래미안힐스테이트고덕-59.json",
+              "data/content/2026-09-07/singo-롯데캐슬위너-84.json",
+              "data/content/2026-09-07/singo-미사강변스타힐스아파트-84.json",
+              "data/content/2026-09-07/singo-산성역자이푸르지오1단지-59.json",
+              "data/content/2026-09-07/singo-광명두산위브트레지움-59.json",
+              "data/content/2026-09-07/singo-관악-84.json",
+              "data/content/2026-09-07/singo-동탄시범다은마을월드메르디앙반도유보라-59.json",
+              "data/content/2026-09-07/singo-자연앤데시앙-84.json"
             ],
             "png": [
-              "data/out/2026-09-05/singo-광교중흥에스클래스-84-p1.png",
-              "data/out/2026-09-05/singo-e편한세상신촌2단지-59-p1.png",
-              "data/out/2026-09-05/singo-래미안힐스테이트고덕-59-p1.png",
-              "data/out/2026-09-05/singo-롯데캐슬위너-84-p1.png",
-              "data/out/2026-09-05/singo-미사강변스타힐스아파트-84-p1.png",
-              "data/out/2026-09-05/singo-산성역자이푸르지오1단지-59-p1.png",
-              "data/out/2026-09-05/singo-광명두산위브트레지움-59-p1.png",
-              "data/out/2026-09-05/singo-관악-84-p1.png",
-              "data/out/2026-09-05/singo-동탄시범다은마을월드메르디앙반도유보라-59-p1.png",
-              "data/out/2026-09-05/singo-자연앤데시앙-84-p1.png"
+              "data/out/2026-09-07/singo-광교중흥에스클래스-84-p1.png",
+              "data/out/2026-09-07/singo-e편한세상신촌2단지-59-p1.png",
+              "data/out/2026-09-07/singo-래미안힐스테이트고덕-59-p1.png",
+              "data/out/2026-09-07/singo-롯데캐슬위너-84-p1.png",
+              "data/out/2026-09-07/singo-미사강변스타힐스아파트-84-p1.png",
+              "data/out/2026-09-07/singo-산성역자이푸르지오1단지-59-p1.png",
+              "data/out/2026-09-07/singo-광명두산위브트레지움-59-p1.png",
+              "data/out/2026-09-07/singo-관악-84-p1.png",
+              "data/out/2026-09-07/singo-동탄시범다은마을월드메르디앙반도유보라-59-p1.png",
+              "data/out/2026-09-07/singo-자연앤데시앙-84-p1.png"
             ]
           },
           "verdict": "pass",
@@ -329,7 +410,7 @@
           "label": "gap-ep1-5",
           "title": "출발선은 같았다 #5 — 2020년 초 똑같은 5.5억, 지금은 5.5억 격차 (수지 현대성우8차·기흥 블루밍구성더센트럴·시흥 호반베르디움더프라임)",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "미승인",
@@ -342,10 +423,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/gap-ep1-5.json"
+              "data/content/2026-09-07/gap-ep1-5.json"
             ],
             "png": [
-              "data/out/2026-09-05/gap-ep1-5-p1.png"
+              "data/out/2026-09-07/gap-ep1-5-p1.png"
             ]
           },
           "verdict": "pass",
@@ -357,7 +438,7 @@
           "label": "gap-ep1-4",
           "title": "출발선은 같았다 #4 — 2020년 초 똑같은 6.9억, 지금은 4.8억 격차 (강서 가양6단지·성북 돈암동삼성·구리 한라비발디)",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "미승인",
@@ -370,10 +451,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/gap-ep1-4.json"
+              "data/content/2026-09-07/gap-ep1-4.json"
             ],
             "png": [
-              "data/out/2026-09-05/gap-ep1-4-p1.png"
+              "data/out/2026-09-07/gap-ep1-4-p1.png"
             ]
           },
           "verdict": "pass",
@@ -385,7 +466,7 @@
           "label": "gap-ep1-3",
           "title": "출발선은 같았다 #3 — 2020년 초 똑같은 7.6억, 지금은 7.9억 격차 (성동 벽산·성북 길음동동부센트레빌·구리 갈매역아이파크)",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "미승인",
@@ -398,10 +479,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/gap-ep1-3.json"
+              "data/content/2026-09-07/gap-ep1-3.json"
             ],
             "png": [
-              "data/out/2026-09-05/gap-ep1-3-p1.png"
+              "data/out/2026-09-07/gap-ep1-3-p1.png"
             ]
           },
           "verdict": "pass",
@@ -413,7 +494,7 @@
           "label": "gap-ep1-2",
           "title": "출발선은 같았다 #2 — 2020년 초 똑같은 8.0억, 지금은 8.6억 격차 (성동 두산·평촌 초원마을대림·수원장안 SK SKY VIEW)",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "미승인",
@@ -426,10 +507,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/gap-ep1-2.json"
+              "data/content/2026-09-07/gap-ep1-2.json"
             ],
             "png": [
-              "data/out/2026-09-05/gap-ep1-2-p1.png"
+              "data/out/2026-09-07/gap-ep1-2-p1.png"
             ]
           },
           "verdict": "pass",
@@ -441,7 +522,7 @@
           "label": "gap-ep1-1",
           "title": "출발선은 같았다 #1 — 2020년 초 똑같은 7.0억, 지금은 9.8억 격차 (분당 시범우성·성북 길음뉴타운1·안산 파크푸르지오)",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "미승인",
@@ -454,10 +535,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/gap-ep1-1.json"
+              "data/content/2026-09-07/gap-ep1-1.json"
             ],
             "png": [
-              "data/out/2026-09-05/gap-ep1-1-p1.png"
+              "data/out/2026-09-07/gap-ep1-1-p1.png"
             ]
           },
           "verdict": "pass",
@@ -469,9 +550,9 @@
           "label": "singo-daily-2026-09-02",
           "title": "🔥 9월 2일 신고가 15곳",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 15,
-          "pages": 14,
+          "pages": 15,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -482,36 +563,38 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/singo-텐즈힐1단지-84.json",
-              "data/content/2026-09-05/singo-위례더힐55-84.json",
-              "data/content/2026-09-05/singo-우장산아이파크이편한세상-84.json",
-              "data/content/2026-09-05/singo-마곡엠밸리9단지-59.json",
-              "data/content/2026-09-05/singo-주공12-84.json",
-              "data/content/2026-09-05/singo-이편한세상센트레빌-59.json",
-              "data/content/2026-09-05/singo-영통아이파크캐슬1단지-59.json",
-              "data/content/2026-09-05/singo-휘경리오포레아파트1단지-84.json",
-              "data/content/2026-09-05/singo-기흥역센트럴푸르지오-84.json",
-              "data/content/2026-09-05/singo-동탄역센트럴푸르지오-59.json",
-              "data/content/2026-09-05/singo-도덕파크타운1단지-59.json",
-              "data/content/2026-09-05/singo-만현마을9단지엘지자이-84.json",
-              "data/content/2026-09-05/singo-수원하늘채더퍼스트1단지-84.json",
-              "data/content/2026-09-05/singo-네이처포레-59.json"
+              "data/content/2026-09-07/singo-텐즈힐1단지-84.json",
+              "data/content/2026-09-07/singo-위례더힐55-84.json",
+              "data/content/2026-09-07/singo-우장산아이파크이편한세상-84.json",
+              "data/content/2026-09-07/singo-마곡엠밸리9단지-59.json",
+              "data/content/2026-09-07/singo-다산롯데캐슬-84.json",
+              "data/content/2026-09-07/singo-주공12-84.json",
+              "data/content/2026-09-07/singo-이편한세상센트레빌-59.json",
+              "data/content/2026-09-07/singo-영통아이파크캐슬1단지-59.json",
+              "data/content/2026-09-07/singo-휘경리오포레아파트1단지-84.json",
+              "data/content/2026-09-07/singo-기흥역센트럴푸르지오-84.json",
+              "data/content/2026-09-07/singo-동탄역센트럴푸르지오-59.json",
+              "data/content/2026-09-07/singo-도덕파크타운1단지-59.json",
+              "data/content/2026-09-07/singo-만현마을9단지엘지자이-84.json",
+              "data/content/2026-09-07/singo-수원하늘채더퍼스트1단지-84.json",
+              "data/content/2026-09-07/singo-네이처포레-59.json"
             ],
             "png": [
-              "data/out/2026-09-05/singo-텐즈힐1단지-84-p1.png",
-              "data/out/2026-09-05/singo-위례더힐55-84-p1.png",
-              "data/out/2026-09-05/singo-우장산아이파크이편한세상-84-p1.png",
-              "data/out/2026-09-05/singo-마곡엠밸리9단지-59-p1.png",
-              "data/out/2026-09-05/singo-주공12-84-p1.png",
-              "data/out/2026-09-05/singo-이편한세상센트레빌-59-p1.png",
-              "data/out/2026-09-05/singo-영통아이파크캐슬1단지-59-p1.png",
-              "data/out/2026-09-05/singo-휘경리오포레아파트1단지-84-p1.png",
-              "data/out/2026-09-05/singo-기흥역센트럴푸르지오-84-p1.png",
-              "data/out/2026-09-05/singo-동탄역센트럴푸르지오-59-p1.png",
-              "data/out/2026-09-05/singo-도덕파크타운1단지-59-p1.png",
-              "data/out/2026-09-05/singo-만현마을9단지엘지자이-84-p1.png",
-              "data/out/2026-09-05/singo-수원하늘채더퍼스트1단지-84-p1.png",
-              "data/out/2026-09-05/singo-네이처포레-59-p1.png"
+              "data/out/2026-09-07/singo-텐즈힐1단지-84-p1.png",
+              "data/out/2026-09-07/singo-위례더힐55-84-p1.png",
+              "data/out/2026-09-07/singo-우장산아이파크이편한세상-84-p1.png",
+              "data/out/2026-09-07/singo-마곡엠밸리9단지-59-p1.png",
+              "data/out/2026-09-07/singo-다산롯데캐슬-84-p1.png",
+              "data/out/2026-09-07/singo-주공12-84-p1.png",
+              "data/out/2026-09-07/singo-이편한세상센트레빌-59-p1.png",
+              "data/out/2026-09-07/singo-영통아이파크캐슬1단지-59-p1.png",
+              "data/out/2026-09-07/singo-휘경리오포레아파트1단지-84-p1.png",
+              "data/out/2026-09-07/singo-기흥역센트럴푸르지오-84-p1.png",
+              "data/out/2026-09-07/singo-동탄역센트럴푸르지오-59-p1.png",
+              "data/out/2026-09-07/singo-도덕파크타운1단지-59-p1.png",
+              "data/out/2026-09-07/singo-만현마을9단지엘지자이-84-p1.png",
+              "data/out/2026-09-07/singo-수원하늘채더퍼스트1단지-84-p1.png",
+              "data/out/2026-09-07/singo-네이처포레-59-p1.png"
             ]
           },
           "verdict": "pass",
@@ -523,7 +606,7 @@
           "label": "hakgun-map",
           "title": "🏫 대한민국 대표 학군지 Top 31 — 시세 & 학원 (2장)",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 2,
           "pages": 2,
           "state": "미승인",
@@ -536,12 +619,12 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/hakgun-map.json",
-              "data/content/2026-09-05/hakgun-academy.json"
+              "data/content/2026-09-07/hakgun-map.json",
+              "data/content/2026-09-07/hakgun-academy.json"
             ],
             "png": [
-              "data/out/2026-09-05/hakgun-map-p1.png",
-              "data/out/2026-09-05/hakgun-academy-p1.png"
+              "data/out/2026-09-07/hakgun-map-p1.png",
+              "data/out/2026-09-07/hakgun-academy-p1.png"
             ]
           },
           "verdict": "block",
@@ -553,9 +636,9 @@
           "label": "singo-daily-2026-09-01",
           "title": "🔥 9월 1일 신고가 15곳",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 15,
-          "pages": 12,
+          "pages": 14,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -566,32 +649,36 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/singo-목동힐스테이트-59.json",
-              "data/content/2026-09-05/singo-주공13-84.json",
-              "data/content/2026-09-05/singo-광교호반베르디움-84.json",
-              "data/content/2026-09-05/singo-강서힐스테이트-59.json",
-              "data/content/2026-09-05/singo-평촌더샵센트럴시티-59.json",
-              "data/content/2026-09-05/singo-평촌센텀퍼스트-59.json",
-              "data/content/2026-09-05/singo-평촌더샵아이파크-59.json",
-              "data/content/2026-09-05/singo-동탄시범다은마을월드메르디앙반도유보라-84.json",
-              "data/content/2026-09-05/singo-병점역아이파크캐슬-84.json",
-              "data/content/2026-09-05/singo-아르테자이-59.json",
-              "data/content/2026-09-05/singo-수원하늘채더퍼스트1단지-59.json",
-              "data/content/2026-09-05/singo-보람마을아주-59.json"
+              "data/content/2026-09-07/singo-목동힐스테이트-59.json",
+              "data/content/2026-09-07/singo-주공13-84.json",
+              "data/content/2026-09-07/singo-광교호반베르디움-84.json",
+              "data/content/2026-09-07/singo-신도림태영타운-84.json",
+              "data/content/2026-09-07/singo-강서힐스테이트-59.json",
+              "data/content/2026-09-07/singo-평촌더샵센트럴시티-59.json",
+              "data/content/2026-09-07/singo-평촌센텀퍼스트-59.json",
+              "data/content/2026-09-07/singo-평촌더샵아이파크-59.json",
+              "data/content/2026-09-07/singo-동탄시범다은마을월드메르디앙반도유보라-84.json",
+              "data/content/2026-09-07/singo-병점역아이파크캐슬-84.json",
+              "data/content/2026-09-07/singo-신동탄포레자이-59.json",
+              "data/content/2026-09-07/singo-아르테자이-59.json",
+              "data/content/2026-09-07/singo-수원하늘채더퍼스트1단지-59.json",
+              "data/content/2026-09-07/singo-보람마을아주-59.json"
             ],
             "png": [
-              "data/out/2026-09-05/singo-목동힐스테이트-59-p1.png",
-              "data/out/2026-09-05/singo-주공13-84-p1.png",
-              "data/out/2026-09-05/singo-광교호반베르디움-84-p1.png",
-              "data/out/2026-09-05/singo-강서힐스테이트-59-p1.png",
-              "data/out/2026-09-05/singo-평촌더샵센트럴시티-59-p1.png",
-              "data/out/2026-09-05/singo-평촌센텀퍼스트-59-p1.png",
-              "data/out/2026-09-05/singo-평촌더샵아이파크-59-p1.png",
-              "data/out/2026-09-05/singo-동탄시범다은마을월드메르디앙반도유보라-84-p1.png",
-              "data/out/2026-09-05/singo-병점역아이파크캐슬-84-p1.png",
-              "data/out/2026-09-05/singo-아르테자이-59-p1.png",
-              "data/out/2026-09-05/singo-수원하늘채더퍼스트1단지-59-p1.png",
-              "data/out/2026-09-05/singo-보람마을아주-59-p1.png"
+              "data/out/2026-09-07/singo-목동힐스테이트-59-p1.png",
+              "data/out/2026-09-07/singo-주공13-84-p1.png",
+              "data/out/2026-09-07/singo-광교호반베르디움-84-p1.png",
+              "data/out/2026-09-07/singo-신도림태영타운-84-p1.png",
+              "data/out/2026-09-07/singo-강서힐스테이트-59-p1.png",
+              "data/out/2026-09-07/singo-평촌더샵센트럴시티-59-p1.png",
+              "data/out/2026-09-07/singo-평촌센텀퍼스트-59-p1.png",
+              "data/out/2026-09-07/singo-평촌더샵아이파크-59-p1.png",
+              "data/out/2026-09-07/singo-동탄시범다은마을월드메르디앙반도유보라-84-p1.png",
+              "data/out/2026-09-07/singo-병점역아이파크캐슬-84-p1.png",
+              "data/out/2026-09-07/singo-신동탄포레자이-59-p1.png",
+              "data/out/2026-09-07/singo-아르테자이-59-p1.png",
+              "data/out/2026-09-07/singo-수원하늘채더퍼스트1단지-59-p1.png",
+              "data/out/2026-09-07/singo-보람마을아주-59-p1.png"
             ]
           },
           "verdict": "pass",
@@ -603,9 +690,9 @@
           "label": "singo-daily-2026-08-29_2026-08-31",
           "title": "🔥 8월 29~31일 신고가 14곳",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 14,
-          "pages": 12,
+          "pages": 14,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -616,32 +703,36 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/singo-미사강변푸르지오-84.json",
-              "data/content/2026-09-05/singo-대림1-59.json",
-              "data/content/2026-09-05/singo-관악푸르지오-84.json",
-              "data/content/2026-09-05/singo-동천자이-84.json",
-              "data/content/2026-09-05/singo-미사강변루나리움-59.json",
-              "data/content/2026-09-05/singo-수원하늘채더퍼스트2단지-84.json",
-              "data/content/2026-09-05/singo-병점역아이파크캐슬-59.json",
-              "data/content/2026-09-05/singo-e편한세상반월나노시티역-59.json",
-              "data/content/2026-09-05/singo-수원시청역SKVIEW-84.json",
-              "data/content/2026-09-05/singo-수원하늘채더퍼스트2단지-59.json",
-              "data/content/2026-09-05/singo-황골마을주공1-59.json",
-              "data/content/2026-09-05/singo-늘푸른벽산-59.json"
+              "data/content/2026-09-07/singo-성복역롯데캐슬골드타운-84.json",
+              "data/content/2026-09-07/singo-미사강변푸르지오-84.json",
+              "data/content/2026-09-07/singo-대림1-59.json",
+              "data/content/2026-09-07/singo-관악푸르지오-84.json",
+              "data/content/2026-09-07/singo-동천자이-84.json",
+              "data/content/2026-09-07/singo-미사강변루나리움-59.json",
+              "data/content/2026-09-07/singo-수원하늘채더퍼스트2단지-84.json",
+              "data/content/2026-09-07/singo-화서역푸르지오더에듀포레-59.json",
+              "data/content/2026-09-07/singo-병점역아이파크캐슬-59.json",
+              "data/content/2026-09-07/singo-e편한세상반월나노시티역-59.json",
+              "data/content/2026-09-07/singo-수원시청역SKVIEW-84.json",
+              "data/content/2026-09-07/singo-수원하늘채더퍼스트2단지-59.json",
+              "data/content/2026-09-07/singo-황골마을주공1-59.json",
+              "data/content/2026-09-07/singo-늘푸른벽산-59.json"
             ],
             "png": [
-              "data/out/2026-09-05/singo-미사강변푸르지오-84-p1.png",
-              "data/out/2026-09-05/singo-대림1-59-p1.png",
-              "data/out/2026-09-05/singo-관악푸르지오-84-p1.png",
-              "data/out/2026-09-05/singo-동천자이-84-p1.png",
-              "data/out/2026-09-05/singo-미사강변루나리움-59-p1.png",
-              "data/out/2026-09-05/singo-수원하늘채더퍼스트2단지-84-p1.png",
-              "data/out/2026-09-05/singo-병점역아이파크캐슬-59-p1.png",
-              "data/out/2026-09-05/singo-e편한세상반월나노시티역-59-p1.png",
-              "data/out/2026-09-05/singo-수원시청역SKVIEW-84-p1.png",
-              "data/out/2026-09-05/singo-수원하늘채더퍼스트2단지-59-p1.png",
-              "data/out/2026-09-05/singo-황골마을주공1-59-p1.png",
-              "data/out/2026-09-05/singo-늘푸른벽산-59-p1.png"
+              "data/out/2026-09-07/singo-성복역롯데캐슬골드타운-84-p1.png",
+              "data/out/2026-09-07/singo-미사강변푸르지오-84-p1.png",
+              "data/out/2026-09-07/singo-대림1-59-p1.png",
+              "data/out/2026-09-07/singo-관악푸르지오-84-p1.png",
+              "data/out/2026-09-07/singo-동천자이-84-p1.png",
+              "data/out/2026-09-07/singo-미사강변루나리움-59-p1.png",
+              "data/out/2026-09-07/singo-수원하늘채더퍼스트2단지-84-p1.png",
+              "data/out/2026-09-07/singo-화서역푸르지오더에듀포레-59-p1.png",
+              "data/out/2026-09-07/singo-병점역아이파크캐슬-59-p1.png",
+              "data/out/2026-09-07/singo-e편한세상반월나노시티역-59-p1.png",
+              "data/out/2026-09-07/singo-수원시청역SKVIEW-84-p1.png",
+              "data/out/2026-09-07/singo-수원하늘채더퍼스트2단지-59-p1.png",
+              "data/out/2026-09-07/singo-황골마을주공1-59-p1.png",
+              "data/out/2026-09-07/singo-늘푸른벽산-59-p1.png"
             ]
           },
           "verdict": "pass",
@@ -653,7 +744,7 @@
           "label": "singo-daily-2026-08-28",
           "title": "🔥 8월 28일 신고가 6곳",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 6,
           "pages": 6,
           "state": "미승인",
@@ -666,20 +757,20 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/singo-힐스테이트상도센트럴파크-84.json",
-              "data/content/2026-09-05/singo-벽산블루밍-84.json",
-              "data/content/2026-09-05/singo-래미안월곡-84.json",
-              "data/content/2026-09-05/singo-초원마을대림-59.json",
-              "data/content/2026-09-05/singo-덕현-84.json",
-              "data/content/2026-09-05/singo-동탄2하우스디더레이크-59.json"
+              "data/content/2026-09-07/singo-힐스테이트상도센트럴파크-84.json",
+              "data/content/2026-09-07/singo-벽산블루밍-84.json",
+              "data/content/2026-09-07/singo-래미안월곡-84.json",
+              "data/content/2026-09-07/singo-초원마을대림-59.json",
+              "data/content/2026-09-07/singo-덕현-84.json",
+              "data/content/2026-09-07/singo-동탄2하우스디더레이크-59.json"
             ],
             "png": [
-              "data/out/2026-09-05/singo-힐스테이트상도센트럴파크-84-p1.png",
-              "data/out/2026-09-05/singo-벽산블루밍-84-p1.png",
-              "data/out/2026-09-05/singo-래미안월곡-84-p1.png",
-              "data/out/2026-09-05/singo-초원마을대림-59-p1.png",
-              "data/out/2026-09-05/singo-덕현-84-p1.png",
-              "data/out/2026-09-05/singo-동탄2하우스디더레이크-59-p1.png"
+              "data/out/2026-09-07/singo-힐스테이트상도센트럴파크-84-p1.png",
+              "data/out/2026-09-07/singo-벽산블루밍-84-p1.png",
+              "data/out/2026-09-07/singo-래미안월곡-84-p1.png",
+              "data/out/2026-09-07/singo-초원마을대림-59-p1.png",
+              "data/out/2026-09-07/singo-덕현-84-p1.png",
+              "data/out/2026-09-07/singo-동탄2하우스디더레이크-59-p1.png"
             ]
           },
           "verdict": "pass",
@@ -691,7 +782,7 @@
           "label": "singo-daily-2026-08-27",
           "title": "🔥 8월 27일 신고가 14곳",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 14,
           "pages": 12,
           "state": "미승인",
@@ -704,32 +795,32 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/singo-래미안리더스원-84.json",
-              "data/content/2026-09-05/singo-서울숲리버뷰자이-84.json",
-              "data/content/2026-09-05/singo-고덕주공9-84.json",
-              "data/content/2026-09-05/singo-현대프라임-59.json",
-              "data/content/2026-09-05/singo-약수하이츠-59.json",
-              "data/content/2026-09-05/singo-고덕리엔파크3단지-84.json",
-              "data/content/2026-09-05/singo-관악드림삼성-59.json",
-              "data/content/2026-09-05/singo-쌍용-59.json",
-              "data/content/2026-09-05/singo-한마을-59.json",
-              "data/content/2026-09-05/singo-진산마을성원상떼빌아파트-84.json",
-              "data/content/2026-09-05/singo-전농우성-59.json",
-              "data/content/2026-09-05/singo-부영-59.json"
+              "data/content/2026-09-07/singo-래미안리더스원-84.json",
+              "data/content/2026-09-07/singo-서울숲리버뷰자이-84.json",
+              "data/content/2026-09-07/singo-고덕주공9-84.json",
+              "data/content/2026-09-07/singo-현대프라임-59.json",
+              "data/content/2026-09-07/singo-약수하이츠-59.json",
+              "data/content/2026-09-07/singo-고덕리엔파크3단지-84.json",
+              "data/content/2026-09-07/singo-관악드림삼성-59.json",
+              "data/content/2026-09-07/singo-쌍용-59.json",
+              "data/content/2026-09-07/singo-한마을-59.json",
+              "data/content/2026-09-07/singo-진산마을성원상떼빌아파트-84.json",
+              "data/content/2026-09-07/singo-전농우성-59.json",
+              "data/content/2026-09-07/singo-부영-59.json"
             ],
             "png": [
-              "data/out/2026-09-05/singo-래미안리더스원-84-p1.png",
-              "data/out/2026-09-05/singo-서울숲리버뷰자이-84-p1.png",
-              "data/out/2026-09-05/singo-고덕주공9-84-p1.png",
-              "data/out/2026-09-05/singo-현대프라임-59-p1.png",
-              "data/out/2026-09-05/singo-약수하이츠-59-p1.png",
-              "data/out/2026-09-05/singo-고덕리엔파크3단지-84-p1.png",
-              "data/out/2026-09-05/singo-관악드림삼성-59-p1.png",
-              "data/out/2026-09-05/singo-쌍용-59-p1.png",
-              "data/out/2026-09-05/singo-한마을-59-p1.png",
-              "data/out/2026-09-05/singo-진산마을성원상떼빌아파트-84-p1.png",
-              "data/out/2026-09-05/singo-전농우성-59-p1.png",
-              "data/out/2026-09-05/singo-부영-59-p1.png"
+              "data/out/2026-09-07/singo-래미안리더스원-84-p1.png",
+              "data/out/2026-09-07/singo-서울숲리버뷰자이-84-p1.png",
+              "data/out/2026-09-07/singo-고덕주공9-84-p1.png",
+              "data/out/2026-09-07/singo-현대프라임-59-p1.png",
+              "data/out/2026-09-07/singo-약수하이츠-59-p1.png",
+              "data/out/2026-09-07/singo-고덕리엔파크3단지-84-p1.png",
+              "data/out/2026-09-07/singo-관악드림삼성-59-p1.png",
+              "data/out/2026-09-07/singo-쌍용-59-p1.png",
+              "data/out/2026-09-07/singo-한마을-59-p1.png",
+              "data/out/2026-09-07/singo-진산마을성원상떼빌아파트-84-p1.png",
+              "data/out/2026-09-07/singo-전농우성-59-p1.png",
+              "data/out/2026-09-07/singo-부영-59-p1.png"
             ]
           },
           "verdict": "pass",
@@ -741,9 +832,9 @@
           "label": "singo-daily-2026-08-26",
           "title": "🔥 8월 26일 신고가 16곳",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 16,
-          "pages": 14,
+          "pages": 15,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -754,36 +845,38 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/singo-신촌숲아이파크-84.json",
-              "data/content/2026-09-05/singo-강촌-59.json",
-              "data/content/2026-09-05/singo-서초힐스-59.json",
-              "data/content/2026-09-05/singo-신동아리버파크-59.json",
-              "data/content/2026-09-05/singo-초원마을대림-84.json",
-              "data/content/2026-09-05/singo-등촌동아이파크-84.json",
-              "data/content/2026-09-05/singo-한신아파트상가동유치원동103~109-84.json",
-              "data/content/2026-09-05/singo-다산반도유보라메이플타운-84.json",
-              "data/content/2026-09-05/singo-광주역자연앤자이-84.json",
-              "data/content/2026-09-05/singo-장미시영6-59.json",
-              "data/content/2026-09-05/singo-한진-84.json",
-              "data/content/2026-09-05/singo-호계2차현대홈타운-59.json",
-              "data/content/2026-09-05/singo-엘에이치이스트힐-59.json",
-              "data/content/2026-09-05/singo-덕유마을주공4-59.json"
+              "data/content/2026-09-07/singo-신촌숲아이파크-84.json",
+              "data/content/2026-09-07/singo-강촌-59.json",
+              "data/content/2026-09-07/singo-서초힐스-59.json",
+              "data/content/2026-09-07/singo-신동아리버파크-59.json",
+              "data/content/2026-09-07/singo-신도림태영타운-84.json",
+              "data/content/2026-09-07/singo-초원마을대림-84.json",
+              "data/content/2026-09-07/singo-등촌동아이파크-84.json",
+              "data/content/2026-09-07/singo-한신아파트상가동유치원동103~109-84.json",
+              "data/content/2026-09-07/singo-다산반도유보라메이플타운-84.json",
+              "data/content/2026-09-07/singo-광주역자연앤자이-84.json",
+              "data/content/2026-09-07/singo-장미시영6-59.json",
+              "data/content/2026-09-07/singo-한진-84.json",
+              "data/content/2026-09-07/singo-호계2차현대홈타운-59.json",
+              "data/content/2026-09-07/singo-엘에이치이스트힐-59.json",
+              "data/content/2026-09-07/singo-덕유마을주공4-59.json"
             ],
             "png": [
-              "data/out/2026-09-05/singo-신촌숲아이파크-84-p1.png",
-              "data/out/2026-09-05/singo-강촌-59-p1.png",
-              "data/out/2026-09-05/singo-서초힐스-59-p1.png",
-              "data/out/2026-09-05/singo-신동아리버파크-59-p1.png",
-              "data/out/2026-09-05/singo-초원마을대림-84-p1.png",
-              "data/out/2026-09-05/singo-등촌동아이파크-84-p1.png",
-              "data/out/2026-09-05/singo-한신아파트상가동유치원동103~109-84-p1.png",
-              "data/out/2026-09-05/singo-다산반도유보라메이플타운-84-p1.png",
-              "data/out/2026-09-05/singo-광주역자연앤자이-84-p1.png",
-              "data/out/2026-09-05/singo-장미시영6-59-p1.png",
-              "data/out/2026-09-05/singo-한진-84-p1.png",
-              "data/out/2026-09-05/singo-호계2차현대홈타운-59-p1.png",
-              "data/out/2026-09-05/singo-엘에이치이스트힐-59-p1.png",
-              "data/out/2026-09-05/singo-덕유마을주공4-59-p1.png"
+              "data/out/2026-09-07/singo-신촌숲아이파크-84-p1.png",
+              "data/out/2026-09-07/singo-강촌-59-p1.png",
+              "data/out/2026-09-07/singo-서초힐스-59-p1.png",
+              "data/out/2026-09-07/singo-신동아리버파크-59-p1.png",
+              "data/out/2026-09-07/singo-신도림태영타운-84-p1.png",
+              "data/out/2026-09-07/singo-초원마을대림-84-p1.png",
+              "data/out/2026-09-07/singo-등촌동아이파크-84-p1.png",
+              "data/out/2026-09-07/singo-한신아파트상가동유치원동103~109-84-p1.png",
+              "data/out/2026-09-07/singo-다산반도유보라메이플타운-84-p1.png",
+              "data/out/2026-09-07/singo-광주역자연앤자이-84-p1.png",
+              "data/out/2026-09-07/singo-장미시영6-59-p1.png",
+              "data/out/2026-09-07/singo-한진-84-p1.png",
+              "data/out/2026-09-07/singo-호계2차현대홈타운-59-p1.png",
+              "data/out/2026-09-07/singo-엘에이치이스트힐-59-p1.png",
+              "data/out/2026-09-07/singo-덕유마을주공4-59-p1.png"
             ]
           },
           "verdict": "pass",
@@ -795,9 +888,9 @@
           "label": "singo-daily-2026-08-25",
           "title": "🔥 8월 25일 신고가 15곳",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 15,
-          "pages": 13,
+          "pages": 15,
           "state": "미승인",
           "setState": "오너 확정",
           "files": {
@@ -808,34 +901,38 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/singo-성복역롯데캐슬클라시엘-84.json",
-              "data/content/2026-09-05/singo-꿈의숲아이파크-59.json",
-              "data/content/2026-09-05/singo-태릉해링턴플레이스-84.json",
-              "data/content/2026-09-05/singo-삼환-84.json",
-              "data/content/2026-09-05/singo-녹번역e편한세상캐슬-59.json",
-              "data/content/2026-09-05/singo-영통아이파크캐슬1단지-84.json",
-              "data/content/2026-09-05/singo-블루밍구성더센트럴-84.json",
-              "data/content/2026-09-05/singo-미사강변센트리버-59.json",
-              "data/content/2026-09-05/singo-한진한화그랑빌-59.json",
-              "data/content/2026-09-05/singo-영통에듀파크331동~337동-84.json",
-              "data/content/2026-09-05/singo-화서역푸르지오더에듀포레-84.json",
-              "data/content/2026-09-05/singo-영통센트럴파크뷰-59.json",
-              "data/content/2026-09-05/singo-e편한세상평내메트로원-59.json"
+              "data/content/2026-09-07/singo-성복역롯데캐슬골드타운-84.json",
+              "data/content/2026-09-07/singo-성복역롯데캐슬클라시엘-84.json",
+              "data/content/2026-09-07/singo-꿈의숲아이파크-59.json",
+              "data/content/2026-09-07/singo-태릉해링턴플레이스-84.json",
+              "data/content/2026-09-07/singo-삼환-84.json",
+              "data/content/2026-09-07/singo-녹번역e편한세상캐슬-59.json",
+              "data/content/2026-09-07/singo-영통아이파크캐슬1단지-84.json",
+              "data/content/2026-09-07/singo-블루밍구성더센트럴-84.json",
+              "data/content/2026-09-07/singo-미사강변센트리버-59.json",
+              "data/content/2026-09-07/singo-한진한화그랑빌-59.json",
+              "data/content/2026-09-07/singo-영통에듀파크331동~337동-84.json",
+              "data/content/2026-09-07/singo-화서역푸르지오더에듀포레-84.json",
+              "data/content/2026-09-07/singo-신동탄포레자이-59.json",
+              "data/content/2026-09-07/singo-영통센트럴파크뷰-59.json",
+              "data/content/2026-09-07/singo-e편한세상평내메트로원-59.json"
             ],
             "png": [
-              "data/out/2026-09-05/singo-성복역롯데캐슬클라시엘-84-p1.png",
-              "data/out/2026-09-05/singo-꿈의숲아이파크-59-p1.png",
-              "data/out/2026-09-05/singo-태릉해링턴플레이스-84-p1.png",
-              "data/out/2026-09-05/singo-삼환-84-p1.png",
-              "data/out/2026-09-05/singo-녹번역e편한세상캐슬-59-p1.png",
-              "data/out/2026-09-05/singo-영통아이파크캐슬1단지-84-p1.png",
-              "data/out/2026-09-05/singo-블루밍구성더센트럴-84-p1.png",
-              "data/out/2026-09-05/singo-미사강변센트리버-59-p1.png",
-              "data/out/2026-09-05/singo-한진한화그랑빌-59-p1.png",
-              "data/out/2026-09-05/singo-영통에듀파크331동~337동-84-p1.png",
-              "data/out/2026-09-05/singo-화서역푸르지오더에듀포레-84-p1.png",
-              "data/out/2026-09-05/singo-영통센트럴파크뷰-59-p1.png",
-              "data/out/2026-09-05/singo-e편한세상평내메트로원-59-p1.png"
+              "data/out/2026-09-07/singo-성복역롯데캐슬골드타운-84-p1.png",
+              "data/out/2026-09-07/singo-성복역롯데캐슬클라시엘-84-p1.png",
+              "data/out/2026-09-07/singo-꿈의숲아이파크-59-p1.png",
+              "data/out/2026-09-07/singo-태릉해링턴플레이스-84-p1.png",
+              "data/out/2026-09-07/singo-삼환-84-p1.png",
+              "data/out/2026-09-07/singo-녹번역e편한세상캐슬-59-p1.png",
+              "data/out/2026-09-07/singo-영통아이파크캐슬1단지-84-p1.png",
+              "data/out/2026-09-07/singo-블루밍구성더센트럴-84-p1.png",
+              "data/out/2026-09-07/singo-미사강변센트리버-59-p1.png",
+              "data/out/2026-09-07/singo-한진한화그랑빌-59-p1.png",
+              "data/out/2026-09-07/singo-영통에듀파크331동~337동-84-p1.png",
+              "data/out/2026-09-07/singo-화서역푸르지오더에듀포레-84-p1.png",
+              "data/out/2026-09-07/singo-신동탄포레자이-59-p1.png",
+              "data/out/2026-09-07/singo-영통센트럴파크뷰-59-p1.png",
+              "data/out/2026-09-07/singo-e편한세상평내메트로원-59-p1.png"
             ]
           },
           "verdict": "pass",
@@ -847,7 +944,7 @@
           "label": "singo-dmc-centralxi",
           "title": "🔥 DMC센트럴자이 25평, 15.95억 신고가",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "미승인",
@@ -860,10 +957,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/singo-DMC센트럴자이-59.json"
+              "data/content/2026-09-07/singo-DMC센트럴자이-59.json"
             ],
             "png": [
-              "data/out/2026-09-05/singo-DMC센트럴자이-59-p1.png"
+              "data/out/2026-09-07/singo-DMC센트럴자이-59-p1.png"
             ]
           },
           "verdict": "pass",
@@ -875,7 +972,7 @@
           "label": "singo-seocho-foresta2",
           "title": "🔥 서초포레스타2단지 38평, 19.9억 신고가",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "미승인",
@@ -888,10 +985,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/singo-서초포레스타2단지-84.json"
+              "data/content/2026-09-07/singo-서초포레스타2단지-84.json"
             ],
             "png": [
-              "data/out/2026-09-05/singo-서초포레스타2단지-84-p1.png"
+              "data/out/2026-09-07/singo-서초포레스타2단지-84-p1.png"
             ]
           },
           "verdict": "pass",
@@ -903,7 +1000,7 @@
           "label": "singo-raemian-crisiel",
           "title": "🔥 래미안크리시엘 33평, 지난 고점 대비 +21% 신고가",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "미승인",
@@ -916,10 +1013,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/singo-래미안크리시엘-84.json"
+              "data/content/2026-09-07/singo-래미안크리시엘-84.json"
             ],
             "png": [
-              "data/out/2026-09-05/singo-래미안크리시엘-84-p1.png"
+              "data/out/2026-09-07/singo-래미안크리시엘-84-p1.png"
             ]
           },
           "verdict": "pass",
@@ -931,7 +1028,7 @@
           "label": "singo-neulpureun-byuksan",
           "title": "🔥 늘푸른벽산 33평, 저점 대비 +108% 신고가",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "미승인",
@@ -944,10 +1041,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/singo-늘푸른벽산-84.json"
+              "data/content/2026-09-07/singo-늘푸른벽산-84.json"
             ],
             "png": [
-              "data/out/2026-09-05/singo-늘푸른벽산-84-p1.png"
+              "data/out/2026-09-07/singo-늘푸른벽산-84-p1.png"
             ]
           },
           "verdict": "pass",
@@ -959,7 +1056,7 @@
           "label": "jeonwolse-map",
           "title": "토허 40곳 전세·월세 비중 (월세화 추이·월간)",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "미승인",
@@ -972,10 +1069,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/jeonwolse-map.json"
+              "data/content/2026-09-07/jeonwolse-map.json"
             ],
             "png": [
-              "data/out/2026-09-05/jeonwolse-map-p1.png"
+              "data/out/2026-09-07/jeonwolse-map-p1.png"
             ]
           },
           "verdict": "revise",
@@ -987,7 +1084,7 @@
           "label": "jeonse-streak",
           "title": "서울 아파트 매매·전세 동반 연속 상승 (주간)",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "발행됨",
@@ -1000,10 +1097,10 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/jeonse-streak.json"
+              "data/content/2026-09-07/jeonse-streak.json"
             ],
             "png": [
-              "data/out/2026-09-05/jeonse-streak-p1.png"
+              "data/out/2026-09-07/jeonse-streak-p1.png"
             ]
           },
           "verdict": "revise",
@@ -1015,7 +1112,7 @@
           "label": "mae-streak",
           "title": "서울 아파트 매매 연속 상승 · 상승폭 文정부의 2배 (주간)",
           "topic": "기타",
-          "date": "2026-09-05",
+          "date": "2026-09-07",
           "cards": 1,
           "pages": 1,
           "state": "발행됨",
@@ -1028,16 +1125,44 @@
           },
           "rebuilt": {
             "content": [
-              "data/content/2026-09-05/mae-streak.json"
+              "data/content/2026-09-07/mae-streak.json"
             ],
             "png": [
-              "data/out/2026-09-05/mae-streak-p1.png"
+              "data/out/2026-09-07/mae-streak-p1.png"
             ]
           },
           "verdict": "revise",
           "reviewSummary": "REVISE — error 0 · warn 1 · 카드 1장 · 코드 검수만",
           "caption": "서울 아파트가 81주째 오르고 있습니다. 그런데 진짜 무서운 건 따로 있습니다 👀\n\n한국부동산원 주간 매매가격지수 기준,\n현재 상승기는 2025년 1월 셋째주부터 81주 연속입니다.\n역대 최장 기록(85주)까지 이제 단 4주 남았습니다.\n\n그런데 '기간'보다 무서운 건 '상승폭'입니다.\n· 현재 81주 : 누적 +16.34%\n· 역대 최장 85주 : 누적 +7.71%\n\n같은 서울 아파트인데 이번 오름폭이 이미 두 배가 넘습니다.\n더 짧은 기간에, 더 가파르게 올랐다는 뜻입니다.\n\n이번 상승장이 이전과 다른 이유입니다.\n\n📌 저장해두고 주간 흐름 확인하기\n\n—\n📊 출처 : 한국부동산원 주간 아파트가격동향\n※ 연속 상승 주수·누적 상승률은 주간 매매가격지수에서 계산한 값입니다\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#서울아파트 #부동산 #집값 #한국부동산원 #위릿노트",
           "captionChars": 482
+        },
+        {
+          "label": "seongsu-zones",
+          "title": "성수 1~4지구, 누가 짓나 (시공사 지도)",
+          "topic": "기타",
+          "date": "2026-09-06",
+          "cards": 1,
+          "pages": 1,
+          "state": "미승인",
+          "setState": "",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/seongsu-zones.txt",
+            "review": ""
+          },
+          "rebuilt": {
+            "content": [
+              "data/content/2026-09-06/seongsu-zones.json"
+            ],
+            "png": [
+              "data/out/2026-09-06/seongsu-zones-p1.png"
+            ]
+          },
+          "verdict": "",
+          "reviewSummary": "",
+          "caption": "성수 1~4지구, 누가 짓나?\n\n한강변 성수전략정비구역 네 곳의 시공사 현황을 지도 한 장에 올렸습니다.\n네 곳 중 2곳은 시공사가 확정됐고, 나머지 2곳은 아직 선정 절차가 진행 중입니다.\n합치면 공사비만 7조 3,444억 규모입니다.\n\n· 1지구 — GS건설(리베니크 자이) · 선정 완료 · 공사비 2조 1,540억(계약)\n   2026-04-25 시공자 선정 총회\n· 2지구 — DL이앤씨 · 유력 · 공사비 2조 137억(예정)\n   1차 입찰 단독응찰로 유찰(8/31) · 2차 입찰 진행\n· 3지구 — 삼성물산(래미안 레비르 성수) · 유력 · 공사비 1조 8,275억(예정)\n   단독응찰 · 수의계약 수순 · 9월 선정총회 예정\n· 4지구 — 롯데건설(성수르엘 S70) · 선정 완료 · 공사비 1조 3,492억(계약)\n   2026-07-05 총회 · 449표(72.4%)\n\n※ '유력'은 확정이 아닙니다. 단독 응찰·수의계약 수순으로 그 회사가 유력하다는 뜻이고,\n   조합 총회에서 뒤집힐 수 있습니다. 2026-09-06 기준입니다.\n※ 공사비는 시공사가 정해진 곳은 계약액, 아직인 곳은 조합이 내건 입찰 예정가입니다.\n※ 세대수·최고층수는 매체마다 값이 갈려 카드에 넣지 않았습니다.\n※ 지도의 구역 표시는 정확한 경계가 아니라 구간 표시입니다. 구역 경계의 정본은 서울시 「성수전략정비구역 지구단위계획 결정도」입니다.\n※ 지도에 얹은 3D 조감도는 정비계획 당시 이미지로, 지금 시공사들의 설계와 다릅니다. 각 사의 실제 제안은 아래 네 장의 투시도입니다.\n※ 출처: 각 조합·건설사 발표 및 업계 보도 종합 — 2026년 4월 1지구 선정부터 2026-09-06 까지의 진행 상황입니다.\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#성수동 #성수전략정비구역 #재개발 #서울부동산 #위릿",
+          "captionChars": 949
         },
         {
           "label": "danji-mokdong",
@@ -1906,6 +2031,198 @@
           "reviewSummary": "",
           "caption": "올해 서울 정비사업, 수주 1위는 어디였을까요? 🏗️\n\n1·2위가 나란히 7조를 넘겼습니다.\n\n🏅 도시정비 누적 수주 TOP 8\n1위 현대건설 7조 6,946억\n2위 GS건설 7조 4,694억\n3위 삼성물산 4조 7,163억\n4위 대우건설 4조 3,530억\n5위 롯데건설 2조 8,541억\n6위 포스코이앤씨 1조 7,051억\n7위 DL이앤씨 1조 2,868억\n8위 SK에코플랜트 4,096억\n\n그런데 지도를 보면 다른 게 보입니다.\n\n서울 사업지 24곳 중 10곳이 강남·서초 한 곳에 몰려 있습니다.\n· 강남구 6곳\n· 서초구 4곳\n· 성동구 3곳 / 영등포구 3곳\n· 동작구 2곳 / 송파구 2곳\n· 강동·동대문·양천·중구 각 1곳\n\n📌 저장해두고 우리 동네에 누가 들어오는지 확인하기\n\n—\n📊 출처 : 뉴시스 (2026.7.30) · 각 사 취합\n🗺 위치 : 카카오 로컬 검색으로 좌표 확인\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#서울재개발 #서울재건축 #정비사업 #현대건설 #gs건설",
           "captionChars": 551
+        },
+        {
+          "label": "rail-daejang",
+          "title": "대장홍대선 어디까지 왔나 (9.7% · 2031년 말 목표)",
+          "topic": "기타",
+          "date": "",
+          "cards": 1,
+          "pages": 0,
+          "state": "미승인",
+          "setState": "",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/rail-daejang.txt",
+            "review": ""
+          },
+          "rebuilt": {
+            "content": [],
+            "png": []
+          },
+          "verdict": "",
+          "reviewSummary": "",
+          "caption": "대장홍대선 — 공정률 9.7%\n\n종착역 자리가 아직 소송 중이다. 마포구는 홍대입구역 9번 출구 옆 이설과 DMC역 신설을 요구한다.\n\n· 구간 부천대장 ~ 홍대입구\n· 준공 예정 2031년 말\n· 환승 4개역 — 원종 · 화곡 · 가양 · 홍대입구\n\n개통 예정은 목표치이며 확정 고시가 아닙니다.\n출처 · 국가철도공단 주요사업현황 · 세계일보 2026.08.18 · 2026-06 기준\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#수도권철도 #부동산 #교통호재 #위릿노트 #부동산공부",
+          "captionChars": 316
+        },
+        {
+          "label": "rail-sinbundang",
+          "title": "신분당선 어디까지 왔나 (남부 17.25% · 북부 미착공)",
+          "topic": "기타",
+          "date": "",
+          "cards": 1,
+          "pages": 0,
+          "state": "미승인",
+          "setState": "",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/rail-sinbundang.txt",
+            "review": ""
+          },
+          "rebuilt": {
+            "content": [],
+            "png": []
+          },
+          "verdict": "",
+          "reviewSummary": "",
+          "caption": "신분당선 — 공정률 17.25%\n\n북부는 용산 미군기지를 관통해 동빙고역이 사실상 무산됐고, 보광역 신설비 분담도 미타결이다.\n\n· 구간 용산 ~ 호매실 연장\n· 남부 준공 2029.12\n· 호매실~봉담 연장은 제5차 국가철도망 확정 대기\n\n개통 예정은 목표치이며 확정 고시가 아닙니다.\n출처 · 국가철도공단 주요사업현황 · 파이낸셜뉴스 2026.08.03 · 2026-06 기준\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#수도권철도 #부동산 #교통호재 #위릿노트 #부동산공부",
+          "captionChars": 312
+        },
+        {
+          "label": "rail-wolpan",
+          "title": "월곶~판교 어디까지 왔나 (18.0% · 2029.12 목표)",
+          "topic": "기타",
+          "date": "",
+          "cards": 1,
+          "pages": 0,
+          "state": "미승인",
+          "setState": "",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/rail-wolpan.txt",
+            "review": ""
+          },
+          "rebuilt": {
+            "content": [],
+            "png": []
+          },
+          "verdict": "",
+          "reviewSummary": "",
+          "caption": "월곶~판교 — 공정률 18%\n\n공단 사업기간 표기는 2030년까지다. 언론의 「2028년 준공」과 달라 준공과 영업개통을 나눠 읽어야 한다.\n\n· 구간 월판선\n· 개통 예정 2029.12\n· 공용구간 추가역 학온·매화를 포함하면 정차역 13개\n\n개통 예정은 목표치이며 확정 고시가 아닙니다.\n출처 · 국가철도공단 주요사업현황 · 경인일보 2024.05.29 · 2026-06 기준\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#수도권철도 #부동산 #교통호재 #위릿노트 #부동산공부",
+          "captionChars": 312
+        },
+        {
+          "label": "rail-indong",
+          "title": "인덕원~동탄 어디까지 왔나 (20.4% · 2029년 말 목표)",
+          "topic": "기타",
+          "date": "",
+          "cards": 1,
+          "pages": 0,
+          "state": "미승인",
+          "setState": "",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/rail-indong.txt",
+            "review": ""
+          },
+          "rebuilt": {
+            "content": [],
+            "png": []
+          },
+          "verdict": "",
+          "reviewSummary": "",
+          "caption": "인덕원~동탄 — 공정률 20.4%\n\n17개역 중 이름이 확정된 곳은 인덕원·영통·동탄 셋뿐이다. 나머지는 아직 가칭이거나 번호로 불린다.\n\n· 구간 인동선\n· 개통 예정 2029년 말\n· 인덕원역은 GTX-C 통합정거장 재설계로 개통이 더 늦어질 전망\n\n개통 예정은 목표치이며 확정 고시가 아닙니다.\n출처 · 국가철도공단 주요사업현황 · 경인일보 2026.08.20 · 2026-06 기준\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#수도권철도 #부동산 #교통호재 #위릿노트 #부동산공부",
+          "captionChars": 317
+        },
+        {
+          "label": "rail-gtxc",
+          "title": "GTX-C 어디까지 왔나 (0% · 준공 시점 미정)",
+          "topic": "기타",
+          "date": "",
+          "cards": 1,
+          "pages": 0,
+          "state": "미승인",
+          "setState": "",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/rail-gtxc.txt",
+            "review": ""
+          },
+          "rebuilt": {
+            "content": [],
+            "png": []
+          },
+          "verdict": "",
+          "reviewSummary": "",
+          "caption": "GTX-C — 공정률 0%\n\n착공식은 2024년 1월에 했는데 공정률은 0%다. 실시협약에서 준공 연도 자체가 사라졌다.\n\n· 구간 덕정 ~ 수원 / 상록수\n· 개통 예정 미정\n· 추가역 4곳(왕십리·인덕원·의왕·상록수)은 2022.02.24 확정 · 상록수는 금정 분기 지선\n\n개통 예정은 목표치이며 확정 고시가 아닙니다.\n출처 · 국가철도공단 주요사업현황 · 뉴스핌 2026.08.14 · 2026-06 기준\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#수도권철도 #부동산 #교통호재 #위릿노트 #부동산공부",
+          "captionChars": 330
+        },
+        {
+          "label": "rail-gtxb",
+          "title": "GTX-B 어디까지 왔나 (민자 8.1% · 2031년 목표)",
+          "topic": "기타",
+          "date": "",
+          "cards": 1,
+          "pages": 0,
+          "state": "미승인",
+          "setState": "",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/rail-gtxb.txt",
+            "review": ""
+          },
+          "rebuilt": {
+            "content": [],
+            "png": []
+          },
+          "verdict": "",
+          "reviewSummary": "",
+          "caption": "GTX-B — 공정률 8.1%\n\n2031년 개통 목표인데 아직 한 자릿수다. 지난해 12월 청학역이 추가돼 정거장은 15개가 됐다.\n\n· 구간 인천대입구 ~ 마석\n· 개통 예정 2031년\n· 상봉~마석 22.9km 는 경춘선 선로 공용 · 청학역 사업비 약 2,540억은 전액 인천시 부담\n\n개통 예정은 목표치이며 확정 고시가 아닙니다.\n출처 · 국가철도공단 주요사업현황 · 세계일보 2026.05.01 · 2026-06 기준\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#수도권철도 #부동산 #교통호재 #위릿노트 #부동산공부",
+          "captionChars": 338
+        },
+        {
+          "label": "rail-gtxa",
+          "title": "GTX-A 어디까지 왔나 (민자 99.9% · 서울역~수서 연결 2027 상반기)",
+          "topic": "기타",
+          "date": "",
+          "cards": 1,
+          "pages": 0,
+          "state": "미승인",
+          "setState": "",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/rail-gtxa.txt",
+            "review": ""
+          },
+          "rebuilt": {
+            "content": [],
+            "png": []
+          },
+          "verdict": "",
+          "reviewSummary": "",
+          "caption": "GTX-A — 공정률 99.9%\n\n사실상 다 지었는데 서울역과 수서 사이가 안 이어진다. 삼성역 철근 누락으로 약 1년 밀렸다.\n\n· 구간 운정중앙 ~ 동탄\n· 개통 실적 9개역 운행\n· 합동점검 결과 2026.11.20 발표 예정 · 별도로 동탄~평택지제 연장 설계 중\n\n개통 예정은 목표치이며 확정 고시가 아닙니다.\n출처 · 국가철도공단 주요사업현황 · 뉴스핌 2026.07.20 · 2026-06 기준\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#수도권철도 #부동산 #교통호재 #위릿노트 #부동산공부",
+          "captionChars": 327
+        },
+        {
+          "label": "rail-sinansan",
+          "title": "신안산선 어디까지 왔나 (공정률 72.58% · 2028.12 목표)",
+          "topic": "기타",
+          "date": "",
+          "cards": 1,
+          "pages": 0,
+          "state": "미승인",
+          "setState": "",
+          "files": {
+            "content": [],
+            "png": [],
+            "caption": "data/review/captions/rail-sinansan.txt",
+            "review": ""
+          },
+          "rebuilt": {
+            "content": [],
+            "png": []
+          },
+          "verdict": "",
+          "reviewSummary": "",
+          "caption": "신안산선 — 공정률 72.58%\n\n열 중 일곱은 팠는데 새 개통일은 아직 승인 전이다. 광명 붕괴사고로 멈춘 공사가 2026년 9월 재개 전망이다.\n\n· 구간 한양대 ~ 여의도\n· 개통 예정 2028.12 신청\n· 지선 — 광명 · 학온(가칭) · 매화(가칭) · 시흥시청 → 서해선 직결 · 업계에서는 2030년 관측도 나온다\n\n개통 예정은 목표치이며 확정 고시가 아닙니다.\n출처 · 국가철도공단 주요사업현황 · 시사저널e 2026.08.21 · 2026-06 기준\n\n· · ·\n부동산·경제·트렌드를 한 눈에, 위릿.\n정확한 데이터, 감각적인 카드.\n매일 한 장, 내 맘속에 저장. 🫶\n\n#수도권철도 #부동산 #교통호재 #위릿노트 #부동산공부",
+          "captionChars": 361
         }
       ]
     },

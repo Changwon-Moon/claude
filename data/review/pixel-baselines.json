@@ -78,6 +78,16 @@
       "content": "data/content/2026-08-05/world-capital.json",
       "png": "world-capital-p1.png",
       "md5": "f955b16599940c44167ed2a0e0aaa667"
+    },
+    {
+      "label": "supply-progress",
+      "title": "李정부 수도권 공급정책 1주년 — 147만호 중 5.3%",
+      "state": "오너 확정",
+      "at": "2026-09-07",
+      "builder": "supply-progress",
+      "content": "data/content/2026-09-07/supply-progress.json",
+      "png": "supply-progress-p1.png",
+      "md5": "1abe257c0418d418250bd450d44be36d"
     }
   ]
 }

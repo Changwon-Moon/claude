@@ -2947,6 +2947,18 @@
         "rail-sinbundang",
         "rail-daejang"
       ]
+    },
+    {
+      "label": "supply-progress",
+      "cmd": "scripts/build-supply-progress.mjs",
+      "args": [
+        "2026-09-07",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 없으면 data/out/_spike 로 간다(확정·재생산은 data/content/<날짜>/ 를 렌더한다). 날짜를 박는 이유: 자료가 월 단위(국토부 '26.7 주택통계)라 오늘 날짜로 다시 그리면 같은 값의 카드가 날짜만 달리 생긴다. ⚠️ 판형 supply-progress@1 은 새 폰트 세트(font-taebaek-pretendard, 2026-09-07 오너 확정)를 쓰는 첫 카드다.",
+      "produces": [
+        "supply-progress"
+      ]
     }
   ]
 }
