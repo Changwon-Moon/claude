@@ -94,7 +94,7 @@ jobs:
           Q=data/apt-supply-queue.txt          # 카드가 오늘 기다리는 줄 — **상한 없음**
           QB=data/apt-supply-bulk-queue.txt    # 미리 채우기 — **하루 상한이 걸린 쪽**
           [ -f "$Q" ] || [ -f "$QB" ] || { echo "대기열 없음 — 건너뜀"; exit 0; }
-          OKN=0; NGN=0; SKIPN=0; CAPN=0; TRIED=0; CAPPED=0
+          OKN=0; NGN=0; SKIPN=0; CAPN=0; TRIED=0; CAPPED=0; QUOTA=0
           # 연달아 이만큼 연결이 안 열리면 문이 닫힌 것으로 본다. 한두 건은 그 단지 사정일 수 있다.
           DEAD=0; DEAD_MAX=6; CLOSED=0
           : > "$RUNNER_TEMP/supply.log"
@@ -182,6 +182,11 @@ jobs:
               OUT="data/datasets/apt-supply/$KAPT-$TYPE.json"
               [ -f "$OUT" ] && [ -z "$FORCE" ] && continue
               # ── 여기부터는 **아직 못 받은 줄**이다
+              # ── 🚫 **한도가 닫힌 날은 그날 안에 다시 열리지 않는다** (2026-09-07)
+              #    `fetch failed`(문이 잠깐 닫힘)와 다르다 — **일일** 한도라 새 러너로 바꿔도 그대로다.
+              #    그런데 예전엔 이것도 「실패」로 세어 빨간불을 켰고, 재시도 사다리가 세 칸을
+              #    더 돌며 같은 벽을 두드렸다. 상한과 같은 취급을 한다: **세되 초록불로 끝낸다.**
+              if [ "$QUOTA" = "1" ]; then CAPN=$((CAPN+1)); CAPPED=1; continue; fi
               if [ "$LIMITED" = "1" ] && [ "$TRIED" -ge "$ALLOW" ]; then CAPN=$((CAPN+1)); CAPPED=1; continue; fi
               if [ "$CLOSED" = "1" ] || [ "$SECONDS" -ge "$BUDGET" ]; then SKIPN=$((SKIPN+1)); continue; fi
               echo "── $KAPT 전용 $AREA" | tee -a "$RUNNER_TEMP/supply.log"
@@ -210,6 +215,11 @@ jobs:
                 else
                   DEAD=0
                 fi
+                # 🚫 일일 호출 한도 — 이 줄부터는 오늘 아무것도 안 된다. 방금 것은 실패에서 뺀다.
+                if grep -q "일일 호출 한도" "$RUNNER_TEMP/one.log"; then
+                  QUOTA=1; NGN=$((NGN-1)); CAPN=$((CAPN+1)); CAPPED=1
+                  echo "🚫 공공데이터포털 **일일 호출 한도**입니다 — 오늘은 여기까지. 내일 이어서 받습니다." | tee -a "$RUNNER_TEMP/supply.log"
+                fi
               fi
               cat "$RUNNER_TEMP/one.log" >> "$RUNNER_TEMP/supply.log"
               if [ "$DEAD" -ge "$DEAD_MAX" ]; then
@@ -228,6 +238,9 @@ jobs:
 
           # ── 🧾 장부에 오늘 몫을 적는다 (시도 기준)
           NOW=$(( USED + TRIED ))
+          # 🚫 한도에 걸린 날은 **오늘 몫을 다 쓴 것으로 적는다.** 그래야 13시 예약이
+          #    같은 벽을 한 번 더 두드리러 오지 않는다(열쇠를 다른 것이 먼저 태운 날도 있다).
+          if [ "$QUOTA" = "1" ] && [ "$NOW" -lt "$CAP" ]; then NOW=$CAP; TRIED=1; fi
           if [ "$TRIED" -gt 0 ]; then
             grep -vE "^${TODAY}[[:space:]]" "$LEDGER" > "$RUNNER_TEMP/led" 2>/dev/null || true
             { cat "$RUNNER_TEMP/led"; echo "$TODAY $NOW"; } > "$LEDGER"
