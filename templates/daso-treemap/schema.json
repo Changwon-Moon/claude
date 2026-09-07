@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "daso-treemap@1",
-  "description": "왼쪽은 면적(트리맵), 오른쪽은 값(표). 칸 안에 글자가 들어갈 자리가 없으면 라벨을 넣지 않고 옆 표가 그 값을 받는다 — 억지로 지시선을 뽑아 채우면 그림이 「다 비슷하다」고 거짓말을 한다.",
+  "description": "오른쪽은 가로막대(1채 vs 2채 이상) + 그 오른쪽 토막을 확대한 트리맵, 왼쪽은 표. ⚠️ 칸의 넓이는 '2채 이상' 안에서의 비중이고 칸에 적힌 %는 전체 소유자 기준 공표값이다 — 분모가 둘이므로 zoom 라벨이 그 사실을 카드 위에 적어야 한다. 칸 안에 글자 자리가 없으면 라벨을 넣지 않고 옆 표가 그 값을 받는다 — 억지로 지시선을 뽑아 채우면 그림이 「다 비슷하다」고 거짓말을 한다.",
   "type": "object",
   "required": [
     "template",
@@ -28,7 +28,7 @@
     },
     "plot": {
       "type": "object",
-      "description": "왼쪽 트리맵 판의 실제 픽셀 크기와 표와의 간격. 빌더가 이 값으로 칸 크기를 재서 라벨 등급을 정하므로 템플릿과 반드시 같아야 한다.",
+      "description": "오른쪽 칸 전체의 픽셀 크기(h 는 막대+확대라벨+트리맵을 합친 높이)와 표와의 간격. 빌더는 h 에서 막대와 확대라벨 높이를 빼고 남은 것으로 칸 크기를 재므로 템플릿과 반드시 같아야 한다.",
       "required": [
         "w",
         "h",
@@ -216,6 +216,73 @@
         "type": "string",
         "maxLength": 120
       }
+    },
+    "bar": {
+      "type": "object",
+      "description": "오른쪽 맨 위 가로막대 — 소유자 100명을 1채 / 2채 이상으로 가른다. 아래 트리맵이 확대하는 대상이 여기 오른쪽 토막이다.",
+      "required": [
+        "h",
+        "segments"
+      ],
+      "properties": {
+        "h": {
+          "type": "number"
+        },
+        "segments": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "required": [
+              "w",
+              "label",
+              "value",
+              "bg",
+              "fg",
+              "lbPx",
+              "vlPx"
+            ],
+            "properties": {
+              "w": {
+                "type": "number",
+                "description": "막대 대비 %. 합이 100이어야 한다"
+              },
+              "label": {
+                "type": "string",
+                "maxLength": 12
+              },
+              "value": {
+                "type": "string",
+                "maxLength": 10
+              },
+              "bg": {
+                "type": "string",
+                "pattern": "^#[0-9A-Fa-f]{6}$"
+              },
+              "fg": {
+                "type": "string",
+                "pattern": "^#[0-9A-Fa-f]{6}$"
+              },
+              "lbPx": {
+                "type": "number"
+              },
+              "vlPx": {
+                "type": "number"
+              },
+              "tight": {
+                "type": "boolean",
+                "description": "좁은 토막 — 안쪽 여백을 줄이고 글자를 가운데로 모은다"
+              }
+            }
+          }
+        }
+      }
+    },
+    "zoom": {
+      "type": "string",
+      "maxLength": 80,
+      "description": "확대 라벨. **빠뜨리면 안 된다** — 칸의 넓이(2채 이상 기준)와 적힌 %(전체 기준)의 분모가 다르다는 사실을 카드 위에서 말하는 유일한 줄이다. 빌더가 「확대」·「전체 기준」이 들어 있는지 검사한다."
     }
   }
 }

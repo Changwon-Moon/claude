@@ -61,38 +61,38 @@ const popMulti = (OWN * multiSum) / 100;
 if (Math.abs(popOne + popMulti - OWN) > 1e-9) throw new Error(`검산 실패: ${popOne} + ${popMulti} ≠ ${OWN}`);
 
 /* ── ② 구간 ───────────────────────────────────────────────────
- * **1채를 넣는다**(오너 2026-09-07). 그러면 값이 곧 등기정보광장 공표값이 되어
- * 재정규화가 사라진다 — '원지수' 라는 (내가 지어낸) 열도 함께 사라졌다.
- *   1채 = 100 − 다소유지수 합. 포털 유의사항이 그렇게 하라고 적어 둔 계산이다.
+ * **바(bar)와 트리맵은 분모가 다르다.** 이걸 흐리면 카드가 거짓말을 한다.
+ *   · 가로막대 = 소유자 100명을 1채(83.98%) / 2채 이상(16.02%) 로 가른다.
+ *   · 트리맵   = 그 오른쪽 토막(2채 이상)만 **확대한 것**이다.
+ * 그래서 칸의 **넓이**는 2채 이상 안에서의 비중이지만, 칸에 **적히는 %**는
+ * 오너 지시대로 **전체 소유자 기준 공표값**이다(1채 83.98%가 포함된 분모).
+ * 두 분모가 다르다는 사실을 「확대」 라벨이 카드 위에 직접 적는다 — 주석에만 적어 두면
+ * 카드를 보는 사람은 알 길이 없다.
  *
- * ⚠️ 그런데 1채가 84% 라 **나머지가 짓눌린다.** 2~9채를 개별 칸으로 두면
- * 7·8·9채가 20px 안팎이 돼 채수조차 못 적는다(실측 스윕).
- * 그래서 **트리맵은 5칸(1·2·3·4·5채 이상), 표는 10행 전부**로 나눈다 —
- * 그림은 크기를 말하고, 표가 세부를 잃지 않는다. 묶인 다섯 행은 표에서
- * 같은 색과 묶음선으로 「이 다섯 줄이 저 한 칸」임을 보인다. */
+ * 표는 **원자료 15구간 + 1채 = 16행 전부**를 싣는다(오너 2026-09-07).
+ * 트리맵은 10채 이상 일곱 구간을 한 칸으로 묶는다 — 그대로 그리면 20px 티끌이 돼
+ * 채수조차 못 적기 때문이다. 묶인 일곱 줄은 표에서 묶음선으로 「저 한 칸」임을 보인다. */
 const TAB_TAIL = ["10", "11-20", "21-30", "31-40", "41-50", "51-100", "101+"];
 const tail = MULTI.filter((m) => TAB_TAIL.includes(m.key));
 const tailV = r3(tail.reduce((a, m) => a + m.v, 0));
 
-/* 표 — 1채 + 2~9채 + 10채 이상 = 10행. 값은 전부 공표값 그대로다. */
+/* 표 — 1채 + 원자료 15구간 = 16행. 값은 전부 공표값 그대로다(재정규화 없음). */
 const TABLE_ROWS = [
   { key: "1", label: "1채", v: oneShare },
-  ...MULTI.filter((m) => !TAB_TAIL.includes(m.key)).map((m) => ({ key: m.key, label: m.label, v: m.v })),
-  { key: "10+", label: "10채 이상", v: tailV },
+  ...MULTI.map((m) => ({ key: m.key, label: m.label, v: m.v })),
 ];
 if (Math.abs(TABLE_ROWS.reduce((a, g) => a + g.v, 0) - 100) > 1e-9) throw new Error("표 합이 100이 아니다");
 
-/* 트리맵 — 5칸. PLOT_KEYS 안의 것만 제 칸을 갖고, 나머지는 마지막 칸으로 묶인다. */
-const PLOT_KEYS = ["1", "2", "3", "4"];
-const mergedV = r3(TABLE_ROWS.filter((g) => !PLOT_KEYS.includes(g.key)).reduce((a, g) => a + g.v, 0));
+/* 트리맵 — 2채 이상만. 2~9채는 제 칸, 10채 이상은 한 칸. */
+const PLOT_KEYS = ["2", "3", "4", "5", "6", "7", "8", "9"];
 const GROUPS = [
-  ...TABLE_ROWS.filter((g) => PLOT_KEYS.includes(g.key)),
-  { key: "5+", label: "5채 이상", v: mergedV },
+  ...MULTI.filter((m) => PLOT_KEYS.includes(m.key)).map((m) => ({ key: m.key, label: m.label, v: m.v })),
+  { key: "10+", label: "10채 이상", v: tailV },
 ];
-if (Math.abs(GROUPS.reduce((a, g) => a + g.v, 0) - 100) > 1e-9) throw new Error("묶은 뒤 합이 100이 아니다");
-/* 표의 어느 행이 트리맵의 어느 칸에 속하는지 — 색과 묶음선이 이걸 따른다. */
-const TAIL_KEY = "5+"; /* 묶인 마지막 칸의 키 — 배합이 이걸로 「꼬리」를 알아본다 */
-const groupOf = (key) => (PLOT_KEYS.includes(key) ? key : TAIL_KEY);
+if (Math.abs(GROUPS.reduce((a, g) => a + g.v, 0) - multiSum) > 1e-9) throw new Error("묶은 뒤 합이 다소유지수 합과 다르다");
+const TAIL_KEY = "10+"; /* 묶인 마지막 칸의 키 — 배합이 이걸로 「꼬리」를 알아본다 */
+const ONE_KEY = "1";    /* 트리맵에 없는 행 — 가로막대의 왼쪽 토막이다 */
+const groupOf = (key) => (key === ONE_KEY ? ONE_KEY : PLOT_KEYS.includes(key) ? key : TAIL_KEY);
 
 /* ── ③ 색 배합 ─────────────────────────────────────────────────
  * BRAND.md: 레드는 '상승·경고' 시그널 전용이라 여기 쓰지 않는다. 코발트·잉크·중립만 쓴다.
@@ -149,14 +149,14 @@ const PALETTES = {
       return (i, n, key) => (key === TAIL_KEY ? COBALT : r(i / (n - 2)));
     })(),
   },
-  /* D. 이산 계단 — 보간 없이 그룹마다 한 색. 「2채 / 3~4채 / 5~9채 / 10채 이상」이 눈에 묶인다. */
+  /* D. 이산 계단 — 보간 없이 묶음마다 한 색. 「2채 / 3채 / 4~9채 / 10채 이상」이 눈에 묶인다. */
   steps: {
-    name: "4단 계단 (1 / 2 / 3~4 / 5채↑)",
+    name: "4단 계단 (2 / 3 / 4~9 / 10채↑)",
     fn: (i, n, key) => {
-      if (key === "1") return "#DEE9FF";
-      if (key === "2") return "#93B8FF";
+      if (key === "2") return "#DEE9FF";
+      if (key === "3") return "#93B8FF";
       if (key === TAIL_KEY) return "#16223F";
-      return COBALT; /* 3·4채 */
+      return COBALT; /* 4~9채 */
     },
   },
 };
@@ -208,8 +208,9 @@ function tierFor(wPx, hPx, label, value) {
   return null;
 }
 
-/* 소수 자릿수는 카드 안에서 통일한다(CARD_CHECKLIST §2). 공표값이 소수 셋째 자리까지라 3으로 맞춘다. */
-const pct = (n, d = 3) => `${n.toFixed(d)}%`;
+/* 소수 자릿수는 카드 안에서 통일한다(CARD_CHECKLIST §2). 오너 지시로 **둘째 자리**에 맞춘다
+ * (공표값은 셋째 자리까지지만, 카드에서 자릿수가 섞이면 눈이 값을 비교하지 못한다). */
+const pct = (n, d = 2) => `${n.toFixed(d)}%`;
 
 /* ── ⑤ 트리맵 ─────────────────────────────────────────────── */
 function buildPlot(rows, plotW, plotH) {
@@ -311,12 +312,47 @@ function noHousingWord(card) {
   }
 }
 
+/* ── ⑥-b 가로막대 ─────────────────────────────────────────────
+ * 카드가 먼저 말해야 하는 건 「1채가 84%」다. 트리맵만 두면 2채 이상 안쪽만 보이고
+ * **얼마짜리 조각을 확대한 것인지** 사라진다. 그래서 막대를 위에 세운다.
+ * 글자 크기는 여기서도 손으로 못박지 않는다 — 좁은 토막(16%)이 96px 뿐이라
+ * 큰 등급을 그대로 쓰면 잘린다. 토막마다 들어가는 첫 등급을 고른다. */
+const BAR_TIERS = [
+  { lb: 22, vl: 34, pad: 16 },
+  { lb: 19, vl: 28, pad: 13 },
+  { lb: 17, vl: 23, pad: 10 },
+  { lb: 15, vl: 18, pad: 6, tight: true },
+  { lb: 13, vl: 15, pad: 5, tight: true },
+];
+function buildBar(segs, barW, barH) {
+  const total = segs.reduce((a, g) => a + g.v, 0);
+  if (Math.abs(total - 100) > 1e-9) throw new Error(`막대 합이 100이 아니다: ${total}`);
+  const segments = segs.map((g) => {
+    const wPx = (barW * g.v) / 100;
+    const t = BAR_TIERS.find((T) => {
+      const avail = wPx - T.pad * 2;
+      return avail > 0 && textW(g.label, T.lb) <= avail && textW(g.valueTxt, T.vl) <= avail
+        && T.lb * 1.2 + T.vl * 1.15 <= barH;
+    });
+    if (!t) throw new Error(`막대 토막 「${g.label}」(${Math.round(wPx)}px)에 글자가 안 들어간다`);
+    return {
+      w: r3(g.v), label: g.label, value: g.valueTxt, bg: g.bg, fg: fgOf(g.bg),
+      lbPx: t.lb, vlPx: t.vl, ...(t.tight ? { tight: true } : {}),
+    };
+  });
+  return { h: barH, segments };
+}
+
 /* ── ⑦ 카드 ───────────────────────────────────────────────── */
-/* 판 크기 — 트리맵은 오른쪽, 표는 왼쪽. 카드 높이에서 머리·요약·각주·푸터를 뺀 나머지를
- * 판이 **전부** 가져간다. 제목 상자를 고정 높이로 못박았으므로 이 값은 제목 길이와 무관하다. */
-/* 판 폭 520 — 490 이면 「10채 이상」 칸이 81px 라 채수만 들어간다(실측 스윕).
- * 520 에서 147×84 가 되어 아홉 칸 전부가 채수 + 비중을 담는다. 표는 남는 390px 를 쓴다. */
-const PLOT_W = 600, PLOT_GAP = 26, PLOT_H = 786;
+/* 판 크기 — 오른쪽 칸은 **막대 → 확대 라벨 → 트리맵** 세 층이다. 표는 왼쪽.
+ * BODY_H 는 카드 높이에서 머리·요약·각주·푸터를 뺀 나머지 전부다(제목 상자가 고정이라
+ * 제목 길이와 무관하다). 트리맵 높이는 남는 것을 받는다 —
+ * ZOOM_H 는 .tm-zoom 의 위여백 13 + 줄 19 + 아래여백 9 이고, 템플릿과 같아야 한다. */
+const PLOT_W = 640, PLOT_GAP = 26, BODY_H = 786, BAR_H = 104, ZOOM_H = 13 + 19 + 9;
+const PLOT_H = BODY_H - BAR_H - ZOOM_H;
+/* 막대 색 — 1채는 중립(종이 위에서 뒤로 물러난다), 2채 이상은 규격 코발트다.
+ * 「코발트 토막을 확대한 게 아래 트리맵」이라는 걸 색이 먼저 말한다. */
+const ONE_BG = "#E7E4DC", MULTI_BG = COBALT;
 
 /* 제목 후보 — 오너가 고른다(--title <번호>). 전부 **계산이 확인한 말**만 쓴다:
  *   「열에 일곱」 = 2채 69.19%  ·  「열에 아홉」 = 2+3+4채 90.64%  ·  「100명 중 3명」 = 10채 이상 2.95% */
@@ -340,34 +376,48 @@ function makeCard(palKey) {
   const pal = PALETTES[palKey];
   if (!pal) throw new Error(`없는 배합: ${palKey} — ${Object.keys(PALETTES).join(", ")}`);
 
-  /* 칸 색 — 트리맵 5칸이 기준이고, 표의 각 행은 제가 속한 칸의 색을 그대로 쓴다.
-   * 색이 곧 「이 줄은 저 칸」이라는 연결선이다. */
-  const tileBg = {};
+  /* 칸 색 — 트리맵 9칸이 기준이고, 표의 각 행은 제가 속한 칸의 색을 그대로 쓴다.
+   * 1채 행만 트리맵에 칸이 없다 — 그 행은 막대 왼쪽 토막의 색을 받는다.
+   * 색이 곧 「이 줄은 저 칸(또는 저 토막)」이라는 연결선이다. */
+  const tileBg = { [ONE_KEY]: ONE_BG };
   GROUPS.forEach((g, i) => { tileBg[g.key] = pal.fn(i, GROUPS.length, g.key); });
 
+  /* 가로막대 — 소유자 100명을 1채 / 2채 이상으로 가른다. */
+  const bar = buildBar([
+    { label: "1채", v: oneShare, valueTxt: pct(oneShare), bg: ONE_BG },
+    { label: "2채 이상", v: multiSum, valueTxt: pct(multiSum), bg: MULTI_BG },
+  ], PLOT_W, BAR_H);
+
+  /* 트리맵 — 막대의 오른쪽 토막을 확대한 것.
+   * ⚠️ value(넓이)는 **2채 이상 안에서의 비중**으로 정규화하고,
+   *    valueTxt(적히는 글자)는 **전체 기준 공표값** 그대로다(오너 2026-09-07).
+   *    두 분모가 다르므로 zoom 라벨이 카드 위에 그 사실을 적는다. */
   const plotRows = GROUPS.map((g) => ({
-    value: g.v, label: g.label, valueTxt: pct(g.v), bg: tileBg[g.key],
+    value: r3((g.v / multiSum) * 100), label: g.label, valueTxt: pct(g.v), bg: tileBg[g.key],
   }));
   const plot = buildPlot(plotRows.slice().sort((a, b) => b.value - a.value), PLOT_W, PLOT_H);
 
   const tableRows = TABLE_ROWS.map((g) => ({
     label: g.label, valueTxt: pct(g.v), bg: tileBg[groupOf(g.key)],
-    grp: !PLOT_KEYS.includes(g.key),
+    grp: groupOf(g.key) === TAIL_KEY,
   }));
 
-  const one = TABLE_ROWS[0].v, two = TABLE_ROWS[1].v;
   const card = {
     template: "daso-treemap@1",
     date,
-    subtitle: "집합건물 다소유지수 ('26.08월 기준)",
+    subtitle: "집합건물 다소유지수 (2026.08월 기준)",
     title: TITLES[titleArg],
-    plot: { w: PLOT_W, h: PLOT_H, gap: PLOT_GAP, side: "right" },
+    plot: { w: PLOT_W, h: BODY_H, gap: PLOT_GAP, side: "right" },
+    bar,
+    /* 확대 라벨 — **없으면 안 되는 문장**이다. 트리맵 칸의 넓이와 적힌 %가 서로 다른
+     * 분모를 쓰기 때문에, 이 한 줄이 빠지면 카드가 「2채가 판의 69%」라고 읽히고
+     * 그건 오보다. 그래서 아래에서 존재와 문구를 검사한다. */
+    zoom: `↓ <b>2채 이상 ${pct(multiSum)}</b>만 확대 — 비중은 전체 기준`,
     tiles: plot.tiles,
-    table: buildTable(tableRows, ["보유 채수", "소유자 중"], PLOT_H, 936 - PLOT_W - PLOT_GAP),
+    table: buildTable(tableRows, ["보유 채수", "소유자 중"], BODY_H, 936 - PLOT_W - PLOT_GAP),
     /* 제목의 질문에 **답이 첫머리에** 온다. 두 값 모두 위에서 계산한 것이다.
      * ⚠️ 한 줄을 넘기지 않는다 — fitsOneLine() 이 폭을 재서 막는다. */
-    summary:
-      `100명 중 <b>${Math.round(one)}명</b>이 1채 · 2채 이상은 <b>${multiSum.toFixed(1)}%</b>`,
+    summary: `2채 이상 <b>${pct(multiSum)}</b> — 그중 <b>${multiSum ? MULTI[0].v.toFixed(2) : 0}%p</b>가 딱 2채`,
     notes: [
       `※ <b>집합건물</b> : 아파트 · 오피스텔 · 연립 · 다세대 등 구분소유 건물 (단독주택 제외)`,
       `※ <b>다소유지수</b> : 집합건물 소유자 중 2채 이상 보유자 비율`,
@@ -376,6 +426,10 @@ function makeCard(palKey) {
   };
   noHousingWord(card);
   fitsOneLine(card.summary);
+  fitsOneLine(card.zoom, 19, PLOT_W);
+  /* 분모가 둘인 판이라 확대 라벨이 사라지면 그림이 거짓말을 한다 — 사람 기억에 안 맡긴다. */
+  if (!/확대/.test(card.zoom) || !/전체 기준/.test(card.zoom))
+    throw new Error("확대 라벨이 「확대」와 「전체 기준」을 둘 다 말하지 않는다 — 칸 넓이와 적힌 %의 분모가 다르다");
   return { card, noVal: plot.noVal, palName: pal.name };
 }
 
@@ -406,19 +460,23 @@ if (variants) {
     `· 소유지수 — 전체 국민 중 집합건물 소유명의인 비율. 2026년 8월 ${OWN}%`,
     `· 다소유지수 — 그 소유자 중 2채 이상 보유자 비율. 같은 달 합계 ${multiSum}%`,
     ``,
-    `국민 100명으로 환산하면 ${popOne.toFixed(1)}명이 1채, ${popMulti.toFixed(1)}명이 2채 이상입니다.`,
-    `이 카드는 그 '2채 이상' 100명을 열어 본 것입니다.`,
+    `집합건물 소유자 100명으로 보면 ${oneShare.toFixed(2)}명이 1채, ${multiSum.toFixed(2)}명이 2채 이상입니다.`,
+    `카드의 가로막대가 이 둘이고, 아래 트리맵은 오른쪽 토막(2채 이상)만 확대한 것입니다.`,
+    `칸의 크기는 2채 이상 안에서의 비중이지만, 칸에 적힌 %는 전체 소유자 기준 값입니다.`,
     ``,
-    ...GROUPS.map((g) => `· ${g.label} ${((g.v / multiSum) * 100).toFixed(2)}% (원지수 ${r3(g.v)}% · 국민 1만명당 ${per10k(g.v)}명)`),
+    ...TABLE_ROWS.map((g) => `· ${g.label} ${g.v.toFixed(2)}% (국민 1만명당 ${per10k(g.v)}명)`),
     ``,
-    `2채가 ${((GROUPS[0].v / multiSum) * 100).toFixed(1)}%입니다. 여러 채를 가진 사람 열에 일곱은 딱 두 채입니다.`,
+    `2채 이상 ${multiSum.toFixed(2)}% 가운데 ${MULTI[0].v.toFixed(2)}%p가 딱 2채입니다.`,
+    `여러 채를 가진 사람 열에 일곱은 두 채라는 뜻입니다.`,
     ``,
-    `※ '10채 이상'은 원자료의 일곱 구간을 묶은 것입니다. 내역은 이렇습니다 —`,
-    `   ${tail.map((m) => `${m.label} ${m.v}%`).join(" · ")} (원지수 기준)`,
+    `※ 트리맵의 '10채 이상'은 원자료 일곱 구간을 묶은 것입니다. 내역은 이렇습니다 —`,
+    `   ${tail.map((m) => `${m.label} ${m.v.toFixed(2)}%`).join(" · ")}`,
+    `   (카드 왼쪽 표에는 열여섯 구간이 그대로 다 들어 있습니다)`,
     `※ '주택'이 아니라 '집합건물'입니다. 아파트·연립·다세대·오피스텔 등이 들어가고`,
     `   단독주택은 빠집니다. 오피스텔·상가도 집합건물이라 여기 잡힙니다.`,
     `※ 그래서 국가데이터처 주택소유통계의 다보유 비율(2024년 14.9%)과는 다른 통계입니다.`,
     `   모집단이 다르니 두 숫자를 나란히 놓고 비교하지 마세요.`,
+    `※ 1채 비율은 포털 유의사항대로 100 − 다소유지수 합으로 구했습니다.`,
     `※ 소유명의인 기준입니다(내국인·재외국민).`,
     `※ 최신월은 잠정치입니다 — 포털도 "신청 후 등기가 완료되지 않은 소유명의인이 존재할 수 있다"고 적어 둡니다.`,
     `※ 출처: 법원 등기정보광장 집합건물 소유지수·다소유지수, 2026년 8월 기준.`,

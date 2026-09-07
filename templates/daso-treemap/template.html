@@ -46,7 +46,35 @@
       /* 좌우 자리는 데이터가 정한다(plot.side) — CSS 로 못박으면 판형이 한 방향밖에 못 쓴다.
          면적(트리맵)과 값(표) 중 무엇을 먼저 읽히게 할지는 소재마다 다르다. */
       .tm-body.flip { flex-direction: row-reverse; }
-      .tm-plot { position: relative; flex: 0 0 auto; overflow: hidden; }
+      /* 오른쪽 칸 = 가로막대(1채 vs 다주택) + 「확대」 라벨 + 트리맵.
+         트리맵은 막대의 다주택 토막을 **확대한 것**이다 — 그래서 칸 넓이는 다주택 안에서의
+         비중이지만 적힌 %는 **전체 기준 공표값**이다. 두 분모가 다르므로 확대 라벨이 필수다. */
+      .tm-right { flex: 0 0 auto; display: flex; flex-direction: column; }
+
+      .tm-bar { flex: 0 0 auto; display: flex; overflow: hidden; }
+      .tm-bar .sg {
+        display: flex; flex-direction: column; justify-content: center;
+        padding: 0 14px; overflow: hidden;
+        box-shadow: inset 0 0 0 2px var(--wirit-paper);
+      }
+      .tm-bar .sg .lb {
+        font-weight: 700; letter-spacing: -0.05em; line-height: 1.2; opacity: 0.82; white-space: nowrap;
+      }
+      .tm-bar .sg .vl {
+        font-family: var(--font-num); font-weight: 900; letter-spacing: -0.04em;
+        line-height: 1.15; white-space: nowrap;
+      }
+      /* 좁은 토막(다주택 16%)은 글자를 밖에서 받는다 — 안에 넣으면 잘린다. */
+      .tm-bar .sg.tight { padding: 0 6px; align-items: center; }
+
+      .tm-zoom {
+        flex: 0 0 auto; margin: 13px 0 9px;
+        font-size: 19px; font-weight: 800; color: var(--wirit-gray);
+        letter-spacing: -0.045em; line-height: 1; white-space: nowrap;
+      }
+      .tm-zoom b { color: var(--wirit-cobalt); font-family: var(--font-num); font-weight: 900; }
+
+      .tm-plot { position: relative; flex: 1 1 auto; overflow: hidden; }
 
       .tm-t {
         position: absolute; overflow: hidden;
@@ -98,15 +126,12 @@
         font-weight: 700; color: var(--wirit-ink); letter-spacing: -0.05em; line-height: 1.15;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
-      .tm-tab .r .v1, .tm-tab .r .v2 {
+      .tm-tab .r .v1 {
         font-family: var(--font-num);
         font-weight: 900; letter-spacing: -0.04em; line-height: 1.15;
-        text-align: right; white-space: nowrap;
+        text-align: right; white-space: nowrap; color: var(--wirit-ink);
       }
-      .tm-tab .r .v1 { color: var(--wirit-ink); }
-      /* 두 번째 값 열은 '원지수' — 포털에서 그대로 대조되는 공표값이라 보조로 둔다. */
-      .tm-tab .r .v2 { color: var(--wirit-gray); font-weight: 800; }
-      .tm-tab .hr .h2, .tm-tab .hr .h3 { text-align: right; }
+      .tm-tab .hr .h2 { text-align: right; }
 
       /* 요약 — 빈 자리를 문구가 아니라 **계산값**으로 채운다(CARD_CHECKLIST §2 여백). */
       .tm-sum {
@@ -136,24 +161,38 @@
       <div class="tm-head"><h1 class="wirit-title">{{{title}}}</h1></div>
 
       <div class="tm-body{{#if plot.side}} flip{{/if}}" style="height: {{plot.h}}px; gap: {{plot.gap}}px">
-        <div class="tm-plot" style="width: {{plot.w}}px">
-          {{#each tiles}}
-          <div class="tm-t wirit-ramp" style="left:{{this.x}}%;top:{{this.y}}%;width:{{this.w}}%;height:{{this.h}}%;background:{{this.bg}};color:{{this.fg}};padding:{{this.pdPx}}px">
-            {{#if this.label}}<span class="lb" style="font-size:{{this.lbPx}}px">{{this.label}}</span>{{/if}}{{#if this.value}}<span class="vl" style="font-size:{{this.vlPx}}px">{{this.value}}</span>{{/if}}
+        <div class="tm-right" style="width: {{plot.w}}px">
+          {{#if bar}}
+          <div class="tm-bar" style="height: {{bar.h}}px">
+            {{#each bar.segments}}
+            <div class="sg wirit-ramp{{#if this.tight}} tight{{/if}}" style="width:{{this.w}}%;background:{{this.bg}};color:{{this.fg}}">
+              <span class="lb" style="font-size:{{this.lbPx}}px">{{this.label}}</span>
+              <span class="vl" style="font-size:{{this.vlPx}}px">{{this.value}}</span>
+            </div>
+            {{/each}}
           </div>
-          {{/each}}
+          {{/if}}
+          {{#if zoom}}<div class="tm-zoom">{{{zoom}}}</div>{{/if}}
+
+          <div class="tm-plot">
+            {{#each tiles}}
+            <div class="tm-t wirit-ramp" style="left:{{this.x}}%;top:{{this.y}}%;width:{{this.w}}%;height:{{this.h}}%;background:{{this.bg}};color:{{this.fg}};padding:{{this.pdPx}}px">
+              {{#if this.label}}<span class="lb" style="font-size:{{this.lbPx}}px">{{this.label}}</span>{{/if}}{{#if this.value}}<span class="vl" style="font-size:{{this.vlPx}}px">{{this.value}}</span>{{/if}}
+            </div>
+            {{/each}}
+          </div>
         </div>
 
         <div class="tm-tab">
           <div class="hr" style="grid-template-columns:{{table.cols}}; font-size:{{table.hdPx}}px">
-            <span></span><span class="h1">{{table.head.[0]}}</span><span class="h2">{{table.head.[1]}}</span>{{#if table.head.[2]}}<span class="h3">{{table.head.[2]}}</span>{{/if}}
+            <span></span><span class="h1">{{table.head.[0]}}</span><span class="h2">{{table.head.[1]}}</span>
           </div>
           {{#each table.rows}}
           <div class="r{{#if this.grp}} grp{{/if}}" style="grid-template-columns:{{../table.cols}}; flex:{{../table.rowFlex}}; min-height:{{../table.rowH}}px">
             <i class="wirit-ramp" style="background:{{this.bg}}"></i>
             <span class="nm" style="font-size:{{../table.nmPx}}px">{{this.label}}</span>
             <span class="v1" style="font-size:{{../table.v1Px}}px">{{this.v1}}</span>
-                      </div>
+          </div>
           {{/each}}
         </div>
       </div>
