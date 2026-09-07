@@ -88,6 +88,16 @@
       "content": "data/content/2026-09-07/supply-progress.json",
       "png": "supply-progress-p1.png",
       "md5": "1abe257c0418d418250bd450d44be36d"
+    },
+    {
+      "label": "daso-treemap",
+      "title": "2026년 현재, 다주택자 비율? (집합건물 다소유지수 트리맵)",
+      "state": "오너 확정",
+      "at": "2026-09-07",
+      "builder": "daso-treemap",
+      "content": "data/content/2026-09-07/daso-treemap.json",
+      "png": "daso-treemap-p1.png",
+      "md5": "1a06eace066dafcc1258a8cd27790a84"
     }
   ]
 }
