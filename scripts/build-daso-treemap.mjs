@@ -70,11 +70,25 @@ if (Math.abs(popOne + popMulti - OWN) > 1e-9) throw new Error(`검산 실패: ${
  * 카드를 보는 사람은 알 길이 없다.
  *
  * 표는 **원자료 15구간 + 1채 = 16행 전부**를 싣는다(오너 2026-09-07).
- * 트리맵은 10채 이상 일곱 구간을 한 칸으로 묶는다 — 그대로 그리면 20px 티끌이 돼
- * 채수조차 못 적기 때문이다. 묶인 일곱 줄은 표에서 묶음선으로 「저 한 칸」임을 보인다. */
-const TAB_TAIL = ["10", "11-20", "21-30", "31-40", "41-50", "51-100", "101+"];
-const tail = MULTI.filter((m) => TAB_TAIL.includes(m.key));
-const tailV = r3(tail.reduce((a, m) => a + m.v, 0));
+ * 트리맵은 꼬리 구간을 한 칸으로 묶는다 — 그대로 그리면 20px 티끌이 돼 채수조차 못 적기
+ * 때문이다. 묶인 줄들은 표에서 묶음선으로 「저 한 칸」임을 보인다. */
+/* 꼬리를 어디서부터 묶을지는 **손으로 정하지 않는다.** 판이 좁아지면 마지막 칸이
+ * 채수도 못 적을 만큼 얇아지는데, 그때 필요한 건 「더 묶는 것」이다.
+ * 10채부터 시작해 안 되면 9채·8채로 한 칸씩 물러난다 — 실제로 그리는 픽셀이 결정한다.
+ * 묶어서 감추는 게 아니다: 표는 언제나 16행 전부를 싣고, 캡션이 묶인 내역을 적는다. */
+const TAIL_FROM = [10, 9, 8, 7];
+function groupingFrom(minTail) {
+  const solo = MULTI.filter((m) => /^\d+$/.test(m.key) && Number(m.key) < minTail);
+  const tailItems = MULTI.filter((m) => !solo.includes(m));
+  const tailV = r3(tailItems.reduce((a, m) => a + m.v, 0));
+  const tailKey = `${minTail}+`;
+  const groups = [
+    ...solo.map((m) => ({ key: m.key, label: m.label, v: m.v })),
+    { key: tailKey, label: `${minTail}채 이상`, v: tailV },
+  ];
+  if (Math.abs(groups.reduce((a, g) => a + g.v, 0) - multiSum) > 1e-9) throw new Error("묶은 뒤 합이 다소유지수 합과 다르다");
+  return { minTail, tailKey, tailItems, groups, soloKeys: solo.map((m) => m.key) };
+}
 
 /* 표 — 1채 + 원자료 15구간 = 16행. 값은 전부 공표값 그대로다(재정규화 없음). */
 const TABLE_ROWS = [
@@ -83,16 +97,11 @@ const TABLE_ROWS = [
 ];
 if (Math.abs(TABLE_ROWS.reduce((a, g) => a + g.v, 0) - 100) > 1e-9) throw new Error("표 합이 100이 아니다");
 
-/* 트리맵 — 2채 이상만. 2~9채는 제 칸, 10채 이상은 한 칸. */
-const PLOT_KEYS = ["2", "3", "4", "5", "6", "7", "8", "9"];
-const GROUPS = [
-  ...MULTI.filter((m) => PLOT_KEYS.includes(m.key)).map((m) => ({ key: m.key, label: m.label, v: m.v })),
-  { key: "10+", label: "10채 이상", v: tailV },
-];
-if (Math.abs(GROUPS.reduce((a, g) => a + g.v, 0) - multiSum) > 1e-9) throw new Error("묶은 뒤 합이 다소유지수 합과 다르다");
-const TAIL_KEY = "10+"; /* 묶인 마지막 칸의 키 — 배합이 이걸로 「꼬리」를 알아본다 */
 const ONE_KEY = "1";    /* 트리맵에 없는 행 — 가로막대의 왼쪽 토막이다 */
-const groupOf = (key) => (key === ONE_KEY ? ONE_KEY : PLOT_KEYS.includes(key) ? key : TAIL_KEY);
+const isTail = (key) => key.endsWith("+");
+/* 배합 검사용 기본 묶음 — 실제 카드가 어느 묶음을 쓸지는 픽셀이 정한다. */
+const GROUPS = groupingFrom(TAIL_FROM[0]).groups;
+const groupOfIn = (G) => (key) => (key === ONE_KEY ? ONE_KEY : G.soloKeys.includes(key) ? key : G.tailKey);
 
 /* ── ③ 색 배합 ─────────────────────────────────────────────────
  * BRAND.md: 레드는 '상승·경고' 시그널 전용이라 여기 쓰지 않는다. 코발트·잉크·중립만 쓴다.
@@ -146,7 +155,7 @@ const PALETTES = {
     name: "중립 회색 + 마지막 칸만 코발트",
     fn: (() => {
       const r = rampOf([{ t: 0, c: "#E7E4DC" }, { t: 1, c: "#6E6A60" }]);
-      return (i, n, key) => (key === TAIL_KEY ? COBALT : r(i / (n - 2)));
+      return (i, n, key) => (isTail(key) ? COBALT : r(i / (n - 2)));
     })(),
   },
   /* D. 이산 계단 — 보간 없이 묶음마다 한 색. 「2채 / 3채 / 4~9채 / 10채 이상」이 눈에 묶인다. */
@@ -155,7 +164,7 @@ const PALETTES = {
     fn: (i, n, key) => {
       if (key === "2") return "#DEE9FF";
       if (key === "3") return "#93B8FF";
-      if (key === TAIL_KEY) return "#16223F";
+      if (isTail(key)) return "#16223F";
       return COBALT; /* 4~9채 */
     },
   },
@@ -247,9 +256,14 @@ function buildPlot(rows, plotW, plotH) {
  * 그때마다 「이름이 말줄임(…)으로 잘렸다」로 designQa 가 막는다(실제로 겪었다).
  * 후보를 큰 것부터 대 보고 **전부 들어가는 첫 조합**을 고른다 — 자리가 바뀌면 알아서 줄어든다. */
 const PRESETS = {
-  few:  [{ hd: 19, nm: 30, v1: 40, w1: 150 }, { hd: 18, nm: 26, v1: 34, w1: 130 }],
-  mid:  [{ hd: 17, nm: 26, v1: 26, w1: 134 }, { hd: 17, nm: 23, v1: 23, w1: 122 }, { hd: 16, nm: 21, v1: 21, w1: 112 }],
-  many: [{ hd: 16, nm: 19, v1: 19, w1: 94 }, { hd: 15, nm: 17, v1: 17, w1: 86 }],
+  few:  [{ hd: 21, nm: 34, v1: 44, w1: 168 }, { hd: 19, nm: 30, v1: 40, w1: 150 }, { hd: 18, nm: 26, v1: 34, w1: 130 }],
+  mid:  [{ hd: 19, nm: 30, v1: 30, w1: 148 }, { hd: 17, nm: 26, v1: 26, w1: 134 }, { hd: 17, nm: 23, v1: 23, w1: 122 }, { hd: 16, nm: 21, v1: 21, w1: 112 }],
+  /* 16행짜리도 판을 좁히면 큰 글자가 들어간다(오너 「표 폰트 키워줘」 2026-09-07).
+     큰 것부터 대 보고 전부 들어가는 첫 조합을 고르므로, 나중에 판 폭을 바꿔도 알아서 따라온다. */
+  /* 값 열 폭(w1)은 값이 필요한 만큼만 준다 — 넉넉히 주면 그만큼 이름 열이 좁아져
+     「101채 이상」이 말줄임으로 잘리고, 그러면 한 단계 작은 글자로 내려간다. */
+  many: [{ hd: 22, nm: 28, v1: 28, w1: 130 }, { hd: 21, nm: 26, v1: 26, w1: 122 }, { hd: 20, nm: 24, v1: 24, w1: 114 },
+         { hd: 19, nm: 22, v1: 22, w1: 106 }, { hd: 18, nm: 21, v1: 21, w1: 102 }, { hd: 16, nm: 19, v1: 19, w1: 94 }],
 };
 function buildTable(rows, head, plotH, tabW) {
   const n = rows.length;
@@ -290,10 +304,17 @@ function buildTable(rows, head, plotH, tabW) {
  * 셋 중 하나라도 빠지면 빌드가 멈춘다. 「나중에 누가 지울까」를 사람 기억에 맡기지 않는다. */
 /* 요약 한 줄이 카드 폭(안쪽 936px)을 넘는지 — 넘으면 둘째 줄로 흘러 레이아웃이 무너진다.
  * 태그를 걷어낸 글자만 잰다. 32px 는 .tm-sum 의 크기이고, 한쪽을 바꾸면 반대쪽도 바꾼다. */
-function fitsOneLine(html, px = 32, avail = 936) {
+const SUM_TIERS = [36, 34, 32, 30, 28, 26, 24, 22];
+/* ⚠️ textW 는 트리맵 칸이 넘치지 않도록 **넉넉히** 어림한 값이라, 한글이 많은 문장에서는
+ * 실제 폭의 1.4배쯤 나온다(32px 요약 실측 426px, 어림 617px). 트리맵 쪽 어림을 건드리면
+ * 잘 맞던 라벨 등급이 흔들리므로, 요약에만 실측으로 되맞춘 계수를 곱한다.
+ * 그래도 어림은 어림이라 — **designQa 의 .tm-sum 잘림 검사가 마지막 그물이다.** */
+const sumW = (plain, px) => textW(plain, px) * 0.80;
+function pickSumPx(html, avail) {
   const plain = String(html).replace(/<[^>]+>/g, "");
-  const w = textW(plain, px);
-  if (w > avail) throw new Error(`요약이 한 줄을 넘는다 (${Math.round(w)}px > ${avail}px): "${plain}"`);
+  const px = SUM_TIERS.find((p) => sumW(plain, p) <= avail);
+  if (!px) throw new Error(`요약이 폭 ${avail}px 에 한 줄로 안 들어간다: "${plain}"`);
+  return px;
 }
 
 function noHousingWord(card) {
@@ -363,9 +384,16 @@ function buildFunnel(x0, x1, h, bg, bg2) {
  * BODY_H 는 카드 높이에서 머리·요약·각주·푸터를 뺀 나머지 전부다(제목 상자가 고정이라
  * 제목 길이와 무관하다). 트리맵 높이는 남는 것을 받는다 —
  * ZOOM_H 는 .tm-zoom 의 위여백 13 + 줄 19 + 아래여백 9 이고, 템플릿과 같아야 한다. */
-const PLOT_W = 640, PLOT_GAP = 26, BODY_H = 786;
-const LAB_H = 48, BAR_GAP = 12, BAR_H = 56, FUNNEL_H = 54;
-const PLOT_H = BODY_H - LAB_H - BAR_GAP - BAR_H - FUNNEL_H;
+/* 판 폭 560 — 640에서 줄였다(오너 「트리맵 좀 줄여줘」 2026-09-07).
+ * 줄인 폭은 그대로 표가 가져가고, 표는 그 폭으로 더 큰 글자를 고른다. */
+/* BODY_H 868 — 요약이 판 안으로 들어오면서 아래에 80px 넘는 죽은 자리가 생겼다(실측).
+ * 그 자리를 판이 가져간다. 각주·푸터 사이 숨은 .tm-note 의 아래 margin 이 못박는다. */
+const PLOT_W = 560, PLOT_GAP = 26, BODY_H = 868;
+const LAB_H = 48, BAR_GAP = 12, BAR_H = 56, FUNNEL_H = 54, SUM_GAP = 20;
+/* 요약 상자 높이는 **표의 한 행과 같다**(오너 2026-09-07: 두 아래끝을 같은 라인에).
+ * 표는 머리글(hdPx + 아래여백 9 + 밑줄 2) 아래를 16행이 똑같이 나눠 갖는다 —
+ * 그 한 칸과 같은 높이를 요약에 주면 밑줄이 저절로 맞는다. 좌표를 손으로 적지 않는다. */
+const rowBandH = (hdPx, n) => (BODY_H - (hdPx + 11)) / n;
 /* 막대 색 — 1채는 **연회색**(오너 2026-09-07: 종이 위에서 더 뒤로 물러나게), 2채 이상은 규격 코발트.
  * 「코발트 토막을 확대한 게 아래 트리맵」이라는 걸 색과 깔때기가 함께 말한다. */
 const ONE_BG = "#E6E7EA", MULTI_BG = COBALT;
@@ -392,33 +420,57 @@ function makeCard(palKey) {
   const pal = PALETTES[palKey];
   if (!pal) throw new Error(`없는 배합: ${palKey} — ${Object.keys(PALETTES).join(", ")}`);
 
-  /* 칸 색 — 트리맵 9칸이 기준이고, 표의 각 행은 제가 속한 칸의 색을 그대로 쓴다.
-   * 1채 행만 트리맵에 칸이 없다 — 그 행은 막대 왼쪽 토막의 색을 받는다.
-   * 색이 곧 「이 줄은 저 칸(또는 저 토막)」이라는 연결선이다. */
-  const tileBg = { [ONE_KEY]: ONE_BG };
-  GROUPS.forEach((g, i) => { tileBg[g.key] = pal.fn(i, GROUPS.length, g.key); });
-
   /* 가로막대 — 소유자 100명을 1채 / 2채 이상으로 가른다. 글자는 막대 위 라벨 줄에 선다. */
   const bar = buildBar([
     { label: "1채", v: oneShare, valueTxt: pct(oneShare), bg: ONE_BG },
     { label: "2채 이상", v: multiSum, valueTxt: pct(multiSum), bg: MULTI_BG },
   ], PLOT_W, LAB_H, BAR_H, BAR_GAP);
-  /* 깔때기 — 코발트 토막(막대의 오른쪽 끝 구간)이 아래 트리맵으로 벌어진다. */
-  const funnel = buildFunnel(oneShare, 100, FUNNEL_H, MULTI_BG, tileBg[GROUPS[0].key]);
+
+  /* 표를 먼저 짓는다 — 표가 고른 머리글 크기가 요약 상자 높이를 정하고,
+   * 그 높이가 정해져야 트리맵에 남는 세로가 나온다. 순서가 곧 의존 관계다.
+   * (표는 언제나 16행 전부라 어느 묶음을 쓰든 모양이 같다 — 색만 나중에 채운다) */
+  const table = buildTable(
+    TABLE_ROWS.map((g) => ({ label: g.label, valueTxt: pct(g.v) })),
+    ["보유 채수", "소유자 중"], BODY_H, 936 - PLOT_W - PLOT_GAP);
+  const sumH = Math.floor(rowBandH(table.hdPx, TABLE_ROWS.length));
+  const plotH = BODY_H - LAB_H - BAR_GAP - BAR_H - FUNNEL_H - SUM_GAP - sumH;
+  if (plotH < 300) throw new Error(`판에 남는 세로가 ${plotH}px 뿐이다 — 위아래 층을 줄이거나 카드를 키운다`);
+
+  const summary = `유주택자 중 다주택자 비율 <b>약 ${Math.round(multiSum)}%</b>`;
 
   /* 트리맵 — 막대의 오른쪽 토막을 확대한 것.
    * ⚠️ value(넓이)는 **2채 이상 안에서의 비중**으로 정규화하고,
    *    valueTxt(적히는 글자)는 **전체 기준 공표값** 그대로다(오너 2026-09-07).
-   *    두 분모가 다르므로 zoom 라벨이 카드 위에 그 사실을 적는다. */
-  const plotRows = GROUPS.map((g) => ({
-    value: r3((g.v / multiSum) * 100), label: g.label, valueTxt: pct(g.v), bg: tileBg[g.key],
-  }));
-  const plot = buildPlot(plotRows.slice().sort((a, b) => b.value - a.value), PLOT_W, PLOT_H);
+   *    두 분모가 다르므로 깔때기가 카드 위에 「확대」라는 사실을 그린다.
+   *
+   * 꼬리 묶음은 **판이 정한다.** 10채부터 묶어 보고 마지막 칸이 채수도 못 담으면
+   * 9채·8채로 한 칸씩 물러난다. 손으로 정하면 판 크기를 바꿀 때마다 사람이 다시 재야 한다. */
+  let G, tileBg, plot, lastErr;
+  for (const minTail of TAIL_FROM) {
+    G = groupingFrom(minTail);
+    /* 칸 색 — 트리맵 칸이 기준이고, 표의 각 행은 제가 속한 칸의 색을 그대로 쓴다.
+     * 1채 행만 트리맵에 칸이 없다 — 그 행은 막대 왼쪽 토막의 색을 받는다. */
+    tileBg = { [ONE_KEY]: ONE_BG };
+    G.groups.forEach((g, i) => { tileBg[g.key] = pal.fn(i, G.groups.length, g.key); });
+    const plotRows = G.groups.map((g) => ({
+      value: r3((g.v / multiSum) * 100), label: g.label, valueTxt: pct(g.v), bg: tileBg[g.key],
+    }));
+    try {
+      plot = buildPlot(plotRows.slice().sort((a, b) => b.value - a.value), PLOT_W, plotH);
+      break;
+    } catch (e) { lastErr = e; plot = null; }
+  }
+  if (!plot) throw lastErr;
 
-  const tableRows = TABLE_ROWS.map((g) => ({
-    label: g.label, valueTxt: pct(g.v), bg: tileBg[groupOf(g.key)],
-    grp: groupOf(g.key) === TAIL_KEY,
+  /* 색과 묶음선은 확정된 묶음을 따라 채운다. */
+  const groupOf = groupOfIn(G);
+  table.rows = TABLE_ROWS.map((g) => ({
+    label: g.label, v1: pct(g.v), bg: tileBg[groupOf(g.key)],
+    ...(isTail(groupOf(g.key)) ? { grp: true } : {}),
   }));
+
+  /* 깔때기 — 코발트 토막(막대의 오른쪽 끝 구간)이 아래 트리맵으로 벌어진다. */
+  const funnel = buildFunnel(oneShare, 100, FUNNEL_H, MULTI_BG, tileBg[G.groups[0].key]);
 
   const card = {
     template: "daso-treemap@1",
@@ -433,12 +485,12 @@ function makeCard(palKey) {
      * 문장이 아니라 도형이 되었을 뿐 **필수라는 성질은 그대로**라, 아래에서 존재를 검사한다. */
     funnel,
     tiles: plot.tiles,
-    table: buildTable(tableRows, ["보유 채수", "소유자 중"], BODY_H, 936 - PLOT_W - PLOT_GAP),
-    /* 제목의 질문에 **답이 첫머리에** 온다. 두 값 모두 위에서 계산한 것이다.
-     * ⚠️ 한 줄을 넘기지 않는다 — fitsOneLine() 이 폭을 재서 막는다. */
+    table,
     /* 오너 지시 문구(2026-09-07). 숫자는 손으로 적지 않는다 — 다소유지수 합을 반올림한 값이다.
      * ⚠️ 11%가 아니라 16%다. 11.08%는 「딱 2채」 한 구간이고, 다주택자는 2채 이상 전부다. */
-    summary: `유주택자 중 다주택자 비율 <b>약 ${Math.round(multiSum)}%</b>`,
+    summary,
+    /* 요약 상자 — 높이를 표의 한 행과 같게 줘 아래끝을 맞춘다. 글자 크기는 판 폭에 맞춘다. */
+    sumBox: { h: sumH, gap: SUM_GAP, px: pickSumPx(summary, PLOT_W - 12) },
     notes: [
       `※ <b>집합건물</b> : 아파트 · 오피스텔 · 연립 · 다세대 등 구분소유 건물 (단독주택 제외)`,
       `※ <b>다소유지수</b> : 집합건물 소유자 중 2채 이상 보유자 비율`,
@@ -446,11 +498,13 @@ function makeCard(palKey) {
     source: SRC,
   };
   noHousingWord(card);
-  fitsOneLine(card.summary);
+  /* 세로 뺄셈이 어긋나면 판이 flex 로 조용히 늘거나 줄어 칸 크기가 거짓이 된다 — 여기서 막는다. */
+  const stack = LAB_H + BAR_GAP + BAR_H + FUNNEL_H + plotH + SUM_GAP + sumH;
+  if (stack !== BODY_H) throw new Error(`오른쪽 칸 세로 합이 ${stack}px — 판 높이 ${BODY_H}px 와 다르다`);
   /* 분모가 둘인 판이라 깔때기가 사라지면 그림이 거짓말을 한다 — 사람 기억에 안 맡긴다. */
   if (!card.funnel || !/^[\d.]+% 0%,/.test(card.funnel.clip))
     throw new Error("확대 깔때기가 없다 — 칸 넓이(2채 이상 기준)와 적힌 %(전체 기준)의 분모가 다르다는 걸 카드가 못 말한다");
-  return { card, noVal: plot.noVal, palName: pal.name };
+  return { card, noVal: plot.noVal, palName: pal.name, grouping: G };
 }
 
 /* ── ⑧ 내보내기 ───────────────────────────────────────────── */
@@ -459,14 +513,14 @@ if (variants) {
   mkdirSync(dir, { recursive: true });
   console.log(`🎨 색 배합 시안 ${Object.keys(PALETTES).length}종 — ${dir}`);
   for (const k of Object.keys(PALETTES)) {
-    const { card, noVal, palName } = makeCard(k);
+    const { card, noVal, palName, grouping } = makeCard(k);
     writeFileSync(join(dir, `daso-treemap-${k}.json`), JSON.stringify(card, null, 2) + "\n", "utf8");
-    console.log(`   ${k.padEnd(11)} ${palName} — 채수만 적힌 칸: ${noVal.length ? noVal.join(", ") : "없음"}`);
+    console.log(`   ${k.padEnd(11)} ${palName} — 꼬리 ${grouping.minTail}채↑ · 채수만 적힌 칸: ${noVal.length ? noVal.join(", ") : "없음"}`);
   }
   console.log(`   검산 ✅ 1채 ${popOne.toFixed(3)} + 다보유 ${popMulti.toFixed(3)} = 소유지수 ${OWN}`);
 } else {
   const palKey = palArg || "cobalt";
-  const { card, noVal, palName } = makeCard(palKey);
+  const { card, noVal, palName, grouping } = makeCard(palKey);
   const outDir = publish ? join(ROOT, "data/content", date) : join(ROOT, "data/out/_spike/daso-treemap");
   mkdirSync(outDir, { recursive: true });
   writeFileSync(join(outDir, "daso-treemap.json"), JSON.stringify(card, null, 2) + "\n", "utf8");
@@ -492,8 +546,8 @@ if (variants) {
     `※ 트리맵에서 제일 큰 칸의 ${MULTI[0].v.toFixed(2)}%는 '2채' 한 구간의 값입니다.`,
     `   2채 이상 전체(=다보유)는 ${multiSum.toFixed(2)}%이니 둘을 섞지 마세요.`,
     ``,
-    `※ 트리맵의 '10채 이상'은 원자료 일곱 구간을 묶은 것입니다. 내역은 이렇습니다 —`,
-    `   ${tail.map((m) => `${m.label} ${m.v.toFixed(2)}%`).join(" · ")}`,
+    `※ 트리맵의 '${grouping.minTail}채 이상'은 원자료 ${grouping.tailItems.length}개 구간을 묶은 것입니다. 내역은 이렇습니다 —`,
+    `   ${grouping.tailItems.map((m) => `${m.label} ${m.v.toFixed(2)}%`).join(" · ")}`,
     `   (카드 왼쪽 표에는 열여섯 구간이 그대로 다 들어 있습니다)`,
     `※ '주택'이 아니라 '집합건물'입니다. 아파트·연립·다세대·오피스텔 등이 들어가고`,
     `   단독주택은 빠집니다. 오피스텔·상가도 집합건물이라 여기 잡힙니다.`,
@@ -510,5 +564,5 @@ if (variants) {
 
   console.log(`🧩 daso-treemap [${palName}] — ${publish ? "data/content" : "_spike"}/${date}`);
   console.log(`   검산 ✅ 1채 ${popOne.toFixed(3)} + 다보유 ${popMulti.toFixed(3)} = 소유지수 ${OWN}`);
-  console.log(`   칸 ${GROUPS.length} (전부 채수 표기) · 채수만 적힌 칸: ${noVal.length ? noVal.join(", ") : "없음"}`);
+  console.log(`   칸 ${grouping.groups.length} (꼬리 ${grouping.minTail}채↑ 로 묶음 · 전부 채수 표기) · 채수만 적힌 칸: ${noVal.length ? noVal.join(", ") : "없음"}`);
 }

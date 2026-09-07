@@ -317,8 +317,10 @@ const MEASURE_JS = `(() => {
    * text-overflow:ellipsis 를 쓰는 칸은 **잘렸는지 좌표로** 확인한다 — 눈으로는 그럴듯해 보인다. */
   var clipped=[];
   /* ⚠️ daso-treemap 은 **칸(.tm-t)** 을 올린다. 라벨(span)은 제 내용만큼 커져서 안 잘리고,
-     자르는 쪽은 overflow:hidden 인 부모 칸이다 — 라벨을 올리면 이 검사가 아무것도 안 잰다. */
-  Array.prototype.forEach.call(card.querySelectorAll(".mr-apt,.mr-gu,.m2-seg,.rt-name,.sm-gu,.db-nm .n,.db-nm .loc,.db-row span,.tx-cell,.tx-lb,.tm-t,.rl-seg .sg,.rl-f dd,.rl-f em"), function(el){
+     자르는 쪽은 overflow:hidden 인 부모 칸이다 — 라벨을 올리면 이 검사가 아무것도 안 잰다.
+     .tm-sum 도 같은 이유로 올린다 — 요약 한 줄은 빌더가 글자 폭을 어림해 크기를 고르는데,
+     그 어림은 넉넉히 잡아도 실제와 다르다. 여기가 브라우저 실측으로 받는 마지막 그물이다. */
+  Array.prototype.forEach.call(card.querySelectorAll(".mr-apt,.mr-gu,.m2-seg,.rt-name,.sm-gu,.db-nm .n,.db-nm .loc,.db-row span,.tx-cell,.tx-lb,.tm-t,.tm-sum,.rl-seg .sg,.rl-f dd,.rl-f em"), function(el){
     if(el.scrollWidth - el.clientWidth > 1)
       clipped.push({sel:name(el), text:(el.textContent||"").trim().slice(0,24), need:Math.ceil(el.scrollWidth), has:Math.ceil(el.clientWidth)});
   });

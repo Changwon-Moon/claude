@@ -81,6 +81,9 @@
          한 색으로 칠하면 트리맵 칸 하나가 더 있는 것처럼 보인다. */
       .tm-funnel { flex: 0 0 auto; }
 
+      /* 판은 남는 자리를 **전부** 가져간다 — 위(라벨·막대·깔때기)와 아래(요약)가 전부 고정이라
+         이 한 칸이 나머지를 흡수하면 오른쪽 칸의 아래끝이 표의 아래끝과 정확히 맞는다.
+         빌더는 같은 뺄셈으로 판 높이를 미리 계산해 칸 크기를 재고, 그 합이 어긋나면 던진다. */
       .tm-plot { position: relative; flex: 1 1 auto; overflow: hidden; }
 
       .tm-t {
@@ -140,13 +143,22 @@
       }
       .tm-tab .hr .h2 { text-align: right; }
 
-      /* 요약 — 빈 자리를 문구가 아니라 **계산값**으로 채운다(CARD_CHECKLIST §2 여백). */
+      /* 요약 — 빈 자리를 문구가 아니라 **계산값**으로 채운다(CARD_CHECKLIST §2 여백).
+         ⚠️ 자리는 **트리맵 아래, 오른쪽 칸 안**이다(오너 2026-09-07). 판 밖에 두면 요약이
+         카드 폭을 다 쓰면서 표와 아래끝이 어긋난다. 안에 두고 상자 높이를 표의 한 행과
+         같게 주면 **요약 밑줄과 표 마지막 행 밑줄이 같은 라인에** 선다.
+         글자 크기는 빌더가 폭을 재서 고르고, 넘치면 designQa 가 실측으로 막는다. */
+      /* ⚠️ flex 컨테이너로 두면 scrollWidth 가 언제나 clientWidth 와 같아서
+         designQa 의 잘림 검사가 **아무것도 못 잡는다**(실측으로 확인). 블록으로 두고
+         세로 가운데는 line-height 로 맞춘다 — 그래야 넘칠 때 실측에 걸린다. */
       .tm-sum {
-        flex: 0 0 auto; margin: 26px 0 0;
-        font-size: 32px; font-weight: 800; color: var(--wirit-ink);
-        letter-spacing: -0.045em; line-height: 1.28;
+        flex: 0 0 auto; display: block;
+        font-weight: 800; color: var(--wirit-ink);
+        letter-spacing: -0.045em;
+        white-space: nowrap; overflow: hidden;
       }
-      .tm-sum b { font-family: var(--font-num); font-weight: 900; color: var(--wirit-cobalt); }
+      /* 태그 사이 공백은 letter-spacing 이 먹어 붙어 보인다 — 숨을 margin 으로 준다. */
+      .tm-sum b { font-family: var(--font-num); font-weight: 900; color: var(--wirit-cobalt); margin-left: 0.24em; }
 
       /* 각주 — 용어 풀이를 ※ 로 한 줄씩 세운다(오너 2026-09-07).
          한 문단으로 흘리면 어디까지가 한 항목인지 안 보인다. 푸터와는 숨을 준다(footergap ≥ 14px). */
@@ -155,10 +167,10 @@
          이제 자리를 못박는다 — 판 높이(plot.h)가 남는 자리를 전부 흡수하므로
          요약·각주·푸터 사이 숨이 언제나 같다. footergap 최소 14px 를 아래 margin 이 보증한다. */
       .tm-note {
-        flex: 0 0 auto; font-size: 17px; font-weight: 600; color: var(--wirit-gray);
+        flex: 0 0 auto; font-size: 20px; font-weight: 600; color: var(--wirit-gray);
         letter-spacing: -0.04em; line-height: 1.5; margin: 22px 0 18px;
       }
-      .tm-note .ln + .ln { margin-top: 3px; }
+      .tm-note .ln + .ln { margin-top: 4px; }
       .tm-note .ln b { font-weight: 800; color: var(--wirit-ink); }
     </style>
   </head>
@@ -192,6 +204,7 @@
             </div>
             {{/each}}
           </div>
+          {{#if summary}}<div class="tm-sum" style="height:{{sumBox.h}}px; line-height:{{sumBox.h}}px; margin-top:{{sumBox.gap}}px; font-size:{{sumBox.px}}px">{{{summary}}}</div>{{/if}}
         </div>
 
         <div class="tm-tab">
@@ -208,7 +221,6 @@
         </div>
       </div>
 
-      {{#if summary}}<div class="tm-sum">{{{summary}}}</div>{{/if}}
       {{#if notes}}<div class="tm-note">{{#each notes}}<div class="ln">{{{this}}}</div>{{/each}}</div>{{/if}}
 
       <div class="wirit-footer">
