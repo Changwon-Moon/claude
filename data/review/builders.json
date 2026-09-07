@@ -2959,6 +2959,161 @@
       "produces": [
         "supply-progress"
       ]
+    },
+    {
+      "label": "singo-A12181103-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "대흥동태영아파트",
+        "--type",
+        "84",
+        "--kapt",
+        "A12181103",
+        "--publish"
+      ],
+      "produces": [
+        "singo-대흥동태영아파트-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10023926-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "롯데캐슬클라시아",
+        "--type",
+        "59",
+        "--kapt",
+        "A10023926",
+        "--publish"
+      ],
+      "produces": [
+        "singo-롯데캐슬클라시아-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A15005705-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "삼환",
+        "--type",
+        "59",
+        "--kapt",
+        "A15005705",
+        "--publish"
+      ],
+      "produces": [
+        "singo-삼환-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10026619-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "미사레스티아",
+        "--type",
+        "84",
+        "--kapt",
+        "A10026619",
+        "--publish"
+      ],
+      "produces": [
+        "singo-미사레스티아-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10025830-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "힐스테이트다산",
+        "--type",
+        "84",
+        "--kapt",
+        "A10025830",
+        "--publish"
+      ],
+      "produces": [
+        "singo-힐스테이트다산-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10027188-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "금천롯데캐슬골드파크1차",
+        "--type",
+        "59",
+        "--kapt",
+        "A10027188",
+        "--publish"
+      ],
+      "produces": [
+        "singo-금천롯데캐슬골드파크1차-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10023451-84-0908",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "반정아이파크캐슬5단지",
+        "--type",
+        "84",
+        "--kapt",
+        "A10023451",
+        "--slug",
+        "singo-반정아이파크캐슬5단지-84-0908",
+        "--publish"
+      ],
+      "produces": [
+        "singo-반정아이파크캐슬5단지-84-0908"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A13905105-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "현대",
+        "--type",
+        "59",
+        "--kapt",
+        "A13905105",
+        "--publish"
+      ],
+      "produces": [
+        "singo-현대-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10027122-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "동탄역포레너스",
+        "--type",
+        "59",
+        "--kapt",
+        "A10027122",
+        "--publish"
+      ],
+      "produces": [
+        "singo-동탄역포레너스-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
     }
   ]
 }
