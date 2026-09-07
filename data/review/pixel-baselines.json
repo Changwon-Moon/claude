@@ -113,11 +113,11 @@
       "label": "rail-gtxa",
       "title": "GTX-A 언제 완전 개통하지 (공정률 99.9% · 개통 미정)",
       "state": "오너 확정",
-      "at": "2026-09-07",
+      "at": "2026-09-08",
       "builder": "rail-line",
       "content": "data/content/2026-09-07/rail-gtxa.json",
       "png": "rail-gtxa-p1.png",
-      "md5": "1fb8797963d85a763587c1b2b5cc73c1"
+      "md5": "485ba73560c772c248ab994f208107b9"
     },
     {
       "label": "rail-gtxb",

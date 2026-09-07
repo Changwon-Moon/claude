@@ -117,7 +117,23 @@ const MEASURE = `(() => {
   var isRampSurface = function (el) {
     return el.classList && (el.classList.contains("tk-geo") || el.classList.contains("wirit-ramp"));
   };
+  /* ⚠️ 2026-09-07: 세 번째로 같은 일이 났다 — 이번엔 **노선색**이다.
+     이 검사의 머리말은 「노선색·면색·회색은 대상이 아니다」인데 코드가 노선색을 거르지 않아,
+     새 판형(rail-line)의 경강선 #003DA5 가 「규격 밖 코발트」, 신안산 #C10230 이
+     「규격 밖 레드」로 잡혔다. 기존 노선 카드가 안 걸린 건 규칙이 맞아서가 아니라
+     그 카드들이 마침 1~9호선 뱃지만 써서 빨강·파랑 자리에 안 앉았을 뿐이다
+     (램프가 색에 따라 우연히 통과하던 것과 똑같다).
+
+     노선색은 임의 색이 아니다 — templates/_shared/metro-lines.json 정본에서만 오고,
+     빌더가 환승 키를 전수 대조해 카탈로그에 없으면 던진다. 강조색을 흉내 낸 색이 아니라
+     **그 노선의 신분증**이다. 그래서 요소에 wirit-linecolor 를 붙여 표시하고,
+     그 요소는 면·글자·테두리를 **모두** 건너뛴다(뱃지는 색면이고 글자는 그 위의 흰 글자다).
+     새 판형이 노선색을 쓰면 이 클래스만 붙이면 된다. */
+  var isLineColor = function (el) {
+    return el.classList && el.classList.contains("wirit-linecolor");
+  };
   Array.prototype.forEach.call(card.querySelectorAll("*"), function (el) {
+    if (isLineColor(el)) return;
     var cs2 = getComputedStyle(el);
     /* 글자색·테두리는 **언제나** 본다 — 램프 면 위에 얹힌 라벨이 규격 밖 색으로
        새는 것은 여전히 잡혀야 한다. 빼는 것은 면(배경·fill)뿐이다. */

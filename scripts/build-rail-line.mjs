@@ -61,6 +61,60 @@ function buildPeriod(start, openNow) {
   return { value: `약 ${yy}년${mm ? ` ${mm}개월` : ""}`, note: `${start.replace(".", "년 ")}월 착공 ~ ${openNow}` };
 }
 
+/* 당초 목표 → 현재 목표가 **얼마나 밀렸는지**도 코드가 센다. 캡션 문장에 손으로
+   "3년 밀렸다"고 적으면 데이터가 바뀔 때 문장만 남는다(§2 가 오보가 나는 자리라 부르는 곳).
+   양쪽 다 월(또는 '말')이 있으면 개월로, 한쪽이라도 연도뿐이면 **연 단위로만** 센다 —
+   없는 정밀도를 지어내지 않는다. 개통이 '미정'이면 null 이고 캡션이 문장을 바꾼다. */
+function buildDelay(openWas, openNow) {
+  const parse = (t) => {
+    const y = /(\d{4})\s*년/.exec(t || "");
+    if (!y) return null;
+    const m = /말/.test(t) ? 12 : /(\d{1,2})\s*월/.exec(t) ? +/(\d{1,2})\s*월/.exec(t)[1] : null;
+    return { y: +y[1], m };
+  };
+  const a = parse(openWas), b = parse(openNow);
+  if (!a || !b) return null;
+  if (a.m == null || b.m == null) {
+    const yy = b.y - a.y;
+    return yy > 0 ? `${yy}년` : null;
+  }
+  const months = (b.y - a.y) * 12 + (b.m - a.m);
+  if (months <= 0) return null;
+  const yy = Math.floor(months / 12), mm = months % 12;
+  return yy ? `${yy}년${mm ? ` ${mm}개월` : ""}` : `${mm}개월`;
+}
+
+/* ⑧ 캡션 가드 (2026-09-07). 캡션을 사람 말투로 바꾸면서 **손글씨가 들어올 자리**가 생겼다.
+   - capPoint(👉 한 줄)에는 숫자를 못 쓴다. 숫자가 필요하면 코드가 끼우는 자리로 간다.
+   - capLines 의 숫자는 그 노선 데이터 또는 meta.flags(검증 기록)에 **그대로 있어야** 한다.
+     '61.94' 를 '61.9' 로 옮겨 적는 식의 조용한 변형이 여기서 걸린다. */
+const FLAGTEXT = JSON.stringify(doc.meta.flags || []);
+function guardCaption(L) {
+  if (!L.capPoint) throw new Error(`${L.name}: capPoint 가 없다 — 👉 한 줄은 필수다`);
+  const d = L.capPoint.match(/\d/);
+  if (d) throw new Error(`${L.name}: capPoint 에 숫자가 있다("${L.capPoint}") — 숫자는 코드가 넣는다`);
+  /* ⚠️ 포함(includes)으로 대조하면 **61.9 가 61.94 안에 들어 있어 통과한다** —
+     실제로 이 가드를 처음 짜고 일부러 61.94 를 61.9 로 바꿔봤더니 조용히 넘어갔다.
+     그래서 양쪽을 **숫자 토큰 집합**으로 만들어 정확히 같은 값만 인정한다. */
+  const NUM = /\d+(?:\.\d+)?/g;
+  /* ⚠️ 그리고 **검사 대상을 대조표에 넣으면 안 된다** — JSON.stringify(L) 에 capLines 가
+     그대로 들어 있어서, 61.9 로 고쳐 놓으면 그 61.9 가 스스로를 증명했다. 두 번째로 조용히
+     통과했다. 캡션 필드를 뺀 나머지만 대조표로 쓴다. */
+  const { capLines: _cl, capPoint: _cp, ...rest } = L;
+  const pool = new Set((JSON.stringify(rest) + FLAGTEXT).match(NUM) || []);
+  /* 날짜만 쪼갠다 — 착공이 "2024.01" 로 적혀 있으면 캡션의 "2024년 1월" 도 같은 사실이다.
+     여기서 **모든** 소수를 쪼개면 61.94 가 61 과 94 를 통과시켜 검사가 헐거워지므로
+     YYYY.MM 모양에만 적용한다. */
+  for (const t of [...pool]) {
+    const m = /^(\d{4})\.(\d{2})$/.exec(t);
+    if (m) { pool.add(m[1]); pool.add(String(+m[2])); pool.add(m[2]); }
+  }
+  for (const line of L.capLines || [])
+    for (const n of line.match(NUM) || [])
+      if (!pool.has(n))
+        throw new Error(`${L.name}: capLines 의 숫자 ${n} 이 데이터셋·검증기록 어디에도 없다 — 옮겨 적힌 값이다`);
+}
+
 const outDir = publish ? join(ROOT, `data/content/${date}`) : join(ROOT, "data/out/_spike");
 mkdirSync(outDir, { recursive: true });
 const missing = new Set();
@@ -160,7 +214,7 @@ for (const L of doc.lines) {
   const card = {
     template: "rail-line@1", date, lc, n: NROW, rail,
     subtitle: `서울 수도권 주요 노선 · 공사 현황 · ${doc.meta.asOfLabel} 기준`,
-    title: `<span class="ln">${L.name}</span> ${L.titleAsk || "언제 개통하지?"}`,
+    title: `<span class="ln wirit-linecolor">${L.name}</span> ${L.titleAsk || "언제 개통하지?"}`,
     badge: L.badge, tone: L.tone,
     prog: { value: L.progressText, asOf: L.progressNote || `${doc.meta.asOfLabel} · 국가철도공단`,
             width: `${L.progress}%`, zero: L.progress === 0 },
@@ -172,17 +226,30 @@ for (const L of doc.lines) {
   };
   writeFileSync(join(outDir, `rail-${L.key}.json`), JSON.stringify(card, null, 2) + "\n");
 
+  guardCaption(L);
+  const delay = buildDelay(L.openWas, L.openNow);
+
+  /* 캡션은 **카톡으로 보내는 말투**로 쓴다 (오너 지시 2026-09-07).
+     그전 판본은 이모지도 후킹도 CTA 도 없는 평서문 나열이라 docs/CAPTION.md §4 형식과
+     아예 갈라져 있었다 — 문서가 있는데도 이 판형만 제 형식을 안 따르고 있었다.
+     ⚠️ **말투만 사람 몫이고 숫자는 여전히 코드 몫이다**(§2). 밀린 기간은 buildDelay 가 세고,
+     capPoint 에는 숫자를 못 쓰게 막고, capLines 의 숫자는 데이터셋·검증기록과 대조한다.
+     ⚠️ null 은 '이 줄 없음', "" 는 **빈 줄**이다. 예전 판본은 ""를 전부 걸러내서
+     문단 구분이 통째로 사라진 채 벽글이 나갔다 — 그래서 두 값을 나눠 쓴다. */
   writeCaption(`rail-${L.key}`, [
-    `${L.name} — 공정률 ${L.progress}%`, "",
-    `당초 ${L.openWas} 개통 목표였다. 지금은 ${L.openNow}.`,
-    L.capExtra || "", "",
-    `· 착공 ${L.start} · 예상 공사기간 ${period.value}`,
-    `· ${L.km} · ${L.stationNote}`,
-    L.shared ? `· 선로 공용 — ${L.shared}` : "", "",
-    "개통 목표는 목표치이며 확정 고시가 아닙니다.",
-    `출처 · ${L.src}`, "",
-    "#수도권철도 #부동산 #교통호재 #위릿노트 #부동산공부",
-  ].filter((x) => x !== "").join("\n"));
+    `🚇 ${L.name}, 지금 어디까지 왔을까요?`, "",
+    `공정률 ${L.progressText}%`,
+    `📅 당초 ${L.openWas} → 지금 ${L.openNow}`,
+    delay ? `⏳ 당초 목표보다 ${delay} 밀렸습니다.` : "⏳ 새 개통 목표는 아직 없습니다.",
+    ...(L.capLines ? ["", ...L.capLines] : []), "",
+    `📍 ${L.start.replace(/^(\d{4})\.0?(\d{1,2})$/, "$1년 $2")}월 착공 · ${L.km} · ${L.stationNote}`,
+    L.shared ? `🔗 선로 공용 — ${L.shared}` : null, "",
+    `👉 ${L.capPoint}`, "",
+    `📌 출처 · ${L.src}`,
+    "※ 개통 목표는 목표치이며 확정 고시가 아닙니다.", "",
+    "더 보기 👉 @wirit_note", "",
+    "#수도권철도 #교통호재 #부동산 #위릿노트 #부동산공부",
+  ].filter((x) => x !== null).join("\n"));
   made++;
 }
 

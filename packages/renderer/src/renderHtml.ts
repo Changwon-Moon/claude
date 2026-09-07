@@ -72,7 +72,7 @@ Handlebars.registerHelper("metroBadge", (key: unknown) => {
     inner = `<span class="nm two">${m.lines[0]}<br>${m.lines[1]}</span>`;
   else inner = `<span class="nm">${m.label || k}</span>`;
   return new Handlebars.SafeString(
-    `<span class="rt-line ${cls}" style="background:${m.color}">${inner}</span>`,
+    `<span class="rt-line wirit-linecolor ${cls}" style="background:${m.color}">${inner}</span>`,
   );
 });
 
@@ -102,7 +102,7 @@ Handlebars.registerHelper("metroWide", (key: unknown) => {
         ? `${m.lines.join("")}선`
         : `${m.label || k}선`;
   return new Handlebars.SafeString(
-    `<span class="rt-wide ${cls}" style="background:${m.color}">${label}</span>`,
+    `<span class="rt-wide wirit-linecolor ${cls}" style="background:${m.color}">${label}</span>`,
   );
 });
 

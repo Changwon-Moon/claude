@@ -241,10 +241,10 @@
       <div class="rl-body">
         {{#*inline "stRow"}}
           {{#if this.gap}}
-            <div class="rl-st s-gap"><span class="rl-gap">{{this.gap}}</span></div>
+            <div class="rl-st s-gap"><span class="rl-gap wirit-linecolor">{{this.gap}}</span></div>
           {{else}}
             <div class="rl-st {{this.cls}}">
-              <span class="rl-dot"></span>
+              <span class="rl-dot wirit-linecolor"></span>
               <span class="rl-nm">{{this.name}}{{#if this.prov}}<i>{{this.prov}}</i>{{/if}}</span>
               <span class="rl-xf">{{#each this.xfer}}{{{metroBadge this}}}{{/each}}</span>
             </div>
@@ -252,20 +252,20 @@
         {{/inline}}
         <div class="rl-map">
           <div class="rl-sts">
-            <div class="rl-rail" aria-hidden="true" style="top:{{rail.top}};height:{{rail.h}}"></div>
+            <div class="rl-rail wirit-linecolor" aria-hidden="true" style="top:{{rail.top}};height:{{rail.h}}"></div>
             {{#each head}}
               {{> stRow}}
             {{/each}}
             {{#if split}}
             <div class="rl-split{{#unless split.main.length}} solo{{/unless}}" style="flex:{{split.flex}} 1 0;{{#if split.cols}}grid-template-columns:{{split.cols}}{{/if}}">
               <div class="rl-col" style="grid-template-rows:repeat({{split.flex}},1fr)">
-                {{#if split.mainRail}}<div class="rl-brail" aria-hidden="true" style="left:calc(var(--dotc)/2 - var(--rail)/2);top:{{split.mainRail.top}};height:{{split.mainRail.h}}"></div>{{/if}}
-                {{#if split.conMain}}<div class="rl-bcon" aria-hidden="true" style="left:{{split.con.left}};top:{{split.con.top}};width:{{split.con.w}};height:{{split.con.h}}"></div>{{/if}}
+                {{#if split.mainRail}}<div class="rl-brail wirit-linecolor" aria-hidden="true" style="left:calc(var(--dotc)/2 - var(--rail)/2);top:{{split.mainRail.top}};height:{{split.mainRail.h}}"></div>{{/if}}
+                {{#if split.conMain}}<div class="rl-bcon wirit-linecolor" aria-hidden="true" style="left:{{split.con.left}};top:{{split.con.top}};width:{{split.con.w}};height:{{split.con.h}}"></div>{{/if}}
                 {{#each split.main}}{{> stRow}}{{/each}}
               </div>
               <div class="rl-col" style="grid-template-rows:repeat({{split.flex}},1fr)">
-                {{#if split.conBranch}}<div class="rl-bcon" aria-hidden="true" style="left:{{split.con.left}};top:{{split.con.top}};width:{{split.con.w}};height:{{split.con.h}}"></div>{{/if}}
-                <div class="rl-brail" aria-hidden="true" style="left:calc(var(--dotc)/2 - var(--rail)/2);top:{{split.brRail.top}};height:{{split.brRail.h}}"></div>
+                {{#if split.conBranch}}<div class="rl-bcon wirit-linecolor" aria-hidden="true" style="left:{{split.con.left}};top:{{split.con.top}};width:{{split.con.w}};height:{{split.con.h}}"></div>{{/if}}
+                <div class="rl-brail wirit-linecolor" aria-hidden="true" style="left:calc(var(--dotc)/2 - var(--rail)/2);top:{{split.brRail.top}};height:{{split.brRail.h}}"></div>
                 {{#each split.branch}}{{> stRow}}{{/each}}
               </div>
             </div>
@@ -279,14 +279,14 @@
             <div class="lb">공정률</div>
             <div class="big">{{prog.value}}<u>%</u></div>
             <div class="as">{{prog.asOf}}</div>
-            <div class="rl-track{{#if prog.zero}} zero{{/if}}">{{#unless prog.zero}}<div class="rl-fill" style="width:{{prog.width}}"></div>{{/unless}}</div>
+            <div class="rl-track{{#if prog.zero}} zero{{/if}}">{{#unless prog.zero}}<div class="rl-fill wirit-linecolor" style="width:{{prog.width}}"></div>{{/unless}}</div>
           </div>
           <dl class="rl-facts">
             <div class="rl-f eta">
               <dt>현실적인<br>개통 예상일</dt>
-              <div class="rl-etabox" style="background:{{etaBg}};box-shadow:0 0 12px {{etaGlow}},0 3px 16px rgba(20,24,33,0.08)">
+              <div class="rl-etabox wirit-linecolor" style="background:{{etaBg}};box-shadow:0 0 12px {{etaGlow}},0 3px 16px rgba(20,24,33,0.08)">
                 <div class="r was"><span class="k">당초</span><span class="v">{{eta.was}}</span></div>
-                <div class="r now"><span class="k">변경</span><span class="v">{{eta.now}}</span></div>
+                <div class="r now wirit-linecolor"><span class="k">변경</span><span class="v">{{eta.now}}</span></div>
               </div>
             </div>
             {{#each facts}}
