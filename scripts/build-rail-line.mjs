@@ -174,7 +174,8 @@ for (const L of doc.lines) {
 
   writeCaption(`rail-${L.key}`, [
     `${L.name} — 공정률 ${L.progress}%`, "",
-    `당초 ${L.openWas} 개통 목표였다. 지금은 ${L.openNow}.`, "",
+    `당초 ${L.openWas} 개통 목표였다. 지금은 ${L.openNow}.`,
+    L.capExtra || "", "",
     `· 착공 ${L.start} · 예상 공사기간 ${period.value}`,
     `· ${L.km} · ${L.stationNote}`,
     L.shared ? `· 선로 공용 — ${L.shared}` : "", "",
