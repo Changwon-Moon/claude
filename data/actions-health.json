@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-07T12:30:10.948Z",
+  "generatedAt": "2026-09-07T14:42:41.974Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -391,6 +391,103 @@
       "okDaysAgo": 6
     },
     {
+      "file": "reb-weekly-collect.yml",
+      "name": "주간 매매·전세 지수 수집 (한국부동산원)",
+      "cron": "37 1 * * 5",
+      "dueKst": "10:37",
+      "dots": [
+        {
+          "day": "08-25",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "08-26",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "08-27",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "08-28",
+          "state": "ok",
+          "at": "21:40",
+          "delay": null
+        },
+        {
+          "day": "08-29",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "08-30",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "08-31",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "09-01",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "09-02",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "09-03",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "09-04",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "09-05",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "09-06",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "09-07",
+          "state": "none",
+          "at": null,
+          "delay": null
+        }
+      ],
+      "medianDelay": null,
+      "maxDelay": null,
+      "lastRun": "2026-09-07",
+      "lastOk": "2026-09-07",
+      "okDaysAgo": 0
+    },
+    {
       "file": "month-backfill.yml",
       "name": "「구 × 월」 캐시 백필 (곡선을 호출 없이 그리기 위한 적재)",
       "cron": "40 1 * * *",
@@ -710,9 +807,9 @@
       "file": "seoul-living-probe.yml",
       "name": "서울 생활인구 서비스 검증 (probe)",
       "lastRun": "2026-08-08",
-      "daysAgo": 29,
+      "daysAgo": 30,
       "lastOk": "2026-08-08",
-      "okDaysAgo": 29,
+      "okDaysAgo": 30,
       "fails30": 0,
       "runs30": 2
     },
@@ -730,9 +827,9 @@
       "file": "photo-batch.yml",
       "name": "이미지 일괄 자동취득 (photo-batch)",
       "lastRun": "2026-08-12",
-      "daysAgo": 25,
+      "daysAgo": 26,
       "lastOk": "2026-08-12",
-      "okDaysAgo": 25,
+      "okDaysAgo": 26,
       "fails30": 0,
       "runs30": 3
     },
@@ -797,6 +894,16 @@
       "runs30": 7
     },
     {
+      "file": "pipeline-tick.yml",
+      "name": "파이프라인 진행 (승인 → 실행)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 7,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 7,
+      "fails30": 8,
+      "runs30": 56
+    },
+    {
       "file": "population-collect.yml",
       "name": "인구 수집 (monthly)",
       "lastRun": "2026-08-31",
@@ -835,16 +942,6 @@
       "okDaysAgo": 10,
       "fails30": 4,
       "runs30": 6
-    },
-    {
-      "file": "pipeline-tick.yml",
-      "name": "파이프라인 진행 (승인 → 실행)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 6,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 6,
-      "fails30": 8,
-      "runs30": 56
     },
     {
       "file": "molit-collect.yml",
@@ -964,7 +1061,7 @@
       "lastOk": "2026-09-07",
       "okDaysAgo": 0,
       "fails30": 18,
-      "runs30": 68
+      "runs30": 72
     },
     {
       "file": "geocode.yml",
@@ -985,16 +1082,6 @@
       "okDaysAgo": 0,
       "fails30": 30,
       "runs30": 100
-    },
-    {
-      "file": "reb-weekly-collect.yml",
-      "name": "주간 매매·전세 지수 수집 (한국부동산원)",
-      "lastRun": "2026-09-07",
-      "daysAgo": 0,
-      "lastOk": "2026-09-07",
-      "okDaysAgo": 0,
-      "fails30": 1,
-      "runs30": 6
     },
     {
       "file": "singo-prep.yml",
@@ -1023,7 +1110,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-07",
       "okDaysAgo": 0,
-      "fails30": 10,
+      "fails30": 13,
       "runs30": 100
     }
   ]
