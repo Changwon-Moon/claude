@@ -6,11 +6,9 @@
     "template",
     "date",
     "title",
-    "badge",
-    "tone",
     "n",
     "rail",
-    "stations",
+    "head",
     "prog",
     "facts",
     "eta",
@@ -49,36 +47,6 @@
       "minimum": 2,
       "maximum": 18,
       "description": "노선도 행 수(레일 길이 계산용)"
-    },
-    "stations": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "cls": {
-            "type": "string"
-          },
-          "prov": {
-            "type": "string"
-          },
-          "xfer": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "gap": {
-            "type": "string"
-          },
-          "br": {
-            "type": "boolean",
-            "description": "지선 행"
-          }
-        }
-      }
     },
     "prog": {
       "type": "object",
@@ -146,42 +114,6 @@
         }
       }
     },
-    "brail": {
-      "type": "object",
-      "description": "지선 레일·커넥터 위치 — 분기가 있는 노선만",
-      "properties": {
-        "label": {
-          "type": "string"
-        },
-        "left": {
-          "type": "string"
-        },
-        "top": {
-          "type": "string"
-        },
-        "h": {
-          "type": "string"
-        },
-        "conL": {
-          "type": "string"
-        },
-        "conT": {
-          "type": "string"
-        },
-        "conW": {
-          "type": "string"
-        },
-        "conH": {
-          "type": "string"
-        },
-        "labL": {
-          "type": "string"
-        },
-        "labT": {
-          "type": "string"
-        }
-      }
-    },
     "eta": {
       "type": "object",
       "description": "개통예상일 강조 카드",
@@ -195,6 +127,106 @@
         },
         "now": {
           "type": "string"
+        }
+      }
+    },
+    "head": {
+      "type": "array",
+      "description": "분기 전(또는 전체) 역 행",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "cls": {
+            "type": "string"
+          },
+          "prov": {
+            "type": "string"
+          },
+          "xfer": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "gap": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "split": {
+      "type": "object",
+      "description": "분기점 이후 좌우 두 갈래 — 왼쪽 본선 잔여, 오른쪽 지선",
+      "properties": {
+        "flex": {
+          "type": "integer"
+        },
+        "main": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "cls": {
+                "type": "string"
+              },
+              "prov": {
+                "type": "string"
+              },
+              "xfer": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "gap": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "branch": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "cls": {
+                "type": "string"
+              },
+              "prov": {
+                "type": "string"
+              },
+              "xfer": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "gap": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "mainRail": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "brRail": {
+          "type": "object"
+        },
+        "con": {
+          "type": "object"
         }
       }
     }

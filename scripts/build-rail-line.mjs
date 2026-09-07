@@ -81,39 +81,49 @@ for (const L of doc.lines) {
     throw new Error("GTX-C 는 준공 연도가 협약에서 삭제됐다 — 개통 연도를 쓰지 않는다");
 
 
-  const mapSt = (s, br) => s.type === "gap"
+  const mapSt = (s) => s.type === "gap"
     ? { gap: s.text }
-    : { name: s.name, cls: MAP_CLS[s.state] ?? "", prov: PROV[s.state] || "", xfer: s.xfer || [], ...(br ? { br: true } : {}) };
+    : { name: s.name, cls: MAP_CLS[s.state] ?? "", prov: PROV[s.state] || "", xfer: s.xfer || [] };
 
-  /* 지선을 분기역 바로 뒤에 끼워 넣는다. 본선 레일은 그 구간도 관통한다 —
-   * 실제로 본선은 분기역에서 다음 본선역으로 계속 이어지기 때문이다. */
-  let rows, brail = null;
+  /* 지선 — 분기점 이후 **좌우 두 갈래**로 갈라진다(오너 지시 2026-09-07, 첨부 노선도 방식).
+   * 왼쪽이 본선 잔여, 오른쪽이 지선. 두 열의 역 수가 달라도 행 높이는 같아야 하므로
+   * 전체 행 수 N = 분기 전 행 + max(본선 잔여, 지선) 으로 잡고, 분할 영역에
+   * flex 를 그 max 만큼 준다. 레일 위치는 각 열 안의 (i+0.5)/n 으로 % 계산한다. */
+  const pct = (v) => `${(v * 100).toFixed(3)}%`;
+  const cen = (i, n) => (i + 0.5) / n;
+  let head, split = null, NROW;
   if (L.branch) {
     const j = L.stations.findIndex((s) => s.name === L.branchAfter);
     if (j < 0) throw new Error(`${L.name}: branchAfter 「${L.branchAfter}」 가 본선에 없다`);
-    const head = L.stations.slice(0, j + 1).map((s) => mapSt(s));
-    const brs = L.branch.stations.map((s) => mapSt(s, true));
-    const tail = L.stations.slice(j + 1).map((s) => mapSt(s));
-    rows = [...head, ...brs, ...tail];
-    const N = rows.length, bFirst = j + 1, bLast = j + L.branch.stations.length;
-    const pct = (v) => `${(v * 100).toFixed(3)}%`;
-    const cen = (i) => (i + 0.5) / N;
-    brail = {
-      label: L.branch.label,
-      left: "calc(var(--dotc) + var(--dotc) / 2 - var(--rail) / 2)",
-      top: pct(cen(bFirst)), h: pct(cen(bLast) - cen(bFirst)),
-      conL: "calc(var(--dotc) / 2 - var(--rail) / 2)",
-      conT: pct(cen(j)), conW: "var(--dotc)", conH: pct(cen(bFirst) - cen(j)),
-      labL: "calc(var(--dotc) * 2 + 6px)", labT: `calc(${pct(cen(j))} + 6px)`,
+    head = L.stations.slice(0, j + 1).map((s) => mapSt(s));
+    const main = L.stations.slice(j + 1).map((s) => mapSt(s));
+    const branch = L.branch.stations.map((s) => mapSt(s));
+    const rowsInSplit = Math.max(main.length, branch.length);
+    NROW = head.length + rowsInSplit;
+    split = {
+      flex: rowsInSplit, main, branch,
+      mainRail: main.length > 1
+        ? { top: pct(cen(0, rowsInSplit)), h: pct(cen(main.length - 1, rowsInSplit) - cen(0, rowsInSplit)) }
+        : null,
+      /* 지선 레일은 **분할 영역 맨 위**(커넥터가 건너온 지점)에서 시작해 마지막 역까지 */
+      brRail: { top: "0%", h: pct(cen(branch.length - 1, rowsInSplit)) },
+      /* 커넥터: 분기역 점(왼쪽 열 x)에서 오른쪽 열 첫 점까지. 분할 영역 기준 좌표라
+       * top 은 음수(분기역은 분할 영역 위쪽 행에 있다) — 열 폭의 절반만큼 가로로 건넌다. */
+      /* 커넥터: 분기역 점(분할 영역 위로 반 행)에서 오른쪽 열 첫 점(아래로 반 행)까지 = 정확히 한 행 */
+      con: main.length
+        ? { left: `calc(-100% - 10px + var(--dotc) / 2 - var(--rail) / 2)`, top: pct(-0.5 / rowsInSplit),
+            w: `calc(100% + 10px)`, h: pct(0.5 / rowsInSplit) }
+        : { left: `calc(-44px + var(--dotc) / 2 - var(--rail) / 2)`, top: pct(-0.5 / rowsInSplit),
+            w: "44px", h: pct(0.5 / rowsInSplit) },
     };
   } else {
-    rows = L.stations.map((s) => mapSt(s));
+    head = L.stations.map((s) => mapSt(s));
+    NROW = head.length;
   }
-  const NROW = rows.length;
-  const mainIdx = rows.map((r, i) => (r.gap || !r.br ? i : -1)).filter((i) => i >= 0);
+  const mainCount = L.branch ? head.length : NROW;
   const rail = {
-    top: `${(((mainIdx[0] + 0.5) / NROW) * 100).toFixed(3)}%`,
-    h: `${(((mainIdx[mainIdx.length - 1] - mainIdx[0]) / NROW) * 100).toFixed(3)}%`,
+    top: pct(cen(0, NROW)),
+    h: pct(cen(mainCount - 1, NROW) - cen(0, NROW)),
   };
 
   const avail = BODY_H - (L.shared ? NOTE_H : 0);
@@ -132,14 +142,14 @@ for (const L of doc.lines) {
   ];
 
   const card = {
-    template: "rail-line@1", date, lc, n: NROW, rail, ...(brail ? { brail } : {}),
+    template: "rail-line@1", date, lc, n: NROW, rail,
     subtitle: `서울 수도권 주요 노선 · 공사 현황 · ${doc.meta.asOfLabel} 기준`,
     title: `<span class="ln">${L.name}</span> 언제 개통하지?`,
     badge: L.badge, tone: L.tone,
     prog: { value: String(L.progress), asOf: L.progressNote || `${doc.meta.asOfLabel} · 국가철도공단`,
             width: `${L.progress}%`, zero: L.progress === 0 },
     eta: { was: L.openWas, now: L.openNow },
-    facts, shared: L.shared || "", stations: rows,
+    facts, shared: L.shared || "", head, ...(split ? { split } : {}),
     source: { name: L.src },
   };
   writeFileSync(join(outDir, `rail-${L.key}.json`), JSON.stringify(card, null, 2) + "\n");

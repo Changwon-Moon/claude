@@ -108,8 +108,14 @@
        * 행 높이가 모두 같으므로(flex:1 1 0) 행 i 의 중심은 (i+0.5)/N 이다.
        * 레일 셋(본선·커넥터·지선)의 top/height 를 **빌더가 % 로 계산**해 인라인으로 준다 —
        * CSS calc 로는 지선 역이 1개일 때(높이 0) 커넥터가 붕 뜬다. */
-      .rl-st.s-br { grid-template-columns: var(--dotc) var(--dotc) auto 1fr; }
+      /* 분기점 이후 좌우 두 갈래 — 왼쪽이 본선, 오른쪽이 지선(첨부 노선도 방식).
+       * 두 열의 역 수가 달라도 행 높이가 같아야 하므로, 전체 행 수 N =
+       * 분기 전 행 + max(본선 잔여, 지선) 으로 잡고 각 열 안에서 flex:1 로 채운다. */
+      .rl-split { display: grid; grid-template-columns: 1fr 1fr; column-gap: 10px; }
+      .rl-split.solo { grid-template-columns: 44px 1fr; column-gap: 0; }
+      .rl-col { position: relative; display: grid; align-content: start; min-width: 0; }
       .rl-brail { position: absolute; z-index: 0; width: var(--rail); border-radius: 4px; background: var(--lc); }
+      /* 분기 커넥터 — 분기역 점에서 오른쪽 열 첫 점까지 ㄱ 자 */
       .rl-bcon {
         position: absolute; z-index: 0;
         border-left: var(--rail) solid var(--lc);
@@ -147,26 +153,31 @@
 
       /* 개통 예상일 — 이 카드가 답하는 질문이다. 통화량 카드(gov-bars)의 강조 뱃지와
        * 같은 규격: 흰→#fff0f1 그라디언트 · 레드 3px 테두리 · 레드 네온 글로우. */
-      .rl-eta {
-        flex: 0 0 auto; margin: 22px 0 24px;
-        border: 3px solid var(--wirit-red); border-radius: 16px;
+      /* 개통 예상일 — 왼쪽 라벨은 다른 항목과 같은 자리, 오른쪽에 강조 카드 두 줄.
+       * 카드 규격은 통화량 카드(gov-bars)의 badges 와 같다. */
+      .rl-f.eta { flex: 1.9 1 0; align-items: center; }
+      .rl-f.eta dt { color: #98a1ae; }
+      .rl-etabox {
+        flex: 1 1 auto; margin-left: auto;
+        border: 3px solid var(--wirit-red); border-radius: 14px;
         background: linear-gradient(180deg, #ffffff 0%, #fff0f1 100%);
-        box-shadow: 0 0 14px rgba(229, 72, 77, 0.38), 0 3px 20px rgba(20, 24, 33, 0.10);
-        padding: 18px 22px 20px; text-align: center;
+        box-shadow: 0 0 12px rgba(229, 72, 77, 0.34), 0 3px 16px rgba(20, 24, 33, 0.08);
+        padding: 12px 18px; text-align: right;
       }
-      .rl-eta .lb { font-size: 21px; font-weight: 800; letter-spacing: -0.02em; }
-      .rl-eta .lb i { font-style: normal; color: #98a1ae; }
-      .rl-eta .was { margin-top: 8px; font-size: 20px; font-weight: 700; color: #98a1ae; letter-spacing: -0.02em; }
-      .rl-eta .now {
-        margin-top: 2px; font-size: 46px; font-weight: 800; line-height: 1.2;
-        color: var(--wirit-red); letter-spacing: -0.045em;
-      }
+      .rl-etabox .r { display: flex; align-items: baseline; justify-content: flex-end; gap: 10px; }
+      .rl-etabox .r + .r { margin-top: 5px; }
+      .rl-etabox .k { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; }
+      .rl-etabox .was .k, .rl-etabox .was .v { color: #98a1ae; }
+      .rl-etabox .v { font-size: 27px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.2; white-space: nowrap; }
+      .rl-etabox .now .k { color: var(--wirit-red); }
+      .rl-etabox .now .v { color: var(--wirit-red); font-size: 32px; }
 
       /* 나머지 정보는 한 줄에 라벨·값 — 줄마다 두 줄씩 쓰면 여백이 사라진다 */
       .rl-facts { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
       .rl-f {
         flex: 1 1 0; min-height: 0;
         display: flex; align-items: baseline; gap: 14px;
+        padding: 6px 0 14px;
         border-bottom: 2px solid var(--wirit-ink-06);
       }
       .rl-f:last-child { border-bottom: none; }
@@ -225,29 +236,39 @@
 
       <div class="rl-head">
         <h1 class="wirit-title">{{{title}}}</h1>
-        <div class="rl-seg"><span class="rl-badge t-{{tone}}">{{badge}}</span></div>
       </div>
 
       <div class="rl-body">
+        {{#*inline "stRow"}}
+          {{#if this.gap}}
+            <div class="rl-st s-gap"><span class="rl-gap">{{this.gap}}</span></div>
+          {{else}}
+            <div class="rl-st {{this.cls}}">
+              <span class="rl-dot"></span>
+              <span class="rl-nm">{{this.name}}{{#if this.prov}}<i>{{this.prov}}</i>{{/if}}</span>
+              <span class="rl-xf">{{#each this.xfer}}{{{metroBadge this}}}{{/each}}</span>
+            </div>
+          {{/if}}
+        {{/inline}}
         <div class="rl-map">
           <div class="rl-sts">
             <div class="rl-rail" aria-hidden="true" style="top:{{rail.top}};height:{{rail.h}}"></div>
-            {{#if brail}}
-              <div class="rl-bcon" aria-hidden="true" style="left:{{brail.conL}};top:{{brail.conT}};width:{{brail.conW}};height:{{brail.conH}}"></div>
-              <div class="rl-brail" aria-hidden="true" style="left:{{brail.left}};top:{{brail.top}};height:{{brail.h}}"></div>
-            {{/if}}
-            {{#each stations}}
-              {{#if this.gap}}
-                <div class="rl-st s-gap"><span class="rl-gap">{{this.gap}}</span></div>
-              {{else}}
-                <div class="rl-st {{this.cls}}{{#if this.br}} s-br{{/if}}">
-                  {{#if this.br}}<span></span>{{/if}}
-                  <span class="rl-dot"></span>
-                  <span class="rl-nm">{{this.name}}{{#if this.prov}}<i>{{this.prov}}</i>{{/if}}</span>
-                  <span class="rl-xf">{{#each this.xfer}}{{{metroBadge this}}}{{/each}}</span>
-                </div>
-              {{/if}}
+            {{#each head}}
+              {{> stRow}}
             {{/each}}
+            {{#if split}}
+            <div class="rl-split{{#unless split.main.length}} solo{{/unless}}" style="flex:{{split.flex}} 1 0">
+              <div class="rl-col" style="grid-template-rows:repeat({{split.flex}},1fr)">
+                {{#if split.mainRail}}<div class="rl-brail" aria-hidden="true" style="left:calc(var(--dotc)/2 - var(--rail)/2);top:{{split.mainRail.top}};height:{{split.mainRail.h}}"></div>{{/if}}
+                {{#each split.main}}{{> stRow}}{{/each}}
+              </div>
+              <div class="rl-col" style="grid-template-rows:repeat({{split.flex}},1fr)">
+                <div class="rl-bcon" aria-hidden="true" style="left:{{split.con.left}};top:{{split.con.top}};width:{{split.con.w}};height:{{split.con.h}}"></div>
+                <div class="rl-brail" aria-hidden="true" style="left:calc(var(--dotc)/2 - var(--rail)/2);top:{{split.brRail.top}};height:{{split.brRail.h}}"></div>
+                {{#each split.branch}}{{> stRow}}{{/each}}
+              </div>
+            </div>
+            {{/if}}
           </div>
           {{#if shared}}<div class="rl-note"><b>선로 공용</b> · {{shared}}</div>{{/if}}
         </div>
@@ -259,12 +280,14 @@
             <div class="as">{{prog.asOf}}</div>
             <div class="rl-track{{#if prog.zero}} zero{{/if}}">{{#unless prog.zero}}<div class="rl-fill" style="width:{{prog.width}}"></div>{{/unless}}</div>
           </div>
-          <div class="rl-eta">
-            <div class="lb"><i>현실적인</i> 개통예상일</div>
-            <div class="was">당초 {{eta.was}}</div>
-            <div class="now">{{eta.now}}</div>
-          </div>
           <dl class="rl-facts">
+            <div class="rl-f eta">
+              <dt>현실적인<br>개통 예상일</dt>
+              <div class="rl-etabox">
+                <div class="r was"><span class="k">당초</span><span class="v">{{eta.was}}</span></div>
+                <div class="r now"><span class="k">변경</span><span class="v">{{eta.now}}</span></div>
+              </div>
+            </div>
             {{#each facts}}
             <div class="rl-f"><dt>{{this.label}}</dt><dd>{{this.value}}</dd></div>
             {{/each}}
