@@ -53,8 +53,13 @@ function currentRun(series) {
 
 const mae = currentRun(d.mae[SEOUL]);
 const jeon = currentRun(d.jeonse[SEOUL]);
-const N = mae.run.weeks;
-if (jeon.run.weeks !== N) throw new Error(`매매(${N})·전세(${jeon.run.weeks}) 연속 주수가 달라 '동반' 프레임이 안 맞는다 — 제목을 바꾼다`);
+/* 연속 '주수'는 **달력 주**로 센다 — 부동산원은 설·추석 주 조사를 쉬어 그 주가 계열에 없다.
+   관측 개수로 세면 그만큼 적게 나온다(매매 카드와 같은 교정, 2026-09-07). */
+const WEEK_MS = 7 * 864e5;
+const calAt = (o, k) => Math.round((mondayOf(o.ks[o.run.base + k]) - mondayOf(o.ks[o.run.base + 1])) / WEEK_MS) + 1;
+const calWeeks = (o) => calAt(o, o.run.weeks);
+const N = calWeeks(mae);
+if (calWeeks(jeon) !== N) throw new Error(`매매(${N})·전세(${calWeeks(jeon)}) 연속 주수가 달라 '동반' 프레임이 안 맞는다 — 제목을 바꾼다`);
 /* 신선도 경고(비차단) — 최신주가 오래 묵으면 수집이 밀린 것. 확정은 confirm.mjs 게이트가 막는다. */
 { const _latest = mae.ks[mae.ks.length - 1], _age = Math.floor((Date.now() - mondayOf(_latest).getTime()) / 86400000);
   if (_age > 10) console.warn(`⚠️  주간지수가 ${_age}일 묵었다(최신주 ${_latest}) — 수집(reb-weekly-collect)이 밀렸는지 확인. 카드가 옛 주수로 나갈 수 있다.`); }
@@ -73,7 +78,7 @@ const xw = (w) => r1(AXIS_X + ((w - 1) / (WMAX - 1)) * (RIGHT - AXIS_X));
 const yp = (p) => r1(BASE - (p / YMAX) * (BASE - TOP));
 const y0 = yp(0);
 
-const curve = (o) => { const pts = []; for (let k = 1; k <= o.run.weeks; k++) pts.push(`${xw(k)},${yp(o.cumAt(k))}`); return pts; };
+const curve = (o) => { const pts = []; for (let k = 1; k <= o.run.weeks; k++) pts.push(`${xw(calAt(o, k))},${yp(o.cumAt(k))}`); return pts; };
 const maeCurve = curve(mae), jeonCurve = curve(jeon);
 
 const grid = [5, 10, 15].map((p) => ({ x1: AXIS_X, x2: RIGHT, y: yp(p) }));
@@ -134,4 +139,4 @@ mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "jeonse-streak.json"), JSON.stringify(card, null, 2) + "\n", "utf8");
 
 console.log(`jeonse-streak (매매·전세 동반) — 원자료 계산 · 기준일 ${date}`);
-console.log(`   매매 ${N}주 누적 +${mae.cum}% · 전세 ${N}주 누적 +${jeon.cum}% · 시작 ${startLabel} · 같은주바닥 ${sameBottom}`);
+console.log(`   매매 ${N}주(달력) 누적 +${mae.cum}% · 전세 ${N}주 누적 +${jeon.cum}% · 관측 ${mae.run.weeks}개 · 시작 ${startLabel} · 같은주바닥 ${sameBottom}`);

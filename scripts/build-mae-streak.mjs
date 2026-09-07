@@ -72,25 +72,36 @@ if (!current) throw new Error("마지막 주까지 이어진 상승 구간이 �
 const record = runs.filter((r) => r !== current).sort((a, b) => b.weeks - a.weeks)[0];
 if (!record) throw new Error("역대 최장 구간을 못 찾았다");
 
-const cumAt = (r, k) => (vals[r.base + k] / vals[r.base] - 1) * 100;   // k=1..weeks
+const cumAt = (r, k) => (vals[r.base + k] / vals[r.base] - 1) * 100;   // k=1..r.weeks (관측 개수 기준)
+
+/* ── 연속 '주수'는 **달력 주**로 센다 (2026-09-07 교정) ───────────────────────
+ * 부동산원은 설·추석 연휴 주에 주간조사를 쉰다 → 그 주는 계열에 아예 없다.
+ * 관측 개수로 세면 쉰 주만큼 적게 나온다(2025 설 202505·추석 202541 누락 → 현재 국면 2주 과소).
+ * 부동산원·언론이 말하는 "N주 연속"은 **첫 상승주 ~ 마지막주 달력 주수**다.
+ * 실측(2026-09-07): 현재 관측83/달력85 · 역대최장 관측85/달력85 → 달력 기준이 보도값과 일치.
+ * 곡선의 x 도 관측 순번이 아니라 달력 주 위치로 찍는다(쉰 주는 간격으로 드러난다 — 사실대로). */
+const WEEK_MS = 7 * 864e5;
+const calAt = (r, k) => Math.round((mondayOf(ks[r.base + k]) - mondayOf(ks[r.base + 1])) / WEEK_MS) + 1;
+const calWeeks = (r) => calAt(r, r.weeks);
+const curWeeks = calWeeks(current), recWeeks = calWeeks(record);
+
 const curCum = r2(cumAt(current, current.weeks));
 const recCum = r2(cumAt(record, record.weeks));
-const gap = record.weeks - current.weeks;
+const gap = recWeeks - curWeeks;          // >0 남음 · 0 타이 · <0 신기록
 const ratio = r1(curCum / recCum);
-if (gap <= 0) throw new Error(`현재(${current.weeks})가 역대 최장(${record.weeks})을 이미 넘었다 — 제목을 바꾼다`);
 if (ratio < 1.9) throw new Error(`누적 배수 ${ratio} 가 2배 미만 — 제목을 고친다`);
 
 /* ── 좌표 (뷰박스 1000×715 — 그래프 높이 살짝 축소) ── */
 const RED = "#e5484d", SLATE = "#5b6b7f", INK = "#141821", MUTE = "#9aa3af";
 const AXIS_X = 95, RIGHT = 915, TOP = 70, BASE = 650, VB_H = 715;
-const WMAX = Math.max(current.weeks, record.weeks), YMAX = 17;
+const WMAX = Math.max(curWeeks, recWeeks), YMAX = 17;
 const xw = (w) => r1(AXIS_X + ((w - 1) / (WMAX - 1)) * (RIGHT - AXIS_X));   // 1주차 = 좌축
 const yp = (p) => r1(BASE - (p / YMAX) * (BASE - TOP));
 const y0 = yp(0);
 
 const curvePts = (r) => {
   const pts = [];
-  for (let k = 1; k <= r.weeks; k++) pts.push(`${xw(k)},${yp(cumAt(r, k))}`);
+  for (let k = 1; k <= r.weeks; k++) pts.push(`${xw(calAt(r, k))},${yp(cumAt(r, k))}`);
   return pts;
 };
 const curCurve = curvePts(current), recCurve = curvePts(record);
@@ -100,14 +111,14 @@ const ylabels = [0, 5, 10, 15].map((p) => ({ x: AXIS_X - 16, y: yp(p) + 9, text:
 const yunit = { x: AXIS_X - 16, y: TOP - 8, text: "(%)" };
 
 const areas = [
-  { points: `${recCurve.join(" ")} ${xw(record.weeks)},${y0} ${xw(1)},${y0}`, fill: SLATE, opacity: 0.06 },
-  { points: `${curCurve.join(" ")} ${xw(current.weeks)},${y0} ${xw(1)},${y0}`, fill: RED, opacity: 0.09 },
+  { points: `${recCurve.join(" ")} ${xw(recWeeks)},${y0} ${xw(1)},${y0}`, fill: SLATE, opacity: 0.06 },
+  { points: `${curCurve.join(" ")} ${xw(curWeeks)},${y0} ${xw(1)},${y0}`, fill: RED, opacity: 0.09 },
 ];
 const polylines = [
   { points: recCurve.join(" "), color: SLATE, width: 7 },
   { points: curCurve.join(" "), color: RED, width: 8 },
 ];
-const cx = xw(current.weeks), cy = yp(curCum), rx = xw(record.weeks), ry = yp(recCum);
+const cx = xw(curWeeks), cy = yp(curCum), rx = xw(recWeeks), ry = yp(recCum);
 const dots = [
   { x: rx, y: ry, color: SLATE, r: 15 },
   { x: cx, y: cy, color: RED, r: 16 },
@@ -116,24 +127,36 @@ const vmarks = [
   { x: rx, y1: ry, y2: y0, color: SLATE },
   { x: cx, y1: cy, y2: y0, color: RED },
 ];
+/* 현재 끝점이 오른쪽 축 끝(타이·신기록)에 붙으면 가운데정렬 라벨이 카드 밖으로 잘린다.
+   끝단이면 오른쪽 정렬로 눕힌다(2026-09-07 타이 국면에서 실제로 잘려 잡음). */
+const curAtEdge = curWeeks >= WMAX;
 const vlabels = [
-  { x: cx, y: cy - 36, text: `+${curCum.toFixed(2)}%`, fill: RED, anchor: "middle" },
+  { x: curAtEdge ? cx - 10 : cx, y: cy - 36, text: `+${curCum.toFixed(2)}%`, fill: RED, anchor: curAtEdge ? "end" : "middle" },
   { x: rx - 16, y: ry - 26, text: `+${recCum.toFixed(2)}%`, fill: SLATE, anchor: "end" },
 ];
-const xlabels = [
-  { x: AXIS_X, y: BASE + 46, text: "1주차", fill: MUTE, anchor: "middle" },
-  { x: cx, y: BASE + 46, text: `${current.weeks}주`, fill: RED, anchor: "end" },
-  { x: rx, y: BASE + 46, text: `${record.weeks}주`, fill: SLATE, anchor: "start" },
-];
+/* 타이(gap 0)면 두 끝점이 같은 x 라 라벨을 하나로 합친다 — 겹쳐 찍지 않는다. */
+const xlabels = gap === 0
+  ? [
+      { x: AXIS_X, y: BASE + 46, text: "1주차", fill: MUTE, anchor: "middle" },
+      { x: cx, y: BASE + 46, text: `${curWeeks}주`, fill: INK, anchor: "end" },
+    ]
+  : [
+      { x: AXIS_X, y: BASE + 46, text: "1주차", fill: MUTE, anchor: "middle" },
+      { x: cx, y: BASE + 46, text: `${curWeeks}주`, fill: RED, anchor: "end" },
+      { x: rx, y: BASE + 46, text: `${recWeeks}주`, fill: SLATE, anchor: "start" },
+    ];
+/* 남은 주 화살표는 '아직 남았을 때'만 뜻이 있다. 타이·신기록이면 그리지 않는다. */
 const ay = BASE - 26, midX = r1((cx + rx) / 2);
-const arrow = {
-  x1: cx, x2: rx, y: ay, color: RED,
-  heads: [
-    { points: `${cx},${ay} ${cx + 15},${ay - 7} ${cx + 15},${ay + 7}`, fill: RED },
-    { points: `${rx},${ay} ${rx - 15},${ay - 7} ${rx - 15},${ay + 7}`, fill: RED },
-  ],
-  lx: midX, ly: ay - 16, text: `${gap}주`,
-};
+const arrow = gap > 0
+  ? {
+      x1: cx, x2: rx, y: ay, color: RED,
+      heads: [
+        { points: `${cx},${ay} ${cx + 15},${ay - 7} ${cx + 15},${ay + 7}`, fill: RED },
+        { points: `${rx},${ay} ${rx - 15},${ay - 7} ${rx - 15},${ay + 7}`, fill: RED },
+      ],
+      lx: midX, ly: ay - 16, text: `${gap}주`,
+    }
+  : null;
 /* 범례 기간 라벨도 원자료에서 계산한다(손으로 적지 않는다). 상승 시작주 = base 다음 주(첫 상승주). */
 const curStart = weekLabel(ks[current.base + 1]);
 const recStart = weekLabel(ks[record.base + 1]);
@@ -154,10 +177,13 @@ const card = {
   template: "streak-line@1",
   date,
   badge: `오늘의 주요 부동산 이슈 (${date.replace(/-/g, ".")})`,
-  title: `<span class="tl">서울 아파트 <span class="hi">${current.weeks}주 연속</span> 상승</span>` +
+  title: `<span class="tl">서울 아파트 <span class="hi">${curWeeks}주 연속</span> 상승</span>` +
          `<span class="tl">이미 文정부의 <span class="hi">${ratio.toFixed(1)}배</span> 상승</span>`,
   chart: { vb: `0 0 1000 ${VB_H}`, bgImage, wm, base: { y: y0, x1: AXIS_X, x2: RIGHT }, grid, areas, ylabels, yunit, vmarks, polylines, dots, vlabels, xlabels, arrow, legend },
-  note: `역사상 최장 기간 연속 상승까지, 단 <b>${gap}주</b>`,
+  /* 마무리 문구는 국면에 맞춘다(오보 0) — 남음 / 타이 / 신기록 */
+  note: gap > 0 ? `역사상 최장 기간 연속 상승까지, 단 <b>${gap}주</b>`
+       : gap === 0 ? `역사상 최장 기간 연속 상승과 <b>타이</b>`
+       : `역사상 최장 기간 연속 상승을 <b>${-gap}주</b> 넘어섰다`,
   source: { name: "한국부동산원 주간 아파트가격동향" },
 };
 
@@ -166,6 +192,6 @@ mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "mae-streak.json"), JSON.stringify(card, null, 2) + "\n", "utf8");
 
 console.log(`mae-streak (streak-line, 실곡선) — 원자료 계산 · 기준일 ${date}(최신 주 ${latestKey})`);
-console.log(`   현재 ${current.weeks}주(${ks[current.base]}~${ks[current.end]}) 누적 +${curCum}% · 시작 ${curStart}`);
-console.log(`   역대 최장 ${record.weeks}주(${ks[record.base]}~${ks[record.end]}) 누적 +${recCum}%`);
-console.log(`   남은 ${gap}주 · 배수 ${ratio}배 · 곡선점 현재 ${curCurve.length}·역대 ${recCurve.length}`);
+console.log(`   현재 ${curWeeks}주(달력) · 관측 ${current.weeks}개(${ks[current.base]}~${ks[current.end]}) 누적 +${curCum}% · 시작 ${curStart}`);
+console.log(`   역대 최장 ${recWeeks}주(달력) · 관측 ${record.weeks}개(${ks[record.base]}~${ks[record.end]}) 누적 +${recCum}%`);
+console.log(`   gap ${gap}주 · 배수 ${ratio}배 · 곡선점 현재 ${curCurve.length}·역대 ${recCurve.length}`);
