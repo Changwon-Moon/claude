@@ -13,9 +13,9 @@
  * 아니었다. 둘이 겹쳐 **한강변 재개발인데 핀이 강변북로 안쪽에 찍혔다.**
  * 계산을 잘 하는 것보다 **계산이 필요 없는 자료를 구하는 것**이 나았다.
  *
- * ── 왜 점이 아니라 구간인가
- * 우리가 아는 것은 "이 구역이 이 언저리"지 "여기 정확히"가 아니다. 그래서 알약에서
- * 지시선을 내리고 끝에 **가로 막대**를 둔다. 모양이 정확도를 말하게 하는 것이다.
+ * ── 구간 표시
+ * 우리가 아는 것은 "이 구역이 이 언저리"지 "여기 정확히"가 아니다. 알약이 건물 위에 앉고
+ * 꼬리(▼)가 자리를 가리킨다 — 각주에 '구간 표시'라고 적는다(오너 시안 2026-09-06).
  *
  * ── 확정과 미확정
  * 채운 알약·실선 지시선 = 시공사 확정 / 점선 알약·점선 지시선 = 미확정('유력').
@@ -42,10 +42,10 @@ export function seongsuAerialSvg({ zones, aerial, href }) {
   const W = cx1 - cx0, H = cy1 - cy0;
   if (W <= 0 || H <= 0) throw new Error("aerial.crop 이 뒤집혀 있다");
 
-  const FS = 40, NUM = 46, PADX = 20, GAP = 12, PH = 66, BAR = 84;
+  /* 알약은 **건물 위에 바로** 앉는다(오너 시안 2026-09-06). 지시선·구간 막대는 뺐다 —
+   * 시안이 그렇고, 알약 아래 꼬리(▼)가 자리를 가리키면 충분하다. */
+  const FS = 42, NUM = 48, PADX = 22, GAP = 12, PH = 70, TAIL = 16;
   const labelY = (aerial.labelY ?? 60) - cy0;
-  const zoneY = (aerial.zoneY ?? labelY + 200) - cy0;
-  if (zoneY <= labelY + PH) throw new Error("zoneY 가 알약 아래가 아니다 — 지시선을 못 내린다");
 
   const pills = zones.map((z) => {
     const lx = aerial.labelX[String(z.id)];
@@ -53,7 +53,7 @@ export function seongsuAerialSvg({ zones, aerial, href }) {
     const w = PADX * 2 + NUM + GAP + textWidth(z.builder, FS);
     const anchorX = lx - cx0;
     let x = anchorX - w / 2;
-    x = Math.max(8, Math.min(W - w - 8, x));
+    x = Math.max(10, Math.min(W - w - 10, x));
     return { z, x, y: labelY - PH / 2, w, h: PH, anchorX };
   });
 
@@ -70,24 +70,23 @@ export function seongsuAerialSvg({ zones, aerial, href }) {
   for (const p of pills) {
     const { z } = p;
     const fixed = z.statusKind === "fixed";
-    const cx = p.x + p.w / 2;
-    /* 구간 막대는 흰 후광을 깔고 그 위에 색을 얹는다 — 조감도의 파란 타워 위에서도 보이게. */
+    /* 꼬리(▼) — 알약이 가리키는 자리는 앵커 x. 알약이 가장자리에서 밀렸어도 꼬리는 제자리에. */
+    const tx = Math.max(p.x + 18, Math.min(p.x + p.w - 18, p.anchorX));
+    const by = p.y + p.h;
     out.push(
-      `<line x1="${cx.toFixed(1)}" y1="${(p.y + p.h).toFixed(1)}" x2="${p.anchorX.toFixed(1)}" y2="${(zoneY - 8).toFixed(1)}" stroke="${z.color}" stroke-width="5" stroke-linecap="round"${fixed ? "" : ' stroke-dasharray="9 7"'}/>` +
-      `<line x1="${(p.anchorX - BAR).toFixed(1)}" y1="${zoneY.toFixed(1)}" x2="${(p.anchorX + BAR).toFixed(1)}" y2="${zoneY.toFixed(1)}" stroke="#fff" stroke-width="17" stroke-linecap="round" stroke-opacity="0.55"/>` +
-      `<line x1="${(p.anchorX - BAR).toFixed(1)}" y1="${zoneY.toFixed(1)}" x2="${(p.anchorX + BAR).toFixed(1)}" y2="${zoneY.toFixed(1)}" stroke="${z.color}" stroke-width="10" stroke-linecap="round"/>`,
+      `<path d="M ${(tx - TAIL).toFixed(1)} ${(by + 3).toFixed(1)} L ${tx.toFixed(1)} ${(by + TAIL + 4).toFixed(1)} L ${(tx + TAIL).toFixed(1)} ${(by + 3).toFixed(1)} Z" fill="${fixed ? z.color : "#FFFFFF"}"${fixed ? "" : ` stroke="${z.color}" stroke-width="3"`}/>`,
     );
     out.push(
-      `<rect x="${(p.x - 4).toFixed(1)}" y="${p.y - 4}" width="${(p.w + 8).toFixed(1)}" height="${p.h + 8}" rx="8" fill="#F7F5F0" fill-opacity="0.85"/>` +
-      `<rect x="${p.x.toFixed(1)}" y="${p.y}" width="${p.w.toFixed(1)}" height="${p.h}" rx="6" ` +
+      `<rect x="${(p.x - 4).toFixed(1)}" y="${p.y - 4}" width="${(p.w + 8).toFixed(1)}" height="${p.h + 8}" rx="9" fill="#F7F5F0" fill-opacity="0.8"/>` +
+      `<rect x="${p.x.toFixed(1)}" y="${p.y}" width="${p.w.toFixed(1)}" height="${p.h}" rx="7" ` +
       (fixed ? `fill="${z.color}"/>` : `fill="#FFFFFF" stroke="${z.color}" stroke-width="3" stroke-dasharray="8 5"/>`),
     );
     const numFill = fixed ? "#FFFFFF" : z.color;
     const numText = fixed ? z.color : "#FFFFFF";
     out.push(
       `<circle cx="${(p.x + PADX + NUM / 2).toFixed(1)}" cy="${(p.y + p.h / 2).toFixed(1)}" r="${NUM / 2}" fill="${numFill}"/>` +
-      `<text x="${(p.x + PADX + NUM / 2).toFixed(1)}" y="${(p.y + p.h / 2 + 11).toFixed(1)}" text-anchor="middle" font-size="30" font-weight="900" fill="${numText}" letter-spacing="-0.04em">${z.id}</text>` +
-      `<text x="${(p.x + PADX + NUM + GAP).toFixed(1)}" y="${(p.y + p.h / 2 + 14).toFixed(1)}" font-size="${FS}" font-weight="800" fill="${fixed ? "#FFFFFF" : z.color}" letter-spacing="-0.045em">${esc(z.builder)}</text>`,
+      `<text x="${(p.x + PADX + NUM / 2).toFixed(1)}" y="${(p.y + p.h / 2 + 11).toFixed(1)}" text-anchor="middle" font-size="31" font-weight="900" fill="${numText}" letter-spacing="-0.04em">${z.id}</text>` +
+      `<text x="${(p.x + PADX + NUM + GAP).toFixed(1)}" y="${(p.y + p.h / 2 + 15).toFixed(1)}" font-size="${FS}" font-weight="800" fill="${fixed ? "#FFFFFF" : z.color}" letter-spacing="-0.045em">${esc(z.builder)}</text>`,
     );
   }
 

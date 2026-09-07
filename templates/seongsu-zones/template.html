@@ -33,62 +33,63 @@
       /* 지도와 네 칸 사이 요약 한 줄 — 빈 자리를 **데이터로** 채운다(CARD_CHECKLIST §2 여백).
          문구가 아니라 코드가 더한 값이라, 자료가 바뀌면 이 줄도 같이 바뀐다. */
       .sz-sum {
-        flex: 0 0 auto; margin: 22px 0 0; padding: 0 0 2px;
+        flex: 0 0 auto; margin: 16px 0 0; padding: 0 0 2px;
         font-size: 31px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.045em; line-height: 1;
       }
       .sz-sum b { font-family: "Wanted Sans", "Pretendard", sans-serif; font-weight: 900; color: var(--wirit-red); }
 
-      /* ── 아래 4칸 ── 상자가 아니라 브랜드색 굵은 선으로 칸을 연다(AI티 금지). */
+      /* ── 아래 네 칸 — 옆가로 칸 2×2 (오너 시안 2026-09-06) ──
+         세로형 936px 폭에 옆가로 칸 넷을 한 줄로 두면 칸이 217px 이라 사진 옆에 글자가 안 선다.
+         그래서 2×2 다. 상자가 아니라 **브랜드색 굵은 윗선**으로 칸을 연다(AI티 금지). */
       .sz-cards {
-        flex: 0 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-        column-gap: 22px; margin: 16px 0 0;
+        flex: 0 0 auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 26px; row-gap: 12px; margin: 14px 0 0;
       }
-      .sz-c { display: flex; flex-direction: column; gap: 8px; padding-top: 11px; border-top: 5px solid var(--c); }
+      .sz-c {
+        display: grid; grid-template-columns: 158px minmax(0, 1fr); column-gap: 14px; align-items: start;
+        padding-top: 11px; border-top: 5px solid var(--c);
+      }
+      .sz-c .ph { grid-row: 1 / span 5; width: 158px; height: 108px; object-fit: cover; display: block; border-radius: 2px; }
 
-      /* 조감도 띠 — 네 칸 전부 있을 때만 그린다. 한 칸만 비면 줄이 어긋난다. */
-      .sz-c .ph { width: 100%; height: 96px; object-fit: cover; display: block; border-radius: 2px; }
-
-      .sz-c .zn { display: flex; align-items: baseline; gap: 7px; }
+      .sz-c .zn { display: flex; align-items: center; gap: 7px; }
       .sz-c .zn .n {
-        flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%; background: var(--c); color: #fff;
+        flex: 0 0 auto; width: 24px; height: 24px; border-radius: 50%; background: var(--c); color: #fff;
         display: inline-flex; align-items: center; justify-content: center;
-        font-size: 16px; font-weight: 800; letter-spacing: -0.05em; align-self: center;
+        font-size: 15px; font-weight: 800; letter-spacing: -0.05em;
       }
-      .sz-c .zn .t { font-size: 25px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.05em; line-height: 1; }
-
+      .sz-c .zn .t { font-size: 20px; font-weight: 800; color: var(--wirit-gray); letter-spacing: -0.05em; line-height: 1; }
       .sz-c .bl {
         font-family: "Wanted Sans", "Pretendard", sans-serif;
-        font-size: 36px; font-weight: 900; color: var(--c); letter-spacing: -0.045em; line-height: 1;
-        white-space: nowrap;
+        font-size: 31px; font-weight: 900; color: var(--c); letter-spacing: -0.045em; line-height: 1;
+        white-space: nowrap; margin-top: 3px;
       }
-      .sz-c .br { font-size: 17px; font-weight: 700; color: var(--wirit-gray); letter-spacing: -0.05em; line-height: 1.1; min-height: 19px; }
+      .sz-c .br { font-size: 16px; font-weight: 700; color: var(--wirit-gray); letter-spacing: -0.05em; line-height: 1.1; min-height: 18px; margin-top: 2px; }
 
-      /* 배지 — 실선(확정) / 점선(미확정). 색은 칸 색을 따른다. */
+      /* 배지 + 공사비를 한 줄에 — 실선(확정) / 점선(미확정). */
+      .sz-c .row { display: flex; align-items: center; gap: 9px; margin-top: 6px; }
       .sz-c .bg {
-        align-self: flex-start; font-size: 16px; font-weight: 800; letter-spacing: -0.04em; line-height: 1;
-        padding: 6px 10px; border-radius: 2px;
+        flex: 0 0 auto; font-size: 14px; font-weight: 800; letter-spacing: -0.04em; line-height: 1;
+        padding: 5px 8px; border-radius: 2px;
       }
       .sz-c .bg.on { background: var(--c); color: #fff; }
       .sz-c .bg.off { border: 2px dashed var(--c); color: var(--c); background: transparent; }
-
       .sz-c .ct {
         font-family: "Wanted Sans", "Pretendard", sans-serif;
-        font-size: 22px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.03em; line-height: 1;
+        font-size: 21px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.03em; line-height: 1;
         white-space: nowrap;
       }
-      .sz-c .ct i { font-style: normal; font-size: 15px; font-weight: 700; color: var(--wirit-gray); margin-left: 4px; }
+      .sz-c .ct i { font-style: normal; font-size: 14px; font-weight: 700; color: var(--wirit-gray); margin-left: 3px; }
 
-      /* 지금 어느 단계인지 — 빈 아래를 **데이터로** 채운다. 배지가 '무엇'이면 이 줄은 '왜'다. */
+      /* 지금 어느 단계인지 — 배지가 '무엇'이면 이 줄은 '왜'다. */
       .sz-c .dt {
-        margin-top: 2px; padding-top: 8px; border-top: 1px solid #E3E0D9;
-        font-size: 17px; font-weight: 600; color: var(--wirit-gray);
-        letter-spacing: -0.045em; line-height: 1.45;
+        margin-top: 5px; font-size: 15px; font-weight: 600; color: var(--wirit-gray);
+        letter-spacing: -0.045em; line-height: 1.35;
       }
 
       /* 각주 — 푸터와 숨을 준다(footergap ≥ 14px). */
       .sz-note {
         flex: 0 0 auto; font-size: 17px; font-weight: 600; color: var(--wirit-gray);
-        letter-spacing: -0.04em; line-height: 1.35; margin: 12px 0 4px;
+        letter-spacing: -0.04em; line-height: 1.35; margin: 10px 0 2px;
       }
     </style>
   </head>
@@ -108,8 +109,7 @@
           <span class="zn"><span class="n">{{this.no}}</span><span class="t">{{this.name}}</span></span>
           <span class="bl">{{this.builder}}</span>
           <span class="br">{{#if this.brand}}{{this.brand}}{{/if}}</span>
-          <span class="bg {{#if this.fixed}}on{{else}}off{{/if}}">{{this.status}}</span>
-          <span class="ct">{{this.cost}}{{#if this.costKind}}<i>{{this.costKind}}</i>{{/if}}</span>
+          <span class="row"><span class="bg {{#if this.fixed}}on{{else}}off{{/if}}">{{this.status}}</span><span class="ct">{{this.cost}}{{#if this.costKind}}<i>{{this.costKind}}</i>{{/if}}</span></span>
           {{#if this.detail}}<span class="dt">{{this.detail}}</span>{{/if}}
         </div>
         {{/each}}
