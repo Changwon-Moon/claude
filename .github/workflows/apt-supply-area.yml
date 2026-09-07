@@ -21,6 +21,9 @@ on:
   push:
     paths:
       - "data/apt-supply-queue.txt"
+      # 미리 채우기는 **다른 대기열**이다 — 이쪽에만 하루 상한이 걸린다 (2026-09-07).
+      # 왜 갈랐는지는 data/apt-supply-bulk-queue.txt 머리말에 있다.
+      - "data/apt-supply-bulk-queue.txt"
 
   # 이 서비스도 국토부라 몇 시간 단위로 문이 닫힌다(주차대수와 같은 현상).
   # 사람이 다시 밀기를 기다리지 않고 두 시간마다 대기열을 훑는다. 다 찼으면 몇 초에 끝난다.
@@ -88,12 +91,40 @@ jobs:
         shell: bash
         run: |
           set +e
-          Q=data/apt-supply-queue.txt
-          [ -f "$Q" ] || { echo "대기열 없음 — 건너뜀"; exit 0; }
-          OKN=0; NGN=0; SKIPN=0
+          Q=data/apt-supply-queue.txt          # 카드가 오늘 기다리는 줄 — **상한 없음**
+          QB=data/apt-supply-bulk-queue.txt    # 미리 채우기 — **하루 상한이 걸린 쪽**
+          [ -f "$Q" ] || [ -f "$QB" ] || { echo "대기열 없음 — 건너뜀"; exit 0; }
+          OKN=0; NGN=0; SKIPN=0; CAPN=0; TRIED=0; CAPPED=0
           # 연달아 이만큼 연결이 안 열리면 문이 닫힌 것으로 본다. 한두 건은 그 단지 사정일 수 있다.
           DEAD=0; DEAD_MAX=6; CLOSED=0
           : > "$RUNNER_TEMP/supply.log"
+
+          # ── 🧾 **하루 상한** — 판이 아니라 **날짜**로 센다 (2026-09-07 오너 "하루 상한 잘 정해서")
+          #
+          # 왜 판 기준이면 안 되나: 재시도 사다리가 같은 날 네 판을 돌린다.
+          # 판마다 250이면 하루 1,000이 되어 상한이 상한이 아니게 된다.
+          # 그래서 `data/apt-supply-day.txt` 장부에 **날짜별 시도 건수**를 적고 거기서 뺀다.
+          #
+          # 왜 250인가 (09-07 실측): 그날 338건을 받고 나서 공공데이터포털이 닫혔다.
+          # 한 건이 페이지를 여러 번 부르므로 건수가 곧 호출수는 아니지만, 닫힌 지점이
+          # 400건 안쪽인 것은 재 봤다. 250이면 **아침 카드 몫(하루 스무 건 남짓)을 남긴다.**
+          # 저장소 변수 SUPPLY_DAILY_MAX 로 바꾼다.
+          #
+          # ⚠️ 상한은 **미리 채우기 대기열에만** 건다. 카드가 기다리는 줄까지 막으면
+          #    상한이 그날 카드를 못 만들게 하는 문지기가 된다 — 그건 정반대다.
+          # ⚠️ 성공만이 아니라 **시도**를 센다(실패한 호출도 한도를 태운다).
+          #    「이미 있음」으로 건너뛴 줄은 안 센다 — 호출을 안 했다.
+          LEDGER=data/apt-supply-day.txt
+          TODAY=$(TZ=Asia/Seoul date +%F)
+          CAP=${{ vars.SUPPLY_DAILY_MAX || 250 }}
+          USED=0
+          if [ -f "$LEDGER" ]; then
+            L=$(grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}[[:space:]]+[0-9]+' "$LEDGER" | tail -1)
+            if [ "$(echo "$L" | awk '{print $1}')" = "$TODAY" ]; then USED=$(echo "$L" | awk '{print $2}'); fi
+          fi
+          USED=${USED:-0}
+          ALLOW=$(( CAP - USED )); [ "$ALLOW" -lt 0 ] && ALLOW=0
+          echo "🧾 오늘(${TODAY}) 미리 채우기 ${USED}/${CAP}건 — 이 판에서 최대 ${ALLOW}건"
           # ⚠️ **시간 예산 20분** (2026-09-03)
           #    재시도 사다리(3번·지수 대기)를 붙인 뒤로 「전부 실패」하는 날에는 한 줄에 수십 초가 든다.
           #    대기열이 184줄이라 30분 제한에 걸려 잡이 **죽었고**, 죽으면 `if: always()` 기록·커밋
@@ -115,7 +146,7 @@ jobs:
           BUDGET=1200
           EVT="${{ github.event_name }}"
           if { [ "$EVT" = "push" ] || [ "$EVT" = "workflow_dispatch" ]; }; then
-            B=$(grep -oE '^[[:space:]]*budget=[0-9]+' "$Q" | tail -1 | grep -oE '[0-9]+' || true)
+            B=$(cat "$Q" "$QB" 2>/dev/null | grep -oE '^[[:space:]]*budget=[0-9]+' | tail -1 | grep -oE '[0-9]+' || true)
             if [ -n "$B" ]; then
               LIMIT=$(( ${{ vars.SUPPLY_TIMEOUT_MIN || 120 }} * 60 - 300 ))
               [ "$B" -gt "$LIMIT" ] && B=$LIMIT
@@ -125,22 +156,41 @@ jobs:
           fi
           # ⚠️ **새 줄부터** 훑는다(tac). 대기열은 아래로 쌓이고, 오늘 카드가 기다리는 것은 **맨 아래 묶음**이다.
           #    위에서부터 훑으면 예산이 옛 줄에 다 타고 오늘 것은 손도 못 댄다.
-          while read -r LINE; do
-            case "$LINE" in ''|'#'*) continue;; esac
-            if [ "$SECONDS" -ge "$BUDGET" ]; then SKIPN=$((SKIPN+1)); continue; fi
-            KAPT=$(echo "$LINE" | grep -oE 'kapt=A[0-9]+' | cut -d= -f2)
-            AREA=$(echo "$LINE" | grep -oE 'area=[0-9.]+'  | cut -d= -f2)
-            FORCE=$(echo "$LINE" | grep -oE 'force=1')
-            [ -n "$KAPT" ] && [ -n "$AREA" ] || continue
-            TYPE=$(python3 -c "a=float('$AREA'); print('84' if a>=82 else '59' if a>=56 else str(round(a)))")
-            OUT="data/datasets/apt-supply/$KAPT-$TYPE.json"
-            if [ -f "$OUT" ] && [ -z "$FORCE" ]; then echo "── $KAPT-$TYPE 이미 있음 — 건너뜀"; continue; fi
-            echo "── $KAPT 전용 $AREA" | tee -a "$RUNNER_TEMP/supply.log"
-            : > "$RUNNER_TEMP/one.log"
-            if pnpm --filter @wirit/collectors collect-supply-area -- --kapt "$KAPT" --area "$AREA" 2>&1 | tee "$RUNNER_TEMP/one.log"; then
-              OKN=$((OKN+1)); DEAD=0
-            else
-              NGN=$((NGN+1))
+          #
+          # ── 대기열 하나를 훑는다. 두 번째 인자가 1 이면 **하루 상한을 받는 쪽**이다.
+          #
+          # ⚠️ 「이미 있음」을 **맨 앞에서** 거른다 (2026-09-07 에 순서를 바꿨다).
+          #    예전엔 예산 검사가 먼저라, 예산이 끝난 뒤엔 **이미 받아 둔 줄까지 「미룸」으로 셌다.**
+          #    미리 채우기로 대기열이 1,300줄이 된 뒤로 그 숫자가 실제로 남은 일과 딴판이 됐다.
+          #    이제 「미룸」은 **정말 아직 못 받은 줄**만 센다.
+          # ⚠️ 문이 닫혔거나 예산이 끝나도 `break` 하지 않고 **끝까지 세기만 한다.**
+          #    남은 줄이 몇인지 알아야 사다리가 이어받을지 판단할 수 있다(호출은 안 한다).
+          run_queue() {
+            local F="$1" LIMITED="$2" LINE KAPT AREA FORCE AI TYPE OUT
+            [ -f "$F" ] || return 0
+            while read -r LINE; do
+              case "$LINE" in ''|'#'*) continue;; esac
+              KAPT=$(echo "$LINE" | grep -oE 'kapt=A[0-9]+' | cut -d= -f2)
+              AREA=$(echo "$LINE" | grep -oE 'area=[0-9.]+'  | cut -d= -f2)
+              FORCE=$(echo "$LINE" | grep -oE 'force=1')
+              [ -n "$KAPT" ] && [ -n "$AREA" ] || continue
+              # 수집기(`supplyAreaCli.ts`)가 파일 이름을 짓는 규칙과 **같아야 한다** — 84 / 59 / 그 외 반올림
+              AI=${AREA%%.*}
+              if   [ "$AI" -ge 82 ]; then TYPE=84
+              elif [ "$AI" -ge 56 ]; then TYPE=59
+              else TYPE=$(awk -v a="$AREA" 'BEGIN{printf "%d", a+0.5}'); fi
+              OUT="data/datasets/apt-supply/$KAPT-$TYPE.json"
+              [ -f "$OUT" ] && [ -z "$FORCE" ] && continue
+              # ── 여기부터는 **아직 못 받은 줄**이다
+              if [ "$LIMITED" = "1" ] && [ "$TRIED" -ge "$ALLOW" ]; then CAPN=$((CAPN+1)); CAPPED=1; continue; fi
+              if [ "$CLOSED" = "1" ] || [ "$SECONDS" -ge "$BUDGET" ]; then SKIPN=$((SKIPN+1)); continue; fi
+              echo "── $KAPT 전용 $AREA" | tee -a "$RUNNER_TEMP/supply.log"
+              : > "$RUNNER_TEMP/one.log"
+              [ "$LIMITED" = "1" ] && TRIED=$((TRIED+1))
+              if pnpm --filter @wirit/collectors collect-supply-area -- --kapt "$KAPT" --area "$AREA" 2>&1 | tee "$RUNNER_TEMP/one.log"; then
+                OKN=$((OKN+1)); DEAD=0
+              else
+                NGN=$((NGN+1))
               # ── ⛔ **문이 닫힌 것을 알면 그만 두드린다** (2026-09-07)
               #
               # `fetch failed` 는 **연결 자체가 안 열린다**는 뜻이다(응답이 늦은 게 아니다).
@@ -155,28 +205,41 @@ jobs:
               #    다음 줄은 멀쩡히 될 수 있다. 연결이 안 열리는 것만 문 닫힘으로 본다.
               # ⚠️ 접어도 **여기까지 받은 것은 그대로 커밋된다**(아래 기록·커밋 단계).
               #    남은 줄은 「미룸」으로 세어 재시도 사다리가 이어받는다.
-              if grep -q "fetch failed" "$RUNNER_TEMP/one.log"; then
-                DEAD=$((DEAD+1))
-              else
-                DEAD=0
+                if grep -q "fetch failed" "$RUNNER_TEMP/one.log"; then
+                  DEAD=$((DEAD+1))
+                else
+                  DEAD=0
+                fi
               fi
-            fi
-            cat "$RUNNER_TEMP/one.log" >> "$RUNNER_TEMP/supply.log"
-            if [ "$DEAD" -ge "$DEAD_MAX" ]; then
-              echo "⛔ 연결이 ${DEAD}번 연달아 안 열렸습니다 — 문이 닫혔습니다. 여기서 접고 새 러너에 넘깁니다." | tee -a "$RUNNER_TEMP/supply.log"
-              CLOSED=1
-              break
-            fi
-          done < <(tac "$Q")
-          # 접었으면 아직 안 본 줄이 남는다 — 「미룸」으로 세야 사다리가 이어받는다
-          if [ "${CLOSED:-0}" = "1" ]; then
-            LEFT=$(grep -cE '^[[:space:]]*kapt=A[0-9]+' "$Q" || true)
-            SKIPN=$(( LEFT - OKN - NGN ))
-            [ "$SKIPN" -lt 0 ] && SKIPN=0
-            echo "⏳ 문이 닫혀 접었습니다 — 남은 ${SKIPN}줄은 다음 칸으로 미룹니다" | tee -a "$RUNNER_TEMP/supply.log"
-          fi
+              cat "$RUNNER_TEMP/one.log" >> "$RUNNER_TEMP/supply.log"
+              if [ "$DEAD" -ge "$DEAD_MAX" ]; then
+                echo "⛔ 연결이 ${DEAD}번 연달아 안 열렸습니다 — 문이 닫혔습니다. 남은 줄은 새 러너에 넘깁니다." | tee -a "$RUNNER_TEMP/supply.log"
+                CLOSED=1
+              fi
+            done < <(tac "$F")
+          }
+
+          # ⚠️ **카드가 먼저다.** 미리 채우기가 예산과 상한을 먼저 먹으면 오늘 카드가 못 나온다.
+          run_queue "$Q"  0
+          run_queue "$QB" 1
+
+          [ "${CLOSED:-0}" = "1" ] && echo "⏳ 문이 닫혀 접었습니다 — 남은 ${SKIPN}줄은 다음 칸으로 미룹니다" | tee -a "$RUNNER_TEMP/supply.log"
           [ "$SKIPN" -gt 0 ] && [ "${CLOSED:-0}" != "1" ] && echo "⏳ 시간 예산(${BUDGET}초)에 닿아 ${SKIPN}줄은 다음 칸으로 미룹니다" | tee -a "$RUNNER_TEMP/supply.log"
-          echo "OKN=$OKN" >> "$GITHUB_ENV"; echo "NGN=$NGN" >> "$GITHUB_ENV"; echo "SKIPN=$SKIPN" >> "$GITHUB_ENV"
+
+          # ── 🧾 장부에 오늘 몫을 적는다 (시도 기준)
+          NOW=$(( USED + TRIED ))
+          if [ "$TRIED" -gt 0 ]; then
+            grep -vE "^${TODAY}[[:space:]]" "$LEDGER" > "$RUNNER_TEMP/led" 2>/dev/null || true
+            { cat "$RUNNER_TEMP/led"; echo "$TODAY $NOW"; } > "$LEDGER"
+          fi
+          if [ "$CAPPED" = "1" ]; then
+            echo "🧾 오늘 몫(${CAP}건)을 다 썼습니다 — 미리 채우기 ${CAPN}줄은 **내일** 이어서 받습니다." | tee -a "$RUNNER_TEMP/supply.log"
+            echo "   (실패가 아닙니다. 여기서 빨간불을 켜면 재시도 사다리가 상한을 우회합니다.)" | tee -a "$RUNNER_TEMP/supply.log"
+          fi
+          {
+            echo "OKN=$OKN"; echo "NGN=$NGN"; echo "SKIPN=$SKIPN"
+            echo "CAPN=$CAPN"; echo "DAYUSED=$NOW"; echo "DAYCAP=$CAP"
+          } >> "$GITHUB_ENV"
           exit 0
 
       - name: 실행 결과 기록
@@ -188,6 +251,9 @@ jobs:
             echo
             echo "- 성공 ${OKN:-0}건 · 실패 ${NGN:-0}건 · 미룸 ${SKIPN:-0}줄"
             echo "- 결과는 Actions 로그가 아니라 이 파일과 data/datasets/apt-supply/ 에서 본다"
+            # ⚠️ **머리 4줄 안에 넣지 않는다.** 재시도 사다리의 문지기가 머리 4줄에서
+            #    「실패 N건」·「미룸 N줄」을 찾는다. 상한 줄이 그 안에 있으면 헛짚을 수 있다.
+            echo "- 미리 채우기 오늘 몫 ${DAYUSED:-0}/${DAYCAP:-0}건 · 내일로 미룬 ${CAPN:-0}줄 (상한은 실패가 아니다)"
             echo
             echo '```'
             tail -c 60000 "$RUNNER_TEMP/supply.log" 2>/dev/null || echo "(로그 없음)"
@@ -201,6 +267,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f data/apt-supply-last.md
+          # 🧾 하루 장부 — 이것이 저장소에 도달해야 다음 판이 오늘 몫을 안다.
+          #    빠뜨리면 판마다 상한이 처음부터라 상한이 없는 것과 같아진다.
+          [ -e data/apt-supply-day.txt ] && git add -f data/apt-supply-day.txt || true
           [ -e data/datasets/apt-supply ] && git add data/datasets/apt-supply || true
           git diff --cached --quiet || git commit -m "공급면적 수집 (실측 · 전유+주건축물공용)"
           git pull --rebase --autostash || true
@@ -224,9 +293,17 @@ jobs:
         if: always()
         shell: bash
         run: |
+          # ⚠️ **하루 상한(CAPN)은 여기 안 더한다** (2026-09-07)
+          #    상한에 닿은 것은 실패가 아니라 「오늘 몫을 다 썼다」이다.
+          #    여기서 빨간불을 켜면 재시도 사다리가 이어받아 **상한을 우회한다** —
+          #    그러면 상한이 상한이 아니게 되고, 09-07 처럼 한도를 태워 다음 날 아침 카드까지 막는다.
           N=$(( ${NGN:-0} + ${SKIPN:-0} ))
           if [ "$N" -gt 0 ]; then
             echo "::error::공급면적 ${NGN:-0}건 실패 · ${SKIPN:-0}줄 미룸 — 재시도 사다리가 새 러너로 이어받습니다"
             exit 1
+          fi
+          if [ "${CAPN:-0}" -gt 0 ]; then
+            echo "🧾 오늘 몫(${DAYCAP:-0}건)을 다 썼습니다 — 미리 채우기 ${CAPN}줄은 내일 예약이 이어받습니다(초록불이 맞습니다)"
+            exit 0
           fi
           echo "✅ 남은 것 없음"
