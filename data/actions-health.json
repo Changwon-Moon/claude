@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-07T12:04:22.583Z",
+  "generatedAt": "2026-09-07T12:30:10.948Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -964,7 +964,7 @@
       "lastOk": "2026-09-07",
       "okDaysAgo": 0,
       "fails30": 18,
-      "runs30": 67
+      "runs30": 68
     },
     {
       "file": "geocode.yml",
@@ -991,8 +991,8 @@
       "name": "주간 매매·전세 지수 수집 (한국부동산원)",
       "lastRun": "2026-09-07",
       "daysAgo": 0,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 7,
+      "lastOk": "2026-09-07",
+      "okDaysAgo": 0,
       "fails30": 1,
       "runs30": 6
     },
@@ -1023,7 +1023,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-07",
       "okDaysAgo": 0,
-      "fails30": 9,
+      "fails30": 10,
       "runs30": 100
     }
   ]
