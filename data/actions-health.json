@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-07T10:15:43.605Z",
+  "generatedAt": "2026-09-07T12:04:22.583Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -827,16 +827,6 @@
       "runs30": 3
     },
     {
-      "file": "reb-weekly-collect.yml",
-      "name": "주간 매매·전세 지수 수집 (한국부동산원)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 7,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 7,
-      "fails30": 0,
-      "runs30": 4
-    },
-    {
       "file": "silv-collect.yml",
       "name": "분양권전매 실거래 수집 (국토부)",
       "lastRun": "2026-08-31",
@@ -951,9 +941,9 @@
       "name": "단지 공급면적 (카드 평 표기용)",
       "lastRun": "2026-09-07",
       "daysAgo": 0,
-      "lastOk": "2026-09-03",
-      "okDaysAgo": 4,
-      "fails30": 13,
+      "lastOk": "2026-09-07",
+      "okDaysAgo": 0,
+      "fails30": 14,
       "runs30": 100
     },
     {
@@ -961,10 +951,10 @@
       "name": "공급면적 — 자동 재시도",
       "lastRun": "2026-09-07",
       "daysAgo": 0,
-      "lastOk": "2026-09-03",
-      "okDaysAgo": 4,
-      "fails30": 14,
-      "runs30": 15
+      "lastOk": "2026-09-07",
+      "okDaysAgo": 0,
+      "fails30": 15,
+      "runs30": 17
     },
     {
       "file": "auto-produce.yml",
@@ -974,7 +964,7 @@
       "lastOk": "2026-09-07",
       "okDaysAgo": 0,
       "fails30": 18,
-      "runs30": 65
+      "runs30": 67
     },
     {
       "file": "geocode.yml",
@@ -995,6 +985,16 @@
       "okDaysAgo": 0,
       "fails30": 30,
       "runs30": 100
+    },
+    {
+      "file": "reb-weekly-collect.yml",
+      "name": "주간 매매·전세 지수 수집 (한국부동산원)",
+      "lastRun": "2026-09-07",
+      "daysAgo": 0,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 7,
+      "fails30": 1,
+      "runs30": 6
     },
     {
       "file": "singo-prep.yml",
@@ -1023,7 +1023,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-07",
       "okDaysAgo": 0,
-      "fails30": 7,
+      "fails30": 9,
       "runs30": 100
     }
   ]
