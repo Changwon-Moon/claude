@@ -1455,6 +1455,18 @@
       "review": "성수전략정비구역 시공사 지도",
       "note": "2026-09-06 기준. 2·3지구는 시공사 미확정('유력') — 총회 결과가 나오면 데이터셋의 status·statusKind 를 고치고 다시 그린다.",
       "pixelPolicy": "정기물에 준한다 — 선정총회 결과가 나오면 다시 그려진다. pixel-baselines 에 넣지 않는다."
+    },
+    {
+      "label": "daso-treemap",
+      "title": "집합건물 보유 채수별 분포 트리맵 (2026-08)",
+      "cards": [
+        "daso-treemap-p1",
+        "daso-treemap-p2"
+      ],
+      "caption": "daso-treemap",
+      "review": "다소유지수 × 소유지수 트리맵 2컷",
+      "note": "판형 daso-treemap@1 신설분. ⚠️ 두 컷의 분모가 다르다 — p1 은 전 국민 100명, p2 는 2채 이상 소유자 100명. 섞어 읽으면 오보다. ⚠️ '주택'이 아니라 '집합건물'이다(오피스텔·상가 포함, 단독주택 제외) — 국가데이터처 주택소유통계의 다주택자 14.9%와 나란히 놓지 않는다.",
+      "pixelPolicy": "정기물에 준한다 — data/datasets/iros-daso-*.json 이 다음 달 값으로 갱신되면 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)."
     }
   ]
 }

@@ -1,0 +1,24 @@
+{
+  "label": "daso-treemap",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 2장 · 코드 검수만",
+  "findings": [],
+  "cards": [
+    {
+      "file": "daso-treemap-p1.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "daso-treemap-p2.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}

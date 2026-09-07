@@ -105,14 +105,24 @@ const MEASURE = `(() => {
 
      ⚠️ **면(fill)만** 뺀다. 같은 요소의 글자색·테두리는 그대로 본다 — 지도 위 라벨이
      규격 밖 빨강으로 새는 것은 여전히 잡혀야 한다. 램프의 양 끝이 규격색인지는
-     빌더가 상수로 들고 있고 기준 문서(토허제-가격지도-기준 §2⑥)가 지킨다. */
-  var isChoropleth = function (el) {
-    return el.classList && el.classList.contains("tk-geo");
+     빌더가 상수로 들고 있고 기준 문서(토허제-가격지도-기준 §2⑥)가 지킨다.
+
+     ⚠️ 2026-09-07: 같은 일이 **배경색으로** 한 번 더 났다. 트리맵(daso-treemap)은 칸을
+     SVG 가 아니라 div 로 그려서 램프가 fill 이 아니라 background-color 로 들어오는데,
+     위 예외가 fill 만 빼고 있어 중간 톤 9개가 전부 「규격 밖 코발트」로 잡혔다.
+     예외의 근거는 「지도」가 아니라 **「면색은 강조색이 아니다」** 이므로, 무엇으로 칠했는지가
+     아니라 **그 요소가 램프 면인지**로 가른다 → 공용 표시 클래스 wirit-ramp.
+     (⚠️ 이 블록은 브라우저로 넘어가는 문자열 안이다 — 주석에 역따옴표를 쓰면 통째로 깨진다)
+     새 판형이 램프를 쓰면 이 클래스만 붙이면 된다(지도는 tk-geo 를 계속 쓴다). */
+  var isRampSurface = function (el) {
+    return el.classList && (el.classList.contains("tk-geo") || el.classList.contains("wirit-ramp"));
   };
   Array.prototype.forEach.call(card.querySelectorAll("*"), function (el) {
     var cs2 = getComputedStyle(el);
-    look(cs2.color); look(cs2.backgroundColor); look(cs2.borderTopColor);
-    if (!isChoropleth(el)) look(cs2.fill);
+    /* 글자색·테두리는 **언제나** 본다 — 램프 면 위에 얹힌 라벨이 규격 밖 색으로
+       새는 것은 여전히 잡혀야 한다. 빼는 것은 면(배경·fill)뿐이다. */
+    look(cs2.color); look(cs2.borderTopColor);
+    if (!isRampSurface(el)) { look(cs2.backgroundColor); look(cs2.fill); }
   });
   return {
     accents: accents,

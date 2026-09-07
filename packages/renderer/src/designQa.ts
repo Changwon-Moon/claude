@@ -218,6 +218,13 @@ const MEASURE_JS = `(() => {
              /* sinbundang-map — 노선도형 지도 카드(2026-07-31). 새 템플릿을 만들면 글자 요소를
                 여기 등록해야 겹침 검사가 실제로 잰다(빠뜨리면 검사받지 않은 것). */
              ".sbm-stn,.sbm-danji,.sbm-price .v,.sbm-price .sz,.sbm-note," +
+             /* daso-treemap — 트리맵(2026-09-07). 이 판형은 **칸 안에 글자를 넣기 때문에**
+                SVG 가 아니라 div 로 그렸다 — 그래야 여기서 실측이 된다(§2 「SVG 안 글자는
+                넘침 검사 대상이 아니다」). 칸 라벨·요약·칩·각주를 전부 올린다.
+                칸끼리는 면적이 곧 비율이라 겹칠 수 없지만, **라벨이 제 칸을 넘는 것**은
+                칸이 좁을수록 쉽게 생긴다. 빌더가 글자 폭을 어림해 한 번 거르고,
+                여기서 그린 뒤의 좌표로 한 번 더 거른다(서로 다른 두 방법). */
+             ".tm-t .lb,.tm-t .vl,.tm-sum,.tm-tail .hd,.tm-tail .ch b,.tm-tail .ch em,.tm-note," +
              /* danji-cover — 청약·분양 표준 판형(오너 확정 2026-08-03). 새 템플릿을 만들면
                 글자 요소를 여기 등록해야 겹침 검사가 실제로 잰다 — 빠진 요소는 없는 것과 같다.
                 (danji-brief 는 이 판형으로 대체돼 삭제됐다) */
@@ -301,7 +308,9 @@ const MEASURE_JS = `(() => {
    * (이 주석 안에서는 역따옴표를 쓰지 않는다 — 이 블록 전체가 템플릿 리터럴이다)
    * text-overflow:ellipsis 를 쓰는 칸은 **잘렸는지 좌표로** 확인한다 — 눈으로는 그럴듯해 보인다. */
   var clipped=[];
-  Array.prototype.forEach.call(card.querySelectorAll(".mr-apt,.mr-gu,.m2-seg,.rt-name,.sm-gu,.db-nm .n,.db-nm .loc,.db-row span,.tx-cell,.tx-lb"), function(el){
+  /* ⚠️ daso-treemap 은 **칸(.tm-t)** 을 올린다. 라벨(span)은 제 내용만큼 커져서 안 잘리고,
+     자르는 쪽은 overflow:hidden 인 부모 칸이다 — 라벨을 올리면 이 검사가 아무것도 안 잰다. */
+  Array.prototype.forEach.call(card.querySelectorAll(".mr-apt,.mr-gu,.m2-seg,.rt-name,.sm-gu,.db-nm .n,.db-nm .loc,.db-row span,.tx-cell,.tx-lb,.tm-t"), function(el){
     if(el.scrollWidth - el.clientWidth > 1)
       clipped.push({sel:name(el), text:(el.textContent||"").trim().slice(0,24), need:Math.ceil(el.scrollWidth), has:Math.ceil(el.clientWidth)});
   });
@@ -402,7 +411,7 @@ const MEASURE_JS = `(() => {
        danji-brief 것이다) 청약 판형 9장에서 이 검사가 **한 번도 돈 적이 없었다.** .dcv-note 가
        특이사항 줄이다 — 이번에 그 줄이 두 줄로 늘면서 정확히 필요해진 검사다.
        ⚠️ 이 블록은 브라우저로 넘어가는 문자열 안이다 — 주석에 백틱을 쓰면 스크립트가 깨진다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.dcv-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note,.gb-note,.sr-chart,.wm-grid");
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.dcv-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note,.gb-note,.sr-chart,.wm-grid,.tm-note");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();

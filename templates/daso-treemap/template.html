@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* daso-treemap@1 — 상 제목 / 중 **좌 트리맵 · 우 표** / 요약 한 줄 / 각주.
+         면적이 곧 비율인 판이다.
+
+         ── 왜 트리맵 옆에 표가 붙나 (오너 2026-09-07)
+         트리맵만 두면 작은 칸이 안 보인다. 억지로 지시선을 뽑아 채우면 그림이
+         「다 비슷하다」고 거짓말을 하고, 칩 줄로 받으면 **그림에서 못 읽은 것을
+         아래에서 다시 찾아야** 한다. 그래서 **표를 옆에 세운다** —
+         왼쪽은 크기를 보여 주고 오른쪽은 값을 읽게 한다. 색칩이 둘을 잇는다.
+
+         ── 왜 SVG 가 아니라 div 인가
+         CARD_CHECKLIST §2: **SVG 안 글자는 designQa 넘침 검사 대상이 아니다.** 트리맵은
+         칸마다 글자가 들어가는 판이라, SVG 로 그리면 라벨이 칸 밖으로 나가도 검수가
+         「문제 없음」이라 답한다. 그래서 칸도 라벨도 전부 HTML 요소로 둔다.
+
+         ── 왜 라벨 크기를 CSS 가 안 정하나
+         칸 크기가 데이터마다 달라진다. CSS 로 한 값을 못박으면 작은 칸에서 글자가 넘쳐
+         `clipped` 가 error 를 낸다. **빌더가 칸의 실제 픽셀을 재서** 등급을 정하고
+         `lbPx`·`vlPx`·`pdPx` 로 내려보낸다. 못 들어갈 칸은 라벨을 아예 안 준다 —
+         그 칸의 값은 옆 표가 받는다. 「이 칸」을 손으로 지정하지 않는다(CLAUDE.md §8). */
+      .tm { display: flex; flex-direction: column; }
+
+      /* 위 여백은 우상단 로고 뱃지와의 거리를 만든다 — 겹치지 않는 것만으론 부족하고
+         세로 30px 이상 떨어져야 한다(CARD_CHECKLIST §2, designQa badgeClear). */
+      .tm-head { padding: 0; margin: 38px 0 0; }
+      .tm .wirit-title {
+        font-size: 76px; line-height: 1.02; text-align: left; white-space: nowrap;
+        margin: 0; letter-spacing: -0.035em;
+      }
+      .tm .wirit-title .hi { color: var(--wirit-cobalt); }
+
+      /* 좌우 두 칸 — 폭·높이는 빌더가 픽셀로 준다(칸 크기 계산과 같은 값이어야 한다). */
+      .tm-body { display: flex; flex: 0 0 auto; margin: 32px 0 0; align-items: stretch; }
+      .tm-plot { position: relative; flex: 0 0 auto; overflow: hidden; }
+
+      .tm-t {
+        position: absolute; overflow: hidden;
+        display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start;
+        /* 칸 사이 틈은 종이색 안쪽 선으로 낸다 — 레이아웃(면적)을 건드리지 않는다.
+           면적이 비율인 판에서 margin 으로 틈을 내면 그만큼 비율이 거짓이 된다.
+           여백(padding)은 등급마다 다르다 — 빌더가 함께 내려보낸다. */
+        box-shadow: inset 0 0 0 2px var(--wirit-paper);
+      }
+      /* ⚠️ line-height:1 로 두면 designQa 가 **글자 상자끼리 겹쳤다**고 잡는다(실제로 잡혔다).
+         상자 높이는 글자 크기와 같은데 한글·숫자의 실제 글립은 그보다 위아래로 삐져나오기
+         때문이다. 줄높이와 사이 여백을 글자 크기에 비례해 준다. */
+      .tm-t .lb {
+        font-weight: 700; letter-spacing: -0.05em; line-height: 1.3;
+        opacity: 0.82; white-space: nowrap;
+      }
+      .tm-t .vl {
+        font-family: "Wanted Sans", "Pretendard", sans-serif;
+        font-weight: 900; letter-spacing: -0.045em; line-height: 1.15;
+        margin-top: 0.1em; white-space: nowrap;
+      }
+
+      /* ── 오른쪽 표 ──
+         머리글과 데이터 행이 **같은 grid** 를 쓴다. 열 폭은 전부 고정이고 이름 열만 1fr 이다
+         — `auto` 열을 두면 행마다 폭이 달라져 세로선이 어긋난다(CARD_CHECKLIST §2 표). */
+      .tm-tab { flex: 1 1 auto; display: flex; flex-direction: column; min-width: 0; }
+      .tm-tab .hr, .tm-tab .r {
+        display: grid; align-items: center; column-gap: 10px;
+      }
+      .tm-tab .hr {
+        color: var(--wirit-gray); font-weight: 700; letter-spacing: -0.045em; line-height: 1;
+        padding-bottom: 9px; border-bottom: 2px solid var(--wirit-ink);
+      }
+      .tm-tab .r { border-bottom: 1px solid var(--wirit-ink-12); }
+      .tm-tab .r:last-child { border-bottom: 0; }
+      .tm-tab .r i { width: 14px; height: 14px; border-radius: 2px; }
+      .tm-tab .r .nm {
+        font-weight: 700; color: var(--wirit-ink); letter-spacing: -0.05em; line-height: 1.15;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+      .tm-tab .r .v1, .tm-tab .r .v2 {
+        font-family: "Wanted Sans", "Pretendard", sans-serif;
+        font-weight: 900; letter-spacing: -0.04em; line-height: 1.15;
+        text-align: right; white-space: nowrap;
+      }
+      .tm-tab .r .v1 { color: var(--wirit-ink); }
+      /* 두 번째 값 열은 '원지수' — 포털에서 그대로 대조되는 공표값이라 보조로 둔다. */
+      .tm-tab .r .v2 { color: var(--wirit-gray); font-weight: 800; }
+      .tm-tab .hr .h2, .tm-tab .hr .h3 { text-align: right; }
+
+      /* 요약 — 빈 자리를 문구가 아니라 **계산값**으로 채운다(CARD_CHECKLIST §2 여백). */
+      .tm-sum {
+        flex: 0 0 auto; margin: 26px 0 0;
+        font-size: 32px; font-weight: 800; color: var(--wirit-ink);
+        letter-spacing: -0.045em; line-height: 1.28;
+      }
+      .tm-sum b { font-family: "Wanted Sans", "Pretendard", sans-serif; font-weight: 900; color: var(--wirit-cobalt); }
+
+      /* 각주 — 푸터와 숨을 준다(footergap ≥ 14px). */
+      .tm-note {
+        flex: 0 0 auto; font-size: 17px; font-weight: 600; color: var(--wirit-gray);
+        letter-spacing: -0.04em; line-height: 1.45; margin: auto 0 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card tm">
+      <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
+      <div class="tm-head"><h1 class="wirit-title">{{{title}}}</h1></div>
+
+      <div class="tm-body" style="height: {{plot.h}}px; gap: {{plot.gap}}px">
+        <div class="tm-plot" style="width: {{plot.w}}px">
+          {{#each tiles}}
+          <div class="tm-t wirit-ramp" style="left:{{this.x}}%;top:{{this.y}}%;width:{{this.w}}%;height:{{this.h}}%;background:{{this.bg}};color:{{this.fg}};padding:{{this.pdPx}}px">
+            {{#if this.label}}<span class="lb" style="font-size:{{this.lbPx}}px">{{this.label}}</span><span class="vl" style="font-size:{{this.vlPx}}px">{{this.value}}</span>{{/if}}
+          </div>
+          {{/each}}
+        </div>
+
+        <div class="tm-tab">
+          <div class="hr" style="grid-template-columns:{{table.cols}}; font-size:{{table.hdPx}}px">
+            <span></span><span class="h1">{{table.head.[0]}}</span><span class="h2">{{table.head.[1]}}</span>{{#if table.head.[2]}}<span class="h3">{{table.head.[2]}}</span>{{/if}}
+          </div>
+          {{#each table.rows}}
+          <div class="r" style="grid-template-columns:{{../table.cols}}; flex:{{../table.rowFlex}}; min-height:{{../table.rowH}}px">
+            <i class="wirit-ramp" style="background:{{this.bg}}"></i>
+            <span class="nm" style="font-size:{{../table.nmPx}}px">{{this.label}}</span>
+            <span class="v1" style="font-size:{{../table.v1Px}}px">{{this.v1}}</span>
+            {{#if this.v2}}<span class="v2" style="font-size:{{../table.v2Px}}px">{{this.v2}}</span>{{/if}}
+          </div>
+          {{/each}}
+        </div>
+      </div>
+
+      {{#if summary}}<div class="tm-sum">{{{summary}}}</div>{{/if}}
+      {{#if note}}<div class="tm-note">{{note}}</div>{{/if}}
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <!-- 제목 맞춤 — 카드 폭을 채운다(seongsu-zones·map-board 와 같은 규칙). -->
+    <script>
+      window.__wiritFit = function () {
+        var el = document.querySelector(".tm .wirit-title");
+        if (!el) return;
+        var box = el.parentElement;
+        var bs = getComputedStyle(box);
+        var avail = box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
+        var MINPX = 34, MAXPX = 94;
+        var lo = MINPX, hi = MAXPX, best = MINPX;
+        for (var i = 0; i < 24; i++) {
+          var mid = (lo + hi) / 2;
+          el.style.fontSize = mid + "px";
+          if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(window.__wiritFit);
+    </script>
+  </body>
+</html>

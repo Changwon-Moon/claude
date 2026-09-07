@@ -1,0 +1,206 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "daso-treemap@1",
+  "description": "왼쪽은 면적(트리맵), 오른쪽은 값(표). 칸 안에 글자가 들어갈 자리가 없으면 라벨을 넣지 않고 옆 표가 그 값을 받는다 — 억지로 지시선을 뽑아 채우면 그림이 「다 비슷하다」고 거짓말을 한다.",
+  "type": "object",
+  "required": [
+    "template",
+    "title",
+    "plot",
+    "tiles",
+    "table",
+    "source"
+  ],
+  "properties": {
+    "template": {
+      "type": "string",
+      "pattern": "^daso-treemap@\\d+$"
+    },
+    "date": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string",
+      "maxLength": 44
+    },
+    "title": {
+      "type": "string"
+    },
+    "plot": {
+      "type": "object",
+      "description": "왼쪽 트리맵 판의 실제 픽셀 크기와 표와의 간격. 빌더가 이 값으로 칸 크기를 재서 라벨 등급을 정하므로 템플릿과 반드시 같아야 한다.",
+      "required": [
+        "w",
+        "h",
+        "gap"
+      ],
+      "properties": {
+        "w": {
+          "type": "number"
+        },
+        "h": {
+          "type": "number"
+        },
+        "gap": {
+          "type": "number",
+          "description": "트리맵과 표 사이 간격(px)"
+        }
+      }
+    },
+    "tiles": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "required": [
+          "x",
+          "y",
+          "w",
+          "h",
+          "bg",
+          "fg"
+        ],
+        "properties": {
+          "x": {
+            "type": "number",
+            "description": "왼쪽 (판 대비 %)"
+          },
+          "y": {
+            "type": "number"
+          },
+          "w": {
+            "type": "number"
+          },
+          "h": {
+            "type": "number"
+          },
+          "bg": {
+            "type": "string",
+            "pattern": "^#[0-9A-Fa-f]{6}$"
+          },
+          "fg": {
+            "type": "string",
+            "pattern": "^#[0-9A-Fa-f]{6}$"
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 14,
+            "description": "없으면 라벨을 안 그린다(칸이 좁다는 뜻)"
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "lbPx": {
+            "type": "number"
+          },
+          "vlPx": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "string",
+      "description": "판 아래 굵은 한 줄. <b>…</b> 로 감싼 낱말만 코발트"
+    },
+    "note": {
+      "type": "string",
+      "maxLength": 130
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "asOf": {
+          "type": "string"
+        }
+      }
+    },
+    "table": {
+      "type": "object",
+      "description": "오른쪽 표 — 트리맵이 크기를 보여 주고 이 표가 값을 읽게 한다. 색칩이 둘을 잇는다. 머리글과 행이 같은 grid(cols) 를 쓰므로 열이 어긋날 수 없다.",
+      "required": [
+        "cols",
+        "head",
+        "rows",
+        "rowH",
+        "rowFlex",
+        "hdPx",
+        "nmPx",
+        "v1Px"
+      ],
+      "properties": {
+        "cols": {
+          "type": "string",
+          "description": "grid-template-columns 값. 이름 열만 1fr 이고 나머지는 고정폭 — auto 열을 두면 행마다 폭이 달라져 세로선이 어긋난다."
+        },
+        "head": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "maxLength": 10
+          }
+        },
+        "rowH": {
+          "type": "number"
+        },
+        "rowFlex": {
+          "type": "string",
+          "description": "행이 적을 때 세로를 채우려고 늘린다(\"1 1 0\"), 많으면 \"0 0 auto\""
+        },
+        "hdPx": {
+          "type": "number"
+        },
+        "nmPx": {
+          "type": "number"
+        },
+        "v1Px": {
+          "type": "number"
+        },
+        "v2Px": {
+          "type": "number"
+        },
+        "rows": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 20,
+          "items": {
+            "type": "object",
+            "required": [
+              "label",
+              "v1",
+              "bg"
+            ],
+            "properties": {
+              "label": {
+                "type": "string",
+                "maxLength": 12
+              },
+              "v1": {
+                "type": "string",
+                "maxLength": 10
+              },
+              "v2": {
+                "type": "string",
+                "maxLength": 10
+              },
+              "bg": {
+                "type": "string",
+                "pattern": "^#[0-9A-Fa-f]{6}$"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -2912,6 +2912,19 @@
       "args": [
         "2026-09-06"
       ]
+    },
+    {
+      "label": "daso-treemap",
+      "cmd": "scripts/build-daso-treemap.mjs",
+      "args": [
+        "2026-09-07",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 가 반드시 있어야 한다 — 이 빌더는 기본으로 data/out/_spike 에 쓰는데 재생산·확정은 data/content/<날짜>/ 를 렌더한다. 날짜를 박아 두는 이유: 자료가 월 단위(2026-08 등기지수)라 오늘 날짜로 다시 그리면 같은 값의 카드가 날짜만 달리 생긴다.",
+      "produces": [
+        "daso-treemap-p1",
+        "daso-treemap-p2"
+      ]
     }
   ]
 }
