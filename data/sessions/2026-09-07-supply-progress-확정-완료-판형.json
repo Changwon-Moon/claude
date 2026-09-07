@@ -1,0 +1,15 @@
+{
+ "session": "2026-09-07-supply-progress-확정-완료-판형",
+ "startedAt": "2026-09-07T11:30:02.175Z",
+ "task": "supply-progress 확정 완료 — 판형·데이터셋·빌더 신설, sets/builders/pixel-baselines 등록, JPG ZIP 전달. 새 폰트 세트 첫 적용 카드",
+ "log": [
+  {
+   "at": "2026-09-07T11:30:02.175Z",
+   "cmd": "done",
+   "text": "supply-progress 확정 완료 — 판형·데이터셋·빌더 신설, sets/builders/pixel-baselines 등록, JPG ZIP 전달. 새 폰트 세트 첫 적용 카드"
+  }
+ ],
+ "status": "끝",
+ "updatedAt": "2026-09-07T11:30:02.175Z",
+ "last": "supply-progress 확정 완료 — 판형·데이터셋·빌더 신설, sets/builders/pixel-baselines 등록, JPG ZIP 전달. 새 폰트 세트 첫 적용 카드"
+}
