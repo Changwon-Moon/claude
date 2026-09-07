@@ -65,10 +65,14 @@ const totalCost = zones.reduce((a, z) => a + z.cost, 0);
 const aerial = doc.aerial;
 if (!aerial?.file) throw new Error("데이터셋에 aerial(지도 그림)이 없다");
 if (!existsSync(join(photoDir, aerial.file))) throw new Error(`지도 그림이 없다: ${aerial.file}`);
+if (!allPhotos) throw new Error(`투시도가 빠졌다: ${zones.filter((z) => !photoOf(z)).map((z) => z.short).join(", ")} — 네 장이 다 있어야 지도 위에 건다`);
 const { svg: mapSvg, w: mapW, h: mapH } = seongsuAerialSvg({
   zones: zones.map((z) => ({ ...z, color: colorOf(z.builder) })),
   aerial,
   href: `../_shared/photos/${aerial.file}`,
+  /* 투시도는 **지도 위에** 건다(오너 2026-09-06). 아래 네 칸은 글자만 남는다 —
+   * 같은 사진을 두 번 보여 주면 카드가 두 번 말하는 것이 된다. */
+  photoHref: (z) => `../_shared/photos/${photoOf(z)}`,
 });
 
 const card = {
@@ -89,7 +93,7 @@ const card = {
     cost: won(z.cost),
     costKind: z.costKind,
     color: colorOf(z.builder),
-    photo: allPhotos ? photoOf(z) : null,
+    detail: z.statusDetail,
   })),
   /* 각주는 **한 줄**이다 — 두 줄이 되면 푸터와의 숨(footergap)을 먹는다. */
   note:
@@ -130,4 +134,4 @@ writeCaption("seongsu-zones", caption); // ⚠️ 서명은 writeCaption 이 붙
 
 console.log(`🗺  seongsu-zones — 지구 ${zones.length} · 확정 ${fixedN} · 공사비 합 ${won(totalCost)}`);
 console.log(`   지도: ${aerial.file} ${mapW}×${mapH} · 구역 자리는 조감도 비율 + 단지명 앵커(데이터셋 aerial._ 참고)`);
-console.log(`   조감도: ${allPhotos ? "네 칸 모두 있음" : `아직 없음(${zones.filter((z) => !photoOf(z)).map((z) => z.short).join(", ")}) — 사진 띠 없이 그린다`}`);
+console.log(`   투시도: 네 장 모두 지도 위에 걸었다`);

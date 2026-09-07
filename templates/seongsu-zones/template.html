@@ -25,23 +25,23 @@
       .sz .wirit-title .hi { color: var(--wirit-red); }
 
       /* 지도는 남는 세로를 갖되 상한을 둔다 — 상한이 없으면 아래 칸과 맞닿는다. */
-      .sz-map { flex: 1 1 auto; min-height: 0; max-height: 470px; display: flex; align-items: center; justify-content: center; margin: 30px 0 0; }
+      .sz-map { flex: 1 1 auto; min-height: 0; max-height: 560px; display: flex; align-items: center; justify-content: center; margin: 30px 0 0; }
       .sz-map svg { width: 100%; height: 100%; display: block; }
 
       /* 지도와 네 칸 사이 요약 한 줄 — 빈 자리를 **데이터로** 채운다(CARD_CHECKLIST §2 여백).
          문구가 아니라 코드가 더한 값이라, 자료가 바뀌면 이 줄도 같이 바뀐다. */
       .sz-sum {
-        flex: 0 0 auto; margin: 20px 0 0; padding: 0 0 2px;
-        font-size: 30px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.045em; line-height: 1;
+        flex: 0 0 auto; margin: 26px 0 0; padding: 0 0 2px;
+        font-size: 33px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.045em; line-height: 1;
       }
       .sz-sum b { font-family: "Wanted Sans", "Pretendard", sans-serif; font-weight: 900; color: var(--wirit-red); }
 
       /* ── 아래 4칸 ── 상자가 아니라 브랜드색 굵은 선으로 칸을 연다(AI티 금지). */
       .sz-cards {
         flex: 0 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-        column-gap: 22px; margin: 14px 0 0;
+        column-gap: 22px; margin: 22px 0 0;
       }
-      .sz-c { display: flex; flex-direction: column; gap: 7px; padding-top: 10px; border-top: 5px solid var(--c); }
+      .sz-c { display: flex; flex-direction: column; gap: 10px; padding-top: 13px; border-top: 5px solid var(--c); }
 
       /* 조감도 띠 — 네 칸 전부 있을 때만 그린다. 한 칸만 비면 줄이 어긋난다. */
       .sz-c .ph { width: 100%; height: 196px; object-fit: cover; display: block; border-radius: 2px; }
@@ -56,7 +56,7 @@
 
       .sz-c .bl {
         font-family: "Wanted Sans", "Pretendard", sans-serif;
-        font-size: 33px; font-weight: 900; color: var(--c); letter-spacing: -0.045em; line-height: 1;
+        font-size: 36px; font-weight: 900; color: var(--c); letter-spacing: -0.045em; line-height: 1;
         white-space: nowrap;
       }
       .sz-c .br { font-size: 17px; font-weight: 700; color: var(--wirit-gray); letter-spacing: -0.05em; line-height: 1.1; min-height: 19px; }
@@ -76,10 +76,17 @@
       }
       .sz-c .ct i { font-style: normal; font-size: 15px; font-weight: 700; color: var(--wirit-gray); margin-left: 4px; }
 
+      /* 지금 어느 단계인지 — 빈 아래를 **데이터로** 채운다. 배지가 '무엇'이면 이 줄은 '왜'다. */
+      .sz-c .dt {
+        margin-top: 4px; padding-top: 9px; border-top: 1px solid #E3E0D9;
+        font-size: 17px; font-weight: 600; color: var(--wirit-gray);
+        letter-spacing: -0.045em; line-height: 1.45;
+      }
+
       /* 각주 — 푸터와 숨을 준다(footergap ≥ 14px). */
       .sz-note {
         flex: 0 0 auto; font-size: 17px; font-weight: 600; color: var(--wirit-gray);
-        letter-spacing: -0.04em; line-height: 1.4; margin: 18px 0 22px;
+        letter-spacing: -0.04em; line-height: 1.4; margin: auto 0 6px;
       }
     </style>
   </head>
@@ -95,12 +102,12 @@
       <div class="sz-cards">
         {{#each zones}}
         <div class="sz-c" style="--c: {{this.color}}">
-          {{#if this.photo}}<img class="ph" src="../_shared/photos/{{this.photo}}" alt="" />{{/if}}
           <span class="zn"><span class="n">{{this.no}}</span><span class="t">{{this.name}}</span></span>
           <span class="bl">{{this.builder}}</span>
           <span class="br">{{#if this.brand}}{{this.brand}}{{/if}}</span>
           <span class="bg {{#if this.fixed}}on{{else}}off{{/if}}">{{this.status}}</span>
           <span class="ct">{{this.cost}}{{#if this.costKind}}<i>{{this.costKind}}</i>{{/if}}</span>
+          {{#if this.detail}}<span class="dt">{{this.detail}}</span>{{/if}}
         </div>
         {{/each}}
       </div>

@@ -93,6 +93,11 @@
               "null"
             ],
             "description": "조감도 파일명(templates/_shared/photos/ 아래). 네 칸 **전부** 있을 때만 사진 띠를 그린다 — 한 칸만 비면 줄이 어긋난다."
+          },
+          "detail": {
+            "type": "string",
+            "maxLength": 40,
+            "description": "그 구역이 지금 어느 단계인지 한 토막 — 데이터셋 statusDetail 을 그대로 쓴다"
           }
         }
       }
