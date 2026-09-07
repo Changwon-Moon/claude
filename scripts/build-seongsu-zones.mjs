@@ -70,9 +70,6 @@ const { svg: mapSvg, w: mapW, h: mapH } = seongsuAerialSvg({
   zones: zones.map((z) => ({ ...z, color: colorOf(z.builder) })),
   aerial,
   href: `../_shared/photos/${aerial.file}`,
-  /* 투시도는 **지도 위에** 건다(오너 2026-09-06). 아래 네 칸은 글자만 남는다 —
-   * 같은 사진을 두 번 보여 주면 카드가 두 번 말하는 것이 된다. */
-  photoHref: (z) => `../_shared/photos/${photoOf(z)}`,
 });
 
 const card = {
@@ -94,11 +91,12 @@ const card = {
     costKind: z.costKind,
     color: colorOf(z.builder),
     detail: z.statusDetail,
+    photo: photoOf(z),
   })),
   /* 각주는 **한 줄**이다 — 두 줄이 되면 푸터와의 숨(footergap)을 먹는다. */
   note:
     `실선 = 시공사 확정 · 점선 = 미확정 · 공사비는 확정 구역만 계약액 · ` +
-    `구역 표시는 구간 표시입니다 · 지도: 네이버 지도 · 조감도: 각 사 제공`,
+    `구역 표시는 구간 표시 · 지도 위 조감도는 정비계획 당시 이미지(실제 설계와 다름) · 아래 투시도는 각 사 제안`,
   source: { name: "각 조합·건설사 발표 및 업계 보도 종합", asOf: doc.meta.asOf },
 };
 
@@ -125,6 +123,7 @@ const caption = [
   `※ 공사비는 시공사가 정해진 곳은 계약액, 아직인 곳은 조합이 내건 입찰 예정가입니다.`,
   `※ 세대수·최고층수는 매체마다 값이 갈려 카드에 넣지 않았습니다.`,
   `※ 지도의 구역 표시는 정확한 경계가 아니라 구간 표시입니다. 구역 경계의 정본은 서울시 「성수전략정비구역 지구단위계획 결정도」입니다.`,
+  `※ 지도에 얹은 3D 조감도는 정비계획 당시 이미지로, 지금 시공사들의 설계와 다릅니다. 각 사의 실제 제안은 아래 네 장의 투시도입니다.`,
   `※ 출처: 각 조합·건설사 발표 및 업계 보도 종합 — 2026년 4월 1지구 선정부터 ${doc.meta.asOf} 까지의 진행 상황입니다.`,
   ``,
   /* 해시태그는 5개까지(CAPTION_MAX_TAGS). 늘리려면 기준을 먼저 바꾼다. */
@@ -134,4 +133,4 @@ writeCaption("seongsu-zones", caption); // ⚠️ 서명은 writeCaption 이 붙
 
 console.log(`🗺  seongsu-zones — 지구 ${zones.length} · 확정 ${fixedN} · 공사비 합 ${won(totalCost)}`);
 console.log(`   지도: ${aerial.file} ${mapW}×${mapH} · 구역 자리는 조감도 비율 + 단지명 앵커(데이터셋 aerial._ 참고)`);
-console.log(`   투시도: 네 장 모두 지도 위에 걸었다`);
+console.log(`   투시도: 네 칸 · 지도는 합성본(${aerial.file})`);
