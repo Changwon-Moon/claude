@@ -36,6 +36,9 @@
 
       /* 좌우 두 칸 — 폭·높이는 빌더가 픽셀로 준다(칸 크기 계산과 같은 값이어야 한다). */
       .tm-body { display: flex; flex: 0 0 auto; margin: 32px 0 0; align-items: stretch; }
+      /* 좌우 자리는 데이터가 정한다(plot.side) — CSS 로 못박으면 판형이 한 방향밖에 못 쓴다.
+         면적(트리맵)과 값(표) 중 무엇을 먼저 읽히게 할지는 소재마다 다르다. */
+      .tm-body.flip { flex-direction: row-reverse; }
       .tm-plot { position: relative; flex: 0 0 auto; overflow: hidden; }
 
       .tm-t {
@@ -72,7 +75,9 @@
       }
       .tm-tab .r { border-bottom: 1px solid var(--wirit-ink-12); }
       .tm-tab .r:last-child { border-bottom: 0; }
-      .tm-tab .r i { width: 14px; height: 14px; border-radius: 2px; }
+      /* 아주 옅은 칸 색(#DEE9FF 등)은 종이 위에서 칩이 사라진다 — 얇은 안쪽 선으로 테두리를 준다.
+         면색을 바꾸지 않으므로 「면적=비율」도, 램프 예외도 그대로다. */
+      .tm-tab .r i { width: 14px; height: 14px; border-radius: 2px; box-shadow: inset 0 0 0 1px rgba(20, 24, 33, 0.16); }
       .tm-tab .r .nm {
         font-weight: 700; color: var(--wirit-ink); letter-spacing: -0.05em; line-height: 1.15;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -95,11 +100,14 @@
       }
       .tm-sum b { font-family: "Wanted Sans", "Pretendard", sans-serif; font-weight: 900; color: var(--wirit-cobalt); }
 
-      /* 각주 — 푸터와 숨을 준다(footergap ≥ 14px). */
+      /* 각주 — 용어 풀이를 ※ 로 한 줄씩 세운다(오너 2026-09-07).
+         한 문단으로 흘리면 어디까지가 한 항목인지 안 보인다. 푸터와는 숨을 준다(footergap ≥ 14px). */
       .tm-note {
         flex: 0 0 auto; font-size: 17px; font-weight: 600; color: var(--wirit-gray);
-        letter-spacing: -0.04em; line-height: 1.45; margin: auto 0 8px;
+        letter-spacing: -0.04em; line-height: 1.5; margin: auto 0 8px;
       }
+      .tm-note .ln + .ln { margin-top: 3px; }
+      .tm-note .ln b { font-weight: 800; color: var(--wirit-ink); }
     </style>
   </head>
   <body>
@@ -107,11 +115,11 @@
       <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
       <div class="tm-head"><h1 class="wirit-title">{{{title}}}</h1></div>
 
-      <div class="tm-body" style="height: {{plot.h}}px; gap: {{plot.gap}}px">
+      <div class="tm-body{{#if plot.side}} flip{{/if}}" style="height: {{plot.h}}px; gap: {{plot.gap}}px">
         <div class="tm-plot" style="width: {{plot.w}}px">
           {{#each tiles}}
           <div class="tm-t wirit-ramp" style="left:{{this.x}}%;top:{{this.y}}%;width:{{this.w}}%;height:{{this.h}}%;background:{{this.bg}};color:{{this.fg}};padding:{{this.pdPx}}px">
-            {{#if this.label}}<span class="lb" style="font-size:{{this.lbPx}}px">{{this.label}}</span><span class="vl" style="font-size:{{this.vlPx}}px">{{this.value}}</span>{{/if}}
+            {{#if this.label}}<span class="lb" style="font-size:{{this.lbPx}}px">{{this.label}}</span>{{/if}}{{#if this.value}}<span class="vl" style="font-size:{{this.vlPx}}px">{{this.value}}</span>{{/if}}
           </div>
           {{/each}}
         </div>
@@ -132,7 +140,7 @@
       </div>
 
       {{#if summary}}<div class="tm-sum">{{{summary}}}</div>{{/if}}
-      {{#if note}}<div class="tm-note">{{note}}</div>{{/if}}
+      {{#if notes}}<div class="tm-note">{{#each notes}}<div class="ln">{{{this}}}</div>{{/each}}</div>{{/if}}
 
       <div class="wirit-footer">
         <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>

@@ -44,6 +44,13 @@
         "gap": {
           "type": "number",
           "description": "트리맵과 표 사이 간격(px)"
+        },
+        "side": {
+          "type": "string",
+          "enum": [
+            "right"
+          ],
+          "description": "'right' 면 트리맵이 오른쪽·표가 왼쪽(row-reverse). 없으면 트리맵이 왼쪽."
         }
       }
     },
@@ -90,13 +97,18 @@
           },
           "value": {
             "type": "string",
-            "maxLength": 10
+            "maxLength": 10,
+            "description": "없으면 채수만 그린다(칸이 값까지 담기엔 좁다는 뜻)"
           },
           "lbPx": {
             "type": "number"
           },
           "vlPx": {
             "type": "number"
+          },
+          "pdPx": {
+            "type": "number",
+            "description": "칸 안쪽 여백(px) — 등급마다 다르다"
           }
         }
       }
@@ -104,10 +116,6 @@
     "summary": {
       "type": "string",
       "description": "판 아래 굵은 한 줄. <b>…</b> 로 감싼 낱말만 코발트"
-    },
-    "note": {
-      "type": "string",
-      "maxLength": 130
     },
     "source": {
       "type": "object",
@@ -200,6 +208,16 @@
             }
           }
         }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "description": "각주 — ※ 로 시작하는 용어 풀이를 한 줄씩. <b>…</b> 로 용어를 굵게. 한 문단으로 흘리지 않는다(오너 2026-09-07).",
+      "items": {
+        "type": "string",
+        "maxLength": 120
       }
     }
   }
