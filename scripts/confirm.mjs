@@ -94,6 +94,34 @@ const today = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const md5 = (p) => createHash("md5").update(readFileSync(p)).digest("hex");
 const base = (c) => c.replace(/-p\d+$/, "");
 
+/* ── 정기물 신선도 게이트 (2026-09-07 신설) ──────────────────────────────
+ * 왜: 주간 수집 크론이 8/31 에 꺼진 걸 모르고 8/24 데이터로 연속상승 카드를 확정해,
+ *     기사(85주)보다 3주 뒤처진 82주로 나갔다. "같은 데이터면 같은 픽셀"은 지켰지만
+ *     **데이터가 최신인지**는 아무도 안 봤다. 그래서 확정 시점에 원천 데이터가 묵었으면 막는다.
+ * 무엇을: 정기물이 읽는 주간 시계열(meta.asOf = YYYYWW)이 임계일보다 오래됐으면 die.
+ *         월간 등 다른 시계열은 아직 판정하지 않는다(오판 방지) — 확장 지점.
+ * 우회: 알고도 옛 데이터로 확정하려면 --allow-stale (또는 WIRIT_ALLOW_STALE=1). */
+const allowStale = argv.includes("--allow-stale") || process.env.WIRIT_ALLOW_STALE === "1";
+const WEEK_MAX_DAYS = 10;   // 부동산원 주간지수는 매주 공표 → 정상이면 최신주가 ~7일 이내. 10일 초과면 최소 한 주 밀린 것
+function isoWeekMonday(y, w) {
+  const s = new Date(Date.UTC(y, 0, 1 + (w - 1) * 7));
+  const dow = s.getUTCDay() || 7;
+  s.setUTCDate(s.getUTCDate() - dow + 1);
+  return s;
+}
+/** 주간 시계열(YYYYWW)의 '최신 데이터가 며칠 묵었나'. 판정 불가면 null(막지 않음). */
+function weeklyDatasetAgeDays(dep) {
+  if (!/weekly/.test(dep) || !dep.endsWith(".json")) return null; // 주간 파일형만 판정
+  const fp = P(dep);
+  if (!existsSync(fp)) return null;
+  let asOf;
+  try { asOf = JSON.parse(readFileSync(fp, "utf8"))?.meta?.asOf; } catch { return null; }
+  if (!/^\d{6}$/.test(String(asOf))) return null;
+  const y = +String(asOf).slice(0, 4), w = +String(asOf).slice(4);
+  const age = Math.floor((Date.now() - isoWeekMonday(y, w).getTime()) / 86400000);
+  return { asOf, age };
+}
+
 const summary = [];
 for (const label of labels) {
   const set = (sets.sets || []).find((s) => s.label === label);
@@ -114,6 +142,19 @@ for (const label of labels) {
   const deps = [...new Set(mine.flatMap(depsOf))];
   const rolling = deps.filter((d) => REFRESHED.some((rf) => d.startsWith(rf) || rf.startsWith(d)));
   const isPeriodic = rolling.length > 0;
+
+  /* 신선도 게이트 — 정기물의 주간 원천이 임계일보다 묵었으면 확정을 막는다(재발방지 2026-09-07). */
+  if (isPeriodic && !allowStale) {
+    for (const dep of rolling) {
+      const f = weeklyDatasetAgeDays(dep);
+      if (f && f.age > WEEK_MAX_DAYS) {
+        die(`정기물 신선도 실패 — ${label} 의 원천 ${dep} 이(가) ${f.age}일 묵었습니다(최신주 ${f.asOf}, 임계 ${WEEK_MAX_DAYS}일).\n` +
+            `      수집이 밀린 상태에서 확정하면 옛 숫자가 그대로 나갑니다(2026-09 연속상승 82주 사고).\n` +
+            `      먼저 최신 데이터를 수집하세요: data/reb-weekly-queue.txt 에 한 줄 push → reb-weekly-collect 재수집 → pull.\n` +
+            `      알고도 옛 데이터로 확정하려면: --allow-stale (또는 WIRIT_ALLOW_STALE=1)`);
+      }
+    }
+  }
 
   const pngs = [];
   for (const slug of set.cards) {

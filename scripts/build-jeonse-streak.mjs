@@ -55,6 +55,9 @@ const mae = currentRun(d.mae[SEOUL]);
 const jeon = currentRun(d.jeonse[SEOUL]);
 const N = mae.run.weeks;
 if (jeon.run.weeks !== N) throw new Error(`매매(${N})·전세(${jeon.run.weeks}) 연속 주수가 달라 '동반' 프레임이 안 맞는다 — 제목을 바꾼다`);
+/* 신선도 경고(비차단) — 최신주가 오래 묵으면 수집이 밀린 것. 확정은 confirm.mjs 게이트가 막는다. */
+{ const _latest = mae.ks[mae.ks.length - 1], _age = Math.floor((Date.now() - mondayOf(_latest).getTime()) / 86400000);
+  if (_age > 10) console.warn(`⚠️  주간지수가 ${_age}일 묵었다(최신주 ${_latest}) — 수집(reb-weekly-collect)이 밀렸는지 확인. 카드가 옛 주수로 나갈 수 있다.`); }
 const sameBottom = mae.ks[mae.run.base] === jeon.ks[jeon.run.base];
 const startLabel = weekLabel(mae.ks[mae.run.base + 1]);
 /* 뱃지·폴더 = 발행일(오늘, KST). '오늘의 이슈'라 데이터 기준일이 아니라 카드가 나가는 날짜를 쓴다.

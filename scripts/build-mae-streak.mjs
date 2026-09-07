@@ -50,6 +50,9 @@ const isoDate = (key) => mondayOf(key).toISOString().slice(0, 10);   // YYYY-MM-
  * 배포/주간 자동생산이 도는 날로 스탬프된다. 인자를 주면 그걸로 덮어쓴다(과거 발행분 재현용).
  * (데이터가 몇 주째인지는 weekLabel 로 범례에 따로 표기 — 뱃지 날짜와 무관.) */
 const latestKey = d.meta.asOf || ks[ks.length - 1];
+/* 신선도 경고(비차단) — 최신주가 오래 묵으면 수집이 밀린 것이다. 확정은 confirm.mjs 게이트가 막는다. */
+{ const _age = Math.floor((Date.now() - mondayOf(latestKey).getTime()) / 86400000);
+  if (_age > 10) console.warn(`⚠️  주간지수가 ${_age}일 묵었다(최신주 ${latestKey}) — 수집(reb-weekly-collect)이 밀렸는지 확인. 카드가 옛 주수로 나갈 수 있다.`); }
 const kstToday = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const date = process.argv[2] || kstToday;
 
