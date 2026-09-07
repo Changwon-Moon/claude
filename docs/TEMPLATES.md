@@ -12,7 +12,7 @@
 > 이 표는 `node scripts/template-usage.mjs --write` 가 **실측해서 씁니다.**
 > 손으로 고치지 마세요 — 세트가 늘면 다음 실행 때 덮어씁니다.
 
-**템플릿 42종** · 🟢 카드가 나오는 것 27 · 🟡 빌더는 있음 3 · ⚪ 잠자는 것 12
+**템플릿 44종** · 🟢 카드가 나오는 것 27 · 🟡 빌더는 있음 5 · ⚪ 잠자는 것 12
 
 | 판형 | 상태 | 쓰는 세트 |
 |---|---|---|
@@ -43,8 +43,10 @@
 | `world-capital` | 🟢 1세트 | world-capital |
 | `world-monthly` | 🟢 1세트 | world-monthly |
 | `year-bars` | 🟢 2세트 | wolse-flip, m2-rate |
+| `daso-treemap` | 🟡 빌더 있음·세트 없음 | — |
 | `estate-cover` | 🟡 빌더 있음·세트 없음 | — |
 | `metro-cover-photo` | 🟡 빌더 있음·세트 없음 | — |
+| `rail-line` | 🟡 빌더 있음·세트 없음 | — |
 | `ranking-table` | 🟡 빌더 있음·세트 없음 | — |
 | `dummy-card` | ⚪ 잠자는 중 | — |
 | `figure-roster` | ⚪ 잠자는 중 | — |
