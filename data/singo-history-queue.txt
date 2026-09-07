@@ -216,3 +216,17 @@ lawd=41450 umd=창우동 type=84 apt="꿈동산신안" force=1
 
 # 2026-09-07 singo-daily-build 가 채운 줄
 lawd=11200 umd=마장동 type=59 apt="현대"
+
+# 2026-09-08 singo-daily-build 가 채운 줄
+lawd=11440 umd=대흥동 type=84 apt="대흥동태영아파트"
+lawd=11290 umd=길음동 type=59 apt="롯데캐슬클라시아"
+lawd=11560 umd=신길동 type=59 apt="삼환"
+lawd=41450 umd=망월동 type=84 apt="미사레스티아"
+lawd=41360 umd=다산동 type=84 apt="힐스테이트다산"
+lawd=11545 umd=독산동 type=59 apt="금천롯데캐슬골드파크1차"
+lawd=11350 umd=월계동 type=59 apt="현대"
+lawd=11290 umd=돈암동 type=59 apt="한진(609-1)"
+lawd=41597 umd=영천동 type=59 apt="동탄역포레너스"
+lawd=41113 umd=구운동 type=84 apt="삼환"
+lawd=41115 umd=화서동 type=59 apt="화서역블루밍푸른숲"
+lawd=41271 umd=사동 type=59 apt="그랑시티자이2차"
