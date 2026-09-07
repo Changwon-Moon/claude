@@ -64,7 +64,7 @@
         opacity: 0.82; white-space: nowrap;
       }
       .tm-t .vl {
-        font-family: "Wanted Sans", "Pretendard", sans-serif;
+        font-family: var(--font-num);
         font-weight: 900; letter-spacing: -0.045em; line-height: 1.15;
         margin-top: 0.1em; white-space: nowrap;
       }
@@ -99,7 +99,7 @@
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
       .tm-tab .r .v1, .tm-tab .r .v2 {
-        font-family: "Wanted Sans", "Pretendard", sans-serif;
+        font-family: var(--font-num);
         font-weight: 900; letter-spacing: -0.04em; line-height: 1.15;
         text-align: right; white-space: nowrap;
       }
@@ -114,7 +114,7 @@
         font-size: 32px; font-weight: 800; color: var(--wirit-ink);
         letter-spacing: -0.045em; line-height: 1.28;
       }
-      .tm-sum b { font-family: "Wanted Sans", "Pretendard", sans-serif; font-weight: 900; color: var(--wirit-cobalt); }
+      .tm-sum b { font-family: var(--font-num); font-weight: 900; color: var(--wirit-cobalt); }
 
       /* 각주 — 용어 풀이를 ※ 로 한 줄씩 세운다(오너 2026-09-07).
          한 문단으로 흘리면 어디까지가 한 항목인지 안 보인다. 푸터와는 숨을 준다(footergap ≥ 14px). */
@@ -131,7 +131,7 @@
     </style>
   </head>
   <body>
-    <div class="wirit-card tm">
+    <div class="wirit-card font-taebaek-pretendard tm">
       <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
       <div class="tm-head"><h1 class="wirit-title">{{{title}}}</h1></div>
 
