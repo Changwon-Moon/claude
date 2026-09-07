@@ -70,6 +70,11 @@ for (const L of doc.lines) {
   if (!L.progressAsOf) throw new Error(`${L.name}: progressAsOf 가 없다`);
   if (L.progressAsOf !== doc.meta.asOf) throw new Error(`${L.name}: 공정률 기준일이 데이터셋과 다르다`);
   if (!(L.progress >= 0 && L.progress <= 100)) throw new Error(`${L.name}: 공정률이 0~100 밖이다: ${L.progress}`);
+  /* 카드에 찍는 것은 **공단 표기 그대로의 문자열**이다 — JSON 이 18.0 을 18 로 저장해
+   * 월판선만 소수 자리가 사라졌다(2026-09-07). 값이 어긋나면 던진다. */
+  if (!L.progressText) throw new Error(`${L.name}: progressText 가 없다`);
+  if (Math.abs(Number(L.progressText) - L.progress) > 1e-9)
+    throw new Error(`${L.name}: progressText(${L.progressText}) 와 progress(${L.progress}) 가 다르다`);
 
   const all = [...L.stations, ...(L.branch?.stations || [])];
   for (const s of all) for (const k of s.xfer || []) if (!CAT[k]) missing.add(`${L.name}/${s.name}: ${k}`);
@@ -157,7 +162,7 @@ for (const L of doc.lines) {
     subtitle: `서울 수도권 주요 노선 · 공사 현황 · ${doc.meta.asOfLabel} 기준`,
     title: `<span class="ln">${L.name}</span> ${L.titleAsk || "언제 개통하지?"}`,
     badge: L.badge, tone: L.tone,
-    prog: { value: String(L.progress), asOf: L.progressNote || `${doc.meta.asOfLabel} · 국가철도공단`,
+    prog: { value: L.progressText, asOf: L.progressNote || `${doc.meta.asOfLabel} · 국가철도공단`,
             width: `${L.progress}%`, zero: L.progress === 0 },
     eta: { was: L.openWas, now: L.openNow },
     etaBg: `linear-gradient(180deg,#ffffff 0%,${rgba(lc, 0.09)} 100%)`,

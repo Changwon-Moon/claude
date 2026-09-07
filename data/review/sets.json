@@ -1474,91 +1474,131 @@
     },
     {
       "label": "rail-sinansan",
-      "title": "신안산선 어디까지 왔나 (공정률 72.58% · 2028.12 목표)",
+      "title": "신안산선 언제 개통하지 (공정률 72.58% · 2028년 말 목표)",
       "cards": [
-        "rail-sinansan-p1"
+        "rail-sinansan"
       ],
       "caption": "rail-sinansan",
       "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
-      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다.",
-      "pixelPolicy": "정기물에 준한다 — 공단 사업현황이 분기 갱신되면 데이터셋을 바꿔 다시 그린다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)."
+      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
+      "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
+      "state": "오너 확정",
+      "confirmedAt": "2026-09-07",
+      "confirmedMd5": [
+        "rail-sinansan:e49a1f9f89e1"
+      ]
     },
     {
       "label": "rail-gtxa",
-      "title": "GTX-A 어디까지 왔나 (민자 99.9% · 서울역~수서 연결 2027 상반기)",
+      "title": "GTX-A 언제 완전 개통하지 (공정률 99.9% · 개통 미정)",
       "cards": [
-        "rail-gtxa-p1"
+        "rail-gtxa"
       ],
       "caption": "rail-gtxa",
       "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
-      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다.",
-      "pixelPolicy": "정기물에 준한다 — 공단 사업현황이 분기 갱신되면 데이터셋을 바꿔 다시 그린다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)."
+      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
+      "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
+      "state": "오너 확정",
+      "confirmedAt": "2026-09-07",
+      "confirmedMd5": [
+        "rail-gtxa:1fb8797963d8"
+      ]
     },
     {
       "label": "rail-gtxb",
-      "title": "GTX-B 어디까지 왔나 (민자 8.1% · 2031년 목표)",
+      "title": "GTX-B 언제 개통하지 (공정률 8.1% · 2031년 목표)",
       "cards": [
-        "rail-gtxb-p1"
+        "rail-gtxb"
       ],
       "caption": "rail-gtxb",
       "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
-      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다.",
-      "pixelPolicy": "정기물에 준한다 — 공단 사업현황이 분기 갱신되면 데이터셋을 바꿔 다시 그린다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)."
+      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
+      "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
+      "state": "오너 확정",
+      "confirmedAt": "2026-09-07",
+      "confirmedMd5": [
+        "rail-gtxb:6d6ccd0f22fd"
+      ]
     },
     {
       "label": "rail-gtxc",
-      "title": "GTX-C 어디까지 왔나 (0% · 준공 시점 미정)",
+      "title": "GTX-C 언제 개통하지 (공정률 0% · 개통 미정)",
       "cards": [
-        "rail-gtxc-p1"
+        "rail-gtxc"
       ],
       "caption": "rail-gtxc",
       "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
-      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다.",
-      "pixelPolicy": "정기물에 준한다 — 공단 사업현황이 분기 갱신되면 데이터셋을 바꿔 다시 그린다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)."
+      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
+      "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
+      "state": "오너 확정",
+      "confirmedAt": "2026-09-07",
+      "confirmedMd5": [
+        "rail-gtxc:6319a13dd19a"
+      ]
     },
     {
       "label": "rail-indong",
-      "title": "인덕원~동탄 어디까지 왔나 (20.4% · 2029년 말 목표)",
+      "title": "인덕원~동탄선 언제 개통하지 (공정률 20.4% · 2029년 말 목표)",
       "cards": [
-        "rail-indong-p1"
+        "rail-indong"
       ],
       "caption": "rail-indong",
       "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
-      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다.",
-      "pixelPolicy": "정기물에 준한다 — 공단 사업현황이 분기 갱신되면 데이터셋을 바꿔 다시 그린다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)."
+      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
+      "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
+      "state": "오너 확정",
+      "confirmedAt": "2026-09-07",
+      "confirmedMd5": [
+        "rail-indong:2099c6e0f351"
+      ]
     },
     {
       "label": "rail-wolpan",
-      "title": "월곶~판교 어디까지 왔나 (18.0% · 2029.12 목표)",
+      "title": "월곶~판교선 언제 개통하지 (공정률 18.0% · 2029년 말 목표)",
       "cards": [
-        "rail-wolpan-p1"
+        "rail-wolpan"
       ],
       "caption": "rail-wolpan",
       "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
-      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다.",
-      "pixelPolicy": "정기물에 준한다 — 공단 사업현황이 분기 갱신되면 데이터셋을 바꿔 다시 그린다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)."
+      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
+      "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
+      "state": "오너 확정",
+      "confirmedAt": "2026-09-07",
+      "confirmedMd5": [
+        "rail-wolpan:07dbb7901dba"
+      ]
     },
     {
       "label": "rail-sinbundang",
-      "title": "신분당선 어디까지 왔나 (남부 17.25% · 북부 미착공)",
+      "title": "신분당선 연장선 언제 개통하지 (공정률 17.25% · 2029년 말 목표)",
       "cards": [
-        "rail-sinbundang-p1"
+        "rail-sinbundang"
       ],
       "caption": "rail-sinbundang",
       "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
-      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다.",
-      "pixelPolicy": "정기물에 준한다 — 공단 사업현황이 분기 갱신되면 데이터셋을 바꿔 다시 그린다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)."
+      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
+      "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
+      "state": "오너 확정",
+      "confirmedAt": "2026-09-07",
+      "confirmedMd5": [
+        "rail-sinbundang:2b8c831cf2b9"
+      ]
     },
     {
       "label": "rail-daejang",
-      "title": "대장홍대선 어디까지 왔나 (9.7% · 2031년 말 목표)",
+      "title": "대장홍대선 언제 개통하지 (공정률 9.7% · 2031년 목표)",
       "cards": [
-        "rail-daejang-p1"
+        "rail-daejang"
       ],
       "caption": "rail-daejang",
       "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
-      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다.",
-      "pixelPolicy": "정기물에 준한다 — 공단 사업현황이 분기 갱신되면 데이터셋을 바꿔 다시 그린다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)."
+      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
+      "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
+      "state": "오너 확정",
+      "confirmedAt": "2026-09-07",
+      "confirmedMd5": [
+        "rail-daejang:a665b6e46b71"
+      ]
     },
     {
       "label": "supply-progress",

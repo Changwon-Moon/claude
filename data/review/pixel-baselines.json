@@ -14,8 +14,8 @@
     "  content = 빌더가 만드는 카드 JSON 경로",
     "  md5     = 그 JSON을 렌더한 PNG 1장의 md5"
   ],
-  "cards": [
-    {
+  "cards": {
+    "0": {
       "label": "jeongbi-board",
       "title": "올해 서울 정비사업 수주 1위는?",
       "state": "오너 확정",
@@ -26,7 +26,7 @@
       "png": "jeongbi-board-p1.png",
       "note": "2026-07-31 발행 후 머리 규격(카드 위 패딩·코너 뱃지)을 공용 규격으로 되돌린 수정본이다. 인스타에 올라간 이미지는 직전 픽셀(e407c7fb)이므로, 재발행하면 이 판으로 나간다."
     },
-    {
+    "1": {
       "label": "brand-rank",
       "title": "당신이 아는 아파트 1위, 맞나요?",
       "state": "오너 확정",
@@ -37,7 +37,7 @@
       "md5": "91d8e2ab6a2c8bda92d1dc97ae36f66f",
       "note": "로고 22칸이 들어가는 카드라 templates/_shared/logos/ 의 파일이 하나만 바뀌어도 md5 가 깨진다. 로고를 다시 정규화(normalize-logos.mjs)하면 이 값도 함께 갱신해야 한다."
     },
-    {
+    "2": {
       "label": "kospi-record",
       "title": "오늘 국내 증시가 세운 기록들",
       "state": "오너 확정",
@@ -48,7 +48,7 @@
       "md5": "5c242f77c9ce1b86eb26e40a45c4e0be",
       "note": "그래프를 템플릿 스크립트가 SVG 로 직접 그린다. 뱃지 자리는 겹침을 재서 고르므로 시계열이 바뀌면 뱃지 위치가 따라 바뀌고 md5 도 바뀐다 — 정상이다. kr-market-2026.json 을 갱신하면 이 값도 함께 갱신한다."
     },
-    {
+    "3": {
       "label": "metro-speed",
       "title": "수도권 지하철 노선·구간별 표정속도",
       "state": "오너 확정",
@@ -58,7 +58,7 @@
       "png": "metro-2col-p1.png",
       "md5": "62e94c06f8fae70402862d99f06862d2"
     },
-    {
+    "4": {
       "label": "sinbundang-loop",
       "title": "신분당선 역세권 34평 APT 시세 (2026.01~07)",
       "state": "오너 확정",
@@ -69,7 +69,7 @@
       "md5": "7e3f24d25021e2bf61ca3c79075561ff",
       "note": "2026-08-06 오너 재확정. 08-02 3188dbd(9개 노선 공용 렌더러)가 이 카드를 같이 바꿨는데 기준값을 안 고쳐 검사가 깨져 있었다. 오너가 새 모습을 확정해 갱신한다. 이전 md5 acdaf3493e6c… (08-01 확정본). 바뀐 것: 워터마크 2개 추가 · 구칩 연회색 · '최고가' 뱃지 제거 · 환승뱃지(GTX-C·월판) 추가 · 9호선 칩색 · 동천 14.3→14.4억(round-half-up). ⚠️ 마지막 항목은 숫자가 바뀐 것이라 이미 발행한 카드와 값이 다르다 — 발행 완료 시리즈라 그대로 둔다(오너 판단)."
     },
-    {
+    "5": {
       "label": "world-capital",
       "title": "당신 건물주가 네덜란드 연기금? (글로벌 자본의 서울 임대시장 진출)",
       "state": "오너 확정",
@@ -79,7 +79,7 @@
       "png": "world-capital-p1.png",
       "md5": "f955b16599940c44167ed2a0e0aaa667"
     },
-    {
+    "6": {
       "label": "supply-progress",
       "title": "李정부 수도권 공급정책 1주년 — 147만호 중 5.3%",
       "state": "오너 확정",
@@ -89,7 +89,7 @@
       "png": "supply-progress-p1.png",
       "md5": "1abe257c0418d418250bd450d44be36d"
     },
-    {
+    "7": {
       "label": "daso-treemap",
       "title": "2026년 현재, 다주택자 비율? (집합건물 다소유지수 트리맵)",
       "state": "오너 확정",
@@ -98,6 +98,86 @@
       "content": "data/content/2026-09-07/daso-treemap.json",
       "png": "daso-treemap-p1.png",
       "md5": "1a06eace066dafcc1258a8cd27790a84"
+    },
+    "8": {
+      "label": "rail-sinansan",
+      "title": "신안산선 언제 개통하지 (공정률 72.58% · 2028년 말 목표)",
+      "state": "오너 확정",
+      "at": "2026-09-07",
+      "builder": "rail-line",
+      "content": "data/content/2026-09-07/rail-sinansan.json",
+      "png": "rail-sinansan-p1.png",
+      "md5": "e49a1f9f89e104f3ad8421752c291f03"
+    },
+    "9": {
+      "label": "rail-gtxa",
+      "title": "GTX-A 언제 완전 개통하지 (공정률 99.9% · 개통 미정)",
+      "state": "오너 확정",
+      "at": "2026-09-07",
+      "builder": "rail-line",
+      "content": "data/content/2026-09-07/rail-gtxa.json",
+      "png": "rail-gtxa-p1.png",
+      "md5": "1fb8797963d85a763587c1b2b5cc73c1"
+    },
+    "10": {
+      "label": "rail-gtxb",
+      "title": "GTX-B 언제 개통하지 (공정률 8.1% · 2031년 목표)",
+      "state": "오너 확정",
+      "at": "2026-09-07",
+      "builder": "rail-line",
+      "content": "data/content/2026-09-07/rail-gtxb.json",
+      "png": "rail-gtxb-p1.png",
+      "md5": "6d6ccd0f22fd2365b5cc92fce2b868ec"
+    },
+    "11": {
+      "label": "rail-gtxc",
+      "title": "GTX-C 언제 개통하지 (공정률 0% · 개통 미정)",
+      "state": "오너 확정",
+      "at": "2026-09-07",
+      "builder": "rail-line",
+      "content": "data/content/2026-09-07/rail-gtxc.json",
+      "png": "rail-gtxc-p1.png",
+      "md5": "6319a13dd19adf90586569adb2e7f228"
+    },
+    "12": {
+      "label": "rail-indong",
+      "title": "인덕원~동탄선 언제 개통하지 (공정률 20.4% · 2029년 말 목표)",
+      "state": "오너 확정",
+      "at": "2026-09-07",
+      "builder": "rail-line",
+      "content": "data/content/2026-09-07/rail-indong.json",
+      "png": "rail-indong-p1.png",
+      "md5": "2099c6e0f3511434faea5149d5694994"
+    },
+    "13": {
+      "label": "rail-wolpan",
+      "title": "월곶~판교선 언제 개통하지 (공정률 18.0% · 2029년 말 목표)",
+      "state": "오너 확정",
+      "at": "2026-09-07",
+      "builder": "rail-line",
+      "content": "data/content/2026-09-07/rail-wolpan.json",
+      "png": "rail-wolpan-p1.png",
+      "md5": "07dbb7901dbaf80cbcef0b3920c3d1df"
+    },
+    "14": {
+      "label": "rail-sinbundang",
+      "title": "신분당선 연장선 언제 개통하지 (공정률 17.25% · 2029년 말 목표)",
+      "state": "오너 확정",
+      "at": "2026-09-07",
+      "builder": "rail-line",
+      "content": "data/content/2026-09-07/rail-sinbundang.json",
+      "png": "rail-sinbundang-p1.png",
+      "md5": "2b8c831cf2b94323c669871c006fc4a4"
+    },
+    "15": {
+      "label": "rail-daejang",
+      "title": "대장홍대선 언제 개통하지 (공정률 9.7% · 2031년 목표)",
+      "state": "오너 확정",
+      "at": "2026-09-07",
+      "builder": "rail-line",
+      "content": "data/content/2026-09-07/rail-daejang.json",
+      "png": "rail-daejang-p1.png",
+      "md5": "a665b6e46b71c8f398b9030afce8ae04"
     }
-  ]
+  }
 }
