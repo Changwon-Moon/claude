@@ -67,8 +67,6 @@ for (const L of doc.lines) {
   if (!L.progressAsOf) throw new Error(`${L.name}: progressAsOf 가 없다`);
   if (L.progressAsOf !== doc.meta.asOf) throw new Error(`${L.name}: 공정률 기준일이 데이터셋과 다르다`);
   if (!(L.progress >= 0 && L.progress <= 100)) throw new Error(`${L.name}: 공정률이 0~100 밖이다: ${L.progress}`);
-  if (!L.openNote || !L.openNote.trim())
-    throw new Error(`${L.name}: 개통 목표에 근거(openNote) 가 없다 — 숫자만 적으면 승인된 사실로 읽힌다`);
 
   const all = [...L.stations, ...(L.branch?.stations || [])];
   for (const s of all) for (const k of s.xfer || []) if (!CAT[k]) missing.add(`${L.name}/${s.name}: ${k}`);
@@ -77,49 +75,78 @@ for (const L of doc.lines) {
   if (!selfKey || !CAT[selfKey]) throw new Error(`${L.name}: 카탈로그에 자기 노선(${selfKey}) 이 없다`);
   const lc = CAT[selfKey].color;
 
-  const prose = [L.openNote, L.shared || "", L.startNote || ""].join(" ");
+  const prose = [L.shared || "", L.badge || ""].join(" ");
   if (BAN.test(prose)) throw new Error(`${L.name}: 개통을 단정하는 표현이 있다 — 개통 목표는 목표치다`);
-  if (L.key === "gtxc" && /\b20[23]\d년?\s*(개통|준공)/.test(`${L.openNow} ${L.openNote}`.replace(/당초|2028년/g, "")))
+  if (L.key === "gtxc" && /\b20[23]\d/.test(L.openNow))
     throw new Error("GTX-C 는 준공 연도가 협약에서 삭제됐다 — 개통 연도를 쓰지 않는다");
 
-  const n = L.stations.length;
-  const avail = BODY_H - (L.branch ? BRANCH_H : 0) - (L.shared ? NOTE_H : 0);
-  const rowH = avail / n;
-  if (rowH < ROW_MIN)
-    throw new Error(`${L.name}: 역이 ${n}개라 행 높이가 ${rowH.toFixed(1)}px — 환승 뱃지(40px)가 삐져나온다. 상한 ${Math.floor(avail / ROW_MIN)}행`);
 
-  const mapSt = (s) => s.type === "gap"
+  const mapSt = (s, br) => s.type === "gap"
     ? { gap: s.text }
-    : { name: s.name, cls: MAP_CLS[s.state] ?? "", prov: PROV[s.state] || "", xfer: s.xfer || [] };
+    : { name: s.name, cls: MAP_CLS[s.state] ?? "", prov: PROV[s.state] || "", xfer: s.xfer || [], ...(br ? { br: true } : {}) };
+
+  /* 지선을 분기역 바로 뒤에 끼워 넣는다. 본선 레일은 그 구간도 관통한다 —
+   * 실제로 본선은 분기역에서 다음 본선역으로 계속 이어지기 때문이다. */
+  let rows, brail = null;
+  if (L.branch) {
+    const j = L.stations.findIndex((s) => s.name === L.branchAfter);
+    if (j < 0) throw new Error(`${L.name}: branchAfter 「${L.branchAfter}」 가 본선에 없다`);
+    const head = L.stations.slice(0, j + 1).map((s) => mapSt(s));
+    const brs = L.branch.stations.map((s) => mapSt(s, true));
+    const tail = L.stations.slice(j + 1).map((s) => mapSt(s));
+    rows = [...head, ...brs, ...tail];
+    const N = rows.length, bFirst = j + 1, bLast = j + L.branch.stations.length;
+    const pct = (v) => `${(v * 100).toFixed(3)}%`;
+    const cen = (i) => (i + 0.5) / N;
+    brail = {
+      label: L.branch.label,
+      left: "calc(var(--dotc) + var(--dotc) / 2 - var(--rail) / 2)",
+      top: pct(cen(bFirst)), h: pct(cen(bLast) - cen(bFirst)),
+      conL: "calc(var(--dotc) / 2 - var(--rail) / 2)",
+      conT: pct(cen(j)), conW: "var(--dotc)", conH: pct(cen(bFirst) - cen(j)),
+      labL: "calc(var(--dotc) * 2 + 6px)", labT: `calc(${pct(cen(j))} + 6px)`,
+    };
+  } else {
+    rows = L.stations.map((s) => mapSt(s));
+  }
+  const NROW = rows.length;
+  const mainIdx = rows.map((r, i) => (r.gap || !r.br ? i : -1)).filter((i) => i >= 0);
+  const rail = {
+    top: `${(((mainIdx[0] + 0.5) / NROW) * 100).toFixed(3)}%`,
+    h: `${(((mainIdx[mainIdx.length - 1] - mainIdx[0]) / NROW) * 100).toFixed(3)}%`,
+  };
+
+  const avail = BODY_H - (L.shared ? NOTE_H : 0);
+  const rowH = avail / NROW;
+  if (rowH < ROW_MIN)
+    throw new Error(`${L.name}: 행이 ${NROW}개라 행 높이가 ${rowH.toFixed(1)}px — 환승 뱃지(40px)가 삐져나온다. 상한 ${Math.floor(avail / ROW_MIN)}행`);
 
   const period = buildPeriod(L.start, L.openNow);
   const facts = [
-    { label: "착공", value: L.start, note: L.startNote || "" },
-    { label: "개통 목표", value: `당초 ${L.openWas} →`, now: L.openNow, note: L.openNote, open: true },
-    { label: "예상 공사기간", value: period.value, note: period.note },
-    { label: "연장 · 정거장", value: L.km, note: L.stationNote },
-    { label: "총사업비", value: L.cost, note: "" },
-    { label: "시행자", value: L.operator, note: L.operatorNote || "" },
+    { label: "착공", value: L.start },
+    { label: "예상 공사기간", value: period.value },
+    { label: "연장", value: L.km },
+    { label: "정거장", value: L.stationNote },
+    { label: "총사업비", value: L.cost },
+    { label: "시행자", value: L.operator },
   ];
 
   const card = {
-    template: "rail-line@1", date, lc, n,
+    template: "rail-line@1", date, lc, n: NROW, rail, ...(brail ? { brail } : {}),
     subtitle: `서울 수도권 주요 노선 · 공사 현황 · ${doc.meta.asOfLabel} 기준`,
-    title: `<span class="ln">‘${L.name}’</span> 언제 개통하지?`,
-    seg: L.seg, badge: L.badge, tone: L.tone,
+    title: `<span class="ln">${L.name}</span> 언제 개통하지?`,
+    badge: L.badge, tone: L.tone,
     prog: { value: String(L.progress), asOf: L.progressNote || `${doc.meta.asOfLabel} · 국가철도공단`,
             width: `${L.progress}%`, zero: L.progress === 0 },
-    facts, shared: L.shared || "",
-    stations: L.stations.map(mapSt),
-    ...(L.branch ? { branch: { label: L.branch.label, note: L.branch.note || "", stations: L.branch.stations.map(mapSt) } } : {}),
+    eta: { was: L.openWas, now: L.openNow },
+    facts, shared: L.shared || "", stations: rows,
     source: { name: L.src },
   };
   writeFileSync(join(outDir, `rail-${L.key}.json`), JSON.stringify(card, null, 2) + "\n");
 
   writeCaption(`rail-${L.key}`, [
     `${L.name} — 공정률 ${L.progress}%`, "",
-    `당초 ${L.openWas} 개통 목표였다. 지금은 ${L.openNow}.`,
-    L.openNote, "",
+    `당초 ${L.openWas} 개통 목표였다. 지금은 ${L.openNow}.`, "",
     `· 착공 ${L.start} · 예상 공사기간 ${period.value}`,
     `· ${L.km} · ${L.stationNote}`,
     L.shared ? `· 선로 공용 — ${L.shared}` : "", "",

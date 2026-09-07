@@ -104,25 +104,18 @@
         letter-spacing: -0.03em; white-space: nowrap;
       }
 
-      /* ── 지선 — 본선(세로) 아래 가로 한 줄.
-       * 세로 레일에서 꺾어 그리면 행 높이가 무너진다. 지선은 역이 2~4개뿐이라
-       * 가로 한 줄이 읽기도 쉽고 본선 배치도 안 건드린다. */
-      .rl-branch {
-        flex: 0 0 auto; margin-top: 14px; padding-top: 14px;
-        border-top: 2px dashed var(--wirit-ink-12);
+      /* ── 지선 — 본선에서 실제로 갈라져 나가는 Y 자 (오너 지시 2026-09-07)
+       * 행 높이가 모두 같으므로(flex:1 1 0) 행 i 의 중심은 (i+0.5)/N 이다.
+       * 레일 셋(본선·커넥터·지선)의 top/height 를 **빌더가 % 로 계산**해 인라인으로 준다 —
+       * CSS calc 로는 지선 역이 1개일 때(높이 0) 커넥터가 붕 뜬다. */
+      .rl-st.s-br { grid-template-columns: var(--dotc) var(--dotc) auto 1fr; }
+      .rl-brail { position: absolute; z-index: 0; width: var(--rail); border-radius: 4px; background: var(--lc); }
+      .rl-bcon {
+        position: absolute; z-index: 0;
+        border-left: var(--rail) solid var(--lc);
+        border-bottom: var(--rail) solid var(--lc);
+        border-bottom-left-radius: 18px;
       }
-      .rl-branch .bl {
-        font-size: 19px; font-weight: 800; color: #98a1ae;
-        letter-spacing: -0.02em; margin-bottom: 9px;
-      }
-      .rl-branch .bl i { font-style: normal; color: var(--lc); }
-      .rl-brow { display: flex; align-items: center; gap: 0; }
-      .rl-bst { display: flex; align-items: center; gap: 9px; flex: none; }
-      .rl-bst .d { width: 16px; height: 16px; border-radius: 50%; background: var(--lc); flex: none; }
-      .rl-bst.s-prov .d { background: #a9b1bd; }
-      .rl-bst .n { font-size: 23px; font-weight: 800; letter-spacing: -0.035em; white-space: nowrap; }
-      .rl-bst.s-prov .n { color: #7b8492; font-weight: 700; }
-      .rl-blink { flex: 1 1 auto; height: 5px; background: var(--lc); min-width: 14px; margin: 0 9px; border-radius: 3px; }
 
       /* ── 오른쪽: 일정 ─────────────────────────────────── */
       .rl-side { display: flex; flex-direction: column; min-height: 0; }
@@ -152,30 +145,36 @@
         background: repeating-linear-gradient(135deg, rgba(20,24,33,0.18) 0 2px, transparent 2px 9px);
       }
 
+      /* 개통 예상일 — 이 카드가 답하는 질문이다. 통화량 카드(gov-bars)의 강조 뱃지와
+       * 같은 규격: 흰→#fff0f1 그라디언트 · 레드 3px 테두리 · 레드 네온 글로우. */
+      .rl-eta {
+        flex: 0 0 auto; margin: 22px 0 24px;
+        border: 3px solid var(--wirit-red); border-radius: 16px;
+        background: linear-gradient(180deg, #ffffff 0%, #fff0f1 100%);
+        box-shadow: 0 0 14px rgba(229, 72, 77, 0.38), 0 3px 20px rgba(20, 24, 33, 0.10);
+        padding: 18px 22px 20px; text-align: center;
+      }
+      .rl-eta .lb { font-size: 21px; font-weight: 800; letter-spacing: -0.02em; }
+      .rl-eta .lb i { font-style: normal; color: #98a1ae; }
+      .rl-eta .was { margin-top: 8px; font-size: 20px; font-weight: 700; color: #98a1ae; letter-spacing: -0.02em; }
+      .rl-eta .now {
+        margin-top: 2px; font-size: 46px; font-weight: 800; line-height: 1.2;
+        color: var(--wirit-red); letter-spacing: -0.045em;
+      }
+
+      /* 나머지 정보는 한 줄에 라벨·값 — 줄마다 두 줄씩 쓰면 여백이 사라진다 */
       .rl-facts { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
       .rl-f {
         flex: 1 1 0; min-height: 0;
-        display: flex; flex-direction: column; justify-content: center; gap: 5px;
+        display: flex; align-items: baseline; gap: 14px;
         border-bottom: 2px solid var(--wirit-ink-06);
       }
-      .rl-f dt { font-size: 22px; font-weight: 800; color: #98a1ae; letter-spacing: 0.03em; }
+      .rl-f:last-child { border-bottom: none; }
+      .rl-f dt { flex: none; font-size: 21px; font-weight: 800; color: #98a1ae; letter-spacing: -0.02em; }
       .rl-f dd {
-        font-size: 30px; font-weight: 800; letter-spacing: -0.035em;
+        flex: 1 1 auto; text-align: right;
+        font-size: 28px; font-weight: 800; letter-spacing: -0.04em;
         line-height: 1.14; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      }
-      .rl-f.open dd { white-space: normal; text-overflow: clip; }
-      .rl-f em {
-        display: block; font-style: normal; font-size: 19px; font-weight: 600;
-        color: #98a1ae; letter-spacing: -0.02em; line-height: 1.35;
-        white-space: normal; margin-top: 3px;
-      }
-      /* 개통 목표 — 이 카드가 답하는 질문이라 한 칸만 크게 간다.
-       * 당초는 회색 작게, 화살표 뒤 현재 목표는 빨강 크게. 크기 차이가 곧 위계다. */
-      .rl-f.open { flex: 2.1 1 0; }
-      .rl-f.open dd { font-size: 24px; color: #98a1ae; font-weight: 700; }
-      .rl-f.open dd b {
-        display: block; margin-top: 4px; line-height: 1.18;
-        font-size: 42px; font-weight: 800; color: var(--wirit-red); letter-spacing: -0.045em;
       }
 
       /* ── 각주(선로 공용) — 노선도 열 안. 카드 폭을 가로지르면 우측 일정표가 눌린다. */
@@ -226,21 +225,23 @@
 
       <div class="rl-head">
         <h1 class="wirit-title">{{{title}}}</h1>
-        <div class="rl-seg">
-          <span class="sg">{{seg}}</span>
-          <span class="rl-badge t-{{tone}}">{{badge}}</span>
-        </div>
+        <div class="rl-seg"><span class="rl-badge t-{{tone}}">{{badge}}</span></div>
       </div>
 
       <div class="rl-body">
         <div class="rl-map">
           <div class="rl-sts">
-            <div class="rl-rail" aria-hidden="true"></div>
+            <div class="rl-rail" aria-hidden="true" style="top:{{rail.top}};height:{{rail.h}}"></div>
+            {{#if brail}}
+              <div class="rl-bcon" aria-hidden="true" style="left:{{brail.conL}};top:{{brail.conT}};width:{{brail.conW}};height:{{brail.conH}}"></div>
+              <div class="rl-brail" aria-hidden="true" style="left:{{brail.left}};top:{{brail.top}};height:{{brail.h}}"></div>
+            {{/if}}
             {{#each stations}}
               {{#if this.gap}}
                 <div class="rl-st s-gap"><span class="rl-gap">{{this.gap}}</span></div>
               {{else}}
-                <div class="rl-st {{this.cls}}">
+                <div class="rl-st {{this.cls}}{{#if this.br}} s-br{{/if}}">
+                  {{#if this.br}}<span></span>{{/if}}
                   <span class="rl-dot"></span>
                   <span class="rl-nm">{{this.name}}{{#if this.prov}}<i>{{this.prov}}</i>{{/if}}</span>
                   <span class="rl-xf">{{#each this.xfer}}{{{metroBadge this}}}{{/each}}</span>
@@ -248,17 +249,6 @@
               {{/if}}
             {{/each}}
           </div>
-          {{#if branch}}
-          <div class="rl-branch">
-            <div class="bl"><i>▸</i> {{branch.label}}{{#if branch.note}} · {{branch.note}}{{/if}}</div>
-            <div class="rl-brow">
-              {{#each branch.stations}}
-                {{#unless @first}}<span class="rl-blink"></span>{{/unless}}
-                <span class="rl-bst {{this.cls}}"><span class="d"></span><span class="n">{{this.name}}</span></span>
-              {{/each}}
-            </div>
-          </div>
-          {{/if}}
           {{#if shared}}<div class="rl-note"><b>선로 공용</b> · {{shared}}</div>{{/if}}
         </div>
 
@@ -269,12 +259,14 @@
             <div class="as">{{prog.asOf}}</div>
             <div class="rl-track{{#if prog.zero}} zero{{/if}}">{{#unless prog.zero}}<div class="rl-fill" style="width:{{prog.width}}"></div>{{/unless}}</div>
           </div>
+          <div class="rl-eta">
+            <div class="lb"><i>현실적인</i> 개통예상일</div>
+            <div class="was">당초 {{eta.was}}</div>
+            <div class="now">{{eta.now}}</div>
+          </div>
           <dl class="rl-facts">
             {{#each facts}}
-            <div class="rl-f{{#if this.open}} open{{/if}}">
-              <dt>{{this.label}}</dt>
-              <dd>{{this.value}}{{#if this.now}}<b>{{this.now}}</b>{{/if}}{{#if this.note}}<em>{{this.note}}</em>{{/if}}</dd>
-            </div>
+            <div class="rl-f"><dt>{{this.label}}</dt><dd>{{this.value}}</dd></div>
             {{/each}}
           </dl>
         </div>

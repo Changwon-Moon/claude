@@ -6,13 +6,14 @@
     "template",
     "date",
     "title",
-    "seg",
     "badge",
     "tone",
     "n",
+    "rail",
     "stations",
     "prog",
     "facts",
+    "eta",
     "source"
   ],
   "properties": {
@@ -26,9 +27,6 @@
       "type": "string"
     },
     "title": {
-      "type": "string"
-    },
-    "seg": {
       "type": "string"
     },
     "badge": {
@@ -74,6 +72,10 @@
           },
           "gap": {
             "type": "string"
+          },
+          "br": {
+            "type": "boolean",
+            "description": "지선 행"
           }
         }
       }
@@ -114,17 +116,6 @@
           },
           "value": {
             "type": "string"
-          },
-          "note": {
-            "type": "string"
-          },
-          "now": {
-            "type": "string",
-            "description": "개통 목표 행에서 화살표 뒤 값(빨강·크게)"
-          },
-          "open": {
-            "type": "boolean",
-            "description": "개통 목표 행 표시"
           }
         }
       }
@@ -137,31 +128,73 @@
     },
     "shared": {
       "type": "string",
-      "description": "선로 공용 구간 — 없으면 각주 자체를 그리지 않는다"
+      "description": "선로 공용 구간 — 없으면 각주를 안 그린다"
     },
-    "branch": {
+    "rail": {
       "type": "object",
-      "description": "지선 — 본선 아래 가로 한 줄",
+      "description": "본선 레일 위치(%) — 빌더가 행 인덱스로 계산",
+      "required": [
+        "top",
+        "h"
+      ],
+      "properties": {
+        "top": {
+          "type": "string"
+        },
+        "h": {
+          "type": "string"
+        }
+      }
+    },
+    "brail": {
+      "type": "object",
+      "description": "지선 레일·커넥터 위치 — 분기가 있는 노선만",
       "properties": {
         "label": {
           "type": "string"
         },
-        "note": {
+        "left": {
           "type": "string"
         },
-        "stations": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "cls": {
-                "type": "string"
-              }
-            }
-          }
+        "top": {
+          "type": "string"
+        },
+        "h": {
+          "type": "string"
+        },
+        "conL": {
+          "type": "string"
+        },
+        "conT": {
+          "type": "string"
+        },
+        "conW": {
+          "type": "string"
+        },
+        "conH": {
+          "type": "string"
+        },
+        "labL": {
+          "type": "string"
+        },
+        "labT": {
+          "type": "string"
+        }
+      }
+    },
+    "eta": {
+      "type": "object",
+      "description": "개통예상일 강조 카드",
+      "required": [
+        "was",
+        "now"
+      ],
+      "properties": {
+        "was": {
+          "type": "string"
+        },
+        "now": {
+          "type": "string"
         }
       }
     }
