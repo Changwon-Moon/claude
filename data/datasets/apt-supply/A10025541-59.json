@@ -1,0 +1,36 @@
+{
+  "kaptCode": "A10025541",
+  "kaptName": "신흥덕 롯데캐슬레이시티",
+  "type": "59",
+  "jibun": "736",
+  "exclusive": 59.573,
+  "commonResidential": 27.916,
+  "supply": 87.49,
+  "pyeong": 26.47,
+  "pyeongLabel": "26평",
+  "sampleDong": "101동",
+  "sampleHo": "1803",
+  "sampleCount": 212,
+  "ratio": 0.6809,
+  "parts": [
+    {
+      "purpose": "아파트 / 홀,계단(주거공용)",
+      "floor": "지상 각층",
+      "area": 20.2256
+    },
+    {
+      "purpose": "아파트 / 벽체",
+      "floor": "지상 18층",
+      "area": 6.1605
+    },
+    {
+      "purpose": "부대시설 / 홀,계단(기타공용)",
+      "floor": "각층 지3~지1",
+      "area": 1.5302
+    }
+  ],
+  "warn": "전용률 68.1% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것",
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

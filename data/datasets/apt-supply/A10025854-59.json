@@ -1,0 +1,25 @@
+{
+  "kaptCode": "A10025854",
+  "kaptName": "힐스테이트태전 한아람마을",
+  "type": "59",
+  "jibun": "702",
+  "exclusive": 59.729,
+  "commonResidential": 21.55,
+  "supply": 81.28,
+  "pyeong": 24.59,
+  "pyeongLabel": "25평",
+  "sampleDong": "1608",
+  "sampleHo": "604",
+  "sampleCount": 130,
+  "ratio": 0.7349,
+  "parts": [
+    {
+      "purpose": "아파트 / 벽체,계단실",
+      "floor": "지상 각층",
+      "area": 21.5503
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

@@ -1,0 +1,37 @@
+{
+  "kaptCode": "A10027122",
+  "kaptName": "동탄역 포레너스 입주자대표회의",
+  "type": "59",
+  "jibun": "720",
+  "exclusive": 60.377,
+  "commonResidential": 22.999,
+  "supply": 83.38,
+  "pyeong": 25.22,
+  "pyeongLabel": "25평",
+  "sampleDong": "479동",
+  "sampleHo": "1205",
+  "sampleCount": 30,
+  "ratio": 0.7242,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단실,승강기,홀",
+      "floor": "지상 각층",
+      "area": 17.2911
+    },
+    {
+      "purpose": "아파트 / 벽체",
+      "floor": "지상 12층",
+      "area": 5.7078
+    }
+  ],
+  "excludedFromCommon": [
+    {
+      "purpose": "아파트 / 지하주차장연결통로",
+      "area": 7.8139
+    }
+  ],
+  "excludedNote": "대장이 「주건축물」로 적었지만 주차장·대피소는 기타공용이라 공급면적에서 뺐다(2026-09-05). 이 줄을 넣으면 전용 60㎡ 가 30평으로 나온다 — 같은 타입 72곳의 중앙값은 25평이다.",
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

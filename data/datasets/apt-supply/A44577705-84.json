@@ -1,0 +1,30 @@
+{
+  "kaptCode": "A44577705",
+  "kaptName": "기안마을풍성신미주",
+  "type": "84",
+  "jibun": "895",
+  "exclusive": 84.801,
+  "commonResidential": 29.759,
+  "supply": 114.56,
+  "pyeong": 34.65,
+  "pyeongLabel": "35평",
+  "sampleDong": "112동",
+  "sampleHo": "902",
+  "sampleCount": 312,
+  "ratio": 0.7402,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단,승강기,외벽,복도",
+      "floor": "각층 각층",
+      "area": 23.384
+    },
+    {
+      "purpose": "아파트 / 동지하,계단실",
+      "floor": "각층 각층",
+      "area": 6.3748
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

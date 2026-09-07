@@ -1,0 +1,25 @@
+{
+  "kaptCode": "A44598820",
+  "kaptName": "태안주공1단지",
+  "type": "59",
+  "jibun": "809",
+  "exclusive": 59.47,
+  "commonResidential": 16.804,
+  "supply": 76.27,
+  "pyeong": 23.07,
+  "pyeongLabel": "23평",
+  "sampleDong": "112동",
+  "sampleHo": "1601호",
+  "sampleCount": 345,
+  "ratio": 0.7797,
+  "parts": [
+    {
+      "purpose": "아파트 / 복도,계단,승강기등",
+      "floor": "",
+      "area": 16.8043
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

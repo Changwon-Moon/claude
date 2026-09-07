@@ -1,0 +1,25 @@
+{
+  "kaptCode": "A44675301",
+  "kaptName": "신동백롯데캐슬에코1단지",
+  "type": "84",
+  "jibun": "1096",
+  "exclusive": 84.85,
+  "commonResidential": 28.088,
+  "supply": 112.94,
+  "pyeong": 34.16,
+  "pyeongLabel": "34평",
+  "sampleDong": "102동",
+  "sampleHo": "1504",
+  "sampleCount": 279,
+  "ratio": 0.7513,
+  "parts": [
+    {
+      "purpose": "아파트 / 벽체,계단실",
+      "floor": "지상 각층",
+      "area": 28.0876
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

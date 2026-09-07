@@ -1,0 +1,35 @@
+{
+  "kaptCode": "A44694209",
+  "kaptName": "수원동마을쌍용아파트",
+  "type": "84",
+  "jibun": "621",
+  "exclusive": 84.895,
+  "commonResidential": 30.985,
+  "supply": 115.88,
+  "pyeong": 35.05,
+  "pyeongLabel": "35평",
+  "sampleDong": "306동",
+  "sampleHo": "606호",
+  "sampleCount": 165,
+  "ratio": 0.7326,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단,승강기",
+      "floor": "각층",
+      "area": 16.879
+    },
+    {
+      "purpose": "아파트 / 대 피 소",
+      "floor": "지하 지1층",
+      "area": 7.148
+    },
+    {
+      "purpose": "아파트 / 벽체",
+      "floor": "각층",
+      "area": 6.958
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
