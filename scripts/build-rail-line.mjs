@@ -42,6 +42,9 @@ const BAN = /개통일\s*확정|확정\s*개통|개통\s*확정|준공\s*확정/
 /* 세로 예산 — 카드 1350 − 상단 72 − topcap − 머리(제목·구간·괘선) − 각주 − 푸터 ≈ 880px */
 const BODY_H = 880, ROW_MIN = 44, BRANCH_H = 108, NOTE_H = 62;
 
+const hexRgb = (h) => { const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; };
+const rgba = (h, a) => { const [r, g, b] = hexRgb(h); return `rgba(${r},${g},${b},${a})`; };
+
 const MAP_CLS = { 개통: "s-open", 미개통: "", 가칭: "s-prov", 역명미정: "s-prov", 추가역: "" };
 const PROV = { 가칭: "가칭", 역명미정: "역명 미정", 추가역: "추가역" };
 
@@ -100,19 +103,27 @@ for (const L of doc.lines) {
     const branch = L.branch.stations.map((s) => mapSt(s));
     const rowsInSplit = Math.max(main.length, branch.length);
     NROW = head.length + rowsInSplit;
+    /* 열 폭은 내용이 정한다 — 역명 글자수 × 26 + 뱃지 46 + 가칭 꼬리표 44 (실측 근사) */
+    const need = (rows) => Math.max(...rows.map((r) =>
+      r.gap ? 200 : r.name.length * 26 + (r.xfer?.length || 0) * 46 + (r.prov ? 44 : 0)), 120);
+    const wl = need(main), wr = need(branch);
     split = {
       flex: rowsInSplit, main, branch,
-      mainRail: main.length > 1
-        ? { top: pct(cen(0, rowsInSplit)), h: pct(cen(main.length - 1, rowsInSplit) - cen(0, rowsInSplit)) }
+      cols: `${Math.round(wl)}fr ${Math.round(wr)}fr`,
+      mainRail: main.length
+        ? { top: "0%", h: pct(cen(main.length - 1, rowsInSplit)) }
         : null,
       /* 지선 레일은 **분할 영역 맨 위**(커넥터가 건너온 지점)에서 시작해 마지막 역까지 */
       brRail: { top: "0%", h: pct(cen(branch.length - 1, rowsInSplit)) },
       /* 커넥터: 분기역 점(왼쪽 열 x)에서 오른쪽 열 첫 점까지. 분할 영역 기준 좌표라
        * top 은 음수(분기역은 분할 영역 위쪽 행에 있다) — 열 폭의 절반만큼 가로로 건넌다. */
       /* 커넥터: 분기역 점(분할 영역 위로 반 행)에서 오른쪽 열 첫 점(아래로 반 행)까지 = 정확히 한 행 */
+      /* 커넥터: 분기역 점(분할 영역 위로 반 행)에서 내려와 분할 상단에서 오른쪽으로 건넌다.
+       * 거기서부터는 지선 레일(top:0%)이 그대로 이어받아 꺾임이 끊기지 않는다. */
+      ...(main.length ? { conMain: true } : { conBranch: true }),
       con: main.length
-        ? { left: `calc(-100% - 10px + var(--dotc) / 2 - var(--rail) / 2)`, top: pct(-0.5 / rowsInSplit),
-            w: `calc(100% + 10px)`, h: pct(0.5 / rowsInSplit) }
+        ? { left: `calc(var(--dotc) / 2 - var(--rail) / 2)`, top: pct(-0.5 / rowsInSplit),
+            w: `calc(100% + 10px + var(--rail) / 2 + var(--dotc) / 2 - var(--dotc) / 2)`, h: pct(0.5 / rowsInSplit) }
         : { left: `calc(-44px + var(--dotc) / 2 - var(--rail) / 2)`, top: pct(-0.5 / rowsInSplit),
             w: "44px", h: pct(0.5 / rowsInSplit) },
     };
@@ -120,11 +131,11 @@ for (const L of doc.lines) {
     head = L.stations.map((s) => mapSt(s));
     NROW = head.length;
   }
-  const mainCount = L.branch ? head.length : NROW;
-  const rail = {
-    top: pct(cen(0, NROW)),
-    h: pct(cen(mainCount - 1, NROW) - cen(0, NROW)),
-  };
+  /* 분기가 있으면 본선 레일을 **분할 영역 상단까지** 잇는다 — 거기서 왼쪽 갈래 레일이 이어받는다.
+   * 분기역에서 끊으면 광명↔목감·금정↔의왕이 끊어져 보인다(2026-09-07 오너 지적). */
+  const rail = L.branch
+    ? { top: pct(cen(0, NROW)), h: `calc(${pct(head.length / NROW - cen(0, NROW))} + 2px)` }
+    : { top: pct(cen(0, NROW)), h: pct(cen(NROW - 1, NROW) - cen(0, NROW)) };
 
   const avail = BODY_H - (L.shared ? NOTE_H : 0);
   const rowH = avail / NROW;
@@ -144,11 +155,13 @@ for (const L of doc.lines) {
   const card = {
     template: "rail-line@1", date, lc, n: NROW, rail,
     subtitle: `서울 수도권 주요 노선 · 공사 현황 · ${doc.meta.asOfLabel} 기준`,
-    title: `<span class="ln">${L.name}</span> 언제 개통하지?`,
+    title: `<span class="ln">${L.name}</span> ${L.titleAsk || "언제 개통하지?"}`,
     badge: L.badge, tone: L.tone,
     prog: { value: String(L.progress), asOf: L.progressNote || `${doc.meta.asOfLabel} · 국가철도공단`,
             width: `${L.progress}%`, zero: L.progress === 0 },
     eta: { was: L.openWas, now: L.openNow },
+    etaBg: `linear-gradient(180deg,#ffffff 0%,${rgba(lc, 0.09)} 100%)`,
+    etaGlow: rgba(lc, 0.34),
     facts, shared: L.shared || "", head, ...(split ? { split } : {}),
     source: { name: L.src },
   };

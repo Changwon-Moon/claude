@@ -227,8 +227,23 @@
         },
         "con": {
           "type": "object"
+        },
+        "cols": {
+          "type": "string"
+        },
+        "conMain": {
+          "type": "boolean"
+        },
+        "conBranch": {
+          "type": "boolean"
         }
       }
+    },
+    "etaBg": {
+      "type": "string"
+    },
+    "etaGlow": {
+      "type": "string"
     }
   }
 }

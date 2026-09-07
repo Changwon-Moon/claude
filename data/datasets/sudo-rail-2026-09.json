@@ -265,7 +265,8 @@
             "인동"
           ]
         }
-      ]
+      ],
+      "titleAsk": "언제 완전 개통하지?"
     },
     {
       "key": "gtxb",
@@ -675,7 +676,7 @@
       "progressAsOf": "2026-06",
       "start": "2021.04",
       "openWas": "2025년",
-      "openNow": "2029년 12월",
+      "openNow": "2029년 말",
       "km": "39.8km",
       "stationNote": "11개역 · 전 구간 지하",
       "cost": "3조 2,665억원",
@@ -769,7 +770,7 @@
       "progressNote": "남부(광교~호매실) · 북부는 미착공",
       "start": "2024.07",
       "openWas": "2028년 말",
-      "openNow": "2029년 12월",
+      "openNow": "2029년 말",
       "km": "17.7km",
       "stationNote": "남부 5역 + 북부 3역",
       "cost": "3조 45억원",
@@ -814,42 +815,42 @@
           "xfer": []
         },
         {
-          "name": "광교",
-          "state": "개통",
+          "name": "수원월드컵경기장",
+          "state": "가칭",
+          "xfer": [
+            "인동"
+          ]
+        },
+        {
+          "name": "수성중사거리",
+          "state": "역명미정",
+          "xfer": []
+        },
+        {
+          "name": "화서",
+          "state": "미개통",
+          "xfer": [
+            "1"
+          ]
+        },
+        {
+          "name": "구운",
+          "state": "가칭",
+          "xfer": []
+        },
+        {
+          "name": "호매실",
+          "state": "가칭",
           "xfer": []
         }
       ],
-      "branchAfter": "광교",
+      "branchAfter": "광교중앙",
       "branch": {
-        "label": "광교 분기 · 남부연장",
+        "label": "광교 지선",
         "stations": [
           {
-            "name": "수원월드컵경기장",
-            "state": "가칭",
-            "xfer": [
-              "인동"
-            ]
-          },
-          {
-            "name": "수성중사거리",
-            "state": "역명미정",
-            "xfer": []
-          },
-          {
-            "name": "화서",
-            "state": "미개통",
-            "xfer": [
-              "1"
-            ]
-          },
-          {
-            "name": "구운",
-            "state": "가칭",
-            "xfer": []
-          },
-          {
-            "name": "호매실",
-            "state": "가칭",
+            "name": "광교",
+            "state": "개통",
             "xfer": []
           }
         ]

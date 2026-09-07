@@ -120,7 +120,7 @@
         position: absolute; z-index: 0;
         border-left: var(--rail) solid var(--lc);
         border-bottom: var(--rail) solid var(--lc);
-        border-bottom-left-radius: 18px;
+        border-bottom-left-radius: 12px;
       }
 
       /* ── 오른쪽: 일정 ─────────────────────────────────── */
@@ -157,11 +157,11 @@
        * 카드 규격은 통화량 카드(gov-bars)의 badges 와 같다. */
       .rl-f.eta { flex: 1.9 1 0; align-items: center; }
       .rl-f.eta dt { color: #98a1ae; }
+      /* 카드는 그 노선 색을 입는다 — 테두리·바탕·글로우·글자 모두(오너 지시 2026-09-07).
+       * 바탕과 글로우는 빌더가 노선색에서 만든 rgba 를 인라인으로 준다. */
       .rl-etabox {
         flex: 1 1 auto; margin-left: auto;
-        border: 3px solid var(--wirit-red); border-radius: 14px;
-        background: linear-gradient(180deg, #ffffff 0%, #fff0f1 100%);
-        box-shadow: 0 0 12px rgba(229, 72, 77, 0.34), 0 3px 16px rgba(20, 24, 33, 0.08);
+        border: 3px solid var(--lc); border-radius: 14px;
         padding: 12px 18px; text-align: right;
       }
       .rl-etabox .r { display: flex; align-items: baseline; justify-content: flex-end; gap: 10px; }
@@ -169,8 +169,8 @@
       .rl-etabox .k { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; }
       .rl-etabox .was .k, .rl-etabox .was .v { color: #98a1ae; }
       .rl-etabox .v { font-size: 27px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.2; white-space: nowrap; }
-      .rl-etabox .now .k { color: var(--wirit-red); }
-      .rl-etabox .now .v { color: var(--wirit-red); font-size: 32px; }
+      .rl-etabox .now .k { color: var(--lc); }
+      .rl-etabox .now .v { color: var(--lc); font-size: 32px; }
 
       /* 나머지 정보는 한 줄에 라벨·값 — 줄마다 두 줄씩 쓰면 여백이 사라진다 */
       .rl-facts { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
@@ -257,13 +257,14 @@
               {{> stRow}}
             {{/each}}
             {{#if split}}
-            <div class="rl-split{{#unless split.main.length}} solo{{/unless}}" style="flex:{{split.flex}} 1 0">
+            <div class="rl-split{{#unless split.main.length}} solo{{/unless}}" style="flex:{{split.flex}} 1 0;{{#if split.cols}}grid-template-columns:{{split.cols}}{{/if}}">
               <div class="rl-col" style="grid-template-rows:repeat({{split.flex}},1fr)">
                 {{#if split.mainRail}}<div class="rl-brail" aria-hidden="true" style="left:calc(var(--dotc)/2 - var(--rail)/2);top:{{split.mainRail.top}};height:{{split.mainRail.h}}"></div>{{/if}}
+                {{#if split.conMain}}<div class="rl-bcon" aria-hidden="true" style="left:{{split.con.left}};top:{{split.con.top}};width:{{split.con.w}};height:{{split.con.h}}"></div>{{/if}}
                 {{#each split.main}}{{> stRow}}{{/each}}
               </div>
               <div class="rl-col" style="grid-template-rows:repeat({{split.flex}},1fr)">
-                <div class="rl-bcon" aria-hidden="true" style="left:{{split.con.left}};top:{{split.con.top}};width:{{split.con.w}};height:{{split.con.h}}"></div>
+                {{#if split.conBranch}}<div class="rl-bcon" aria-hidden="true" style="left:{{split.con.left}};top:{{split.con.top}};width:{{split.con.w}};height:{{split.con.h}}"></div>{{/if}}
                 <div class="rl-brail" aria-hidden="true" style="left:calc(var(--dotc)/2 - var(--rail)/2);top:{{split.brRail.top}};height:{{split.brRail.h}}"></div>
                 {{#each split.branch}}{{> stRow}}{{/each}}
               </div>
@@ -283,7 +284,7 @@
           <dl class="rl-facts">
             <div class="rl-f eta">
               <dt>현실적인<br>개통 예상일</dt>
-              <div class="rl-etabox">
+              <div class="rl-etabox" style="background:{{etaBg}};box-shadow:0 0 12px {{etaGlow}},0 3px 16px rgba(20,24,33,0.08)">
                 <div class="r was"><span class="k">당초</span><span class="v">{{eta.was}}</span></div>
                 <div class="r now"><span class="k">변경</span><span class="v">{{eta.now}}</span></div>
               </div>
