@@ -1,0 +1,35 @@
+{
+  "kaptCode": "A42683705",
+  "kaptName": "성포예술인",
+  "type": "84",
+  "jibun": "583",
+  "exclusive": 84.87,
+  "commonResidential": 28.34,
+  "supply": 113.21,
+  "pyeong": 34.25,
+  "pyeongLabel": "34평",
+  "sampleDong": "7동",
+  "sampleHo": "1403호",
+  "sampleCount": 175,
+  "ratio": 0.7497,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단실",
+      "floor": "14층",
+      "area": 20.55
+    },
+    {
+      "purpose": "아파트 /",
+      "floor": "지1층",
+      "area": 6.09
+    },
+    {
+      "purpose": "아파트 / 보일러및공중변소",
+      "floor": "1층",
+      "area": 1.7
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

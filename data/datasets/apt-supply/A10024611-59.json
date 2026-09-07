@@ -1,0 +1,30 @@
+{
+  "kaptCode": "A10024611",
+  "kaptName": "더샵지제역센트럴파크1BL아파트",
+  "type": "59",
+  "jibun": "219-9",
+  "exclusive": 59.766,
+  "commonResidential": 19.725,
+  "supply": 79.49,
+  "pyeong": 24.05,
+  "pyeongLabel": "24평",
+  "sampleDong": "105동",
+  "sampleHo": "503",
+  "sampleCount": 155,
+  "ratio": 0.7519,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단실",
+      "floor": "지상 각층",
+      "area": 13.1346
+    },
+    {
+      "purpose": "아파트 / 벽체",
+      "floor": "지상 5층",
+      "area": 6.5904
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
