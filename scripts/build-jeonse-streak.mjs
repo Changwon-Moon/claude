@@ -73,7 +73,10 @@ const date = process.argv[2] || kstToday;
 /* ── 좌표 (매매 카드와 동일 규격 상속) ── */
 const RED = "#e5484d", COBALT = "#2e6bff", INK = "#141821", MUTE = "#9aa3af";
 const AXIS_X = 95, RIGHT = 915, TOP = 70, BASE = 560, VB_H = 625;   // 리드 확대(좌우 꽉참)에 맞춰 그래프 높이 낮춤
-const WMAX = N, YMAX = 17;
+const WMAX = N;
+/* y축 상한은 데이터에 맞춰 여유를 둔다 — 끝점이 천장에 붙지 않게(매매 카드와 동일 교정 2026-09-07) */
+const YMAX = Math.max(17, Math.ceil(Math.max(mae.cum, jeon.cum) + 1.5));
+const GRIDS = []; for (let g = 5; g < YMAX; g += 5) GRIDS.push(g);
 const xw = (w) => r1(AXIS_X + ((w - 1) / (WMAX - 1)) * (RIGHT - AXIS_X));
 const yp = (p) => r1(BASE - (p / YMAX) * (BASE - TOP));
 const y0 = yp(0);
@@ -81,8 +84,8 @@ const y0 = yp(0);
 const curve = (o) => { const pts = []; for (let k = 1; k <= o.run.weeks; k++) pts.push(`${xw(calAt(o, k))},${yp(o.cumAt(k))}`); return pts; };
 const maeCurve = curve(mae), jeonCurve = curve(jeon);
 
-const grid = [5, 10, 15].map((p) => ({ x1: AXIS_X, x2: RIGHT, y: yp(p) }));
-const ylabels = [0, 5, 10, 15].map((p) => ({ x: AXIS_X - 16, y: yp(p) + 9, text: `${p}` }));
+const grid = GRIDS.map((p) => ({ x1: AXIS_X, x2: RIGHT, y: yp(p) }));
+const ylabels = [0, ...GRIDS].map((p) => ({ x: AXIS_X - 16, y: yp(p) + 9, text: `${p}` }));
 const yunit = { x: AXIS_X - 16, y: TOP - 8, text: "(%)" };
 
 const areas = [
@@ -107,7 +110,7 @@ const vmarks = [
    (매매 카드 때 배운 것: 그래픽 위 라벨은 자리가 없으면 억지로 얹지 않는다) */
 const vlabels = [];
 const xlabels = [
-  { x: AXIS_X, y: BASE + 46, text: "1주차", fill: MUTE, anchor: "middle" },
+  { x: AXIS_X, y: BASE + 46, text: "1주차", fill: MUTE, anchor: "start" }   /* y축 "0" 라벨과 겹침 방지(2026-09-07) */,
   { x: ex, y: BASE + 46, text: `${N}주`, fill: INK, anchor: "end" },
 ];
 const legend = [

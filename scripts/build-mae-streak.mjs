@@ -94,7 +94,11 @@ if (ratio < 1.9) throw new Error(`누적 배수 ${ratio} 가 2배 미만 — 제
 /* ── 좌표 (뷰박스 1000×715 — 그래프 높이 살짝 축소) ── */
 const RED = "#e5484d", SLATE = "#5b6b7f", INK = "#141821", MUTE = "#9aa3af";
 const AXIS_X = 95, RIGHT = 915, TOP = 70, BASE = 650, VB_H = 715;
-const WMAX = Math.max(curWeeks, recWeeks), YMAX = 17;
+const WMAX = Math.max(curWeeks, recWeeks);
+/* y축 상한은 데이터에 맞춰 여유를 둔다 — 끝점 값 라벨이 차트 위로 잘리지 않게(2026-09-07).
+   16.94% 가 상한 17 에 닿아 '+16.94%' 윗변이 뷰박스 밖(-4px)으로 나갔다. 최소 1.5%p 헤드룸. */
+const YMAX = Math.max(17, Math.ceil(Math.max(curCum, recCum) + 1.5));
+const GRIDS = []; for (let g = 5; g < YMAX; g += 5) GRIDS.push(g);
 const xw = (w) => r1(AXIS_X + ((w - 1) / (WMAX - 1)) * (RIGHT - AXIS_X));   // 1주차 = 좌축
 const yp = (p) => r1(BASE - (p / YMAX) * (BASE - TOP));
 const y0 = yp(0);
@@ -106,8 +110,8 @@ const curvePts = (r) => {
 };
 const curCurve = curvePts(current), recCurve = curvePts(record);
 
-const grid = [5, 10, 15].map((p) => ({ x1: AXIS_X, x2: RIGHT, y: yp(p) }));
-const ylabels = [0, 5, 10, 15].map((p) => ({ x: AXIS_X - 16, y: yp(p) + 9, text: `${p}` }));
+const grid = GRIDS.map((p) => ({ x1: AXIS_X, x2: RIGHT, y: yp(p) }));
+const ylabels = [0, ...GRIDS].map((p) => ({ x: AXIS_X - 16, y: yp(p) + 9, text: `${p}` }));
 const yunit = { x: AXIS_X - 16, y: TOP - 8, text: "(%)" };
 
 const areas = [
@@ -137,11 +141,11 @@ const vlabels = [
 /* 타이(gap 0)면 두 끝점이 같은 x 라 라벨을 하나로 합친다 — 겹쳐 찍지 않는다. */
 const xlabels = gap === 0
   ? [
-      { x: AXIS_X, y: BASE + 46, text: "1주차", fill: MUTE, anchor: "middle" },
+      { x: AXIS_X, y: BASE + 46, text: "1주차", fill: MUTE, anchor: "start" }   /* y축 "0" 라벨과 겹침 방지(2026-09-07) */,
       { x: cx, y: BASE + 46, text: `${curWeeks}주`, fill: INK, anchor: "end" },
     ]
   : [
-      { x: AXIS_X, y: BASE + 46, text: "1주차", fill: MUTE, anchor: "middle" },
+      { x: AXIS_X, y: BASE + 46, text: "1주차", fill: MUTE, anchor: "start" }   /* y축 "0" 라벨과 겹침 방지(2026-09-07) */,
       { x: cx, y: BASE + 46, text: `${curWeeks}주`, fill: RED, anchor: "end" },
       { x: rx, y: BASE + 46, text: `${recWeeks}주`, fill: SLATE, anchor: "start" },
     ];
