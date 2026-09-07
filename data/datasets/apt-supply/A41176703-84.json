@@ -1,0 +1,30 @@
+{
+  "kaptCode": "A41176703",
+  "kaptName": "일산파밀리에4단지",
+  "type": "84",
+  "jibun": "1535",
+  "exclusive": 84.57,
+  "commonResidential": 28.603,
+  "supply": 113.17,
+  "pyeong": 34.23,
+  "pyeongLabel": "34평",
+  "sampleDong": "413동",
+  "sampleHo": "1201",
+  "sampleCount": 94,
+  "ratio": 0.7473,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단실,승강기",
+      "floor": "지상 각층",
+      "area": 20.5634
+    },
+    {
+      "purpose": "아파트 / 벽체",
+      "floor": "지상 12층",
+      "area": 8.04
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

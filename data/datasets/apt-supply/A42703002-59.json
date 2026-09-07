@@ -1,0 +1,31 @@
+{
+  "kaptCode": "A42703002",
+  "kaptName": "과천래미안슈르",
+  "type": "59",
+  "jibun": "4",
+  "exclusive": 59.973,
+  "commonResidential": 26.374,
+  "supply": 86.35,
+  "pyeong": 26.12,
+  "pyeongLabel": "26평",
+  "sampleDong": "309동",
+  "sampleHo": "904",
+  "sampleCount": 87,
+  "ratio": 0.6946,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단실,ELEV.",
+      "floor": "각층 각층",
+      "area": 21.623
+    },
+    {
+      "purpose": "아파트 / 벽체면적",
+      "floor": "각층 각층",
+      "area": 4.751
+    }
+  ],
+  "warn": "전용률 69.5% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것",
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
