@@ -81,7 +81,17 @@ for (const L of doc.lines) {
   if (L.key === "gtxc" && /\b20[23]\d년?\s*개통/.test(prose))
     throw new Error("GTX-C 는 준공 연도가 실시협약에서 삭제됐다 — 개통 연도를 쓰지 않는다");
 
-  /* ⑤ 세로 */
+  /* ⑤ 개통·준공 시점에는 반드시 근거를 붙인다 (2026-09-07 사고)
+   * 신안산선 개통을 '2028.12' 라고만 적었는데, 국토부가 **승인**한 마지막 목표는 2026.12 이고
+   * 2028.12 는 실시계획 변경 '신청안'이자 전동차 납품 시한이었다. 숫자만 적으면 승인된
+   * 사실로 읽힌다 — 개통·준공 줄은 note(당초 목표·승인 상태·산정 근거)가 없으면 던진다. */
+  for (const f of L.facts) {
+    if (!/개통|준공/.test(f.label)) continue;
+    if (!f.note || !f.note.trim())
+      throw new Error(`${L.name}: '${f.label}' 에 근거(note) 가 없다 — 개통 시점은 당초 목표·승인 상태·산정 근거를 반드시 병기한다`);
+  }
+
+  /* ⑥ 세로 */
   const n = L.stations.length;
   const rowH = BODY_H / n;
   if (rowH < ROW_MIN)
