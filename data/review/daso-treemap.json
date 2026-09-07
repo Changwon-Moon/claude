@@ -1,17 +1,11 @@
 {
   "label": "daso-treemap",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 2장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
-      "file": "daso-treemap-p1.json",
-      "deterministic": true,
-      "qaErrors": 0,
-      "findings": []
-    },
-    {
-      "file": "daso-treemap-p2.json",
+      "file": "daso-treemap.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []

@@ -213,61 +213,117 @@ function buildPlot(rows, plotW, plotH) {
   return { tiles, noVal };
 }
 
-/* ── ⑥ 표 ─────────────────────────────────────────────────── */
-const TAB_W = 420;
-function buildTable(rows, head, plotH) {
+/* ── ⑥ 표 ─────────────────────────────────────────────────────
+ * 트리맵이 크기를 보여 주고, 표가 값을 읽게 한다. **모든 구간이 표에 있다.**
+ *
+ * ⚠️ 글자 크기를 손으로 못박지 않는다. 판 폭을 조금만 바꿔도 표에 남는 폭이 달라지고,
+ * 그때마다 「이름이 말줄임(…)으로 잘렸다」로 designQa 가 막는다(실제로 겪었다).
+ * 후보를 큰 것부터 대 보고 **전부 들어가는 첫 조합**을 고른다 — 자리가 바뀌면 알아서 줄어든다. */
+const PRESETS = {
+  few: [{ hd: 19, nm: 30, v1: 44, v2: 26, cols: "14px 1fr 128px" }],
+  mid: [
+    { hd: 17, nm: 26, v1: 26, v2: 19, cols: "14px 1fr 118px 106px" },
+    { hd: 17, nm: 23, v1: 24, v2: 18, cols: "14px 1fr 110px 100px" },
+    { hd: 16, nm: 21, v1: 22, v2: 17, cols: "14px 1fr 100px 94px" },
+  ],
+  many: [
+    { hd: 17, nm: 21, v1: 21, v2: 18, cols: "14px 1fr 92px 96px" },
+    { hd: 16, nm: 19, v1: 19, v2: 16, cols: "14px 1fr 84px 88px" },
+  ],
+};
+function buildTable(rows, head, plotH, tabW) {
   const n = rows.length;
   const hasV2 = rows.some((r) => r.rawTxt);
-  /* 행 수에 따라 글자 크기를 고른다 — 손으로 정하면 행이 늘 때 넘친다. */
-  const P = n <= 5 ? { hd: 19, nm: 30, v1: 44, v2: 26, cols: "14px 1fr 128px" }
-    : n <= 10 ? { hd: 17, nm: 26, v1: 26, v2: 19, cols: "14px 1fr 118px 106px" }
-      : { hd: 17, nm: 21, v1: 21, v2: 18, cols: "14px 1fr 92px 96px" };
-  const headH = P.hd + 11;
-  const t = {
-    cols: hasV2 ? P.cols : "14px 1fr 128px",
-    head, hdPx: P.hd, nmPx: P.nm, v1Px: P.v1,
-    rowH: 0, rowFlex: "1 1 0",
-    rows: rows.map((r) => ({ label: r.label, v1: r.valueTxt, ...(r.rawTxt ? { v2: r.rawTxt } : {}), bg: r.bg })),
+  const cands = n <= 5 ? PRESETS.few : n <= 10 ? PRESETS.mid : PRESETS.many;
+
+  const fits = (P) => {
+    const cols = hasV2 ? P.cols : "14px 1fr 128px";
+    const fixed = cols.split(" ").filter((c) => c.endsWith("px")).reduce((a, c) => a + parseFloat(c), 0);
+    const colW = cols.split(" ").filter((c) => c.endsWith("px")).map(parseFloat);
+    const nameW = tabW - fixed - (cols.split(" ").length - 1) * 10;
+    if (nameW < 60) return null;
+    for (const r of rows) {
+      if (textW(r.label, P.nm) > nameW) return null;
+      if (textW(r.valueTxt, P.v1) > colW[1]) return null;
+      if (r.rawTxt && textW(r.rawTxt, P.v2) > colW[2]) return null;
+    }
+    for (let i = 0; i < head.length; i++) {
+      const w = i === 0 ? nameW : colW[i];
+      if (textW(head[i], P.hd) > w) return null;
+    }
+    return cols;
   };
-  if (hasV2) t.v2Px = P.v2;
-  if ((plotH - headH) / n < 30) throw new Error(`표 행이 너무 얇다 — 행이 ${n}개면 판을 키우거나 구간을 묶는다`);
-  /* 열마다 가장 긴 값이 들어가는지 — 안 들어가면 말줄임(…)이 되고 designQa 가 error 로 막는다.
-   * 여기서 먼저 잡아 무엇이 문제인지 이름으로 말해 준다. */
-  const fixed = t.cols.split(" ").filter((c) => c.endsWith("px")).reduce((a, c) => a + parseFloat(c), 0);
-  const gaps = (t.cols.split(" ").length - 1) * 10;
-  const nameW = TAB_W - fixed - gaps;
-  const colW = t.cols.split(" ").filter((c) => c.endsWith("px")).map(parseFloat);
-  for (const r of rows) {
-    if (textW(r.label, t.nmPx) > nameW) throw new Error(`표 이름 열이 좁다: "${r.label}" (${Math.round(textW(r.label, t.nmPx))}px > ${nameW}px)`);
-    if (textW(r.valueTxt, t.v1Px) > colW[1]) throw new Error(`표 비중 열이 좁다: "${r.valueTxt}"`);
-    if (r.rawTxt && textW(r.rawTxt, t.v2Px) > colW[2]) throw new Error(`표 원지수 열이 좁다: "${r.rawTxt}"`);
+
+  for (const P of cands) {
+    const cols = fits(P);
+    if (!cols) continue;
+    if ((plotH - (P.hd + 11)) / n < 30) continue;
+    const t = {
+      cols, head, hdPx: P.hd, nmPx: P.nm, v1Px: P.v1,
+      rowH: 0, rowFlex: "1 1 0",
+      rows: rows.map((r) => ({ label: r.label, v1: r.valueTxt, ...(r.rawTxt ? { v2: r.rawTxt } : {}), bg: r.bg })),
+    };
+    if (hasV2) t.v2Px = P.v2;
+    return t;
   }
-  return t;
+  throw new Error(`표가 폭 ${tabW}px 에 안 들어간다 (행 ${n}개) — 판 폭을 줄이거나 구간을 묶는다`);
 }
 
-/* '주택'이라 쓰면 오보다 — 이 판형의 모집단은 집합건물이다. */
+/* '주택'이라 쓰면 오보다 — 이 판형의 모집단은 집합건물이다(단독주택 제외 · 오피스텔 포함).
+ *
+ * ── 제목만 예외다. 그리고 **공짜 예외가 아니다** (오너 2026-09-07)
+ * 오너가 「2026년 현재, 다주택자 비율?」로 가자고 했다. 일상어로 후킹하고 정확한 정의는
+ * 카드가 붙여 준다는 판단이다. 맞는 판단이지만, **정의가 붙어 있을 때만** 맞다 —
+ * 나중에 킥커나 각주를 지우면 제목만 남아 그때부터 오보가 된다.
+ * 그래서 예외에 조건을 건다: 킥커가 지표명을 밝히고, 각주가 두 낱말을 풀어야 한다.
+ * 셋 중 하나라도 빠지면 빌드가 멈춘다. 「나중에 누가 지울까」를 사람 기억에 맡기지 않는다. */
+/* 요약 한 줄이 카드 폭(안쪽 936px)을 넘는지 — 넘으면 둘째 줄로 흘러 레이아웃이 무너진다.
+ * 태그를 걷어낸 글자만 잰다. 32px 는 .tm-sum 의 크기이고, 한쪽을 바꾸면 반대쪽도 바꾼다. */
+function fitsOneLine(html, px = 32, avail = 936) {
+  const plain = String(html).replace(/<[^>]+>/g, "");
+  const w = textW(plain, px);
+  if (w > avail) throw new Error(`요약이 한 줄을 넘는다 (${Math.round(w)}px > ${avail}px): "${plain}"`);
+}
+
 function noHousingWord(card) {
-  const bad = JSON.stringify(card).match(/주택수|다주택|[0-9]주택/g);
-  if (bad) throw new Error(`카드 문구에 '주택' 표현이 있다: ${[...new Set(bad)].join(", ")} — 모집단은 집합건물이다`);
+  const body = JSON.stringify({ ...card, title: undefined });
+  const bad = body.match(/주택수|다주택|[0-9]주택/g);
+  if (bad) throw new Error(`카드 본문에 '주택' 표현이 있다: ${[...new Set(bad)].join(", ")} — 모집단은 집합건물이다`);
+
+  if (/다주택/.test(card.title)) {
+    const notes = (card.notes || []).join(" ");
+    if (!/집합건물\s*다소유지수/.test(card.subtitle || ""))
+      throw new Error("제목이 '다주택'을 쓰는데 킥커가 「집합건물 다소유지수」를 안 밝힌다 — 둘은 짝이다");
+    if (!/집합건물<\/b>\s*:/.test(notes))
+      throw new Error("제목이 '다주택'을 쓰는데 각주에 「집합건물」 풀이가 없다");
+    if (!/다소유지수<\/b>\s*:/.test(notes))
+      throw new Error("제목이 '다주택'을 쓰는데 각주에 「다소유지수」 풀이가 없다");
+  }
 }
 
 /* ── ⑦ 카드 ───────────────────────────────────────────────── */
-const PLOT_W = 490, PLOT_GAP = 26, PLOT_H = 742;
+/* 판 크기 — 트리맵은 오른쪽, 표는 왼쪽. 카드 높이에서 머리·요약·각주·푸터를 뺀 나머지를
+ * 판이 **전부** 가져간다. 제목 상자를 고정 높이로 못박았으므로 이 값은 제목 길이와 무관하다. */
+/* 판 폭 520 — 490 이면 「10채 이상」 칸이 81px 라 채수만 들어간다(실측 스윕).
+ * 520 에서 147×84 가 되어 아홉 칸 전부가 채수 + 비중을 담는다. 표는 남는 390px 를 쓴다. */
+const PLOT_W = 520, PLOT_GAP = 26, PLOT_H = 786;
 
 /* 제목 후보 — 오너가 고른다(--title <번호>). 전부 **계산이 확인한 말**만 쓴다:
- *   「열에 일곱」 = 2채 69.19%  ·  「열에 아홉」 = 2+3+4채 90.64%
- * ⚠️ '다주택'은 쓰지 않는다 — 이 자료의 모집단은 집합건물이라 단독주택이 빠지고
- *    오피스텔·상가가 들어간다. noHousingWord() 가 실제로 막는다. */
+ *   「열에 일곱」 = 2채 69.19%  ·  「열에 아홉」 = 2+3+4채 90.64%  ·  「100명 중 3명」 = 10채 이상 2.95% */
 const TITLES = [
+  /* 오너 확정 2026-09-07. '다주택자'는 일상어이고 이 자료의 모집단(집합건물)과 정확히 같지는
+   * 않다 — 그래서 **킥커가 지표명을 밝히고 각주가 두 낱말을 풀어 줄 때만** 쓴다.
+   * 그 조건을 noHousingWord() 가 실제로 검사한다(문구를 지우면 빌드가 멈춘다). */
+  `2026년 현재, <span class="hi">다주택자 비율</span>?`,
   `두 채가 <span class="hi">열에 일곱</span>`,
   `2026년 현재, <span class="hi">몇 채씩</span> 갖고 있나`,
   `열에 아홉은 <span class="hi">네 채 안쪽</span>`,
   `여러 채라고 <span class="hi">다 같지 않다</span>`,
-  `2채 이상 100명 중 <span class="hi">69명이 딱 2채</span>`,
   `10채 이상은 <span class="hi">100명 중 3명</span>`,
 ];
 const titleArg = (() => { const i = argv.indexOf("--title"); return i >= 0 ? Number(argv[i + 1]) : 0; })();
 if (!TITLES[titleArg]) throw new Error(`없는 제목 번호: ${titleArg} (0~${TITLES.length - 1})`);
+
 const SRC = { name: "법원 등기정보광장 등기지수", asOf: "2026년 8월" };
 
 function makeCard(palKey) {
@@ -295,23 +351,21 @@ function makeCard(palKey) {
     /* 표가 왼쪽, 트리맵이 오른쪽 (오너 2026-09-07) */
     plot: { w: PLOT_W, h: PLOT_H, gap: PLOT_GAP, side: "right" },
     tiles: plot.tiles,
-    table: buildTable(rows, ["보유 채수", "비중", "원지수"], PLOT_H),
+    table: buildTable(rows, ["보유 채수", "비중", "원지수"], PLOT_H, 936 - PLOT_W - PLOT_GAP),
+    /* 제목이 「비율?」을 물으므로 **답이 첫머리에** 온다. 그 다음이 속을 연 결과다.
+     * 두 값 모두 위에서 계산한 것이다 — 손으로 적지 않는다.
+     * ⚠️ **한 줄을 넘기지 않는다.** 넘치면 마지막 값만 둘째 줄에 홀로 떨어져 보기 흉하다
+     * (실제로 그랬다). 아래 fitsOneLine() 이 폭을 재서 막는다. */
     summary:
-      `2채가 <b>${two.toFixed(1)}%</b> · 3채까지 더하면 <b>${(two + three).toFixed(1)}%</b> · ` +
-      `10채 이상은 <b>${ten.toFixed(1)}%</b>`,
-    /* ※ 용어 풀이 — 이 카드의 두 낱말은 일상어가 아니다. 안 풀면 독자가 '주택'으로 읽는다.
-     * 세 번째 줄은 **묶은 것을 숨기지 않겠다는 약속**이다 — 원자료의 일곱 칸을 그대로 적는다. */
+      `소유자의 <b>${multiSum.toFixed(1)}%</b>가 2채 이상 · 그중 <b>${two.toFixed(1)}%</b>는 2채`,
     notes: [
       `※ <b>집합건물</b> : 아파트 · 오피스텔 · 연립 · 다세대 등 구분소유 건물 (단독주택 제외)`,
-      `※ <b>다소유지수</b> : 집합건물 소유자 중 2채 이상 보유자 비율 — 표의 '원지수'가 그 값입니다`,
-      /* 구간 이름은 **키에서** 만든다 — 라벨에서 '채'를 빼면 「101채 이상」이 「101 이상」이 돼
-       * 「101 이상채 이상」 같은 말이 나온다(실제로 한 번 나왔다). */
-      `※ <b>10채 이상</b> : 원자료 일곱 구간(${tail.map((m) => (m.key === "101+" ? "101채 이상" : m.key.replace("-", "~"))).join(" · ")}) 합계 ${tailV}%`,
-      `※ 2026년 8월 말 기준 <b>잠정치</b>입니다 — 신청 후 등기가 완료되지 않은 건이 있을 수 있습니다`,
+      `※ <b>다소유지수</b> : 집합건물 소유자 중 2채 이상 보유자 비율`,
     ],
     source: SRC,
   };
   noHousingWord(card);
+  fitsOneLine(card.summary);
   return { card, noVal: plot.noVal, palName: pal.name };
 }
 
