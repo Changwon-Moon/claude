@@ -194,6 +194,28 @@ const caption = [
 ].join("\n");
 writeCaption("supply-progress", caption); // ⚠️ 서명은 writeCaption 이 붙인다
 
+/* ── 카톡 공유용 — 인스타 캡션과 다른 물건이다(CAPTION.md §9) ──
+ * 카톡은 링크 미리보기 없이 글자만으로 눈에 들어와야 하고 이미지가 글 위에 붙는다.
+ * 그래서 앞은 숫자로 세우고 뒤는 접는다. 숫자는 전부 위에서 계산한 값이다 —
+ * 카드를 보고 옮겨 적지 않는다. 서명은 붙이지 않는다(인스타 캡션 전용).
+ * 오너에겐 **채팅 텍스트로** 드리고, 이 파일은 기록용이다. */
+const kakao = [
+  `🏗 이재명 정부 수도권 공급대책, 1주년 성적표`,
+  ``,
+  `1️⃣ 총목표 ${Math.round(man(totalGoal))}만호 중 착공 ${f1(man(ACT))}만호`,
+  `2️⃣ 달성률 ${f1(rate)}% · 남은 물량 ${f1(man(remain))}만호`,
+  `3️⃣ 올해 목표 ${f1(man(firstYear.ho))}만호 대비 ${f1(firstRate)}%`,
+  ``,
+  `’25년 9.7대책 ${Math.round(man(planSum))}만호`,
+  `+ ’26년 8.13대책 ${Math.round(man(ADD.ho))}만호 👆`,
+  ``,
+  `📊 수도권 신규 착공 기준`,
+  `   국토부 ’${doc.actual.asOf.slice(2, 4)}년 ${Number(doc.actual.asOf.slice(5))}월 주택통계 (1~7월 누계)`,
+].join("\n");
+const kakaoDir = join(ROOT, "data/review/captions/_kakao");
+mkdirSync(kakaoDir, { recursive: true });
+writeFileSync(join(kakaoDir, "supply-progress.txt"), kakao + "\n", "utf8");
+
 console.log(`🏗  supply-progress — ${publish ? "data/content" : "_spike"}/${date}`);
 console.log(`   총목표 ${f1(man(totalGoal))}만호 = 9·7 ${f1(man(planSum))} + 8·13 ${f1(man(ADD.ho))}`);
 console.log(`   착공 ${f1(man(ACT))}만호 → 총 달성률 ${f1(rate)}% · 첫해(${firstYear.year}) 대비 ${f1(firstRate)}%`);
