@@ -83,7 +83,30 @@
 
 ## 4. 타이포그래피
 
-**폰트 시스템 (2026-07-18 확정 · 2026-07-23 제목 폰트 변경)**: 3개 역할로 분리.
+**폰트 시스템 (2026-07-18 확정 · 07-23 제목 폰트 변경 · 2026-09-07 새 판형 세트 교체)**
+
+### ⭐ 새로 만드는 판형은 `font-taebaek-pretendard` 를 붙인다 (2026-09-07 오너 확정)
+
+| 역할 | CSS 변수 | 폰트 | 이유 |
+|---|---|---|---|
+| 헤드라인(제목) | `--font-title` | **태백체(TAEBAEK)** | 개성 강한 지오메트릭 디스플레이 |
+| 숫자(수치·순위·등락) | `--font-num` | **Pretendard** | 한 글꼴로 통일 — 강조는 글꼴이 아니라 **색과 크기**가 맡는다 |
+| 본문·라벨·캡션 | `--font-sans` | **Pretendard** | 긴 텍스트 가독성 |
+
+**Wanted Sans 는 퇴역한다.** 카드에 남는 자리는 로고 뱃지(`.wirit-corner .mark`) 하나뿐이고,
+그건 폰트 시스템이 아니라 **CI** 라 이 결정의 대상이 아니다(바꾸려면 별도 결정).
+
+> 🔒 **`:root` 기본값은 안 바꾼다 — 옛 카드를 지키기 위해서다.**
+> `--font-num` 을 갈면 확정본 **51개 세트**와 `--font-num` 을 쓰는 **판형 33개**가
+> 다시 그려질 때 픽셀이 전부 바뀐다. 「발행본·확정본 픽셀 불변」(CLAUDE.md §8)이 금지하는 바로 그 일이고,
+> 그 규칙이 말하는 **"새 스타일은 variant 로 격리"** 가 이 세트다.
+> 새 판형이 쌓이며 자연히 갈아탄다 — **일괄 소급 전환은 하지 않는다.**
+
+⚠️ **태백체를 숫자에 쓰지 않는다.** 자폭이 넓고 tabular(고정폭) 숫자가 없어
+표·순위·연속된 수치에 쓰면 자릿수마다 폭이 달라져 열이 흔들린다.
+제목과 「단독으로 크게 서는 수치」까지가 한계다.
+
+### 기존 판형 — 하이브리드 (`:root` 기본값, 2026-07-18 확정)
 
 | 역할 | CSS 변수 | 폰트 | 이유 |
 |---|---|---|---|
@@ -94,9 +117,9 @@
 - base.css @font-face 번들(Pretendard/Wanted Sans/Black Han Sans/**태백체**). Black Han Sans는 미사용(특집 옵션 보존).
 - **태백체는 WOFF2 번들만 사용**: 원본 OTF(CFF+세로메트릭 vhea/vmtx)는 Chromium OTS가 거부해 렌더에서 폴백됨 → `scripts/font_pipeline.py`+`font-convert.yml`(Actions)에서 OTS 정화·CFF→TTF 변환 후 `TAEBAEK.woff2` 생성. **새 폰트 도입 시 반드시 이 파이프라인으로 WOFF2 변환 후 사용**(OTF 직접 참조 금지). 태백체는 단일 웨이트라 @font-face `font-weight:100 900`으로 선언해 전 웨이트 요청을 매핑(폴백 이탈 방지).
 - 태백체는 Wanted Sans보다 자폭이 넓다 → nowrap 제목은 크기/여백 재확인 필수(예: index-2026 제목 78→64px).
-- 실험용 전환 클래스: `font-pretendard` / `font-wanted` / `font-wanted-blackhan` (카드 루트). 미지정 시 위 확정 하이브리드.
-- 위계: 제목 ExtraBold~Black(자간 타이트) / 수치 Bold(Wanted) / 라벨·캡션 Regular(Pretendard, 블루그레이)
-- 숫자 tabular figures(고정폭) — 표 정렬 품질의 핵심.
+- 전환 클래스(카드 루트): **`font-taebaek-pretendard`(새 판형 기본)** / 실험용 `font-pretendard`·`font-wanted`·`font-wanted-blackhan`. 미지정 시 위 하이브리드.
+- 위계: 제목 ExtraBold~Black(자간 타이트) / 수치 Bold / 라벨·캡션 Regular(블루그레이). **새 세트에서는 제목만 태백체이고 나머지는 전부 Pretendard 라, 위계를 웨이트·크기·색으로 낸다.**
+- 숫자 tabular figures(고정폭) — 표 정렬 품질의 핵심. Pretendard 도 `font-feature-settings:"tnum" 1` 로 고정폭이 켜진다(base.css `body`).
 
 ## 4a-2. 카드 아이덴티티 요소 (2026-07-18 운영자 지정)
 

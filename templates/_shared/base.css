@@ -60,6 +60,21 @@
   --font-title: var(--font-taebaek);
 }
 
+/* ⭐ 2026-09-07 오너 확정 — **새 판형의 기본 세트**.
+ * 제목만 태백체, 숫자를 포함한 나머지 전부 Pretendard(= Wanted Sans 퇴역).
+ * 왜 기본값(:root)을 안 바꾸나: `--font-num` 을 갈면 확정본 51개 세트와
+ *   `--font-num` 을 쓰는 판형 33개가 다시 그려질 때 픽셀이 전부 바뀐다.
+ *   「발행본·확정본 픽셀 불변」(CLAUDE.md §8)에 정면으로 걸린다 →
+ *   **새 스타일은 variant 로 격리**한다는 그 규칙대로 세트를 하나 더 둔다.
+ * 쓰는 법: 새로 만드는 판형의 카드 루트에 `class="wirit-card font-taebaek-pretendard ..."`.
+ *   옛 카드는 아무것도 안 붙이므로 자기 픽셀 그대로 남는다.
+ * 로고 뱃지(`.wirit-corner .mark`)는 이 세트의 대상이 아니다 — 폰트가 아니라 CI 다. */
+.font-taebaek-pretendard {
+  --font-sans: var(--font-pretendard);
+  --font-num: var(--font-pretendard);
+  --font-title: var(--font-taebaek);
+}
+
 /* 폰트 세트 전환(실험용). 기본은 위 하이브리드. */
 .font-pretendard {
   --font-sans: var(--font-pretendard);
