@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-07T05:47:55.275Z",
+  "generatedAt": "2026-09-07T10:15:43.605Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -388,7 +388,7 @@
       "maxDelay": null,
       "lastRun": "2026-09-01",
       "lastOk": "2026-09-01",
-      "okDaysAgo": 5
+      "okDaysAgo": 6
     },
     {
       "file": "month-backfill.yml",
@@ -476,15 +476,15 @@
         },
         {
           "day": "09-07",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "15:36",
+          "delay": 296
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-09-06",
-      "lastOk": "2026-09-06",
+      "medianDelay": 296,
+      "maxDelay": 296,
+      "lastRun": "2026-09-07",
+      "lastOk": "2026-09-07",
       "okDaysAgo": 0
     },
     {
@@ -573,15 +573,15 @@
         },
         {
           "day": "09-07",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "16:05",
+          "delay": 306
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-09-06",
-      "lastOk": "2026-09-06",
+      "medianDelay": 306,
+      "maxDelay": 306,
+      "lastRun": "2026-09-07",
+      "lastOk": "2026-09-07",
       "okDaysAgo": 0
     }
   ],
@@ -720,9 +720,9 @@
       "file": "kosis-probe.yml",
       "name": "KOSIS 표 검증 (probe)",
       "lastRun": "2026-08-12",
-      "daysAgo": 25,
+      "daysAgo": 26,
       "lastOk": "2026-08-12",
-      "okDaysAgo": 25,
+      "okDaysAgo": 26,
       "fails30": 0,
       "runs30": 7
     },
@@ -797,6 +797,16 @@
       "runs30": 7
     },
     {
+      "file": "population-collect.yml",
+      "name": "인구 수집 (monthly)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 7,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 7,
+      "fails30": 2,
+      "runs30": 3
+    },
+    {
       "file": "publish-archive.yml",
       "name": "완성본 보관 (발행 완료)",
       "lastRun": "2026-08-31",
@@ -847,14 +857,14 @@
       "runs30": 56
     },
     {
-      "file": "population-collect.yml",
-      "name": "인구 수집 (monthly)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 6,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 6,
-      "fails30": 2,
-      "runs30": 3
+      "file": "molit-collect.yml",
+      "name": "실거래 수집 (국토부)",
+      "lastRun": "2026-09-02",
+      "daysAgo": 5,
+      "lastOk": "2026-09-02",
+      "okDaysAgo": 5,
+      "fails30": 5,
+      "runs30": 11
     },
     {
       "file": "molit-door.yml",
@@ -885,16 +895,6 @@
       "okDaysAgo": 5,
       "fails30": 2,
       "runs30": 4
-    },
-    {
-      "file": "molit-collect.yml",
-      "name": "실거래 수집 (국토부)",
-      "lastRun": "2026-09-02",
-      "daysAgo": 4,
-      "lastOk": "2026-09-02",
-      "okDaysAgo": 4,
-      "fails30": 5,
-      "runs30": 11
     },
     {
       "file": "world-market.yml",
@@ -963,7 +963,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-03",
       "okDaysAgo": 4,
-      "fails30": 13,
+      "fails30": 14,
       "runs30": 15
     },
     {
@@ -974,7 +974,7 @@
       "lastOk": "2026-09-07",
       "okDaysAgo": 0,
       "fails30": 18,
-      "runs30": 64
+      "runs30": 65
     },
     {
       "file": "geocode.yml",
@@ -1023,7 +1023,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-07",
       "okDaysAgo": 0,
-      "fails30": 5,
+      "fails30": 7,
       "runs30": 100
     }
   ]
