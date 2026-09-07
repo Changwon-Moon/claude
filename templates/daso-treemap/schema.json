@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "daso-treemap@1",
-  "description": "오른쪽은 가로막대(1채 vs 2채 이상) + 그 오른쪽 토막을 확대한 트리맵, 왼쪽은 표. ⚠️ 칸의 넓이는 '2채 이상' 안에서의 비중이고 칸에 적힌 %는 전체 소유자 기준 공표값이다 — 분모가 둘이므로 zoom 라벨이 그 사실을 카드 위에 적어야 한다. 칸 안에 글자 자리가 없으면 라벨을 넣지 않고 옆 표가 그 값을 받는다 — 억지로 지시선을 뽑아 채우면 그림이 「다 비슷하다」고 거짓말을 한다.",
+  "description": "오른쪽은 라벨 줄 + 가로막대(1채 vs 2채 이상) + 확대 깔때기 + 그 토막을 확대한 트리맵, 왼쪽은 표. ⚠️ 칸의 넓이는 '2채 이상' 안에서의 비중이고 칸에 적힌 %는 전체 소유자 기준 공표값이다 — 분모가 둘이므로 확대라는 사실을 깔때기(funnel)가 그림으로 말해야 한다(설명 문장으로 대신하지 않는다, 오너 2026-09-07). 칸 안에 글자 자리가 없으면 라벨을 넣지 않고 옆 표가 그 값을 받는다 — 억지로 지시선을 뽑아 채우면 그림이 「다 비슷하다」고 거짓말을 한다.",
   "type": "object",
   "required": [
     "template",
@@ -219,14 +219,65 @@
     },
     "bar": {
       "type": "object",
-      "description": "오른쪽 맨 위 가로막대 — 소유자 100명을 1채 / 2채 이상으로 가른다. 아래 트리맵이 확대하는 대상이 여기 오른쪽 토막이다.",
+      "description": "오른쪽 위 라벨 줄 + 가로막대. 소유자 100명을 1채 / 2채 이상으로 가른다. 글자는 막대 안이 아니라 위 라벨 줄에 있다 — 좁은 토막 안에서는 두 글자를 같은 크기로 키울 수 없기 때문이다.",
       "required": [
+        "labH",
         "h",
+        "gap",
+        "labels",
         "segments"
       ],
       "properties": {
+        "labH": {
+          "type": "number",
+          "description": "라벨 줄 높이(px)"
+        },
         "h": {
-          "type": "number"
+          "type": "number",
+          "description": "막대 높이(px)"
+        },
+        "gap": {
+          "type": "number",
+          "description": "라벨 줄과 막대 사이(px)"
+        },
+        "labels": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "required": [
+              "cls",
+              "name",
+              "value",
+              "nmPx",
+              "vlPx"
+            ],
+            "properties": {
+              "cls": {
+                "type": "string",
+                "enum": [
+                  "one",
+                  "two"
+                ],
+                "description": "one=왼쪽(잉크) · two=오른쪽(코발트)"
+              },
+              "name": {
+                "type": "string",
+                "maxLength": 12
+              },
+              "value": {
+                "type": "string",
+                "maxLength": 10
+              },
+              "nmPx": {
+                "type": "number"
+              },
+              "vlPx": {
+                "type": "number"
+              }
+            }
+          }
         },
         "segments": {
           "type": "array",
@@ -236,53 +287,50 @@
             "type": "object",
             "required": [
               "w",
-              "label",
-              "value",
-              "bg",
-              "fg",
-              "lbPx",
-              "vlPx"
+              "bg"
             ],
             "properties": {
               "w": {
                 "type": "number",
                 "description": "막대 대비 %. 합이 100이어야 한다"
               },
-              "label": {
-                "type": "string",
-                "maxLength": 12
-              },
-              "value": {
-                "type": "string",
-                "maxLength": 10
-              },
               "bg": {
                 "type": "string",
                 "pattern": "^#[0-9A-Fa-f]{6}$"
-              },
-              "fg": {
-                "type": "string",
-                "pattern": "^#[0-9A-Fa-f]{6}$"
-              },
-              "lbPx": {
-                "type": "number"
-              },
-              "vlPx": {
-                "type": "number"
-              },
-              "tight": {
-                "type": "boolean",
-                "description": "좁은 토막 — 안쪽 여백을 줄이고 글자를 가운데로 모은다"
               }
             }
           }
         }
       }
     },
-    "zoom": {
-      "type": "string",
-      "maxLength": 80,
-      "description": "확대 라벨. **빠뜨리면 안 된다** — 칸의 넓이(2채 이상 기준)와 적힌 %(전체 기준)의 분모가 다르다는 사실을 카드 위에서 말하는 유일한 줄이다. 빌더가 「확대」·「전체 기준」이 들어 있는지 검사한다."
+    "funnel": {
+      "type": "object",
+      "description": "확대 깔때기. **빠뜨리면 안 된다** — 칸의 넓이(2채 이상 기준)와 적힌 %(전체 기준)의 분모가 다르다는 사실을 카드 위에서 말하는 유일한 표현이다. 위 변은 확대 대상 토막의 좌우, 아래 변은 트리맵의 좌우.",
+      "required": [
+        "h",
+        "bg",
+        "bg2",
+        "clip"
+      ],
+      "properties": {
+        "h": {
+          "type": "number"
+        },
+        "bg": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "description": "위 변 색 — 확대 대상 토막과 같은 색"
+        },
+        "clip": {
+          "type": "string",
+          "description": "clip-path: polygon(…) 안에 그대로 들어가는 좌표 목록"
+        },
+        "bg2": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "description": "아래 변 색 — 트리맵 첫 칸과 같은 색. 둘 사이를 세로 그러데이션으로 흘린다"
+        }
+      }
     }
   }
 }

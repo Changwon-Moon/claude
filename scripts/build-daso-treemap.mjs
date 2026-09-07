@@ -297,50 +297,65 @@ function fitsOneLine(html, px = 32, avail = 936) {
 }
 
 function noHousingWord(card) {
-  const body = JSON.stringify({ ...card, title: undefined });
+  /* 제목과 요약 두 줄만 일상어를 쓸 수 있다 — 그 밖의 어디에도 '주택'이 들어가면 오보다. */
+  const body = JSON.stringify({ ...card, title: undefined, summary: undefined });
   const bad = body.match(/주택수|다주택|[0-9]주택/g);
   if (bad) throw new Error(`카드 본문에 '주택' 표현이 있다: ${[...new Set(bad)].join(", ")} — 모집단은 집합건물이다`);
 
-  if (/다주택/.test(card.title)) {
+  /* 예외는 **공짜가 아니다.** 킥커가 지표명을 밝히고 각주가 두 낱말을 풀어야 성립한다.
+   * 나중에 누가 킥커나 각주를 지우면 일상어만 남아 그때부터 오보가 되므로,
+   * 「누가 지울까」를 사람 기억에 맡기지 않고 빌드가 멈추게 한다. */
+  const loose = [card.title, card.summary].filter((t) => /다주택|유주택/.test(t || ""));
+  if (loose.length) {
     const notes = (card.notes || []).join(" ");
     if (!/집합건물\s*다소유지수/.test(card.subtitle || ""))
-      throw new Error("제목이 '다주택'을 쓰는데 킥커가 「집합건물 다소유지수」를 안 밝힌다 — 둘은 짝이다");
+      throw new Error("제목·요약이 '주택' 일상어를 쓰는데 킥커가 「집합건물 다소유지수」를 안 밝힌다 — 둘은 짝이다");
     if (!/집합건물<\/b>\s*:/.test(notes))
-      throw new Error("제목이 '다주택'을 쓰는데 각주에 「집합건물」 풀이가 없다");
+      throw new Error("제목·요약이 '주택' 일상어를 쓰는데 각주에 「집합건물」 풀이가 없다");
     if (!/다소유지수<\/b>\s*:/.test(notes))
-      throw new Error("제목이 '다주택'을 쓰는데 각주에 「다소유지수」 풀이가 없다");
+      throw new Error("제목·요약이 '주택' 일상어를 쓰는데 각주에 「다소유지수」 풀이가 없다");
   }
 }
 
-/* ── ⑥-b 가로막대 ─────────────────────────────────────────────
+/* ── ⑥-b 가로막대 + 확대 깔때기 ────────────────────────────────
  * 카드가 먼저 말해야 하는 건 「1채가 84%」다. 트리맵만 두면 2채 이상 안쪽만 보이고
  * **얼마짜리 조각을 확대한 것인지** 사라진다. 그래서 막대를 위에 세운다.
- * 글자 크기는 여기서도 손으로 못박지 않는다 — 좁은 토막(16%)이 96px 뿐이라
- * 큰 등급을 그대로 쓰면 잘린다. 토막마다 들어가는 첫 등급을 고른다. */
-const BAR_TIERS = [
-  { lb: 22, vl: 34, pad: 16 },
-  { lb: 19, vl: 28, pad: 13 },
-  { lb: 17, vl: 23, pad: 10 },
-  { lb: 15, vl: 18, pad: 6, tight: true },
-  { lb: 13, vl: 15, pad: 5, tight: true },
+ *
+ * ⚠️ 글자는 막대 **안이 아니라 위**에 있다(오너 2026-09-07). 좁은 토막이 100px 남짓이라
+ * 안에 넣으면 두 토막의 글자 크기가 달라진다 — 「같은 크기로 키우라」는 지시를 칸 안에서는
+ * 지킬 수 없다. 밖으로 빼면 제약이 사라지고, 크기는 여기서도 손으로 못박지 않고
+ * 두 라벨을 합쳐 판 폭에 들어가는 첫 등급을 고른다.
+ *
+ * 확대는 **글이 아니라 그림이 말한다.** 코발트 토막의 좌우 끝에서 트리맵의 좌우 끝으로
+ * 벌어지는 사다리꼴 하나면 된다. 「아래는 2채 이상만 확대」라고 적던 줄은 지웠다. */
+const BARLAB_TIERS = [
+  { nm: 34, vl: 46 }, { nm: 31, vl: 42 }, { nm: 28, vl: 38 },
+  { nm: 25, vl: 34 }, { nm: 22, vl: 29 }, { nm: 19, vl: 25 },
 ];
-function buildBar(segs, barW, barH) {
+function buildBar(segs, barW, labH, barH, gap) {
   const total = segs.reduce((a, g) => a + g.v, 0);
   if (Math.abs(total - 100) > 1e-9) throw new Error(`막대 합이 100이 아니다: ${total}`);
-  const segments = segs.map((g) => {
-    const wPx = (barW * g.v) / 100;
-    const t = BAR_TIERS.find((T) => {
-      const avail = wPx - T.pad * 2;
-      return avail > 0 && textW(g.label, T.lb) <= avail && textW(g.valueTxt, T.vl) <= avail
-        && T.lb * 1.2 + T.vl * 1.15 <= barH;
-    });
-    if (!t) throw new Error(`막대 토막 「${g.label}」(${Math.round(wPx)}px)에 글자가 안 들어간다`);
-    return {
-      w: r3(g.v), label: g.label, value: g.valueTxt, bg: g.bg, fg: fgOf(g.bg),
-      lbPx: t.lb, vlPx: t.vl, ...(t.tight ? { tight: true } : {}),
-    };
+  /* 두 라벨이 한 줄에 나란히 선다 — 합친 폭 + 최소 숨(40px)이 판 폭 안에 들어와야 한다. */
+  const t = BARLAB_TIERS.find((T) => {
+    const w = segs.reduce((a, g) => a + textW(g.label + " ", T.nm) + textW(g.valueTxt, T.vl), 0);
+    return w + 40 <= barW && T.vl * 1.15 <= labH; /* 40px = 두 라벨 사이 최소 숨 */
   });
-  return { h: barH, segments };
+  if (!t) throw new Error(`막대 라벨이 판 폭 ${barW}px 에 안 들어간다`);
+  return {
+    labH, h: barH, gap,
+    labels: segs.map((g, i) => ({
+      cls: i === 0 ? "one" : "two",
+      name: g.label, value: g.valueTxt, nmPx: t.nm, vlPx: t.vl,
+    })),
+    segments: segs.map((g) => ({ w: r3(g.v), bg: g.bg })),
+  };
+}
+/* 깔때기 — 위 변은 확대 대상 토막의 좌우(막대에서의 위치), 아래 변은 트리맵의 좌우(0~100%).
+ * 막대 비율이 바뀌면 깔때기도 따라 움직인다. 좌표를 손으로 적지 않는다. */
+function buildFunnel(x0, x1, h, bg, bg2) {
+  if (!(x1 > x0)) throw new Error("깔때기 위 변이 뒤집혔다");
+  /* 위는 막대 토막 색, 아래는 트리맵 첫 칸 색 — 빛줄기가 막대에서 판으로 떨어지는 모양이다. */
+  return { h, bg, bg2, clip: `${r3(x0)}% 0%, ${r3(x1)}% 0%, 100% 100%, 0% 100%` };
 }
 
 /* ── ⑦ 카드 ───────────────────────────────────────────────── */
@@ -348,11 +363,12 @@ function buildBar(segs, barW, barH) {
  * BODY_H 는 카드 높이에서 머리·요약·각주·푸터를 뺀 나머지 전부다(제목 상자가 고정이라
  * 제목 길이와 무관하다). 트리맵 높이는 남는 것을 받는다 —
  * ZOOM_H 는 .tm-zoom 의 위여백 13 + 줄 19 + 아래여백 9 이고, 템플릿과 같아야 한다. */
-const PLOT_W = 640, PLOT_GAP = 26, BODY_H = 786, BAR_H = 104, ZOOM_H = 13 + 19 + 9;
-const PLOT_H = BODY_H - BAR_H - ZOOM_H;
-/* 막대 색 — 1채는 중립(종이 위에서 뒤로 물러난다), 2채 이상은 규격 코발트다.
- * 「코발트 토막을 확대한 게 아래 트리맵」이라는 걸 색이 먼저 말한다. */
-const ONE_BG = "#E7E4DC", MULTI_BG = COBALT;
+const PLOT_W = 640, PLOT_GAP = 26, BODY_H = 786;
+const LAB_H = 48, BAR_GAP = 12, BAR_H = 56, FUNNEL_H = 54;
+const PLOT_H = BODY_H - LAB_H - BAR_GAP - BAR_H - FUNNEL_H;
+/* 막대 색 — 1채는 **연회색**(오너 2026-09-07: 종이 위에서 더 뒤로 물러나게), 2채 이상은 규격 코발트.
+ * 「코발트 토막을 확대한 게 아래 트리맵」이라는 걸 색과 깔때기가 함께 말한다. */
+const ONE_BG = "#E6E7EA", MULTI_BG = COBALT;
 
 /* 제목 후보 — 오너가 고른다(--title <번호>). 전부 **계산이 확인한 말**만 쓴다:
  *   「열에 일곱」 = 2채 69.19%  ·  「열에 아홉」 = 2+3+4채 90.64%  ·  「100명 중 3명」 = 10채 이상 2.95% */
@@ -382,11 +398,13 @@ function makeCard(palKey) {
   const tileBg = { [ONE_KEY]: ONE_BG };
   GROUPS.forEach((g, i) => { tileBg[g.key] = pal.fn(i, GROUPS.length, g.key); });
 
-  /* 가로막대 — 소유자 100명을 1채 / 2채 이상으로 가른다. */
+  /* 가로막대 — 소유자 100명을 1채 / 2채 이상으로 가른다. 글자는 막대 위 라벨 줄에 선다. */
   const bar = buildBar([
     { label: "1채", v: oneShare, valueTxt: pct(oneShare), bg: ONE_BG },
     { label: "2채 이상", v: multiSum, valueTxt: pct(multiSum), bg: MULTI_BG },
-  ], PLOT_W, BAR_H);
+  ], PLOT_W, LAB_H, BAR_H, BAR_GAP);
+  /* 깔때기 — 코발트 토막(막대의 오른쪽 끝 구간)이 아래 트리맵으로 벌어진다. */
+  const funnel = buildFunnel(oneShare, 100, FUNNEL_H, MULTI_BG, tileBg[GROUPS[0].key]);
 
   /* 트리맵 — 막대의 오른쪽 토막을 확대한 것.
    * ⚠️ value(넓이)는 **2채 이상 안에서의 비중**으로 정규화하고,
@@ -409,15 +427,18 @@ function makeCard(palKey) {
     title: TITLES[titleArg],
     plot: { w: PLOT_W, h: BODY_H, gap: PLOT_GAP, side: "right" },
     bar,
-    /* 확대 라벨 — **없으면 안 되는 문장**이다. 트리맵 칸의 넓이와 적힌 %가 서로 다른
-     * 분모를 쓰기 때문에, 이 한 줄이 빠지면 카드가 「2채가 판의 69%」라고 읽히고
-     * 그건 오보다. 그래서 아래에서 존재와 문구를 검사한다. */
-    zoom: `↓ <b>2채 이상 ${pct(multiSum)}</b>만 확대 — 비중은 전체 기준`,
+    /* 깔때기 — **없으면 안 되는 도형**이다. 트리맵 칸의 넓이와 적힌 %가 서로 다른 분모를
+     * 쓰기 때문에, 확대라는 사실이 안 보이면 카드가 「2채가 판의 69%」라고 읽히고 그건 오보다.
+     * 예전엔 이걸 문장으로 적었는데(오너 「설명 빼줘」 2026-09-07), 그림이 할 일이라 도형으로 옮겼다.
+     * 문장이 아니라 도형이 되었을 뿐 **필수라는 성질은 그대로**라, 아래에서 존재를 검사한다. */
+    funnel,
     tiles: plot.tiles,
     table: buildTable(tableRows, ["보유 채수", "소유자 중"], BODY_H, 936 - PLOT_W - PLOT_GAP),
     /* 제목의 질문에 **답이 첫머리에** 온다. 두 값 모두 위에서 계산한 것이다.
      * ⚠️ 한 줄을 넘기지 않는다 — fitsOneLine() 이 폭을 재서 막는다. */
-    summary: `2채 이상 <b>${pct(multiSum)}</b> — 그중 <b>${multiSum ? MULTI[0].v.toFixed(2) : 0}%p</b>가 딱 2채`,
+    /* 오너 지시 문구(2026-09-07). 숫자는 손으로 적지 않는다 — 다소유지수 합을 반올림한 값이다.
+     * ⚠️ 11%가 아니라 16%다. 11.08%는 「딱 2채」 한 구간이고, 다주택자는 2채 이상 전부다. */
+    summary: `유주택자 중 다주택자 비율 <b>약 ${Math.round(multiSum)}%</b>`,
     notes: [
       `※ <b>집합건물</b> : 아파트 · 오피스텔 · 연립 · 다세대 등 구분소유 건물 (단독주택 제외)`,
       `※ <b>다소유지수</b> : 집합건물 소유자 중 2채 이상 보유자 비율`,
@@ -426,10 +447,9 @@ function makeCard(palKey) {
   };
   noHousingWord(card);
   fitsOneLine(card.summary);
-  fitsOneLine(card.zoom, 19, PLOT_W);
-  /* 분모가 둘인 판이라 확대 라벨이 사라지면 그림이 거짓말을 한다 — 사람 기억에 안 맡긴다. */
-  if (!/확대/.test(card.zoom) || !/전체 기준/.test(card.zoom))
-    throw new Error("확대 라벨이 「확대」와 「전체 기준」을 둘 다 말하지 않는다 — 칸 넓이와 적힌 %의 분모가 다르다");
+  /* 분모가 둘인 판이라 깔때기가 사라지면 그림이 거짓말을 한다 — 사람 기억에 안 맡긴다. */
+  if (!card.funnel || !/^[\d.]+% 0%,/.test(card.funnel.clip))
+    throw new Error("확대 깔때기가 없다 — 칸 넓이(2채 이상 기준)와 적힌 %(전체 기준)의 분모가 다르다는 걸 카드가 못 말한다");
   return { card, noVal: plot.noVal, palName: pal.name };
 }
 
@@ -466,8 +486,11 @@ if (variants) {
     ``,
     ...TABLE_ROWS.map((g) => `· ${g.label} ${g.v.toFixed(2)}% (국민 1만명당 ${per10k(g.v)}명)`),
     ``,
-    `2채 이상 ${multiSum.toFixed(2)}% 가운데 ${MULTI[0].v.toFixed(2)}%p가 딱 2채입니다.`,
-    `여러 채를 가진 사람 열에 일곱은 두 채라는 뜻입니다.`,
+    `집합건물을 가진 사람 중 2채 이상은 ${multiSum.toFixed(2)}% — 약 ${Math.round(multiSum)}%입니다.`,
+    `그 가운데 ${MULTI[0].v.toFixed(2)}%p가 딱 2채라, 여러 채를 가진 사람 열에 일곱은 두 채입니다.`,
+    ``,
+    `※ 트리맵에서 제일 큰 칸의 ${MULTI[0].v.toFixed(2)}%는 '2채' 한 구간의 값입니다.`,
+    `   2채 이상 전체(=다보유)는 ${multiSum.toFixed(2)}%이니 둘을 섞지 마세요.`,
     ``,
     `※ 트리맵의 '10채 이상'은 원자료 일곱 구간을 묶은 것입니다. 내역은 이렇습니다 —`,
     `   ${tail.map((m) => `${m.label} ${m.v.toFixed(2)}%`).join(" · ")}`,

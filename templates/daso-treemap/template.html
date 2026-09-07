@@ -46,33 +46,40 @@
       /* 좌우 자리는 데이터가 정한다(plot.side) — CSS 로 못박으면 판형이 한 방향밖에 못 쓴다.
          면적(트리맵)과 값(표) 중 무엇을 먼저 읽히게 할지는 소재마다 다르다. */
       .tm-body.flip { flex-direction: row-reverse; }
-      /* 오른쪽 칸 = 가로막대(1채 vs 다주택) + 「확대」 라벨 + 트리맵.
-         트리맵은 막대의 다주택 토막을 **확대한 것**이다 — 그래서 칸 넓이는 다주택 안에서의
-         비중이지만 적힌 %는 **전체 기준 공표값**이다. 두 분모가 다르므로 확대 라벨이 필수다. */
+      /* 오른쪽 칸 = **라벨 줄 → 가로막대 → 확대 깔때기 → 트리맵** 네 층.
+         트리맵은 막대의 코발트 토막(2채 이상)을 **확대한 것**이다.
+
+         ── 왜 글자를 막대 밖으로 뺐나 (오너 2026-09-07)
+         좁은 토막(16%)이 100px 남짓이라 안에 넣으면 글자가 작아진다. 두 토막의 글자를
+         **같은 크기로** 키우라는 지시가 왔고, 칸 안에서는 그게 불가능하다.
+         그래서 막대 위에 라벨 줄을 세운다 — 크기 제약이 사라지고 막대는 순수한 도형이 된다.
+
+         ── 왜 깔때기인가 (오너 2026-09-07)
+         「아래 트리맵은 2채 이상만 확대한 것」을 **글로 설명하고 있었다.** 그림이 할 일을
+         글이 대신하면 카드가 장황해진다. 코발트 토막의 좌우 끝에서 트리맵의 좌우 끝으로
+         벌어지는 사다리꼴을 그으면 확대라는 사실이 한눈에 보인다 — 설명은 지웠다. */
       .tm-right { flex: 0 0 auto; display: flex; flex-direction: column; }
 
-      .tm-bar { flex: 0 0 auto; display: flex; overflow: hidden; }
-      .tm-bar .sg {
-        display: flex; flex-direction: column; justify-content: center;
-        padding: 0 14px; overflow: hidden;
-        box-shadow: inset 0 0 0 2px var(--wirit-paper);
+      /* 라벨 줄 — 왼쪽은 1채, 오른쪽은 2채 이상. 각자 제 토막 위에 선다. */
+      .tm-barlab {
+        flex: 0 0 auto; display: flex; justify-content: space-between; align-items: baseline;
+        letter-spacing: -0.05em; line-height: 1; white-space: nowrap;
       }
-      .tm-bar .sg .lb {
-        font-weight: 700; letter-spacing: -0.05em; line-height: 1.2; opacity: 0.82; white-space: nowrap;
-      }
-      .tm-bar .sg .vl {
-        font-family: var(--font-num); font-weight: 900; letter-spacing: -0.04em;
-        line-height: 1.15; white-space: nowrap;
-      }
-      /* 좁은 토막(다주택 16%)은 글자를 밖에서 받는다 — 안에 넣으면 잘린다. */
-      .tm-bar .sg.tight { padding: 0 6px; align-items: center; }
+      .tm-barlab .one { color: var(--wirit-ink); }
+      .tm-barlab .two { color: var(--wirit-cobalt); }
+      .tm-barlab .nm { font-weight: 700; opacity: 0.72; }
+      /* 이름과 값 사이 숨 — 태그 사이 공백은 letter-spacing 이 먹어 버려 붙어 보인다(실측). */
+      .tm-barlab .vv { font-family: var(--font-num); font-weight: 900; letter-spacing: -0.04em; margin-left: 0.3em; }
 
-      .tm-zoom {
-        flex: 0 0 auto; margin: 13px 0 9px;
-        font-size: 19px; font-weight: 800; color: var(--wirit-gray);
-        letter-spacing: -0.045em; line-height: 1; white-space: nowrap;
-      }
-      .tm-zoom b { color: var(--wirit-cobalt); font-family: var(--font-num); font-weight: 900; }
+      .tm-bar { flex: 0 0 auto; display: flex; overflow: hidden; }
+      /* 틈은 안쪽 그림자다 — 막대에서도 길이가 곧 비율이라 margin 으로 깎지 않는다. */
+      .tm-bar .sg { box-shadow: inset 0 0 0 2px var(--wirit-paper); }
+
+      /* 확대 깔때기 — 위 변은 코발트 토막의 좌우, 아래 변은 트리맵의 좌우.
+         빌더가 clip-path 를 계산해 내려보낸다(막대 비율이 바뀌면 깔때기도 따라 움직인다).
+         위는 막대 토막 색, 아래는 트리맵 첫 칸 색으로 흘려 **빛줄기처럼 이어 붙인다** —
+         한 색으로 칠하면 트리맵 칸 하나가 더 있는 것처럼 보인다. */
+      .tm-funnel { flex: 0 0 auto; }
 
       .tm-plot { position: relative; flex: 1 1 auto; overflow: hidden; }
 
@@ -163,16 +170,20 @@
       <div class="tm-body{{#if plot.side}} flip{{/if}}" style="height: {{plot.h}}px; gap: {{plot.gap}}px">
         <div class="tm-right" style="width: {{plot.w}}px">
           {{#if bar}}
-          <div class="tm-bar" style="height: {{bar.h}}px">
+          <div class="tm-barlab" style="height: {{bar.labH}}px">
+            {{#each bar.labels}}
+            <span class="{{this.cls}}"><span class="nm" style="font-size:{{this.nmPx}}px">{{this.name}}</span> <span class="vv" style="font-size:{{this.vlPx}}px">{{this.value}}</span></span>
+            {{/each}}
+          </div>
+          <div class="tm-bar" style="height: {{bar.h}}px; margin-top: {{bar.gap}}px">
             {{#each bar.segments}}
-            <div class="sg wirit-ramp{{#if this.tight}} tight{{/if}}" style="width:{{this.w}}%;background:{{this.bg}};color:{{this.fg}}">
-              <span class="lb" style="font-size:{{this.lbPx}}px">{{this.label}}</span>
-              <span class="vl" style="font-size:{{this.vlPx}}px">{{this.value}}</span>
-            </div>
+            <div class="sg wirit-ramp" style="width:{{this.w}}%;background:{{this.bg}}"></div>
             {{/each}}
           </div>
           {{/if}}
-          {{#if zoom}}<div class="tm-zoom">{{{zoom}}}</div>{{/if}}
+          {{#if funnel}}
+          <div class="tm-funnel wirit-ramp" style="height:{{funnel.h}}px;background:linear-gradient(180deg,{{funnel.bg}} 0%,{{funnel.bg2}} 100%);clip-path:polygon({{funnel.clip}})"></div>
+          {{/if}}
 
           <div class="tm-plot">
             {{#each tiles}}
