@@ -2925,6 +2925,25 @@
         "daso-treemap-p1",
         "daso-treemap-p2"
       ]
+    },
+    {
+      "label": "rail-line",
+      "cmd": "scripts/build-rail-line.mjs",
+      "args": [
+        "2026-09-07",
+        "--publish"
+      ],
+      "note": "⚠️ --publish 필수 — 없으면 data/out/_spike 로 간다(확정·재생산은 data/content/<날짜>/ 를 렌더한다). 날짜를 박아 두는 이유: 공정률이 국가철도공단 분기 갱신값(26.6월)이라 오늘 날짜로 다시 그리면 같은 값의 카드가 날짜만 달리 생긴다.",
+      "produces": [
+        "rail-sinansan",
+        "rail-gtxa",
+        "rail-gtxb",
+        "rail-gtxc",
+        "rail-indong",
+        "rail-wolpan",
+        "rail-sinbundang",
+        "rail-daejang"
+      ]
     }
   ]
 }

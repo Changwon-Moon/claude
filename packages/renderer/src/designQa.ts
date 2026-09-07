@@ -236,6 +236,14 @@ const MEASURE_JS = `(() => {
              ".dcv-facts .abv," +
              /* sinbundang-loop — 노선 접이형 정보카드(2026-07-31). */
              ".slp-stn,.slp-danji,.slp-meta,.slp-priceB,.slp-name,.slp-gu,.slp-top," +
+             /* rail-line — 예정 철도망 노선 카드(2026-09-07). 이 판형의 위험은 **한 행에 환승
+                뱃지가 넷까지 붙는 것**이다(서울역 = 1·4·공항철도·GTX-A). 역명이 길고 뱃지가
+                많은 행에서 이름과 뱃지가 겹치는지는 눈이 아니라 좌표가 판정해야 한다.
+                그래서 글자뿐 아니라 **뱃지(.rt-line) 자체도** 올린다 — 뱃지는 심볼이지만
+                여기서는 서로/역명과 부딪히는 실물이다. (.rl-wm 워터마크는 일부러 뒤에 깔린
+                장식이라 넣지 않는다) */
+             ".rl-seg .sg,.rl-badge,.rl-nm,.rl-nm i,.rl-gap,.rt-line," +
+             ".rl-prog .lb,.rl-prog .big,.rl-prog .as,.rl-f dt,.rl-f dd,.rl-f em,.rl-key,.rl-note," +
              /* news-figure — 인물/뉴스 이슈 카드(2026-08-05). 헤드라인(.nf-title)이 좌열을
                 넘어 우측 인물 사진(.nf-photo)을 침범하는지, 형광펜 본문·정보 바가 서로/푸터와
                 겹치는지 좌표로 잰다. 빠뜨리면 검사받지 않은 것이다. */
@@ -310,7 +318,7 @@ const MEASURE_JS = `(() => {
   var clipped=[];
   /* ⚠️ daso-treemap 은 **칸(.tm-t)** 을 올린다. 라벨(span)은 제 내용만큼 커져서 안 잘리고,
      자르는 쪽은 overflow:hidden 인 부모 칸이다 — 라벨을 올리면 이 검사가 아무것도 안 잰다. */
-  Array.prototype.forEach.call(card.querySelectorAll(".mr-apt,.mr-gu,.m2-seg,.rt-name,.sm-gu,.db-nm .n,.db-nm .loc,.db-row span,.tx-cell,.tx-lb,.tm-t"), function(el){
+  Array.prototype.forEach.call(card.querySelectorAll(".mr-apt,.mr-gu,.m2-seg,.rt-name,.sm-gu,.db-nm .n,.db-nm .loc,.db-row span,.tx-cell,.tx-lb,.tm-t,.rl-seg .sg,.rl-f dd,.rl-f em"), function(el){
     if(el.scrollWidth - el.clientWidth > 1)
       clipped.push({sel:name(el), text:(el.textContent||"").trim().slice(0,24), need:Math.ceil(el.scrollWidth), has:Math.ceil(el.clientWidth)});
   });
@@ -411,7 +419,7 @@ const MEASURE_JS = `(() => {
        danji-brief 것이다) 청약 판형 9장에서 이 검사가 **한 번도 돈 적이 없었다.** .dcv-note 가
        특이사항 줄이다 — 이번에 그 줄이 두 줄로 늘면서 정확히 필요해진 검사다.
        ⚠️ 이 블록은 브라우저로 넘어가는 문자열 안이다 — 주석에 백틱을 쓰면 스크립트가 깨진다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.dcv-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note,.gb-note,.sr-chart,.wm-grid,.tm-note");
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.dcv-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note,.gb-note,.sr-chart,.wm-grid,.tm-note,.rl-note");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();

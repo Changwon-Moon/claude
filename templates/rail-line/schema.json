@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "rail-line@1 — 수도권 예정 철도망 노선 카드(좌 노선도 · 우 일정)",
+  "type": "object",
+  "required": ["template", "date", "title", "seg", "badge", "tone", "n", "stations", "prog", "facts", "keyline", "source"],
+  "properties": {
+    "template": { "const": "rail-line@1" },
+    "date": { "type": "string" },
+    "subtitle": { "type": "string" },
+    "title": { "type": "string" },
+    "seg": { "type": "string" },
+    "badge": { "type": "string" },
+    "tone": { "enum": ["go", "mid", "warn", "stop"] },
+    "lc": { "type": "string", "description": "노선 표시색 — metro-lines.json 카탈로그 값" },
+    "n": { "type": "integer", "minimum": 2, "maximum": 18, "description": "노선도 행 수(레일 길이 계산용)" },
+    "stations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "cls": { "type": "string" },
+          "prov": { "type": "string" },
+          "xfer": { "type": "array", "items": { "type": "string" } },
+          "gap": { "type": "string" }
+        }
+      }
+    },
+    "prog": {
+      "type": "object",
+      "required": ["value", "asOf", "width"],
+      "properties": {
+        "value": { "type": "string" },
+        "asOf": { "type": "string" },
+        "width": { "type": "string" },
+        "zero": { "type": "boolean" }
+      }
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["label", "value"],
+        "properties": {
+          "label": { "type": "string" }, "value": { "type": "string" },
+          "note": { "type": "string" }, "alert": { "type": "boolean" }
+        }
+      }
+    },
+    "keyline": { "type": "string" },
+    "note": { "type": "string" },
+    "source": { "type": "object", "required": ["name"] }
+  }
+}

@@ -1,5 +1,4 @@
 {
-  "_meta": "수도권 전철 노선 심볼 카탈로그 — wirit 노선 뱃지(metroBadge 헬퍼)용. color=공식 노선색, num=번호(대형), label=단문(1행), lines=2행 분할, gtx=GTX 알파벳, text=dark면 밝은 배경용 진한 글자. ⚠️ colorPending=true 인 항목은 **공식 색을 아직 확인하지 못해** 중립 회색을 임시로 쓴다(2026-08-25). 이름은 맞고 색만 미정이다 — 짐작한 색을 칠하지 않는다. 오너가 공식 색을 확인해 주면 color 만 바꾸면 된다.",
   "1": {
     "color": "#0052A4",
     "num": "1"
@@ -37,6 +36,7 @@
     "num": "9",
     "text": "dark"
   },
+  "_meta": "수도권 전철 노선 심볼 카탈로그 — wirit 노선 뱃지(metroBadge 헬퍼)용. color=공식 노선색, num=번호(대형), label=단문(1행), lines=2행 분할, gtx=GTX 알파벳, text=dark면 밝은 배경용 진한 글자. ⚠️ colorPending=true 인 항목은 **공식 색을 아직 확인하지 못해** 중립 회색을 임시로 쓴다(2026-08-25). 이름은 맞고 색만 미정이다 — 짐작한 색을 칠하지 않는다. 오너가 공식 색을 확인해 주면 color 만 바꾸면 된다. ⚠️ _inherited 가 붙은 항목은 wirit-line.mjs 의 EXP 상수(기존 노선 시세 카드가 이미 발행한 색)를 계승한 것으로, 공식색이 아니라 계정 일관성을 위한 값이다(2026-09-07).",
   "신분당": {
     "color": "#D4003B",
     "label": "신분당"
@@ -142,6 +142,44 @@
   "의정부": {
     "color": "#8A94A6",
     "label": "의정부",
+    "colorPending": true
+  },
+  "KTX": {
+    "color": "#003D7A",
+    "label": "KTX",
+    "_inherited": "EXP(wirit-line.mjs) 계승"
+  },
+  "SRT": {
+    "color": "#4B2E83",
+    "label": "SRT",
+    "_inherited": "EXP(wirit-line.mjs) 계승"
+  },
+  "월판": {
+    "color": "#8A5A00",
+    "label": "월판",
+    "_inherited": "EXP(wirit-line.mjs) 계승"
+  },
+  "인동": {
+    "color": "#7E6A34",
+    "label": "인동",
+    "_inherited": "EXP(wirit-line.mjs) 계승"
+  },
+  "대홍": {
+    "color": "#7A4FA3",
+    "label": "대홍",
+    "_inherited": "EXP(wirit-line.mjs) 계승"
+  },
+  "GTX-D": {
+    "color": "#8A94A6",
+    "gtx": "D",
+    "colorPending": true
+  },
+  "고양은평": {
+    "color": "#8A94A6",
+    "lines": [
+      "고양",
+      "은평"
+    ],
     "colorPending": true
   }
 }

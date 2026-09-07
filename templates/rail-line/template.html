@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* =========================================================
+         rail-line@1 — 수도권 예정 철도망 노선 카드
+         왼쪽은 공간(어디를 지나는가) · 오른쪽은 시간(언제 열리는가).
+         환승 표기는 공용 metroBadge 헬퍼 + templates/_shared/metro-lines.json 정본.
+
+         ⚠️ 되돌리지 말 것 (2026-09-07 실측)
+          1) 레일은 **한 줄**이다. 행마다 ::before 로 그리면 행을 벌리는 순간 줄이
+             토막나 열쇠구멍이 된다. --n(행 수)으로 첫 점·끝 점 중심을 계산해 한 줄로 긋는다.
+          2) 좌·우 열 모두 행을 flex:1 1 0 으로 펴서 본문 높이를 채운다.
+             안 펴면 17역짜리도 아래가 250px 빈다.
+          3) 점 세 종류가 정보다 — 흰속 큰 원=개통 / 채운 점=미개통 / 회색 점=가칭·역명미정.
+             (흰속 원 = 개통 문법은 노선 시세 카드의 rep 표기를 잇는다)
+          4) 채움 박스를 쓰지 않는다(§2 "AI티 금지"). 종이 바탕 + 괘선으로 간다.
+         ========================================================= */
+      .rl {
+        --mono: 40px;          /* 환승 뱃지 지름 — ranking-table/metro-2col 과 같은 변수명 */
+        --lc: #2e6bff;         /* 노선 표시색 (빌더가 인라인으로 덮어쓴다) */
+        --rail: 7px;
+        --dotc: 34px;          /* 점 열 폭 */
+      }
+
+      /* ── 머리 ───────────────────────────────────────── */
+      .rl-head { margin: 40px 0 0; }
+      .rl .wirit-title {
+        font-size: 76px; line-height: 1.04; white-space: nowrap;
+        margin: 0; letter-spacing: -0.035em;
+      }
+      .rl .wirit-title .ln { color: var(--lc); }
+      .rl-seg {
+        display: flex; align-items: center; gap: 16px;
+        margin-top: 30px; padding-bottom: 20px;
+        border-bottom: 3px solid var(--wirit-ink);
+      }
+      .rl-seg .sg {
+        font-size: 27px; font-weight: 600; color: var(--wirit-gray);
+        letter-spacing: -0.02em; white-space: nowrap;
+        overflow: hidden; text-overflow: ellipsis;
+      }
+      .rl-badge {
+        margin-left: auto; flex: none;
+        font-size: 23px; font-weight: 800; letter-spacing: -0.02em;
+        padding: 6px 16px; border-radius: 4px; white-space: nowrap;
+      }
+      .rl-badge.t-go   { background: rgba(18, 133, 90, 0.12);  color: #0c6b48; }
+      .rl-badge.t-mid  { background: rgba(46, 107, 255, 0.12); color: #1b4acc; }
+      .rl-badge.t-warn { background: rgba(192, 105, 28, 0.14); color: #94500f; }
+      .rl-badge.t-stop { background: rgba(229, 72, 77, 0.13);  color: #a5121c; }
+
+      /* ── 본문 2열 ────────────────────────────────────── */
+      .rl-body {
+        flex: 1; min-height: 0; display: grid;
+        grid-template-columns: 1fr 400px; gap: 32px; margin-top: 30px;
+      }
+
+      /* ── 왼쪽: 노선도 ─────────────────────────────────── */
+      .rl-map { position: relative; display: flex; flex-direction: column; min-height: 0; }
+      /* 레일 한 줄 — 첫 행·끝 행 중심을 --n 으로 계산 (되돌리지 말 것 ①) */
+      .rl-rail {
+        position: absolute; z-index: 0;
+        left: calc((var(--dotc) - var(--rail)) / 2);
+        width: var(--rail); border-radius: 4px; background: var(--lc);
+        top: calc(50% / var(--n));
+        height: calc(100% - 100% / var(--n));
+      }
+      .rl-st {
+        position: relative; z-index: 1;
+        flex: 1 1 0; min-height: 0;
+        display: grid; grid-template-columns: var(--dotc) auto 1fr;
+        align-items: center; column-gap: 14px;
+      }
+      .rl-dot {
+        width: 19px; height: 19px; border-radius: 50%;
+        background: var(--lc); justify-self: center;
+      }
+      .rl-st.s-open .rl-dot {
+        width: 30px; height: 30px; background: var(--wirit-paper);
+        border: 7px solid var(--lc);
+      }
+      .rl-st.s-prov .rl-dot { background: #a9b1bd; }
+      .rl-nm {
+        font-size: 27px; font-weight: 800; letter-spacing: -0.035em;
+        white-space: nowrap; line-height: 1.1;
+      }
+      .rl-st.s-prov .rl-nm { color: #7b8492; font-weight: 700; }
+      .rl-nm i {
+        font-style: normal; font-size: 17px; font-weight: 600;
+        color: #9aa3b0; margin-left: 7px; letter-spacing: -0.02em;
+      }
+      .rl-xf { display: flex; align-items: center; gap: 6px; }
+
+      /* 개통 구간 압축 띠 — 신분당선처럼 이미 열린 구간을 한 줄로 접는다 */
+      .rl-st.s-gap { grid-template-columns: 1fr; }
+      .rl-gap {
+        grid-column: 1 / -1; margin-left: calc(var(--dotc) + 14px);
+        border-left: 5px solid var(--lc); padding: 8px 0 8px 16px;
+        font-size: 21px; font-weight: 700; color: var(--wirit-gray);
+        letter-spacing: -0.03em; white-space: nowrap;
+      }
+
+      /* ── 오른쪽: 일정 ─────────────────────────────────── */
+      .rl-side { display: flex; flex-direction: column; min-height: 0; }
+
+      .rl-prog {
+        flex: 0 0 auto; padding-bottom: 20px;
+        border-bottom: 3px solid var(--wirit-ink);
+      }
+      .rl-prog .lb {
+        font-size: 20px; font-weight: 800; color: var(--wirit-gray);
+        letter-spacing: 0.06em;
+      }
+      .rl-prog .big {
+        font-family: var(--font-num); font-size: 82px; font-weight: 800;
+        line-height: 1.1; letter-spacing: -0.05em; margin: 4px 0 6px;
+        font-variant-numeric: tabular-nums; color: var(--wirit-ink);
+      }
+      .rl-prog .big u { text-decoration: none; font-size: 36px; margin-left: 2px; }
+      .rl-prog .as { font-size: 19px; font-weight: 600; color: var(--wirit-gray); letter-spacing: -0.02em; }
+      .rl-track {
+        height: 14px; margin-top: 13px; border-radius: 2px;
+        background: var(--wirit-ink-06); overflow: hidden;
+      }
+      .rl-fill { height: 100%; background: var(--lc); border-radius: 2px; }
+      /* 0% — 채울 게 없다. 사선으로 "아직 없음"을 그린다(실측/부재 구분) */
+      .rl-track.zero {
+        background: repeating-linear-gradient(135deg, rgba(20,24,33,0.18) 0 2px, transparent 2px 9px);
+      }
+
+      .rl-facts { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
+      .rl-f {
+        flex: 1 1 0; min-height: 0;
+        display: flex; flex-direction: column; justify-content: center; gap: 2px;
+        border-bottom: 2px solid var(--wirit-ink-06);
+      }
+      .rl-f dt { font-size: 19px; font-weight: 800; color: #98a1ae; letter-spacing: 0.03em; }
+      .rl-f dd {
+        font-size: 27px; font-weight: 800; letter-spacing: -0.035em;
+        line-height: 1.14; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+      .rl-f dd.alert { color: var(--wirit-red); }
+      .rl-f em {
+        display: block; font-style: normal; font-size: 18px; font-weight: 600;
+        color: #98a1ae; letter-spacing: -0.02em; white-space: nowrap;
+        overflow: hidden; text-overflow: ellipsis;
+      }
+
+      .rl-key {
+        flex: 0 0 auto; margin-top: 18px;
+        border-left: 5px solid var(--lc); padding: 4px 0 4px 16px;
+        font-size: 21px; font-weight: 700; line-height: 1.5;
+        letter-spacing: -0.03em; color: #2b333f;
+      }
+
+      /* ── 각주 ────────────────────────────────────────── */
+      .rl-note {
+        flex: 0 0 auto; margin-top: 20px; margin-bottom: 18px;
+        font-size: 19px; font-weight: 600; color: var(--wirit-gray); letter-spacing: -0.02em;
+      }
+
+      /* ── 워터마크 2개 (metro-2col 과 같은 방식 — 좌표는 CSS px) ── */
+      .rl-wm { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+      .rl-wm > span {
+        position: absolute; font-family: "Wanted Sans", "Pretendard", sans-serif;
+        font-weight: 800; font-size: 112px; line-height: 1; letter-spacing: -0.03em;
+        color: rgba(20, 24, 33, 0.025); transform: rotate(-24deg); white-space: nowrap;
+      }
+      .rl-wm .w1 { left: 300px; top: 600px; }
+      .rl-wm .w2 { left: 300px; top: 1030px; }
+      .rl > .wirit-topcap, .rl > .rl-head, .rl > .rl-body,
+      .rl > .rl-note, .rl > .wirit-footer { position: relative; z-index: 1; }
+
+      /* ── 환승 뱃지 (metroBadge 출력) — ranking-table·metro-2col 과 동일 ── */
+      .rt-line {
+        width: var(--mono); height: var(--mono); border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; text-align: center;
+        font-family: var(--font-sans); font-weight: 800; line-height: 0.94;
+        box-shadow: 0 1px 3px rgba(20, 24, 33, 0.18); flex: none;
+      }
+      .rt-line.ln-white { color: #fff; }
+      .rt-line.ln-white .num, .rt-line.ln-white .nm, .rt-line.ln-white .gtx {
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+      }
+      .rt-line.ln-dark { color: #1c2431; }
+      .rt-line .num { font-size: calc(var(--mono) * 0.58); font-weight: 900; }
+      .rt-line .nm { font-size: calc(var(--mono) * 0.3); font-weight: 800; letter-spacing: -0.04em; }
+      .rt-line .nm.two { font-size: calc(var(--mono) * 0.28); line-height: 1; }
+      .rt-line .gtx { display: flex; flex-direction: column; line-height: 0.86; }
+      .rt-line .gtx i { font-style: italic; font-weight: 900; font-size: calc(var(--mono) * 0.24); }
+      .rt-line .gtx b { font-size: calc(var(--mono) * 0.32); }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card {{#if font}}font-{{font}}{{/if}} rl" style="--lc:{{lc}};--n:{{n}}">
+      <div class="rl-wm" aria-hidden="true"><span class="w1">wirit<span class="dot">.</span></span><span class="w2">wirit<span class="dot">.</span></span></div>
+      {{#if subtitle}}<div class="wirit-topcap"><span>{{subtitle}}</span></div>{{/if}}
+
+      <div class="rl-head">
+        <h1 class="wirit-title">{{{title}}}</h1>
+        <div class="rl-seg">
+          <span class="sg">{{seg}}</span>
+          <span class="rl-badge t-{{tone}}">{{badge}}</span>
+        </div>
+      </div>
+
+      <div class="rl-body">
+        <div class="rl-map">
+          <div class="rl-rail" aria-hidden="true"></div>
+          {{#each stations}}
+            {{#if this.gap}}
+              <div class="rl-st s-gap"><span class="rl-gap">{{this.gap}}</span></div>
+            {{else}}
+              <div class="rl-st {{this.cls}}">
+                <span class="rl-dot"></span>
+                <span class="rl-nm">{{this.name}}{{#if this.prov}}<i>{{this.prov}}</i>{{/if}}</span>
+                <span class="rl-xf">{{#each this.xfer}}{{{metroBadge this}}}{{/each}}</span>
+              </div>
+            {{/if}}
+          {{/each}}
+        </div>
+
+        <div class="rl-side">
+          <div class="rl-prog">
+            <div class="lb">공정률</div>
+            <div class="big">{{prog.value}}<u>%</u></div>
+            <div class="as">{{prog.asOf}}</div>
+            <div class="rl-track{{#if prog.zero}} zero{{/if}}">{{#unless prog.zero}}<div class="rl-fill" style="width:{{prog.width}}"></div>{{/unless}}</div>
+          </div>
+          <dl class="rl-facts">
+            {{#each facts}}
+            <div class="rl-f">
+              <dt>{{this.label}}</dt>
+              <dd class="{{#if this.alert}}alert{{/if}}">{{this.value}}{{#if this.note}}<em>{{this.note}}</em>{{/if}}</dd>
+            </div>
+            {{/each}}
+          </dl>
+          <div class="rl-key">{{keyline}}</div>
+        </div>
+      </div>
+
+      {{#if note}}<div class="rl-note">{{note}}</div>{{/if}}
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <!-- 제목 폭 맞춤 — 노선명 길이가 달라도(신안산선 / 인덕원~동탄) 좌우 여백을 지킨다 -->
+    <script>
+      window.__wiritFit = function () {
+        var el = document.querySelector(".rl .wirit-title");
+        if (!el) return;
+        var head = el.parentElement, hs = getComputedStyle(head);
+        var avail = head.clientWidth - (parseFloat(hs.paddingLeft) || 0) - (parseFloat(hs.paddingRight) || 0);
+        el.style.whiteSpace = "nowrap";
+        var lo = 40, hi = 74, best = lo;
+        for (var i = 0; i < 20; i++) {
+          var mid = (lo + hi) / 2;
+          el.style.fontSize = mid + "px";
+          if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(window.__wiritFit);
+    </script>
+  </body>
+</html>
