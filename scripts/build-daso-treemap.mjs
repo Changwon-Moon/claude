@@ -373,10 +373,19 @@ function buildBar(segs, barW, labH, barH, gap) {
 }
 /* 깔때기 — 위 변은 확대 대상 토막의 좌우(막대에서의 위치), 아래 변은 트리맵의 좌우(0~100%).
  * 막대 비율이 바뀌면 깔때기도 따라 움직인다. 좌표를 손으로 적지 않는다. */
+/* 막대 토막과 트리맵 칸은 종이색 안쪽 선(2px)으로 서로 떨어져 있다 — 그 선만큼 색면이
+ * 안으로 들어가 있다는 뜻이다. 깔때기에 같은 값을 안 빼면 **깔때기만 좌우로 2px씩 더 넓어**
+ * 막대·판 밖으로 튀어나와 보인다(오너 2026-09-07). 이 값은 템플릿의 inset 그림자와 같은 수다. */
+const EDGE = 2;
 function buildFunnel(x0, x1, h, bg, bg2) {
   if (!(x1 > x0)) throw new Error("깔때기 위 변이 뒤집혔다");
+  if (x1 !== 100) throw new Error("깔때기 위 변 오른쪽은 막대 오른쪽 끝이어야 한다");
   /* 위는 막대 토막 색, 아래는 트리맵 첫 칸 색 — 빛줄기가 막대에서 판으로 떨어지는 모양이다. */
-  return { h, bg, bg2, clip: `${r3(x0)}% 0%, ${r3(x1)}% 0%, 100% 100%, 0% 100%` };
+  return {
+    h, bg, bg2,
+    clip: `calc(${r3(x0)}% + ${EDGE}px) 0%, calc(100% - ${EDGE}px) 0%, `
+        + `calc(100% - ${EDGE}px) 100%, ${EDGE}px 100%`,
+  };
 }
 
 /* ── ⑦ 카드 ───────────────────────────────────────────────── */
@@ -389,7 +398,10 @@ function buildFunnel(x0, x1, h, bg, bg2) {
 /* BODY_H 868 — 요약이 판 안으로 들어오면서 아래에 80px 넘는 죽은 자리가 생겼다(실측).
  * 그 자리를 판이 가져간다. 각주·푸터 사이 숨은 .tm-note 의 아래 margin 이 못박는다. */
 const PLOT_W = 560, PLOT_GAP = 26, BODY_H = 868;
-const LAB_H = 48, BAR_GAP = 12, BAR_H = 56, FUNNEL_H = 54, SUM_GAP = 20;
+/* BAR_H 32 — 막대는 「1채 대 2채 이상」 한 가지만 말하는 도형이라 두꺼울 이유가 없다.
+ * 글자가 막대 밖 라벨 줄에 있으므로 높이는 순전히 굵기 취향이다(오너 「좀 더 얇게」 2026-09-07).
+ * 줄인 만큼은 아래 판이 그대로 가져간다. */
+const LAB_H = 48, BAR_GAP = 12, BAR_H = 32, FUNNEL_H = 54, SUM_GAP = 20;
 /* 요약 상자 높이는 **표의 한 행과 같다**(오너 2026-09-07: 두 아래끝을 같은 라인에).
  * 표는 머리글(hdPx + 아래여백 9 + 밑줄 2) 아래를 16행이 똑같이 나눠 갖는다 —
  * 그 한 칸과 같은 높이를 요약에 주면 밑줄이 저절로 맞는다. 좌표를 손으로 적지 않는다. */
@@ -502,7 +514,7 @@ function makeCard(palKey) {
   const stack = LAB_H + BAR_GAP + BAR_H + FUNNEL_H + plotH + SUM_GAP + sumH;
   if (stack !== BODY_H) throw new Error(`오른쪽 칸 세로 합이 ${stack}px — 판 높이 ${BODY_H}px 와 다르다`);
   /* 분모가 둘인 판이라 깔때기가 사라지면 그림이 거짓말을 한다 — 사람 기억에 안 맡긴다. */
-  if (!card.funnel || !/^[\d.]+% 0%,/.test(card.funnel.clip))
+  if (!card.funnel || !/^calc\([\d.]+% \+ \d+px\) 0%,/.test(card.funnel.clip))
     throw new Error("확대 깔때기가 없다 — 칸 넓이(2채 이상 기준)와 적힌 %(전체 기준)의 분모가 다르다는 걸 카드가 못 말한다");
   return { card, noVal: plot.noVal, palName: pal.name, grouping: G };
 }
