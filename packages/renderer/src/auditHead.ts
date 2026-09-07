@@ -128,20 +128,39 @@ const MEASURE = `(() => {
      빌더가 환승 키를 전수 대조해 카탈로그에 없으면 던진다. 강조색을 흉내 낸 색이 아니라
      **그 노선의 신분증**이다. 그래서 요소에 wirit-linecolor 를 붙여 표시하고,
      그 요소는 면·글자·테두리를 **모두** 건너뛴다(뱃지는 색면이고 글자는 그 위의 흰 글자다).
-     새 판형이 노선색을 쓰면 이 클래스만 붙이면 된다. */
+     새 판형이 노선색을 쓰면 이 클래스만 붙이면 된다.
+
+     ⚠️ 2026-09-07 (같은 날 두 번째): 클래스가 붙은 **그 요소만** 건너뛰게 짰더니
+     .rl-etabox 안의 <span class="k"> / <span class="v"> 가 부모에서 노선색을 물려받아
+     그대로 걸렸다(rail-sinansan #C10230). 색은 상속되므로 **조상까지** 보고 가른다.
+     대신 이 예외가 카드를 통째로 삼키지 못하게 **면제된 요소 수를 세어 같이 내보낸다** —
+     조용히 0장을 재고 초록불이 뜨던 사고를 이 공장은 이미 세 번 겪었다. */
+  var exempt = 0;
   var isLineColor = function (el) {
-    return el.classList && el.classList.contains("wirit-linecolor");
+    return el.closest && el.closest(".wirit-linecolor") !== null;
   };
   Array.prototype.forEach.call(card.querySelectorAll("*"), function (el) {
-    if (isLineColor(el)) return;
+    if (isLineColor(el)) { exempt++; return; }
     var cs2 = getComputedStyle(el);
     /* 글자색·테두리는 **언제나** 본다 — 램프 면 위에 얹힌 라벨이 규격 밖 색으로
        새는 것은 여전히 잡혀야 한다. 빼는 것은 면(배경·fill)뿐이다. */
     look(cs2.color); look(cs2.borderTopColor);
     if (!isRampSurface(el)) { look(cs2.backgroundColor); look(cs2.fill); }
   });
+  /* 「클래스를 큰 상자에 붙였나」는 **면제 비율로는 못 잰다** — 노선 카드는 점·레일·뱃지가
+     원래 요소의 절반이라 30~50%가 정상이고, 실제로 rail-gtxb 50%를 붙잡고 한참 헤맸다.
+     재야 할 것은 비율이 아니라 **한 표시가 얼마나 큰 덩어리를 삼키는가**다. */
+  var maxSub = 0, maxSubSel = "";
+  Array.prototype.forEach.call(card.querySelectorAll(".wirit-linecolor"), function (el) {
+    var n = el.querySelectorAll("*").length;
+    if (n > maxSub) { maxSub = n; maxSubSel = el.tagName + "." + String(el.className || "").split(" ")[0]; }
+  });
   return {
     accents: accents,
+    exempt: exempt,
+    total: card.querySelectorAll("*").length,
+    maxSub: maxSub,
+    maxSubSel: maxSubSel,
     capPx: tc && tc.textContent.trim() ? Math.round(parseFloat(tcs.fontSize)) : null,
     capWeight: tc && tc.textContent.trim() ? String(tcs.fontWeight) : null,
     padTop: Math.round(parseFloat(cs.paddingTop) || 0),
@@ -280,6 +299,20 @@ async function main() {
 
   console.log(`🎨 강조색 전수 — 규격 레드 ${RED} · 코발트 ${COBALT}`);
   console.log("   (빨강·파랑 자리의 진한 색만 봅니다. 노선색·면색·회색은 대상이 아닙니다)");
+  /* 노선색 예외가 **카드를 통째로 삼키지 않았는지** 매번 잰다. 통과 여부만 보면
+     wirit-linecolor 를 큰 상자에 잘못 붙인 날 조용히 초록불이 뜬다 —
+     이 공장이 램프·designQa·픽셀 기준값에서 이미 세 번 겪은 자리다. */
+  if (process.env.WIRIT_EXEMPT_DETAIL)
+    for (const r of rows.filter((x) => x.exempt))
+      console.log(`      ${r.slug} ${r.exempt}/${r.total}`);
+  const swallowed = rows
+    .filter((r) => (r.maxSub ?? 0) > 20)
+    .map((r) => `${r.slug} ${r.maxSubSel} 안 ${r.maxSub}개`);
+  const exemptAll = rows.reduce((a, r) => a + (r.exempt ?? 0), 0);
+  const totalAll = rows.reduce((a, r) => a + (r.total ?? 0), 0);
+  console.log(`   ℹ️ 노선색 면제 ${exemptAll}개 / 전체 ${totalAll}개 요소 (${totalAll ? Math.round((exemptAll / totalAll) * 100) : 0}%)`);
+  if (swallowed.length)
+    console.log(`   ⛔ wirit-linecolor 가 큰 덩어리를 통째로 면제하고 있습니다 — 표시는 색을 입은 요소에만 붙입니다: ${swallowed.join(", ")}`);
   if (process.argv.includes("--write-accent-baseline")) {
     fs.writeFileSync(
       BASE,
