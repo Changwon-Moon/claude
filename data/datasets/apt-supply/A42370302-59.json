@@ -1,0 +1,25 @@
+{
+  "kaptCode": "A42370302",
+  "kaptName": "철산푸르지오하늘채",
+  "type": "59",
+  "jibun": "637",
+  "exclusive": 59.985,
+  "commonResidential": 20.602,
+  "supply": 80.59,
+  "pyeong": 24.38,
+  "pyeongLabel": "24평",
+  "sampleDong": "103동",
+  "sampleHo": "1903",
+  "sampleCount": 72,
+  "ratio": 0.7444,
+  "parts": [
+    {
+      "purpose": "아파트 / 벽체,계단실,복도",
+      "floor": "각층 각층",
+      "area": 20.602
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

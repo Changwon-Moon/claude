@@ -1,0 +1,30 @@
+{
+  "kaptCode": "A43105004",
+  "kaptName": "비산삼성래미안아파트",
+  "type": "84",
+  "jibun": "425",
+  "exclusive": 84.918,
+  "commonResidential": 23.345,
+  "supply": 108.26,
+  "pyeong": 32.75,
+  "pyeongLabel": "33평",
+  "sampleDong": "111동",
+  "sampleHo": "102",
+  "sampleCount": 23,
+  "ratio": 0.7844,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단실",
+      "floor": "각층 각층",
+      "area": 17.091
+    },
+    {
+      "purpose": "아파트 / 벽체,닥트",
+      "floor": "각층 각층",
+      "area": 6.254
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
