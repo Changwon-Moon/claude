@@ -1,11 +1,15 @@
 # 외국인 주택소유통계 수집 — 마지막 실행
 
-- 실행(UTC): 2026-09-08T02:46:43Z · run 34181208431
-- 결과: failure
+- 실행(UTC): 2026-09-08T02:51:04Z · run 34181459780
+- 결과: success
 
 ```
-❌ 202202: 국적별 합(83746)이 총괄표(83512)와 다르다 — 공동+단독을 더하는 방식이나 항목코드를 다시 본다
-undefined
-/home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: tsx src/foreignHouseCli.ts --out /home/runner/work/claude/claude/data/datasets/foreign-house-nat.json
+✅ /home/runner/work/claude/claude/data/datasets/foreign-house-nat.json
+   시점 7개: 2022년 하반기 ~ 2025년 하반기
+   최신 총계 108,231호(총괄표) · 국적별 합 108,492호(중복 261) · 소유자 108,024명
+   중국: 61,439호
+   미국: 23,187호
+   캐나다: 6,542호
+   대만: 3,392호
+   호주: 2,006호
 ```

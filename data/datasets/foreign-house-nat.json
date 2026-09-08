@@ -1,0 +1,485 @@
+{
+ "_": "국적별 외국인 주택소유 현황(반기). 공동주택+단독주택 합산. KOSIS 원자료를 코드가 집계.",
+ "meta": {
+  "name": "국적별 외국인주택소유현황",
+  "source": "KOSIS 한국부동산원(orgId 408) — DT_408004_007(공동주택)·DT_408004_008(단독주택)·DT_408004_001(총괄)",
+  "asOf": "2025-12-31",
+  "provenance": "KOSIS OpenAPI statisticsParameterData.do · itmId T001(주택수)·T003(소유자수) · objL1=ALL(국적) · newEstPrdCnt=20",
+  "verified": true,
+  "verificationNote": "축·항목은 2026-09-08 probe 실측(data/kosis-probe.md). 주택수 = 공동주택 + 단독주택. 2025년 하반기 중국 61,439호·총계 108,231호가 국토부 보도자료와 일치.\n⚠️ totalHouses 는 **총괄표**의 값이고 natSumHouses(국적별 합)는 그보다 조금 크다 — 국적이 다른 사람들이 한 집을 공동소유하면 국적마다 한 번씩 세어지기 때문이다(dupHouses). 카드의 총계는 totalHouses 를 쓴다. 벌어짐이 1% 를 넘으면 수집이 던진다.",
+  "unit": "호",
+  "collectedAt": "2026-09-08"
+ },
+ "natCodes": {
+  "A01": "중국",
+  "A02": "미국",
+  "A03": "캐나다",
+  "A04": "일본",
+  "A05": "대만",
+  "A06": "호주",
+  "A07": "베트남",
+  "A08": "뉴질랜드",
+  "A09": "영/프/독",
+  "A10": "기타아시아",
+  "A11": "기타유럽",
+  "A12": "기타국가",
+  "A13": "기타"
+ },
+ "series": [
+  {
+   "prdDe": "202202",
+   "year": 2022,
+   "half": 2,
+   "label": "2022년 하반기",
+   "asOf": "2022-12-31",
+   "totalHouses": 83512,
+   "totalOwners": 82666,
+   "natSumHouses": 83746,
+   "dupHouses": 234,
+   "nat": {
+    "중국": {
+     "houses": 44889,
+     "owners": 47912
+    },
+    "미국": {
+     "houses": 19923,
+     "owners": 17891
+    },
+    "캐나다": {
+     "houses": 5810,
+     "owners": 4859
+    },
+    "일본": {
+     "houses": 1497,
+     "owners": 1342
+    },
+    "대만": {
+     "houses": 3271,
+     "owners": 2982
+    },
+    "호주": {
+     "houses": 1740,
+     "owners": 1498
+    },
+    "베트남": {
+     "houses": 972,
+     "owners": 945
+    },
+    "뉴질랜드": {
+     "houses": 794,
+     "owners": 701
+    },
+    "영/프/독": {
+     "houses": 1121,
+     "owners": 1029
+    },
+    "기타아시아": {
+     "houses": 1648,
+     "owners": 1581
+    },
+    "기타유럽": {
+     "houses": 1144,
+     "owners": 1053
+    },
+    "기타국가": {
+     "houses": 135,
+     "owners": 127
+    },
+    "기타": {
+     "houses": 802,
+     "owners": 746
+    }
+   }
+  },
+  {
+   "prdDe": "202301",
+   "year": 2023,
+   "half": 1,
+   "label": "2023년 상반기",
+   "asOf": "2023-06-30",
+   "totalHouses": 87223,
+   "totalOwners": 86456,
+   "natSumHouses": 87471,
+   "dupHouses": 248,
+   "nat": {
+    "중국": {
+     "houses": 47327,
+     "owners": 50405
+    },
+    "미국": {
+     "houses": 20469,
+     "owners": 18461
+    },
+    "캐나다": {
+     "houses": 5959,
+     "owners": 4986
+    },
+    "일본": {
+     "houses": 1530,
+     "owners": 1361
+    },
+    "대만": {
+     "houses": 3286,
+     "owners": 3015
+    },
+    "호주": {
+     "houses": 1801,
+     "owners": 1557
+    },
+    "베트남": {
+     "houses": 1062,
+     "owners": 1039
+    },
+    "뉴질랜드": {
+     "houses": 819,
+     "owners": 723
+    },
+    "영/프/독": {
+     "houses": 1155,
+     "owners": 1064
+    },
+    "기타아시아": {
+     "houses": 1874,
+     "owners": 1812
+    },
+    "기타유럽": {
+     "houses": 1255,
+     "owners": 1162
+    },
+    "기타국가": {
+     "houses": 139,
+     "owners": 131
+    },
+    "기타": {
+     "houses": 795,
+     "owners": 740
+    }
+   }
+  },
+  {
+   "prdDe": "202302",
+   "year": 2023,
+   "half": 2,
+   "label": "2023년 하반기",
+   "asOf": "2023-12-31",
+   "totalHouses": 91453,
+   "totalOwners": 90932,
+   "natSumHouses": 91703,
+   "dupHouses": 250,
+   "nat": {
+    "중국": {
+     "houses": 50328,
+     "owners": 53586
+    },
+    "미국": {
+     "houses": 20947,
+     "owners": 18958
+    },
+    "캐나다": {
+     "houses": 6089,
+     "owners": 5114
+    },
+    "일본": {
+     "houses": 1557,
+     "owners": 1392
+    },
+    "대만": {
+     "houses": 3284,
+     "owners": 3030
+    },
+    "호주": {
+     "houses": 1837,
+     "owners": 1588
+    },
+    "베트남": {
+     "houses": 1227,
+     "owners": 1212
+    },
+    "뉴질랜드": {
+     "houses": 821,
+     "owners": 728
+    },
+    "영/프/독": {
+     "houses": 1186,
+     "owners": 1100
+    },
+    "기타아시아": {
+     "houses": 2153,
+     "owners": 2091
+    },
+    "기타유럽": {
+     "houses": 1373,
+     "owners": 1283
+    },
+    "기타국가": {
+     "houses": 134,
+     "owners": 128
+    },
+    "기타": {
+     "houses": 767,
+     "owners": 722
+    }
+   }
+  },
+  {
+   "prdDe": "202401",
+   "year": 2024,
+   "half": 1,
+   "label": "2024년 상반기",
+   "asOf": "2024-06-30",
+   "totalHouses": 95058,
+   "totalOwners": 94606,
+   "natSumHouses": 95307,
+   "dupHouses": 249,
+   "nat": {
+    "중국": {
+     "houses": 52798,
+     "owners": 56160
+    },
+    "미국": {
+     "houses": 21360,
+     "owners": 19374
+    },
+    "캐나다": {
+     "houses": 6225,
+     "owners": 5217
+    },
+    "일본": {
+     "houses": 1584,
+     "owners": 1421
+    },
+    "대만": {
+     "houses": 3307,
+     "owners": 3050
+    },
+    "호주": {
+     "houses": 1894,
+     "owners": 1643
+    },
+    "베트남": {
+     "houses": 1373,
+     "owners": 1357
+    },
+    "뉴질랜드": {
+     "houses": 833,
+     "owners": 739
+    },
+    "영/프/독": {
+     "houses": 1218,
+     "owners": 1133
+    },
+    "기타아시아": {
+     "houses": 2365,
+     "owners": 2303
+    },
+    "기타유럽": {
+     "houses": 1454,
+     "owners": 1365
+    },
+    "기타국가": {
+     "houses": 138,
+     "owners": 132
+    },
+    "기타": {
+     "houses": 758,
+     "owners": 712
+    }
+   }
+  },
+  {
+   "prdDe": "202402",
+   "year": 2024,
+   "half": 2,
+   "label": "2024년 하반기",
+   "asOf": "2024-12-31",
+   "totalHouses": 100216,
+   "totalOwners": 99839,
+   "natSumHouses": 100468,
+   "dupHouses": 252,
+   "nat": {
+    "중국": {
+     "houses": 56301,
+     "owners": 59722
+    },
+    "미국": {
+     "houses": 22031,
+     "owners": 20036
+    },
+    "캐나다": {
+     "houses": 6315,
+     "owners": 5341
+    },
+    "일본": {
+     "houses": 1608,
+     "owners": 1445
+    },
+    "대만": {
+     "houses": 3360,
+     "owners": 3097
+    },
+    "호주": {
+     "houses": 1940,
+     "owners": 1690
+    },
+    "베트남": {
+     "houses": 1606,
+     "owners": 1592
+    },
+    "뉴질랜드": {
+     "houses": 843,
+     "owners": 751
+    },
+    "영/프/독": {
+     "houses": 1257,
+     "owners": 1175
+    },
+    "기타아시아": {
+     "houses": 2687,
+     "owners": 2620
+    },
+    "기타유럽": {
+     "houses": 1616,
+     "owners": 1529
+    },
+    "기타국가": {
+     "houses": 150,
+     "owners": 144
+    },
+    "기타": {
+     "houses": 754,
+     "owners": 697
+    }
+   }
+  },
+  {
+   "prdDe": "202501",
+   "year": 2025,
+   "half": 1,
+   "label": "2025년 상반기",
+   "asOf": "2025-06-30",
+   "totalHouses": 104065,
+   "totalOwners": 103761,
+   "natSumHouses": 104314,
+   "dupHouses": 249,
+   "nat": {
+    "중국": {
+     "houses": 58896,
+     "owners": 62399
+    },
+    "미국": {
+     "houses": 22455,
+     "owners": 20467
+    },
+    "캐나다": {
+     "houses": 6433,
+     "owners": 5422
+    },
+    "일본": {
+     "houses": 1625,
+     "owners": 1467
+    },
+    "대만": {
+     "houses": 3392,
+     "owners": 3137
+    },
+    "호주": {
+     "houses": 1959,
+     "owners": 1709
+    },
+    "베트남": {
+     "houses": 1806,
+     "owners": 1793
+    },
+    "뉴질랜드": {
+     "houses": 852,
+     "owners": 764
+    },
+    "영/프/독": {
+     "houses": 1279,
+     "owners": 1195
+    },
+    "기타아시아": {
+     "houses": 2996,
+     "owners": 2927
+    },
+    "기타유럽": {
+     "houses": 1729,
+     "owners": 1636
+    },
+    "기타국가": {
+     "houses": 159,
+     "owners": 154
+    },
+    "기타": {
+     "houses": 733,
+     "owners": 691
+    }
+   }
+  },
+  {
+   "prdDe": "202502",
+   "year": 2025,
+   "half": 2,
+   "label": "2025년 하반기",
+   "asOf": "2025-12-31",
+   "totalHouses": 108231,
+   "totalOwners": 108024,
+   "natSumHouses": 108492,
+   "dupHouses": 261,
+   "nat": {
+    "중국": {
+     "houses": 61439,
+     "owners": 65079
+    },
+    "미국": {
+     "houses": 23187,
+     "owners": 21152
+    },
+    "캐나다": {
+     "houses": 6542,
+     "owners": 5521
+    },
+    "일본": {
+     "houses": 1644,
+     "owners": 1490
+    },
+    "대만": {
+     "houses": 3392,
+     "owners": 3165
+    },
+    "호주": {
+     "houses": 2006,
+     "owners": 1748
+    },
+    "베트남": {
+     "houses": 2028,
+     "owners": 2011
+    },
+    "뉴질랜드": {
+     "houses": 861,
+     "owners": 776
+    },
+    "영/프/독": {
+     "houses": 1320,
+     "owners": 1230
+    },
+    "기타아시아": {
+     "houses": 3316,
+     "owners": 3243
+    },
+    "기타유럽": {
+     "houses": 1875,
+     "owners": 1778
+    },
+    "기타국가": {
+     "houses": 164,
+     "owners": 161
+    },
+    "기타": {
+     "houses": 718,
+     "owners": 670
+    }
+   }
+  }
+ ]
+}
