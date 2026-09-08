@@ -38,7 +38,19 @@ name: 신고가 재료 미리 걸기 (아침 판정 직후)
 
 on:
   workflow_run:
-    workflows: ["오늘의 신고가 (daily)"]
+    # ── ⚠️ **사다리도 듣는다** (2026-09-09)
+    #
+    # 09-09 아침, 예약 판정(07:02 KST)이 「신고가 확인」에서 실패했다. 그런데 **사다리 1칸이
+    # 곧바로 성공해** 알림도 나갔고 판정 로그도 15건으로 멀쩡히 남았다.
+    # 그런데 이 워크플로는 **실패한 그 런**만 보고 `skipped` 로 끝났고,
+    # 그 결과 **오늘 재료가 하나도 안 걸렸다**(공급면적 11 · 곡선 12 · 주차 11).
+    # 카드는 3장밖에 못 만들 뻔했고, 사람이 07:45 에 손으로 밀어 겨우 시작했다.
+    #
+    # 사다리의 성공은 `workflow_call` 이라 「오늘의 신고가 (daily)」 이름으로
+    # **workflow_run 을 새로 띄우지 않는다.** 그래서 사다리 워크플로 자체를 함께 듣는다.
+    # ⚠️ 그것만으로는 부족하다 — 사다리는 「할 일이 없어서」 성공하기도 한다.
+    #    그래서 아래 「판정이 오늘 것인지 잰다」 단계가 **로그를 직접 보고** 정한다.
+    workflows: ["오늘의 신고가 (daily)", "오늘의 신고가 — 자동 재시도"]
     types: [completed]
   workflow_dispatch:
 
@@ -51,14 +63,42 @@ concurrency:
 
 jobs:
   prep:
-    # 판정이 성공했을 때만 — 실패한 판정 뒤에 거는 재료는 어제 것이거나 빈 것이다
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    # ⚠️ 여기서 앞 런의 conclusion 을 보지 않는다 — 09-09 에 그것 때문에 하루가 통째로 막혔다.
+    #    「판정이 실제로 오늘 것을 남겼는가」는 아래에서 **로그를 보고** 잰다.
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    outputs:
+      go: ${{ steps.judged.outputs.go }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_branch || github.ref_name }}
+
+      # ── 🔍 **판정이 오늘 것을 남겼는지 잰다** (2026-09-09)
+      #
+      # 예전엔 「앞 워크플로가 success 였나」로 정했다. 그건 **누가 이겼는지**를 묻는 것이고,
+      # 우리가 알아야 할 것은 **판정 결과가 오늘 것인가**다. 둘은 09-09 에 갈라졌다:
+      # 예약 판정은 실패했는데 사다리가 성공해 로그는 멀쩡했고, 이 문지기만 그걸 몰랐다.
+      #
+      # `data/singo-last.md` 머리 6줄이 「실행 날짜(KST)」와 「결과」를 적어 둔다. 그것을 본다.
+      # ⚠️ 사람이 손으로 부른 경우(workflow_dispatch)는 그냥 통과시킨다 — 사람이 이미 판단했다.
+      - name: 판정이 오늘 것인지 잰다
+        id: judged
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "사람이 손으로 불렀습니다 — 그대로 진행합니다"; echo "go=1" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          TODAY=$(TZ=Asia/Seoul date +%F)
+          HEAD6=$(head -6 data/singo-last.md 2>/dev/null || true)
+          if printf '%s' "$HEAD6" | grep -q "실행: ${TODAY}" && printf '%s' "$HEAD6" | grep -q "결과: \*\*성공\*\*"; then
+            echo "✅ 오늘(${TODAY}) 판정이 성공으로 남아 있습니다 — 재료를 겁니다"
+            echo "go=1" >> "$GITHUB_OUTPUT"
+          else
+            echo "⏭ 오늘(${TODAY}) 판정 기록이 없거나 실패입니다 — 재료를 걸지 않습니다"
+            printf '%s\n' "$HEAD6"
+            echo "go=0" >> "$GITHUB_OUTPUT"
+          fi
 
       - uses: pnpm/action-setup@v4
         with:
@@ -70,6 +110,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: 재료 걸기
+        if: steps.judged.outputs.go == '1'
         shell: bash
         run: |
           # ⚠️ 종료코드 2 는 「재료가 덜 왔다」는 **정상 신호**다 — 여기서는 실패가 아니다.
@@ -82,6 +123,7 @@ jobs:
           [ "$C" = "0" ] || [ "$C" = "2" ] || [ "$C" = "3" ] || exit "$C"
 
       - name: 대기열 커밋 (수집기의 방아쇠다)
+        if: steps.judged.outputs.go == '1'
         shell: bash
         run: |
           git config user.name  "wirit-bot"
@@ -96,7 +138,7 @@ jobs:
           git push origin HEAD:${{ github.event.workflow_run.head_branch || github.ref_name }}
 
       - name: 무엇을 걸었나
-        if: always()
+        if: always() && steps.judged.outputs.go == '1'
         shell: bash
         run: |
           { echo "### 신고가 재료 미리 걸기"; echo; sed -n '1,40p' /tmp/prep.log; } >> "$GITHUB_STEP_SUMMARY"
@@ -108,21 +150,29 @@ jobs:
   # ⚠️ 넷을 **나란히** 부른다. 서로 다른 API 라 줄 세울 이유가 없고,
   #    하나가 죽어도 나머지는 받아 온다(공급면적은 자기 재시도 사다리가 따로 받는다).
   supply:
+    # 판정이 오늘 것이 아니면 수집기도 부르지 않는다 — 어제 대기열을 다시 훑을 이유가 없다
+    if: needs.prep.outputs.go == '1'
     name: 공급면적
     needs: prep
     uses: ./.github/workflows/apt-supply-area.yml
     secrets: inherit
   history:
+    # 판정이 오늘 것이 아니면 수집기도 부르지 않는다 — 어제 대기열을 다시 훑을 이유가 없다
+    if: needs.prep.outputs.go == '1'
     name: 곡선
     needs: prep
     uses: ./.github/workflows/singo-history.yml
     secrets: inherit
   station:
+    # 판정이 오늘 것이 아니면 수집기도 부르지 않는다 — 어제 대기열을 다시 훑을 이유가 없다
+    if: needs.prep.outputs.go == '1'
     name: 가까운 역
     needs: prep
     uses: ./.github/workflows/apt-station.yml
     secrets: inherit
   detail:
+    # 판정이 오늘 것이 아니면 수집기도 부르지 않는다 — 어제 대기열을 다시 훑을 이유가 없다
+    if: needs.prep.outputs.go == '1'
     name: 주차
     needs: prep
     uses: ./.github/workflows/apt-detail.yml
