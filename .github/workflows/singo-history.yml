@@ -45,6 +45,16 @@ on:
         description: "시작월 YYYYMM (기본 202001)"
         required: false
         default: ""
+      # ── ⚠️ **버튼으로 부를 때도 다시 받을 수 있어야 한다** (2026-09-09)
+      #
+      # 09-09 에 백련산·아르테자이 곡선을 버튼으로 두 번 불렀는데 값이 그대로였다.
+      # 버튼 경로가 만드는 한 줄짜리 대기열에 `force=1` 이 없어 **「이미 있음」으로 건너뛴 것**이다.
+      # 성공(초록불)으로 끝나기 때문에 **아무 일도 안 한 것을 알 수가 없었다** —
+      # 종료코드 0 이 「일했다」를 뜻하지 않는 자리가 여기에도 있었다(08-19 신고가와 같은 교훈).
+      force:
+        description: "이미 받아 둔 곡선도 다시 받는다 (true/false)"
+        required: false
+        default: "false"
 
 permissions:
   contents: write
@@ -95,13 +105,16 @@ jobs:
           IN_UMD: ${{ github.event.inputs.umd }}
           IN_TYPE: ${{ github.event.inputs.type }}
           IN_FROM: ${{ github.event.inputs.from }}
+          IN_FORCE: ${{ github.event.inputs.force }}
         run: |
           Q=data/singo-history-queue.txt
           : > "$RUNNER_TEMP/jobs.txt"
           if [ -n "$IN_LAWD$IN_APT" ]; then
             # 버튼으로 부른 경우 — 한 줄짜리 대기열을 만들어 아래 루프가 똑같이 돌게 한다
-            printf 'lawd=%s umd=%s type=%s from=%s apt="%s"\n' \
-              "$IN_LAWD" "$IN_UMD" "${IN_TYPE:-84}" "$IN_FROM" "$IN_APT" >> "$RUNNER_TEMP/jobs.txt"
+            FORCE_TOK=""
+            case "$IN_FORCE" in true|1|yes) FORCE_TOK=" force=1";; esac
+            printf 'lawd=%s umd=%s type=%s from=%s apt="%s"%s\n' \
+              "$IN_LAWD" "$IN_UMD" "${IN_TYPE:-84}" "$IN_FROM" "$IN_APT" "$FORCE_TOK" >> "$RUNNER_TEMP/jobs.txt"
           elif [ -f "$Q" ]; then
             grep -v '^[[:space:]]*#' "$Q" | grep -v '^[[:space:]]*$' > "$RUNNER_TEMP/jobs.txt" || true
           fi

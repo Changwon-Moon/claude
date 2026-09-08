@@ -225,6 +225,29 @@ if (MERGE) {
   );
 }
 
+/* ── 🔒 **이 카드가 이미 확정·발행된 것인가** (2026-09-09)
+ *
+ * 「기준은 새로 만드는 것에만 적용한다」(오너 2026-09-03)를 **그림 배치**에도 지켜야 한다.
+ * 09-09 에 라벨 배치를 픽셀 기준으로 바꿨더니 **이미 확정된 카드 6장**(153개 중)이 같이
+ * 움직였다 — 영통에듀파크·영통센트럴파크뷰·중동덕유4·구리덕현·동천자이·부천보람아주.
+ * 그건 이미 인스타에 올라간 그림이다. 그래서 그 카드들은 **옛 배치로 그린다.**
+ *
+ * ⚠️ 「같은 단지의 새 이름표」(…-0909)는 **새 카드**다 — 여기 안 걸린다.
+ *    묻는 것은 「내가 쓸 파일 이름이 이미 확정된 카드인가」이지 단지가 아니다.
+ * ⚠️ 확정은 `confirm.mjs` 만 찍고 그때 md5 증거가 함께 박힌다 — 사람이 못 위조한다.
+ */
+const OUT_SLUG = arg("slug") ?? `singo-${full(APT)}-${TYPE}`;
+const ALREADY_CONFIRMED = (() => {
+  try {
+    const S = JSON.parse(readFileSync(P("data/review/sets.json"), "utf8"));
+    return (S.sets ?? []).some(
+      (s) => String(s.state ?? "").startsWith("오너 확정") && (s.cards ?? []).includes(OUT_SLUG),
+    );
+  } catch {
+    return false;
+  }
+})();
+
 /* ── ② 곡선 자료 */
 const histPath = P(`data/datasets/singo-history/${hit.lawdCd}-${full(APT)}-${TYPE}.json`);
 if (!existsSync(histPath)) {
@@ -670,17 +693,41 @@ if (cycle && worst.atMaxIdx >= 0) {
   const pk = traded[worst.atMaxIdx];
   const py = r2(yOf(pk.maxManwon));
   const bx = r2(X0 + 26);
-  /* 두 선이 붙은 판(오너 2026-09-08): 점선은 신고가 라인 하나로, 라벨은 그 **아래**로.
-     위에 두면 신고가 점선이 글자를 그대로 뚫는다(08-27 수원아이파크시티7단지). */
-  const NEAR = !!cycleNear;
+  /* ── 📏 **퍼센트가 아니라 픽셀로 잰다** (2026-09-09)
+   *
+   * 09-08 에 「3% 안이면 붙은 판」으로 두었다. 그런데 09-09 원천레이크파크가 **+3.4%** 로
+   * 그 문턱을 넘어 통과했고, **검수가 「기준선이 글자를 12px 관통」으로 막았다.**
+   * 당연하다 — 겹치는지 아닌지는 퍼센트가 아니라 **판의 세로 배율**이 정한다.
+   * 값 폭이 좁은 단지는 3.4% 가 60px 이고, 넓은 단지는 3% 가 200px 이다.
+   *
+   * 그래서 **실제 두 선의 픽셀 거리**를 본다:
+   *   · 라벨 2행이 선 위에 차지하는 띠 ≈ 80px (`ty1 = py-52` · 글자 27px)
+   *     → 그 안에 신고가 선이 들어오면 **라벨을 선 아래로 내린다**
+   *   · 두 선이 사실상 한 줄(14px 안)이면 **점선도 하나만** 긋고 세로 폭 표시는 뺀다
+   *     (길이가 0이라 그림이 아니라 때처럼 보인다 — 오너 2026-09-08)
+   *
+   * ⚠️ 빌더의 3% 문지기는 **그대로 둔다.** 그건 「이 소재를 카드로 만들 것인가」를 묻는
+   *    오너의 자리이고, 여기는 「만들기로 한 카드를 어떻게 그릴 것인가」다. 두 물음은 다르다.
+   */
+  const NEAR_BAND = 80;
+  const NEAR_ONE_LINE = 14;
+  const gapPx = Math.abs(thrY - py);
+  /* ⚠️ **이미 확정·발행한 카드는 옛 배치 그대로.** 새 잣대로 이미 나간 그림을 되짚지 않는다.
+     (오너 2026-09-03) — `--accept-cycle-guard` 로 오너가 직접 지시한 판은 예외 없이 새 배치다. */
+  const NEAR = !!cycleNear || (gapPx < NEAR_BAND && !ALREADY_CONFIRMED);
+  const ONE_LINE = !!cycleNear || (gapPx < NEAR_ONE_LINE && !ALREADY_CONFIRMED);
+  if (NEAR && !cycleNear)
+    console.log(`   ↕ 두 기준선이 ${gapPx.toFixed(0)}px 로 붙어 「지난 고점」 라벨을 선 아래로 내립니다(띠 ${NEAR_BAND}px).`);
   prevLine = {
     x1: X0,
     x2: X1,
-    y: NEAR ? thrY : py,
+    y: ONE_LINE ? thrY : py,
     tx: r2(bx + 26),
     anchor: "start",
-    ty1: NEAR ? r2(thrY + 40) : r2(py - 52),
-    ty2: NEAR ? r2(thrY + 76) : r2(py - 16),
+    /* 붙었으면 **선 아래**로 — 위에 두면 신고가 점선이 글자를 그대로 뚫는다
+       (08-27 수원아이파크시티7단지 +0.2% · 09-09 원천레이크파크 +3.4%). */
+    ty1: NEAR ? r2((ONE_LINE ? thrY : py) + 40) : r2(py - 52),
+    ty2: NEAR ? r2((ONE_LINE ? thrY : py) + 76) : r2(py - 16),
     text1: `${eok(pk.maxManwon)}(${ymLab(pk.ym)})`,
     /* ⚠️ "고점대비" 만 쓰면 **역대 고점 대비**로 읽힌다(2026-08-16b 검수).
        여기 고점은 지난 사이클 고점(9억·2021.10)이고, 직전 최고가는 9.5억(2026-07-14)로 따로 있다.
@@ -690,7 +737,7 @@ if (cycle && worst.atMaxIdx >= 0) {
   };
   /* 세로 폭 표시는 **길이가 곧 퍼센트**다. 1~2%면 길이가 몇 px 이라 그림이 아니라
      때처럼 보이고 눈금 두 개만 남는다 — 붙은 판에서는 뺀다(오너 2026-09-08). */
-  brkHi = NEAR ? null : { x: bx, y1: thrY, y2: py, tickX1: r2(bx - 12), tickX2: r2(bx + 12), tone: "hi" };
+  brkHi = ONE_LINE ? null : { x: bx, y1: thrY, y2: py, tickX1: r2(bx - 12), tickX2: r2(bx + 12), tone: "hi" };
   const idx = pts.findIndex((p) => p.ym === pk.ym);
   /* 고점 점은 **빨강 채움**(오너 2026-08-16) — 빈 원 두 개는 어느 쪽이 고점인지 말해 주지 않았다.
      색이 라벨과 같으니 그림에서 숫자를 찾는 데 한 걸음이 준다. */
