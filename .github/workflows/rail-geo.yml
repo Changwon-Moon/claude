@@ -17,6 +17,11 @@ on:
         required: false
         default: "sinansan"
 
+# 봇이 결과 파일을 커밋한다 — 기본 GITHUB_TOKEN 은 읽기만 되어서 첫 실행이 커밋 단계에서
+# 죽었다(run 34176171620). 탐사 자체는 성공했는데 결과가 저장소에 안 남아 볼 수가 없었다.
+permissions:
+  contents: write
+
 jobs:
   probe:
     runs-on: ubuntu-latest
