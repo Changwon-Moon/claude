@@ -156,14 +156,30 @@ async function main() {
       sumOwners += v.owners;
     }
     const declared = totalByPeriod.get(p);
-    /* 총괄표는 국적축이 없어 한 시점에 한 줄이다. 있으면 반드시 맞아야 한다. */
-    if (declared !== undefined && declared !== sumHouses) {
+    if (declared === undefined) throw new Error(`${p}: 총괄표에 이 시점이 없다`);
+
+    /* ── 국적별 합은 총괄보다 **조금 크다** (2026-09-08 실측: 202202 에서 83,746 vs 83,512, +234)
+       국적이 다른 사람들이 한 집을 공동소유하면 그 집이 국적마다 한 번씩 세어지기 때문이다.
+       그래서 두 숫자는 원래 안 맞는 것이고, **어느 쪽을 총계로 쓸지 정하는 것**이 우리 일이다.
+         · 총계(카드의 「10만 8,231호」) = 총괄표. 보도자료가 말하는 그 숫자다.
+         · 국적별 선                    = 국적별 표. 「중국 61,439호」도 보도자료와 같다.
+       벌어짐이 커지면 우리가 뭔가 잘못 더한 것이므로 1% 를 넘으면 던진다. */
+    const gap = sumHouses - declared;
+    if (gap < 0) throw new Error(`${p}: 국적별 합(${sumHouses})이 총괄(${declared})보다 작다 — 빠진 국적이 있다`);
+    if (gap / declared > 0.01) {
       throw new Error(
-        `${p}: 국적별 합(${sumHouses})이 총괄표(${declared})와 다르다 — ` +
-        `공동+단독을 더하는 방식이나 항목코드를 다시 본다`,
+        `${p}: 국적별 합(${sumHouses})이 총괄표(${declared})보다 ${gap}호(${(gap / declared * 100).toFixed(2)}%) 많다 — ` +
+        `공동소유 중복으로 보기엔 크다. 항목코드·더하는 방식을 다시 본다`,
       );
     }
-    return { ...period(p), totalHouses: sumHouses, totalOwners: sumOwners, nat };
+    return {
+      ...period(p),
+      totalHouses: declared,        // 총괄표 — 카드가 총계로 쓰는 값
+      totalOwners: sumOwners,       // 소유자수는 국적별 합(총괄에도 T003 이 있지만 축이 주택종류다)
+      natSumHouses: sumHouses,      // 국적별 합 — 총괄보다 큰 것이 정상이다
+      dupHouses: gap,               // 국적이 다른 사람끼리의 공동소유로 중복 계상된 만큼
+      nat,
+    };
   });
 
   const latest = series[series.length - 1];
@@ -176,8 +192,11 @@ async function main() {
       provenance: "KOSIS OpenAPI statisticsParameterData.do · itmId T001(주택수)·T003(소유자수) · objL1=ALL(국적) · newEstPrdCnt=" + CNT,
       verified: true,
       verificationNote:
-        "축·항목은 2026-09-08 probe 실측(data/kosis-probe.md). 공동+단독 합을 총괄표(DT_408004_001)와 " +
-        "시점마다 대조해 어긋나면 수집이 던진다. 2025년 하반기 중국 61,439호가 국토부 보도자료와 일치.",
+        "축·항목은 2026-09-08 probe 실측(data/kosis-probe.md). 주택수 = 공동주택 + 단독주택. " +
+        "2025년 하반기 중국 61,439호·총계 108,231호가 국토부 보도자료와 일치.\n" +
+        "⚠️ totalHouses 는 **총괄표**의 값이고 natSumHouses(국적별 합)는 그보다 조금 크다 — " +
+        "국적이 다른 사람들이 한 집을 공동소유하면 국적마다 한 번씩 세어지기 때문이다(dupHouses). " +
+        "카드의 총계는 totalHouses 를 쓴다. 벌어짐이 1% 를 넘으면 수집이 던진다.",
       unit: "호",
       collectedAt: new Date().toISOString().slice(0, 10),
     },
@@ -189,7 +208,7 @@ async function main() {
   writeFileSync(out, JSON.stringify(payload, null, 1) + "\n");
   console.log(`✅ ${out}`);
   console.log(`   시점 ${series.length}개: ${series[0].label} ~ ${latest.label}`);
-  console.log(`   최신 총계 ${latest.totalHouses.toLocaleString()}호 · 소유자 ${latest.totalOwners.toLocaleString()}명`);
+  console.log(`   최신 총계 ${latest.totalHouses.toLocaleString()}호(총괄표) · 국적별 합 ${latest.natSumHouses.toLocaleString()}호(중복 ${latest.dupHouses}) · 소유자 ${latest.totalOwners.toLocaleString()}명`);
   for (const k of ["중국", "미국", "캐나다", "대만", "호주"]) {
     console.log(`   ${k}: ${latest.nat[k]?.houses.toLocaleString()}호`);
   }
