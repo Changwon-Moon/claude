@@ -5,12 +5,12 @@
 
 ```
 
-── 그랑시티자이2차 전용 59타입 (41271)
+── 반정아이파크캐슬5단지 전용 84타입 (41595)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41271 --apt '그랑시티자이2차' --umd '사동' --type 59 --from 202001
+> tsx src/molitHistoryCli.ts -- --lawd 41595 --apt '반정아이파크캐슬5단지' --umd '반정동' --type 84 --from 202001
 
-⏭ 이미 있음 — 41271-그랑시티자이2차-59.json (다시 받으려면 force=1)
+⏭ 이미 있음 — 41595-반정아이파크캐슬5단지-84.json (다시 받으려면 force=1)
 
 ✅ 대기열 전 줄 완료
 ```
