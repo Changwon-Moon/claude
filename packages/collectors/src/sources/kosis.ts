@@ -203,23 +203,33 @@ export const TABLES: Record<string, TableSpec> = {
         probe 가 실패하면 fetchMeta 가 실제 주기·축을 적어 온다. */
   foreignHouseTotal: {
     orgId: "408", tblId: "DT_408004_001", label: "외국인주택소유현황(총괄)",
-    metric: "외국인소유주택", itmId: "ALL", objL1: "ALL", objL2: "", prdSe: "H",
-    confidence: "표명확실", enabled: false,
-    note: "2026-09-08 kosis-search 로 표명 확인(orgId 408 한국부동산원). 항목코드·분류축·주기 전부 미검증. " +
-      "국적별 두 표(007·008)의 합이 이 총괄과 맞는지 대조하는 용도로 함께 넣었다.",
+    metric: "외국인소유주택", itmId: "T001", objL1: "ALL", objL2: "", prdSe: "H",
+    confidence: "확실", enabled: false,
+    note: "probe 검증 완료(2026-09-08): 통계표명 일치 · 항목 T001=주택수 T002=지분반영 주택수 T003=소유자수 " +
+      "T004·T005=1인당 평균 · 시점 PRD_DE=202502(PRD_SE=S 반기) · 최신 공표 2026-05-29.\n" +
+      "⚠️ **C1 이 국적이 아니라 주택종류다**(A01=전체주택 · A02=공동주택 · A03=단독주택). " +
+      "국적별 표(007·008)와 축이 달라서, 모르고 다 더하면 전체를 두 번 세어 216,462호가 된다 — " +
+      "그럴듯한 숫자라 눈으로는 안 잡힌다. A01 한 줄만 쓴다(202502 A01=108,231호, 보도자료와 일치).\n" +
+      "enabled 는 false 로 둔다 — 정기 수집(kosisCli)은 인구 계열용이고, 이 표는 " +
+      "foreignHouseCli 가 따로 받는다(foreign-house-collect.yml).",
   },
   foreignHouseNatApt: {
     orgId: "408", tblId: "DT_408004_007", label: "국적별 외국인주택소유현황(공동주택)",
-    metric: "외국인소유주택", itmId: "ALL", objL1: "ALL", objL2: "", prdSe: "H",
-    confidence: "표명확실", enabled: false,
-    note: "2026-09-08 kosis-search 로 표명 확인. 국적 축이 C1 인지 C2 인지 미확인 — probe 로 본다. " +
-      "⚠️ 이 표만으로는 총계가 안 나온다. 단독주택(008)과 더해야 보도자료 수치가 된다.",
+    metric: "외국인소유주택", itmId: "T001", objL1: "ALL", objL2: "", prdSe: "H",
+    confidence: "확실", enabled: false,
+    note: "probe 검증 완료(2026-09-08): C1=국적(A01 중국 · A02 미국 · A03 캐나다 · A04 일본 · A05 대만 · " +
+      "A06 호주 · A07 베트남 · A08 뉴질랜드 · A09 영/프/독 · A10 기타아시아 · A11 기타유럽 · " +
+      "A12 기타국가 · A13 기타) · 항목 T001=주택수 T003=소유자수 · 단위 호수.\n" +
+      "⚠️ 이 표만으로는 총계가 안 나온다. 단독주택(008)과 더해야 보도자료 수치가 된다 " +
+      "(202502 중국: 공동 59,082 + 단독 2,357 = 61,439호). 수집은 foreignHouseCli 가 한다.",
   },
   foreignHouseNatHouse: {
     orgId: "408", tblId: "DT_408004_008", label: "국적별 외국인주택소유현황(단독주택)",
-    metric: "외국인소유주택", itmId: "ALL", objL1: "ALL", objL2: "", prdSe: "H",
-    confidence: "표명확실", enabled: false,
-    note: "2026-09-08 kosis-search 로 표명 확인. 공동주택(007)과 짝이다 — 둘을 더해야 총계가 된다.",
+    metric: "외국인소유주택", itmId: "T001", objL1: "ALL", objL2: "", prdSe: "H",
+    confidence: "확실", enabled: false,
+    note: "probe 검증 완료(2026-09-08): 축·항목은 공동주택(007)과 같다. **단위만 다르다 — 동수**. " +
+      "공동주택(007)과 짝이라 둘을 더해야 이 통계가 말하는 '주택수'가 된다. " +
+      "수집은 foreignHouseCli 가 한다(foreign-house-collect.yml).",
   },
 };
 

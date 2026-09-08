@@ -29,7 +29,8 @@
     "collect-silv": "tsx src/silvCli.ts",
     "read-bunyang-csv": "tsx src/bunyangCsvCli.ts",
     "collect-month-backfill": "tsx src/monthBackfillCli.ts",
-    "fold-month-cache": "tsx src/monthFoldCli.ts"
+    "fold-month-cache": "tsx src/monthFoldCli.ts",
+    "collect-foreign-house": "tsx src/foreignHouseCli.ts"
   },
   "dependencies": {},
   "devDependencies": {
