@@ -44,7 +44,7 @@ export type TableSpec = {
   objL1: string;
   objL2: string;
   /** 수록 주기 — 월간이 있으면 M, 연간뿐이면 Y */
-  prdSe: "M" | "Y";
+  prdSe: "M" | "Y" | "H";
   /**
    * 얼마나 확인됐나.
    *   확실     — 표 제목 + 항목코드까지 실동작 사례로 확인
@@ -194,6 +194,33 @@ export const TABLES: Record<string, TableSpec> = {
       "이름 그대로 맞추면 그 세 도가 통째로 떨어져 나가 지도에서 조용히 빈다 — " +
       "빈 지도는 '데이터가 없다'로 보이지 오류로 안 보인다. canonSido() 로 정규화한다.",
   },
+
+  /* ── 외국인 주택소유통계(한국부동산원 orgId 408) — 2026-09-08 신설, 전부 미검증 ──
+     소재: 「국적별 외국인 집주인이 어떻게 늘어왔나」 추이 카드.
+     ⚠️ 이 통계의 총계는 **공동주택 + 단독주택**이다. 국적별 표가 둘로 나뉘어 있어
+        한쪽만 쓰면 카드의 숫자가 보도자료(2025년 말 108,231호)와 안 맞는다.
+     ⚠️ 주기가 반기(6월말·12월말)라 prdSe 를 H 로 적었지만 **이것도 미확인**이다.
+        probe 가 실패하면 fetchMeta 가 실제 주기·축을 적어 온다. */
+  foreignHouseTotal: {
+    orgId: "408", tblId: "DT_408004_001", label: "외국인주택소유현황(총괄)",
+    metric: "외국인소유주택", itmId: "ALL", objL1: "ALL", objL2: "", prdSe: "H",
+    confidence: "표명확실", enabled: false,
+    note: "2026-09-08 kosis-search 로 표명 확인(orgId 408 한국부동산원). 항목코드·분류축·주기 전부 미검증. " +
+      "국적별 두 표(007·008)의 합이 이 총괄과 맞는지 대조하는 용도로 함께 넣었다.",
+  },
+  foreignHouseNatApt: {
+    orgId: "408", tblId: "DT_408004_007", label: "국적별 외국인주택소유현황(공동주택)",
+    metric: "외국인소유주택", itmId: "ALL", objL1: "ALL", objL2: "", prdSe: "H",
+    confidence: "표명확실", enabled: false,
+    note: "2026-09-08 kosis-search 로 표명 확인. 국적 축이 C1 인지 C2 인지 미확인 — probe 로 본다. " +
+      "⚠️ 이 표만으로는 총계가 안 나온다. 단독주택(008)과 더해야 보도자료 수치가 된다.",
+  },
+  foreignHouseNatHouse: {
+    orgId: "408", tblId: "DT_408004_008", label: "국적별 외국인주택소유현황(단독주택)",
+    metric: "외국인소유주택", itmId: "ALL", objL1: "ALL", objL2: "", prdSe: "H",
+    confidence: "표명확실", enabled: false,
+    note: "2026-09-08 kosis-search 로 표명 확인. 공동주택(007)과 짝이다 — 둘을 더해야 총계가 된다.",
+  },
 };
 
 export type TableKey = keyof typeof TABLES;
@@ -219,7 +246,7 @@ export function buildUrl(
   table: TableKey,
   key: string,
   opts: {
-    prdSe?: "M" | "Y"; startPrdDe?: string; endPrdDe?: string; newEstPrdCnt?: number;
+    prdSe?: "M" | "Y" | "H"; startPrdDe?: string; endPrdDe?: string; newEstPrdCnt?: number;
     /** probe 전용 — 축을 하나씩 열어 보며 이 표가 축을 몇 개 요구하는지 관찰한다. */
     extraObjL?: string[];
     itmId?: string;
@@ -258,7 +285,7 @@ export async function fetchTable(
   table: TableKey,
   key: string,
   opts: {
-    prdSe?: "M" | "Y"; startPrdDe?: string; endPrdDe?: string; newEstPrdCnt?: number;
+    prdSe?: "M" | "Y" | "H"; startPrdDe?: string; endPrdDe?: string; newEstPrdCnt?: number;
     extraObjL?: string[]; itmId?: string; objL1?: string;
   },
 ): Promise<unknown> {
@@ -353,7 +380,7 @@ export function chunkSizeFor(table: TableKey, periods: number): number {
 export async function fetchTableChunked(
   table: TableKey,
   key: string,
-  opts: { startPrdDe?: string; endPrdDe?: string; prdSe?: "M" | "Y" },
+  opts: { startPrdDe?: string; endPrdDe?: string; prdSe?: "M" | "Y" | "H" },
   codes: string[],
   periods: number,
   onProgress?: (done: number, total: number) => void,
@@ -395,13 +422,19 @@ export async function fetchTableChunked(
  * 계산에 쓴 시점 수와 실제로 요청하는 시점 수가 다르면 한도에 걸린다.
  */
 export function rangeForTable(
-  spec: { prdSe: "M" | "Y"; maxMonths?: number },
+  spec: { prdSe: "M" | "Y" | "H"; maxMonths?: number },
   today: string,
   months: number,
 ): { start: string; end: string; periods: number } {
   const want = Math.min(months, spec.maxMonths ?? months);
   const [y, m] = today.split("-").map(Number);
 
+  if (spec.prdSe === "H") {
+    /* 반기 표(외국인 주택소유통계)의 PRD_DE 표기를 아직 실측하지 못했다.
+       추측한 형식으로 범위를 던지면 KOSIS 는 빈 배열을 주고, 빈 배열은 '자료 없음'처럼 보인다.
+       probe 가 PRD_DE 를 적어 올 때까지 이 길은 막아 두고 newEstPrdCnt 로만 받는다. */
+    throw new Error("반기(H) 표는 기간 범위 계산이 아직 검증되지 않았다 — newEstPrdCnt 로 받는다");
+  }
   if (spec.prdSe === "Y") {
     /* 연간 통계는 한두 해 늦게 나온다(출생·사망 최신이 2024년). 넉넉히 잡고 오는 만큼 받는다. */
     const endY = y;
