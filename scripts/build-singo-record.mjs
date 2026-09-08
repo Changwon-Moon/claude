@@ -508,6 +508,8 @@ traded.forEach((p, i) => {
 let cycle = null;
 let cycleDropped = null;
 let cycleGuardWaived = null;
+/* 두 기준선이 3% 안에 붙은 판 — 점선 하나 · 라벨은 선 아래 (오너 2026-09-08) */
+let cycleNear = null;
 if (worst.atMaxIdx >= 0) {
   const pk = traded[worst.atMaxIdx];
   /* ⚠️ **몇 달 전 값을 "지난 사이클 고점"이라 부르지 않는다** (2026-08-16b).
@@ -610,8 +612,32 @@ if (worst.atMaxIdx >= 0) {
    * ⚠️ 시간(12개월) 쪽 가드를 넘긴 경우는 이 줄을 **그대로 그린다.** 그건 그림이 아니라
    *    **말**의 문제였고(6개월 전을 「사이클」이라 부를 것인가), 오너가 그 말을 판단했다. */
   if (cycleGuardWaived && Math.abs(vs) < MIN_VS_CYCLE) {
-    cycleDropped = { overlapPct: Number(Math.abs(vs).toFixed(2)), reason: "두 기준선이 겹친다" };
-    console.log(`   ⓘ 두 기준선이 겹쳐(${Math.abs(vs).toFixed(1)}%) 「지난 고점대비」 줄을 뺍니다 — 판이 깨지지 않게.`);
+    /* ── ✂️ **줄을 빼지 않고 자리를 옮긴다** (오너 2026-09-08
+     *    *"선은 신고가 라인 기준으로 그리고 라벨 안겹치게 살짝 위치 조정해서 만들어봐"*)
+     *
+     * 09-05 판단은 「겹치면 그 줄을 뺀다」였다. 그런데 이 카드들(석수 1.2% · 삼환 0.8% ·
+     * 화서역블루밍푸른숲 2.0%)에서는 **그 줄이 곧 소식**이다 — 지난 사이클 고점을 이제 막
+     * 되찾았다는 것. 빼면 카드가 말을 잃는다.
+     *
+     * 겹치는 이유는 값이 겹쳐서가 아니라 **라벨을 선 위에 올려 두기 때문**이다.
+     * 두 선이 1~2% 안에 있으면:
+     *   ① 점선은 **하나만** 그린다 — 신고가 라인에 맞춘다(두 줄을 겹쳐 그으면 두꺼운 얼룩이 된다)
+     *   ② 「지난 고점」 2행 라벨을 그 선 **아래로** 내린다 — 위에 두니 선이 글자를 뚫었다
+     *   ③ 세로 폭 표시(빨강 눈금)는 뺀다 — 길이가 0이라 그림이 아니라 때처럼 보인다
+     * 「저점대비」 라벨은 오른쪽 정렬이라 가로로 안 부딪힌다(확인 완료).
+     *
+     * ⚠️ 08-25 에 「회피 띠를 넓혀」 풀어 보려다 세 장이 더 나빠진 기록이 있다. 그건
+     *    **라벨을 곡선 빈 자리로 떠돌게** 한 시도였다. 여기는 떠돌지 않는다 —
+     *    제 선 아래 고정이라 단지가 달라도 같은 자리다.
+     */
+    cycleNear = { overlapPct: Number(Math.abs(vs).toFixed(2)) };
+    console.log(`   ⓘ 두 기준선이 ${Math.abs(vs).toFixed(1)}% 차이라 점선은 하나로 긋고 「지난 고점」 라벨을 선 아래로 내립니다.`);
+    cycle = {
+      peak: eok(pk.maxManwon),
+      when: `${pk.ym.slice(0, 4)}.${pk.ym.slice(4)}월`,
+      vs: `${vs >= 0 ? "+" : "−"}${Math.abs(vs).toFixed(1)}%`,
+      dir: vs >= 0 ? "up" : "down",
+    };
   } else {
     cycle = {
       peak: eok(pk.maxManwon),
@@ -644,14 +670,17 @@ if (cycle && worst.atMaxIdx >= 0) {
   const pk = traded[worst.atMaxIdx];
   const py = r2(yOf(pk.maxManwon));
   const bx = r2(X0 + 26);
+  /* 두 선이 붙은 판(오너 2026-09-08): 점선은 신고가 라인 하나로, 라벨은 그 **아래**로.
+     위에 두면 신고가 점선이 글자를 그대로 뚫는다(08-27 수원아이파크시티7단지). */
+  const NEAR = !!cycleNear;
   prevLine = {
     x1: X0,
     x2: X1,
-    y: py,
+    y: NEAR ? thrY : py,
     tx: r2(bx + 26),
     anchor: "start",
-    ty1: r2(py - 52),
-    ty2: r2(py - 16),
+    ty1: NEAR ? r2(thrY + 40) : r2(py - 52),
+    ty2: NEAR ? r2(thrY + 76) : r2(py - 16),
     text1: `${eok(pk.maxManwon)}(${ymLab(pk.ym)})`,
     /* ⚠️ "고점대비" 만 쓰면 **역대 고점 대비**로 읽힌다(2026-08-16b 검수).
        여기 고점은 지난 사이클 고점(9억·2021.10)이고, 직전 최고가는 9.5억(2026-07-14)로 따로 있다.
@@ -659,7 +688,9 @@ if (cycle && worst.atMaxIdx >= 0) {
     text2: `지난 고점대비 ${cycle.vs}`,
     tone: "hi",
   };
-  brkHi = { x: bx, y1: thrY, y2: py, tickX1: r2(bx - 12), tickX2: r2(bx + 12), tone: "hi" };
+  /* 세로 폭 표시는 **길이가 곧 퍼센트**다. 1~2%면 길이가 몇 px 이라 그림이 아니라
+     때처럼 보이고 눈금 두 개만 남는다 — 붙은 판에서는 뺀다(오너 2026-09-08). */
+  brkHi = NEAR ? null : { x: bx, y1: thrY, y2: py, tickX1: r2(bx - 12), tickX2: r2(bx + 12), tone: "hi" };
   const idx = pts.findIndex((p) => p.ym === pk.ym);
   /* 고점 점은 **빨강 채움**(오너 2026-08-16) — 빈 원 두 개는 어느 쪽이 고점인지 말해 주지 않았다.
      색이 라벨과 같으니 그림에서 숫자를 찾는 데 한 걸음이 준다. */
@@ -1192,6 +1223,41 @@ if (KAPT) {
   const sp = P(`data/datasets/apt-supply/${KAPT}-${type}.json`);
   if (existsSync(sp)) {
     supply = JSON.parse(readFileSync(sp, "utf8"));
+    /* ── ✋ **사람이 짚은 공급면적이 있으면 그것이 이긴다** (오너 2026-09-08)
+     *
+     * 돈암 한신·한진 전용 59.58 이 **34평**으로 왔다. 대장이 용도 칸이 **비어 있는**
+     * 37.65㎡ 를 「주건축물 공용」으로 줬기 때문이다 — 09-05 에 넣은 주차·대피 걸러내기는
+     * **이름으로** 거르므로 이름이 없는 줄은 못 거른다.
+     * 오너가 네이버부동산 단지정보를 보고 공급 81.7㎡(전용률 73%)로 짚어 줬다.
+     *
+     * ⚠️ 이 값은 **사람이 실제 표기를 보고 짚은 것만** 들어간다(`--name` 과 같은 자리다).
+     *    추정한 값은 안 된다 — 그 순간 「오보 0」이 깨진다. 무엇을 보고 짚었는지는
+     *    사전 파일의 `source` 에 남고, 카드 meta.provenance 로 따라간다.
+     * ⚠️ 사람이 이미 대조했으므로 대장 경고(warn)는 여기서 사라진다.
+     */
+    const ovPath = P("data/review/apt-supply-overrides.json");
+    const ov = existsSync(ovPath)
+      ? (JSON.parse(readFileSync(ovPath, "utf8")).overrides ?? {})[`${KAPT}-${type}`]
+      : null;
+    if (ov && Number.isFinite(ov.supplyM2)) {
+      const PY_M2 = 3.305785;
+      supply = {
+        ...supply,
+        supply: ov.supplyM2,
+        exclusive: ov.exclusiveM2 ?? supply.exclusive,
+        commonResidential: Number((ov.supplyM2 - (ov.exclusiveM2 ?? supply.exclusive)).toFixed(3)),
+        pyeong: Number((ov.supplyM2 / PY_M2).toFixed(2)),
+        pyeongLabel: `${Math.round(ov.supplyM2 / PY_M2)}평`,
+        ratio: Number(((ov.exclusiveM2 ?? supply.exclusive) / ov.supplyM2).toFixed(4)),
+        warn: undefined,
+        overriddenBy: { ...ov, was: { supply: supply.supply, pyeongLabel: supply.pyeongLabel, warn: supply.warn } },
+      };
+      console.log(
+        `✋ 공급면적을 사람이 짚은 값으로 씁니다 — ${ov.supplyM2}㎡ (${supply.pyeongLabel}) · 전용률 ${(supply.ratio * 100).toFixed(1)}%\n` +
+          `   근거: ${ov.source}\n` +
+          `   대장 값은 ${JSON.stringify(supply.overriddenBy.was.supply)}㎡(${supply.overriddenBy.was.pyeongLabel})였습니다.`,
+      );
+    }
     /* ── ⚠️ **수집기가 스스로 단 경고는 카드까지 따라와야 한다** (2026-09-03)
      *
      * 금호두산 전용 84.99 의 공급면적이 97.52㎡(29평)로 왔다. 수집기는 그때 이미
