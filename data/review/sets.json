@@ -1,1671 +1,1682 @@
 {
-  "_": [
-    "발행 세트 정의 — '오너가 한 번에 승인하는 단위'를 명시한다.",
-    "",
-    "왜 필요한가: data/content 에는 실험 렌더·중간 산출물이 섞여 있다.",
-    "이걸 전부 '발행 승인 대기'로 띄우면 관제탑 결정함이 수십 건으로 불어나 못 쓴다.",
-    "여기에 적힌 세트만 진짜 발행 후보로 취급하고, 나머지는 파이프라인 목록에만 남긴다.",
-    "",
-    "cards = data/content/{날짜}/{slug}.json 의 slug. 적은 순서가 캐러셀 순서다.",
-    "caption = data/review/captions/{caption}.txt (없으면 label 과 같은 이름을 찾는다).",
-    "review = data/review/{review}.json (없으면 label 과 같은 이름을 찾는다).",
-    "",
-    "새 카드를 만들면 여기에 한 줄 추가한다 — 추가하지 않으면 발행 후보로 올라오지 않는다."
-  ],
-  "sets": [
-    {
-      "label": "tohuh-rank",
-      "title": "🔥 2026년 6월 신고가 쏟아진 지역은? (토허제 기준)",
-      "cards": [
-        "tohuh-rank"
-      ],
-      "caption": "tohuh-rank",
-      "review": "토허제 신고가 지도",
-      "state": "오너 확정",
-      "confirmedAt": "2026-08-28",
-      "confirmedMd5": [
-        "tohuh-rank:bd5cd11638ce"
-      ],
-      "note": "한국부동산원 월세지수 기준시점 재설정(2026년 6월=100) 반영. 오너 재확정 2026-08-28.",
-      "pixelPolicy": "정기물 — data/datasets/molit 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
-    },
-    {
-      "label": "index-2026",
-      "title": "2026년 국장 성적표 — 코스피·코스닥 고점 대비",
-      "cards": [
-        "index-2026"
-      ],
-      "caption": "index-2026"
-    },
-    {
-      "label": "estate-84",
-      "title": "서울 아파트 실거래 랭킹 84㎡ (2026 상반기)",
-      "cards": [
-        "maprank-84-p1",
-        "maprank-84-p2"
-      ],
-      "caption": "estate-84",
-      "note": "커버 없이 재업로드 (2026-07-31 오너 결정) — 커버 빌더는 builders.json에 남겨둠 / 커버 없이 재업로드 · 2026.01~07월 반영",
-      "state": "오너 확정",
-      "confirmedAt": "2026-08-01",
-      "confirmedMd5": [
-        "maprank-84-p1:88beb58caa77",
-        "maprank-84-p2:a72bd7d12852"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/molit/,data/datasets/molit 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
-    },
-    {
-      "label": "estate-59",
-      "title": "서울 아파트 실거래 랭킹 59㎡ (2026 상반기)",
-      "cards": [
-        "maprank-59-p1",
-        "maprank-59-p2"
-      ],
-      "caption": "estate-59",
-      "note": "커버 없이 재업로드 (2026-07-31 오너 결정) — 커버 빌더는 builders.json에 남겨둠 / 커버 없이 재업로드 · 2026.01~07월 반영",
-      "state": "오너 확정",
-      "confirmedAt": "2026-08-01",
-      "confirmedMd5": [
-        "maprank-59-p1:4014afbaaa8d",
-        "maprank-59-p2:594f39393f8e"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/molit/,data/datasets/molit 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
-    },
-    {
-      "label": "metro-speed",
-      "title": "수도권 지하철 노선·구간별 표정속도",
-      "cards": [
-        "metro-2col"
-      ],
-      "caption": "metro-speed",
-      "note": "커버 없이 재업로드 (2026-07-31 오너 결정) — 커버 빌더는 builders.json에 남겨둠 / 커버 없이 재업로드 · 2026.01~07월 반영",
-      "state": "오너 확정",
-      "confirmedAt": "2026-08-01",
-      "confirmedMd5": [
-        "metro-2col:62e94c06f8fa"
-      ]
-    },
-    {
-      "label": "wolse-flip",
-      "title": "📉📈 미쳐버린 서울 월세 폭등 상황 (월세지수 2016~2026)",
-      "cards": [
-        "wolse-flip-p1"
-      ],
-      "caption": "wolse-flip",
-      "note": "오너 확정(2026-07-30) — 단일 카드. 자치구 25곳 표(p2·p3)는 기준 시점이 달라(2020-07 임대차2법 이후 누적) 같은 캐러셀에 섞으면 독자가 두 기준을 헷갈린다. 빌더는 그대로 두었으니 별도 소재로 낼 때 되살릴 수 있다. / 한국부동산원이 월세지수 기준시점을 2026년 6월=100 으로 다시 잡았다(rebasing). 지수 레벨이 전부 내려앉고(103.9→101.2 · 90.9→87.5 · 88.0→84.7) 기준월도 6월→7월로 늘었다. 연간 변화율은 그대로다(+1.7/+2.0/+1.8/+2.3/+4.5). 연말 추정은 오너가 정한 규칙 그대로 YTD 5.91% x 12/7 = +10.1%. 오너 재확정 2026-08-28. / 한국부동산원 월세지수 기준시점 재설정(2026년 6월=100) 반영. 오너 재확정 2026-08-28.",
-      "state": "오너 확정",
-      "confirmedAt": "2026-08-28",
-      "confirmedMd5": [
-        "wolse-flip-p1:8ee99ef28108"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/reb-rent-index.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
-    },
-    {
-      "label": "tohuh-rent-map",
-      "title": "🔥 토허제 40곳 월세 폭등 (지도+행정구역 표)",
-      "cards": [
-        "tohuh-rent-map"
-      ],
-      "caption": "tohuh-rent-map",
-      "state": "오너 확정",
-      "confirmedAt": "2026-08-28",
-      "confirmedMd5": [
-        "tohuh-rent-map:f38e400d34c3"
-      ],
-      "note": "한국부동산원 월세지수 기준시점 재설정(2026년 6월=100) 반영. 오너 재확정 2026-08-28.",
-      "pixelPolicy": "정기물 — data/datasets/reb-rent-index.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
-    },
-    {
-      "label": "jeongbi-board",
-      "title": "올해 서울 정비사업 수주 1위는? (지도 + 시공사 8곳)",
-      "cards": [
-        "jeongbi-board"
-      ],
-      "caption": "jeongbi-board"
-    },
-    {
-      "label": "brand-rank",
-      "title": "당신이 아는 아파트 1위, 맞나요? (브랜드 순위 조사 5곳 비교)",
-      "cards": [
-        "brand-rank"
-      ],
-      "caption": "brand-rank",
-      "note": "오너 확정(2026-07-31) — 단일 카드. 조사 5곳의 발표 시점이 2025.3~2026.7 로 제각각이라 푸터에 기준일을 적지 않는다(하나로 적으면 다섯이 같은 날로 읽힌다). 각 조사 시점은 표 왼쪽 칸이 줄마다 갖는다. K-BPI 는 1~3위만 발표하는 조사라 4·5위가 '발표 없음'이고, 그 줄을 맨 아래에 둔다. 아이파크·위브는 브랜드 로고가 있으나 포레나는 아직 없다 — 없는 브랜드는 이름만 적고 회사 로고로 대신하지 않는다."
-    },
-    {
-      "label": "kospi-record",
-      "title": "오늘 국내 증시가 세운 기록들 (2026-07-31)",
-      "cards": [
-        "kospi-record"
-      ],
-      "caption": "kospi-record",
-      "note": "오너 확정(2026-07-31) — 단일 카드. ⚠️ 데이터셋 verified=false: 수급·시총·상한가는 거래소 집계를 언론이 받아 쓴 값이라 KRX 정보데이터시스템 대조 후 발행한다. 지수 등락은 야후 수집값과 교차 확인됨(7/29·7/30 소수점까지 일치). '오늘'이라는 말이 들어가므로 발행일이 밀리면 제목을 손봐야 한다."
-    },
-    {
-      "label": "sinbundang-loop",
-      "title": "신분당선 역세권 34평 APT 시세 (2026.01~07)",
-      "cards": [
-        "sinbundang-loop"
-      ],
-      "caption": "sinbundang-loop",
-      "note": "오너 확정(2026-07-31). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시). 역세권 도보10분·300세대↑ 기준. 논현·양재시민의숲 등 판정건은 데이터셋 meta.flags 참조. 07월은 collect-on-request 트리거로 수집. / 신분당선 34평 84㎡ 최고가(2026.01~07) 노선 지도 카드 확정 / 신분당선 34평 84㎡ 최고가(2026.01~07) 노선 지도 카드 확정 / 모바일 최적화(노선 폭 축소·세대수/연식 제거·역명/단지/가격 확대·단어단위 줄바꿈·상하여백 균형) / 모바일 최적화(노선 폭 축소·세대수/연식 제거·역명/단지/가격 확대·단어단위 줄바꿈·상하여백 균형)",
-      "state": "오너 확정",
-      "confirmedAt": "2026-08-01",
-      "confirmedMd5": [
-        "sinbundang-loop:7e3f24d25021"
-      ]
-    },
-    {
-      "label": "line2-loop",
-      "title": "2호선 역세권 34평 APT 시세 (2026.01~07)",
-      "cards": [
-        "line2-loop"
-      ],
-      "caption": "line2-loop",
-      "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
-      "state": "오너 확정"
-    },
-    {
-      "label": "line3-loop",
-      "title": "3호선 역세권 34평 APT 시세 (2026.01~07)",
-      "cards": [
-        "line3-loop"
-      ],
-      "caption": "line3-loop",
-      "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
-      "state": "오너 확정"
-    },
-    {
-      "label": "line4-loop",
-      "title": "4호선 역세권 34평 APT 시세 (2026.01~07)",
-      "cards": [
-        "line4-loop"
-      ],
-      "caption": "line4-loop",
-      "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
-      "state": "오너 확정"
-    },
-    {
-      "label": "line5-loop",
-      "title": "5호선 역세권 34평 APT 시세 (2026.01~07)",
-      "cards": [
-        "line5-loop"
-      ],
-      "caption": "line5-loop",
-      "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
-      "state": "오너 확정"
-    },
-    {
-      "label": "line6-loop",
-      "title": "6호선 역세권 34평 APT 시세 (2026.01~07)",
-      "cards": [
-        "line6-loop"
-      ],
-      "caption": "line6-loop",
-      "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
-      "state": "오너 확정"
-    },
-    {
-      "label": "line7-loop",
-      "title": "7호선 역세권 34평 APT 시세 (2026.01~07)",
-      "cards": [
-        "line7-loop"
-      ],
-      "caption": "line7-loop",
-      "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
-      "state": "오너 확정"
-    },
-    {
-      "label": "line8-loop",
-      "title": "8호선 역세권 34평 APT 시세 (2026.01~07)",
-      "cards": [
-        "line8-loop"
-      ],
-      "caption": "line8-loop",
-      "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
-      "state": "오너 확정"
-    },
-    {
-      "label": "line9-loop",
-      "title": "9호선 역세권 34평 APT 시세 (2026.01~07)",
-      "cards": [
-        "line9-loop"
-      ],
-      "caption": "line9-loop",
-      "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
-      "state": "오너 확정"
-    },
-    {
-      "label": "mae-streak",
-      "title": "서울 아파트 매매 연속 상승 · 상승폭 文정부의 2배 (주간)",
-      "cards": [
-        "mae-streak"
-      ],
-      "caption": "mae-streak",
-      "note": "원자료 계산(한국부동산원 주간 매매가격지수)·verified. 정기물(주간 갱신) — reb-weekly-index.json 의존. 서울 로고·워터마크는 저장소 자산/BRAND 슬롯 사용. / 원자료(부동산원 주간 매매지수) 계산 실곡선·verified. 정기물(주간 갱신). 서울 로고·워터마크 저장소 자산 사용. / 원자료(부동산원 주간 매매지수) 계산 실곡선·verified. 정기물(주간 갱신). 로고·워터마크 저장소 자산. / 원자료(부동산원 주간 매매지수) 계산 실곡선·verified. 정기물(주간 갱신). 로고·워터마크 저장소 자산.",
-      "state": "오너 확정",
-      "confirmedAt": "2026-09-07",
-      "confirmedMd5": [
-        "mae-streak:9c2b46385e63"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/reb-weekly-index.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
-    },
-    {
-      "label": "jeonse-streak",
-      "title": "서울 아파트 매매·전세 동반 연속 상승 (주간)",
-      "cards": [
-        "jeonse-streak"
-      ],
-      "caption": "jeonse-streak",
-      "note": "원자료 계산(부동산원 주간 매매·전세지수)·매매/전세 동반 곡선. 정기물(주간 갱신)—reb-weekly-index.json 의존. 서울 로고·워터마크 저장소 자산. 뱃지=발행일(오늘). / 매매·전세 동반 연속상승 카드·정기물·뱃지 발행일",
-      "state": "오너 확정",
-      "confirmedAt": "2026-09-07",
-      "confirmedMd5": [
-        "jeonse-streak:60db1b649b3b"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/reb-weekly-index.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
-    },
-    {
-      "label": "jeonwolse-map",
-      "title": "토허 40곳 전세·월세 비중 (월세화 추이·월간)",
-      "cards": [
-        "jeonwolse-map"
-      ],
-      "caption": "jeonwolse-map",
-      "note": "국토부 아파트 전월세 실거래 집계(월세금액 0=전세)에서 월세 비중 계산·오보 0. 토허 40곳(서울 25구+경기 15곳) 코로플레스+순위(1~17위·38~40위)+전체/신규 막대. 지도=tohuh-map.mjs 상속. 서울 로고 저장소 자산. 뱃지=발행일(오늘). 월 자동 감지(수집 확대 시 최신월). 제목은 데이터 연동 — 전체 월세비중이 50% 아래면 '신규 계약' 기준으로 못박아 카드 막대와 모순을 막는다(2026-08-24, 오너 위임). / 월세비중 토허지도·정기물",
-      "state": "오너 확정",
-      "confirmedAt": "2026-09-01",
-      "confirmedMd5": [
-        "jeonwolse-map:d38339611256"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/molit-rent/,data/datasets/molit-rent 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
-    },
-    {
-      "label": "danji-hangang",
-      "title": "🌊 한강뷰 아파트 분양가 7억대? (한강 푸르지오 리버프론트)",
-      "cards": [
-        "danji-hangang"
-      ],
-      "caption": "danji-hangang",
-      "note": "청약·분양 표준 판형 danji-cover@1 첫 확정본. 세대수·일정·상한제는 청약홈 API 를 코드가 직접 읽는다. ✅ 2026-08-03 분양가 대조 완료 — 청약홈 공고 상세의 공급금액(77,300/95,100/118,600/299,900만원, 최고가)이 데이터셋과 네 건 모두 일치. 평형별 세대수 합 2,432 = API supply 도 일치. 발행 게이트 전부 통과.",
-      "state": "발행 승인",
-      "confirmedAt": "2026-08-03",
-      "confirmedMd5": [
-        "danji-hangang:3dc78a132f5c"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증). 접수가 끝나면 공고가 목록에서 빠져 빌더가 던진다 — 그때는 재생산하지 않는다"
-    },
-    {
-      "label": "danji-songdo",
-      "title": "🏙 송도 무순위 줍줍 150세대 (더샵 송도그란테르)",
-      "cards": [
-        "danji-songdo"
-      ],
-      "caption": "danji-songdo",
-      "note": "무순위(kind: remndr) 첫 확정본. 머리 밴드가 분양가 대신 전용면적별 잔여 세대를 말한다. 면적대별 세대수는 청약홈 블록별 공고 5건(2026910203~07) 열람 전사 — 합계 150 = API supply 150 교차검증. 공급금액은 공고에 '사업주체 문의'로만 있어 카드가 말하지 않는다(캡션이 문의처를 안내).",
-      "state": "발행 승인",
-      "confirmedAt": "2026-08-03",
-      "confirmedMd5": [
-        "danji-songdo:553d4532c187"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증). 접수가 끝나면 공고가 목록에서 빠져 빌더가 던진다 — 그때는 재생산하지 않는다"
-    },
-    {
-      "label": "world-capital",
-      "title": "당신 건물주가 네덜란드 연기금? (글로벌 자본의 서울 임대시장 진출)",
-      "cards": [
-        "world-capital"
-      ],
-      "caption": "world-capital",
-      "note": "뉴스 소재(verified:false) — 각 사 발표·언론 보도 종합. 좌 제목(세로 5줄)·우 서울 투자위치 지도(seoul-invest-map)·하 투자자 9곳 표(위치·세대수). 금액·세대수는 발표·약정·목표 혼재, 발행 전 1차 출처 재대조 필요(오보 0). CPPIB 규모 보도 상충(1,330억~5,000억)은 캡션이 병기. 지도 핀 좌표는 지오데이터에서 계산(손 좌표 0).",
-      "state": "오너 확정",
-      "confirmedAt": "2026-08-05",
-      "confirmedMd5": [
-        "world-capital:f955b1659994"
-      ]
-    },
-    {
-      "label": "foreign-rank",
-      "title": "🌏 서울 자치구별 외국인 거주비율 (국적별)",
-      "cards": [
-        "foreign-rank-p1",
-        "foreign-rank-p2"
-      ],
-      "caption": "foreign-rank",
-      "note": "법무부 「2025 출입국·외국인정책 통계연보」 부록(2장Ⅱ-3, 2025.12.31 기준) 국적별·남+여 합산. 표=인원 순, 외국인비율=주민등록인구(2025-12) 대비 산출(카드 상단 부제에는 미표기 — 오너 요청 2026-08-10). 한국계중국인→중국 합산(오너 결정 2026-08-08, 국적 기준). 서울 전체 279,629명(2023 대비 +10.6%) · 강북구 2년새 +43.3%(19위→15위) · 용산구 유일 감소(-6.2%, 7위→9위). 2026-08-10: 2023판(빌더 인자 year=2023으로 재생산 가능, md5 4f36cd92977f/5c4627c5fea2 로 검증됨)을 2025.12.31 데이터로 교체. 데이터 갱신 시 재생산 — pixel-baselines 에 넣지 않는다(결정성으로 보증).",
-      "state": "오너 확정",
-      "confirmedAt": "2026-08-10",
-      "confirmedMd5": [
-        "foreign-rank-p1:327d1e20ac4a",
-        "foreign-rank-p2:9661c70836a4"
-      ],
-      "pixelPolicy": "일회성(2025.12.31 스냅샷)·데이터 고정 → 결정적. 인구/외국인 원자료 갱신 시에만 재생산."
-    },
-    {
-      "label": "danji-jangwi",
-      "title": "🏗 천지개벽 장위에 줍줍 떴다 (장위 푸르지오 마크원 39세대)",
-      "cards": [
-        "danji-jangwi"
-      ],
-      "caption": "danji-jangwi",
-      "note": "무순위 두 번째 판형(분양가를 아는 줍줍). 위 단 = 단지 규모 4칸, 아래 단 = 타입별 세대수·최고 분양가 4칸. price.byType 이 있을 때만 이 판이 나오고, 없으면 송도처럼 면적대별 잔여 세대 판이 나온다 — 칸의 뜻은 데이터가 정한다.",
-      "state": "발행 보류 — 공고문 대조 대기",
-      "confirmedAt": "2026-08-06",
-      "confirmedMd5": [
-        "danji-jangwi:5af157c8c9cb"
-      ],
-      "pixelPolicy": "정기물 — applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다.",
-      "publishGate": [
-        "분양가 4개(7.3·17.5·17.6·19.5억) = 2차 출처. 무순위 공고는 공급금액을 \"사업주체 문의\"로만 적었다.",
-        "자격 요건(서울 거주 무주택세대구성원·청약통장 불필요) = 모집공고문 인용 2차 출처. 청약홈 무순위 상세에는 신청자격 항목이 없다.",
-        "동수 23개동 = 보도 2곳 일치, 1차 미대조.",
-        "→ 셋 다 입주자모집공고문 PDF 로 대조되면 state 를 \"발행 승인\" 으로 올린다. PDF 는 세션에서 403."
-      ]
-    },
-    {
-      "label": "danji-thesharp",
-      "title": "🏢 신길 완판 단지에서 추가 청약이? (더샵 신길센트럴시티 취소분 67세대)",
-      "cards": [
-        "danji-thesharp"
-      ],
-      "caption": "danji-thesharp",
-      "note": "조합원 취소분. 규모 우선 판(장위 판형). 타입별 세대수는 취소분 기준(51:20·59:26·74:10·84:11 = 67 = 청약홈 공급 67), 분양가는 본청약 기준 최고가다 — 취소분 가격은 본청약과 같다.",
-      "state": "발행 보류 — 공고문 대조 대기",
-      "confirmedAt": "2026-08-08",
-      "pixelPolicy": "정기물 — applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다.",
-      "publishGate": [
-        "타입별 세대수는 2차 출처(청약공고 정리 글) — 합 67 이 청약홈 API 와 일치해 채택. 공고문 대조 대상.",
-        "분양가는 본청약 표(호갱노노) 기준 최고가.",
-        "16개동·35층은 보도 2곳 일치.",
-        "전매제한 3년은 2차 출처."
-      ],
-      "confirmedMd5": [
-        "danji-thesharp:91baa196f80c"
-      ]
-    },
-    {
-      "label": "danji-summit",
-      "title": "🏗 신길 대장아파트 분양가 18억대? (써밋 클라비온 176세대)",
-      "cards": [
-        "danji-summit"
-      ],
-      "caption": "danji-summit",
-      "note": "규모 우선 판. 분양가는 **청약홈 공고 상세 원문** 7줄에서 면적대별 최고가를 취했다. 세대수 합 176 = 청약홈 공급 176.",
-      "state": "발행 보류 — 공고문 대조 대기",
-      "confirmedAt": "2026-08-08",
-      "pixelPolicy": "정기물 — applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다.",
-      "publishGate": [
-        "8개동·29층·총 812세대는 보도 1곳 — 공고문 대조 대상.",
-        "전매제한 3년은 2차 출처."
-      ],
-      "confirmedMd5": [
-        "danji-summit:5230eb427673"
-      ]
-    },
-    {
-      "label": "danji-chungjeongno",
-      "title": "🚇 2·5호선 더블 초역세권 18억대? (충정로역 자이르네 186세대)",
-      "cards": [
-        "danji-chungjeongno"
-      ],
-      "caption": "danji-chungjeongno",
-      "note": "규모 우선 판. 타입별 세대수 합 186 = 청약홈 공급 186(교차검증). 로고는 오너 제공 조감도의 워드마크를 떼어 만든 임시본 — 공식 파일을 받으면 교체.",
-      "state": "발행 보류 — 공고문 대조 대기",
-      "confirmedAt": "2026-08-08",
-      "pixelPolicy": "정기물 — applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다.",
-      "publishGate": [
-        "분양가·세대수는 2차 출처지만 합이 청약홈 공급과 일치.",
-        "3개동·25층은 2차 출처 1곳.",
-        "전매제한 3년은 2차 출처.",
-        "자이르네 로고는 임시본(조감도에서 추출)."
-      ],
-      "confirmedMd5": [
-        "danji-chungjeongno:66996821813f"
-      ]
-    },
-    {
-      "label": "danji-define-artia",
-      "title": "🏙 노량진 무순위 줍줍 15세대 (드파인 아르티아)",
-      "cards": [
-        "danji-define-artia"
-      ],
-      "caption": "danji-define-artia",
-      "note": "무순위(kind: remndr) 표준 판형. 세대수·일정은 청약홈 API(applyhomeNo 2026910214) 직접 반영, 잔여 15세대 = API 공급과 일치. 타입별 분양가는 2차 출처(mhb-blog·홈두부) — 입주자모집공고문 대조 전까지 발행 금지.",
-      "state": "시안"
-    },
-    {
-      "label": "danji-songpa",
-      "title": "🚨 송파 시그니처 롯데캐슬 재공급 줍줍! 안전마진 10.9억",
-      "cards": [
-        "danji-songpa"
-      ],
-      "caption": "danji-songpa",
-      "note": "⚠️ 예외 처리 — 청약홈 무순위 목록에 아직 공고번호(applyhomeNo)가 안 잡히는 재공급 1세대(무순위 접수 2026-08-18 예정, 데이터셋 _manual 필드 참조). remndr() 가드는 applyhomeNo 없으면 무조건 던지므로 표준 파이프라인을 못 탄다 — 대신 scripts/build-danji-songpa-manual.mjs(커밋됨)에 승인된 카드 JSON을 고정해 두고 그 스크립트가 매번 재현한다(data/content 는 gitignore 대상이라 산출물 자체는 커밋하지 않는다). 총 1,945세대(richgo·나무위키·최초 출처 3곳 일치 — 롯데건설 공식 페이지 1,577과 불일치해 다수결로 채택, 재대조 필요). 분양가 10.1억/최근 실거래 21.0억/안전마진 10.9억은 한국경제·헤럴드경제 2개 매체 교차검증(2차 출처) — 입주자모집공고문 대조 전까지 발행 금지. 오너 지시(2026-08-11)로 안전마진 강조(glow) 처리·사진 칸 확대(boxH 555)·입주 라벨을 '입주 5년차/즉시 입주'로 개편. 청약홈에 정식 공고번호가 잡히면 이 수동 빌더를 폐기하고 build-danji.mjs --only songpa-signature-remndr --publish 로 전환한다.",
-      "state": "시안"
-    },
-    {
-      "label": "m2-gov",
-      "title": "💵 역대 정부 통화량 증가 규모 — 지금이 가장 빠르다",
-      "cards": [
-        "m2-gov"
-      ],
-      "caption": "m2-gov",
-      "note": "M2 개편 전 기준(구 M2)으로 전 구간 통일 — 현행 공식 M2 로는 결론이 달라진다는 사실을 오너가 알고 선택(2026-08-12) / 역대 정부 M2 — 개편 전 기준(구 M2)으로 통일. 정기물이라 픽셀 기준값 미등록 / 뱃지 확대·레드는 현 정부 한 곳·하단 '현 정부' 강조 (오너 2026-08-13)",
-      "state": "오너 확정",
-      "confirmedAt": "2026-09-01",
-      "confirmedMd5": [
-        "m2-gov:5a60f9c81e26"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/m2-monthly.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
-    },
-    {
-      "label": "danji-sangdong",
-      "title": "🏙 부천 국평 16억 실화냐? (상동역 롯데캐슬 시그니처)",
-      "cards": [
-        "danji-sangdong"
-      ],
-      "caption": "danji-sangdong",
-      "note": "청약·분양 표준 판형 danji-cover@1. 분양가·세대수·전용면적 구성은 입주자모집공고문 PDF 를 scripts/extract-danji-notice.py 가 직접 읽었고, 공급금액 표 104행이 공급대상 표 세대수로 정확히 나눠 먹혀 합 1,859세대가 맞았다(남는 행 0). 84㎡ 1,370세대(74%)는 헤럴드경제 2026-07-27 보도와도 일치. 밴드 라벨은 최고가를 낸 타입(84E·113B)이다. 펜트하우스 3형(153P·187P·192P, 각 1세대)은 총 공급의 0.16% 라 밴드에서 빼고 아래 한 줄이 받는다. / 오너 확정 2026-08-14 — 제목·펜트하우스 줄 오너 수정 반영본. 3팀 선검수 통과. / 오너 확정 2026-08-14 — 제목·펜트하우스 줄 오너 수정 반영본. 3팀 선검수 통과.",
-      "state": "오너 확정",
-      "publishGate": "⚠️ 공고일 당일이라 청약홈 API 수집분에 이 공고(2026000354)가 아직 없다. 일정·세대수는 입주자모집공고문 PDF 단독 근거이고, 청약홈 교차검증 가드는 이 카드에 걸리지 않았다. 청약홈에 실리면 데이터셋에 applyhomeNo 를 붙여 청약홈이 이기게 할 것(다르면 빌더가 던진다).",
-      "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-15",
-      "confirmedMd5": [
-        "danji-sangdong:40d45101e495"
-      ]
-    },
-    {
-      "label": "danji-doosanbucheon",
-      "title": "🏗 부천 소사 재개발 아파트 분양가 8억대? (두산위브더제니스 부천)",
-      "cards": [
-        "danji-doosanbucheon"
-      ],
-      "caption": "danji-doosanbucheon",
-      "note": "청약·분양 표준 판형 danji-cover@1 · 규모 우선 판(price.byType). 분양가·전용면적 구성은 입주자모집공고문 PDF 를 scripts/extract-danji-notice.py 가 직접 읽었고, 공급금액 표 38행이 공급대상 표 세대수로 정확히 나눠 먹혀 합 1,158세대 = 청약홈 API supply 와도 일치. 제목의 '8억대'는 주력 면적대 59㎡(491세대, 42%)의 최고가 8.75억이다. 카드에 '최고가 기준'이라는 말이 없는 판이라 캡션 셋째 줄이 그 말을 받는다. / 오너 확정 2026-08-14 — 제목·펜트하우스 줄 오너 수정 반영본. 3팀 선검수 통과. / 오너 확정 2026-08-14 — 제목·펜트하우스 줄 오너 수정 반영본. 3팀 선검수 통과.",
-      "state": "오너 확정",
-      "publishGate": "없음 — 청약홈 API(2026000382) 교차검증 통과, 분양가 공고문 대조 완료",
-      "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-15",
-      "confirmedMd5": [
-        "danji-doosanbucheon:63ae5540473a"
-      ]
-    },
-    {
-      "label": "danji-guri",
-      "title": "🚨 구리역 안전마진 5억대 줍줍 (구리역 롯데캐슬 시그니처)",
-      "cards": [
-        "danji-guri"
-      ],
-      "caption": "danji-guri",
-      "note": "줍줍 **기본 판형**(danji-cover@1 · margin) 첫 코드 생산분. 송파 시그니처 롯데캐슬 카드(2026-08-11, 손으로 만든 것)를 오너가 2026-08-26 정본으로 승격시켜 build-danji.mjs 의 marginBand() 로 옮겼다. 위 단 4칸 = 타입 82B · 분양가 8.8억 · 현재 최저호가 14.5억 · 안전마진 5.7억(**코드가 뺀다** — 데이터셋에 적는 칸이 없다). 아래 단 4칸 = 잔여 1세대 · 총 1,180세대 · 11개동 · 최고 42층. 분양가 87,710만원은 청약홈 무순위 공고 상세(2026930028)를 세션이 직접 읽었고 뉴스핌 2026-08-21 보도와 만원 단위까지 일치(교차검증). 제목 '5억대'는 오너 작성 — 호가 기준이라 소수점까지 단정하지 않는다. 사진 boxH 614 는 원본 1540×876 이 폭 1080 에서 갖는 높이로, 늘리지 않고 흰 판을 줄일 수 있는 한계값이다.",
-      "state": "오너 확정",
-      "publishGate": "⚠️ 안전마진 5.7억의 비교 기준은 **호가**다(오너 확인 2026-08-26, 같은 타입 현재 최저호가 14.5억). 실거래가 아니므로 카드 칸 이름을 '현재 최저호가'로 적었고, 캡션이 같은 평형 분양권 실거래(2025-12, 11억8,681만원 → 마진 3.1억)를 함께 싣는다. 이 두 장치가 빠지면 발행 금지.",
-      "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "captionCrossCheck": [
-        {
-          "value": "11",
-          "why": "같은 평형(82B) 분양권 실거래 11억8,681만원(2025-12, 14층, 뉴스핌) — 카드는 호가로 갔으므로 캡션이 실거래를 받는다"
-        },
-        {
-          "value": "3.1",
-          "why": "위 실거래 기준 마진 11.87억 − 8.771억 = 3.1억. 독자가 호가 기준과 실거래 기준을 나란히 보고 판단하게 한다"
-        }
-      ],
-      "confirmedAt": "2026-08-26",
-      "confirmedMd5": [
-        "danji-guri:2ebc5dd5c9d4"
-      ]
-    },
-    {
-      "label": "singo-gwangmyeong-hanjin",
-      "title": "🔥 광명한진타운 33평, 10억 클럽 가입",
-      "cards": [
-        "singo-광명한진타운-84"
-      ],
-      "caption": "singo-gwangmyeong-hanjin",
-      "note": "오늘의 신고가 판형(singo-record@1) 첫 실전 소재. 세대수는 --kapt A42385801 로 대장 항목을 사람이 짚어 물렸다(지번 200-6 일치 확인). 3팀 검수 반영 최종본: 킥커=계약일 · 제원 회색 34px · 판 안 대각 워터마크. 기준은 docs/guides/신고가-카드-기준.md. 정기물이라 픽셀 기준값 미등록. / 역 뱃지 1행 개편 반영 재확정(오너 2026-08-16b) / 오늘 값 기준선 전면 적용 재확정(오너 2026-08-16c) — 선은 같은 자리(값=문턱 10억), 라벨만 28px/900 → 24px/800 잉크 / 실측 공급평수 판본으로 재확정(34평 → 33평). 공급 110.44㎡ = 33.41평, 건축물대장 전유+주건축물공용. 오너가 네이버 화면으로 셈법 대조·반올림 확정(2026-08-16d). 이전 확정본 md5 6b095447cb9d 는 고정 환산표 시절 판본이다. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "state": "오너 확정",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-광명한진타운-84:c47d19fcdb4e"
-      ]
-    },
-    {
-      "label": "singo-neulpureun-byuksan",
-      "title": "🔥 늘푸른벽산 33평, 저점 대비 +108% 신고가",
-      "cards": [
-        "singo-늘푸른벽산-84"
-      ],
-      "caption": "singo-neulpureun-byuksan",
-      "note": "2026-08 계약 신고가(갱신폭 상위). 세대수는 --kapt A44340013 로 대장 항목을 사람이 짚어 물렸다(세대수·법정동 대조). 기준은 docs/guides/신고가-카드-기준.md / 실측 공급평수 판본으로 확정. 셈법 = 전유 + 주건축물 공용(건축물대장), 평은 3.305785 로 나눠 반올림(오너 2026-08-16d). 늘푸른벽산 109.94㎡ 는 네이버부동산 표기와 소수점까지 일치함을 오너가 화면으로 대조했다. 주차대수 포함 제원 3줄. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "state": "오너 확정",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-늘푸른벽산-84:86dd8e96dc60"
-      ]
-    },
-    {
-      "label": "singo-raemian-crisiel",
-      "title": "🔥 래미안크리시엘 33평, 지난 고점 대비 +21% 신고가",
-      "cards": [
-        "singo-래미안크리시엘-84"
-      ],
-      "caption": "singo-raemian-crisiel",
-      "note": "2026-08 계약 신고가(갱신폭 상위). 세대수는 --kapt A13686302 로 대장 항목을 사람이 짚어 물렸다(세대수·법정동 대조). 기준은 docs/guides/신고가-카드-기준.md / 실측 공급평수 판본으로 확정. 셈법 = 전유 + 주건축물 공용(건축물대장), 평은 3.305785 로 나눠 반올림(오너 2026-08-16d). 늘푸른벽산 109.94㎡ 는 네이버부동산 표기와 소수점까지 일치함을 오너가 화면으로 대조했다. 주차대수 포함 제원 3줄. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "state": "오너 확정",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-래미안크리시엘-84:3a765fa855f5"
-      ]
-    },
-    {
-      "label": "singo-seocho-foresta2",
-      "title": "🔥 서초포레스타2단지 38평, 19.9억 신고가",
-      "cards": [
-        "singo-서초포레스타2단지-84"
-      ],
-      "caption": "singo-seocho-foresta2",
-      "note": "2026-08 계약 신고가(갱신폭 상위). 세대수는 --kapt A10028021 로 대장 항목을 사람이 짚어 물렸다(세대수·법정동 대조). 기준은 docs/guides/신고가-카드-기준.md / 실측 공급평수 판본으로 확정(오너 지시 2026-08-16e). 서초포레스타2 124.35㎡=38평(전용률 67.9%) · 다산롯데캐슬 114.08㎡=35평(74.5%). ⚠️ 서초는 전용률이 흔한 범위(70~85%) 밖이다 — 주거공용 39.87㎡ 의 용도별 내역(parts)을 못 본 채 확정했다. 앞선 수집이 parts 를 남기기 전 판본이었고 재수집은 국토부 문 닫힘으로 실패했다. cron 이 받으면 내역을 보고, 기타공용이 주건축물로 잡힌 것이면 값을 고치고 재확정한다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "state": "오너 확정",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-서초포레스타2단지-84:93721cb5fbde"
-      ]
-    },
-    {
-      "label": "singo-dmc-centralxi",
-      "title": "🔥 DMC센트럴자이 25평, 15.95억 신고가",
-      "cards": [
-        "singo-DMC센트럴자이-59"
-      ],
-      "caption": "singo-dmc-centralxi",
-      "note": "오늘의 신고가 판형(singo-record@1). 1~4단지 통합 — 같은 지번(증산동 258)·같은 준공(2023)·명부 1건(1,256세대)이라 실거래만 블록별로 신고된다. 판정(최고가 인덱스)은 원래 합쳐 보고 있었고 빌더만 엄격했다(--merge-blocks 신설, 원자료로 지번 1종 확인). 제목에 (2단지)를 안 붙이는 이유는 세대수 1,256 이 단지 전체 값이기 때문이다. / 역 뱃지: 디지털미디어시티역 386m — 카카오가 노선별로 나눠 준 항목을 합쳐 경의중앙+공항철도. ⚠️ 6호선은 카카오 응답에 없어 싣지 않았다(오보 0 — 아는 것이 아니라 받은 것을 적는다). / 평 25평은 건축물대장 실측(공급 81.77㎡ = 24.74평). 정기물이라 픽셀 기준값 미등록. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
-      "state": "오너 확정",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-25",
-      "confirmedMd5": [
-        "singo-DMC센트럴자이-59:3270f81aca79"
-      ]
-    },
-    {
-      "label": "singo-daily-2026-08-25",
-      "title": "🔥 8월 25일 신고가 15곳",
-      "cards": [
-        "singo-성복역롯데캐슬골드타운-84",
-        "singo-성복역롯데캐슬클라시엘-84",
-        "singo-꿈의숲아이파크-59",
-        "singo-태릉해링턴플레이스-84",
-        "singo-삼환-84",
-        "singo-녹번역e편한세상캐슬-59",
-        "singo-영통아이파크캐슬1단지-84",
-        "singo-블루밍구성더센트럴-84",
-        "singo-미사강변센트리버-59",
-        "singo-한진한화그랑빌-59",
-        "singo-영통에듀파크331동~337동-84",
-        "singo-화서역푸르지오더에듀포레-84",
-        "singo-신동탄포레자이-59",
-        "singo-영통센트럴파크뷰-59",
-        "singo-e편한세상평내메트로원-59"
-      ],
-      "caption": "singo-daily-2026-08-25",
-      "state": "오너 확정",
-      "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 15개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 하루치 캐러셀 한 게시물로 묶음(오너 2026-08-25) / 하루치를 캐러셀 한 게시물로 묶음(오너 2026-08-25). 장 순서 = 거래가 큰 순.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedMd5": [
-        "singo-성복역롯데캐슬골드타운-84:90dab0445cb0",
-        "singo-성복역롯데캐슬클라시엘-84:611555e4bb64",
-        "singo-꿈의숲아이파크-59:4befdf413917",
-        "singo-태릉해링턴플레이스-84:1e7cf29db026",
-        "singo-삼환-84:69d656ee67d2",
-        "singo-녹번역e편한세상캐슬-59:fdcafbde48dd",
-        "singo-영통아이파크캐슬1단지-84:20b9c2f75737",
-        "singo-블루밍구성더센트럴-84:cd6e0788566d",
-        "singo-미사강변센트리버-59:24458a264c75",
-        "singo-한진한화그랑빌-59:3de1fd127679",
-        "singo-영통에듀파크331동~337동-84:34f70419ed16",
-        "singo-화서역푸르지오더에듀포레-84:20a141e61107",
-        "singo-신동탄포레자이-59:f33bf4836995",
-        "singo-영통센트럴파크뷰-59:9d612b8f6d11",
-        "singo-e편한세상평내메트로원-59:5637cfd6e1bd"
-      ],
-      "confirmedAt": "2026-08-25"
-    },
-    {
-      "label": "singo-daily-2026-08-26",
-      "title": "🔥 8월 26일 신고가 16곳",
-      "cards": [
-        "singo-신촌숲아이파크-84",
-        "singo-강촌-59",
-        "singo-서초힐스-59",
-        "singo-신동아리버파크-59",
-        "singo-신도림태영타운-84",
-        "singo-초원마을대림-84",
-        "singo-등촌동아이파크-84",
-        "singo-한신아파트상가동유치원동103~109-84",
-        "singo-다산반도유보라메이플타운-84",
-        "singo-광주역자연앤자이-84",
-        "singo-동아에코빌-59",
-        "singo-장미시영6-59",
-        "singo-한진-84",
-        "singo-호계2차현대홈타운-59",
-        "singo-엘에이치이스트힐-59",
-        "singo-덕유마을주공4-59"
-      ],
-      "caption": "singo-daily-2026-08-26",
-      "state": "오너 확정",
-      "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 16개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 2026-08-26 신고가 16장 — 하루치 캐러셀",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-26",
-      "confirmedMd5": [
-        "singo-신촌숲아이파크-84:d98277efb4ab",
-        "singo-강촌-59:7bb73a79e87f",
-        "singo-서초힐스-59:5a74b6505bed",
-        "singo-신동아리버파크-59:968b35a54f4f",
-        "singo-신도림태영타운-84:da64612024fd",
-        "singo-초원마을대림-84:e23aa783c14a",
-        "singo-등촌동아이파크-84:ff077f50b212",
-        "singo-한신아파트상가동유치원동103~109-84:e057dcc8ddf9",
-        "singo-다산반도유보라메이플타운-84:901e5f8195f8",
-        "singo-광주역자연앤자이-84:07bcea18b9b8",
-        "singo-동아에코빌-59:9e5c3b69c185",
-        "singo-장미시영6-59:09e76e65e8e3",
-        "singo-한진-84:7d587f447f34",
-        "singo-호계2차현대홈타운-59:2da1159fe46d",
-        "singo-엘에이치이스트힐-59:f5e319124200",
-        "singo-덕유마을주공4-59:c9eaf7494e5b"
-      ]
-    },
-    {
-      "label": "singo-daily-2026-08-27",
-      "title": "🔥 8월 27일 신고가 14곳",
-      "cards": [
-        "singo-래미안리더스원-84",
-        "singo-서울숲리버뷰자이-84",
-        "singo-고덕주공9-84",
-        "singo-현대프라임-59",
-        "singo-약수하이츠-59",
-        "singo-고덕리엔파크3단지-84",
-        "singo-관악드림삼성-59",
-        "singo-광명푸르지오센트베르-59",
-        "singo-쌍용-59",
-        "singo-한마을-59",
-        "singo-힐스테이트푸르지오수원-84",
-        "singo-진산마을성원상떼빌아파트-84",
-        "singo-전농우성-59",
-        "singo-부영-59"
-      ],
-      "caption": "singo-daily-2026-08-27",
-      "state": "오너 확정",
-      "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 14개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 2026-08-27 신고가 14장 — 하루치 캐러셀",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-27",
-      "confirmedMd5": [
-        "singo-래미안리더스원-84:763cabeed9e6",
-        "singo-서울숲리버뷰자이-84:df9cfaf75175",
-        "singo-고덕주공9-84:0c9fe5e94876",
-        "singo-현대프라임-59:b187eb718a18",
-        "singo-약수하이츠-59:86a7e4a3dca8",
-        "singo-고덕리엔파크3단지-84:32e11aadd2ab",
-        "singo-관악드림삼성-59:c8ce4daf8c01",
-        "singo-광명푸르지오센트베르-59:ea57629454bb",
-        "singo-쌍용-59:36241c55ed50",
-        "singo-한마을-59:22f39f7cf8a1",
-        "singo-힐스테이트푸르지오수원-84:17197c6f8107",
-        "singo-진산마을성원상떼빌아파트-84:e5805f6789d2",
-        "singo-전농우성-59:738b15dd918d",
-        "singo-부영-59:0c2c34dd3eb3"
-      ]
-    },
-    {
-      "label": "singo-daily-2026-08-28",
-      "title": "🔥 8월 28일 신고가 6곳",
-      "cards": [
-        "singo-힐스테이트상도센트럴파크-84",
-        "singo-벽산블루밍-84",
-        "singo-래미안월곡-84",
-        "singo-초원마을대림-59",
-        "singo-덕현-84",
-        "singo-동탄2하우스디더레이크-59"
-      ],
-      "caption": "singo-daily-2026-08-28",
-      "state": "오너 확정",
-      "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 6개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 2026-08-28 신고가 6장 — 하루치 캐러셀",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-28",
-      "confirmedMd5": [
-        "singo-힐스테이트상도센트럴파크-84:a58acf9e9b1e",
-        "singo-벽산블루밍-84:122693e0541c",
-        "singo-래미안월곡-84:d31c54aebce5",
-        "singo-초원마을대림-59:489bf3e42507",
-        "singo-덕현-84:1dcfd87d7eae",
-        "singo-동탄2하우스디더레이크-59:bf6556022ae0"
-      ]
-    },
-    {
-      "label": "singo-daily-2026-08-29_2026-08-31",
-      "title": "🔥 8월 29~31일 신고가 14곳",
-      "cards": [
-        "singo-성복역롯데캐슬골드타운-84",
-        "singo-미사강변푸르지오-84",
-        "singo-대림1-59",
-        "singo-관악푸르지오-84",
-        "singo-동천자이-84",
-        "singo-미사강변루나리움-59",
-        "singo-수원하늘채더퍼스트2단지-84",
-        "singo-화서역푸르지오더에듀포레-59",
-        "singo-병점역아이파크캐슬-59",
-        "singo-e편한세상반월나노시티역-59",
-        "singo-수원시청역SKVIEW-84",
-        "singo-수원하늘채더퍼스트2단지-59",
-        "singo-황골마을주공1-59",
-        "singo-늘푸른벽산-59"
-      ],
-      "caption": "singo-daily-2026-08-29_2026-08-31",
-      "state": "오너 확정",
-      "note": "2026-08-29~2026-08-31 3일치를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-31 \"사흘치를 한 데 묶어서\"). 예약이 안 떠 밀린 날을 하루씩 따로 내면 같은 소식을 여러 번 결재·발행하게 된다. 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 2개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. ⚠️ 화서역푸르지오 25평·성복역롯데캐슬골드타운 34평은 이미 낸 단지·타입인데 다시 신고가를 썼다(오너 지시 2026-08-31 로 합쳤다). 흡수한 화서역 세트의 옛 확정 md5 는 옛 카드의 것이라 지웠다 — 새 값은 confirm 이 다시 잰다.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-08-31",
-      "confirmedMd5": [
-        "singo-성복역롯데캐슬골드타운-84:d773cfc6419c",
-        "singo-미사강변푸르지오-84:db34e9701543",
-        "singo-대림1-59:ef253f6d721b",
-        "singo-관악푸르지오-84:db738b206a18",
-        "singo-동천자이-84:9e7b893a5dc9",
-        "singo-미사강변루나리움-59:9be2f93cf7de",
-        "singo-수원하늘채더퍼스트2단지-84:4d1975df8ed0",
-        "singo-화서역푸르지오더에듀포레-59:59e0d6c99f5d",
-        "singo-병점역아이파크캐슬-59:5a3b2c8adc53",
-        "singo-e편한세상반월나노시티역-59:30d43af82d7c",
-        "singo-수원시청역SKVIEW-84:de055218da82",
-        "singo-수원하늘채더퍼스트2단지-59:581cb3b77aae",
-        "singo-황골마을주공1-59:9a1f9647a714",
-        "singo-늘푸른벽산-59:d6574d56a3dc"
-      ]
-    },
-    {
-      "label": "singo-daily-2026-09-01",
-      "title": "🔥 9월 1일 신고가 15곳",
-      "cards": [
-        "singo-목동힐스테이트-59",
-        "singo-주공13-84",
-        "singo-광교호반베르디움-84",
-        "singo-신도림태영타운-84",
-        "singo-강서힐스테이트-59",
-        "singo-평촌더샵센트럴시티-59",
-        "singo-평촌센텀퍼스트-59",
-        "singo-평촌더샵아이파크-59",
-        "singo-동탄시범다은마을월드메르디앙반도유보라-84",
-        "singo-반정아이파크캐슬5단지-84",
-        "singo-병점역아이파크캐슬-84",
-        "singo-신동탄포레자이-59",
-        "singo-아르테자이-59",
-        "singo-수원하늘채더퍼스트1단지-59",
-        "singo-보람마을아주-59"
-      ],
-      "caption": "singo-daily-2026-09-01",
-      "state": "오너 확정",
-      "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 0개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-09-01",
-      "confirmedMd5": [
-        "singo-목동힐스테이트-59:5558836963b9",
-        "singo-주공13-84:d73636772d9b",
-        "singo-광교호반베르디움-84:13ef62403dcd",
-        "singo-신도림태영타운-84:8dc971c2131e",
-        "singo-강서힐스테이트-59:7ed5caedf29c",
-        "singo-평촌더샵센트럴시티-59:754162c81f49",
-        "singo-평촌센텀퍼스트-59:3e9767f435d4",
-        "singo-평촌더샵아이파크-59:877cc2a02787",
-        "singo-동탄시범다은마을월드메르디앙반도유보라-84:90932c608d40",
-        "singo-반정아이파크캐슬5단지-84:276d1add9f8f",
-        "singo-병점역아이파크캐슬-84:60c492cef210",
-        "singo-신동탄포레자이-59:d8dad3f9507f",
-        "singo-아르테자이-59:11d43676e632",
-        "singo-수원하늘채더퍼스트1단지-59:1d684c658a3f",
-        "singo-보람마을아주-59:75d2abdbfa1a"
-      ]
-    },
-    {
-      "label": "m2-gap",
-      "title": "💵 M2 통계 개편 — 같은 달, 두 개의 통화량",
-      "cards": [
-        "m2-gap"
-      ],
-      "caption": "m2-gap",
-      "note": "2025-12-30 한국은행 통화·유동성 통계 개편(수익증권 제외) 전후 두 계열을 나란히. 오너 지시 2026-09-01 「담담하게 사실만」 — 판단하는 문장을 넣지 않는다. 정기물이라 픽셀 기준값 미등록",
-      "state": "시안",
-      "pixelPolicy": "정기물 — data/datasets/m2-monthly.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다. ⚠️ 신·구 병행 공표는 2026년 12월까지라 그 뒤엔 빌더가 던진다"
-    },
-    {
-      "label": "m2-rate",
-      "title": "💵 통화량 증가율 추이 — 각 해 6월 기준",
-      "cards": [
-        "m2-rate"
-      ],
-      "caption": "m2-rate",
-      "note": "각 해 6월 전년동월비로 통일 — 12월 기준으로 재면 2021년이 지금보다 높아 제목과 그림이 어긋난다(빌더가 게이트로 막는다). 개편 전 기준(구 M2). 정기물이라 픽셀 기준값 미등록",
-      "state": "시안",
-      "pixelPolicy": "정기물 — 자료 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
-    },
-    {
-      "label": "m2-trend",
-      "title": "💵 2030 대한민국 M2통화량은?",
-      "cards": [
-        "m2-trend"
-      ],
-      "caption": "m2-trend",
-      "note": "2003.10~2026.06 실측(구 M2 단일 계열, 접합 없음) + 2030년까지 두 시나리오. 시나리오는 자의적 낙관·비관이 아니라 과거 실측 속도다 — ①2003.10~2025.06 연평균 7.6% ②현 정부 구간(2025.04~2026.06) 연평균 11.8%. 오너 메모의 \"12.3%\"는 최신월 전년동월비라 계산값 11.8%를 썼다(CLAUDE.md §8). 예측은 점선·범례 이름·경계 세로선·캡션 산식 네 겹으로 실측과 가른다. 오너 지시 2026-09-01로 「1986~2026 40년 추이」를 이 카드로 교체.",
-      "state": "시안",
-      "pixelPolicy": "정기물 — 자료 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
-    },
-    {
-      "label": "hakgun-map",
-      "title": "🏫 대한민국 대표 학군지 Top 31 — 시세 & 학원 (2장)",
-      "cards": [
-        "hakgun-map",
-        "hakgun-academy"
-      ],
-      "caption": "hakgun-map",
-      "note": "좌 급지별 3개 표(급지 안에서 국평 시세 순·번호는 표마다 1번부터) + 우 수도권 시군구 지도(토허제 면 + 급지색 번호 핀 + 한강 + 자동 배치 이름표). 급지색 1=빨강·2=검정·3=회색. 인천 송도·부평은 2026-09-01 에 수집해 넣었다(청라는 서구 코드 미보유로 제외). 급지는 『대한민국 학군지도』 인용(verified:false) — **발행 전 원 인포그래픽 대조 필요**. 값은 국토부 실거래를 빌더가 집계 ‖ 2장째(hakgun-academy, 오너 2026-09-02 '2장 세트로'): 같은 21곳·같은 지도에 **입시·보습 학원 수**를 얹는다. 1장과 달리 학원 수 순으로 새로 번호를 매기고 핀 색은 급지 그대로다 — 2번에 회색(3급지) 핀이 서는 것(동탄)이 이 장의 전부다. 교습소는 제외(1인 운영·일시수용 9명 상한이라 대형 학원과 한 줄로 세면 동네마다 다른 것을 센다 — 교습소 비중이 대치 24%·목동 50%·수성 52%로 갈렸다). 정원(TOFOR_SMTOT)은 쓰지 않았다: 곳당 61~660명으로 신고 편차가 커 규모로 못 읽는다. ‖ 2026-09-02 오너 확정: **2장 캐러셀**(1장 국평 시세 · 2장 입시·보습 학원 수). 2장은 1장과 판형이 완전히 같고 값만 다르다. 봉선(광주 남구)은 2급지로 복귀했으나 실거래가 안 잡혀 **2장에만** 있다(데이터셋 priceUnavailable). 급지 분류는 원 인포그래픽 전수 대조로 verified:true 로 올렸다 — 원본 32곳 중 청라만 빠져 31곳이다. ⚠️ 내보내기 전 검사(§0)는 무관한 카드(singo-dasan-lottecastle 곡선 불일치)로 빨간불이다 — 배포는 그 카드가 풀린 뒤에 한다.",
-      "state": "오너 확정",
-      "pixelPolicy": "정기물 — data/datasets/molit/,data/datasets/molit,data/datasets/neis-academy/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-09-02",
-      "confirmedMd5": [
-        "hakgun-map:400b3350584a",
-        "hakgun-academy:7b3f4429bec8"
-      ]
-    },
-    {
-      "label": "singo-daily-2026-09-02",
-      "title": "🔥 9월 2일 신고가 15곳",
-      "cards": [
-        "singo-텐즈힐1단지-84",
-        "singo-위례더힐55-84",
-        "singo-우장산아이파크이편한세상-84",
-        "singo-마곡엠밸리9단지-59",
-        "singo-다산롯데캐슬-84",
-        "singo-주공12-84",
-        "singo-이편한세상센트레빌-59",
-        "singo-영통아이파크캐슬1단지-59",
-        "singo-휘경리오포레아파트1단지-84",
-        "singo-기흥역센트럴푸르지오-84",
-        "singo-동탄역센트럴푸르지오-59",
-        "singo-도덕파크타운1단지-59",
-        "singo-만현마을9단지엘지자이-84",
-        "singo-수원하늘채더퍼스트1단지-84",
-        "singo-네이처포레-59"
-      ],
-      "caption": "singo-daily-2026-09-02",
-      "state": "오너 확정",
-      "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 15개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록.",
-      "pixelPolicy": "정기물 — data/datasets/singo-history/,data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-09-02",
-      "confirmedMd5": [
-        "singo-텐즈힐1단지-84:9fb900857805",
-        "singo-위례더힐55-84:ddb38eba1df5",
-        "singo-우장산아이파크이편한세상-84:9e9e3764bcb5",
-        "singo-마곡엠밸리9단지-59:6fe15c418c04",
-        "singo-다산롯데캐슬-84:ee1c0bf87733",
-        "singo-주공12-84:2ccadf3a1026",
-        "singo-이편한세상센트레빌-59:5f1d4446431b",
-        "singo-영통아이파크캐슬1단지-59:c272de642f55",
-        "singo-휘경리오포레아파트1단지-84:aeee7ce692d9",
-        "singo-기흥역센트럴푸르지오-84:e089e554987d",
-        "singo-동탄역센트럴푸르지오-59:d269f94f69fd",
-        "singo-도덕파크타운1단지-59:ba01e372ad02",
-        "singo-만현마을9단지엘지자이-84:c05bc59fc84b",
-        "singo-수원하늘채더퍼스트1단지-84:7d5fc7498659",
-        "singo-네이처포레-59:8e2093594d1f"
-      ]
-    },
-    {
-      "label": "tohuh-price-map",
-      "title": "🗺 토허제 40곳 가격 지도 — 매매·전세 × 34평·25평 (2026.06~07)",
-      "cards": [
-        "mae84-map",
-        "jeonse84-map",
-        "mae59-map",
-        "jeonse59-map"
-      ],
-      "caption": "tohuh-price-map",
-      "state": "오너 확정",
-      "note": "**월간 정기물.** 만드는 법은 `node scripts/tohuh-price-monthly.mjs` 하나다 — 달 고르기·자료 점검·대기열·빌더 인자·검수·묶음까지 그 스크립트가 한다. 사람용 정본은 docs/guides/토허제-가격지도-기준.md.\n집계 202606,202607 · 국토부 아파트 매매/전월세 실거래 · 전용 82~86㎡(34평) · 57~61㎡(25평).\n**두 달을 합친다** — 한 달이면 표본이 얇은 구가 흔들린다(종로 전용59: 06월 9건 7.41억 / 07월 11건 5.63억).\n**매매는 직거래·해제거래를 뺀다** — 신고가 카드와 같은 모집단이어야 두 카드가 같은 세계를 말한다.\n색은 **매매 빨강 · 전세 파랑**(오너 2026-09-02) — 표 값과 지도 램프가 한 축이고 제목만 예외다(평형 파랑·금액 빨강).\n캐러셀 순서는 34평 매매 → 34평 전세 → 25평 매매 → 25평 전세 — 첫 장이 표지라 큰 숫자가 앞에 서고, 같은 평형의 사는 값/빌리는 값이 붙어 있어야 넘기며 비교된다.\n머리글은 **2열**이어야 한다 — 3열(head.c)이면 값 칸이 176px 로 고정돼 「성남시 분당구」가 접히고 표가 236px 넘친다.\n정기물이라 픽셀 기준값(pixel-baselines)에 넣지 않는다. / 오너 확정(2026-09-02) — 한강 흰 케이싱 반영본. 파랑 지도에서 강이 면과 같은 색상이라 명도 대비만 남아 1.26:1 이었다. 강 색은 그대로 두고(발행본 픽셀 불변) 흰 띠를 아래에 깔았다. 네 장 모두 적용 — 한 게시물이라 같은 지도로 읽혀야 한다.",
-      "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/molit-rent 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "scopeAck": {
-        "why": "오너 확정(2026-09-01): 제목의 주어는 서울이고 값도 서울 25구 평균이다. 표·지도는 수도권 토지거래허가구역 40곳을 함께 보여 주며, 카드 맨 위 회색 줄이 그 범위를 밝힌다. 아래는 그 경기 지역이며, 명단에 없는 이름이 새로 끼면 검사가 그대로 막는다(07-27 캐시 오염 사고 방어는 유지).",
-        "outside": [
-          "용인시 기흥구",
-          "화성시 동탄구",
-          "구리시",
-          "과천시",
-          "광명시",
-          "성남시 수정구",
-          "성남시 중원구",
-          "성남시 분당구",
-          "수원시 장안구",
-          "수원시 팔달구",
-          "수원시 영통구",
-          "안양시 동안구",
-          "용인시 수지구",
-          "의왕시",
-          "하남시"
-        ]
-      },
-      "confirmedAt": "2026-09-02",
-      "confirmedMd5": [
-        "mae84-map:eb3cd920429d",
-        "jeonse84-map:686ce92f1631",
-        "mae59-map:715c1b303c44",
-        "jeonse59-map:4aa0f154aa53"
-      ]
-    },
-    {
-      "label": "gap-ep1-1",
-      "title": "출발선은 같았다 #1 — 2020년 초 똑같은 7.0억, 지금은 9.8억 격차 (분당 시범우성·성북 길음뉴타운1·안산 파크푸르지오)",
-      "cards": [
-        "gap-ep1-1"
-      ],
-      "caption": "gap-ep1-1",
-      "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형은 streak-line@1 재사용. ⚠️ 평형을 섞어 묶은 카드다(25평 둘·34평 하나) — 「같은 집끼리의 비교」가 아니라 「그때 같은 돈이면 살 수 있던 집들」이다. 기준 정본은 docs/GAP_CARDS.md. / 시리즈명 「출발선은 같았다」+번호와 **연회색 판면(B안)** 은 오너 2026-09-02 확정 — 상단은 시리즈명·번호만, 측정 정의(월별 최고가)는 푸터로 내렸다.",
-      "state": "오너 확정 · 인스타 발행 완료",
-      "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-09-02",
-      "confirmedMd5": [
-        "gap-ep1-1:1c508ee2bec5"
-      ],
-      "publishedAt": "2026-09-04"
-    },
-    {
-      "label": "gap-ep1-2",
-      "title": "출발선은 같았다 #2 — 2020년 초 똑같은 8.0억, 지금은 8.6억 격차 (성동 두산·평촌 초원마을대림·수원장안 SK SKY VIEW)",
-      "cards": [
-        "gap-ep1-2"
-      ],
-      "caption": "gap-ep1-2",
-      "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형·연회색 판면은 1호와 동일(streak-line@1). ⚠️ 평형을 섞어 묶은 카드다(25평 하나·34평 둘). 기준 정본은 docs/GAP_CARDS.md. / 오너가 고른 옛 안건표 2번(수지·노원·관악)은 관악 신림동 현대 84 의 기준값이 **한 건짜리 튄 거래**(2020.02 단 1건 5.6억, 앞뒤 달은 4.35·4.50억)여서 카드가 「6년째 제자리」라는 거짓말을 하게 되어 있었다 — 스파이크 방어(find-gap-pairs settle())를 넣어 후보에서 뺐고, 그 자리를 후보 4번이 대신한다.",
-      "state": "오너 확정 · 인스타 발행 완료",
-      "captionCrossCheck": [
-        {
-          "value": "7.9",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        }
-      ],
-      "confirmedAt": "2026-09-02",
-      "confirmedMd5": [
-        "gap-ep1-2:d1a4bb56b032"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "publishedAt": "2026-09-04"
-    },
-    {
-      "label": "gap-ep1-3",
-      "title": "출발선은 같았다 #3 — 2020년 초 똑같은 7.6억, 지금은 7.9억 격차 (성동 벽산·성북 길음동동부센트레빌·구리 갈매역아이파크)",
-      "cards": [
-        "gap-ep1-3"
-      ],
-      "caption": "gap-ep1-3",
-      "note": "오너가 고른 원래 3호(동탄·성북·오산)는 오산대역세교자이의 곡선이 톱니(이웃달 18%)라 오너가 교체를 지시했다(2026-09-03, (b)안). 구리 41310 을 69회로 채워 후보 6·21 을 놓고 비교했고, 톱니가 더 낮고(3%/0%/0%) 상승률 격차가 큰(1.01배) 후보 6 을 골랐다. ⚠️ 평형을 섞은 카드다(25평 하나·34평 둘). 기준 정본은 docs/GAP_CARDS.md.",
-      "state": "오너 확정 · 인스타 발행 완료",
-      "captionCrossCheck": [
-        {
-          "value": "7.8",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        },
-        {
-          "value": "7.5",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        },
-        {
-          "value": "7.7",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        }
-      ],
-      "confirmedAt": "2026-09-02",
-      "confirmedMd5": [
-        "gap-ep1-3:c03acf7da771"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "publishedAt": "2026-09-04"
-    },
-    {
-      "label": "gap-ep1-4",
-      "title": "출발선은 같았다 #4 — 2020년 초 똑같은 6.9억, 지금은 4.8억 격차 (강서 가양6단지·성북 돈암동삼성·구리 한라비발디)",
-      "cards": [
-        "gap-ep1-4"
-      ],
-      "caption": "gap-ep1-4",
-      "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형은 1~3호와 동일(streak-line@1). ⚠️ 평형을 섞은 카드다. 세 가드(스파이크·톱니·긴 공백)를 모두 통과했다. 기준 정본은 docs/GAP_CARDS.md. / 오너가 렌더를 보고 2026-09-03 확정했다(1~5호 일괄).",
-      "state": "오너 확정 · 인스타 발행 완료",
-      "captionCrossCheck": [
-        {
-          "value": "6.8",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        },
-        {
-          "value": "7.0",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        }
-      ],
-      "confirmedAt": "2026-09-03",
-      "confirmedMd5": [
-        "gap-ep1-4:f2e2ca9f0269"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "publishedAt": "2026-09-04"
-    },
-    {
-      "label": "gap-ep1-5",
-      "title": "출발선은 같았다 #5 — 2020년 초 똑같은 5.5억, 지금은 5.5억 격차 (수지 현대성우8차·기흥 블루밍구성더센트럴·시흥 호반베르디움더프라임)",
-      "cards": [
-        "gap-ep1-5"
-      ],
-      "caption": "gap-ep1-5",
-      "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형은 1~3호와 동일(streak-line@1). ⚠️ 평형을 섞은 카드다. 세 가드(스파이크·톱니·긴 공백)를 모두 통과했다. 기준 정본은 docs/GAP_CARDS.md. / 오너가 렌더를 보고 2026-09-03 확정했다(1~5호 일괄).",
-      "state": "오너 확정 · 인스타 발행 완료",
-      "captionCrossCheck": [
-        {
-          "value": "5.6",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        },
-        {
-          "value": "5.5",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        }
-      ],
-      "confirmedAt": "2026-09-03",
-      "confirmedMd5": [
-        "gap-ep1-5:fc4da3b0130b"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "publishedAt": "2026-09-04"
-    },
-    {
-      "label": "danji-mokdong",
-      "title": "🏙️ 목동 하이퍼트 아파텔 33억? (목동윤슬자이 오피스텔)",
-      "cards": [
-        "danji-mokdong"
-      ],
-      "caption": "danji-mokdong",
-      "note": "청약·분양 판형 danji-cover@1 의 **첫 오피스텔 카드**(2026-09-03). 청약홈 API 에 오피스텔 오퍼레이션이 아직 안 붙어 있어 applyhomeNo 없이 scheduleSource 를 밝힌 입주자모집공고문(공고번호 2026950076, 오너 제공 PDF)에서 읽었다. 오피스텔은 특별공급·1순위가 없어 일정 4칸이 접수·당발·계약·입주로 바뀌고 단위가 '실'이다(propertyType 이 켠다). 분양가는 공고문 5p 공급금액표의 타입별 최고가와 대조 완료. ⚠️ 이 카드를 만들며 좌우 판형(danji-cover-split@1)을 실제로 구현했다가 오너가 물렸다 — 판형은 하나다. ⚠️ '국평'은 오피스텔에 발코니가 없어 전용 114㎡ 가 아파트 84㎡ 확장형과 실사용이 비슷한 데서 온 업계 표현이다 — 카드엔 한 낱말, 근거는 캡션이 받는다.",
-      "captionCrossCheck": [
-        {
-          "value": "24.6",
-          "why": "최저 공급금액(114B 24.60억) — 카드 밴드는 최고가만 싣는다. 진입가를 캡션이 받는다"
-        },
-        {
-          "value": "444",
-          "why": "114~115㎡ 실수 — 카드 밴드는 면적대와 금액만 싣는다"
-        },
-        {
-          "value": "180",
-          "why": "117~120㎡ 실수 — 같은 이유"
-        },
-        {
-          "value": "27",
-          "why": "198~203㎡ 실수 — 같은 이유. 합 444+180+27 = 651 = 카드의 총 실수"
-        },
-        {
-          "value": "84",
-          "why": "아파트 국민평형 84㎡ — '국평'이라는 카드 위 한 낱말의 근거. 카드에는 이 수가 없다"
-        },
-        {
-          "value": "40",
-          "why": "114B 실사용 약 40평(이데일리 르포 2026) — 같은 근거 줄"
-        },
-        {
-          "value": "4",
-          "why": "114B 방 4개(이데일리 르포) — 같은 근거 줄"
-        },
-        {
-          "value": "2",
-          "why": "114B 욕실 2개(이데일리 르포) — 같은 근거 줄"
-        },
-        {
-          "value": "900",
-          "why": "예비당첨자 900%(공고문 1p) — 카드 아래 한 줄이 자격 요건만 싣느라 뺐다"
-        },
-        {
-          "value": "1,206",
-          "why": "주차 1,206대(공고문 2p) — 카드 제원 3칸에 자리가 없다"
-        },
-        {
-          "value": "1.85",
-          "why": "실당 주차 1.85대(공고문 2p) — 같은 이유"
-        },
-        {
-          "value": "6",
-          "why": "지하 6층(공고문 2p) — 카드는 '최고 48층'만 싣는다"
-        },
-        {
-          "value": "16",
-          "why": "당첨자 발표 16시 이후(공고문 1p) — 카드는 날짜만 싣는다"
-        },
-        {
-          "value": "14",
-          "why": "계약 마감 9/14(월) — 카드는 계약 시작일만 싣는다"
-        }
-      ],
-      "state": "오너 확정",
-      "confirmedAt": "2026-09-03",
-      "confirmedMd5": [
-        "danji-mokdong:2f5023b9672a"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
-    },
-    {
-      "label": "singo-daily-2026-09-03",
-      "title": "🔥 9월 3일 신고가 11곳",
-      "cards": [
-        "singo-광교중흥에스클래스-84",
-        "singo-e편한세상신촌2단지-59",
-        "singo-래미안힐스테이트고덕-59",
-        "singo-롯데캐슬위너-84",
-        "singo-미사강변스타힐스아파트-84",
-        "singo-산성역자이푸르지오1단지-59",
-        "singo-광명두산위브트레지움-59",
-        "singo-관악-84",
-        "singo-꿈동산신안-84",
-        "singo-동탄시범다은마을월드메르디앙반도유보라-59",
-        "singo-자연앤데시앙-84"
-      ],
-      "caption": "singo-daily-2026-09-03",
-      "state": "오너 확정",
-      "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 11개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 오너가 HTML 미리보기를 보고 확정(제목 4곳 수정 반영본). 09-03 판정 9장 + 09-02 이월 2장(--also). / 오너가 HTML 미리보기를 보고 확정(제목 4곳 수정 반영본). 09-03 판정 9장 + 09-02 이월 2장(--also 산성역자이푸르지오1단지·평촌관악타운).",
-      "pixelPolicy": "정기물 — data/datasets/singo-history/,data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-09-03",
-      "confirmedMd5": [
-        "singo-광교중흥에스클래스-84:1f9c2cd1626d",
-        "singo-e편한세상신촌2단지-59:0a670e9b8b44",
-        "singo-래미안힐스테이트고덕-59:a808471d8de7",
-        "singo-롯데캐슬위너-84:561254be4ac4",
-        "singo-미사강변스타힐스아파트-84:b8fede4681a6",
-        "singo-산성역자이푸르지오1단지-59:304f06efe350",
-        "singo-광명두산위브트레지움-59:798e9987a216",
-        "singo-관악-84:038e18241d7c",
-        "singo-꿈동산신안-84:e3f7f04ee172",
-        "singo-동탄시범다은마을월드메르디앙반도유보라-59:73d15c5da29b",
-        "singo-자연앤데시앙-84:8e38576567e5"
-      ]
-    },
-    {
-      "label": "world-monthly",
-      "title": "🌏 26년 세계 증시 1등, 한국 +61.8% — 8개국 월별 성적표 (2026.01~08)",
-      "cards": [
-        "world-monthly"
-      ],
-      "caption": "world-monthly",
-      "review": "세계 주요국 월별 증시 성적표",
-      "state": "오너 확정",
-      "note": "오너 확정 8개국(원래 베트남 → 야후에 VN-Index 가 없어 대만으로 교체). 현지통화 기준. ⚠️ 캡션이 반드시 적을 것: 누적의 밑은 **전년 12월 말 종가**이고, 환율은 반영하지 않았다. 2026-09-04 오너 지시로 카드 최하단 문구를 뺐고 그 정의가 캡션으로 내려왔다. / 오너 확정 2026-09-04 — 세계 8개국 1~8월 성적표 1호. 판형 world-monthly@1 신설분.",
-      "confirmedAt": "2026-09-04",
-      "confirmedMd5": [
-        "world-monthly:d00e5951d0cc"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/world-market- 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
-    },
-    {
-      "label": "singo-A15106901-84",
-      "cards": [
-        "singo-두산-84"
-      ],
-      "caption": "singo-A15106901-84",
-      "title": "🔥 두산 34평, 18.5억 신고가",
-      "state": "시안",
-      "note": "2026-09-04 판정 신고가. 대장 열쇠 A15106901 (사람이 짚었다(--kapt)). 기준은 docs/guides/신고가-카드-기준.md",
-      "pixelPolicy": "정기물 — singo-history·molit·apt-station·apt-detail·apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
-    },
-    {
-      "label": "singo-daily-2026-09-04",
-      "title": "🔥 9월 4일 신고가 14곳",
-      "cards": [
-        "singo-마포래미안푸르지오2단지-84",
-        "singo-서울역센트럴자이-59",
-        "singo-대림아파트-84",
-        "singo-신길센트럴자이아파트-59",
-        "singo-위례롯데캐슬-84",
-        "singo-미사강변골든센트로-84",
-        "singo-산성역자이푸르지오2단지-59",
-        "singo-상암월드컵파크9단지-84",
-        "singo-백련산에스케이뷰아이파크-59",
-        "singo-동아에코빌-59-0904",
-        "singo-지제역더샵센트럴시티-84",
-        "singo-주공9-59",
-        "singo-벽적골9단지주공-59",
-        "singo-갈매6단지-59"
-      ],
-      "caption": "singo-daily-2026-09-04",
-      "state": "오너 확정",
-      "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 14개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 2026-09-04 신고가 14장 — 오너 확정. 곡선 무채색 발광 첫 적용 · 월곡 동아에코빌은 08-26 발행분과 이름표를 갈라 만든 새 카드.",
-      "pixelPolicy": "정기물 — data/datasets/singo-history/,data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-09-04",
-      "confirmedMd5": [
-        "singo-마포래미안푸르지오2단지-84:98df25110375",
-        "singo-서울역센트럴자이-59:791f3cbdbd41",
-        "singo-대림아파트-84:e2ce8dfecca1",
-        "singo-신길센트럴자이아파트-59:d1def1cdcc92",
-        "singo-위례롯데캐슬-84:e0f1be703b1b",
-        "singo-미사강변골든센트로-84:17d06531b0c1",
-        "singo-산성역자이푸르지오2단지-59:bc21bdf513c1",
-        "singo-상암월드컵파크9단지-84:372446857558",
-        "singo-백련산에스케이뷰아이파크-59:b3d4a4dba361",
-        "singo-동아에코빌-59-0904:131ec5b58301",
-        "singo-지제역더샵센트럴시티-84:a16ba37bf1c4",
-        "singo-주공9-59:809d843a6e45",
-        "singo-벽적골9단지주공-59:7590ed0f4ef5",
-        "singo-갈매6단지-59:2ade2a60dec2"
-      ]
-    },
-    {
-      "label": "gap-ep1-6",
-      "title": "출발선은 같았다 #6 — 2020년 초 똑같은 5.9억, 지금은 6.2억 격차 (분당 장미마을·강북 삼각산아이원·시흥 한라비발디캠퍼스2차)",
-      "cards": [
-        "gap-ep1-6"
-      ],
-      "caption": "gap-ep1-6",
-      "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형은 1~5호와 동일(streak-line@1). ⚠️ 평형을 섞은 카드다. 세 가드(스파이크·톱니·긴 공백)를 모두 통과했다. 기준 정본은 docs/GAP_CARDS.md. / 후보는 §18 정본대로 「자료 0회·톱니 12% 이하·공백 20개월 이하」를 통과한 것 중 상승률 격차 순으로 골랐다 — 앞 카드에 나온 구는 피하지 않았다.",
-      "state": "오너 확정 · 인스타 발행 완료",
-      "captionCrossCheck": [
-        {
-          "value": "6.0",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        },
-        {
-          "value": "5.9",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        }
-      ],
-      "renderedMd5": [
-        "gap-ep1-6:771f60e2d673"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "publishedAt": "2026-09-04",
-      "confirmedAt": "2026-09-04",
-      "confirmedMd5": [
-        "gap-ep1-6:771f60e2d673"
-      ]
-    },
-    {
-      "label": "gap-ep1-7",
-      "title": "출발선은 같았다 #7 — 2020년 초 똑같은 8.5억, 지금은 7.7억 격차 (성동 대림강변타운·강서 마곡수명산파크1단지·금천 남서울힐스테이트)",
-      "cards": [
-        "gap-ep1-7"
-      ],
-      "caption": "gap-ep1-7",
-      "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형은 1~5호와 동일(streak-line@1). ⚠️ 평형을 섞은 카드다. 세 가드(스파이크·톱니·긴 공백)를 모두 통과했다. 기준 정본은 docs/GAP_CARDS.md. / 후보는 §18 정본대로 「자료 0회·톱니 12% 이하·공백 20개월 이하」를 통과한 것 중 상승률 격차 순으로 골랐다 — 앞 카드에 나온 구는 피하지 않았다.",
-      "state": "오너 확정 · 인스타 발행 완료",
-      "captionCrossCheck": [
-        {
-          "value": "8.5",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        }
-      ],
-      "renderedMd5": [
-        "gap-ep1-7:9b8d2ada337d"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "publishedAt": "2026-09-04",
-      "confirmedAt": "2026-09-04",
-      "confirmedMd5": [
-        "gap-ep1-7:9b8d2ada337d"
-      ]
-    },
-    {
-      "label": "gap-ep1-8",
-      "title": "출발선은 같았다 #8 — 2020년 초 똑같은 6.1억, 지금은 5.7억 격차 (동탄 동탄역센트럴상록아파트·서대문 홍은동벽산·시흥 한라비발디캠퍼스)",
-      "cards": [
-        "gap-ep1-8"
-      ],
-      "caption": "gap-ep1-8",
-      "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형은 1~5호와 동일(streak-line@1). ⚠️ 평형을 섞은 카드다. 세 가드(스파이크·톱니·긴 공백)를 모두 통과했다. 기준 정본은 docs/GAP_CARDS.md. / 후보는 §18 정본대로 「자료 0회·톱니 12% 이하·공백 20개월 이하」를 통과한 것 중 상승률 격차 순으로 골랐다 — 앞 카드에 나온 구는 피하지 않았다.",
-      "state": "오너 확정 · 인스타 발행 완료",
-      "captionCrossCheck": [
-        {
-          "value": "6.2",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        },
-        {
-          "value": "6.1",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        },
-        {
-          "value": "6.0",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        }
-      ],
-      "renderedMd5": [
-        "gap-ep1-8:a0fcfc8af230"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "publishedAt": "2026-09-04",
-      "confirmedAt": "2026-09-04",
-      "confirmedMd5": [
-        "gap-ep1-8:a0fcfc8af230"
-      ]
-    },
-    {
-      "label": "gap-ep1-9",
-      "title": "출발선은 같았다 #9 — 2020년 초 똑같은 8.1억, 지금은 6.5억 격차 (분당 시범한양·평촌 인덕원마을·기흥 기흥역더샵)",
-      "cards": [
-        "gap-ep1-9"
-      ],
-      "caption": "gap-ep1-9",
-      "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형은 1~5호와 동일(streak-line@1). ⚠️ 평형을 섞은 카드다. 세 가드(스파이크·톱니·긴 공백)를 모두 통과했다. 기준 정본은 docs/GAP_CARDS.md. / 후보는 §18 정본대로 「자료 0회·톱니 12% 이하·공백 20개월 이하」를 통과한 것 중 상승률 격차 순으로 골랐다 — 앞 카드에 나온 구는 피하지 않았다.",
-      "state": "오너 확정 · 인스타 발행 완료",
-      "captionCrossCheck": [
-        {
-          "value": "8.0",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        },
-        {
-          "value": "8.2",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        },
-        {
-          "value": "8.1",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        }
-      ],
-      "renderedMd5": [
-        "gap-ep1-9:be86b49dc8dc"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "publishedAt": "2026-09-04",
-      "confirmedAt": "2026-09-04",
-      "confirmedMd5": [
-        "gap-ep1-9:be86b49dc8dc"
-      ]
-    },
-    {
-      "label": "gap-ep1-10",
-      "title": "출발선은 같았다 #10 — 2020년 초 똑같은 4.4억, 지금은 3.7억 격차 (광명 주공10·수원장안 한일타운우성·수원권선 호매실스타힐스)",
-      "cards": [
-        "gap-ep1-10"
-      ],
-      "caption": "gap-ep1-10",
-      "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형은 1~5호와 동일(streak-line@1). ⚠️ 평형을 섞은 카드다. 세 가드(스파이크·톱니·긴 공백)를 모두 통과했다. 기준 정본은 docs/GAP_CARDS.md. / 후보는 §18 정본대로 「자료 0회·톱니 12% 이하·공백 20개월 이하」를 통과한 것 중 상승률 격차 순으로 골랐다 — 앞 카드에 나온 구는 피하지 않았다.",
-      "state": "오너 확정 · 인스타 발행 완료",
-      "captionCrossCheck": [
-        {
-          "value": "4.4",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        },
-        {
-          "value": "4.5",
-          "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
-        }
-      ],
-      "renderedMd5": [
-        "gap-ep1-10:96232d5cb840"
-      ],
-      "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-09-04",
-      "confirmedMd5": [
-        "gap-ep1-10:a516ea341402"
-      ],
-      "publishedAt": "2026-09-04"
-    },
-    {
-      "label": "singo-daily-2026-09-05",
-      "title": "🔥 9월 5일 신고가 12곳",
-      "cards": [
-        "singo-산성역자이푸르지오1단지-84",
-        "singo-진산마을삼성5차-84",
-        "singo-인덕원센트럴자이1단지-84",
-        "singo-동천디이스트-84",
-        "singo-광명푸르지오센트베르-59-0905",
-        "singo-래미안트리베라1단지-84",
-        "singo-반정아이파크캐슬5단지-84-0905",
-        "singo-꿈동산신안-84-0905",
-        "singo-화서주공4단지-59",
-        "singo-벽적골9단지주공-59-0905",
-        "singo-석수e편한세상-59",
-        "singo-권선자이e편한세상-59"
-      ],
-      "caption": "singo-daily-2026-09-05",
-      "state": "오너 확정",
-      "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 12개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 오너가 JPG 낱장을 보고 확정. 12장 — 산성역·석수는 오너 지시로 사이클 가드를 넘겨(겹치는 「지난 고점대비」 줄을 빼고) 실었다. 석수 공급면적은 주차장·대피소를 뺀 뒤 다시 받은 23평. / 이름 사전(수지 진산마을삼성5차·인덕원센트럴자이1단지·하남 꿈동산신안) 반영본으로 재확정.",
-      "pixelPolicy": "정기물 — data/datasets/singo-history/,data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-09-05",
-      "confirmedMd5": [
-        "singo-산성역자이푸르지오1단지-84:c25e88b41555",
-        "singo-진산마을삼성5차-84:c8fc034571e7",
-        "singo-인덕원센트럴자이1단지-84:63dca7dc9345",
-        "singo-동천디이스트-84:5da7f2769487",
-        "singo-광명푸르지오센트베르-59-0905:3a86467e8886",
-        "singo-래미안트리베라1단지-84:3e51661d8686",
-        "singo-반정아이파크캐슬5단지-84-0905:d0aa2f32df0d",
-        "singo-꿈동산신안-84-0905:bc4f5d7ea650",
-        "singo-화서주공4단지-59:fb5e7b25a5e0",
-        "singo-벽적골9단지주공-59-0905:bda36e90414e",
-        "singo-석수e편한세상-59:b6d7f4008d41",
-        "singo-권선자이e편한세상-59:860a56fb5d69"
-      ]
-    },
-    {
-      "label": "seongsu-zones",
-      "title": "성수 1~4지구, 누가 짓나 (시공사 지도)",
-      "cards": [
-        "seongsu-zones"
-      ],
-      "caption": "seongsu-zones",
-      "review": "성수전략정비구역 시공사 지도",
-      "note": "2026-09-06 기준. 2·3지구는 시공사 미확정('유력') — 총회 결과가 나오면 데이터셋의 status·statusKind 를 고치고 다시 그린다.",
-      "pixelPolicy": "정기물에 준한다 — 선정총회 결과가 나오면 다시 그려진다. pixel-baselines 에 넣지 않는다."
-    },
-    {
-      "label": "daso-treemap",
-      "title": "2026년 현재, 다주택자 비율? (집합건물 다소유지수 트리맵)",
-      "cards": [
-        "daso-treemap"
-      ],
-      "caption": "daso-treemap",
-      "review": "다소유지수 × 소유지수 트리맵 2컷",
-      "note": "판형 daso-treemap@1 신설분. 좌 표(16행 전부)·우 「가로막대 → 확대 깔때기 → 트리맵」. ⚠️ 제목의 '다주택자'는 일상어이고 이 자료의 모집단(집합건물)과 정확히 같지 않다 — 킥커가 「집합건물 다소유지수」를 밝히고 각주가 두 낱말을 풀 때만 쓴다(빌더가 검사한다). ⚠️ 국가데이터처 주택소유통계의 14.9%(2024, 주택 기준)와 나란히 놓지 않는다. 모집단이 다르다. ⚠️ 트리맵의 넓이는 2채 이상 안에서의 비중이고 적힌 %는 전체 소유자 기준 공표값이다 — 깔때기가 그 확대를 그림으로 말한다(빌더가 존재를 검사한다). ⚠️ 트리맵의 「10채 이상」은 원자료 일곱 구간을 묶은 것 — 표·캡션이 내역을 적는다. / 가로막대(1채/2채 이상) + 다보유 확대 트리맵 + 16행 표. 오너 확정 2026-09-07",
-      "pixelPolicy": "고정물 — 원자료가 오너의 2026-08 직접 조회분이고 이를 갱신하는 워크플로가 없다. 다음 달 값은 새 데이터셋(iros-daso-2026-09.json)·새 카드로 만든다. 따라서 이 판본의 픽셀은 이제 불변이다(pixel-baselines 등록 — confirm 이 그렇게 판정했고, 그 판정이 맞다).",
-      "state": "오너 확정",
-      "confirmedAt": "2026-09-07",
-      "confirmedMd5": [
-        "daso-treemap:1a06eace066d"
-      ]
-    },
-    {
-      "label": "rail-sinansan",
-      "title": "신안산선 언제 개통하지 (공정률 72.58% · 2028년 말 목표)",
-      "cards": [
-        "rail-sinansan"
-      ],
-      "caption": "rail-sinansan",
-      "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
-      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분 / 장하역 누락 교정 — 목감~성포 사이 신설 확정역(2021.09 협약). 본선 15역 → 16역",
-      "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
-      "state": "오너 확정",
-      "confirmedAt": "2026-09-08",
-      "confirmedMd5": [
-        "rail-sinansan:534355c9ce00"
-      ]
-    },
-    {
-      "label": "rail-gtxa",
-      "title": "GTX-A 언제 완전 개통하지 (공정률 99.9% · 개통 미정)",
-      "cards": [
-        "rail-gtxa"
-      ],
-      "caption": "rail-gtxa",
-      "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
-      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분 / GTX-A 99.9% 오해 교정 — 삼성역 병목(61.94%) 병기 / GTX-A 99.9% 오해 교정(삼성역 61.94% 병기) · 캡션 카톡체 전면 개편",
-      "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
-      "state": "오너 확정",
-      "confirmedAt": "2026-09-08",
-      "confirmedMd5": [
-        "rail-gtxa:485ba73560c7"
-      ]
-    },
-    {
-      "label": "rail-gtxb",
-      "title": "GTX-B 언제 개통하지 (공정률 8.1% · 2031년 목표)",
-      "cards": [
-        "rail-gtxb"
-      ],
-      "caption": "rail-gtxb",
-      "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
-      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
-      "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
-      "state": "오너 확정",
-      "confirmedAt": "2026-09-07",
-      "confirmedMd5": [
-        "rail-gtxb:6d6ccd0f22fd"
-      ]
-    },
-    {
-      "label": "rail-gtxc",
-      "title": "GTX-C 언제 개통하지 (공정률 0% · 개통 미정)",
-      "cards": [
-        "rail-gtxc"
-      ],
-      "caption": "rail-gtxc",
-      "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
-      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
-      "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
-      "state": "오너 확정",
-      "confirmedAt": "2026-09-07",
-      "confirmedMd5": [
-        "rail-gtxc:6319a13dd19a"
-      ]
-    },
-    {
-      "label": "rail-indong",
-      "title": "인덕원~동탄선 언제 개통하지 (공정률 20.4% · 2029년 말 목표)",
-      "cards": [
-        "rail-indong"
-      ],
-      "caption": "rail-indong",
-      "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
-      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
-      "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
-      "state": "오너 확정",
-      "confirmedAt": "2026-09-07",
-      "confirmedMd5": [
-        "rail-indong:2099c6e0f351"
-      ]
-    },
-    {
-      "label": "rail-wolpan",
-      "title": "월곶~판교선 언제 개통하지 (공정률 18.0% · 2029년 말 목표)",
-      "cards": [
-        "rail-wolpan"
-      ],
-      "caption": "rail-wolpan",
-      "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
-      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
-      "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
-      "state": "오너 확정",
-      "confirmedAt": "2026-09-07",
-      "confirmedMd5": [
-        "rail-wolpan:07dbb7901dba"
-      ]
-    },
-    {
-      "label": "rail-sinbundang",
-      "title": "신분당선 연장선 언제 개통하지 (공정률 17.25% · 2029년 말 목표)",
-      "cards": [
-        "rail-sinbundang"
-      ],
-      "caption": "rail-sinbundang",
-      "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
-      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
-      "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
-      "state": "오너 확정",
-      "confirmedAt": "2026-09-07",
-      "confirmedMd5": [
-        "rail-sinbundang:2b8c831cf2b9"
-      ]
-    },
-    {
-      "label": "rail-daejang",
-      "title": "대장홍대선 언제 개통하지 (공정률 9.7% · 2031년 목표)",
-      "cards": [
-        "rail-daejang"
-      ],
-      "caption": "rail-daejang",
-      "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
-      "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
-      "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
-      "state": "오너 확정",
-      "confirmedAt": "2026-09-07",
-      "confirmedMd5": [
-        "rail-daejang:a665b6e46b71"
-      ]
-    },
-    {
-      "label": "supply-progress",
-      "title": "李정부 수도권 공급정책 1주년 — 147만호 중 5.3%",
-      "cards": [
-        "supply-progress"
-      ],
-      "caption": "supply-progress",
-      "review": "수도권 공급대책 진행률 — 상단 총량 진행바 + 하단 연도별 목표 기둥",
-      "note": "판형 supply-progress@1 신설분 · 새 폰트 세트(font-taebaek-pretendard) 첫 적용. ⚠️ 한 카드에 분모가 둘이다 — 위 진행바는 총목표 146.9만호(9·7 134.9 + 8·13 12.0), 아래 막대 다섯의 합은 9·7 배분 134.9만호뿐이다. 각주가 그 차이를 적고, 빌더가 각주를 검사해 없으면 던진다. ⚠️ 8·13 추가 12만호는 연도별 배분 미발표라 별도 칸(점선)으로 세웠다 — 5년 균등 배분하면 2026 달성률이 29.0%→26.6%로 바뀌는데 그건 정부 발표가 아니다. 🔴 수치가 국토부 보도자료 PDF 원문 대조를 아직 못 거쳤다(언론 보도 경유 + 오너 확인). 데이터셋 meta.cautions 참조. / 9·7 대책 1주년 결산 · 판형 supply-progress@1 신설 · 새 폰트 세트(font-taebaek-pretendard) 첫 적용 · 수치는 언론 보도 경유 + 오너 확인(정부 원문 PDF 미대조)",
-      "pixelPolicy": "고정물 — 2026년 9월 7일 시점의 1주년 결산이라 자료가 갱신돼도 다시 그리지 않는다. pixel-baselines 에 넣는다.",
-      "state": "오너 확정",
-      "confirmedAt": "2026-09-07",
-      "confirmedMd5": [
-        "supply-progress:1abe257c0418"
-      ]
-    },
-    {
-      "label": "singo-daily-2026-09-08",
-      "title": "🔥 9월 8일 신고가 19곳",
-      "cards": [
-        "singo-대흥동태영아파트-84",
-        "singo-롯데캐슬클라시아-59",
-        "singo-삼환-59",
-        "singo-미사레스티아-84",
-        "singo-힐스테이트다산-84",
-        "singo-평촌센텀퍼스트-59-0908",
-        "singo-금천롯데캐슬골드파크1차-59",
-        "singo-반정아이파크캐슬5단지-84-0908",
-        "singo-현대-59",
-        "singo-화서역푸르지오더에듀포레-84-0908",
-        "singo-한진6091-59",
-        "singo-e편한세상반월나노시티역-59-0908",
-        "singo-자연앤데시앙-84-0908",
-        "singo-동탄역포레너스-59",
-        "singo-수원하늘채더퍼스트2단지-59-0908",
-        "singo-석수e편한세상-59-0908",
-        "singo-삼환-84-0908",
-        "singo-화서역블루밍푸른숲-59",
-        "singo-늘푸른벽산-59-0908"
-      ],
-      "caption": "singo-daily-2026-09-08",
-      "state": "오너 확정",
-      "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 19개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 오너 확인 2026-09-08 — 이름 5건(대흥동 태영·길음 롯데캐슬클라시아·신길 삼환·월계동 현대·성북 한신한진·구운동 삼환), 겹치는 기준선 3장은 라벨을 선 아래로 내려 그림, 한신한진 공급면적은 오너가 네이버 표기로 짚음, 화서역블루밍 26평 확인 / 오너 확인 2026-09-08 — 이름 6건(대흥동 태영·길음 롯데캐슬클라시아·신길 삼환·월계동 현대·성북 한신한진·구운동 삼환), 겹치는 기준선 3장은 라벨을 선 아래로 내려 그림, 한신한진 공급면적은 오너가 네이버 표기로 짚음, 화서역블루밍 26평 확인",
-      "pixelPolicy": "정기물 — data/datasets/singo-history/,data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
-      "confirmedAt": "2026-09-08",
-      "confirmedMd5": [
-        "singo-대흥동태영아파트-84:8a570dc1ca3e",
-        "singo-롯데캐슬클라시아-59:c142db82404b",
-        "singo-삼환-59:9b45a3c8dbee",
-        "singo-미사레스티아-84:a7ff2e2af49e",
-        "singo-힐스테이트다산-84:57d5043662c6",
-        "singo-평촌센텀퍼스트-59-0908:2709de453c0e",
-        "singo-금천롯데캐슬골드파크1차-59:bd0f1e5ee177",
-        "singo-반정아이파크캐슬5단지-84-0908:558ac691ace5",
-        "singo-현대-59:4966ae792c6a",
-        "singo-화서역푸르지오더에듀포레-84-0908:a814bdb63bce",
-        "singo-한진6091-59:67aea6bdd016",
-        "singo-e편한세상반월나노시티역-59-0908:cb8654ae8c53",
-        "singo-자연앤데시앙-84-0908:a9ef9d0d9723",
-        "singo-동탄역포레너스-59:ee0cde228ab4",
-        "singo-수원하늘채더퍼스트2단지-59-0908:dea767093c5f",
-        "singo-석수e편한세상-59-0908:069d461c718a",
-        "singo-삼환-84-0908:44e6ac5a94e8",
-        "singo-화서역블루밍푸른숲-59:e6f192db86e8",
-        "singo-늘푸른벽산-59-0908:f6a6384bd2dd"
-      ]
+ "_": [
+  "발행 세트 정의 — '오너가 한 번에 승인하는 단위'를 명시한다.",
+  "",
+  "왜 필요한가: data/content 에는 실험 렌더·중간 산출물이 섞여 있다.",
+  "이걸 전부 '발행 승인 대기'로 띄우면 관제탑 결정함이 수십 건으로 불어나 못 쓴다.",
+  "여기에 적힌 세트만 진짜 발행 후보로 취급하고, 나머지는 파이프라인 목록에만 남긴다.",
+  "",
+  "cards = data/content/{날짜}/{slug}.json 의 slug. 적은 순서가 캐러셀 순서다.",
+  "caption = data/review/captions/{caption}.txt (없으면 label 과 같은 이름을 찾는다).",
+  "review = data/review/{review}.json (없으면 label 과 같은 이름을 찾는다).",
+  "",
+  "새 카드를 만들면 여기에 한 줄 추가한다 — 추가하지 않으면 발행 후보로 올라오지 않는다."
+ ],
+ "sets": [
+  {
+   "label": "tohuh-rank",
+   "title": "🔥 2026년 6월 신고가 쏟아진 지역은? (토허제 기준)",
+   "cards": [
+    "tohuh-rank"
+   ],
+   "caption": "tohuh-rank",
+   "review": "토허제 신고가 지도",
+   "state": "오너 확정",
+   "confirmedAt": "2026-08-28",
+   "confirmedMd5": [
+    "tohuh-rank:bd5cd11638ce"
+   ],
+   "note": "한국부동산원 월세지수 기준시점 재설정(2026년 6월=100) 반영. 오너 재확정 2026-08-28.",
+   "pixelPolicy": "정기물 — data/datasets/molit 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
+  },
+  {
+   "label": "index-2026",
+   "title": "2026년 국장 성적표 — 코스피·코스닥 고점 대비",
+   "cards": [
+    "index-2026"
+   ],
+   "caption": "index-2026"
+  },
+  {
+   "label": "estate-84",
+   "title": "서울 아파트 실거래 랭킹 84㎡ (2026 상반기)",
+   "cards": [
+    "maprank-84-p1",
+    "maprank-84-p2"
+   ],
+   "caption": "estate-84",
+   "note": "커버 없이 재업로드 (2026-07-31 오너 결정) — 커버 빌더는 builders.json에 남겨둠 / 커버 없이 재업로드 · 2026.01~07월 반영",
+   "state": "오너 확정",
+   "confirmedAt": "2026-08-01",
+   "confirmedMd5": [
+    "maprank-84-p1:88beb58caa77",
+    "maprank-84-p2:a72bd7d12852"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/molit/,data/datasets/molit 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
+  },
+  {
+   "label": "estate-59",
+   "title": "서울 아파트 실거래 랭킹 59㎡ (2026 상반기)",
+   "cards": [
+    "maprank-59-p1",
+    "maprank-59-p2"
+   ],
+   "caption": "estate-59",
+   "note": "커버 없이 재업로드 (2026-07-31 오너 결정) — 커버 빌더는 builders.json에 남겨둠 / 커버 없이 재업로드 · 2026.01~07월 반영",
+   "state": "오너 확정",
+   "confirmedAt": "2026-08-01",
+   "confirmedMd5": [
+    "maprank-59-p1:4014afbaaa8d",
+    "maprank-59-p2:594f39393f8e"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/molit/,data/datasets/molit 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
+  },
+  {
+   "label": "metro-speed",
+   "title": "수도권 지하철 노선·구간별 표정속도",
+   "cards": [
+    "metro-2col"
+   ],
+   "caption": "metro-speed",
+   "note": "커버 없이 재업로드 (2026-07-31 오너 결정) — 커버 빌더는 builders.json에 남겨둠 / 커버 없이 재업로드 · 2026.01~07월 반영",
+   "state": "오너 확정",
+   "confirmedAt": "2026-08-01",
+   "confirmedMd5": [
+    "metro-2col:62e94c06f8fa"
+   ]
+  },
+  {
+   "label": "wolse-flip",
+   "title": "📉📈 미쳐버린 서울 월세 폭등 상황 (월세지수 2016~2026)",
+   "cards": [
+    "wolse-flip-p1"
+   ],
+   "caption": "wolse-flip",
+   "note": "오너 확정(2026-07-30) — 단일 카드. 자치구 25곳 표(p2·p3)는 기준 시점이 달라(2020-07 임대차2법 이후 누적) 같은 캐러셀에 섞으면 독자가 두 기준을 헷갈린다. 빌더는 그대로 두었으니 별도 소재로 낼 때 되살릴 수 있다. / 한국부동산원이 월세지수 기준시점을 2026년 6월=100 으로 다시 잡았다(rebasing). 지수 레벨이 전부 내려앉고(103.9→101.2 · 90.9→87.5 · 88.0→84.7) 기준월도 6월→7월로 늘었다. 연간 변화율은 그대로다(+1.7/+2.0/+1.8/+2.3/+4.5). 연말 추정은 오너가 정한 규칙 그대로 YTD 5.91% x 12/7 = +10.1%. 오너 재확정 2026-08-28. / 한국부동산원 월세지수 기준시점 재설정(2026년 6월=100) 반영. 오너 재확정 2026-08-28.",
+   "state": "오너 확정",
+   "confirmedAt": "2026-08-28",
+   "confirmedMd5": [
+    "wolse-flip-p1:8ee99ef28108"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/reb-rent-index.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
+  },
+  {
+   "label": "tohuh-rent-map",
+   "title": "🔥 토허제 40곳 월세 폭등 (지도+행정구역 표)",
+   "cards": [
+    "tohuh-rent-map"
+   ],
+   "caption": "tohuh-rent-map",
+   "state": "오너 확정",
+   "confirmedAt": "2026-08-28",
+   "confirmedMd5": [
+    "tohuh-rent-map:f38e400d34c3"
+   ],
+   "note": "한국부동산원 월세지수 기준시점 재설정(2026년 6월=100) 반영. 오너 재확정 2026-08-28.",
+   "pixelPolicy": "정기물 — data/datasets/reb-rent-index.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
+  },
+  {
+   "label": "jeongbi-board",
+   "title": "올해 서울 정비사업 수주 1위는? (지도 + 시공사 8곳)",
+   "cards": [
+    "jeongbi-board"
+   ],
+   "caption": "jeongbi-board"
+  },
+  {
+   "label": "brand-rank",
+   "title": "당신이 아는 아파트 1위, 맞나요? (브랜드 순위 조사 5곳 비교)",
+   "cards": [
+    "brand-rank"
+   ],
+   "caption": "brand-rank",
+   "note": "오너 확정(2026-07-31) — 단일 카드. 조사 5곳의 발표 시점이 2025.3~2026.7 로 제각각이라 푸터에 기준일을 적지 않는다(하나로 적으면 다섯이 같은 날로 읽힌다). 각 조사 시점은 표 왼쪽 칸이 줄마다 갖는다. K-BPI 는 1~3위만 발표하는 조사라 4·5위가 '발표 없음'이고, 그 줄을 맨 아래에 둔다. 아이파크·위브는 브랜드 로고가 있으나 포레나는 아직 없다 — 없는 브랜드는 이름만 적고 회사 로고로 대신하지 않는다."
+  },
+  {
+   "label": "kospi-record",
+   "title": "오늘 국내 증시가 세운 기록들 (2026-07-31)",
+   "cards": [
+    "kospi-record"
+   ],
+   "caption": "kospi-record",
+   "note": "오너 확정(2026-07-31) — 단일 카드. ⚠️ 데이터셋 verified=false: 수급·시총·상한가는 거래소 집계를 언론이 받아 쓴 값이라 KRX 정보데이터시스템 대조 후 발행한다. 지수 등락은 야후 수집값과 교차 확인됨(7/29·7/30 소수점까지 일치). '오늘'이라는 말이 들어가므로 발행일이 밀리면 제목을 손봐야 한다."
+  },
+  {
+   "label": "sinbundang-loop",
+   "title": "신분당선 역세권 34평 APT 시세 (2026.01~07)",
+   "cards": [
+    "sinbundang-loop"
+   ],
+   "caption": "sinbundang-loop",
+   "note": "오너 확정(2026-07-31). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시). 역세권 도보10분·300세대↑ 기준. 논현·양재시민의숲 등 판정건은 데이터셋 meta.flags 참조. 07월은 collect-on-request 트리거로 수집. / 신분당선 34평 84㎡ 최고가(2026.01~07) 노선 지도 카드 확정 / 신분당선 34평 84㎡ 최고가(2026.01~07) 노선 지도 카드 확정 / 모바일 최적화(노선 폭 축소·세대수/연식 제거·역명/단지/가격 확대·단어단위 줄바꿈·상하여백 균형) / 모바일 최적화(노선 폭 축소·세대수/연식 제거·역명/단지/가격 확대·단어단위 줄바꿈·상하여백 균형)",
+   "state": "오너 확정",
+   "confirmedAt": "2026-08-01",
+   "confirmedMd5": [
+    "sinbundang-loop:7e3f24d25021"
+   ]
+  },
+  {
+   "label": "line2-loop",
+   "title": "2호선 역세권 34평 APT 시세 (2026.01~07)",
+   "cards": [
+    "line2-loop"
+   ],
+   "caption": "line2-loop",
+   "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
+   "state": "오너 확정"
+  },
+  {
+   "label": "line3-loop",
+   "title": "3호선 역세권 34평 APT 시세 (2026.01~07)",
+   "cards": [
+    "line3-loop"
+   ],
+   "caption": "line3-loop",
+   "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
+   "state": "오너 확정"
+  },
+  {
+   "label": "line4-loop",
+   "title": "4호선 역세권 34평 APT 시세 (2026.01~07)",
+   "cards": [
+    "line4-loop"
+   ],
+   "caption": "line4-loop",
+   "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
+   "state": "오너 확정"
+  },
+  {
+   "label": "line5-loop",
+   "title": "5호선 역세권 34평 APT 시세 (2026.01~07)",
+   "cards": [
+    "line5-loop"
+   ],
+   "caption": "line5-loop",
+   "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
+   "state": "오너 확정"
+  },
+  {
+   "label": "line6-loop",
+   "title": "6호선 역세권 34평 APT 시세 (2026.01~07)",
+   "cards": [
+    "line6-loop"
+   ],
+   "caption": "line6-loop",
+   "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
+   "state": "오너 확정"
+  },
+  {
+   "label": "line7-loop",
+   "title": "7호선 역세권 34평 APT 시세 (2026.01~07)",
+   "cards": [
+    "line7-loop"
+   ],
+   "caption": "line7-loop",
+   "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
+   "state": "오너 확정"
+  },
+  {
+   "label": "line8-loop",
+   "title": "8호선 역세권 34평 APT 시세 (2026.01~07)",
+   "cards": [
+    "line8-loop"
+   ],
+   "caption": "line8-loop",
+   "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
+   "state": "오너 확정"
+  },
+  {
+   "label": "line9-loop",
+   "title": "9호선 역세권 34평 APT 시세 (2026.01~07)",
+   "cards": [
+    "line9-loop"
+   ],
+   "caption": "line9-loop",
+   "note": "시안(오너 확정 대기). 국토부 실거래 84㎡ 최고가(2026.01~07, molit 캐시, 경기·인천은 collect-on-request 트리거 수집). 역세권 도보10분·300세대↑, 중복 허용·각 역 최고가. 공용 렌더러 scripts/lib/wirit-line.mjs 사용. 판정건은 데이터셋 meta.flags 참조.",
+   "state": "오너 확정"
+  },
+  {
+   "label": "mae-streak",
+   "title": "서울 아파트 매매 연속 상승 · 상승폭 文정부의 2배 (주간)",
+   "cards": [
+    "mae-streak"
+   ],
+   "caption": "mae-streak",
+   "note": "원자료 계산(한국부동산원 주간 매매가격지수)·verified. 정기물(주간 갱신) — reb-weekly-index.json 의존. 서울 로고·워터마크는 저장소 자산/BRAND 슬롯 사용. / 원자료(부동산원 주간 매매지수) 계산 실곡선·verified. 정기물(주간 갱신). 서울 로고·워터마크 저장소 자산 사용. / 원자료(부동산원 주간 매매지수) 계산 실곡선·verified. 정기물(주간 갱신). 로고·워터마크 저장소 자산. / 원자료(부동산원 주간 매매지수) 계산 실곡선·verified. 정기물(주간 갱신). 로고·워터마크 저장소 자산.",
+   "state": "오너 확정",
+   "confirmedAt": "2026-09-07",
+   "confirmedMd5": [
+    "mae-streak:9c2b46385e63"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/reb-weekly-index.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
+  },
+  {
+   "label": "jeonse-streak",
+   "title": "서울 아파트 매매·전세 동반 연속 상승 (주간)",
+   "cards": [
+    "jeonse-streak"
+   ],
+   "caption": "jeonse-streak",
+   "note": "원자료 계산(부동산원 주간 매매·전세지수)·매매/전세 동반 곡선. 정기물(주간 갱신)—reb-weekly-index.json 의존. 서울 로고·워터마크 저장소 자산. 뱃지=발행일(오늘). / 매매·전세 동반 연속상승 카드·정기물·뱃지 발행일",
+   "state": "오너 확정",
+   "confirmedAt": "2026-09-07",
+   "confirmedMd5": [
+    "jeonse-streak:60db1b649b3b"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/reb-weekly-index.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
+  },
+  {
+   "label": "jeonwolse-map",
+   "title": "토허 40곳 전세·월세 비중 (월세화 추이·월간)",
+   "cards": [
+    "jeonwolse-map"
+   ],
+   "caption": "jeonwolse-map",
+   "note": "국토부 아파트 전월세 실거래 집계(월세금액 0=전세)에서 월세 비중 계산·오보 0. 토허 40곳(서울 25구+경기 15곳) 코로플레스+순위(1~17위·38~40위)+전체/신규 막대. 지도=tohuh-map.mjs 상속. 서울 로고 저장소 자산. 뱃지=발행일(오늘). 월 자동 감지(수집 확대 시 최신월). 제목은 데이터 연동 — 전체 월세비중이 50% 아래면 '신규 계약' 기준으로 못박아 카드 막대와 모순을 막는다(2026-08-24, 오너 위임). / 월세비중 토허지도·정기물",
+   "state": "오너 확정",
+   "confirmedAt": "2026-09-01",
+   "confirmedMd5": [
+    "jeonwolse-map:d38339611256"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/molit-rent/,data/datasets/molit-rent 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
+  },
+  {
+   "label": "danji-hangang",
+   "title": "🌊 한강뷰 아파트 분양가 7억대? (한강 푸르지오 리버프론트)",
+   "cards": [
+    "danji-hangang"
+   ],
+   "caption": "danji-hangang",
+   "note": "청약·분양 표준 판형 danji-cover@1 첫 확정본. 세대수·일정·상한제는 청약홈 API 를 코드가 직접 읽는다. ✅ 2026-08-03 분양가 대조 완료 — 청약홈 공고 상세의 공급금액(77,300/95,100/118,600/299,900만원, 최고가)이 데이터셋과 네 건 모두 일치. 평형별 세대수 합 2,432 = API supply 도 일치. 발행 게이트 전부 통과.",
+   "state": "발행 승인",
+   "confirmedAt": "2026-08-03",
+   "confirmedMd5": [
+    "danji-hangang:3dc78a132f5c"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증). 접수가 끝나면 공고가 목록에서 빠져 빌더가 던진다 — 그때는 재생산하지 않는다"
+  },
+  {
+   "label": "danji-songdo",
+   "title": "🏙 송도 무순위 줍줍 150세대 (더샵 송도그란테르)",
+   "cards": [
+    "danji-songdo"
+   ],
+   "caption": "danji-songdo",
+   "note": "무순위(kind: remndr) 첫 확정본. 머리 밴드가 분양가 대신 전용면적별 잔여 세대를 말한다. 면적대별 세대수는 청약홈 블록별 공고 5건(2026910203~07) 열람 전사 — 합계 150 = API supply 150 교차검증. 공급금액은 공고에 '사업주체 문의'로만 있어 카드가 말하지 않는다(캡션이 문의처를 안내).",
+   "state": "발행 승인",
+   "confirmedAt": "2026-08-03",
+   "confirmedMd5": [
+    "danji-songdo:553d4532c187"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증). 접수가 끝나면 공고가 목록에서 빠져 빌더가 던진다 — 그때는 재생산하지 않는다"
+  },
+  {
+   "label": "world-capital",
+   "title": "당신 건물주가 네덜란드 연기금? (글로벌 자본의 서울 임대시장 진출)",
+   "cards": [
+    "world-capital"
+   ],
+   "caption": "world-capital",
+   "note": "뉴스 소재(verified:false) — 각 사 발표·언론 보도 종합. 좌 제목(세로 5줄)·우 서울 투자위치 지도(seoul-invest-map)·하 투자자 9곳 표(위치·세대수). 금액·세대수는 발표·약정·목표 혼재, 발행 전 1차 출처 재대조 필요(오보 0). CPPIB 규모 보도 상충(1,330억~5,000억)은 캡션이 병기. 지도 핀 좌표는 지오데이터에서 계산(손 좌표 0).",
+   "state": "오너 확정",
+   "confirmedAt": "2026-08-05",
+   "confirmedMd5": [
+    "world-capital:f955b1659994"
+   ]
+  },
+  {
+   "label": "foreign-rank",
+   "title": "🌏 서울 자치구별 외국인 거주비율 (국적별)",
+   "cards": [
+    "foreign-rank-p1",
+    "foreign-rank-p2"
+   ],
+   "caption": "foreign-rank",
+   "note": "법무부 「2025 출입국·외국인정책 통계연보」 부록(2장Ⅱ-3, 2025.12.31 기준) 국적별·남+여 합산. 표=인원 순, 외국인비율=주민등록인구(2025-12) 대비 산출(카드 상단 부제에는 미표기 — 오너 요청 2026-08-10). 한국계중국인→중국 합산(오너 결정 2026-08-08, 국적 기준). 서울 전체 279,629명(2023 대비 +10.6%) · 강북구 2년새 +43.3%(19위→15위) · 용산구 유일 감소(-6.2%, 7위→9위). 2026-08-10: 2023판(빌더 인자 year=2023으로 재생산 가능, md5 4f36cd92977f/5c4627c5fea2 로 검증됨)을 2025.12.31 데이터로 교체. 데이터 갱신 시 재생산 — pixel-baselines 에 넣지 않는다(결정성으로 보증).",
+   "state": "오너 확정",
+   "confirmedAt": "2026-08-10",
+   "confirmedMd5": [
+    "foreign-rank-p1:327d1e20ac4a",
+    "foreign-rank-p2:9661c70836a4"
+   ],
+   "pixelPolicy": "일회성(2025.12.31 스냅샷)·데이터 고정 → 결정적. 인구/외국인 원자료 갱신 시에만 재생산."
+  },
+  {
+   "label": "danji-jangwi",
+   "title": "🏗 천지개벽 장위에 줍줍 떴다 (장위 푸르지오 마크원 39세대)",
+   "cards": [
+    "danji-jangwi"
+   ],
+   "caption": "danji-jangwi",
+   "note": "무순위 두 번째 판형(분양가를 아는 줍줍). 위 단 = 단지 규모 4칸, 아래 단 = 타입별 세대수·최고 분양가 4칸. price.byType 이 있을 때만 이 판이 나오고, 없으면 송도처럼 면적대별 잔여 세대 판이 나온다 — 칸의 뜻은 데이터가 정한다.",
+   "state": "발행 보류 — 공고문 대조 대기",
+   "confirmedAt": "2026-08-06",
+   "confirmedMd5": [
+    "danji-jangwi:5af157c8c9cb"
+   ],
+   "pixelPolicy": "정기물 — applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다.",
+   "publishGate": [
+    "분양가 4개(7.3·17.5·17.6·19.5억) = 2차 출처. 무순위 공고는 공급금액을 \"사업주체 문의\"로만 적었다.",
+    "자격 요건(서울 거주 무주택세대구성원·청약통장 불필요) = 모집공고문 인용 2차 출처. 청약홈 무순위 상세에는 신청자격 항목이 없다.",
+    "동수 23개동 = 보도 2곳 일치, 1차 미대조.",
+    "→ 셋 다 입주자모집공고문 PDF 로 대조되면 state 를 \"발행 승인\" 으로 올린다. PDF 는 세션에서 403."
+   ]
+  },
+  {
+   "label": "danji-thesharp",
+   "title": "🏢 신길 완판 단지에서 추가 청약이? (더샵 신길센트럴시티 취소분 67세대)",
+   "cards": [
+    "danji-thesharp"
+   ],
+   "caption": "danji-thesharp",
+   "note": "조합원 취소분. 규모 우선 판(장위 판형). 타입별 세대수는 취소분 기준(51:20·59:26·74:10·84:11 = 67 = 청약홈 공급 67), 분양가는 본청약 기준 최고가다 — 취소분 가격은 본청약과 같다.",
+   "state": "발행 보류 — 공고문 대조 대기",
+   "confirmedAt": "2026-08-08",
+   "pixelPolicy": "정기물 — applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다.",
+   "publishGate": [
+    "타입별 세대수는 2차 출처(청약공고 정리 글) — 합 67 이 청약홈 API 와 일치해 채택. 공고문 대조 대상.",
+    "분양가는 본청약 표(호갱노노) 기준 최고가.",
+    "16개동·35층은 보도 2곳 일치.",
+    "전매제한 3년은 2차 출처."
+   ],
+   "confirmedMd5": [
+    "danji-thesharp:91baa196f80c"
+   ]
+  },
+  {
+   "label": "danji-summit",
+   "title": "🏗 신길 대장아파트 분양가 18억대? (써밋 클라비온 176세대)",
+   "cards": [
+    "danji-summit"
+   ],
+   "caption": "danji-summit",
+   "note": "규모 우선 판. 분양가는 **청약홈 공고 상세 원문** 7줄에서 면적대별 최고가를 취했다. 세대수 합 176 = 청약홈 공급 176.",
+   "state": "발행 보류 — 공고문 대조 대기",
+   "confirmedAt": "2026-08-08",
+   "pixelPolicy": "정기물 — applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다.",
+   "publishGate": [
+    "8개동·29층·총 812세대는 보도 1곳 — 공고문 대조 대상.",
+    "전매제한 3년은 2차 출처."
+   ],
+   "confirmedMd5": [
+    "danji-summit:5230eb427673"
+   ]
+  },
+  {
+   "label": "danji-chungjeongno",
+   "title": "🚇 2·5호선 더블 초역세권 18억대? (충정로역 자이르네 186세대)",
+   "cards": [
+    "danji-chungjeongno"
+   ],
+   "caption": "danji-chungjeongno",
+   "note": "규모 우선 판. 타입별 세대수 합 186 = 청약홈 공급 186(교차검증). 로고는 오너 제공 조감도의 워드마크를 떼어 만든 임시본 — 공식 파일을 받으면 교체.",
+   "state": "발행 보류 — 공고문 대조 대기",
+   "confirmedAt": "2026-08-08",
+   "pixelPolicy": "정기물 — applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다.",
+   "publishGate": [
+    "분양가·세대수는 2차 출처지만 합이 청약홈 공급과 일치.",
+    "3개동·25층은 2차 출처 1곳.",
+    "전매제한 3년은 2차 출처.",
+    "자이르네 로고는 임시본(조감도에서 추출)."
+   ],
+   "confirmedMd5": [
+    "danji-chungjeongno:66996821813f"
+   ]
+  },
+  {
+   "label": "danji-define-artia",
+   "title": "🏙 노량진 무순위 줍줍 15세대 (드파인 아르티아)",
+   "cards": [
+    "danji-define-artia"
+   ],
+   "caption": "danji-define-artia",
+   "note": "무순위(kind: remndr) 표준 판형. 세대수·일정은 청약홈 API(applyhomeNo 2026910214) 직접 반영, 잔여 15세대 = API 공급과 일치. 타입별 분양가는 2차 출처(mhb-blog·홈두부) — 입주자모집공고문 대조 전까지 발행 금지.",
+   "state": "시안"
+  },
+  {
+   "label": "danji-songpa",
+   "title": "🚨 송파 시그니처 롯데캐슬 재공급 줍줍! 안전마진 10.9억",
+   "cards": [
+    "danji-songpa"
+   ],
+   "caption": "danji-songpa",
+   "note": "⚠️ 예외 처리 — 청약홈 무순위 목록에 아직 공고번호(applyhomeNo)가 안 잡히는 재공급 1세대(무순위 접수 2026-08-18 예정, 데이터셋 _manual 필드 참조). remndr() 가드는 applyhomeNo 없으면 무조건 던지므로 표준 파이프라인을 못 탄다 — 대신 scripts/build-danji-songpa-manual.mjs(커밋됨)에 승인된 카드 JSON을 고정해 두고 그 스크립트가 매번 재현한다(data/content 는 gitignore 대상이라 산출물 자체는 커밋하지 않는다). 총 1,945세대(richgo·나무위키·최초 출처 3곳 일치 — 롯데건설 공식 페이지 1,577과 불일치해 다수결로 채택, 재대조 필요). 분양가 10.1억/최근 실거래 21.0억/안전마진 10.9억은 한국경제·헤럴드경제 2개 매체 교차검증(2차 출처) — 입주자모집공고문 대조 전까지 발행 금지. 오너 지시(2026-08-11)로 안전마진 강조(glow) 처리·사진 칸 확대(boxH 555)·입주 라벨을 '입주 5년차/즉시 입주'로 개편. 청약홈에 정식 공고번호가 잡히면 이 수동 빌더를 폐기하고 build-danji.mjs --only songpa-signature-remndr --publish 로 전환한다.",
+   "state": "시안"
+  },
+  {
+   "label": "m2-gov",
+   "title": "💵 역대 정부 통화량 증가 규모 — 지금이 가장 빠르다",
+   "cards": [
+    "m2-gov"
+   ],
+   "caption": "m2-gov",
+   "note": "M2 개편 전 기준(구 M2)으로 전 구간 통일 — 현행 공식 M2 로는 결론이 달라진다는 사실을 오너가 알고 선택(2026-08-12) / 역대 정부 M2 — 개편 전 기준(구 M2)으로 통일. 정기물이라 픽셀 기준값 미등록 / 뱃지 확대·레드는 현 정부 한 곳·하단 '현 정부' 강조 (오너 2026-08-13)",
+   "state": "오너 확정",
+   "confirmedAt": "2026-09-01",
+   "confirmedMd5": [
+    "m2-gov:5a60f9c81e26"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/m2-monthly.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
+  },
+  {
+   "label": "danji-sangdong",
+   "title": "🏙 부천 국평 16억 실화냐? (상동역 롯데캐슬 시그니처)",
+   "cards": [
+    "danji-sangdong"
+   ],
+   "caption": "danji-sangdong",
+   "note": "청약·분양 표준 판형 danji-cover@1. 분양가·세대수·전용면적 구성은 입주자모집공고문 PDF 를 scripts/extract-danji-notice.py 가 직접 읽었고, 공급금액 표 104행이 공급대상 표 세대수로 정확히 나눠 먹혀 합 1,859세대가 맞았다(남는 행 0). 84㎡ 1,370세대(74%)는 헤럴드경제 2026-07-27 보도와도 일치. 밴드 라벨은 최고가를 낸 타입(84E·113B)이다. 펜트하우스 3형(153P·187P·192P, 각 1세대)은 총 공급의 0.16% 라 밴드에서 빼고 아래 한 줄이 받는다. / 오너 확정 2026-08-14 — 제목·펜트하우스 줄 오너 수정 반영본. 3팀 선검수 통과. / 오너 확정 2026-08-14 — 제목·펜트하우스 줄 오너 수정 반영본. 3팀 선검수 통과.",
+   "state": "오너 확정",
+   "publishGate": "⚠️ 공고일 당일이라 청약홈 API 수집분에 이 공고(2026000354)가 아직 없다. 일정·세대수는 입주자모집공고문 PDF 단독 근거이고, 청약홈 교차검증 가드는 이 카드에 걸리지 않았다. 청약홈에 실리면 데이터셋에 applyhomeNo 를 붙여 청약홈이 이기게 할 것(다르면 빌더가 던진다).",
+   "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-08-15",
+   "confirmedMd5": [
+    "danji-sangdong:40d45101e495"
+   ]
+  },
+  {
+   "label": "danji-doosanbucheon",
+   "title": "🏗 부천 소사 재개발 아파트 분양가 8억대? (두산위브더제니스 부천)",
+   "cards": [
+    "danji-doosanbucheon"
+   ],
+   "caption": "danji-doosanbucheon",
+   "note": "청약·분양 표준 판형 danji-cover@1 · 규모 우선 판(price.byType). 분양가·전용면적 구성은 입주자모집공고문 PDF 를 scripts/extract-danji-notice.py 가 직접 읽었고, 공급금액 표 38행이 공급대상 표 세대수로 정확히 나눠 먹혀 합 1,158세대 = 청약홈 API supply 와도 일치. 제목의 '8억대'는 주력 면적대 59㎡(491세대, 42%)의 최고가 8.75억이다. 카드에 '최고가 기준'이라는 말이 없는 판이라 캡션 셋째 줄이 그 말을 받는다. / 오너 확정 2026-08-14 — 제목·펜트하우스 줄 오너 수정 반영본. 3팀 선검수 통과. / 오너 확정 2026-08-14 — 제목·펜트하우스 줄 오너 수정 반영본. 3팀 선검수 통과.",
+   "state": "오너 확정",
+   "publishGate": "없음 — 청약홈 API(2026000382) 교차검증 통과, 분양가 공고문 대조 완료",
+   "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-08-15",
+   "confirmedMd5": [
+    "danji-doosanbucheon:63ae5540473a"
+   ]
+  },
+  {
+   "label": "danji-guri",
+   "title": "🚨 구리역 안전마진 5억대 줍줍 (구리역 롯데캐슬 시그니처)",
+   "cards": [
+    "danji-guri"
+   ],
+   "caption": "danji-guri",
+   "note": "줍줍 **기본 판형**(danji-cover@1 · margin) 첫 코드 생산분. 송파 시그니처 롯데캐슬 카드(2026-08-11, 손으로 만든 것)를 오너가 2026-08-26 정본으로 승격시켜 build-danji.mjs 의 marginBand() 로 옮겼다. 위 단 4칸 = 타입 82B · 분양가 8.8억 · 현재 최저호가 14.5억 · 안전마진 5.7억(**코드가 뺀다** — 데이터셋에 적는 칸이 없다). 아래 단 4칸 = 잔여 1세대 · 총 1,180세대 · 11개동 · 최고 42층. 분양가 87,710만원은 청약홈 무순위 공고 상세(2026930028)를 세션이 직접 읽었고 뉴스핌 2026-08-21 보도와 만원 단위까지 일치(교차검증). 제목 '5억대'는 오너 작성 — 호가 기준이라 소수점까지 단정하지 않는다. 사진 boxH 614 는 원본 1540×876 이 폭 1080 에서 갖는 높이로, 늘리지 않고 흰 판을 줄일 수 있는 한계값이다.",
+   "state": "오너 확정",
+   "publishGate": "⚠️ 안전마진 5.7억의 비교 기준은 **호가**다(오너 확인 2026-08-26, 같은 타입 현재 최저호가 14.5억). 실거래가 아니므로 카드 칸 이름을 '현재 최저호가'로 적었고, 캡션이 같은 평형 분양권 실거래(2025-12, 11억8,681만원 → 마진 3.1억)를 함께 싣는다. 이 두 장치가 빠지면 발행 금지.",
+   "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "captionCrossCheck": [
+    {
+     "value": "11",
+     "why": "같은 평형(82B) 분양권 실거래 11억8,681만원(2025-12, 14층, 뉴스핌) — 카드는 호가로 갔으므로 캡션이 실거래를 받는다"
+    },
+    {
+     "value": "3.1",
+     "why": "위 실거래 기준 마진 11.87억 − 8.771억 = 3.1억. 독자가 호가 기준과 실거래 기준을 나란히 보고 판단하게 한다"
     }
-  ]
+   ],
+   "confirmedAt": "2026-08-26",
+   "confirmedMd5": [
+    "danji-guri:2ebc5dd5c9d4"
+   ]
+  },
+  {
+   "label": "singo-gwangmyeong-hanjin",
+   "title": "🔥 광명한진타운 33평, 10억 클럽 가입",
+   "cards": [
+    "singo-광명한진타운-84"
+   ],
+   "caption": "singo-gwangmyeong-hanjin",
+   "note": "오늘의 신고가 판형(singo-record@1) 첫 실전 소재. 세대수는 --kapt A42385801 로 대장 항목을 사람이 짚어 물렸다(지번 200-6 일치 확인). 3팀 검수 반영 최종본: 킥커=계약일 · 제원 회색 34px · 판 안 대각 워터마크. 기준은 docs/guides/신고가-카드-기준.md. 정기물이라 픽셀 기준값 미등록. / 역 뱃지 1행 개편 반영 재확정(오너 2026-08-16b) / 오늘 값 기준선 전면 적용 재확정(오너 2026-08-16c) — 선은 같은 자리(값=문턱 10억), 라벨만 28px/900 → 24px/800 잉크 / 실측 공급평수 판본으로 재확정(34평 → 33평). 공급 110.44㎡ = 33.41평, 건축물대장 전유+주건축물공용. 오너가 네이버 화면으로 셈법 대조·반올림 확정(2026-08-16d). 이전 확정본 md5 6b095447cb9d 는 고정 환산표 시절 판본이다. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
+   "state": "오너 확정",
+   "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-08-25",
+   "confirmedMd5": [
+    "singo-광명한진타운-84:c47d19fcdb4e"
+   ]
+  },
+  {
+   "label": "singo-neulpureun-byuksan",
+   "title": "🔥 늘푸른벽산 33평, 저점 대비 +108% 신고가",
+   "cards": [
+    "singo-늘푸른벽산-84"
+   ],
+   "caption": "singo-neulpureun-byuksan",
+   "note": "2026-08 계약 신고가(갱신폭 상위). 세대수는 --kapt A44340013 로 대장 항목을 사람이 짚어 물렸다(세대수·법정동 대조). 기준은 docs/guides/신고가-카드-기준.md / 실측 공급평수 판본으로 확정. 셈법 = 전유 + 주건축물 공용(건축물대장), 평은 3.305785 로 나눠 반올림(오너 2026-08-16d). 늘푸른벽산 109.94㎡ 는 네이버부동산 표기와 소수점까지 일치함을 오너가 화면으로 대조했다. 주차대수 포함 제원 3줄. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
+   "state": "오너 확정",
+   "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-08-25",
+   "confirmedMd5": [
+    "singo-늘푸른벽산-84:86dd8e96dc60"
+   ]
+  },
+  {
+   "label": "singo-raemian-crisiel",
+   "title": "🔥 래미안크리시엘 33평, 지난 고점 대비 +21% 신고가",
+   "cards": [
+    "singo-래미안크리시엘-84"
+   ],
+   "caption": "singo-raemian-crisiel",
+   "note": "2026-08 계약 신고가(갱신폭 상위). 세대수는 --kapt A13686302 로 대장 항목을 사람이 짚어 물렸다(세대수·법정동 대조). 기준은 docs/guides/신고가-카드-기준.md / 실측 공급평수 판본으로 확정. 셈법 = 전유 + 주건축물 공용(건축물대장), 평은 3.305785 로 나눠 반올림(오너 2026-08-16d). 늘푸른벽산 109.94㎡ 는 네이버부동산 표기와 소수점까지 일치함을 오너가 화면으로 대조했다. 주차대수 포함 제원 3줄. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
+   "state": "오너 확정",
+   "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-08-25",
+   "confirmedMd5": [
+    "singo-래미안크리시엘-84:3a765fa855f5"
+   ]
+  },
+  {
+   "label": "singo-seocho-foresta2",
+   "title": "🔥 서초포레스타2단지 38평, 19.9억 신고가",
+   "cards": [
+    "singo-서초포레스타2단지-84"
+   ],
+   "caption": "singo-seocho-foresta2",
+   "note": "2026-08 계약 신고가(갱신폭 상위). 세대수는 --kapt A10028021 로 대장 항목을 사람이 짚어 물렸다(세대수·법정동 대조). 기준은 docs/guides/신고가-카드-기준.md / 실측 공급평수 판본으로 확정(오너 지시 2026-08-16e). 서초포레스타2 124.35㎡=38평(전용률 67.9%) · 다산롯데캐슬 114.08㎡=35평(74.5%). ⚠️ 서초는 전용률이 흔한 범위(70~85%) 밖이다 — 주거공용 39.87㎡ 의 용도별 내역(parts)을 못 본 채 확정했다. 앞선 수집이 parts 를 남기기 전 판본이었고 재수집은 국토부 문 닫힘으로 실패했다. cron 이 받으면 내역을 보고, 기타공용이 주건축물로 잡힌 것이면 값을 고치고 재확정한다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
+   "state": "오너 확정",
+   "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-08-25",
+   "confirmedMd5": [
+    "singo-서초포레스타2단지-84:93721cb5fbde"
+   ]
+  },
+  {
+   "label": "singo-dmc-centralxi",
+   "title": "🔥 DMC센트럴자이 25평, 15.95억 신고가",
+   "cards": [
+    "singo-DMC센트럴자이-59"
+   ],
+   "caption": "singo-dmc-centralxi",
+   "note": "오늘의 신고가 판형(singo-record@1). 1~4단지 통합 — 같은 지번(증산동 258)·같은 준공(2023)·명부 1건(1,256세대)이라 실거래만 블록별로 신고된다. 판정(최고가 인덱스)은 원래 합쳐 보고 있었고 빌더만 엄격했다(--merge-blocks 신설, 원자료로 지번 1종 확인). 제목에 (2단지)를 안 붙이는 이유는 세대수 1,256 이 단지 전체 값이기 때문이다. / 역 뱃지: 디지털미디어시티역 386m — 카카오가 노선별로 나눠 준 항목을 합쳐 경의중앙+공항철도. ⚠️ 6호선은 카카오 응답에 없어 싣지 않았다(오보 0 — 아는 것이 아니라 받은 것을 적는다). / 평 25평은 건축물대장 실측(공급 81.77㎡ = 24.74평). 정기물이라 픽셀 기준값 미등록. / ⚠️ 캡션은 세트 라벨과 같은 이름의 파일이다. 08-25 에 신규 16장을 모두 caption=\"singo-record\"(광명한진타운 캡션)로 등록했다가 caption-number 검수가 막았다 — 캡션 하나를 여러 카드가 공유하면 그게 곧 오보다. / 2026-08-25 일괄 — 제원 3줄(주소/세대수·준공·주차/전용·층) 새 형식. 기존 6장은 그 형식 변경으로 픽셀이 바뀌어 재확정.",
+   "state": "오너 확정",
+   "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-08-25",
+   "confirmedMd5": [
+    "singo-DMC센트럴자이-59:3270f81aca79"
+   ]
+  },
+  {
+   "label": "singo-daily-2026-08-25",
+   "title": "🔥 8월 25일 신고가 15곳",
+   "cards": [
+    "singo-성복역롯데캐슬골드타운-84",
+    "singo-성복역롯데캐슬클라시엘-84",
+    "singo-꿈의숲아이파크-59",
+    "singo-태릉해링턴플레이스-84",
+    "singo-삼환-84",
+    "singo-녹번역e편한세상캐슬-59",
+    "singo-영통아이파크캐슬1단지-84",
+    "singo-블루밍구성더센트럴-84",
+    "singo-미사강변센트리버-59",
+    "singo-한진한화그랑빌-59",
+    "singo-영통에듀파크331동~337동-84",
+    "singo-화서역푸르지오더에듀포레-84",
+    "singo-신동탄포레자이-59",
+    "singo-영통센트럴파크뷰-59",
+    "singo-e편한세상평내메트로원-59"
+   ],
+   "caption": "singo-daily-2026-08-25",
+   "state": "오너 확정",
+   "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 15개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 하루치 캐러셀 한 게시물로 묶음(오너 2026-08-25) / 하루치를 캐러셀 한 게시물로 묶음(오너 2026-08-25). 장 순서 = 거래가 큰 순.",
+   "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedMd5": [
+    "singo-성복역롯데캐슬골드타운-84:90dab0445cb0",
+    "singo-성복역롯데캐슬클라시엘-84:611555e4bb64",
+    "singo-꿈의숲아이파크-59:4befdf413917",
+    "singo-태릉해링턴플레이스-84:1e7cf29db026",
+    "singo-삼환-84:69d656ee67d2",
+    "singo-녹번역e편한세상캐슬-59:fdcafbde48dd",
+    "singo-영통아이파크캐슬1단지-84:20b9c2f75737",
+    "singo-블루밍구성더센트럴-84:cd6e0788566d",
+    "singo-미사강변센트리버-59:24458a264c75",
+    "singo-한진한화그랑빌-59:3de1fd127679",
+    "singo-영통에듀파크331동~337동-84:34f70419ed16",
+    "singo-화서역푸르지오더에듀포레-84:20a141e61107",
+    "singo-신동탄포레자이-59:f33bf4836995",
+    "singo-영통센트럴파크뷰-59:9d612b8f6d11",
+    "singo-e편한세상평내메트로원-59:5637cfd6e1bd"
+   ],
+   "confirmedAt": "2026-08-25"
+  },
+  {
+   "label": "singo-daily-2026-08-26",
+   "title": "🔥 8월 26일 신고가 16곳",
+   "cards": [
+    "singo-신촌숲아이파크-84",
+    "singo-강촌-59",
+    "singo-서초힐스-59",
+    "singo-신동아리버파크-59",
+    "singo-신도림태영타운-84",
+    "singo-초원마을대림-84",
+    "singo-등촌동아이파크-84",
+    "singo-한신아파트상가동유치원동103~109-84",
+    "singo-다산반도유보라메이플타운-84",
+    "singo-광주역자연앤자이-84",
+    "singo-동아에코빌-59",
+    "singo-장미시영6-59",
+    "singo-한진-84",
+    "singo-호계2차현대홈타운-59",
+    "singo-엘에이치이스트힐-59",
+    "singo-덕유마을주공4-59"
+   ],
+   "caption": "singo-daily-2026-08-26",
+   "state": "오너 확정",
+   "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 16개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 2026-08-26 신고가 16장 — 하루치 캐러셀",
+   "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-08-26",
+   "confirmedMd5": [
+    "singo-신촌숲아이파크-84:d98277efb4ab",
+    "singo-강촌-59:7bb73a79e87f",
+    "singo-서초힐스-59:5a74b6505bed",
+    "singo-신동아리버파크-59:968b35a54f4f",
+    "singo-신도림태영타운-84:da64612024fd",
+    "singo-초원마을대림-84:e23aa783c14a",
+    "singo-등촌동아이파크-84:ff077f50b212",
+    "singo-한신아파트상가동유치원동103~109-84:e057dcc8ddf9",
+    "singo-다산반도유보라메이플타운-84:901e5f8195f8",
+    "singo-광주역자연앤자이-84:07bcea18b9b8",
+    "singo-동아에코빌-59:9e5c3b69c185",
+    "singo-장미시영6-59:09e76e65e8e3",
+    "singo-한진-84:7d587f447f34",
+    "singo-호계2차현대홈타운-59:2da1159fe46d",
+    "singo-엘에이치이스트힐-59:f5e319124200",
+    "singo-덕유마을주공4-59:c9eaf7494e5b"
+   ]
+  },
+  {
+   "label": "singo-daily-2026-08-27",
+   "title": "🔥 8월 27일 신고가 14곳",
+   "cards": [
+    "singo-래미안리더스원-84",
+    "singo-서울숲리버뷰자이-84",
+    "singo-고덕주공9-84",
+    "singo-현대프라임-59",
+    "singo-약수하이츠-59",
+    "singo-고덕리엔파크3단지-84",
+    "singo-관악드림삼성-59",
+    "singo-광명푸르지오센트베르-59",
+    "singo-쌍용-59",
+    "singo-한마을-59",
+    "singo-힐스테이트푸르지오수원-84",
+    "singo-진산마을성원상떼빌아파트-84",
+    "singo-전농우성-59",
+    "singo-부영-59"
+   ],
+   "caption": "singo-daily-2026-08-27",
+   "state": "오너 확정",
+   "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 14개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 2026-08-27 신고가 14장 — 하루치 캐러셀",
+   "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-08-27",
+   "confirmedMd5": [
+    "singo-래미안리더스원-84:763cabeed9e6",
+    "singo-서울숲리버뷰자이-84:df9cfaf75175",
+    "singo-고덕주공9-84:0c9fe5e94876",
+    "singo-현대프라임-59:b187eb718a18",
+    "singo-약수하이츠-59:86a7e4a3dca8",
+    "singo-고덕리엔파크3단지-84:32e11aadd2ab",
+    "singo-관악드림삼성-59:c8ce4daf8c01",
+    "singo-광명푸르지오센트베르-59:ea57629454bb",
+    "singo-쌍용-59:36241c55ed50",
+    "singo-한마을-59:22f39f7cf8a1",
+    "singo-힐스테이트푸르지오수원-84:17197c6f8107",
+    "singo-진산마을성원상떼빌아파트-84:e5805f6789d2",
+    "singo-전농우성-59:738b15dd918d",
+    "singo-부영-59:0c2c34dd3eb3"
+   ]
+  },
+  {
+   "label": "singo-daily-2026-08-28",
+   "title": "🔥 8월 28일 신고가 6곳",
+   "cards": [
+    "singo-힐스테이트상도센트럴파크-84",
+    "singo-벽산블루밍-84",
+    "singo-래미안월곡-84",
+    "singo-초원마을대림-59",
+    "singo-덕현-84",
+    "singo-동탄2하우스디더레이크-59"
+   ],
+   "caption": "singo-daily-2026-08-28",
+   "state": "오너 확정",
+   "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 6개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 2026-08-28 신고가 6장 — 하루치 캐러셀",
+   "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-08-28",
+   "confirmedMd5": [
+    "singo-힐스테이트상도센트럴파크-84:a58acf9e9b1e",
+    "singo-벽산블루밍-84:122693e0541c",
+    "singo-래미안월곡-84:d31c54aebce5",
+    "singo-초원마을대림-59:489bf3e42507",
+    "singo-덕현-84:1dcfd87d7eae",
+    "singo-동탄2하우스디더레이크-59:bf6556022ae0"
+   ]
+  },
+  {
+   "label": "singo-daily-2026-08-29_2026-08-31",
+   "title": "🔥 8월 29~31일 신고가 14곳",
+   "cards": [
+    "singo-성복역롯데캐슬골드타운-84",
+    "singo-미사강변푸르지오-84",
+    "singo-대림1-59",
+    "singo-관악푸르지오-84",
+    "singo-동천자이-84",
+    "singo-미사강변루나리움-59",
+    "singo-수원하늘채더퍼스트2단지-84",
+    "singo-화서역푸르지오더에듀포레-59",
+    "singo-병점역아이파크캐슬-59",
+    "singo-e편한세상반월나노시티역-59",
+    "singo-수원시청역SKVIEW-84",
+    "singo-수원하늘채더퍼스트2단지-59",
+    "singo-황골마을주공1-59",
+    "singo-늘푸른벽산-59"
+   ],
+   "caption": "singo-daily-2026-08-29_2026-08-31",
+   "state": "오너 확정",
+   "note": "2026-08-29~2026-08-31 3일치를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-31 \"사흘치를 한 데 묶어서\"). 예약이 안 떠 밀린 날을 하루씩 따로 내면 같은 소식을 여러 번 결재·발행하게 된다. 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 2개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. ⚠️ 화서역푸르지오 25평·성복역롯데캐슬골드타운 34평은 이미 낸 단지·타입인데 다시 신고가를 썼다(오너 지시 2026-08-31 로 합쳤다). 흡수한 화서역 세트의 옛 확정 md5 는 옛 카드의 것이라 지웠다 — 새 값은 confirm 이 다시 잰다.",
+   "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-08-31",
+   "confirmedMd5": [
+    "singo-성복역롯데캐슬골드타운-84:d773cfc6419c",
+    "singo-미사강변푸르지오-84:db34e9701543",
+    "singo-대림1-59:ef253f6d721b",
+    "singo-관악푸르지오-84:db738b206a18",
+    "singo-동천자이-84:9e7b893a5dc9",
+    "singo-미사강변루나리움-59:9be2f93cf7de",
+    "singo-수원하늘채더퍼스트2단지-84:4d1975df8ed0",
+    "singo-화서역푸르지오더에듀포레-59:59e0d6c99f5d",
+    "singo-병점역아이파크캐슬-59:5a3b2c8adc53",
+    "singo-e편한세상반월나노시티역-59:30d43af82d7c",
+    "singo-수원시청역SKVIEW-84:de055218da82",
+    "singo-수원하늘채더퍼스트2단지-59:581cb3b77aae",
+    "singo-황골마을주공1-59:9a1f9647a714",
+    "singo-늘푸른벽산-59:d6574d56a3dc"
+   ]
+  },
+  {
+   "label": "singo-daily-2026-09-01",
+   "title": "🔥 9월 1일 신고가 15곳",
+   "cards": [
+    "singo-목동힐스테이트-59",
+    "singo-주공13-84",
+    "singo-광교호반베르디움-84",
+    "singo-신도림태영타운-84",
+    "singo-강서힐스테이트-59",
+    "singo-평촌더샵센트럴시티-59",
+    "singo-평촌센텀퍼스트-59",
+    "singo-평촌더샵아이파크-59",
+    "singo-동탄시범다은마을월드메르디앙반도유보라-84",
+    "singo-반정아이파크캐슬5단지-84",
+    "singo-병점역아이파크캐슬-84",
+    "singo-신동탄포레자이-59",
+    "singo-아르테자이-59",
+    "singo-수원하늘채더퍼스트1단지-59",
+    "singo-보람마을아주-59"
+   ],
+   "caption": "singo-daily-2026-09-01",
+   "state": "오너 확정",
+   "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 0개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록.",
+   "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-09-01",
+   "confirmedMd5": [
+    "singo-목동힐스테이트-59:5558836963b9",
+    "singo-주공13-84:d73636772d9b",
+    "singo-광교호반베르디움-84:13ef62403dcd",
+    "singo-신도림태영타운-84:8dc971c2131e",
+    "singo-강서힐스테이트-59:7ed5caedf29c",
+    "singo-평촌더샵센트럴시티-59:754162c81f49",
+    "singo-평촌센텀퍼스트-59:3e9767f435d4",
+    "singo-평촌더샵아이파크-59:877cc2a02787",
+    "singo-동탄시범다은마을월드메르디앙반도유보라-84:90932c608d40",
+    "singo-반정아이파크캐슬5단지-84:276d1add9f8f",
+    "singo-병점역아이파크캐슬-84:60c492cef210",
+    "singo-신동탄포레자이-59:d8dad3f9507f",
+    "singo-아르테자이-59:11d43676e632",
+    "singo-수원하늘채더퍼스트1단지-59:1d684c658a3f",
+    "singo-보람마을아주-59:75d2abdbfa1a"
+   ]
+  },
+  {
+   "label": "m2-gap",
+   "title": "💵 M2 통계 개편 — 같은 달, 두 개의 통화량",
+   "cards": [
+    "m2-gap"
+   ],
+   "caption": "m2-gap",
+   "note": "2025-12-30 한국은행 통화·유동성 통계 개편(수익증권 제외) 전후 두 계열을 나란히. 오너 지시 2026-09-01 「담담하게 사실만」 — 판단하는 문장을 넣지 않는다. 정기물이라 픽셀 기준값 미등록",
+   "state": "시안",
+   "pixelPolicy": "정기물 — data/datasets/m2-monthly.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다. ⚠️ 신·구 병행 공표는 2026년 12월까지라 그 뒤엔 빌더가 던진다"
+  },
+  {
+   "label": "m2-rate",
+   "title": "💵 통화량 증가율 추이 — 각 해 6월 기준",
+   "cards": [
+    "m2-rate"
+   ],
+   "caption": "m2-rate",
+   "note": "각 해 6월 전년동월비로 통일 — 12월 기준으로 재면 2021년이 지금보다 높아 제목과 그림이 어긋난다(빌더가 게이트로 막는다). 개편 전 기준(구 M2). 정기물이라 픽셀 기준값 미등록",
+   "state": "시안",
+   "pixelPolicy": "정기물 — 자료 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+  },
+  {
+   "label": "m2-trend",
+   "title": "💵 2030 대한민국 M2통화량은?",
+   "cards": [
+    "m2-trend"
+   ],
+   "caption": "m2-trend",
+   "note": "2003.10~2026.06 실측(구 M2 단일 계열, 접합 없음) + 2030년까지 두 시나리오. 시나리오는 자의적 낙관·비관이 아니라 과거 실측 속도다 — ①2003.10~2025.06 연평균 7.6% ②현 정부 구간(2025.04~2026.06) 연평균 11.8%. 오너 메모의 \"12.3%\"는 최신월 전년동월비라 계산값 11.8%를 썼다(CLAUDE.md §8). 예측은 점선·범례 이름·경계 세로선·캡션 산식 네 겹으로 실측과 가른다. 오너 지시 2026-09-01로 「1986~2026 40년 추이」를 이 카드로 교체.",
+   "state": "시안",
+   "pixelPolicy": "정기물 — 자료 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+  },
+  {
+   "label": "hakgun-map",
+   "title": "🏫 대한민국 대표 학군지 Top 31 — 시세 & 학원 (2장)",
+   "cards": [
+    "hakgun-map",
+    "hakgun-academy"
+   ],
+   "caption": "hakgun-map",
+   "note": "좌 급지별 3개 표(급지 안에서 국평 시세 순·번호는 표마다 1번부터) + 우 수도권 시군구 지도(토허제 면 + 급지색 번호 핀 + 한강 + 자동 배치 이름표). 급지색 1=빨강·2=검정·3=회색. 인천 송도·부평은 2026-09-01 에 수집해 넣었다(청라는 서구 코드 미보유로 제외). 급지는 『대한민국 학군지도』 인용(verified:false) — **발행 전 원 인포그래픽 대조 필요**. 값은 국토부 실거래를 빌더가 집계 ‖ 2장째(hakgun-academy, 오너 2026-09-02 '2장 세트로'): 같은 21곳·같은 지도에 **입시·보습 학원 수**를 얹는다. 1장과 달리 학원 수 순으로 새로 번호를 매기고 핀 색은 급지 그대로다 — 2번에 회색(3급지) 핀이 서는 것(동탄)이 이 장의 전부다. 교습소는 제외(1인 운영·일시수용 9명 상한이라 대형 학원과 한 줄로 세면 동네마다 다른 것을 센다 — 교습소 비중이 대치 24%·목동 50%·수성 52%로 갈렸다). 정원(TOFOR_SMTOT)은 쓰지 않았다: 곳당 61~660명으로 신고 편차가 커 규모로 못 읽는다. ‖ 2026-09-02 오너 확정: **2장 캐러셀**(1장 국평 시세 · 2장 입시·보습 학원 수). 2장은 1장과 판형이 완전히 같고 값만 다르다. 봉선(광주 남구)은 2급지로 복귀했으나 실거래가 안 잡혀 **2장에만** 있다(데이터셋 priceUnavailable). 급지 분류는 원 인포그래픽 전수 대조로 verified:true 로 올렸다 — 원본 32곳 중 청라만 빠져 31곳이다. ⚠️ 내보내기 전 검사(§0)는 무관한 카드(singo-dasan-lottecastle 곡선 불일치)로 빨간불이다 — 배포는 그 카드가 풀린 뒤에 한다.",
+   "state": "오너 확정",
+   "pixelPolicy": "정기물 — data/datasets/molit/,data/datasets/molit,data/datasets/neis-academy/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-09-02",
+   "confirmedMd5": [
+    "hakgun-map:400b3350584a",
+    "hakgun-academy:7b3f4429bec8"
+   ]
+  },
+  {
+   "label": "singo-daily-2026-09-02",
+   "title": "🔥 9월 2일 신고가 15곳",
+   "cards": [
+    "singo-텐즈힐1단지-84",
+    "singo-위례더힐55-84",
+    "singo-우장산아이파크이편한세상-84",
+    "singo-마곡엠밸리9단지-59",
+    "singo-다산롯데캐슬-84",
+    "singo-주공12-84",
+    "singo-이편한세상센트레빌-59",
+    "singo-영통아이파크캐슬1단지-59",
+    "singo-휘경리오포레아파트1단지-84",
+    "singo-기흥역센트럴푸르지오-84",
+    "singo-동탄역센트럴푸르지오-59",
+    "singo-도덕파크타운1단지-59",
+    "singo-만현마을9단지엘지자이-84",
+    "singo-수원하늘채더퍼스트1단지-84",
+    "singo-네이처포레-59"
+   ],
+   "caption": "singo-daily-2026-09-02",
+   "state": "오너 확정",
+   "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 15개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록.",
+   "pixelPolicy": "정기물 — data/datasets/singo-history/,data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-09-02",
+   "confirmedMd5": [
+    "singo-텐즈힐1단지-84:9fb900857805",
+    "singo-위례더힐55-84:ddb38eba1df5",
+    "singo-우장산아이파크이편한세상-84:9e9e3764bcb5",
+    "singo-마곡엠밸리9단지-59:6fe15c418c04",
+    "singo-다산롯데캐슬-84:ee1c0bf87733",
+    "singo-주공12-84:2ccadf3a1026",
+    "singo-이편한세상센트레빌-59:5f1d4446431b",
+    "singo-영통아이파크캐슬1단지-59:c272de642f55",
+    "singo-휘경리오포레아파트1단지-84:aeee7ce692d9",
+    "singo-기흥역센트럴푸르지오-84:e089e554987d",
+    "singo-동탄역센트럴푸르지오-59:d269f94f69fd",
+    "singo-도덕파크타운1단지-59:ba01e372ad02",
+    "singo-만현마을9단지엘지자이-84:c05bc59fc84b",
+    "singo-수원하늘채더퍼스트1단지-84:7d5fc7498659",
+    "singo-네이처포레-59:8e2093594d1f"
+   ]
+  },
+  {
+   "label": "tohuh-price-map",
+   "title": "🗺 토허제 40곳 가격 지도 — 매매·전세 × 34평·25평 (2026.06~07)",
+   "cards": [
+    "mae84-map",
+    "jeonse84-map",
+    "mae59-map",
+    "jeonse59-map"
+   ],
+   "caption": "tohuh-price-map",
+   "state": "오너 확정",
+   "note": "**월간 정기물.** 만드는 법은 `node scripts/tohuh-price-monthly.mjs` 하나다 — 달 고르기·자료 점검·대기열·빌더 인자·검수·묶음까지 그 스크립트가 한다. 사람용 정본은 docs/guides/토허제-가격지도-기준.md.\n집계 202606,202607 · 국토부 아파트 매매/전월세 실거래 · 전용 82~86㎡(34평) · 57~61㎡(25평).\n**두 달을 합친다** — 한 달이면 표본이 얇은 구가 흔들린다(종로 전용59: 06월 9건 7.41억 / 07월 11건 5.63억).\n**매매는 직거래·해제거래를 뺀다** — 신고가 카드와 같은 모집단이어야 두 카드가 같은 세계를 말한다.\n색은 **매매 빨강 · 전세 파랑**(오너 2026-09-02) — 표 값과 지도 램프가 한 축이고 제목만 예외다(평형 파랑·금액 빨강).\n캐러셀 순서는 34평 매매 → 34평 전세 → 25평 매매 → 25평 전세 — 첫 장이 표지라 큰 숫자가 앞에 서고, 같은 평형의 사는 값/빌리는 값이 붙어 있어야 넘기며 비교된다.\n머리글은 **2열**이어야 한다 — 3열(head.c)이면 값 칸이 176px 로 고정돼 「성남시 분당구」가 접히고 표가 236px 넘친다.\n정기물이라 픽셀 기준값(pixel-baselines)에 넣지 않는다. / 오너 확정(2026-09-02) — 한강 흰 케이싱 반영본. 파랑 지도에서 강이 면과 같은 색상이라 명도 대비만 남아 1.26:1 이었다. 강 색은 그대로 두고(발행본 픽셀 불변) 흰 띠를 아래에 깔았다. 네 장 모두 적용 — 한 게시물이라 같은 지도로 읽혀야 한다.",
+   "pixelPolicy": "정기물 — data/datasets/molit,data/datasets/molit-rent 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "scopeAck": {
+    "why": "오너 확정(2026-09-01): 제목의 주어는 서울이고 값도 서울 25구 평균이다. 표·지도는 수도권 토지거래허가구역 40곳을 함께 보여 주며, 카드 맨 위 회색 줄이 그 범위를 밝힌다. 아래는 그 경기 지역이며, 명단에 없는 이름이 새로 끼면 검사가 그대로 막는다(07-27 캐시 오염 사고 방어는 유지).",
+    "outside": [
+     "용인시 기흥구",
+     "화성시 동탄구",
+     "구리시",
+     "과천시",
+     "광명시",
+     "성남시 수정구",
+     "성남시 중원구",
+     "성남시 분당구",
+     "수원시 장안구",
+     "수원시 팔달구",
+     "수원시 영통구",
+     "안양시 동안구",
+     "용인시 수지구",
+     "의왕시",
+     "하남시"
+    ]
+   },
+   "confirmedAt": "2026-09-02",
+   "confirmedMd5": [
+    "mae84-map:eb3cd920429d",
+    "jeonse84-map:686ce92f1631",
+    "mae59-map:715c1b303c44",
+    "jeonse59-map:4aa0f154aa53"
+   ]
+  },
+  {
+   "label": "gap-ep1-1",
+   "title": "출발선은 같았다 #1 — 2020년 초 똑같은 7.0억, 지금은 9.8억 격차 (분당 시범우성·성북 길음뉴타운1·안산 파크푸르지오)",
+   "cards": [
+    "gap-ep1-1"
+   ],
+   "caption": "gap-ep1-1",
+   "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형은 streak-line@1 재사용. ⚠️ 평형을 섞어 묶은 카드다(25평 둘·34평 하나) — 「같은 집끼리의 비교」가 아니라 「그때 같은 돈이면 살 수 있던 집들」이다. 기준 정본은 docs/GAP_CARDS.md. / 시리즈명 「출발선은 같았다」+번호와 **연회색 판면(B안)** 은 오너 2026-09-02 확정 — 상단은 시리즈명·번호만, 측정 정의(월별 최고가)는 푸터로 내렸다.",
+   "state": "오너 확정 · 인스타 발행 완료",
+   "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-09-02",
+   "confirmedMd5": [
+    "gap-ep1-1:1c508ee2bec5"
+   ],
+   "publishedAt": "2026-09-04"
+  },
+  {
+   "label": "gap-ep1-2",
+   "title": "출발선은 같았다 #2 — 2020년 초 똑같은 8.0억, 지금은 8.6억 격차 (성동 두산·평촌 초원마을대림·수원장안 SK SKY VIEW)",
+   "cards": [
+    "gap-ep1-2"
+   ],
+   "caption": "gap-ep1-2",
+   "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형·연회색 판면은 1호와 동일(streak-line@1). ⚠️ 평형을 섞어 묶은 카드다(25평 하나·34평 둘). 기준 정본은 docs/GAP_CARDS.md. / 오너가 고른 옛 안건표 2번(수지·노원·관악)은 관악 신림동 현대 84 의 기준값이 **한 건짜리 튄 거래**(2020.02 단 1건 5.6억, 앞뒤 달은 4.35·4.50억)여서 카드가 「6년째 제자리」라는 거짓말을 하게 되어 있었다 — 스파이크 방어(find-gap-pairs settle())를 넣어 후보에서 뺐고, 그 자리를 후보 4번이 대신한다.",
+   "state": "오너 확정 · 인스타 발행 완료",
+   "captionCrossCheck": [
+    {
+     "value": "7.9",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    }
+   ],
+   "confirmedAt": "2026-09-02",
+   "confirmedMd5": [
+    "gap-ep1-2:d1a4bb56b032"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "publishedAt": "2026-09-04"
+  },
+  {
+   "label": "gap-ep1-3",
+   "title": "출발선은 같았다 #3 — 2020년 초 똑같은 7.6억, 지금은 7.9억 격차 (성동 벽산·성북 길음동동부센트레빌·구리 갈매역아이파크)",
+   "cards": [
+    "gap-ep1-3"
+   ],
+   "caption": "gap-ep1-3",
+   "note": "오너가 고른 원래 3호(동탄·성북·오산)는 오산대역세교자이의 곡선이 톱니(이웃달 18%)라 오너가 교체를 지시했다(2026-09-03, (b)안). 구리 41310 을 69회로 채워 후보 6·21 을 놓고 비교했고, 톱니가 더 낮고(3%/0%/0%) 상승률 격차가 큰(1.01배) 후보 6 을 골랐다. ⚠️ 평형을 섞은 카드다(25평 하나·34평 둘). 기준 정본은 docs/GAP_CARDS.md.",
+   "state": "오너 확정 · 인스타 발행 완료",
+   "captionCrossCheck": [
+    {
+     "value": "7.8",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    },
+    {
+     "value": "7.5",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    },
+    {
+     "value": "7.7",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    }
+   ],
+   "confirmedAt": "2026-09-02",
+   "confirmedMd5": [
+    "gap-ep1-3:c03acf7da771"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "publishedAt": "2026-09-04"
+  },
+  {
+   "label": "gap-ep1-4",
+   "title": "출발선은 같았다 #4 — 2020년 초 똑같은 6.9억, 지금은 4.8억 격차 (강서 가양6단지·성북 돈암동삼성·구리 한라비발디)",
+   "cards": [
+    "gap-ep1-4"
+   ],
+   "caption": "gap-ep1-4",
+   "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형은 1~3호와 동일(streak-line@1). ⚠️ 평형을 섞은 카드다. 세 가드(스파이크·톱니·긴 공백)를 모두 통과했다. 기준 정본은 docs/GAP_CARDS.md. / 오너가 렌더를 보고 2026-09-03 확정했다(1~5호 일괄).",
+   "state": "오너 확정 · 인스타 발행 완료",
+   "captionCrossCheck": [
+    {
+     "value": "6.8",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    },
+    {
+     "value": "7.0",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    }
+   ],
+   "confirmedAt": "2026-09-03",
+   "confirmedMd5": [
+    "gap-ep1-4:f2e2ca9f0269"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "publishedAt": "2026-09-04"
+  },
+  {
+   "label": "gap-ep1-5",
+   "title": "출발선은 같았다 #5 — 2020년 초 똑같은 5.5억, 지금은 5.5억 격차 (수지 현대성우8차·기흥 블루밍구성더센트럴·시흥 호반베르디움더프라임)",
+   "cards": [
+    "gap-ep1-5"
+   ],
+   "caption": "gap-ep1-5",
+   "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형은 1~3호와 동일(streak-line@1). ⚠️ 평형을 섞은 카드다. 세 가드(스파이크·톱니·긴 공백)를 모두 통과했다. 기준 정본은 docs/GAP_CARDS.md. / 오너가 렌더를 보고 2026-09-03 확정했다(1~5호 일괄).",
+   "state": "오너 확정 · 인스타 발행 완료",
+   "captionCrossCheck": [
+    {
+     "value": "5.6",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    },
+    {
+     "value": "5.5",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    }
+   ],
+   "confirmedAt": "2026-09-03",
+   "confirmedMd5": [
+    "gap-ep1-5:fc4da3b0130b"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "publishedAt": "2026-09-04"
+  },
+  {
+   "label": "danji-mokdong",
+   "title": "🏙️ 목동 하이퍼트 아파텔 33억? (목동윤슬자이 오피스텔)",
+   "cards": [
+    "danji-mokdong"
+   ],
+   "caption": "danji-mokdong",
+   "note": "청약·분양 판형 danji-cover@1 의 **첫 오피스텔 카드**(2026-09-03). 청약홈 API 에 오피스텔 오퍼레이션이 아직 안 붙어 있어 applyhomeNo 없이 scheduleSource 를 밝힌 입주자모집공고문(공고번호 2026950076, 오너 제공 PDF)에서 읽었다. 오피스텔은 특별공급·1순위가 없어 일정 4칸이 접수·당발·계약·입주로 바뀌고 단위가 '실'이다(propertyType 이 켠다). 분양가는 공고문 5p 공급금액표의 타입별 최고가와 대조 완료. ⚠️ 이 카드를 만들며 좌우 판형(danji-cover-split@1)을 실제로 구현했다가 오너가 물렸다 — 판형은 하나다. ⚠️ '국평'은 오피스텔에 발코니가 없어 전용 114㎡ 가 아파트 84㎡ 확장형과 실사용이 비슷한 데서 온 업계 표현이다 — 카드엔 한 낱말, 근거는 캡션이 받는다.",
+   "captionCrossCheck": [
+    {
+     "value": "24.6",
+     "why": "최저 공급금액(114B 24.60억) — 카드 밴드는 최고가만 싣는다. 진입가를 캡션이 받는다"
+    },
+    {
+     "value": "444",
+     "why": "114~115㎡ 실수 — 카드 밴드는 면적대와 금액만 싣는다"
+    },
+    {
+     "value": "180",
+     "why": "117~120㎡ 실수 — 같은 이유"
+    },
+    {
+     "value": "27",
+     "why": "198~203㎡ 실수 — 같은 이유. 합 444+180+27 = 651 = 카드의 총 실수"
+    },
+    {
+     "value": "84",
+     "why": "아파트 국민평형 84㎡ — '국평'이라는 카드 위 한 낱말의 근거. 카드에는 이 수가 없다"
+    },
+    {
+     "value": "40",
+     "why": "114B 실사용 약 40평(이데일리 르포 2026) — 같은 근거 줄"
+    },
+    {
+     "value": "4",
+     "why": "114B 방 4개(이데일리 르포) — 같은 근거 줄"
+    },
+    {
+     "value": "2",
+     "why": "114B 욕실 2개(이데일리 르포) — 같은 근거 줄"
+    },
+    {
+     "value": "900",
+     "why": "예비당첨자 900%(공고문 1p) — 카드 아래 한 줄이 자격 요건만 싣느라 뺐다"
+    },
+    {
+     "value": "1,206",
+     "why": "주차 1,206대(공고문 2p) — 카드 제원 3칸에 자리가 없다"
+    },
+    {
+     "value": "1.85",
+     "why": "실당 주차 1.85대(공고문 2p) — 같은 이유"
+    },
+    {
+     "value": "6",
+     "why": "지하 6층(공고문 2p) — 카드는 '최고 48층'만 싣는다"
+    },
+    {
+     "value": "16",
+     "why": "당첨자 발표 16시 이후(공고문 1p) — 카드는 날짜만 싣는다"
+    },
+    {
+     "value": "14",
+     "why": "계약 마감 9/14(월) — 카드는 계약 시작일만 싣는다"
+    }
+   ],
+   "state": "오너 확정",
+   "confirmedAt": "2026-09-03",
+   "confirmedMd5": [
+    "danji-mokdong:2f5023b9672a"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
+  },
+  {
+   "label": "singo-daily-2026-09-03",
+   "title": "🔥 9월 3일 신고가 11곳",
+   "cards": [
+    "singo-광교중흥에스클래스-84",
+    "singo-e편한세상신촌2단지-59",
+    "singo-래미안힐스테이트고덕-59",
+    "singo-롯데캐슬위너-84",
+    "singo-미사강변스타힐스아파트-84",
+    "singo-산성역자이푸르지오1단지-59",
+    "singo-광명두산위브트레지움-59",
+    "singo-관악-84",
+    "singo-꿈동산신안-84",
+    "singo-동탄시범다은마을월드메르디앙반도유보라-59",
+    "singo-자연앤데시앙-84"
+   ],
+   "caption": "singo-daily-2026-09-03",
+   "state": "오너 확정",
+   "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 11개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 오너가 HTML 미리보기를 보고 확정(제목 4곳 수정 반영본). 09-03 판정 9장 + 09-02 이월 2장(--also). / 오너가 HTML 미리보기를 보고 확정(제목 4곳 수정 반영본). 09-03 판정 9장 + 09-02 이월 2장(--also 산성역자이푸르지오1단지·평촌관악타운).",
+   "pixelPolicy": "정기물 — data/datasets/singo-history/,data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-09-03",
+   "confirmedMd5": [
+    "singo-광교중흥에스클래스-84:1f9c2cd1626d",
+    "singo-e편한세상신촌2단지-59:0a670e9b8b44",
+    "singo-래미안힐스테이트고덕-59:a808471d8de7",
+    "singo-롯데캐슬위너-84:561254be4ac4",
+    "singo-미사강변스타힐스아파트-84:b8fede4681a6",
+    "singo-산성역자이푸르지오1단지-59:304f06efe350",
+    "singo-광명두산위브트레지움-59:798e9987a216",
+    "singo-관악-84:038e18241d7c",
+    "singo-꿈동산신안-84:e3f7f04ee172",
+    "singo-동탄시범다은마을월드메르디앙반도유보라-59:73d15c5da29b",
+    "singo-자연앤데시앙-84:8e38576567e5"
+   ]
+  },
+  {
+   "label": "world-monthly",
+   "title": "🌏 26년 세계 증시 1등, 한국 +61.8% — 8개국 월별 성적표 (2026.01~08)",
+   "cards": [
+    "world-monthly"
+   ],
+   "caption": "world-monthly",
+   "review": "세계 주요국 월별 증시 성적표",
+   "state": "오너 확정",
+   "note": "오너 확정 8개국(원래 베트남 → 야후에 VN-Index 가 없어 대만으로 교체). 현지통화 기준. ⚠️ 캡션이 반드시 적을 것: 누적의 밑은 **전년 12월 말 종가**이고, 환율은 반영하지 않았다. 2026-09-04 오너 지시로 카드 최하단 문구를 뺐고 그 정의가 캡션으로 내려왔다. / 오너 확정 2026-09-04 — 세계 8개국 1~8월 성적표 1호. 판형 world-monthly@1 신설분.",
+   "confirmedAt": "2026-09-04",
+   "confirmedMd5": [
+    "world-monthly:d00e5951d0cc"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/world-market- 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
+  },
+  {
+   "label": "singo-A15106901-84",
+   "cards": [
+    "singo-두산-84"
+   ],
+   "caption": "singo-A15106901-84",
+   "title": "🔥 두산 34평, 18.5억 신고가",
+   "state": "시안",
+   "note": "2026-09-04 판정 신고가. 대장 열쇠 A15106901 (사람이 짚었다(--kapt)). 기준은 docs/guides/신고가-카드-기준.md",
+   "pixelPolicy": "정기물 — singo-history·molit·apt-station·apt-detail·apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+  },
+  {
+   "label": "singo-daily-2026-09-04",
+   "title": "🔥 9월 4일 신고가 14곳",
+   "cards": [
+    "singo-마포래미안푸르지오2단지-84",
+    "singo-서울역센트럴자이-59",
+    "singo-대림아파트-84",
+    "singo-신길센트럴자이아파트-59",
+    "singo-위례롯데캐슬-84",
+    "singo-미사강변골든센트로-84",
+    "singo-산성역자이푸르지오2단지-59",
+    "singo-상암월드컵파크9단지-84",
+    "singo-백련산에스케이뷰아이파크-59",
+    "singo-동아에코빌-59-0904",
+    "singo-지제역더샵센트럴시티-84",
+    "singo-주공9-59",
+    "singo-벽적골9단지주공-59",
+    "singo-갈매6단지-59"
+   ],
+   "caption": "singo-daily-2026-09-04",
+   "state": "오너 확정",
+   "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 14개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 2026-09-04 신고가 14장 — 오너 확정. 곡선 무채색 발광 첫 적용 · 월곡 동아에코빌은 08-26 발행분과 이름표를 갈라 만든 새 카드.",
+   "pixelPolicy": "정기물 — data/datasets/singo-history/,data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-09-04",
+   "confirmedMd5": [
+    "singo-마포래미안푸르지오2단지-84:98df25110375",
+    "singo-서울역센트럴자이-59:791f3cbdbd41",
+    "singo-대림아파트-84:e2ce8dfecca1",
+    "singo-신길센트럴자이아파트-59:d1def1cdcc92",
+    "singo-위례롯데캐슬-84:e0f1be703b1b",
+    "singo-미사강변골든센트로-84:17d06531b0c1",
+    "singo-산성역자이푸르지오2단지-59:bc21bdf513c1",
+    "singo-상암월드컵파크9단지-84:372446857558",
+    "singo-백련산에스케이뷰아이파크-59:b3d4a4dba361",
+    "singo-동아에코빌-59-0904:131ec5b58301",
+    "singo-지제역더샵센트럴시티-84:a16ba37bf1c4",
+    "singo-주공9-59:809d843a6e45",
+    "singo-벽적골9단지주공-59:7590ed0f4ef5",
+    "singo-갈매6단지-59:2ade2a60dec2"
+   ]
+  },
+  {
+   "label": "gap-ep1-6",
+   "title": "출발선은 같았다 #6 — 2020년 초 똑같은 5.9억, 지금은 6.2억 격차 (분당 장미마을·강북 삼각산아이원·시흥 한라비발디캠퍼스2차)",
+   "cards": [
+    "gap-ep1-6"
+   ],
+   "caption": "gap-ep1-6",
+   "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형은 1~5호와 동일(streak-line@1). ⚠️ 평형을 섞은 카드다. 세 가드(스파이크·톱니·긴 공백)를 모두 통과했다. 기준 정본은 docs/GAP_CARDS.md. / 후보는 §18 정본대로 「자료 0회·톱니 12% 이하·공백 20개월 이하」를 통과한 것 중 상승률 격차 순으로 골랐다 — 앞 카드에 나온 구는 피하지 않았다.",
+   "state": "오너 확정 · 인스타 발행 완료",
+   "captionCrossCheck": [
+    {
+     "value": "6.0",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    },
+    {
+     "value": "5.9",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    }
+   ],
+   "renderedMd5": [
+    "gap-ep1-6:771f60e2d673"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "publishedAt": "2026-09-04",
+   "confirmedAt": "2026-09-04",
+   "confirmedMd5": [
+    "gap-ep1-6:771f60e2d673"
+   ]
+  },
+  {
+   "label": "gap-ep1-7",
+   "title": "출발선은 같았다 #7 — 2020년 초 똑같은 8.5억, 지금은 7.7억 격차 (성동 대림강변타운·강서 마곡수명산파크1단지·금천 남서울힐스테이트)",
+   "cards": [
+    "gap-ep1-7"
+   ],
+   "caption": "gap-ep1-7",
+   "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형은 1~5호와 동일(streak-line@1). ⚠️ 평형을 섞은 카드다. 세 가드(스파이크·톱니·긴 공백)를 모두 통과했다. 기준 정본은 docs/GAP_CARDS.md. / 후보는 §18 정본대로 「자료 0회·톱니 12% 이하·공백 20개월 이하」를 통과한 것 중 상승률 격차 순으로 골랐다 — 앞 카드에 나온 구는 피하지 않았다.",
+   "state": "오너 확정 · 인스타 발행 완료",
+   "captionCrossCheck": [
+    {
+     "value": "8.5",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    }
+   ],
+   "renderedMd5": [
+    "gap-ep1-7:9b8d2ada337d"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "publishedAt": "2026-09-04",
+   "confirmedAt": "2026-09-04",
+   "confirmedMd5": [
+    "gap-ep1-7:9b8d2ada337d"
+   ]
+  },
+  {
+   "label": "gap-ep1-8",
+   "title": "출발선은 같았다 #8 — 2020년 초 똑같은 6.1억, 지금은 5.7억 격차 (동탄 동탄역센트럴상록아파트·서대문 홍은동벽산·시흥 한라비발디캠퍼스)",
+   "cards": [
+    "gap-ep1-8"
+   ],
+   "caption": "gap-ep1-8",
+   "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형은 1~5호와 동일(streak-line@1). ⚠️ 평형을 섞은 카드다. 세 가드(스파이크·톱니·긴 공백)를 모두 통과했다. 기준 정본은 docs/GAP_CARDS.md. / 후보는 §18 정본대로 「자료 0회·톱니 12% 이하·공백 20개월 이하」를 통과한 것 중 상승률 격차 순으로 골랐다 — 앞 카드에 나온 구는 피하지 않았다.",
+   "state": "오너 확정 · 인스타 발행 완료",
+   "captionCrossCheck": [
+    {
+     "value": "6.2",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    },
+    {
+     "value": "6.1",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    },
+    {
+     "value": "6.0",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    }
+   ],
+   "renderedMd5": [
+    "gap-ep1-8:a0fcfc8af230"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "publishedAt": "2026-09-04",
+   "confirmedAt": "2026-09-04",
+   "confirmedMd5": [
+    "gap-ep1-8:a0fcfc8af230"
+   ]
+  },
+  {
+   "label": "gap-ep1-9",
+   "title": "출발선은 같았다 #9 — 2020년 초 똑같은 8.1억, 지금은 6.5억 격차 (분당 시범한양·평촌 인덕원마을·기흥 기흥역더샵)",
+   "cards": [
+    "gap-ep1-9"
+   ],
+   "caption": "gap-ep1-9",
+   "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형은 1~5호와 동일(streak-line@1). ⚠️ 평형을 섞은 카드다. 세 가드(스파이크·톱니·긴 공백)를 모두 통과했다. 기준 정본은 docs/GAP_CARDS.md. / 후보는 §18 정본대로 「자료 0회·톱니 12% 이하·공백 20개월 이하」를 통과한 것 중 상승률 격차 순으로 골랐다 — 앞 카드에 나온 구는 피하지 않았다.",
+   "state": "오너 확정 · 인스타 발행 완료",
+   "captionCrossCheck": [
+    {
+     "value": "8.0",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    },
+    {
+     "value": "8.2",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    },
+    {
+     "value": "8.1",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    }
+   ],
+   "renderedMd5": [
+    "gap-ep1-9:be86b49dc8dc"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "publishedAt": "2026-09-04",
+   "confirmedAt": "2026-09-04",
+   "confirmedMd5": [
+    "gap-ep1-9:be86b49dc8dc"
+   ]
+  },
+  {
+   "label": "gap-ep1-10",
+   "title": "출발선은 같았다 #10 — 2020년 초 똑같은 4.4억, 지금은 3.7억 격차 (광명 주공10·수원장안 한일타운우성·수원권선 호매실스타힐스)",
+   "cards": [
+    "gap-ep1-10"
+   ],
+   "caption": "gap-ep1-10",
+   "note": "국토부 실거래 「구 × 월」 캐시에서 코드가 계산·verified. 판형은 1~5호와 동일(streak-line@1). ⚠️ 평형을 섞은 카드다. 세 가드(스파이크·톱니·긴 공백)를 모두 통과했다. 기준 정본은 docs/GAP_CARDS.md. / 후보는 §18 정본대로 「자료 0회·톱니 12% 이하·공백 20개월 이하」를 통과한 것 중 상승률 격차 순으로 골랐다 — 앞 카드에 나온 구는 피하지 않았다.",
+   "state": "오너 확정 · 인스타 발행 완료",
+   "captionCrossCheck": [
+    {
+     "value": "4.4",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    },
+    {
+     "value": "4.5",
+     "why": "단지별 출발가다. 카드는 묶음 대표값(구간의 가운데) 하나만 찍고 단지별 출발가는 안 찍는다 — 배수는 이 값으로 낸 것이라 캡션에는 정확한 값을 적는다(docs/GAP_CARDS.md §13)."
+    }
+   ],
+   "renderedMd5": [
+    "gap-ep1-10:96232d5cb840"
+   ],
+   "pixelPolicy": "정기물 — data/datasets/molit-monthly/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-09-04",
+   "confirmedMd5": [
+    "gap-ep1-10:a516ea341402"
+   ],
+   "publishedAt": "2026-09-04"
+  },
+  {
+   "label": "singo-daily-2026-09-05",
+   "title": "🔥 9월 5일 신고가 12곳",
+   "cards": [
+    "singo-산성역자이푸르지오1단지-84",
+    "singo-진산마을삼성5차-84",
+    "singo-인덕원센트럴자이1단지-84",
+    "singo-동천디이스트-84",
+    "singo-광명푸르지오센트베르-59-0905",
+    "singo-래미안트리베라1단지-84",
+    "singo-반정아이파크캐슬5단지-84-0905",
+    "singo-꿈동산신안-84-0905",
+    "singo-화서주공4단지-59",
+    "singo-벽적골9단지주공-59-0905",
+    "singo-석수e편한세상-59",
+    "singo-권선자이e편한세상-59"
+   ],
+   "caption": "singo-daily-2026-09-05",
+   "state": "오너 확정",
+   "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 12개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 오너가 JPG 낱장을 보고 확정. 12장 — 산성역·석수는 오너 지시로 사이클 가드를 넘겨(겹치는 「지난 고점대비」 줄을 빼고) 실었다. 석수 공급면적은 주차장·대피소를 뺀 뒤 다시 받은 23평. / 이름 사전(수지 진산마을삼성5차·인덕원센트럴자이1단지·하남 꿈동산신안) 반영본으로 재확정.",
+   "pixelPolicy": "정기물 — data/datasets/singo-history/,data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-09-05",
+   "confirmedMd5": [
+    "singo-산성역자이푸르지오1단지-84:c25e88b41555",
+    "singo-진산마을삼성5차-84:c8fc034571e7",
+    "singo-인덕원센트럴자이1단지-84:63dca7dc9345",
+    "singo-동천디이스트-84:5da7f2769487",
+    "singo-광명푸르지오센트베르-59-0905:3a86467e8886",
+    "singo-래미안트리베라1단지-84:3e51661d8686",
+    "singo-반정아이파크캐슬5단지-84-0905:d0aa2f32df0d",
+    "singo-꿈동산신안-84-0905:bc4f5d7ea650",
+    "singo-화서주공4단지-59:fb5e7b25a5e0",
+    "singo-벽적골9단지주공-59-0905:bda36e90414e",
+    "singo-석수e편한세상-59:b6d7f4008d41",
+    "singo-권선자이e편한세상-59:860a56fb5d69"
+   ]
+  },
+  {
+   "label": "seongsu-zones",
+   "title": "성수 1~4지구, 누가 짓나 (시공사 지도)",
+   "cards": [
+    "seongsu-zones"
+   ],
+   "caption": "seongsu-zones",
+   "review": "성수전략정비구역 시공사 지도",
+   "note": "2026-09-06 기준. 2·3지구는 시공사 미확정('유력') — 총회 결과가 나오면 데이터셋의 status·statusKind 를 고치고 다시 그린다.",
+   "pixelPolicy": "정기물에 준한다 — 선정총회 결과가 나오면 다시 그려진다. pixel-baselines 에 넣지 않는다."
+  },
+  {
+   "label": "daso-treemap",
+   "title": "2026년 현재, 다주택자 비율? (집합건물 다소유지수 트리맵)",
+   "cards": [
+    "daso-treemap"
+   ],
+   "caption": "daso-treemap",
+   "review": "다소유지수 × 소유지수 트리맵 2컷",
+   "note": "판형 daso-treemap@1 신설분. 좌 표(16행 전부)·우 「가로막대 → 확대 깔때기 → 트리맵」. ⚠️ 제목의 '다주택자'는 일상어이고 이 자료의 모집단(집합건물)과 정확히 같지 않다 — 킥커가 「집합건물 다소유지수」를 밝히고 각주가 두 낱말을 풀 때만 쓴다(빌더가 검사한다). ⚠️ 국가데이터처 주택소유통계의 14.9%(2024, 주택 기준)와 나란히 놓지 않는다. 모집단이 다르다. ⚠️ 트리맵의 넓이는 2채 이상 안에서의 비중이고 적힌 %는 전체 소유자 기준 공표값이다 — 깔때기가 그 확대를 그림으로 말한다(빌더가 존재를 검사한다). ⚠️ 트리맵의 「10채 이상」은 원자료 일곱 구간을 묶은 것 — 표·캡션이 내역을 적는다. / 가로막대(1채/2채 이상) + 다보유 확대 트리맵 + 16행 표. 오너 확정 2026-09-07",
+   "pixelPolicy": "고정물 — 원자료가 오너의 2026-08 직접 조회분이고 이를 갱신하는 워크플로가 없다. 다음 달 값은 새 데이터셋(iros-daso-2026-09.json)·새 카드로 만든다. 따라서 이 판본의 픽셀은 이제 불변이다(pixel-baselines 등록 — confirm 이 그렇게 판정했고, 그 판정이 맞다).",
+   "state": "오너 확정",
+   "confirmedAt": "2026-09-07",
+   "confirmedMd5": [
+    "daso-treemap:1a06eace066d"
+   ]
+  },
+  {
+   "label": "rail-sinansan",
+   "title": "신안산선 언제 개통하지 (공정률 72.58% · 2028년 말 목표)",
+   "cards": [
+    "rail-sinansan"
+   ],
+   "caption": "rail-sinansan",
+   "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
+   "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분 / 장하역 누락 교정 — 목감~성포 사이 신설 확정역(2021.09 협약). 본선 15역 → 16역",
+   "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
+   "state": "오너 확정",
+   "confirmedAt": "2026-09-08",
+   "confirmedMd5": [
+    "rail-sinansan:534355c9ce00"
+   ]
+  },
+  {
+   "label": "rail-gtxa",
+   "title": "GTX-A 언제 완전 개통하지 (공정률 99.9% · 개통 미정)",
+   "cards": [
+    "rail-gtxa"
+   ],
+   "caption": "rail-gtxa",
+   "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
+   "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분 / GTX-A 99.9% 오해 교정 — 삼성역 병목(61.94%) 병기 / GTX-A 99.9% 오해 교정(삼성역 61.94% 병기) · 캡션 카톡체 전면 개편",
+   "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
+   "state": "오너 확정",
+   "confirmedAt": "2026-09-08",
+   "confirmedMd5": [
+    "rail-gtxa:485ba73560c7"
+   ]
+  },
+  {
+   "label": "rail-gtxb",
+   "title": "GTX-B 언제 개통하지 (공정률 8.1% · 2031년 목표)",
+   "cards": [
+    "rail-gtxb"
+   ],
+   "caption": "rail-gtxb",
+   "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
+   "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
+   "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
+   "state": "오너 확정",
+   "confirmedAt": "2026-09-07",
+   "confirmedMd5": [
+    "rail-gtxb:6d6ccd0f22fd"
+   ]
+  },
+  {
+   "label": "rail-gtxc",
+   "title": "GTX-C 언제 개통하지 (공정률 0% · 개통 미정)",
+   "cards": [
+    "rail-gtxc"
+   ],
+   "caption": "rail-gtxc",
+   "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
+   "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
+   "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
+   "state": "오너 확정",
+   "confirmedAt": "2026-09-07",
+   "confirmedMd5": [
+    "rail-gtxc:6319a13dd19a"
+   ]
+  },
+  {
+   "label": "rail-indong",
+   "title": "인덕원~동탄선 언제 개통하지 (공정률 20.4% · 2029년 말 목표)",
+   "cards": [
+    "rail-indong"
+   ],
+   "caption": "rail-indong",
+   "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
+   "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
+   "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
+   "state": "오너 확정",
+   "confirmedAt": "2026-09-07",
+   "confirmedMd5": [
+    "rail-indong:2099c6e0f351"
+   ]
+  },
+  {
+   "label": "rail-wolpan",
+   "title": "월곶~판교선 언제 개통하지 (공정률 18.0% · 2029년 말 목표)",
+   "cards": [
+    "rail-wolpan"
+   ],
+   "caption": "rail-wolpan",
+   "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
+   "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
+   "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
+   "state": "오너 확정",
+   "confirmedAt": "2026-09-07",
+   "confirmedMd5": [
+    "rail-wolpan:07dbb7901dba"
+   ]
+  },
+  {
+   "label": "rail-sinbundang",
+   "title": "신분당선 연장선 언제 개통하지 (공정률 17.25% · 2029년 말 목표)",
+   "cards": [
+    "rail-sinbundang"
+   ],
+   "caption": "rail-sinbundang",
+   "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
+   "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
+   "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
+   "state": "오너 확정",
+   "confirmedAt": "2026-09-07",
+   "confirmedMd5": [
+    "rail-sinbundang:2b8c831cf2b9"
+   ]
+  },
+  {
+   "label": "rail-daejang",
+   "title": "대장홍대선 언제 개통하지 (공정률 9.7% · 2031년 목표)",
+   "cards": [
+    "rail-daejang"
+   ],
+   "caption": "rail-daejang",
+   "review": "수도권 예정 철도망 노선 카드 — 좌 노선도 · 우 일정",
+   "note": "판형 rail-line@1 신설분. ⚠️ 공정률은 8장 전부 국가철도공단 「주요사업현황」 '26.6월 한 기준일이다 — 언론 보도치와 섞으면 사업 간 비교가 깨진다(공단 6월 값이 더 이른 보도치보다 낮은 사업이 셋 있다). ⚠️ 개통 예정은 전부 목표치이며 확정 고시가 아니다. ⚠️ 환승 뱃지 색은 templates/_shared/metro-lines.json 정본 — EXP(wirit-line.mjs)와 GTX-A·신안산 색이 다르다. / 수도권 주요 노선 공사 현황 8장 · 판형 rail-line@1 신설분",
+   "pixelPolicy": "고정물 — 데이터셋(sudo-rail-2026-09.json)은 워크플로가 자동 갱신하지 않는다(사람이 분기마다 새로 만든다). 그래서 pixel-baselines 에 등록했고 이후 md5 회귀 검사 대상이다. 공단 사업현황이 갱신되면 **새 데이터셋 파일**로 가고 기준값도 새로 잡는다.",
+   "state": "오너 확정",
+   "confirmedAt": "2026-09-07",
+   "confirmedMd5": [
+    "rail-daejang:a665b6e46b71"
+   ]
+  },
+  {
+   "label": "supply-progress",
+   "title": "李정부 수도권 공급정책 1주년 — 147만호 중 5.3%",
+   "cards": [
+    "supply-progress"
+   ],
+   "caption": "supply-progress",
+   "review": "수도권 공급대책 진행률 — 상단 총량 진행바 + 하단 연도별 목표 기둥",
+   "note": "판형 supply-progress@1 신설분 · 새 폰트 세트(font-taebaek-pretendard) 첫 적용. ⚠️ 한 카드에 분모가 둘이다 — 위 진행바는 총목표 146.9만호(9·7 134.9 + 8·13 12.0), 아래 막대 다섯의 합은 9·7 배분 134.9만호뿐이다. 각주가 그 차이를 적고, 빌더가 각주를 검사해 없으면 던진다. ⚠️ 8·13 추가 12만호는 연도별 배분 미발표라 별도 칸(점선)으로 세웠다 — 5년 균등 배분하면 2026 달성률이 29.0%→26.6%로 바뀌는데 그건 정부 발표가 아니다. 🔴 수치가 국토부 보도자료 PDF 원문 대조를 아직 못 거쳤다(언론 보도 경유 + 오너 확인). 데이터셋 meta.cautions 참조. / 9·7 대책 1주년 결산 · 판형 supply-progress@1 신설 · 새 폰트 세트(font-taebaek-pretendard) 첫 적용 · 수치는 언론 보도 경유 + 오너 확인(정부 원문 PDF 미대조)",
+   "pixelPolicy": "고정물 — 2026년 9월 7일 시점의 1주년 결산이라 자료가 갱신돼도 다시 그리지 않는다. pixel-baselines 에 넣는다.",
+   "state": "오너 확정",
+   "confirmedAt": "2026-09-07",
+   "confirmedMd5": [
+    "supply-progress:1abe257c0418"
+   ]
+  },
+  {
+   "label": "singo-daily-2026-09-08",
+   "title": "🔥 9월 8일 신고가 19곳",
+   "cards": [
+    "singo-대흥동태영아파트-84",
+    "singo-롯데캐슬클라시아-59",
+    "singo-삼환-59",
+    "singo-미사레스티아-84",
+    "singo-힐스테이트다산-84",
+    "singo-평촌센텀퍼스트-59-0908",
+    "singo-금천롯데캐슬골드파크1차-59",
+    "singo-반정아이파크캐슬5단지-84-0908",
+    "singo-현대-59",
+    "singo-화서역푸르지오더에듀포레-84-0908",
+    "singo-한진6091-59",
+    "singo-e편한세상반월나노시티역-59-0908",
+    "singo-자연앤데시앙-84-0908",
+    "singo-동탄역포레너스-59",
+    "singo-수원하늘채더퍼스트2단지-59-0908",
+    "singo-석수e편한세상-59-0908",
+    "singo-삼환-84-0908",
+    "singo-화서역블루밍푸른숲-59",
+    "singo-늘푸른벽산-59-0908"
+   ],
+   "caption": "singo-daily-2026-09-08",
+   "state": "오너 확정",
+   "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 19개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 오너 확인 2026-09-08 — 이름 5건(대흥동 태영·길음 롯데캐슬클라시아·신길 삼환·월계동 현대·성북 한신한진·구운동 삼환), 겹치는 기준선 3장은 라벨을 선 아래로 내려 그림, 한신한진 공급면적은 오너가 네이버 표기로 짚음, 화서역블루밍 26평 확인 / 오너 확인 2026-09-08 — 이름 6건(대흥동 태영·길음 롯데캐슬클라시아·신길 삼환·월계동 현대·성북 한신한진·구운동 삼환), 겹치는 기준선 3장은 라벨을 선 아래로 내려 그림, 한신한진 공급면적은 오너가 네이버 표기로 짚음, 화서역블루밍 26평 확인",
+   "pixelPolicy": "정기물 — data/datasets/singo-history/,data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+   "confirmedAt": "2026-09-08",
+   "confirmedMd5": [
+    "singo-대흥동태영아파트-84:8a570dc1ca3e",
+    "singo-롯데캐슬클라시아-59:c142db82404b",
+    "singo-삼환-59:9b45a3c8dbee",
+    "singo-미사레스티아-84:a7ff2e2af49e",
+    "singo-힐스테이트다산-84:57d5043662c6",
+    "singo-평촌센텀퍼스트-59-0908:2709de453c0e",
+    "singo-금천롯데캐슬골드파크1차-59:bd0f1e5ee177",
+    "singo-반정아이파크캐슬5단지-84-0908:558ac691ace5",
+    "singo-현대-59:4966ae792c6a",
+    "singo-화서역푸르지오더에듀포레-84-0908:a814bdb63bce",
+    "singo-한진6091-59:67aea6bdd016",
+    "singo-e편한세상반월나노시티역-59-0908:cb8654ae8c53",
+    "singo-자연앤데시앙-84-0908:a9ef9d0d9723",
+    "singo-동탄역포레너스-59:ee0cde228ab4",
+    "singo-수원하늘채더퍼스트2단지-59-0908:dea767093c5f",
+    "singo-석수e편한세상-59-0908:069d461c718a",
+    "singo-삼환-84-0908:44e6ac5a94e8",
+    "singo-화서역블루밍푸른숲-59:e6f192db86e8",
+    "singo-늘푸른벽산-59-0908:f6a6384bd2dd"
+   ]
+  },
+  {
+   "label": "foreign-house",
+   "title": "🏠 3년 새 늘어난 외국인 집, 그중 3분의 2가 중국",
+   "cards": [
+    "foreign-house"
+   ],
+   "caption": "foreign-house",
+   "note": "국적별 외국인 주택소유 추이(2022년 하반기~2025년 하반기, 반기 7시점). 중국·미국 두 선 + 「그 밖의 모든 나라」 한 선 — 오너 확정 2026-09-08. 주택수 = 공동주택+단독주택(KOSIS 한국부동산원 DT_408004_007+008), 총계는 총괄표(001) 값이고 나머지는 총계−중국−미국 뺄셈이다(국적이 다른 공동소유가 국적별 표에서 중복 계상되기 때문). 제목의 「3분의 2」는 빌더가 증가분 몫을 계산해 63~70% 밖이면 던진다.",
+   "state": "시안",
+   "pixelPolicy": "정기물 — 반기 공표 때 다시 그려진다. pixel-baselines 에 넣지 않는다"
+  }
+ ]
 }

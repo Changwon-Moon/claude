@@ -103,3 +103,14 @@ jobs:
         run: |
           echo "::error::수집 실패 — 원인은 data/foreign-house-last.md 에 적혀 있습니다"
           exit 1
+
+      - name: 실패하면 말한다
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          # 성공은 말하지 않는다 — 반기짜리 배관이라 실패만 말해도 충분하다.
+          # 원인은 로그가 아니라 data/foreign-house-last.md 에 적혀 있다(세션이 읽는 유일한 눈).
+          MSG=$(printf '⛔ 외국인 주택소유통계 수집 실패\n\n원인은 data/foreign-house-last.md 에 적혀 있습니다.\n국적별 합이 총괄과 1%% 넘게 벌어지면 여기서 멈춥니다 — 표 축이 바뀌었는지 봅니다.')
+          node scripts/notify-telegram.mjs "$MSG"

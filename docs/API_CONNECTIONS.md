@@ -57,6 +57,7 @@
 | **국토부 공동주택 기본정보(세대수)** | `MOLIT_API_KEY` | `sources/aptInfo.ts` · `aptUniverseCli.ts` | `data/datasets/apt-hhld.json` (8,062단지) | `apt-universe.yml` | ✅ 실사용 |
 | └ 공동주택 **상세**정보(주차대수) | 〃 | `aptDetailCli.ts` | `data/datasets/apt-detail/{kapt}.json` | `apt-detail.yml` (`data/apt-detail-queue.txt`) | ✅ 2026-08-16 신설 |
 | **카카오 로컬(가장 가까운 역)** | `KAKAO_REST_KEY` | `aptStationCli.ts` · `parse/station.ts` | `data/datasets/apt-station/{kapt}.json` | `apt-station.yml` (`data/apt-station-queue.txt`) | ✅ 2026-08-16 신설 |
+| **외국인 주택소유통계(부동산원·KOSIS)** | `KOSIS_API_KEY` | `foreignHouseCli.ts` (표는 `sources/kosis.ts`) | `data/datasets/foreign-house-nat.json` · 결과기록 `data/foreign-house-last.md` | `foreign-house-collect.yml` `23 2 12 1,4,7,10 *` + `data/foreign-house-queue.txt` | ✅ 2026-09-08 신설·수집 확인 |
 | **한국부동산원 R-ONE (월간)** | `RONE_API_KEY` **또는** `REB_API_KEY` | `sources/rebIndex.ts` · `rebCli.ts` | `data/datasets/reb-rent-index.json` | `reb-collect.yml` `0 2 16 * *` | ✅ 실사용 |
 | **한국부동산원 R-ONE (주간)** | 〃 | `sources/rebWeekly.ts` · `rebWeeklyCli.ts` | `data/datasets/reb-weekly-index.json` | `reb-weekly-collect.yml` `7 1 * * 5` + `data/reb-weekly-queue.txt` | ✅ 실사용 |
 | **금감원 DART** | `DART_API_KEY` | `sources/dartSalary.ts` · `dartCli.ts` | `data/datasets/avg-salary-2025.json` | `dart-salary.yml` (dispatch 전용) | ✅ 실사용(수동) |
@@ -213,6 +214,7 @@ ECOS 는 같은 통계표(`161Y006`)에 **`BBHA16 [참고] 구 M2(평잔, 원계
 | `data/apt-station-queue.txt` | `kapt=A42385801` (대장에 없으면 `addr="…" key=…`) | `apt-station.yml` |
 | `data/apt-detail-queue.txt` | `kapt=A42385801` — 주차대수 | `apt-detail.yml` |
 | `data/reb-weekly-queue.txt` | 아무 줄(변경이 방아쇠) | `reb-weekly-collect.yml` |
+| `data/foreign-house-queue.txt` | 아무 줄(변경이 방아쇠) | `foreign-house-collect.yml` |
 | `data/market-queue.txt` | 아무 줄 | `kr-market.yml` |
 | `data/seoul-probe-queue.txt` | 아무 줄 | `seoul-living-probe.yml` |
 | `data/geo-queue.txt` | `url=<geojson> tolerance=0.0004` | `sgg-geo-refresh.yml` |
