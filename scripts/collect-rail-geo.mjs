@@ -60,28 +60,44 @@ const OSM_NAMES = {
   daejang: ["대장홍대", "서부광역철도"],
 };
 
-const OVERPASS = process.env.OVERPASS_URL || "https://overpass-api.de/api/interpreter";
+/* 거울 여러 곳 — 한 곳이 504 를 뱉어도 탐사가 통째로 죽지 않게 한다.
+   (2026-09-08: overpass-api.de 가 504 Gateway Timeout 을 내 2차 탐사가 빈손으로 끝났다.) */
+const MIRRORS = process.env.OVERPASS_URL
+  ? [process.env.OVERPASS_URL]
+  : ["https://overpass-api.de/api/interpreter",
+     "https://overpass.kumi.systems/api/interpreter",
+     "https://overpass.osm.jp/api/interpreter"];
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function overpass(query) {
-  const res = await fetch(OVERPASS, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded", "User-Agent": "wirit-note-card-factory/1.0" },
-    body: "data=" + encodeURIComponent(query),
-  });
-  if (!res.ok) throw new Error(`Overpass ${res.status} ${res.statusText}`);
-  return res.json();
+  let last;
+  for (let round = 0; round < 2; round++)
+    for (const url of MIRRORS) {
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded", "User-Agent": "wirit-note-card-factory/1.0" },
+          body: "data=" + encodeURIComponent(query),
+        });
+        if (!res.ok) { last = new Error(`${url} → ${res.status} ${res.statusText}`); await sleep(3000); continue; }
+        return await res.json();
+      } catch (e) { last = e; await sleep(3000); }
+    }
+  throw new Error(`Overpass 전부 실패 — ${last?.message}`);
 }
 
 /** ① 이름으로 관계·길을 찾는다. **정확 일치는 0건이었다**(run 34176303760) —
     OSM 이 "수도권 전철 신안산선" 처럼 다르게 부를 수 있어 **부분 일치**로 넓힌다. */
+const B = `${BOX.minLat},${BOX.minLon},${BOX.maxLat},${BOX.maxLon}`;
 const qFind = (keys) => `[out:json][timeout:120];
-(${keys.map((k) => `relation["name"~"${k}"];way["name"~"${k}"];`).join("")});
+(${keys.map((k) => `relation["name"~"${k}"](${B});way["name"~"${k}"](${B});`).join("")});
 out tags;`;
 
 /** ② **노선 길의 형상**을 받는다 — railway=construction|proposed 이고 이름이 맞는 길만.
     (1차 탐사에서 신안산선은 railway=construction 길 13개로 들어 있었다. run 34176451359) */
 const qLines = (keys) => `[out:json][timeout:180];
-(${keys.map((k) => `way["railway"~"^(construction|proposed|rail|subway|light_rail)$"]["name"~"${k}"];`).join("")});
+(${keys.map((k) => `way["railway"~"^(construction|proposed|rail|subway|light_rail)$"]["name"~"${k}"](${B});`).join("")});
 out geom tags;`;
 
 /** ③ 역 점 — 이름으로 딱 찍어 묻는 건 **0건이었다**(run 34176451359). 이름 규칙을 모르는 채
@@ -132,7 +148,7 @@ async function probe() {
         w: Math.min(...all.map((p) => p.lon)), e: Math.max(...all.map((p) => p.lon)),
       };
     } catch (e) { lineWays = [{ error: String(e.message) }]; }
-    await new Promise((r2) => setTimeout(r2, 1500));
+    await sleep(1500);
 
     /* 그 상자 안의 철도역스러운 것 전부 — 이름 규칙을 눈으로 보려는 것이다. */
     let stationHits = [];
@@ -146,7 +162,7 @@ async function probe() {
                          lat: e.lat ?? e.center?.lat, lon: e.lon ?? e.center?.lon, type: e.type, id: e.id }))
           .filter((x) => x.lat != null);
       } catch (e) { stationHits = [{ error: String(e.message) }]; }
-      await new Promise((r2) => setTimeout(r2, 1500));
+      await sleep(1500);
     }
 
     const hitNames = new Set(stationHits.flatMap((h) => { const n2 = h.name || ""; return [n2, n2.replace(/역$/, "")]; }));
@@ -158,7 +174,7 @@ async function probe() {
       역점: { 찾음: stationHits.length, 우리역중일치: ours0.filter((n) => hitNames.has(n)).length,
              놓친역: ours0.filter((n) => !hitNames.has(n)), 표본: stationHits },
     });
-    await new Promise((r2) => setTimeout(r2, 1500));
+    await sleep(1500);
   }
 
   mkdirSync(join(ROOT, "data/geo"), { recursive: true });
