@@ -85,7 +85,11 @@ jobs:
         run: |
           git config user.name "wirit-bot"
           git config user.email "noreply@github.com"
-          git add -- data/datasets/foreign-house-nat.json data/foreign-house-last.md
+          # ⚠️ 수집이 실패하면 데이터셋 파일이 아예 없다. `git add -- <없는 경로>` 는 fatal(128)로
+          #    죽어서 **실패 기록조차 커밋되지 않는다** — 눈을 만들어 놓고 그 눈을 못 뜨는 자리였다.
+          #    그래서 있는 것만 담는다.
+          git add -- data/foreign-house-last.md
+          [ -f data/datasets/foreign-house-nat.json ] && git add -- data/datasets/foreign-house-nat.json
           if git diff --cached --quiet; then
             echo "변경 없음 — 새 공표분이 아직 없습니다"
           else
