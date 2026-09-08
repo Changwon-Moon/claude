@@ -55,18 +55,37 @@ jobs:
           fi
           echo "키 확인됨"
 
+      # ⚠️ 세션은 Actions 로그를 못 읽는다(로그 blob 호스트가 allowlist 밖이다).
+      #    그래서 성공이든 실패든 **결과를 저장소 파일에 적는다** — 이 파일이 유일한 눈이다.
       - name: 국적별 외국인 주택소유 수집
+        id: collect
+        continue-on-error: true
         env:
           KOSIS_API_KEY: ${{ secrets.KOSIS_API_KEY }}
         run: |
+          set -o pipefail
           pnpm --filter @wirit/collectors exec tsx src/foreignHouseCli.ts \
-            --out "$GITHUB_WORKSPACE/data/datasets/foreign-house-nat.json"
+            --out "$GITHUB_WORKSPACE/data/datasets/foreign-house-nat.json" 2>&1 | tee /tmp/fh.log
+          echo "rc=$?" >> "$GITHUB_OUTPUT"
+
+      - name: 결과 기록
+        run: |
+          {
+            echo "# 외국인 주택소유통계 수집 — 마지막 실행"
+            echo
+            echo "- 실행(UTC): $(date -u +%Y-%m-%dT%H:%M:%SZ) · run ${{ github.run_id }}"
+            echo "- 결과: ${{ steps.collect.outcome }}"
+            echo
+            echo '```'
+            tail -c 6000 /tmp/fh.log 2>/dev/null || echo "(로그 없음)"
+            echo '```'
+          } > data/foreign-house-last.md
 
       - name: 데이터셋 커밋
         run: |
           git config user.name "wirit-bot"
           git config user.email "noreply@github.com"
-          git add -- data/datasets/foreign-house-nat.json
+          git add -- data/datasets/foreign-house-nat.json data/foreign-house-last.md
           if git diff --cached --quiet; then
             echo "변경 없음 — 새 공표분이 아직 없습니다"
           else
@@ -74,3 +93,9 @@ jobs:
             git pull --rebase --autostash origin ${GITHUB_REF_NAME}
             git push origin HEAD:${GITHUB_REF_NAME}
           fi
+
+      - name: 수집이 실패했으면 여기서 빨간불
+        if: steps.collect.outcome != 'success'
+        run: |
+          echo "::error::수집 실패 — 원인은 data/foreign-house-last.md 에 적혀 있습니다"
+          exit 1
