@@ -91,7 +91,23 @@ export function foldMonth(
     if (!type) continue;
     if (t.dealingGbn === "직거래") continue;
     if (!inUniverse(t.umdNm, t.aptNm, t.jibun)) continue;
-    const k = `${t.umdNm}|${t.aptNm}|${type}`;
+    /* ── 📐 **같은 전용면적끼리 묶는다** (오너 2026-09-08 "같은 면적은 묶어서 정리")
+     *
+     * 예전 열쇠는 `동|단지|타입` 이었다. 그러면 한 「59타입」 안에 전용 59.9068 과 59.9595 가
+     * **한 줄로 접혀** 둘 중 비싼 쪽만 남는다. 09-08 그랑시티자이2차에서 그게 드러났다:
+     *   · 59.9068 → 2024-11 에 5.7억
+     *   · 59.9595 → 오늘 5.6억 (그 면적의 직전 최고는 5.5억 · 2023-08)
+     * 신고가 **판정은 전용면적 단위**로 보고 「신고가 맞다」 했는데, **곡선은 타입 단위**라
+     * 「위에 5.7억이 있다」고 했다. 둘 다 제 기준으로는 맞고, 카드에서만 어긋난다.
+     *
+     * ⚠️ 곡선 파일 163개 중 **97개(59%)** 가 한 타입에 전용면적을 둘 이상 묶고 있었다.
+     *    바뀌는 것은 **앞으로 접는 달**뿐이고, 이미 확정·발행한 카드는 소급하지 않는다
+     *    (오너 2026-09-03). 기준: docs/guides/신고가-카드-기준.md
+     *
+     * ⚠️ 줄이 늘어도 **읽는 쪽은 그대로다.** `pickRow` 가 면적을 안 받으면 예전처럼
+     *    타입 전체의 최고가와 **합산 건수**를 돌려준다 — 옛 곡선의 값이 흔들리지 않는다.
+     */
+    const k = `${t.umdNm}|${t.aptNm}|${type}|${t.area}`;
     const cur = best.get(k);
     if (!cur) {
       best.set(k, {
@@ -106,14 +122,33 @@ export function foldMonth(
     }
   }
   /* 줄 순서를 고정한다 — 같은 입력이면 같은 파일이어야 git 이 헛되이 안 바뀐다 */
+  /* 줄 순서를 고정한다 — 같은 입력이면 같은 파일이어야 git 이 헛되이 안 바뀐다.
+     면적이 열쇠에 들어왔으므로 마지막 열쇠로 면적까지 본다(같은 단지 안에서 오르내리지 않게). */
   return [...best.values()].sort((a, b) =>
-    a.umd === b.umd ? (a.apt === b.apt ? a.type.localeCompare(b.type) : a.apt.localeCompare(b.apt)) : a.umd.localeCompare(b.umd),
+    a.umd === b.umd
+      ? a.apt === b.apt
+        ? a.type === b.type
+          ? a.area - b.area
+          : a.type.localeCompare(b.type)
+        : a.apt.localeCompare(b.apt)
+      : a.umd.localeCompare(b.umd),
   );
 }
+
+/** 전용면적이 같다고 볼 오차 — 대장·실거래 표기가 소수점에서 흔들린다 */
+export const AREA_EPS = 0.01;
 
 /**
  * 캐시에서 한 단지·한 타입의 그 달 값을 꺼낸다.
  * `sameApt`(이름 잇기)은 곡선 쪽에서 넘겨받는다 — 규칙을 여기 복사하지 않는다.
+ *
+ * ── `wantArea` (2026-09-08)
+ * 주면 **그 전용면적의 줄만** 본다 — 신고가 판정과 같은 잣대다(오너 "같은 면적은 묶어서").
+ * 안 주면 **예전 그대로** 타입 전체의 최고가를 돌려준다. 이 갈림길이 있어야
+ * 이미 확정·발행한 곡선이 소급해 바뀌지 않는다.
+ *
+ * ⚠️ `count` 는 **합산해서** 돌려준다. 접는 열쇠에 면적이 들어가 줄이 쪼개졌지만,
+ *    「그 달 그 칸의 거래 건수」라는 뜻은 그대로여야 옛 곡선의 숫자가 안 흔들린다.
  */
 export function pickRow(
   rows: MonthRow[],
@@ -121,15 +156,19 @@ export function pickRow(
   type: string,
   umdNm: string | undefined,
   sameApt: (a: string, b: string) => boolean,
+  wantArea?: number | null,
 ): MonthRow | null {
   let best: MonthRow | null = null;
+  let count = 0;
   for (const r of rows) {
     if (r.type !== type) continue;
     if (umdNm && r.umd !== umdNm) continue;
     if (!sameApt(r.apt, aptNm)) continue;
+    if (wantArea != null && Math.abs(r.area - wantArea) > AREA_EPS) continue;
+    count += r.count;
     if (!best || r.max > best.max) best = r;
   }
-  return best;
+  return best ? { ...best, count } : null;
 }
 
 /**
