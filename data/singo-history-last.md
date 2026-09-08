@@ -10,132 +10,84 @@
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41290 --apt '과천자이' --umd '별양동' --type 59 --from 202001
 
-과천자이 · 전용 59타입 · 41290 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41290-과천자이-59.json
-거래 있던 달 30/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 22.15억 (2026-08-24 · 전용 59.95㎡ 19층)
+⏭ 이미 있음 — 41290-과천자이-59.json (다시 받으려면 force=1)
 
 ── DMC래미안e편한세상 전용 84타입 (11410)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 11410 --apt 'DMC래미안e편한세상' --umd '북가좌동' --type 84 --from 202001
 
-DMC래미안e편한세상 · 전용 84타입 · 11410 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/11410-DMC래미안e편한세상-84.json
-거래 있던 달 66/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 16억 (2026-09-07 · 전용 84.95㎡ 16층)
+⏭ 이미 있음 — 11410-DMC래미안e편한세상-84.json (다시 받으려면 force=1)
 
 ── 동아1 전용 59타입 (11530)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 11530 --apt '동아1' --umd '신도림동' --type 59 --from 202001
 
-동아1 · 전용 59타입 · 11530 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/11530-동아1-59.json
-거래 있던 달 45/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 14.2억 (2026-09-04 · 전용 59.978㎡ 25층)
+⏭ 이미 있음 — 11530-동아1-59.json (다시 받으려면 force=1)
 
 ── 한진한화그랑빌 전용 84타입 (11350)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 11350 --apt '한진한화그랑빌' --umd '월계동' --type 84 --from 202001
 
-한진한화그랑빌 · 전용 84타입 · 11350 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/11350-한진한화그랑빌-84.json
-거래 있던 달 69/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 12.5억 (2026-08-07 · 전용 84.97㎡ 14층)
+⏭ 이미 있음 — 11350-한진한화그랑빌-84.json (다시 받으려면 force=1)
 
 ── 이수브라운스톤돈암 전용 84타입 (11290)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 11290 --apt '이수브라운스톤돈암' --umd '돈암동' --type 84 --from 202001
 
-이수브라운스톤돈암 · 전용 84타입 · 11290 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/11290-이수브라운스톤돈암-84.json
-거래 있던 달 52/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 11.97억 (2026-08-26 · 전용 84.97㎡ 18층)
+⏭ 이미 있음 — 11290-이수브라운스톤돈암-84.json (다시 받으려면 force=1)
 
 ── 매화마을공무원2 전용 59타입 (41135)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41135 --apt '매화마을공무원2' --umd '야탑동' --type 59 --from 202001
 
-매화마을공무원2 · 전용 59타입 · 41135 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41135-매화마을공무원2-59.json
-거래 있던 달 64/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 11.65억 (2026-08-18 · 전용 58.71㎡ 10층)
+⏭ 이미 있음 — 41135-매화마을공무원2-59.json (다시 받으려면 force=1)
 
 ── 광명해모로이연 전용 84타입 (41210)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41210 --apt '광명해모로이연' --umd '광명동' --type 84 --from 202001
 
-광명해모로이연 · 전용 84타입 · 41210 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41210-광명해모로이연-84.json
-거래 있던 달 55/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 11억 (2026-08-08 · 전용 84.995㎡ 11층)
+⏭ 이미 있음 — 41210-광명해모로이연-84.json (다시 받으려면 force=1)
 
 ── 수원센트럴아이파크자이 전용 84타입 (41115)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41115 --apt '수원센트럴아이파크자이' --umd '인계동' --type 84 --from 202001
 
-수원센트럴아이파크자이 · 전용 84타입 · 41115 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41115-수원센트럴아이파크자이-84.json
-거래 있던 달 17/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 10억 (2026-09-01 · 전용 84.99㎡ 12층)
+⏭ 이미 있음 — 41115-수원센트럴아이파크자이-84.json (다시 받으려면 force=1)
 
 ── 수원센트럴아이파크자이 전용 59타입 (41115)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41115 --apt '수원센트럴아이파크자이' --umd '인계동' --type 59 --from 202001
 
-수원센트럴아이파크자이 · 전용 59타입 · 41115 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41115-수원센트럴아이파크자이-59.json
-거래 있던 달 22/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 8.1억 (2026-09-05 · 전용 59.98㎡ 8층)
+⏭ 이미 있음 — 41115-수원센트럴아이파크자이-59.json (다시 받으려면 force=1)
 
 ── 래미안노블클래스1단지 전용 59타입 (41115)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41115 --apt '래미안노블클래스1단지' --umd '인계동' --type 59 --from 202001
 
-래미안노블클래스1단지 · 전용 59타입 · 41115 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41115-래미안노블클래스1단지-59.json
-거래 있던 달 47/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 6.9억 (2026-09-01 · 전용 59.99㎡ 12층)
+⏭ 이미 있음 — 41115-래미안노블클래스1단지-59.json (다시 받으려면 force=1)
 
 ── 원천레이크파크 전용 59타입 (41117)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '원천레이크파크' --umd '원천동' --type 59 --from 202001
 
-원천레이크파크 · 전용 59타입 · 41117 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41117-원천레이크파크-59.json
-거래 있던 달 73/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 6.08억 (2026-09-04 · 전용 59.99㎡ 14층)
+⏭ 이미 있음 — 41117-원천레이크파크-59.json (다시 받으려면 force=1)
 
 ── 중흥S-클래스에듀파크 전용 59타입 (41370)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41370 --apt '중흥S-클래스에듀파크' --umd '궐동' --type 59 --from 202001
 
-중흥S-클래스에듀파크 · 전용 59타입 · 41370 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41370-중흥S클래스에듀파크-59.json
-거래 있던 달 8/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 4.75억 (2026-09-08 · 전용 59.9784㎡ 9층)
+⏭ 이미 있음 — 41370-중흥S클래스에듀파크-59.json (다시 받으려면 force=1)
 
 ── 평촌센텀퍼스트 전용 59타입 (41173)
 
