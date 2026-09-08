@@ -78,17 +78,22 @@ const qFind = (keys) => `[out:json][timeout:120];
 (${keys.map((k) => `relation["name"~"${k}"];way["name"~"${k}"];`).join("")});
 out tags;`;
 
-/** ② 역 이름으로 **점을 직접** 찾는다 — 사실 카드가 필요한 건 선형보다 이 좌표다.
-    수도권 상자 안에서 "○○역" 이라는 이름의 철도 관련 점/면을 본다. */
-const qStations = (names) => `[out:json][timeout:180];
-(${names.map((n) => `node["name"~"^${n}역$"](${BOX.minLat},${BOX.minLon},${BOX.maxLat},${BOX.maxLon});` +
-                    `way["name"~"^${n}역$"](${BOX.minLat},${BOX.minLon},${BOX.maxLat},${BOX.maxLon});`).join("")});
-out center tags;`;
+/** ② **노선 길의 형상**을 받는다 — railway=construction|proposed 이고 이름이 맞는 길만.
+    (1차 탐사에서 신안산선은 railway=construction 길 13개로 들어 있었다. run 34176451359) */
+const qLines = (keys) => `[out:json][timeout:180];
+(${keys.map((k) => `way["railway"~"^(construction|proposed|rail|subway|light_rail)$"]["name"~"${k}"];`).join("")});
+out geom tags;`;
 
-/** 관계 하나의 멤버와 형상을 통째로 받는다. */
-const qGeom = (id) => `[out:json][timeout:180];
-relation(${id});
-out body geom;`;
+/** ③ 역 점 — 이름으로 딱 찍어 묻는 건 **0건이었다**(run 34176451359). 이름 규칙을 모르는 채
+    묻고 있었던 것이다. 그래서 **노선 주변 상자 안의 철도역스러운 것을 전부 긁어** 이름을 본다.
+    이 순서가 맞다 — 모르는 것을 물을 땐 좁게 묻지 말고 넓게 긁어 무엇이 있는지부터 본다. */
+const qStationsInBox = (b) => `[out:json][timeout:180];
+(
+  node["railway"~"^(station|halt|construction|proposed)$"](${b.s},${b.w},${b.n},${b.e});
+  way["railway"~"^(station|halt|construction|proposed)$"]["name"](${b.s},${b.w},${b.n},${b.e});
+  node["public_transport"="station"](${b.s},${b.w},${b.n},${b.e});
+);
+out center tags;`;
 
 const doc = JSON.parse(readFileSync(join(ROOT, "data/datasets/sudo-rail-2026-09.json"), "utf8"));
 const lines = doc.lines.filter((L) => (ONLY ? L.key === ONLY : true));
@@ -107,56 +112,51 @@ async function probe() {
     try { found = await overpass(qFind(names)); }
     catch (e) { out.push({ key: L.key, name: L.name, error: String(e.message) }); continue; }
 
-    /* 역 점을 직접 찾아 본다 — 우리 역 이름 그대로. */
-    const ours0 = ourStations(L);
-    let stationHits = [];
-    try {
-      const sj = await overpass(qStations(ours0));
-      stationHits = (sj.elements || []).map((e) => ({
-        name: e.tags?.name,
-        railway: e.tags?.railway, construction: e.tags?.construction || e.tags?.["construction:railway"],
-        lat: e.lat ?? e.center?.lat, lon: e.lon ?? e.center?.lon,
-        type: e.type, id: e.id,
-      })).filter((x) => x.lat != null);
-    } catch (e) { stationHits = [{ error: String(e.message) }]; }
-    await new Promise((r2) => setTimeout(r2, 1500));
-
     const rels = (found.elements || []).map((e) => ({
-      id: e.id, type: e.tags?.type, route: e.tags?.route, railway: e.tags?.railway,
+      id: e.id, kind: e.type, type: e.tags?.type, route: e.tags?.route, railway: e.tags?.railway,
       state: e.tags?.state || e.tags?.construction, name: e.tags?.name,
     }));
+    const ours0 = ourStations(L);
 
-    /* 관계마다 역 이름을 세어 본다 — 우리 목록과 몇 개나 맞는지가 판단의 전부다. */
-    const detail = [];
-    for (const r of rels.slice(0, 6)) {
-      let g;
-      try { g = await overpass(qGeom(r.id)); }
-      catch (e) { detail.push({ id: r.id, error: String(e.message) }); continue; }
-      const rel = (g.elements || []).find((e) => e.type === "relation" && e.id === r.id);
-      const members = rel?.members || [];
-      const stops = members
-        .filter((m) => m.type === "node" && /stop|station|halt/.test(m.role || ""))
-        .length;
-      const nodeNames = (g.elements || [])
-        .filter((e) => e.type === "node" && e.tags?.name)
-        .map((e) => e.tags.name);
-      const ways = members.filter((m) => m.type === "way").length;
-      const pts = members.filter((m) => m.type === "way" && m.geometry).reduce((a, m) => a + m.geometry.length, 0);
-      const ours = ourStations(L);
-      const matched = ours.filter((n) => nodeNames.some((x) => x.replace(/역$/, "") === n));
-      detail.push({
-        id: r.id, ways, pts, stopRoles: stops,
-        namedNodes: nodeNames.length,
-        우리역: ours.length, 일치: matched.length,
-        놓친역: ours.filter((n) => !matched.includes(n)),
-      });
-      await new Promise((r2) => setTimeout(r2, 1500)); // Overpass 예의
+    /* 노선 길의 형상 — 이게 지도에 그릴 선이다. */
+    let lineWays = [], bbox = null;
+    try {
+      const lj = await overpass(qLines(names));
+      lineWays = (lj.elements || [])
+        .filter((e) => e.type === "way" && e.geometry && e.tags?.name && names.some((k) => e.tags.name.includes(k)))
+        .map((e) => ({ id: e.id, name: e.tags.name, railway: e.tags.railway, pts: e.geometry.length,
+                       geometry: e.geometry }));
+      const all = lineWays.flatMap((w) => w.geometry);
+      if (all.length) bbox = {
+        s: Math.min(...all.map((p) => p.lat)), n: Math.max(...all.map((p) => p.lat)),
+        w: Math.min(...all.map((p) => p.lon)), e: Math.max(...all.map((p) => p.lon)),
+      };
+    } catch (e) { lineWays = [{ error: String(e.message) }]; }
+    await new Promise((r2) => setTimeout(r2, 1500));
+
+    /* 그 상자 안의 철도역스러운 것 전부 — 이름 규칙을 눈으로 보려는 것이다. */
+    let stationHits = [];
+    if (bbox) {
+      const pad = 0.02;
+      try {
+        const sj = await overpass(qStationsInBox({ s: bbox.s - pad, n: bbox.n + pad, w: bbox.w - pad, e: bbox.e + pad }));
+        stationHits = (sj.elements || [])
+          .filter((e) => e.tags?.name)
+          .map((e) => ({ name: e.tags.name, railway: e.tags.railway, pt: e.tags.public_transport,
+                         lat: e.lat ?? e.center?.lat, lon: e.lon ?? e.center?.lon, type: e.type, id: e.id }))
+          .filter((x) => x.lat != null);
+      } catch (e) { stationHits = [{ error: String(e.message) }]; }
+      await new Promise((r2) => setTimeout(r2, 1500));
     }
-    const hitNames = new Set(stationHits.map((h) => (h.name || "").replace(/역$/, "")));
+
+    const hitNames = new Set(stationHits.flatMap((h) => { const n2 = h.name || ""; return [n2, n2.replace(/역$/, "")]; }));
     out.push({
-      key: L.key, name: L.name, 우리역수: ours0.length, 관계: rels, 상세: detail,
+      key: L.key, name: L.name, 우리역수: ours0.length, 관계: rels,
+      선형: { 길수: lineWays.length, 점수: lineWays.reduce((a2, w) => a2 + (w.pts || 0), 0), 상자: bbox,
+             길: lineWays.map((w) => ({ id: w.id, name: w.name, railway: w.railway, pts: w.pts })) },
+      좌표: lineWays.filter((w) => w.geometry).map((w) => ({ id: w.id, railway: w.railway, g: w.geometry })),
       역점: { 찾음: stationHits.length, 우리역중일치: ours0.filter((n) => hitNames.has(n)).length,
-             놓친역: ours0.filter((n) => !hitNames.has(n)), 표본: stationHits.slice(0, 40) },
+             놓친역: ours0.filter((n) => !hitNames.has(n)), 표본: stationHits },
     });
     await new Promise((r2) => setTimeout(r2, 1500));
   }
@@ -170,16 +170,15 @@ async function probe() {
     if (o.error) { console.log(`❌ ${o.name} — ${o.error}`); continue; }
     console.log(`\n${o.name} (우리 역 ${o.우리역수}개) — 관계 ${o.관계.length}건`);
     for (const r of o.관계) console.log(`   rel ${r.id} · type=${r.type} route=${r.route} railway=${r.railway} state=${r.state ?? "-"} · ${r.name}`);
+    if (o.선형) {
+      console.log(`   [선형] 길 ${o.선형.길수}개 · 점 ${o.선형.점수}개` + (o.선형.상자 ? ` · 상자 ${o.선형.상자.s.toFixed(3)}~${o.선형.상자.n.toFixed(3)}N ${o.선형.상자.w.toFixed(3)}~${o.선형.상자.e.toFixed(3)}E` : " · 상자 없음"));
+      for (const w of o.선형.길.slice(0, 20)) console.log(`      way ${w.id} railway=${w.railway} 점${w.pts} · ${w.name}`);
+    }
     if (o.역점) {
       console.log(`   [역 점] OSM 에서 ${o.역점.찾음}건 찾음 · 우리 역과 일치 ${o.역점.우리역중일치}/${o.우리역수}`);
       if (o.역점.놓친역.length) console.log(`      못 찾은 역: ${o.역점.놓친역.join(", ")}`);
       for (const h of (o.역점.표본 || []).slice(0, 25))
         console.log(`      ${h.name} ${h.lat?.toFixed(5)},${h.lon?.toFixed(5)} railway=${h.railway ?? "-"} constr=${h.construction ?? "-"}`);
-    }
-    for (const d of o.상세) {
-      if (d.error) { console.log(`   rel ${d.id} → ${d.error}`); continue; }
-      console.log(`   rel ${d.id} → way ${d.ways}개(점 ${d.pts}) · 이름있는 노드 ${d.namedNodes} · 우리역 ${d.일치}/${d.우리역}`);
-      if (d.놓친역?.length) console.log(`      놓친 역: ${d.놓친역.join(", ")}`);
     }
   }
   console.log(`\n📄 ${path}`);
