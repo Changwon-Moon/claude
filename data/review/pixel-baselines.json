@@ -103,11 +103,11 @@
       "label": "rail-sinansan",
       "title": "신안산선 언제 개통하지 (공정률 72.58% · 2028년 말 목표)",
       "state": "오너 확정",
-      "at": "2026-09-07",
+      "at": "2026-09-08",
       "builder": "rail-line",
       "content": "data/content/2026-09-07/rail-sinansan.json",
       "png": "rail-sinansan-p1.png",
-      "md5": "e49a1f9f89e104f3ad8421752c291f03"
+      "md5": "534355c9ce00d970f62924ab69793878"
     },
     {
       "label": "rail-gtxa",
