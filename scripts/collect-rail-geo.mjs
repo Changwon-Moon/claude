@@ -47,15 +47,17 @@ const ONLY = onlyIdx >= 0 ? argv[onlyIdx + 1] : null;
 const BOX = { minLat: 36.8, maxLat: 38.1, minLon: 126.3, maxLon: 127.7 };
 
 /** OSM 에서 노선을 찾을 이름들. 한 노선이 여러 이름으로 들어가 있을 수 있어 배열로 둔다. */
+/* 부분 일치용 열쇠말 — 정확 이름이 아니라 **들어 있으면 잡히는** 조각으로 둔다.
+   (정확 일치 판본은 신안산선에서 0건이었다 — run 34176303760) */
 const OSM_NAMES = {
-  sinansan: ["신안산선"],
-  gtxa: ["수도권 광역급행철도 A선", "GTX-A", "GTX A선"],
-  gtxb: ["수도권 광역급행철도 B선", "GTX-B", "GTX B선"],
-  gtxc: ["수도권 광역급행철도 C선", "GTX-C", "GTX C선"],
-  indong: ["인덕원~동탄 복선전철", "인덕원동탄선", "인덕원~동탄선"],
-  wolpan: ["월곶~판교선", "월곶판교선"],
+  sinansan: ["신안산"],
+  gtxa: ["광역급행철도 A", "GTX-A", "GTX A"],
+  gtxb: ["광역급행철도 B", "GTX-B", "GTX B"],
+  gtxc: ["광역급행철도 C", "GTX-C", "GTX C"],
+  indong: ["인덕원"],
+  wolpan: ["월곶"],
   sinbundang: ["신분당선"],
-  daejang: ["대장홍대선", "서부광역철도"],
+  daejang: ["대장홍대", "서부광역철도"],
 };
 
 const OVERPASS = process.env.OVERPASS_URL || "https://overpass-api.de/api/interpreter";
@@ -70,10 +72,18 @@ async function overpass(query) {
   return res.json();
 }
 
-/** 이름으로 route/route_master 관계를 찾는다. 태그만 먼저 본다(가벼움). */
-const qFind = (names) => `[out:json][timeout:120];
-(${names.map((n) => `relation["name"="${n}"];relation["name:ko"="${n}"];`).join("")});
+/** ① 이름으로 관계·길을 찾는다. **정확 일치는 0건이었다**(run 34176303760) —
+    OSM 이 "수도권 전철 신안산선" 처럼 다르게 부를 수 있어 **부분 일치**로 넓힌다. */
+const qFind = (keys) => `[out:json][timeout:120];
+(${keys.map((k) => `relation["name"~"${k}"];way["name"~"${k}"];`).join("")});
 out tags;`;
+
+/** ② 역 이름으로 **점을 직접** 찾는다 — 사실 카드가 필요한 건 선형보다 이 좌표다.
+    수도권 상자 안에서 "○○역" 이라는 이름의 철도 관련 점/면을 본다. */
+const qStations = (names) => `[out:json][timeout:180];
+(${names.map((n) => `node["name"~"^${n}역$"](${BOX.minLat},${BOX.minLon},${BOX.maxLat},${BOX.maxLon});` +
+                    `way["name"~"^${n}역$"](${BOX.minLat},${BOX.minLon},${BOX.maxLat},${BOX.maxLon});`).join("")});
+out center tags;`;
 
 /** 관계 하나의 멤버와 형상을 통째로 받는다. */
 const qGeom = (id) => `[out:json][timeout:180];
@@ -96,6 +106,20 @@ async function probe() {
     let found;
     try { found = await overpass(qFind(names)); }
     catch (e) { out.push({ key: L.key, name: L.name, error: String(e.message) }); continue; }
+
+    /* 역 점을 직접 찾아 본다 — 우리 역 이름 그대로. */
+    const ours0 = ourStations(L);
+    let stationHits = [];
+    try {
+      const sj = await overpass(qStations(ours0));
+      stationHits = (sj.elements || []).map((e) => ({
+        name: e.tags?.name,
+        railway: e.tags?.railway, construction: e.tags?.construction || e.tags?.["construction:railway"],
+        lat: e.lat ?? e.center?.lat, lon: e.lon ?? e.center?.lon,
+        type: e.type, id: e.id,
+      })).filter((x) => x.lat != null);
+    } catch (e) { stationHits = [{ error: String(e.message) }]; }
+    await new Promise((r2) => setTimeout(r2, 1500));
 
     const rels = (found.elements || []).map((e) => ({
       id: e.id, type: e.tags?.type, route: e.tags?.route, railway: e.tags?.railway,
@@ -128,7 +152,12 @@ async function probe() {
       });
       await new Promise((r2) => setTimeout(r2, 1500)); // Overpass 예의
     }
-    out.push({ key: L.key, name: L.name, 우리역수: ourStations(L).length, 관계: rels, 상세: detail });
+    const hitNames = new Set(stationHits.map((h) => (h.name || "").replace(/역$/, "")));
+    out.push({
+      key: L.key, name: L.name, 우리역수: ours0.length, 관계: rels, 상세: detail,
+      역점: { 찾음: stationHits.length, 우리역중일치: ours0.filter((n) => hitNames.has(n)).length,
+             놓친역: ours0.filter((n) => !hitNames.has(n)), 표본: stationHits.slice(0, 40) },
+    });
     await new Promise((r2) => setTimeout(r2, 1500));
   }
 
@@ -141,6 +170,12 @@ async function probe() {
     if (o.error) { console.log(`❌ ${o.name} — ${o.error}`); continue; }
     console.log(`\n${o.name} (우리 역 ${o.우리역수}개) — 관계 ${o.관계.length}건`);
     for (const r of o.관계) console.log(`   rel ${r.id} · type=${r.type} route=${r.route} railway=${r.railway} state=${r.state ?? "-"} · ${r.name}`);
+    if (o.역점) {
+      console.log(`   [역 점] OSM 에서 ${o.역점.찾음}건 찾음 · 우리 역과 일치 ${o.역점.우리역중일치}/${o.우리역수}`);
+      if (o.역점.놓친역.length) console.log(`      못 찾은 역: ${o.역점.놓친역.join(", ")}`);
+      for (const h of (o.역점.표본 || []).slice(0, 25))
+        console.log(`      ${h.name} ${h.lat?.toFixed(5)},${h.lon?.toFixed(5)} railway=${h.railway ?? "-"} constr=${h.construction ?? "-"}`);
+    }
     for (const d of o.상세) {
       if (d.error) { console.log(`   rel ${d.id} → ${d.error}`); continue; }
       console.log(`   rel ${d.id} → way ${d.ways}개(점 ${d.pts}) · 이름있는 노드 ${d.namedNodes} · 우리역 ${d.일치}/${d.우리역}`);
