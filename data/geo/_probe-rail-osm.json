@@ -1,0 +1,13 @@
+{
+  "잰날": "2026-09-08",
+  "overpass": "https://overpass-api.de/api/interpreter",
+  "결과": [
+    {
+      "key": "sinansan",
+      "name": "신안산선",
+      "우리역수": 19,
+      "관계": [],
+      "상세": []
+    }
+  ]
+}
