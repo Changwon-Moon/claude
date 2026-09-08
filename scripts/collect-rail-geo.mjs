@@ -1,3 +1,7 @@
+/* ⚠️ **밀기 전에 여기서 한 번 돌린다** — `node scripts/collect-rail-geo.mjs --probe --only sinansan`.
+ *    이 컨테이너는 Overpass 가 막혀 있어 "전부 실패"로 끝나지만, **그 뒤 파일 쓰기까지 도달**한다.
+ *    2026-09-08 에 이걸 건너뛰어 OVERPASS→MIRRORS 개명 뒤 남은 참조 하나로 Actions 런이 죽었다.
+ *    네트워크가 없어도 잡히는 사고가 대부분이다. */
 /**
  * 수도권 건설중 철도 8개 노선의 **선형·역 좌표**를 OSM 에서 받아 온다.
  *
@@ -179,7 +183,7 @@ async function probe() {
 
   mkdirSync(join(ROOT, "data/geo"), { recursive: true });
   const path = join(ROOT, "data/geo/_probe-rail-osm.json");
-  writeFileSync(path, JSON.stringify({ 잰날: new Date().toISOString().slice(0, 10), overpass: OVERPASS, 결과: out }, null, 2) + "\n");
+  writeFileSync(path, JSON.stringify({ 잰날: new Date().toISOString().slice(0, 10), 거울: MIRRORS, 결과: out }, null, 2) + "\n");
 
   console.log("── OSM 탐사 결과 ──");
   for (const o of out) {
