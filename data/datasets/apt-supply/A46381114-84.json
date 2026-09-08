@@ -1,0 +1,37 @@
+{
+  "kaptCode": "A46381114",
+  "kaptName": "아이파크분당",
+  "type": "84",
+  "jibun": "10-1",
+  "exclusive": 84.96,
+  "commonResidential": 25.07,
+  "supply": 110.03,
+  "pyeong": 33.28,
+  "pyeongLabel": "33평",
+  "sampleDong": "201동",
+  "sampleHo": "2903",
+  "sampleCount": 24,
+  "ratio": 0.7722,
+  "parts": [
+    {
+      "purpose": "부대시설 / 계단,승강기",
+      "floor": "각층",
+      "area": 21.595
+    },
+    {
+      "purpose": "아파트 / 기계실,전기실,관리사무소,노인정,주민공동시설,경비실",
+      "floor": "지3~1층,3층",
+      "area": 3.475
+    }
+  ],
+  "excludedFromCommon": [
+    {
+      "purpose": "부대시설 / 지하주차장",
+      "area": 29.13
+    }
+  ],
+  "excludedNote": "대장이 「주건축물」로 적었지만 주차장·대피소는 기타공용이라 공급면적에서 뺐다(2026-09-05). 이 줄을 넣으면 전용 60㎡ 가 30평으로 나온다 — 같은 타입 72곳의 중앙값은 25평이다.",
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

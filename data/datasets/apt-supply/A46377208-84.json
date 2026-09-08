@@ -1,0 +1,56 @@
+{
+  "kaptCode": "A46377208",
+  "kaptName": "분당시범삼성한신아파트",
+  "type": "84",
+  "jibun": "87",
+  "exclusive": 84.69,
+  "commonResidential": 22.764,
+  "supply": 107.45,
+  "pyeong": 32.5,
+  "pyeongLabel": "33평",
+  "sampleDong": "115동",
+  "sampleHo": "1301호",
+  "sampleCount": 184,
+  "ratio": 0.7882,
+  "parts": [
+    {
+      "purpose": "부대시설 / 계단.복도",
+      "floor": "",
+      "area": 15.062
+    },
+    {
+      "purpose": "부대시설 / 지하층",
+      "floor": "",
+      "area": 6.838
+    },
+    {
+      "purpose": "부대시설 / 공급실",
+      "floor": "",
+      "area": 0.599
+    },
+    {
+      "purpose": "복리시설 / 노인정.관리사무실",
+      "floor": "",
+      "area": 0.185
+    },
+    {
+      "purpose": "독서실 / 독서실",
+      "floor": "",
+      "area": 0.08
+    }
+  ],
+  "excludedFromCommon": [
+    {
+      "purpose": "복리시설 / 법정초과지하주차장",
+      "area": 13.143
+    },
+    {
+      "purpose": "부대시설 / 지하대피소및주차장",
+      "area": 0.653
+    }
+  ],
+  "excludedNote": "대장이 「주건축물」로 적었지만 주차장·대피소는 기타공용이라 공급면적에서 뺐다(2026-09-05). 이 줄을 넣으면 전용 60㎡ 가 30평으로 나온다 — 같은 타입 72곳의 중앙값은 25평이다.",
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

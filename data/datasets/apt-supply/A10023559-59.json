@@ -1,0 +1,30 @@
+{
+  "kaptCode": "A10023559",
+  "kaptName": "평촌어바인퍼스트",
+  "type": "59",
+  "jibun": "1296",
+  "exclusive": 59.87,
+  "commonResidential": 25.556,
+  "supply": 85.43,
+  "pyeong": 25.84,
+  "pyeongLabel": "26평",
+  "sampleDong": "110동",
+  "sampleHo": "502",
+  "sampleCount": 186,
+  "ratio": 0.7008,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단실,전실,코어",
+      "floor": "각층 각층",
+      "area": 19.516
+    },
+    {
+      "purpose": "아파트 / 벽체",
+      "floor": "지상 5층",
+      "area": 6.04
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
