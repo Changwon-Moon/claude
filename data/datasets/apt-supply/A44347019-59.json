@@ -1,0 +1,30 @@
+{
+  "kaptCode": "A44347019",
+  "kaptName": "영통벽적골롯데",
+  "type": "59",
+  "jibun": "971-1",
+  "exclusive": 59.96,
+  "commonResidential": 13.559,
+  "supply": 73.52,
+  "pyeong": 22.24,
+  "pyeongLabel": "22평",
+  "sampleDong": "944동",
+  "sampleHo": "805호",
+  "sampleCount": 157,
+  "ratio": 0.8156,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단,복도,ELEV",
+      "floor": "1~20층",
+      "area": 11.4399
+    },
+    {
+      "purpose": "아파트 / 공용발코니",
+      "floor": "각층 각층",
+      "area": 2.119
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

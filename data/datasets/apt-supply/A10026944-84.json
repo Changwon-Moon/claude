@@ -1,0 +1,35 @@
+{
+  "kaptCode": "A10026944",
+  "kaptName": "위례센트럴자이",
+  "type": "84",
+  "jibun": "504",
+  "exclusive": 84.94,
+  "commonResidential": 30.28,
+  "supply": 115.22,
+  "pyeong": 34.85,
+  "pyeongLabel": "35평",
+  "sampleDong": "3216동",
+  "sampleHo": "1202",
+  "sampleCount": 43,
+  "ratio": 0.7372,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단실",
+      "floor": "지상 각층",
+      "area": 20.61
+    },
+    {
+      "purpose": "아파트 / 벽체",
+      "floor": "지상 12층",
+      "area": 6.62
+    },
+    {
+      "purpose": "아파트 / 지하계단실",
+      "floor": "각층 지2~지1",
+      "area": 3.05
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
