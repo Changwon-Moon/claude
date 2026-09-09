@@ -278,7 +278,11 @@ function buildOne(L) {
   const BDG_PAD = BDG_W ? 10 : 0;
   /* 한 행의 최대 폭 = 뱃지 구역 + 이름 + (가칭). 좌우 배치는 이 폭을 **양쪽에** 둔다. */
   const ROW_W = Math.round(BDG_W + BDG_PAD + maxNm * LBL_FS * 0.98);
-  const LEAD_W = 30;                       // 지시선이 최소한 이만큼은 보여야 어느 점인지 안다
+  /* 30 → 36 (오너 2026-09-09 "호수·중앙 지시선 위치 보정"). 30 이면 점 테두리(13)를 빼고
+     남는 가로가 17px 뿐이라, 라벨이 22px 아래로 밀린 역(중앙·호수)에서 지시선이
+     **17×22 짜리 급경사 토막**이 되어 어디를 가리키는지 안 보였다.
+     지금 지도는 세로가 병목이라 좌우를 조금 더 써도 지도가 안 줄어든다 — 공짜로 넓힌다. */
+  const LEAD_W = 36;                       // 지시선이 최소한 이만큼은 보여야 어느 점인지 안다
   const SIDE_W = ROW_W + LEAD_W;
   /* 위아래 여백 10 → 34 (오너 2026-09-09 "역 위아래 여백이 너무 없어졌네"). 끝 역의 이름이
      테두리에 붙어 숨이 막혔다. 지도가 그만큼 작아지지만 읽는 쪽이 편한 게 먼저다. */
@@ -530,20 +534,29 @@ function buildOne(L) {
          [점] ──수평── ╲45° ──10px── [뱃지·이름]
        가로 여유가 없으면(짧은 지시선) 그냥 대각 하나로 잇는다 — 억지로 세 토막을 만들면
        10px 짜리 조각이 생겨 지저분하다. */
-    const sx = p.x + p.side * 13;                 // 점 테두리에서 출발
     const dy = p.ly - p.y;
-    const run = Math.abs(endX - sx);
+    const sxH = p.x + p.side * 13;                // 가로로 나갈 때의 출발점(점 테두리)
+    const run = Math.abs(endX - sxH);
     const STUB = 10;
     let lead;
     if (Math.abs(dy) < 1.5) {
-      lead = `<path d="M${sx.toFixed(1)},${p.y.toFixed(1)}H${endX.toFixed(1)}"`;
-    } else if (run < STUB + 8) {
-      lead = `<path d="M${sx.toFixed(1)},${p.y.toFixed(1)}L${endX.toFixed(1)},${p.ly.toFixed(1)}"`;
+      lead = `<path d="M${sxH.toFixed(1)},${p.y.toFixed(1)}H${endX.toFixed(1)}"`;
     } else {
       const diag = Math.min(Math.abs(dy), run - STUB - 4);
-      const k1 = sx + p.side * (run - STUB - diag);
-      const k2 = endX - p.side * STUB;
-      lead = `<path d="M${sx.toFixed(1)},${p.y.toFixed(1)}H${k1.toFixed(1)}L${k2.toFixed(1)},${p.ly.toFixed(1)}H${endX.toFixed(1)}"`;
+      const leadOut = run - STUB - diag;          // 점에서 곧게 빠져나오는 길이
+      if (leadOut >= 10) {
+        /* 자리가 넉넉하다 — 곧게 빠져나와 45°로 꺾고 라벨 앞 10px 은 수평으로 (오너가 고른 모양) */
+        const k1 = sxH + p.side * leadOut, k2 = endX - p.side * STUB;
+        lead = `<path d="M${sxH.toFixed(1)},${p.y.toFixed(1)}H${k1.toFixed(1)}L${k2.toFixed(1)},${p.ly.toFixed(1)}H${endX.toFixed(1)}"`;
+      } else {
+        /* 자리가 없다 — 한 줄로 곧장 잇는다.
+           ⚠️ 이때 출발점을 **가로 테두리(sxH)** 에 두면 안 된다. 「중앙」은 그렇게 나가다
+              바로 위 「성포」의 역 표시를 뚫고 지나가 성포에서 뻗은 선처럼 보였다(2026-09-09).
+              **가는 방향의 테두리**에서 출발시키면 이웃 역을 비껴간다. */
+        const vx = endX - p.x, vy = p.ly - p.y, vL = Math.hypot(vx, vy) || 1;
+        const sx = p.x + (vx / vL) * 13, sy = p.y + (vy / vL) * 13;
+        lead = `<path d="M${sx.toFixed(1)},${sy.toFixed(1)}L${endX.toFixed(1)},${p.ly.toFixed(1)}"`;
+      }
     }
     lead += ` stroke="#9aa1ac" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
 
