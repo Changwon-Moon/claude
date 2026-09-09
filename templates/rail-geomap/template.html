@@ -166,10 +166,14 @@
         background: none; border: 0; border-radius: 0; box-shadow: none;
         display: grid; grid-template-columns: auto auto 1fr; column-gap: 30px; align-items: end;
       }
-      /* 각주는 지도 **위**로 온다 — 지도를 맨 아래까지 내리면 각주가 놓일 자리가 없다.
-         기호 설명이므로 지도 바로 위에서도 제 몫을 한다. */
+      /* 각주는 **지도 아래·푸터 위**다 (오너 2026-09-09: "인동선, 월판선도 이 문구가
+         푸터 위, 사진 아래 들어가야해"). 세로 판형이 이미 그 자리를 쓰므로 가로 판형만
+         달라서는 안 된다 — 캐러셀로 넘겨 볼 때 각주가 위아래로 튄다.
+         ⚠️ 한때 지도 위에 뒀다. "자리가 없다"고 적어 뒀는데 그건 틀린 진단이었다 —
+            지도 높이(빌더 WIDE 분기의 BH)를 각주 몫만큼 줄이면 된다.
+            판형을 바꿀 문제가 아니라 높이를 고칠 문제였다. */
       .rgm.is-wide .rgm-body { order: 2; height: auto; margin-top: 34px; display: flex; flex-direction: column; }
-      .rgm.is-wide .rgm-note { position: static; order: 0; margin: 0 0 10px; }
+      .rgm.is-wide .rgm-note { position: static; order: 2; margin: 18px 0 0; }
       .rgm.is-wide .rgm-map { order: 1; }
       .rgm.is-wide .rgm-track { width: 250px; }
       .rgm.is-wide .rgm-eta { margin: 0 0 4px; padding: 10px 15px; text-align: right; }
