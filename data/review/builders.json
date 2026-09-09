@@ -3572,6 +3572,16 @@
         "singo-아르테자이-59-0909"
       ],
       "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "danji-define-artia2",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-09-09",
+        "--only",
+        "ah-2026910233",
+        "--publish"
+      ]
     }
   ]
 }

@@ -1718,6 +1718,16 @@
         "singo-래미안노블클래스1단지-59:eeefc79faee0",
         "singo-원천레이크파크-59:d5ba003f473e"
       ]
+    },
+    {
+      "label": "danji-define-artia2",
+      "title": "🏙 노량진 무순위 줍줍 7세대 (드파인 아르티아 2차)",
+      "cards": [
+        "danji-define-artia2"
+      ],
+      "caption": "danji-define-artia2",
+      "note": "무순위(kind: remndr) 타입·분양가 판형. 세대수·일정은 청약홈 API(applyhomeNo 2026910233) 직접 반영, 잔여 7세대 = 084.0000B 2 + 109.8652A 5 로 API 공급과 일치(빌더 검산). 타입별 공급금액은 공고 공급금액표를 전재한 2차 출처 두 곳(dazabi·mhb-blog)이 일치 — 입주자모집공고문 PDF 대조 전까지 발행 금지.",
+      "state": "시안"
     }
   ]
 }

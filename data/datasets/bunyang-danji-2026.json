@@ -1756,6 +1756,105 @@
       "titleLines": null,
       "_gukpyeongWhy": "오피스텔은 발코니(서비스면적)가 없어 같은 전용면적이라도 아파트보다 좁다. 그래서 전용 114㎡ 가 아파트 국평 84㎡ 확장형과 실사용이 비슷한 구간이고, 업계가 이 구간을 \"아파텔 국평\"이라 부른다. 이데일리 르포(2026)도 114B 를 \"방 4개·욕실 2개, 실사용 약 40평\"이라 적었다. 카드에는 (국평) 한 낱말만 싣고 근거는 캡션이 받는다.",
       "noteSmall": true
+    },
+    {
+      "id": "ah-2026910233",
+      "slug": "define-artia2",
+      "kind": "remndr",
+      "name": "드파인 아르티아(2차)",
+      "location": "서울 동작구 노량진동",
+      "hook": "노량진",
+      "applyhomeNo": "2026910233",
+      "total": 7,
+      "buildings": 2,
+      "topFloor": 45,
+      "totalComplex": 404,
+      "moveIn": "2029-11",
+      "_scaleNote": "404세대·지하4층~지상45층·2개동(일반분양 171세대)은 1차 무순위 카드(define-artia-remndr) 때 확인한 값 그대로 — 이비엔뉴스·헤럴드경제·서울경제 등 SK에코플랜트 분양 보도 다수 일치. 청약홈은 규모를 안 준다.",
+      "_areasNote": "청약홈 무순위 공고 상세의 주택형별 공급세대수 원문(084.0000B 2 · 109.8652A 5)을 면적대로 옮겼다. 합 7 = 청약홈 공급 총 7세대와 일치(빌더가 다시 검산한다).",
+      "areas": [
+        {
+          "m2": 84,
+          "units": 2,
+          "types": [
+            "B"
+          ]
+        },
+        {
+          "m2": 109,
+          "units": 5,
+          "types": [
+            "A"
+          ]
+        }
+      ],
+      "mainArea": {
+        "m2": 109,
+        "units": 5
+      },
+      "company": "SK에코플랜트",
+      "source": {
+        "name": "한국부동산원 청약홈 무순위 입주자모집공고",
+        "via": "청약홈 API·공고 상세 (2026-09-09 열람) · 단지 규모는 분양 보도",
+        "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910233&pblancNo=2026910233"
+      },
+      "photo": {
+        "file": "define-artia.jpg",
+        "credit": "출처. SK에코플랜트",
+        "provided": "2026-08-11 오너 제공(항공뷰 조감도) · 1차 카드와 같은 단지라 같은 사진을 쓴다. 원본 1096×891, 원본은 _source/"
+      },
+      "logo": "define.png",
+      "price": {
+        "verified": false,
+        "_gate": "⚠️ 2차 출처다. 청약홈 무순위 상세 화면은 공급금액을 \"사업주체 문의\"로만 적는다. 다만 이번에는 공고 공급금액표를 그대로 옮긴 두 곳(dazabi·mhb-blog)이 최고가에서 정확히 일치한다 — 84B 266,000만원 · 109A 306,000만원. 그래도 입주자모집공고문 PDF 1차 대조 전까지 발행 금지(1차 카드와 같은 게이트).",
+        "sources": [
+          "dazabi.com/insurance_magazine/article.php?id=43891 (공고 공급금액표 전재 — 084.0000B 2세대 266,000만원 · 109.8652A 5세대 306,000만원)",
+          "mhb-blog.com/dongjak-define-artia-2nd-unranked-subscription-guide (84B 26.15~26.6억 · 109A 29.5~30.6억 — 최고가 일치)"
+        ],
+        "byType": [
+          {
+            "type": "84B",
+            "units": 2,
+            "won": 2660000000
+          },
+          {
+            "type": "109A",
+            "units": 5,
+            "won": 3060000000
+          }
+        ],
+        "_mainNote": "밴드의 주력 타입을 칠하지 않는다 — 이 카드에서 색이 있는 곳은 잔여 세대와 접수일 둘이다(청약분양-카드-기준.md §무순위). 양쪽을 칠하면 강조가 셋이 된다."
+      },
+      "oneLiner": "서울 거주 무주택세대구성원 · 청약통장 불필요",
+      "_oneLinerNote": "자격 요건은 모집공고문을 인용한 2차 출처(mhb-blog·위키트리)에서 옮겼다. 청약홈 무순위 상세 화면에는 신청자격 항목이 없다 — 발행 전 공고문 대조 대상(분양가와 같은 게이트).",
+      "_regNote": "투기과열지구 물량 — 당첨 시 재당첨 제한 10년 · 전매제한 3년 · 실거주 의무 없음(위키트리). 카드 아래 한 줄은 자격 요건이 기본이라 여기엔 안 싣는다.",
+      "_applyhomeSnapshot": {
+        "kind": "remndr",
+        "pblancNo": "2026910233",
+        "name": "드파인 아르티아(2차)",
+        "areaName": "서울",
+        "address": "서울특별시 동작구 노량진동 312-75번지 일대",
+        "supply": 7,
+        "noticeDate": "2026-09-08",
+        "receiptFrom": "2026-09-14",
+        "receiptTo": "2026-09-14",
+        "specialFrom": null,
+        "rank1From": null,
+        "moveInYm": "2029-11",
+        "announceDate": "2026-09-17",
+        "builder": "노량진2재정비촉진구역재개발정비사업조합",
+        "priceCap": false,
+        "speculative": false,
+        "homepage": "https://altia.skdefine.com",
+        "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910233&pblancNo=2026910233",
+        "score": 77,
+        "reasons": [
+          "서울",
+          "무순위",
+          "D-5",
+          "드파인"
+        ]
+      }
     }
   ]
 }
