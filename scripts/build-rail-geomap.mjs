@@ -529,8 +529,11 @@ function buildOne(L) {
     const gapTo = (sd) => {
       let best = Infinity;
       corridorPx.forEach((g, ci) => {
-        if (ci === p.cid) return;              // 제 선은 안 센다
         for (const q of g) {
+          /* 제 선은 **제 역 언저리만** 뺀다. 통째로 빼면 노선이 굽은 자리에서
+             라벨이 제 노선을 타고 넘는다(인동선 「원천」이 마커와 12% 겹쳤다, 2026-09-09).
+             55px 은 역 표시(반지름 12)와 지시선 출발 구간을 덮는 값이다. */
+          if (ci === p.cid && Math.hypot(q.x - x, q.y - y) < 55) continue;
           if (Math.abs(q.y - y) >= 13) continue;
           const dx = sd > 0 ? q.x - x : x - q.x;
           if (dx > 12 && dx < best) best = dx;
@@ -1037,7 +1040,9 @@ function buildOne(L) {
     /* 각주가 **지도의 표기 규칙**을 말한다. 카드만 캡처돼 돌 때 캡션이 안 따라가므로,
        모양으로 구분한 것(점선 지선·점선 링 가칭)은 여기서 한 번 설명한다. */
     note: [
-      provCount ? "◌ 점선 = 가칭역" : "",
+      /* 역명이 대부분 미확정인 노선은 **그 사실을 각주가 말한다.** 점선 링만으로는
+         「이 이름이 확정인 줄 알았다」를 막지 못한다(인동선 17역 중 확정은 셋뿐이다). */
+      provCount ? (L.nameNote ? `◌ 점선 = 가칭역 · ${L.nameNote}` : "◌ 점선 = 가칭역") : "",
       /* ⚠️ 「지선·공용 구간은 잇는 선이 개략」 한 줄은 오너 지시로 뺐다(2026-09-09).
          고지가 사라진 게 아니다 — 캡션의 「※ 노선 선형은 실제 좌표(OpenStreetMap),
          역 위치는 개략 표기입니다.」가 그대로 지고 있고, 그 줄은 가드 ⑤ 가 지킨다.
