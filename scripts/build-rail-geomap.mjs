@@ -47,7 +47,7 @@ if (!["a", "b", "c", "d"].includes(VARIANT)) throw new Error(`--variant 는 a|b|
    카드만 잘려 돌아다닐 때 푸터 워드마크가 같이 안 따라간다 — 지도 안에도 한 번 남긴다.
    none(기본) · soft(흐린 글자) · badge(잉크 알약) · outline(테두리 알약) · tile(대각 반복) */
 const wi = argv.indexOf("--wm");
-const WM = wi >= 0 ? argv[wi + 1] : "none";
+const WM = wi >= 0 ? argv[wi + 1] : "soft";   /* 오너가 2026-09-09 에 soft 를 두 곳으로 골랐다 */
 if (!["none", "soft", "badge", "outline", "tile"].includes(WM))
   throw new Error(`--wm 은 none|soft|badge|outline|tile 이다 (받은 값: ${WM})`);
 
@@ -671,6 +671,11 @@ function buildOne(L) {
     wmSvg = `<g transform="rotate(-26 ${(MAP_W / 2).toFixed(0)} ${(BODY_H / 2).toFixed(0)})">${t}</g>`;
   } else if (WM !== "none") {
     const WMW = WM === "soft" ? 210 : 196, WMH = WM === "soft" ? 34 : 40;
+    /* 구석 다섯 곳을 먼저 보고, 다 막혔으면 **판 전체를 훑는다.**
+       ⚠️ 구석만 보다가 신안산선에서 두 번째 자리를 못 찾았다(왼쪽 위=패널, 오른쪽 위=여의도,
+          왼쪽 아래=국제테마파크, 오른쪽 아래=정보 상자). 이 노선은 서해·의왕 쪽이 훤히 비는데
+          후보 목록에 그런 자리가 없었던 것뿐이다. 격자는 **가장자리부터** 본다 —
+          워터마크는 한가운데보다 변두리가 맞다. */
     const spots = [
       { x: 18 + WMW / 2, y: BODY_H - 18 - WMH / 2 },              // 왼쪽 아래
       { x: MAP_W - 18 - WMW / 2, y: 18 + WMH / 2 },               // 오른쪽 위
@@ -678,6 +683,16 @@ function buildOne(L) {
       { x: MAP_W - 18 - WMW / 2, y: BODY_H - 18 - WMH / 2 },      // 오른쪽 아래
       { x: MAP_W / 2, y: BODY_H - 18 - WMH / 2 },                 // 아래 가운데
     ];
+    {
+      const gx0 = 18 + WMW / 2, gx1 = MAP_W - 18 - WMW / 2;
+      const gy0 = 18 + WMH / 2, gy1 = BODY_H - 18 - WMH / 2;
+      const grid = [];
+      for (let gx = gx0; gx <= gx1; gx += 44)
+        for (let gy = gy0; gy <= gy1; gy += 38) grid.push({ x: gx, y: gy });
+      const cxm = MAP_W / 2, cym = BODY_H / 2;
+      grid.sort((a2, b2) => Math.hypot(b2.x - cxm, b2.y - cym) - Math.hypot(a2.x - cxm, a2.y - cym));
+      spots.push(...grid);
+    }
     const clear = (c) => {
       const b2 = { x0: c.x - WMW / 2, x1: c.x + WMW / 2, y0: c.y - WMH / 2, y1: c.y + WMH / 2 };
       const hit = (o) => b2.x1 > o.x0 - 10 && b2.x0 < o.x1 + 10 && b2.y1 > o.y0 - 8 && b2.y0 < o.y1 + 8;
@@ -685,15 +700,25 @@ function buildOne(L) {
       return [...trackPx, ...dotPx].every((q) =>
         !(q.x > b2.x0 - 12 && q.x < b2.x1 + 12 && q.y > b2.y0 - 12 && q.y < b2.y1 + 12));
     };
-    const at = spots.find(clear);
-    if (at) {
+    /* soft 는 **두 곳**에 넣는다(오너 2026-09-09). 흐린 글자는 한 곳만 두면 잘려 나갔을 때
+       같이 사라진다. 대신 둘이 몰려 있으면 안 되므로 **300px 넘게 떨어진 자리**만 짝으로 쓴다.
+       빈 구석이 하나뿐이면 하나만 넣는다 — 억지로 두 번째를 밀어 넣지 않는다. */
+    const want = WM === "soft" ? 2 : 1;
+    const chosen = [];
+    for (const c of spots) {
+      if (chosen.length >= want) break;
+      if (!clear(c)) continue;
+      if (chosen.some((q) => Math.hypot(q.x - c.x, q.y - c.y) < 300)) continue;
+      chosen.push(c);
+    }
+    for (const at of chosen) {
       if (WM === "soft") {
-        wmSvg = `<text x="${at.x.toFixed(1)}" y="${at.y.toFixed(1)}" font-size="30" font-weight="900" fill="#141821" opacity="0.17" letter-spacing="-0.6" text-anchor="middle" dominant-baseline="middle">@wirit_note</text>`;
+        wmSvg += `<text x="${at.x.toFixed(1)}" y="${at.y.toFixed(1)}" font-size="30" font-weight="900" fill="#141821" opacity="0.15" letter-spacing="-0.6" text-anchor="middle" dominant-baseline="middle">@wirit_note</text>`;
       } else if (WM === "badge") {
-        wmSvg = `<rect x="${(at.x - WMW / 2).toFixed(1)}" y="${(at.y - WMH / 2).toFixed(1)}" width="${WMW}" height="${WMH}" rx="${(WMH / 2).toFixed(1)}" fill="#141821" opacity="0.92"/>` +
+        wmSvg += `<rect x="${(at.x - WMW / 2).toFixed(1)}" y="${(at.y - WMH / 2).toFixed(1)}" width="${WMW}" height="${WMH}" rx="${(WMH / 2).toFixed(1)}" fill="#141821" opacity="0.92"/>` +
           `<text x="${at.x.toFixed(1)}" y="${at.y.toFixed(1)}" font-size="20" font-weight="800" fill="#ffffff" letter-spacing="-0.3" text-anchor="middle" dominant-baseline="central">@wirit_note<tspan fill="#2E6BFF">.</tspan></text>`;
       } else {
-        wmSvg = `<rect x="${(at.x - WMW / 2).toFixed(1)}" y="${(at.y - WMH / 2).toFixed(1)}" width="${WMW}" height="${WMH}" rx="${(WMH / 2).toFixed(1)}" fill="#fbfaf7" opacity="0.9" stroke="#141821" stroke-width="1.6"/>` +
+        wmSvg += `<rect x="${(at.x - WMW / 2).toFixed(1)}" y="${(at.y - WMH / 2).toFixed(1)}" width="${WMW}" height="${WMH}" rx="${(WMH / 2).toFixed(1)}" fill="#fbfaf7" opacity="0.9" stroke="#141821" stroke-width="1.6"/>` +
           `<text x="${at.x.toFixed(1)}" y="${at.y.toFixed(1)}" font-size="20" font-weight="800" fill="#141821" letter-spacing="-0.3" text-anchor="middle" dominant-baseline="central">@wirit_note<tspan fill="#2E6BFF">.</tspan></text>`;
       }
     }
