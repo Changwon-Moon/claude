@@ -12,8 +12,11 @@
        *    좌표 계산이 두 곳에 있으면 갈라진다(이 공장이 네 번 겪었다).
        * ② 노선색은 wirit-linecolor 를 붙인다 — 강조색 전수(auditHead)가 노선색을
        *    「규격 밖 빨강/코발트」로 잡던 사고가 2026-09-07 에 있었다.
-       * ③ 우측 정보는 지도 위에 **떠 있는 카드**가 아니라 지도 옆 세로 열이다.
-       *    지도 위에 얹으면 노선을 가린다 — 노선이 세로로 길어서 어디에 놔도 걸린다.
+       * ③ 정보는 지도 **위 가로 띠**다. 처음엔 지도 옆 세로 열이었는데, 환승 뱃지가 들어오자
+       *    이름 열이 362px 을 먹어 지도 그림 폭이 236px 까지 줄었다 — 세로로 긴 노선인데
+       *    **가로가 병목이라 세로 여백만 남는** 상태였다(2026-09-09).
+       *    정보를 위로 올리면 지도가 카드 폭을 다 쓰고, 그때부터는 세로가 병목이 되어
+       *    노선이 화면을 꽉 채운다. 오너의 "확대해줘"에 대한 제대로 된 답이 이쪽이다.
        * ⑤ 카드 루트에 font-taebaek-pretendard — CARD_CHECKLIST §2 가 **새 판형에 요구**한다
        *    (제목만 태백체, 숫자 포함 나머지는 Pretendard). 짝인 rail-line@1 은 이 규칙이
        *    생기기 전에 확정돼 안 붙어 있다 — 소급하면 확정 md5 가 깨지므로 그대로 둔다.
@@ -29,54 +32,53 @@
       }
       .rgm-title .ln { color: var(--lc); }
 
-      .rgm-body {
-        position: relative; margin: var(--bodyGap) 0 0;
-        height: var(--bodyH); display: grid;
-        /* ⚠️ var() 에 단위를 이어 붙일 수 없다 — `var(--mapW)px` 는 무효라 그리드가 통째로
-           무너지고 우측 열이 카드 밖으로 흘렀다(2026-09-09 첫 렌더). 단위는 빌더가 붙여 준다. */
-        grid-template-columns: var(--mapW) 1fr; column-gap: 24px;
+      /* ── 정보 띠 (가로) ── */
+      .rgm-bar {
+        margin: var(--barGap) 0 0; display: grid;
+        grid-template-columns: auto auto 1fr; column-gap: 26px; align-items: end;
+        border-bottom: 3px solid var(--wirit-ink); padding-bottom: 12px;
       }
       /* 지도 — SVG 는 빌더가 뷰박스까지 맞춰 준다. 여기선 자리만 준다. */
-      .rgm-map { position: relative; width: var(--mapW); height: var(--bodyH); overflow: hidden; }
+      .rgm-body { position: relative; margin: var(--bodyGap) 0 0; height: var(--bodyH); }
+      .rgm-map { position: relative; width: 100%; height: var(--bodyH); overflow: hidden; }
       .rgm-map svg { display: block; width: 100%; height: 100%; }
 
-      /* ── 우측 정보열 ── */
-      .rgm-side { display: flex; flex-direction: column; min-width: 0; }
-
-      .rgm-prog { border-bottom: 3px solid var(--wirit-ink); padding-bottom: 12px; }
+      .rgm-prog { }
       .rgm-prog .lb { font-size: 22px; font-weight: 800; color: var(--wirit-gray); letter-spacing: -0.02em; }
       /* ⚠️ line-height 를 1.05 로 두면 68px 글자가 제 상자보다 커져 위 라벨(.lb)을 3px 먹는다
          — designQa 가 잡았다(2026-09-09). rail-line 에서도 같은 자리에서 같은 일이 났었다.
          큰 숫자에 1.0 언저리 행간을 주는 습관이 이 공장에서 두 번째 사고다. */
       .rgm-prog .big {
-        display: block; margin-top: 6px; font-size: 68px; font-weight: 900;
+        display: block; margin-top: 4px; font-size: 62px; font-weight: 900;
         letter-spacing: -0.05em; color: var(--wirit-ink); line-height: 1.16;
       }
-      .rgm-prog .big i { font-size: 34px; font-style: normal; margin-left: 2px; }
+      .rgm-prog .big i { font-size: 31px; font-style: normal; margin-left: 2px; }
       .rgm-prog .as { display: block; margin-top: 4px; font-size: 18px; font-weight: 700; color: var(--wirit-gray); }
-      .rgm-track { margin-top: 10px; height: 10px; border-radius: 5px; background: var(--wirit-ink-06); overflow: hidden; }
+      .rgm-track { margin-top: 8px; width: 250px; height: 9px; border-radius: 5px; background: var(--wirit-ink-06); overflow: hidden; }
       .rgm-fill { height: 100%; border-radius: 5px; background: var(--lc); }
 
       /* 개통예상일 — rail-line 과 같은 카드 모양. 두 판형이 같은 소재를 다르게 보이면 안 된다. */
       .rgm-eta {
-        margin-top: 20px; border: 3px solid var(--lc); border-radius: 14px;
-        padding: 12px 16px; text-align: right;
+        border: 3px solid var(--lc); border-radius: 14px;
+        padding: 10px 15px; text-align: right; margin-bottom: 4px;
       }
       .rgm-eta .r { display: flex; align-items: baseline; justify-content: flex-end; gap: 9px; }
       .rgm-eta .r + .r { margin-top: 5px; }
-      .rgm-eta .k { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
+      /* nowrap 없으면 좁은 칸에서 「변경」이 「변/경」으로 접힌다(2026-09-09 띠 개편 직후). */
+      .rgm-eta .k { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; white-space: nowrap; }
       .rgm-eta .v { font-size: 25px; font-weight: 800; letter-spacing: -0.04em; white-space: nowrap; }
       .rgm-eta .was .k, .rgm-eta .was .v { color: #98a1ae; }
       .rgm-eta .now .k { color: var(--lc); }
       .rgm-eta .now .v { color: var(--lc); font-size: 30px; }
 
+      /* 나머지 정보는 2열 격자 — 세로 열이던 것을 띠에 맞춰 눕혔다. */
+      .rgm-facts { display: grid; grid-template-columns: 1fr 1fr; column-gap: 22px; row-gap: 2px; margin: 0; }
       .rgm-f {
-        display: flex; align-items: baseline; gap: 12px; padding: 9px 0;
+        display: flex; align-items: baseline; gap: 10px; padding: 5px 0;
         border-bottom: 2px solid var(--wirit-ink-06);
       }
-      .rgm-f:last-child { border-bottom: none; }
-      .rgm-f dt { font-size: 19px; font-weight: 700; color: var(--wirit-gray); letter-spacing: -0.02em; white-space: nowrap; }
-      .rgm-f dd { margin: 0 0 0 auto; font-size: 23px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.03em; text-align: right; }
+      .rgm-f dt { font-size: 17px; font-weight: 700; color: var(--wirit-gray); letter-spacing: -0.02em; white-space: nowrap; }
+      .rgm-f dd { margin: 0 0 0 auto; font-size: 20px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.03em; text-align: right; white-space: nowrap; }
 
       /* 각주는 푸터에서 14px 이상 떨어져야 한다(designQa footerGap).
          -30px→11px, -44px→-3px 로 재 보고 -22px 로 잡았다. **음수가 커질수록 푸터에 붙는다** —
@@ -97,29 +99,28 @@
 
       <h1 class="rgm-title">{{{title}}}</h1>
 
-      <div class="rgm-body" style="--bodyH:{{layout.bodyH}}px;--mapW:{{layout.mapW}}px">
-        <div class="rgm-map wirit-linecolor">{{{mapSvg}}}</div>
-
-        <div class="rgm-side">
-          <div class="rgm-prog">
-            <span class="lb">공정률</span>
-            <span class="big">{{prog.value}}<i>%</i></span>
-            <span class="as">{{prog.asOf}}</span>
-            <div class="rgm-track">{{#unless prog.zero}}<div class="rgm-fill wirit-linecolor" style="width:{{prog.width}}"></div>{{/unless}}</div>
-          </div>
-
-          <div class="rgm-eta wirit-linecolor">
-            <div class="r was"><span class="k">당초</span><span class="v">{{eta.was}}</span></div>
-            <div class="r now wirit-linecolor"><span class="k">변경</span><span class="v">{{eta.now}}</span></div>
-          </div>
-
-          <dl style="margin:14px 0 0">
-            {{#each facts}}
-            <div class="rgm-f"><dt>{{this.k}}</dt><dd>{{this.v}}</dd></div>
-            {{/each}}
-          </dl>
+      <div class="rgm-bar" style="--barGap:{{layout.barGap}}px">
+        <div class="rgm-prog">
+          <span class="lb">공정률</span>
+          <span class="big">{{prog.value}}<i>%</i></span>
+          <span class="as">{{prog.asOf}}</span>
+          <div class="rgm-track">{{#unless prog.zero}}<div class="rgm-fill wirit-linecolor" style="width:{{prog.width}}"></div>{{/unless}}</div>
         </div>
 
+        <div class="rgm-eta wirit-linecolor">
+          <div class="r was"><span class="k">당초</span><span class="v">{{eta.was}}</span></div>
+          <div class="r now wirit-linecolor"><span class="k">변경</span><span class="v">{{eta.now}}</span></div>
+        </div>
+
+        <dl class="rgm-facts">
+          {{#each facts}}
+          <div class="rgm-f"><dt>{{this.k}}</dt><dd>{{this.v}}</dd></div>
+          {{/each}}
+        </dl>
+      </div>
+
+      <div class="rgm-body" style="--bodyH:{{layout.bodyH}}px">
+        <div class="rgm-map wirit-linecolor">{{{mapSvg}}}</div>
         {{#if note}}<div class="rgm-note">{{note}}</div>{{/if}}
       </div>
 

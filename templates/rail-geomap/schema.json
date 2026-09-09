@@ -35,10 +35,10 @@
     },
     "layout": {
       "type": "object",
-      "required": ["titleFs", "titleGap", "bodyGap", "bodyH", "mapW"],
+      "required": ["titleFs", "titleGap", "barGap", "bodyGap", "bodyH", "mapW"],
       "properties": {
         "titleFs": { "type": "number" }, "titleGap": { "type": "number" },
-        "bodyGap": { "type": "number" }, "bodyH": { "type": "number" }, "mapW": { "type": "number" }
+        "barGap": { "type": "number" }, "bodyGap": { "type": "number" }, "bodyH": { "type": "number" }, "mapW": { "type": "number" }
       }
     },
     "source": {

@@ -54,10 +54,49 @@ const SELF = { sinansan: "신안산", gtxa: "GTX-A", gtxb: "GTX-B", gtxc: "GTX-C
                indong: "인동", wolpan: "월판", sinbundang: "신분당", daejang: "대홍" };
 
 const sggGeom = (nm) => sgg.features.find((x) => x.properties.name === nm)?.geometry || null;
+
+/* ── 환승 뱃지를 **SVG 로 직접 그린다** (오너 2026-09-09: "역이름 왼쪽에 노선 로고").
+ * 지도는 SVG 라 renderHtml 의 metroBadge/metroWide 헬퍼(HTML+CSS)를 못 쓴다.
+ * 그래서 **모양 규칙만 옮기고 색·표기는 카탈로그 정본에서 그대로 읽는다** —
+ * 색을 여기 적어 두면 카탈로그와 갈라져 같은 노선이 두 색으로 나간다.
+ *   · num 있으면 원형 심볼(1·2·4·5·7·9)
+ *   · 그 외는 알약 — lines 배열은 붙여서(수인분당), label 은 그대로(KTX·서해·월판)
+ *   · text:"dark" 면 글자를 잉크색으로 (9호선·수인분당·서해처럼 밝은 바탕) */
+const BDG_R = 12.5, BDG_FS = 15, BDG_GAP = 4;
+function badgeText(m, k) {
+  if (m.num) return m.num;
+  if (m.gtx) return `GTX-${m.gtx}`;
+  if (Array.isArray(m.lines)) return m.lines.join("");
+  return m.label || k;
+}
+function badgeWidth(k) {
+  const m = CAT[k];
+  if (!m) return 0;
+  if (m.num) return BDG_R * 2;
+  const t = badgeText(m, k);
+  /* 한글은 폭이 거의 정폭, 라틴은 좁다 — 글자별로 재야 KTX 알약이 헐렁해지지 않는다. */
+  const w = [...t].reduce((a, ch) => a + (/[\x00-\x7F]/.test(ch) ? BDG_FS * 0.62 : BDG_FS * 1.0), 0);
+  return Math.round(w + 16);
+}
+function badgeSvg(k, x, cy) {
+  const m = CAT[k];
+  if (!m) return "";
+  const ink = m.text === "dark" ? "#141821" : "#ffffff";
+  const t = badgeText(m, k);
+  if (m.num)
+    return `<circle cx="${(x + BDG_R).toFixed(1)}" cy="${cy.toFixed(1)}" r="${BDG_R}" fill="${m.color}"/>` +
+      `<text x="${(x + BDG_R).toFixed(1)}" y="${cy.toFixed(1)}" font-size="${BDG_FS}" font-weight="800" fill="${ink}" text-anchor="middle" dominant-baseline="central">${esc(t)}</text>`;
+  const w = badgeWidth(k), h = BDG_R * 2;
+  return `<rect x="${x.toFixed(1)}" y="${(cy - h / 2).toFixed(1)}" width="${w}" height="${h}" rx="${(h / 2).toFixed(1)}" fill="${m.color}"/>` +
+    `<text x="${(x + w / 2).toFixed(1)}" y="${cy.toFixed(1)}" font-size="${BDG_FS}" font-weight="800" fill="${ink}" text-anchor="middle" dominant-baseline="central">${esc(t)}</text>`;
+}
+const badgeRowWidth = (keys) =>
+  keys.length ? keys.reduce((a, k) => a + badgeWidth(k), 0) + BDG_GAP * (keys.length - 1) : 0;
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-/* ── 지도 판 크기. 세로로 긴 노선이라 카드 왼쪽 절반을 준다. */
-const MAP_W = 620, BODY_H = 985;
+/* ── 지도 판 크기. 정보를 위 띠로 올렸으므로 **카드 폭을 다 쓴다**(2026-09-09 개편).
+   968 = 1080 − 좌우 패딩 56×2. 세로는 제목·정보띠·각주·푸터를 뺀 나머지다. */
+const MAP_W = 968, BODY_H = 820;
 
 function buildOne(L) {
   const A = anchorsDoc[L.key];
@@ -117,8 +156,16 @@ function buildOne(L) {
   const LBL_FS = 23;
   const maxNm = Math.max(...names.map((n) => n.length));
   const anyProv = L.stations.some((st) => st.state === "가칭" || st.state === "역명미정");
+  /* 환승 키 전수 대조 — 카탈로그에 없으면 뱃지가 조용히 안 그려진다(rail-line 과 같은 규칙). */
+  for (const st of L.stations)
+    for (const k of st.xfer || [])
+      if (!CAT[k]) throw new Error(`${L.name} ${st.name}: 환승 키 '${k}' 가 카탈로그에 없다`); // ④
+  /* 뱃지 자리는 **가장 뱃지가 많은 역**이 정한다. 이름은 그 오른쪽에서 전부 같은 x 로 시작한다 —
+     뱃지 뒤에 바로 붙이면 역마다 이름 시작점이 들쭉날쭉해 읽는 눈이 계속 좌우로 흔들린다. */
+  const BDG_W = Math.max(0, ...L.stations.map((st) => badgeRowWidth(st.xfer || [])));
+  const BDG_PAD = BDG_W ? 10 : 0;
   const PADL = 22, PADT = 20, PADB = 20;
-  const PADR = Math.round(30 + maxNm * LBL_FS * 0.98 + (anyProv ? 44 : 0) + 8);
+  const PADR = Math.round(30 + BDG_W + BDG_PAD + maxNm * LBL_FS * 0.98 + (anyProv ? 44 : 0) + 8);
   const spanX = (lon1 - lon0) * kx, spanY = lat1 - lat0;
   const s = Math.min((MAP_W - PADL - PADR) / spanX, (BODY_H - PADT - PADB) / spanY);
   const offX = PADL + (MAP_W - PADL - PADR - spanX * s) / 2;
@@ -139,7 +186,8 @@ function buildOne(L) {
     }
 
   /* 이름 열의 x — 지명 배치도 이 값을 쓰므로 **쓰는 곳들보다 먼저** 정한다(const 는 TDZ 다). */
-  const LBL_X = Math.max(...pos.map((p) => X(p.lon))) + 26;
+  const LBL_X = Math.max(...pos.map((p) => X(p.lon))) + 26;   // 뱃지 구역 왼쪽 끝
+  const NAME_X = LBL_X + BDG_W + BDG_PAD;                    // 이름은 모두 여기서 시작
 
   /* ── 한강. sudogwon-map 과 같은 부품을 쓴다 — 강을 두 곳에서 그리면 갈라진다. */
   let river = "";
@@ -209,24 +257,40 @@ function buildOne(L) {
   for (let i = lbl.length - 2; i >= 0; i--)
     if (lbl[i + 1].ly - lbl[i].ly < LBL_GAP) lbl[i].ly = lbl[i + 1].ly - LBL_GAP;
 
-  let dots = "";
+  let inMap = "", outMap = "";
   for (const p of lbl) {
     const prov = p.st.state === "가칭" || p.st.state === "역명미정";
-    /* 지시선 — 점에서 이름 왼쪽까지. 높이가 같으면 직선, 다르면 살짝 꺾는다. */
+    const keys = p.st.xfer || [];
+    /* ⚠️ 지시선은 **지도 자르기 밖에서** 그린다. 안쪽에서 그리면 지도 가장자리에서 잘려
+       점과 이름 사이가 끊긴 채로 보인다(2026-09-09). 끝점은 그 행의 **가장 왼쪽 요소**
+       (뱃지가 있으면 뱃지, 없으면 이름) 바로 앞이다 — 행마다 다르므로 여기서 계산한다. */
+    const rowLeft = NAME_X - (keys.length ? BDG_PAD + badgeRowWidth(keys) : 0);
+    const endX = rowLeft - 9;
     const near = Math.abs(p.ly - p.y) < 1.5;
     const lead = near
-      ? `<path d="M${(p.x + 13).toFixed(1)},${p.y.toFixed(1)}H${(LBL_X - 7).toFixed(1)}" stroke="#c9ccd2" stroke-width="1.6" fill="none"/>`
-      : `<path d="M${(p.x + 13).toFixed(1)},${p.y.toFixed(1)}H${(LBL_X - 20).toFixed(1)}L${(LBL_X - 7).toFixed(1)},${(p.ly - 7).toFixed(1)}" stroke="#c9ccd2" stroke-width="1.6" fill="none"/>`;
-    dots += lead +
-      `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="#ffffff" stroke="${lc}" stroke-width="5"/>` +
-      `<text x="${LBL_X.toFixed(1)}" y="${(p.ly - 0).toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle">${esc(p.name)}` +
+      ? `<path d="M${(p.x + 13).toFixed(1)},${p.y.toFixed(1)}H${endX.toFixed(1)}" stroke="#b3b8c1" stroke-width="1.8" fill="none"/>`
+      : `<path d="M${(p.x + 13).toFixed(1)},${p.y.toFixed(1)}H${(endX - 16).toFixed(1)}L${endX.toFixed(1)},${p.ly.toFixed(1)}" stroke="#b3b8c1" stroke-width="1.8" fill="none"/>`;
+
+    /* 뱃지는 이름 바로 왼쪽에 **오른쪽 맞춤** — 이름 시작점(NAME_X)을 흔들지 않으면서
+       "이 역은 무슨 노선과 만나나"가 이름 앞에서 먼저 읽힌다(오너 2026-09-09). */
+    let bd = "", bx = rowLeft;
+    for (const k of keys) { bd += badgeSvg(k, bx, p.ly); bx += badgeWidth(k) + BDG_GAP; }
+
+    inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="#ffffff" stroke="${lc}" stroke-width="5"/>`;
+    outMap += lead + bd +
+      `<text x="${NAME_X.toFixed(1)}" y="${p.ly.toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle">${esc(p.name)}` +
       (prov ? `<tspan font-size="16" font-weight="700" fill="#8a8f98" dx="6">가칭</tspan>` : "") +
       `</text>`;
   }
 
+  /* ⚠️ 지도 그림을 **이름 열 왼쪽에서 자른다.** 안 자르면 시군구 면색과 한강이 이름·뱃지
+     뒤까지 깔려, 여의도·영등포 뱃지가 파란 강 위에 앉는다(2026-09-09).
+     자르는 선은 지시선이 닿는 곳(LBL_X − 8)보다 살짝 오른쪽이어야 선이 안 잘린다. */
+  const clipId = `rgmclip-${L.key}`;
   const mapSvg =
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${MAP_W} ${BODY_H}" width="${MAP_W}" height="${BODY_H}">` +
-    `<rect width="${MAP_W}" height="${BODY_H}" fill="none"/>${land}${river}${ctx}${sggNm}${line}${dots}</svg>`;
+    `<defs><clipPath id="${clipId}"><rect x="0" y="0" width="${(LBL_X - 4).toFixed(1)}" height="${BODY_H}"/></clipPath></defs>` +
+    `<g clip-path="url(#${clipId})">${land}${river}${ctx}${sggNm}${line}${inMap}</g>${outMap}</svg>`;
 
   const facts = [
     { k: "착공", v: L.start },
@@ -252,7 +316,7 @@ function buildOne(L) {
        「선형은 실제다」가 그 순간 거짓이 된다. 안 그리고 밝히는 쪽을 고른다. */
     note: [L.branch ? `지도는 본선만 — ${L.branch.label}은 선형 자료 미비` : "",
            L.shared ? `선로 공용 · ${L.shared}` : ""].filter(Boolean).join("  ·  "),
-    layout: { titleFs: 62, titleGap: 18, bodyGap: 24, bodyH: BODY_H, mapW: MAP_W },
+    layout: { titleFs: 62, titleGap: 16, barGap: 18, bodyGap: 16, bodyH: BODY_H, mapW: MAP_W },
     source: { name: L.src },
   };
 
