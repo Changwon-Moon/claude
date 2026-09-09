@@ -106,6 +106,12 @@ const MAP_W = 968;
    a: 위 띠(정보가 세로를 먹음) · b: 지도 위에 겹침(세로를 안 먹음) · c: 우측 열(현행) */
 const BODY_H_BY_V = { a: 820, b: 986, c: 820 };
 const BODY_H = BODY_H_BY_V[VARIANT];
+/* 시안 b 의 정보 패널이 지도 위에서 차지하는 자리. **빌더가 이 값을 알아야** 그 자리에
+   걸리는 역 이름을 반대쪽으로 보낼 수 있다(오너 2026-09-09: "시흥사거리를 우측으로 옮기면
+   정보 카드가 더 내려갈 수 있다"). 손으로 역을 지정하는 대신 **패널 자리로 규칙을 만든다** —
+   그래야 다른 노선에서도, 패널을 옮겨도 저절로 맞는다.
+   ⚠️ 템플릿의 .v-b .rgm-bar 치수와 **같아야 한다.** 갈라지면 라벨은 비켰는데 패널은 딴 데 있다. */
+const PANEL = { x0: 0, x1: 478, y0: 30, y1: 350 };
 
 function buildOne(L) {
   const A = anchorsDoc[L.key];
@@ -154,8 +160,33 @@ function buildOne(L) {
 
   const pos = placed.map((p, i) => ({ ...pointAt(track, p.t), name: p.name, st: L.stations[i] }));
 
+  /* ── Y자 지선 (오너 2026-09-09 "아직 반영되지 않은 Y자 분기는 진행해줘")
+     ⚠️ **본선과 다른 자료다.** 본선 선형은 OSM 실측 401점이지만, 지선은 OSM 에 1km 토막뿐이고
+        선로를 함께 쓰는 월곶~판교선도 OSM 선형이 0건이었다(2026-09-09 탐사 두 번).
+        그래서 지선은 **역 점 네 개를 이은 개략선**이다 — 점은 전부 자료 기반(분기역·시흥시청은
+        OSM 실좌표, 학온·매화는 소재 동 중심)이지만 **잇는 선은 실제 선형이 아니다.**
+        거짓이 되지 않게 하는 방법은 하나뿐 — **눈에 다르게 보이게** 그리고 각주에 적는다.
+        본선: 굵은 실선 / 지선: 가는 점선. */
+  let branchPts = [], branchPos = [];
+  if (L.branch?.stations?.length && L.branchAfter) {
+    const from = pos.find((p) => p.name === L.branchAfter);
+    if (!from) throw new Error(`${L.name}: 분기역 '${L.branchAfter}' 을 본선에서 못 찾았다`);
+    branchPos = L.branch.stations.map((st) => {
+      const gt = truth.get(st.name);
+      if (gt) return { lat: gt.lat, lon: gt.lon, name: st.name, st, src: "OSM 실좌표" };
+      const a2 = A[st.name];
+      if (!a2?.dong) throw new Error(`${L.name} 지선 ${st.name}: 닻(시군구+동)이 없다 — 개략선도 못 그린다`);
+      const g2 = sggGeom(a2.sgg);
+      if (!g2) throw new Error(`${L.name} 지선 ${st.name}: 시군구 '${a2.sgg}' 가 경계 자료에 없다`);
+      const c2 = dongCentre(dong, g2, a2.dong);
+      if (!c2) throw new Error(`${L.name} 지선 ${st.name}: 동 '${a2.dong}' 을 ${a2.sgg} 안에서 못 찾았다`);
+      return { lat: c2.lat, lon: c2.lon, name: st.name, st, src: `${a2.dong} 중심` };
+    });
+    branchPts = [{ lat: from.lat, lon: from.lon }, ...branchPos];
+  }
+
   /* ── 화면 좌표계 — 위도 보정을 넣어 가로세로 비율을 지킨다(지도는 늘리면 거짓말이다). */
-  const all = track;
+  const all = [...track, ...branchPts];
   const lat0 = Math.min(...all.map((p) => p.lat)), lat1 = Math.max(...all.map((p) => p.lat));
   const lon0 = Math.min(...all.map((p) => p.lon)), lon1 = Math.max(...all.map((p) => p.lon));
   const kx = Math.cos(((lat0 + lat1) / 2 * Math.PI) / 180);
@@ -228,7 +259,11 @@ function buildOne(L) {
   if (!selfKey || !CAT[selfKey]) throw new Error(`${L.name}: 카탈로그에 자기 노선(${selfKey}) 이 없다`); // ④
   const lc = CAT[selfKey].color;
 
-  const line = `<path d="${d(mainWay.g)}" fill="none" stroke="${lc}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const line = `<path d="${d(mainWay.g)}" fill="none" stroke="${lc}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`
+    /* 지선 — 점선·얇게. 실제 선형이 아니라는 것이 **모양으로** 드러나야 한다. */
+    + (branchPts.length
+      ? `<path d="${d(branchPts)}" fill="none" stroke="${lc}" stroke-width="5" stroke-dasharray="11 8" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>`
+      : "");
 
   /* ── 역 점·이름.
      ⚠️ 도심 구간은 역간 1km 라 화면에서 20px 도 안 떨어진다. 한쪽에 몰면 다섯 개가 겹친다.
@@ -248,13 +283,18 @@ function buildOne(L) {
   };
   function p2name(st) { return st.name; }
 
-  const lbl = pos.map((p, i) => {
+  const allPos = [...pos, ...branchPos];
+  const lbl = allPos.map((p, i) => {
     const x = X(p.lon), y = Y(p.lat);
     let side = i % 2 === 0 ? 1 : -1;                       // ① 번갈아
     if ((p.st.xfer || []).length) side = 1;                // ③ 뱃지 있으면 오른쪽
     const w = rowW(p.st);
     if (side < 0 && x - LEAD_W - w < 6) side = 1;          // ② 왼쪽이면 카드 밖
     if (side > 0 && x + LEAD_W + w > MAP_W - 6) side = -1;
+    /* ④ 정보 패널 자리에 걸리면 반대쪽으로 — 패널이 이름을 덮는 대신 이름이 비킨다.
+       패널은 왼쪽 위에만 있으므로 여기서 오른쪽으로 가는 경우만 생긴다. */
+    if (VARIANT === "b" && side < 0 &&
+        y > PANEL.y0 - 22 && y < PANEL.y1 + 22 && x - LEAD_W - w < PANEL.x1 + 14) side = 1;
     return { ...p, x, y, ly: y, side };
   });
 
@@ -262,8 +302,11 @@ function buildOne(L) {
      paint-order 없이 stroke 를 주면 획이 글자 안쪽까지 먹어 굵고 뭉개져 보인다. */
   const HALO = TWO_SIDED ? ' stroke="#fbfaf7" stroke-width="4.5" paint-order="stroke" stroke-linejoin="round"' : "";
   const LBL_GAP = 30;
+  /* ⚠️ 겹침 해소는 **배열 순서가 아니라 y 순서**로 돌아야 한다. 본선 뒤에 지선을 이어 붙였더니
+     지선 역들이 본선 마지막 역 뒤로 정렬돼 카드 아래로 밀리고, 지시선이 지도를 가로질렀다
+     (2026-09-09). 아래로 미는 규칙은 "위에서 아래로 훑는다"를 전제하므로 정렬이 먼저다. */
   for (const sd of [1, -1]) {
-    const g = lbl.filter((p) => p.side === sd);
+    const g = lbl.filter((p) => p.side === sd).sort((x, y2) => x.y - y2.y);
     for (let i = 1; i < g.length; i++)
       if (g[i].ly - g[i - 1].ly < LBL_GAP) g[i].ly = g[i - 1].ly + LBL_GAP;
     const BOT = BODY_H - 20;
@@ -390,8 +433,13 @@ function buildOne(L) {
        지선을 억지로 그리지 않는 이유: OSM 에 광명 지선은 1km 토막뿐이라 선형이 없다.
        양 끝만 알고 가운데를 직선으로 이으면 그건 실제 선형이 아니고, 이 판형이 내세우는
        「선형은 실제다」가 그 순간 거짓이 된다. 안 그리고 밝히는 쪽을 고른다. */
-    note: [L.branch ? `지도는 본선만 — ${L.branch.label}은 선형 자료 미비` : "",
-           L.shared ? `선로 공용 · ${L.shared}` : ""].filter(Boolean).join("  ·  "),
+    /* 각주가 **지도의 표기 규칙**을 말한다. 카드만 캡처돼 돌 때 캡션이 안 따라가므로,
+       모양으로 구분한 것(점선 지선·점선 링 가칭)은 여기서 한 번 설명한다. */
+    note: [
+      provCount ? "◌ 점선 = 가칭역" : "",
+      branchPts.length ? `${L.branch.label} 점선 — 역 위치는 자료 기반, 잇는 선은 개략` : "",
+      L.shared ? `선로 공용 · ${L.shared}` : "",
+    ].filter(Boolean).join("  ·  "),
     layout: { titleFs: 62, titleGap: 16, barGap: 18, bodyGap: 16, bodyH: BODY_H, mapW: MAP_W },
     source: { name: L.src },
   };

@@ -93,8 +93,10 @@
          정보가 세로를 안 먹으니 지도가 그만큼 커진다. 겹치는 자리는 노선에서 먼
          왼쪽 위(인천·부천 쪽) — 이 노선이 세로라 그쪽이 늘 비어 있다.
          ⚠️ 반투명이 아니라 **불투명 패널**이다. 반투명이면 밑의 경계선이 숫자에 겹쳐 읽힌다. */
+      /* ⚠️ 이 자리(left·top·width)는 빌더의 PANEL 과 **같아야 한다** — 빌더가 이 상자에
+         걸리는 역 이름을 반대쪽으로 보낸다. 갈라지면 이름은 비켰는데 패널은 딴 데 있다. */
       .v-b .rgm-bar {
-        position: absolute; left: 0; top: 0; z-index: 2;
+        position: absolute; left: 0; top: 30px; z-index: 2;
         margin: 0; padding: 15px 18px 13px; width: 468px;
         display: grid; grid-template-columns: auto 1fr; column-gap: 20px;
         background: rgba(251,250,247,0.96); border: 2px solid var(--wirit-ink-06);
