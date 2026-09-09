@@ -5,13 +5,27 @@
     "dealYmd": "202605",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-07-25",
+    "collectedAt": "2026-09-09",
     "count": 45,
-    "rawCount": 46,
+    "rawCount": 47,
     "verified": true,
     "note": "API 응답 원본을 코드로 정규화(해제 거래 제외). 1차 출처."
   },
   "trades": [
+    {
+      "aptNm": "과천푸르지오써밋",
+      "umdNm": "중앙동",
+      "jibun": "101",
+      "priceWon": 2570000000,
+      "priceManwon": 257000,
+      "area": 84.9998,
+      "floor": 25,
+      "buildYear": 2020,
+      "date": "2026-05-08",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "41290"
+    },
     {
       "aptNm": "과천위버필드",
       "umdNm": "원문동",
@@ -512,20 +526,6 @@
       "floor": 30,
       "buildYear": 2021,
       "date": "2026-05-04",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "41290"
-    },
-    {
-      "aptNm": "과천푸르지오써밋",
-      "umdNm": "중앙동",
-      "jibun": "101",
-      "priceWon": 2570000000,
-      "priceManwon": 257000,
-      "area": 84.9998,
-      "floor": 25,
-      "buildYear": 2020,
-      "date": "2026-05-08",
       "dealingGbn": "중개거래",
       "canceled": false,
       "sggCd": "41290"

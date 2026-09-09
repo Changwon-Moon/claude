@@ -5,7 +5,7 @@
     "dealYmd": "202606",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-07-25",
+    "collectedAt": "2026-09-09",
     "count": 22,
     "rawCount": 24,
     "verified": true,
