@@ -101,6 +101,123 @@ const addCity = (slug, doc) => add(slug, { hideMark: false, logoLabel: "국가",
   });
 }
 
+/* ── E1 대안 두 안 — ratio-bars@1 (2026-09-09 오너 지시) ──────────
+ * 표가 아니라 **길이**로 보여 준다. 오너가 두 안을 골랐다.
+ * 좌표·개수는 전부 여기서 계산한다(TEMPLATES: 템플릿은 숫자를 만들지 않는다).
+ *
+ * ⚠️ 두 안은 **서로 반대 방향으로 읽힌다.** 처음에 이걸 놓쳐 아이콘 안이 뒤집혀 나왔다:
+ *   ① bar  — 「값이 기준의 몇 배냐」  → 비싼 나라가 **길다**   (튀르키예 219)
+ *   ② icon — 「같은 돈으로 몇 대냐」  → 비싼 나라가 **적다**   (튀르키예 1대)
+ * 아이콘 안에서 튀르키예를 2.19대로 그리면 「튀르키예가 폰을 더 많이 산다」가 되어
+ * 카드가 하려는 말과 정반대가 된다. 그래서 아이콘 안은 **예산 ÷ 값**으로 센다.
+ * 예산은 가장 비싼 나라의 값(= 튀르키예에서 한 대 살 돈)이다. */
+{
+  const ip = D.iphone;
+  const base = ip.baseValue;
+  const rows = ip.rows.filter((r) => r.country !== "미국"); // 기준 나라는 기준선이 대신한다
+
+  /* ① 막대 안 — 기준선을 어디 두면 가장 긴 막대가 트랙에 들어오나(여유 2%) */
+  const maxRatio = Math.max(...rows.map((r) => r.value / base));
+  const BASEX = Math.min(50, 98 / maxRatio);
+
+  /* ② 아이콘 안 — 예산은 가장 비싼 나라의 값이다 */
+  const budget = Math.max(...rows.map((r) => r.value));
+  const budgetCountry = rows.find((r) => r.value === budget).country;
+  const maxCount = Math.max(...rows.map((r) => budget / r.value));
+
+  /* 아이콘 치수 — 폰 비율(약 1:2.2)을 지켜야 폰으로 보인다.
+     가장 많은 줄이 트랙(약 620px)을 넘지 않게 개수로 역산한다. */
+  /* 아이콘은 **크게** 그린다. 28px 폭에서는 테두리가 4px 라 폰이 아니라 빈 사각형으로 읽혔다.
+     한 줄에 최대 3개뿐이라(2.31대) 키울 자리가 넉넉하다. */
+  const ICON_H = 92;
+  const ICON_W = Math.round(ICON_H * 0.46);
+  const ICON_GAP = 11;
+
+  const PHONE_VB = 46;
+  /* 폰 실루엣 — 바깥 몸체 + **안쪽 화면을 뚫는다**(fill-rule:evenodd).
+     꽉 찬 사각형은 28px 폭에서 그냥 막대로 보인다. 테두리가 있어야 폰으로 읽힌다. */
+  const PHONE_PATH =
+    "M8 1h30a7 7 0 0 1 7 7v84a7 7 0 0 1-7 7H8a7 7 0 0 1-7-7V8a7 7 0 0 1 7-7z" +
+    "M9 10h28v80H9z";   // 안쪽 화면을 뚫는다 — 테두리 약 6단위(42px 폭에서 5px)
+
+  const titleOf = (icon) => (icon ? "같은 돈으로 몇 대 살까" : "아이폰 값, 한국은 미국과 같다");
+
+  const mk = (icon) => ({
+    template: "ratio-bars@1",
+    date,
+    title: titleOf(icon),
+    subtitle: `${ip.product} · 보고서가 짚은 최저·최고 구간 · 달러 환산`,
+    baseLabel: icon ? `${budgetCountry} 한 대 값` : "미국 = 100",
+    baseValue: usd(icon ? budget : base),
+    unitLabel: icon ? "그 돈이면 몇 대" : "미국 대비",
+    icon,
+    iconPath: PHONE_PATH,
+    iconVb: PHONE_VB,
+    rows: (icon
+      ? [...rows].sort((a, b) => a.value - b.value)   // 싼 나라 = 많이 산다 → 위부터
+      : rows
+    ).map((r) => {
+      if (!icon) {
+        const ratio = r.value / base;
+        const over = ratio > 1.001;
+        return {
+          name: r.country,
+          flag: r.cc,
+          val: Math.round(ratio * 100) + "",
+          w: +(BASEX * ratio).toFixed(2),
+          ow: over ? +(BASEX * (ratio - 1)).toFixed(2) : 0,
+          over,
+          hl: !!r.highlight,
+        };
+      }
+      const count = budget / r.value;
+      const whole = Math.floor(count);
+      const frac = count - whole;
+      const icons = [
+        ...Array.from({ length: whole }, () => ({ w: ICON_W })),
+        ...(frac > 0.04 ? [{ w: +(ICON_W * frac).toFixed(1), part: true }] : []),
+      ];
+      /* 한 대밖에 못 사는 나라(예산을 정한 그 나라)만 레드 — 그게 이 카드의 신호다 */
+      const only1 = count < 1.05;
+      if (only1) icons.forEach((ic) => { ic.over = true; });
+      return {
+        name: r.country,
+        flag: r.cc,
+        val: count.toFixed(2),
+        unit: "대",
+        w: +((count / maxCount) * 100).toFixed(2),
+        ow: 0,
+        over: only1,
+        hl: !!r.highlight,
+        icons,
+      };
+    }),
+    kicker: icon
+      ? `${budgetCountry}에서 <span class="hi">한 대</span> 살 돈이면 한국에선 <span class="hb">${(budget / ip.rows.find((r) => r.highlight).value).toFixed(1)}대</span>`
+      : '같은 폰인데 튀르키예는 <span class="hi">2.2배</span>를 낸다',
+    layout: {
+      flagw: 62,
+      namew: 148,
+      valw: icon ? 150 : 118,
+      gap: 22,
+      rowpad: icon ? 8 : 43,   // 7줄이 본문 높이를 채우는 값. 아이콘 안은 아이콘이 크니 여백을 줄인다
+      barh: icon ? ICON_H : 34,
+      namesz: 36,
+      valsz: 44,
+      iconw: ICON_W,
+      icongap: ICON_GAP,
+      basex: BASEX.toFixed(2) + "%",
+      /* 제목 폰트 — 이 판형엔 자동 축소가 없다. 한 줄이 936px 를 넘지 않게 글자 수로 정한다.
+         한글 한 글자 ≈ 폰트크기 × 0.92 로 잡고 역산한다. */
+      titlesz: Math.min(84, Math.floor(936 / (titleOf(icon).length * 0.92))),
+    },
+    source: { ...SRC, asOf: `${D.meta.sourceDate} · ${ip.product} · 달러 환산` },
+  });
+
+  cards.push({ slug: "e1-iphone-bars", doc: mk(false) });
+  cards.push({ slug: "e1-iphone-count", doc: mk(true) });
+}
+
 /* ── A0 — 서울 성적표 ─────────────────────────────────── */
 {
   const s = D.seoul;

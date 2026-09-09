@@ -1,0 +1,216 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "template",
+    "title",
+    "baseLabel",
+    "baseValue",
+    "rows",
+    "layout",
+    "source"
+  ],
+  "properties": {
+    "template": {
+      "type": "string",
+      "pattern": "^ratio-bars@\\d+$"
+    },
+    "date": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 30,
+      "description": "한 줄. 길면 폰트가 커져 우상단 로고에 붙는다(badgeclear)."
+    },
+    "subtitle": {
+      "type": "string",
+      "maxLength": 60,
+      "description": "카드 맨 윗줄. 기준·단위·표본 범위를 밝힌다."
+    },
+    "baseLabel": {
+      "type": "string",
+      "maxLength": 20,
+      "description": "기준이 무엇인지. 예) 미국 = 100"
+    },
+    "baseValue": {
+      "type": "string",
+      "maxLength": 12,
+      "description": "기준값 표기. 예) $1,181"
+    },
+    "unitLabel": {
+      "type": "string",
+      "maxLength": 24,
+      "description": "오른쪽 끝 안내. 예) 아이폰 17 프로 256GB"
+    },
+    "icon": {
+      "type": "boolean",
+      "description": "true 면 아이콘 모드(막대 대신 품목 그림 반복). false·미지정이면 막대 모드."
+    },
+    "iconPath": {
+      "type": "string",
+      "description": "아이콘 SVG path d 값. viewBox 는 0 0 {iconVb} 100."
+    },
+    "iconVb": {
+      "type": "number",
+      "description": "아이콘 viewBox 가로. 세로는 100 고정."
+    },
+    "rows": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "flag",
+          "val",
+          "w"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "flag": {
+            "type": "string",
+            "pattern": "^[a-z]{2}$",
+            "description": "_shared/flags/{cc}.svg"
+          },
+          "val": {
+            "type": "string",
+            "maxLength": 8,
+            "description": "오른쪽 큰 숫자. 빌더가 포맷한다."
+          },
+          "unit": {
+            "type": "string",
+            "maxLength": 4,
+            "description": "값 뒤 작은 단위. 예) 배, %"
+          },
+          "w": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "막대 폭 %. **빌더가 계산한다.**"
+          },
+          "ow": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "기준 초과 구간 폭 %. 빌더 계산."
+          },
+          "over": {
+            "type": "boolean",
+            "description": "기준을 넘었나. 값 색과 초과 구간을 레드로."
+          },
+          "hl": {
+            "type": "boolean",
+            "description": "주인공 행(우리 나라). 한 표에 하나만."
+          },
+          "icons": {
+            "type": "array",
+            "description": "아이콘 모드용. 빌더가 개수와 마지막 조각 폭까지 계산해 넣는다.",
+            "items": {
+              "type": "object",
+              "required": [
+                "w"
+              ],
+              "properties": {
+                "w": {
+                  "type": "number",
+                  "description": "이 조각의 픽셀 폭. 온전한 것은 iconw, 마지막은 그 소수배."
+                },
+                "part": {
+                  "type": "boolean"
+                },
+                "over": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "kicker": {
+      "type": "string",
+      "maxLength": 90,
+      "description": "맨 아래 한 줄. <span class=\"hi\">레드</span> · <span class=\"hb\">코발트</span> 강조 가능."
+    },
+    "layout": {
+      "type": "object",
+      "required": [
+        "flagw",
+        "namew",
+        "valw",
+        "gap",
+        "rowpad",
+        "barh",
+        "namesz",
+        "valsz",
+        "basex",
+        "titlesz"
+      ],
+      "description": "치수의 정본은 빌더다. 템플릿은 CSS 변수로 받아 쓰기만 한다.",
+      "properties": {
+        "flagw": {
+          "type": "number"
+        },
+        "namew": {
+          "type": "number"
+        },
+        "valw": {
+          "type": "number"
+        },
+        "gap": {
+          "type": "number"
+        },
+        "rowpad": {
+          "type": "number"
+        },
+        "barh": {
+          "type": "number"
+        },
+        "namesz": {
+          "type": "number"
+        },
+        "valsz": {
+          "type": "number"
+        },
+        "iconw": {
+          "type": "number"
+        },
+        "icongap": {
+          "type": "number"
+        },
+        "basex": {
+          "type": "string",
+          "description": "기준선 가로 위치. 예) \"45%\""
+        },
+        "titlesz": {
+          "type": "number",
+          "description": "제목 폰트 px. 한 줄로 936px 안에 들어와야 한다 — 빌더가 글자 수로 정한다."
+        }
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "asOf": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
