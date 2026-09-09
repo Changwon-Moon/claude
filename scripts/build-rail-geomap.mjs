@@ -415,50 +415,31 @@ function buildOne(L) {
   /* ⚠️ 예전에는 시군구 폴리곤만 칠했다. 그러면 바다·경계 밖이 **카드 바탕(흰색)** 으로 남아
      지도가 어디서 시작해 어디서 끝나는지 모호했고, 좌상단 정보 패널이 지도 밖에 뜬 것처럼 보였다
      (오너 2026-09-09). 판 전체를 같은 색으로 깔고 잉크 테두리를 두른다. */
-  let land = `<rect x="0" y="0" width="${MAP_W}" height="${BODY_H}" fill="#efece5"/>`;
-  for (const f of sgg.features)
+  /* ── 시·도를 **면색**으로 나눈다 (오너 2026-09-09 3차)
+     경계선을 진하게 긋는 방식을 두 판 시도했는데, 선이 굵으면 지도가 어지럽고 얇으면 안 보였다.
+     오너 제안대로 **선은 전부 같은 연회색으로 두고, 서울·경기·인천의 바탕색만 조금씩 달리한다.**
+     차이는 작아야 한다 — 이건 배경이지 정보가 아니다. 주인공은 빨간 노선이다.
+     판 바탕(바다·경계 밖)은 세 색 어디와도 겹치지 않는 중간 톤으로 둔다. */
+  const SIDO_FILL = {
+    서울특별시: "#e8e2d6",
+    경기도: "#f2efe8",
+    인천광역시: "#e4e8e5",
+  };
+  const FILL_ETC = "#edeae3";
+  let land = `<rect x="0" y="0" width="${MAP_W}" height="${BODY_H}" fill="${FILL_ETC}"/>`;
+  for (const f of sgg.features) {
+    const fill = SIDO_FILL[f.properties?.sido] || FILL_ETC;
     for (const r of rings(f.geometry)) {
       if (!inBox(r)) continue;
-      land += `<path d="${r.map(([lon, lat], i) => `${i ? "L" : "M"}${X(lon).toFixed(1)},${Y(lat).toFixed(1)}`).join("")}Z" fill="#efece5" stroke="#dcd8cf" stroke-width="1.1"/>`;
+      land += `<path d="${r.map(([lon, lat], i) => `${i ? "L" : "M"}${X(lon).toFixed(1)},${Y(lat).toFixed(1)}`).join("")}Z" fill="${fill}" stroke="#dcd8cf" stroke-width="1.1"/>`;
     }
-
-  /* ── 시·도 **사이** 경계만 진하게 (오너 2026-09-09 2차)
-     처음엔 「같은 시도 안에서 한 번만 나오는 변 = 그 시도의 바깥선」으로 그렸다. 그러면
-     인천의 해안선, 경기도의 강원·충청 쪽 경계까지 다 진해져 화면이 어지러웠다.
-     오너가 원한 건 **서울↔경기 · 경기↔인천 · 인천↔서울** 세 경계뿐이다.
-
-     그래서 반대로 센다 — 변 하나가 **서로 다른 두 시도**의 시군구에 동시에 들어 있으면
-     그게 곧 시도 사이 경계다(같은 시도 안 경계는 한 시도 이름만, 바다·외곽은 한 번만 나온다).
-     시군구 경계선(연한 회색 #dcd8cf)은 손대지 않는다 — 그건 배경이다. */
-  let sidoLine = "";
-  {
-    const WANT = new Set(["서울특별시", "인천광역시", "경기도"]);
-    const edges = new Map();                      // 변 → { a, b, sido:Set }
-    for (const f of sgg.features) {
-      const sd = f.properties?.sido;
-      if (!WANT.has(sd)) continue;
-      for (const r of rings(f.geometry)) {
-        if (!inBox(r)) continue;                  // 화면 밖 시군구는 셀 필요가 없다
-        for (let i = 0; i < r.length - 1; i++) {
-          const a = r[i], b = r[i + 1];
-          const ka = `${a[0].toFixed(7)},${a[1].toFixed(7)}`, kb = `${b[0].toFixed(7)},${b[1].toFixed(7)}`;
-          const key = ka < kb ? `${ka}|${kb}` : `${kb}|${ka}`;
-          const e = edges.get(key);
-          if (e) e.sido.add(sd);
-          else edges.set(key, { a, b, sido: new Set([sd]) });
-        }
-      }
-    }
-    let dstr = "";
-    for (const e of edges.values()) {
-      if (e.sido.size < 2) continue;              // 같은 시도 안 경계 · 바깥 테두리
-      const x1p = X(e.a[0]), y1p = Y(e.a[1]), x2p = X(e.b[0]), y2p = Y(e.b[1]);
-      if (Math.max(x1p, x2p) < -20 || Math.min(x1p, x2p) > MAP_W + 20) continue;
-      if (Math.max(y1p, y2p) < -20 || Math.min(y1p, y2p) > BODY_H + 20) continue;
-      dstr += `M${x1p.toFixed(1)},${y1p.toFixed(1)}L${x2p.toFixed(1)},${y2p.toFixed(1)}`;
-    }
-    if (dstr) sidoLine = `<path d="${dstr}" fill="none" stroke="#a79e90" stroke-width="2.8" stroke-linecap="round"/>`;
   }
+
+  /* ⚠️ 시·도 경계를 **선으로** 긋던 블록은 걷어냈다(오너 2026-09-09 3차).
+     두 판을 시도했다 — ① 시도별 바깥선(인천 해안선·경기 외곽까지 진해짐) ② 시도 상호 경계만.
+     ②는 정확했지만 결국 "선이 하나 더 있는" 지도였다. 지금은 **면색**이 그 일을 한다(위 SIDO_FILL).
+     되살릴 일이 생기면 git 이력에 있다 — 여기에 주석으로 남겨 두지 않는다. */
+  const sidoLine = "";
 
   /* 지명을 적을 수 있는 가로 범위 — 좌우 교차에서는 이름이 양쪽에 있으므로
      "노선 주변"만 비워 두면 된다. 아래 far() 가 점·선과의 거리로 다시 거른다. */
