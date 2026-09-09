@@ -316,9 +316,21 @@ function repPrice(d, rep) {
  * ⚠️ 타입은 **둘까지**다. 셋이면 규모 칸까지 네 칸이 되어 한 줄에 안 들어간다 —
  *    그때는 장위형(`scalePlan`)이 맞는 판이다.
  */
-function tightPlan(d, total) {
-  if (d.layout !== "tight") return { on: false };
+function tightPlan(d, total, hasMargin) {
+  /* ── 판을 고르는 것은 **데이터**다 (오너 지시 2026-09-09 "기준화해줘") ──
+   * 안전마진 판이 있으면 그게 이긴다(2026-08-26 정본). 그 다음이 이 두 줄 판이고,
+   * 타입이 셋 이상이면 한 줄에 안 들어가므로 장위형이 받는다.
+   * `layout: "flat"` 은 **명시적 되돌리기** — 옛 판(위 단 + 제원 줄)으로 그린다. */
+  if (d.layout === "flat") return { on: false };
+  if (hasMargin && d.layout !== "tight") return { on: false };
   const byType = d.price?.byType;
+  const priced = (byType || []).filter((t) => t.won != null);
+  /* 켜지는 조건: 값을 아는 타입이 1~2개. 그 밖에는 조용히 안 켜진다(옛 판 그대로).
+     `layout:"tight"` 를 손으로 적었는데 모양이 안 맞으면 **던진다** — 조용히 다른 판으로
+     떨어지면 오너가 지시한 판이 아닌 것이 나가고 아무도 모른다. */
+  const forced = d.layout === "tight";
+  if (!forced && !(priced.length >= 1 && priced.length <= 2 && priced.length === (byType || []).length))
+    return { on: false };
   if (!Array.isArray(byType) || !byType.length)
     throw new Error(`${d.id}: 두 줄 판은 타입별 분양가(price.byType)가 있어야 한다 — 1행이 그것으로 채워진다`);
   if (byType.length > 2)
@@ -838,13 +850,14 @@ function remndr(d) {
    * `price.byType` 이 없으면 예전 판 그대로 — 확정된 카드(한강·송도)의 픽셀을 건드리지 않는다. */
   const plan = scalePlan(d, total);
 
-  /* 두 줄 판(오너 지시 2026-09-09)이 켜져 있으면 그게 가장 먼저 이긴다 —
-     위 단을 아예 안 그리는 판이라 다른 판과 섞일 수 없다. */
-  const tight = tightPlan(d, total);
 
   /* 줍줍 기본 판형(분양가·시세·안전마진)이 있으면 그게 이긴다 — 오너가 정본으로 세운 판이다.
      없는 단지는 예전 판 그대로다(확정된 카드의 픽셀을 건드리지 않는다). */
   const margin = marginBand(d);
+
+  /* 두 줄 판 — 줍줍의 **기본 판**이다(오너 지시 2026-09-09 기준화).
+     안전마진 판이 있으면 그게 이기므로 `margin` 을 먼저 재고 넘긴다. */
+  const tight = tightPlan(d, total, !!margin);
 
   return {
     /* 판형은 둘이다(오너 확정 2026-09-03): 표지형 `danji-cover@1` 과 좌우형 `danji-cover-split@1`.
@@ -1028,7 +1041,10 @@ for (const d of targets) {
      한쪽 모양만 알고 찍으면 "undefined 8.8억" 이 나온다 — 두 모양을 다 읽는다. */
   const band = card.priceTable.rows.map((r) => `${r.area} ${r.price}`).join(" · ");
   const types = card.scale ? card.spec.map((c) => `${c.above} ${c.value}`).join(" · ") : null;
-  console.log(`   ${card.scale ? "규모" : "평형"} ${band}`);
+  /* 두 줄 판은 위 단이 없다 — 밴드 자리에 빈 줄을 찍으면 콘솔만 보고 "값이 안 들어갔나" 싶다.
+     그 판은 제원 줄이 곧 타입·분양가이므로 거기서 읽어 찍는다. */
+  if (card.priceTable?.rows?.length) console.log(`   ${card.scale ? "규모" : "평형"} ${band}`);
+  else console.log(`   표 ${card.spec.map((c) => [c.above, c.pre, c.value + (c.unit || "")].filter(Boolean).join(" ")).join(" · ")}`);
   if (types) console.log(`   타입 ${types}`);
   console.log(`   일정 ${card.schedule.map((s) => `${s.label} ${s.date}`).join(" · ")}`);
 }

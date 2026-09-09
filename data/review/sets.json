@@ -1726,8 +1726,13 @@
         "danji-define-artia2"
       ],
       "caption": "danji-define-artia2",
-      "note": "무순위(kind: remndr) 타입·분양가 판형. 세대수·일정은 청약홈 API(applyhomeNo 2026910233) 직접 반영, 잔여 7세대 = 084.0000B 2 + 109.8652A 5 로 API 공급과 일치(빌더 검산). 타입별 공급금액은 공고 공급금액표를 전재한 2차 출처 두 곳(dazabi·mhb-blog)이 일치 — 입주자모집공고문 PDF 대조 전까지 발행 금지.",
-      "state": "시안"
+      "note": "무순위 **두 줄 판**(드파인형 — 판 고르기 표 ②). 세대수·일정은 청약홈 API(applyhomeNo 2026910233) 직접 반영, 잔여 7세대 = 084.0000B 2 + 109.8652A 5 로 API 공급과 일치(빌더 검산). 타입별 공급금액은 공고 공급금액표를 전재한 2차 출처 두 곳(dazabi·mhb-blog)이 최고가에서 일치 — **입주자모집공고문 PDF 대조 전까지 발행 금지**(오너 확정은 카드 모양에 대한 것이고, 발행 게이트는 그대로다).",
+      "state": "오너 확정",
+      "confirmedAt": "2026-09-09",
+      "confirmedMd5": [
+        "danji-define-artia2:da0a6d483f27"
+      ],
+      "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)"
     }
   ]
 }
