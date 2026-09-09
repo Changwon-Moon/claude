@@ -55,16 +55,28 @@ const BOX = { minLat: 36.8, maxLat: 38.1, minLon: 126.3, maxLon: 127.7 };
 /** OSM 에서 노선을 찾을 이름들. 한 노선이 여러 이름으로 들어가 있을 수 있어 배열로 둔다. */
 /* 부분 일치용 열쇠말 — 정확 이름이 아니라 **들어 있으면 잡히는** 조각으로 둔다.
    (정확 일치 판본은 신안산선에서 0건이었다 — run 34176303760) */
+/* ⚠️ 이름은 **OSM 이 실제로 쓰는 이름**이어야 한다. 「월곶」·「인덕원」·「GTX-A」로 물었더니
+   전부 0건이었다(2026-09-09). 신안산선 탐사가 긁어 온 역 상자 안에 답이 있었다 —
+   OSM 은 이렇게 부른다: 동탄인덕원선 · 경강선 · 수도권광역급행철도에이선/비선/씨선 ·
+   신분당선 · 대장홍대선. **모르는 이름을 짐작하지 말고 긁어 온 목록에서 읽는다.** */
 const OSM_NAMES = {
   sinansan: ["신안산"],
-  gtxa: ["광역급행철도 A", "GTX-A", "GTX A"],
-  gtxb: ["광역급행철도 B", "GTX-B", "GTX B"],
-  gtxc: ["광역급행철도 C", "GTX-C", "GTX C"],
-  indong: ["인덕원"],
-  wolpan: ["월곶"],
+  gtxa: ["수도권광역급행철도에이선", "광역급행철도 A", "GTX-A"],
+  gtxb: ["수도권광역급행철도비선", "광역급행철도 B", "GTX-B"],
+  gtxc: ["수도권광역급행철도씨선", "광역급행철도 C", "GTX-C"],
+  indong: ["동탄인덕원선", "인덕원~동탄", "인덕원∼동탄"],
+  wolpan: ["월곶", "경강선"],
   sinbundang: ["신분당선"],
   daejang: ["대장홍대", "서부광역철도"],
   "gongyong-seohae": ["서해선"],
+};
+
+/* 노선별 탐사 상자 — 이름이 넓게 걸리는 노선만 좁힌다.
+   「경강선」은 여주까지 가는 노선이라 수도권 상자로 물으면 동쪽 꼬리가 통째로 딸려 와
+   역 상자가 강원도까지 커지고, 그 상자로 역을 긁으면 수천 건이 나와 Overpass 가 죽는다. */
+const OSM_BOX = {
+  wolpan: { minLat: 37.20, maxLat: 37.55, minLon: 126.65, maxLon: 127.15 },
+  indong: { minLat: 37.10, maxLat: 37.45, minLon: 126.90, maxLon: 127.20 },
 };
 
 /* ── 우리 데이터셋의 노선이 **아니지만** 카드에 그려야 하는 구간.
@@ -164,7 +176,7 @@ async function probe() {
     const names = OSM_NAMES[L.key];
     if (!names) { out.push({ key: L.key, name: L.name, error: "OSM_NAMES 에 이름이 없다" }); continue; }
     let found;
-    const LB = L.box ? bx(L.box) : B;
+    const LB = L.box ? bx(L.box) : OSM_BOX[L.key] ? bx(OSM_BOX[L.key]) : B;
     try { found = await overpass(qFind(names, LB)); }
     catch (e) { out.push({ key: L.key, name: L.name, error: String(e.message) }); continue; }
 
