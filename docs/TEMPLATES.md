@@ -17,7 +17,7 @@
 | 판형 | 상태 | 쓰는 세트 |
 |---|---|---|
 | `brand-rank-grid` | 🟢 1세트 | brand-rank |
-| `danji-cover` | 🟢 13세트 | danji-hangang, danji-songdo, danji-jangwi 외 10 |
+| `danji-cover` | 🟢 14세트 | danji-hangang, danji-songdo, danji-jangwi 외 11 |
 | `daso-treemap` | 🟢 1세트 | daso-treemap |
 | `foreign-rank` | 🟢 1세트 | foreign-rank |
 | `gov-bars` | 🟢 1세트 | m2-gov |
