@@ -1,0 +1,67 @@
+{
+  "kaptCode": "A44070707",
+  "kaptName": "정자동신2차",
+  "type": "59",
+  "jibun": "313-1",
+  "exclusive": 59.66,
+  "commonResidential": 19.9,
+  "supply": 79.56,
+  "pyeong": 24.07,
+  "pyeongLabel": "24평",
+  "sampleDong": "206동",
+  "sampleHo": "1208호",
+  "sampleCount": 40,
+  "ratio": 0.7499,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단복도",
+      "floor": "지상 십이층",
+      "area": 14.36
+    },
+    {
+      "purpose": "아파트 / 지하실",
+      "floor": "지하 지1층",
+      "area": 4.36
+    },
+    {
+      "purpose": "아파트 / 중앙공급실",
+      "floor": "지하 지1층",
+      "area": 0.5
+    },
+    {
+      "purpose": "부대시설 / 관리사무실",
+      "floor": "지하 지1층",
+      "area": 0.17
+    },
+    {
+      "purpose": "부대시설 / 경비실",
+      "floor": "지상",
+      "area": 0.16
+    },
+    {
+      "purpose": "복리시설 / 노인시설",
+      "floor": "지상 일층",
+      "area": 0.15
+    },
+    {
+      "purpose": "아파트 / 열교환실및공중변소",
+      "floor": "지하 지1층",
+      "area": 0.13
+    },
+    {
+      "purpose": "아파트 / 지역변전실.열교환실",
+      "floor": "지하 지1층",
+      "area": 0.07
+    }
+  ],
+  "excludedFromCommon": [
+    {
+      "purpose": "부대시설 / 대피시설",
+      "area": 0.31
+    }
+  ],
+  "excludedNote": "대장이 「주건축물」로 적었지만 주차장·대피소는 기타공용이라 공급면적에서 뺐다(2026-09-05). 이 줄을 넣으면 전용 60㎡ 가 30평으로 나온다 — 같은 타입 72곳의 중앙값은 25평이다.",
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

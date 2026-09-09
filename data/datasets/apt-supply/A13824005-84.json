@@ -1,0 +1,31 @@
+{
+  "kaptCode": "A13824005",
+  "kaptName": "신천장미1차2차",
+  "type": "84",
+  "jibun": "11",
+  "exclusive": 82.45,
+  "commonResidential": 6.97,
+  "supply": 89.42,
+  "pyeong": 27.05,
+  "pyeongLabel": "27평",
+  "sampleDong": "26동",
+  "sampleHo": "302호",
+  "sampleCount": 2,
+  "ratio": 0.9221,
+  "parts": [
+    {
+      "purpose": "부대시설 / 지하",
+      "floor": "지하 지1",
+      "area": 6.21
+    },
+    {
+      "purpose": "아파트 / 옥탑",
+      "floor": "옥탑 옥1",
+      "area": 0.76
+    }
+  ],
+  "warn": "전용률 92.2% — 흔한 범위(70~85%) 밖이다. parts 를 보고 기타공용이 주건축물로 잡혔는지, 정말 그런 단지인지 확인할 것",
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
