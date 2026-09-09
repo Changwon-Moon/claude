@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T07:02:08.499Z",
+  "generatedAt": "2026-09-09T09:36:13.891Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -670,16 +670,16 @@
         },
         {
           "day": "09-09",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "16:09",
+          "delay": 309
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-09-08",
-      "lastOk": "2026-09-08",
-      "okDaysAgo": 1
+      "medianDelay": 309,
+      "maxDelay": 309,
+      "lastRun": "2026-09-09",
+      "lastOk": "2026-09-09",
+      "okDaysAgo": 0
     },
     {
       "file": "foreign-house-collect.yml",
@@ -1128,7 +1128,7 @@
       "lastOk": "2026-09-09",
       "okDaysAgo": 0,
       "fails30": 17,
-      "runs30": 81
+      "runs30": 82
     },
     {
       "file": "guard.yml",

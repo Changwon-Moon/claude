@@ -12,7 +12,7 @@
 > 이 표는 `node scripts/template-usage.mjs --write` 가 **실측해서 씁니다.**
 > 손으로 고치지 마세요 — 세트가 늘면 다음 실행 때 덮어씁니다.
 
-**템플릿 46종** · 🟢 카드가 나오는 것 30 · 🟡 빌더는 있음 4 · ⚪ 잠자는 것 12
+**템플릿 47종** · 🟢 카드가 나오는 것 31 · 🟡 빌더는 있음 3 · ⚪ 잠자는 것 13
 
 | 판형 | 상태 | 쓰는 세트 |
 |---|---|---|
@@ -35,6 +35,7 @@
 | `map-board` | 🟢 1세트 | jeongbi-board |
 | `map-rank` | 🟢 2세트 | estate-84, estate-59 |
 | `metro-2col` | 🟢 1세트 | metro-speed |
+| `rail-geomap` | 🟢 1세트 | railmap-sinansan |
 | `rail-line` | 🟢 8세트 | rail-sinansan, rail-gtxa, rail-gtxb 외 5 |
 | `record-grid` | 🟢 1세트 | kospi-record |
 | `seongsu-zones` | 🟢 1세트 | seongsu-zones |
@@ -48,7 +49,6 @@
 | `year-bars` | 🟢 2세트 | wolse-flip, m2-rate |
 | `estate-cover` | 🟡 빌더 있음·세트 없음 | — |
 | `metro-cover-photo` | 🟡 빌더 있음·세트 없음 | — |
-| `rail-geomap` | 🟡 빌더 있음·세트 없음 | — |
 | `ranking-table` | 🟡 빌더 있음·세트 없음 | — |
 | `dummy-card` | ⚪ 잠자는 중 | — |
 | `figure-roster` | ⚪ 잠자는 중 | — |
@@ -57,6 +57,7 @@
 | `map-choropleth` | ⚪ 잠자는 중 | — |
 | `market-daily` | ⚪ 잠자는 중 | — |
 | `news-figure` | ⚪ 잠자는 중 | — |
+| `ratio-bars` | ⚪ 잠자는 중 | — |
 | `sinbundang-geomap` | ⚪ 잠자는 중 | — |
 | `sinbundang-map` | ⚪ 잠자는 중 | — |
 | `streak-bars` | ⚪ 잠자는 중 | — |
