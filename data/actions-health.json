@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T11:22:20.096Z",
+  "generatedAt": "2026-09-09T11:45:52.321Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -1106,7 +1106,7 @@
       "lastRun": "2026-09-09",
       "daysAgo": 0,
       "lastOk": "2026-09-07",
-      "okDaysAgo": 1,
+      "okDaysAgo": 2,
       "fails30": 19,
       "runs30": 100
     },
@@ -1116,7 +1116,7 @@
       "lastRun": "2026-09-09",
       "daysAgo": 0,
       "lastOk": "2026-09-07",
-      "okDaysAgo": 1,
+      "okDaysAgo": 2,
       "fails30": 19,
       "runs30": 22
     },
@@ -1137,7 +1137,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-09",
       "okDaysAgo": 0,
-      "fails30": 23,
+      "fails30": 22,
       "runs30": 100
     },
     {
