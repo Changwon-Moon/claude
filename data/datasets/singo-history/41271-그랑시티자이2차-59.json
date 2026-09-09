@@ -7,8 +7,8 @@
     "from": "202001",
     "to": "202609",
     "monthsTried": 81,
-    "monthsFailed": 3,
-    "monthsTraded": 38,
+    "monthsFailed": 0,
+    "monthsTraded": 39,
     "peak": {
       "manwon": 57000,
       "date": "2024-11-23",
@@ -728,16 +728,16 @@
       "area": null,
       "floor": null,
       "date": null,
-      "ok": false
+      "ok": true
     },
     {
       "ym": "202608",
-      "maxManwon": null,
-      "count": 0,
-      "area": null,
-      "floor": null,
-      "date": null,
-      "ok": false
+      "maxManwon": 56000,
+      "count": 1,
+      "area": 59.9595,
+      "floor": 34,
+      "date": "2026-08-29",
+      "ok": true
     },
     {
       "ym": "202609",
@@ -746,7 +746,7 @@
       "area": null,
       "floor": null,
       "date": null,
-      "ok": false
+      "ok": true
     }
   ]
 }
