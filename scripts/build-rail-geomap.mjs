@@ -43,6 +43,13 @@ const ONLY = oi >= 0 ? argv[oi + 1] : null;
 const vi = argv.indexOf("--variant");
 const VARIANT = vi >= 0 ? argv[vi + 1] : "d";   /* 오너가 2026-09-09 에 d(정보 두 덩이)를 골랐다 */
 if (!["a", "b", "c", "d"].includes(VARIANT)) throw new Error(`--variant 는 a|b|c|d 다 (받은 값: ${VARIANT})`);
+/* ── 지도 안 워터마크(오너 2026-09-09 "다양하게 제안해줘").
+   카드만 잘려 돌아다닐 때 푸터 워드마크가 같이 안 따라간다 — 지도 안에도 한 번 남긴다.
+   none(기본) · soft(흐린 글자) · badge(잉크 알약) · outline(테두리 알약) · tile(대각 반복) */
+const wi = argv.indexOf("--wm");
+const WM = wi >= 0 ? argv[wi + 1] : "none";
+if (!["none", "soft", "badge", "outline", "tile"].includes(WM))
+  throw new Error(`--wm 은 none|soft|badge|outline|tile 이다 (받은 값: ${WM})`);
 
 const rail = JSON.parse(readFileSync(join(ROOT, "data/datasets/sudo-rail-2026-09.json"), "utf8"));
 if (rail.meta?.verified !== true) throw new Error("데이터셋이 verified:true 가 아니다 (CLAUDE.md §8)");
@@ -598,31 +605,99 @@ function buildOne(L) {
 
   /* ── 시군구 이름. **라벨을 다 놓은 뒤에** 정한다 — 남은 자리에만 적기 때문이다.
      처음엔 라벨보다 먼저 계산했다가 「광명」이 「시흥사거리」와 100% 겹쳤다(designQa 가 잡음).
-     halo 때문에 눈으로는 넘어갔다 — 눈이 아니라 좌표가 판정한다. **화면 안에 중심이 들어오는 것만** 적는다 — 가장자리에 걸친 구의
-     이름을 중심에 찍으면 화면 밖이나 엉뚱한 자리에 뜬다. */
-  /* ⚠️ 중심에 그냥 찍으면 **노선과 역 위에 올라앉는다**(2026-09-09 — 금천구가 독산역을,
-     안산시상록구가 성포역을 덮었다). 지명은 배경이지 정보가 아니므로, 자리가 없으면
-     **안 적는다.** 밀어내면 엉뚱한 구에 이름이 붙어 그게 더 나쁘다. */
-  const trackPx = track.map((p) => ({ x: X(p.lon), y: Y(p.lat) }));
-  const dotPx = pos.map((p) => ({ x: X(p.lon), y: Y(p.lat) }));
+     halo 때문에 눈으로는 넘어갔다 — 눈이 아니라 좌표가 판정한다.
+
+     ── 후보를 여러 개 본다 (오너 2026-09-09: "누락된 행정구역명들 잘 피해서 표기해줘")
+     앞 판은 **중심 한 곳만** 보고, 거기가 막히면 그 구 이름을 통째로 포기했다. 그래서
+     영등포·동작·금천·광명·시흥·안산처럼 **노선이 지나가는 구가 오히려 이름을 잃었다** —
+     정작 독자가 찾는 곳들이다.
+     이제 중심에서 시작해 사방으로 후보를 넓혀 가며 **처음 비는 자리**에 적는다.
+     ⚠️ 후보는 반드시 **그 시군구 폴리곤 안**이어야 한다. 그 조건이 없으면 밀려난 이름이
+        옆 구 위에 앉아 「엉뚱한 구에 이름이 붙는」 옛 문제로 돌아간다. */
+  const trackPx = [...mainWay.g, ...branchPts, ...thruPts].map((p) => ({ x: X(p.lon), y: Y(p.lat) }));
+  const dotPx = lbl.map((p) => ({ x: p.x, y: p.y }));
   const far = (x, y, pts, min) => pts.every((q) => Math.hypot(q.x - x, q.y - y) > min);
+  /* 화면 좌표 → 경위도 (배율이 정해진 뒤라 역산할 수 있다) */
+  const invLon = (x) => lon0 + (x - offX) / (kx * s);
+  const invLat = (y) => lat0 + (BODY_H - y - offY) / s;
+
+  const placedNm = [];                       // 이미 적은 지명 상자 — 지명끼리도 안 겹치게
   let sggNm = "";
   for (const f of sgg.features) {
     const c = ringCentroid(f.geometry);
     if (!c) continue;
-    const x = X(c[0]), y = Y(c[1]);
-    if (x < SAFE_L || x > SAFE_R || y < 30 || y > BODY_H - 34) continue;
-    if (!far(x, y, trackPx, 34) || !far(x, y, dotPx, 52)) continue;
+    const cx = X(c[0]), cy = Y(c[1]);
     /* 「안산시상록구」처럼 붙여 쓴 이름은 읽기 어렵다 — 시와 구를 띄우고, 시로 끝나면 시를 뗀다. */
     const nm = f.properties.name.replace(/^(.+?)시(.+?구)$/, "$1 $2").replace(/시$/, "");
     const nw = [...nm].length * 15 + 8;
-    if (hitsLabel(x, y, nw, 22)) continue;
-    /* 지명은 **정보 패널 자리도 피한다.** 패널이 반투명이라 밑에 깔린 지명이 비쳐 보인다
-       (2026-09-09 시안 d — 우하단 정보 뒤로 「수원 장안구」가 비쳤다). */
-    if (PANELS.some((P) => x + nw / 2 > P.x0 && x - nw / 2 < P.x1 && y + 11 > P.y0 && y - 11 < P.y1)) continue;
-    sggNm += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="15" font-weight="700" fill="#aeb3bb" text-anchor="middle" letter-spacing="0.4">${esc(nm)}</text>`;
+
+    /* 후보: 중심 → 반경을 넓혀 가며 8방향. 가까운 자리부터 본다. */
+    const cand = [{ x: cx, y: cy }];
+    for (const r of [34, 58, 84, 112, 145])
+      for (let k = 0; k < 8; k++) {
+        const th = (k * Math.PI) / 4;
+        cand.push({ x: cx + Math.cos(th) * r * 1.35, y: cy + Math.sin(th) * r });
+      }
+
+    const ok = cand.find(({ x, y }) => {
+      if (x - nw / 2 < SAFE_L || x + nw / 2 > SAFE_R || y < 26 || y > BODY_H - 26) return false;
+      if (!far(x, y, trackPx, 30) || !far(x, y, dotPx, 46)) return false;
+      if (hitsLabel(x, y, nw + 10, 24)) return false;
+      /* 지명은 **정보 패널 자리도 피한다.** 패널이 반투명이라 밑에 깔린 지명이 비쳐 보인다
+         (2026-09-09 시안 d — 우하단 정보 뒤로 「수원 장안구」가 비쳤다). */
+      if (PANELS.some((P) => x + nw / 2 > P.x0 - 6 && x - nw / 2 < P.x1 + 6 && y + 12 > P.y0 - 6 && y - 12 < P.y1 + 6)) return false;
+      if (placedNm.some((b2) => x + nw / 2 > b2.x0 - 8 && x - nw / 2 < b2.x1 + 8 && y + 12 > b2.y0 && y - 12 < b2.y1)) return false;
+      /* ⭐ 그 구 안인가 — 이 한 줄이 「밀어내면 엉뚱한 구에 붙는다」를 막는다. */
+      return pointInGeom([invLon(x), invLat(y)], f.geometry);
+    });
+    if (!ok) continue;
+
+    placedNm.push({ x0: ok.x - nw / 2, x1: ok.x + nw / 2, y0: ok.y - 12, y1: ok.y + 12 });
+    sggNm += `<text x="${ok.x.toFixed(1)}" y="${ok.y.toFixed(1)}" font-size="15" font-weight="700" fill="#aeb3bb" text-anchor="middle" letter-spacing="0.4">${esc(nm)}</text>`;
   }
 
+  /* ── 지도 안 워터마크.
+     ⚠️ 자리를 **고정하지 않는다.** 노선마다 비는 구석이 다르다 — 신안산선은 왼쪽 아래가 비지만
+        가로로 누운 노선(GTX-B)은 거기가 꽉 찬다. 역 이름·정보 패널·노선·지명을 다 피해
+        **처음 비는 구석**에 놓는다. 아무 데도 없으면 **안 그린다** — 워터마크가 정보를 덮으면
+        그건 워터마크가 아니라 사고다. */
+  let wmSvg = "";
+  if (WM === "tile") {
+    /* 대각 반복 — 자리를 찾을 필요가 없다. 대신 아주 흐려야 한다(지도가 주인공이다). */
+    let t = "";
+    for (let row = -1; row * 150 < BODY_H + 300; row++)
+      for (let col = -1; col * 320 < MAP_W + 320; col++)
+        t += `<text x="${(col * 320 + (row % 2 ? 160 : 0)).toFixed(0)}" y="${(row * 150).toFixed(0)}" font-size="34" font-weight="900" fill="#141821" opacity="0.055" letter-spacing="-0.5">@wirit_note</text>`;
+    wmSvg = `<g transform="rotate(-26 ${(MAP_W / 2).toFixed(0)} ${(BODY_H / 2).toFixed(0)})">${t}</g>`;
+  } else if (WM !== "none") {
+    const WMW = WM === "soft" ? 210 : 196, WMH = WM === "soft" ? 34 : 40;
+    const spots = [
+      { x: 18 + WMW / 2, y: BODY_H - 18 - WMH / 2 },              // 왼쪽 아래
+      { x: MAP_W - 18 - WMW / 2, y: 18 + WMH / 2 },               // 오른쪽 위
+      { x: 18 + WMW / 2, y: 18 + WMH / 2 },                       // 왼쪽 위
+      { x: MAP_W - 18 - WMW / 2, y: BODY_H - 18 - WMH / 2 },      // 오른쪽 아래
+      { x: MAP_W / 2, y: BODY_H - 18 - WMH / 2 },                 // 아래 가운데
+    ];
+    const clear = (c) => {
+      const b2 = { x0: c.x - WMW / 2, x1: c.x + WMW / 2, y0: c.y - WMH / 2, y1: c.y + WMH / 2 };
+      const hit = (o) => b2.x1 > o.x0 - 10 && b2.x0 < o.x1 + 10 && b2.y1 > o.y0 - 8 && b2.y0 < o.y1 + 8;
+      if (PANELS.some(hit) || lblBoxes.some(hit) || placedNm.some(hit)) return false;
+      return [...trackPx, ...dotPx].every((q) =>
+        !(q.x > b2.x0 - 12 && q.x < b2.x1 + 12 && q.y > b2.y0 - 12 && q.y < b2.y1 + 12));
+    };
+    const at = spots.find(clear);
+    if (at) {
+      if (WM === "soft") {
+        wmSvg = `<text x="${at.x.toFixed(1)}" y="${at.y.toFixed(1)}" font-size="30" font-weight="900" fill="#141821" opacity="0.17" letter-spacing="-0.6" text-anchor="middle" dominant-baseline="middle">@wirit_note</text>`;
+      } else if (WM === "badge") {
+        wmSvg = `<rect x="${(at.x - WMW / 2).toFixed(1)}" y="${(at.y - WMH / 2).toFixed(1)}" width="${WMW}" height="${WMH}" rx="${(WMH / 2).toFixed(1)}" fill="#141821" opacity="0.92"/>` +
+          `<text x="${at.x.toFixed(1)}" y="${at.y.toFixed(1)}" font-size="20" font-weight="800" fill="#ffffff" letter-spacing="-0.3" text-anchor="middle" dominant-baseline="central">@wirit_note<tspan fill="#2E6BFF">.</tspan></text>`;
+      } else {
+        wmSvg = `<rect x="${(at.x - WMW / 2).toFixed(1)}" y="${(at.y - WMH / 2).toFixed(1)}" width="${WMW}" height="${WMH}" rx="${(WMH / 2).toFixed(1)}" fill="#fbfaf7" opacity="0.9" stroke="#141821" stroke-width="1.6"/>` +
+          `<text x="${at.x.toFixed(1)}" y="${at.y.toFixed(1)}" font-size="20" font-weight="800" fill="#141821" letter-spacing="-0.3" text-anchor="middle" dominant-baseline="central">@wirit_note<tspan fill="#2E6BFF">.</tspan></text>`;
+      }
+    }
+  }
 
   /* ── 지도를 어디서 자를 것인가 (오너 질문 2026-09-09)
      좌우 교차에서는 이름이 양쪽에 있으므로 **노선 주변만 남기고 양옆을 자른다.**
@@ -640,7 +715,7 @@ function buildOne(L) {
   const mapSvg =
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${MAP_W} ${BODY_H}" width="${MAP_W}" height="${BODY_H}">` +
     `<defs><clipPath id="${clipId}"><rect x="${clipL.toFixed(1)}" y="0" width="${(clipR - clipL).toFixed(1)}" height="${BODY_H}" rx="13"/></clipPath></defs>` +
-    `<g clip-path="url(#${clipId})">${land}${sidoLine}${river}${ctx}${sggNm}${line}${inMap}</g>${outMap}` +
+    `<g clip-path="url(#${clipId})">${land}${sidoLine}${river}${ctx}${sggNm}${line}${inMap}</g>${outMap}${wmSvg}` +
     /* 테두리는 **맨 위에, 클립 밖에서** 긋는다 — 클립 안에서 그으면 자기 자신이 반쯤 잘린다. */
     `<rect x="1.5" y="1.5" width="${(MAP_W - 3).toFixed(1)}" height="${(BODY_H - 3).toFixed(1)}" rx="13" fill="none" stroke="#141821" stroke-width="3"/></svg>`;
 
