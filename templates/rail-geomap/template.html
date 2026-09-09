@@ -155,15 +155,22 @@
          세로 카드에 가로 노선(월판선 32×5.7km)을 넣으면 노선이 가운데 얇은 띠가 되고
          위아래가 통째로 빈다. 그 빈자리를 정보가 쓴다.
          ⚠️ .v-d 의 절대배치를 덮어야 하므로 선택자를 한 단계 더 준다(.rgm.is-wide). */
+      /* 순서: 제목 → **정보 띠** → 각주 → **지도(맨 아래)** (오너 2026-09-09 2차)
+         처음엔 지도를 위에 두고 띠를 아래에 뒀는데, 오너가 뒤집기를 골랐다.
+         띠 아래 구분선도 뺐다 — 지도가 바로 아래에 오면 그 선이 지도의 두 번째 테두리처럼 보인다. */
       .rgm.is-wide .rgm-wrap { display: flex; flex-direction: column; }
-      .rgm.is-wide .rgm-body { order: 1; }
       .rgm.is-wide .rgm-bar {
-        order: 2; position: static; left: auto; right: auto; top: auto; width: auto;
-        margin: 46px 0 0; padding: 0 0 14px;
-        background: none; border: 0; border-bottom: 3px solid var(--wirit-ink);
-        border-radius: 0; box-shadow: none;
+        /* 제목 바로 아래라 숨 쉴 자리를 준다 — 0 으로 두면 「하지?」의 아래 획이 「공정률」에 닿는다. */
+        order: 1; position: static; left: auto; right: auto; top: auto; width: auto;
+        margin: 26px 0 0; padding: 0;
+        background: none; border: 0; border-radius: 0; box-shadow: none;
         display: grid; grid-template-columns: auto auto 1fr; column-gap: 30px; align-items: end;
       }
+      /* 각주는 지도 **위**로 온다 — 지도를 맨 아래까지 내리면 각주가 놓일 자리가 없다.
+         기호 설명이므로 지도 바로 위에서도 제 몫을 한다. */
+      .rgm.is-wide .rgm-body { order: 2; height: auto; margin-top: 34px; display: flex; flex-direction: column; }
+      .rgm.is-wide .rgm-note { position: static; order: 0; margin: 0 0 10px; }
+      .rgm.is-wide .rgm-map { order: 1; }
       .rgm.is-wide .rgm-track { width: 250px; }
       .rgm.is-wide .rgm-eta { margin: 0 0 4px; padding: 10px 15px; text-align: right; }
       .rgm.is-wide .rgm-eta .r { justify-content: flex-end; }
