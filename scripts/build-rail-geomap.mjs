@@ -602,6 +602,13 @@ function buildOne(L) {
     if (!fitsCard(side) && fitsCard(-side)) side = -side;     // ②
     if (crossesLine(side) && !crossesLine(-side) && fitsCard(-side)) side = -side;  // ⑤
     if (hitsPanel(side) && !hitsPanel(-side) && fitsCard(-side)) side = -side;      // ④
+    /* ⓪ 오너 지정이 **모든 규칙을 이긴다** (2026-09-09: "메타폴리스와 능동은 역명 위치를
+       바꿔야 보기가 좋을것 같아"). 규칙 ①~⑤ 는 「부딪히지 않는 자리」까지만 안다 —
+       부딪히지 않는 자리가 여럿일 때 어느 쪽이 읽기 좋은지는 사람이 본다.
+       ⚠️ 카드 밖으로 나가는 쪽은 지정이어도 안 따른다. 그건 취향이 아니라 사고다.
+       가로 판형(is-wide)은 위/아래라 같은 키에 "up"/"down" 을 쓴다(assignUpDown ⓪). */
+    if (p.st.labelSide === "left"  && fitsCard(-1)) side = -1;
+    if (p.st.labelSide === "right" && fitsCard(1))  side = 1;
     return { ...p, x, y, ly: y, side };
   });
   };
