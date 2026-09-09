@@ -23,7 +23,7 @@ import { fetchAptTradesMonth } from "./sources/molit.js";
 import { validTrades, explainApiError } from "./parse/molit.js";
 import { areaType, sameApt, fullAptName, BASELINE_FROM, manwonToEok } from "./parse/singo.js";
 import { pickRow, foldMonth } from "./parse/monthCache.js";
-import { readMonth, writeMonth } from "./monthCacheIo.js";
+import { readMonth, writeMonth, readMonthFallback } from "./monthCacheIo.js";
 import { buildUniverseLookup } from "./universeIndex.js";
 import { monthRange } from "./sources/singoRegions.js";
 
@@ -95,6 +95,8 @@ async function main() {
   let failed = 0;
   let fromCache = 0;
   let fromApi = 0;
+  /** API 가 거절해 **캐시로 메운** 달들 — meta 에 그대로 적는다(조용히 메우지 않는다) */
+  const patched: string[] = [];
 
   for (const ym of months) {
     /* ── 📦 캐시 먼저 본다 (2026-09-02)
@@ -185,6 +187,26 @@ async function main() {
           );
           process.exit(1);
         }
+        /* ── 📦 **마지막 수단: 캐시** (2026-09-10)
+         *
+         * 여기까지 왔다는 것은 그 달을 **못 받았다**는 뜻이다. 예전엔 그대로 「모르는 달」로
+         * 뒀는데, 09-10 남양주 41360 에서 그 대가가 드러났다 — 최근 세 달을 API 가 세 번 다
+         * 거절해 곡선이 9.45억에서 멈췄고, 오늘 신고가 10.8억이 곡선 위로 튀어나와 카드가 막혔다.
+         * **그 세 달 값은 캐시에 이미 있었다**(어제 아침 알림이 접어 둔 것 · 10.8억까지 들어 있었다).
+         *
+         * 「모르는 달」보다 어제 접어 둔 값이 낫다. 대신 **숨기지 않는다** —
+         * 어느 달을 캐시로 메웠고 그 캐시가 언제 것인지 meta 에 적는다.
+         * ⚠️ 이건 **API 가 실패했을 때만** 도는 길이다. 평소엔 최근 달을 늘 새로 받는다(09-04 사고).
+         */
+        const fb = readMonthFallback(lawdCd, ym);
+        const fr = fb ? pickRow(fb.rows, aptNm, type, umdNm, sameApt) : null;
+        if (fb && fr) {
+          console.warn(`   📦 ${ym} 은 캐시로 메웁니다(${fb.savedAt} 접음) — API 가 안 열렸습니다`);
+          patched.push(`${ym}←${fb.savedAt}`);
+          points.push({ ym, maxManwon: fr.max, count: fr.count, area: fr.area, floor: fr.floor, date: fr.date, ok: true });
+          done = true;
+          break;
+        }
         // ⚠️ 실패한 달을 0 이나 직전값으로 메우지 않는다 — 곡선이 거짓말을 하게 된다.
         failed++;
         points.push({ ym, maxManwon: null, count: 0, area: null, floor: null, date: null, ok: false });
@@ -241,7 +263,10 @@ async function main() {
           note:
             "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 " +
             "수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. " +
-            "직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조).",
+            "직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)." +
+            (patched.length
+              ? ` API 가 거절해 「구×월」 캐시로 메운 달: ${patched.join(", ")} (연월←캐시 접은 날).`
+              : ""),
         },
         points,
       },

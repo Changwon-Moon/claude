@@ -58,6 +58,33 @@ export function readMonth(lawd: string, ym: string): MonthRow[] | null {
   }
 }
 
+/**
+ * 📦 **최근 달이라도 캐시를 꺼내 본다** — API 가 실패했을 때의 **마지막 수단** (2026-09-10)
+ *
+ * `readMonth` 는 최근 3개월을 일부러 건너뛴다(신고 지연 30일 · 09-04 사고). 그 규칙은 옳다 —
+ * **받아올 수 있을 때는** 캐시보다 API 가 낫다. 그런데 09-10 에 그 반대편이 드러났다:
+ * 남양주 41360 의 최근 세 달을 API 가 **세 번 다 거절**해서 곡선이 「모르는 달」 셋을 안고
+ * 9.45억으로 끝났고, 카드가 막혔다. **그런데 그 세 달 값이 캐시에 이미 있었다** —
+ * 어제 아침 알림이 접어 둔 것이고, 오늘 신고가로 뜬 10.8억(09-08 계약)까지 들어 있었다.
+ *
+ * 「모르는 달」보다 **어제 접어 둔 값이 낫다.** 다만 그 사실은 숨기지 않는다 —
+ * 부른 쪽이 `savedAt` 을 받아 곡선 meta 에 적는다.
+ *
+ * ⚠️ **API 가 실패했을 때만** 쓴다. 평소 경로는 그대로 `readMonth` 다 —
+ *    이걸 앞세우면 09-04 사고(낡은 캐시가 새 신고를 못 본다)가 그대로 돌아온다.
+ */
+export function readMonthFallback(lawd: string, ym: string): { rows: MonthRow[]; savedAt: string } | null {
+  const p = monthPath(lawd, ym);
+  if (!existsSync(p)) return null;
+  try {
+    const j = JSON.parse(readFileSync(p, "utf8")) as MonthCache;
+    if (j.scope !== "universe" || !Array.isArray(j.rows)) return null;
+    return { rows: j.rows, savedAt: j.savedAt };
+  } catch {
+    return null;
+  }
+}
+
 /** 칸을 쓴다. **내용이 같으면 안 쓴다** — 매일 같은 파일을 다시 커밋하지 않기 위해서다. */
 export function writeMonth(lawd: string, ym: string, rows: MonthRow[]): boolean {
   const p = monthPath(lawd, ym);
