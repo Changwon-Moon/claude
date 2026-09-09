@@ -110,7 +110,7 @@ const MAP_W = 936;
    a: 위 띠(정보가 세로를 먹음) · b: 지도 위에 겹침(세로를 안 먹음) · c: 우측 열(현행) */
 /* d 는 제목을 1.5배(62→93px)로 키우면서 두 줄이 됐다(오너 2026-09-09). 늘어난 131px 을
    지도에서 뺀다 — "그것에 맞게 지도는 조금 줄여줘". */
-const BODY_H_BY_V = { a: 820, b: 986, c: 820, d: 946 };
+const BODY_H_BY_V = { a: 820, b: 986, c: 820, d: 930 };
 const TITLE_FS_BY_V = { a: 62, b: 62, c: 62, d: 93 };
 const BODY_H = BODY_H_BY_V[VARIANT];
 /* 정보 패널이 지도 위에서 차지하는 자리. **빌더가 이 값을 알아야** 그 자리에 걸리는 역 이름을
@@ -412,10 +412,15 @@ function buildOne(L) {
     }
   }
 
-  /* ── 배경: 시군구 경계 + 한강 */
-  const PADD = 0.05;
+  /* ── 배경: 시군구 면 + 바다 + 한강
+     ⚠️ 그릴 시군구를 고르는 상자는 **노선 상자 ±0.05°** 였다. 바다를 파랑으로 칠하기 전에는
+        안 그려진 땅이 바탕색으로 남아 티가 안 났지만, 이제는 **안 그려진 땅이 바다로 보인다.**
+        그래서 상자를 **화면에 실제로 보이는 범위**로 잡는다(배율이 정해진 뒤라 역산할 수 있다). */
+  const visLon0 = lon0 - offX / (kx * s), visLon1 = lon0 + (MAP_W - offX) / (kx * s);
+  const visLat0 = lat0 - offY / s, visLat1 = lat0 + (BODY_H - offY) / s;
+  const PADD = 0.02;
   const inBox = (r) => r.some(([lon, lat]) =>
-    lat > lat0 - PADD && lat < lat1 + PADD && lon > lon0 - PADD && lon < lon1 + PADD);
+    lat > visLat0 - PADD && lat < visLat1 + PADD && lon > visLon0 - PADD && lon < visLon1 + PADD);
   /* ⚠️ 예전에는 시군구 폴리곤만 칠했다. 그러면 바다·경계 밖이 **카드 바탕(흰색)** 으로 남아
      지도가 어디서 시작해 어디서 끝나는지 모호했고, 좌상단 정보 패널이 지도 밖에 뜬 것처럼 보였다
      (오너 2026-09-09). 판 전체를 같은 색으로 깔고 잉크 테두리를 두른다. */
@@ -427,10 +432,15 @@ function buildOne(L) {
   const SIDO_FILL = {
     서울특별시: "#e8e2d6",
     경기도: "#f2efe8",
-    인천광역시: "#e4e8e5",
+    /* 인천은 **회색 계열**로 뺀다(오너 2026-09-09). 앞 판의 #e4e8e5 는 초록빛이 돌아
+       물빛과 헷갈렸다 — 바다를 파랑으로 칠하면서 더 그랬다. */
+    인천광역시: "#e2e3e6",
   };
   const FILL_ETC = "#edeae3";
-  let land = `<rect x="0" y="0" width="${MAP_W}" height="${BODY_H}" fill="${FILL_ETC}"/>`;
+  /* 판 바탕 = **바다**. 시군구 면이 그 위에 덮이므로, 남는 파랑은 서해·시화호처럼
+     실제로 물인 자리다(오너 2026-09-09 "바다, 강을 파랑색으로 칠해서 헷갈리지 않게"). */
+  const SEA = "#d3e3f0";
+  let land = `<rect x="0" y="0" width="${MAP_W}" height="${BODY_H}" fill="${SEA}"/>`;
   for (const f of sgg.features) {
     const fill = SIDO_FILL[f.properties?.sido] || FILL_ETC;
     for (const r of rings(f.geometry)) {
