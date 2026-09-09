@@ -88,17 +88,35 @@
         font-size: 18px; font-weight: 600; color: var(--wirit-gray); letter-spacing: -0.02em;
       }
       .rgm .wirit-footer { font-size: 19px; letter-spacing: -0.015em; }
+
+      /* ══ 시안 b — 정보를 지도 **위에 겹친다** (오너 2026-09-09 "겹쳐지더라도 효율적으로")
+         정보가 세로를 안 먹으니 지도가 그만큼 커진다. 겹치는 자리는 노선에서 먼
+         왼쪽 위(인천·부천 쪽) — 이 노선이 세로라 그쪽이 늘 비어 있다.
+         ⚠️ 반투명이 아니라 **불투명 패널**이다. 반투명이면 밑의 경계선이 숫자에 겹쳐 읽힌다. */
+      .v-b .rgm-bar {
+        position: absolute; left: 0; top: 0; z-index: 2;
+        margin: 0; padding: 15px 18px 13px; width: 468px;
+        display: grid; grid-template-columns: auto 1fr; column-gap: 20px;
+        background: rgba(251,250,247,0.96); border: 2px solid var(--wirit-ink-06);
+        border-radius: 16px; box-shadow: 0 4px 22px rgba(20,24,33,0.10);
+      }
+      .v-b .rgm-facts { grid-column: 1 / -1; margin-top: 10px; }
+      .v-b .rgm-prog .big { font-size: 54px; }
+      .v-b .rgm-prog .big i { font-size: 27px; }
+      .v-b .rgm-track { width: 200px; }
+      .v-b .rgm-wrap { position: relative; }
     </style>
   </head>
   <body>
     <div
-      class="wirit-card font-taebaek-pretendard rgm"
+      class="wirit-card font-taebaek-pretendard rgm v-{{variant}}"
       style="--lc:{{lc}};--titleFs:{{layout.titleFs}}px;--titleGap:{{layout.titleGap}}px;--bodyGap:{{layout.bodyGap}}px"
     >
       <div class="wirit-topcap"><span>{{subtitle}}</span></div>
 
       <h1 class="rgm-title">{{{title}}}</h1>
 
+      <div class="rgm-wrap">
       <div class="rgm-bar" style="--barGap:{{layout.barGap}}px">
         <div class="rgm-prog">
           <span class="lb">공정률</span>
@@ -122,6 +140,7 @@
       <div class="rgm-body" style="--bodyH:{{layout.bodyH}}px">
         <div class="rgm-map wirit-linecolor">{{{mapSvg}}}</div>
         {{#if note}}<div class="rgm-note">{{note}}</div>{{/if}}
+      </div>
       </div>
 
       <div class="wirit-footer">

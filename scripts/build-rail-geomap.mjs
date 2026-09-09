@@ -29,7 +29,7 @@ import { writeCaption } from "./lib/caption-signature.mjs";
 import { hanRiverPoints } from "./lib/han-river.mjs";
 import {
   metres, rings, ringCentroid, pointInGeom, dongCentre,
-  buildTrack, projectOnTrack, pointAt, monotonicPositions,
+  buildTrack, projectOnTrack, pointAt, monotonicPositions, buildPeriod,
 } from "./lib/rail-geo.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -38,6 +38,11 @@ const date = argv.find((a) => /^\d{4}-\d{2}-\d{2}$/.test(a)) || new Date().toISO
 const publish = argv.includes("--publish");
 const oi = argv.indexOf("--only");
 const ONLY = oi >= 0 ? argv[oi + 1] : null;
+/* ── 시안(variant). 오너 요청 2026-09-09: 라벨 좌우 배치·여백·크롭·정보 배치를 달리한 안을
+      여러 개 만들어 비교한다. 기본은 a(현행 개선). 시안은 --publish 없이 뽑아 눈으로 고른다. */
+const vi = argv.indexOf("--variant");
+const VARIANT = vi >= 0 ? argv[vi + 1] : "a";
+if (!["a", "b", "c"].includes(VARIANT)) throw new Error(`--variant 는 a|b|c 다 (받은 값: ${VARIANT})`);
 
 const rail = JSON.parse(readFileSync(join(ROOT, "data/datasets/sudo-rail-2026-09.json"), "utf8"));
 if (rail.meta?.verified !== true) throw new Error("데이터셋이 verified:true 가 아니다 (CLAUDE.md §8)");
@@ -96,7 +101,11 @@ const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replac
 
 /* ── 지도 판 크기. 정보를 위 띠로 올렸으므로 **카드 폭을 다 쓴다**(2026-09-09 개편).
    968 = 1080 − 좌우 패딩 56×2. 세로는 제목·정보띠·각주·푸터를 뺀 나머지다. */
-const MAP_W = 968, BODY_H = 820;
+const MAP_W = 968;
+/* 시안마다 지도 높이가 다르다 — 정보를 어디에 두느냐가 곧 지도에 남는 세로다.
+   a: 위 띠(정보가 세로를 먹음) · b: 지도 위에 겹침(세로를 안 먹음) · c: 우측 열(현행) */
+const BODY_H_BY_V = { a: 820, b: 986, c: 820 };
+const BODY_H = BODY_H_BY_V[VARIANT];
 
 function buildOne(L) {
   const A = anchorsDoc[L.key];
@@ -164,8 +173,15 @@ function buildOne(L) {
      뱃지 뒤에 바로 붙이면 역마다 이름 시작점이 들쭉날쭉해 읽는 눈이 계속 좌우로 흔들린다. */
   const BDG_W = Math.max(0, ...L.stations.map((st) => badgeRowWidth(st.xfer || [])));
   const BDG_PAD = BDG_W ? 10 : 0;
-  const PADL = 22, PADT = 20, PADB = 20;
-  const PADR = Math.round(30 + BDG_W + BDG_PAD + maxNm * LBL_FS * 0.98 + (anyProv ? 44 : 0) + 8);
+  /* 한 행의 최대 폭 = 뱃지 구역 + 이름 + (가칭). 좌우 배치는 이 폭을 **양쪽에** 둔다. */
+  const ROW_W = Math.round(BDG_W + BDG_PAD + maxNm * LBL_FS * 0.98 + (anyProv ? 44 : 0));
+  const LEAD_W = 30;                       // 지시선이 최소한 이만큼은 보여야 어느 점인지 안다
+  const SIDE_W = ROW_W + LEAD_W;
+  const PADT = 20, PADB = 20;
+  /* a·b 는 좌우 교차 → 양쪽에 자리. c 는 현행(오른쪽 한 열). */
+  const TWO_SIDED = VARIANT !== "c";
+  const PADL = TWO_SIDED ? SIDE_W : 22;
+  const PADR = TWO_SIDED ? SIDE_W : Math.round(30 + ROW_W + 8);
   const spanX = (lon1 - lon0) * kx, spanY = lat1 - lat0;
   const s = Math.min((MAP_W - PADL - PADR) / spanX, (BODY_H - PADT - PADB) / spanY);
   const offX = PADL + (MAP_W - PADL - PADR - spanX * s) / 2;
@@ -185,9 +201,10 @@ function buildOne(L) {
       land += `<path d="${r.map(([lon, lat], i) => `${i ? "L" : "M"}${X(lon).toFixed(1)},${Y(lat).toFixed(1)}`).join("")}Z" fill="#efece5" stroke="#dcd8cf" stroke-width="1.1"/>`;
     }
 
-  /* 이름 열의 x — 지명 배치도 이 값을 쓰므로 **쓰는 곳들보다 먼저** 정한다(const 는 TDZ 다). */
-  const LBL_X = Math.max(...pos.map((p) => X(p.lon))) + 26;   // 뱃지 구역 왼쪽 끝
-  const NAME_X = LBL_X + BDG_W + BDG_PAD;                    // 이름은 모두 여기서 시작
+  /* 지명을 적을 수 있는 가로 범위 — 좌우 교차에서는 이름이 양쪽에 있으므로
+     "노선 주변"만 비워 두면 된다. 아래 far() 가 점·선과의 거리로 다시 거른다. */
+  const SAFE_L = TWO_SIDED ? 26 : 40;
+  const SAFE_R = TWO_SIDED ? MAP_W - 26 : Math.max(...pos.map((p) => X(p.lon))) - 20;
 
   /* ── 한강. sudogwon-map 과 같은 부품을 쓴다 — 강을 두 곳에서 그리면 갈라진다. */
   let river = "";
@@ -196,26 +213,6 @@ function buildOne(L) {
     const hr = hanRiverPoints(named);
     river = `<path d="${hr.map(([lon, lat], i) => `${i ? "L" : "M"}${X(lon).toFixed(1)},${Y(lat).toFixed(1)}`).join("")}" fill="none" stroke="#c3d9e9" stroke-width="13" stroke-linecap="round"/>`;
   } catch (e) { throw new Error(`${L.name}: 한강을 못 그렸다 — ${e.message}`); }
-
-  /* ── 시군구 이름. **화면 안에 중심이 들어오는 것만** 적는다 — 가장자리에 걸친 구의
-     이름을 중심에 찍으면 화면 밖이나 엉뚱한 자리에 뜬다. */
-  /* ⚠️ 중심에 그냥 찍으면 **노선과 역 위에 올라앉는다**(2026-09-09 — 금천구가 독산역을,
-     안산시상록구가 성포역을 덮었다). 지명은 배경이지 정보가 아니므로, 자리가 없으면
-     **안 적는다.** 밀어내면 엉뚱한 구에 이름이 붙어 그게 더 나쁘다. */
-  const trackPx = track.map((p) => ({ x: X(p.lon), y: Y(p.lat) }));
-  const dotPx = pos.map((p) => ({ x: X(p.lon), y: Y(p.lat) }));
-  const far = (x, y, pts, min) => pts.every((q) => Math.hypot(q.x - x, q.y - y) > min);
-  let sggNm = "";
-  for (const f of sgg.features) {
-    const c = ringCentroid(f.geometry);
-    if (!c) continue;
-    const x = X(c[0]), y = Y(c[1]);
-    if (x < 40 || x > LBL_X - 46 || y < 30 || y > BODY_H - 34) continue;
-    if (!far(x, y, trackPx, 34) || !far(x, y, dotPx, 52)) continue;
-    /* 「안산시상록구」처럼 붙여 쓴 이름은 읽기 어렵다 — 시와 구를 띄우고, 시로 끝나면 시를 뗀다. */
-    const nm = f.properties.name.replace(/^(.+?)시(.+?구)$/, "$1 $2").replace(/시$/, "");
-    sggNm += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="15" font-weight="700" fill="#aeb3bb" text-anchor="middle" letter-spacing="0.4">${esc(nm)}</text>`;
-  }
 
   /* ── 배경(기존) 노선 — 오너 요청 2026-09-09. 회색 가는 선으로 뒤에 깐다.
      ⚠️ 자료가 없으면 **조용히 넘어가지 않는다.** 이 판형의 요청 사항이라 없으면 그렇게 말한다. */
@@ -237,63 +234,147 @@ function buildOne(L) {
   const line = `<path d="${d(mainWay.g)}" fill="none" stroke="${lc}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`;
 
   /* ── 역 점·이름.
-     ⚠️ 도심 구간은 역간 1km 라 화면에서 20px 도 안 떨어진다 — 이름을 점 옆에 그냥 붙이면
-        여의도~구로디지털단지 다섯 개가 겹쳐 뭉갠다(2026-09-09 첫 렌더에서 실제로 그랬다).
-        그래서 이름은 **고정된 세로 열**에 놓고, 겹치지 않게 아래로 밀고, 점과는 지시선으로 잇는다.
-        미는 순간 이름과 점의 높이가 달라지므로 지시선이 없으면 어느 점의 이름인지 모른다.
-     개통 예정이라 점 모양은 전부 같게 둔다 — 상태를 색으로 나누면 「어디는 열려 있다」로 읽힌다. */
-  const LBL_GAP = 30;                                        // 글자 24px + 여백
-  const lbl = pos.map((p) => ({ ...p, x: X(p.lon), y: Y(p.lat), ly: Y(p.lat) }));
+     ⚠️ 도심 구간은 역간 1km 라 화면에서 20px 도 안 떨어진다. 한쪽에 몰면 다섯 개가 겹친다.
 
-  /* 위에서 아래로 훑으며 최소 간격을 지키게 민다. 그다음 아래에서 위로 한 번 더 훑어
-     카드 밖으로 밀린 것을 되끌어 올린다 — 한 방향만 하면 마지막 몇 개가 밖으로 나간다. */
-  for (let i = 1; i < lbl.length; i++)
-    if (lbl[i].ly - lbl[i - 1].ly < LBL_GAP) lbl[i].ly = lbl[i - 1].ly + LBL_GAP;
-  /* ⚠️ 아래 여백을 14px 로 뒀더니 마지막 역 이름이 **각주 위로 올라앉았다**(2026-09-09).
-     지도 상자 안이라 designQa 의 겹침 검사에도 안 잡힌다 — SVG 안 글자는 그쪽 소관이 아니다.
-     그래서 여백을 넉넉히 주고, 되끌어 올리는 패스를 **조건 없이** 돌린다. */
-  const BOT = BODY_H - 46;
-  if (lbl[lbl.length - 1].ly > BOT) lbl[lbl.length - 1].ly = BOT;
-  for (let i = lbl.length - 2; i >= 0; i--)
-    if (lbl[i + 1].ly - lbl[i].ly < LBL_GAP) lbl[i].ly = lbl[i + 1].ly - LBL_GAP;
+     ── 좌우 교차 (오너 2026-09-09 "노선의 좌, 우로 겹치지 않게")
+     한쪽 열에 다 몰던 것을 **양쪽으로 나눈다.** 나누면 같은 쪽 이웃 간격이 두 배가 되어
+     밀어내는 양이 절반으로 준다 — 라벨이 제 점 가까이 남고 지시선이 짧아진다.
+     쪽을 정하는 규칙:
+       ① 번갈아 놓는 것을 기본으로 하되,
+       ② 그 쪽으로 놓으면 카드 밖으로 나가는 역은 반대쪽으로 (가장자리 역이 잘리는 걸 막는다)
+       ③ 뱃지가 있는 역은 **오른쪽을 우선**한다 — 왼쪽에 놓으면 뱃지가 이름보다 더 왼쪽에
+          가서 이름·뱃지 순서가 좌우로 뒤집힌다(오너가 원한 "이름 앞 로고"가 깨진다).
+     그다음 **쪽마다 따로** 세로 겹침을 푼다. */
+  const rowW = (st) => {
+    const k = st.xfer || [];
+    return (k.length ? badgeRowWidth(k) + BDG_PAD : 0)
+      + [...p2name(st)].length * LBL_FS * 0.98
+      + (st.state === "가칭" || st.state === "역명미정" ? 44 : 0);
+  };
+  function p2name(st) { return st.name; }
+
+  const lbl = pos.map((p, i) => {
+    const x = X(p.lon), y = Y(p.lat);
+    let side = i % 2 === 0 ? 1 : -1;                       // ① 번갈아
+    if ((p.st.xfer || []).length) side = 1;                // ③ 뱃지 있으면 오른쪽
+    const w = rowW(p.st);
+    if (side < 0 && x - LEAD_W - w < 6) side = 1;          // ② 왼쪽이면 카드 밖
+    if (side > 0 && x + LEAD_W + w > MAP_W - 6) side = -1;
+    return { ...p, x, y, ly: y, side };
+  });
+
+  /* 지도 위에 글자를 얹을 때의 유일한 방법 — 글자 테두리를 먼저 칠하고 그 위에 글자를 칠한다.
+     paint-order 없이 stroke 를 주면 획이 글자 안쪽까지 먹어 굵고 뭉개져 보인다. */
+  const HALO = TWO_SIDED ? ' stroke="#fbfaf7" stroke-width="4.5" paint-order="stroke" stroke-linejoin="round"' : "";
+  const LBL_GAP = 30;
+  for (const sd of [1, -1]) {
+    const g = lbl.filter((p) => p.side === sd);
+    for (let i = 1; i < g.length; i++)
+      if (g[i].ly - g[i - 1].ly < LBL_GAP) g[i].ly = g[i - 1].ly + LBL_GAP;
+    const BOT = BODY_H - 20;
+    if (g.length && g[g.length - 1].ly > BOT) g[g.length - 1].ly = BOT;
+    for (let i = g.length - 2; i >= 0; i--)
+      if (g[i + 1].ly - g[i].ly < LBL_GAP) g[i].ly = g[i + 1].ly - LBL_GAP;
+    for (const p of g) if (p.ly < 16) p.ly = 16;
+  }
 
   let inMap = "", outMap = "";
   for (const p of lbl) {
     const prov = p.st.state === "가칭" || p.st.state === "역명미정";
     const keys = p.st.xfer || [];
-    /* ⚠️ 지시선은 **지도 자르기 밖에서** 그린다. 안쪽에서 그리면 지도 가장자리에서 잘려
-       점과 이름 사이가 끊긴 채로 보인다(2026-09-09). 끝점은 그 행의 **가장 왼쪽 요소**
-       (뱃지가 있으면 뱃지, 없으면 이름) 바로 앞이다 — 행마다 다르므로 여기서 계산한다. */
-    const rowLeft = NAME_X - (keys.length ? BDG_PAD + badgeRowWidth(keys) : 0);
-    const endX = rowLeft - 9;
-    const near = Math.abs(p.ly - p.y) < 1.5;
-    const lead = near
-      ? `<path d="M${(p.x + 13).toFixed(1)},${p.y.toFixed(1)}H${endX.toFixed(1)}" stroke="#b3b8c1" stroke-width="1.8" fill="none"/>`
-      : `<path d="M${(p.x + 13).toFixed(1)},${p.y.toFixed(1)}H${(endX - 16).toFixed(1)}L${endX.toFixed(1)},${p.ly.toFixed(1)}" stroke="#b3b8c1" stroke-width="1.8" fill="none"/>`;
+    const bw = keys.length ? badgeRowWidth(keys) + BDG_PAD : 0;
 
-    /* 뱃지는 이름 바로 왼쪽에 **오른쪽 맞춤** — 이름 시작점(NAME_X)을 흔들지 않으면서
-       "이 역은 무슨 노선과 만나나"가 이름 앞에서 먼저 읽힌다(오너 2026-09-09). */
-    let bd = "", bx = rowLeft;
-    for (const k of keys) { bd += badgeSvg(k, bx, p.ly); bx += badgeWidth(k) + BDG_GAP; }
+    /* 오른쪽: [지시선][뱃지][이름] · 왼쪽: [이름][뱃지][지시선] — 안쪽(노선쪽)이 뱃지다.
+       그래야 양쪽 모두 "노선에서 멀어지는 방향으로 뱃지 → 이름"이 되어 대칭이 된다. */
+    const nameW = [...p.name].length * LBL_FS * 0.98 + (prov ? 44 : 0);
+    let bx, nameX, anchor, endX;
+    if (p.side > 0) {
+      endX = p.x + LEAD_W;
+      bx = endX + 9;
+      nameX = bx + bw;
+      anchor = "start";
+    } else {
+      endX = p.x - LEAD_W;
+      bx = endX - 9 - bw;
+      nameX = bx;                     // 왼쪽은 이름을 오른쪽 끝 기준으로 맞춘다
+      anchor = "end";
+      nameX = bx;                     // text-anchor=end 라 이 x 가 오른쪽 끝
+    }
+
+    const near = Math.abs(p.ly - p.y) < 1.5;
+    const kink = p.side > 0 ? endX - 14 : endX + 14;
+    const lead = near
+      ? `<path d="M${(p.x + p.side * 13).toFixed(1)},${p.y.toFixed(1)}H${endX.toFixed(1)}" stroke="#9aa1ac" stroke-width="1.8" fill="none"/>`
+      : `<path d="M${(p.x + p.side * 13).toFixed(1)},${p.y.toFixed(1)}H${kink.toFixed(1)}L${endX.toFixed(1)},${p.ly.toFixed(1)}" stroke="#9aa1ac" stroke-width="1.8" fill="none"/>`;
+
+    let bd = "";
+    if (keys.length) {
+      let bxx = p.side > 0 ? bx : bx;
+      for (const k of keys) { bd += badgeSvg(k, bxx, p.ly); bxx += badgeWidth(k) + BDG_GAP; }
+    }
 
     inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="#ffffff" stroke="${lc}" stroke-width="5"/>`;
     outMap += lead + bd +
-      `<text x="${NAME_X.toFixed(1)}" y="${p.ly.toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle">${esc(p.name)}` +
+      `<text x="${(p.side > 0 ? nameX : bx - 9).toFixed(1)}" y="${p.ly.toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle" text-anchor="${anchor}"${HALO}>${esc(p.name)}` +
       (prov ? `<tspan font-size="16" font-weight="700" fill="#8a8f98" dx="6">가칭</tspan>` : "") +
       `</text>`;
   }
 
-  /* ⚠️ 지도 그림을 **이름 열 왼쪽에서 자른다.** 안 자르면 시군구 면색과 한강이 이름·뱃지
-     뒤까지 깔려, 여의도·영등포 뱃지가 파란 강 위에 앉는다(2026-09-09).
-     자르는 선은 지시선이 닿는 곳(LBL_X − 8)보다 살짝 오른쪽이어야 선이 안 잘린다. */
-  const clipId = `rgmclip-${L.key}`;
+  /* 역 이름·뱃지가 차지한 상자들 — 지명은 여기도 피한다. */
+  const lblBoxes = lbl.map((p) => {
+    const w = rowW(p.st) + LEAD_W + 12;
+    return p.side > 0
+      ? { x0: p.x, x1: p.x + w, y0: p.ly - 17, y1: p.ly + 17 }
+      : { x0: p.x - w, x1: p.x, y0: p.ly - 17, y1: p.ly + 17 };
+  });
+  const inBoxAny = (x, y) => lblBoxes.some((b2) => x > b2.x0 && x < b2.x1 && y > b2.y0 && y < b2.y1);
+
+  /* ── 시군구 이름. **라벨을 다 놓은 뒤에** 정한다 — 남은 자리에만 적기 때문이다.
+     처음엔 라벨보다 먼저 계산했다가 「광명」이 「시흥사거리」와 100% 겹쳤다(designQa 가 잡음).
+     halo 때문에 눈으로는 넘어갔다 — 눈이 아니라 좌표가 판정한다. **화면 안에 중심이 들어오는 것만** 적는다 — 가장자리에 걸친 구의
+     이름을 중심에 찍으면 화면 밖이나 엉뚱한 자리에 뜬다. */
+  /* ⚠️ 중심에 그냥 찍으면 **노선과 역 위에 올라앉는다**(2026-09-09 — 금천구가 독산역을,
+     안산시상록구가 성포역을 덮었다). 지명은 배경이지 정보가 아니므로, 자리가 없으면
+     **안 적는다.** 밀어내면 엉뚱한 구에 이름이 붙어 그게 더 나쁘다. */
+  const trackPx = track.map((p) => ({ x: X(p.lon), y: Y(p.lat) }));
+  const dotPx = pos.map((p) => ({ x: X(p.lon), y: Y(p.lat) }));
+  const far = (x, y, pts, min) => pts.every((q) => Math.hypot(q.x - x, q.y - y) > min);
+  let sggNm = "";
+  for (const f of sgg.features) {
+    const c = ringCentroid(f.geometry);
+    if (!c) continue;
+    const x = X(c[0]), y = Y(c[1]);
+    if (x < SAFE_L || x > SAFE_R || y < 30 || y > BODY_H - 34) continue;
+    if (!far(x, y, trackPx, 34) || !far(x, y, dotPx, 52) || inBoxAny(x, y)) continue;
+    /* 「안산시상록구」처럼 붙여 쓴 이름은 읽기 어렵다 — 시와 구를 띄우고, 시로 끝나면 시를 뗀다. */
+    const nm = f.properties.name.replace(/^(.+?)시(.+?구)$/, "$1 $2").replace(/시$/, "");
+    sggNm += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="15" font-weight="700" fill="#aeb3bb" text-anchor="middle" letter-spacing="0.4">${esc(nm)}</text>`;
+  }
+
+
+  /* ── 지도를 어디서 자를 것인가 (오너 질문 2026-09-09)
+     좌우 교차에서는 이름이 양쪽에 있으므로 **노선 주변만 남기고 양옆을 자른다.**
+     자르는 폭은 노선의 실제 가로 범위 + 여유다 — 고정값이면 노선마다 여백이 달라진다.
+     안 자르면 면색·한강이 이름·뱃지 뒤까지 깔려 뱃지가 강 위에 앉는다(2026-09-09 실측). */
+  const dotXs = pos.map((p) => X(p.lon));
+  /* ⚠️ 처음엔 좌우 교차에서 **노선 주변만 남기고 잘랐다.** 그랬더니 지도가 세로 띠가 되고
+     양옆 흰 바탕에 이름이 떠서 「지도 위 노선」이 아니라 「목록 옆 그림」이 됐다(2026-09-09).
+     자르는 대신 **이름에 흰 테두리(halo)** 를 둘러 지도 위에서 읽히게 한다 —
+     자르면 정보(지리)가 사라지고, halo 는 안 사라진다.
+     한 열짜리(c)만 예전처럼 이름 열 왼쪽에서 자른다. */
+  const clipL = TWO_SIDED ? 0 : 0;
+  const clipR = TWO_SIDED ? MAP_W : Math.max(...dotXs) + 22;
+  const clipId = `rgmclip-${L.key}-${VARIANT}`;
   const mapSvg =
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${MAP_W} ${BODY_H}" width="${MAP_W}" height="${BODY_H}">` +
-    `<defs><clipPath id="${clipId}"><rect x="0" y="0" width="${(LBL_X - 4).toFixed(1)}" height="${BODY_H}"/></clipPath></defs>` +
+    `<defs><clipPath id="${clipId}"><rect x="${clipL.toFixed(1)}" y="0" width="${(clipR - clipL).toFixed(1)}" height="${BODY_H}"/></clipPath></defs>` +
     `<g clip-path="url(#${clipId})">${land}${river}${ctx}${sggNm}${line}${inMap}</g>${outMap}</svg>`;
 
+  /* ⚠️ rail-line@1 은 6항목인데 여기 옮길 때 **「예상 공사기간」이 빠졌다**(2026-09-09 대조).
+     같은 소재의 두 판형이 다른 정보를 보이면 어느 쪽이 맞는지 독자가 알 수 없다. */
   const facts = [
     { k: "착공", v: L.start },
+    { k: "예상 공사기간", v: buildPeriod(L.start, L.openNow) },
     { k: "연장", v: L.km },
     { k: "정거장", v: L.stationNote },
     { k: "총사업비", v: L.cost },
@@ -301,7 +382,7 @@ function buildOne(L) {
   ].filter((f) => f.v);
 
   const card = {
-    template: "rail-geomap@1", date, lc,
+    template: "rail-geomap@1", date, lc, variant: VARIANT,
     subtitle: `서울 수도권 주요 노선 · 공사 현황 · ${rail.meta.asOfLabel} 기준`,
     title: `<span class="ln wirit-linecolor">${L.name}</span> ${L.titleAsk || "언제 개통하지?"}`,
     mapSvg,

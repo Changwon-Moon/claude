@@ -9,6 +9,7 @@
     "subtitle": { "type": "string" },
     "mapSvg": { "type": "string" },
     "lc": { "type": "string" },
+    "variant": { "type": "string" },
     "note": { "type": "string" },
     "prog": {
       "type": "object",

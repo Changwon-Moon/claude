@@ -154,3 +154,24 @@ export function monotonicPositions(anchors, trackLen) {
   }
   return anchors.map((a, k) => ({ name: a.name, t: t[k], from: from[k] }));
 }
+
+/**
+ * 예상 공사기간 — 착공(YYYY.MM)과 개통 목표에서 **코드가 센다.**
+ *
+ * ⚠️ 같은 계산이 `scripts/build-rail-line.mjs` 에도 있다(buildPeriod). 그쪽은 확정본이라
+ *    손대면 픽셀이 바뀌므로 그대로 두고, **새로 쓰는 쪽만 여기를 쓴다.**
+ *    셋째 판형이 생기면 rail-line 도 여기로 모은다 — 그때는 픽셀이 안 바뀌는지 재고 옮긴다.
+ *
+ * 개통이 '미정'이면 **산정하지 않는다** — 없는 값을 지어내지 않는다.
+ */
+export function buildPeriod(start, openNow) {
+  const s = /^(\d{4})\.(\d{2})$/.exec(start || "");
+  if (!s) throw new Error(`착공 표기가 YYYY.MM 이 아니다: ${start}`);
+  const y = /(\d{4})\s*년/.exec(openNow || "");
+  if (!y) return "산정 불가";
+  const endM = /말/.test(openNow) ? 12 : /(\d{1,2})\s*월/.exec(openNow) ? +/(\d{1,2})\s*월/.exec(openNow)[1] : 12;
+  const months = (+y[1] - +s[1]) * 12 + (endM - +s[2]);
+  if (months <= 0) throw new Error(`공사기간이 0 이하다: ${start} → ${openNow}`);
+  const yy = Math.floor(months / 12), mm = months % 12;
+  return `약 ${yy}년${mm ? ` ${mm}개월` : ""}`;
+}
