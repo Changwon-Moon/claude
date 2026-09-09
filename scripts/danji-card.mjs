@@ -88,7 +88,10 @@ if (isNew) {
   d = {
     id,
     slug,
-    kind: "presale",
+    /* 청약홈이 "APT 분양"과 "APT 무순위/잔여세대" 두 갈래로 준다 — 그대로 받는다.
+     * 손으로 "presale" 을 박아 두었더니 줍줍 공고인 드파인 아르티아(2차)가 분양 예정 판형으로
+     * 만들어졌다(2026-09-09). 판형을 가르는 값이라 조용히 틀리면 카드가 통째로 다른 말을 한다. */
+    kind: ah.kind === "remndr" ? "remndr" : "presale",
     name: ah.name,
     location: shortAddr(ah.address),
     applyhomeNo: ah.pblancNo,
