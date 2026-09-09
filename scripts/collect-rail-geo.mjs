@@ -40,8 +40,9 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const argv = process.argv.slice(2);
 const PROBE = argv.includes("--probe");
 const BUILD = argv.includes("--build");
-if (PROBE === BUILD) {
-  console.error("--probe 또는 --build 중 하나를 준다 (둘 다/둘 다 아님은 거부).");
+const CONTEXT = argv.includes("--context");
+if ([PROBE, BUILD, CONTEXT].filter(Boolean).length !== 1) {
+  console.error("--probe / --context / --build 중 **하나만** 준다.");
   process.exit(2);
 }
 const onlyIdx = argv.indexOf("--only");
@@ -114,6 +115,14 @@ const qStationsInBox = (b) => `[out:json][timeout:180];
   node["public_transport"="station"](${b.s},${b.w},${b.n},${b.e});
 );
 out center tags;`;
+
+/** ④ **배경 노선** — 이 노선이 지나가며 만나는 기존 철도. 오너 요청(2026-09-09):
+    "기존 노선들 지나가는 것 다 표현". 이름이 있는 운행선만 받는다 —
+    construction·proposed 를 같이 받으면 우리 노선이 배경에 회색으로 한 번 더 그려진다. */
+const qContext = (b) => `[out:json][timeout:180];
+way["railway"~"^(subway|rail|light_rail|narrow_gauge)$"]["name"]
+   ["usage"!="industrial"]["service"!~"."](${b.s},${b.w},${b.n},${b.e});
+out geom tags;`;
 
 const doc = JSON.parse(readFileSync(join(ROOT, "data/datasets/sudo-rail-2026-09.json"), "utf8"));
 const lines = doc.lines.filter((L) => (ONLY ? L.key === ONLY : true));
@@ -205,6 +214,37 @@ async function probe() {
   console.log("⚠️ 이건 재기만 한 것이다. 이 결과를 보고 --build 를 짠다.");
 }
 
+/* ── 배경 노선 받기. 탐사 결과의 상자를 그대로 쓴다 — 지도에 그릴 범위와 같아야 한다. */
+async function context() {
+  const prev = JSON.parse(readFileSync(join(ROOT, "data/geo/_probe-rail-osm.json"), "utf8"));
+  const out = {};
+  for (const L of lines) {
+    const O = prev.결과?.find((x) => x.key === L.key);
+    const bb = O?.선형?.상자;
+    if (!bb) { console.log(`⏭ ${L.name} — 탐사 상자가 없다. --probe 를 먼저 돌린다`); continue; }
+    const pad = 0.03;
+    let j;
+    try { j = await overpass(qContext({ s: bb.s - pad, n: bb.n + pad, w: bb.w - pad, e: bb.e + pad })); }
+    catch (e) { console.log(`❌ ${L.name} — ${e.message}`); continue; }
+    /* 이름별로 묶는다 — OSM 은 한 노선을 수백 개 토막으로 쪼개 놓는다. */
+    const byName = new Map();
+    for (const e of j.elements || []) {
+      if (e.type !== "way" || !e.geometry || !e.tags?.name) continue;
+      if (!byName.has(e.tags.name)) byName.set(e.tags.name, []);
+      byName.get(e.tags.name).push(e.geometry);
+    }
+    out[L.key] = [...byName].map(([name, segs]) => ({ name, segs }));
+    const tot = out[L.key].reduce((a, x) => a + x.segs.length, 0);
+    console.log(`✅ ${L.name} — 배경 노선 ${out[L.key].length}종 · 토막 ${tot}개`);
+    for (const x of out[L.key].slice(0, 30)) console.log(`     ${x.name} (${x.segs.length})`);
+    await sleep(1500);
+  }
+  mkdirSync(join(ROOT, "data/geo"), { recursive: true });
+  const path = join(ROOT, "data/geo/rail-context.json");
+  writeFileSync(path, JSON.stringify({ 받은날: new Date().toISOString().slice(0, 10), 노선: out }, null, 2) + "\n");
+  console.log(`\n📄 ${path}`);
+}
+
 async function build() {
   throw new Error(
     "--build 는 아직 없다. --probe 결과를 보고 짠다 — OSM 이 어떤 모양으로 담고 있는지\n" +
@@ -212,4 +252,4 @@ async function build() {
   );
 }
 
-await (PROBE ? probe() : build());
+await (PROBE ? probe() : CONTEXT ? context() : build());
