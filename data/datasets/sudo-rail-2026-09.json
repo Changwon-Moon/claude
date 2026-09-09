@@ -812,7 +812,7 @@
           "state": "가칭",
           "xfer": [],
           "km": 31.5,
-          "labelSide": "right"
+          "labelSide": "down"
         },
         {
           "name": "동탄",
@@ -1017,7 +1017,7 @@
           ]
         },
         {
-          "name": "SB07정거장",
+          "name": "수성중사거리",
           "state": "역명미정",
           "xfer": []
         },

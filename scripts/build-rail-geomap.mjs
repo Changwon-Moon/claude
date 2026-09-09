@@ -609,7 +609,14 @@ function buildOne(L) {
        가로 판형(is-wide)은 위/아래라 같은 키에 "up"/"down" 을 쓴다(assignUpDown ⓪). */
     if (p.st.labelSide === "left"  && fitsCard(-1)) side = -1;
     if (p.st.labelSide === "right" && fitsCard(1))  side = 1;
-    return { ...p, x, y, ly: y, side };
+    /* ⓠ **위/아래 놓기** (오너 2026-09-09: "메타폴리스 노선과 겹치잖아 … 굳이 직선으로
+       연결하지 않아도 되는 역명들은 그냥 적당히 가까이 붙여도 될것같아").
+       좌우가 둘 다 막힌 역이 있다 — 메타폴리스는 오른쪽이면 제 노선(동탄 방향)을 깔고 앉고,
+       왼쪽이면 능동과 부딪힌다. 그런 자리에서는 **마커 바로 위/아래**가 유일하게 빈 곳이다.
+       지시선 없이 붙이므로 어느 점인지도 헷갈리지 않는다.
+       ⚠️ 세로 판형에서만 쓴다. 가로 판형은 위/아래가 기본 배치라 같은 키가 다른 뜻이다. */
+    const vert = p.st.labelSide === "up" ? -1 : p.st.labelSide === "down" ? 1 : 0;
+    return { ...p, x, y, ly: y, side, vert };
   });
   };
 
@@ -619,7 +626,8 @@ function buildOne(L) {
      ⚠️ 마지막에 한 번 더 확인한다. 배치를 바꾼 뒤 여백이 모자라면 그때는 **여백을 넓히고
         쪽은 그대로 둔다** — 여기서 또 쪽을 바꾸면 두 상태를 오갈 수 있다. */
   const needSide = (g, sd) => {
-    const q = g.filter((p) => p.side === sd);
+    /* 위/아래로 놓은 라벨은 **좌우 여백을 안 쓴다** — 세면 지도가 공연히 좁아진다. */
+    const q = g.filter((p) => p.side === sd && !p.vert);
     return q.length ? Math.round(Math.max(...q.map((p) => rowW(p.st))) + LEAD_W + 8) : 24;
   };
   /* ── 가로 노선: 이름표를 **위아래로 번갈아** 놓는다.
@@ -773,7 +781,8 @@ function buildOne(L) {
      지선 역들이 본선 마지막 역 뒤로 정렬돼 카드 아래로 밀리고, 지시선이 지도를 가로질렀다
      (2026-09-09). 아래로 미는 규칙은 "위에서 아래로 훑는다"를 전제하므로 정렬이 먼저다. */
   for (const sd of [1, -1]) {
-    const g = lbl.filter((p) => p.side === sd).sort((x, y2) => x.y - y2.y);
+    /* 위/아래 라벨은 이 줄세우기에 끼지 않는다 — 제 마커에 붙어 있어야 뜻이 있다. */
+    const g = lbl.filter((p) => p.side === sd && !p.vert).sort((x, y2) => x.y - y2.y);
     for (let i = 1; i < g.length; i++)
       if (g[i].ly - g[i - 1].ly < LBL_GAP) g[i].ly = g[i - 1].ly + LBL_GAP;
     const BOT = BH - 20;
@@ -834,15 +843,45 @@ function buildOne(L) {
     const nameW = [...p.name].length * LBL_FS * 0.98;
     const pw = provW(p.st);
     const bwRaw = keys.length ? badgeRowWidth(keys) : 0;
+
+    /* ── 위/아래 놓기 (ⓠ) — 마커 바로 위/아래에 가운데 맞춰 붙인다. 지시선은 없다.
+       [뱃지][이름] 한 줄을 p.x 에 가운데 맞춘다 — 위아래에서는 좌우 읽기 순서가 없으므로
+       가로 판형과 같은 규칙을 쓴다. */
+    if (p.vert) {
+      const rowWidth = bwRaw + (bwRaw ? BDG_PAD : 0) + nameW + pw;
+      let left = p.x - rowWidth / 2;
+      /* 카드 밖으로 나가면 안으로 당긴다 — 위/아래는 좌우 여백을 안 쓰기 때문에 여기서 막는다. */
+      left = Math.max(8, Math.min(left, MAP_W - 8 - rowWidth));
+      const cy = p.y + p.vert * (13 + 9 + LBL_FS / 2);
+      let bxv = left, bdv = "";
+      for (const k of keys) { bdv += badgeSvg(k, bxv, cy); bxv += badgeWidth(k) + BDG_GAP; }
+      const nx = left + bwRaw + (bwRaw ? BDG_PAD : 0);
+      inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="${prov ? "#f0eee9" : "#ffffff"}" stroke="${lc}" stroke-width="5"${prov ? ' stroke-dasharray="3.2 2.4"' : ""}/>`;
+      outMap += bdv +
+        `<text x="${nx.toFixed(1)}" y="${cy.toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle" text-anchor="start"${HALO}>${esc(p.name)}</text>` +
+        (pw ? provSvg(nx + nameW + PROV_GAP, cy, "start") : "");
+      p.ly = cy; p.rowLeft = left; p.rowWidth = rowWidth;
+      continue;
+    }
+
+    /* ── 지시선을 뺄 수 있는가 (오너 2026-09-09: "굳이 직선으로 연결하지 않아도 되는
+       역명들은 그냥 적당히 가까이 붙여도 될것같아")
+       지시선은 **라벨이 제 마커에서 세로로 밀렸을 때** 어느 점인지 알려주는 장치다.
+       안 밀린 라벨(ly ≈ y)에서는 36px 짜리 수평선이 정보를 하나도 더하지 않으면서
+       라벨을 노선 쪽에서 36px 밀어내 — 그 36px 이 다른 라벨·노선과 부딪히는 원인이 된다.
+       그래서 **안 밀린 라벨은 마커 바로 옆(NEAR_LEAD)에 붙이고 선을 그리지 않는다.** */
+    const NEAR_LEAD = 15;                       // 마커 반지름 12 를 막 벗어나는 값
+    const nudged = Math.abs(p.ly - p.y) >= 1.5;
+    const lead = nudged ? LEAD_W : NEAR_LEAD;
     let bx, nameX, anchor, endX, provX;
     if (p.side > 0) {
-      endX = p.x + LEAD_W;
+      endX = p.x + lead;
       bx = endX + 9;
       nameX = bx + bw;
       anchor = "start";
       provX = nameX + nameW + PROV_GAP;          // 이름 뒤
     } else {
-      endX = p.x - LEAD_W;
+      endX = p.x - lead;
       provX = endX - 9;                          // 오른쪽 끝(지시선 쪽)에 「가칭」
       nameX = endX - 9 - pw;                     // text-anchor=end 라 이 x 가 이름의 오른쪽 끝
       bx = nameX - nameW - BDG_PAD - bwRaw;
@@ -861,16 +900,16 @@ function buildOne(L) {
     const sxH = p.x + p.side * 13;                // 가로로 나갈 때의 출발점(점 테두리)
     const run = Math.abs(endX - sxH);
     const STUB = 10;
-    let lead;
-    if (Math.abs(dy) < 1.5) {
-      lead = `<path d="M${sxH.toFixed(1)},${p.y.toFixed(1)}H${endX.toFixed(1)}"`;
+    let leadSvg = "";
+    if (!nudged) {
+      /* 안 밀렸다 — 선을 그리지 않는다(위 NEAR_LEAD 주석). */
     } else {
       const diag = Math.min(Math.abs(dy), run - STUB - 4);
       const leadOut = run - STUB - diag;          // 점에서 곧게 빠져나오는 길이
       if (leadOut >= 10) {
         /* 자리가 넉넉하다 — 곧게 빠져나와 45°로 꺾고 라벨 앞 10px 은 수평으로 (오너가 고른 모양) */
         const k1 = sxH + p.side * leadOut, k2 = endX - p.side * STUB;
-        lead = `<path d="M${sxH.toFixed(1)},${p.y.toFixed(1)}H${k1.toFixed(1)}L${k2.toFixed(1)},${p.ly.toFixed(1)}H${endX.toFixed(1)}"`;
+        leadSvg = `<path d="M${sxH.toFixed(1)},${p.y.toFixed(1)}H${k1.toFixed(1)}L${k2.toFixed(1)},${p.ly.toFixed(1)}H${endX.toFixed(1)}"`;
       } else {
         /* 자리가 없다 — 한 줄로 곧장 잇는다.
            ⚠️ 이때 출발점을 **가로 테두리(sxH)** 에 두면 안 된다. 「중앙」은 그렇게 나가다
@@ -878,10 +917,10 @@ function buildOne(L) {
               **가는 방향의 테두리**에서 출발시키면 이웃 역을 비껴간다. */
         const vx = endX - p.x, vy = p.ly - p.y, vL = Math.hypot(vx, vy) || 1;
         const sx = p.x + (vx / vL) * 13, sy = p.y + (vy / vL) * 13;
-        lead = `<path d="M${sx.toFixed(1)},${sy.toFixed(1)}L${endX.toFixed(1)},${p.ly.toFixed(1)}"`;
+        leadSvg = `<path d="M${sx.toFixed(1)},${sy.toFixed(1)}L${endX.toFixed(1)},${p.ly.toFixed(1)}"`;
       }
     }
-    lead += ` stroke="#9aa1ac" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+    if (leadSvg) leadSvg += ` stroke="#9aa1ac" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
 
     let bd = "";
     if (keys.length) {
@@ -890,7 +929,7 @@ function buildOne(L) {
     }
 
     inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="${prov ? "#f0eee9" : "#ffffff"}" stroke="${lc}" stroke-width="5"${prov ? ' stroke-dasharray="3.2 2.4"' : ""}/>`;
-    outMap += lead + bd +
+    outMap += leadSvg + bd +
       `<text x="${nameX.toFixed(1)}" y="${p.ly.toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle" text-anchor="${anchor}"${HALO}>${esc(p.name)}</text>` +
       (pw ? provSvg(provX, p.ly, p.side > 0 ? "start" : "end") : "");
   }
@@ -903,6 +942,12 @@ function buildOne(L) {
       const far = p.y + p.side * (LEAD_V + ((p.st.xfer || []).length ? BDG_H + BDG_VGAP : 0) + LBL_FS + 6);
       return { x0: Math.min(p.lx, p.x) - hw, x1: Math.max(p.lx, p.x) + hw,
                y0: Math.min(p.y, far) - 6, y1: Math.max(p.y, far) + 6 };
+    }
+    /* 위/아래로 붙인 라벨은 좌우로 안 뻗는다 — 실제 쓴 폭(rowWidth)으로 잰다.
+       LEAD_W 를 더한 상자로 재면 있지도 않은 자리를 막아 지명이 통째로 사라진다. */
+    if (p.vert) {
+      const left = p.rowLeft ?? (p.x - rowW(p.st) / 2), wv = p.rowWidth ?? rowW(p.st);
+      return { x0: left - 8, x1: left + wv + 8, y0: Math.min(p.y, p.ly) - 19, y1: Math.max(p.y, p.ly) + 19 };
     }
     const w = rowW(p.st) + LEAD_W + 22;
     return p.side > 0
