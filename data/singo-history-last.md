@@ -1,9 +1,20 @@
 # 신고가 단지 이력 — 마지막 실행
 
-- 대기열: 196줄
+- 대기열: 197줄
 - 결과: **성공**
 
 ```
+
+── 두산 전용 84타입 (11620)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11620 --apt '두산' --umd '봉천동' --type 84 --from 202001 --force
+
+두산 · 전용 84타입 · 11620 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11620-두산-84.json
+거래 있던 달 55/81 · 수집 실패 0개월
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 14.83억 (2026-08-07 · 전용 84.92㎡ 21층)
 
 ── 과천자이 전용 59타입 (41290)
 
