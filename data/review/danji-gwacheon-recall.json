@@ -1,0 +1,67 @@
+{
+  "label": "danji-gwacheon-recall",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 2장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 21억 허용 — 2026-04-27 실거래 21억8,000만원을 캡션이 만원 단위로 다시 적는다 — 카드는 21.8억으로 줄여 쓴다(국토부 원본 41290-202604.json)"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 20.5억 허용 — 같은 단지 84㎡ 올해 거래 범위의 하단(2026-06-27 · 84.745㎡ · 16층 · 20.50억). 카드가 최근 한 건만 말하므로 캡션이 범위를 받는다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 21.85억 허용 — 같은 범위의 상단(2026-01-24 · 84.6197㎡ · 18층 · 21.85억). 독자가 21.8억이 튄 값인지 아닌지 판단할 수 있어야 한다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 20억 허용 — 2026-08-29 실거래 20억8,000만원을 캡션이 만원 단위로 다시 적는다 — 카드는 20.8억(국토부 원본 41290-202608.json)"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 19.5억 허용 — 호갱노노 2026-09-09 화면의 현재 매물 최저호가. 카드가 실거래로 갔으므로 캡션이 호가대를 받는다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 22.5억 허용 — 같은 화면의 매물 최고호가. 최저~최고를 함께 실어야 20.8억이 어디쯤인지 읽힌다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 10억 허용 — 최저호가 19.5억 − 최초 분양가 9.425억 = 10.1억. 가장 낮은 부름값으로도 10억이 남는다는 것이 실거래 기준보다 보수적이고 강한 말이다"
+    }
+  ],
+  "cards": [
+    {
+      "file": "danji-gwacheon-lavieno.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "danji-gwacheon-bellarte.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}

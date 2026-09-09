@@ -1,0 +1,37 @@
+{
+  "label": "danji-gwacheon-lavieno",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 21억 허용 — 2026-04-27 실거래 21억8,000만원을 캡션이 만원 단위로 다시 적는다 — 카드는 21.8억으로 줄여 쓴다(국토부 원본 41290-202604.json)"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 20.5억 허용 — 같은 단지 84㎡ 올해 거래 범위의 하단(2026-06-27 · 84.745㎡ · 16층 · 20.50억). 카드가 최근 한 건만 말하므로 캡션이 범위를 받는다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 21.85억 허용 — 같은 범위의 상단(2026-01-24 · 84.6197㎡ · 18층 · 21.85억). 독자가 21.8억이 튄 값인지 아닌지 판단할 수 있어야 한다"
+    }
+  ],
+  "cards": [
+    {
+      "file": "danji-gwacheon-lavieno.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}

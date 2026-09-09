@@ -3594,6 +3594,26 @@
         "ah-2026910233",
         "--publish"
       ]
+    },
+    {
+      "label": "danji-gwacheon-lavieno",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-09-09",
+        "--only",
+        "gwacheon-lavieno-recall",
+        "--publish"
+      ]
+    },
+    {
+      "label": "danji-gwacheon-bellarte",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-09-09",
+        "--only",
+        "gwacheon-bellarte-recall",
+        "--publish"
+      ]
     }
   ]
 }

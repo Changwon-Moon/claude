@@ -797,8 +797,15 @@ function marginBand(d) {
 }
 
 function remndr(d) {
-  const ah = applyhome(d);
-  if (!ah) throw new Error(`${d.id}: 무순위 카드는 청약홈 공고(applyhomeNo)가 있어야 한다`);
+  /* 청약홈 수집분이 기본이고, **아직 API 에 안 실린 건**은 `scheduleSource` 로 출처를 밝힌
+   * 데이터셋 일정을 받는다(`noticeFacts` 주석 — 상동역 2026-08-14 와 같은 자리).
+   * 계약취소주택 재공급(과천 지정타 2026-09-09)은 공고가 접수 닷새 전에 나서 이 길이 필요했다.
+   * 출처를 안 밝히면 여전히 막힌다 — 날짜를 지어내는 길은 열지 않는다. */
+  const ah = noticeFacts(d);
+  if (!ah)
+    throw new Error(
+      `${d.id}: 무순위 카드는 청약홈 공고(applyhomeNo)나, 출처를 밝힌 일정(scheduleSource + schedule)이 있어야 한다`,
+    );
   const total = ah.supply;
   /* 무순위는 **접수가 하루**다. 그 하루가 무슨 요일인지가 곧 "내일 넣을 수 있나"라
      날짜만큼 중요하다 — 그래서 무순위 일정에는 요일을 붙인다(오너 지시 2026-08-03).
@@ -810,6 +817,13 @@ function remndr(d) {
     return `${Number(m)}/${Number(dd)}(${WD[new Date(`${iso}T00:00:00Z`).getUTCDay()]})`;
   };
   const ymKo = (ym) => (ym ? `${ym.split("-")[0]}년 ${Number(ym.split("-")[1])}월` : "미고지");
+  /* 「입주 예정」인가 「입주 완료」인가는 **날짜가 정한다.** 계약취소주택 재공급은 이미 사람이
+     사는 단지의 집을 다시 파는 것이라, 2021년을 '입주 예정'이라 적으면 카드가 거짓말을 한다.
+     오늘과 견줘 코드가 고른다 — 손으로 라벨을 적으면 다음 카드에서 틀린다. */
+  const moveInLabel = (ym) => {
+    if (!ym) return "입주 예정";
+    return ym < new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 7) ? "입주 완료" : "입주 예정";
+  };
 
   /* 접수가 하루면 '시작·마감' 두 칸이 같은 날을 두 번 말한다 — 데이터가 칸 수를 정한다. */
   const oneDay = !ah.receiptTo || ah.receiptFrom === ah.receiptTo;
@@ -817,13 +831,13 @@ function remndr(d) {
     ? [
         { label: "무순위 접수", date: ah.receiptFrom ? md(ah.receiptFrom) : "미고지", tbd: !ah.receiptFrom, hi: true },
         { label: "당첨자 발표", date: ah.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah.announceDate },
-        { label: "입주 예정", date: ymKo(ah.moveInYm ?? d.moveIn), tbd: !(ah.moveInYm ?? d.moveIn) },
+        { label: moveInLabel(ah.moveInYm ?? d.moveIn), date: ymKo(ah.moveInYm ?? d.moveIn), tbd: !(ah.moveInYm ?? d.moveIn) },
       ]
     : [
         { label: "무순위 접수", date: md(ah.receiptFrom), hi: true },
         { label: "접수 마감", date: md(ah.receiptTo) },
         { label: "당첨자 발표", date: ah.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah.announceDate },
-        { label: "입주 예정", date: ymKo(ah.moveInYm ?? d.moveIn), tbd: !(ah.moveInYm ?? d.moveIn) },
+        { label: moveInLabel(ah.moveInYm ?? d.moveIn), date: ymKo(ah.moveInYm ?? d.moveIn), tbd: !(ah.moveInYm ?? d.moveIn) },
       ];
 
   const blocks = d.blocks ?? ah.blocks ?? null;
