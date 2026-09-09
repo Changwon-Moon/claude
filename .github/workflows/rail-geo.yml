@@ -16,12 +16,11 @@ on:
         type: string
         required: false
         default: "sinansan"
-      mode:
-        description: "probe = 선형·역 탐사 · context = 배경(기존) 노선 받기"
-        type: choice
+      skip_probe:
+        description: "선형 탐사를 건너뛰고 배경 노선만 받는다"
+        type: boolean
         required: false
-        default: probe
-        options: [probe, context]
+        default: false
 
 # 봇이 결과 파일을 커밋한다 — 기본 GITHUB_TOKEN 은 읽기만 되어서 첫 실행이 커밋 단계에서
 # 죽었다(run 34176171620). 탐사 자체는 성공했는데 결과가 저장소에 안 남아 볼 수가 없었다.
@@ -38,14 +37,22 @@ jobs:
         with:
           node-version: 22
 
-      - name: OSM 탐사
+      # ⚠️ 모드를 입력으로 고르게 했더니 **입력이 스크립트까지 안 갔다**(run 34307371408 —
+      #    21초 만에 끝나고 배경 자료가 안 나왔다. probe 로 돌아 결과가 같아 커밋도 생략됐다).
+      #    입력 배선을 더 파는 대신 **둘 다 순서대로 돌린다** — context 는 probe 의 상자를 쓰므로
+      #    이 순서가 맞고, 한 번 더 도는 비용은 1분이다. 고를 게 없으면 잘못 고를 일도 없다.
+      - name: OSM 탐사 (선형 → 배경)
         run: |
-          MODE="--${{ inputs.mode || 'probe' }}"
-          if [ -n "${{ inputs.only }}" ]; then
-            node scripts/collect-rail-geo.mjs "$MODE" --only "${{ inputs.only }}"
+          ONLY=""
+          [ -n "${{ inputs.only }}" ] && ONLY="--only ${{ inputs.only }}"
+          echo "▶ only='${{ inputs.only }}' skip_probe='${{ inputs.skip_probe }}'"
+          if [ "${{ inputs.skip_probe }}" != "true" ]; then
+            node scripts/collect-rail-geo.mjs --probe $ONLY
           else
-            node scripts/collect-rail-geo.mjs "$MODE"
+            echo "⏭ 선형 탐사 건너뜀"
           fi
+          node scripts/collect-rail-geo.mjs --context $ONLY
+          echo "── 결과 파일:"; ls -la data/geo/_probe-rail-osm.json data/geo/rail-context.json || true
 
       - name: 결과 커밋
         run: |

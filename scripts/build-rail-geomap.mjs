@@ -22,10 +22,11 @@
  *
  * 실행: node scripts/build-rail-geomap.mjs [날짜] [--only sinansan] [--publish]
  */
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { writeCaption } from "./lib/caption-signature.mjs";
+import { hanRiverPoints } from "./lib/han-river.mjs";
 import {
   metres, rings, ringCentroid, pointInGeom, dongCentre,
   buildTrack, projectOnTrack, pointAt, monotonicPositions,
@@ -45,6 +46,8 @@ const probe = JSON.parse(readFileSync(join(ROOT, "data/geo/_probe-rail-osm.json"
 const sgg = JSON.parse(readFileSync(join(ROOT, "data/geo/korea-sgg-2026.geojson"), "utf8"));
 const dong = JSON.parse(readFileSync(join(ROOT, "data/geo/korea-submunicipalities.geojson"), "utf8"));
 const CAT = JSON.parse(readFileSync(join(ROOT, "templates/_shared/metro-lines.json"), "utf8"));
+const CTXP = join(ROOT, "data/geo/rail-context.json");
+const CTX = existsSync(CTXP) ? JSON.parse(readFileSync(CTXP, "utf8")) : null;
 /* ⚠️ rail-line@1 의 SELF 와 **같은 값이어야 한다.** 갈라지면 같은 노선이 두 색으로 나간다.
    (지금은 두 벌이다 — 셋째 판형이 생기면 lib 으로 뽑는다. 둘까지는 눈으로 지킨다.) */
 const SELF = { sinansan: "신안산", gtxa: "GTX-A", gtxb: "GTX-B", gtxc: "GTX-C",
@@ -71,8 +74,9 @@ function buildOne(L) {
   const track = buildTrack(mainWay.g);
   const trackLen = track[track.length - 1].d;
 
-  /* 계획 구간(연장)은 점선으로 따로 그린다. */
-  const planWays = O.좌표.filter((w) => w.railway === "proposed");
+  /* ⚠️ 계획 구간(proposed)은 **그리지 않는다**(오너 2026-09-09).
+     여의도 위로 뻗은 서울역 연장 점선이 상자를 북동쪽으로 늘려 정작 노선이 작아졌다.
+     아직 착공도 안 한 구간이라 「공사 현황」 카드의 주제도 아니다. */
 
   /* OSM 실좌표 — 있으면 그게 닻이다. */
   const truth = new Map();
@@ -103,7 +107,7 @@ function buildOne(L) {
   const pos = placed.map((p, i) => ({ ...pointAt(track, p.t), name: p.name, st: L.stations[i] }));
 
   /* ── 화면 좌표계 — 위도 보정을 넣어 가로세로 비율을 지킨다(지도는 늘리면 거짓말이다). */
-  const all = [...track, ...planWays.flatMap((w) => w.g)];
+  const all = track;
   const lat0 = Math.min(...all.map((p) => p.lat)), lat1 = Math.max(...all.map((p) => p.lat));
   const lon0 = Math.min(...all.map((p) => p.lon)), lon1 = Math.max(...all.map((p) => p.lon));
   const kx = Math.cos(((lat0 + lat1) / 2 * Math.PI) / 180);
@@ -134,14 +138,43 @@ function buildOne(L) {
       land += `<path d="${r.map(([lon, lat], i) => `${i ? "L" : "M"}${X(lon).toFixed(1)},${Y(lat).toFixed(1)}`).join("")}Z" fill="#efece5" stroke="#dcd8cf" stroke-width="1.1"/>`;
     }
 
+  /* ── 한강. sudogwon-map 과 같은 부품을 쓴다 — 강을 두 곳에서 그리면 갈라진다. */
+  let river = "";
+  try {
+    const named = sgg.features.map((f) => ({ name: f.properties.name, rings: rings(f.geometry) }));
+    const hr = hanRiverPoints(named);
+    river = `<path d="${hr.map(([lon, lat], i) => `${i ? "L" : "M"}${X(lon).toFixed(1)},${Y(lat).toFixed(1)}`).join("")}" fill="none" stroke="#c3d9e9" stroke-width="13" stroke-linecap="round"/>`;
+  } catch (e) { throw new Error(`${L.name}: 한강을 못 그렸다 — ${e.message}`); }
+
+  /* ── 시군구 이름. **화면 안에 중심이 들어오는 것만** 적는다 — 가장자리에 걸친 구의
+     이름을 중심에 찍으면 화면 밖이나 엉뚱한 자리에 뜬다. */
+  let sggNm = "";
+  for (const f of sgg.features) {
+    const c = ringCentroid(f.geometry);
+    if (!c) continue;
+    const x = X(c[0]), y = Y(c[1]);
+    if (x < 30 || x > MAP_W - PADR + 10 || y < 26 || y > BODY_H - 26) continue;
+    const nm = f.properties.name.replace(/^(서울|인천)?(특별|광역)?시/, "");
+    sggNm += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="15" font-weight="700" fill="#a9aeb6" text-anchor="middle" letter-spacing="0.4">${esc(nm)}</text>`;
+  }
+
+  /* ── 배경(기존) 노선 — 오너 요청 2026-09-09. 회색 가는 선으로 뒤에 깐다.
+     ⚠️ 자료가 없으면 **조용히 넘어가지 않는다.** 이 판형의 요청 사항이라 없으면 그렇게 말한다. */
+  let ctx = "";
+  if (CTX?.노선?.[L.key]) {
+    for (const line2 of CTX.노선[L.key])
+      for (const seg of line2.segs)
+        ctx += `<path d="${d(seg)}" fill="none" stroke="#c7cbd2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
+  } else {
+    console.log(`   ⚠️ ${L.name} — 배경 노선 자료 없음(rail-geo.yml mode=context 로 받으세요)`);
+  }
+
   /* 노선색은 rail-line 과 **같은 자리에서 같은 규칙으로** 온다 — 두 판형이 다른 색을 쓰면
      같은 노선이 두 색으로 나간다. SELF 표도 rail-line 에서 그대로 가져온다. */
   const selfKey = SELF[L.key];
   if (!selfKey || !CAT[selfKey]) throw new Error(`${L.name}: 카탈로그에 자기 노선(${selfKey}) 이 없다`); // ④
   const lc = CAT[selfKey].color;
 
-  const plan = planWays.map((w) =>
-    `<path d="${d(w.g)}" fill="none" stroke="${lc}" stroke-width="6" stroke-dasharray="14 11" opacity="0.42" stroke-linecap="round"/>`).join("");
   const line = `<path d="${d(mainWay.g)}" fill="none" stroke="${lc}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`;
 
   /* ── 역 점·이름.
@@ -182,7 +215,7 @@ function buildOne(L) {
 
   const mapSvg =
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${MAP_W} ${BODY_H}" width="${MAP_W}" height="${BODY_H}">` +
-    `<rect width="${MAP_W}" height="${BODY_H}" fill="none"/>${land}${plan}${line}${dots}</svg>`;
+    `<rect width="${MAP_W}" height="${BODY_H}" fill="none"/>${land}${river}${ctx}${sggNm}${line}${dots}</svg>`;
 
   const facts = [
     { k: "착공", v: L.start },
