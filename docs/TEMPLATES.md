@@ -39,7 +39,7 @@
 | `record-grid` | 🟢 1세트 | kospi-record |
 | `seongsu-zones` | 🟢 1세트 | seongsu-zones |
 | `sinbundang-loop` | 🟢 1세트 | sinbundang-loop |
-| `singo-record` | 🟢 17세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 14 |
+| `singo-record` | 🟢 18세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 15 |
 | `singoga-map` | 🟢 4세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map 외 1 |
 | `streak-line` | 🟢 15세트 | mae-streak, jeonse-streak, m2-gap 외 12 |
 | `supply-progress` | 🟢 1세트 | supply-progress |
