@@ -1,0 +1,15 @@
+{
+ "session": "2026-09-09-jeongbi-rank-카드-1장-제작-er",
+ "startedAt": "2026-09-09T23:42:11.171Z",
+ "task": "jeongbi-rank 카드 1장 제작 · error 0 · 오너 확정 대기",
+ "log": [
+  {
+   "at": "2026-09-09T23:42:11.171Z",
+   "cmd": "done",
+   "text": "jeongbi-rank 카드 1장 제작 · error 0 · 오너 확정 대기"
+  }
+ ],
+ "status": "끝",
+ "updatedAt": "2026-09-09T23:42:11.171Z",
+ "last": "jeongbi-rank 카드 1장 제작 · error 0 · 오너 확정 대기"
+}
