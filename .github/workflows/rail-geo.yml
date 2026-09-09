@@ -21,6 +21,11 @@ on:
         type: boolean
         required: false
         default: false
+      extra:
+        description: "데이터셋에 없는 공용 구간(서해선 등)도 후보에 넣는다"
+        type: boolean
+        required: false
+        default: false
 
 # 봇이 결과 파일을 커밋한다 — 기본 GITHUB_TOKEN 은 읽기만 되어서 첫 실행이 커밋 단계에서
 # 죽었다(run 34176171620). 탐사 자체는 성공했는데 결과가 저장소에 안 남아 볼 수가 없었다.
@@ -45,13 +50,19 @@ jobs:
         run: |
           ONLY=""
           [ -n "${{ inputs.only }}" ] && ONLY="--only ${{ inputs.only }}"
+          EXTRA=""
+          [ "${{ inputs.extra }}" = "true" ] && EXTRA="--extra"
           echo "▶ only='${{ inputs.only }}' skip_probe='${{ inputs.skip_probe }}'"
           if [ "${{ inputs.skip_probe }}" != "true" ]; then
-            node scripts/collect-rail-geo.mjs --probe $ONLY
+            node scripts/collect-rail-geo.mjs --probe $ONLY $EXTRA
           else
             echo "⏭ 선형 탐사 건너뜀"
           fi
-          node scripts/collect-rail-geo.mjs --context $ONLY
+          if [ -z "$EXTRA" ]; then
+            node scripts/collect-rail-geo.mjs --context $ONLY
+          else
+            echo "⏭ 배경 노선은 건너뜀(공용 구간 탐사)"
+          fi
           echo "── 결과 파일:"; ls -la data/geo/_probe-rail-osm.json data/geo/rail-context.json || true
 
       - name: 결과 커밋

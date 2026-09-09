@@ -41,6 +41,7 @@ const argv = process.argv.slice(2);
 const PROBE = argv.includes("--probe");
 const BUILD = argv.includes("--build");
 const CONTEXT = argv.includes("--context");
+const EXTRA = argv.includes("--extra");
 if ([PROBE, BUILD, CONTEXT].filter(Boolean).length !== 1) {
   console.error("--probe / --context / --build 중 **하나만** 준다.");
   process.exit(2);
@@ -63,7 +64,30 @@ const OSM_NAMES = {
   wolpan: ["월곶"],
   sinbundang: ["신분당선"],
   daejang: ["대장홍대", "서부광역철도"],
+  "gongyong-seohae": ["서해선"],
 };
+
+/* ── 우리 데이터셋의 노선이 **아니지만** 카드에 그려야 하는 구간.
+ *
+ * 신안산선 지선은 시흥시청에서 끝나지 않는다 — 거기서 서해선 선로로 **직결**해 원시까지 간다
+ * (나무위키 「수도권 전철 신안산선/역 목록」 본선 2구간: 시흥시청 9.7km → 원시 19.6km).
+ * 오너 2026-09-09: "누락된 역들도 표기해줘 (서해선 공통)".
+ *
+ * ⚠️ 이 구간은 **이미 운행중**이라 railway=rail 이다. 건설중(construction) 만 받던
+ *    탐사로는 안 잡힌다. 그래서 여기에 따로 적는다.
+ * ⚠️ **상자를 따로 준다.** 서해선은 홍성까지 내려가는 노선이라 수도권 상자로 물으면
+ *    남쪽 꼬리가 통째로 딸려 와 역 상자가 충청도까지 커진다.
+ * ⚠️ 키를 신안산선과 **분리**한다 — 같은 키로 받으면 이미 받아 둔 신안산선 선형을
+ *    이번 탐사가 덮는다(2026-09-09 에 --only 로 한 번 잃었다). */
+const EXTRA_LINES = [{
+  key: "gongyong-seohae",
+  name: "서해선 공용구간(시흥시청~원시)",
+  box: { minLat: 37.28, maxLat: 37.46, minLon: 126.70, maxLon: 126.85 },
+  stations: [
+    { name: "시흥시청" }, { name: "시흥능곡" }, { name: "달미" },
+    { name: "선부" }, { name: "초지" }, { name: "시우" }, { name: "원시" },
+  ],
+}];
 
 /* 거울 여러 곳 — 한 곳이 504 를 뱉어도 탐사가 통째로 죽지 않게 한다.
    (2026-09-08: overpass-api.de 가 504 Gateway Timeout 을 내 2차 탐사가 빈손으로 끝났다.) */
@@ -94,15 +118,16 @@ async function overpass(query) {
 
 /** ① 이름으로 관계·길을 찾는다. **정확 일치는 0건이었다**(run 34176303760) —
     OSM 이 "수도권 전철 신안산선" 처럼 다르게 부를 수 있어 **부분 일치**로 넓힌다. */
-const B = `${BOX.minLat},${BOX.minLon},${BOX.maxLat},${BOX.maxLon}`;
-const qFind = (keys) => `[out:json][timeout:120];
-(${keys.map((k) => `relation["name"~"${k}"](${B});way["name"~"${k}"](${B});`).join("")});
+const bx = (b) => `${b.minLat},${b.minLon},${b.maxLat},${b.maxLon}`;
+const B = bx(BOX);
+const qFind = (keys, b = B) => `[out:json][timeout:120];
+(${keys.map((k) => `relation["name"~"${k}"](${b});way["name"~"${k}"](${b});`).join("")});
 out tags;`;
 
 /** ② **노선 길의 형상**을 받는다 — railway=construction|proposed 이고 이름이 맞는 길만.
     (1차 탐사에서 신안산선은 railway=construction 길 13개로 들어 있었다. run 34176451359) */
-const qLines = (keys) => `[out:json][timeout:180];
-(${keys.map((k) => `way["railway"~"^(construction|proposed|rail|subway|light_rail)$"]["name"~"${k}"](${B});`).join("")});
+const qLines = (keys, b = B) => `[out:json][timeout:180];
+(${keys.map((k) => `way["railway"~"^(construction|proposed|rail|subway|light_rail)$"]["name"~"${k}"](${b});`).join("")});
 out geom tags;`;
 
 /** ③ 역 점 — 이름으로 딱 찍어 묻는 건 **0건이었다**(run 34176451359). 이름 규칙을 모르는 채
@@ -125,7 +150,8 @@ way["railway"~"^(subway|rail|light_rail|narrow_gauge)$"]["name"]
 out geom tags;`;
 
 const doc = JSON.parse(readFileSync(join(ROOT, "data/datasets/sudo-rail-2026-09.json"), "utf8"));
-const lines = doc.lines.filter((L) => (ONLY ? L.key === ONLY : true));
+const pool = EXTRA ? [...doc.lines, ...EXTRA_LINES] : doc.lines;
+const lines = pool.filter((L) => (ONLY ? L.key === ONLY : true));
 if (!lines.length) throw new Error(`--only ${ONLY} 에 맞는 노선이 데이터셋에 없다`);
 
 /* 우리 데이터셋이 아는 역 이름 — OSM 결과를 여기에 맞춰 본다. */
@@ -138,7 +164,8 @@ async function probe() {
     const names = OSM_NAMES[L.key];
     if (!names) { out.push({ key: L.key, name: L.name, error: "OSM_NAMES 에 이름이 없다" }); continue; }
     let found;
-    try { found = await overpass(qFind(names)); }
+    const LB = L.box ? bx(L.box) : B;
+    try { found = await overpass(qFind(names, LB)); }
     catch (e) { out.push({ key: L.key, name: L.name, error: String(e.message) }); continue; }
 
     const rels = (found.elements || []).map((e) => ({
@@ -150,7 +177,7 @@ async function probe() {
     /* 노선 길의 형상 — 이게 지도에 그릴 선이다. */
     let lineWays = [], bbox = null;
     try {
-      const lj = await overpass(qLines(names));
+      const lj = await overpass(qLines(names, LB));
       lineWays = (lj.elements || [])
         .filter((e) => e.type === "way" && e.geometry && e.tags?.name && names.some((k) => e.tags.name.includes(k)))
         .map((e) => ({ id: e.id, name: e.tags.name, railway: e.tags.railway, pts: e.geometry.length,
