@@ -297,6 +297,64 @@ function repPrice(d, rep) {
  *    이번 물량은 67세대). 그때는 `typeSumIsSupply: false` 로 검산을 끄고 **머리글이 기준을
  *    말하게** 한다. 끄는 것을 데이터에 적어 두는 이유는, 조용히 안 세면 다음 사람이 모른다.
  */
+/**
+ * 두 줄 판 — 위 단을 없애고 **아래 단 두 줄**로만 짠다 (오너 지시 2026-09-09)
+ *
+ * > "타입별 면적/분양가/세대수를 합쳐서 2칸으로 만들고, 총 2개동 최고 층수도 한 칸으로 해서
+ * >  최종적으로 2행으로 구성해줘. 대신 확보되는 세로 공간만큼을 조감도로 채워줘."
+ *
+ *   [1행]  84B · 2세대 / 109A · 5세대 / 총 2개동 · 최고 45층
+ *   [2행]  무순위 접수 / 당첨자 발표 / 입주 예정
+ *
+ * 왜 이 판이 필요한가: 타입이 둘뿐인 줍줍에서는 위 단(타입·분양가)과 아래 단(잔여·동수·층수)이
+ * **같은 것을 두 번** 말한다 — 위에서 '84B 26.6억'을 말하고 아래에서 다시 '7세대'를 말하는 식이다.
+ * 한 줄로 합치면 카드가 짧아지고, 그만큼 표지가 늘어나 조감도가 위아래로 잘리지 않는다.
+ * (표지는 `flex:1 1 auto` 라 남는 세로를 스스로 먹는다 — 상한은 `hero.coverMax`.)
+ *
+ * ⚠️ **옵트인이다**(`layout: "tight"`). 안 적은 카드는 이 함수에 들어오지도 않으므로
+ *    확정본 픽셀은 그대로다.
+ * ⚠️ 타입은 **둘까지**다. 셋이면 규모 칸까지 네 칸이 되어 한 줄에 안 들어간다 —
+ *    그때는 장위형(`scalePlan`)이 맞는 판이다.
+ */
+function tightPlan(d, total) {
+  if (d.layout !== "tight") return { on: false };
+  const byType = d.price?.byType;
+  if (!Array.isArray(byType) || !byType.length)
+    throw new Error(`${d.id}: 두 줄 판은 타입별 분양가(price.byType)가 있어야 한다 — 1행이 그것으로 채워진다`);
+  if (byType.length > 2)
+    throw new Error(
+      `${d.id}: 두 줄 판은 타입 2개까지다(지금 ${byType.length}개). 규모 칸까지 ${byType.length + 1}칸이라 한 줄에 안 들어간다 —` +
+        ` 타입이 셋 이상이면 layout 을 빼고 장위형으로 간다`,
+    );
+  /* 세대수 합 검산은 장위형과 같은 자리다 — 표가 공고와 다르면 여기서 멈춘다. */
+  const sum = byType.reduce((a, b) => a + (b.units || 0), 0);
+  const anyUnits = byType.some((t) => t.units != null);
+  if (anyUnits && d.typeSumIsSupply !== false && sum !== total)
+    throw new Error(`${d.id}: 타입별 세대수 합 ${sum} ≠ 이번 공급 ${total} — 표가 공고와 다르다`);
+
+  const typeCells = byType.map((t) => {
+    if (t.won == null) throw new Error(`${d.id}: ${t.type} 의 분양가(won)가 없다 — 지어내지 않는다`);
+    /* 세대수를 모르면 비운다 — 타입만 말하는 편이 틀린 수를 말하는 것보다 낫다(장위형과 같다). */
+    return {
+      above: t.units != null ? `${t.type} · ${n(t.units)}세대` : t.type,
+      value: eok1(t.won),
+      hi: !!t.main,
+    };
+  });
+
+  /* 규모 한 칸 — 동수는 회색 윗줄, 층수는 값. 두 값이 같은 급이라 어느 쪽을 값으로 둬도 되는데,
+     층수가 '최고'라는 말을 데리고 있어 값 자리에 어울린다. 하나만 알면 아는 것만 말한다. */
+  const bldg = d.buildings != null ? `총 ${d.buildings}개동` : null;
+  const scaleCell =
+    d.topFloor != null
+      ? { ...(bldg ? { above: bldg } : {}), pre: "최고", value: String(d.topFloor), unit: "층" }
+      : bldg
+        ? { pre: "총", value: String(d.buildings), unit: "개동" }
+        : { value: "미고지", tbd: true };
+
+  return { on: true, cells: [...typeCells, scaleCell] };
+}
+
 function scalePlan(d, total) {
   const byType = d.price?.byType;
   if (!Array.isArray(byType) || !byType.length) return { on: false };
@@ -780,6 +838,10 @@ function remndr(d) {
    * `price.byType` 이 없으면 예전 판 그대로 — 확정된 카드(한강·송도)의 픽셀을 건드리지 않는다. */
   const plan = scalePlan(d, total);
 
+  /* 두 줄 판(오너 지시 2026-09-09)이 켜져 있으면 그게 가장 먼저 이긴다 —
+     위 단을 아예 안 그리는 판이라 다른 판과 섞일 수 없다. */
+  const tight = tightPlan(d, total);
+
   /* 줍줍 기본 판형(분양가·시세·안전마진)이 있으면 그게 이긴다 — 오너가 정본으로 세운 판이다.
      없는 단지는 예전 판 그대로다(확정된 카드의 픽셀을 건드리지 않는다). */
   const margin = marginBand(d);
@@ -807,10 +869,14 @@ function remndr(d) {
        그대로 두고, **보이는 이름만** 바꾼다 — 둘을 한 필드로 합치면 대조가 헐거워진다. */
     danji: { name: d.displayName || d.name, ...(d.logo ? { logo: d.logo } : {}), ...(d.company ? { company: d.company } : {}) },
     address: addressOf(d),
-    ...(margin ? { specFour: true } : plan.on ? { scale: true, specFour: plan.four } : {}),
+    /* 두 줄 판은 `scale`(남는 세로를 위아래로 나누는 판)을 켜지 않는다 —
+       남는 세로는 **표지가 먹어야** 하기 때문이다(오너: "확보되는 만큼 조감도로"). */
+    ...(tight.on ? {} : margin ? { specFour: true } : plan.on ? { scale: true, specFour: plan.four } : {}),
     /* 안전마진 판에서는 위 단이 이미 '돈' 세 칸이라, 아래 단은 **단지 규모**가 맡는다
        (송파 정본과 같은 자리). 잔여 세대수는 아래 한 줄이 받는다 — 카드에서 사라지지 않는다. */
-    spec: margin
+    spec: tight.on
+      ? tight.cells
+      : margin
       ? [
           /* 잔여 세대 칸(오너 지시 2026-08-26). 처음엔 아래 한 줄로 내렸는데, 줍줍에서
              '몇 세대 남았나'는 규모와 나란히 읽혀야 하는 값이라 제원 줄 맨 앞으로 올렸다. */
@@ -846,11 +912,14 @@ function remndr(d) {
             : { label: "최고 층수", value: "미고지", tbd: true },
         ],
     /* `gap` 은 제목이 이미 받아 갔다 — 카드 계약에 남기지 않는다(템플릿이 안 쓰는 필드). */
-    priceTable: margin
-      ? (({ gap: _gap, ...rest }) => rest)(margin)
-      : plan.on
-        ? plan.grid
-        : priceTable(d, total),
+    /* 두 줄 판은 위 단이 없다 — 빈 rows 를 주면 템플릿이 밴드와 가운데 선을 통째로 안 그린다. */
+    priceTable: tight.on
+      ? { head: [], cols: 0, rows: [] }
+      : margin
+        ? (({ gap: _gap, ...rest }) => rest)(margin)
+        : plan.on
+          ? plan.grid
+          : priceTable(d, total),
     schedule,
     /* 한줄평이 있으면 그게 아래 한 줄이다 — 특이사항 나열보다 한 문장이 오래 남는다. */
     notice: noticeOf(d, flags),
