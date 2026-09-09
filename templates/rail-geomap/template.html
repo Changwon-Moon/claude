@@ -199,7 +199,10 @@
       </div>
 
       <div class="rgm-body" style="--bodyH:{{layout.bodyH}}px">
-        <div class="rgm-map wirit-linecolor">{{{mapSvg}}}</div>
+        <!-- ⚠️ 여기에 wirit-linecolor 를 붙이지 말 것 — 상자 하나로 187개를 면제해
+             auditHead 가 「큰 덩어리를 통째로 면제」로 잡았다(2026-09-09).
+             표시는 빌더가 SVG 요소 하나하나에 붙인다. -->
+        <div class="rgm-map">{{{mapSvg}}}</div>
         {{#if splitInfo}}
         <dl class="rgm-facts rgm-side">
           {{#each facts}}

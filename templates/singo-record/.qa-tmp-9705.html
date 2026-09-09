@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+/*
+ * wirit 공통 브랜드 스타일 (base.css)
+ * BRAND.md 의 잉크네이비 팔레트·규칙을 구현한다.
+ * 폰트: Pretendard Variable 번들 (모든 웨이트 포함) → 머신 간 동일 렌더.
+ */
+
+@font-face {
+  font-family: "Pretendard";
+  font-weight: 45 920; /* Variable: 얇은~Black 전 구간 */
+  font-style: normal;
+  font-display: block;
+  src: url("../_shared/fonts/PretendardVariable.woff2") format("woff2-variations");
+}
+@font-face {
+  font-family: "Wanted Sans";
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: block;
+  src: url("../_shared/fonts/WantedSansVariable.woff2") format("woff2-variations");
+}
+@font-face {
+  font-family: "Black Han Sans"; /* 헤드라인 전용 디스플레이(굵고 임팩트) */
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+  src: url("../_shared/fonts/BlackHanSans-Korean.woff2") format("woff2");
+}
+@font-face {
+  font-family: "TAEBAEK"; /* 제목 기본 서체(운영자 지정 2026-07-23, 태백체) */
+  font-weight: 100 900; /* 단일 마스터 — 전 웨이트 요청을 이 서체로 매핑(폴백 이탈 방지) */
+  font-style: normal;
+  font-display: block;
+  /* OTF(CFF+vhea/vmtx)는 Chromium OTS가 거부 → WOFF2로 재패키징(font-convert.yml) */
+  src: url("../_shared/fonts/TAEBAEK.woff2") format("woff2");
+}
+
+:root {
+  --wirit-ink: #141821; /* 본문, 수치, 다크 배경 */
+  --wirit-paper: #fafaf8; /* 기본 배경 */
+  --wirit-cobalt: #2e6bff; /* 강조 1축 */
+  --wirit-red: #e5484d; /* 상승·경고 시그널 전용 */
+  --wirit-gray: #5b6b7f; /* 보조 텍스트, 비강조 */
+  --wirit-ink-06: rgba(20, 24, 33, 0.06); /* 행 밴딩, 구분선 */
+  --wirit-ink-12: rgba(20, 24, 33, 0.12);
+
+  /* 폰트 후보 스택 */
+  --font-pretendard: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR",
+    system-ui, sans-serif;
+  --font-wanted: "Wanted Sans", "Pretendard", "Apple SD Gothic Neo",
+    system-ui, sans-serif;
+  --font-blackhan: "Black Han Sans", "Wanted Sans", "Pretendard", sans-serif;
+  --font-taebaek: "TAEBAEK", "Wanted Sans", "Pretendard", sans-serif;
+
+  /* 확정 폰트 시스템:
+     - 헤드라인(title) = 태백체 (2026-07-23 운영자 지정, 이전 Wanted Sans)
+     - 숫자(num)       = Wanted Sans
+     - 본문·라벨(sans) = Pretendard */
+  --font-sans: var(--font-pretendard);
+  --font-num: var(--font-wanted);
+  --font-title: var(--font-taebaek);
+}
+
+/* ⭐ 2026-09-07 오너 확정 — **새 판형의 기본 세트**.
+ * 제목만 태백체, 숫자를 포함한 나머지 전부 Pretendard(= Wanted Sans 퇴역).
+ * 왜 기본값(:root)을 안 바꾸나: `--font-num` 을 갈면 확정본 51개 세트와
+ *   `--font-num` 을 쓰는 판형 33개가 다시 그려질 때 픽셀이 전부 바뀐다.
+ *   「발행본·확정본 픽셀 불변」(CLAUDE.md §8)에 정면으로 걸린다 →
+ *   **새 스타일은 variant 로 격리**한다는 그 규칙대로 세트를 하나 더 둔다.
+ * 쓰는 법: 새로 만드는 판형의 카드 루트에 `class="wirit-card font-taebaek-pretendard ..."`.
+ *   옛 카드는 아무것도 안 붙이므로 자기 픽셀 그대로 남는다.
+ * 로고 뱃지(`.wirit-corner .mark`)는 이 세트의 대상이 아니다 — 폰트가 아니라 CI 다. */
+.font-taebaek-pretendard {
+  --font-sans: var(--font-pretendard);
+  --font-num: var(--font-pretendard);
+  --font-title: var(--font-taebaek);
+}
+
+/* 폰트 세트 전환(실험용). 기본은 위 하이브리드. */
+.font-pretendard {
+  --font-sans: var(--font-pretendard);
+  --font-num: var(--font-pretendard);
+  --font-title: var(--font-pretendard);
+}
+.font-wanted {
+  --font-sans: var(--font-wanted);
+  --font-num: var(--font-wanted);
+  --font-title: var(--font-wanted);
+}
+.font-wanted-blackhan {
+  --font-sans: var(--font-pretendard);
+  --font-num: var(--font-wanted);
+  --font-title: var(--font-blackhan);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--wirit-paper);
+  color: var(--wirit-ink);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "tnum" 1; /* 표 정렬용 고정폭 숫자 */
+}
+
+/* 카드 프레임: 뷰포트(config 크기)에 맞춤 — 4:5(1080×1350) 기본, 1:1(1080×1080) 등 config로 전환 */
+.wirit-card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 72px 72px 0;
+  background: var(--wirit-paper);
+  font-family: var(--font-sans); /* 카드 폰트세트 전환이 하위에 전파되도록 */
+}
+
+/* 상단: 카테고리 뱃지 + 제목 */
+.wirit-badge {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: var(--wirit-cobalt);
+  color: #fff;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.wirit-title {
+  font-family: var(--font-title); /* 제목만 개성 폰트 적용 가능 */
+  margin-top: 28px;
+  font-size: 76px;
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: var(--wirit-ink);
+}
+
+.wirit-subtitle {
+  margin-top: 18px;
+  font-size: 34px;
+  font-weight: 600;
+  color: var(--wirit-gray);
+  letter-spacing: -0.01em;
+}
+
+/* 색 유틸 */
+.up {
+  color: var(--wirit-red);
+} /* 상승·경고 (시그널 전용) */
+.accent {
+  color: var(--wirit-cobalt);
+}
+.muted {
+  color: var(--wirit-gray);
+}
+
+/* 하단 고정: 출처 + 워터마크
+ * margin-top:auto 로 플렉스 컬럼의 맨 아래에 고정 → 본문과 절대 겹치지 않음 */
+/* 하단 바: 로고색(잉크네이비) 풀블리드 배경 + 흰색 글씨 (로고와 동일 톤)
+ * 높이 1.5배(패딩 확대), 워드마크 확대 */
+.wirit-footer {
+  margin-top: auto;
+  margin-left: -72px;
+  margin-right: -72px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 34px 72px;
+  font-size: 24px;
+  font-weight: 600;
+  background: var(--wirit-ink);
+  color: #aeb8c4; /* 출처 등 보조 텍스트는 밝은 회청색 */
+}
+
+.wirit-watermark {
+  font-weight: 800;
+  font-size: 37px; /* 푸터 워드마크 확대 */
+  color: #ffffff; /* 로고처럼 흰색 워드마크 */
+}
+.wirit-watermark .dot {
+  color: var(--wirit-cobalt); /* 로고의 코발트 마침표 */
+}
+
+/* 우상단 로고 뱃지 (wirit.) — 네이비 둥근 사각형, 글자에 맞춘 여백. 자동 삽입(renderHtml) */
+.wirit-corner {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  padding: 13px 21px;
+  border-radius: 18px;
+  background: var(--wirit-ink);
+  display: inline-flex;
+  align-items: center;
+  z-index: 6;
+}
+.wirit-corner .mark {
+  font-family: "Wanted Sans", "Pretendard", sans-serif;
+  font-weight: 800;
+  font-size: 36px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+.wirit-corner .mark .dot {
+  color: var(--wirit-cobalt);
+}
+
+/* 공용 상단 캡션: 날짜·부제를 좌상단 로고 라인에 옅고 작게 (모든 카드 기본) */
+.wirit-topcap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: -30px; /* 우상단 로고 뱃지 라인에 맞춤 */
+  min-height: 62px;
+  padding-right: 190px; /* 우상단 로고 자리 확보 */
+  color: var(--wirit-gray);
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* 그래픽 내부 스탬프(아이덴티티 슬롯 C) — 지도·차트·사진이 카드의 절반 이상을 차지해
+ * "그래픽만 잘라 쓰기"가 가능한 카드에만 1개. 데이터 위에는 절대 올리지 않는다(빈 코너 전용).
+ * 위치는 각 템플릿이 지정(부모에 position:relative 필요). 다크/사진 위에는 .on-dark. */
+.wirit-stamp {
+  position: absolute;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--wirit-ink);
+  opacity: 0.16;
+  pointer-events: none;
+  z-index: 5;
+}
+.wirit-stamp.on-dark {
+  color: #ffffff;
+  opacity: 0.26;
+}
+
+/* 브랜드 컬러 로고칩: 실제 로고가 없을 때 브랜드색 원 + 약칭(흰 글씨).
+ * 배경색은 인라인 style="background:{brandColor}" 로 지정.
+ * 폴백 순서: 이미지 로고 > 컬러칩(logoColor) > 회색 모노그램 */
+.wirit-chip {
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  flex: none;
+}
+
+/* 카드 테두리(아이덴티티) — 콘텐츠 위에 오버레이(레이아웃 영향 없음).
+ * 최외곽 얇은 흰색 라인 + 그 안쪽 잉크 프레임 → 캡처 시 어떤 배경에서도 카드 경계가 또렷.
+ * border(흰색 3px)=최외곽, inset box-shadow(잉크 12px)=안쪽 프레임. */
+.wirit-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 3px solid #ffffff;
+  box-shadow: inset 0 0 0 12px var(--wirit-ink);
+  pointer-events: none;
+  z-index: 10;
+}
+
+</style>
+    <style>
+      /* =========================================================
+         singo-record@1 — 오늘의 신고가, 단지 한 곳 (2026-08-13)
+
+         무엇을 그리나: **한 단지·한 타입이 기준선 이후 최고가를 새로 쓴 사건** 한 건.
+         구조: [킥커: 계약일·지역] → [제목] → [단지 한 줄] → [실거래가 + 갱신폭]
+               → [월별 최고가 곡선] → [팩트 3칸] → [기준 문구] → [푸터]
+
+         왜 gov-bars 를 안 쓰나: 저쪽은 몇 개 구간의 **크기 비교**라 막대가 맞다.
+         여기는 한 계열이 시간을 따라 올라와 **선을 넘는 순간**이 소식이라, 곡선과
+         가로 점선(넘은 선)이 있어야 뜻이 산다.
+
+         · 좌표는 전부 **빌더가 계산한다.** 템플릿은 그리기만 한다(TEMPLATES 규칙).
+         · 색: 이 카드는 전부 '오름'이라 방향 색이 변별력을 잃는다(gov-bars 와 같은 문제).
+           그래서 곡선·수치는 잉크 단색이고 **레드는 이번 거래 점 하나**에만 준다.
+         · ⚠️ 수집을 못 한 달(ok=false)은 곡선을 **끊는다.** 이어 버리면 "그때도 이 값이었다"는
+           거짓말이 된다. 빌더가 구간을 나눠 여러 개의 path 로 넘긴다.
+         ========================================================= */
+      .sr { display: flex; flex-direction: column; }
+
+      /* 킥커 — 계약일과 지역. 제목이 말하지 않는 '언제·어디'를 여기서 받는다. */
+      .sr-kick {
+        font-family: var(--font-num); font-size: 30px; font-weight: 800;
+        color: var(--wirit-gray); letter-spacing: -0.01em; white-space: nowrap;
+      }
+
+      .sr-head { padding: 0; margin: 40px 0 0; } /* 뱃지 아래 30px 확보(badgeclear) */
+      /* 제목 — 이 판형의 주인공은 제목이 아니라 **가격**이다(오너 2026-08-13).
+         그래서 제목은 한 줄로 낮추고, 단지명과 평형만 남긴다. */
+      .sr .wirit-title {
+        font-size: 84px; line-height: 1.06; text-align: left; white-space: nowrap;
+        margin: 0; letter-spacing: -0.045em;
+      }
+      /* 제목은 **두 토막**이다 — 단지명(잉크) + 평형(코발트).
+         지역 라벨(.rg)은 걷어냈다(오너 2026-08-16b "이름 앞에 지역은 빼는걸로 전체 세팅").
+         단지명이 지역을 품으면 생략하던 예외가 있었는데, 그 예외 때문에 카드마다 제목
+         모양이 달랐다 — 정기물은 한 가지 모양이어야 한다. */
+      .sr .wirit-title .py { color: var(--wirit-cobalt); }
+
+      /* 주인공 줄 — 왼쪽 가격, 오른쪽 단지 제원 */
+      /* 제목 바로 아래에 올 때는 28px 이상 띄운다(designQa titlegap). 역 뱃지 줄이
+         사이에 끼면 그만큼 붙여도 된다 — 사이에 이미 한 줄이 있기 때문이다. */
+      .sr-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 34px; margin: 32px 0 0; }
+
+      .sr-price {
+        font-family: var(--font-num); font-size: 150px; font-weight: 900;
+        color: var(--wirit-red); letter-spacing: -0.055em; line-height: 0.94; white-space: nowrap;
+      }
+      /* 제원 — 세대수 · 준공 · 전용 · 층. 가격 오른쪽에 두 줄로 접어 세운다.
+         ⚠️ "이번 거래"·"중개거래" 같은 말은 뺐다(오너 2026-08-13) — 카드가 이미 거래 이야기다. */
+      .sr-spec { text-align: right; font-family: var(--font-num); font-size: 36px; line-height: 1.32; }
+      /* 줄마다 block — inline span 은 scrollWidth 가 믿을 게 못 돼 폭 맞춤이 어긋난다.
+         크기는 .sr-spec 이 정하고 줄은 물려받는다(그래야 두 줄이 같은 크기로 붙는다). */
+      /* ⚠️ 잉크 800 이었을 때 제원 덩어리(414×158)가 가격 덩어리(312×141)보다 **커서**,
+         이 줄의 주인이 가격이 아니라 제원이 됐다(2026-08-16b 검수 실측).
+         글자는 40→34 로, 색은 잉크→회색으로 내린다 — 정보는 그대로 두고 무게만 낮춘다.
+         BRAND.md §4 위계에서도 라벨·캡션은 블루그레이다. */
+      .sr-spec .l {
+        display: block; font-size: inherit; font-weight: 700; color: var(--wirit-gray);
+        letter-spacing: -0.03em; white-space: nowrap;
+      }
+      .sr-spec .l .sep { color: var(--wirit-gray); font-weight: 700; padding: 0 6px; }
+
+      /* ── 가까운 역 — **최상단 킥커 옆**으로 (오너 2026-08-16)
+         제목 아래에 혼자 떠 있던 것을 위로 올렸다. 킥커와 같은 줄에 있으면
+         '오늘 어디 소식인가'가 한 줄로 읽힌다. 우상단 로고 뱃지 자리는 침범하지 않는다. */
+      .wirit-topcap { display: flex; align-items: center; gap: 16px; }
+      /* ── 역 뱃지 — **한 행으로 길게, 우상단 wirit. 뱃지와 같은 키** (오너 2026-08-16b)
+         예전엔 34px 원 안에 노선 이름을 두 줄로 접어 넣었다("수인/분당"). 접히니 글자가
+         작아져 노선이 뭔지 읽히지 않았다. 원을 버리고 **알약 두 개가 한 줄로** 서게 한다.
+
+         높이 62px = `.wirit-corner`(패딩 13+13 + 글자 36) 와 같은 값이다.
+         우상단 로고와 같은 키로 서야 최상단 줄이 한 줄로 읽힌다.
+         ⚠️ 공용 `.wirit-topcap` 의 min-height 도 62px 이라 이 크기까지는 아래 레이아웃이
+            그대로다. 더 키우면 곡선 판(VB_H)을 그만큼 줄여야 한다(svgspill 이 잡는다). */
+      .sr-stn {
+        display: inline-flex; align-items: center; gap: 12px;
+        height: 62px; padding: 0 24px 0 8px; border-radius: 999px;
+        background: var(--wirit-ink-06); flex: 0 0 auto;
+      }
+      .sr-stn .nmx {
+        font-family: var(--font-sans); font-size: 34px; font-weight: 800;
+        color: var(--wirit-ink); letter-spacing: -0.035em; white-space: nowrap;
+      }
+      /* 노선 알약 — 한 행("7호선"·"수인분당선"). 접지 않으므로 폭은 이름이 정한다. */
+      .sr-stn .rt-wide {
+        display: inline-flex; align-items: center; justify-content: center;
+        height: 46px; padding: 0 16px; border-radius: 999px;
+        font-family: var(--font-sans); font-size: 27px; font-weight: 800;
+        letter-spacing: -0.04em; line-height: 1; white-space: nowrap; flex: 0 0 auto;
+      }
+      /* ── compact — 역 이름이 8자 이상일 때만 (2026-08-24)
+         「디지털미디어시티역」(9자)이 최상단 줄에서 우상단 로고를 가로 21px 침범했다
+         (designQa `badgeclip`). 판형이 「광명사거리역」·「길음역」 같은 짧은 이름을
+         전제로 잡혀 있었다.
+
+         ⚠️ **높이 62px 은 건드리지 않는다.** 그 값은 `.wirit-corner` 와 같은 키로 서기
+            위한 것이고, 공용 `.wirit-topcap` 의 min-height 도 같은 값이라 줄이면
+            최상단 줄이 로고와 어긋난다. 줄이는 것은 **가로를 먹는 것들뿐**이다.
+         ⚠️ 이 규칙은 `.compact` 안에 갇혀 있다 — 플래그가 없으면 한 픽셀도 안 움직인다.
+            확정본 6장의 역 이름은 전부 6자 이하라 아무 영향이 없다(재확인 완료). */
+      .sr-stn.compact { gap: 10px; padding: 0 18px 0 6px; }
+      .sr-stn.compact .nmx { font-size: 28px; letter-spacing: -0.045em; }
+      .sr-stn.compact .rt-wide { height: 42px; padding: 0 12px; font-size: 23px; }
+
+      .sr-stn .rt-wide.ln-white { color: #fff; }
+      .sr-stn .rt-wide.ln-dark { color: #1c2431; }
+      .sr-stn .rt-wide.plain { background: var(--wirit-gray); color: #fff; }
+
+      /* ── 곡선 ─────────────────────────────────────────────
+         카드 아래에 따로 있던 '지난 사이클' 블록을 여기로 들여왔다(오너 2026-08-16).
+         기준선 세 줄이 이야기를 다 한다:
+           · 위  = 오늘 값 기준선(라벨은 **오늘 자리**인 오른쪽 끝에)
+           · 중간 = 지난 사이클 고점  + 빨강 '고점 대비 +N%'
+           · 아래 = 기준선 이후 최저점 + 파랑 '저점 대비 +N%'
+         색은 방향이 아니라 **무엇과 견주는가**로 고정했다 — 고점=빨강, 저점=파랑.
+         곡선은 단조 3차 보간이라 두 점 사이를 벗어나지 않는다(빌더가 다시 잰다). */
+      .sr-chart { flex: 1 1 auto; display: flex; align-items: center; margin: 24px 0 22px; min-height: 0; }
+      .sr-svg { display: block; width: 100%; height: auto; }
+      /* 판 바탕 — 아주 옅게. 진해지면 회색 덩어리가 앉은 것처럼 보인다. */
+      .sr-bg { fill: var(--wirit-ink); opacity: 0.035; }
+      .sr-line { fill: none; stroke: var(--wirit-ink); stroke-width: 5; stroke-linejoin: round; stroke-linecap: round; }
+      .sr-obs { fill: var(--wirit-ink); opacity: 0.45; }
+      /* 오늘 값 기준선 — 진하게. 이게 이 카드의 사건이고, 아래 두 기준선이 견주는 대상이다. */
+      .sr-thr { stroke: var(--wirit-ink); stroke-width: 3; stroke-dasharray: 11 9; opacity: 0.55; }
+      /* 값은 **작게**(오너 2026-08-16c "현재 가격도 작게 잉크색으로").
+         바로 위 히어로가 같은 숫자를 크게 말하고 있으므로 여기서 크게 쓰면 같은 말을 두 번 외친다.
+         선이 어디인지만 짚어 주면 된다 — 아래 기준선 라벨(27px)보다도 한 단계 작다. */
+      .sr-thrlab {
+        font-family: var(--font-num); font-size: 24px; font-weight: 800;
+        fill: var(--wirit-ink); opacity: 0.7;
+      }
+      /* 기준선 두 줄 — 한 단계 물러난다. 셋이 같은 무게면 무엇이 사건인지 흐려진다. */
+      .sr-base { stroke: var(--wirit-gray); stroke-width: 2.5; stroke-dasharray: 6 9; opacity: 0.9; }
+      .sr-baselab { font-family: var(--font-num); font-size: 27px; }
+      /* 1행 = 값(연월). 2행 = 무엇과 견줬는지 + 몇 % — 색은 그 기준이 정한다. */
+      .sr-baselab .v { font-weight: 800; fill: var(--wirit-ink); }
+      .sr-baselab .p { font-weight: 900; }
+      .sr-baselab .p.hi { fill: var(--wirit-red); }
+      .sr-baselab .p.lo { fill: var(--wirit-cobalt); }
+      /* 폭 표시 직선 — 두 선 사이의 **길이가 곧 그 퍼센트**다.
+         곡선 뒤에 깔아 그림의 주인공을 뺏지 않는다. */
+      .sr-brk { stroke-width: 3.5; }
+      .sr-brk.hi { stroke: var(--wirit-red); }
+      .sr-brk.lo { stroke: var(--wirit-cobalt); }
+      /* 그 값이 난 달의 점. **라벨과 같은 색**으로 채운다(오너 2026-08-16) —
+         빈 원 두 개는 어느 쪽이 고점이고 어느 쪽이 저점인지 말해 주지 않았다.
+         종이색 테두리는 곡선 위에서도 점이 점으로 보이게 하는 것뿐이다. */
+      .sr-old { stroke: var(--wirit-paper); stroke-width: 4; fill: var(--wirit-gray); }
+      .sr-old.hi { fill: var(--wirit-red); }
+      .sr-old.lo { fill: var(--wirit-cobalt); }
+      /* 오늘 점 — 속을 비우고 잉크 테두리만(오너 2026-08-16b) */
+      .sr-now { fill: none; stroke: var(--wirit-ink); stroke-width: 6; }
+      .sr-ax { font-family: var(--font-num); font-size: 23px; font-weight: 700; fill: var(--wirit-gray); }
+
+      /* ── 판 안쪽 워터마크 (BRAND.md 슬롯 C · 오너 2026-08-16 "그래프에 흰색으로 크게")
+         흰색이라 옅은 회색 판 위에서 **파낸 것처럼** 보인다. 곡선·점·라벨보다 **먼저** 그려
+         언제나 데이터 뒤에 있고, 자리는 빌더가 빈 곳을 재서 고른다(손 좌표 금지). */
+      .sr-wmk {
+        font-family: var(--font-sans); font-weight: 900; letter-spacing: -0.03em;
+        fill: #ffffff; opacity: 0.9;
+      }
+      /* 가격과 그 옆 한 마디는 **한 덩어리**다 — hero 가 space-between 이라
+         따로 두면 그 말이 가운데로 밀려 가격에서 떨어진다. */
+      .sr-priceline { display: flex; align-items: flex-end; flex: 0 0 auto; min-width: 0; }
+      /* 가격 옆 "달성!" — 잉크(오너 2026-08-16b). 레드는 가격 숫자 하나만 갖는다.
+         여기까지 빨강이면 이 줄 전체가 빨강 덩어리가 되어 숫자가 안 튄다. */
+      .sr-price-suffix {
+        /* ⚠️ 서체는 가격과 같아야 한다 — 한 덩어리라고 적어 놓고 서체를 가르면 두 덩어리로 보인다. */
+        font-family: var(--font-num); font-size: 62px; font-weight: 900;
+        color: var(--wirit-ink); letter-spacing: -0.05em;
+        white-space: nowrap; margin-left: 14px; padding-bottom: 12px;
+      }
+
+
+      /* ── ✨ 곡선 발광 (오너 2026-09-04 "그래프 선을 반짝반짝 빛나는 효과" · "불빛 색을 까망/회색 결로")
+         카드는 정지 PNG 라 **깜빡이는 애니메이션은 남지 않는다.** 그래서 「빛난다」를
+         정지 화면에서 읽히게 하는 방식으로 낸다 — 선 둘레에 흰빛을 얇게 깔아 판에서 띄우고,
+         그 바깥에 무채색 번짐을 두 겹 준다(가까이 청회색 · 멀리 잉크).
+         ⚠️ 붉은 빛은 오너가 물렸다("빨강 넘 튀어"). 강조색은 점·기준선이 이미 쓰고 있어
+            선까지 물들이면 카드가 광고처럼 읽힌다.
+         ⚠️ 흰빛을 **맨 앞에** 둔다. 이게 없으면 어두운 번짐이 「빛」이 아니라 그림자로 보인다. */
+      .sr-line {
+        filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.95))
+                drop-shadow(0 0 9px rgba(91, 107, 127, 0.5))
+                drop-shadow(0 0 22px rgba(20, 24, 33, 0.18));
+      }
+      .sr-now {
+        filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 10px rgba(91, 107, 127, 0.6));
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card sr"><div class="wirit-corner"><span class="mark">wirit<span class="dot">.</span></span></div>
+      <div class="wirit-topcap">
+        <span class="sr-kick">오늘의 10억 클럽 (계약 2026.08.24)</span>
+        <span class="sr-stn">
+          <span class="rt-wide wirit-linecolor ln-white" style="background:#E6186C">8호선</span>
+          <span class="nmx">다산역</span>
+        </span>
+      </div>
+      <div class="sr-head"><h1 class="wirit-title">다산반도유보라메이플타운 <span class="py">32평</span></h1></div>
+
+      <div class="sr-hero">
+        <span class="sr-priceline"><span class="sr-price">10.02억</span><span class="sr-price-suffix">달성!</span></span>
+        <span class="sr-spec"><span class="l">남양주시 다산동</span><span class="l">1,140세대<span class="sep">/</span>'18년 준공<span class="sep">/</span>주차 1.2대</span><span class="l">전용 82.2㎡<span class="sep">/</span>21층</span></span>
+      </div>
+
+      <div class="sr-chart">
+        <svg class="sr-svg" viewBox="0 0 936 768" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <rect class="sr-bg" x="0" y="0" width="936" height="768" rx="4" />
+          <!-- 워터마크는 판 바탕 바로 위 = **모든 데이터 아래**. 자리는 빌더가 재서 준다 -->
+          <text class="sr-wmk" x="468" y="431.9" font-size="141" text-anchor="middle" transform="rotate(-39.4 468 384)">@wirit_note</text>
+          <line class="sr-base" x1="46" y1="169.3" x2="890" y2="169.3" />
+          <line class="sr-base" x1="46" y1="696.6" x2="890" y2="696.6" />
+          <line class="sr-thr" x1="46" y1="69.1" x2="890" y2="69.1" />
+          <text class="sr-thrlab" x="856" y="49.1" text-anchor="end">10.02억</text>
+          <!-- 폭 표시 직선 — 곡선 **뒤**에 깐다 -->
+          <g class="sr-brk hi">
+            <line x1="72" y1="69.1" x2="72" y2="169.3" />
+            <line x1="60" y1="69.1" x2="84" y2="69.1" />
+            <line x1="60" y1="169.3" x2="84" y2="169.3" />
+          </g>
+          <g class="sr-brk lo">
+            <line x1="890" y1="69.1" x2="890" y2="696.6" />
+            <line x1="878" y1="69.1" x2="902" y2="69.1" />
+            <line x1="878" y1="696.6" x2="902" y2="696.6" />
+          </g>
+          <path class="sr-line" d="M46 603.5 C49.6 602.8 53.1 603.4 56.7 599.9 C60.3 596.4 63.8 564.8 67.4 564.8 C71 564.8 74.5 652.7 78.1 652.7 C81.6 652.7 85.2 611.6 88.7 591.2 C92.3 570.6 95.8 545.7 99.4 529.6 C103 513.5 106.5 512.1 110.1 494.5 C113.7 476.9 117.2 424.2 120.8 424.2 C124.4 424.2 127.9 425.9 131.5 425.9 C135.1 425.9 138.6 423.2 142.2 408.4 C145.7 393.8 149.3 355.8 152.8 338 C156.4 320 159.9 310.2 163.5 301.1 C167.1 292 170.6 292.3 174.2 283.5 C177.8 274.7 181.3 255.7 184.9 248.4 C188.5 241.1 192 239.6 195.6 239.6 C199.2 239.6 202.7 309.9 206.3 318.7 C213.4 336.3 220.5 336.3 227.6 336.3 C231.2 336.3 234.7 285 238.3 257.2 C241.9 229.4 245.4 169.3 249 169.3 C252.6 169.3 256.1 200 259.7 213.2 C263.3 226.4 266.8 248.4 270.4 248.4 C273.9 248.4 277.5 248.4 281 248.4 C284.6 248.4 288.1 195.7 291.7 195.7 C295.3 195.7 298.8 301.1 302.4 301.1 C306 301.1 309.5 274.8 313.1 274.8 C316.7 274.8 320.2 292.3 323.8 292.3 C327.4 292.3 330.9 239.6 334.5 239.6 C341.6 239.6 348.7 312.6 355.8 355.6 C362.9 398.8 370.1 441.2 377.2 498 C384.3 554.8 391.5 696.6 398.6 696.6 C402.1 696.6 405.7 652.7 409.2 652.7 C412.8 652.7 416.3 687.8 419.9 687.8 C423.5 687.8 427 654.7 430.6 643.9 C434.2 633.1 437.7 636 441.3 622.8 C444.9 609.6 448.4 577.4 452 564.8 C455.6 552.2 459.1 554.6 462.7 547.2 C466.2 539.9 469.8 529.5 473.3 520.8 C476.9 512 480.4 494.5 484 494.5 C487.6 494.5 491.1 540.2 494.7 540.2 C498.3 540.2 501.8 516.5 505.4 498 C509 479.5 512.5 429.4 516.1 429.4 C519.7 429.4 523.2 451 526.8 462.8 C530.3 474.5 533.9 492.3 537.4 499.8 C541 507.3 544.5 507.7 548.1 507.7 C551.7 507.7 555.2 479.5 558.8 479.5 C562.4 479.5 565.9 494.5 569.5 494.5 C573.1 494.5 576.6 445.3 580.2 436.5 C583.8 427.7 587.3 427.7 590.9 427.7 C594.4 427.7 598 464.9 601.5 480.4 C605.1 496 608.6 520.8 612.2 520.8 C615.8 520.8 619.3 424.2 622.9 424.2 C626.5 424.2 630 459.3 633.6 459.3 C637.2 459.3 640.7 345.1 644.3 345.1 C647.9 345.1 651.4 387.8 655 402.2 C658.5 416.5 662.1 421.7 665.6 431.2 C669.2 440.8 672.7 453.2 676.3 459.3 C679.9 465.5 683.4 468.1 687 468.1 C690.6 468.1 694.1 397.8 697.7 397.8 C701.3 397.8 704.8 424.2 708.4 424.2 C712 424.2 715.5 424.2 719.1 424.2 C722.6 424.2 726.2 429.4 729.7 429.4 C733.3 429.4 736.8 371.4 740.4 371.4 C744 371.4 747.5 445.3 751.1 445.3 C754.7 445.3 758.2 438.9 761.8 433 C765.4 427.1 768.9 423.3 772.5 410.1 C776.1 396.9 779.6 369.2 783.2 353.9 C786.7 338.8 790.3 326.6 793.8 318.7 C797.4 310.7 800.9 306.4 804.5 306.4 C808.1 306.4 811.6 309.9 815.2 309.9 C818.8 309.9 822.3 250.2 825.9 250.2 C829.5 250.2 833 253.7 836.6 253.7 C840.2 253.7 843.7 224.1 847.3 215 C850.8 206 854.4 199.2 857.9 199.2 C861.5 199.2 865 204.4 868.6 204.4 C872.2 204.4 875.7 110.3 879.3 90.2 C882.9 70.1 886.4 75.4 890 69.1" />
+          <!-- 실제 거래가 있던 달만 점으로 찍는다. 점 사이를 잇는 선은 **관측 사이를 이은 것**이지
+               그 사이에 그 값이었다는 뜻이 아니다 — 점이 있어야 그 차이가 보인다. -->
+          
+          <text class="sr-ax" x="46" y="754" text-anchor="middle">2020</text><text class="sr-ax" x="174.2" y="754" text-anchor="middle">2021</text><text class="sr-ax" x="302.4" y="754" text-anchor="middle">2022</text><text class="sr-ax" x="430.6" y="754" text-anchor="middle">2023</text><text class="sr-ax" x="558.8" y="754" text-anchor="middle">2024</text><text class="sr-ax" x="687" y="754" text-anchor="middle">2025</text><text class="sr-ax" x="815.2" y="754" text-anchor="middle">2026</text>
+          <!-- 기준선 라벨 2행. 종이색 테두리를 둘러 곡선 위에서도 읽히게 한다 -->
+          <text class="sr-baselab" x="98" text-anchor="start" paint-order="stroke" stroke="#f6f6f3" stroke-width="9" stroke-linejoin="round">
+            <tspan class="v" x="98" y="117.3">9.45억(21.08월)</tspan><tspan class="p hi" x="98" y="153.3">지난 고점대비 +6.0%</tspan>
+          </text>
+          <text class="sr-baselab" x="856" text-anchor="end" paint-order="stroke" stroke="#f6f6f3" stroke-width="9" stroke-linejoin="round">
+            <tspan class="v" x="856" y="644.6">6.45억(22.10월)</tspan><tspan class="p lo" x="856" y="680.6">저점대비 +55.3%</tspan>
+          </text>
+          <circle class="sr-old hi" cx="249" cy="169.3" r="10" />
+          <circle class="sr-old lo" cx="398.6" cy="696.6" r="10" />
+          <!-- 오늘 거래 — **채우기 없이 잉크 테두리**(오너 2026-08-16b).
+               고점=빨강 채움 · 저점=파랑 채움 사이에서, 속 빈 원 하나면 오늘만 다르게 읽힌다.
+               ⚠️ 뒤에 깔린 종이색 원을 지웠다 — '채우기 없이'가 곧 이 지시였다. -->
+          <circle class="sr-now" cx="890" cy="69.1" r="13" />
+        </svg>
+      </div>
+
+      <div class="wirit-footer">
+        <span>출처 · 국토교통부 아파트 매매 실거래가 · 2020년 이후 기준</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <script>
+      /* 제목과 제원 블록을 카드 폭에 맞춘다 — 고정 크기는 태백체·긴 단지명에서 넘친다.
+         ⚠️ 제원(세대수·준공·전용·층)은 단지마다 글자 수가 달라서 **반드시 재야 한다.**
+            "3,432세대 | 2022년 준공(22년식)" 처럼 길어지면 가격을 밀어낸다. */
+      window.__wiritFit = function () {
+        var fit = function (el, box, lo, hi, measure) {
+          if (!el || !box) return;
+          var bs = getComputedStyle(box);
+          var avail = box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
+          var best = lo;
+          for (var i = 0; i < 24; i++) {
+            var mid = (lo + hi) / 2;
+            el.style.fontSize = mid + "px";
+            if (measure() <= avail) { best = mid; lo = mid; } else { hi = mid; }
+          }
+          el.style.fontSize = best.toFixed(2) + "px";
+        };
+
+        var title = document.querySelector(".sr .wirit-title");
+        if (title) fit(title, title.parentElement, 30, 92, function () { return title.scrollWidth; });
+
+        /* 제원은 **가격이 차지하고 남은 폭**에 맞춘다. hero 전체 scrollWidth 로 재면
+           가격까지 함께 재게 되어 둘이 서로를 밀어낸다. */
+        var hero = document.querySelector(".sr .sr-hero");
+        var spec = document.querySelector(".sr .sr-spec");
+        /* ⚠️ 가격 **덩어리**(가격 + 옆 표식)를 재야 한다. 가격만 재면 표식 폭만큼
+           제원이 넘쳐 서로를 밀어낸다(2026-08-16 표식을 붙이며 겪었다). */
+        var price = document.querySelector(".sr .sr-priceline") || document.querySelector(".sr .sr-price");
+        if (hero && spec && price) {
+          var gap = parseFloat(getComputedStyle(hero).columnGap || "34") || 34;
+          var room = hero.clientWidth - price.scrollWidth - gap;
+          /* 상한 34 — 40 이면 3줄이 가격보다 높은 덩어리가 된다(2026-08-16b 검수). */
+          var lo = 18, hi = 34, best = 18;
+          for (var k = 0; k < 24; k++) {
+            var mid = (lo + hi) / 2;
+            spec.style.fontSize = mid + "px";
+            var lines = spec.querySelectorAll(".l"), w = 0;
+            for (var m = 0; m < lines.length; m++) w = Math.max(w, lines[m].scrollWidth);
+            if (w <= room) { best = mid; lo = mid; } else { hi = mid; }
+          }
+          spec.style.fontSize = best.toFixed(2) + "px";
+        }
+      };
+    </script>
+  </body>
+</html>

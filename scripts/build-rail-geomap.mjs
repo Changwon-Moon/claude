@@ -737,12 +737,21 @@ function buildOne(L) {
   const clipL = TWO_SIDED ? 0 : 0;
   const clipR = TWO_SIDED ? MAP_W : Math.max(...dotXs) + 22;
   const clipId = `rgmclip-${L.key}-${VARIANT}`;
-  const mapSvg =
+  let mapSvg =
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${MAP_W} ${BODY_H}" width="${MAP_W}" height="${BODY_H}">` +
     `<defs><clipPath id="${clipId}"><rect x="${clipL.toFixed(1)}" y="0" width="${(clipR - clipL).toFixed(1)}" height="${BODY_H}" rx="13"/></clipPath></defs>` +
     `<g clip-path="url(#${clipId})">${land}${sidoLine}${river}${ctx}${sggNm}${line}${inMap}</g>${outMap}${wmSvg}` +
     /* 테두리는 **맨 위에, 클립 밖에서** 긋는다 — 클립 안에서 그으면 자기 자신이 반쯤 잘린다. */
     `<rect x="1.5" y="1.5" width="${(MAP_W - 3).toFixed(1)}" height="${(BODY_H - 3).toFixed(1)}" rx="13" fill="none" stroke="#141821" stroke-width="3"/></svg>`;
+
+  /* ── 강조색 전수(auditHead)에 대한 표시.
+     ⚠️ 앞 판은 템플릿의 **.rgm-map 한 상자**에 wirit-linecolor 를 붙였다. 그게 편했지만
+        auditHead 가 정확히 그걸 잡아냈다 — 「wirit-linecolor 가 큰 덩어리를 통째로 면제하고
+        있습니다: DIV.rgm-map 안 187개」. 상자 하나로 187개를 면제하면, 언젠가 그 안에서
+        규격 밖 빨강이 나도 조용히 지나간다. 이 공장이 세 번 겪은 「조용한 초록불」이다.
+     → 표시를 **색을 입은 요소 하나하나**에 붙인다. 잎에 붙으면 면제 덩어리가 0개가 된다.
+        클래스에 스타일이 없으므로 픽셀은 안 바뀐다(확인함). */
+  mapSvg = mapSvg.replace(/<(path|circle|rect|text)\b/g, '<$1 class="wirit-linecolor"');
 
   /* ⚠️ rail-line@1 은 6항목인데 여기 옮길 때 **「예상 공사기간」이 빠졌다**(2026-09-09 대조).
      같은 소재의 두 판형이 다른 정보를 보이면 어느 쪽이 맞는지 독자가 알 수 없다. */
@@ -804,7 +813,8 @@ for (const L of rail.lines) {
   /* ⑤ 개략 고지는 **캡션이 유일한 자리**다(오너 2026-09-09 선택). 그래서 코드가 넣는다. */
   const 개략고지 = "※ 노선 선형은 실제 좌표(OpenStreetMap), 역 위치는 개략 표기입니다.";
   const cap = [
-    `🗺️ ${L.name}, 지도 위에 그려 보면 이렇게 지나갑니다`, "",
+    /* 첫 줄은 **멈춰 세우는 줄**이다 — 서술형이면 그냥 넘긴다(docs/CAPTION.md · caption-lint). */
+    `🗺️ ${L.name}, 지도 위에 그리면 우리 동네를 지날까?`, "",
     `공정률 ${L.progressText}%`,
     `📅 당초 ${L.openWas} → 지금 ${L.openNow}`, "",
     `📍 ${L.start.replace(/^(\d{4})\.0?(\d{1,2})$/, "$1년 $2")}월 착공 · ${L.km} · ${L.stationNote}`,

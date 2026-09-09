@@ -103,31 +103,31 @@
       "label": "rail-sinansan",
       "title": "신안산선 언제 개통하지 (공정률 72.58% · 2028년 말 목표)",
       "state": "오너 확정",
-      "at": "2026-09-08",
+      "at": "2026-09-09",
       "builder": "rail-line",
       "content": "data/content/2026-09-07/rail-sinansan.json",
       "png": "rail-sinansan-p1.png",
-      "md5": "534355c9ce00d970f62924ab69793878"
+      "md5": "f07ac0d398d7bff94bfb836b1ca77daa"
     },
     {
       "label": "rail-gtxa",
       "title": "GTX-A 언제 완전 개통하지 (공정률 99.9% · 개통 미정)",
       "state": "오너 확정",
-      "at": "2026-09-08",
+      "at": "2026-09-09",
       "builder": "rail-line",
       "content": "data/content/2026-09-07/rail-gtxa.json",
       "png": "rail-gtxa-p1.png",
-      "md5": "485ba73560c772c248ab994f208107b9"
+      "md5": "3482e937d7c2926ebf37cfd15e14017b"
     },
     {
       "label": "rail-gtxb",
       "title": "GTX-B 언제 개통하지 (공정률 8.1% · 2031년 목표)",
       "state": "오너 확정",
-      "at": "2026-09-07",
+      "at": "2026-09-09",
       "builder": "rail-line",
       "content": "data/content/2026-09-07/rail-gtxb.json",
       "png": "rail-gtxb-p1.png",
-      "md5": "6d6ccd0f22fd2365b5cc92fce2b868ec"
+      "md5": "16069b002594d0ce56ebac35b49005d8"
     },
     {
       "label": "rail-gtxc",
@@ -178,6 +178,16 @@
       "content": "data/content/2026-09-07/rail-daejang.json",
       "png": "rail-daejang-p1.png",
       "md5": "a665b6e46b71c8f398b9030afce8ae04"
+    },
+    {
+      "label": "railmap-sinansan",
+      "title": "신안산선 언제 개통하지 — 실제 지도 위 노선 (공정률 72.58% · 2028년 말 목표)",
+      "state": "오너 확정",
+      "at": "2026-09-09",
+      "builder": "rail-geomap",
+      "content": "data/content/2026-09-09/railmap-sinansan.json",
+      "png": "railmap-sinansan-p1.png",
+      "md5": "207bd665ad029c681cb80af490cb239c"
     }
   ]
 }
