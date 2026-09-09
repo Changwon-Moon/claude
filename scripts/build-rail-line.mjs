@@ -46,7 +46,15 @@ const hexRgb = (h) => { const n = parseInt(h.slice(1), 16); return [n >> 16 & 25
 const rgba = (h, a) => { const [r, g, b] = hexRgb(h); return `rgba(${r},${g},${b},${a})`; };
 
 const MAP_CLS = { 개통: "s-open", 미개통: "", 가칭: "s-prov", 역명미정: "s-prov", 추가역: "" };
-const PROV = { 가칭: "가칭", 역명미정: "역명 미정", 추가역: "추가역" };
+/* 🔴 「가칭」·「역명 미정」 꼬리표는 **역 옆에서 뺐다**(오너 2026-09-09:
+   "가칭은 역명 말고 푸터 위에 몰아서 살짝 표시해줘"). 인동선은 17역 중 14역,
+   신안산선은 12역이 가칭이라 같은 두 글자가 열 번 넘게 반복돼 눈이 그것만 읽었고,
+   열 폭도 역마다 44px 씩 부풀어 있었다. 이제 **회색 점·회색 이름**이 그 뜻을 지고,
+   푸터 위 각주 한 줄이 그 규칙을 설명한다(PROV_NOTE).
+   ⚠️ 「추가역」은 남긴다 — 가칭이 아니라 **나중에 추가된 역**이라는 다른 사실이고,
+      GTX-B 2역·GTX-C 4역뿐이라 반복되지 않는다. 회색으로 칠하지도 않는다. */
+const PROV = { 가칭: "", 역명미정: "", 추가역: "추가역" };
+const PROV_NOTE = "회색 = 역명 미확정(가칭)";
 
 /* ⑥ 예상 공사기간 — 착공 YYYY.MM 과 개통 목표에서 센다. 개통이 미정이면 산정하지 않는다. */
 function buildPeriod(start, openNow) {
@@ -163,6 +171,7 @@ for (const L of doc.lines) {
     const rowsInSplit = Math.max(main.length, branch.length);
     NROW = head.length + rowsInSplit;
     /* 열 폭은 내용이 정한다 — 역명 글자수 × 26 + 뱃지 46 + 가칭 꼬리표 44 (실측 근사) */
+    /* 열 폭은 내용이 정한다 — 역명 글자수 × 26 + 뱃지 46 + 꼬리표 44(추가역만 남았다) */
     const need = (rows) => Math.max(...rows.map((r) =>
       r.gap ? 200 : r.name.length * 26 + (r.xfer?.length || 0) * 46 + (r.prov ? 44 : 0)), 120);
     const wl = need(main), wr = need(branch);
@@ -196,7 +205,19 @@ for (const L of doc.lines) {
     ? { top: pct(cen(0, NROW)), h: `calc(${pct(head.length / NROW - cen(0, NROW))} + 2px)` }
     : { top: pct(cen(0, NROW)), h: pct(cen(NROW - 1, NROW) - cen(0, NROW)) };
 
-  const avail = BODY_H - (L.shared ? NOTE_H : 0);
+  /* 각주 한 줄 = 「회색 = 역명 미확정(가칭)」 + 「선로 공용 · …」. 둘 중 하나라도 있으면
+     노선도 열이 그만큼 짧아진다 — 예산에서 먼저 빼지 않으면 행이 푸터를 밟는다. */
+  const provAny = [...L.stations, ...(L.branch?.stations || [])]
+    .some((st) => st.state === "가칭" || st.state === "역명미정");
+  /* 가칭 범례가 앞에 붙는 노선은 각주가 한 줄 더 길어진다 — 그런 노선에서는
+     공용 설명을 **줄인 판(sharedShort)** 으로 바꿔 문장이 어색하게 끊기는 걸 막는다.
+     sharedShort 는 제 앞에 「선로 공용 — 」을 달고 있으므로 겹치지 않게 떼어낸다. */
+  const sharedTxt = provAny && L.sharedShort
+    ? L.sharedShort.replace(/^선로\s*공용\s*[—·-]\s*/, "")
+    : L.shared;
+  const note = [provAny ? `<b>◌</b> ${PROV_NOTE}` : "",
+                sharedTxt ? `<b>선로 공용</b> · ${sharedTxt}` : ""].filter(Boolean).join("  ·  ");
+  const avail = BODY_H - (note ? NOTE_H : 0);
   const rowH = avail / NROW;
   if (rowH < ROW_MIN)
     throw new Error(`${L.name}: 행이 ${NROW}개라 행 높이가 ${rowH.toFixed(1)}px — 환승 뱃지(40px)가 삐져나온다. 상한 ${Math.floor(avail / ROW_MIN)}행`);
@@ -221,7 +242,7 @@ for (const L of doc.lines) {
     eta: { was: L.openWas, now: L.openNow },
     etaBg: `linear-gradient(180deg,#ffffff 0%,${rgba(lc, 0.09)} 100%)`,
     etaGlow: rgba(lc, 0.34),
-    facts, shared: L.shared || "", head, ...(split ? { split } : {}),
+    facts, shared: L.shared || "", note, head, ...(split ? { split } : {}),
     source: { name: L.src },
   };
   writeFileSync(join(outDir, `rail-${L.key}.json`), JSON.stringify(card, null, 2) + "\n");

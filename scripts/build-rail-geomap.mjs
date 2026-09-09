@@ -276,12 +276,34 @@ function buildOne(L) {
      ⚠️ 공표 총연장과 OSM 선형 길이는 다르다(인동선 33.7km vs OSM 35.1km — 곡선·접속선 차이).
         그래서 **비율로 늘려** 얹는다. 그대로 쓰면 끝 역이 선형 끝에서 1.4km 모자란다.
      ⚠️ km 이 하나라도 빠지면 섞어 쓰지 않는다 — 두 잣대가 섞이면 순서가 뒤집힌다. */
-  const kmAll = L.stations.every((st) => typeof st.km === "number");
-  const kmMax = kmAll ? Math.max(...L.stations.map((st) => st.km)) : 0;
-  if (kmAll && !(kmMax > 0)) throw new Error(`${L.name}: 영업거리가 전부 0 이다`);
+  /* ── 닻 우선순위 ① 공표 영업거리 ② OSM 실좌표 ③ 소재 동 중심 ④ 이웃 등분
+     (data/datasets/rail-station-anchors.json 의 `_배치_우선순위` 가 정본이다)
+     🔴 예전에는 **전 역에 km 이 있을 때만** ①을 썼다(kmAll). 그러면 한 역만 비어도
+        노선 전체가 ②로 떨어진다 — GTX-A 는 삼성 하나(출처끼리 0.5km 어긋나 못 적었다),
+        GTX-B 는 청학 하나(2025.12 신설이라 영업거리표에 행이 없다) 때문에 10~14개 역의
+        공표 거리를 통째로 버리게 된다. 그래서 **역마다 따로 고른다.**
+     ⚠️ 섞어 쓰려면 km 스케일과 선형 길이가 같은 자를 써야 한다. kmMax 는
+        「km 이 적힌 역 중 가장 먼 역」이고, 그 역의 실제 위치(②)로 스케일을 맞춘다 —
+        마지막 역에 km 이 없으면 km/kmMax × trackLen 이 선형 끝을 넘겨 버린다. */
+  const kmSt = L.stations.filter((st) => typeof st.km === "number");
+  const kmAny = kmSt.length >= 2;
+  const kmMax = kmAny ? Math.max(...kmSt.map((st) => st.km)) : 0;
+  if (kmAny && !(kmMax > 0)) throw new Error(`${L.name}: 영업거리가 전부 0 이다`);
+  /* km 자 ↔ 선형 자 환산계수. km 이 가장 먼 역의 실좌표가 있으면 거기서 재고,
+     없으면 선형 전체를 kmMax 로 나눈다(예전과 같은 셈). */
+  let kmScale = trackLen / (kmMax || 1);
+  {
+    const far = kmSt.reduce((a, b) => (b.km > a.km ? b : a), kmSt[0] || { km: 0 });
+    const gt = far && truth.get(far.name);
+    if (gt && far.km > 0) {
+      const tFar = projectOnTrack(track, gt).t;
+      if (tFar > trackLen * 0.5) kmScale = tFar / far.km;   /* 절반도 안 가는 값이면 못 믿는다 */
+    }
+  }
 
   const anchors = names.map((name, i) => {
-    if (kmAll) return { name, t: (L.stations[i].km / kmMax) * trackLen, src: `공표 ${L.stations[i].km}km` };
+    if (kmAny && typeof L.stations[i].km === "number")
+      return { name, t: Math.min(L.stations[i].km * kmScale, trackLen), src: `공표 ${L.stations[i].km}km` };
     const gt = truth.get(name);
     if (gt) return { name, t: projectOnTrack(track, gt).t, src: "OSM 실좌표" };
     const a = A[name];

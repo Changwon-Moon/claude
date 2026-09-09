@@ -188,7 +188,8 @@
         line-height: 1.14; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
 
-      /* ── 각주(선로 공용) — 노선도 열 안. 카드 폭을 가로지르면 우측 일정표가 눌린다. */
+      /* ── 각주(가칭 범례 + 선로 공용) — 노선도 열 안. 카드 폭을 가로지르면 우측 일정표가 눌린다.
+         빌더가 한 줄로 합쳐서 보낸다(note). 「◌」는 회색 점을 가리키는 기호다. */
       .rl-note {
         flex: 0 0 auto; margin-top: 14px; padding-top: 12px;
         border-top: 2px solid var(--wirit-ink-06);
@@ -271,7 +272,7 @@
             </div>
             {{/if}}
           </div>
-          {{#if shared}}<div class="rl-note"><b>선로 공용</b> · {{shared}}</div>{{/if}}
+          {{#if note}}<div class="rl-note">{{{note}}}</div>{{/if}}
         </div>
 
         <div class="rl-side">
