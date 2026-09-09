@@ -5,15 +5,15 @@
     "aptNm": "다산반도유보라메이플타운",
     "type": "84",
     "from": "202001",
-    "to": "202608",
-    "monthsTried": 80,
-    "monthsFailed": 0,
-    "monthsTraded": 76,
+    "to": "202609",
+    "monthsTried": 81,
+    "monthsFailed": 3,
+    "monthsTraded": 74,
     "peak": {
-      "manwon": 100200,
-      "date": "2026-08-24",
-      "area": 82.1967,
-      "floor": 21
+      "manwon": 94500,
+      "date": "2021-08-21",
+      "area": 84.9683,
+      "floor": 16
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -723,21 +723,30 @@
     },
     {
       "ym": "202607",
-      "maxManwon": 99000,
-      "count": 12,
-      "area": 82.1967,
-      "floor": 15,
-      "date": "2026-07-18",
-      "ok": true
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": false
     },
     {
       "ym": "202608",
-      "maxManwon": 100200,
-      "count": 3,
-      "area": 82.1967,
-      "floor": 21,
-      "date": "2026-08-24",
-      "ok": true
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": false
+    },
+    {
+      "ym": "202609",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": false
     }
   ]
 }
