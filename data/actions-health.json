@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T11:45:52.321Z",
+  "generatedAt": "2026-09-09T13:27:53.195Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -485,7 +485,7 @@
       "maxDelay": null,
       "lastRun": "2026-09-07",
       "lastOk": "2026-09-07",
-      "okDaysAgo": 1
+      "okDaysAgo": 2
     },
     {
       "file": "month-backfill.yml",
@@ -1128,7 +1128,7 @@
       "lastOk": "2026-09-09",
       "okDaysAgo": 0,
       "fails30": 17,
-      "runs30": 83
+      "runs30": 84
     },
     {
       "file": "guard.yml",
@@ -1137,7 +1137,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-09",
       "okDaysAgo": 0,
-      "fails30": 22,
+      "fails30": 21,
       "runs30": 100
     },
     {
