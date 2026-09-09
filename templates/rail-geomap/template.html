@@ -146,6 +146,11 @@
       .v-d .rgm-eta .v { font-size: 26px; }
       .v-d .rgm-eta .now .v { font-size: 32px; }
 
+      /* 노선이 북서→남동으로 누우면 좌상단·우하단이 노선 위다 — 상자를 반대 대각선으로 옮긴다.
+         (빌더가 (x,y) 공분산으로 정하고 panelSide 로 넘긴다. PANELS 좌표도 같이 뒤집힌다.) */
+      .v-d.p-nesw .rgm-bar { left: auto; right: 18px; }
+      .v-d.p-nesw .rgm-side { right: auto; left: 18px; }
+
       /* 우하단 — **덜 눈에 띄게.** 테두리도 그림자도 없고, 바탕만 살짝 깔아 지도 위에서
          글자가 읽히게 한다. 값은 회색 계열로 내려 앉힌다(이건 강조가 아니라 참고다). */
       .rgm-side {
@@ -168,7 +173,7 @@
   </head>
   <body>
     <div
-      class="wirit-card font-taebaek-pretendard rgm v-{{variant}}"
+      class="wirit-card font-taebaek-pretendard rgm v-{{variant}} p-{{panelSide}}"
       style="--lc:{{lc}};--titleFs:{{layout.titleFs}}px;--titleGap:{{layout.titleGap}}px;--bodyGap:{{layout.bodyGap}}px"
     >
       <div class="wirit-topcap"><span>{{subtitle}}</span></div>
