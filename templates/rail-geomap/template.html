@@ -40,6 +40,8 @@
       }
       /* 지도 — SVG 는 빌더가 뷰박스까지 맞춰 준다. 여기선 자리만 준다. */
       .rgm-body { position: relative; margin: var(--bodyGap) 0 0; height: var(--bodyH); }
+      /* 테두리·바탕은 **빌더가 SVG 안에서** 그린다 — 여기서 border 를 주면 상자 크기가 달라져
+         SVG 뷰박스와 어긋난다(레터박스가 생긴다). */
       .rgm-map { position: relative; width: 100%; height: var(--bodyH); overflow: hidden; }
       .rgm-map svg { display: block; width: 100%; height: 100%; }
 
@@ -121,7 +123,10 @@
          벗어나지 않게"). **세로로 쌓는다** — 폭이 좁아져 지도가 커지고, 긴 날짜 문자열이
          패널 전체 폭을 쓸 수 있어 넘칠 자리가 없어진다. */
       .v-d .rgm-bar {
-        position: absolute; left: 0; top: 24px; z-index: 2;
+        /* ⚠️ top 은 **지도 상자 기준**이어야 한다. .rgm-body 가 --bodyGap 만큼 내려와 있으므로
+           그만큼 더한다 — 안 더하면 패널이 지도 위쪽 테두리 밖으로 삐져나온다
+           (오너 2026-09-09 "좌상단 카드가 지도 바깥으로 벗어나지 않게"). */
+        position: absolute; left: 0; top: calc(var(--bodyGap) + 22px); z-index: 2;
         margin: 0; padding: 16px 18px 15px; width: 312px;
         display: block;
         background: rgba(251,250,247,0.96); border: 2px solid var(--wirit-ink-06);
@@ -131,7 +136,10 @@
       .v-d .rgm-prog .big { font-size: 68px; }
       .v-d .rgm-prog .big i { font-size: 34px; }
       .v-d .rgm-track { width: 100%; height: 11px; }
-      .v-d .rgm-eta { margin: 13px 0 0; padding: 10px 14px; }
+      /* 카드 안의 카드는 **가운데 정렬** (오너 2026-09-09). 패널이 세로로 길어지면서
+         오른쪽 정렬이 위 블록과 축이 안 맞아 삐뚤어 보였다. */
+      .v-d .rgm-eta { margin: 13px 0 0; padding: 10px 14px; text-align: center; }
+      .v-d .rgm-eta .r { justify-content: center; }
       .v-d .rgm-eta .k { font-size: 19px; }
       .v-d .rgm-eta .v { font-size: 26px; }
       .v-d .rgm-eta .now .v { font-size: 32px; }
@@ -141,7 +149,9 @@
       .rgm-side {
         /* ⚠️ bottom:0 으로 두면 각주(.rgm-note, bottom:-22px)와 겹친다 — designQa 가 잡았다.
            각주는 지도 밖 아래에 걸쳐 있으므로 그만큼 띄운다. */
-        position: absolute; right: 0; bottom: 26px; z-index: 2; width: 328px;
+        /* 폭을 328 → 264 로 줄였다(오너 2026-09-09 "1열과 2열 간격을 좁혀서 컴팩트하게").
+           값은 여전히 오른쪽 끝에 붙지만 상자가 좁아져 항목명과의 거리가 준다. */
+        position: absolute; right: 0; bottom: 26px; z-index: 2; width: 264px;
         display: grid; grid-template-columns: 1fr; row-gap: 0;
         padding: 9px 12px 7px; border-radius: 12px;
         background: rgba(251,250,247,0.86);

@@ -101,10 +101,17 @@ const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replac
 
 /* ── 지도 판 크기. 정보를 위 띠로 올렸으므로 **카드 폭을 다 쓴다**(2026-09-09 개편).
    968 = 1080 − 좌우 패딩 56×2. 세로는 제목·정보띠·각주·푸터를 뺀 나머지다. */
-const MAP_W = 968;
+/* 🔴 968 이 아니라 **936** 이다(2026-09-09 실측). 카드 좌우 패딩은 56 이 아니라 72 였다 —
+   1080 − 72×2 = 936. 968 로 두면 뷰박스가 상자보다 넓어 SVG 가 96.7% 로 줄고 **위아래 14px 씩
+   레터박스**가 생긴다. 그 14px 때문에 지도 테두리가 상자보다 안쪽에 그려져 좌상단 패널이
+   테두리 밖으로 나간 것처럼 보였다(오너 지적). 잰 값으로 고친다 — 눈으로 맞추지 않는다. */
+const MAP_W = 936;
 /* 시안마다 지도 높이가 다르다 — 정보를 어디에 두느냐가 곧 지도에 남는 세로다.
    a: 위 띠(정보가 세로를 먹음) · b: 지도 위에 겹침(세로를 안 먹음) · c: 우측 열(현행) */
-const BODY_H_BY_V = { a: 820, b: 986, c: 820, d: 986 };
+/* d 는 제목을 1.5배(62→93px)로 키우면서 두 줄이 됐다(오너 2026-09-09). 늘어난 131px 을
+   지도에서 뺀다 — "그것에 맞게 지도는 조금 줄여줘". */
+const BODY_H_BY_V = { a: 820, b: 986, c: 820, d: 946 };
+const TITLE_FS_BY_V = { a: 62, b: 62, c: 62, d: 93 };
 const BODY_H = BODY_H_BY_V[VARIANT];
 /* 정보 패널이 지도 위에서 차지하는 자리. **빌더가 이 값을 알아야** 그 자리에 걸리는 역 이름을
    반대쪽으로 보낼 수 있다(오너 2026-09-09: "시흥사거리를 우측으로 옮기면 정보 카드가 더
@@ -118,8 +125,14 @@ const BODY_H = BODY_H_BY_V[VARIANT];
 const PANELS_BY_V = {
   a: [], c: [],
   b: [{ x0: 0, x1: 478, y0: 30, y1: 350 }],
-  d: [{ x0: 0, x1: 316, y0: 24, y1: 340 },      // .v-d .rgm-bar (세로 적층)
-      { x0: 640, x1: 968, y0: 762, y1: 962 }],  // .v-d .rgm-side (bottom:26px)
+  /* ⚠️ 두 상자 모두 **지도 안쪽**에 있어야 한다(오너 2026-09-09: "좌상단 카드가 지도 바깥으로
+     벗어나지 않게"). 지도가 이제 테두리를 가진 상자라 조금만 나가도 눈에 띈다.
+     y0=14 는 템플릿의 top: calc(var(--bodyGap) + 14px) 과 같은 값이다. */
+  /* 실측값(packages/renderer/src/_measure.ts)으로 적는다 — 눈대중으로 적었다가 두 번 어긋났다.
+     bar : top calc(--bodyGap + 22px) · 폭 312 · 높이 304
+     side: 폭 264 · 높이 177 · bottom 26  → 아래에서부터 잰다 */
+  d: [{ x0: 0, x1: 316, y0: 22, y1: 330 },
+      { x0: MAP_W - 268, x1: MAP_W, y0: BODY_H - 207, y1: BODY_H - 22 }],
 };
 const PANELS = PANELS_BY_V[VARIANT];
 const SPLIT_INFO = VARIANT === "d";
@@ -265,7 +278,9 @@ function buildOne(L) {
   const ROW_W = Math.round(BDG_W + BDG_PAD + maxNm * LBL_FS * 0.98);
   const LEAD_W = 30;                       // 지시선이 최소한 이만큼은 보여야 어느 점인지 안다
   const SIDE_W = ROW_W + LEAD_W;
-  const PADT = 10, PADB = 10;
+  /* 위아래 여백 10 → 34 (오너 2026-09-09 "역 위아래 여백이 너무 없어졌네"). 끝 역의 이름이
+     테두리에 붙어 숨이 막혔다. 지도가 그만큼 작아지지만 읽는 쪽이 편한 게 먼저다. */
+  const PADT = 34, PADB = 34;
   /* a·b·d 는 좌우 교차 → 양쪽에 자리. c 는 현행(오른쪽 한 열). */
   const TWO_SIDED = VARIANT !== "c";
   let PADL = TWO_SIDED ? SIDE_W : 22;
@@ -395,12 +410,51 @@ function buildOne(L) {
   const PADD = 0.05;
   const inBox = (r) => r.some(([lon, lat]) =>
     lat > lat0 - PADD && lat < lat1 + PADD && lon > lon0 - PADD && lon < lon1 + PADD);
-  let land = "";
+  /* ⚠️ 예전에는 시군구 폴리곤만 칠했다. 그러면 바다·경계 밖이 **카드 바탕(흰색)** 으로 남아
+     지도가 어디서 시작해 어디서 끝나는지 모호했고, 좌상단 정보 패널이 지도 밖에 뜬 것처럼 보였다
+     (오너 2026-09-09). 판 전체를 같은 색으로 깔고 잉크 테두리를 두른다. */
+  let land = `<rect x="0" y="0" width="${MAP_W}" height="${BODY_H}" fill="#efece5"/>`;
   for (const f of sgg.features)
     for (const r of rings(f.geometry)) {
       if (!inBox(r)) continue;
       land += `<path d="${r.map(([lon, lat], i) => `${i ? "L" : "M"}${X(lon).toFixed(1)},${Y(lat).toFixed(1)}`).join("")}Z" fill="#efece5" stroke="#dcd8cf" stroke-width="1.1"/>`;
     }
+
+  /* ── 시·도 경계(서울/인천/경기)를 **더 진하게** (오너 2026-09-09).
+     같은 시도의 시군구 조각들을 붙여 놓고, **한 번만 나오는 변**이 곧 그 시도의 바깥선이다
+     (안쪽 경계는 이웃 두 구가 공유해 두 번 나온다). 폴리곤 합집합을 계산하지 않고도
+     바깥선만 골라낼 수 있다 — 좌표가 정확히 같은 자료라 성립한다(실측: 서울 25구에서
+     안쪽 388변 / 바깥 659변으로 깨끗하게 갈렸다). */
+  let sidoLine = "";
+  {
+    const bySido = new Map();
+    for (const f of sgg.features) {
+      const sd = f.properties?.sido;
+      if (!sd) continue;
+      if (!bySido.has(sd)) bySido.set(sd, new Map());
+      const em = bySido.get(sd);
+      for (const r of rings(f.geometry)) {
+        if (!inBox(r)) continue;                       // 화면 밖 시군구는 셀 필요가 없다
+        for (let i = 0; i < r.length - 1; i++) {
+          const a = r[i], b = r[i + 1];
+          const ka = `${a[0].toFixed(7)},${a[1].toFixed(7)}`, kb = `${b[0].toFixed(7)},${b[1].toFixed(7)}`;
+          const key = ka < kb ? `${ka}|${kb}` : `${kb}|${ka}`;
+          const prev = em.get(key);
+          em.set(key, prev ? { ...prev, n: prev.n + 1 } : { a, b, n: 1 });
+        }
+      }
+    }
+    let dstr = "";
+    for (const em of bySido.values())
+      for (const e of em.values()) {
+        if (e.n !== 1) continue;                       // 안쪽 경계
+        const [x1p, y1p] = [X(e.a[0]), Y(e.a[1])], [x2p, y2p] = [X(e.b[0]), Y(e.b[1])];
+        if (Math.max(x1p, x2p) < -20 || Math.min(x1p, x2p) > MAP_W + 20) continue;
+        if (Math.max(y1p, y2p) < -20 || Math.min(y1p, y2p) > BODY_H + 20) continue;
+        dstr += `M${x1p.toFixed(1)},${y1p.toFixed(1)}L${x2p.toFixed(1)},${y2p.toFixed(1)}`;
+      }
+    if (dstr) sidoLine = `<path d="${dstr}" fill="none" stroke="#a79e90" stroke-width="2.8" stroke-linecap="round"/>`;
+  }
 
   /* 지명을 적을 수 있는 가로 범위 — 좌우 교차에서는 이름이 양쪽에 있으므로
      "노선 주변"만 비워 두면 된다. 아래 far() 가 점·선과의 거리로 다시 거른다. */
@@ -577,8 +631,10 @@ function buildOne(L) {
   const clipId = `rgmclip-${L.key}-${VARIANT}`;
   const mapSvg =
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${MAP_W} ${BODY_H}" width="${MAP_W}" height="${BODY_H}">` +
-    `<defs><clipPath id="${clipId}"><rect x="${clipL.toFixed(1)}" y="0" width="${(clipR - clipL).toFixed(1)}" height="${BODY_H}"/></clipPath></defs>` +
-    `<g clip-path="url(#${clipId})">${land}${river}${ctx}${sggNm}${line}${inMap}</g>${outMap}</svg>`;
+    `<defs><clipPath id="${clipId}"><rect x="${clipL.toFixed(1)}" y="0" width="${(clipR - clipL).toFixed(1)}" height="${BODY_H}" rx="13"/></clipPath></defs>` +
+    `<g clip-path="url(#${clipId})">${land}${sidoLine}${river}${ctx}${sggNm}${line}${inMap}</g>${outMap}` +
+    /* 테두리는 **맨 위에, 클립 밖에서** 긋는다 — 클립 안에서 그으면 자기 자신이 반쯤 잘린다. */
+    `<rect x="1.5" y="1.5" width="${(MAP_W - 3).toFixed(1)}" height="${(BODY_H - 3).toFixed(1)}" rx="13" fill="none" stroke="#141821" stroke-width="3"/></svg>`;
 
   /* ⚠️ rail-line@1 은 6항목인데 여기 옮길 때 **「예상 공사기간」이 빠졌다**(2026-09-09 대조).
      같은 소재의 두 판형이 다른 정보를 보이면 어느 쪽이 맞는지 독자가 알 수 없다. */
@@ -614,7 +670,7 @@ function buildOne(L) {
          긴 설명(L.shared)은 캡션이 지고, 카드에는 줄인 판(sharedShort)을 쓴다. */
       L.sharedShort || L.shared || "",
     ].filter(Boolean).join("  ·  "),
-    layout: { titleFs: 62, titleGap: 16, barGap: 18, bodyGap: 16, bodyH: BODY_H, mapW: MAP_W },
+    layout: { titleFs: TITLE_FS_BY_V[VARIANT], titleGap: 16, barGap: 18, bodyGap: 16, bodyH: BODY_H, mapW: MAP_W },
     source: { name: L.src },
   };
 
