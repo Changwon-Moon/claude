@@ -192,7 +192,16 @@ async function probe() {
 
   mkdirSync(join(ROOT, "data/geo"), { recursive: true });
   const path = join(ROOT, "data/geo/_probe-rail-osm.json");
-  writeFileSync(path, JSON.stringify({ 잰날: new Date().toISOString().slice(0, 10), 거울: MIRRORS, 결과: out }, null, 2) + "\n");
+  /* ⚠️ **덮어쓰지 않고 합친다.** `--only wolpan` 이 파일을 통째로 다시 쓰면 이미 받아 둔
+     신안산선 선형이 통째로 사라진다(2026-09-09 발견 — 안 지워진 건 운이었다).
+     한 노선만 다시 받는 것은 흔한 일이고, 그때마다 나머지를 잃으면 못 쓴다. */
+  let prev = { 결과: [] };
+  try { prev = JSON.parse(readFileSync(path, "utf8")); } catch { /* 첫 실행 */ }
+  const merged = new Map((prev.결과 || []).map((x) => [x.key, x]));
+  for (const o of out) merged.set(o.key, o);
+  writeFileSync(path, JSON.stringify(
+    { 잰날: new Date().toISOString().slice(0, 10), 거울: MIRRORS, 결과: [...merged.values()] }, null, 2) + "\n");
+  console.log(`   (합침 — 파일에 든 노선: ${[...merged.keys()].join(", ")})`);
 
   console.log("── OSM 탐사 결과 ──");
   for (const o of out) {
@@ -241,7 +250,11 @@ async function context() {
   }
   mkdirSync(join(ROOT, "data/geo"), { recursive: true });
   const path = join(ROOT, "data/geo/rail-context.json");
-  writeFileSync(path, JSON.stringify({ 받은날: new Date().toISOString().slice(0, 10), 노선: out }, null, 2) + "\n");
+  /* 여기도 합친다 — 위와 같은 이유다. */
+  let prevC = { 노선: {} };
+  try { prevC = JSON.parse(readFileSync(path, "utf8")); } catch { /* 첫 실행 */ }
+  writeFileSync(path, JSON.stringify(
+    { 받은날: new Date().toISOString().slice(0, 10), 노선: { ...(prevC.노선 || {}), ...out } }, null, 2) + "\n");
   console.log(`\n📄 ${path}`);
 }
 

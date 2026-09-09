@@ -67,7 +67,7 @@ const sggGeom = (nm) => sgg.features.find((x) => x.properties.name === nm)?.geom
  *   · num 있으면 원형 심볼(1·2·4·5·7·9)
  *   · 그 외는 알약 — lines 배열은 붙여서(수인분당), label 은 그대로(KTX·서해·월판)
  *   · text:"dark" 면 글자를 잉크색으로 (9호선·수인분당·서해처럼 밝은 바탕) */
-const BDG_R = 12.5, BDG_FS = 15, BDG_GAP = 4;
+const BDG_R = 11.5, BDG_FS = 14, BDG_GAP = 4;
 function badgeText(m, k) {
   if (m.num) return m.num;
   if (m.gtx) return `GTX-${m.gtx}`;
@@ -162,9 +162,11 @@ function buildOne(L) {
   /* 오른쪽에 역 이름이 붙으므로 지도를 왼쪽으로 몰고 이름 자리를 비워 둔다. */
   /* 오른쪽 이름 자리는 **가장 긴 역 이름에서 계산한다.** 고정값으로 두면 짧은 노선에서는
      지도가 쓸데없이 작아지고(세로 여백이 남고), 긴 이름 노선에서는 이름이 잘린다. */
-  const LBL_FS = 23;
+  /* ⚠️ 「가칭」을 역마다 붙이면 16역 중 10역에 반복되고, 그만큼(44px) 라벨 폭이 늘어
+     **지도가 작아진다**(가로가 병목이라 라벨 폭이 곧 지도 크기다). 범례 한 줄로 옮긴다. */
+  const LBL_FS = 21;
   const maxNm = Math.max(...names.map((n) => n.length));
-  const anyProv = L.stations.some((st) => st.state === "가칭" || st.state === "역명미정");
+  const provCount = L.stations.filter((st) => st.state === "가칭" || st.state === "역명미정").length;
   /* 환승 키 전수 대조 — 카탈로그에 없으면 뱃지가 조용히 안 그려진다(rail-line 과 같은 규칙). */
   for (const st of L.stations)
     for (const k of st.xfer || [])
@@ -174,10 +176,10 @@ function buildOne(L) {
   const BDG_W = Math.max(0, ...L.stations.map((st) => badgeRowWidth(st.xfer || [])));
   const BDG_PAD = BDG_W ? 10 : 0;
   /* 한 행의 최대 폭 = 뱃지 구역 + 이름 + (가칭). 좌우 배치는 이 폭을 **양쪽에** 둔다. */
-  const ROW_W = Math.round(BDG_W + BDG_PAD + maxNm * LBL_FS * 0.98 + (anyProv ? 44 : 0));
+  const ROW_W = Math.round(BDG_W + BDG_PAD + maxNm * LBL_FS * 0.98);
   const LEAD_W = 30;                       // 지시선이 최소한 이만큼은 보여야 어느 점인지 안다
   const SIDE_W = ROW_W + LEAD_W;
-  const PADT = 20, PADB = 20;
+  const PADT = 10, PADB = 10;
   /* a·b 는 좌우 교차 → 양쪽에 자리. c 는 현행(오른쪽 한 열). */
   const TWO_SIDED = VARIANT !== "c";
   const PADL = TWO_SIDED ? SIDE_W : 22;
@@ -214,16 +216,11 @@ function buildOne(L) {
     river = `<path d="${hr.map(([lon, lat], i) => `${i ? "L" : "M"}${X(lon).toFixed(1)},${Y(lat).toFixed(1)}`).join("")}" fill="none" stroke="#c3d9e9" stroke-width="13" stroke-linecap="round"/>`;
   } catch (e) { throw new Error(`${L.name}: 한강을 못 그렸다 — ${e.message}`); }
 
-  /* ── 배경(기존) 노선 — 오너 요청 2026-09-09. 회색 가는 선으로 뒤에 깐다.
-     ⚠️ 자료가 없으면 **조용히 넘어가지 않는다.** 이 판형의 요청 사항이라 없으면 그렇게 말한다. */
-  let ctx = "";
-  if (CTX?.노선?.[L.key]) {
-    for (const line2 of CTX.노선[L.key])
-      for (const seg of line2.segs)
-        ctx += `<path d="${d(seg)}" fill="none" stroke="#c7cbd2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
-  } else {
-    console.log(`   ⚠️ ${L.name} — 배경 노선 자료 없음(rail-geo.yml mode=context 로 받으세요)`);
-  }
+  /* ⚠️ 배경 철도선(경부·경인·안산선 등)은 **그리지 않는다**(오너 2026-09-09 "어지럽다").
+     한 번 넣었다가 뺀 자리다 — 34종 회색 선이 깔리니 지도가 지저분해지고, 정작 우리 노선의
+     빨간 선이 그 속에 묻혔다. 어느 노선과 만나는지는 **역 이름 앞 환승 뱃지**가 이미 말한다.
+     자료(data/geo/rail-context.json)는 그대로 둔다 — 되살릴 일이 생기면 받아 놓은 걸 쓴다. */
+  const ctx = "";
 
   /* 노선색은 rail-line 과 **같은 자리에서 같은 규칙으로** 온다 — 두 판형이 다른 색을 쓰면
      같은 노선이 두 색으로 나간다. SELF 표도 rail-line 에서 그대로 가져온다. */
@@ -247,9 +244,7 @@ function buildOne(L) {
      그다음 **쪽마다 따로** 세로 겹침을 푼다. */
   const rowW = (st) => {
     const k = st.xfer || [];
-    return (k.length ? badgeRowWidth(k) + BDG_PAD : 0)
-      + [...p2name(st)].length * LBL_FS * 0.98
-      + (st.state === "가칭" || st.state === "역명미정" ? 44 : 0);
+    return (k.length ? badgeRowWidth(k) + BDG_PAD : 0) + [...p2name(st)].length * LBL_FS * 0.98;
   };
   function p2name(st) { return st.name; }
 
@@ -286,7 +281,7 @@ function buildOne(L) {
 
     /* 오른쪽: [지시선][뱃지][이름] · 왼쪽: [이름][뱃지][지시선] — 안쪽(노선쪽)이 뱃지다.
        그래야 양쪽 모두 "노선에서 멀어지는 방향으로 뱃지 → 이름"이 되어 대칭이 된다. */
-    const nameW = [...p.name].length * LBL_FS * 0.98 + (prov ? 44 : 0);
+    const nameW = [...p.name].length * LBL_FS * 0.98;
     let bx, nameX, anchor, endX;
     if (p.side > 0) {
       endX = p.x + LEAD_W;
@@ -313,12 +308,12 @@ function buildOne(L) {
       for (const k of keys) { bd += badgeSvg(k, bxx, p.ly); bxx += badgeWidth(k) + BDG_GAP; }
     }
 
-    inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="#ffffff" stroke="${lc}" stroke-width="5"/>`;
+    inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="${prov ? "#f0eee9" : "#ffffff"}" stroke="${lc}" stroke-width="5"${prov ? ' stroke-dasharray="3.2 2.4"' : ""}/>`;
     outMap += lead + bd +
       `<text x="${(p.side > 0 ? nameX : bx - 9).toFixed(1)}" y="${p.ly.toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle" text-anchor="${anchor}"${HALO}>${esc(p.name)}` +
-      (prov ? `<tspan font-size="16" font-weight="700" fill="#8a8f98" dx="6">가칭</tspan>` : "") +
       `</text>`;
   }
+  /* 가칭 역은 **점 모양**으로 구분한다 — 이름 옆 글자 대신. 범례는 아래 한 줄. */
 
   /* 역 이름·뱃지가 차지한 상자들 — 지명은 여기도 피한다. */
   const lblBoxes = lbl.map((p) => {
