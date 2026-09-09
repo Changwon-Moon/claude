@@ -165,7 +165,7 @@ function buildOne(L) {
   /* 제목 크기와 지도 높이는 **노선 이름 길이에 따라 달라진다.** 제목이 두 줄이 되면
      카드 아래로 넘치고(2026-09-09 인동선 25px 넘침), 짧아지면 그만큼 지도를 키운다. */
   const titleFs = fitTitleFs(`${L.name} ${L.titleAsk || "언제 개통하지?"}`, TITLE_FS_BY_V[VARIANT]);
-  const BH = BODY_H + (VARIANT === "d" ? Math.round(93 * 1.06) - Math.round(titleFs * 1.06) : 0);
+  let BH = BODY_H + (VARIANT === "d" ? Math.round(93 * 1.06) - Math.round(titleFs * 1.06) : 0);
   let PANELS = PANELS_FN(VARIANT, BH);
   let panelDiag = "nwse";
 
@@ -365,6 +365,20 @@ function buildOne(L) {
   const lat0 = Math.min(...all.map((p) => p.lat)), lat1 = Math.max(...all.map((p) => p.lat));
   const lon0 = Math.min(...all.map((p) => p.lon)), lon1 = Math.max(...all.map((p) => p.lon));
   const kx = Math.cos(((lat0 + lat1) / 2 * Math.PI) / 180);
+  /* ── 🔴 가로로 누운 노선인가 (오너 2026-09-09 "1번으로 가자")
+     세로로 긴 카드에 가로 노선을 넣으면 노선이 가운데 얇은 띠가 되고 위아래가 통째로 빈다.
+     실측 — 신안산 0.3:1 · 인동 0.5:1 · **월판 5.6:1**. 월판선은 32km × 5.7km 다.
+     비율이 1.6 을 넘으면 **지도를 가로로 눕히고**(높이를 줄이고) 정보를 지도 **아래 띠**로 내린다.
+     이름표도 좌우가 아니라 **위아래**로 놓는다 — 가로 노선에서 좌우는 서로를 밟는다. */
+  const aspect = ((lon1 - lon0) * kx) / (lat1 - lat0 || 1e-9);
+  const WIDE = VARIANT === "d" && aspect > 1.6;
+  if (WIDE) {
+    /* 430 → 760. 430 은 노선 띠(90px)+이름표 자리만 남긴 값이라 지도는 딱 맞았는데
+       **카드 아래가 360px 비었다.** 가로 노선은 가로가 병목이라 상자를 키워도 노선이
+       더 커지지는 않는다 — 대신 남·북 배경이 더 보이고 카드가 채워진다(오너 "지도 확대").
+       띠·각주·푸터가 쓰는 236px 을 뺀 나머지를 지도에 준다. */
+    BH = 760; PANELS = [];
+  }
   /* 오른쪽에 역 이름이 붙으므로 지도를 왼쪽으로 몰고 이름 자리를 비워 둔다. */
   /* 오른쪽 이름 자리는 **가장 긴 역 이름에서 계산한다.** 고정값으로 두면 짧은 노선에서는
      지도가 쓸데없이 작아지고(세로 여백이 남고), 긴 이름 노선에서는 이름이 잘린다. */
@@ -394,11 +408,12 @@ function buildOne(L) {
   const SIDE_W = ROW_W + LEAD_W;
   /* 위아래 여백 10 → 34 (오너 2026-09-09 "역 위아래 여백이 너무 없어졌네"). 끝 역의 이름이
      테두리에 붙어 숨이 막혔다. 지도가 그만큼 작아지지만 읽는 쪽이 편한 게 먼저다. */
-  const PADT = 34, PADB = 34;
+  /* 가로 노선은 이름표가 위아래로 서므로 그쪽에 자리가 필요하다(지시선 26 + 뱃지 23 + 이름 23 + 여유). */
+  const PADT = WIDE ? 104 : 34, PADB = WIDE ? 104 : 34;
   /* a·b·d 는 좌우 교차 → 양쪽에 자리. c 는 현행(오른쪽 한 열). */
   const TWO_SIDED = VARIANT !== "c";
-  let PADL = TWO_SIDED ? SIDE_W : 22;
-  let PADR = TWO_SIDED ? SIDE_W : Math.round(30 + ROW_W + 8);
+  let PADL = WIDE ? 70 : TWO_SIDED ? SIDE_W : 22;
+  let PADR = WIDE ? 70 : TWO_SIDED ? SIDE_W : Math.round(30 + ROW_W + 8);
   const spanX = (lon1 - lon0) * kx, spanY = lat1 - lat0;
   /* ⚠️ 좌우 여백을 **최악값(가장 긴 이름 + 가장 많은 뱃지)** 으로 잡으면 지도가 확 줄어든다.
      신안산선 실측(2026-09-09): 최악값 344px × 2 = 688px 을 이름 자리로 떼어 주니 지도에 남는
@@ -417,7 +432,7 @@ function buildOne(L) {
   const Y = (lat) => BH - (offY + (lat - lat0) * s);
   /* ── 어느 대각선이 비는가. 노선 점들의 (x,y) 공분산 부호 하나면 된다 —
      양수면 북서→남동(그 대각선이 노선 위)이므로 상자는 북동·남서로 간다. */
-  if (VARIANT === "d") {
+  if (VARIANT === "d" && !WIDE) {
     const pts = mainWay.g.map((q) => ({ x: X(q.lon), y: Y(q.lat) }));
     const mx = pts.reduce((a, q) => a + q.x, 0) / pts.length;
     const my = pts.reduce((a, q) => a + q.y, 0) / pts.length;
@@ -516,8 +531,25 @@ function buildOne(L) {
     const q = g.filter((p) => p.side === sd);
     return q.length ? Math.round(Math.max(...q.map((p) => rowW(p.st))) + LEAD_W + 8) : 24;
   };
-  let lbl = assignSides();
-  if (TWO_SIDED) {
+  /* ── 가로 노선: 이름표를 **위아래로 번갈아** 놓는다.
+     같은 쪽 이웃 간격이 두 배가 되어 밀어내는 양이 절반으로 준다 — 세로 배치와 같은 원리다.
+     ⚠️ 뱃지는 이름 **안쪽(노선 쪽)** 에 둔다. 위아래에서는 좌우 읽기 순서가 없으므로
+        「이름 앞 로고」가 성립하지 않는다 — 대신 **양쪽이 대칭**인 게 낫다. */
+  const LEAD_V = 26, BDG_H = BDG_R * 2, BDG_VGAP = 6;
+  const rowWv = (st) => Math.max(
+    [...st.name].length * LBL_FS * 0.98,
+    (st.xfer || []).length ? badgeRowWidth(st.xfer) : 0);
+  const assignUpDown = () => allPos.map((p, i) => {
+    const x = X(p.lon), y = Y(p.lat);
+    const need = LEAD_V + ((p.st.xfer || []).length ? BDG_H + BDG_VGAP : 0) + LBL_FS + 8;
+    let side = i % 2 === 0 ? 1 : -1;                 // ① 번갈아 (+1 = 아래)
+    if (side > 0 && y + need > BH - 6) side = -1;    // ② 카드 밖이면 반대쪽
+    if (side < 0 && y - need < 6) side = 1;
+    return { ...p, x, y, lx: x, side };
+  });
+
+  let lbl = WIDE ? assignUpDown() : assignSides();
+  if (TWO_SIDED && !WIDE) {
     for (let pass = 0; pass < 3; pass++) {
       const nL = needSide(lbl, -1), nR = needSide(lbl, 1);
       if (Math.abs(nL - PADL) < 4 && Math.abs(nR - PADR) < 4) break;
@@ -622,6 +654,26 @@ function buildOne(L) {
      paint-order 없이 stroke 를 주면 획이 글자 안쪽까지 먹어 굵고 뭉개져 보인다. */
   const HALO = TWO_SIDED ? ' stroke="#fbfaf7" stroke-width="4.5" paint-order="stroke" stroke-linejoin="round"' : "";
   const LBL_GAP = 32;  /* 글자 23px + 여유 9px. 폰트를 키웠으면 간격도 같이 키운다 */
+  if (WIDE) {
+    /* 가로 배치의 겹침 해소 — 세로판의 거울이다. 쪽마다 x 순으로 훑어 밀고, 끝에서 되민다. */
+    for (const sd of [1, -1]) {
+      const g = lbl.filter((p) => p.side === sd).sort((a2, b2) => a2.x - b2.x);
+      const half = (p) => rowWv(p.st) / 2;
+      for (let i = 1; i < g.length; i++) {
+        const min = g[i - 1].lx + half(g[i - 1]) + half(g[i]) + 12;
+        if (g[i].lx < min) g[i].lx = min;
+      }
+      if (g.length) {
+        const last = g[g.length - 1], R = MAP_W - 8 - half(last);
+        if (last.lx > R) last.lx = R;
+      }
+      for (let i = g.length - 2; i >= 0; i--) {
+        const max = g[i + 1].lx - half(g[i + 1]) - half(g[i]) - 12;
+        if (g[i].lx > max) g[i].lx = max;
+      }
+      for (const p of g) { const Lm = 8 + half(p); if (p.lx < Lm) p.lx = Lm; }
+    }
+  } else
   /* ⚠️ 겹침 해소는 **배열 순서가 아니라 y 순서**로 돌아야 한다. 본선 뒤에 지선을 이어 붙였더니
      지선 역들이 본선 마지막 역 뒤로 정렬돼 카드 아래로 밀리고, 지시선이 지도를 가로질렀다
      (2026-09-09). 아래로 미는 규칙은 "위에서 아래로 훑는다"를 전제하므로 정렬이 먼저다. */
@@ -641,6 +693,40 @@ function buildOne(L) {
     const prov = p.st.state === "가칭" || p.st.state === "역명미정";
     const keys = p.st.xfer || [];
     const bw = keys.length ? badgeRowWidth(keys) + BDG_PAD : 0;
+
+    if (WIDE) {
+      /* ── 가로 노선: [점] │지시선│ [뱃지] [이름]  (위아래 대칭)
+         지시선은 세로로 빠져나와 45°로 꺾고 라벨 앞 10px 은 다시 세로 — 세로판의 거울이다. */
+      const bwRawV = keys.length ? badgeRowWidth(keys) : 0;
+      const endY = p.y + p.side * LEAD_V;
+      const bcy = endY + p.side * (BDG_H / 2);
+      const ncy = endY + p.side * ((bwRawV ? BDG_H + BDG_VGAP : 0) + LBL_FS / 2);
+      const dx = p.lx - p.x, syV = p.y + p.side * 13, runV = Math.abs(endY - syV), STUBV = 10;
+      let leadV;
+      if (Math.abs(dx) < 1.5) {
+        leadV = `<path d="M${p.x.toFixed(1)},${syV.toFixed(1)}V${endY.toFixed(1)}"`;
+      } else {
+        const diagV = Math.min(Math.abs(dx), runV - STUBV - 4);
+        const outV = runV - STUBV - diagV;
+        if (outV >= 6) {
+          const k1 = syV + p.side * outV, k2 = endY - p.side * STUBV;
+          leadV = `<path d="M${p.x.toFixed(1)},${syV.toFixed(1)}V${k1.toFixed(1)}L${p.lx.toFixed(1)},${k2.toFixed(1)}V${endY.toFixed(1)}"`;
+        } else {
+          const vL = Math.hypot(dx, endY - p.y) || 1;
+          leadV = `<path d="M${(p.x + (dx / vL) * 13).toFixed(1)},${(p.y + ((endY - p.y) / vL) * 13).toFixed(1)}L${p.lx.toFixed(1)},${endY.toFixed(1)}"`;
+        }
+      }
+      leadV += ` stroke="#9aa1ac" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+      let bdV = "";
+      if (keys.length) {
+        let bxx = p.lx - bwRawV / 2;
+        for (const k of keys) { bdV += badgeSvg(k, bxx, bcy); bxx += badgeWidth(k) + BDG_GAP; }
+      }
+      inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="${prov ? "#f0eee9" : "#ffffff"}" stroke="${lc}" stroke-width="5"${prov ? ' stroke-dasharray="3.2 2.4"' : ""}/>`;
+      outMap += leadV + bdV +
+        `<text x="${p.lx.toFixed(1)}" y="${ncy.toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle" text-anchor="middle" stroke="#fbfaf7" stroke-width="4.5" paint-order="stroke" stroke-linejoin="round">${esc(p.name)}</text>`;
+      continue;
+    }
 
     /* 양쪽 모두 **읽는 순서로 [뱃지][이름]** 이다 (오너 2026-09-09: "역이름 왼쪽(앞)에 로고").
        ⚠️ 앞 판은 왼쪽에서 [이름][뱃지][지시선] 이었다 — 안쪽(노선쪽)에 뱃지를 두면 대칭이라는
@@ -711,6 +797,12 @@ function buildOne(L) {
 
   /* 역 이름·뱃지가 차지한 상자들 — 지명은 여기도 피한다. */
   const lblBoxes = lbl.map((p) => {
+    if (WIDE) {
+      const hw = rowWv(p.st) / 2 + 8;
+      const far = p.y + p.side * (LEAD_V + ((p.st.xfer || []).length ? BDG_H + BDG_VGAP : 0) + LBL_FS + 6);
+      return { x0: Math.min(p.lx, p.x) - hw, x1: Math.max(p.lx, p.x) + hw,
+               y0: Math.min(p.y, far) - 6, y1: Math.max(p.y, far) + 6 };
+    }
     const w = rowW(p.st) + LEAD_W + 22;
     return p.side > 0
       ? { x0: p.x, x1: p.x + w, y0: p.ly - 19, y1: p.ly + 19 }
@@ -884,7 +976,8 @@ function buildOne(L) {
   ].filter((f) => f.v);
 
   const card = {
-    template: "rail-geomap@1", date, lc, variant: VARIANT, splitInfo: SPLIT_INFO, panelSide: panelDiag,
+    template: "rail-geomap@1", date, lc, variant: VARIANT, splitInfo: SPLIT_INFO && !WIDE,
+    panelSide: panelDiag, wideCls: WIDE ? "is-wide" : "",
     subtitle: `서울 수도권 주요 노선 · 공사 현황 · ${rail.meta.asOfLabel} 기준`,
     title: `<span class="ln wirit-linecolor">${L.name}</span> ${L.titleAsk || "언제 개통하지?"}`,
     mapSvg,

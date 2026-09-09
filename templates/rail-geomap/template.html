@@ -151,6 +151,24 @@
       .v-d.p-nesw .rgm-bar { left: auto; right: 18px; }
       .v-d.p-nesw .rgm-side { right: auto; left: 18px; }
 
+      /* ══ 가로 노선 (is-wide) — 지도를 눕히고 정보를 **지도 아래 띠**로 내린다.
+         세로 카드에 가로 노선(월판선 32×5.7km)을 넣으면 노선이 가운데 얇은 띠가 되고
+         위아래가 통째로 빈다. 그 빈자리를 정보가 쓴다.
+         ⚠️ .v-d 의 절대배치를 덮어야 하므로 선택자를 한 단계 더 준다(.rgm.is-wide). */
+      .rgm.is-wide .rgm-wrap { display: flex; flex-direction: column; }
+      .rgm.is-wide .rgm-body { order: 1; }
+      .rgm.is-wide .rgm-bar {
+        order: 2; position: static; left: auto; right: auto; top: auto; width: auto;
+        margin: 46px 0 0; padding: 0 0 14px;
+        background: none; border: 0; border-bottom: 3px solid var(--wirit-ink);
+        border-radius: 0; box-shadow: none;
+        display: grid; grid-template-columns: auto auto 1fr; column-gap: 30px; align-items: end;
+      }
+      .rgm.is-wide .rgm-track { width: 250px; }
+      .rgm.is-wide .rgm-eta { margin: 0 0 4px; padding: 10px 15px; text-align: right; }
+      .rgm.is-wide .rgm-eta .r { justify-content: flex-end; }
+      .rgm.is-wide .rgm-facts { margin: 0; }
+
       /* 우하단 — **덜 눈에 띄게.** 테두리도 그림자도 없고, 바탕만 살짝 깔아 지도 위에서
          글자가 읽히게 한다. 값은 회색 계열로 내려 앉힌다(이건 강조가 아니라 참고다). */
       .rgm-side {
@@ -173,7 +191,7 @@
   </head>
   <body>
     <div
-      class="wirit-card font-taebaek-pretendard rgm v-{{variant}} p-{{panelSide}}"
+      class="wirit-card font-taebaek-pretendard rgm v-{{variant}} p-{{panelSide}} {{wideCls}}"
       style="--lc:{{lc}};--titleFs:{{layout.titleFs}}px;--titleGap:{{layout.titleGap}}px;--bodyGap:{{layout.bodyGap}}px"
     >
       <div class="wirit-topcap"><span>{{subtitle}}</span></div>
