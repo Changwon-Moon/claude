@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T10:21:07.825Z",
+  "generatedAt": "2026-09-09T11:22:20.096Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -1128,7 +1128,7 @@
       "lastOk": "2026-09-09",
       "okDaysAgo": 0,
       "fails30": 17,
-      "runs30": 82
+      "runs30": 83
     },
     {
       "file": "guard.yml",
@@ -1137,7 +1137,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-09",
       "okDaysAgo": 0,
-      "fails30": 26,
+      "fails30": 23,
       "runs30": 100
     },
     {
@@ -1168,7 +1168,7 @@
       "lastOk": "2026-09-09",
       "okDaysAgo": 0,
       "fails30": 2,
-      "runs30": 12
+      "runs30": 15
     },
     {
       "file": "singo-history-retry.yml",
