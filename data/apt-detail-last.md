@@ -1,7 +1,7 @@
 # 단지 주차대수 — 마지막 실행
 
 - 대기열: 176줄
-- 결과: **실패**
+- 결과: **성공**
 
 ```
 ⏭ 이미 있음 — data/datasets/apt-detail/A44340013.json (다시 받으려면 force=1)
@@ -179,120 +179,57 @@
 > @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptDetailCli.ts -- --kapt A13071302
 
-   ⏸ 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-     문이 닫힌 것으로 보고 20초 기다립니다 (1/1)
-Error: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed — 2번(약 0분) 시도했습니다
-    at get (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:138:9)
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    at async pickOp (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:170:30)
-    at async fetchAptDetail (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:215:7)
-    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptDetailCli.ts:44:13)
-/home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-detail: `tsx src/aptDetailCli.ts -- --kapt A13071302`
-Exit status 1
+/home/runner/work/claude/claude/data/datasets/apt-detail/A13071302.json
+A13071302 주차 지상 0 + 지하 2901 = **2901대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
 
 ── A10026799
 
 > @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptDetailCli.ts -- --kapt A10026799
 
-   ⏸ 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-     문이 닫힌 것으로 보고 20초 기다립니다 (1/1)
-Error: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed — 2번(약 0분) 시도했습니다
-    at get (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:138:9)
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    at async pickOp (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:170:30)
-    at async fetchAptDetail (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:215:7)
-    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptDetailCli.ts:44:13)
-/home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-detail: `tsx src/aptDetailCli.ts -- --kapt A10026799`
-Exit status 1
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10026799.json
+A10026799 주차 지상 7 + 지하 2533 = **2540대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
 
 ── A10025481
 
 > @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptDetailCli.ts -- --kapt A10025481
 
-   ⏸ 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-     문이 닫힌 것으로 보고 20초 기다립니다 (1/1)
-Error: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed — 2번(약 0분) 시도했습니다
-    at get (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:138:9)
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    at async pickOp (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:170:30)
-    at async fetchAptDetail (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:215:7)
-    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptDetailCli.ts:44:13)
-/home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-detail: `tsx src/aptDetailCli.ts -- --kapt A10025481`
-Exit status 1
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10025481.json
+A10025481 주차 지상 0 + 지하 1417 = **1417대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
 
 ── A12008003
 
 > @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptDetailCli.ts -- --kapt A12008003
 
-   ⏸ 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-     문이 닫힌 것으로 보고 20초 기다립니다 (1/1)
-Error: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed — 2번(약 0분) 시도했습니다
-    at get (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:138:9)
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    at async pickOp (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:170:30)
-    at async fetchAptDetail (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:215:7)
-    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptDetailCli.ts:44:13)
-/home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-detail: `tsx src/aptDetailCli.ts -- --kapt A12008003`
-Exit status 1
+/home/runner/work/claude/claude/data/datasets/apt-detail/A12008003.json
+A12008003 주차 지상 284 + 지하 1067 = **1351대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
 
 ── A10025946
 
 > @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptDetailCli.ts -- --kapt A10025946
 
-   ⏸ 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-     문이 닫힌 것으로 보고 20초 기다립니다 (1/1)
-Error: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed — 2번(약 0분) 시도했습니다
-    at get (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:138:9)
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    at async pickOp (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:170:30)
-    at async fetchAptDetail (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:215:7)
-    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptDetailCli.ts:44:13)
-/home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-detail: `tsx src/aptDetailCli.ts -- --kapt A10025946`
-Exit status 1
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10025946.json
+A10025946 주차 지상 0 + 지하 1351 = **1351대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
 
 ── A10024547
 
 > @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptDetailCli.ts -- --kapt A10024547
 
-   ⏸ 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-     문이 닫힌 것으로 보고 20초 기다립니다 (1/1)
-Error: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed — 2번(약 0분) 시도했습니다
-    at get (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:138:9)
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    at async pickOp (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:170:30)
-    at async fetchAptDetail (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:215:7)
-    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptDetailCli.ts:44:13)
-/home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-detail: `tsx src/aptDetailCli.ts -- --kapt A10024547`
-Exit status 1
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10024547.json
+A10024547 주차 지상 0 + 지하 1385 = **1385대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
 
 ── A13980513
 
 > @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptDetailCli.ts -- --kapt A13980513
 
-   ⏸ 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed
-     문이 닫힌 것으로 보고 20초 기다립니다 (1/1)
-Error: 망 오류: UND_ERR_CONNECT_TIMEOUT · Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms) · fetch failed — 2번(약 0분) 시도했습니다
-    at get (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:138:9)
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    at async pickOp (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:170:30)
-    at async fetchAptDetail (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:215:7)
-    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptDetailCli.ts:44:13)
-/home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-detail: `tsx src/aptDetailCli.ts -- --kapt A13980513`
-Exit status 1
+/home/runner/work/claude/claude/data/datasets/apt-detail/A13980513.json
+A13980513 주차 지상 473 + 지하 1540 = **2013대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
 
 실제로 받아 본 단지 7곳 · 이미 있어 건너뛴 것 169곳
-⚠️ 일부 줄이 실패했습니다
+✅ 대기열 전 줄 완료
 ```
