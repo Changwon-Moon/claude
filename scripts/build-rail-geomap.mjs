@@ -138,6 +138,9 @@ function buildOne(L) {
       land += `<path d="${r.map(([lon, lat], i) => `${i ? "L" : "M"}${X(lon).toFixed(1)},${Y(lat).toFixed(1)}`).join("")}Z" fill="#efece5" stroke="#dcd8cf" stroke-width="1.1"/>`;
     }
 
+  /* 이름 열의 x — 지명 배치도 이 값을 쓰므로 **쓰는 곳들보다 먼저** 정한다(const 는 TDZ 다). */
+  const LBL_X = Math.max(...pos.map((p) => X(p.lon))) + 26;
+
   /* ── 한강. sudogwon-map 과 같은 부품을 쓴다 — 강을 두 곳에서 그리면 갈라진다. */
   let river = "";
   try {
@@ -148,14 +151,22 @@ function buildOne(L) {
 
   /* ── 시군구 이름. **화면 안에 중심이 들어오는 것만** 적는다 — 가장자리에 걸친 구의
      이름을 중심에 찍으면 화면 밖이나 엉뚱한 자리에 뜬다. */
+  /* ⚠️ 중심에 그냥 찍으면 **노선과 역 위에 올라앉는다**(2026-09-09 — 금천구가 독산역을,
+     안산시상록구가 성포역을 덮었다). 지명은 배경이지 정보가 아니므로, 자리가 없으면
+     **안 적는다.** 밀어내면 엉뚱한 구에 이름이 붙어 그게 더 나쁘다. */
+  const trackPx = track.map((p) => ({ x: X(p.lon), y: Y(p.lat) }));
+  const dotPx = pos.map((p) => ({ x: X(p.lon), y: Y(p.lat) }));
+  const far = (x, y, pts, min) => pts.every((q) => Math.hypot(q.x - x, q.y - y) > min);
   let sggNm = "";
   for (const f of sgg.features) {
     const c = ringCentroid(f.geometry);
     if (!c) continue;
     const x = X(c[0]), y = Y(c[1]);
-    if (x < 30 || x > MAP_W - PADR + 10 || y < 26 || y > BODY_H - 26) continue;
-    const nm = f.properties.name.replace(/^(서울|인천)?(특별|광역)?시/, "");
-    sggNm += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="15" font-weight="700" fill="#a9aeb6" text-anchor="middle" letter-spacing="0.4">${esc(nm)}</text>`;
+    if (x < 40 || x > LBL_X - 46 || y < 30 || y > BODY_H - 34) continue;
+    if (!far(x, y, trackPx, 34) || !far(x, y, dotPx, 52)) continue;
+    /* 「안산시상록구」처럼 붙여 쓴 이름은 읽기 어렵다 — 시와 구를 띄우고, 시로 끝나면 시를 뗀다. */
+    const nm = f.properties.name.replace(/^(.+?)시(.+?구)$/, "$1 $2").replace(/시$/, "");
+    sggNm += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="15" font-weight="700" fill="#aeb3bb" text-anchor="middle" letter-spacing="0.4">${esc(nm)}</text>`;
   }
 
   /* ── 배경(기존) 노선 — 오너 요청 2026-09-09. 회색 가는 선으로 뒤에 깐다.
@@ -183,7 +194,6 @@ function buildOne(L) {
         그래서 이름은 **고정된 세로 열**에 놓고, 겹치지 않게 아래로 밀고, 점과는 지시선으로 잇는다.
         미는 순간 이름과 점의 높이가 달라지므로 지시선이 없으면 어느 점의 이름인지 모른다.
      개통 예정이라 점 모양은 전부 같게 둔다 — 상태를 색으로 나누면 「어디는 열려 있다」로 읽힌다. */
-  const LBL_X = Math.max(...pos.map((p) => X(p.lon))) + 26; // 가장 오른쪽 점보다 더 오른쪽
   const LBL_GAP = 30;                                        // 글자 24px + 여백
   const lbl = pos.map((p) => ({ ...p, x: X(p.lon), y: Y(p.lat), ly: Y(p.lat) }));
 
@@ -191,12 +201,13 @@ function buildOne(L) {
      카드 밖으로 밀린 것을 되끌어 올린다 — 한 방향만 하면 마지막 몇 개가 밖으로 나간다. */
   for (let i = 1; i < lbl.length; i++)
     if (lbl[i].ly - lbl[i - 1].ly < LBL_GAP) lbl[i].ly = lbl[i - 1].ly + LBL_GAP;
-  const BOT = BODY_H - 14;
-  if (lbl[lbl.length - 1].ly > BOT) {
-    lbl[lbl.length - 1].ly = BOT;
-    for (let i = lbl.length - 2; i >= 0; i--)
-      if (lbl[i + 1].ly - lbl[i].ly < LBL_GAP) lbl[i].ly = lbl[i + 1].ly - LBL_GAP;
-  }
+  /* ⚠️ 아래 여백을 14px 로 뒀더니 마지막 역 이름이 **각주 위로 올라앉았다**(2026-09-09).
+     지도 상자 안이라 designQa 의 겹침 검사에도 안 잡힌다 — SVG 안 글자는 그쪽 소관이 아니다.
+     그래서 여백을 넉넉히 주고, 되끌어 올리는 패스를 **조건 없이** 돌린다. */
+  const BOT = BODY_H - 46;
+  if (lbl[lbl.length - 1].ly > BOT) lbl[lbl.length - 1].ly = BOT;
+  for (let i = lbl.length - 2; i >= 0; i--)
+    if (lbl[i + 1].ly - lbl[i].ly < LBL_GAP) lbl[i].ly = lbl[i + 1].ly - LBL_GAP;
 
   let dots = "";
   for (const p of lbl) {
