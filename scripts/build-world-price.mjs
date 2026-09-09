@@ -70,6 +70,37 @@ const cards = [];
 const add = (slug, doc) => cards.push({ slug, doc: { template: "ranking-table@1", date, hideMark: true, plainRank: true, source: SRC, ...doc } });
 const addCity = (slug, doc) => add(slug, { hideMark: false, logoLabel: "국가", ...doc });
 
+/* ── E1 — 아이폰 값 (⭐⭐ 부동산 밖 첫 카드) ─────────────
+ * ⚠️ 제목에 「세계에서 두 번째로 싸다」를 쓰지 않는다.
+ *    소재 보드 안에서 두 곳이 어긋난다(성적표 40위 vs E1 '더 싼 곳은 일본뿐').
+ *    데이터셋의 iphone.conflict 참조. PDF 대조 전까지는 **이 표에 실린 값들만으로** 말한다.
+ *    표가 「최저·최고 구간」이라는 것도 부제에 밝힌다 — 69개 도시 전수표가 아니다.
+ * ⓘ ranking-table 은 `badge` 를 안 읽는다. 카드 맨 윗줄(topcap)에 그려지는 것은 `subtitle` 하나다.
+ *    그래서 제품명을 부제 앞에 붙였다. (A군 카드들의 badge 도 같은 이유로 화면에 안 나온다.) */
+{
+  const ip = D.iphone;
+  const base = ip.baseValue;
+  addCity("e1-iphone", {
+    title: "아이폰 값, 한국은 미국과 같다",
+    subtitle: `${ip.product} · 보고서가 짚은 최저·최고 구간 · 달러 환산`,
+    // 순위 번호를 뺀다. 이 표는 69개 도시 전수 순위가 아니라 **최저·최고 구간만 뽑은 것**이라
+    // 1~8위를 달면 전체 순위처럼 읽힌다 — 마침 그 순위가 원자료에서 어긋나 있는 항목이다.
+    hideRank: true,
+    logoLabel: "",   // 국기 열과 이름 열은 같은 것이다. 머리를 둘 달면 「국가/나라」로 겹친다
+    nameLabel: "나라",
+    valueLabel: "값",
+    subLabel: "미국 대비",
+    items: ip.rows.map((r) => ({
+      name: r.country,
+      flag: r.cc,
+      hl: r.highlight ? "fast" : undefined,
+      value: usd(r.value),
+      sub: Math.round((r.value / base) * 100) + "%",
+    })),
+    source: { ...SRC, asOf: `${D.meta.sourceDate} · ${ip.product} · 달러 환산` },
+  });
+}
+
 /* ── A0 — 서울 성적표 ─────────────────────────────────── */
 {
   const s = D.seoul;
