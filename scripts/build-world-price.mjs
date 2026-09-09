@@ -42,9 +42,22 @@ const usd = (n) => "$" + Math.round(n).toLocaleString("en-US");
 const usdK = (n) => (n >= 10000 ? "$" + (n / 1000).toFixed(1) + "K" : usd(n)); // sub 열은 16자 제한
 const pct = (n, unit = "%") => (n > 0 ? "+" : "") + n.toFixed(1) + unit;
 const rank = (n) => n + "위";
-/** 서울이 표 한가운데 묻히면 이 카드가 하려는 말이 사라진다 — 데이터셋의 highlight 를 이름에 새긴다.
- *  판형에 강조 필드가 없어(ranking-table 스키마) 이름 뒤 화살표로 대신한다. */
-const nm = (c) => (c.highlight ? c.city + " ←" : c.city);
+/** 이름은 이름만 둔다. 서울 표시는 국기와 코발트 행이 한다(2026-09-09) —
+ *  「서울 ←」 화살표는 그 둘이 붙기 전 임시방편이었고, 이제 겹쳐서 군더더기다. */
+const nm = (c) => c.city;
+/** 국기 — 도시 이름만으로 나라를 알 수 없으니 데이터셋의 표를 본다. 표에 없으면 국기를 안 단다(첫 글자 원으로 떨어진다). */
+const flag = (city) => D.cityCountry[city] || undefined;
+/** 주인공 행 강조. 판형에 이미 있는 hl 을 쓴다 — fast 는 코발트 배경 + 코발트 값이다.
+ *  한 표에 하나만 준다. 우리 카드에서 주인공은 언제나 서울이다. */
+const hl = (c) => (c.highlight ? "fast" : undefined);
+/** 도시 한 줄 — 국기·강조·이름을 한 곳에서 만든다. 카드마다 따로 쓰면 반드시 어긋난다. */
+const cityRow = (c, extra = {}) => ({
+  name: nm(c),
+  flag: flag(c.city),
+  hl: hl(c),
+  rank: c.rank == null ? undefined : String(c.rank),
+  ...extra,
+});
 
 /** 모든 카드가 같은 출처를 단다 — 하나라도 빠지면 우리가 넘베오를 보증하는 게 된다 */
 const SRC = {
@@ -53,7 +66,9 @@ const SRC = {
 };
 
 const cards = [];
+/** 도시 카드는 마크 슬롯을 **켠다**(국기가 거기 들어간다). 항목 카드는 끈다 — 항목엔 국기가 없다. */
 const add = (slug, doc) => cards.push({ slug, doc: { template: "ranking-table@1", date, hideMark: true, plainRank: true, source: SRC, ...doc } });
+const addCity = (slug, doc) => add(slug, { hideMark: false, logoLabel: "국가", ...doc });
 
 /* ── A0 — 서울 성적표 ─────────────────────────────────── */
 {
@@ -99,41 +114,41 @@ const add = (slug, doc) => cards.push({ slug, doc: { template: "ranking-table@1"
 
 /* ── A1 — 집값 3위 / 월세 44위 (캐러셀 2장) ───────────── */
 {
-  add("a1-apt-price-p1", {
+  addCity("a1-apt-price-p1", {
     badge: "사는 값",
     title: "서울 집값 세계 3위",
     subtitle: "도심 아파트 ㎡당 매매가",
     nameLabel: "도시",
     valueLabel: "㎡당",
     items: [
-      ...D.aptSqmTop.map((c) => ({ name: nm(c), rank: String(c.rank), value: usd(c.value) })),
-      ...D.aptSqmRef.filter((c) => c.rank == null).map((c) => ({ name: c.city, rank: "–", value: usd(c.value) })),
+      ...D.aptSqmTop.map((c) => cityRow(c, { value: usd(c.value) })),
+      ...D.aptSqmRef.filter((c) => c.rank == null).map((c) => cityRow(c, { rank: "–", value: usd(c.value) })),
     ],
   });
 
   const seoulRent = D.rent3roomTop.find((c) => c.highlight);
   const nyRent = D.rent3roomTop.find((c) => c.rank === 1);
   const ratio = Math.round((seoulRent.value / nyRent.value) * 100);
-  add("a1-rent-p2", {
+  addCity("a1-rent-p2", {
     badge: "빌리는 값",
     title: "그런데 월세는 44위",
     subtitle: `서울 3룸 월세는 뉴욕의 ${ratio}% · 이 간극의 이름이 전세다`,
     nameLabel: "도시",
     valueLabel: "3룸 월세",
-    items: D.rent3roomTop.map((c) => ({ name: nm(c), rank: String(c.rank), value: usd(c.value) })),
+    items: D.rent3roomTop.map((c) => cityRow(c, { value: usd(c.value) })),
   });
 }
 
 /* ── A2 — 월세가 10년째 내려간 도시 ───────────────────── */
 {
   const s = D.seoul;
-  add("a2-rent-fell", {
+  addCity("a2-rent-fell", {
     badge: "10년 변화",
     title: "월세가 내린 도시들",
     subtitle: `서울 3룸 월세 ${pct(s.rent3room.chg10y)} · 같은 기간 매매가는 ${pct(s.aptSqm.chg10y)}`,
     nameLabel: "도시",
     valueLabel: "3룸 월세",
-    items: D.rentFell10y.map((c, i) => ({ name: nm(c), rank: String(i + 1), value: pct(c.chg10y) })),
+    items: D.rentFell10y.map((c, i) => cityRow(c, { rank: String(i + 1), value: pct(c.chg10y) })),
   });
 
   add("a2-seoul-10y", {
@@ -152,15 +167,15 @@ const add = (slug, doc) => cards.push({ slug, doc: { template: "ranking-table@1"
 
 /* ── A3 — 원리금 부담 10위 (⭐⭐ 가장 센 장) ──────────── */
 {
-  add("a3-mortgage-burden", {
+  addCity("a3-mortgage-burden", {
     badge: "소득 대비 원리금",
     title: "집 사는 부담 세계 10위",
     subtitle: "그 앞의 9곳에 선진국은 하나도 없다",
     nameLabel: "도시",
     valueLabel: "지수",
     items: [
-      ...D.mortgageBurdenTop.map((c) => ({ name: nm(c), rank: String(c.rank), value: String(c.value) })),
-      ...D.mortgageBurdenRef.map((c) => ({ name: c.city, rank: String(c.rank), value: String(c.value) })),
+      ...D.mortgageBurdenTop.map((c) => cityRow(c, { value: String(c.value) })),
+      ...D.mortgageBurdenRef.map((c) => cityRow(c, { value: String(c.value) })),
     ],
     source: { ...SRC, asOf: D.mortgageBurdenDef },
   });
@@ -169,13 +184,12 @@ const add = (slug, doc) => cards.push({ slug, doc: { template: "ranking-table@1"
 /* ── A4 — 월급 순위와 통장 순위는 다르다 ──────────────── */
 {
   const arrow = (m) => (m > 0 ? `▲${m}` : `▼${Math.abs(m)}`);
-  const line = (c, i) => ({
-    name: nm(c),
+  const line = (c, i) => cityRow(c, {
     rank: String(i + 1),
     value: arrow(c.move),
     sub: `${c.salaryRank}위→${c.disposableRank}위`,
   });
-  add("a4-rank-move", {
+  addCity("a4-rank-move", {
     badge: "월세 낸 뒤",
     title: "월급 순위 ≠ 통장 순위",
     subtitle: "뉴욕은 5위에서 39위로, 서울은 35위에서 25위로",
@@ -207,17 +221,13 @@ const add = (slug, doc) => cards.push({ slug, doc: { template: "ranking-table@1"
 
 /* ── A6 — 10년 새 집값이 가장 많이 오른 도시 ──────────── */
 {
-  add("a6-apt-chg10y", {
+  addCity("a6-apt-chg10y", {
     badge: "10년 상승률",
     title: "집값이 3배 된 도시들",
     subtitle: "도심 아파트 ㎡당 · 서울은 6위다",
     nameLabel: "도시",
     valueLabel: "10년 변화",
-    items: D.aptChg10yTop.map((c) => ({
-      name: nm(c),
-      rank: String(c.rank),
-      value: pct(c.chg10y),
-    })),
+    items: D.aptChg10yTop.map((c) => cityRow(c, { value: pct(c.chg10y) })),
   });
 }
 

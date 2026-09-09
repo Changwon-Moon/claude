@@ -161,14 +161,20 @@ node scripts/line-card.mjs 5호선 --collect 202608   # 새 달 수집부터(→
 
 ---
 
-## 실좌표 노선 지도 — 아직 **스파이크**다 (2026-09-07, 다른 세션)
+## 실좌표 노선 지도 — 스파이크는 **판형이 됐다** (2026-09-09)
 
-`scripts/spike-rail-geomap.mjs` 는 신안산선 선형을 실좌표로 그려 본 **탐사용 도구**다.
-카드가 아니고 판형·확정·픽셀 기준값과 무관하다.
+옛 스파이크 스크립트(spike-rail-geomap)는 더 이상 없다. `rail-geomap@1` 판형과
+`scripts/build-rail-geomap.mjs` 로 승격했고, 오너 확정 카드 8장(`rail-sinansan` ·
+`rail-gtxa` · `rail-gtxb` · `rail-gtxc` · `rail-indong` · `rail-wolpan` ·
+`rail-sinbundang` · `rail-daejang`)이 픽셀 기준값에 올라 있다.
 
 ```bash
-node scripts/spike-rail-geomap.mjs > /tmp/rail-geomap.svg
+node scripts/build-rail-geomap.mjs      # 쓰는 법의 정본은 빌더 첫 주석이다
 ```
+
+> ⚠️ 아래 문단은 **승격 전 스파이크 시절의 기록**이다. 무엇이 실측이고 무엇이 개략인지의
+> 판단 근거로 남겨 두되, 쓰는 법은 위 빌더를 본다.
+> (2026-09-09: 문서가 없어진 스크립트를 가리켜 `audit-all` 이 2건 어긋남으로 잡고 있었다.)
 
 넣는 것: 시군구 경계(`data/geo/korea-sgg-2026.geojson`) · 한강(`scripts/lib/han-river.mjs`) ·
 OSM `railway=construction` 선형(`data/geo/_probe-rail-osm.json`, 401점) · **기존 역 9개**의 점.
