@@ -645,3 +645,28 @@ pnpm --filter @wirit/renderer qa <절대경로>/news-figure-demo-issue.json   # 
 
 ### 정기물
 M2 는 매월 갱신된다 — **`pixel-baselines` 에 넣지 않는다.** 약속은 "같은 데이터면 같은 픽셀"(결정성)이다.
+
+## rail-geomap@1 — 실제 지도 위 예정 노선
+
+`rail-line@1`(도식형)의 짝. 같은 데이터셋·같은 숫자를 쓰되 역을 **실제 지리 위**에 놓는다.
+
+| | |
+|---|---|
+| 빌더 | `node scripts/build-rail-geomap.mjs 2026-09-09 --only sinansan --publish` |
+| 선형 | OSM `railway=construction` — `data/geo/_probe-rail-osm.json` |
+| 선형 받기 | `.github/workflows/rail-geo.yml` (수동 실행. 코워크 컨테이너는 Overpass 가 막혀 있다) |
+| 역 닻 | `data/datasets/rail-station-anchors.json` — 좌표가 아니라 **시군구+동** |
+| 검증 도구 | `node scripts/spike-rail-anchor-check.mjs` — 닻 배치가 실좌표와 몇 m 차이 나는지 잰다 |
+
+**무엇이 실제이고 무엇이 개략인가** — 이 구분이 이 판형의 전부다.
+
+- **선형은 실제다.** 신안산선 401점.
+- **역 위치는 개략이다.** 신설역은 좌표 자료가 없어 소재 동 중심을 닻으로 쓴다.
+  2026-09-09 눈가림 실측 **중앙값 535m · 최대 1,335m (n=8)**.
+- **역 순서는 절대 안 뒤집힌다.** 진행거리를 단조증가로 강제한다(`scripts/lib/rail-geo.mjs`).
+  이게 없으면 도심 구간(역간 1km)에서 순서가 뒤집혀 개략이 아니라 **틀린 그림**이 된다.
+
+개략이라는 사실은 **캡션에 적는다**(오너 2026-09-09 선택). 빌더가 그 문장이 없으면 던진다.
+
+⚠️ 지선은 **안 그린다.** OSM 에 광명 지선은 1km 토막뿐이다. 양 끝만 알고 가운데를 직선으로
+이으면 「선형은 실제다」가 그 순간 거짓이 된다. 안 그리고 카드 각주로 밝힌다.

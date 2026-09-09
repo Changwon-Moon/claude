@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["template", "title", "subtitle", "mapSvg", "lc", "prog", "eta", "facts", "layout", "source"],
+  "properties": {
+    "template": { "type": "string" },
+    "date": { "type": "string" },
+    "title": { "type": "string" },
+    "subtitle": { "type": "string" },
+    "mapSvg": { "type": "string" },
+    "lc": { "type": "string" },
+    "note": { "type": "string" },
+    "prog": {
+      "type": "object",
+      "required": ["value", "asOf", "width"],
+      "properties": {
+        "value": { "type": "string" },
+        "asOf": { "type": "string" },
+        "width": { "type": "string" },
+        "zero": { "type": "boolean" }
+      }
+    },
+    "eta": {
+      "type": "object",
+      "required": ["was", "now"],
+      "properties": { "was": { "type": "string" }, "now": { "type": "string" } }
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["k", "v"],
+        "properties": { "k": { "type": "string" }, "v": { "type": "string" } }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "required": ["titleFs", "titleGap", "bodyGap", "bodyH", "mapW"],
+      "properties": {
+        "titleFs": { "type": "number" }, "titleGap": { "type": "number" },
+        "bodyGap": { "type": "number" }, "bodyH": { "type": "number" }, "mapW": { "type": "number" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["name"],
+      "properties": { "name": { "type": "string" } }
+    }
+  }
+}
