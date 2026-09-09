@@ -41,7 +41,7 @@ const ONLY = oi >= 0 ? argv[oi + 1] : null;
 /* ── 시안(variant). 오너 요청 2026-09-09: 라벨 좌우 배치·여백·크롭·정보 배치를 달리한 안을
       여러 개 만들어 비교한다. 기본은 a(현행 개선). 시안은 --publish 없이 뽑아 눈으로 고른다. */
 const vi = argv.indexOf("--variant");
-const VARIANT = vi >= 0 ? argv[vi + 1] : "a";
+const VARIANT = vi >= 0 ? argv[vi + 1] : "d";   /* 오너가 2026-09-09 에 d(정보 두 덩이)를 골랐다 */
 if (!["a", "b", "c", "d"].includes(VARIANT)) throw new Error(`--variant 는 a|b|c|d 다 (받은 값: ${VARIANT})`);
 
 const rail = JSON.parse(readFileSync(join(ROOT, "data/datasets/sudo-rail-2026-09.json"), "utf8"));
@@ -118,7 +118,7 @@ const BODY_H = BODY_H_BY_V[VARIANT];
 const PANELS_BY_V = {
   a: [], c: [],
   b: [{ x0: 0, x1: 478, y0: 30, y1: 350 }],
-  d: [{ x0: 0, x1: 452, y0: 24, y1: 246 },      // .v-d .rgm-bar
+  d: [{ x0: 0, x1: 316, y0: 24, y1: 340 },      // .v-d .rgm-bar (세로 적층)
       { x0: 640, x1: 968, y0: 762, y1: 962 }],  // .v-d .rgm-side (bottom:26px)
 };
 const PANELS = PANELS_BY_V[VARIANT];
@@ -220,8 +220,19 @@ function buildOne(L) {
     if (!from) throw new Error(`${L.name}: 직결 시작역 '${L.through.after}' 을 못 찾았다`);
     thruPos = L.through.stations.map((st) => {
       const c = tmap.get(st.name);
-      if (!c) throw new Error(`${L.name} 직결 ${st.name}: OSM 실좌표가 없다`); // ⑥
-      return { lat: c.lat, lon: c.lon, name: st.name, st, src: "OSM 실좌표" };
+      if (c) return { lat: c.lat, lon: c.lon, name: st.name, st, src: "OSM 실좌표" };
+      /* ⑦ **아직 안 지은 역**은 OSM 에 점이 없다(국제테마파크 — 2026-09-09 탐사에서 상자 안에
+         그 이름이 아예 없었다). 그럴 때는 **양옆 실좌표 두 개와 공표된 역간거리**로 내분한다.
+         닻(동 중심)보다 낫다 — 두 끝이 실좌표이고 사이 거리가 공표값이라 오차가 선형 구간의
+         굽이만큼밖에 안 생긴다. 대신 근거가 없으면 **던진다** — 지어내지 않는다. */
+      const bt = st.between;
+      if (!bt) throw new Error(`${L.name} 직결 ${st.name}: OSM 실좌표도 between 근거도 없다`); // ⑥
+      const a = tmap.get(bt.from), b = tmap.get(bt.to);
+      if (!a || !b) throw new Error(`${L.name} 직결 ${st.name}: 기준역(${bt.from}·${bt.to}) 실좌표가 없다`);
+      if (!(bt.kmFrom > 0) || !(bt.kmTo > 0)) throw new Error(`${L.name} 직결 ${st.name}: 역간거리가 없다`);
+      const f = bt.kmFrom / (bt.kmFrom + bt.kmTo);
+      return { lat: a.lat + (b.lat - a.lat) * f, lon: a.lon + (b.lon - a.lon) * f,
+               name: st.name, st, src: `${bt.from}~${bt.to} ${bt.kmFrom}:${bt.kmTo} 내분` };
     });
     thruPts = [{ lat: from.lat, lon: from.lon }, ...thruPos];
   }
@@ -255,17 +266,130 @@ function buildOne(L) {
   const LEAD_W = 30;                       // 지시선이 최소한 이만큼은 보여야 어느 점인지 안다
   const SIDE_W = ROW_W + LEAD_W;
   const PADT = 10, PADB = 10;
-  /* a·b 는 좌우 교차 → 양쪽에 자리. c 는 현행(오른쪽 한 열). */
+  /* a·b·d 는 좌우 교차 → 양쪽에 자리. c 는 현행(오른쪽 한 열). */
   const TWO_SIDED = VARIANT !== "c";
-  const PADL = TWO_SIDED ? SIDE_W : 22;
-  const PADR = TWO_SIDED ? SIDE_W : Math.round(30 + ROW_W + 8);
+  let PADL = TWO_SIDED ? SIDE_W : 22;
+  let PADR = TWO_SIDED ? SIDE_W : Math.round(30 + ROW_W + 8);
   const spanX = (lon1 - lon0) * kx, spanY = lat1 - lat0;
-  const s = Math.min((MAP_W - PADL - PADR) / spanX, (BODY_H - PADT - PADB) / spanY);
-  const offX = PADL + (MAP_W - PADL - PADR - spanX * s) / 2;
-  const offY = PADT + (BODY_H - PADT - PADB - spanY * s) / 2;
+  /* ⚠️ 좌우 여백을 **최악값(가장 긴 이름 + 가장 많은 뱃지)** 으로 잡으면 지도가 확 줄어든다.
+     신안산선 실측(2026-09-09): 최악값 344px × 2 = 688px 을 이름 자리로 떼어 주니 지도에 남는
+     가로가 280px 뿐이라 **가로가 병목**이 되고, 세로로는 386px 이 빈 채로 남았다 —
+     오너가 "여의도 윗부분과 아랫부분 여백을 날려 달라"고 한 게 이 여백이다.
+     실제로는 뱃지 있는 역은 오른쪽에 몰리므로 왼쪽은 그만큼 필요 없다. 그래서 **두 번 잰다** —
+     한 번 놓아 보고, 그 배치가 실제로 쓰는 폭으로 여백을 다시 잡아 더 크게 그린다. */
+  let s, offX, offY;
+  const fit = () => {
+    s = Math.min((MAP_W - PADL - PADR) / spanX, (BODY_H - PADT - PADB) / spanY);
+    offX = PADL + (MAP_W - PADL - PADR - spanX * s) / 2;
+    offY = PADT + (BODY_H - PADT - PADB - spanY * s) / 2;
+  };
+  fit();
   const X = (lon) => offX + (lon - lon0) * kx * s;
   const Y = (lat) => BODY_H - (offY + (lat - lat0) * s);
   const d = (g) => g.map((p, i) => `${i ? "L" : "M"}${X(p.lon).toFixed(1)},${Y(p.lat).toFixed(1)}`).join("");
+
+  /* ── 역 점·이름.
+     ⚠️ 도심 구간은 역간 1km 라 화면에서 20px 도 안 떨어진다. 한쪽에 몰면 다섯 개가 겹친다.
+
+     ── 좌우 교차 (오너 2026-09-09 "노선의 좌, 우로 겹치지 않게")
+     한쪽 열에 다 몰던 것을 **양쪽으로 나눈다.** 나누면 같은 쪽 이웃 간격이 두 배가 되어
+     밀어내는 양이 절반으로 준다 — 라벨이 제 점 가까이 남고 지시선이 짧아진다.
+     쪽을 정하는 규칙:
+       ① 번갈아 놓는 것을 기본으로 하되,
+       ② 그 쪽으로 놓으면 카드 밖으로 나가는 역은 반대쪽으로 (가장자리 역이 잘리는 걸 막는다)
+       ③ 뱃지가 있는 역은 **오른쪽을 우선**한다 — 왼쪽에 놓으면 뱃지가 이름보다 더 왼쪽에
+          가서 이름·뱃지 순서가 좌우로 뒤집힌다(오너가 원한 "이름 앞 로고"가 깨진다).
+     그다음 **쪽마다 따로** 세로 겹침을 푼다. */
+  const rowW = (st) => {
+    const k = st.xfer || [];
+    return (k.length ? badgeRowWidth(k) + BDG_PAD : 0) + [...p2name(st)].length * LBL_FS * 0.98;
+  };
+  function p2name(st) { return st.name; }
+
+  /* 어느 갈래에 속한 역인지 표를 붙인다 — ⑤ 에서 **제 선은 빼고** 남의 선만 재기 위해서다. */
+  const allPos = [...pos.map((p) => ({ ...p, cid: 0 })),
+                  ...branchPos.map((p) => ({ ...p, cid: 1 })),
+                  ...thruPos.map((p) => ({ ...p, cid: 2 }))];
+  /* 배치는 **여러 번 돈다**(아래 2패스). 그래서 화면 좌표에 매달린 것은 전부 이 안에서 새로 잰다. */
+  const assignSides = () => {
+  /* ⑤ 를 재려면 **그려질 선들의 화면 좌표**가 필요하다. 본선·지선·직결 세 갈래다. */
+  const corridorPx = [mainWay.g, branchPts, thruPts]
+    .map((g) => g.map((q) => ({ x: X(q.lon), y: Y(q.lat) })));
+  return allPos.map((p, i) => {
+    const x = X(p.lon), y = Y(p.lat);
+    const w = rowW(p.st);
+    /* 카드 밖으로 안 나가는가 */
+    const fitsCard = (sd) => (sd > 0 ? x + LEAD_W + w <= MAP_W - 6 : x - LEAD_W - w >= 6);
+    /* ⑤ 그쪽에 **남의 선이 있는가** — 있으면 반대쪽(바깥)으로 보낸다.
+       ⚠️ 나란한 두 선(신안산선 본선 ↔ 서해선 직결 구간, 화면에서 95px)에서 두 선 **사이**로
+          라벨을 뻗으면 양쪽에서 마주 뻗어 정면 충돌한다 — 「장하」와 「달미」가 70% 겹쳤다
+          (2026-09-09 실측). 처음엔 "선을 실제로 넘는가"만 봤는데, 두 라벨은 선을 넘지 않고
+          **사이에서** 부딪혔다. 그래서 **닿기 전에** 비킨다 — 라벨 길이에 여유(CLEAR)를 더해
+          그 안에 남의 선이 들어오면 반대쪽이다.
+       ⚠️ 제 선은 뺀다(cid). 안 빼면 곡선 구간에서 자기 선이 걸려 아무 쪽도 못 고른다. */
+    /* 규칙 한 줄: **두 선 사이의 틈은 반씩 나눠 쓴다.**
+       내 라벨이 그 절반을 넘겨야 들어가면 그쪽은 내 자리가 아니다 — 바깥으로 나간다.
+       (처음엔 "남의 선을 실제로 넘는가"로 쟀다. 「달미」의 라벨 끝이 본선에서 **1px** 모자라
+        통과했고, 마주 뻗은 「장하」와 70% 겹쳤다. 닿았는지가 아니라 **나눠 쓸 수 있는지**를
+        묻는 게 맞다.) */
+    const gapTo = (sd) => {
+      let best = Infinity;
+      corridorPx.forEach((g, ci) => {
+        if (ci === p.cid) return;              // 제 선은 안 센다
+        for (const q of g) {
+          if (Math.abs(q.y - y) >= 13) continue;
+          const dx = sd > 0 ? q.x - x : x - q.x;
+          if (dx > 12 && dx < best) best = dx;
+        }
+      });
+      return best;
+    };
+    /* ⚠️ 「내 라벨이 쓰는 폭」을 LEAD_W + w 로 쟀다가 **14px 모자랐다** — 실제 글자는 지시선 끝에서
+       9px 더 떨어져 시작한다(뱃지·이름 앞 틈). 「달미」와 「장하」가 154px 틈을 사이에 두고
+       서로 84px 씩 뻗어 겹쳤다(2026-09-09). 재는 폭에 그 9px 과 여유 8px 을 넣는다. */
+    const reach = 9 + LEAD_W + w + 8;
+    const crossesLine = (sd) => reach > gapTo(sd) / 2;
+    /* ④ 정보 패널 자리에 걸리는가 — 패널은 불투명이라 걸리면 이름이 통째로 사라진다.
+       ⚠️ 처음엔 "왼쪽 패널 하나"를 전제로 짰다(side<0 일 때만 검사). 시안 d 는 패널이
+          우하단에도 있어 그 규칙으로는 안 잡힌다. **양쪽 다 재고 비는 쪽으로 보낸다.** */
+    const hitsPanel = (sd) => {
+      const a0 = sd > 0 ? x : x - LEAD_W - w, a1 = sd > 0 ? x + LEAD_W + w : x;
+      return PANELS.some((P) => a1 > P.x0 - 10 && a0 < P.x1 + 10 && y > P.y0 - 22 && y < P.y1 + 22);
+    };
+    /* 순서에 뜻이 있다 — 뒤로 갈수록 **못 참는 것**이다.
+       ① 번갈아(기본) → ③ 뱃지는 오른쪽 → ② 카드 밖 → ⑤ 선 가로지름 → ④ 패널에 먹힘.
+       ②는 매번 다시 본다 — 뒤 규칙이 뒤집은 쪽이 카드 밖이면 그건 더 나쁘다. */
+    let side = i % 2 === 0 ? 1 : -1;                          // ①
+    if ((p.st.xfer || []).length) side = 1;                   // ③
+    if (!fitsCard(side) && fitsCard(-side)) side = -side;     // ②
+    if (crossesLine(side) && !crossesLine(-side) && fitsCard(-side)) side = -side;  // ⑤
+    if (hitsPanel(side) && !hitsPanel(-side) && fitsCard(-side)) side = -side;      // ④
+    return { ...p, x, y, ly: y, side };
+  });
+  };
+
+  /* ── 2패스: 실제 배치가 쓰는 폭으로 좌우 여백을 다시 잡고 지도를 키운다.
+     한쪽에 아무것도 없으면 그 쪽은 24px 만 남긴다. 여백을 줄이면 배율이 커지고,
+     배율이 커지면 역 위치가 달라져 쪽이 바뀔 수 있다 — 그래서 **몇 번 돌려 안정될 때까지** 본다.
+     ⚠️ 마지막에 한 번 더 확인한다. 배치를 바꾼 뒤 여백이 모자라면 그때는 **여백을 넓히고
+        쪽은 그대로 둔다** — 여기서 또 쪽을 바꾸면 두 상태를 오갈 수 있다. */
+  const needSide = (g, sd) => {
+    const q = g.filter((p) => p.side === sd);
+    return q.length ? Math.round(Math.max(...q.map((p) => rowW(p.st))) + LEAD_W + 8) : 24;
+  };
+  let lbl = assignSides();
+  if (TWO_SIDED) {
+    for (let pass = 0; pass < 3; pass++) {
+      const nL = needSide(lbl, -1), nR = needSide(lbl, 1);
+      if (Math.abs(nL - PADL) < 4 && Math.abs(nR - PADR) < 4) break;
+      PADL = nL; PADR = nR; fit(); lbl = assignSides();
+    }
+    const fL = needSide(lbl, -1), fR = needSide(lbl, 1);
+    if (fL > PADL || fR > PADR) {
+      PADL = Math.max(PADL, fL); PADR = Math.max(PADR, fR); fit();
+      for (const p of lbl) { p.x = X(p.lon); p.y = Y(p.lat); p.ly = p.y; }
+    }
+  }
 
   /* ── 배경: 시군구 경계 + 한강 */
   const PADD = 0.05;
@@ -314,79 +438,6 @@ function buildOne(L) {
       ? `<path d="${d(thruPts)}" fill="none" stroke="${lc}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>`
       : "");
 
-  /* ── 역 점·이름.
-     ⚠️ 도심 구간은 역간 1km 라 화면에서 20px 도 안 떨어진다. 한쪽에 몰면 다섯 개가 겹친다.
-
-     ── 좌우 교차 (오너 2026-09-09 "노선의 좌, 우로 겹치지 않게")
-     한쪽 열에 다 몰던 것을 **양쪽으로 나눈다.** 나누면 같은 쪽 이웃 간격이 두 배가 되어
-     밀어내는 양이 절반으로 준다 — 라벨이 제 점 가까이 남고 지시선이 짧아진다.
-     쪽을 정하는 규칙:
-       ① 번갈아 놓는 것을 기본으로 하되,
-       ② 그 쪽으로 놓으면 카드 밖으로 나가는 역은 반대쪽으로 (가장자리 역이 잘리는 걸 막는다)
-       ③ 뱃지가 있는 역은 **오른쪽을 우선**한다 — 왼쪽에 놓으면 뱃지가 이름보다 더 왼쪽에
-          가서 이름·뱃지 순서가 좌우로 뒤집힌다(오너가 원한 "이름 앞 로고"가 깨진다).
-     그다음 **쪽마다 따로** 세로 겹침을 푼다. */
-  const rowW = (st) => {
-    const k = st.xfer || [];
-    return (k.length ? badgeRowWidth(k) + BDG_PAD : 0) + [...p2name(st)].length * LBL_FS * 0.98;
-  };
-  function p2name(st) { return st.name; }
-
-  /* 어느 갈래에 속한 역인지 표를 붙인다 — ⑤ 에서 **제 선은 빼고** 남의 선만 재기 위해서다. */
-  const allPos = [...pos.map((p) => ({ ...p, cid: 0 })),
-                  ...branchPos.map((p) => ({ ...p, cid: 1 })),
-                  ...thruPos.map((p) => ({ ...p, cid: 2 }))];
-  /* ⑤ 를 재려면 **그려질 선들의 화면 좌표**가 필요하다. 본선·지선·직결 세 갈래다. */
-  const corridorPx = [mainWay.g, branchPts, thruPts]
-    .map((g) => g.map((q) => ({ x: X(q.lon), y: Y(q.lat) })));
-
-  const lbl = allPos.map((p, i) => {
-    const x = X(p.lon), y = Y(p.lat);
-    const w = rowW(p.st);
-    /* 카드 밖으로 안 나가는가 */
-    const fitsCard = (sd) => (sd > 0 ? x + LEAD_W + w <= MAP_W - 6 : x - LEAD_W - w >= 6);
-    /* ⑤ 그쪽에 **남의 선이 있는가** — 있으면 반대쪽(바깥)으로 보낸다.
-       ⚠️ 나란한 두 선(신안산선 본선 ↔ 서해선 직결 구간, 화면에서 95px)에서 두 선 **사이**로
-          라벨을 뻗으면 양쪽에서 마주 뻗어 정면 충돌한다 — 「장하」와 「달미」가 70% 겹쳤다
-          (2026-09-09 실측). 처음엔 "선을 실제로 넘는가"만 봤는데, 두 라벨은 선을 넘지 않고
-          **사이에서** 부딪혔다. 그래서 **닿기 전에** 비킨다 — 라벨 길이에 여유(CLEAR)를 더해
-          그 안에 남의 선이 들어오면 반대쪽이다.
-       ⚠️ 제 선은 뺀다(cid). 안 빼면 곡선 구간에서 자기 선이 걸려 아무 쪽도 못 고른다. */
-    /* 규칙 한 줄: **두 선 사이의 틈은 반씩 나눠 쓴다.**
-       내 라벨이 그 절반을 넘겨야 들어가면 그쪽은 내 자리가 아니다 — 바깥으로 나간다.
-       (처음엔 "남의 선을 실제로 넘는가"로 쟀다. 「달미」의 라벨 끝이 본선에서 **1px** 모자라
-        통과했고, 마주 뻗은 「장하」와 70% 겹쳤다. 닿았는지가 아니라 **나눠 쓸 수 있는지**를
-        묻는 게 맞다.) */
-    const gapTo = (sd) => {
-      let best = Infinity;
-      corridorPx.forEach((g, ci) => {
-        if (ci === p.cid) return;              // 제 선은 안 센다
-        for (const q of g) {
-          if (Math.abs(q.y - y) >= 13) continue;
-          const dx = sd > 0 ? q.x - x : x - q.x;
-          if (dx > 12 && dx < best) best = dx;
-        }
-      });
-      return best;
-    };
-    const crossesLine = (sd) => LEAD_W + w > gapTo(sd) / 2;
-    /* ④ 정보 패널 자리에 걸리는가 — 패널은 불투명이라 걸리면 이름이 통째로 사라진다.
-       ⚠️ 처음엔 "왼쪽 패널 하나"를 전제로 짰다(side<0 일 때만 검사). 시안 d 는 패널이
-          우하단에도 있어 그 규칙으로는 안 잡힌다. **양쪽 다 재고 비는 쪽으로 보낸다.** */
-    const hitsPanel = (sd) => {
-      const a0 = sd > 0 ? x : x - LEAD_W - w, a1 = sd > 0 ? x + LEAD_W + w : x;
-      return PANELS.some((P) => a1 > P.x0 - 10 && a0 < P.x1 + 10 && y > P.y0 - 22 && y < P.y1 + 22);
-    };
-    /* 순서에 뜻이 있다 — 뒤로 갈수록 **못 참는 것**이다.
-       ① 번갈아(기본) → ③ 뱃지는 오른쪽 → ② 카드 밖 → ⑤ 선 가로지름 → ④ 패널에 먹힘.
-       ②는 매번 다시 본다 — 뒤 규칙이 뒤집은 쪽이 카드 밖이면 그건 더 나쁘다. */
-    let side = i % 2 === 0 ? 1 : -1;                          // ①
-    if ((p.st.xfer || []).length) side = 1;                   // ③
-    if (!fitsCard(side) && fitsCard(-side)) side = -side;     // ②
-    if (crossesLine(side) && !crossesLine(-side) && fitsCard(-side)) side = -side;  // ⑤
-    if (hitsPanel(side) && !hitsPanel(-side) && fitsCard(-side)) side = -side;      // ④
-    return { ...p, x, y, ly: y, side };
-  });
 
   /* 지도 위에 글자를 얹을 때의 유일한 방법 — 글자 테두리를 먼저 칠하고 그 위에 글자를 칠한다.
      paint-order 없이 stroke 를 주면 획이 글자 안쪽까지 먹어 굵고 뭉개져 보인다. */
@@ -558,7 +609,7 @@ function buildOne(L) {
        모양으로 구분한 것(점선 지선·점선 링 가칭)은 여기서 한 번 설명한다. */
     note: [
       provCount ? "◌ 점선 = 가칭역" : "",
-      branchPts.length ? "지선·직결 구간은 역 위치만 자료 기반 — 잇는 선은 개략" : "",
+      branchPts.length ? "지선·공용 구간은 잇는 선이 개략" : "",
       /* 각주는 **한 줄**이 목표다 — 두 줄로 넘어가면 마지막 줄에 두 글자만 남아 지저분해진다.
          긴 설명(L.shared)은 캡션이 지고, 카드에는 줄인 판(sharedShort)을 쓴다. */
       L.sharedShort || L.shared || "",
@@ -590,7 +641,12 @@ for (const L of rail.lines) {
     `공정률 ${L.progressText}%`,
     `📅 당초 ${L.openWas} → 지금 ${L.openNow}`, "",
     `📍 ${L.start.replace(/^(\d{4})\.0?(\d{1,2})$/, "$1년 $2")}월 착공 · ${L.km} · ${L.stationNote}`,
-    L.shared ? `🔗 선로 공용 — ${L.shared}` : null, "",
+    /* ⚠️ 앞 판은 `🔗 선로 공용 — ${L.shared}` 였는데 L.shared 안에 이미 「선로 공용」이 들어 있어
+       「선로 공용 — … 선로 공용 …」이 됐다. 데이터에 든 말을 앞에 또 붙이지 않는다. */
+    L.shared ? `🔗 ${L.shared}` : null,
+    L.through?.stations?.length
+      ? `🚉 지도의 ${L.through.after}~${L.through.stations[L.through.stations.length - 1].name} 구간은 서해선과 함께 쓰는 선로입니다`
+      : null, "",
     `👉 ${L.capPoint}`, "",
     "📌 저장해두고 우리 집 지나는 노선 언제 열리는지 확인하기",
     "—",
