@@ -110,6 +110,7 @@ const josa = (w, withJong, withoutJong) => {
   const jong = c >= 0xac00 && c <= 0xd7a3 ? (c - 0xac00) % 28 !== 0 : false;
   return jong ? withJong : withoutJong;
 };
+const HALO_S = ' stroke="#fbfaf7" stroke-width="4.5" paint-order="stroke" stroke-linejoin="round"';
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 /* ── 지도 판 크기. 정보를 위 띠로 올렸으므로 **카드 폭을 다 쓴다**(2026-09-09 개편).
@@ -423,6 +424,18 @@ function buildOne(L) {
   /* ⚠️ 「가칭」을 역마다 붙이면 16역 중 10역에 반복되고, 그만큼(44px) 라벨 폭이 늘어
      **지도가 작아진다**(가로가 병목이라 라벨 폭이 곧 지도 크기다). 범례 한 줄로 옮긴다. */
   const LBL_FS = 23;   /* 21 → 23 (오너 2026-09-09 "조금만 더 크게") */
+  /* ── 「가칭」 표시 (오너 2026-09-09: "별도로 가칭 표시를 써주자")
+     점선 링만으로는 「이 이름이 확정인 줄 알았다」를 못 막는다. 이름 뒤에 작고 흐린 글자로 붙인다.
+     ⚠️ **노선별로 켠다**(provTag). 신안산선 실지도 카드는 이미 확정·발행돼 픽셀을 못 바꾼다.
+     ⚠️ 한때 「가칭」을 이름에 섞어 넣었다가 16역 중 10역에 반복돼 라벨 폭이 44px 씩 늘고
+        지도가 작아져 뺐던 자리다. 이번엔 **작은 글자(15px)** 로 붙여 32px 만 쓴다. */
+  const PROV_TAG = L.provTag === true;
+  const PROV_FS = 15, PROV_GAP = 5;
+  const PROV_W = PROV_TAG ? 2 * PROV_FS + PROV_GAP : 0;
+  /* ⚠️ 「가칭」은 **가칭 이름이 붙은 역**에만 단다. 「107정거장」처럼 역명미정인 곳은
+     그 번호가 곧 공식 표기라 「107정거장 가칭」은 말이 안 된다(점선 링은 그대로 붙는다). */
+  const provW = (st) => (PROV_TAG && st.state === "가칭" ? PROV_W : 0);
+  const provSvg = (x, y, anchor) => `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="${PROV_FS}" font-weight="700" fill="#9aa1ac" letter-spacing="-0.3" dominant-baseline="middle" text-anchor="${anchor}"${HALO_S}>가칭</text>`;
   /* ⚠️ 이름 길이·뱃지 폭·환승 키 대조는 **본선만 보면 안 된다.** 지선·직결 구간 역이
      더 길거나 뱃지가 더 많으면 그만큼 잘리거나 카드 밖으로 나간다. */
   const everySt = [...L.stations, ...(L.branch?.stations || []), ...(L.through?.stations || []),
@@ -495,7 +508,7 @@ function buildOne(L) {
      그다음 **쪽마다 따로** 세로 겹침을 푼다. */
   const rowW = (st) => {
     const k = st.xfer || [];
-    return (k.length ? badgeRowWidth(k) + BDG_PAD : 0) + [...p2name(st)].length * LBL_FS * 0.98;
+    return (k.length ? badgeRowWidth(k) + BDG_PAD : 0) + [...p2name(st)].length * LBL_FS * 0.98 + provW(st);
   };
   function p2name(st) { return st.name; }
 
@@ -580,7 +593,7 @@ function buildOne(L) {
         「이름 앞 로고」가 성립하지 않는다 — 대신 **양쪽이 대칭**인 게 낫다. */
   const LEAD_V = 26, BDG_H = BDG_R * 2, BDG_VGAP = 6;
   const rowWv = (st) => Math.max(
-    [...st.name].length * LBL_FS * 0.98,
+    [...st.name].length * LBL_FS * 0.98 + provW(st),
     (st.xfer || []).length ? badgeRowWidth(st.xfer) : 0);
   const assignUpDown = () => allPos.map((p, i) => {
     const x = X(p.lon), y = Y(p.lat);
@@ -699,7 +712,7 @@ function buildOne(L) {
 
   /* 지도 위에 글자를 얹을 때의 유일한 방법 — 글자 테두리를 먼저 칠하고 그 위에 글자를 칠한다.
      paint-order 없이 stroke 를 주면 획이 글자 안쪽까지 먹어 굵고 뭉개져 보인다. */
-  const HALO = TWO_SIDED ? ' stroke="#fbfaf7" stroke-width="4.5" paint-order="stroke" stroke-linejoin="round"' : "";
+  const HALO = TWO_SIDED ? HALO_S : "";
   const LBL_GAP = 32;  /* 글자 23px + 여유 9px. 폰트를 키웠으면 간격도 같이 키운다 */
   if (WIDE) {
     /* 가로 배치의 겹침 해소 — 세로판의 거울이다. 쪽마다 x 순으로 훑어 밀고, 끝에서 되민다. */
@@ -770,8 +783,11 @@ function buildOne(L) {
         for (const k of keys) { bdV += badgeSvg(k, bxx, bcy); bxx += badgeWidth(k) + BDG_GAP; }
       }
       inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="${prov ? "#f0eee9" : "#ffffff"}" stroke="${lc}" stroke-width="5"${prov ? ' stroke-dasharray="3.2 2.4"' : ""}/>`;
+      const nmW = [...p.name].length * LBL_FS * 0.98, pwV = provW(p.st);
+      const left = p.lx - (nmW + pwV) / 2;
       outMap += leadV + bdV +
-        `<text x="${p.lx.toFixed(1)}" y="${ncy.toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle" text-anchor="middle" stroke="#fbfaf7" stroke-width="4.5" paint-order="stroke" stroke-linejoin="round">${esc(p.name)}</text>`;
+        `<text x="${left.toFixed(1)}" y="${ncy.toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle" text-anchor="start"${HALO_S}>${esc(p.name)}</text>` +
+        (pwV ? provSvg(left + nmW + PROV_GAP, ncy, "start") : "");
       continue;
     }
 
@@ -781,16 +797,19 @@ function buildOne(L) {
           대칭보다 **읽는 순서**가 먼저다.
        오른쪽: [지시선][뱃지][이름] · 왼쪽: [뱃지][이름][지시선] */
     const nameW = [...p.name].length * LBL_FS * 0.98;
+    const pw = provW(p.st);
     const bwRaw = keys.length ? badgeRowWidth(keys) : 0;
-    let bx, nameX, anchor, endX;
+    let bx, nameX, anchor, endX, provX;
     if (p.side > 0) {
       endX = p.x + LEAD_W;
       bx = endX + 9;
       nameX = bx + bw;
       anchor = "start";
+      provX = nameX + nameW + PROV_GAP;          // 이름 뒤
     } else {
       endX = p.x - LEAD_W;
-      nameX = endX - 9;               // text-anchor=end 라 이 x 가 이름의 오른쪽 끝
+      provX = endX - 9;                          // 오른쪽 끝(지시선 쪽)에 「가칭」
+      nameX = endX - 9 - pw;                     // text-anchor=end 라 이 x 가 이름의 오른쪽 끝
       bx = nameX - nameW - BDG_PAD - bwRaw;
       anchor = "end";
     }
@@ -837,8 +856,8 @@ function buildOne(L) {
 
     inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="${prov ? "#f0eee9" : "#ffffff"}" stroke="${lc}" stroke-width="5"${prov ? ' stroke-dasharray="3.2 2.4"' : ""}/>`;
     outMap += lead + bd +
-      `<text x="${nameX.toFixed(1)}" y="${p.ly.toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle" text-anchor="${anchor}"${HALO}>${esc(p.name)}` +
-      `</text>`;
+      `<text x="${nameX.toFixed(1)}" y="${p.ly.toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle" text-anchor="${anchor}"${HALO}>${esc(p.name)}</text>` +
+      (pw ? provSvg(provX, p.ly, p.side > 0 ? "start" : "end") : "");
   }
   /* 가칭 역은 **점 모양**으로 구분한다 — 이름 옆 글자 대신. 범례는 아래 한 줄. */
 
@@ -1042,7 +1061,7 @@ function buildOne(L) {
     note: [
       /* 역명이 대부분 미확정인 노선은 **그 사실을 각주가 말한다.** 점선 링만으로는
          「이 이름이 확정인 줄 알았다」를 막지 못한다(인동선 17역 중 확정은 셋뿐이다). */
-      provCount ? (L.nameNote ? `◌ 점선 = 가칭역 · ${L.nameNote}` : "◌ 점선 = 가칭역") : "",
+      provCount ? [PROV_TAG ? "◌ 점선·「가칭」 = 역명 미확정" : "◌ 점선 = 가칭역", L.nameNote].filter(Boolean).join(" · ") : "",
       /* ⚠️ 「지선·공용 구간은 잇는 선이 개략」 한 줄은 오너 지시로 뺐다(2026-09-09).
          고지가 사라진 게 아니다 — 캡션의 「※ 노선 선형은 실제 좌표(OpenStreetMap),
          역 위치는 개략 표기입니다.」가 그대로 지고 있고, 그 줄은 가드 ⑤ 가 지킨다.
