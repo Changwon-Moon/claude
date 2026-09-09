@@ -126,7 +126,7 @@
         /* ⚠️ top 은 **지도 상자 기준**이어야 한다. .rgm-body 가 --bodyGap 만큼 내려와 있으므로
            그만큼 더한다 — 안 더하면 패널이 지도 위쪽 테두리 밖으로 삐져나온다
            (오너 2026-09-09 "좌상단 카드가 지도 바깥으로 벗어나지 않게"). */
-        position: absolute; left: 0; top: calc(var(--bodyGap) + 22px); z-index: 2;
+        position: absolute; left: 18px; top: calc(var(--bodyGap) + 22px); z-index: 2;
         margin: 0; padding: 16px 18px 15px; width: 312px;
         display: block;
         background: rgba(251,250,247,0.96); border: 2px solid var(--wirit-ink-06);
@@ -151,7 +151,7 @@
            각주는 지도 밖 아래에 걸쳐 있으므로 그만큼 띄운다. */
         /* 폭을 328 → 264 로 줄였다(오너 2026-09-09 "1열과 2열 간격을 좁혀서 컴팩트하게").
            값은 여전히 오른쪽 끝에 붙지만 상자가 좁아져 항목명과의 거리가 준다. */
-        position: absolute; right: 0; bottom: 26px; z-index: 2; width: 264px;
+        position: absolute; right: 18px; bottom: 26px; z-index: 2; width: 264px;
         display: grid; grid-template-columns: 1fr; row-gap: 0;
         padding: 9px 12px 7px; border-radius: 12px;
         background: rgba(251,250,247,0.86);

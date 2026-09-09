@@ -129,10 +129,12 @@ const PANELS_BY_V = {
      벗어나지 않게"). 지도가 이제 테두리를 가진 상자라 조금만 나가도 눈에 띈다.
      y0=14 는 템플릿의 top: calc(var(--bodyGap) + 14px) 과 같은 값이다. */
   /* 실측값(packages/renderer/src/_measure.ts)으로 적는다 — 눈대중으로 적었다가 두 번 어긋났다.
-     bar : top calc(--bodyGap + 22px) · 폭 312 · 높이 304
-     side: 폭 264 · 높이 177 · bottom 26  → 아래에서부터 잰다 */
-  d: [{ x0: 0, x1: 316, y0: 22, y1: 330 },
-      { x0: MAP_W - 268, x1: MAP_W, y0: BODY_H - 207, y1: BODY_H - 22 }],
+     bar : left 18 · top calc(--bodyGap + 22px) · 폭 312 · 높이 304
+     side: right 18 · 폭 264 · 높이 177 · bottom 26  → 아래에서부터 잰다
+     ⚠️ 두 상자는 **좌우 테두리에서도** 떨어져 있어야 한다(오너 2026-09-09 2차). 0 으로 두면
+        모서리가 둥근 테두리와 맞물려 상자가 테두리를 뚫고 나간 것처럼 보인다. */
+  d: [{ x0: 14, x1: 334, y0: 22, y1: 330 },
+      { x0: MAP_W - 286, x1: MAP_W - 14, y0: BODY_H - 207, y1: BODY_H - 22 }],
 };
 const PANELS = PANELS_BY_V[VARIANT];
 const SPLIT_INFO = VARIANT === "d";
@@ -420,39 +422,41 @@ function buildOne(L) {
       land += `<path d="${r.map(([lon, lat], i) => `${i ? "L" : "M"}${X(lon).toFixed(1)},${Y(lat).toFixed(1)}`).join("")}Z" fill="#efece5" stroke="#dcd8cf" stroke-width="1.1"/>`;
     }
 
-  /* ── 시·도 경계(서울/인천/경기)를 **더 진하게** (오너 2026-09-09).
-     같은 시도의 시군구 조각들을 붙여 놓고, **한 번만 나오는 변**이 곧 그 시도의 바깥선이다
-     (안쪽 경계는 이웃 두 구가 공유해 두 번 나온다). 폴리곤 합집합을 계산하지 않고도
-     바깥선만 골라낼 수 있다 — 좌표가 정확히 같은 자료라 성립한다(실측: 서울 25구에서
-     안쪽 388변 / 바깥 659변으로 깨끗하게 갈렸다). */
+  /* ── 시·도 **사이** 경계만 진하게 (오너 2026-09-09 2차)
+     처음엔 「같은 시도 안에서 한 번만 나오는 변 = 그 시도의 바깥선」으로 그렸다. 그러면
+     인천의 해안선, 경기도의 강원·충청 쪽 경계까지 다 진해져 화면이 어지러웠다.
+     오너가 원한 건 **서울↔경기 · 경기↔인천 · 인천↔서울** 세 경계뿐이다.
+
+     그래서 반대로 센다 — 변 하나가 **서로 다른 두 시도**의 시군구에 동시에 들어 있으면
+     그게 곧 시도 사이 경계다(같은 시도 안 경계는 한 시도 이름만, 바다·외곽은 한 번만 나온다).
+     시군구 경계선(연한 회색 #dcd8cf)은 손대지 않는다 — 그건 배경이다. */
   let sidoLine = "";
   {
-    const bySido = new Map();
+    const WANT = new Set(["서울특별시", "인천광역시", "경기도"]);
+    const edges = new Map();                      // 변 → { a, b, sido:Set }
     for (const f of sgg.features) {
       const sd = f.properties?.sido;
-      if (!sd) continue;
-      if (!bySido.has(sd)) bySido.set(sd, new Map());
-      const em = bySido.get(sd);
+      if (!WANT.has(sd)) continue;
       for (const r of rings(f.geometry)) {
-        if (!inBox(r)) continue;                       // 화면 밖 시군구는 셀 필요가 없다
+        if (!inBox(r)) continue;                  // 화면 밖 시군구는 셀 필요가 없다
         for (let i = 0; i < r.length - 1; i++) {
           const a = r[i], b = r[i + 1];
           const ka = `${a[0].toFixed(7)},${a[1].toFixed(7)}`, kb = `${b[0].toFixed(7)},${b[1].toFixed(7)}`;
           const key = ka < kb ? `${ka}|${kb}` : `${kb}|${ka}`;
-          const prev = em.get(key);
-          em.set(key, prev ? { ...prev, n: prev.n + 1 } : { a, b, n: 1 });
+          const e = edges.get(key);
+          if (e) e.sido.add(sd);
+          else edges.set(key, { a, b, sido: new Set([sd]) });
         }
       }
     }
     let dstr = "";
-    for (const em of bySido.values())
-      for (const e of em.values()) {
-        if (e.n !== 1) continue;                       // 안쪽 경계
-        const [x1p, y1p] = [X(e.a[0]), Y(e.a[1])], [x2p, y2p] = [X(e.b[0]), Y(e.b[1])];
-        if (Math.max(x1p, x2p) < -20 || Math.min(x1p, x2p) > MAP_W + 20) continue;
-        if (Math.max(y1p, y2p) < -20 || Math.min(y1p, y2p) > BODY_H + 20) continue;
-        dstr += `M${x1p.toFixed(1)},${y1p.toFixed(1)}L${x2p.toFixed(1)},${y2p.toFixed(1)}`;
-      }
+    for (const e of edges.values()) {
+      if (e.sido.size < 2) continue;              // 같은 시도 안 경계 · 바깥 테두리
+      const x1p = X(e.a[0]), y1p = Y(e.a[1]), x2p = X(e.b[0]), y2p = Y(e.b[1]);
+      if (Math.max(x1p, x2p) < -20 || Math.min(x1p, x2p) > MAP_W + 20) continue;
+      if (Math.max(y1p, y2p) < -20 || Math.min(y1p, y2p) > BODY_H + 20) continue;
+      dstr += `M${x1p.toFixed(1)},${y1p.toFixed(1)}L${x2p.toFixed(1)},${y2p.toFixed(1)}`;
+    }
     if (dstr) sidoLine = `<path d="${dstr}" fill="none" stroke="#a79e90" stroke-width="2.8" stroke-linecap="round"/>`;
   }
 
