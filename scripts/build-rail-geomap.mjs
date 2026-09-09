@@ -104,6 +104,12 @@ function badgeSvg(k, x, cy) {
 }
 const badgeRowWidth = (keys) =>
   keys.length ? keys.reduce((a, k) => a + badgeWidth(k), 0) + BDG_GAP * (keys.length - 1) : 0;
+/* 「학온는」 같은 조사 오류를 막는다 — 받침이 있으면 은/이, 없으면 는/가. */
+const josa = (w, withJong, withoutJong) => {
+  const c = [...String(w)].pop().charCodeAt(0);
+  const jong = c >= 0xac00 && c <= 0xd7a3 ? (c - 0xac00) % 28 !== 0 : false;
+  return jong ? withJong : withoutJong;
+};
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 /* ── 지도 판 크기. 정보를 위 띠로 올렸으므로 **카드 폭을 다 쓴다**(2026-09-09 개편).
@@ -360,6 +366,38 @@ function buildOne(L) {
     thruPts = [{ lat: from.lat, lon: from.lon }, ...thruPos];
   }
 
+  /* ── 공용 구간의 **남의 노선 역** (오너 2026-09-09: "시흥시청부터 광명 사이에 신안산선과
+     공유하는 노선들이 있고 그 역들이 지금 누락되어 있어")
+     월판선 광명~시흥시청 9.8km 는 신안산선 지선과 선로를 공용하고, 그 구간에 신안산선 역
+     두 개(매화·학온)가 있다. 신안산선 카드에서 서해선 공용 구간 역을 함께 그린 것과 **같은 취급**이다 —
+     지도에만 얹고 **정거장 수는 그대로 둔다**(월판선 11개역).
+     ⚠️ L.stations 에 넣으면 안 된다 — 그러면 확정된 도식형 카드(rail-wolpan)의 픽셀이 바뀐다.
+     ⚠️ 놓인 자리가 지정한 두 역 **사이**가 아니면 던진다. 공용 구간 밖에 찍히면 거짓말이다. */
+  let sharedPos = [];
+  if (L.sharedOn?.stations?.length) {
+    const [n0, n1] = L.sharedOn.between || [];
+    const i0 = names.indexOf(n0), i1 = names.indexOf(n1);
+    if (i0 < 0 || i1 < 0) throw new Error(`${L.name}: 공용 구간 기준역(${n0}·${n1})을 본선에서 못 찾았다`);
+    const [tLo, tHi] = [placed[i0].t, placed[i1].t].sort((x, y2) => x - y2);
+    sharedPos = L.sharedOn.stations.map((st) => {
+      const gt = truth.get(st.name);
+      let t;
+      if (gt) t = projectOnTrack(track, gt).t;
+      else {
+        const a2 = A[st.name];
+        if (!a2?.dong) throw new Error(`${L.name} 공용역 ${st.name}: 닻(시군구+동)이 없다`);
+        const g2 = sggGeom(a2.sgg);
+        if (!g2) throw new Error(`${L.name} 공용역 ${st.name}: 시군구 '${a2.sgg}' 가 경계 자료에 없다`);
+        const c2 = dongCentre(dong, g2, a2.dong);
+        if (!c2) throw new Error(`${L.name} 공용역 ${st.name}: 동 '${a2.dong}' 을 ${a2.sgg} 안에서 못 찾았다`);
+        t = projectOnTrack(track, c2).t;
+      }
+      if (t < tLo || t > tHi)
+        throw new Error(`${L.name} 공용역 ${st.name}: ${n0}~${n1} 구간 밖에 놓였다 — 공용 구간이 아니다`);
+      return { ...pointAt(track, t), name: st.name, st, src: "공용 구간" };
+    }).sort((a2, b2) => projectOnTrack(track, a2).t - projectOnTrack(track, b2).t);
+  }
+
   /* ── 화면 좌표계 — 위도 보정을 넣어 가로세로 비율을 지킨다(지도는 늘리면 거짓말이다). */
   const all = [...track, ...branchPts, ...thruPts];
   const lat0 = Math.min(...all.map((p) => p.lat)), lat1 = Math.max(...all.map((p) => p.lat));
@@ -387,7 +425,8 @@ function buildOne(L) {
   const LBL_FS = 23;   /* 21 → 23 (오너 2026-09-09 "조금만 더 크게") */
   /* ⚠️ 이름 길이·뱃지 폭·환승 키 대조는 **본선만 보면 안 된다.** 지선·직결 구간 역이
      더 길거나 뱃지가 더 많으면 그만큼 잘리거나 카드 밖으로 나간다. */
-  const everySt = [...L.stations, ...(L.branch?.stations || []), ...(L.through?.stations || [])];
+  const everySt = [...L.stations, ...(L.branch?.stations || []), ...(L.through?.stations || []),
+                   ...(L.sharedOn?.stations || [])];
   const maxNm = Math.max(...everySt.map((st) => [...st.name].length));
   const provCount = L.stations.filter((st) => st.state === "가칭" || st.state === "역명미정").length;
   /* 환승 키 전수 대조 — 카탈로그에 없으면 뱃지가 조용히 안 그려진다(rail-line 과 같은 규칙). */
@@ -463,7 +502,8 @@ function buildOne(L) {
   /* 어느 갈래에 속한 역인지 표를 붙인다 — ⑤ 에서 **제 선은 빼고** 남의 선만 재기 위해서다. */
   const allPos = [...pos.map((p) => ({ ...p, cid: 0 })),
                   ...branchPos.map((p) => ({ ...p, cid: 1 })),
-                  ...thruPos.map((p) => ({ ...p, cid: 2 }))];
+                  ...thruPos.map((p) => ({ ...p, cid: 2 })),
+                  ...sharedPos.map((p) => ({ ...p, cid: 0 }))];   // 공용역은 본선 위에 있다
   /* 배치는 **여러 번 돈다**(아래 2패스). 그래서 화면 좌표에 매달린 것은 전부 이 안에서 새로 잰다. */
   const assignSides = () => {
   /* ⑤ 를 재려면 **그려질 선들의 화면 좌표**가 필요하다. 본선·지선·직결 세 갈래다. */
@@ -543,6 +583,10 @@ function buildOne(L) {
     const x = X(p.lon), y = Y(p.lat);
     const need = LEAD_V + ((p.st.xfer || []).length ? BDG_H + BDG_VGAP : 0) + LBL_FS + 8;
     let side = i % 2 === 0 ? 1 : -1;                 // ① 번갈아 (+1 = 아래)
+    /* ⓪ 데이터셋이 쪽을 지정했으면 그게 우선이다(오너가 눈으로 보고 정한 자리).
+       규칙으로 못 잡는 자리가 가끔 있다 — 그럴 때 코드를 비틀지 말고 여기 한 줄로 적는다. */
+    if (p.st.labelSide === "up") side = -1;
+    else if (p.st.labelSide === "down") side = 1;
     if (side > 0 && y + need > BH - 6) side = -1;    // ② 카드 밖이면 반대쪽
     if (side < 0 && y - need < 6) side = 1;
     return { ...p, x, y, lx: x, side };
@@ -1001,6 +1045,10 @@ function buildOne(L) {
       /* 각주는 **한 줄**이 목표다 — 두 줄로 넘어가면 마지막 줄에 두 글자만 남아 지저분해진다.
          긴 설명(L.shared)은 캡션이 지고, 카드에는 줄인 판(sharedShort)을 쓴다. */
       L.sharedShort || L.shared || "",
+      /* 공용 구간에 남의 노선 역을 그렸으면 **그게 남의 역이라고 적는다.** 안 적으면 독자가
+         정거장 수를 세다가 카드의 「11개역」과 안 맞아 어느 쪽이 틀렸는지 알 수 없다. */
+      sharedPos.length ? (() => { const nm = sharedPos.map((x) => x.name).join("·");
+          return `${nm}${josa(nm, "은", "는")} ${L.sharedOn.label.replace(/ 구간$/, "")} 역`; })() : "",
     ].filter(Boolean).join("  ·  "),
     layout: { titleFs, titleGap: 16, barGap: 18, bodyGap: 16, bodyH: BH, mapW: MAP_W },
     source: { name: L.src },
