@@ -270,7 +270,7 @@ async function probe() {
     const ours0 = ourStations(L);
 
     /* 노선 길의 형상 — 이게 지도에 그릴 선이다. */
-    let lineWays = [], bbox = null;
+    let lineWays = [], bbox = null, geomErr = null;
     try {
       const lj = await overpass(qLines(names, LB));
       lineWays = (lj.elements || [])
@@ -282,7 +282,7 @@ async function probe() {
         s: Math.min(...all.map((p) => p.lat)), n: Math.max(...all.map((p) => p.lat)),
         w: Math.min(...all.map((p) => p.lon)), e: Math.max(...all.map((p) => p.lon)),
       };
-    } catch (e) { lineWays = [{ error: String(e.message) }]; }
+    } catch (e) { lineWays = []; geomErr = String(e.message); }
     await sleep(1500);
 
     /* 그 상자 안의 철도역스러운 것 전부 — 이름 규칙을 눈으로 보려는 것이다. */
@@ -303,7 +303,11 @@ async function probe() {
     const hitNames = new Set(stationHits.flatMap((h) => { const n2 = h.name || ""; return [n2, n2.replace(/역$/, "")]; }));
     out.push({
       key: L.key, name: L.name, 우리역수: ours0.length, 관계: rels,
+      /* ⚠️ 선형 질의가 **실패했는데도 결과가 그럴듯해 보이던** 자리다(2026-09-10 신분당선).
+         앞 판은 오류를 `길:[{error}]` 로 넣어 「길 1개·점 0개」로 적었다 — 자료가 없는 것과
+         받아오다 실패한 것이 같은 모양으로 남았다. 오류는 오류라고 적는다. */
       선형: { 길수: lineWays.length, 점수: lineWays.reduce((a2, w) => a2 + (w.pts || 0), 0), 상자: bbox,
+             ...(geomErr ? { 오류: geomErr } : {}),
              길: lineWays.map((w) => ({ id: w.id, name: w.name, railway: w.railway, pts: w.pts })) },
       좌표: lineWays.filter((w) => w.geometry).map((w) => ({ id: w.id, railway: w.railway, g: w.geometry })),
       역점: { 찾음: stationHits.length, 우리역중일치: ours0.filter((n) => hitNames.has(n)).length,
@@ -331,6 +335,7 @@ async function probe() {
     console.log(`\n${o.name} (우리 역 ${o.우리역수}개) — 관계 ${o.관계.length}건`);
     for (const r of o.관계) console.log(`   rel ${r.id} · type=${r.type} route=${r.route} railway=${r.railway} state=${r.state ?? "-"} · ${r.name}`);
     if (o.선형) {
+      if (o.선형.오류) console.log(`   ❌ [선형] 받아오기 실패 — ${o.선형.오류}`);
       console.log(`   [선형] 길 ${o.선형.길수}개 · 점 ${o.선형.점수}개` + (o.선형.상자 ? ` · 상자 ${o.선형.상자.s.toFixed(3)}~${o.선형.상자.n.toFixed(3)}N ${o.선형.상자.w.toFixed(3)}~${o.선형.상자.e.toFixed(3)}E` : " · 상자 없음"));
       for (const w of o.선형.길.slice(0, 20)) console.log(`      way ${w.id} railway=${w.railway} 점${w.pts} · ${w.name}`);
     }
