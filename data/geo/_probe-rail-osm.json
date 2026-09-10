@@ -76533,6 +76533,248 @@
           }
         ]
       }
+    },
+    {
+      "key": "sinbundang",
+      "name": "신분당선 연장선",
+      "우리역수": 12,
+      "관계": [
+        {
+          "id": 304232223,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 391358773,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 494828563,
+          "kind": "way",
+          "name": "신분당선강남역(중)"
+        },
+        {
+          "id": 494828564,
+          "kind": "way",
+          "name": "신분당선강남역"
+        },
+        {
+          "id": 549032652,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 549032653,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 669314229,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 669314230,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 669704821,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 675112943,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 949889490,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 949889491,
+          "kind": "way",
+          "railway": "proposed",
+          "name": "신분당선 용산-신사 연장"
+        },
+        {
+          "id": 951688069,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 951688070,
+          "kind": "way",
+          "railway": "proposed",
+          "name": "신분당선 용산-신사 연장"
+        },
+        {
+          "id": 951688071,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 951688073,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 951688074,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 951688075,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 951688076,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 951688077,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 951688078,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 951688079,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 951688080,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 1064473668,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 1064473669,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 1304859288,
+          "kind": "way",
+          "railway": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 1313899587,
+          "kind": "way",
+          "railway": "construction",
+          "state": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 1313899588,
+          "kind": "way",
+          "railway": "construction",
+          "state": "rail",
+          "name": "신분당선"
+        },
+        {
+          "id": 6060963,
+          "kind": "relation",
+          "type": "route",
+          "route": "subway",
+          "name": "수도권 전철 신분당선: 신사 → 광교"
+        },
+        {
+          "id": 8733840,
+          "kind": "relation",
+          "type": "public_transport",
+          "name": "미금 (신분당선)"
+        },
+        {
+          "id": 8735449,
+          "kind": "relation",
+          "type": "public_transport",
+          "name": "신분당선 판교"
+        },
+        {
+          "id": 8824090,
+          "kind": "relation",
+          "type": "route",
+          "route": "tracks",
+          "name": "신분당선"
+        },
+        {
+          "id": 12814871,
+          "kind": "relation",
+          "type": "route",
+          "route": "subway",
+          "name": "수도권 전철 신분당선: 광교 → 신사"
+        },
+        {
+          "id": 14191656,
+          "kind": "relation",
+          "type": "public_transport",
+          "name": "신분당선 신사"
+        }
+      ],
+      "선형": {
+        "길수": 1,
+        "점수": 0,
+        "상자": null,
+        "길": [
+          {}
+        ]
+      },
+      "좌표": [],
+      "역점": {
+        "찾음": 0,
+        "우리역중일치": 0,
+        "놓친역": [
+          "용산",
+          "국립박물관",
+          "보광",
+          "신사",
+          null,
+          "광교중앙",
+          "수원월드컵경기장",
+          "수성중사거리",
+          "화서",
+          "구운",
+          "호매실",
+          "광교"
+        ],
+        "표본": []
+      }
     }
   ]
 }
