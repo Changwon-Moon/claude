@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T06:47:04.927Z",
+  "generatedAt": "2026-09-10T08:17:21.979Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -670,15 +670,15 @@
         },
         {
           "day": "09-10",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "16:05",
+          "delay": 306
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-09-09",
-      "lastOk": "2026-09-09",
+      "medianDelay": 306,
+      "maxDelay": 306,
+      "lastRun": "2026-09-10",
+      "lastOk": "2026-09-10",
       "okDaysAgo": 0
     },
     {
@@ -1148,7 +1148,7 @@
       "lastOk": "2026-09-10",
       "okDaysAgo": 0,
       "fails30": 18,
-      "runs30": 96
+      "runs30": 99
     },
     {
       "file": "guard.yml",
