@@ -761,7 +761,10 @@ function buildOne(L) {
      오정·고강·신월·덕은·상암·성산 여섯 역이었다.
      필요한 만큼만 띄운다: 마커 반지름 12 + 줄 높이의 반 + 숨 6. */
   const LEAD_V_BASE = L.oneRowLabel === true ? 38 : 26;
-  const leadVOf = (st) => (L.oneRowLabel === true
+  /* 🔴 역 하나만 더 붙이거나 더 띄우고 싶을 때가 있다(오너 2026-09-10 "청학 짧게 ·
+     용산 좀 더 위로 길게"). 규칙을 비틀지 않고 데이터셋에 숫자 한 개로 적는다. */
+  const leadVOf = (st) => (typeof st.leadV === "number" ? st.leadV
+    : L.oneRowLabel === true
     ? 12 + ((st.xfer || []).length ? BDG_R : LBL_FS / 2) + 6
     : LEAD_V_BASE);
   const LEAD_V = LEAD_V_BASE, BDG_H = BDG_R * 2, BDG_VGAP = 6;
@@ -774,13 +777,28 @@ function buildOne(L) {
      확정된 카드의 픽셀을 지키면서 필요한 노선만 켜는 쪽을 고른다. */
   const ONE_ROW = L.oneRowLabel === true;
   const rowWv = (st) => {
-    const bw = (st.xfer || []).length ? badgeRowWidth(st.xfer) : 0;
+    const keys = st.xfer || [];
+    const bw = keys.length ? badgeRowWidth(keys) : 0;
     const nm = [...st.name].length * LBL_FS * 0.98 + provW(st);
+    /* 세로로 쌓으면 폭은 **가장 넓은 뱃지 하나**다 — 겹침 해소가 이 값을 자로 쓴다. */
+    if (st.badgeStack === true && keys.length > 1)
+      return Math.max(nm, Math.max(...keys.map((k) => badgeWidth(k))));
     return ONE_ROW ? (bw ? bw + BDG_PAD : 0) + nm : Math.max(nm, bw);
   };
+  /* 🔴 **옆으로 비켜 세우기**(labelAlign)의 자 — 그리기와 겹침 해소가 같은 값을 봐야 한다.
+     "left" 는 줄의 오른쪽 끝을 마커 왼쪽 14px 에 붙인다(그 반대가 "right").
+     지정이 없으면 0 이라 확정된 카드의 픽셀은 그대로다. */
+  const alignOff = (st) => (st.labelAlign === "left" ? -(rowWv(st) / 2 + 14)
+    : st.labelAlign === "right" ? rowWv(st) / 2 + 14 : 0);
+  /* labelDx — 겹침 해소가 **다 끝난 뒤에** 얹는 손끝 밀기(px). 자동 배치로는 못 가는 빈자리가
+     지도마다 한두 곳 있다. ⚠️ alignOff 에 넣으면 밀어내기가 도로 제자리로 돌려놓는다 —
+     그래서 그리기에서만 더한다. */
+  const dxOf = (st) => (typeof st.labelDx === "number" ? st.labelDx : 0);
   const assignUpDown = () => allPos.map((p, i) => {
     const x = X(p.lon), y = Y(p.lat);
-    const need = leadVOf(p.st) + (ONE_ROW ? Math.max(BDG_H, LBL_FS)
+    const stackN = (p.st.badgeStack === true && (p.st.xfer || []).length > 1) ? (p.st.xfer || []).length : 0;
+    const need = leadVOf(p.st) + (stackN ? stackN * BDG_H + (stackN - 1) * 5 + 6 + LBL_FS
+      : ONE_ROW ? Math.max(BDG_H, LBL_FS)
       : ((p.st.xfer || []).length ? BDG_H + BDG_VGAP : 0) + LBL_FS) + 8;
     let side = i % 2 === 0 ? 1 : -1;                 // ① 번갈아 (+1 = 아래)
     /* ⓪ 데이터셋이 쪽을 지정했으면 그게 우선이다(오너가 눈으로 보고 정한 자리).
@@ -981,19 +999,47 @@ function buildOne(L) {
     for (const sd of [1, -1]) {
       const g = lbl.filter((p) => p.side === sd).sort((a2, b2) => a2.x - b2.x);
       const half = (p) => rowWv(p.st) / 2;
+      /* 밀고 되미는 자는 **줄의 가운데**다 — 비켜 세운 역은 lx 가 아니라 비킨 자리가 가운데다. */
+      const ctr = (p) => p.lx + alignOff(p.st);
+      const put = (p, c) => { p.lx = c - alignOff(p.st); };
+      /* 🔴 **같은 쪽이라고 다 부딪히는 것은 아니다** (2026-09-10).
+         지시선 길이(leadV)와 줄 높이는 역마다 다르다 — 용산은 마커에서 62px 위, 청량리는 26px
+         위에 놓인다. 두 줄의 **세로 띠가 겹치지 않으면** 가로로 밀 이유가 없다.
+         앞 판은 x 순으로 무조건 밀어서, 용산의 세 뱃지 줄(177px)이 청량리를 117px 오른쪽으로
+         밀어 왕숙 마커 위에 올려놓았다(designQa svglabel 이 잡았다).
+         오너가 "그 공간을 파고들어"라고 부른 것이 바로 이 빈 띠다. */
+      const blockH = (st) => {
+        const ks = st.xfer || [];
+        if (st.badgeStack === true && ks.length > 1)
+          return ks.length * BDG_H + (ks.length - 1) * 5 + 6 + LBL_FS;
+        return ONE_ROW ? Math.max(BDG_H, LBL_FS) : (ks.length ? BDG_H + BDG_VGAP : 0) + LBL_FS;
+      };
+      const band = (p) => {
+        const a = p.y + sd * leadVOf(p.st), b = a + sd * blockH(p.st);
+        return [Math.min(a, b) - 4, Math.max(a, b) + 4];
+      };
+      const hits = (a2, b2) => { const A = band(a2), B = band(b2); return A[0] < B[1] && B[0] < A[1]; };
       for (let i = 1; i < g.length; i++) {
-        const min = g[i - 1].lx + half(g[i - 1]) + half(g[i]) + 12;
-        if (g[i].lx < min) g[i].lx = min;
+        let min = -Infinity;
+        for (let j = 0; j < i; j++) {
+          if (!hits(g[j], g[i])) continue;
+          min = Math.max(min, ctr(g[j]) + half(g[j]) + half(g[i]) + 12);
+        }
+        if (min > -Infinity && ctr(g[i]) < min) put(g[i], min);
       }
       if (g.length) {
         const last = g[g.length - 1], R = MAP_W - 8 - half(last);
-        if (last.lx > R) last.lx = R;
+        if (ctr(last) > R) put(last, R);
       }
       for (let i = g.length - 2; i >= 0; i--) {
-        const max = g[i + 1].lx - half(g[i + 1]) - half(g[i]) - 12;
-        if (g[i].lx > max) g[i].lx = max;
+        let max = Infinity;
+        for (let j = i + 1; j < g.length; j++) {
+          if (!hits(g[j], g[i])) continue;
+          max = Math.min(max, ctr(g[j]) - half(g[j]) - half(g[i]) - 12);
+        }
+        if (max < Infinity && ctr(g[i]) > max) put(g[i], max);
       }
-      for (const p of g) { const Lm = 8 + half(p); if (p.lx < Lm) p.lx = Lm; }
+      for (const p of g) { const Lm = 8 + half(p); if (ctr(p) < Lm) put(p, Lm); }
     }
     /* ── 🔴 밀어낸 뒤 **남의 마커를 물었는지** 본다 (2026-09-10)
        가로 판형은 [뱃지][이름]을 한 줄로 놓으면서 줄이 넓어졌다. 가로로 밀어내는 규칙은
@@ -1003,7 +1049,8 @@ function buildOne(L) {
     const markers = allPos.map((q) => ({ x: X(q.lon), y: Y(q.lat) }));
     const rowBox = (p, sd) => {
       const hw = rowWv(p.st) / 2 + 6, cy = p.y + sd * leadVOf(p.st) + sd * Math.max(BDG_H, LBL_FS) / 2;
-      return { x0: p.lx - hw, x1: p.lx + hw, y0: cy - 22, y1: cy + 22 };
+      const c = p.lx + alignOff(p.st);
+      return { x0: c - hw, x1: c + hw, y0: cy - 22, y1: cy + 22 };
     };
     const bites = (p, sd) => {
       const b = rowBox(p, sd);
@@ -1118,7 +1165,13 @@ function buildOne(L) {
                           : endY + p.side * ((bwRawV ? BDG_H + BDG_VGAP : 0) + LBL_FS / 2);
       const dx = p.lx - p.x, syV = p.y + p.side * 13, runV = Math.abs(endY - syV), STUBV = 10;
       let leadV;
-      if (Math.abs(dx) < 1.5) {
+      /* ── 지시선을 아예 안 그리는 역 (오너 2026-09-10 "직선 없이")
+         이름표가 제 마커 바로 위/아래에 붙어 있으면 그 사이 16px 짜리 선은 아무것도
+         더하지 않는다 — 오히려 열두 개가 모이면 지도가 빗금처럼 보인다.
+         ⚠️ 밀려난 이름표(lx ≠ x)에서는 여전히 그린다. 그때는 어느 점인지 알려 주는 장치다. */
+      if (p.st.labelPin === true) {
+        leadV = "";
+      } else if (Math.abs(dx) < 1.5) {
         leadV = `<path d="M${p.x.toFixed(1)},${syV.toFixed(1)}V${endY.toFixed(1)}"`;
       } else {
         const diagV = Math.min(Math.abs(dx), runV - STUBV - 4);
@@ -1131,7 +1184,7 @@ function buildOne(L) {
           leadV = `<path d="M${(p.x + (dx / vL) * 13).toFixed(1)},${(p.y + ((endY - p.y) / vL) * 13).toFixed(1)}L${p.lx.toFixed(1)},${endY.toFixed(1)}"`;
         }
       }
-      leadV += ` stroke="#9aa1ac" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+      if (leadV) leadV += ` stroke="#9aa1ac" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
       let bdV = "";
       if (keys.length) {
         /* 한 줄이므로 뱃지와 이름의 **가로 폭을 합쳐** 가운데를 잡는다. bxx 는 아래에서 다시 센다. */
@@ -1143,18 +1196,35 @@ function buildOne(L) {
          오너 2026-09-10: "가양, 고강은 왼편으로 붙여줘" — 마커 위아래가 붐비는 자리에서는
          옆으로 비켜 세우는 편이 읽힌다. */
       const rowAll = ONE_ROW ? (bwRawV ? bwRawV + BDG_PAD : 0) + nmW + pwV : 0;
-      const align = p.st.labelAlign;
-      const rowL = align === "left" ? p.lx - rowAll - 14
-                 : align === "right" ? p.lx + 14
-                 : p.lx - rowAll / 2;
-      if (keys.length) {
-        let bxx = ONE_ROW ? rowL : p.lx - bwRawV / 2;
+      /* 비켜 세운 자리를 **가운데 하나(cx)** 로 모은다 — 한 줄이든 두 줄이든 쌓았든 같은 자다.
+         (앞 판은 한 줄 배치에서만 먹어서 GTX-B 의 신도림·서울역을 옮길 수 없었다.) */
+      const cx = p.lx + alignOff(p.st) + dxOf(p.st);
+      const rowL = cx - rowAll / 2;
+      /* ⚠️ 뱃지를 **세로로 쌓는다**(badgeStack). 환승이 셋이면 한 줄이 260px 이 되어
+         옆 역을 덮는다 — 홍대입구(2·경의중앙·공항철도)가 그랬다.
+         세로로 쌓으면 폭이 가장 넓은 뱃지 하나로 줄고, 이름은 그 아래(위)에 붙는다. */
+      const STACK = p.st.badgeStack === true && keys.length > 1;
+      let stackH = 0, nameCy = ncy, nameLeft = 0;
+      if (STACK) {
+        const bwMax = Math.max(...keys.map((k) => badgeWidth(k)));
+        stackH = keys.length * BDG_H + (keys.length - 1) * 5;
+        /* 쌓은 더미의 **바깥 끝**이 이름 쪽이다 — 위쪽 역이면 이름이 더미 위로 간다. */
+        const top = p.side > 0 ? endY + 4 : endY - 4 - stackH;
+        keys.forEach((k, ki) => { bdV += badgeSvg(k, cx - badgeWidth(k) / 2, top + ki * (BDG_H + 5) + BDG_H / 2); });
+        nameCy = p.side > 0 ? top + stackH + 6 + LBL_FS / 2 : top - 6 - LBL_FS / 2;
+        nameLeft = cx - (nmW + pwV) / 2;
+        void bwMax;
+      } else if (keys.length) {
+        let bxx = ONE_ROW ? rowL : cx - bwRawV / 2;
         for (const k of keys) { bdV += badgeSvg(k, bxx, bcy); bxx += badgeWidth(k) + BDG_GAP; }
       }
-      const left = ONE_ROW ? rowL + (bwRawV ? bwRawV + BDG_PAD : 0) : p.lx - (nmW + pwV) / 2;
+      const left = STACK ? nameLeft
+        : ONE_ROW ? rowL + (bwRawV ? bwRawV + BDG_PAD : 0)
+        : cx - (nmW + pwV) / 2;
+      const nY = STACK ? nameCy : ncy;
       outMap += leadV + bdV +
-        `<text x="${left.toFixed(1)}" y="${ncy.toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle" text-anchor="start"${HALO_S}>${esc(p.name)}</text>` +
-        (pwV ? provSvg(left + nmW + PROV_GAP, ncy, "start") : "");
+        `<text x="${left.toFixed(1)}" y="${nY.toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle" text-anchor="start"${HALO_S}>${esc(p.name)}</text>` +
+        (pwV ? provSvg(left + nmW + PROV_GAP, nY, "start") : "");
       continue;
     }
 

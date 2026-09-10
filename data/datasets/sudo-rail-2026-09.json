@@ -406,7 +406,8 @@
         {
           "name": "청학",
           "state": "추가역",
-          "xfer": []
+          "xfer": [],
+          "leadV": 18
         },
         {
           "name": "인천시청",
@@ -415,7 +416,8 @@
             "인천1",
             "인천2"
           ],
-          "km": 10.1
+          "km": 10.1,
+          "labelAlign": "right"
         },
         {
           "name": "부평",
@@ -434,7 +436,8 @@
             "서해",
             "GTX-D"
           ],
-          "km": 22.5
+          "km": 22.5,
+          "labelSide": "down"
         },
         {
           "name": "신도림",
@@ -443,7 +446,9 @@
             "1",
             "2"
           ],
-          "km": 31.6
+          "km": 31.6,
+          "labelAlign": "right",
+          "leadV": 55
         },
         {
           "name": "여의도",
@@ -453,7 +458,10 @@
             "9",
             "신안산"
           ],
-          "km": 35.0
+          "km": 35.0,
+          "labelSide": "down",
+          "leadV": 62,
+          "labelAlign": "left"
         },
         {
           "name": "용산",
@@ -463,7 +471,9 @@
             "경의중앙",
             "신분당"
           ],
-          "km": 39.5
+          "km": 39.5,
+          "labelSide": "up",
+          "leadV": 90
         },
         {
           "name": "서울역",
@@ -474,7 +484,11 @@
             "공항철도",
             "GTX-A"
           ],
-          "km": 42.7
+          "km": 42.7,
+          "labelAlign": "left",
+          "badgeStack": true,
+          "leadV": 60,
+          "labelDx": -34
         },
         {
           "name": "청량리",
@@ -485,7 +499,9 @@
             "경춘",
             "GTX-C"
           ],
-          "km": 51.1
+          "km": 51.1,
+          "badgeStack": true,
+          "leadV": 45
         },
         {
           "name": "상봉",
@@ -495,7 +511,9 @@
             "경춘"
           ],
           "km": 55.1,
-          "labelSide": "up"
+          "labelSide": "down",
+          "labelAlign": "left",
+          "leadV": 55
         },
         {
           "name": "별내",
@@ -504,7 +522,9 @@
             "8",
             "경춘"
           ],
-          "km": 61.8
+          "km": 61.8,
+          "labelSide": "up",
+          "leadV": 40
         },
         {
           "name": "왕숙",
@@ -520,7 +540,8 @@
           "xfer": [
             "경춘"
           ],
-          "km": 74.3
+          "km": 74.3,
+          "labelSide": "up"
         },
         {
           "name": "마석",
@@ -1115,7 +1136,8 @@
           "name": "오정",
           "state": "가칭",
           "xfer": [],
-          "km": 1.9
+          "km": 1.9,
+          "labelPin": true
         },
         {
           "name": "원종",
@@ -1130,13 +1152,15 @@
           "state": "가칭",
           "xfer": [],
           "km": 5.3,
-          "labelAlign": "left"
+          "labelAlign": "left",
+          "labelPin": true
         },
         {
           "name": "신월",
           "state": "가칭",
           "xfer": [],
-          "km": 7.2
+          "km": 7.2,
+          "labelPin": true
         },
         {
           "name": "화곡",
@@ -1152,7 +1176,8 @@
           "state": "역명미정",
           "xfer": [],
           "km": 9.8,
-          "labelSide": "down"
+          "labelSide": "down",
+          "leadV": 20
         },
         {
           "name": "가양",
@@ -1169,20 +1194,23 @@
           "state": "가칭",
           "xfer": [],
           "km": 13.5,
-          "labelSide": "up"
+          "labelSide": "up",
+          "labelPin": true
         },
         {
           "name": "상암",
           "state": "가칭",
           "xfer": [],
-          "km": 15.4
+          "km": 15.4,
+          "labelPin": true
         },
         {
           "name": "성산",
           "state": "가칭",
           "xfer": [],
           "km": 18.0,
-          "labelSide": "up"
+          "labelSide": "up",
+          "labelPin": true
         },
         {
           "name": "홍대입구",
@@ -1193,7 +1221,8 @@
             "공항철도"
           ],
           "km": 19.5,
-          "labelSide": "down"
+          "labelSide": "down",
+          "badgeStack": true
         }
       ],
       "progressText": "9.7",
