@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T03:15:07.641Z",
+  "generatedAt": "2026-09-10T04:00:42.788Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -934,9 +934,9 @@
       "file": "apt-area-probe.yml",
       "name": "공급면적 탐침 (K-apt 전용률 · 건축물대장 실측)",
       "lastRun": "2026-08-17",
-      "daysAgo": 23,
+      "daysAgo": 24,
       "lastOk": "2026-08-17",
-      "okDaysAgo": 23,
+      "okDaysAgo": 24,
       "fails30": 0,
       "runs30": 25
     },
@@ -944,9 +944,9 @@
       "file": "collect.yml",
       "name": "데이터 수집 (daily)",
       "lastRun": "2026-08-29",
-      "daysAgo": 11,
+      "daysAgo": 12,
       "lastOk": "2026-08-29",
-      "okDaysAgo": 11,
+      "okDaysAgo": 12,
       "fails30": 0,
       "runs30": 14
     },
@@ -1138,7 +1138,7 @@
       "lastOk": "2026-09-10",
       "okDaysAgo": 0,
       "fails30": 18,
-      "runs30": 93
+      "runs30": 94
     },
     {
       "file": "guard.yml",
