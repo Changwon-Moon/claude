@@ -755,7 +755,16 @@ function buildOne(L) {
      역 표시는 반지름 12px 이므로 26 이나 32 로 두면 마커 바로 위/아래의 뱃지가 마커를 문다
      (GTX-B 인천시청의 「인천2」가 20% 겹쳤다 — designQa svglabel 이 잡았다).
      12(마커) + 20(줄 반) + 6(숨) = 38. */
-  const LEAD_V = L.oneRowLabel === true ? 38 : 26, BDG_H = BDG_R * 2, BDG_VGAP = 6;
+  /* 🔴 이름표가 마커에서 떨어지는 거리는 **역마다 다르다** (오너 2026-09-10 "가까이 붙여줘").
+     한 줄 배치에서 줄 높이는 뱃지가 있으면 40px, 없으면 글자 23px 이다. 그런데 38 을
+     한 값으로 쓰면 **뱃지 없는 역까지 뱃지 있는 역만큼 밀려난다** — 대장홍대선에서 그게
+     오정·고강·신월·덕은·상암·성산 여섯 역이었다.
+     필요한 만큼만 띄운다: 마커 반지름 12 + 줄 높이의 반 + 숨 6. */
+  const LEAD_V_BASE = L.oneRowLabel === true ? 38 : 26;
+  const leadVOf = (st) => (L.oneRowLabel === true
+    ? 12 + ((st.xfer || []).length ? BDG_R : LBL_FS / 2) + 6
+    : LEAD_V_BASE);
+  const LEAD_V = LEAD_V_BASE, BDG_H = BDG_R * 2, BDG_VGAP = 6;
   /* 한 줄 배치이므로 폭은 **더하기**다(앞 판은 쌓아 놓아 max 였다). 이 값이 겹침 해소의 자다 —
      안 맞추면 뱃지 있는 역이 이웃 이름을 파고든다. */
   /* 🔴 **한 줄로 놓기는 노선이 켠다**(oneRowLabel).
@@ -771,7 +780,7 @@ function buildOne(L) {
   };
   const assignUpDown = () => allPos.map((p, i) => {
     const x = X(p.lon), y = Y(p.lat);
-    const need = LEAD_V + (ONE_ROW ? Math.max(BDG_H, LBL_FS)
+    const need = leadVOf(p.st) + (ONE_ROW ? Math.max(BDG_H, LBL_FS)
       : ((p.st.xfer || []).length ? BDG_H + BDG_VGAP : 0) + LBL_FS) + 8;
     let side = i % 2 === 0 ? 1 : -1;                 // ① 번갈아 (+1 = 아래)
     /* ⓪ 데이터셋이 쪽을 지정했으면 그게 우선이다(오너가 눈으로 보고 정한 자리).
@@ -794,6 +803,34 @@ function buildOne(L) {
     if (fL > PADL || fR > PADR) {
       PADL = Math.max(PADL, fL); PADR = Math.max(PADR, fR); fit();
       for (const p of lbl) { p.x = X(p.lon); p.y = Y(p.lat); p.ly = p.y; }
+    }
+    /* ── 🔴 **실제로 쓴 만큼까지 조인다** (오너 2026-09-10 "불필요한 왼쪽을 자르고 지도 확대")
+       needSide 는 그 쪽에서 **가장 넓은 줄**을 기준으로 여백을 잡는다. 그런데 노선은 곧지 않다 —
+       GTX-A 는 마커 x 가 387~724 로 337px 을 오간다. 가장 넓은 줄이 가장 왼쪽 마커에 붙어 있지
+       않으면, 그 차이만큼 **아무도 안 쓰는 띠**가 생기고 그 띠가 지도에서는 강화·김포가 된다
+       (실측 123px). 그래서 놓아 본 뒤 **진짜 왼쪽 끝·오른쪽 끝**을 재서 여백을 다시 잡고,
+       남는 만큼 배율을 올린다. 두 번이면 안정된다(배율이 바뀌면 자리도 조금 바뀌므로 다시 잰다).
+       ⚠️ 8px 은 카드 테두리에서 떼어 놓는 최소 숨이다. */
+    for (let pass = 0; pass < 3; pass++) {
+      const edge = (p, sd) => (sd > 0 ? p.x + LEAD_W + rowW(p.st) + 8 : p.x - LEAD_W - rowW(p.st) - 8);
+      const leftMost = Math.min(...lbl.filter((p) => p.side < 0).map((q) => edge(q, -1)), MAP_W);
+      const rightMost = Math.max(...lbl.filter((p) => p.side > 0).map((q) => edge(q, 1)), 0);
+      const slackL = Math.max(0, leftMost - 8), slackR = Math.max(0, MAP_W - 8 - rightMost);
+      if (process.env.RGM_DEV) console.log("      · 조이기 pass" + pass + " leftMost=" + leftMost.toFixed(0) + " rightMost=" + rightMost.toFixed(0) + " PADL=" + PADL.toFixed(0) + " PADR=" + PADR.toFixed(0));
+      if (slackL < 6 && slackR < 6) break;
+      /* ⚠️ 여기서 needSide 로 되돌리면 안 된다 — needSide 는 **가장 넓은 줄**을 다시 불러와
+         방금 조인 것을 그대로 물린다(2026-09-10 에 그렇게 세 번 헛돌았다).
+         조인 뒤에는 **실제 끝**을 다시 재서, 카드 밖으로 나간 만큼만 되돌린다. */
+      const prevL = PADL, prevR = PADR;
+      PADL = Math.max(24, PADL - slackL); PADR = Math.max(24, PADR - slackR);
+      fit(); lbl = assignSides();
+      const outL = 8 - Math.min(...lbl.filter((p) => p.side < 0).map((q) => edge(q, -1)), MAP_W);
+      const outR = Math.max(...lbl.filter((p) => p.side > 0).map((q) => edge(q, 1)), 0) - (MAP_W - 8);
+      if (outL > 0 || outR > 0) {
+        PADL = Math.min(prevL, PADL + Math.max(0, outL));
+        PADR = Math.min(prevR, PADR + Math.max(0, outR));
+        fit(); lbl = assignSides();
+      }
     }
   }
 
@@ -965,7 +1002,7 @@ function buildOne(L) {
        걸리면 위/아래를 뒤집는다. 뒤집어도 걸리면 그냥 둔다 — 어느 쪽이든 걸리는 자리다. */
     const markers = allPos.map((q) => ({ x: X(q.lon), y: Y(q.lat) }));
     const rowBox = (p, sd) => {
-      const hw = rowWv(p.st) / 2 + 6, cy = p.y + sd * LEAD_V + sd * Math.max(BDG_H, LBL_FS) / 2;
+      const hw = rowWv(p.st) / 2 + 6, cy = p.y + sd * leadVOf(p.st) + sd * Math.max(BDG_H, LBL_FS) / 2;
       return { x0: p.lx - hw, x1: p.lx + hw, y0: cy - 22, y1: cy + 22 };
     };
     const bites = (p, sd) => {
@@ -1001,7 +1038,11 @@ function buildOne(L) {
     for (const p of lbl) {
       if (p.vert) continue;
       if (p.st.labelSide) continue;                      // 오너가 지정한 자리는 코드가 안 건드린다
-      if (Math.abs(p.ly - p.y) <= 45) continue;          // 멀어지지 않았으면 그대로 둔다
+      /* 문턱값은 노선이 정한다(autoVertAt, 기본 45px).
+         🔴 낮출수록 이름표가 위/아래로 많이 가고, 그만큼 **좌우 여백(PADL·PADR)이 줄어**
+            지도가 커진다 — 세로로 긴 노선에서 배율을 잡고 있는 것은 가로이고, 그 가로를
+            먹는 것이 이름표 자리이기 때문이다(GTX-A 는 왼쪽에만 370px). 오너 "지도 확대해줘". */
+      if (Math.abs(p.ly - p.y) <= (L.autoVertAt ?? 45)) continue;
       const mine = sideBox(p);
       const others = taken.filter((b) => b !== mine);
       for (const dir of [-1, 1]) {                        // 위 먼저(지도에서 위가 덜 붐빈다)
@@ -1070,7 +1111,7 @@ function buildOne(L) {
          이름이 한강 위에 떠 있었다. 한 줄로 놓으면 **40px** 로 줄어 마커 옆에 붙는다.
          ⚠️ 좌우 읽기 순서는 세로판과 같게 [뱃지][이름] 이다. 가운데 맞춤은 그대로. */
       const bwRawV = keys.length ? badgeRowWidth(keys) : 0;
-      const endY = p.y + p.side * LEAD_V;
+      const endY = p.y + p.side * leadVOf(p.st);
       const bcy = ONE_ROW ? endY + p.side * (Math.max(BDG_H, LBL_FS) / 2)
                           : endY + p.side * (BDG_H / 2);
       const ncy = ONE_ROW ? bcy
@@ -1097,8 +1138,15 @@ function buildOne(L) {
       }
       inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="${prov ? "#f0eee9" : "#ffffff"}" stroke="${lc}" stroke-width="5"${prov ? ' stroke-dasharray="3.2 2.4"' : ""}/>`;
       const nmW = [...p.name].length * LBL_FS * 0.98, pwV = provW(p.st);
+      /* ── 가로 정렬 지정(labelAlign). 기본은 마커에 가운데 맞춤이고,
+         "left" 는 **줄의 오른쪽 끝을 마커 왼쪽에** 붙인다(그 반대가 "right").
+         오너 2026-09-10: "가양, 고강은 왼편으로 붙여줘" — 마커 위아래가 붐비는 자리에서는
+         옆으로 비켜 세우는 편이 읽힌다. */
       const rowAll = ONE_ROW ? (bwRawV ? bwRawV + BDG_PAD : 0) + nmW + pwV : 0;
-      const rowL = p.lx - rowAll / 2;
+      const align = p.st.labelAlign;
+      const rowL = align === "left" ? p.lx - rowAll - 14
+                 : align === "right" ? p.lx + 14
+                 : p.lx - rowAll / 2;
       if (keys.length) {
         let bxx = ONE_ROW ? rowL : p.lx - bwRawV / 2;
         for (const k of keys) { bdV += badgeSvg(k, bxx, bcy); bxx += badgeWidth(k) + BDG_GAP; }
@@ -1226,7 +1274,7 @@ function buildOne(L) {
   const lblBoxes = lbl.map((p) => {
     if (WIDE) {
       const hw = rowWv(p.st) / 2 + 8;
-      const far = p.y + p.side * (LEAD_V + (ONE_ROW ? Math.max(BDG_H, LBL_FS)
+      const far = p.y + p.side * (leadVOf(p.st) + (ONE_ROW ? Math.max(BDG_H, LBL_FS)
         : ((p.st.xfer || []).length ? BDG_H + BDG_VGAP : 0) + LBL_FS) + 6);
       return { x0: Math.min(p.lx, p.x) - hw, x1: Math.max(p.lx, p.x) + hw,
                y0: Math.min(p.y, far) - 6, y1: Math.max(p.y, far) + 6 };
