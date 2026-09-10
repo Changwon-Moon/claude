@@ -13,4 +13,3 @@
 gtxa
 gtxb
 gtxc
-daejang

@@ -190,8 +190,23 @@ function buildOne(L) {
     if (!truth.has(n)) truth.set(n, { lat: h.lat, lon: h.lon });
   }
 
-  const conWays = O.좌표.filter((w) => w.railway === "construction");
-  if (!conWays.length) throw new Error(`${L.name}: railway=construction 길이 없다`);
+  /* ── 어떤 OSM 태그를 선형으로 볼 것인가 (데이터셋 osmTags, 기본 construction)
+     🔴 2026-09-10 에 네 노선을 받아 보고 알았다 — **노선마다 태그가 다르다.**
+        · 신안산·월판·인동·GTX-B → railway=construction (공사중)
+        · GTX-A → 개통 구간이 **railway=rail** 이고 미개통 구간만 construction 이다.
+          construction 만 보면 55점(13.9km)짜리 토막만 잡혀 82.3km 노선이 무너진다.
+        · GTX-C·대장홍대 → **railway=proposed**. construction 은 28점짜리 부스러기뿐이다.
+     ⚠️ proposed 는 「아직 안 지었다」는 뜻이지 「지어낸 선」이 아니다 — 기본계획 노선을
+        OSM 기여자가 옮겨 그린 실제 자료다. 다만 **공사중보다 덜 굳었다**. 그래서
+        데이터셋이 노선마다 **명시적으로** 고르게 하고(기본값은 가장 굳은 construction),
+        캡션이 그 사실을 진다. 코드가 알아서 태그를 넓히지 않는다 —
+        그러면 어느 노선이 어느 단계의 자료로 그려졌는지 아무도 모르게 된다. */
+  const OSM_TAGS = L.osmTags?.length ? L.osmTags : ["construction"];
+  const conWays = O.좌표.filter((w) => OSM_TAGS.includes(w.railway));
+  if (!conWays.length) {
+    const have = [...new Set(O.좌표.map((w) => w.railway))].join(", ") || "없음";
+    throw new Error(`${L.name}: railway=${OSM_TAGS.join("/")} 길이 없다 (받아 온 태그: ${have})`);
+  }
   let mainWay = [...conWays].sort((a, b) => b.g.length - a.g.length)[0];
 
   /* ── 토막 잇기 (데이터셋의 osmStitch: true 인 노선만)
