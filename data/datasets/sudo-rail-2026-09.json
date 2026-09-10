@@ -371,7 +371,8 @@
         "construction"
       ],
       "osmStitch": true,
-      "osmNote": "GTX-A 는 운정중앙~서울역·수서~동탄이 이미 개통해 그 구간이 railway=rail 이고, 창릉·삼성만 construction 이다. 둘을 다 봐야 82.3km 가 이어진다."
+      "osmNote": "GTX-A 는 운정중앙~서울역·수서~동탄이 이미 개통해 그 구간이 railway=rail 이고, 창릉·삼성만 construction 이다. 둘을 다 봐야 82.3km 가 이어진다.",
+      "osmStitchBoth": true
     },
     {
       "key": "gtxb",
@@ -531,9 +532,13 @@
       "capPoint": "경춘선 선로를 함께 쓰는 구간이 있어, 전 구간을 새로 뚫는 건 아닙니다.",
       "kmSrc": "나무위키 「수도권 광역급행철도 B선/역 목록」 누적 영업거리(2026-09-09 조회). 왕숙역 문서의 역간거리(별내 3.3 · 평내호평 9.2)로 교차검증했다. ⚠️ **청학은 km 을 비워 뒀다** — 2025.12 인천시가 추가 확정한 신설역이라 영업거리표에 아직 행이 없다(역번 X202 자리가 비어 있다). ⚠️ 왕숙은 **가칭**이다(나무위키 왕숙역 문서). 여기서는 「추가역」 상태를 우선 적었다.",
       "osmTags": [
-        "construction"
+        "construction",
+        "rail"
       ],
-      "osmNote": "GTX-B 는 전 구간 construction 이다. 다만 잡힌 길은 신설 구간뿐이라 상봉~마석 경춘선 공용 22.9km 가 빠진다."
+      "osmNote": "GTX-B 는 전 구간 construction 이다. 다만 잡힌 길은 신설 구간뿐이라 상봉~마석 경춘선 공용 22.9km 가 빠진다.",
+      "osmStitch": true,
+      "osmStitchBoth": true,
+      "osmJoin": 2000
     },
     {
       "key": "gtxc",
@@ -699,10 +704,13 @@
       "kmSrc": "나무위키 「수도권 광역급행철도 C선/역 목록」 집계 누적거리(2026-09-09 조회). ⚠️ **고시된 영업거리표가 아직 없다** — 국가철도공단 철도거리표는 개통 시점에 고시되고, 공공데이터포털에 올라온 것은 GTX-A 뿐이다(2024.10.17). 구간장 합(경원선 16.71 + 신설 37.95 + 과천선 5.95 + 경부선 14.15 + 안산선 11.70 = 86.46km)과 0.1~0.3km 안에서 맞는다. 상록수 72.6 = 금정 60.9 + 안산선 11.70.",
       "osmTags": [
         "proposed",
-        "construction"
+        "construction",
+        "rail"
       ],
       "osmStitch": true,
-      "osmNote": "GTX-C 는 대부분 railway=proposed 다(construction 은 28점짜리 부스러기). 실시협약은 됐지만 본공사가 아직이라 OSM 이 proposed 로 둔 것과 맞는다."
+      "osmNote": "GTX-C 는 대부분 railway=proposed 다(construction 은 28점짜리 부스러기). 실시협약은 됐지만 본공사가 아직이라 OSM 이 proposed 로 둔 것과 맞는다.",
+      "osmStitchBoth": true,
+      "osmJoin": 2000
     },
     {
       "key": "indong",

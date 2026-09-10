@@ -3048,7 +3048,10 @@
       "produces": [
         "railmap-sinansan",
         "railmap-indong",
-        "railmap-wolpan"
+        "railmap-wolpan",
+        "railmap-gtxa",
+        "railmap-gtxb",
+        "railmap-daejang"
       ]
     },
     {

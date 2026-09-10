@@ -228,37 +228,90 @@ function buildOne(L) {
     /* 300m 로 뒀다가 **3m 차이로** 끊겼다(월판선 실측 간격 303m — 시흥시청 구내에서 길이 갈린다).
        OSM 은 역 구내·분기점에서 길을 끊고 그 사이를 안 그려 두기도 한다. 600m 까지 잇는다 —
        그보다 멀면 정말로 자료가 없는 것이고, 그건 아래 길이 가드가 잡는다. */
-    const JOIN = 600;                                  // m — 이 안에 붙어 있으면 같은 선로로 본다
+    /* 기존선을 함께 쓰는 노선은 **역 구내에서 길이 더 크게 끊긴다**(환승 배선·분기).
+       노선이 osmJoin 으로 넓힐 수 있게 한다 — 넓히면 엉뚱한 선을 물 위험도 같이 커지므로
+       기본값은 그대로 600m 이고, 넓힌 노선은 아래 「놓은 자리 vs 실좌표」 가드가 지킨다. */
+    const JOIN = L.osmJoin || 600;                    // m — 이 안에 붙어 있으면 같은 선로로 본다
     const pool = conWays.map((w) => ({ ...w, g: [...w.g] }));
-    let bi = -1, bd = Infinity;
+    let bi2 = -1, bd = Infinity;
     pool.forEach((w, i) => {
       const d = Math.min(metres(w.g[0], first), metres(w.g[w.g.length - 1], first));
-      if (d < bd) { bd = d; bi = i; }
+      if (d < bd) { bd = d; bi2 = i; }
     });
-    const cur = pool.splice(bi, 1)[0];
+    /* 🔴 씨앗은 **첫 역에 가까운 길**이 아니라 **가장 긴 길**이다 (2026-09-10).
+       기존선 이름까지 넣고 받으면 길이 582개가 된다(GTX-C). 그중 첫 역 옆에 우연히 놓인
+       6.6km 짜리 부스러기에서 출발하면 거기서 체인이 죽는다 — 실제로 그랬다.
+       가장 긴 길은 그 노선의 **몸통**이라 양쪽으로 자라날 여지가 가장 크다.
+       ⚠️ 그래서 **양 끝으로 자란다.** 한쪽으로만 자라던 앞 판은 몸통 뒤쪽(덕정 방향)을
+          통째로 놓쳤다. 머리에 붙일 때와 꼬리에 붙일 때 「되돌아가지 않는다」의 기준점이
+          서로 반대편 끝이 된다 — 그게 이 규칙의 원래 뜻이다(전체 뻗음이 늘어야 한다). */
+    /* ⚠️ **새 규칙은 노선이 켜야 켜진다**(osmStitchBoth). 월판선은 이미 확정된 카드라
+       씨앗을 바꾸면 선형이 39.5→40.5km 로 움직여 픽셀이 깨진다(2026-09-10 실측).
+       고른 규칙이 더 낫다고 해서 이미 결재된 그림을 조용히 바꾸지 않는다. */
+    const BOTH = L.osmStitchBoth === true;
+    const seedIdx = BOTH
+      ? pool.reduce((bIdx, w, i, a) => (w.g.length > a[bIdx].g.length ? i : bIdx), 0)
+      : bi2;
+    const cur = pool.splice(seedIdx, 1)[0];
     if (metres(cur.g[cur.g.length - 1], first) < metres(cur.g[0], first)) cur.g.reverse();
     const chain = [...cur.g];
-    const origin = chain[0];
     for (;;) {
-      const end = chain[chain.length - 1];
+      const head = chain[0], tail = chain[chain.length - 1];
       let best = null;
       pool.forEach((w, i) => {
         const ends = [[w.g[0], w.g[w.g.length - 1], false], [w.g[w.g.length - 1], w.g[0], true]];
         for (const [near, far, flip] of ends) {
-          const d = metres(near, end);
-          if (d > JOIN) continue;
-          if (metres(far, origin) <= metres(end, origin)) continue;   // ② 되돌아가지 않는다
-          if (!best || d < best.d) best = { i, d, flip };
+          /* 꼬리에 붙이기 — 붙인 뒤 끝이 **머리에서 더 멀어야** 한다 */
+          const dT = metres(near, tail);
+          if (dT <= JOIN && metres(far, head) > metres(tail, head) &&
+              (!best || dT < best.d)) best = { i, d: dT, flip, at: "tail" };
+          /* 머리에 붙이기 — 옛 규칙(한쪽으로만 자람)에서는 하지 않는다 */
+          if (!BOTH) continue;
+          const dH = metres(near, head);
+          if (dH <= JOIN && metres(far, tail) > metres(head, tail) &&
+              (!best || dH < best.d)) best = { i, d: dH, flip, at: "head" };
         }
       });
       if (!best) break;
       const w = pool.splice(best.i, 1)[0];
-      const g = best.flip ? [...w.g].reverse() : w.g;
-      chain.push(...g.slice(1));
+      if (best.at === "tail") {
+        /* near → far 방향으로 눕혀 꼬리에 잇는다. 첫 점은 꼬리와 겹치므로 뺀다. */
+        const g = best.flip ? [...w.g].reverse() : w.g;
+        chain.push(...g.slice(1));
+      } else {
+        /* far → near 방향으로 눕혀 머리 앞에 붙인다. 마지막 점이 머리와 겹치므로 뺀다. */
+        const g = best.flip ? w.g : [...w.g].reverse();
+        chain.unshift(...g.slice(0, -1));
+      }
+    }
+    /* ── ③ **양 끝을 역에서 자른다** (2026-09-10)
+       기존선을 함께 쓰는 노선은 그 기존선이 우리 노선보다 **더 멀리 간다.** GTX-A 는
+       수서~동탄을 수서평택고속선과 함께 쓰는데, 그 선은 평택까지 내려간다 —
+       이름으로 받으면 동탄 아래 17km 가 딸려 와 이은 길이가 99.2km 가 됐다(공표 82.3km).
+       그대로 그리면 **동탄 아래로 노선이 계속 뻗은 그림**이 된다. 사실이 아니다.
+       그래서 첫 역·끝 역의 실좌표를 선형에 투영해 **그 바깥을 잘라낸다.**
+       ⚠️ 자를 기준이 되는 역의 실좌표가 없으면 자르지 않는다 — 모르면 손대지 않는다. */
+    {
+      const tk = buildTrack(chain);
+      const ends = [L.stations[0], L.stations[L.stations.length - 1]].map((st) => truth.get(st.name));
+      if (ends[0] && ends[1]) {
+        const ts = ends.map((g) => projectOnTrack(tk, g).t).sort((a, b) => a - b);
+        const MARGIN = 400;                       // m — 역이 선형 끝점보다 살짝 밖일 수 있다
+        const lo = Math.max(0, ts[0] - MARGIN), hi = Math.min(tk[tk.length - 1].d, ts[1] + MARGIN);
+        const cut = chain.filter((_, i) => tk[i].d >= lo && tk[i].d <= hi);
+        if (cut.length >= 50 && cut.length < chain.length) {
+          console.log(`   ✂️ ${L.name} 양 끝 자름 — 점 ${chain.length} → ${cut.length}`);
+          chain.length = 0; chain.push(...cut);
+        }
+      }
     }
     let chainLen = 0;
     for (let i = 1; i < chain.length; i++) chainLen += metres(chain[i - 1], chain[i]);
-    const want = parseFloat(String(L.km).replace(/[^\d.]/g, "")) * 1000;
+    /* ⚠️ 공표 총연장(L.km)에는 **지선이 들어 있다.** GTX-C 86.5km 는 본선 덕정~수원 74.9km 와
+       금정~상록수 지선을 합한 값이다. 본선 선형을 그 값에 견주면 늘 모자라 보인다.
+       역별 km 이 있으면 **본선 마지막 역의 km** 이 본선 길이다. */
+    const kmMainMax = Math.max(0, ...L.stations.map((st) => (typeof st.km === "number" ? st.km : 0)));
+    const want = (kmMainMax || parseFloat(String(L.km).replace(/[^\d.]/g, ""))) * 1000;
     if (want && chainLen < want * 0.7)
       throw new Error(`${L.name}: 토막을 이었는데 ${(chainLen / 1000).toFixed(1)}km 뿐이다 (공표 ${L.km}) — 아직 토막이 더 있다`);
     mainWay = { ...mainWay, g: chain };
@@ -337,6 +390,29 @@ function buildOne(L) {
       throw new Error(`${L.name}: 역 순서가 뒤집혔다 — ${placed[i - 1].name} → ${placed[i].name}`); // ①
 
   const pos = placed.map((p, i) => ({ ...pointAt(track, p.t), name: p.name, st: L.stations[i] }));
+
+  /* ── 🔴 **놓은 자리와 실좌표를 대조한다** (2026-09-10 · GTX-B 에서 데인 자리)
+     공표 km 배치는 「선형이 그 노선 전체」임을 전제한다. 선형이 짧으면(토막이 덜 이어졌으면)
+     km/kmMax 비율이 전 역을 시작 쪽으로 당긴다 — GTX-B 는 이은 선형이 68.2km 뿐이라
+     **서울역이 여의도 자리에** 놓였다. 지도 카드에서 그건 오보다.
+     그런데 designQa 도, 단조 가드도 이걸 못 잡는다. 순서는 맞고 겹치지도 않기 때문이다.
+     그래서 **실좌표를 아는 역**만 골라 놓은 자리와 견준다. 자료가 자료를 검사하는 자리다.
+     ⚠️ 1.5km 는 「지도에서 눈에 띄게 틀린」 거리다(카드 한 장이 대략 40~90km 를 담는다).
+        역 위치가 개략이라는 고지와도 어긋나지 않는다 — 개략은 몇 백 m 지 몇 km 가 아니다. */
+  {
+    const TOL = 1500;
+    const bad = [];
+    pos.forEach((q) => {
+      const gt = truth.get(q.name);
+      if (!gt) return;
+      const d = metres(gt, q);
+      if (d > TOL) bad.push(`${q.name} ${(d / 1000).toFixed(1)}km`);
+    });
+    if (bad.length)
+      throw new Error(`${L.name}: 놓은 자리가 실좌표와 어긋난다 — ${bad.join(" · ")}\n` +
+        `   선형이 노선 전체를 못 덮고 있을 가능성이 크다(선형 ${(trackLen / 1000).toFixed(1)}km / 공표 ${L.km}).` +
+        ` rail-geo.yml 로 그 노선을 다시 받거나, 빠진 공용 구간의 노선 이름을 OSM_NAMES 에 더한다.`);
+  }
 
   /* ── Y자 지선 (오너 2026-09-09 "아직 반영되지 않은 Y자 분기는 진행해줘")
      ⚠️ **본선과 다른 자료다.** 본선 선형은 OSM 실측 401점이지만, 지선은 OSM 에 1km 토막뿐이고
@@ -616,7 +692,14 @@ function buildOne(L) {
        ① 번갈아(기본) → ③ 뱃지는 오른쪽 → ② 카드 밖 → ⑤ 선 가로지름 → ④ 패널에 먹힘.
        ②는 매번 다시 본다 — 뒤 규칙이 뒤집은 쪽이 카드 밖이면 그건 더 나쁘다. */
     let side = i % 2 === 0 ? 1 : -1;                          // ①
-    if ((p.st.xfer || []).length) side = 1;                   // ③
+    /* ③ 뱃지가 있는 역은 오른쪽 — 로고를 이름 **앞**에서 읽게 하려는 규칙이다.
+       🔴 그런데 **대부분의 역에 뱃지가 있으면 이 규칙이 스스로를 무너뜨린다**(2026-09-10).
+          GTX-B 는 15역 중 14역이 환승역이라 라벨이 전부 오른쪽 한 줄에 쌓였고, 세로 겹침
+          해소가 그것들을 200px 씩 밀어내 **서울역 이름이 송파 위에, 왕숙이 하남 위에** 놓였다.
+          지시선이 이어 주긴 하지만 지도 카드에서 그건 「역이 거기 있다」로 읽힌다.
+          한쪽에 몰릴 바에는 **번갈아 놓는 편이 정확하다** — 읽는 순서보다 자리가 먼저다. */
+    const badgeShare = allPos.filter((q) => (q.st.xfer || []).length).length / (allPos.length || 1);
+    if ((p.st.xfer || []).length && badgeShare <= 0.6) side = 1;   // ③
     if (!fitsCard(side) && fitsCard(-side)) side = -side;     // ②
     if (crossesLine(side) && !crossesLine(-side) && fitsCard(-side)) side = -side;  // ⑤
     if (hitsPanel(side) && !hitsPanel(-side) && fitsCard(-side)) side = -side;      // ④
@@ -704,8 +787,13 @@ function buildOne(L) {
     서울특별시: "#e8e2d6",
     경기도: "#f2efe8",
     /* 인천은 **회색 계열**로 뺀다(오너 2026-09-09). 앞 판의 #e4e8e5 는 초록빛이 돌아
-       물빛과 헷갈렸다 — 바다를 파랑으로 칠하면서 더 그랬다. */
-    인천광역시: "#e2e3e6",
+       물빛과 헷갈렸다 — 바다를 파랑으로 칠하면서 더 그랬다.
+       🔴 그 다음 판 #e2e3e6 도 **파랑기가 남아 바다처럼 읽혔다**(오너 2026-09-10:
+          "인천을 회색빛 나는 바탕으로 표기해야, 파랑빛으로 바다를 표현하지 않을까?").
+          GTX-B·월판선처럼 인천이 넓게 나오는 카드에서 왼쪽이 통째로 물로 보였다.
+          이제 **파랑기를 0 으로** 둔다 — R>G>B 로 살짝 따뜻한 중립 회색이다.
+          이 색은 「파랑 = 물」을 카드 안에서 유일하게 만들기 위한 것이다. */
+    인천광역시: "#e3e0dc",
   };
   const FILL_ETC = "#edeae3";
   /* 🔴 판 바탕을 **바다색으로 칠하지 않는다** (2026-09-09, 오너가 잡았다 — "국제테마파크역은
@@ -798,6 +886,28 @@ function buildOne(L) {
   /* ⚠️ 겹침 해소는 **배열 순서가 아니라 y 순서**로 돌아야 한다. 본선 뒤에 지선을 이어 붙였더니
      지선 역들이 본선 마지막 역 뒤로 정렬돼 카드 아래로 밀리고, 지시선이 지도를 가로질렀다
      (2026-09-09). 아래로 미는 규칙은 "위에서 아래로 훑는다"를 전제하므로 정렬이 먼저다. */
+  /* ── 패널을 **세로로** 피한다 (2026-09-10)
+     쪽 고르기 ④ 는 「반대쪽이 비었으면 그리로」까지만 한다. 양쪽이 다 막힌 역이 있다 —
+     GTX-A 서울역은 뱃지가 다섯이라 왼쪽으로 보내면 카드 밖이고, 오른쪽은 공정률 패널이다.
+     그래서 **이름이 패널 뒤로 통째로 사라졌다.**
+     패널은 불투명하니 그 위에 얹힌 이름은 없는 것과 같다 — 그때는 **위나 아래로 비킨다.**
+     지시선이 따라 붙어 어느 점인지는 그대로 알 수 있다(지시선이 있는 이유가 이것이다).
+     ⚠️ 패널 밖으로 나가는 데 필요한 거리가 더 짧은 쪽으로 민다. 카드 밖으로는 안 민다. */
+  if (!WIDE && PANELS.length) {
+    for (const p of lbl) {
+      if (p.vert) continue;
+      const a0 = p.side > 0 ? p.x : p.x - LEAD_W - rowW(p.st);
+      const a1 = p.side > 0 ? p.x + LEAD_W + rowW(p.st) : p.x;
+      for (const P of PANELS) {
+        if (!(a1 > P.x0 - 10 && a0 < P.x1 + 10)) continue;
+        if (!(p.ly > P.y0 - 22 && p.ly < P.y1 + 22)) continue;
+        const up = P.y0 - 34 - p.ly, down = P.y1 + 34 - p.ly;   // 각각 필요한 이동량(부호 포함)
+        const pick = Math.abs(up) <= Math.abs(down) ? up : down;
+        const want = p.ly + pick;
+        if (want > 16 && want < BH - 20) p.ly = want;
+      }
+    }
+  }
   for (const sd of [1, -1]) {
     /* 위/아래 라벨은 이 줄세우기에 끼지 않는다 — 제 마커에 붙어 있어야 뜻이 있다. */
     const g = lbl.filter((p) => p.side === sd && !p.vert).sort((x, y2) => x.y - y2.y);
@@ -1183,13 +1293,28 @@ const outDir = publish ? join(ROOT, `data/content/${date}`) : join(ROOT, "data/o
 mkdirSync(outDir, { recursive: true });
 
 let made = 0;
+const skipped = [];   /* 못 그린 노선 — 끝에서 한 번 더 크게 말한다 */
 for (const L of rail.lines) {
   if (ONLY && L.key !== ONLY) continue;
   if (!probe.결과?.some((x) => x.key === L.key && x.좌표?.length)) {
     console.log(`⏭ ${L.name} — OSM 선형이 아직 없다 (rail-geo.yml 을 그 노선으로 돌리세요)`);
     continue;
   }
-  const { card, placed, anchors, trackLen } = buildOne(L);
+  /* ⚠️ **한 노선이 못 그려진다고 나머지를 못 만들면 안 된다.**
+     GTX-C 는 기존선 공용 구간이 아직 안 이어져 「놓은 자리 vs 실좌표」 가드에 걸린다.
+     전체 빌드에서 그게 예외로 튀면 인동선·월판선·대장홍대선까지 같이 안 나온다.
+     그래서 **--only 로 그 노선을 콕 집었을 때만 던지고**, 전체 빌드에서는 **크게 적고 건너뛴다.**
+     조용히 넘어가는 것이 아니다 — ⛔ 와 이유가 그대로 찍히고, 그 카드는 만들어지지 않는다. */
+  let built;
+  try {
+    built = buildOne(L);
+  } catch (e) {
+    if (ONLY) throw e;
+    console.log(`⛔ ${L.name} — 카드를 만들지 않았습니다: ${String(e.message).split("\n")[0]}`);
+    skipped.push(L.name);
+    continue;
+  }
+  const { card, placed, anchors, trackLen } = built;
   writeFileSync(join(outDir, `railmap-${L.key}.json`), JSON.stringify(card, null, 2) + "\n");
 
   /* ⑤ 개략 고지는 **캡션이 유일한 자리**다(오너 2026-09-09 선택). 그래서 코드가 넣는다. */
@@ -1222,5 +1347,6 @@ for (const L of rail.lines) {
   console.log(`✅ ${L.name} — 역 ${placed.length}개(닻 ${byAnchor} · 등분 ${placed.length - byAnchor}) · 선형 ${(trackLen / 1000).toFixed(1)}km`);
   made++;
 }
+if (skipped.length) console.log(`\n⛔ 못 만든 노선 ${skipped.length}개 — ${skipped.join(", ")}`);
 if (!made) throw new Error("만든 카드가 0장이다 — 조용히 넘어가지 않는다");
 console.log(`\n✅ rail-geomap ${made}장 → ${publish ? `data/content/${date}/` : "data/out/_spike/"}`);
