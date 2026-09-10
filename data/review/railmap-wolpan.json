@@ -1,11 +1,11 @@
 {
-  "label": "rail-indong",
+  "label": "railmap-wolpan",
   "verdict": "pass",
   "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
-      "file": "rail-indong.json",
+      "file": "railmap-wolpan.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []

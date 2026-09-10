@@ -103,9 +103,9 @@
       "label": "rail-sinansan",
       "title": "신안산선 언제 개통하지 (공정률 72.58% · 2028년 말 목표)",
       "state": "오너 확정",
-      "at": "2026-09-09",
+      "at": "2026-09-10",
       "builder": "rail-line",
-      "content": "data/content/2026-09-07/rail-sinansan.json",
+      "content": "data/content/2026-09-10/rail-sinansan.json",
       "png": "rail-sinansan-p1.png",
       "md5": "e59c26dac821002a8e83e124caf3f7ba",
       "note": "오너 지시로 픽셀이 바뀌어 2026-09-09 재기록. ① 「가칭」 꼬리표를 역 옆에서 걷어 푸터 위 각주 한 줄로 옮겼다 · ② 안 밀린 라벨은 지시선을 빼고 마커에 붙였다(실지도판) · ③ 인동선 역명 4건(수원종합운동장·호계·북수원·메타폴리스)과 신분당선 2건(국립박물관·수성중사거리). 오너가 신안산선·인동선·월판선 3장을 눈으로 보고 확인하는 것이 이 값의 근거다."
@@ -144,9 +144,9 @@
       "label": "rail-indong",
       "title": "인덕원~동탄선 언제 개통하지 (공정률 20.4% · 2029년 말 목표)",
       "state": "오너 확정",
-      "at": "2026-09-09",
+      "at": "2026-09-10",
       "builder": "rail-line",
-      "content": "data/content/2026-09-07/rail-indong.json",
+      "content": "data/content/2026-09-10/rail-indong.json",
       "png": "rail-indong-p1.png",
       "md5": "8d1d8e4a6205b62014d8b54944ecd5f2",
       "note": "오너 지시로 픽셀이 바뀌어 2026-09-09 재기록. ① 「가칭」 꼬리표를 역 옆에서 걷어 푸터 위 각주 한 줄로 옮겼다 · ② 안 밀린 라벨은 지시선을 빼고 마커에 붙였다(실지도판) · ③ 인동선 역명 4건(수원종합운동장·호계·북수원·메타폴리스)과 신분당선 2건(국립박물관·수성중사거리). 오너가 신안산선·인동선·월판선 3장을 눈으로 보고 확인하는 것이 이 값의 근거다."
@@ -155,9 +155,9 @@
       "label": "rail-wolpan",
       "title": "월곶~판교선 언제 개통하지 (공정률 18.0% · 2029년 말 목표)",
       "state": "오너 확정",
-      "at": "2026-09-09",
+      "at": "2026-09-10",
       "builder": "rail-line",
-      "content": "data/content/2026-09-07/rail-wolpan.json",
+      "content": "data/content/2026-09-09/rail-wolpan.json",
       "png": "rail-wolpan-p1.png",
       "md5": "c4adb7ded6190d8e763462bf92baccef",
       "note": "오너 지시로 픽셀이 바뀌어 2026-09-09 재기록. ① 「가칭」 꼬리표를 역 옆에서 걷어 푸터 위 각주 한 줄로 옮겼다 · ② 안 밀린 라벨은 지시선을 빼고 마커에 붙였다(실지도판) · ③ 인동선 역명 4건(수원종합운동장·호계·북수원·메타폴리스)과 신분당선 2건(국립박물관·수성중사거리). 오너가 신안산선·인동선·월판선 3장을 눈으로 보고 확인하는 것이 이 값의 근거다."
@@ -188,12 +188,32 @@
       "label": "railmap-sinansan",
       "title": "신안산선 언제 개통하지 — 실제 지도 위 노선 (공정률 72.58% · 2028년 말 목표)",
       "state": "오너 확정",
-      "at": "2026-09-09",
+      "at": "2026-09-10",
       "builder": "rail-geomap",
       "content": "data/content/2026-09-09/railmap-sinansan.json",
       "png": "railmap-sinansan-p1.png",
       "md5": "e079d678475c6b5cb4595de17474770e",
       "note": "오너 지시로 픽셀이 바뀌어 2026-09-09 재기록. ① 「가칭」 꼬리표를 역 옆에서 걷어 푸터 위 각주 한 줄로 옮겼다 · ② 안 밀린 라벨은 지시선을 빼고 마커에 붙였다(실지도판) · ③ 인동선 역명 4건(수원종합운동장·호계·북수원·메타폴리스)과 신분당선 2건(국립박물관·수성중사거리). 오너가 신안산선·인동선·월판선 3장을 눈으로 보고 확인하는 것이 이 값의 근거다."
+    },
+    {
+      "label": "railmap-indong",
+      "title": "인덕원~동탄선 언제 개통하지 — 실제 지도 위 노선 (공정률 20.4% · 2029년 말 목표)",
+      "state": "오너 확정",
+      "at": "2026-09-10",
+      "builder": "rail-geomap",
+      "content": "data/content/2026-09-09/railmap-indong.json",
+      "png": "railmap-indong-p1.png",
+      "md5": "3d3d947f6866104aa6a3a2447bd33de2"
+    },
+    {
+      "label": "railmap-wolpan",
+      "title": "월곶~판교선 언제 개통하지 — 실제 지도 위 노선 (공정률 18.0% · 2029년 말 목표)",
+      "state": "오너 확정",
+      "at": "2026-09-10",
+      "builder": "rail-geomap",
+      "content": "data/content/2026-09-09/railmap-wolpan.json",
+      "png": "railmap-wolpan-p1.png",
+      "md5": "33ca3f0ac8572662b80c0b50c493fe65"
     }
   ]
 }

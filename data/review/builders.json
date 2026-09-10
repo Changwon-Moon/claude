@@ -2976,7 +2976,9 @@
       ],
       "note": "실제 지도 위 노선(rail-line 의 짝). 선형은 OSM railway=construction 이고 data/geo/_probe-rail-osm.json 에 담겨 있다 — 그 파일이 없으면 그 노선을 건너뛴다. 새 노선을 넣으려면 .github/workflows/rail-geo.yml 을 그 노선으로 먼저 돌린다. 역 위치는 개략이고 순서만 코드가 강제한다.",
       "produces": [
-        "railmap-sinansan"
+        "railmap-sinansan",
+        "railmap-indong",
+        "railmap-wolpan"
       ]
     },
     {
