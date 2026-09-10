@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T15:34:42.962Z",
+  "generatedAt": "2026-09-10T16:00:24.310Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -1121,16 +1121,6 @@
       "runs30": 22
     },
     {
-      "file": "guard.yml",
-      "name": "문지기 (guard)",
-      "lastRun": "2026-09-09",
-      "daysAgo": 1,
-      "lastOk": "2026-09-09",
-      "okDaysAgo": 1,
-      "fails30": 33,
-      "runs30": 100
-    },
-    {
       "file": "kosis-probe.yml",
       "name": "KOSIS 표 검증 (probe)",
       "lastRun": "2026-09-09",
@@ -1153,6 +1143,16 @@
     {
       "file": "auto-produce.yml",
       "name": "데이터 바뀌면 카드 자동 재생산",
+      "lastRun": "2026-09-11",
+      "daysAgo": 0,
+      "lastOk": "2026-09-11",
+      "okDaysAgo": 0,
+      "fails30": 15,
+      "runs30": 100
+    },
+    {
+      "file": "guard.yml",
+      "name": "문지기 (guard)",
       "lastRun": "2026-09-11",
       "daysAgo": 0,
       "lastOk": "2026-09-11",
@@ -1215,7 +1215,7 @@
       "name": "관제탑 배포 (Cloudflare)",
       "lastRun": "2026-09-11",
       "daysAgo": 0,
-      "lastOk": "2026-09-10",
+      "lastOk": "2026-09-11",
       "okDaysAgo": 0,
       "fails30": 10,
       "runs30": 100
