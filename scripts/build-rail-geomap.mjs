@@ -661,6 +661,8 @@ function buildOne(L0, opt = {}) {
   /* 뱃지 자리는 **가장 뱃지가 많은 역**이 정한다. 이름은 그 오른쪽에서 전부 같은 x 로 시작한다 —
      뱃지 뒤에 바로 붙이면 역마다 이름 시작점이 들쭉날쭉해 읽는 눈이 계속 좌우로 흔들린다. */
   const BDG_W = Math.max(0, ...everySt.map((st) => badgeRowWidth(st.xfer || [])));
+  /* ⚠️ 10 을 8 로 줄였다가 **확정 3장의 픽셀이 움직였다**(신안산·인동 md5 변경, 2026-09-10).
+     이 값은 뱃지 있는 역 전부에 걸린다 — 「좀 붙여줘」는 쌓은 줄의 오른쪽 맞춤으로 푼다. */
   const BDG_PAD = BDG_W ? 10 : 0;
   /* 한 행의 최대 폭 = 뱃지 구역 + 이름 + (가칭). 좌우 배치는 이 폭을 **양쪽에** 둔다. */
   const ROW_W = Math.round(BDG_W + BDG_PAD + maxNm * LBL_FS * 0.98);
@@ -681,8 +683,10 @@ function buildOne(L0, opt = {}) {
     if (!opt.sub || !PANELS?.length) return 0;
     let w = 0;
     for (const r of PANELS) {
-      /* ⚠️ 「패널이 절반 넘게 먹을 때만」으로 뒀다가 아래 상자에서 안 먹혔다(패널 185 / 상자 543).
-         토막 지도는 상자가 작아 세로로 피할 자리가 아예 없다 — 있으면 무조건 가로로 비킨다. */
+      /* ⚠️ 「절반 넘게 먹을 때만」으로 뒀다가 아래 상자에서 안 먹혔다(패널 185 / 상자 543).
+         반대로 **작은 칩까지** 가로 여백을 뺏으면 지도가 통째로 쪼그라든다(칩 112 / 상자 393).
+         상자 높이의 **30%** 를 넘게 먹는 것만 비켜 그린다 — 정보표(34%)는 걸리고 칩(23%)은 안 걸린다. */
+      if ((r.y1 - r.y0) < BH * 0.30) continue;
       if (side < 0 && r.x0 < MAP_W * 0.4) w = Math.max(w, r.x1 + 12);
       if (side > 0 && r.x1 > MAP_W * 0.6) w = Math.max(w, MAP_W - r.x0 + 12);
     }
@@ -1522,10 +1526,13 @@ function buildOne(L0, opt = {}) {
         /* 쌓은 더미는 이름 줄에 **세로 가운데**로 맞춘다 — 이름이 더미의 가운데 옆에 선다. */
         const top = p.ly - bdgBlockH(p.st) / 2, blkW = bdgBlockW(p.st);
         rows.forEach((row, ri) => {
-          /* 🔴 짧은 줄은 **가운데 맞춤**이다 (오너 2026-09-10 "노선 로고랑 역명이 너무 많이
-             떨어진 곳들이 있어"). 왼쪽 맞춤이면 둘째 줄의 짧은 뱃지(인덕원 「인동」,
-             광운대 「경춘」)가 이름 옆에 구멍을 남겨 로고와 역명이 떨어져 보였다. */
-          let bxx = bx + (blkW - badgeRowWidth(row)) / 2;
+          /* 🔴 짧은 줄은 **이름 쪽으로 붙인다**(오른쪽 맞춤) — 오너 2026-09-10 두 번째 지시
+             "노선 배지랑 역명 너무 멀게 있는 것들이 많은데 좀 붙여줘".
+             왼쪽 맞춤 → 가운데 맞춤 → 오른쪽 맞춤 순으로 옮겨 왔다. 읽는 순서가 [뱃지][이름]
+             이라 이름은 **항상 더미의 오른쪽**에 선다. 그러니 줄의 오른쪽 끝을 이름에 맞추면
+             모든 줄이 이름에 같은 거리로 붙는다 — 인덕원 「인동」이 23px 떠 있던 자리가 그 값이다.
+             (대신 왼쪽 끝이 들쭉날쭉해지지만, 그쪽은 지시선이 아니라 빈 곳이다.) */
+          let bxx = bx + (blkW - badgeRowWidth(row));
           const cy2 = top + ri * (BDG_H + 5) + BDG_H / 2;
           for (const k of row) { bd += badgeSvg(k, bxx, cy2); bxx += badgeWidth(k) + BDG_GAP; }
         });
@@ -1835,6 +1842,14 @@ for (const L of rail.lines) {
       const panels = PF
         .filter((r) => (i === 0 ? r.y1 <= HS[0] : r.y0 >= top))
         .map((r) => (i === 0 ? r : { ...r, y0: r.y0 - top, y1: r.y1 - top }));
+      /* 큰 패널 대신 **토막 칩**을 쓰는 상자에서는 그 칩 자리를 대신 넘긴다 —
+         칩이 작아 가로 여백은 안 뺏지만(위 30% 규칙) 이름표·지명은 피해야 한다. */
+      if (b.info) {
+        /* ⚠️ **큰 공정률 패널만** 걷어낸다(y0=22 짜리). 정보표는 그대로 둬야 한다 —
+           걷어냈더니 호매실·구운이 다시 그 밑으로 들어갔다(2026-09-10 실측). */
+        for (let k = panels.length - 1; k >= 0; k--) if (panels[k].y0 <= 24) panels.splice(k, 1);
+        panels.push({ x0: MAP_W - 286, x1: MAP_W - 18, y0: 22, y1: 134 });
+      }
       return buildOne(sub, { bodyH: HS[i], panels, sub: true, idSuffix: `-b${i}` }).card.mapSvg;
     });
     const inner = (svg, y, h) =>
@@ -1842,6 +1857,15 @@ for (const L of rail.lines) {
       + svg.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "") + `</svg>`;
     card.mapSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${MAP_W} ${BHfull}" width="${MAP_W}" height="${BHfull}">`
       + inner(subs[0], 0, HS[0]) + inner(subs[1], HS[0] + GAPBOX, HS[1]) + `</svg>`;
+    /* 🔴 토막마다 제 공정률·준공 일정 (오너 2026-09-10). 한 노선이라도 구간마다 사업이 따로
+       굴러가면 숫자도 따로 적어야 한다 — 신분당선은 남부만 착공했고 북부는 미착공이다.
+       카드 전체에 「17.25%」 하나만 적으면 북부에 대해서는 그게 거짓말이다. */
+    if (L.mapSplit.every((b) => b.info)) {
+      card.segs = L.mapSplit.map((b, i) => ({
+        top: i === 0 ? 22 : HS[0] + GAPBOX + 22,
+        title: b.info.title, prog: b.info.prog, eta: b.info.eta,
+      }));
+    }
     console.log(`   ▤ ${L.name} 지도 두 토막 — ${HS[0]}px + ${HS[1]}px`);
   }
 

@@ -44,6 +44,19 @@
          SVG 뷰박스와 어긋난다(레터박스가 생긴다). */
       .rgm-map { position: relative; width: 100%; height: var(--bodyH); overflow: hidden; }
       .rgm-map > svg { display: block; width: 100%; height: 100%; }
+      /* 🔴 **토막마다 제 공정률·일정** (오너 2026-09-10 "북부와 카드마다 공정률 준공 일정 따로").
+         한 노선인데 구간마다 사업이 따로 굴러가는 노선이 있다 — 신분당선은 남부(광교~호매실)만
+         착공했고 북부(용산~신사)는 미착공이다. 카드 전체에 숫자 하나만 적으면 둘 중 하나가 거짓말이 된다.
+         그래서 상자마다 작은 칩을 얹는다. 큰 패널(.rgm-bar)은 그때 안 그린다. */
+      .rgm-seg {
+        position: absolute; right: 18px; z-index: 2; box-sizing: border-box;
+        width: 268px; padding: 11px 16px 12px;
+        background: rgba(251,250,247,0.96); border: 2px solid var(--wirit-ink-06);
+        border-radius: 14px; box-shadow: 0 4px 18px rgba(20,24,33,0.10);
+      }
+      .rgm-seg .sg-t { display: block; font-size: 19px; font-weight: 800; color: var(--lc); letter-spacing: -0.02em; }
+      .rgm-seg .sg-p { display: block; margin-top: 5px; font-size: 27px; font-weight: 900; color: var(--wirit-ink); letter-spacing: -0.03em; }
+      .rgm-seg .sg-e { display: block; margin-top: 3px; font-size: 17px; font-weight: 700; color: var(--wirit-gray); }
       /* ⚠️ **바로 아래 자식만** 잡는다. 토막 지도(mapSplit)는 svg 안에 svg 가 둘 들어 있는데,
          `.rgm-map svg` 로 두면 그 안쪽 것들까지 100%/100% 로 늘어나 x·y·크기가 통째로 무시된다
          (2026-09-10 실측 — 두 상자가 겹쳐 앉고 지도가 아래로 밀렸다). */
@@ -213,6 +226,7 @@
       <h1 class="rgm-title">{{{title}}}</h1>
 
       <div class="rgm-wrap">
+      {{#unless segs}}
       <div class="rgm-bar" style="--barGap:{{layout.barGap}}px">
         <div class="rgm-prog">
           <span class="lb">공정률</span>
@@ -234,12 +248,13 @@
         </dl>
         {{/unless}}
       </div>
+      {{/unless}}
 
       <div class="rgm-body" style="--bodyH:{{layout.bodyH}}px">
         <!-- ⚠️ 여기에 wirit-linecolor 를 붙이지 말 것 — 상자 하나로 187개를 면제해
              auditHead 가 「큰 덩어리를 통째로 면제」로 잡았다(2026-09-09).
              표시는 빌더가 SVG 요소 하나하나에 붙인다. -->
-        <div class="rgm-map">{{{mapSvg}}}</div>
+        <div class="rgm-map">{{{mapSvg}}}{{#each segs}}<div class="rgm-seg wirit-linecolor" style="top:{{this.top}}px"><span class="sg-t">{{this.title}}</span><span class="sg-p">{{this.prog}}</span><span class="sg-e">{{this.eta}}</span></div>{{/each}}</div>
         {{#if splitInfo}}
         <dl class="rgm-facts rgm-side">
           {{#each facts}}
