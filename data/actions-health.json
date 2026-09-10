@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T04:32:34.640Z",
+  "generatedAt": "2026-09-10T06:47:04.927Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -388,7 +388,7 @@
       "maxDelay": null,
       "lastRun": "2026-09-01",
       "lastOk": "2026-09-01",
-      "okDaysAgo": 8
+      "okDaysAgo": 9
     },
     {
       "file": "reb-weekly-collect.yml",
@@ -573,15 +573,15 @@
         },
         {
           "day": "09-10",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "15:35",
+          "delay": 296
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-09-09",
-      "lastOk": "2026-09-09",
+      "medianDelay": 296,
+      "maxDelay": 296,
+      "lastRun": "2026-09-10",
+      "lastOk": "2026-09-10",
       "okDaysAgo": 0
     },
     {
@@ -961,6 +961,46 @@
       "runs30": 18
     },
     {
+      "file": "ecos-m2.yml",
+      "name": "ECOS M2 수집 (probe+collect)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 10,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 10,
+      "fails30": 0,
+      "runs30": 11
+    },
+    {
+      "file": "kr-market.yml",
+      "name": "국내 증시 수집 (코스피·코스닥)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 10,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 10,
+      "fails30": 0,
+      "runs30": 5
+    },
+    {
+      "file": "population-collect.yml",
+      "name": "인구 수집 (monthly)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 10,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 10,
+      "fails30": 1,
+      "runs30": 2
+    },
+    {
+      "file": "publish-archive.yml",
+      "name": "완성본 보관 (발행 완료)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 10,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 10,
+      "fails30": 8,
+      "runs30": 11
+    },
+    {
       "file": "reb-collect.yml",
       "name": "전세·월세 지수 수집 (한국부동산원)",
       "lastRun": "2026-08-31",
@@ -976,29 +1016,9 @@
       "lastRun": "2026-08-31",
       "daysAgo": 10,
       "lastOk": "2026-08-28",
-      "okDaysAgo": 12,
+      "okDaysAgo": 13,
       "fails30": 4,
       "runs30": 6
-    },
-    {
-      "file": "ecos-m2.yml",
-      "name": "ECOS M2 수집 (probe+collect)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 9,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 9,
-      "fails30": 0,
-      "runs30": 11
-    },
-    {
-      "file": "kr-market.yml",
-      "name": "국내 증시 수집 (코스피·코스닥)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 9,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 9,
-      "fails30": 0,
-      "runs30": 5
     },
     {
       "file": "pipeline-tick.yml",
@@ -1009,26 +1029,6 @@
       "okDaysAgo": 9,
       "fails30": 4,
       "runs30": 30
-    },
-    {
-      "file": "population-collect.yml",
-      "name": "인구 수집 (monthly)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 9,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 9,
-      "fails30": 1,
-      "runs30": 2
-    },
-    {
-      "file": "publish-archive.yml",
-      "name": "완성본 보관 (발행 완료)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 9,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 9,
-      "fails30": 8,
-      "runs30": 11
     },
     {
       "file": "molit-door.yml",
@@ -1071,6 +1071,16 @@
       "runs30": 5
     },
     {
+      "file": "apt-station.yml",
+      "name": "단지 가까운 역 (카드 뱃지용)",
+      "lastRun": "2026-09-07",
+      "daysAgo": 3,
+      "lastOk": "2026-09-05",
+      "okDaysAgo": 5,
+      "fails30": 10,
+      "runs30": 21
+    },
+    {
       "file": "geocode.yml",
       "name": "좌표 지오코딩 (카카오 로컬)",
       "lastRun": "2026-09-07",
@@ -1079,16 +1089,6 @@
       "okDaysAgo": 3,
       "fails30": 0,
       "runs30": 4
-    },
-    {
-      "file": "apt-station.yml",
-      "name": "단지 가까운 역 (카드 뱃지용)",
-      "lastRun": "2026-09-07",
-      "daysAgo": 2,
-      "lastOk": "2026-09-05",
-      "okDaysAgo": 5,
-      "fails30": 10,
-      "runs30": 21
     },
     {
       "file": "apt-detail.yml",
@@ -1148,7 +1148,7 @@
       "lastOk": "2026-09-10",
       "okDaysAgo": 0,
       "fails30": 18,
-      "runs30": 95
+      "runs30": 96
     },
     {
       "file": "guard.yml",
