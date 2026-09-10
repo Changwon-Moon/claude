@@ -12,7 +12,7 @@
 > 이 표는 `node scripts/template-usage.mjs --write` 가 **실측해서 씁니다.**
 > 손으로 고치지 마세요 — 세트가 늘면 다음 실행 때 덮어씁니다.
 
-**템플릿 47종** · 🟢 카드가 나오는 것 31 · 🟡 빌더는 있음 3 · ⚪ 잠자는 것 13
+**템플릿 47종** · 🟢 카드가 나오는 것 32 · 🟡 빌더는 있음 2 · ⚪ 잠자는 것 13
 
 | 판형 | 상태 | 쓰는 세트 |
 |---|---|---|
@@ -35,12 +35,13 @@
 | `map-board` | 🟢 1세트 | jeongbi-board |
 | `map-rank` | 🟢 2세트 | estate-84, estate-59 |
 | `metro-2col` | 🟢 1세트 | metro-speed |
-| `rail-geomap` | 🟢 1세트 | railmap-sinansan |
+| `rail-geomap` | 🟢 3세트 | railmap-sinansan, railmap-indong, railmap-wolpan |
 | `rail-line` | 🟢 8세트 | rail-sinansan, rail-gtxa, rail-gtxb 외 5 |
+| `ranking-table` | 🟢 1세트 | jeongbi-rank |
 | `record-grid` | 🟢 1세트 | kospi-record |
 | `seongsu-zones` | 🟢 1세트 | seongsu-zones |
 | `sinbundang-loop` | 🟢 1세트 | sinbundang-loop |
-| `singo-record` | 🟢 18세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 15 |
+| `singo-record` | 🟢 19세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 16 |
 | `singoga-map` | 🟢 4세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map 외 1 |
 | `streak-line` | 🟢 15세트 | mae-streak, jeonse-streak, m2-gap 외 12 |
 | `supply-progress` | 🟢 1세트 | supply-progress |
@@ -49,7 +50,6 @@
 | `year-bars` | 🟢 2세트 | wolse-flip, m2-rate |
 | `estate-cover` | 🟡 빌더 있음·세트 없음 | — |
 | `metro-cover-photo` | 🟡 빌더 있음·세트 없음 | — |
-| `ranking-table` | 🟡 빌더 있음·세트 없음 | — |
 | `dummy-card` | ⚪ 잠자는 중 | — |
 | `figure-roster` | ⚪ 잠자는 중 | — |
 | `highlight-cover` | ⚪ 잠자는 중 | — |
