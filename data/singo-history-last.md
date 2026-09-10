@@ -1,6 +1,6 @@
 # 신고가 단지 이력 — 마지막 실행
 
-- 대기열: 208줄
+- 대기열: 217줄
 - 결과: **성공**
 
 ```
@@ -1560,6 +1560,69 @@ e편한세상반월나노시티역 · 전용 59타입 · 41595 · 202001~202609 
 > tsx src/molitHistoryCli.ts -- --lawd 11545 --apt '두산' --umd '가산동' --type 84 --from 202001
 
 ⏭ 이미 있음 — 11545-두산-84.json (다시 받으려면 force=1)
+
+── 자연앤힐스테이트 전용 84타입 (41117)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '자연앤힐스테이트' --umd '이의동' --type 84 --from 202001
+
+⏭ 이미 있음 — 41117-자연앤힐스테이트-84.json (다시 받으려면 force=1)
+
+── 리버힐삼성 전용 84타입 (11170)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11170 --apt '리버힐삼성' --umd '산천동' --type 84 --from 202001
+
+⏭ 이미 있음 — 11170-리버힐삼성-84.json (다시 받으려면 force=1)
+
+── 마곡13단지힐스테이트마스터 전용 84타입 (11500)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11500 --apt '마곡13단지힐스테이트마스터' --umd '마곡동' --type 84 --from 202001
+
+⏭ 이미 있음 — 11500-마곡13단지힐스테이트마스터-84.json (다시 받으려면 force=1)
+
+── 마곡수명산파크1단지 전용 84타입 (11500)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11500 --apt '마곡수명산파크1단지' --umd '내발산동' --type 84 --from 202001
+
+⏭ 이미 있음 — 11500-마곡수명산파크1단지-84.json (다시 받으려면 force=1)
+
+── 포레나노원 전용 84타입 (11350)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11350 --apt '포레나노원' --umd '상계동' --type 84 --from 202001
+
+⏭ 이미 있음 — 11350-포레나노원-84.json (다시 받으려면 force=1)
+
+── 평촌어바인퍼스트 전용 84타입 (41173)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '평촌어바인퍼스트' --umd '호계동' --type 84 --from 202001
+
+⏭ 이미 있음 — 41173-평촌어바인퍼스트-84.json (다시 받으려면 force=1)
+
+── 영흥숲푸르지오파크비엔 전용 84타입 (41117)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '영흥숲푸르지오파크비엔' --umd '원천동' --type 84 --from 202001
+
+⏭ 이미 있음 — 41117-영흥숲푸르지오파크비엔-84.json (다시 받으려면 force=1)
+
+── 한신아파트상가동유치원동(103~109) 전용 59타입 (11260)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11260 --apt '한신아파트상가동유치원동(103~109)' --umd '중화동' --type 59 --from 202001
+
+⏭ 이미 있음 — 11260-한신아파트상가동유치원동103~109-59.json (다시 받으려면 force=1)
+
+── 공작아파트 전용 59타입 (41173)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '공작아파트' --umd '관양동' --type 59 --from 202001
+
+⏭ 이미 있음 — 41173-공작아파트-59.json (다시 받으려면 force=1)
 
 ✅ 대기열 전 줄 완료
 ```
