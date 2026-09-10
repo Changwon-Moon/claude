@@ -1214,7 +1214,13 @@ function buildOne(L) {
       } else {
         const diagV = Math.min(Math.abs(dx), runV - STUBV - 4);
         const outV = runV - STUBV - diagV;
-        if (outV >= 6) {
+        /* 🔴 **꺾지 않고 한 줄로** (leadStraight, 오너 2026-09-10 "인천시청 꺾지 말고 대각선으로").
+           기본은 [수직]─45°─[수직 10px] 세 토막이다. 자리가 넉넉할수록 이 모양이 깔끔하지만,
+           옮긴 거리가 짧은 역에서는 토막이 잘게 나뉘어 지저분하다. 그때는 곧장 잇는다. */
+        if (p.st.leadStraight === true) {
+          const vL0 = Math.hypot(dx, endY - p.y) || 1;
+          leadV = `<path d="M${(p.x + (dx / vL0) * 13).toFixed(1)},${(p.y + ((endY - p.y) / vL0) * 13).toFixed(1)}L${cx.toFixed(1)},${endY.toFixed(1)}"`;
+        } else if (outV >= 6) {
           const k1 = syV + p.side * outV, k2 = endY - p.side * STUBV;
           leadV = `<path d="M${p.x.toFixed(1)},${syV.toFixed(1)}V${k1.toFixed(1)}L${cx.toFixed(1)},${k2.toFixed(1)}V${endY.toFixed(1)}"`;
         } else {

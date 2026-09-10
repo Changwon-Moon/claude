@@ -428,7 +428,8 @@
           "km": 10.1,
           "labelAlign": "right",
           "leadV": 60,
-          "labelDx": -50
+          "labelDx": -50,
+          "leadStraight": true
         },
         {
           "name": "부평",
@@ -449,7 +450,7 @@
           ],
           "km": 22.5,
           "labelSide": "down",
-          "leadV": 76
+          "leadV": 26
         },
         {
           "name": "신도림",
@@ -459,9 +460,8 @@
             "2"
           ],
           "km": 31.6,
-          "labelAlign": "left",
-          "leadV": 14,
-          "labelSide": "down"
+          "leadV": 30,
+          "labelSide": "up"
         },
         {
           "name": "여의도",
