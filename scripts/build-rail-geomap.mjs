@@ -636,9 +636,25 @@ function buildOne(L) {
        ③ 뱃지가 있는 역은 **오른쪽을 우선**한다 — 왼쪽에 놓으면 뱃지가 이름보다 더 왼쪽에
           가서 이름·뱃지 순서가 좌우로 뒤집힌다(오너가 원한 "이름 앞 로고"가 깨진다).
      그다음 **쪽마다 따로** 세로 겹침을 푼다. */
+  /* 🔴 **세로판에서도 뱃지를 쌓는다**(badgeStack, 오너 2026-09-10 "대곡, 서울역도 세로 배치").
+     GTX-A 서울역은 환승이 다섯(1·4·경의중앙·공항철도·GTX-B)이라 한 줄이 273px —
+     지도 폭의 30%가 이름표 하나로 나간다. 한 줄에 N개씩 접으면 156px 로 준다.
+     읽는 순서 [뱃지][이름] 은 그대로 두고, 쌓은 더미를 이름 줄에 세로 가운데로 맞춘다. */
+  const bdgRows = (st) => {
+    const k = st.xfer || [];
+    const n = st.badgeStack === true ? 1 : (typeof st.badgeStack === "number" ? st.badgeStack : 0);
+    if (!n || k.length <= 1) return [k];
+    const rows = [];
+    for (let i = 0; i < k.length; i += n) rows.push(k.slice(i, i + n));
+    return rows;
+  };
+  const bdgBlockW = (st) => Math.max(...bdgRows(st).map((r) => (r.length ? badgeRowWidth(r) : 0)), 0);
+  const bdgBlockH = (st) => { const r = bdgRows(st); return r.length * BDG_H + (r.length - 1) * 5; };
+  /* 이름표 한 줄이 차지하는 **세로 높이의 반** — 쌓았으면 더미가 더 크다. */
+  const rowHalfH = (st) => Math.max(LBL_FS / 2, (st.xfer || []).length ? bdgBlockH(st) / 2 : 0);
   const rowW = (st) => {
     const k = st.xfer || [];
-    return (k.length ? badgeRowWidth(k) + BDG_PAD : 0) + [...p2name(st)].length * LBL_FS * 0.98 + provW(st);
+    return (k.length ? bdgBlockW(st) + BDG_PAD : 0) + [...p2name(st)].length * LBL_FS * 0.98 + provW(st);
   };
   function p2name(st) { return st.name; }
 
@@ -994,9 +1010,10 @@ function buildOne(L) {
   /* 이름표가 실제로 먹는 상자 — 좌우판과 위아래판 두 모양. 자리 다툼은 이 상자로만 잰다. */
   const sideBox = (p) => {
     const w = rowW(p.st) + LEAD_W + 12;
+    const h = Math.max(17, rowHalfH(p.st) + 5);
     return p.side > 0
-      ? { x0: p.x, x1: p.x + w, y0: p.ly - 17, y1: p.ly + 17 }
-      : { x0: p.x - w, x1: p.x, y0: p.ly - 17, y1: p.ly + 17 };
+      ? { x0: p.x, x1: p.x + w, y0: p.ly - h, y1: p.ly + h }
+      : { x0: p.x - w, x1: p.x, y0: p.ly - h, y1: p.ly + h };
   };
   const vertBox = (p) => {
     const w = rowW(p.st) + 10;
@@ -1140,12 +1157,19 @@ function buildOne(L) {
   for (const sd of [1, -1]) {
     /* 위/아래 라벨은 이 줄세우기에 끼지 않는다 — 제 마커에 붙어 있어야 뜻이 있다. */
     const g = lbl.filter((p) => p.side === sd && !p.vert).sort((x, y2) => x.y - y2.y);
-    for (let i = 1; i < g.length; i++)
-      if (g[i].ly - g[i - 1].ly < LBL_GAP) g[i].ly = g[i - 1].ly + LBL_GAP;
+    /* ⚠️ 간격은 **두 이름표의 실제 높이**로 잰다 — 쌓은 더미(서울역 3줄 = 79px)를 32px 로
+       재면 위아래 역이 그 더미 속으로 들어간다. */
+    const gapOf = (a2, b2) => Math.max(LBL_GAP, rowHalfH(a2.st) + rowHalfH(b2.st) + 9);
+    for (let i = 1; i < g.length; i++) {
+      const need = gapOf(g[i - 1], g[i]);
+      if (g[i].ly - g[i - 1].ly < need) g[i].ly = g[i - 1].ly + need;
+    }
     const BOT = BH - 20;
     if (g.length && g[g.length - 1].ly > BOT) g[g.length - 1].ly = BOT;
-    for (let i = g.length - 2; i >= 0; i--)
-      if (g[i + 1].ly - g[i].ly < LBL_GAP) g[i].ly = g[i + 1].ly - LBL_GAP;
+    for (let i = g.length - 2; i >= 0; i--) {
+      const need = gapOf(g[i], g[i + 1]);
+      if (g[i + 1].ly - g[i].ly < need) g[i].ly = g[i + 1].ly - need;
+    }
     for (const p of g) if (p.ly < 16) p.ly = 16;
   }
 
@@ -1153,7 +1177,7 @@ function buildOne(L) {
   for (const p of lbl) {
     const prov = p.st.state === "가칭" || p.st.state === "역명미정";
     const keys = p.st.xfer || [];
-    const bw = keys.length ? badgeRowWidth(keys) + BDG_PAD : 0;
+    const bw = keys.length ? bdgBlockW(p.st) + BDG_PAD : 0;   // 쌓았으면 가장 넓은 줄
 
     if (WIDE) {
       /* ── 가로 노선: [점] │지시선│ [뱃지] [이름]  (위아래 대칭)
@@ -1251,20 +1275,24 @@ function buildOne(L) {
        오른쪽: [지시선][뱃지][이름] · 왼쪽: [뱃지][이름][지시선] */
     const nameW = [...p.name].length * LBL_FS * 0.98;
     const pw = provW(p.st);
-    const bwRaw = keys.length ? badgeRowWidth(keys) : 0;
+    const bwRaw = keys.length ? bdgBlockW(p.st) : 0;
 
     /* ── 위/아래 놓기 (ⓠ) — 마커 바로 위/아래에 가운데 맞춰 붙인다. 지시선은 없다.
        [뱃지][이름] 한 줄을 p.x 에 가운데 맞춘다 — 위아래에서는 좌우 읽기 순서가 없으므로
        가로 판형과 같은 규칙을 쓴다. */
     if (p.vert) {
-      const rowWidth = bwRaw + (bwRaw ? BDG_PAD : 0) + nameW + pw;
+      const blkW = keys.length ? bdgBlockW(p.st) : 0;
+      const rowWidth = blkW + (blkW ? BDG_PAD : 0) + nameW + pw;
       let left = p.x - rowWidth / 2;
       /* 카드 밖으로 나가면 안으로 당긴다 — 위/아래는 좌우 여백을 안 쓰기 때문에 여기서 막는다. */
       left = Math.max(8, Math.min(left, MAP_W - 8 - rowWidth));
-      const cy = p.y + p.vert * (13 + 9 + LBL_FS / 2);
-      let bxv = left, bdv = "";
-      for (const k of keys) { bdv += badgeSvg(k, bxv, cy); bxv += badgeWidth(k) + BDG_GAP; }
-      const nx = left + bwRaw + (bwRaw ? BDG_PAD : 0);
+      const cy = p.y + p.vert * (13 + 9 + Math.max(LBL_FS, keys.length ? bdgBlockH(p.st) : 0) / 2);
+      let bdv = "";
+      { const rows = bdgRows(p.st), top = cy - bdgBlockH(p.st) / 2;
+        rows.forEach((row, ri) => { let bxv = left;
+          const cy2 = rows.length > 1 ? top + ri * (BDG_H + 5) + BDG_H / 2 : cy;
+          for (const k of row) { bdv += badgeSvg(k, bxv, cy2); bxv += badgeWidth(k) + BDG_GAP; } }); }
+      const nx = left + blkW + (blkW ? BDG_PAD : 0);
       inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="${prov ? "#f0eee9" : "#ffffff"}" stroke="${lc}" stroke-width="5"${prov ? ' stroke-dasharray="3.2 2.4"' : ""}/>`;
       outMap += bdv +
         `<text x="${nx.toFixed(1)}" y="${cy.toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle" text-anchor="start"${HALO}>${esc(p.name)}</text>` +
@@ -1345,8 +1373,19 @@ function buildOne(L) {
 
     let bd = "";
     if (keys.length) {
-      let bxx = bx;
-      for (const k of keys) { bd += badgeSvg(k, bxx, p.ly); bxx += badgeWidth(k) + BDG_GAP; }
+      const rows = bdgRows(p.st);
+      if (rows.length > 1) {
+        /* 쌓은 더미는 이름 줄에 **세로 가운데**로 맞춘다 — 이름이 더미의 가운데 옆에 선다. */
+        const top = p.ly - bdgBlockH(p.st) / 2;
+        rows.forEach((row, ri) => {
+          let bxx = bx;                                   // 각 줄은 왼쪽 맞춤
+          const cy2 = top + ri * (BDG_H + 5) + BDG_H / 2;
+          for (const k of row) { bd += badgeSvg(k, bxx, cy2); bxx += badgeWidth(k) + BDG_GAP; }
+        });
+      } else {
+        let bxx = bx;
+        for (const k of keys) { bd += badgeSvg(k, bxx, p.ly); bxx += badgeWidth(k) + BDG_GAP; }
+      }
     }
 
     inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="${prov ? "#f0eee9" : "#ffffff"}" stroke="${lc}" stroke-width="5"${prov ? ' stroke-dasharray="3.2 2.4"' : ""}/>`;
@@ -1374,9 +1413,10 @@ function buildOne(L) {
       return { x0: left - 8, x1: left + wv + 8, y0: Math.min(p.y, p.ly) - 19, y1: Math.max(p.y, p.ly) + 19 };
     }
     const w = rowW(p.st) + LEAD_W + 22;
+    const h = Math.max(19, rowHalfH(p.st) + 7);
     return p.side > 0
-      ? { x0: p.x, x1: p.x + w, y0: p.ly - 19, y1: p.ly + 19 }
-      : { x0: p.x - w, x1: p.x, y0: p.ly - 19, y1: p.ly + 19 };
+      ? { x0: p.x, x1: p.x + w, y0: p.ly - h, y1: p.ly + h }
+      : { x0: p.x - w, x1: p.x, y0: p.ly - h, y1: p.ly + h };
   });
   /* ⚠️ 처음엔 **지명의 중심 한 점**만 라벨 상자 안인지 봤다. 그러면 「동작구」처럼 3글자짜리
      지명은 중심만 살짝 비켜도 통과하면서 글자 왼쪽이 역 이름을 파고든다
