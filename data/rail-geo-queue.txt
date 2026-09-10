@@ -6,10 +6,9 @@
 #
 # 쓰는 법: 노선 키를 한 줄에 하나. 비우면 8개 전부를 한 번에 탐사한다.
 # 키: sinansan / gtxa / gtxb / gtxc / indong / wolpan / sinbundang / daejang
+# 🌊 특별한 키 water — 노선이 아니라 바다·강·호수를 수도권 상자 전체로 한 번 받는다.
 #
 # ⚠️ 결과(data/geo/_probe-rail-osm.json)는 덮지 않고 합친다 — 이미 받아 둔 노선은 안 잃는다.
 # ⚠️ 봇이 결과를 커밋할 때 [skip ci] 를 달고, 방아쇠는 이 파일 하나만 본다 — 되돌지 않는다.
 
-gtxa
-gtxb
-gtxc
+water

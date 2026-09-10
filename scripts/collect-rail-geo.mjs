@@ -41,9 +41,10 @@ const argv = process.argv.slice(2);
 const PROBE = argv.includes("--probe");
 const BUILD = argv.includes("--build");
 const CONTEXT = argv.includes("--context");
+const WATER = argv.includes("--water");
 const EXTRA = argv.includes("--extra");
-if ([PROBE, BUILD, CONTEXT].filter(Boolean).length !== 1) {
-  console.error("--probe / --context / --build 중 **하나만** 준다.");
+if ([PROBE, BUILD, CONTEXT, WATER].filter(Boolean).length !== 1) {
+  console.error("--probe / --context / --water / --build 중 **하나만** 준다.");
   process.exit(2);
 }
 const onlyIdx = argv.indexOf("--only");
@@ -192,6 +193,57 @@ way["railway"~"^(subway|rail|light_rail|narrow_gauge)$"]["name"]
    ["usage"!="industrial"]["service"!~"."](${b.s},${b.w},${b.n},${b.e});
 out geom tags;`;
 
+/** ⑤ **물** — 바다·호수·하천. 오너 2026-09-10: "바다는 전체 카드 다 파랑기 있게 통일 해줘".
+ *
+ * 🔴 왜 따로 받아야 하나: 시군구 경계 자료는 **육지/바다 마스크가 아니다.**
+ *    2026-09-09 에 「시군구 면이 안 덮은 곳 = 물」로 칠했다가 국제테마파크역이 물 위에 떴다 —
+ *    안산단원구 남쪽 끝(37.289)과 화성시 사이가 통째로 비어 있는데 그건 바다가 아니라
+ *    매립지(송산그린시티)였다. **모르는 것을 색으로 단정하지 않는다**가 그때 세운 규칙이고,
+ *    이건 그 규칙을 지키면서 오너 요청을 들어주는 유일한 길이다 — 물의 출처를 받아 온다.
+ *
+ * ⚠️ `natural=coastline` 은 **선**이라 그것만으로는 면을 못 칠한다. 그래서 두 가지를 받는다:
+ *    ① coastline 선 — 해안선의 실제 모양
+ *    ② `natural=water` / `waterway=riverbank` **면** — 시화호·한강·저수지
+ *    카드는 ②를 칠하고, ①은 바다 쪽을 판별하는 데 쓴다(빌더가 판단).
+ * ⚠️ 상자는 수도권 전체(BOX)다. 노선마다 받으면 같은 바다를 여덟 번 받는다. */
+const qWater = (b) => `[out:json][timeout:240];
+(
+  way["natural"="water"](${b.s},${b.w},${b.n},${b.e});
+  relation["natural"="water"](${b.s},${b.w},${b.n},${b.e});
+  way["waterway"="riverbank"](${b.s},${b.w},${b.n},${b.e});
+  way["natural"="coastline"](${b.s},${b.w},${b.n},${b.e});
+);
+out geom tags;`;
+
+async function water() {
+  const b = { s: BOX.minLat, n: BOX.maxLat, w: BOX.minLon, e: BOX.maxLon };
+  console.log(`🌊 물 탐사 — 수도권 상자 ${b.s}~${b.n} / ${b.w}~${b.e}`);
+  const j = await overpass(qWater(b));
+  const keep = [];
+  for (const el of j.elements || []) {
+    const g = (el.geometry || []).filter((p) => p && typeof p.lat === "number");
+    if (g.length < 4) continue;                       // 점 3개짜리 웅덩이는 카드에 안 보인다
+    const t = el.tags || {};
+    const kind = t.natural === "coastline" ? "coastline"
+      : (t.water === "river" || t.waterway === "riverbank") ? "river" : "water";
+    /* 이름 없는 자잘한 것까지 다 담으면 파일이 수십 MB 가 된다 — **면적으로 거른다.**
+       위경도 사각 넓이가 대략 0.0000004 (≈ 4천 ㎡) 이상만. 해안선은 길이로 거른다. */
+    const lats = g.map((p) => p.lat), lons = g.map((p) => p.lon);
+    const area = (Math.max(...lats) - Math.min(...lats)) * (Math.max(...lons) - Math.min(...lons));
+    if (kind === "coastline" ? g.length < 8 : area < 0.0000004) continue;
+    keep.push({ id: el.id, kind, name: t.name || "",
+      g: g.map((p) => ({ lat: +p.lat.toFixed(6), lon: +p.lon.toFixed(6) })) });
+  }
+  const by = {};
+  for (const w of keep) by[w.kind] = (by[w.kind] || 0) + 1;
+  mkdirSync(join(ROOT, "data/geo"), { recursive: true });
+  const path = join(ROOT, "data/geo/_water-osm.json");
+  writeFileSync(path, JSON.stringify({ 받은날: new Date().toISOString().slice(0, 10),
+    상자: BOX, 거울: MIRRORS, 종류: by, 물: keep }, null, 2) + "\n");
+  console.log(`📄 ${path}`);
+  console.log(`   ${keep.length}개 — ${Object.entries(by).map(([k, v]) => `${k} ${v}`).join(" · ")}`);
+}
+
 const doc = JSON.parse(readFileSync(join(ROOT, "data/datasets/sudo-rail-2026-09.json"), "utf8"));
 const pool = EXTRA ? [...doc.lines, ...EXTRA_LINES] : doc.lines;
 const lines = pool.filter((L) => (ONLY ? L.key === ONLY : true));
@@ -335,4 +387,4 @@ async function build() {
   );
 }
 
-await (PROBE ? probe() : CONTEXT ? context() : build());
+await (PROBE ? probe() : CONTEXT ? context() : WATER ? water() : build());
