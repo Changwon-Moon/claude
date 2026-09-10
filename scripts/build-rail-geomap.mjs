@@ -216,7 +216,10 @@ function buildOne(L0, opt = {}) {
         데이터셋이 노선마다 **명시적으로** 고르게 하고(기본값은 가장 굳은 construction),
         캡션이 그 사실을 진다. 코드가 알아서 태그를 넓히지 않는다 —
         그러면 어느 노선이 어느 단계의 자료로 그려졌는지 아무도 모르게 된다. */
-  const OSM_TAGS = L.osmTags?.length ? L.osmTags : ["construction"];
+  /* 🔴 토막 지도는 **제 태그만** 본다 (opt.osmTags). 신분당선 남부 상자는 연장 구간이
+     railway=construction 하나인데, 개통 구간(rail)까지 후보에 넣으면 광교역 구내의 짧은
+     토막들(0.03~0.27km 짜리 여덟 개)을 물고 **빨간 실뭉치**를 그린다 — 오너가 본 그 표시다. */
+  const OSM_TAGS = opt.osmTags?.length ? opt.osmTags : (L.osmTags?.length ? L.osmTags : ["construction"]);
   const conWays = O.좌표.filter((w) => OSM_TAGS.includes(w.railway));
   if (!conWays.length) {
     const have = [...new Set(O.좌표.map((w) => w.railway))].join(", ") || "없음";
@@ -1117,14 +1120,21 @@ function buildOne(L0, opt = {}) {
     }
   }
   const OPEN_C = "#c2c7cf";
-  const line = (openSeg
+  /* 🔴 **이미 다니는 선을 회색으로, 지도 안쪽까지만** (오너 2026-09-10)
+     "신사~/광교중앙~에서 각각 이어지는 기존 개통된 노선 부분 회색으로 지도 안쪽까지만 표시"
+     선형을 늘려 잇는 대신, 그 상자 안에 걸치는 **기존선 길을 그대로 깔고** 상자가 자른다.
+     지도 밖으로 뻗지 않는 이유가 바로 그 자름이다 — 길이를 우리가 정하지 않는다. */
+  const grayLines = (opt.grayTags?.length
+    ? O.좌표.filter((w) => opt.grayTags.includes(w.railway) && w.g?.length > 1)
+    : []).map((w) => `<path class="wirit-linecolor" d="${d(w.g)}" fill="none" stroke="${OPEN_C}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>`).join("");
+  const line = grayLines + (openSeg
     ? `<path d="${d(mainWay.g.slice(0, openSeg.ia + 1))}" fill="none" stroke="${lc}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`
       + `<path d="${d(mainWay.g.slice(openSeg.ia, openSeg.ib + 1))}" fill="none" stroke="${OPEN_C}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>`
       + `<path d="${d(mainWay.g.slice(openSeg.ib))}" fill="none" stroke="${lc}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`
     : `<path d="${d(mainWay.g)}" fill="none" stroke="${lc}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`)
     /* 지선 — **실선**(오너 2026-09-09). 개략이라는 고지는 각주·캡션이 진다. */
     + (branchPts.length
-      ? `<path d="${d(branchPts)}" fill="none" stroke="${lc}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`
+      ? `<path d="${d(branchPts)}" fill="none" stroke="${L.branchOpen || opt.branchOpen ? OPEN_C : lc}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`
       : "")
     /* 직결 구간 — 더 얇게. 본선 8 > 지선 6 > 직결 5 로 위계를 굵기 하나로만 준다
        (색을 바꾸면 노선색이 두 개가 되고, 점선은 오너가 물렸다). */
@@ -1601,7 +1611,25 @@ function buildOne(L0, opt = {}) {
   for (const f of sgg.features) {
     const c = ringCentroid(f.geometry);
     if (!c) continue;
-    const cx = X(c[0]), cy = Y(c[1]);
+    let cx = X(c[0]), cy = Y(c[1]);
+    /* 🔴 **토막 지도에서는 중심이 상자 밖일 때가 흔하다** (오너 2026-09-10 "행정구 이름 누락분").
+       상자를 확대할수록 시군구는 귀퉁이만 걸치고, 그 중심은 화면 밖이라 후보가 하나도 안 생긴다 —
+       그래서 북부 상자에 「용산구」 하나만 남았다. 중심이 밖이면 **상자 안에 든 점들의 평균**
+       에서 시작한다(그 시군구의 「보이는 부분」의 한가운데다). */
+    /* ⚠️ **토막 지도에서만** 이 보정을 켠다. 온전한 카드에도 걸었더니 시군구가 더 적히면서
+       확정 3장의 픽셀이 통째로 움직였다(2026-09-10 실측 — 세 장 md5 전부 변경).
+       규칙이 더 낫다고 해서 이미 결재된 그림을 조용히 바꾸지 않는다. */
+    if (opt.sub && (cx < SAFE_L || cx > SAFE_R || cy < 26 || cy > BH - 26)) {
+      const inb = [];
+      for (const ring of rings(f.geometry)) for (const q of ring) {
+        const px = X(q[0]), py = Y(q[1]);
+        if (px >= SAFE_L && px <= SAFE_R && py >= 26 && py <= BH - 26) inb.push([px, py]);
+      }
+      if (inb.length >= 3) {
+        cx = inb.reduce((a2, q) => a2 + q[0], 0) / inb.length;
+        cy = inb.reduce((a2, q) => a2 + q[1], 0) / inb.length;
+      }
+    }
     /* 「안산시상록구」처럼 붙여 쓴 이름은 읽기 어렵다 — 시와 구를 띄우고, 시로 끝나면 시를 뗀다. */
     const nm = f.properties.name.replace(/^(.+?)시(.+?구)$/, "$1 $2").replace(/시$/, "");
     const nw = [...nm].length * 15 + 8;
@@ -1817,6 +1845,11 @@ for (const L of rail.lines) {
      ⚠️ 카드의 나머지(공정률·정보·각주·캡션)는 **온전한 노선으로 한 번 더 지은 것**을 그대로 쓴다.
         지도만 갈아 끼운다 — 숫자가 토막마다 달라지면 안 되기 때문이다. */
   if (L.mapSplit?.length === 2) {
+    /* ⚠️ 정보표를 지도 밖(위 띠)으로 올리면 그 띠가 **세로를 먹는다** — 안 빼면 지도가
+       푸터를 밀어낸다(designQa footergap −40px, 2026-09-10 실측). 띠 높이만큼 지도를 줄인다.
+       104 = 2줄(각 36) + 아래 여백 12 + 위 여백 18 + 테두리. */
+    const STRIP_H = 104;
+    card.layout.bodyH -= STRIP_H;
     const BHfull = card.layout.bodyH, GAPBOX = 18;
     const share = L.mapSplit.map((b) => b.share || 0.5);
     const sum = share[0] + share[1];
@@ -1848,9 +1881,18 @@ for (const L of rail.lines) {
         /* ⚠️ **큰 공정률 패널만** 걷어낸다(y0=22 짜리). 정보표는 그대로 둬야 한다 —
            걷어냈더니 호매실·구운이 다시 그 밑으로 들어갔다(2026-09-10 실측). */
         for (let k = panels.length - 1; k >= 0; k--) if (panels[k].y0 <= 24) panels.splice(k, 1);
-        panels.push({ x0: MAP_W - 286, x1: MAP_W - 18, y0: 22, y1: 134 });
+        /* chip:true — 이름표·지명은 피하되 **가로 여백은 안 뺏는다**. 칩이 상자 높이의 절반을
+           넘어서 padPanel 규칙에 걸리면 지도가 통째로 쪼그라든다. */
+        /* 칩은 300×246 이라 작지 않다 — 이름표만 피하게 뒀더니 용산·수성중사거리·광교가
+           그 밑으로 들어갔다(2026-09-10 실측). 가로로도 비켜 그린다. */
+        const CH = 246;
+        panels.length = 0;                       // 토막 카드는 정보표를 지도 밖(위 띠)으로 올렸다
+        panels.push(b.info.at === "bl"
+          ? { x0: 18, x1: 318, y0: HS[i] - 22 - CH, y1: HS[i] - 22 }
+          : { x0: MAP_W - 318, x1: MAP_W - 18, y0: 22, y1: 22 + CH });
       }
-      return buildOne(sub, { bodyH: HS[i], panels, sub: true, idSuffix: `-b${i}` }).card.mapSvg;
+      return buildOne(sub, { bodyH: HS[i], panels, sub: true, idSuffix: `-b${i}`,
+        osmTags: b.osmTags, grayTags: b.grayTags, branchOpen: b.branchOpen }).card.mapSvg;
     });
     const inner = (svg, y, h) =>
       `<svg x="0" y="${y}" width="${MAP_W}" height="${h}" viewBox="0 0 ${MAP_W} ${h}" overflow="visible">`
@@ -1861,10 +1903,19 @@ for (const L of rail.lines) {
        굴러가면 숫자도 따로 적어야 한다 — 신분당선은 남부만 착공했고 북부는 미착공이다.
        카드 전체에 「17.25%」 하나만 적으면 북부에 대해서는 그게 거짓말이다. */
     if (L.mapSplit.every((b) => b.info)) {
-      card.segs = L.mapSplit.map((b, i) => ({
-        top: i === 0 ? 22 : HS[0] + GAPBOX + 22,
-        title: b.info.title, prog: b.info.prog, eta: b.info.eta,
-      }));
+      const CHIP_H = 246;
+      card.segs = L.mapSplit.map((b, i) => {
+        const boxTop = i === 0 ? 0 : HS[0] + GAPBOX, boxH = HS[i];
+        const bl = b.info.at === "bl";
+        return {
+          at: bl ? "at-bl" : "at-tr",
+          top: boxTop + (bl ? boxH - 22 - CHIP_H : 22),
+          title: b.info.title, value: b.info.value, asOf: b.info.asOf,
+          width: `${b.info.value ? Number(b.info.value) : 0}%`, zero: !Number(b.info.value),
+          wasK: b.info.wasK || "당초", was: b.info.was,
+          nowK: b.info.nowK || "변경", now: b.info.now,
+        };
+      });
     }
     console.log(`   ▤ ${L.name} 지도 두 토막 — ${HS[0]}px + ${HS[1]}px`);
   }

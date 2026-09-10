@@ -1057,7 +1057,9 @@
             "1",
             "경의중앙",
             "GTX-B"
-          ]
+          ],
+          "labelSide": "down",
+          "labelAlign": "right"
         },
         {
           "name": "국립박물관",
@@ -1085,7 +1087,8 @@
           "state": "개통",
           "xfer": [],
           "km": 31.5,
-          "labelSide": "right"
+          "labelSide": "down",
+          "labelAlign": "left"
         },
         {
           "name": "수원월드컵경기장",
@@ -1165,9 +1168,20 @@
           ],
           "info": {
             "title": "북부 · 용산~신사 5.3km",
-            "prog": "아직 미착공",
-            "eta": "개통 목표 미정"
-          }
+            "at": "bl",
+            "value": "0",
+            "asOf": "아직 미착공 · 2026.6월 국가철도공단",
+            "wasK": "착공",
+            "was": "2027년 목표",
+            "nowK": "개통",
+            "now": "2032년 목표"
+          },
+          "osmTags": [
+            "proposed"
+          ],
+          "grayTags": [
+            "rail"
+          ]
         },
         {
           "label": "남부 · 광교중앙~호매실",
@@ -1183,9 +1197,21 @@
           ],
           "info": {
             "title": "남부 · 광교~호매실 10.1km",
-            "prog": "공정률 17.25%",
-            "eta": "당초 2028년 말 → 2029년 말"
-          }
+            "at": "tr",
+            "value": "17.25",
+            "asOf": "2026.6월 · 국가철도공단",
+            "wasK": "당초",
+            "was": "2028년 말",
+            "nowK": "변경",
+            "now": "2029년 말"
+          },
+          "osmTags": [
+            "construction"
+          ],
+          "grayTags": [
+            "rail"
+          ],
+          "branchOpen": true
         }
       ]
     },
