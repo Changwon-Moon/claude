@@ -1294,7 +1294,19 @@ function buildOne(L) {
           for (const k of row) { bdv += badgeSvg(k, bxv, cy2); bxv += badgeWidth(k) + BDG_GAP; } }); }
       const nx = left + blkW + (blkW ? BDG_PAD : 0);
       inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="${prov ? "#f0eee9" : "#ffffff"}" stroke="${lc}" stroke-width="5"${prov ? ' stroke-dasharray="3.2 2.4"' : ""}/>`;
-      outMap += bdv +
+      /* 🔴 위/아래 배치는 원래 지시선을 안 그린다 — 마커 바로 위아래라 선이 필요 없어서다.
+         그런데 뱃지를 세로로 쌓으면 이름이 60px 넘게 떨어진다(GTX-A 대곡). 그때는 선이 있어야
+         어느 원의 이름인지 읽힌다 (오너 2026-09-10 "대곡은 원에서 역이름까지 직선그려").
+         선은 **이름 상자의 마커 쪽 변**으로 긋는다 — 뱃지 더미를 안 지나간다. */
+      let leadU = "";
+      if (p.st.leadLine === true) {
+        const tx = Math.max(nx - 6, Math.min(p.x, nx + nameW + 6));
+        const ty = cy - p.vert * (LBL_FS / 2 + 4);
+        const vx = tx - p.x, vy = ty - p.y, vL = Math.hypot(vx, vy) || 1;
+        if (vL > 20)
+          leadU = `<path d="M${(p.x + (vx / vL) * 13).toFixed(1)},${(p.y + (vy / vL) * 13).toFixed(1)}L${tx.toFixed(1)},${ty.toFixed(1)}" stroke="#9aa1ac" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
+      }
+      outMap += leadU + bdv +
         `<text x="${nx.toFixed(1)}" y="${cy.toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle" text-anchor="start"${HALO}>${esc(p.name)}</text>` +
         (pw ? provSvg(nx + nameW + PROV_GAP, cy, "start") : "");
       p.ly = cy; p.rowLeft = left; p.rowWidth = rowWidth;
