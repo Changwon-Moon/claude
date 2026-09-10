@@ -406,6 +406,7 @@ function buildOne(L) {
       const gt = truth.get(q.name);
       if (!gt) return;
       const d = metres(gt, q);
+      if (process.env.RGM_DEV) console.log(`      · ${q.name} ${Math.round(d)}m`);
       if (d > TOL) bad.push(`${q.name} ${(d / 1000).toFixed(1)}km`);
     });
     if (bad.length)
@@ -524,6 +525,7 @@ function buildOne(L) {
      이름표도 좌우가 아니라 **위아래**로 놓는다 — 가로 노선에서 좌우는 서로를 밟는다. */
   const aspect = ((lon1 - lon0) * kx) / (lat1 - lat0 || 1e-9);
   const WIDE = VARIANT === "d" && aspect > 1.6;
+  if (process.env.RGM_DEV) console.log();
   if (WIDE) {
     /* 430 → 764. 430 은 노선 띠(90px)+이름표 자리만 남긴 값이라 지도는 딱 맞았는데
        **카드 아래가 360px 비었다.** 가로 노선은 가로가 병목이라 상자를 키워도 노선이
@@ -596,6 +598,12 @@ function buildOne(L) {
      실제로는 뱃지 있는 역은 오른쪽에 몰리므로 왼쪽은 그만큼 필요 없다. 그래서 **두 번 잰다** —
      한 번 놓아 보고, 그 배치가 실제로 쓰는 폭으로 여백을 다시 잡아 더 크게 그린다. */
   let s, offX, offY;
+  /* 🔴 남는 자리를 **가운데로 나누지 않는다** (오너 2026-09-10: GTX-A "불필요한 왼쪽을 자르고
+     노선/지도 확대해줘"). GTX-A 는 세로로 길어 배율이 **높이**에 걸린다 — 그러면 가로가 남고,
+     남는 것을 반씩 나누면 이름표가 하나도 없는 왼쪽(강화·김포 앞바다)에 200px 이 그냥 간다.
+     남는 자리는 **이름표가 필요하다고 말한 만큼**(PADL:PADR) 나눈다. 한쪽이 24px 만 달라고 하면
+     그쪽에는 거의 안 주고 노선이 그리로 붙는다 — 잘라 낸 것과 같은 효과다.
+     ⚠️ 양쪽이 비슷하면(신안산·인동선처럼 좌우 교차 배치) 이 식은 가운데 나누기와 같아진다. */
   const fit = () => {
     s = Math.min((MAP_W - PADL - PADR) / spanX, (BH - PADT - PADB) / spanY);
     offX = PADL + (MAP_W - PADL - PADR - spanX * s) / 2;
@@ -691,7 +699,15 @@ function buildOne(L) {
     /* 순서에 뜻이 있다 — 뒤로 갈수록 **못 참는 것**이다.
        ① 번갈아(기본) → ③ 뱃지는 오른쪽 → ② 카드 밖 → ⑤ 선 가로지름 → ④ 패널에 먹힘.
        ②는 매번 다시 본다 — 뒤 규칙이 뒤집은 쪽이 카드 밖이면 그건 더 나쁘다. */
-    let side = i % 2 === 0 ? 1 : -1;                          // ①
+    /* ⓐ 노선이 한쪽을 지정하면 그게 기본이다(labelSideDefault).
+       🔴 왜 필요한가: **비워 둔 쪽이 곧 지도에 더 보이는 땅**이다. 이름표에 왼쪽 370px 을
+          떼어 주면 그 370px 이 빈 여백이 아니라 **강화·김포 앞바다**로 채워진다(GTX-A, 세로로
+          길어 배율이 높이에 걸리는 노선). 이름표를 한쪽으로 모으면 반대쪽 여백이 24px 로 줄고,
+          그만큼 지도 창이 좁아져 **필요 없는 땅이 잘려 나간다.** 오너 2026-09-10:
+          "gtx a는 불필요한 왼쪽을 자르고 노선/지도 확대해줘". */
+    let side = L.labelSideDefault === "right" ? 1
+             : L.labelSideDefault === "left" ? -1
+             : i % 2 === 0 ? 1 : -1;                       // ①
     /* ③ 뱃지가 있는 역은 오른쪽 — 로고를 이름 **앞**에서 읽게 하려는 규칙이다.
        🔴 그런데 **대부분의 역에 뱃지가 있으면 이 규칙이 스스로를 무너뜨린다**(2026-09-10).
           GTX-B 는 15역 중 14역이 환승역이라 라벨이 전부 오른쪽 한 줄에 쌓였고, 세로 겹침
@@ -735,13 +751,28 @@ function buildOne(L) {
      같은 쪽 이웃 간격이 두 배가 되어 밀어내는 양이 절반으로 준다 — 세로 배치와 같은 원리다.
      ⚠️ 뱃지는 이름 **안쪽(노선 쪽)** 에 둔다. 위아래에서는 좌우 읽기 순서가 없으므로
         「이름 앞 로고」가 성립하지 않는다 — 대신 **양쪽이 대칭**인 게 낫다. */
-  const LEAD_V = 26, BDG_H = BDG_R * 2, BDG_VGAP = 6;
-  const rowWv = (st) => Math.max(
-    [...st.name].length * LBL_FS * 0.98 + provW(st),
-    (st.xfer || []).length ? badgeRowWidth(st.xfer) : 0);
+  /* 🔴 38 이어야 한다 — 뱃지·이름이 **한 줄**이 되면서 줄 높이가 40px 이 됐다(반 20px).
+     역 표시는 반지름 12px 이므로 26 이나 32 로 두면 마커 바로 위/아래의 뱃지가 마커를 문다
+     (GTX-B 인천시청의 「인천2」가 20% 겹쳤다 — designQa svglabel 이 잡았다).
+     12(마커) + 20(줄 반) + 6(숨) = 38. */
+  const LEAD_V = L.oneRowLabel === true ? 38 : 26, BDG_H = BDG_R * 2, BDG_VGAP = 6;
+  /* 한 줄 배치이므로 폭은 **더하기**다(앞 판은 쌓아 놓아 max 였다). 이 값이 겹침 해소의 자다 —
+     안 맞추면 뱃지 있는 역이 이웃 이름을 파고든다. */
+  /* 🔴 **한 줄로 놓기는 노선이 켠다**(oneRowLabel).
+     뱃지와 이름을 한 줄로 놓으면 라벨이 마커에 26px 더 붙는다(대장홍대선 가양이 한강 위에
+     떠 있던 것을 이걸로 고쳤다). 그런데 **줄이 그만큼 넓어진다** — 역이 많고 이름이 긴
+     월판선(11역)에서는 넓어진 줄끼리 부딪혀 designQa error 4건이 났다.
+     확정된 카드의 픽셀을 지키면서 필요한 노선만 켜는 쪽을 고른다. */
+  const ONE_ROW = L.oneRowLabel === true;
+  const rowWv = (st) => {
+    const bw = (st.xfer || []).length ? badgeRowWidth(st.xfer) : 0;
+    const nm = [...st.name].length * LBL_FS * 0.98 + provW(st);
+    return ONE_ROW ? (bw ? bw + BDG_PAD : 0) + nm : Math.max(nm, bw);
+  };
   const assignUpDown = () => allPos.map((p, i) => {
     const x = X(p.lon), y = Y(p.lat);
-    const need = LEAD_V + ((p.st.xfer || []).length ? BDG_H + BDG_VGAP : 0) + LBL_FS + 8;
+    const need = LEAD_V + (ONE_ROW ? Math.max(BDG_H, LBL_FS)
+      : ((p.st.xfer || []).length ? BDG_H + BDG_VGAP : 0) + LBL_FS) + 8;
     let side = i % 2 === 0 ? 1 : -1;                 // ① 번갈아 (+1 = 아래)
     /* ⓪ 데이터셋이 쪽을 지정했으면 그게 우선이다(오너가 눈으로 보고 정한 자리).
        규칙으로 못 잡는 자리가 가끔 있다 — 그럴 때 코드를 비틀지 말고 여기 한 줄로 적는다. */
@@ -827,13 +858,42 @@ function buildOne(L) {
   const SAFE_L = TWO_SIDED ? 26 : 40;
   const SAFE_R = TWO_SIDED ? MAP_W - 26 : Math.max(...pos.map((p) => X(p.lon))) - 20;
 
-  /* ── 한강. sudogwon-map 과 같은 부품을 쓴다 — 강을 두 곳에서 그리면 갈라진다. */
+  /* ── 물 — **출처가 있는 것만 파랑으로 칠한다** (오너 2026-09-10 "바다는 전체 카드 다
+     파랑기 있게 통일 해줘").
+     🔴 2026-09-09 에 「시군구 면이 안 덮은 곳 = 물」로 칠했다가 국제테마파크역이 물 위에 떴다.
+        경계 자료는 육지/바다 마스크가 아니다 — 안산단원구와 화성시 사이의 빈자리는 바다가
+        아니라 매립지(송산그린시티)였다. 그래서 **모르는 곳은 여전히 안 칠한다.**
+     이제는 OSM 이 물이라고 적어 둔 곳만 칠한다(data/geo/_water-osm.json —
+     natural=water · waterway=riverbank). 시화호·저수지·하천이 여기 들어 있다.
+     ⚠️ **바다(coastline 바깥)는 아직 안 칠한다.** coastline 은 선이라 면이 되려면 화면
+        가장자리를 따라 닫아야 하고, 그 닫는 방향을 잘못 잡으면 육지가 통째로 파래진다.
+        받아는 뒀으니(kind: coastline) 다음에 그 방법으로 채운다.
+     한강은 sudogwon-map 과 같은 부품으로 한 번 더 그린다 — 좁은 구간에서 면이 끊겨 보이는 것을
+     굵은 선이 이어 준다. 두 곳에서 그리는 게 아니라 **면 위에 선을 겹쳐** 두께를 보장하는 것이다. */
   let river = "";
-  try {
-    const named = sgg.features.map((f) => ({ name: f.properties.name, rings: rings(f.geometry) }));
-    const hr = hanRiverPoints(named);
-    river = `<path d="${hr.map(([lon, lat], i) => `${i ? "L" : "M"}${X(lon).toFixed(1)},${Y(lat).toFixed(1)}`).join("")}" fill="none" stroke="#c3d9e9" stroke-width="13" stroke-linecap="round"/>`;
-  } catch (e) { throw new Error(`${L.name}: 한강을 못 그렸다 — ${e.message}`); }
+  {
+    const WATER_FILL = "#cfe0ee";
+    let poly = "";
+    try {
+      const wj = JSON.parse(readFileSync(join(ROOT, "data/geo/_water-osm.json"), "utf8"));
+      for (const w of wj.물 || []) {
+        if (w.kind === "coastline") continue;                       // 선이라 면이 안 된다
+        const g = w.g;
+        /* 화면 밖은 그리지 않는다 — 2,900개를 다 그리면 SVG 가 수 MB 가 된다. */
+        if (!g.some((q) => q.lat > visLat0 - 0.02 && q.lat < visLat1 + 0.02 &&
+                           q.lon > visLon0 - 0.02 && q.lon < visLon1 + 0.02)) continue;
+        poly += `<path d="${g.map((q, i) => `${i ? "L" : "M"}${X(q.lon).toFixed(1)},${Y(q.lat).toFixed(1)}`).join("")}Z" fill="${WATER_FILL}" stroke="none"/>`;
+      }
+    } catch (e) {
+      /* 물 자료가 아직 없는 세션도 있다(rail-geo.yml 대기열 키 water). 그때는 한강만 그린다. */
+      console.log(`   ⓘ ${L.name} — 물 자료가 없어 한강만 그립니다 (${e.code || e.message})`);
+    }
+    try {
+      const named = sgg.features.map((f) => ({ name: f.properties.name, rings: rings(f.geometry) }));
+      const hr = hanRiverPoints(named);
+      river = poly + `<path d="${hr.map(([lon, lat], i) => `${i ? "L" : "M"}${X(lon).toFixed(1)},${Y(lat).toFixed(1)}`).join("")}" fill="none" stroke="${WATER_FILL}" stroke-width="13" stroke-linecap="round"/>`;
+    } catch (e) { throw new Error(`${L.name}: 한강을 못 그렸다 — ${e.message}`); }
+  }
 
   /* ⚠️ 배경 철도선(경부·경인·안산선 등)은 **그리지 않는다**(오너 2026-09-09 "어지럽다").
      한 번 넣었다가 뺀 자리다 — 34종 회색 선이 깔리니 지도가 지저분해지고, 정작 우리 노선의
@@ -863,6 +923,22 @@ function buildOne(L) {
      paint-order 없이 stroke 를 주면 획이 글자 안쪽까지 먹어 굵고 뭉개져 보인다. */
   const HALO = TWO_SIDED ? HALO_S : "";
   const LBL_GAP = 32;  /* 글자 23px + 여유 9px. 폰트를 키웠으면 간격도 같이 키운다 */
+  /* 이름표가 실제로 먹는 상자 — 좌우판과 위아래판 두 모양. 자리 다툼은 이 상자로만 잰다. */
+  const sideBox = (p) => {
+    const w = rowW(p.st) + LEAD_W + 12;
+    return p.side > 0
+      ? { x0: p.x, x1: p.x + w, y0: p.ly - 17, y1: p.ly + 17 }
+      : { x0: p.x - w, x1: p.x, y0: p.ly - 17, y1: p.ly + 17 };
+  };
+  const vertBox = (p) => {
+    const w = rowW(p.st) + 10;
+    const cy = p.y + p.vert * (13 + 9 + LBL_FS / 2);
+    return { x0: p.x - w / 2, x1: p.x + w / 2, y0: Math.min(p.y, cy) - 15, y1: Math.max(p.y, cy) + 15 };
+  };
+  /* 자동 위/아래 옮기기는 **노선이 켠다**(autoVert). 확정된 카드의 픽셀을 건드리지 않기 위해서다. */
+  const AUTO_VERT = L.autoVert === true;
+  /* 노선(과 그 위의 역 표시)의 화면 좌표 — 자리 다툼을 재는 데 두 곳에서 쓴다. */
+  const corrAll = [mainWay.g, branchPts, thruPts].flatMap((g) => g.map((q) => ({ x: X(q.lon), y: Y(q.lat) })));
   if (WIDE) {
     /* 가로 배치의 겹침 해소 — 세로판의 거울이다. 쪽마다 x 순으로 훑어 밀고, 끝에서 되민다. */
     for (const sd of [1, -1]) {
@@ -882,10 +958,68 @@ function buildOne(L) {
       }
       for (const p of g) { const Lm = 8 + half(p); if (p.lx < Lm) p.lx = Lm; }
     }
+    /* ── 🔴 밀어낸 뒤 **남의 마커를 물었는지** 본다 (2026-09-10)
+       가로 판형은 [뱃지][이름]을 한 줄로 놓으면서 줄이 넓어졌다. 가로로 밀어내는 규칙은
+       이름표끼리만 보고 **역 표시는 안 본다** — 그래서 밀려난 줄이 옆 역의 동그라미를
+       덮었다(GTX-B 인천시청의 「인천2」 20%, 월판선 「만안」 25%. designQa svglabel 이 잡았다).
+       걸리면 위/아래를 뒤집는다. 뒤집어도 걸리면 그냥 둔다 — 어느 쪽이든 걸리는 자리다. */
+    const markers = allPos.map((q) => ({ x: X(q.lon), y: Y(q.lat) }));
+    const rowBox = (p, sd) => {
+      const hw = rowWv(p.st) / 2 + 6, cy = p.y + sd * LEAD_V + sd * Math.max(BDG_H, LBL_FS) / 2;
+      return { x0: p.lx - hw, x1: p.lx + hw, y0: cy - 22, y1: cy + 22 };
+    };
+    const bites = (p, sd) => {
+      const b = rowBox(p, sd);
+      return markers.some((m) => Math.hypot(m.x - p.x, m.y - p.y) > 6 &&
+        m.x > b.x0 - 13 && m.x < b.x1 + 13 && m.y > b.y0 - 13 && m.y < b.y1 + 13);
+    };
+    /* ⚠️ 한 줄 배치를 켠 노선에서만 돈다 — 줄이 넓어진 것이 이 규칙이 필요해진 이유이고,
+       옛 배치(월판선 확정본)에서는 이미 designQa 0 이라 손댈 이유가 없다. */
+    if (ONE_ROW) for (const p of lbl) {
+      if (p.st.labelSide) continue;              // 오너가 정한 자리는 안 건드린다
+      if (!bites(p, p.side)) continue;
+      if (!bites(p, -p.side)) p.side = -p.side;
+    }
   } else
   /* ⚠️ 겹침 해소는 **배열 순서가 아니라 y 순서**로 돌아야 한다. 본선 뒤에 지선을 이어 붙였더니
      지선 역들이 본선 마지막 역 뒤로 정렬돼 카드 아래로 밀리고, 지시선이 지도를 가로질렀다
      (2026-09-09). 아래로 미는 규칙은 "위에서 아래로 훑는다"를 전제하므로 정렬이 먼저다. */
+  /* ── 🔴 **멀어진 이름표는 마커 위/아래로 옮긴다** (오너 2026-09-10)
+     "노선 위 아래로 역명 적절히 배치해서 가까이 옮겨줘. 지금 멀어지니까 직선이 길어져 어지럽잖아"
+     좌우 배치는 같은 쪽 이웃끼리 세로로 밀어내며 자리를 만든다. 역이 촘촘한 구간(GTX-A 의
+     대곡·창릉·연신내·서울역)에서는 그 밀어냄이 100px 을 넘고, 그만큼 지시선이 길어져
+     **어느 선이 어느 역인지 눈으로 따라가야 하는 그림**이 된다.
+     그런 이름표는 제 마커 바로 위나 아래로 옮긴다 — 거기가 비어 있다면. 지시선이 사라진다.
+     ⚠️ 옮기기 전에 **네 가지를 다 본다**: 이미 놓인 이름표 · 노선(제 선 포함) · 정보 패널 · 카드 밖.
+        하나라도 걸리면 옮기지 않는다. 좌우에 있던 편이 낫다 — 겹치는 것보다는 먼 게 낫다. */
+  if (!WIDE && AUTO_VERT) {
+    const taken = lbl.filter((p) => p.vert).map((p) => vertBox(p));
+    lbl.filter((p) => !p.vert).forEach((p) => {
+      /* 좌우 배치가 쓰는 상자도 「이미 놓인 것」에 넣는다 — 옮긴 뒤 그 자리를 다시 밟으면 안 된다. */
+      taken.push(sideBox(p));
+    });
+    for (const p of lbl) {
+      if (p.vert) continue;
+      if (p.st.labelSide) continue;                      // 오너가 지정한 자리는 코드가 안 건드린다
+      if (Math.abs(p.ly - p.y) <= 45) continue;          // 멀어지지 않았으면 그대로 둔다
+      const mine = sideBox(p);
+      const others = taken.filter((b) => b !== mine);
+      for (const dir of [-1, 1]) {                        // 위 먼저(지도에서 위가 덜 붐빈다)
+        const b = vertBox({ ...p, vert: dir });
+        if (b.x0 < 8 || b.x1 > MAP_W - 8 || b.y0 < 8 || b.y1 > BH - 8) continue;
+        if (others.some((o) => b.x1 > o.x0 && b.x0 < o.x1 && b.y1 > o.y0 && b.y0 < o.y1)) continue;
+        if (PANELS.some((P) => b.x1 > P.x0 - 8 && b.x0 < P.x1 + 8 && b.y1 > P.y0 - 8 && b.y0 < P.y1 + 8)) continue;
+        /* 여유 4px 은 모자랐다 — 역 표시는 반지름 9.5 에 테두리 5 라 **12px 짜리 원**이다.
+           4px 로 재면 뱃지가 남의 마커를 20% 물고도 통과한다(GTX-B 인천시청, designQa 가 잡았다). */
+        if (corrAll.some((q) => q.x > b.x0 - 16 && q.x < b.x1 + 16 && q.y > b.y0 - 16 && q.y < b.y1 + 16)) continue;
+        p.vert = dir; p.ly = p.y;
+        taken.splice(taken.indexOf(mine), 1);
+        taken.push(b);
+        break;
+      }
+    }
+  }
+
   /* ── 패널을 **세로로** 피한다 (2026-09-10)
      쪽 고르기 ④ 는 「반대쪽이 비었으면 그리로」까지만 한다. 양쪽이 다 막힌 역이 있다 —
      GTX-A 서울역은 뱃지가 다섯이라 왼쪽으로 보내면 카드 밖이고, 오른쪽은 공정률 패널이다.
@@ -929,10 +1063,18 @@ function buildOne(L) {
     if (WIDE) {
       /* ── 가로 노선: [점] │지시선│ [뱃지] [이름]  (위아래 대칭)
          지시선은 세로로 빠져나와 45°로 꺾고 라벨 앞 10px 은 다시 세로 — 세로판의 거울이다. */
+      /* 🔴 뱃지와 이름을 **한 줄로** 놓는다 (오너 2026-09-10: "역명 적절히 배치해서 가까이
+         옮겨줘. 지금 멀어지니까 직선이 길어져 어지럽잖아").
+         앞 판은 뱃지 줄 아래에 이름 줄을 쌓아 라벨이 마커에서 **66px** 떨어졌다 —
+         가로 판형에서 그만큼 떨어지면 지시선이 길어지고, 대장홍대선 가양은 그 66px 때문에
+         이름이 한강 위에 떠 있었다. 한 줄로 놓으면 **40px** 로 줄어 마커 옆에 붙는다.
+         ⚠️ 좌우 읽기 순서는 세로판과 같게 [뱃지][이름] 이다. 가운데 맞춤은 그대로. */
       const bwRawV = keys.length ? badgeRowWidth(keys) : 0;
       const endY = p.y + p.side * LEAD_V;
-      const bcy = endY + p.side * (BDG_H / 2);
-      const ncy = endY + p.side * ((bwRawV ? BDG_H + BDG_VGAP : 0) + LBL_FS / 2);
+      const bcy = ONE_ROW ? endY + p.side * (Math.max(BDG_H, LBL_FS) / 2)
+                          : endY + p.side * (BDG_H / 2);
+      const ncy = ONE_ROW ? bcy
+                          : endY + p.side * ((bwRawV ? BDG_H + BDG_VGAP : 0) + LBL_FS / 2);
       const dx = p.lx - p.x, syV = p.y + p.side * 13, runV = Math.abs(endY - syV), STUBV = 10;
       let leadV;
       if (Math.abs(dx) < 1.5) {
@@ -951,12 +1093,17 @@ function buildOne(L) {
       leadV += ` stroke="#9aa1ac" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
       let bdV = "";
       if (keys.length) {
-        let bxx = p.lx - bwRawV / 2;
-        for (const k of keys) { bdV += badgeSvg(k, bxx, bcy); bxx += badgeWidth(k) + BDG_GAP; }
+        /* 한 줄이므로 뱃지와 이름의 **가로 폭을 합쳐** 가운데를 잡는다. bxx 는 아래에서 다시 센다. */
       }
       inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="${prov ? "#f0eee9" : "#ffffff"}" stroke="${lc}" stroke-width="5"${prov ? ' stroke-dasharray="3.2 2.4"' : ""}/>`;
       const nmW = [...p.name].length * LBL_FS * 0.98, pwV = provW(p.st);
-      const left = p.lx - (nmW + pwV) / 2;
+      const rowAll = ONE_ROW ? (bwRawV ? bwRawV + BDG_PAD : 0) + nmW + pwV : 0;
+      const rowL = p.lx - rowAll / 2;
+      if (keys.length) {
+        let bxx = ONE_ROW ? rowL : p.lx - bwRawV / 2;
+        for (const k of keys) { bdV += badgeSvg(k, bxx, bcy); bxx += badgeWidth(k) + BDG_GAP; }
+      }
+      const left = ONE_ROW ? rowL + (bwRawV ? bwRawV + BDG_PAD : 0) : p.lx - (nmW + pwV) / 2;
       outMap += leadV + bdV +
         `<text x="${left.toFixed(1)}" y="${ncy.toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle" text-anchor="start"${HALO_S}>${esc(p.name)}</text>` +
         (pwV ? provSvg(left + nmW + PROV_GAP, ncy, "start") : "");
@@ -999,7 +1146,19 @@ function buildOne(L) {
        라벨을 노선 쪽에서 36px 밀어내 — 그 36px 이 다른 라벨·노선과 부딪히는 원인이 된다.
        그래서 **안 밀린 라벨은 마커 바로 옆(NEAR_LEAD)에 붙이고 선을 그리지 않는다.** */
     const NEAR_LEAD = 15;                       // 마커 반지름 12 를 막 벗어나는 값
-    const nudged = Math.abs(p.ly - p.y) >= 1.5;
+    /* ⚠️ 붙이기 전에 **그 자리가 비었는지** 본다. 이웃 역이 대각선으로 40px 옆에 있으면
+       마커에 바짝 붙인 뱃지가 그 이웃 마커를 문다(GTX-B 인천시청, designQa svglabel 20%).
+       걸리면 36px 로 물리고 지시선을 그린다 — 그게 지시선이 있는 이유다. */
+    const nearBox = (() => {
+      const w = rowW(p.st) + NEAR_LEAD + 6;
+      return p.side > 0
+        ? { x0: p.x + 12, x1: p.x + w, y0: p.ly - 16, y1: p.ly + 16 }
+        : { x0: p.x - w, x1: p.x - 12, y0: p.ly - 16, y1: p.ly + 16 };
+    })();
+    const nearBlocked = !WIDE && corrAll.some((q) =>
+      Math.hypot(q.x - p.x, q.y - p.y) > 22 &&                 // 제 마커 언저리는 뺀다
+      q.x > nearBox.x0 && q.x < nearBox.x1 && q.y > nearBox.y0 && q.y < nearBox.y1);
+    const nudged = Math.abs(p.ly - p.y) >= 1.5 || nearBlocked;
     const lead = nudged ? LEAD_W : NEAR_LEAD;
     let bx, nameX, anchor, endX, provX;
     if (p.side > 0) {
@@ -1067,7 +1226,8 @@ function buildOne(L) {
   const lblBoxes = lbl.map((p) => {
     if (WIDE) {
       const hw = rowWv(p.st) / 2 + 8;
-      const far = p.y + p.side * (LEAD_V + ((p.st.xfer || []).length ? BDG_H + BDG_VGAP : 0) + LBL_FS + 6);
+      const far = p.y + p.side * (LEAD_V + (ONE_ROW ? Math.max(BDG_H, LBL_FS)
+        : ((p.st.xfer || []).length ? BDG_H + BDG_VGAP : 0) + LBL_FS) + 6);
       return { x0: Math.min(p.lx, p.x) - hw, x1: Math.max(p.lx, p.x) + hw,
                y0: Math.min(p.y, far) - 6, y1: Math.max(p.y, far) + 6 };
     }

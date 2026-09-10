@@ -372,7 +372,8 @@
       ],
       "osmStitch": true,
       "osmNote": "GTX-A 는 운정중앙~서울역·수서~동탄이 이미 개통해 그 구간이 railway=rail 이고, 창릉·삼성만 construction 이다. 둘을 다 봐야 82.3km 가 이어진다.",
-      "osmStitchBoth": true
+      "osmStitchBoth": true,
+      "autoVert": true
     },
     {
       "key": "gtxb",
@@ -492,7 +493,8 @@
             "7",
             "경춘"
           ],
-          "km": 55.1
+          "km": 55.1,
+          "labelSide": "up"
         },
         {
           "name": "별내",
@@ -538,7 +540,8 @@
       "osmNote": "GTX-B 는 전 구간 construction 이다. 다만 잡힌 길은 신설 구간뿐이라 상봉~마석 경춘선 공용 22.9km 가 빠진다.",
       "osmStitch": true,
       "osmStitchBoth": true,
-      "osmJoin": 2000
+      "osmJoin": 2000,
+      "autoVert": true
     },
     {
       "key": "gtxc",
@@ -710,7 +713,8 @@
       "osmStitch": true,
       "osmNote": "GTX-C 는 대부분 railway=proposed 다(construction 은 28점짜리 부스러기). 실시협약은 됐지만 본공사가 아직이라 OSM 이 proposed 로 둔 것과 맞는다.",
       "osmStitchBoth": true,
-      "osmJoin": 2000
+      "osmJoin": 2000,
+      "autoVert": true
     },
     {
       "key": "indong",
@@ -1199,7 +1203,8 @@
       "osmTags": [
         "proposed"
       ],
-      "osmNote": "대장홍대선은 2025.12 착공했는데 OSM 에는 아직 proposed 로만 있다. construction 길이 하나도 없다. 길 하나가 19.4km 로 기점~종점 영업거리(19.430km)를 그대로 덮어 토막 잇기가 필요 없다 — OSM 은 상·하행을 같은 모양으로 두 벌 두는데 그중 한 벌이면 충분하다."
+      "osmNote": "대장홍대선은 2025.12 착공했는데 OSM 에는 아직 proposed 로만 있다. construction 길이 하나도 없다. 길 하나가 19.4km 로 기점~종점 영업거리(19.430km)를 그대로 덮어 토막 잇기가 필요 없다 — OSM 은 상·하행을 같은 모양으로 두 벌 두는데 그중 한 벌이면 충분하다.",
+      "oneRowLabel": true
     }
   ]
 }
