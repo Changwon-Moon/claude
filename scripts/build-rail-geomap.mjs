@@ -1352,7 +1352,7 @@ function buildOne(L) {
       const cy = p.y + p.vert * (13 + 9 + Math.max(LBL_FS, keys.length ? bdgBlockH(p.st) : 0) / 2);
       let bdv = "";
       { const rows = bdgRows(p.st), top = cy - bdgBlockH(p.st) / 2;
-        rows.forEach((row, ri) => { let bxv = left;
+        rows.forEach((row, ri) => { let bxv = left + (rows.length > 1 ? (blkW - badgeRowWidth(row)) / 2 : 0);
           const cy2 = rows.length > 1 ? top + ri * (BDG_H + 5) + BDG_H / 2 : cy;
           for (const k of row) { bdv += badgeSvg(k, bxv, cy2); bxv += badgeWidth(k) + BDG_GAP; } }); }
       const nx = left + blkW + (blkW ? BDG_PAD : 0);
@@ -1451,9 +1451,12 @@ function buildOne(L) {
       const rows = bdgRows(p.st);
       if (rows.length > 1) {
         /* 쌓은 더미는 이름 줄에 **세로 가운데**로 맞춘다 — 이름이 더미의 가운데 옆에 선다. */
-        const top = p.ly - bdgBlockH(p.st) / 2;
+        const top = p.ly - bdgBlockH(p.st) / 2, blkW = bdgBlockW(p.st);
         rows.forEach((row, ri) => {
-          let bxx = bx;                                   // 각 줄은 왼쪽 맞춤
+          /* 🔴 짧은 줄은 **가운데 맞춤**이다 (오너 2026-09-10 "노선 로고랑 역명이 너무 많이
+             떨어진 곳들이 있어"). 왼쪽 맞춤이면 둘째 줄의 짧은 뱃지(인덕원 「인동」,
+             광운대 「경춘」)가 이름 옆에 구멍을 남겨 로고와 역명이 떨어져 보였다. */
+          let bxx = bx + (blkW - badgeRowWidth(row)) / 2;
           const cy2 = top + ri * (BDG_H + 5) + BDG_H / 2;
           for (const k of row) { bd += badgeSvg(k, bxx, cy2); bxx += badgeWidth(k) + BDG_GAP; }
         });
