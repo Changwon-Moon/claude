@@ -12,7 +12,7 @@
 > 이 표는 `node scripts/template-usage.mjs --write` 가 **실측해서 씁니다.**
 > 손으로 고치지 마세요 — 세트가 늘면 다음 실행 때 덮어씁니다.
 
-**템플릿 47종** · 🟢 카드가 나오는 것 32 · 🟡 빌더는 있음 2 · ⚪ 잠자는 것 13
+**템플릿 47종** · 🟢 카드가 나오는 것 33 · 🟡 빌더는 있음 2 · ⚪ 잠자는 것 12
 
 | 판형 | 상태 | 쓰는 세트 |
 |---|---|---|
@@ -35,7 +35,7 @@
 | `map-board` | 🟢 1세트 | jeongbi-board |
 | `map-rank` | 🟢 2세트 | estate-84, estate-59 |
 | `metro-2col` | 🟢 1세트 | metro-speed |
-| `rail-geomap` | 🟢 3세트 | railmap-sinansan, railmap-indong, railmap-wolpan |
+| `rail-geomap` | 🟢 1세트 | railmap-sinansan |
 | `rail-line` | 🟢 8세트 | rail-sinansan, rail-gtxa, rail-gtxb 외 5 |
 | `ranking-table` | 🟢 1세트 | jeongbi-rank |
 | `record-grid` | 🟢 1세트 | kospi-record |
@@ -43,8 +43,9 @@
 | `sinbundang-loop` | 🟢 1세트 | sinbundang-loop |
 | `singo-record` | 🟢 19세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 16 |
 | `singoga-map` | 🟢 4세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map 외 1 |
-| `streak-line` | 🟢 15세트 | mae-streak, jeonse-streak, m2-gap 외 12 |
+| `streak-line` | 🟢 22세트 | mae-streak, jeonse-streak, m2-gap 외 19 |
 | `supply-progress` | 🟢 1세트 | supply-progress |
+| `tax-matrix` | 🟢 1세트 | ltv-matrix |
 | `world-capital` | 🟢 1세트 | world-capital |
 | `world-monthly` | 🟢 1세트 | world-monthly |
 | `year-bars` | 🟢 2세트 | wolse-flip, m2-rate |
@@ -61,7 +62,6 @@
 | `sinbundang-geomap` | ⚪ 잠자는 중 | — |
 | `sinbundang-map` | ⚪ 잠자는 중 | — |
 | `streak-bars` | ⚪ 잠자는 중 | — |
-| `tax-matrix` | ⚪ 잠자는 중 | — |
 | `tohuh-map` | ⚪ 잠자는 중 | — |
 
 > 🟡 는 **죽은 것이 아니라 발행 단위로 등록되지 않은 것**이다. 「대장 도감」이 그렇게

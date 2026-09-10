@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T00:40:46.085Z",
+  "generatedAt": "2026-09-10T01:05:10.027Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -1041,6 +1041,16 @@
       "runs30": 7
     },
     {
+      "file": "molit-rent-collect.yml",
+      "name": "전월세 실거래 수집 (국토부)",
+      "lastRun": "2026-09-02",
+      "daysAgo": 8,
+      "lastOk": "2026-09-02",
+      "okDaysAgo": 8,
+      "fails30": 2,
+      "runs30": 12
+    },
+    {
       "file": "neis-academy.yml",
       "name": "학원 수집 (나이스)",
       "lastRun": "2026-09-02",
@@ -1049,16 +1059,6 @@
       "okDaysAgo": 8,
       "fails30": 2,
       "runs30": 4
-    },
-    {
-      "file": "molit-rent-collect.yml",
-      "name": "전월세 실거래 수집 (국토부)",
-      "lastRun": "2026-09-02",
-      "daysAgo": 7,
-      "lastOk": "2026-09-02",
-      "okDaysAgo": 7,
-      "fails30": 2,
-      "runs30": 12
     },
     {
       "file": "world-market.yml",
@@ -1127,8 +1127,8 @@
       "daysAgo": 0,
       "lastOk": "2026-09-10",
       "okDaysAgo": 0,
-      "fails30": 17,
-      "runs30": 88
+      "fails30": 18,
+      "runs30": 91
     },
     {
       "file": "guard.yml",
@@ -1168,7 +1168,7 @@
       "lastOk": "2026-09-10",
       "okDaysAgo": 0,
       "fails30": 2,
-      "runs30": 16
+      "runs30": 17
     },
     {
       "file": "singo-history-retry.yml",
