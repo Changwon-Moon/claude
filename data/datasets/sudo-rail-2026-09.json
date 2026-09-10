@@ -501,7 +501,7 @@
           ],
           "km": 51.1,
           "badgeStack": true,
-          "leadV": 45
+          "leadV": 78
         },
         {
           "name": "상봉",
@@ -1153,7 +1153,9 @@
           "xfer": [],
           "km": 5.3,
           "labelAlign": "left",
-          "labelPin": true
+          "labelPin": true,
+          "labelSide": "down",
+          "leadV": -12
         },
         {
           "name": "신월",

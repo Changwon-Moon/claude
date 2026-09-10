@@ -1158,12 +1158,19 @@ function buildOne(L) {
          이름이 한강 위에 떠 있었다. 한 줄로 놓으면 **40px** 로 줄어 마커 옆에 붙는다.
          ⚠️ 좌우 읽기 순서는 세로판과 같게 [뱃지][이름] 이다. 가운데 맞춤은 그대로. */
       const bwRawV = keys.length ? badgeRowWidth(keys) : 0;
+      /* 🔴 **지시선은 이름표가 실제로 놓인 자리를 가리켜야 한다** (오너 2026-09-10:
+         "역명 이동하면서 선이 다 섞여버렸어").
+         앞 판은 선의 끝을 p.lx(비켜 세우기 전의 가운데)에 두고 이름표만 alignOff·labelDx
+         만큼 옮겼다. 그래서 여의도는 이름이 왼쪽에 있는데 선은 오른쪽으로 74px 뻗고,
+         서울역은 선이 라벨과 아무 상관 없는 곳에서 끝났다 — 지도 위에서 선들이 섞여 보인 것이
+         전부 이 어긋남이었다. 가운데(cx) 하나를 그리기 **전에** 잡아 선과 라벨이 같이 쓴다. */
+      const cx = p.lx + alignOff(p.st) + dxOf(p.st);
       const endY = p.y + p.side * leadVOf(p.st);
       const bcy = ONE_ROW ? endY + p.side * (Math.max(BDG_H, LBL_FS) / 2)
                           : endY + p.side * (BDG_H / 2);
       const ncy = ONE_ROW ? bcy
                           : endY + p.side * ((bwRawV ? BDG_H + BDG_VGAP : 0) + LBL_FS / 2);
-      const dx = p.lx - p.x, syV = p.y + p.side * 13, runV = Math.abs(endY - syV), STUBV = 10;
+      const dx = cx - p.x, syV = p.y + p.side * 13, runV = Math.abs(endY - syV), STUBV = 10;
       let leadV;
       /* ── 지시선을 아예 안 그리는 역 (오너 2026-09-10 "직선 없이")
          이름표가 제 마커 바로 위/아래에 붙어 있으면 그 사이 16px 짜리 선은 아무것도
@@ -1178,10 +1185,10 @@ function buildOne(L) {
         const outV = runV - STUBV - diagV;
         if (outV >= 6) {
           const k1 = syV + p.side * outV, k2 = endY - p.side * STUBV;
-          leadV = `<path d="M${p.x.toFixed(1)},${syV.toFixed(1)}V${k1.toFixed(1)}L${p.lx.toFixed(1)},${k2.toFixed(1)}V${endY.toFixed(1)}"`;
+          leadV = `<path d="M${p.x.toFixed(1)},${syV.toFixed(1)}V${k1.toFixed(1)}L${cx.toFixed(1)},${k2.toFixed(1)}V${endY.toFixed(1)}"`;
         } else {
           const vL = Math.hypot(dx, endY - p.y) || 1;
-          leadV = `<path d="M${(p.x + (dx / vL) * 13).toFixed(1)},${(p.y + ((endY - p.y) / vL) * 13).toFixed(1)}L${p.lx.toFixed(1)},${endY.toFixed(1)}"`;
+          leadV = `<path d="M${(p.x + (dx / vL) * 13).toFixed(1)},${(p.y + ((endY - p.y) / vL) * 13).toFixed(1)}L${cx.toFixed(1)},${endY.toFixed(1)}"`;
         }
       }
       if (leadV) leadV += ` stroke="#9aa1ac" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
@@ -1196,9 +1203,6 @@ function buildOne(L) {
          오너 2026-09-10: "가양, 고강은 왼편으로 붙여줘" — 마커 위아래가 붐비는 자리에서는
          옆으로 비켜 세우는 편이 읽힌다. */
       const rowAll = ONE_ROW ? (bwRawV ? bwRawV + BDG_PAD : 0) + nmW + pwV : 0;
-      /* 비켜 세운 자리를 **가운데 하나(cx)** 로 모은다 — 한 줄이든 두 줄이든 쌓았든 같은 자다.
-         (앞 판은 한 줄 배치에서만 먹어서 GTX-B 의 신도림·서울역을 옮길 수 없었다.) */
-      const cx = p.lx + alignOff(p.st) + dxOf(p.st);
       const rowL = cx - rowAll / 2;
       /* ⚠️ 뱃지를 **세로로 쌓는다**(badgeStack). 환승이 셋이면 한 줄이 260px 이 되어
          옆 역을 덮는다 — 홍대입구(2·경의중앙·공항철도)가 그랬다.
