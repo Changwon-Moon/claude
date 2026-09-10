@@ -11,4 +11,4 @@
 # ⚠️ 결과(data/geo/_probe-rail-osm.json)는 덮지 않고 합친다 — 이미 받아 둔 노선은 안 잃는다.
 # ⚠️ 봇이 결과를 커밋할 때 [skip ci] 를 달고, 방아쇠는 이 파일 하나만 본다 — 되돌지 않는다.
 
-water
+sinbundang
