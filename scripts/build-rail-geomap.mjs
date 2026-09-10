@@ -168,7 +168,13 @@ const PANELS_FN = (v, H, diag = "nwse") => ({
 }[v]);
 const SPLIT_INFO = VARIANT === "d";
 
-function buildOne(L) {
+function buildOne(L0) {
+  /* 🔴 도식형(rail-line@1)의 데이터셋에는 **역이 아닌 줄**이 있다 — 신분당선의
+     `{type:"gap", text:"논현 ~ 상현 13역 — 이미 개통"}` 처럼. 도식형은 그 줄을 「사이 생략」
+     표시로 그리지만, **지도판에는 놓을 자리가 없다**(좌표가 없는 것이 아니라 역이 아니다).
+     지도판은 이름 있는 역만 본다. 앞 판은 그대로 들어가 st.name 이 undefined 로 터졌다. */
+  const L = (L0.stations || []).some((st) => !st?.name)
+    ? { ...L0, stations: L0.stations.filter((st) => st?.name) } : L0;
   /* 제목 크기와 지도 높이는 **노선 이름 길이에 따라 달라진다.** 제목이 두 줄이 되면
      카드 아래로 넘치고(2026-09-09 인동선 25px 넘침), 짧아지면 그만큼 지도를 키운다. */
   const titleFs = fitTitleFs(`${L.name} ${L.titleAsk || "언제 개통하지?"}`, TITLE_FS_BY_V[VARIANT]);
@@ -1048,7 +1054,29 @@ function buildOne(L) {
   if (!selfKey || !CAT[selfKey]) throw new Error(`${L.name}: 카탈로그에 자기 노선(${selfKey}) 이 없다`); // ④
   const lc = CAT[selfKey].color;
 
-  const line = `<path d="${d(mainWay.g)}" fill="none" stroke="${lc}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`
+  /* 🔴 **이미 다니는 구간은 다르게 그린다** (openSegment, 2026-09-10).
+     신분당선 카드는 「연장선」이 주인공인데, 선형은 용산~호매실 48.7km 가 통째로 이어져 있다.
+     한 색으로 그으면 **신사~광교 33km(2011·2016 개통)까지 공사중으로 읽힌다** — 도식형 카드가
+     「남부와 북부, 떨어진 두 구간을 따로 짓고 있습니다」라고 말하는 것과 정면으로 어긋난다.
+     그래서 그 사이만 회색으로, 얇게 긋는다. 각주가 한 줄로 밝힌다.
+     ⚠️ 자르는 자리는 **역의 실좌표를 선형에 투영한 t** 다 — 눈대중 인덱스가 아니다. */
+  let openSeg = null;
+  if (L.openSegment?.from && L.openSegment?.to) {
+    const ga = truth.get(L.openSegment.from), gb = truth.get(L.openSegment.to);
+    if (ga && gb) {
+      const ts = [projectOnTrack(track, ga).t, projectOnTrack(track, gb).t].sort((x, y) => x - y);
+      let ia = 0, ib = mainWay.g.length - 1;
+      for (let i = 0; i < track.length; i++) { if (track[i].d <= ts[0]) ia = i; }
+      for (let i = track.length - 1; i >= 0; i--) { if (track[i].d >= ts[1]) ib = i; }
+      if (ib - ia > 20) openSeg = { ia, ib };
+    }
+  }
+  const OPEN_C = "#c2c7cf";
+  const line = (openSeg
+    ? `<path d="${d(mainWay.g.slice(0, openSeg.ia + 1))}" fill="none" stroke="${lc}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`
+      + `<path d="${d(mainWay.g.slice(openSeg.ia, openSeg.ib + 1))}" fill="none" stroke="${OPEN_C}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>`
+      + `<path d="${d(mainWay.g.slice(openSeg.ib))}" fill="none" stroke="${lc}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`
+    : `<path d="${d(mainWay.g)}" fill="none" stroke="${lc}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`)
     /* 지선 — **실선**(오너 2026-09-09). 개략이라는 고지는 각주·캡션이 진다. */
     + (branchPts.length
       ? `<path d="${d(branchPts)}" fill="none" stroke="${lc}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`
@@ -1684,6 +1712,7 @@ function buildOne(L) {
       /* 역명이 대부분 미확정인 노선은 **그 사실을 각주가 말한다.** 점선 링만으로는
          「이 이름이 확정인 줄 알았다」를 막지 못한다(인동선 17역 중 확정은 셋뿐이다). */
       provCount ? [PROV_TAG ? "◌ 점선·「가칭」 = 역명 미확정" : "◌ 점선 = 역명 미확정(가칭)", L.nameNote].filter(Boolean).join(" · ") : "",
+      L.openSegment?.note || "",
       /* ⚠️ 「지선·공용 구간은 잇는 선이 개략」 한 줄은 오너 지시로 뺐다(2026-09-09).
          고지가 사라진 게 아니다 — 캡션의 「※ 노선 선형은 실제 좌표(OpenStreetMap),
          역 위치는 개략 표기입니다.」가 그대로 지고 있고, 그 줄은 가드 ⑤ 가 지킨다.

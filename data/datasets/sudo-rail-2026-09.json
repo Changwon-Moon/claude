@@ -1084,26 +1084,31 @@
           "name": "광교중앙",
           "state": "개통",
           "xfer": [],
-          "km": 31.5
+          "km": 31.5,
+          "labelSide": "right"
         },
         {
           "name": "수원월드컵경기장",
           "state": "가칭",
           "xfer": [
             "인동"
-          ]
+          ],
+          "labelSide": "down",
+          "badgeStack": 1
         },
         {
           "name": "수성중사거리",
           "state": "역명미정",
-          "xfer": []
+          "xfer": [],
+          "labelSide": "up"
         },
         {
           "name": "화서",
           "state": "미개통",
           "xfer": [
             "1"
-          ]
+          ],
+          "labelSide": "up"
         },
         {
           "name": "구운",
@@ -1113,7 +1118,8 @@
         {
           "name": "호매실",
           "state": "가칭",
-          "xfer": []
+          "xfer": [],
+          "labelSide": "right"
         }
       ],
       "branchAfter": "광교중앙",
@@ -1124,14 +1130,29 @@
             "name": "광교",
             "state": "개통",
             "xfer": [],
-            "km": 33.4
+            "km": 33.4,
+            "labelSide": "right"
           }
         ]
       },
       "progressText": "17.25",
       "capPoint": "남부와 북부, 떨어진 두 구간을 따로 짓고 있습니다.",
       "kmSrc": "⚠️ **연장 구간의 공표 영업거리를 못 찾았다.** 광교중앙 31.5 · 광교 33.4 만 기존 영업거리(신사 기점)로 확인된다. 국토부 실시계획 고시문 PDF(403)·토지이음(robots)·철도투자평가정보시스템(신사~강남만 게재)까지 훑었다. 나머지 역은 코드가 OSM 실좌표로 놓는다(2순위). 총연장 17.7km = 북부 7.8 + 남부 9.88.",
-      "nameNote": ""
+      "nameNote": "",
+      "osmTags": [
+        "rail",
+        "proposed",
+        "construction"
+      ],
+      "osmStitch": true,
+      "osmStitchBoth": true,
+      "osmRoute": true,
+      "osmJoin": 2000,
+      "openSegment": {
+        "from": "신사",
+        "to": "광교중앙",
+        "note": "회색 = 이미 개통한 구간(신사~광교 2011·2016) · 빨강 두 토막이 연장선 17.7km"
+      }
     },
     {
       "key": "daejang",
