@@ -48,7 +48,10 @@
         align-items: center; gap: 16px; padding: 0 18px; position: relative; z-index: 1;
       }
       .tx-hr { flex: 0 0 auto; padding-bottom: 12px; border-bottom: 3px solid var(--wirit-ink); }
-      .tx-hr span { font-size: 30px; font-weight: 800; color: var(--wirit-gray); text-align: center; letter-spacing: -0.02em; }
+      /* 열 머리도 어절 단위로만 끊는다 — `.tx-lb` 에는 처음부터 있었는데 여기엔 빠져 있어서
+         "2023.1 완화" 가 "2023.1 완 / 화" 로 잘렸다(2026-09-10 육안 검수. designQa 는
+         넘침이 아니라 줄바꿈이라 못 잡는다). 이 판형을 쓴 발행본은 아직 없어 픽셀 영향 0. */
+      .tx-hr span { font-size: 30px; font-weight: 800; color: var(--wirit-gray); text-align: center; letter-spacing: -0.02em; word-break: keep-all; }
       .tx-hr .lb, .tx-hr .lft { text-align: left; }
       /* 행 높이 상한 — 없으면 2행짜리 카드에서 한 행이 500px 띠가 된다(2026-08-03 오너 검수).
          상한을 걸고, 남는 자리는 위아래 auto 여백으로 **가운데 정렬**한다. */

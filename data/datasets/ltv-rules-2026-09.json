@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "title": "주택담보대출 LTV·한도 규제 국면표 (서울 아파트·무주택 세대주 기준)",
+    "unit": "억원 / %",
+    "asOf": "2026-09-10",
+    "verified": false,
+    "verifyNote": "7국면 중 5국면(2017.8·2019.12·2022.12·2025.6·2025.10)은 정부 원문(정책브리핑·금융위)으로 대조 완료. 2014.8(전국 LTV 70% 단일화)과 2023.1(강남3구·용산 외 규제 해제)은 언론 보도로만 확인 — 발행 전 국토부·금융위 원문으로 승격할 것.",
+    "assumptions": [
+      "무주택 세대주 · 서울 아파트 · 소득 충분(DSR 미저촉) · 취득세·중개보수 별도",
+      "대출 = min(집값 × LTV, 가격구간별 한도)",
+      "필요현금 = 집값 − 대출",
+      "생애최초는 각 국면의 우대요건(소득·주택가격 상한)을 충족했을 때의 값이다"
+    ],
+    "source": "정책브리핑(korea.kr) · 금융위원회(fsc.go.kr) · 국토교통부",
+    "note": "이 표는 통계가 아니라 **규제 규칙**이다. 대책이 새로 나오면 국면을 하나 더 붙인다. 기존 국면의 값은 고치지 않는다."
+  },
+  "phases": [
+    {
+      "key": "2014-08",
+      "label": "2014.8",
+      "name": "전국 LTV 70% 단일화",
+      "from": "2014-08-01",
+      "gen": { "kind": "flat", "ltv": 0.70, "cap": null },
+      "first": { "kind": "flat", "ltv": 0.70, "cap": null },
+      "sourceTier": "2차",
+      "sourceUrl": "https://www.khan.co.kr/article/201706060600001"
+    },
+    {
+      "key": "2017-08",
+      "label": "2017.8",
+      "name": "8.2대책 투기과열지구 LTV 40%",
+      "from": "2017-08-03",
+      "gen": { "kind": "flat", "ltv": 0.40, "cap": null },
+      "first": { "kind": "flat", "ltv": 0.50, "cap": null },
+      "sourceTier": "1차",
+      "sourceUrl": "https://www.korea.kr/news/policyNewsView.do?newsId=148840571"
+    },
+    {
+      "key": "2019-12",
+      "label": "2019.12",
+      "name": "12.16대책 9억↓40% · 초과분 20% · 15억↑ 금지",
+      "from": "2019-12-16",
+      "gen": { "kind": "tier", "t1": 9, "ltv1": 0.40, "ltv2": 0.20, "banAbove": 15 },
+      "first": { "kind": "tier", "t1": 9, "ltv1": 0.50, "ltv2": 0.30, "banAbove": 15 },
+      "sourceTier": "1차",
+      "sourceUrl": "https://www.fsc.go.kr/po020201/27351?curPage=1"
+    },
+    {
+      "key": "2022-12",
+      "label": "2022.12",
+      "name": "규제지역 LTV 50% 단일화 · 15억 초과 허용",
+      "from": "2022-12-01",
+      "gen": { "kind": "flat", "ltv": 0.50, "cap": null },
+      "first": { "kind": "flat", "ltv": 0.80, "cap": 6 },
+      "sourceTier": "1차",
+      "sourceUrl": "https://www.korea.kr/news/policyNewsView.do?newsId=148908439"
+    },
+    {
+      "key": "2023-01",
+      "label": "2023.1",
+      "name": "강남3구·용산 외 규제지역 해제 → LTV 70%",
+      "from": "2023-01-03",
+      "gen": { "kind": "flat", "ltv": 0.70, "cap": null },
+      "first": { "kind": "flat", "ltv": 0.80, "cap": 6 },
+      "sourceTier": "2차",
+      "sourceUrl": "https://www.newspim.com/news/view/20230103000632"
+    },
+    {
+      "key": "2025-06",
+      "label": "2025.6",
+      "name": "6.27대책 수도권·규제지역 주담대 한도 6억",
+      "from": "2025-06-28",
+      "gen": { "kind": "flat", "ltv": 0.70, "cap": 6 },
+      "first": { "kind": "flat", "ltv": 0.70, "cap": 6 },
+      "sourceTier": "1차",
+      "sourceUrl": "https://www.korea.kr/news/policyNewsView.do?newsId=148945077"
+    },
+    {
+      "key": "2025-10",
+      "label": "2025.10",
+      "name": "10.15대책 서울 전역 규제지역 LTV 40% · 한도 6/4/2억",
+      "from": "2025-10-16",
+      "gen": { "kind": "flat", "ltv": 0.40, "capTiers": [[15, 6], [25, 4], [null, 2]] },
+      "first": { "kind": "flat", "ltv": 0.40, "capTiers": [[15, 6], [25, 4], [null, 2]] },
+      "sourceTier": "1차",
+      "sourceUrl": "https://www.fsc.go.kr/po020201/85466"
+    }
+  ]
+}

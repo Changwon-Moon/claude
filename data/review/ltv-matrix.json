@@ -1,0 +1,31 @@
+{
+  "label": "ltv-matrix",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 6억 허용 — 캡션의 「한도 6억」은 10.15대책의 가격구간별 대출한도(15억 이하 6억)다. 규칙표(data/datasets/ltv-rules-2026-09.json)의 값이고 카드는 그 규칙으로 계산된 결과만 싣는다 — 카드 밖 수치가 아니라 카드가 선 근거다."
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 15억 허용 — 캡션의 「15억이 넘는 순간 한도가 6억에서 4억으로」도 같은 규칙표의 구간 경계다. 현금 10억 행이 15.0억에서 멈추는 이유를 설명하는 문장이라 카드와 직접 이어져 있다."
+    }
+  ],
+  "cards": [
+    {
+      "file": "ltv-matrix.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}
