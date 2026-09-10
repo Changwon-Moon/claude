@@ -35,7 +35,7 @@
 | `map-board` | 🟢 1세트 | jeongbi-board |
 | `map-rank` | 🟢 2세트 | estate-84, estate-59 |
 | `metro-2col` | 🟢 1세트 | metro-speed |
-| `rail-geomap` | 🟢 1세트 | railmap-sinansan |
+| `rail-geomap` | 🟢 6세트 | railmap-sinansan, railmap-indong, railmap-wolpan 외 3 |
 | `rail-line` | 🟢 8세트 | rail-sinansan, rail-gtxa, rail-gtxb 외 5 |
 | `ranking-table` | 🟢 1세트 | jeongbi-rank |
 | `record-grid` | 🟢 1세트 | kospi-record |

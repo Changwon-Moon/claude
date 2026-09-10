@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T01:05:10.027Z",
+  "generatedAt": "2026-09-10T03:15:07.641Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -776,7 +776,7 @@
       "maxDelay": null,
       "lastRun": "2026-09-08",
       "lastOk": "2026-09-08",
-      "okDaysAgo": 1
+      "okDaysAgo": 2
     }
   ],
   "manual": [
@@ -1064,9 +1064,9 @@
       "file": "world-market.yml",
       "name": "세계 지수 수집 (8개국 월별 성적표)",
       "lastRun": "2026-09-04",
-      "daysAgo": 5,
+      "daysAgo": 6,
       "lastOk": "2026-09-04",
-      "okDaysAgo": 5,
+      "okDaysAgo": 6,
       "fails30": 4,
       "runs30": 5
     },
@@ -1121,6 +1121,16 @@
       "runs30": 22
     },
     {
+      "file": "kosis-probe.yml",
+      "name": "KOSIS 표 검증 (probe)",
+      "lastRun": "2026-09-09",
+      "daysAgo": 1,
+      "lastOk": "2026-09-08",
+      "okDaysAgo": 2,
+      "fails30": 0,
+      "runs30": 10
+    },
+    {
       "file": "auto-produce.yml",
       "name": "데이터 바뀌면 카드 자동 재생산",
       "lastRun": "2026-09-10",
@@ -1128,7 +1138,7 @@
       "lastOk": "2026-09-10",
       "okDaysAgo": 0,
       "fails30": 18,
-      "runs30": 91
+      "runs30": 93
     },
     {
       "file": "guard.yml",
@@ -1139,16 +1149,6 @@
       "okDaysAgo": 0,
       "fails30": 16,
       "runs30": 100
-    },
-    {
-      "file": "kosis-probe.yml",
-      "name": "KOSIS 표 검증 (probe)",
-      "lastRun": "2026-09-09",
-      "daysAgo": 0,
-      "lastOk": "2026-09-08",
-      "okDaysAgo": 1,
-      "fails30": 0,
-      "runs30": 10
     },
     {
       "file": "molit-collect.yml",
@@ -1168,7 +1168,7 @@
       "lastOk": "2026-09-10",
       "okDaysAgo": 0,
       "fails30": 2,
-      "runs30": 17
+      "runs30": 18
     },
     {
       "file": "singo-history-retry.yml",
