@@ -113,6 +113,15 @@ function unitNoise(u) {
     if (r) pts.push({ ym, v: r.max });
   }
   const mi = (ym) => (+ym.slice(0, 4)) * 12 + (+ym.slice(4));
+  /* ── 램프 (2026-09-10 신설)
+     기준창은 2019.11~2020.03 다섯 달이다. 그 직후 값이 크게 튀면 **기준창이 급등 직전을
+     잡은 것**이라 「출발선이 같았다」는 이 카드의 전제가 약해진다.
+     실측: 11~15호 후보 중 김포한강아이파크 1.55배 · 한화 포레나 킨텍스 1.56배 —
+     둘 다 곡선에서 혼자 두 배로 치솔아, 제목은 「똑같이 출발」인데 그림은 아니었다.
+     발행본 1~10호는 1.16~1.43배다. 1.45배를 넘으면 ⚠️ 로 보인다(막지는 않는다). */
+  let ramp = 0;
+  for (const q of pts) if (q.ym.startsWith("2020")) ramp = Math.max(ramp, q.v);
+
   /* 가장 긴 공백 — 관측이 끊긴 구간은 선이 아니라 직선 추측이다(빌더 문턱 20개월) */
   let hole = 0;
   for (let k = 1; k < pts.length; k++) hole = Math.max(hole, mi(pts[k].ym) - mi(pts[k - 1].ym));
@@ -123,7 +132,7 @@ function unitNoise(u) {
     if (Math.abs(pts[k].v - pts[k - 1].v) / pts[k - 1].v > 0.15) jump++;
   }
   /* 이웃달 쌍이 12개도 안 되면 「아직 모른다」다 — 0%로 적어 통과시키지 않는다 */
-  const out = { noise: adj < 12 ? null : jump / adj, hole: pts.length ? hole : null };
+  const out = { noise: adj < 12 ? null : jump / adj, hole: pts.length ? hole : null, ramp: ramp && u.base ? ramp / u.base : null };
   seriesCache.set(key, out);
   return out;
 }
@@ -191,6 +200,7 @@ L.push("| **상승률차** | 1위와 3위의 배수 차이(2.52 − 1.14 = 1.38)
 L.push("| 금액차 | 지금 값의 차이(억). 참고용 |");
 L.push("| 그때 | 2019.11~2020.03 실거래 최고가 — 세 단지가 ±3% 안에서 겹칩니다 |");
 L.push("| 자료 | 곡선을 그리려면 더 받아야 하는 국토부 호출 수. 🟢 0회면 바로 나옵니다 |");
+L.push("| 램프 | 기준창 직후(2020년) 최고가 ÷ 그때 값. **1.45 넘으면 ⚠️** — 기준창이 급등 직전을 잡아 「출발선이 같았다」가 약해집니다(발행본은 1.16~1.43) |");
 L.push("| ♻️ | **이미 나간 단지**가 이 묶음에 들어 있습니다. 막지는 않습니다 — 같은 단지를 또 내보낼지는 고르시는 분이 정합니다 |");
 L.push("| 공백 | 관측이 가장 오래 끊긴 구간(개월). 그 사이는 선이 아니라 **직선 추측**입니다 — **20개월 넘으면 빌더가 던집니다** |");
 L.push("| … | 「자료」가 남은 묶음은 **아직 재지 않았습니다.** 덜 찬 캐시로 재면 「나쁜 자료」와 「아직 안 받은 자료」가 같은 얼굴이 됩니다 |");
@@ -223,13 +233,16 @@ const row = (r, no) => {
   const holes = measured ? r.stat.map((x) => x.hole).filter((h) => h !== null) : [];
   const bigHole = holes.length ? Math.max(...holes) : null;
   const again = reused(r);
+  const ramps = measured ? r.stat.map((x) => x.ramp).filter((x) => x) : [];
+  const bigRamp = ramps.length ? Math.max(...ramps) : null;
+  const rampCell = bigRamp === null ? "…" : bigRamp > 1.45 ? `⚠️ ${bigRamp.toFixed(2)}` : bigRamp.toFixed(2);
   const gapCell = bigHole === null ? "…" : bigHole > 20 ? `⛔ ${bigHole}개월` : `${bigHole}개월`;
   const mid = r.members.length === 3 ? cell(r.members[1]) : "—";
-  return `| ${no} | **${r.ratioGap.toFixed(2)}배** | ${r.gapEok.toFixed(1)}억 | ${eok(r.baseFrom)}~${eok(r.baseTo)}억 | ${cell(r.members[0])} | ${mid} | ${cell(r.members[r.members.length - 1])} | ${tag}${again.length ? ` ♻️` : ""} | ${saw} | ${gapCell} | \`${r.set} ${r.pick}\` |`;
+  return `| ${no} | **${r.ratioGap.toFixed(2)}배** | ${r.gapEok.toFixed(1)}억 | ${eok(r.baseFrom)}~${eok(r.baseTo)}억 | ${cell(r.members[0])} | ${mid} | ${cell(r.members[r.members.length - 1])} | ${tag}${again.length ? ` ♻️` : ""} | ${saw} | ${gapCell} | ${rampCell} | \`${r.set} ${r.pick}\` |`;
 };
 
-L.push("| # | 상승률차 | 금액차 | 그때 | 🔺 가장 많이 오른 곳 | 가운데 | 🔻 가장 덜 오른 곳 | 자료 | 톱니 | 공백 | 만들 때 |");
-L.push("|--:|--:|--:|--:|---|---|---|---|--:|--:|---|");
+L.push("| # | 상승률차 | 금액차 | 그때 | 🔺 가장 많이 오른 곳 | 가운데 | 🔻 가장 덜 오른 곳 | 자료 | 톱니 | 공백 | 램프 | 만들 때 |");
+L.push("|--:|--:|--:|--:|---|---|---|---|--:|--:|--:|---|");
 shown.forEach((r, i) => L.push(row(r, i + 1)));
 L.push("");
 

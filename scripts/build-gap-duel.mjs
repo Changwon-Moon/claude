@@ -116,8 +116,23 @@ function series(unit, months) {
     if (!existsSync(p)) { holes.push(ym); continue; }
     const cell = JSON.parse(readFileSync(p, "utf8"));
     if (cell.scope !== "universe") { holes.push(ym); continue; }
-    const row = (cell.rows ?? []).find((r) => r.umd === unit.umd && r.apt === unit.apt && r.type === unit.type);
-    if (row) pts.push({ ym, v: row.max });
+    /* ⚠️ **한 칸에 같은 단지·평형이 여러 행으로 들어 있을 수 있다** (2026-09-10 발견).
+       실측: 5,015칸 중 55칸에 339건. 전부 202607~202609 — 최근 달을 채우는 수집기가
+       행을 덧붙이면서 생긴 것으로 보인다.
+       예: 화서역블루밍푸른숲 84 의 202607 이 68000(1건)·64000(1건)·**74500(9건)** 세 줄.
+
+       예전 코드는 `.find()` 로 **첫 줄**을 집었다. 그런데 후보를 고르는 쪽(find-gap-pairs)은
+       그 달의 **최댓값**을 쓴다 — 그래서 12호에서 창의 「지금 값」이 7.45억인데 곡선의 같은 달은
+       6.80억이 되어, 끝점 마커가 곡선 밖을 가리키고 제목의 격차가 라벨의 뺄셈과 어긋났다.
+
+       이 카드가 그리는 것은 **월별 최고가**다. 여러 줄이면 **최댓값**이 답이다.
+       ⚠️ 캐시의 중복 자체는 수집기 쪽 문제로 남아 있다 — 여기서는 읽는 쪽만 막는다. */
+    let v = null;
+    for (const r of cell.rows ?? []) {
+      if (r.umd !== unit.umd || r.apt !== unit.apt || r.type !== unit.type) continue;
+      if (v === null || r.max > v) v = r.max;
+    }
+    if (v !== null) pts.push({ ym, v });
   }
   if (holes.length) {
     throw new Error(

@@ -53,8 +53,45 @@ const arg = (n, d) => {
 };
 
 const MONTH_DIR = R("data/datasets/molit-monthly");
+
+/**
+ * ── 최근창은 **모든 구가 다 찬 마지막 달**에서 끝난다 (2026-09-10 사고 뒤 자동화)
+ *
+ * 예전에는 `202603-202608` 처럼 손으로 박아 뒀다. 그런데 캐시는 구마다 다른 속도로 찬다 —
+ * 2026-09-10 실측: 202607 은 61/61곳인데 **202608·202609 는 37/61곳**뿐이었다.
+ * 그 상태로 「최근 6개월 최고가」를 내면 **먼저 찬 37곳만 한 달을 더 보고** 값이 매겨진다.
+ * 같은 기준으로 재지 않은 값끼리 순위를 다투게 되는 것이다.
+ *
+ * 게다가 빌더의 곡선은 202607 에서 끝나므로, 202608 에서 최고가가 난 단지는
+ * **끝점 마커가 곡선 밖을 가리켜** 마지막 달로 물러났다 — 11~15호 다섯 장이 전부
+ * 「제목의 격차 ≠ 라벨의 뺄셈」으로 어긋났다(§13 대조에서 걸렸다).
+ *
+ * → 명부의 **모든 구**에 있는 가장 최근 달을 찾아 그 달에서 최근창을 끝낸다.
+ *   손으로 박은 값이 없으면 코드가 매번 다시 잰다. `--now` 로 덮어쓸 수 있다.
+ */
+function lastCompleteMonth() {
+  const uni = JSON.parse(readFileSync(R("data/datasets/apt-universe.json"), "utf8"));
+  const lawds = [...new Set(uni.items.map((i) => i.lawdCd))];
+  const ymOf = (d) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}`;
+  const now = new Date(Date.now() + 9 * 3600 * 1000);
+  for (let back = 1; back <= 24; back++) {
+    const d = new Date(now.getFullYear(), now.getMonth() - back, 1);
+    const ym = ymOf(d);
+    if (lawds.every((l) => existsSync(join(MONTH_DIR, l, `${ym}.json`)))) return ym;
+  }
+  return null;
+}
+const shift = (ym, n) => {
+  let y = +ym.slice(0, 4), m = +ym.slice(4) + n;
+  while (m < 1) { m += 12; y--; }
+  while (m > 12) { m -= 12; y++; }
+  return `${y}${String(m).padStart(2, "0")}`;
+};
+const LAST = lastCompleteMonth();
+if (!LAST) { console.error("⛔ 명부의 모든 구가 다 찬 달이 최근 24개월에 없습니다 — 백필을 먼저 돌리세요"); process.exit(2); }
+
 const [BASE_FROM, BASE_TO] = arg("base", "201911-202003").split("-");
-const [NOW_FROM, NOW_TO] = arg("now", "202603-202608").split("-");
+const [NOW_FROM, NOW_TO] = arg("now", `${shift(LAST, -5)}-${LAST}`).split("-");
 const TOL = Number(arg("tol", 5)) / 100;      // 기준가 유사 판정 폭
 const MIN_GAP = Number(arg("min-gap", 3));    // 억 — 이보다 작은 차이는 카드가 안 된다
 /**
