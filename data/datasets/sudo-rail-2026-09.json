@@ -751,7 +751,8 @@
       "osmNote": "GTX-C 는 대부분 railway=proposed 다(construction 은 28점짜리 부스러기). 실시협약은 됐지만 본공사가 아직이라 OSM 이 proposed 로 둔 것과 맞는다.",
       "osmStitchBoth": true,
       "osmJoin": 2000,
-      "autoVert": true
+      "autoVert": true,
+      "osmRoute": true
     },
     {
       "key": "indong",

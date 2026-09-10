@@ -255,6 +255,63 @@ function buildOne(L) {
     const cur = pool.splice(seedIdx, 1)[0];
     if (metres(cur.g[cur.g.length - 1], first) < metres(cur.g[0], first)) cur.g.reverse();
     const chain = [...cur.g];
+    /* ── 🔴 **역 차례를 따라 잇는다** (osmRoute, 2026-09-10 — GTX-C 를 살린 규칙)
+       앞의 「끝과 끝을 잇는다」로는 GTX-C 를 못 이었다. 이유가 둘이다.
+       ① **끝이 아니라 중간에서 만난다.** GTX-C 의 proposed 선형은 과천선 길의 **한가운데**에서
+          끝난다. 끝끼리만 보는 규칙은 거기서 죽는다(55.2km 에서 멈췄다).
+       ② **갈림길에서 엉뚱한 쪽으로 간다.** 금정에서 경부선(→수원)과 안산선(→상록수)이 갈리는데,
+          「머리에서 멀어지면 된다」만으로는 안산선을 물고 상록수까지 내려갔다.
+       그래서 이렇게 바꾼다:
+       · 붙일 자리는 길의 **모든 점** 중 가장 가까운 점이다(중간에서도 잇는다). 쓰고 남은 토막은
+         풀에 도로 넣는다 — 반대편에서 또 쓸 수 있다.
+       · 어느 쪽으로 갈지는 **다음 역**이 정한다. 아직 안 닿은 다음 역을 겨누고, 후보 조각이
+         그 역 **곁을 지나가는지**로 고른다(조각의 끝점 거리가 아니라 최소 거리 —
+         끝점으로 재면 수원까지 가는 옳은 조각이 「멀다」고 밀린다. 실제로 그랬다).
+       ⚠️ 노선이 켜야 켜진다. 확정된 카드(월판·신안산·인동)의 픽셀을 건드리지 않기 위해서다. */
+    if (L.osmRoute === true) {
+      const seq = L.stations.map((st) => truth.get(st.name)).filter(Boolean);
+      const NEARST = 500;                        // m — 이 안에 오면 그 역은 「닿았다」
+      const aimOf = () => {
+        let hi = -1, lo = seq.length;
+        for (let i = 0; i < seq.length; i++) {
+          let ok = false;
+          for (const p of chain) if (metres(p, seq[i]) < NEARST) { ok = true; break; }
+          if (ok) { hi = Math.max(hi, i); lo = Math.min(lo, i); }
+        }
+        return { tail: seq[Math.min(hi < 0 ? seq.length - 1 : hi + 1, seq.length - 1)],
+                 head: seq[Math.max(lo >= seq.length ? 0 : lo - 1, 0)] };
+      };
+      for (let step = 0; step < 800; step++) {
+        const aim = aimOf(), head = chain[0], tail = chain[chain.length - 1];
+        let best = null;
+        pool.forEach((w, i) => {
+          for (const at of ["tail", "head"]) {
+            const pt = at === "tail" ? tail : head;
+            const other = at === "tail" ? head : tail;
+            const target = at === "tail" ? aim.tail : aim.head;
+            if (!target) continue;
+            let bj = -1, bd = Infinity;
+            for (let j = 0; j < w.g.length; j++) { const d = metres(w.g[j], pt); if (d < bd) { bd = d; bj = j; } }
+            if (bd > JOIN) continue;
+            for (const dir of [1, -1]) {
+              const g = dir > 0 ? w.g.slice(bj) : w.g.slice(0, bj + 1).reverse();
+              if (g.length < 2) continue;
+              if (metres(g[g.length - 1], other) <= metres(pt, other)) continue;   // 되돌아가지 않는다
+              let sc = Infinity;
+              for (const q of g) { const d = metres(q, target); if (d < sc) sc = d; }
+              const c = { i, at, bj, dir, g, d: bd, sc };
+              if (!best || c.sc < best.sc - 1 || (Math.abs(c.sc - best.sc) <= 1 && c.d < best.d)) best = c;
+            }
+          }
+        });
+        if (!best) break;
+        const w = pool[best.i];
+        const rest = best.dir > 0 ? w.g.slice(0, best.bj + 1) : w.g.slice(best.bj);
+        if (rest.length >= 2) pool[best.i] = { ...w, g: rest }; else pool.splice(best.i, 1);
+        if (best.at === "tail") chain.push(...best.g.slice(best.d < 1 ? 1 : 0));
+        else chain.unshift(...[...best.g].reverse().slice(0, best.d < 1 ? -1 : undefined));
+      }
+    } else
     for (;;) {
       const head = chain[0], tail = chain[chain.length - 1];
       let best = null;
