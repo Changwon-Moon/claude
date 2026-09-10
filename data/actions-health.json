@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T23:31:57.183Z",
+  "generatedAt": "2026-09-10T23:52:35.471Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -1031,6 +1031,16 @@
       "runs30": 6
     },
     {
+      "file": "molit-door.yml",
+      "name": "실거래 문 열렸나 (한 번 두드려 본다)",
+      "lastRun": "2026-09-02",
+      "daysAgo": 9,
+      "lastOk": "2026-09-02",
+      "okDaysAgo": 9,
+      "fails30": 1,
+      "runs30": 7
+    },
+    {
       "file": "neis-academy.yml",
       "name": "학원 수집 (나이스)",
       "lastRun": "2026-09-02",
@@ -1039,16 +1049,6 @@
       "okDaysAgo": 9,
       "fails30": 2,
       "runs30": 4
-    },
-    {
-      "file": "molit-door.yml",
-      "name": "실거래 문 열렸나 (한 번 두드려 본다)",
-      "lastRun": "2026-09-02",
-      "daysAgo": 8,
-      "lastOk": "2026-09-02",
-      "okDaysAgo": 8,
-      "fails30": 1,
-      "runs30": 7
     },
     {
       "file": "molit-rent-collect.yml",
@@ -1101,26 +1101,6 @@
       "runs30": 100
     },
     {
-      "file": "apt-supply-area.yml",
-      "name": "단지 공급면적 (카드 평 표기용)",
-      "lastRun": "2026-09-09",
-      "daysAgo": 2,
-      "lastOk": "2026-09-07",
-      "okDaysAgo": 3,
-      "fails30": 19,
-      "runs30": 100
-    },
-    {
-      "file": "apt-supply-retry.yml",
-      "name": "공급면적 — 자동 재시도",
-      "lastRun": "2026-09-09",
-      "daysAgo": 2,
-      "lastOk": "2026-09-07",
-      "okDaysAgo": 3,
-      "fails30": 19,
-      "runs30": 22
-    },
-    {
       "file": "kosis-probe.yml",
       "name": "KOSIS 표 검증 (probe)",
       "lastRun": "2026-09-09",
@@ -1141,24 +1121,24 @@
       "runs30": 12
     },
     {
-      "file": "singo-history-retry.yml",
-      "name": "곡선 — 자동 재시도",
-      "lastRun": "2026-09-10",
-      "daysAgo": 1,
-      "lastOk": "2026-09-10",
-      "okDaysAgo": 1,
-      "fails30": 0,
-      "runs30": 24
+      "file": "apt-supply-area.yml",
+      "name": "단지 공급면적 (카드 평 표기용)",
+      "lastRun": "2026-09-11",
+      "daysAgo": 0,
+      "lastOk": "2026-09-07",
+      "okDaysAgo": 3,
+      "fails30": 20,
+      "runs30": 100
     },
     {
-      "file": "singo-history.yml",
-      "name": "신고가 단지 이력 (한 단지 곡선)",
-      "lastRun": "2026-09-10",
-      "daysAgo": 1,
-      "lastOk": "2026-09-10",
-      "okDaysAgo": 1,
-      "fails30": 4,
-      "runs30": 52
+      "file": "apt-supply-retry.yml",
+      "name": "공급면적 — 자동 재시도",
+      "lastRun": "2026-09-11",
+      "daysAgo": 0,
+      "lastOk": "2026-09-07",
+      "okDaysAgo": 3,
+      "fails30": 20,
+      "runs30": 23
     },
     {
       "file": "auto-produce.yml",
@@ -1167,7 +1147,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-11",
       "okDaysAgo": 0,
-      "fails30": 15,
+      "fails30": 14,
       "runs30": 100
     },
     {
@@ -1191,13 +1171,33 @@
       "runs30": 20
     },
     {
+      "file": "singo-history-retry.yml",
+      "name": "곡선 — 자동 재시도",
+      "lastRun": "2026-09-11",
+      "daysAgo": 0,
+      "lastOk": "2026-09-11",
+      "okDaysAgo": 0,
+      "fails30": 0,
+      "runs30": 25
+    },
+    {
+      "file": "singo-history.yml",
+      "name": "신고가 단지 이력 (한 단지 곡선)",
+      "lastRun": "2026-09-11",
+      "daysAgo": 0,
+      "lastOk": "2026-09-11",
+      "okDaysAgo": 0,
+      "fails30": 4,
+      "runs30": 54
+    },
+    {
       "file": "singo-prep.yml",
       "name": "신고가 재료 미리 걸기 (아침 판정 직후)",
       "lastRun": "2026-09-11",
       "daysAgo": 0,
       "lastOk": "2026-09-11",
       "okDaysAgo": 0,
-      "fails30": 23,
+      "fails30": 24,
       "runs30": 36
     },
     {
