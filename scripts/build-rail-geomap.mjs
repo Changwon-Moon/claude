@@ -780,9 +780,14 @@ function buildOne(L) {
     const keys = st.xfer || [];
     const bw = keys.length ? badgeRowWidth(keys) : 0;
     const nm = [...st.name].length * LBL_FS * 0.98 + provW(st);
-    /* 세로로 쌓으면 폭은 **가장 넓은 뱃지 하나**다 — 겹침 해소가 이 값을 자로 쓴다. */
-    if (st.badgeStack === true && keys.length > 1)
-      return Math.max(nm, Math.max(...keys.map((k) => badgeWidth(k))));
+    /* 세로로 쌓으면 폭은 **가장 넓은 줄**이다 — 겹침 해소가 이 값을 자로 쓴다.
+       badgeStack 이 숫자면 그 개수만큼 한 줄에 놓는다(4개짜리 서울역을 2×2 로). */
+    const sn = st.badgeStack === true ? 1 : (typeof st.badgeStack === "number" ? st.badgeStack : 0);
+    if (sn && keys.length > 1) {
+      let w = 0;
+      for (let i = 0; i < keys.length; i += sn) w = Math.max(w, badgeRowWidth(keys.slice(i, i + sn)));
+      return Math.max(nm, w);
+    }
     return ONE_ROW ? (bw ? bw + BDG_PAD : 0) + nm : Math.max(nm, bw);
   };
   /* 🔴 **옆으로 비켜 세우기**(labelAlign)의 자 — 그리기와 겹침 해소가 같은 값을 봐야 한다.
@@ -794,12 +799,20 @@ function buildOne(L) {
      지도마다 한두 곳 있다. ⚠️ alignOff 에 넣으면 밀어내기가 도로 제자리로 돌려놓는다 —
      그래서 그리기에서만 더한다. */
   const dxOf = (st) => (typeof st.labelDx === "number" ? st.labelDx : 0);
+  /* 🔴 이름표 한 덩이의 **세로 높이**. 세 곳(자리 정하기·겹침 해소·지명 피하기)이 같은 자를
+     써야 한다 — 앞 판은 지명 쪽만 세로 쌓기를 몰라서 「은평구」가 서울역 뱃지 밑으로 들어갔다. */
+  const blockHv = (st) => {
+    const ks = st.xfer || [];
+    const sn = st.badgeStack === true ? 1 : (typeof st.badgeStack === "number" ? st.badgeStack : 0);
+    if (sn && ks.length > 1) {
+      const rows = Math.ceil(ks.length / sn);
+      return rows * BDG_H + (rows - 1) * 5 + 6 + LBL_FS;
+    }
+    return ONE_ROW ? Math.max(BDG_H, LBL_FS) : (ks.length ? BDG_H + BDG_VGAP : 0) + LBL_FS;
+  };
   const assignUpDown = () => allPos.map((p, i) => {
     const x = X(p.lon), y = Y(p.lat);
-    const stackN = (p.st.badgeStack === true && (p.st.xfer || []).length > 1) ? (p.st.xfer || []).length : 0;
-    const need = leadVOf(p.st) + (stackN ? stackN * BDG_H + (stackN - 1) * 5 + 6 + LBL_FS
-      : ONE_ROW ? Math.max(BDG_H, LBL_FS)
-      : ((p.st.xfer || []).length ? BDG_H + BDG_VGAP : 0) + LBL_FS) + 8;
+    const need = leadVOf(p.st) + blockHv(p.st) + 8;
     let side = i % 2 === 0 ? 1 : -1;                 // ① 번갈아 (+1 = 아래)
     /* ⓪ 데이터셋이 쪽을 지정했으면 그게 우선이다(오너가 눈으로 보고 정한 자리).
        규칙으로 못 잡는 자리가 가끔 있다 — 그럴 때 코드를 비틀지 말고 여기 한 줄로 적는다. */
@@ -1008,14 +1021,8 @@ function buildOne(L) {
          앞 판은 x 순으로 무조건 밀어서, 용산의 세 뱃지 줄(177px)이 청량리를 117px 오른쪽으로
          밀어 왕숙 마커 위에 올려놓았다(designQa svglabel 이 잡았다).
          오너가 "그 공간을 파고들어"라고 부른 것이 바로 이 빈 띠다. */
-      const blockH = (st) => {
-        const ks = st.xfer || [];
-        if (st.badgeStack === true && ks.length > 1)
-          return ks.length * BDG_H + (ks.length - 1) * 5 + 6 + LBL_FS;
-        return ONE_ROW ? Math.max(BDG_H, LBL_FS) : (ks.length ? BDG_H + BDG_VGAP : 0) + LBL_FS;
-      };
       const band = (p) => {
-        const a = p.y + sd * leadVOf(p.st), b = a + sd * blockH(p.st);
+        const a = p.y + sd * leadVOf(p.st), b = a + sd * blockHv(p.st);
         return [Math.min(a, b) - 4, Math.max(a, b) + 4];
       };
       const hits = (a2, b2) => { const A = band(a2), B = band(b2); return A[0] < B[1] && B[0] < A[1]; };
@@ -1207,17 +1214,22 @@ function buildOne(L) {
       /* ⚠️ 뱃지를 **세로로 쌓는다**(badgeStack). 환승이 셋이면 한 줄이 260px 이 되어
          옆 역을 덮는다 — 홍대입구(2·경의중앙·공항철도)가 그랬다.
          세로로 쌓으면 폭이 가장 넓은 뱃지 하나로 줄고, 이름은 그 아래(위)에 붙는다. */
-      const STACK = p.st.badgeStack === true && keys.length > 1;
+      const stackN = p.st.badgeStack === true ? 1 : (typeof p.st.badgeStack === "number" ? p.st.badgeStack : 0);
+      const STACK = stackN > 0 && keys.length > 1;
       let stackH = 0, nameCy = ncy, nameLeft = 0;
       if (STACK) {
-        const bwMax = Math.max(...keys.map((k) => badgeWidth(k)));
-        stackH = keys.length * BDG_H + (keys.length - 1) * 5;
+        const rows = [];
+        for (let i = 0; i < keys.length; i += stackN) rows.push(keys.slice(i, i + stackN));
+        stackH = rows.length * BDG_H + (rows.length - 1) * 5;
         /* 쌓은 더미의 **바깥 끝**이 이름 쪽이다 — 위쪽 역이면 이름이 더미 위로 간다. */
         const top = p.side > 0 ? endY + 4 : endY - 4 - stackH;
-        keys.forEach((k, ki) => { bdV += badgeSvg(k, cx - badgeWidth(k) / 2, top + ki * (BDG_H + 5) + BDG_H / 2); });
+        rows.forEach((row, ri) => {
+          let bx = cx - badgeRowWidth(row) / 2;
+          const cy2 = top + ri * (BDG_H + 5) + BDG_H / 2;
+          for (const k of row) { bdV += badgeSvg(k, bx, cy2); bx += badgeWidth(k) + BDG_GAP; }
+        });
         nameCy = p.side > 0 ? top + stackH + 6 + LBL_FS / 2 : top - 6 - LBL_FS / 2;
         nameLeft = cx - (nmW + pwV) / 2;
-        void bwMax;
       } else if (keys.length) {
         let bxx = ONE_ROW ? rowL : cx - bwRawV / 2;
         for (const k of keys) { bdV += badgeSvg(k, bxx, bcy); bxx += badgeWidth(k) + BDG_GAP; }
@@ -1347,10 +1359,12 @@ function buildOne(L) {
   /* 역 이름·뱃지가 차지한 상자들 — 지명은 여기도 피한다. */
   const lblBoxes = lbl.map((p) => {
     if (WIDE) {
+      /* 🔴 지명이 피해야 할 자리는 **이름표가 실제로 놓인 자리**다. 앞 판은 p.lx(비켜 세우기
+         전 가운데)와 안 쌓은 높이로 재서, 서울역의 세로 뱃지 밑으로 「은평구」가 들어갔다. */
+      const c = p.lx + alignOff(p.st) + dxOf(p.st);
       const hw = rowWv(p.st) / 2 + 8;
-      const far = p.y + p.side * (leadVOf(p.st) + (ONE_ROW ? Math.max(BDG_H, LBL_FS)
-        : ((p.st.xfer || []).length ? BDG_H + BDG_VGAP : 0) + LBL_FS) + 6);
-      return { x0: Math.min(p.lx, p.x) - hw, x1: Math.max(p.lx, p.x) + hw,
+      const far = p.y + p.side * (leadVOf(p.st) + blockHv(p.st) + 6);
+      return { x0: Math.min(c, p.x) - hw, x1: Math.max(c, p.x) + hw,
                y0: Math.min(p.y, far) - 6, y1: Math.max(p.y, far) + 6 };
     }
     /* 위/아래로 붙인 라벨은 좌우로 안 뻗는다 — 실제 쓴 폭(rowWidth)으로 잰다.

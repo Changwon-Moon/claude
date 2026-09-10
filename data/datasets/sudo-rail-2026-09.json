@@ -279,7 +279,8 @@
             "경의중앙",
             "서해"
           ],
-          "km": 13.6
+          "km": 13.6,
+          "labelSide": "up"
         },
         {
           "name": "창릉",
@@ -417,7 +418,9 @@
             "인천2"
           ],
           "km": 10.1,
-          "labelAlign": "right"
+          "labelAlign": "right",
+          "leadV": 60,
+          "labelDx": -50
         },
         {
           "name": "부평",
@@ -437,7 +440,8 @@
             "GTX-D"
           ],
           "km": 22.5,
-          "labelSide": "down"
+          "labelSide": "down",
+          "leadV": 76
         },
         {
           "name": "신도림",
@@ -447,8 +451,9 @@
             "2"
           ],
           "km": 31.6,
-          "labelAlign": "right",
-          "leadV": 55
+          "labelAlign": "left",
+          "leadV": 14,
+          "labelSide": "down"
         },
         {
           "name": "여의도",
@@ -460,8 +465,7 @@
           ],
           "km": 35.0,
           "labelSide": "down",
-          "leadV": 62,
-          "labelAlign": "left"
+          "leadV": 40
         },
         {
           "name": "용산",
@@ -472,8 +476,10 @@
             "신분당"
           ],
           "km": 39.5,
-          "labelSide": "up",
-          "leadV": 90
+          "labelSide": "down",
+          "leadV": 20,
+          "badgeStack": true,
+          "labelAlign": "right"
         },
         {
           "name": "서울역",
@@ -486,9 +492,10 @@
           ],
           "km": 42.7,
           "labelAlign": "left",
-          "badgeStack": true,
-          "leadV": 60,
-          "labelDx": -34
+          "badgeStack": 2,
+          "leadV": 52,
+          "labelSide": "up",
+          "labelDx": 30
         },
         {
           "name": "청량리",
@@ -501,7 +508,7 @@
           ],
           "km": 51.1,
           "badgeStack": true,
-          "leadV": 78
+          "leadV": 30
         },
         {
           "name": "상봉",
@@ -512,8 +519,8 @@
           ],
           "km": 55.1,
           "labelSide": "down",
-          "labelAlign": "left",
-          "leadV": 55
+          "leadV": 14,
+          "labelDx": 14
         },
         {
           "name": "별내",
