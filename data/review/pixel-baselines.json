@@ -192,7 +192,7 @@
       "builder": "rail-geomap",
       "content": "data/content/2026-09-09/railmap-sinansan.json",
       "png": "railmap-sinansan-p1.png",
-      "md5": "b99b1041bd9311cb2cbe7e01a89afa11",
+      "md5": "4afa82bd1e7cf1cb46654dc988eeba28",
       "note": "오너 지시로 픽셀이 바뀌어 2026-09-09 재기록. ① 「가칭」 꼬리표를 역 옆에서 걷어 푸터 위 각주 한 줄로 옮겼다 · ② 안 밀린 라벨은 지시선을 빼고 마커에 붙였다(실지도판) · ③ 인동선 역명 4건(수원종합운동장·호계·북수원·메타폴리스)과 신분당선 2건(국립박물관·수성중사거리). 오너가 신안산선·인동선·월판선 3장을 눈으로 보고 확인하는 것이 이 값의 근거다."
     },
     {
@@ -203,7 +203,7 @@
       "builder": "rail-geomap",
       "content": "data/content/2026-09-09/railmap-indong.json",
       "png": "railmap-indong-p1.png",
-      "md5": "d782fa941398beeb054aa8800afc7125"
+      "md5": "83df92ec5ff49da4833bb27a0db4a82d"
     },
     {
       "label": "railmap-wolpan",
