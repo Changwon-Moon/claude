@@ -168,7 +168,16 @@ const PANELS_FN = (v, H, diag = "nwse") => ({
 }[v]);
 const SPLIT_INFO = VARIANT === "d";
 
-function buildOne(L0) {
+/* ── 🔴 **지도를 두 토막으로 나눠 위아래에 놓기** (오너 2026-09-10)
+   "북부와 남부가 대부분을 차지하도록 토막내서 배치해 줘. 기존에 뚫려있는 노선은 되니까"
+   신분당선은 용산~호매실 48.7km 인데 카드의 주인공은 양 끝의 연장 두 토막(17.7km)이다.
+   한 상자에 다 담으면 가운데 60% 가 빈 회색 구간이고, 남부 5역이 270×100px 안에 뭉친다.
+   그래서 **투영을 두 번** 돌린다 — 상자마다 제 배율·제 배경·제 지명을 갖는다.
+   ⚠️ 좌표를 옮겨 붙이는 것이 아니다. 상자 하나하나는 여전히 실제 좌표 그대로다
+      (그렇게 안 하면 이 판형이 내세우는 「선형은 실제다」가 거짓이 된다).
+   ⚠️ opt 는 **부분 지도로 불릴 때만** 온다. 안 주면 앞 판과 똑같이 돈다 — 확정된 카드의
+      픽셀이 이 손잡이 때문에 움직이면 안 된다. */
+function buildOne(L0, opt = {}) {
   /* 🔴 도식형(rail-line@1)의 데이터셋에는 **역이 아닌 줄**이 있다 — 신분당선의
      `{type:"gap", text:"논현 ~ 상현 13역 — 이미 개통"}` 처럼. 도식형은 그 줄을 「사이 생략」
      표시로 그리지만, **지도판에는 놓을 자리가 없다**(좌표가 없는 것이 아니라 역이 아니다).
@@ -178,8 +187,8 @@ function buildOne(L0) {
   /* 제목 크기와 지도 높이는 **노선 이름 길이에 따라 달라진다.** 제목이 두 줄이 되면
      카드 아래로 넘치고(2026-09-09 인동선 25px 넘침), 짧아지면 그만큼 지도를 키운다. */
   const titleFs = fitTitleFs(`${L.name} ${L.titleAsk || "언제 개통하지?"}`, TITLE_FS_BY_V[VARIANT]);
-  let BH = BODY_H + (VARIANT === "d" ? Math.round(93 * 1.06) - Math.round(titleFs * 1.06) : 0);
-  let PANELS = PANELS_FN(VARIANT, BH);
+  let BH = opt.bodyH ?? (BODY_H + (VARIANT === "d" ? Math.round(93 * 1.06) - Math.round(titleFs * 1.06) : 0));
+  let PANELS = opt.panels ?? PANELS_FN(VARIANT, BH);
   let panelDiag = "nwse";
 
   const A = anchorsDoc[L.key];
@@ -356,13 +365,23 @@ function buildOne(L0) {
        ⚠️ 자를 기준이 되는 역의 실좌표가 없으면 자르지 않는다 — 모르면 손대지 않는다. */
     {
       const tk = buildTrack(chain);
-      const ends = [L.stations[0], L.stations[L.stations.length - 1]].map((st) => truth.get(st.name));
+      /* ⚠️ 자를 기준 역에 **OSM 실좌표가 없을 수 있다**(신분당선 호매실 — 아직 안 지은 역이라
+         OSM 에 점이 없다). 그때는 닻(시군구+동 중심)으로 대신 잰다 — 자를 자리를 정하는 데는
+         동 중심이면 충분하고, 못 자르면 상자가 노선 전체를 덮어 확대가 통째로 무의미해진다. */
+      const endAt = (st) => truth.get(st.name) || (() => {
+        const a2 = A[st.name]; if (!a2?.dong) return null;
+        const g2 = sggGeom(a2.sgg); if (!g2) return null;
+        return dongCentre(dong, g2, a2.dong);
+      })();
+      const ends = [L.stations[0], L.stations[L.stations.length - 1]].map(endAt);
       if (ends[0] && ends[1]) {
         const ts = ends.map((g) => projectOnTrack(tk, g).t).sort((a, b) => a - b);
         const MARGIN = 400;                       // m — 역이 선형 끝점보다 살짝 밖일 수 있다
         const lo = Math.max(0, ts[0] - MARGIN), hi = Math.min(tk[tk.length - 1].d, ts[1] + MARGIN);
         const cut = chain.filter((_, i) => tk[i].d >= lo && tk[i].d <= hi);
-        if (cut.length >= 50 && cut.length < chain.length) {
+        /* ⚠️ 토막 지도(mapSplit)의 부분 선형은 점이 50개가 안 될 수 있다 — 그때도 잘라야 한다.
+           안 자르면 상자가 노선 전체를 덮어 확대한 뜻이 사라진다. */
+        if (cut.length >= (opt.sub ? 8 : 50) && cut.length < chain.length) {
           console.log(`   ✂️ ${L.name} 양 끝 자름 — 점 ${chain.length} → ${cut.length}`);
           chain.length = 0; chain.push(...cut);
         }
@@ -375,12 +394,15 @@ function buildOne(L0) {
        역별 km 이 있으면 **본선 마지막 역의 km** 이 본선 길이다. */
     const kmMainMax = Math.max(0, ...L.stations.map((st) => (typeof st.km === "number" ? st.km : 0)));
     const want = (kmMainMax || parseFloat(String(L.km).replace(/[^\d.]/g, ""))) * 1000;
-    if (want && chainLen < want * 0.7)
+    /* ⚠️ 토막 지도는 **일부러 짧다** — 공표 총연장에 견주면 늘 모자라 보인다. 가드를 건너뛴다. */
+    if (want && !opt.sub && chainLen < want * 0.7)
       throw new Error(`${L.name}: 토막을 이었는데 ${(chainLen / 1000).toFixed(1)}km 뿐이다 (공표 ${L.km}) — 아직 토막이 더 있다`);
     mainWay = { ...mainWay, g: chain };
     console.log(`   🔗 ${L.name} 선형 토막 잇기 — ${(chainLen / 1000).toFixed(1)}km · 점 ${chain.length}개`);
   }
-  if (mainWay.g.length < 50)
+  /* ⚠️ 토막 지도는 점이 적다 — 5.8km 짜리 북부 구간이 20점이다. 그건 「토막만 받은」 것이 아니라
+     **일부러 자른** 것이다. 온전한 노선에서는 그대로 50점 가드가 지킨다. */
+  if (mainWay.g.length < (opt.sub ? 8 : 50))
     throw new Error(`${L.name}: 선형 점이 ${mainWay.g.length}개뿐이다 — 토막만 받았다. 그리면 안 된다`); // ②
   /* ── 선형의 **방향**을 역 순서에 맞춘다.
      OSM 은 길을 어느 쪽으로든 그려 놓는다 — 인동선은 동탄에서 인덕원 쪽으로 그려져 있어
@@ -597,7 +619,10 @@ function buildOne(L0) {
        764 → 742: 각주를 지도 **아래**로 내리면서(오너 2026-09-09) 각주 22px 만큼 양보했다.
        세로 판형과 **같은 틈**이 되도록 잰 값이다 — 지도↔각주 18px · 각주↔푸터 33px
        (packages/renderer/src/_measure.ts 로 세 장을 나란히 재서 맞췄다). */
-    BH = 742; PANELS = [];
+    /* ⚠️ 토막 지도(mapSplit)는 **제 높이를 이미 받아 왔다** — 여기서 742 로 덮으면
+       두 상자를 쌓은 자리와 어긋난다(실측: 393·543 자리에 742 짜리가 들어가 카드를 밀어냈다).
+       가로 판형의 나머지(이름표를 위·아래로)는 그대로 쓴다 — 토막은 대개 가로로 눕는다. */
+    BH = opt.bodyH ?? 742; PANELS = opt.panels ?? [];
   }
   /* 오른쪽에 역 이름이 붙으므로 지도를 왼쪽으로 몰고 이름 자리를 비워 둔다. */
   /* 오른쪽 이름 자리는 **가장 긴 역 이름에서 계산한다.** 고정값으로 두면 짧은 노선에서는
@@ -648,11 +673,26 @@ function buildOne(L0) {
   /* 위아래 여백 10 → 34 (오너 2026-09-09 "역 위아래 여백이 너무 없어졌네"). 끝 역의 이름이
      테두리에 붙어 숨이 막혔다. 지도가 그만큼 작아지지만 읽는 쪽이 편한 게 먼저다. */
   /* 가로 노선은 이름표가 위아래로 서므로 그쪽에 자리가 필요하다(지시선 26 + 뱃지 23 + 이름 23 + 여유). */
+  /* 🔴 토막 지도는 **정보 상자가 상자 높이의 대부분을 먹는다** — 공정률 패널은 304px 인데
+     위 상자가 393px 이다. 세로로 피할 자리가 없으니 **가로로 비켜** 그린다: 패널이 그 상자에서
+     차지하는 세로 비율이 절반을 넘으면 그 폭만큼을 좌·우 여백으로 미리 떼어 놓는다.
+     (안 떼면 신사 역이 공정률 패널 밑에 깔린다 — 2026-09-10 실측.) */
+  const padPanel = (side) => {
+    if (!opt.sub || !PANELS?.length) return 0;
+    let w = 0;
+    for (const r of PANELS) {
+      /* ⚠️ 「패널이 절반 넘게 먹을 때만」으로 뒀다가 아래 상자에서 안 먹혔다(패널 185 / 상자 543).
+         토막 지도는 상자가 작아 세로로 피할 자리가 아예 없다 — 있으면 무조건 가로로 비킨다. */
+      if (side < 0 && r.x0 < MAP_W * 0.4) w = Math.max(w, r.x1 + 12);
+      if (side > 0 && r.x1 > MAP_W * 0.6) w = Math.max(w, MAP_W - r.x0 + 12);
+    }
+    return w;
+  };
   const PADT = WIDE ? 104 : 34, PADB = WIDE ? 104 : 34;
   /* a·b·d 는 좌우 교차 → 양쪽에 자리. c 는 현행(오른쪽 한 열). */
   const TWO_SIDED = VARIANT !== "c";
-  let PADL = WIDE ? 70 : TWO_SIDED ? SIDE_W : 22;
-  let PADR = WIDE ? 70 : TWO_SIDED ? SIDE_W : Math.round(30 + ROW_W + 8);
+  let PADL = Math.max(padPanel(-1), WIDE ? 70 : TWO_SIDED ? SIDE_W : 22);
+  let PADR = Math.max(padPanel(1), WIDE ? 70 : TWO_SIDED ? SIDE_W : Math.round(30 + ROW_W + 8));
   const spanX = (lon1 - lon0) * kx, spanY = lat1 - lat0;
   /* ⚠️ 좌우 여백을 **최악값(가장 긴 이름 + 가장 많은 뱃지)** 으로 잡으면 지도가 확 줄어든다.
      신안산선 실측(2026-09-09): 최악값 344px × 2 = 688px 을 이름 자리로 떼어 주니 지도에 남는
@@ -677,7 +717,7 @@ function buildOne(L0) {
   const Y = (lat) => BH - (offY + (lat - lat0) * s);
   /* ── 어느 대각선이 비는가. 노선 점들의 (x,y) 공분산 부호 하나면 된다 —
      양수면 북서→남동(그 대각선이 노선 위)이므로 상자는 북동·남서로 간다. */
-  if (VARIANT === "d" && !WIDE) {
+  if (VARIANT === "d" && !WIDE && !opt.panels) {
     const pts = mainWay.g.map((q) => ({ x: X(q.lon), y: Y(q.lat) }));
     const mx = pts.reduce((a, q) => a + q.x, 0) / pts.length;
     const my = pts.reduce((a, q) => a + q.y, 0) / pts.length;
@@ -932,7 +972,8 @@ function buildOne(L0) {
          방금 조인 것을 그대로 물린다(2026-09-10 에 그렇게 세 번 헛돌았다).
          조인 뒤에는 **실제 끝**을 다시 재서, 카드 밖으로 나간 만큼만 되돌린다. */
       const prevL = PADL, prevR = PADR;
-      PADL = Math.max(24, PADL - slackL); PADR = Math.max(24, PADR - slackR);
+      PADL = Math.max(Math.max(24, padPanel(-1)), PADL - slackL);
+      PADR = Math.max(Math.max(24, padPanel(1)), PADR - slackR);
       fit(); lbl = assignSides();
       const outL = 8 - Math.min(...lbl.filter((p) => p.side < 0).map((q) => edge(q, -1)), MAP_W);
       const outR = Math.max(...lbl.filter((p) => p.side > 0).map((q) => edge(q, 1)), 0) - (MAP_W - 8);
@@ -1663,7 +1704,9 @@ function buildOne(L0) {
      한 열짜리(c)만 예전처럼 이름 열 왼쪽에서 자른다. */
   const clipL = TWO_SIDED ? 0 : 0;
   const clipR = TWO_SIDED ? MAP_W : Math.max(...dotXs) + 22;
-  const clipId = `rgmclip-${L.key}-${VARIANT}`;
+  /* ⚠️ 토막 지도는 한 카드 안에 **svg 가 둘**이다 — clipPath id 가 같으면 브라우저가 먼저 나온
+     것 하나로 둘 다 자른다(실측: 아래 상자 내용이 위 상자 높이에서 잘려 호매실·구운이 사라졌다). */
+  const clipId = `rgmclip-${L.key}-${VARIANT}${opt.idSuffix || ""}`;
   let mapSvg =
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${MAP_W} ${BH}" width="${MAP_W}" height="${BH}">` +
     `<defs><clipPath id="${clipId}"><rect x="${clipL.toFixed(1)}" y="0" width="${(clipR - clipL).toFixed(1)}" height="${BH}" rx="13"/></clipPath></defs>` +
@@ -1758,6 +1801,50 @@ for (const L of rail.lines) {
     continue;
   }
   const { card, placed, anchors, trackLen } = built;
+
+  /* ── 🔴 **두 토막 지도** (mapSplit, 오너 2026-09-10)
+     한 상자에 다 담으면 가운데가 비는 노선이 있다(신분당선 — 양 끝의 연장 두 토막이 주인공인데
+     사이 33km 는 이미 개통한 구간이다). 그럴 때는 **투영을 두 번 돌려** 상자 두 개를 위아래로 놓는다.
+     ⚠️ 좌표를 옮겨 붙이지 않는다 — 상자마다 제 배율로 제 자리를 그린다. 그래서 각 상자 안은
+        여전히 실제 좌표다. 두 상자 사이가 지리적으로 이어져 보이지 않게 **테두리를 각각** 두른다.
+     ⚠️ 카드의 나머지(공정률·정보·각주·캡션)는 **온전한 노선으로 한 번 더 지은 것**을 그대로 쓴다.
+        지도만 갈아 끼운다 — 숫자가 토막마다 달라지면 안 되기 때문이다. */
+  if (L.mapSplit?.length === 2) {
+    const BHfull = card.layout.bodyH, GAPBOX = 18;
+    const share = L.mapSplit.map((b) => b.share || 0.5);
+    const sum = share[0] + share[1];
+    const HS = [Math.round((BHfull - GAPBOX) * share[0] / sum), 0];
+    HS[1] = BHfull - GAPBOX - HS[0];
+    const subs = L.mapSplit.map((b, i) => {
+      const names = new Set(b.stations);
+      const stations = L.stations.filter((st) => names.has(st.name));
+      const br = L.branch?.stations?.filter((st) => names.has(st.name)) || [];
+      /* ⚠️ **km 은 떼고 넘긴다.** 누적거리는 노선 전체 기준이라 토막 선형(10km)에 대면
+         31.5km 짜리 역이 끝으로 날아간다. 토막에서는 실좌표·닻이 자리를 잡는다. */
+      const strip = (a) => a.map(({ km, ...r }) => r);
+      const sub = { ...L, stations: strip(stations),
+        branch: br.length && names.has(L.branchAfter) ? { ...L.branch, stations: strip(br) } : undefined,
+        branchAfter: br.length && names.has(L.branchAfter) ? L.branchAfter : undefined,
+        openSegment: undefined,          // 토막 안에는 개통 구간이 없다
+        through: undefined };
+      /* 패널은 **그 상자 안의 좌표**로 넘긴다 — 위 상자엔 공정률, 아래 상자엔 정보표. */
+      /* 패널 두 개는 카드 전체 좌표에 붙어 있다(HTML 오버레이) — 위 것은 위 상자, 아래 것은
+         아래 상자 안에 들어간다. 각 상자의 **제 좌표로** 옮겨 넘긴다. */
+      const PF = PANELS_FN(VARIANT, BHfull, card.panelSide) || [];
+      const top = HS[0] + (i ? GAPBOX : 0);
+      const panels = PF
+        .filter((r) => (i === 0 ? r.y1 <= HS[0] : r.y0 >= top))
+        .map((r) => (i === 0 ? r : { ...r, y0: r.y0 - top, y1: r.y1 - top }));
+      return buildOne(sub, { bodyH: HS[i], panels, sub: true, idSuffix: `-b${i}` }).card.mapSvg;
+    });
+    const inner = (svg, y, h) =>
+      `<svg x="0" y="${y}" width="${MAP_W}" height="${h}" viewBox="0 0 ${MAP_W} ${h}" overflow="visible">`
+      + svg.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "") + `</svg>`;
+    card.mapSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${MAP_W} ${BHfull}" width="${MAP_W}" height="${BHfull}">`
+      + inner(subs[0], 0, HS[0]) + inner(subs[1], HS[0] + GAPBOX, HS[1]) + `</svg>`;
+    console.log(`   ▤ ${L.name} 지도 두 토막 — ${HS[0]}px + ${HS[1]}px`);
+  }
+
   writeFileSync(join(outDir, `railmap-${L.key}.json`), JSON.stringify(card, null, 2) + "\n");
 
   /* ⑤ 개략 고지는 **캡션이 유일한 자리**다(오너 2026-09-09 선택). 그래서 코드가 넣는다. */

@@ -43,7 +43,10 @@
       /* 테두리·바탕은 **빌더가 SVG 안에서** 그린다 — 여기서 border 를 주면 상자 크기가 달라져
          SVG 뷰박스와 어긋난다(레터박스가 생긴다). */
       .rgm-map { position: relative; width: 100%; height: var(--bodyH); overflow: hidden; }
-      .rgm-map svg { display: block; width: 100%; height: 100%; }
+      .rgm-map > svg { display: block; width: 100%; height: 100%; }
+      /* ⚠️ **바로 아래 자식만** 잡는다. 토막 지도(mapSplit)는 svg 안에 svg 가 둘 들어 있는데,
+         `.rgm-map svg` 로 두면 그 안쪽 것들까지 100%/100% 로 늘어나 x·y·크기가 통째로 무시된다
+         (2026-09-10 실측 — 두 상자가 겹쳐 앉고 지도가 아래로 밀렸다). */
 
       .rgm-prog { }
       .rgm-prog .lb { font-size: 22px; font-weight: 800; color: var(--wirit-gray); letter-spacing: -0.02em; }
