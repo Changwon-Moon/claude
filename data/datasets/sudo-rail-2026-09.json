@@ -1130,13 +1130,15 @@
           "xfer": [
             "5"
           ],
-          "km": 8.3
+          "km": 8.3,
+          "labelSide": "down"
         },
         {
           "name": "강서구청",
           "state": "역명미정",
           "xfer": [],
-          "km": 9.8
+          "km": 9.8,
+          "labelSide": "down"
         },
         {
           "name": "가양",
@@ -1144,13 +1146,15 @@
           "xfer": [
             "9"
           ],
-          "km": 10.9
+          "km": 10.9,
+          "labelSide": "up"
         },
         {
           "name": "덕은",
           "state": "가칭",
           "xfer": [],
-          "km": 13.5
+          "km": 13.5,
+          "labelSide": "up"
         },
         {
           "name": "상암",
@@ -1162,7 +1166,8 @@
           "name": "성산",
           "state": "가칭",
           "xfer": [],
-          "km": 18.0
+          "km": 18.0,
+          "labelSide": "up"
         },
         {
           "name": "홍대입구",
@@ -1172,7 +1177,8 @@
             "경의중앙",
             "공항철도"
           ],
-          "km": 19.5
+          "km": 19.5,
+          "labelSide": "down"
         }
       ],
       "progressText": "9.7",
