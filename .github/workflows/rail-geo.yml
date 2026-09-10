@@ -8,6 +8,12 @@ name: 철도 선형 좌표 (OSM 탐사)
 # ⚠️ **예약을 걸지 않는다.** 이건 한 번 재서 판단하려는 탐사이지 매일 도는 배관이 아니다.
 #    (2026-08-31 실측 — 예약이 몰린 시간대일수록 스케줄러가 건너뛴다. 안 도는 예약을
 #     늘리는 것은 파수꾼이 볼 것만 늘린다.)
+# ⚠️ **푸시도 방아쇠다** (2026-09-10). 세션은 Actions 의 「Run workflow」 버튼을 못 누른다 —
+#    코워크 컨테이너에서 GitHub API 가 막혀 있고, 세션이 쥔 손잡이는 **푸시 하나뿐**이다
+#    (CLAUDE.md: 워크플로 30개 중 19개가 푸시를 방아쇠로 쓴다). 그래서 대기열 파일을 둔다:
+#    `data/rail-geo-queue.txt` 에 노선 키를 한 줄에 하나씩 적어 밀면 그 노선만 탐사한다.
+#    ⚠️ 되도는 것을 두 겹으로 막는다 — ① paths 가 대기열 파일 하나만 본다(봇이 커밋하는
+#       data/geo/* 는 방아쇠가 아니다) ② 봇 커밋 메시지에 [skip ci] 가 있다.
 on:
   workflow_dispatch:
     inputs:
@@ -26,6 +32,9 @@ on:
         type: boolean
         required: false
         default: false
+  push:
+    paths:
+      - "data/rail-geo-queue.txt"
 
 # 봇이 결과 파일을 커밋한다 — 기본 GITHUB_TOKEN 은 읽기만 되어서 첫 실행이 커밋 단계에서
 # 죽었다(run 34176171620). 탐사 자체는 성공했는데 결과가 저장소에 안 남아 볼 수가 없었다.
@@ -46,22 +55,40 @@ jobs:
       #    21초 만에 끝나고 배경 자료가 안 나왔다. probe 로 돌아 결과가 같아 커밋도 생략됐다).
       #    입력 배선을 더 파는 대신 **둘 다 순서대로 돌린다** — context 는 probe 의 상자를 쓰므로
       #    이 순서가 맞고, 한 번 더 도는 비용은 1분이다. 고를 게 없으면 잘못 고를 일도 없다.
+      # ⚠️ `--only` 는 **한 노선만** 받는다(collect-rail-geo.mjs 의 ONLY 는 문자열 하나다).
+      #    그래서 여러 노선은 for 로 돈다 — 탐사 결과 파일은 덮지 않고 **합치므로**
+      #    (2026-09-09 에 --only 로 신안산선 선형을 한 번 잃고 고친 자리다) 순서대로 쌓인다.
+      # ⚠️ 한 노선이 실패해도 **멈추지 않는다.** 넷 중 하나가 OSM 에 이름이 다르게 올라와
+      #    빈손으로 끝나는 일은 흔하고, 그때 나머지 셋까지 버리면 런을 또 돌려야 한다.
       - name: OSM 탐사 (선형 → 배경)
         run: |
-          ONLY=""
-          [ -n "${{ inputs.only }}" ] && ONLY="--only ${{ inputs.only }}"
           EXTRA=""
           [ "${{ inputs.extra }}" = "true" ] && EXTRA="--extra"
-          echo "▶ only='${{ inputs.only }}' skip_probe='${{ inputs.skip_probe }}'"
-          if [ "${{ inputs.skip_probe }}" != "true" ]; then
-            node scripts/collect-rail-geo.mjs --probe $ONLY $EXTRA
+          if [ "${{ github.event_name }}" = "push" ]; then
+            KEYS=$(sed -e 's/\r$//' -e 's/#.*//' data/rail-geo-queue.txt | tr -s ' \t' ' ' | tr '\n' ' ')
+            echo "▶ 대기열에서 읽음: '$KEYS'"
           else
-            echo "⏭ 선형 탐사 건너뜀"
+            KEYS="${{ inputs.only }}"
+            echo "▶ only='$KEYS' skip_probe='${{ inputs.skip_probe }}'"
           fi
-          if [ -z "$EXTRA" ]; then
-            node scripts/collect-rail-geo.mjs --context $ONLY
+          run_one () {
+            ONLY=""
+            [ -n "$1" ] && ONLY="--only $1"
+            if [ "${{ inputs.skip_probe }}" != "true" ]; then
+              node scripts/collect-rail-geo.mjs --probe $ONLY $EXTRA || echo "⚠️ 탐사 실패: '$1'"
+            else
+              echo "⏭ 선형 탐사 건너뜀"
+            fi
+            if [ -z "$EXTRA" ]; then
+              node scripts/collect-rail-geo.mjs --context $ONLY || echo "⚠️ 배경 실패: '$1'"
+            else
+              echo "⏭ 배경 노선은 건너뜀(공용 구간 탐사)"
+            fi
+          }
+          if [ -z "$(echo $KEYS)" ]; then
+            run_one ""                      # 비면 8개 전부 한 번에
           else
-            echo "⏭ 배경 노선은 건너뜀(공용 구간 탐사)"
+            for K in $KEYS; do echo "── $K"; run_one "$K"; done
           fi
           echo "── 결과 파일:"; ls -la data/geo/_probe-rail-osm.json data/geo/rail-context.json || true
 

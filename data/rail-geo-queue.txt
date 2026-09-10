@@ -1,0 +1,16 @@
+# 철도 선형 OSM 탐사 대기열 — 이 파일을 바꿔 밀면 .github/workflows/rail-geo.yml 이 돈다.
+#
+# 왜 이 파일이 있나: 세션은 Actions 의 「Run workflow」 버튼을 못 누른다(코워크 컨테이너에서
+# GitHub API 가 막혀 있다). 세션이 쥔 손잡이는 푸시 하나뿐이라, 이 저장소의 다른 배관처럼
+# 대기열 파일을 방아쇠로 쓴다.
+#
+# 쓰는 법: 노선 키를 한 줄에 하나. 비우면 8개 전부를 한 번에 탐사한다.
+# 키: sinansan / gtxa / gtxb / gtxc / indong / wolpan / sinbundang / daejang
+#
+# ⚠️ 결과(data/geo/_probe-rail-osm.json)는 덮지 않고 합친다 — 이미 받아 둔 노선은 안 잃는다.
+# ⚠️ 봇이 결과를 커밋할 때 [skip ci] 를 달고, 방아쇠는 이 파일 하나만 본다 — 되돌지 않는다.
+
+gtxa
+gtxb
+gtxc
+daejang
