@@ -2190,20 +2190,6 @@
       "at": "2026-09-10"
     },
     {
-      "id": "ah-remndr-2026910228",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 남양주 진접 서한이다음(S1BL)",
-      "why": "경기 · 141세대 · 접수 ~2026-09-08 · 63점(수도권·141가구·무순위)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-09-08",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910228&pblancNo=2026910228",
-      "at": "2026-09-10"
-    },
-    {
       "id": "ah-remndr-2026910232",
       "cat": "todo",
       "topic": "부동산",
@@ -2218,20 +2204,6 @@
       "at": "2026-09-10"
     },
     {
-      "id": "ah-remndr-2026910231",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 동대구역 더샵 센터시티(2차)",
-      "why": "대구 · 1세대 · 접수 ~2026-09-09 · 49점(광역시·무순위·더샵)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-09-09",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910231&pblancNo=2026910231",
-      "at": "2026-09-10"
-    },
-    {
       "id": "ah-apt-2026000423",
       "cat": "todo",
       "topic": "부동산",
@@ -2243,6 +2215,34 @@
       "status": "",
       "deadline": "2026-09-16",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000423&pblancNo=2026000423",
+      "at": "2026-09-10"
+    },
+    {
+      "id": "ah-remndr-2026910228",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 남양주 진접 서한이다음(S1BL)",
+      "why": "경기 · 141세대 · 접수 ~2026-09-08 · 63점(수도권·141가구·무순위)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-09-08",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910228&pblancNo=2026910228",
+      "at": "2026-09-10"
+    },
+    {
+      "id": "ah-remndr-2026910231",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 동대구역 더샵 센터시티(2차)",
+      "why": "대구 · 1세대 · 접수 ~2026-09-09 · 49점(광역시·무순위·더샵)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-09-09",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910231&pblancNo=2026910231",
       "at": "2026-09-10"
     }
   ]
