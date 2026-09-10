@@ -446,6 +446,59 @@ vmarks.push({ x: startX, y1: r1(startLabelY + 16), y2: r1(startCy - startR - 4),
 /* 범례 — 단지명 + **평형**(필수) · 옆에 배수.
    ⚠️ 이름의 괄호 별칭은 뗀다 — 「길음뉴타운1단지(래미안길음1차)」는 판 폭을 넘어
    다음 줄을 밀어낸다. 지역이 sub 에 있으므로 어느 단지인지는 흐려지지 않는다. */
+/**
+ * ── 단지 이름 사전 (2026-09-10 연결)
+ *
+ * 이 시리즈는 그동안 실거래 **신고명을 그대로** 썼다. 그런데 신고명은 카드에 얹기엔
+ * 길거나 지역이 겹친다 — 「수원 권선 **수원**모아미래도센트럴타운1단지」처럼.
+ * 오너가 고쳐 달라고 한 이름을 이 빌더 안에만 적으면 **다음 카드에서 되돌아간다.**
+ *
+ * 공장에는 이미 이름 사전이 있다(`data/review/apt-names.json`, 신고가 카드가 쓰던 것).
+ * 열쇠는 **공동주택 대장 코드**다 — 이름으로 짚으면 남의 단지에 붙는다(상록마을 2026-08-13).
+ * 이 시리즈는 코드를 안 들고 다니므로 명부(`apt-universe.json`)에서 (구·동·이름)으로 찾아 잇는다.
+ *
+ * 우선순위는 사전이 정한 그대로: ① 빌더의 --name → ② 사전 → ③ 신고명.
+ * 넣고 빼는 것은 `node scripts/rename-danji.mjs` 하나로 한다 — 여기서 손으로 고치지 않는다.
+ */
+const NAME_DICT = (() => {
+  try {
+    const d = JSON.parse(readFileSync(R("data/review/apt-names.json"), "utf8"));
+    return d.names ?? {};
+  } catch { return {}; }
+})();
+const KAPT_BY = (() => {
+  const m = new Map();
+  try {
+    const uni = JSON.parse(readFileSync(R("data/datasets/apt-universe.json"), "utf8"));
+    const norm = (x) => String(x).replace(/[\s()\-]/g, "").replace(/아파트$/, "");
+    for (const it of uni.items ?? []) {
+      if (!it.kaptCode) continue;
+      m.set(`${it.lawdCd}|${it.umd}|${norm(it.kaptName)}`, it.kaptCode);
+    }
+  } catch { /* 명부가 없으면 사전을 건너뛴다 — 신고명 그대로 나간다 */ }
+  return m;
+})();
+/** 신고명 → 카드에 적을 이름. 사전에 없으면 신고명 그대로. */
+function displayName(m) {
+  const norm = (x) => String(x).replace(/[\s()\-]/g, "").replace(/아파트$/, "");
+  const want = norm(m.apt);
+  let code = KAPT_BY.get(`${m.lawd}|${m.umd}|${want}`);
+  if (!code) {
+    /* 신고명과 대장명이 완전히 같지 않은 경우가 흔하다
+       (「안산메트로타운푸르지오힐스테이트」 vs 「안산 메트로타운 푸르지오 힐스테이트 아파트」).
+       같은 구·동 안에서 **한쪽이 다른 쪽으로 시작하는** 짝이 **하나뿐일 때만** 잇는다 —
+       둘 이상이면 잇지 않는다(엉뚱한 단지에 붙는 것보다 이름이 안 바뀌는 편이 낫다). */
+    const hits = [];
+    for (const [k, v] of KAPT_BY) {
+      if (!k.startsWith(`${m.lawd}|${m.umd}|`)) continue;
+      const nm = k.slice(k.lastIndexOf("|") + 1);
+      if (nm.startsWith(want) || want.startsWith(nm)) hits.push(v);
+    }
+    if (hits.length === 1) code = hits[0];
+  }
+  return (code && NAME_DICT[code]?.name) || m.apt;
+}
+
 const shortName = (s) => s.replace(/\s*\([^)]*\)\s*$/, "").trim() || s;
 /* ⚠️ 지역 이름표와 단지명이 **같은 말로 시작하면** 그 말을 한 번만 쓴다.
    「수원 장안」 + 「수원 SK SKY VIEW」 는 「수원 장안 수원 SK SKY VIEW」가 되어
@@ -475,7 +528,7 @@ const legend = members.map((m, i) => ({
   sx1: 118, sx2: 190, sy: 72 + i * 62,
   color: m.color,
   tx: 208, ty: 84 + i * 62,
-  text: `${shortGu(m.gu)} ${dedupCity(m.gu, shortName(m.apt))} ${m.pyeong}`,
+  text: `${shortGu(m.gu)} ${dedupCity(m.gu, shortName(displayName(m)))} ${m.pyeong}`,
   fill: T.text, size: 38,
   /* 배수를 이름 옆에 **같은 크기·회색**으로(오너 2026-09-02). 「그때 → 지금」 두 값은
      곡선 양 끝이 이미 말하므로 여기서 되풀이하지 않는다. */
