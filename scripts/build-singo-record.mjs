@@ -1358,6 +1358,28 @@ if (KAPT) {
         return false;
       }
     })();
+    /* ── 📏 **문턱이 바뀌면 옛 파일의 경고도 다시 잰다** (오너 2026-09-11 "문턱은 90%를 넘지 않도록")
+     *
+     * 경고 문구는 **받아 올 때** 파일에 박힌다. 그래서 문턱을 70~85% → 70~90% 로 올려도
+     * **이미 받아 둔 807건 중 45건은 옛 문구를 그대로 들고 있다** — 문턱을 올린 의미가 없어진다.
+     * 다시 받게 하는 것은 호출 낭비이고(하루 상한이 있다), 값은 어차피 같다.
+     *
+     * 그래서 여기서 **저장된 문구 대신 `ratio` 를 지금 문턱으로 다시 잰다.**
+     * 지금 기준으로 흔한 범위 안이면 경고를 내려놓는다 — 무엇을 내려놨는지는 한 줄 적는다.
+     *
+     * ⚠️ 아래쪽 70% 는 그대로다. 그쪽은 주차장·대피소가 주거공용에 섞이는 실제 사고 자리다.
+     * ⚠️ 값(공급면적·평)은 **하나도 안 바뀐다.** 바뀌는 것은 「사람을 부를 것인가」뿐이라
+     *    이미 확정된 카드의 픽셀에도 영향이 없다.
+     */
+    const RATIO_LO = 0.7;
+    const RATIO_HI = 0.9;
+    if (supply.warn && Number.isFinite(supply.ratio) && supply.ratio >= RATIO_LO && supply.ratio <= RATIO_HI) {
+      console.log(
+        `ⓘ 옛 경고를 내려놓습니다 — 전용률 ${(supply.ratio * 100).toFixed(1)}% 는 지금 문턱(${RATIO_LO * 100}~${RATIO_HI * 100}%) 안입니다.\n` +
+          `   (파일에 박힌 문구: ${supply.warn})`,
+      );
+      supply = { ...supply, warn: undefined, warnRelaxed: { ratio: supply.ratio, band: [RATIO_LO, RATIO_HI], at: "2026-09-11" } };
+    }
     if (supply.warn && alreadyConfirmed) {
       console.log(
         `ⓘ 공급면적 경고가 있지만 **이미 오너가 확정·발행한 카드**라 그대로 그립니다 — ${publishedSlug}\n` +
