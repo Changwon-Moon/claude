@@ -1,8 +1,7 @@
 # 단지 주차대수 — 마지막 실행
 
-- 대기열: 183줄
+- 대기열: 186줄
 - 결과: **성공**
-- ⚠️ 이번 실행은 **국토부에 붙지 않았습니다**(전부 이미 있음) — API 가 살아 있다는 증거로 쓰지 마세요
 
 ```
 ⏭ 이미 있음 — data/datasets/apt-detail/A44340013.json (다시 받으려면 force=1)
@@ -189,7 +188,30 @@
 ⏭ 이미 있음 — data/datasets/apt-detail/A10023155.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A43181406.json (다시 받으려면 force=1)
 
-실제로 받아 본 단지 0곳 · 이미 있어 건너뛴 것 183곳
-ⓘ 이번 실행은 **국토부에 한 번도 붙지 않았습니다** — 이 초록불은 API 가 살아 있다는 증거가 아닙니다.
+── A10021122
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10021122
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10021122.json
+A10021122 주차 지상 0 + 지하 17166 = **17166대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A44657207
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A44657207
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A44657207.json
+A44657207 주차 지상 106 + 지하 1388 = **1494대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A10026603
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10026603
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10026603.json
+A10026603 주차 지상 146 + 지하 1359 = **1505대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+실제로 받아 본 단지 3곳 · 이미 있어 건너뛴 것 183곳
 ✅ 대기열 전 줄 완료
 ```
