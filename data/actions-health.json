@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-11T02:32:38.442Z",
+  "generatedAt": "2026-09-11T06:25:31.739Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -388,7 +388,7 @@
       "maxDelay": null,
       "lastRun": "2026-09-01",
       "lastOk": "2026-09-01",
-      "okDaysAgo": 9
+      "okDaysAgo": 10
     },
     {
       "file": "reb-weekly-collect.yml",
@@ -776,7 +776,7 @@
       "maxDelay": null,
       "lastRun": "2026-09-08",
       "lastOk": "2026-09-08",
-      "okDaysAgo": 2
+      "okDaysAgo": 3
     }
   ],
   "manual": [
@@ -934,9 +934,9 @@
       "file": "apt-area-probe.yml",
       "name": "공급면적 탐침 (K-apt 전용률 · 건축물대장 실측)",
       "lastRun": "2026-08-17",
-      "daysAgo": 24,
+      "daysAgo": 25,
       "lastOk": "2026-08-17",
-      "okDaysAgo": 24,
+      "okDaysAgo": 25,
       "fails30": 0,
       "runs30": 25
     },
@@ -944,9 +944,9 @@
       "file": "collect.yml",
       "name": "데이터 수집 (daily)",
       "lastRun": "2026-08-29",
-      "daysAgo": 12,
+      "daysAgo": 13,
       "lastOk": "2026-08-29",
-      "okDaysAgo": 12,
+      "okDaysAgo": 13,
       "fails30": 0,
       "runs30": 13
     },
@@ -959,6 +959,46 @@
       "okDaysAgo": 12,
       "fails30": 0,
       "runs30": 17
+    },
+    {
+      "file": "ecos-m2.yml",
+      "name": "ECOS M2 수집 (probe+collect)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 11,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 11,
+      "fails30": 0,
+      "runs30": 11
+    },
+    {
+      "file": "kr-market.yml",
+      "name": "국내 증시 수집 (코스피·코스닥)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 11,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 11,
+      "fails30": 0,
+      "runs30": 4
+    },
+    {
+      "file": "population-collect.yml",
+      "name": "인구 수집 (monthly)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 11,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 11,
+      "fails30": 1,
+      "runs30": 2
+    },
+    {
+      "file": "publish-archive.yml",
+      "name": "완성본 보관 (발행 완료)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 11,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 11,
+      "fails30": 8,
+      "runs30": 11
     },
     {
       "file": "reb-collect.yml",
@@ -976,29 +1016,9 @@
       "lastRun": "2026-08-31",
       "daysAgo": 11,
       "lastOk": "2026-08-28",
-      "okDaysAgo": 13,
+      "okDaysAgo": 14,
       "fails30": 4,
       "runs30": 6
-    },
-    {
-      "file": "ecos-m2.yml",
-      "name": "ECOS M2 수집 (probe+collect)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 10,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 10,
-      "fails30": 0,
-      "runs30": 11
-    },
-    {
-      "file": "kr-market.yml",
-      "name": "국내 증시 수집 (코스피·코스닥)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 10,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 10,
-      "fails30": 0,
-      "runs30": 4
     },
     {
       "file": "pipeline-tick.yml",
@@ -1009,26 +1029,6 @@
       "okDaysAgo": 10,
       "fails30": 4,
       "runs30": 28
-    },
-    {
-      "file": "population-collect.yml",
-      "name": "인구 수집 (monthly)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 10,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 10,
-      "fails30": 1,
-      "runs30": 2
-    },
-    {
-      "file": "publish-archive.yml",
-      "name": "완성본 보관 (발행 완료)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 10,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 10,
-      "fails30": 8,
-      "runs30": 11
     },
     {
       "file": "molit-door.yml",
@@ -1071,6 +1071,16 @@
       "runs30": 5
     },
     {
+      "file": "apt-station.yml",
+      "name": "단지 가까운 역 (카드 뱃지용)",
+      "lastRun": "2026-09-07",
+      "daysAgo": 4,
+      "lastOk": "2026-09-05",
+      "okDaysAgo": 6,
+      "fails30": 10,
+      "runs30": 21
+    },
+    {
       "file": "geocode.yml",
       "name": "좌표 지오코딩 (카카오 로컬)",
       "lastRun": "2026-09-07",
@@ -1079,16 +1089,6 @@
       "okDaysAgo": 4,
       "fails30": 0,
       "runs30": 4
-    },
-    {
-      "file": "apt-station.yml",
-      "name": "단지 가까운 역 (카드 뱃지용)",
-      "lastRun": "2026-09-07",
-      "daysAgo": 3,
-      "lastOk": "2026-09-05",
-      "okDaysAgo": 6,
-      "fails30": 10,
-      "runs30": 21
     },
     {
       "file": "apt-detail.yml",
@@ -1114,9 +1114,9 @@
       "file": "molit-collect.yml",
       "name": "실거래 수집 (국토부)",
       "lastRun": "2026-09-09",
-      "daysAgo": 1,
+      "daysAgo": 2,
       "lastOk": "2026-09-09",
-      "okDaysAgo": 1,
+      "okDaysAgo": 2,
       "fails30": 5,
       "runs30": 12
     },
@@ -1197,7 +1197,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-11",
       "okDaysAgo": 0,
-      "fails30": 24,
+      "fails30": 26,
       "runs30": 39
     },
     {
@@ -1217,7 +1217,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-11",
       "okDaysAgo": 0,
-      "fails30": 6,
+      "fails30": 5,
       "runs30": 100
     }
   ]
