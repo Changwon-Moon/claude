@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T23:52:35.471Z",
+  "generatedAt": "2026-09-11T01:39:19.852Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -82,9 +82,9 @@
         },
         {
           "day": "09-10",
-          "state": "fail",
-          "at": "06:59",
-          "delay": 125
+          "state": "ok",
+          "at": "09:10",
+          "delay": null
         },
         {
           "day": "09-11",
@@ -93,8 +93,8 @@
           "delay": 123
         }
       ],
-      "medianDelay": 125,
-      "maxDelay": 125,
+      "medianDelay": 123,
+      "maxDelay": 123,
       "lastRun": "2026-09-11",
       "lastOk": "2026-09-11",
       "okDaysAgo": 0
@@ -276,21 +276,21 @@
         },
         {
           "day": "09-10",
-          "state": "late",
-          "at": "09:06",
-          "delay": 117
+          "state": "ok",
+          "at": "14:45",
+          "delay": null
         },
         {
           "day": "09-11",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "09:02",
+          "delay": 112
         }
       ],
-      "medianDelay": 117,
-      "maxDelay": 117,
-      "lastRun": "2026-09-10",
-      "lastOk": "2026-09-10",
+      "medianDelay": 112,
+      "maxDelay": 112,
+      "lastRun": "2026-09-11",
+      "lastOk": "2026-09-11",
       "okDaysAgo": 0
     },
     {
@@ -567,9 +567,9 @@
         },
         {
           "day": "09-10",
-          "state": "late",
+          "state": "ok",
           "at": "15:35",
-          "delay": 296
+          "delay": null
         },
         {
           "day": "09-11",
@@ -578,8 +578,8 @@
           "delay": null
         }
       ],
-      "medianDelay": 296,
-      "maxDelay": 296,
+      "medianDelay": null,
+      "maxDelay": null,
       "lastRun": "2026-09-10",
       "lastOk": "2026-09-10",
       "okDaysAgo": 0
@@ -664,9 +664,9 @@
         },
         {
           "day": "09-10",
-          "state": "late",
+          "state": "ok",
           "at": "16:05",
-          "delay": 306
+          "delay": null
         },
         {
           "day": "09-11",
@@ -675,8 +675,8 @@
           "delay": null
         }
       ],
-      "medianDelay": 306,
-      "maxDelay": 306,
+      "medianDelay": null,
+      "maxDelay": null,
       "lastRun": "2026-09-10",
       "lastOk": "2026-09-10",
       "okDaysAgo": 0
@@ -924,9 +924,9 @@
       "file": "notify-once.yml",
       "name": "텔레그램 한 통 보내기",
       "lastRun": "2026-08-14",
-      "daysAgo": 27,
+      "daysAgo": 28,
       "lastOk": "2026-08-14",
-      "okDaysAgo": 27,
+      "okDaysAgo": 28,
       "fails30": 0,
       "runs30": 4
     },
@@ -948,17 +948,37 @@
       "lastOk": "2026-08-29",
       "okDaysAgo": 12,
       "fails30": 0,
-      "runs30": 14
+      "runs30": 13
     },
     {
       "file": "research-digest.yml",
       "name": "소재 보드 수집 (daily)",
       "lastRun": "2026-08-30",
-      "daysAgo": 11,
+      "daysAgo": 12,
       "lastOk": "2026-08-30",
+      "okDaysAgo": 12,
+      "fails30": 0,
+      "runs30": 17
+    },
+    {
+      "file": "reb-collect.yml",
+      "name": "전세·월세 지수 수집 (한국부동산원)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 11,
+      "lastOk": "2026-08-31",
       "okDaysAgo": 11,
       "fails30": 0,
-      "runs30": 18
+      "runs30": 3
+    },
+    {
+      "file": "silv-collect.yml",
+      "name": "분양권전매 실거래 수집 (국토부)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 11,
+      "lastOk": "2026-08-28",
+      "okDaysAgo": 13,
+      "fails30": 4,
+      "runs30": 6
     },
     {
       "file": "ecos-m2.yml",
@@ -978,7 +998,7 @@
       "lastOk": "2026-08-31",
       "okDaysAgo": 10,
       "fails30": 0,
-      "runs30": 5
+      "runs30": 4
     },
     {
       "file": "pipeline-tick.yml",
@@ -988,7 +1008,7 @@
       "lastOk": "2026-08-31",
       "okDaysAgo": 10,
       "fails30": 4,
-      "runs30": 30
+      "runs30": 28
     },
     {
       "file": "population-collect.yml",
@@ -1011,26 +1031,6 @@
       "runs30": 11
     },
     {
-      "file": "reb-collect.yml",
-      "name": "전세·월세 지수 수집 (한국부동산원)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 10,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 10,
-      "fails30": 0,
-      "runs30": 3
-    },
-    {
-      "file": "silv-collect.yml",
-      "name": "분양권전매 실거래 수집 (국토부)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 10,
-      "lastOk": "2026-08-28",
-      "okDaysAgo": 13,
-      "fails30": 4,
-      "runs30": 6
-    },
-    {
       "file": "molit-door.yml",
       "name": "실거래 문 열렸나 (한 번 두드려 본다)",
       "lastRun": "2026-09-02",
@@ -1039,6 +1039,16 @@
       "okDaysAgo": 9,
       "fails30": 1,
       "runs30": 7
+    },
+    {
+      "file": "molit-rent-collect.yml",
+      "name": "전월세 실거래 수집 (국토부)",
+      "lastRun": "2026-09-02",
+      "daysAgo": 9,
+      "lastOk": "2026-09-02",
+      "okDaysAgo": 9,
+      "fails30": 2,
+      "runs30": 12
     },
     {
       "file": "neis-academy.yml",
@@ -1051,22 +1061,12 @@
       "runs30": 4
     },
     {
-      "file": "molit-rent-collect.yml",
-      "name": "전월세 실거래 수집 (국토부)",
-      "lastRun": "2026-09-02",
-      "daysAgo": 8,
-      "lastOk": "2026-09-02",
-      "okDaysAgo": 8,
-      "fails30": 2,
-      "runs30": 12
-    },
-    {
       "file": "world-market.yml",
       "name": "세계 지수 수집 (8개국 월별 성적표)",
       "lastRun": "2026-09-04",
-      "daysAgo": 6,
+      "daysAgo": 7,
       "lastOk": "2026-09-04",
-      "okDaysAgo": 6,
+      "okDaysAgo": 7,
       "fails30": 4,
       "runs30": 5
     },
@@ -1178,7 +1178,7 @@
       "lastOk": "2026-09-11",
       "okDaysAgo": 0,
       "fails30": 0,
-      "runs30": 25
+      "runs30": 27
     },
     {
       "file": "singo-history.yml",
@@ -1188,7 +1188,7 @@
       "lastOk": "2026-09-11",
       "okDaysAgo": 0,
       "fails30": 4,
-      "runs30": 54
+      "runs30": 55
     },
     {
       "file": "singo-prep.yml",
@@ -1198,7 +1198,7 @@
       "lastOk": "2026-09-11",
       "okDaysAgo": 0,
       "fails30": 24,
-      "runs30": 36
+      "runs30": 39
     },
     {
       "file": "singo-retry.yml",
@@ -1207,8 +1207,8 @@
       "daysAgo": 0,
       "lastOk": "2026-09-10",
       "okDaysAgo": 1,
-      "fails30": 2,
-      "runs30": 52
+      "fails30": 3,
+      "runs30": 53
     },
     {
       "file": "tower-deploy.yml",
@@ -1217,7 +1217,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-11",
       "okDaysAgo": 0,
-      "fails30": 9,
+      "fails30": 7,
       "runs30": 100
     }
   ]
