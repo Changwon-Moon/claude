@@ -1629,44 +1629,28 @@ e편한세상반월나노시티역 · 전용 59타입 · 41595 · 202001~202609 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 11740 --apt '올림픽파크포레온' --umd '둔촌동' --type 59 --from 202001
 
-올림픽파크포레온 · 전용 59타입 · 11740 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/11740-올림픽파크포레온-59.json
-거래 있던 달 4/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 26.3억 (2026-08-17 · 전용 59.98㎡ 25층)
+⏭ 이미 있음 — 11740-올림픽파크포레온-59.json (다시 받으려면 force=1)
 
 ── 벽산블루밍 전용 59타입 (11620)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 11620 --apt '벽산블루밍' --umd '봉천동' --type 59 --from 202001
 
-벽산블루밍 · 전용 59타입 · 11620 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/11620-벽산블루밍-59.json
-거래 있던 달 68/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 11.05억 (2026-08-28 · 전용 59.99㎡ 17층)
+⏭ 이미 있음 — 11620-벽산블루밍-59.json (다시 받으려면 force=1)
 
 ── 장미마을삼성래미안2 전용 84타입 (41463)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41463 --apt '장미마을삼성래미안2' --umd '언남동' --type 84 --from 202001
 
-장미마을삼성래미안2 · 전용 84타입 · 41463 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41463-장미마을삼성래미안2-84.json
-거래 있던 달 54/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 9억 (2026-09-06 · 전용 84.98㎡ 4층)
+⏭ 이미 있음 — 41463-장미마을삼성래미안2-84.json (다시 받으려면 force=1)
 
 ── 벨섬시티 전용 84타입 (41113)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41113 --apt '벨섬시티' --umd '호매실동' --type 84 --from 202001
 
-벨섬시티 · 전용 84타입 · 41113 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41113-벨섬시티-84.json
-거래 있던 달 21/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 6.43억 (2026-09-07 · 전용 84.94㎡ 19층)
+⏭ 이미 있음 — 41113-벨섬시티-84.json (다시 받으려면 force=1)
 
 ✅ 대기열 전 줄 완료
 ```
