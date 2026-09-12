@@ -174,7 +174,7 @@ const PANELS_FN = (v, H, diag = "nwse") => ({
 }[v]);
 /* 합친 상자의 높이 — 실측(packages/renderer 측정 스크립트, 2026-09-12).
    공정률 304 + 정보표 5줄 + 개통일정 3줄. 데이터가 늘면 여기도 다시 재야 한다. */
-const MERGE_H = 647;
+const MERGE_H = 622;
 const SPLIT_INFO = VARIANT === "d";
 
 /* ── 🔴 **지도를 두 토막으로 나눠 위아래에 놓기** (오너 2026-09-10)
@@ -950,6 +950,20 @@ function buildOne(L0, opt = {}) {
      지도마다 한두 곳 있다. ⚠️ alignOff 에 넣으면 밀어내기가 도로 제자리로 돌려놓는다 —
      그래서 그리기에서만 더한다. */
   const dxOf = (st) => (typeof st.labelDx === "number" ? st.labelDx : 0);
+  /* labelDy — dxOf 의 세로 짝. 양수가 아래다(화면 좌표 그대로).
+     ⚠️ dxOf 는 여태 가로판(WIDE)에서만 먹었다. 세로판에도 손끝 밀기가 필요하다
+        (오너 2026-09-12: "수서 역명과 노선은 좀더 우하단으로", "삼성은 살짝 위로",
+         "대곡은 좀더 아래로"). 셋 다 자동 배치로는 못 가는 자리다.
+     ⚠️ 이 둘은 **겹침 해소가 끝난 뒤** 얹는 값이라, 밀어 놓은 만큼은 코드가 다시 안 본다.
+        크게 밀면 designQa 로 확인할 것. */
+  const dyOf = (st) => (typeof st.labelDy === "number" ? st.labelDy : 0);
+  /* 뱃지 더미와 이름 사이 틈. 기본은 BDG_PAD(10).
+     ⚠️ 눈에 보이는 틈은 이 값보다 **넓다** — bx 를 이름 폭의 *추정치*(글자수×0.98em)로 잡는데
+        실제 글자는 자간(-0.6)만큼 좁아서, 그 차이가 고스란히 틈으로 나온다. 「서울역」은
+        추정 67.6 · 실제 약 57 이라 10px 이 더 벌어져 보였다(오너 2026-09-12 "서울역은
+        환승노선뱃지와 서울역명을 좁혀줘"). 추정식을 건드리면 확정 3장 픽셀이 깨지므로
+        **그 역만** 이 손잡이로 줄인다. */
+  const bdgGapOf = (st) => (typeof st.badgeGap === "number" ? st.badgeGap : BDG_PAD);
   /* 🔴 이름표 한 덩이의 **세로 높이**. 세 곳(자리 정하기·겹침 해소·지명 피하기)이 같은 자를
      써야 한다 — 앞 판은 지명 쪽만 세로 쌓기를 몰라서 「은평구」가 서울역 뱃지 밑으로 들어갔다. */
   const blockHv = (st) => {
@@ -1491,7 +1505,9 @@ function buildOne(L0, opt = {}) {
       let left = p.x - rowWidth / 2;
       /* 카드 밖으로 나가면 안으로 당긴다 — 위/아래는 좌우 여백을 안 쓰기 때문에 여기서 막는다. */
       left = Math.max(8, Math.min(left, MAP_W - 8 - rowWidth));
-      const cy = p.y + p.vert * (13 + 9 + Math.max(LBL_FS, keys.length ? bdgBlockH(p.st) : 0) / 2);
+      left += dxOf(p.st);                                   // 손끝 밀기(가로)
+      const cy = p.y + p.vert * (13 + 9 + Math.max(LBL_FS, keys.length ? bdgBlockH(p.st) : 0) / 2)
+               + dyOf(p.st);                                // 손끝 밀기(세로)
       let bdv = "";
       { const rows = bdgRows(p.st), top = cy - bdgBlockH(p.st) / 2;
         rows.forEach((row, ri) => { let bxv = left + (rows.length > 1 ? (blkW - badgeRowWidth(row)) / 2 : 0);
@@ -1524,6 +1540,7 @@ function buildOne(L0, opt = {}) {
        안 밀린 라벨(ly ≈ y)에서는 36px 짜리 수평선이 정보를 하나도 더하지 않으면서
        라벨을 노선 쪽에서 36px 밀어내 — 그 36px 이 다른 라벨·노선과 부딪히는 원인이 된다.
        그래서 **안 밀린 라벨은 마커 바로 옆(NEAR_LEAD)에 붙이고 선을 그리지 않는다.** */
+    p.ly += dyOf(p.st);                         // 손끝 밀기(세로) — 지시선이 따라온다
     const NEAR_LEAD = 15;                       // 마커 반지름 12 를 막 벗어나는 값
     /* ⚠️ 붙이기 전에 **그 자리가 비었는지** 본다. 이웃 역이 대각선으로 40px 옆에 있으면
        마커에 바짝 붙인 뱃지가 그 이웃 마커를 문다(GTX-B 인천시청, designQa svglabel 20%).
@@ -1543,16 +1560,18 @@ function buildOne(L0, opt = {}) {
     if (p.side > 0) {
       endX = p.x + lead;
       bx = endX + 9;
-      nameX = bx + bw;
+      nameX = bx + (bwRaw ? bwRaw + bdgGapOf(p.st) : 0);
       anchor = "start";
       provX = nameX + nameW + PROV_GAP;          // 이름 뒤
     } else {
       endX = p.x - lead;
       provX = endX - 9;                          // 오른쪽 끝(지시선 쪽)에 「가칭」
       nameX = endX - 9 - pw;                     // text-anchor=end 라 이 x 가 이름의 오른쪽 끝
-      bx = nameX - nameW - BDG_PAD - bwRaw;
+      bx = nameX - nameW - bdgGapOf(p.st) - bwRaw;
       anchor = "end";
     }
+    /* 손끝 밀기(가로) — 지시선 끝까지 같이 옮겨야 선이 이름에 닿는다. */
+    { const dx0 = dxOf(p.st); if (dx0) { endX += dx0; bx += dx0; nameX += dx0; provX += dx0; } }
 
     /* ── 지시선 (오너 2026-09-09 "위치나 간격 등을 신경써서 검수해줘")
        ⚠️ 앞 판에서는 꺾는 자리를 **끝에서 14px** 로 고정했다. 그러면 라벨이 60px 밀린 역에서

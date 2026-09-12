@@ -263,7 +263,9 @@
           "name": "운정중앙",
           "state": "개통",
           "xfer": [],
-          "km": 0.6
+          "km": 0.6,
+          "labelSide": "up",
+          "labelDx": 26
         },
         {
           "name": "킨텍스",
@@ -283,7 +285,8 @@
           "km": 13.6,
           "badgeStack": 1,
           "labelSide": "up",
-          "leadLine": true
+          "leadLine": true,
+          "labelDy": 26
         },
         {
           "name": "창릉",
@@ -292,7 +295,7 @@
             "고양은평"
           ],
           "km": 19.8,
-          "labelSide": "down",
+          "labelSide": "up",
           "nameProv": true
         },
         {
@@ -303,8 +306,7 @@
             "6"
           ],
           "km": 23.5,
-          "labelSide": "up",
-          "badgeStack": 1
+          "labelSide": "right"
         },
         {
           "name": "서울역",
@@ -317,7 +319,8 @@
             "GTX-B"
           ],
           "km": 32.9,
-          "badgeStack": 1
+          "badgeStack": 1,
+          "badgeGap": -2
         },
         {
           "name": "삼성",
@@ -327,7 +330,8 @@
             "9",
             "GTX-C"
           ],
-          "badgeStack": 2
+          "badgeStack": 2,
+          "labelDy": -22
         },
         {
           "name": "수서",
@@ -338,7 +342,9 @@
             "SRT"
           ],
           "km": 47.7,
-          "badgeStack": 1
+          "badgeStack": 1,
+          "labelDx": 34,
+          "labelDy": 22
         },
         {
           "name": "성남",

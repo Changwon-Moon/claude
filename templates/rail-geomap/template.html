@@ -196,10 +196,16 @@
       /* 개통 일정은 당초/변경 **아래, 같은 상자 안**이다. 선 하나로만 나눈다 —
          상자를 또 그리면 「카드 안의 카드 안의 카드」가 되어 무슨 층인지 알 수 없다. */
       .rgm-eta-x { margin-top: 9px; padding-top: 8px; border-top: 2px solid var(--wirit-ink-06); }
-      .rgm-eta-x .x { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+      /* ⚠️ 글자 크기는 **가장 긴 줄이 상자 안에 들어가는지**로 정한다 — 「서울역~수서
+         2026년 하반기」가 260px 인데 상자 안쪽이 238px 이라 5px 삐져나왔다(오너 2026-09-12
+         "카드 밖에 튀어나온 3줄 시기 폰트 알아서 조정해줘"). 17/19 + 간격 8 이면 206px 다.
+         ⚠️ 선택자를 `.rgm-eta-x .k` 로만 두면 **안 먹는다** — `.v-d .rgm-eta .k`(19px)가
+            더 구체적이라 이긴다. 처음에 그래서 크기가 하나도 안 바뀌었다.
+         줄이 늘거나 문구가 길어지면 **다시 재야 한다**(packages/renderer 측정 스크립트). */
+      .rgm-eta-x .x { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
       .rgm-eta-x .x + .x { margin-top: 4px; }
-      .rgm-eta-x .k { font-size: 16px; font-weight: 700; color: var(--wirit-gray); letter-spacing: -0.02em; white-space: nowrap; }
-      .rgm-eta-x .v { font-size: 18px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.03em; white-space: nowrap; }
+      .rgm-eta .rgm-eta-x .k, .v-d .rgm-eta .rgm-eta-x .k { font-size: 17px; font-weight: 700; color: var(--wirit-gray); letter-spacing: -0.02em; white-space: nowrap; }
+      .rgm-eta .rgm-eta-x .v, .v-d .rgm-eta .rgm-eta-x .v { font-size: 19px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.03em; white-space: nowrap; }
 
       /* 노선이 북서→남동으로 누우면 좌상단·우하단이 노선 위다 — 상자를 반대 대각선으로 옮긴다.
          (빌더가 (x,y) 공분산으로 정하고 panelSide 로 넘긴다. PANELS 좌표도 같이 뒤집힌다.) */
