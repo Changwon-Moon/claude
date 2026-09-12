@@ -285,7 +285,8 @@
           "km": 13.6,
           "badgeStack": 1,
           "labelSide": "down",
-          "leadLine": true
+          "leadLine": true,
+          "labelDx": -30
         },
         {
           "name": "창릉",
@@ -295,7 +296,8 @@
           ],
           "km": 19.8,
           "labelSide": "up",
-          "nameProv": true
+          "nameProv": true,
+          "leadLine": true
         },
         {
           "name": "연신내",
@@ -485,7 +487,7 @@
           ],
           "km": 10.1,
           "labelAlign": "right",
-          "leadV": 60,
+          "leadV": 36,
           "labelDx": -50,
           "leadStraight": true
         },
@@ -559,7 +561,7 @@
           "km": 42.7,
           "labelAlign": "left",
           "badgeStack": 2,
-          "leadV": 52,
+          "leadV": 34,
           "labelSide": "up",
           "labelDx": 30
         },
