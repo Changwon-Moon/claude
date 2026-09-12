@@ -3580,6 +3580,31 @@
       "milestone": null,
       "hhld": 1300,
       "kaptCode": "A10026603"
+    },
+    {
+      "foundOn": "2026-09-13",
+      "aptNm": "평촌트리지아",
+      "umdNm": "호계동",
+      "jibun": "1338",
+      "priceWon": 1200000000,
+      "priceManwon": 120000,
+      "area": 59.98,
+      "floor": 28,
+      "buildYear": 2024,
+      "date": "2026-08-14",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "41173",
+      "type": "59",
+      "pyeong": "25평",
+      "lawdCd": "41173",
+      "gu": "안양시동안구",
+      "prevPeakManwon": 115000,
+      "prevPeakDate": "2026-07-09",
+      "gainPct": 4.3478260869565215,
+      "milestone": null,
+      "hhld": 2417,
+      "kaptCode": "A10022268"
     }
   ]
 }
