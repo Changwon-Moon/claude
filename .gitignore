@@ -31,6 +31,11 @@ data/content/
 
 # 렌더러 임시 HTML (템플릿 폴더에 잠깐 생겼다 삭제됨)
 templates/**/.render-tmp-*.html
+# 검수(designQa)가 만드는 임시 판. render-tmp 는 무시하면서 이쪽은 빠져 있었다 — 2026-09-12.
+#   그 결과 templates/danji-cover/.qa-tmp-7017.html 이 **커밋돼 버렸고**, 렌더가 그 파일을
+#   지울 때마다 작업트리가 더러워져 rebase 가 「unstaged changes」로 거절했다.
+#   그때 푸시가 조용히 안 가는 것이 09-10·09-12 두 번 있었다(한 번은 하루치 마감을 날릴 뻔).
+templates/**/.qa-tmp-*.html
 
 # 관제탑 생성물 (dashboard-static이 만드는 산출물 — 썸네일 base64 포함 대용량)
 # 생성기 소스(packages/dashboard-static)만 커밋하고, 결과물은 필요 시 재생성/CI 배포
