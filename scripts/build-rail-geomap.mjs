@@ -160,12 +160,21 @@ const PANELS_FN = (v, H, diag = "nwse") => ({
   /* 정보 상자 두 개는 **비는 대각선**에 놓는다. 신안산선은 노선이 북동→남서라 북서·남동이
      비지만, 인동선은 북서→남동이라 그 두 자리가 정확히 노선 위다 — 실제로 좌상단 패널이
      「인덕원·호계·오전·의왕시청」을, 우하단 상자가 「동탄」을 덮었다(2026-09-09). */
-  d: diag === "nesw"
+  /* 🔴 **두 상자를 하나로 합쳐 왼쪽에 세운다**(오너 2026-09-12 "카드 두개를 합쳐서 왼편에").
+     대각선으로 흩어 놓으면 읽는 사람이 시선을 두 번 옮겨야 하고, GTX-A 는 노선이 지도
+     오른쪽에 치우쳐 있어 왼쪽 절반이 통째로 빈다 — 그 빈자리를 한 덩이가 쓰는 편이 낫다.
+     ⚠️ y1 은 **잰 값**이다(아래 MERGE_H). 눈대중으로 적으면 지도를 미는 양이 틀어진다. */
+  d: diag === "merge"
+    ? [{ x0: 14, x1: 348, y0: 22, y1: 22 + MERGE_H }]
+    : diag === "nesw"
     ? [{ x0: MAP_W - 334, x1: MAP_W - 14, y0: 22, y1: 330 },   // 공정률 패널 = 오른쪽 위
        { x0: 14, x1: 286, y0: H - 207, y1: H - 22 }]           // 정보 표   = 왼쪽 아래
     : [{ x0: 14, x1: 334, y0: 22, y1: 330 },
        { x0: MAP_W - 286, x1: MAP_W - 14, y0: H - 207, y1: H - 22 }],
 }[v]);
+/* 합친 상자의 높이 — 실측(packages/renderer 측정 스크립트, 2026-09-12).
+   공정률 304 + 정보표 5줄 + 개통일정 3줄. 데이터가 늘면 여기도 다시 재야 한다. */
+const MERGE_H = 647;
 const SPLIT_INFO = VARIANT === "d";
 
 /* ── 🔴 **지도를 두 토막으로 나눠 위아래에 놓기** (오너 2026-09-10)
@@ -613,6 +622,9 @@ function buildOne(L0, opt = {}) {
      이름표도 좌우가 아니라 **위아래**로 놓는다 — 가로 노선에서 좌우는 서로를 밟는다. */
   const aspect = ((lon1 - lon0) * kx) / (lat1 - lat0 || 1e-9);
   const WIDE = VARIANT === "d" && aspect > 1.6;
+  /* 🔴 합친 패널(오너 2026-09-12). 켜면 정보표가 공정률 상자 **안으로** 들어가고
+     (splitInfo 를 끈다), 상자는 왼쪽 한 덩이가 되며, 그 폭만큼 지도가 오른쪽으로 밀린다. */
+  const MERGE = L.panelMerge === true && !WIDE && !opt.panels;
   if (process.env.RGM_DEV) console.log();
   if (WIDE) {
     /* 430 → 764. 430 은 노선 띠(90px)+이름표 자리만 남긴 값이라 지도는 딱 맞았는데
@@ -691,8 +703,11 @@ function buildOne(L0, opt = {}) {
      위 상자가 393px 이다. 세로로 피할 자리가 없으니 **가로로 비켜** 그린다: 패널이 그 상자에서
      차지하는 세로 비율이 절반을 넘으면 그 폭만큼을 좌·우 여백으로 미리 떼어 놓는다.
      (안 떼면 신사 역이 공정률 패널 밑에 깔린다 — 2026-09-10 실측.) */
+  /* ⚠️ 합친 패널에서도 이 여백이 필요하다 — 안 떼면 지도가 패널 밑으로 그대로 들어가
+     운정중앙·킨텍스가 공정률 숫자에 깔린다. 오너가 "지도를 살짝 우측으로"라고 한 것이
+     이 여백이다. 자리를 직접 밀지 않고 **여백으로** 미는 이유: 배율까지 같이 맞춰진다. */
   const padPanel = (side) => {
-    if (!opt.sub || !PANELS?.length) return 0;
+    if (!(opt.sub || MERGE) || !PANELS?.length) return 0;
     let w = 0;
     for (const r of PANELS) {
       /* ⚠️ 「절반 넘게 먹을 때만」으로 뒀다가 아래 상자에서 안 먹혔다(패널 185 / 상자 543).
@@ -733,7 +748,8 @@ function buildOne(L0, opt = {}) {
   const Y = (lat) => BH - (offY + (lat - lat0) * s);
   /* ── 어느 대각선이 비는가. 노선 점들의 (x,y) 공분산 부호 하나면 된다 —
      양수면 북서→남동(그 대각선이 노선 위)이므로 상자는 북동·남서로 간다. */
-  if (VARIANT === "d" && !WIDE && !opt.panels) {
+  if (MERGE) { panelDiag = "merge"; PANELS = PANELS_FN(VARIANT, BH, "merge"); }
+  else if (VARIANT === "d" && !WIDE && !opt.panels) {
     const pts = mainWay.g.map((q) => ({ x: X(q.lon), y: Y(q.lat) }));
     const mx = pts.reduce((a, q) => a + q.x, 0) / pts.length;
     const my = pts.reduce((a, q) => a + q.y, 0) / pts.length;
@@ -1816,14 +1832,17 @@ function buildOne(L0, opt = {}) {
   ]).filter((f) => f.v);
 
   const card = {
-    template: "rail-geomap@1", date, lc, variant: VARIANT, splitInfo: SPLIT_INFO && !WIDE,
+    template: "rail-geomap@1", date, lc, variant: VARIANT, splitInfo: SPLIT_INFO && !WIDE && !MERGE,
     panelSide: panelDiag, wideCls: WIDE ? "is-wide" : "",
     subtitle: `서울 수도권 주요 노선 · 공사 현황 · ${rail.meta.asOfLabel} 기준`,
     title: `<span class="ln wirit-linecolor">${L.name}</span> ${L.titleAsk || "언제 개통하지?"}`,
     mapSvg,
     prog: { value: L.progressText, asOf: L.progressNote || `${rail.meta.asOfLabel} · 국가철도공단`,
             width: `${L.progress}%`, zero: L.progress === 0 },
-    eta: { was: L.openWas, now: L.openNow },
+    /* 🔴 역·구간별 일정은 **당초/변경 카드 안**에 넣는다(오너 2026-09-12
+       "역별 개통정보 3개는 표에서 제거하고 공정률 하단에 있는 당초/변경 카드 안으로").
+       정보표에 두면 착공·연장 같은 고정 제원과 한 덩이로 읽혀 「언제 열리나」가 묻힌다. */
+    eta: { was: L.openWas, now: L.openNow, rows: L.etaRows || null },
     facts,
     /* ⚠️ 지도에 **안 그린 것**을 카드가 말한다. 우측에는 「본선 16역 + 지선 3역」이라 적히는데
        지도에는 본선만 있다 — 말하지 않으면 지선 3역이 어디 갔는지 아무도 모른다.

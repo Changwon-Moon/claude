@@ -186,6 +186,21 @@
       .v-d .rgm-eta .v { font-size: 26px; }
       .v-d .rgm-eta .now .v { font-size: 32px; }
 
+      /* 🔴 **합친 패널** (오너 2026-09-12 "카드 두개를 합쳐서 왼편에 위치").
+         정보표가 상자 안으로 들어오므로 시안 b 처럼 한 덩이가 된다. 다만 b 는 2열 격자라
+         468px 로 넓은데, 여기는 세로로 길어도 좁아야 한다 — 지도를 그만큼 덜 먹는다.
+         ⚠️ 이 상자 치수(left 18 · 폭 312 + padding)는 빌더 PANELS_FN 의 merge 칸과 같아야 한다. */
+      .v-d.p-merge .rgm-bar { left: 18px; right: auto; }
+      .v-d.p-merge .rgm-facts { grid-template-columns: 1fr; margin-top: 13px; }
+
+      /* 개통 일정은 당초/변경 **아래, 같은 상자 안**이다. 선 하나로만 나눈다 —
+         상자를 또 그리면 「카드 안의 카드 안의 카드」가 되어 무슨 층인지 알 수 없다. */
+      .rgm-eta-x { margin-top: 9px; padding-top: 8px; border-top: 2px solid var(--wirit-ink-06); }
+      .rgm-eta-x .x { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+      .rgm-eta-x .x + .x { margin-top: 4px; }
+      .rgm-eta-x .k { font-size: 16px; font-weight: 700; color: var(--wirit-gray); letter-spacing: -0.02em; white-space: nowrap; }
+      .rgm-eta-x .v { font-size: 18px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.03em; white-space: nowrap; }
+
       /* 노선이 북서→남동으로 누우면 좌상단·우하단이 노선 위다 — 상자를 반대 대각선으로 옮긴다.
          (빌더가 (x,y) 공분산으로 정하고 panelSide 로 넘긴다. PANELS 좌표도 같이 뒤집힌다.) */
       .v-d.p-nesw .rgm-bar { left: auto; right: 18px; }
@@ -269,6 +284,7 @@
         <div class="rgm-eta wirit-linecolor">
           <div class="r was"><span class="k">당초</span><span class="v">{{eta.was}}</span></div>
           <div class="r now wirit-linecolor"><span class="k">변경</span><span class="v">{{eta.now}}</span></div>
+          {{#if eta.rows}}<div class="rgm-eta-x">{{#each eta.rows}}<div class="x"><span class="k">{{this.k}}</span><span class="v">{{this.v}}</span></div>{{/each}}</div>{{/if}}
         </div>
 
         {{#unless splitInfo}}
