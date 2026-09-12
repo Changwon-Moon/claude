@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-12T01:06:24.383Z",
+  "generatedAt": "2026-09-12T05:08:53.264Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -776,7 +776,7 @@
       "maxDelay": null,
       "lastRun": "2026-09-08",
       "lastOk": "2026-09-08",
-      "okDaysAgo": 3
+      "okDaysAgo": 4
     }
   ],
   "manual": [
@@ -934,9 +934,9 @@
       "file": "apt-area-probe.yml",
       "name": "공급면적 탐침 (K-apt 전용률 · 건축물대장 실측)",
       "lastRun": "2026-08-17",
-      "daysAgo": 25,
+      "daysAgo": 26,
       "lastOk": "2026-08-17",
-      "okDaysAgo": 25,
+      "okDaysAgo": 26,
       "fails30": 0,
       "runs30": 25
     },
@@ -944,9 +944,9 @@
       "file": "collect.yml",
       "name": "데이터 수집 (daily)",
       "lastRun": "2026-08-29",
-      "daysAgo": 13,
+      "daysAgo": 14,
       "lastOk": "2026-08-29",
-      "okDaysAgo": 13,
+      "okDaysAgo": 14,
       "fails30": 0,
       "runs30": 12
     },
@@ -959,6 +959,16 @@
       "okDaysAgo": 13,
       "fails30": 0,
       "runs30": 16
+    },
+    {
+      "file": "publish-archive.yml",
+      "name": "완성본 보관 (발행 완료)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 12,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 12,
+      "fails30": 8,
+      "runs30": 10
     },
     {
       "file": "reb-collect.yml",
@@ -1021,16 +1031,6 @@
       "runs30": 2
     },
     {
-      "file": "publish-archive.yml",
-      "name": "완성본 보관 (발행 완료)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 11,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 11,
-      "fails30": 8,
-      "runs30": 10
-    },
-    {
       "file": "molit-door.yml",
       "name": "실거래 문 열렸나 (한 번 두드려 본다)",
       "lastRun": "2026-09-02",
@@ -1064,11 +1064,21 @@
       "file": "world-market.yml",
       "name": "세계 지수 수집 (8개국 월별 성적표)",
       "lastRun": "2026-09-04",
-      "daysAgo": 7,
+      "daysAgo": 8,
       "lastOk": "2026-09-04",
-      "okDaysAgo": 7,
+      "okDaysAgo": 8,
       "fails30": 4,
       "runs30": 5
+    },
+    {
+      "file": "apt-station.yml",
+      "name": "단지 가까운 역 (카드 뱃지용)",
+      "lastRun": "2026-09-07",
+      "daysAgo": 5,
+      "lastOk": "2026-09-05",
+      "okDaysAgo": 7,
+      "fails30": 10,
+      "runs30": 21
     },
     {
       "file": "geocode.yml",
@@ -1079,16 +1089,6 @@
       "okDaysAgo": 5,
       "fails30": 0,
       "runs30": 4
-    },
-    {
-      "file": "apt-station.yml",
-      "name": "단지 가까운 역 (카드 뱃지용)",
-      "lastRun": "2026-09-07",
-      "daysAgo": 4,
-      "lastOk": "2026-09-05",
-      "okDaysAgo": 7,
-      "fails30": 10,
-      "runs30": 21
     },
     {
       "file": "apt-detail.yml",
@@ -1104,9 +1104,9 @@
       "file": "kosis-probe.yml",
       "name": "KOSIS 표 검증 (probe)",
       "lastRun": "2026-09-09",
-      "daysAgo": 2,
+      "daysAgo": 3,
       "lastOk": "2026-09-08",
-      "okDaysAgo": 3,
+      "okDaysAgo": 4,
       "fails30": 0,
       "runs30": 3
     },
@@ -1114,9 +1114,9 @@
       "file": "molit-collect.yml",
       "name": "실거래 수집 (국토부)",
       "lastRun": "2026-09-09",
-      "daysAgo": 2,
+      "daysAgo": 3,
       "lastOk": "2026-09-09",
-      "okDaysAgo": 2,
+      "okDaysAgo": 3,
       "fails30": 5,
       "runs30": 12
     },
@@ -1141,16 +1141,6 @@
       "runs30": 23
     },
     {
-      "file": "auto-produce.yml",
-      "name": "데이터 바뀌면 카드 자동 재생산",
-      "lastRun": "2026-09-11",
-      "daysAgo": 1,
-      "lastOk": "2026-09-11",
-      "okDaysAgo": 1,
-      "fails30": 14,
-      "runs30": 100
-    },
-    {
       "file": "rail-geo.yml",
       "name": "철도 선형 좌표 (OSM 탐사)",
       "lastRun": "2026-09-10",
@@ -1159,6 +1149,16 @@
       "okDaysAgo": 1,
       "fails30": 2,
       "runs30": 20
+    },
+    {
+      "file": "auto-produce.yml",
+      "name": "데이터 바뀌면 카드 자동 재생산",
+      "lastRun": "2026-09-12",
+      "daysAgo": 0,
+      "lastOk": "2026-09-12",
+      "okDaysAgo": 0,
+      "fails30": 11,
+      "runs30": 100
     },
     {
       "file": "guard.yml",
@@ -1215,9 +1215,9 @@
       "name": "관제탑 배포 (Cloudflare)",
       "lastRun": "2026-09-12",
       "daysAgo": 0,
-      "lastOk": "2026-09-11",
+      "lastOk": "2026-09-12",
       "okDaysAgo": 0,
-      "fails30": 5,
+      "fails30": 2,
       "runs30": 100
     }
   ]
