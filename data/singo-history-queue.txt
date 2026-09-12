@@ -308,3 +308,6 @@ lawd=11740 umd=둔촌동 type=59 apt="올림픽파크포레온"
 lawd=11620 umd=봉천동 type=59 apt="벽산블루밍"
 lawd=41463 umd=언남동 type=84 apt="장미마을삼성래미안2"
 lawd=41113 umd=호매실동 type=84 apt="벨섬시티"
+
+# 2026-09-13 singo-daily-build 가 채운 줄
+lawd=41173 umd=호계동 type=59 apt="평촌트리지아"
