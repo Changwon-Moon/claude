@@ -1101,6 +1101,14 @@ function buildOne(L0, opt = {}) {
   const selfKey = SELF[L.key];
   if (!selfKey || !CAT[selfKey]) throw new Error(`${L.name}: 카탈로그에 자기 노선(${selfKey}) 이 없다`); // ④
   const lc = CAT[selfKey].color;
+  /* 🔴 **이미 문 연 역은 속을 채운다** (openMark, 오너 2026-09-12
+     "현재 개통된 역과 아직 미개통인 곳들을 어떻게 표현하면 좋을까?").
+     GTX-A 는 11역 중 9역이 이미 다니고 창릉·삼성만 아직이다. 점 모양이 다 같으면
+     「언제 완전 개통하지?」라는 제목에 지도가 아무 대답도 안 한다.
+       ● 속 찬 점 = 이미 운행 중   ○ 빈 점 = 아직
+     ⚠️ **노선이 켜야 켜진다.** 신안산선은 직결 6역이 state:"개통" 이라 이걸 전역으로 켜면
+        확정된 카드의 픽셀이 움직인다. */
+  const openMark = (st) => L.openMark === true && st?.state === "개통";
 
   /* 🔴 **이미 다니는 구간은 다르게 그린다** (openSegment, 2026-09-10).
      신분당선 카드는 「연장선」이 주인공인데, 선형은 용산~호매실 48.7km 가 통째로 이어져 있다.
@@ -1108,17 +1116,26 @@ function buildOne(L0, opt = {}) {
      「남부와 북부, 떨어진 두 구간을 따로 짓고 있습니다」라고 말하는 것과 정면으로 어긋난다.
      그래서 그 사이만 회색으로, 얇게 긋는다. 각주가 한 줄로 밝힌다.
      ⚠️ 자르는 자리는 **역의 실좌표를 선형에 투영한 t** 다 — 눈대중 인덱스가 아니다. */
-  let openSeg = null;
-  if (L.openSegment?.from && L.openSegment?.to) {
-    const ga = truth.get(L.openSegment.from), gb = truth.get(L.openSegment.to);
-    if (ga && gb) {
-      const ts = [projectOnTrack(track, ga).t, projectOnTrack(track, gb).t].sort((x, y) => x - y);
-      let ia = 0, ib = mainWay.g.length - 1;
-      for (let i = 0; i < track.length; i++) { if (track[i].d <= ts[0]) ia = i; }
-      for (let i = track.length - 1; i >= 0; i--) { if (track[i].d >= ts[1]) ib = i; }
-      if (ib - ia > 20) openSeg = { ia, ib };
-    }
+  /* ⚠️ 구간이 **여럿**일 수 있다(openSegments). GTX-A 는 양 끝 두 토막이 이미 다니고
+     가운데(서울역~수서)만 아직이다 — 신분당선과 정반대 모양이다. */
+  const segDefs = L.openSegments?.length ? L.openSegments
+    : (L.openSegment?.from && L.openSegment?.to ? [L.openSegment] : []);
+  const openSegs = [];
+  /* ⚠️ truth 의 열쇠는 OSM 이름에서 **「역」을 뗀 것**이다("서울역"→"서울"). 데이터셋 역명은
+     「서울역」이라 그대로 찾으면 빈손이고, 그러면 그 구간이 조용히 색칠에서 빠진다
+     (2026-09-12 실측 — GTX-A 운정중앙~서울역이 회색이 안 됐다). 떼고도 한 번 더 본다. */
+  const truthOf = (n) => truth.get(n) || truth.get(String(n).replace(/역$/, ""));
+  for (const sd of segDefs) {
+    const ga = truthOf(sd.from), gb = truthOf(sd.to);
+    if (!ga || !gb) continue;
+    const ts = [projectOnTrack(track, ga).t, projectOnTrack(track, gb).t].sort((x, y) => x - y);
+    let ia = 0, ib = mainWay.g.length - 1;
+    for (let i = 0; i < track.length; i++) { if (track[i].d <= ts[0]) ia = i; }
+    for (let i = track.length - 1; i >= 0; i--) { if (track[i].d >= ts[1]) ib = i; }
+    if (ib - ia > 10) openSegs.push({ ia, ib });
   }
+  openSegs.sort((a2, b2) => a2.ia - b2.ia);
+  const openSeg = openSegs.length === 1 ? openSegs[0] : null;
   const OPEN_C = "#c2c7cf";
   /* 🔴 **이미 다니는 선을 회색으로, 지도 안쪽까지만** (오너 2026-09-10)
      "신사~/광교중앙~에서 각각 이어지는 기존 개통된 노선 부분 회색으로 지도 안쪽까지만 표시"
@@ -1127,11 +1144,20 @@ function buildOne(L0, opt = {}) {
   const grayLines = (opt.grayTags?.length
     ? O.좌표.filter((w) => opt.grayTags.includes(w.railway) && w.g?.length > 1)
     : []).map((w) => `<path class="wirit-linecolor" d="${d(w.g)}" fill="none" stroke="${OPEN_C}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>`).join("");
-  const line = grayLines + (openSeg
-    ? `<path d="${d(mainWay.g.slice(0, openSeg.ia + 1))}" fill="none" stroke="${lc}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`
-      + `<path d="${d(mainWay.g.slice(openSeg.ia, openSeg.ib + 1))}" fill="none" stroke="${OPEN_C}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>`
-      + `<path d="${d(mainWay.g.slice(openSeg.ib))}" fill="none" stroke="${lc}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`
-    : `<path d="${d(mainWay.g)}" fill="none" stroke="${lc}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`)
+  /* 회색(이미 다님)과 노선색(아직)을 **번갈아** 긋는다 — 구간이 하나든 둘이든 같은 코드다. */
+  const seg = (g, open) => g.length < 2 ? ""
+    : `<path d="${d(g)}" fill="none" stroke="${open ? OPEN_C : lc}" stroke-width="${open ? 5 : 8}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  let lineBody = "";
+  if (openSegs.length) {
+    let cur = 0;
+    for (const o of openSegs) {
+      lineBody += seg(mainWay.g.slice(cur, o.ia + 1), false);
+      lineBody += seg(mainWay.g.slice(o.ia, o.ib + 1), true);
+      cur = o.ib;
+    }
+    lineBody += seg(mainWay.g.slice(cur), false);
+  } else lineBody = seg(mainWay.g, false);
+  const line = grayLines + lineBody
     /* 지선 — **실선**(오너 2026-09-09). 개략이라는 고지는 각주·캡션이 진다. */
     + (branchPts.length
       ? `<path d="${d(branchPts)}" fill="none" stroke="${L.branchOpen || opt.branchOpen ? OPEN_C : lc}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`
@@ -1373,7 +1399,7 @@ function buildOne(L0, opt = {}) {
       if (keys.length) {
         /* 한 줄이므로 뱃지와 이름의 **가로 폭을 합쳐** 가운데를 잡는다. bxx 는 아래에서 다시 센다. */
       }
-      inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="${prov ? "#f0eee9" : "#ffffff"}" stroke="${lc}" stroke-width="5"${prov ? ' stroke-dasharray="3.2 2.4"' : ""}/>`;
+      inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="${prov ? "#f0eee9" : openMark(p.st) ? lc : "#ffffff"}" stroke="${lc}" stroke-width="5"${prov ? ' stroke-dasharray="3.2 2.4"' : ""}/>`;
       const nmW = [...p.name].length * LBL_FS * 0.98, pwV = provW(p.st);
       /* ── 가로 정렬 지정(labelAlign). 기본은 마커에 가운데 맞춤이고,
          "left" 는 **줄의 오른쪽 끝을 마커 왼쪽에** 붙인다(그 반대가 "right").
@@ -1447,7 +1473,7 @@ function buildOne(L0, opt = {}) {
           const cy2 = rows.length > 1 ? top + ri * (BDG_H + 5) + BDG_H / 2 : cy;
           for (const k of row) { bdv += badgeSvg(k, bxv, cy2); bxv += badgeWidth(k) + BDG_GAP; } }); }
       const nx = left + blkW + (blkW ? BDG_PAD : 0);
-      inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="${prov ? "#f0eee9" : "#ffffff"}" stroke="${lc}" stroke-width="5"${prov ? ' stroke-dasharray="3.2 2.4"' : ""}/>`;
+      inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="${prov ? "#f0eee9" : openMark(p.st) ? lc : "#ffffff"}" stroke="${lc}" stroke-width="5"${prov ? ' stroke-dasharray="3.2 2.4"' : ""}/>`;
       /* 🔴 위/아래 배치는 원래 지시선을 안 그린다 — 마커 바로 위아래라 선이 필요 없어서다.
          그런데 뱃지를 세로로 쌓으면 이름이 60px 넘게 떨어진다(GTX-A 대곡). 그때는 선이 있어야
          어느 원의 이름인지 읽힌다 (오너 2026-09-10 "대곡은 원에서 역이름까지 직선그려").
@@ -1560,7 +1586,7 @@ function buildOne(L0, opt = {}) {
       }
     }
 
-    inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="${prov ? "#f0eee9" : "#ffffff"}" stroke="${lc}" stroke-width="5"${prov ? ' stroke-dasharray="3.2 2.4"' : ""}/>`;
+    inMap += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9.5" fill="${prov ? "#f0eee9" : openMark(p.st) ? lc : "#ffffff"}" stroke="${lc}" stroke-width="5"${prov ? ' stroke-dasharray="3.2 2.4"' : ""}/>`;
     outMap += leadSvg + bd +
       `<text x="${nameX.toFixed(1)}" y="${p.ly.toFixed(1)}" font-size="${LBL_FS}" font-weight="800" fill="#141821" letter-spacing="-0.6" dominant-baseline="middle" text-anchor="${anchor}"${HALO}>${esc(p.name)}</text>` +
       (pw ? provSvg(provX, p.ly, p.side > 0 ? "start" : "end") : "");
@@ -1798,7 +1824,7 @@ function buildOne(L0, opt = {}) {
       /* 역명이 대부분 미확정인 노선은 **그 사실을 각주가 말한다.** 점선 링만으로는
          「이 이름이 확정인 줄 알았다」를 막지 못한다(인동선 17역 중 확정은 셋뿐이다). */
       provCount ? [PROV_TAG ? "◌ 점선·「가칭」 = 역명 미확정" : "◌ 점선 = 역명 미확정(가칭)", L.nameNote].filter(Boolean).join(" · ") : "",
-      L.openSegment?.note || "",
+      L.openSegment?.note || L.openNote || "",
       /* ⚠️ 「지선·공용 구간은 잇는 선이 개략」 한 줄은 오너 지시로 뺐다(2026-09-09).
          고지가 사라진 게 아니다 — 캡션의 「※ 노선 선형은 실제 좌표(OpenStreetMap),
          역 위치는 개략 표기입니다.」가 그대로 지고 있고, 그 줄은 가드 ⑤ 가 지킨다.

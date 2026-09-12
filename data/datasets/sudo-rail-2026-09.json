@@ -383,7 +383,20 @@
       "osmNote": "GTX-A 는 운정중앙~서울역·수서~동탄이 이미 개통해 그 구간이 railway=rail 이고, 창릉·삼성만 construction 이다. 둘을 다 봐야 82.3km 가 이어진다.",
       "osmStitchBoth": true,
       "autoVert": true,
-      "autoVertAt": 0
+      "autoVertAt": 0,
+      "openMark": true,
+      "openSegments": [
+        {
+          "from": "운정중앙",
+          "to": "서울역"
+        },
+        {
+          "from": "수서",
+          "to": "동탄"
+        }
+      ],
+      "openNote": "● 찬 역 = 이미 운행 중 · ○ 빈 역 = 아직 · 회색 = 이미 다니는 구간",
+      "sharedShort": "수서~동탄은 SRT 와 선로 공용"
     },
     {
       "key": "gtxb",
@@ -1214,7 +1227,8 @@
             "rail"
           ]
         }
-      ]
+      ],
+      "openMark": true
     },
     {
       "key": "daejang",
