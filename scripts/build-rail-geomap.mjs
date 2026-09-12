@@ -1391,14 +1391,22 @@ function buildOne(L0, opt = {}) {
         const rows = [];
         for (let i = 0; i < keys.length; i += stackN) rows.push(keys.slice(i, i + stackN));
         stackH = rows.length * BDG_H + (rows.length - 1) * 5;
-        /* 쌓은 더미의 **바깥 끝**이 이름 쪽이다 — 위쪽 역이면 이름이 더미 위로 간다. */
-        const top = p.side > 0 ? endY + 4 : endY - 4 - stackH;
+        /* 🔴 **이름을 먼저, 뱃지를 그 바깥에**(nameFirst, 오너 2026-09-10
+           "용산은 역 아래에 역명쓰고 그 아래에 세로로 환승노선 배치해줘").
+           기본은 [뱃지 더미][이름] 이지만, 환승이 셋인 역은 더미가 이름을 마커에서 멀리 밀어낸다.
+           이름을 마커 쪽에 두면 어느 역인지가 먼저 읽힌다. */
+        const NF = p.st.nameFirst === true;
+        const top = NF
+          ? (p.side > 0 ? endY + LBL_FS + 8 : endY - LBL_FS - 8 - stackH)
+          : (p.side > 0 ? endY + 4 : endY - 4 - stackH);
         rows.forEach((row, ri) => {
           let bx = cx - badgeRowWidth(row) / 2;
           const cy2 = top + ri * (BDG_H + 5) + BDG_H / 2;
           for (const k of row) { bdV += badgeSvg(k, bx, cy2); bx += badgeWidth(k) + BDG_GAP; }
         });
-        nameCy = p.side > 0 ? top + stackH + 6 + LBL_FS / 2 : top - 6 - LBL_FS / 2;
+        nameCy = NF
+          ? (p.side > 0 ? endY + LBL_FS / 2 + 2 : endY - LBL_FS / 2 - 2)
+          : (p.side > 0 ? top + stackH + 6 + LBL_FS / 2 : top - 6 - LBL_FS / 2);
         nameLeft = cx - (nmW + pwV) / 2;
       } else if (keys.length) {
         let bxx = ONE_ROW ? rowL : cx - bwRawV / 2;
@@ -1885,7 +1893,7 @@ for (const L of rail.lines) {
            넘어서 padPanel 규칙에 걸리면 지도가 통째로 쪼그라든다. */
         /* 칩은 300×246 이라 작지 않다 — 이름표만 피하게 뒀더니 용산·수성중사거리·광교가
            그 밑으로 들어갔다(2026-09-10 실측). 가로로도 비켜 그린다. */
-        const CH = 246;
+        const CH = 282;
         panels.length = 0;                       // 토막 카드는 정보표를 지도 밖(위 띠)으로 올렸다
         panels.push(b.info.at === "bl"
           ? { x0: 18, x1: 318, y0: HS[i] - 22 - CH, y1: HS[i] - 22 }
@@ -1903,7 +1911,9 @@ for (const L of rail.lines) {
        굴러가면 숫자도 따로 적어야 한다 — 신분당선은 남부만 착공했고 북부는 미착공이다.
        카드 전체에 「17.25%」 하나만 적으면 북부에 대해서는 그게 거짓말이다. */
     if (L.mapSplit.every((b) => b.info)) {
-      const CHIP_H = 246;
+      /* ⚠️ 246 으로 어림잡았다가 **칩이 상자 밖으로 삐져나왔다**(오너 2026-09-10 "벗어나지 않게").
+         구간명 23 + 공정률 25 + 숫자 58 + 기준일 20 + 막대 9 + 일정칸 86 + 안쪽여백 27 + 테두리 4 ≈ 280. */
+      const CHIP_H = 282;
       card.segs = L.mapSplit.map((b, i) => {
         const boxTop = i === 0 ? 0 : HS[0] + GAPBOX, boxH = HS[i];
         const bl = b.info.at === "bl";
