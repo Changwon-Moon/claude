@@ -284,9 +284,8 @@
           ],
           "km": 13.6,
           "badgeStack": 1,
-          "labelSide": "up",
-          "leadLine": true,
-          "labelDy": 26
+          "labelSide": "down",
+          "leadLine": true
         },
         {
           "name": "창릉",
