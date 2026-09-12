@@ -1900,8 +1900,10 @@
       },
       "photo": {
         "file": "gwacheon-lavieno.jpg",
-        "credit": "출처. 나무위키",
-        "provided": "2026-09-09 오너 제공(실사진 — 입주 완료 단지라 조감도가 아니다). 원본 888×666, _source/ 에 보존"
+        "credit": "출처. 대우건설",
+        "provided": "2026-09-09 오너 제공(실사진 — 입주 완료 단지라 조감도가 아니다). 원본 888×666, _source/ 에 보존",
+        "creditOnCard": true,
+        "_creditNote": "오너가 나무위키에서 받은 사진이지만 원 저작권자는 시공사다(오너 판단 2026-09-12). 나무위키는 게시처이지 저작권자가 아니다."
       },
       "price": {
         "verified": false,
@@ -1980,8 +1982,10 @@
       },
       "photo": {
         "file": "gwacheon-bellarte.jpg",
-        "credit": "출처. 나무위키",
-        "provided": "2026-09-09 오너 제공(실사진 항공뷰 — 입주 완료 단지). 원본 1000×562, _source/ 에 보존"
+        "credit": "출처. 대우건설",
+        "provided": "2026-09-09 오너 제공(실사진 항공뷰 — 입주 완료 단지). 원본 1000×562, _source/ 에 보존",
+        "creditOnCard": true,
+        "_creditNote": "오너가 나무위키에서 받은 사진이지만 원 저작권자는 시공사다(오너 판단 2026-09-12). 나무위키는 게시처이지 저작권자가 아니다."
       },
       "price": {
         "verified": false,

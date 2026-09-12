@@ -992,7 +992,17 @@ function remndr(d) {
     schedule,
     /* 한줄평이 있으면 그게 아래 한 줄이다 — 특이사항 나열보다 한 문장이 오래 남는다. */
     notice: noticeOf(d, flags),
-    source: { name: d.source.name.replace(/^한국부동산원\s+/, "") },
+    source: {
+      name: d.source.name.replace(/^한국부동산원\s+/, ""),
+      /* 조감도·실사진은 **건설사 저작물**이라 카드 어딘가에 출처가 남아야 한다(기준 문서).
+       * 분양 예정 갈래는 처음부터 이걸 붙였는데 **무순위 갈래만 빠져 있었다**(2026-09-12 발견) —
+       * 장위·구리·드파인이 사진 출처 없이 나갔다. 규칙이 두 갈래로 갈려 있던 자리다.
+       * 그렇다고 통째로 켜면 그 확정본 셋의 푸터가 바뀐다(픽셀 불변). 그래서 **옵트인**으로 둔다:
+       * 새 카드는 `photo.creditOnCard: true` 를 적고, 옛 확정본은 그대로 둔다. */
+      ...(d.photo?.creditOnCard && d.photo?.credit
+        ? { photo: d.photo.credit.replace(/^\s*출처[.·:]?\s*/, "") }
+        : {}),
+    },
   };
 }
 
