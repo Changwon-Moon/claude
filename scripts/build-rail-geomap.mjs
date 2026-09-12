@@ -656,7 +656,16 @@ function buildOne(L0, opt = {}) {
   const everySt = [...L.stations, ...(L.branch?.stations || []), ...(L.through?.stations || []),
                    ...(L.sharedOn?.stations || [])];
   const maxNm = Math.max(...everySt.map((st) => [...st.name].length));
-  const provCount = L.stations.filter((st) => st.state === "가칭" || st.state === "역명미정").length;
+  /* 🔴 **점선의 기준을 한 줄로 못박는다** (오너 2026-09-12 "그런 기준들도 전체 확인해서 통일").
+     점선 = **역명이 아직 확정되지 않은 역**. 대개 신설역이고, 기존역에 승강장만 더하는 곳은
+     이름이 이미 있으니 실선이다.
+     ⚠️ `state` 로만 판정하면 안 되는 자리가 있다 — 도식형 카드가 「추가역」 이라고 적는 역 중
+        **성격이 정반대인 둘**이 섞여 있다:
+          · GTX-C 왕십리·인덕원·의왕·상록수 = **기존역에 정차 추가**(이름 확정) → 실선
+          · GTX-B 청학·왕숙 = **신도시에 새로 짓는 역**(이름 가칭) → 점선이어야 한다
+        도식형 8장은 오너 확정이라 state 를 못 바꾼다. 그래서 지도판 전용 손잡이를 둔다. */
+  const isProv = (st) => st?.state === "가칭" || st?.state === "역명미정" || st?.nameProv === true;
+  const provCount = L.stations.filter(isProv).length;
   /* 환승 키 전수 대조 — 카탈로그에 없으면 뱃지가 조용히 안 그려진다(rail-line 과 같은 규칙). */
   for (const st of everySt)
     for (const k of st.xfer || [])
@@ -1341,7 +1350,7 @@ function buildOne(L0, opt = {}) {
 
   let inMap = "", outMap = "";
   for (const p of lbl) {
-    const prov = p.st.state === "가칭" || p.st.state === "역명미정";
+    const prov = isProv(p.st);
     const keys = p.st.xfer || [];
     const bw = keys.length ? bdgBlockW(p.st) + BDG_PAD : 0;   // 쌓았으면 가장 넓은 줄
 
@@ -1794,14 +1803,17 @@ function buildOne(L0, opt = {}) {
 
   /* ⚠️ rail-line@1 은 6항목인데 여기 옮길 때 **「예상 공사기간」이 빠졌다**(2026-09-09 대조).
      같은 소재의 두 판형이 다른 정보를 보이면 어느 쪽이 맞는지 독자가 알 수 없다. */
-  const facts = [
+  /* ⚠️ 일정을 표에 더 적어야 하는 노선이 있다 — GTX-A 는 99.9% 인데 남은 것이 셋이고
+     시점이 다 다르다(오너 2026-09-12 "99.9%로 할거면 미개통 노선과 역들에 대한 일정을 넣어줘").
+     데이터셋이 `facts` 를 주면 그걸 쓰고, 안 주면 앞 판 그대로다. */
+  const facts = (L.facts?.length ? L.facts : [
     { k: "착공", v: L.start },
     { k: "예상 공사기간", v: buildPeriod(L.start, L.openNow) },
     { k: "연장", v: L.km },
     { k: "정거장", v: L.stationNote },
     { k: "총사업비", v: L.cost },
     { k: "시행자", v: L.operator },
-  ].filter((f) => f.v);
+  ]).filter((f) => f.v);
 
   const card = {
     template: "rail-geomap@1", date, lc, variant: VARIANT, splitInfo: SPLIT_INFO && !WIDE,
