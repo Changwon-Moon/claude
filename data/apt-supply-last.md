@@ -36,7 +36,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A12285703 --area 83.27
 
 ▶ 미성아파트(불광동) (A12285703) · 전용 83.27㎡ · 11380-10300 · 지번 후보 248
-   지번 248 (0248-0000) · 대지 → 줄 3000개
+   지번 248 (0248-0000) · 대지 → 줄 1200개
 ::error::전용 83.27㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 248) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A12285703 --area 83.27`
