@@ -5,15 +5,15 @@
     "aptNm": "초원마을대림",
     "type": "59",
     "from": "202001",
-    "to": "202608",
-    "monthsTried": 80,
+    "to": "202609",
+    "monthsTried": 81,
     "monthsFailed": 0,
     "monthsTraded": 56,
     "peak": {
-      "manwon": 104000,
-      "date": "2026-08-15",
+      "manwon": 105000,
+      "date": "2026-08-27",
       "area": 59.742,
-      "floor": 8
+      "floor": 12
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -732,11 +732,20 @@
     },
     {
       "ym": "202608",
-      "maxManwon": 104000,
-      "count": 2,
+      "maxManwon": 105000,
+      "count": 3,
       "area": 59.742,
-      "floor": 8,
-      "date": "2026-08-15",
+      "floor": 12,
+      "date": "2026-08-27",
+      "ok": true
+    },
+    {
+      "ym": "202609",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
       "ok": true
     }
   ]
