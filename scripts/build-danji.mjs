@@ -27,7 +27,7 @@
  *
  * 실행: node scripts/build-danji.mjs [날짜=오늘]
  */
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -767,6 +767,46 @@ function presale(d) {
  *    실거래 11.87억이면 3.1억. 카드가 어느 쪽인지 말하지 않으면 독자는 실거래로 읽는다.
  * ③ 안전마진이 0 이하면 던진다 — 마이너스 마진을 '안전마진'이라 부를 수는 없다.
  */
+/**
+ * 안전마진의 **비교값이 낡지 않았는지** 원자료로 다시 잰다 (2026-09-12 신설).
+ *
+ * `margin.market.won` 은 사람이 적는 값이다 — 그래야 호가·분양권·다른 단지 시세도 쓸 수 있다
+ * (구리역 2026-08-26). 그런데 그 자유에는 대가가 있다: **새 거래가 붙어도 카드는 모른다.**
+ * 과천 지정타 재공급은 공고(9/23)까지 2주를 기다리는 카드라, 그 사이 거래가 하나 붙으면
+ * 발행되는 카드가 옛 시세로 안전마진을 말하게 된다. 종료코드는 0 이고 아무도 모른다.
+ *
+ * 그래서 **국토부 실거래를 비교값으로 쓴 카드는** `market.verify` 를 달아 원자료와 대조한다:
+ *   { lawd: "41290", aptNm: "과천푸르지오라비엔오", m2: [84, 85] }
+ * 적어 둔 금액이 원자료에 아예 없거나, 그보다 **나중 거래**가 있으면 **던진다.**
+ * 경고로 두지 않는 이유는 늘 같다 — 경고는 안 읽힌다.
+ *
+ * 호가·분양권처럼 실거래가 아닌 비교값에는 `verify` 를 달지 않는다. 달 수 없는 값이다.
+ */
+function verifyMarket(d, m) {
+  const v = m.market?.verify;
+  if (!v) return;
+  const dir = join(ROOT, "data/datasets/molit");
+  if (!existsSync(dir)) throw new Error(`${d.id}: 실거래 원본 폴더가 없다 — 비교값을 대조할 수 없다`);
+  const [lo, hi] = v.m2;
+  const hits = [];
+  for (const f of readdirSync(dir).filter((x) => x.startsWith(`${v.lawd}-`) && x.endsWith(".json"))) {
+    for (const t of JSON.parse(readFileSync(join(dir, f), "utf8")).trades || []) {
+      if (t.aptNm === v.aptNm && t.area >= lo && t.area < hi) hits.push(t);
+    }
+  }
+  if (!hits.length)
+    throw new Error(`${d.id}: 실거래 원본에 ${v.aptNm} 전용 ${lo}~${hi}㎡ 거래가 하나도 없다 — 비교값의 근거가 없다`);
+  hits.sort((a, b) => (a.date < b.date ? -1 : 1));
+  const latest = hits[hits.length - 1];
+  if (latest.priceWon !== m.market.won)
+    throw new Error(
+      `${d.id}: 비교값이 낡았다 — 적어 둔 값 ${(m.market.won / 1e8).toFixed(2)}억,` +
+        ` 원자료의 최근 거래는 ${latest.date} · ${latest.area}㎡ · ${latest.floor}층 · ${(latest.priceWon / 1e8).toFixed(2)}억.\n` +
+        `   margin.market.won 과 source 를 이 거래로 고친 뒤 다시 만든다 (안전마진은 코드가 다시 뺀다).`,
+    );
+  console.log(`   ✓ 비교값 대조 — ${v.aptNm} ${lo}~${hi}㎡ 최근 거래 ${latest.date} · ${latest.floor}층 · ${(latest.priceWon / 1e8).toFixed(2)}억`);
+}
+
 function marginBand(d) {
   const m = d.margin;
   if (!m) return null;
@@ -780,6 +820,8 @@ function marginBand(d) {
     );
   if (!m.market.source)
     throw new Error(`${d.id}: 비교값의 출처(margin.market.source)가 있어야 한다 — 카드 밖에서라도 되짚을 수 있어야 한다`);
+  /* 실거래를 비교값으로 쓴 카드는 원자료와 다시 맞춰 본다 — 기다리는 동안 낡지 않게. */
+  verifyMarket(d, m);
   const gap = m.market.won - priceWon;
   if (gap <= 0)
     throw new Error(`${d.id}: 안전마진이 0 이하다 (비교값 ${m.market.won} ≤ 분양가 ${priceWon}) — 이 판형을 쓸 수 없다`);
