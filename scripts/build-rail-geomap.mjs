@@ -2021,7 +2021,11 @@ for (const L of rail.lines) {
     L.shared ? `🔗 ${L.shared}` : null,
     L.through?.stations?.length
       ? `🚉 지도의 ${L.through.after}~${L.through.stations[L.through.stations.length - 1].name} 구간은 서해선과 함께 쓰는 선로입니다`
-      : null, "",
+      : null,
+    /* 🔴 카드가 말하는 것을 캡션도 말해야 한다 — GTX-A 는 「지금 미정」 한 줄로는 부족하다.
+       남은 구간이 셋이고 시점이 다 다르다(오너 2026-09-12 "미개통 일정을 넣어줘").
+       표에만 있고 캡션에 없으면 캡션만 읽는 사람은 「미정」으로만 안다. */
+    L.etaRows?.length ? `🗓️ ${L.etaRows.map((r) => `${r.k} ${r.v}`).join(" · ")}` : null, "",
     `👉 ${L.capPoint}`, "",
     "📌 저장해두고 우리 집 지나는 노선 언제 열리는지 확인하기",
     "—",
