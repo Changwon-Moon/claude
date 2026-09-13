@@ -311,3 +311,7 @@ lawd=41113 umd=호매실동 type=84 apt="벨섬시티"
 
 # 2026-09-13 singo-daily-build 가 채운 줄
 lawd=41173 umd=호계동 type=59 apt="평촌트리지아"
+
+# 2026-09-14 singo-daily-build 가 채운 줄
+lawd=11350 umd=공릉동 type=59 apt="태릉해링턴플레이스"
+lawd=11380 umd=불광동 type=59 apt="북한산현대힐스테이트3차아파트"
