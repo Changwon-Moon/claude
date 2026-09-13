@@ -1,0 +1,30 @@
+{
+  "kaptCode": "A12204004",
+  "kaptName": "북한산힐스테이트3차아파트",
+  "type": "59",
+  "jibun": "641",
+  "exclusive": 59.99,
+  "commonResidential": 19.41,
+  "supply": 79.4,
+  "pyeong": 24.02,
+  "pyeongLabel": "24평",
+  "sampleDong": "3205동",
+  "sampleHo": "1304",
+  "sampleCount": 144,
+  "ratio": 0.7555,
+  "parts": [
+    {
+      "purpose": "아파트 / 계단,승강기",
+      "floor": "각층 각층",
+      "area": 14.08
+    },
+    {
+      "purpose": "아파트 / 벽체",
+      "floor": "각층 각층",
+      "area": 5.33
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}

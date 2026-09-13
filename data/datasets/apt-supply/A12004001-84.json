@@ -1,37 +1,37 @@
 {
-  "kaptCode": "A15728008",
-  "kaptName": "마곡수명산파크1단지",
+  "kaptCode": "A12004001",
+  "kaptName": "서대문천연뜨란채아파트",
   "type": "84",
-  "jibun": "742",
-  "exclusive": 84.68,
-  "commonResidential": 24.359,
-  "supply": 109.04,
-  "pyeong": 32.98,
-  "pyeongLabel": "33평",
+  "jibun": "145",
+  "exclusive": 84.74,
+  "commonResidential": 30.504,
+  "supply": 115.24,
+  "pyeong": 34.86,
+  "pyeongLabel": "35평",
   "sampleDong": "101동",
-  "sampleHo": "604호",
-  "sampleCount": 134,
-  "ratio": 0.7766,
+  "sampleHo": "803",
+  "sampleCount": 14,
+  "ratio": 0.7353,
   "parts": [
     {
-      "purpose": "아파트 / 계단실,승강기",
+      "purpose": "아파트 / 계단실,승강기,벽체",
       "floor": "각층 각층",
-      "area": 22.97
+      "area": 27.9587
     },
     {
-      "purpose": "부대시설 / 관리사무소,문고,보육시설,경로당,주민공동시설",
-      "floor": "지상 1층",
-      "area": 0.709
+      "purpose": "부대시설 / 주민복지관",
+      "floor": "지하 지3~지1층",
+      "area": 1.4116
     },
     {
-      "purpose": "아파트 / 지하계단실",
-      "floor": "지하 지1층",
-      "area": 0.662
+      "purpose": "부대시설 / 지하계단실",
+      "floor": "지하 지4~지1층",
+      "area": 1.1198
     },
     {
       "purpose": "부대시설 / 경비실",
-      "floor": "지상 1층",
-      "area": 0.018
+      "floor": "지하 지1층",
+      "area": 0.0137
     }
   ],
   "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
