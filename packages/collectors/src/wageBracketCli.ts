@@ -88,6 +88,40 @@ function rowsOf(json: unknown, what: string): Row[] {
 }
 
 /** 숫자만 통과시킨다. KOSIS 는 결측을 "-"·""·"…" 로 준다 — 0 으로 읽으면 그래프가 바닥으로 꺾인다. */
+/* ── kosis.kr 은 러너 요청을 **수 분씩 거부하는 창**이 있다 (docs/API_CONNECTIONS.md) ──
+ * HTTP 오류가 아니라 TCP 연결 자체가 안 잡힌다(UND_ERR_CONNECT_TIMEOUT).
+ * fetchText 안의 1·2·4초 백오프로는 나쁜 창 하나를 통째로 못 넘는다 —
+ * 2026-09-14 에 이 수집기가 그 창에 두 번 연달아 걸렸다(run 34808456683 · 34808599596).
+ * 그래서 **분 단위로 쉬며** 다시 두드린다. 표 검증(probe)이 같은 방식으로 넘던 자리다.
+ *
+ * ⚠️ 기다림으로 푸는 것은 '연결이 안 잡힌다'뿐이다. 「표가 없다」·「파라미터가 틀렸다」는
+ *    다시 밀어도 같으므로 기다리지 않고 바로 던진다 — 두 실패를 같은 것으로 세지 않는다. */
+const WAITS_MS = [75_000, 90_000, 120_000];
+
+function isClosedWindow(e: unknown): boolean {
+  const m = e instanceof Error ? `${e.message}` : String(e);
+  return /UND_ERR_CONNECT_TIMEOUT|ConnectTimeoutError|ECONNRESET|EAI_AGAIN|socket hang up|fetch failed/i.test(m);
+}
+
+async function withPatience<T>(what: string, fn: () => Promise<T>): Promise<T> {
+  let lastErr: unknown;
+  for (let i = 0; i <= WAITS_MS.length; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      lastErr = e;
+      if (!isClosedWindow(e) || i === WAITS_MS.length) throw e;
+      const wait = WAITS_MS[i];
+      console.log(
+        `⏳ ${what}: kosis.kr 연결이 안 잡힙니다(${i + 1}/${WAITS_MS.length + 1}). ` +
+        `${Math.round(wait / 1000)}초 쉬고 다시 두드립니다 — 주소 문제가 아니라 닫힌 창입니다.`,
+      );
+      await new Promise((r) => setTimeout(r, wait));
+    }
+  }
+  throw lastErr;
+}
+
 function num(dt: string | undefined, where: string): number {
   const s = String(dt ?? "").replace(/,/g, "").trim();
   if (!/^-?\d+(\.\d+)?$/.test(s)) throw new Error(`${where}: 숫자가 아닌 값 "${dt}"`);
@@ -108,14 +142,14 @@ async function main() {
   if (!(from >= 2007 && to >= from)) throw new Error(`연도 범위가 이상하다: ${from}~${to} (표는 2007~)`);
 
   /* ── ① 총급여 규모별 인원 (전국 합계) ───────────────────────────── */
-  const wageJson = await fetchTable("wageBracket", key, {
+  const wageJson = await withPatience("총급여 규모별 인원", () => fetchTable("wageBracket", key, {
     prdSe: "Y",
     startPrdDe: String(from),
     endPrdDe: String(to),
     itmId: ITM_PEOPLE,
     objL1: "ALL",          // C1 = 총급여 규모 (전 구간)
     extraObjL: [NATION],   // C2 = 주소지 → 합계만
-  });
+  }));
   const wageRows = rowsOf(wageJson, "wageBracket");
 
   type Bracket = { name: string; upper: number | null; people: number };
@@ -171,13 +205,13 @@ async function main() {
   }
 
   /* ── ② 연도별 전국 총인구 ─────────────────────────────────────── */
-  const popJson = await fetchTable("populationYear", key, {
+  const popJson = await withPatience("연도별 총인구", () => fetchTable("populationYear", key, {
     prdSe: "Y",
     startPrdDe: String(from),
     endPrdDe: String(to),
     itmId: "T20",
     objL1: "00",
-  });
+  }));
   const popRows = rowsOf(popJson, "populationYear");
   const pop = new Map<number, number>();
   for (const r of popRows) {

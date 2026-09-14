@@ -33,6 +33,9 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
+    # kosis.kr 이 러너를 거부하는 창을 분 단위로 기다려 넘는다(수집기 안의 withPatience).
+    # 기본 360분에 기대지 않고 상한을 적어 둔다 — 닫힌 창이 길어도 여기서 끝난다.
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:

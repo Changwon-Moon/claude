@@ -463,20 +463,85 @@
         color: var(--wirit-ink);
         font-weight: 900;
       }
-      /* 연도 밑 둘째 줄(선택). 안 주면 아예 안 그려지므로 기존 카드 픽셀은 그대로다.
-       * 칸이 많은 카드(16칸)에서 연도가 서로 붙지 않게 축 글자를 같이 줄인다 —
-       * 줄이는 것은 .dense 를 켠 카드에서만 한다. */
-      .yc-axis b.yc-sub {
-        display: block;
-        margin-top: 4px;
-        font-size: 20px;
+      /* 칸이 많은 카드(13칸 이상)에서 연도와 값이 서로 붙지 않게 한 단 줄인다.
+       * .dense 를 켠 카드에서만 먹으므로 기존 카드 픽셀은 그대로다. */
+      .yc.dense .yc-axis span { font-size: 21px; }
+      .yc.dense .yc-val { font-size: 20px; }
+
+      /* ── 위 칸: 비중 꺾은선 (선택 · topLine 을 줄 때만 그려진다) ────────────────
+       * 왜 겹치지 않고 위아래로 나누나: 인원(명)과 비중(%)은 **단위가 다르다.**
+       * 한 플롯에 겹쳐 그리면 두 축의 눈금을 독자가 임의로 맞춰 읽게 되고,
+       * 축척을 조금만 흔들어도 "선이 막대를 앞질렀다" 같은 없는 이야기가 만들어진다.
+       * 칸을 나누면 가로축(연도)만 공유하고 세로 눈금은 각자 갖는다 — 그게 정직한 배치다.
+       * 좌표는 전부 빌더가 계산한다(템플릿은 숫자를 만들지 않는다). */
+      .yc-top {
+        position: relative;
+        flex: 0 0 var(--top-h, 292px);
+        margin-bottom: 18px;
+      }
+      .yc-top-cap {
+        position: absolute;
+        left: 0;
+        top: -2px;
+        font-size: 23px;
         font-weight: 800;
-        color: var(--wirit-red);
+        color: var(--wirit-gray);
         letter-spacing: -0.02em;
       }
-      .yc.dense .yc-axis span { font-size: 21px; }
-      .yc.dense .yc-axis b.yc-sub { font-size: 17px; margin-top: 3px; }
-      .yc.dense .yc-val { font-size: 21px; }
+      .yc-top-cap b { color: var(--wirit-ink); }
+      /* 바닥선 — 이 칸의 0 이 어디인지 알려 준다. 막대칸의 0선보다 얇게 둬서
+       * "여기가 기준"이라는 무게가 아래 칸에 남게 한다. */
+      .yc-top-base {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 2px;
+        background: var(--wirit-hair, #e2e2e2);
+      }
+      .yc-top svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+      .yc-top polyline {
+        fill: none;
+        stroke: var(--wirit-red);
+        stroke-width: 5;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+        vector-effect: non-scaling-stroke;
+      }
+      .yc-top polygon {
+        fill: var(--wirit-red);
+        opacity: 0.08;
+      }
+      .yc-top circle {
+        fill: #fff;
+        stroke: var(--wirit-red);
+        stroke-width: 4;
+        vector-effect: non-scaling-stroke;
+      }
+      /* 끝점만 채운 원 — 눈이 마지막 값에 멈추게 한다. */
+      .yc-top circle.on {
+        fill: var(--wirit-red);
+      }
+      /* 선 위 값 라벨. 양 끝만 단다(가운데까지 달면 선이 글자에 묻힌다). */
+      .yc-tval {
+        position: absolute;
+        transform: translate(-50%, -100%);
+        font-family: var(--font-num);
+        font-size: 27px;
+        font-weight: 900;
+        color: var(--wirit-red);
+        white-space: nowrap;
+        letter-spacing: -0.02em;
+      }
+      .yc-tval.lo {
+        color: var(--wirit-gray);
+      }
       /* ⚠️ 단위(%)는 축 왼쪽에 두면 −1.5 값 라벨과 부딪힌다(첫 렌더에서 겹쳤다).
        * lede 를 지운 뒤에는 좌상단 캡션(subtitle)에 "단위 %"를 붙여서 해결했다. */
 
@@ -489,7 +554,27 @@
         <h1 class="wirit-title">{{{title}}}</h1>
       </div>
 
-      <div class="yc-chart" style="--zero: {{zeroAt}}; --col-gap: {{#if colGap}}{{colGap}}{{else}}12px{{/if}}">
+      <div class="yc-chart" style="--zero: {{zeroAt}}; --col-gap: {{#if colGap}}{{colGap}}{{else}}12px{{/if}}{{#if topLine.height}}; --top-h: {{topLine.height}}{{/if}}">
+        {{#if topLine}}
+        {{!-- 위 칸: 비중 꺾은선. 가로축(연도)만 아래 막대칸과 공유하고 세로 눈금은 따로 갖는다.
+              단위가 다른 두 값을 한 플롯에 겹쳐 읽히게 하지 않기 위해서다. --}}
+        <div class="yc-top">
+          {{#if topLine.caption}}<span class="yc-top-cap">{{{topLine.caption}}}</span>{{/if}}
+          <svg viewBox="0 0 1000 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            {{#if topLine.area}}<polygon points="{{topLine.area}}" />{{/if}}
+            <polyline points="{{topLine.points}}" />
+          </svg>
+          {{#each topLine.dots}}
+          <svg class="yc-tdot" viewBox="0 0 1000 1000" preserveAspectRatio="none" style="position:absolute;inset:0">
+            <circle class="{{#if this.on}}on{{/if}}" cx="{{this.cx}}" cy="{{this.cy}}" r="9" />
+          </svg>
+          {{/each}}
+          {{#each topLine.labels}}
+          <span class="yc-tval {{#if this.dim}}lo{{/if}}" style="left: {{this.x}}; top: {{this.y}}">{{this.text}}</span>
+          {{/each}}
+          <span class="yc-top-base"></span>
+        </div>
+        {{/if}}
         <div class="yc-plot">
           {{#if arrow}}
           <svg class="yc-arrow" viewBox="0 0 1000 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -567,7 +652,7 @@
           </div>
         </div>
         <div class="yc-axis">
-          {{#each points}}<span class="{{#if this.hEst}}hi{{/if}}{{#if this.peak}}hi{{/if}}">{{this.year}}{{#if this.sub}}<b class="yc-sub">{{this.sub}}</b>{{/if}}</span>{{/each}}
+          {{#each points}}<span class="{{#if this.hEst}}hi{{/if}}{{#if this.peak}}hi{{/if}}">{{this.year}}</span>{{/each}}
         </div>
       </div>
 

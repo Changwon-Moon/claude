@@ -137,11 +137,6 @@
           "valueInside": {
             "type": "boolean",
             "description": "값 라벨을 막대 안(흰 글씨)에 넣는다. 막대 위 자리가 지수 곡선과 겹칠 때만 — 빌더가 실측 거리로 정한다"
-          },
-          "sub": {
-            "type": "string",
-            "maxLength": 8,
-            "description": "연도 밑 둘째 줄(선택). 같은 막대의 두 번째 자(예: 인구 대비 비중). 안 주면 안 그려진다 — 기존 카드 픽셀 불변."
           }
         }
       }
@@ -211,6 +206,83 @@
     "dense": {
       "type": "boolean",
       "description": "칸이 많을 때(13칸 이상) 축·값 글자를 한 단 줄인다. 안 주면 기존 카드와 동일한 픽셀."
+    },
+    "topLine": {
+      "type": "object",
+      "description": "막대칸 **위에 따로 놓는** 꺾은선 칸(선택). 안 주면 안 그려진다 — 기존 카드 픽셀 불변. 인원(명)과 비중(%)처럼 단위가 다른 두 값을 겹치지 않고 위아래로 나눠 보여줄 때 쓴다. 가로축(연도)만 아래 막대칸과 공유하고 세로 눈금은 각자 갖는다. 좌표는 전부 빌더가 계산한다.",
+      "required": [
+        "points"
+      ],
+      "properties": {
+        "height": {
+          "type": "string",
+          "description": "이 칸의 높이. 기본 292px. 여기서 쓴 만큼 아래 막대칸이 줄어든다."
+        },
+        "caption": {
+          "type": "string",
+          "maxLength": 60,
+          "description": "칸 좌상단 한 줄. 이 선이 무엇의 비중인지·분모가 무엇인지 밝힌다. <b>…</b> 로 일부를 잉크색으로."
+        },
+        "points": {
+          "type": "string",
+          "description": "polyline 좌표(viewBox 1000×1000, preserveAspectRatio=none). 빌더가 계산."
+        },
+        "area": {
+          "type": "string",
+          "description": "선 아래 옅은 면(선택). polygon 좌표."
+        },
+        "dots": {
+          "type": "array",
+          "description": "연도 점. on:true 면 채운 원(끝점 강조).",
+          "items": {
+            "type": "object",
+            "required": [
+              "cx",
+              "cy"
+            ],
+            "properties": {
+              "cx": {
+                "type": "number"
+              },
+              "cy": {
+                "type": "number"
+              },
+              "on": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "labels": {
+          "type": "array",
+          "maxItems": 4,
+          "description": "선 위 값 라벨. 양 끝만 단다 — 가운데까지 달면 선이 글자에 묻힌다.",
+          "items": {
+            "type": "object",
+            "required": [
+              "x",
+              "y",
+              "text"
+            ],
+            "properties": {
+              "x": {
+                "type": "string"
+              },
+              "y": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 12
+              },
+              "dim": {
+                "type": "boolean",
+                "description": "회색으로(시작점처럼 주인공이 아닌 값)"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "additionalProperties": true
