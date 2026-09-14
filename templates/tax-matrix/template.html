@@ -30,6 +30,27 @@
       .tx-head { margin-top: 18px; }
       .tx .wirit-title { font-size: 76px; line-height: 1.06; letter-spacing: -0.035em; margin: 0; white-space: nowrap; }
       .tx .wirit-title .hi { color: #c0122a; }
+      .tx .wirit-title .hb { color: var(--wirit-cobalt); }
+
+      /* 2026-09-13 추가 — 둘 다 **선택 필드**라 안 주면 앞 판과 픽셀이 같다(확정 카드 보호).
+         ① 두 줄 제목: `<span class="tl">` 한 줄씩. 블록 자식이라 부모의 nowrap 과 무관하게 줄이 나뉜다.
+         ② 인물: 정부·정책 카드에서 「누구의 정책인가」를 한 칸으로 말한다(gov-bars@1 과 같은 쓰임). */
+      /* 킥커 줄 — 인물 + 「누구의 무엇인가」. 본제목은 그 아래에서 **폭을 다 쓴다.**
+         처음엔 인물과 두 줄 제목을 한 행에 나란히 놓았는데, 936px 중 134px 을 인물이 먹어
+         본제목이 63px 넘쳤다(designQa, 2026-09-13). 인물은 킥커 줄에만 붙인다. */
+      .tx-kick { display: flex; align-items: center; gap: 18px; margin-bottom: 12px; }
+      .tx-kick .k {
+        font-size: 40px; font-weight: 800; letter-spacing: -0.03em;
+        line-height: 1.1; color: var(--wirit-ink);
+      }
+      .tx-kick .k .hb { color: var(--wirit-cobalt); }
+      .tx-kick .k .hi { color: #c0122a; }
+      .tx-head:has(.tx-kick) .wirit-title { font-size: 58px; }
+      .tx-face {
+        flex: 0 0 auto; width: 96px; height: 96px; border-radius: 50%;
+        overflow: hidden; background: var(--wirit-ink-06);
+      }
+      .tx-face img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
 
       /* 본문 표 — 행(항목) × 열. 열 수는 데이터가 정한다(2~4열). */
       .tx-grid {
@@ -109,7 +130,13 @@
         {{#if status}}<span class="tx-tag st">{{status}}</span>{{/if}}
       </div>
 
-      <div class="tx-head"><h1 class="wirit-title">{{{title}}}</h1></div>
+      <div class="tx-head">
+        {{#if kicker}}<div class="tx-kick">
+          {{#if face}}<div class="tx-face"><img src="../_shared/photos/{{face}}" alt="" /></div>{{/if}}
+          <span class="k">{{{kicker}}}</span>
+        </div>{{/if}}
+        <h1 class="wirit-title">{{{title}}}</h1>
+      </div>
 
       <div class="tx-grid{{#if hero}} hero{{/if}}{{#if sparse}} sparse{{/if}}" style="--n:{{n}};--labw:{{labw}}px">
         <!-- 열 머리는 그 열 값의 정렬을 따라간다 — 값이 왼쪽인데 머리만 가운데면 어긋나 보인다 -->

@@ -1,25 +1,67 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": ["template", "who", "status", "title", "cols", "rows", "source"],
+  "required": [
+    "template",
+    "who",
+    "status",
+    "title",
+    "cols",
+    "rows",
+    "source"
+  ],
   "properties": {
-    "template": { "type": "string" },
-    "date": { "type": "string" },
-    "who": { "type": "string", "minLength": 1 },
-    "status": { "type": "string", "minLength": 1 },
-    "title": { "type": "string", "minLength": 1 },
-    "lead": { "type": "string" },
-    "n": { "type": "integer", "minimum": 1 },
-    "labw": { "type": "integer", "minimum": 100 },
-    "hero": { "type": "boolean" },
-    "sparse": { "type": "boolean" },
+    "template": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string"
+    },
+    "who": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "lead": {
+      "type": "string"
+    },
+    "n": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "labw": {
+      "type": "integer",
+      "minimum": 100
+    },
+    "hero": {
+      "type": "boolean"
+    },
+    "sparse": {
+      "type": "boolean"
+    },
     "cols": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["t"],
-        "properties": { "t": { "type": "string" }, "lft": { "type": "boolean" } },
+        "required": [
+          "t"
+        ],
+        "properties": {
+          "t": {
+            "type": "string"
+          },
+          "lft": {
+            "type": "boolean"
+          }
+        },
         "additionalProperties": false
       }
     },
@@ -28,20 +70,35 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["label", "cells"],
+        "required": [
+          "label",
+          "cells"
+        ],
         "properties": {
-          "label": { "type": "string" },
-          "note": { "type": "string" },
+          "label": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
           "cells": {
             "type": "array",
             "minItems": 1,
             "items": {
               "type": "object",
-              "required": ["v"],
+              "required": [
+                "v"
+              ],
               "properties": {
-                "v": { "type": "string" },
-                "unit": { "type": "string" },
-                "cls": { "type": "string" }
+                "v": {
+                  "type": "string"
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "cls": {
+                  "type": "string"
+                }
               },
               "additionalProperties": false
             }
@@ -50,13 +107,34 @@
         "additionalProperties": true
       }
     },
-    "foot": { "type": "string" },
-    "applyAt": { "type": "string" },
+    "foot": {
+      "type": "string"
+    },
+    "applyAt": {
+      "type": "string"
+    },
     "source": {
       "type": "object",
-      "required": ["name"],
-      "properties": { "name": { "type": "string" }, "asOf": { "type": "string" } },
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "asOf": {
+          "type": "string"
+        }
+      },
       "additionalProperties": true
+    },
+    "face": {
+      "type": "string",
+      "description": "templates/_shared/photos/ 안의 파일명. 정부·정책 카드에서 「누구의 정책인가」를 한 칸으로 말한다. 없으면 인물 칸이 아예 없다 — 지어내지 않는다"
+    },
+    "kicker": {
+      "type": "string",
+      "description": "제목 위 한 줄(인물과 같은 행). 「누구의 무엇인가」를 말한다. 없으면 그 줄이 아예 없다"
     }
   },
   "additionalProperties": true
