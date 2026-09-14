@@ -30,7 +30,8 @@
     "read-bunyang-csv": "tsx src/bunyangCsvCli.ts",
     "collect-month-backfill": "tsx src/monthBackfillCli.ts",
     "fold-month-cache": "tsx src/monthFoldCli.ts",
-    "collect-foreign-house": "tsx src/foreignHouseCli.ts"
+    "collect-foreign-house": "tsx src/foreignHouseCli.ts",
+    "collect-wage-bracket": "tsx src/wageBracketCli.ts"
   },
   "dependencies": {},
   "devDependencies": {
