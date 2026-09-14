@@ -1,10 +1,13 @@
 # 억대 연봉 근로소득자 수집 — 마지막 실행
 
-- 실행(UTC): 2026-09-14T05:10:52Z · run 34808599596
+- 실행(UTC): 2026-09-14T05:21:14Z · run 34808798035
 - 범위: 2009 ~ 2024
 - 결과: failure
 
 ```
+⏳ 총급여 규모별 인원: kosis.kr 연결이 안 잡힙니다(1/4). 75초 쉬고 다시 두드립니다 — 주소 문제가 아니라 닫힌 창입니다.
+⏳ 총급여 규모별 인원: kosis.kr 연결이 안 잡힙니다(2/4). 90초 쉬고 다시 두드립니다 — 주소 문제가 아니라 닫힌 창입니다.
+⏳ 총급여 규모별 인원: kosis.kr 연결이 안 잡힙니다(3/4). 120초 쉬고 다시 두드립니다 — 주소 문제가 아니라 닫힌 창입니다.
 ❌ GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=16133T2008_0135&objL1=ALL&format=json&jsonVD=Y&prdSe=Y&orgId=133&tblId=DT_133N_427&objL2=15133JSJ00&startPrdDe=2009&endPrdDe=2024
 fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: kosis.kr:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
 undefined
