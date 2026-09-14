@@ -116,7 +116,7 @@
       "state": "오너 확정",
       "at": "2026-09-09",
       "builder": "rail-line",
-      "content": "data/content/2026-09-07/rail-gtxa.json",
+      "content": "data/content/2026-09-10/rail-gtxa.json",
       "png": "rail-gtxa-p1.png",
       "md5": "3482e937d7c2926ebf37cfd15e14017b"
     },
@@ -126,7 +126,7 @@
       "state": "오너 확정",
       "at": "2026-09-09",
       "builder": "rail-line",
-      "content": "data/content/2026-09-07/rail-gtxb.json",
+      "content": "data/content/2026-09-10/rail-gtxb.json",
       "png": "rail-gtxb-p1.png",
       "md5": "16069b002594d0ce56ebac35b49005d8"
     },
@@ -136,7 +136,7 @@
       "state": "오너 확정",
       "at": "2026-09-07",
       "builder": "rail-line",
-      "content": "data/content/2026-09-07/rail-gtxc.json",
+      "content": "data/content/2026-09-10/rail-gtxc.json",
       "png": "rail-gtxc-p1.png",
       "md5": "6319a13dd19adf90586569adb2e7f228"
     },
@@ -157,7 +157,7 @@
       "state": "오너 확정",
       "at": "2026-09-10",
       "builder": "rail-line",
-      "content": "data/content/2026-09-09/rail-wolpan.json",
+      "content": "data/content/2026-09-10/rail-wolpan.json",
       "png": "rail-wolpan-p1.png",
       "md5": "c4adb7ded6190d8e763462bf92baccef",
       "note": "오너 지시로 픽셀이 바뀌어 2026-09-09 재기록. ① 「가칭」 꼬리표를 역 옆에서 걷어 푸터 위 각주 한 줄로 옮겼다 · ② 안 밀린 라벨은 지시선을 빼고 마커에 붙였다(실지도판) · ③ 인동선 역명 4건(수원종합운동장·호계·북수원·메타폴리스)과 신분당선 2건(국립박물관·수성중사거리). 오너가 신안산선·인동선·월판선 3장을 눈으로 보고 확인하는 것이 이 값의 근거다."
@@ -168,7 +168,7 @@
       "state": "오너 확정",
       "at": "2026-09-12",
       "builder": "rail-line",
-      "content": "data/content/2026-09-07/rail-sinbundang.json",
+      "content": "data/content/2026-09-10/rail-sinbundang.json",
       "png": "rail-sinbundang-p1.png",
       "md5": "5f88af0c476a9e3d0f4f28df93532fd0",
       "note": "오너 지시로 픽셀이 바뀌어 2026-09-09 재기록. ① 「가칭」 꼬리표를 역 옆에서 걷어 푸터 위 각주 한 줄로 옮겼다 · ② 안 밀린 라벨은 지시선을 빼고 마커에 붙였다(실지도판) · ③ 인동선 역명 4건(수원종합운동장·호계·북수원·메타폴리스)과 신분당선 2건(국립박물관·수성중사거리). 오너가 신안산선·인동선·월판선 3장을 눈으로 보고 확인하는 것이 이 값의 근거다.\n🔴 2026-09-12 재기록 — **연장 17.7km → 15.2km**. 지도판 검수에서 찾은 사실 오류를 데이터셋(L.km)에서 고쳤고, 같은 데이터셋을 쓰는 이 도식형도 같이 움직였다. 두 판형이 같은 소재를 다르게 말하면 안 되므로 **의도한 변경**이다. (앞 값 8996c76a50c1) 근거: 17.7 은 이미 개통한 강남~신사 2.5km 를 포함한다 — 이 카드가 다루는 것은 아직 안 지은 두 토막(5.3 + 9.88 = 15.2)이다."
@@ -179,7 +179,7 @@
       "state": "오너 확정",
       "at": "2026-09-09",
       "builder": "rail-line",
-      "content": "data/content/2026-09-07/rail-daejang.json",
+      "content": "data/content/2026-09-10/rail-daejang.json",
       "png": "rail-daejang-p1.png",
       "md5": "6680434810372c90c894ea6095b41577",
       "note": "오너 지시로 픽셀이 바뀌어 2026-09-09 재기록. ① 「가칭」 꼬리표를 역 옆에서 걷어 푸터 위 각주 한 줄로 옮겼다 · ② 안 밀린 라벨은 지시선을 빼고 마커에 붙였다(실지도판) · ③ 인동선 역명 4건(수원종합운동장·호계·북수원·메타폴리스)과 신분당선 2건(국립박물관·수성중사거리). 오너가 신안산선·인동선·월판선 3장을 눈으로 보고 확인하는 것이 이 값의 근거다."
