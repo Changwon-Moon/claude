@@ -32,6 +32,7 @@
  */
 import { writeFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { fetchTable } from "./sources/kosis.js";
 
 const CWD = process.env.INIT_CWD || process.cwd();
@@ -52,17 +53,72 @@ function arg(name: string): string | undefined {
  * 파싱이 조용히 실패해 빈 칸이 생기는 것이 이 자리에서 제일 위험하다.
  */
 
-/** "1억 이하" → 1e8 · "1.5천만 이하" → 1.5e7 · "10억 초과" → Infinity · "소계" → null(합계 행) */
+/**
+ * 「만」·「억」 **아래**의 작은 수를 읽는다. "1천5백" → 1500 · "5백" → 500 · "3" → 3.
+ * 천·백·십은 이 안에서만 곱한다.
+ */
+function parseSmall(t: string, whole: string): number {
+  if (t === "") throw new Error(`금액 표기에 빈 자리가 있다: "${whole}"`);
+  const re = /([0-9]+(?:\.[0-9]+)?)(천|백|십)?/g;
+  let total = 0;
+  let consumed = 0;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(t)) !== null) {
+    if (m.index !== consumed) break;           // 사이에 못 읽은 글자가 있다
+    consumed = m.index + m[0].length;
+    const mult = m[2] === "천" ? 1e3 : m[2] === "백" ? 1e2 : m[2] === "십" ? 10 : 1;
+    total += Number(m[1]) * mult;
+  }
+  if (consumed !== t.length) {
+    throw new Error(`금액 표기를 통째로 못 읽었다: "${whole}" (막힌 자리 "${t.slice(consumed)}")`);
+  }
+  return total;
+}
+
+/**
+ * 금액 이름을 숫자로 푼다.
+ *   "5백만" → 5e6 · "1.5천만" → 1.5e7 · "1천5백만" → 1.5e7 · "1억" → 1e8 · "1억5천만" → 1.5e8
+ *
+ * ⚠️ 한국어 수는 **자리가 겹친다.** 「만」·「억」은 묶음 단위고 천·백·십은 그 안에서만 곱한다.
+ *    이걸 평평하게 읽으면 "1천5백만"이 1,000 + 5,000,000 = 5,001,000 이 된다 —
+ *    실제로 처음 구현이 그랬고, 셀프테스트가 잡았다(2026-09-14).
+ *    **그 값도 그래프에서는 그럴듯해 보인다**는 게 이 자리가 위험한 이유다.
+ *
+ * 통째로 읽어야 한다 — 한 조각이라도 못 읽으면 던진다.
+ */
+function parseAmount(t: string): number {
+  let rest = t;
+  let total = 0;
+  const ei = rest.indexOf("억");
+  if (ei >= 0) {
+    total += parseSmall(rest.slice(0, ei), t) * 1e8;
+    rest = rest.slice(ei + 1);
+  }
+  const mi = rest.indexOf("만");
+  if (mi >= 0) {
+    total += parseSmall(rest.slice(0, mi), t) * 1e4;
+    rest = rest.slice(mi + 1);
+  }
+  if (rest !== "") total += parseSmall(rest, t);
+  if (!(total > 0)) throw new Error(`금액이 0 이하로 읽혔다: "${t}"`);
+  return total;
+}
+
+/**
+ * "1억원 이하" → 1e8 · "5백만원 이하" → 5e6 · "10억원 초과" → Infinity · "소계" → null(합계 행)
+ *
+ * ⚠️ 표기가 해마다 다르다. 2024년은 "1억 이하", 2009년은 "5백만원 이하" 였다 —
+ *    '원'이 붙기도 하고 '백만' 같은 단위도 나온다. 그래서 문법을 넓게 읽되,
+ *    **못 읽으면 반드시 던진다.** 모르는 칸을 0 으로 넘기는 것이 여기서 제일 위험하다.
+ */
 export function bound(name: string): number | null {
-  const n = name.replace(/\s+/g, "");
+  const n = name.replace(/\s+/g, "").replace(/,/g, "").replace(/원/g, "");
   if (/^(소계|합계|계|총계)$/.test(n)) return null;
-  const m = /^([0-9.]+)(천만|억|만)?(이하|초과|미만)$/.exec(n);
+  const m = /^(.+?)(이하|초과|미만)$/.exec(n);
   if (!m) throw new Error(`총급여 구간 이름을 못 읽었다: "${name}" — 표의 구간 표기가 바뀌었다`);
-  const v = Number(m[1]);
-  if (!Number.isFinite(v)) throw new Error(`총급여 구간 숫자를 못 읽었다: "${name}"`);
-  const mult = m[2] === "억" ? 1e8 : m[2] === "천만" ? 1e7 : m[2] === "만" ? 1e4 : 1;
+  const v = parseAmount(m[1]);
   /* "N 초과"는 맨 윗칸이다 — 상한이 없다. */
-  return m[3] === "초과" ? Infinity : v * mult;
+  return m[2] === "초과" ? Infinity : v;
 }
 
 /** 1억. 이 경계가 그해 구간표에 **실제로 있어야** 억대를 정확히 가를 수 있다. */
@@ -329,7 +385,13 @@ async function main() {
   console.log(`   → ${out}`);
 }
 
-main().catch((e) => {
-  console.error(`❌ ${e instanceof Error ? e.message : String(e)}`);
-  process.exit(1);
-});
+/* ⚠️ **직접 실행할 때만** 돈다.
+ * 셀프테스트가 이 파일에서 bound() 를 가져다 쓰는데, 그때 main() 이 같이 돌면
+ * "KOSIS_API_KEY 가 없습니다" 하고 테스트 전체가 죽는다(2026-09-14에 실제로 그랬다). */
+const invoked = process.argv[1] ? resolve(process.argv[1]) : "";
+if (invoked && fileURLToPath(import.meta.url) === invoked) {
+  main().catch((e) => {
+    console.error(`❌ ${e instanceof Error ? e.message : String(e)}`);
+    process.exit(1);
+  });
+}

@@ -3,6 +3,7 @@
  * 실행: pnpm --filter @wirit/collectors selftest
  * 빌드 환경에서 외부 API가 막혀 있어도, 데이터 해석 로직의 정확성을 여기서 검증한다.
  */
+import { bound as wageBound } from "./wageBracketCli.js";
 import { existsSync, readFileSync } from "node:fs";
 import { redactUrl } from "./http.js";
 import {
@@ -1628,6 +1629,28 @@ console.log("\n[청약홈 분양정보 파서]");
     }),
   );
   check("종가 null 인 날은 버린다(0 으로 안 채운다)", withNull.length === 1, `got ${withNull.length}`);
+}
+
+/* ── 총급여 구간 이름 파서 (2026-09-14) ──
+ * 구간 표기가 해마다 다르다. 2024년은 "1억 이하", 2009년은 "5백만원 이하" 였다.
+ * 조각만 읽고 넘어가면 "1천5백만"이 1,000 으로 들어가는데 그래프에서는 그럴듯해 보인다. */
+{
+  check("1억 이하 → 1e8", wageBound("1억 이하") === 1e8, String(wageBound("1억 이하")));
+  check("1억원 이하 ('원'이 붙어도)", wageBound("1억원 이하") === 1e8, String(wageBound("1억원 이하")));
+  check("5백만원 이하 → 5e6", wageBound("5백만원 이하") === 5e6, String(wageBound("5백만원 이하")));
+  check("1.5천만 이하 → 1.5e7", wageBound("1.5천만 이하") === 1.5e7, String(wageBound("1.5천만 이하")));
+  check("1천5백만원 이하 → 1.5e7", wageBound("1천5백만원 이하") === 1.5e7, String(wageBound("1천5백만원 이하")));
+  check("10억 초과 → Infinity", wageBound("10억 초과") === Infinity, String(wageBound("10억 초과")));
+  check("소계는 합계 행(null)", wageBound("소계") === null, String(wageBound("소계")));
+  /* ⚠️ 가장 중요한 것 — **못 읽으면 던진다.** 0 으로 넘기지 않는다. */
+  let threw = false;
+  try { wageBound("1억 안팎"); } catch { threw = true; }
+  check("모르는 표기는 던진다", threw, "안 던졌다");
+  threw = false;
+  try { wageBound("3조 이하"); } catch { threw = true; }
+  check("모르는 단위는 던진다", threw, "안 던졌다");
+  /* 단위 순서가 뒤집히면 3천만이 3,000 이 된다 — 그 실수를 여기서 잡는다. */
+  check("3천만 이하는 3e7 이지 3000 이 아니다", wageBound("3천만 이하") === 3e7, String(wageBound("3천만 이하")));
 }
 
 console.log(`\n결과: ${pass} 통과 / ${fail} 실패`);
