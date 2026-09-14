@@ -1,7 +1,7 @@
 # KOSIS 표 검증 결과 — ❌ 검증이 돌지 못했다
 
-- 실행 시각(KST): 2026-09-09 11:57
-- 실행 로그: https://github.com/Changwon-Moon/claude/actions/runs/34302626905
+- 실행 시각(KST): 2026-09-14 09:20
+- 실행 로그: https://github.com/Changwon-Moon/claude/actions/runs/34790374992
 - 키 있음: yes
 
 ## 마지막 로그 40줄
