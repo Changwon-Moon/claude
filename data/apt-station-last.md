@@ -829,16 +829,7 @@ Exit status 1
 ⏭ 이미 있음 — data/datasets/apt-station/A10025854.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-station/A10023699.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-station/A10022856.json (다시 받으려면 force=1)
-
-── A10024152
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A10024152
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A10024152.json
-포레나송파 (주소로 좌표) → 거여역 직선 947m · 노선 5
-   다음: 마천역 1089m
-   다음: 개롱역 1815m
+⏭ 이미 있음 — data/datasets/apt-station/A10024152.json (다시 받으려면 force=1)
 
 ⚠️ 일부 줄이 실패했습니다
 ```
