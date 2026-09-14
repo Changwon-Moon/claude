@@ -102,7 +102,9 @@ if (existsSync(logDir)) {
   for (const f of readdirSync(logDir).sort().reverse()) {
     if (!f.endsWith(".json")) continue;
     const log = JSON.parse(readFileSync(join(logDir, f), "utf8"));
-    let cand = log.hits.filter((h) => nameEq(h.aptNm, APT) && String(h.type) === String(TYPE));
+    /* ⚠️ `excluded` 줄은 후보에서 뺀다 — 대장을 잘못 물어 나간 알림이다. 여기서 안 막으면
+       사람이 손으로 빌더를 부를 때 그 줄로 카드가 만들어진다(2026-09-14 상록마을(라이프2차)). */
+    let cand = log.hits.filter((h) => !h.excluded && nameEq(h.aptNm, APT) && String(h.type) === String(TYPE));
     /* ── ⚠️ **`--kapt` 를 줬으면 그 단지의 건만 본다** (2026-09-08)
      *
      * 09-08 에 드러났다. 이번 달 로그에 **「현대」가 셋**이었다:

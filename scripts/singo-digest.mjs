@@ -58,7 +58,9 @@ if (existsSync(logDir)) {
     if (!f.endsWith(".json")) continue;
     const j = JSON.parse(readFileSync(join(logDir, f), "utf8"));
     for (const h of j.hits ?? []) {
-      if (h.foundOn >= from && h.foundOn <= today) hits.push(h);
+      /* ⚠️ `excluded` 줄은 세지 않는다 — 대장을 잘못 물어 나간 알림이라 집계에 들어가면
+         「몇 곳이 신고가를 썼다」가 틀어진다(2026-09-14). 기록 자체는 로그에 남아 있다. */
+      if (h.foundOn >= from && h.foundOn <= today && !h.excluded) hits.push(h);
     }
   }
 }

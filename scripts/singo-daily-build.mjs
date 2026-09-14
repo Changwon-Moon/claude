@@ -116,7 +116,9 @@ if (!existsSync(logDir)) {
 const hits = [];
 for (const f of readdirSync(logDir).filter((x) => x.endsWith(".json")))
   for (const h of JSON.parse(readFileSync(join(logDir, f), "utf8")).hits ?? [])
-    if (h.foundOn === DATE) hits.push(h);
+    /* ⚠️ `excluded` 줄은 건너뛴다 — 나가지 말았어야 할 알림이다(아래 참고).
+       기록은 지우지 않되 **카드로는 두 번 다시 안 나가게** 한다(2026-09-14 상록마을(라이프2차)). */
+    if (h.foundOn === DATE && !h.excluded) hits.push(h);
 
 if (!hits.length) {
   console.log(`ⓘ ${DATE} 에 드러난 신고가가 없습니다 — 만들 카드가 없습니다.`);
