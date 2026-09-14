@@ -8,7 +8,7 @@
     "to": "202609",
     "monthsTried": 81,
     "monthsFailed": 0,
-    "monthsTraded": 39,
+    "monthsTraded": 40,
     "peak": {
       "manwon": 57000,
       "date": "2024-11-23",
@@ -741,11 +741,11 @@
     },
     {
       "ym": "202609",
-      "maxManwon": null,
-      "count": 0,
-      "area": null,
-      "floor": null,
-      "date": null,
+      "maxManwon": 55000,
+      "count": 1,
+      "area": 59.9595,
+      "floor": 31,
+      "date": "2026-09-13",
       "ok": true
     }
   ]
