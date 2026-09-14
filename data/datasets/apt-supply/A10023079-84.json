@@ -1,27 +1,27 @@
 {
-  "kaptCode": "A10023991",
-  "kaptName": "태릉해링턴플레이스",
-  "type": "59",
-  "jibun": "758",
-  "exclusive": 59.98,
-  "commonResidential": 20.961,
-  "supply": 80.94,
-  "pyeong": 24.48,
-  "pyeongLabel": "24평",
-  "sampleDong": "106동",
-  "sampleHo": "1805",
-  "sampleCount": 4,
-  "ratio": 0.741,
+  "kaptCode": "A10023079",
+  "kaptName": "DMC파인시티자이",
+  "type": "84",
+  "jibun": "431",
+  "exclusive": 84.94,
+  "commonResidential": 27.47,
+  "supply": 112.41,
+  "pyeong": 34,
+  "pyeongLabel": "34평",
+  "sampleDong": "112동",
+  "sampleHo": "2302",
+  "sampleCount": 104,
+  "ratio": 0.7556,
   "parts": [
     {
       "purpose": "아파트 / 계단실",
       "floor": "지상 각층",
-      "area": 15.7311
+      "area": 22
     },
     {
-      "purpose": "아파트 / 벽체",
-      "floor": "지상 18층",
-      "area": 5.23
+      "purpose": "아파트 / 벽체공용",
+      "floor": "지상 23층",
+      "area": 5.47
     }
   ],
   "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",

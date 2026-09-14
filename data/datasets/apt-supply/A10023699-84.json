@@ -1,27 +1,27 @@
 {
-  "kaptCode": "A10023991",
-  "kaptName": "태릉해링턴플레이스",
-  "type": "59",
-  "jibun": "758",
-  "exclusive": 59.98,
-  "commonResidential": 20.961,
-  "supply": 80.94,
-  "pyeong": 24.48,
-  "pyeongLabel": "24평",
-  "sampleDong": "106동",
-  "sampleHo": "1805",
-  "sampleCount": 4,
-  "ratio": 0.741,
+  "kaptCode": "A10023699",
+  "kaptName": "더샵오포센트럴포레 아파트",
+  "type": "84",
+  "jibun": "654",
+  "exclusive": 84.98,
+  "commonResidential": 29.43,
+  "supply": 114.41,
+  "pyeong": 34.61,
+  "pyeongLabel": "35평",
+  "sampleDong": "107동",
+  "sampleHo": "1001",
+  "sampleCount": 201,
+  "ratio": 0.7428,
   "parts": [
     {
-      "purpose": "아파트 / 계단실",
+      "purpose": "아파트 / 계단실,복도",
       "floor": "지상 각층",
-      "area": 15.7311
+      "area": 23.92
     },
     {
       "purpose": "아파트 / 벽체",
-      "floor": "지상 18층",
-      "area": 5.23
+      "floor": "지상 10층",
+      "area": 5.51
     }
   ],
   "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",

@@ -1,27 +1,27 @@
 {
-  "kaptCode": "A10023991",
-  "kaptName": "태릉해링턴플레이스",
-  "type": "59",
-  "jibun": "758",
-  "exclusive": 59.98,
-  "commonResidential": 20.961,
-  "supply": 80.94,
-  "pyeong": 24.48,
-  "pyeongLabel": "24평",
+  "kaptCode": "A10026370",
+  "kaptName": "e편한세상신촌아파트",
+  "type": "84",
+  "jibun": "1013",
+  "exclusive": 84.95,
+  "commonResidential": 27.87,
+  "supply": 112.82,
+  "pyeong": 34.13,
+  "pyeongLabel": "34평",
   "sampleDong": "106동",
-  "sampleHo": "1805",
-  "sampleCount": 4,
-  "ratio": 0.741,
+  "sampleHo": "401",
+  "sampleCount": 184,
+  "ratio": 0.753,
   "parts": [
     {
-      "purpose": "아파트 / 계단실",
-      "floor": "지상 각층",
-      "area": 15.7311
+      "purpose": "아파트 / 계단실,승강기,홀",
+      "floor": "각층 각층",
+      "area": 21.35
     },
     {
       "purpose": "아파트 / 벽체",
-      "floor": "지상 18층",
-      "area": 5.23
+      "floor": "지상 4층",
+      "area": 6.52
     }
   ],
   "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
