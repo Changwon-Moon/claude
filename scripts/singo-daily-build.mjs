@@ -176,10 +176,41 @@ for (const h of hits) {
     t.short = true;
   }
 
+  /* ── ⚠️⚠️ **곡선은 「없을 때」만이 아니라 「낡았을 때」도 다시 받아야 한다** (2026-09-15)
+   *
+   * 예전엔 파일이 **없을 때만** 대기열에 걸었다. 그런데 곡선 수집기는 파일이 이미 있으면
+   * `force=1` 없이는 **그냥 건너뛴다**("이미 있음"). 그래서 **한 번 카드를 낸 단지가
+   * 다시 신고가를 쓰면 곡선이 영영 옛 값에 멈춰 있다.**
+   *
+   * 09-15 에 22건 중 **7건**이 이것 하나로 막혔다 — 전부 「이미 발행한 카드라 새 이름표로
+   * 만듭니다」로 표시된 재발 단지였다(이편한세상센트레빌 · 평촌더샵아이파크 ·
+   * 광주역자연앤자이 · 병점역아이파크캐슬 · 부영 · 수원하늘채더퍼스트1단지 · 원천레이크파크).
+   * 빌더는 「곡선의 최고가와 신고가 판정이 다르다」며 정확히 멈춰 세웠다 — 그 문지기는
+   * 제 일을 했고, **재료를 거는 이 자리가 틀렸다.**
+   *
+   * 재는 법은 추측이 아니다: 곡선이 스스로 적어 둔 `meta.peak.manwon` 이 오늘 판정한
+   * 신고가보다 **낮으면** 그 곡선은 이 거래를 아직 모른다 → `force=1` 로 다시 받는다.
+   * (같거나 높으면 그대로 둔다 — 쓸데없이 호출을 태우지 않는다.) */
   const hp = `data/datasets/singo-history/${h.lawdCd}-${full(h.aptNm)}-${type}.json`;
+  const histLine = `lawd=${h.lawdCd} umd=${h.umdNm} type=${type} apt="${h.aptNm}"`;
   if (!existsSync(P(hp))) {
-    need.hist.push(`lawd=${h.lawdCd} umd=${h.umdNm} type=${type} apt="${h.aptNm}"`);
+    need.hist.push(histLine);
     t.short = true;
+  } else {
+    let peak = null;
+    try {
+      peak = JSON.parse(readFileSync(P(hp), "utf8"))?.meta?.peak?.manwon ?? null;
+    } catch {
+      peak = null; // 깨진 파일은 낡은 것과 같게 본다 — 다시 받으면 된다
+    }
+    if (peak == null || peak < h.priceManwon) {
+      console.log(
+        `🔄 ${h.aptNm} 전용${type} — 곡선의 최고가(${peak == null ? "읽을 수 없음" : `${(peak / 10000).toFixed(2)}억`})가 ` +
+          `오늘 신고가(${(h.priceManwon / 10000).toFixed(2)}억)보다 낮습니다 — force=1 로 다시 받습니다`,
+      );
+      need.hist.push(`${histLine} force=1`);
+      t.short = true;
+    }
   }
 
   if (!existsSync(P(`data/datasets/apt-station/${h.kaptCode}.json`)))

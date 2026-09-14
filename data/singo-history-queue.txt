@@ -332,3 +332,12 @@ lawd=41310 umd=인창동 type=59 apt="주공1"
 lawd=11260 umd=묵동 type=59 apt="신내"
 lawd=41173 umd=비산동 type=59 apt="더포레스트힐"
 lawd=41610 umd=고산동 type=59 apt="더샵오포센트럴포레"
+
+# 2026-09-15 singo-daily-build 가 채운 줄
+lawd=41210 umd=하안동 type=59 apt="이편한세상센트레빌" force=1
+lawd=41173 umd=호계동 type=59 apt="평촌더샵아이파크" force=1
+lawd=41610 umd=역동 type=84 apt="광주역자연앤자이" force=1
+lawd=41595 umd=병점동 type=84 apt="병점역아이파크캐슬" force=1
+lawd=41450 umd=창우동 type=59 apt="부영" force=1
+lawd=41113 umd=곡반정동 type=59 apt="수원하늘채더퍼스트1단지" force=1
+lawd=41117 umd=원천동 type=59 apt="원천레이크파크" force=1

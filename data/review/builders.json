@@ -4348,6 +4348,210 @@
         "wage-100m"
       ],
       "note": "억대 연봉 근로소득자 추이. ⚠️ data/datasets/wage-100m.json 이 있어야 돈다 — 없으면 빌더가 대기열 쓰는 법을 찍고 멈춘다. 자료는 wage-bracket-collect.yml 이 국세청 총급여 규모별(133/DT_133N_427)에서 받아 온다. 구간은 코드가 아니라 이름으로 가른다(구간 체계가 해마다 바뀐다)."
+    },
+    {
+      "label": "singo-A10026370-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "e편한세상신촌3단지",
+        "--type",
+        "84",
+        "--kapt",
+        "A10026370",
+        "--publish"
+      ],
+      "produces": [
+        "singo-e편한세상신촌3단지-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A44328002-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "광교호수마을호반써밋",
+        "--type",
+        "84",
+        "--kapt",
+        "A44328002",
+        "--publish"
+      ],
+      "produces": [
+        "singo-광교호수마을호반써밋-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10044002-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "롯데캐슬",
+        "--type",
+        "84",
+        "--kapt",
+        "A10044002",
+        "--publish"
+      ],
+      "produces": [
+        "singo-롯데캐슬-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10028139-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "미사강변 골든 센트로",
+        "--type",
+        "59",
+        "--kapt",
+        "A10028139",
+        "--publish"
+      ],
+      "produces": [
+        "singo-미사강변골든센트로-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10027336-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "래미안안양메가트리아",
+        "--type",
+        "59",
+        "--kapt",
+        "A10027336",
+        "--publish"
+      ],
+      "produces": [
+        "singo-래미안안양메가트리아-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10027122-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "동탄역포레너스",
+        "--type",
+        "84",
+        "--kapt",
+        "A10027122",
+        "--publish"
+      ],
+      "produces": [
+        "singo-동탄역포레너스-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A42384503-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "주공10",
+        "--type",
+        "59",
+        "--kapt",
+        "A42384503",
+        "--publish"
+      ],
+      "produces": [
+        "singo-주공10-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A42084708-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "금강마을(주공)",
+        "--type",
+        "84",
+        "--kapt",
+        "A42084708",
+        "--publish"
+      ],
+      "produces": [
+        "singo-금강마을주공-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A43070506-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "석수e-편한세상",
+        "--type",
+        "84",
+        "--kapt",
+        "A43070506",
+        "--publish"
+      ],
+      "produces": [
+        "singo-석수e편한세상-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A47174224-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "주공1",
+        "--type",
+        "59",
+        "--kapt",
+        "A47174224",
+        "--publish"
+      ],
+      "produces": [
+        "singo-주공1-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A13184609-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "신내",
+        "--type",
+        "59",
+        "--kapt",
+        "A13184609",
+        "--publish"
+      ],
+      "produces": [
+        "singo-신내-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A43105102-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "더포레스트힐",
+        "--type",
+        "59",
+        "--kapt",
+        "A43105102",
+        "--publish"
+      ],
+      "produces": [
+        "singo-더포레스트힐-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
     }
   ]
 }
