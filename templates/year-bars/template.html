@@ -463,13 +463,27 @@
         color: var(--wirit-ink);
         font-weight: 900;
       }
+      /* 연도 밑 둘째 줄(선택). 안 주면 아예 안 그려지므로 기존 카드 픽셀은 그대로다.
+       * 칸이 많은 카드(16칸)에서 연도가 서로 붙지 않게 축 글자를 같이 줄인다 —
+       * 줄이는 것은 .dense 를 켠 카드에서만 한다. */
+      .yc-axis b.yc-sub {
+        display: block;
+        margin-top: 4px;
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--wirit-red);
+        letter-spacing: -0.02em;
+      }
+      .yc.dense .yc-axis span { font-size: 21px; }
+      .yc.dense .yc-axis b.yc-sub { font-size: 17px; margin-top: 3px; }
+      .yc.dense .yc-val { font-size: 21px; }
       /* ⚠️ 단위(%)는 축 왼쪽에 두면 −1.5 값 라벨과 부딪힌다(첫 렌더에서 겹쳤다).
        * lede 를 지운 뒤에는 좌상단 캡션(subtitle)에 "단위 %"를 붙여서 해결했다. */
 
     </style>
   </head>
   <body>
-    <div class="wirit-card yc {{#if font}}font-{{font}}{{/if}}">
+    <div class="wirit-card yc {{#if dense}}dense{{/if}} {{#if font}}font-{{font}}{{/if}}">
       <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
       <div class="yc-head">
         <h1 class="wirit-title">{{{title}}}</h1>
@@ -553,7 +567,7 @@
           </div>
         </div>
         <div class="yc-axis">
-          {{#each points}}<span class="{{#if this.hEst}}hi{{/if}}{{#if this.peak}}hi{{/if}}">{{this.year}}</span>{{/each}}
+          {{#each points}}<span class="{{#if this.hEst}}hi{{/if}}{{#if this.peak}}hi{{/if}}">{{this.year}}{{#if this.sub}}<b class="yc-sub">{{this.sub}}</b>{{/if}}</span>{{/each}}
         </div>
       </div>
 
