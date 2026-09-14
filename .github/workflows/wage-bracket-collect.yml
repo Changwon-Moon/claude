@@ -14,6 +14,11 @@ on:
   schedule:
     # 매년 1·7월 17일 02:37 UTC(11:37 KST). 늦게 공표돼도 반년 안에 잡힌다.
     - cron: "37 2 17 1,7 *"
+    # ── 첫 적재가 끝날 때까지만 도는 사다리 (2026-09-14) ──
+    # kosis.kr 이 러너 출구 IP 를 거부하는 구간에 다섯 런 연속 걸렸다(05:02~05:26).
+    # 같은 실행 안에서 기다려도 IP 는 안 바뀌므로, 필요한 것은 **새 러너**다.
+    # 매시 17분에 두드리되 **데이터셋이 이미 있으면 그냥 건너뛴다** — 그래서 스스로 멈춘다.
+    - cron: "17 * * * *"
   # 대기열 한 줄 push 또는 소스 변경으로도 즉시 돈다(세션은 Run 버튼을 못 눌러 push 가 손잡이).
   push:
     branches:
@@ -60,7 +65,25 @@ jobs:
           echo "키 확인됨"
 
       # 대기열 마지막 줄에서 연도 범위를 읽는다. 없으면 기본(2009~작년-1).
+      # 사다리(매시 런)는 아직 적재가 안 됐을 때만 의미가 있다.
+      # 이미 받아 둔 파일이 있으면 여기서 접는다 — 무한히 두드리지 않게 하는 자리다.
+      # (연 2회 정기 런과 손으로 띄운 런, 대기열 push 는 이 문을 통과한다.)
+      - name: 이미 받아 뒀으면 건너뛴다
+        id: gate
+        run: |
+          LADDER=false
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "${{ github.event.schedule }}" = "17 * * * *" ]; then
+            LADDER=true
+          fi
+          if [ "$LADDER" = "true" ] && [ -f data/datasets/wage-100m.json ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "이미 적재돼 있습니다 — 사다리는 여기서 접습니다"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: 연도 범위 읽기
+        if: steps.gate.outputs.run == 'true' 
         id: range
         run: |
           LINE=$(tail -n 1 data/wage-bracket-queue.txt 2>/dev/null || true)
@@ -73,6 +96,7 @@ jobs:
       # ⚠️ 세션은 Actions 로그를 못 읽는다. 성공이든 실패든 **결과를 저장소 파일에 적는다**.
       - name: 총급여 규모별 인원 수집
         id: collect
+        if: steps.gate.outputs.run == 'true'
         continue-on-error: true
         env:
           KOSIS_API_KEY: ${{ secrets.KOSIS_API_KEY }}
@@ -84,6 +108,7 @@ jobs:
             --out "$GITHUB_WORKSPACE/data/datasets/wage-100m.json" 2>&1 | tee /tmp/wb.log
 
       - name: 결과 기록
+        if: steps.gate.outputs.run == 'true'
         run: |
           {
             echo "# 억대 연봉 근로소득자 수집 — 마지막 실행"
@@ -98,6 +123,7 @@ jobs:
           } > data/wage-bracket-last.md
 
       - name: 데이터셋 커밋
+        if: steps.gate.outputs.run == 'true'
         run: |
           git config user.name "wirit-bot"
           git config user.email "noreply@github.com"
@@ -113,17 +139,23 @@ jobs:
             git push origin HEAD:${GITHUB_REF_NAME}
           fi
 
-      - name: 수집이 실패했으면 여기서 빨간불
-        if: steps.collect.outcome != 'success'
-        run: |
-          echo "::error::수집 실패 — 원인은 data/wage-bracket-last.md 에 적혀 있습니다"
-          exit 1
-
-      - name: 실패하면 말한다
-        if: failure()
+      # 성공을 알린다 — 이 배관은 **기다리던 것이 들어온 순간**이 알릴 값어치가 있다.
+      - name: 들어오면 말한다
+        if: steps.gate.outputs.run == 'true' && steps.collect.outcome == 'success'
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          MSG=$(printf '⛔ 억대 연봉 근로소득자 수집 실패\n\n원인은 data/wage-bracket-last.md 에 적혀 있습니다.\n구간 합이 소계와 어긋나거나 보도값과 2%% 넘게 벌어지면 여기서 멈춥니다.')
+          MSG=$(printf '✅ 억대 연봉 근로소득자 적재 완료\n\n연도별 수치가 data/datasets/wage-100m.json 에 들어왔습니다.\n카드(wage-100m)를 그릴 수 있습니다.')
           node scripts/notify-telegram.mjs "$MSG"
+
+      # ⚠️ 사다리 런의 실패는 **빨간불로 만들지 않는다.** kosis.kr 이 러너를 거부하는 동안
+      #    매시 빨간 런이 쌓이면 진짜 고장을 가린다. 원인은 data/wage-bracket-last.md 에 남는다.
+      - name: 수집이 실패했으면 여기서 빨간불
+        if: |
+          steps.gate.outputs.run == 'true'
+          && steps.collect.outcome != 'success'
+          && !(github.event_name == 'schedule' && github.event.schedule == '17 * * * *')
+        run: |
+          echo "::error::수집 실패 — 원인은 data/wage-bracket-last.md 에 적혀 있습니다"
+          exit 1

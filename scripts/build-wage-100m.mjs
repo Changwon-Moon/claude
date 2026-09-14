@@ -24,6 +24,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { writeCaption } from "./lib/caption-signature.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -170,11 +171,50 @@ function main() {
   const out = resolve(outDir, "wage-100m.json");
   writeFileSync(out, JSON.stringify(card, null, 2) + "\n");
 
+  /* ── 캡션 ─────────────────────────────────────────────────────
+   * 빌더가 쓴다. 손으로 적으면 다음 갱신에 카드와 어긋난다.
+   * 문장의 숫자는 전부 위에서 계산한 값이고, 서명은 writeCaption 이 붙인다.
+   *
+   * ⚠️ 두 비중을 **한 문장에 나란히 놓지 않는다.** 분모가 다르다는 말을 먼저 하고 나눠 쓴다.
+   *   신고인원 대비 = 일하는 사람 중에서 / 총인구 대비 = 국민 전체 중에서 */
+  const capLines = rows.map((r) => `${r.year}  ${man(r.over100m).padStart(5)}만명`);
+  const caption = [
+    `연봉 1억 넘는 사람, 이제 ${man(last.over100m)}만명입니다 💼`,
+    `${first.year}년엔 ${man(first.over100m)}만명이었습니다.`,
+    "",
+    "총급여 1억원을 넘긴 근로소득자 수를 그대로 늘어놓으면 이렇게 됩니다.",
+    "",
+    ...capLines,
+    "",
+    `${first.year}년 대비 ${multiple}배입니다.`,
+    "",
+    "여기서 비중을 볼 때 분모를 꼭 같이 봐야 합니다.",
+    "같은 인원인데 무엇으로 나누느냐에 따라 숫자가 두 배 넘게 벌어집니다.",
+    "",
+    `· 국민 전체(주민등록 총인구 ${man(last.population)}만명) 기준 → ${last.sharePopPct.toFixed(1)}%`,
+    `· 일하는 사람(연말정산 신고 ${man(last.payers)}만명) 기준 → ${last.sharePayerPct.toFixed(1)}%`,
+    "",
+    `카드 위쪽 꺾은선은 국민 전체 기준입니다. ${first.year}년 ${first.sharePopPct.toFixed(1)}% → ${last.year}년 ${last.sharePopPct.toFixed(1)}%.`,
+    "",
+    "📌 저장해두고 내년 통계 나올 때 다시 보기",
+    "",
+    "—",
+    `📊 출처 · ${ds.meta.sourceLabel}`,
+    "· 국세청 「근로소득 연말정산 신고 현황」 총급여 규모별 · 전국 합계",
+    "· 총급여 1억원 초과 = 1억 초과 구간들을 모두 더한 값",
+    "· 인구는 통계청 주민등록인구(각 연도 말 기준)",
+    `· ${first.year}~${last.year}년 귀속`,
+    "",
+    "#연봉 #근로소득 #억대연봉 #세금 #직장인",
+  ].join("\n");
+  const capPath = writeCaption(DRY ? "/tmp/wage-100m-dry.txt" : "wage-100m", caption);
+
   console.log(`wage-100m — ${first.year}~${last.year} (${n}칸)`);
   console.log(`   막대(인원)  ${man(first.over100m)}만 → ${man(last.over100m)}만 · ${multiple}배 · 최고 ${peakYear}`);
   console.log(`   선(인구대비) ${first.sharePopPct}% → ${last.sharePopPct}% · 눈금 천장 ${yTop}%`);
   console.log(`   참고(카드에 안 씀) 신고인원 대비 ${first.sharePayerPct}% → ${last.sharePayerPct}%`);
   console.log(`   → ${out}`);
+  console.log(`   → ${capPath}`);
 
   if (process.argv.includes("--publish")) console.log("   (등록은 data/review/sets.json 에서)");
 }
