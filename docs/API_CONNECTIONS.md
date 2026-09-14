@@ -57,6 +57,7 @@
 | **국토부 공동주택 기본정보(세대수)** | `MOLIT_API_KEY` | `sources/aptInfo.ts` · `aptUniverseCli.ts` | `data/datasets/apt-hhld.json` (8,062단지) | `apt-universe.yml` | ✅ 실사용 |
 | └ 공동주택 **상세**정보(주차대수) | 〃 | `aptDetailCli.ts` | `data/datasets/apt-detail/{kapt}.json` | `apt-detail.yml` (`data/apt-detail-queue.txt`) | ✅ 2026-08-16 신설 |
 | **카카오 로컬(가장 가까운 역)** | `KAKAO_REST_KEY` | `aptStationCli.ts` · `parse/station.ts` | `data/datasets/apt-station/{kapt}.json` | `apt-station.yml` (`data/apt-station-queue.txt`) | ✅ 2026-08-16 신설 |
+| **국세청 국세통계 — 총급여 규모별 근로소득자** | `KOSIS_API_KEY` | `wageBracketCli.ts` (표는 `sources/kosis.ts`: `wageBracket` 133/DT_133N_427 · `populationYear` 101/DT_1B040A3 연간·전국) | `data/datasets/wage-100m.json` · 결과기록 `data/wage-bracket-last.md` | `wage-bracket-collect.yml` `37 2 17 1,7 *` + 첫 적재까지만 도는 사다리 `17 * * * *` + `data/wage-bracket-queue.txt` | ⚠️ 2026-09-14 신설 · **첫 적재 대기 중**(kosis.kr 이 러너 출구 IP 를 거부하는 구간에 여러 런 연속으로 걸렸다) |
 | **외국인 주택소유통계(부동산원·KOSIS)** | `KOSIS_API_KEY` | `foreignHouseCli.ts` (표는 `sources/kosis.ts`) | `data/datasets/foreign-house-nat.json` · 결과기록 `data/foreign-house-last.md` | `foreign-house-collect.yml` `23 2 12 1,4,7,10 *` + `data/foreign-house-queue.txt` | ✅ 2026-09-08 신설·수집 확인 |
 | **한국부동산원 R-ONE (월간)** | `RONE_API_KEY` **또는** `REB_API_KEY` | `sources/rebIndex.ts` · `rebCli.ts` | `data/datasets/reb-rent-index.json` | `reb-collect.yml` `0 2 16 * *` | ✅ 실사용 |
 | **한국부동산원 R-ONE (주간)** | 〃 | `sources/rebWeekly.ts` · `rebWeeklyCli.ts` | `data/datasets/reb-weekly-index.json` | `reb-weekly-collect.yml` `7 1 * * 5` + `data/reb-weekly-queue.txt` | ✅ 실사용 |
@@ -280,7 +281,7 @@ GitHub 러너에서 kosis.kr:443 으로 **TCP 연결 자체가 안 잡히는 창
 
 - **P0**: 서울 지하철 승하차(배관 재사용·소재 4개 해금) · 국토부 미분양 · 소상공인 상가정보 · 국민연금 사업장
 - **P1**: K-apt 관리비 · 공동주택 공시가격 · 법원 등기/경매 · 세움터 인허가
-- **P2**: 국세통계 · SGIS · 학교알리미 · 관세청 · 한전 · 기상청 · 지방재정365
+- **P2**: ~~국세통계~~(2026-09-14 착수 — 총급여 규모별만 붙였다. 나머지 국세통계 표는 여전히 P2) · SGIS · 학교알리미 · 관세청 · 한전 · 기상청 · 지방재정365
 
 ---
 
