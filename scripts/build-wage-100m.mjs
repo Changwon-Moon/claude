@@ -26,7 +26,14 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const DATA = resolve(ROOT, "data/datasets/wage-100m.json");
+
+/* --dry — **가짜 숫자로** 판형만 본다. 수집이 아직 안 끝났을 때 그림을 먼저 잡기 위한 자리다.
+ * 산출 경로를 data/out/_spike/ 로 갈라 두고 제목에 (가짜) 를 박는다 —
+ * 진짜 카드와 절대 섞이지 않게. 발행 후보가 될 수 없다. */
+const DRY = process.argv.includes("--dry");
+const DATA = DRY
+  ? resolve(ROOT, "data/datasets/_dry/wage-100m.json")
+  : resolve(ROOT, "data/datasets/wage-100m.json");
 
 /* 카드 안쪽 폭과 막대 간격 — 템플릿 CSS 와 같은 값이어야 꺾은선 점이 막대 가운데에 선다.
  * 여기가 어긋나면 선이 막대에서 조금씩 밀리는데, **한 칸씩 밀린 그림도 그럴듯해 보인다.** */
@@ -113,23 +120,28 @@ function main() {
       ...(i === n - 1 ? { on: true } : {}),
     })),
     /* 라벨은 양 끝만. 가운데까지 달면 선이 글자에 묻힌다. */
+    /* 양 끝 칸의 라벨은 가운데 정렬하면 카드 밖으로 나간다 — 안쪽으로 붙인다. */
     labels: [
       {
         x: `${((xy[0].x / 1000) * 100).toFixed(2)}%`,
         y: `${((xy[0].y / 1000) * 100 - 1.5).toFixed(2)}%`,
-        text: `${first.sharePopPct}%`,
+        text: `${first.sharePopPct.toFixed(1)}%`,
+        anchor: "start",
         dim: true,
       },
       {
         x: `${((xy[n - 1].x / 1000) * 100).toFixed(2)}%`,
         y: `${((xy[n - 1].y / 1000) * 100 - 1.5).toFixed(2)}%`,
-        text: `${last.sharePopPct}%`,
+        text: `${last.sharePopPct.toFixed(1)}%`,
+        anchor: "end",
       },
     ],
   };
 
-  /* 마지막 라벨이 카드 오른쪽 밖으로 나가지 않게 — 끝점은 오른쪽 끝에 가깝다. */
-  if (xy[n - 1].x > 965) throw new Error("끝점이 너무 오른쪽이다 — 라벨이 잘린다. colGap 을 본다");
+  /* 점이 칸 밖으로 나가면 그림이 거짓말을 한다. 라벨은 anchor 로 안쪽에 붙였지만
+   * 점 자체는 칸 안에 있어야 한다. */
+  if (xy[0].x < 0 || xy[n - 1].x > 1000) throw new Error("꺾은선 점이 칸 밖이다 — colGap·칸 수를 본다");
+  if (Math.min(...xy.map((p) => p.y)) < 0) throw new Error("꺾은선이 칸 위로 넘쳤다 — 눈금 천장을 본다");
 
   const multiple = (last.over100m / first.over100m).toFixed(1);
   const card = {
@@ -149,7 +161,11 @@ function main() {
     },
   };
 
-  const outDir = resolve(ROOT, `data/content/${ds.meta.collectedAt}`);
+  if (DRY) card.title = `${card.title} <span class="hi">(가짜)</span>`;
+
+  const outDir = DRY
+    ? resolve(ROOT, "data/out/_spike")
+    : resolve(ROOT, `data/content/${ds.meta.collectedAt}`);
   mkdirSync(outDir, { recursive: true });
   const out = resolve(outDir, "wage-100m.json");
   writeFileSync(out, JSON.stringify(card, null, 2) + "\n");

@@ -63,6 +63,12 @@
         flex-direction: column;
         margin: 22px 0 22px;
       }
+      /* 꺾은선 칸이 있는 카드만 제목과의 간격을 벌린다 — designQa 의 titlegap 권고(28px 이상).
+       * 이 칸의 캡션은 얇은 회색 한 줄이라 22px 로는 제목에 붙어 읽힌다.
+       * :has() 로 가둬서 topLine 이 없는 기존 카드(wolse-flip·m2-rate)는 건드리지 않는다. */
+      .yc-chart:has(.yc-top) {
+        margin-top: 36px;
+      }
 
       /* ── 플롯 영역 ── */
       .yc-plot {
@@ -445,7 +451,13 @@
       .yc-axis {
         display: grid;
         grid-auto-flow: column;
-        grid-auto-columns: 1fr;
+        /* ⚠️ `1fr` 이 아니라 `minmax(0, 1fr)` 이다.
+         * `1fr` 의 최소 크기는 **min-content** 라, 연도 글자가 칸보다 넓으면 칸이 벌어지고
+         * 축 전체가 막대칸보다 길어진다. 16칸 카드에서 마지막 연도가 카드 밖으로 밀려
+         * "2022 아래 2024년 막대"가 서 있는 그림이 나왔다(2026-09-14).
+         * designQa 는 이걸 못 잡는다 — 넘친 자리가 카드 안이라 overflow 가 아니다.
+         * 막대칸(.yc-cols)은 absolute·inset:0 이라 애초에 이 문제가 없었고, 그래서 둘이 갈렸다. */
+        grid-auto-columns: minmax(0, 1fr);
         gap: var(--col-gap, 12px);
         margin-top: 14px;
         padding-top: 10px;
@@ -542,6 +554,10 @@
       .yc-tval.lo {
         color: var(--wirit-gray);
       }
+      /* 끝 칸의 라벨은 가운데 정렬하면 카드 밖으로 나간다 — 오른쪽 끝을 점에 맞춘다.
+       * (첫 렌더에서 마지막 값이 잘렸다.) 시작 칸은 반대로 왼쪽 끝을 맞춘다. */
+      .yc-tval.end { transform: translate(-100%, -100%); }
+      .yc-tval.start { transform: translate(0, -100%); }
       /* ⚠️ 단위(%)는 축 왼쪽에 두면 −1.5 값 라벨과 부딪힌다(첫 렌더에서 겹쳤다).
        * lede 를 지운 뒤에는 좌상단 캡션(subtitle)에 "단위 %"를 붙여서 해결했다. */
 
@@ -570,7 +586,7 @@
           </svg>
           {{/each}}
           {{#each topLine.labels}}
-          <span class="yc-tval {{#if this.dim}}lo{{/if}}" style="left: {{this.x}}; top: {{this.y}}">{{this.text}}</span>
+          <span class="yc-tval {{#if this.dim}}lo{{/if}} {{#if this.anchor}}{{this.anchor}}{{/if}}" style="left: {{this.x}}; top: {{this.y}}">{{this.text}}</span>
           {{/each}}
           <span class="yc-top-base"></span>
         </div>

@@ -1,0 +1,203 @@
+{
+  "meta": {
+    "title": "[가짜] 판형 확인용",
+    "verified": true,
+    "collectedAt": "2026-09-14",
+    "sourceLabel": "⚠️ 가짜 데이터 (판형 확인용)",
+    "dry": true
+  },
+  "rows": [
+    {
+      "year": 2009,
+      "over100m": 196539,
+      "payers": 14038500,
+      "population": 49773145,
+      "sharePayerPct": 1.4,
+      "sharePopPct": 0.4,
+      "over100mParts": [
+        "(가짜)"
+      ],
+      "byBracket": {}
+    },
+    {
+      "year": 2010,
+      "over100m": 279698,
+      "payers": 15538778,
+      "population": 50515666,
+      "sharePayerPct": 1.8,
+      "sharePopPct": 0.6,
+      "over100mParts": [
+        "(가짜)"
+      ],
+      "byBracket": {}
+    },
+    {
+      "year": 2011,
+      "over100m": 361662,
+      "payers": 15724435,
+      "population": 50734284,
+      "sharePayerPct": 2.3,
+      "sharePopPct": 0.7,
+      "over100mParts": [
+        "(가짜)"
+      ],
+      "byBracket": {}
+    },
+    {
+      "year": 2012,
+      "over100m": 415475,
+      "payers": 15979808,
+      "population": 50948272,
+      "sharePayerPct": 2.6,
+      "sharePopPct": 0.8,
+      "over100mParts": [
+        "(가짜)"
+      ],
+      "byBracket": {}
+    },
+    {
+      "year": 2013,
+      "over100m": 472217,
+      "payers": 16283345,
+      "population": 51141463,
+      "sharePayerPct": 2.9,
+      "sharePopPct": 0.9,
+      "over100mParts": [
+        "(가짜)"
+      ],
+      "byBracket": {}
+    },
+    {
+      "year": 2014,
+      "over100m": 526406,
+      "payers": 16450188,
+      "population": 51327916,
+      "sharePayerPct": 3.2,
+      "sharePopPct": 1.0,
+      "over100mParts": [
+        "(가짜)"
+      ],
+      "byBracket": {}
+    },
+    {
+      "year": 2015,
+      "over100m": 596124,
+      "payers": 17533059,
+      "population": 51529338,
+      "sharePayerPct": 3.4,
+      "sharePopPct": 1.2,
+      "over100mParts": [
+        "(가짜)"
+      ],
+      "byBracket": {}
+    },
+    {
+      "year": 2016,
+      "over100m": 653326,
+      "payers": 17657459,
+      "population": 51696216,
+      "sharePayerPct": 3.7,
+      "sharePopPct": 1.3,
+      "over100mParts": [
+        "(가짜)"
+      ],
+      "byBracket": {}
+    },
+    {
+      "year": 2017,
+      "over100m": 719137,
+      "payers": 17978425,
+      "population": 51778544,
+      "sharePayerPct": 4.0,
+      "sharePopPct": 1.4,
+      "over100mParts": [
+        "(가짜)"
+      ],
+      "byBracket": {}
+    },
+    {
+      "year": 2018,
+      "over100m": 801839,
+      "payers": 18647419,
+      "population": 51826059,
+      "sharePayerPct": 4.3,
+      "sharePopPct": 1.5,
+      "over100mParts": [
+        "(가짜)"
+      ],
+      "byBracket": {}
+    },
+    {
+      "year": 2019,
+      "over100m": 851906,
+      "payers": 19361500,
+      "population": 51849861,
+      "sharePayerPct": 4.4,
+      "sharePopPct": 1.6,
+      "over100mParts": [
+        "(가짜)"
+      ],
+      "byBracket": {}
+    },
+    {
+      "year": 2020,
+      "over100m": 916464,
+      "payers": 19499234,
+      "population": 51829023,
+      "sharePayerPct": 4.7,
+      "sharePopPct": 1.8,
+      "over100mParts": [
+        "(가짜)"
+      ],
+      "byBracket": {}
+    },
+    {
+      "year": 2021,
+      "over100m": 1123145,
+      "payers": 20056161,
+      "population": 51638809,
+      "sharePayerPct": 5.6,
+      "sharePopPct": 2.2,
+      "over100mParts": [
+        "(가짜)"
+      ],
+      "byBracket": {}
+    },
+    {
+      "year": 2022,
+      "over100m": 1317329,
+      "payers": 20583266,
+      "population": 51439038,
+      "sharePayerPct": 6.4,
+      "sharePopPct": 2.6,
+      "over100mParts": [
+        "(가짜)"
+      ],
+      "byBracket": {}
+    },
+    {
+      "year": 2023,
+      "over100m": 1393088,
+      "payers": 20792358,
+      "population": 51325329,
+      "sharePayerPct": 6.7,
+      "sharePopPct": 2.7,
+      "over100mParts": [
+        "(가짜)"
+      ],
+      "byBracket": {}
+    },
+    {
+      "year": 2024,
+      "over100m": 1545725,
+      "payers": 21174315,
+      "population": 51217221,
+      "sharePayerPct": 7.3,
+      "sharePopPct": 3.0,
+      "over100mParts": [
+        "(가짜)"
+      ],
+      "byBracket": {}
+    }
+  ]
+}

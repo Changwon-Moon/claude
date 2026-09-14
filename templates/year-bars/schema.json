@@ -278,6 +278,13 @@
               "dim": {
                 "type": "boolean",
                 "description": "회색으로(시작점처럼 주인공이 아닌 값)"
+              },
+              "anchor": {
+                "enum": [
+                  "start",
+                  "end"
+                ],
+                "description": "라벨 정렬. 기본은 점 위 가운데. 양 끝 칸은 가운데로 두면 카드 밖으로 나가므로 start/end 로 안쪽에 붙인다."
               }
             }
           }
