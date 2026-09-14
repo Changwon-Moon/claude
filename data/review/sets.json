@@ -2193,6 +2193,25 @@
         "singo-호계2차현대홈타운-59-0912:d27dc0b8b024",
         "singo-벨섬시티-84:c34b2b3ebca4"
       ]
+    },
+    {
+      "label": "singo-daily-2026-09-14",
+      "title": "🔥 9월 14일 신고가 3곳",
+      "cards": [
+        "singo-평촌트리지아-59",
+        "singo-태릉해링턴플레이스-59",
+        "singo-북한산현대힐스테이트3차아파트-59"
+      ],
+      "caption": "singo-daily-2026-09-14",
+      "state": "오너 확정",
+      "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. 흡수한 개별 세트 3개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록. / 9/13~14 신고가 3장. 트리지아는 신축 판형(--short, 창을 첫 거래 2026-04 로 당김) 첫 적용. 북한산현대힐스테이트3차는 두 기준선 1.8% 차이라 --accept-cycle-guard 로 라벨을 선 아래로 내려 그렸다. 오너 확정.",
+      "pixelPolicy": "정기물 — data/datasets/singo-history/,data/datasets/molit,data/datasets/apt-station/,data/datasets/apt-detail/,data/datasets/apt-supply/ 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+      "confirmedAt": "2026-09-14",
+      "confirmedMd5": [
+        "singo-평촌트리지아-59:deeb951de590",
+        "singo-태릉해링턴플레이스-59:5f33bff2ad7f",
+        "singo-북한산현대힐스테이트3차아파트-59:373bf740c155"
+      ]
     }
   ]
 }

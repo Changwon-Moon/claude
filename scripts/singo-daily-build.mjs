@@ -377,7 +377,20 @@ for (const t of made) {
     }
   }
 
-  let st = sarr.find((x) => (x.cards ?? []).length === 1 && x.cards[0] === t.slug);
+  /* ── ⚠️ **하루 묶음을 「그 카드의 세트」로 착각하면 안 된다** (2026-09-14)
+   *
+   * 이 줄은 「카드 한 장짜리 세트」를 찾는다. 그런데 **그날 신고가가 한 곳뿐이면
+   * 하루 묶음(`singo-daily-YYYY-MM-DD`)도 카드가 한 장**이다 — 그래서 두 번째 실행부터
+   * 묶음이 여기 걸린다. 그러면:
+   *   ① 낱장 세트가 안 만들어진다
+   *   ② 묶음의 제목이 낱장 제목으로 덮인다
+   *   ③ 아래 렌더가 `produce-card <빌더라벨>` 을 부르는데 그 라벨의 **세트가 없어** 멈춘다
+   * 09-14(태릉해링턴플레이스 한 장)에서 실제로 그렇게 멈췄다.
+   *
+   * 묶음은 낱장들을 **모아 놓은 것**이지 낱장이 아니다. 라벨로 갈라 본다. */
+  let st = sarr.find(
+    (x) => !/^singo-daily-/.test(x.label ?? "") && (x.cards ?? []).length === 1 && x.cards[0] === t.slug,
+  );
   if (!st) {
     st = { label: b.label, cards: [t.slug], caption: b.label };
     sarr.push(st);

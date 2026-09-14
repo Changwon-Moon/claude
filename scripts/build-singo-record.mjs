@@ -266,7 +266,26 @@ if (hist.meta.peak.manwon !== hit.priceManwon) {
   );
 }
 
-const pts = hist.points;
+/* ── 🌱 **신축 판형 — 창을 첫 거래로 당긴다** (2026-09-14 오너 "트리지아까지 3장 보여줘")
+ *
+ * 아래 15개월 문지기가 일주일 새 **세 곳**을 잘랐다 — 중흥S-클래스에듀파크(8개월) ·
+ * 올림픽파크포레온(4개월) · 평촌트리지아(5개월). 셋 다 「그림이 거짓말을 해서」가 아니라
+ * **판이 2020년부터 6년을 그리는데 단지가 그만큼 안 살았기 때문**이다.
+ *
+ * 판을 바꿀 것이 아니라 **창을 좁히면 된다.** 첫 거래한 달부터 그리면 6년 판에 점 5개가
+ * 떠 있던 그림이, 5개월을 꽉 채운 그림이 된다. 입주장 단지는 그 5개월이 곧 소식이다
+ * (트리지아: 2026-04 10.3억 → 2026-08 12.0억).
+ *
+ * ⚠️ 창을 좁히면 **"2020년 이후 기준"이라는 단서가 거짓이 된다.** 그래서 푸터 문구도
+ *    `pts[0]` 에서 다시 뽑는다(아래 `fromLabel`) — 「2026년 4월 이후 기준」으로 나간다.
+ * ⚠️ 연도 축도 못 쓴다 — 1월이 창 안에 없으면 눈금이 **하나도 안 그려진다.**
+ *    짧은 창에서는 달로 적는다(아래 `axis`).
+ * ⚠️ 「지난 사이클 고점」은 이 판형에서 **말할 것이 없다.** 낙폭 가드가 이미 그 줄을
+ *    우아하게 뺀다(오르내림이 한 번도 없으면 `atMaxIdx < 0`). 여기서 따로 막지 않는다.
+ * ⚠️ 기존 카드는 이 길로 안 온다 — `--short` 를 준 건만 창이 좁아진다(픽셀 불변). */
+const SHORT = flag("short");
+const firstTradedIdx = hist.points.findIndex((p) => p.maxManwon != null);
+const pts = SHORT && firstTradedIdx > 0 ? hist.points.slice(firstTradedIdx) : hist.points;
 const traded = pts.filter((p) => p.maxManwon != null);
 if (traded.length < 3) throw new Error(`거래가 있던 달이 ${traded.length}개뿐이라 곡선을 그릴 수 없습니다.`);
 /* ⚠️ **이 판형에 맞지 않는 단지를 거른다** (2026-08-16b).
@@ -276,11 +295,11 @@ if (traded.length < 3) throw new Error(`거래가 있던 달이 ${traded.length}
    그 상태로도 "지난 사이클 고점"을 4개월 전 값으로 적게 된다(아래 가드가 그걸 막는다).
    → 이런 단지는 이 판형으로 만들지 않는다. 다른 판형이 필요하다는 뜻이다. */
 const MIN_MONTHS = 15;
-if (traded.length < MIN_MONTHS) {
+if (traded.length < MIN_MONTHS && !SHORT) {
   throw new Error(
     `거래가 있던 달이 ${traded.length}개월뿐입니다(첫 거래 ${traded[0].ym}) — ` +
       `이 판형은 2020년부터 6년을 그리므로 최소 ${MIN_MONTHS}개월이 필요합니다.\n` +
-      `→ 새 단지라 이력이 짧습니다. 이 소재는 다른 판형으로 다루세요.`,
+      `→ 새 단지라 이력이 짧습니다. 창을 첫 거래(${traded[0].ym})로 당기려면 --short 를 주세요(신축 판형, 2026-09-14).`,
   );
 }
 
@@ -315,7 +334,11 @@ const PAD_B = 40;
 /* ⚠️ 좌우 여백을 두는 이유: 2020·2026 연도 라벨이 판 끝에서 잘려 나가 **간격이 어긋나 보였다**
    (오너 2026-08-13 "연도들끼리 간격이 안맞아"). 예전엔 끝 라벨만 왼쪽/오른쪽 정렬로 물려
    붙였는데, 그러면 라벨이 자기 눈금에서 벗어나 더 어긋나 보인다. 여백으로 푼다. */
-const X0 = 46;
+/* ⚠️ 신축 판형(--short)은 **맨 왼쪽 눈금만 「2026년 4월」로 넓다**(오너 2026-09-14
+   *"적어도 '2026년'을 맨 좌측에는 한 번 써서"*). 46 이면 그 라벨이 판 왼쪽으로 13px 삐져나가
+   위 검사가 던진다. 왼쪽만 정렬을 바꿔 물려 붙이면 위 경고대로 **간격이 어긋나 보인다** —
+   그래서 정렬은 그대로 가운데로 두고 **여백을 넓혀서** 푼다(같은 처방, 같은 이유). */
+const X0 = SHORT ? 62 : 46;
 const X1 = VB_W - 46;
 const plotTop = PAD_T;
 const plotBot = VB_H - PAD_B;
@@ -489,11 +512,24 @@ const dy = r2(yOf(hit.priceManwon));
    같은 색이라 어느 쪽이 오늘인지 흐렸다 — 속이 빈 원 하나면 오늘만 다르게 읽힌다. */
 const dot = { x: dx, y: dy, r: 13, rOuter: 20 };
 
-/* 연도 축 — 1월이 있는 달에만 */
-const axis = pts
-  .map((p, i) => (p.ym.slice(4) === "01" ? { i, y: p.ym.slice(0, 4) } : null))
-  .filter(Boolean)
-  .map(({ i, y }) => ({ x: r2(xOf(i)), y: VB_H - 14, anchor: "middle", text: y }));
+/* 연도 축 — 1월이 있는 달에만.
+   ⚠️ 신축 판형(--short)은 창이 1~2년이라 **1월이 창 안에 없을 수 있다** — 그러면 눈금이
+      하나도 안 그려져 판 아래가 통째로 빈다. 짧은 창에서는 **달**로 적는다(2026-09-14). */
+/* 신축 판형의 달 눈금 — **맨 왼쪽 한 번만 연도를 적는다**(오너 2026-09-14).
+   달만 늘어놓으면 「몇 년의 4월인가」를 카드 안에서 알 길이 없다. 푸터에 「2026년 4월 이후
+   기준」이 있긴 하지만 **그래프는 제 발로 서야 한다.** 그렇다고 매 눈금에 연도를 붙이면
+   여섯 번 되풀이되어 읽기만 나빠진다 — 처음 한 번이면 나머지는 따라 읽힌다. */
+const axis = SHORT
+  ? pts.map((p, i) => ({
+      x: r2(xOf(i)),
+      y: VB_H - 14,
+      anchor: "middle",
+      text: i === 0 ? `${p.ym.slice(0, 4)}년 ${Number(p.ym.slice(4))}월` : `${Number(p.ym.slice(4))}월`,
+    }))
+  : pts
+      .map((p, i) => (p.ym.slice(4) === "01" ? { i, y: p.ym.slice(0, 4) } : null))
+      .filter(Boolean)
+      .map(({ i, y }) => ({ x: r2(xOf(i)), y: VB_H - 14, anchor: "middle", text: y }));
 
 /* ⚠️ SVG 글자는 디자인 검수가 못 잰다 — 판을 넘지 않는지 여기서 확인한다.
    태백/Wanted 실측 대신 넉넉한 상한(글자당 0.62em)으로 잡는다. 넘으면 던진다. */
@@ -1107,7 +1143,11 @@ if (KAPT) {
 
 /* ── ⑤ 문구 — 전부 위 수치에서 나온다 */
 const first = traded[0];
-const fromLabel = `${hist.meta.from.slice(0, 4)}년${hist.meta.from.slice(4) === "01" ? "" : ` ${Number(hist.meta.from.slice(4))}월`}`;
+/* ⚠️ **그린 창에서 뽑는다 — 받아 온 창이 아니다.** 신축 판형(--short)은 창을 첫 거래로
+   당기므로 `hist.meta.from`(2020-01)을 그대로 쓰면 푸터가 **거짓말을 한다**.
+   보통 카드는 `pts[0].ym === hist.meta.from` 이라 값이 그대로다(픽셀 불변, 2026-09-14). */
+const baseFrom = pts[0].ym;
+const fromLabel = `${baseFrom.slice(0, 4)}년${baseFrom.slice(4) === "01" ? "" : ` ${Number(baseFrom.slice(4))}월`}`;
 const dot2 = (d) => `${d.slice(0, 4)}.${d.slice(5, 7)}.${d.slice(8, 10)}`;
 
 /* ── 제목에 **지역을 붙이지 않는다** (오너 2026-08-16b "이름 앞에 지역은 빼는걸로 전체 세팅")
@@ -1466,7 +1506,7 @@ const card = {
         ? [`⚠️ 이름 사전으로 바꿔 적었다: 실거래 신고명 "${hit.aptNm}" → 카드 "${BOOK_HIT.name}" (${BOOK_HIT.why ?? "이유 미기재"} · ${BOOK_HIT.by ?? "?"} ${BOOK_HIT.at ?? ""} · data/review/apt-names.json)`]
         : []),
     ],
-    baselineFrom: hist.meta.from,
+    baselineFrom: baseFrom,
     /* 지역은 **카드 제목에서 뺐다**(오너 2026-08-16b). 그렇다고 자료에서까지 지우면
        캡션 쓰는 사람이 어디 단지인지 다시 찾아야 한다 — 여기에 남긴다. */
     region: {
