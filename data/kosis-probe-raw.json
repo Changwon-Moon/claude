@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-08T02:25:29.181Z",
+ "generatedAt": "2026-09-14T04:48:44.212Z",
  "tables": {
   "population": {
    "tblId": "DT_1B040A3",
@@ -3618,11 +3618,7 @@
    ],
    "tblNm": "외국인주택소유현황(총괄)",
    "items": [
-    "T001=주택수",
-    "T002=지분반영 주택수",
-    "T003=소유자수",
-    "T004=1인당 평균소유주택수",
-    "T005=지분반영 1인당 평균소유주택수"
+    "T001=주택수"
    ],
    "axes": [
     {
@@ -3653,11 +3649,7 @@
    ],
    "tblNm": "국적별 외국인주택소유현황(공동주택)",
    "items": [
-    "T001=주택수",
-    "T002=지분반영 주택수",
-    "T003=소유자수",
-    "T004=1인당 평균소유주택수",
-    "T005=지분반영 1인당 평균소유주택수"
+    "T001=주택수"
    ],
    "axes": [
     {
@@ -3708,11 +3700,7 @@
    ],
    "tblNm": "국적별 외국인주택소유현황(단독주택)",
    "items": [
-    "T001=주택수",
-    "T002=지분반영 주택수",
-    "T003=소유자수",
-    "T004=1인당 평균소유주택수",
-    "T005=지분반영 1인당 평균소유주택수"
+    "T001=주택수"
    ],
    "axes": [
     {
@@ -3752,6 +3740,34 @@
     "A12": "기타국가",
     "A13": "기타"
    }
+  },
+  "houseOwnHh": {
+   "tblId": "DT_1LC0033",
+   "ok": false,
+   "error": "KOSIS API 오류(houseOwnHh): 잘못된 요청 변수를 호출 하였습니다.",
+   "objLUsed": 0,
+   "attempts": [
+    "objL2..1=(없음) → KOSIS API 오류(houseOwnHh): 잘못된 요청 변수를 호출 하였습니다."
+   ],
+   "tblNm": null,
+   "items": [],
+   "axes": [],
+   "periods": [],
+   "regions": {}
+  },
+  "houseOwnHhSido": {
+   "tblId": "DT_1LC0034",
+   "ok": false,
+   "error": "KOSIS API 오류(houseOwnHhSido): 잘못된 요청 변수를 호출 하였습니다.",
+   "objLUsed": 0,
+   "attempts": [
+    "objL2..1=(없음) → KOSIS API 오류(houseOwnHhSido): 잘못된 요청 변수를 호출 하였습니다."
+   ],
+   "tblNm": null,
+   "items": [],
+   "axes": [],
+   "periods": [],
+   "regions": {}
   }
  }
 }
