@@ -185,6 +185,8 @@ async function main() {
   const regionMap = loadRegionMap(CWD);
 
   const metrics: Record<string, Series[]> = {};
+  /** 일반구를 둔 시의 KOSIS 「시 전체」 행 — 코드는 **KOSIS 인구표 체계**다(지도 코드 아님). */
+  let cityTotals: (Series & { sido: string })[] = [];
   /* ── 한 표가 넘어져도 나머지는 간다 ──
      표 하나에서 던지면 수집 전체가 멈춘다. 새로 켠 표(연령·출생)가 넘어졌다고
      잘 돌던 인구·세대수까지 못 받는 것은 손해가 크다.
@@ -238,6 +240,21 @@ async function main() {
         );
       }
       const before = points.length;
+      /* ── 일반구를 둔 시의 「시 전체」 행을 따로 남긴다 (2026-09-15) ──
+         remapRegions 는 부모 시 행을 버린다(지도에 그 칸이 없어서). 그런데 시 단위 순위를
+         만들 때 그 행이 **공표 합계**다 — 구를 더한 값과 대 볼 수 있고, 화성시처럼
+         2026-02 에 구가 생긴 도시는 그 전 값이 **이 행에만** 있다.
+         지도에는 안 얹는다. 대조표의 unmatched 중 이름이 「시」로 끝나는 것만(출장소 제외). */
+      if (t === "population") {
+        const parentCodes = new Map(
+          ((regionMap.unmatched?.[t] ?? []) as { code?: string; name?: string; sido?: string }[])
+            .filter((u) => u.code && /시$/.test(u.name ?? "") && !/출장소/.test(u.name ?? ""))
+            .map((u) => [String(u.code), u.sido ?? ""]),
+        );
+        const pp = points.filter((p) => parentCodes.has(p.code));
+        cityTotals = toSeries(pp).map((x) => ({ ...x, sido: parentCodes.get(x.code) ?? "" }));
+        console.log(`· 인구 — 일반구를 둔 시 전체 행 ${cityTotals.length}곳 따로 보관(${[...parentCodes.keys()].length}곳 중)`);
+      }
       const mapped = remapRegions(points, codeMap);
       points = mapped.points;
       console.log(`· ${spec.metric} 코드 변환 → 지도 코드: ${points.length}/${before}행`);
@@ -338,6 +355,9 @@ async function main() {
     series,
     /* 인구 말고 다른 지표(세대수·이동·연령·출생·사망)는 검증되어 켜지는 대로 여기 쌓인다. */
     metrics,
+    /* 일반구를 둔 시의 공표 「시 전체」 인구. ⚠️ code 는 KOSIS 인구표 코드(41590=화성시)라
+       지도·series 의 code 와 체계가 다르다 — 절대 code 로 series 와 조인하지 말 것. */
+    cityTotals,
   };
 
   if (!DRY) writeFileSync(join(outDir, "population-latest.json"), JSON.stringify(doc, null, 2) + "\n", "utf8");
