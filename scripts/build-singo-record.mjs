@@ -239,11 +239,31 @@ if (MERGE) {
  * ⚠️ 확정은 `confirm.mjs` 만 찍고 그때 md5 증거가 함께 박힌다 — 사람이 못 위조한다.
  */
 const OUT_SLUG = arg("slug") ?? `singo-${full(APT)}-${TYPE}`;
+/* ── ⚠️⚠️ **「확정됐다」가 아니라 「새 기준보다 먼저 확정됐다」로 잰다** (2026-09-15)
+ *
+ * 이 값은 「새 배치 규칙(09-08 오너 지시)이 나오기 **전에** 발행한 그림은 되짚지 않는다」는
+ * 뜻이었다. 그런데 재는 법이 **「확정 세트에 들어 있나」** 였다 — 날짜를 안 봤다.
+ * 그래서 오늘 만든 카드도 `confirm` 이 세트를 「오너 확정」으로 바꾸는 순간 이 값이 참이 되고,
+ * 바로 뒤따르는 전 카드 재생성이 **같은 카드를 다른 배치로 다시 그린다.**
+ *
+ * 09-15 에 실제로 그렇게 깨졌다: 비산동 더포레스트힐·원천레이크파크 두 장이
+ * 세트 검수에서는 PASS(error 0) 였는데, 확정 직후 재생성에서 `linecross` 12px 관통으로
+ * 막혔다. **확정 전후로 같은 입력이 다른 픽셀을 냈다** — 결정성이 깨지는 자리다.
+ * (그리고 그 확정 md5 는 다시는 재현되지 않는다.)
+ *
+ * → 세트의 `confirmedAt` 을 본다. 새 배치 규칙이 선 날(2026-09-08)보다 **앞서** 확정한
+ *   카드만 옛 배치로 둔다. 그날 이후 확정본은 처음부터 새 배치로 만들어졌으므로
+ *   다시 그려도 같은 그림이 나온다.
+ * ⚠️ `confirmedAt` 이 없는 옛 세트는 **옛 카드로 본다** — 날짜를 모르면 건드리지 않는 쪽이 안전하다. */
+const NEW_LAYOUT_SINCE = "2026-09-08";
 const ALREADY_CONFIRMED = (() => {
   try {
     const S = JSON.parse(readFileSync(P("data/review/sets.json"), "utf8"));
     return (S.sets ?? []).some(
-      (s) => String(s.state ?? "").startsWith("오너 확정") && (s.cards ?? []).includes(OUT_SLUG),
+      (s) =>
+        String(s.state ?? "").startsWith("오너 확정") &&
+        (s.cards ?? []).includes(OUT_SLUG) &&
+        String(s.confirmedAt ?? "") < NEW_LAYOUT_SINCE,
     );
   } catch {
     return false;
@@ -521,13 +541,38 @@ const dot = { x: dx, y: dy, r: 13, rOuter: 20 };
    달만 늘어놓으면 「몇 년의 4월인가」를 카드 안에서 알 길이 없다. 푸터에 「2026년 4월 이후
    기준」이 있긴 하지만 **그래프는 제 발로 서야 한다.** 그렇다고 매 눈금에 연도를 붙이면
    여섯 번 되풀이되어 읽기만 나빠진다 — 처음 한 번이면 나머지는 따라 읽힌다. */
-const axis = SHORT
-  ? pts.map((p, i) => ({
+/* ── ⚠️ **달을 다 적으면 창이 길어질수록 글자가 겹친다** (2026-09-15)
+ *
+ * 트리지아는 창이 6개월이라 달을 전부 적어도 넉넉했다. 그런데 더샵오포센트럴포레는
+ * 첫 거래가 2024-04 라 창이 **30개월**이고, 같은 규칙으로 30개를 적었더니 검수가
+ * 「9월이 10월과 41% 겹침」으로 10건을 막았다. 창 길이는 단지마다 다르니
+ * **몇 칸마다 적을지를 재서 정한다** — 손으로 정하면 다음 단지에서 또 깨진다.
+ *
+ * 재는 법: 칸 사이 간격(px)이 라벨 폭 + 최소 숨틈(16px)을 넘을 때까지 건너뛰는 칸을 늘린다.
+ * 맨 왼쪽은 「2024년 4월」처럼 연도가 붙어 넓으므로(오너 2026-09-14) 그 폭으로 따로 잰다. */
+const shortAxis = () => {
+  const YEAR_LAB = `${pts[0].ym.slice(0, 4)}년 ${Number(pts[0].ym.slice(4))}월`;
+  const MONTH_W = 3 * 24 * 0.62; // "12월" 상한
+  const GAP = 16;
+  const gapPer = pts.length > 1 ? (X1 - X0) / (pts.length - 1) : X1 - X0;
+  let step = 1;
+  while (step < pts.length && gapPer * step < MONTH_W + GAP) step++;
+  /* 두 번째 라벨은 **연도가 붙은 첫 라벨의 오른쪽 끝**까지 피해야 한다 — 그쪽이 더 넓다 */
+  while (step < pts.length && gapPer * step < (widthOfRough(YEAR_LAB) + MONTH_W) / 2 + GAP) step++;
+  const out = [];
+  for (let i = 0; i < pts.length; i += step)
+    out.push({
       x: r2(xOf(i)),
       y: VB_H - 14,
       anchor: "middle",
-      text: i === 0 ? `${p.ym.slice(0, 4)}년 ${Number(p.ym.slice(4))}월` : `${Number(p.ym.slice(4))}월`,
-    }))
+      text: i === 0 ? YEAR_LAB : `${Number(pts[i].ym.slice(4))}월`,
+    });
+  if (step > 1) console.log(`   ⓘ 신축 판형 — 창이 ${pts.length}개월이라 눈금을 ${step}개월마다 적습니다(겹침 방지).`);
+  return out;
+};
+const widthOfRough = (text, size = 24) => text.length * size * 0.62;
+const axis = SHORT
+  ? shortAxis()
   : pts
       .map((p, i) => (p.ym.slice(4) === "01" ? { i, y: p.ym.slice(0, 4) } : null))
       .filter(Boolean)
