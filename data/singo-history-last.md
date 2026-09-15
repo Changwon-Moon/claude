@@ -113,79 +113,51 @@
 ── 이편한세상센트레빌 전용 59타입 (41210)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41210 --apt '이편한세상센트레빌' --umd '하안동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41210 --apt '이편한세상센트레빌' --umd '하안동' --type 59 --from 202001
 
-이편한세상센트레빌 · 전용 59타입 · 41210 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41210-이편한세상센트레빌-59.json
-거래 있던 달 68/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 11.7억 (2026-09-04 · 전용 59.982㎡ 28층)
+⏭ 이미 있음 — 41210-이편한세상센트레빌-59.json (다시 받으려면 force=1)
 
 ── 평촌더샵아이파크 전용 59타입 (41173)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '평촌더샵아이파크' --umd '호계동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '평촌더샵아이파크' --umd '호계동' --type 59 --from 202001
 
-평촌더샵아이파크 · 전용 59타입 · 41173 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41173-평촌더샵아이파크-59.json
-거래 있던 달 61/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 11.1억 (2026-08-31 · 전용 59.8㎡ 7층)
+⏭ 이미 있음 — 41173-평촌더샵아이파크-59.json (다시 받으려면 force=1)
 
 ── 광주역자연앤자이 전용 84타입 (41610)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41610 --apt '광주역자연앤자이' --umd '역동' --type 84 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41610 --apt '광주역자연앤자이' --umd '역동' --type 84 --from 202001
 
-광주역자연앤자이 · 전용 84타입 · 41610 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41610-광주역자연앤자이-84.json
-거래 있던 달 40/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 9.9억 (2026-08-29 · 전용 84.5516㎡ 8층)
+⏭ 이미 있음 — 41610-광주역자연앤자이-84.json (다시 받으려면 force=1)
 
 ── 병점역아이파크캐슬 전용 84타입 (41595)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41595 --apt '병점역아이파크캐슬' --umd '병점동' --type 84 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41595 --apt '병점역아이파크캐슬' --umd '병점동' --type 84 --from 202001
 
-병점역아이파크캐슬 · 전용 84타입 · 41595 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41595-병점역아이파크캐슬-84.json
-거래 있던 달 46/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 9.4억 (2026-09-11 · 전용 84.97㎡ 9층)
+⏭ 이미 있음 — 41595-병점역아이파크캐슬-84.json (다시 받으려면 force=1)
 
 ── 부영 전용 59타입 (41450)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41450 --apt '부영' --umd '창우동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41450 --apt '부영' --umd '창우동' --type 59 --from 202001
 
-부영 · 전용 59타입 · 41450 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41450-부영-59.json
-거래 있던 달 64/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 8.3억 (2026-08-22 · 전용 59.97㎡ 3층)
+⏭ 이미 있음 — 41450-부영-59.json (다시 받으려면 force=1)
 
 ── 수원하늘채더퍼스트1단지 전용 59타입 (41113)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41113 --apt '수원하늘채더퍼스트1단지' --umd '곡반정동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41113 --apt '수원하늘채더퍼스트1단지' --umd '곡반정동' --type 59 --from 202001
 
-수원하늘채더퍼스트1단지 · 전용 59타입 · 41113 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41113-수원하늘채더퍼스트1단지-59.json
-거래 있던 달 40/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 7.8억 (2026-09-12 · 전용 59.96㎡ 5층)
+⏭ 이미 있음 — 41113-수원하늘채더퍼스트1단지-59.json (다시 받으려면 force=1)
 
 ── 원천레이크파크 전용 59타입 (41117)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '원천레이크파크' --umd '원천동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '원천레이크파크' --umd '원천동' --type 59 --from 202001
 
-원천레이크파크 · 전용 59타입 · 41117 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41117-원천레이크파크-59.json
-거래 있던 달 73/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 6.15억 (2026-09-05 · 전용 59.99㎡ 19층)
+⏭ 이미 있음 — 41117-원천레이크파크-59.json (다시 받으려면 force=1)
 
 ── 두산 전용 84타입 (11620)
 
