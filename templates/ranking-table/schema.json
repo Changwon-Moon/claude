@@ -18,6 +18,12 @@
       "type": "boolean",
       "description": "이름 앞 표식(로고·컬러칩·첫글자 원)을 숨긴다. 자치구·지역처럼 브랜드 마크가 없는 순위표용 — 첫 글자 원은 정보가 없어 노이즈다."
     },
+    "colW": {
+      "type": "object",
+      "required": ["name", "val", "sub"],
+      "properties": { "name": { "type": "number" }, "val": { "type": "number" }, "sub": { "type": "number" } },
+      "description": "열 폭(px) 덮어쓰기 — 이 카드에만. 7자리 인구(1,185,770)처럼 값이 밀도 기본폭(128px)을 넘길 때. 안 주면 기존 카드와 픽셀이 같다(2026-09-15 pop-city-rank)."
+    },
     "plainRank": {
       "type": "boolean",
       "description": "1~3위 메달(🥇🥈🥉) 대신 숫자만. 1위가 '잘한 것'이 아닌 순위(예: 집값이 비싼 순)에서는 메달이 뜻을 왜곡한다."

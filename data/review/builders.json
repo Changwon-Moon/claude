@@ -4728,6 +4728,18 @@
         "singo-원천레이크파크-59-0915"
       ],
       "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "pop-city-rank",
+      "cmd": "scripts/build-pop-city-rank.mjs",
+      "args": [
+        "2026-09-15",
+        "--publish"
+      ],
+      "note": "기준월(PERIOD) 2026-06 고정. cityTotals 는 population-latest.json(2026-09-15 수집부터)에서 읽는다.",
+      "produces": [
+        "pop-city-rank"
+      ]
     }
   ]
 }

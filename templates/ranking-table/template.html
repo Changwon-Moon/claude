@@ -446,7 +446,7 @@
     </style>
   </head>
   <body>
-    <div class="wirit-card {{#if font}}font-{{font}}{{/if}} {{#if variant}}variant-{{variant}}{{else}}variant-a{{/if}} rt {{densityClass items}} {{#if photoStrip}}has-photos{{/if}} {{#if hideRank}}no-rank{{/if}} {{#if hideMark}}no-mark{{/if}}">
+    <div class="wirit-card {{#if font}}font-{{font}}{{/if}} {{#if variant}}variant-{{variant}}{{else}}variant-a{{/if}} rt {{densityClass items}} {{#if photoStrip}}has-photos{{/if}} {{#if hideRank}}no-rank{{/if}} {{#if hideMark}}no-mark{{/if}}"{{#if colW}} style="--name-w:{{colW.name}}px;--val-w:{{colW.val}}px;--sub-w:{{colW.sub}}px"{{/if}}>
       <div class="wirit-topcap">{{#if subtitle}}<span>{{subtitle}}</span>{{/if}}</div>
       <div class="rt-head">
         <h1 class="wirit-title">{{title}}</h1>
