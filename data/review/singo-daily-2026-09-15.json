@@ -1,7 +1,7 @@
 {
   "label": "singo-daily-2026-09-15",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 20장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 21장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
@@ -120,6 +120,12 @@
     },
     {
       "file": "singo-원천레이크파크-59-0915.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-더샵오포센트럴포레-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
