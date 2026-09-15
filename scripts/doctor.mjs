@@ -277,6 +277,52 @@ catch { stOk = false; }
     "node scripts/prune-status.mjs — 굳은 규칙을 정본으로 승격한 뒤 서사를 archive 로");
 }
 
+/* ── 🧹 대기열에 **다 받고도 남은 `force=1`** 이 있나 — 2026-09-15 신설
+ *
+ * `force=1` 은 「파일이 있어도 다시 받아라」다. 받고 나면 지워야 하는데 09-15 까지는
+ * 사람이 지웠고 **안 지켜졌다.** 그날 곡선 대기열 239줄 중 40줄이 force 였고, 수집기가
+ * 돌 때마다 그 40건을 처음부터 다시 받아 네 시간을 썼다. 그날 카드에 필요한 7줄은
+ * 맨 아래라 한 시간을 돌고도 못 닿았다. 공급면적에서도 같은 두 줄이 하루 몫을 태웠다.
+ *
+ * 이제 워크플로가 받자마자 스스로 지운다(`scripts/queue-drop-force.mjs`).
+ * 이 검사는 **그 장치가 도는지 지켜보는 눈**이다 — 파일이 이미 있는데 force 가 남아
+ * 있다면 지우는 손이 안 돌았다는 뜻이다.
+ * ⚠️ **경고로 둔다.** 카드 제작을 막을 일이 아니다 — 값은 정확하고, 느려질 뿐이다. */
+{
+  const stale = [];
+  const scan = (queue, outPath) => {
+    const p = join(ROOT, queue);
+    if (!existsSync(p)) return;
+    for (const raw of readFileSync(p, "utf8").split("\n")) {
+      const l = raw.trim();
+      if (!l || l.startsWith("#") || !/\bforce=1\b/.test(l)) continue;
+      const out = outPath(l);
+      if (out && existsSync(join(ROOT, out))) stale.push(`${queue}: ${l.slice(0, 54)}`);
+    }
+  };
+  scan("data/apt-supply-queue.txt", (l) => {
+    const k = /kapt=(A\d+)/.exec(l)?.[1];
+    const a = Number(/area=([\d.]+)/.exec(l)?.[1]);
+    if (!k || !Number.isFinite(a)) return null;
+    const t = a >= 82 ? "84" : a >= 56 ? "59" : String(Math.round(a));
+    return `data/datasets/apt-supply/${k}-${t}.json`;
+  });
+  scan("data/singo-history-queue.txt", (l) => {
+    const lawd = /lawd=(\d{5})/.exec(l)?.[1];
+    const type = /type=(\d{2})/.exec(l)?.[1];
+    const apt = /apt="([^"]*)"/.exec(l)?.[1] ?? /apt=(\S+)/.exec(l)?.[1];
+    if (!lawd || !type || !apt) return null;
+    const norm = String(apt).replace(/[()[\]]/g, "").replace(/[\s·.\-_,]/g, "");
+    return `data/datasets/singo-history/${lawd}-${norm}-${type}.json`;
+  });
+  if (stale.length) {
+    soft(
+      `다 받고도 남은 force=1 ${stale.length}줄 — 수집기가 매 판 그만큼 다시 받습니다`,
+      `지우는 손이 안 돌았습니다(첫 줄: ${stale[0]}) — 워크플로의 queue-drop-force 단계를 보세요`,
+    );
+  } else check("대기열 force 청소", true, "다 받은 줄에 force=1 이 남아 있지 않습니다");
+}
+
 /* 소재 보드 — 고르는 속도보다 빨리 쌓이는가.
    ⚠️ **경고로 둔다.** 무엇을 지울지는 오너 판단이고, 세션이 스스로 못 고친다.
       필수로 막으면 소재가 많다는 이유로 카드를 못 만들게 된다 — 말이 안 된다. */

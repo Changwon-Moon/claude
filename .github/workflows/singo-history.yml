@@ -165,10 +165,22 @@ jobs:
             echo "" | tee -a "$RUNNER_TEMP/hist.log"
             echo "── $APT 전용 ${TYPE}타입 ($LAWD)" | tee -a "$RUNNER_TEMP/hist.log"
             # ⚠️ 한 줄이 실패해도 나머지는 계속 간다 — 5장 중 1장 때문에 4장을 잃지 않는다
+            OK=1
             if ! pnpm --filter @wirit/collectors collect-singo-history -- \
                   --lawd "$LAWD" --apt "$APT" ${UMD:+--umd "$UMD"} \
                   --type "$TYPE" --from "${FROM:-202001}" $FORCE 2>&1 | tee -a "$RUNNER_TEMP/hist.log"; then
-              FAILED=1
+              FAILED=1; OK=0
+            fi
+            # ── 🧹 **받았으면 그 줄의 `force=1` 을 스스로 지운다** (2026-09-15)
+            #
+            # force=1 은 「파일이 있어도 다시 받아라」다. 한 번 쓰고 나면 지워야 하는데 그 일을
+            # 사람이 했고, **안 지켜졌다** — 09-14 에 「손으로 지우는 규칙은 안 지켜진다」고
+            # 적어 두고 다음 날 또 안 지켜졌다. 09-15 에 이 대기열 239줄 중 **40줄**이 force 였고,
+            # 수집기가 돌 때마다 그 40건을 처음부터 다시 받았다(한 건 6분 → 그것만으로 네 시간).
+            # 그날 카드에 필요한 7줄은 맨 아래라 **한 시간을 돌고도 못 닿았다.**
+            # ⚠️ **성공했을 때만** 지운다 — 실패한 줄은 다시 받아야 하니 force 가 남아야 한다.
+            if [ "$OK" = "1" ] && [ -n "$FORCE" ]; then
+              node scripts/queue-drop-force.mjs data/singo-history-queue.txt "$LINE" 2>&1 | tee -a "$RUNNER_TEMP/hist.log" || true
             fi
             # ── 🔒 한 단지 끝날 때마다 **바로 밀어 둔다** (2026-09-02 오너 "단지마다 바로 커밋")
             #
@@ -186,7 +198,9 @@ jobs:
               #    (2026-09-02), 그 폴더를 add 에서 빠뜨리면 러너 안에서만 만들어졌다 사라진다 —
               #    그러면 다음 단지·내일 세션이 같은 달을 **또** 받는다. 이 잡이 존재하는 이유가
               #    바로 그 「또 받기」를 없애는 것이다.
-              git add data/datasets/singo-history data/datasets/molit-monthly 2>/dev/null || \
+              # ⚠️ **대기열도 같이 담는다** — 위에서 force=1 을 지웠다(2026-09-15).
+              #    안 담으면 러너 안에서만 지워졌다 사라지고, 다음 판이 또 다시 받는다.
+              git add data/datasets/singo-history data/datasets/molit-monthly data/singo-history-queue.txt 2>/dev/null || \
                 git add data/datasets/singo-history || true
               if ! git diff --cached --quiet; then
                 git commit -q -m "곡선 — $APT 전용${TYPE} ($LAWD)" || true
