@@ -41,14 +41,14 @@
 | `record-grid` | 🟢 1세트 | kospi-record |
 | `seongsu-zones` | 🟢 1세트 | seongsu-zones |
 | `sinbundang-loop` | 🟢 1세트 | sinbundang-loop |
-| `singo-record` | 🟢 21세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 18 |
+| `singo-record` | 🟢 23세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 20 |
 | `singoga-map` | 🟢 4세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map 외 1 |
 | `streak-line` | 🟢 22세트 | mae-streak, jeonse-streak, m2-gap 외 19 |
 | `supply-progress` | 🟢 1세트 | supply-progress |
 | `tax-matrix` | 🟢 1세트 | ltv-matrix |
 | `world-capital` | 🟢 1세트 | world-capital |
 | `world-monthly` | 🟢 1세트 | world-monthly |
-| `year-bars` | 🟢 2세트 | wolse-flip, m2-rate |
+| `year-bars` | 🟢 3세트 | wolse-flip, m2-rate, wage-100m |
 | `estate-cover` | 🟡 빌더 있음·세트 없음 | — |
 | `metro-cover-photo` | 🟡 빌더 있음·세트 없음 | — |
 | `dummy-card` | ⚪ 잠자는 중 | — |
