@@ -179,8 +179,24 @@ jobs:
             # 수집기가 돌 때마다 그 40건을 처음부터 다시 받았다(한 건 6분 → 그것만으로 네 시간).
             # 그날 카드에 필요한 7줄은 맨 아래라 **한 시간을 돌고도 못 닿았다.**
             # ⚠️ **성공했을 때만** 지운다 — 실패한 줄은 다시 받아야 하니 force 가 남아야 한다.
+            # ⚠️ **「성공」만으로는 부족하다** (2026-09-16). 이 수집기는 달 몇 개를 못 받아도
+            #    종료코드 0 으로 끝난다(그건 옳다 — 78개월을 받아 두고 2개월 때문에 다 버릴 순 없다).
+            #    그런데 그 상태에서 force 를 지우면 **못 받은 달이 영영 안 채워진다.**
+            #    09-16 아침에 실제로 그랬다: 국토부가 202608·202609 를 「fetch failed」로 돌려줬는데
+            #    수집은 초록불이었고, force 가 지워져 다음 판이 그 달을 다시 받지 않았다.
+            #    → **못 받은 달이 하나라도 있으면 force 를 남긴다.** 곡선이 제 파일에 적어 둔다.
             if [ "$OK" = "1" ] && [ -n "$FORCE" ]; then
-              node scripts/queue-drop-force.mjs data/singo-history-queue.txt "$LINE" 2>&1 | tee -a "$RUNNER_TEMP/hist.log" || true
+              HF=$(node -e '
+                const fs=require("fs");
+                const p=process.argv[1];
+                try{ process.stdout.write(String(JSON.parse(fs.readFileSync(p,"utf8")).meta.monthsFailed ?? 0)); }
+                catch{ process.stdout.write("1"); }
+              ' "data/datasets/singo-history/${LAWD}-$(node -e 'process.stdout.write(process.argv[1].replace(/[()\[\]]/g,"").replace(/[\s·.\-_,]/g,""))' "$APT")-${TYPE}.json" 2>/dev/null || echo 1)
+              if [ "${HF:-1}" = "0" ]; then
+                node scripts/queue-drop-force.mjs data/singo-history-queue.txt "$LINE" 2>&1 | tee -a "$RUNNER_TEMP/hist.log" || true
+              else
+                echo "   ⏸ 못 받은 달이 ${HF}개월 있어 force=1 을 남겨 둡니다 — 다음 판이 다시 받습니다" | tee -a "$RUNNER_TEMP/hist.log"
+              fi
             fi
             # ── 🔒 한 단지 끝날 때마다 **바로 밀어 둔다** (2026-09-02 오너 "단지마다 바로 커밋")
             #
