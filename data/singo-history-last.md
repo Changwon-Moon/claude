@@ -116,9 +116,21 @@
 > tsx src/molitHistoryCli.ts -- --lawd 41210 --apt '이편한세상센트레빌' --umd '하안동' --type 59 --from 202001 --force
 
 이편한세상센트레빌 · 전용 59타입 · 41210 · 202001~202609 (81개월)
+⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202607 은 캐시로 메웁니다(2026-09-08 접음) — API 가 안 열렸습니다
+⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202608 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
+⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
+⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202609 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
 /home/runner/work/claude/claude/data/datasets/singo-history/41210-이편한세상센트레빌-59.json
 거래 있던 달 68/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
 최고가 11.7억 (2026-09-04 · 전용 59.982㎡ 28층)
 
 ── 평촌더샵아이파크 전용 59타입 (41173)
@@ -127,9 +139,21 @@
 > tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '평촌더샵아이파크' --umd '호계동' --type 59 --from 202001 --force
 
 평촌더샵아이파크 · 전용 59타입 · 41173 · 202001~202609 (81개월)
+⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202607 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
+⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202608 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
+⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
+⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+⚠️ 1/81개월을 못 받았습니다 — 그 달은 곡선에서 끊깁니다.
 /home/runner/work/claude/claude/data/datasets/singo-history/41173-평촌더샵아이파크-59.json
-거래 있던 달 61/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+거래 있던 달 61/81 · 수집 실패 1개월
+📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
 최고가 11.1억 (2026-08-31 · 전용 59.8㎡ 7층)
 
 ── 광주역자연앤자이 전용 84타입 (41610)
@@ -138,9 +162,21 @@
 > tsx src/molitHistoryCli.ts -- --lawd 41610 --apt '광주역자연앤자이' --umd '역동' --type 84 --from 202001 --force
 
 광주역자연앤자이 · 전용 84타입 · 41610 · 202001~202609 (81개월)
+⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202607 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
+⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202608 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
+⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
+⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202609 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
 /home/runner/work/claude/claude/data/datasets/singo-history/41610-광주역자연앤자이-84.json
 거래 있던 달 40/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
 최고가 9.9억 (2026-08-29 · 전용 84.5516㎡ 8층)
 
 ── 병점역아이파크캐슬 전용 84타입 (41595)
@@ -149,9 +185,21 @@
 > tsx src/molitHistoryCli.ts -- --lawd 41595 --apt '병점역아이파크캐슬' --umd '병점동' --type 84 --from 202001 --force
 
 병점역아이파크캐슬 · 전용 84타입 · 41595 · 202001~202609 (81개월)
+⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202607 은 캐시로 메웁니다(2026-09-08 접음) — API 가 안 열렸습니다
+⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202608 은 캐시로 메웁니다(2026-09-10 접음) — API 가 안 열렸습니다
+⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
+⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202609 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
 /home/runner/work/claude/claude/data/datasets/singo-history/41595-병점역아이파크캐슬-84.json
 거래 있던 달 46/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
 최고가 9.4억 (2026-09-11 · 전용 84.97㎡ 9층)
 
 ── 부영 전용 59타입 (41450)
@@ -160,9 +208,21 @@
 > tsx src/molitHistoryCli.ts -- --lawd 41450 --apt '부영' --umd '창우동' --type 59 --from 202001 --force
 
 부영 · 전용 59타입 · 41450 · 202001~202609 (81개월)
+⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202607 은 캐시로 메웁니다(2026-09-08 접음) — API 가 안 열렸습니다
+⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202608 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
+⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
+⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+⚠️ 1/81개월을 못 받았습니다 — 그 달은 곡선에서 끊깁니다.
 /home/runner/work/claude/claude/data/datasets/singo-history/41450-부영-59.json
-거래 있던 달 64/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+거래 있던 달 64/81 · 수집 실패 1개월
+📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
 최고가 8.3억 (2026-08-22 · 전용 59.97㎡ 3층)
 
 ── 수원하늘채더퍼스트1단지 전용 59타입 (41113)
@@ -171,9 +231,21 @@
 > tsx src/molitHistoryCli.ts -- --lawd 41113 --apt '수원하늘채더퍼스트1단지' --umd '곡반정동' --type 59 --from 202001 --force
 
 수원하늘채더퍼스트1단지 · 전용 59타입 · 41113 · 202001~202609 (81개월)
+⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202607 은 캐시로 메웁니다(2026-09-10 접음) — API 가 안 열렸습니다
+⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202608 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
+⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
+⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202609 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
 /home/runner/work/claude/claude/data/datasets/singo-history/41113-수원하늘채더퍼스트1단지-59.json
 거래 있던 달 40/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
 최고가 7.8억 (2026-09-12 · 전용 59.96㎡ 5층)
 
 ── 원천레이크파크 전용 59타입 (41117)
@@ -182,9 +254,21 @@
 > tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '원천레이크파크' --umd '원천동' --type 59 --from 202001 --force
 
 원천레이크파크 · 전용 59타입 · 41117 · 202001~202609 (81개월)
+⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202607 은 캐시로 메웁니다(2026-09-08 접음) — API 가 안 열렸습니다
+⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202608 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
+⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
+⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202609 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
 /home/runner/work/claude/claude/data/datasets/singo-history/41117-원천레이크파크-59.json
 거래 있던 달 73/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
 최고가 6.15억 (2026-09-05 · 전용 59.99㎡ 19층)
 
 ── 두산 전용 84타입 (11620)
