@@ -30,7 +30,7 @@
  * 재료(공급면적·곡선·역·주차)가 없으면 **대기열에 줄을 쓰고 거기서 멈춘다.**
  * Actions 가 받아 오면 같은 명령을 한 번 더 돌린다. 두 번째 판에서 카드가 나온다.
  */
-import { readFileSync, writeFileSync, existsSync, readdirSync, appendFileSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
@@ -249,8 +249,22 @@ for (const [name, path, lines, required] of QUEUES) {
     if (!fresh.length) {
       console.log(`   → ${path} — 이미 걸려 있는 줄뿐이라 더 쓰지 않았습니다`);
     } else {
-      appendFileSync(P(path), `\n# ${DATE} singo-daily-build 가 채운 줄\n${fresh.join("\n")}\n`, "utf8");
-      console.log(`   → ${path} 에 ${fresh.length}줄 썼습니다${fresh.length < lines.length ? ` (${lines.length - fresh.length}줄은 이미 있었습니다)` : ""}`);
+      /* ── ⚡ **오늘 줄은 맨 위에 쓴다** (2026-09-15 실측 → 2026-09-16 코드로)
+       *
+       * 수집기는 대기열을 **위에서 아래로** 훑는다. 그런데 여기서 뒤에 붙이니 오늘 카드에
+       * 꼭 필요한 줄이 늘 **맨 아래**에 놓였다 — 대기열이 300줄을 넘은 뒤로는 그게 곧
+       * 「오늘 것이 제일 늦게 온다」가 됐다. 09-15 에 239줄 중 맨 아래 7줄에 닿는 데
+       * **한 시간을 넘겼고**, 사람이 손으로 올려 옮기자 2분 만에 끝났다.
+       *
+       * 급한 것이 먼저다. 지난 줄들은 어차피 「이미 있음」으로 빠르게 지나간다.
+       * ⚠️ 머리말 주석(파일 첫 설명 블록)은 건드리지 않는다 — 맨 앞의 연속된 `#` 줄 뒤에 끼운다. */
+      const cur = existsSync(P(path)) ? readFileSync(P(path), "utf8") : "";
+      const curLines = cur.split("\n");
+      let head = 0;
+      while (head < curLines.length && (curLines[head].trim() === "" || curLines[head].trim().startsWith("#"))) head++;
+      const block = [`# ⚡ ${DATE} singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다`, ...fresh, ""];
+      writeFileSync(P(path), [...curLines.slice(0, head), ...block, ...curLines.slice(head)].join("\n"), "utf8");
+      console.log(`   → ${path} **맨 위**에 ${fresh.length}줄 썼습니다${fresh.length < lines.length ? ` (${lines.length - fresh.length}줄은 이미 있었습니다)` : ""}`);
     }
   }
 }
