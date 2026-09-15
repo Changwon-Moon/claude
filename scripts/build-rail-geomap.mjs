@@ -757,6 +757,54 @@ function buildOne(L0, opt = {}) {
     panelDiag = cov > 0 ? "nesw" : "nwse";
     PANELS = PANELS_FN(VARIANT, BH, panelDiag);
   }
+
+  /* ── 🔴 강조카드 (오너 2026-09-15 "우상단 지도 위에 착공뱃지 빨강 카드로 —
+     기존에 통화량에서 했던 강조카드").
+     규격은 `gov-bars@1` 의 `chart.badges` 와 **같다**: 흰→분홍 그라데이션 · 빨강 테두리 3px ·
+     라운드 16 · 네온(빨강 글로우 + 옅은 그림자) · 900 굵기. 한 계정 안에서 「강조」의 모양은
+     하나여야 한다 — 판형마다 다르게 그리면 독자가 그 빨강을 배우지 못한다.
+
+     ⚠️ **데이터셋이 `callout` 을 줄 때만 그린다.** 안 주면 앞 판과 한 픽셀도 다르지 않다
+        (확정본 7장 보호 — 이 파일은 노선 8장이 함께 쓴다).
+     ⚠️ 상자를 **PANELS 에 더한다.** 그래야 역 이름표도(1729줄) 워터마크도(1780줄) 이 자리를
+        알아서 피해 간다. 「여기는 비켜라」를 자리마다 손으로 적지 않는다.
+     ⚠️ 글자 폭은 **글자 종류로 잰다.** M2 는 숫자가 대부분이라 `길이 × 0.58` 로 됐지만
+        여기는 한글이라 그 자로 재면 상자가 좁게 나와 글자가 삐져나온다. */
+  let callout = null;
+  if (L.callout?.lines?.length && !opt.idSuffix) {
+    const CO_PADX = 24, CO_PADY = 22;
+    /* 한글·전각은 거의 1em, 숫자·영문은 0.56em, 공백 0.28em, 나머지 0.42em */
+    const emOf = (t) => [...t].reduce((a, ch) =>
+      a + (/[가-힣㄰-㆏！-｠]/.test(ch) ? 0.98
+        : /[0-9A-Za-z]/.test(ch) ? 0.56 : ch === " " ? 0.28 : 0.42), 0);
+    const raw = [...L.callout.lines];
+    /* 「2년 8개월 만」의 **숫자는 코드가 센다.** 손으로 적으면 착공일이 바뀔 때 문장만 남는다
+       (§2 가 오보가 나는 자리라 부르는 곳). 기념식→본공사 두 날짜에서 개월을 세어 만든다. */
+    if (L.callout.since) {
+      const a = /^(\d{4})\.(\d{2})$/.exec(L.callout.since);
+      const b = /^(\d{4})\.(\d{2})$/.exec(L.start);
+      if (!a || !b) throw new Error(`${L.name}: 강조카드 since/착공 표기가 YYYY.MM 이 아니다`);
+      const n = (+b[1] - +a[1]) * 12 + (+b[2] - +a[2]);
+      if (n <= 0) throw new Error(`${L.name}: 강조카드 since(${L.callout.since})가 착공(${L.start}) 뒤다`);
+      const yy = Math.floor(n / 12), mm = n % 12;
+      const t = `${yy ? `${yy}년 ` : ""}${mm ? `${mm}개월 ` : ""}${L.callout.sinceWord || "만"}`.trim();
+      raw.push({ t, fs: L.callout.sinceFs || 26 });
+    }
+    const lines = raw.map((l) => {
+      const fs = l.fs || 34;
+      return { t: l.t, fs, lh: Math.round(fs * 1.35), w: emOf(l.t) * fs };
+    });
+    const w = Math.round(Math.max(...lines.map((l) => l.w))) + CO_PADX * 2;
+    const h = lines.reduce((a, l) => a + l.lh, 0) + CO_PADY * 2 - 8;
+    /* 자리는 **오른쪽 위**가 기본이다(오너 지시). 정보 상자가 이미 오른쪽 위에 있는 노선
+       (panelDiag==="nesw")이면 거기에 겹치므로 **왼쪽 위**로 간다 — 빈 대각선을 고르는
+       이 판형의 규칙을 강조카드도 따른다. */
+    const right = panelDiag !== "nesw";
+    const x = right ? MAP_W - 14 - w : 14;
+    const y = 22;
+    callout = { x, y, w, h, padx: CO_PADX, pady: CO_PADY, lines };
+    PANELS = [...PANELS, { x0: x, x1: x + w, y0: y, y1: y + h }];
+  }
   const d = (g) => g.map((p, i) => `${i ? "L" : "M"}${X(p.lon).toFixed(1)},${Y(p.lat).toFixed(1)}`).join("");
 
   /* ── 역 점·이름.
@@ -1824,6 +1872,27 @@ function buildOne(L0, opt = {}) {
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${MAP_W} ${BH}" width="${MAP_W}" height="${BH}">` +
     `<defs><clipPath id="${clipId}"><rect x="${clipL.toFixed(1)}" y="0" width="${(clipR - clipL).toFixed(1)}" height="${BH}" rx="13"/></clipPath></defs>` +
     `<g clip-path="url(#${clipId})">${land}${sidoLine}${river}${ctx}${sggNm}${line}${inMap}</g>${outMap}${wmSvg}` +
+    /* 강조카드는 **워터마크 위·테두리 아래**다. 클립 밖이라 잘리지 않는다.
+       ⚠️ 그라데이션·필터 id 는 토막 지도(svg 둘)에서 부딪히므로 clipId 와 같은 꼬리를 단다. */
+    (callout ? (() => {
+      const gid = `rgmco-bg-${L.key}-${VARIANT}`, fid = `rgmco-neon-${L.key}-${VARIANT}`;
+      const { x, y, w, h, padx, pady, lines } = callout;
+      let ty = y + pady + lines[0].fs - 4;
+      const tspans = lines.map((l, i) => {
+        const dy = i === 0 ? 0 : lines[i].lh;
+        return `<tspan x="${(x + w / 2).toFixed(1)}" dy="${dy}" font-size="${l.fs}">${l.t}</tspan>`;
+      }).join("");
+      return `<defs>` +
+        `<linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">` +
+          `<stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#fff0f1"/></linearGradient>` +
+        `<filter id="${fid}" x="-40%" y="-40%" width="180%" height="180%">` +
+          `<feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="#e5484d" flood-opacity="0.38"/>` +
+          `<feDropShadow dx="0" dy="3" stdDeviation="10" flood-color="#141821" flood-opacity="0.10"/></filter></defs>` +
+        `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="16" ` +
+          `fill="url(#${gid})" stroke="#e5484d" stroke-width="3" filter="url(#${fid})"/>` +
+        `<text x="${(x + w / 2).toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="middle" ` +
+          `fill="#e5484d" font-weight="900" letter-spacing="-0.03em">${tspans}</text>`;
+    })() : "") +
     /* 테두리는 **맨 위에, 클립 밖에서** 긋는다 — 클립 안에서 그으면 자기 자신이 반쯤 잘린다. */
     `<rect x="1.5" y="1.5" width="${(MAP_W - 3).toFixed(1)}" height="${(BH - 3).toFixed(1)}" rx="13" fill="none" stroke="#141821" stroke-width="3"/></svg>`;
 
