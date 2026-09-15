@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-15T01:49:47.928Z",
+  "generatedAt": "2026-09-15T03:55:55.388Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -776,7 +776,7 @@
       "maxDelay": null,
       "lastRun": "2026-09-08",
       "lastOk": "2026-09-08",
-      "okDaysAgo": 6
+      "okDaysAgo": 7
     },
     {
       "file": "wage-bracket-collect.yml",
@@ -1031,9 +1031,9 @@
       "file": "apt-area-probe.yml",
       "name": "공급면적 탐침 (K-apt 전용률 · 건축물대장 실측)",
       "lastRun": "2026-08-17",
-      "daysAgo": 28,
+      "daysAgo": 29,
       "lastOk": "2026-08-17",
-      "okDaysAgo": 28,
+      "okDaysAgo": 29,
       "fails30": 0,
       "runs30": 25
     },
@@ -1041,9 +1041,9 @@
       "file": "collect.yml",
       "name": "데이터 수집 (daily)",
       "lastRun": "2026-08-29",
-      "daysAgo": 16,
+      "daysAgo": 17,
       "lastOk": "2026-08-29",
-      "okDaysAgo": 16,
+      "okDaysAgo": 17,
       "fails30": 0,
       "runs30": 10
     },
@@ -1224,7 +1224,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-07",
       "okDaysAgo": 7,
-      "fails30": 23,
+      "fails30": 24,
       "runs30": 100
     },
     {
@@ -1234,17 +1234,17 @@
       "daysAgo": 0,
       "lastOk": "2026-09-07",
       "okDaysAgo": 7,
-      "fails30": 23,
-      "runs30": 26
+      "fails30": 24,
+      "runs30": 27
     },
     {
       "file": "auto-produce.yml",
       "name": "데이터 바뀌면 카드 자동 재생산",
-      "lastRun": "2026-09-14",
+      "lastRun": "2026-09-15",
       "daysAgo": 0,
-      "lastOk": "2026-09-14",
+      "lastOk": "2026-09-15",
       "okDaysAgo": 0,
-      "fails30": 12,
+      "fails30": 11,
       "runs30": 100
     },
     {
@@ -1254,7 +1254,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-15",
       "okDaysAgo": 0,
-      "fails30": 9,
+      "fails30": 8,
       "runs30": 100
     },
     {
@@ -1275,7 +1275,7 @@
       "lastOk": "2026-09-15",
       "okDaysAgo": 0,
       "fails30": 0,
-      "runs30": 39
+      "runs30": 40
     },
     {
       "file": "singo-history.yml",
@@ -1285,7 +1285,7 @@
       "lastOk": "2026-09-15",
       "okDaysAgo": 0,
       "fails30": 4,
-      "runs30": 66
+      "runs30": 67
     },
     {
       "file": "singo-prep.yml",
