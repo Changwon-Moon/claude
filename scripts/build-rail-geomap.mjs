@@ -29,7 +29,7 @@ import { writeCaption } from "./lib/caption-signature.mjs";
 import { hanRiverPoints } from "./lib/han-river.mjs";
 import {
   metres, rings, ringCentroid, pointInGeom, dongCentre,
-  buildTrack, projectOnTrack, pointAt, monotonicPositions, buildPeriod,
+  buildTrack, projectOnTrack, pointAt, monotonicPositions, buildPeriod, periodFromMonths,
 } from "./lib/rail-geo.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -1842,8 +1842,14 @@ function buildOne(L0, opt = {}) {
      시점이 다 다르다(오너 2026-09-12 "99.9%로 할거면 미개통 노선과 역들에 대한 일정을 넣어줘").
      데이터셋이 `facts` 를 주면 그걸 쓰고, 안 주면 앞 판 그대로다. */
   const facts = (L.facts?.length ? L.facts : [
-    { k: "착공", v: L.start },
-    { k: "예상 공사기간", v: buildPeriod(L.start, L.openNow) },
+    /* 「착공」 라벨을 노선이 바꿀 수 있다 — GTX-C 는 2024.01 기념식과 2026.09 본공사가
+       둘 다 '착공'이라 불려서, 라벨이 어느 쪽인지 말하지 않으면 독자가 가른다(2026-09-15). */
+    { k: L.startLabel || "착공", v: L.start },
+    /* 발표된 공사기간이 있으면 그것을, 없으면 앞처럼 착공~개통에서 역산한다.
+       발표값은 periodFromMonths 가 개통 목표 구간 안인지 재고 벗어나면 던진다. */
+    { k: "예상 공사기간", v: L.periodMonths
+        ? periodFromMonths(L.start, L.openNow, L.periodMonths)
+        : buildPeriod(L.start, L.openNow) },
     { k: "연장", v: L.km },
     { k: "정거장", v: L.stationNote },
     { k: "총사업비", v: L.cost },
@@ -1853,7 +1859,11 @@ function buildOne(L0, opt = {}) {
   const card = {
     template: "rail-geomap@1", date, lc, variant: VARIANT, splitInfo: SPLIT_INFO && !WIDE && !MERGE,
     panelSide: panelDiag, wideCls: WIDE ? "is-wide" : "",
-    subtitle: `서울 수도권 주요 노선 · 공사 현황 · ${rail.meta.asOfLabel} 기준`,
+    /* 🔴 부제의 기준일은 **노선이 덮어쓸 수 있다**(L.asOfLabel, 2026-09-15 GTX-C 착공).
+       데이터셋 meta.asOfLabel 을 고치면 16장이 전부 바뀌므로 노선별로 받는다.
+       ⚠️ 덮는 것은 **부제뿐**이다 — 아래 prog.asOf 와 캡션의 「※ 공정률은 …」은
+          공단 기준일(meta.asOfLabel)에 그대로 묶여 있다. 공정률은 그 달의 값이기 때문이다. */
+    subtitle: `서울 수도권 주요 노선 · 공사 현황 · ${L.asOfLabel || rail.meta.asOfLabel} 기준`,
     title: `<span class="ln wirit-linecolor">${L.name}</span> ${L.titleAsk || "언제 개통하지?"}`,
     mapSvg,
     prog: { value: L.progressText, asOf: L.progressNote || `${rail.meta.asOfLabel} · 국가철도공단`,
@@ -1899,7 +1909,14 @@ mkdirSync(outDir, { recursive: true });
 
 let made = 0;
 const skipped = [];   /* 못 그린 노선 — 끝에서 한 번 더 크게 말한다 */
-for (const L of rail.lines) {
+for (const L0 of rail.lines) {
+  /* 🔴 **한 노선만 기준일이 앞서 나갈 때** 쓰는 덮개 (2026-09-15 GTX-C 본공사 착공).
+     데이터셋 하나를 노선 카드 16장(도식형 8 + 지도판 8)이 함께 쓴다. gtxc 항목을 그냥 고치면
+     **도식형 확정본까지 같이 바뀐다.** 그래서 갱신분은 `updated` 블록에 따로 담고,
+     **이 빌더만** 그걸 덮어쓴다 — build-rail-line.mjs 는 `updated` 를 읽지 않으므로
+     도식형 픽셀은 움직이지 않는다(md5 로 확인한다).
+     ⚠️ 두 판형이 다른 사실을 말하는 상태이므로, 그 사실을 sets.json 의 note 가 적는다. */
+  const L = L0.updated ? { ...L0, ...L0.updated } : L0;
   if (ONLY && L.key !== ONLY) continue;
   if (!probe.결과?.some((x) => x.key === L.key && x.좌표?.length)) {
     console.log(`⏭ ${L.name} — OSM 선형이 아직 없다 (rail-geo.yml 을 그 노선으로 돌리세요)`);
@@ -2015,7 +2032,7 @@ for (const L of rail.lines) {
     `🗺️ ${L.name}, 지도 위에 그리면 우리 동네를 지날까?`, "",
     `공정률 ${L.progressText}%`,
     `📅 당초 ${L.openWas} → 지금 ${L.openNow}`, "",
-    `📍 ${L.start.replace(/^(\d{4})\.0?(\d{1,2})$/, "$1년 $2")}월 착공 · ${L.km} · ${L.stationNote}`,
+    `📍 ${L.start.replace(/^(\d{4})\.0?(\d{1,2})$/, "$1년 $2")}월 ${L.startLabel || "착공"} · ${L.km} · ${L.stationNote}`,
     /* ⚠️ 앞 판은 `🔗 선로 공용 — ${L.shared}` 였는데 L.shared 안에 이미 「선로 공용」이 들어 있어
        「선로 공용 — … 선로 공용 …」이 됐다. 데이터에 든 말을 앞에 또 붙이지 않는다. */
     L.shared ? `🔗 ${L.shared}` : null,

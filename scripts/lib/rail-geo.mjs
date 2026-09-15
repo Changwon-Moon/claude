@@ -164,6 +164,46 @@ export function monotonicPositions(anchors, trackLen) {
  *
  * 개통이 '미정'이면 **산정하지 않는다** — 없는 값을 지어내지 않는다.
  */
+/**
+ * 🔴 **발표된** 공사기간을 쓸 때 (2026-09-15 GTX-C 본공사 착공에서 처음 필요해졌다).
+ *
+ * buildPeriod 는 착공~개통에서 **역산**한다. 그런데 개통 목표에 달이 없고 「2031년 하반기」
+ * 처럼 반기로만 말하면 역산은 12월로 잡아 63개월이 나온다 — 국토부가 발표한 **60개월**과
+ * 어긋난다. 카드가 5년 3개월이라 적고 기사가 60개월이라 적으면 독자는 어느 쪽이 맞는지 모른다.
+ *
+ * 그래서 발표값이 있으면 그걸 쓴다. 다만 **옮겨 적은 값을 그대로 믿지 않는다** —
+ * 착공 + 발표 개월수가 개통 목표가 말하는 구간 **안에 떨어지는지 코드가 재고, 벗어나면 던진다.**
+ * (둘 중 하나가 갱신됐는데 다른 하나가 안 따라온 상태를 이 가드가 잡는다.)
+ *
+ * 개월 → 글자는 코드가 만든다. 「약 5년」을 데이터에 손으로 적지 않는다.
+ */
+export function periodFromMonths(start, openNow, months) {
+  const s = /^(\d{4})\.(\d{2})$/.exec(start || "");
+  if (!s) throw new Error(`착공 표기가 YYYY.MM 이 아니다: ${start}`);
+  if (!(months > 0)) throw new Error(`발표 공사기간이 0 이하다: ${months}`);
+  const y = /(\d{4})\s*년/.exec(openNow || "");
+  if (!y) throw new Error(`발표 공사기간을 쓰려면 개통 목표에 연도가 있어야 한다: ${openNow}`);
+
+  /* 개통 목표가 가리키는 **달의 구간**. 「하반기」=7~12 · 「상반기」=1~6 ·
+     「말」=12 · 달을 콕 집었으면 그 달 하나 · 연도만 있으면 1~12. */
+  const mm = /(\d{1,2})\s*월/.exec(openNow);
+  const [lo, hi] = /하반기/.test(openNow) ? [7, 12]
+    : /상반기/.test(openNow) ? [1, 6]
+    : /말/.test(openNow) ? [12, 12]
+    : mm ? [+mm[1], +mm[1]] : [1, 12];
+
+  const endAbs = (+s[1]) * 12 + (+s[2]) + months;      // 준공 시점을 '달 수'로
+  const loAbs = (+y[1]) * 12 + lo, hiAbs = (+y[1]) * 12 + hi;
+  if (endAbs < loAbs || endAbs > hiAbs) {
+    const ey = Math.floor((endAbs - 1) / 12), em = ((endAbs - 1) % 12) + 1;
+    throw new Error(
+      `발표 공사기간 ${months}개월이 개통 목표 「${openNow}」 밖이다 — ` +
+      `${start} + ${months}개월 = ${ey}.${String(em).padStart(2, "0")}`);
+  }
+  const yy = Math.floor(months / 12), rm = months % 12;
+  return `약 ${yy}년${rm ? ` ${rm}개월` : ""}`;
+}
+
 export function buildPeriod(start, openNow) {
   const s = /^(\d{4})\.(\d{2})$/.exec(start || "");
   if (!s) throw new Error(`착공 표기가 YYYY.MM 이 아니다: ${start}`);
