@@ -772,39 +772,44 @@ function buildOne(L0, opt = {}) {
         여기는 한글이라 그 자로 재면 상자가 좁게 나와 글자가 삐져나온다. */
   let callout = null;
   if (L.callout?.lines?.length && !opt.idSuffix) {
-    const CO_PADX = 24, CO_PADY = 22;
-    /* 한글·전각은 거의 1em, 숫자·영문은 0.56em, 공백 0.28em, 나머지 0.42em */
+    /* 오른쪽 위 모서리에서 띄우는 양. 정보 패널은 18px 인데 이 상자는 **네온 글로우가
+       바깥으로 14px 번지므로** 같은 18 로 두면 빛이 테두리에 닿아 좁아 보인다
+       (오너 2026-09-15 "우측 여백이 좁은것 같아"). 글로우 몫을 더해 24 로 띄운다. */
+    const CO_INSET = L.callout.inset ?? 24, CO_TOP = L.callout.top ?? 22;
+    const CO_PADX = L.callout.padx ?? 20, CO_PADY = L.callout.pady ?? 20;
+    const w = L.callout.w ?? 240;
+    const inner = w - CO_PADX * 2;
+
+    /* 🔴 **줄마다 폰트 크기를 따로 잰다** — 오너 2026-09-15 "카드 좌우 꽉차게".
+       한 크기로 두면 글자 수 차이만큼 짧은 줄의 좌우가 빈다(CARD_CHECKLIST §2 제목 규칙과
+       같은 자리다). 줄 폭을 em 으로 재서 `안쪽 폭 ÷ em` 을 그 줄의 크기로 삼는다.
+       그리고 SVG `textLength` + `lengthAdjust` 로 **정확히** 안쪽 폭에 맞춘다 —
+       em 어림은 크기를 고르는 데만 쓰고, 최종 정렬은 브라우저가 책임진다.
+       ⚠️ 글자 종류로 잰다. 한글은 거의 1em, 숫자·영문은 0.56em 이라 한 자로는 못 잰다. */
     const emOf = (t) => [...t].reduce((a, ch) =>
-      a + (/[가-힣㄰-㆏！-｠]/.test(ch) ? 0.98
+      a + (/[\uAC00-\uD7A3\u3130-\u318F\uFF01-\uFF60]/.test(ch) ? 0.98
         : /[0-9A-Za-z]/.test(ch) ? 0.56 : ch === " " ? 0.28 : 0.42), 0);
-    const raw = [...L.callout.lines];
-    /* 「2년 8개월 만」의 **숫자는 코드가 센다.** 손으로 적으면 착공일이 바뀔 때 문장만 남는다
-       (§2 가 오보가 나는 자리라 부르는 곳). 기념식→본공사 두 날짜에서 개월을 세어 만든다. */
-    if (L.callout.since) {
-      const a = /^(\d{4})\.(\d{2})$/.exec(L.callout.since);
-      const b = /^(\d{4})\.(\d{2})$/.exec(L.start);
-      if (!a || !b) throw new Error(`${L.name}: 강조카드 since/착공 표기가 YYYY.MM 이 아니다`);
-      const n = (+b[1] - +a[1]) * 12 + (+b[2] - +a[2]);
-      if (n <= 0) throw new Error(`${L.name}: 강조카드 since(${L.callout.since})가 착공(${L.start}) 뒤다`);
-      const yy = Math.floor(n / 12), mm = n % 12;
-      const t = `${yy ? `${yy}년 ` : ""}${mm ? `${mm}개월 ` : ""}${L.callout.sinceWord || "만"}`.trim();
-      raw.push({ t, fs: L.callout.sinceFs || 26 });
-    }
-    const lines = raw.map((l) => {
-      const fs = l.fs || 34;
-      return { t: l.t, fs, lh: Math.round(fs * 1.35), w: emOf(l.t) * fs };
+    /* 서체는 카드의 토큰을 그대로 쓴다 — 제목은 태백체, 숫자는 프리텐다드
+       (오너 2026-09-15 · BRAND.md §4 와 같은 가름). SVG 에는 style 로 넣어야 var() 가 산다. */
+    const FONT = { title: "var(--font-taebaek)", pretendard: "var(--font-pretendard)", num: "var(--font-num)" };
+    const lines = L.callout.lines.map((l) => {
+      const em = emOf(l.t);
+      if (!(em > 0)) throw new Error(`${L.name}: 강조카드 빈 줄`);
+      const fs = Math.max(18, Math.min(60, Math.round(inner / em)));
+      const ff = FONT[l.font || "pretendard"];
+      if (!ff) throw new Error(`${L.name}: 강조카드 서체 '${l.font}' 를 모른다 (title|pretendard|num)`);
+      return { t: l.t, fs, ff, lh: Math.round(fs * 1.34) };
     });
-    const w = Math.round(Math.max(...lines.map((l) => l.w))) + CO_PADX * 2;
-    const h = lines.reduce((a, l) => a + l.lh, 0) + CO_PADY * 2 - 8;
+    const h = lines.reduce((a, l) => a + l.lh, 0) + CO_PADY * 2;
     /* 자리는 **오른쪽 위**가 기본이다(오너 지시). 정보 상자가 이미 오른쪽 위에 있는 노선
        (panelDiag==="nesw")이면 거기에 겹치므로 **왼쪽 위**로 간다 — 빈 대각선을 고르는
        이 판형의 규칙을 강조카드도 따른다. */
     const right = panelDiag !== "nesw";
-    const x = right ? MAP_W - 14 - w : 14;
-    const y = 22;
-    callout = { x, y, w, h, padx: CO_PADX, pady: CO_PADY, lines };
-    PANELS = [...PANELS, { x0: x, x1: x + w, y0: y, y1: y + h }];
+    const x = right ? MAP_W - CO_INSET - w : CO_INSET;
+    callout = { x, y: CO_TOP, w, h, padx: CO_PADX, pady: CO_PADY, inner, lines };
+    PANELS = [...PANELS, { x0: x, x1: x + w, y0: CO_TOP, y1: CO_TOP + h }];
   }
+
   const d = (g) => g.map((p, i) => `${i ? "L" : "M"}${X(p.lon).toFixed(1)},${Y(p.lat).toFixed(1)}`).join("");
 
   /* ── 역 점·이름.
@@ -1876,11 +1881,30 @@ function buildOne(L0, opt = {}) {
        ⚠️ 그라데이션·필터 id 는 토막 지도(svg 둘)에서 부딪히므로 clipId 와 같은 꼬리를 단다. */
     (callout ? (() => {
       const gid = `rgmco-bg-${L.key}-${VARIANT}`, fid = `rgmco-neon-${L.key}-${VARIANT}`;
-      const { x, y, w, h, padx, pady, lines } = callout;
-      let ty = y + pady + lines[0].fs - 4;
-      const tspans = lines.map((l, i) => {
-        const dy = i === 0 ? 0 : lines[i].lh;
-        return `<tspan x="${(x + w / 2).toFixed(1)}" dy="${dy}" font-size="${l.fs}">${l.t}</tspan>`;
+      const { x, y, w, h, padx, pady, inner, lines } = callout;
+      const cx2 = x + w / 2;
+      let base = y + pady;                       // 줄 상자의 위쪽
+      const texts = lines.map((l) => {
+        /* 🔴 baseline 을 손으로 잡지 않는다. 앞 판은 `폰트 × 0.78` 로 어림했는데
+           줄마다 크기가 달라 **글자 덩어리가 아래로 치우쳤다**(실측 위 21px · 아래 37px).
+           줄 상자의 **가운데**에 `dominant-baseline="central"` 로 앉히면 크기가 몇이든
+           위아래가 같아진다 — 브라우저가 그 폰트의 실제 중심을 안다.
+           남는 것은 **시각 중심과 em 중심의 차**다. em 상자에는 한글에 안 쓰이는 디센더
+           자리가 들어 있어 em 중심이 글자의 시각 중심보다 **위**에 온다.
+           렌더한 PNG 의 빨강 픽셀을 세어 재 보니 아래 여백이 10 device px(=5 map px) 더
+           넓었다 → 폰트의 0.06em 만큼 **내린다**.
+           ⚠️ **실측값이다.** 눈대중으로 적지 않는다(§2 — 눈대중으로 적었다가 두 번 어긋났다).
+           ⚠️ 처음에 부호를 거꾸로 잡아 10px 이 20px 로 벌어졌다. 재 보고 알았다 —
+              「이쪽이 맞겠지」로 정하지 말고 **렌더해서 세어 본다**. */
+        const OPTICAL = 0.06;
+        const by = base + l.lh / 2 + l.fs * OPTICAL;
+        base += l.lh;
+        /* textLength + lengthAdjust 로 **안쪽 폭에 정확히** 채운다. em 어림으로 고른
+           크기가 이미 가깝기 때문에 글자가 눈에 띄게 늘거나 눌리지 않는다. */
+        return `<text x="${x + padx}" y="${by.toFixed(1)}" textLength="${inner}" ` +
+          `lengthAdjust="spacingAndGlyphs" dominant-baseline="central" ` +
+          `style="font-family:${l.ff}" font-size="${l.fs}" ` +
+          `fill="#e5484d" font-weight="900">${l.t}</text>`;
       }).join("");
       return `<defs>` +
         `<linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">` +
@@ -1890,8 +1914,7 @@ function buildOne(L0, opt = {}) {
           `<feDropShadow dx="0" dy="3" stdDeviation="10" flood-color="#141821" flood-opacity="0.10"/></filter></defs>` +
         `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="16" ` +
           `fill="url(#${gid})" stroke="#e5484d" stroke-width="3" filter="url(#${fid})"/>` +
-        `<text x="${(x + w / 2).toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="middle" ` +
-          `fill="#e5484d" font-weight="900" letter-spacing="-0.03em">${tspans}</text>`;
+        texts;
     })() : "") +
     /* 테두리는 **맨 위에, 클립 밖에서** 긋는다 — 클립 안에서 그으면 자기 자신이 반쯤 잘린다. */
     `<rect x="1.5" y="1.5" width="${(MAP_W - 3).toFixed(1)}" height="${(BH - 3).toFixed(1)}" rx="13" fill="none" stroke="#141821" stroke-width="3"/></svg>`;
