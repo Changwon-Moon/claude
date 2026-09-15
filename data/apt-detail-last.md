@@ -2,6 +2,7 @@
 
 - 대기열: 203줄
 - 결과: **성공**
+- ⚠️ 이번 실행은 **국토부에 붙지 않았습니다**(전부 이미 있음) — API 가 살아 있다는 증거로 쓰지 마세요
 
 ```
 ⏭ 이미 있음 — data/datasets/apt-detail/A44340013.json (다시 받으려면 force=1)
@@ -203,39 +204,12 @@
 ⏭ 이미 있음 — data/datasets/apt-detail/A13184609.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A43105102.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A10023699.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A13611103.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A13971502.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A13613008.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A44072212.json (다시 받으려면 force=1)
 
-── A13611103
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A13611103
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A13611103.json
-A13611103 주차 지상 135 + 지하 1171 = **1306대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
-
-── A13971502
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A13971502
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A13971502.json
-A13971502 주차 지상 857 + 지하 0 = **857대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
-
-── A13613008
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A13613008
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A13613008.json
-A13613008 주차 지상 186 + 지하 2476 = **2662대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
-
-── A44072212
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A44072212
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A44072212.json
-A44072212 주차 지상 259 + 지하 1078 = **1337대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
-
-실제로 받아 본 단지 4곳 · 이미 있어 건너뛴 것 199곳
+실제로 받아 본 단지 0곳 · 이미 있어 건너뛴 것 203곳
+ⓘ 이번 실행은 **국토부에 한 번도 붙지 않았습니다** — 이 초록불은 API 가 살아 있다는 증거가 아닙니다.
 ✅ 대기열 전 줄 완료
 ```
