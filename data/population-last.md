@@ -1,65 +1,47 @@
 # 인구 수집 마지막 실행
 
-- 실행: 2026-08-31 (KST) · 방아쇠 `push`
+- 실행: 2026-09-15 (KST) · 방아쇠 `push`
 - 조건: 최근 25개월 · 신호 문턱 45점 · 상위 8건
 - 보드 자동 등록: 끔(오너가 직접 고릅니다)
-- 결과: **성공**
-- 커밋: `bac922fb9a23d6c5af24a9645c94299db7524b98`
+- 결과: **실패**
+- 커밋: `08b4ab0fac950f2b8ee1748c979e7bd7601dcce8`
 
 ## 수집 로그
 ```
 
 > @wirit/collectors@0.1.0 collect-population /home/runner/work/claude/claude/packages/collectors
-> tsx src/kosisCli.ts -- --today 2026-08-31 --months 25 --min 45
+> tsx src/kosisCli.ts -- --today 2026-09-15 --months 25 --min 45
 
-· 인구 코드 변환 → 지도 코드: 6269/6888행
-::warning::· 인구 전국 대조 2026-07: 우리 합계 47,027,209 / 전국 51,088,284 — 차이 7.9%
-   → 빠진 시군구가 있습니다. 이 지표로 전국 순위·합계 카드를 만들면 그만큼 틀립니다.
-· 인구(DT_1B040A3) — 시군구 255곳 · 시점 25개
-· 세대수 코드 변환 → 지도 코드: 6269/6888행
-::warning::· 세대수 전국 대조 2026-07: 우리 합계 22,500,844 / 전국 24,487,153 — 차이 8.1%
-   → 빠진 시군구가 있습니다. 이 지표로 전국 순위·합계 카드를 만들면 그만큼 틀립니다.
-· 세대수(DT_1B040B3) — 시군구 255곳 · 시점 25개
-· 이동 코드 변환 → 지도 코드: 648/762행
-· 이동(DT_1B26001_A01) — 시군구 216곳 · 시점 3개
-· 고령인구(DT_1B04006) — 202507~202607(14시점) · 지역 250곳을 23개씩 11번에 나눠 받습니다(4만 셀 한도)
-   5/11
-   10/11
-   11/11
-· 고령인구 코드 변환 → 지도 코드: 3192/3192행
-· 고령인구(DT_1B04006) — 시군구 250곳 · 시점 13개
-· 출생 코드 변환 → 지도 코드: 750/789행
-::warning::· 출생 전국 대조 2025-12: 우리 합계 246,329 / 전국 254,341 — 차이 3.2%
-   → 빠진 시군구가 있습니다. 이 지표로 전국 순위·합계 카드를 만들면 그만큼 틀립니다.
-· 출생(DT_1B81A03) — 시군구 251곳 · 시점 3개
-· 사망 코드 변환 → 지도 코드: 489/525행
-· 사망 전국 대조 2024-12: 우리 합계 348,336 / 전국 358,569 — 차이 2.9%
-· 사망(DT_1B34E13) — 시군구 246곳 · 시점 2개
-· 기준 인구 시계열 255곳 (202407~202607)
-· 지도 조인 — 맞음 255 · 지도에 없음 0 · 데이터에 없음 0
-
-✅ 2026-07 기준 · 문턱 45점 넘은 소재 32건
-    64점  [streak] 강서구, 24개월 연속 인구 감소  — 24개월 연속 감소·서울·50만 이상
-    62점  [topmove] 1년 새 인구가 가장 많이 늘어난 시군구 TOP10  — 전국 순위·1위 신안군
-    62점  [topmove] 1년 새 인구가 가장 많이 줄어든 시군구 TOP10  — 전국 순위·1위 목포시
-    59점  [streak] 은평구, 24개월 연속 인구 감소  — 24개월 연속 감소·서울
-    59점  [streak] 마포구, 24개월 연속 인구 감소  — 24개월 연속 감소·서울
-    59점  [streak] 양천구, 24개월 연속 인구 감소  — 24개월 연속 감소·서울
-    58점  [streak] 서구, 23개월 연속 인구 증가  — 23개월 연속 증가·수도권·50만 이상
-    58점  [streak] 평택시, 24개월 연속 인구 증가  — 24개월 연속 증가·수도권·50만 이상
-    58점  [streak] 파주시, 24개월 연속 인구 증가  — 24개월 연속 증가·수도권·50만 이상
-    54점  [streak] 용산구, 24개월 연속 인구 감소  — 24개월 연속 감소·서울
-
-⚠️ 전국 대조에서 벌어진 지표 3개: 인구 7.9% 부족(2026-07) · 세대수 8.1% 부족(2026-07) · 출생 3.2% 부족(2025-12)
-   빠진 시군구가 있다는 뜻입니다 — 그 지표로 전국 순위·합계를 말하면 그만큼 틀립니다.
+::error::인구(DT_1B040A3) 수집 실패 — GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T20&objL1=ALL&format=json&jsonVD=Y&prdSe=M&orgId=101&tblId=DT_1B040A3&startPrdDe=202408&endPrdDe=202608
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: kosis.kr:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+  → 나머지 표는 계속 받습니다. 이 표는 이번 회차 산출물에서 빠집니다.
+::error::세대수(DT_1B040B3) 수집 실패 — GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T1&objL1=ALL&format=json&jsonVD=Y&prdSe=M&orgId=101&tblId=DT_1B040B3&startPrdDe=202408&endPrdDe=202608
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: kosis.kr:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+  → 나머지 표는 계속 받습니다. 이 표는 이번 회차 산출물에서 빠집니다.
+::error::이동(DT_1B26001_A01) 수집 실패 — GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T25&objL1=ALL&format=json&jsonVD=Y&prdSe=Y&orgId=101&tblId=DT_1B26001_A01&startPrdDe=2023&endPrdDe=2026
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: kosis.kr:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+  → 나머지 표는 계속 받습니다. 이 표는 이번 회차 산출물에서 빠집니다.
+· 고령인구(DT_1B04006) — 202508~202608(14시점) · 지역 250곳을 23개씩 11번에 나눠 받습니다(4만 셀 한도)
+::error::고령인구(DT_1B04006) 수집 실패 — GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T2&objL1=11110%2B11140%2B11170%2B11200%2B11215%2B11230%2B11260%2B11290%2B11305%2B11320%2B11350%2B11380%2B11410%2B11440%2B11470%2B11500%2B11530%2B11545%2B11560%2B11590%2B11620%2B11650%2B11680&format=json&jsonVD=Y&prdSe=M&orgId=101&tblId=DT_1B04006&objL2=ALL&startPrdDe=202508&endPrdDe=202608
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: kosis.kr:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+  → 나머지 표는 계속 받습니다. 이 표는 이번 회차 산출물에서 빠집니다.
+::error::출생(DT_1B81A03) 수집 실패 — GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T1&objL1=ALL&format=json&jsonVD=Y&prdSe=Y&orgId=101&tblId=DT_1B81A03&objL2=00&startPrdDe=2023&endPrdDe=2026
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: kosis.kr:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+  → 나머지 표는 계속 받습니다. 이 표는 이번 회차 산출물에서 빠집니다.
+::error::사망(DT_1B34E13) 수집 실패 — GET 실패(4회 시도): https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=***&itmId=T1&objL1=0&format=json&jsonVD=Y&prdSe=Y&orgId=101&tblId=DT_1B34E13&objL2=ALL&objL3=0&startPrdDe=2023&endPrdDe=2026
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: kosis.kr:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+  → 나머지 표는 계속 받습니다. 이 표는 이번 회차 산출물에서 빠집니다.
+· 검증 대기 중인 표 8개: foreignHouseTotal(DT_408004_001), foreignHouseNatApt(DT_408004_007), foreignHouseNatHouse(DT_408004_008), houseOwnHh(DT_1LC0033), houseOwnHhSido(DT_1LC0034), wageYearEnd(TX_13301_A035), wageBracket(DT_133N_427), populationYear(DT_1B040A3)
+  → pnpm --filter @wirit/collectors probe-kosis 로 규격을 확인한 뒤 enabled 를 켭니다.
+❌ 수집 실패: 인구 시계열이 비었다 — 표 ID·기간·인증키를 확인해야 한다.
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-population: `tsx src/kosisCli.ts -- --today 2026-09-15 --months 25 --min 45`
+Exit status 1
 ```
 
 ## 신호 정리
 ```
-✅ 인구 신호 32건 (문턱 45점) → /home/runner/work/claude/claude/data/population-signals.md
-   ※ 상위 8 밖 신호 24건
-   보드에는 올리지 않았습니다(오너가 직접 고릅니다). --register 를 주면 자동 등록합니다.
-   알림 있음
+(등록 단계가 실행되지 못했습니다)
 ```
 
 > 지도 조인에 "지도에 없는 시군구" 가 뜨면 행정구역이 바뀐 것입니다 —
