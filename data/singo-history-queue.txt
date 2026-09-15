@@ -3,7 +3,7 @@
 # ⚡ 2026-09-16 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 lawd=11290 umd=길음동 type=59 apt="길음뉴타운1단지(래미안길음1차)"
 lawd=11350 umd=상계동 type=84 apt="상계주공3(고층)"
-lawd=11440 umd=상암동 type=84 apt="상암월드컵파크9단지" force=1
+lawd=11440 umd=상암동 type=84 apt="상암월드컵파크9단지"
 lawd=41117 umd=망포동 type=59 apt="영통아이파크캐슬1단지" force=1
 lawd=11290 umd=하월곡동 type=59 apt="월곡두산위브"
 lawd=41115 umd=인계동 type=84 apt="수원센트럴아이파크자이" force=1
