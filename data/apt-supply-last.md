@@ -1,36 +1,10 @@
 # 단지 공급면적 — 마지막 실행
 
-- 성공 2건 · 실패 3건 · 미룸 0줄
+- 성공 0건 · 실패 3건 · 미룸 0줄
 - 결과는 Actions 로그가 아니라 이 파일과 data/datasets/apt-supply/ 에서 본다
 - 미리 채우기 오늘 몫 250/250건 · 내일로 미룬 326줄 (상한은 실패가 아니다)
 
 ```
-── A10024152 전용 84.8
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10024152 --area 84.8
-
-▶ 포레나송파 (A10024152) · 전용 84.8㎡ · 11710-11300 · 지번 후보 651
-   지번 651 (0651-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10024152-84.json
-   전유 84.8 + 주거공용 24.25 = 공급 109.05㎡ = 32.99평 → **33평**
-   표본: 1709동 1202 (같은 전용 호 85개) · 전용률 77.8%
-     · 아파트 / 계단실,승강기,홀 [각층 각층] 18.9
-     · 아파트 / 벽체 [지상 12층] 5.35
-── A15728008 전용 84.68
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A15728008 --area 84.68
-
-▶ 마곡수명산파크1단지 (A15728008) · 전용 84.68㎡ · 11500-10600 · 지번 후보 742
-   지번 742 (0742-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A15728008-84.json
-   전유 84.68 + 주거공용 24.359 = 공급 109.04㎡ = 32.98평 → **33평**
-   표본: 101동 604호 (같은 전용 호 134개) · 전용률 77.7%
-     · 아파트 / 계단실,승강기 [각층 각층] 22.97
-     · 부대시설 / 관리사무소,문고,보육시설,경로당,주민공동시설 [지상 1층] 0.709
-     · 아파트 / 지하계단실 [지하 지1층] 0.662
-     · 부대시설 / 경비실 [지상 1층] 0.018
 ── A13202312 전용 84.87
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
