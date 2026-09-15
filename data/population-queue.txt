@@ -29,3 +29,5 @@ months=25 min=45 top=8
 months=25 min=45 top=8
 # 2026-09-15 시 단위 순위용 — 일반구를 둔 시의 「시 전체」 행(cityTotals) 보관 후 재수집(화성시 2025-06 확보)
 months=25 min=45 top=8
+# 2026-09-15 재시도 — 직전 회차 kosis.kr 접속 시간초과(fetch failed, 인증 아님)
+months=25 min=45 top=8
