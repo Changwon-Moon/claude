@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-14T23:58:40.790Z",
+  "generatedAt": "2026-09-15T01:49:47.928Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -82,9 +82,9 @@
         },
         {
           "day": "09-14",
-          "state": "fail",
-          "at": "06:47",
-          "delay": 113
+          "state": "ok",
+          "at": "09:08",
+          "delay": null
         },
         {
           "day": "09-15",
@@ -276,21 +276,21 @@
         },
         {
           "day": "09-14",
-          "state": "late",
-          "at": "09:05",
-          "delay": 115
+          "state": "ok",
+          "at": "14:59",
+          "delay": null
         },
         {
           "day": "09-15",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "09:30",
+          "delay": 140
         }
       ],
-      "medianDelay": 115,
-      "maxDelay": 115,
-      "lastRun": "2026-09-14",
-      "lastOk": "2026-09-14",
+      "medianDelay": 140,
+      "maxDelay": 140,
+      "lastRun": "2026-09-15",
+      "lastOk": "2026-09-15",
       "okDaysAgo": 0
     },
     {
@@ -567,9 +567,9 @@
         },
         {
           "day": "09-14",
-          "state": "late",
+          "state": "ok",
           "at": "15:56",
-          "delay": 317
+          "delay": null
         },
         {
           "day": "09-15",
@@ -578,8 +578,8 @@
           "delay": null
         }
       ],
-      "medianDelay": 317,
-      "maxDelay": 317,
+      "medianDelay": null,
+      "maxDelay": null,
       "lastRun": "2026-09-14",
       "lastOk": "2026-09-14",
       "okDaysAgo": 0
@@ -664,9 +664,9 @@
         },
         {
           "day": "09-14",
-          "state": "late",
+          "state": "ok",
           "at": "16:39",
-          "delay": 340
+          "delay": null
         },
         {
           "day": "09-15",
@@ -675,8 +675,8 @@
           "delay": null
         }
       ],
-      "medianDelay": 340,
-      "maxDelay": 340,
+      "medianDelay": null,
+      "maxDelay": null,
       "lastRun": "2026-09-14",
       "lastOk": "2026-09-14",
       "okDaysAgo": 0
@@ -858,9 +858,9 @@
         },
         {
           "day": "09-14",
-          "state": "late",
+          "state": "ok",
           "at": "21:41",
-          "delay": 604
+          "delay": null
         },
         {
           "day": "09-15",
@@ -1051,11 +1051,31 @@
       "file": "research-digest.yml",
       "name": "소재 보드 수집 (daily)",
       "lastRun": "2026-08-30",
-      "daysAgo": 15,
+      "daysAgo": 16,
       "lastOk": "2026-08-30",
+      "okDaysAgo": 16,
+      "fails30": 0,
+      "runs30": 13
+    },
+    {
+      "file": "reb-collect.yml",
+      "name": "전세·월세 지수 수집 (한국부동산원)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 15,
+      "lastOk": "2026-08-31",
       "okDaysAgo": 15,
       "fails30": 0,
-      "runs30": 14
+      "runs30": 3
+    },
+    {
+      "file": "silv-collect.yml",
+      "name": "분양권전매 실거래 수집 (국토부)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 15,
+      "lastOk": "2026-08-28",
+      "okDaysAgo": 17,
+      "fails30": 4,
+      "runs30": 6
     },
     {
       "file": "ecos-m2.yml",
@@ -1085,7 +1105,7 @@
       "lastOk": "2026-08-31",
       "okDaysAgo": 14,
       "fails30": 4,
-      "runs30": 23
+      "runs30": 21
     },
     {
       "file": "population-collect.yml",
@@ -1105,27 +1125,7 @@
       "lastOk": "2026-08-31",
       "okDaysAgo": 14,
       "fails30": 8,
-      "runs30": 10
-    },
-    {
-      "file": "reb-collect.yml",
-      "name": "전세·월세 지수 수집 (한국부동산원)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 14,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 14,
-      "fails30": 0,
-      "runs30": 3
-    },
-    {
-      "file": "silv-collect.yml",
-      "name": "분양권전매 실거래 수집 (국토부)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 14,
-      "lastOk": "2026-08-28",
-      "okDaysAgo": 17,
-      "fails30": 4,
-      "runs30": 6
+      "runs30": 9
     },
     {
       "file": "molit-door.yml",
@@ -1138,6 +1138,16 @@
       "runs30": 7
     },
     {
+      "file": "molit-rent-collect.yml",
+      "name": "전월세 실거래 수집 (국토부)",
+      "lastRun": "2026-09-02",
+      "daysAgo": 13,
+      "lastOk": "2026-09-02",
+      "okDaysAgo": 13,
+      "fails30": 2,
+      "runs30": 12
+    },
+    {
       "file": "neis-academy.yml",
       "name": "학원 수집 (나이스)",
       "lastRun": "2026-09-02",
@@ -1148,22 +1158,12 @@
       "runs30": 4
     },
     {
-      "file": "molit-rent-collect.yml",
-      "name": "전월세 실거래 수집 (국토부)",
-      "lastRun": "2026-09-02",
-      "daysAgo": 12,
-      "lastOk": "2026-09-02",
-      "okDaysAgo": 12,
-      "fails30": 2,
-      "runs30": 12
-    },
-    {
       "file": "world-market.yml",
       "name": "세계 지수 수집 (8개국 월별 성적표)",
       "lastRun": "2026-09-04",
-      "daysAgo": 10,
+      "daysAgo": 11,
       "lastOk": "2026-09-04",
-      "okDaysAgo": 10,
+      "okDaysAgo": 11,
       "fails30": 4,
       "runs30": 5
     },
@@ -1270,22 +1270,22 @@
     {
       "file": "singo-history-retry.yml",
       "name": "곡선 — 자동 재시도",
-      "lastRun": "2026-09-14",
+      "lastRun": "2026-09-15",
       "daysAgo": 0,
-      "lastOk": "2026-09-14",
+      "lastOk": "2026-09-15",
       "okDaysAgo": 0,
       "fails30": 0,
-      "runs30": 37
+      "runs30": 39
     },
     {
       "file": "singo-history.yml",
       "name": "신고가 단지 이력 (한 단지 곡선)",
       "lastRun": "2026-09-15",
       "daysAgo": 0,
-      "lastOk": "2026-09-14",
+      "lastOk": "2026-09-15",
       "okDaysAgo": 0,
       "fails30": 4,
-      "runs30": 65
+      "runs30": 66
     },
     {
       "file": "singo-prep.yml",
@@ -1294,8 +1294,8 @@
       "daysAgo": 0,
       "lastOk": "2026-09-14",
       "okDaysAgo": 1,
-      "fails30": 43,
-      "runs30": 69
+      "fails30": 47,
+      "runs30": 71
     },
     {
       "file": "singo-retry.yml",
@@ -1305,14 +1305,14 @@
       "lastOk": "2026-09-10",
       "okDaysAgo": 5,
       "fails30": 4,
-      "runs30": 68
+      "runs30": 69
     },
     {
       "file": "tower-deploy.yml",
       "name": "관제탑 배포 (Cloudflare)",
       "lastRun": "2026-09-15",
       "daysAgo": 0,
-      "lastOk": "2026-09-14",
+      "lastOk": "2026-09-15",
       "okDaysAgo": 0,
       "fails30": 1,
       "runs30": 100
