@@ -1,10 +1,20 @@
 # 단지 공급면적 — 마지막 실행
 
-- 성공 0건 · 실패 12건 · 미룸 276줄
+- 성공 0건 · 실패 13건 · 미룸 276줄
 - 결과는 Actions 로그가 아니라 이 파일과 data/datasets/apt-supply/ 에서 본다
-- 미리 채우기 오늘 몫 191/250건 · 내일로 미룬 0줄 (상한은 실패가 아니다)
+- 미리 채우기 오늘 몫 201/250건 · 내일로 미룬 0줄 (상한은 실패가 아니다)
 
 ```
+── A13971502 전용 84.2
+
+> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
+> tsx src/supplyAreaCli.ts -- --kapt A13971502 --area 84.2
+
+▶ 상계주공3단지 (A13971502) · 전용 84.2㎡ · 11350-10500 · 지번 후보 730-2
+::error::730-2 1쪽 실패 — fetch failed: fetch failed
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13971502 --area 84.2`
+Exit status 1
 ── A13971502 전용 84.2
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
