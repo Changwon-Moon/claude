@@ -33,11 +33,20 @@ export const dateDot = (d) =>
 export function loadTohuhRise(ROOT, END) {
   const doc = JSON.parse(readFileSync(join(ROOT, "data/datasets/reb-weekly-index.json"), "utf8"));
   const tohuh = JSON.parse(readFileSync(join(ROOT, "data/datasets/tohuh-2026.json"), "utf8"));
-  if (doc.meta?.verified !== true) {
-    throw new Error("reb-weekly-index.json meta.verified 가 true 가 아니다 — 보도자료와 대조한 뒤 올린다");
-  }
   const mae = doc.mae;
   const SEOUL = doc.meta.seoulCode || "50008";
+  /* 검증 게이트 — meta.verified 대신 **발표값과 직접 대조**한다(2026-09-16 확정 때 바꿈).
+   * meta.verified 는 수집기가 새 주를 받을 때마다 false 로 되돌린다(carryVerification).
+   * 이 카드는 끝점을 못 박은 카드라 새 주가 와도 숫자는 그대로인데, 플래그 때문에 재생산이 멈추면
+   * doctor 가 매주 빨간불이 된다. 그래서 「이 계열로 계산한 2025년 연간 누적 = 부동산원 발표」를
+   * 매번 코드로 확인한다 — 계열이 개정되거나 기준점 규칙이 틀리면 여기서 멈춘다.
+   * 발표값 출처: 한국부동산원 주간 아파트가격동향(2025.12 다섯째 주) · 뉴시스 2025-12-31 보도. */
+  const ANCHORS = [["50008", 8.71], ["50069", 20.92], ["50047", 19.12]]; // 서울 · 송파 · 성동
+  for (const [code, pub] of ANCHORS) {
+    const s = mae[code];
+    const got = s && s["202501"] && s["202601"] ? Math.round((s["202601"] / s["202501"] - 1) * 10000) / 100 : NaN;
+    if (got !== pub) throw new Error(`검증 실패 — ${doc.regionNames?.[code] || code} 2025년 누적 ${got}% ≠ 발표 ${pub}%. 계열 개정 여부를 확인하세요`);
+  }
   if (!mae[SEOUL]?.[END]) throw new Error(`끝점 ${END} 가 자료에 없다 (asOf=${doc.meta.asOf})`);
 
   const AREAS = [

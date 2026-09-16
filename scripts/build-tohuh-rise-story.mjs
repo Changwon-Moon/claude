@@ -7,6 +7,9 @@
  * 계산은 scripts/lib/tohuh-rise-data.mjs 한 곳 — 지도 4장과 순위·반올림이 같다.
  * 손으로 적은 숫자 0개. 문장 속 수치·지역도 전부 계산값에서 꺼낸다.
  *
+ * 읽는 자료(확정 스크립트가 정기물 판정에 쓰는 경로 — lib 안이라 여기 적어 둔다):
+ *   data/datasets/reb-weekly-index.json · data/datasets/tohuh-2026.json
+ *
  * 실행: node scripts/build-tohuh-rise-story.mjs [--end 202637] [--date 2026-09-16]
  * 출력: data/content/{date}/tohuh-rise-{cover,method,bump,grid,notes}.json
  */
@@ -446,6 +449,28 @@ buildStack("dots");
   ].join("\n");
   writeCaption("tohuh-rise", caption);
   writeCaption("tohuh-rise-dots", `(시안) 누적 막대·점 도표 — 캡션은 확정 후 손질\n\n${caption}`);
+}
+
+/* ───────── 카톡 공유용 짧은 글(docs/CAPTION.md §9) ─────────
+ * gen-kakao-caption 은 신고가 전용(세트 라벨에서 날짜를 읽는다)이라 이 세트는 여기서 만든다.
+ * 틀은 §9 그대로: 제목 한 줄 · 하이픈 줄머리 · 접는 줄 끝 👆 · 📊 출처 두 줄. 숫자는 전부 계산값. */
+{
+  const bumpCard = cards.bump;
+  const upNames = bumpCard.legs.find((l) => l.cls === "up").d;
+  const downNames = bumpCard.legs.find((l) => l.cls === "down").d;
+  const kakao = [
+    `📈 토허구역 ${R.AREAS.length}곳, 언제부터 세느냐에 따라 1등이 바뀐다`,
+    ``,
+    ...YS.map((y) => `- '${y.slice(2)}년 초~ 1위 ${B(y).coTop.map(shortName).join("·")} ${pctTxt(B(y).coTop[0].v)}%`),
+    ``,
+    `해마다 순위 오른 곳 ${upNames}`,
+    `해마다 순위 내린 곳 ${downNames} 👆`,
+    ``,
+    `📊 서울 ${nSeoul}개 구 + 경기 ${nGg}곳 토지거래허가구역`,
+    `   한국부동산원 주간 매매가격지수 · ${endDot} 기준`,
+  ].join("\n");
+  mkdirSync(join(ROOT, "data/review/captions/_kakao"), { recursive: true });
+  writeFileSync(join(ROOT, "data/review/captions/_kakao/tohuh-rise.txt"), kakao + "\n", "utf8");
 }
 
 const outDir = join(ROOT, `data/content/${date}`);
