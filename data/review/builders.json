@@ -666,7 +666,8 @@
       "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16).",
       "produces": [
         "singo-신동탄포레자이-59"
-      ]
+      ],
+      "frozen": "2026-09-17: 같은 단지·타입이 또 신고가를 써 새 이름표(singo-신동탄포레자이-59-0917)로 냈다. 이 빌더를 그대로 두면 **이미 발행한 카드가 새 값으로 덮인다**(카드 이름표에 날짜가 없다). 그날의 판본을 그대로 둔다."
     },
     {
       "label": "singo-yeongtong-centralparkview",
@@ -3225,7 +3226,8 @@
       "produces": [
         "singo-현대-59"
       ],
-      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03).",
+      "frozen": "2026-09-17: 같은 단지·타입이 또 신고가를 써 새 이름표(singo-현대-59-0917)로 냈다. 이 빌더를 그대로 두면 **이미 발행한 카드가 새 값으로 덮인다**(카드 이름표에 날짜가 없다). 그날의 판본을 그대로 둔다."
     },
     {
       "label": "singo-A10027122-59",
@@ -4957,6 +4959,182 @@
         "tohuh-rise-dots",
         "tohuh-rise-stack"
       ]
+    },
+    {
+      "label": "singo-A10025263-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "고덕그라시움",
+        "--type",
+        "59",
+        "--kapt",
+        "A10025263",
+        "--publish"
+      ],
+      "produces": [
+        "singo-고덕그라시움-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10024170-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "화서역파크푸르지오",
+        "--type",
+        "84",
+        "--kapt",
+        "A10024170",
+        "--publish"
+      ],
+      "produces": [
+        "singo-화서역파크푸르지오-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A42370301-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "철산래미안자이",
+        "--type",
+        "84",
+        "--kapt",
+        "A42370301",
+        "--publish"
+      ],
+      "produces": [
+        "singo-철산래미안자이-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A42374402-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "이편한세상센트레빌",
+        "--type",
+        "84",
+        "--kapt",
+        "A42374402",
+        "--publish"
+      ],
+      "produces": [
+        "singo-이편한세상센트레빌-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A13905105-59-0917",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "현대",
+        "--type",
+        "59",
+        "--kapt",
+        "A13905105",
+        "--slug",
+        "singo-현대-59-0917",
+        "--publish"
+      ],
+      "produces": [
+        "singo-현대-59-0917"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A44693813-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "블루밍구성더센트럴",
+        "--type",
+        "59",
+        "--kapt",
+        "A44693813",
+        "--publish"
+      ],
+      "produces": [
+        "singo-블루밍구성더센트럴-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10023329-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "신동탄포레자이",
+        "--type",
+        "59",
+        "--kapt",
+        "A10023329",
+        "--slug",
+        "singo-신동탄포레자이-59-0917",
+        "--publish"
+      ],
+      "produces": [
+        "singo-신동탄포레자이-59-0917"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10023989-84-0917",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "수원하늘채더퍼스트2단지",
+        "--type",
+        "84",
+        "--kapt",
+        "A10023989",
+        "--slug",
+        "singo-수원하늘채더퍼스트2단지-84-0917",
+        "--publish"
+      ],
+      "produces": [
+        "singo-수원하늘채더퍼스트2단지-84-0917"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A44876510-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "동아아파트",
+        "--type",
+        "59",
+        "--kapt",
+        "A44876510",
+        "--publish"
+      ],
+      "produces": [
+        "singo-동아아파트-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10027421-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "수원아이파크시티7단지",
+        "--type",
+        "59",
+        "--kapt",
+        "A10027421",
+        "--publish"
+      ],
+      "produces": [
+        "singo-수원아이파크시티7단지-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
     }
   ]
 }
