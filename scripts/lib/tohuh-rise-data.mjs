@@ -60,23 +60,36 @@ export function loadTohuhRise(ROOT, END) {
   }
   const rise = (code, base) => (mae[code][END] / mae[code][base] - 1) * 100;
 
-  const byBase = new Map();
-  for (const y of SERIES_BASES) {
-    const BASE = `${y}01`;
-    const stat = AREAS.map((a) => ({ ...a, v: rise(a.code, BASE) }));
-    /* 같은 값이면 원값으로, 그래도 같으면 이름순 — 순위가 실행마다 흔들리지 않게 */
+  /** 순위 매기기 — 같은 값이면 원값, 그래도 같으면 이름순으로 줄 세우고, 번호는 **보이는 값**(소수 첫째 자리)으로.
+   * 2024장 성동 40.65 / 분당 40.60 이 둘 다 「+40.6%」로 찍혔다(2026-09-16) → 같은 값이면 공동 순위(1·1·3 …). */
+  const rankIt = (stat) => {
     const ranked = [...stat].sort((a, b) => b.v - a.v || a.label.localeCompare(b.label, "ko"));
-    /* 순위는 **보이는 값**(소수 첫째 자리)으로 매긴다 — 같은 값이면 공동 순위(1·1·3 …).
-     * 2024장 성동 40.65 / 분당 40.60 이 둘 다 「+40.6%」로 찍혔다(2026-09-16). */
     const rankOf = new Map();
     ranked.forEach((a, i) => {
       const prev = ranked[i - 1];
       rankOf.set(a.geoName, prev && r1(prev.v) === r1(a.v) ? rankOf.get(prev.geoName) : i + 1);
     });
-    const coTop = ranked.filter((a) => rankOf.get(a.geoName) === 1);
+    return { ranked, rankOf, coTop: ranked.filter((a) => rankOf.get(a.geoName) === 1) };
+  };
+
+  /* 그해 한 해 상승률(오너 2026-09-16: 순위 이동 카드는 누적이 아니라 연도별로)
+   * y 년 = y년 첫 주 → (y+1)년 첫 주. 마지막 해는 끝점까지(연중). 기준점 규칙은 누적과 같다. */
+  const byYear = new Map();
+  SERIES_BASES.forEach((y, i) => {
+    const from = `${y}01`, to = i < SERIES_BASES.length - 1 ? `${SERIES_BASES[i + 1]}01` : END;
+    const yr = (code) => (mae[code][to] / mae[code][from] - 1) * 100;
+    const stat = AREAS.map((a) => ({ ...a, v: yr(a.code) }));
+    byYear.set(y, { from, to, stat, ...rankIt(stat), seoulV: yr(SEOUL), partial: to === END });
+  });
+
+  const byBase = new Map();
+  for (const y of SERIES_BASES) {
+    const BASE = `${y}01`;
+    const stat = AREAS.map((a) => ({ ...a, v: rise(a.code, BASE) }));
+    const { ranked, rankOf, coTop } = rankIt(stat);
     byBase.set(y, { BASE, stat, ranked, rankOf, coTop, seoulV: rise(SEOUL, BASE) });
   }
-  return { doc, mae, END, SEOUL, AREAS, endDate: mondayOf(END), byBase };
+  return { doc, mae, END, SEOUL, AREAS, endDate: mondayOf(END), byBase, byYear };
 }
 
 /** 표 이름: 서울 구·경기 시는 label(「송파구」「광명시」), 경기 시 안의 구는 mapLabel(「성남 분당」).

@@ -2325,15 +2325,14 @@
     },
     {
       "label": "tohuh-rise",
-      "title": "📈 출발점이 바뀌면 순위표도 바뀐다 — 토허제 40곳 매매가 상승률 4장",
+      "title": "📈 '23~'26 토허구역 40곳 집값 — 누적 상승률 · 연도별 순위 · 해마다 오른 폭 (3장)",
       "cards": [
         "tohuh-rise-ranks",
         "tohuh-rise-bump",
-        "tohuh-rise-dots",
-        "tohuh-rise-grid"
+        "tohuh-rise-dots"
       ],
       "caption": "tohuh-rise",
-      "note": "한국부동산원 주간 매매지수 · 끝점 202637(2026-09-07) 고정. 오너 지시(2026-09-16)로 순위표·순위 이동·점 도표·전체 표 4장만 남김(표지·읽는 법·주의 카드는 빌더가 계속 만들지만 세트에서 뺐다 — 주의 문구는 캡션 ※ 줄이 대신한다). 계산은 scripts/lib/tohuh-rise-data.mjs 한 곳.",
+      "note": "한국부동산원 주간 매매지수 · 끝점 202637 고정. 오너 2026-09-16: 3장(누적 순위표·연도별 순위 이동·점 도표). 전체 표(tohuh-rise-grid)는 순위 이동으로 대체돼 세트에서 뺐고 파일만 보존(더 손대지 않음). 표지·읽는 법·주의도 세트 밖. 계산은 scripts/lib/tohuh-rise-data.mjs.",
       "pixelPolicy": "고정물 후보 — 끝점을 --end 로 못 박았다. 확정 후 pixel-baselines 등록 여부는 오너 결정"
     },
     {

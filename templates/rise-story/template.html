@@ -68,7 +68,7 @@
       .rs-col-h { padding-bottom: 10px; border-bottom: 3px solid var(--wirit-ink); }
       .rs-col-h .yr { display: block; font-size: 28px; font-weight: 900; color: var(--wirit-ink); white-space: nowrap; }
       .rs-col-h .sub { display: block; margin-top: 2px; font-size: 19px; font-weight: 700; color: var(--wirit-gray); white-space: nowrap; }
-      .rs-r { display: grid; grid-template-columns: 28px 1fr auto; column-gap: 4px; align-items: center; height: 34px;
+      .rs-r { display: grid; grid-template-columns: 28px 1fr auto; column-gap: 4px; align-items: center; height: 36px;
               border-bottom: 1px solid rgba(20, 24, 33, 0.08); }
       .rs-r .rk { font-size: 18px; font-weight: 800; color: var(--wirit-gray); text-align: right; padding-right: 2px; }
       .rs-r .nm { font-size: 20px; font-weight: 700; color: var(--wirit-ink); white-space: nowrap; overflow: hidden; }
@@ -76,8 +76,24 @@
       .rs-r.hl .nm, .rs-r.hl .rk { color: var(--wirit-cobalt); font-weight: 900; }
       .rs-r.first { background: rgba(20, 24, 33, 0.06); }
       .rs-r.first .nm { font-weight: 900; }
-      .rs-gap { height: 34px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900;
+      .rs-gap { height: 36px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900;
                 color: var(--wirit-gray); letter-spacing: 0.2em; border-bottom: 1px solid rgba(20, 24, 33, 0.08); }
+
+      .rs-pillrow { height: 36px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(20, 24, 33, 0.08); }
+      /* 서울 평균 — 표 안 그 값의 자리에 끼우는 회색 타원(오너 2026-09-16) */
+      .rs-pill { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 14px; border-radius: 13px;
+                 background: rgba(91, 107, 127, 0.16); font-size: 18px; font-weight: 800; color: var(--wirit-gray); white-space: nowrap; }
+      .rs-pill b { font-weight: 800; color: var(--wirit-ink); }
+      .rs-gap.half { height: 18px; font-size: 14px; }
+      /* 순위 이동 — 강조 선 설명 두 카드(좌: 올라옴 · 우: 내려감) */
+      .rs-legs { display: grid; grid-template-columns: 1fr 1fr; column-gap: 18px; }
+      .rs-leg { padding: 14px 18px; border: 2px solid; border-radius: 4px; display: flex; flex-direction: column; gap: 6px; }
+      .rs-leg.up { border-color: var(--wirit-red); }
+      .rs-leg.down { border-color: var(--wirit-cobalt); }
+      .rs-leg .t { font-size: 24px; font-weight: 900; white-space: nowrap; }
+      .rs-leg.up .t { color: var(--wirit-red); }
+      .rs-leg.down .t { color: var(--wirit-cobalt); }
+      .rs-leg .d { font-size: 24px; font-weight: 700; color: var(--wirit-ink); white-space: nowrap; }
 
       /* ── notes ── */
       .rs-items { margin-top: 30px; border-top: 3px solid var(--wirit-ink); flex: 1; display: flex; flex-direction: column; }
@@ -117,6 +133,7 @@
 
         {{#if (eq kind "bump")}}
         {{#if lede}}<div class="rs-lede">{{{lede}}}</div>{{/if}}
+        {{#if legs}}<div class="rs-legs">{{#each legs}}<div class="rs-leg {{this.cls}}"><span class="t">{{this.t}}</span><span class="d">{{this.d}}</span></div>{{/each}}</div>{{/if}}
         <div class="rs-svg">{{{svg}}}</div>
         {{/if}}
 
@@ -138,13 +155,12 @@
         <div class="rs-cols">
           {{#each cols}}
           <div class="rs-col">
-            <div class="rs-col-h"><span class="yr">{{this.yr}}</span><span class="sub">{{this.sub}}</span></div>
-            {{#each this.top}}
-            <div class="rs-r{{#if this.hl}} hl{{/if}}{{#if (eq this.r 1)}} first{{/if}}"><span class="rk">{{this.r}}</span><span class="nm">{{this.nm}}</span><span class="v">{{this.v}}</span></div>
-            {{/each}}
-            <div class="rs-gap">⋮</div>
-            {{#each this.tail}}
-            <div class="rs-r{{#if this.hl}} hl{{/if}}"><span class="rk">{{this.r}}</span><span class="nm">{{this.nm}}</span><span class="v">{{this.v}}</span></div>
+            <div class="rs-col-h"><span class="yr">{{this.yr}}</span></div>
+            {{#each this.items}}
+            {{#if (eq this.t "row")}}<div class="rs-r{{#if this.hl}} hl{{/if}}{{#if this.first}} first{{/if}}"><span class="rk">{{this.r}}</span><span class="nm">{{this.nm}}</span><span class="v">{{this.v}}</span></div>{{/if}}
+            {{#if (eq this.t "pill")}}<div class="rs-pillrow"><span class="rs-pill"><b>{{this.nm}}</b> {{this.v}}</span></div>{{/if}}
+            {{#if (eq this.t "gap")}}<div class="rs-gap">⋮</div>{{/if}}
+            {{#if (eq this.t "gaphalf")}}<div class="rs-gap half">⋮</div>{{/if}}
             {{/each}}
           </div>
           {{/each}}

@@ -17,6 +17,7 @@
     "items": { "type": "array", "items": { "type": "object" } },
     "grid": { "type": "object" },
     "cols": { "type": "array", "items": { "type": "object" } },
+    "legs": { "type": "array", "items": { "type": "object" } },
     "lede": { "type": "string" },
     "foot": { "type": "string", "description": "본문 맨 아래 회색 한 줄(푸터 위)" },
     "source": { "type": "object" }

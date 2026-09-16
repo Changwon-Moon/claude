@@ -35,6 +35,10 @@ const SOURCE = { name: "한국부동산원 주간 아파트가격동향 · 서�
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const fallbacks = R.AREAS.filter((a) => a.fallback);
 const cards = {};
+/* 공통 킥커(오너 2026-09-16) — 숫자는 명단·끝점에서 센다 */
+const nSeoul = R.AREAS.filter((a) => a.region === "서울").length;
+const nGg = R.AREAS.filter((a) => a.region === "경기").length;
+const KICKER = `수도권 토허구역 ${R.AREAS.length}곳 (서울${nSeoul}•경기${nGg}) | ${endDot.slice(0, 7)} 기준`;
 /** 제목 줄 — 줄마다 템플릿이 폭을 따로 잰다 */
 const lines = (...ls) => ls.map((l) => `<span class="ln">${l}</span>`).join("");
 
@@ -61,7 +65,6 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
     note: "수도권 토지거래허가구역 40곳 · 아파트 매매가",
     title: lines(`언제부터 셌느냐에 따라`, `<span class="hi">1등</span>이 바뀐다`),
     rows,
-    foot: `도착점은 모두 ${endKo} · 막대는 네 1위 중 가장 큰 값 대비`,
     source: SOURCE,
   };
 }
@@ -130,27 +133,27 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
   };
 }
 
-/* ───────── 7. 순위 이동 (범프) ───────── */
+/* ───────── 7. 순위 이동 (범프) ─────────
+ * 오너 2026-09-16: 누적(「23년 초부터」)이 아니라 **그해 한 해 상승률**로 해마다 순위를 다시 매긴다.
+ * 23년 = 23년 첫 주 → 24년 첫 주 … 26년 = 26년 첫 주 → 끝점(연중). 계산은 lib 의 byYear. */
 {
   const first = YS[0], last = YS.at(-1);
-  const order = (y) => B(y).ranked; // 같은 순위도 자리는 따로(겹치지 않게), 적는 숫자는 공동 순위
+  const Y1 = (y) => R.byYear.get(y);
+  const order = (y) => Y1(y).ranked; // 같은 순위도 자리는 따로(겹치지 않게), 적는 숫자는 공동 순위
   const pos = new Map(); // geoName → [index per year]
   YS.forEach((y, j) => order(y).forEach((a, i) => {
     if (!pos.has(a.geoName)) pos.set(a.geoName, []);
     pos.get(a.geoName)[j] = i;
   }));
-  const rk = (y, a) => B(y).rankOf.get(a.geoName);
+  const rk = (y, a) => Y1(y).rankOf.get(a.geoName);
+  const cur = (a) => Y1(last).stat.find((x) => x.geoName === a.geoName).v;
   const delta = R.AREAS.map((a) => ({ a, d: rk(first, a) - rk(last, a) })); // +면 올라옴
-  /* 최대 5곳. 다섯째 자리가 동률이면 그 동률 묶음을 통째로 뺀다 — 이름순으로 하나만 고르면
-   * 「가장 많이 올라온 5곳」이 임의의 선택이 된다(2026-09-16: 성북·노원·구로가 +17 동률). */
-  const pick = (arr) => {
-    const N = 5;
-    if (arr.length <= N || arr[N - 1].d !== arr[N].d) return arr.slice(0, N);
-    const cut = arr[N - 1].d;
-    return arr.slice(0, N).filter((p) => p.d !== cut);
-  };
-  const up = pick([...delta].filter((p) => p.d > 0).sort((p, q) => q.d - p.d || p.a.label.localeCompare(q.a.label, "ko")));
-  const down = pick([...delta].filter((p) => p.d < 0).sort((p, q) => p.d - q.d || p.a.label.localeCompare(q.a.label, "ko")));
+  /* 5곳씩(오너 2026-09-16: 「5개씩으로 맞춰줘」). 순위 변화가 같으면 **올해 상승률**로 가른다
+   * (올라온 쪽은 올해 더 오른 곳, 내려간 쪽은 올해 덜 오른 곳 먼저) — 이름순보다 이야기에 맞는 기준. */
+  const N5 = 5;
+  const up = [...delta].filter((p) => p.d > 0).sort((p, q) => q.d - p.d || cur(q.a) - cur(p.a)).slice(0, N5);
+  const down = [...delta].filter((p) => p.d < 0).sort((p, q) => p.d - q.d || cur(p.a) - cur(q.a)).slice(0, N5);
+  if (up.length < N5 || down.length < N5) throw new Error(`강조 지역이 5곳씩 안 나온다 (올라옴 ${up.length} · 내려감 ${down.length})`);
   const color = new Map([...up.map((p) => [p.a.geoName, RED]), ...down.map((p) => [p.a.geoName, CO])]);
 
   const W = 936, H = 830, top = 46, bot = 12;
@@ -164,7 +167,8 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
   const Y = (i) => top + i * step;
   let g = "";
   YS.forEach((y, j) => {
-    g += `<text x="${colX[j].toFixed(1)}" y="22" ${FONT} font-size="22" font-weight="800" fill="${INK}" text-anchor="middle">${y.slice(2)}년 초~</text>`;
+    const lab = Y1(y).partial ? `${y.slice(2)}년(~${+endDot.slice(5, 7)}월)` : `${y.slice(2)}년`;
+    g += `<text x="${colX[j].toFixed(1)}" y="22" ${FONT} font-size="22" font-weight="800" fill="${INK}" text-anchor="middle">${lab}</text>`;
   });
   const drawLine = (a, hl) => {
     const p = pos.get(a.geoName);
@@ -184,9 +188,17 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
   for (let j = 1; j < YS.length - 1; j++) {
     const labs = R.AREAS.filter((a) => color.has(a.geoName)).map((a) => {
       const p = pos.get(a.geoName), i = p[j];
-      return { a, y: p[j + 1] > i ? Y(i) - 8 : Y(i) + 20, c: color.get(a.geoName) };
+      /* 맨 위 줄은 점 위에 자리가 없다(머리글 「25년」과 겹쳤다) → 아래로 */
+      const above = p[j + 1] > i && Y(i) - 8 - 17 > 30;
+      return { a, y: above ? Y(i) - 8 : Y(i) + 20, c: color.get(a.geoName) };
     }).sort((p, q) => p.y - q.y);
     labs.forEach((l, k) => { if (k && l.y < labs[k - 1].y + LABEL_GAP) l.y = labs[k - 1].y + LABEL_GAP; });
+    /* 맨 아래가 판 밖으로 나가면(24년 열 기흥 40위 — 숫자가 잘렸다) 뒤에서부터 위로 당긴다 */
+    const YMAX = H - 2;
+    for (let k = labs.length - 1; k >= 0; k--) {
+      const lim = k === labs.length - 1 ? YMAX : labs[k + 1].y - LABEL_GAP;
+      if (labs[k].y > lim) labs[k].y = lim;
+    }
     for (const l of labs)
       g += `<text x="${(colX[j] + 12).toFixed(1)}" y="${l.y.toFixed(1)}" ${FONT} font-size="17" font-weight="900" fill="${l.c}" stroke="var(--wirit-paper)" stroke-width="6" paint-order="stroke">${rk(YS[j], l.a)}</text>`;
   }
@@ -198,17 +210,16 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
   });
   const svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${g}</svg>`;
 
-  const t1 = B(first).coTop;
-  const t1Now = rk(last, t1[0]);
   cards.bump = {
     template: "rise-story@1", date, kind: "bump",
-    note: `40곳 상승률 순위 · 출발점별`,
-    /* 「올해는」이 올해 상승률 순위인지 올해 기준 순위인지 흐렸다(검수) → 「올해부터 세면」 */
-    title: lines(`${first}년부터 1위 ${t1.map(shortName).join("·")}, <span class="hi">올해부터 세면 ${t1Now}위</span>`),
-    lede: `<span class="co">━ 순위가 가장 많이 내려간 ${down.length}곳</span> ${down.map((p) => shortName(p.a)).join("·")}<br>` +
-      `<span class="hi">━ 순위가 가장 많이 올라온 ${up.length}곳</span> ${up.map((p) => shortName(p.a)).join("·")}`,
+    note: KICKER,
+    title: lines(`'${first.slice(2)}~'${last.slice(2)} 연도별 <span class="hi">집값 상승 순위</span>`),
+    /* 강조 선 설명은 좌우 두 카드(오너 2026-09-16) — 올라온 쪽 왼쪽, 내려간 쪽 오른쪽 */
+    legs: [
+      { cls: "up", t: `순위가 가장 많이 올라온 ${up.length}곳`, d: up.map((p) => shortName(p.a)).join(" · ") },
+      { cls: "down", t: `순위가 가장 많이 내려간 ${down.length}곳`, d: down.map((p) => shortName(p.a)).join(" · ") },
+    ],
     svg,
-    foot: `${first.slice(2)}년 초부터 순위 → ${last.slice(2)}년 초부터 순위의 차이 · 가운데 숫자는 그 출발점의 순위`,
     source: SOURCE,
   };
 }
@@ -228,7 +239,7 @@ const buildStack = (mode) => {
   const STACK_FROM = "2024";
   const SYS = YS.slice(YS.indexOf(STACK_FROM));
   const first = SYS[0], last = SYS.at(-1);
-  const HL = new Set(["송파구", "서초구", "강남구"]);
+  const HL = new Set(); // 설명 줄이 빠져 강조 색도 뺐다(2026-09-16)
   const s0 = (a) => R.mae[a.code];
   const segs = (a) => {
     const s = s0(a), b = s[`${first}01`];
@@ -246,7 +257,7 @@ const buildStack = (mode) => {
   const COLOR_BY_Y = { 2023: ["var(--wirit-gray)", 0.28], 2024: ["var(--wirit-gray)", 0.6], 2025: [INK, 0.9], 2026: [RED, 1] };
   const COLORS = SYS.map((y) => COLOR_BY_Y[y][0]);
   const OPAC = SYS.map((y) => COLOR_BY_Y[y][1]);
-  const W = 936, top = 70, rowH = 21, H = top + rowH * rows.length + 8;
+  const W = 936, top = 70, rowH = 22, H = top + rowH * rows.length + 8;
   const NAME_PX = 17, nameW = Math.ceil(Math.max(...rows.map((a) => textW(tableName(a), NAME_PX)))) + 6;
   const valW = 80;
   const x0 = nameW + 14, x1 = W - valW - 10;
@@ -308,12 +319,9 @@ const buildStack = (mode) => {
   const topLast = [...rows].sort((p, q) => lastShare(q) - lastShare(p))[0];
   cards[mode] = {
     template: "rise-story@1", date, kind: "bump",
-    note: `${mode === "dots" ? "" : "시안 · 누적 막대 · "}40곳 · ${first}년 초부터 상승률 순`,
+    note: mode === "dots" ? KICKER : `시안 · 누적 막대 · ${KICKER}`,
     title: lines(`${first.slice(2)}년부터 <span class="hi">해마다</span> 얼마씩 올랐나`),
     svg,
-    foot: mode === "dots"
-      ? `점 = 그해 말까지 오른 폭(${first.slice(2)}년 초 가격 대비) · 빨간 점 = 지금 = 오른쪽 합계 · ${endDot}`
-      : `칸 = 그해 오른 몫(${first.slice(2)}년 초 가격 대비) · 내린 해는 0 왼쪽 · 세로 눈금 = 합계 자리 · ${endDot}`,
     source: SOURCE,
   };
   if (mode === "stack") console.log(`   누적 막대: 올해 몫 최대 ${topLast.label} ${lastShare(topLast).toFixed(1)}%p`);
@@ -322,28 +330,32 @@ buildStack("stack");
 buildStack("dots");
 
 /* ───────── 3. 출발점별 순위표 넷 — 지도 4장을 한 장으로(오너 2026-09-16) ─────────
- * 「상위 1위~N위 … 38~40위」 — 위는 N곳, 아래는 마지막 세 자리. N 은 판 높이에 맞춘 값이다. */
+ * 「상위 1위~N위 … 38~40위」 — 위는 N곳, 아래는 마지막 세 자리. N 은 판 높이에 맞춘 값이다.
+ * 서울 평균은 머리글 아래가 아니라 **표 안 그 값의 자리**에 회색 타원으로 끼운다(오너 2026-09-16).
+ *   자리가 생략 구간(N+1 ~ 끝−3)이면 「⋮ 서울 ⋮」 로 반 칸씩 나눠 끼운다 — 네 열의 줄 수를 같게 두려고. */
 {
   const TOPN = 20, TAIL = 3;
-  const HL = new Set(["송파구", "서초구", "강남구"]); // 강남 3구 — 7장 순위 이동과 같은 이야기를 따라간다
-  const row = (y, a) => ({ r: B(y).rankOf.get(a.geoName), nm: tableName(a), v: pctTxt(a.v), hl: HL.has(a.label) });
+  /* 강남 3구 파랑 강조는 뺐다 — 「파랑 = 강남 3구」 설명 줄(푸터 위 회색 문구)이 오너 지시로 빠져 설명 없는 색이 됐다(2026-09-16) */
+  const HL = new Set();
+  const row = (y, a) => ({ t: "row", r: B(y).rankOf.get(a.geoName), nm: tableName(a), v: pctTxt(a.v), hl: HL.has(a.label), first: B(y).rankOf.get(a.geoName) === 1 });
+  const N = R.AREAS.length;
   const cols = YS.map((y) => {
-    const rk = B(y).ranked;
-    return {
-      yr: `${y.slice(2)}년 초부터`,
-      sub: `서울 ${pctTxt(B(y).seoulV)}%`,
-      top: rk.slice(0, TOPN).map((a) => row(y, a)),
-      tail: rk.slice(-TAIL).map((a) => row(y, a)),
-    };
+    const b = B(y), rk = b.ranked;
+    const pill = { t: "pill", nm: "서울 평균", v: `${pctTxt(b.seoulV)}%` };
+    const at = rk.filter((a) => a.v > b.seoulV).length; // 서울보다 높은 곳의 수 = 끼울 자리
+    const top = rk.slice(0, TOPN).map((a) => row(y, a));
+    const tail = rk.slice(-TAIL).map((a) => row(y, a));
+    let items;
+    if (at <= TOPN) items = [...top.slice(0, at), pill, ...top.slice(at), { t: "gap" }, ...tail];
+    else if (at >= N - TAIL) items = [...top, { t: "gap" }, ...tail.slice(0, at - (N - TAIL)), pill, ...tail.slice(at - (N - TAIL))];
+    else items = [...top, { t: "gaphalf" }, pill, { t: "gaphalf" }, ...tail];
+    return { yr: `${y.slice(2)}년 초~현재`, items };
   });
-  for (const lab of HL) if (!R.AREAS.some((a) => a.label === lab)) throw new Error(`강조 지역 ${lab} 이 40곳 명단에 없다`);
   cards.ranks = {
     template: "rise-story@1", date, kind: "ranks",
-    note: `출발점별 상승률 순위 · 40곳 중 1~${TOPN}위와 ${R.AREAS.length - TAIL + 1}~${R.AREAS.length}위`,
-    title: lines(`출발점이 바뀌면 <span class="hi">순위표</span>도 바뀐다`),
+    note: KICKER,
+    title: lines(`'${YS[0].slice(2)}~'${YS.at(-1).slice(2)} 연도별 <span class="hi">누적 집값 상승률</span>`),
     cols,
-    foot: `단위 % · 각 연도 초 → ${endDot} · <span class="co">파랑</span> = 강남 3구` +
-      (fallbacks.length ? ` · ${fallbacks.map(tableName).join("·")}은 화성시 기준` : ""),
     source: SOURCE,
   };
 }
@@ -396,7 +408,6 @@ buildStack("dots");
     note: "이 시리즈를 볼 때",
     title: lines(`읽기 전에 <span class="co">알아둘 것</span>`),
     items,
-    foot: `📌 저장해 두고 우리 동네가 몇 위인지 확인하세요`,
     source: SOURCE,
   };
 }
@@ -416,7 +427,7 @@ buildStack("dots");
     `${endKo}까지 비교했습니다.`,
     ``,
     ...YS.flatMap((y) => [`[${y}년 초부터] 서울 평균 ${pctTxt(B(y).seoulV)}%`, `${top3(y)}`, `꼴찌 ${bottom(y)}`, ``]),
-    `👉 1장: 출발점별 순위표 · 2장: 순위 이동 · 3장: 해마다 오른 폭 · 4장: 40곳 전체 표`,
+    `👉 1장: 연도별 누적 상승률 · 2장: 해마다 매긴 상승 순위 · 3장: 해마다 오른 폭`,
     ``,
     `📌 저장해두고 우리 동네가 몇 위인지 확인하기`,
     ``,
