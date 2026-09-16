@@ -8,110 +8,65 @@
 ── 수원센트럴아이파크자이 전용 59타입 (41115)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41115 --apt '수원센트럴아이파크자이' --umd '인계동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41115 --apt '수원센트럴아이파크자이' --umd '인계동' --type 59 --from 202001
 
-수원센트럴아이파크자이 · 전용 59타입 · 41115 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41115-수원센트럴아이파크자이-59.json
-거래 있던 달 22/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 8.2억 (2026-09-02 · 전용 59.98㎡ 19층)
-🧹 force=1 을 지웠습니다 — lawd=41115 umd=인계동 type=59 apt="수원센트럴아이파크자이"
+⏭ 이미 있음 — 41115-수원센트럴아이파크자이-59.json (다시 받으려면 force=1)
 
 ── 권선자이e편한세상 전용 84타입 (41113)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41113 --apt '권선자이e편한세상' --umd '권선동' --type 84 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41113 --apt '권선자이e편한세상' --umd '권선동' --type 84 --from 202001
 
-권선자이e편한세상 · 전용 84타입 · 41113 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41113-권선자이e편한세상-84.json
-거래 있던 달 74/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 7.5억 (2026-09-05 · 전용 84.9441㎡ 14층)
-🧹 force=1 을 지웠습니다 — lawd=41113 umd=권선동 type=84 apt="권선자이e편한세상"
+⏭ 이미 있음 — 41113-권선자이e편한세상-84.json (다시 받으려면 force=1)
 
 ── 화서역 우방 센트럴파크 전용 59타입 (41111)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41111 --apt '화서역 우방 센트럴파크' --umd '정자동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41111 --apt '화서역 우방 센트럴파크' --umd '정자동' --type 59 --from 202001
 
-화서역 우방 센트럴파크 · 전용 59타입 · 41111 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41111-화서역우방센트럴파크-59.json
-거래 있던 달 70/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 7.45억 (2026-09-09 · 전용 59.98㎡ 10층)
-🧹 force=1 을 지웠습니다 — lawd=41111 umd=정자동 type=59 apt="화서역 우방 센트럴파크"
+⏭ 이미 있음 — 41111-화서역우방센트럴파크-59.json (다시 받으려면 force=1)
 
 ── 길음뉴타운1단지(래미안길음1차) 전용 59타입 (11290)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 11290 --apt '길음뉴타운1단지(래미안길음1차)' --umd '길음동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 11290 --apt '길음뉴타운1단지(래미안길음1차)' --umd '길음동' --type 59 --from 202001
 
-길음뉴타운1단지(래미안길음1차) · 전용 59타입 · 11290 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/11290-길음뉴타운1단지래미안길음1차-59.json
-거래 있던 달 53/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 12.88억 (2026-08-22 · 전용 59.99㎡ 11층)
-🧹 force=1 을 지웠습니다 — lawd=11290 umd=길음동 type=59 apt="길음뉴타운1단지(래미안길음1차)"
+⏭ 이미 있음 — 11290-길음뉴타운1단지래미안길음1차-59.json (다시 받으려면 force=1)
 
 ── 상계주공3(고층) 전용 84타입 (11350)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 11350 --apt '상계주공3(고층)' --umd '상계동' --type 84 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 11350 --apt '상계주공3(고층)' --umd '상계동' --type 84 --from 202001
 
-상계주공3(고층) · 전용 84타입 · 11350 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/11350-상계주공3고층-84.json
-거래 있던 달 21/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 12억 (2026-08-09 · 전용 84.2㎡ 4층)
-🧹 force=1 을 지웠습니다 — lawd=11350 umd=상계동 type=84 apt="상계주공3(고층)"
+⏭ 이미 있음 — 11350-상계주공3고층-84.json (다시 받으려면 force=1)
 
 ── 상암월드컵파크9단지 전용 84타입 (11440)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 11440 --apt '상암월드컵파크9단지' --umd '상암동' --type 84 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 11440 --apt '상암월드컵파크9단지' --umd '상암동' --type 84 --from 202001
 
-상암월드컵파크9단지 · 전용 84타입 · 11440 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/11440-상암월드컵파크9단지-84.json
-거래 있던 달 40/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 11.85억 (2026-08-28 · 전용 84.89㎡ 15층)
-🧹 force=1 을 지웠습니다 — lawd=11440 umd=상암동 type=84 apt="상암월드컵파크9단지"
+⏭ 이미 있음 — 11440-상암월드컵파크9단지-84.json (다시 받으려면 force=1)
 
 ── 영통아이파크캐슬1단지 전용 59타입 (41117)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '영통아이파크캐슬1단지' --umd '망포동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '영통아이파크캐슬1단지' --umd '망포동' --type 59 --from 202001
 
-영통아이파크캐슬1단지 · 전용 59타입 · 41117 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41117-영통아이파크캐슬1단지-59.json
-거래 있던 달 75/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 11.4억 (2026-09-14 · 전용 59.83㎡ 22층)
-🧹 force=1 을 지웠습니다 — lawd=41117 umd=망포동 type=59 apt="영통아이파크캐슬1단지"
+⏭ 이미 있음 — 41117-영통아이파크캐슬1단지-59.json (다시 받으려면 force=1)
 
 ── 월곡두산위브 전용 59타입 (11290)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 11290 --apt '월곡두산위브' --umd '하월곡동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 11290 --apt '월곡두산위브' --umd '하월곡동' --type 59 --from 202001
 
-월곡두산위브 · 전용 59타입 · 11290 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/11290-월곡두산위브-59.json
-거래 있던 달 64/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 10.5억 (2026-08-30 · 전용 59.855㎡ 19층)
-🧹 force=1 을 지웠습니다 — lawd=11290 umd=하월곡동 type=59 apt="월곡두산위브"
+⏭ 이미 있음 — 11290-월곡두산위브-59.json (다시 받으려면 force=1)
 
 ── 수원센트럴아이파크자이 전용 84타입 (41115)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41115 --apt '수원센트럴아이파크자이' --umd '인계동' --type 84 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41115 --apt '수원센트럴아이파크자이' --umd '인계동' --type 84 --from 202001
 
-수원센트럴아이파크자이 · 전용 84타입 · 41115 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41115-수원센트럴아이파크자이-84.json
-거래 있던 달 17/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 10.1억 (2026-08-27 · 전용 84.99㎡ 5층)
-🧹 force=1 을 지웠습니다 — lawd=41115 umd=인계동 type=84 apt="수원센트럴아이파크자이"
+⏭ 이미 있음 — 41115-수원센트럴아이파크자이-84.json (다시 받으려면 force=1)
 
 ── 길음뉴타운1단지(래미안길음1차) 전용 59타입 (11290)
 
