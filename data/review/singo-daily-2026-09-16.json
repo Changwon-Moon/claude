@@ -1,0 +1,60 @@
+{
+  "label": "singo-daily-2026-09-16",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 8장 · 코드 검수만",
+  "findings": [],
+  "cards": [
+    {
+      "file": "singo-길음뉴타운1단지래미안길음1차-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-상암월드컵파크9단지-84-0916.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-영통아이파크캐슬1단지-59-0916.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-월곡두산위브-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-수원센트럴아이파크자이-84-0916.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-수원센트럴아이파크자이-59-0916.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-권선자이e편한세상-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-화서역우방센트럴파크-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}

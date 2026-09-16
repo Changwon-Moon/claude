@@ -62,6 +62,9 @@ const DRY = flag("dry");
  * 판정이 끝나면 Actions 가 이 모드로 돌려 대기열만 채우고, 수집기들이 바로 움직인다.
  * 세션은 재료가 다 찬 뒤에 와서 만들기만 하면 된다. */
 const ENQUEUE_ONLY = flag("enqueue-only");
+/* `--skip <대장열쇠|단지명> …` — 오늘만 빼는 건(오너 판단). 아래 ② 에서 쓴다. */
+const SKIP = list("skip");
+const skippedByOwner = [];
 
 /* 이름 정규화 — 빌더(`build-singo-record.mjs` 의 `full`)와 **같은 규칙**이어야 한다.
    여기서 다르게 만들면 슬러그가 갈려 「만든 카드를 못 찾는」 일이 난다. */
@@ -165,6 +168,20 @@ for (const h of hits) {
      — 그게 상록마을 사고(2026-08-13)의 경로다. 명령을 찍어 주고 넘어간다. */
   if (!h.kaptCode) {
     noKey.push({ h, slug, type });
+    continue;
+  }
+  /* ── ⏭ **오너가 오늘은 빼기로 한 건** (2026-09-16 오너 "8장만 먼저 내고 … 내일 작업에 포함")
+   *
+   * 재료 하나가 안 와서 하루치 전체가 멈추는 날이 있다. 09-16 이 그랬다 —
+   * 아홉 건 중 여덟 건이 다 준비됐는데 상계주공3(고층) 공급면적 하나가 아침부터
+   * 계속 「fetch failed」였다. 그 한 건을 기다리느라 여덟 장을 못 내는 건 말이 안 된다.
+   *
+   * ⚠️ **조용히 빠지지 않는다.** 뺀 건은 끝에서 이유와 함께 다시 나오고,
+   *    다음 날 `--also <슬러그>` 로 그날 묶음에 붙인다(지난날 못 낸 장을 붙이는 길).
+   * ⚠️ 이건 **사람의 판단**이다 — 코드가 스스로 빼지 않는다. 명령에 적어야만 빠진다. */
+  if (SKIP.includes(h.kaptCode) || SKIP.includes(h.aptNm)) {
+    skippedByOwner.push({ h, slug, type });
+    console.log(`⏭ ${h.aptNm} 전용${type} — 오너 지시로 오늘은 뺍니다(--skip). 다음 날 --also ${slug} 로 붙입니다.`);
     continue;
   }
   const t = { h, slug, type, kapt: h.kaptCode, base };
@@ -499,6 +516,17 @@ if (skipped.length || noKey.length) {
   console.log(`\n⚠️ 못 만든 ${skipped.length + noKey.length}건 — **조용히 빠뜨리지 않습니다**`);
   for (const s of skipped) console.log(`   · ${s.h.gu} ${s.h.aptNm} 전용${s.type} — ${s.why}`);
   for (const n of noKey) console.log(`   · ${n.h.gu} ${n.h.aptNm} 전용${n.type} — 대장 열쇠를 못 물렸습니다(사람이 짚어야 합니다)`);
+}
+/* 오너가 오늘만 뺀 건은 **따로** 적는다 — 「못 만든 것」과 섞으면 다음 날 세션이
+   「이건 못 만드는 소재구나」로 잘못 읽는다. 여기 적힌 명령을 그대로 쓰면 붙는다. */
+if (skippedByOwner.length) {
+  console.log(`\n⏭ 오너 지시로 **오늘만 뺀** ${skippedByOwner.length}건 — 다음 날 붙입니다`);
+  for (const s of skippedByOwner)
+    console.log(
+      `   · ${s.h.gu} ${s.h.aptNm} 전용${s.type} (${(s.h.priceManwon / 10000).toFixed(2)}억 · ${s.h.foundOn} 판정)\n` +
+        `     내일: node scripts/build-singo-record.mjs --apt "${s.h.aptNm}" --type ${s.type} --kapt ${s.h.kaptCode} --publish\n` +
+        `           → 그 다음 node scripts/singo-daily-build.mjs --also ${s.slug}`,
+    );
 }
 console.log(
   `\n다음: 미리보기를 오너에게 보내 확정을 받습니다.\n` +
