@@ -12,7 +12,7 @@
 > 이 표는 `node scripts/template-usage.mjs --write` 가 **실측해서 씁니다.**
 > 손으로 고치지 마세요 — 세트가 늘면 다음 실행 때 덮어씁니다.
 
-**템플릿 47종** · 🟢 카드가 나오는 것 33 · 🟡 빌더는 있음 2 · ⚪ 잠자는 것 12
+**템플릿 48종** · 🟢 카드가 나오는 것 34 · 🟡 빌더는 있음 2 · ⚪ 잠자는 것 12
 
 | 판형 | 상태 | 쓰는 세트 |
 |---|---|---|
@@ -39,10 +39,11 @@
 | `rail-line` | 🟢 8세트 | rail-sinansan, rail-gtxa, rail-gtxb 외 5 |
 | `ranking-table` | 🟢 2세트 | jeongbi-rank, pop-city-rank |
 | `record-grid` | 🟢 1세트 | kospi-record |
+| `rise-story` | 🟢 1세트 | tohuh-rise |
 | `seongsu-zones` | 🟢 1세트 | seongsu-zones |
 | `sinbundang-loop` | 🟢 1세트 | sinbundang-loop |
 | `singo-record` | 🟢 24세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 21 |
-| `singoga-map` | 🟢 4세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map 외 1 |
+| `singoga-map` | 🟢 5세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map 외 2 |
 | `streak-line` | 🟢 22세트 | mae-streak, jeonse-streak, m2-gap 외 19 |
 | `supply-progress` | 🟢 1세트 | supply-progress |
 | `tax-matrix` | 🟢 1세트 | ltv-matrix |
