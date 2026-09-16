@@ -2340,8 +2340,9 @@
     },
     {
       "label": "tohuh-rise-dots",
-      "title": "(시안) 토허제 40곳 — 23년 초부터 해마다 쌓인 상승 몫 (누적 막대)",
+      "title": "(시안) 토허제 40곳 — 24년 초부터 해마다 오른 폭 (누적 막대 · 점 도표 두 안)",
       "cards": [
+        "tohuh-rise-stack",
         "tohuh-rise-dots"
       ],
       "caption": "tohuh-rise-dots",

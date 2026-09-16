@@ -1,7 +1,7 @@
 {
   "label": "tohuh-rise-dots",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 2장 · 코드 검수만",
   "findings": [
     {
       "reviewer": "caption-lint",
@@ -11,6 +11,12 @@
     }
   ],
   "cards": [
+    {
+      "file": "tohuh-rise-stack.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
     {
       "file": "tohuh-rise-dots.json",
       "deterministic": true,

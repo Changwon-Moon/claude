@@ -219,10 +219,12 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
  *   칸 k = (k+1년 초 지수 − k년 초 지수) ÷ 23년 초 지수   (마지막 칸은 끝점까지)
  *   칸을 다 더하면 정확히 23년 초부터의 상승률이 된다(곱셈 효과가 칸 안에 들어간다).
  * 내린 해는 0 왼쪽으로 쌓는다 — 오른 몫은 0 오른쪽에서 해 순서대로 이어 붙인다.
+ * 3차(오너 2026-09-16): 막대(stack)와 점(dots) 두 시안을 같은 계산으로 나란히 만든다.
+ *   점 = 해마다 끝난 자리(누적)에 찍는다 → 0 → 24년 말 → 25년 말 → 지금, 왼쪽에서 오른쪽으로 해 순서.
  * 2차(오너 2026-09-16): 23년은 내린 곳이 많아 막대가 0 양쪽으로 갈라져 읽기 어렵다 →
  *   **24년 초를 기준(0)으로 24·25·26 세 칸만** 쌓는다. 시작 연도는 STACK_FROM 한 곳에서 바꾼다.
  * 오른쪽 숫자 = 23년 초부터 합계. */
-{
+const buildStack = (mode) => {
   const STACK_FROM = "2024";
   const SYS = YS.slice(YS.indexOf(STACK_FROM));
   const first = SYS[0], last = SYS.at(-1);
@@ -257,13 +259,16 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
   /* 범례 — 해 순서 그대로 */
   let lx = 0;
   SYS.forEach((y, i) => {
-    const lab = i === SYS.length - 1 ? `${y.slice(2)}년(올해)` : `${y.slice(2)}년`;
-    g += `<rect x="${lx}" y="6" width="26" height="16" fill="${COLORS[i]}" opacity="${OPAC[i]}"/>`;
+    const isLast = i === SYS.length - 1;
+    const lab = mode === "dots" ? (isLast ? `지금(${endDot.slice(2, 7)})` : `${y.slice(2)}년 말`) : isLast ? `${y.slice(2)}년(올해)` : `${y.slice(2)}년`;
+    g += mode === "dots"
+      ? `<circle cx="${lx + 12}" cy="14" r="8" fill="${COLORS[i]}" opacity="${OPAC[i]}"/>`
+      : `<rect x="${lx}" y="6" width="26" height="16" fill="${COLORS[i]}" opacity="${OPAC[i]}"/>`;
     g += `<text x="${lx + 34}" y="21" ${FONT} font-size="20" font-weight="800" fill="${i === SYS.length - 1 ? RED : INK}">${lab}</text>`;
     lx += 34 + textW(lab, 20) + 30;
   });
-  g += `<text x="${lx + 4}" y="21" ${FONT} font-size="18" font-weight="600" fill="${GRAY}">에 더해진 몫</text>`;
-  g += `<line x1="${W - 150}" y1="6" x2="${W - 150}" y2="24" stroke="${INK}" stroke-width="2.5"/><text x="${W - 140}" y="21" ${FONT} font-size="18" font-weight="600" fill="${GRAY}">합계 자리</text>`;
+  g += `<text x="${lx + 4}" y="21" ${FONT} font-size="18" font-weight="600" fill="${GRAY}">${mode === "dots" ? "까지 오른 폭" : "에 더해진 몫"}</text>`;
+  if (mode === "stack") g += `<line x1="${W - 150}" y1="6" x2="${W - 150}" y2="24" stroke="${INK}" stroke-width="2.5"/><text x="${W - 140}" y="21" ${FONT} font-size="18" font-weight="600" fill="${GRAY}">합계 자리</text>`;
   for (let t = Math.ceil(axMin / 10) * 10; t <= axMax; t += 10) {
     g += `<line x1="${X(t).toFixed(1)}" y1="${top - 12}" x2="${X(t).toFixed(1)}" y2="${H - 4}" stroke="${t === 0 ? INK : "var(--wirit-ink-06)"}" stroke-width="${t === 0 ? 2 : 2}" opacity="${t === 0 ? 0.5 : 1}"/>`;
     g += `<text x="${X(t).toFixed(1)}" y="${top - 18}" ${FONT} font-size="17" font-weight="700" fill="${GRAY}" text-anchor="middle">${t > 0 ? "+" : t < 0 ? "−" : ""}${Math.abs(t)}%</text>`;
@@ -274,31 +279,47 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
     const hl = HL.has(a.label);
     if (r % 2 === 0) g += `<rect x="0" y="${(cy - rowH / 2).toFixed(1)}" width="${W}" height="${rowH}" fill="var(--wirit-ink-06)" opacity="0.5"/>`;
     g += `<text x="${nameW}" y="${(cy + 6).toFixed(1)}" ${FONT} font-size="${NAME_PX}" font-weight="${hl ? 900 : 600}" fill="${hl ? CO : INK}" text-anchor="end">${esc(tableName(a))}</text>`;
-    let pos = 0, neg = 0;
-    segs(a).forEach((sg, i) => {
-      if (Math.abs(sg.v) < 1e-9) return;
-      let from, to;
-      if (sg.v > 0) { from = pos; to = pos + sg.v; pos = to; } else { from = neg + sg.v; to = neg; neg = from; }
-      g += `<rect x="${X(from).toFixed(1)}" y="${(cy - bh / 2).toFixed(1)}" width="${Math.max(0.8, X(to) - X(from)).toFixed(1)}" height="${bh}" fill="${COLORS[i]}" opacity="${OPAC[i]}"/>`;
-    });
-    /* 내린 해가 있으면 막대 오른쪽 끝 ≠ 합계다 → 합계 자리에 세로 눈금을 찍어 둔다(오독 방지) */
-    if (neg < 0) g += `<line x1="${X(total(a)).toFixed(1)}" y1="${(cy - 9).toFixed(1)}" x2="${X(total(a)).toFixed(1)}" y2="${(cy + 9).toFixed(1)}" stroke="var(--wirit-paper)" stroke-width="5"/><line x1="${X(total(a)).toFixed(1)}" y1="${(cy - 9).toFixed(1)}" x2="${X(total(a)).toFixed(1)}" y2="${(cy + 9).toFixed(1)}" stroke="${INK}" stroke-width="2.5"/>`;
+    if (mode === "dots") {
+      /* 누적 자리: 해마다 끝난 곳 */
+      let c = 0;
+      const cum = segs(a).map((sg) => (c += sg.v));
+      const lo = Math.min(0, ...cum), hi = Math.max(0, ...cum);
+      g += `<line x1="${X(lo).toFixed(1)}" y1="${cy.toFixed(1)}" x2="${X(hi).toFixed(1)}" y2="${cy.toFixed(1)}" stroke="${GRAY}" stroke-width="3" opacity="0.4"/>`;
+      cum.forEach((v, i) => {
+        const last = i === cum.length - 1;
+        g += `<circle cx="${X(v).toFixed(1)}" cy="${cy.toFixed(1)}" r="${last ? 7.5 : 6.5}" fill="${COLORS[i]}" opacity="${OPAC[i]}" stroke="var(--wirit-paper)" stroke-width="1.5"/>`;
+      });
+    } else {
+      let pos = 0, neg = 0;
+      segs(a).forEach((sg, i) => {
+        if (Math.abs(sg.v) < 1e-9) return;
+        let from, to;
+        if (sg.v > 0) { from = pos; to = pos + sg.v; pos = to; } else { from = neg + sg.v; to = neg; neg = from; }
+        g += `<rect x="${X(from).toFixed(1)}" y="${(cy - bh / 2).toFixed(1)}" width="${Math.max(0.8, X(to) - X(from)).toFixed(1)}" height="${bh}" fill="${COLORS[i]}" opacity="${OPAC[i]}"/>`;
+      });
+      /* 내린 해가 있으면 막대 오른쪽 끝 ≠ 합계다 → 합계 자리에 세로 눈금을 찍어 둔다(오독 방지) */
+      if (neg < 0) g += `<line x1="${X(total(a)).toFixed(1)}" y1="${(cy - 9).toFixed(1)}" x2="${X(total(a)).toFixed(1)}" y2="${(cy + 9).toFixed(1)}" stroke="var(--wirit-paper)" stroke-width="5"/><line x1="${X(total(a)).toFixed(1)}" y1="${(cy - 9).toFixed(1)}" x2="${X(total(a)).toFixed(1)}" y2="${(cy + 9).toFixed(1)}" stroke="${INK}" stroke-width="2.5"/>`;
+    }
     g += `<text x="${W - 4}" y="${(cy + 6).toFixed(1)}" ${FONT} font-size="17" font-weight="800" fill="${INK}" text-anchor="end">${pctTxt(total(a))}</text>`;
   });
   const svg = `<svg viewBox="0 0 ${W} ${H.toFixed(0)}" xmlns="http://www.w3.org/2000/svg">${g}</svg>`;
   /* 제목: 올해 몫이 가장 큰 곳 — 계산이 고른다 */
   const lastShare = (a) => segs(a).at(-1).v;
   const topLast = [...rows].sort((p, q) => lastShare(q) - lastShare(p))[0];
-  cards.dots = {
+  cards[mode] = {
     template: "rise-story@1", date, kind: "bump",
-    note: `시안 · 누적 막대 · 40곳 · ${first}년 초부터 합계 순`,
+    note: `시안 · ${mode === "dots" ? "점 도표" : "누적 막대"} · 40곳 · ${first}년 초부터 상승률 순`,
     title: lines(`${first.slice(2)}년부터 <span class="hi">해마다</span> 얼마씩 올랐나`),
     svg,
-    foot: `칸 = 그해 오른 몫(${first.slice(2)}년 초 가격 대비) · 내린 해는 0 왼쪽 · 세로 눈금 = 합계 자리 · ${endDot}`,
+    foot: mode === "dots"
+      ? `점 = 그해 말까지 오른 폭(${first.slice(2)}년 초 가격 대비) · 빨간 점 = 지금 = 오른쪽 합계 · ${endDot}`
+      : `칸 = 그해 오른 몫(${first.slice(2)}년 초 가격 대비) · 내린 해는 0 왼쪽 · 세로 눈금 = 합계 자리 · ${endDot}`,
     source: SOURCE,
   };
-  console.log(`   누적 막대: 올해 몫 최대 ${topLast.label} ${lastShare(topLast).toFixed(1)}%p`);
-}
+  if (mode === "stack") console.log(`   누적 막대: 올해 몫 최대 ${topLast.label} ${lastShare(topLast).toFixed(1)}%p`);
+};
+buildStack("stack");
+buildStack("dots");
 
 /* ───────── 3. 출발점별 순위표 넷 — 지도 4장을 한 장으로(오너 2026-09-16) ─────────
  * 「상위 1위~N위 … 38~40위」 — 위는 N곳, 아래는 마지막 세 자리. N 은 판 높이에 맞춘 값이다. */
@@ -411,7 +432,7 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
     `#부동산 #아파트값 #토지거래허가구역 #집값 #데이터시각화`,
   ].join("\n");
   writeCaption("tohuh-rise", caption);
-  writeCaption("tohuh-rise-dots", `(시안) 점 도표 — 캡션은 확정 후 손질\n\n${caption}`);
+  writeCaption("tohuh-rise-dots", `(시안) 누적 막대·점 도표 — 캡션은 확정 후 손질\n\n${caption}`);
 }
 
 const outDir = join(ROOT, `data/content/${date}`);
