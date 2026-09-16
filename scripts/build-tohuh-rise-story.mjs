@@ -213,63 +213,84 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
   };
 }
 
-/* ───────── (시안) 점 도표 — 최초 기사의 점 도표 형식을 빌린 초안(오너 2026-09-16) ─────────
- * 한 줄 = 한 지역. 가로축 = 상승률. ○ 23년 초부터 · 회색 점 24·25년 초부터 · ● 26년 초부터(올해).
- * 선 길이 = 출발점에 따라 달라지는 폭. 23년 초부터 값이 큰 순으로 줄 세운다. */
+/* ───────── (시안) 해마다 쌓인 몫 — 누적 막대(오너 2026-09-16) ─────────
+ * 1차 시안(점 도표)은 26년 점이 맨 왼쪽에 와서 「26→23」 순으로 읽혔다(오너: 잘 안 읽힌다).
+ * → 23년 초 가격을 기준(0)으로, 해마다 더해진 몫을 23·24·25·26 순서로 쌓는다.
+ *   칸 k = (k+1년 초 지수 − k년 초 지수) ÷ 23년 초 지수   (마지막 칸은 끝점까지)
+ *   칸을 다 더하면 정확히 23년 초부터의 상승률이 된다(곱셈 효과가 칸 안에 들어간다).
+ * 내린 해(대개 2023년)는 0 왼쪽으로 쌓는다 — 오른 몫은 0 오른쪽에서 해 순서대로 이어 붙인다.
+ * 오른쪽 숫자 = 23년 초부터 합계. */
 {
-  const first = YS[0], last = YS.at(-1), mids = YS.slice(1, -1);
+  const first = YS[0], last = YS.at(-1);
   const HL = new Set(["송파구", "서초구", "강남구"]);
-  const val = (y, a) => B(y).stat.find((s) => s.geoName === a.geoName).v;
+  const s0 = (a) => R.mae[a.code];
+  const segs = (a) => {
+    const s = s0(a), b = s[`${first}01`];
+    const pts = [...YS.map((y) => `${y}01`), END].map((k) => (s[k] / b - 1) * 100);
+    return YS.map((y, i) => ({ y, v: pts[i + 1] - pts[i] }));
+  };
+  const total = (a) => B(first).stat.find((x) => x.geoName === a.geoName).v;
   const rows = [...B(first).ranked];
-  const W = 936, top = 70, rowH = 21.5, H = top + rowH * rows.length + 8;
-  const NAME_PX = 17, nameW = Math.ceil(Math.max(...rows.map((a) => textW(tableName(a), NAME_PX)))) + 6;
-  const valW = 150; // 오른쪽 숫자 두 칸
-  const x0 = nameW + 14, x1 = W - valW - 16;
-  const vmax = Math.max(...YS.flatMap((y) => rows.map((a) => val(y, a))));
-  const vmin = Math.min(0, ...YS.flatMap((y) => rows.map((a) => val(y, a))));
-  const axMax = Math.ceil(vmax / 10) * 10;
-  const X = (v) => x0 + ((v - vmin) / (axMax - vmin)) * (x1 - x0);
-  let g = "";
-  /* 범례 */
-  g += `<circle cx="10" cy="14" r="7" fill="var(--wirit-paper)" stroke="${INK}" stroke-width="3"/>`;
-  g += `<text x="24" y="21" ${FONT} font-size="20" font-weight="800" fill="${INK}">${first.slice(2)}년 초부터</text>`;
-  const lx = 24 + textW(`${first.slice(2)}년 초부터`, 20) + 26;
-  g += `<circle cx="${lx}" cy="14" r="5" fill="${GRAY}" opacity="0.55"/>`;
-  g += `<text x="${lx + 12}" y="21" ${FONT} font-size="20" font-weight="700" fill="${GRAY}">${mids.map((y) => y.slice(2)).join("·")}년 초부터</text>`;
-  const lx2 = lx + 12 + textW(`${mids.map((y) => y.slice(2)).join("·")}년 초부터`, 20) + 26;
-  g += `<circle cx="${lx2}" cy="14" r="7" fill="${RED}"/>`;
-  g += `<text x="${lx2 + 14}" y="21" ${FONT} font-size="20" font-weight="800" fill="${RED}">${last.slice(2)}년 초부터(올해)</text>`;
-  /* 눈금 */
-  for (let t = Math.ceil(vmin / 10) * 10; t <= axMax; t += 10) {
-    g += `<line x1="${X(t).toFixed(1)}" y1="${top - 12}" x2="${X(t).toFixed(1)}" y2="${H - 4}" stroke="var(--wirit-ink-06)" stroke-width="2"/>`;
-    g += `<text x="${X(t).toFixed(1)}" y="${top - 18}" ${FONT} font-size="17" font-weight="700" fill="${GRAY}" text-anchor="middle">${t}%</text>`;
+  /* 칸 합 = 합계 검산 — 어긋나면 그림이 거짓이다 */
+  for (const a of rows) {
+    const sum = segs(a).reduce((t, x) => t + x.v, 0);
+    if (Math.abs(sum - total(a)) > 1e-9) throw new Error(`${a.label} 칸 합 ${sum} ≠ 합계 ${total(a)}`);
   }
-  g += `<text x="${W - valW / 2 - 40}" y="${top - 18}" ${FONT} font-size="16" font-weight="800" fill="${INK}" text-anchor="middle">${first.slice(2)}년~</text>`;
-  g += `<text x="${W - 30}" y="${top - 18}" ${FONT} font-size="16" font-weight="800" fill="${RED}" text-anchor="middle">${last.slice(2)}년~</text>`;
-  rows.forEach((a, i) => {
-    const cy = top + rowH * i + rowH / 2;
-    const vs = YS.map((y) => val(y, a));
+  const COLORS = { 0: "var(--wirit-gray)", 1: "var(--wirit-gray)", 2: INK, 3: RED };
+  const OPAC = { 0: 0.28, 1: 0.6, 2: 0.9, 3: 1 };
+  const W = 936, top = 70, rowH = 21, H = top + rowH * rows.length + 8;
+  const NAME_PX = 17, nameW = Math.ceil(Math.max(...rows.map((a) => textW(tableName(a), NAME_PX)))) + 6;
+  const valW = 80;
+  const x0 = nameW + 14, x1 = W - valW - 10;
+  const negMax = Math.max(...rows.map((a) => -segs(a).filter((x) => x.v < 0).reduce((t, x) => t + x.v, 0)));
+  const posMax = Math.max(...rows.map((a) => segs(a).filter((x) => x.v > 0).reduce((t, x) => t + x.v, 0)));
+  const axMin = -Math.ceil(negMax / 10) * 10, axMax = Math.ceil(posMax / 10) * 10;
+  const X = (v) => x0 + ((v - axMin) / (axMax - axMin)) * (x1 - x0);
+  let g = "";
+  /* 범례 — 해 순서 그대로 */
+  let lx = 0;
+  YS.forEach((y, i) => {
+    const lab = i === YS.length - 1 ? `${y.slice(2)}년(올해)` : `${y.slice(2)}년`;
+    g += `<rect x="${lx}" y="6" width="26" height="16" fill="${COLORS[i]}" opacity="${OPAC[i]}"/>`;
+    g += `<text x="${lx + 34}" y="21" ${FONT} font-size="20" font-weight="800" fill="${i === 3 ? RED : INK}">${lab}</text>`;
+    lx += 34 + textW(lab, 20) + 30;
+  });
+  g += `<text x="${lx + 4}" y="21" ${FONT} font-size="18" font-weight="600" fill="${GRAY}">에 더해진 몫</text>`;
+  g += `<line x1="${W - 150}" y1="6" x2="${W - 150}" y2="24" stroke="${INK}" stroke-width="2.5"/><text x="${W - 140}" y="21" ${FONT} font-size="18" font-weight="600" fill="${GRAY}">합계 자리</text>`;
+  for (let t = axMin; t <= axMax; t += 10) {
+    g += `<line x1="${X(t).toFixed(1)}" y1="${top - 12}" x2="${X(t).toFixed(1)}" y2="${H - 4}" stroke="${t === 0 ? INK : "var(--wirit-ink-06)"}" stroke-width="${t === 0 ? 2 : 2}" opacity="${t === 0 ? 0.5 : 1}"/>`;
+    g += `<text x="${X(t).toFixed(1)}" y="${top - 18}" ${FONT} font-size="17" font-weight="700" fill="${GRAY}" text-anchor="middle">${t > 0 ? "+" : t < 0 ? "−" : ""}${Math.abs(t)}%</text>`;
+  }
+  g += `<text x="${W - 4}" y="${top - 18}" ${FONT} font-size="16" font-weight="800" fill="${INK}" text-anchor="end">합계</text>`;
+  rows.forEach((a, r) => {
+    const cy = top + rowH * r + rowH / 2, bh = 13;
     const hl = HL.has(a.label);
-    if (i % 2 === 0) g += `<rect x="0" y="${(cy - rowH / 2).toFixed(1)}" width="${W}" height="${rowH}" fill="var(--wirit-ink-06)" opacity="0.5"/>`;
+    if (r % 2 === 0) g += `<rect x="0" y="${(cy - rowH / 2).toFixed(1)}" width="${W}" height="${rowH}" fill="var(--wirit-ink-06)" opacity="0.5"/>`;
     g += `<text x="${nameW}" y="${(cy + 6).toFixed(1)}" ${FONT} font-size="${NAME_PX}" font-weight="${hl ? 900 : 600}" fill="${hl ? CO : INK}" text-anchor="end">${esc(tableName(a))}</text>`;
-    g += `<line x1="${X(Math.min(...vs)).toFixed(1)}" y1="${cy.toFixed(1)}" x2="${X(Math.max(...vs)).toFixed(1)}" y2="${cy.toFixed(1)}" stroke="${GRAY}" stroke-width="3" opacity="0.45"/>`;
-    mids.forEach((y) => (g += `<circle cx="${X(val(y, a)).toFixed(1)}" cy="${cy.toFixed(1)}" r="4.5" fill="${GRAY}" opacity="0.55"/>`));
-    g += `<circle cx="${X(vs[0]).toFixed(1)}" cy="${cy.toFixed(1)}" r="6.5" fill="var(--wirit-paper)" stroke="${INK}" stroke-width="3"/>`;
-    g += `<circle cx="${X(vs.at(-1)).toFixed(1)}" cy="${cy.toFixed(1)}" r="6.5" fill="${RED}"/>`;
-    g += `<text x="${W - valW / 2 - 40}" y="${(cy + 6).toFixed(1)}" ${FONT} font-size="16" font-weight="700" fill="${INK}" text-anchor="middle">${pctTxt(vs[0])}</text>`;
-    g += `<text x="${W - 30}" y="${(cy + 6).toFixed(1)}" ${FONT} font-size="16" font-weight="800" fill="${RED}" text-anchor="middle">${pctTxt(vs.at(-1))}</text>`;
+    let pos = 0, neg = 0;
+    segs(a).forEach((sg, i) => {
+      if (Math.abs(sg.v) < 1e-9) return;
+      let from, to;
+      if (sg.v > 0) { from = pos; to = pos + sg.v; pos = to; } else { from = neg + sg.v; to = neg; neg = from; }
+      g += `<rect x="${X(from).toFixed(1)}" y="${(cy - bh / 2).toFixed(1)}" width="${Math.max(0.8, X(to) - X(from)).toFixed(1)}" height="${bh}" fill="${COLORS[i]}" opacity="${OPAC[i]}"/>`;
+    });
+    /* 내린 해가 있으면 막대 오른쪽 끝 ≠ 합계다 → 합계 자리에 세로 눈금을 찍어 둔다(오독 방지) */
+    if (neg < 0) g += `<line x1="${X(total(a)).toFixed(1)}" y1="${(cy - 9).toFixed(1)}" x2="${X(total(a)).toFixed(1)}" y2="${(cy + 9).toFixed(1)}" stroke="var(--wirit-paper)" stroke-width="5"/><line x1="${X(total(a)).toFixed(1)}" y1="${(cy - 9).toFixed(1)}" x2="${X(total(a)).toFixed(1)}" y2="${(cy + 9).toFixed(1)}" stroke="${INK}" stroke-width="2.5"/>`;
+    g += `<text x="${W - 4}" y="${(cy + 6).toFixed(1)}" ${FONT} font-size="17" font-weight="800" fill="${INK}" text-anchor="end">${pctTxt(total(a))}</text>`;
   });
   const svg = `<svg viewBox="0 0 ${W} ${H.toFixed(0)}" xmlns="http://www.w3.org/2000/svg">${g}</svg>`;
-  /* 제목: 23년 1위가 올해 몇 %였나 — 같은 지역의 두 점 */
-  const t1 = B(first).coTop[0];
+  /* 제목: 올해 몫이 가장 큰 곳 — 계산이 고른다 */
+  const lastShare = (a) => segs(a).at(-1).v;
+  const topLast = [...rows].sort((p, q) => lastShare(q) - lastShare(p))[0];
   cards.dots = {
     template: "rise-story@1", date, kind: "bump",
-    note: `시안 · 점 도표 · 40곳 · ${first.slice(2)}년 초부터 상승률 순`,
-    title: lines(`${shortName(t1)}, ${first.slice(2)}년부터 ${pctTxt(val(first, t1))}% · <span class="hi">올해 ${pctTxt(val(last, t1))}%</span>`),
+    note: `시안 · 누적 막대 · 40곳 · ${first}년 초부터 합계 순`,
+    title: lines(`${first.slice(2)}년부터 <span class="hi">해마다</span> 얼마씩 올랐나`),
     svg,
-    foot: `선 길이 = 출발점에 따라 달라지는 상승률 폭 · <span class="co">파랑</span> = 강남 3구 · 단위 % · ${endDot} 기준`,
+    foot: `칸 = 그해 오른 몫(${first.slice(2)}년 초 가격 대비) · 내린 해는 0 왼쪽 · 세로 눈금 = 합계 자리 · ${endDot}`,
     source: SOURCE,
   };
+  console.log(`   누적 막대: 올해 몫 최대 ${topLast.label} ${lastShare(topLast).toFixed(1)}%p`);
 }
 
 /* ───────── 3. 출발점별 순위표 넷 — 지도 4장을 한 장으로(오너 2026-09-16) ─────────

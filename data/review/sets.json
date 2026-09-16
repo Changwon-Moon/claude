@@ -2340,13 +2340,13 @@
     },
     {
       "label": "tohuh-rise-dots",
-      "title": "(시안) 토허제 40곳 상승률 점 도표 — 출발점 넷을 한 줄에",
+      "title": "(시안) 토허제 40곳 — 23년 초부터 해마다 쌓인 상승 몫 (누적 막대)",
       "cards": [
         "tohuh-rise-dots"
       ],
       "caption": "tohuh-rise-dots",
       "state": "시안",
-      "note": "최초 기사(직방 분석)의 점 도표 형식을 빌린 초안. build-tohuh-rise-story 가 같이 만든다."
+      "note": "1차 점 도표 → 오너 지시로 23·24·25·26 순서 누적 막대로 교체(2026-09-16). build-tohuh-rise-story 가 만든다."
     }
   ]
 }
