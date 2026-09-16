@@ -218,16 +218,20 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
  * → 23년 초 가격을 기준(0)으로, 해마다 더해진 몫을 23·24·25·26 순서로 쌓는다.
  *   칸 k = (k+1년 초 지수 − k년 초 지수) ÷ 23년 초 지수   (마지막 칸은 끝점까지)
  *   칸을 다 더하면 정확히 23년 초부터의 상승률이 된다(곱셈 효과가 칸 안에 들어간다).
- * 내린 해(대개 2023년)는 0 왼쪽으로 쌓는다 — 오른 몫은 0 오른쪽에서 해 순서대로 이어 붙인다.
+ * 내린 해는 0 왼쪽으로 쌓는다 — 오른 몫은 0 오른쪽에서 해 순서대로 이어 붙인다.
+ * 2차(오너 2026-09-16): 23년은 내린 곳이 많아 막대가 0 양쪽으로 갈라져 읽기 어렵다 →
+ *   **24년 초를 기준(0)으로 24·25·26 세 칸만** 쌓는다. 시작 연도는 STACK_FROM 한 곳에서 바꾼다.
  * 오른쪽 숫자 = 23년 초부터 합계. */
 {
-  const first = YS[0], last = YS.at(-1);
+  const STACK_FROM = "2024";
+  const SYS = YS.slice(YS.indexOf(STACK_FROM));
+  const first = SYS[0], last = SYS.at(-1);
   const HL = new Set(["송파구", "서초구", "강남구"]);
   const s0 = (a) => R.mae[a.code];
   const segs = (a) => {
     const s = s0(a), b = s[`${first}01`];
-    const pts = [...YS.map((y) => `${y}01`), END].map((k) => (s[k] / b - 1) * 100);
-    return YS.map((y, i) => ({ y, v: pts[i + 1] - pts[i] }));
+    const pts = [...SYS.map((y) => `${y}01`), END].map((k) => (s[k] / b - 1) * 100);
+    return SYS.map((y, i) => ({ y, v: pts[i + 1] - pts[i] }));
   };
   const total = (a) => B(first).stat.find((x) => x.geoName === a.geoName).v;
   const rows = [...B(first).ranked];
@@ -236,28 +240,31 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
     const sum = segs(a).reduce((t, x) => t + x.v, 0);
     if (Math.abs(sum - total(a)) > 1e-9) throw new Error(`${a.label} 칸 합 ${sum} ≠ 합계 ${total(a)}`);
   }
-  const COLORS = { 0: "var(--wirit-gray)", 1: "var(--wirit-gray)", 2: INK, 3: RED };
-  const OPAC = { 0: 0.28, 1: 0.6, 2: 0.9, 3: 1 };
+  /* 색은 연도에 붙인다(칸 순번이 아니라) — 시작 연도를 바꿔도 같은 해는 같은 색 */
+  const COLOR_BY_Y = { 2023: ["var(--wirit-gray)", 0.28], 2024: ["var(--wirit-gray)", 0.6], 2025: [INK, 0.9], 2026: [RED, 1] };
+  const COLORS = SYS.map((y) => COLOR_BY_Y[y][0]);
+  const OPAC = SYS.map((y) => COLOR_BY_Y[y][1]);
   const W = 936, top = 70, rowH = 21, H = top + rowH * rows.length + 8;
   const NAME_PX = 17, nameW = Math.ceil(Math.max(...rows.map((a) => textW(tableName(a), NAME_PX)))) + 6;
   const valW = 80;
   const x0 = nameW + 14, x1 = W - valW - 10;
   const negMax = Math.max(...rows.map((a) => -segs(a).filter((x) => x.v < 0).reduce((t, x) => t + x.v, 0)));
   const posMax = Math.max(...rows.map((a) => segs(a).filter((x) => x.v > 0).reduce((t, x) => t + x.v, 0)));
-  const axMin = -Math.ceil(negMax / 10) * 10, axMax = Math.ceil(posMax / 10) * 10;
+  /* 내린 몫이 한 칸(10%) 에 못 미치면 −10% 눈금까지 비워 두지 않는다 — 그만큼만 왼쪽을 연다(24년 기준: 기흥 −0.2%p 하나) */
+  const axMin = negMax >= 5 ? -Math.ceil(negMax / 10) * 10 : negMax > 0 ? -(negMax + 0.6) : 0, axMax = Math.ceil(posMax / 10) * 10;
   const X = (v) => x0 + ((v - axMin) / (axMax - axMin)) * (x1 - x0);
   let g = "";
   /* 범례 — 해 순서 그대로 */
   let lx = 0;
-  YS.forEach((y, i) => {
-    const lab = i === YS.length - 1 ? `${y.slice(2)}년(올해)` : `${y.slice(2)}년`;
+  SYS.forEach((y, i) => {
+    const lab = i === SYS.length - 1 ? `${y.slice(2)}년(올해)` : `${y.slice(2)}년`;
     g += `<rect x="${lx}" y="6" width="26" height="16" fill="${COLORS[i]}" opacity="${OPAC[i]}"/>`;
-    g += `<text x="${lx + 34}" y="21" ${FONT} font-size="20" font-weight="800" fill="${i === 3 ? RED : INK}">${lab}</text>`;
+    g += `<text x="${lx + 34}" y="21" ${FONT} font-size="20" font-weight="800" fill="${i === SYS.length - 1 ? RED : INK}">${lab}</text>`;
     lx += 34 + textW(lab, 20) + 30;
   });
   g += `<text x="${lx + 4}" y="21" ${FONT} font-size="18" font-weight="600" fill="${GRAY}">에 더해진 몫</text>`;
   g += `<line x1="${W - 150}" y1="6" x2="${W - 150}" y2="24" stroke="${INK}" stroke-width="2.5"/><text x="${W - 140}" y="21" ${FONT} font-size="18" font-weight="600" fill="${GRAY}">합계 자리</text>`;
-  for (let t = axMin; t <= axMax; t += 10) {
+  for (let t = Math.ceil(axMin / 10) * 10; t <= axMax; t += 10) {
     g += `<line x1="${X(t).toFixed(1)}" y1="${top - 12}" x2="${X(t).toFixed(1)}" y2="${H - 4}" stroke="${t === 0 ? INK : "var(--wirit-ink-06)"}" stroke-width="${t === 0 ? 2 : 2}" opacity="${t === 0 ? 0.5 : 1}"/>`;
     g += `<text x="${X(t).toFixed(1)}" y="${top - 18}" ${FONT} font-size="17" font-weight="700" fill="${GRAY}" text-anchor="middle">${t > 0 ? "+" : t < 0 ? "−" : ""}${Math.abs(t)}%</text>`;
   }
