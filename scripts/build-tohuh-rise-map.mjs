@@ -19,11 +19,12 @@
  * 실행: node scripts/build-tohuh-rise-map.mjs --base 2023 [--end 202637] [--date 2026-09-16]
  * 출력: data/content/{date}/tohuh-rise-{base}.json · 캡션 data/review/captions/tohuh-rise-{base}.txt
  */
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tohuhParts, tohuhMapSvg } from "./lib/tohuh-map.mjs";
 import { writeCaption } from "./lib/caption-signature.mjs";
+import { loadTohuhRise, pctTxt, dateKo, dateDot, tableName, shortName } from "./lib/tohuh-rise-data.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const arg = (k, dflt) => {
@@ -34,59 +35,17 @@ const BASE_Y = arg("base");
 const END = arg("end", "202637");
 const date = arg("date", "2026-09-16");
 if (!/^20\d\d$/.test(BASE_Y || "")) throw new Error("--base 2023 처럼 연도를 주세요");
-const BASE = `${BASE_Y}01`;
-const SERIES_BASES = ["2023", "2024", "2025", "2026"]; // 캡션에서 네 장을 나란히 적을 때 쓴다
 
-const doc = JSON.parse(readFileSync(join(ROOT, "data/datasets/reb-weekly-index.json"), "utf8"));
-const tohuh = JSON.parse(readFileSync(join(ROOT, "data/datasets/tohuh-2026.json"), "utf8"));
-if (doc.meta?.verified !== true) {
-  throw new Error("reb-weekly-index.json meta.verified 가 true 가 아니다 — 보도자료와 대조한 뒤 올린다");
-}
-const mae = doc.mae;
-const SEOUL = doc.meta.seoulCode || "50008";
-if (!mae[SEOUL]?.[END]) throw new Error(`끝점 ${END} 가 자료에 없다 (asOf=${doc.meta.asOf})`);
-
-/** 부동산원 주 키 → 그 주 조사일(월요일). reb-weekly-brief 와 같은 규칙. */
-const mondayOf = (key) => {
-  const y = +key.slice(0, 4), w = +key.slice(4);
-  const simple = new Date(Date.UTC(y, 0, 1 + (w - 1) * 7));
-  const dow = simple.getUTCDay() || 7;
-  const mon = new Date(simple);
-  mon.setUTCDate(simple.getUTCDate() - dow + 1);
-  return mon;
-};
-const endDate = mondayOf(END);
-const endKo = `${endDate.getUTCFullYear()}년 ${endDate.getUTCMonth() + 1}월 ${endDate.getUTCDate()}일`;
-const endDot = `${endDate.getUTCFullYear()}.${String(endDate.getUTCMonth() + 1).padStart(2, "0")}.${String(endDate.getUTCDate()).padStart(2, "0")}`;
-
-const AREAS = [
-  ...tohuh.seoul.areas.map((a) => ({ ...a, region: "서울" })),
-  ...tohuh.newly.areas.map((a) => ({ ...a, isNew: true, region: "경기" })),
-  ...tohuh.existing.areas.map((a) => ({ ...a, region: "경기" })),
-];
-if (AREAS.length !== 40) throw new Error(`토허제 지역이 40곳이 아니다: ${AREAS.length}곳`);
-
-/** 지역의 계열 — 네 기준점이 **모두** 있는 계열만 쓴다(장끼리 같은 계열이어야 비교가 된다). */
-const seriesOf = (a) => {
-  const need = [...SERIES_BASES.map((y) => `${y}01`), END];
-  const ok = (c) => c && mae[c] && need.every((k) => Number.isFinite(mae[c][k]));
-  if (ok(a.rebWeeklyCode)) return { code: a.rebWeeklyCode, fallback: false };
-  if (ok(a.rebWeeklyFallback)) return { code: a.rebWeeklyFallback, fallback: true };
-  throw new Error(`${a.label}: 주간 계열(${a.rebWeeklyCode}${a.rebWeeklyFallback ? "/" + a.rebWeeklyFallback : ""})에 기준점이 비었다`);
-};
-const rise = (code, base) => (mae[code][END] / mae[code][base] - 1) * 100;
-const r1 = (v) => Math.round(v * 10) / 10;
-const pctTxt = (v) => `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(r1(v)).toFixed(1)}`;
-
-const stat = AREAS.map((a) => {
-  const s = seriesOf(a);
-  return { ...a, ...s, v: rise(s.code, BASE) };
-});
+/* 계산은 lib 한 곳에서 — 이야기 카드 5장(build-tohuh-rise-story)과 같은 순위·반올림을 쓴다 */
+const R = loadTohuhRise(ROOT, END);
+const cur = R.byBase.get(BASE_Y);
+if (!cur) throw new Error(`--base ${BASE_Y} 는 시리즈 기준점이 아니다`);
+const { BASE, stat, ranked, rankOf, coTop, seoulV } = cur;
+const AREAS = R.AREAS;
+const endKo = dateKo(R.endDate);
+const endDot = dateDot(R.endDate);
 const val = new Map(stat.map((a) => [a.geoName, a.v]));
-/* 같은 값(소수 첫째 자리)이면 원값으로, 그래도 같으면 이름순 — 순위가 실행마다 흔들리지 않게 */
-const ranked = [...stat].sort((a, b) => b.v - a.v || a.label.localeCompare(b.label, "ko"));
 const fallbacks = stat.filter((a) => a.fallback);
-const seoulV = rise(SEOUL, BASE);
 
 /* ── 지도 ── */
 const parts = tohuhParts(AREAS);
@@ -102,23 +61,11 @@ const mapSvg = tohuhMapSvg({
 /* ── 표: 상위 8곳 (월세 카드와 같은 기준) ── */
 const TOP = 8;
 const MEDALS = ["🥇", "🥈", "🥉"];
-/* 순위는 **보이는 값**(소수 첫째 자리)으로 매긴다 — 40.65 와 40.60 이 둘 다 「+40.6%」로 찍히는데
- * 1위·2위로 갈라 적으면 독자는 같은 숫자에 다른 순위가 붙은 것을 본다(2024장 성동·분당, 2026-09-16).
- * 같은 값이면 공동 순위(1·1·3 …). */
-const rankOf = new Map();
-ranked.forEach((a, i) => {
-  const prev = ranked[i - 1];
-  rankOf.set(a.geoName, prev && r1(prev.v) === r1(a.v) ? rankOf.get(prev.geoName) : i + 1);
-});
-/* 표 이름: 서울 구·경기 시는 label(「송파구」「광명시」), 경기 시 안의 구는 mapLabel(「성남 분당」).
- * 「성남시 분당구」는 표 칸에서 「성남시 분 / 당구」로 글자 중간이 꺾였다(첫 렌더). */
-const tableName = (a) => (a.region === "경기" && /시 .+구$/.test(a.label) ? a.mapLabel : a.label);
 const rows = ranked.slice(0, TOP).map((a) => {
   const rk = rankOf.get(a.geoName);
   return { rank: rk, medal: MEDALS[rk - 1] || "", top: rk <= 3, gu: tableName(a), hits: pctTxt(a.v) };
 });
 const top1 = ranked[0];
-const coTop = ranked.filter((a) => rankOf.get(a.geoName) === 1);
 const last = ranked.at(-1);
 const upAll = stat.every((a) => a.v > 0);
 
@@ -130,7 +77,7 @@ const card = {
   hideFooterId: true,
   note: `${BASE_Y}년 초부터 · 토지거래허가구역 40곳 · 아파트 매매가`,
   /* 네 장이 같은 모양이어야 넘기며 비교된다 — 연도와 1위만 바뀐다 */
-  title: `${BASE_Y}년부터 ${coTop.length > 1 ? "공동 " : ""}1위 <span class="hi">${coTop.map((a) => a.mapLabel.split(" ").pop()).join("·")} ${pctTxt(top1.v)}%</span>`,
+  title: `${BASE_Y}년부터 ${coTop.length > 1 ? "공동 " : ""}1위 <span class="hi">${coTop.map(shortName).join("·")} ${pctTxt(top1.v)}%</span>`,
   fitTitle: true,
   unit: "%",
   head: { c: ["순위", "지역", "상승률"] },

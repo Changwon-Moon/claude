@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["template", "kind", "title", "source"],
+  "properties": {
+    "template": { "type": "string" },
+    "date": { "type": "string" },
+    "kind": {
+      "type": "string",
+      "enum": ["cover", "method", "bump", "grid", "notes"],
+      "description": "한 판형 안의 다섯 판. 시리즈(같은 기간 입지별 상승률) 이야기 카드용"
+    },
+    "note": { "type": "string", "description": "제목 위 회색 한 줄" },
+    "title": { "type": "string", "description": "HTML 허용(<span class=hi>, <br>)" },
+    "rows": { "type": "array", "items": { "type": "object" } },
+    "svg": { "type": "string", "description": "빌더가 그린 그래프(method·bump)" },
+    "items": { "type": "array", "items": { "type": "object" } },
+    "grid": { "type": "object" },
+    "lede": { "type": "string" },
+    "foot": { "type": "string", "description": "본문 맨 아래 회색 한 줄(푸터 위)" },
+    "source": { "type": "object" }
+  },
+  "additionalProperties": false
+}

@@ -1,9 +1,21 @@
 {
   "label": "tohuh-rise",
   "verdict": "revise",
-  "summary": "REVISE — error 0 · warn 4 · 카드 4장 · 코드 검수만",
+  "summary": "REVISE — error 0 · warn 4 · 카드 9장 · 코드 검수만",
   "findings": [],
   "cards": [
+    {
+      "file": "tohuh-rise-cover.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "tohuh-rise-method.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
     {
       "file": "tohuh-rise-2023.json",
       "deterministic": true,
@@ -55,6 +67,24 @@
           "msg": "제목과 바로 아래 요소의 간격이 20px 입니다 (제목 69px) — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다"
         }
       ]
+    },
+    {
+      "file": "tohuh-rise-bump.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "tohuh-rise-grid.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "tohuh-rise-notes.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
     }
   ],
   "llm": {

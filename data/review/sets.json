@@ -2325,15 +2325,20 @@
     },
     {
       "label": "tohuh-rise",
-      "title": "📈 언제부터 셌느냐에 따라 1등이 바뀐다 — 토허제 40곳 매매가 상승률 (2023·2024·2025·2026년 초 → 지금)",
+      "title": "📈 언제부터 셌느냐에 따라 1등이 바뀐다 — 토허제 40곳 매매가 상승률 9장",
       "cards": [
+        "tohuh-rise-cover",
+        "tohuh-rise-method",
         "tohuh-rise-2023",
         "tohuh-rise-2024",
         "tohuh-rise-2025",
-        "tohuh-rise-2026"
+        "tohuh-rise-2026",
+        "tohuh-rise-bump",
+        "tohuh-rise-grid",
+        "tohuh-rise-notes"
       ],
-      "caption": "tohuh-rise-2023",
-      "note": "한국부동산원 주간 매매가격지수 · 끝점 202637(2026-09-07) 고정. 캡션은 1장(2023) 것을 대표로 쓰고 2024~2026 캡션은 참고용.",
+      "caption": "tohuh-rise",
+      "note": "한국부동산원 주간 매매지수 · 끝점 202637(2026-09-07) 고정. 1·2·7·8·9장 rise-story@1(build-tohuh-rise-story), 3~6장 singoga-map@1(build-tohuh-rise-map). 계산은 scripts/lib/tohuh-rise-data.mjs 한 곳.",
       "pixelPolicy": "고정물 후보 — 끝점을 --end 로 못 박았다. 확정 후 pixel-baselines 등록 여부는 오너 결정"
     }
   ]

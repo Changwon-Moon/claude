@@ -4937,6 +4937,23 @@
         "--date",
         "2026-09-16"
       ]
+    },
+    {
+      "label": "tohuh-rise-story",
+      "cmd": "scripts/build-tohuh-rise-story.mjs",
+      "args": [
+        "--end",
+        "202637",
+        "--date",
+        "2026-09-16"
+      ],
+      "produces": [
+        "tohuh-rise-cover",
+        "tohuh-rise-method",
+        "tohuh-rise-bump",
+        "tohuh-rise-grid",
+        "tohuh-rise-notes"
+      ]
     }
   ]
 }

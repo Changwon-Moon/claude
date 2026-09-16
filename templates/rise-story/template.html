@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* =========================================================
+         rise-story@1 — 「같은 기간, 입지별 상승률」 이야기 카드 다섯 판 (2026-09-16)
+         cover(표지) · method(읽는 법) · bump(순위 이동) · grid(전체 표) · notes(주의)
+         지도 4장(singoga-map@1)과 한 게시물로 나간다 → 머리·여백·푸터는 공통 규격 그대로.
+         새 판형이라 font-taebaek-pretendard 를 붙인다(BRAND §4). 숫자는 전부 Pretendard.
+         그래프(SVG)는 빌더가 좌표를 계산해 넣는다 — 템플릿은 그리기만 한다.
+         색: 오름=레드 토큰, 내려간 순위=코발트 토큰. 각 ≤4px, 종이 바탕 + 괘선.
+         ========================================================= */
+      .rs .wirit-topcap { white-space: nowrap; }
+      .rs .wirit-title { margin-top: 30px; font-size: 76px; line-height: 1.12; letter-spacing: -0.035em; }
+      /* 제목은 줄마다 폭을 따로 재서 크기를 정한다(CARD_CHECKLIST §2 두 줄 제목) — 아래 __wiritFit */
+      .rs .wirit-title .ln { display: block; white-space: nowrap; }
+      .rs .wirit-title .hi { color: var(--wirit-red); }
+      .rs .wirit-title .co { color: var(--wirit-cobalt); }
+      .rs-body { flex: 1; min-height: 0; display: flex; flex-direction: column; position: relative; margin-top: 28px; }
+      .rs-body > :first-child { margin-top: 0; }
+      .rs-foot { margin: 14px 0 30px; font-size: 24px; font-weight: 600; color: var(--wirit-gray); line-height: 1.4; }
+
+      /* ── cover ── */
+      .rsk-cover .rs-body { margin-top: 44px; }
+      .rs-rows { margin-top: 44px; border-top: 3px solid var(--wirit-ink); flex: 1; display: flex; flex-direction: column; }
+      .rs-row { flex: 1; display: grid; grid-template-columns: 196px 1fr 250px; align-items: center; column-gap: 20px;
+                border-bottom: 1px solid rgba(20, 24, 33, 0.14); position: relative; }
+      .rs-row .yr { font-size: 34px; font-weight: 700; color: var(--wirit-gray); white-space: nowrap; }
+      .rs-row .nm { font-size: 56px; font-weight: 900; letter-spacing: -0.03em; color: var(--wirit-ink); white-space: nowrap; }
+      .rs-row .sub { display: block; margin-top: 6px; font-size: 24px; font-weight: 600; letter-spacing: 0; color: var(--wirit-gray); }
+      .rs-row .v { justify-self: end; font-size: 64px; font-weight: 900; letter-spacing: -0.03em; color: var(--wirit-red); white-space: nowrap; }
+      .rs-row .v i { font-style: normal; font-size: 36px; margin-left: 2px; }
+      .rs-row .bar { position: absolute; left: 0; bottom: -1px; height: 6px; background: var(--wirit-red); }
+      .rs-row .bar.base { width: 100%; background: rgba(20, 24, 33, 0.06); }
+
+      /* ── method · bump : 빌더가 그린 SVG ── */
+      .rs-svg { margin-top: 26px; position: relative; }
+      .rs-svg svg { display: block; width: 936px; height: auto; }
+      .rs-lede { margin-top: 18px; font-size: 28px; font-weight: 600; line-height: 1.45; color: var(--wirit-ink); }
+      .rs-lede b { font-weight: 800; }
+      .rs-lede .hi { color: var(--wirit-red); font-weight: 800; }
+      .rs-lede .co { color: var(--wirit-cobalt); font-weight: 800; }
+      .rs-defs { margin-top: 22px; border-top: 3px solid var(--wirit-ink); }
+      .rs-def { display: grid; grid-template-columns: 150px 1fr; column-gap: 18px; padding: 16px 0; border-bottom: 1px solid rgba(20, 24, 33, 0.14); }
+      .rs-def .k { font-size: 28px; font-weight: 800; color: var(--wirit-gray); }
+      .rs-def .d { font-size: 28px; font-weight: 600; line-height: 1.4; color: var(--wirit-ink); }
+
+      /* ── grid ── */
+      .rs-grid { margin-top: 26px; margin-bottom: 30px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 24px; }
+      .rs-panel { display: flex; flex-direction: column; min-height: 0; }
+      .rs-g-h, .rs-g { display: grid; grid-template-columns: 1fr 78px 78px 78px 78px; column-gap: 4px; align-items: center; }
+      .rs-g-h { padding-bottom: 8px; border-bottom: 3px solid var(--wirit-ink); }
+      .rs-g-h span { font-size: 20px; font-weight: 800; color: var(--wirit-gray); text-align: center; white-space: nowrap; }
+      .rs-g-h span:first-child { text-align: left; color: var(--wirit-ink); font-size: 24px; }
+      .rs-g { height: 33px; margin-top: 3px; }
+      .rs-g .nm { font-size: 20px; font-weight: 700; color: var(--wirit-ink); white-space: nowrap; }
+      .rs-g .c { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 19px; font-weight: 700;
+                 color: var(--wirit-ink); border-radius: 2px; white-space: nowrap; }
+      .rs-g .c.dk { color: #fff; }
+      .rs-g .c.top { box-shadow: inset 0 0 0 3px var(--wirit-ink); font-weight: 900; }
+      .rs-key { margin-top: 20px; font-size: 21px; font-weight: 600; line-height: 1.5; color: var(--wirit-gray); }
+      .rs-key .sw { display: inline-block; width: 26px; height: 18px; vertical-align: -2px; margin-right: 6px; box-shadow: inset 0 0 0 3px var(--wirit-ink); }
+
+      /* ── notes ── */
+      .rs-items { margin-top: 30px; border-top: 3px solid var(--wirit-ink); flex: 1; display: flex; flex-direction: column; }
+      .rs-item { flex: 1; display: grid; grid-template-columns: 62px 1fr; column-gap: 14px; align-content: center;
+                 border-bottom: 1px solid rgba(20, 24, 33, 0.14); }
+      .rs-item .n { font-size: 34px; font-weight: 900; color: var(--wirit-cobalt); }
+      .rs-item .t { font-size: 34px; font-weight: 800; color: var(--wirit-ink); letter-spacing: -0.02em; }
+      .rs-item .d { grid-column: 2; margin-top: 6px; font-size: 25px; font-weight: 500; line-height: 1.45; color: var(--wirit-gray); }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card font-taebaek-pretendard rs rsk-{{kind}}" data-max="{{#if (eq kind "cover")}}112{{else}}84{{/if}}">
+      <div class="wirit-topcap">{{#if note}}<span>{{note}}</span>{{/if}}</div>
+      <h1 class="wirit-title">{{{title}}}</h1>
+
+      <div class="rs-body">
+        {{#if (eq kind "cover")}}
+        <div class="rs-rows">
+          {{#each rows}}
+          <div class="rs-row">
+            <span class="yr">{{this.yr}}</span>
+            <span class="nm">{{this.nm}}<span class="sub">{{this.sub}}</span></span>
+            <span class="v">{{this.v}}<i>%</i></span>
+            <span class="bar base"></span><span class="bar" style="width: {{this.w}}"></span>
+          </div>
+          {{/each}}
+        </div>
+        {{/if}}
+
+        {{#if (eq kind "method")}}
+        <div class="rs-svg">{{{svg}}}<span class="wirit-stamp" style="left: 60px; top: 70px">@wirit_note</span></div>
+        {{#if lede}}<div class="rs-lede">{{{lede}}}</div>{{/if}}
+        <div class="rs-defs">
+          {{#each items}}<div class="rs-def"><span class="k">{{this.k}}</span><span class="d">{{this.d}}</span></div>{{/each}}
+        </div>
+        {{/if}}
+
+        {{#if (eq kind "bump")}}
+        {{#if lede}}<div class="rs-lede">{{{lede}}}</div>{{/if}}
+        <div class="rs-svg">{{{svg}}}</div>
+        {{/if}}
+
+        {{#if (eq kind "grid")}}
+        <div class="rs-grid">
+          {{#each grid.panels}}
+          <div class="rs-panel">
+            <div class="rs-g-h"><span>{{this.name}}</span>{{#each ../grid.cols}}<span>{{this}}</span>{{/each}}</div>
+            {{#each this.rows}}
+            <div class="rs-g"><span class="nm">{{this.nm}}</span>{{#each this.cells}}<span class="c{{#if this.dk}} dk{{/if}}{{#if this.top}} top{{/if}}" style="background: {{this.bg}}">{{this.t}}</span>{{/each}}</div>
+            {{/each}}
+            {{#if this.key}}<div class="rs-key">{{{this.key}}}</div>{{/if}}
+          </div>
+          {{/each}}
+        </div>
+        {{/if}}
+
+        {{#if (eq kind "notes")}}
+        <div class="rs-items">
+          {{#each items}}
+          <div class="rs-item"><span class="n">{{inc @index}}</span><span class="t">{{this.t}}</span><span class="d">{{this.d}}</span></div>
+          {{/each}}
+        </div>
+        {{/if}}
+
+        {{#if foot}}<div class="rs-foot">{{{foot}}}</div>{{/if}}
+      </div>
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+    <script>
+      /* 제목 줄마다 폭(콘텐츠 936px)에 맞는 최대 크기 — 줄이는 방향·키우는 방향 모두 상한(data-max) 안에서.
+         결정적: 입력 동일 → 결과 동일. */
+      window.__wiritFit = function () {
+        var card = document.querySelector(".rs");
+        if (!card) return;
+        var cs = getComputedStyle(card);
+        var avail = card.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
+        var max = parseFloat(card.dataset.max) || 84;
+        Array.prototype.forEach.call(card.querySelectorAll(".wirit-title .ln"), function (el) {
+          el.style.display = "inline-block";
+          var lo = 36, hi = max, best = lo;
+          for (var i = 0; i < 22; i++) {
+            var mid = (lo + hi) / 2;
+            el.style.fontSize = mid + "px";
+            if (el.scrollWidth <= avail) { best = mid; lo = mid; } else { hi = mid; }
+          }
+          el.style.fontSize = best.toFixed(2) + "px";
+          el.style.display = "block";
+        });
+      };
+      window.__wiritFit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(window.__wiritFit);
+    </script>
+  </body>
+</html>
