@@ -448,7 +448,117 @@ buildStack("dots");
     `#부동산 #아파트값 #토지거래허가구역 #집값 #데이터시각화`,
   ].join("\n");
   writeCaption("tohuh-rise", caption);
-  writeCaption("tohuh-rise-dots", `(시안) 누적 막대·점 도표 — 캡션은 확정 후 손질\n\n${caption}`);
+}
+
+/* ───────── 카드별 인스타 캡션 3개(오너 2026-09-16 「캡션 각 카드별로 3개 따로」) ─────────
+ * 세 장을 따로 올릴 때 쓴다. 숫자·지역은 전부 계산값. 서명은 writeCaption 이 붙인다. */
+{
+  const TAIL = [
+    `—`,
+    `📊 출처 · 한국부동산원 주간 아파트가격동향 (매매가격지수, ${endKo} 조사)`,
+    `🗂 대상 · 수도권 토지거래허가구역 ${R.AREAS.length}곳 (서울 ${nSeoul}개 구 · 경기 ${nGg}곳)`,
+    ``,
+    ...(fallbacks.length ? [`※ 동탄구는 화성시 전체 기준입니다 (동탄구 지수는 2026년 분구 이후치뿐)`] : []),
+    `※ 지수는 거래된 단지 구성의 영향을 걸러낸 값이라 실거래 평균·중위가격 상승률과 다를 수 있습니다`,
+    `※ 지금의 허가구역 ${R.AREAS.length}곳을 묶어 본 것이며, 규제 효과를 잰 것이 아닙니다`,
+  ];
+  const TAGS = `#부동산 #아파트값 #토지거래허가구역 #집값 #데이터시각화`;
+  const nm = (a) => tableName(a);
+  const pc = (v) => `${pctTxt(v)}%`;
+  const first = YS[0], last = YS.at(-1);
+
+  /* ① 누적 순위표 */
+  {
+    const top3 = (b) => b.ranked.slice(0, 3).map((a) => `${b.rankOf.get(a.geoName)}위 ${nm(a)} ${pc(a.v)}`).join(" · ");
+    const worst = (b) => { const a = b.ranked.at(-1); return `${nm(a)} ${pc(a.v)}`; };
+    const cap = [
+      `언제부터 셌느냐에 따라 1등이 바뀝니다 📈`,
+      `'${first.slice(2)}년 초부터 세면 ${B(first).coTop.map(nm).join("·")}, '${last.slice(2)}년 초부터 세면 ${B(last).coTop.map(nm).join("·")}.`,
+      ``,
+      `토허구역 ${R.AREAS.length}곳의 아파트값이 연초부터 지금(${endKo})까지`,
+      `얼마나 올랐는지, 출발점 넷으로 나눠 줄 세웠습니다.`,
+      ``,
+      ...YS.flatMap((y) => [`[${y}년 초~현재] 서울 평균 ${pc(B(y).seoulV)}`, top3(B(y)), `꼴찌 ${worst(B(y))}`, ``]),
+      `🔵 파란 이름 = 경기 지역`,
+      `📌 저장해두고 우리 동네가 몇 위인지 확인하기`,
+      ``,
+      ...TAIL,
+      `※ 소수 첫째 자리까지 같으면 공동 순위입니다`,
+      ``,
+      TAGS,
+    ].join("\n");
+    writeCaption("tohuh-rise-ranks", cap);
+  }
+
+  /* ② 연도별 순위 이동 */
+  {
+    const Yb = (y) => R.byYear.get(y);
+    const rk = (y, a) => Yb(y).rankOf.get(a.geoName);
+    const leg = cards.bump.legs;
+    const byShort = new Map(R.AREAS.map((a) => [shortName(a), a]));
+    const move = (d) => d.split(" · ").map((n) => { const a = byShort.get(n); return `${nm(a)} ${rk(first, a)}→${rk(last, a)}위`; });
+    const t1 = Yb(first).coTop[0];
+    const yrLab = (y) => (Yb(y).partial ? `${y}년(1~${+endDot.slice(5, 7)}월)` : `${y}년`);
+    const cap = [
+      `'${first.slice(2)}년 한 해 1위 ${nm(t1)}, '${last.slice(2)}년엔 ${rk(last, t1)}위 📉`,
+      `해마다 그해 오른 만큼만 따로 떼어 순위를 매겼습니다.`,
+      ``,
+      ...YS.flatMap((y) => [
+        `[${yrLab(y)}] 서울 ${pc(Yb(y).seoulV)}`,
+        Yb(y).ranked.slice(0, 3).map((a) => `${rk(y, a)}위 ${nm(a)} ${pc(a.v)}`).join(" · "),
+        ``,
+      ]),
+      `🔴 ${leg[0].t} ('${first.slice(2)}년 → '${last.slice(2)}년)`,
+      ...move(leg[0].d).map((l) => `· ${l}`),
+      ``,
+      `🔵 ${leg[1].t}`,
+      ...move(leg[1].d).map((l) => `· ${l}`),
+      ``,
+      ...TAIL,
+      `※ 누적이 아니라 그해 한 해 상승률 기준입니다 (${last}년은 ${+endDot.slice(5, 7)}월 ${+endDot.slice(8, 10)}일까지)`,
+      `※ 소수 첫째 자리까지 같으면 공동 순위입니다`,
+      ``,
+      TAGS,
+    ].join("\n");
+    writeCaption("tohuh-rise-bump", cap);
+  }
+
+  /* ③ 점 도표 — 24년 초 기준, 해마다 오른 폭 */
+  {
+    const SF = "2024";
+    const SYS = YS.slice(YS.indexOf(SF));
+    const cum = (a) => {
+      const sr = R.mae[a.code], b = sr[`${SF}01`];
+      return [...SYS.slice(1).map((y) => `${y}01`), END].map((k) => (sr[k] / b - 1) * 100);
+    };
+    const rows = [...B(SF).ranked];
+    const thisYear = (a) => { const c = cum(a); return c.at(-1) - c.at(-2); };
+    const byThis = [...rows].sort((p, q) => thisYear(q) - thisYear(p));
+    const lineOf = (a) => {
+      const c = cum(a);
+      return `${nm(a)} ${pc(c.at(-1))} (24년 말 ${pc(c[0])} → 25년 말 ${pc(c[1])})`;
+    };
+    const cap = [
+      `'24년 초 가격을 기준으로, 해마다 어디까지 올랐나 🔴`,
+      `올해 가장 많이 더 오른 곳은 ${nm(byThis[0])}(+${thisYear(byThis[0]).toFixed(1)}%p),`,
+      `가장 적게 더 오른 곳은 ${nm(byThis.at(-1))}(+${thisYear(byThis.at(-1)).toFixed(1)}%p)입니다.`,
+      ``,
+      `점 셋이 한 줄입니다 — 회색 24년 말 · 검정 25년 말 · 빨강 지금.`,
+      `검정과 빨강이 멀수록 올해 많이 올랐다는 뜻입니다.`,
+      ``,
+      `[24년 초~현재 상위 10곳]`,
+      ...rows.slice(0, 10).map((a, i) => `${B(SF).rankOf.get(a.geoName)}. ${lineOf(a)}`),
+      ``,
+      `서울 평균 ${pc(B(SF).seoulV)}`,
+      `🔵 파란 이름 = 경기 지역 · 40곳 전체는 카드에서`,
+      ``,
+      ...TAIL,
+      `※ 폭은 모두 24년 초 가격 대비입니다(%p = 퍼센트포인트)`,
+      ``,
+      TAGS,
+    ].join("\n");
+    writeCaption("tohuh-rise-dots", cap);
+  }
 }
 
 /* ───────── 카톡 공유용 짧은 글(docs/CAPTION.md §9) ─────────
