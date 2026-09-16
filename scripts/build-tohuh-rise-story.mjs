@@ -156,7 +156,7 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
   if (up.length < N5 || down.length < N5) throw new Error(`강조 지역이 5곳씩 안 나온다 (올라옴 ${up.length} · 내려감 ${down.length})`);
   const color = new Map([...up.map((p) => [p.a.geoName, RED]), ...down.map((p) => [p.a.geoName, CO])]);
 
-  const W = 936, H = 830, top = 46, bot = 12;
+  const W = 936, H = 852, top = 46, bot = 12; // 푸터 위 회색 문구가 빠진 자리만큼 늘림(오너 2026-09-16)
   const NAME_PX = 16;
   const name = (a, y) => `${rk(y, a)} ${tableName(a)}`;
   const leftW = Math.ceil(Math.max(...R.AREAS.map((a) => textW(name(a, first), NAME_PX)))) + 10;
@@ -257,7 +257,7 @@ const buildStack = (mode) => {
   const COLOR_BY_Y = { 2023: ["var(--wirit-gray)", 0.28], 2024: ["var(--wirit-gray)", 0.6], 2025: [INK, 0.9], 2026: [RED, 1] };
   const COLORS = SYS.map((y) => COLOR_BY_Y[y][0]);
   const OPAC = SYS.map((y) => COLOR_BY_Y[y][1]);
-  const W = 936, top = 70, rowH = 22, H = top + rowH * rows.length + 8;
+  const W = 936, top = 70, rowH = 22.5, H = top + rowH * rows.length + 8;
   const NAME_PX = 17, nameW = Math.ceil(Math.max(...rows.map((a) => textW(tableName(a), NAME_PX)))) + 6;
   const valW = 80;
   const x0 = nameW + 14, x1 = W - valW - 10;
