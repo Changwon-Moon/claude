@@ -2325,12 +2325,13 @@
     },
     {
       "label": "tohuh-rise",
-      "title": "📈 언제부터 셌느냐에 따라 1등이 바뀐다 — 토허제 40곳 매매가 상승률 6장",
+      "title": "📈 언제부터 셌느냐에 따라 1등이 바뀐다 — 토허제 40곳 매매가 상승률 7장",
       "cards": [
         "tohuh-rise-cover",
         "tohuh-rise-method",
         "tohuh-rise-ranks",
         "tohuh-rise-bump",
+        "tohuh-rise-dots",
         "tohuh-rise-grid",
         "tohuh-rise-notes"
       ],
@@ -2340,14 +2341,13 @@
     },
     {
       "label": "tohuh-rise-dots",
-      "title": "(시안) 토허제 40곳 — 24년 초부터 해마다 오른 폭 (누적 막대 · 점 도표 두 안)",
+      "title": "(시안·보류) 토허제 40곳 — 24년 초부터 해마다 오른 몫 (누적 막대)",
       "cards": [
-        "tohuh-rise-stack",
-        "tohuh-rise-dots"
+        "tohuh-rise-stack"
       ],
       "caption": "tohuh-rise-dots",
       "state": "시안",
-      "note": "1차 점 도표 → 오너 지시로 23·24·25·26 순서 누적 막대로 교체(2026-09-16). build-tohuh-rise-story 가 만든다."
+      "note": "점 도표(tohuh-rise-dots)는 오너 지시(2026-09-16)로 본 세트 5장에 들어갔다. 누적 막대는 보류 시안."
     }
   ]
 }

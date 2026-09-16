@@ -308,7 +308,7 @@ const buildStack = (mode) => {
   const topLast = [...rows].sort((p, q) => lastShare(q) - lastShare(p))[0];
   cards[mode] = {
     template: "rise-story@1", date, kind: "bump",
-    note: `시안 · ${mode === "dots" ? "점 도표" : "누적 막대"} · 40곳 · ${first}년 초부터 상승률 순`,
+    note: `${mode === "dots" ? "" : "시안 · 누적 막대 · "}40곳 · ${first}년 초부터 상승률 순`,
     title: lines(`${first.slice(2)}년부터 <span class="hi">해마다</span> 얼마씩 올랐나`),
     svg,
     foot: mode === "dots"
@@ -416,7 +416,7 @@ buildStack("dots");
     `${endKo}까지 비교했습니다.`,
     ``,
     ...YS.flatMap((y) => [`[${y}년 초부터] 서울 평균 ${pctTxt(B(y).seoulV)}%`, `${top3(y)}`, `꼴찌 ${bottom(y)}`, ``]),
-    `👉 2장: 읽는 법 · 3장: 출발점별 순위표 · 4장: 순위 이동 · 5장: 40곳 전체 표`,
+    `👉 2장: 읽는 법 · 3장: 출발점별 순위표 · 4장: 순위 이동 · 5장: 해마다 오른 폭 · 6장: 40곳 전체 표`,
     ``,
     `📌 저장해두고 우리 동네가 몇 위인지 확인하기`,
     ``,
