@@ -1,7 +1,7 @@
 {
   "label": "singo-daily-2026-09-17",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 10장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 11장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
@@ -36,6 +36,12 @@
     },
     {
       "file": "singo-블루밍구성더센트럴-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-e편한세상반월나노시티역-84.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
