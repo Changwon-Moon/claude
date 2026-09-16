@@ -2190,20 +2190,6 @@
       "at": "2026-09-14"
     },
     {
-      "id": "ah-remndr-2026910227",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 한강 푸르지오 리버프론트",
-      "why": "경기 · 832세대 · 접수 ~2026-09-14 · 73점(수도권·832가구·무순위·푸르지오)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-09-14",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910227&pblancNo=2026910227",
-      "at": "2026-09-16"
-    },
-    {
       "id": "ah-remndr-2026910244",
       "cat": "todo",
       "topic": "부동산",
@@ -2215,6 +2201,20 @@
       "status": "",
       "deadline": "2026-09-22",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910244&pblancNo=2026910244",
+      "at": "2026-09-16"
+    },
+    {
+      "id": "ah-remndr-2026910227",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 한강 푸르지오 리버프론트",
+      "why": "경기 · 832세대 · 접수 ~2026-09-14 · 73점(수도권·832가구·무순위·푸르지오)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-09-14",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910227&pblancNo=2026910227",
       "at": "2026-09-16"
     },
     {
