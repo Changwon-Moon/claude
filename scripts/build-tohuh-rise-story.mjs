@@ -583,6 +583,66 @@ buildStack("dots");
   writeFileSync(join(ROOT, "data/review/captions/_kakao/tohuh-rise.txt"), kakao + "\n", "utf8");
 }
 
+/* 카드별 카톡 문구 3개(오너 2026-09-16) — §9 틀: 제목 · 하이픈 줄 · 접는 줄 👆 · 📊 두 줄 */
+{
+  const K = (name, lines) =>
+    writeFileSync(join(ROOT, `data/review/captions/_kakao/tohuh-rise-${name}.txt`), lines.join("\n") + "\n", "utf8");
+  const SRC = [`📊 수도권 토허구역 ${R.AREAS.length}곳 (서울 ${nSeoul} · 경기 ${nGg})`, `   한국부동산원 주간 매매가격지수 · ${endDot} 기준`];
+  const first = YS[0], last = YS.at(-1);
+  const pc = (v) => `${pctTxt(v)}%`;
+
+  /* ① 누적 순위표 */
+  K("ranks", [
+    `📈 연초부터 지금까지, 토허구역 집값 1등은?`,
+    ``,
+    ...YS.map((y) => `- '${y.slice(2)}년 초~ ${B(y).coTop.map(shortName).join("·")} ${pc(B(y).coTop[0].v)} (서울 ${pc(B(y).seoulV)})`),
+    ``,
+    `'${last.slice(2)}년 초부터 세면 꼴찌 셋이 ${B(last).ranked.slice(-3).map(shortName).reverse().join(" · ")} 👆`,
+    ``,
+    ...SRC,
+  ]);
+
+  /* ② 연도별 순위 이동 */
+  {
+    const Yb = (y) => R.byYear.get(y);
+    const rk = (y, a) => Yb(y).rankOf.get(a.geoName);
+    const byShort = new Map(R.AREAS.map((a) => [shortName(a), a]));
+    const mv = (d) => d.split(" · ").map((n) => `${n} ${rk(first, byShort.get(n))}→${rk(last, byShort.get(n))}`).join(" · ");
+    const [up, down] = cards.bump.legs;
+    K("bump", [
+      /* 조사(이/가)를 받침으로 고르지 않아도 되게 쉼표로 끊는다 — 「송파이」가 나왔다(2026-09-16) */
+      `📉 해마다 순위를 매기면, '${first.slice(2)}년 1위 ${shortName(Yb(first).coTop[0])} → 올해 ${rk(last, Yb(first).coTop[0])}위`,
+      ``,
+      ...YS.map((y) => `- '${y.slice(2)}년${Yb(y).partial ? `(~${+endDot.slice(5, 7)}월)` : ""} 1위 ${Yb(y).coTop.map(shortName).join("·")} ${pc(Yb(y).coTop[0].v)}`),
+      ``,
+      `순위 오른 곳 ${mv(up.d)}`,
+      `순위 내린 곳 ${mv(down.d)} 👆`,
+      ``,
+      `📊 그해 한 해 상승률 기준 · 토허구역 ${R.AREAS.length}곳`,
+      `   한국부동산원 주간 매매가격지수 · ${endDot} 기준`,
+    ]);
+  }
+
+  /* ③ 점 도표 */
+  {
+    const SF = "2024";
+    const tail = (a) => { const sr = R.mae[a.code], b = sr[`${SF}01`]; return ((sr[END] - sr[`${last}01`]) / b) * 100; };
+    const rows = B(SF).ranked;
+    const byThis = [...rows].sort((p, q) => tail(q) - tail(p));
+    K("dots", [
+      `🔴 '24년 초부터 얼마나, 그중 올해 몫은?`,
+      ``,
+      ...rows.slice(0, 5).map((a) => `- ${shortName(a)} ${pc(a.v)} (올해 +${tail(a).toFixed(1)}%p)`),
+      ``,
+      `올해 가장 많이 더 오른 곳 ${byThis.slice(0, 3).map((a) => shortName(a)).join(" · ")}`,
+      `올해 가장 적게 더 오른 곳 ${byThis.slice(-3).reverse().map((a) => shortName(a)).join(" · ")} 👆`,
+      ``,
+      `📊 폭은 24년 초 가격 대비 · 토허구역 ${R.AREAS.length}곳`,
+      `   한국부동산원 주간 매매가격지수 · ${endDot} 기준`,
+    ]);
+  }
+}
+
 const outDir = join(ROOT, `data/content/${date}`);
 mkdirSync(outDir, { recursive: true });
 for (const [k, c] of Object.entries(cards)) {
