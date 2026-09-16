@@ -12,7 +12,7 @@ lawd=11350 umd=월계동 type=59 apt="현대"
 lawd=41463 umd=마북동 type=59 apt="블루밍구성더센트럴"
 lawd=41595 umd=반월동 type=84 apt="e편한세상반월나노시티역"
 lawd=41595 umd=반월동 type=59 apt="신동탄포레자이"
-lawd=41113 umd=곡반정동 type=84 apt="수원하늘채더퍼스트2단지" force=1
+lawd=41113 umd=곡반정동 type=84 apt="수원하늘채더퍼스트2단지"
 lawd=41465 umd=풍덕천동 type=59 apt="동아아파트"
 lawd=41113 umd=권선동 type=59 apt="수원아이파크시티7단지" force=1
 lawd=41610 umd=고산동 type=59 apt="더샵오포센트리체"
