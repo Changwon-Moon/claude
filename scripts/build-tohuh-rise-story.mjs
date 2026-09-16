@@ -39,6 +39,8 @@ const cards = {};
 const nSeoul = R.AREAS.filter((a) => a.region === "서울").length;
 const nGg = R.AREAS.filter((a) => a.region === "경기").length;
 const KICKER = `수도권 토허구역 ${R.AREAS.length}곳 (서울${nSeoul}•경기${nGg}) | ${endDot.slice(0, 7)} 기준`;
+/* 경기 이름을 코발트로 칠한 카드(1·3장)는 킥커의 「경기15」도 같은 색 — 따로 범례 줄 없이 색의 뜻을 말한다 */
+const KICKER_GG = `수도권 토허구역 ${R.AREAS.length}곳 (서울${nSeoul}•<span class="gg">경기${nGg}</span>) | ${endDot.slice(0, 7)} 기준`;
 /** 제목 줄 — 줄마다 템플릿이 폭을 따로 잰다 */
 const lines = (...ls) => ls.map((l) => `<span class="ln">${l}</span>`).join("");
 
@@ -289,7 +291,7 @@ const buildStack = (mode) => {
     const cy = top + rowH * r + rowH / 2, bh = 13;
     const hl = HL.has(a.label);
     if (r % 2 === 0) g += `<rect x="0" y="${(cy - rowH / 2).toFixed(1)}" width="${W}" height="${rowH}" fill="var(--wirit-ink-06)" opacity="0.5"/>`;
-    g += `<text x="${nameW}" y="${(cy + 6).toFixed(1)}" ${FONT} font-size="${NAME_PX}" font-weight="${hl ? 900 : 600}" fill="${hl ? CO : INK}" text-anchor="end">${esc(tableName(a))}</text>`;
+    g += `<text x="${nameW}" y="${(cy + 6).toFixed(1)}" ${FONT} font-size="${NAME_PX}" font-weight="${hl ? 900 : 600}" fill="${hl || a.region === "경기" ? CO : INK}" text-anchor="end">${esc(tableName(a))}</text>`;
     if (mode === "dots") {
       /* 누적 자리: 해마다 끝난 곳 */
       let c = 0;
@@ -319,7 +321,7 @@ const buildStack = (mode) => {
   const topLast = [...rows].sort((p, q) => lastShare(q) - lastShare(p))[0];
   cards[mode] = {
     template: "rise-story@1", date, kind: "bump",
-    note: mode === "dots" ? KICKER : `시안 · 누적 막대 · ${KICKER}`,
+    note: mode === "dots" ? KICKER_GG : `시안 · 누적 막대 · ${KICKER_GG}`,
     title: lines(`${first.slice(2)}년부터 <span class="hi">해마다</span> 얼마씩 올랐나`),
     svg,
     source: SOURCE,
@@ -337,7 +339,7 @@ buildStack("dots");
   const TOPN = 20, TAIL = 3;
   /* 강남 3구 파랑 강조는 뺐다 — 「파랑 = 강남 3구」 설명 줄(푸터 위 회색 문구)이 오너 지시로 빠져 설명 없는 색이 됐다(2026-09-16) */
   const HL = new Set();
-  const row = (y, a) => ({ t: "row", r: B(y).rankOf.get(a.geoName), nm: tableName(a), v: pctTxt(a.v), hl: HL.has(a.label), first: B(y).rankOf.get(a.geoName) === 1 });
+  const row = (y, a) => ({ t: "row", r: B(y).rankOf.get(a.geoName), nm: tableName(a), v: pctTxt(a.v), hl: HL.has(a.label), gg: a.region === "경기", first: B(y).rankOf.get(a.geoName) === 1 });
   const N = R.AREAS.length;
   const cols = YS.map((y) => {
     const b = B(y), rk = b.ranked;
@@ -353,7 +355,7 @@ buildStack("dots");
   });
   cards.ranks = {
     template: "rise-story@1", date, kind: "ranks",
-    note: KICKER,
+    note: KICKER_GG,
     title: lines(`'${YS[0].slice(2)}~'${YS.at(-1).slice(2)} 연도별 <span class="hi">누적 집값 상승률</span>`),
     cols,
     source: SOURCE,
