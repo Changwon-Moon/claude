@@ -1,21 +1,9 @@
 {
   "label": "tohuh-rise",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 7장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 4장 · 코드 검수만",
   "findings": [],
   "cards": [
-    {
-      "file": "tohuh-rise-cover.json",
-      "deterministic": true,
-      "qaErrors": 0,
-      "findings": []
-    },
-    {
-      "file": "tohuh-rise-method.json",
-      "deterministic": true,
-      "qaErrors": 0,
-      "findings": []
-    },
     {
       "file": "tohuh-rise-ranks.json",
       "deterministic": true,
@@ -36,12 +24,6 @@
     },
     {
       "file": "tohuh-rise-grid.json",
-      "deterministic": true,
-      "qaErrors": 0,
-      "findings": []
-    },
-    {
-      "file": "tohuh-rise-notes.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
