@@ -4,7 +4,7 @@
 # ⚡ 2026-09-16 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-09-16 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 lawd=41115 umd=인계동 type=59 apt="수원센트럴아이파크자이"
-lawd=41113 umd=권선동 type=84 apt="권선자이e편한세상" force=1
+lawd=41113 umd=권선동 type=84 apt="권선자이e편한세상"
 lawd=41111 umd=정자동 type=59 apt="화서역 우방 센트럴파크" force=1
 
 lawd=11290 umd=길음동 type=59 apt="길음뉴타운1단지(래미안길음1차)" force=1
