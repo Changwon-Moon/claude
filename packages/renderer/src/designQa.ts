@@ -214,6 +214,7 @@ const MEASURE_JS = `(() => {
                 그래프(순위 이동·지수 곡선)는 SVG 라 빌더가 폭을 책임지고, HTML 글자만 여기 올린다. */
              ".rs-row .yr,.rs-row .nm,.rs-row .v,.rs-lede,.rs-foot,.rs-def .k,.rs-def .d," +
              ".rs-g-h span,.rs-g .nm,.rs-g .c,.rs-key,.rs-item .t,.rs-item .d," +
+             ".rs-col-h .yr,.rs-col-h .sub,.rs-r .rk,.rs-r .nm,.rs-r .v,.rs-gap," +
              /* world-monthly — 나라 × 달 성적표 행렬(2026-09-04). 이 판형은 **한 줄에 열이 열 개**라
                 겹치면 옆 칸 숫자와 붙어 값을 잘못 읽게 된다. 실제로 첫 렌더에서 숫자가 칸을 꽉
                 채워 붙어 보였고(26px→23px 로 줄여 고쳤다), 그건 디자인 취향이 아니라 오독이다.
@@ -431,7 +432,7 @@ const MEASURE_JS = `(() => {
        danji-brief 것이다) 청약 판형 9장에서 이 검사가 **한 번도 돈 적이 없었다.** .dcv-note 가
        특이사항 줄이다 — 이번에 그 줄이 두 줄로 늘면서 정확히 필요해진 검사다.
        ⚠️ 이 블록은 브라우저로 넘어가는 문자열 안이다 — 주석에 백틱을 쓰면 스크립트가 깨진다. */
-    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.rgm-note,.rgm-body,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.dcv-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note,.gb-note,.sr-chart,.wm-grid,.tm-note,.rl-note,.rl-body,.rs-foot,.rs-rows,.rs-svg,.rs-defs,.rs-grid,.rs-items");
+    var above=card.querySelectorAll(".sm-total,.sm-insight,.yc-axis,.rt-cap,.rg-note,.rgm-note,.rgm-body,.sb-note,.sl-note,.mr-row:last-child,.m2-r:last-child,.sbm-note,.dcv-note,.slp-note,.tx-apply,.nf-bars,.nf-body,.fr-foot,.fr-list,.fr-note,.gb-note,.sr-chart,.wm-grid,.tm-note,.rl-note,.rl-body,.rs-foot,.rs-rows,.rs-svg,.rs-defs,.rs-grid,.rs-items,.rs-cols");
     var ft=footer.getBoundingClientRect().top, bot=null;
     Array.prototype.forEach.call(above, function(el){
       var r=el.getBoundingClientRect();

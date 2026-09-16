@@ -1,7 +1,7 @@
 {
   "label": "tohuh-rise",
-  "verdict": "revise",
-  "summary": "REVISE — error 0 · warn 4 · 카드 9장 · 코드 검수만",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 6장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
@@ -17,56 +17,10 @@
       "findings": []
     },
     {
-      "file": "tohuh-rise-2023.json",
+      "file": "tohuh-rise-ranks.json",
       "deterministic": true,
       "qaErrors": 0,
-      "findings": [
-        {
-          "reviewer": "design-qa",
-          "level": "warn",
-          "code": "titlegap",
-          "msg": "제목과 바로 아래 요소의 간격이 20px 입니다 (제목 69px) — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다"
-        }
-      ]
-    },
-    {
-      "file": "tohuh-rise-2024.json",
-      "deterministic": true,
-      "qaErrors": 0,
-      "findings": [
-        {
-          "reviewer": "design-qa",
-          "level": "warn",
-          "code": "titlegap",
-          "msg": "제목과 바로 아래 요소의 간격이 20px 입니다 (제목 52px) — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다"
-        }
-      ]
-    },
-    {
-      "file": "tohuh-rise-2025.json",
-      "deterministic": true,
-      "qaErrors": 0,
-      "findings": [
-        {
-          "reviewer": "design-qa",
-          "level": "warn",
-          "code": "titlegap",
-          "msg": "제목과 바로 아래 요소의 간격이 20px 입니다 (제목 69px) — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다"
-        }
-      ]
-    },
-    {
-      "file": "tohuh-rise-2026.json",
-      "deterministic": true,
-      "qaErrors": 0,
-      "findings": [
-        {
-          "reviewer": "design-qa",
-          "level": "warn",
-          "code": "titlegap",
-          "msg": "제목과 바로 아래 요소의 간격이 20px 입니다 (제목 69px) — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다"
-        }
-      ]
+      "findings": []
     },
     {
       "file": "tohuh-rise-bump.json",

@@ -63,6 +63,22 @@
       .rs-key { margin-top: 20px; font-size: 21px; font-weight: 600; line-height: 1.5; color: var(--wirit-gray); }
       .rs-key .sw { display: inline-block; width: 26px; height: 18px; vertical-align: -2px; margin-right: 6px; box-shadow: inset 0 0 0 3px var(--wirit-ink); }
 
+      /* ── ranks : 출발점별 순위표 넷 ── */
+      .rs-cols { margin-top: 0; display: grid; grid-template-columns: repeat(4, 1fr); column-gap: 18px; }
+      .rs-col-h { padding-bottom: 10px; border-bottom: 3px solid var(--wirit-ink); }
+      .rs-col-h .yr { display: block; font-size: 28px; font-weight: 900; color: var(--wirit-ink); white-space: nowrap; }
+      .rs-col-h .sub { display: block; margin-top: 2px; font-size: 19px; font-weight: 700; color: var(--wirit-gray); white-space: nowrap; }
+      .rs-r { display: grid; grid-template-columns: 28px 1fr auto; column-gap: 4px; align-items: center; height: 34px;
+              border-bottom: 1px solid rgba(20, 24, 33, 0.08); }
+      .rs-r .rk { font-size: 18px; font-weight: 800; color: var(--wirit-gray); text-align: right; padding-right: 2px; }
+      .rs-r .nm { font-size: 20px; font-weight: 700; color: var(--wirit-ink); white-space: nowrap; overflow: hidden; }
+      .rs-r .v { font-size: 20px; font-weight: 800; color: var(--wirit-red); white-space: nowrap; }
+      .rs-r.hl .nm, .rs-r.hl .rk { color: var(--wirit-cobalt); font-weight: 900; }
+      .rs-r.first { background: rgba(20, 24, 33, 0.06); }
+      .rs-r.first .nm { font-weight: 900; }
+      .rs-gap { height: 34px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900;
+                color: var(--wirit-gray); letter-spacing: 0.2em; border-bottom: 1px solid rgba(20, 24, 33, 0.08); }
+
       /* ── notes ── */
       .rs-items { margin-top: 30px; border-top: 3px solid var(--wirit-ink); flex: 1; display: flex; flex-direction: column; }
       .rs-item { flex: 1; display: grid; grid-template-columns: 62px 1fr; column-gap: 14px; align-content: center;
@@ -113,6 +129,23 @@
             <div class="rs-g"><span class="nm">{{this.nm}}</span>{{#each this.cells}}<span class="c{{#if this.dk}} dk{{/if}}{{#if this.top}} top{{/if}}" style="background: {{this.bg}}">{{this.t}}</span>{{/each}}</div>
             {{/each}}
             {{#if this.key}}<div class="rs-key">{{{this.key}}}</div>{{/if}}
+          </div>
+          {{/each}}
+        </div>
+        {{/if}}
+
+        {{#if (eq kind "ranks")}}
+        <div class="rs-cols">
+          {{#each cols}}
+          <div class="rs-col">
+            <div class="rs-col-h"><span class="yr">{{this.yr}}</span><span class="sub">{{this.sub}}</span></div>
+            {{#each this.top}}
+            <div class="rs-r{{#if this.hl}} hl{{/if}}{{#if (eq this.r 1)}} first{{/if}}"><span class="rk">{{this.r}}</span><span class="nm">{{this.nm}}</span><span class="v">{{this.v}}</span></div>
+            {{/each}}
+            <div class="rs-gap">⋮</div>
+            {{#each this.tail}}
+            <div class="rs-r{{#if this.hl}} hl{{/if}}"><span class="rk">{{this.r}}</span><span class="nm">{{this.nm}}</span><span class="v">{{this.v}}</span></div>
+            {{/each}}
           </div>
           {{/each}}
         </div>

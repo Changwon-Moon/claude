@@ -153,7 +153,7 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
   const down = pick([...delta].filter((p) => p.d < 0).sort((p, q) => p.d - q.d || p.a.label.localeCompare(q.a.label, "ko")));
   const color = new Map([...up.map((p) => [p.a.geoName, RED]), ...down.map((p) => [p.a.geoName, CO])]);
 
-  const W = 936, H = 880, top = 46, bot = 12;
+  const W = 936, H = 830, top = 46, bot = 12;
   const NAME_PX = 16;
   const name = (a, y) => `${rk(y, a)} ${tableName(a)}`;
   const leftW = Math.ceil(Math.max(...R.AREAS.map((a) => textW(name(a, first), NAME_PX)))) + 10;
@@ -176,6 +176,20 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
   };
   R.AREAS.filter((a) => !color.has(a.geoName)).forEach((a) => (g += drawLine(a, false)));
   R.AREAS.filter((a) => color.has(a.geoName)).forEach((a) => (g += drawLine(a, true)));
+  /* 가운데 두 열은 이름표가 없다 → 강조 선의 그해 순위를 점 옆에 적는다(검수 2026-09-16: 24·25년 순위를 읽을 수 없었다).
+   * 자리: 나가는 선의 반대쪽(내려가면 점 위, 올라가면 점 아래)을 먼저 잡고,
+   * 같은 열 안에서 위에서부터 LABEL_GAP 보다 가까우면 아래로 민다 — 한쪽에 고정했더니
+   * 24년 열의 7·8·9·11 이 포개졌다(designQa 가 「11」·「9」 43% 겹침으로 막았다). */
+  const LABEL_GAP = 19;
+  for (let j = 1; j < YS.length - 1; j++) {
+    const labs = R.AREAS.filter((a) => color.has(a.geoName)).map((a) => {
+      const p = pos.get(a.geoName), i = p[j];
+      return { a, y: p[j + 1] > i ? Y(i) - 8 : Y(i) + 20, c: color.get(a.geoName) };
+    }).sort((p, q) => p.y - q.y);
+    labs.forEach((l, k) => { if (k && l.y < labs[k - 1].y + LABEL_GAP) l.y = labs[k - 1].y + LABEL_GAP; });
+    for (const l of labs)
+      g += `<text x="${(colX[j] + 12).toFixed(1)}" y="${l.y.toFixed(1)}" ${FONT} font-size="17" font-weight="900" fill="${l.c}" stroke="var(--wirit-paper)" stroke-width="6" paint-order="stroke">${rk(YS[j], l.a)}</text>`;
+  }
   R.AREAS.forEach((a) => {
     const p = pos.get(a.geoName), hl = color.has(a.geoName);
     const c = hl ? color.get(a.geoName) : GRAY, fw = hl ? 900 : 600;
@@ -188,11 +202,99 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
   const t1Now = rk(last, t1[0]);
   cards.bump = {
     template: "rise-story@1", date, kind: "bump",
-    note: `40곳 순위 · ${first}년 초부터 ~ ${last}년 초부터`,
-    title: lines(`${first}년부터 1위 ${t1.map(shortName).join("·")}, <span class="hi">올해는 ${t1Now}위</span>`),
-    lede: `<span class="co">━ 가장 많이 내려간 ${down.length}곳</span> ${down.map((p) => shortName(p.a)).join("·")}<br>` +
-      `<span class="hi">━ 가장 많이 올라온 ${up.length}곳</span> ${up.map((p) => shortName(p.a)).join("·")}`,
+    note: `40곳 상승률 순위 · 출발점별`,
+    /* 「올해는」이 올해 상승률 순위인지 올해 기준 순위인지 흐렸다(검수) → 「올해부터 세면」 */
+    title: lines(`${first}년부터 1위 ${t1.map(shortName).join("·")}, <span class="hi">올해부터 세면 ${t1Now}위</span>`),
+    lede: `<span class="co">━ 순위가 가장 많이 내려간 ${down.length}곳</span> ${down.map((p) => shortName(p.a)).join("·")}<br>` +
+      `<span class="hi">━ 순위가 가장 많이 올라온 ${up.length}곳</span> ${up.map((p) => shortName(p.a)).join("·")}`,
     svg,
+    foot: `${first.slice(2)}년 초부터 순위 → ${last.slice(2)}년 초부터 순위의 차이 · 가운데 숫자는 그 출발점의 순위`,
+    source: SOURCE,
+  };
+}
+
+/* ───────── (시안) 점 도표 — 최초 기사의 점 도표 형식을 빌린 초안(오너 2026-09-16) ─────────
+ * 한 줄 = 한 지역. 가로축 = 상승률. ○ 23년 초부터 · 회색 점 24·25년 초부터 · ● 26년 초부터(올해).
+ * 선 길이 = 출발점에 따라 달라지는 폭. 23년 초부터 값이 큰 순으로 줄 세운다. */
+{
+  const first = YS[0], last = YS.at(-1), mids = YS.slice(1, -1);
+  const HL = new Set(["송파구", "서초구", "강남구"]);
+  const val = (y, a) => B(y).stat.find((s) => s.geoName === a.geoName).v;
+  const rows = [...B(first).ranked];
+  const W = 936, top = 70, rowH = 21.5, H = top + rowH * rows.length + 8;
+  const NAME_PX = 17, nameW = Math.ceil(Math.max(...rows.map((a) => textW(tableName(a), NAME_PX)))) + 6;
+  const valW = 150; // 오른쪽 숫자 두 칸
+  const x0 = nameW + 14, x1 = W - valW - 16;
+  const vmax = Math.max(...YS.flatMap((y) => rows.map((a) => val(y, a))));
+  const vmin = Math.min(0, ...YS.flatMap((y) => rows.map((a) => val(y, a))));
+  const axMax = Math.ceil(vmax / 10) * 10;
+  const X = (v) => x0 + ((v - vmin) / (axMax - vmin)) * (x1 - x0);
+  let g = "";
+  /* 범례 */
+  g += `<circle cx="10" cy="14" r="7" fill="var(--wirit-paper)" stroke="${INK}" stroke-width="3"/>`;
+  g += `<text x="24" y="21" ${FONT} font-size="20" font-weight="800" fill="${INK}">${first.slice(2)}년 초부터</text>`;
+  const lx = 24 + textW(`${first.slice(2)}년 초부터`, 20) + 26;
+  g += `<circle cx="${lx}" cy="14" r="5" fill="${GRAY}" opacity="0.55"/>`;
+  g += `<text x="${lx + 12}" y="21" ${FONT} font-size="20" font-weight="700" fill="${GRAY}">${mids.map((y) => y.slice(2)).join("·")}년 초부터</text>`;
+  const lx2 = lx + 12 + textW(`${mids.map((y) => y.slice(2)).join("·")}년 초부터`, 20) + 26;
+  g += `<circle cx="${lx2}" cy="14" r="7" fill="${RED}"/>`;
+  g += `<text x="${lx2 + 14}" y="21" ${FONT} font-size="20" font-weight="800" fill="${RED}">${last.slice(2)}년 초부터(올해)</text>`;
+  /* 눈금 */
+  for (let t = Math.ceil(vmin / 10) * 10; t <= axMax; t += 10) {
+    g += `<line x1="${X(t).toFixed(1)}" y1="${top - 12}" x2="${X(t).toFixed(1)}" y2="${H - 4}" stroke="var(--wirit-ink-06)" stroke-width="2"/>`;
+    g += `<text x="${X(t).toFixed(1)}" y="${top - 18}" ${FONT} font-size="17" font-weight="700" fill="${GRAY}" text-anchor="middle">${t}%</text>`;
+  }
+  g += `<text x="${W - valW / 2 - 40}" y="${top - 18}" ${FONT} font-size="16" font-weight="800" fill="${INK}" text-anchor="middle">${first.slice(2)}년~</text>`;
+  g += `<text x="${W - 30}" y="${top - 18}" ${FONT} font-size="16" font-weight="800" fill="${RED}" text-anchor="middle">${last.slice(2)}년~</text>`;
+  rows.forEach((a, i) => {
+    const cy = top + rowH * i + rowH / 2;
+    const vs = YS.map((y) => val(y, a));
+    const hl = HL.has(a.label);
+    if (i % 2 === 0) g += `<rect x="0" y="${(cy - rowH / 2).toFixed(1)}" width="${W}" height="${rowH}" fill="var(--wirit-ink-06)" opacity="0.5"/>`;
+    g += `<text x="${nameW}" y="${(cy + 6).toFixed(1)}" ${FONT} font-size="${NAME_PX}" font-weight="${hl ? 900 : 600}" fill="${hl ? CO : INK}" text-anchor="end">${esc(tableName(a))}</text>`;
+    g += `<line x1="${X(Math.min(...vs)).toFixed(1)}" y1="${cy.toFixed(1)}" x2="${X(Math.max(...vs)).toFixed(1)}" y2="${cy.toFixed(1)}" stroke="${GRAY}" stroke-width="3" opacity="0.45"/>`;
+    mids.forEach((y) => (g += `<circle cx="${X(val(y, a)).toFixed(1)}" cy="${cy.toFixed(1)}" r="4.5" fill="${GRAY}" opacity="0.55"/>`));
+    g += `<circle cx="${X(vs[0]).toFixed(1)}" cy="${cy.toFixed(1)}" r="6.5" fill="var(--wirit-paper)" stroke="${INK}" stroke-width="3"/>`;
+    g += `<circle cx="${X(vs.at(-1)).toFixed(1)}" cy="${cy.toFixed(1)}" r="6.5" fill="${RED}"/>`;
+    g += `<text x="${W - valW / 2 - 40}" y="${(cy + 6).toFixed(1)}" ${FONT} font-size="16" font-weight="700" fill="${INK}" text-anchor="middle">${pctTxt(vs[0])}</text>`;
+    g += `<text x="${W - 30}" y="${(cy + 6).toFixed(1)}" ${FONT} font-size="16" font-weight="800" fill="${RED}" text-anchor="middle">${pctTxt(vs.at(-1))}</text>`;
+  });
+  const svg = `<svg viewBox="0 0 ${W} ${H.toFixed(0)}" xmlns="http://www.w3.org/2000/svg">${g}</svg>`;
+  /* 제목: 23년 1위가 올해 몇 %였나 — 같은 지역의 두 점 */
+  const t1 = B(first).coTop[0];
+  cards.dots = {
+    template: "rise-story@1", date, kind: "bump",
+    note: `시안 · 점 도표 · 40곳 · ${first.slice(2)}년 초부터 상승률 순`,
+    title: lines(`${shortName(t1)}, ${first.slice(2)}년부터 ${pctTxt(val(first, t1))}% · <span class="hi">올해 ${pctTxt(val(last, t1))}%</span>`),
+    svg,
+    foot: `선 길이 = 출발점에 따라 달라지는 상승률 폭 · <span class="co">파랑</span> = 강남 3구 · 단위 % · ${endDot} 기준`,
+    source: SOURCE,
+  };
+}
+
+/* ───────── 3. 출발점별 순위표 넷 — 지도 4장을 한 장으로(오너 2026-09-16) ─────────
+ * 「상위 1위~N위 … 38~40위」 — 위는 N곳, 아래는 마지막 세 자리. N 은 판 높이에 맞춘 값이다. */
+{
+  const TOPN = 20, TAIL = 3;
+  const HL = new Set(["송파구", "서초구", "강남구"]); // 강남 3구 — 7장 순위 이동과 같은 이야기를 따라간다
+  const row = (y, a) => ({ r: B(y).rankOf.get(a.geoName), nm: tableName(a), v: pctTxt(a.v), hl: HL.has(a.label) });
+  const cols = YS.map((y) => {
+    const rk = B(y).ranked;
+    return {
+      yr: `${y.slice(2)}년 초부터`,
+      sub: `서울 ${pctTxt(B(y).seoulV)}%`,
+      top: rk.slice(0, TOPN).map((a) => row(y, a)),
+      tail: rk.slice(-TAIL).map((a) => row(y, a)),
+    };
+  });
+  for (const lab of HL) if (!R.AREAS.some((a) => a.label === lab)) throw new Error(`강조 지역 ${lab} 이 40곳 명단에 없다`);
+  cards.ranks = {
+    template: "rise-story@1", date, kind: "ranks",
+    note: `출발점별 상승률 순위 · 40곳 중 1~${TOPN}위와 ${R.AREAS.length - TAIL + 1}~${R.AREAS.length}위`,
+    title: lines(`출발점이 바뀌면 <span class="hi">순위표</span>도 바뀐다`),
+    cols,
+    foot: `단위 % · 각 연도 초 → ${endDot} · <span class="co">파랑</span> = 강남 3구` +
+      (fallbacks.length ? ` · ${fallbacks.map(tableName).join("·")}은 화성시 기준` : ""),
     source: SOURCE,
   };
 }
@@ -265,7 +367,7 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
     `${endKo}까지 비교했습니다.`,
     ``,
     ...YS.flatMap((y) => [`[${y}년 초부터] 서울 평균 ${pctTxt(B(y).seoulV)}%`, `${top3(y)}`, `꼴찌 ${bottom(y)}`, ``]),
-    `👉 2장: 읽는 법 · 3~6장: 출발점별 지도 · 7장: 순위 이동 · 8장: 40곳 전체 표`,
+    `👉 2장: 읽는 법 · 3장: 출발점별 순위표 · 4장: 순위 이동 · 5장: 40곳 전체 표`,
     ``,
     `📌 저장해두고 우리 동네가 몇 위인지 확인하기`,
     ``,
@@ -281,6 +383,7 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
     `#부동산 #아파트값 #토지거래허가구역 #집값 #데이터시각화`,
   ].join("\n");
   writeCaption("tohuh-rise", caption);
+  writeCaption("tohuh-rise-dots", `(시안) 점 도표 — 캡션은 확정 후 손질\n\n${caption}`);
 }
 
 const outDir = join(ROOT, `data/content/${date}`);

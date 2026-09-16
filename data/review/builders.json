@@ -4950,9 +4950,11 @@
       "produces": [
         "tohuh-rise-cover",
         "tohuh-rise-method",
+        "tohuh-rise-ranks",
         "tohuh-rise-bump",
         "tohuh-rise-grid",
-        "tohuh-rise-notes"
+        "tohuh-rise-notes",
+        "tohuh-rise-dots"
       ]
     }
   ]

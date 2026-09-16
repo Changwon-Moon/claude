@@ -2325,21 +2325,28 @@
     },
     {
       "label": "tohuh-rise",
-      "title": "📈 언제부터 셌느냐에 따라 1등이 바뀐다 — 토허제 40곳 매매가 상승률 9장",
+      "title": "📈 언제부터 셌느냐에 따라 1등이 바뀐다 — 토허제 40곳 매매가 상승률 6장",
       "cards": [
         "tohuh-rise-cover",
         "tohuh-rise-method",
-        "tohuh-rise-2023",
-        "tohuh-rise-2024",
-        "tohuh-rise-2025",
-        "tohuh-rise-2026",
+        "tohuh-rise-ranks",
         "tohuh-rise-bump",
         "tohuh-rise-grid",
         "tohuh-rise-notes"
       ],
       "caption": "tohuh-rise",
-      "note": "한국부동산원 주간 매매지수 · 끝점 202637(2026-09-07) 고정. 1·2·7·8·9장 rise-story@1(build-tohuh-rise-story), 3~6장 singoga-map@1(build-tohuh-rise-map). 계산은 scripts/lib/tohuh-rise-data.mjs 한 곳.",
+      "note": "한국부동산원 주간 매매지수 · 끝점 202637(2026-09-07) 고정. 6장 모두 rise-story@1(build-tohuh-rise-story). 지도 4장(build-tohuh-rise-map)은 오너 지시(2026-09-16)로 3장 순위표 한 장으로 합쳐 세트에서 뺐다 — 빌더는 남겨 둔다. 계산은 scripts/lib/tohuh-rise-data.mjs 한 곳.",
       "pixelPolicy": "고정물 후보 — 끝점을 --end 로 못 박았다. 확정 후 pixel-baselines 등록 여부는 오너 결정"
+    },
+    {
+      "label": "tohuh-rise-dots",
+      "title": "(시안) 토허제 40곳 상승률 점 도표 — 출발점 넷을 한 줄에",
+      "cards": [
+        "tohuh-rise-dots"
+      ],
+      "caption": "tohuh-rise-dots",
+      "state": "시안",
+      "note": "최초 기사(직방 분석)의 점 도표 형식을 빌린 초안. build-tohuh-rise-story 가 같이 만든다."
     }
   ]
 }
