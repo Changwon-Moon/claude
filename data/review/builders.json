@@ -4889,6 +4889,54 @@
         "singo-권선자이e편한세상-84"
       ],
       "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 신고가(7.5억)와 지난 사이클 고점(7.4억·2021.08)이 1.4% 차이라 두 기준선이 붙는다. 09-08 오너 기준대로 점선은 신고가 라인 하나로 긋고 「지난 고점」 라벨을 선 아래로 내린다(2026-09-16)."
+    },
+    {
+      "label": "tohuh-rise-2023",
+      "cmd": "scripts/build-tohuh-rise-map.mjs",
+      "args": [
+        "--base",
+        "2023",
+        "--end",
+        "202637",
+        "--date",
+        "2026-09-16"
+      ]
+    },
+    {
+      "label": "tohuh-rise-2024",
+      "cmd": "scripts/build-tohuh-rise-map.mjs",
+      "args": [
+        "--base",
+        "2024",
+        "--end",
+        "202637",
+        "--date",
+        "2026-09-16"
+      ]
+    },
+    {
+      "label": "tohuh-rise-2025",
+      "cmd": "scripts/build-tohuh-rise-map.mjs",
+      "args": [
+        "--base",
+        "2025",
+        "--end",
+        "202637",
+        "--date",
+        "2026-09-16"
+      ]
+    },
+    {
+      "label": "tohuh-rise-2026",
+      "cmd": "scripts/build-tohuh-rise-map.mjs",
+      "args": [
+        "--base",
+        "2026",
+        "--end",
+        "202637",
+        "--date",
+        "2026-09-16"
+      ]
     }
   ]
 }
