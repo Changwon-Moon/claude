@@ -7,19 +7,7 @@
       "reviewer": "caption-number",
       "level": "info",
       "code": "crosscheck-allowed",
-      "msg": "캡션 교차검증값 81,727억 허용 — 59A 최고가 공급가(옵션포함) 8.17억의 만원 단위"
-    },
-    {
-      "reviewer": "caption-number",
-      "level": "info",
-      "code": "crosscheck-allowed",
       "msg": "캡션 교차검증값 7.63억 허용 — 122동 1205호 공급가(옵션포함) 7억6,331만원 — 카드는 최고가 한 세대만 말하므로 캡션이 4세대를 모두 적는다"
-    },
-    {
-      "reviewer": "caption-number",
-      "level": "info",
-      "code": "crosscheck-allowed",
-      "msg": "캡션 교차검증값 7.24억 허용 — 121동 304호 공급가(옵션포함) 7억2,440만원"
     },
     {
       "reviewer": "caption-number",
@@ -38,6 +26,24 @@
       "level": "info",
       "code": "crosscheck-allowed",
       "msg": "캡션 교차검증값 2,500억 허용 — 14억2,500만원의 뒷자리"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 72,440억 허용 — 기준 세대(59A 121동 304호) 공급가(옵션포함) 7.24억의 만원 단위"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 8.17억 허용 — 59A 120동 3106호(31층) 공급가(옵션포함) 8억1,727만원 — 카드는 최저가 세대 기준이라 캡션이 4세대를 모두 적는다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 6.1억 허용 — 최고가 세대(8.17억) 기준 안전마진 14.25−8.17 — 카드가 최저가 기준이므로 독자가 범위를 보게 한다"
     }
   ],
   "cards": [
