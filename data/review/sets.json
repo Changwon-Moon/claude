@@ -2475,9 +2475,9 @@
       ],
       "caption": "danji-cheolsan-heritage",
       "note": "무순위(사후) 4세대(59A 3 · 59C 1). 브리에르와 같은 안전마진 판(①) — 기준은 59A 3세대 중 **최저가**(121동 304호·3층, 옵션포함 7.24억 — 오너 판단 2026-09-17 「7억으로」). 공급금액·옵션(승계 필수)·자격·일정은 공고 2026910236(오너 제공 캡처)로 대조. 시세는 국토부 분양권·입주권 전매 원본 silv/41210-202602(구분 '입', 59.9867㎡·16층·14.25억, 이 평형 최근 거래)을 market.verify 로 대조. 실거래를 14.3억으로 반올림하지 않도록 margin.digits 2, 안전마진은 브리에르와 같이 첫째 자리(gapDigits 1, 14.25−7.24=7.01 검산). 사진은 오너 제공 실사진(조경).",
-      "state": "시안",
+      "state": "오너 확정",
       "publishGate": "없음 — 공급금액 공고문 대조 완료. 오너 확정 대기.",
-      "pixelPolicy": "정기물 — data/datasets 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+      "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json,data/datasets/silv,data/datasets/molit 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
       "captionCrossCheck": [
         {
           "value": "7.63",
@@ -2507,6 +2507,10 @@
           "value": "6.1",
           "why": "최고가 세대(8.17억) 기준 안전마진 14.25−8.17 — 카드가 최저가 기준이므로 독자가 범위를 보게 한다"
         }
+      ],
+      "confirmedAt": "2026-09-17",
+      "confirmedMd5": [
+        "danji-cheolsan-heritage:e4ac1c37ee13"
       ]
     }
   ]
