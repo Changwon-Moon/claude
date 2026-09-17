@@ -5163,6 +5163,16 @@
         "cheolsan-briller-recall",
         "--publish"
       ]
+    },
+    {
+      "label": "danji-doosanbucheon-remndr",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-09-17",
+        "--only",
+        "doosan-zenith-bucheon-remndr",
+        "--publish"
+      ]
     }
   ]
 }

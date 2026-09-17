@@ -349,10 +349,25 @@ function tightPlan(d, total, hasMargin) {
     /* 세대수를 모르면 비운다 — 타입만 말하는 편이 틀린 수를 말하는 것보다 낫다(장위형과 같다). */
     return {
       above: t.units != null ? `${t.type} · ${n(t.units)}세대` : t.type,
-      value: eok1(t.won),
+      /* 첫째 자리로 떨어지지 않는 값은 둘째 자리까지 적는다 — 8.75억을 8.8억이라 적으면 최고가를
+         부풀린다(두산위브더제니스 부천 무순위 2026-09-17). 딱 떨어지는 값은 예전 그대로다. */
+      value: t.won % 1e7 ? `${(t.won / 1e8).toFixed(2)}억` : eok1(t.won),
       hi: !!t.main,
     };
   });
+
+  /* 타입이 **하나**면 1행이 두 칸뿐이라 판형 스키마(spec 3칸 이상)를 못 채운다 —
+     규모를 동수·층수 두 칸으로 편다(두산위브더제니스 부천 무순위 59A 한 타입, 2026-09-17).
+     타입이 둘인 카드는 예전 그대로 한 칸이다. */
+  if (typeCells.length === 1 && d.buildings != null && d.topFloor != null)
+    return {
+      on: true,
+      cells: [
+        ...typeCells,
+        { label: "동수", pre: "총", value: String(d.buildings), unit: "개동" },
+        { label: "최고 층수", pre: "최고", value: String(d.topFloor), unit: "층" },
+      ],
+    };
 
   /* 규모 한 칸 — 동수는 회색 윗줄, 층수는 값. 두 값이 같은 급이라 어느 쪽을 값으로 둬도 되는데,
      층수가 '최고'라는 말을 데리고 있어 값 자리에 어울린다. 하나만 알면 아는 것만 말한다. */

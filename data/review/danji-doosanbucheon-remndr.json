@@ -1,0 +1,43 @@
+{
+  "label": "danji-doosanbucheon-remndr",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 87,500억 허용 — 59A 최고가 8.75억(40~49층)의 만원 단위 — 카드와 같은 값"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 7.43억 허용 — 같은 타입 최저가(2층 8세대, 공고 3쪽) — 카드는 최고가만 말하므로 캡션이 범위의 아래쪽을 받는다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 74,300억 허용 — 위 최저가 7.43억의 만원 단위"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 2,220억 허용 — 발코니 확장 공사비(별도 선택 계약, 공고 3쪽) — 금액에 포함하지 않았음을 밝힌다"
+    }
+  ],
+  "cards": [
+    {
+      "file": "danji-doosanbucheon-remndr.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}
