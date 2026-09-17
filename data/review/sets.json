@@ -2441,9 +2441,9 @@
       ],
       "caption": "danji-doosanbucheon-remndr",
       "note": "본청약 카드(danji-doosanbucheon, 2026-08-15 확정)와 별개의 무순위(사후) 카드 — 기존 확정 항목은 건드리지 않았다. 두 줄 판(②) 한 타입: 59A·229세대 8.75억 / 총 7개동 / 최고 49층. 금액·자격은 무순위 공고문(2026910241, 오너 제공 PDF)을 pdfplumber 로 읽어 층 구간 합 229 검산. 조감도는 본청약과 같은 원본에서 960×576 으로 좁게 잘랐다(1200 폭이면 표지 한계에 걸려 카드 하단이 비었다).",
-      "state": "시안",
+      "state": "오너 확정",
       "publishGate": "없음 — 공급금액·자격 공고문 대조 완료. 오너 확정 대기.",
-      "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+      "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json,data/datasets/silv,data/datasets/molit 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
       "captionCrossCheck": [
         {
           "value": "87,500",
@@ -2461,6 +2461,10 @@
           "value": "2,220",
           "why": "발코니 확장 공사비(별도 선택 계약, 공고 3쪽) — 금액에 포함하지 않았음을 밝힌다"
         }
+      ],
+      "confirmedAt": "2026-09-17",
+      "confirmedMd5": [
+        "danji-doosanbucheon-remndr:13c05da719c4"
       ]
     }
   ]
