@@ -2291,7 +2291,7 @@
         "file": "cheolsan-heritage-dusk.jpg",
         "credit": "출처. GS건설",
         "creditOnCard": true,
-        "provided": "2026-09-17 오너 교체 제공 실사진(하천변 저녁 전경, 720×540). 원본은 _source/cheolsan-heritage-dusk.jpg. 이전의 조경 사진(_source/cheolsan-heritage.jpg)과 그 축소판은 쓰지 않는다.",
+        "provided": "2026-09-17 오너 교체 제공 실사진(하천변 저녁 전경, 720×540). 원본은 _source/cheolsan-heritage-dusk.jpg. 오른쪽 가로수가 안 나오게(오너 지시) (0,0)-(600,540)을 잘라 썼다 — 나무 줄기·가지는 x 600 오른쪽에 있다.",
         "_creditNote": "원 저작권자는 시공사로 본다(오너 판단 2026-09-12 과천 사례와 같은 처리)."
       },
       "price": {
