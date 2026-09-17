@@ -8,7 +8,7 @@
 # ⚡ 2026-09-18 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 lawd=11290 umd=길음동 type=84 apt="롯데캐슬클라시아"
 lawd=11560 umd=영등포동 type=59 apt="영등포푸르지오"
-lawd=41210 umd=철산동 type=59 apt="철산역롯데캐슬&amp;SKVIEW클래스티지" force=1
+lawd=41210 umd=철산동 type=59 apt="철산역롯데캐슬&amp;SKVIEW클래스티지"
 lawd=11380 umd=수색동 type=59 apt="DMCSKVIEW" force=1
 lawd=11290 umd=하월곡동 type=84 apt="월곡두산위브" force=1
 lawd=41115 umd=화서동 type=59 apt="화서주공4단지" force=1
