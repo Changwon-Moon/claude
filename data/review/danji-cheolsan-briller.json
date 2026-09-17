@@ -1,0 +1,61 @@
+{
+  "label": "danji-cheolsan-briller",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 83,462억 허용 — 59A 공급가(옵션포함) 8.35억의 만원 단위 — 카드와 같은 값"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 9.03억 허용 — 59B(일반공급) 공급가(옵션포함) 90,325만원 — 카드는 기준 타입 59A 만 말하므로 캡션이 나머지 한 세대를 받는다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 3.72억 허용 — 59B 기준 마진 12.75억 − 9.0325억 — 59B 는 자격(무주택세대주)이 달라 독자에게 따로 필요하다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 12억 허용 — 「12억7,500만원」의 앞자리 — 카드의 12.75억을 만원 단위로 적는다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 8억 허용 — 「8억8,016만원」의 앞자리 — 2026-08-18 59.5081㎡(59E) 23층 분양권 거래(silv/41210-202608, 구분 빈칸). 최초 분양가 수준이라 시세로 쓰지 않았고 그 사실을 캡션이 밝힌다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 8,016억 허용 — 위 분양권 거래 8억8,016만원의 뒷자리"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 7,500억 허용 — 12억7,500만원의 뒷자리 — 카드의 12.75억과 같은 거래"
+    }
+  ],
+  "cards": [
+    {
+      "file": "danji-cheolsan-briller.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}

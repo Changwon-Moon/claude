@@ -5153,6 +5153,16 @@
         "singo-e편한세상반월나노시티역-84"
       ],
       "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 신고가(9.2억)와 지난 사이클 고점(9억·2021.09)이 2.2% 차이 — 오너가 넣기로 함(2026-09-17)."
+    },
+    {
+      "label": "danji-cheolsan-briller",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-09-17",
+        "--only",
+        "cheolsan-briller-recall",
+        "--publish"
+      ]
     }
   ]
 }

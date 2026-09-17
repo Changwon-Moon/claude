@@ -837,13 +837,23 @@ function marginBand(d) {
      2026-09-17) 둘째 자리까지 적는다. 맞으면 예전 그대로다 — 확정본 픽셀은 안 바뀐다. */
   const r1 = (v) => Math.round(v / 1e7);
   const fmt = r1(m.market.won) - r1(priceWon) === r1(gap) ? eok1 : (v) => `${(v / 1e8).toFixed(2)}억`;
+  /* 안전마진만 첫째 자리로(`margin.gapDigits: 1`, 오너 지시 2026-09-17 철산자이 브리에르 "4.4억").
+     둘째 자리로 적은 두 값의 차(12.75 − 8.35 = 4.40)가 첫째 자리 마진과 같을 때만 허용한다 —
+     다르면 독자의 뺄셈이 카드와 어긋나므로 던진다. */
+  let gapFmt = fmt;
+  if (m.gapDigits === 1 && fmt !== eok1) {
+    const r2 = (v) => Math.round(v / 1e6);
+    if (Math.round((r2(m.market.won) - r2(priceWon)) / 10) !== r1(gap))
+      throw new Error(`${d.id}: margin.gapDigits 1 — 표의 두 값 차와 첫째 자리 안전마진이 어긋난다`);
+    gapFmt = eok1;
+  }
   const rows = [
     ...(type ? [{ area: "타입", price: type }] : []),
     { area: m.priceLabel || "분양가", price: fmt(priceWon), main: true },
     { area: m.market.label, price: fmt(m.market.won) },
-    { area: "안전마진", price: fmt(gap), warn: true, glow: true },
+    { area: "안전마진", price: gapFmt(gap), warn: true, glow: true },
   ];
-  return { head: [], cols: rows.length, rows, gap, fmt };
+  return { head: [], cols: rows.length, rows, gap, fmt: gapFmt };
 }
 
 function remndr(d) {
