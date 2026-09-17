@@ -793,7 +793,8 @@ function verifyMarket(d, m) {
   const hits = [];
   for (const f of readdirSync(dir).filter((x) => x.startsWith(`${v.lawd}-`) && x.endsWith(".json"))) {
     for (const t of JSON.parse(readFileSync(join(dir, f), "utf8")).trades || []) {
-      if (t.aptNm === v.aptNm && t.area >= lo && t.area < hi) hits.push(t);
+      /* `kindRaw` 를 주면 분양권·입주권 원값까지 맞춘다 — 같은 면적대라도 둘은 값의 성격이 다르다. */
+      if (t.aptNm === v.aptNm && t.area >= lo && t.area < hi && (v.kindRaw == null || t.kindRaw === v.kindRaw)) hits.push(t);
     }
   }
   if (!hits.length)
@@ -831,13 +832,18 @@ function marginBand(d) {
      맨 왼쪽에 타입을 세우면 세 금액이 전부 그 타입의 것임이 한눈에 읽힌다.
      타입은 데이터가 주거나(margin.type) 주력 타입에서 온다 — 손으로 적지 않는다. */
   const type = m.type ?? (d.price?.byType || []).find((t) => t.main)?.type ?? null;
+  /* 세 칸은 서로를 검산한다 — 독자는 '시세 − 분양가'를 머리로 빼 본다. 소수 첫째 자리로
+     반올림한 두 값의 차가 반올림한 안전마진과 다르면(철산자이 브리에르 12.8 − 9.0 ≠ 3.7,
+     2026-09-17) 둘째 자리까지 적는다. 맞으면 예전 그대로다 — 확정본 픽셀은 안 바뀐다. */
+  const r1 = (v) => Math.round(v / 1e7);
+  const fmt = r1(m.market.won) - r1(priceWon) === r1(gap) ? eok1 : (v) => `${(v / 1e8).toFixed(2)}억`;
   const rows = [
     ...(type ? [{ area: "타입", price: type }] : []),
-    { area: m.priceLabel || "분양가", price: eok1(priceWon), main: true },
-    { area: m.market.label, price: eok1(m.market.won) },
-    { area: "안전마진", price: eok1(gap), warn: true, glow: true },
+    { area: m.priceLabel || "분양가", price: fmt(priceWon), main: true },
+    { area: m.market.label, price: fmt(m.market.won) },
+    { area: "안전마진", price: fmt(gap), warn: true, glow: true },
   ];
-  return { head: [], cols: rows.length, rows, gap };
+  return { head: [], cols: rows.length, rows, gap, fmt };
 }
 
 function remndr(d) {
@@ -871,17 +877,34 @@ function remndr(d) {
 
   /* 접수가 하루면 '시작·마감' 두 칸이 같은 날을 두 번 말한다 — 데이터가 칸 수를 정한다. */
   const oneDay = !ah.receiptTo || ah.receiptFrom === ah.receiptTo;
-  const schedule = oneDay
+  /* 특별공급·일반공급이 **다른 날** 접수하는 재공급(철산자이 브리에르 2026-09-17 공고)은
+     두 날이 '시작·마감'이 아니다 — 특공 물량과 일반 물량이 따로 있다. 공고가 특공일을 주면
+     칸 이름을 그대로 바꾼다. 특공일이 없는 카드(과천 등)는 예전 이름 그대로다. */
+  const splitSupply = !oneDay && ah._fromNotice && ah.specialFrom && ah.specialFrom === ah.receiptFrom;
+  /* 준공이 끝난 집의 재공급은 '입주 완료 ○년 ○월'이 이 집의 입주 시점이 아니다 — 공고가
+     입주지정기간을 주면(잔금 내고 들어가는 기간) 그걸 적는다. */
+  const win = d.moveInWindow;
+  const moveInCell = win
+    ? { label: "입주지정기간", date: `${md(win.from).replace(/\(.\)/, "")}~${md(win.to).replace(/\(.\)/, "")}` }
+    : { label: moveInLabel(ah.moveInYm ?? d.moveIn), date: ymKo(ah.moveInYm ?? d.moveIn), tbd: !(ah.moveInYm ?? d.moveIn) };
+  const schedule = splitSupply
+    ? [
+        { label: "특별공급 접수", date: md(ah.receiptFrom), hi: true },
+        { label: "일반공급 접수", date: md(ah.receiptTo) },
+        { label: "당첨자 발표", date: ah.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah.announceDate },
+        moveInCell,
+      ]
+    : oneDay
     ? [
         { label: "무순위 접수", date: ah.receiptFrom ? md(ah.receiptFrom) : "미고지", tbd: !ah.receiptFrom, hi: true },
         { label: "당첨자 발표", date: ah.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah.announceDate },
-        { label: moveInLabel(ah.moveInYm ?? d.moveIn), date: ymKo(ah.moveInYm ?? d.moveIn), tbd: !(ah.moveInYm ?? d.moveIn) },
+        moveInCell,
       ]
     : [
         { label: "무순위 접수", date: md(ah.receiptFrom), hi: true },
         { label: "접수 마감", date: md(ah.receiptTo) },
         { label: "당첨자 발표", date: ah.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah.announceDate },
-        { label: moveInLabel(ah.moveInYm ?? d.moveIn), date: ymKo(ah.moveInYm ?? d.moveIn), tbd: !(ah.moveInYm ?? d.moveIn) },
+        moveInCell,
       ];
 
   const blocks = d.blocks ?? ah.blocks ?? null;
@@ -931,7 +954,7 @@ function remndr(d) {
         /* 안전마진 판이면 제목도 안전마진이 진다 — 표에서 빨간 칸이 말하는 것을 제목이 되받는다.
            금액은 `up`(빨강)이다. `hi`(코발트)로 적으면 표의 빨간 칸과 색이 어긋난다. */
         (margin
-          ? `<span class="hi">${hook}</span> 안전마진 <span class="up">${eok1(margin.gap)}</span> 줍줍!`
+          ? `<span class="hi">${hook}</span> 안전마진 <span class="up">${margin.fmt(margin.gap)}</span> 줍줍!`
           : `<span class="hi">${hook}</span> 무순위 줍줍 <span class="hi">${n(total)}세대</span>`),
     ],
     hero: heroOf(d),
@@ -987,7 +1010,7 @@ function remndr(d) {
     priceTable: tight.on
       ? { head: [], cols: 0, rows: [] }
       : margin
-        ? (({ gap: _gap, ...rest }) => rest)(margin)
+        ? (({ gap: _gap, fmt: _fmt, ...rest }) => rest)(margin)
         : plan.on
           ? plan.grid
           : priceTable(d, total),
