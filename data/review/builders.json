@@ -5173,6 +5173,16 @@
         "doosan-zenith-bucheon-remndr",
         "--publish"
       ]
+    },
+    {
+      "label": "danji-cheolsan-heritage",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-09-17",
+        "--only",
+        "cheolsan-heritage-remndr",
+        "--publish"
+      ]
     }
   ]
 }

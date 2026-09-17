@@ -1,0 +1,55 @@
+{
+  "label": "danji-cheolsan-heritage",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 81,727억 허용 — 59A 최고가 공급가(옵션포함) 8.17억의 만원 단위"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 7.63억 허용 — 122동 1205호 공급가(옵션포함) 7억6,331만원 — 카드는 최고가 한 세대만 말하므로 캡션이 4세대를 모두 적는다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 7.24억 허용 — 121동 304호 공급가(옵션포함) 7억2,440만원"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 7.66억 허용 — 59C 123동 1101호 공급가(옵션포함) 7억6,557만원"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 14억 허용 — 「14억2,500만원」의 앞자리 — 카드의 14.25억과 같은 거래"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 2,500억 허용 — 14억2,500만원의 뒷자리"
+    }
+  ],
+  "cards": [
+    {
+      "file": "danji-cheolsan-heritage.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}
