@@ -785,7 +785,9 @@ function presale(d) {
 function verifyMarket(d, m) {
   const v = m.market?.verify;
   if (!v) return;
-  const dir = join(ROOT, "data/datasets/molit");
+  /* 준공 전·직후 단지는 매매 실거래가 없고 분양권·입주권 거래(silv)가 가장 가까운 실거래다
+     (철산자이 브리에르 2026-09-17). `verify.src: "silv"` 면 그 원본을 훑는다 — 기본은 매매(molit). */
+  const dir = join(ROOT, v.src === "silv" ? "data/datasets/silv" : "data/datasets/molit");
   if (!existsSync(dir)) throw new Error(`${d.id}: 실거래 원본 폴더가 없다 — 비교값을 대조할 수 없다`);
   const [lo, hi] = v.m2;
   const hits = [];
