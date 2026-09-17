@@ -2395,9 +2395,9 @@
       ],
       "caption": "danji-cheolsan-briller",
       "note": "불법행위 재공급 2세대(59A 생애최초 특공 · 59B 일반). 안전마진 판(①) — 기준 타입 59A(오너 판단 2026-09-17). 공급가(옵션포함)·타입·일정·자격은 입주자모집공고(2026930031, 오너 제공 캡처)로 대조, 시세는 국토부 분양권전매 원본 silv/41210-202604(구분 '입', 59.9924㎡·26층·12.75억)을 market.verify(src silv·kindRaw 입)로 대조. 뉴스핌 2026-09-08 의 「84㎡ A 10.46억 · 안전마진 5억」은 공고에 84㎡가 없어 오보 — 쓰지 않았다. 안전마진 4.4억은 첫째 자리(오너 지시, gapDigits 1) — 표의 8.35·12.75 차 4.40 과 검산이 맞는다.",
-      "state": "시안",
+      "state": "오너 확정",
       "publishGate": "없음 — 공급가 공고문 대조 완료. 오너 최종 확정(confirm) 대기.",
-      "pixelPolicy": "정기물 — data/datasets 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+      "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json,data/datasets/silv,data/datasets/molit 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
       "captionCrossCheck": [
         {
           "value": "83,462",
@@ -2427,6 +2427,10 @@
           "value": "7,500",
           "why": "12억7,500만원의 뒷자리 — 카드의 12.75억과 같은 거래"
         }
+      ],
+      "confirmedAt": "2026-09-17",
+      "confirmedMd5": [
+        "danji-cheolsan-briller:0146c381212e"
       ]
     }
   ]
