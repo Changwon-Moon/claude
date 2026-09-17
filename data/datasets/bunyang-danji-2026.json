@@ -2136,6 +2136,50 @@
         "to": "2026-11-16"
       },
       "_mainNote": "안전마진 기준 타입은 59A(생애최초 특공) — 오너 판단 2026-09-17(더 큰 마진 쪽). 특공이라는 사실은 아래 한 줄이 말한다. 뉴스핌의 5.3억은 존재하지 않는 84A(10.46억) 기준이라 쓸 수 없다."
+    },
+    {
+      "id": "doosan-zenith-bucheon-remndr",
+      "slug": "doosanbucheon-remndr",
+      "kind": "remndr",
+      "name": "두산위브더제니스 부천",
+      "location": "경기 부천시 소사본동",
+      "applyhomeNo": "2026910241",
+      "total": 229,
+      "moveIn": "2032-02",
+      "buildings": 7,
+      "topFloor": 49,
+      "areas": [
+        {
+          "m2": 59,
+          "units": 229,
+          "types": [
+            "A"
+          ]
+        }
+      ],
+      "company": "두산건설·쌍용건설",
+      "source": {
+        "name": "한국부동산원 청약홈 입주자모집공고",
+        "via": "청약홈 API",
+        "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910241&pblancNo=2026910241"
+      },
+      "hook": "부천 소사",
+      "photo": {
+        "file": "doosan-zenith-bucheon-remndr.png",
+        "credit": "출처. 두산위브더제니스 부천 홈페이지",
+        "provided": "2026-09-17 — 본청약 카드(doosan-zenith-bucheon, 2026-08-14 오너 제공)와 같은 조감도 1200×576 을 그대로 썼다.",
+        "creditOnCard": true
+      },
+      "totalComplex": 1728,
+      "logo": "weve.png",
+      "_scaleNote": "7개동·지상 49층·총 1,728세대는 본청약 입주자모집공고(2026.08.12, 2026000382) — 같은 단지 항목 doosan-zenith-bucheon 의 unitsNote 와 같다.",
+      "mainArea": {
+        "m2": 59,
+        "units": 229
+      },
+      "_areasNote": "청약홈 무순위 공고 상세(2026910241) 공급내역: 주택형 059.9400A 229세대 한 줄. 매일일보 2026-09-11 「59㎡A 타입만 청약에서 경쟁 발생, 별도 무순위 청약 예정」과 맞는다. 공급금액은 청약홈이 '사업주체 문의'라 비워 뒀다 — 무순위 모집공고문 대조 전까지 넣지 않는다(본청약 59A 최고가 8.75억은 40~49층 값이라 이번 229세대의 층 구성을 모르면 쓸 수 없다).",
+      "contractDate": "2026-10-01",
+      "_totalComplexNote": "1,728세대는 본청약 공고문 공급규모(조합원 409·임대 144·보류지 17·일반 1,158). 보도의 '2,008가구'는 공고문과 다르다 — 1차를 쓴다."
     }
   ]
 }
