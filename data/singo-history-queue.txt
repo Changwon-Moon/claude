@@ -16,7 +16,7 @@ lawd=41115 umd=화서동 type=59 apt="화서주공4단지"
 lawd=41133 umd=금광동 type=84 apt="래미안금광"
 lawd=41115 umd=매교동 type=59 apt="힐스테이트푸르지오수원"
 lawd=41117 umd=매탄동 type=59 apt="매탄위브하늘채"
-lawd=41117 umd=영통동 type=59 apt="벽적골9단지주공" force=1
+lawd=41117 umd=영통동 type=59 apt="벽적골9단지주공"
 
 lawd=11740 umd=고덕동 type=59 apt="고덕그라시움"
 lawd=41111 umd=정자동 type=84 apt="화서역파크푸르지오"
