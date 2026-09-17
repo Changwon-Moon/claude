@@ -12,7 +12,7 @@ lawd=41210 umd=철산동 type=59 apt="철산역롯데캐슬&amp;SKVIEW클래스�
 lawd=11380 umd=수색동 type=59 apt="DMCSKVIEW"
 lawd=11290 umd=하월곡동 type=84 apt="월곡두산위브"
 lawd=41463 umd=구갈동 type=84 apt="기흥역센트럴푸르지오" force=1
-lawd=41115 umd=화서동 type=59 apt="화서주공4단지" force=1
+lawd=41115 umd=화서동 type=59 apt="화서주공4단지"
 lawd=41133 umd=금광동 type=84 apt="래미안금광"
 lawd=41115 umd=매교동 type=59 apt="힐스테이트푸르지오수원"
 lawd=41117 umd=매탄동 type=59 apt="매탄위브하늘채"
