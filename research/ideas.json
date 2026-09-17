@@ -2148,6 +2148,20 @@
       "at": "2026-09-17"
     },
     {
+      "id": "ah-remndr-2026910240",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 아야진 라메르 데시앙",
+      "why": "강원 · 3세대 · 접수 ~2026-09-21(D-4) · 41점(무순위·D-4)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-09-21",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910240&pblancNo=2026910240",
+      "at": "2026-09-17"
+    },
+    {
       "id": "ah-remndr-2026910242",
       "cat": "hot",
       "topic": "부동산",
@@ -2187,20 +2201,6 @@
       "status": "",
       "deadline": "2026-09-15",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910239&pblancNo=2026910239",
-      "at": "2026-09-17"
-    },
-    {
-      "id": "ah-remndr-2026910240",
-      "cat": "todo",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 아야진 라메르 데시앙",
-      "why": "강원 · 3세대 · 접수 ~2026-09-21(D-4) · 41점(무순위·D-4)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-09-21",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910240&pblancNo=2026910240",
       "at": "2026-09-17"
     }
   ]
