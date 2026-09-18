@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-18T00:19:59.650Z",
+  "generatedAt": "2026-09-18T00:50:10.132Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -1051,11 +1051,21 @@
       "file": "research-digest.yml",
       "name": "소재 보드 수집 (daily)",
       "lastRun": "2026-08-30",
-      "daysAgo": 18,
+      "daysAgo": 19,
       "lastOk": "2026-08-30",
-      "okDaysAgo": 18,
+      "okDaysAgo": 19,
       "fails30": 0,
       "runs30": 10
+    },
+    {
+      "file": "reb-collect.yml",
+      "name": "전세·월세 지수 수집 (한국부동산원)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 18,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 18,
+      "fails30": 0,
+      "runs30": 2
     },
     {
       "file": "ecos-m2.yml",
@@ -1096,16 +1106,6 @@
       "okDaysAgo": 17,
       "fails30": 0,
       "runs30": 1
-    },
-    {
-      "file": "reb-collect.yml",
-      "name": "전세·월세 지수 수집 (한국부동산원)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 17,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 17,
-      "fails30": 0,
-      "runs30": 2
     },
     {
       "file": "molit-door.yml",
@@ -1208,6 +1208,26 @@
       "runs30": 8
     },
     {
+      "file": "apt-supply-area.yml",
+      "name": "단지 공급면적 (카드 평 표기용)",
+      "lastRun": "2026-09-16",
+      "daysAgo": 2,
+      "lastOk": "2026-09-07",
+      "okDaysAgo": 10,
+      "fails30": 25,
+      "runs30": 100
+    },
+    {
+      "file": "apt-supply-retry.yml",
+      "name": "공급면적 — 자동 재시도",
+      "lastRun": "2026-09-16",
+      "daysAgo": 2,
+      "lastOk": "2026-09-07",
+      "okDaysAgo": 10,
+      "fails30": 26,
+      "runs30": 29
+    },
+    {
       "file": "population-collect.yml",
       "name": "인구 수집 (monthly)",
       "lastRun": "2026-09-15",
@@ -1236,26 +1256,6 @@
       "okDaysAgo": 2,
       "fails30": 3,
       "runs30": 66
-    },
-    {
-      "file": "apt-supply-area.yml",
-      "name": "단지 공급면적 (카드 평 표기용)",
-      "lastRun": "2026-09-16",
-      "daysAgo": 1,
-      "lastOk": "2026-09-07",
-      "okDaysAgo": 10,
-      "fails30": 25,
-      "runs30": 100
-    },
-    {
-      "file": "apt-supply-retry.yml",
-      "name": "공급면적 — 자동 재시도",
-      "lastRun": "2026-09-16",
-      "daysAgo": 1,
-      "lastOk": "2026-09-07",
-      "okDaysAgo": 10,
-      "fails30": 26,
-      "runs30": 29
     },
     {
       "file": "auto-produce.yml",
@@ -1294,7 +1294,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-14",
       "okDaysAgo": 4,
-      "fails30": 63,
+      "fails30": 64,
       "runs30": 95
     },
     {
@@ -1312,7 +1312,7 @@
       "name": "관제탑 배포 (Cloudflare)",
       "lastRun": "2026-09-18",
       "daysAgo": 0,
-      "lastOk": "2026-09-17",
+      "lastOk": "2026-09-18",
       "okDaysAgo": 0,
       "fails30": 1,
       "runs30": 100
