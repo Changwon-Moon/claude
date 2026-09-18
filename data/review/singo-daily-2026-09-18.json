@@ -1,7 +1,7 @@
 {
   "label": "singo-daily-2026-09-18",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 11장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 12장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
@@ -54,6 +54,12 @@
     },
     {
       "file": "singo-래미안금광-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-힐스테이트푸르지오수원-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
