@@ -138,14 +138,15 @@ const vlabels = [
   { x: curAtEdge ? cx - 10 : cx, y: cy - 36, text: `+${curCum.toFixed(2)}%`, fill: RED, anchor: curAtEdge ? "end" : "middle" },
   { x: rx - 16, y: ry - 26, text: `+${recCum.toFixed(2)}%`, fill: SLATE, anchor: "end" },
 ];
-/* 타이(gap 0)면 두 끝점이 같은 x 라 라벨을 하나로 합친다 — 겹쳐 찍지 않는다. */
-const xlabels = gap === 0
-  ? [
-      { x: AXIS_X, y: BASE + 46, text: "1주차", fill: MUTE, anchor: "start" }   /* y축 "0" 라벨과 겹침 방지(2026-09-07) */,
-      { x: cx, y: BASE + 46, text: `${curWeeks}주`, fill: INK, anchor: "end" },
-    ]
+/* 두 끝점의 x 가 가까우면(타이·신기록·박빙) 주수 라벨이 겹치거나 오른쪽으로 잘린다.
+   실측 2026-09-18: 87주 vs 85주 = 19px 차 → 겹침 + '85주'가 축 밖으로 잘림.
+   가까우면 현재 주수 하나로 합친다 — 역대 최장 값은 범례와 마무리 문구가 이미 들고 있다. */
+const X_LABEL_MIN_GAP = 170;
+const xOrigin = { x: AXIS_X, y: BASE + 46, text: "1주차", fill: MUTE, anchor: "start" };   /* y축 "0" 라벨과 겹침 방지(2026-09-07) */
+const xlabels = Math.abs(cx - rx) < X_LABEL_MIN_GAP
+  ? [xOrigin, { x: cx, y: BASE + 46, text: `${curWeeks}주`, fill: gap === 0 ? INK : RED, anchor: "end" }]
   : [
-      { x: AXIS_X, y: BASE + 46, text: "1주차", fill: MUTE, anchor: "start" }   /* y축 "0" 라벨과 겹침 방지(2026-09-07) */,
+      xOrigin,
       { x: cx, y: BASE + 46, text: `${curWeeks}주`, fill: RED, anchor: "end" },
       { x: rx, y: BASE + 46, text: `${recWeeks}주`, fill: SLATE, anchor: "start" },
     ];
@@ -167,7 +168,7 @@ const recStart = weekLabel(ks[record.base + 1]);
 const recEnd = weekLabel(ks[record.end]);
 const legend = [
   { sx1: 118, sx2: 196, sy: 120, color: RED, tx: 214, ty: 110, text: "현재 상승기", fill: INK, sub: `${curStart} ~ 진행 중`, sty: 156 },
-  { sx1: 118, sx2: 196, sy: 210, color: SLATE, tx: 214, ty: 200, text: "역대 최장 (文정부)", fill: INK, sub: `${recStart} ~ ${recEnd}`, sty: 246 },
+  { sx1: 118, sx2: 196, sy: 210, color: SLATE, tx: 214, ty: 200, text: `역대 최장 ${recWeeks}주 (文정부)`, fill: INK, sub: `${recStart} ~ ${recEnd}`, sty: 246 },
 ];
 /* 그래프 뒤 옅은 '서울' 배경 워드마크 (공식 로고 파일이 없어 워드마크로 — 자산 있으면 교체) */
 /* 그래프 뒤 서울시 공식 로고(자동 수집 자산)를 옅게 배경으로 — 텍스트 대체가 아니라 실제 자산 */
