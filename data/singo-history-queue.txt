@@ -11,7 +11,7 @@ lawd=41465 umd=풍덕천동 type=59 apt="현대성우8차"
 lawd=41173 umd=호계동 type=59 apt="평촌더샵아이파크"
 lawd=41173 umd=호계동 type=59 apt="평촌어바인퍼스트"
 lawd=41115 umd=인계동 type=84 apt="수원센트럴아이파크자이"
-lawd=41113 umd=곡반정동 type=84 apt="수원하늘채더퍼스트1단지" force=1
+lawd=41113 umd=곡반정동 type=84 apt="수원하늘채더퍼스트1단지"
 lawd=41133 umd=하대원동 type=84 apt="아튼빌"
 lawd=11530 umd=개봉동 type=59 apt="한진"
 
