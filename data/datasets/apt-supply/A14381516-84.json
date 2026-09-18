@@ -1,0 +1,25 @@
+{
+  "kaptCode": "A14381516",
+  "kaptName": "광장현대파크빌",
+  "type": "84",
+  "jibun": "577",
+  "exclusive": 84.81,
+  "commonResidential": 15.01,
+  "supply": 99.82,
+  "pyeong": 30.2,
+  "pyeongLabel": "30평",
+  "sampleDong": "1013동",
+  "sampleHo": "603호",
+  "sampleCount": 251,
+  "ratio": 0.8496,
+  "parts": [
+    {
+      "purpose": "부대시설 / 계단실",
+      "floor": "각층",
+      "area": 15.01
+    }
+  ],
+  "source": "국토교통부 건축물대장 전유공용면적(getBrExposPubuseAreaInfo)",
+  "platGbCd": "0",
+  "note": "공급면적 = 전유 + 「주건축물」 공용. 부속건축물 공용(지하주차장·관리·경비·기계전기)은 기타공용이라 뺀다. 용도 이름으로 거르지 않는 이유는 「승강기계단」이 '기계'에 걸리는 오탐 때문이다 — mainAtchGbCd 는 대장이 나눠 둔 칸이라 흔들리지 않는다."
+}
