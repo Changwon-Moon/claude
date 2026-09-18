@@ -10,80 +10,49 @@
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41465 --apt '현대성우8차' --umd '풍덕천동' --type 59 --from 202001
 
-현대성우8차 · 전용 59타입 · 41465 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41465-현대성우8차-59.json
-거래 있던 달 79/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 11.85억 (2026-09-12 · 전용 59.99㎡ 5층)
+⏭ 이미 있음 — 41465-현대성우8차-59.json (다시 받으려면 force=1)
 
 ── 평촌더샵아이파크 전용 59타입 (41173)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '평촌더샵아이파크' --umd '호계동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '평촌더샵아이파크' --umd '호계동' --type 59 --from 202001
 
-평촌더샵아이파크 · 전용 59타입 · 41173 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41173-평촌더샵아이파크-59.json
-거래 있던 달 61/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 11.15억 (2026-08-31 · 전용 59.8㎡ 16층)
-🧹 force=1 을 지웠습니다 — lawd=41173 umd=호계동 type=59 apt="평촌더샵아이파크"
+⏭ 이미 있음 — 41173-평촌더샵아이파크-59.json (다시 받으려면 force=1)
 
 ── 평촌어바인퍼스트 전용 59타입 (41173)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '평촌어바인퍼스트' --umd '호계동' --type 59 --from 202001
 
-평촌어바인퍼스트 · 전용 59타입 · 41173 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41173-평촌어바인퍼스트-59.json
-거래 있던 달 52/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 11억 (2026-09-03 · 전용 59.87㎡ 15층)
+⏭ 이미 있음 — 41173-평촌어바인퍼스트-59.json (다시 받으려면 force=1)
 
 ── 수원센트럴아이파크자이 전용 84타입 (41115)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41115 --apt '수원센트럴아이파크자이' --umd '인계동' --type 84 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41115 --apt '수원센트럴아이파크자이' --umd '인계동' --type 84 --from 202001
 
-수원센트럴아이파크자이 · 전용 84타입 · 41115 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41115-수원센트럴아이파크자이-84.json
-거래 있던 달 17/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 10.2억 (2026-09-15 · 전용 84.99㎡ 15층)
-🧹 force=1 을 지웠습니다 — lawd=41115 umd=인계동 type=84 apt="수원센트럴아이파크자이"
+⏭ 이미 있음 — 41115-수원센트럴아이파크자이-84.json (다시 받으려면 force=1)
 
 ── 수원하늘채더퍼스트1단지 전용 84타입 (41113)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41113 --apt '수원하늘채더퍼스트1단지' --umd '곡반정동' --type 84 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41113 --apt '수원하늘채더퍼스트1단지' --umd '곡반정동' --type 84 --from 202001
 
-수원하늘채더퍼스트1단지 · 전용 84타입 · 41113 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41113-수원하늘채더퍼스트1단지-84.json
-거래 있던 달 35/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 9.5억 (2026-09-15 · 전용 84.96㎡ 12층)
-🧹 force=1 을 지웠습니다 — lawd=41113 umd=곡반정동 type=84 apt="수원하늘채더퍼스트1단지"
+⏭ 이미 있음 — 41113-수원하늘채더퍼스트1단지-84.json (다시 받으려면 force=1)
 
 ── 아튼빌 전용 84타입 (41133)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41133 --apt '아튼빌' --umd '하대원동' --type 84 --from 202001
 
-아튼빌 · 전용 84타입 · 41133 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41133-아튼빌-84.json
-거래 있던 달 58/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 9억 (2026-08-31 · 전용 84.99㎡ 16층)
+⏭ 이미 있음 — 41133-아튼빌-84.json (다시 받으려면 force=1)
 
 ── 한진 전용 59타입 (11530)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 11530 --apt '한진' --umd '개봉동' --type 59 --from 202001
 
-한진 · 전용 59타입 · 11530 · 202001~202609 (81개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/11530-한진-59.json
-거래 있던 달 64/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 3개월
-최고가 7.2억 (2026-09-12 · 전용 59.95㎡ 20층)
+⏭ 이미 있음 — 11530-한진-59.json (다시 받으려면 force=1)
 
 ── 롯데캐슬클라시아 전용 84타입 (11290)
 
