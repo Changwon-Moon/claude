@@ -51,6 +51,15 @@ const list = (n) => {
 };
 
 const DATE = arg("date") ?? new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+/* ⚠️ **지난날을 만들 때는 빌더에게도 그 날짜를 넘긴다** (2026-09-20)
+ *
+ * 빌더(`build-singo-record.mjs`)의 `--publish` 는 **자기 기준 오늘** 폴더에 쓴다.
+ * 그래서 `--date 2026-09-19` 로 돌리면 카드가 `data/content/2026-09-20/` 에 떨어지고,
+ * 이 스크립트는 `data/content/2026-09-19/` 를 읽으러 가 **ENOENT 로 죽었다**
+ * (09-20 에 어제치 7장을 만들다 실제로 그랬다 — 빌드는 7장 다 됐는데 등록에서 터졌다).
+ * 등록하는 인자에도 같이 박아 둔다. 안 그러면 나중에 재생산할 때 또 엉뚱한 폴더로 간다. */
+const TODAY = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+const DATE_ARGS = DATE === TODAY ? [] : ["--date", DATE];
 const MAX = arg("max");
 const ALSO = list("also");
 const DRY = flag("dry");
@@ -353,6 +362,7 @@ for (const t of targets) {
     /* 이름표를 가른 건만 `--slug` 를 넘긴다 — 안 가른 건은 빌더 기본값 그대로다 */
     ...(t.slug === `singo-${full(t.h.aptNm)}-${t.type}` ? [] : ["--slug", t.slug]),
     ...carried,
+    ...DATE_ARGS,
     "--publish",
   ]);
   if (r.status === 0) {
@@ -384,6 +394,7 @@ for (const t of made) {
   const args = [
     "--apt", t.h.aptNm, "--type", t.type, "--kapt", t.kapt,
     ...(t.slug === `singo-${full(t.h.aptNm)}-${t.type}` ? [] : ["--slug", t.slug]),
+    ...DATE_ARGS,
     "--publish",
   ];
 
