@@ -7,6 +7,9 @@
 # ⚡ 2026-09-18 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-09-18 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-09-19 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+# ⚡ 2026-09-20 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+lawd=41465 umd=풍덕천동 type=59 apt="삼익아파트"
+
 lawd=41465 umd=풍덕천동 type=59 apt="현대성우8차"
 lawd=41173 umd=호계동 type=59 apt="평촌더샵아이파크"
 lawd=41173 umd=호계동 type=59 apt="평촌어바인퍼스트"
