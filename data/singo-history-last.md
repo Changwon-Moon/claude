@@ -1,9 +1,20 @@
 # 신고가 단지 이력 — 마지막 실행
 
-- 대기열: 305줄
+- 대기열: 306줄
 - 결과: **성공**
 
 ```
+
+── 삼익아파트 전용 59타입 (41465)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41465 --apt '삼익아파트' --umd '풍덕천동' --type 59 --from 202001
+
+삼익아파트 · 전용 59타입 · 41465 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41465-삼익아파트-59.json
+거래 있던 달 67/81 · 수집 실패 0개월
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 8.5억 (2026-09-12 · 전용 59.76㎡ 11층)
 
 ── 현대성우8차 전용 59타입 (41465)
 
