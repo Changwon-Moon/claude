@@ -5205,6 +5205,31 @@
       "milestone": null,
       "hhld": 1371,
       "kaptCode": "A15209305"
+    },
+    {
+      "foundOn": "2026-09-20",
+      "aptNm": "삼익아파트",
+      "umdNm": "풍덕천동",
+      "jibun": "664",
+      "priceWon": 850000000,
+      "priceManwon": 85000,
+      "area": 59.76,
+      "floor": 11,
+      "buildYear": 1994,
+      "date": "2026-09-12",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "41465",
+      "type": "59",
+      "pyeong": "25평",
+      "lawdCd": "41465",
+      "gu": "용인시수지구",
+      "prevPeakManwon": 82000,
+      "prevPeakDate": "2026-07-25",
+      "gainPct": 3.6585365853658534,
+      "milestone": null,
+      "hhld": 1620,
+      "kaptCode": "A44876510"
     }
   ]
 }
