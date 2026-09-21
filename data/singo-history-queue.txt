@@ -23,7 +23,7 @@ lawd=11290 umd=돈암동 type=59 apt="한진(609-1)"
 lawd=41115 umd=화서동 type=59 apt="화서주공4단지"
 lawd=41595 umd=반월동 type=59 apt="신동탄포레자이"
 lawd=41360 umd=다산동 type=59 apt="다산푸르지오"
-lawd=11545 umd=가산동 type=59 apt="두산" force=1
+lawd=11545 umd=가산동 type=59 apt="두산"
 lawd=41113 umd=권선동 type=84 apt="권선자이e편한세상" force=1
 lawd=11530 umd=개봉동 type=59 apt="한진" force=1
 lawd=41113 umd=구운동 type=84 apt="삼환" force=1
