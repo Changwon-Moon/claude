@@ -18,7 +18,7 @@ lawd=11410 umd=남가좌동 type=59 apt="DMC에코자이"
 lawd=11620 umd=봉천동 type=59 apt="벽산블루밍"
 lawd=11290 umd=하월곡동 type=59 apt="래미안월곡"
 lawd=41595 umd=반정동 type=84 apt="반정아이파크캐슬5단지"
-lawd=41595 umd=병점동 type=84 apt="병점역아이파크캐슬" force=1
+lawd=41595 umd=병점동 type=84 apt="병점역아이파크캐슬"
 lawd=11290 umd=돈암동 type=59 apt="한진(609-1)" force=1
 lawd=41115 umd=화서동 type=59 apt="화서주공4단지" force=1
 lawd=41595 umd=반월동 type=59 apt="신동탄포레자이" force=1
