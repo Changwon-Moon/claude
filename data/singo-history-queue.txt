@@ -13,7 +13,7 @@ lawd=11440 umd=신수동 type=59 apt="마포아이파크포레"
 lawd=11470 umd=신정동 type=84 apt="래미안목동아델리체(101동~118동)"
 lawd=11470 umd=신정동 type=59 apt="목동힐스테이트"
 lawd=11230 umd=전농동 type=84 apt="래미안크레시티"
-lawd=41117 umd=망포동 type=84 apt="힐스테이트영통" force=1
+lawd=41117 umd=망포동 type=84 apt="힐스테이트영통"
 lawd=11410 umd=남가좌동 type=59 apt="DMC에코자이"
 lawd=11620 umd=봉천동 type=59 apt="벽산블루밍" force=1
 lawd=11290 umd=하월곡동 type=59 apt="래미안월곡"
