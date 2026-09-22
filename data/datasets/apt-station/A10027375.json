@@ -8,8 +8,8 @@
   "kaptCode": "A10027375",
   "name": "목동힐스테이트",
   "addr": "서울특별시 양천구 신정동 1323 목동힐스테이트",
-  "x": 126.856457667129,
-  "y": 37.5203061709519,
+  "x": 126.85645980091,
+  "y": 37.5201961611651,
   "geoMethod": "주소",
   "station": "신정네거리역",
   "lines": [
@@ -20,26 +20,26 @@
   "others": [
     {
       "station": "신정역",
-      "distanceM": 524,
+      "distanceM": 537,
       "lines": [
         "5"
       ]
     },
     {
       "station": "목동역",
-      "distanceM": 969,
+      "distanceM": 977,
       "lines": [
         "5"
       ]
     },
     {
       "station": "양천구청역",
-      "distanceM": 1201,
+      "distanceM": 1192,
       "lines": [
         "2"
       ]
     }
   ],
   "source": "카카오 로컬 API (주소 검색 · 카테고리 SW8)",
-  "collectedFor": "2026-09-01"
+  "collectedFor": "2026-09-22"
 }

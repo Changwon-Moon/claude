@@ -8,19 +8,19 @@
   "kaptCode": "A13613007",
   "name": "래미안월곡",
   "addr": "서울특별시 성북구 하월곡동 225 래미안월곡",
-  "x": 127.036873189543,
-  "y": 37.610440395666,
+  "x": 127.036928635198,
+  "y": 37.6105681385935,
   "geoMethod": "주소",
   "station": "미아사거리역",
   "lines": [
     "4"
   ],
-  "distanceM": 676,
+  "distanceM": 675,
   "rawPlaceName": "미아사거리역 4호선",
   "others": [
     {
       "station": "월곡역",
-      "distanceM": 1040,
+      "distanceM": 1051,
       "lines": [
         "6"
       ]
@@ -34,12 +34,12 @@
     },
     {
       "station": "길음역",
-      "distanceM": 1303,
+      "distanceM": 1316,
       "lines": [
         "4"
       ]
     }
   ],
   "source": "카카오 로컬 API (주소 검색 · 카테고리 SW8)",
-  "collectedFor": "2026-08-28"
+  "collectedFor": "2026-09-22"
 }
