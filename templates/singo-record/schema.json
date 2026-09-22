@@ -533,9 +533,19 @@
         },
         "lines": {
           "type": "array",
+          "description": "뱃지에 그릴 노선. 환승역은 2개까지(셋이면 우상단 로고를 침범한다 · 2026-09-22). 잰 값 전부는 meta.station 에 남는다.",
+          "maxItems": 2,
           "items": {
             "type": "string"
           }
+        },
+        "compact": {
+          "type": "boolean",
+          "description": "역 이름이 8자 이상이면 뱃지를 한 치수 줄인다."
+        },
+        "duo": {
+          "type": "boolean",
+          "description": "노선 알약이 둘일 때 가로를 한 치수 더 줄인다(2026-09-22)."
         },
         "distanceM": {
           "type": "number"

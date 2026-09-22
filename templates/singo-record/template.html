@@ -92,6 +92,17 @@
          빌더가 노선을 2개까지만 넘긴다 — 셋이 되면 로고를 침범한다. */
       .sr-stn .lnw { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; }
       .sr-stn.compact .lnw { gap: 4px; }
+      /* ── duo — 알약이 둘일 때만 (2026-09-22)
+         「성신여대입구역」(7자) + 알약 둘이 우상단 로고를 가로 65px 침범했다(designQa).
+         높이 62px 은 그대로 두고 **가로를 먹는 것만** 줄인다(compact 와 같은 규칙).
+         한 개짜리 역에는 이 클래스가 안 붙으므로 기존 카드는 픽셀이 안 바뀐다. */
+      .sr-stn.duo { gap: 8px; padding: 0 16px 0 6px; }
+      .sr-stn.duo .lnw { gap: 4px; }
+      .sr-stn.duo .rt-wide { height: 40px; padding: 0 10px; font-size: 21px; }
+      .sr-stn.duo .nmx { font-size: 27px; letter-spacing: -0.045em; }
+      .sr-stn.duo.compact { gap: 7px; padding: 0 12px 0 5px; }
+      .sr-stn.duo.compact .rt-wide { height: 36px; padding: 0 8px; font-size: 18px; }
+      .sr-stn.duo.compact .nmx { font-size: 24px; letter-spacing: -0.05em; }
       /* 노선 알약 — 한 행("7호선"·"수인분당선"). 접지 않으므로 폭은 이름이 정한다. */
       .sr-stn .rt-wide {
         display: inline-flex; align-items: center; justify-content: center;
@@ -205,7 +216,7 @@
       <div class="wirit-topcap">
         {{#if kicker}}<span class="sr-kick">{{kicker}}</span>{{/if}}
         {{#if station}}
-        <span class="sr-stn{{#if station.compact}} compact{{/if}}">
+        <span class="sr-stn{{#if station.compact}} compact{{/if}}{{#if station.duo}} duo{{/if}}">
           {{#if station.lines}}<span class="lnw">{{#each station.lines}}{{{metroWide this}}}{{/each}}</span>{{else}}<span class="rt-wide plain">지하철</span>{{/if}}
           <span class="nmx">{{station.name}}</span>
         </span>
