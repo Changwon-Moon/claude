@@ -91,8 +91,15 @@ async function main() {
 
   /* ── ② 그 좌표에서 지하철역을 **거리순**으로. SW8 = 지하철역 카테고리. */
   const RADIUS = 2000; // m. 이보다 멀면 '역세권'이라 부를 일이 없다.
+  /* ⚠️ **size 는 5 가 아니라 15 다** (2026-09-22)
+   *
+   * 카카오는 환승역을 **노선별 POI** 로 준다 — 「성신여대입구역 우이신설선」과
+   * 「성신여대입구역 4호선」이 다른 항목으로, 출입구 위치가 달라 거리도 다르다.
+   * 5개만 받으면 가까운 다른 역들에 밀려 **같은 역의 나머지 노선이 잘려 나간다**
+   * (돈암한신한진: 우이신설 584m 만 오고 4호선 항목은 5위 밖이었다 — 카드가 환승역을
+   * 단일 노선역으로 그렸다). 15개면 반경 2km 안의 같은 역 항목들이 함께 들어온다. */
   const s = await kakao(
-    `search/category.json?category_group_code=SW8&x=${x}&y=${y}&radius=${RADIUS}&sort=distance&size=5`,
+    `search/category.json?category_group_code=SW8&x=${x}&y=${y}&radius=${RADIUS}&sort=distance&size=15`,
   );
   const docs: any[] = s.documents ?? [];
   if (!docs.length) {
@@ -133,15 +140,28 @@ async function main() {
     process.exit(0);
   }
 
-  /* 같은 역이 출입구별로 여러 건 오기도 한다. 이름으로 접어 **가장 가까운 한 건**만 남긴다. */
-  const byName = new Map<string, any>();
+  /* 같은 역이 출입구별·**노선별**로 여러 건 온다. 이름으로 접어 가장 가까운 한 건을 남기되,
+   * ⚠️ **노선은 접힌 항목들 것을 모두 합친다** (2026-09-22).
+   *
+   * 예전엔 가장 가까운 한 건의 노선만 적었다. 그래서 환승역이 **단일 노선역으로 기록**됐다
+   * (돈암한신한진 → 「우이신설 · 성신여대입구역」. 실제로는 4호선 환승역이다).
+   * 빌더에도 합치는 코드가 있지만 그건 `others` 에 남은 **다른 이름의 항목**을 보는 것이라
+   * 여기서 접혀 사라진 노선은 되살리지 못한다. 잃어버리는 자리가 여기이므로 여기서 고친다.
+   * ⚠️ 없는 노선을 채우지 않는다 — **받은 항목에 적힌 것만** 합친다(오보 0). */
+  const byName = new Map<string, { doc: any; lines: string[] }>();
   for (const d of docs) {
     const nm = cleanStationName(d.place_name);
+    const ls = linesFromCategory(d.category_name, d.place_name);
     const prev = byName.get(nm);
-    if (!prev || Number(d.distance) < Number(prev.distance)) byName.set(nm, d);
+    if (!prev) byName.set(nm, { doc: d, lines: [...ls] });
+    else {
+      for (const l of ls) if (!prev.lines.includes(l)) prev.lines.push(l);
+      if (Number(d.distance) < Number(prev.doc.distance)) prev.doc = d;
+    }
   }
-  const near = [...byName.values()].sort((p, q) => Number(p.distance) - Number(q.distance));
-  const best = near[0];
+  const near = [...byName.values()].sort((p, q) => Number(p.doc.distance) - Number(q.doc.distance));
+  const best = near[0].doc;
+  const bestLines = near[0].lines;
 
   const outDir = R("data/datasets/apt-station");
   mkdirSync(outDir, { recursive: true });
@@ -163,13 +183,13 @@ async function main() {
         y: Number(y),
         geoMethod: method,
         station: cleanStationName(best.place_name),
-        lines: linesFromCategory(best.category_name, best.place_name),
+        lines: bestLines,
         distanceM: Number(best.distance),
         rawPlaceName: best.place_name,
-        others: near.slice(1, 4).map((d) => ({
-          station: cleanStationName(d.place_name),
-          distanceM: Number(d.distance),
-          lines: linesFromCategory(d.category_name, d.place_name),
+        others: near.slice(1, 4).map((n) => ({
+          station: cleanStationName(n.doc.place_name),
+          distanceM: Number(n.doc.distance),
+          lines: n.lines,
         })),
         source: "카카오 로컬 API (주소 검색 · 카테고리 SW8)",
         collectedFor: new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10),
@@ -182,10 +202,10 @@ async function main() {
   console.log(
     `${outPath}\n` +
       `${name ?? outKey} (${method}로 좌표) → ${cleanStationName(best.place_name)} ` +
-      `직선 ${best.distance}m · 노선 ${linesFromCategory(best.category_name, best.place_name).join("·") || "미상"}\n` +
+      `직선 ${best.distance}m · 노선 ${bestLines.join("·") || "미상"}\n` +
       near
         .slice(1, 4)
-        .map((d) => `   다음: ${cleanStationName(d.place_name)} ${d.distance}m`)
+        .map((n) => `   다음: ${cleanStationName(n.doc.place_name)} ${n.doc.distance}m`)
         .join("\n"),
   );
 }

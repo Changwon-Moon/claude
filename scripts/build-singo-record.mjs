@@ -1159,6 +1159,14 @@ if (KAPT) {
       );
     }
 
+    /* ⚠️ 뱃지에 그리는 노선은 **2개까지** (2026-09-22)
+     * 최상단 줄은 킥커 + 뱃지 + 로고가 한 키로 서는 자리다. 알약이 셋이면 로고를 침범한다
+     * (designQa badgeclip). 셋 이상인 역은 가까운 순서대로 앞 둘만 그리고, 잰 값 전부는
+     * meta 에 남긴다 — 카드에서 뺀 것이지 모르는 것이 아니다. */
+    const badgeLines = lines.slice(0, 2);
+    if (lines.length > badgeLines.length)
+      console.log(`ⓘ 노선이 ${lines.length}개라 뱃지에는 앞 2개만 그립니다: ${badgeLines.join("+")} (전체 ${lines.join("+")})`);
+
     stationRaw = { name: st.station, lines, distanceM: st.distanceM };
     if (st.distanceM != null && st.distanceM > MAX_BADGE_M) {
       console.warn(
@@ -1178,7 +1186,7 @@ if (KAPT) {
        * 새 CSS 는 `.sr-stn.compact` 로 가둬 이 플래그가 없으면 아예 안 켜진다(픽셀 불변). */
       const compact = String(st.station ?? "").length >= 8;
       if (compact) console.log(`ⓘ 역 이름이 길어(${st.station}) 뱃지를 compact 로 그립니다.`);
-      station = { name: st.station, lines, distanceM: st.distanceM, compact };
+      station = { name: st.station, lines: badgeLines, distanceM: st.distanceM, compact };
     }
   } else {
     console.warn(

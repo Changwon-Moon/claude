@@ -87,6 +87,11 @@
         font-family: var(--font-sans); font-size: 34px; font-weight: 800;
         color: var(--wirit-ink); letter-spacing: -0.035em; white-space: nowrap;
       }
+      /* ── 환승역은 알약을 **나란히 둘** 그린다 (오너 2026-09-22 "4호선/우이신설선 환승역인데 동시 표현 돼?")
+         한 개짜리 역은 알약이 하나뿐이라 `.lnw` 가 있어도 **픽셀이 그대로다**(폭 0 의 간격은 없다).
+         빌더가 노선을 2개까지만 넘긴다 — 셋이 되면 로고를 침범한다. */
+      .sr-stn .lnw { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; }
+      .sr-stn.compact .lnw { gap: 4px; }
       /* 노선 알약 — 한 행("7호선"·"수인분당선"). 접지 않으므로 폭은 이름이 정한다. */
       .sr-stn .rt-wide {
         display: inline-flex; align-items: center; justify-content: center;
@@ -201,7 +206,7 @@
         {{#if kicker}}<span class="sr-kick">{{kicker}}</span>{{/if}}
         {{#if station}}
         <span class="sr-stn{{#if station.compact}} compact{{/if}}">
-          {{#if station.lines}}{{{metroWide station.lines.[0]}}}{{else}}<span class="rt-wide plain">지하철</span>{{/if}}
+          {{#if station.lines}}<span class="lnw">{{#each station.lines}}{{{metroWide this}}}{{/each}}</span>{{else}}<span class="rt-wide plain">지하철</span>{{/if}}
           <span class="nmx">{{station.name}}</span>
         </span>
         {{/if}}
