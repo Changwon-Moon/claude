@@ -2150,34 +2150,6 @@
       "at": "2026-09-21"
     },
     {
-      "id": "ah-remndr-2026910241",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 두산위브더제니스 부천",
-      "why": "경기 · 229세대 · 접수 ~2026-09-21 · 73점(수도권·229가구·무순위·위브)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-09-21",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910241&pblancNo=2026910241",
-      "at": "2026-09-22"
-    },
-    {
-      "id": "ah-remndr-2026910246",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 용인반도체클러스터 동일하이빌 파크밸리(D1-1블록)",
-      "why": "경기 · 126세대 · 접수 ~2026-09-21 · 63점(수도권·126가구·무순위)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-09-21",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910246&pblancNo=2026910246",
-      "at": "2026-09-22"
-    },
-    {
       "id": "ah-remndr-2026910243",
       "cat": "todo",
       "topic": "부동산",
@@ -2217,6 +2189,34 @@
       "status": "",
       "deadline": "2026-09-28",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930032&pblancNo=2026930032",
+      "at": "2026-09-22"
+    },
+    {
+      "id": "ah-remndr-2026910241",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 두산위브더제니스 부천",
+      "why": "경기 · 229세대 · 접수 ~2026-09-21 · 73점(수도권·229가구·무순위·위브)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-09-21",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910241&pblancNo=2026910241",
+      "at": "2026-09-22"
+    },
+    {
+      "id": "ah-remndr-2026910246",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 용인반도체클러스터 동일하이빌 파크밸리(D1-1블록)",
+      "why": "경기 · 126세대 · 접수 ~2026-09-21 · 63점(수도권·126가구·무순위)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-09-21",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910246&pblancNo=2026910246",
       "at": "2026-09-22"
     }
   ]
