@@ -26,7 +26,7 @@ lawd=41597 umd=목동 type=84 apt="호반베르디움센트럴포레"
 lawd=41117 umd=영통동 type=59 apt="벽적골롯데"
 lawd=41192 umd=중동 type=59 apt="덕유마을(주공4)"
 
-lawd=41117 umd=이의동 type=84 apt="자연앤힐스테이트" force=1
+lawd=41117 umd=이의동 type=84 apt="자연앤힐스테이트"
 lawd=11590 umd=노량진동 type=84 apt="신동아리버파크"
 lawd=11530 umd=신도림동 type=84 apt="동아1"
 lawd=41173 umd=관양동 type=84 apt="평촌더샵센트럴시티"
