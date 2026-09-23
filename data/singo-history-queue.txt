@@ -24,7 +24,7 @@ lawd=11470 umd=신월동 type=59 apt="신월시영"
 lawd=41111 umd=천천동 type=59 apt="화서역푸르지오더에듀포레"
 lawd=41597 umd=목동 type=84 apt="호반베르디움센트럴포레"
 lawd=41117 umd=영통동 type=59 apt="벽적골롯데"
-lawd=41192 umd=중동 type=59 apt="덕유마을(주공4)" force=1
+lawd=41192 umd=중동 type=59 apt="덕유마을(주공4)"
 
 lawd=41117 umd=이의동 type=84 apt="자연앤힐스테이트" force=1
 lawd=11590 umd=노량진동 type=84 apt="신동아리버파크"
