@@ -6172,6 +6172,24 @@
         "singo-호반베르디움센트럴포레-84"
       ],
       "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 신고가(7.95억)와 지난 고점(7.77억·2021.10)이 2.3% 차이."
+    },
+    {
+      "label": "singo-A14272309-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "래미안트리베라1단지",
+        "--type",
+        "59",
+        "--kapt",
+        "A14272309",
+        "--accept-supply-warn",
+        "--publish"
+      ],
+      "produces": [
+        "singo-래미안트리베라1단지-59"
+      ],
+      "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-supply-warn: 전용률 68.7%(전용 59.6 + 주거공용 27.17 = 86.77㎡ · 26평). parts 가 벽체·계단실·홀뿐이라 주차 섞임이 아니다. 오너가 26평과 대조해 통과시켰다(2026-09-23)."
     }
   ]
 }
