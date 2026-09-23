@@ -16,7 +16,7 @@ lawd=11530 umd=신도림동 type=84 apt="동아1"
 lawd=41173 umd=관양동 type=84 apt="평촌더샵센트럴시티"
 lawd=41450 umd=망월동 type=59 apt="미사강변스타힐스아파트"
 lawd=11305 umd=미아동 type=84 apt="삼성래미안트리베라2단지"
-lawd=11530 umd=개봉동 type=84 apt="현대" force=1
+lawd=11530 umd=개봉동 type=84 apt="현대"
 lawd=11305 umd=미아동 type=59 apt="래미안트리베라1단지" force=1
 lawd=41360 umd=다산동 type=84 apt="다산신안인스빌퍼스트포레" force=1
 lawd=41595 umd=반정동 type=84 apt="반정아이파크캐슬5단지" force=1
