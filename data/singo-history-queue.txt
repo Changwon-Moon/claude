@@ -11,6 +11,23 @@
 # ⚡ 2026-09-22 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-09-23 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-09-23 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+# ⚡ 2026-09-24 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+lawd=11740 umd=명일동 type=59 apt="래미안솔베뉴"
+lawd=41210 umd=철산동 type=84 apt="주공13" force=1
+lawd=41210 umd=철산동 type=59 apt="철산푸르지오하늘채"
+lawd=41210 umd=하안동 type=84 apt="이편한세상센트레빌" force=1
+lawd=41173 umd=호계동 type=59 apt="평촌센텀퍼스트" force=1
+lawd=41597 umd=산척동 type=84 apt="호수공원역 센트럴시티"
+lawd=41430 umd=내손동 type=59 apt="의왕내손e편한세상"
+lawd=11380 umd=불광동 type=59 apt="북한산현대힐스테이트3차아파트" force=1
+lawd=41597 umd=반송동 type=59 apt="동탄시범다은마을 월드메르디앙 반도유보라" force=1
+lawd=11305 umd=미아동 type=84 apt="삼각산아이원"
+lawd=41597 umd=영천동 type=84 apt="동탄역포레너스" force=1
+lawd=41597 umd=목동 type=84 apt="호반베르디움센트럴포레" force=1
+lawd=41410 umd=산본동 type=84 apt="우륵"
+lawd=41113 umd=권선동 type=59 apt="수원아이파크시티7단지" force=1
+lawd=41360 umd=평내동 type=59 apt="e편한세상평내메트로원" force=1
+
 lawd=11590 umd=노량진동 type=84 apt="신동아리버파크"
 lawd=11530 umd=신도림동 type=84 apt="동아1"
 lawd=41173 umd=관양동 type=84 apt="평촌더샵센트럴시티"
