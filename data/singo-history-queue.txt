@@ -41,7 +41,7 @@ lawd=41111 umd=천천동 type=59 apt="화서역푸르지오더에듀포레"
 lawd=41597 umd=목동 type=84 apt="호반베르디움센트럴포레"
 lawd=41597 umd=장지동 type=59 apt="동탄호수자이파밀리에"
 lawd=41117 umd=영통동 type=59 apt="벽적골롯데"
-lawd=41171 umd=석수동 type=59 apt="석수e-편한세상" force=1
+lawd=41171 umd=석수동 type=59 apt="석수e-편한세상"
 lawd=41192 umd=중동 type=59 apt="덕유마을(주공4)"
 
 lawd=11440 umd=신수동 type=59 apt="마포아이파크포레"
