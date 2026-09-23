@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-23T02:12:25.902Z",
+  "generatedAt": "2026-09-23T05:33:29.881Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -776,7 +776,7 @@
       "maxDelay": null,
       "lastRun": "2026-09-08",
       "lastOk": "2026-09-08",
-      "okDaysAgo": 14
+      "okDaysAgo": 15
     },
     {
       "file": "wage-bracket-collect.yml",
@@ -1041,9 +1041,9 @@
       "file": "collect.yml",
       "name": "데이터 수집 (daily)",
       "lastRun": "2026-08-29",
-      "daysAgo": 24,
+      "daysAgo": 25,
       "lastOk": "2026-08-29",
-      "okDaysAgo": 24,
+      "okDaysAgo": 25,
       "fails30": 0,
       "runs30": 5
     },
@@ -1058,6 +1058,36 @@
       "runs30": 5
     },
     {
+      "file": "ecos-m2.yml",
+      "name": "ECOS M2 수집 (probe+collect)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 23,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 23,
+      "fails30": 0,
+      "runs30": 1
+    },
+    {
+      "file": "kr-market.yml",
+      "name": "국내 증시 수집 (코스피·코스닥)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 23,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 23,
+      "fails30": 0,
+      "runs30": 1
+    },
+    {
+      "file": "publish-archive.yml",
+      "name": "완성본 보관 (발행 완료)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 23,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 23,
+      "fails30": 0,
+      "runs30": 1
+    },
+    {
       "file": "reb-collect.yml",
       "name": "전세·월세 지수 수집 (한국부동산원)",
       "lastRun": "2026-08-31",
@@ -1068,26 +1098,6 @@
       "runs30": 2
     },
     {
-      "file": "ecos-m2.yml",
-      "name": "ECOS M2 수집 (probe+collect)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 22,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 22,
-      "fails30": 0,
-      "runs30": 1
-    },
-    {
-      "file": "kr-market.yml",
-      "name": "국내 증시 수집 (코스피·코스닥)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 22,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 22,
-      "fails30": 0,
-      "runs30": 1
-    },
-    {
       "file": "pipeline-tick.yml",
       "name": "파이프라인 진행 (승인 → 실행)",
       "lastRun": "2026-08-31",
@@ -1096,16 +1106,6 @@
       "okDaysAgo": 22,
       "fails30": 0,
       "runs30": 9
-    },
-    {
-      "file": "publish-archive.yml",
-      "name": "완성본 보관 (발행 완료)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 22,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 22,
-      "fails30": 0,
-      "runs30": 1
     },
     {
       "file": "molit-door.yml",
@@ -1181,9 +1181,9 @@
       "file": "molit-collect.yml",
       "name": "실거래 수집 (국토부)",
       "lastRun": "2026-09-12",
-      "daysAgo": 10,
+      "daysAgo": 11,
       "lastOk": "2026-09-12",
-      "okDaysAgo": 10,
+      "okDaysAgo": 11,
       "fails30": 4,
       "runs30": 12
     },
@@ -1191,9 +1191,9 @@
       "file": "kosis-probe.yml",
       "name": "KOSIS 표 검증 (probe)",
       "lastRun": "2026-09-14",
-      "daysAgo": 8,
+      "daysAgo": 9,
       "lastOk": "2026-09-14",
-      "okDaysAgo": 8,
+      "okDaysAgo": 9,
       "fails30": 0,
       "runs30": 8
     },
@@ -1243,19 +1243,9 @@
       "lastRun": "2026-09-16",
       "daysAgo": 7,
       "lastOk": "2026-09-15",
-      "okDaysAgo": 7,
+      "okDaysAgo": 8,
       "fails30": 3,
       "runs30": 66
-    },
-    {
-      "file": "auto-produce.yml",
-      "name": "데이터 바뀌면 카드 자동 재생산",
-      "lastRun": "2026-09-17",
-      "daysAgo": 5,
-      "lastOk": "2026-09-17",
-      "okDaysAgo": 5,
-      "fails30": 9,
-      "runs30": 100
     },
     {
       "file": "silv-collect.yml",
@@ -1278,13 +1268,23 @@
       "runs30": 17
     },
     {
+      "file": "auto-produce.yml",
+      "name": "데이터 바뀌면 카드 자동 재생산",
+      "lastRun": "2026-09-23",
+      "daysAgo": 0,
+      "lastOk": "2026-09-17",
+      "okDaysAgo": 5,
+      "fails30": 10,
+      "runs30": 100
+    },
+    {
       "file": "guard.yml",
       "name": "문지기 (guard)",
       "lastRun": "2026-09-23",
       "daysAgo": 0,
       "lastOk": "2026-09-23",
       "okDaysAgo": 0,
-      "fails30": 3,
+      "fails30": 5,
       "runs30": 100
     },
     {
