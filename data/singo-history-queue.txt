@@ -26,7 +26,7 @@ lawd=41597 umd=영천동 type=84 apt="동탄역포레너스"
 lawd=41597 umd=목동 type=84 apt="호반베르디움센트럴포레"
 lawd=41410 umd=산본동 type=84 apt="우륵"
 lawd=41113 umd=권선동 type=59 apt="수원아이파크시티7단지"
-lawd=41360 umd=평내동 type=59 apt="e편한세상평내메트로원" force=1
+lawd=41360 umd=평내동 type=59 apt="e편한세상평내메트로원"
 
 lawd=11590 umd=노량진동 type=84 apt="신동아리버파크"
 lawd=11530 umd=신도림동 type=84 apt="동아1"
