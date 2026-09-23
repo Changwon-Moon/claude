@@ -22,7 +22,7 @@ lawd=41360 umd=다산동 type=84 apt="다산신안인스빌퍼스트포레"
 lawd=41595 umd=반정동 type=84 apt="반정아이파크캐슬5단지"
 lawd=11470 umd=신월동 type=59 apt="신월시영"
 lawd=41111 umd=천천동 type=59 apt="화서역푸르지오더에듀포레"
-lawd=41597 umd=목동 type=84 apt="호반베르디움센트럴포레" force=1
+lawd=41597 umd=목동 type=84 apt="호반베르디움센트럴포레"
 lawd=41117 umd=영통동 type=59 apt="벽적골롯데" force=1
 lawd=41192 umd=중동 type=59 apt="덕유마을(주공4)" force=1
 
