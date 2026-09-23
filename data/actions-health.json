@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-23T01:30:50.484Z",
+  "generatedAt": "2026-09-23T02:12:25.902Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -1141,9 +1141,9 @@
       "file": "world-market.yml",
       "name": "세계 지수 수집 (8개국 월별 성적표)",
       "lastRun": "2026-09-04",
-      "daysAgo": 18,
+      "daysAgo": 19,
       "lastOk": "2026-09-04",
-      "okDaysAgo": 18,
+      "okDaysAgo": 19,
       "fails30": 4,
       "runs30": 5
     },
