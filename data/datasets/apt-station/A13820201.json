@@ -26,7 +26,7 @@
       ]
     },
     {
-      "station": "수서역 GTX-A",
+      "station": "수서역",
       "distanceM": 1066,
       "lines": [
         "GTX-A"

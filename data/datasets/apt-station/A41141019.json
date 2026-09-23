@@ -19,7 +19,7 @@
   "rawPlaceName": "대화역 3호선",
   "others": [
     {
-      "station": "킨텍스역 GTX-A",
+      "station": "킨텍스역",
       "distanceM": 1399,
       "lines": [
         "GTX-A"

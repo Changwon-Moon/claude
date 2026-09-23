@@ -11,7 +11,7 @@
   "x": 126.632637025044,
   "y": 37.6512399596072,
   "geoMethod": "주소",
-  "station": "구래역 김포골드라인",
+  "station": "구래역",
   "lines": [
     "김포골드"
   ],
@@ -19,14 +19,14 @@
   "rawPlaceName": "구래역 김포골드라인",
   "others": [
     {
-      "station": "마산역 김포골드라인",
+      "station": "마산역",
       "distanceM": 1548,
       "lines": [
         "김포골드"
       ]
     },
     {
-      "station": "양촌역 김포골드라인",
+      "station": "양촌역",
       "distanceM": 1904,
       "lines": [
         "김포골드"

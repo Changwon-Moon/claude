@@ -11,7 +11,7 @@
   "x": 127.138417616354,
   "y": 37.2571582358538,
   "geoMethod": "주소",
-  "station": "지석역 에버라인",
+  "station": "지석역",
   "lines": [
     "에버라인"
   ],
@@ -19,21 +19,21 @@
   "rawPlaceName": "지석역 에버라인",
   "others": [
     {
-      "station": "강남대역 에버라인",
+      "station": "강남대역",
       "distanceM": 1812,
       "lines": [
         "에버라인"
       ]
     },
     {
-      "station": "동백역 에버라인",
+      "station": "동백역",
       "distanceM": 1833,
       "lines": [
         "에버라인"
       ]
     },
     {
-      "station": "초당역 에버라인",
+      "station": "초당역",
       "distanceM": 1910,
       "lines": [
         "에버라인"

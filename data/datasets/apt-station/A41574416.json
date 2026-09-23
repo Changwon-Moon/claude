@@ -11,7 +11,7 @@
   "x": 126.662359132626,
   "y": 37.6498050368286,
   "geoMethod": "주소",
-  "station": "장기역 김포골드라인",
+  "station": "장기역",
   "lines": [
     "김포골드"
   ],
@@ -19,14 +19,14 @@
   "rawPlaceName": "장기역 김포골드라인",
   "others": [
     {
-      "station": "마산역 김포골드라인",
+      "station": "마산역",
       "distanceM": 1914,
       "lines": [
         "김포골드"
       ]
     },
     {
-      "station": "운양역 김포골드라인",
+      "station": "운양역",
       "distanceM": 1946,
       "lines": [
         "김포골드"

@@ -11,7 +11,7 @@
   "x": 127.150065057131,
   "y": 37.28389890788,
   "geoMethod": "주소",
-  "station": "어정역 에버라인",
+  "station": "어정역",
   "lines": [
     "에버라인"
   ],
@@ -19,14 +19,14 @@
   "rawPlaceName": "어정역 에버라인",
   "others": [
     {
-      "station": "동백역 에버라인",
+      "station": "동백역",
       "distanceM": 1658,
       "lines": [
         "에버라인"
       ]
     },
     {
-      "station": "지석역 에버라인",
+      "station": "지석역",
       "distanceM": 1972,
       "lines": [
         "에버라인"

@@ -11,7 +11,7 @@
   "x": 127.220397257292,
   "y": 37.2489418488789,
   "geoMethod": "주소",
-  "station": "고진역 에버라인",
+  "station": "고진역",
   "lines": [
     "에버라인"
   ],
@@ -19,14 +19,14 @@
   "rawPlaceName": "고진역 에버라인",
   "others": [
     {
-      "station": "보평역 에버라인",
+      "station": "보평역",
       "distanceM": 1125,
       "lines": [
         "에버라인"
       ]
     },
     {
-      "station": "용인중앙시장역 에버라인",
+      "station": "용인중앙시장역",
       "distanceM": 1584,
       "lines": [
         "에버라인"

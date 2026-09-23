@@ -101,7 +101,8 @@
     "lines": [
       "김포",
       "골드"
-    ]
+    ],
+    "wide": "김포골드라인"
   },
   "우이신설": {
     "color": "#B7C452",
@@ -137,7 +138,8 @@
   "에버라인": {
     "color": "#8A94A6",
     "label": "에버라인",
-    "colorPending": true
+    "colorPending": true,
+    "wide": "에버라인"
   },
   "의정부": {
     "color": "#8A94A6",

@@ -18,11 +18,22 @@ export function cleanStationName(raw: string): string {
      "망포역 수인분당선", "청계산입구역 신분당선"(2026-08-16 실제 수집분).
      그대로 두면 뱃지가 노선 동그라미 옆에 노선 이름을 **한 번 더** 적는다.
      그래서 **공백 뒤에 오는 '…선' 꼬리**를 통째로 뗀다 — 역 이름은 늘 '역'으로 끝난다. */
-  return String(raw ?? "")
+  /* ⚠️ **'…선' 으로 끝나지 않는 노선도 있다** — 「기흥역 **에버라인**」(용인경전철).
+     꼬리 규칙을 노선 이름 모양으로 잡으면 이렇게 새는 것이 계속 나온다(의정부경전철·김포골드라인…).
+     역 이름은 **'역'으로 끝난다**는 사실이 더 단단하다 — 공백이 있고 '역'으로 끝나는 토막이
+     있으면 **거기까지만** 남긴다. 2026-09-23 에 「기흥역 에버라인」이 뱃지에 그대로 찍혀
+     노선 알약 옆에 노선 이름을 한 번 더 적고 있었다(09-17 카드). */
+  const cleaned = String(raw ?? "")
     .replace(/\s*[(（][^)）]*[)）]/g, "")
     .replace(/\s+\S*선(\s.*)?$/, "")
     .replace(/\s*\d*호선.*$/, "")
     .trim();
+  if (/\s/.test(cleaned)) {
+    const toks = cleaned.split(/\s+/);
+    const i = toks.findIndex((t) => t.endsWith("역"));
+    if (i >= 0) return toks.slice(0, i + 1).join(" ");
+  }
+  return cleaned;
 }
 
 /**

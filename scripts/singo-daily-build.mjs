@@ -224,10 +224,33 @@ for (const h of hits) {
     t.short = true;
   } else {
     let peak = null;
+    let cachedMonths = null; // 최근 달을 「구×월」 캐시로 메웠다면 그 사실
     try {
-      peak = JSON.parse(readFileSync(P(hp), "utf8"))?.meta?.peak?.manwon ?? null;
+      const hm = JSON.parse(readFileSync(P(hp), "utf8"))?.meta ?? {};
+      peak = hm?.peak?.manwon ?? null;
+      /* ⚠️ **다시 받아도 소용없는 날이 있다** (2026-09-23)
+       *
+       * 국토부 실거래 API 가 최근 달을 거절하면 수집기는 `readMonthFallback` 으로
+       * **「구×월」 캐시**(어제 아침이 접어 둔 것)를 꺼내 메운다. 그 자체는 옳다 —
+       * 「모르는 달」보다 낫다. 그런데 그렇게 메운 달에는 **오늘 뜬 거래가 없다.**
+       * 그래서 곡선 최고가가 신고가보다 낮고, force 로 다시 받아도 **같은 캐시를 또 읽어**
+       * 결과가 똑같다. 09-23 오전에 17건 전부 이 상태로 두 시간을 돌았다.
+       * 수집기가 meta.note 에 남긴 그 사실을 여기서 읽어 **사람에게 말한다** —
+       * 기다릴 일인지(문이 닫혔다) 다시 밀 일인지(그냥 못 받았다)가 갈린다. */
+      const m = String(hm?.note ?? "").match(/API 가 거절해 「구×월」 캐시로 메운 달: ([^.]*)/);
+      if (m) {
+        const recent = m[1].split("·").map((x) => x.trim()).filter((x) => /^20\d{4}←/.test(x));
+        const last = recent[recent.length - 1];
+        if (last) cachedMonths = last;
+      }
     } catch {
       peak = null; // 깨진 파일은 낡은 것과 같게 본다 — 다시 받으면 된다
+    }
+    if (peak != null && peak < h.priceManwon && cachedMonths) {
+      console.log(
+        `   ⏳ ${h.aptNm} — 이 곡선의 최근 달은 **국토부가 거절해 캐시로 메운 것**입니다(${cachedMonths}).\n` +
+          `      지금 다시 받아도 같은 캐시를 다시 읽습니다. 국토부가 다시 답할 때까지 기다리세요.`,
+      );
     }
     if (peak == null || peak < h.priceManwon) {
       console.log(

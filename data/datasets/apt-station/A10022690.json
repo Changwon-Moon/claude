@@ -11,7 +11,7 @@
   "x": 127.215598038616,
   "y": 37.2573255103026,
   "geoMethod": "주소",
-  "station": "보평역 에버라인",
+  "station": "보평역",
   "lines": [
     "에버라인"
   ],
@@ -19,14 +19,14 @@
   "rawPlaceName": "보평역 에버라인",
   "others": [
     {
-      "station": "둔전역 에버라인",
+      "station": "둔전역",
       "distanceM": 1110,
       "lines": [
         "에버라인"
       ]
     },
     {
-      "station": "고진역 에버라인",
+      "station": "고진역",
       "distanceM": 1413,
       "lines": [
         "에버라인"

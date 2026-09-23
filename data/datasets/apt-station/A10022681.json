@@ -11,7 +11,7 @@
   "x": 127.206828587753,
   "y": 37.2337083170919,
   "geoMethod": "주소",
-  "station": "용인중앙시장역 에버라인",
+  "station": "용인중앙시장역",
   "lines": [
     "에버라인"
   ],
@@ -19,21 +19,21 @@
   "rawPlaceName": "용인중앙시장역 에버라인",
   "others": [
     {
-      "station": "김량장역 에버라인",
+      "station": "김량장역",
       "distanceM": 832,
       "lines": [
         "에버라인"
       ]
     },
     {
-      "station": "고진역 에버라인",
+      "station": "고진역",
       "distanceM": 1377,
       "lines": [
         "에버라인"
       ]
     },
     {
-      "station": "명지대역 에버라인",
+      "station": "명지대역",
       "distanceM": 1545,
       "lines": [
         "에버라인"

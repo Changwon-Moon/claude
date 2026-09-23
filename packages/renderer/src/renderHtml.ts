@@ -89,18 +89,44 @@ Handlebars.registerHelper("metroBadge", (key: unknown) => {
  *
  * 표기: 번호는 `7호선`, 2행짜리는 붙여서 `수인분당선`, 단문은 `신분당선`, GTX 는 `GTX-A`.
  */
+/**
+ * 🚉 역 이름에서 **노선 꼬리를 떼고 그린다** — `{{stationName station.name}}`
+ *
+ * 카카오 POI 이름은 「기흥역 에버라인」·「장기역 김포골드라인」처럼 노선을 달고 온다.
+ * 수집기(`parse/station.ts`)가 떼지만, **이미 만들어 둔 카드 JSON 에는 옛 이름이 남아 있다**
+ * (굳힌 빌더는 다시 안 돌린다 — 그건 발행본을 지키는 규칙이라 옳다).
+ * 그 카드를 지금 그리면 노선 알약 옆에 노선 이름을 **한 번 더** 적고, 뱃지가 길어져
+ * 우상단 로고를 침범한다(2026-09-23 designQa badgeclip).
+ *
+ * 그래서 **그리는 자리에서 한 번 더 걷는다.** 역 이름은 '역'으로 끝난다 — 공백이 있고
+ * '역'으로 끝나는 토막이 있으면 거기까지만 쓴다. 꼬리가 없으면 한 글자도 안 바뀐다.
+ */
+Handlebars.registerHelper("stationName", (raw: unknown) => {
+  const s = String(raw ?? "").trim();
+  if (!/\s/.test(s)) return s;
+  const toks = s.split(/\s+/);
+  const i = toks.findIndex((t) => t.endsWith("역"));
+  return i >= 0 ? toks.slice(0, i + 1).join(" ") : s;
+});
+
 Handlebars.registerHelper("metroWide", (key: unknown) => {
   const k = String(key);
   const m = METRO_LINES[k];
   if (!m) return new Handlebars.SafeString(`<span class="rt-wide plain">${k}</span>`);
   const cls = m.text === "dark" ? "ln-dark" : "ln-white";
-  const label = m.num
-    ? `${m.num}호선`
-    : m.gtx
-      ? `GTX-${m.gtx}`
-      : Array.isArray(m.lines)
-        ? `${m.lines.join("")}선`
-        : `${m.label || k}선`;
+  /* ⚠️ **'…선' 을 붙이면 안 되는 노선이 있다** (2026-09-23)
+   * 「에버라인」·「김포골드라인」은 그 자체가 정식 이름이다 — 뒤에 '선'을 붙이면
+   * 「에버라인선」·「김포골드선」이라는 없는 이름이 카드에 찍힌다.
+   * 그래서 `metro-lines.json` 에 `wide` 가 있으면 **그대로** 쓴다. */
+  const label = m.wide
+    ? String(m.wide)
+    : m.num
+      ? `${m.num}호선`
+      : m.gtx
+        ? `GTX-${m.gtx}`
+        : Array.isArray(m.lines)
+          ? `${m.lines.join("")}선`
+          : `${m.label || k}선`;
   return new Handlebars.SafeString(
     `<span class="rt-wide wirit-linecolor ${cls}" style="background:${m.color}">${label}</span>`,
   );

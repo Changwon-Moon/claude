@@ -100,9 +100,12 @@
       .sr-stn.duo .lnw { gap: 4px; }
       .sr-stn.duo .rt-wide { height: 40px; padding: 0 10px; font-size: 21px; }
       .sr-stn.duo .nmx { font-size: 27px; letter-spacing: -0.045em; }
-      .sr-stn.duo.compact { gap: 7px; padding: 0 12px 0 5px; }
-      .sr-stn.duo.compact .rt-wide { height: 36px; padding: 0 8px; font-size: 18px; }
-      .sr-stn.duo.compact .nmx { font-size: 24px; letter-spacing: -0.05em; }
+      /* 둘 다 걸린 자리(이름 8자 이상 + 알약 둘)는 가장 좁다. 「기흥역 에버라인」(09-17 카드)이
+         여기서 22px 더 비어져 나왔다 — 그래서 한 치수를 더 깎는다. 여전히 높이는 62px 그대로다. */
+      .sr-stn.duo.compact { gap: 6px; padding: 0 10px 0 4px; }
+      .sr-stn.duo.compact .lnw { gap: 3px; }
+      .sr-stn.duo.compact .rt-wide { height: 33px; padding: 0 7px; font-size: 16px; }
+      .sr-stn.duo.compact .nmx { font-size: 21px; letter-spacing: -0.05em; }
       /* 노선 알약 — 한 행("7호선"·"수인분당선"). 접지 않으므로 폭은 이름이 정한다. */
       .sr-stn .rt-wide {
         display: inline-flex; align-items: center; justify-content: center;
@@ -218,7 +221,7 @@
         {{#if station}}
         <span class="sr-stn{{#if station.compact}} compact{{/if}}{{#if station.duo}} duo{{/if}}">
           {{#if station.lines}}<span class="lnw">{{#each station.lines}}{{{metroWide this}}}{{/each}}</span>{{else}}<span class="rt-wide plain">지하철</span>{{/if}}
-          <span class="nmx">{{station.name}}</span>
+          <span class="nmx">{{stationName station.name}}</span>
         </span>
         {{/if}}
       </div>
