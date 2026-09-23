@@ -14,7 +14,7 @@
 lawd=11590 umd=노량진동 type=84 apt="신동아리버파크"
 lawd=11530 umd=신도림동 type=84 apt="동아1"
 lawd=41173 umd=관양동 type=84 apt="평촌더샵센트럴시티"
-lawd=41450 umd=망월동 type=59 apt="미사강변스타힐스아파트" force=1
+lawd=41450 umd=망월동 type=59 apt="미사강변스타힐스아파트"
 lawd=11305 umd=미아동 type=84 apt="삼성래미안트리베라2단지" force=1
 lawd=11530 umd=개봉동 type=84 apt="현대" force=1
 lawd=11305 umd=미아동 type=59 apt="래미안트리베라1단지" force=1
