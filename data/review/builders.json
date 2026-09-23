@@ -982,7 +982,8 @@
       "produces": [
         "singo-덕유마을주공4-59"
       ],
-      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16).",
+      "frozen": "2026-09-23: 같은 단지·타입이 또 신고가를 써 새 이름표(singo-덕유마을주공4-59-0923)로 냈다. 이 빌더를 그대로 두면 **이미 발행한 카드가 새 값으로 덮인다**(카드 이름표에 날짜가 없다). 그날의 판본을 그대로 둔다."
     },
     {
       "label": "singo-raemian-leadersone",
@@ -4003,7 +4004,8 @@
       "produces": [
         "singo-자연앤힐스테이트-84"
       ],
-      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03).",
+      "frozen": "2026-09-23: 같은 단지·타입이 또 신고가를 써 새 이름표(singo-자연앤힐스테이트-84-0923)로 냈다. 이 빌더를 그대로 두면 **이미 발행한 카드가 새 값으로 덮인다**(카드 이름표에 날짜가 없다). 그날의 판본을 그대로 둔다."
     },
     {
       "label": "singo-A10026879-84",
@@ -5902,6 +5904,274 @@
         "singo-삼환-84-0922"
       ],
       "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 신고가(6.4억)와 지난 고점(6.3억·2021.10)이 1.6% 차이. 오너가 넣기로 했다(2026-09-22)."
+    },
+    {
+      "label": "singo-A44376009-84-0923",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "자연앤힐스테이트",
+        "--type",
+        "84",
+        "--kapt",
+        "A44376009",
+        "--slug",
+        "singo-자연앤힐스테이트-84-0923",
+        "--publish"
+      ],
+      "produces": [
+        "singo-자연앤힐스테이트-84-0923"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A15605103-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "신동아리버파크",
+        "--type",
+        "84",
+        "--kapt",
+        "A15605103",
+        "--publish"
+      ],
+      "produces": [
+        "singo-신동아리버파크-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10027180-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "미사강변스타힐스아파트",
+        "--type",
+        "59",
+        "--kapt",
+        "A10027180",
+        "--publish"
+      ],
+      "produces": [
+        "singo-미사강변스타힐스아파트-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A15209207-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "현대",
+        "--type",
+        "84",
+        "--kapt",
+        "A15209207",
+        "--publish"
+      ],
+      "produces": [
+        "singo-현대-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10025066-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "다산신안인스빌퍼스트포레",
+        "--type",
+        "84",
+        "--kapt",
+        "A10025066",
+        "--publish"
+      ],
+      "produces": [
+        "singo-다산신안인스빌퍼스트포레-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10023451-84-0923",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "반정아이파크캐슬5단지",
+        "--type",
+        "84",
+        "--kapt",
+        "A10023451",
+        "--slug",
+        "singo-반정아이파크캐슬5단지-84-0923",
+        "--publish"
+      ],
+      "produces": [
+        "singo-반정아이파크캐슬5단지-84-0923"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A15884703-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "신월시영",
+        "--type",
+        "59",
+        "--kapt",
+        "A15884703",
+        "--publish"
+      ],
+      "produces": [
+        "singo-신월시영-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A44033010-59-0923",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "화서역푸르지오더에듀포레",
+        "--type",
+        "59",
+        "--kapt",
+        "A44033010",
+        "--slug",
+        "singo-화서역푸르지오더에듀포레-59-0923",
+        "--publish"
+      ],
+      "produces": [
+        "singo-화서역푸르지오더에듀포레-59-0923"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10026380-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "동탄호수자이파밀리에",
+        "--type",
+        "59",
+        "--kapt",
+        "A10026380",
+        "--publish"
+      ],
+      "produces": [
+        "singo-동탄호수자이파밀리에-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A44347019-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "벽적골롯데",
+        "--type",
+        "59",
+        "--kapt",
+        "A44347019",
+        "--publish"
+      ],
+      "produces": [
+        "singo-벽적골롯데-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A43070506-59-0923",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "석수e-편한세상",
+        "--type",
+        "59",
+        "--kapt",
+        "A43070506",
+        "--slug",
+        "singo-석수e편한세상-59-0923",
+        "--publish"
+      ],
+      "produces": [
+        "singo-석수e편한세상-59-0923"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A42084908-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "덕유마을(주공4)",
+        "--type",
+        "59",
+        "--kapt",
+        "A42084908",
+        "--slug",
+        "singo-덕유마을주공4-59-0923",
+        "--publish"
+      ],
+      "produces": [
+        "singo-덕유마을주공4-59-0923"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10027233-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "평촌더샵센트럴시티",
+        "--type",
+        "84",
+        "--kapt",
+        "A10027233",
+        "--accept-cycle-guard",
+        "--publish"
+      ],
+      "produces": [
+        "singo-평촌더샵센트럴시티-84"
+      ],
+      "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 신고가(15.5억)와 지난 고점(15.4억·2021.08)이 0.6% 차이. 09-22 와 같은 판단(오너)."
+    },
+    {
+      "label": "singo-A14272308-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "삼성래미안트리베라2단지",
+        "--type",
+        "84",
+        "--kapt",
+        "A14272308",
+        "--accept-cycle-guard",
+        "--publish"
+      ],
+      "produces": [
+        "singo-삼성래미안트리베라2단지-84"
+      ],
+      "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 신고가(12.15억)와 지난 고점(11.8억·2022.04)이 3.0% 차이."
+    },
+    {
+      "label": "singo-A10026985-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "호반베르디움센트럴포레",
+        "--type",
+        "84",
+        "--kapt",
+        "A10026985",
+        "--accept-cycle-guard",
+        "--publish"
+      ],
+      "produces": [
+        "singo-호반베르디움센트럴포레-84"
+      ],
+      "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 신고가(7.95억)와 지난 고점(7.77억·2021.10)이 2.3% 차이."
     }
   ]
 }
