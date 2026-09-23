@@ -1,213 +1,105 @@
 # 신고가 단지 이력 — 마지막 실행
 
-- 대기열: 343줄
+- 대기열: 357줄
 - 결과: **성공**
 
 ```
 
-── 자연앤힐스테이트 전용 84타입 (41117)
-
-> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '자연앤힐스테이트' --umd '이의동' --type 84 --from 202001 --force
-
-자연앤힐스테이트 · 전용 84타입 · 41117 · 202001~202609 (81개월)
-⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202607 은 캐시로 메웁니다(2026-09-08 접음) — API 가 안 열렸습니다
-⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202608 은 캐시로 메웁니다(2026-09-21 접음) — API 가 안 열렸습니다
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 1/81개월을 못 받았습니다 — 그 달은 곡선에서 끊깁니다.
-/home/runner/work/claude/claude/data/datasets/singo-history/41117-자연앤힐스테이트-84.json
-거래 있던 달 77/81 · 수집 실패 1개월
-📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
-최고가 21.2억 (2026-08-29 · 전용 84.55㎡ 14층)
-   ⏸ 못 받은 달이 1개월 있어 force=1 을 남겨 둡니다 — 다음 판이 다시 받습니다
-
 ── 신동아리버파크 전용 84타입 (11590)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 11590 --apt '신동아리버파크' --umd '노량진동' --type 84 --from 202001
+> tsx src/molitHistoryCli.ts -- --lawd 11590 --apt '신동아리버파크' --umd '노량진동' --type 84 --from 202001 --force
 
 신동아리버파크 · 전용 84타입 · 11590 · 202001~202609 (81개월)
-⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202607 은 캐시로 메웁니다(2026-09-02 접음) — API 가 안 열렸습니다
-⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 2/81개월을 못 받았습니다 — 그 달은 곡선에서 끊깁니다.
 /home/runner/work/claude/claude/data/datasets/singo-history/11590-신동아리버파크-84.json
-거래 있던 달 58/81 · 수집 실패 2개월
-📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
-최고가 16.55억 (2026-03-31 · 전용 84.88㎡ 6층)
+거래 있던 달 60/81 · 수집 실패 0개월
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 17억 (2026-09-04 · 전용 84.88㎡ 17층)
+🧹 force=1 을 지웠습니다 — lawd=11590 umd=노량진동 type=84 apt="신동아리버파크"
 
 ── 동아1 전용 84타입 (11530)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 11530 --apt '동아1' --umd '신도림동' --type 84 --from 202001
+> tsx src/molitHistoryCli.ts -- --lawd 11530 --apt '동아1' --umd '신도림동' --type 84 --from 202001 --force
 
 동아1 · 전용 84타입 · 11530 · 202001~202609 (81개월)
-⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202607 은 캐시로 메웁니다(2026-09-08 접음) — API 가 안 열렸습니다
-⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202609 은 캐시로 메웁니다(2026-09-21 접음) — API 가 안 열렸습니다
-⚠️ 1/81개월을 못 받았습니다 — 그 달은 곡선에서 끊깁니다.
 /home/runner/work/claude/claude/data/datasets/singo-history/11530-동아1-84.json
-거래 있던 달 46/81 · 수집 실패 1개월
-📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
-최고가 15.5억 (2026-07-06 · 전용 84.908㎡ 18층)
+거래 있던 달 46/81 · 수집 실패 0개월
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 16.15억 (2026-09-19 · 전용 84.908㎡ 16층)
+🧹 force=1 을 지웠습니다 — lawd=11530 umd=신도림동 type=84 apt="동아1"
 
 ── 평촌더샵센트럴시티 전용 84타입 (41173)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '평촌더샵센트럴시티' --umd '관양동' --type 84 --from 202001
+> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '평촌더샵센트럴시티' --umd '관양동' --type 84 --from 202001 --force
 
 평촌더샵센트럴시티 · 전용 84타입 · 41173 · 202001~202609 (81개월)
-⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202607 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
-⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202608 은 캐시로 메웁니다(2026-09-18 접음) — API 가 안 열렸습니다
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202609 은 캐시로 메웁니다(2026-09-18 접음) — API 가 안 열렸습니다
 /home/runner/work/claude/claude/data/datasets/singo-history/41173-평촌더샵센트럴시티-84.json
 거래 있던 달 62/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
-최고가 15.4억 (2021-08-23 · 전용 84.9887㎡ 26층)
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 15.5억 (2026-08-29 · 전용 84.985㎡ 23층)
+🧹 force=1 을 지웠습니다 — lawd=41173 umd=관양동 type=84 apt="평촌더샵센트럴시티"
 
 ── 미사강변스타힐스아파트 전용 59타입 (41450)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41450 --apt '미사강변스타힐스아파트' --umd '망월동' --type 59 --from 202001
+> tsx src/molitHistoryCli.ts -- --lawd 41450 --apt '미사강변스타힐스아파트' --umd '망월동' --type 59 --from 202001 --force
 
 미사강변스타힐스아파트 · 전용 59타입 · 41450 · 202001~202609 (81개월)
-⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202607 은 캐시로 메웁니다(2026-09-08 접음) — API 가 안 열렸습니다
-⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 2/81개월을 못 받았습니다 — 그 달은 곡선에서 끊깁니다.
 /home/runner/work/claude/claude/data/datasets/singo-history/41450-미사강변스타힐스아파트-59.json
-거래 있던 달 50/81 · 수집 실패 2개월
-📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
-최고가 12.25억 (2026-07-14 · 전용 59.79㎡ 12층)
+거래 있던 달 51/81 · 수집 실패 0개월
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 12.45억 (2026-09-17 · 전용 59.79㎡ 12층)
+🧹 force=1 을 지웠습니다 — lawd=41450 umd=망월동 type=59 apt="미사강변스타힐스아파트"
 
 ── 삼성래미안트리베라2단지 전용 84타입 (11305)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 11305 --apt '삼성래미안트리베라2단지' --umd '미아동' --type 84 --from 202001
+> tsx src/molitHistoryCli.ts -- --lawd 11305 --apt '삼성래미안트리베라2단지' --umd '미아동' --type 84 --from 202001 --force
 
 삼성래미안트리베라2단지 · 전용 84타입 · 11305 · 202001~202609 (81개월)
-⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202607 은 캐시로 메웁니다(2026-09-02 접음) — API 가 안 열렸습니다
-⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202608 은 캐시로 메웁니다(2026-09-04 접음) — API 가 안 열렸습니다
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 1/81개월을 못 받았습니다 — 그 달은 곡선에서 끊깁니다.
 /home/runner/work/claude/claude/data/datasets/singo-history/11305-삼성래미안트리베라2단지-84.json
-거래 있던 달 54/81 · 수집 실패 1개월
-📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
-최고가 11.8억 (2022-04-22 · 전용 84.29㎡ 8층)
+거래 있던 달 55/81 · 수집 실패 0개월
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 12.15억 (2026-09-12 · 전용 84.15㎡ 20층)
+🧹 force=1 을 지웠습니다 — lawd=11305 umd=미아동 type=84 apt="삼성래미안트리베라2단지"
 
 ── 현대 전용 84타입 (11530)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 11530 --apt '현대' --umd '개봉동' --type 84 --from 202001
+> tsx src/molitHistoryCli.ts -- --lawd 11530 --apt '현대' --umd '개봉동' --type 84 --from 202001 --force
 
 현대 · 전용 84타입 · 11530 · 202001~202609 (81개월)
-⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202607 은 캐시로 메웁니다(2026-09-08 접음) — API 가 안 열렸습니다
-⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202608 은 캐시로 메웁니다(2026-09-18 접음) — API 가 안 열렸습니다
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202609 은 캐시로 메웁니다(2026-09-21 접음) — API 가 안 열렸습니다
 /home/runner/work/claude/claude/data/datasets/singo-history/11530-현대-84.json
 거래 있던 달 68/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
-최고가 10.7억 (2026-08-08 · 전용 84.99㎡ 21층)
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 11.95억 (2026-09-16 · 전용 84.99㎡ 19층)
+🧹 force=1 을 지웠습니다 — lawd=11530 umd=개봉동 type=84 apt="현대"
 
 ── 래미안트리베라1단지 전용 59타입 (11305)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 11305 --apt '래미안트리베라1단지' --umd '미아동' --type 59 --from 202001
+> tsx src/molitHistoryCli.ts -- --lawd 11305 --apt '래미안트리베라1단지' --umd '미아동' --type 59 --from 202001 --force
 
 래미안트리베라1단지 · 전용 59타입 · 11305 · 202001~202609 (81개월)
-⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 3/81개월을 못 받았습니다 — 그 달은 곡선에서 끊깁니다.
 /home/runner/work/claude/claude/data/datasets/singo-history/11305-래미안트리베라1단지-59.json
-거래 있던 달 49/81 · 수집 실패 3개월
-📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
-최고가 9.6억 (2026-02-27 · 전용 59.6㎡ 14층)
+거래 있던 달 50/81 · 수집 실패 0개월
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 10.8억 (2026-09-04 · 전용 59.6㎡ 14층)
+🧹 force=1 을 지웠습니다 — lawd=11305 umd=미아동 type=59 apt="래미안트리베라1단지"
 
 ── 다산신안인스빌퍼스트포레 전용 84타입 (41360)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41360 --apt '다산신안인스빌퍼스트포레' --umd '다산동' --type 84 --from 202001
+> tsx src/molitHistoryCli.ts -- --lawd 41360 --apt '다산신안인스빌퍼스트포레' --umd '다산동' --type 84 --from 202001 --force
 
 다산신안인스빌퍼스트포레 · 전용 84타입 · 41360 · 202001~202609 (81개월)
-⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202607 은 캐시로 메웁니다(2026-09-11 접음) — API 가 안 열렸습니다
-⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202608 은 캐시로 메웁니다(2026-09-21 접음) — API 가 안 열렸습니다
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 1/81개월을 못 받았습니다 — 그 달은 곡선에서 끊깁니다.
 /home/runner/work/claude/claude/data/datasets/singo-history/41360-다산신안인스빌퍼스트포레-84.json
-거래 있던 달 65/81 · 수집 실패 1개월
-📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
-최고가 10억 (2021-05-09 · 전용 84.965㎡ 24층)
+거래 있던 달 66/81 · 수집 실패 0개월
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 10.2억 (2026-09-09 · 전용 84.965㎡ 19층)
+🧹 force=1 을 지웠습니다 — lawd=41360 umd=다산동 type=84 apt="다산신안인스빌퍼스트포레"
 
 ── 반정아이파크캐슬5단지 전용 84타입 (41595)
 
@@ -215,45 +107,23 @@
 > tsx src/molitHistoryCli.ts -- --lawd 41595 --apt '반정아이파크캐슬5단지' --umd '반정동' --type 84 --from 202001 --force
 
 반정아이파크캐슬5단지 · 전용 84타입 · 41595 · 202001~202609 (81개월)
-⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202607 은 캐시로 메웁니다(2026-09-08 접음) — API 가 안 열렸습니다
-⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202608 은 캐시로 메웁니다(2026-09-16 접음) — API 가 안 열렸습니다
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202609 은 캐시로 메웁니다(2026-09-21 접음) — API 가 안 열렸습니다
 /home/runner/work/claude/claude/data/datasets/singo-history/41595-반정아이파크캐슬5단지-84.json
 거래 있던 달 28/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
-최고가 9.95억 (2026-09-19 · 전용 84.73㎡ 5층)
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 10.1억 (2026-09-21 · 전용 84.73㎡ 12층)
 🧹 force=1 을 지웠습니다 — lawd=41595 umd=반정동 type=84 apt="반정아이파크캐슬5단지"
 
 ── 신월시영 전용 59타입 (11470)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 11470 --apt '신월시영' --umd '신월동' --type 59 --from 202001
+> tsx src/molitHistoryCli.ts -- --lawd 11470 --apt '신월시영' --umd '신월동' --type 59 --from 202001 --force
 
 신월시영 · 전용 59타입 · 11470 · 202001~202609 (81개월)
-⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202607 은 캐시로 메웁니다(2026-09-21 접음) — API 가 안 열렸습니다
-⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 2/81개월을 못 받았습니다 — 그 달은 곡선에서 끊깁니다.
 /home/runner/work/claude/claude/data/datasets/singo-history/11470-신월시영-59.json
-거래 있던 달 43/81 · 수집 실패 2개월
-📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
-최고가 8.57억 (2026-07-29 · 전용 59.49㎡ 3층)
+거래 있던 달 44/81 · 수집 실패 0개월
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 8.9억 (2026-08-31 · 전용 59.49㎡ 9층)
+🧹 force=1 을 지웠습니다 — lawd=11470 umd=신월동 type=59 apt="신월시영"
 
 ── 화서역푸르지오더에듀포레 전용 59타입 (41111)
 
@@ -261,115 +131,35 @@
 > tsx src/molitHistoryCli.ts -- --lawd 41111 --apt '화서역푸르지오더에듀포레' --umd '천천동' --type 59 --from 202001 --force
 
 화서역푸르지오더에듀포레 · 전용 59타입 · 41111 · 202001~202609 (81개월)
-⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202607 은 캐시로 메웁니다(2026-09-08 접음) — API 가 안 열렸습니다
-⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202608 은 캐시로 메웁니다(2026-09-16 접음) — API 가 안 열렸습니다
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202609 은 캐시로 메웁니다(2026-09-16 접음) — API 가 안 열렸습니다
 /home/runner/work/claude/claude/data/datasets/singo-history/41111-화서역푸르지오더에듀포레-59.json
 거래 있던 달 70/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
-최고가 8.1억 (2026-09-08 · 전용 59.98㎡ 19층)
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 8.15억 (2026-09-10 · 전용 59.98㎡ 15층)
 🧹 force=1 을 지웠습니다 — lawd=41111 umd=천천동 type=59 apt="화서역푸르지오더에듀포레"
 
 ── 호반베르디움센트럴포레 전용 84타입 (41597)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41597 --apt '호반베르디움센트럴포레' --umd '목동' --type 84 --from 202001
+> tsx src/molitHistoryCli.ts -- --lawd 41597 --apt '호반베르디움센트럴포레' --umd '목동' --type 84 --from 202001 --force
 
 호반베르디움센트럴포레 · 전용 84타입 · 41597 · 202001~202609 (81개월)
-⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202608 은 캐시로 메웁니다(2026-09-11 접음) — API 가 안 열렸습니다
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 2/81개월을 못 받았습니다 — 그 달은 곡선에서 끊깁니다.
 /home/runner/work/claude/claude/data/datasets/singo-history/41597-호반베르디움센트럴포레-84.json
-거래 있던 달 76/81 · 수집 실패 2개월
-📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
-최고가 7.85억 (2026-06-29 · 전용 84.8388㎡ 5층)
-
-── 동탄호수자이파밀리에 전용 59타입 (41597)
-
-> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41597 --apt '동탄호수자이파밀리에' --umd '장지동' --type 59 --from 202001 --force
-
-동탄호수자이파밀리에 · 전용 59타입 · 41597 · 202001~202609 (81개월)
-⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202607 은 캐시로 메웁니다(2026-09-08 접음) — API 가 안 열렸습니다
-⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202608 은 캐시로 메웁니다(2026-09-11 접음) — API 가 안 열렸습니다
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 1/81개월을 못 받았습니다 — 그 달은 곡선에서 끊깁니다.
-/home/runner/work/claude/claude/data/datasets/singo-history/41597-동탄호수자이파밀리에-59.json
-거래 있던 달 65/81 · 수집 실패 1개월
-📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
-최고가 7.4억 (2026-08-15 · 전용 59.64㎡ 9층)
-   ⏸ 못 받은 달이 1개월 있어 force=1 을 남겨 둡니다 — 다음 판이 다시 받습니다
+거래 있던 달 77/81 · 수집 실패 0개월
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 7.95억 (2026-09-18 · 전용 84.8388㎡ 4층)
+🧹 force=1 을 지웠습니다 — lawd=41597 umd=목동 type=84 apt="호반베르디움센트럴포레"
 
 ── 벽적골롯데 전용 59타입 (41117)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '벽적골롯데' --umd '영통동' --type 59 --from 202001
+> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '벽적골롯데' --umd '영통동' --type 59 --from 202001 --force
 
 벽적골롯데 · 전용 59타입 · 41117 · 202001~202609 (81개월)
-⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202607 은 캐시로 메웁니다(2026-09-08 접음) — API 가 안 열렸습니다
-⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 2/81개월을 못 받았습니다 — 그 달은 곡선에서 끊깁니다.
 /home/runner/work/claude/claude/data/datasets/singo-history/41117-벽적골롯데-59.json
-거래 있던 달 68/81 · 수집 실패 2개월
-📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
-최고가 6.77억 (2026-06-20 · 전용 59.96㎡ 5층)
-
-── 석수e-편한세상 전용 59타입 (41171)
-
-> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41171 --apt '석수e-편한세상' --umd '석수동' --type 59 --from 202001 --force
-
-석수e-편한세상 · 전용 59타입 · 41171 · 202001~202609 (81개월)
-⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202607 은 캐시로 메웁니다(2026-09-08 접음) — API 가 안 열렸습니다
-⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202608 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-⚠️ 1/81개월을 못 받았습니다 — 그 달은 곡선에서 끊깁니다.
-/home/runner/work/claude/claude/data/datasets/singo-history/41171-석수e편한세상-59.json
-거래 있던 달 63/81 · 수집 실패 1개월
-📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
-최고가 6.85억 (2026-08-26 · 전용 60㎡ 12층)
-   ⏸ 못 받은 달이 1개월 있어 force=1 을 남겨 둡니다 — 다음 판이 다시 받습니다
+거래 있던 달 69/81 · 수집 실패 0개월
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 7.5억 (2026-09-16 · 전용 59.96㎡ 12층)
+🧹 force=1 을 지웠습니다 — lawd=41117 umd=영통동 type=59 apt="벽적골롯데"
 
 ── 덕유마을(주공4) 전용 59타입 (41192)
 
@@ -377,23 +167,145 @@
 > tsx src/molitHistoryCli.ts -- --lawd 41192 --apt '덕유마을(주공4)' --umd '중동' --type 59 --from 202001 --force
 
 덕유마을(주공4) · 전용 59타입 · 41192 · 202001~202609 (81개월)
-⚠️ 202607 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202607 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
-⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202608 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
-⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
-↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
-   📦 202609 은 캐시로 메웁니다(2026-09-14 접음) — API 가 안 열렸습니다
 /home/runner/work/claude/claude/data/datasets/singo-history/41192-덕유마을주공4-59.json
 거래 있던 달 68/81 · 수집 실패 0개월
-📦 캐시에서 78개월 · 국토부에 물은 것 0개월  ← **호출 0회**
-최고가 5.8억 (2026-08-22 · 전용 59.98㎡ 16층)
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 6억 (2026-09-21 · 전용 59.98㎡ 12층)
 🧹 force=1 을 지웠습니다 — lawd=41192 umd=중동 type=59 apt="덕유마을(주공4)"
+
+── 자연앤힐스테이트 전용 84타입 (41117)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '자연앤힐스테이트' --umd '이의동' --type 84 --from 202001 --force
+
+자연앤힐스테이트 · 전용 84타입 · 41117 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41117-자연앤힐스테이트-84.json
+거래 있던 달 78/81 · 수집 실패 0개월
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 21.4억 (2026-09-21 · 전용 84.37㎡ 7층)
+🧹 force=1 을 지웠습니다 — lawd=41117 umd=이의동 type=84 apt="자연앤힐스테이트"
+
+── 신동아리버파크 전용 84타입 (11590)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11590 --apt '신동아리버파크' --umd '노량진동' --type 84 --from 202001
+
+⏭ 이미 있음 — 11590-신동아리버파크-84.json (다시 받으려면 force=1)
+
+── 동아1 전용 84타입 (11530)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11530 --apt '동아1' --umd '신도림동' --type 84 --from 202001
+
+⏭ 이미 있음 — 11530-동아1-84.json (다시 받으려면 force=1)
+
+── 평촌더샵센트럴시티 전용 84타입 (41173)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '평촌더샵센트럴시티' --umd '관양동' --type 84 --from 202001
+
+⏭ 이미 있음 — 41173-평촌더샵센트럴시티-84.json (다시 받으려면 force=1)
+
+── 미사강변스타힐스아파트 전용 59타입 (41450)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41450 --apt '미사강변스타힐스아파트' --umd '망월동' --type 59 --from 202001
+
+⏭ 이미 있음 — 41450-미사강변스타힐스아파트-59.json (다시 받으려면 force=1)
+
+── 삼성래미안트리베라2단지 전용 84타입 (11305)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11305 --apt '삼성래미안트리베라2단지' --umd '미아동' --type 84 --from 202001
+
+⏭ 이미 있음 — 11305-삼성래미안트리베라2단지-84.json (다시 받으려면 force=1)
+
+── 현대 전용 84타입 (11530)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11530 --apt '현대' --umd '개봉동' --type 84 --from 202001
+
+⏭ 이미 있음 — 11530-현대-84.json (다시 받으려면 force=1)
+
+── 래미안트리베라1단지 전용 59타입 (11305)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11305 --apt '래미안트리베라1단지' --umd '미아동' --type 59 --from 202001
+
+⏭ 이미 있음 — 11305-래미안트리베라1단지-59.json (다시 받으려면 force=1)
+
+── 다산신안인스빌퍼스트포레 전용 84타입 (41360)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41360 --apt '다산신안인스빌퍼스트포레' --umd '다산동' --type 84 --from 202001
+
+⏭ 이미 있음 — 41360-다산신안인스빌퍼스트포레-84.json (다시 받으려면 force=1)
+
+── 반정아이파크캐슬5단지 전용 84타입 (41595)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41595 --apt '반정아이파크캐슬5단지' --umd '반정동' --type 84 --from 202001
+
+⏭ 이미 있음 — 41595-반정아이파크캐슬5단지-84.json (다시 받으려면 force=1)
+
+── 신월시영 전용 59타입 (11470)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11470 --apt '신월시영' --umd '신월동' --type 59 --from 202001
+
+⏭ 이미 있음 — 11470-신월시영-59.json (다시 받으려면 force=1)
+
+── 화서역푸르지오더에듀포레 전용 59타입 (41111)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41111 --apt '화서역푸르지오더에듀포레' --umd '천천동' --type 59 --from 202001
+
+⏭ 이미 있음 — 41111-화서역푸르지오더에듀포레-59.json (다시 받으려면 force=1)
+
+── 호반베르디움센트럴포레 전용 84타입 (41597)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41597 --apt '호반베르디움센트럴포레' --umd '목동' --type 84 --from 202001
+
+⏭ 이미 있음 — 41597-호반베르디움센트럴포레-84.json (다시 받으려면 force=1)
+
+── 동탄호수자이파밀리에 전용 59타입 (41597)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41597 --apt '동탄호수자이파밀리에' --umd '장지동' --type 59 --from 202001 --force
+
+동탄호수자이파밀리에 · 전용 59타입 · 41597 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41597-동탄호수자이파밀리에-59.json
+거래 있던 달 66/81 · 수집 실패 0개월
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 7.9억 (2026-09-17 · 전용 59.64㎡ 15층)
+🧹 force=1 을 지웠습니다 — lawd=41597 umd=장지동 type=59 apt="동탄호수자이파밀리에"
+
+── 벽적골롯데 전용 59타입 (41117)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '벽적골롯데' --umd '영통동' --type 59 --from 202001
+
+⏭ 이미 있음 — 41117-벽적골롯데-59.json (다시 받으려면 force=1)
+
+── 석수e-편한세상 전용 59타입 (41171)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41171 --apt '석수e-편한세상' --umd '석수동' --type 59 --from 202001 --force
+
+석수e-편한세상 · 전용 59타입 · 41171 · 202001~202609 (81개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41171-석수e편한세상-59.json
+거래 있던 달 64/81 · 수집 실패 0개월
+📦 캐시에서 78개월 · 국토부에 물은 것 3개월
+최고가 7억 (2026-09-05 · 전용 60㎡ 24층)
+🧹 force=1 을 지웠습니다 — lawd=41171 umd=석수동 type=59 apt="석수e-편한세상"
+
+── 덕유마을(주공4) 전용 59타입 (41192)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41192 --apt '덕유마을(주공4)' --umd '중동' --type 59 --from 202001
+
+⏭ 이미 있음 — 41192-덕유마을주공4-59.json (다시 받으려면 force=1)
 
 ── 마포아이파크포레 전용 59타입 (11440)
 
