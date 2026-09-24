@@ -5,13 +5,27 @@
     "dealYmd": "202608",
     "source": "국토교통부 아파트 매매 실거래가 상세자료 (getRTMSDataSvcAptTradeDev)",
     "sourceUrl": "https://www.data.go.kr",
-    "collectedAt": "2026-09-12",
-    "count": 14,
-    "rawCount": 14,
+    "collectedAt": "2026-09-24",
+    "count": 17,
+    "rawCount": 17,
     "verified": true,
     "note": "API 응답 원본을 코드로 정규화(해제 거래 제외). 1차 출처."
   },
   "trades": [
+    {
+      "aptNm": "과천자이",
+      "umdNm": "별양동",
+      "jibun": "93",
+      "priceWon": 2790000000,
+      "priceManwon": 279000,
+      "area": 99.99,
+      "floor": 5,
+      "buildYear": 2022,
+      "date": "2026-08-21",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "41290"
+    },
     {
       "aptNm": "과천자이",
       "umdNm": "별양동",
@@ -97,6 +111,20 @@
       "sggCd": "41290"
     },
     {
+      "aptNm": "과천자이",
+      "umdNm": "별양동",
+      "jibun": "93",
+      "priceWon": 2590000000,
+      "priceManwon": 259000,
+      "area": 84.93,
+      "floor": 28,
+      "buildYear": 2022,
+      "date": "2026-08-29",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "41290"
+    },
+    {
       "aptNm": "센트럴파크푸르지오써밋",
       "umdNm": "부림동",
       "jibun": "96",
@@ -120,6 +148,20 @@
       "floor": 4,
       "buildYear": 2020,
       "date": "2026-08-22",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "41290"
+    },
+    {
+      "aptNm": "래미안슈르",
+      "umdNm": "원문동",
+      "jibun": "4",
+      "priceWon": 2245000000,
+      "priceManwon": 224500,
+      "area": 84.961,
+      "floor": 16,
+      "buildYear": 2008,
+      "date": "2026-08-18",
       "dealingGbn": "중개거래",
       "canceled": false,
       "sggCd": "41290"
