@@ -56,12 +56,19 @@ const latestKey = d.meta.asOf || ks[ks.length - 1];
 const kstToday = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const date = process.argv[2] || kstToday;
 
-/* ── 연속 상승 run 계산: 전주比 상승이 이어진 구간. base=첫 상승 직전(저점) ── */
+/* ── 연속 상승 run 계산 — **부동산원 발표 기준**으로 센다 (2026-09-24 교정) ──────────
+ * 부동산원이 공표하는 주간 변동률은 소수 둘째 자리다. 지수 원값이 +0.0036% 처럼 미세하게
+ * 올라도 **발표는 0.00% = 보합**이고, 보합은 '연속 상승'을 끊는다.
+ * 지수 레벨로 v[i] > v[i-1] 만 보면 그 보합 주까지 상승으로 세어 주수가 과다계상된다
+ * — 2026-09-18 카드가 87주로 나갔는데 발표값은 84주였다(3주 초과). 그 원인이 이것이다.
+ * 검증(2026-09-24): 이 방식이면 역대 최장이 85주 · 2020.6 둘째주~2022.1 셋째주 · 누적 +7.71%
+ * 로 나와 보도값과 주수·기간·누적률이 **동시에** 맞는다. */
+const pubRate = (i) => Math.round(((vals[i] / vals[i - 1] - 1) * 100) * 100) / 100;   // 발표 형식(소수 둘째)
 const runs = [];
 for (let i = 1; i < ks.length; ) {
-  if (vals[i] > vals[i - 1]) {
+  if (pubRate(i) > 0) {
     const base = i - 1; let j = i;
-    while (j < ks.length && vals[j] > vals[j - 1]) j++;
+    while (j < ks.length && pubRate(j) > 0) j++;
     runs.push({ base, end: j - 1, weeks: (j - 1) - base });
     i = j + 1;
   } else i++;
@@ -74,16 +81,9 @@ if (!record) throw new Error("역대 최장 구간을 못 찾았다");
 
 const cumAt = (r, k) => (vals[r.base + k] / vals[r.base] - 1) * 100;   // k=1..r.weeks (관측 개수 기준)
 
-/* ── 연속 '주수'는 **달력 주**로 센다 (2026-09-07 교정) ───────────────────────
- * 부동산원은 설·추석 연휴 주에 주간조사를 쉰다 → 그 주는 계열에 아예 없다.
- * 관측 개수로 세면 쉰 주만큼 적게 나온다(2025 설 202505·추석 202541 누락 → 현재 국면 2주 과소).
- * 부동산원·언론이 말하는 "N주 연속"은 **첫 상승주 ~ 마지막주 달력 주수**다.
- * 실측(2026-09-07): 현재 관측83/달력85 · 역대최장 관측85/달력85 → 달력 기준이 보도값과 일치.
- * 곡선의 x 도 관측 순번이 아니라 달력 주 위치로 찍는다(쉰 주는 간격으로 드러난다 — 사실대로). */
-const WEEK_MS = 7 * 864e5;
-const calAt = (r, k) => Math.round((mondayOf(ks[r.base + k]) - mondayOf(ks[r.base + 1])) / WEEK_MS) + 1;
-const calWeeks = (r) => calAt(r, r.weeks);
-const curWeeks = calWeeks(current), recWeeks = calWeeks(record);
+/* 연속 '주수' = **발표 건수(관측 개수)**. 달력 주수로 세던 2026-09-07 방식은 오판이었다 —
+   설·추석 미조사 주를 채워 넣어 보도값보다 많아졌다. 부동산원은 발표한 주만 센다. */
+const curWeeks = current.weeks, recWeeks = record.weeks;
 
 const curCum = r2(cumAt(current, current.weeks));
 const recCum = r2(cumAt(record, record.weeks));
@@ -105,7 +105,7 @@ const y0 = yp(0);
 
 const curvePts = (r) => {
   const pts = [];
-  for (let k = 1; k <= r.weeks; k++) pts.push(`${xw(calAt(r, k))},${yp(cumAt(r, k))}`);
+  for (let k = 1; k <= r.weeks; k++) pts.push(`${xw(k)},${yp(cumAt(r, k))}`);
   return pts;
 };
 const curCurve = curvePts(current), recCurve = curvePts(record);
@@ -197,6 +197,6 @@ mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "mae-streak.json"), JSON.stringify(card, null, 2) + "\n", "utf8");
 
 console.log(`mae-streak (streak-line, 실곡선) — 원자료 계산 · 기준일 ${date}(최신 주 ${latestKey})`);
-console.log(`   현재 ${curWeeks}주(달력) · 관측 ${current.weeks}개(${ks[current.base]}~${ks[current.end]}) 누적 +${curCum}% · 시작 ${curStart}`);
-console.log(`   역대 최장 ${recWeeks}주(달력) · 관측 ${record.weeks}개(${ks[record.base]}~${ks[record.end]}) 누적 +${recCum}%`);
+console.log(`   현재 ${curWeeks}주(발표 기준) · 관측 ${current.weeks}건(${ks[current.base]}~${ks[current.end]}) 누적 +${curCum}% · 시작 ${curStart}`);
+console.log(`   역대 최장 ${recWeeks}주(발표 기준) · 관측 ${record.weeks}건(${ks[record.base]}~${ks[record.end]}) 누적 +${recCum}%`);
 console.log(`   gap ${gap}주 · 배수 ${ratio}배 · 곡선점 현재 ${curCurve.length}·역대 ${recCurve.length}`);
