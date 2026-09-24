@@ -3718,7 +3718,7 @@
       "label": "danji-gwacheon-lavieno",
       "cmd": "scripts/build-danji.mjs",
       "args": [
-        "2026-09-09",
+        "2026-09-24",
         "--only",
         "gwacheon-lavieno-recall",
         "--publish"
@@ -3728,7 +3728,7 @@
       "label": "danji-gwacheon-bellarte",
       "cmd": "scripts/build-danji.mjs",
       "args": [
-        "2026-09-09",
+        "2026-09-24",
         "--only",
         "gwacheon-bellarte-recall",
         "--publish"
