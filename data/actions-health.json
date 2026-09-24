@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-24T03:10:07.542Z",
+  "generatedAt": "2026-09-24T04:54:12.659Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -865,12 +865,12 @@
         {
           "day": "09-24",
           "state": "late",
-          "at": "01:54",
-          "delay": 858
+          "at": "13:45",
+          "delay": 129
         }
       ],
-      "medianDelay": 858,
-      "maxDelay": 858,
+      "medianDelay": 129,
+      "maxDelay": 129,
       "lastRun": "2026-09-24",
       "lastOk": "2026-09-24",
       "okDaysAgo": 0
@@ -1041,9 +1041,9 @@
       "file": "collect.yml",
       "name": "데이터 수집 (daily)",
       "lastRun": "2026-08-29",
-      "daysAgo": 25,
+      "daysAgo": 26,
       "lastOk": "2026-08-29",
-      "okDaysAgo": 25,
+      "okDaysAgo": 26,
       "fails30": 0,
       "runs30": 4
     },
@@ -1056,6 +1056,16 @@
       "okDaysAgo": 25,
       "fails30": 0,
       "runs30": 4
+    },
+    {
+      "file": "publish-archive.yml",
+      "name": "완성본 보관 (발행 완료)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 24,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 24,
+      "fails30": 0,
+      "runs30": 1
     },
     {
       "file": "reb-collect.yml",
@@ -1096,16 +1106,6 @@
       "okDaysAgo": 23,
       "fails30": 0,
       "runs30": 8
-    },
-    {
-      "file": "publish-archive.yml",
-      "name": "완성본 보관 (발행 완료)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 23,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 23,
-      "fails30": 0,
-      "runs30": 1
     },
     {
       "file": "molit-door.yml",
@@ -1274,7 +1274,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-23",
       "okDaysAgo": 1,
-      "fails30": 9,
+      "fails30": 10,
       "runs30": 100
     },
     {
@@ -1314,7 +1314,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-23",
       "okDaysAgo": 0,
-      "fails30": 4,
+      "fails30": 5,
       "runs30": 100
     }
   ]
