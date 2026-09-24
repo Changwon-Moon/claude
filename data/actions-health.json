@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-23T23:34:24.158Z",
+  "generatedAt": "2026-09-24T00:22:58.328Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -1045,7 +1045,7 @@
       "lastOk": "2026-08-29",
       "okDaysAgo": 25,
       "fails30": 0,
-      "runs30": 5
+      "runs30": 4
     },
     {
       "file": "research-digest.yml",
@@ -1055,7 +1055,7 @@
       "lastOk": "2026-08-30",
       "okDaysAgo": 24,
       "fails30": 0,
-      "runs30": 5
+      "runs30": 4
     },
     {
       "file": "ecos-m2.yml",
@@ -1085,7 +1085,7 @@
       "lastOk": "2026-08-31",
       "okDaysAgo": 23,
       "fails30": 0,
-      "runs30": 9
+      "runs30": 8
     },
     {
       "file": "publish-archive.yml",
@@ -1108,6 +1108,16 @@
       "runs30": 2
     },
     {
+      "file": "molit-door.yml",
+      "name": "실거래 문 열렸나 (한 번 두드려 본다)",
+      "lastRun": "2026-09-02",
+      "daysAgo": 22,
+      "lastOk": "2026-09-02",
+      "okDaysAgo": 22,
+      "fails30": 1,
+      "runs30": 7
+    },
+    {
       "file": "neis-academy.yml",
       "name": "학원 수집 (나이스)",
       "lastRun": "2026-09-02",
@@ -1118,16 +1128,6 @@
       "runs30": 4
     },
     {
-      "file": "molit-door.yml",
-      "name": "실거래 문 열렸나 (한 번 두드려 본다)",
-      "lastRun": "2026-09-02",
-      "daysAgo": 21,
-      "lastOk": "2026-09-02",
-      "okDaysAgo": 21,
-      "fails30": 1,
-      "runs30": 7
-    },
-    {
       "file": "molit-rent-collect.yml",
       "name": "전월세 실거래 수집 (국토부)",
       "lastRun": "2026-09-02",
@@ -1135,7 +1135,7 @@
       "lastOk": "2026-09-02",
       "okDaysAgo": 21,
       "fails30": 1,
-      "runs30": 11
+      "runs30": 9
     },
     {
       "file": "world-market.yml",
@@ -1164,8 +1164,8 @@
       "daysAgo": 15,
       "lastOk": "2026-09-09",
       "okDaysAgo": 15,
-      "fails30": 4,
-      "runs30": 64
+      "fails30": 0,
+      "runs30": 47
     },
     {
       "file": "rail-geo.yml",
@@ -1208,6 +1208,26 @@
       "runs30": 4
     },
     {
+      "file": "singo-history-retry.yml",
+      "name": "곡선 — 자동 재시도",
+      "lastRun": "2026-09-16",
+      "daysAgo": 8,
+      "lastOk": "2026-09-16",
+      "okDaysAgo": 8,
+      "fails30": 1,
+      "runs30": 43
+    },
+    {
+      "file": "singo-history.yml",
+      "name": "신고가 단지 이력 (한 단지 곡선)",
+      "lastRun": "2026-09-16",
+      "daysAgo": 8,
+      "lastOk": "2026-09-15",
+      "okDaysAgo": 8,
+      "fails30": 2,
+      "runs30": 63
+    },
+    {
       "file": "apt-supply-area.yml",
       "name": "단지 공급면적 (카드 평 표기용)",
       "lastRun": "2026-09-16",
@@ -1215,7 +1235,7 @@
       "lastOk": "2026-09-07",
       "okDaysAgo": 16,
       "fails30": 25,
-      "runs30": 100
+      "runs30": 91
     },
     {
       "file": "apt-supply-retry.yml",
@@ -1226,26 +1246,6 @@
       "okDaysAgo": 16,
       "fails30": 26,
       "runs30": 29
-    },
-    {
-      "file": "singo-history-retry.yml",
-      "name": "곡선 — 자동 재시도",
-      "lastRun": "2026-09-16",
-      "daysAgo": 7,
-      "lastOk": "2026-09-16",
-      "okDaysAgo": 7,
-      "fails30": 1,
-      "runs30": 43
-    },
-    {
-      "file": "singo-history.yml",
-      "name": "신고가 단지 이력 (한 단지 곡선)",
-      "lastRun": "2026-09-16",
-      "daysAgo": 7,
-      "lastOk": "2026-09-15",
-      "okDaysAgo": 8,
-      "fails30": 3,
-      "runs30": 66
     },
     {
       "file": "silv-collect.yml",
@@ -1261,11 +1261,11 @@
       "file": "apt-station.yml",
       "name": "단지 가까운 역 (카드 뱃지용)",
       "lastRun": "2026-09-22",
-      "daysAgo": 1,
+      "daysAgo": 2,
       "lastOk": "2026-09-05",
       "okDaysAgo": 19,
       "fails30": 9,
-      "runs30": 17
+      "runs30": 15
     },
     {
       "file": "auto-produce.yml",
@@ -1284,7 +1284,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-23",
       "okDaysAgo": 0,
-      "fails30": 6,
+      "fails30": 7,
       "runs30": 100
     },
     {
@@ -1314,7 +1314,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-23",
       "okDaysAgo": 0,
-      "fails30": 1,
+      "fails30": 2,
       "runs30": 100
     }
   ]
