@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-24T00:22:58.328Z",
+  "generatedAt": "2026-09-24T03:10:07.542Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -282,15 +282,15 @@
         },
         {
           "day": "09-24",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "09:25",
+          "delay": 135
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-09-23",
-      "lastOk": "2026-09-23",
+      "medianDelay": 135,
+      "maxDelay": 135,
+      "lastRun": "2026-09-24",
+      "lastOk": "2026-09-24",
       "okDaysAgo": 0
     },
     {
@@ -776,7 +776,7 @@
       "maxDelay": null,
       "lastRun": "2026-09-08",
       "lastOk": "2026-09-08",
-      "okDaysAgo": 15
+      "okDaysAgo": 16
     },
     {
       "file": "wage-bracket-collect.yml",
@@ -1051,11 +1051,21 @@
       "file": "research-digest.yml",
       "name": "소재 보드 수집 (daily)",
       "lastRun": "2026-08-30",
-      "daysAgo": 24,
+      "daysAgo": 25,
       "lastOk": "2026-08-30",
-      "okDaysAgo": 24,
+      "okDaysAgo": 25,
       "fails30": 0,
       "runs30": 4
+    },
+    {
+      "file": "reb-collect.yml",
+      "name": "전세·월세 지수 수집 (한국부동산원)",
+      "lastRun": "2026-08-31",
+      "daysAgo": 24,
+      "lastOk": "2026-08-31",
+      "okDaysAgo": 24,
+      "fails30": 0,
+      "runs30": 2
     },
     {
       "file": "ecos-m2.yml",
@@ -1098,16 +1108,6 @@
       "runs30": 1
     },
     {
-      "file": "reb-collect.yml",
-      "name": "전세·월세 지수 수집 (한국부동산원)",
-      "lastRun": "2026-08-31",
-      "daysAgo": 23,
-      "lastOk": "2026-08-31",
-      "okDaysAgo": 23,
-      "fails30": 0,
-      "runs30": 2
-    },
-    {
       "file": "molit-door.yml",
       "name": "실거래 문 열렸나 (한 번 두드려 본다)",
       "lastRun": "2026-09-02",
@@ -1116,6 +1116,16 @@
       "okDaysAgo": 22,
       "fails30": 1,
       "runs30": 7
+    },
+    {
+      "file": "molit-rent-collect.yml",
+      "name": "전월세 실거래 수집 (국토부)",
+      "lastRun": "2026-09-02",
+      "daysAgo": 22,
+      "lastOk": "2026-09-02",
+      "okDaysAgo": 22,
+      "fails30": 1,
+      "runs30": 9
     },
     {
       "file": "neis-academy.yml",
@@ -1128,22 +1138,12 @@
       "runs30": 4
     },
     {
-      "file": "molit-rent-collect.yml",
-      "name": "전월세 실거래 수집 (국토부)",
-      "lastRun": "2026-09-02",
-      "daysAgo": 21,
-      "lastOk": "2026-09-02",
-      "okDaysAgo": 21,
-      "fails30": 1,
-      "runs30": 9
-    },
-    {
       "file": "world-market.yml",
       "name": "세계 지수 수집 (8개국 월별 성적표)",
       "lastRun": "2026-09-04",
-      "daysAgo": 19,
+      "daysAgo": 20,
       "lastOk": "2026-09-04",
-      "okDaysAgo": 19,
+      "okDaysAgo": 20,
       "fails30": 4,
       "runs30": 5
     },
@@ -1178,16 +1178,6 @@
       "runs30": 20
     },
     {
-      "file": "molit-collect.yml",
-      "name": "실거래 수집 (국토부)",
-      "lastRun": "2026-09-12",
-      "daysAgo": 11,
-      "lastOk": "2026-09-12",
-      "okDaysAgo": 11,
-      "fails30": 4,
-      "runs30": 12
-    },
-    {
       "file": "kosis-probe.yml",
       "name": "KOSIS 표 검증 (probe)",
       "lastRun": "2026-09-14",
@@ -1196,6 +1186,26 @@
       "okDaysAgo": 9,
       "fails30": 0,
       "runs30": 8
+    },
+    {
+      "file": "apt-supply-area.yml",
+      "name": "단지 공급면적 (카드 평 표기용)",
+      "lastRun": "2026-09-16",
+      "daysAgo": 8,
+      "lastOk": "2026-09-07",
+      "okDaysAgo": 16,
+      "fails30": 25,
+      "runs30": 91
+    },
+    {
+      "file": "apt-supply-retry.yml",
+      "name": "공급면적 — 자동 재시도",
+      "lastRun": "2026-09-16",
+      "daysAgo": 8,
+      "lastOk": "2026-09-07",
+      "okDaysAgo": 16,
+      "fails30": 26,
+      "runs30": 29
     },
     {
       "file": "population-collect.yml",
@@ -1223,29 +1233,9 @@
       "lastRun": "2026-09-16",
       "daysAgo": 8,
       "lastOk": "2026-09-15",
-      "okDaysAgo": 8,
+      "okDaysAgo": 9,
       "fails30": 2,
       "runs30": 63
-    },
-    {
-      "file": "apt-supply-area.yml",
-      "name": "단지 공급면적 (카드 평 표기용)",
-      "lastRun": "2026-09-16",
-      "daysAgo": 7,
-      "lastOk": "2026-09-07",
-      "okDaysAgo": 16,
-      "fails30": 25,
-      "runs30": 91
-    },
-    {
-      "file": "apt-supply-retry.yml",
-      "name": "공급면적 — 자동 재시도",
-      "lastRun": "2026-09-16",
-      "daysAgo": 7,
-      "lastOk": "2026-09-07",
-      "okDaysAgo": 16,
-      "fails30": 26,
-      "runs30": 29
     },
     {
       "file": "silv-collect.yml",
@@ -1270,11 +1260,11 @@
     {
       "file": "auto-produce.yml",
       "name": "데이터 바뀌면 카드 자동 재생산",
-      "lastRun": "2026-09-23",
+      "lastRun": "2026-09-24",
       "daysAgo": 0,
       "lastOk": "2026-09-17",
       "okDaysAgo": 6,
-      "fails30": 10,
+      "fails30": 11,
       "runs30": 100
     },
     {
@@ -1283,9 +1273,19 @@
       "lastRun": "2026-09-24",
       "daysAgo": 0,
       "lastOk": "2026-09-23",
-      "okDaysAgo": 0,
-      "fails30": 7,
+      "okDaysAgo": 1,
+      "fails30": 9,
       "runs30": 100
+    },
+    {
+      "file": "molit-collect.yml",
+      "name": "실거래 수집 (국토부)",
+      "lastRun": "2026-09-24",
+      "daysAgo": 0,
+      "lastOk": "2026-09-24",
+      "okDaysAgo": 0,
+      "fails30": 4,
+      "runs30": 13
     },
     {
       "file": "singo-prep.yml",
@@ -1314,7 +1314,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-23",
       "okDaysAgo": 0,
-      "fails30": 2,
+      "fails30": 4,
       "runs30": 100
     }
   ]
