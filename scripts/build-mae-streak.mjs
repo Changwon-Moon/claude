@@ -182,7 +182,7 @@ const card = {
   template: "streak-line@1",
   date,
   badge: `오늘의 주요 부동산 이슈 (${date.replace(/-/g, ".")})`,
-  title: `<span class="tl">서울 아파트 <span class="hi">${curWeeks}주 연속</span> 상승</span>` +
+  title: `<span class="tl"><img class="tlogo" src="${seoulHref}" alt="" />서울 아파트 <span class="hi">${curWeeks}주 연속</span> 상승</span>` +
          `<span class="tl">이미 文정부의 <span class="hi">${ratio.toFixed(1)}배</span> 상승</span>`,
   chart: { vb: `0 0 1000 ${VB_H}`, bgImage, wm, base: { y: y0, x1: AXIS_X, x2: RIGHT }, grid, areas, ylabels, yunit, vmarks, polylines, dots, vlabels, xlabels, arrow, legend },
   /* 마무리 문구는 국면에 맞춘다(오보 0) — 남음 / 타이 / 신기록 */

@@ -63,6 +63,13 @@
       }
       .sl-lead-logo { height: 1em; width: auto; display: block; }
 
+      /* (옵션) 제목 줄 앞 로고 — 글자 크기에 맞춰 같이 커진다(제목 자동확대와 함께 움직인다).
+         .tlogo 를 쓰지 않는 카드엔 영향 없음(픽셀 불변). */
+      .sl .wirit-title .tlogo {
+        height: 0.78em; width: auto; display: inline-block;
+        vertical-align: -0.05em; margin-right: 0.14em;
+      }
+
       .sl-chart { flex: 0 0 auto; display: flex; align-items: center; margin: 30px 0 0; }
       /* 하단 문구를 그래프와 푸터 사이 남은 공간의 정중앙에 둔다 */
       .sl-notewrap { flex: 1 1 auto; display: flex; align-items: center; justify-content: center; }
