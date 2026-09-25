@@ -1,8 +1,15 @@
 {
   "label": "jeonse-streak",
-  "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
-  "findings": [],
+  "verdict": "revise",
+  "summary": "REVISE — error 0 · warn 1 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "caption-lint",
+      "level": "warn",
+      "code": "period-vague",
+      "msg": "집계 기간 구체 표기(예: 2026년 1~6월)가 없습니다"
+    }
+  ],
   "cards": [
     {
       "file": "jeonse-streak.json",
