@@ -1,10 +1,10 @@
 # 분양권전매 API — 수집 보고
 
-- 실행: 2026-09-17
-- 결과: 수집 9 · 스킵 0 · 실패 0 · 유효거래 447건
+- 실행: 2026-09-25
+- 결과: 수집 6 · 스킵 0 · 실패 0 · 유효거래 4건
 
-- 표본: 광명시 202603
-- 구분 집계: 분양권 0 · 입주권 0 · 미상 447
+- 표본: 광진구 202608
+- 구분 집계: 분양권 0 · 입주권 0 · 미상 4
 - 태그 판정: 🔴 구분 칸을 **하나도 못 읽었다** — 태그 이름이 틀렸다. 아래 원본에서 실제 이름을 찾아 parse/silv.ts 의 toKind 후보에 넣을 것
 
 > 이 대조표가 있는 이유: 세션 컨테이너는 data.go.kr 이 막혀 있어 이 API 를 한 번도
@@ -16,8 +16,8 @@
 
 | 원값 | 건수 |
 |---|---|
-| `입` | 281 |
-| `(빈칸)` | 166 |
+| `입` | 2 |
+| `(빈칸)` | 2 |
 
 ## 응답에 있던 태그 이름 전부
 
@@ -28,5 +28,5 @@ aptNm · buyerGbn · cdealDay · cdealType · dealAmount · dealDay · dealMonth
 ## 원본 item 한 건
 
 ```xml
-<item><aptNm>광명자이힐스테이트SKVIEW</aptNm><buyerGbn>개인</buyerGbn><cdealDay> </cdealDay><cdealType> </cdealType><dealAmount>125,430</dealAmount><dealDay>29</dealDay><dealMonth>3</dealMonth><dealYear>2026</dealYear><dealingGbn>중개거래</dealingGbn><estateAgentSggNm>경기 광명시</estateAgentSggNm><excluUseAr>71.3606</excluUseAr><floor>6</floor><jibun>78-38</jibun><ownershipGbn>입</ownershipGbn><sggCd>41210</sggCd><sggNm>광명시</sggNm><slerGbn>개인</slerGbn><umdNm>광명동</umdNm></item>
+<item><aptNm>강변역 센트럴 아이파크</aptNm><buyerGbn>개인</buyerGbn><cdealDay> </cdealDay><cdealType> </cdealType><dealAmount>220,000</dealAmount><dealDay>18</dealDay><dealMonth>8</dealMonth><dealYear>2026</dealYear><dealingGbn>중개거래</dealingGbn><estateAgentSggNm>경기 하남시, 서울 광진구</estateAgentSggNm><excluUseAr>84.9811</excluUseAr><floor>14</floor><jibun>592-39</jibun><ownershipGbn>입</ownershipGbn><sggCd>11215</sggCd><sggNm>광진구</sggNm><slerGbn>개인</slerGbn><umdNm>구의동</umdNm></item>
 ```
