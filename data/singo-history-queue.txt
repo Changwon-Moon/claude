@@ -16,7 +16,7 @@
 lawd=11215 umd=광장동 type=59 apt="현대파크빌"
 lawd=41135 umd=판교동 type=84 apt="판교원마을9단지(한림풀에버)"
 lawd=11590 umd=상도동 type=84 apt="래미안상도3차"
-lawd=41131 umd=신흥동 type=59 apt="산성역자이푸르지오1단지" force=1
+lawd=41131 umd=신흥동 type=59 apt="산성역자이푸르지오1단지"
 lawd=41171 umd=안양동 type=84 apt="래미안안양메가트리아"
 lawd=41133 umd=금광동 type=84 apt="e편한세상금빛그랑메종5단지"
 lawd=11350 umd=월계동 type=84 apt="현대"
