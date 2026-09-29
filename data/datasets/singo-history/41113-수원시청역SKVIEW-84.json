@@ -5,15 +5,15 @@
     "aptNm": "수원시청역SKVIEW",
     "type": "84",
     "from": "202001",
-    "to": "202608",
-    "monthsTried": 80,
+    "to": "202609",
+    "monthsTried": 81,
     "monthsFailed": 0,
-    "monthsTraded": 61,
+    "monthsTraded": 62,
     "peak": {
-      "manwon": 72500,
-      "date": "2026-08-22",
-      "area": 84.64,
-      "floor": 13
+      "manwon": 73000,
+      "date": "2026-09-28",
+      "area": 84.88,
+      "floor": 14
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -714,29 +714,38 @@
     },
     {
       "ym": "202606",
-      "maxManwon": 70000,
-      "count": 2,
+      "maxManwon": 61750,
+      "count": 1,
       "area": 84.88,
-      "floor": 6,
-      "date": "2026-06-15",
+      "floor": 8,
+      "date": "2026-06-01",
       "ok": true
     },
     {
       "ym": "202607",
-      "maxManwon": 60000,
-      "count": 1,
-      "area": 82.95,
-      "floor": 7,
-      "date": "2026-07-28",
+      "maxManwon": 61000,
+      "count": 2,
+      "area": 84.88,
+      "floor": 2,
+      "date": "2026-07-25",
       "ok": true
     },
     {
       "ym": "202608",
       "maxManwon": 72500,
-      "count": 5,
+      "count": 6,
       "area": 84.64,
       "floor": 13,
       "date": "2026-08-22",
+      "ok": true
+    },
+    {
+      "ym": "202609",
+      "maxManwon": 73000,
+      "count": 3,
+      "area": 84.88,
+      "floor": 14,
+      "date": "2026-09-28",
       "ok": true
     }
   ]
