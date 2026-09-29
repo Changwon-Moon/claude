@@ -12,6 +12,28 @@
 # ⚡ 2026-09-23 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-09-23 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-09-24 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+# ⚡ 2026-09-29 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+lawd=11215 umd=광장동 type=59 apt="현대파크빌"
+lawd=41135 umd=판교동 type=84 apt="판교원마을9단지(한림풀에버)"
+lawd=11590 umd=상도동 type=84 apt="래미안상도3차"
+lawd=41131 umd=신흥동 type=59 apt="산성역자이푸르지오1단지" force=1
+lawd=41171 umd=안양동 type=84 apt="래미안안양메가트리아"
+lawd=41133 umd=금광동 type=84 apt="e편한세상금빛그랑메종5단지"
+lawd=11350 umd=월계동 type=84 apt="현대"
+lawd=41465 umd=풍덕천동 type=59 apt="현대성우8차" force=1
+lawd=41117 umd=원천동 type=59 apt="광교호반베르디움"
+lawd=41135 umd=야탑동 type=59 apt="매화마을공무원2" force=1
+lawd=11620 umd=봉천동 type=59 apt="봉천우성"
+lawd=11140 umd=황학동 type=59 apt="롯데캐슬"
+lawd=11290 umd=돈암동 type=84 apt="한신"
+lawd=11305 umd=미아동 type=84 apt="삼각산아이원" force=1
+lawd=11230 umd=전농동 type=59 apt="전농우성" force=1
+lawd=41133 umd=금광동 type=84 apt="래미안금광" force=1
+lawd=41115 umd=매교동 type=59 apt="힐스테이트푸르지오수원" force=1
+lawd=41410 umd=산본동 type=84 apt="세종"
+lawd=41111 umd=정자동 type=59 apt="수원 SK SKY VIEW"
+lawd=11305 umd=수유동 type=84 apt="수유벽산2차"
+
 lawd=11740 umd=명일동 type=59 apt="래미안솔베뉴"
 lawd=41210 umd=철산동 type=84 apt="주공13"
 lawd=41210 umd=철산동 type=59 apt="철산푸르지오하늘채"
