@@ -21,7 +21,7 @@ lawd=11620 umd=봉천동 type=84 apt="봉천우성"
 lawd=11140 umd=황학동 type=59 apt="롯데캐슬"
 lawd=41597 umd=송동 type=84 apt="동탄2하우스디더레이크"
 lawd=41117 umd=원천동 type=84 apt="영흥숲푸르지오파크비엔"
-lawd=11260 umd=중화동 type=84 apt="한신아파트상가동유치원동(103~109)" force=1
+lawd=11260 umd=중화동 type=84 apt="한신아파트상가동유치원동(103~109)"
 lawd=41597 umd=송동 type=59 apt="동탄2하우스디더레이크" force=1
 lawd=41465 umd=풍덕천동 type=59 apt="수지삼성4차"
 lawd=41450 umd=창우동 type=59 apt="부영" force=1

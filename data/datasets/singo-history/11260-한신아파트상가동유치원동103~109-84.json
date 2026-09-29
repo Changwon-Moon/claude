@@ -5,13 +5,13 @@
     "aptNm": "한신아파트상가동유치원동(103~109)",
     "type": "84",
     "from": "202001",
-    "to": "202608",
-    "monthsTried": 80,
+    "to": "202609",
+    "monthsTried": 81,
     "monthsFailed": 0,
-    "monthsTraded": 47,
+    "monthsTraded": 49,
     "peak": {
-      "manwon": 108000,
-      "date": "2026-07-25",
+      "manwon": 109500,
+      "date": "2026-08-28",
       "area": 84.03,
       "floor": 22
     },
@@ -732,11 +732,20 @@
     },
     {
       "ym": "202608",
-      "maxManwon": null,
-      "count": 0,
-      "area": null,
-      "floor": null,
-      "date": null,
+      "maxManwon": 109500,
+      "count": 4,
+      "area": 84.03,
+      "floor": 22,
+      "date": "2026-08-28",
+      "ok": true
+    },
+    {
+      "ym": "202609",
+      "maxManwon": 99000,
+      "count": 1,
+      "area": 84.69,
+      "floor": 1,
+      "date": "2026-09-12",
       "ok": true
     }
   ]
