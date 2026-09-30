@@ -2122,6 +2122,20 @@
       "at": "2026-09-29"
     },
     {
+      "id": "ah-apt-2026000453",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[신규분양] 광명 시티프라디움 에듀하임",
+      "why": "경기 · 426세대 · 접수 ~2026-10-02(D-2) · 50점(수도권·D-2·투기과열지구)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-10-02",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000453&pblancNo=2026000453",
+      "at": "2026-09-30"
+    },
+    {
       "id": "ah-remndr-2026910220",
       "cat": "hot",
       "topic": "부동산",
@@ -2161,20 +2175,6 @@
       "status": "",
       "deadline": "2026-09-28",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930036&pblancNo=2026930036",
-      "at": "2026-09-30"
-    },
-    {
-      "id": "ah-apt-2026000453",
-      "cat": "todo",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[신규분양] 광명 시티프라디움 에듀하임",
-      "why": "경기 · 426세대 · 접수 ~2026-10-02(D-2) · 50점(수도권·D-2·투기과열지구)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-10-02",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000453&pblancNo=2026000453",
       "at": "2026-09-30"
     }
   ]
