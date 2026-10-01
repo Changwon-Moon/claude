@@ -5,13 +5,13 @@
     "aptNm": "두산",
     "type": "84",
     "from": "202001",
-    "to": "202608",
-    "monthsTried": 80,
+    "to": "202610",
+    "monthsTried": 82,
     "monthsFailed": 0,
-    "monthsTraded": 60,
+    "monthsTraded": 61,
     "peak": {
-      "manwon": 112000,
-      "date": "2026-08-21",
+      "manwon": 114500,
+      "date": "2026-09-22",
       "area": 84.9,
       "floor": 18
     },
@@ -737,6 +737,24 @@
       "area": 84.9,
       "floor": 18,
       "date": "2026-08-21",
+      "ok": true
+    },
+    {
+      "ym": "202609",
+      "maxManwon": 114500,
+      "count": 1,
+      "area": 84.9,
+      "floor": 18,
+      "date": "2026-09-22",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
       "ok": true
     }
   ]
