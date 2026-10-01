@@ -5789,7 +5789,8 @@
       "produces": [
         "singo-다산푸르지오-59"
       ],
-      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03).",
+      "frozen": "2026-10-01: 같은 단지·타입이 또 신고가를 써 새 이름표(singo-다산푸르지오-59-1001)로 냈다. 이 빌더를 그대로 두면 **이미 발행한 카드가 새 값으로 덮인다**(카드 이름표에 날짜가 없다). 그날의 판본을 그대로 둔다."
     },
     {
       "label": "singo-A15380403-59",
@@ -7099,6 +7100,254 @@
         "singo-래미안노블클래스1단지-59-0930"
       ],
       "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 신고가(7억)와 지난 고점(6.82억·2022.04)이 2.6% 차이. 09-16 이후 오너 기준대로 넣는다(2026-09-30)."
+    },
+    {
+      "label": "singo-A12004001-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "천연뜨란채",
+        "--type",
+        "59",
+        "--kapt",
+        "A12004001",
+        "--publish"
+      ],
+      "produces": [
+        "singo-천연뜨란채-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A15286809-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "주공1",
+        "--type",
+        "84",
+        "--kapt",
+        "A15286809",
+        "--publish"
+      ],
+      "produces": [
+        "singo-주공1-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A13606107-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "돈암동삼성",
+        "--type",
+        "84",
+        "--kapt",
+        "A13606107",
+        "--publish"
+      ],
+      "produces": [
+        "singo-돈암동삼성-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10027281-59-1001",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "동탄2하우스디더레이크",
+        "--type",
+        "59",
+        "--kapt",
+        "A10027281",
+        "--slug",
+        "singo-동탄2하우스디더레이크-59-1001",
+        "--publish"
+      ],
+      "produces": [
+        "singo-동탄2하우스디더레이크-59-1001"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A44033010-84-1001",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "화서역푸르지오더에듀포레",
+        "--type",
+        "84",
+        "--kapt",
+        "A44033010",
+        "--slug",
+        "singo-화서역푸르지오더에듀포레-84-1001",
+        "--publish"
+      ],
+      "produces": [
+        "singo-화서역푸르지오더에듀포레-84-1001"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A12010104-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "홍은동벽산",
+        "--type",
+        "84",
+        "--kapt",
+        "A12010104",
+        "--publish"
+      ],
+      "produces": [
+        "singo-홍은동벽산-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10024093-59-1001",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "다산푸르지오",
+        "--type",
+        "59",
+        "--kapt",
+        "A10024093",
+        "--slug",
+        "singo-다산푸르지오-59-1001",
+        "--publish"
+      ],
+      "produces": [
+        "singo-다산푸르지오-59-1001"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A14272304-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "에스케이북한산시티",
+        "--type",
+        "59",
+        "--kapt",
+        "A14272304",
+        "--publish"
+      ],
+      "produces": [
+        "singo-에스케이북한산시티-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A44033010-59-1001",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "화서역푸르지오더에듀포레",
+        "--type",
+        "59",
+        "--kapt",
+        "A44033010",
+        "--slug",
+        "singo-화서역푸르지오더에듀포레-59-1001",
+        "--publish"
+      ],
+      "produces": [
+        "singo-화서역푸르지오더에듀포레-59-1001"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10022677-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "북수원자이렉스비아",
+        "--type",
+        "59",
+        "--kapt",
+        "A10022677",
+        "--publish"
+      ],
+      "produces": [
+        "singo-북수원자이렉스비아-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A47174523-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "주공6",
+        "--type",
+        "59",
+        "--kapt",
+        "A47174523",
+        "--publish"
+      ],
+      "produces": [
+        "singo-주공6-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A43504006-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "세종",
+        "--type",
+        "59",
+        "--kapt",
+        "A43504006",
+        "--publish"
+      ],
+      "produces": [
+        "singo-세종-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A43105004-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "삼성래미안",
+        "--type",
+        "84",
+        "--kapt",
+        "A43105004",
+        "--accept-cycle-guard",
+        "--publish"
+      ],
+      "produces": [
+        "singo-삼성래미안-84"
+      ],
+      "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 신고가(9.65억)와 지난 고점(9.5억·2021.10)이 1.6% 차이. 09-16 이후 오너 기준대로 넣는다(2026-10-01)."
+    },
+    {
+      "label": "singo-A44532014-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "포스코더샵2차",
+        "--type",
+        "84",
+        "--kapt",
+        "A44532014",
+        "--accept-cycle-guard",
+        "--publish"
+      ],
+      "produces": [
+        "singo-포스코더샵2차-84"
+      ],
+      "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 신고가(7.2억)와 지난 고점(7.05억·2021.11)이 2.1% 차이. 09-16 이후 오너 기준대로 넣는다(2026-10-01)."
     }
   ]
 }

@@ -1500,6 +1500,38 @@ if (KAPT) {
     }
     if (supply.pyeongLabel) hit.pyeong = supply.pyeongLabel;
   } else {
+    /* ── ✋ **대장이 끝내 못 주는 단지도 사람이 짚은 값으로 만든다** (2026-10-01)
+     *
+     * 상계주공3(09-17)·창동주공3(10-01)은 대장 지번에 그 전용면적 호가 **아예 없어**
+     * 수집기가 파일을 못 만든다(단지가 여러 필지에 나뉘어 등록된 것으로 보인다).
+     * 그런데 위의 「사람이 짚은 값」은 **파일이 있을 때만** 덮어쓰게 되어 있어서,
+     * 오너가 평수를 알려 줘도 넣을 자리가 없었다.
+     *
+     * 사전에 `exclusiveM2` 와 `supplyM2` 가 **둘 다** 있으면 그 값만으로 만든다.
+     * 규칙은 위와 같다 — **추정 금지**, 근거(source)를 남기고, meta 에 「대장 값 없음」을 적는다. */
+    const ovPath0 = P("data/review/apt-supply-overrides.json");
+    const ov0 = existsSync(ovPath0)
+      ? (JSON.parse(readFileSync(ovPath0, "utf8")).overrides ?? {})[`${KAPT}-${type}`]
+      : null;
+    if (ov0 && Number.isFinite(ov0.supplyM2) && Number.isFinite(ov0.exclusiveM2)) {
+      const PY_M2 = 3.305785;
+      supply = {
+        exclusive: ov0.exclusiveM2,
+        commonResidential: Number((ov0.supplyM2 - ov0.exclusiveM2).toFixed(3)),
+        supply: ov0.supplyM2,
+        pyeong: Number((ov0.supplyM2 / PY_M2).toFixed(2)),
+        pyeongLabel: `${Math.round(ov0.supplyM2 / PY_M2)}평`,
+        ratio: Number((ov0.exclusiveM2 / ov0.supplyM2).toFixed(4)),
+        parts: [],
+        overriddenBy: { ...ov0, was: null },
+        note: "건축물대장에서 이 전용면적 호를 찾지 못해(파일 없음) 사람이 짚은 값만으로 만들었다.",
+      };
+      console.log(
+        `✋ 대장 자료가 없어 사람이 짚은 공급면적으로 만듭니다 — ${ov0.supplyM2}㎡ (${supply.pyeongLabel}) · 전용률 ${(supply.ratio * 100).toFixed(1)}%\n` +
+          `   근거: ${ov0.source}`,
+      );
+      hit.pyeong = supply.pyeongLabel;
+    } else
     throw new Error(
       `공급면적 자료가 없습니다: data/datasets/apt-supply/${KAPT}-${type}.json\n` +
         `→ data/apt-supply-queue.txt 에 아래 한 줄을 쓰고 푸시하세요\n` +

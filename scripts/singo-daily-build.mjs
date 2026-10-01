@@ -197,7 +197,18 @@ for (const h of hits) {
   targets.push(t);
 
   const sup = `data/datasets/apt-supply/${h.kaptCode}-${areaType(h.area)}.json`;
-  if (!existsSync(P(sup))) {
+  /* 대장이 끝내 못 주는 단지는 사람이 짚은 값(overrides · exclusiveM2+supplyM2)이 있으면 재료가 있는 것으로 본다
+     (2026-10-01 · build-singo-record 와 같은 규칙). 없으면 예전처럼 대기열에 건다. */
+  const ovHas = (() => {
+    try {
+      const o = JSON.parse(readFileSync(P("data/review/apt-supply-overrides.json"), "utf8")).overrides ?? {};
+      const v = o[`${h.kaptCode}-${areaType(h.area)}`];
+      return !!(v && Number.isFinite(v.supplyM2) && Number.isFinite(v.exclusiveM2));
+    } catch {
+      return false;
+    }
+  })();
+  if (!existsSync(P(sup)) && !ovHas) {
     need.supply.push(`kapt=${h.kaptCode} area=${h.area}   # ${h.aptNm} 전용${type}`);
     t.short = true;
   }
