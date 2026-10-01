@@ -14,6 +14,23 @@
 # ⚡ 2026-09-24 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-09-29 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-09-30 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+# ⚡ 2026-10-01 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+lawd=11410 umd=천연동 type=59 apt="천연뜨란채"
+lawd=11530 umd=구로동 type=84 apt="주공1"
+lawd=11290 umd=돈암동 type=84 apt="돈암동삼성"
+lawd=41597 umd=송동 type=59 apt="동탄2하우스디더레이크" force=1
+lawd=41173 umd=비산동 type=84 apt="삼성래미안"
+lawd=41111 umd=천천동 type=84 apt="화서역푸르지오더에듀포레" force=1
+lawd=11410 umd=홍은동 type=84 apt="홍은동벽산"
+lawd=11320 umd=창동 type=84 apt="창동주공3단지(해등마을)"
+lawd=41360 umd=다산동 type=59 apt="다산푸르지오" force=1
+lawd=11305 umd=미아동 type=59 apt="에스케이북한산시티"
+lawd=41111 umd=천천동 type=59 apt="화서역푸르지오더에듀포레" force=1
+lawd=41111 umd=정자동 type=59 apt="북수원자이렉스비아"
+lawd=41310 umd=인창동 type=59 apt="주공6"
+lawd=41597 umd=능동 type=84 apt="포스코더샵2차"
+lawd=41410 umd=산본동 type=59 apt="세종"
+
 lawd=11710 umd=장지동 type=84 apt="위례24단지(꿈에그린)"
 lawd=11230 umd=답십리동 type=84 apt="래미안미드카운티"
 lawd=11590 umd=대방동 type=59 apt="대림아파트"
