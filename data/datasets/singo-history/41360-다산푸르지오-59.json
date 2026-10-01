@@ -5,15 +5,15 @@
     "aptNm": "다산푸르지오",
     "type": "59",
     "from": "202001",
-    "to": "202609",
-    "monthsTried": 81,
+    "to": "202610",
+    "monthsTried": 82,
     "monthsFailed": 0,
     "monthsTraded": 42,
     "peak": {
-      "manwon": 86000,
-      "date": "2026-09-17",
+      "manwon": 90000,
+      "date": "2026-09-06",
       "area": 59.5591,
-      "floor": 19
+      "floor": 22
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -725,9 +725,9 @@
       "ym": "202607",
       "maxManwon": 85000,
       "count": 9,
-      "area": 59.9568,
-      "floor": 16,
-      "date": "2026-07-17",
+      "area": 59.5591,
+      "floor": 17,
+      "date": "2026-07-24",
       "ok": true
     },
     {
@@ -741,11 +741,20 @@
     },
     {
       "ym": "202609",
-      "maxManwon": 86000,
-      "count": 1,
+      "maxManwon": 90000,
+      "count": 2,
       "area": 59.5591,
-      "floor": 19,
-      "date": "2026-09-17",
+      "floor": 22,
+      "date": "2026-09-06",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
       "ok": true
     }
   ]

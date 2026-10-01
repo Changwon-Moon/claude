@@ -23,7 +23,7 @@ lawd=41173 umd=비산동 type=84 apt="삼성래미안"
 lawd=41111 umd=천천동 type=84 apt="화서역푸르지오더에듀포레"
 lawd=11410 umd=홍은동 type=84 apt="홍은동벽산"
 lawd=11320 umd=창동 type=84 apt="창동주공3단지(해등마을)"
-lawd=41360 umd=다산동 type=59 apt="다산푸르지오" force=1
+lawd=41360 umd=다산동 type=59 apt="다산푸르지오"
 lawd=11305 umd=미아동 type=59 apt="에스케이북한산시티"
 lawd=41111 umd=천천동 type=59 apt="화서역푸르지오더에듀포레" force=1
 lawd=41111 umd=정자동 type=59 apt="북수원자이렉스비아"
