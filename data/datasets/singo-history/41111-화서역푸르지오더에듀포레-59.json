@@ -5,15 +5,15 @@
     "aptNm": "화서역푸르지오더에듀포레",
     "type": "59",
     "from": "202001",
-    "to": "202609",
-    "monthsTried": 81,
+    "to": "202610",
+    "monthsTried": 82,
     "monthsFailed": 0,
     "monthsTraded": 70,
     "peak": {
-      "manwon": 81500,
-      "date": "2026-09-10",
+      "manwon": 82700,
+      "date": "2026-09-28",
       "area": 59.98,
-      "floor": 15
+      "floor": 24
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -741,11 +741,20 @@
     },
     {
       "ym": "202609",
-      "maxManwon": 81500,
-      "count": 3,
+      "maxManwon": 82700,
+      "count": 5,
       "area": 59.98,
-      "floor": 15,
-      "date": "2026-09-10",
+      "floor": 24,
+      "date": "2026-09-28",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
       "ok": true
     }
   ]
