@@ -20,7 +20,7 @@ lawd=11530 umd=구로동 type=84 apt="주공1"
 lawd=11290 umd=돈암동 type=84 apt="돈암동삼성"
 lawd=41597 umd=송동 type=59 apt="동탄2하우스디더레이크"
 lawd=41173 umd=비산동 type=84 apt="삼성래미안"
-lawd=41111 umd=천천동 type=84 apt="화서역푸르지오더에듀포레" force=1
+lawd=41111 umd=천천동 type=84 apt="화서역푸르지오더에듀포레"
 lawd=11410 umd=홍은동 type=84 apt="홍은동벽산"
 lawd=11320 umd=창동 type=84 apt="창동주공3단지(해등마을)"
 lawd=41360 umd=다산동 type=59 apt="다산푸르지오" force=1
