@@ -1,11 +1,11 @@
 {
-  "label": "singo-A15106901-84",
+  "label": "singo-A47174523-59-1002",
   "verdict": "pass",
   "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
-      "file": "singo-두산-84.json",
+      "file": "singo-주공6-59-1002.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
