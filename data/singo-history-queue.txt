@@ -26,7 +26,7 @@ lawd=41597 umd=반송동 type=84 apt="동탄시범다은마을 월드메르디�
 lawd=41273 umd=고잔동 type=84 apt="안산레이크타운푸르지오"
 lawd=11290 umd=돈암동 type=59 apt="이수브라운스톤돈암"
 lawd=41133 umd=은행동 type=84 apt="현대"
-lawd=41115 umd=매교동 type=59 apt="힐스테이트푸르지오수원" force=1
+lawd=41115 umd=매교동 type=59 apt="힐스테이트푸르지오수원"
 lawd=41173 umd=호계동 type=84 apt="대림e-편한세상"
 lawd=41597 umd=목동 type=59 apt="힐스테이트동탄"
 lawd=41461 umd=고림동 type=59 apt="힐스테이트용인고진역2단지"
