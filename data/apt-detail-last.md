@@ -1,10 +1,65 @@
 # 단지 주차대수 — 마지막 실행
 
-- 대기열: 254줄
+- 대기열: 261줄
 - 결과: **성공**
-- ⚠️ 이번 실행은 **국토부에 붙지 않았습니다**(전부 이미 있음) — API 가 살아 있다는 증거로 쓰지 마세요
 
 ```
+
+── A15004507
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A15004507
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A15004507.json
+A15004507 주차 지상 71 + 지하 2393 = **2464대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A44851511
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A44851511
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A44851511.json
+A44851511 주차 지상 4 + 지하 1406 = **1410대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A15703309
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A15703309
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A15703309.json
+A15703309 주차 지상 376 + 지하 270 = **646대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A10027619
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10027619
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10027619.json
+A10027619 주차 지상 3 + 지하 2354 = **2357대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A46270901
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A46270901
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A46270901.json
+A46270901 주차 지상 469 + 지하 64 = **533대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A43183405
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A43183405
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A43183405.json
+A43183405 주차 지상 128 + 지하 2133 = **2261대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A10025603
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10025603
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10025603.json
+A10025603 주차 지상 0 + 지하 1820 = **1820대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
 ⏭ 이미 있음 — data/datasets/apt-detail/A10024473.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A15176202.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A13290107.json (다시 받으려면 force=1)
@@ -260,7 +315,6 @@
 ⏭ 이미 있음 — data/datasets/apt-detail/A13613008.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A44072212.json (다시 받으려면 force=1)
 
-실제로 받아 본 단지 0곳 · 이미 있어 건너뛴 것 254곳
-ⓘ 이번 실행은 **국토부에 한 번도 붙지 않았습니다** — 이 초록불은 API 가 살아 있다는 증거가 아닙니다.
+실제로 받아 본 단지 7곳 · 이미 있어 건너뛴 것 254곳
 ✅ 대기열 전 줄 완료
 ```
