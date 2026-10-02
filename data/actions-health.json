@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-01T02:02:51.829Z",
+  "generatedAt": "2026-10-02T00:36:07.517Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -8,12 +8,6 @@
       "cron": "55 19 * * *",
       "dueKst": "04:55",
       "dots": [
-        {
-          "day": "09-18",
-          "state": "ok",
-          "at": "09:12",
-          "delay": null
-        },
         {
           "day": "09-19",
           "state": "ok",
@@ -88,15 +82,21 @@
         },
         {
           "day": "10-01",
-          "state": "fail",
-          "at": "08:13",
-          "delay": 199
+          "state": "ok",
+          "at": "10:15",
+          "delay": null
+        },
+        {
+          "day": "10-02",
+          "state": "late",
+          "at": "08:28",
+          "delay": 213
         }
       ],
-      "medianDelay": 199,
-      "maxDelay": 199,
-      "lastRun": "2026-10-01",
-      "lastOk": "2026-10-01",
+      "medianDelay": 213,
+      "maxDelay": 213,
+      "lastRun": "2026-10-02",
+      "lastOk": "2026-10-02",
       "okDaysAgo": 0
     },
     {
@@ -105,12 +105,6 @@
       "cron": "10 20 8 * *",
       "dueKst": "05:10",
       "dots": [
-        {
-          "day": "09-18",
-          "state": "none",
-          "at": null,
-          "delay": null
-        },
         {
           "day": "09-19",
           "state": "none",
@@ -188,13 +182,19 @@
           "state": "none",
           "at": null,
           "delay": null
+        },
+        {
+          "day": "10-02",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": null,
       "maxDelay": null,
       "lastRun": "2026-09-09",
       "lastOk": "2026-09-09",
-      "okDaysAgo": 22
+      "okDaysAgo": 23
     },
     {
       "file": "applyhome-collect.yml",
@@ -202,12 +202,6 @@
       "cron": "10 22 * * *",
       "dueKst": "07:10",
       "dots": [
-        {
-          "day": "09-18",
-          "state": "ok",
-          "at": "14:44",
-          "delay": null
-        },
         {
           "day": "09-19",
           "state": "ok",
@@ -282,13 +276,19 @@
         },
         {
           "day": "10-01",
-          "state": "late",
-          "at": "10:13",
-          "delay": 184
+          "state": "ok",
+          "at": "16:05",
+          "delay": null
+        },
+        {
+          "day": "10-02",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
-      "medianDelay": 184,
-      "maxDelay": 184,
+      "medianDelay": null,
+      "maxDelay": null,
       "lastRun": "2026-10-01",
       "lastOk": "2026-10-01",
       "okDaysAgo": 0
@@ -300,12 +300,6 @@
       "dueKst": "10:20",
       "dots": [
         {
-          "day": "09-18",
-          "state": "none",
-          "at": null,
-          "delay": null
-        },
-        {
           "day": "09-19",
           "state": "none",
           "at": null,
@@ -379,6 +373,12 @@
         },
         {
           "day": "10-01",
+          "state": "ok",
+          "at": "16:12",
+          "delay": null
+        },
+        {
+          "day": "10-02",
           "state": "none",
           "at": null,
           "delay": null
@@ -386,9 +386,9 @@
       ],
       "medianDelay": null,
       "maxDelay": null,
-      "lastRun": "2026-09-01",
-      "lastOk": "2026-09-01",
-      "okDaysAgo": 29
+      "lastRun": "2026-10-01",
+      "lastOk": "2026-10-01",
+      "okDaysAgo": 0
     },
     {
       "file": "reb-weekly-collect.yml",
@@ -396,12 +396,6 @@
       "cron": "37 1 * * 5",
       "dueKst": "10:37",
       "dots": [
-        {
-          "day": "09-18",
-          "state": "ok",
-          "at": "15:31",
-          "delay": null
-        },
         {
           "day": "09-19",
           "state": "none",
@@ -476,6 +470,12 @@
         },
         {
           "day": "10-01",
+          "state": "none",
+          "at": null,
+          "delay": null
+        },
+        {
+          "day": "10-02",
           "state": "none",
           "at": null,
           "delay": null
@@ -485,7 +485,7 @@
       "maxDelay": null,
       "lastRun": "2026-09-25",
       "lastOk": "2026-09-25",
-      "okDaysAgo": 5
+      "okDaysAgo": 6
     },
     {
       "file": "month-backfill.yml",
@@ -493,12 +493,6 @@
       "cron": "40 1 * * *",
       "dueKst": "10:40",
       "dots": [
-        {
-          "day": "09-18",
-          "state": "ok",
-          "at": "15:32",
-          "delay": null
-        },
         {
           "day": "09-19",
           "state": "ok",
@@ -573,6 +567,12 @@
         },
         {
           "day": "10-01",
+          "state": "ok",
+          "at": "16:42",
+          "delay": null
+        },
+        {
+          "day": "10-02",
           "state": "none",
           "at": null,
           "delay": null
@@ -580,8 +580,8 @@
       ],
       "medianDelay": null,
       "maxDelay": null,
-      "lastRun": "2026-09-30",
-      "lastOk": "2026-09-30",
+      "lastRun": "2026-10-01",
+      "lastOk": "2026-10-01",
       "okDaysAgo": 0
     },
     {
@@ -590,12 +590,6 @@
       "cron": "0 2 * * *",
       "dueKst": "11:00",
       "dots": [
-        {
-          "day": "09-18",
-          "state": "ok",
-          "at": "16:09",
-          "delay": null
-        },
         {
           "day": "09-19",
           "state": "ok",
@@ -670,6 +664,12 @@
         },
         {
           "day": "10-01",
+          "state": "ok",
+          "at": "17:27",
+          "delay": null
+        },
+        {
+          "day": "10-02",
           "state": "none",
           "at": null,
           "delay": null
@@ -677,8 +677,8 @@
       ],
       "medianDelay": null,
       "maxDelay": null,
-      "lastRun": "2026-09-30",
-      "lastOk": "2026-09-30",
+      "lastRun": "2026-10-01",
+      "lastOk": "2026-10-01",
       "okDaysAgo": 0
     },
     {
@@ -687,12 +687,6 @@
       "cron": "23 2 12 1,4,7,10 *",
       "dueKst": "11:23",
       "dots": [
-        {
-          "day": "09-18",
-          "state": "none",
-          "at": null,
-          "delay": null
-        },
         {
           "day": "09-19",
           "state": "none",
@@ -770,13 +764,19 @@
           "state": "none",
           "at": null,
           "delay": null
+        },
+        {
+          "day": "10-02",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": null,
       "maxDelay": null,
       "lastRun": "2026-09-08",
       "lastOk": "2026-09-08",
-      "okDaysAgo": 22
+      "okDaysAgo": 23
     },
     {
       "file": "wage-bracket-collect.yml",
@@ -784,12 +784,6 @@
       "cron": "37 2 17 1,7 *",
       "dueKst": "11:37",
       "dots": [
-        {
-          "day": "09-18",
-          "state": "ok",
-          "at": "23:29",
-          "delay": null
-        },
         {
           "day": "09-19",
           "state": "ok",
@@ -864,15 +858,21 @@
         },
         {
           "day": "10-01",
+          "state": "ok",
+          "at": "17:53",
+          "delay": null
+        },
+        {
+          "day": "10-02",
           "state": "late",
-          "at": "04:16",
-          "delay": 1000
+          "at": "01:25",
+          "delay": 828
         }
       ],
-      "medianDelay": 1000,
-      "maxDelay": 1000,
-      "lastRun": "2026-10-01",
-      "lastOk": "2026-10-01",
+      "medianDelay": 828,
+      "maxDelay": 828,
+      "lastRun": "2026-10-02",
+      "lastOk": "2026-10-02",
       "okDaysAgo": 0
     }
   ],
@@ -970,6 +970,26 @@
     {
       "file": "kr-market.yml",
       "name": "국내 증시 수집 (코스피·코스닥)",
+      "lastRun": null,
+      "daysAgo": null,
+      "lastOk": null,
+      "okDaysAgo": null,
+      "fails30": 0,
+      "runs30": 0
+    },
+    {
+      "file": "molit-door.yml",
+      "name": "실거래 문 열렸나 (한 번 두드려 본다)",
+      "lastRun": null,
+      "daysAgo": null,
+      "lastOk": null,
+      "okDaysAgo": null,
+      "fails30": 0,
+      "runs30": 0
+    },
+    {
+      "file": "neis-academy.yml",
+      "name": "학원 수집 (나이스)",
       "lastRun": null,
       "daysAgo": null,
       "lastOk": null,
@@ -1108,16 +1128,6 @@
       "runs30": 0
     },
     {
-      "file": "molit-door.yml",
-      "name": "실거래 문 열렸나 (한 번 두드려 본다)",
-      "lastRun": "2026-09-02",
-      "daysAgo": 29,
-      "lastOk": "2026-09-02",
-      "okDaysAgo": 29,
-      "fails30": 0,
-      "runs30": 4
-    },
-    {
       "file": "molit-rent-collect.yml",
       "name": "전월세 실거래 수집 (국토부)",
       "lastRun": "2026-09-02",
@@ -1125,17 +1135,7 @@
       "lastOk": "2026-09-02",
       "okDaysAgo": 29,
       "fails30": 0,
-      "runs30": 4
-    },
-    {
-      "file": "neis-academy.yml",
-      "name": "학원 수집 (나이스)",
-      "lastRun": "2026-09-02",
-      "daysAgo": 29,
-      "lastOk": "2026-09-02",
-      "okDaysAgo": 29,
-      "fails30": 2,
-      "runs30": 4
+      "runs30": 1
     },
     {
       "file": "world-market.yml",
@@ -1151,9 +1151,9 @@
       "file": "geocode.yml",
       "name": "좌표 지오코딩 (카카오 로컬)",
       "lastRun": "2026-09-07",
-      "daysAgo": 24,
+      "daysAgo": 25,
       "lastOk": "2026-09-07",
-      "okDaysAgo": 24,
+      "okDaysAgo": 25,
       "fails30": 0,
       "runs30": 4
     },
@@ -1161,19 +1161,19 @@
       "file": "apt-detail.yml",
       "name": "단지 주차대수 (카드 제원용)",
       "lastRun": "2026-09-09",
-      "daysAgo": 22,
+      "daysAgo": 23,
       "lastOk": "2026-09-09",
-      "okDaysAgo": 22,
+      "okDaysAgo": 23,
       "fails30": 0,
-      "runs30": 5
+      "runs30": 4
     },
     {
       "file": "rail-geo.yml",
       "name": "철도 선형 좌표 (OSM 탐사)",
       "lastRun": "2026-09-10",
-      "daysAgo": 20,
+      "daysAgo": 21,
       "lastOk": "2026-09-10",
-      "okDaysAgo": 20,
+      "okDaysAgo": 21,
       "fails30": 2,
       "runs30": 20
     },
@@ -1181,39 +1181,19 @@
       "file": "kosis-probe.yml",
       "name": "KOSIS 표 검증 (probe)",
       "lastRun": "2026-09-14",
-      "daysAgo": 16,
+      "daysAgo": 17,
       "lastOk": "2026-09-14",
-      "okDaysAgo": 16,
+      "okDaysAgo": 17,
       "fails30": 0,
       "runs30": 8
-    },
-    {
-      "file": "apt-supply-area.yml",
-      "name": "단지 공급면적 (카드 평 표기용)",
-      "lastRun": "2026-09-16",
-      "daysAgo": 15,
-      "lastOk": "2026-09-07",
-      "okDaysAgo": 23,
-      "fails30": 25,
-      "runs30": 37
-    },
-    {
-      "file": "apt-supply-retry.yml",
-      "name": "공급면적 — 자동 재시도",
-      "lastRun": "2026-09-16",
-      "daysAgo": 15,
-      "lastOk": "2026-09-07",
-      "okDaysAgo": 23,
-      "fails30": 26,
-      "runs30": 29
     },
     {
       "file": "population-collect.yml",
       "name": "인구 수집 (monthly)",
       "lastRun": "2026-09-15",
-      "daysAgo": 15,
+      "daysAgo": 16,
       "lastOk": "2026-09-15",
-      "okDaysAgo": 15,
+      "okDaysAgo": 16,
       "fails30": 1,
       "runs30": 2
     },
@@ -1221,9 +1201,9 @@
       "file": "singo-history-retry.yml",
       "name": "곡선 — 자동 재시도",
       "lastRun": "2026-09-16",
-      "daysAgo": 15,
+      "daysAgo": 16,
       "lastOk": "2026-09-16",
-      "okDaysAgo": 15,
+      "okDaysAgo": 16,
       "fails30": 1,
       "runs30": 43
     },
@@ -1231,21 +1211,21 @@
       "file": "singo-history.yml",
       "name": "신고가 단지 이력 (한 단지 곡선)",
       "lastRun": "2026-09-16",
-      "daysAgo": 15,
+      "daysAgo": 16,
       "lastOk": "2026-09-15",
-      "okDaysAgo": 15,
+      "okDaysAgo": 16,
       "fails30": 1,
-      "runs30": 53
+      "runs30": 51
     },
     {
       "file": "apt-station.yml",
       "name": "단지 가까운 역 (카드 뱃지용)",
       "lastRun": "2026-09-22",
-      "daysAgo": 9,
+      "daysAgo": 10,
       "lastOk": "2026-09-05",
-      "okDaysAgo": 26,
+      "okDaysAgo": 27,
       "fails30": 4,
-      "runs30": 9
+      "runs30": 8
     },
     {
       "file": "auto-produce.yml",
@@ -1253,7 +1233,7 @@
       "lastRun": "2026-09-25",
       "daysAgo": 6,
       "lastOk": "2026-09-17",
-      "okDaysAgo": 13,
+      "okDaysAgo": 14,
       "fails30": 11,
       "runs30": 100
     },
@@ -1264,8 +1244,8 @@
       "daysAgo": 6,
       "lastOk": "2026-09-25",
       "okDaysAgo": 6,
-      "fails30": 4,
-      "runs30": 12
+      "fails30": 0,
+      "runs30": 5
     },
     {
       "file": "silv-collect.yml",
@@ -1278,11 +1258,31 @@
       "runs30": 4
     },
     {
+      "file": "apt-supply-area.yml",
+      "name": "단지 공급면적 (카드 평 표기용)",
+      "lastRun": "2026-10-02",
+      "daysAgo": 0,
+      "lastOk": "2026-09-07",
+      "okDaysAgo": 24,
+      "fails30": 27,
+      "runs30": 34
+    },
+    {
+      "file": "apt-supply-retry.yml",
+      "name": "공급면적 — 자동 재시도",
+      "lastRun": "2026-10-02",
+      "daysAgo": 0,
+      "lastOk": "2026-09-07",
+      "okDaysAgo": 24,
+      "fails30": 28,
+      "runs30": 31
+    },
+    {
       "file": "guard.yml",
       "name": "문지기 (guard)",
-      "lastRun": "2026-10-01",
+      "lastRun": "2026-10-02",
       "daysAgo": 0,
-      "lastOk": "2026-10-01",
+      "lastOk": "2026-10-02",
       "okDaysAgo": 0,
       "fails30": 13,
       "runs30": 100
@@ -1290,31 +1290,31 @@
     {
       "file": "singo-prep.yml",
       "name": "신고가 재료 미리 걸기 (아침 판정 직후)",
-      "lastRun": "2026-10-01",
+      "lastRun": "2026-10-02",
       "daysAgo": 0,
       "lastOk": "2026-10-01",
-      "okDaysAgo": 0,
+      "okDaysAgo": 1,
       "fails30": 90,
       "runs30": 100
     },
     {
       "file": "singo-retry.yml",
       "name": "오늘의 신고가 — 자동 재시도",
-      "lastRun": "2026-10-01",
+      "lastRun": "2026-10-02",
       "daysAgo": 0,
       "lastOk": "2026-09-20",
-      "okDaysAgo": 11,
-      "fails30": 3,
+      "okDaysAgo": 12,
+      "fails30": 4,
       "runs30": 100
     },
     {
       "file": "tower-deploy.yml",
       "name": "관제탑 배포 (Cloudflare)",
-      "lastRun": "2026-10-01",
+      "lastRun": "2026-10-02",
       "daysAgo": 0,
       "lastOk": "2026-09-23",
-      "okDaysAgo": 7,
-      "fails30": 12,
+      "okDaysAgo": 8,
+      "fails30": 13,
       "runs30": 100
     }
   ]
