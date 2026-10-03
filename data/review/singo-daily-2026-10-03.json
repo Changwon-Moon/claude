@@ -1,7 +1,7 @@
 {
   "label": "singo-daily-2026-10-03",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 14장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 15장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
@@ -78,6 +78,12 @@
     },
     {
       "file": "singo-대림e편한세상-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-힐스테이트동탄-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
