@@ -1,7 +1,7 @@
 {
   "label": "singo-daily-2026-10-03",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 13장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 14장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
@@ -48,6 +48,12 @@
     },
     {
       "file": "singo-이수브라운스톤돈암-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-주공19단지창동리버타운-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
