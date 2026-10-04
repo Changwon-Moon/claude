@@ -2282,11 +2282,11 @@
       "note": "한국부동산원 주간 매매지수 · 끝점 202637 고정. 오너 2026-09-16: 3장(누적 순위표·연도별 순위 이동·점 도표). 전체 표(tohuh-rise-grid)는 순위 이동으로 대체돼 세트에서 뺐고 파일만 보존(더 손대지 않음). 표지·읽는 법·주의도 세트 밖. 계산은 scripts/lib/tohuh-rise-data.mjs.",
       "pixelPolicy": "정기물 — data/datasets/reb-weekly-index.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
       "state": "오너 확정",
-      "confirmedAt": "2026-09-16",
+      "confirmedAt": "2026-10-04",
       "confirmedMd5": [
-        "tohuh-rise-ranks:d0228a6c98bb",
-        "tohuh-rise-bump:98c6ae54b99d",
-        "tohuh-rise-dots:2960be489c42"
+        "tohuh-rise-ranks:bc9eea720cfb",
+        "tohuh-rise-bump:b5b3ed064757",
+        "tohuh-rise-dots:f6d3a12aad08"
       ]
     },
     {
