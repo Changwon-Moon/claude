@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-04T01:38:46.691Z",
+  "generatedAt": "2026-10-04T09:55:33.025Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -388,7 +388,7 @@
       "maxDelay": null,
       "lastRun": "2026-10-01",
       "lastOk": "2026-10-01",
-      "okDaysAgo": 2
+      "okDaysAgo": 3
     },
     {
       "file": "reb-weekly-collect.yml",
@@ -485,7 +485,7 @@
       "maxDelay": null,
       "lastRun": "2026-10-02",
       "lastOk": "2026-10-02",
-      "okDaysAgo": 1
+      "okDaysAgo": 2
     },
     {
       "file": "month-backfill.yml",
@@ -573,15 +573,15 @@
         },
         {
           "day": "10-04",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "16:21",
+          "delay": 341
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-10-03",
-      "lastOk": "2026-10-03",
+      "medianDelay": 341,
+      "maxDelay": 341,
+      "lastRun": "2026-10-04",
+      "lastOk": "2026-10-04",
       "okDaysAgo": 0
     },
     {
@@ -670,15 +670,15 @@
         },
         {
           "day": "10-04",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "16:53",
+          "delay": 353
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-10-03",
-      "lastOk": "2026-10-03",
+      "medianDelay": 353,
+      "maxDelay": 353,
+      "lastRun": "2026-10-04",
+      "lastOk": "2026-10-04",
       "okDaysAgo": 0
     },
     {
@@ -776,7 +776,7 @@
       "maxDelay": null,
       "lastRun": "2026-09-08",
       "lastOk": "2026-09-08",
-      "okDaysAgo": 25
+      "okDaysAgo": 26
     },
     {
       "file": "wage-bracket-collect.yml",
@@ -865,12 +865,12 @@
         {
           "day": "10-04",
           "state": "late",
-          "at": "02:14",
-          "delay": 878
+          "at": "18:43",
+          "delay": 427
         }
       ],
-      "medianDelay": 878,
-      "maxDelay": 878,
+      "medianDelay": 427,
+      "maxDelay": 427,
       "lastRun": "2026-10-04",
       "lastOk": "2026-10-04",
       "okDaysAgo": 0
@@ -1181,9 +1181,9 @@
       "file": "kosis-probe.yml",
       "name": "KOSIS 표 검증 (probe)",
       "lastRun": "2026-09-14",
-      "daysAgo": 19,
+      "daysAgo": 20,
       "lastOk": "2026-09-14",
-      "okDaysAgo": 19,
+      "okDaysAgo": 20,
       "fails30": 0,
       "runs30": 8
     },
@@ -1191,9 +1191,9 @@
       "file": "population-collect.yml",
       "name": "인구 수집 (monthly)",
       "lastRun": "2026-09-15",
-      "daysAgo": 18,
+      "daysAgo": 19,
       "lastOk": "2026-09-15",
-      "okDaysAgo": 18,
+      "okDaysAgo": 19,
       "fails30": 1,
       "runs30": 2
     },
@@ -1213,7 +1213,7 @@
       "lastRun": "2026-09-16",
       "daysAgo": 18,
       "lastOk": "2026-09-15",
-      "okDaysAgo": 18,
+      "okDaysAgo": 19,
       "fails30": 1,
       "runs30": 47
     },
@@ -1233,7 +1233,7 @@
       "lastRun": "2026-09-25",
       "daysAgo": 9,
       "lastOk": "2026-09-17",
-      "okDaysAgo": 16,
+      "okDaysAgo": 17,
       "fails30": 8,
       "runs30": 92
     },
@@ -1284,7 +1284,7 @@
       "daysAgo": 0,
       "lastOk": "2026-10-04",
       "okDaysAgo": 0,
-      "fails30": 13,
+      "fails30": 14,
       "runs30": 100
     },
     {
@@ -1313,8 +1313,8 @@
       "lastRun": "2026-10-04",
       "daysAgo": 0,
       "lastOk": "2026-09-23",
-      "okDaysAgo": 10,
-      "fails30": 17,
+      "okDaysAgo": 11,
+      "fails30": 18,
       "runs30": 100
     }
   ]
