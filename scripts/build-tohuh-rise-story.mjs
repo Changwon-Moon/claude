@@ -342,7 +342,7 @@ buildStack("dots");
   const TOPN = 20, TAIL = 3;
   /* 강남 3구 파랑 강조는 뺐다 — 「파랑 = 강남 3구」 설명 줄(푸터 위 회색 문구)이 오너 지시로 빠져 설명 없는 색이 됐다(2026-09-16) */
   const HL = new Set();
-  const row = (y, a) => ({ t: "row", r: B(y).rankOf.get(a.geoName), nm: tableName(a), v: pctTxt(a.v), hl: HL.has(a.label), gg: a.region === "경기", first: B(y).rankOf.get(a.geoName) === 1 });
+  const row = (y, a) => ({ t: "row", r: B(y).rankOf.get(a.geoName), nm: tableName(a), v: pctTxt(a.v), neg: a.v < 0, hl: HL.has(a.label), gg: a.region === "경기", first: B(y).rankOf.get(a.geoName) === 1 });
   const N = R.AREAS.length;
   const cols = YS.map((y) => {
     const b = B(y), rk = b.ranked;
@@ -540,8 +540,8 @@ buildStack("dots");
     };
     const cap = [
       `'24년 초 가격을 기준으로, 해마다 어디까지 올랐나 🔴`,
-      `올해 가장 많이 더 오른 곳은 ${nm(byThis[0])}(+${thisYear(byThis[0]).toFixed(1)}%p),`,
-      `가장 적게 더 오른 곳은 ${nm(byThis.at(-1))}(+${thisYear(byThis.at(-1)).toFixed(1)}%p)입니다.`,
+      `올해 가장 많이 더 오른 곳은 ${nm(byThis[0])}(${pctTxt(thisYear(byThis[0]))}%p),`,
+      `가장 적게 더 오른 곳은 ${nm(byThis.at(-1))}(${pctTxt(thisYear(byThis.at(-1)))}%p)입니다.`,
       ``,
       `점 셋이 한 줄입니다 — 회색 24년 말 · 검정 25년 말 · 빨강 지금.`,
       `검정과 빨강이 멀수록 올해 많이 올랐다는 뜻입니다.`,
@@ -632,7 +632,7 @@ buildStack("dots");
     K("dots", [
       `🔴 '24년 초부터 얼마나, 그중 올해 몫은?`,
       ``,
-      ...rows.slice(0, 5).map((a) => `- ${shortName(a)} ${pc(a.v)} (올해 +${tail(a).toFixed(1)}%p)`),
+      ...rows.slice(0, 5).map((a) => `- ${shortName(a)} ${pc(a.v)} (올해 ${pctTxt(tail(a))}%p)`),
       ``,
       `올해 가장 많이 더 오른 곳 ${byThis.slice(0, 3).map((a) => shortName(a)).join(" · ")}`,
       `올해 가장 적게 더 오른 곳 ${byThis.slice(-3).reverse().map((a) => shortName(a)).join(" · ")} 👆`,

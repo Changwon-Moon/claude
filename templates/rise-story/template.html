@@ -73,6 +73,8 @@
       .rs-r .rk { font-size: 18px; font-weight: 800; color: var(--wirit-gray); text-align: right; padding-right: 2px; }
       .rs-r .nm { font-size: 20px; font-weight: 700; color: var(--wirit-ink); white-space: nowrap; overflow: hidden; }
       .rs-r .v { font-size: 20px; font-weight: 800; color: var(--wirit-red); white-space: nowrap; }
+      /* 내린 값은 코발트 — 레드는 오름 전용(BRAND §3 파생 규칙). 2026년 강남이 처음 음수가 됐다(2026-10-04) */
+      .rs-r .v.neg { color: var(--wirit-cobalt); }
       .rs-r.hl .nm, .rs-r.hl .rk { color: var(--wirit-cobalt); font-weight: 900; }
       /* 경기 지역 이름은 코발트(오너 2026-09-16) — 킥커의 「경기15」가 같은 색으로 범례를 맡는다 */
       .rs-r.gg .nm { color: var(--wirit-cobalt); }
@@ -164,7 +166,7 @@
           <div class="rs-col">
             <div class="rs-col-h"><span class="yr">{{this.yr}}</span></div>
             {{#each this.items}}
-            {{#if (eq this.t "row")}}<div class="rs-r{{#if this.hl}} hl{{/if}}{{#if this.gg}} gg{{/if}}{{#if this.first}} first{{/if}}"><span class="rk">{{this.r}}</span><span class="nm">{{this.nm}}</span><span class="v">{{this.v}}</span></div>{{/if}}
+            {{#if (eq this.t "row")}}<div class="rs-r{{#if this.hl}} hl{{/if}}{{#if this.gg}} gg{{/if}}{{#if this.first}} first{{/if}}"><span class="rk">{{this.r}}</span><span class="nm">{{this.nm}}</span><span class="v{{#if this.neg}} neg{{/if}}">{{this.v}}</span></div>{{/if}}
             {{#if (eq this.t "pill")}}<div class="rs-pillrow"><span class="rs-pill"><b>{{this.nm}}</b> {{this.v}}</span></div>{{/if}}
             {{#if (eq this.t "gap")}}<div class="rs-gap">⋮</div>{{/if}}
             {{#if (eq this.t "gaphalf")}}<div class="rs-gap half">⋮</div>{{/if}}
