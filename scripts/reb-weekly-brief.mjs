@@ -18,6 +18,7 @@
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { makeRebCalendar } from "./lib/reb-week.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const d = JSON.parse(readFileSync(join(ROOT, "data/datasets/reb-weekly-index.json"), "utf8"));
@@ -41,13 +42,9 @@ const TOHEO = [
   ["50090", "기흥구", "용인 기흥구"], ["50106", "구리시"], ["50259", "동탄구", "화성 동탄구"],
 ];
 
-const mondayOf = (key) => {
-  const y = +key.slice(0, 4), w = +key.slice(4);
-  const simple = new Date(Date.UTC(y, 0, 1 + (w - 1) * 7));
-  const dow = simple.getUTCDay() || 7;
-  const mon = new Date(simple); mon.setUTCDate(simple.getUTCDate() - dow + 1);
-  return mon;
-};
+/* 주차 환산은 scripts/lib/reb-week.mjs 가 정본 — ISO 로 계산하면 2017·2023 년이 일주일 밀린다 */
+const _cal = makeRebCalendar(Object.keys(d.mae[SEOUL]));
+const mondayOf = (key) => _cal.monday(key);
 const asOf = d.meta.asOf || Object.keys(d.mae[SEOUL]).sort().pop();
 const baseDate = mondayOf(asOf).toISOString().slice(0, 10).replace(/-/g, ".");
 
@@ -55,16 +52,20 @@ const wow = (series) => {
   const ks = Object.keys(series).sort();
   return (series[ks[ks.length - 1]] / series[ks[ks.length - 2]] - 1) * 100;
 };
+/* 연속 주수는 **부동산원 발표 기준**으로 센다 (2026-09-25 교정 · CEO.md ⑪).
+ * 발표 변동률은 소수 둘째 자리라 지수가 +0.0036% 올라도 발표는 0.00%=보합이고, 보합은 연속을 끊는다.
+ * 지수 레벨(v[i] > v[i-1])로 세면 과다계상된다 — 2026-10-04 기준 87주로 나와 발표값 86주와 어긋났다. */
 const streak = (series) => {
   const ks = Object.keys(series).sort();
   const v = ks.map((k) => series[k]);
+  const pub = (i) => Math.round(((v[i] / v[i - 1] - 1) * 100) * 100) / 100;   // 발표 형식(소수 둘째)
   const last = v.length - 1;
-  const up = v[last] > v[last - 1], down = v[last] < v[last - 1];
+  const up = pub(last) > 0, down = pub(last) < 0;
   if (!up && !down) return { dir: "보합", n: 0 };
   let n = 0;
   for (let i = last; i > 0; i--) {
-    if (up && v[i] > v[i - 1]) n++;
-    else if (down && v[i] < v[i - 1]) n++;
+    if (up && pub(i) > 0) n++;
+    else if (down && pub(i) < 0) n++;
     else break;
   }
   return { dir: up ? "상승" : "하락", n };

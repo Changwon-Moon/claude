@@ -16,6 +16,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { makeRebCalendar } from "./lib/reb-week.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const d = JSON.parse(readFileSync(join(ROOT, "data/datasets/reb-weekly-index.json"), "utf8"));
@@ -28,23 +29,13 @@ const vals = ks.map((k) => series[k]);
 const r1 = (v) => Math.round(v * 10) / 10;
 const r2 = (v) => Math.round(v * 100) / 100;
 
-/* ── 시점 코드(YYYYWW) → 실제 날짜: 손으로 안 적는다(오보 0). 매주 자동으로 굴러간다 ──
- * WW = ISO 연차주. 그 주 월요일 = 부동산원 '기준일'(보도자료 "(m.d일 기준)"과 같은 날).
- * 202631 이 2026-07-27(월, ISO 31주)로 나오는 것을 오늘 날짜로 검증했다. */
-const mondayOf = (key) => {
-  const y = +key.slice(0, 4), w = +key.slice(4);
-  const simple = new Date(Date.UTC(y, 0, 1 + (w - 1) * 7));
-  const dow = simple.getUTCDay() || 7;
-  const mon = new Date(simple); mon.setUTCDate(simple.getUTCDate() - dow + 1);
-  return mon;                                    // UTC 자정 기준 월요일
-};
-const ORD = ["", "첫", "둘", "셋", "넷", "다섯"];
-const weekLabel = (key) => {                      // "2020.6 둘째주" (부동산원식 월-주차)
-  const m = mondayOf(key);
-  const wom = Math.floor((m.getUTCDate() - 1) / 7) + 1;
-  return `${m.getUTCFullYear()}.${m.getUTCMonth() + 1} ${ORD[wom]}째주`;
-};
-const isoDate = (key) => mondayOf(key).toISOString().slice(0, 10);   // YYYY-MM-DD
+/* ── 시점 코드(YYYYWW) → 실제 날짜: 손으로 안 적는다(오보 0) ─────────────────────
+ * 부동산원 주차는 ISO 연차주가 아니다(2026-10-04 교정). 환산 규칙과 체크포인트는
+ * scripts/lib/reb-week.mjs 한 곳이 정본 — 여기서 다시 계산하지 않는다. */
+const cal = makeRebCalendar(ks);
+const mondayOf = (key) => cal.monday(key);
+const weekLabel = (key) => cal.label(key);        // "2020.6 둘째주" (부동산원식 월-주차)
+const isoDate = (key) => cal.iso(key);            // YYYY-MM-DD
 
 /* 뱃지·저장 폴더 날짜 = **발행일(오늘 KST)** — '오늘의 주요 부동산 이슈' 뱃지 원칙(CEO 08-03).
  * 배포/주간 자동생산이 도는 날로 스탬프된다. 인자를 주면 그걸로 덮어쓴다(과거 발행분 재현용).

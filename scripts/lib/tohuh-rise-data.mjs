@@ -14,13 +14,17 @@ export const SERIES_BASES = ["2023", "2024", "2025", "2026"];
 export const r1 = (v) => Math.round(v * 10) / 10;
 export const pctTxt = (v) => `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(r1(v)).toFixed(1)}`;
 
-/** 부동산원 주 키 → 그 주 조사일(월요일). reb-weekly-brief 와 같은 규칙. */
+/** 부동산원 주 키 → 그 주 조사일(월요일).
+ * ⚠️ 환산 정본은 ./reb-week.mjs 다 — ISO 로 계산하면 2017·2023 년이 일주일 밀린다(2026-10-04 교정).
+ * 여기서는 주차 목록을 모른 채 단건 호출되는 자리가 있어 ISO 근사를 남겨 두되,
+ * **2017·2023 구간을 쓰는 순간 틀린다**. 과거 구간을 다루면 makeRebCalendar 로 갈아타라. */
 export const mondayOf = (key) => {
   const y = +key.slice(0, 4), w = +key.slice(4);
   const simple = new Date(Date.UTC(y, 0, 1 + (w - 1) * 7));
   const dow = simple.getUTCDay() || 7;
   const mon = new Date(simple);
   mon.setUTCDate(simple.getUTCDate() - dow + 1);
+  if (y === 2017 || y === 2023) console.warn(`⚠️  mondayOf(${key}) — 2017·2023 은 ISO 근사가 1주 어긋난다. lib/reb-week.mjs 를 써라`);
   return mon;
 };
 export const dateKo = (d) => `${d.getUTCFullYear()}년 ${d.getUTCMonth() + 1}월 ${d.getUTCDate()}일`;

@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "streak-top5@1",
+  "description": "좌·우 두 패널로 같은 종류의 순위 막대를 나란히 비교한다(매매 TOP5 / 전세 TOP5). 사각형·선·글자의 좌표는 전부 빌더가 계산한다 — 템플릿은 숫자를 만들지 않는다. 그래서 시안 A(나비형)·B(세로막대)·C(가로막대 랭킹)가 이 판형 하나를 공유하고, 차이는 좌표에만 있다.\n⚠️ 두 패널의 막대 길이 축척은 **빌더가 공유**해야 한다. 패널마다 따로 늘리면 '전세 135주'와 '매매 86주'가 같은 길이로 보인다 — 길이로 하는 거짓말이다.\ntexts[].cls 로 글자 등급을 고른다: st-pt(패널 제목) · st-ptsub(패널 부제) · st-rank(순위) · st-val/st-valb(주수, b=강조) · st-cum(누적률) · st-sub(기간·연도).",
+  "type": "object",
+  "required": ["template", "title", "chart", "source"],
+  "additionalProperties": true,
+  "properties": {
+    "template": { "type": "string", "pattern": "^streak-top5@\\d+$" },
+    "date": { "type": "string" },
+    "badge": { "type": "string", "maxLength": 40 },
+    "title": { "type": "string" },
+    "note": { "type": "string", "maxLength": 120 },
+    "chart": {
+      "type": "object",
+      "required": ["vb", "rects", "texts"],
+      "additionalProperties": false,
+      "properties": {
+        "vb": { "type": "string" },
+        "bgImage": { "type": "object" },
+        "wm": { "type": "object" },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["x1", "y1", "x2", "y2", "stroke", "sw"],
+            "additionalProperties": true
+          }
+        },
+        "rects": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["x", "y", "w", "h", "fill"],
+            "additionalProperties": true
+          }
+        },
+        "texts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["cls", "x", "y", "text", "fill", "anchor"],
+            "additionalProperties": true,
+            "properties": {
+              "cls": { "enum": ["st-pt", "st-ptsub", "st-rank", "st-val", "st-valb", "st-cum", "st-sub"] },
+              "anchor": { "enum": ["start", "middle", "end"] }
+            }
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["name"],
+      "properties": { "name": { "type": "string" }, "asOf": { "type": "string" } }
+    }
+  }
+}

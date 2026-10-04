@@ -12,6 +12,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { makeRebCalendar } from "./lib/reb-week.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const d = JSON.parse(readFileSync(join(ROOT, "data/datasets/reb-weekly-index.json"), "utf8"));
@@ -20,21 +21,11 @@ const SEOUL = d.meta.seoulCode;
 const r1 = (v) => Math.round(v * 10) / 10;
 const r2 = (v) => Math.round(v * 100) / 100;
 
-/* 시점키(YYYYWW, ISO 연차주) → 그 주 월요일 = 부동산원 기준일 (매매 카드와 동일 규칙) */
-const mondayOf = (key) => {
-  const y = +key.slice(0, 4), w = +key.slice(4);
-  const simple = new Date(Date.UTC(y, 0, 1 + (w - 1) * 7));
-  const dow = simple.getUTCDay() || 7;
-  const mon = new Date(simple); mon.setUTCDate(simple.getUTCDate() - dow + 1);
-  return mon;
-};
-const ORD = ["", "첫", "둘", "셋", "넷", "다섯"];
-const weekLabel = (key) => {
-  const m = mondayOf(key);
-  const wom = Math.floor((m.getUTCDate() - 1) / 7) + 1;
-  return `${m.getUTCFullYear()}.${m.getUTCMonth() + 1} ${ORD[wom]}째주`;
-};
-const isoDate = (key) => mondayOf(key).toISOString().slice(0, 10);
+/* 시점키(YYYYWW) → 그 주 월요일 = 부동산원 기준일. 환산은 lib/reb-week.mjs 정본 (매매 카드와 동일) */
+const cal = makeRebCalendar(Object.keys(d.mae[SEOUL]));
+const mondayOf = (key) => cal.monday(key);
+const weekLabel = (key) => cal.label(key);
+const isoDate = (key) => cal.iso(key);
 
 /* 각 계열의 '마지막 주까지 이어진 연속 상승 run' */
 function currentRun(series) {

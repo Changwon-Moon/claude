@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* streak-top5@1 — 좌(매매)·우(전세) 두 패널로 연속 상승 TOP5 를 막대로 비교한다.
+         ── 왜 새 판형인가
+         streak-line@1 은 '두 국면의 누적 곡선' 전용이고, streak-bars@1 은 한 묶음 막대다.
+         "좌 매매 / 우 전세, 각각 5개 순위" 는 둘 다 담지 못한다.
+         ── 템플릿은 숫자를 만들지 않는다 (TEMPLATES 원칙)
+         사각형·선·글자의 좌표는 전부 빌더가 계산해 넘긴다. 여기는 그리기만 한다.
+         그래서 시안 A/B/C 가 같은 판형 하나를 공유하고, 차이는 빌더의 좌표에만 있다.
+         ── 막대 길이 축척은 두 패널이 공유한다(빌더 책임)
+         패널마다 따로 늘리면 '전세 135주'와 '매매 86주'가 같은 길이로 보인다 — 오보다. */
+      .st { display: flex; flex-direction: column; }
+      .st-badge {
+        font-family: var(--font-num); font-size: 34px; font-weight: 900;
+        color: var(--wirit-gray); letter-spacing: 0.005em;
+      }
+      .st-head { padding: 0; margin: 36px 0 0; }
+      .st .wirit-title {
+        font-size: 72px; line-height: 1.06; text-align: left; margin: 0; letter-spacing: -0.04em;
+      }
+      .st .wirit-title .tl { display: block; white-space: nowrap; }
+      .st .wirit-title .hi { color: var(--wirit-red); }
+      .st .wirit-title .hb { color: var(--wirit-blue, #2e6bff); }
+      /* 제목 앞 기관 로고 — 이 클래스를 쓰는 카드에만 적용된다(다른 확정본 불변) */
+      .st .wirit-title .tlogo {
+        height: 0.78em; width: auto; display: inline-block;
+        vertical-align: -0.05em; margin-right: 0.14em;
+      }
+
+      .st-chart { flex: 1 1 auto; display: flex; align-items: center; margin: 30px 0 0; }
+      .st-svg { display: block; width: 100%; height: auto; }
+
+      .st-pt   { font-family: var(--font-title); font-size: 42px; font-weight: 900; letter-spacing: -0.04em; }
+      .st-ptsub{ font-family: var(--font-num);   font-size: 23px; font-weight: 700; letter-spacing: -0.02em; }
+      .st-rank { font-family: var(--font-num);   font-size: 26px; font-weight: 900; letter-spacing: -0.01em; }
+      .st-val  { font-family: var(--font-num);   font-size: 38px; font-weight: 900; letter-spacing: -0.03em; }
+      .st-valb { font-family: var(--font-num);   font-size: 46px; font-weight: 900; letter-spacing: -0.03em; }
+      .st-cum  { font-family: var(--font-num);   font-size: 29px; font-weight: 900; letter-spacing: -0.02em; }
+      .st-sub  { font-family: var(--font-num);   font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+
+      .st-note {
+        flex: 0 0 auto; margin: 26px 2px 22px; font-size: 25px; font-weight: 700;
+        color: var(--wirit-gray); letter-spacing: -0.045em; line-height: 1.35;
+      }
+      .st-note b { color: var(--wirit-red); font-weight: 900; }
+      .st-note i { color: var(--wirit-blue, #2e6bff); font-style: normal; font-weight: 900; }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card st">
+      <div class="wirit-topcap">{{#if badge}}<span class="st-badge">{{badge}}</span>{{/if}}</div>
+      <div class="st-head"><h1 class="wirit-title">{{{title}}}</h1></div>
+
+      <div class="st-chart">
+        <svg class="st-svg" viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          {{#if chart.bgImage}}<image href="{{chart.bgImage.href}}" x="{{chart.bgImage.x}}" y="{{chart.bgImage.y}}" width="{{chart.bgImage.w}}" height="{{chart.bgImage.h}}" opacity="{{chart.bgImage.opacity}}" preserveAspectRatio="xMidYMid meet" />{{/if}}
+          {{#if chart.wm}}<text x="{{chart.wm.x}}" y="{{chart.wm.y}}" font-size="{{chart.wm.size}}" font-weight="900" fill="{{chart.wm.fill}}" opacity="{{chart.wm.opacity}}" text-anchor="{{chart.wm.anchor}}">{{chart.wm.text}}</text>{{/if}}
+          {{#each chart.lines}}<line x1="{{x1}}" y1="{{y1}}" x2="{{x2}}" y2="{{y2}}" stroke="{{stroke}}" stroke-width="{{sw}}"{{#if dash}} stroke-dasharray="{{dash}}"{{/if}} />{{/each}}
+          {{#each chart.rects}}<rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" rx="{{rx}}" fill="{{fill}}"{{#if opacity}} opacity="{{opacity}}"{{/if}} />{{/each}}
+          {{#each chart.texts}}<text class="{{cls}}" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="{{anchor}}"{{#if opacity}} opacity="{{opacity}}"{{/if}}>{{text}}</text>{{/each}}
+        </svg>
+      </div>
+
+      {{#if note}}<div class="st-note">{{{note}}}</div>{{/if}}
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <script>
+      /* 제목 줄을 카드 폭에 맞춰 키우고 줄인다(streak-line 과 같은 코드·같은 이유).
+         여러 줄(.tl)이면 가장 긴 줄이 폭을 결정하도록 한 번에 잰다. */
+      window.__wiritFit = function () {
+        var el = document.querySelector(".st .wirit-title");
+        if (!el) return;
+        var box = el.parentElement, bs = getComputedStyle(box);
+        var avail = box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
+        var lines = el.querySelectorAll(".tl");
+        var probe = lines.length ? lines : [el];
+        var lo = 30, hi = 110, best = 30;
+        for (var i = 0; i < 26; i++) {
+          var mid = (lo + hi) / 2;
+          el.style.fontSize = mid + "px";
+          var fits = true;
+          for (var j = 0; j < probe.length; j++) if (probe[j].scrollWidth > avail) { fits = false; break; }
+          if (fits) { best = mid; lo = mid; } else { hi = mid; }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+    </script>
+  </body>
+</html>
