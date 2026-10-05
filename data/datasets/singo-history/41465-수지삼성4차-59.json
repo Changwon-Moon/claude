@@ -5,9 +5,9 @@
     "aptNm": "수지삼성4차",
     "type": "59",
     "from": "202001",
-    "to": "202609",
-    "monthsTried": 81,
-    "monthsFailed": 0,
+    "to": "202610",
+    "monthsTried": 82,
+    "monthsFailed": 1,
     "monthsTraded": 73,
     "peak": {
       "manwon": 94800,
@@ -16,7 +16,7 @@
       "floor": 11
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
-    "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
+    "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조). API 가 거절해 「구×월」 캐시로 메운 달: 202608←2026-09-18, 202609←2026-10-02 (연월←캐시 접은 날)."
   },
   "points": [
     {
@@ -742,11 +742,20 @@
     {
       "ym": "202609",
       "maxManwon": 94800,
-      "count": 2,
+      "count": 3,
       "area": 59.76,
       "floor": 11,
       "date": "2026-09-05",
       "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
+      "ok": false
     }
   ]
 }
