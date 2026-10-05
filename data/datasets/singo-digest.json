@@ -1,9 +1,9 @@
 {
   "meta": {
-    "today": "2026-10-05",
-    "from": "2026-10-05",
+    "today": "2026-10-06",
+    "from": "2026-10-06",
     "days": 1,
-    "weekLabel": "2026-10-05 ~ 2026-10-05",
+    "weekLabel": "2026-10-06 ~ 2026-10-06",
     "note": "foundOn(확인한 날) 기준 주간. milestone 은 일간이 판정 시점의 직전 최고가로 계산한 값을 그대로 옮긴 것 — 여기서 다시 재지 않는다.",
     "baselineLabel": "2020년 이후",
     "types": [
@@ -21,7 +21,33 @@
   },
   "conceptB": {
     "title": "개별 카드 후보",
-    "count": 0,
-    "items": []
+    "count": 1,
+    "items": [
+      {
+        "foundOn": "2026-10-06",
+        "aptNm": "수지삼성4차",
+        "umdNm": "풍덕천동",
+        "jibun": "663-1",
+        "priceWon": 950000000,
+        "priceManwon": 95000,
+        "area": 59.76,
+        "floor": 9,
+        "buildYear": 1994,
+        "date": "2026-09-23",
+        "dealingGbn": "중개거래",
+        "canceled": false,
+        "sggCd": "41465",
+        "type": "59",
+        "pyeong": "25평",
+        "lawdCd": "41465",
+        "gu": "용인시수지구",
+        "prevPeakManwon": 94800,
+        "prevPeakDate": "2026-09-05",
+        "gainPct": 0.21097046413502107,
+        "milestone": null,
+        "hhld": 1137,
+        "kaptCode": "A44876411"
+      }
+    ]
   }
 }

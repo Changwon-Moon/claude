@@ -905,6 +905,31 @@
       "milestone": null,
       "hhld": 1360,
       "kaptCode": "A10022404"
+    },
+    {
+      "foundOn": "2026-10-06",
+      "aptNm": "수지삼성4차",
+      "umdNm": "풍덕천동",
+      "jibun": "663-1",
+      "priceWon": 950000000,
+      "priceManwon": 95000,
+      "area": 59.76,
+      "floor": 9,
+      "buildYear": 1994,
+      "date": "2026-09-23",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "41465",
+      "type": "59",
+      "pyeong": "25평",
+      "lawdCd": "41465",
+      "gu": "용인시수지구",
+      "prevPeakManwon": 94800,
+      "prevPeakDate": "2026-09-05",
+      "gainPct": 0.21097046413502107,
+      "milestone": null,
+      "hhld": 1137,
+      "kaptCode": "A44876411"
     }
   ]
 }
