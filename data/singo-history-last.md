@@ -1,9 +1,33 @@
 # 신고가 단지 이력 — 마지막 실행
 
-- 대기열: 444줄
+- 대기열: 445줄
 - 결과: **성공**
 
 ```
+
+── 수지삼성4차 전용 59타입 (41465)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41465 --apt '수지삼성4차' --umd '풍덕천동' --type 59 --from 202001 --force
+
+수지삼성4차 · 전용 59타입 · 41465 · 202001~202610 (82개월)
+⚠️ 202608 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202608 은 캐시로 메웁니다(2026-09-18 접음) — API 가 안 열렸습니다
+⚠️ 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   📦 202609 은 캐시로 메웁니다(2026-10-02 접음) — API 가 안 열렸습니다
+⚠️ 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+   ⏸ 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
+⚠️ 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인
+⚠️ 1/82개월을 못 받았습니다 — 그 달은 곡선에서 끊깁니다.
+/home/runner/work/claude/claude/data/datasets/singo-history/41465-수지삼성4차-59.json
+거래 있던 달 73/82 · 수집 실패 1개월
+📦 캐시에서 79개월 · 국토부에 물은 것 0개월  ← **호출 0회**
+최고가 9.48억 (2026-09-05 · 전용 59.76㎡ 11층)
+   ⏸ 못 받은 달이 1개월 있어 force=1 을 남겨 둡니다 — 다음 판이 다시 받습니다
 
 ── 당산삼성래미안4차 전용 84타입 (11560)
 
