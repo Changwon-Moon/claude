@@ -93,6 +93,14 @@ if (!key) {
  */
 const EXCLUDE = /오피스텔|규모별|연령별|계절조정|준전세|준월세|수급동향|평균|중위|대비/;
 
+/** "(월) 평균매매가격_아파트" 한 표를 이름으로 집는다. 애매하면 null — 짐작해서 쓰지 않는다. */
+function chooseAvgMae(tables: RebTable[]): RebTable | null {
+  const hit = tables.filter(
+    (t) => t.cycle === "MM" && /^\(월\)\s*평균매매가격_아파트$/.test(t.name.trim()),
+  );
+  return hit.length === 1 ? hit[0] : null;
+}
+
 function chooseTable(tables: RebTable[], want: "전세" | "월세"): RebTable | null {
   const scored = tables
     .filter((t) => t.cycle === "MM") // 월간 계열만 (주간은 다른 표본·기준)
@@ -165,6 +173,10 @@ async function main(): Promise<void> {
      * 금액 계열은 사람이 체감하는 숫자라 카드로는 대개 이쪽이 세다. */
     avgWolse: { id: "A_2024_00069", name: "(월) 평균월세가격_아파트" },
     avgJeonse: { id: "A_2024_00064", name: "(월) 평균전세가격_아파트" },
+    /* 평균**매매**가격 — 2026-10-06 추가. 정부별 가격 카드가 매매·전세·월세를 같은 자(금액)로
+     * 나란히 놓으려면 이게 있어야 한다. ID 는 못 박지 않고 **이름으로 찾는다**:
+     * 짐작한 ID 로 CI 를 왕복하는 것보다, 이 표는 이름이 분명해서 찾는 편이 확실하다. */
+    avgMae: { id: "", name: "(월) 평균매매가격_아파트" },
   };
 
   let jeonseId = arg("--jeonse");
@@ -209,14 +221,29 @@ async function main(): Promise<void> {
   const wa = await fetchMonthly(key, PINNED.wolseAll.id, fromYear, toYear, onlyIndex);
   const aw = await fetchMonthly(key, PINNED.avgWolse.id, fromYear, toYear);
   const aj = await fetchMonthly(key, PINNED.avgJeonse.id, fromYear, toYear);
+  /* 평균매매가격 — 이름으로 표를 찾아 받는다. 못 찾거나 비면 **그 키를 아예 안 쓴다**:
+   * 반쪽으로 넣으면 그걸 읽는 카드가 조용히 틀린다(2026-07-29 월세 0건 사고와 같은 종류). */
+  let avgMaeId = arg("--avgmae") || "";
+  if (!avgMaeId) {
+    const t = chooseAvgMae(await listTables(key, "평균매매"));
+    if (t) { avgMaeId = t.id; PINNED.avgMae.name = t.name; }
+    else console.warn("⚠️  평균매매가격_아파트 표를 못 찾았다 — avgMae 없이 저장한다");
+  }
+  const am = avgMaeId ? await fetchMonthly(key, avgMaeId, fromYear, toYear) : null;
   const jeonse = toSeries(j.points);
   const wolse = toSeries(w.points);
   const wolseAll = toSeries(wa.points);
   const avgWolse = toSeries(aw.points);
   const avgJeonse = toSeries(aj.points);
+  const avgMae = am ? toSeries(am.points) : null;
+  /* 서울이 없으면 안 넣는다 — 우리 카드의 기준 지역이다 */
+  const avgMaeOk = !!(avgMae && avgMae["500008"] && Object.keys(avgMae["500008"]).length >= 24);
+  if (avgMae && !avgMaeOk) console.warn("⚠️  평균매매가격 서울 계열이 없거나 짧다 — avgMae 없이 저장한다");
+  if (avgMaeId) console.log(`평균매매 표 ${avgMaeId} (${PINNED.avgMae.name}) — 지역 ${avgMae ? Object.keys(avgMae).length : 0}곳`);
   /* 계열은 **코드**로 키를 잡고 이름은 따로 둔다 — 중구·동구·남구·북구·서구는
    * 여러 광역시에 다 있어서 이름으로 접으면 서로 덮어쓴다(2026-07-29 실측). */
   const names = {
+    ...(am ? regionNames(am.points) : {}),
     ...regionNames(aj.points), ...regionNames(aw.points),
     ...regionNames(wa.points), ...regionNames(w.points), ...regionNames(j.points),
   };
@@ -278,6 +305,7 @@ async function main(): Promise<void> {
         wolseAll: { id: PINNED.wolseAll.id, name: PINNED.wolseAll.name, note: "월세+준월세+준전세 통합 · 더 긴 계열" },
         avgWolse: { id: PINNED.avgWolse.id, name: PINNED.avgWolse.name, note: "실제 평균 금액(원) — 지수와 다른 이야기를 한다" },
         avgJeonse: { id: PINNED.avgJeonse.id, name: PINNED.avgJeonse.name, note: "실제 평균 금액(원)" },
+        ...(avgMaeOk ? { avgMae: { id: avgMaeId, name: PINNED.avgMae.name, note: "실제 평균 금액(원) — 2026-10-06 추가" } } : {}),
       },
       asOf,
       range: { from: fromYear, to: toYear },
@@ -308,6 +336,7 @@ async function main(): Promise<void> {
     wolseAll,
     avgWolse,
     avgJeonse,
+    ...(avgMaeOk ? { avgMae } : {}),
   };
 
   mkdirSync(dirname(outPath), { recursive: true });
@@ -318,7 +347,8 @@ async function main(): Promise<void> {
   console.log(`✅ ${outPath}`);
   console.log(`   지역 ${regions.size}개 · 최신 ${asOf}`);
   for (const [lbl, s2] of [["전세지수", jeonse], ["월세지수", wolse], ["월세통합지수", wolseAll],
-    ["평균월세액", avgWolse], ["평균전세액", avgJeonse]] as const) {
+    ["평균월세액", avgWolse], ["평균전세액", avgJeonse],
+    ...(avgMaeOk ? [["평균매매액", avgMae as Record<string, Record<string, number>>] as const] : [])] as const) {
     const seoul = s2["500008"] || {};
     const ks = Object.keys(seoul).sort();
     console.log(`   ${lbl}: 최장 ${months(s2)}개월 · 서울 ${ks.length}개월 (${ks[0] || "-"} → ${ks[ks.length - 1] || "-"})`);
