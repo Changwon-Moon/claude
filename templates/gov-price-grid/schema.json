@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "gov-price-grid@1",
+  "description": "시점(정부) × 지표(매매·전세·월세) 금액 격자. 좌표·금액 변환은 전부 빌더가 계산한다 — 템플릿은 그리기만 한다.\n⚠️ 막대 축척은 **열(지표)마다** 따로 잡되 열 안에서는 반드시 같은 자를 쓴다. 매매(억)·전세(억)·월세(만원)는 단위가 달라 한 자로 재면 뜻이 없고, 열 안에서 자가 달라지면 길이가 거짓말을 한다.\ntexts[].cls: gp-col(열 이름) · gp-unit(단위) · gp-name(인물) · gp-when(시점) · gp-val/gp-valb(금액, b=강조) · gp-sub(보조).\nfaces[] 는 원형 클리핑된 인물 사진 — id 는 clipPath 식별자로 카드 안에서 유일해야 한다.",
+  "type": "object",
+  "required": [
+    "template",
+    "title",
+    "chart",
+    "source"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "template": {
+      "type": "string",
+      "pattern": "^gov-price-grid@\\d+$"
+    },
+    "date": {
+      "type": "string"
+    },
+    "badge": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "title": {
+      "type": "string"
+    },
+    "note": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "chart": {
+      "type": "object",
+      "required": [
+        "vb",
+        "rects",
+        "texts"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "vb": {
+          "type": "string"
+        },
+        "wm": {
+          "type": "object"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "x1",
+              "y1",
+              "x2",
+              "y2",
+              "stroke",
+              "sw"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "rects": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "x",
+              "y",
+              "w",
+              "h",
+              "fill"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "faces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "cx",
+              "cy",
+              "r",
+              "href",
+              "x",
+              "y",
+              "w",
+              "h"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "texts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "cls",
+              "x",
+              "y",
+              "text",
+              "fill",
+              "anchor"
+            ],
+            "additionalProperties": true,
+            "properties": {
+              "cls": {
+                "enum": [
+                  "gp-col",
+                  "gp-unit",
+                  "gp-name",
+                  "gp-when",
+                  "gp-val",
+                  "gp-valb",
+                  "gp-sub"
+                ]
+              },
+              "anchor": {
+                "enum": [
+                  "start",
+                  "middle",
+                  "end"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "asOf": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

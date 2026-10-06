@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--WIRIT_SHARED_CSS-->
+    <style>
+      /* gov-price-grid@1 — 시점(정부) × 지표(매매·전세·월세) 격자. 금액을 같은 자로 나란히 둔다.
+         ── 왜 새 판형인가
+         gov-bars@1 은 정권별 "누적 증가폭" 한 지표를 세로 막대로 세우는 판이고,
+         여기는 **세 지표의 수준(금액)** 을 시점별로 늘어놓는 표다. 억지로 끼우면
+         안 쓰는 요소가 유령처럼 남는다(TEMPLATES §13 과 같은 이유).
+         ── 템플릿은 숫자를 만들지 않는다
+         사각형·선·글자·사진의 좌표는 전부 빌더가 계산해 넘긴다. 시안 A(격자)와
+         시안 B(열별 세로막대)가 이 판형 하나를 공유하고, 차이는 좌표에만 있다.
+         ── 막대 축척은 **열(지표)마다** 따로다
+         매매(억)·전세(억)·월세(만원)는 단위가 달라 한 자로 재면 아무 뜻이 없다.
+         대신 열 안에서는 반드시 같은 자를 쓴다 — 그 책임은 빌더에 있다. */
+      .gp { display: flex; flex-direction: column; }
+      .gp-badge {
+        font-family: var(--font-num); font-size: 34px; font-weight: 900;
+        color: var(--wirit-gray); letter-spacing: 0.005em;
+      }
+      .gp-head { padding: 0; margin: 36px 0 0; }
+      .gp .wirit-title {
+        font-size: 72px; line-height: 1.06; text-align: left; margin: 0; letter-spacing: -0.04em;
+      }
+      .gp .wirit-title .tl { display: block; white-space: nowrap; }
+      .gp .wirit-title .hi { color: var(--wirit-red); }
+      .gp .wirit-title .hb { color: var(--wirit-blue, #2e6bff); }
+      .gp .wirit-title .tlogo {
+        height: 0.78em; width: auto; display: inline-block;
+        vertical-align: -0.05em; margin-right: 0.14em;
+      }
+
+      .gp-chart { flex: 1 1 auto; display: flex; align-items: center; margin: 28px 0 0; }
+      .gp-svg { display: block; width: 100%; height: auto; }
+
+      .gp-col  { font-family: var(--font-title); font-size: 36px; font-weight: 900; letter-spacing: -0.04em; }
+      .gp-unit { font-family: var(--font-num);   font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+      .gp-name { font-family: var(--font-num);   font-size: 30px; font-weight: 900; letter-spacing: -0.03em; }
+      .gp-when { font-family: var(--font-num);   font-size: 23px; font-weight: 700; letter-spacing: -0.02em; }
+      .gp-val  { font-family: var(--font-num);   font-size: 50px; font-weight: 900; letter-spacing: -0.035em; }
+      .gp-valb { font-family: var(--font-num);   font-size: 58px; font-weight: 900; letter-spacing: -0.035em; }
+      .gp-sub  { font-family: var(--font-num);   font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+
+      .gp-note {
+        flex: 0 0 auto; margin: 24px 2px 22px; font-size: 25px; font-weight: 700;
+        color: var(--wirit-gray); letter-spacing: -0.045em; line-height: 1.35;
+      }
+      .gp-note b { color: var(--wirit-red); font-weight: 900; }
+      .gp-note i { color: var(--wirit-blue, #2e6bff); font-style: normal; font-weight: 900; }
+    </style>
+  </head>
+  <body>
+    <div class="wirit-card gp">
+      <div class="wirit-topcap">{{#if badge}}<span class="gp-badge">{{badge}}</span>{{/if}}</div>
+      <div class="gp-head"><h1 class="wirit-title">{{{title}}}</h1></div>
+
+      <div class="gp-chart">
+        <svg class="gp-svg" viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <defs>
+            {{#each chart.faces}}<clipPath id="{{id}}"><circle cx="{{cx}}" cy="{{cy}}" r="{{r}}" /></clipPath>{{/each}}
+          </defs>
+          {{#if chart.wm}}<text x="{{chart.wm.x}}" y="{{chart.wm.y}}" font-size="{{chart.wm.size}}" font-weight="900" fill="{{chart.wm.fill}}" opacity="{{chart.wm.opacity}}" text-anchor="{{chart.wm.anchor}}">{{chart.wm.text}}</text>{{/if}}
+          {{#each chart.rects}}<rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" rx="{{rx}}" fill="{{fill}}"{{#if opacity}} opacity="{{opacity}}"{{/if}} />{{/each}}
+          {{#each chart.faces}}<circle cx="{{cx}}" cy="{{cy}}" r="{{ring}}" fill="{{ringFill}}" /><image href="{{href}}" x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" clip-path="url(#{{id}})" preserveAspectRatio="xMidYMid slice" />{{/each}}
+          {{#each chart.lines}}<line x1="{{x1}}" y1="{{y1}}" x2="{{x2}}" y2="{{y2}}" stroke="{{stroke}}" stroke-width="{{sw}}"{{#if dash}} stroke-dasharray="{{dash}}"{{/if}} />{{/each}}
+          {{#each chart.texts}}<text class="{{cls}}" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="{{anchor}}"{{#if opacity}} opacity="{{opacity}}"{{/if}}>{{text}}</text>{{/each}}
+        </svg>
+      </div>
+
+      {{#if note}}<div class="gp-note">{{{note}}}</div>{{/if}}
+
+      <div class="wirit-footer">
+        <span>출처 · {{source.name}}{{#if source.asOf}} · {{source.asOf}} 기준{{/if}}</span>
+        <span class="wirit-watermark">@wirit_note<span class="dot">.</span></span>
+      </div>
+    </div>
+
+    <script>
+      /* 제목 줄을 카드 폭에 맞춰 키우고 줄인다(다른 카드와 같은 코드·같은 이유) */
+      window.__wiritFit = function () {
+        var el = document.querySelector(".gp .wirit-title");
+        if (!el) return;
+        var box = el.parentElement, bs = getComputedStyle(box);
+        var avail = box.clientWidth - (parseFloat(bs.paddingLeft) || 0) - (parseFloat(bs.paddingRight) || 0);
+        var lines = el.querySelectorAll(".tl");
+        var probe = lines.length ? lines : [el];
+        var lo = 30, hi = 110, best = 30;
+        for (var i = 0; i < 26; i++) {
+          var mid = (lo + hi) / 2;
+          el.style.fontSize = mid + "px";
+          var fits = true;
+          for (var j = 0; j < probe.length; j++) if (probe[j].scrollWidth > avail) { fits = false; break; }
+          if (fits) { best = mid; lo = mid; } else { hi = mid; }
+        }
+        el.style.fontSize = best.toFixed(2) + "px";
+      };
+    </script>
+  </body>
+</html>
