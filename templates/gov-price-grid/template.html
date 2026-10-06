@@ -42,6 +42,11 @@
       .gp-val  { font-family: var(--font-num);   font-size: 50px; font-weight: 900; letter-spacing: -0.035em; }
       .gp-valb { font-family: var(--font-num);   font-size: 58px; font-weight: 900; letter-spacing: -0.035em; }
       .gp-sub  { font-family: var(--font-num);   font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+      /* 표 판(시안 C)용 — 격자 판의 큰 숫자(gp-val)는 표 행 높이에 안 들어간다 */
+      .gp-th   { font-family: var(--font-num);   font-size: 25px; font-weight: 800; letter-spacing: -0.02em; }
+      .gp-td   { font-family: var(--font-num);   font-size: 36px; font-weight: 900; letter-spacing: -0.03em; }
+      .gp-tdb  { font-family: var(--font-num);   font-size: 40px; font-weight: 900; letter-spacing: -0.03em; }
+      .gp-tick { font-family: var(--font-num);   font-size: 21px; font-weight: 700; letter-spacing: -0.02em; }
 
       .gp-note {
         flex: 0 0 auto; margin: 24px 2px 22px; font-size: 25px; font-weight: 700;
@@ -64,6 +69,9 @@
           {{#if chart.wm}}<text x="{{chart.wm.x}}" y="{{chart.wm.y}}" font-size="{{chart.wm.size}}" font-weight="900" fill="{{chart.wm.fill}}" opacity="{{chart.wm.opacity}}" text-anchor="{{chart.wm.anchor}}">{{chart.wm.text}}</text>{{/if}}
           {{#each chart.rects}}<rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" rx="{{rx}}" fill="{{fill}}"{{#if opacity}} opacity="{{opacity}}"{{/if}} />{{/each}}
           {{#each chart.faces}}<circle cx="{{cx}}" cy="{{cy}}" r="{{ring}}" fill="{{ringFill}}" /><image href="{{href}}" x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" clip-path="url(#{{id}})" preserveAspectRatio="xMidYMid slice" />{{/each}}
+          {{#each chart.areas}}<polygon points="{{points}}" fill="{{fill}}" />{{/each}}
+          {{#each chart.paths}}<polyline points="{{points}}" fill="none" stroke="{{stroke}}" stroke-width="{{sw}}" stroke-linejoin="round" stroke-linecap="round"{{#if dash}} stroke-dasharray="{{dash}}"{{/if}} />{{/each}}
+          {{#each chart.dots}}<circle cx="{{cx}}" cy="{{cy}}" r="{{r}}" fill="{{fill}}" stroke="{{stroke}}" stroke-width="{{sw}}" />{{/each}}
           {{#each chart.lines}}<line x1="{{x1}}" y1="{{y1}}" x2="{{x2}}" y2="{{y2}}" stroke="{{stroke}}" stroke-width="{{sw}}"{{#if dash}} stroke-dasharray="{{dash}}"{{/if}} />{{/each}}
           {{#each chart.texts}}<text class="{{cls}}" x="{{x}}" y="{{y}}" fill="{{fill}}" text-anchor="{{anchor}}"{{#if opacity}} opacity="{{opacity}}"{{/if}}>{{text}}</text>{{/each}}
         </svg>

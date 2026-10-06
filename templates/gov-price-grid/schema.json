@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "gov-price-grid@1",
-  "description": "시점(정부) × 지표(매매·전세·월세) 금액 격자. 좌표·금액 변환은 전부 빌더가 계산한다 — 템플릿은 그리기만 한다.\n⚠️ 막대 축척은 **열(지표)마다** 따로 잡되 열 안에서는 반드시 같은 자를 쓴다. 매매(억)·전세(억)·월세(만원)는 단위가 달라 한 자로 재면 뜻이 없고, 열 안에서 자가 달라지면 길이가 거짓말을 한다.\ntexts[].cls: gp-col(열 이름) · gp-unit(단위) · gp-name(인물) · gp-when(시점) · gp-val/gp-valb(금액, b=강조) · gp-sub(보조).\nfaces[] 는 원형 클리핑된 인물 사진 — id 는 clipPath 식별자로 카드 안에서 유일해야 한다.",
+  "description": "시점(정부) × 지표(매매·전세·월세) 금액 격자. 좌표·금액 변환은 전부 빌더가 계산한다 — 템플릿은 그리기만 한다.\n⚠️ 막대 축척은 **열(지표)마다** 따로 잡되 열 안에서는 반드시 같은 자를 쓴다. 매매(억)·전세(억)·월세(만원)는 단위가 달라 한 자로 재면 뜻이 없고, 열 안에서 자가 달라지면 길이가 거짓말을 한다.\ntexts[].cls: gp-col(열 이름) · gp-unit(단위) · gp-name(인물) · gp-when(시점) · gp-val/gp-valb(금액, b=강조) · gp-sub(보조).\nfaces[] 는 원형 클리핑된 인물 사진 — id 는 clipPath 식별자로 카드 안에서 유일해야 한다.\n시안 C(표+선그래프)는 areas/paths/dots 를 쓴다 — 정부 구간은 rects 로 깐 세로 밴드다. 세 그래프는 **x축을 공유**한다(2012-01~최신). 월세만 2015-07부터 선이 시작되는 것은 집계 시작월이 그때라서다 — 그 공백을 메우지 않는다.",
   "type": "object",
   "required": [
     "template",
@@ -115,7 +115,11 @@
                   "gp-when",
                   "gp-val",
                   "gp-valb",
-                  "gp-sub"
+                  "gp-sub",
+                  "gp-th",
+                  "gp-td",
+                  "gp-tdb",
+                  "gp-tick"
                 ]
               },
               "anchor": {
@@ -126,6 +130,42 @@
                 ]
               }
             }
+          }
+        },
+        "areas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "points",
+              "fill"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "points",
+              "stroke",
+              "sw"
+            ],
+            "additionalProperties": true
+          }
+        },
+        "dots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "cx",
+              "cy",
+              "r",
+              "fill"
+            ],
+            "additionalProperties": true
           }
         }
       }

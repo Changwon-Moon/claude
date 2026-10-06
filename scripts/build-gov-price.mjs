@@ -20,6 +20,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { makeRebCalendar } from "./lib/reb-week.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const d = JSON.parse(readFileSync(join(ROOT, "data/datasets/reb-rent-index.json"), "utf8"));
@@ -39,6 +40,46 @@ if (UNIT.avgJeonse && UNIT.avgJeonse !== "천원")
   throw new Error(`금액 단위가 천원이 아니다(${UNIT.avgJeonse}) — 환산식을 다시 맞춰라`);
 
 const mae = d.avgMae[SEOUL], jeon = d.avgJeonse[SEOUL], wol = d.avgWolse[SEOUL];
+
+/* ── 표본 개편 단절을 **코드가 찾는다** (2026-10-07 발견 · 오보 0) ────────────────
+ * 부동산원 '평균 금액'은 품질조정 지수가 아니라 그 달 표본의 산술평균이다. 그래서
+ * **표본을 갈아끼운 달에 금액이 통째로 점프한다** — 시장이 움직인 게 아니다.
+ * 2021년 7월 개편(표본주택 3.5배 확대)이 대표적이고, 그 달 금액은 매매 +19.5%·전세 +23.5%
+ * 뛰었는데 **가격지수는 +0.6%·+0.7%** 였다. 2015-07·2017-12·2019-01·2020-01·2025-04 도 같다.
+ * 이 단절을 모르고 두 시점을 나누면 "11년 2.5배"가 나오는데, 품질조정 지수로는 1.43배다.
+ * → 금액 계열의 월간 변동이 **같은 달 지수 변동과 3%p 이상 벌어지고 4% 넘게 튀면** 단절로 본다.
+ *   (2022년 말 전세 급락은 지수도 같이 내려가 여기 안 걸린다 — 그건 진짜 시장이다)
+ * 카드는 이 자리를 점선으로 긋고, 배수 문구를 제목에서 뺀다. */
+const wk = JSON.parse(readFileSync(join(ROOT, "data/datasets/reb-weekly-index.json"), "utf8"));
+const WCAL = makeRebCalendar(Object.keys(wk.mae[wk.meta.seoulCode]));
+const maeIdx = (() => {
+  const src = wk.mae[wk.meta.seoulCode], bucket = {};
+  for (const k of Object.keys(src).sort()) {
+    const m = WCAL.iso(k).slice(0, 7);
+    (bucket[m] ||= []).push(src[k]);
+  }
+  return Object.fromEntries(Object.entries(bucket).map(([m, v]) => [m, v.reduce((a, b) => a + b, 0) / v.length]));
+})();
+const IDX = { mae: maeIdx, jeon: d.jeonse[SEOUL], wol: d.wolseAll[SEOUL] };
+const MONEY = { mae, jeon, wol };
+const BREAK_MOM = 4, BREAK_GAP = 3;
+const breaks = (() => {
+  const hit = new Map();
+  for (const key of ["mae", "jeon", "wol"]) {
+    const money = MONEY[key], idx = IDX[key], ks = Object.keys(money).sort();
+    for (let i = 1; i < ks.length; i++) {
+      const m = ks[i], p = ks[i - 1];
+      if (idx[m] === undefined || idx[p] === undefined) continue;
+      const mm = (money[m] / money[p] - 1) * 100, ii = (idx[m] / idx[p] - 1) * 100;
+      if (Math.abs(mm) >= BREAK_MOM && Math.abs(mm - ii) >= BREAK_GAP) {
+        if (!hit.has(m)) hit.set(m, []);
+        hit.get(m).push(`${key} 금액 ${mm.toFixed(1)}% vs 지수 ${ii.toFixed(1)}%`);
+      }
+    }
+  }
+  return [...hit.entries()].sort().map(([ym, why]) => ({ ym, why }));
+})();
+if (!breaks.length) console.warn("⚠️  표본 개편 단절을 하나도 못 찾았다 — 탐지 기준이나 데이터를 확인하라");
 const latest = [mae, jeon, wol].map((s) => Object.keys(s).sort().pop()).sort()[0];   // 셋 다 있는 가장 늦은 달
 
 /* ── 시점 다섯 ── */
@@ -72,6 +113,11 @@ const COLS = [
   { key: "wol", name: "월세", unit: "만원", fmt: (v) => Math.round(v).toLocaleString("ko-KR"), color: INK },
 ];
 const mult = Object.fromEntries(COLS.map((c) => [c.key, x(now[c.key], first[c.key])]));
+/* 품질조정 지수 기준 배수 — 금액 배수는 표본 개편이 섞여 과장된다. 비교는 이쪽이 정직하다. */
+const multIdx = Object.fromEntries(COLS.map((c) => {
+  const i = IDX[c.key];
+  return [c.key, (i[latest] !== undefined && i[first.ym] !== undefined) ? i[latest] / i[first.ym] : null];
+}));
 const years = ((+latest.slice(0, 4) * 12 + +latest.slice(5)) - (+first.ym.slice(0, 4) * 12 + +first.ym.slice(5))) / 12;
 
 const dataUri = (file) => {
@@ -82,13 +128,18 @@ const dataUri = (file) => {
 const seoulHref = "data:image/svg+xml;base64," +
   readFileSync(join(ROOT, "data/assets/seoul/seoul-logo.svg")).toString("base64");
 
+/* ⚠️ 제목에 **금액 배수를 쓰지 않는다** (2026-10-07).
+ * 평균 금액 계열에는 표본 개편 단절이 다섯 번 들어 있어 "11년 2.5배"는 시장이 그만큼 올랐다는
+ * 뜻이 아니다(품질조정 지수로는 1.43배). 수준(얼마가 됐나)은 그대로 말할 수 있으므로
+ * 제목은 **금액 수준**으로 간다. */
 const TITLE =
-  `<span class="tl"><img class="tlogo" src="${seoulHref}" alt="" />서울 아파트 ${Math.round(years)}년, 매매만 <span class="hi">${mult.mae.toFixed(1)}배</span></span>` +
-  `<span class="tl">전세 ${mult.jeon.toFixed(1)}배 · 월세 ${mult.wol.toFixed(1)}배</span>`;
+  `<span class="tl"><img class="tlogo" src="${seoulHref}" alt="" />정부가 네 번 바뀌는 동안</span>` +
+  `<span class="tl">서울 아파트 <span class="hi">${first.mae.toFixed(1)}억 → ${now.mae.toFixed(1)}억</span></span>`;
 const NOTE =
   `매매 <b>${first.mae.toFixed(1)} → ${now.mae.toFixed(1)}억</b> · 전세 <i>${first.jeon.toFixed(1)} → ${now.jeon.toFixed(1)}억</i> · ` +
   `월세 ${Math.round(first.wol)} → ${Math.round(now.wol)}만원<br>` +
-  `※ 시점은 각 정부 출범월 — 박근혜만 평균월세 집계가 시작된 ${first.when}`;
+  `※ 점선 ${breaks.length}곳 = 조사 표본이 바뀌어 금액만 튄 달 · 품질조정 지수로는 ` +
+  `매매 ${multIdx.mae.toFixed(1)} · 전세 ${multIdx.jeon.toFixed(1)} · 월세 ${multIdx.wol.toFixed(1)}배`;
 const SOURCE = { name: "한국부동산원 평균 매매·전세·월세가격(아파트)", asOf: `${latest.slice(0, 4)}.${+latest.slice(5)}` };
 
 /* ── 시안 A: 사진 축 + 세 열 격자 ─────────────────────────────────────────── */
@@ -180,15 +231,105 @@ function variantB() {
            wm: { x: 500, y: 150, size: 34, text: "@wirit_note", fill: INK, opacity: 0.10, anchor: "middle" } };
 }
 
-const VARIANTS = { a: variantA, b: variantB };
+/* ── 시안 C: 표 + 월별 선그래프 3개 + 정부 구간 밴드 ──────────────────────────
+ * 위는 다섯 시점 표, 아래는 **월별 전 구간** 곡선 셋. 표는 "얼마"를, 곡선은 "어떻게"를 말한다.
+ * ⚠️ 세 곡선은 **x축을 공유**한다(데이터 시작월 ~ 최신월). 월세만 선이 중간에서 시작하는데,
+ *    평균월세 집계가 2015-07부터이기 때문이다 — 그 공백을 이어 그리지 않는다(없는 궤적 금지).
+ * ⚠️ 세로 밴드는 정부 **교체월**로 끊는다. 권한대행 기간(2017.3~5 · 2025.4~6)은 따로 칠하지
+ *    않고 직전 정부 구간에 포함했다 — 두 달짜리 띠는 카드에서 소음이고, 그 사실은 각주에 밝힌다. */
+const GOVS = [
+  { name: "이명박", from: "2008-02" },
+  { name: "박근혜", from: "2013-02" },
+  { name: "문재인", from: "2017-05" },
+  { name: "윤석열", from: "2022-05" },
+  { name: "이재명", from: "2025-06", now: true },
+];
+const mi = (ym) => +ym.slice(0, 4) * 12 + (+ym.slice(5) - 1);   // 월 일련번호
+
+function variantC() {
+  const allMonths = Object.keys(mae).sort();
+  const M0 = mi(allMonths[0]), M1 = mi(latest);
+  const SPAN = M1 - M0;
+  const px = (ym) => Math.round((mi(ym) - M0) / SPAN * 1000);
+
+  const rects = [], texts = [], lines = [], paths = [], areas = [], dots = [], faces = [];
+
+  /* ① 표 — 다섯 시점 */
+  const CX = [250, 500, 748, 1000];                 // 각 숫자 열의 오른쪽 끝
+  texts.push({ cls: "gp-th", x: 0, y: 26, text: "시점", fill: MUTE, anchor: "start" });
+  COLS.forEach((c, ci) => texts.push({ cls: "gp-th", x: CX[ci + 1], y: 26, text: `${c.name} (${c.unit})`, fill: c.color, anchor: "end" }));
+  lines.push({ x1: 0, y1: 42, x2: 1000, y2: 42, stroke: "rgba(20,24,33,0.16)", sw: 2 });
+  const RH = 48, R0 = 42;
+  rows.forEach((r, ri) => {
+    const y = R0 + ri * RH;
+    if (r.now) rects.push({ x: -8, y: y + 3, w: 1016, h: RH - 4, rx: 12, fill: RED_SOFT });
+    else if (ri % 2 === 1) rects.push({ x: -8, y: y + 3, w: 1016, h: RH - 4, rx: 12, fill: "rgba(20,24,33,0.035)" });
+    texts.push({ cls: "gp-th", x: 0, y: y + 34, text: `${r.name} ${r.when}`, fill: r.now ? RED : INK, anchor: "start" });
+    COLS.forEach((c, ci) => texts.push({
+      cls: r.now ? "gp-tdb" : "gp-td", x: CX[ci + 1], y: y + 36,
+      text: c.fmt(r[c.key]), fill: r.now ? c.color : INK, anchor: "end",
+    }));
+  });
+
+  /* ② 월별 곡선 셋 — 같은 x축 */
+  const CH = 130, CGAP = 16, C0 = R0 + rows.length * RH + 30;
+  const bandEdges = GOVS.map((g, i) => ({
+    ...g,
+    x1: Math.max(0, px(g.from < allMonths[0] ? allMonths[0] : g.from)),
+    x2: i + 1 < GOVS.length ? px(GOVS[i + 1].from) : 1000,
+  })).filter((g) => g.x2 > g.x1);
+
+  COLS.forEach((c, ci) => {
+    const top = C0 + ci * (CH + CGAP), bot = top + CH;
+    const series = { mae, jeon, wol }[{ mae: "mae", jeon: "jeon", wol: "wol" }[c.key]];
+    const scale = c.key === "wol" ? 10 : 100000;      // 천원 → 만원 / 억원
+    const months = Object.keys(series).sort().filter((m) => mi(m) >= M0 && mi(m) <= M1);
+    const vals = months.map((m) => series[m] / scale);
+    const vmax = Math.max(...vals) * 1.12;
+    const y = (v) => Math.round(bot - (v / vmax) * (CH - 14));
+
+    /* 정부 구간 밴드 — 색은 뜻 하나씩: 현 정부만 레드, 나머지는 번갈아 옅은 잉크 */
+    bandEdges.forEach((g, gi) => rects.push({
+      x: g.x1, y: top, w: g.x2 - g.x1, h: CH, rx: 0,
+      fill: g.now ? "rgba(229,72,77,0.10)" : (gi % 2 ? "rgba(20,24,33,0.055)" : "rgba(20,24,33,0.025)"),
+    }));
+    bandEdges.slice(1).forEach((g) => lines.push({ x1: g.x1, y1: top, x2: g.x1, y2: bot, stroke: "rgba(20,24,33,0.16)", sw: 2 }));
+    /* 표본 개편 자리 — 세 그래프 모두에 같은 점선. 여기서 선이 한 칸 솟는 것은 시장이 아니다 */
+    breaks.forEach((b) => lines.push({ x1: px(b.ym), y1: top + 4, x2: px(b.ym), y2: bot - 4,
+                                       stroke: "rgba(20,24,33,0.46)", sw: 2.5, dash: "7 6" }));
+
+    const pts = months.map((m, i) => `${px(m)},${y(vals[i])}`).join(" ");
+    areas.push({ points: `${px(months[0])},${bot} ${pts} ${px(months[months.length - 1])},${bot}`, fill: c.key === "mae" ? "rgba(229,72,77,0.13)" : c.key === "jeon" ? "rgba(46,107,255,0.12)" : "rgba(20,24,33,0.10)" });
+    paths.push({ points: pts, stroke: c.color, sw: 5 });
+    const lx = px(months[months.length - 1]), ly = y(vals[vals.length - 1]);
+    dots.push({ cx: lx, cy: ly, r: 8, fill: "#fff", stroke: c.color, sw: 5 });
+
+    texts.push({ cls: "gp-th", x: 10, y: top + 30, text: `${c.name} (${c.unit})`, fill: c.color, anchor: "start" });
+    texts.push({ cls: "gp-tick", x: lx - 14, y: ly - 16, text: c.fmt(vals[vals.length - 1]), fill: c.color, anchor: "end" });
+    if (c.key === "wol") texts.push({ cls: "gp-tick", x: px(months[0]) + 10, y: bot - 12, text: `${months[0].slice(2, 4)}.${+months[0].slice(5)} 집계 시작`, fill: MUTE, anchor: "start" });
+  });
+
+  /* ③ 정부 이름 띠 — 한 번만 */
+  const LY = C0 + 3 * (CH + CGAP) + 6;
+  bandEdges.forEach((g) => {
+    const w = g.x2 - g.x1;
+    if (w < 70) return;                               // 좁은 칸은 이름을 안 넣는다(겹친다)
+    texts.push({ cls: "gp-tick", x: (g.x1 + g.x2) / 2, y: LY + 22, text: g.name, fill: g.now ? RED : MUTE, anchor: "middle" });
+  });
+  const H = LY + 40;
+  return { vb: `0 0 1000 ${H}`, rects, texts, lines, paths, areas, dots, faces,
+           wm: { x: 330, y: C0 + CH + CGAP + 112, size: 30, text: "@wirit_note", fill: INK, opacity: 0.11, anchor: "middle" } };
+}
+
+const VARIANTS = { a: variantA, b: variantB, c: variantC };
 const argv = process.argv.slice(2);
-const picks = argv.filter((a) => /^[ab]$/.test(a));
+const picks = argv.filter((a) => /^[abc]$/.test(a));
 const date = argv.find((a) => /^\d{4}-\d{2}-\d{2}$/.test(a)) ||
   new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const outDir = join(ROOT, "data/content", date);
 mkdirSync(outDir, { recursive: true });
 
-for (const v of (picks.length ? picks : ["a", "b"])) {
+for (const v of (picks.length ? picks : ["a", "b", "c"])) {
   const card = {
     template: "gov-price-grid@1",
     date,
