@@ -12,7 +12,7 @@
 > 이 표는 `node scripts/template-usage.mjs --write` 가 **실측해서 씁니다.**
 > 손으로 고치지 마세요 — 세트가 늘면 다음 실행 때 덮어씁니다.
 
-**템플릿 49종** · 🟢 카드가 나오는 것 34 · 🟡 빌더는 있음 2 · ⚪ 잠자는 것 13
+**템플릿 50종** · 🟢 카드가 나오는 것 34 · 🟡 빌더는 있음 2 · ⚪ 잠자는 것 14
 
 | 판형 | 상태 | 쓰는 세트 |
 |---|---|---|
@@ -42,7 +42,7 @@
 | `rise-story` | 🟢 2세트 | tohuh-rise, tohuh-rise-dots |
 | `seongsu-zones` | 🟢 1세트 | seongsu-zones |
 | `sinbundang-loop` | 🟢 1세트 | sinbundang-loop |
-| `singo-record` | 🟢 36세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 33 |
+| `singo-record` | 🟢 37세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 34 |
 | `singoga-map` | 🟢 4세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map 외 1 |
 | `streak-line` | 🟢 22세트 | mae-streak, jeonse-streak, m2-gap 외 19 |
 | `supply-progress` | 🟢 1세트 | supply-progress |
@@ -54,6 +54,7 @@
 | `metro-cover-photo` | 🟡 빌더 있음·세트 없음 | — |
 | `dummy-card` | ⚪ 잠자는 중 | — |
 | `figure-roster` | ⚪ 잠자는 중 | — |
+| `gov-price-grid` | ⚪ 잠자는 중 | — |
 | `highlight-cover` | ⚪ 잠자는 중 | — |
 | `index-cover` | ⚪ 잠자는 중 | — |
 | `map-choropleth` | ⚪ 잠자는 중 | — |
