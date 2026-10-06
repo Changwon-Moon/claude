@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-06T22:54:38.581Z",
+  "generatedAt": "2026-10-06T23:30:05.392Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -1131,9 +1131,9 @@
       "file": "geocode.yml",
       "name": "좌표 지오코딩 (카카오 로컬)",
       "lastRun": "2026-09-07",
-      "daysAgo": 29,
+      "daysAgo": 30,
       "lastOk": "2026-09-07",
-      "okDaysAgo": 29,
+      "okDaysAgo": 30,
       "fails30": 0,
       "runs30": 4
     },
@@ -1244,7 +1244,7 @@
       "daysAgo": 0,
       "lastOk": "2026-10-04",
       "okDaysAgo": 2,
-      "fails30": 20,
+      "fails30": 21,
       "runs30": 100
     },
     {
@@ -1314,7 +1314,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-23",
       "okDaysAgo": 13,
-      "fails30": 20,
+      "fails30": 21,
       "runs30": 100
     }
   ]
