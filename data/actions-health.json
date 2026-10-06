@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-06T02:01:02.316Z",
+  "generatedAt": "2026-10-06T04:22:08.220Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -282,15 +282,15 @@
         },
         {
           "day": "10-06",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "11:12",
+          "delay": 242
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-10-05",
-      "lastOk": "2026-10-05",
+      "medianDelay": 242,
+      "maxDelay": 242,
+      "lastRun": "2026-10-06",
+      "lastOk": "2026-10-06",
       "okDaysAgo": 0
     },
     {
@@ -776,7 +776,7 @@
       "maxDelay": null,
       "lastRun": "2026-09-08",
       "lastOk": "2026-09-08",
-      "okDaysAgo": 27
+      "okDaysAgo": 28
     },
     {
       "file": "wage-bracket-collect.yml",
@@ -1254,7 +1254,7 @@
       "daysAgo": 0,
       "lastOk": "2026-10-04",
       "okDaysAgo": 2,
-      "fails30": 16,
+      "fails30": 17,
       "runs30": 100
     },
     {
