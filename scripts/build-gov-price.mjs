@@ -425,22 +425,144 @@ function variantD() {
            wm: { x: X0 + (X1 - X0) * 0.74, y: BOT - 84, size: 30, text: "@wirit_note", fill: INK, opacity: 0.10, anchor: "middle" } };
 }
 
-const VARIANTS = { a: variantA, b: variantB, c: variantC, d: variantD };
+/* ── 시안 E: 표 없이 한 판 — 정부 구간 배경에 대통령 얼굴, 곡선 위에 값 라벨 ─────
+ * 오너 지시(2026-10-07): 표를 빼고, 대통령 얼굴을 **연하게 구간 뒤 배경**에 깔고,
+ * 박근혜·문재인·윤석열·이재명 **네 명만** 보여준다 → x축을 박근혜 출범(2013-02)부터 자른다.
+ * 표를 뺀 자리에 값이 사라지지 않도록, **정부 출범 시점마다 세 곡선에 점을 찍고
+ * 매매 금액을 라벨**로 단다(주인공 지표 하나만 — 세 값을 한 시점에 쌓으면 서로 겹친다.
+ * 2017.5 의 전세 3.8억과 월세 89만원은 같은 자에서 0.65억 차이라 글자가 포개진다).
+ * 전세·월세는 시작값·끝값으로 읽는다. */
+function variantE() {
+  const START = "2013-02";                                  // 박근혜 출범 — 여기서부터 그린다
+  const allMonths = Object.keys(mae).sort().filter((m) => mi(m) >= mi(START));
+  const M0 = mi(allMonths[0]), M1 = mi(latest), SPAN = M1 - M0;
+  const X0 = 86, X1 = 918;
+  const px = (ym) => Math.round(X0 + (mi(ym) - M0) / SPAN * (X1 - X0));
+
+  const rects = [], texts = [], lines = [], paths = [], areas = [], dots = [], faces = [];
+  const TOP = 64, PH = 616, BOT = TOP + PH;
+
+  const WON_PER_EOK = 20;
+  const LMAX = Math.ceil(Math.max(...rows.map((r) => Math.max(r.mae, r.jeon))) / 5) * 5;
+  const RMAX = LMAX * WON_PER_EOK;
+  const yL = (v) => BOT - (v / LMAX) * PH;
+  const yR = (v) => BOT - (v / RMAX) * PH;
+  const yOf = (key, v) => (key === "wol" ? yR(v) : yL(v));
+
+  /* 정부 네 명 — 이명박은 뺀다(오너 지시) */
+  const FOUR = GOVS.filter((g) => mi(g.from) >= mi(START));
+  const bands = FOUR.map((g, i) => ({
+    ...g, x1: px(g.from), x2: i + 1 < FOUR.length ? px(FOUR[i + 1].from) : X1,
+    photo: POINTS.find((p) => p.name === g.name)?.photo || null,
+  }));
+
+  bands.forEach((g, gi) => {
+    rects.push({ x: g.x1, y: TOP, w: g.x2 - g.x1, h: PH, rx: 0,
+                 fill: g.now ? "rgba(229,72,77,0.10)" : (gi % 2 ? "rgba(20,24,33,0.05)" : "rgba(20,24,33,0.022)") });
+    /* 배경 얼굴 — 구간 폭에 맞춰 크기가 정해진다. 재임이 짧으면 얼굴도 작다(그 자체로 정보다).
+       곡선이 위를 지나가므로 테두리 없이 아주 연하게 깐다. */
+    const href = g.photo && dataUri(g.photo);
+    if (href) {
+      const R = Math.max(34, Math.min((g.x2 - g.x1) * 0.42, 150));
+      const cxp = Math.min(Math.max((g.x1 + g.x2) / 2, X0 + R), X1 - R), cyp = TOP + PH * 0.42;
+      faces.push({ id: `e${gi}`, cx: cxp, cy: cyp, r: R, href,
+                   x: cxp - R, y: cyp - R, w: R * 2, h: R * 2, opacity: 0.16 });
+    }
+  });
+  bands.slice(1).forEach((g) => lines.push({ x1: g.x1, y1: TOP, x2: g.x1, y2: BOT, stroke: "rgba(20,24,33,0.20)", sw: 2 }));
+
+  /* 눈금선 — 왼쪽 억원 · 오른쪽 만원이 같은 줄을 쓴다(1억 = 20만원) */
+  for (let v = LMAX / 3; v <= LMAX + 0.001; v += LMAX / 3) {
+    const gy = Math.round(yL(v));
+    lines.push({ x1: X0, y1: gy, x2: X1, y2: gy, stroke: "rgba(20,24,33,0.10)", sw: 2 });
+    texts.push({ cls: "gp-tick", x: X0 - 12, y: gy + 7, text: `${Math.round(v)}`, fill: MUTE, anchor: "end" });
+    texts.push({ cls: "gp-tick", x: X1 + 12, y: gy + 7, text: `${Math.round(v * WON_PER_EOK)}`, fill: MUTE, anchor: "start" });
+  }
+  lines.push({ x1: X0, y1: BOT, x2: X1, y2: BOT, stroke: "rgba(20,24,33,0.22)", sw: 2 });
+
+  /* 표본 개편 점선 — 그린 구간 안에 있는 것만 */
+  breaks.filter((b) => mi(b.ym) >= M0).forEach((b) =>
+    lines.push({ x1: px(b.ym), y1: TOP + 4, x2: px(b.ym), y2: BOT - 4, stroke: "rgba(20,24,33,0.40)", sw: 2.5, dash: "7 6" }));
+
+  /* 곡선 + 라벨 */
+  COLS.forEach((c) => {
+    const series = MONEY[c.key], scale = c.key === "wol" ? 10 : 100000;
+    const months = Object.keys(series).sort().filter((m) => mi(m) >= M0 && mi(m) <= M1);
+    const vals = months.map((m) => series[m] / scale);
+    paths.push({ points: months.map((m, i) => `${px(m)},${Math.round(yOf(c.key, vals[i]))}`).join(" "), stroke: c.color, sw: 5 });
+
+    /* 시작값 — 그 계열이 처음 나오는 달 */
+    const sx = px(months[0]), sy = Math.round(yOf(c.key, vals[0]));
+    dots.push({ cx: sx, cy: sy, r: 8, fill: "#fff", stroke: c.color, sw: 4 });
+    texts.push({ cls: "gp-th", x: sx + 14, y: sy - 16, text: c.fmt(vals[0]), fill: c.color, anchor: "start" });
+    if (c.key === "wol") {
+      lines.push({ x1: sx, y1: BOT - 44, x2: sx, y2: BOT, stroke: "rgba(20,24,33,0.3)", sw: 2 });
+      texts.push({ cls: "gp-tick", x: sx + 10, y: BOT - 16, text: `월세 ${months[0].slice(2, 4)}.${+months[0].slice(5)} 집계 시작`, fill: MUTE, anchor: "start" });
+    }
+
+    /* 끝값 */
+    const lx = px(months[months.length - 1]), ly = Math.round(yOf(c.key, vals[vals.length - 1]));
+    dots.push({ cx: lx, cy: ly, r: 9, fill: "#fff", stroke: c.color, sw: 5 });
+    texts.push({ cls: "gp-td", x: lx - 16, y: ly + 12, text: c.fmt(vals[vals.length - 1]), fill: c.color, anchor: "end" });
+
+    /* 정부 교체 시점의 점 — 세 곡선 모두 찍고, 금액은 매매에만 단다(겹침 방지) */
+    bands.slice(1).forEach((g) => {
+      if (series[g.from] === undefined) return;
+      const v = series[g.from] / scale, gx = px(g.from), gy = Math.round(yOf(c.key, v));
+      dots.push({ cx: gx, cy: gy, r: 7, fill: "#fff", stroke: c.color, sw: 4 });
+      if (c.key === "mae") texts.push({ cls: "gp-th", x: gx - 12, y: gy - 16, text: `${c.fmt(v)}억`, fill: c.color, anchor: "end" });
+    });
+  });
+
+  /* 범례 */
+  COLS.forEach((c, ci) => {
+    const ly = TOP + 30 + ci * 38, lx = X0 + 20;
+    lines.push({ x1: lx, y1: ly - 8, x2: lx + 46, y2: ly - 8, stroke: c.color, sw: 5 });
+    texts.push({ cls: "gp-th", x: lx + 58, y: ly, text: `${c.name} (${c.key === "wol" ? "오른쪽" : "왼쪽"} 축 · ${c.unit})`, fill: c.color, anchor: "start" });
+  });
+
+  /* 정부 이름 + 재임 구간 */
+  bands.forEach((g) => {
+    const cxg = (g.x1 + g.x2) / 2, narrow = g.x2 - g.x1 < 150;
+    texts.push({ cls: "gp-name", x: cxg, y: BOT + 44, text: g.name, fill: g.now ? RED : INK, anchor: "middle" });
+    if (!narrow) texts.push({ cls: "gp-tick", x: cxg, y: BOT + 74, text: `${g.from.slice(2, 4)}.${+g.from.slice(5)} ~`, fill: MUTE, anchor: "middle" });
+  });
+  const H = BOT + 100;
+  return { vb: `0 0 1000 ${H}`, rects, texts, lines, paths, areas, dots, faces,
+           wm: { x: X0 + (X1 - X0) * 0.30, y: BOT - 112, size: 30, text: "@wirit_note", fill: INK, opacity: 0.10, anchor: "middle" } };
+}
+
+/* 시안 E 는 x축을 박근혜 출범(2013-02)부터 자른다 — 그래서 **시작값이 다르다**.
+ * 다른 시안의 제목(2015.7 기준 5.4억)을 그대로 쓰면 카드의 그림과 글이 어긋난다. */
+const E_START = "2013-02";
+const eFirst = {
+  mae: mae[E_START] / 100000, jeon: jeon[E_START] / 100000,
+  wol: wol[Object.keys(wol).sort()[0]] / 10, wolFrom: first.when,
+};
+const TITLE_E =
+  `<span class="tl"><img class="tlogo" src="${seoulHref}" alt="" />정부가 네 번 바뀌는 동안</span>` +
+  `<span class="tl">서울 아파트 <span class="hi">${eFirst.mae.toFixed(1)}억 → ${now.mae.toFixed(1)}억</span></span>`;
+const NOTE_E =
+  `${E_START.slice(2, 4)}.${+E_START.slice(5)} → ${now.when} · 매매 <b>${eFirst.mae.toFixed(1)} → ${now.mae.toFixed(1)}억</b> · ` +
+  `전세 <i>${eFirst.jeon.toFixed(1)} → ${now.jeon.toFixed(1)}억</i> · 월세 ${Math.round(eFirst.wol)} → ${Math.round(now.wol)}만원(${eFirst.wolFrom} 집계 시작)<br>` +
+  `※ 점선 = 조사 표본이 바뀌어 금액만 튄 달 · 품질조정 지수로는 매매 ${multIdx.mae.toFixed(1)} · 전세 ${multIdx.jeon.toFixed(1)} · 월세 ${multIdx.wol.toFixed(1)}배`;
+
+const VARIANTS = { a: variantA, b: variantB, c: variantC, d: variantD, e: variantE };
 const argv = process.argv.slice(2);
-const picks = argv.filter((a) => /^[abcd]$/.test(a));
+const picks = argv.filter((a) => /^[abcde]$/.test(a));
 const date = argv.find((a) => /^\d{4}-\d{2}-\d{2}$/.test(a)) ||
   new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const outDir = join(ROOT, "data/content", date);
 mkdirSync(outDir, { recursive: true });
 
-for (const v of (picks.length ? picks : ["a", "b", "c", "d"])) {
+for (const v of (picks.length ? picks : ["a", "b", "c", "d", "e"])) {
   const card = {
     template: "gov-price-grid@1",
     date,
     badge: `오늘의 주요 부동산 이슈 (${date.replace(/-/g, ".")})`,
-    title: TITLE,
+    title: v === "e" ? TITLE_E : TITLE,
     chart: VARIANTS[v](),
-    note: NOTE,
+    note: v === "e" ? NOTE_E : NOTE,
     source: SOURCE,
   };
   writeFileSync(join(outDir, `gov-price-${v}.json`), JSON.stringify(card, null, 2) + "\n");

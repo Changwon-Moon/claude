@@ -68,7 +68,7 @@
           </defs>
           {{#if chart.wm}}<text x="{{chart.wm.x}}" y="{{chart.wm.y}}" font-size="{{chart.wm.size}}" font-weight="900" fill="{{chart.wm.fill}}" opacity="{{chart.wm.opacity}}" text-anchor="{{chart.wm.anchor}}">{{chart.wm.text}}</text>{{/if}}
           {{#each chart.rects}}<rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" rx="{{rx}}" fill="{{fill}}"{{#if opacity}} opacity="{{opacity}}"{{/if}} />{{/each}}
-          {{#each chart.faces}}<circle cx="{{cx}}" cy="{{cy}}" r="{{ring}}" fill="{{ringFill}}" /><image href="{{href}}" x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" clip-path="url(#{{id}})" preserveAspectRatio="xMidYMid slice" />{{/each}}
+          {{#each chart.faces}}{{#if ring}}<circle cx="{{cx}}" cy="{{cy}}" r="{{ring}}" fill="{{ringFill}}" />{{/if}}<image href="{{href}}" x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}" clip-path="url(#{{id}})" preserveAspectRatio="xMidYMid slice"{{#if opacity}} opacity="{{opacity}}"{{/if}} />{{/each}}
           {{#each chart.areas}}<polygon points="{{points}}" fill="{{fill}}" />{{/each}}
           {{#each chart.paths}}<polyline points="{{points}}" fill="none" stroke="{{stroke}}" stroke-width="{{sw}}" stroke-linejoin="round" stroke-linecap="round"{{#if dash}} stroke-dasharray="{{dash}}"{{/if}} />{{/each}}
           {{#each chart.dots}}<circle cx="{{cx}}" cy="{{cy}}" r="{{r}}" fill="{{fill}}" stroke="{{stroke}}" stroke-width="{{sw}}" />{{/each}}
