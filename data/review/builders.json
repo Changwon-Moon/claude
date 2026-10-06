@@ -7964,13 +7964,14 @@
         "59",
         "--kapt",
         "A10025541",
+        "--accept-supply-warn",
         "--accept-cycle-guard",
         "--publish"
       ],
       "produces": [
         "singo-신흥덕롯데캐슬레이시티-59"
       ],
-      "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 6.9억 vs 지난 고점 6.75억(2021.12) 2.2% — 09-16 이후 오너 기준(2026-10-07)."
+      "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 6.9억 vs 지난 고점 6.75억(2021.12) 2.2% — 09-16 이후 오너 기준(2026-10-07). ⚠️ --accept-supply-warn: 전용률 68.1%(대장 공급 87.49㎡ → 26평) — 오너가 26평 확인(2026-10-07)."
     }
   ]
 }
