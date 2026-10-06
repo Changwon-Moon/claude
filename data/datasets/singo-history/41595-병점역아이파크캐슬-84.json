@@ -5,13 +5,13 @@
     "aptNm": "병점역아이파크캐슬",
     "type": "84",
     "from": "202001",
-    "to": "202609",
-    "monthsTried": 81,
+    "to": "202610",
+    "monthsTried": 82,
     "monthsFailed": 0,
-    "monthsTraded": 46,
+    "monthsTraded": 47,
     "peak": {
-      "manwon": 95000,
-      "date": "2026-09-19",
+      "manwon": 103000,
+      "date": "2026-10-01",
       "area": 84.98,
       "floor": 22
     },
@@ -746,6 +746,15 @@
       "area": 84.98,
       "floor": 22,
       "date": "2026-09-19",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": 103000,
+      "count": 3,
+      "area": 84.98,
+      "floor": 22,
+      "date": "2026-10-01",
       "ok": true
     }
   ]
