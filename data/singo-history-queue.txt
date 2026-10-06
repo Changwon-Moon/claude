@@ -31,7 +31,7 @@ lawd=41171 umd=안양동 type=84 apt="주공뜨란채(아)"
 lawd=11320 umd=창동 type=59 apt="동아청솔"
 lawd=41595 umd=병점동 type=59 apt="병점역아이파크캐슬"
 lawd=41463 umd=신갈동 type=59 apt="신흥덕롯데캐슬레이시티"
-lawd=41192 umd=중동 type=59 apt="보람마을(아주)" force=1
+lawd=41192 umd=중동 type=59 apt="보람마을(아주)"
 
 lawd=41465 umd=풍덕천동 type=59 apt="수지삼성4차" force=1
 
