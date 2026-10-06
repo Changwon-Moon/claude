@@ -321,15 +321,119 @@ function variantC() {
            wm: { x: 330, y: C0 + CH + CGAP + 112, size: 30, text: "@wirit_note", fill: INK, opacity: 0.11, anchor: "middle" } };
 }
 
-const VARIANTS = { a: variantA, b: variantB, c: variantC };
+/* ── 시안 D: 표 + **곡선 셋을 한 판에** + 정부 구간 밴드 ───────────────────────
+ * ⚠️ 단위가 다른 세 계열을 한 판에 겹치는 일 — 축을 둘 두되 **둘 다 0에서 시작**하고
+ *    눈금선을 공유한다. 왼쪽 억원, 오른쪽 만원. 축척은 1억 = 20만원으로 못 박아
+ *    눈금선 세 줄이 5·10·15억 = 100·200·300만원으로 **딱 떨어지게** 잡는다.
+ *    (오른쪽 축을 임의로 늘려 선을 예쁘게 겹치는 짓은 길이로 하는 거짓말이다)
+ * ⚠️ 지수화(첫 시점=100)는 쓰지 않는다 — 평균 금액에는 표본 개편 단절이 섞여 있어
+ *    '몇 배 올랐나' 그림이 그 자체로 과장이 된다(2026-10-07 발견). 수준을 그대로 그린다. */
+function variantD() {
+  const allMonths = Object.keys(mae).sort();
+  const M0 = mi(allMonths[0]), M1 = mi(latest);
+  const SPAN = M1 - M0;
+  const X0 = 86, X1 = 918;
+  const px = (ym) => Math.round(X0 + (mi(ym) - M0) / SPAN * (X1 - X0));
+
+  const rects = [], texts = [], lines = [], paths = [], areas = [], dots = [], faces = [];
+
+  /* ① 표 — 시안 C 와 같은 규격 */
+  const CX = [250, 500, 748, 1000];
+  texts.push({ cls: "gp-th", x: 0, y: 26, text: "시점", fill: MUTE, anchor: "start" });
+  COLS.forEach((c, ci) => texts.push({ cls: "gp-th", x: CX[ci + 1], y: 26, text: `${c.name} (${c.unit})`, fill: c.color, anchor: "end" }));
+  lines.push({ x1: 0, y1: 42, x2: 1000, y2: 42, stroke: "rgba(20,24,33,0.16)", sw: 2 });
+  const RH = 48, R0 = 42;
+  rows.forEach((r, ri) => {
+    const y = R0 + ri * RH;
+    if (r.now) rects.push({ x: -8, y: y + 3, w: 1016, h: RH - 4, rx: 12, fill: RED_SOFT });
+    else if (ri % 2 === 1) rects.push({ x: -8, y: y + 3, w: 1016, h: RH - 4, rx: 12, fill: "rgba(20,24,33,0.035)" });
+    texts.push({ cls: "gp-th", x: 0, y: y + 34, text: `${r.name} ${r.when}`, fill: r.now ? RED : INK, anchor: "start" });
+    COLS.forEach((c, ci) => texts.push({
+      cls: r.now ? "gp-tdb" : "gp-td", x: CX[ci + 1], y: y + 36,
+      text: c.fmt(r[c.key]), fill: r.now ? c.color : INK, anchor: "end",
+    }));
+  });
+
+  /* ② 한 판에 겹친 곡선 셋 */
+  const TOP = R0 + rows.length * RH + 56, PH = 404, BOT = TOP + PH;
+  const WON_PER_EOK = 20;                                  // 1억 = 20만원 (축 두 개를 묶는 자)
+  const LMAX = Math.ceil(Math.max(...rows.map((r) => Math.max(r.mae, r.jeon))) / 5) * 5;
+  const RMAX = LMAX * WON_PER_EOK;
+  if (Math.max(...rows.map((r) => r.wol)) > RMAX) throw new Error("월세가 오른쪽 축을 넘는다 — 1억=20만원 축척을 다시 잡아라");
+  const yL = (v) => BOT - (v / LMAX) * PH;                  // 억원
+  const yR = (v) => BOT - (v / RMAX) * PH;                  // 만원
+
+  /* 정부 구간 밴드 */
+  const bandEdges = GOVS.map((g, i) => ({
+    ...g,
+    x1: Math.max(X0, px(g.from < allMonths[0] ? allMonths[0] : g.from)),
+    x2: i + 1 < GOVS.length ? px(GOVS[i + 1].from) : X1,
+  })).filter((g) => g.x2 > g.x1);
+  bandEdges.forEach((g, gi) => rects.push({
+    x: g.x1, y: TOP, w: g.x2 - g.x1, h: PH, rx: 0,
+    fill: g.now ? "rgba(229,72,77,0.09)" : (gi % 2 ? "rgba(20,24,33,0.05)" : "rgba(20,24,33,0.022)"),
+  }));
+  bandEdges.slice(1).forEach((g) => lines.push({ x1: g.x1, y1: TOP, x2: g.x1, y2: BOT, stroke: "rgba(20,24,33,0.16)", sw: 2 }));
+
+  /* 눈금선 — 왼쪽 억원과 오른쪽 만원이 같은 줄을 쓴다 */
+  for (let v = LMAX / 3; v <= LMAX + 0.001; v += LMAX / 3) {
+    const gy = Math.round(yL(v));
+    lines.push({ x1: X0, y1: gy, x2: X1, y2: gy, stroke: "rgba(20,24,33,0.10)", sw: 2 });
+    texts.push({ cls: "gp-tick", x: X0 - 12, y: gy + 7, text: `${Math.round(v)}`, fill: MUTE, anchor: "end" });
+    texts.push({ cls: "gp-tick", x: X1 + 12, y: gy + 7, text: `${Math.round(v * WON_PER_EOK)}`, fill: MUTE, anchor: "start" });
+  }
+  lines.push({ x1: X0, y1: BOT, x2: X1, y2: BOT, stroke: "rgba(20,24,33,0.22)", sw: 2 });
+
+  /* 표본 개편 점선 */
+  breaks.forEach((b) => lines.push({ x1: px(b.ym), y1: TOP + 4, x2: px(b.ym), y2: BOT - 4,
+                                     stroke: "rgba(20,24,33,0.42)", sw: 2.5, dash: "7 6" }));
+
+  /* 곡선 — 매매·전세는 왼쪽 축, 월세는 오른쪽 축 */
+  COLS.forEach((c) => {
+    const series = MONEY[c.key];
+    const scale = c.key === "wol" ? 10 : 100000;
+    const yf = c.key === "wol" ? yR : yL;
+    const months = Object.keys(series).sort().filter((m) => mi(m) >= M0 && mi(m) <= M1);
+    const vals = months.map((m) => series[m] / scale);
+    const pts = months.map((m, i) => `${px(m)},${Math.round(yf(vals[i]))}`).join(" ");
+    paths.push({ points: pts, stroke: c.color, sw: 5 });
+    const lx = px(months[months.length - 1]), ly = Math.round(yf(vals[vals.length - 1]));
+    dots.push({ cx: lx, cy: ly, r: 9, fill: "#fff", stroke: c.color, sw: 5 });
+    texts.push({ cls: "gp-th", x: lx + 14, y: ly + 8, text: c.fmt(vals[vals.length - 1]), fill: c.color, anchor: "start" });
+    if (c.key === "wol") {
+      /* 곡선 옆에 붙이면 다른 선과 겹친다 — 바닥 빈 자리에 눈금처럼 둔다 */
+      lines.push({ x1: px(months[0]), y1: BOT - 46, x2: px(months[0]), y2: BOT, stroke: "rgba(20,24,33,0.3)", sw: 2 });
+      texts.push({ cls: "gp-tick", x: px(months[0]) + 10, y: BOT - 16, text: `월세 ${months[0].slice(2, 4)}.${+months[0].slice(5)} 집계 시작`, fill: MUTE, anchor: "start" });
+    }
+  });
+
+  /* 범례 — 어느 선이 어느 축인지 분명히 */
+  COLS.forEach((c, ci) => {
+    const ly = TOP + 26 + ci * 38, lx = X0 + 22;
+    lines.push({ x1: lx, y1: ly - 8, x2: lx + 46, y2: ly - 8, stroke: c.color, sw: 5 });
+    texts.push({ cls: "gp-th", x: lx + 58, y: ly, text: `${c.name} (${c.key === "wol" ? "오른쪽" : "왼쪽"} 축 · ${c.unit})`, fill: c.color, anchor: "start" });
+  });
+
+  /* ③ 정부 이름 띠 */
+  const LY = BOT + 10;
+  bandEdges.forEach((g) => {
+    if (g.x2 - g.x1 < 52) return;   // 이보다 좁으면 이름이 옆 칸을 침범한다
+    texts.push({ cls: "gp-tick", x: (g.x1 + g.x2) / 2, y: LY + 24, text: g.name, fill: g.now ? RED : MUTE, anchor: "middle" });
+  });
+  const H = LY + 42;
+  return { vb: `0 0 1000 ${H}`, rects, texts, lines, paths, areas, dots, faces,
+           wm: { x: X0 + (X1 - X0) * 0.74, y: BOT - 84, size: 30, text: "@wirit_note", fill: INK, opacity: 0.10, anchor: "middle" } };
+}
+
+const VARIANTS = { a: variantA, b: variantB, c: variantC, d: variantD };
 const argv = process.argv.slice(2);
-const picks = argv.filter((a) => /^[abc]$/.test(a));
+const picks = argv.filter((a) => /^[abcd]$/.test(a));
 const date = argv.find((a) => /^\d{4}-\d{2}-\d{2}$/.test(a)) ||
   new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const outDir = join(ROOT, "data/content", date);
 mkdirSync(outDir, { recursive: true });
 
-for (const v of (picks.length ? picks : ["a", "b", "c"])) {
+for (const v of (picks.length ? picks : ["a", "b", "c", "d"])) {
   const card = {
     template: "gov-price-grid@1",
     date,
