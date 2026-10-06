@@ -23,7 +23,7 @@ lawd=11560 umd=신길동 type=59 apt="신길센트럴자이아파트"
 lawd=41450 umd=선동 type=84 apt="미사강변 센트리버"
 lawd=41173 umd=호계동 type=59 apt="평촌센텀퍼스트"
 lawd=41410 umd=산본동 type=84 apt="래미안하이어스"
-lawd=41597 umd=송동 type=84 apt="동탄2하우스디더레이크" force=1
+lawd=41597 umd=송동 type=84 apt="동탄2하우스디더레이크"
 lawd=11410 umd=남가좌동 type=59 apt="남가좌동현대"
 lawd=41360 umd=다산동 type=84 apt="다산신안인스빌퍼스트포레" force=1
 lawd=41595 umd=병점동 type=84 apt="병점역아이파크캐슬" force=1
