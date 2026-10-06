@@ -5,15 +5,15 @@
     "aptNm": "병점역아이파크캐슬",
     "type": "59",
     "from": "202001",
-    "to": "202608",
-    "monthsTried": 80,
+    "to": "202610",
+    "monthsTried": 82,
     "monthsFailed": 0,
-    "monthsTraded": 31,
+    "monthsTraded": 33,
     "peak": {
-      "manwon": 78000,
-      "date": "2026-08-22",
+      "manwon": 82000,
+      "date": "2026-10-02",
       "area": 59.89,
-      "floor": 12
+      "floor": 14
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -737,6 +737,24 @@
       "area": 59.89,
       "floor": 12,
       "date": "2026-08-22",
+      "ok": true
+    },
+    {
+      "ym": "202609",
+      "maxManwon": 76000,
+      "count": 1,
+      "area": 59.89,
+      "floor": 15,
+      "date": "2026-09-04",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": 82000,
+      "count": 1,
+      "area": 59.89,
+      "floor": 14,
+      "date": "2026-10-02",
       "ok": true
     }
   ]
