@@ -30,7 +30,7 @@ lawd=11440 umd=상암동 type=84 apt="상암월드컵파크9단지"
 lawd=11530 umd=개봉동 type=59 apt="한마을"
 lawd=11290 umd=석관동 type=59 apt="두산"
 lawd=11290 umd=하월곡동 type=59 apt="월곡두산위브"
-lawd=11230 umd=전농동 type=59 apt="전농우성" force=1
+lawd=11230 umd=전농동 type=59 apt="전농우성"
 lawd=11320 umd=창동 type=59 apt="동아청솔" force=1
 lawd=11410 umd=홍은동 type=84 apt="홍은동벽산" force=1
 
