@@ -31,7 +31,7 @@ lawd=11530 umd=개봉동 type=59 apt="한마을"
 lawd=11290 umd=석관동 type=59 apt="두산"
 lawd=11290 umd=하월곡동 type=59 apt="월곡두산위브"
 lawd=11230 umd=전농동 type=59 apt="전농우성"
-lawd=11320 umd=창동 type=59 apt="동아청솔" force=1
+lawd=11320 umd=창동 type=59 apt="동아청솔"
 lawd=11410 umd=홍은동 type=84 apt="홍은동벽산" force=1
 
 lawd=11560 umd=신길동 type=59 apt="신길센트럴자이아파트"
