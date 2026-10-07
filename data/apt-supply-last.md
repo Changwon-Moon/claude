@@ -1,6 +1,6 @@
 # 단지 공급면적 — 마지막 실행
 
-- 성공 1건 · 실패 5건 · 미룸 0줄
+- 성공 0건 · 실패 5건 · 미룸 0줄
 - 결과는 Actions 로그가 아니라 이 파일과 data/datasets/apt-supply/ 에서 본다
 - 미리 채우기 오늘 몫 250/250건 · 내일로 미룬 135줄 (상한은 실패가 아니다)
 
@@ -38,19 +38,6 @@ Exit status 1
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13202312 --area 84.87`
 Exit status 1
-── A15209002 전용 59.57
-🧹 force=1 을 지웠습니다 — kapt=A15209002 area=59.57   # 개봉 한마을 전용59 — 옛 파일이라 지하주차장 21.
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A15209002 --area 59.57
-
-▶ 개봉한마을 (A15209002) · 전용 59.57㎡ · 11530-10700 · 지번 후보 476
-   지번 476 (0476-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A15209002-59.json
-   전유 59.57 + 주거공용 15.069 = 공급 74.64㎡ = 22.58평 → **23평**
-   표본: 108동 1601호 (같은 전용 호 210개) · 전용률 79.8%
-     · 아파트 / 계단,복도,엘리베이터 [1~25층] 14.82
-     · 아파트 / 전기실,기계실 [지2~지1] 0.249
 ── A13204105 전용 84.41
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
