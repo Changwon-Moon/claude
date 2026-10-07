@@ -5,15 +5,15 @@
     "aptNm": "상암월드컵파크9단지",
     "type": "84",
     "from": "202001",
-    "to": "202609",
-    "monthsTried": 81,
+    "to": "202610",
+    "monthsTried": 82,
     "monthsFailed": 0,
-    "monthsTraded": 40,
+    "monthsTraded": 41,
     "peak": {
-      "manwon": 118500,
-      "date": "2026-08-28",
-      "area": 84.89,
-      "floor": 15
+      "manwon": 122000,
+      "date": "2026-10-03",
+      "area": 84.98,
+      "floor": 10
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -746,6 +746,15 @@
       "area": null,
       "floor": null,
       "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": 122000,
+      "count": 1,
+      "area": 84.98,
+      "floor": 10,
+      "date": "2026-10-03",
       "ok": true
     }
   ]
