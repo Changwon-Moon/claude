@@ -189,7 +189,12 @@
         "file": "sangok-xi-hillstate.jpg",
         "credit": "출처. 산곡역자이힐스테이트&하늘채 홈페이지",
         "provided": "2026-10-08 오너 제공 조감도(1100×618). 원본은 _source/sangok-xi-hillstate.jpg. 단지를 키우려고 (60,150)-(840,618) 780×468 을 잘랐다 — 오른쪽 상가동 끝과 위쪽 하늘을 덜어냈다."
-      }
+      },
+      "hiAreas": [
+        84
+      ],
+      "titleHtml": "<span class=\"hi\">인천</span>도 신축 분양가 <span class=\"hi\">10억</span>시대",
+      "_titleNote": "오너 지시 2026-10-08: 제목 「인천도 신축 분양가 10억시대」, 84B 에도 코발트. 근거는 84B 최고가 10억 3,200만원(청약홈 공고 상세)."
     },
     {
       "id": "acro-de-seocho",

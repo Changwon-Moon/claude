@@ -3072,15 +3072,15 @@
     },
     {
       "label": "danji-sangok",
-      "title": "🏗 7호선 산곡역 아파트 분양가 7억대? (산곡역자이힐스테이트&하늘채)",
+      "title": "🏗 인천도 신축 분양가 10억시대 (산곡역자이힐스테이트&하늘채)",
       "cards": [
         "danji-sangok"
       ],
       "caption": "danji-sangok",
-      "note": "분양 예정 판형(danji-cover@1 · presale). 면적대별 최고가 4칸 — 공급금액은 청약홈 공고 상세(2026000458, 공고 2026-10-08)의 주택형별 「공급금액 최고가」를 세션이 직접 읽었다(9개 주택형, 세대수 합 1,289 = 공급규모). 청약홈 API 에 아직 안 실려 applyhomeNo 를 떼고 scheduleSource 로 일정을 썼다(상동역 08-14 절차) — 실리면 복원. 총 2,706세대·20개동·33층은 GS건설 보도자료. 로고 없음(3사 컨소시엄). 조감도는 오너 제공 1100×618 에서 780×468 크롭.",
-      "state": "시안",
+      "note": "분양 예정 판형(danji-cover@1 · presale). 면적대별 최고가 4칸 — 공급금액은 청약홈 공고 상세(2026000458, 공고 2026-10-08)의 주택형별 「공급금액 최고가」를 세션이 직접 읽었다(9개 주택형, 세대수 합 1,289 = 공급규모). 청약홈 API 에 아직 안 실려 applyhomeNo 를 떼고 scheduleSource 로 일정을 썼다(상동역 08-14 절차) — 실리면 복원. 총 2,706세대·20개동·33층은 GS건설 보도자료. 로고 없음(3사 컨소시엄). 조감도는 오너 제공 1100×618 에서 780×468 크롭. / 오너 지시 2026-10-08: 제목 「인천도 신축 분양가 10억시대」(titleHtml) · 84B 칸도 코발트(hiAreas [84]).",
+      "state": "오너 확정",
       "publishGate": "없음 — 공급금액 청약홈 공고 상세 대조 완료. 오너 확정 대기.",
-      "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
+      "pixelPolicy": "정기물 — data/datasets/applyhome-latest.json,data/datasets/silv,data/datasets/molit 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다(같은 데이터면 같은 픽셀이라는 결정성으로 보증)",
       "captionCrossCheck": [
         {
           "value": "2,706",
@@ -3126,6 +3126,10 @@
           "value": "103,200",
           "why": "84㎡ 최고가(84B)"
         }
+      ],
+      "confirmedAt": "2026-10-08",
+      "confirmedMd5": [
+        "danji-sangok:6c60660c3589"
       ]
     }
   ]
