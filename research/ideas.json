@@ -2094,6 +2094,20 @@
       "at": "2026-10-07"
     },
     {
+      "id": "ah-remndr-2026930041",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 세종 리더스포레 나릿재마을 1단지",
+      "why": "세종 · 1세대 · 접수 ~2026-10-12(D-4) · 47점(광역시·무순위·D-4)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-10-12",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930041&pblancNo=2026930041",
+      "at": "2026-10-08"
+    },
+    {
       "id": "ah-remndr-2026910250",
       "cat": "hot",
       "topic": "부동산",
@@ -2122,17 +2136,59 @@
       "at": "2026-10-08"
     },
     {
-      "id": "ah-remndr-2026930041",
+      "id": "ah-apt-2026000463",
       "cat": "todo",
       "topic": "부동산",
       "feed": "auto",
-      "title": "[줍줍] 세종 리더스포레 나릿재마을 1단지",
-      "why": "세종 · 1세대 · 접수 ~2026-10-12(D-4) · 47점(광역시·무순위·D-4)",
+      "title": "[신규분양] 향남역 그로브 스위첸",
+      "why": "경기 · 933세대 · 접수 ~2026-10-14(D-6) · 44점(수도권·933가구·D-6)",
       "source": "한국부동산원 청약홈 API",
       "state": "",
       "status": "",
-      "deadline": "2026-10-12",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930041&pblancNo=2026930041",
+      "deadline": "2026-10-14",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000463&pblancNo=2026000463",
+      "at": "2026-10-08"
+    },
+    {
+      "id": "ah-remndr-2026930039",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 탕정 푸르지오 리버파크",
+      "why": "충남 · 3세대 · 접수 ~2026-10-07 · 43점(무순위·푸르지오)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-10-07",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930039&pblancNo=2026930039",
+      "at": "2026-10-08"
+    },
+    {
+      "id": "ah-apt-2026820010",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[신규분양] 인천계양 A17블록 신혼희망타운(공공분양)(본청약)",
+      "why": "인천 · 309세대 · 접수 ~2026-10-27(D-19) · 42점(수도권·분양가상한제)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-10-27",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820010&pblancNo=2026820010",
+      "at": "2026-10-08"
+    },
+    {
+      "id": "ah-apt-2026000494",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[신규분양] 더샵 동인센트리체",
+      "why": "대구 · 314세대 · 접수 ~2026-10-14(D-6) · 40점(광역시·D-6·더샵)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-10-14",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000494&pblancNo=2026000494",
       "at": "2026-10-08"
     }
   ]
