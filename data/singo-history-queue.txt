@@ -29,7 +29,7 @@ lawd=41310 umd=교문동 type=84 apt="덕현"
 lawd=41465 umd=풍덕천동 type=59 apt="수지삼성4차"
 lawd=11530 umd=구로동 type=84 apt="구로두산위브"
 lawd=41113 umd=곡반정동 type=59 apt="수원하늘채더퍼스트2단지"
-lawd=41410 umd=산본동 type=59 apt="세종" force=1
+lawd=41410 umd=산본동 type=59 apt="세종"
 
 lawd=41135 umd=서현동 type=84 apt="시범현대"
 lawd=11410 umd=북가좌동 type=84 apt="DMC래미안e편한세상"
