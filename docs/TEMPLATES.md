@@ -75,6 +75,17 @@
 > 지우면 그 판형으로 낸 발행본을 **다시 그릴 수 없다**. 읽는 부담도 없다(이 표만 보면 된다).
 <!-- template-usage -->
 
+### 시안 단계 빌더 — 사람이 부른다 (발행 단위 등록 전)
+
+오너 판단을 기다리는 시안 빌더다. `builders.json` 에 넣지 않은 것은 **판이 아직 안 정해져서**지
+버려서가 아니다. 판이 정해지면 그 판 하나만 등록하고 나머지 갈래는 지운다.
+
+| 빌더 | 판형 | 쓰는 법 | 시작 |
+|---|---|---|---|
+| `scripts/build-gov-price.mjs` | `gov-price-grid@1` | `node scripts/build-gov-price.mjs [a\|b] [날짜]` — a 격자 · b 지표별 막대, 없으면 둘 다 | 2026-10-06 |
+| `scripts/build-streak-top5.mjs` | `streak-top5@1` | `node scripts/build-streak-top5.mjs [a\|b\|c] [날짜]` — a 나비형 · b 좌우 세로막대 · c 좌우 가로막대, 없으면 셋 다 | 2026-10-04 |
+
+
 ---
 
 ## 1. 렌더링 방식

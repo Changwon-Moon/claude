@@ -24,3 +24,5 @@ within=14 min=40 digest=1
 within=14 min=40 digest=1
 # 2026-09-17 철산자이 브리에르 불법행위 재공급(공고 9/17) — 청약홈에 올라왔는지 확인
 within=7 min=40 digest=1 grep=철산
+# 2026-10-08 산곡역자이힐스테이트&하늘채(2026000458, 공고 10/8) — 청약홈 수집분에 넣기
+within=7 min=40 digest=1 grep=산곡
