@@ -1,0 +1,85 @@
+{
+  "label": "danji-sangok",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 2,706억 허용 — 총 세대수(조합원 등 포함) — 카드 아래 한 줄과 같은 값. GS건설 보도자료"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 685억 허용 — 특별공급 세대수 합 — 청약홈 공고 상세 공급대상 표"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 604억 허용 — 일반공급 세대수 합 — 같은 표"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 156억 허용 — 50㎡ 세대수(50A 112 + 50B 44)"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 854억 허용 — 59㎡ 세대수(59A 307 + 59B 334 + 59C 213)"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 196억 허용 — 75㎡ 세대수(75A 136 + 75B 60)"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 83억 허용 — 84㎡ 세대수(84A 20 + 84B 63)"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 56,000억 허용 — 50㎡ 최고가(50B)의 만원 단위"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 78,000억 허용 — 59㎡ 최고가(59B)"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 93,000억 허용 — 75㎡ 최고가(75B)"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 103,200억 허용 — 84㎡ 최고가(84B)"
+    }
+  ],
+  "cards": [
+    {
+      "file": "danji-sangok.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}
