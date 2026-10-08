@@ -25,7 +25,7 @@ lawd=11290 umd=길음동 type=59 apt="래미안길음센터피스"
 lawd=41117 umd=하동 type=84 apt="광교호수마을호반써밋"
 lawd=41111 umd=정자동 type=59 apt="화서역파크푸르지오"
 lawd=11230 umd=이문동 type=59 apt="대림e-편한세상"
-lawd=41310 umd=교문동 type=84 apt="덕현" force=1
+lawd=41310 umd=교문동 type=84 apt="덕현"
 lawd=41465 umd=풍덕천동 type=59 apt="수지삼성4차" force=1
 lawd=11530 umd=구로동 type=84 apt="구로두산위브"
 lawd=41113 umd=곡반정동 type=59 apt="수원하늘채더퍼스트2단지" force=1
