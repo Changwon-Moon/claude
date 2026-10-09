@@ -21,6 +21,9 @@
 # ⚡ 2026-10-07 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-10-08 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-10-09 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+# ⚡ 2026-10-10 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+lawd=41133 umd=하대원동 type=59 apt="아튼빌"
+
 lawd=11290 umd=길음동 type=59 apt="래미안길음센터피스"
 lawd=41117 umd=하동 type=84 apt="광교호수마을호반써밋"
 lawd=41111 umd=정자동 type=59 apt="화서역파크푸르지오"
