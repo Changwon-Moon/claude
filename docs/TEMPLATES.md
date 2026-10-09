@@ -17,7 +17,7 @@
 | 판형 | 상태 | 쓰는 세트 |
 |---|---|---|
 | `brand-rank-grid` | 🟢 1세트 | brand-rank |
-| `danji-cover` | 🟢 15세트 | danji-hangang, danji-songdo, danji-jangwi 외 12 |
+| `danji-cover` | 🟢 16세트 | danji-hangang, danji-songdo, danji-jangwi 외 13 |
 | `daso-treemap` | 🟢 1세트 | daso-treemap |
 | `foreign-rank` | 🟢 1세트 | foreign-rank |
 | `gov-bars` | 🟢 1세트 | m2-gov |
@@ -42,7 +42,7 @@
 | `rise-story` | 🟢 2세트 | tohuh-rise, tohuh-rise-dots |
 | `seongsu-zones` | 🟢 1세트 | seongsu-zones |
 | `sinbundang-loop` | 🟢 1세트 | sinbundang-loop |
-| `singo-record` | 🟢 38세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 35 |
+| `singo-record` | 🟢 39세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 36 |
 | `singoga-map` | 🟢 4세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map 외 1 |
 | `streak-line` | 🟢 22세트 | mae-streak, jeonse-streak, m2-gap 외 19 |
 | `supply-progress` | 🟢 1세트 | supply-progress |
