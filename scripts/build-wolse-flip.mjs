@@ -169,7 +169,9 @@ const points = yearRows.map((r) => {
           hEst: pctOf(estAdd),
           totalH: pctOf(estFull),
           /* 정사각 2줄 뱃지(오너 지시 6차) — 알약형 1줄은 막대보다 넓어 곡선과 겹쳤다 */
-          tag: ["하반기", "추정"],
+          /* 꼬리표는 남은 기간에 맞춘다 — 6월까지면 '하반기', 그 뒤면 '연말'.
+           * 8월 공표분에서 '하반기 추정'이라 쓰면 9~12월을 하반기라 부르는 셈이다. */
+          tag: [monthsDone === 6 ? "하반기" : "연말", "추정"],
           /* 오너 지시: 실측(6월까지) 값도 그래프에 표기. 추정 막대가 위에 쌓여도
            * **어디까지가 실측인지** 숫자로 보인다. */
           solidValue: `${bare(r.v)}`,
@@ -221,14 +223,21 @@ const ly = (v) => Y_BOT - ((v - lMin) / (lMax - lMin || 1)) * (Y_BOT - Y_TOP);
 const LABEL_YEARS = [2020, lastYear];
 const labelMonths = [{ m: lineMonths[0], anchor: "s" }];
 for (const y of LABEL_YEARS) {
-  const m = `${y}-06`;
+  /* 마지막 해는 **최신 공표월**을 단다(2026-10-09 교정).
+   * 6월로 못 박아 두었더니 8월 공표분에서 곡선 끝(102.2)이 아니라 기준월 값(100.0)이 찍혔다 —
+   * 좌측 '역사상 최고 102.2' 카드와 곡선 끝 뱃지가 서로 다른 숫자를 말하게 된다. */
+  const m = y === lastYear ? asOf : `${y}-06`;
+  /* 뱃지의 **가로 자리**는 6월 위치를 넘지 않는다. 끝점 뱃지는 점 왼쪽(.l)으로 눕는데,
+   * 8월 공표분처럼 끝점이 칸 안쪽으로 들어가면 뱃지 오른쪽이 추정 막대에 1px 물린다(검수 BLOCK).
+   * 높이·숫자는 최신월을 따르고, 가로만 6월 자리에 묶는다. */
+  const xm = y === lastYear && asOf > `${y}-06` ? `${y}-06` : m;
   if (m <= asOf && at(wolse, m) != null)
-    labelMonths.push({ m, ...(y === lastYear ? { anchor: "l" } : {}) });
+    labelMonths.push({ m, xm, ...(y === lastYear ? { anchor: "l" } : {}) });
 }
 const indexLine = {
   points: lineMonths.map((m) => `${lx(m).toFixed(1)},${ly(wolse[m]).toFixed(1)}`).join(" "),
-  labels: labelMonths.map(({ m, anchor }) => ({
-    x: `${(lx(m) / 10).toFixed(2)}%`,
+  labels: labelMonths.map(({ m, xm, anchor }) => ({
+    x: `${(lx(xm || m) / 10).toFixed(2)}%`,
     y: `${(ly(wolse[m]) / 10).toFixed(2)}%`,
     /* 원형 뱃지 안에 들어가야 하니 **소수 한 자리**다(둘째 자리까지 쓰면 6글자라 원을 넘친다).
      * 카드의 103.9 와도 같은 자릿수 — 한 카드 안에서 정밀도가 엇갈리면 독자가 의심한다. */
@@ -363,6 +372,12 @@ const seoulJ = pct(at(jeonse, BASE), at(jeonse, asOf));
 const h1W = pct(at(wolse, `${lastYear - 1}-12`), at(wolse, asOf));
 const h1J = pct(at(jeonse, `${lastYear - 1}-12`), at(jeonse, asOf));
 
+/* 기간을 부르는 말도 데이터에서 만든다(2026-10-09 교정).
+ * "반년 만에"·"상반기"는 6월 공표분에서만 참이다. 8월 공표분에서 그대로 나가면
+ * 8개월을 반년이라 부르는 셈이 된다 — 숫자는 맞는데 말이 틀린다. */
+const doneWord = monthsDone === 6 ? "반년" : `${monthsDone}개월`;
+const restWord = monthsDone === 6 ? "남은 반년" : `남은 ${12 - monthsDone}개월`;
+const ytdWord = monthsDone === 6 ? "올해 상반기" : `올해 1~${monthsDone}월`;
 const half = Math.ceil(guRows.length / 2); // 13 / 12
 const toItem = (r) => ({
   rank: String(r.rank),
@@ -446,15 +461,15 @@ const caption = nl(
     : `사상 최고는 ${ymKo(peak)}의 ${idx1(peak)}입니다.`,
   ``,
   /* 추정치는 캡션에서도 실측과 갈라 놓는다 — 카드의 점선 막대와 같은 이야기 */
-  `올해는 반년 만에 이미 ${sign1(partialRow.v)}입니다.`,
-  `남은 반년이 같은 속도라면 연간 ${bare(estFull)}% —`,
+  `올해는 ${doneWord} 만에 이미 ${sign1(partialRow.v)}입니다.`,
+  `${restWord}이 같은 속도라면 연간 ${bare(estFull)}% —`,
   `카드의 점선 막대가 그 추정치입니다.`,
   `⚠️ 산술 가정(${monthsDone}개월 실측 × ${mulTxt})일 뿐이고,`,
   `   계절성·정책 변화는 반영하지 않았습니다.`,
   ``,
   /* 약점을 우리 입으로 먼저 말한다. 숫자까지 붙여야 신뢰가 된다. */
   `한 가지 덧붙이면, 전세도 같이 오르고 있습니다.`,
-  `올해 상반기 전세 ${sign1(h1J)} / 월세 ${sign1(h1W)}.`,
+  `${ytdWord} 전세 ${sign1(h1J)} / 월세 ${sign1(h1W)}.`,
   /* ⚠️ 인스타 캡션은 마크다운을 못 쓴다 — **강조**를 넣으면 별표가 그대로 보인다 */
   `'월세만' 오른 게 아니라, 월세가 ${posRows.length}년째 한 방향이라는 게 이 카드의 요점입니다.`,
   ``,

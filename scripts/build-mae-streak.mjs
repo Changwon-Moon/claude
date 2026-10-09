@@ -13,7 +13,7 @@
  *
  * 실행: node scripts/build-mae-streak.mjs
  */
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { makeRebCalendar } from "./lib/reb-week.mjs";
@@ -169,13 +169,92 @@ const bgImage = { href: seoulHref, x: Math.round(505 - LOGO_W / 2), y: 200, w: L
 /* 범례 아래 빈 공간에 계정 아이디 워터마크(BRAND §4b 슬롯 C — @wirit_note·잉크 옅게) */
 const wm = { x: 150, y: 418, size: 40, text: "@wirit_note", fill: INK, opacity: 0.14, anchor: "start" };
 
+/* ── 대통령 얼굴(연하게) — 오너 지시 2026-10-09 ─────────────────────────────────
+ * 현재 상승기(빨강) 누적률 라벨 아래 = 이재명 · 역대 최장(회색) 라벨 아래 회색 영역 안 = 문재인.
+ * 자리는 **눈대중이 아니라 계산**한다. 데이터가 한 주만 바뀌어도 곡선이 움직이고,
+ * 손으로 박은 좌표는 그 순간 얼굴이 선을 가르거나 숫자를 덮는다.
+ *   이재명: 빨강 곡선 **아래** · 회색 곡선 **위** (빨강만 칠해진 띠 안)
+ *   문재인: 회색 곡선 **아래** · 0선 **위** (회색 칠 안)
+ * 두 원 모두 누적률 라벨·범례·세로 점선·서울 로고·워터마크와 겹치지 않게 고른다.
+ * ⚠️ 문재인 얼굴은 '역대 최장 85주' 구간(2020.6~2022.1)이 文정부 임기 안이라 사실과 맞는다.
+ *    이재명 얼굴은 현재 상승기에 얹지만, 이 구간은 **2025.2 시작**이라 출범(2025.6)보다 넉 달 이르다 —
+ *    범례의 시작 주가 그 사실을 그대로 보여 준다(숨기지 않는다). */
+const photoUri = (file) => {
+  const p = join(ROOT, "templates/_shared/photos", file);
+  return existsSync(p) ? "data:image/png;base64," + readFileSync(p).toString("base64") : null;
+};
+const toPts = (arr) => arr.map((s) => s.split(",").map(Number));
+const interp = (pts) => (x) => {
+  if (x < pts[0][0] || x > pts[pts.length - 1][0]) return null;
+  for (let i = 1; i < pts.length; i++) {
+    if (x <= pts[i][0]) { const [x0, y0_] = pts[i - 1], [x1, y1] = pts[i]; return y0_ + (y1 - y0_) * ((x - x0) / (x1 - x0 || 1)); }
+  }
+  return pts[pts.length - 1][1];
+};
+const yRed = interp(toPts(curCurve)), yGray = interp(toPts(recCurve));
+const VL_W = (t) => t.length * 0.62 * 54, VL_ASC = 44, VL_DESC = 10;   // .sl-vl 54px 근사
+const boxOfVL = (v) => {
+  const w = VL_W(v.text), x0 = v.anchor === "end" ? v.x - w : v.anchor === "middle" ? v.x - w / 2 : v.x;
+  return { x0, x1: x0 + w, y0: v.y - VL_ASC, y1: v.y + VL_DESC };
+};
+const OBST = [
+  ...vlabels.map(boxOfVL),
+  { x0: 100, x1: 760, y0: 70, y1: 268 },                                                      // 범례 두 줄
+  { x0: bgImage.x, x1: bgImage.x + bgImage.w, y0: bgImage.y, y1: bgImage.y + bgImage.h },     // 서울 로고
+  { x0: wm.x - 6, x1: wm.x + 330, y0: wm.y - 40, y1: wm.y + 8 },                               // @wirit_note
+];
+const hitsBox = (fx, fy, R, b, m) => {
+  const nx = Math.max(b.x0, Math.min(fx, b.x1)), ny = Math.max(b.y0, Math.min(fy, b.y1));
+  return (fx - nx) ** 2 + (fy - ny) ** 2 < (R + m) ** 2;
+};
+/** 띠 안에 들어가는 가장 큰 원을 찾는다. upper/lower = 원 위·아래 경계 함수(x→y) */
+function fitCircle({ upper, lower, prefX, xMax, avoid = [], Rmax = 132, Rmin = 56, M = 14 }) {
+  let best = null;
+  for (let R = Rmax; R >= Rmin; R -= 4) {
+    for (let fx = AXIS_X + R + M; fx <= xMax - R; fx += 6) {
+      for (let fy = TOP + R; fy <= y0 - R; fy += 6) {
+        let ok = true;
+        for (let sx = fx - R; sx <= fx + R && ok; sx += 6) {
+          const half = Math.sqrt(Math.max(0, R * R - (sx - fx) ** 2));
+          const up = upper(sx), lo = lower(sx);
+          if (up == null || lo == null) { ok = false; break; }
+          if (fy - half < up + M || fy + half > lo - M) ok = false;
+        }
+        if (!ok) continue;
+        if ([...OBST, ...avoid].some((b) => hitsBox(fx, fy, R, b, M))) continue;
+        const score = -Math.abs(fx - prefX) - fy * 0.15;          // 라벨 바로 아래 · 가능한 한 위쪽
+        if (!best || score > best.score) best = { fx, fy, R, score };
+      }
+    }
+    if (best) return best;   // 가장 큰 R 에서 찾았으면 거기서 멈춘다
+  }
+  return null;
+}
+const vlCur = boxOfVL(vlabels[0]), vlRec = boxOfVL(vlabels[1]);
+const markX = Math.min(cx, rx) - 8;                                   // 세로 점선 왼쪽까지만
+const leeFit = fitCircle({ upper: yRed, lower: yGray, prefX: (vlCur.x0 + vlCur.x1) / 2, xMax: markX });
+/* 두 얼굴은 **같은 크기**로 — 크기가 다르면 한쪽을 강조하는 것처럼 읽힌다.
+ * 빨강 띠가 더 좁아서(곡선과 +7.71% 라벨 사이) 이재명 쪽 최대 크기에 문재인을 맞춘다. */
+const moonArgs = {
+  upper: yGray, lower: () => y0, prefX: (vlRec.x0 + vlRec.x1) / 2, xMax: markX,
+  avoid: leeFit ? [{ x0: leeFit.fx - leeFit.R, x1: leeFit.fx + leeFit.R, y0: leeFit.fy - leeFit.R, y1: leeFit.fy + leeFit.R }] : [],
+};
+const moonFit = (leeFit && fitCircle({ ...moonArgs, Rmax: leeFit.R, Rmin: leeFit.R })) || fitCircle(moonArgs);
+const FACE_OPACITY = 0.2;
+const faces = [];
+for (const [fit, file, id, who] of [[leeFit, "lee-jaemyung-face.png", "faceLee", "이재명"], [moonFit, "moon-jaein-face.png", "faceMoon", "문재인"]]) {
+  const href = photoUri(file);
+  if (!fit || !href) { console.warn(`⚠️  ${who} 얼굴 자리를 못 찾았다(또는 사진 없음) — 얼굴 없이 그린다`); continue; }
+  faces.push({ id, cx: fit.fx, cy: fit.fy, r: fit.R, href, x: fit.fx - fit.R, y: fit.fy - fit.R, w: fit.R * 2, h: fit.R * 2, opacity: FACE_OPACITY });
+}
+
 const card = {
   template: "streak-line@1",
   date,
   badge: `오늘의 주요 부동산 이슈 (${date.replace(/-/g, ".")})`,
   title: `<span class="tl"><img class="tlogo" src="${seoulHref}" alt="" />서울 아파트 <span class="hi">${curWeeks}주 연속</span> 상승</span>` +
          `<span class="tl">이미 文정부의 <span class="hi">${ratio.toFixed(1)}배</span> 상승</span>`,
-  chart: { vb: `0 0 1000 ${VB_H}`, bgImage, wm, base: { y: y0, x1: AXIS_X, x2: RIGHT }, grid, areas, ylabels, yunit, vmarks, polylines, dots, vlabels, xlabels, arrow, legend },
+  chart: { vb: `0 0 1000 ${VB_H}`, bgImage, wm, base: { y: y0, x1: AXIS_X, x2: RIGHT }, grid, areas, faces, ylabels, yunit, vmarks, polylines, dots, vlabels, xlabels, arrow, legend },
   /* 마무리 문구는 국면에 맞춘다(오보 0) — 남음 / 타이 / 신기록 */
   note: gap > 0 ? `역사상 최장 기간 연속 상승까지, 단 <b>${gap}주</b>`
        : gap === 0 ? `역사상 최장 기간 연속 상승과 <b>타이</b>`
