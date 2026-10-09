@@ -10,11 +10,7 @@
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41133 --apt '아튼빌' --umd '하대원동' --type 59 --from 202001
 
-아튼빌 · 전용 59타입 · 41133 · 202001~202610 (82개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41133-아튼빌-59.json
-거래 있던 달 53/82 · 수집 실패 0개월
-📦 캐시에서 79개월 · 국토부에 물은 것 3개월
-최고가 7.8억 (2026-09-23 · 전용 59.91㎡ 16층)
+⏭ 이미 있음 — 41133-아튼빌-59.json (다시 받으려면 force=1)
 
 ── 래미안길음센터피스 전용 59타입 (11290)
 
