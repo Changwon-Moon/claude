@@ -1,6 +1,6 @@
 # 단지 공급면적 — 마지막 실행
 
-- 성공 2건 · 실패 5건 · 미룸 0줄
+- 성공 0건 · 실패 5건 · 미룸 0줄
 - 결과는 Actions 로그가 아니라 이 파일과 data/datasets/apt-supply/ 에서 본다
 - 미리 채우기 오늘 몫 250/250건 · 내일로 미룬 134줄 (상한은 실패가 아니다)
 
@@ -11,7 +11,7 @@
 > tsx src/supplyAreaCli.ts -- --kapt A13971502 --area 84.2
 
 ▶ 상계주공3단지 (A13971502) · 전용 84.2㎡ · 11350-10500 · 지번 후보 730-2
-   지번 730-2 (0730-0002) · 대지 → 줄 200개
+   지번 730-2 (0730-0002) · 대지 → 줄 382개
 ::error::전용 84.2㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 730-2) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13971502 --area 84.2`
@@ -22,7 +22,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A13971502 --area 84.2
 
 ▶ 상계주공3단지 (A13971502) · 전용 84.2㎡ · 11350-10500 · 지번 후보 730-2
-   지번 730-2 (0730-0002) · 대지 → 줄 300개
+   지번 730-2 (0730-0002) · 대지 → 줄 382개
 ::error::전용 84.2㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 730-2) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13971502 --area 84.2`
@@ -33,48 +33,19 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A13202312 --area 84.87
 
 ▶ 방학신동아1단지 (A13202312) · 전용 84.87㎡ · 11320-10600 · 지번 후보 643, 271-1
-   지번 643 (0643-0000) · 대지 → 줄 0개
-   지번 271-1 (0271-0001) · 대지 → 줄 1814개
-::error::전용 84.87㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 271-1) — 파일을 만들지 않습니다
+   지번 643 (0643-0000) · 대지 → 줄 29개
+::error::전용 84.87㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 643) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13202312 --area 84.87`
 Exit status 1
-── A47170801 전용 84.57
-🧹 force=1 을 지웠습니다 — kapt=A47170801 area=84.57   # 구리 덕현 84 — 08-28 옛 파일, 지하대피소 5
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A47170801 --area 84.57
-
-▶ 구리덕현 (A47170801) · 전용 84.57㎡ · 41310-10400 · 지번 후보 808
-   지번 808 (0808-0000) · 대지 → 줄 900개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A47170801-84.json
-   전유 84.57 + 주거공용 13.169 = 공급 97.74㎡ = 29.57평 → **30평**
-   표본: 104동 1003호 (같은 전용 호 52개) · 전용률 86.5%
-     · 부대시설 / 계단,복도 [각층] 13.169
-── A10023989 전용 59.96
-🧹 force=1 을 지웠습니다 — kapt=A10023989 area=59.96   # 수원하늘채더퍼스트2단지 59 — 08-31 옛 파일, 
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A10023989 --area 59.96
-
-▶ 수원하늘채더퍼스트2단지 (A10023989) · 전용 59.96㎡ · 41113-13600 · 지번 후보 654
-   지번 654 (0654-0000) · 대지 → 줄 500개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A10023989-59.json
-   전유 59.96 + 주거공용 23.64 = 공급 83.6㎡ = 25.29평 → **25평**
-   표본: 203동 1004 (같은 전용 호 12개) · 전용률 71.7%
-     · 아파트 / 계단실,승강기,홀 [지상 각층] 18.1503
-     · 아파트 / 벽체 [지상 10층] 5.49
 ── A13204105 전용 84.41
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
 > tsx src/supplyAreaCli.ts -- --kapt A13204105 --area 84.41
 
 ▶ 창동주공3단지 (A13204105) · 전용 84.41㎡ · 11320-10700 · 지번 후보 347
-   지번 347 (0347-0000) · 대지 → 줄 0개
-::error::지번 후보 347 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
-   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
-   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
-   --jibun 으로 대지 지번을 직접 주세요.
+   지번 347 (0347-0000) · 대지 → 줄 300개
+::error::전용 84.41㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 347) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13204105 --area 84.41`
 Exit status 1
@@ -85,9 +56,11 @@ Exit status 1
 
 ▶ 창동주공19단지 (A13290107) · 전용 60.5㎡ · 11320-10700 · 지번 후보 663-1, 685-222, 27
    지번 663-1 (0663-0001) · 대지 → 줄 0개
-   지번 685-222 (0685-0222) · 대지 → 줄 0개
-   지번 27 (0027-0000) · 대지 → 줄 2342개
-::error::전용 60.5㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 27) — 파일을 만들지 않습니다
+::error::663-1 1쪽 실패 — {
+  "OpenAPI_ServiceResponse": {
+    "cmmMsgHeader": {
+      "errMsg": "SERVICETIMEOUT_ERROR",
+      "returnAuthMsg": "서
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13290107 --area 60.5`
 Exit status 1
