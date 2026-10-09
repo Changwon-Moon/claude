@@ -194,7 +194,7 @@ ${bullets}
 
 그런데 속도로 보면 이야기가 달라집니다.
 현 정부는 ${cur.months}개월 만에 ${num(cur.delta)}조가 늘었습니다.
-월평균 ${cur.rate.toFixed(1)}조 — ${moon.name} 정부(${moon.rate.toFixed(1)}조)의 ${r1(cur.rate / moon.rate)}배입니다.
+월평균 ${cur.rate.toFixed(1)}조 — ${moon.name} 정부(${moon.rate.toFixed(1)}조)의 ${m.speedRatio ? `약 ${m.speedRatio.shown}배(${m.speedRatio.exact}배)` : `${r1(cur.rate / moon.rate)}배`}입니다.
 
 임기 길이가 제각각이라 총액보다 월평균이 더 정확한 비교입니다.
 
@@ -217,7 +217,10 @@ ${m.lastMonth.largestDropSince.slice(0, 4)}년 집계 이후 한 달 감소폭�
 ※ 한국은행이 2025년 12월 통화지표를 개편해 수익증권 등을 M2에서 제외했습니다.
    이 카드는 정부 간 비교를 위해 전 구간을 개편 전 기준으로 통일했습니다.
 ※ 얼굴 아래 개월 수는 실제 재임 기간, 월평균은 데이터 구간 기준입니다.
-※ ${ymLabel(cur.end)} 기준 M2 총량은 ${num(m.shown.level)}조입니다(개편 전 기준, 개편 후 기준은 ${num(m.shown.levelNewBasis)}조).${est ? `
+${m.shown.levelYm && m.shown.levelYm !== m.shown.latestYm
+  ? `※ 카드 왼쪽 ${num(m.shown.level)}조는 ${ymLabel(m.shown.levelYm)} 기준 M2 총량으로, 집계 이후 가장 높았던 달입니다(개편 전 기준, 개편 후 기준은 ${num(m.shown.levelNewBasis)}조).
+   최신 ${ymLabel(m.shown.latestYm)}은 ${num(m.shown.latest)}조입니다.`
+  : `※ ${ymLabel(cur.end)} 기준 M2 총량은 ${num(m.shown.level)}조입니다(개편 전 기준, 개편 후 기준은 ${num(m.shown.levelNewBasis)}조).`}${est ? `
 ※ 카드 왼쪽 회색 글씨 약 ${num(est.shown)}조는 예상치입니다 — 한국은행이 발표한 값이 아닙니다.
    ${ymLabel(cur.end)}까지의 실적 ${num(est.ytd)}조 ÷ ${est.monthsDone}개월 = 월 ${est.perMonth}조를 남은 ${est.remMonths}개월에 그대로 더하면 ${num(est.exact)}조이고,
    카드에는 ${est.roundTo}조 단위로 반올림해 적었습니다. 통화정책·자금흐름이 바뀌면 달라집니다.` : ""}

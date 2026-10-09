@@ -241,15 +241,26 @@ const est = (() => {
    막대는 '정부별로 얼마나 늘었나'만 말한다. 그 늘어난 돈이 쌓인 **현재 총량**은 다른 축이라
    막대로 그리면 안 되고(높이가 통째로 달라진다), 빈 자리에 글자로 둔다.
    기준은 카드 전체와 같은 개편 전 계열(구 M2). 값은 원자료의 최신월. */
+/* 좌상단 강조 블록은 **집계 이후 최고치인 달**을 보여 준다(오너 지시 2026-10-09).
+   7월에 M2 가 36.1조 줄어 최신월(4,795조)이 6월(4,831조)보다 낮아졌다 — 오너가 높은 쪽을 골랐다.
+   손으로 "202606" 을 적지 않는다: 다음 달에 새 최고가 나오면 그 달로 자동으로 옮겨 간다.
+   라벨에 그 달을 그대로 적으므로(「2026.06 기준」) 최신월로 오독되지 않는다. */
+const levelYm = months.reduce((a, b) => (M2[b] > M2[a] ? b : a));
+
+/* 최하단 배수는 **정수로 반올림**해 적는다(오너 지시 2026-10-09: "그냥 2배 속도로").
+   정확한 소수 배수는 meta.speedRatio 에 남기고 캡션이 함께 적는다. */
+const SPEED_RATIO = rows[rows.length - 1].rate / rows.find((r) => r.name === "문재인").rate;
+const SPEED_X = Math.round(SPEED_RATIO);
+
 const level = {
   x: 8,
   y: r1(TOP - 26),
   /* 줄마다 크기가 달라 **줄 간격도 줄마다** 준다(한 값으로 두면 큰 글자가 위 줄을 먹는다).
      dy 는 "앞 줄 baseline 에서 이만큼 내려온다"는 뜻이다. */
   lines: [
-    { t: `${ymLabel(lastYm)} 기준`, fill: GRAY, size: 26, weight: 800, dy: 0 },
+    { t: `${ymLabel(levelYm)} 기준`, fill: GRAY, size: 26, weight: 800, dy: 0 },
     { t: "M2(광의통화)", fill: GRAY, size: 26, weight: 800, dy: 32 },
-    { t: `${Math.round(M2[lastYm]).toLocaleString("ko-KR")}조`, fill: RED, size: 52, weight: 900, dy: 60 },
+    { t: `${Math.round(M2[levelYm]).toLocaleString("ko-KR")}조`, fill: RED, size: 52, weight: 900, dy: 60 },
     /* 아래 두 줄이 추정이다 — 위 실측(레드)과 색·크기로 갈린다 */
     ...(est
       ? [{ t: `'${lastYm.slice(2, 4)}년 말 예상 약 ${est.shown.toLocaleString("ko-KR")}조`, fill: GRAY, size: 32, weight: 800, dy: 52 }]
@@ -292,7 +303,7 @@ const card = {
      ⚠️ 분자는 `maxRate` 가 아니라 **현 정부**다. 문장이 "현 정부"라고 말하므로 숫자도 현 정부여야 한다 —
      최고 속도로 두면 현 정부가 1위가 아니게 되는 달에 문장이 조용히 거짓이 된다(QA 지적 2026-08-12).
      ".0" 은 떼고 적는다 — "2.0배"는 소수 자리가 뜻을 갖는 것처럼 읽힌다. */
-  note: `<b>현 정부</b> 통화량 증가속도는 문 정부 대비 <b>${(rows[rows.length - 1].rate / rows.find((r) => r.name === "문재인").rate).toFixed(1).replace(/\.0$/, "")}배 속도</b>`,
+  note: `<b>현 정부</b> 통화량 증가속도는 문 정부 대비 <b>${SPEED_X}배 속도</b>`,
   source: { name: "한국은행 ECOS(M2 평잔·원계열, 개편 전 기준)", asOf: ymLabel(lastYm) },
   meta: {
     verified: true,
@@ -316,7 +327,9 @@ const card = {
         largestDropSince: drops.length && drops[0].ym === lastYm ? months[0] : null,
       };
     })(),
-    shown: { level: Math.round(M2[lastYm]), levelNewBasis: NEW && lastYm in NEW ? Math.round(NEW[lastYm]) : null },
+    shown: { level: Math.round(M2[levelYm]), levelNewBasis: NEW && levelYm in NEW ? Math.round(NEW[levelYm]) : null,
+      levelYm, levelIsPeak: true, latest: Math.round(M2[lastYm]), latestYm: lastYm },
+    speedRatio: { exact: r1(SPEED_RATIO), shown: SPEED_X },
     overlapCheckMaxDiff: r1(worst),
     /* 카드에 찍은 추정치와 그 산술 가정 — 캡션이 이걸 그대로 옮겨 적는다 */
     yearEndEstimate: est
