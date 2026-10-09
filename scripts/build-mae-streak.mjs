@@ -208,10 +208,13 @@ const hitsBox = (fx, fy, R, b, m) => {
   return (fx - nx) ** 2 + (fy - ny) ** 2 < (R + m) ** 2;
 };
 /** 띠 안에 들어가는 가장 큰 원을 찾는다. upper/lower = 원 위·아래 경계 함수(x→y) */
-function fitCircle({ upper, lower, prefX, xMax, avoid = [], Rmax = 132, Rmin = 56, M = 14 }) {
+function fitCircle({ upper, lower, prefX, xMax, avoid = [], Rmax = 132, Rmin = 56, M = 14, xOnly = null }) {
   let best = null;
   for (let R = Rmax; R >= Rmin; R -= 4) {
-    for (let fx = AXIS_X + R + M; fx <= xMax - R; fx += 6) {
+    const xs = [];
+    if (xOnly != null) { if (xOnly - R >= AXIS_X + M && xOnly + R <= xMax) xs.push(xOnly); }
+    else for (let fx = AXIS_X + R + M; fx <= xMax - R; fx += 6) xs.push(fx);
+    for (const fx of xs) {
       for (let fy = TOP + R; fy <= y0 - R; fy += 6) {
         let ok = true;
         for (let sx = fx - R; sx <= fx + R && ok; sx += 6) {
@@ -239,13 +242,26 @@ const moonArgs = {
   upper: yGray, lower: () => y0, prefX: (vlRec.x0 + vlRec.x1) / 2, xMax: markX,
   avoid: leeFit ? [{ x0: leeFit.fx - leeFit.R, x1: leeFit.fx + leeFit.R, y0: leeFit.fy - leeFit.R, y1: leeFit.fy + leeFit.R }] : [],
 };
-const moonFit = (leeFit && fitCircle({ ...moonArgs, Rmax: leeFit.R, Rmin: leeFit.R })) || fitCircle(moonArgs);
+/* 오너 지시(2026-10-09 2차): 문재인 얼굴을 이재명 얼굴 **바로 아래 같은 세로줄**에.
+ * 먼저 이재명과 같은 x 로 맞춰 보고(가로 자리 고정, 세로만 찾는다), 그 줄에 안 들어가면
+ * 가까운 자리로 물러난다 — 숫자·곡선을 덮느니 줄을 조금 어긋나게 두는 편이 낫다. */
+const moonFit =
+  (leeFit && fitCircle({ ...moonArgs, Rmax: leeFit.R, Rmin: leeFit.R, prefX: leeFit.fx, xOnly: leeFit.fx })) ||
+  (leeFit && fitCircle({ ...moonArgs, Rmax: leeFit.R, Rmin: leeFit.R, prefX: leeFit.fx })) ||
+  fitCircle(moonArgs);
+if (leeFit && moonFit && moonFit.fx !== leeFit.fx) console.warn(`⚠️  문재인 얼굴이 이재명과 같은 세로줄에 안 들어간다(${moonFit.fx} vs ${leeFit.fx}) — 가장 가까운 자리로 옮겼다`);
 const FACE_OPACITY = 0.2;
+/* 테두리 — 각 얼굴이 어느 곡선의 사람인지 **곡선 색으로** 묶는다. 두 원은 같은 굵기·같은 농도(같은 결). */
+const FACE_RING = { sw: 5, strokeOpacity: 0.75 };
 const faces = [];
-for (const [fit, file, id, who] of [[leeFit, "lee-jaemyung-face.png", "faceLee", "이재명"], [moonFit, "moon-jaein-face.png", "faceMoon", "문재인"]]) {
+for (const [fit, file, id, who, ring] of [
+  [leeFit, "lee-jaemyung-face.png", "faceLee", "이재명", RED],
+  [moonFit, "moon-jaein-face.png", "faceMoon", "문재인", SLATE],
+]) {
   const href = photoUri(file);
   if (!fit || !href) { console.warn(`⚠️  ${who} 얼굴 자리를 못 찾았다(또는 사진 없음) — 얼굴 없이 그린다`); continue; }
-  faces.push({ id, cx: fit.fx, cy: fit.fy, r: fit.R, href, x: fit.fx - fit.R, y: fit.fy - fit.R, w: fit.R * 2, h: fit.R * 2, opacity: FACE_OPACITY });
+  faces.push({ id, cx: fit.fx, cy: fit.fy, r: fit.R, href, x: fit.fx - fit.R, y: fit.fy - fit.R, w: fit.R * 2, h: fit.R * 2,
+               opacity: FACE_OPACITY, stroke: ring, ...FACE_RING });
 }
 
 const card = {
