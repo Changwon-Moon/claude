@@ -212,6 +212,12 @@ const card = {
     provenance: `${raw.legacyM2.itemCode ?? "BBHA16"}([참고] 구 M2) 단일 계열 — 접합 없음`,
     basis: "개편 전 기준(구 M2). 2030년 값은 예측이며 한국은행 발표값이 아니다",
     range: { from: firstYm, to: lastYm, months: hist.length },
+    /* 「한 번도 안 줄었다」류 문장은 **세어서만** 쓴다. 2026-09-01 캡션에 그 문장이 계산 없이
+       들어가 있었는데 실제로는 14번 줄었다(2026-10-09 발견). */
+    monthlyDecreases: (() => {
+      const d = hist.slice(1).map((m, i) => OLD[m] - OLD[hist[i]]);
+      return { count: d.filter((x) => x < 0).length, of: d.length };
+    })(),
     current: { ym: lastYm, shown: shownJo(cur) },
     projection: {
       toYm: TO_YM,

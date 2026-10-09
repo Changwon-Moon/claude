@@ -29,8 +29,31 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 /** 겹치는 달의 허용 오차(조원). 접합 근거는 "값이 같다"이므로 사실상 0 이어야 한다. */
 const OVERLAP_TOL = 0.05;
 
+/**
+ * `--asof YYYYMM` — 그 달까지만 쓴다(그 뒤 자료는 없는 것으로 친다).
+ *
+ * ── 왜 있나 (2026-10-09)
+ * 7월 자료가 들어오자 구 M2 가 처음으로 크게 줄었다(-36.1조). 그러자 6월 자료로 만든 시안 둘의
+ * **제목이 거짓이 됐다** — 「사라진 621조」(최대 격차)·「12.3% 4년 만의 최고」. 빌더 가드가 제대로
+ * 막았지만, 그 바람에 확정 절차(전 카드 재생성)가 통째로 멈췄다. 오너가 다시 볼 때까지
+ * 시안을 **오너가 본 그대로** 묶어 두는 손잡이다. builders.json 의 args 에 적는다.
+ * ⚠️ 확정·발행 카드에 쓰지 않는다 — 정기물이 최신 자료를 안 따라가는 것은 그 자체가 낡은 정보다.
+ */
+const ASOF = (() => {
+  const i = process.argv.indexOf("--asof");
+  const v = i >= 0 ? process.argv[i + 1] : null;
+  if (v != null && !/^\d{6}$/.test(v)) throw new Error(`--asof 는 YYYYMM 이어야 한다(받은 값: ${v})`);
+  return v;
+})();
+
 export function loadM2() {
   const raw = JSON.parse(readFileSync(join(ROOT, "data/datasets/m2-monthly.json"), "utf8"));
+  if (ASOF) {
+    const cut = (rows) => rows.filter((r) => r.ym <= ASOF);
+    raw.series = cut(raw.series ?? []);
+    raw.legacyM2 = { ...raw.legacyM2, series: cut(raw.legacyM2.series) };
+    for (const k of Object.keys(raw.others ?? {})) raw.others[k] = { ...raw.others[k], series: cut(raw.others[k].series) };
+  }
   if (!raw.legacyM2) throw new Error("m2-monthly.json 에 legacyM2([참고] 구 M2)가 없다 — ECOS 수집을 먼저 돌린다");
   if (!raw.others?.["101Y004"]) throw new Error("m2-monthly.json 에 구지표 표(101Y004)가 없다");
 
@@ -59,7 +82,8 @@ export function loadM2() {
   const months = Object.keys(M2).sort();
   const lastYm = months[months.length - 1];
 
-  return { raw, M2, OLD, PRE, NEW, months, lastYm, worst, overlapMonths: overlap.length };
+  if (ASOF && lastYm !== ASOF) throw new Error(`--asof ${ASOF} 인데 그 달 자료가 없다(마지막 ${lastYm})`);
+  return { raw, M2, OLD, PRE, NEW, months, lastYm, worst, overlapMonths: overlap.length, asof: ASOF };
 }
 
 /** "202606" → "2026.06" */

@@ -289,7 +289,7 @@
       "cmd": "scripts/build-m2-gov.mjs",
       "args": [
         "--publish",
-        "2026-09-01"
+        "2026-10-09"
       ]
     },
     {
@@ -1788,7 +1788,9 @@
       "cmd": "scripts/build-m2-gap.mjs",
       "args": [
         "--publish",
-        "2026-09-01"
+        "2026-09-01",
+        "--asof",
+        "202606"
       ]
     },
     {
@@ -1796,7 +1798,9 @@
       "cmd": "scripts/build-m2-rate.mjs",
       "args": [
         "--publish",
-        "2026-09-01"
+        "2026-09-01",
+        "--asof",
+        "202606"
       ]
     },
     {
@@ -1804,7 +1808,9 @@
       "cmd": "scripts/build-m2-trend.mjs",
       "args": [
         "--publish",
-        "2026-09-01"
+        "2026-09-01",
+        "--asof",
+        "202606"
       ]
     },
     {

@@ -143,7 +143,9 @@ function capTrend(m) {
   return `2030년 통화량은 얼마가 되어 있을까요 💵
 
 ${kor(m.range.to)} 대한민국 M2(광의통화)는 ${num(m.current.shown)}조입니다.
-${m.range.from.slice(0, 4)}년 이후 한 번도 줄어든 적이 없습니다.
+${m.monthlyDecreases.count === 0
+  ? `${m.range.from.slice(0, 4)}년 이후 ${m.monthlyDecreases.of}개월 동안 한 번도 줄어든 적이 없습니다.`
+  : `${m.range.from.slice(0, 4)}년 이후 ${m.monthlyDecreases.of}개월 중 전월보다 줄어든 달은 ${m.monthlyDecreases.count}번뿐입니다.`}
 
 📊 앞으로 ${p.years}년, 두 가지 속도로 재봤습니다
 · ${lo.name} 연 ${lo.rate}% → ${num(lo.shown)}조
@@ -198,7 +200,11 @@ ${bullets}
 
 ⚡ ${pk.inCurrentTerm ? `특히 ${kor(pk.ym)} 한 달에만 ${pk.delta.toFixed(1)}조가 늘었습니다.\n${firstYm.slice(0, 4)}년 집계 이후 한 달 증가폭 1위입니다.` : `한 달 증가폭 1위는 ${kor(pk.ym)}의 ${pk.delta.toFixed(1)}조입니다.`}
 
-${est ? `📈 '${est.ym.slice(2, 4)}년 말 예상 약 ${num(est.shown)}조
+${m.lastMonth && m.lastMonth.delta < 0 ? `📉 다만 ${kor(m.lastMonth.ym)}에는 전월보다 ${Math.abs(m.lastMonth.delta).toFixed(1)}조 줄었습니다.${m.lastMonth.largestDropSince ? `
+${m.lastMonth.largestDropSince.slice(0, 4)}년 집계 이후 한 달 감소폭으로는 가장 큽니다.` : ""}${m.lastMonth.newBasisDelta != null ? `
+수익증권을 뺀 개편 후 기준으로는 ${m.lastMonth.newBasisDelta >= 0 ? `오히려 ${m.lastMonth.newBasisDelta.toFixed(1)}조 늘었습니다` : `${Math.abs(m.lastMonth.newBasisDelta).toFixed(1)}조 줄었습니다`}.` : ""}
+
+` : ""}${est ? `📈 '${est.ym.slice(2, 4)}년 말 예상 약 ${num(est.shown)}조
 올해 들어 ${num(est.ytd)}조가 늘었습니다(${est.monthsDone}개월, 월평균 ${est.perMonth}조).
 그 속도가 남은 ${est.remMonths}개월에도 이어진다고 본 값입니다.\n` : ""}
 📌 저장해두고 통화량 흐름 확인하기

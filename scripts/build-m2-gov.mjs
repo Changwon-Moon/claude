@@ -303,6 +303,19 @@ const card = {
     /* 최신월 한 달 증가 — 이 카드의 배수가 이 달에 크게 기댄다는 사실을 데이터로 남긴다(오너 인지 2026-08-12) */
     lastMonthDelta: r1(lastDelta),
     peakMonth: { ym: peakMo.ym, delta: r1(peakMo.d), inCurrentTerm: peakInRun },
+    /* 최신월 한 달 변화 — **줄었으면 캡션이 반드시 말한다**(2026-10-09).
+       7월 자료에서 구 M2 가 -36.1조로 처음 크게 줄었다. 지난 발행본(4,771조)과 나란히 보는 독자는
+       "총량이 왜 줄었나"를 묻는다. 신 기준(수익증권 제외) 변화를 함께 남겨 어디서 줄었는지 가른다.
+       「가장 큰 감소」는 전 구간(접합 계열)을 **세어서만** 쓴다. */
+    lastMonth: (() => {
+      const prev = months[months.indexOf(lastYm) - 1];
+      const drops = deltas.filter((x) => x.d < 0).sort((a, b) => a.d - b.d);
+      return {
+        ym: lastYm, delta: r1(lastDelta),
+        newBasisDelta: NEW && lastYm in NEW && prev in NEW ? r1(NEW[lastYm] - NEW[prev]) : null,
+        largestDropSince: drops.length && drops[0].ym === lastYm ? months[0] : null,
+      };
+    })(),
     shown: { level: Math.round(M2[lastYm]), levelNewBasis: NEW && lastYm in NEW ? Math.round(NEW[lastYm]) : null },
     overlapCheckMaxDiff: r1(worst),
     /* 카드에 찍은 추정치와 그 산술 가정 — 캡션이 이걸 그대로 옮겨 적는다 */
