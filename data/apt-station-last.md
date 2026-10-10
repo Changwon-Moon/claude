@@ -4,15 +4,7 @@
 - 결과: **실패**
 
 ```
-
-── A10020950
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A10020950
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A10020950.json
-안양역푸르지오더샵 (주소로 좌표) → 안양역 직선 575m · 노선 1
-   다음: 명학역 1697m
+⏭ 이미 있음 — data/datasets/apt-station/A10020950.json (다시 받으려면 force=1)
 
 ── A10024974
 
