@@ -27,7 +27,7 @@ lawd=11380 umd=응암동 type=59 apt="녹번역e편한세상캐슬"
 lawd=41131 umd=단대동 type=59 apt="단대푸르지오"
 lawd=41171 umd=안양동 type=59 apt="안양역푸르지오더샵"
 lawd=41115 umd=인계동 type=84 apt="수원센트럴아이파크자이"
-lawd=41115 umd=매교동 type=84 apt="힐스테이트푸르지오수원" force=1
+lawd=41115 umd=매교동 type=84 apt="힐스테이트푸르지오수원"
 
 lawd=41133 umd=하대원동 type=59 apt="아튼빌"
 
