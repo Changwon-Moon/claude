@@ -1,9 +1,18 @@
 # 단지 가까운 역 — 마지막 실행
 
-- 대기열: 837줄
+- 대기열: 838줄
 - 결과: **실패**
 
 ```
+
+── A10020950
+
+> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptStationCli.ts -- --kapt A10020950
+
+/home/runner/work/claude/claude/data/datasets/apt-station/A10020950.json
+안양역푸르지오더샵 (주소로 좌표) → 안양역 직선 575m · 노선 1
+   다음: 명학역 1697m
 
 ── A10024974
 
