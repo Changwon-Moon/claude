@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-11T00:36:28.690Z",
+  "generatedAt": "2026-10-11T01:14:24.367Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -282,15 +282,15 @@
         },
         {
           "day": "10-11",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "09:52",
+          "delay": 162
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-10-10",
-      "lastOk": "2026-10-10",
+      "medianDelay": 162,
+      "maxDelay": 162,
+      "lastRun": "2026-10-11",
+      "lastOk": "2026-10-11",
       "okDaysAgo": 0
     },
     {
@@ -1181,9 +1181,9 @@
       "file": "molit-collect.yml",
       "name": "실거래 수집 (국토부)",
       "lastRun": "2026-09-25",
-      "daysAgo": 15,
+      "daysAgo": 16,
       "lastOk": "2026-09-25",
-      "okDaysAgo": 15,
+      "okDaysAgo": 16,
       "fails30": 0,
       "runs30": 3
     },
@@ -1191,9 +1191,9 @@
       "file": "silv-collect.yml",
       "name": "분양권전매 실거래 수집 (국토부)",
       "lastRun": "2026-09-25",
-      "daysAgo": 15,
+      "daysAgo": 16,
       "lastOk": "2026-09-25",
-      "okDaysAgo": 15,
+      "okDaysAgo": 16,
       "fails30": 1,
       "runs30": 4
     },
@@ -1314,7 +1314,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-23",
       "okDaysAgo": 17,
-      "fails30": 28,
+      "fails30": 29,
       "runs30": 100
     }
   ]
