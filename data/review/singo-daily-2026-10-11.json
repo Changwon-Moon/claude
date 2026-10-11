@@ -1,11 +1,17 @@
 {
   "label": "singo-daily-2026-10-11",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 4장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 5장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
       "file": "singo-녹번역e편한세상캐슬-59-1011.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-단대푸르지오-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
