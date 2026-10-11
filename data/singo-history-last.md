@@ -1,9 +1,32 @@
 # 신고가 단지 이력 — 마지막 실행
 
-- 대기열: 486줄
+- 대기열: 488줄
 - 결과: **성공**
 
 ```
+
+── 현대 전용 84타입 (41465)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41465 --apt '현대' --umd '풍덕천동' --type 84 --from 202001
+
+현대 · 전용 84타입 · 41465 · 202001~202610 (82개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41465-현대-84.json
+거래 있던 달 64/82 · 수집 실패 0개월
+📦 캐시에서 79개월 · 국토부에 물은 것 3개월
+최고가 13.5억 (2026-09-28 · 전용 84.51㎡ 11층)
+
+── 수원하늘채더퍼스트1단지 전용 59타입 (41113)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41113 --apt '수원하늘채더퍼스트1단지' --umd '곡반정동' --type 59 --from 202001 --force
+
+수원하늘채더퍼스트1단지 · 전용 59타입 · 41113 · 202001~202610 (82개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41113-수원하늘채더퍼스트1단지-59.json
+거래 있던 달 41/82 · 수집 실패 0개월
+📦 캐시에서 79개월 · 국토부에 물은 것 3개월
+최고가 7.9억 (2026-10-08 · 전용 59.96㎡ 3층)
+🧹 force=1 을 지웠습니다 — lawd=41113 umd=곡반정동 type=59 apt="수원하늘채더퍼스트1단지"
 
 ── 녹번역e편한세상캐슬 전용 59타입 (11380)
 
