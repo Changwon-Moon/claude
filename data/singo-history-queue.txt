@@ -32,7 +32,7 @@ lawd=41173 umd=비산동 type=59 apt="샛별한양4-2"
 lawd=41171 umd=안양동 type=84 apt="아르테자이"
 lawd=41597 umd=산척동 type=59 apt="호수공원역 센트럴시티"
 lawd=41117 umd=매탄동 type=59 apt="매탄위브하늘채"
-lawd=41310 umd=갈매동 type=59 apt="엘에이치이스트힐" force=1
+lawd=41310 umd=갈매동 type=59 apt="엘에이치이스트힐"
 lawd=11260 umd=신내동 type=59 apt="동성1"
 lawd=41461 umd=유방동 type=84 apt="용인보평역서희스타힐스리버파크"
 lawd=41461 umd=김량장동 type=59 apt="용인드마크데시앙"
