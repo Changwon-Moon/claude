@@ -568,6 +568,13 @@ const shortAxis = () => {
       text: i === 0 ? YEAR_LAB : `${Number(pts[i].ym.slice(4))}월`,
     });
   if (step > 1) console.log(`   ⓘ 신축 판형 — 창이 ${pts.length}개월이라 눈금을 ${step}개월마다 적습니다(겹침 방지).`);
+  /* ── 첫 라벨이 왼쪽 판을 넘으면 **왼쪽 끝에 붙인다** (2026-10-13 용인드마크데시앙)
+   *  「2025년 10월」처럼 두 자리 달이 붙으면 가운데 정렬로는 X0 왼쪽으로 삐져나간다.
+   *  여백(X0)을 키우면 모든 카드의 곡선 폭이 바뀌므로, 이 한 라벨만 start 정렬로 옮긴다. */
+  if (out.length && out[0].x - widthOfRough(out[0].text) / 2 < 4) {
+    out[0] = { ...out[0], anchor: "start", x: 4, tick: out[0].x };
+    console.log(`   ⓘ 첫 눈금 「${out[0].text}」이 넓어 왼쪽 끝에 붙였습니다.`);
+  }
   return out;
 };
 const widthOfRough = (text, size = 24) => text.length * size * 0.62;
@@ -585,14 +592,18 @@ const widthOf = (text, size) => text.length * size * 0.62;
    모자란 것이니 던진다 — 끝만 슬쩍 밀어 붙이면 간격이 어긋나 보인다(오너가 바로 알아봤다). */
 for (const a of axis) {
   const w = widthOf(a.text, 24) / 2;
-  if (a.x - w < 0 || a.x + w > VB_W) {
+  const L = a.anchor === "start" ? a.x : a.x - w;
+  const R = a.anchor === "start" ? a.x + 2 * w : a.x + w;
+  if (L < 0 || R > VB_W) {
     throw new Error(`연도 축 "${a.text}" 이 판을 넘습니다 — X0/X1 여백을 키우세요.`);
   }
 }
 /* 눈금 간격이 실제로 고른지 확인한다(달 수가 12로 안 떨어지면 어긋난다) */
 for (let i = 2; i < axis.length; i++) {
-  const d1 = axis[i].x - axis[i - 1].x;
-  const d0 = axis[i - 1].x - axis[i - 2].x;
+  /* 왼쪽 끝에 붙인 첫 라벨은 글자 자리(x)와 눈금 자리(tick)가 다르다 — 간격은 눈금으로 잰다 */
+  const at = (a) => a.tick ?? a.x;
+  const d1 = at(axis[i]) - at(axis[i - 1]);
+  const d0 = at(axis[i - 1]) - at(axis[i - 2]);
   if (Math.abs(d1 - d0) > 1) throw new Error(`연도 간격이 고르지 않습니다: ${d0} vs ${d1}`);
 }
 

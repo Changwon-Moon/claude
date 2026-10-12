@@ -8664,6 +8664,60 @@
         "singo-동성1-59"
       ],
       "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A10025510-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "호수공원역 센트럴시티",
+        "--type",
+        "59",
+        "--kapt",
+        "A10025510",
+        "--accept-cycle-guard",
+        "--publish"
+      ],
+      "produces": [
+        "singo-호수공원역센트럴시티-59"
+      ],
+      "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 8.3억 vs 지난 고점 8.25억(2021.10) 0.6% — 오너 기준 (2026-10-13)."
+    },
+    {
+      "label": "singo-A10026640-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "역북지웰푸르지오",
+        "--type",
+        "59",
+        "--kapt",
+        "A10026640",
+        "--accept-cycle-guard",
+        "--publish"
+      ],
+      "produces": [
+        "singo-역북지웰푸르지오-59"
+      ],
+      "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 5.7억 vs 지난 고점 5.6억(2021.08) 1.8% — 오너 기준 (2026-10-13)."
+    },
+    {
+      "label": "singo-A10022690-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "용인보평역서희스타힐스리버파크",
+        "--type",
+        "84",
+        "--kapt",
+        "A10022690",
+        "--short",
+        "--publish"
+      ],
+      "produces": [
+        "singo-용인보평역서희스타힐스리버파크-84"
+      ],
+      "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --short: 신축 판형: 첫 거래 2024-04, 거래 있던 달 5개 (2026-10-13)."
     }
   ]
 }
