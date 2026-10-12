@@ -10,7 +10,7 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-10-11",
+    "collectedFor": "2026-10-12",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2900,
@@ -45,7 +45,7 @@
         "수도권",
         "785가구",
         "무순위",
-        "D-1",
+        "오늘 마감",
         "롯데캐슬"
       ]
     },
@@ -77,7 +77,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-2",
+        "D-1",
         "푸르지오",
         "2개 블록 합계"
       ]
@@ -105,7 +105,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -153,11 +153,62 @@
       "speculative": false,
       "homepage": "https://향남역스위첸.com",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000463&pblancNo=2026000463",
-      "score": 44,
+      "score": 51,
       "reasons": [
         "수도권",
         "933가구",
-        "D-3"
+        "D-2"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000494",
+      "name": "더샵 동인센트리체",
+      "areaName": "대구",
+      "address": "대구광역시 중구 동인동1가 9 일원",
+      "supply": 314,
+      "noticeDate": "2026-10-02",
+      "receiptFrom": "2026-10-13",
+      "receiptTo": "2026-10-14",
+      "specialFrom": "2026-10-12",
+      "rank1From": "2026-10-13",
+      "moveInYm": "2028-06",
+      "announceDate": "2026-10-20",
+      "builder": "(주)포스코이앤씨",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "http://더샵동인센트리체.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000494&pblancNo=2026000494",
+      "score": 47,
+      "reasons": [
+        "광역시",
+        "D-2",
+        "더샵"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000468",
+      "name": "쌍용 더 플래티넘 한강",
+      "areaName": "경기",
+      "address": "경기도 양평군 양서면 용담리 212-3번지 일원",
+      "supply": 333,
+      "noticeDate": "2026-10-02",
+      "receiptFrom": "2026-10-13",
+      "receiptTo": "2026-10-14",
+      "specialFrom": "2026-10-12",
+      "rank1From": "2026-10-13",
+      "moveInYm": "2029-05",
+      "announceDate": "2026-10-20",
+      "builder": "쌍용건설(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "http://쌍용더플래티넘한강.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000468&pblancNo=2026000468",
+      "score": 45,
+      "reasons": [
+        "수도권",
+        "D-2"
       ]
     },
     {
@@ -187,32 +238,6 @@
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000494",
-      "name": "더샵 동인센트리체",
-      "areaName": "대구",
-      "address": "대구광역시 중구 동인동1가 9 일원",
-      "supply": 314,
-      "noticeDate": "2026-10-02",
-      "receiptFrom": "2026-10-13",
-      "receiptTo": "2026-10-14",
-      "specialFrom": "2026-10-12",
-      "rank1From": "2026-10-13",
-      "moveInYm": "2028-06",
-      "announceDate": "2026-10-20",
-      "builder": "(주)포스코이앤씨",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://더샵동인센트리체.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000494&pblancNo=2026000494",
-      "score": 40,
-      "reasons": [
-        "광역시",
-        "D-3",
-        "더샵"
-      ]
-    },
-    {
-      "kind": "apt",
       "pblancNo": "2026000492",
       "name": "청주 가경 아이파크 8단지",
       "areaName": "충북",
@@ -238,27 +263,27 @@
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000468",
-      "name": "쌍용 더 플래티넘 한강",
+      "pblancNo": "2026000386",
+      "name": "용인 양지 서희스타힐스 하이뷰 (조합원 취소분)",
       "areaName": "경기",
-      "address": "경기도 양평군 양서면 용담리 212-3번지 일원",
-      "supply": 333,
+      "address": "경기도 용인시 처인구 양지읍 양지리 산105-8번지 일원",
+      "supply": 48,
       "noticeDate": "2026-10-02",
       "receiptFrom": "2026-10-13",
       "receiptTo": "2026-10-14",
       "specialFrom": "2026-10-12",
       "rank1From": "2026-10-13",
-      "moveInYm": "2029-05",
+      "moveInYm": "2030-09",
       "announceDate": "2026-10-20",
-      "builder": "쌍용건설(주)",
+      "builder": "(주)서희건설",
       "priceCap": false,
       "speculative": false,
-      "homepage": "http://쌍용더플래티넘한강.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000468&pblancNo=2026000468",
-      "score": 38,
+      "homepage": "https://www.starhills-yg.co.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000386&pblancNo=2026000386",
+      "score": 35,
       "reasons": [
         "수도권",
-        "D-3"
+        "D-2"
       ]
     },
     {
@@ -313,6 +338,31 @@
     },
     {
       "kind": "apt",
+      "pblancNo": "2026000498",
+      "name": "천안 아이파크 시티 2단지(2회차)",
+      "areaName": "충남",
+      "address": "충청남도 천안시 서북구 부대동 409-1 외 46필지",
+      "supply": 61,
+      "noticeDate": "2026-10-02",
+      "receiptFrom": "2026-10-13",
+      "receiptTo": "2026-10-14",
+      "specialFrom": "2026-10-12",
+      "rank1From": "2026-10-13",
+      "moveInYm": "2028-08",
+      "announceDate": "2026-10-20",
+      "builder": "아이파크현대산업개발 주식회사",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://cheonan-iparkcity2.com/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000498&pblancNo=2026000498",
+      "score": 31,
+      "reasons": [
+        "D-2",
+        "아이파크"
+      ]
+    },
+    {
+      "kind": "apt",
       "pblancNo": "2026000267",
       "name": "아산 그랑시티필하우스",
       "areaName": "충남",
@@ -333,31 +383,6 @@
       "score": 29,
       "reasons": [
         "1,380가구 대단지"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000386",
-      "name": "용인 양지 서희스타힐스 하이뷰 (조합원 취소분)",
-      "areaName": "경기",
-      "address": "경기도 용인시 처인구 양지읍 양지리 산105-8번지 일원",
-      "supply": 48,
-      "noticeDate": "2026-10-02",
-      "receiptFrom": "2026-10-13",
-      "receiptTo": "2026-10-14",
-      "specialFrom": "2026-10-12",
-      "rank1From": "2026-10-13",
-      "moveInYm": "2030-09",
-      "announceDate": "2026-10-20",
-      "builder": "(주)서희건설",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.starhills-yg.co.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000386&pblancNo=2026000386",
-      "score": 28,
-      "reasons": [
-        "수도권",
-        "D-3"
       ]
     },
     {
@@ -386,31 +411,6 @@
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000498",
-      "name": "천안 아이파크 시티 2단지(2회차)",
-      "areaName": "충남",
-      "address": "충청남도 천안시 서북구 부대동 409-1 외 46필지",
-      "supply": 61,
-      "noticeDate": "2026-10-02",
-      "receiptFrom": "2026-10-13",
-      "receiptTo": "2026-10-14",
-      "specialFrom": "2026-10-12",
-      "rank1From": "2026-10-13",
-      "moveInYm": "2028-08",
-      "announceDate": "2026-10-20",
-      "builder": "아이파크현대산업개발 주식회사",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://cheonan-iparkcity2.com/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000498&pblancNo=2026000498",
-      "score": 24,
-      "reasons": [
-        "D-3",
-        "아이파크"
-      ]
-    },
-    {
-      "kind": "apt",
       "pblancNo": "2026000444",
       "name": "제주시 이도이동 아이린8차 아파트",
       "areaName": "제주",
@@ -430,7 +430,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000444&pblancNo=2026000444",
       "score": 21,
       "reasons": [
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -476,7 +476,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000466&pblancNo=2026000466",
       "score": 14,
       "reasons": [
-        "D-4"
+        "D-3"
       ]
     },
     {
