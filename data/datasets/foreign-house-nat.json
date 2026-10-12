@@ -8,7 +8,7 @@
   "verified": true,
   "verificationNote": "축·항목은 2026-09-08 probe 실측(data/kosis-probe.md). 주택수 = 공동주택 + 단독주택. 2025년 하반기 중국 61,439호·총계 108,231호가 국토부 보도자료와 일치.\n⚠️ totalHouses 는 **총괄표**의 값이고 natSumHouses(국적별 합)는 그보다 조금 크다 — 국적이 다른 사람들이 한 집을 공동소유하면 국적마다 한 번씩 세어지기 때문이다(dupHouses). 카드의 총계는 totalHouses 를 쓴다. 벌어짐이 1% 를 넘으면 수집이 던진다.",
   "unit": "호",
-  "collectedAt": "2026-09-08"
+  "collectedAt": "2026-10-12"
  },
  "natCodes": {
   "A01": "중국",
