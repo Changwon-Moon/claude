@@ -1142,7 +1142,8 @@
       "produces": [
         "singo-쌍용-59"
       ],
-      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16)."
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16).",
+      "frozen": "2026-10-14: 같은 단지·타입이 또 신고가를 써 새 이름표(singo-쌍용-59-1014)로 냈다. 이 빌더를 그대로 두면 **이미 발행한 카드가 새 값으로 덮인다**(카드 이름표에 날짜가 없다). 그날의 판본을 그대로 둔다."
     },
     {
       "label": "singo-gaebong-hanmaeul",
@@ -8736,6 +8737,113 @@
         "singo-광명역써밋플레이스-84"
       ],
       "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-supply-warn: 대장 공급 124.62㎡ 38평·전용률 68.2% — 오너가 38평 맞다고 확인(2026-10-13)."
+    },
+    {
+      "label": "singo-A10024974-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "마포아이파크포레",
+        "--type",
+        "84",
+        "--kapt",
+        "A10024974",
+        "--publish"
+      ],
+      "produces": [
+        "singo-마포아이파크포레-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A12012202-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "DMC래미안클라시스",
+        "--type",
+        "84",
+        "--kapt",
+        "A12012202",
+        "--publish"
+      ],
+      "produces": [
+        "singo-DMC래미안클라시스-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A13204406-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "쌍용",
+        "--type",
+        "59",
+        "--kapt",
+        "A13204406",
+        "--slug",
+        "singo-쌍용-59-1014",
+        "--publish"
+      ],
+      "produces": [
+        "singo-쌍용-59-1014"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A12010104-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "홍은동벽산",
+        "--type",
+        "59",
+        "--kapt",
+        "A12010104",
+        "--publish"
+      ],
+      "produces": [
+        "singo-홍은동벽산-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A44532015-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "자연앤데시앙",
+        "--type",
+        "59",
+        "--kapt",
+        "A44532015",
+        "--publish"
+      ],
+      "produces": [
+        "singo-자연앤데시앙-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A44173006-84-1014",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "삼환",
+        "--type",
+        "84",
+        "--kapt",
+        "A44173006",
+        "--slug",
+        "singo-삼환-84-1014",
+        "--accept-cycle-guard",
+        "--publish"
+      ],
+      "produces": [
+        "singo-삼환-84-1014"
+      ],
+      "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 6.45억 vs 지난 고점 6.3억(2021.10) 2.4% — 오너 기준(2026-10-14). 수원 구운동 삼환(A44173006) — 신길 삼환(A15005705)과 이름표가 겹치므로 --slug 필수."
     }
   ]
 }
