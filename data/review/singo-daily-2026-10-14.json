@@ -1,11 +1,17 @@
 {
   "label": "singo-daily-2026-10-14",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 6장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 8장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
       "file": "singo-마포아이파크포레-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-송파더센트레-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
@@ -24,6 +30,12 @@
     },
     {
       "file": "singo-홍은동벽산-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-주공2-84.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
