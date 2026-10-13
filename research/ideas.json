@@ -2136,20 +2136,6 @@
       "at": "2026-10-12"
     },
     {
-      "id": "ah-remndr-2026910256",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 상동역 롯데캐슬 시그니처",
-      "why": "경기 · 785세대 · 접수 ~2026-10-12 · 73점(수도권·785가구·무순위·롯데캐슬)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-10-12",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910256&pblancNo=2026910256",
-      "at": "2026-10-13"
-    },
-    {
       "id": "ah-remndr-2026910263",
       "cat": "todo",
       "topic": "부동산",
@@ -2217,6 +2203,20 @@
       "status": "",
       "deadline": "2026-10-19",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910260&pblancNo=2026910260",
+      "at": "2026-10-13"
+    },
+    {
+      "id": "ah-remndr-2026910256",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 상동역 롯데캐슬 시그니처",
+      "why": "경기 · 785세대 · 접수 ~2026-10-12 · 73점(수도권·785가구·무순위·롯데캐슬)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-10-12",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910256&pblancNo=2026910256",
       "at": "2026-10-13"
     }
   ]
