@@ -1,7 +1,7 @@
 {
   "label": "singo-daily-2026-10-13",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 10장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 13장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
@@ -12,6 +12,12 @@
     },
     {
       "file": "singo-고덕자이-84-1013.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-광명역써밋플레이스-84.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
@@ -42,6 +48,18 @@
     },
     {
       "file": "singo-매탄위브하늘채-59-1013.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-수원하늘채더퍼스트1단지-59-1012.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-엘에이치이스트힐-59-1013.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []

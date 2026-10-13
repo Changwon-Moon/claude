@@ -8718,6 +8718,24 @@
         "singo-용인보평역서희스타힐스리버파크-84"
       ],
       "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --short: 신축 판형: 첫 거래 2024-04, 거래 있던 달 5개 (2026-10-13)."
+    },
+    {
+      "label": "singo-A10026455-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "광명역써밋플레이스",
+        "--type",
+        "84",
+        "--kapt",
+        "A10026455",
+        "--accept-supply-warn",
+        "--publish"
+      ],
+      "produces": [
+        "singo-광명역써밋플레이스-84"
+      ],
+      "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-supply-warn: 대장 공급 124.62㎡ 38평·전용률 68.2% — 오너가 38평 맞다고 확인(2026-10-13)."
     }
   ]
 }
