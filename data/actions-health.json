@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-13T22:47:47.582Z",
+  "generatedAt": "2026-10-14T00:23:40.387Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -194,7 +194,7 @@
       "maxDelay": null,
       "lastRun": "2026-10-09",
       "lastOk": "2026-10-09",
-      "okDaysAgo": 4
+      "okDaysAgo": 5
     },
     {
       "file": "applyhome-collect.yml",
@@ -1155,7 +1155,7 @@
       "lastOk": "2026-09-14",
       "okDaysAgo": 29,
       "fails30": 0,
-      "runs30": 5
+      "runs30": 4
     },
     {
       "file": "population-collect.yml",
@@ -1171,7 +1171,7 @@
       "file": "apt-station.yml",
       "name": "단지 가까운 역 (카드 뱃지용)",
       "lastRun": "2026-09-22",
-      "daysAgo": 21,
+      "daysAgo": 22,
       "lastOk": null,
       "okDaysAgo": null,
       "fails30": 1,
@@ -1201,9 +1201,9 @@
       "file": "notify-once.yml",
       "name": "텔레그램 한 통 보내기",
       "lastRun": "2026-10-06",
-      "daysAgo": 7,
+      "daysAgo": 8,
       "lastOk": "2026-10-06",
-      "okDaysAgo": 7,
+      "okDaysAgo": 8,
       "fails30": 0,
       "runs30": 1
     },
@@ -1225,7 +1225,7 @@
       "lastOk": "2026-10-06",
       "okDaysAgo": 7,
       "fails30": 1,
-      "runs30": 12
+      "runs30": 8
     },
     {
       "file": "singo-history.yml",
@@ -1235,7 +1235,7 @@
       "lastOk": "2026-10-06",
       "okDaysAgo": 7,
       "fails30": 0,
-      "runs30": 12
+      "runs30": 8
     },
     {
       "file": "auto-produce.yml",
@@ -1261,17 +1261,17 @@
       "file": "apt-supply-area.yml",
       "name": "단지 공급면적 (카드 평 표기용)",
       "lastRun": "2026-10-13",
-      "daysAgo": 0,
+      "daysAgo": 1,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 10,
-      "runs30": 13
+      "fails30": 9,
+      "runs30": 12
     },
     {
       "file": "apt-supply-retry.yml",
       "name": "공급면적 — 자동 재시도",
       "lastRun": "2026-10-13",
-      "daysAgo": 0,
+      "daysAgo": 1,
       "lastOk": null,
       "okDaysAgo": null,
       "fails30": 13,
@@ -1314,7 +1314,7 @@
       "daysAgo": 0,
       "lastOk": "2026-09-23",
       "okDaysAgo": 20,
-      "fails30": 32,
+      "fails30": 33,
       "runs30": 100
     }
   ]
