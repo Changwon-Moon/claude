@@ -26,6 +26,19 @@
 # ⚡ 2026-10-12 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-10-13 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-10-14 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+# ⚡ 2026-10-15 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+lawd=11200 umd=옥수동 type=84 apt="옥수삼성"
+lawd=11560 umd=당산동5가 type=84 apt="당산삼성래미안4차" force=1
+lawd=41117 umd=원천동 type=84 apt="광교중흥에스클래스" force=1
+lawd=41465 umd=풍덕천동 type=84 apt="진산마을삼성5차" force=1
+lawd=41173 umd=호계동 type=84 apt="평촌어바인퍼스트" force=1
+lawd=11305 umd=미아동 type=84 apt="래미안트리베라1단지" force=1
+lawd=11230 umd=답십리동 type=59 apt="답십리청솔우성"
+lawd=11290 umd=종암동 type=59 apt="종암에스케이"
+lawd=41595 umd=병점동 type=59 apt="병점역아이파크캐슬" force=1
+lawd=41173 umd=호계동 type=84 apt="호계2차현대홈타운" force=1
+lawd=41210 umd=광명동 type=84 apt="중앙하이츠2"
+
 lawd=11440 umd=신수동 type=84 apt="마포아이파크포레"
 lawd=11710 umd=장지동 type=59 apt="송파더센트레"
 lawd=11410 umd=남가좌동 type=84 apt="DMC래미안클라시스"
