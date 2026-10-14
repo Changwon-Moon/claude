@@ -220,7 +220,32 @@ writeFileSync(
 
 const zipPath = join(OUTDIR, `${stem}.zip`);
 rmSync(zipPath, { force: true });
-const z = spawnSync("zip", ["-q", "-r", "-X", zipPath, stem], { cwd: OUTDIR });
+/* ── ⚠️ 한글 파일명은 **UTF-8 표시(플래그)를 단 ZIP** 으로 묶는다 (오너 2026-10-14 「zip파일에 사진이 다 없네」)
+ *
+ * 그전에는 Info-ZIP(`zip -r`)으로 묶었는데, 컨테이너 로캘이 UTF-8 이 아니라서
+ * 한글 이름이 **UTF-8 표시 없이** 들어갔다. 그러면 휴대폰·윈도우 압축 해제기가 이름을
+ * 옛 인코딩(CP437)으로 읽어 「∞║í∞àÿ.txt」 같은 깨진 이름이 되고, 앱에 따라 사진이 아예 안 보인다.
+ * 파이썬 zipfile 은 비ASCII 이름에 UTF-8 표시(general purpose bit 11)를 자동으로 단다. */
+const z = spawnSync(
+  "python3",
+  [
+    "-c",
+    `import zipfile,os,sys
+root,stem,out=sys.argv[1],sys.argv[2],sys.argv[3]
+with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED) as zf:
+    for dp,dn,fn in os.walk(os.path.join(root,stem)):
+        for f in sorted(fn):
+            full=os.path.join(dp,f)
+            zf.write(full,os.path.relpath(full,root))
+with zipfile.ZipFile(out) as zf:
+    bad=[i.filename for i in zf.infolist() if any(ord(c)>127 for c in i.filename) and not (i.flag_bits & 0x800)]
+    if bad: sys.exit("UTF-8 표시 없음: "+", ".join(bad))`,
+    OUTDIR,
+    stem,
+    zipPath,
+  ],
+  { encoding: "utf8" },
+);
 if (z.status !== 0) {
   console.error(`⛔ zip 실패: ${z.stderr}`);
   process.exit(1);
