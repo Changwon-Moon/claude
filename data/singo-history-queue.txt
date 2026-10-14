@@ -30,7 +30,7 @@
 lawd=11200 umd=옥수동 type=84 apt="옥수삼성"
 lawd=11560 umd=당산동5가 type=84 apt="당산삼성래미안4차"
 lawd=41117 umd=원천동 type=84 apt="광교중흥에스클래스"
-lawd=41465 umd=풍덕천동 type=84 apt="진산마을삼성5차" force=1
+lawd=41465 umd=풍덕천동 type=84 apt="진산마을삼성5차"
 lawd=41173 umd=호계동 type=84 apt="평촌어바인퍼스트" force=1
 lawd=11305 umd=미아동 type=84 apt="래미안트리베라1단지" force=1
 lawd=11230 umd=답십리동 type=59 apt="답십리청솔우성"
