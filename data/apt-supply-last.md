@@ -1,6 +1,6 @@
 # 단지 공급면적 — 마지막 실행
 
-- 성공 1건 · 실패 7건 · 미룸 0줄
+- 성공 0건 · 실패 7건 · 미룸 0줄
 - 결과는 Actions 로그가 아니라 이 파일과 data/datasets/apt-supply/ 에서 본다
 - 미리 채우기 오늘 몫 250/250건 · 내일로 미룬 133줄 (상한은 실패가 아니다)
 
@@ -88,18 +88,6 @@ Exit status 1
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13984814 --area 84.815`
 Exit status 1
-── A44878510 전용 84.21
-🧹 force=1 을 지웠습니다 — kapt=A44878510 area=84.21   # 진산마을삼성5차 84 — 09-04 옛 파일, 지하 대
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A44878510 --area 84.21
-
-▶ 진산마을삼성5차아파트 (A44878510) · 전용 84.21㎡ · 41465-10100 · 지번 후보 1167
-   지번 1167 (1167-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A44878510-84.json
-   전유 84.21 + 주거공용 22.901 = 공급 107.11㎡ = 32.4평 → **32평**
-   표본: 526동 1908호 (같은 전용 호 180개) · 전용률 78.6%
-     · 아파트 / 계단,승강기 [각층] 22.9011
 🧾 오늘 몫(250건)을 다 썼습니다 — 미리 채우기 133줄은 **내일** 이어서 받습니다.
    (실패가 아닙니다. 여기서 빨간불을 켜면 재시도 사다리가 상한을 우회합니다.)
 ```
