@@ -10,7 +10,7 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-10-13",
+    "collectedFor": "2026-10-14",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2900,
@@ -21,33 +21,6 @@
     }
   },
   "notices": [
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910256",
-      "name": "상동역 롯데캐슬 시그니처",
-      "areaName": "경기",
-      "address": "경기도 부천시 원미구 상동 540-1번지",
-      "supply": 785,
-      "noticeDate": "2026-10-06",
-      "receiptFrom": "2026-10-12",
-      "receiptTo": "2026-10-12",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2032-03",
-      "announceDate": "2026-10-15",
-      "builder": "한국자산신탁(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.lottecastle.co.kr/APT/AT00430/main/index.do",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910256&pblancNo=2026910256",
-      "score": 73,
-      "reasons": [
-        "수도권",
-        "785가구",
-        "무순위",
-        "롯데캐슬"
-      ]
-    },
     {
       "kind": "remndr",
       "pblancNo": "2026910263",
@@ -71,7 +44,7 @@
       "reasons": [
         "서울",
         "무순위",
-        "D-6"
+        "D-5"
       ]
     },
     {
@@ -98,40 +71,7 @@
         "수도권",
         "68가구",
         "무순위",
-        "D-6"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026930033",
-      "name": "도안 푸르지오 디아델",
-      "areaName": "대전",
-      "address": "대전광역시 유성구 용계동 70대 일원",
-      "supply": 7,
-      "noticeDate": "2026-10-06",
-      "receiptFrom": "2026-10-12",
-      "receiptTo": "2026-10-13",
-      "specialFrom": "2026-10-12",
-      "rank1From": null,
-      "moveInYm": "2027-09",
-      "announceDate": "2026-10-19",
-      "builder": "케이비부동산신탁(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://도안푸르지오디아델.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930033&pblancNo=2026930033",
-      "blocks": 2,
-      "blockNames": [
-        "도안 푸르지오 디아델 31블록",
-        "도안 푸르지오 디아델 29블록"
-      ],
-      "score": 64,
-      "reasons": [
-        "광역시",
-        "무순위",
-        "오늘 마감",
-        "푸르지오",
-        "2개 블록 합계"
+        "D-5"
       ]
     },
     {
@@ -157,7 +97,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-6",
+        "D-5",
         "e편한세상"
       ]
     },
@@ -184,7 +124,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-6",
+        "D-5",
         "푸르지오"
       ]
     },
@@ -211,7 +151,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-6"
+        "D-5"
       ]
     },
     {
@@ -263,7 +203,7 @@
       "reasons": [
         "수도권",
         "933가구",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -288,7 +228,7 @@
       "score": 47,
       "reasons": [
         "광역시",
-        "D-1",
+        "오늘 마감",
         "더샵"
       ]
     },
@@ -314,7 +254,7 @@
       "score": 45,
       "reasons": [
         "수도권",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -414,7 +354,7 @@
       "score": 35,
       "reasons": [
         "수도권",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -488,7 +428,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000498&pblancNo=2026000498",
       "score": 31,
       "reasons": [
-        "D-1",
+        "오늘 마감",
         "아이파크"
       ]
     },
@@ -542,30 +482,6 @@
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000444",
-      "name": "제주시 이도이동 아이린8차 아파트",
-      "areaName": "제주",
-      "address": "제주특별자치도 제주시 이도이동 1045-3번지",
-      "supply": 45,
-      "noticeDate": "2026-10-02",
-      "receiptFrom": "2026-10-12",
-      "receiptTo": "2026-10-13",
-      "specialFrom": null,
-      "rank1From": "2026-10-12",
-      "moveInYm": "2026-11",
-      "announceDate": "2026-10-19",
-      "builder": "(주)힘찬종합건설",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://blog.naver.com/him2729",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000444&pblancNo=2026000444",
-      "score": 21,
-      "reasons": [
-        "오늘 마감"
-      ]
-    },
-    {
-      "kind": "apt",
       "pblancNo": "2026000466",
       "name": "진도 승원팰리체 더 테라스",
       "areaName": "전남",
@@ -585,7 +501,32 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000466&pblancNo=2026000466",
       "score": 21,
       "reasons": [
-        "D-2"
+        "D-1"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000471",
+      "name": "한양립스 에듀포레(조합원 취소분)",
+      "areaName": "광주",
+      "address": "전남광주통합특별시 광산구 하산동 269번지 일원",
+      "supply": 19,
+      "noticeDate": "2026-10-08",
+      "receiptFrom": "2026-10-19",
+      "receiptTo": "2026-10-20",
+      "specialFrom": null,
+      "rank1From": "2026-10-19",
+      "moveInYm": "2027-11",
+      "announceDate": "2026-10-26",
+      "builder": "(주)한양건설",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "http://www.한양립스에듀포레.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000471&pblancNo=2026000471",
+      "score": 20,
+      "reasons": [
+        "광역시",
+        "D-6"
       ]
     },
     {
@@ -609,30 +550,6 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000402&pblancNo=2026000402",
       "score": 16,
       "reasons": []
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000471",
-      "name": "한양립스 에듀포레(조합원 취소분)",
-      "areaName": "광주",
-      "address": "전남광주통합특별시 광산구 하산동 269번지 일원",
-      "supply": 19,
-      "noticeDate": "2026-10-08",
-      "receiptFrom": "2026-10-19",
-      "receiptTo": "2026-10-20",
-      "specialFrom": null,
-      "rank1From": "2026-10-19",
-      "moveInYm": "2027-11",
-      "announceDate": "2026-10-26",
-      "builder": "(주)한양건설",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://www.한양립스에듀포레.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000471&pblancNo=2026000471",
-      "score": 12,
-      "reasons": [
-        "광역시"
-      ]
     }
   ]
 }
