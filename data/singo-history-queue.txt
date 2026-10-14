@@ -36,7 +36,7 @@ lawd=11305 umd=미아동 type=84 apt="래미안트리베라1단지"
 lawd=11230 umd=답십리동 type=59 apt="답십리청솔우성"
 lawd=11290 umd=종암동 type=59 apt="종암에스케이"
 lawd=41595 umd=병점동 type=59 apt="병점역아이파크캐슬"
-lawd=41173 umd=호계동 type=84 apt="호계2차현대홈타운" force=1
+lawd=41173 umd=호계동 type=84 apt="호계2차현대홈타운"
 lawd=41210 umd=광명동 type=84 apt="중앙하이츠2"
 
 lawd=11440 umd=신수동 type=84 apt="마포아이파크포레"
