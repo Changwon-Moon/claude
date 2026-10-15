@@ -478,11 +478,21 @@ for (const t of made) {
    *
    * ⚠️ 굳히는 이유를 반드시 적는다. 이유 없는 `frozen` 은 몇 주 뒤 「왜 이건 안 그리지」가 되고,
    *    그러면 누군가 무심코 푼다. */
+  /* ⚠️ **기본 이름표만이 아니라 날짜 꼬리 이름표(…-0930 등)도 굳힌다** (2026-10-16)
+   *    롯데캐슬 59 가 09-30 에 「-0930」으로 나간 뒤 그 빌더가 안 굳어 있어서, 10-16 아침에
+   *    다른 세트를 확정하며 돈 전체 재빌드가 그 카드를 **오늘 값으로 오늘 폴더에** 다시 그렸다.
+   *    그 결과 오늘 묶음에 같은 단지가 두 장(-0930·-1016) 들어갔다. 같은 base 로 시작하는
+   *    옛 이름표는 전부 굳힌다. */
   if (t.slug !== t.base) {
-    const oldB = barr.find((x) => Array.isArray(x.produces) && x.produces.includes(t.base));
-    if (oldB && !oldB.frozen) {
+    const olds = barr.filter(
+      (x) =>
+        Array.isArray(x.produces) &&
+        x.produces.some((p) => p !== t.slug && (p === t.base || new RegExp(`^${t.base.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}-\\d{4}$`).test(p))),
+    );
+    for (const oldB of olds) {
+      if (oldB.frozen) continue;
       oldB.frozen = `${DATE}: 같은 단지·타입이 또 신고가를 써 새 이름표(${t.slug})로 냈다. 이 빌더를 그대로 두면 **이미 발행한 카드가 새 값으로 덮인다**(카드 이름표에 날짜가 없다). 그날의 판본을 그대로 둔다.`;
-      console.log(`❄️ 옛 빌더를 굳혔습니다 — ${oldB.label} (${t.base})`);
+      console.log(`❄️ 옛 빌더를 굳혔습니다 — ${oldB.label} (${oldB.produces.join(",")})`);
     }
   }
 

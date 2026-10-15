@@ -322,6 +322,30 @@
         if (hero && spec && price) {
           var gap = parseFloat(getComputedStyle(hero).columnGap || "34") || 34;
           var room = hero.clientWidth - price.scrollWidth - gap;
+          /* ── 가격 덩어리가 너무 넓으면 **가격을 조금 줄인다** (2026-10-16 영통아이파크캐슬2단지)
+             「10.05억 달성!」처럼 길면 제원이 하한(18px)까지 줄어도 들어가지 않아 카드 오른쪽
+             밖으로 삐져나갔다. 제원이 22px 로 들어갈 자리가 생길 때까지 가격·표식을 함께 줄인다
+             (하한 112px). 대부분의 카드는 이 조건에 안 걸려 그대로다. */
+          var widest = function () {
+            var ls = spec.querySelectorAll(".l"), w = 0;
+            for (var q = 0; q < ls.length; q++) w = Math.max(w, ls[q].scrollWidth);
+            return w;
+          };
+          spec.style.fontSize = "22px";
+          var need = widest();
+          if (room < need) {
+            var pEl = document.querySelector(".sr .sr-price");
+            var sEl = document.querySelector(".sr .sr-price-suffix");
+            var pf = parseFloat(getComputedStyle(pEl).fontSize) || 150;
+            var sf0 = sEl ? parseFloat(getComputedStyle(sEl).fontSize) || 62 : 0;
+            var pf0 = pf;
+            for (var t = 0; t < 40 && room < need && pf > 112; t++) {
+              pf -= 1;
+              pEl.style.fontSize = pf + "px";
+              if (sEl) sEl.style.fontSize = (sf0 * pf / pf0).toFixed(1) + "px";
+              room = hero.clientWidth - price.scrollWidth - gap;
+            }
+          }
           /* 상한 34 — 40 이면 3줄이 가격보다 높은 덩어리가 된다(2026-08-16b 검수). */
           var lo = 18, hi = 34, best = 18;
           for (var k = 0; k < 24; k++) {
