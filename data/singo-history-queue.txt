@@ -35,7 +35,7 @@ lawd=41360 umd=다산동 type=84 apt="힐스테이트다산"
 lawd=11140 umd=황학동 type=59 apt="롯데캐슬"
 lawd=41117 umd=망포동 type=59 apt="영통아이파크캐슬2단지"
 lawd=41173 umd=관양동 type=59 apt="공작아파트"
-lawd=41210 umd=광명동 type=59 apt="광명한진타운" force=1
+lawd=41210 umd=광명동 type=59 apt="광명한진타운"
 lawd=41173 umd=비산동 type=59 apt="삼성래미안"
 lawd=41595 umd=기산동 type=59 apt="에스케이뷰파크2차"
 
