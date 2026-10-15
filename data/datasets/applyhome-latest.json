@@ -10,11 +10,11 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-10-14",
+    "collectedFor": "2026-10-15",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2900,
-      "APT 무순위/잔여세대": 1714
+      "APT 무순위/잔여세대": 1716
     },
     "unit": {
       "supply": "가구"
@@ -44,7 +44,7 @@
       "reasons": [
         "서울",
         "무순위",
-        "D-5"
+        "D-4"
       ]
     },
     {
@@ -71,7 +71,34 @@
         "수도권",
         "68가구",
         "무순위",
-        "D-5"
+        "D-4"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000458",
+      "name": "산곡역자이힐스테이트앤하늘채",
+      "areaName": "인천",
+      "address": "인천광역시 부평구 산곡동 10번지 일원(산곡6 주택재개발정비사업)",
+      "supply": 1289,
+      "noticeDate": "2026-10-08",
+      "receiptFrom": "2026-10-20",
+      "receiptTo": "2026-10-21",
+      "specialFrom": "2026-10-19",
+      "rank1From": "2026-10-20",
+      "moveInYm": "2029-12",
+      "announceDate": "2026-10-27",
+      "builder": "지에스건설(주), 현대건설(주), 코오롱글로벌(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.xi.co.kr/sangokxi",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000458&pblancNo=2026000458",
+      "score": 61,
+      "reasons": [
+        "수도권",
+        "1,289가구 대단지",
+        "D-6",
+        "자이"
       ]
     },
     {
@@ -97,7 +124,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-5",
+        "D-4",
         "e편한세상"
       ]
     },
@@ -124,8 +151,34 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-5",
+        "D-4",
         "푸르지오"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910262",
+      "name": "화성 송산 동원로얄듀크 포레(2차)",
+      "areaName": "경기",
+      "address": "경기도 화성시 병점구 화산로 9",
+      "supply": 5,
+      "noticeDate": "2026-10-14",
+      "receiptFrom": "2026-10-19",
+      "receiptTo": "2026-10-19",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-11",
+      "announceDate": "2026-10-22",
+      "builder": "코리아신탁(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": null,
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910262&pblancNo=2026910262",
+      "score": 55,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "D-4"
       ]
     },
     {
@@ -151,110 +204,59 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-5"
+        "D-4"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910252",
+      "name": "그랑라크 에일린의 뜰",
+      "areaName": "울산",
+      "address": "울산광역시 남구 야음동 350-5번지 일원",
+      "supply": 18,
+      "noticeDate": "2026-10-14",
+      "receiptFrom": "2026-10-19",
+      "receiptTo": "2026-10-19",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2029-11",
+      "announceDate": "2026-10-22",
+      "builder": "남구비14구역주택재개발정비사업조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "http://www.그랑라크에일린의뜰.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910252&pblancNo=2026910252",
+      "score": 51,
+      "reasons": [
+        "광역시",
+        "무순위",
+        "D-4"
       ]
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000458",
-      "name": "산곡역자이힐스테이트앤하늘채",
-      "areaName": "인천",
-      "address": "인천광역시 부평구 산곡동 10번지 일원(산곡6 주택재개발정비사업)",
-      "supply": 1289,
+      "pblancNo": "2026000492",
+      "name": "청주 가경 아이파크 8단지",
+      "areaName": "충북",
+      "address": "충청북도 청주시 흥덕구 가경동 701번지 일원",
+      "supply": 1128,
       "noticeDate": "2026-10-08",
       "receiptFrom": "2026-10-20",
       "receiptTo": "2026-10-21",
       "specialFrom": "2026-10-19",
       "rank1From": "2026-10-20",
-      "moveInYm": "2029-12",
+      "moveInYm": "2029-11",
       "announceDate": "2026-10-27",
-      "builder": "지에스건설(주), 현대건설(주), 코오롱글로벌(주)",
+      "builder": "아이파크현대산업개발 주식회사",
       "priceCap": false,
       "speculative": false,
-      "homepage": "https://www.xi.co.kr/sangokxi",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000458&pblancNo=2026000458",
-      "score": 53,
-      "reasons": [
-        "수도권",
-        "1,289가구 대단지",
-        "자이"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000463",
-      "name": "향남역 그로브 스위첸",
-      "areaName": "경기",
-      "address": "경기도 화성특례시 만세구 향남읍 하길리 404-2번지 일원",
-      "supply": 933,
-      "noticeDate": "2026-10-02",
-      "receiptFrom": "2026-10-13",
-      "receiptTo": "2026-10-14",
-      "specialFrom": "2026-10-12",
-      "rank1From": "2026-10-13",
-      "moveInYm": "2029-06",
-      "announceDate": "2026-10-20",
-      "builder": "주식회사 케이씨씨건설",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://향남역스위첸.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000463&pblancNo=2026000463",
-      "score": 51,
-      "reasons": [
-        "수도권",
-        "933가구",
-        "오늘 마감"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000494",
-      "name": "더샵 동인센트리체",
-      "areaName": "대구",
-      "address": "대구광역시 중구 동인동1가 9 일원",
-      "supply": 314,
-      "noticeDate": "2026-10-02",
-      "receiptFrom": "2026-10-13",
-      "receiptTo": "2026-10-14",
-      "specialFrom": "2026-10-12",
-      "rank1From": "2026-10-13",
-      "moveInYm": "2028-06",
-      "announceDate": "2026-10-20",
-      "builder": "(주)포스코이앤씨",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://더샵동인센트리체.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000494&pblancNo=2026000494",
+      "homepage": "https://www.i-park.com/gagyeong7-8",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000492&pblancNo=2026000492",
       "score": 47,
       "reasons": [
-        "광역시",
-        "오늘 마감",
-        "더샵"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000468",
-      "name": "쌍용 더 플래티넘 한강",
-      "areaName": "경기",
-      "address": "경기도 양평군 양서면 용담리 212-3번지 일원",
-      "supply": 333,
-      "noticeDate": "2026-10-02",
-      "receiptFrom": "2026-10-13",
-      "receiptTo": "2026-10-14",
-      "specialFrom": "2026-10-12",
-      "rank1From": "2026-10-13",
-      "moveInYm": "2029-05",
-      "announceDate": "2026-10-20",
-      "builder": "쌍용건설(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://쌍용더플래티넘한강.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000468&pblancNo=2026000468",
-      "score": 45,
-      "reasons": [
-        "수도권",
-        "오늘 마감"
+        "1,128가구 대단지",
+        "D-6",
+        "아이파크"
       ]
     },
     {
@@ -283,81 +285,6 @@
       ]
     },
     {
-      "kind": "remndr",
-      "pblancNo": "2026930041",
-      "name": "세종 리더스포레 나릿재마을 1단지",
-      "areaName": "세종",
-      "address": "세종특별자치시 나성동 835",
-      "supply": 1,
-      "noticeDate": "2026-10-07",
-      "receiptFrom": "2026-10-12",
-      "receiptTo": "2026-10-12",
-      "specialFrom": "2026-10-12",
-      "rank1From": null,
-      "moveInYm": "2026-12",
-      "announceDate": "2026-10-15",
-      "builder": "(주) 한화",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://blog.naver.com/dnjsgh1445",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930041&pblancNo=2026930041",
-      "score": 39,
-      "reasons": [
-        "광역시",
-        "무순위"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000492",
-      "name": "청주 가경 아이파크 8단지",
-      "areaName": "충북",
-      "address": "충청북도 청주시 흥덕구 가경동 701번지 일원",
-      "supply": 1128,
-      "noticeDate": "2026-10-08",
-      "receiptFrom": "2026-10-20",
-      "receiptTo": "2026-10-21",
-      "specialFrom": "2026-10-19",
-      "rank1From": "2026-10-20",
-      "moveInYm": "2029-11",
-      "announceDate": "2026-10-27",
-      "builder": "아이파크현대산업개발 주식회사",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.i-park.com/gagyeong7-8",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000492&pblancNo=2026000492",
-      "score": 39,
-      "reasons": [
-        "1,128가구 대단지",
-        "아이파크"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000386",
-      "name": "용인 양지 서희스타힐스 하이뷰 (조합원 취소분)",
-      "areaName": "경기",
-      "address": "경기도 용인시 처인구 양지읍 양지리 산105-8번지 일원",
-      "supply": 48,
-      "noticeDate": "2026-10-02",
-      "receiptFrom": "2026-10-13",
-      "receiptTo": "2026-10-14",
-      "specialFrom": "2026-10-12",
-      "rank1From": "2026-10-13",
-      "moveInYm": "2030-09",
-      "announceDate": "2026-10-20",
-      "builder": "(주)서희건설",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.starhills-yg.co.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000386&pblancNo=2026000386",
-      "score": 35,
-      "reasons": [
-        "수도권",
-        "오늘 마감"
-      ]
-    },
-    {
       "kind": "apt",
       "pblancNo": "2026000491",
       "name": "청주 가경 아이파크 7단지",
@@ -376,9 +303,10 @@
       "speculative": false,
       "homepage": "https://www.i-park.com/gagyeong7-8",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000491&pblancNo=2026000491",
-      "score": 32,
+      "score": 40,
       "reasons": [
         "543가구",
+        "D-6",
         "아이파크"
       ]
     },
@@ -401,35 +329,11 @@
       "speculative": false,
       "homepage": "https://www.xi.co.kr/yj",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000469&pblancNo=2026000469",
-      "score": 32,
+      "score": 40,
       "reasons": [
         "광역시",
+        "D-6",
         "자이"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000498",
-      "name": "천안 아이파크 시티 2단지(2회차)",
-      "areaName": "충남",
-      "address": "충청남도 천안시 서북구 부대동 409-1 외 46필지",
-      "supply": 61,
-      "noticeDate": "2026-10-02",
-      "receiptFrom": "2026-10-13",
-      "receiptTo": "2026-10-14",
-      "specialFrom": "2026-10-12",
-      "rank1From": "2026-10-13",
-      "moveInYm": "2028-08",
-      "announceDate": "2026-10-20",
-      "builder": "아이파크현대산업개발 주식회사",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://cheonan-iparkcity2.com/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000498&pblancNo=2026000498",
-      "score": 31,
-      "reasons": [
-        "오늘 마감",
-        "아이파크"
       ]
     },
     {
@@ -451,9 +355,10 @@
       "speculative": false,
       "homepage": "https://www.천안아산역그랑시티필하우스.com/",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000267&pblancNo=2026000267",
-      "score": 29,
+      "score": 37,
       "reasons": [
-        "1,380가구 대단지"
+        "1,380가구 대단지",
+        "D-6"
       ]
     },
     {
@@ -475,8 +380,9 @@
       "speculative": false,
       "homepage": "https://www.힐스테이트거제시그니처.com",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000464&pblancNo=2026000464",
-      "score": 26,
+      "score": 34,
       "reasons": [
+        "D-6",
         "힐스테이트"
       ]
     },
@@ -501,7 +407,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000466&pblancNo=2026000466",
       "score": 21,
       "reasons": [
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -526,7 +432,7 @@
       "score": 20,
       "reasons": [
         "광역시",
-        "D-6"
+        "D-5"
       ]
     },
     {
