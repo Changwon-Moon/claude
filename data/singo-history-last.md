@@ -8,119 +8,72 @@
 ── 영통아이파크캐슬1단지 전용 84타입 (41117)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '영통아이파크캐슬1단지' --umd '망포동' --type 84 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '영통아이파크캐슬1단지' --umd '망포동' --type 84 --from 202001
 
-영통아이파크캐슬1단지 · 전용 84타입 · 41117 · 202001~202610 (82개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41117-영통아이파크캐슬1단지-84.json
-거래 있던 달 69/82 · 수집 실패 0개월
-📦 캐시에서 79개월 · 국토부에 물은 것 3개월
-최고가 14.05억 (2026-10-14 · 전용 84.69㎡ 7층)
-🧹 force=1 을 지웠습니다 — lawd=41117 umd=망포동 type=84 apt="영통아이파크캐슬1단지"
+⏭ 이미 있음 — 41117-영통아이파크캐슬1단지-84.json (다시 받으려면 force=1)
 
 ── 평촌더샵센트럴시티 전용 59타입 (41173)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '평촌더샵센트럴시티' --umd '관양동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '평촌더샵센트럴시티' --umd '관양동' --type 59 --from 202001
 
-평촌더샵센트럴시티 · 전용 59타입 · 41173 · 202001~202610 (82개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41173-평촌더샵센트럴시티-59.json
-거래 있던 달 52/82 · 수집 실패 0개월
-📦 캐시에서 79개월 · 국토부에 물은 것 3개월
-최고가 13.1억 (2026-10-11 · 전용 59.997㎡ 24층)
-🧹 force=1 을 지웠습니다 — lawd=41173 umd=관양동 type=59 apt="평촌더샵센트럴시티"
+⏭ 이미 있음 — 41173-평촌더샵센트럴시티-59.json (다시 받으려면 force=1)
 
 ── 동아청솔 전용 84타입 (11320)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 11320 --apt '동아청솔' --umd '창동' --type 84 --from 202001
 
-동아청솔 · 전용 84타입 · 11320 · 202001~202610 (82개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/11320-동아청솔-84.json
-거래 있던 달 52/82 · 수집 실패 0개월
-📦 캐시에서 79개월 · 국토부에 물은 것 3개월
-최고가 12.4억 (2026-10-08 · 전용 84.97㎡ 18층)
+⏭ 이미 있음 — 11320-동아청솔-84.json (다시 받으려면 force=1)
 
 ── 힐스테이트다산 전용 84타입 (41360)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41360 --apt '힐스테이트다산' --umd '다산동' --type 84 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41360 --apt '힐스테이트다산' --umd '다산동' --type 84 --from 202001
 
-힐스테이트다산 · 전용 84타입 · 41360 · 202001~202610 (82개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41360-힐스테이트다산-84.json
-거래 있던 달 73/82 · 수집 실패 0개월
-📦 캐시에서 79개월 · 국토부에 물은 것 3개월
-최고가 12.4억 (2026-10-06 · 전용 84.5649㎡ 11층)
-🧹 force=1 을 지웠습니다 — lawd=41360 umd=다산동 type=84 apt="힐스테이트다산"
+⏭ 이미 있음 — 41360-힐스테이트다산-84.json (다시 받으려면 force=1)
 
 ── 롯데캐슬 전용 59타입 (11140)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 11140 --apt '롯데캐슬' --umd '황학동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 11140 --apt '롯데캐슬' --umd '황학동' --type 59 --from 202001
 
-롯데캐슬 · 전용 59타입 · 11140 · 202001~202610 (82개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/11140-롯데캐슬-59.json
-거래 있던 달 60/82 · 수집 실패 0개월
-📦 캐시에서 79개월 · 국토부에 물은 것 3개월
-최고가 12억 (2026-09-04 · 전용 59.91㎡ 30층)
-🧹 force=1 을 지웠습니다 — lawd=11140 umd=황학동 type=59 apt="롯데캐슬"
+⏭ 이미 있음 — 11140-롯데캐슬-59.json (다시 받으려면 force=1)
 
 ── 영통아이파크캐슬2단지 전용 59타입 (41117)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '영통아이파크캐슬2단지' --umd '망포동' --type 59 --from 202001
 
-영통아이파크캐슬2단지 · 전용 59타입 · 41117 · 202001~202610 (82개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41117-영통아이파크캐슬2단지-59.json
-거래 있던 달 64/82 · 수집 실패 0개월
-📦 캐시에서 79개월 · 국토부에 물은 것 3개월
-최고가 10.05억 (2026-10-14 · 전용 59.98㎡ 13층)
+⏭ 이미 있음 — 41117-영통아이파크캐슬2단지-59.json (다시 받으려면 force=1)
 
 ── 공작아파트 전용 59타입 (41173)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '공작아파트' --umd '관양동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '공작아파트' --umd '관양동' --type 59 --from 202001
 
-공작아파트 · 전용 59타입 · 41173 · 202001~202610 (82개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41173-공작아파트-59.json
-거래 있던 달 62/82 · 수집 실패 0개월
-📦 캐시에서 79개월 · 국토부에 물은 것 3개월
-최고가 9.75억 (2026-10-06 · 전용 60㎡ 18층)
-🧹 force=1 을 지웠습니다 — lawd=41173 umd=관양동 type=59 apt="공작아파트"
+⏭ 이미 있음 — 41173-공작아파트-59.json (다시 받으려면 force=1)
 
 ── 광명한진타운 전용 59타입 (41210)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41210 --apt '광명한진타운' --umd '광명동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41210 --apt '광명한진타운' --umd '광명동' --type 59 --from 202001
 
-광명한진타운 · 전용 59타입 · 41210 · 202001~202610 (82개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41210-광명한진타운-59.json
-거래 있던 달 59/82 · 수집 실패 0개월
-📦 캐시에서 79개월 · 국토부에 물은 것 3개월
-최고가 9.3억 (2026-10-08 · 전용 59.93㎡ 15층)
-🧹 force=1 을 지웠습니다 — lawd=41210 umd=광명동 type=59 apt="광명한진타운"
+⏭ 이미 있음 — 41210-광명한진타운-59.json (다시 받으려면 force=1)
 
 ── 삼성래미안 전용 59타입 (41173)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '삼성래미안' --umd '비산동' --type 59 --from 202001
 
-삼성래미안 · 전용 59타입 · 41173 · 202001~202610 (82개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41173-삼성래미안-59.json
-거래 있던 달 65/82 · 수집 실패 0개월
-📦 캐시에서 79개월 · 국토부에 물은 것 3개월
-최고가 8.45억 (2026-09-23 · 전용 59.881㎡ 14층)
-   ⏸ 푸시 충돌 — 다시 시도 (1/3)
+⏭ 이미 있음 — 41173-삼성래미안-59.json (다시 받으려면 force=1)
 
 ── 에스케이뷰파크2차 전용 59타입 (41595)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41595 --apt '에스케이뷰파크2차' --umd '기산동' --type 59 --from 202001
 
-에스케이뷰파크2차 · 전용 59타입 · 41595 · 202001~202610 (82개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41595-에스케이뷰파크2차-59.json
-거래 있던 달 73/82 · 수집 실패 0개월
-📦 캐시에서 79개월 · 국토부에 물은 것 3개월
-최고가 6.83억 (2026-10-14 · 전용 59.9889㎡ 23층)
+⏭ 이미 있음 — 41595-에스케이뷰파크2차-59.json (다시 받으려면 force=1)
 
 ── 옥수삼성 전용 84타입 (11200)
 
