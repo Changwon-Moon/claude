@@ -136,6 +136,9 @@ function noticeOf(d, flags, carried = []) {
   const all = [...flags, ...carried];
   if (!d.oneLiner) return all.join(" · ");
   const head = d.oneLiner.includes('<i class="em">') ? d.oneLiner : `<i class="em">💡</i>${d.oneLiner}`;
+  /* `hideCarried` — 오너가 그 줄을 빼라고 지시한 카드만(아크메르 동탄 2026-10-16 「펜트하우스 내용 없애고」).
+     빠진 값은 캡션이 받는다. 기본은 예전 그대로 싣는다. */
+  if (d.hideCarried) return head;
   return carried.length ? `${head}<br>${carried.join(" · ")}` : head;
 }
 
