@@ -26,3 +26,5 @@ within=14 min=40 digest=1
 within=7 min=40 digest=1 grep=철산
 # 2026-10-08 산곡역자이힐스테이트&하늘채(2026000458, 공고 10/8) — 청약홈 수집분에 넣기
 within=7 min=40 digest=1 grep=산곡
+# 2026-10-16 아크메르 동탄(견본주택 10/16 개관) — 청약홈 공고 확인
+within=7 min=40 digest=1 grep=아크메르
