@@ -33,7 +33,7 @@ lawd=41450 umd=망월동 type=84 apt="미사강변 골든 센트로"
 lawd=11290 umd=하월곡동 type=84 apt="월곡두산위브"
 lawd=41430 umd=내손동 type=59 apt="인덕원 센트럴 자이 2단지"
 lawd=41597 umd=목동 type=84 apt="힐스테이트동탄"
-lawd=41115 umd=매교동 type=84 apt="힐스테이트푸르지오수원" force=1
+lawd=41115 umd=매교동 type=84 apt="힐스테이트푸르지오수원"
 lawd=41113 umd=곡반정동 type=84 apt="수원하늘채더퍼스트2단지" force=1
 lawd=41111 umd=연무동 type=59 apt="서광교파크스위첸"
 lawd=41192 umd=중동 type=84 apt="보람마을(아주)"
