@@ -240,6 +240,8 @@ function noticeFacts(d) {
     specialFrom: s.special ?? null,
     rank1From: s.first ?? null,
     announceDate: s.announce ?? null,
+    /* 블록마다 당첨자 발표일이 하루 다른 공고(아크메르 동탄 95·99, 2026-10-16)는 끝날을 따로 받는다. */
+    announceTo: s.announceTo ?? null,
     /* 오피스텔은 특별공급·순위가 없고 접수가 하루다 — 그 하루를 `receipt` 로 따로 받는다.
        `first`(1순위)에 실어 보내면 APT 의 순위 개념이 오피스텔 카드에 묻는다. */
     receiptFrom: s.receipt ?? s.first ?? null,
@@ -741,7 +743,16 @@ function presale(d) {
       : [
           { label: "특별공급", date: ah?.specialFrom ? md(ah.specialFrom) : "미고지", tbd: !ah?.specialFrom },
           { label: "1순위", date: ah?.rank1From ? md(ah.rank1From) : "미고지", tbd: !ah?.rank1From },
-          { label: "당첨자 발표", date: ah?.announceDate ? md(ah.announceDate) : "미고지", tbd: !ah?.announceDate },
+          {
+            label: "당첨자 발표",
+            /* 블록별로 발표가 이틀에 걸치면 `11/3~4` 로 적는다 — 한 날만 적으면 다른 블록 독자에게 틀린 날이다. */
+            date: ah?.announceDate
+              ? ah.announceTo && ah.announceTo !== ah.announceDate
+                ? `${md(ah.announceDate).replace(/\(.\)$/, "")}~${Number(ah.announceTo.slice(8))}`
+                : md(ah.announceDate)
+              : "미고지",
+            tbd: !ah?.announceDate,
+          },
           { label: "입주 예정", date: ymKo(moveInYm), tbd: !moveInYm },
         ],
     /* 한줄평이 있으면 그게 아래 한 줄이다 — 특이사항 나열보다 한 문장이 오래 남는다. */

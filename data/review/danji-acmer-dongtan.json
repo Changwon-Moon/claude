@@ -1,0 +1,91 @@
+{
+  "label": "danji-acmer-dongtan",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 812억 허용 — 95블록 총공급(공고 공급규모)"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 996억 허용 — 99블록 총공급"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 1,182억 허용 — 84㎡ 세대수(95: 180+90 · 99: 334+84+166+164+164)"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 78억 허용 — 99㎡ 세대수(99A)"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 272억 허용 — 116㎡ 세대수(116A 92 + 116B 180)"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 266억 허용 — 128~129㎡ 세대수(128A 90 + 129B 176)"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 171,680억 허용 — 84㎡ 최고가(99블록 84B 40층 이상)의 만원 단위"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 191,440억 허용 — 99A 최고가"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 221,350억 허용 — 116B 최고가"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 248,290억 허용 — 129B 최고가"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 2026000508억 허용 — 95블록 주택관리번호"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 2026000509억 허용 — 99블록 주택관리번호"
+    }
+  ],
+  "cards": [
+    {
+      "file": "danji-acmer-dongtan.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}
