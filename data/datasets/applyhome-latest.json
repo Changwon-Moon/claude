@@ -10,11 +10,11 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-10-15",
+    "collectedFor": "2026-10-16",
     "withinDays": 7,
     "totals": {
-      "APT 분양정보": 2900,
-      "APT 무순위/잔여세대": 1716
+      "APT 분양정보": 2901,
+      "APT 무순위/잔여세대": 1718
     },
     "unit": {
       "supply": "가구"
@@ -44,7 +44,7 @@
       "reasons": [
         "서울",
         "무순위",
-        "D-4"
+        "D-3"
       ]
     },
     {
@@ -70,6 +70,33 @@
       "reasons": [
         "수도권",
         "68가구",
+        "무순위",
+        "D-3"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910261",
+      "name": "올 뉴 챔피언스시티 1차",
+      "areaName": "광주",
+      "address": "전남광주통합특별시 북구 임동 100-1 일원 (구)전방·일신방직 부지 지구단위계획구역 A2BL)",
+      "supply": 729,
+      "noticeDate": "2026-10-15",
+      "receiptFrom": "2026-10-20",
+      "receiptTo": "2026-10-20",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2030-11",
+      "announceDate": "2026-10-23",
+      "builder": "(주) 챔피언스시티복합개발피에프브이",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.championscity.co.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910261&pblancNo=2026910261",
+      "score": 63,
+      "reasons": [
+        "광역시",
+        "729가구",
         "무순위",
         "D-4"
       ]
@@ -97,8 +124,34 @@
       "reasons": [
         "수도권",
         "1,289가구 대단지",
-        "D-6",
+        "D-5",
         "자이"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910264",
+      "name": "시흥 은계 에피트(조합원 취소분)",
+      "areaName": "경기",
+      "address": "경기도 시흥시 은행동 289-31번지 일원",
+      "supply": 16,
+      "noticeDate": "2026-10-15",
+      "receiptFrom": "2026-10-20",
+      "receiptTo": "2026-10-20",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-10",
+      "announceDate": "2026-10-23",
+      "builder": "신극동아파트 가로주택정비사업조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "http://efete-eungye.com/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910264&pblancNo=2026910264",
+      "score": 59,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "D-4"
       ]
     },
     {
@@ -124,7 +177,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-4",
+        "D-3",
         "e편한세상"
       ]
     },
@@ -151,7 +204,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-4",
+        "D-3",
         "푸르지오"
       ]
     },
@@ -178,7 +231,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-4"
+        "D-3"
       ]
     },
     {
@@ -204,7 +257,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-4"
+        "D-3"
       ]
     },
     {
@@ -230,7 +283,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-4"
+        "D-3"
       ]
     },
     {
@@ -255,7 +308,7 @@
       "score": 47,
       "reasons": [
         "1,128가구 대단지",
-        "D-6",
+        "D-5",
         "아이파크"
       ]
     },
@@ -306,7 +359,7 @@
       "score": 40,
       "reasons": [
         "543가구",
-        "D-6",
+        "D-5",
         "아이파크"
       ]
     },
@@ -332,7 +385,7 @@
       "score": 40,
       "reasons": [
         "광역시",
-        "D-6",
+        "D-5",
         "자이"
       ]
     },
@@ -358,7 +411,7 @@
       "score": 37,
       "reasons": [
         "1,380가구 대단지",
-        "D-6"
+        "D-5"
       ]
     },
     {
@@ -382,32 +435,32 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000464&pblancNo=2026000464",
       "score": 34,
       "reasons": [
-        "D-6",
+        "D-5",
         "힐스테이트"
       ]
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000466",
-      "name": "진도 승원팰리체 더 테라스",
-      "areaName": "전남",
-      "address": "전남광주통합특별시 진도군 진도읍 교동리 618번지 일원",
-      "supply": 58,
-      "noticeDate": "2026-10-08",
-      "receiptFrom": "2026-10-14",
-      "receiptTo": "2026-10-15",
-      "specialFrom": "2026-10-13",
-      "rank1From": "2026-10-14",
-      "moveInYm": "2028-09",
-      "announceDate": "2026-10-21",
-      "builder": "승원건영 주식회사",
+      "pblancNo": "2026000455",
+      "name": "신분평 에피트 더웨이시티",
+      "areaName": "충북",
+      "address": "충청북도 청주시 서원구 장성동 135번지 일원(장성지구 A2블럭)",
+      "supply": 992,
+      "noticeDate": "2026-10-15",
+      "receiptFrom": "2026-10-28",
+      "receiptTo": "2026-10-29",
+      "specialFrom": "2026-10-27",
+      "rank1From": "2026-10-28",
+      "moveInYm": "2029-09",
+      "announceDate": "2026-11-04",
+      "builder": "에이치엘디앤아이한라 주식회사, 에이치엘에코텍 주식회사",
       "priceCap": false,
       "speculative": false,
-      "homepage": "https://진도승원팰리체.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000466&pblancNo=2026000466",
-      "score": 21,
+      "homepage": "https://brand.hldni.com/thewaycity/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000455&pblancNo=2026000455",
+      "score": 22,
       "reasons": [
-        "오늘 마감"
+        "992가구"
       ]
     },
     {
@@ -432,7 +485,7 @@
       "score": 20,
       "reasons": [
         "광역시",
-        "D-5"
+        "D-4"
       ]
     },
     {
