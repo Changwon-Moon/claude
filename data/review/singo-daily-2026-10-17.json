@@ -1,7 +1,7 @@
 {
   "label": "singo-daily-2026-10-17",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 17장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 18장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
@@ -42,6 +42,12 @@
     },
     {
       "file": "singo-월곡두산위브-84-1017.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-인덕원센트럴자이2단지-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []

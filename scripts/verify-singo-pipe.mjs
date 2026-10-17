@@ -126,7 +126,7 @@ head("⑦ 자료가 없으면 그 줄을 안 붙이는가");
       const hh = join(ROOT, "data/datasets/apt-hhld.json");
       const byKapt = existsSync(hh) ? JSON.parse(readFileSync(hh, "utf8")).byKapt ?? {} : {};
       /* ⚠️ 대장에 없는 코드는 **영영 안 듣는 항목**이다 — 오타 하나면 조용히 죽는다 */
-      const ghost = Object.keys(names).filter((k) => Object.keys(byKapt).length && !byKapt[k]);
+      const ghost = Object.keys(names).filter((k) => Object.keys(byKapt).length && !byKapt[k.split("@")[0]]); /* 코드@신고명 열쇠(2026-10-17)는 앞 코드로 잰다 */
       check(`이름 사전의 코드가 전부 대장에 있다 (${Object.keys(names).length}건)`, !ghost.length, ghost.join(", "));
       /* ⚠️ 이유 없는 항목은 몇 주 뒤 누군가 무심코 지운다 */
       const noWhy = Object.entries(names).filter(([, v]) => !v.why).map(([k]) => k);

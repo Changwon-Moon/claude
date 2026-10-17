@@ -1355,10 +1355,23 @@ const nameAlreadyConfirmed = (() => {
     return false;
   }
 })();
-const BOOK_HIT = !NAME_OVERRIDE && !MERGE && KAPT && !nameAlreadyConfirmed ? nameBook[KAPT] : null;
+/* 🏢 한 대장 코드에 단지가 둘 이상 묶인 경우(2026-10-17 인덕원센트럴자이 1·2단지 = A43708008 하나)
+ * 코드만으로 짚으면 2단지 카드에 「1단지」 이름이 붙는다 — 오보다.
+ * ① `코드@신고명(띄어쓰기 뺀)` 열쇠가 있으면 그것이 먼저 ② 코드 열쇠 항목에 `onlyAptNm` 이 있으면
+ *    신고명이 맞을 때만 쓴다(안 맞으면 사전을 건너뛰고 신고명 그대로). */
+const _nm = (s) => String(s ?? "").replace(/\s+/g, "");
+const bookLookup = () => {
+  if (!KAPT) return null;
+  const exact = nameBook[`${KAPT}@${_nm(hit.aptNm)}`];
+  if (exact) return exact;
+  const e = nameBook[KAPT];
+  if (e?.onlyAptNm && _nm(e.onlyAptNm) !== _nm(hit.aptNm)) return null;
+  return e ?? null;
+};
+const BOOK_HIT = !NAME_OVERRIDE && !MERGE && KAPT && !nameAlreadyConfirmed ? bookLookup() : null;
 const RAW_NAME = nameAlreadyConfirmed ? hit.aptNm : BOOK_HIT?.name || dropAptSuffix(hit.aptNm);
 const DISPLAY_NAME = NAME_OVERRIDE || (MERGE ? APT : RAW_NAME);
-if (nameAlreadyConfirmed && !NAME_OVERRIDE && !MERGE && (nameBook[KAPT] || dropAptSuffix(hit.aptNm) !== hit.aptNm))
+if (nameAlreadyConfirmed && !NAME_OVERRIDE && !MERGE && (bookLookup() || dropAptSuffix(hit.aptNm) !== hit.aptNm))
   console.log(
     `ⓘ 이름 규칙(사전·「아파트」 손질)이 있지만 **이미 오너가 확정·발행한 카드**라 신고명 그대로 그립니다 — ${nameSlug}\n` +
       `   기준을 바꿔도 이미 나간 카드는 소급하지 않습니다(오너 2026-09-03). 새 카드부터 적용됩니다.`,
