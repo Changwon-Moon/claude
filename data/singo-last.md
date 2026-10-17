@@ -1,30 +1,69 @@
 # 오늘의 신고가 — 마지막 실행
 
-- 실행: 2026-10-17 (KST) · 방아쇠 `schedule`
+- 실행: 2026-10-18 (KST) · 방아쇠 `schedule`
 - 기준: 1000세대 이상 명부 · 전용 59·84 타입 · 최근 2개월 신고분
-- 결과: **성공**
-- 커밋: `90b2c60e2042371bf837e8df635cbfc5f4455dd8`
+- 결과: **실패**
+- 커밋: `4e81fba05677a270c1361200590abc2d4ba043ba`
 
 ```
 
 > @wirit/collectors@0.1.0 collect-singo /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitSingoCli.ts -- --today 2026-10-17 --months 2 --top 0 --sort price
+> tsx src/molitSingoCli.ts -- --today 2026-10-18 --months 2 --top 0 --sort price
 
    🔑 MOLIT_API_KEY: 166b… (64자) · 지문 4e34245e · 인코딩 안 됨
 명부 지번 조회판 1050칸 (지번 겹쳐 버린 것 9칸)
-명부 1147개 단지 · 판정 지역 61/61 · 수집 성공 122회 / 실패 0회
-→ 오늘의 신고가 8건
-  · 하남시 미사강변 골든 센트로 34평 14.05억 (전용 84.88㎡ 19층 2026-09-15 · 직전 14억 2026-08-08 · 1,541세대)
-  · 성북구 월곡두산위브 34평 11.85억 (전용 84.843㎡ 17층 2026-10-08 · 직전 11.3억 2026-09-01 · 2,197세대)
-  · 의왕시 인덕원 센트럴 자이 2단지 25평 11.2억 (전용 59.84㎡ 11층 2026-10-06 · 직전 10.85억 2026-06-15 · 2,540세대)
-  · 화성시동탄구 힐스테이트동탄 34평 11.15억 (전용 84.8835㎡ 10층 2026-10-13 · 직전 10.9억 2026-06-30 · 1,479세대)
-  · 수원시팔달구 힐스테이트푸르지오수원 34평 10.5억 (전용 84.91㎡ 14층 2026-10-16 · 직전 10.3억 2026-09-30 · 2,586세대)
-  · 수원시권선구 수원하늘채더퍼스트2단지 34평 9.3억 (전용 84.96㎡ 10층 2026-09-19 · 직전 8.7억 2026-09-15 · 1,833세대)
-  · 수원시장안구 서광교파크스위첸 25평 8.25억 (전용 59.6816㎡ 3층 2026-10-14 · 직전 7.9억 2026-06-11 · 1,130세대)
-  · 부천시원미구 보람마을(아주) 34평 8억 (전용 84.94㎡ 16층 2026-10-08 · 직전 7.9억 2021-10-02 · 1,398세대)
-기간 2026-10-17
-신고가 8건 · 돌파 0건
-→ /home/runner/work/claude/claude/docs/daily/신고가재료-2026-10-17.md
-→ data/datasets/singo-digest.json
-→ data/singo-digest-alert.txt
+⚠️ 종로구 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+⚠️ 종로구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+⚠️ 중구 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+   ⏸ 3번 연속 실패 — 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
+⚠️ 중구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+⚠️ 용산구 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+⚠️ 용산구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+   ⏸ 3번 연속 실패 — 문이 닫힌 것으로 보고 60초 기다립니다 (2/5)
+⚠️ 성동구 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+⚠️ 성동구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+⚠️ 광진구 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+   ⏸ 3번 연속 실패 — 문이 닫힌 것으로 보고 60초 기다립니다 (3/5)
+⚠️ 광진구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+⚠️ 동대문구 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+⚠️ 동대문구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+   ⏸ 3번 연속 실패 — 문이 닫힌 것으로 보고 60초 기다립니다 (4/5)
+⚠️ 중랑구 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+⚠️ 중랑구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+⚠️ 성북구 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+   ⏸ 3번 연속 실패 — 문이 닫힌 것으로 보고 60초 기다립니다 (5/5)
+⚠️ 성북구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+⚠️ 강북구 202609 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+⚠️ 강북구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← 응답 자체가 없습니다(문이 닫힌 쪽). 다시 밀면 올 수 있습니다
+⛔ 5번(약 5분) 기다렸는데도 안 열립니다 — 여기서 접습니다.
+   (계속 두드리면 30분을 태우고도 결과는 같습니다)
+명부 1147개 단지 · 판정 지역 9/61 · 수집 성공 0회 / 실패 18회
+→ 오늘의 신고가 0건
+
+❌ 실거래 API 에서 한 건도 받지 못했습니다 (18회 시도 전부 실패) — 오늘 판정은 없습니다.
+   알림은 이미 나갔지만, 수집이 0건인 날을 초록불로 끝내지 않습니다.
+   첫 실패 사유: 종로구 202609: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: fetch failed | getRTMSDataSvcAptTrade: fetch failed
+↳ 403이면: (a) 방금 신청한 키의 전파 지
+   ↳ 403/401 이면 공공데이터포털 마이페이지에서 **활용신청 상태와 만료일**을 확인하세요.
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-singo: `tsx src/molitSingoCli.ts -- --today 2026-10-18 --months 2 --top 0 --sort price`
+Exit status 1
 ```
