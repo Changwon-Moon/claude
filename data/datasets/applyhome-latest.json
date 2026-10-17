@@ -10,7 +10,7 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-10-17",
+    "collectedFor": "2026-10-18",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2907,
@@ -44,7 +44,7 @@
       "reasons": [
         "서울",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -70,6 +70,59 @@
       "reasons": [
         "수도권",
         "68가구",
+        "무순위",
+        "D-1"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910261",
+      "name": "올 뉴 챔피언스시티 1차",
+      "areaName": "광주",
+      "address": "전남광주통합특별시 북구 임동 100-1 일원 (구)전방·일신방직 부지 지구단위계획구역 A2BL)",
+      "supply": 729,
+      "noticeDate": "2026-10-15",
+      "receiptFrom": "2026-10-20",
+      "receiptTo": "2026-10-20",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2030-11",
+      "announceDate": "2026-10-23",
+      "builder": "(주) 챔피언스시티복합개발피에프브이",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.championscity.co.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910261&pblancNo=2026910261",
+      "score": 70,
+      "reasons": [
+        "광역시",
+        "729가구",
+        "무순위",
+        "D-2"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910264",
+      "name": "시흥 은계 에피트(조합원 취소분)",
+      "areaName": "경기",
+      "address": "경기도 시흥시 은행동 289-31번지 일원",
+      "supply": 16,
+      "noticeDate": "2026-10-15",
+      "receiptFrom": "2026-10-20",
+      "receiptTo": "2026-10-20",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-10",
+      "announceDate": "2026-10-23",
+      "builder": "신극동아파트 가로주택정비사업조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "http://efete-eungye.com/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910264&pblancNo=2026910264",
+      "score": 66,
+      "reasons": [
+        "수도권",
         "무순위",
         "D-2"
       ]
@@ -97,7 +150,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-2",
+        "D-1",
         "e편한세상"
       ]
     },
@@ -124,35 +177,8 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-2",
+        "D-1",
         "푸르지오"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910261",
-      "name": "올 뉴 챔피언스시티 1차",
-      "areaName": "광주",
-      "address": "전남광주통합특별시 북구 임동 100-1 일원 (구)전방·일신방직 부지 지구단위계획구역 A2BL)",
-      "supply": 729,
-      "noticeDate": "2026-10-15",
-      "receiptFrom": "2026-10-20",
-      "receiptTo": "2026-10-20",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2030-11",
-      "announceDate": "2026-10-23",
-      "builder": "(주) 챔피언스시티복합개발피에프브이",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.championscity.co.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910261&pblancNo=2026910261",
-      "score": 63,
-      "reasons": [
-        "광역시",
-        "729가구",
-        "무순위",
-        "D-3"
       ]
     },
     {
@@ -178,7 +204,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -204,7 +230,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -230,34 +256,8 @@
       "reasons": [
         "수도권",
         "1,289가구 대단지",
-        "D-4",
+        "D-3",
         "자이"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910264",
-      "name": "시흥 은계 에피트(조합원 취소분)",
-      "areaName": "경기",
-      "address": "경기도 시흥시 은행동 289-31번지 일원",
-      "supply": 16,
-      "noticeDate": "2026-10-15",
-      "receiptFrom": "2026-10-20",
-      "receiptTo": "2026-10-20",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-10",
-      "announceDate": "2026-10-23",
-      "builder": "신극동아파트 가로주택정비사업조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://efete-eungye.com/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910264&pblancNo=2026910264",
-      "score": 59,
-      "reasons": [
-        "수도권",
-        "무순위",
-        "D-3"
       ]
     },
     {
@@ -283,7 +283,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -308,7 +308,7 @@
       "score": 47,
       "reasons": [
         "1,128가구 대단지",
-        "D-4",
+        "D-3",
         "아이파크"
       ]
     },
@@ -411,7 +411,7 @@
       "score": 40,
       "reasons": [
         "543가구",
-        "D-4",
+        "D-3",
         "아이파크"
       ]
     },
@@ -437,7 +437,7 @@
       "score": 40,
       "reasons": [
         "광역시",
-        "D-4",
+        "D-3",
         "자이"
       ]
     },
@@ -463,7 +463,7 @@
       "score": 37,
       "reasons": [
         "1,380가구 대단지",
-        "D-4"
+        "D-3"
       ]
     },
     {
@@ -487,7 +487,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000464&pblancNo=2026000464",
       "score": 34,
       "reasons": [
-        "D-4",
+        "D-3",
         "힐스테이트"
       ]
     },
@@ -543,6 +543,31 @@
     },
     {
       "kind": "apt",
+      "pblancNo": "2026000471",
+      "name": "한양립스 에듀포레(조합원 취소분)",
+      "areaName": "광주",
+      "address": "전남광주통합특별시 광산구 하산동 269번지 일원",
+      "supply": 19,
+      "noticeDate": "2026-10-08",
+      "receiptFrom": "2026-10-19",
+      "receiptTo": "2026-10-20",
+      "specialFrom": null,
+      "rank1From": "2026-10-19",
+      "moveInYm": "2027-11",
+      "announceDate": "2026-10-26",
+      "builder": "(주)한양건설",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "http://www.한양립스에듀포레.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000471&pblancNo=2026000471",
+      "score": 27,
+      "reasons": [
+        "광역시",
+        "D-2"
+      ]
+    },
+    {
+      "kind": "apt",
       "pblancNo": "2026000455",
       "name": "신분평 에피트 더웨이시티",
       "areaName": "충북",
@@ -563,31 +588,6 @@
       "score": 22,
       "reasons": [
         "992가구"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000471",
-      "name": "한양립스 에듀포레(조합원 취소분)",
-      "areaName": "광주",
-      "address": "전남광주통합특별시 광산구 하산동 269번지 일원",
-      "supply": 19,
-      "noticeDate": "2026-10-08",
-      "receiptFrom": "2026-10-19",
-      "receiptTo": "2026-10-20",
-      "specialFrom": null,
-      "rank1From": "2026-10-19",
-      "moveInYm": "2027-11",
-      "announceDate": "2026-10-26",
-      "builder": "(주)한양건설",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://www.한양립스에듀포레.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000471&pblancNo=2026000471",
-      "score": 20,
-      "reasons": [
-        "광역시",
-        "D-3"
       ]
     },
     {
