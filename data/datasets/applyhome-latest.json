@@ -10,10 +10,10 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-10-16",
+    "collectedFor": "2026-10-17",
     "withinDays": 7,
     "totals": {
-      "APT 분양정보": 2901,
+      "APT 분양정보": 2907,
       "APT 무순위/잔여세대": 1718
     },
     "unit": {
@@ -40,11 +40,11 @@
       "speculative": false,
       "homepage": "https://청계노르웨이숲.com",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910263&pblancNo=2026910263",
-      "score": 71,
+      "score": 78,
       "reasons": [
         "서울",
         "무순위",
-        "D-3"
+        "D-2"
       ]
     },
     {
@@ -66,12 +66,66 @@
       "speculative": false,
       "homepage": "https://cityociel9.com/",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910259&pblancNo=2026910259",
-      "score": 65,
+      "score": 72,
       "reasons": [
         "수도권",
         "68가구",
         "무순위",
-        "D-3"
+        "D-2"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910255",
+      "name": "e편한세상 에코델타 센터포인트(19BL)",
+      "areaName": "부산",
+      "address": "부산광역시 강서구 강동동 에코델타시티 내 공동 19BL",
+      "supply": 1,
+      "noticeDate": "2026-10-12",
+      "receiptFrom": "2026-10-19",
+      "receiptTo": "2026-10-19",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-12",
+      "announceDate": "2026-10-22",
+      "builder": "부산도시공사",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.elife.co.kr/Posm_list01.action?commonMap.CD_BIZ_LND=200026",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910255&pblancNo=2026910255",
+      "score": 64,
+      "reasons": [
+        "광역시",
+        "무순위",
+        "D-2",
+        "e편한세상"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910254",
+      "name": "에코델타시티 푸르지오 센터파크(18BL)",
+      "areaName": "부산",
+      "address": "부산광역시 강서구 강동동 에코델타시티 내 공동 18BL",
+      "supply": 1,
+      "noticeDate": "2026-10-12",
+      "receiptFrom": "2026-10-19",
+      "receiptTo": "2026-10-19",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-12",
+      "announceDate": "2026-10-22",
+      "builder": "부산도시공사",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.prugio.com/hb/2022/ecodeltacity",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910254&pblancNo=2026910254",
+      "score": 64,
+      "reasons": [
+        "광역시",
+        "무순위",
+        "D-2",
+        "푸르지오"
       ]
     },
     {
@@ -98,7 +152,59 @@
         "광역시",
         "729가구",
         "무순위",
-        "D-4"
+        "D-3"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910262",
+      "name": "화성 송산 동원로얄듀크 포레(2차)",
+      "areaName": "경기",
+      "address": "경기도 화성시 병점구 화산로 9",
+      "supply": 5,
+      "noticeDate": "2026-10-14",
+      "receiptFrom": "2026-10-19",
+      "receiptTo": "2026-10-19",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-11",
+      "announceDate": "2026-10-22",
+      "builder": "코리아신탁(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": null,
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910262&pblancNo=2026910262",
+      "score": 62,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "D-2"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910260",
+      "name": "의왕역 한신더휴",
+      "areaName": "경기",
+      "address": "경기도 의왕시 삼동 244-1번지 일원",
+      "supply": 8,
+      "noticeDate": "2026-10-12",
+      "receiptFrom": "2026-10-19",
+      "receiptTo": "2026-10-19",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2029-06",
+      "announceDate": "2026-10-23",
+      "builder": "우성4차아파트 및 주변가로주택정비사업조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://의왕역한신더휴.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910260&pblancNo=2026910260",
+      "score": 62,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "D-2"
       ]
     },
     {
@@ -124,7 +230,7 @@
       "reasons": [
         "수도권",
         "1,289가구 대단지",
-        "D-5",
+        "D-4",
         "자이"
       ]
     },
@@ -151,112 +257,6 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-4"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910255",
-      "name": "e편한세상 에코델타 센터포인트(19BL)",
-      "areaName": "부산",
-      "address": "부산광역시 강서구 강동동 에코델타시티 내 공동 19BL",
-      "supply": 1,
-      "noticeDate": "2026-10-12",
-      "receiptFrom": "2026-10-19",
-      "receiptTo": "2026-10-19",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-12",
-      "announceDate": "2026-10-22",
-      "builder": "부산도시공사",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.elife.co.kr/Posm_list01.action?commonMap.CD_BIZ_LND=200026",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910255&pblancNo=2026910255",
-      "score": 57,
-      "reasons": [
-        "광역시",
-        "무순위",
-        "D-3",
-        "e편한세상"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910254",
-      "name": "에코델타시티 푸르지오 센터파크(18BL)",
-      "areaName": "부산",
-      "address": "부산광역시 강서구 강동동 에코델타시티 내 공동 18BL",
-      "supply": 1,
-      "noticeDate": "2026-10-12",
-      "receiptFrom": "2026-10-19",
-      "receiptTo": "2026-10-19",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-12",
-      "announceDate": "2026-10-22",
-      "builder": "부산도시공사",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.prugio.com/hb/2022/ecodeltacity",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910254&pblancNo=2026910254",
-      "score": 57,
-      "reasons": [
-        "광역시",
-        "무순위",
-        "D-3",
-        "푸르지오"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910262",
-      "name": "화성 송산 동원로얄듀크 포레(2차)",
-      "areaName": "경기",
-      "address": "경기도 화성시 병점구 화산로 9",
-      "supply": 5,
-      "noticeDate": "2026-10-14",
-      "receiptFrom": "2026-10-19",
-      "receiptTo": "2026-10-19",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-11",
-      "announceDate": "2026-10-22",
-      "builder": "코리아신탁(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": null,
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910262&pblancNo=2026910262",
-      "score": 55,
-      "reasons": [
-        "수도권",
-        "무순위",
-        "D-3"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910260",
-      "name": "의왕역 한신더휴",
-      "areaName": "경기",
-      "address": "경기도 의왕시 삼동 244-1번지 일원",
-      "supply": 8,
-      "noticeDate": "2026-10-12",
-      "receiptFrom": "2026-10-19",
-      "receiptTo": "2026-10-19",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2029-06",
-      "announceDate": "2026-10-23",
-      "builder": "우성4차아파트 및 주변가로주택정비사업조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://의왕역한신더휴.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910260&pblancNo=2026910260",
-      "score": 55,
-      "reasons": [
-        "수도권",
-        "무순위",
         "D-3"
       ]
     },
@@ -279,11 +279,11 @@
       "speculative": false,
       "homepage": "http://www.그랑라크에일린의뜰.com",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910252&pblancNo=2026910252",
-      "score": 51,
+      "score": 58,
       "reasons": [
         "광역시",
         "무순위",
-        "D-3"
+        "D-2"
       ]
     },
     {
@@ -308,7 +308,7 @@
       "score": 47,
       "reasons": [
         "1,128가구 대단지",
-        "D-5",
+        "D-4",
         "아이파크"
       ]
     },
@@ -339,6 +339,58 @@
     },
     {
       "kind": "apt",
+      "pblancNo": "2026000509",
+      "name": "아크메르 동탄 99",
+      "areaName": "경기",
+      "address": "경기도 화성특례시 동탄구 반송동 99번지[동탄(1) M1-2-2블록]",
+      "supply": 996,
+      "noticeDate": "2026-10-16",
+      "receiptFrom": "2026-10-27",
+      "receiptTo": "2026-10-28",
+      "specialFrom": "2026-10-26",
+      "rank1From": "2026-10-27",
+      "moveInYm": "2032-01",
+      "announceDate": "2026-11-04",
+      "builder": "(주)포스코이앤씨",
+      "priceCap": false,
+      "speculative": true,
+      "homepage": "https://아크메르동탄.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000509&pblancNo=2026000509",
+      "score": 41,
+      "reasons": [
+        "수도권",
+        "996가구",
+        "투기과열지구"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000508",
+      "name": "아크메르 동탄 95",
+      "areaName": "경기",
+      "address": "경기도 화성특례시 동탄구 반송동 95번지[동탄(1) M1-1-2블록]",
+      "supply": 812,
+      "noticeDate": "2026-10-16",
+      "receiptFrom": "2026-10-27",
+      "receiptTo": "2026-10-28",
+      "specialFrom": "2026-10-26",
+      "rank1From": "2026-10-27",
+      "moveInYm": "2032-01",
+      "announceDate": "2026-11-03",
+      "builder": "(주)포스코이앤씨",
+      "priceCap": false,
+      "speculative": true,
+      "homepage": "https://아크메르동탄.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000508&pblancNo=2026000508",
+      "score": 41,
+      "reasons": [
+        "수도권",
+        "812가구",
+        "투기과열지구"
+      ]
+    },
+    {
+      "kind": "apt",
       "pblancNo": "2026000491",
       "name": "청주 가경 아이파크 7단지",
       "areaName": "충북",
@@ -359,7 +411,7 @@
       "score": 40,
       "reasons": [
         "543가구",
-        "D-5",
+        "D-4",
         "아이파크"
       ]
     },
@@ -385,7 +437,7 @@
       "score": 40,
       "reasons": [
         "광역시",
-        "D-5",
+        "D-4",
         "자이"
       ]
     },
@@ -411,7 +463,7 @@
       "score": 37,
       "reasons": [
         "1,380가구 대단지",
-        "D-5"
+        "D-4"
       ]
     },
     {
@@ -435,8 +487,58 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000464&pblancNo=2026000464",
       "score": 34,
       "reasons": [
-        "D-5",
+        "D-4",
         "힐스테이트"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000514",
+      "name": "트리븐센텀 2단지",
+      "areaName": "부산",
+      "address": "부산광역시 해운대구 반여동 610-5번지 일원",
+      "supply": 792,
+      "noticeDate": "2026-10-16",
+      "receiptFrom": "2026-10-27",
+      "receiptTo": "2026-10-28",
+      "specialFrom": "2026-10-26",
+      "rank1From": "2026-10-27",
+      "moveInYm": "2031-02",
+      "announceDate": "2026-11-05",
+      "builder": "두산에너빌리티(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.trivn-doosan-centum.com/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000514&pblancNo=2026000514",
+      "score": 28,
+      "reasons": [
+        "광역시",
+        "792가구"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000513",
+      "name": "트리븐센텀 1단지",
+      "areaName": "부산",
+      "address": "부산광역시 해운대구 반여동 1167-3번지 일원",
+      "supply": 852,
+      "noticeDate": "2026-10-16",
+      "receiptFrom": "2026-10-27",
+      "receiptTo": "2026-10-28",
+      "specialFrom": "2026-10-26",
+      "rank1From": "2026-10-27",
+      "moveInYm": "2031-02",
+      "announceDate": "2026-11-04",
+      "builder": "두산에너빌리티(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.trivn-doosan-centum.com/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000513&pblancNo=2026000513",
+      "score": 28,
+      "reasons": [
+        "광역시",
+        "852가구"
       ]
     },
     {
@@ -485,7 +587,7 @@
       "score": 20,
       "reasons": [
         "광역시",
-        "D-4"
+        "D-3"
       ]
     },
     {
@@ -509,6 +611,54 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000402&pblancNo=2026000402",
       "score": 16,
       "reasons": []
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000495",
+      "name": "연산 센텀 월드메르디앙",
+      "areaName": "부산",
+      "address": "부산광역시 연제구 연산동 418-8(외1필지)",
+      "supply": 144,
+      "noticeDate": "2026-10-16",
+      "receiptFrom": "2026-10-27",
+      "receiptTo": "2026-10-28",
+      "specialFrom": "2026-10-26",
+      "rank1From": "2026-10-27",
+      "moveInYm": "2029-04",
+      "announceDate": "2026-11-04",
+      "builder": "주식회사 명린종합건설",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.연산센텀월드메르디앙.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000495&pblancNo=2026000495",
+      "score": 16,
+      "reasons": [
+        "광역시"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000507",
+      "name": "광안센텀 비스타동원(조합원 취소분)",
+      "areaName": "부산",
+      "address": "부산광역시 수영구 광안동 971",
+      "supply": 39,
+      "noticeDate": "2026-10-16",
+      "receiptFrom": "2026-10-26",
+      "receiptTo": "2026-10-27",
+      "specialFrom": null,
+      "rank1From": "2026-10-26",
+      "moveInYm": "2027-09",
+      "announceDate": "2026-11-02",
+      "builder": "(주)동원개발",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.광안센텀비스타동원.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000507&pblancNo=2026000507",
+      "score": 12,
+      "reasons": [
+        "광역시"
+      ]
     }
   ]
 }
