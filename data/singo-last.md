@@ -1,22 +1,22 @@
 # 오늘의 신고가 — 마지막 실행
 
-- 실행: 2026-10-18 (KST) · 방아쇠 `workflow_run` · **자동 재시도** 1/4칸 · 🔇 조용
+- 실행: 2026-10-19 (KST) · 방아쇠 `schedule`
 - 기준: 1000세대 이상 명부 · 전용 59·84 타입 · 최근 2개월 신고분
 - 결과: **성공**
-- 커밋: `aa89a3f124a94469690948ba883805de9a3131f5`
+- 커밋: `70d928cc507b51bb8c0df83e968bdda1557ec570`
 
 ```
 
 > @wirit/collectors@0.1.0 collect-singo /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitSingoCli.ts -- --today 2026-10-18 --months 2 --top 0 --sort price
+> tsx src/molitSingoCli.ts -- --today 2026-10-19 --months 2 --top 0 --sort price
 
    🔑 MOLIT_API_KEY: 166b… (64자) · 지문 4e34245e · 인코딩 안 됨
 명부 지번 조회판 1050칸 (지번 겹쳐 버린 것 9칸)
 명부 1147개 단지 · 판정 지역 61/61 · 수집 성공 122회 / 실패 0회
 → 오늘의 신고가 0건
-기간 2026-10-18
+기간 2026-10-19
 신고가 0건 · 돌파 0건
-→ /home/runner/work/claude/claude/docs/daily/신고가재료-2026-10-18.md
+→ /home/runner/work/claude/claude/docs/daily/신고가재료-2026-10-19.md
 → data/datasets/singo-digest.json
 → data/singo-digest-alert.txt
 ```
