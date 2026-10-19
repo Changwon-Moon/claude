@@ -52,7 +52,7 @@ lawd=41461 umd=역북동 type=84 apt="우미린센트럴파크"
 lawd=41410 umd=산본동 type=59 apt="세종"
 lawd=41117 umd=영통동 type=59 apt="영통센트럴파크뷰"
 lawd=41370 umd=궐동 type=84 apt="중흥S-클래스에듀파크"
-lawd=41461 umd=고림동 type=59 apt="힐스테이트용인고진역1단지" force=1
+lawd=41461 umd=고림동 type=59 apt="힐스테이트용인고진역1단지"
 
 lawd=41450 umd=망월동 type=84 apt="미사강변 골든 센트로"
 lawd=11290 umd=하월곡동 type=84 apt="월곡두산위브"

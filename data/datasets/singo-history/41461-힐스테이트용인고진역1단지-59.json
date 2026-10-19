@@ -5,15 +5,15 @@
     "aptNm": "힐스테이트용인고진역1단지",
     "type": "59",
     "from": "202001",
-    "to": "202609",
-    "monthsTried": 81,
+    "to": "202610",
+    "monthsTried": 82,
     "monthsFailed": 0,
-    "monthsTraded": 6,
+    "monthsTraded": 7,
     "peak": {
-      "manwon": 57000,
-      "date": "2026-09-01",
+      "manwon": 59200,
+      "date": "2026-10-14",
       "area": 59.9786,
-      "floor": 29
+      "floor": 16
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -742,10 +742,19 @@
     {
       "ym": "202609",
       "maxManwon": 57000,
-      "count": 1,
+      "count": 4,
       "area": 59.9786,
       "floor": 29,
       "date": "2026-09-01",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": 59200,
+      "count": 6,
+      "area": 59.9786,
+      "floor": 16,
+      "date": "2026-10-14",
       "ok": true
     }
   ]
