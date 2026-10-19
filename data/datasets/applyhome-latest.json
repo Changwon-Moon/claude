@@ -10,7 +10,7 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-10-18",
+    "collectedFor": "2026-10-19",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2907,
@@ -44,7 +44,7 @@
       "reasons": [
         "서울",
         "무순위",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -71,7 +71,7 @@
         "수도권",
         "68가구",
         "무순위",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -98,7 +98,34 @@
         "광역시",
         "729가구",
         "무순위",
-        "D-2"
+        "D-1"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000458",
+      "name": "산곡역자이힐스테이트앤하늘채",
+      "areaName": "인천",
+      "address": "인천광역시 부평구 산곡동 10번지 일원(산곡6 주택재개발정비사업)",
+      "supply": 1289,
+      "noticeDate": "2026-10-08",
+      "receiptFrom": "2026-10-20",
+      "receiptTo": "2026-10-21",
+      "specialFrom": "2026-10-19",
+      "rank1From": "2026-10-20",
+      "moveInYm": "2029-12",
+      "announceDate": "2026-10-27",
+      "builder": "지에스건설(주), 현대건설(주), 코오롱글로벌(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.xi.co.kr/sangokxi",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000458&pblancNo=2026000458",
+      "score": 68,
+      "reasons": [
+        "수도권",
+        "1,289가구 대단지",
+        "D-2",
+        "자이"
       ]
     },
     {
@@ -124,7 +151,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -150,7 +177,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-1",
+        "오늘 마감",
         "e편한세상"
       ]
     },
@@ -177,7 +204,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-1",
+        "오늘 마감",
         "푸르지오"
       ]
     },
@@ -204,7 +231,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -230,34 +257,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000458",
-      "name": "산곡역자이힐스테이트앤하늘채",
-      "areaName": "인천",
-      "address": "인천광역시 부평구 산곡동 10번지 일원(산곡6 주택재개발정비사업)",
-      "supply": 1289,
-      "noticeDate": "2026-10-08",
-      "receiptFrom": "2026-10-20",
-      "receiptTo": "2026-10-21",
-      "specialFrom": "2026-10-19",
-      "rank1From": "2026-10-20",
-      "moveInYm": "2029-12",
-      "announceDate": "2026-10-27",
-      "builder": "지에스건설(주), 현대건설(주), 코오롱글로벌(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.xi.co.kr/sangokxi",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000458&pblancNo=2026000458",
-      "score": 61,
-      "reasons": [
-        "수도권",
-        "1,289가구 대단지",
-        "D-3",
-        "자이"
+        "오늘 마감"
       ]
     },
     {
@@ -283,7 +283,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -305,11 +305,88 @@
       "speculative": false,
       "homepage": "https://www.i-park.com/gagyeong7-8",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000492&pblancNo=2026000492",
-      "score": 47,
+      "score": 54,
       "reasons": [
         "1,128가구 대단지",
-        "D-3",
+        "D-2",
         "아이파크"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000491",
+      "name": "청주 가경 아이파크 7단지",
+      "areaName": "충북",
+      "address": "충청북도 청주시 흥덕구 가경동 309번지 일원",
+      "supply": 543,
+      "noticeDate": "2026-10-08",
+      "receiptFrom": "2026-10-20",
+      "receiptTo": "2026-10-21",
+      "specialFrom": "2026-10-19",
+      "rank1From": "2026-10-20",
+      "moveInYm": "2029-11",
+      "announceDate": "2026-10-28",
+      "builder": "아이파크현대산업개발 주식회사",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.i-park.com/gagyeong7-8",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000491&pblancNo=2026000491",
+      "score": 47,
+      "reasons": [
+        "543가구",
+        "D-2",
+        "아이파크"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000469",
+      "name": "연제갤러리자이",
+      "areaName": "부산",
+      "address": "부산광역시 연제구 연산동 1123-1번지",
+      "supply": 459,
+      "noticeDate": "2026-10-08",
+      "receiptFrom": "2026-10-20",
+      "receiptTo": "2026-10-21",
+      "specialFrom": "2026-10-19",
+      "rank1From": "2026-10-20",
+      "moveInYm": "2030-10",
+      "announceDate": "2026-10-27",
+      "builder": "지에스건설(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.xi.co.kr/yj",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000469&pblancNo=2026000469",
+      "score": 47,
+      "reasons": [
+        "광역시",
+        "D-2",
+        "자이"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000267",
+      "name": "아산 그랑시티필하우스",
+      "areaName": "충남",
+      "address": "충청남도 아산시 배방읍 휴대리 143번지 일원 (휴대지구 도시개발사업구역 내 공동주택 1블럭)",
+      "supply": 1380,
+      "noticeDate": "2026-10-08",
+      "receiptFrom": "2026-10-20",
+      "receiptTo": "2026-10-21",
+      "specialFrom": "2026-10-19",
+      "rank1From": "2026-10-20",
+      "moveInYm": "2029-08",
+      "announceDate": "2026-10-27",
+      "builder": "한성건설(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.천안아산역그랑시티필하우스.com/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000267&pblancNo=2026000267",
+      "score": 44,
+      "reasons": [
+        "1,380가구 대단지",
+        "D-2"
       ]
     },
     {
@@ -335,6 +412,31 @@
       "reasons": [
         "수도권",
         "분양가상한제"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000464",
+      "name": "힐스테이트 거제시그니처(1회차)",
+      "areaName": "경남",
+      "address": "경상남도 거제시 옥포동 1670번지 일원",
+      "supply": 356,
+      "noticeDate": "2026-10-08",
+      "receiptFrom": "2026-10-20",
+      "receiptTo": "2026-10-21",
+      "specialFrom": "2026-10-19",
+      "rank1From": "2026-10-20",
+      "moveInYm": "2030-08",
+      "announceDate": "2026-10-27",
+      "builder": "현대엔지니어링(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.힐스테이트거제시그니처.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000464&pblancNo=2026000464",
+      "score": 41,
+      "reasons": [
+        "D-2",
+        "힐스테이트"
       ]
     },
     {
@@ -387,108 +489,6 @@
         "수도권",
         "812가구",
         "투기과열지구"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000491",
-      "name": "청주 가경 아이파크 7단지",
-      "areaName": "충북",
-      "address": "충청북도 청주시 흥덕구 가경동 309번지 일원",
-      "supply": 543,
-      "noticeDate": "2026-10-08",
-      "receiptFrom": "2026-10-20",
-      "receiptTo": "2026-10-21",
-      "specialFrom": "2026-10-19",
-      "rank1From": "2026-10-20",
-      "moveInYm": "2029-11",
-      "announceDate": "2026-10-28",
-      "builder": "아이파크현대산업개발 주식회사",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.i-park.com/gagyeong7-8",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000491&pblancNo=2026000491",
-      "score": 40,
-      "reasons": [
-        "543가구",
-        "D-3",
-        "아이파크"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000469",
-      "name": "연제갤러리자이",
-      "areaName": "부산",
-      "address": "부산광역시 연제구 연산동 1123-1번지",
-      "supply": 459,
-      "noticeDate": "2026-10-08",
-      "receiptFrom": "2026-10-20",
-      "receiptTo": "2026-10-21",
-      "specialFrom": "2026-10-19",
-      "rank1From": "2026-10-20",
-      "moveInYm": "2030-10",
-      "announceDate": "2026-10-27",
-      "builder": "지에스건설(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.xi.co.kr/yj",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000469&pblancNo=2026000469",
-      "score": 40,
-      "reasons": [
-        "광역시",
-        "D-3",
-        "자이"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000267",
-      "name": "아산 그랑시티필하우스",
-      "areaName": "충남",
-      "address": "충청남도 아산시 배방읍 휴대리 143번지 일원 (휴대지구 도시개발사업구역 내 공동주택 1블럭)",
-      "supply": 1380,
-      "noticeDate": "2026-10-08",
-      "receiptFrom": "2026-10-20",
-      "receiptTo": "2026-10-21",
-      "specialFrom": "2026-10-19",
-      "rank1From": "2026-10-20",
-      "moveInYm": "2029-08",
-      "announceDate": "2026-10-27",
-      "builder": "한성건설(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.천안아산역그랑시티필하우스.com/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000267&pblancNo=2026000267",
-      "score": 37,
-      "reasons": [
-        "1,380가구 대단지",
-        "D-3"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000464",
-      "name": "힐스테이트 거제시그니처(1회차)",
-      "areaName": "경남",
-      "address": "경상남도 거제시 옥포동 1670번지 일원",
-      "supply": 356,
-      "noticeDate": "2026-10-08",
-      "receiptFrom": "2026-10-20",
-      "receiptTo": "2026-10-21",
-      "specialFrom": "2026-10-19",
-      "rank1From": "2026-10-20",
-      "moveInYm": "2030-08",
-      "announceDate": "2026-10-27",
-      "builder": "현대엔지니어링(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.힐스테이트거제시그니처.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000464&pblancNo=2026000464",
-      "score": 34,
-      "reasons": [
-        "D-3",
-        "힐스테이트"
       ]
     },
     {
@@ -563,7 +563,7 @@
       "score": 27,
       "reasons": [
         "광역시",
-        "D-2"
+        "D-1"
       ]
     },
     {
