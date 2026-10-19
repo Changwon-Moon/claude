@@ -3399,6 +3399,58 @@
         "singo-보람마을아주-84:faad00d9a701",
         "singo-에스케이뷰파크2차-59:d12d9aad4cc6"
       ]
+    },
+    {
+      "label": "singo-A10022331-84",
+      "cards": [
+        "singo-중흥S클래스에듀파크-84"
+      ],
+      "caption": "singo-A10022331-84",
+      "title": "🔥 중흥S-클래스에듀파크 35평, 5.95억 신고가",
+      "state": "시안",
+      "note": "2026-10-20 판정 신고가. 대장 열쇠 A10022331 (사람이 짚었다(--kapt)). 기준은 docs/guides/신고가-카드-기준.md",
+      "pixelPolicy": "정기물 — singo-history·molit·apt-station·apt-detail·apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "singo-A10022387-59",
+      "cards": [
+        "singo-힐스테이트용인고진역1단지-59"
+      ],
+      "caption": "singo-A10022387-59",
+      "title": "🔥 힐스테이트용인고진역1단지 25평, 5.92억 신고가",
+      "state": "시안",
+      "note": "2026-10-20 판정 신고가. 대장 열쇠 A10022387 (사람이 짚었다(--kapt)). 기준은 docs/guides/신고가-카드-기준.md",
+      "pixelPolicy": "정기물 — singo-history·molit·apt-station·apt-detail·apt-supply 갱신 시 다시 그려진다. pixel-baselines 에 넣지 않는다"
+    },
+    {
+      "label": "singo-daily-2026-10-20",
+      "title": "🔥 10월 20일 신고가 20곳",
+      "cards": [
+        "singo-광교중흥에스클래스-84-1020",
+        "singo-산성역포레스티아-84",
+        "singo-대림1-59-1020",
+        "singo-두산-59-1020",
+        "singo-평촌센텀퍼스트-59-1020",
+        "singo-광교호반베르디움-59-1020",
+        "singo-신림푸르지오-84",
+        "singo-매화마을공무원2-59-1020",
+        "singo-두산-84-1020",
+        "singo-벽산블루밍-59-1020",
+        "singo-영통아이파크캐슬2단지-59-1020",
+        "singo-현대관악-59",
+        "singo-래미안안양메가트리아-59-1020",
+        "singo-학여울청구-84",
+        "singo-신동탄포레자이-59-1020",
+        "singo-내대지마을건영캐스빌-84",
+        "singo-아르테자이-59-1020",
+        "singo-우미린센트럴파크-84",
+        "singo-세종-59-1020",
+        "singo-영통센트럴파크뷰-59-1020"
+      ],
+      "caption": "singo-daily-2026-10-20",
+      "state": "검수 대기",
+      "note": "하루치 신고가를 **캐러셀 한 게시물**로 묶은 세트(오너 2026-08-25 \"하루에 제작되는 카드들은 1개로 묶어서\"). 장 순서는 **거래가 큰 순** — 첫 장이 표지다. 캐러셀 상한 20장. ⚠️ 상한을 넘어 2장을 뺐다: singo-중흥S클래스에듀파크-84, singo-힐스테이트용인고진역1단지-59. 흡수한 개별 세트 20개의 확정 md5 를 그대로 옮겨 담았다 — 확정 증거는 사라지지 않는다. 개별 캡션 파일은 지우지 않는다(카드별 사실 확인에 쓴다). 정기물이라 픽셀 기준값 미등록.",
+      "pixelPolicy": "정기물 — apt-station/apt-detail/apt-supply/molit 갱신 시 다시 그려진다"
     }
   ]
 }
