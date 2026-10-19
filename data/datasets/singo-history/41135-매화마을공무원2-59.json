@@ -5,15 +5,15 @@
     "aptNm": "매화마을공무원2",
     "type": "59",
     "from": "202001",
-    "to": "202609",
-    "monthsTried": 81,
+    "to": "202610",
+    "monthsTried": 82,
     "monthsFailed": 0,
-    "monthsTraded": 65,
+    "monthsTraded": 66,
     "peak": {
-      "manwon": 117600,
-      "date": "2026-09-18",
+      "manwon": 118000,
+      "date": "2026-10-15",
       "area": 58.71,
-      "floor": 14
+      "floor": 8
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -742,10 +742,19 @@
     {
       "ym": "202609",
       "maxManwon": 117600,
-      "count": 1,
+      "count": 5,
       "area": 58.71,
       "floor": 14,
       "date": "2026-09-18",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": 118000,
+      "count": 3,
+      "area": 58.71,
+      "floor": 8,
+      "date": "2026-10-15",
       "ok": true
     }
   ]

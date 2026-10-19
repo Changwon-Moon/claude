@@ -37,7 +37,7 @@ lawd=11620 umd=봉천동 type=59 apt="두산"
 lawd=41173 umd=호계동 type=59 apt="평촌센텀퍼스트"
 lawd=41117 umd=원천동 type=59 apt="광교호반베르디움"
 lawd=11620 umd=신림동 type=84 apt="신림푸르지오"
-lawd=41135 umd=야탑동 type=59 apt="매화마을공무원2" force=1
+lawd=41135 umd=야탑동 type=59 apt="매화마을공무원2"
 lawd=11290 umd=석관동 type=84 apt="두산" force=1
 lawd=11620 umd=봉천동 type=59 apt="벽산블루밍" force=1
 lawd=41117 umd=망포동 type=59 apt="영통아이파크캐슬2단지" force=1
