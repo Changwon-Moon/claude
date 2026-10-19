@@ -5,15 +5,15 @@
     "aptNm": "대림1",
     "type": "59",
     "from": "202001",
-    "to": "202608",
-    "monthsTried": 80,
+    "to": "202610",
+    "monthsTried": 82,
     "monthsFailed": 0,
-    "monthsTraded": 70,
+    "monthsTraded": 72,
     "peak": {
-      "manwon": 138000,
-      "date": "2026-07-29",
+      "manwon": 142000,
+      "date": "2026-10-10",
       "area": 59.9,
-      "floor": 8
+      "floor": 26
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -737,6 +737,24 @@
       "area": null,
       "floor": null,
       "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202609",
+      "maxManwon": 137800,
+      "count": 2,
+      "area": 59.88,
+      "floor": 24,
+      "date": "2026-09-12",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": 142000,
+      "count": 1,
+      "area": 59.9,
+      "floor": 26,
+      "date": "2026-10-10",
       "ok": true
     }
   ]
