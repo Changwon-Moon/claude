@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-20T21:54:08.825Z",
+  "generatedAt": "2026-10-20T23:35:23.532Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -1271,7 +1271,7 @@
       "file": "apt-supply-retry.yml",
       "name": "공급면적 — 자동 재시도",
       "lastRun": "2026-10-20",
-      "daysAgo": 0,
+      "daysAgo": 1,
       "lastOk": null,
       "okDaysAgo": null,
       "fails30": 10,
@@ -1285,7 +1285,7 @@
       "lastOk": "2026-10-21",
       "okDaysAgo": 0,
       "fails30": 26,
-      "runs30": 86
+      "runs30": 89
     },
     {
       "file": "singo-prep.yml",
@@ -1294,7 +1294,7 @@
       "daysAgo": 0,
       "lastOk": "2026-10-18",
       "okDaysAgo": 3,
-      "fails30": 76,
+      "fails30": 77,
       "runs30": 100
     },
     {
@@ -1314,8 +1314,8 @@
       "daysAgo": 0,
       "lastOk": "2026-09-23",
       "okDaysAgo": 27,
-      "fails30": 44,
-      "runs30": 94
+      "fails30": 45,
+      "runs30": 97
     }
   ]
 }
