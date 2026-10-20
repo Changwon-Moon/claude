@@ -376,6 +376,8 @@ const humanFlags = (() => {
       const keep = [];
       const ni = a.indexOf("--name");
       if (ni >= 0 && a[ni + 1]) keep.push("--name", a[ni + 1]);
+      const di = a.indexOf("--drop-ym"); // 오너가 짚은 「그래프에서 뺄 달」(2026-10-21) — 같은 단지 새 이름표에도 따라간다
+      if (di >= 0 && a[di + 1]) keep.push("--drop-ym", a[di + 1]);
       for (const f of ["--accept-supply-warn", "--accept-cycle-guard", "--merge-blocks", "--short"]) if (a.includes(f)) keep.push(f);
       if (keep.length) for (const pr of b.produces ?? []) map.set(pr, keep);
     }
@@ -444,6 +446,8 @@ for (const t of made) {
     const nameIdx = old.indexOf("--name");
     const carry = [];
     if (nameIdx >= 0 && old[nameIdx + 1]) carry.push("--name", old[nameIdx + 1]);
+    const dropIdx = old.indexOf("--drop-ym"); // 오너가 짚은 「그래프에서 뺄 달」(2026-10-21)
+    if (dropIdx >= 0 && old[dropIdx + 1]) carry.push("--drop-ym", old[dropIdx + 1]);
     for (const f of ["--accept-supply-warn", "--accept-cycle-guard", "--merge-blocks", "--short"]) if (old.includes(f)) carry.push(f);
     b.args = [...args.slice(0, -1), ...carry, "--publish"];
   } else {
