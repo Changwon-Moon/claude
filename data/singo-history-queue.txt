@@ -37,7 +37,7 @@ lawd=41465 umd=풍덕천동 type=59 apt="신정마을주공1"
 lawd=41450 umd=망월동 type=84 apt="미사강변 센텀팰리스"
 lawd=41173 umd=평촌동 type=84 apt="인덕원대우"
 lawd=11305 umd=미아동 type=84 apt="꿈의숲해링턴플레이스"
-lawd=41135 umd=야탑동 type=59 apt="매화마을공무원2" force=1
+lawd=41135 umd=야탑동 type=59 apt="매화마을공무원2"
 lawd=11545 umd=독산동 type=59 apt="금천롯데캐슬골드파크3차" force=1
 lawd=41210 umd=광명동 type=59 apt="광명아크포레자이위브"
 lawd=11380 umd=불광동 type=84 apt="라이프미성"
