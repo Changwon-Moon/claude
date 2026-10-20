@@ -5,15 +5,15 @@
     "aptNm": "금천롯데캐슬골드파크3차",
     "type": "59",
     "from": "202001",
-    "to": "202609",
-    "monthsTried": 81,
+    "to": "202610",
+    "monthsTried": 82,
     "monthsFailed": 0,
-    "monthsTraded": 63,
+    "monthsTraded": 65,
     "peak": {
-      "manwon": 112000,
-      "date": "2026-08-29",
-      "area": 59.9662,
-      "floor": 7
+      "manwon": 113000,
+      "date": "2026-10-02",
+      "area": 59.968,
+      "floor": 41
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -741,11 +741,20 @@
     },
     {
       "ym": "202609",
-      "maxManwon": null,
-      "count": 0,
-      "area": null,
-      "floor": null,
-      "date": null,
+      "maxManwon": 112000,
+      "count": 3,
+      "area": 59.9662,
+      "floor": 32,
+      "date": "2026-09-12",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": 113000,
+      "count": 5,
+      "area": 59.968,
+      "floor": 41,
+      "date": "2026-10-02",
       "ok": true
     }
   ]
