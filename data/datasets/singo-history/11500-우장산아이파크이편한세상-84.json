@@ -5,15 +5,15 @@
     "aptNm": "우장산아이파크,이편한세상",
     "type": "84",
     "from": "202001",
-    "to": "202609",
-    "monthsTried": 81,
+    "to": "202610",
+    "monthsTried": 82,
     "monthsFailed": 0,
-    "monthsTraded": 61,
+    "monthsTraded": 63,
     "peak": {
-      "manwon": 164000,
-      "date": "2026-08-10",
+      "manwon": 166500,
+      "date": "2026-10-09",
       "area": 84.97,
-      "floor": 7
+      "floor": 11
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -733,7 +733,7 @@
     {
       "ym": "202608",
       "maxManwon": 164000,
-      "count": 3,
+      "count": 4,
       "area": 84.97,
       "floor": 7,
       "date": "2026-08-10",
@@ -741,11 +741,20 @@
     },
     {
       "ym": "202609",
-      "maxManwon": null,
-      "count": 0,
-      "area": null,
-      "floor": null,
-      "date": null,
+      "maxManwon": 161000,
+      "count": 3,
+      "area": 84.97,
+      "floor": 2,
+      "date": "2026-09-19",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": 166500,
+      "count": 2,
+      "area": 84.97,
+      "floor": 11,
+      "date": "2026-10-09",
       "ok": true
     }
   ]
