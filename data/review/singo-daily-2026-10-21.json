@@ -1,7 +1,7 @@
 {
   "label": "singo-daily-2026-10-21",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 18장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 19장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
@@ -90,6 +90,12 @@
     },
     {
       "file": "singo-신내6대주-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-중계그린1단지-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
