@@ -5,15 +5,15 @@
     "aptNm": "동탄시범다은마을 월드메르디앙 반도유보라",
     "type": "59",
     "from": "202001",
-    "to": "202609",
-    "monthsTried": 81,
+    "to": "202610",
+    "monthsTried": 82,
     "monthsFailed": 0,
-    "monthsTraded": 78,
+    "monthsTraded": 79,
     "peak": {
-      "manwon": 96250,
-      "date": "2026-09-20",
+      "manwon": 98550,
+      "date": "2026-10-16",
       "area": 59.07,
-      "floor": 8
+      "floor": 13
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -742,10 +742,19 @@
     {
       "ym": "202609",
       "maxManwon": 96250,
-      "count": 5,
+      "count": 7,
       "area": 59.07,
       "floor": 8,
       "date": "2026-09-20",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": 98550,
+      "count": 3,
+      "area": 59.07,
+      "floor": 13,
+      "date": "2026-10-16",
       "ok": true
     }
   ]
