@@ -1,9 +1,15 @@
 {
   "label": "singo-daily-2026-10-22",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 16장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 17장 · 코드 검수만",
   "findings": [],
   "cards": [
+    {
+      "file": "singo-아크로리버하임-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
     {
       "file": "singo-시범우성-84.json",
       "deterministic": true,
