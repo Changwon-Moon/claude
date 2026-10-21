@@ -43,7 +43,7 @@ lawd=11620 umd=봉천동 type=59 apt="봉천동아"
 lawd=41450 umd=망월동 type=59 apt="미사레스티아"
 lawd=41210 umd=철산동 type=84 apt="도덕파크타운1단지"
 lawd=41465 umd=상현동 type=59 apt="진산마을성원상떼빌아파트"
-lawd=41465 umd=풍덕천동 type=59 apt="동아아파트" force=1
+lawd=41465 umd=풍덕천동 type=59 apt="동아아파트"
 lawd=41111 umd=천천동 type=59 apt="화서역푸르지오더에듀포레" force=1
 lawd=41210 umd=하안동 type=59 apt="주공5"
 lawd=41360 umd=다산동 type=84 apt="다산리버펠리체1단지"
