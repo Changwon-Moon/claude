@@ -10596,6 +10596,24 @@
         "singo-신나무실신성-59"
       ],
       "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 지난 고점 대비 3% 미만 — 오너 기준(2026-10-22)."
+    },
+    {
+      "label": "singo-A10025770-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "아크로리버하임",
+        "--type",
+        "59",
+        "--kapt",
+        "A10025770",
+        "--accept-cycle-guard",
+        "--publish"
+      ],
+      "produces": [
+        "singo-아크로리버하임-59"
+      ],
+      "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 지난 고점 2026-01 26.6억이 8개월 전(기준 12개월) · +1.5% — 오너 「넣자」(2026-10-22)."
     }
   ]
 }
