@@ -44,6 +44,7 @@
 import { existsSync, readFileSync, readdirSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { lastCompleteMonth, shiftYm } from "./lib/month-cache.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const R = (p) => join(ROOT, p);
@@ -69,29 +70,12 @@ const MONTH_DIR = R("data/datasets/molit-monthly");
  * → 명부의 **모든 구**에 있는 가장 최근 달을 찾아 그 달에서 최근창을 끝낸다.
  *   손으로 박은 값이 없으면 코드가 매번 다시 잰다. `--now` 로 덮어쓸 수 있다.
  */
-function lastCompleteMonth() {
-  const uni = JSON.parse(readFileSync(R("data/datasets/apt-universe.json"), "utf8"));
-  const lawds = [...new Set(uni.items.map((i) => i.lawdCd))];
-  const ymOf = (d) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}`;
-  const now = new Date(Date.now() + 9 * 3600 * 1000);
-  for (let back = 1; back <= 24; back++) {
-    const d = new Date(now.getFullYear(), now.getMonth() - back, 1);
-    const ym = ymOf(d);
-    if (lawds.every((l) => existsSync(join(MONTH_DIR, l, `${ym}.json`)))) return ym;
-  }
-  return null;
-}
-const shift = (ym, n) => {
-  let y = +ym.slice(0, 4), m = +ym.slice(4) + n;
-  while (m < 1) { m += 12; y--; }
-  while (m > 12) { m -= 12; y++; }
-  return `${y}${String(m).padStart(2, "0")}`;
-};
+/* 구현은 scripts/lib/month-cache.mjs 하나에 있다 — 빌더와 같은 값을 써야 하므로. */
 const LAST = lastCompleteMonth();
 if (!LAST) { console.error("⛔ 명부의 모든 구가 다 찬 달이 최근 24개월에 없습니다 — 백필을 먼저 돌리세요"); process.exit(2); }
 
 const [BASE_FROM, BASE_TO] = arg("base", "201911-202003").split("-");
-const [NOW_FROM, NOW_TO] = arg("now", `${shift(LAST, -5)}-${LAST}`).split("-");
+const [NOW_FROM, NOW_TO] = arg("now", `${shiftYm(LAST, -5)}-${LAST}`).split("-");
 const TOL = Number(arg("tol", 5)) / 100;      // 기준가 유사 판정 폭
 const MIN_GAP = Number(arg("min-gap", 3));    // 억 — 이보다 작은 차이는 카드가 안 된다
 /**

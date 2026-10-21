@@ -24,6 +24,7 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { lastCompleteMonth } from "./lib/month-cache.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const R = (p) => join(ROOT, p);
@@ -34,8 +35,20 @@ const arg = (n, d) => {
 
 const SET = arg("set", "gap-ep1");
 const PICK = Number(arg("pick", 1)) - 1;
-const CURVE_FROM = arg("from", "202001");
-const CURVE_TO = arg("to", "202607");
+let CURVE_FROM = arg("from", "202001");
+/**
+ * ⚠️ 곡선의 끝달은 **후보를 고르는 쪽과 같은 달**이어야 한다.
+ *
+ * 예전에는 `202607` 로 박혀 있었다. 그런데 `find-gap-pairs` 의 최근창은 2026-09-10 부터
+ * 「모든 구가 다 찬 마지막 달」을 코드가 재서 쓴다. 한 달이 더 차는 순간 둘이 어긋나고,
+ * 그 달에 최고가가 난 단지는 **끝점 마커가 곡선 밖**을 가리켜 마지막 달로 물러난다
+ * — 「제목의 격차 ≠ 라벨의 뺄셈」(§13 대조에서 걸리는 바로 그 자리).
+ *
+ * 9월에 11~15호 다섯 장이 그렇게 나왔고, 10월에 또 같은 자리가 벌어져
+ * **두 파일이 같은 함수를 쓰도록** 묶었다(scripts/lib/month-cache.mjs).
+ * ⚠️ 못 박은 묶음(`--group`)에 `curveTo` 가 있으면 **그 값이 이긴다** — 발행본은 안 흔들린다.
+ */
+let CURVE_TO = arg("to") ?? lastCompleteMonth() ?? "202607";
 const kstToday = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 const DATE = arg("date", kstToday);
 
@@ -245,6 +258,10 @@ if (GROUP_FILE) {
 }
 if (!group) throw new Error(`${SET} 에 ${PICK + 1}번 묶음이 없습니다 (${data.picks.length}개 있음)`);
 
+/* ⚠️ **못 박은 묶음의 곡선 구간이 이긴다.** 발행본은 그때 그린 구간 그대로여야 한다 —
+   캐시가 한 달 더 차도 확정한 그림이 바뀌면 안 된다(§19·§20). 손으로 준 --from/--to 는 그보다 세다. */
+if (GROUP_FILE && !arg("to") && group.curveTo) CURVE_TO = group.curveTo;
+if (GROUP_FILE && !arg("from") && group.curveFrom) CURVE_FROM = group.curveFrom;
 const months = monthRange(CURVE_FROM, CURVE_TO);
 /**
  * ⚠️ **못 박은 묶음에 곡선이 들어 있으면 그것을 쓴다** (2026-09-04, 두 번째 사고 뒤)
