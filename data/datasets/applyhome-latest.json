@@ -10,7 +10,7 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-10-20",
+    "collectedFor": "2026-10-21",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2908,
@@ -49,33 +49,6 @@
       ]
     },
     {
-      "kind": "remndr",
-      "pblancNo": "2026910261",
-      "name": "올 뉴 챔피언스시티 1차",
-      "areaName": "광주",
-      "address": "전남광주통합특별시 북구 임동 100-1 일원 (구)전방·일신방직 부지 지구단위계획구역 A2BL)",
-      "supply": 729,
-      "noticeDate": "2026-10-15",
-      "receiptFrom": "2026-10-20",
-      "receiptTo": "2026-10-20",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2030-11",
-      "announceDate": "2026-10-23",
-      "builder": "(주) 챔피언스시티복합개발피에프브이",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.championscity.co.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910261&pblancNo=2026910261",
-      "score": 70,
-      "reasons": [
-        "광역시",
-        "729가구",
-        "무순위",
-        "오늘 마감"
-      ]
-    },
-    {
       "kind": "apt",
       "pblancNo": "2026000458",
       "name": "산곡역자이힐스테이트앤하늘채",
@@ -98,34 +71,34 @@
       "reasons": [
         "수도권",
         "1,289가구 대단지",
-        "D-1",
+        "오늘 마감",
         "자이"
       ]
     },
     {
       "kind": "remndr",
-      "pblancNo": "2026910264",
-      "name": "시흥 은계 에피트(조합원 취소분)",
-      "areaName": "경기",
-      "address": "경기도 시흥시 은행동 289-31번지 일원",
-      "supply": 16,
+      "pblancNo": "2026910261",
+      "name": "올 뉴 챔피언스시티 1차",
+      "areaName": "광주",
+      "address": "전남광주통합특별시 북구 임동 100-1 일원 (구)전방·일신방직 부지 지구단위계획구역 A2BL)",
+      "supply": 729,
       "noticeDate": "2026-10-15",
       "receiptFrom": "2026-10-20",
       "receiptTo": "2026-10-20",
       "specialFrom": null,
       "rank1From": null,
-      "moveInYm": "2026-10",
+      "moveInYm": "2030-11",
       "announceDate": "2026-10-23",
-      "builder": "신극동아파트 가로주택정비사업조합",
+      "builder": "(주) 챔피언스시티복합개발피에프브이",
       "priceCap": false,
       "speculative": false,
-      "homepage": "http://efete-eungye.com/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910264&pblancNo=2026910264",
-      "score": 66,
+      "homepage": "https://www.championscity.co.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910261&pblancNo=2026910261",
+      "score": 55,
       "reasons": [
-        "수도권",
-        "무순위",
-        "오늘 마감"
+        "광역시",
+        "729가구",
+        "무순위"
       ]
     },
     {
@@ -150,8 +123,59 @@
       "score": 54,
       "reasons": [
         "1,128가구 대단지",
-        "D-1",
+        "오늘 마감",
         "아이파크"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910264",
+      "name": "시흥 은계 에피트(조합원 취소분)",
+      "areaName": "경기",
+      "address": "경기도 시흥시 은행동 289-31번지 일원",
+      "supply": 16,
+      "noticeDate": "2026-10-15",
+      "receiptFrom": "2026-10-20",
+      "receiptTo": "2026-10-20",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-10",
+      "announceDate": "2026-10-23",
+      "builder": "신극동아파트 가로주택정비사업조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "http://efete-eungye.com/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910264&pblancNo=2026910264",
+      "score": 51,
+      "reasons": [
+        "수도권",
+        "무순위"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026820010",
+      "name": "인천계양 A17블록 신혼희망타운(공공분양)(본청약)",
+      "areaName": "인천",
+      "address": "인천광역시 계양구 귤현동, 동양동, 박촌동, 병방동, 상야동, 경기도 부천시 대장동, 서울특별시 강서구 오곡동 일원 인천계양 테크노밸리 공공주택지구 내 A17블록",
+      "supply": 309,
+      "noticeDate": "2026-09-30",
+      "receiptFrom": "2026-10-19",
+      "receiptTo": "2026-10-27",
+      "specialFrom": null,
+      "rank1From": "2026-10-19",
+      "moveInYm": "2029-11",
+      "announceDate": "2026-11-05",
+      "builder": "(주)케이씨씨건설",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://apply.lh.or.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820010&pblancNo=2026820010",
+      "score": 50,
+      "reasons": [
+        "수도권",
+        "D-6",
+        "분양가상한제"
       ]
     },
     {
@@ -201,7 +225,7 @@
       "score": 47,
       "reasons": [
         "543가구",
-        "D-1",
+        "오늘 마감",
         "아이파크"
       ]
     },
@@ -227,7 +251,7 @@
       "score": 47,
       "reasons": [
         "광역시",
-        "D-1",
+        "오늘 마감",
         "자이"
       ]
     },
@@ -253,7 +277,7 @@
       "score": 44,
       "reasons": [
         "1,380가구 대단지",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -283,31 +307,6 @@
     },
     {
       "kind": "apt",
-      "pblancNo": "2026820010",
-      "name": "인천계양 A17블록 신혼희망타운(공공분양)(본청약)",
-      "areaName": "인천",
-      "address": "인천광역시 계양구 귤현동, 동양동, 박촌동, 병방동, 상야동, 경기도 부천시 대장동, 서울특별시 강서구 오곡동 일원 인천계양 테크노밸리 공공주택지구 내 A17블록",
-      "supply": 309,
-      "noticeDate": "2026-09-30",
-      "receiptFrom": "2026-10-19",
-      "receiptTo": "2026-10-27",
-      "specialFrom": null,
-      "rank1From": "2026-10-19",
-      "moveInYm": "2029-11",
-      "announceDate": "2026-11-05",
-      "builder": "(주)케이씨씨건설",
-      "priceCap": true,
-      "speculative": false,
-      "homepage": "https://apply.lh.or.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820010&pblancNo=2026820010",
-      "score": 42,
-      "reasons": [
-        "수도권",
-        "분양가상한제"
-      ]
-    },
-    {
-      "kind": "apt",
       "pblancNo": "2026000464",
       "name": "힐스테이트 거제시그니처(1회차)",
       "areaName": "경남",
@@ -327,7 +326,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000464&pblancNo=2026000464",
       "score": 41,
       "reasons": [
-        "D-1",
+        "오늘 마감",
         "힐스테이트"
       ]
     },
@@ -435,31 +434,6 @@
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000471",
-      "name": "한양립스 에듀포레(조합원 취소분)",
-      "areaName": "광주",
-      "address": "전남광주통합특별시 광산구 하산동 269번지 일원",
-      "supply": 19,
-      "noticeDate": "2026-10-08",
-      "receiptFrom": "2026-10-19",
-      "receiptTo": "2026-10-20",
-      "specialFrom": null,
-      "rank1From": "2026-10-19",
-      "moveInYm": "2027-11",
-      "announceDate": "2026-10-26",
-      "builder": "(주)한양건설",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://www.한양립스에듀포레.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000471&pblancNo=2026000471",
-      "score": 27,
-      "reasons": [
-        "광역시",
-        "오늘 마감"
-      ]
-    },
-    {
-      "kind": "apt",
       "pblancNo": "2026000402",
       "name": "익산 부송에코르 10년 공공임대주택",
       "areaName": "전북",
@@ -479,7 +453,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000402&pblancNo=2026000402",
       "score": 24,
       "reasons": [
-        "D-6"
+        "D-5"
       ]
     },
     {
@@ -508,6 +482,31 @@
     },
     {
       "kind": "apt",
+      "pblancNo": "2026000507",
+      "name": "광안센텀 비스타동원(조합원 취소분)",
+      "areaName": "부산",
+      "address": "부산광역시 수영구 광안동 971",
+      "supply": 39,
+      "noticeDate": "2026-10-16",
+      "receiptFrom": "2026-10-26",
+      "receiptTo": "2026-10-27",
+      "specialFrom": null,
+      "rank1From": "2026-10-26",
+      "moveInYm": "2027-09",
+      "announceDate": "2026-11-02",
+      "builder": "(주)동원개발",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.광안센텀비스타동원.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000507&pblancNo=2026000507",
+      "score": 20,
+      "reasons": [
+        "광역시",
+        "D-6"
+      ]
+    },
+    {
+      "kind": "apt",
       "pblancNo": "2026000495",
       "name": "연산 센텀 월드메르디앙",
       "areaName": "부산",
@@ -526,30 +525,6 @@
       "homepage": "https://www.연산센텀월드메르디앙.com",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000495&pblancNo=2026000495",
       "score": 16,
-      "reasons": [
-        "광역시"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000507",
-      "name": "광안센텀 비스타동원(조합원 취소분)",
-      "areaName": "부산",
-      "address": "부산광역시 수영구 광안동 971",
-      "supply": 39,
-      "noticeDate": "2026-10-16",
-      "receiptFrom": "2026-10-26",
-      "receiptTo": "2026-10-27",
-      "specialFrom": null,
-      "rank1From": "2026-10-26",
-      "moveInYm": "2027-09",
-      "announceDate": "2026-11-02",
-      "builder": "(주)동원개발",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.광안센텀비스타동원.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000507&pblancNo=2026000507",
-      "score": 12,
       "reasons": [
         "광역시"
       ]
