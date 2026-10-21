@@ -538,8 +538,23 @@ const KAPT_BY = (() => {
   } catch { /* 명부가 없으면 사전을 건너뛴다 — 신고명 그대로 나간다 */ }
   return m;
 })();
-/** 신고명 → 카드에 적을 이름. 사전에 없으면 신고명 그대로. */
+/**
+ * 신고명 → 카드에 적을 이름. 사전에 없으면 신고명 그대로.
+ *
+ * ⚠️ **못 박은 묶음에 `shown` 이 있으면 그것이 이긴다** (2026-10-22 신설 · GAP_CARDS §25).
+ *
+ * 묶음(§19)과 곡선(§20)은 못 박았는데 **이름은 안 박았다.** 그래서 공용 사전
+ * (`data/review/apt-names.json`)에 누가 한 줄을 넣으면 **이미 인스타에 나간 카드의 범례가
+ * 조용히 바뀌었다.** 실제로 두 번 일어났다:
+ *   · 5호 「수지 현대성우8차」 → 「수지 풍덕천동 현대성우8」 (다른 세션이 사전에 넣음)
+ *   · 10호 「광명 주공10」 → 「광명 하안동 주공10단지」 (2026-10-22, 이름 잇는 법을 넓히자마자)
+ * 사전을 고친 쪽은 그 카드를 건드린 줄도 모른다 — 발행본과 저장된 것이 갈라지는 자리다.
+ *
+ * 그래서 **발행본은 이름까지 핀에 적는다.** 사전은 이제 **새 카드에만** 듣는다.
+ * 핀의 이름을 일부러 바꾸고 싶으면 핀 파일의 `shown` 을 고치고 **재확정**을 받는다.
+ */
 function displayName(m) {
+  if (m.shown) return m.shown;
   const norm = (x) => String(x).replace(/[\s()\-]/g, "").replace(/아파트$/, "");
   const want = norm(m.apt);
   let code = KAPT_BY.get(`${m.lawd}|${m.umd}|${want}`);
@@ -555,6 +570,30 @@ function displayName(m) {
       if (nm.startsWith(want) || want.startsWith(nm)) hits.push(v);
     }
     if (hits.length === 1) code = hits[0];
+    /**
+     * 마지막 수단 — **한쪽이 다른 쪽을 품고 있을 때** (2026-10-22 신설)
+     *
+     * 앞머리만 맞춰서는 못 잇는 짝이 있다. 국토부 신고명이 대장명의 **가운데·뒤쪽**만
+     * 적는 경우다: 부천 송내동의 「중동역푸르지오」가 신고에는 그냥 **「푸르지오」**로,
+     * 부천 중동의 「중동금강마을주공」이 **「금강마을(주공)」**로 들어온다.
+     * 그래서 오너가 2026-09-15 에 넣어 둔 사전 항목이 **한 번도 안 듣고 있었다** —
+     * 카드에는 계속 「부천 푸르지오」가 찍혔다(어느 단지인지 가리키지 못하는 이름이다).
+     *
+     * ⚠️ 품는 것은 앞머리보다 훨씬 느슨하다. 그래서 **같은 구·동 안에서 걸리는 것이
+     *    하나뿐일 때만** 잇는다 — 둘 이상이면 손대지 않는다(엉뚱한 단지에 이름을
+     *    붙이는 것보다 이름이 안 바뀌는 편이 낫다). 앞 두 단계가 먼저 돌므로,
+     *    여기까지 오는 것은 정확히도 앞머리로도 못 이은 것뿐이다.
+     */
+    /* 못 박은 이름이 있으면 그것이 이긴다 — 사전이 바뀌어도 발행본은 안 흔들린다(§25) */
+    if (!code && want.length >= 3) {
+      const loose = [];
+      for (const [k, v] of KAPT_BY) {
+        if (!k.startsWith(`${m.lawd}|${m.umd}|`)) continue;
+        const nm = k.slice(k.lastIndexOf("|") + 1);
+        if (nm.includes(want) || want.includes(nm)) loose.push(v);
+      }
+      if (loose.length === 1) code = loose[0];
+    }
   }
   return (code && NAME_DICT[code]?.name) || m.apt;
 }
@@ -565,12 +604,24 @@ const shortName = (s) => s.replace(/\s*\([^)]*\)\s*$/, "").trim() || s;
    한 줄이 판을 넘고, 읽는 사람 눈에는 오타로 보인다(2026-09-02 안건 4번 실측).
    → 「수원 장안 SK SKY VIEW」. 지역 이름표에 없는 말은 손대지 않는다. */
 const dedupCity = (gu, name) => {
+  /**
+   * ⚠️ **실제로 찍히는 이름표**와 먼저 맞춰 본다 (2026-10-22).
+   *
+   * 예전에는 구 이름(`안양시동안구`)에서 시를 뽑아 「안양」과만 맞췄다. 그런데 카드에
+   * 찍히는 이름표는 `SHORT_GU` 가 정한 **「평촌」**이다. 사전에 오너가 넣어 둔 이름이
+   * 「평촌 공작」이라 둘이 만나 **「평촌 평촌 공작」**이 됐다 — 이 함수가 막으려던 바로 그 모양인데
+   * 맞추는 대상이 틀려서 못 막았다. 그러니 **라벨 → 시 이름** 순으로 본다.
+   *
+   * ⚠️ **띄어쓰기가 있을 때만** 뗀다. 붙어 있으면 그건 지역 이름이 아니라 단지 이름의
+   * 일부다 — 「오산대역세교자이」에서 「오산」을 떼면 「대역세교자이」가 되고(역 이름이
+   * 오산대역이다), 「김포한강신도시…」도 마찬가지로 망가진다. 실제로 그렇게 나왔다.
+   * 「수원 SK SKY VIEW」처럼 원래 이름에 이미 칸이 있는 것만 안전하다.
+   */
   const city = /^(.+?)시/.exec(gu)?.[1] ?? gu.replace(/[시구군]$/, "");
-  /* ⚠️ **띄어쓰기가 있을 때만** 뗀다. 붙어 있으면 그건 시 이름이 아니라 단지 이름의
-     일부다 — 「오산대역세교자이」에서 「오산」을 떼면 「대역세교자이」가 되고(역 이름이
-     오산대역이다), 「김포한강신도시…」도 마찬가지로 망가진다. 실제로 그렇게 나왔다.
-     「수원 SK SKY VIEW」처럼 원래 이름에 이미 칸이 있는 것만 안전하다. */
-  return city && name.startsWith(`${city} `) ? name.slice(city.length).trim() || name : name;
+  for (const head of [shortGu(gu), city]) {
+    if (head && name.startsWith(`${head} `)) return name.slice(head.length).trim() || name;
+  }
+  return name;
 };
 /* ⚠️ 지역은 **이름 앞에 짧게** 붙인다 — 「성남시분당구」가 아니라 「분당」.
    한 줄에 다 넣기로 했으므로(오너 2026-09-02) 행정구역 정식명칭을 그대로 쓰면 줄이 넘친다.
@@ -583,17 +634,35 @@ const SHORT_GU = { 성남시분당구: "분당", 성남시중원구: "성남 중
   화성시동탄구: "동탄", 화성시병점구: "병점", 화성시만세구: "화성", 화성시효행구: "화성",
   부천시원미구: "부천", 부천시소사구: "부천", 부천시오정구: "부천" };
 const shortGu = (g) => SHORT_GU[g] ?? g.replace(/시$/, "");
+/**
+ * 범례 글자 크기 — 기본 38. **긴 이름이 판을 넘는 카드만** 줄인다 (2026-10-22 신설).
+ *
+ * ── 왜 손잡이로 뒀나 (자동으로 재서 줄이지 않는 이유)
+ * `designQa` 는 SVG 안의 글자를 재지 않는다. 그래서 범례가 잘려 나가도 검수는 초록이다.
+ * 실제로 21호의 「동탄 그린힐 반도유보라 아이비파크 10 34평 (1.08배)」는 **`(1.08` 에서 잘렸고**,
+ * 23호의 「성동구 옥수파크힐스101동~116동」도 `)` 를 잃었다.
+ *
+ * 글자 폭을 코드가 추정해 자동으로 줄이게 하면, 추정이 몇 px만 틀려도 **이미 확정된 카드의
+ * 크기가 바뀐다** — 발행본 20장은 지금 전부 38에 들어가 있다(14호만 15px 넘치는데
+ * 그건 오너가 그대로 발행한 것이다). 그래서 **값을 손으로 못 박고**, 넘쳤는지는
+ * 브라우저가 실제로 재게 한다:
+ *
+ *   pnpm -s --filter @wirit/renderer exec tsx src/_measureLegend.ts <카드.json>
+ *
+ * 핀(`--group`)의 `legendSize` 가 있으면 그 값이 이긴다 — 발행본은 안 흔들린다.
+ */
+const LEGEND_SIZE = Number(arg("legend-size", (GROUP_FILE && group.legendSize) || 38));
 const legend = members.map((m, i) => ({
   inline: true,
   sx1: 118, sx2: 190, sy: 72 + i * 62,
   color: m.color,
   tx: 208, ty: 84 + i * 62,
   text: `${shortGu(m.gu)} ${dedupCity(m.gu, shortName(displayName(m)))} ${m.pyeong}`,
-  fill: T.text, size: 38,
+  fill: T.text, size: LEGEND_SIZE,
   /* 배수를 이름 옆에 **같은 크기·회색**으로(오너 2026-09-02). 「그때 → 지금」 두 값은
      곡선 양 끝이 이미 말하므로 여기서 되풀이하지 않는다. */
   sub: `(${fmtX(m.ratio)})`,
-  subDx: 18, subSize: 38, subFill: MUTE,
+  subDx: 18, subSize: LEGEND_SIZE, subFill: MUTE,
 }));
 
 const hi = members[0], lo = members[members.length - 1];
@@ -657,8 +726,10 @@ if (!GROUP_FILE) {
   const pinDir = R("data/datasets/gap-published");
   mkdirSync(pinDir, { recursive: true });
   /* 곡선의 점까지 함께 적는다 — 캐시가 정정돼도 발행본이 흔들리지 않게 */
-  const pinned = { ...group, curveFrom: CURVE_FROM, curveTo: CURVE_TO,
-    members: group.members.map((m, i) => ({ ...m, pts: members[i].pts })) };
+  /* 곡선의 점과 **카드에 찍힌 이름**까지 함께 적는다 — 캐시가 정정돼도, 공용 사전이
+     바뀌어도 발행본은 그대로다(§20·§25). */
+  const pinned = { ...group, curveFrom: CURVE_FROM, curveTo: CURVE_TO, legendSize: LEGEND_SIZE,
+    members: group.members.map((m, i) => ({ ...m, shown: displayName(m), pts: members[i].pts })) };
   writeFileSync(join(pinDir, `${label}.json`), JSON.stringify(pinned, null, 2) + "\n", "utf8");
   console.log(`   📌 묶음을 못 박았습니다 — data/datasets/gap-published/${label}.json`);
   console.log(`      발행하면 builders.json 을 --group 으로 바꾸세요(GAP_CARDS §19)`);

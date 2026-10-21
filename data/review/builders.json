@@ -10614,6 +10614,132 @@
         "singo-아크로리버하임-59"
       ],
       "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 지난 고점 2026-01 26.6억이 8개월 전(기준 12개월) · +1.5% — 오너 「넣자」(2026-10-22)."
+    },
+    {
+      "label": "gap-ep1-21",
+      "cmd": "scripts/build-gap-duel.mjs",
+      "args": [
+        "--set",
+        "gap-ep1",
+        "--group",
+        "data/datasets/gap-published/gap-ep1-21.json",
+        "--no",
+        "21",
+        "--label",
+        "gap-ep1-21"
+      ]
+    },
+    {
+      "label": "gap-ep1-22",
+      "cmd": "scripts/build-gap-duel.mjs",
+      "args": [
+        "--set",
+        "gap-ep1",
+        "--group",
+        "data/datasets/gap-published/gap-ep1-22.json",
+        "--no",
+        "22",
+        "--label",
+        "gap-ep1-22"
+      ]
+    },
+    {
+      "label": "gap-ep2-23",
+      "cmd": "scripts/build-gap-duel.mjs",
+      "args": [
+        "--set",
+        "gap-ep2",
+        "--group",
+        "data/datasets/gap-published/gap-ep2-23.json",
+        "--no",
+        "23",
+        "--label",
+        "gap-ep2-23"
+      ]
+    },
+    {
+      "label": "gap-ep1-24",
+      "cmd": "scripts/build-gap-duel.mjs",
+      "args": [
+        "--set",
+        "gap-ep1",
+        "--group",
+        "data/datasets/gap-published/gap-ep1-24.json",
+        "--no",
+        "24",
+        "--label",
+        "gap-ep1-24"
+      ]
+    },
+    {
+      "label": "gap-ep1-25",
+      "cmd": "scripts/build-gap-duel.mjs",
+      "args": [
+        "--set",
+        "gap-ep1",
+        "--group",
+        "data/datasets/gap-published/gap-ep1-25.json",
+        "--no",
+        "25",
+        "--label",
+        "gap-ep1-25"
+      ]
+    },
+    {
+      "label": "gap-ep1-26",
+      "cmd": "scripts/build-gap-duel.mjs",
+      "args": [
+        "--set",
+        "gap-ep1",
+        "--group",
+        "data/datasets/gap-published/gap-ep1-26.json",
+        "--no",
+        "26",
+        "--label",
+        "gap-ep1-26"
+      ]
+    },
+    {
+      "label": "gap-ep2-27",
+      "cmd": "scripts/build-gap-duel.mjs",
+      "args": [
+        "--set",
+        "gap-ep2",
+        "--group",
+        "data/datasets/gap-published/gap-ep2-27.json",
+        "--no",
+        "27",
+        "--label",
+        "gap-ep2-27"
+      ]
+    },
+    {
+      "label": "gap-ep1-28",
+      "cmd": "scripts/build-gap-duel.mjs",
+      "args": [
+        "--set",
+        "gap-ep1",
+        "--group",
+        "data/datasets/gap-published/gap-ep1-28.json",
+        "--no",
+        "28",
+        "--label",
+        "gap-ep1-28"
+      ]
+    },
+    {
+      "label": "gap-ep1-29",
+      "cmd": "scripts/build-gap-duel.mjs",
+      "args": [
+        "--set",
+        "gap-ep1",
+        "--group",
+        "data/datasets/gap-published/gap-ep1-29.json",
+        "--no",
+        "29",
+        "--label",
+        "gap-ep1-29"
+      ]
     }
   ]
 }
