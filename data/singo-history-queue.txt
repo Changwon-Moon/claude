@@ -47,7 +47,7 @@ lawd=41465 umd=풍덕천동 type=59 apt="동아아파트"
 lawd=41111 umd=천천동 type=59 apt="화서역푸르지오더에듀포레"
 lawd=41210 umd=하안동 type=59 apt="주공5"
 lawd=41360 umd=다산동 type=84 apt="다산리버펠리체1단지"
-lawd=41113 umd=권선동 type=59 apt="수원아이파크시티7단지" force=1
+lawd=41113 umd=권선동 type=59 apt="수원아이파크시티7단지"
 lawd=41117 umd=영통동 type=59 apt="신나무실신성"
 
 lawd=11500 umd=화곡동 type=84 apt="우장산아이파크,이편한세상"
