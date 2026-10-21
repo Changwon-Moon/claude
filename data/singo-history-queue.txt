@@ -37,7 +37,7 @@ lawd=41135 umd=서현동 type=84 apt="시범우성"
 lawd=11710 umd=문정동 type=84 apt="문정래미안"
 lawd=11410 umd=남가좌동 type=84 apt="DMC에코자이"
 lawd=41173 umd=호계동 type=84 apt="평촌더샵아이파크"
-lawd=11410 umd=남가좌동 type=59 apt="DMC에코자이" force=1
+lawd=11410 umd=남가좌동 type=59 apt="DMC에코자이"
 lawd=11530 umd=개봉동 type=84 apt="한마을" force=1
 lawd=11620 umd=봉천동 type=59 apt="봉천동아"
 lawd=41450 umd=망월동 type=59 apt="미사레스티아"
