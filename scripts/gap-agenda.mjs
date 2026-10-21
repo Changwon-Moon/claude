@@ -131,8 +131,18 @@ function unitNoise(u) {
     adj++;
     if (Math.abs(pts[k].v - pts[k - 1].v) / pts[k - 1].v > 0.15) jump++;
   }
+  /* ── 꼭지 (2026-10-21 신설) — 최근 1년 고점 ÷ 카드가 적을 「지금」
+     강남 래미안블레스티지는 2026.1 에 32.0억을 찍고 최근창 최고가는 26.7억이었다.
+     값은 정의대로 맞지만 **32억 꼭지가 카드에 그려지고** 끝점 마커만 그 아래 선다 —
+     제목의 격차가 꼭지끼리 잰 것보다 커 보인다. 톱니·공백·램프는 전부 「값이 튀는 것」을
+     보는 자라 이건 못 잡는다. 발행본 15장 실측은 1.00~1.09, **빌더 문턱은 1.10**이다. */
+  const dipFrom = MONTHS.length ? MONTHS[Math.max(0, MONTHS.length - 12)] : "";
+  const late = pts.filter((q) => q.ym >= dipFrom);
+  const latePeak = late.length ? Math.max(...late.map((q) => q.v)) : 0;
+
   /* 이웃달 쌍이 12개도 안 되면 「아직 모른다」다 — 0%로 적어 통과시키지 않는다 */
-  const out = { noise: adj < 12 ? null : jump / adj, hole: pts.length ? hole : null, ramp: ramp && u.base ? ramp / u.base : null };
+  const out = { noise: adj < 12 ? null : jump / adj, hole: pts.length ? hole : null, ramp: ramp && u.base ? ramp / u.base : null,
+    dip: latePeak && u.now ? latePeak / u.now : null };
   seriesCache.set(key, out);
   return out;
 }
@@ -205,6 +215,7 @@ L.push("| ♻️ | **이미 나간 단지**가 이 묶음에 들어 있습니다
 L.push("| 공백 | 관측이 가장 오래 끊긴 구간(개월). 그 사이는 선이 아니라 **직선 추측**입니다 — **20개월 넘으면 빌더가 던집니다** |");
 L.push("| … | 「자료」가 남은 묶음은 **아직 재지 않았습니다.** 덜 찬 캐시로 재면 「나쁜 자료」와 「아직 안 받은 자료」가 같은 얼굴이 됩니다 |");
 L.push("| 톱니 | 이웃한 두 달 사이 15% 넘게 튄 비율(가장 심한 단지). 발행본은 0~9%, **12% 넘으면 빌더가 던집니다** — 값은 맞아도 선이 이야기를 못 합니다 |");
+L.push("| 꼭지 | 최근 1년 고점 ÷ 카드가 적을 「지금」. **1.10 넘으면 ⛔ 빌더가 던집니다** — 꼭지는 카드에 그려지는데 끝점 마커만 그 아래 서서 **격차가 부풀어 보입니다**(발행본은 1.00~1.09) |");
 L.push("| 만들 때 | `build-gap-duel.mjs --set … --pick …` 에 넣는 값 |");
 L.push("");
 L.push("");
@@ -237,12 +248,15 @@ const row = (r, no) => {
   const bigRamp = ramps.length ? Math.max(...ramps) : null;
   const rampCell = bigRamp === null ? "…" : bigRamp > 1.45 ? `⚠️ ${bigRamp.toFixed(2)}` : bigRamp.toFixed(2);
   const gapCell = bigHole === null ? "…" : bigHole > 20 ? `⛔ ${bigHole}개월` : `${bigHole}개월`;
+  const dips = measured ? r.stat.map((x) => x.dip).filter((x) => x) : [];
+  const bigDip = dips.length ? Math.max(...dips) : null;
+  const dipCell = bigDip === null ? "…" : bigDip > 1.10 ? `⛔ ${bigDip.toFixed(2)}` : bigDip.toFixed(2);
   const mid = r.members.length === 3 ? cell(r.members[1]) : "—";
-  return `| ${no} | **${r.ratioGap.toFixed(2)}배** | ${r.gapEok.toFixed(1)}억 | ${eok(r.baseFrom)}~${eok(r.baseTo)}억 | ${cell(r.members[0])} | ${mid} | ${cell(r.members[r.members.length - 1])} | ${tag}${again.length ? ` ♻️` : ""} | ${saw} | ${gapCell} | ${rampCell} | \`${r.set} ${r.pick}\` |`;
+  return `| ${no} | **${r.ratioGap.toFixed(2)}배** | ${r.gapEok.toFixed(1)}억 | ${eok(r.baseFrom)}~${eok(r.baseTo)}억 | ${cell(r.members[0])} | ${mid} | ${cell(r.members[r.members.length - 1])} | ${tag}${again.length ? ` ♻️` : ""} | ${saw} | ${gapCell} | ${rampCell} | ${dipCell} | \`${r.set} ${r.pick}\` |`;
 };
 
-L.push("| # | 상승률차 | 금액차 | 그때 | 🔺 가장 많이 오른 곳 | 가운데 | 🔻 가장 덜 오른 곳 | 자료 | 톱니 | 공백 | 램프 | 만들 때 |");
-L.push("|--:|--:|--:|--:|---|---|---|---|--:|--:|--:|---|");
+L.push("| # | 상승률차 | 금액차 | 그때 | 🔺 가장 많이 오른 곳 | 가운데 | 🔻 가장 덜 오른 곳 | 자료 | 톱니 | 공백 | 램프 | 꼭지 | 만들 때 |");
+L.push("|--:|--:|--:|--:|---|---|---|---|--:|--:|--:|--:|---|");
 shown.forEach((r, i) => L.push(row(r, i + 1)));
 L.push("");
 

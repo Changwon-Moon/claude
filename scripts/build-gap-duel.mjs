@@ -24,7 +24,7 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { lastCompleteMonth } from "./lib/month-cache.mjs";
+import { lastCompleteMonth, shiftYm } from "./lib/month-cache.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const R = (p) => join(ROOT, p);
@@ -90,6 +90,27 @@ const THEME = arg("theme", "light") === "dark" ? "dark" : "light";
 const NOISE = process.argv.includes("--allow-noisy") ? 1 : Number(arg("noise", 12)) / 100;
 /** 관측이 이만큼 넘게 끊기면 그 구간은 곡선이 아니라 **직선 추측**이다 — series() 참고 */
 const MAXGAP = process.argv.includes("--allow-gaps") ? 999 : Number(arg("maxgap", 20));
+/**
+ * 「지금」이 그 단지의 **최근 고점보다 얼마나 내려와 있나** — 넘으면 던진다 (2026-10-21 신설).
+ *
+ * ── 왜 (2026-10-21, 2편 첫 카드 후보에서 눈으로 잡았다)
+ * 강남 래미안블레스티지 25평은 **2026.1 에 32.0억**을 찍고 2026.5 에 26.7억에 팔렸다.
+ * 최근창(202603~202608)의 최고가는 그 26.7억이므로 카드는 그것을 「지금」으로 적는다 —
+ * **정의대로이고 값도 맞다.** 그런데 32억 꼭지는 카드에 **그려져 있고** 끝점 마커만
+ * 그 아래 26.7억에 선다. 읽는 사람 눈에는 「끝값이 왜 꼭지가 아니지」가 되고,
+ * 제목의 격차(10.1억)는 꼭지끼리 재면 4.8억이다 — **격차가 부풀어 보인다.**
+ *
+ * 기존 네 가드(스파이크·톱니·공백·램프)는 이걸 못 잡는다. 그 넷은 전부 **값이 튀는 것**을
+ * 보는데, 이건 값이 멀쩡하면서 **창 밖의 고점과 창 안의 최고가가 갈리는** 자리다.
+ *
+ * 문턱 1.10: 발행본 15장 실측이 1.00~1.09 다(가장 큰 것이 6호 분당 장미마을 1.09).
+ * 그 선을 그으면 발행본은 하나도 안 건드리고 블레스티지(1.20)만 걸린다.
+ * ⚠️ 못 박은 발행본을 다시 그릴 때도 이 검사는 돈다 — 문턱을 조일 일이 있으면
+ *    먼저 `node scripts/audit-all.mjs` 로 발행본이 전부 통과하는지 확인할 것.
+ */
+const MAXDIP = process.argv.includes("--allow-dip") ? 99 : Number(arg("maxdip", 110)) / 100;
+/** 「최근 고점」을 어디서부터 볼까 — 최근창 앞 1년까지 거슬러 본다(발행본 실측도 이 창으로 쟀다) */
+const DIP_FROM = arg("dip-from", "");
 const T = THEME === "dark"
   ? { panel: INK, text: PAPER, mid: PAPER, mute: "#9aa3af",
       grid: "rgba(255,255,255,0.10)", wm: "#ffffff", wmOp: 0.13,
@@ -279,6 +300,28 @@ const members = group.members.map((m, i) => {
   const pts = m.pts?.length ? m.pts : series(m, months);
   return { ...m, color: SERIES_COLORS[i === group.members.length - 1 ? 2 : i], pts };
 });
+
+/* ── 꼭지 가드 — 「지금」이 최근 고점보다 한참 아래면 던진다 (MAXDIP 주석에 왜가 있다).
+   ⚠️ series() 안이 아니라 **여기**서 잰다. series() 는 곡선만 알고 `now`(최근창 최고가)를
+      모르는데, 이 가드는 **그 둘의 차이**를 보는 것이라 양쪽이 다 있어야 한다. */
+{
+  const dipFrom = DIP_FROM || shiftYm(CURVE_TO, -11);
+  for (const m of members) {
+    const win = m.pts.filter((t) => t.ym >= dipFrom);
+    if (!win.length) continue;
+    const peak = Math.max(...win.map((t) => t.v));
+    if (peak > m.now * MAXDIP) {
+      const at = win.find((t) => t.v === peak)?.ym ?? "";
+      throw new Error(
+        `${m.gu} ${m.apt} ${m.pyeong} — 카드가 적을 「지금」(${(m.now / 10000).toFixed(1)}억)이 ` +
+          `최근 고점(${(peak / 10000).toFixed(1)}억 · ${at})보다 ${Math.round((peak / m.now - 1) * 100)}% 아래입니다.\n` +
+          `   값은 정의대로 맞지만, 그 꼭지는 **카드에 그려집니다** — 끝점 마커만 그 아래 서고\n` +
+          `   제목의 격차는 꼭지끼리 잰 것보다 커 보입니다(발행본 15장은 전부 9% 이내).\n` +
+          `   다른 묶음을 고르세요. 그래도 그리려면: --allow-dip`,
+      );
+    }
+  }
+}
 
 /* ── 좌표
    ⚠️ 범례가 세 줄이라 streak-line 의 두 줄 자를 그대로 쓰면 안 된다(2026-09-02 실측).
