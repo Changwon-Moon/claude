@@ -2,48 +2,14 @@
 
 - 대기열: 315줄
 - 결과: **성공**
+- ⚠️ 이번 실행은 **국토부에 붙지 않았습니다**(전부 이미 있음) — API 가 살아 있다는 증거로 쓰지 마세요
 
 ```
-
-── A13824005
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A13824005
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A13824005.json
-A13824005 주차 지상 1980 + 지하 0 = **1980대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
-
-── A13485302
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A13485302
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A13485302.json
-A13485302 주차 지상 0 + 지하 4633 = **4633대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
-
-── A13611007
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A13611007
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A13611007.json
-A13611007 주차 지상 360 + 지하 2201 = **2561대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
-
-── A44897120
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A44897120
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A44897120.json
-A44897120 주차 지상 422 + 지하 1610 = **2032대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
-
-── A15879502
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A15879502
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A15879502.json
-A15879502 주차 지상 23 + 지하 1475 = **1498대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+⏭ 이미 있음 — data/datasets/apt-detail/A13824005.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A13485302.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A13611007.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A44897120.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A15879502.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A10025770.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A46377309.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A13820006.json (다시 받으려면 force=1)
@@ -355,6 +321,7 @@ A15879502 주차 지상 23 + 지하 1475 = **1498대** (오퍼레이션 AptBasis
 ⏭ 이미 있음 — data/datasets/apt-detail/A13613008.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A44072212.json (다시 받으려면 force=1)
 
-실제로 받아 본 단지 5곳 · 이미 있어 건너뛴 것 310곳
+실제로 받아 본 단지 0곳 · 이미 있어 건너뛴 것 315곳
+ⓘ 이번 실행은 **국토부에 한 번도 붙지 않았습니다** — 이 초록불은 API 가 살아 있다는 증거가 아닙니다.
 ✅ 대기열 전 줄 완료
 ```
