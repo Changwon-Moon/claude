@@ -42,7 +42,7 @@ lawd=11290 umd=길음동 type=84 apt="길음뉴타운2단지푸르지오"
 lawd=11410 umd=천연동 type=59 apt="천연뜨란채"
 lawd=11620 umd=봉천동 type=59 apt="벽산블루밍"
 lawd=11380 umd=응암동 type=59 apt="백련산에스케이뷰아이파크"
-lawd=11290 umd=하월곡동 type=59 apt="월곡두산위브" force=1
+lawd=11290 umd=하월곡동 type=59 apt="월곡두산위브"
 lawd=41210 umd=하안동 type=59 apt="주공12"
 lawd=41115 umd=화서동 type=59 apt="화서주공4단지" force=1
 lawd=41113 umd=곡반정동 type=84 apt="수원하늘채더퍼스트1단지" force=1
