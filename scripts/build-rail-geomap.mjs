@@ -2105,8 +2105,18 @@ for (const L0 of rail.lines) {
         return {
           at: bl ? "at-bl" : "at-tr",
           top: boxTop + (bl ? boxH - 22 - CHIP_H : 22),
-          title: b.info.title, value: b.info.value, asOf: b.info.asOf,
-          width: `${b.info.value ? Number(b.info.value) : 0}%`, zero: !Number(b.info.value),
+          /* 🔴 **칩의 공정률을 데이터셋에 또 적지 않는다**(2026-10-22 발견).
+             앞 판은 b.info.value·asOf 를 손으로 적어 뒀는데, 공정률을 갱신해도 **칩만 옛 값으로
+             남았다** — 머리글은 「2026.9월 기준」인데 남부 칩은 17.25% · 2026.6월이었다.
+             한 카드 안에서 같은 숫자를 두 곳에 적으면 반드시 이렇게 갈린다.
+             이제 안 주면 **노선의 공정률**을 그대로 쓴다. 토막마다 값이 다른 경우
+             (북부는 미착공 0%)만 데이터셋이 적고, 기준일은 언제나 meta 가 정한다. */
+          title: b.info.title,
+          value: b.info.value ?? L.progressText,
+          asOf: b.info.asOf
+            ?? `${b.info.asOfPrefix ? `${b.info.asOfPrefix} · ` : ""}${rail.meta.asOfLabel} · 국가철도공단`,
+          width: `${(b.info.value ?? L.progressText) ? Number(b.info.value ?? L.progressText) : 0}%`,
+          zero: !Number(b.info.value ?? L.progressText),
           wasK: b.info.wasK || "당초", was: b.info.was,
           nowK: b.info.nowK || "변경", now: b.info.now,
         };
