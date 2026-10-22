@@ -46,7 +46,7 @@ lawd=11290 umd=하월곡동 type=59 apt="월곡두산위브"
 lawd=41210 umd=하안동 type=59 apt="주공12"
 lawd=41115 umd=화서동 type=59 apt="화서주공4단지"
 lawd=41113 umd=곡반정동 type=84 apt="수원하늘채더퍼스트1단지"
-lawd=41173 umd=비산동 type=84 apt="삼성래미안" force=1
+lawd=41173 umd=비산동 type=84 apt="삼성래미안"
 lawd=41465 umd=죽전동 type=84 apt="새터마을죽전힐스테이트"
 lawd=11470 umd=신정동 type=84 apt="이펜하우스3단지"
 lawd=11545 umd=가산동 type=59 apt="두산" force=1
