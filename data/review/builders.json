@@ -11028,6 +11028,40 @@
         "singo-삼성래미안-84-1023"
       ],
       "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 9.75억 vs 지난 고점 9.5억(2021.10) 2.6% — 오너 기준(2026-10-23)."
+    },
+    {
+      "label": "singo-A13824005-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "장미2",
+        "--type",
+        "84",
+        "--kapt",
+        "A13824005",
+        "--publish"
+      ],
+      "produces": [
+        "singo-장미2-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A13485302-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "롯데캐슬퍼스트",
+        "--type",
+        "59",
+        "--kapt",
+        "A13485302",
+        "--publish"
+      ],
+      "produces": [
+        "singo-롯데캐슬퍼스트-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
     }
   ]
 }
