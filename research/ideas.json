@@ -2122,20 +2122,6 @@
       "at": "2026-10-22"
     },
     {
-      "id": "ah-remndr-2026910261",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 올 뉴 챔피언스시티 1차",
-      "why": "광주 · 729세대 · 접수 ~2026-10-20 · 55점(광역시·729가구·무순위)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-10-20",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910261&pblancNo=2026910261",
-      "at": "2026-10-22"
-    },
-    {
       "id": "ah-remndr-2026910268",
       "cat": "todo",
       "topic": "부동산",
@@ -2164,20 +2150,6 @@
       "at": "2026-10-22"
     },
     {
-      "id": "ah-remndr-2026910264",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 시흥 은계 에피트(조합원 취소분)",
-      "why": "경기 · 16세대 · 접수 ~2026-10-20 · 51점(수도권·무순위)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-10-20",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910264&pblancNo=2026910264",
-      "at": "2026-10-22"
-    },
-    {
       "id": "ah-apt-2026000509",
       "cat": "todo",
       "topic": "부동산",
@@ -2203,6 +2175,34 @@
       "status": "",
       "deadline": "2026-10-28",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000508&pblancNo=2026000508",
+      "at": "2026-10-22"
+    },
+    {
+      "id": "ah-remndr-2026910261",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 올 뉴 챔피언스시티 1차",
+      "why": "광주 · 729세대 · 접수 ~2026-10-20 · 55점(광역시·729가구·무순위)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-10-20",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910261&pblancNo=2026910261",
+      "at": "2026-10-22"
+    },
+    {
+      "id": "ah-remndr-2026910264",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 시흥 은계 에피트(조합원 취소분)",
+      "why": "경기 · 16세대 · 접수 ~2026-10-20 · 51점(수도권·무순위)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-10-20",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910264&pblancNo=2026910264",
       "at": "2026-10-22"
     }
   ]
