@@ -44,7 +44,7 @@
 | `sinbundang-loop` | 🟢 1세트 | sinbundang-loop |
 | `singo-record` | 🟢 49세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 46 |
 | `singoga-map` | 🟢 4세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map 외 1 |
-| `streak-line` | 🟢 27세트 | mae-streak, jeonse-streak, m2-gap 외 24 |
+| `streak-line` | 🟢 36세트 | mae-streak, jeonse-streak, m2-gap 외 33 |
 | `supply-progress` | 🟢 1세트 | supply-progress |
 | `tax-matrix` | 🟢 1세트 | ltv-matrix |
 | `world-capital` | 🟢 1세트 | world-capital |
