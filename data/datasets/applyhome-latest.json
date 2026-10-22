@@ -10,11 +10,11 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-10-21",
+    "collectedFor": "2026-10-22",
     "withinDays": 7,
     "totals": {
-      "APT 분양정보": 2908,
-      "APT 무순위/잔여세대": 1718
+      "APT 분양정보": 2909,
+      "APT 무순위/잔여세대": 1722
     },
     "unit": {
       "supply": "가구"
@@ -49,30 +49,84 @@
       ]
     },
     {
-      "kind": "apt",
-      "pblancNo": "2026000458",
-      "name": "산곡역자이힐스테이트앤하늘채",
-      "areaName": "인천",
-      "address": "인천광역시 부평구 산곡동 10번지 일원(산곡6 주택재개발정비사업)",
-      "supply": 1289,
-      "noticeDate": "2026-10-08",
-      "receiptFrom": "2026-10-20",
-      "receiptTo": "2026-10-21",
-      "specialFrom": "2026-10-19",
-      "rank1From": "2026-10-20",
-      "moveInYm": "2029-12",
-      "announceDate": "2026-10-27",
-      "builder": "지에스건설(주), 현대건설(주), 코오롱글로벌(주)",
+      "kind": "remndr",
+      "pblancNo": "2026930044",
+      "name": "한화포레나 영흥숲",
+      "areaName": "경기",
+      "address": "경기도 수원시 영통구 원천동 333-1번지 일원",
+      "supply": 1,
+      "noticeDate": "2026-10-21",
+      "receiptFrom": "2026-10-26",
+      "receiptTo": "2026-10-26",
+      "specialFrom": "2026-10-26",
+      "rank1From": null,
+      "moveInYm": "2026-11",
+      "announceDate": "2026-10-29",
+      "builder": "(주)한화",
       "priceCap": false,
       "speculative": false,
-      "homepage": "https://www.xi.co.kr/sangokxi",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000458&pblancNo=2026000458",
-      "score": 68,
+      "homepage": null,
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930044&pblancNo=2026930044",
+      "score": 65,
       "reasons": [
         "수도권",
-        "1,289가구 대단지",
-        "오늘 마감",
-        "자이"
+        "무순위",
+        "D-4",
+        "포레나"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910265",
+      "name": "한화포레나 영흥숲(3차)",
+      "areaName": "경기",
+      "address": "경기도 수원시 영통구 원천동 333-1번지 일원",
+      "supply": 1,
+      "noticeDate": "2026-10-21",
+      "receiptFrom": "2026-10-26",
+      "receiptTo": "2026-10-26",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-11",
+      "announceDate": "2026-10-29",
+      "builder": "(주)한화",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": null,
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910265&pblancNo=2026910265",
+      "score": 65,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "D-4",
+        "포레나"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910266",
+      "name": "문수로 비스타 더파크",
+      "areaName": "울산",
+      "address": "울산광역시 남구 무거동 1615-1번지(무거삼호지구 11BL) 일원",
+      "supply": 329,
+      "noticeDate": "2026-10-21",
+      "receiptFrom": "2026-10-26",
+      "receiptTo": "2026-10-26",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2029-05",
+      "announceDate": "2026-10-29",
+      "builder": "(주)동원개발",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "http://munsuro-vista-park.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910266&pblancNo=2026910266",
+      "score": 63,
+      "reasons": [
+        "광역시",
+        "329가구",
+        "무순위",
+        "D-4"
       ]
     },
     {
@@ -102,29 +156,55 @@
       ]
     },
     {
-      "kind": "apt",
-      "pblancNo": "2026000492",
-      "name": "청주 가경 아이파크 8단지",
-      "areaName": "충북",
-      "address": "충청북도 청주시 흥덕구 가경동 701번지 일원",
-      "supply": 1128,
-      "noticeDate": "2026-10-08",
-      "receiptFrom": "2026-10-20",
-      "receiptTo": "2026-10-21",
-      "specialFrom": "2026-10-19",
-      "rank1From": "2026-10-20",
-      "moveInYm": "2029-11",
-      "announceDate": "2026-10-27",
-      "builder": "아이파크현대산업개발 주식회사",
+      "kind": "remndr",
+      "pblancNo": "2026910268",
+      "name": "신천역 에피트(3차)",
+      "areaName": "경기",
+      "address": "경기도 시흥시 시흥대로 1110",
+      "supply": 8,
+      "noticeDate": "2026-10-21",
+      "receiptFrom": "2026-10-26",
+      "receiptTo": "2026-10-26",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-11",
+      "announceDate": "2026-10-29",
+      "builder": "(주)다우개발",
       "priceCap": false,
       "speculative": false,
-      "homepage": "https://www.i-park.com/gagyeong7-8",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000492&pblancNo=2026000492",
-      "score": 54,
+      "homepage": "http://halla-shincheon.co.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910268&pblancNo=2026910268",
+      "score": 55,
       "reasons": [
-        "1,128가구 대단지",
-        "오늘 마감",
-        "아이파크"
+        "수도권",
+        "무순위",
+        "D-4"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000502",
+      "name": "화성 향남 롯데캐슬 시그니처",
+      "areaName": "경기",
+      "address": "경기도 화성시 만세구 향남읍 상신리 산 13-13 일원",
+      "supply": 1542,
+      "noticeDate": "2026-10-21",
+      "receiptFrom": "2026-11-03",
+      "receiptTo": "2026-11-04",
+      "specialFrom": "2026-11-02",
+      "rank1From": "2026-11-03",
+      "moveInYm": "2029-12",
+      "announceDate": "2026-11-10",
+      "builder": "롯데건설(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.hwaseong-lottecastlesignature.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000502&pblancNo=2026000502",
+      "score": 53,
+      "reasons": [
+        "수도권",
+        "1,542가구 대단지",
+        "롯데캐슬"
       ]
     },
     {
@@ -174,160 +254,8 @@
       "score": 50,
       "reasons": [
         "수도권",
-        "D-6",
+        "D-5",
         "분양가상한제"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910262",
-      "name": "화성 송산 동원로얄듀크 포레(2차)",
-      "areaName": "경기",
-      "address": "경기도 화성시 병점구 화산로 9",
-      "supply": 5,
-      "noticeDate": "2026-10-14",
-      "receiptFrom": "2026-10-19",
-      "receiptTo": "2026-10-19",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-11",
-      "announceDate": "2026-10-22",
-      "builder": "코리아신탁(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": null,
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910262&pblancNo=2026910262",
-      "score": 47,
-      "reasons": [
-        "수도권",
-        "무순위"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000491",
-      "name": "청주 가경 아이파크 7단지",
-      "areaName": "충북",
-      "address": "충청북도 청주시 흥덕구 가경동 309번지 일원",
-      "supply": 543,
-      "noticeDate": "2026-10-08",
-      "receiptFrom": "2026-10-20",
-      "receiptTo": "2026-10-21",
-      "specialFrom": "2026-10-19",
-      "rank1From": "2026-10-20",
-      "moveInYm": "2029-11",
-      "announceDate": "2026-10-28",
-      "builder": "아이파크현대산업개발 주식회사",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.i-park.com/gagyeong7-8",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000491&pblancNo=2026000491",
-      "score": 47,
-      "reasons": [
-        "543가구",
-        "오늘 마감",
-        "아이파크"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000469",
-      "name": "연제갤러리자이",
-      "areaName": "부산",
-      "address": "부산광역시 연제구 연산동 1123-1번지",
-      "supply": 459,
-      "noticeDate": "2026-10-08",
-      "receiptFrom": "2026-10-20",
-      "receiptTo": "2026-10-21",
-      "specialFrom": "2026-10-19",
-      "rank1From": "2026-10-20",
-      "moveInYm": "2030-10",
-      "announceDate": "2026-10-27",
-      "builder": "지에스건설(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.xi.co.kr/yj",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000469&pblancNo=2026000469",
-      "score": 47,
-      "reasons": [
-        "광역시",
-        "오늘 마감",
-        "자이"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000267",
-      "name": "아산 그랑시티필하우스",
-      "areaName": "충남",
-      "address": "충청남도 아산시 배방읍 휴대리 143번지 일원 (휴대지구 도시개발사업구역 내 공동주택 1블럭)",
-      "supply": 1380,
-      "noticeDate": "2026-10-08",
-      "receiptFrom": "2026-10-20",
-      "receiptTo": "2026-10-21",
-      "specialFrom": "2026-10-19",
-      "rank1From": "2026-10-20",
-      "moveInYm": "2029-08",
-      "announceDate": "2026-10-27",
-      "builder": "한성건설(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.천안아산역그랑시티필하우스.com/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000267&pblancNo=2026000267",
-      "score": 44,
-      "reasons": [
-        "1,380가구 대단지",
-        "오늘 마감"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910252",
-      "name": "그랑라크 에일린의 뜰",
-      "areaName": "울산",
-      "address": "울산광역시 남구 야음동 350-5번지 일원",
-      "supply": 18,
-      "noticeDate": "2026-10-14",
-      "receiptFrom": "2026-10-19",
-      "receiptTo": "2026-10-19",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2029-11",
-      "announceDate": "2026-10-22",
-      "builder": "남구비14구역주택재개발정비사업조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://www.그랑라크에일린의뜰.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910252&pblancNo=2026910252",
-      "score": 43,
-      "reasons": [
-        "광역시",
-        "무순위"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000464",
-      "name": "힐스테이트 거제시그니처(1회차)",
-      "areaName": "경남",
-      "address": "경상남도 거제시 옥포동 1670번지 일원",
-      "supply": 356,
-      "noticeDate": "2026-10-08",
-      "receiptFrom": "2026-10-20",
-      "receiptTo": "2026-10-21",
-      "specialFrom": "2026-10-19",
-      "rank1From": "2026-10-20",
-      "moveInYm": "2030-08",
-      "announceDate": "2026-10-27",
-      "builder": "현대엔지니어링(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.힐스테이트거제시그니처.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000464&pblancNo=2026000464",
-      "score": 41,
-      "reasons": [
-        "오늘 마감",
-        "힐스테이트"
       ]
     },
     {
@@ -349,10 +277,11 @@
       "speculative": true,
       "homepage": "https://아크메르동탄.kr",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000509&pblancNo=2026000509",
-      "score": 41,
+      "score": 49,
       "reasons": [
         "수도권",
         "996가구",
+        "D-6",
         "투기과열지구"
       ]
     },
@@ -375,10 +304,11 @@
       "speculative": true,
       "homepage": "https://아크메르동탄.kr",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000508&pblancNo=2026000508",
-      "score": 41,
+      "score": 49,
       "reasons": [
         "수도권",
         "812가구",
+        "D-6",
         "투기과열지구"
       ]
     },
@@ -401,10 +331,11 @@
       "speculative": false,
       "homepage": "https://www.trivn-doosan-centum.com/",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000514&pblancNo=2026000514",
-      "score": 28,
+      "score": 36,
       "reasons": [
         "광역시",
-        "792가구"
+        "792가구",
+        "D-6"
       ]
     },
     {
@@ -426,10 +357,11 @@
       "speculative": false,
       "homepage": "https://www.trivn-doosan-centum.com/",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000513&pblancNo=2026000513",
-      "score": 28,
+      "score": 36,
       "reasons": [
         "광역시",
-        "852가구"
+        "852가구",
+        "D-6"
       ]
     },
     {
@@ -453,7 +385,32 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000402&pblancNo=2026000402",
       "score": 24,
       "reasons": [
-        "D-5"
+        "D-4"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000495",
+      "name": "연산 센텀 월드메르디앙",
+      "areaName": "부산",
+      "address": "부산광역시 연제구 연산동 418-8(외1필지)",
+      "supply": 144,
+      "noticeDate": "2026-10-16",
+      "receiptFrom": "2026-10-27",
+      "receiptTo": "2026-10-28",
+      "specialFrom": "2026-10-26",
+      "rank1From": "2026-10-27",
+      "moveInYm": "2029-04",
+      "announceDate": "2026-11-04",
+      "builder": "주식회사 명린종합건설",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.연산센텀월드메르디앙.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000495&pblancNo=2026000495",
+      "score": 24,
+      "reasons": [
+        "광역시",
+        "D-6"
       ]
     },
     {
@@ -502,31 +459,7 @@
       "score": 20,
       "reasons": [
         "광역시",
-        "D-6"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000495",
-      "name": "연산 센텀 월드메르디앙",
-      "areaName": "부산",
-      "address": "부산광역시 연제구 연산동 418-8(외1필지)",
-      "supply": 144,
-      "noticeDate": "2026-10-16",
-      "receiptFrom": "2026-10-27",
-      "receiptTo": "2026-10-28",
-      "specialFrom": "2026-10-26",
-      "rank1From": "2026-10-27",
-      "moveInYm": "2029-04",
-      "announceDate": "2026-11-04",
-      "builder": "주식회사 명린종합건설",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.연산센텀월드메르디앙.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000495&pblancNo=2026000495",
-      "score": 16,
-      "reasons": [
-        "광역시"
+        "D-5"
       ]
     }
   ]
