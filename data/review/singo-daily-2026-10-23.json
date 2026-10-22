@@ -1,9 +1,15 @@
 {
   "label": "singo-daily-2026-10-23",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 15장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 17장 · 코드 검수만",
   "findings": [],
   "cards": [
+    {
+      "file": "singo-장미2-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
     {
       "file": "singo-서울숲리버뷰자이-59.json",
       "deterministic": true,
@@ -12,6 +18,12 @@
     },
     {
       "file": "singo-대흥동태영아파트-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-롯데캐슬퍼스트-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
