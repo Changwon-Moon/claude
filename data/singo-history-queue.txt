@@ -42,7 +42,7 @@ lawd=11230 umd=장안동 type=84 apt="장안현대홈타운(336)"
 lawd=41117 umd=원천동 type=59 apt="광교호반베르디움"
 lawd=41465 umd=동천동 type=84 apt="동천디이스트"
 lawd=41115 umd=인계동 type=59 apt="수원센트럴아이파크자이"
-lawd=41410 umd=산본동 type=59 apt="세종" force=1
+lawd=41410 umd=산본동 type=59 apt="세종"
 lawd=41463 umd=상갈동 type=59 apt="금화마을주공3단지"
 
 lawd=11710 umd=신천동 type=84 apt="장미2"
