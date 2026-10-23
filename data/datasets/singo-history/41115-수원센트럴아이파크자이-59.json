@@ -5,14 +5,14 @@
     "aptNm": "수원센트럴아이파크자이",
     "type": "59",
     "from": "202001",
-    "to": "202609",
-    "monthsTried": 81,
+    "to": "202610",
+    "monthsTried": 82,
     "monthsFailed": 0,
-    "monthsTraded": 22,
+    "monthsTraded": 23,
     "peak": {
-      "manwon": 82000,
-      "date": "2026-09-02",
-      "area": 59.98,
+      "manwon": 84000,
+      "date": "2026-10-21",
+      "area": 59.99,
       "floor": 19
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
@@ -733,7 +733,7 @@
     {
       "ym": "202608",
       "maxManwon": 80000,
-      "count": 6,
+      "count": 7,
       "area": 59.98,
       "floor": 10,
       "date": "2026-08-10",
@@ -742,10 +742,19 @@
     {
       "ym": "202609",
       "maxManwon": 82000,
-      "count": 4,
+      "count": 6,
       "area": 59.98,
       "floor": 19,
       "date": "2026-09-02",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": 84000,
+      "count": 2,
+      "area": 59.99,
+      "floor": 19,
+      "date": "2026-10-21",
       "ok": true
     }
   ]
