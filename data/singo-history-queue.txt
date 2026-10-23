@@ -37,7 +37,7 @@
 lawd=11500 umd=화곡동 type=84 apt="강서힐스테이트"
 lawd=41430 umd=포일동 type=84 apt="인덕원푸르지오엘센트로"
 lawd=11260 umd=면목동 type=84 apt="사가정센트럴아이파크"
-lawd=41465 umd=성복동 type=84 apt="성복역롯데캐슬클라시엘" force=1
+lawd=41465 umd=성복동 type=84 apt="성복역롯데캐슬클라시엘"
 lawd=11230 umd=장안동 type=84 apt="장안현대홈타운(336)" force=1
 lawd=41117 umd=원천동 type=59 apt="광교호반베르디움" force=1
 lawd=41465 umd=동천동 type=84 apt="동천디이스트" force=1

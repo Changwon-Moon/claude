@@ -5,14 +5,14 @@
     "aptNm": "성복역롯데캐슬클라시엘",
     "type": "84",
     "from": "202001",
-    "to": "202608",
-    "monthsTried": 80,
+    "to": "202610",
+    "monthsTried": 82,
     "monthsFailed": 0,
-    "monthsTraded": 47,
+    "monthsTraded": 49,
     "peak": {
-      "manwon": 149000,
-      "date": "2026-07-22",
-      "area": 84.91,
+      "manwon": 152500,
+      "date": "2026-10-17",
+      "area": 84.95,
       "floor": 11
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
@@ -737,6 +737,24 @@
       "area": 84.91,
       "floor": 4,
       "date": "2026-08-13",
+      "ok": true
+    },
+    {
+      "ym": "202609",
+      "maxManwon": 135000,
+      "count": 1,
+      "area": 84.95,
+      "floor": 4,
+      "date": "2026-09-03",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": 152500,
+      "count": 3,
+      "area": 84.95,
+      "floor": 11,
+      "date": "2026-10-17",
       "ok": true
     }
   ]
