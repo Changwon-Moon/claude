@@ -5,13 +5,11 @@
  * 오너 2026-10-25: "서울, 수도권 지도 위에 gtx-abc를 올린 지도를 만들어서 문제로 만들어줄 수 있니?"
  *   → 빈칸: 역명 + 시·구 이름 (오너 선택) · 범위: GTX 가 지나는 범위 (오너 선택)
  *
- * ── 왜 두 쪽인가
- *   GTX 범위를 A4 세로에 담으면 1km ≈ 10px 이다. 서울 25구는 한 구가 60px 남짓이라, 거기에 구 이름
- *   빈칸 25개와 서울 안 역 빈칸 13개를 함께 넣으면 칸끼리 포개진다(지난 GTX 시험지에서도 서울
- *   도심이 가장 빡빡했다). 그래서 교과서 지도처럼 **서울은 확대도로 따로 뺀다.**
- *     ① 수도권(A4 세로) — 경기 시·군 · 인천 구·군 이름 + 서울 밖 역 이름
- *     ② 서울 확대(A4 가로) — 서울 25구 이름 + 서울 안 역 이름
- *   ①에는 ② 범위를 점선 상자로 표시한다. 같은 역·같은 구를 두 쪽에서 두 번 묻지 않는다.
+ * ── 두 쪽 (오너 2026-10-25 2차로 바뀌었다)
+ *     ① 수도권(A4 세로) — GTX 37역 **전부** + 경기 시·군. 서울은 구 경계만 긋고 이름은 안 묻는다.
+ *     ② 서울(A4 가로) — 서울 25구만. 노선·역·이웃 시·도 경계·범례 없이.
+ *   인천은 시험 범위가 아니다 — 면색만 깔고 구 경계도 빈칸도 없다.
+ *   (1차는 서울 안 역 13개를 ②로 뺐는데, 오너가 「노선 문제는 모두 1번에서」로 정리했다.)
  *
  * ── 무엇을 다시 쓰나
  *   선형·역 경위도: build-rail-geomap.mjs --geo-out (카드와 같은 계산 · 카드 출력은 안 건드린다)
@@ -50,7 +48,8 @@ const HAN = hanRiverPoints(sgg.features.map((f) => ({ name: f.properties.name, r
 const SIDO_FILL = { 서울특별시: "#e8e2d6", 경기도: "#f2efe8", 인천광역시: "#e3e0dc" };
 const FILL_ETC = "#edeae3", WATER_FILL = "#cfe0ee", CTX_EDGE = "#d6d1c6";
 const INK = "#141821", INNER = "#9aa0a9", LEAD = "#9aa1ac", UNIT_BOX = "#7d838c";
-const FOCUS = new Set(["서울특별시", "경기도", "인천광역시"]);
+/* 경계선을 칸칸이 긋는 시·도(주인공). 쪽마다 다르다 — 아래 PAGES 의 focus.
+   인천은 시험 범위가 아니다(오너 2026-10-25 2차) — 어느 쪽에서도 주인공이 아니다. */
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const units = (t) => [...t].reduce((a, c) => a + (/[\x00-\x7F]/.test(c) ? 0.56 : 0.96), 0);
 const cityOf = (n) => n.match(/^(.+?시)(.+구)$/)?.[1] || n;
@@ -92,6 +91,7 @@ const polysOf = (f) => (f.geometry.type === "Polygon" ? [f.geometry.coordinates]
 
 /* ── 한 쪽 */
 function buildPage(pg) {
+  const FOCUS = pg.focus;
   const [PW, PH] = pg.orient === "landscape" ? [1123, 794] : [794, 1123];
   const MG = 34, P = { x: MG, y: MG, w: PW - 2 * MG, h: PH - 2 * MG };
   const BOX = pg.box, UBOX = pg.ubox;
@@ -161,7 +161,7 @@ function buildPage(pg) {
 
   /* ── 노선 */
   const strokes = [], railSegs = [];
-  for (const L of LINES) {
+  for (const L of pg.rail ? LINES : []) {
     const c = colorOf(L), xy = (q) => [X(q.lon), Y(q.lat)];
     strokes.push({ g: L.chain.map(xy), c, w: 5.2 });
     if (L.branch.length) strokes.push({ g: L.branch.map(xy), c, w: 4.2 });
@@ -173,7 +173,7 @@ function buildPage(pg) {
 
   /* ── 역 — 같은 이름은 한 점(서울역·삼성·청량리) */
   const nodes = new Map();
-  for (const L of LINES) for (const st of L.stations) {
+  for (const L of pg.rail ? LINES : []) for (const st of L.stations) {
     const n = nodes.get(st.name) || { name: st.name, xs: [], ys: [], lines: new Set(), colors: new Set(), seoul: inSeoul(st) };
     n.xs.push(X(st.lon)); n.ys.push(Y(st.lat)); n.lines.add(L.key); n.colors.add(colorOf(L)); nodes.set(st.name, n);
   }
@@ -228,6 +228,7 @@ function buildPage(pg) {
   if (pg.legend) {
     const items = LINES.map((L) => ({ t: TAG[L.key], c: colorOf(L) }));
     const lw = items.reduce((a, it) => a + pillW(it.t) + 6, 0) + 150, lh = 24;
+    /* 빈칸 범례는 역·구역 두 종류가 한 쪽에 같이 나올 때만 뜻이 있다(②는 구역뿐이라 안 단다). */
     const corners = [[P.x + 12, P.y + 12], [P.x + P.w - 12 - lw, P.y + 12], [P.x + 12, P.y + P.h - 12 - lh], [P.x + P.w - 12 - lw, P.y + P.h - 12 - lh]];
     const cost = ([cx, cy]) => { const r = grow({ x0: cx, y0: cy, x1: cx + lw, y1: cy + lh }, 30);
       return railSegs.filter((sg) => segHitsRect(sg, r)).length + ST.filter((n) => circleHitsRect(n.x, n.y, 50, r)).length * 20
@@ -376,7 +377,7 @@ function buildPage(pg) {
     o += `<g clip-path="url(#k${pg.id})"><rect x="${P.x}" y="${P.y}" width="${P.w}" height="${P.h}" fill="${FILL_ETC}"/>`;
     for (const f of feats) { const fill = SIDO_FILL[f.properties.sido] || FILL_ETC;
       for (const r of rings(f.geometry)) o += `<path d="${dl(r)}Z" fill="${fill}" stroke="${fill}" stroke-width="0.7" stroke-linejoin="round"/>`; }
-    o += `<path d="${edgePath(cls.ctx)}" fill="none" stroke="${CTX_EDGE}" stroke-width="1" stroke-linecap="round"/>`;
+    if (pg.ctx !== false) o += `<path d="${edgePath(cls.ctx)}" fill="none" stroke="${CTX_EDGE}" stroke-width="1" stroke-linecap="round"/>`;
     o += `<path d="${edgePath(cls.inner)}" fill="none" stroke="${INNER}" stroke-width="1" stroke-linecap="round"/>`;
     o += `<path d="${edgePath(cls.sido)}" fill="none" stroke="#5b616b" stroke-width="1.4" stroke-linecap="round"/>`;
     o += `<path d="${edgePath(cls.outer)}" fill="none" stroke="${INK}" stroke-width="1.6" stroke-linecap="round"/>`;
@@ -456,17 +457,21 @@ const bbOfPts = (pts) => ({ lon0: Math.min(...pts.map((p) => p.lon)), lon1: Math
                             lat0: Math.min(...pts.map((p) => p.lat)), lat1: Math.max(...pts.map((p) => p.lat)) });
 const seoulPts = SEOUL.flatMap((f) => rings(f.geometry).flat().map((q) => ({ lon: q[0], lat: q[1] })));
 const SEOUL_BB = bbOfPts(seoulPts);
+/* 오너 2026-10-25 2차: "인천 행정구역은 시험범위 아니니 전체 지워줘. GTX 노선 문제는 모두 1번
+   수도권 사진에서 작성하게 해주고, 2번에서는 서울 행정구역만 나오게 해줘."
+   → ① 역 37칸 전부 + 경기 시·군 · 서울은 구 경계만(이름은 ②에서) · 인천은 면색만(경계·빈칸 없음)
+   → ② 서울 25구만 — 노선·역·이웃 시·도 경계·범례 없이 */
 const PAGES = [
   { id: "1_수도권", orient: "portrait", bbox: bbOfPts(allSt), padx: 46, padt: 64, padb: 40,
-    /* 인천 구 8칸이 판 왼쪽 끝에 몰려 부평구·부천시 빈칸이 갈 곳이 없었다(1판). 오른쪽 끝은 마석
-       하나뿐이라 여백을 왼쪽으로 옮긴다 — 합은 거의 같아 축척은 4% 남짓만 준다. */
+    /* 인천대입구~부평 역 빈칸이 판 왼쪽 끝에 몰린다 — 여백을 왼쪽으로(합은 거의 같아 축척 4% 남짓) */
     padl: 104, padr: 22,
-    box: { w: 66, h: 22 }, ubox: { w: 48, h: 18 }, minUnitD: 9, legend: true,
-    askStation: (n) => !n.seoul, askUnit: (f) => f.properties.sido !== "서울특별시",
-    zoomRect: (X, Y) => ({ x0: X(SEOUL_BB.lon0) - 6, y0: Y(SEOUL_BB.lat1) - 6, x1: X(SEOUL_BB.lon1) + 6, y1: Y(SEOUL_BB.lat0) + 6 }) },
+    focus: new Set(["서울특별시", "경기도"]), rail: true, legend: true,
+    box: { w: 66, h: 22 }, ubox: { w: 48, h: 18 }, minUnitD: 9,
+    askStation: () => true, askUnit: (f) => f.properties.sido === "경기도" },
   { id: "2_서울", orient: "landscape", bbox: SEOUL_BB, padx: 30, padt: 30, padb: 30,
-    box: { w: 74, h: 25 }, ubox: { w: 64, h: 23 }, minUnitD: 12, legend: true,
-    askStation: (n) => n.seoul, askUnit: (f) => f.properties.sido === "서울특별시" },
+    focus: new Set(["서울특별시"]), rail: false, legend: false, ctx: false,
+    box: { w: 74, h: 25 }, ubox: { w: 70, h: 25 }, minUnitD: 12,
+    askStation: () => false, askUnit: (f) => f.properties.sido === "서울특별시" },
 ];
 const built = PAGES.map(buildPage);
 
@@ -476,6 +481,8 @@ const stAll = [...new Set(LINES.flatMap((L) => L.stations.map((s) => s.name)))].
 if (JSON.stringify(stAsked) !== JSON.stringify(stAll))
   throw new Error(`역 빈칸 ${stAsked.length}개 ≠ GTX 역 ${stAll.length}개 — 빠졌거나 두 번 물었다`);
 if (built[1].UN.length !== 25) throw new Error(`서울 확대도의 구 빈칸이 ${built[1].UN.length}개다 — 25개여야 한다`);
+if (built[1].askSt.length) throw new Error("② 서울 쪽에 역 빈칸이 있다 — 역은 ①에서만 묻는다");
+if (built[0].UN.some((u) => u.sido !== "경기도")) throw new Error("① 에 경기 밖 구역 빈칸이 있다 — 인천은 시험 범위가 아니다");
 if (built.some((b) => b.bad.length)) console.log("⚠️ 노선을 가리거나 자리를 못 찾은 빈칸이 있다 — 눈으로 확인할 것");
 
 /* ── PDF · JPG */
