@@ -8,38 +8,23 @@
 ── 진산마을성원상떼빌아파트 전용 84타입 (41465)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41465 --apt '진산마을성원상떼빌아파트' --umd '상현동' --type 84 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41465 --apt '진산마을성원상떼빌아파트' --umd '상현동' --type 84 --from 202001
 
-진산마을성원상떼빌아파트 · 전용 84타입 · 41465 · 202001~202610 (82개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41465-진산마을성원상떼빌아파트-84.json
-거래 있던 달 64/82 · 수집 실패 0개월
-📦 캐시에서 79개월 · 국토부에 물은 것 3개월
-최고가 9.5억 (2026-10-07 · 전용 84.96㎡ 19층)
-🧹 force=1 을 지웠습니다 — lawd=41465 umd=상현동 type=84 apt="진산마을성원상떼빌아파트"
+⏭ 이미 있음 — 41465-진산마을성원상떼빌아파트-84.json (다시 받으려면 force=1)
 
 ── 수원 SK SKY VIEW 전용 59타입 (41111)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41111 --apt '수원 SK SKY VIEW' --umd '정자동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41111 --apt '수원 SK SKY VIEW' --umd '정자동' --type 59 --from 202001
 
-수원 SK SKY VIEW · 전용 59타입 · 41111 · 202001~202610 (82개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41111-수원SKSKYVIEW-59.json
-거래 있던 달 74/82 · 수집 실패 0개월
-📦 캐시에서 79개월 · 국토부에 물은 것 3개월
-최고가 7.8억 (2026-10-18 · 전용 59.952㎡ 10층)
-🧹 force=1 을 지웠습니다 — lawd=41111 umd=정자동 type=59 apt="수원 SK SKY VIEW"
+⏭ 이미 있음 — 41111-수원SKSKYVIEW-59.json (다시 받으려면 force=1)
 
 ── 황골마을주공1 전용 59타입 (41117)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '황골마을주공1' --umd '영통동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '황골마을주공1' --umd '영통동' --type 59 --from 202001
 
-황골마을주공1 · 전용 59타입 · 41117 · 202001~202610 (82개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41117-황골마을주공1-59.json
-거래 있던 달 82/82 · 수집 실패 0개월
-📦 캐시에서 79개월 · 국토부에 물은 것 3개월
-최고가 6.95억 (2026-10-19 · 전용 59.99㎡ 8층)
-🧹 force=1 을 지웠습니다 — lawd=41117 umd=영통동 type=59 apt="황골마을주공1"
+⏭ 이미 있음 — 41117-황골마을주공1-59.json (다시 받으려면 force=1)
 
 ── 강서힐스테이트 전용 84타입 (11500)
 
