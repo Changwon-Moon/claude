@@ -40,6 +40,14 @@ const oi = argv.indexOf("--only");
 const ONLY = oi >= 0 ? argv[oi + 1] : null;
 /* ── 시안(variant). 오너 요청 2026-09-09: 라벨 좌우 배치·여백·크롭·정보 배치를 달리한 안을
       여러 개 만들어 비교한다. 기본은 a(현행 개선). 시안은 --publish 없이 뽑아 눈으로 고른다. */
+/* ── --geo-out <파일> (2026-10-25, 시험지 판형 rail-quiz 용)
+   카드는 만들지 않고, buildOne 이 **이미 계산한** 선형·역 경위도만 뽑아 낸다.
+   시험지가 선형 잇기·역 배치를 따로 다시 짜면 두 판이 서로 다른 지도를 그리게 된다 —
+   「실제 지도 위 노선카드를 기반으로」(오너)가 깨진다. 그래서 같은 계산을 한 번만 하고 나눠 쓴다.
+   ⚠️ 이 모드에서는 카드 JSON·캡션을 **하나도 쓰지 않는다** — 확정본을 건드릴 길을 아예 막는다. */
+const gi = argv.indexOf("--geo-out");
+const GEO_OUT = gi >= 0 ? argv[gi + 1] : null;
+const GEO = GEO_OUT ? [] : null;
 const vi = argv.indexOf("--variant");
 const VARIANT = vi >= 0 ? argv[vi + 1] : "d";   /* 오너가 2026-09-09 에 d(정보 두 덩이)를 골랐다 */
 if (!["a", "b", "c", "d"].includes(VARIANT)) throw new Error(`--variant 는 a|b|c|d 다 (받은 값: ${VARIANT})`);
@@ -608,6 +616,27 @@ function buildOne(L0, opt = {}) {
         throw new Error(`${L.name} 공용역 ${st.name}: ${n0}~${n1} 구간 밖에 놓였다 — 공용 구간이 아니다`);
       return { ...pointAt(track, t), name: st.name, st, src: "공용 구간" };
     }).sort((a2, b2) => projectOnTrack(track, a2).t - projectOnTrack(track, b2).t);
+  }
+
+  if (GEO) {
+    const ll = (p) => ({ lat: +p.lat.toFixed(6), lon: +p.lon.toFixed(6) });
+    const O2 = probe.결과?.find((x) => x.key === L.key);
+    GEO.push({
+      key: L.key, name: L.name, sub: opt.sub ? (opt.idSuffix || "") : null,
+      lineKey: SELF[L.key],
+      chain: mainWay.g.map(ll),
+      branch: branchPts.map(ll), through: thruPts.map(ll),
+      /* 카드가 회색으로 깔던 기존 노선(신분당 토막의 신사~·광교중앙~) — 같은 자료를 그대로 */
+      gray: opt.grayTags?.length
+        ? (O2?.좌표 || []).filter((w) => opt.grayTags.includes(w.railway)).map((w) => w.g.map(ll))
+        : [],
+      stations: [
+        ...pos.map((p) => ({ ...ll(p), name: p.name, part: "main" })),
+        ...branchPos.map((p) => ({ ...ll(p), name: p.name, part: "branch" })),
+        ...thruPos.map((p) => ({ ...ll(p), name: p.name, part: "through" })),
+        ...sharedPos.map((p) => ({ ...ll(p), name: p.name, part: "shared" })),
+      ],
+    });
   }
 
   /* ── 화면 좌표계 — 위도 보정을 넣어 가로세로 비율을 지킨다(지도는 늘리면 거짓말이다). */
@@ -2125,7 +2154,7 @@ for (const L0 of rail.lines) {
     console.log(`   ▤ ${L.name} 지도 두 토막 — ${HS[0]}px + ${HS[1]}px`);
   }
 
-  writeFileSync(join(outDir, `railmap-${L.key}.json`), JSON.stringify(card, null, 2) + "\n");
+  if (!GEO) writeFileSync(join(outDir, `railmap-${L.key}.json`), JSON.stringify(card, null, 2) + "\n");
 
   /* ⑤ 개략 고지는 **캡션이 유일한 자리**다(오너 2026-09-09 선택). 그래서 코드가 넣는다. */
   const 개략고지 = "※ 노선 선형은 실제 좌표(OpenStreetMap), 역 위치는 개략 표기입니다.";
@@ -2155,7 +2184,7 @@ for (const L0 of rail.lines) {
     "#수도권철도 #교통호재 #부동산 #위릿노트 #부동산공부",
   ].filter((x) => x !== null).join("\n");
   if (!cap.includes(개략고지)) throw new Error(`${L.name}: 캡션에 개략 고지가 없다`); // ⑤
-  writeCaption(`railmap-${L.key}`, cap);
+  if (!GEO) writeCaption(`railmap-${L.key}`, cap);
 
   const byAnchor = placed.filter((p) => p.from === "anchor").length;
   console.log(`✅ ${L.name} — 역 ${placed.length}개(닻 ${byAnchor} · 등분 ${placed.length - byAnchor}) · 선형 ${(trackLen / 1000).toFixed(1)}km`);
@@ -2163,4 +2192,10 @@ for (const L0 of rail.lines) {
 }
 if (skipped.length) console.log(`\n⛔ 못 만든 노선 ${skipped.length}개 — ${skipped.join(", ")}`);
 if (!made) throw new Error("만든 카드가 0장이다 — 조용히 넘어가지 않는다");
+if (GEO) {
+  mkdirSync(dirname(GEO_OUT), { recursive: true });
+  writeFileSync(GEO_OUT, JSON.stringify({ asOf: rail.meta.asOfLabel, lines: GEO }, null, 1) + "\n");
+  console.log(`\n🗺️ 기하 ${GEO.length}건 → ${GEO_OUT} (카드·캡션은 쓰지 않았다)`);
+  process.exit(0);
+}
 console.log(`\n✅ rail-geomap ${made}장 → ${publish ? `data/content/${date}/` : "data/out/_spike/"}`);
