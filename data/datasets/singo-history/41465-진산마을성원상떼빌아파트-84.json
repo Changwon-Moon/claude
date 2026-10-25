@@ -5,15 +5,15 @@
     "aptNm": "진산마을성원상떼빌아파트",
     "type": "84",
     "from": "202001",
-    "to": "202608",
-    "monthsTried": 80,
+    "to": "202610",
+    "monthsTried": 82,
     "monthsFailed": 0,
-    "monthsTraded": 62,
+    "monthsTraded": 64,
     "peak": {
-      "manwon": 93800,
-      "date": "2026-08-08",
+      "manwon": 95000,
+      "date": "2026-10-07",
       "area": 84.96,
-      "floor": 8
+      "floor": 19
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -737,6 +737,24 @@
       "area": 84.96,
       "floor": 8,
       "date": "2026-08-08",
+      "ok": true
+    },
+    {
+      "ym": "202609",
+      "maxManwon": 93500,
+      "count": 2,
+      "area": 84.96,
+      "floor": 10,
+      "date": "2026-09-18",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": 95000,
+      "count": 1,
+      "area": 84.96,
+      "floor": 19,
+      "date": "2026-10-07",
       "ok": true
     }
   ]
