@@ -54,7 +54,7 @@ lawd=41117 umd=망포동 type=59 apt="영통아이파크캐슬1단지"
 lawd=41173 umd=비산동 type=59 apt="평촌래미안푸르지오"
 lawd=11410 umd=남가좌동 type=59 apt="DMC래미안클라시스"
 lawd=11305 umd=미아동 type=59 apt="꿈의숲해링턴플레이스"
-lawd=41450 umd=창우동 type=84 apt="꿈동산신안" force=1
+lawd=41450 umd=창우동 type=84 apt="꿈동산신안"
 lawd=41461 umd=역북동 type=84 apt="우미린센트럴파크" force=1
 lawd=11620 umd=신림동 type=59 apt="관악산휴먼시아2단지"
 lawd=41463 umd=신갈동 type=59 apt="신흥덕롯데캐슬레이시티" force=1
