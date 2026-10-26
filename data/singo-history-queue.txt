@@ -48,7 +48,7 @@ lawd=11410 umd=현저동 type=59 apt="독립문극동(200-0)"
 lawd=41463 umd=마북동 type=84 apt="삼거마을삼성래미안1"
 lawd=41210 umd=광명동 type=84 apt="광명푸르지오센트베르"
 lawd=11410 umd=남가좌동 type=59 apt="DMC센트럴아이파크"
-lawd=41173 umd=호계동 type=59 apt="평촌센텀퍼스트" force=1
+lawd=41173 umd=호계동 type=59 apt="평촌센텀퍼스트"
 lawd=11230 umd=장안동 type=59 apt="장안현대홈타운(336)"
 lawd=41117 umd=망포동 type=59 apt="영통아이파크캐슬1단지" force=1
 lawd=41173 umd=비산동 type=59 apt="평촌래미안푸르지오"
