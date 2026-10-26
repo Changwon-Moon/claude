@@ -44,7 +44,7 @@ lawd=11740 umd=성내동 type=84 apt="성내동삼성아파트"
 lawd=41430 umd=포일동 type=84 apt="인덕원푸르지오엘센트로"
 lawd=11290 umd=길음동 type=84 apt="길음뉴타운9단지(래미안)"
 lawd=41210 umd=철산동 type=84 apt="철산래미안자이"
-lawd=11410 umd=현저동 type=59 apt="독립문극동(200-0)" force=1
+lawd=11410 umd=현저동 type=59 apt="독립문극동(200-0)"
 lawd=41463 umd=마북동 type=84 apt="삼거마을삼성래미안1"
 lawd=41210 umd=광명동 type=84 apt="광명푸르지오센트베르"
 lawd=11410 umd=남가좌동 type=59 apt="DMC센트럴아이파크"
