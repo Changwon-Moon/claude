@@ -60,7 +60,7 @@ lawd=11620 umd=신림동 type=59 apt="관악산휴먼시아2단지"
 lawd=41463 umd=신갈동 type=59 apt="신흥덕롯데캐슬레이시티"
 lawd=41360 umd=평내동 type=84 apt="e편한세상평내메트로원"
 lawd=41113 umd=권선동 type=59 apt="수원시청역SKVIEW"
-lawd=41117 umd=원천동 type=59 apt="원천레이크파크" force=1
+lawd=41117 umd=원천동 type=59 apt="원천레이크파크"
 lawd=41390 umd=은행동 type=84 apt="네이처포레"
 
 lawd=41465 umd=상현동 type=84 apt="진산마을성원상떼빌아파트"
