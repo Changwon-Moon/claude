@@ -1,7 +1,7 @@
 {
   "label": "singo-daily-2026-10-27",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 20장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 26장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
@@ -101,6 +101,18 @@
       "findings": []
     },
     {
+      "file": "singo-진산마을성원상떼빌아파트-84-1026.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-수원SKSKYVIEW-59-1026.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
       "file": "singo-우미린센트럴파크-84-1027.json",
       "deterministic": true,
       "qaErrors": 0,
@@ -119,7 +131,31 @@
       "findings": []
     },
     {
+      "file": "singo-황골마을주공1-59-1026.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
       "file": "singo-e편한세상평내메트로원-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-수원시청역SKVIEW-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-원천레이크파크-59-1027.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-네이처포레-84.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
