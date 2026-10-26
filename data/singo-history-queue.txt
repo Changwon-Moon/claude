@@ -36,7 +36,7 @@
 # ⚡ 2026-10-24 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-10-26 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-10-27 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
-lawd=11440 umd=아현동 type=84 apt="마포래미안푸르지오2단지" force=1
+lawd=11440 umd=아현동 type=84 apt="마포래미안푸르지오2단지"
 lawd=11470 umd=신정동 type=84 apt="목동신시가지14"
 lawd=11680 umd=자곡동 type=84 apt="강남한양수자인(4단지)"
 lawd=11500 umd=마곡동 type=84 apt="마곡엠밸리9단지"
