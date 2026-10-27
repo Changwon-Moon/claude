@@ -10,11 +10,11 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-10-26",
+    "collectedFor": "2026-10-27",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2916,
-      "APT 무순위/잔여세대": 1724
+      "APT 무순위/잔여세대": 1727
     },
     "unit": {
       "supply": "가구"
@@ -44,62 +44,8 @@
       "reasons": [
         "서울",
         "무순위",
-        "D-1",
+        "오늘 마감",
         "자이"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026930044",
-      "name": "한화포레나 영흥숲",
-      "areaName": "경기",
-      "address": "경기도 수원시 영통구 원천동 333-1번지 일원",
-      "supply": 1,
-      "noticeDate": "2026-10-21",
-      "receiptFrom": "2026-10-26",
-      "receiptTo": "2026-10-26",
-      "specialFrom": "2026-10-26",
-      "rank1From": null,
-      "moveInYm": "2026-11",
-      "announceDate": "2026-10-29",
-      "builder": "(주)한화",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": null,
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930044&pblancNo=2026930044",
-      "score": 72,
-      "reasons": [
-        "수도권",
-        "무순위",
-        "오늘 마감",
-        "포레나"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910265",
-      "name": "한화포레나 영흥숲(3차)",
-      "areaName": "경기",
-      "address": "경기도 수원시 영통구 원천동 333-1번지 일원",
-      "supply": 1,
-      "noticeDate": "2026-10-21",
-      "receiptFrom": "2026-10-26",
-      "receiptTo": "2026-10-26",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-11",
-      "announceDate": "2026-10-29",
-      "builder": "(주)한화",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": null,
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910265&pblancNo=2026910265",
-      "score": 72,
-      "reasons": [
-        "수도권",
-        "무순위",
-        "오늘 마감",
-        "포레나"
       ]
     },
     {
@@ -125,7 +71,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2",
+        "D-1",
         "힐스테이트"
       ]
     },
@@ -158,55 +104,29 @@
     },
     {
       "kind": "remndr",
-      "pblancNo": "2026910266",
-      "name": "문수로 비스타 더파크",
-      "areaName": "울산",
-      "address": "울산광역시 남구 무거동 1615-1번지(무거삼호지구 11BL) 일원",
-      "supply": 329,
-      "noticeDate": "2026-10-21",
-      "receiptFrom": "2026-10-26",
-      "receiptTo": "2026-10-26",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2029-05",
-      "announceDate": "2026-10-29",
-      "builder": "(주)동원개발",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://munsuro-vista-park.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910266&pblancNo=2026910266",
-      "score": 70,
-      "reasons": [
-        "광역시",
-        "329가구",
-        "무순위",
-        "오늘 마감"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910268",
-      "name": "신천역 에피트(3차)",
+      "pblancNo": "2026910269",
+      "name": "화서역 호수공원 아너스빌",
       "areaName": "경기",
-      "address": "경기도 시흥시 시흥대로 1110",
-      "supply": 8,
-      "noticeDate": "2026-10-21",
-      "receiptFrom": "2026-10-26",
-      "receiptTo": "2026-10-26",
+      "address": "경기도 수원시 권선구 서둔동 212-1번지 일원",
+      "supply": 169,
+      "noticeDate": "2026-10-26",
+      "receiptFrom": "2026-11-02",
+      "receiptTo": "2026-11-02",
       "specialFrom": null,
       "rank1From": null,
-      "moveInYm": "2026-11",
-      "announceDate": "2026-10-29",
-      "builder": "(주)다우개발",
+      "moveInYm": "2029-10",
+      "announceDate": "2026-11-06",
+      "builder": "삼환기업(주)",
       "priceCap": false,
       "speculative": false,
-      "homepage": "http://halla-shincheon.co.kr/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910268&pblancNo=2026910268",
-      "score": 62,
+      "homepage": "https://www.화서역아너스빌.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910269&pblancNo=2026910269",
+      "score": 71,
       "reasons": [
         "수도권",
+        "169가구",
         "무순위",
-        "오늘 마감"
+        "D-6"
       ]
     },
     {
@@ -237,6 +157,58 @@
       ]
     },
     {
+      "kind": "remndr",
+      "pblancNo": "2026930044",
+      "name": "한화포레나 영흥숲",
+      "areaName": "경기",
+      "address": "경기도 수원시 영통구 원천동 333-1번지 일원",
+      "supply": 1,
+      "noticeDate": "2026-10-21",
+      "receiptFrom": "2026-10-26",
+      "receiptTo": "2026-10-26",
+      "specialFrom": "2026-10-26",
+      "rank1From": null,
+      "moveInYm": "2026-11",
+      "announceDate": "2026-10-29",
+      "builder": "(주)한화",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": null,
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930044&pblancNo=2026930044",
+      "score": 57,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "포레나"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910265",
+      "name": "한화포레나 영흥숲(3차)",
+      "areaName": "경기",
+      "address": "경기도 수원시 영통구 원천동 333-1번지 일원",
+      "supply": 1,
+      "noticeDate": "2026-10-21",
+      "receiptFrom": "2026-10-26",
+      "receiptTo": "2026-10-26",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-11",
+      "announceDate": "2026-10-29",
+      "builder": "(주)한화",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": null,
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910265&pblancNo=2026910265",
+      "score": 57,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "포레나"
+      ]
+    },
+    {
       "kind": "apt",
       "pblancNo": "2026820010",
       "name": "인천계양 A17블록 신혼희망타운(공공분양)(본청약)",
@@ -258,7 +230,7 @@
       "score": 57,
       "reasons": [
         "수도권",
-        "D-1",
+        "오늘 마감",
         "분양가상한제"
       ]
     },
@@ -285,7 +257,7 @@
       "reasons": [
         "수도권",
         "996가구",
-        "D-2",
+        "D-1",
         "투기과열지구"
       ]
     },
@@ -312,8 +284,66 @@
       "reasons": [
         "수도권",
         "812가구",
-        "D-2",
+        "D-1",
         "투기과열지구"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910266",
+      "name": "문수로 비스타 더파크",
+      "areaName": "울산",
+      "address": "울산광역시 남구 무거동 1615-1번지(무거삼호지구 11BL) 일원",
+      "supply": 329,
+      "noticeDate": "2026-10-21",
+      "receiptFrom": "2026-10-26",
+      "receiptTo": "2026-10-26",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2029-05",
+      "announceDate": "2026-10-29",
+      "builder": "(주)동원개발",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "http://munsuro-vista-park.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910266&pblancNo=2026910266",
+      "score": 55,
+      "reasons": [
+        "광역시",
+        "329가구",
+        "무순위"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910257",
+      "name": "파주 운정신도시 우미 린 더 센텀",
+      "areaName": "경기",
+      "address": "경기도 파주시 물향기1로 45(동패동) 운정중앙역 우미 린 더 센텀",
+      "supply": 3,
+      "noticeDate": "2026-10-26",
+      "receiptFrom": "2026-11-02",
+      "receiptTo": "2026-11-02",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2027-01",
+      "announceDate": "2026-11-05",
+      "builder": "(주)명일건설",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.lynn.co.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910257&pblancNo=2026910257",
+      "blocks": 2,
+      "blockNames": [
+        "파주 운정신도시 우미 린 더 센텀",
+        "파주 운정신도시 우미 린 더 센텀"
+      ],
+      "score": 55,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "D-6",
+        "2개 블록 합계"
       ]
     },
     {
@@ -375,6 +405,31 @@
       ]
     },
     {
+      "kind": "remndr",
+      "pblancNo": "2026910268",
+      "name": "신천역 에피트(3차)",
+      "areaName": "경기",
+      "address": "경기도 시흥시 시흥대로 1110",
+      "supply": 8,
+      "noticeDate": "2026-10-21",
+      "receiptFrom": "2026-10-26",
+      "receiptTo": "2026-10-26",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-11",
+      "announceDate": "2026-10-29",
+      "builder": "(주)다우개발",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "http://halla-shincheon.co.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910268&pblancNo=2026910268",
+      "score": 47,
+      "reasons": [
+        "수도권",
+        "무순위"
+      ]
+    },
+    {
       "kind": "apt",
       "pblancNo": "2026000514",
       "name": "트리븐센텀 2단지",
@@ -397,7 +452,7 @@
       "reasons": [
         "광역시",
         "792가구",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -423,7 +478,7 @@
       "reasons": [
         "광역시",
         "852가구",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -503,6 +558,31 @@
     },
     {
       "kind": "apt",
+      "pblancNo": "2026000455",
+      "name": "신분평 에피트 더웨이시티",
+      "areaName": "충북",
+      "address": "충청북도 청주시 서원구 장성동 135번지 일원(장성지구 A2블럭)",
+      "supply": 992,
+      "noticeDate": "2026-10-15",
+      "receiptFrom": "2026-10-28",
+      "receiptTo": "2026-10-29",
+      "specialFrom": "2026-10-27",
+      "rank1From": "2026-10-28",
+      "moveInYm": "2029-09",
+      "announceDate": "2026-11-04",
+      "builder": "에이치엘디앤아이한라 주식회사, 에이치엘에코텍 주식회사",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://brand.hldni.com/thewaycity/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000455&pblancNo=2026000455",
+      "score": 37,
+      "reasons": [
+        "992가구",
+        "D-2"
+      ]
+    },
+    {
+      "kind": "apt",
       "pblancNo": "2026820012",
       "name": "시흥하중지구 A1블록 신혼희망타운(공공분양) 추가입주자모집공고",
       "areaName": "경기",
@@ -528,30 +608,6 @@
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000402",
-      "name": "익산 부송에코르 10년 공공임대주택",
-      "areaName": "전북",
-      "address": "전북특별자치도 익산시 부송동 1421(익산 부송4지구 A블록)",
-      "supply": 300,
-      "noticeDate": "2026-10-08",
-      "receiptFrom": "2026-10-23",
-      "receiptTo": "2026-10-26",
-      "specialFrom": "2026-10-22",
-      "rank1From": "2026-10-23",
-      "moveInYm": "2027-04",
-      "announceDate": "2026-10-30",
-      "builder": "(주)부강건설",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.jbdc.co.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000402&pblancNo=2026000402",
-      "score": 31,
-      "reasons": [
-        "오늘 마감"
-      ]
-    },
-    {
-      "kind": "apt",
       "pblancNo": "2026000495",
       "name": "연산 센텀 월드메르디앙",
       "areaName": "부산",
@@ -572,32 +628,7 @@
       "score": 31,
       "reasons": [
         "광역시",
-        "D-2"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000455",
-      "name": "신분평 에피트 더웨이시티",
-      "areaName": "충북",
-      "address": "충청북도 청주시 서원구 장성동 135번지 일원(장성지구 A2블럭)",
-      "supply": 992,
-      "noticeDate": "2026-10-15",
-      "receiptFrom": "2026-10-28",
-      "receiptTo": "2026-10-29",
-      "specialFrom": "2026-10-27",
-      "rank1From": "2026-10-28",
-      "moveInYm": "2029-09",
-      "announceDate": "2026-11-04",
-      "builder": "에이치엘디앤아이한라 주식회사, 에이치엘에코텍 주식회사",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://brand.hldni.com/thewaycity/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000455&pblancNo=2026000455",
-      "score": 30,
-      "reasons": [
-        "992가구",
-        "D-3"
+        "D-1"
       ]
     },
     {
@@ -622,7 +653,7 @@
       "score": 27,
       "reasons": [
         "광역시",
-        "D-1"
+        "오늘 마감"
       ]
     }
   ]
