@@ -2192,6 +2192,20 @@
       "at": "2026-10-27"
     },
     {
+      "id": "ah-remndr-2026910257",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 파주 운정신도시 우미 린 더 센텀",
+      "why": "경기 · 3세대(2개 블록 합계) · 접수 ~2026-11-02(D-6) · 55점(수도권·무순위·D-6·2개 블록 합계)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-11-02",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910257&pblancNo=2026910257",
+      "at": "2026-10-27"
+    },
+    {
       "id": "ah-remndr-2026930044",
       "cat": "hot",
       "topic": "부동산",
@@ -2231,20 +2245,6 @@
       "status": "",
       "deadline": "2026-10-26",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910266&pblancNo=2026910266",
-      "at": "2026-10-27"
-    },
-    {
-      "id": "ah-remndr-2026910257",
-      "cat": "todo",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 파주 운정신도시 우미 린 더 센텀",
-      "why": "경기 · 3세대(2개 블록 합계) · 접수 ~2026-11-02(D-6) · 55점(수도권·무순위·D-6·2개 블록 합계)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-11-02",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910257&pblancNo=2026910257",
       "at": "2026-10-27"
     },
     {
