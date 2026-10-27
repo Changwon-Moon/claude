@@ -48,7 +48,7 @@ lawd=41597 umd=장지동 type=59 apt="동탄호수자이파밀리에"
 lawd=41117 umd=영통동 type=59 apt="벽적골롯데"
 lawd=11260 umd=묵동 type=59 apt="신내"
 lawd=41461 umd=역북동 type=59 apt="우미린센트럴파크"
-lawd=41370 umd=궐동 type=59 apt="중흥S-클래스에듀파크" force=1
+lawd=41370 umd=궐동 type=59 apt="중흥S-클래스에듀파크"
 
 lawd=11440 umd=아현동 type=84 apt="마포래미안푸르지오2단지"
 lawd=11470 umd=신정동 type=84 apt="목동신시가지14"
