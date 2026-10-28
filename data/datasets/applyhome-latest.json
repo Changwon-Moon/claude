@@ -10,11 +10,11 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-10-27",
+    "collectedFor": "2026-10-28",
     "withinDays": 7,
     "totals": {
-      "APT 분양정보": 2916,
-      "APT 무순위/잔여세대": 1727
+      "APT 분양정보": 2918,
+      "APT 무순위/잔여세대": 1728
     },
     "unit": {
       "supply": "가구"
@@ -23,29 +23,30 @@
   "notices": [
     {
       "kind": "remndr",
-      "pblancNo": "2026910270",
-      "name": "충정로역자이르네(2차)",
-      "areaName": "서울",
-      "address": "서울특별시 중구 중림동 157-2번지 일원",
-      "supply": 9,
-      "noticeDate": "2026-10-22",
-      "receiptFrom": "2026-10-27",
-      "receiptTo": "2026-10-27",
+      "pblancNo": "2026910275",
+      "name": "더샵 분당하이스트",
+      "areaName": "경기",
+      "address": "경기도 성남시 분당구 정자동 90번지",
+      "supply": 58,
+      "noticeDate": "2026-10-27",
+      "receiptFrom": "2026-11-02",
+      "receiptTo": "2026-11-02",
       "specialFrom": null,
       "rank1From": null,
-      "moveInYm": "2030-05",
-      "announceDate": "2026-11-02",
-      "builder": "(주)이노디앤씨",
+      "moveInYm": "2027-12",
+      "announceDate": "2026-11-05",
+      "builder": "느티마을4단지 리모델링주택조합",
       "priceCap": false,
       "speculative": false,
-      "homepage": "https://충정로역자이르네.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910270&pblancNo=2026910270",
-      "score": 84,
+      "homepage": "https://더샵분당하이스트.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910275&pblancNo=2026910275",
+      "score": 75,
       "reasons": [
-        "서울",
+        "수도권",
+        "58가구",
         "무순위",
-        "오늘 마감",
-        "자이"
+        "D-5",
+        "더샵"
       ]
     },
     {
@@ -71,7 +72,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1",
+        "오늘 마감",
         "힐스테이트"
       ]
     },
@@ -126,7 +127,33 @@
         "수도권",
         "169가구",
         "무순위",
-        "D-6"
+        "D-5"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910270",
+      "name": "충정로역자이르네(2차)",
+      "areaName": "서울",
+      "address": "서울특별시 중구 중림동 157-2번지 일원",
+      "supply": 9,
+      "noticeDate": "2026-10-22",
+      "receiptFrom": "2026-10-27",
+      "receiptTo": "2026-10-27",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2030-05",
+      "announceDate": "2026-11-02",
+      "builder": "(주)이노디앤씨",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://충정로역자이르네.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910270&pblancNo=2026910270",
+      "score": 69,
+      "reasons": [
+        "서울",
+        "무순위",
+        "자이"
       ]
     },
     {
@@ -210,32 +237,6 @@
     },
     {
       "kind": "apt",
-      "pblancNo": "2026820010",
-      "name": "인천계양 A17블록 신혼희망타운(공공분양)(본청약)",
-      "areaName": "인천",
-      "address": "인천광역시 계양구 귤현동, 동양동, 박촌동, 병방동, 상야동, 경기도 부천시 대장동, 서울특별시 강서구 오곡동 일원 인천계양 테크노밸리 공공주택지구 내 A17블록",
-      "supply": 309,
-      "noticeDate": "2026-09-30",
-      "receiptFrom": "2026-10-19",
-      "receiptTo": "2026-10-27",
-      "specialFrom": null,
-      "rank1From": "2026-10-19",
-      "moveInYm": "2029-11",
-      "announceDate": "2026-11-05",
-      "builder": "(주)케이씨씨건설",
-      "priceCap": true,
-      "speculative": false,
-      "homepage": "https://apply.lh.or.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820010&pblancNo=2026820010",
-      "score": 57,
-      "reasons": [
-        "수도권",
-        "오늘 마감",
-        "분양가상한제"
-      ]
-    },
-    {
-      "kind": "apt",
       "pblancNo": "2026000509",
       "name": "아크메르 동탄 99",
       "areaName": "경기",
@@ -257,7 +258,7 @@
       "reasons": [
         "수도권",
         "996가구",
-        "D-1",
+        "오늘 마감",
         "투기과열지구"
       ]
     },
@@ -284,7 +285,7 @@
       "reasons": [
         "수도권",
         "812가구",
-        "D-1",
+        "오늘 마감",
         "투기과열지구"
       ]
     },
@@ -342,7 +343,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-6",
+        "D-5",
         "2개 블록 합계"
       ]
     },
@@ -431,6 +432,32 @@
     },
     {
       "kind": "apt",
+      "pblancNo": "2026820012",
+      "name": "시흥하중지구 A1블록 신혼희망타운(공공분양) 추가입주자모집공고",
+      "areaName": "경기",
+      "address": "경기도 시흥시 하중동 일원 시흥하중 공공주택지구 내 A1블록",
+      "supply": 175,
+      "noticeDate": "2026-10-23",
+      "receiptFrom": "2026-11-02",
+      "receiptTo": "2026-11-03",
+      "specialFrom": null,
+      "rank1From": "2026-11-02",
+      "moveInYm": "2029-03",
+      "announceDate": "2026-11-12",
+      "builder": "이수건설 주식회사, 주식회사 오렌지이앤씨",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://apply.lh.or.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820012&pblancNo=2026820012",
+      "score": 44,
+      "reasons": [
+        "수도권",
+        "D-6",
+        "분양가상한제"
+      ]
+    },
+    {
+      "kind": "apt",
       "pblancNo": "2026000514",
       "name": "트리븐센텀 2단지",
       "areaName": "부산",
@@ -452,7 +479,7 @@
       "reasons": [
         "광역시",
         "792가구",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -478,7 +505,7 @@
       "reasons": [
         "광역시",
         "852가구",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -578,32 +605,7 @@
       "score": 37,
       "reasons": [
         "992가구",
-        "D-2"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026820012",
-      "name": "시흥하중지구 A1블록 신혼희망타운(공공분양) 추가입주자모집공고",
-      "areaName": "경기",
-      "address": "경기도 시흥시 하중동 일원 시흥하중 공공주택지구 내 A1블록",
-      "supply": 175,
-      "noticeDate": "2026-10-23",
-      "receiptFrom": "2026-11-02",
-      "receiptTo": "2026-11-03",
-      "specialFrom": null,
-      "rank1From": "2026-11-02",
-      "moveInYm": "2029-03",
-      "announceDate": "2026-11-12",
-      "builder": "이수건설 주식회사, 주식회사 오렌지이앤씨",
-      "priceCap": true,
-      "speculative": false,
-      "homepage": "https://apply.lh.or.kr/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820012&pblancNo=2026820012",
-      "score": 36,
-      "reasons": [
-        "수도권",
-        "분양가상한제"
+        "D-1"
       ]
     },
     {
@@ -628,32 +630,55 @@
       "score": 31,
       "reasons": [
         "광역시",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000507",
-      "name": "광안센텀 비스타동원(조합원 취소분)",
-      "areaName": "부산",
-      "address": "부산광역시 수영구 광안동 971",
-      "supply": 39,
-      "noticeDate": "2026-10-16",
-      "receiptFrom": "2026-10-26",
-      "receiptTo": "2026-10-27",
-      "specialFrom": null,
-      "rank1From": "2026-10-26",
-      "moveInYm": "2027-09",
-      "announceDate": "2026-11-02",
-      "builder": "(주)동원개발",
-      "priceCap": false,
+      "pblancNo": "2026000435",
+      "name": "삼도이동 2지구 토지임대부 공공분양주택",
+      "areaName": "제주",
+      "address": "제주특별자치도 제주시 삼도이동 1246-1 외 4필지",
+      "supply": 40,
+      "noticeDate": "2026-10-27",
+      "receiptFrom": "2026-11-17",
+      "receiptTo": "2026-11-18",
+      "specialFrom": "2026-11-16",
+      "rank1From": "2026-11-17",
+      "moveInYm": "2027-11",
+      "announceDate": "2026-11-25",
+      "builder": "국토건설(주)",
+      "priceCap": true,
       "speculative": false,
-      "homepage": "https://www.광안센텀비스타동원.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000507&pblancNo=2026000507",
-      "score": 27,
+      "homepage": "https://samdo.jpdc.co.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000435&pblancNo=2026000435",
+      "score": 18,
       "reasons": [
-        "광역시",
-        "오늘 마감"
+        "분양가상한제"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000434",
+      "name": "삼도이동 1지구 토지임대부 공공분양주택",
+      "areaName": "제주",
+      "address": "제주특별자치도 제주시 삼도이동 1244-1",
+      "supply": 32,
+      "noticeDate": "2026-10-27",
+      "receiptFrom": "2026-11-17",
+      "receiptTo": "2026-11-18",
+      "specialFrom": "2026-11-16",
+      "rank1From": "2026-11-17",
+      "moveInYm": "2027-11",
+      "announceDate": "2026-11-24",
+      "builder": "국토건설(주)",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://samdo.jpdc.co.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000434&pblancNo=2026000434",
+      "score": 18,
+      "reasons": [
+        "분양가상한제"
       ]
     }
   ]

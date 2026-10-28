@@ -1,7 +1,7 @@
 {
   "meta": {
     "note": "소재(아이디어) 단일 원천. 관제탑이 읽고, 오너가 조작하면 GitHub API로 이 파일을 되쓴다.",
-    "updated": "2026-10-27",
+    "updated": "2026-10-28",
     "schema": "{id, cat(=발행 주기), topic(=주제/보관함 폴더), feed(auto|manual), title, why, source, state, status(done|\"\"), stage}",
     "catNote": "cat은 '주제'가 아니라 **얼마나 자주 내는가**다. 주제는 topic이 맡는다(보관함 폴더링). 2026-07-27 오너 지시로 재편.",
     "feedNote": "feed=auto 는 데이터가 스스로 갱신되는 소재 — 관제탑 [🔁 다시 제작] 버튼만으로 최신판이 나온다. feed=manual 은 자료를 사람(작업 세션)이 다시 넣어야 한다."
@@ -2052,26 +2052,12 @@
       "isNew": true
     },
     {
-      "id": "ah-apt-2026820010",
-      "cat": "todo",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[신규분양] 인천계양 A17블록 신혼희망타운(공공분양)(본청약)",
-      "why": "인천 · 309세대 · 접수 ~2026-10-27(D-0) · 57점(수도권·오늘 마감·분양가상한제)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-10-27",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820010&pblancNo=2026820010",
-      "at": "2026-10-08"
-    },
-    {
       "id": "ah-apt-2026000373",
       "cat": "todo",
       "topic": "부동산",
       "feed": "auto",
       "title": "[신규분양] 고덕강일지구 3단지 토지임대부(본청약)",
-      "why": "서울 · 1,305세대 · 접수 ~2026-11-06(D-10) · 72점(서울·1,305가구 대단지·분양가상한제·투기과열지구)",
+      "why": "서울 · 1,305세대 · 접수 ~2026-11-06(D-9) · 72점(서울·1,305가구 대단지·분양가상한제·투기과열지구)",
       "source": "한국부동산원 청약홈 API",
       "state": "",
       "status": "",
@@ -2085,7 +2071,7 @@
       "topic": "부동산",
       "feed": "auto",
       "title": "[신규분양] 화성 향남 롯데캐슬 시그니처",
-      "why": "경기 · 1,542세대 · 접수 ~2026-11-04(D-8) · 53점(수도권·1,542가구 대단지·롯데캐슬)",
+      "why": "경기 · 1,542세대 · 접수 ~2026-11-04(D-7) · 53점(수도권·1,542가구 대단지·롯데캐슬)",
       "source": "한국부동산원 청약홈 API",
       "state": "",
       "status": "",
@@ -2099,7 +2085,7 @@
       "topic": "부동산",
       "feed": "auto",
       "title": "[신규분양] 아크메르 동탄 99",
-      "why": "경기 · 996세대 · 접수 ~2026-10-28(D-1) · 56점(수도권·996가구·D-1·투기과열지구)",
+      "why": "경기 · 996세대 · 접수 ~2026-10-28(D-0) · 56점(수도권·996가구·오늘 마감·투기과열지구)",
       "source": "한국부동산원 청약홈 API",
       "state": "",
       "status": "",
@@ -2113,7 +2099,7 @@
       "topic": "부동산",
       "feed": "auto",
       "title": "[신규분양] 아크메르 동탄 95",
-      "why": "경기 · 812세대 · 접수 ~2026-10-28(D-1) · 56점(수도권·812가구·D-1·투기과열지구)",
+      "why": "경기 · 812세대 · 접수 ~2026-10-28(D-0) · 56점(수도권·812가구·오늘 마감·투기과열지구)",
       "source": "한국부동산원 청약홈 API",
       "state": "",
       "status": "",
@@ -2122,26 +2108,12 @@
       "at": "2026-10-22"
     },
     {
-      "id": "ah-remndr-2026910270",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 충정로역자이르네(2차)",
-      "why": "서울 · 9세대 · 접수 ~2026-10-27(D-0) · 84점(서울·무순위·오늘 마감·자이)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-10-27",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910270&pblancNo=2026910270",
-      "at": "2026-10-23"
-    },
-    {
       "id": "ah-remndr-2026910271",
       "cat": "hot",
       "topic": "부동산",
       "feed": "auto",
       "title": "[줍줍] 힐스테이트 레이크 송도 4차(2차)",
-      "why": "인천 · 8세대 · 접수 ~2026-10-28(D-1) · 72점(수도권·무순위·D-1·힐스테이트)",
+      "why": "인천 · 8세대 · 접수 ~2026-10-28(D-0) · 72점(수도권·무순위·오늘 마감·힐스테이트)",
       "source": "한국부동산원 청약홈 API",
       "state": "",
       "status": "",
@@ -2155,7 +2127,7 @@
       "topic": "부동산",
       "feed": "auto",
       "title": "[신규분양] 청라 아크원 푸르지오",
-      "why": "인천 · 868세대 · 접수 ~2026-11-04(D-8) · 58점(수도권·868가구·푸르지오·분양가상한제)",
+      "why": "인천 · 868세대 · 접수 ~2026-11-04(D-7) · 58점(수도권·868가구·푸르지오·분양가상한제)",
       "source": "한국부동산원 청약홈 API",
       "state": "",
       "status": "",
@@ -2169,7 +2141,7 @@
       "topic": "부동산",
       "feed": "auto",
       "title": "[신규분양] 계양신도시 카이브 유보라",
-      "why": "인천 · 1,110세대(2개 블록 합계) · 접수 ~2026-11-04(D-8) · 55점(수도권·1,110가구 대단지·2개 블록 합계·분양가상한제)",
+      "why": "인천 · 1,110세대(2개 블록 합계) · 접수 ~2026-11-04(D-7) · 55점(수도권·1,110가구 대단지·2개 블록 합계·분양가상한제)",
       "source": "한국부동산원 청약홈 API",
       "state": "",
       "status": "",
@@ -2183,7 +2155,7 @@
       "topic": "부동산",
       "feed": "auto",
       "title": "[줍줍] 화서역 호수공원 아너스빌",
-      "why": "경기 · 169세대 · 접수 ~2026-11-02(D-6) · 71점(수도권·169가구·무순위·D-6)",
+      "why": "경기 · 169세대 · 접수 ~2026-11-02(D-5) · 71점(수도권·169가구·무순위·D-5)",
       "source": "한국부동산원 청약홈 API",
       "state": "",
       "status": "",
@@ -2197,13 +2169,41 @@
       "topic": "부동산",
       "feed": "auto",
       "title": "[줍줍] 파주 운정신도시 우미 린 더 센텀",
-      "why": "경기 · 3세대(2개 블록 합계) · 접수 ~2026-11-02(D-6) · 55점(수도권·무순위·D-6·2개 블록 합계)",
+      "why": "경기 · 3세대(2개 블록 합계) · 접수 ~2026-11-02(D-5) · 55점(수도권·무순위·D-5·2개 블록 합계)",
       "source": "한국부동산원 청약홈 API",
       "state": "",
       "status": "",
       "deadline": "2026-11-02",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910257&pblancNo=2026910257",
       "at": "2026-10-27"
+    },
+    {
+      "id": "ah-remndr-2026910275",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 더샵 분당하이스트",
+      "why": "경기 · 58세대 · 접수 ~2026-11-02(D-5) · 75점(수도권·58가구·무순위·D-5·더샵)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-11-02",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910275&pblancNo=2026910275",
+      "at": "2026-10-28"
+    },
+    {
+      "id": "ah-remndr-2026910270",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 충정로역자이르네(2차)",
+      "why": "서울 · 9세대 · 접수 ~2026-10-27 · 69점(서울·무순위·자이)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-10-27",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910270&pblancNo=2026910270",
+      "at": "2026-10-28"
     },
     {
       "id": "ah-remndr-2026930044",
@@ -2217,7 +2217,7 @@
       "status": "",
       "deadline": "2026-10-26",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930044&pblancNo=2026930044",
-      "at": "2026-10-27"
+      "at": "2026-10-28"
     },
     {
       "id": "ah-remndr-2026910265",
@@ -2231,7 +2231,7 @@
       "status": "",
       "deadline": "2026-10-26",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910265&pblancNo=2026910265",
-      "at": "2026-10-27"
+      "at": "2026-10-28"
     },
     {
       "id": "ah-remndr-2026910266",
@@ -2245,7 +2245,7 @@
       "status": "",
       "deadline": "2026-10-26",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910266&pblancNo=2026910266",
-      "at": "2026-10-27"
+      "at": "2026-10-28"
     },
     {
       "id": "ah-remndr-2026910268",
@@ -2259,7 +2259,7 @@
       "status": "",
       "deadline": "2026-10-26",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910268&pblancNo=2026910268",
-      "at": "2026-10-27"
+      "at": "2026-10-28"
     }
   ]
 }
