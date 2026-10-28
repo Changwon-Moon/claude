@@ -44,7 +44,7 @@ lawd=41111 umd=정자동 type=84 apt="화서역파크푸르지오"
 lawd=41465 umd=동천동 type=84 apt="동천마을현대홈타운2차"
 lawd=41210 umd=하안동 type=84 apt="주공12"
 lawd=41173 umd=호계동 type=59 apt="평촌더샵아이파크"
-lawd=41597 umd=영천동 type=84 apt="동탄역포레너스" force=1
+lawd=41597 umd=영천동 type=84 apt="동탄역포레너스"
 lawd=41310 umd=인창동 type=59 apt="주공4-2"
 lawd=11305 umd=미아동 type=59 apt="벽산라이브파크"
 lawd=41310 umd=갈매동 type=59 apt="엘에이치이스트힐" force=1
