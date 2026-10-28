@@ -47,7 +47,7 @@ lawd=41173 umd=호계동 type=59 apt="평촌더샵아이파크"
 lawd=41597 umd=영천동 type=84 apt="동탄역포레너스"
 lawd=41310 umd=인창동 type=59 apt="주공4-2"
 lawd=11305 umd=미아동 type=59 apt="벽산라이브파크"
-lawd=41310 umd=갈매동 type=59 apt="엘에이치이스트힐" force=1
+lawd=41310 umd=갈매동 type=59 apt="엘에이치이스트힐"
 lawd=41597 umd=능동 type=59 apt="자연앤데시앙" force=1
 
 lawd=11380 umd=증산동 type=84 apt="DMC센트럴자이(3단지)"
