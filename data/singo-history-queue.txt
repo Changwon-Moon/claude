@@ -37,6 +37,19 @@
 # ⚡ 2026-10-26 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-10-27 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-10-28 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+# ⚡ 2026-10-29 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+lawd=11500 umd=화곡동 type=84 apt="강서힐스테이트" force=1
+lawd=41173 umd=관양동 type=84 apt="평촌더샵센트럴시티" force=1
+lawd=41111 umd=정자동 type=84 apt="화서역파크푸르지오" force=1
+lawd=41465 umd=동천동 type=84 apt="동천마을현대홈타운2차"
+lawd=41210 umd=하안동 type=84 apt="주공12" force=1
+lawd=41173 umd=호계동 type=59 apt="평촌더샵아이파크" force=1
+lawd=41597 umd=영천동 type=84 apt="동탄역포레너스" force=1
+lawd=41310 umd=인창동 type=59 apt="주공4-2"
+lawd=11305 umd=미아동 type=59 apt="벽산라이브파크"
+lawd=41310 umd=갈매동 type=59 apt="엘에이치이스트힐" force=1
+lawd=41597 umd=능동 type=59 apt="자연앤데시앙" force=1
+
 lawd=11380 umd=증산동 type=84 apt="DMC센트럴자이(3단지)"
 lawd=41173 umd=관양동 type=84 apt="인덕원마을(삼성)"
 lawd=41597 umd=청계동 type=84 apt="동탄역센트럴푸르지오"
