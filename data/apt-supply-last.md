@@ -33,8 +33,9 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A13202312 --area 84.87
 
 ▶ 방학신동아1단지 (A13202312) · 전용 84.87㎡ · 11320-10600 · 지번 후보 643, 271-1
-   지번 643 (0643-0000) · 대지 → 줄 29개
-::error::전용 84.87㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 643) — 파일을 만들지 않습니다
+   지번 643 (0643-0000) · 대지 → 줄 0개
+   지번 271-1 (0271-0001) · 대지 → 줄 1814개
+::error::전용 84.87㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 271-1) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13202312 --area 84.87`
 Exit status 1
@@ -83,7 +84,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A13984814 --area 84.815
 
 ▶ 월계주공2단지 (A13984814) · 전용 84.815㎡ · 11350-10200 · 지번 후보 556
-   지번 556 (0556-0000) · 대지 → 줄 3000개
+   지번 556 (0556-0000) · 대지 → 줄 1900개
 ::error::전용 84.815㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 556) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13984814 --area 84.815`
