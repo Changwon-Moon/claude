@@ -46,7 +46,7 @@ lawd=41117 umd=원천동 type=59 apt="광교호반베르디움"
 lawd=41210 umd=철산동 type=59 apt="철산푸르지오하늘채"
 lawd=11320 umd=창동 type=84 apt="동아청솔"
 lawd=41465 umd=동천동 type=59 apt="동천센트럴자이"
-lawd=41597 umd=반송동 type=84 apt="동탄시범다은마을 월드메르디앙 반도유보라" force=1
+lawd=41597 umd=반송동 type=84 apt="동탄시범다은마을 월드메르디앙 반도유보라"
 lawd=11290 umd=돈암동 type=59 apt="이수브라운스톤돈암" force=1
 lawd=41463 umd=구갈동 type=84 apt="기흥역더샵"
 lawd=41210 umd=광명동 type=59 apt="광명해모로이연"
