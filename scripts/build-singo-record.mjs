@@ -296,7 +296,7 @@ if (hist.meta.peak.manwon !== hit.priceManwon) {
  *
  * ⚠️ **사람이 짚은 달만 뺀다.** 코드가 이상치를 스스로 고르지 않는다 — 다른 카드의 픽셀이
  *    조용히 바뀌면 안 되고, 무엇이 「정상이 아닌 거래」인지는 사람이 본다.
- * ⚠️ **그달 거래가 1건일 때만** 뺀다. 여러 건이면 그달의 다른 최고가를 우리는 모른다 — 멈춘다.
+ * ⚠️ 여러 건인 달은 그달 거래를 **전부** 뺀다(그달 최고가가 비정상이면 나머지는 더 낮다 · 2026-10-30).
  * ⚠️ 뺀 달은 「거래 없음」(maxManwon=null)으로 그린다. 무엇을 뺐는지는 meta.provenance 에 남긴다.
  * ⚠️ 오늘 신고가 그달이면 못 뺀다 — 그건 카드의 주인공이다. */
 const DROP_YM = String(arg("drop-ym") ?? "").split(",").map((x) => x.trim()).filter(Boolean);
@@ -304,9 +304,11 @@ const DROPPED = [];
 for (const ym of DROP_YM) {
   const p = hist.points.find((x) => x.ym === ym);
   if (!p || p.maxManwon == null) throw new Error(`--drop-ym ${ym}: 그달 곡선에 거래가 없습니다 — 달을 다시 확인하세요.`);
-  if ((p.count ?? 0) !== 1) throw new Error(`--drop-ym ${ym}: 그달 거래가 ${p.count}건입니다 — 1건일 때만 뺍니다(다른 건의 최고가를 모른다).`);
+  /* 여러 건인 달(2026-10-30 우장산롯데캐슬 2021-06 · 2건 모두 8.3억 이하)도 뺄 수 있다 —
+     곡선에 찍히는 건 그달 **최고가**이고, 나머지 거래는 그보다 낮으니 같이 비정상이다.
+     대신 몇 건을 함께 뺐는지 provenance 에 남긴다. */
   if (p.maxManwon === hit.priceManwon && String(p.date) === String(hit.date)) throw new Error(`--drop-ym ${ym}: 오늘 신고가가 그달입니다 — 뺄 수 없습니다.`);
-  DROPPED.push({ ym, manwon: p.maxManwon, floor: p.floor, area: p.area, date: p.date });
+  DROPPED.push({ ym, manwon: p.maxManwon, floor: p.floor, area: p.area, date: p.date, count: p.count });
   p.maxManwon = null;
   p.count = 0;
   p.dropped = true;
@@ -1641,7 +1643,7 @@ const card = {
       `singo-log: ${hit.foundOn ?? DATE} 판정`,
       `singo-history: ${histPath.replace(ROOT + "/", "")} (${hist.meta.monthsTried}개월 · 실패 ${hist.meta.monthsFailed})`,
       ...(DROPPED.length
-        ? [`⚠️ 그래프에서 뺀 거래(--drop-ym, 오너 지시 — 앞뒤 시세와 동떨어진 한 건짜리 거래): ${DROPPED.map((d) => `${d.date} ${d.floor}층 ${d.area}㎡ ${eok(d.manwon)}`).join(" · ")}`]
+        ? [`⚠️ 그래프에서 뺀 거래(--drop-ym, 오너 지시 — 앞뒤 시세와 동떨어진 거래): ${DROPPED.map((d) => `${d.date} ${d.floor}층 ${d.area}㎡ ${eok(d.manwon)}${(d.count ?? 1) > 1 ? ` 외 ${d.count - 1}건` : ""}`).join(" · ")}`]
         : []),
       ...(NAME_OVERRIDE
         ? [`⚠️ 카드 이름을 줄여 적었다: 실거래 신고명 "${hit.aptNm}" → 카드 "${NAME_OVERRIDE}" (--name, 오너 지시)`]
