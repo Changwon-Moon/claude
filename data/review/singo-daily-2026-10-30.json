@@ -1,0 +1,114 @@
+{
+  "label": "singo-daily-2026-10-30",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 17장 · 코드 검수만",
+  "findings": [],
+  "cards": [
+    {
+      "file": "singo-성복역롯데캐슬골드타운-84-1030.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-상록마을우성1-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-우장산롯데캐슬-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-광교호반베르디움-59-1030.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-철산푸르지오하늘채-59-1030.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-동아청솔-84-1030.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-동천센트럴자이-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-동탄시범다은마을월드메르디앙반도유보라-84-1030.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-이수브라운스톤돈암-59-1030.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-광명해모로이연-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-호반베르디움더센트럴-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-만현마을9단지엘지자이-84-1030.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-부천위브트레지움2단지-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-중계그린1단지-59-1030.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-벽적골9단지주공-59-1030.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-부천위브트레지움2단지-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-벽적골우성-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}
