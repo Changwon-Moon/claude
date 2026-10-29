@@ -2150,20 +2150,6 @@
       "at": "2026-10-28"
     },
     {
-      "id": "ah-remndr-2026910270",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 충정로역자이르네(2차)",
-      "why": "서울 · 9세대 · 접수 ~2026-10-27 · 69점(서울·무순위·자이)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-10-27",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910270&pblancNo=2026910270",
-      "at": "2026-10-29"
-    },
-    {
       "id": "ah-remndr-2026910278",
       "cat": "todo",
       "topic": "부동산",
@@ -2175,20 +2161,6 @@
       "status": "",
       "deadline": "2026-11-02",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910278&pblancNo=2026910278",
-      "at": "2026-10-29"
-    },
-    {
-      "id": "ah-remndr-2026910271",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 힐스테이트 레이크 송도 4차(2차)",
-      "why": "인천 · 8세대 · 접수 ~2026-10-28 · 57점(수도권·무순위·힐스테이트)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-10-28",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910271&pblancNo=2026910271",
       "at": "2026-10-29"
     },
     {
@@ -2231,6 +2203,34 @@
       "status": "",
       "deadline": "2026-11-04",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000517&pblancNo=2026000517",
+      "at": "2026-10-29"
+    },
+    {
+      "id": "ah-remndr-2026910270",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 충정로역자이르네(2차)",
+      "why": "서울 · 9세대 · 접수 ~2026-10-27 · 69점(서울·무순위·자이)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-10-27",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910270&pblancNo=2026910270",
+      "at": "2026-10-29"
+    },
+    {
+      "id": "ah-remndr-2026910271",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 힐스테이트 레이크 송도 4차(2차)",
+      "why": "인천 · 8세대 · 접수 ~2026-10-28 · 57점(수도권·무순위·힐스테이트)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-10-28",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910271&pblancNo=2026910271",
       "at": "2026-10-29"
     }
   ]
