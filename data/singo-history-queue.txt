@@ -42,7 +42,7 @@
 lawd=41465 umd=성복동 type=84 apt="성복역롯데캐슬골드타운"
 lawd=41135 umd=정자동 type=59 apt="상록마을(우성)1"
 lawd=11500 umd=화곡동 type=84 apt="우장산롯데캐슬"
-lawd=41117 umd=원천동 type=59 apt="광교호반베르디움" force=1
+lawd=41117 umd=원천동 type=59 apt="광교호반베르디움"
 lawd=41210 umd=철산동 type=59 apt="철산푸르지오하늘채" force=1
 lawd=11320 umd=창동 type=84 apt="동아청솔" force=1
 lawd=41465 umd=동천동 type=59 apt="동천센트럴자이"
