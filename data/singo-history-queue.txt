@@ -51,7 +51,7 @@ lawd=11290 umd=돈암동 type=59 apt="이수브라운스톤돈암"
 lawd=41463 umd=구갈동 type=84 apt="기흥역더샵"
 lawd=41210 umd=광명동 type=59 apt="광명해모로이연"
 lawd=41113 umd=금곡동 type=84 apt="호반베르디움더센트럴"
-lawd=41465 umd=상현동 type=84 apt="만현마을9단지엘지자이" force=1
+lawd=41465 umd=상현동 type=84 apt="만현마을9단지엘지자이"
 lawd=41192 umd=약대동 type=84 apt="부천위브트레지움2단지"
 lawd=11350 umd=중계동 type=59 apt="중계그린1단지" force=1
 lawd=41117 umd=영통동 type=59 apt="벽적골9단지주공" force=1
