@@ -68,7 +68,10 @@ const lowPct = lowLine ? lowLine.text2.replace(/^저점대비\s*/, "") : null;
 const specAll = (card.spec ?? []).map((x) => x.replace(/<[^>]+>/g, " | ")).join(" | ");
 const hhld = m.hhld?.hhld ? `${m.hhld.hhld.toLocaleString("ko-KR")}세대 단지입니다.` : "";
 const yy2 = specAll.match(/'(\d{2})년 준공/)?.[1];
-const buildYear = specAll.match(/(\d{4})년 준공/)?.[1] ?? (yy2 ? `20${yy2}` : undefined);
+/* ⚠️ 두 자리 연도는 세기를 붙여야 한다 — '98 은 1998 이다(2026-10-31 「2098년 준공」 161건 발견).
+   카드에 오는 단지는 1970년대~올해라서, 올해 끝 두 자리보다 크면 1900년대로 본다. */
+const nowYY = Number(String(new Date().getFullYear()).slice(2));
+const buildYear = specAll.match(/(\d{4})년 준공/)?.[1] ?? (yy2 ? `${Number(yy2) > nowYY ? 19 : 20}${yy2}` : undefined);
 const area = m.supplyArea?.exclusive ?? specAll.match(/전용 ([\d.]+)/)?.[1];
 const floor = specAll.match(/(\d+)층/)?.[1];
 const park = m.parking?.perHhld

@@ -459,6 +459,8 @@ for (const t of made) {
           겹치면 어느 쪽이 잡힐지 알 수 없다. 이미 있으면 뒤에 날짜를 붙인다. */
     let label = `singo-${t.kapt}-${t.type}`;
     if (barr.some((x) => x.label === label)) label = `${label}-${DATE.slice(5).replace("-", "")}`;
+    /* 같은 날 같은 대장 코드로 두 신고명이 오면(2026-10-31 벽적골한신·벽적골우성 = A44347025) 날짜를 붙인 라벨도 겹친다 → b, c… */
+    for (let n = 0; barr.some((x) => x.label === label); n++) label = `${label.replace(/-[a-z]$/, "")}-${String.fromCharCode(98 + n)}`;
     b = {
       label,
       cmd: "scripts/build-singo-record.mjs",
