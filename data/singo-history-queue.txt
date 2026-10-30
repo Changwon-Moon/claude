@@ -47,7 +47,7 @@ lawd=41117 umd=망포동 type=59 apt="영통아이파크캐슬1단지"
 lawd=41597 umd=반송동 type=59 apt="동탄시범다은마을 월드메르디앙 반도유보라"
 lawd=41310 umd=인창동 type=84 apt="주공2"
 lawd=41410 umd=산본동 type=84 apt="세종"
-lawd=11260 umd=묵동 type=59 apt="신내" force=1
+lawd=11260 umd=묵동 type=59 apt="신내"
 lawd=41310 umd=인창동 type=59 apt="주공4-2" force=1
 lawd=41117 umd=영통동 type=59 apt="벽적골한신"
 lawd=41117 umd=영통동 type=59 apt="벽적골우성" force=1
