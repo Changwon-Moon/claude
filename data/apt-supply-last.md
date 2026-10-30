@@ -2,10 +2,10 @@
 
 - 성공 0건 · 실패 129건 · 미룸 0줄
 - 결과는 Actions 로그가 아니라 이 파일과 data/datasets/apt-supply/ 에서 본다
-- 미리 채우기 오늘 몫 121/250건 · 내일로 미룬 0줄 (상한은 실패가 아니다)
+- 미리 채우기 오늘 몫 242/250건 · 내일로 미룬 0줄 (상한은 실패가 아니다)
 
 ```
-� 3000개
+ 줄 3000개
 ::error::전용 59.76㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 90-1) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A43071005 --area 59.76`
@@ -311,7 +311,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A13879102 --area 82.61
 
 ▶ 잠실5단지아파트 (A13879102) · 전용 82.61㎡ · 11710-10100 · 지번 후보 27
-   지번 27 (0027-0000) · 대지 → 줄 3000개
+   지번 27 (0027-0000) · 대지 → 줄 900개
 ::error::전용 82.61㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 27) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13879102 --area 82.61`
@@ -649,7 +649,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A15701602 --area 59.97
 
 ▶ 우장산롯데캐슬 (A15701602) · 전용 59.97㎡ · 11500-10300 · 지번 후보 1145, 2545
-   지번 1145 (1145-0000) · 대지 → 줄 3000개
+   지번 1145 (1145-0000) · 대지 → 줄 100개
 ::error::전용 59.97㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 1145) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A15701602 --area 59.97`
@@ -841,7 +841,7 @@ Exit status 1
 ▶ 상계주공11단지 (A13982301) · 전용 59.2㎡ · 11350-10500 · 지번 후보 663-1, 685-222, 652
    지번 663-1 (0663-0001) · 대지 → 줄 0개
    지번 685-222 (0685-0222) · 대지 → 줄 0개
-   지번 652 (0652-0000) · 대지 → 줄 3000개
+   지번 652 (0652-0000) · 대지 → 줄 300개
 ::error::전용 59.2㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 652) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13982301 --area 59.2`
