@@ -5,15 +5,15 @@
     "aptNm": "미사강변스타힐스아파트",
     "type": "84",
     "from": "202001",
-    "to": "202609",
-    "monthsTried": 81,
+    "to": "202610",
+    "monthsTried": 82,
     "monthsFailed": 0,
-    "monthsTraded": 50,
+    "monthsTraded": 51,
     "peak": {
-      "manwon": 138000,
-      "date": "2026-09-01",
-      "area": 84.89,
-      "floor": 20
+      "manwon": 140300,
+      "date": "2026-10-22",
+      "area": 84.94,
+      "floor": 24
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -746,6 +746,15 @@
       "area": 84.89,
       "floor": 20,
       "date": "2026-09-01",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": 140300,
+      "count": 1,
+      "area": 84.94,
+      "floor": 24,
+      "date": "2026-10-22",
       "ok": true
     }
   ]
