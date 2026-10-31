@@ -1,7 +1,7 @@
 {
   "label": "singo-daily-2026-10-31",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 11장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 10장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
@@ -60,12 +60,6 @@
     },
     {
       "file": "singo-벽적골우성-59-1031.json",
-      "deterministic": true,
-      "qaErrors": 0,
-      "findings": []
-    },
-    {
-      "file": "singo-벽적골한신-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
