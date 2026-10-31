@@ -5,15 +5,15 @@
     "aptNm": "화서역 우방 센트럴파크",
     "type": "59",
     "from": "202001",
-    "to": "202609",
-    "monthsTried": 81,
+    "to": "202611",
+    "monthsTried": 83,
     "monthsFailed": 0,
-    "monthsTraded": 70,
+    "monthsTraded": 71,
     "peak": {
-      "manwon": 74500,
-      "date": "2026-09-09",
+      "manwon": 80000,
+      "date": "2026-10-27",
       "area": 59.98,
-      "floor": 10
+      "floor": 5
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -742,10 +742,28 @@
     {
       "ym": "202609",
       "maxManwon": 74500,
-      "count": 2,
+      "count": 6,
       "area": 59.98,
       "floor": 10,
       "date": "2026-09-09",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": 80000,
+      "count": 5,
+      "area": 59.98,
+      "floor": 5,
+      "date": "2026-10-27",
+      "ok": true
+    },
+    {
+      "ym": "202611",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
       "ok": true
     }
   ]

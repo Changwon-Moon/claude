@@ -42,7 +42,7 @@
 # ⚡ 2026-10-31 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-01 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 lawd=41131 umd=신흥동 type=84 apt="산성역자이푸르지오2단지"
-lawd=41111 umd=정자동 type=59 apt="화서역 우방 센트럴파크" force=1
+lawd=41111 umd=정자동 type=59 apt="화서역 우방 센트럴파크"
 
 lawd=41450 umd=망월동 type=84 apt="미사강변스타힐스아파트"
 lawd=11620 umd=봉천동 type=59 apt="두산"
