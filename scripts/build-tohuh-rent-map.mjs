@@ -44,14 +44,18 @@ import { writeCaption } from "./lib/caption-signature.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const date = process.argv[2] || "2026-07-30";
-const BASE = "2025-06"; // 최근 1년의 시작 시점(동월 대비)
-const BASE_NOTE = "李정부 취임";
 /** 천원 → 만원. R-ONE 금액 계열의 단위는 천원이다(meta.unit 에 확정 기록). */
 const MAN = (v) => v / 10;
 
 const doc = JSON.parse(readFileSync(join(ROOT, "data/datasets/reb-rent-index.json"), "utf8"));
 const tohuh = JSON.parse(readFileSync(join(ROOT, "data/datasets/tohuh-2026.json"), "utf8"));
 const asOf = doc.meta?.asOf;
+/* 최근 1년의 시작 시점 = **최신 공표월의 1년 전 같은 달**(동월 대비, 정확히 12개월).
+ * ⚠️ 2026-10-31 교정: 원래 "2025-06" 으로 못 박혀 있었다. 6월 공표분일 때는 맞았지만
+ *    8월 공표분부터는 2025-06 → 2026-08 = **14개월**인데 카드는 "1년 만에"라고 말했다.
+ *    위 주석의 원칙(동월 대비)대로 공표월에서 계산한다. */
+const BASE = asOf ? `${Number(asOf.slice(0, 4)) - 1}${asOf.slice(4)}` : null;
+if (!BASE) throw new Error("meta.asOf 가 없다 — 최근 1년 기준월을 정할 수 없다");
 if (doc.meta?.verified !== true) {
   throw new Error("데이터셋 meta.verified 가 true 가 아니다 — 교차 확인 전에는 카드를 만들지 않는다");
 }
@@ -100,7 +104,8 @@ const rate = new Map([...money].map(([k, v]) => [k, v.up]));
 
 /* ── 지도 ── 신고가 카드와 같은 모듈. 라벨은 mapLabel + 상승률 %. */
 const parts = tohuhParts(AREAS);
-const won = (v) => `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.round(Math.abs(v))}만`;
+/* 1만원 미만은 소수 한 자리로 — 반올림하면 "+0만"이 되어 '올랐는데 0'처럼 읽힌다(2026-10-31, 과천 +0.4만) */
+const won = (v) => `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v) < 1 ? Math.abs(v).toFixed(1) : Math.round(Math.abs(v))}만`;
 const mapSvg = tohuhMapSvg({
   parts,
   valueOf: (info) => rate.get(info.geoName),
