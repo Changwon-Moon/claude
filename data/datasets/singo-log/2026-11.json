@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "month": "2026-11",
+    "note": "매일 확인된 신고가 누적. foundOn = 우리가 확인한 날(계약일 아님). 주간 집계가 이 파일을 읽는다.",
+    "baselineFrom": "202001",
+    "source": "국토교통부 아파트 매매 실거래가 상세자료"
+  },
+  "hits": [
+    {
+      "foundOn": "2026-11-01",
+      "aptNm": "산성역자이푸르지오2단지",
+      "umdNm": "신흥동",
+      "jibun": "6963",
+      "priceWon": 1497000000,
+      "priceManwon": 149700,
+      "area": 84.98,
+      "floor": 26,
+      "buildYear": 2024,
+      "date": "2026-10-17",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "41131",
+      "type": "84",
+      "pyeong": "34평",
+      "lawdCd": "41131",
+      "gu": "성남시수정구",
+      "prevPeakManwon": 145000,
+      "prevPeakDate": "2026-03-09",
+      "gainPct": 3.2413793103448274,
+      "milestone": null,
+      "hhld": 1270,
+      "kaptCode": "A10022853"
+    },
+    {
+      "foundOn": "2026-11-01",
+      "aptNm": "화서역 우방 센트럴파크",
+      "umdNm": "정자동",
+      "jibun": "887-1",
+      "priceWon": 800000000,
+      "priceManwon": 80000,
+      "area": 59.98,
+      "floor": 5,
+      "buildYear": 1999,
+      "date": "2026-10-27",
+      "dealingGbn": "중개거래",
+      "canceled": false,
+      "sggCd": "41111",
+      "type": "59",
+      "pyeong": "25평",
+      "lawdCd": "41111",
+      "gu": "수원시장안구",
+      "prevPeakManwon": 74500,
+      "prevPeakDate": "2026-09-09",
+      "gainPct": 7.38255033557047,
+      "milestone": null,
+      "hhld": 1335,
+      "kaptCode": "A44072212"
+    }
+  ]
+}
