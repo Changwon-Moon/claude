@@ -10,23 +10,14 @@
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41131 --apt '산성역자이푸르지오2단지' --umd '신흥동' --type 84 --from 202001
 
-산성역자이푸르지오2단지 · 전용 84타입 · 41131 · 202001~202611 (83개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41131-산성역자이푸르지오2단지-84.json
-거래 있던 달 13/83 · 수집 실패 0개월
-📦 캐시에서 80개월 · 국토부에 물은 것 3개월
-최고가 14.97억 (2026-10-17 · 전용 84.98㎡ 26층)
+⏭ 이미 있음 — 41131-산성역자이푸르지오2단지-84.json (다시 받으려면 force=1)
 
 ── 화서역 우방 센트럴파크 전용 59타입 (41111)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41111 --apt '화서역 우방 센트럴파크' --umd '정자동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41111 --apt '화서역 우방 센트럴파크' --umd '정자동' --type 59 --from 202001
 
-화서역 우방 센트럴파크 · 전용 59타입 · 41111 · 202001~202611 (83개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41111-화서역우방센트럴파크-59.json
-거래 있던 달 71/83 · 수집 실패 0개월
-📦 캐시에서 80개월 · 국토부에 물은 것 3개월
-최고가 8억 (2026-10-27 · 전용 59.98㎡ 5층)
-🧹 force=1 을 지웠습니다 — lawd=41111 umd=정자동 type=59 apt="화서역 우방 센트럴파크"
+⏭ 이미 있음 — 41111-화서역우방센트럴파크-59.json (다시 받으려면 force=1)
 
 ── 미사강변스타힐스아파트 전용 84타입 (41450)
 
