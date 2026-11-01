@@ -1,6 +1,6 @@
 {
   "meta": {
-    "today": "2026-11-01",
+    "today": "2026-11-02",
     "months": [
       "202610",
       "202611"
@@ -31,54 +31,5 @@
     "source": "국토교통부 아파트 매매 실거래가 상세자료 · 공동주택 기본 정보(세대수)",
     "note": "1000세대 이상 단지(명부)의 전용 59·84 타입 중개거래 중, 구·법정동·단지명 기준 2020년 이후 최고가를 넘어선 건. 2006~2019 기록은 보지 않으므로 \"역대\"라고 쓰지 않는다. 직거래·해제거래 제외. 평 표기는 관용 환산(전용률 미공개)이라 단지에 따라 ±1평 어긋날 수 있고 원본 전용면적을 함께 남긴다."
   },
-  "hits": [
-    {
-      "aptNm": "산성역자이푸르지오2단지",
-      "umdNm": "신흥동",
-      "jibun": "6963",
-      "priceWon": 1497000000,
-      "priceManwon": 149700,
-      "area": 84.98,
-      "floor": 26,
-      "buildYear": 2024,
-      "date": "2026-10-17",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "41131",
-      "type": "84",
-      "pyeong": "34평",
-      "lawdCd": "41131",
-      "gu": "성남시수정구",
-      "prevPeakManwon": 145000,
-      "prevPeakDate": "2026-03-09",
-      "gainPct": 3.2413793103448274,
-      "milestone": null,
-      "hhld": 1270,
-      "kaptCode": "A10022853"
-    },
-    {
-      "aptNm": "화서역 우방 센트럴파크",
-      "umdNm": "정자동",
-      "jibun": "887-1",
-      "priceWon": 800000000,
-      "priceManwon": 80000,
-      "area": 59.98,
-      "floor": 5,
-      "buildYear": 1999,
-      "date": "2026-10-27",
-      "dealingGbn": "중개거래",
-      "canceled": false,
-      "sggCd": "41111",
-      "type": "59",
-      "pyeong": "25평",
-      "lawdCd": "41111",
-      "gu": "수원시장안구",
-      "prevPeakManwon": 74500,
-      "prevPeakDate": "2026-09-09",
-      "gainPct": 7.38255033557047,
-      "milestone": null,
-      "hhld": 1335,
-      "kaptCode": "A44072212"
-    }
-  ]
+  "hits": []
 }
