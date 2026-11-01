@@ -11,7 +11,7 @@
 > tsx src/supplyAreaCli.ts -- --kapt A13971502 --area 84.2
 
 ▶ 상계주공3단지 (A13971502) · 전용 84.2㎡ · 11350-10500 · 지번 후보 730-2
-   지번 730-2 (0730-0002) · 대지 → 줄 200개
+   지번 730-2 (0730-0002) · 대지 → 줄 382개
 ::error::전용 84.2㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 730-2) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13971502 --area 84.2`
@@ -44,7 +44,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A13204105 --area 84.41
 
 ▶ 창동주공3단지 (A13204105) · 전용 84.41㎡ · 11320-10700 · 지번 후보 347
-   지번 347 (0347-0000) · 대지 → 줄 2800개
+   지번 347 (0347-0000) · 대지 → 줄 3000개
 ::error::전용 84.41㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 347) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13204105 --area 84.41`
@@ -83,7 +83,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A13984814 --area 84.815
 
 ▶ 월계주공2단지 (A13984814) · 전용 84.815㎡ · 11350-10200 · 지번 후보 556, 664-1
-   지번 556 (0556-0000) · 대지 → 줄 1600개
+   지번 556 (0556-0000) · 대지 → 줄 3000개
 ::error::전용 84.815㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 556) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13984814 --area 84.815`
@@ -94,7 +94,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A13986306 --area 59.22
 
 ▶ 중계그린 (A13986306) · 전용 59.22㎡ · 11350-10600 · 지번 후보 502-1
-   지번 502-1 (0502-0001) · 대지 → 줄 100개
+   지번 502-1 (0502-0001) · 대지 → 줄 3000개
 ::error::전용 59.22㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 502-1) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13986306 --area 59.22`
