@@ -10,7 +10,7 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-10-31",
+    "collectedFor": "2026-11-01",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2929,
@@ -45,7 +45,7 @@
         "수도권",
         "58가구",
         "무순위",
-        "D-2",
+        "D-1",
         "더샵"
       ]
     },
@@ -72,7 +72,7 @@
       "reasons": [
         "서울",
         "1,305가구 대단지",
-        "D-6",
+        "D-5",
         "분양가상한제",
         "투기과열지구"
       ]
@@ -101,7 +101,7 @@
         "수도권",
         "169가구",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -127,7 +127,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -153,7 +153,7 @@
       "reasons": [
         "수도권",
         "868가구",
-        "D-4",
+        "D-3",
         "푸르지오",
         "분양가상한제"
       ]
@@ -186,7 +186,7 @@
       "reasons": [
         "수도권",
         "1,110가구 대단지",
-        "D-4",
+        "D-3",
         "2개 블록 합계",
         "분양가상한제"
       ]
@@ -214,7 +214,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -245,7 +245,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2",
+        "D-1",
         "2개 블록 합계"
       ]
     },
@@ -272,7 +272,7 @@
       "reasons": [
         "수도권",
         "1,542가구 대단지",
-        "D-4",
+        "D-3",
         "롯데캐슬"
       ]
     },
@@ -304,6 +304,32 @@
       ]
     },
     {
+      "kind": "remndr",
+      "pblancNo": "2026910267",
+      "name": "교대역 모아엘가 그랑데",
+      "areaName": "광주",
+      "address": "전남광주통합특별시 동구 무등로 373",
+      "supply": 1,
+      "noticeDate": "2026-10-29",
+      "receiptFrom": "2026-11-03",
+      "receiptTo": "2026-11-03",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-11",
+      "announceDate": "2026-11-06",
+      "builder": "계림4구역 주택재개발정비사업조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://moaelgaa.co.kr/index.php",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910267&pblancNo=2026910267",
+      "score": 54,
+      "reasons": [
+        "광역시",
+        "무순위",
+        "D-2"
+      ]
+    },
+    {
       "kind": "apt",
       "pblancNo": "2026000499",
       "name": "한화포레나 지제역",
@@ -327,6 +353,32 @@
         "수도권",
         "1,098가구 대단지",
         "포레나"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026820012",
+      "name": "시흥하중지구 A1블록 신혼희망타운(공공분양) 추가입주자모집공고",
+      "areaName": "경기",
+      "address": "경기도 시흥시 하중동 일원 시흥하중 공공주택지구 내 A1블록",
+      "supply": 175,
+      "noticeDate": "2026-10-23",
+      "receiptFrom": "2026-11-02",
+      "receiptTo": "2026-11-03",
+      "specialFrom": null,
+      "rank1From": "2026-11-02",
+      "moveInYm": "2029-03",
+      "announceDate": "2026-11-12",
+      "builder": "이수건설 주식회사, 주식회사 오렌지이앤씨",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://apply.lh.or.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820012&pblancNo=2026820012",
+      "score": 51,
+      "reasons": [
+        "수도권",
+        "D-2",
+        "분양가상한제"
       ]
     },
     {
@@ -378,7 +430,7 @@
       "score": 50,
       "reasons": [
         "수도권",
-        "D-4",
+        "D-3",
         "분양가상한제"
       ]
     },
@@ -404,7 +456,7 @@
       "score": 50,
       "reasons": [
         "수도권",
-        "D-4",
+        "D-3",
         "분양가상한제"
       ]
     },
@@ -431,58 +483,6 @@
       "reasons": [
         "수도권",
         "623가구",
-        "분양가상한제"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910267",
-      "name": "교대역 모아엘가 그랑데",
-      "areaName": "광주",
-      "address": "전남광주통합특별시 동구 무등로 373",
-      "supply": 1,
-      "noticeDate": "2026-10-29",
-      "receiptFrom": "2026-11-03",
-      "receiptTo": "2026-11-03",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-11",
-      "announceDate": "2026-11-06",
-      "builder": "계림4구역 주택재개발정비사업조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://moaelgaa.co.kr/index.php",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910267&pblancNo=2026910267",
-      "score": 47,
-      "reasons": [
-        "광역시",
-        "무순위",
-        "D-3"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026820012",
-      "name": "시흥하중지구 A1블록 신혼희망타운(공공분양) 추가입주자모집공고",
-      "areaName": "경기",
-      "address": "경기도 시흥시 하중동 일원 시흥하중 공공주택지구 내 A1블록",
-      "supply": 175,
-      "noticeDate": "2026-10-23",
-      "receiptFrom": "2026-11-02",
-      "receiptTo": "2026-11-03",
-      "specialFrom": null,
-      "rank1From": "2026-11-02",
-      "moveInYm": "2029-03",
-      "announceDate": "2026-11-12",
-      "builder": "이수건설 주식회사, 주식회사 오렌지이앤씨",
-      "priceCap": true,
-      "speculative": false,
-      "homepage": "https://apply.lh.or.kr/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820012&pblancNo=2026820012",
-      "score": 44,
-      "reasons": [
-        "수도권",
-        "D-3",
         "분양가상한제"
       ]
     },
