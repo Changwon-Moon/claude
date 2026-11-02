@@ -41,6 +41,22 @@
 # ⚡ 2026-10-30 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-10-31 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-01 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+# ⚡ 2026-11-03 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+lawd=11590 umd=상도동 type=59 apt="포스코더샵"
+lawd=41450 umd=망월동 type=84 apt="미사강변스타힐스아파트" force=1
+lawd=41117 umd=원천동 type=59 apt="광교호반베르디움" force=1
+lawd=11290 umd=길음동 type=59 apt="길음뉴타운9단지(래미안)"
+lawd=41597 umd=산척동 type=84 apt="동탄 더샵 레이크에듀타운"
+lawd=11620 umd=신림동 type=84 apt="신림푸르지오" force=1
+lawd=11380 umd=녹번동 type=59 apt="북한산푸르지오"
+lawd=11305 umd=미아동 type=59 apt="삼성래미안트리베라2단지"
+lawd=11410 umd=홍은동 type=84 apt="홍은동벽산" force=1
+lawd=11620 umd=신림동 type=59 apt="신림현대"
+lawd=41410 umd=산본동 type=59 apt="세종" force=1
+lawd=41461 umd=고림동 type=84 apt="힐스테이트용인고진역2단지" force=1
+lawd=41360 umd=평내동 type=84 apt="e편한세상평내메트로원" force=1
+lawd=41113 umd=호매실동 type=84 apt="벨섬시티" force=1
+
 lawd=41131 umd=신흥동 type=84 apt="산성역자이푸르지오2단지"
 lawd=41111 umd=정자동 type=59 apt="화서역 우방 센트럴파크"
 
