@@ -10,7 +10,7 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-11-01",
+    "collectedFor": "2026-11-02",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2929,
@@ -45,7 +45,7 @@
         "수도권",
         "58가구",
         "무순위",
-        "D-1",
+        "오늘 마감",
         "더샵"
       ]
     },
@@ -72,7 +72,7 @@
       "reasons": [
         "서울",
         "1,305가구 대단지",
-        "D-5",
+        "D-4",
         "분양가상한제",
         "투기과열지구"
       ]
@@ -101,33 +101,7 @@
         "수도권",
         "169가구",
         "무순위",
-        "D-1"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910278",
-      "name": "숭의역 노르웨이숲 더 스카이",
-      "areaName": "인천",
-      "address": "인천광역시 미추홀구 숭의동 350-1번지 일원",
-      "supply": 13,
-      "noticeDate": "2026-10-28",
-      "receiptFrom": "2026-11-02",
-      "receiptTo": "2026-11-02",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2030-05",
-      "announceDate": "2026-11-05",
-      "builder": "숭의역2단지지역주택조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://숭의역노르웨이숲더스카이.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910278&pblancNo=2026910278",
-      "score": 66,
-      "reasons": [
-        "수도권",
-        "무순위",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -149,11 +123,11 @@
       "speculative": false,
       "homepage": "https://www.arkone-prugio.com",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000496&pblancNo=2026000496",
-      "score": 66,
+      "score": 73,
       "reasons": [
         "수도권",
         "868가구",
-        "D-3",
+        "D-2",
         "푸르지오",
         "분양가상한제"
       ]
@@ -182,13 +156,66 @@
         "계양신도시 카이브 유보라(AC4BL)",
         "계양신도시 카이브 유보라(AC3BL)"
       ],
-      "score": 63,
+      "score": 70,
       "reasons": [
         "수도권",
         "1,110가구 대단지",
-        "D-3",
+        "D-2",
         "2개 블록 합계",
         "분양가상한제"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000502",
+      "name": "화성 향남 롯데캐슬 시그니처",
+      "areaName": "경기",
+      "address": "경기도 화성시 만세구 향남읍 상신리 산 13-13 일원",
+      "supply": 1542,
+      "noticeDate": "2026-10-21",
+      "receiptFrom": "2026-11-03",
+      "receiptTo": "2026-11-04",
+      "specialFrom": "2026-11-02",
+      "rank1From": "2026-11-03",
+      "moveInYm": "2029-12",
+      "announceDate": "2026-11-10",
+      "builder": "롯데건설(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.hwaseong-lottecastlesignature.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000502&pblancNo=2026000502",
+      "score": 68,
+      "reasons": [
+        "수도권",
+        "1,542가구 대단지",
+        "D-2",
+        "롯데캐슬"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910278",
+      "name": "숭의역 노르웨이숲 더 스카이",
+      "areaName": "인천",
+      "address": "인천광역시 미추홀구 숭의동 350-1번지 일원",
+      "supply": 13,
+      "noticeDate": "2026-10-28",
+      "receiptFrom": "2026-11-02",
+      "receiptTo": "2026-11-02",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2030-05",
+      "announceDate": "2026-11-05",
+      "builder": "숭의역2단지지역주택조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://숭의역노르웨이숲더스카이.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910278&pblancNo=2026910278",
+      "score": 66,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "오늘 마감"
       ]
     },
     {
@@ -214,7 +241,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -245,35 +272,60 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1",
+        "오늘 마감",
         "2개 블록 합계"
       ]
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000502",
-      "name": "화성 향남 롯데캐슬 시그니처",
+      "pblancNo": "2026000518",
+      "name": "GTX운정중앙역 시티프라디움 4단지(후속사업)",
       "areaName": "경기",
-      "address": "경기도 화성시 만세구 향남읍 상신리 산 13-13 일원",
-      "supply": 1542,
-      "noticeDate": "2026-10-21",
+      "address": "경기도 파주시 파주운정3지구 주상복합 4블록(경기도 파주시 동패동 400-7번지 일원)",
+      "supply": 358,
+      "noticeDate": "2026-10-23",
       "receiptFrom": "2026-11-03",
       "receiptTo": "2026-11-04",
       "specialFrom": "2026-11-02",
       "rank1From": "2026-11-03",
-      "moveInYm": "2029-12",
-      "announceDate": "2026-11-10",
-      "builder": "롯데건설(주)",
-      "priceCap": false,
+      "moveInYm": "2030-07",
+      "announceDate": "2026-11-11",
+      "builder": "주식회사 시티건설, 주식회사 시티, 주식회사 시티종합건설",
+      "priceCap": true,
       "speculative": false,
-      "homepage": "https://www.hwaseong-lottecastlesignature.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000502&pblancNo=2026000502",
-      "score": 61,
+      "homepage": "https://www.gtx운정중앙역시티프라디움.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000518&pblancNo=2026000518",
+      "score": 57,
       "reasons": [
         "수도권",
-        "1,542가구 대단지",
-        "D-3",
-        "롯데캐슬"
+        "D-2",
+        "분양가상한제"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000517",
+      "name": "GTX운정중앙역 시티프라디움 3단지(후속사업)",
+      "areaName": "경기",
+      "address": "경기도 파주시 파주운정3지구 주상복합 3블록(경기도 파주시 동패동 1673번지 일원)",
+      "supply": 337,
+      "noticeDate": "2026-10-23",
+      "receiptFrom": "2026-11-03",
+      "receiptTo": "2026-11-04",
+      "specialFrom": "2026-11-02",
+      "rank1From": "2026-11-03",
+      "moveInYm": "2030-07",
+      "announceDate": "2026-11-10",
+      "builder": "주식회사 시티건설, 주식회사 시티, 주식회사 시티종합건설",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://www.gtx운정중앙역시티프라디움.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000517&pblancNo=2026000517",
+      "score": 57,
+      "reasons": [
+        "수도권",
+        "D-2",
+        "분양가상한제"
       ]
     },
     {
@@ -326,7 +378,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -377,7 +429,7 @@
       "score": 51,
       "reasons": [
         "수도권",
-        "D-2",
+        "D-1",
         "분양가상한제"
       ]
     },
@@ -406,58 +458,6 @@
         "센트레빌",
         "분양가상한제",
         "투기과열지구"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000518",
-      "name": "GTX운정중앙역 시티프라디움 4단지(후속사업)",
-      "areaName": "경기",
-      "address": "경기도 파주시 파주운정3지구 주상복합 4블록(경기도 파주시 동패동 400-7번지 일원)",
-      "supply": 358,
-      "noticeDate": "2026-10-23",
-      "receiptFrom": "2026-11-03",
-      "receiptTo": "2026-11-04",
-      "specialFrom": "2026-11-02",
-      "rank1From": "2026-11-03",
-      "moveInYm": "2030-07",
-      "announceDate": "2026-11-11",
-      "builder": "주식회사 시티건설, 주식회사 시티, 주식회사 시티종합건설",
-      "priceCap": true,
-      "speculative": false,
-      "homepage": "https://www.gtx운정중앙역시티프라디움.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000518&pblancNo=2026000518",
-      "score": 50,
-      "reasons": [
-        "수도권",
-        "D-3",
-        "분양가상한제"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000517",
-      "name": "GTX운정중앙역 시티프라디움 3단지(후속사업)",
-      "areaName": "경기",
-      "address": "경기도 파주시 파주운정3지구 주상복합 3블록(경기도 파주시 동패동 1673번지 일원)",
-      "supply": 337,
-      "noticeDate": "2026-10-23",
-      "receiptFrom": "2026-11-03",
-      "receiptTo": "2026-11-04",
-      "specialFrom": "2026-11-02",
-      "rank1From": "2026-11-03",
-      "moveInYm": "2030-07",
-      "announceDate": "2026-11-10",
-      "builder": "주식회사 시티건설, 주식회사 시티, 주식회사 시티종합건설",
-      "priceCap": true,
-      "speculative": false,
-      "homepage": "https://www.gtx운정중앙역시티프라디움.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000517&pblancNo=2026000517",
-      "score": 50,
-      "reasons": [
-        "수도권",
-        "D-3",
-        "분양가상한제"
       ]
     },
     {
