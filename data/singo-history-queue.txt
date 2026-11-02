@@ -55,7 +55,7 @@ lawd=11620 umd=신림동 type=59 apt="신림현대"
 lawd=41410 umd=산본동 type=59 apt="세종"
 lawd=41461 umd=고림동 type=84 apt="힐스테이트용인고진역2단지"
 lawd=41360 umd=평내동 type=84 apt="e편한세상평내메트로원"
-lawd=41113 umd=호매실동 type=84 apt="벨섬시티" force=1
+lawd=41113 umd=호매실동 type=84 apt="벨섬시티"
 
 lawd=41131 umd=신흥동 type=84 apt="산성역자이푸르지오2단지"
 lawd=41111 umd=정자동 type=59 apt="화서역 우방 센트럴파크"
