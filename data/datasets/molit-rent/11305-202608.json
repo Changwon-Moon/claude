@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "gu": "강북구",
+    "lawdCd": "11305",
+    "dealYmd": "202608",
+    "source": "국토교통부 아파트 전월세 실거래가 (getRTMSDataSvcAptRent)",
+    "sourceUrl": "https://www.data.go.kr",
+    "collectedAt": "2026-11-03",
+    "verified": true,
+    "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존). agg.price 는 전세 계약의 금액·면적 집계이며 **전용면적 기준**이다 — 실거래에는 공급면적이 없다(공급 평당가로 읽으면 30%쯤 부풀려진다)."
+  },
+  "agg": {
+    "total": 207,
+    "jeonse": 99,
+    "wolse": 108,
+    "wolseRatio": 52.2,
+    "newTotal": 122,
+    "newJeonse": 45,
+    "newWolse": 77,
+    "newWolseRatio": 63.1,
+    "renewTotal": 84,
+    "renewJeonse": 53,
+    "renewWolse": 31,
+    "typedTotal": 206,
+    "price": {
+      "unit": "만원 · 전용면적(㎡) 기준",
+      "n": 99,
+      "depositSum": 4272568,
+      "areaSum": 6946.88,
+      "avgDeposit": 43157.25,
+      "avgArea": 70.17,
+      "perM2": 615.03,
+      "perPyeong": 2033.17,
+      "perPyeongSimple": 2114.1,
+      "kp84": {
+        "loM2": 82,
+        "hiM2": 86,
+        "n": 36,
+        "avgDeposit": 51059.92,
+        "avgArea": 84.76
+      },
+      "kp59": {
+        "loM2": 57,
+        "hiM2": 61,
+        "n": 22,
+        "avgDeposit": 45815.91,
+        "avgArea": 59.72
+      }
+    }
+  }
+}

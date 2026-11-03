@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "gu": "의왕시",
+    "lawdCd": "41430",
+    "dealYmd": "202608",
+    "source": "국토교통부 아파트 전월세 실거래가 (getRTMSDataSvcAptRent)",
+    "sourceUrl": "https://www.data.go.kr",
+    "collectedAt": "2026-11-03",
+    "verified": true,
+    "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존). agg.price 는 전세 계약의 금액·면적 집계이며 **전용면적 기준**이다 — 실거래에는 공급면적이 없다(공급 평당가로 읽으면 30%쯤 부풀려진다)."
+  },
+  "agg": {
+    "total": 210,
+    "jeonse": 101,
+    "wolse": 109,
+    "wolseRatio": 51.9,
+    "newTotal": 111,
+    "newJeonse": 58,
+    "newWolse": 53,
+    "newWolseRatio": 47.7,
+    "renewTotal": 97,
+    "renewJeonse": 41,
+    "renewWolse": 56,
+    "typedTotal": 208,
+    "price": {
+      "unit": "만원 · 전용면적(㎡) 기준",
+      "n": 101,
+      "depositSum": 4622955,
+      "areaSum": 7549.05,
+      "avgDeposit": 45771.83,
+      "avgArea": 74.74,
+      "perM2": 612.39,
+      "perPyeong": 2024.43,
+      "perPyeongSimple": 2009.79,
+      "kp84": {
+        "loM2": 82,
+        "hiM2": 86,
+        "n": 46,
+        "avgDeposit": 53791.09,
+        "avgArea": 84.85
+      },
+      "kp59": {
+        "loM2": 57,
+        "hiM2": 61,
+        "n": 22,
+        "avgDeposit": 44087.05,
+        "avgArea": 59.83
+      }
+    }
+  }
+}

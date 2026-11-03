@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "gu": "수원시장안구",
+    "lawdCd": "41111",
+    "dealYmd": "202608",
+    "source": "국토교통부 아파트 전월세 실거래가 (getRTMSDataSvcAptRent)",
+    "sourceUrl": "https://www.data.go.kr",
+    "collectedAt": "2026-11-03",
+    "verified": true,
+    "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존). agg.price 는 전세 계약의 금액·면적 집계이며 **전용면적 기준**이다 — 실거래에는 공급면적이 없다(공급 평당가로 읽으면 30%쯤 부풀려진다)."
+  },
+  "agg": {
+    "total": 295,
+    "jeonse": 181,
+    "wolse": 114,
+    "wolseRatio": 38.6,
+    "newTotal": 173,
+    "newJeonse": 93,
+    "newWolse": 80,
+    "newWolseRatio": 46.2,
+    "renewTotal": 122,
+    "renewJeonse": 88,
+    "renewWolse": 34,
+    "typedTotal": 295,
+    "price": {
+      "unit": "만원 · 전용면적(㎡) 기준",
+      "n": 181,
+      "depositSum": 6263721,
+      "areaSum": 12972.51,
+      "avgDeposit": 34606.19,
+      "avgArea": 71.67,
+      "perM2": 482.85,
+      "perPyeong": 1596.18,
+      "perPyeongSimple": 1607.41,
+      "kp84": {
+        "loM2": 82,
+        "hiM2": 86,
+        "n": 59,
+        "avgDeposit": 41631.61,
+        "avgArea": 84.81
+      },
+      "kp59": {
+        "loM2": 57,
+        "hiM2": 61,
+        "n": 69,
+        "avgDeposit": 31789.32,
+        "avgArea": 59.84
+      }
+    }
+  }
+}

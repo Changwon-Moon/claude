@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "gu": "성남시중원구",
+    "lawdCd": "41133",
+    "dealYmd": "202609",
+    "source": "국토교통부 아파트 전월세 실거래가 (getRTMSDataSvcAptRent)",
+    "sourceUrl": "https://www.data.go.kr",
+    "collectedAt": "2026-11-03",
+    "verified": true,
+    "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존). agg.price 는 전세 계약의 금액·면적 집계이며 **전용면적 기준**이다 — 실거래에는 공급면적이 없다(공급 평당가로 읽으면 30%쯤 부풀려진다)."
+  },
+  "agg": {
+    "total": 248,
+    "jeonse": 125,
+    "wolse": 123,
+    "wolseRatio": 49.6,
+    "newTotal": 130,
+    "newJeonse": 51,
+    "newWolse": 79,
+    "newWolseRatio": 60.8,
+    "renewTotal": 114,
+    "renewJeonse": 73,
+    "renewWolse": 41,
+    "typedTotal": 244,
+    "price": {
+      "unit": "만원 · 전용면적(㎡) 기준",
+      "n": 125,
+      "depositSum": 6284395,
+      "areaSum": 8416.28,
+      "avgDeposit": 50275.16,
+      "avgArea": 67.33,
+      "perM2": 746.7,
+      "perPyeong": 2468.41,
+      "perPyeongSimple": 2499.72,
+      "kp84": {
+        "loM2": 82,
+        "hiM2": 86,
+        "n": 23,
+        "avgDeposit": 55854.35,
+        "avgArea": 84.63
+      },
+      "kp59": {
+        "loM2": 57,
+        "hiM2": 61,
+        "n": 35,
+        "avgDeposit": 52720.43,
+        "avgArea": 59.93
+      }
+    }
+  }
+}

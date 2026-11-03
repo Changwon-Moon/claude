@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "gu": "안양시동안구",
+    "lawdCd": "41173",
+    "dealYmd": "202608",
+    "source": "국토교통부 아파트 전월세 실거래가 (getRTMSDataSvcAptRent)",
+    "sourceUrl": "https://www.data.go.kr",
+    "collectedAt": "2026-11-03",
+    "verified": true,
+    "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존). agg.price 는 전세 계약의 금액·면적 집계이며 **전용면적 기준**이다 — 실거래에는 공급면적이 없다(공급 평당가로 읽으면 30%쯤 부풀려진다)."
+  },
+  "agg": {
+    "total": 758,
+    "jeonse": 490,
+    "wolse": 268,
+    "wolseRatio": 35.4,
+    "newTotal": 355,
+    "newJeonse": 195,
+    "newWolse": 160,
+    "newWolseRatio": 45.1,
+    "renewTotal": 385,
+    "renewJeonse": 281,
+    "renewWolse": 104,
+    "typedTotal": 740,
+    "price": {
+      "unit": "만원 · 전용면적(㎡) 기준",
+      "n": 490,
+      "depositSum": 21074544,
+      "areaSum": 32537.45,
+      "avgDeposit": 43009.27,
+      "avgArea": 66.4,
+      "perM2": 647.7,
+      "perPyeong": 2141.16,
+      "perPyeongSimple": 2134.37,
+      "kp84": {
+        "loM2": 82,
+        "hiM2": 86,
+        "n": 119,
+        "avgDeposit": 55259.24,
+        "avgArea": 84.84
+      },
+      "kp59": {
+        "loM2": 57,
+        "hiM2": 61,
+        "n": 139,
+        "avgDeposit": 40967.34,
+        "avgArea": 59.79
+      }
+    }
+  }
+}

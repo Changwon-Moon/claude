@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "gu": "동작구",
+    "lawdCd": "11590",
+    "dealYmd": "202609",
+    "source": "국토교통부 아파트 전월세 실거래가 (getRTMSDataSvcAptRent)",
+    "sourceUrl": "https://www.data.go.kr",
+    "collectedAt": "2026-11-03",
+    "verified": true,
+    "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존). agg.price 는 전세 계약의 금액·면적 집계이며 **전용면적 기준**이다 — 실거래에는 공급면적이 없다(공급 평당가로 읽으면 30%쯤 부풀려진다)."
+  },
+  "agg": {
+    "total": 612,
+    "jeonse": 271,
+    "wolse": 341,
+    "wolseRatio": 55.7,
+    "newTotal": 394,
+    "newJeonse": 127,
+    "newWolse": 267,
+    "newWolseRatio": 67.8,
+    "renewTotal": 205,
+    "renewJeonse": 136,
+    "renewWolse": 69,
+    "typedTotal": 599,
+    "price": {
+      "unit": "만원 · 전용면적(㎡) 기준",
+      "n": 271,
+      "depositSum": 19570786,
+      "areaSum": 21437.78,
+      "avgDeposit": 72216.92,
+      "avgArea": 79.11,
+      "perM2": 912.91,
+      "perPyeong": 3017.89,
+      "perPyeongSimple": 3076.11,
+      "kp84": {
+        "loM2": 82,
+        "hiM2": 86,
+        "n": 131,
+        "avgDeposit": 79451.91,
+        "avgArea": 84.81
+      },
+      "kp59": {
+        "loM2": 57,
+        "hiM2": 61,
+        "n": 72,
+        "avgDeposit": 61343.9,
+        "avgArea": 59.78
+      }
+    }
+  }
+}

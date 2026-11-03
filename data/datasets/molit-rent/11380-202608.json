@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "gu": "은평구",
+    "lawdCd": "11380",
+    "dealYmd": "202608",
+    "source": "국토교통부 아파트 전월세 실거래가 (getRTMSDataSvcAptRent)",
+    "sourceUrl": "https://www.data.go.kr",
+    "collectedAt": "2026-11-03",
+    "verified": true,
+    "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존). agg.price 는 전세 계약의 금액·면적 집계이며 **전용면적 기준**이다 — 실거래에는 공급면적이 없다(공급 평당가로 읽으면 30%쯤 부풀려진다)."
+  },
+  "agg": {
+    "total": 665,
+    "jeonse": 340,
+    "wolse": 325,
+    "wolseRatio": 48.9,
+    "newTotal": 275,
+    "newJeonse": 138,
+    "newWolse": 137,
+    "newWolseRatio": 49.8,
+    "renewTotal": 373,
+    "renewJeonse": 191,
+    "renewWolse": 182,
+    "typedTotal": 648,
+    "price": {
+      "unit": "만원 · 전용면적(㎡) 기준",
+      "n": 340,
+      "depositSum": 16103162,
+      "areaSum": 24878.67,
+      "avgDeposit": 47362.24,
+      "avgArea": 73.17,
+      "perM2": 647.27,
+      "perPyeong": 2139.73,
+      "perPyeongSimple": 2216.22,
+      "kp84": {
+        "loM2": 82,
+        "hiM2": 86,
+        "n": 144,
+        "avgDeposit": 48970.08,
+        "avgArea": 84.8
+      },
+      "kp59": {
+        "loM2": 57,
+        "hiM2": 61,
+        "n": 91,
+        "avgDeposit": 49703.99,
+        "avgArea": 59.8
+      }
+    }
+  }
+}

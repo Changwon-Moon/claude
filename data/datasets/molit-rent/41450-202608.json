@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "gu": "하남시",
+    "lawdCd": "41450",
+    "dealYmd": "202608",
+    "source": "국토교통부 아파트 전월세 실거래가 (getRTMSDataSvcAptRent)",
+    "sourceUrl": "https://www.data.go.kr",
+    "collectedAt": "2026-11-03",
+    "verified": true,
+    "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존). agg.price 는 전세 계약의 금액·면적 집계이며 **전용면적 기준**이다 — 실거래에는 공급면적이 없다(공급 평당가로 읽으면 30%쯤 부풀려진다)."
+  },
+  "agg": {
+    "total": 705,
+    "jeonse": 343,
+    "wolse": 362,
+    "wolseRatio": 51.3,
+    "newTotal": 295,
+    "newJeonse": 134,
+    "newWolse": 161,
+    "newWolseRatio": 54.6,
+    "renewTotal": 407,
+    "renewJeonse": 206,
+    "renewWolse": 201,
+    "typedTotal": 702,
+    "price": {
+      "unit": "만원 · 전용면적(㎡) 기준",
+      "n": 343,
+      "depositSum": 21076643,
+      "areaSum": 27693.42,
+      "avgDeposit": 61447.94,
+      "avgArea": 80.74,
+      "perM2": 761.07,
+      "perPyeong": 2515.94,
+      "perPyeongSimple": 2519.96,
+      "kp84": {
+        "loM2": 82,
+        "hiM2": 86,
+        "n": 145,
+        "avgDeposit": 62379.68,
+        "avgArea": 84.85
+      },
+      "kp59": {
+        "loM2": 57,
+        "hiM2": 61,
+        "n": 41,
+        "avgDeposit": 48803.27,
+        "avgArea": 59.72
+      }
+    }
+  }
+}

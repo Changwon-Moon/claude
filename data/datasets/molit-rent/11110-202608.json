@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "gu": "종로구",
+    "lawdCd": "11110",
+    "dealYmd": "202608",
+    "source": "국토교통부 아파트 전월세 실거래가 (getRTMSDataSvcAptRent)",
+    "sourceUrl": "https://www.data.go.kr",
+    "collectedAt": "2026-11-03",
+    "verified": true,
+    "note": "월세금액 0=전세 / >0=월세. 계약구분(신규/갱신)은 전월세신고제(2021.6~) 이후만 채워짐(typedTotal로 커버리지 확인). 집계만 저장(원거래 미보존). agg.price 는 전세 계약의 금액·면적 집계이며 **전용면적 기준**이다 — 실거래에는 공급면적이 없다(공급 평당가로 읽으면 30%쯤 부풀려진다)."
+  },
+  "agg": {
+    "total": 145,
+    "jeonse": 40,
+    "wolse": 105,
+    "wolseRatio": 72.4,
+    "newTotal": 104,
+    "newJeonse": 23,
+    "newWolse": 81,
+    "newWolseRatio": 77.9,
+    "renewTotal": 40,
+    "renewJeonse": 16,
+    "renewWolse": 24,
+    "typedTotal": 144,
+    "price": {
+      "unit": "만원 · 전용면적(㎡) 기준",
+      "n": 40,
+      "depositSum": 3561000,
+      "areaSum": 3463.93,
+      "avgDeposit": 89025,
+      "avgArea": 86.6,
+      "perM2": 1028.02,
+      "perPyeong": 3398.43,
+      "perPyeongSimple": 3303.26,
+      "kp84": {
+        "loM2": 82,
+        "hiM2": 86,
+        "n": 9,
+        "avgDeposit": 99955.56,
+        "avgArea": 84.79
+      },
+      "kp59": {
+        "loM2": 57,
+        "hiM2": 61,
+        "n": 7,
+        "avgDeposit": 73071.43,
+        "avgArea": 59.89
+      }
+    }
+  }
+}
