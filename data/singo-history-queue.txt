@@ -67,7 +67,7 @@ lawd=41171 umd=석수동 type=84 apt="석수e-편한세상"
 lawd=41310 umd=인창동 type=59 apt="주공6"
 lawd=41310 umd=인창동 type=59 apt="주공4-2"
 lawd=41595 umd=기산동 type=59 apt="에스케이뷰파크2차"
-lawd=41113 umd=권선동 type=59 apt="권선자이e편한세상" force=1
+lawd=41113 umd=권선동 type=59 apt="권선자이e편한세상"
 lawd=41117 umd=영통동 type=59 apt="신나무실휴먼시아5단지"
 lawd=41370 umd=궐동 type=84 apt="중흥S-클래스에듀파크" force=1
 
