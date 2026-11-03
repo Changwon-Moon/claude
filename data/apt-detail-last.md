@@ -2,40 +2,13 @@
 
 - 대기열: 343줄
 - 결과: **성공**
+- ⚠️ 이번 실행은 **국토부에 붙지 않았습니다**(전부 이미 있음) — API 가 살아 있다는 증거로 쓰지 마세요
 
 ```
-
-── A15603206
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A15603206
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A15603206.json
-A15603206 주차 지상 47 + 지하 1591 = **1638대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
-
-── A10025680
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A10025680
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A10025680.json
-A10025680 주차 지상 22 + 지하 1901 = **1923대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
-
-── A10027816
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A10027816
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A10027816.json
-A10027816 주차 지상 0 + 지하 1532 = **1532대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
-
-── A15101508
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A15101508
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A15101508.json
-A15101508 주차 지상 654 + 지하 413 = **1067대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+⏭ 이미 있음 — data/datasets/apt-detail/A15603206.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A10025680.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A10027816.json (다시 받으려면 force=1)
+⏭ 이미 있음 — data/datasets/apt-detail/A15101508.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A47174320.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A46378626.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A15701602.json (다시 받으려면 force=1)
@@ -376,6 +349,7 @@ A15101508 주차 지상 654 + 지하 413 = **1067대** (오퍼레이션 AptBasis
 ⏭ 이미 있음 — data/datasets/apt-detail/A13613008.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A44072212.json (다시 받으려면 force=1)
 
-실제로 받아 본 단지 4곳 · 이미 있어 건너뛴 것 339곳
+실제로 받아 본 단지 0곳 · 이미 있어 건너뛴 것 343곳
+ⓘ 이번 실행은 **국토부에 한 번도 붙지 않았습니다** — 이 초록불은 API 가 살아 있다는 증거가 아닙니다.
 ✅ 대기열 전 줄 완료
 ```
