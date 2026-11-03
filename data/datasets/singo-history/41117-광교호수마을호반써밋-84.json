@@ -5,15 +5,15 @@
     "aptNm": "광교호수마을호반써밋",
     "type": "84",
     "from": "202001",
-    "to": "202610",
-    "monthsTried": 82,
+    "to": "202611",
+    "monthsTried": 83,
     "monthsFailed": 0,
-    "monthsTraded": 66,
+    "monthsTraded": 67,
     "peak": {
-      "manwon": 147000,
-      "date": "2026-09-15",
+      "manwon": 148000,
+      "date": "2026-10-29",
       "area": 84.85,
-      "floor": 8
+      "floor": 25
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -742,7 +742,7 @@
     {
       "ym": "202609",
       "maxManwon": 147000,
-      "count": 3,
+      "count": 4,
       "area": 84.85,
       "floor": 8,
       "date": "2026-09-15",
@@ -750,6 +750,15 @@
     },
     {
       "ym": "202610",
+      "maxManwon": 148000,
+      "count": 2,
+      "area": 84.85,
+      "floor": 25,
+      "date": "2026-10-29",
+      "ok": true
+    },
+    {
+      "ym": "202611",
       "maxManwon": null,
       "count": 0,
       "area": null,
