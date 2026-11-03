@@ -2220,20 +2220,6 @@
       "at": "2026-11-01"
     },
     {
-      "id": "ah-remndr-2026910275",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 더샵 분당하이스트",
-      "why": "경기 · 58세대 · 접수 ~2026-11-02 · 67점(수도권·58가구·무순위·더샵)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-11-02",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910275&pblancNo=2026910275",
-      "at": "2026-11-03"
-    },
-    {
       "id": "ah-remndr-2026910281",
       "cat": "todo",
       "topic": "부동산",
@@ -2245,6 +2231,20 @@
       "status": "",
       "deadline": "2026-11-09",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910281&pblancNo=2026910281",
+      "at": "2026-11-03"
+    },
+    {
+      "id": "ah-remndr-2026910275",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 더샵 분당하이스트",
+      "why": "경기 · 58세대 · 접수 ~2026-11-02 · 67점(수도권·58가구·무순위·더샵)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-11-02",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910275&pblancNo=2026910275",
       "at": "2026-11-03"
     },
     {
