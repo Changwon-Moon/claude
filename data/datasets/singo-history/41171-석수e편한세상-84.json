@@ -5,15 +5,15 @@
     "aptNm": "석수e-편한세상",
     "type": "84",
     "from": "202001",
-    "to": "202609",
-    "monthsTried": 81,
+    "to": "202611",
+    "monthsTried": 83,
     "monthsFailed": 0,
-    "monthsTraded": 64,
+    "monthsTraded": 66,
     "peak": {
-      "manwon": 78500,
-      "date": "2026-08-29",
+      "manwon": 80000,
+      "date": "2026-10-26",
       "area": 84.87,
-      "floor": 19
+      "floor": 5
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -741,6 +741,24 @@
     },
     {
       "ym": "202609",
+      "maxManwon": 75500,
+      "count": 1,
+      "area": 84.87,
+      "floor": 12,
+      "date": "2026-09-06",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": 80000,
+      "count": 4,
+      "area": 84.87,
+      "floor": 5,
+      "date": "2026-10-26",
+      "ok": true
+    },
+    {
+      "ym": "202611",
       "maxManwon": null,
       "count": 0,
       "area": null,
