@@ -53,7 +53,7 @@ lawd=11620 umd=봉천동 type=84 apt="봉천동아"
 lawd=41597 umd=산척동 type=84 apt="동탄 더샵 레이크에듀타운"
 lawd=41133 umd=여수동 type=59 apt="산들마을2단지"
 lawd=41463 umd=구갈동 type=84 apt="기흥역센트럴푸르지오"
-lawd=41173 umd=비산동 type=84 apt="삼성래미안" force=1
+lawd=41173 umd=비산동 type=84 apt="삼성래미안"
 lawd=41410 umd=산본동 type=59 apt="래미안하이어스"
 lawd=11320 umd=창동 type=59 apt="동아청솔" force=1
 lawd=41173 umd=비산동 type=59 apt="관악"
