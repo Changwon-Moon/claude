@@ -5,15 +5,15 @@
     "aptNm": "동아청솔",
     "type": "59",
     "from": "202001",
-    "to": "202610",
-    "monthsTried": 82,
+    "to": "202611",
+    "monthsTried": 83,
     "monthsFailed": 0,
     "monthsTraded": 57,
     "peak": {
-      "manwon": 94500,
-      "date": "2026-10-02",
-      "area": 59.76,
-      "floor": 18
+      "manwon": 96500,
+      "date": "2026-10-20",
+      "area": 59.96,
+      "floor": 15
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -741,20 +741,29 @@
     },
     {
       "ym": "202609",
-      "maxManwon": 92750,
-      "count": 4,
+      "maxManwon": 93750,
+      "count": 6,
       "area": 59.76,
-      "floor": 8,
-      "date": "2026-09-20",
+      "floor": 19,
+      "date": "2026-09-30",
       "ok": true
     },
     {
       "ym": "202610",
-      "maxManwon": 94500,
-      "count": 1,
-      "area": 59.76,
-      "floor": 18,
-      "date": "2026-10-02",
+      "maxManwon": 96500,
+      "count": 7,
+      "area": 59.96,
+      "floor": 15,
+      "date": "2026-10-20",
+      "ok": true
+    },
+    {
+      "ym": "202611",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
       "ok": true
     }
   ]
