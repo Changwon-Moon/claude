@@ -2,7 +2,14 @@
   "label": "jeonwolse-map",
   "verdict": "revise",
   "summary": "REVISE — error 0 · warn 2 · 카드 1장 · 코드 검수만",
-  "findings": [],
+  "findings": [
+    {
+      "reviewer": "caption-lint",
+      "level": "info",
+      "code": "no-caption",
+      "msg": "캡션 미제공 — 캡션 검수 생략(--caption로 전달)"
+    }
+  ],
   "cards": [
     {
       "file": "jeonwolse-map.json",
@@ -13,7 +20,7 @@
           "reviewer": "design-qa",
           "level": "warn",
           "code": "titlegap",
-          "msg": "제목과 바로 아래 요소의 간격이 21px 입니다 (제목 62px) — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다"
+          "msg": "제목과 바로 아래 요소의 간격이 11px 입니다 (제목 87px) — 제목을 키우면 아래 여백이 함께 줄어듭니다. 28px 이상을 권합니다"
         },
         {
           "reviewer": "design-qa",
