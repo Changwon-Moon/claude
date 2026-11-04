@@ -1,11 +1,17 @@
 {
   "label": "singo-daily-2026-11-04",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 25장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 27장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
       "file": "singo-시범삼성-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-고덕롯데캐슬베네루체-84.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
@@ -54,6 +60,12 @@
     },
     {
       "file": "singo-기흥역센트럴푸르지오-84-1104.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-래미안하이어스-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []

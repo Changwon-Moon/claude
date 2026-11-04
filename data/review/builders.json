@@ -13538,6 +13538,40 @@
         "singo-신내우디안1단지-84"
       ],
       "note": "⚠️ --publish 필수(2026-08-16). ⚠️ produces 필수(2026-09-03). ⚠️ --accept-cycle-guard: 9억 vs 지난 고점 8.8억(2021.08) 2.3% — 오너 기준(2026-11-04)."
+    },
+    {
+      "label": "singo-A10025112-84",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "고덕롯데캐슬베네루체",
+        "--type",
+        "84",
+        "--kapt",
+        "A10025112",
+        "--publish"
+      ],
+      "produces": [
+        "singo-고덕롯데캐슬베네루체-84"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "singo-A43576808-59",
+      "cmd": "scripts/build-singo-record.mjs",
+      "args": [
+        "--apt",
+        "래미안하이어스",
+        "--type",
+        "59",
+        "--kapt",
+        "A43576808",
+        "--publish"
+      ],
+      "produces": [
+        "singo-래미안하이어스-59"
+      ],
+      "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
     }
   ]
 }
