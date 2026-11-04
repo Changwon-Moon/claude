@@ -2206,20 +2206,6 @@
       "at": "2026-11-03"
     },
     {
-      "id": "ah-remndr-2026910278",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 숭의역 노르웨이숲 더 스카이",
-      "why": "인천 · 13세대 · 접수 ~2026-11-02 · 51점(수도권·무순위)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-11-02",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910278&pblancNo=2026910278",
-      "at": "2026-11-04"
-    },
-    {
       "id": "ah-remndr-2026910274",
       "cat": "todo",
       "topic": "부동산",
@@ -2231,20 +2217,6 @@
       "status": "",
       "deadline": "2026-11-09",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910274&pblancNo=2026910274",
-      "at": "2026-11-04"
-    },
-    {
-      "id": "ah-remndr-2026930043",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 과천 디에트르 퍼스티지(S2BL)",
-      "why": "경기 · 2세대 · 접수 ~2026-11-02 · 47점(수도권·무순위)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-11-02",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930043&pblancNo=2026930043",
       "at": "2026-11-04"
     },
     {
@@ -2273,6 +2245,34 @@
       "status": "",
       "deadline": "2026-11-09",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910272&pblancNo=2026910272",
+      "at": "2026-11-04"
+    },
+    {
+      "id": "ah-remndr-2026910278",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 숭의역 노르웨이숲 더 스카이",
+      "why": "인천 · 13세대 · 접수 ~2026-11-02 · 51점(수도권·무순위)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-11-02",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910278&pblancNo=2026910278",
+      "at": "2026-11-04"
+    },
+    {
+      "id": "ah-remndr-2026930043",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 과천 디에트르 퍼스티지(S2BL)",
+      "why": "경기 · 2세대 · 접수 ~2026-11-02 · 47점(수도권·무순위)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-11-02",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930043&pblancNo=2026930043",
       "at": "2026-11-04"
     }
   ]
