@@ -1,9 +1,232 @@
 # 신고가 단지 이력 — 마지막 실행
 
-- 대기열: 748줄
+- 대기열: 767줄
 - 결과: **성공**
 
 ```
+
+── 서초더샵포레 전용 84타입 (11650)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11650 --apt '서초더샵포레' --umd '내곡동' --type 84 --from 202001
+
+서초더샵포레 · 전용 84타입 · 11650 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11650-서초더샵포레-84.json
+거래 있던 달 40/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 19.8억 (2026-10-19 · 전용 84.81㎡ 16층)
+
+── 래미안크레시티 전용 59타입 (11230)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11230 --apt '래미안크레시티' --umd '전농동' --type 59 --from 202001 --force
+
+래미안크레시티 · 전용 59타입 · 11230 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11230-래미안크레시티-59.json
+거래 있던 달 65/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 16.55억 (2026-10-22 · 전용 59.99㎡ 6층)
+🧹 force=1 을 지웠습니다 — lawd=11230 umd=전농동 type=59 apt="래미안크레시티"
+
+── 평촌센텀퍼스트 전용 84타입 (41173)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '평촌센텀퍼스트' --umd '호계동' --type 84 --from 202001
+
+평촌센텀퍼스트 · 전용 84타입 · 41173 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41173-평촌센텀퍼스트-84.json
+거래 있던 달 17/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 16.45억 (2026-10-26 · 전용 84.525㎡ 26층)
+
+── 영통아이파크캐슬2단지 전용 84타입 (41117)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '영통아이파크캐슬2단지' --umd '망포동' --type 84 --from 202001
+
+영통아이파크캐슬2단지 · 전용 84타입 · 41117 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41117-영통아이파크캐슬2단지-84.json
+거래 있던 달 61/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 12.9억 (2026-10-21 · 전용 84.69㎡ 20층)
+
+── 미사강변 센트리버 전용 59타입 (41450)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41450 --apt '미사강변 센트리버' --umd '선동' --type 59 --from 202001 --force
+
+미사강변 센트리버 · 전용 59타입 · 41450 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41450-미사강변센트리버-59.json
+거래 있던 달 49/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 12.3억 (2026-10-24 · 전용 59.8㎡ 9층)
+🧹 force=1 을 지웠습니다 — lawd=41450 umd=선동 type=59 apt="미사강변 센트리버"
+
+── 현대성우8차 전용 59타입 (41465)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41465 --apt '현대성우8차' --umd '풍덕천동' --type 59 --from 202001 --force
+
+현대성우8차 · 전용 59타입 · 41465 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41465-현대성우8차-59.json
+거래 있던 달 80/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 12.18억 (2026-10-17 · 전용 59.99㎡ 9층)
+🧹 force=1 을 지웠습니다 — lawd=41465 umd=풍덕천동 type=59 apt="현대성우8차"
+
+── 이편한세상센트레빌 전용 59타입 (41210)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41210 --apt '이편한세상센트레빌' --umd '하안동' --type 59 --from 202001 --force
+
+이편한세상센트레빌 · 전용 59타입 · 41210 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41210-이편한세상센트레빌-59.json
+거래 있던 달 69/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 12억 (2026-10-16 · 전용 59.982㎡ 13층)
+🧹 force=1 을 지웠습니다 — lawd=41210 umd=하안동 type=59 apt="이편한세상센트레빌"
+
+── 동탄역센트럴상록아파트 전용 59타입 (41597)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41597 --apt '동탄역센트럴상록아파트' --umd '영천동' --type 59 --from 202001 --force
+
+동탄역센트럴상록아파트 · 전용 59타입 · 41597 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41597-동탄역센트럴상록아파트-59.json
+거래 있던 달 75/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 12억 (2026-11-02 · 전용 59.96㎡ 26층)
+🧹 force=1 을 지웠습니다 — lawd=41597 umd=영천동 type=59 apt="동탄역센트럴상록아파트"
+
+── 벽산블루밍 전용 59타입 (11620)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11620 --apt '벽산블루밍' --umd '봉천동' --type 59 --from 202001 --force
+
+벽산블루밍 · 전용 59타입 · 11620 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11620-벽산블루밍-59.json
+거래 있던 달 69/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 11.75억 (2026-10-31 · 전용 59.99㎡ 8층)
+🧹 force=1 을 지웠습니다 — lawd=11620 umd=봉천동 type=59 apt="벽산블루밍"
+
+── 기흥역더샵 전용 84타입 (41463)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41463 --apt '기흥역더샵' --umd '구갈동' --type 84 --from 202001 --force
+
+기흥역더샵 · 전용 84타입 · 41463 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41463-기흥역더샵-84.json
+거래 있던 달 63/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 11.3억 (2026-10-31 · 전용 84.981㎡ 24층)
+🧹 force=1 을 지웠습니다 — lawd=41463 umd=구갈동 type=84 apt="기흥역더샵"
+
+── 관악 전용 84타입 (41173)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '관악' --umd '비산동' --type 84 --from 202001 --force
+
+관악 · 전용 84타입 · 41173 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41173-관악-84.json
+거래 있던 달 69/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 10.55억 (2026-10-26 · 전용 84.945㎡ 7층)
+🧹 force=1 을 지웠습니다 — lawd=41173 umd=비산동 type=84 apt="관악"
+
+── 돈암동삼성 전용 59타입 (11290)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11290 --apt '돈암동삼성' --umd '돈암동' --type 59 --from 202001 --force
+
+돈암동삼성 · 전용 59타입 · 11290 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11290-돈암동삼성-59.json
+거래 있던 달 43/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 9.5억 (2026-10-17 · 전용 59.4㎡ 10층)
+🧹 force=1 을 지웠습니다 — lawd=11290 umd=돈암동 type=59 apt="돈암동삼성"
+
+── 새터마을죽전힐스테이트 전용 84타입 (41465)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41465 --apt '새터마을죽전힐스테이트' --umd '죽전동' --type 84 --from 202001 --force
+
+새터마을죽전힐스테이트 · 전용 84타입 · 41465 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41465-새터마을죽전힐스테이트-84.json
+거래 있던 달 80/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 9.5억 (2026-11-02 · 전용 84.9959㎡ 19층)
+🧹 force=1 을 지웠습니다 — lawd=41465 umd=죽전동 type=84 apt="새터마을죽전힐스테이트"
+
+── 광명한진타운 전용 59타입 (41210)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41210 --apt '광명한진타운' --umd '광명동' --type 59 --from 202001 --force
+
+광명한진타운 · 전용 59타입 · 41210 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41210-광명한진타운-59.json
+거래 있던 달 59/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 9.4억 (2026-10-10 · 전용 59.93㎡ 19층)
+🧹 force=1 을 지웠습니다 — lawd=41210 umd=광명동 type=59 apt="광명한진타운"
+
+── 수원센트럴아이파크자이 전용 59타입 (41115)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41115 --apt '수원센트럴아이파크자이' --umd '인계동' --type 59 --from 202001 --force
+
+수원센트럴아이파크자이 · 전용 59타입 · 41115 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41115-수원센트럴아이파크자이-59.json
+거래 있던 달 23/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 8.55억 (2026-10-26 · 전용 59.98㎡ 12층)
+🧹 force=1 을 지웠습니다 — lawd=41115 umd=인계동 type=59 apt="수원센트럴아이파크자이"
+
+── 에스케이북한산시티 전용 59타입 (11305)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11305 --apt '에스케이북한산시티' --umd '미아동' --type 59 --from 202001 --force
+
+에스케이북한산시티 · 전용 59타입 · 11305 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11305-에스케이북한산시티-59.json
+거래 있던 달 81/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 8.48억 (2026-10-21 · 전용 59.98㎡ 18층)
+🧹 force=1 을 지웠습니다 — lawd=11305 umd=미아동 type=59 apt="에스케이북한산시티"
+
+── 벽적골롯데 전용 59타입 (41117)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '벽적골롯데' --umd '영통동' --type 59 --from 202001 --force
+
+벽적골롯데 · 전용 59타입 · 41117 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41117-벽적골롯데-59.json
+거래 있던 달 70/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 8억 (2026-10-30 · 전용 59.96㎡ 19층)
+🧹 force=1 을 지웠습니다 — lawd=41117 umd=영통동 type=59 apt="벽적골롯데"
+
+── 현대힐스테이트 전용 59타입 (41117)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '현대힐스테이트' --umd '매탄동' --type 59 --from 202001
+
+현대힐스테이트 · 전용 59타입 · 41117 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41117-현대힐스테이트-59.json
+거래 있던 달 73/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 7.2억 (2026-11-03 · 전용 59.648㎡ 21층)
+
+── 우륵 전용 59타입 (41410)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41410 --apt '우륵' --umd '산본동' --type 59 --from 202001
+
+우륵 · 전용 59타입 · 41410 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41410-우륵-59.json
+거래 있던 달 75/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 6.1억 (2026-10-15 · 전용 58.46㎡ 10층)
 
 ── 시범삼성 전용 84타입 (41135)
 
