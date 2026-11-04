@@ -45,7 +45,7 @@
 # ⚡ 2026-11-04 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-05 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 lawd=11650 umd=내곡동 type=84 apt="서초더샵포레"
-lawd=11230 umd=전농동 type=59 apt="래미안크레시티" force=1
+lawd=11230 umd=전농동 type=59 apt="래미안크레시티"
 lawd=41173 umd=호계동 type=84 apt="평촌센텀퍼스트"
 lawd=41117 umd=망포동 type=84 apt="영통아이파크캐슬2단지"
 lawd=41450 umd=선동 type=59 apt="미사강변 센트리버" force=1
