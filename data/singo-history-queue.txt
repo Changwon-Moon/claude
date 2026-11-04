@@ -57,7 +57,7 @@ lawd=41463 umd=구갈동 type=84 apt="기흥역더샵"
 lawd=41173 umd=비산동 type=84 apt="관악"
 lawd=11290 umd=돈암동 type=59 apt="돈암동삼성"
 lawd=41465 umd=죽전동 type=84 apt="새터마을죽전힐스테이트"
-lawd=41210 umd=광명동 type=59 apt="광명한진타운" force=1
+lawd=41210 umd=광명동 type=59 apt="광명한진타운"
 lawd=41115 umd=인계동 type=59 apt="수원센트럴아이파크자이" force=1
 lawd=11305 umd=미아동 type=59 apt="에스케이북한산시티" force=1
 lawd=41117 umd=영통동 type=59 apt="벽적골롯데" force=1
