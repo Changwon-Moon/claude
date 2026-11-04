@@ -53,7 +53,7 @@ lawd=41465 umd=풍덕천동 type=59 apt="현대성우8차"
 lawd=41210 umd=하안동 type=59 apt="이편한세상센트레빌"
 lawd=41597 umd=영천동 type=59 apt="동탄역센트럴상록아파트"
 lawd=11620 umd=봉천동 type=59 apt="벽산블루밍"
-lawd=41463 umd=구갈동 type=84 apt="기흥역더샵" force=1
+lawd=41463 umd=구갈동 type=84 apt="기흥역더샵"
 lawd=41173 umd=비산동 type=84 apt="관악" force=1
 lawd=11290 umd=돈암동 type=59 apt="돈암동삼성" force=1
 lawd=41465 umd=죽전동 type=84 apt="새터마을죽전힐스테이트" force=1
