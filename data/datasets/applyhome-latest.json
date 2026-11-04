@@ -10,11 +10,11 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-11-03",
+    "collectedFor": "2026-11-04",
     "withinDays": 7,
     "totals": {
-      "APT 분양정보": 2929,
-      "APT 무순위/잔여세대": 1732
+      "APT 분양정보": 2931,
+      "APT 무순위/잔여세대": 1735
     },
     "unit": {
       "supply": "가구"
@@ -40,11 +40,11 @@
       "speculative": true,
       "homepage": "https://www.i-sh.co.kr/main/index.do",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000373&pblancNo=2026000373",
-      "score": 80,
+      "score": 87,
       "reasons": [
         "서울",
         "1,305가구 대단지",
-        "D-3",
+        "D-2",
         "분양가상한제",
         "투기과열지구"
       ]
@@ -72,7 +72,7 @@
       "reasons": [
         "수도권",
         "868가구",
-        "D-1",
+        "오늘 마감",
         "푸르지오",
         "분양가상한제"
       ]
@@ -105,7 +105,7 @@
       "reasons": [
         "수도권",
         "1,110가구 대단지",
-        "D-1",
+        "오늘 마감",
         "2개 블록 합계",
         "분양가상한제"
       ]
@@ -133,35 +133,8 @@
       "reasons": [
         "수도권",
         "1,542가구 대단지",
-        "D-1",
+        "오늘 마감",
         "롯데캐슬"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910275",
-      "name": "더샵 분당하이스트",
-      "areaName": "경기",
-      "address": "경기도 성남시 분당구 정자동 90번지",
-      "supply": 58,
-      "noticeDate": "2026-10-27",
-      "receiptFrom": "2026-11-02",
-      "receiptTo": "2026-11-02",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2027-12",
-      "announceDate": "2026-11-05",
-      "builder": "느티마을4단지 리모델링주택조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://더샵분당하이스트.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910275&pblancNo=2026910275",
-      "score": 67,
-      "reasons": [
-        "수도권",
-        "58가구",
-        "무순위",
-        "더샵"
       ]
     },
     {
@@ -186,7 +159,7 @@
       "score": 57,
       "reasons": [
         "수도권",
-        "D-1",
+        "오늘 마감",
         "분양가상한제"
       ]
     },
@@ -212,7 +185,7 @@
       "score": 57,
       "reasons": [
         "수도권",
-        "D-1",
+        "오늘 마감",
         "분양가상한제"
       ]
     },
@@ -266,33 +239,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-6"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910267",
-      "name": "교대역 모아엘가 그랑데",
-      "areaName": "광주",
-      "address": "전남광주통합특별시 동구 무등로 373",
-      "supply": 1,
-      "noticeDate": "2026-10-29",
-      "receiptFrom": "2026-11-03",
-      "receiptTo": "2026-11-03",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-11",
-      "announceDate": "2026-11-06",
-      "builder": "계림4구역 주택재개발정비사업조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://moaelgaa.co.kr/index.php",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910267&pblancNo=2026910267",
-      "score": 54,
-      "reasons": [
-        "광역시",
-        "무순위",
-        "오늘 마감"
+        "D-5"
       ]
     },
     {
@@ -347,29 +294,29 @@
       ]
     },
     {
-      "kind": "apt",
-      "pblancNo": "2026820012",
-      "name": "시흥하중지구 A1블록 신혼희망타운(공공분양) 추가입주자모집공고",
-      "areaName": "경기",
-      "address": "경기도 시흥시 하중동 일원 시흥하중 공공주택지구 내 A1블록",
-      "supply": 175,
-      "noticeDate": "2026-10-23",
-      "receiptFrom": "2026-11-02",
-      "receiptTo": "2026-11-03",
+      "kind": "remndr",
+      "pblancNo": "2026910274",
+      "name": "천안 롯데캐슬 더 청당",
+      "areaName": "충남",
+      "address": "충청남도 천안시 동남구 청당4로 20",
+      "supply": 2,
+      "noticeDate": "2026-11-03",
+      "receiptFrom": "2026-11-09",
+      "receiptTo": "2026-11-09",
       "specialFrom": null,
-      "rank1From": "2026-11-02",
-      "moveInYm": "2029-03",
+      "rank1From": null,
+      "moveInYm": "2026-12",
       "announceDate": "2026-11-12",
-      "builder": "이수건설 주식회사, 주식회사 오렌지이앤씨",
-      "priceCap": true,
+      "builder": "롯데건설(주)",
+      "priceCap": false,
       "speculative": false,
-      "homepage": "https://apply.lh.or.kr/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820012&pblancNo=2026820012",
+      "homepage": "https://www.lottecastle.co.kr/APT/AT00385/main/index.do",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910274&pblancNo=2026910274",
       "score": 51,
       "reasons": [
-        "수도권",
-        "오늘 마감",
-        "분양가상한제"
+        "무순위",
+        "D-5",
+        "롯데캐슬"
       ]
     },
     {
@@ -448,6 +395,58 @@
       "reasons": [
         "수도권",
         "무순위"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910273",
+      "name": "캐슬앤파밀리에 디아트(4-1생활권 P1구역 L2블록 수루배마을2단지)",
+      "areaName": "세종",
+      "address": "세종특별자치시 반곡1길 9 (반곡동, 수루배마을2단지)",
+      "supply": 1,
+      "noticeDate": "2026-11-03",
+      "receiptFrom": "2026-11-09",
+      "receiptTo": "2026-11-09",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-12",
+      "announceDate": "2026-11-12",
+      "builder": "롯데건설(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.lottecastle.co.kr/APT/AT00172/main/index.do",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910273&pblancNo=2026910273",
+      "score": 47,
+      "reasons": [
+        "광역시",
+        "무순위",
+        "D-5"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910272",
+      "name": "캐슬앤파밀리에 디아트(4-1생활권 P1구역 M1블록 수루배마을1단지)",
+      "areaName": "세종",
+      "address": "세종특별자치시 반곡로 14 (반곡동, 수루배마을1단지)",
+      "supply": 1,
+      "noticeDate": "2026-11-03",
+      "receiptFrom": "2026-11-09",
+      "receiptTo": "2026-11-09",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-12",
+      "announceDate": "2026-11-12",
+      "builder": "롯데건설(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.lottecastle.co.kr/APT/AT00172/main/index.do",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910272&pblancNo=2026910272",
+      "score": 47,
+      "reasons": [
+        "광역시",
+        "무순위",
+        "D-5"
       ]
     },
     {
@@ -552,6 +551,31 @@
       ]
     },
     {
+      "kind": "remndr",
+      "pblancNo": "2026910267",
+      "name": "교대역 모아엘가 그랑데",
+      "areaName": "광주",
+      "address": "전남광주통합특별시 동구 무등로 373",
+      "supply": 1,
+      "noticeDate": "2026-10-29",
+      "receiptFrom": "2026-11-03",
+      "receiptTo": "2026-11-03",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-11",
+      "announceDate": "2026-11-06",
+      "builder": "계림4구역 주택재개발정비사업조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://moaelgaa.co.kr/index.php",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910267&pblancNo=2026910267",
+      "score": 39,
+      "reasons": [
+        "광역시",
+        "무순위"
+      ]
+    },
+    {
       "kind": "apt",
       "pblancNo": "2026820013",
       "name": "안산신길2 A-6블록 신혼희망타운(공공분양)(본청약)",
@@ -571,6 +595,31 @@
       "homepage": "https://apply.lh.or.kr/",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820013&pblancNo=2026820013",
       "score": 36,
+      "reasons": [
+        "수도권",
+        "분양가상한제"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026820014",
+      "name": "남양주왕숙 A-2블록 신혼희망타운(공공분양) 잔여세대 추가입주자모집공고",
+      "areaName": "경기",
+      "address": "경기도 남양주시 진접읍, 진건읍, 퇴계원읍 일원, 남양주왕숙 공공주택지구 내 A-2블록",
+      "supply": 32,
+      "noticeDate": "2026-11-03",
+      "receiptFrom": "2026-11-11",
+      "receiptTo": "2026-11-12",
+      "specialFrom": null,
+      "rank1From": "2026-11-11",
+      "moveInYm": "2028-08",
+      "announceDate": "2026-11-19",
+      "builder": "계룡건설산업(주), 미래이앤시(주), (주)오스코",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://apply.lh.or.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820014&pblancNo=2026820014",
+      "score": 32,
       "reasons": [
         "수도권",
         "분양가상한제"
@@ -692,6 +741,28 @@
       "speculative": false,
       "homepage": "https://www.arterahg.co.kr",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000523&pblancNo=2026000523",
+      "score": 10,
+      "reasons": []
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000554",
+      "name": "리첼 에듀포레 경산역",
+      "areaName": "경북",
+      "address": "경상북도 경산시 사정동 301-22번지 일원",
+      "supply": 201,
+      "noticeDate": "2026-11-03",
+      "receiptFrom": "2026-11-16",
+      "receiptTo": "2026-11-17",
+      "specialFrom": "2026-11-13",
+      "rank1From": "2026-11-16",
+      "moveInYm": "2029-09",
+      "announceDate": "2026-11-23",
+      "builder": "에쓰와이이앤씨",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://richelledufore.co.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000554&pblancNo=2026000554",
       "score": 10,
       "reasons": []
     }
