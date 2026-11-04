@@ -5,15 +5,15 @@
     "aptNm": "동탄역센트럴상록아파트",
     "type": "59",
     "from": "202001",
-    "to": "202610",
-    "monthsTried": 82,
+    "to": "202611",
+    "monthsTried": 83,
     "monthsFailed": 0,
-    "monthsTraded": 74,
+    "monthsTraded": 75,
     "peak": {
-      "manwon": 119900,
-      "date": "2026-10-27",
-      "area": 59.98,
-      "floor": 18
+      "manwon": 120000,
+      "date": "2026-11-02",
+      "area": 59.96,
+      "floor": 26
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -755,6 +755,15 @@
       "area": 59.98,
       "floor": 18,
       "date": "2026-10-27",
+      "ok": true
+    },
+    {
+      "ym": "202611",
+      "maxManwon": 120000,
+      "count": 2,
+      "area": 59.96,
+      "floor": 26,
+      "date": "2026-11-02",
       "ok": true
     }
   ]
