@@ -5,15 +5,15 @@
     "aptNm": "한진",
     "type": "84",
     "from": "202001",
-    "to": "202608",
-    "monthsTried": 80,
+    "to": "202611",
+    "monthsTried": 83,
     "monthsFailed": 0,
-    "monthsTraded": 60,
+    "monthsTraded": 62,
     "peak": {
-      "manwon": 84000,
-      "date": "2026-08-13",
+      "manwon": 88000,
+      "date": "2026-10-31",
       "area": 84.96,
-      "floor": 10
+      "floor": 18
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -737,6 +737,33 @@
       "area": 84.96,
       "floor": 10,
       "date": "2026-08-13",
+      "ok": true
+    },
+    {
+      "ym": "202609",
+      "maxManwon": 83500,
+      "count": 2,
+      "area": 84.96,
+      "floor": 15,
+      "date": "2026-09-19",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": 88000,
+      "count": 2,
+      "area": 84.96,
+      "floor": 18,
+      "date": "2026-10-31",
+      "ok": true
+    },
+    {
+      "ym": "202611",
+      "maxManwon": null,
+      "count": 0,
+      "area": null,
+      "floor": null,
+      "date": null,
       "ok": true
     }
   ]
