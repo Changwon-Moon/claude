@@ -56,7 +56,7 @@ lawd=11290 umd=종암동 type=59 apt="종암에스케이"
 lawd=41360 umd=다산동 type=84 apt="힐스테이트 황금산"
 lawd=11350 umd=하계동 type=59 apt="장미(시영6)"
 lawd=11530 umd=개봉동 type=84 apt="한진"
-lawd=41111 umd=천천동 type=59 apt="화서역푸르지오더에듀포레" force=1
+lawd=41111 umd=천천동 type=59 apt="화서역푸르지오더에듀포레"
 lawd=11305 umd=수유동 type=84 apt="수유벽산1차"
 
 lawd=11650 umd=내곡동 type=84 apt="서초더샵포레"
