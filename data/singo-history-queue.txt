@@ -44,6 +44,21 @@
 # ⚡ 2026-11-03 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-04 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-05 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+# ⚡ 2026-11-06 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+lawd=11200 umd=옥수동 type=59 apt="래미안 옥수 리버젠"
+lawd=41135 umd=서현동 type=84 apt="시범한신"
+lawd=11680 umd=자곡동 type=84 apt="래미안포레"
+lawd=11200 umd=행당동 type=84 apt="서울숲 한신 더 휴"
+lawd=11230 umd=이문동 type=84 apt="대림e-편한세상"
+lawd=41597 umd=청계동 type=59 apt="동탄역센트럴푸르지오" force=1
+lawd=41173 umd=평촌동 type=59 apt="초원마을대림" force=1
+lawd=11290 umd=종암동 type=59 apt="종암에스케이" force=1
+lawd=41360 umd=다산동 type=84 apt="힐스테이트 황금산"
+lawd=11350 umd=하계동 type=59 apt="장미(시영6)" force=1
+lawd=11530 umd=개봉동 type=84 apt="한진" force=1
+lawd=41111 umd=천천동 type=59 apt="화서역푸르지오더에듀포레" force=1
+lawd=11305 umd=수유동 type=84 apt="수유벽산1차"
+
 lawd=11650 umd=내곡동 type=84 apt="서초더샵포레"
 lawd=11230 umd=전농동 type=59 apt="래미안크레시티"
 lawd=41173 umd=호계동 type=84 apt="평촌센텀퍼스트"
