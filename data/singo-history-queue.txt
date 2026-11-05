@@ -52,7 +52,7 @@ lawd=11200 umd=행당동 type=84 apt="서울숲 한신 더 휴"
 lawd=11230 umd=이문동 type=84 apt="대림e-편한세상"
 lawd=41597 umd=청계동 type=59 apt="동탄역센트럴푸르지오"
 lawd=41173 umd=평촌동 type=59 apt="초원마을대림"
-lawd=11290 umd=종암동 type=59 apt="종암에스케이" force=1
+lawd=11290 umd=종암동 type=59 apt="종암에스케이"
 lawd=41360 umd=다산동 type=84 apt="힐스테이트 황금산"
 lawd=11350 umd=하계동 type=59 apt="장미(시영6)" force=1
 lawd=11530 umd=개봉동 type=84 apt="한진" force=1
