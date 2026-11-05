@@ -1,11 +1,16 @@
 # 단지 공급면적 — 마지막 실행
 
-- 성공 4건 · 실패 121건 · 미룸 0줄
+- 성공 0건 · 실패 121건 · 미룸 0줄
 - 결과는 Actions 로그가 아니라 이 파일과 data/datasets/apt-supply/ 에서 본다
-- 미리 채우기 오늘 몫 115/250건 · 내일로 미룬 0줄 (상한은 실패가 아니다)
+- 미리 채우기 오늘 몫 228/250건 · 내일로 미룬 0줄 (상한은 실패가 아니다)
 
 ```
-T_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A42383806 --area 84.97`
+�·블록) 전부 줄 0개입니다.
+   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
+   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
+   --jibun 으로 대지 지번을 직접 주세요.
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A42383806 --area 84.97`
 Exit status 1
 ── A42383806 전용 60.21
 
@@ -363,18 +368,6 @@ Exit status 1
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13879102 --area 82.61`
 Exit status 1
-── A13520001 전용 59.97
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A13520001 --area 59.97
-
-▶ 래미안포레 (A13520001) · 전용 59.97㎡ · 11680-11200 · 지번 후보 687, 361
-   지번 687 (0687-0000) · 대지 → 줄 3000개
-✅ /home/runner/work/claude/claude/data/datasets/apt-supply/A13520001-59.json
-   전유 59.97 + 주거공용 25.1 = 공급 85.07㎡ = 25.73평 → **26평**
-   표본: 311동 307 (같은 전용 호 178개) · 전용률 70.5%
-     · 아파트 / 계단실,승강기,홀,복도 [각층 각층] 19.86
-     · 아파트 / 벽체 [지상 3층] 5.24
 ── A10023348 전용 84.7509
 
 > @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
@@ -530,7 +523,7 @@ Exit status 1
 
 ▶ 신반포한신2차 (A13790929) · 전용 84.52㎡ · 11650-10600 · 지번 후보 609-1, 73
    지번 609-1 (0609-0001) · 대지 → 줄 0개
-   지번 73 (0073-0000) · 대지 → 줄 3000개
+   지번 73 (0073-0000) · 대지 → 줄 1600개
 ::error::전용 84.52㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 73) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13790929 --area 84.52`
@@ -652,8 +645,12 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A15701602 --area 59.97
 
 ▶ 우장산롯데캐슬 (A15701602) · 전용 59.97㎡ · 11500-10300 · 지번 후보 1145, 2545
-   지번 1145 (1145-0000) · 대지 → 줄 200개
-::error::전용 59.97㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 1145) — 파일을 만들지 않습니다
+   지번 1145 (1145-0000) · 대지 → 줄 0개
+   지번 2545 (2545-0000) · 대지 → 줄 0개
+::error::지번 후보 1145, 2545 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
+   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
+   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
+   --jibun 으로 대지 지번을 직접 주세요.
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A15701602 --area 59.97`
 Exit status 1
@@ -809,7 +806,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A13920706 --area 58.01
 
 ▶ 상계주공4단지 (A13920706) · 전용 58.01㎡ · 11350-10500 · 지번 후보 749-5
-   지번 749-5 (0749-0005) · 대지 → 줄 369개
+   지번 749-5 (0749-0005) · 대지 → 줄 200개
 ::error::전용 58.01㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 749-5) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13920706 --area 58.01`
@@ -868,7 +865,7 @@ Exit status 1
 ▶ 창동주공19단지 (A13290107) · 전용 60.5㎡ · 11320-10700 · 지번 후보 663-1, 685-222, 27
    지번 663-1 (0663-0001) · 대지 → 줄 0개
    지번 685-222 (0685-0222) · 대지 → 줄 0개
-   지번 27 (0027-0000) · 대지 → 줄 2342개
+   지번 27 (0027-0000) · 대지 → 줄 300개
 ::error::전용 60.5㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 27) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13290107 --area 60.5`
