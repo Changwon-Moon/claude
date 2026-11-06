@@ -53,7 +53,7 @@ lawd=11290 umd=길음동 type=59 apt="래미안길음센터피스"
 lawd=41465 umd=풍덕천동 type=84 apt="진산마을삼성5차"
 lawd=11500 umd=화곡동 type=59 apt="강서힐스테이트"
 lawd=41133 umd=중앙동 type=59 apt="신흥역하늘채랜더스원1단지"
-lawd=41465 umd=풍덕천동 type=84 apt="현대" force=1
+lawd=41465 umd=풍덕천동 type=84 apt="현대"
 lawd=11230 umd=제기동 type=84 apt="한신아파트"
 lawd=41430 umd=내손동 type=59 apt="의왕내손e편한세상" force=1
 lawd=11305 umd=미아동 type=84 apt="삼각산아이원" force=1
