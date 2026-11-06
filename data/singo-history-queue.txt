@@ -58,7 +58,7 @@ lawd=11230 umd=제기동 type=84 apt="한신아파트"
 lawd=41430 umd=내손동 type=59 apt="의왕내손e편한세상"
 lawd=11305 umd=미아동 type=84 apt="삼각산아이원"
 lawd=11305 umd=미아동 type=84 apt="벽산라이브파크"
-lawd=11545 umd=가산동 type=59 apt="두산" force=1
+lawd=11545 umd=가산동 type=59 apt="두산"
 lawd=41597 umd=능동 type=84 apt="포스코더샵2차" force=1
 lawd=41281 umd=향동동 type=59 apt="디엠씨해링턴플레이스엔에이치에프(임대)"
 
