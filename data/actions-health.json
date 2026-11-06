@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-05T23:10:57.395Z",
+  "generatedAt": "2026-11-06T04:25:50.348Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -194,7 +194,7 @@
       "maxDelay": null,
       "lastRun": "2026-10-09",
       "lastOk": "2026-10-09",
-      "okDaysAgo": 27
+      "okDaysAgo": 28
     },
     {
       "file": "applyhome-collect.yml",
@@ -282,15 +282,15 @@
         },
         {
           "day": "11-06",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "11:16",
+          "delay": 246
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-11-05",
-      "lastOk": "2026-11-05",
+      "medianDelay": 246,
+      "maxDelay": 246,
+      "lastRun": "2026-11-06",
+      "lastOk": "2026-11-06",
       "okDaysAgo": 0
     },
     {
@@ -1168,6 +1168,26 @@
       "runs30": 0
     },
     {
+      "file": "singo-history-retry.yml",
+      "name": "곡선 — 자동 재시도",
+      "lastRun": null,
+      "daysAgo": null,
+      "lastOk": null,
+      "okDaysAgo": null,
+      "fails30": 0,
+      "runs30": 0
+    },
+    {
+      "file": "singo-history.yml",
+      "name": "신고가 단지 이력 (한 단지 곡선)",
+      "lastRun": null,
+      "daysAgo": null,
+      "lastOk": null,
+      "okDaysAgo": null,
+      "fails30": 0,
+      "runs30": 0
+    },
+    {
       "file": "svg-asset-fetch.yml",
       "name": "SVG 자산 취득 (공개)",
       "lastRun": null,
@@ -1196,26 +1216,6 @@
       "okDaysAgo": null,
       "fails30": 0,
       "runs30": 0
-    },
-    {
-      "file": "singo-history-retry.yml",
-      "name": "곡선 — 자동 재시도",
-      "lastRun": "2026-10-06",
-      "daysAgo": 30,
-      "lastOk": "2026-10-06",
-      "okDaysAgo": 30,
-      "fails30": 0,
-      "runs30": 1
-    },
-    {
-      "file": "singo-history.yml",
-      "name": "신고가 단지 이력 (한 단지 곡선)",
-      "lastRun": "2026-10-06",
-      "daysAgo": 30,
-      "lastOk": "2026-10-06",
-      "okDaysAgo": 30,
-      "fails30": 0,
-      "runs30": 1
     },
     {
       "file": "ecos-m2.yml",
@@ -1261,9 +1261,9 @@
       "file": "molit-rent-collect.yml",
       "name": "전월세 실거래 수집 (국토부)",
       "lastRun": "2026-11-03",
-      "daysAgo": 2,
+      "daysAgo": 3,
       "lastOk": "2026-11-03",
-      "okDaysAgo": 2,
+      "okDaysAgo": 3,
       "fails30": 0,
       "runs30": 1
     },
@@ -1271,11 +1271,11 @@
       "file": "reb-collect.yml",
       "name": "전세·월세 지수 수집 (한국부동산원)",
       "lastRun": "2026-11-03",
-      "daysAgo": 2,
+      "daysAgo": 3,
       "lastOk": "2026-11-03",
-      "okDaysAgo": 2,
+      "okDaysAgo": 3,
       "fails30": 0,
-      "runs30": 3
+      "runs30": 1
     },
     {
       "file": "guard.yml",
@@ -1284,8 +1284,8 @@
       "daysAgo": 0,
       "lastOk": "2026-11-06",
       "okDaysAgo": 0,
-      "fails30": 14,
-      "runs30": 87
+      "fails30": 5,
+      "runs30": 79
     },
     {
       "file": "singo-prep.yml",
@@ -1294,7 +1294,7 @@
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 81,
+      "fails30": 84,
       "runs30": 100
     },
     {
@@ -1314,8 +1314,8 @@
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 47,
-      "runs30": 95
+      "fails30": 44,
+      "runs30": 88
     }
   ]
 }
