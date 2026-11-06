@@ -1,10 +1,33 @@
 # 단지 주차대수 — 마지막 실행
 
-- 대기열: 355줄
+- 대기열: 358줄
 - 결과: **성공**
-- ⚠️ 이번 실행은 **국토부에 붙지 않았습니다**(전부 이미 있음) — API 가 살아 있다는 증거로 쓰지 마세요
 
 ```
+
+── A10023626
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10023626
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10023626.json
+A10023626 주차 지상 1501 + 지하 47 = **1548대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A13006101
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A13006101
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A13006101.json
+A13006101 주차 지상 283 + 지하 1053 = **1336대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+
+── A10025333
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10025333
+
+/home/runner/work/claude/claude/data/datasets/apt-detail/A10025333.json
+A10025333 주차 지상 342 + 지하 1063 = **1405대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
 ⏭ 이미 있음 — data/datasets/apt-detail/A13375907.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A13520001.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A13386702.json (다시 받으려면 force=1)
@@ -361,7 +384,6 @@
 ⏭ 이미 있음 — data/datasets/apt-detail/A13613008.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A44072212.json (다시 받으려면 force=1)
 
-실제로 받아 본 단지 0곳 · 이미 있어 건너뛴 것 355곳
-ⓘ 이번 실행은 **국토부에 한 번도 붙지 않았습니다** — 이 초록불은 API 가 살아 있다는 증거가 아닙니다.
+실제로 받아 본 단지 3곳 · 이미 있어 건너뛴 것 355곳
 ✅ 대기열 전 줄 완료
 ```
