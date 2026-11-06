@@ -49,7 +49,7 @@
 lawd=11290 umd=길음동 type=84 apt="롯데캐슬클라시아"
 lawd=11590 umd=대방동 type=84 apt="대림아파트"
 lawd=41135 umd=서현동 type=59 apt="시범현대"
-lawd=11290 umd=길음동 type=59 apt="래미안길음센터피스" force=1
+lawd=11290 umd=길음동 type=59 apt="래미안길음센터피스"
 lawd=41465 umd=풍덕천동 type=84 apt="진산마을삼성5차" force=1
 lawd=11500 umd=화곡동 type=59 apt="강서힐스테이트" force=1
 lawd=41133 umd=중앙동 type=59 apt="신흥역하늘채랜더스원1단지"
