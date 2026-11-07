@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-07T02:07:59.534Z",
+  "generatedAt": "2026-11-07T09:12:17.947Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -388,7 +388,7 @@
       "maxDelay": null,
       "lastRun": "2026-11-01",
       "lastOk": "2026-11-01",
-      "okDaysAgo": 5
+      "okDaysAgo": 6
     },
     {
       "file": "reb-weekly-collect.yml",
@@ -485,7 +485,7 @@
       "maxDelay": null,
       "lastRun": "2026-11-06",
       "lastOk": "2026-11-06",
-      "okDaysAgo": 0
+      "okDaysAgo": 1
     },
     {
       "file": "month-backfill.yml",
@@ -573,15 +573,15 @@
         },
         {
           "day": "11-07",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "16:43",
+          "delay": 363
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-11-06",
-      "lastOk": "2026-11-06",
+      "medianDelay": 363,
+      "maxDelay": 363,
+      "lastRun": "2026-11-07",
+      "lastOk": "2026-11-07",
       "okDaysAgo": 0
     },
     {
@@ -670,15 +670,15 @@
         },
         {
           "day": "11-07",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "17:28",
+          "delay": 388
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-11-06",
-      "lastOk": "2026-11-06",
+      "medianDelay": 388,
+      "maxDelay": 388,
+      "lastRun": "2026-11-07",
+      "lastOk": "2026-11-07",
       "okDaysAgo": 0
     },
     {
@@ -865,12 +865,12 @@
         {
           "day": "11-07",
           "state": "late",
-          "at": "05:51",
-          "delay": 1095
+          "at": "16:05",
+          "delay": 268
         }
       ],
-      "medianDelay": 1095,
-      "maxDelay": 1095,
+      "medianDelay": 268,
+      "maxDelay": 268,
       "lastRun": "2026-11-07",
       "lastOk": "2026-11-07",
       "okDaysAgo": 0
@@ -1221,9 +1221,9 @@
       "file": "ecos-m2.yml",
       "name": "ECOS M2 수집 (probe+collect)",
       "lastRun": "2026-10-09",
-      "daysAgo": 28,
+      "daysAgo": 29,
       "lastOk": "2026-10-09",
-      "okDaysAgo": 28,
+      "okDaysAgo": 29,
       "fails30": 0,
       "runs30": 1
     },
@@ -1285,7 +1285,7 @@
       "lastOk": "2026-11-07",
       "okDaysAgo": 0,
       "fails30": 2,
-      "runs30": 77
+      "runs30": 78
     },
     {
       "file": "singo-prep.yml",
@@ -1314,8 +1314,8 @@
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 44,
-      "runs30": 86
+      "fails30": 45,
+      "runs30": 87
     }
   ]
 }
