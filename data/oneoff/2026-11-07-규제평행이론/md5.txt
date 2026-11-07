@@ -1,0 +1,2 @@
+d8ba82bf11dfdef492149308621daaba  v1-얼굴.png
+12bb56d74eb57ef8b5c09fece6be4068  v2-배경.png

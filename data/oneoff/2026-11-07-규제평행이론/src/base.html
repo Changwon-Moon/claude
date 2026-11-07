@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../_shared/base.css" />
+<style>
+  html, body { width: 1080px; height: 1350px; margin: 0; }
+  .wirit-card { padding: 72px 64px 0; overflow: hidden; }
+  .wirit-topcap { gap: 14px; }
+  .wirit-topcap .tag { color: var(--wirit-cobalt); font-weight: 800; }
+  .wirit-title { margin-top: 6px; white-space: nowrap; font-size: 66px; line-height: 1.12; letter-spacing: -0.035em; position: relative; z-index: 3; }
+  .wirit-subtitle { margin-top: 12px; font-size: 28px; font-weight: 600; position: relative; z-index: 3; }
+
+  /* 열 머리 */
+  .heads { display: grid; grid-template-columns: 1fr 216px 1fr; margin-top: 36px; align-items: center; position: relative; z-index: 3; }
+  .head { display: flex; align-items: center; gap: 18px; }
+  .head.l { justify-content: flex-end; text-align: right; padding-right: 20px; }
+  .head.r { justify-content: flex-start; padding-left: 20px; }
+  .head .txt { display: flex; flex-direction: column; gap: 4px; }
+  .head.l .txt { align-items: flex-end; }
+  .head .who { font-size: 40px; font-weight: 800; letter-spacing: -0.02em; }
+  .head .yr { font-size: 23px; font-weight: 600; color: var(--wirit-gray); white-space: nowrap; }
+  .v1 .head .yr { font-size: 21px; }
+  .v1 .face { width: 96px; height: 96px; }
+  .v1 .head { gap: 14px; }
+  .head.r .who { color: var(--wirit-cobalt); }
+  .face { display: none; width: 112px; height: 112px; border-radius: 50%; overflow: hidden; flex: none; background: #e9edf2; }
+  .face img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 8%; }
+  .head.l .face { box-shadow: 0 0 0 4px var(--wirit-ink); }
+  .head.r .face { box-shadow: 0 0 0 4px var(--wirit-cobalt); }
+  .heads .vs { justify-self: center; font-family: var(--font-title); font-size: 34px; color: var(--wirit-gray); opacity: .55; }
+
+  /* 배경 인물(버전2) */
+  .bg { display: none; position: absolute; z-index: 0; pointer-events: none; mix-blend-mode: multiply; -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 45%, #000 55%, transparent 100%); }
+  .bg img { display: block; width: 100%; height: auto; }
+  .bg.moon { left: -87px; top: 560px; width: 455px; opacity: .14; filter: grayscale(1); }
+  .bg.lee  { left: 682px; top: 515px; width: 520px; opacity: .15; filter: grayscale(.2); }
+  .bgfade { display: none; position: absolute; left: 0; right: 0; top: 0; height: 560px; z-index: 1;
+    background: linear-gradient(var(--wirit-paper) 62%, rgba(250,250,248,0)); }
+
+  /* 타임라인 */
+  .tl { position: relative; margin-top: 16px; padding-top: 6px; z-index: 2; }
+  .tl::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 18px; width: 4px; margin-left: -2px;
+    background: var(--wirit-ink-06); border-radius: 2px; }
+  .row { position: relative; display: grid; grid-template-columns: 1fr 216px 1fr; align-items: center; height: 104px; }
+  .row + .row { border-top: 1px solid var(--wirit-ink-06); }
+  .stage { justify-self: center; z-index: 2; }
+  .stage span { display: inline-block; padding: 10px 18px; border-radius: 999px; font-size: 26px; font-weight: 800;
+    letter-spacing: -0.02em; background: var(--wirit-ink); color: #fff; white-space: nowrap; }
+  .row.elect .stage span { background: #fff; border: 2px dashed var(--wirit-gray); color: var(--wirit-gray); padding: 7px 16px; }
+  .cell { display: flex; flex-direction: column; gap: 6px; }
+  .cell.l { align-items: flex-end; text-align: right; padding-right: 14px; }
+  .cell.r { align-items: flex-start; padding-left: 14px; }
+  .ev { font-size: 33px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.12; white-space: nowrap; }
+  .cell.l .ev { color: var(--wirit-ink); }
+  .cell.r .ev { color: var(--wirit-cobalt); }
+  .dt { font-size: 23px; font-weight: 600; color: var(--wirit-gray); letter-spacing: 0; display:flex; gap:10px; align-items:baseline; }
+  .dt b { color: var(--wirit-red); font-weight: 800; font-size: 26px; letter-spacing: -0.01em; }
+  .basis { margin-top: auto; padding: 0 0 18px; font-size: 19px; line-height: 1.45; color: var(--wirit-gray); position: relative; z-index: 4; }
+  .basis + .wirit-footer { margin-top: 0; }
+  .row.elect .ev { color: var(--wirit-gray) !important; font-weight: 700; }
+
+  /* 지금 */
+  .now { height: 58px; display: flex; align-items: center; gap: 16px; position: relative; z-index: 3; }
+  .now .line { flex: 1; border-top: 4px dashed var(--wirit-red); }
+  .now .lbl { flex: none; background: var(--wirit-red); color: #fff; font-size: 27px; font-weight: 800; padding: 9px 20px; border-radius: 10px; }
+
+  .row.next { height: 136px; border-top: none !important; }
+  .row.next .stage span { background: var(--wirit-red); }
+  .row.next .cell.r { padding-top: 22px; }
+  .q { font-family: var(--font-title); font-size: 88px; color: var(--wirit-red); line-height: .9; }
+  .note { font-size: 22px; font-weight: 600; color: var(--wirit-gray); line-height: 1.35; }
+
+  .wirit-footer { font-size: 21px; position: relative; z-index: 4; }
+
+  /* 변형 스위치 */
+  .v1 .face { display: block; }
+  .v1 .heads .vs { display: block; }
+  .v2 .bg, .v2 .bgfade { display: block; }
+  .v2 .heads .vs { display: block; }
+  .v2 .stage span { box-shadow: 0 0 0 6px var(--wirit-paper); }
+</style>
+</head>
+<body>
+<div class="wirit-card font-taebaek-pretendard __V__">
+  <div class="bg moon"><img src="../_shared/photos/moon-jaein-cut.png" /></div>
+  <div class="bg lee"><img src="../_shared/photos/lee-jaemyung-cut.png" /></div>
+  <div class="bgfade"></div>
+  <div class="wirit-corner"><span class="mark">wirit<span class="dot">.</span></span></div>
+
+  <div class="wirit-topcap" style="position:relative;z-index:3"><span class="tag">부동산 규제 평행이론</span><span>·</span><span>2026.11 기준</span></div>
+  <h1 class="wirit-title">8년의 시차, <span class="accent">순서까지</span> 똑같다</h1>
+
+  <div class="heads">
+    <div class="head l">
+      <div class="txt"><span class="who">문재인 정부</span><span class="yr">2017.05 취임</span></div>
+      <div class="face"><img src="../_shared/photos/moon-jaein-face.png" /></div>
+    </div>
+    <div class="vs">VS</div>
+    <div class="head r">
+      <div class="face"><img src="../_shared/photos/lee-jaemyung-face.png" /></div>
+      <div class="txt"><span class="who">이재명 정부</span><span class="yr">2025.06 취임</span></div>
+    </div>
+  </div>
+
+  <div class="tl">
+    <div class="row">
+      <div class="cell l"><div class="ev">6·19 LTV·DTI 강화</div><div class="dt">2017.06<b>+1.1%</b></div></div>
+      <div class="stage"><span>대출 규제</span></div>
+      <div class="cell r"><div class="ev">6·27 주담대 6억 한도</div><div class="dt">2025.06<b>+1.2%</b></div></div>
+    </div>
+    <div class="row">
+      <div class="cell l"><div class="ev">8·2 서울 전역 지정</div><div class="dt">2017.08<b>+2.7%</b></div></div>
+      <div class="stage"><span>투기과열지구</span></div>
+      <div class="cell r"><div class="ev">10·15 서울 전역+경기</div><div class="dt">2025.10<b>+5.0%</b></div></div>
+    </div>
+    <div class="row">
+      <div class="cell l"><div class="ev">재초환 부활</div><div class="dt">2018.01<b>+5.3%</b></div></div>
+      <div class="stage"><span>정비사업 규제</span></div>
+      <div class="cell r"><div class="ev">이주비 대출 LTV 40%</div><div class="dt">2025.10<b>+5.0%</b></div></div>
+    </div>
+    <div class="row">
+      <div class="cell l"><div class="ev">다주택자 중과 시행</div><div class="dt">2018.04<b>+8.8%</b></div></div>
+      <div class="stage"><span>양도세 중과</span></div>
+      <div class="cell r"><div class="ev">4년 만에 유예 종료</div><div class="dt">2026.05<b>+13.7%</b></div></div>
+    </div>
+    <div class="row elect">
+      <div class="cell l"><div class="ev">제7회 지방선거</div><div class="dt">2018.06<b>+10.1%</b></div></div>
+      <div class="stage"><span>지방선거</span></div>
+      <div class="cell r"><div class="ev">제9회 지방선거</div><div class="dt">2026.06<b>+14.6%</b></div></div>
+    </div>
+    <div class="row">
+      <div class="cell l"><div class="ev">9·13 종부세율 인상</div><div class="dt">2018.09<b>+16.3%</b></div></div>
+      <div class="stage"><span>보유세 인상</span></div>
+      <div class="cell r"><div class="ev">8·3 세제개편안 발표</div><div class="dt">2026.08<b>+17.4%</b></div></div>
+    </div>
+
+    <div class="now"><div class="line"></div><div class="lbl">지금 2026.11 · +20.3%</div><div class="line"></div></div>
+
+    <div class="row next">
+      <div class="cell l"><div class="ev">12·16 15억 초과<br/>아파트 주담대 금지</div><div class="dt">2019.12<b>+22.4%</b></div></div>
+      <div class="stage"><span>15억↑ 주담대</span></div>
+      <div class="cell r"><div class="q">???</div><div class="note">10월 ‘전면 금지설’에<br/>금융위 “사실 아냐”</div></div>
+    </div>
+  </div>
+
+  <div class="basis">※ 상승률 = KB 주간 서울 아파트 매매가격지수, 각 정부 취임 주 대비</div>
+  <div class="wirit-footer">
+    <span>자료: KB부동산·국토교통부·금융위원회·재정경제부</span>
+    <span class="wirit-watermark">@wirit_note</span>
+  </div>
+</div>
+</body>
+</html>
