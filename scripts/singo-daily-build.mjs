@@ -390,7 +390,9 @@ const humanFlags = (() => {
 const made = [];
 const skipped = [];
 for (const t of targets) {
-  const carried = humanFlags.get(t.slug) ?? [];
+  /* 이미 낸 카드라 이름표에 날짜가 붙은 경우(…-1107)에도 같은 단지에 붙여 둔 손잡이를 이어받는다(2026-11-07 —
+     포스코더샵2차 84 가 10-01 에 사이클 가드를 넘겨 나갔는데, 새 이름표에서 손잡이를 못 찾아 또 막혔다). */
+  const carried = humanFlags.get(t.slug) ?? humanFlags.get(t.slug.replace(/-\d{4}(-[b-z])?$/, "")) ?? [];
   if (carried.length) console.log(`   ⓘ ${t.h.aptNm} — 사람이 붙여 둔 손잡이를 이어받습니다: ${carried.join(" ")}`);
   const r = sh("node", [
     "scripts/build-singo-record.mjs",
@@ -461,10 +463,13 @@ for (const t of made) {
     if (barr.some((x) => x.label === label)) label = `${label}-${DATE.slice(5).replace("-", "")}`;
     /* 같은 날 같은 대장 코드로 두 신고명이 오면(2026-10-31 벽적골한신·벽적골우성 = A44347025) 날짜를 붙인 라벨도 겹친다 → b, c… */
     for (let n = 0; barr.some((x) => x.label === label); n++) label = `${label.replace(/-[a-z]$/, "")}-${String.fromCharCode(98 + n)}`;
+    /* 날짜 꼬리 새 이름표(…-1107)도 같은 단지에 붙여 둔 손잡이를 이어받는다(2026-11-07 포스코더샵2차 —
+       만들 때는 이어받고 등록할 때는 빠뜨려서, 렌더 단계에서 가드가 또 막았다). */
+    const inherited = humanFlags.get(t.slug) ?? humanFlags.get(t.slug.replace(/-\d{4}(-[b-z])?$/, "")) ?? [];
     b = {
       label,
       cmd: "scripts/build-singo-record.mjs",
-      args,
+      args: [...args.slice(0, -1), ...inherited, "--publish"],
       produces: [t.slug],
       note: "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03).",
     };
