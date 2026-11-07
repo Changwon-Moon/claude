@@ -1,9 +1,33 @@
 # 신고가 단지 이력 — 마지막 실행
 
-- 대기열: 795줄
+- 대기열: 797줄
 - 결과: **성공**
 
 ```
+
+── 영통아이파크캐슬1단지 전용 84타입 (41117)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '영통아이파크캐슬1단지' --umd '망포동' --type 84 --from 202001 --force
+
+영통아이파크캐슬1단지 · 전용 84타입 · 41117 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41117-영통아이파크캐슬1단지-84.json
+거래 있던 달 70/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 14.25억 (2026-11-06 · 전용 84.69㎡ 17층)
+🧹 force=1 을 지웠습니다 — lawd=41117 umd=망포동 type=84 apt="영통아이파크캐슬1단지"
+
+── 영통센트럴파크뷰 전용 59타입 (41117)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '영통센트럴파크뷰' --umd '영통동' --type 59 --from 202001 --force
+
+영통센트럴파크뷰 · 전용 59타입 · 41117 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41117-영통센트럴파크뷰-59.json
+거래 있던 달 82/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 7억 (2026-11-03 · 전용 59.99㎡ 7층)
+🧹 force=1 을 지웠습니다 — lawd=41117 umd=영통동 type=59 apt="영통센트럴파크뷰"
 
 ── 롯데캐슬클라시아 전용 84타입 (11290)
 
