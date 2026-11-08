@@ -42,9 +42,10 @@ const cards = {};
 /* 공통 킥커(오너 2026-09-16) — 숫자는 명단·끝점에서 센다 */
 const nSeoul = R.AREAS.filter((a) => a.region === "서울").length;
 const nGg = R.AREAS.filter((a) => a.region === "경기").length;
-const KICKER = `수도권 토허구역 ${R.AREAS.length}곳 (서울${nSeoul}•경기${nGg}) | ${endDot.slice(0, 7)} 기준`;
+/* 2026-11-08 오너: 월(2026.11)이 아니라 **조사일 그대로**(2026.11.02). 월 표기는 달 전체로 읽힌다 */
+const KICKER = `수도권 토허구역 ${R.AREAS.length}곳 (서울${nSeoul}•경기${nGg}) | ${endDot} 기준`;
 /* 경기 이름을 코발트로 칠한 카드(1·3장)는 킥커의 「경기15」도 같은 색 — 따로 범례 줄 없이 색의 뜻을 말한다 */
-const KICKER_GG = `수도권 토허구역 ${R.AREAS.length}곳 (서울${nSeoul}•<span class="gg">경기${nGg}</span>) | ${endDot.slice(0, 7)} 기준`;
+const KICKER_GG = `수도권 토허구역 ${R.AREAS.length}곳 (서울${nSeoul}•<span class="gg">경기${nGg}</span>) | ${endDot} 기준`;
 /** 제목 줄 — 줄마다 템플릿이 폭을 따로 잰다 */
 const lines = (...ls) => ls.map((l) => `<span class="ln">${l}</span>`).join("");
 
@@ -173,7 +174,8 @@ const INK = "var(--wirit-ink)", GRAY = "var(--wirit-gray)", RED = "var(--wirit-r
   const Y = (i) => top + i * step;
   let g = "";
   YS.forEach((y, j) => {
-    const lab = Y1(y).partial ? `${y.slice(2)}년(~${+endDot.slice(5, 7)}월)` : `${y.slice(2)}년`;
+    /* 연중 구간은 「~11월」이 아니라 조사일로 적는다 — 11/2 뿐인데 11월 전체로 읽힌다(오너 2026-11-08) */
+    const lab = Y1(y).partial ? `${y.slice(2)}년(~${endDot.slice(5)})` : `${y.slice(2)}년`;
     g += `<text x="${colX[j].toFixed(1)}" y="22" ${FONT} font-size="22" font-weight="800" fill="${INK}" text-anchor="middle">${lab}</text>`;
   });
   const drawLine = (a, hl) => {
@@ -277,7 +279,7 @@ const buildStack = (mode) => {
   let lx = 0;
   SYS.forEach((y, i) => {
     const isLast = i === SYS.length - 1;
-    const lab = mode === "dots" ? (isLast ? `지금(${endDot.slice(2, 7)})` : `${y.slice(2)}년 말`) : isLast ? `${y.slice(2)}년(올해)` : `${y.slice(2)}년`;
+    const lab = mode === "dots" ? (isLast ? `지금(${endDot.slice(2)})` : `${y.slice(2)}년 말`) : isLast ? `${y.slice(2)}년(올해)` : `${y.slice(2)}년`;
     g += mode === "dots"
       ? `<circle cx="${lx + 12}" cy="14" r="8" fill="${COLORS[i]}" opacity="${OPAC[i]}"/>`
       : `<rect x="${lx}" y="6" width="26" height="16" fill="${COLORS[i]}" opacity="${OPAC[i]}"/>`;
@@ -499,7 +501,7 @@ buildStack("dots");
     const byShort = new Map(R.AREAS.map((a) => [shortName(a), a]));
     const move = (d) => d.split(" · ").map((n) => { const a = byShort.get(n); return `${nm(a)} ${rk(first, a)}→${rk(last, a)}위`; });
     const t1 = Yb(first).coTop[0];
-    const yrLab = (y) => (Yb(y).partial ? `${y}년(1~${+endDot.slice(5, 7)}월)` : `${y}년`);
+    const yrLab = (y) => (Yb(y).partial ? `${y}년(~${endDot.slice(5)})` : `${y}년`);
     const cap = [
       `'${first.slice(2)}년 한 해 1위 ${nm(t1)}, '${last.slice(2)}년엔 ${rk(last, t1)}위 📉`,
       `해마다 그해 오른 만큼만 따로 떼어 순위를 매겼습니다.`,
@@ -614,7 +616,7 @@ buildStack("dots");
       /* 조사(이/가)를 받침으로 고르지 않아도 되게 쉼표로 끊는다 — 「송파이」가 나왔다(2026-09-16) */
       `📉 해마다 순위를 매기면, '${first.slice(2)}년 1위 ${shortName(Yb(first).coTop[0])} → 올해 ${rk(last, Yb(first).coTop[0])}위`,
       ``,
-      ...YS.map((y) => `- '${y.slice(2)}년${Yb(y).partial ? `(~${+endDot.slice(5, 7)}월)` : ""} 1위 ${Yb(y).coTop.map(shortName).join("·")} ${pc(Yb(y).coTop[0].v)}`),
+      ...YS.map((y) => `- '${y.slice(2)}년${Yb(y).partial ? `(~${endDot.slice(5)})` : ""} 1위 ${Yb(y).coTop.map(shortName).join("·")} ${pc(Yb(y).coTop[0].v)}`),
       ``,
       `순위 오른 곳 ${mv(up.d)}`,
       `순위 내린 곳 ${mv(down.d)} 👆`,
