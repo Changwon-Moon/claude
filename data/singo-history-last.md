@@ -10,35 +10,21 @@
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
 > tsx src/molitHistoryCli.ts -- --lawd 41465 --apt 'e편한세상수지' --umd '풍덕천동' --type 84 --from 202001
 
-e편한세상수지 · 전용 84타입 · 41465 · 202001~202611 (83개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41465-e편한세상수지-84.json
-거래 있던 달 77/83 · 수집 실패 0개월
-📦 캐시에서 80개월 · 국토부에 물은 것 3개월
-최고가 17.3억 (2026-10-31 · 전용 84.929㎡ 18층)
+⏭ 이미 있음 — 41465-e편한세상수지-84.json (다시 받으려면 force=1)
 
 ── 현대 전용 84타입 (11350)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 11350 --apt '현대' --umd '하계동' --type 84 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 11350 --apt '현대' --umd '하계동' --type 84 --from 202001
 
-현대 · 전용 84타입 · 11350 · 202001~202611 (83개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/11350-현대-84.json
-거래 있던 달 34/83 · 수집 실패 0개월
-📦 캐시에서 80개월 · 국토부에 물은 것 3개월
-최고가 12.85억 (2026-10-15 · 전용 84.96㎡ 8층)
-🧹 force=1 을 지웠습니다 — lawd=11350 umd=하계동 type=84 apt="현대"
+⏭ 이미 있음 — 11350-현대-84.json (다시 받으려면 force=1)
 
 ── 수원 SK SKY VIEW 전용 59타입 (41111)
 
 > @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitHistoryCli.ts -- --lawd 41111 --apt '수원 SK SKY VIEW' --umd '정자동' --type 59 --from 202001 --force
+> tsx src/molitHistoryCli.ts -- --lawd 41111 --apt '수원 SK SKY VIEW' --umd '정자동' --type 59 --from 202001
 
-수원 SK SKY VIEW · 전용 59타입 · 41111 · 202001~202611 (83개월)
-/home/runner/work/claude/claude/data/datasets/singo-history/41111-수원SKSKYVIEW-59.json
-거래 있던 달 75/83 · 수집 실패 0개월
-📦 캐시에서 80개월 · 국토부에 물은 것 3개월
-최고가 7.87억 (2026-11-07 · 전용 59.952㎡ 19층)
-🧹 force=1 을 지웠습니다 — lawd=41111 umd=정자동 type=59 apt="수원 SK SKY VIEW"
+⏭ 이미 있음 — 41111-수원SKSKYVIEW-59.json (다시 받으려면 force=1)
 
 ── 영통아이파크캐슬1단지 전용 84타입 (41117)
 
