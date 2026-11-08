@@ -49,7 +49,7 @@
 # ⚡ 2026-11-08 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-09 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 lawd=41465 umd=풍덕천동 type=84 apt="e편한세상수지"
-lawd=11350 umd=하계동 type=84 apt="현대" force=1
+lawd=11350 umd=하계동 type=84 apt="현대"
 lawd=41111 umd=정자동 type=59 apt="수원 SK SKY VIEW" force=1
 
 lawd=41117 umd=망포동 type=84 apt="영통아이파크캐슬1단지"
