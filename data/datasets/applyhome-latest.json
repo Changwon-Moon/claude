@@ -10,7 +10,7 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-11-07",
+    "collectedFor": "2026-11-08",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2935,
@@ -44,7 +44,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2",
+        "D-1",
         "더샵"
       ]
     },
@@ -67,12 +67,38 @@
       "speculative": false,
       "homepage": "https://www.idsd.co.kr",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910279&pblancNo=2026910279",
-      "score": 65,
+      "score": 72,
       "reasons": [
         "수도권",
         "무순위",
-        "D-3",
+        "D-2",
         "자이"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910282",
+      "name": "광명 시티프라디움 에듀하임",
+      "areaName": "경기",
+      "address": "경기도 광명시 소하동 광명 구름산지구 도시개발사업지구 A6BL",
+      "supply": 21,
+      "noticeDate": "2026-11-05",
+      "receiptFrom": "2026-11-10",
+      "receiptTo": "2026-11-10",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2029-03",
+      "announceDate": "2026-11-13",
+      "builder": "(주)시티글로벌",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://광명시티프라디움.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910282&pblancNo=2026910282",
+      "score": 66,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "D-2"
       ]
     },
     {
@@ -97,7 +123,7 @@
       "score": 65,
       "reasons": [
         "수도권",
-        "D-4",
+        "D-3",
         "센트레빌",
         "분양가상한제",
         "투기과열지구"
@@ -127,7 +153,7 @@
         "광역시",
         "53가구",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -153,7 +179,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -179,34 +205,8 @@
       "reasons": [
         "수도권",
         "1,098가구 대단지",
-        "D-4",
+        "D-3",
         "포레나"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910282",
-      "name": "광명 시티프라디움 에듀하임",
-      "areaName": "경기",
-      "address": "경기도 광명시 소하동 광명 구름산지구 도시개발사업지구 A6BL",
-      "supply": 21,
-      "noticeDate": "2026-11-05",
-      "receiptFrom": "2026-11-10",
-      "receiptTo": "2026-11-10",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2029-03",
-      "announceDate": "2026-11-13",
-      "builder": "(주)시티글로벌",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://광명시티프라디움.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910282&pblancNo=2026910282",
-      "score": 59,
-      "reasons": [
-        "수도권",
-        "무순위",
-        "D-3"
       ]
     },
     {
@@ -231,7 +231,7 @@
       "score": 59,
       "reasons": [
         "수도권",
-        "D-4",
+        "D-3",
         "센트레빌",
         "분양가상한제",
         "투기과열지구"
@@ -259,7 +259,7 @@
       "score": 58,
       "reasons": [
         "무순위",
-        "D-2",
+        "D-1",
         "하늘채"
       ]
     },
@@ -285,7 +285,7 @@
       "score": 58,
       "reasons": [
         "무순위",
-        "D-2",
+        "D-1",
         "롯데캐슬"
       ]
     },
@@ -312,7 +312,7 @@
       "reasons": [
         "수도권",
         "623가구",
-        "D-4",
+        "D-3",
         "분양가상한제"
       ]
     },
@@ -339,7 +339,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-4"
+        "D-3"
       ]
     },
     {
@@ -365,7 +365,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-4"
+        "D-3"
       ]
     },
     {
@@ -391,7 +391,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-4"
+        "D-3"
       ]
     },
     {
@@ -417,7 +417,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -443,7 +443,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -468,7 +468,7 @@
       "score": 50,
       "reasons": [
         "수도권",
-        "D-4",
+        "D-3",
         "분양가상한제"
       ]
     },
@@ -494,7 +494,7 @@
       "score": 49,
       "reasons": [
         "수도권",
-        "D-4",
+        "D-3",
         "분양가상한제",
         "투기과열지구"
       ]
@@ -647,7 +647,7 @@
       "score": 40,
       "reasons": [
         "수도권",
-        "D-5",
+        "D-4",
         "분양가상한제"
       ]
     },
@@ -698,7 +698,7 @@
       "score": 33,
       "reasons": [
         "수도권",
-        "D-5",
+        "D-4",
         "투기과열지구"
       ]
     },
@@ -747,7 +747,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000539&pblancNo=2026000539",
       "score": 28,
       "reasons": [
-        "D-4",
+        "D-3",
         "센트레빌"
       ]
     },
@@ -772,7 +772,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000523&pblancNo=2026000523",
       "score": 18,
       "reasons": [
-        "D-4"
+        "D-3"
       ]
     },
     {
