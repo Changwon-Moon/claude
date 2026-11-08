@@ -7,6 +7,7 @@
  * 기준점 키 YYYY01 = 1월 1일이 든 주(전년 마지막 조사) — 2025 연간 누적이 발표와 일치(2026-09-16 대조)
  */
 import { readFileSync } from "node:fs";
+import { makeRebCalendar } from "./reb-week.mjs";
 import { join } from "node:path";
 
 export const SERIES_BASES = ["2023", "2024", "2025", "2026"];
@@ -16,17 +17,9 @@ export const pctTxt = (v) => `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(r1(v
 
 /** 부동산원 주 키 → 그 주 조사일(월요일).
  * ⚠️ 환산 정본은 ./reb-week.mjs 다 — ISO 로 계산하면 2017·2023 년이 일주일 밀린다(2026-10-04 교정).
- * 여기서는 주차 목록을 모른 채 단건 호출되는 자리가 있어 ISO 근사를 남겨 두되,
- * **2017·2023 구간을 쓰는 순간 틀린다**. 과거 구간을 다루면 makeRebCalendar 로 갈아타라. */
-export const mondayOf = (key) => {
-  const y = +key.slice(0, 4), w = +key.slice(4);
-  const simple = new Date(Date.UTC(y, 0, 1 + (w - 1) * 7));
-  const dow = simple.getUTCDay() || 7;
-  const mon = new Date(simple);
-  mon.setUTCDate(simple.getUTCDate() - dow + 1);
-  if (y === 2017 || y === 2023) console.warn(`⚠️  mondayOf(${key}) — 2017·2023 은 ISO 근사가 1주 어긋난다. lib/reb-week.mjs 를 써라`);
-  return mon;
-};
+ * 2026-11-08: 이 파일의 ISO 근사를 걷어내고 makeRebCalendar 로 갈아탔다.
+ * 이 시리즈는 2023년 첫 주를 기준점으로 쓰므로 **정확히 그 틀리는 구간**을 밟고 있었다
+ * (값은 시점코드로 뽑아 영향이 없었지만, 날짜를 찍는 자리는 일주일 밀려 있었다). */
 export const dateKo = (d) => `${d.getUTCFullYear()}년 ${d.getUTCMonth() + 1}월 ${d.getUTCDate()}일`;
 export const dateDot = (d) =>
   `${d.getUTCFullYear()}.${String(d.getUTCMonth() + 1).padStart(2, "0")}.${String(d.getUTCDate()).padStart(2, "0")}`;
@@ -39,6 +32,9 @@ export function loadTohuhRise(ROOT, END) {
   const tohuh = JSON.parse(readFileSync(join(ROOT, "data/datasets/tohuh-2026.json"), "utf8"));
   const mae = doc.mae;
   const SEOUL = doc.meta.seoulCode || "50008";
+  /* 시점코드 → 조사기준일: 데이터에 실제로 있는 주차 목록으로 복원한다(정본 lib/reb-week.mjs) */
+  const cal = makeRebCalendar(Object.keys(mae[SEOUL] || {}));
+  const mondayOf = (k) => cal.monday(k);
   /* 검증 게이트 — meta.verified 대신 **발표값과 직접 대조**한다(2026-09-16 확정 때 바꿈).
    * meta.verified 는 수집기가 새 주를 받을 때마다 false 로 되돌린다(carryVerification).
    * 이 카드는 끝점을 못 박은 카드라 새 주가 와도 숫자는 그대로인데, 플래그 때문에 재생산이 멈추면
@@ -102,7 +98,7 @@ export function loadTohuhRise(ROOT, END) {
     const { ranked, rankOf, coTop } = rankIt(stat);
     byBase.set(y, { BASE, stat, ranked, rankOf, coTop, seoulV: rise(SEOUL, BASE) });
   }
-  return { doc, mae, END, SEOUL, AREAS, endDate: mondayOf(END), byBase, byYear };
+  return { doc, mae, END, SEOUL, AREAS, cal, mondayOf, endDate: mondayOf(END), byBase, byYear };
 }
 
 /** 표 이름: 서울 구·경기 시는 label(「송파구」「광명시」), 경기 시 안의 구는 mapLabel(「성남 분당」).

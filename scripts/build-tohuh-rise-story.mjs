@@ -18,7 +18,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { writeCaption } from "./lib/caption-signature.mjs";
 import {
-  loadTohuhRise, SERIES_BASES, pctTxt, r1, mondayOf, dateKo, dateDot, tableName, shortName,
+  loadTohuhRise, SERIES_BASES, pctTxt, r1, dateKo, dateDot, tableName, shortName,
 } from "./lib/tohuh-rise-data.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -29,6 +29,7 @@ const arg = (k, dflt) => {
 const END = arg("end", "202637");
 const date = arg("date", "2026-09-16");
 const R = loadTohuhRise(ROOT, END);
+const mondayOf = R.mondayOf; // 조사기준일 환산은 lib 이 쥔다(2026-11-08)
 const tohuh = JSON.parse(readFileSync(join(ROOT, "data/datasets/tohuh-2026.json"), "utf8"));
 const endKo = dateKo(R.endDate);
 const endDot = dateDot(R.endDate);
