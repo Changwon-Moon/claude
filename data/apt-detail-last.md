@@ -1,10 +1,60 @@
 # 단지 주차대수 — 마지막 실행
 
-- 대기열: 360줄
-- 결과: **성공**
-- ⚠️ 이번 실행은 **국토부에 붙지 않았습니다**(전부 이미 있음) — API 가 살아 있다는 증거로 쓰지 마세요
+- 대기열: 363줄
+- 결과: **실패**
 
 ```
+
+── A46377610
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A46377610
+
+   ⏸ 망 오류: This operation was aborted
+     문이 닫힌 것으로 보고 20초 기다립니다 (1/1)
+Error: 망 오류: This operation was aborted — 2번(약 0분) 시도했습니다
+    at get (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:138:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async pickOp (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:170:30)
+    at async fetchAptDetail (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:215:7)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptDetailCli.ts:44:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-detail: `tsx src/aptDetailCli.ts -- --kapt A46377610`
+Exit status 1
+
+── A10023503
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A10023503
+
+   ⏸ 망 오류: This operation was aborted
+     문이 닫힌 것으로 보고 20초 기다립니다 (1/1)
+Error: 망 오류: This operation was aborted — 2번(약 0분) 시도했습니다
+    at get (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:138:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async pickOp (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:170:30)
+    at async fetchAptDetail (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:215:7)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptDetailCli.ts:44:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-detail: `tsx src/aptDetailCli.ts -- --kapt A10023503`
+Exit status 1
+
+── A13470101
+
+> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
+> tsx src/aptDetailCli.ts -- --kapt A13470101
+
+   ⏸ 망 오류: This operation was aborted
+     문이 닫힌 것으로 보고 20초 기다립니다 (1/1)
+Error: 망 오류: This operation was aborted — 2번(약 0분) 시도했습니다
+    at get (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:138:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async pickOp (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:170:30)
+    at async fetchAptDetail (/home/runner/work/claude/claude/packages/collectors/src/sources/aptInfo.ts:215:7)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptDetailCli.ts:44:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-detail: `tsx src/aptDetailCli.ts -- --kapt A13470101`
+Exit status 1
 ⏭ 이미 있음 — data/datasets/apt-detail/A10026839.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A13987303.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A10023626.json (다시 받으려면 force=1)
@@ -366,7 +416,6 @@
 ⏭ 이미 있음 — data/datasets/apt-detail/A13613008.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A44072212.json (다시 받으려면 force=1)
 
-실제로 받아 본 단지 0곳 · 이미 있어 건너뛴 것 360곳
-ⓘ 이번 실행은 **국토부에 한 번도 붙지 않았습니다** — 이 초록불은 API 가 살아 있다는 증거가 아닙니다.
-✅ 대기열 전 줄 완료
+실제로 받아 본 단지 3곳 · 이미 있어 건너뛴 것 360곳
+⚠️ 일부 줄이 실패했습니다
 ```
