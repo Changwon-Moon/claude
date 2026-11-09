@@ -5,15 +5,15 @@
     "aptNm": "권선자이e편한세상",
     "type": "84",
     "from": "202001",
-    "to": "202609",
-    "monthsTried": 81,
+    "to": "202611",
+    "monthsTried": 83,
     "monthsFailed": 0,
-    "monthsTraded": 74,
+    "monthsTraded": 76,
     "peak": {
-      "manwon": 76000,
-      "date": "2026-09-19",
-      "area": 84.9813,
-      "floor": 10
+      "manwon": 76800,
+      "date": "2026-11-07",
+      "area": 84.9438,
+      "floor": 7
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -746,6 +746,24 @@
       "area": 84.9813,
       "floor": 10,
       "date": "2026-09-19",
+      "ok": true
+    },
+    {
+      "ym": "202610",
+      "maxManwon": 75000,
+      "count": 2,
+      "area": 84.9813,
+      "floor": 11,
+      "date": "2026-10-30",
+      "ok": true
+    },
+    {
+      "ym": "202611",
+      "maxManwon": 76800,
+      "count": 2,
+      "area": 84.9438,
+      "floor": 7,
+      "date": "2026-11-07",
       "ok": true
     }
   ]
