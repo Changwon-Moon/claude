@@ -5,15 +5,15 @@
     "aptNm": "황골마을주공1",
     "type": "59",
     "from": "202001",
-    "to": "202610",
-    "monthsTried": 82,
+    "to": "202611",
+    "monthsTried": 83,
     "monthsFailed": 0,
-    "monthsTraded": 82,
+    "monthsTraded": 83,
     "peak": {
-      "manwon": 69500,
-      "date": "2026-10-19",
+      "manwon": 71000,
+      "date": "2026-11-04",
       "area": 59.99,
-      "floor": 8
+      "floor": 15
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -742,7 +742,7 @@
     {
       "ym": "202609",
       "maxManwon": 67800,
-      "count": 13,
+      "count": 14,
       "area": 59.99,
       "floor": 10,
       "date": "2026-09-15",
@@ -751,10 +751,19 @@
     {
       "ym": "202610",
       "maxManwon": 69500,
-      "count": 16,
+      "count": 26,
       "area": 59.99,
       "floor": 8,
       "date": "2026-10-19",
+      "ok": true
+    },
+    {
+      "ym": "202611",
+      "maxManwon": 71000,
+      "count": 4,
+      "area": 59.99,
+      "floor": 15,
+      "date": "2026-11-04",
       "ok": true
     }
   ]
