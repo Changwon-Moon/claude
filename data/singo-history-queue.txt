@@ -56,7 +56,7 @@ lawd=11740 umd=길동 type=59 apt="삼익파크맨션"
 lawd=11620 umd=봉천동 type=59 apt="관악푸르지오"
 lawd=11620 umd=봉천동 type=84 apt="현대(관악)"
 lawd=41463 umd=구갈동 type=84 apt="기흥역센트럴푸르지오"
-lawd=41597 umd=목동 type=84 apt="힐스테이트동탄" force=1
+lawd=41597 umd=목동 type=84 apt="힐스테이트동탄"
 lawd=41597 umd=반송동 type=59 apt="동탄시범다은마을 월드메르디앙 반도유보라" force=1
 lawd=41595 umd=반월동 type=59 apt="신동탄포레자이" force=1
 lawd=41113 umd=권선동 type=84 apt="권선자이e편한세상" force=1
