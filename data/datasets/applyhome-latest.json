@@ -10,7 +10,7 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-11-08",
+    "collectedFor": "2026-11-09",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2935,
@@ -44,7 +44,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1",
+        "오늘 마감",
         "더샵"
       ]
     },
@@ -71,8 +71,63 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2",
+        "D-1",
         "자이"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000528",
+      "name": "광교 자연앤 센트레빌(A17BL) 공공분양주택",
+      "areaName": "경기",
+      "address": "경기도 수원시 영통구 원천동 633번지 일원",
+      "supply": 360,
+      "noticeDate": "2026-10-30",
+      "receiptFrom": "2026-11-10",
+      "receiptTo": "2026-11-11",
+      "specialFrom": "2026-11-09",
+      "rank1From": "2026-11-10",
+      "moveInYm": "2029-10",
+      "announceDate": "2026-11-17",
+      "builder": "동부건설(주), (주)에이치제이중공업, 대보건설(주), (주)우호건설, 씨앤씨종합건설(주)",
+      "priceCap": true,
+      "speculative": true,
+      "homepage": "http://www.gwanggyo-centreville.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000528&pblancNo=2026000528",
+      "score": 72,
+      "reasons": [
+        "수도권",
+        "D-2",
+        "센트레빌",
+        "분양가상한제",
+        "투기과열지구"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000499",
+      "name": "한화포레나 지제역",
+      "areaName": "경기",
+      "address": "경기도 평택시 세교동 725번지 일원",
+      "supply": 1098,
+      "noticeDate": "2026-10-29",
+      "receiptFrom": "2026-11-10",
+      "receiptTo": "2026-11-11",
+      "specialFrom": "2026-11-09",
+      "rank1From": "2026-11-10",
+      "moveInYm": "2029-11",
+      "announceDate": "2026-11-18",
+      "builder": "(주)한화",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://jije.forena.co.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000499&pblancNo=2026000499",
+      "score": 68,
+      "reasons": [
+        "수도권",
+        "1,098가구 대단지",
+        "D-2",
+        "포레나"
       ]
     },
     {
@@ -98,32 +153,32 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000528",
-      "name": "광교 자연앤 센트레빌(A17BL) 공공분양주택",
+      "pblancNo": "2026000527",
+      "name": "광교 자연앤 센트레빌(A17BL) 지분적립형 분양주택",
       "areaName": "경기",
       "address": "경기도 수원시 영통구 원천동 633번지 일원",
-      "supply": 360,
+      "supply": 240,
       "noticeDate": "2026-10-30",
       "receiptFrom": "2026-11-10",
       "receiptTo": "2026-11-11",
       "specialFrom": "2026-11-09",
       "rank1From": "2026-11-10",
       "moveInYm": "2029-10",
-      "announceDate": "2026-11-17",
+      "announceDate": "2026-11-18",
       "builder": "동부건설(주), (주)에이치제이중공업, 대보건설(주), (주)우호건설, 씨앤씨종합건설(주)",
       "priceCap": true,
       "speculative": true,
       "homepage": "http://www.gwanggyo-centreville.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000528&pblancNo=2026000528",
-      "score": 65,
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000527&pblancNo=2026000527",
+      "score": 66,
       "reasons": [
         "수도권",
-        "D-3",
+        "D-2",
         "센트레빌",
         "분양가상한제",
         "투기과열지구"
@@ -153,7 +208,34 @@
         "광역시",
         "53가구",
         "무순위",
-        "D-1"
+        "오늘 마감"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000515",
+      "name": "평택 고덕 우미 린 더 프리미어",
+      "areaName": "경기",
+      "address": "경기도 평택시 고덕 국제화계획지구 내 Abc-33블록",
+      "supply": 623,
+      "noticeDate": "2026-10-30",
+      "receiptFrom": "2026-11-10",
+      "receiptTo": "2026-11-11",
+      "specialFrom": "2026-11-09",
+      "rank1From": "2026-11-10",
+      "moveInYm": "2029-05",
+      "announceDate": "2026-11-17",
+      "builder": "우미건설(주),지에스건설(주),이에스아이주식회사",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://pg2.lynn.co.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000515&pblancNo=2026000515",
+      "score": 63,
+      "reasons": [
+        "수도권",
+        "623가구",
+        "D-2",
+        "분양가상한제"
       ]
     },
     {
@@ -179,62 +261,85 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
-      "kind": "apt",
-      "pblancNo": "2026000499",
-      "name": "한화포레나 지제역",
-      "areaName": "경기",
-      "address": "경기도 평택시 세교동 725번지 일원",
-      "supply": 1098,
-      "noticeDate": "2026-10-29",
-      "receiptFrom": "2026-11-10",
+      "kind": "remndr",
+      "pblancNo": "2026910283",
+      "name": "인천 영종하늘도시 A25블록 대성베르힐(5차)",
+      "areaName": "인천",
+      "address": "인천광역시 영종구 운남동 1709-1번지(영종 A25블록)",
+      "supply": 1,
+      "noticeDate": "2026-11-06",
+      "receiptFrom": "2026-11-11",
       "receiptTo": "2026-11-11",
-      "specialFrom": "2026-11-09",
-      "rank1From": "2026-11-10",
-      "moveInYm": "2029-11",
-      "announceDate": "2026-11-18",
-      "builder": "(주)한화",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-12",
+      "announceDate": "2026-11-16",
+      "builder": "주식회사 인천영종피에프브이",
       "priceCap": false,
       "speculative": false,
-      "homepage": "https://jije.forena.co.kr/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000499&pblancNo=2026000499",
-      "score": 61,
+      "homepage": "http://www.yjd-verthill.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910283&pblancNo=2026910283",
+      "score": 62,
       "reasons": [
         "수도권",
-        "1,098가구 대단지",
-        "D-3",
-        "포레나"
+        "무순위",
+        "D-2"
       ]
     },
     {
-      "kind": "apt",
-      "pblancNo": "2026000527",
-      "name": "광교 자연앤 센트레빌(A17BL) 지분적립형 분양주택",
+      "kind": "remndr",
+      "pblancNo": "2026910280",
+      "name": "오남역 서희스타힐스 여의재 3단지 (조합원 취소분)",
       "areaName": "경기",
-      "address": "경기도 수원시 영통구 원천동 633번지 일원",
-      "supply": 240,
-      "noticeDate": "2026-10-30",
-      "receiptFrom": "2026-11-10",
+      "address": "경기도 남양주시 오남읍 양지리 186-10번지 일원",
+      "supply": 6,
+      "noticeDate": "2026-11-06",
+      "receiptFrom": "2026-11-11",
       "receiptTo": "2026-11-11",
-      "specialFrom": "2026-11-09",
-      "rank1From": "2026-11-10",
-      "moveInYm": "2029-10",
-      "announceDate": "2026-11-18",
-      "builder": "동부건설(주), (주)에이치제이중공업, 대보건설(주), (주)우호건설, 씨앤씨종합건설(주)",
-      "priceCap": true,
-      "speculative": true,
-      "homepage": "http://www.gwanggyo-centreville.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000527&pblancNo=2026000527",
-      "score": 59,
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2029-01",
+      "announceDate": "2026-11-16",
+      "builder": "양지7지구 3단지 지역주택조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.오남역서희스타힐스여의재.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910280&pblancNo=2026910280",
+      "score": 62,
       "reasons": [
         "수도권",
-        "D-3",
-        "센트레빌",
-        "분양가상한제",
-        "투기과열지구"
+        "무순위",
+        "D-2"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910276",
+      "name": "인천 검단신도시 AB20-2블록 중흥S-클래스 에듀파크",
+      "areaName": "인천",
+      "address": "인천광역시 검단지구 공동주택용지 AB20-2BL",
+      "supply": 1,
+      "noticeDate": "2026-11-06",
+      "receiptFrom": "2026-11-11",
+      "receiptTo": "2026-11-11",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2027-06",
+      "announceDate": "2026-11-16",
+      "builder": "중흥건설(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "http://www.geomdan-sclass.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910276&pblancNo=2026910276",
+      "score": 62,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "D-2"
       ]
     },
     {
@@ -259,7 +364,7 @@
       "score": 58,
       "reasons": [
         "무순위",
-        "D-1",
+        "오늘 마감",
         "하늘채"
       ]
     },
@@ -285,113 +390,61 @@
       "score": 58,
       "reasons": [
         "무순위",
-        "D-1",
+        "오늘 마감",
         "롯데캐슬"
       ]
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000515",
-      "name": "평택 고덕 우미 린 더 프리미어",
+      "pblancNo": "2026000525",
+      "name": "엘리프 시흥 더프라임",
       "areaName": "경기",
-      "address": "경기도 평택시 고덕 국제화계획지구 내 Abc-33블록",
-      "supply": 623,
+      "address": "경기도 시흥시 거모동 시흥거모지구 B-5블록",
+      "supply": 304,
+      "noticeDate": "2026-10-29",
+      "receiptFrom": "2026-11-10",
+      "receiptTo": "2026-11-11",
+      "specialFrom": "2026-11-09",
+      "rank1From": "2026-11-10",
+      "moveInYm": "2029-08",
+      "announceDate": "2026-11-17",
+      "builder": "계룡건설산업(주)",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://www.엘리프시흥더프라임.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000525&pblancNo=2026000525",
+      "score": 57,
+      "reasons": [
+        "수도권",
+        "D-2",
+        "분양가상한제"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000472",
+      "name": "구리갈매역세권 B-1블록 신안인스빌 디센트",
+      "areaName": "경기",
+      "address": "경기도 구리시 구리갈매역세권 B-1블록",
+      "supply": 213,
       "noticeDate": "2026-10-30",
       "receiptFrom": "2026-11-10",
       "receiptTo": "2026-11-11",
       "specialFrom": "2026-11-09",
       "rank1From": "2026-11-10",
-      "moveInYm": "2029-05",
+      "moveInYm": "2028-08",
       "announceDate": "2026-11-17",
-      "builder": "우미건설(주),지에스건설(주),이에스아이주식회사",
+      "builder": "(주)신안",
       "priceCap": true,
-      "speculative": false,
-      "homepage": "https://pg2.lynn.co.kr/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000515&pblancNo=2026000515",
+      "speculative": true,
+      "homepage": "https://guri.ensvil.com/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000472&pblancNo=2026000472",
       "score": 56,
       "reasons": [
         "수도권",
-        "623가구",
-        "D-3",
-        "분양가상한제"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910283",
-      "name": "인천 영종하늘도시 A25블록 대성베르힐(5차)",
-      "areaName": "인천",
-      "address": "인천광역시 영종구 운남동 1709-1번지(영종 A25블록)",
-      "supply": 1,
-      "noticeDate": "2026-11-06",
-      "receiptFrom": "2026-11-11",
-      "receiptTo": "2026-11-11",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-12",
-      "announceDate": "2026-11-16",
-      "builder": "주식회사 인천영종피에프브이",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://www.yjd-verthill.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910283&pblancNo=2026910283",
-      "score": 55,
-      "reasons": [
-        "수도권",
-        "무순위",
-        "D-3"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910280",
-      "name": "오남역 서희스타힐스 여의재 3단지 (조합원 취소분)",
-      "areaName": "경기",
-      "address": "경기도 남양주시 오남읍 양지리 186-10번지 일원",
-      "supply": 6,
-      "noticeDate": "2026-11-06",
-      "receiptFrom": "2026-11-11",
-      "receiptTo": "2026-11-11",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2029-01",
-      "announceDate": "2026-11-16",
-      "builder": "양지7지구 3단지 지역주택조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.오남역서희스타힐스여의재.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910280&pblancNo=2026910280",
-      "score": 55,
-      "reasons": [
-        "수도권",
-        "무순위",
-        "D-3"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910276",
-      "name": "인천 검단신도시 AB20-2블록 중흥S-클래스 에듀파크",
-      "areaName": "인천",
-      "address": "인천광역시 검단지구 공동주택용지 AB20-2BL",
-      "supply": 1,
-      "noticeDate": "2026-11-06",
-      "receiptFrom": "2026-11-11",
-      "receiptTo": "2026-11-11",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2027-06",
-      "announceDate": "2026-11-16",
-      "builder": "중흥건설(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://www.geomdan-sclass.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910276&pblancNo=2026910276",
-      "score": 55,
-      "reasons": [
-        "수도권",
-        "무순위",
-        "D-3"
+        "D-2",
+        "분양가상한제",
+        "투기과열지구"
       ]
     },
     {
@@ -417,7 +470,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -443,60 +496,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-1"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000525",
-      "name": "엘리프 시흥 더프라임",
-      "areaName": "경기",
-      "address": "경기도 시흥시 거모동 시흥거모지구 B-5블록",
-      "supply": 304,
-      "noticeDate": "2026-10-29",
-      "receiptFrom": "2026-11-10",
-      "receiptTo": "2026-11-11",
-      "specialFrom": "2026-11-09",
-      "rank1From": "2026-11-10",
-      "moveInYm": "2029-08",
-      "announceDate": "2026-11-17",
-      "builder": "계룡건설산업(주)",
-      "priceCap": true,
-      "speculative": false,
-      "homepage": "https://www.엘리프시흥더프라임.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000525&pblancNo=2026000525",
-      "score": 50,
-      "reasons": [
-        "수도권",
-        "D-3",
-        "분양가상한제"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000472",
-      "name": "구리갈매역세권 B-1블록 신안인스빌 디센트",
-      "areaName": "경기",
-      "address": "경기도 구리시 구리갈매역세권 B-1블록",
-      "supply": 213,
-      "noticeDate": "2026-10-30",
-      "receiptFrom": "2026-11-10",
-      "receiptTo": "2026-11-11",
-      "specialFrom": "2026-11-09",
-      "rank1From": "2026-11-10",
-      "moveInYm": "2028-08",
-      "announceDate": "2026-11-17",
-      "builder": "(주)신안",
-      "priceCap": true,
-      "speculative": true,
-      "homepage": "https://guri.ensvil.com/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000472&pblancNo=2026000472",
-      "score": 49,
-      "reasons": [
-        "수도권",
-        "D-3",
-        "분양가상한제",
-        "투기과열지구"
+        "오늘 마감"
       ]
     },
     {
@@ -647,7 +647,7 @@
       "score": 40,
       "reasons": [
         "수도권",
-        "D-4",
+        "D-3",
         "분양가상한제"
       ]
     },
@@ -678,6 +678,31 @@
     },
     {
       "kind": "apt",
+      "pblancNo": "2026000539",
+      "name": "남춘천 센트레빌",
+      "areaName": "강원",
+      "address": "강원특별자치도 춘천시 효자동 681-12 일원",
+      "supply": 264,
+      "noticeDate": "2026-10-30",
+      "receiptFrom": "2026-11-10",
+      "receiptTo": "2026-11-11",
+      "specialFrom": "2026-11-09",
+      "rank1From": "2026-11-10",
+      "moveInYm": "2030-10",
+      "announceDate": "2026-11-17",
+      "builder": "동부건설(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.남춘천센트레빌.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000539&pblancNo=2026000539",
+      "score": 35,
+      "reasons": [
+        "D-2",
+        "센트레빌"
+      ]
+    },
+    {
+      "kind": "apt",
       "pblancNo": "2026000535",
       "name": "중앙하이츠 구성 플랫폼시티",
       "areaName": "경기",
@@ -698,7 +723,7 @@
       "score": 33,
       "reasons": [
         "수도권",
-        "D-4",
+        "D-3",
         "투기과열지구"
       ]
     },
@@ -728,31 +753,6 @@
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000539",
-      "name": "남춘천 센트레빌",
-      "areaName": "강원",
-      "address": "강원특별자치도 춘천시 효자동 681-12 일원",
-      "supply": 264,
-      "noticeDate": "2026-10-30",
-      "receiptFrom": "2026-11-10",
-      "receiptTo": "2026-11-11",
-      "specialFrom": "2026-11-09",
-      "rank1From": "2026-11-10",
-      "moveInYm": "2030-10",
-      "announceDate": "2026-11-17",
-      "builder": "동부건설(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.남춘천센트레빌.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000539&pblancNo=2026000539",
-      "score": 28,
-      "reasons": [
-        "D-3",
-        "센트레빌"
-      ]
-    },
-    {
-      "kind": "apt",
       "pblancNo": "2026000523",
       "name": "형곡 센트럴 아테라",
       "areaName": "경북",
@@ -770,9 +770,9 @@
       "speculative": false,
       "homepage": "https://www.arterahg.co.kr",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000523&pblancNo=2026000523",
-      "score": 18,
+      "score": 25,
       "reasons": [
-        "D-3"
+        "D-2"
       ]
     },
     {
