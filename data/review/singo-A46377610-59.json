@@ -1,21 +1,14 @@
 {
   "label": "singo-A46377610-59",
-  "verdict": "block",
-  "summary": "BLOCK — error 1 · warn 0 · 카드 1장 · 코드 검수만",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
       "file": "singo-시범한양-59.json",
       "deterministic": true,
-      "qaErrors": 1,
-      "findings": [
-        {
-          "reviewer": "design-qa",
-          "level": "error",
-          "code": "linecross",
-          "msg": "기준선 `..r-ba.e` 이 글자 \"9.3억(20.12월)지난 고점대비 \" 를 12px 관통합니다 — 라벨 자리를 옮기거나, 두 기준선이 붙는 소재면 카드로 만들지 마세요"
-        }
-      ]
+      "qaErrors": 0,
+      "findings": []
     }
   ],
   "llm": {

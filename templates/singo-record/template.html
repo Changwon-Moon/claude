@@ -233,7 +233,7 @@
       </div>
 
       <div class="sr-chart">
-        <svg class="sr-svg" viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <svg class="sr-svg"{{#if chart.qaAllow}} data-qa-allow="{{chart.qaAllow}}"{{/if}} viewBox="{{chart.vb}}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
           {{#if chart.bg}}<rect class="sr-bg" x="{{chart.bg.x}}" y="{{chart.bg.y}}" width="{{chart.bg.w}}" height="{{chart.bg.h}}" rx="{{chart.bg.r}}" />{{/if}}
           <!-- 워터마크는 판 바탕 바로 위 = **모든 데이터 아래**. 자리는 빌더가 재서 준다 -->
           {{#with chart.stamp}}<text class="sr-wmk" x="{{x}}" y="{{y}}" font-size="{{size}}" text-anchor="middle" transform="rotate({{rotate}} {{cx}} {{cy}})">{{text}}</text>{{/with}}

@@ -377,6 +377,9 @@ const MEASURE_JS = `(() => {
     var texts=Array.prototype.slice.call(sv.querySelectorAll("text"));
     var lines=Array.prototype.slice.call(sv.querySelectorAll("line"));
     if(!texts.length||!lines.length) return;
+    /* 오너가 그림을 보고 「선이 글자를 지나가도 된다」고 한 판(빌더 --allow-linecross, 2026-11-10 분당 시범한양).
+       판이 그 표시를 들고 있을 때만 건너뛴다 — 표시 없는 판은 지금처럼 막는다. */
+    if(/(^|\s)linecross(\s|$)/.test(sv.getAttribute("data-qa-allow")||"")) return;
     function cls(el){ var c=el.getAttribute("class")||""; return c?"."+c.trim().split(/\s+/).join("."):el.tagName; }
     texts.forEach(function(tx){
       var t=(tx.textContent||"").trim();

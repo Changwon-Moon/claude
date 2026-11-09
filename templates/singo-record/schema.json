@@ -490,6 +490,13 @@
               ]
             }
           }
+        },
+        "qaAllow": {
+          "type": "string",
+          "enum": [
+            "linecross"
+          ],
+          "description": "오너가 그림을 보고 통과시킨 검수 항목(빌더 --allow-linecross, 2026-11-10). 픽셀에는 영향 없음 — svg 의 data-qa-allow 로만 나간다."
         }
       }
     },

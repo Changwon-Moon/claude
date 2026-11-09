@@ -1631,7 +1631,9 @@ const card = {
      ⚠️ **돌파일 때만 붙인다.** 선을 넘지 않은 그냥 신고가에 "달성!"은 말이 안 된다. */
   priceSuffix: hit.milestone ? "달성!" : null,
   spec,
-  chart: { vb: `0 0 ${VB_W} ${VB_H}`, bg, stamp, threshold, prevLine, lowLine, brkHi, brkLo, paths: chartPaths, dots, axis, old, lowDot, dot },
+  /* `--allow-linecross` — 오너가 그림을 보고 「기준선이 글자를 지나가도 된다」고 한 판(2026-11-10 분당 시범한양).
+     검수(designQa linecross)가 이 판만 건너뛰도록 svg 에 표시를 단다. 픽셀은 바뀌지 않는다. */
+  chart: { vb: `0 0 ${VB_W} ${VB_H}`, bg, stamp, threshold, prevLine, lowLine, brkHi, brkLo, paths: chartPaths, dots, axis, old, lowDot, dot, ...(flag("allow-linecross") ? { qaAllow: "linecross" } : {}) },
   /* ⚠️ 하단 기준 문구를 걷어냈다(오너 2026-08-16). 다만 **"역대가 아니라 2020년 이후"** 라는
      단서는 오보를 막는 장치라 버릴 수 없어 **푸터 출처 줄로 옮겼다.** 카드 어딘가에는 있어야 한다. */
   /* 푸터는 한 줄이어야 한다 — asOf 까지 넣었더니 두 줄로 넘쳤다(2026-08-16).
@@ -1644,6 +1646,9 @@ const card = {
       `singo-history: ${histPath.replace(ROOT + "/", "")} (${hist.meta.monthsTried}개월 · 실패 ${hist.meta.monthsFailed})`,
       ...(DROPPED.length
         ? [`⚠️ 그래프에서 뺀 거래(--drop-ym, 오너 지시 — 앞뒤 시세와 동떨어진 거래): ${DROPPED.map((d) => `${d.date} ${d.floor}층 ${d.area}㎡ ${eok(d.manwon)}${(d.count ?? 1) > 1 ? ` 외 ${d.count - 1}건` : ""}`).join(" · ")}`]
+        : []),
+      ...(flag("allow-linecross")
+        ? ["⚠️ 기준선이 라벨 글자를 지나간다 — 오너가 그림을 보고 통과시켰다(--allow-linecross)"]
         : []),
       ...(NAME_OVERRIDE
         ? [`⚠️ 카드 이름을 줄여 적었다: 실거래 신고명 "${hit.aptNm}" → 카드 "${NAME_OVERRIDE}" (--name, 오너 지시)`]

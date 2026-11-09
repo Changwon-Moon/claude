@@ -378,7 +378,7 @@ const humanFlags = (() => {
       if (ni >= 0 && a[ni + 1]) keep.push("--name", a[ni + 1]);
       const di = a.indexOf("--drop-ym"); // 오너가 짚은 「그래프에서 뺄 달」(2026-10-21) — 같은 단지 새 이름표에도 따라간다
       if (di >= 0 && a[di + 1]) keep.push("--drop-ym", a[di + 1]);
-      for (const f of ["--accept-supply-warn", "--accept-cycle-guard", "--merge-blocks", "--short"]) if (a.includes(f)) keep.push(f);
+      for (const f of ["--accept-supply-warn", "--accept-cycle-guard", "--merge-blocks", "--short", "--allow-linecross"]) if (a.includes(f)) keep.push(f);
       if (keep.length) for (const pr of b.produces ?? []) map.set(pr, keep);
     }
     return map;
@@ -450,7 +450,7 @@ for (const t of made) {
     if (nameIdx >= 0 && old[nameIdx + 1]) carry.push("--name", old[nameIdx + 1]);
     const dropIdx = old.indexOf("--drop-ym"); // 오너가 짚은 「그래프에서 뺄 달」(2026-10-21)
     if (dropIdx >= 0 && old[dropIdx + 1]) carry.push("--drop-ym", old[dropIdx + 1]);
-    for (const f of ["--accept-supply-warn", "--accept-cycle-guard", "--merge-blocks", "--short"]) if (old.includes(f)) carry.push(f);
+    for (const f of ["--accept-supply-warn", "--accept-cycle-guard", "--merge-blocks", "--short", "--allow-linecross"]) if (old.includes(f)) carry.push(f);
     b.args = [...args.slice(0, -1), ...carry, "--publish"];
   } else {
     /* 새 빌더의 라벨은 **대장 열쇠로 짓는다** — 기계가 지어도 겹치지 않고, 한글 카드 이름과
