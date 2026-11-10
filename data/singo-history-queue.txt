@@ -62,7 +62,7 @@ lawd=41463 umd=구갈동 type=84 apt="기흥역더샵"
 lawd=11305 umd=미아동 type=84 apt="두산위브트레지움"
 lawd=41463 umd=언남동 type=84 apt="장미마을삼성래미안2"
 lawd=11290 umd=정릉동 type=59 apt="정릉풍림아이원"
-lawd=41115 umd=화서동 type=59 apt="화서역블루밍푸른숲" force=1
+lawd=41115 umd=화서동 type=59 apt="화서역블루밍푸른숲"
 
 lawd=41135 umd=서현동 type=59 apt="시범한양"
 lawd=11740 umd=상일동 type=59 apt="고덕롯데캐슬베네루체"
