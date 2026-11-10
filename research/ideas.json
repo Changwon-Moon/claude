@@ -2234,6 +2234,20 @@
       "at": "2026-11-10"
     },
     {
+      "id": "ah-apt-2026820014",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[신규분양] 남양주왕숙 A-2블록 신혼희망타운(공공분양) 잔여세대 추가입주자모집공고",
+      "why": "경기 · 32세대 · 접수 ~2026-11-12(D-2) · 47점(수도권·D-2·분양가상한제)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-11-12",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820014&pblancNo=2026820014",
+      "at": "2026-11-10"
+    },
+    {
       "id": "ah-remndr-2026910285",
       "cat": "hot",
       "topic": "부동산",
@@ -2259,20 +2273,6 @@
       "status": "",
       "deadline": "2026-11-09",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910277&pblancNo=2026910277",
-      "at": "2026-11-10"
-    },
-    {
-      "id": "ah-apt-2026820014",
-      "cat": "todo",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[신규분양] 남양주왕숙 A-2블록 신혼희망타운(공공분양) 잔여세대 추가입주자모집공고",
-      "why": "경기 · 32세대 · 접수 ~2026-11-12(D-2) · 47점(수도권·D-2·분양가상한제)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-11-12",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820014&pblancNo=2026820014",
       "at": "2026-11-10"
     }
   ]
