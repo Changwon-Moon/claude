@@ -50,7 +50,7 @@
 # ⚡ 2026-11-09 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-10 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-11 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
-lawd=41117 umd=원천동 type=84 apt="광교중흥에스클래스" force=1
+lawd=41117 umd=원천동 type=84 apt="광교중흥에스클래스"
 lawd=11740 umd=고덕동 type=84 apt="고덕 아이파크"
 lawd=11500 umd=화곡동 type=59 apt="우장산아이파크,이편한세상"
 lawd=11620 umd=봉천동 type=84 apt="관악푸르지오" force=1
