@@ -5,15 +5,15 @@
     "aptNm": "내대지마을건영캐스빌",
     "type": "84",
     "from": "202001",
-    "to": "202610",
-    "monthsTried": 82,
+    "to": "202611",
+    "monthsTried": 83,
     "monthsFailed": 0,
-    "monthsTraded": 62,
+    "monthsTraded": 64,
     "peak": {
-      "manwon": 90000,
-      "date": "2026-09-29",
+      "manwon": 90400,
+      "date": "2026-11-11",
       "area": 84.5773,
-      "floor": 10
+      "floor": 21
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -750,11 +750,20 @@
     },
     {
       "ym": "202610",
-      "maxManwon": null,
-      "count": 0,
-      "area": null,
-      "floor": null,
-      "date": null,
+      "maxManwon": 89000,
+      "count": 1,
+      "area": 84.5773,
+      "floor": 5,
+      "date": "2026-10-19",
+      "ok": true
+    },
+    {
+      "ym": "202611",
+      "maxManwon": 90400,
+      "count": 1,
+      "area": 84.5773,
+      "floor": 21,
+      "date": "2026-11-11",
       "ok": true
     }
   ]
