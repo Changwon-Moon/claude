@@ -10,44 +10,17 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-11-10",
+    "collectedFor": "2026-11-11",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2935,
-      "APT 무순위/잔여세대": 1744
+      "APT 무순위/잔여세대": 1745
     },
     "unit": {
       "supply": "가구"
     }
   },
   "notices": [
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910279",
-      "name": "봉담자이 프라이드시티",
-      "areaName": "경기",
-      "address": "경기도 화성특례시 효행구 봉담읍 삼봉안길 30 (봉담내리지구 A1블록 봉담자이 프라이드시티)",
-      "supply": 2,
-      "noticeDate": "2026-11-05",
-      "receiptFrom": "2026-11-10",
-      "receiptTo": "2026-11-10",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-12",
-      "announceDate": "2026-11-13",
-      "builder": "디에스디삼호(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.idsd.co.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910279&pblancNo=2026910279",
-      "score": 72,
-      "reasons": [
-        "수도권",
-        "무순위",
-        "오늘 마감",
-        "자이"
-      ]
-    },
     {
       "kind": "apt",
       "pblancNo": "2026000528",
@@ -70,7 +43,7 @@
       "score": 72,
       "reasons": [
         "수도권",
-        "D-1",
+        "오늘 마감",
         "센트레빌",
         "분양가상한제",
         "투기과열지구"
@@ -99,34 +72,34 @@
       "reasons": [
         "수도권",
         "1,098가구 대단지",
-        "D-1",
+        "오늘 마감",
         "포레나"
       ]
     },
     {
       "kind": "remndr",
-      "pblancNo": "2026910282",
-      "name": "광명 시티프라디움 에듀하임",
-      "areaName": "경기",
-      "address": "경기도 광명시 소하동 광명 구름산지구 도시개발사업지구 A6BL",
-      "supply": 21,
-      "noticeDate": "2026-11-05",
-      "receiptFrom": "2026-11-10",
-      "receiptTo": "2026-11-10",
+      "pblancNo": "2026910290",
+      "name": "청계 노르웨이숲(14차)",
+      "areaName": "서울",
+      "address": "서울특별시 중구 황학동 1756번지 일원",
+      "supply": 6,
+      "noticeDate": "2026-11-09",
+      "receiptFrom": "2026-11-16",
+      "receiptTo": "2026-11-17",
       "specialFrom": null,
       "rank1From": null,
-      "moveInYm": "2029-03",
-      "announceDate": "2026-11-13",
-      "builder": "(주)시티글로벌",
+      "moveInYm": "2028-07",
+      "announceDate": "2026-11-20",
+      "builder": "황학동청계지역주택조합",
       "priceCap": false,
       "speculative": false,
-      "homepage": "https://광명시티프라디움.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910282&pblancNo=2026910282",
-      "score": 66,
+      "homepage": "https://청계노르웨이숲.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910290&pblancNo=2026910290",
+      "score": 67,
       "reasons": [
-        "수도권",
+        "서울",
         "무순위",
-        "오늘 마감"
+        "D-6"
       ]
     },
     {
@@ -151,7 +124,7 @@
       "score": 66,
       "reasons": [
         "수도권",
-        "D-1",
+        "오늘 마감",
         "센트레빌",
         "분양가상한제",
         "투기과열지구"
@@ -180,7 +153,7 @@
       "reasons": [
         "수도권",
         "623가구",
-        "D-1",
+        "오늘 마감",
         "분양가상한제"
       ]
     },
@@ -207,7 +180,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -233,7 +206,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -259,32 +232,33 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
       "kind": "remndr",
-      "pblancNo": "2026910290",
-      "name": "청계 노르웨이숲(14차)",
-      "areaName": "서울",
-      "address": "서울특별시 중구 황학동 1756번지 일원",
-      "supply": 6,
-      "noticeDate": "2026-11-09",
+      "pblancNo": "2026910284",
+      "name": "중동역 다채로움 더원",
+      "areaName": "경기",
+      "address": "경기도 부천시 소사구 송내동 365-1번지 일원",
+      "supply": 23,
+      "noticeDate": "2026-11-10",
       "receiptFrom": "2026-11-16",
-      "receiptTo": "2026-11-17",
+      "receiptTo": "2026-11-16",
       "specialFrom": null,
       "rank1From": null,
-      "moveInYm": "2028-07",
-      "announceDate": "2026-11-20",
-      "builder": "황학동청계지역주택조합",
+      "moveInYm": "2028-08",
+      "announceDate": "2026-11-19",
+      "builder": "송내동 성우아파트 소규모재건축정비사업조합",
       "priceCap": false,
       "speculative": false,
-      "homepage": "https://청계노르웨이숲.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910290&pblancNo=2026910290",
+      "homepage": "http://중동역다채로움더원.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910284&pblancNo=2026910284",
       "score": 59,
       "reasons": [
-        "서울",
-        "무순위"
+        "수도권",
+        "무순위",
+        "D-5"
       ]
     },
     {
@@ -314,6 +288,32 @@
       ]
     },
     {
+      "kind": "remndr",
+      "pblancNo": "2026910279",
+      "name": "봉담자이 프라이드시티",
+      "areaName": "경기",
+      "address": "경기도 화성특례시 효행구 봉담읍 삼봉안길 30 (봉담내리지구 A1블록 봉담자이 프라이드시티)",
+      "supply": 2,
+      "noticeDate": "2026-11-05",
+      "receiptFrom": "2026-11-10",
+      "receiptTo": "2026-11-10",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-12",
+      "announceDate": "2026-11-13",
+      "builder": "디에스디삼호(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.idsd.co.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910279&pblancNo=2026910279",
+      "score": 57,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "자이"
+      ]
+    },
+    {
       "kind": "apt",
       "pblancNo": "2026000525",
       "name": "엘리프 시흥 더프라임",
@@ -335,7 +335,7 @@
       "score": 57,
       "reasons": [
         "수도권",
-        "D-1",
+        "오늘 마감",
         "분양가상한제"
       ]
     },
@@ -361,9 +361,60 @@
       "score": 56,
       "reasons": [
         "수도권",
-        "D-1",
+        "오늘 마감",
         "분양가상한제",
         "투기과열지구"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910282",
+      "name": "광명 시티프라디움 에듀하임",
+      "areaName": "경기",
+      "address": "경기도 광명시 소하동 광명 구름산지구 도시개발사업지구 A6BL",
+      "supply": 21,
+      "noticeDate": "2026-11-05",
+      "receiptFrom": "2026-11-10",
+      "receiptTo": "2026-11-10",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2029-03",
+      "announceDate": "2026-11-13",
+      "builder": "(주)시티글로벌",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://광명시티프라디움.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910282&pblancNo=2026910282",
+      "score": 51,
+      "reasons": [
+        "수도권",
+        "무순위"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000531",
+      "name": "시흥거모지구 S-1블록 공공분양(본청약)",
+      "areaName": "경기",
+      "address": "경기도 시흥시 거모동, 군자동 일원 시흥거모 공공주택지구 내 S-1블록",
+      "supply": 300,
+      "noticeDate": "2026-10-23",
+      "receiptFrom": "2026-11-02",
+      "receiptTo": "2026-11-17",
+      "specialFrom": null,
+      "rank1From": "2026-11-02",
+      "moveInYm": "2029-06",
+      "announceDate": "2026-11-26",
+      "builder": "씨에이이앤씨주식회사",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://apply.lh.or.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000531&pblancNo=2026000531",
+      "score": 50,
+      "reasons": [
+        "수도권",
+        "D-6",
+        "분양가상한제"
       ]
     },
     {
@@ -414,7 +465,7 @@
       "score": 47,
       "reasons": [
         "수도권",
-        "D-2",
+        "D-1",
         "분양가상한제"
       ]
     },
@@ -467,56 +518,6 @@
       "reasons": [
         "무순위",
         "하늘채"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910274",
-      "name": "천안 롯데캐슬 더 청당",
-      "areaName": "충남",
-      "address": "충청남도 천안시 동남구 청당4로 20",
-      "supply": 2,
-      "noticeDate": "2026-11-03",
-      "receiptFrom": "2026-11-09",
-      "receiptTo": "2026-11-09",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-12",
-      "announceDate": "2026-11-12",
-      "builder": "롯데건설(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.lottecastle.co.kr/APT/AT00385/main/index.do",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910274&pblancNo=2026910274",
-      "score": 43,
-      "reasons": [
-        "무순위",
-        "롯데캐슬"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000531",
-      "name": "시흥거모지구 S-1블록 공공분양(본청약)",
-      "areaName": "경기",
-      "address": "경기도 시흥시 거모동, 군자동 일원 시흥거모 공공주택지구 내 S-1블록",
-      "supply": 300,
-      "noticeDate": "2026-10-23",
-      "receiptFrom": "2026-11-02",
-      "receiptTo": "2026-11-17",
-      "specialFrom": null,
-      "rank1From": "2026-11-02",
-      "moveInYm": "2029-06",
-      "announceDate": "2026-11-26",
-      "builder": "씨에이이앤씨주식회사",
-      "priceCap": true,
-      "speculative": false,
-      "homepage": "https://apply.lh.or.kr/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000531&pblancNo=2026000531",
-      "score": 42,
-      "reasons": [
-        "수도권",
-        "분양가상한제"
       ]
     },
     {
@@ -616,58 +617,8 @@
       "score": 40,
       "reasons": [
         "수도권",
-        "D-2",
+        "D-1",
         "투기과열지구"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910273",
-      "name": "캐슬앤파밀리에 디아트(4-1생활권 P1구역 L2블록 수루배마을2단지)",
-      "areaName": "세종",
-      "address": "세종특별자치시 반곡1길 9 (반곡동, 수루배마을2단지)",
-      "supply": 1,
-      "noticeDate": "2026-11-03",
-      "receiptFrom": "2026-11-09",
-      "receiptTo": "2026-11-09",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-12",
-      "announceDate": "2026-11-12",
-      "builder": "롯데건설(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.lottecastle.co.kr/APT/AT00172/main/index.do",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910273&pblancNo=2026910273",
-      "score": 39,
-      "reasons": [
-        "광역시",
-        "무순위"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910272",
-      "name": "캐슬앤파밀리에 디아트(4-1생활권 P1구역 M1블록 수루배마을1단지)",
-      "areaName": "세종",
-      "address": "세종특별자치시 반곡로 14 (반곡동, 수루배마을1단지)",
-      "supply": 1,
-      "noticeDate": "2026-11-03",
-      "receiptFrom": "2026-11-09",
-      "receiptTo": "2026-11-09",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-12",
-      "announceDate": "2026-11-12",
-      "builder": "롯데건설(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.lottecastle.co.kr/APT/AT00172/main/index.do",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910272&pblancNo=2026910272",
-      "score": 39,
-      "reasons": [
-        "광역시",
-        "무순위"
       ]
     },
     {
@@ -716,7 +667,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000539&pblancNo=2026000539",
       "score": 35,
       "reasons": [
-        "D-1",
+        "오늘 마감",
         "센트레빌"
       ]
     },
@@ -765,7 +716,31 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000523&pblancNo=2026000523",
       "score": 25,
       "reasons": [
-        "D-1"
+        "오늘 마감"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000554",
+      "name": "리첼 에듀포레 경산역",
+      "areaName": "경북",
+      "address": "경상북도 경산시 사정동 301-22번지 일원",
+      "supply": 201,
+      "noticeDate": "2026-11-03",
+      "receiptFrom": "2026-11-16",
+      "receiptTo": "2026-11-17",
+      "specialFrom": "2026-11-13",
+      "rank1From": "2026-11-16",
+      "moveInYm": "2029-09",
+      "announceDate": "2026-11-23",
+      "builder": "에쓰와이이앤씨",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://richelledufore.co.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000554&pblancNo=2026000554",
+      "score": 18,
+      "reasons": [
+        "D-6"
       ]
     },
     {
@@ -815,28 +790,6 @@
       "reasons": [
         "분양가상한제"
       ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000554",
-      "name": "리첼 에듀포레 경산역",
-      "areaName": "경북",
-      "address": "경상북도 경산시 사정동 301-22번지 일원",
-      "supply": 201,
-      "noticeDate": "2026-11-03",
-      "receiptFrom": "2026-11-16",
-      "receiptTo": "2026-11-17",
-      "specialFrom": "2026-11-13",
-      "rank1From": "2026-11-16",
-      "moveInYm": "2029-09",
-      "announceDate": "2026-11-23",
-      "builder": "에쓰와이이앤씨",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://richelledufore.co.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000554&pblancNo=2026000554",
-      "score": 10,
-      "reasons": []
     }
   ]
 }
