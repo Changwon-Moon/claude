@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-10T22:58:43.417Z",
+  "generatedAt": "2026-11-11T00:28:43.255Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -194,7 +194,7 @@
       "maxDelay": null,
       "lastRun": "2026-11-09",
       "lastOk": "2026-11-09",
-      "okDaysAgo": 1
+      "okDaysAgo": 2
     },
     {
       "file": "applyhome-collect.yml",
@@ -1285,7 +1285,7 @@
       "lastOk": "2026-11-11",
       "okDaysAgo": 0,
       "fails30": 2,
-      "runs30": 75
+      "runs30": 74
     },
     {
       "file": "singo-prep.yml",
@@ -1302,8 +1302,8 @@
       "name": "오늘의 신고가 — 자동 재시도",
       "lastRun": "2026-11-11",
       "daysAgo": 0,
-      "lastOk": "2026-10-18",
-      "okDaysAgo": 24,
+      "lastOk": null,
+      "okDaysAgo": null,
       "fails30": 0,
       "runs30": 100
     },
@@ -1314,8 +1314,8 @@
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 46,
-      "runs30": 81
+      "fails30": 45,
+      "runs30": 80
     }
   ]
 }
