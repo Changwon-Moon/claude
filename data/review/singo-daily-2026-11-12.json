@@ -1,0 +1,138 @@
+{
+  "label": "singo-daily-2026-11-12",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 21장 · 코드 검수만",
+  "findings": [],
+  "cards": [
+    {
+      "file": "singo-강남자곡힐스테이트-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-평촌센텀퍼스트-84-1112.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-화서역파크푸르지오-84-1112.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-신흥역하늘채랜더스원1단지-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-미사강변골든센트로-84-1112.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-길음뉴타운8단지래미안-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-평촌더샵센트럴시티-59-1112.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-힐스테이트동탄-84-1112.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-DMC래미안클라시스-59-1112.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-포레나노원-59-1112.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-평촌더샵아이파크-59-1112.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-아르테자이-84-1112.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-삼성래미안-84-1112.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-광명해모로이연-59-1112.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-샛별한양42-59-1112.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-전농우성-59-1112.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-주공2-84-1112.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-내대지마을건영캐스빌-84-1112.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-동아아파트-59-1112.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-주공7-59.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-벽적골우성-59-1112.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}
