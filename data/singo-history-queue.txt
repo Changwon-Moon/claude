@@ -55,7 +55,7 @@ lawd=11680 umd=자곡동 type=84 apt="강남자곡 힐스테이트"
 lawd=41173 umd=호계동 type=84 apt="평촌센텀퍼스트"
 lawd=41111 umd=정자동 type=84 apt="화서역파크푸르지오"
 lawd=41133 umd=중앙동 type=84 apt="신흥역하늘채랜더스원1단지"
-lawd=41450 umd=망월동 type=84 apt="미사강변 골든 센트로" force=1
+lawd=41450 umd=망월동 type=84 apt="미사강변 골든 센트로"
 lawd=11290 umd=길음동 type=59 apt="길음뉴타운8단지(래미안)"
 lawd=41173 umd=관양동 type=59 apt="평촌더샵센트럴시티" force=1
 lawd=41597 umd=목동 type=84 apt="힐스테이트동탄" force=1
