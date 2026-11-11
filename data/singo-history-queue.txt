@@ -62,7 +62,7 @@ lawd=41597 umd=목동 type=84 apt="힐스테이트동탄"
 lawd=11410 umd=남가좌동 type=59 apt="DMC래미안클라시스"
 lawd=11350 umd=상계동 type=59 apt="포레나노원"
 lawd=41173 umd=호계동 type=59 apt="평촌더샵아이파크"
-lawd=41171 umd=안양동 type=84 apt="아르테자이" force=1
+lawd=41171 umd=안양동 type=84 apt="아르테자이"
 lawd=41173 umd=비산동 type=84 apt="삼성래미안" force=1
 lawd=41210 umd=광명동 type=59 apt="광명해모로이연" force=1
 lawd=11230 umd=전농동 type=59 apt="전농우성" force=1
