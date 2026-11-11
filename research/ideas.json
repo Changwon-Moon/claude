@@ -2234,6 +2234,20 @@
       "at": "2026-11-11"
     },
     {
+      "id": "ah-apt-2026000531",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[신규분양] 시흥거모지구 S-1블록 공공분양(본청약)",
+      "why": "경기 · 300세대 · 접수 ~2026-11-17(D-6) · 50점(수도권·D-6·분양가상한제)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-11-17",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000531&pblancNo=2026000531",
+      "at": "2026-11-11"
+    },
+    {
       "id": "ah-remndr-2026910285",
       "cat": "hot",
       "topic": "부동산",
@@ -2273,20 +2287,6 @@
       "status": "",
       "deadline": "2026-11-10",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910282&pblancNo=2026910282",
-      "at": "2026-11-11"
-    },
-    {
-      "id": "ah-apt-2026000531",
-      "cat": "todo",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[신규분양] 시흥거모지구 S-1블록 공공분양(본청약)",
-      "why": "경기 · 300세대 · 접수 ~2026-11-17(D-6) · 50점(수도권·D-6·분양가상한제)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-11-17",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000531&pblancNo=2026000531",
       "at": "2026-11-11"
     },
     {
