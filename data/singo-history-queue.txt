@@ -67,7 +67,7 @@ lawd=41173 umd=비산동 type=84 apt="삼성래미안"
 lawd=41210 umd=광명동 type=59 apt="광명해모로이연"
 lawd=11230 umd=전농동 type=59 apt="전농우성"
 lawd=41173 umd=비산동 type=59 apt="샛별한양4-2"
-lawd=41310 umd=인창동 type=84 apt="주공2" force=1
+lawd=41310 umd=인창동 type=84 apt="주공2"
 lawd=41465 umd=죽전동 type=84 apt="내대지마을건영캐스빌" force=1
 lawd=41465 umd=풍덕천동 type=59 apt="동아아파트" force=1
 lawd=41210 umd=하안동 type=59 apt="주공7"
