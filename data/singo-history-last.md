@@ -1,9 +1,194 @@
 # 신고가 단지 이력 — 마지막 실행
 
-- 대기열: 848줄
+- 대기열: 864줄
 - 결과: **성공**
 
 ```
+
+── 상록마을(우성)1 전용 84타입 (41135)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41135 --apt '상록마을(우성)1' --umd '정자동' --type 84 --from 202001
+
+상록마을(우성)1 · 전용 84타입 · 41135 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41135-상록마을우성1-84.json
+거래 있던 달 37/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 24.9억 (2026-11-10 · 전용 84.97㎡ 14층)
+
+── 센트럴파크푸르지오써밋 전용 84타입 (41290)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41290 --apt '센트럴파크푸르지오써밋' --umd '부림동' --type 84 --from 202001
+
+센트럴파크푸르지오써밋 · 전용 84타입 · 41290 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41290-센트럴파크푸르지오써밋-84.json
+거래 있던 달 43/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 24.9억 (2026-10-31 · 전용 84.99㎡ 12층)
+
+── 래미안힐스테이트고덕 전용 84타입 (11740)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11740 --apt '래미안힐스테이트고덕' --umd '고덕동' --type 84 --from 202001
+
+래미안힐스테이트고덕 · 전용 84타입 · 11740 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11740-래미안힐스테이트고덕-84.json
+거래 있던 달 67/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 23.2억 (2026-10-24 · 전용 84.83㎡ 20층)
+
+── 우장산힐스테이트 전용 84타입 (11500)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11500 --apt '우장산힐스테이트' --umd '내발산동' --type 84 --from 202001
+
+우장산힐스테이트 · 전용 84타입 · 11500 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11500-우장산힐스테이트-84.json
+거래 있던 달 65/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 18.05억 (2026-10-30 · 전용 84.98㎡ 14층)
+
+── 철산래미안자이 전용 84타입 (41210)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41210 --apt '철산래미안자이' --umd '철산동' --type 84 --from 202001 --force
+
+철산래미안자이 · 전용 84타입 · 41210 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41210-철산래미안자이-84.json
+거래 있던 달 70/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 14.85억 (2026-11-07 · 전용 84.44㎡ 21층)
+🧹 force=1 을 지웠습니다 — lawd=41210 umd=철산동 type=84 apt="철산래미안자이"
+
+── 롯데캐슬 전용 84타입 (11140)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11140 --apt '롯데캐슬' --umd '황학동' --type 84 --from 202001 --force
+
+롯데캐슬 · 전용 84타입 · 11140 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11140-롯데캐슬-84.json
+거래 있던 달 66/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 14.45억 (2026-11-07 · 전용 84.97㎡ 25층)
+🧹 force=1 을 지웠습니다 — lawd=11140 umd=황학동 type=84 apt="롯데캐슬"
+
+── 평촌더샵센트럴시티 전용 59타입 (41173)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '평촌더샵센트럴시티' --umd '관양동' --type 59 --from 202001 --force
+
+평촌더샵센트럴시티 · 전용 59타입 · 41173 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41173-평촌더샵센트럴시티-59.json
+거래 있던 달 52/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 13.4억 (2026-10-31 · 전용 59.9861㎡ 18층)
+🧹 force=1 을 지웠습니다 — lawd=41173 umd=관양동 type=59 apt="평촌더샵센트럴시티"
+
+── 미사강변 골든 센트로 전용 59타입 (41450)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41450 --apt '미사강변 골든 센트로' --umd '망월동' --type 59 --from 202001 --force
+
+미사강변 골든 센트로 · 전용 59타입 · 41450 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41450-미사강변골든센트로-59.json
+거래 있던 달 74/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 12.77억 (2026-11-05 · 전용 59.96㎡ 17층)
+🧹 force=1 을 지웠습니다 — lawd=41450 umd=망월동 type=59 apt="미사강변 골든 센트로"
+
+── 현대성우8차 전용 59타입 (41465)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41465 --apt '현대성우8차' --umd '풍덕천동' --type 59 --from 202001 --force
+
+현대성우8차 · 전용 59타입 · 41465 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41465-현대성우8차-59.json
+거래 있던 달 80/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 12.5억 (2026-10-30 · 전용 59.99㎡ 8층)
+🧹 force=1 을 지웠습니다 — lawd=41465 umd=풍덕천동 type=59 apt="현대성우8차"
+
+── 강동리버스트4단지 전용 59타입 (11740)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11740 --apt '강동리버스트4단지' --umd '강일동' --type 59 --from 202001
+
+강동리버스트4단지 · 전용 59타입 · 11740 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11740-강동리버스트4단지-59.json
+거래 있던 달 27/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 12.3억 (2026-11-09 · 전용 59.99㎡ 11층)
+
+── 초원마을대림 전용 59타입 (41173)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41173 --apt '초원마을대림' --umd '평촌동' --type 59 --from 202001 --force
+
+초원마을대림 · 전용 59타입 · 41173 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41173-초원마을대림-59.json
+거래 있던 달 59/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 10.7억 (2026-10-31 · 전용 59.742㎡ 4층)
+🧹 force=1 을 지웠습니다 — lawd=41173 umd=평촌동 type=59 apt="초원마을대림"
+
+── 매탄위브하늘채 전용 84타입 (41117)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41117 --apt '매탄위브하늘채' --umd '매탄동' --type 84 --from 202001 --force
+
+매탄위브하늘채 · 전용 84타입 · 41117 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41117-매탄위브하늘채-84.json
+거래 있던 달 82/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 9.5억 (2026-11-04 · 전용 84.7807㎡ 15층)
+🧹 force=1 을 지웠습니다 — lawd=41117 umd=매탄동 type=84 apt="매탄위브하늘채"
+
+── 은행주공 전용 59타입 (41133)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41133 --apt '은행주공' --umd '은행동' --type 59 --from 202001
+
+은행주공 · 전용 59타입 · 41133 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41133-은행주공-59.json
+거래 있던 달 32/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 9억 (2026-10-09 · 전용 61.52㎡ 15층)
+
+── 장미(시영6) 전용 59타입 (11350)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11350 --apt '장미(시영6)' --umd '하계동' --type 59 --from 202001 --force
+
+장미(시영6) · 전용 59타입 · 11350 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11350-장미시영6-59.json
+거래 있던 달 23/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 8.9억 (2026-10-19 · 전용 59.87㎡ 7층)
+🧹 force=1 을 지웠습니다 — lawd=11350 umd=하계동 type=59 apt="장미(시영6)"
+
+── 호수공원역 센트럴시티 전용 59타입 (41597)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41597 --apt '호수공원역 센트럴시티' --umd '산척동' --type 59 --from 202001 --force
+
+호수공원역 센트럴시티 · 전용 59타입 · 41597 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41597-호수공원역센트럴시티-59.json
+거래 있던 달 37/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 8.8억 (2026-11-02 · 전용 60.3768㎡ 2층)
+🧹 force=1 을 지웠습니다 — lawd=41597 umd=산척동 type=59 apt="호수공원역 센트럴시티"
+
+── 비단마을베스트타운 전용 84타입 (41111)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41111 --apt '비단마을베스트타운' --umd '천천동' --type 84 --from 202001
+
+비단마을베스트타운 · 전용 84타입 · 41111 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41111-비단마을베스트타운-84.json
+거래 있던 달 70/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 8.27억 (2026-11-07 · 전용 84.9981㎡ 16층)
 
 ── 강남자곡 힐스테이트 전용 84타입 (11680)
 
