@@ -387,12 +387,26 @@ const humanFlags = (() => {
   }
 })();
 
+/* 날짜 꼬리 이름표가 옛 이름표의 손잡이를 이어받을 때 **`--name` 은 빼고** 받는다(2026-11-13).
+   이름은 이름 사전(apt-names.json)이 정본이다 — 옛 빌더에 박힌 `--name` 을 따라가면, 그 뒤 오너가
+   사전에서 바꾼 이름(예: 「평촌 초원마을대림」)이 옛 이름으로 되돌아간다. */
+const baseFlags = (slug) => {
+  const own = humanFlags.get(slug);
+  if (own) return own;
+  const f = humanFlags.get(slug.replace(/-\d{4}(-[b-z])?$/, "")) ?? [];
+  const out = [];
+  for (let i = 0; i < f.length; i++) {
+    if (f[i] === "--name") { i++; continue; }
+    out.push(f[i]);
+  }
+  return out;
+};
 const made = [];
 const skipped = [];
 for (const t of targets) {
   /* 이미 낸 카드라 이름표에 날짜가 붙은 경우(…-1107)에도 같은 단지에 붙여 둔 손잡이를 이어받는다(2026-11-07 —
      포스코더샵2차 84 가 10-01 에 사이클 가드를 넘겨 나갔는데, 새 이름표에서 손잡이를 못 찾아 또 막혔다). */
-  const carried = humanFlags.get(t.slug) ?? humanFlags.get(t.slug.replace(/-\d{4}(-[b-z])?$/, "")) ?? [];
+  const carried = baseFlags(t.slug);
   if (carried.length) console.log(`   ⓘ ${t.h.aptNm} — 사람이 붙여 둔 손잡이를 이어받습니다: ${carried.join(" ")}`);
   const r = sh("node", [
     "scripts/build-singo-record.mjs",
@@ -465,7 +479,7 @@ for (const t of made) {
     for (let n = 0; barr.some((x) => x.label === label); n++) label = `${label.replace(/-[a-z]$/, "")}-${String.fromCharCode(98 + n)}`;
     /* 날짜 꼬리 새 이름표(…-1107)도 같은 단지에 붙여 둔 손잡이를 이어받는다(2026-11-07 포스코더샵2차 —
        만들 때는 이어받고 등록할 때는 빠뜨려서, 렌더 단계에서 가드가 또 막았다). */
-    const inherited = humanFlags.get(t.slug) ?? humanFlags.get(t.slug.replace(/-\d{4}(-[b-z])?$/, "")) ?? [];
+    const inherited = baseFlags(t.slug);
     b = {
       label,
       cmd: "scripts/build-singo-record.mjs",
