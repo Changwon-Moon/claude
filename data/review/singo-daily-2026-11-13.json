@@ -1,7 +1,7 @@
 {
   "label": "singo-daily-2026-11-13",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 15장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 16장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
@@ -54,6 +54,12 @@
     },
     {
       "file": "singo-현대성우8차-59-1113.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-강동리버스트4단지-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
