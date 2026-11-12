@@ -65,7 +65,7 @@ lawd=11740 umd=강일동 type=59 apt="강동리버스트4단지"
 lawd=41173 umd=평촌동 type=59 apt="초원마을대림"
 lawd=41117 umd=매탄동 type=84 apt="매탄위브하늘채"
 lawd=41133 umd=은행동 type=59 apt="은행주공"
-lawd=11350 umd=하계동 type=59 apt="장미(시영6)" force=1
+lawd=11350 umd=하계동 type=59 apt="장미(시영6)"
 lawd=41597 umd=산척동 type=59 apt="호수공원역 센트럴시티" force=1
 lawd=41111 umd=천천동 type=84 apt="비단마을베스트타운"
 
