@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-12T00:21:32.214Z",
+  "generatedAt": "2026-11-12T04:34:57.155Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -282,15 +282,15 @@
         },
         {
           "day": "11-12",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "11:51",
+          "delay": 281
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-11-11",
-      "lastOk": "2026-11-11",
+      "medianDelay": 281,
+      "maxDelay": 281,
+      "lastRun": "2026-11-12",
+      "lastOk": "2026-11-12",
       "okDaysAgo": 0
     },
     {
@@ -1261,9 +1261,9 @@
       "file": "molit-rent-collect.yml",
       "name": "전월세 실거래 수집 (국토부)",
       "lastRun": "2026-11-03",
-      "daysAgo": 8,
+      "daysAgo": 9,
       "lastOk": "2026-11-03",
-      "okDaysAgo": 8,
+      "okDaysAgo": 9,
       "fails30": 0,
       "runs30": 1
     },
@@ -1271,9 +1271,9 @@
       "file": "reb-collect.yml",
       "name": "전세·월세 지수 수집 (한국부동산원)",
       "lastRun": "2026-11-03",
-      "daysAgo": 8,
+      "daysAgo": 9,
       "lastOk": "2026-11-03",
-      "okDaysAgo": 8,
+      "okDaysAgo": 9,
       "fails30": 0,
       "runs30": 1
     },
@@ -1285,7 +1285,7 @@
       "lastOk": "2026-11-12",
       "okDaysAgo": 0,
       "fails30": 0,
-      "runs30": 73
+      "runs30": 74
     },
     {
       "file": "singo-prep.yml",
@@ -1314,8 +1314,8 @@
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 45,
-      "runs30": 79
+      "fails30": 46,
+      "runs30": 80
     }
   ]
 }
