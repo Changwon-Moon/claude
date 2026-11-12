@@ -8,12 +8,12 @@
     "to": "202611",
     "monthsTried": 83,
     "monthsFailed": 0,
-    "monthsTraded": 81,
+    "monthsTraded": 82,
     "peak": {
-      "manwon": 91000,
-      "date": "2026-10-27",
-      "area": 84.7273,
-      "floor": 22
+      "manwon": 95000,
+      "date": "2026-11-04",
+      "area": 84.7807,
+      "floor": 15
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -751,7 +751,7 @@
     {
       "ym": "202610",
       "maxManwon": 91000,
-      "count": 6,
+      "count": 9,
       "area": 84.7273,
       "floor": 22,
       "date": "2026-10-27",
@@ -759,11 +759,11 @@
     },
     {
       "ym": "202611",
-      "maxManwon": null,
-      "count": 0,
-      "area": null,
-      "floor": null,
-      "date": null,
+      "maxManwon": 95000,
+      "count": 2,
+      "area": 84.7807,
+      "floor": 15,
+      "date": "2026-11-04",
       "ok": true
     }
   ]
