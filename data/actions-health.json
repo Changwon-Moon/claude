@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-12T23:04:28.409Z",
+  "generatedAt": "2026-11-12T23:54:04.541Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -194,7 +194,7 @@
       "maxDelay": null,
       "lastRun": "2026-11-09",
       "lastOk": "2026-11-09",
-      "okDaysAgo": 3
+      "okDaysAgo": 4
     },
     {
       "file": "applyhome-collect.yml",
@@ -1285,7 +1285,7 @@
       "lastOk": "2026-11-13",
       "okDaysAgo": 0,
       "fails30": 0,
-      "runs30": 75
+      "runs30": 76
     },
     {
       "file": "singo-prep.yml",
@@ -1314,8 +1314,8 @@
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 47,
-      "runs30": 81
+      "fails30": 48,
+      "runs30": 82
     }
   ]
 }
