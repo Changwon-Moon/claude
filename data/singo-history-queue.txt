@@ -57,7 +57,7 @@ lawd=41290 umd=부림동 type=84 apt="센트럴파크푸르지오써밋"
 lawd=11740 umd=고덕동 type=84 apt="래미안힐스테이트고덕"
 lawd=11500 umd=내발산동 type=84 apt="우장산힐스테이트"
 lawd=41210 umd=철산동 type=84 apt="철산래미안자이"
-lawd=11140 umd=황학동 type=84 apt="롯데캐슬" force=1
+lawd=11140 umd=황학동 type=84 apt="롯데캐슬"
 lawd=41173 umd=관양동 type=59 apt="평촌더샵센트럴시티" force=1
 lawd=41450 umd=망월동 type=59 apt="미사강변 골든 센트로" force=1
 lawd=41465 umd=풍덕천동 type=59 apt="현대성우8차" force=1
