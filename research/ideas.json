@@ -2164,20 +2164,6 @@
       "at": "2026-11-12"
     },
     {
-      "id": "ah-remndr-2026910279",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 봉담자이 프라이드시티",
-      "why": "경기 · 2세대 · 접수 ~2026-11-10 · 57점(수도권·무순위·자이)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-11-10",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910279&pblancNo=2026910279",
-      "at": "2026-11-12"
-    },
-    {
       "id": "ah-remndr-2026910297",
       "cat": "todo",
       "topic": "부동산",
@@ -2192,20 +2178,6 @@
       "at": "2026-11-12"
     },
     {
-      "id": "ah-remndr-2026910282",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 광명 시티프라디움 에듀하임",
-      "why": "경기 · 21세대 · 접수 ~2026-11-10 · 51점(수도권·무순위)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-11-10",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910282&pblancNo=2026910282",
-      "at": "2026-11-12"
-    },
-    {
       "id": "ah-apt-2026000533",
       "cat": "todo",
       "topic": "부동산",
@@ -2217,6 +2189,34 @@
       "status": "",
       "deadline": "2026-11-18",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000533&pblancNo=2026000533",
+      "at": "2026-11-12"
+    },
+    {
+      "id": "ah-remndr-2026910279",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 봉담자이 프라이드시티",
+      "why": "경기 · 2세대 · 접수 ~2026-11-10 · 57점(수도권·무순위·자이)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-11-10",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910279&pblancNo=2026910279",
+      "at": "2026-11-12"
+    },
+    {
+      "id": "ah-remndr-2026910282",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 광명 시티프라디움 에듀하임",
+      "why": "경기 · 21세대 · 접수 ~2026-11-10 · 51점(수도권·무순위)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-11-10",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910282&pblancNo=2026910282",
       "at": "2026-11-12"
     },
     {
