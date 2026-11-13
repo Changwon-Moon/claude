@@ -54,7 +54,7 @@
 # ⚡ 2026-11-13 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-14 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 lawd=11200 umd=옥수동 type=59 apt="옥수파크힐스101동~116동"
-lawd=41450 umd=망월동 type=84 apt="미사강변 골든 센트로" force=1
+lawd=41450 umd=망월동 type=84 apt="미사강변 골든 센트로"
 lawd=11500 umd=가양동 type=59 apt="가양6단지"
 lawd=41597 umd=송동 type=59 apt="동탄2하우스디더레이크" force=1
 lawd=41597 umd=목동 type=59 apt="힐스테이트동탄" force=1
