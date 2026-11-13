@@ -62,7 +62,7 @@ lawd=41115 umd=매교동 type=59 apt="힐스테이트푸르지오수원"
 lawd=41463 umd=동백동 type=84 apt="용인동백두산위브더제니스"
 lawd=41597 umd=영천동 type=59 apt="동탄역포레너스"
 lawd=41597 umd=능동 type=84 apt="자연앤데시앙"
-lawd=41370 umd=궐동 type=59 apt="중흥S-클래스에듀파크" force=1
+lawd=41370 umd=궐동 type=59 apt="중흥S-클래스에듀파크"
 lawd=41113 umd=권선동 type=59 apt="보성,유원" force=1
 
 lawd=41135 umd=정자동 type=84 apt="상록마을(우성)1"
