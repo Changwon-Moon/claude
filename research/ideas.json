@@ -2220,6 +2220,20 @@
       "at": "2026-11-13"
     },
     {
+      "id": "ah-apt-2026000576",
+      "cat": "todo",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[신규분양] 아르뮤제자이",
+      "why": "경기 · 984세대 · 접수 ~2026-11-25(D-12) · 46점(수도권·984가구·자이)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-11-25",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000576&pblancNo=2026000576",
+      "at": "2026-11-13"
+    },
+    {
       "id": "ah-remndr-2026910283",
       "cat": "hot",
       "topic": "부동산",
@@ -2259,20 +2273,6 @@
       "status": "",
       "deadline": "2026-11-11",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910276&pblancNo=2026910276",
-      "at": "2026-11-13"
-    },
-    {
-      "id": "ah-apt-2026000576",
-      "cat": "todo",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[신규분양] 아르뮤제자이",
-      "why": "경기 · 984세대 · 접수 ~2026-11-25(D-12) · 46점(수도권·984가구·자이)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-11-25",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000576&pblancNo=2026000576",
       "at": "2026-11-13"
     }
   ]
