@@ -5,13 +5,13 @@
     "aptNm": "힐스테이트동탄",
     "type": "59",
     "from": "202001",
-    "to": "202610",
-    "monthsTried": 82,
+    "to": "202611",
+    "monthsTried": 83,
     "monthsFailed": 0,
-    "monthsTraded": 52,
+    "monthsTraded": 53,
     "peak": {
-      "manwon": 89000,
-      "date": "2026-10-23",
+      "manwon": 92500,
+      "date": "2026-11-11",
       "area": 61.9248,
       "floor": 12
     },
@@ -755,6 +755,15 @@
       "area": 61.9248,
       "floor": 12,
       "date": "2026-10-23",
+      "ok": true
+    },
+    {
+      "ym": "202611",
+      "maxManwon": 92500,
+      "count": 1,
+      "area": 61.9248,
+      "floor": 12,
+      "date": "2026-11-11",
       "ok": true
     }
   ]
