@@ -10,11 +10,11 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-11-12",
+    "collectedFor": "2026-11-13",
     "withinDays": 7,
     "totals": {
-      "APT 분양정보": 2935,
-      "APT 무순위/잔여세대": 1749
+      "APT 분양정보": 2937,
+      "APT 무순위/잔여세대": 1750
     },
     "unit": {
       "supply": "가구"
@@ -44,7 +44,7 @@
       "reasons": [
         "서울",
         "무순위",
-        "D-5"
+        "D-4"
       ]
     },
     {
@@ -70,7 +70,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-4",
+        "D-3",
         "자이"
       ]
     },
@@ -97,7 +97,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-4",
+        "D-3",
         "자이"
       ]
     },
@@ -124,7 +124,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-4",
+        "D-3",
         "자이"
       ]
     },
@@ -151,33 +151,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-4"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910279",
-      "name": "봉담자이 프라이드시티",
-      "areaName": "경기",
-      "address": "경기도 화성특례시 효행구 봉담읍 삼봉안길 30 (봉담내리지구 A1블록 봉담자이 프라이드시티)",
-      "supply": 2,
-      "noticeDate": "2026-11-05",
-      "receiptFrom": "2026-11-10",
-      "receiptTo": "2026-11-10",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-12",
-      "announceDate": "2026-11-13",
-      "builder": "디에스디삼호(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.idsd.co.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910279&pblancNo=2026910279",
-      "score": 57,
-      "reasons": [
-        "수도권",
-        "무순위",
-        "자이"
+        "D-3"
       ]
     },
     {
@@ -203,7 +177,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-4"
+        "D-3"
       ]
     },
     {
@@ -229,33 +203,34 @@
       "reasons": [
         "수도권",
         "572가구",
-        "D-6",
+        "D-5",
         "제일풍경채"
       ]
     },
     {
       "kind": "remndr",
-      "pblancNo": "2026910282",
-      "name": "광명 시티프라디움 에듀하임",
-      "areaName": "경기",
-      "address": "경기도 광명시 소하동 광명 구름산지구 도시개발사업지구 A6BL",
-      "supply": 21,
-      "noticeDate": "2026-11-05",
-      "receiptFrom": "2026-11-10",
-      "receiptTo": "2026-11-10",
+      "pblancNo": "2026910287",
+      "name": "더샵 청주그리니티(2차)",
+      "areaName": "충북",
+      "address": "충청북도 청주시 서원구 개신동 767번지",
+      "supply": 1,
+      "noticeDate": "2026-11-12",
+      "receiptFrom": "2026-11-17",
+      "receiptTo": "2026-11-17",
       "specialFrom": null,
       "rank1From": null,
-      "moveInYm": "2029-03",
-      "announceDate": "2026-11-13",
-      "builder": "(주)시티글로벌",
+      "moveInYm": "2027-01",
+      "announceDate": "2026-11-20",
+      "builder": "구룡개발(주)",
       "priceCap": false,
       "speculative": false,
-      "homepage": "https://광명시티프라디움.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910282&pblancNo=2026910282",
+      "homepage": "https://www.thesharp.co.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910287&pblancNo=2026910287",
       "score": 51,
       "reasons": [
-        "수도권",
-        "무순위"
+        "무순위",
+        "D-4",
+        "더샵"
       ]
     },
     {
@@ -280,7 +255,7 @@
       "score": 50,
       "reasons": [
         "수도권",
-        "D-5",
+        "D-4",
         "분양가상한제"
       ]
     },
@@ -306,7 +281,59 @@
       "score": 50,
       "reasons": [
         "수도권",
+        "D-5",
+        "분양가상한제"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000497",
+      "name": "중화역 라온프라이빗 센트로",
+      "areaName": "서울",
+      "address": "서울특별시 중랑구 중화동 303-9번지 일원",
+      "supply": 113,
+      "noticeDate": "2026-11-06",
+      "receiptFrom": "2026-11-17",
+      "receiptTo": "2026-11-19",
+      "specialFrom": "2026-11-16",
+      "rank1From": "2026-11-17",
+      "moveInYm": "2029-02",
+      "announceDate": "2026-11-25",
+      "builder": "라온건설(주)",
+      "priceCap": false,
+      "speculative": true,
+      "homepage": "https://www.jh-raon.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000497&pblancNo=2026000497",
+      "score": 49,
+      "reasons": [
+        "서울",
         "D-6",
+        "투기과열지구"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000457",
+      "name": "부천대장 하우스토리 디센트(부천대장지구 A2BL) 공공분양주택",
+      "areaName": "경기",
+      "address": "경기도 부천시 오정구 대장동, 오정동, 원종동, 삼정동 일원 부천대장 공공주택지구 내 A2블록",
+      "supply": 548,
+      "noticeDate": "2026-11-12",
+      "receiptFrom": "2026-11-24",
+      "receiptTo": "2026-11-25",
+      "specialFrom": "2026-11-23",
+      "rank1From": "2026-11-24",
+      "moveInYm": "2029-06",
+      "announceDate": "2026-12-01",
+      "builder": "남광토건(주), 중흥토건(주), (주)케이알산업, 극동건설(주), 씨앤씨종합건설(주)",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://www.부천대장하우스토리디센트.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000457&pblancNo=2026000457",
+      "score": 48,
+      "reasons": [
+        "수도권",
+        "548가구",
         "분양가상한제"
       ]
     },
@@ -387,28 +414,28 @@
     },
     {
       "kind": "apt",
-      "pblancNo": "2026820014",
-      "name": "남양주왕숙 A-2블록 신혼희망타운(공공분양) 잔여세대 추가입주자모집공고",
+      "pblancNo": "2026000576",
+      "name": "아르뮤제자이",
       "areaName": "경기",
-      "address": "경기도 남양주시 진접읍, 진건읍, 퇴계원읍 일원, 남양주왕숙 공공주택지구 내 A-2블록",
-      "supply": 32,
-      "noticeDate": "2026-11-03",
-      "receiptFrom": "2026-11-11",
-      "receiptTo": "2026-11-12",
-      "specialFrom": null,
-      "rank1From": "2026-11-11",
-      "moveInYm": "2028-08",
-      "announceDate": "2026-11-19",
-      "builder": "계룡건설산업(주), 미래이앤시(주), (주)오스코",
-      "priceCap": true,
+      "address": "경기도 안산시 상록구 성포동 586번지 일원",
+      "supply": 984,
+      "noticeDate": "2026-11-12",
+      "receiptFrom": "2026-11-24",
+      "receiptTo": "2026-11-25",
+      "specialFrom": "2026-11-23",
+      "rank1From": "2026-11-24",
+      "moveInYm": "2031-03",
+      "announceDate": "2026-12-01",
+      "builder": "지에스건설(주)",
+      "priceCap": false,
       "speculative": false,
-      "homepage": "https://apply.lh.or.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820014&pblancNo=2026820014",
-      "score": 47,
+      "homepage": "https://xi.co.kr/armusee",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000576&pblancNo=2026000576",
+      "score": 46,
       "reasons": [
         "수도권",
-        "오늘 마감",
-        "분양가상한제"
+        "984가구",
+        "자이"
       ]
     },
     {
@@ -438,57 +465,6 @@
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000497",
-      "name": "중화역 라온프라이빗 센트로",
-      "areaName": "서울",
-      "address": "서울특별시 중랑구 중화동 303-9번지 일원",
-      "supply": 113,
-      "noticeDate": "2026-11-06",
-      "receiptFrom": "2026-11-17",
-      "receiptTo": "2026-11-19",
-      "specialFrom": "2026-11-16",
-      "rank1From": "2026-11-17",
-      "moveInYm": "2029-02",
-      "announceDate": "2026-11-25",
-      "builder": "라온건설(주)",
-      "priceCap": false,
-      "speculative": true,
-      "homepage": "https://www.jh-raon.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000497&pblancNo=2026000497",
-      "score": 41,
-      "reasons": [
-        "서울",
-        "투기과열지구"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000535",
-      "name": "중앙하이츠 구성 플랫폼시티",
-      "areaName": "경기",
-      "address": "경기도 용인시 기흥구 마북동 298-1번지 일원",
-      "supply": 76,
-      "noticeDate": "2026-10-29",
-      "receiptFrom": "2026-11-10",
-      "receiptTo": "2026-11-12",
-      "specialFrom": "2026-11-09",
-      "rank1From": "2026-11-10",
-      "moveInYm": "2028-06",
-      "announceDate": "2026-11-18",
-      "builder": "씨에이이앤씨 주식회사",
-      "priceCap": false,
-      "speculative": true,
-      "homepage": "https://www.중앙하이츠구성플랫폼시티.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000535&pblancNo=2026000535",
-      "score": 40,
-      "reasons": [
-        "수도권",
-        "오늘 마감",
-        "투기과열지구"
-      ]
-    },
-    {
-      "kind": "apt",
       "pblancNo": "2026000553",
       "name": "의정부역 펠리스타워 양우내안애",
       "areaName": "경기",
@@ -509,7 +485,7 @@
       "score": 38,
       "reasons": [
         "수도권",
-        "D-6"
+        "D-5"
       ]
     },
     {
@@ -558,7 +534,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000435&pblancNo=2026000435",
       "score": 26,
       "reasons": [
-        "D-6",
+        "D-5",
         "분양가상한제"
       ]
     },
@@ -583,7 +559,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000434&pblancNo=2026000434",
       "score": 26,
       "reasons": [
-        "D-6",
+        "D-5",
         "분양가상한제"
       ]
     },
@@ -608,7 +584,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000554&pblancNo=2026000554",
       "score": 18,
       "reasons": [
-        "D-5"
+        "D-4"
       ]
     }
   ]
