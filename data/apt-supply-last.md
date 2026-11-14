@@ -2,21 +2,10 @@
 
 - 성공 0건 · 실패 123건 · 미룸 0줄
 - 결과는 Actions 로그가 아니라 이 파일과 data/datasets/apt-supply/ 에서 본다
-- 미리 채우기 오늘 몫 113/250건 · 내일로 미룬 0줄 (상한은 실패가 아니다)
+- 미리 채우기 오늘 몫 226/250건 · 내일로 미룬 0줄 (상한은 실패가 아니다)
 
 ```
-r/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10022961 --area 59.994`
-Exit status 1
-── A42383806 전용 84.97
-
-> @wirit/collectors@0.1.0 collect-supply-area /home/runner/work/claude/claude/packages/collectors
-> tsx src/supplyAreaCli.ts -- --kapt A42383806 --area 84.97
-
-▶ 철산주공12단지 (A42383806) · 전용 84.97㎡ · 41210-10200 · 지번 후보 110, 663-1, 685-222, 449-6
-   지번 110 (0110-0000) · 대지 → 줄 0개
-   지번 663-1 (0663-0001) · 대지 → 줄 0개
-   지번 685-222 (0685-0222) · 대지 → 줄 0개
+ 지번 685-222 (0685-0222) · 대지 → 줄 0개
    지번 449-6 (0449-0006) · 대지 → 줄 0개
 ::error::지번 후보 110, 663-1, 685-222, 449-6 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
    ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
@@ -48,7 +37,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A42281205 --area 59.45
 
 ▶ 소사주공 (A42281205) · 전용 59.45㎡ · 41194-10100 · 지번 후보 400-8
-   지번 400-8 (0400-0008) · 대지 → 줄 600개
+   지번 400-8 (0400-0008) · 대지 → 줄 3000개
 ::error::전용 59.45㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 400-8) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A42281205 --area 59.45`
@@ -60,11 +49,10 @@ Exit status 1
 
 ▶ 평촌엘프라우드아파트 (A10022506) · 전용 84.9664㎡ · 41173-10100 · 지번 후보 281-1
    지번 281-1 (0281-0001) · 대지 → 줄 0개
-::error::281-1 1쪽 실패 — {
-  "OpenAPI_ServiceResponse": {
-    "cmmMsgHeader": {
-      "errMsg": "SERVICETIMEOUT_ERROR",
-      "returnAuthMsg": "서
+::error::지번 후보 281-1 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
+   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
+   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
+   --jibun 으로 대지 지번을 직접 주세요.
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10022506 --area 84.9664`
 Exit status 1
@@ -89,7 +77,7 @@ Exit status 1
 
 ▶ 안양동삼성래미안 (A43071005) · 전용 84.99㎡ · 41171-10100 · 지번 후보 425, 90-1
    지번 425 (0425-0000) · 대지 → 줄 0개
-   지번 90-1 (0090-0001) · 대지 → 줄 900개
+   지번 90-1 (0090-0001) · 대지 → 줄 3000개
 ::error::전용 84.99㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 90-1) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A43071005 --area 84.99`
@@ -101,7 +89,7 @@ Exit status 1
 
 ▶ 안양동삼성래미안 (A43071005) · 전용 59.76㎡ · 41171-10100 · 지번 후보 425, 90-1
    지번 425 (0425-0000) · 대지 → 줄 0개
-   지번 90-1 (0090-0001) · 대지 → 줄 100개
+   지번 90-1 (0090-0001) · 대지 → 줄 3000개
 ::error::전용 59.76㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 90-1) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A43071005 --area 59.76`
@@ -126,11 +114,8 @@ Exit status 1
    지번 64 (0064-0000) · 대지 → 줄 0개
    지번 271-3 (0271-0003) · 대지 → 줄 0개
    지번 807 (0807-0000) · 대지 → 줄 0개
-::error::807 1쪽 실패 — {
-  "OpenAPI_ServiceResponse": {
-    "cmmMsgHeader": {
-      "errMsg": "SERVICETIMEOUT_ERROR",
-      "returnAuthMsg": "서
+   지번 71 (0071-0000) · 대지 → 줄 1356개
+::error::전용 59.78㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 71) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A46377908 --area 59.78`
 Exit status 1
@@ -155,11 +140,10 @@ Exit status 1
 
 ▶ 수내푸른마을신성벽산쌍용 (A46377908) · 전용 84.72㎡ · 41135-10200 · 지번 후보 64, 271-3, 807, 71
    지번 64 (0064-0000) · 대지 → 줄 0개
-::error::271-3 1쪽 실패 — {
-  "OpenAPI_ServiceResponse": {
-    "cmmMsgHeader": {
-      "errMsg": "SERVICETIMEOUT_ERROR",
-      "returnAuthMsg": "서
+   지번 271-3 (0271-0003) · 대지 → 줄 0개
+   지번 807 (0807-0000) · 대지 → 줄 0개
+   지번 71 (0071-0000) · 대지 → 줄 1356개
+::error::전용 84.72㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 71) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A46377908 --area 84.72`
 Exit status 1
@@ -183,7 +167,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A10026318 --area 59.32
 
 ▶ 파크타운아파트 (A10026318) · 전용 59.32㎡ · 41135-10200 · 지번 후보 51
-   지번 51 (0051-0000) · 대지 → 줄 1500개
+   지번 51 (0051-0000) · 대지 → 줄 3000개
 ::error::전용 59.32㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 51) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10026318 --area 59.32`
@@ -194,7 +178,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A46392206 --area 59.76
 
 ▶ 수내양지마을한양1단지 (A46392206) · 전용 59.76㎡ · 41135-10200 · 지번 후보 24
-   지번 24 (0024-0000) · 대지 → 줄 100개
+   지번 24 (0024-0000) · 대지 → 줄 3000개
 ::error::전용 59.76㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 24) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A46392206 --area 59.76`
@@ -205,11 +189,8 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A46390707 --area 85
 
 ▶ 분당장안타운건영2차 (A46390707) · 전용 85㎡ · 41135-10100 · 지번 후보 68
-   지번 68 (0068-0000) · 대지 → 줄 0개
-::error::지번 후보 68 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
-   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
-   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
-   --jibun 으로 대지 지번을 직접 주세요.
+   지번 68 (0068-0000) · 대지 → 줄 2268개
+::error::전용 85㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 68) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A46390707 --area 85`
 Exit status 1
@@ -281,7 +262,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A44170408 --area 84.42
 
 ▶ 금곡엘지빌리지아파트 (A44170408) · 전용 84.42㎡ · 41113-13400 · 지번 후보 520
-   지번 520 (0520-0000) · 대지 → 줄 500개
+   지번 520 (0520-0000) · 대지 → 줄 3000개
 ::error::전용 84.42㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 520) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A44170408 --area 84.42`
@@ -292,7 +273,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A44170408 --area 60
 
 ▶ 금곡엘지빌리지아파트 (A44170408) · 전용 60㎡ · 41113-13400 · 지번 후보 520
-   지번 520 (0520-0000) · 대지 → 줄 2900개
+   지번 520 (0520-0000) · 대지 → 줄 3000개
 ::error::전용 60㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 520) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A44170408 --area 60`
@@ -317,11 +298,11 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A10022525 --area 59.98
 
 ▶ 강동헤리티지자이 (A10022525) · 전용 59.98㎡ · 11740-10500 · 지번 후보 160
-::error::160 1쪽 실패 — {
-  "OpenAPI_ServiceResponse": {
-    "cmmMsgHeader": {
-      "errMsg": "SERVICETIMEOUT_ERROR",
-      "returnAuthMsg": "서
+   지번 160 (0160-0000) · 대지 → 줄 0개
+::error::지번 후보 160 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
+   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
+   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
+   --jibun 으로 대지 지번을 직접 주세요.
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10022525 --area 59.98`
 Exit status 1
@@ -384,7 +365,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A13879102 --area 82.61
 
 ▶ 잠실5단지아파트 (A13879102) · 전용 82.61㎡ · 11710-10100 · 지번 후보 27
-   지번 27 (0027-0000) · 대지 → 줄 200개
+   지번 27 (0027-0000) · 대지 → 줄 3000개
 ::error::전용 82.61㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 27) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13879102 --area 82.61`
@@ -395,11 +376,11 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A10023348 --area 84.7509
 
 ▶ 개포자이프레지던스 (A10023348) · 전용 84.7509㎡ · 11680-10300 · 지번 후보 189
-::error::189 1쪽 실패 — {
-  "OpenAPI_ServiceResponse": {
-    "cmmMsgHeader": {
-      "errMsg": "SERVICETIMEOUT_ERROR",
-      "returnAuthMsg": "서
+   지번 189 (0189-0000) · 대지 → 줄 0개
+::error::지번 후보 189 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
+   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
+   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
+   --jibun 으로 대지 지번을 직접 주세요.
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10023348 --area 84.7509`
 Exit status 1
@@ -493,7 +474,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A10023043 --area 59.96
 
 ▶ 래미안원베일리 (A10023043) · 전용 59.96㎡ · 11650-10700 · 지번 후보 1-1
-   지번 1-1 (0001-0001) · 대지 → 줄 400개
+   지번 1-1 (0001-0001) · 대지 → 줄 1032개
 ::error::전용 59.96㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 1-1) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10023043 --area 59.96`
@@ -518,11 +499,8 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A10023043 --area 84.95
 
 ▶ 래미안원베일리 (A10023043) · 전용 84.95㎡ · 11650-10700 · 지번 후보 1-1
-   지번 1-1 (0001-0001) · 대지 → 줄 0개
-::error::지번 후보 1-1 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
-   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
-   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
-   --jibun 으로 대지 지번을 직접 주세요.
+   지번 1-1 (0001-0001) · 대지 → 줄 1032개
+::error::전용 84.95㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 1-1) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10023043 --area 84.95`
 Exit status 1
@@ -547,7 +525,7 @@ Exit status 1
 
 ▶ 신반포한신2차 (A13790929) · 전용 84.52㎡ · 11650-10600 · 지번 후보 609-1, 73
    지번 609-1 (0609-0001) · 대지 → 줄 0개
-   지번 73 (0073-0000) · 대지 → 줄 1500개
+   지번 73 (0073-0000) · 대지 → 줄 3000개
 ::error::전용 84.52㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 73) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A13790929 --area 84.52`
@@ -559,11 +537,10 @@ Exit status 1
 
 ▶ 힐스테이트뉴포레 (A10023661) · 전용 84.9433㎡ · 11620-10200 · 지번 후보 1644
    지번 1644 (1644-0000) · 대지 → 줄 0개
-::error::1644 1쪽 실패 — {
-  "OpenAPI_ServiceResponse": {
-    "cmmMsgHeader": {
-      "errMsg": "SERVICETIMEOUT_ERROR",
-      "returnAuthMsg": "서
+::error::지번 후보 1644 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
+   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
+   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
+   --jibun 으로 대지 지번을 직접 주세요.
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A10023661 --area 84.9433`
 Exit status 1
@@ -587,7 +564,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A15685206 --area 59.6
 
 ▶ 신대방우성1차 (A15685206) · 전용 59.6㎡ · 11590-10900 · 지번 후보 565
-   지번 565 (0565-0000) · 대지 → 줄 2400개
+   지번 565 (0565-0000) · 대지 → 줄 3000개
 ::error::전용 59.6㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 565) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A15685206 --area 59.6`
@@ -598,11 +575,8 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A15089421 --area 60.96
 
 ▶ 여의도시범아파트 (A15089421) · 전용 60.96㎡ · 11560-11000 · 지번 후보 50
-   지번 50 (0050-0000) · 대지 → 줄 0개
-::error::지번 후보 50 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
-   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
-   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
-   --jibun 으로 대지 지번을 직접 주세요.
+   지번 50 (0050-0000) · 대지 → 줄 1839개
+::error::전용 60.96㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 50) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A15089421 --area 60.96`
 Exit status 1
@@ -673,7 +647,7 @@ Exit status 1
 > tsx src/supplyAreaCli.ts -- --kapt A15701602 --area 59.97
 
 ▶ 우장산롯데캐슬 (A15701602) · 전용 59.97㎡ · 11500-10300 · 지번 후보 1145, 2545
-   지번 1145 (1145-0000) · 대지 → 줄 1800개
+   지번 1145 (1145-0000) · 대지 → 줄 3000개
 ::error::전용 59.97㎡ 에 해당하는 아파트 호를 못 찾았습니다(지번 1145) — 파일을 만들지 않습니다
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A15701602 --area 59.97`
@@ -685,11 +659,10 @@ Exit status 1
 
 ▶ 마곡엠밸리6단지 (A15721006) · 전용 84.99㎡ · 11500-10500 · 지번 후보 6
    지번 6 (0006-0000) · 대지 → 줄 0개
-::error::6 1쪽 실패 — {
-  "OpenAPI_ServiceResponse": {
-    "cmmMsgHeader": {
-      "errMsg": "SERVICETIMEOUT_ERROR",
-      "returnAuthMsg": "서
+::error::지번 후보 6 × 대지구분(대지·산·블록) 전부 줄 0개입니다.
+   ⚠️ 두 가지가 같은 얼굴로 보입니다 — **지번이 틀렸거나, 대장 API 가 아프거나.**
+   먼저 시간을 두고 다시 미세요(2시간마다 cron 이 옵니다). 그래도 0개면 그때
+   --jibun 으로 대지 지번을 직접 주세요.
 /home/runner/work/claude/claude/packages/collectors:
  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-supply-area: `tsx src/supplyAreaCli.ts -- --kapt A15721006 --area 84.99`
 Exit status 1
