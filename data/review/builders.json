@@ -289,7 +289,7 @@
       "cmd": "scripts/build-m2-gov.mjs",
       "args": [
         "--publish",
-        "2026-10-09"
+        "2026-11-15"
       ]
     },
     {

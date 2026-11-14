@@ -5,7 +5,7 @@ import { chromium, type Browser } from "playwright-core";
 
 /**
  * 사전 설치된 Chromium 실행 파일을 찾는다.
- * 이 환경은 PLAYWRIGHT_BROWSERS_PATH 아래에 chromium-{빌드}/chrome-linux/chrome 형태로 있다.
+ * 이 환경은 PLAYWRIGHT_BROWSERS_PATH 아래에 chromium-{빌드}/chrome-linux(64)/chrome 형태로 있다.
  * 못 찾으면 playwright-core 기본 탐색(executablePath 미지정)에 맡긴다.
  */
 export function findChromiumExecutable(): string | undefined {
@@ -16,6 +16,8 @@ export function findChromiumExecutable(): string | undefined {
   for (const entry of fs.readdirSync(base)) {
     if (entry.startsWith("chromium-")) {
       candidates.push(path.join(base, entry, "chrome-linux", "chrome"));
+      // 2026-11 컨테이너부터 폴더 이름이 chrome-linux64 로 바뀌었다(없으면 기본 탐색이 headless_shell 옛 빌드를 찾다 죽는다)
+      candidates.push(path.join(base, entry, "chrome-linux64", "chrome"));
     }
   }
   // 빌드 번호 내림차순으로 정렬해 최신 우선
