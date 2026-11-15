@@ -1,9 +1,33 @@
 # 신고가 단지 이력 — 마지막 실행
 
-- 대기열: 875줄
+- 대기열: 877줄
 - 결과: **성공**
 
 ```
+
+── e편한세상수지 전용 84타입 (41465)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41465 --apt 'e편한세상수지' --umd '풍덕천동' --type 84 --from 202001 --force
+
+e편한세상수지 · 전용 84타입 · 41465 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41465-e편한세상수지-84.json
+거래 있던 달 77/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 17.77억 (2026-10-31 · 전용 84.921㎡ 21층)
+🧹 force=1 을 지웠습니다 — lawd=41465 umd=풍덕천동 type=84 apt="e편한세상수지"
+
+── 동아아파트 전용 59타입 (41465)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41465 --apt '동아아파트' --umd '풍덕천동' --type 59 --from 202001 --force
+
+동아아파트 · 전용 59타입 · 41465 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41465-동아아파트-59.json
+거래 있던 달 68/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 8.7억 (2026-11-02 · 전용 59.76㎡ 12층)
+🧹 force=1 을 지웠습니다 — lawd=41465 umd=풍덕천동 type=59 apt="동아아파트"
 
 ── 옥수파크힐스101동~116동 전용 59타입 (11200)
 
