@@ -10,7 +10,7 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-11-14",
+    "collectedFor": "2026-11-15",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2943,
@@ -21,6 +21,32 @@
     }
   },
   "notices": [
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910290",
+      "name": "청계 노르웨이숲(14차)",
+      "areaName": "서울",
+      "address": "서울특별시 중구 황학동 1756번지 일원",
+      "supply": 6,
+      "noticeDate": "2026-11-09",
+      "receiptFrom": "2026-11-16",
+      "receiptTo": "2026-11-17",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2028-07",
+      "announceDate": "2026-11-20",
+      "builder": "황학동청계지역주택조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://청계노르웨이숲.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910290&pblancNo=2026910290",
+      "score": 74,
+      "reasons": [
+        "서울",
+        "무순위",
+        "D-2"
+      ]
+    },
     {
       "kind": "remndr",
       "pblancNo": "2026910293",
@@ -44,7 +70,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2",
+        "D-1",
         "자이"
       ]
     },
@@ -71,7 +97,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2",
+        "D-1",
         "자이"
       ]
     },
@@ -98,34 +124,8 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2",
+        "D-1",
         "자이"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910290",
-      "name": "청계 노르웨이숲(14차)",
-      "areaName": "서울",
-      "address": "서울특별시 중구 황학동 1756번지 일원",
-      "supply": 6,
-      "noticeDate": "2026-11-09",
-      "receiptFrom": "2026-11-16",
-      "receiptTo": "2026-11-17",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2028-07",
-      "announceDate": "2026-11-20",
-      "builder": "황학동청계지역주택조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://청계노르웨이숲.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910290&pblancNo=2026910290",
-      "score": 67,
-      "reasons": [
-        "서울",
-        "무순위",
-        "D-3"
       ]
     },
     {
@@ -151,7 +151,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -177,7 +177,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -203,7 +203,59 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-4"
+        "D-3"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910287",
+      "name": "더샵 청주그리니티(2차)",
+      "areaName": "충북",
+      "address": "충청북도 청주시 서원구 개신동 767번지",
+      "supply": 1,
+      "noticeDate": "2026-11-12",
+      "receiptFrom": "2026-11-17",
+      "receiptTo": "2026-11-17",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2027-01",
+      "announceDate": "2026-11-20",
+      "builder": "구룡개발(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.thesharp.co.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910287&pblancNo=2026910287",
+      "score": 58,
+      "reasons": [
+        "무순위",
+        "D-2",
+        "더샵"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000531",
+      "name": "시흥거모지구 S-1블록 공공분양(본청약)",
+      "areaName": "경기",
+      "address": "경기도 시흥시 거모동, 군자동 일원 시흥거모 공공주택지구 내 S-1블록",
+      "supply": 300,
+      "noticeDate": "2026-10-23",
+      "receiptFrom": "2026-11-02",
+      "receiptTo": "2026-11-17",
+      "specialFrom": null,
+      "rank1From": "2026-11-02",
+      "moveInYm": "2029-06",
+      "announceDate": "2026-11-26",
+      "builder": "씨에이이앤씨주식회사",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://apply.lh.or.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000531&pblancNo=2026000531",
+      "score": 57,
+      "reasons": [
+        "수도권",
+        "D-2",
+        "분양가상한제"
       ]
     },
     {
@@ -229,60 +281,8 @@
       "reasons": [
         "수도권",
         "572가구",
-        "D-4",
+        "D-3",
         "제일풍경채"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910287",
-      "name": "더샵 청주그리니티(2차)",
-      "areaName": "충북",
-      "address": "충청북도 청주시 서원구 개신동 767번지",
-      "supply": 1,
-      "noticeDate": "2026-11-12",
-      "receiptFrom": "2026-11-17",
-      "receiptTo": "2026-11-17",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2027-01",
-      "announceDate": "2026-11-20",
-      "builder": "구룡개발(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.thesharp.co.kr/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910287&pblancNo=2026910287",
-      "score": 51,
-      "reasons": [
-        "무순위",
-        "D-3",
-        "더샵"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000531",
-      "name": "시흥거모지구 S-1블록 공공분양(본청약)",
-      "areaName": "경기",
-      "address": "경기도 시흥시 거모동, 군자동 일원 시흥거모 공공주택지구 내 S-1블록",
-      "supply": 300,
-      "noticeDate": "2026-10-23",
-      "receiptFrom": "2026-11-02",
-      "receiptTo": "2026-11-17",
-      "specialFrom": null,
-      "rank1From": "2026-11-02",
-      "moveInYm": "2029-06",
-      "announceDate": "2026-11-26",
-      "builder": "씨에이이앤씨주식회사",
-      "priceCap": true,
-      "speculative": false,
-      "homepage": "https://apply.lh.or.kr/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000531&pblancNo=2026000531",
-      "score": 50,
-      "reasons": [
-        "수도권",
-        "D-3",
-        "분양가상한제"
       ]
     },
     {
@@ -307,7 +307,7 @@
       "score": 50,
       "reasons": [
         "수도권",
-        "D-4",
+        "D-3",
         "분양가상한제"
       ]
     },
@@ -333,7 +333,7 @@
       "score": 49,
       "reasons": [
         "서울",
-        "D-5",
+        "D-4",
         "투기과열지구"
       ]
     },
@@ -486,7 +486,7 @@
       "score": 38,
       "reasons": [
         "수도권",
-        "D-4"
+        "D-3"
       ]
     },
     {
@@ -561,7 +561,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000435&pblancNo=2026000435",
       "score": 26,
       "reasons": [
-        "D-4",
+        "D-3",
         "분양가상한제"
       ]
     },
@@ -586,7 +586,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000434&pblancNo=2026000434",
       "score": 26,
       "reasons": [
-        "D-4",
+        "D-3",
         "분양가상한제"
       ]
     },
@@ -659,9 +659,9 @@
       "speculative": false,
       "homepage": "https://richelledufore.co.kr",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000554&pblancNo=2026000554",
-      "score": 18,
+      "score": 25,
       "reasons": [
-        "D-3"
+        "D-2"
       ]
     },
     {
