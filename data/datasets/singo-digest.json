@@ -1,9 +1,9 @@
 {
   "meta": {
-    "today": "2026-11-15",
-    "from": "2026-11-15",
+    "today": "2026-11-16",
+    "from": "2026-11-16",
     "days": 1,
-    "weekLabel": "2026-11-15 ~ 2026-11-15",
+    "weekLabel": "2026-11-16 ~ 2026-11-16",
     "note": "foundOn(확인한 날) 기준 주간. milestone 은 일간이 판정 시점의 직전 최고가로 계산한 값을 그대로 옮긴 것 — 여기서 다시 재지 않는다.",
     "baselineLabel": "2020년 이후",
     "types": [
@@ -21,7 +21,58 @@
   },
   "conceptB": {
     "title": "개별 카드 후보",
-    "count": 0,
-    "items": []
+    "count": 2,
+    "items": [
+      {
+        "foundOn": "2026-11-16",
+        "aptNm": "e편한세상수지",
+        "umdNm": "풍덕천동",
+        "jibun": "1209",
+        "priceWon": 1777000000,
+        "priceManwon": 177700,
+        "area": 84.921,
+        "floor": 21,
+        "buildYear": 2017,
+        "date": "2026-10-31",
+        "dealingGbn": "중개거래",
+        "canceled": false,
+        "sggCd": "41465",
+        "type": "84",
+        "pyeong": "34평",
+        "lawdCd": "41465",
+        "gu": "용인시수지구",
+        "prevPeakManwon": 173000,
+        "prevPeakDate": "2026-10-31",
+        "gainPct": 2.7167630057803467,
+        "milestone": null,
+        "hhld": 1237,
+        "kaptCode": "A10026839"
+      },
+      {
+        "foundOn": "2026-11-16",
+        "aptNm": "동아아파트",
+        "umdNm": "풍덕천동",
+        "jibun": "664",
+        "priceWon": 870000000,
+        "priceManwon": 87000,
+        "area": 59.76,
+        "floor": 12,
+        "buildYear": 1994,
+        "date": "2026-11-02",
+        "dealingGbn": "중개거래",
+        "canceled": false,
+        "sggCd": "41465",
+        "type": "59",
+        "pyeong": "25평",
+        "lawdCd": "41465",
+        "gu": "용인시수지구",
+        "prevPeakManwon": 86000,
+        "prevPeakDate": "2026-10-28",
+        "gainPct": 1.1627906976744187,
+        "milestone": null,
+        "hhld": 1620,
+        "kaptCode": "A44876510"
+      }
+    ]
   }
 }
