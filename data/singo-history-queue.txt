@@ -56,7 +56,7 @@
 # ⚡ 2026-11-16 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-17 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 lawd=41210 umd=일직동 type=84 apt="광명역센트럴자이"
-lawd=41450 umd=망월동 type=84 apt="미사강변 골든 센트로" force=1
+lawd=41450 umd=망월동 type=84 apt="미사강변 골든 센트로"
 lawd=41450 umd=망월동 type=84 apt="미사강변루나리움"
 lawd=41131 umd=단대동 type=84 apt="단대푸르지오"
 lawd=11290 umd=길음동 type=84 apt="길음동동부센트레빌(1278-0)"
