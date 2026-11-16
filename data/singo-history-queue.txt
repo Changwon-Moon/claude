@@ -65,7 +65,7 @@ lawd=11410 umd=남가좌동 type=84 apt="DMC래미안클라시스"
 lawd=11545 umd=독산동 type=59 apt="금천롯데캐슬골드파크3차"
 lawd=41465 umd=상현동 type=84 apt="진산마을성원상떼빌아파트"
 lawd=41610 umd=역동 type=84 apt="광주역자연앤자이"
-lawd=11290 umd=돈암동 type=59 apt="돈암동삼성" force=1
+lawd=11290 umd=돈암동 type=59 apt="돈암동삼성"
 lawd=11260 umd=신내동 type=84 apt="동성1"
 lawd=11350 umd=하계동 type=59 apt="학여울청구"
 lawd=41360 umd=다산동 type=59 apt="힐스테이트 황금산"
