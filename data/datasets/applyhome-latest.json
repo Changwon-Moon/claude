@@ -10,7 +10,7 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-11-15",
+    "collectedFor": "2026-11-16",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2943,
@@ -44,7 +44,7 @@
       "reasons": [
         "서울",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -70,7 +70,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1",
+        "오늘 마감",
         "자이"
       ]
     },
@@ -97,7 +97,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1",
+        "오늘 마감",
         "자이"
       ]
     },
@@ -124,7 +124,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1",
+        "오늘 마감",
         "자이"
       ]
     },
@@ -151,7 +151,33 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1"
+        "오늘 마감"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910299",
+      "name": "용인 양지 서희스타힐스 하이뷰 (조합원 취소분)",
+      "areaName": "경기",
+      "address": "경기도 용인시 처인구 양지읍 양지리 산105-8번지 일원",
+      "supply": 19,
+      "noticeDate": "2026-11-13",
+      "receiptFrom": "2026-11-18",
+      "receiptTo": "2026-11-18",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2030-09",
+      "announceDate": "2026-11-23",
+      "builder": "양지지구 2블럭 지역주택조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.starhills-yg.co.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910299&pblancNo=2026910299",
+      "score": 66,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "D-2"
       ]
     },
     {
@@ -177,33 +203,34 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
-      "kind": "remndr",
-      "pblancNo": "2026910299",
-      "name": "용인 양지 서희스타힐스 하이뷰 (조합원 취소분)",
+      "kind": "apt",
+      "pblancNo": "2026000557",
+      "name": "제일풍경채 광주 포에듀",
       "areaName": "경기",
-      "address": "경기도 용인시 처인구 양지읍 양지리 산105-8번지 일원",
-      "supply": 19,
-      "noticeDate": "2026-11-13",
-      "receiptFrom": "2026-11-18",
+      "address": "경기도 광주시 탄벌동 203-4번지 일원 (탄벌A지구 A5블럭)",
+      "supply": 572,
+      "noticeDate": "2026-11-06",
+      "receiptFrom": "2026-11-17",
       "receiptTo": "2026-11-18",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2030-09",
-      "announceDate": "2026-11-23",
-      "builder": "양지지구 2블럭 지역주택조합",
+      "specialFrom": "2026-11-16",
+      "rank1From": "2026-11-17",
+      "moveInYm": "2029-11",
+      "announceDate": "2026-11-24",
+      "builder": "제일건설 주식회사",
       "priceCap": false,
       "speculative": false,
-      "homepage": "https://www.starhills-yg.co.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910299&pblancNo=2026910299",
-      "score": 59,
+      "homepage": "http://jeil-foredu.co.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000557&pblancNo=2026000557",
+      "score": 61,
       "reasons": [
         "수도권",
-        "무순위",
-        "D-3"
+        "572가구",
+        "D-2",
+        "제일풍경채"
       ]
     },
     {
@@ -228,7 +255,7 @@
       "score": 58,
       "reasons": [
         "무순위",
-        "D-2",
+        "D-1",
         "더샵"
       ]
     },
@@ -254,35 +281,8 @@
       "score": 57,
       "reasons": [
         "수도권",
-        "D-2",
+        "D-1",
         "분양가상한제"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000557",
-      "name": "제일풍경채 광주 포에듀",
-      "areaName": "경기",
-      "address": "경기도 광주시 탄벌동 203-4번지 일원 (탄벌A지구 A5블럭)",
-      "supply": 572,
-      "noticeDate": "2026-11-06",
-      "receiptFrom": "2026-11-17",
-      "receiptTo": "2026-11-18",
-      "specialFrom": "2026-11-16",
-      "rank1From": "2026-11-17",
-      "moveInYm": "2029-11",
-      "announceDate": "2026-11-24",
-      "builder": "제일건설 주식회사",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://jeil-foredu.co.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000557&pblancNo=2026000557",
-      "score": 54,
-      "reasons": [
-        "수도권",
-        "572가구",
-        "D-3",
-        "제일풍경채"
       ]
     },
     {
@@ -304,10 +304,10 @@
       "speculative": false,
       "homepage": "https://apply.lh.or.kr",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000533&pblancNo=2026000533",
-      "score": 50,
+      "score": 57,
       "reasons": [
         "수도권",
-        "D-3",
+        "D-2",
         "분양가상한제"
       ]
     },
@@ -333,7 +333,7 @@
       "score": 49,
       "reasons": [
         "서울",
-        "D-4",
+        "D-3",
         "투기과열지구"
       ]
     },
@@ -387,6 +387,31 @@
         "수도권",
         "984가구",
         "자이"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000553",
+      "name": "의정부역 펠리스타워 양우내안애",
+      "areaName": "경기",
+      "address": "경기도 의정부시 의정부동 424번지 일원",
+      "supply": 414,
+      "noticeDate": "2026-11-06",
+      "receiptFrom": "2026-11-17",
+      "receiptTo": "2026-11-18",
+      "specialFrom": "2026-11-16",
+      "rank1From": "2026-11-17",
+      "moveInYm": "2031-01",
+      "announceDate": "2026-11-24",
+      "builder": "양우건설(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://feliztower-yangwoo.co.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000553&pblancNo=2026000553",
+      "score": 45,
+      "reasons": [
+        "수도권",
+        "D-2"
       ]
     },
     {
@@ -466,31 +491,6 @@
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000553",
-      "name": "의정부역 펠리스타워 양우내안애",
-      "areaName": "경기",
-      "address": "경기도 의정부시 의정부동 424번지 일원",
-      "supply": 414,
-      "noticeDate": "2026-11-06",
-      "receiptFrom": "2026-11-17",
-      "receiptTo": "2026-11-18",
-      "specialFrom": "2026-11-16",
-      "rank1From": "2026-11-17",
-      "moveInYm": "2031-01",
-      "announceDate": "2026-11-24",
-      "builder": "양우건설(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://feliztower-yangwoo.co.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000553&pblancNo=2026000553",
-      "score": 38,
-      "reasons": [
-        "수도권",
-        "D-3"
-      ]
-    },
-    {
-      "kind": "apt",
       "pblancNo": "2026000558",
       "name": "화정1지구 아르엘",
       "areaName": "울산",
@@ -559,9 +559,9 @@
       "speculative": false,
       "homepage": "https://samdo.jpdc.co.kr",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000435&pblancNo=2026000435",
-      "score": 26,
+      "score": 33,
       "reasons": [
-        "D-3",
+        "D-2",
         "분양가상한제"
       ]
     },
@@ -584,9 +584,9 @@
       "speculative": false,
       "homepage": "https://samdo.jpdc.co.kr",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000434&pblancNo=2026000434",
-      "score": 26,
+      "score": 33,
       "reasons": [
-        "D-3",
+        "D-2",
         "분양가상한제"
       ]
     },
@@ -661,7 +661,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000554&pblancNo=2026000554",
       "score": 25,
       "reasons": [
-        "D-2"
+        "D-1"
       ]
     },
     {
