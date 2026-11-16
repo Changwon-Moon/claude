@@ -69,7 +69,7 @@ lawd=11290 umd=돈암동 type=59 apt="돈암동삼성"
 lawd=11260 umd=신내동 type=84 apt="동성1"
 lawd=11350 umd=하계동 type=59 apt="학여울청구"
 lawd=41360 umd=다산동 type=59 apt="힐스테이트 황금산"
-lawd=41117 umd=영통동 type=59 apt="벽적골한신" force=1
+lawd=41117 umd=영통동 type=59 apt="벽적골한신"
 lawd=41117 umd=영통동 type=59 apt="벽적골두산"
 lawd=41410 umd=금정동 type=59 apt="율곡"
 lawd=41117 umd=영통동 type=59 apt="신나무실신안"
