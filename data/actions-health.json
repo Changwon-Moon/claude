@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-16T23:10:35.014Z",
+  "generatedAt": "2026-11-16T23:48:29.754Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -194,7 +194,7 @@
       "maxDelay": null,
       "lastRun": "2026-11-09",
       "lastOk": "2026-11-09",
-      "okDaysAgo": 7
+      "okDaysAgo": 8
     },
     {
       "file": "applyhome-collect.yml",
@@ -1261,9 +1261,9 @@
       "file": "ecos-m2.yml",
       "name": "ECOS M2 수집 (probe+collect)",
       "lastRun": "2026-11-15",
-      "daysAgo": 1,
+      "daysAgo": 2,
       "lastOk": "2026-11-15",
-      "okDaysAgo": 1,
+      "okDaysAgo": 2,
       "fails30": 0,
       "runs30": 1
     },
@@ -1271,9 +1271,9 @@
       "file": "reb-collect.yml",
       "name": "전세·월세 지수 수집 (한국부동산원)",
       "lastRun": "2026-11-15",
-      "daysAgo": 1,
+      "daysAgo": 2,
       "lastOk": "2026-11-15",
-      "okDaysAgo": 1,
+      "okDaysAgo": 2,
       "fails30": 0,
       "runs30": 2
     },
@@ -1285,7 +1285,7 @@
       "lastOk": "2026-11-17",
       "okDaysAgo": 0,
       "fails30": 0,
-      "runs30": 70
+      "runs30": 71
     },
     {
       "file": "singo-prep.yml",
@@ -1314,8 +1314,8 @@
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 43,
-      "runs30": 72
+      "fails30": 44,
+      "runs30": 73
     }
   ]
 }
