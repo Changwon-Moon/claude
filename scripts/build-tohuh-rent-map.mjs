@@ -200,7 +200,8 @@ const gapNote =
 const caption = [
   /* 첫 두 줄이 '더 보기' 앞에 보이는 전부다 — 숫자와 규모를 여기서 다 말한다 */
   `1년 만에 월세 ${Math.round(m(top1.geoName).up)}만원. 🔥`,
-  `토허제 40곳 중 ${AREAS.filter((a) => rate.get(a.geoName) > 0).length}곳이 올랐습니다.`,
+  (() => { const up = AREAS.filter((a) => rate.get(a.geoName) > 0).length;
+            return up === AREAS.length ? `토허제 ${AREAS.length}곳 모두 올랐습니다.` : `토허제 ${AREAS.length}곳 중 ${up}곳이 올랐습니다.`; })(),
   ``,
   `서울 25개 자치구 전역 + 경기 15곳,`,
   `토지거래허가구역 40곳의 아파트 평균 월세를`,
