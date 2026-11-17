@@ -10,11 +10,11 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-11-16",
+    "collectedFor": "2026-11-17",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2943,
-      "APT 무순위/잔여세대": 1751
+      "APT 무순위/잔여세대": 1752
     },
     "unit": {
       "supply": "가구"
@@ -44,114 +44,34 @@
       "reasons": [
         "서울",
         "무순위",
-        "D-1"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910293",
-      "name": "이천자이 더 리체",
-      "areaName": "경기",
-      "address": "경기도 이천시 증포동 502번지",
-      "supply": 3,
-      "noticeDate": "2026-11-11",
-      "receiptFrom": "2026-11-16",
-      "receiptTo": "2026-11-16",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-11",
-      "announceDate": "2026-11-19",
-      "builder": "교보자산신탁(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://xi.co.kr/irc",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910293&pblancNo=2026910293",
-      "score": 72,
-      "reasons": [
-        "수도권",
-        "무순위",
-        "오늘 마감",
-        "자이"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910291",
-      "name": "송도자이 더 스타(3차)",
-      "areaName": "인천",
-      "address": "인천광역시 연수구 송도동 396-11 (A17블록)",
-      "supply": 1,
-      "noticeDate": "2026-11-11",
-      "receiptFrom": "2026-11-16",
-      "receiptTo": "2026-11-16",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2027-03",
-      "announceDate": "2026-11-19",
-      "builder": "주식회사 무궁화신탁",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://xi.co.kr/sd2",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910291&pblancNo=2026910291",
-      "score": 72,
-      "reasons": [
-        "수도권",
-        "무순위",
-        "오늘 마감",
-        "자이"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910288",
-      "name": "안양자이 더 포레스트",
-      "areaName": "경기",
-      "address": "경기도 안양시 만안구 석수2동 38번지 일대",
-      "supply": 1,
-      "noticeDate": "2026-11-11",
-      "receiptFrom": "2026-11-16",
-      "receiptTo": "2026-11-16",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-11",
-      "announceDate": "2026-11-19",
-      "builder": "화창지구재개발정비사업조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://xi.co.kr/YYH",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910288&pblancNo=2026910288",
-      "score": 72,
-      "reasons": [
-        "수도권",
-        "무순위",
-        "오늘 마감",
-        "자이"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910284",
-      "name": "중동역 다채로움 더원",
-      "areaName": "경기",
-      "address": "경기도 부천시 소사구 송내동 365-1번지 일원",
-      "supply": 23,
-      "noticeDate": "2026-11-10",
-      "receiptFrom": "2026-11-16",
-      "receiptTo": "2026-11-16",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2028-08",
-      "announceDate": "2026-11-19",
-      "builder": "송내동 성우아파트 소규모재건축정비사업조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://중동역다채로움더원.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910284&pblancNo=2026910284",
-      "score": 66,
-      "reasons": [
-        "수도권",
-        "무순위",
         "오늘 마감"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910296",
+      "name": "힐스테이트 거제시그니처(1회차)",
+      "areaName": "경남",
+      "address": "경상남도 거제시 옥포동 1670번지 일원",
+      "supply": 129,
+      "noticeDate": "2026-11-16",
+      "receiptFrom": "2026-11-23",
+      "receiptTo": "2026-11-23",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2030-08",
+      "announceDate": "2026-11-26",
+      "builder": "(주)옥포드림파크피에프브이",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.힐스테이트거제시그니처.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910296&pblancNo=2026910296",
+      "score": 67,
+      "reasons": [
+        "129가구",
+        "무순위",
+        "D-6",
+        "힐스테이트"
       ]
     },
     {
@@ -177,33 +97,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910297",
-      "name": "평택 고덕 국제신도시 A-55 대광로제비앙 모아엘가(4차)",
-      "areaName": "경기",
-      "address": "경기도 평택시 고덕국제8로 10(고덕동 2705-1)",
-      "supply": 3,
-      "noticeDate": "2026-11-11",
-      "receiptFrom": "2026-11-16",
-      "receiptTo": "2026-11-16",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2027-02",
-      "announceDate": "2026-11-19",
-      "builder": "(주)덕원이앤씨",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://평택고덕대광로제비앙모아엘가.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910297&pblancNo=2026910297",
-      "score": 62,
-      "reasons": [
-        "수도권",
-        "무순위",
-        "오늘 마감"
+        "D-1"
       ]
     },
     {
@@ -229,7 +123,7 @@
       "reasons": [
         "수도권",
         "572가구",
-        "D-2",
+        "D-1",
         "제일풍경채"
       ]
     },
@@ -255,8 +149,86 @@
       "score": 58,
       "reasons": [
         "무순위",
-        "D-1",
+        "오늘 마감",
         "더샵"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910293",
+      "name": "이천자이 더 리체",
+      "areaName": "경기",
+      "address": "경기도 이천시 증포동 502번지",
+      "supply": 3,
+      "noticeDate": "2026-11-11",
+      "receiptFrom": "2026-11-16",
+      "receiptTo": "2026-11-16",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-11",
+      "announceDate": "2026-11-19",
+      "builder": "교보자산신탁(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://xi.co.kr/irc",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910293&pblancNo=2026910293",
+      "score": 57,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "자이"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910291",
+      "name": "송도자이 더 스타(3차)",
+      "areaName": "인천",
+      "address": "인천광역시 연수구 송도동 396-11 (A17블록)",
+      "supply": 1,
+      "noticeDate": "2026-11-11",
+      "receiptFrom": "2026-11-16",
+      "receiptTo": "2026-11-16",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2027-03",
+      "announceDate": "2026-11-19",
+      "builder": "주식회사 무궁화신탁",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://xi.co.kr/sd2",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910291&pblancNo=2026910291",
+      "score": 57,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "자이"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910288",
+      "name": "안양자이 더 포레스트",
+      "areaName": "경기",
+      "address": "경기도 안양시 만안구 석수2동 38번지 일대",
+      "supply": 1,
+      "noticeDate": "2026-11-11",
+      "receiptFrom": "2026-11-16",
+      "receiptTo": "2026-11-16",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-11",
+      "announceDate": "2026-11-19",
+      "builder": "화창지구재개발정비사업조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://xi.co.kr/YYH",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910288&pblancNo=2026910288",
+      "score": 57,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "자이"
       ]
     },
     {
@@ -281,7 +253,7 @@
       "score": 57,
       "reasons": [
         "수도권",
-        "D-1",
+        "오늘 마감",
         "분양가상한제"
       ]
     },
@@ -307,7 +279,7 @@
       "score": 57,
       "reasons": [
         "수도권",
-        "D-2",
+        "D-1",
         "분양가상한제"
       ]
     },
@@ -330,11 +302,36 @@
       "speculative": true,
       "homepage": "https://www.jh-raon.com",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000497&pblancNo=2026000497",
-      "score": 49,
+      "score": 56,
       "reasons": [
         "서울",
-        "D-3",
+        "D-2",
         "투기과열지구"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910284",
+      "name": "중동역 다채로움 더원",
+      "areaName": "경기",
+      "address": "경기도 부천시 소사구 송내동 365-1번지 일원",
+      "supply": 23,
+      "noticeDate": "2026-11-10",
+      "receiptFrom": "2026-11-16",
+      "receiptTo": "2026-11-16",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2028-08",
+      "announceDate": "2026-11-19",
+      "builder": "송내동 성우아파트 소규모재건축정비사업조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "http://중동역다채로움더원.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910284&pblancNo=2026910284",
+      "score": 51,
+      "reasons": [
+        "수도권",
+        "무순위"
       ]
     },
     {
@@ -361,6 +358,31 @@
         "수도권",
         "548가구",
         "분양가상한제"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910297",
+      "name": "평택 고덕 국제신도시 A-55 대광로제비앙 모아엘가(4차)",
+      "areaName": "경기",
+      "address": "경기도 평택시 고덕국제8로 10(고덕동 2705-1)",
+      "supply": 3,
+      "noticeDate": "2026-11-11",
+      "receiptFrom": "2026-11-16",
+      "receiptTo": "2026-11-16",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2027-02",
+      "announceDate": "2026-11-19",
+      "builder": "(주)덕원이앤씨",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "http://평택고덕대광로제비앙모아엘가.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910297&pblancNo=2026910297",
+      "score": 47,
+      "reasons": [
+        "수도권",
+        "무순위"
       ]
     },
     {
@@ -411,7 +433,7 @@
       "score": 45,
       "reasons": [
         "수도권",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -561,7 +583,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000435&pblancNo=2026000435",
       "score": 33,
       "reasons": [
-        "D-2",
+        "D-1",
         "분양가상한제"
       ]
     },
@@ -586,7 +608,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000434&pblancNo=2026000434",
       "score": 33,
       "reasons": [
-        "D-2",
+        "D-1",
         "분양가상한제"
       ]
     },
@@ -661,7 +683,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000554&pblancNo=2026000554",
       "score": 25,
       "reasons": [
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
