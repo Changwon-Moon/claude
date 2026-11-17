@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-16T23:48:29.754Z",
+  "generatedAt": "2026-11-17T13:53:54.663Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -88,13 +88,13 @@
         },
         {
           "day": "11-17",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "09:36",
+          "delay": 461
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
+      "medianDelay": 461,
+      "maxDelay": 461,
       "lastRun": "2026-11-17",
       "lastOk": "2026-11-17",
       "okDaysAgo": 0
@@ -282,15 +282,15 @@
         },
         {
           "day": "11-17",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "13:25",
+          "delay": 376
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-11-16",
-      "lastOk": "2026-11-16",
+      "medianDelay": 376,
+      "maxDelay": 376,
+      "lastRun": "2026-11-17",
+      "lastOk": "2026-11-17",
       "okDaysAgo": 0
     },
     {
@@ -388,7 +388,7 @@
       "maxDelay": null,
       "lastRun": "2026-11-01",
       "lastOk": "2026-11-01",
-      "okDaysAgo": 15
+      "okDaysAgo": 16
     },
     {
       "file": "reb-weekly-collect.yml",
@@ -485,7 +485,7 @@
       "maxDelay": null,
       "lastRun": "2026-11-13",
       "lastOk": "2026-11-13",
-      "okDaysAgo": 3
+      "okDaysAgo": 4
     },
     {
       "file": "month-backfill.yml",
@@ -573,15 +573,15 @@
         },
         {
           "day": "11-17",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "18:41",
+          "delay": 482
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-11-16",
-      "lastOk": "2026-11-16",
+      "medianDelay": 482,
+      "maxDelay": 482,
+      "lastRun": "2026-11-17",
+      "lastOk": "2026-11-17",
       "okDaysAgo": 0
     },
     {
@@ -670,15 +670,15 @@
         },
         {
           "day": "11-17",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "19:19",
+          "delay": 499
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-11-16",
-      "lastOk": "2026-11-16",
+      "medianDelay": 499,
+      "maxDelay": 499,
+      "lastRun": "2026-11-17",
+      "lastOk": "2026-11-17",
       "okDaysAgo": 0
     },
     {
@@ -865,12 +865,12 @@
         {
           "day": "11-17",
           "state": "late",
-          "at": "05:25",
-          "delay": 1068
+          "at": "12:48",
+          "delay": 72
         }
       ],
-      "medianDelay": 1068,
-      "maxDelay": 1068,
+      "medianDelay": 72,
+      "maxDelay": 72,
       "lastRun": "2026-11-17",
       "lastOk": "2026-11-17",
       "okDaysAgo": 0
@@ -1224,8 +1224,8 @@
       "daysAgo": 28,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 2,
-      "runs30": 2
+      "fails30": 1,
+      "runs30": 1
     },
     {
       "file": "apt-supply-retry.yml",
@@ -1234,16 +1234,16 @@
       "daysAgo": 28,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 2,
-      "runs30": 2
+      "fails30": 1,
+      "runs30": 1
     },
     {
       "file": "auto-produce.yml",
       "name": "데이터 바뀌면 카드 자동 재생산",
       "lastRun": "2026-10-22",
-      "daysAgo": 25,
+      "daysAgo": 26,
       "lastOk": "2026-10-22",
-      "okDaysAgo": 25,
+      "okDaysAgo": 26,
       "fails30": 2,
       "runs30": 4
     },
@@ -1251,29 +1251,19 @@
       "file": "molit-rent-collect.yml",
       "name": "전월세 실거래 수집 (국토부)",
       "lastRun": "2026-11-03",
-      "daysAgo": 13,
+      "daysAgo": 14,
       "lastOk": "2026-11-03",
-      "okDaysAgo": 13,
+      "okDaysAgo": 14,
       "fails30": 0,
       "runs30": 1
     },
     {
       "file": "ecos-m2.yml",
       "name": "ECOS M2 수집 (probe+collect)",
-      "lastRun": "2026-11-15",
-      "daysAgo": 2,
-      "lastOk": "2026-11-15",
-      "okDaysAgo": 2,
-      "fails30": 0,
-      "runs30": 1
-    },
-    {
-      "file": "reb-collect.yml",
-      "name": "전세·월세 지수 수집 (한국부동산원)",
-      "lastRun": "2026-11-15",
-      "daysAgo": 2,
-      "lastOk": "2026-11-15",
-      "okDaysAgo": 2,
+      "lastRun": "2026-11-17",
+      "daysAgo": 0,
+      "lastOk": "2026-11-17",
+      "okDaysAgo": 0,
       "fails30": 0,
       "runs30": 2
     },
@@ -1288,13 +1278,23 @@
       "runs30": 71
     },
     {
+      "file": "reb-collect.yml",
+      "name": "전세·월세 지수 수집 (한국부동산원)",
+      "lastRun": "2026-11-17",
+      "daysAgo": 0,
+      "lastOk": "2026-11-17",
+      "okDaysAgo": 0,
+      "fails30": 0,
+      "runs30": 3
+    },
+    {
       "file": "singo-prep.yml",
       "name": "신고가 재료 미리 걸기 (아침 판정 직후)",
       "lastRun": "2026-11-17",
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 91,
+      "fails30": 92,
       "runs30": 100
     },
     {
@@ -1314,7 +1314,7 @@
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 44,
+      "fails30": 43,
       "runs30": 73
     }
   ]
