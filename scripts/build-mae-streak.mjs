@@ -157,9 +157,14 @@ const arrow = gap > 0
 const curStart = weekLabel(ks[current.base + 1]);
 const recStart = weekLabel(ks[record.base + 1]);
 const recEnd = weekLabel(ks[record.end]);
+/* 오너 지시(2026-11-17): 기록을 넘어선 뒤(현재 > 종전 최장)엔 범례를
+ * '현재 역대 최장 N주' / '기존 최장 85주 (文정부)' · 기간은 월까지만(2020.6 ~ 2022.1). */
+const BROKE = curWeeks > recWeeks;
+const ym = (lbl) => String(lbl).replace(/\s*\S+째주$/, "");
 const legend = [
-  { sx1: 118, sx2: 196, sy: 120, color: RED, tx: 214, ty: 110, text: "현재 상승기", fill: INK, sub: `${curStart} ~ 진행 중`, sty: 156 },
-  { sx1: 118, sx2: 196, sy: 210, color: SLATE, tx: 214, ty: 200, text: `역대 최장 ${recWeeks}주 (文정부)`, fill: INK, sub: `${recStart} ~ ${recEnd}`, sty: 246 },
+  { sx1: 118, sx2: 196, sy: 120, color: RED, tx: 214, ty: 110, text: BROKE ? `현재 역대 최장 ${curWeeks}주` : "현재 상승기", fill: INK, sub: `${curStart} ~ 진행 중`, sty: 156 },
+  { sx1: 118, sx2: 196, sy: 210, color: SLATE, tx: 214, ty: 200, text: `${BROKE ? "기존" : "역대"} 최장 ${recWeeks}주 (文정부)`, fill: INK,
+    sub: BROKE ? `${ym(recStart)} ~ ${ym(recEnd)}` : `${recStart} ~ ${recEnd}`, sty: 246 },
 ];
 /* 그래프 뒤 옅은 '서울' 배경 워드마크 (공식 로고 파일이 없어 워드마크로 — 자산 있으면 교체) */
 /* 그래프 뒤 서울시 공식 로고(자동 수집 자산)를 옅게 배경으로 — 텍스트 대체가 아니라 실제 자산 */
