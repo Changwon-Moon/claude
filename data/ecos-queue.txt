@@ -3,3 +3,4 @@ run 2026-08-12 m2-monthly (개편 전 기준 [참고] 구 M2 = BBHA16 수집)
 run 2026-08-31 m2-monthly — 18일째 미실행, 캐시 갱신
 run 2026-10-09 m2-monthly — m2-gov 갱신(2026-07 이후 공표분)
 run 2026-11-14 m2-monthly — m2-gov 갱신(2026-08 이후 공표분)
+run 2026-11-17 m2-monthly — m2-gov 갱신 확인(2026-10 공표 여부)
