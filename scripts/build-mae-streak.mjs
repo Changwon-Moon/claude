@@ -235,7 +235,10 @@ function fitCircle({ upper, lower, prefX, xMax, avoid = [], Rmax = 132, Rmin = 5
 }
 const vlCur = boxOfVL(vlabels[0]), vlRec = boxOfVL(vlabels[1]);
 const markX = Math.min(cx, rx) - 8;                                   // 세로 점선 왼쪽까지만
-const leeFit = fitCircle({ upper: yRed, lower: yGray, prefX: (vlCur.x0 + vlCur.x1) / 2, xMax: markX });
+/* 2026-11-17: 92주부터 빨강 띠가 +7.71% 라벨·서울 로고에 막혀 R 56 이 안 들어간다 →
+ * 그때만 크기를 줄여(최소 36) 다시 찾는다. 56 이상이 들어가는 판(10-09 확정본 등)은 그대로. */
+const leeArgs = { upper: yRed, lower: yGray, prefX: (vlCur.x0 + vlCur.x1) / 2, xMax: markX };
+const leeFit = fitCircle(leeArgs) || fitCircle({ ...leeArgs, Rmax: 52, Rmin: 36 });
 /* 두 얼굴은 **같은 크기**로 — 크기가 다르면 한쪽을 강조하는 것처럼 읽힌다.
  * 빨강 띠가 더 좁아서(곡선과 +7.71% 라벨 사이) 이재명 쪽 최대 크기에 문재인을 맞춘다. */
 const moonArgs = {
