@@ -75,7 +75,7 @@ lawd=41360 umd=다산동 type=59 apt="다산자연앤e편한세상3차"
 lawd=11470 umd=신정동 type=84 apt="이펜하우스3단지"
 lawd=41173 umd=비산동 type=59 apt="삼성래미안"
 lawd=41111 umd=정자동 type=59 apt="북수원자이렉스비아"
-lawd=11305 umd=미아동 type=59 apt="벽산라이브파크" force=1
+lawd=11305 umd=미아동 type=59 apt="벽산라이브파크"
 
 lawd=11410 umd=북아현동 type=59 apt="e편한세상신촌2단지"
 lawd=11500 umd=마곡동 type=84 apt="마곡엠밸리9단지"
