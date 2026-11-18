@@ -57,7 +57,7 @@
 # ⚡ 2026-11-17 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-18 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-19 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
-lawd=11470 umd=신정동 type=84 apt="목동신시가지14" force=1
+lawd=11470 umd=신정동 type=84 apt="목동신시가지14"
 lawd=41135 umd=수내동 type=84 apt="파크타운(대림)"
 lawd=41135 umd=서현동 type=59 apt="시범삼성"
 lawd=41131 umd=창곡동 type=59 apt="위례센트럴자이"
