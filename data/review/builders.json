@@ -80,6 +80,13 @@
       ]
     },
     {
+      "label": "tohuh-rent-ytd",
+      "cmd": "scripts/build-tohuh-rent-ytd.mjs",
+      "args": [
+        "2026-11-18"
+      ]
+    },
+    {
       "label": "jeongbi-map",
       "cmd": "scripts/build-jeongbi-map.mjs",
       "args": [
