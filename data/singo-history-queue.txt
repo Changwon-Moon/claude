@@ -56,6 +56,27 @@
 # ⚡ 2026-11-16 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-17 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-18 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+# ⚡ 2026-11-19 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+lawd=11470 umd=신정동 type=84 apt="목동신시가지14" force=1
+lawd=41135 umd=수내동 type=84 apt="파크타운(대림)"
+lawd=41135 umd=서현동 type=59 apt="시범삼성"
+lawd=41131 umd=창곡동 type=59 apt="위례센트럴자이"
+lawd=41465 umd=풍덕천동 type=84 apt="e편한세상수지" force=1
+lawd=41135 umd=야탑동 type=59 apt="장미마을(코오롱)1"
+lawd=41133 umd=금광동 type=59 apt="e편한세상금빛그랑메종1단지"
+lawd=41173 umd=호계동 type=84 apt="평촌어바인퍼스트" force=1
+lawd=41597 umd=반송동 type=84 apt="동탄시범다은마을 월드메르디앙 반도유보라" force=1
+lawd=41173 umd=관양동 type=59 apt="인덕원마을(삼성)"
+lawd=11350 umd=월계동 type=59 apt="삼호3"
+lawd=41173 umd=비산동 type=84 apt="관악" force=1
+lawd=11290 umd=상월곡동 type=84 apt="동아에코빌" force=1
+lawd=11350 umd=월계동 type=59 apt="현대" force=1
+lawd=41360 umd=다산동 type=59 apt="다산자연앤e편한세상3차" force=1
+lawd=11470 umd=신정동 type=84 apt="이펜하우스3단지" force=1
+lawd=41173 umd=비산동 type=59 apt="삼성래미안" force=1
+lawd=41111 umd=정자동 type=59 apt="북수원자이렉스비아" force=1
+lawd=11305 umd=미아동 type=59 apt="벽산라이브파크" force=1
+
 lawd=11410 umd=북아현동 type=59 apt="e편한세상신촌2단지"
 lawd=11500 umd=마곡동 type=84 apt="마곡엠밸리9단지"
 lawd=41135 umd=수내동 type=59 apt="파크타운(대림)"
