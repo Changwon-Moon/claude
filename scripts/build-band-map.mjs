@@ -251,6 +251,8 @@ const mapSvg = tohuhMapSvg({
    * "중구·성동구 포함 전체적으로 경계 라인에 닿지 않게 중앙으로"). 무게중심은 오목한 구에서
    * 경계 바로 옆에 떨어진다 — 최대 내접원 중심이 정의상 가장 넉넉한 자리다. */
   centerFit: true,
+  /* 가독성 표준(오너 지시 2026-11-18) — lib/tohuh-map.mjs readable 프리셋 */
+  readable: true,
   /* 최저값이 0 이 아니라 4억대라 [0,max] 정규화하면 색이 다 비슷해진다 → [min,max] 로 편다 */
   minValue: Math.min(...AREAS.map((a) => eokOf(a.geoName))),
 });

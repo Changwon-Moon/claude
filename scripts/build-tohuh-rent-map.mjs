@@ -117,6 +117,8 @@ const mapSvg = tohuhMapSvg({
   /* 라벨을 무게중심에서 가장 가까운 빈 자리에 둔다(오너 지적: 위치가 많이 틀어져 있다).
    * 기본값 "down" 은 이미 발행된 신고가 카드의 배치라 건드리지 않는다. */
   placement: "nearest",
+  /* 가독성 표준(오너 지시 2026-11-18) — lib/tohuh-map.mjs readable 프리셋 */
+  readable: true,
 });
 
 /* ── 표 ── 이름은 label(행정구·시까지).

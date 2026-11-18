@@ -120,6 +120,8 @@ const mapSvg = tohuhMapSvg({
   twoLine: true,
   labelWidth: 118,
   placement: "nearest",
+  /* 가독성 표준(오너 지시 2026-11-18) — lib/tohuh-map.mjs readable 프리셋 */
+  readable: true,
 });
 
 // ── 순위: 1~17위 + ··· + 38~40위 ──

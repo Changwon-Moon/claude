@@ -139,9 +139,17 @@ export function tohuhMapSvg({
   maxValue = null,
   /** 색·정규화 옵션(기본값 = 기존 동작 유지 → 발행 카드 픽셀 불변).
    * minValue 를 주면 [min,max] 정규화(대비↑). colorLo/colorHi 로 그라데이션 양끝을 바꾼다. */
-  minValue = 0,
-  colorLo = [255, 226, 219],
-  colorHi = [176, 11, 30],
+  /** ⭐ 가독성 표준(오너 지시 2026-11-18: "앞으로 모든 토허제 지도 카드는 개선된 디자인으로").
+   * 켜면 아래 옵션들의 **기본값만** 바뀐다(카드가 직접 준 값은 그대로 이긴다):
+   *   minValue = 표시 값의 최저(→ [최저,최고] 정규화, 색 차이가 벌어진다)
+   *   colorLo/colorHi = [255,236,232] → 계정 레드 #E5484D(잉크 글자 대비 전 구간 4.5+)
+   *   labelInk · centerFit · riverCasing = true
+   * 끄면(기본) 예전 동작 그대로 — 보관된 옛 판을 다시 뽑아도 같은 그림이 나온다.
+   * **새 토허제 지도 카드는 반드시 `readable: true` 로 만든다.** */
+  readable = false,
+  minValue,
+  colorLo,
+  colorHi,
   textThreshold = 0.5,
   /** 지도 안 @wirit_note 스탬프. 기본은 켬(발행 카드 픽셀 불변).
    * ⚠️ 이 모듈은 스탬프를 **2개** 찍는데 BRAND.md 는 「아이디는 카드당 1개」다.
@@ -151,11 +159,11 @@ export function tohuhMapSvg({
    * ⚠️ 켜려면 `colorHi` 를 밝은 쪽으로 줘야 한다. 기본 진한끝 rgb(176,11,30) 위의 잉크는
    * 대비 2.46 으로 WCAG 큰글자 AA(3.0)에도 못 미친다. 계정 레드 #E5484D 를 진한끝으로
    * 쓰면 전 구간 4.54 이상이 나온다(2026-09-01 실측). */
-  labelInk = false,
+  labelInk,
   /** 라벨을 **경계에서 가장 먼 안쪽 점**(최대 내접원 중심)에 놓고, 글자 상자가 경계선에
    * 닿으면 벌점을 준다. 기본은 끔 — 켜면 배치가 달라져 발행 카드 픽셀이 바뀐다.
    * `placement:"nearest"` 와 함께 쓴다(무게중심 대신 그 점을 기준으로 겨룬다). */
-  centerFit = false,
+  centerFit,
   /** 한강에 **흰 테두리(케이싱)**를 두른다. 기본은 끔(발행 카드 픽셀 불변).
    *
    * ── 왜 (오너 2026-09-02 확인 → 반영)
@@ -169,7 +177,7 @@ export function tohuhMapSvg({
    * 그린다. 밝은 면 위에서도 어두운 면 위에서도 **면과 강 사이에 흰 띠**가 생기므로
    * 램프 색이 무엇이든 분리가 유지된다. 구 경계선도 이미 흰색(`.tk-geo` stroke)이라
    * 새 요소처럼 보이지 않고 같은 언어로 읽힌다. */
-  riverCasing = false,
+  riverCasing,
   labelWidth = 140,
   twoLine = false,
   /** 라벨 배치 방식. "down"(기본) = 아래로만 밀기 · "nearest" = 중앙에서 가장 가까운 빈 자리.
@@ -178,6 +186,12 @@ export function tohuhMapSvg({
    *    그래서 개선은 새 카드에서만 켠다. */
   placement = "down",
 }) {
+  /* readable 프리셋 — 준 값이 없을 때만 표준값으로 채운다 */
+  labelInk = labelInk ?? readable;
+  centerFit = centerFit ?? readable;
+  riverCasing = riverCasing ?? readable;
+  colorLo = colorLo ?? (readable ? [255, 236, 232] : [255, 226, 219]);
+  colorHi = colorHi ?? (readable ? [229, 72, 77] : [176, 11, 30]);
   /* bbox 는 **표시 대상만**으로 잡는다 — 경기 전체로 잡으면 40곳이 깨알처럼 작아진다 */
   const shown = parts.flatMap((p) => p.features);
   let minLon = 999, maxLon = -999, minLat = 999, maxLat = -999;
@@ -197,7 +211,7 @@ export function tohuhMapSvg({
 
   const vals = parts.map((p) => valueOf(p.info));
   const max = maxValue ?? Math.max(...vals, 1);
-  const min = minValue;                       // 기본 0 → v/max (기존 동작)
+  const min = minValue ?? (readable ? Math.min(...vals) : 0); // 기본 0 → v/max (기존 동작)
   const span = max - min || 1;
   const C_LO = colorLo, C_HI = colorHi;
   const lerp = (a, b, t) => Math.round(a + (b - a) * t);

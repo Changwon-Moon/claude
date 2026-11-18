@@ -95,6 +95,9 @@ const mapSvg = tohuhMapSvg({
   parts,
   valueOf: hitsOf,
   textOf: (p) => String(p.v),
+  /* 가독성 표준(오너 지시 2026-11-18) — lib/tohuh-map.mjs readable 프리셋 */
+  readable: true,
+  placement: "nearest",
 });
 
 // ── 좌측 순위: 상위 topN + (생략) + 최하위 3곳 ──

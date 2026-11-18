@@ -64,19 +64,6 @@ const seoulS = doc.wolse?.["500008"];
 const seoulPct = pct(at(seoulS, BASE), at(seoulS, asOf));
 
 const parts = tohuhParts(AREAS);
-/* 가독성 시안(2026-11-18 오너 "지도를 더 가독성 좋게") — 모듈에 이미 있는 선택 옵션만 켠다.
- *  · minValue: 0 기준이 아니라 [최저,최고] 정규화 → 1.5%~14.7% 차이가 색으로 벌어진다
- *  · colorHi 계정 레드 #E5484D + labelInk: 글자 전부 진한 잉크(흰 글자/흰 테두리 번짐 제거, 대비 4.5+)
- *  · centerFit: 라벨을 도형 안쪽 가장 넓은 점에 — 경계선 걸침 감소
- *  · riverCasing: 한강 흰 테두리 */
-const READ_OPTS = {
-  minValue: Math.min(...[...rate.values()]),
-  colorLo: [255, 236, 232],
-  colorHi: [229, 72, 77],
-  labelInk: true,
-  centerFit: true,
-  riverCasing: true,
-};
 const mapSvg = tohuhMapSvg({
   parts,
   valueOf: (info) => rate.get(info.geoName),
@@ -84,7 +71,7 @@ const mapSvg = tohuhMapSvg({
   twoLine: true,
   labelWidth: 118,
   placement: "nearest",
-  ...READ_OPTS,
+  readable: true, // 가독성 표준(오너 지시 2026-11-18) — lib/tohuh-map.mjs readable 프리셋
 });
 
 const ranked = [...AREAS].sort((a, b) => rate.get(b.geoName) - rate.get(a.geoName));

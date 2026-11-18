@@ -56,6 +56,8 @@ const mapSvg = tohuhMapSvg({
   twoLine: true,
   labelWidth: 118,
   placement: "nearest",
+  /* 가독성 표준(오너 지시 2026-11-18) — lib/tohuh-map.mjs readable 프리셋 */
+  readable: true,
 });
 
 /* ── 표: 상위 8곳 (월세 카드와 같은 기준) ── */
