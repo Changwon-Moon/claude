@@ -10,11 +10,11 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-11-17",
+    "collectedFor": "2026-11-18",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2943,
-      "APT 무순위/잔여세대": 1752
+      "APT 무순위/잔여세대": 1753
     },
     "unit": {
       "supply": "가구"
@@ -23,28 +23,29 @@
   "notices": [
     {
       "kind": "remndr",
-      "pblancNo": "2026910290",
-      "name": "청계 노르웨이숲(14차)",
+      "pblancNo": "2026930045",
+      "name": "잠실 래미안아이파크",
       "areaName": "서울",
-      "address": "서울특별시 중구 황학동 1756번지 일원",
-      "supply": 6,
-      "noticeDate": "2026-11-09",
-      "receiptFrom": "2026-11-16",
-      "receiptTo": "2026-11-17",
-      "specialFrom": null,
+      "address": "서울특별시 송파구 신천동 20-4번지 일대(잠실진주주택재건축정비사업)",
+      "supply": 3,
+      "noticeDate": "2026-11-17",
+      "receiptFrom": "2026-11-23",
+      "receiptTo": "2026-11-24",
+      "specialFrom": "2026-11-23",
       "rank1From": null,
-      "moveInYm": "2028-07",
-      "announceDate": "2026-11-20",
-      "builder": "황학동청계지역주택조합",
+      "moveInYm": "2027-01",
+      "announceDate": "2026-11-27",
+      "builder": "잠실진주아파트주택재건축정비사업조합",
       "priceCap": false,
       "speculative": false,
-      "homepage": "https://청계노르웨이숲.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910290&pblancNo=2026910290",
-      "score": 74,
+      "homepage": "https://www.raemian.co.kr/sales/s/jamsiljinju",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930045&pblancNo=2026930045",
+      "score": 77,
       "reasons": [
         "서울",
         "무순위",
-        "오늘 마감"
+        "D-6",
+        "래미안"
       ]
     },
     {
@@ -70,7 +71,7 @@
       "reasons": [
         "129가구",
         "무순위",
-        "D-6",
+        "D-5",
         "힐스테이트"
       ]
     },
@@ -97,7 +98,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -123,34 +124,8 @@
       "reasons": [
         "수도권",
         "572가구",
-        "D-1",
-        "제일풍경채"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910287",
-      "name": "더샵 청주그리니티(2차)",
-      "areaName": "충북",
-      "address": "충청북도 청주시 서원구 개신동 767번지",
-      "supply": 1,
-      "noticeDate": "2026-11-12",
-      "receiptFrom": "2026-11-17",
-      "receiptTo": "2026-11-17",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2027-01",
-      "announceDate": "2026-11-20",
-      "builder": "구룡개발(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.thesharp.co.kr/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910287&pblancNo=2026910287",
-      "score": 58,
-      "reasons": [
-        "무순위",
         "오늘 마감",
-        "더샵"
+        "제일풍경채"
       ]
     },
     {
@@ -233,32 +208,6 @@
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000531",
-      "name": "시흥거모지구 S-1블록 공공분양(본청약)",
-      "areaName": "경기",
-      "address": "경기도 시흥시 거모동, 군자동 일원 시흥거모 공공주택지구 내 S-1블록",
-      "supply": 300,
-      "noticeDate": "2026-10-23",
-      "receiptFrom": "2026-11-02",
-      "receiptTo": "2026-11-17",
-      "specialFrom": null,
-      "rank1From": "2026-11-02",
-      "moveInYm": "2029-06",
-      "announceDate": "2026-11-26",
-      "builder": "씨에이이앤씨주식회사",
-      "priceCap": true,
-      "speculative": false,
-      "homepage": "https://apply.lh.or.kr/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000531&pblancNo=2026000531",
-      "score": 57,
-      "reasons": [
-        "수도권",
-        "오늘 마감",
-        "분양가상한제"
-      ]
-    },
-    {
-      "kind": "apt",
       "pblancNo": "2026000533",
       "name": "안산신길2지구 B-1블록 공공분양주택(본청약)",
       "areaName": "경기",
@@ -279,7 +228,7 @@
       "score": 57,
       "reasons": [
         "수도권",
-        "D-1",
+        "오늘 마감",
         "분양가상한제"
       ]
     },
@@ -305,33 +254,8 @@
       "score": 56,
       "reasons": [
         "서울",
-        "D-2",
+        "D-1",
         "투기과열지구"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910284",
-      "name": "중동역 다채로움 더원",
-      "areaName": "경기",
-      "address": "경기도 부천시 소사구 송내동 365-1번지 일원",
-      "supply": 23,
-      "noticeDate": "2026-11-10",
-      "receiptFrom": "2026-11-16",
-      "receiptTo": "2026-11-16",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2028-08",
-      "announceDate": "2026-11-19",
-      "builder": "송내동 성우아파트 소규모재건축정비사업조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://중동역다채로움더원.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910284&pblancNo=2026910284",
-      "score": 51,
-      "reasons": [
-        "수도권",
-        "무순위"
       ]
     },
     {
@@ -433,7 +357,58 @@
       "score": 45,
       "reasons": [
         "수도권",
-        "D-1"
+        "오늘 마감"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026820013",
+      "name": "안산신길2 A-6블록 신혼희망타운(공공분양)(본청약)",
+      "areaName": "경기",
+      "address": "경기도 안산시 단원구 신길동 일원 안산신길2 공공주택지구 내 A-6블록",
+      "supply": 251,
+      "noticeDate": "2026-10-30",
+      "receiptFrom": "2026-11-16",
+      "receiptTo": "2026-11-24",
+      "specialFrom": null,
+      "rank1From": "2026-11-16",
+      "moveInYm": "2029-11",
+      "announceDate": "2026-12-04",
+      "builder": "동문건설(주), 남진건설 주식회사, 아라이앤씨 주식회사",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://apply.lh.or.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820013&pblancNo=2026820013",
+      "score": 44,
+      "reasons": [
+        "수도권",
+        "D-6",
+        "분양가상한제"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910287",
+      "name": "더샵 청주그리니티(2차)",
+      "areaName": "충북",
+      "address": "충청북도 청주시 서원구 개신동 767번지",
+      "supply": 1,
+      "noticeDate": "2026-11-12",
+      "receiptFrom": "2026-11-17",
+      "receiptTo": "2026-11-17",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2027-01",
+      "announceDate": "2026-11-20",
+      "builder": "구룡개발(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.thesharp.co.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910287&pblancNo=2026910287",
+      "score": 43,
+      "reasons": [
+        "무순위",
+        "더샵"
       ]
     },
     {
@@ -539,31 +514,6 @@
     },
     {
       "kind": "apt",
-      "pblancNo": "2026820013",
-      "name": "안산신길2 A-6블록 신혼희망타운(공공분양)(본청약)",
-      "areaName": "경기",
-      "address": "경기도 안산시 단원구 신길동 일원 안산신길2 공공주택지구 내 A-6블록",
-      "supply": 251,
-      "noticeDate": "2026-10-30",
-      "receiptFrom": "2026-11-16",
-      "receiptTo": "2026-11-24",
-      "specialFrom": null,
-      "rank1From": "2026-11-16",
-      "moveInYm": "2029-11",
-      "announceDate": "2026-12-04",
-      "builder": "동문건설(주), 남진건설 주식회사, 아라이앤씨 주식회사",
-      "priceCap": true,
-      "speculative": false,
-      "homepage": "https://apply.lh.or.kr/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820013&pblancNo=2026820013",
-      "score": 36,
-      "reasons": [
-        "수도권",
-        "분양가상한제"
-      ]
-    },
-    {
-      "kind": "apt",
       "pblancNo": "2026000435",
       "name": "삼도이동 2지구 토지임대부 공공분양주택",
       "areaName": "제주",
@@ -583,7 +533,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000435&pblancNo=2026000435",
       "score": 33,
       "reasons": [
-        "D-1",
+        "오늘 마감",
         "분양가상한제"
       ]
     },
@@ -608,7 +558,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000434&pblancNo=2026000434",
       "score": 33,
       "reasons": [
-        "D-1",
+        "오늘 마감",
         "분양가상한제"
       ]
     },
@@ -660,30 +610,6 @@
       "reasons": [
         "광역시",
         "더샵"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000554",
-      "name": "리첼 에듀포레 경산역",
-      "areaName": "경북",
-      "address": "경상북도 경산시 사정동 301-22번지 일원",
-      "supply": 201,
-      "noticeDate": "2026-11-03",
-      "receiptFrom": "2026-11-16",
-      "receiptTo": "2026-11-17",
-      "specialFrom": "2026-11-13",
-      "rank1From": "2026-11-16",
-      "moveInYm": "2029-09",
-      "announceDate": "2026-11-23",
-      "builder": "에쓰와이이앤씨",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://richelledufore.co.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000554&pblancNo=2026000554",
-      "score": 25,
-      "reasons": [
-        "오늘 마감"
       ]
     },
     {
