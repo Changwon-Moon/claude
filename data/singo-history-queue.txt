@@ -61,7 +61,7 @@ lawd=11470 umd=신정동 type=84 apt="목동신시가지14"
 lawd=41135 umd=수내동 type=84 apt="파크타운(대림)"
 lawd=41135 umd=서현동 type=59 apt="시범삼성"
 lawd=41131 umd=창곡동 type=59 apt="위례센트럴자이"
-lawd=41465 umd=풍덕천동 type=84 apt="e편한세상수지" force=1
+lawd=41465 umd=풍덕천동 type=84 apt="e편한세상수지"
 lawd=41135 umd=야탑동 type=59 apt="장미마을(코오롱)1"
 lawd=41133 umd=금광동 type=59 apt="e편한세상금빛그랑메종1단지"
 lawd=41173 umd=호계동 type=84 apt="평촌어바인퍼스트" force=1
