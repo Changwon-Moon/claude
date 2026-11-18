@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-18T05:13:40.057Z",
+  "generatedAt": "2026-11-18T06:55:48.756Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -1275,7 +1275,7 @@
       "lastOk": "2026-11-18",
       "okDaysAgo": 0,
       "fails30": 0,
-      "runs30": 75
+      "runs30": 76
     },
     {
       "file": "reb-collect.yml",
@@ -1314,8 +1314,8 @@
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 46,
-      "runs30": 77
+      "fails30": 47,
+      "runs30": 78
     }
   ]
 }
