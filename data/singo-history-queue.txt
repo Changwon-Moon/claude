@@ -76,7 +76,7 @@ lawd=41192 umd=중동 type=84 apt="금강마을(주공)"
 lawd=41597 umd=능동 type=84 apt="자연앤데시앙"
 lawd=41610 umd=고산동 type=84 apt="더샵오포센트럴포레"
 lawd=41117 umd=영통동 type=59 apt="벽적골두산"
-lawd=41463 umd=상갈동 type=59 apt="금화마을주공3단지" force=1
+lawd=41463 umd=상갈동 type=59 apt="금화마을주공3단지"
 lawd=41461 umd=고림동 type=59 apt="힐스테이트용인고진역1단지" force=1
 
 lawd=11470 umd=신정동 type=84 apt="목동신시가지14"

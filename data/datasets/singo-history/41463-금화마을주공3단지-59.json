@@ -5,13 +5,13 @@
     "aptNm": "금화마을주공3단지",
     "type": "59",
     "from": "202001",
-    "to": "202610",
-    "monthsTried": 82,
+    "to": "202611",
+    "monthsTried": 83,
     "monthsFailed": 0,
-    "monthsTraded": 68,
+    "monthsTraded": 69,
     "peak": {
-      "manwon": 64800,
-      "date": "2026-10-21",
+      "manwon": 67500,
+      "date": "2026-11-06",
       "area": 59.97,
       "floor": 7
     },
@@ -751,10 +751,19 @@
     {
       "ym": "202610",
       "maxManwon": 64800,
-      "count": 2,
+      "count": 3,
+      "area": 59.97,
+      "floor": 11,
+      "date": "2026-10-22",
+      "ok": true
+    },
+    {
+      "ym": "202611",
+      "maxManwon": 67500,
+      "count": 1,
       "area": 59.97,
       "floor": 7,
-      "date": "2026-10-21",
+      "date": "2026-11-06",
       "ok": true
     }
   ]
