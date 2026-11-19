@@ -57,6 +57,28 @@
 # ⚡ 2026-11-17 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-18 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-19 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+# ⚡ 2026-11-20 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+lawd=41135 umd=서현동 type=84 apt="시범삼성" force=1
+lawd=41131 umd=신흥동 type=59 apt="산성역포레스티아"
+lawd=41173 umd=호계동 type=84 apt="평촌더샵아이파크" force=1
+lawd=11350 umd=하계동 type=84 apt="현대" force=1
+lawd=11290 umd=석관동 type=59 apt="래미안아트리치"
+lawd=11545 umd=독산동 type=59 apt="금천롯데캐슬골드파크1차" force=1
+lawd=11290 umd=길음동 type=59 apt="길음뉴타운4단지(e편한세상)"
+lawd=41133 umd=금광동 type=59 apt="e편한세상금빛그랑메종5단지"
+lawd=11410 umd=남가좌동 type=59 apt="남가좌동현대" force=1
+lawd=11530 umd=개봉동 type=59 apt="현대" force=1
+lawd=41597 umd=반송동 type=59 apt="동탄시범다은마을 월드메르디앙 반도유보라" force=1
+lawd=41465 umd=신봉동 type=84 apt="신봉마을LG자이1차"
+lawd=41463 umd=동백동 type=84 apt="용인동백두산위브더제니스" force=1
+lawd=41117 umd=영통동 type=59 apt="벽적골롯데" force=1
+lawd=41192 umd=중동 type=84 apt="금강마을(주공)" force=1
+lawd=41597 umd=능동 type=84 apt="자연앤데시앙" force=1
+lawd=41610 umd=고산동 type=84 apt="더샵오포센트럴포레" force=1
+lawd=41117 umd=영통동 type=59 apt="벽적골두산" force=1
+lawd=41463 umd=상갈동 type=59 apt="금화마을주공3단지" force=1
+lawd=41461 umd=고림동 type=59 apt="힐스테이트용인고진역1단지" force=1
+
 lawd=11470 umd=신정동 type=84 apt="목동신시가지14"
 lawd=41135 umd=수내동 type=84 apt="파크타운(대림)"
 lawd=41135 umd=서현동 type=59 apt="시범삼성"
