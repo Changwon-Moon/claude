@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T00:48:56.646Z",
+  "generatedAt": "2026-11-19T08:09:23.816Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -282,15 +282,15 @@
         },
         {
           "day": "11-19",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "12:13",
+          "delay": 304
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-11-18",
-      "lastOk": "2026-11-18",
+      "medianDelay": 304,
+      "maxDelay": 304,
+      "lastRun": "2026-11-19",
+      "lastOk": "2026-11-19",
       "okDaysAgo": 0
     },
     {
@@ -388,7 +388,7 @@
       "maxDelay": null,
       "lastRun": "2026-11-01",
       "lastOk": "2026-11-01",
-      "okDaysAgo": 17
+      "okDaysAgo": 18
     },
     {
       "file": "reb-weekly-collect.yml",
@@ -865,12 +865,12 @@
         {
           "day": "11-19",
           "state": "late",
-          "at": "06:24",
-          "delay": 1128
+          "at": "12:21",
+          "delay": 45
         }
       ],
-      "medianDelay": 1128,
-      "maxDelay": 1128,
+      "medianDelay": 45,
+      "maxDelay": 45,
       "lastRun": "2026-11-19",
       "lastOk": "2026-11-19",
       "okDaysAgo": 0
@@ -1251,9 +1251,9 @@
       "file": "molit-rent-collect.yml",
       "name": "전월세 실거래 수집 (국토부)",
       "lastRun": "2026-11-03",
-      "daysAgo": 15,
+      "daysAgo": 16,
       "lastOk": "2026-11-03",
-      "okDaysAgo": 15,
+      "okDaysAgo": 16,
       "fails30": 0,
       "runs30": 1
     },
@@ -1285,7 +1285,7 @@
       "lastOk": "2026-11-19",
       "okDaysAgo": 0,
       "fails30": 0,
-      "runs30": 74
+      "runs30": 75
     },
     {
       "file": "singo-prep.yml",
@@ -1294,7 +1294,7 @@
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 90,
+      "fails30": 92,
       "runs30": 100
     },
     {
@@ -1314,8 +1314,8 @@
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 46,
-      "runs30": 76
+      "fails30": 47,
+      "runs30": 77
     }
   ]
 }
