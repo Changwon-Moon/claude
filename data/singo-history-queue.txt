@@ -60,7 +60,7 @@
 # ⚡ 2026-11-20 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 lawd=41135 umd=서현동 type=84 apt="시범삼성"
 lawd=41131 umd=신흥동 type=59 apt="산성역포레스티아"
-lawd=41173 umd=호계동 type=84 apt="평촌더샵아이파크" force=1
+lawd=41173 umd=호계동 type=84 apt="평촌더샵아이파크"
 lawd=11350 umd=하계동 type=84 apt="현대" force=1
 lawd=11290 umd=석관동 type=59 apt="래미안아트리치"
 lawd=11545 umd=독산동 type=59 apt="금천롯데캐슬골드파크1차" force=1
