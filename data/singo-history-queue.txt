@@ -66,7 +66,7 @@ lawd=11290 umd=석관동 type=59 apt="래미안아트리치"
 lawd=11545 umd=독산동 type=59 apt="금천롯데캐슬골드파크1차"
 lawd=11290 umd=길음동 type=59 apt="길음뉴타운4단지(e편한세상)"
 lawd=41133 umd=금광동 type=59 apt="e편한세상금빛그랑메종5단지"
-lawd=11410 umd=남가좌동 type=59 apt="남가좌동현대" force=1
+lawd=11410 umd=남가좌동 type=59 apt="남가좌동현대"
 lawd=11530 umd=개봉동 type=59 apt="현대" force=1
 lawd=41597 umd=반송동 type=59 apt="동탄시범다은마을 월드메르디앙 반도유보라" force=1
 lawd=41465 umd=신봉동 type=84 apt="신봉마을LG자이1차"
