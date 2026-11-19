@@ -2164,20 +2164,6 @@
       "at": "2026-11-19"
     },
     {
-      "id": "ah-remndr-2026910299",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 용인 양지 서희스타힐스 하이뷰 (조합원 취소분)",
-      "why": "경기 · 19세대 · 접수 ~2026-11-18 · 51점(수도권·무순위)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-11-18",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910299&pblancNo=2026910299",
-      "at": "2026-11-19"
-    },
-    {
       "id": "ah-apt-2026000558",
       "cat": "todo",
       "topic": "부동산",
@@ -2189,6 +2175,20 @@
       "status": "",
       "deadline": "2026-11-25",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000558&pblancNo=2026000558",
+      "at": "2026-11-19"
+    },
+    {
+      "id": "ah-remndr-2026910299",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 용인 양지 서희스타힐스 하이뷰 (조합원 취소분)",
+      "why": "경기 · 19세대 · 접수 ~2026-11-18 · 51점(수도권·무순위)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-11-18",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910299&pblancNo=2026910299",
       "at": "2026-11-19"
     }
   ]
