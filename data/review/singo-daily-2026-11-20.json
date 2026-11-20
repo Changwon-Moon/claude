@@ -1,7 +1,7 @@
 {
   "label": "singo-daily-2026-11-20",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 19장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 18장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
@@ -42,12 +42,6 @@
     },
     {
       "file": "singo-길음뉴타운4단지e편한세상-59.json",
-      "deterministic": true,
-      "qaErrors": 0,
-      "findings": []
-    },
-    {
-      "file": "singo-e편한세상금빛그랑메종5단지-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
