@@ -58,6 +58,22 @@
 # ⚡ 2026-11-18 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-19 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 # ⚡ 2026-11-20 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+# ⚡ 2026-11-21 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
+lawd=11470 umd=목동 type=84 apt="목동신시가지2"
+lawd=11740 umd=암사동 type=84 apt="롯데캐슬퍼스트"
+lawd=11740 umd=상일동 type=59 apt="고덕아르테온"
+lawd=41450 umd=망월동 type=59 apt="미사강변 골든 센트로" force=1
+lawd=41171 umd=안양동 type=59 apt="안양역푸르지오더샵" force=1
+lawd=41597 umd=목동 type=84 apt="힐스테이트동탄" force=1
+lawd=41173 umd=평촌동 type=59 apt="인덕원대우"
+lawd=41133 umd=금광동 type=59 apt="e편한세상금빛그랑메종5단지" force=1
+lawd=11290 umd=하월곡동 type=59 apt="월곡두산위브" force=1
+lawd=11350 umd=중계동 type=84 apt="상아"
+lawd=11380 umd=응암동 type=59 apt="백련산힐스테이트1차"
+lawd=11260 umd=신내동 type=84 apt="신내우디안1단지" force=1
+lawd=11350 umd=공릉동 type=59 apt="풍림아파트A" force=1
+lawd=41113 umd=권선동 type=59 apt="대원신동아"
+
 lawd=41135 umd=서현동 type=84 apt="시범삼성"
 lawd=41131 umd=신흥동 type=59 apt="산성역포레스티아"
 lawd=41173 umd=호계동 type=84 apt="평촌더샵아이파크"
