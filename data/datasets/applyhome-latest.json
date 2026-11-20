@@ -10,17 +10,45 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-11-19",
+    "collectedFor": "2026-11-20",
     "withinDays": 7,
     "totals": {
-      "APT 분양정보": 2945,
-      "APT 무순위/잔여세대": 1756
+      "APT 분양정보": 2948,
+      "APT 무순위/잔여세대": 1758
     },
     "unit": {
       "supply": "가구"
     }
   },
   "notices": [
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910300",
+      "name": "산곡역자이힐스테이트앤하늘채",
+      "areaName": "인천",
+      "address": "인천광역시 부평구 산곡동 10번지 일원(산곡6 주택재개발정비사업)",
+      "supply": 550,
+      "noticeDate": "2026-11-19",
+      "receiptFrom": "2026-11-24",
+      "receiptTo": "2026-11-24",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2029-12",
+      "announceDate": "2026-11-27",
+      "builder": "산곡6주택재개발정비사업조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.xi.co.kr/sangokxi",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910300&pblancNo=2026910300",
+      "score": 81,
+      "reasons": [
+        "수도권",
+        "550가구",
+        "무순위",
+        "D-4",
+        "자이"
+      ]
+    },
     {
       "kind": "remndr",
       "pblancNo": "2026930045",
@@ -44,7 +72,7 @@
       "reasons": [
         "서울",
         "무순위",
-        "D-5",
+        "D-4",
         "래미안"
       ]
     },
@@ -72,7 +100,7 @@
         "광역시",
         "315가구",
         "무순위",
-        "D-4",
+        "D-3",
         "자이"
       ]
     },
@@ -99,7 +127,7 @@
       "reasons": [
         "129가구",
         "무순위",
-        "D-4",
+        "D-3",
         "힐스테이트"
       ]
     },
@@ -126,34 +154,35 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-4",
+        "D-3",
         "푸르지오"
       ]
     },
     {
-      "kind": "apt",
-      "pblancNo": "2026000497",
-      "name": "중화역 라온프라이빗 센트로",
-      "areaName": "서울",
-      "address": "서울특별시 중랑구 중화동 303-9번지 일원",
-      "supply": 113,
-      "noticeDate": "2026-11-06",
-      "receiptFrom": "2026-11-17",
-      "receiptTo": "2026-11-19",
-      "specialFrom": "2026-11-16",
-      "rank1From": "2026-11-17",
-      "moveInYm": "2029-02",
-      "announceDate": "2026-11-25",
-      "builder": "라온건설(주)",
+      "kind": "remndr",
+      "pblancNo": "2026910307",
+      "name": "인천 검단신도시 AB13블록 호반써밋Ⅲ",
+      "areaName": "인천",
+      "address": "인천 검단신도시 AB13블록 호반써밋 아라 (인천광역시 검단구 이음4로 101)",
+      "supply": 1,
+      "noticeDate": "2026-11-19",
+      "receiptFrom": "2026-11-24",
+      "receiptTo": "2026-11-24",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-12",
+      "announceDate": "2026-11-27",
+      "builder": "티에스리빙 주식회사",
       "priceCap": false,
-      "speculative": true,
-      "homepage": "https://www.jh-raon.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000497&pblancNo=2026000497",
-      "score": 56,
+      "speculative": false,
+      "homepage": "https://www.gd3-hoban.co.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910307&pblancNo=2026910307",
+      "score": 65,
       "reasons": [
-        "서울",
-        "오늘 마감",
-        "투기과열지구"
+        "수도권",
+        "무순위",
+        "D-4",
+        "써밋"
       ]
     },
     {
@@ -179,7 +208,7 @@
       "reasons": [
         "수도권",
         "548가구",
-        "D-6",
+        "D-5",
         "분양가상한제"
       ]
     },
@@ -206,7 +235,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-4"
+        "D-3"
       ]
     },
     {
@@ -232,7 +261,7 @@
       "reasons": [
         "수도권",
         "984가구",
-        "D-6",
+        "D-5",
         "자이"
       ]
     },
@@ -263,6 +292,32 @@
     },
     {
       "kind": "apt",
+      "pblancNo": "2026000560",
+      "name": "해링턴 플레이스 문래",
+      "areaName": "서울",
+      "address": "서울특별시 영등포구 문래동3가 27-1번지 일원",
+      "supply": 218,
+      "noticeDate": "2026-11-13",
+      "receiptFrom": "2026-11-24",
+      "receiptTo": "2026-11-26",
+      "specialFrom": "2026-11-23",
+      "rank1From": "2026-11-24",
+      "moveInYm": "2030-03",
+      "announceDate": "2026-12-02",
+      "builder": "효성중공업 주식회사",
+      "priceCap": false,
+      "speculative": true,
+      "homepage": "https://www.해링턴플레이스문래.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000560&pblancNo=2026000560",
+      "score": 49,
+      "reasons": [
+        "서울",
+        "D-6",
+        "투기과열지구"
+      ]
+    },
+    {
+      "kind": "apt",
       "pblancNo": "2026000558",
       "name": "화정1지구 아르엘",
       "areaName": "울산",
@@ -284,7 +339,7 @@
       "reasons": [
         "광역시",
         "802가구",
-        "D-6",
+        "D-5",
         "르엘"
       ]
     },
@@ -310,33 +365,8 @@
       "score": 44,
       "reasons": [
         "수도권",
-        "D-5",
+        "D-4",
         "분양가상한제"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910287",
-      "name": "더샵 청주그리니티(2차)",
-      "areaName": "충북",
-      "address": "충청북도 청주시 서원구 개신동 767번지",
-      "supply": 1,
-      "noticeDate": "2026-11-12",
-      "receiptFrom": "2026-11-17",
-      "receiptTo": "2026-11-17",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2027-01",
-      "announceDate": "2026-11-20",
-      "builder": "구룡개발(주)",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.thesharp.co.kr/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910287&pblancNo=2026910287",
-      "score": 43,
-      "reasons": [
-        "무순위",
-        "더샵"
       ]
     },
     {
@@ -366,27 +396,27 @@
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000560",
-      "name": "해링턴 플레이스 문래",
-      "areaName": "서울",
-      "address": "서울특별시 영등포구 문래동3가 27-1번지 일원",
-      "supply": 218,
-      "noticeDate": "2026-11-13",
-      "receiptFrom": "2026-11-24",
-      "receiptTo": "2026-11-26",
-      "specialFrom": "2026-11-23",
-      "rank1From": "2026-11-24",
-      "moveInYm": "2030-03",
-      "announceDate": "2026-12-02",
-      "builder": "효성중공업 주식회사",
-      "priceCap": false,
-      "speculative": true,
-      "homepage": "https://www.해링턴플레이스문래.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000560&pblancNo=2026000560",
-      "score": 41,
+      "pblancNo": "2026000575",
+      "name": "왕숙 한신더휴 센텀(남양주 왕숙 A-17BL) 공공분양주택",
+      "areaName": "경기",
+      "address": "경기도 남양주시 진건읍 진관리 일원 남양주 왕숙 공공주택지구 A-17BL",
+      "supply": 379,
+      "noticeDate": "2026-11-19",
+      "receiptFrom": "2026-12-01",
+      "receiptTo": "2026-12-02",
+      "specialFrom": "2026-11-30",
+      "rank1From": "2026-12-01",
+      "moveInYm": "2029-07",
+      "announceDate": "2026-12-08",
+      "builder": "한신공영(주),쌍용건설(주),(주)대승글로벌,(주)고덕종합건설,(주)지아이",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://ws-thehue.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000575&pblancNo=2026000575",
+      "score": 42,
       "reasons": [
-        "서울",
-        "투기과열지구"
+        "수도권",
+        "분양가상한제"
       ]
     },
     {
@@ -416,6 +446,31 @@
     },
     {
       "kind": "apt",
+      "pblancNo": "2026000521",
+      "name": "더샵 천안라크원",
+      "areaName": "충남",
+      "address": "충청남도 천안시 서북구 부대동 354번지 일원",
+      "supply": 1032,
+      "noticeDate": "2026-11-19",
+      "receiptFrom": "2026-12-01",
+      "receiptTo": "2026-12-02",
+      "specialFrom": "2026-11-30",
+      "rank1From": "2026-12-01",
+      "moveInYm": "2030-02",
+      "announceDate": "2026-12-09",
+      "builder": "(주)포스코이앤씨",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://더샵천안라크원.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000521&pblancNo=2026000521",
+      "score": 39,
+      "reasons": [
+        "1,032가구 대단지",
+        "더샵"
+      ]
+    },
+    {
+      "kind": "apt",
       "pblancNo": "2026000536",
       "name": "구미 파크원 데시앙",
       "areaName": "경북",
@@ -436,7 +491,7 @@
       "score": 37,
       "reasons": [
         "1,355가구 대단지",
-        "D-6"
+        "D-5"
       ]
     },
     {
@@ -461,7 +516,7 @@
       "score": 34,
       "reasons": [
         "광역시",
-        "D-6",
+        "D-5",
         "써밋"
       ]
     },
@@ -487,7 +542,7 @@
       "score": 34,
       "reasons": [
         "광역시",
-        "D-6",
+        "D-5",
         "더샵"
       ]
     },
@@ -512,7 +567,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000559&pblancNo=2026000559",
       "score": 28,
       "reasons": [
-        "D-6",
+        "D-5",
         "위브"
       ]
     },
@@ -537,7 +592,31 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000540&pblancNo=2026000540",
       "score": 24,
       "reasons": [
-        "D-6"
+        "D-5"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000585",
+      "name": "고양 한신더휴 퍼스트원",
+      "areaName": "경기",
+      "address": "경기도 고양시 덕양구 행신동 173-1번지 일원",
+      "supply": 102,
+      "noticeDate": "2026-11-19",
+      "receiptFrom": "2026-12-01",
+      "receiptTo": "2026-12-02",
+      "specialFrom": "2026-11-30",
+      "rank1From": "2026-12-01",
+      "moveInYm": "2029-05",
+      "announceDate": "2026-12-09",
+      "builder": "한신공영 주식회사",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://gy-thehue.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000585&pblancNo=2026000585",
+      "score": 24,
+      "reasons": [
+        "수도권"
       ]
     }
   ]
