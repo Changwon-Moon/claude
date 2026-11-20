@@ -63,7 +63,7 @@ lawd=11470 umd=목동 type=84 apt="목동신시가지2"
 lawd=11740 umd=암사동 type=84 apt="롯데캐슬퍼스트"
 lawd=11740 umd=상일동 type=59 apt="고덕아르테온"
 lawd=41450 umd=망월동 type=59 apt="미사강변 골든 센트로"
-lawd=41171 umd=안양동 type=59 apt="안양역푸르지오더샵" force=1
+lawd=41171 umd=안양동 type=59 apt="안양역푸르지오더샵"
 lawd=41597 umd=목동 type=84 apt="힐스테이트동탄" force=1
 lawd=41173 umd=평촌동 type=59 apt="인덕원대우"
 lawd=41133 umd=금광동 type=59 apt="e편한세상금빛그랑메종5단지" force=1
