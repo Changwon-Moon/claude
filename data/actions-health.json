@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T08:09:23.816Z",
+  "generatedAt": "2026-11-19T23:59:43.275Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -8,12 +8,6 @@
       "cron": "55 16 * * *",
       "dueKst": "01:55",
       "dots": [
-        {
-          "day": "11-06",
-          "state": "ok",
-          "at": "09:09",
-          "delay": null
-        },
         {
           "day": "11-07",
           "state": "ok",
@@ -88,15 +82,21 @@
         },
         {
           "day": "11-19",
+          "state": "ok",
+          "at": "10:08",
+          "delay": null
+        },
+        {
+          "day": "11-20",
           "state": "late",
-          "at": "08:13",
-          "delay": 379
+          "at": "08:22",
+          "delay": 387
         }
       ],
-      "medianDelay": 379,
-      "maxDelay": 379,
-      "lastRun": "2026-11-19",
-      "lastOk": "2026-11-19",
+      "medianDelay": 387,
+      "maxDelay": 387,
+      "lastRun": "2026-11-20",
+      "lastOk": "2026-11-20",
       "okDaysAgo": 0
     },
     {
@@ -105,12 +105,6 @@
       "cron": "10 20 8 * *",
       "dueKst": "05:10",
       "dots": [
-        {
-          "day": "11-06",
-          "state": "none",
-          "at": null,
-          "delay": null
-        },
         {
           "day": "11-07",
           "state": "none",
@@ -188,13 +182,19 @@
           "state": "none",
           "at": null,
           "delay": null
+        },
+        {
+          "day": "11-20",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": null,
       "maxDelay": null,
       "lastRun": "2026-11-09",
       "lastOk": "2026-11-09",
-      "okDaysAgo": 10
+      "okDaysAgo": 11
     },
     {
       "file": "applyhome-collect.yml",
@@ -202,12 +202,6 @@
       "cron": "10 22 * * *",
       "dueKst": "07:10",
       "dots": [
-        {
-          "day": "11-06",
-          "state": "ok",
-          "at": "16:50",
-          "delay": null
-        },
         {
           "day": "11-07",
           "state": "ok",
@@ -282,13 +276,19 @@
         },
         {
           "day": "11-19",
-          "state": "late",
-          "at": "12:13",
-          "delay": 304
+          "state": "ok",
+          "at": "17:34",
+          "delay": null
+        },
+        {
+          "day": "11-20",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
-      "medianDelay": 304,
-      "maxDelay": 304,
+      "medianDelay": null,
+      "maxDelay": null,
       "lastRun": "2026-11-19",
       "lastOk": "2026-11-19",
       "okDaysAgo": 0
@@ -299,12 +299,6 @@
       "cron": "20 1 1 * *",
       "dueKst": "10:20",
       "dots": [
-        {
-          "day": "11-06",
-          "state": "none",
-          "at": null,
-          "delay": null
-        },
         {
           "day": "11-07",
           "state": "none",
@@ -382,6 +376,12 @@
           "state": "none",
           "at": null,
           "delay": null
+        },
+        {
+          "day": "11-20",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": null,
@@ -396,12 +396,6 @@
       "cron": "37 1 * * 5",
       "dueKst": "10:37",
       "dots": [
-        {
-          "day": "11-06",
-          "state": "ok",
-          "at": "17:27",
-          "delay": null
-        },
         {
           "day": "11-07",
           "state": "none",
@@ -479,13 +473,19 @@
           "state": "none",
           "at": null,
           "delay": null
+        },
+        {
+          "day": "11-20",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": null,
       "maxDelay": null,
       "lastRun": "2026-11-13",
       "lastOk": "2026-11-13",
-      "okDaysAgo": 5
+      "okDaysAgo": 6
     },
     {
       "file": "month-backfill.yml",
@@ -493,12 +493,6 @@
       "cron": "40 1 * * *",
       "dueKst": "10:40",
       "dots": [
-        {
-          "day": "11-06",
-          "state": "ok",
-          "at": "17:27",
-          "delay": null
-        },
         {
           "day": "11-07",
           "state": "ok",
@@ -573,6 +567,12 @@
         },
         {
           "day": "11-19",
+          "state": "ok",
+          "at": "18:25",
+          "delay": null
+        },
+        {
+          "day": "11-20",
           "state": "none",
           "at": null,
           "delay": null
@@ -580,8 +580,8 @@
       ],
       "medianDelay": null,
       "maxDelay": null,
-      "lastRun": "2026-11-18",
-      "lastOk": "2026-11-18",
+      "lastRun": "2026-11-19",
+      "lastOk": "2026-11-19",
       "okDaysAgo": 0
     },
     {
@@ -590,12 +590,6 @@
       "cron": "0 2 * * *",
       "dueKst": "11:00",
       "dots": [
-        {
-          "day": "11-06",
-          "state": "ok",
-          "at": "17:59",
-          "delay": null
-        },
         {
           "day": "11-07",
           "state": "ok",
@@ -670,6 +664,12 @@
         },
         {
           "day": "11-19",
+          "state": "ok",
+          "at": "18:57",
+          "delay": null
+        },
+        {
+          "day": "11-20",
           "state": "none",
           "at": null,
           "delay": null
@@ -677,8 +677,8 @@
       ],
       "medianDelay": null,
       "maxDelay": null,
-      "lastRun": "2026-11-18",
-      "lastOk": "2026-11-18",
+      "lastRun": "2026-11-19",
+      "lastOk": "2026-11-19",
       "okDaysAgo": 0
     },
     {
@@ -687,12 +687,6 @@
       "cron": "23 2 12 1,4,7,10 *",
       "dueKst": "11:23",
       "dots": [
-        {
-          "day": "11-06",
-          "state": "none",
-          "at": null,
-          "delay": null
-        },
         {
           "day": "11-07",
           "state": "none",
@@ -770,6 +764,12 @@
           "state": "none",
           "at": null,
           "delay": null
+        },
+        {
+          "day": "11-20",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": null,
@@ -784,12 +784,6 @@
       "cron": "37 2 17 1,7 *",
       "dueKst": "11:37",
       "dots": [
-        {
-          "day": "11-06",
-          "state": "ok",
-          "at": "23:59",
-          "delay": null
-        },
         {
           "day": "11-07",
           "state": "ok",
@@ -864,15 +858,21 @@
         },
         {
           "day": "11-19",
+          "state": "ok",
+          "at": "21:58",
+          "delay": null
+        },
+        {
+          "day": "11-20",
           "state": "late",
-          "at": "12:21",
-          "delay": 45
+          "at": "06:28",
+          "delay": 1132
         }
       ],
-      "medianDelay": 45,
-      "maxDelay": 45,
-      "lastRun": "2026-11-19",
-      "lastOk": "2026-11-19",
+      "medianDelay": 1132,
+      "maxDelay": 1132,
+      "lastRun": "2026-11-20",
+      "lastOk": "2026-11-20",
       "okDaysAgo": 0
     }
   ],
@@ -1241,9 +1241,9 @@
       "file": "auto-produce.yml",
       "name": "데이터 바뀌면 카드 자동 재생산",
       "lastRun": "2026-10-22",
-      "daysAgo": 27,
+      "daysAgo": 28,
       "lastOk": "2026-10-22",
-      "okDaysAgo": 27,
+      "okDaysAgo": 28,
       "fails30": 2,
       "runs30": 4
     },
@@ -1261,9 +1261,9 @@
       "file": "ecos-m2.yml",
       "name": "ECOS M2 수집 (probe+collect)",
       "lastRun": "2026-11-17",
-      "daysAgo": 1,
+      "daysAgo": 2,
       "lastOk": "2026-11-17",
-      "okDaysAgo": 1,
+      "okDaysAgo": 2,
       "fails30": 0,
       "runs30": 2
     },
@@ -1271,36 +1271,36 @@
       "file": "reb-collect.yml",
       "name": "전세·월세 지수 수집 (한국부동산원)",
       "lastRun": "2026-11-17",
-      "daysAgo": 1,
+      "daysAgo": 2,
       "lastOk": "2026-11-17",
-      "okDaysAgo": 1,
+      "okDaysAgo": 2,
       "fails30": 0,
       "runs30": 3
     },
     {
       "file": "guard.yml",
       "name": "문지기 (guard)",
-      "lastRun": "2026-11-19",
+      "lastRun": "2026-11-20",
       "daysAgo": 0,
-      "lastOk": "2026-11-19",
+      "lastOk": "2026-11-20",
       "okDaysAgo": 0,
       "fails30": 0,
-      "runs30": 75
+      "runs30": 76
     },
     {
       "file": "singo-prep.yml",
       "name": "신고가 재료 미리 걸기 (아침 판정 직후)",
-      "lastRun": "2026-11-19",
+      "lastRun": "2026-11-20",
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 92,
+      "fails30": 89,
       "runs30": 100
     },
     {
       "file": "singo-retry.yml",
       "name": "오늘의 신고가 — 자동 재시도",
-      "lastRun": "2026-11-19",
+      "lastRun": "2026-11-20",
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
@@ -1310,12 +1310,12 @@
     {
       "file": "tower-deploy.yml",
       "name": "관제탑 배포 (Cloudflare)",
-      "lastRun": "2026-11-19",
+      "lastRun": "2026-11-20",
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 47,
-      "runs30": 77
+      "fails30": 48,
+      "runs30": 78
     }
   ]
 }
