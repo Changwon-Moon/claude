@@ -5,15 +5,15 @@
     "aptNm": "풍림아파트A",
     "type": "59",
     "from": "202001",
-    "to": "202609",
-    "monthsTried": 81,
+    "to": "202611",
+    "monthsTried": 83,
     "monthsFailed": 0,
-    "monthsTraded": 59,
+    "monthsTraded": 61,
     "peak": {
-      "manwon": 88000,
-      "date": "2026-08-12",
+      "manwon": 89500,
+      "date": "2026-11-06",
       "area": 59.94,
-      "floor": 8
+      "floor": 19
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -741,11 +741,29 @@
     },
     {
       "ym": "202609",
+      "maxManwon": 85000,
+      "count": 2,
+      "area": 59.94,
+      "floor": 8,
+      "date": "2026-09-19",
+      "ok": true
+    },
+    {
+      "ym": "202610",
       "maxManwon": null,
       "count": 0,
       "area": null,
       "floor": null,
       "date": null,
+      "ok": true
+    },
+    {
+      "ym": "202611",
+      "maxManwon": 89500,
+      "count": 1,
+      "area": 59.94,
+      "floor": 19,
+      "date": "2026-11-06",
       "ok": true
     }
   ]
