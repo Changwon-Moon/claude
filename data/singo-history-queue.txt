@@ -67,7 +67,7 @@ lawd=41171 umd=안양동 type=59 apt="안양역푸르지오더샵"
 lawd=41597 umd=목동 type=84 apt="힐스테이트동탄"
 lawd=41173 umd=평촌동 type=59 apt="인덕원대우"
 lawd=41133 umd=금광동 type=59 apt="e편한세상금빛그랑메종5단지"
-lawd=11290 umd=하월곡동 type=59 apt="월곡두산위브" force=1
+lawd=11290 umd=하월곡동 type=59 apt="월곡두산위브"
 lawd=11350 umd=중계동 type=84 apt="상아"
 lawd=11380 umd=응암동 type=59 apt="백련산힐스테이트1차"
 lawd=11260 umd=신내동 type=84 apt="신내우디안1단지" force=1
