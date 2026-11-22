@@ -17687,6 +17687,16 @@
         "singo-서광교파크스위첸-59-1123"
       ],
       "note": "⚠️ --publish 필수 — 빼면 재생산·확정이 옛 판본을 본다(2026-08-16). ⚠️ produces 필수 — 빼면 묶음 세트가 이 빌더를 못 찾는다(2026-09-03)."
+    },
+    {
+      "label": "danji-jamsil-raemian-ipark",
+      "cmd": "scripts/build-danji.mjs",
+      "args": [
+        "2026-11-23",
+        "--only",
+        "jamsil-raemian-ipark-remndr",
+        "--publish"
+      ]
     }
   ]
 }

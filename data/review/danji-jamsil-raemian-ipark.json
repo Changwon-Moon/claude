@@ -1,0 +1,55 @@
+{
+  "label": "danji-jamsil-raemian-ipark",
+  "verdict": "pass",
+  "summary": "PASS — error 0 · warn 0 · 카드 1장 · 코드 검수만",
+  "findings": [
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 157,939억 허용 — 59A 공급금액 만원 단위(카드 15.8억)"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 15.79억 허용 — 59A 공급금액 둘째 자리 — 카드는 첫째 자리 15.8억"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 11.05억 허용 — 43㎡ 일반공급 공급금액 110,548만원 — 카드는 기준 타입 하나만 말하므로 캡션이 3세대를 모두 적는다"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 18.56억 허용 — 84D 특별공급 공급금액 185,607만원"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 7,000억 허용 — 32억7,000만원의 뒷자리 — 카드의 32.7억과 같은 거래"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 32억 허용 — 32억7,000만원의 앞자리"
+    }
+  ],
+  "cards": [
+    {
+      "file": "danji-jamsil-raemian-ipark.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    }
+  ],
+  "llm": {
+    "available": false,
+    "note": "ANTHROPIC_API_KEY 없음 — LLM 검수 건너뜀(코드 검수만). 키 등록: docs/guides/anthropic-key.md"
+  }
+}
