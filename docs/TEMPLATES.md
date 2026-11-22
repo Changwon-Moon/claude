@@ -42,7 +42,7 @@
 | `rise-story` | 🟢 2세트 | tohuh-rise, tohuh-rise-dots |
 | `seongsu-zones` | 🟢 1세트 | seongsu-zones |
 | `sinbundang-loop` | 🟢 1세트 | sinbundang-loop |
-| `singo-record` | 🟢 70세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 67 |
+| `singo-record` | 🟢 71세트 | singo-gwangmyeong-hanjin, singo-neulpureun-byuksan, singo-raemian-crisiel 외 68 |
 | `singoga-map` | 🟢 4세트 | tohuh-rank, tohuh-rent-map, jeonwolse-map 외 1 |
 | `streak-line` | 🟢 36세트 | mae-streak, jeonse-streak, m2-gap 외 33 |
 | `supply-progress` | 🟢 1세트 | supply-progress |
