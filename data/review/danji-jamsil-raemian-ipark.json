@@ -7,37 +7,43 @@
       "reviewer": "caption-number",
       "level": "info",
       "code": "crosscheck-allowed",
-      "msg": "캡션 교차검증값 157,939억 허용 — 59A 공급금액 만원 단위(카드 15.8억)"
+      "msg": "캡션 교차검증값 16.02억 허용 — 59A 공급가(옵션포함) 16억186만원 둘째 자리 — 카드는 첫째 자리 16.0억"
     },
     {
       "reviewer": "caption-number",
       "level": "info",
       "code": "crosscheck-allowed",
-      "msg": "캡션 교차검증값 15.79억 허용 — 59A 공급금액 둘째 자리 — 카드는 첫째 자리 15.8억"
+      "msg": "캡션 교차검증값 160,187억 허용 — 59A 공급가(옵션포함) 1,601,865,680원의 만원 단위(반올림)"
     },
     {
       "reviewer": "caption-number",
       "level": "info",
       "code": "crosscheck-allowed",
-      "msg": "캡션 교차검증값 11.05억 허용 — 43㎡ 일반공급 공급금액 110,548만원 — 카드는 기준 타입 하나만 말하므로 캡션이 3세대를 모두 적는다"
+      "msg": "캡션 교차검증값 11.12억 허용 — 43㎡ 120동 402호 공급가(옵션포함) 1,112,253,366원 — 카드는 기준 타입 하나만 말하므로 캡션이 3세대를 모두 적는다"
     },
     {
       "reviewer": "caption-number",
       "level": "info",
       "code": "crosscheck-allowed",
-      "msg": "캡션 교차검증값 18.56억 허용 — 84D 특별공급 공급금액 185,607만원"
+      "msg": "캡션 교차검증값 18.79억 허용 — 84D 117동 503호 공급가(옵션포함) 1,878,788,144원"
     },
     {
       "reviewer": "caption-number",
       "level": "info",
       "code": "crosscheck-allowed",
-      "msg": "캡션 교차검증값 7,000억 허용 — 32억7,000만원의 뒷자리 — 카드의 32.7억과 같은 거래"
+      "msg": "캡션 교차검증값 32억 허용 — 32억7,000만원의 앞자리 — 카드의 32.7억과 같은 거래"
     },
     {
       "reviewer": "caption-number",
       "level": "info",
       "code": "crosscheck-allowed",
-      "msg": "캡션 교차검증값 32억 허용 — 32억7,000만원의 앞자리"
+      "msg": "캡션 교차검증값 7,000억 허용 — 32억7,000만원의 뒷자리"
+    },
+    {
+      "reviewer": "caption-number",
+      "level": "info",
+      "code": "crosscheck-allowed",
+      "msg": "캡션 교차검증값 2024억 허용 — 최초 당첨자 발표일 2024-10-30 (전매제한 기산점, 공고 1·4쪽)"
     }
   ],
   "cards": [
