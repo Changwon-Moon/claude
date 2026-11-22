@@ -10,7 +10,7 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-11-21",
+    "collectedFor": "2026-11-22",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2954,
@@ -40,13 +40,40 @@
       "speculative": false,
       "homepage": "https://www.xi.co.kr/sangokxi",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910300&pblancNo=2026910300",
-      "score": 81,
+      "score": 88,
       "reasons": [
         "수도권",
         "550가구",
         "무순위",
-        "D-3",
+        "D-2",
         "자이"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026930045",
+      "name": "잠실 래미안아이파크",
+      "areaName": "서울",
+      "address": "서울특별시 송파구 신천동 20-4번지 일대(잠실진주주택재건축정비사업)",
+      "supply": 3,
+      "noticeDate": "2026-11-17",
+      "receiptFrom": "2026-11-23",
+      "receiptTo": "2026-11-24",
+      "specialFrom": "2026-11-23",
+      "rank1From": null,
+      "moveInYm": "2027-01",
+      "announceDate": "2026-11-27",
+      "builder": "잠실진주아파트주택재건축정비사업조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.raemian.co.kr/sales/s/jamsiljinju",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930045&pblancNo=2026930045",
+      "score": 84,
+      "reasons": [
+        "서울",
+        "무순위",
+        "D-2",
+        "래미안"
       ]
     },
     {
@@ -73,35 +100,8 @@
         "광역시",
         "315가구",
         "무순위",
-        "D-2",
+        "D-1",
         "자이"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026930045",
-      "name": "잠실 래미안아이파크",
-      "areaName": "서울",
-      "address": "서울특별시 송파구 신천동 20-4번지 일대(잠실진주주택재건축정비사업)",
-      "supply": 3,
-      "noticeDate": "2026-11-17",
-      "receiptFrom": "2026-11-23",
-      "receiptTo": "2026-11-24",
-      "specialFrom": "2026-11-23",
-      "rank1From": null,
-      "moveInYm": "2027-01",
-      "announceDate": "2026-11-27",
-      "builder": "잠실진주아파트주택재건축정비사업조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.raemian.co.kr/sales/s/jamsiljinju",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930045&pblancNo=2026930045",
-      "score": 77,
-      "reasons": [
-        "서울",
-        "무순위",
-        "D-3",
-        "래미안"
       ]
     },
     {
@@ -127,7 +127,7 @@
       "reasons": [
         "129가구",
         "무순위",
-        "D-2",
+        "D-1",
         "힐스테이트"
       ]
     },
@@ -154,7 +154,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2",
+        "D-1",
         "푸르지오"
       ]
     },
@@ -177,11 +177,11 @@
       "speculative": false,
       "homepage": "https://www.gd3-hoban.co.kr/",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910307&pblancNo=2026910307",
-      "score": 65,
+      "score": 72,
       "reasons": [
         "수도권",
         "무순위",
-        "D-3",
+        "D-2",
         "써밋"
       ]
     },
@@ -208,7 +208,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2"
+        "D-1"
       ]
     },
     {
@@ -235,7 +235,7 @@
         "광역시",
         "39가구",
         "무순위",
-        "D-4"
+        "D-3"
       ]
     },
     {
@@ -261,7 +261,7 @@
       "reasons": [
         "수도권",
         "548가구",
-        "D-4",
+        "D-3",
         "분양가상한제"
       ]
     },
@@ -288,8 +288,34 @@
       "reasons": [
         "수도권",
         "984가구",
-        "D-4",
+        "D-3",
         "자이"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026820013",
+      "name": "안산신길2 A-6블록 신혼희망타운(공공분양)(본청약)",
+      "areaName": "경기",
+      "address": "경기도 안산시 단원구 신길동 일원 안산신길2 공공주택지구 내 A-6블록",
+      "supply": 251,
+      "noticeDate": "2026-10-30",
+      "receiptFrom": "2026-11-16",
+      "receiptTo": "2026-11-24",
+      "specialFrom": null,
+      "rank1From": "2026-11-16",
+      "moveInYm": "2029-11",
+      "announceDate": "2026-12-04",
+      "builder": "동문건설(주), 남진건설 주식회사, 아라이앤씨 주식회사",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://apply.lh.or.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820013&pblancNo=2026820013",
+      "score": 51,
+      "reasons": [
+        "수도권",
+        "D-2",
+        "분양가상한제"
       ]
     },
     {
@@ -314,7 +340,7 @@
       "score": 50,
       "reasons": [
         "수도권",
-        "D-6",
+        "D-5",
         "분양가상한제"
       ]
     },
@@ -340,7 +366,7 @@
       "score": 49,
       "reasons": [
         "서울",
-        "D-5",
+        "D-4",
         "투기과열지구"
       ]
     },
@@ -367,7 +393,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-4"
+        "D-3"
       ]
     },
     {
@@ -393,34 +419,8 @@
       "reasons": [
         "광역시",
         "802가구",
-        "D-4",
-        "르엘"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026820013",
-      "name": "안산신길2 A-6블록 신혼희망타운(공공분양)(본청약)",
-      "areaName": "경기",
-      "address": "경기도 안산시 단원구 신길동 일원 안산신길2 공공주택지구 내 A-6블록",
-      "supply": 251,
-      "noticeDate": "2026-10-30",
-      "receiptFrom": "2026-11-16",
-      "receiptTo": "2026-11-24",
-      "specialFrom": null,
-      "rank1From": "2026-11-16",
-      "moveInYm": "2029-11",
-      "announceDate": "2026-12-04",
-      "builder": "동문건설(주), 남진건설 주식회사, 아라이앤씨 주식회사",
-      "priceCap": true,
-      "speculative": false,
-      "homepage": "https://apply.lh.or.kr/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820013&pblancNo=2026820013",
-      "score": 44,
-      "reasons": [
-        "수도권",
         "D-3",
-        "분양가상한제"
+        "르엘"
       ]
     },
     {
@@ -520,7 +520,7 @@
       "score": 37,
       "reasons": [
         "1,355가구 대단지",
-        "D-4"
+        "D-3"
       ]
     },
     {
@@ -545,7 +545,7 @@
       "score": 34,
       "reasons": [
         "광역시",
-        "D-4",
+        "D-3",
         "써밋"
       ]
     },
@@ -571,7 +571,7 @@
       "score": 34,
       "reasons": [
         "광역시",
-        "D-4",
+        "D-3",
         "더샵"
       ]
     },
@@ -627,7 +627,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000559&pblancNo=2026000559",
       "score": 28,
       "reasons": [
-        "D-4",
+        "D-3",
         "위브"
       ]
     },
@@ -652,7 +652,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000540&pblancNo=2026000540",
       "score": 24,
       "reasons": [
-        "D-4"
+        "D-3"
       ]
     },
     {
