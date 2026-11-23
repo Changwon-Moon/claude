@@ -69,7 +69,7 @@ lawd=11500 umd=화곡동 type=59 apt="강서힐스테이트"
 lawd=41210 umd=철산동 type=84 apt="철산푸르지오하늘채"
 lawd=41450 umd=망월동 type=59 apt="미사강변 골든 센트로"
 lawd=41450 umd=망월동 type=59 apt="미사레스티아"
-lawd=11290 umd=하월곡동 type=59 apt="월곡두산위브" force=1
+lawd=11290 umd=하월곡동 type=59 apt="월곡두산위브"
 lawd=11290 umd=길음동 type=59 apt="길음뉴타운2단지푸르지오"
 lawd=41463 umd=보정동 type=84 apt="행원마을동아솔레시티"
 lawd=11260 umd=중화동 type=59 apt="한신아파트상가동유치원동(103~109)" force=1
