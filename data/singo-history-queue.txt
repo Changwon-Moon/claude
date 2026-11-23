@@ -79,7 +79,7 @@ lawd=41465 umd=죽전동 type=84 apt="내대지마을건영캐스빌"
 lawd=41595 umd=반정동 type=59 apt="반정아이파크캐슬5단지"
 lawd=41360 umd=다산동 type=84 apt="플루리움3단지"
 lawd=41310 umd=인창동 type=59 apt="주공4-1"
-lawd=41360 umd=평내동 type=84 apt="e편한세상평내메트로원" force=1
+lawd=41360 umd=평내동 type=84 apt="e편한세상평내메트로원"
 lawd=41410 umd=산본동 type=59 apt="주공11"
 lawd=41171 umd=석수동 type=59 apt="석수엘지빌리지"
 lawd=41370 umd=궐동 type=84 apt="중흥S-클래스에듀파크" force=1
