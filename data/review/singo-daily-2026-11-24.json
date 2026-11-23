@@ -1,7 +1,7 @@
 {
   "label": "singo-daily-2026-11-24",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 20장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 22장 · 코드 검수만",
   "findings": [],
   "cards": [
     {
@@ -18,6 +18,12 @@
     },
     {
       "file": "singo-삼환-84-1124.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-동탄역시범우남퍼스트빌아파트-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
@@ -72,6 +78,12 @@
     },
     {
       "file": "singo-e편한세상반월나노시티역-84-1124.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
+    {
+      "file": "singo-남서울힐스테이트-59.json",
       "deterministic": true,
       "qaErrors": 0,
       "findings": []
