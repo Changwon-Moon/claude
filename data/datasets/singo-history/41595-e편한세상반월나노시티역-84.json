@@ -5,15 +5,15 @@
     "aptNm": "e편한세상반월나노시티역",
     "type": "84",
     "from": "202001",
-    "to": "202610",
-    "monthsTried": 82,
+    "to": "202611",
+    "monthsTried": 83,
     "monthsFailed": 0,
-    "monthsTraded": 58,
+    "monthsTraded": 59,
     "peak": {
-      "manwon": 93000,
-      "date": "2026-10-26",
-      "area": 84.8,
-      "floor": 25
+      "manwon": 94000,
+      "date": "2026-11-07",
+      "area": 84.97,
+      "floor": 12
     },
     "source": "국토교통부 아파트 매매 실거래가 상세자료",
     "note": "월별 최고가. maxManwon=null 은 그달 거래가 없었다는 뜻이고, ok=false 면 수집을 못 한 달이라 **거래 유무를 모른다** — 곡선에서 이 둘을 같게 그리지 않는다. 직거래 제외. 단지 판정은 sameApt(괄호 안까지 대조)."
@@ -751,10 +751,19 @@
     {
       "ym": "202610",
       "maxManwon": 93000,
-      "count": 1,
+      "count": 2,
       "area": 84.8,
       "floor": 25,
       "date": "2026-10-26",
+      "ok": true
+    },
+    {
+      "ym": "202611",
+      "maxManwon": 94000,
+      "count": 2,
+      "area": 84.97,
+      "floor": 12,
+      "date": "2026-11-07",
       "ok": true
     }
   ]
