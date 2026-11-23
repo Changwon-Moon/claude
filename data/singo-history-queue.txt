@@ -65,7 +65,7 @@ lawd=41135 umd=서현동 type=84 apt="시범현대"
 lawd=11410 umd=북아현동 type=59 apt="e편한세상신촌4단지"
 lawd=11560 umd=신길동 type=84 apt="삼환"
 lawd=41597 umd=청계동 type=59 apt="동탄역 시범우남퍼스트빌아파트"
-lawd=11500 umd=화곡동 type=59 apt="강서힐스테이트" force=1
+lawd=11500 umd=화곡동 type=59 apt="강서힐스테이트"
 lawd=41210 umd=철산동 type=84 apt="철산푸르지오하늘채"
 lawd=41450 umd=망월동 type=59 apt="미사강변 골든 센트로" force=1
 lawd=41450 umd=망월동 type=59 apt="미사레스티아" force=1
