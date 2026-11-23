@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T22:50:25.946Z",
+  "generatedAt": "2026-11-22T23:58:54.167Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -194,7 +194,7 @@
       "maxDelay": null,
       "lastRun": "2026-11-09",
       "lastOk": "2026-11-09",
-      "okDaysAgo": 13
+      "okDaysAgo": 14
     },
     {
       "file": "applyhome-collect.yml",
@@ -938,16 +938,6 @@
       "runs30": 0
     },
     {
-      "file": "auto-produce.yml",
-      "name": "데이터 바뀌면 카드 자동 재생산",
-      "lastRun": null,
-      "daysAgo": null,
-      "lastOk": null,
-      "okDaysAgo": null,
-      "fails30": 0,
-      "runs30": 0
-    },
-    {
       "file": "collect-on-request.yml",
       "name": "실거래 수집 (요청 파일 push 트리거)",
       "lastRun": null,
@@ -1188,16 +1178,6 @@
       "runs30": 0
     },
     {
-      "file": "silv-collect.yml",
-      "name": "분양권전매 실거래 수집 (국토부)",
-      "lastRun": null,
-      "daysAgo": null,
-      "lastOk": null,
-      "okDaysAgo": null,
-      "fails30": 0,
-      "runs30": 0
-    },
-    {
       "file": "singo-history-retry.yml",
       "name": "곡선 — 자동 재시도",
       "lastRun": null,
@@ -1278,6 +1258,16 @@
       "runs30": 3
     },
     {
+      "file": "auto-produce.yml",
+      "name": "데이터 바뀌면 카드 자동 재생산",
+      "lastRun": "2026-11-23",
+      "daysAgo": 0,
+      "lastOk": null,
+      "okDaysAgo": null,
+      "fails30": 2,
+      "runs30": 2
+    },
+    {
       "file": "guard.yml",
       "name": "문지기 (guard)",
       "lastRun": "2026-11-23",
@@ -1285,7 +1275,17 @@
       "lastOk": "2026-11-23",
       "okDaysAgo": 0,
       "fails30": 0,
-      "runs30": 66
+      "runs30": 69
+    },
+    {
+      "file": "silv-collect.yml",
+      "name": "분양권전매 실거래 수집 (국토부)",
+      "lastRun": "2026-11-23",
+      "daysAgo": 0,
+      "lastOk": "2026-11-23",
+      "okDaysAgo": 0,
+      "fails30": 0,
+      "runs30": 1
     },
     {
       "file": "singo-prep.yml",
@@ -1294,7 +1294,7 @@
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 87,
+      "fails30": 88,
       "runs30": 100
     },
     {
@@ -1314,8 +1314,8 @@
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 43,
-      "runs30": 65
+      "fails30": 44,
+      "runs30": 70
     }
   ]
 }
