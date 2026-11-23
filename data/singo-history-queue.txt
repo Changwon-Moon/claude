@@ -83,7 +83,7 @@ lawd=41360 umd=평내동 type=84 apt="e편한세상평내메트로원"
 lawd=41410 umd=산본동 type=59 apt="주공11"
 lawd=41171 umd=석수동 type=59 apt="석수엘지빌리지"
 lawd=41370 umd=궐동 type=84 apt="중흥S-클래스에듀파크"
-lawd=41610 umd=고산동 type=59 apt="더샵오포센트리체" force=1
+lawd=41610 umd=고산동 type=59 apt="더샵오포센트리체"
 
 lawd=11500 umd=내발산동 type=59 apt="우장산힐스테이트"
 lawd=41111 umd=연무동 type=59 apt="서광교파크스위첸"
