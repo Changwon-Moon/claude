@@ -10,7 +10,7 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-11-22",
+    "collectedFor": "2026-11-23",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2954,
@@ -45,7 +45,7 @@
         "수도권",
         "550가구",
         "무순위",
-        "D-2",
+        "D-1",
         "자이"
       ]
     },
@@ -72,7 +72,7 @@
       "reasons": [
         "서울",
         "무순위",
-        "D-2",
+        "D-1",
         "래미안"
       ]
     },
@@ -100,7 +100,7 @@
         "광역시",
         "315가구",
         "무순위",
-        "D-1",
+        "오늘 마감",
         "자이"
       ]
     },
@@ -127,7 +127,7 @@
       "reasons": [
         "129가구",
         "무순위",
-        "D-1",
+        "오늘 마감",
         "힐스테이트"
       ]
     },
@@ -154,7 +154,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1",
+        "오늘 마감",
         "푸르지오"
       ]
     },
@@ -181,8 +181,62 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-2",
+        "D-1",
         "써밋"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910306",
+      "name": "광안센텀 비스타동원(조합원 취소분)",
+      "areaName": "부산",
+      "address": "부산광역시 수영구 광안동 971",
+      "supply": 39,
+      "noticeDate": "2026-11-20",
+      "receiptFrom": "2026-11-25",
+      "receiptTo": "2026-11-25",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2027-09",
+      "announceDate": "2026-11-30",
+      "builder": "광안지역주택조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.광안센텀비스타동원.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910306&pblancNo=2026910306",
+      "score": 64,
+      "reasons": [
+        "광역시",
+        "39가구",
+        "무순위",
+        "D-2"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000457",
+      "name": "부천대장 하우스토리 디센트(부천대장지구 A2BL) 공공분양주택",
+      "areaName": "경기",
+      "address": "경기도 부천시 오정구 대장동, 오정동, 원종동, 삼정동 일원 부천대장 공공주택지구 내 A2블록",
+      "supply": 548,
+      "noticeDate": "2026-11-12",
+      "receiptFrom": "2026-11-24",
+      "receiptTo": "2026-11-25",
+      "specialFrom": "2026-11-23",
+      "rank1From": "2026-11-24",
+      "moveInYm": "2029-06",
+      "announceDate": "2026-12-01",
+      "builder": "남광토건(주), 중흥토건(주), (주)케이알산업, 극동건설(주), 씨앤씨종합건설(주)",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://www.부천대장하우스토리디센트.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000457&pblancNo=2026000457",
+      "score": 63,
+      "reasons": [
+        "수도권",
+        "548가구",
+        "D-2",
+        "분양가상한제"
       ]
     },
     {
@@ -208,61 +262,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-1"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910306",
-      "name": "광안센텀 비스타동원(조합원 취소분)",
-      "areaName": "부산",
-      "address": "부산광역시 수영구 광안동 971",
-      "supply": 39,
-      "noticeDate": "2026-11-20",
-      "receiptFrom": "2026-11-25",
-      "receiptTo": "2026-11-25",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2027-09",
-      "announceDate": "2026-11-30",
-      "builder": "광안지역주택조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.광안센텀비스타동원.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910306&pblancNo=2026910306",
-      "score": 57,
-      "reasons": [
-        "광역시",
-        "39가구",
-        "무순위",
-        "D-3"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000457",
-      "name": "부천대장 하우스토리 디센트(부천대장지구 A2BL) 공공분양주택",
-      "areaName": "경기",
-      "address": "경기도 부천시 오정구 대장동, 오정동, 원종동, 삼정동 일원 부천대장 공공주택지구 내 A2블록",
-      "supply": 548,
-      "noticeDate": "2026-11-12",
-      "receiptFrom": "2026-11-24",
-      "receiptTo": "2026-11-25",
-      "specialFrom": "2026-11-23",
-      "rank1From": "2026-11-24",
-      "moveInYm": "2029-06",
-      "announceDate": "2026-12-01",
-      "builder": "남광토건(주), 중흥토건(주), (주)케이알산업, 극동건설(주), 씨앤씨종합건설(주)",
-      "priceCap": true,
-      "speculative": false,
-      "homepage": "https://www.부천대장하우스토리디센트.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000457&pblancNo=2026000457",
-      "score": 56,
-      "reasons": [
-        "수도권",
-        "548가구",
-        "D-3",
-        "분양가상한제"
+        "오늘 마감"
       ]
     },
     {
@@ -284,12 +284,65 @@
       "speculative": false,
       "homepage": "https://xi.co.kr/armusee",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000576&pblancNo=2026000576",
-      "score": 54,
+      "score": 61,
       "reasons": [
         "수도권",
         "984가구",
-        "D-3",
+        "D-2",
         "자이"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910298",
+      "name": "한양립스 에듀포레(조합원 취소분)",
+      "areaName": "광주",
+      "address": "전남광주통합특별시 광산구 하산동 269번지 일원",
+      "supply": 4,
+      "noticeDate": "2026-11-20",
+      "receiptFrom": "2026-11-25",
+      "receiptTo": "2026-11-25",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2027-11",
+      "announceDate": "2026-11-30",
+      "builder": "송정리버파크지역주택조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "http://www.한양립스에듀포레.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910298&pblancNo=2026910298",
+      "score": 54,
+      "reasons": [
+        "광역시",
+        "무순위",
+        "D-2"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000558",
+      "name": "화정1지구 아르엘",
+      "areaName": "울산",
+      "address": "울산광역시 동구 화정동 12-6번지 일원",
+      "supply": 802,
+      "noticeDate": "2026-11-13",
+      "receiptFrom": "2026-11-24",
+      "receiptTo": "2026-11-25",
+      "specialFrom": "2026-11-23",
+      "rank1From": "2026-11-24",
+      "moveInYm": "2029-11",
+      "announceDate": "2026-12-01",
+      "builder": "(주)서한",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://hwajeong-seohan.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000558&pblancNo=2026000558",
+      "score": 53,
+      "reasons": [
+        "광역시",
+        "802가구",
+        "D-2",
+        "르엘"
       ]
     },
     {
@@ -314,7 +367,7 @@
       "score": 51,
       "reasons": [
         "수도권",
-        "D-2",
+        "D-1",
         "분양가상한제"
       ]
     },
@@ -340,7 +393,7 @@
       "score": 50,
       "reasons": [
         "수도권",
-        "D-5",
+        "D-4",
         "분양가상한제"
       ]
     },
@@ -366,61 +419,33 @@
       "score": 49,
       "reasons": [
         "서울",
-        "D-4",
+        "D-3",
         "투기과열지구"
       ]
     },
     {
-      "kind": "remndr",
-      "pblancNo": "2026910298",
-      "name": "한양립스 에듀포레(조합원 취소분)",
-      "areaName": "광주",
-      "address": "전남광주통합특별시 광산구 하산동 269번지 일원",
-      "supply": 4,
-      "noticeDate": "2026-11-20",
-      "receiptFrom": "2026-11-25",
-      "receiptTo": "2026-11-25",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2027-11",
-      "announceDate": "2026-11-30",
-      "builder": "송정리버파크지역주택조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://www.한양립스에듀포레.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910298&pblancNo=2026910298",
-      "score": 47,
-      "reasons": [
-        "광역시",
-        "무순위",
-        "D-3"
-      ]
-    },
-    {
       "kind": "apt",
-      "pblancNo": "2026000558",
-      "name": "화정1지구 아르엘",
-      "areaName": "울산",
-      "address": "울산광역시 동구 화정동 12-6번지 일원",
-      "supply": 802,
-      "noticeDate": "2026-11-13",
+      "pblancNo": "2026000536",
+      "name": "구미 파크원 데시앙",
+      "areaName": "경북",
+      "address": "경상북도 구미시 도량동 산40-4번지 일원",
+      "supply": 1355,
+      "noticeDate": "2026-11-18",
       "receiptFrom": "2026-11-24",
       "receiptTo": "2026-11-25",
       "specialFrom": "2026-11-23",
       "rank1From": "2026-11-24",
-      "moveInYm": "2029-11",
-      "announceDate": "2026-12-01",
-      "builder": "(주)서한",
+      "moveInYm": "2030-02",
+      "announceDate": "2026-12-02",
+      "builder": "주식회사 태영건설",
       "priceCap": false,
       "speculative": false,
-      "homepage": "https://hwajeong-seohan.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000558&pblancNo=2026000558",
-      "score": 46,
+      "homepage": "https://구미파크원데시앙.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000536&pblancNo=2026000536",
+      "score": 44,
       "reasons": [
-        "광역시",
-        "802가구",
-        "D-3",
-        "르엘"
+        "1,355가구 대단지",
+        "D-2"
       ]
     },
     {
@@ -446,6 +471,58 @@
       "reasons": [
         "수도권",
         "분양가상한제"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000566",
+      "name": "호반써밋 초량",
+      "areaName": "부산",
+      "address": "부산광역시 동구 초량3동 659번지 일원",
+      "supply": 236,
+      "noticeDate": "2026-11-13",
+      "receiptFrom": "2026-11-24",
+      "receiptTo": "2026-11-25",
+      "specialFrom": "2026-11-23",
+      "rank1From": "2026-11-24",
+      "moveInYm": "2029-08",
+      "announceDate": "2026-12-01",
+      "builder": "(주)호반건설",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://hobansummit-choryang.co.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000566&pblancNo=2026000566",
+      "score": 41,
+      "reasons": [
+        "광역시",
+        "D-2",
+        "써밋"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000563",
+      "name": "더샵 트리센트(조합원 자격상실 세대분)",
+      "areaName": "부산",
+      "address": "부산광역시 남구 문현동 334번지 일원",
+      "supply": 103,
+      "noticeDate": "2026-11-13",
+      "receiptFrom": "2026-11-24",
+      "receiptTo": "2026-11-25",
+      "specialFrom": "2026-11-23",
+      "rank1From": "2026-11-24",
+      "moveInYm": "2029-12",
+      "announceDate": "2026-12-01",
+      "builder": "(주)포스코이앤씨",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.더샵트리센트.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000563&pblancNo=2026000563",
+      "score": 41,
+      "reasons": [
+        "광역시",
+        "D-2",
+        "더샵"
       ]
     },
     {
@@ -500,79 +577,27 @@
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000536",
-      "name": "구미 파크원 데시앙",
-      "areaName": "경북",
-      "address": "경상북도 구미시 도량동 산40-4번지 일원",
-      "supply": 1355,
+      "pblancNo": "2026000559",
+      "name": "두산위브 트레지움 익산",
+      "areaName": "전북",
+      "address": "전북특별자치도 익산시 동산동 1057번지 일원",
+      "supply": 251,
       "noticeDate": "2026-11-18",
       "receiptFrom": "2026-11-24",
       "receiptTo": "2026-11-25",
       "specialFrom": "2026-11-23",
       "rank1From": "2026-11-24",
       "moveInYm": "2030-02",
-      "announceDate": "2026-12-02",
-      "builder": "주식회사 태영건설",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://구미파크원데시앙.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000536&pblancNo=2026000536",
-      "score": 37,
-      "reasons": [
-        "1,355가구 대단지",
-        "D-3"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000566",
-      "name": "호반써밋 초량",
-      "areaName": "부산",
-      "address": "부산광역시 동구 초량3동 659번지 일원",
-      "supply": 236,
-      "noticeDate": "2026-11-13",
-      "receiptFrom": "2026-11-24",
-      "receiptTo": "2026-11-25",
-      "specialFrom": "2026-11-23",
-      "rank1From": "2026-11-24",
-      "moveInYm": "2029-08",
       "announceDate": "2026-12-01",
-      "builder": "(주)호반건설",
+      "builder": "두산건설 주식회사",
       "priceCap": false,
       "speculative": false,
-      "homepage": "https://hobansummit-choryang.co.kr/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000566&pblancNo=2026000566",
-      "score": 34,
+      "homepage": "https://www.두산위브트레지움익산.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000559&pblancNo=2026000559",
+      "score": 35,
       "reasons": [
-        "광역시",
-        "D-3",
-        "써밋"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026000563",
-      "name": "더샵 트리센트(조합원 자격상실 세대분)",
-      "areaName": "부산",
-      "address": "부산광역시 남구 문현동 334번지 일원",
-      "supply": 103,
-      "noticeDate": "2026-11-13",
-      "receiptFrom": "2026-11-24",
-      "receiptTo": "2026-11-25",
-      "specialFrom": "2026-11-23",
-      "rank1From": "2026-11-24",
-      "moveInYm": "2029-12",
-      "announceDate": "2026-12-01",
-      "builder": "(주)포스코이앤씨",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.더샵트리센트.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000563&pblancNo=2026000563",
-      "score": 34,
-      "reasons": [
-        "광역시",
-        "D-3",
-        "더샵"
+        "D-2",
+        "위브"
       ]
     },
     {
@@ -608,31 +633,6 @@
     },
     {
       "kind": "apt",
-      "pblancNo": "2026000559",
-      "name": "두산위브 트레지움 익산",
-      "areaName": "전북",
-      "address": "전북특별자치도 익산시 동산동 1057번지 일원",
-      "supply": 251,
-      "noticeDate": "2026-11-18",
-      "receiptFrom": "2026-11-24",
-      "receiptTo": "2026-11-25",
-      "specialFrom": "2026-11-23",
-      "rank1From": "2026-11-24",
-      "moveInYm": "2030-02",
-      "announceDate": "2026-12-01",
-      "builder": "두산건설 주식회사",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.두산위브트레지움익산.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000559&pblancNo=2026000559",
-      "score": 28,
-      "reasons": [
-        "D-3",
-        "위브"
-      ]
-    },
-    {
-      "kind": "apt",
       "pblancNo": "2026000540",
       "name": "엘리프 논산 디에디션",
       "areaName": "충남",
@@ -650,9 +650,9 @@
       "speculative": false,
       "homepage": "https://엘리프논산디에디션.com",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000540&pblancNo=2026000540",
-      "score": 24,
+      "score": 31,
       "reasons": [
-        "D-3"
+        "D-2"
       ]
     },
     {
