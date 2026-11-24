@@ -5,13 +5,13 @@
     "aptNm": "매화마을공무원2",
     "type": "59",
     "from": "202001",
-    "to": "202610",
-    "monthsTried": 82,
+    "to": "202611",
+    "monthsTried": 83,
     "monthsFailed": 0,
-    "monthsTraded": 66,
+    "monthsTraded": 67,
     "peak": {
-      "manwon": 123000,
-      "date": "2026-10-28",
+      "manwon": 129000,
+      "date": "2026-11-03",
       "area": 58.71,
       "floor": 17
     },
@@ -751,10 +751,19 @@
     {
       "ym": "202610",
       "maxManwon": 123000,
-      "count": 9,
+      "count": 13,
       "area": 58.71,
       "floor": 17,
       "date": "2026-10-28",
+      "ok": true
+    },
+    {
+      "ym": "202611",
+      "maxManwon": 129000,
+      "count": 1,
+      "area": 58.71,
+      "floor": 17,
+      "date": "2026-11-03",
       "ok": true
     }
   ]
