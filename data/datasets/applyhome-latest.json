@@ -10,7 +10,7 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-11-24",
+    "collectedFor": "2026-11-25",
     "withinDays": 7,
     "totals": {
       "APT 분양정보": 2954,
@@ -21,61 +21,6 @@
     }
   },
   "notices": [
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910300",
-      "name": "산곡역자이힐스테이트앤하늘채",
-      "areaName": "인천",
-      "address": "인천광역시 부평구 산곡동 10번지 일원(산곡6 주택재개발정비사업)",
-      "supply": 550,
-      "noticeDate": "2026-11-19",
-      "receiptFrom": "2026-11-24",
-      "receiptTo": "2026-11-24",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2029-12",
-      "announceDate": "2026-11-27",
-      "builder": "산곡6주택재개발정비사업조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.xi.co.kr/sangokxi",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910300&pblancNo=2026910300",
-      "score": 88,
-      "reasons": [
-        "수도권",
-        "550가구",
-        "무순위",
-        "오늘 마감",
-        "자이"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026930045",
-      "name": "잠실 래미안아이파크",
-      "areaName": "서울",
-      "address": "서울특별시 송파구 신천동 20-4번지 일대(잠실진주주택재건축정비사업)",
-      "supply": 3,
-      "noticeDate": "2026-11-17",
-      "receiptFrom": "2026-11-23",
-      "receiptTo": "2026-11-24",
-      "specialFrom": "2026-11-23",
-      "rank1From": null,
-      "moveInYm": "2027-01",
-      "announceDate": "2026-11-27",
-      "builder": "잠실진주아파트주택재건축정비사업조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.raemian.co.kr/sales/s/jamsiljinju",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930045&pblancNo=2026930045",
-      "score": 84,
-      "reasons": [
-        "서울",
-        "무순위",
-        "오늘 마감",
-        "래미안"
-      ]
-    },
     {
       "kind": "remndr",
       "pblancNo": "2026910304",
@@ -100,35 +45,35 @@
         "수도권",
         "34가구",
         "무순위",
-        "D-6",
+        "D-5",
         "더샵"
       ]
     },
     {
       "kind": "remndr",
-      "pblancNo": "2026910307",
-      "name": "인천 검단신도시 AB13블록 호반써밋Ⅲ",
+      "pblancNo": "2026910300",
+      "name": "산곡역자이힐스테이트앤하늘채",
       "areaName": "인천",
-      "address": "인천 검단신도시 AB13블록 호반써밋 아라 (인천광역시 검단구 이음4로 101)",
-      "supply": 1,
+      "address": "인천광역시 부평구 산곡동 10번지 일원(산곡6 주택재개발정비사업)",
+      "supply": 550,
       "noticeDate": "2026-11-19",
       "receiptFrom": "2026-11-24",
       "receiptTo": "2026-11-24",
       "specialFrom": null,
       "rank1From": null,
-      "moveInYm": "2026-12",
+      "moveInYm": "2029-12",
       "announceDate": "2026-11-27",
-      "builder": "티에스리빙 주식회사",
+      "builder": "산곡6주택재개발정비사업조합",
       "priceCap": false,
       "speculative": false,
-      "homepage": "https://www.gd3-hoban.co.kr/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910307&pblancNo=2026910307",
-      "score": 72,
+      "homepage": "https://www.xi.co.kr/sangokxi",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910300&pblancNo=2026910300",
+      "score": 73,
       "reasons": [
         "수도권",
+        "550가구",
         "무순위",
-        "오늘 마감",
-        "써밋"
+        "자이"
       ]
     },
     {
@@ -160,6 +105,33 @@
     },
     {
       "kind": "remndr",
+      "pblancNo": "2026910302",
+      "name": "한화포레나 영흥숲(4차)",
+      "areaName": "경기",
+      "address": "경기도 수원시 영통구 원천동 333-1번지 일원",
+      "supply": 2,
+      "noticeDate": "2026-11-23",
+      "receiptFrom": "2026-12-01",
+      "receiptTo": "2026-12-01",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-12",
+      "announceDate": "2026-12-04",
+      "builder": "(주)한화",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": null,
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910302&pblancNo=2026910302",
+      "score": 65,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "D-6",
+        "포레나"
+      ]
+    },
+    {
+      "kind": "remndr",
       "pblancNo": "2026910306",
       "name": "광안센텀 비스타동원(조합원 취소분)",
       "areaName": "부산",
@@ -182,7 +154,7 @@
         "광역시",
         "39가구",
         "무순위",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -208,7 +180,7 @@
       "reasons": [
         "수도권",
         "548가구",
-        "D-1",
+        "오늘 마감",
         "분양가상한제"
       ]
     },
@@ -235,7 +207,7 @@
       "reasons": [
         "수도권",
         "984가구",
-        "D-1",
+        "오늘 마감",
         "자이"
       ]
     },
@@ -267,28 +239,54 @@
     },
     {
       "kind": "remndr",
-      "pblancNo": "2026910302",
-      "name": "한화포레나 영흥숲(4차)",
-      "areaName": "경기",
-      "address": "경기도 수원시 영통구 원천동 333-1번지 일원",
-      "supply": 2,
-      "noticeDate": "2026-11-23",
-      "receiptFrom": "2026-12-01",
-      "receiptTo": "2026-12-01",
+      "pblancNo": "2026910307",
+      "name": "인천 검단신도시 AB13블록 호반써밋Ⅲ",
+      "areaName": "인천",
+      "address": "인천 검단신도시 AB13블록 호반써밋 아라 (인천광역시 검단구 이음4로 101)",
+      "supply": 1,
+      "noticeDate": "2026-11-19",
+      "receiptFrom": "2026-11-24",
+      "receiptTo": "2026-11-24",
       "specialFrom": null,
       "rank1From": null,
       "moveInYm": "2026-12",
-      "announceDate": "2026-12-04",
-      "builder": "(주)한화",
+      "announceDate": "2026-11-27",
+      "builder": "티에스리빙 주식회사",
       "priceCap": false,
       "speculative": false,
-      "homepage": null,
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910302&pblancNo=2026910302",
+      "homepage": "https://www.gd3-hoban.co.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910307&pblancNo=2026910307",
       "score": 57,
       "reasons": [
         "수도권",
         "무순위",
-        "포레나"
+        "써밋"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026820015",
+      "name": "시흥 거모 아테라(시흥거모 A-6BL) 신혼희망타운(공공분양)(본청약)",
+      "areaName": "경기",
+      "address": "경기도 시흥시 거모지구 내 A-6블록",
+      "supply": 480,
+      "noticeDate": "2026-11-06",
+      "receiptFrom": "2026-11-16",
+      "receiptTo": "2026-11-27",
+      "specialFrom": null,
+      "rank1From": "2026-11-16",
+      "moveInYm": "2029-09",
+      "announceDate": "2026-12-08",
+      "builder": "금호건설 주식회사",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://apply.lh.or.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820015&pblancNo=2026820015",
+      "score": 57,
+      "reasons": [
+        "수도권",
+        "D-2",
+        "분양가상한제"
       ]
     },
     {
@@ -313,7 +311,7 @@
       "score": 56,
       "reasons": [
         "서울",
-        "D-2",
+        "D-1",
         "투기과열지구"
       ]
     },
@@ -340,7 +338,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-6"
+        "D-5"
       ]
     },
     {
@@ -366,7 +364,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-6"
+        "D-5"
       ]
     },
     {
@@ -388,6 +386,32 @@
       "speculative": false,
       "homepage": "https://blog.naver.com/kkvista",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910303&pblancNo=2026910303",
+      "score": 55,
+      "reasons": [
+        "수도권",
+        "무순위",
+        "D-5"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910301",
+      "name": "이천 서희스타힐스 SKY (조합원 취소분)",
+      "areaName": "경기",
+      "address": "경기도 이천시 안흥동 279-1번지 일원",
+      "supply": 3,
+      "noticeDate": "2026-11-23",
+      "receiptFrom": "2026-12-01",
+      "receiptTo": "2026-12-01",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2029-01",
+      "announceDate": "2026-12-04",
+      "builder": "안흥동 지역주택조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "http://www.이천서희스타힐스스카이.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910301&pblancNo=2026910301",
       "score": 55,
       "reasons": [
         "수도권",
@@ -418,7 +442,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -444,60 +468,8 @@
       "reasons": [
         "광역시",
         "802가구",
-        "D-1",
-        "르엘"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026820013",
-      "name": "안산신길2 A-6블록 신혼희망타운(공공분양)(본청약)",
-      "areaName": "경기",
-      "address": "경기도 안산시 단원구 신길동 일원 안산신길2 공공주택지구 내 A-6블록",
-      "supply": 251,
-      "noticeDate": "2026-10-30",
-      "receiptFrom": "2026-11-16",
-      "receiptTo": "2026-11-24",
-      "specialFrom": null,
-      "rank1From": "2026-11-16",
-      "moveInYm": "2029-11",
-      "announceDate": "2026-12-04",
-      "builder": "동문건설(주), 남진건설 주식회사, 아라이앤씨 주식회사",
-      "priceCap": true,
-      "speculative": false,
-      "homepage": "https://apply.lh.or.kr/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820013&pblancNo=2026820013",
-      "score": 51,
-      "reasons": [
-        "수도권",
         "오늘 마감",
-        "분양가상한제"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026820015",
-      "name": "시흥 거모 아테라(시흥거모 A-6BL) 신혼희망타운(공공분양)(본청약)",
-      "areaName": "경기",
-      "address": "경기도 시흥시 거모지구 내 A-6블록",
-      "supply": 480,
-      "noticeDate": "2026-11-06",
-      "receiptFrom": "2026-11-16",
-      "receiptTo": "2026-11-27",
-      "specialFrom": null,
-      "rank1From": "2026-11-16",
-      "moveInYm": "2029-09",
-      "announceDate": "2026-12-08",
-      "builder": "금호건설 주식회사",
-      "priceCap": true,
-      "speculative": false,
-      "homepage": "https://apply.lh.or.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820015&pblancNo=2026820015",
-      "score": 50,
-      "reasons": [
-        "수도권",
-        "D-3",
-        "분양가상한제"
+        "르엘"
       ]
     },
     {
@@ -522,7 +494,7 @@
       "score": 49,
       "reasons": [
         "서울",
-        "D-6",
+        "D-5",
         "투기과열지구"
       ]
     },
@@ -574,32 +546,7 @@
       "reasons": [
         "광역시",
         "무순위",
-        "D-6"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910301",
-      "name": "이천 서희스타힐스 SKY (조합원 취소분)",
-      "areaName": "경기",
-      "address": "경기도 이천시 안흥동 279-1번지 일원",
-      "supply": 3,
-      "noticeDate": "2026-11-23",
-      "receiptFrom": "2026-12-01",
-      "receiptTo": "2026-12-01",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2029-01",
-      "announceDate": "2026-12-04",
-      "builder": "안흥동 지역주택조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "http://www.이천서희스타힐스스카이.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910301&pblancNo=2026910301",
-      "score": 47,
-      "reasons": [
-        "수도권",
-        "무순위"
+        "D-5"
       ]
     },
     {
@@ -624,7 +571,7 @@
       "score": 44,
       "reasons": [
         "1,355가구 대단지",
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
@@ -674,7 +621,7 @@
       "score": 41,
       "reasons": [
         "광역시",
-        "D-1",
+        "오늘 마감",
         "써밋"
       ]
     },
@@ -700,7 +647,7 @@
       "score": 41,
       "reasons": [
         "광역시",
-        "D-1",
+        "오늘 마감",
         "더샵"
       ]
     },
@@ -750,7 +697,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000559&pblancNo=2026000559",
       "score": 35,
       "reasons": [
-        "D-1",
+        "오늘 마감",
         "위브"
       ]
     },
@@ -806,7 +753,7 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000540&pblancNo=2026000540",
       "score": 31,
       "reasons": [
-        "D-1"
+        "오늘 마감"
       ]
     },
     {
