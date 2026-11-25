@@ -1,9 +1,15 @@
 {
   "label": "singo-daily-2026-11-25",
   "verdict": "pass",
-  "summary": "PASS — error 0 · warn 0 · 카드 7장 · 코드 검수만",
+  "summary": "PASS — error 0 · warn 0 · 카드 8장 · 코드 검수만",
   "findings": [],
   "cards": [
+    {
+      "file": "singo-동탄역시범한화꿈에그린프레스티지-84.json",
+      "deterministic": true,
+      "qaErrors": 0,
+      "findings": []
+    },
     {
       "file": "singo-매화마을공무원2-59-1125.json",
       "deterministic": true,
