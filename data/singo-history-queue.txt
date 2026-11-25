@@ -67,7 +67,7 @@ lawd=41135 umd=야탑동 type=59 apt="매화마을공무원2"
 lawd=41597 umd=산척동 type=59 apt="호수공원역 센트럴시티"
 lawd=11260 umd=상봉동 type=84 apt="건영2차아파트"
 lawd=11305 umd=미아동 type=84 apt="에스케이북한산시티"
-lawd=41597 umd=목동 type=84 apt="호반베르디움센트럴포레" force=1
+lawd=41597 umd=목동 type=84 apt="호반베르디움센트럴포레"
 lawd=41117 umd=망포동 type=84 apt="동수원자이1차" force=1
 lawd=41115 umd=화서동 type=59 apt="화서역블루밍푸른숲" force=1
 
