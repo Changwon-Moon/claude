@@ -69,7 +69,7 @@ lawd=11260 umd=상봉동 type=84 apt="건영2차아파트"
 lawd=11305 umd=미아동 type=84 apt="에스케이북한산시티"
 lawd=41597 umd=목동 type=84 apt="호반베르디움센트럴포레"
 lawd=41117 umd=망포동 type=84 apt="동수원자이1차"
-lawd=41115 umd=화서동 type=59 apt="화서역블루밍푸른숲" force=1
+lawd=41115 umd=화서동 type=59 apt="화서역블루밍푸른숲"
 
 lawd=41135 umd=서현동 type=84 apt="시범현대"
 lawd=11410 umd=북아현동 type=59 apt="e편한세상신촌4단지"
