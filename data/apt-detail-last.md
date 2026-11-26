@@ -2,16 +2,10 @@
 
 - 대기열: 403줄
 - 결과: **성공**
+- ⚠️ 이번 실행은 **국토부에 붙지 않았습니다**(전부 이미 있음) — API 가 살아 있다는 증거로 쓰지 마세요
 
 ```
-
-── A15609005
-
-> @wirit/collectors@0.1.0 collect-apt-detail /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptDetailCli.ts -- --kapt A15609005
-
-/home/runner/work/claude/claude/data/datasets/apt-detail/A15609005.json
-A15609005 주차 지상 1200 + 지하 0 = **1200대** (오퍼레이션 AptBasisInfoServiceV5/getAphusDtlInfoV5)
+⏭ 이미 있음 — data/datasets/apt-detail/A15609005.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A15010502.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A10027830.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A13185607.json (다시 받으려면 force=1)
@@ -415,6 +409,7 @@ A15609005 주차 지상 1200 + 지하 0 = **1200대** (오퍼레이션 AptBasisI
 ⏭ 이미 있음 — data/datasets/apt-detail/A13613008.json (다시 받으려면 force=1)
 ⏭ 이미 있음 — data/datasets/apt-detail/A44072212.json (다시 받으려면 force=1)
 
-실제로 받아 본 단지 1곳 · 이미 있어 건너뛴 것 402곳
+실제로 받아 본 단지 0곳 · 이미 있어 건너뛴 것 403곳
+ⓘ 이번 실행은 **국토부에 한 번도 붙지 않았습니다** — 이 초록불은 API 가 살아 있다는 증거가 아닙니다.
 ✅ 대기열 전 줄 완료
 ```
