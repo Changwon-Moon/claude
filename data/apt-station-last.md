@@ -11,1028 +11,268 @@
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A10024974
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A10024974.json
-마포 아이파크 포레 아파트 (주소로 좌표) → 서강대역 직선 162m · 노선 경의중앙
-   다음: 광흥창역 446m
-   다음: 신촌역 514m
-   다음: 대흥역 828m
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EB%A7%88%ED%8F%AC%EA%B5%AC%20%EC%8B%A0%EC%88%98%EB%8F%99%20462%20%EB%A7%88%ED%8F%AC%20%EC%95%84%EC%9D%B4%ED%8C%8C%ED%81%AC%20%ED%8F%AC%EB%A0%88%20%EC%95%84%ED%8C%8C%ED%8A%B8&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A10024974`
+Exit status 1
 
 ── A10024398
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A10024398
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A10024398.json
-래미안 목동아델리체 (주소로 좌표) → 신정네거리역 직선 158m · 노선 2
-   다음: 신정역 758m
-   다음: 목동역 1381m
-   다음: 까치산역 1420m
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%96%91%EC%B2%9C%EA%B5%AC%20%EC%8B%A0%EC%A0%95%EB%8F%99%201326%20%EB%9E%98%EB%AF%B8%EC%95%88%20%EB%AA%A9%EB%8F%99%EC%95%84%EB%8D%B8%EB%A6%AC%EC%B2%B4&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A10024398`
+Exit status 1
 
 ── A10027375
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A10027375
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A10027375.json
-목동힐스테이트 (주소로 좌표) → 신정네거리역 직선 315m · 노선 2
-   다음: 신정역 537m
-   다음: 목동역 977m
-   다음: 양천구청역 1192m
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%96%91%EC%B2%9C%EA%B5%AC%20%EC%8B%A0%EC%A0%95%EB%8F%99%201323%20%EB%AA%A9%EB%8F%99%ED%9E%90%EC%8A%A4%ED%85%8C%EC%9D%B4%ED%8A%B8&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A10027375`
+Exit status 1
 
 ── A13071302
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A13071302
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A13071302.json
-래미안크레시티 (이름로 좌표) → 청량리역 직선 599m · 노선 경의중앙·경춘·수인분당·1
-   다음: 신답역 865m
-   다음: 답십리역 1038m
-   다음: 용두역 1281m
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EB%8F%99%EB%8C%80%EB%AC%B8%EA%B5%AC%20%EC%A0%84%EB%86%8D%EB%8F%99%20440-9%20%EB%9E%98%EB%AF%B8%EC%95%88%ED%81%AC%EB%A0%88%EC%8B%9C%ED%8B%B0&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A13071302`
+Exit status 1
 
 ── A10026799
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A10026799
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A10026799.json
-힐스테이트 영통아파트 (주소로 좌표) → 망포역 직선 784m · 노선 수인분당
-   다음: 매탄권선역 1256m
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%88%98%EC%9B%90%EC%98%81%ED%86%B5%EA%B5%AC%20%EB%A7%9D%ED%8F%AC%EB%8F%99%20728%20%ED%9E%90%EC%8A%A4%ED%85%8C%EC%9D%B4%ED%8A%B8%20%EC%98%81%ED%86%B5%EC%95%84%ED%8C%8C%ED%8A%B8&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A10026799`
+Exit status 1
 
 ── A10025130
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A10025130
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A10025130.json
-DMC에코자이 (이름로 좌표) → 가좌역 직선 1036m · 노선 경의중앙
-   다음: 증산역 1105m
-   다음: 새절역 1571m
-   다음: 디지털미디어시티역 1587m
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC%20%EB%82%A8%EA%B0%80%EC%A2%8C%EB%8F%99%20224%20DMC%EC%97%90%EC%BD%94%EC%9E%90%EC%9D%B4&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A10025130`
+Exit status 1
 
 ── A15178201
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A15178201
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A15178201.json
-관악벽산블루밍 (주소로 좌표) → 봉천역 직선 818m · 노선 2
-   다음: 숭실대입구역 1088m
-   다음: 서울대입구역 1133m
-   다음: 신림역 1440m
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B4%80%EC%95%85%EA%B5%AC%20%EB%B4%89%EC%B2%9C%EB%8F%99%201718%20%EA%B4%80%EC%95%85%EB%B2%BD%EC%82%B0%EB%B8%94%EB%A3%A8%EB%B0%8D&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A15178201`
+Exit status 1
 
 ── A13613007
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A13613007
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A13613007.json
-래미안월곡 (주소로 좌표) → 미아사거리역 직선 675m · 노선 4
-   다음: 월곡역 1051m
-   다음: 상월곡역 1140m
-   다음: 길음역 1316m
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%B1%EB%B6%81%EA%B5%AC%20%ED%95%98%EC%9B%94%EA%B3%A1%EB%8F%99%20225%20%EB%9E%98%EB%AF%B8%EC%95%88%EC%9B%94%EA%B3%A1&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A13613007`
+Exit status 1
 
 ── A10023451
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A10023451
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A10023451.json
-반정아이파크캐슬5단지 (주소로 좌표) → 망포역 직선 1614m · 노선 수인분당
-   다음: 매탄권선역 1766m
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EA%B2%BD%EA%B8%B0%EB%8F%84%20%ED%99%94%EC%84%B1%EB%B3%91%EC%A0%90%EA%B5%AC%20%EB%B0%98%EC%A0%95%EB%8F%99%20637%20%EB%B0%98%EC%A0%95%EC%95%84%EC%9D%B4%ED%8C%8C%ED%81%AC%EC%BA%90%EC%8A%AC5%EB%8B%A8%EC%A7%80&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A10023451`
+Exit status 1
 
 ── A10024349
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A10024349
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A10024349.json
-병점역아이파크캐슬 (주소로 좌표) → 병점역 직선 630m · 노선 1
-
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EA%B2%BD%EA%B8%B0%EB%8F%84%20%ED%99%94%EC%84%B1%EB%B3%91%EC%A0%90%EA%B5%AC%20%EB%B3%91%EC%A0%90%EB%8F%99%20881%20%EB%B3%91%EC%A0%90%EC%97%AD%EC%95%84%EC%9D%B4%ED%8C%8C%ED%81%AC%EC%BA%90%EC%8A%AC&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A10024349`
+Exit status 1
 
 ── A13606004
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A13606004
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A13606004.json
-돈암한신한진아파트 (주소로 좌표) → 성신여대입구역 직선 584m · 노선 우이신설·4
-   다음: 한성대입구역 742m
-   다음: 정릉역 978m
-   다음: 보문역 1284m
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%84%B1%EB%B6%81%EA%B5%AC%20%EB%8F%88%EC%95%94%EB%8F%99%20609-1%20%EB%8F%88%EC%95%94%ED%95%9C%EC%8B%A0%ED%95%9C%EC%A7%84%EC%95%84%ED%8C%8C%ED%8A%B8&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A13606004`
+Exit status 1
 
 ── A44278215
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A44278215
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A44278215.json
-화서주공4단지 (주소로 좌표) → 화서역 직선 244m · 노선 1
-
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%88%98%EC%9B%90%ED%8C%94%EB%8B%AC%EA%B5%AC%20%ED%99%94%EC%84%9C%EB%8F%99%20650%20%ED%99%94%EC%84%9C%EC%A3%BC%EA%B3%B54%EB%8B%A8%EC%A7%80&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A44278215`
+Exit status 1
 
 ── A10023329
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A10023329
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A10023329.json
-신동탄포레자이아파트 (주소로 좌표) → 망포역 직선 1046m · 노선 수인분당
-   다음: 영통역 1517m
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EA%B2%BD%EA%B8%B0%EB%8F%84%20%ED%99%94%EC%84%B1%EB%B3%91%EC%A0%90%EA%B5%AC%20%EB%B0%98%EC%9B%94%EB%8F%99%20974%20%EC%8B%A0%EB%8F%99%ED%83%84%ED%8F%AC%EB%A0%88%EC%9E%90%EC%9D%B4%EC%95%84%ED%8C%8C%ED%8A%B8&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A10023329`
+Exit status 1
 
 ── A10024093
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A10024093
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A10024093.json
-다산 푸르지오 (주소로 좌표) → 도농역 직선 741m · 노선 경의중앙
-   다음: 다산역 1656m
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EB%82%A8%EC%96%91%EC%A3%BC%EC%8B%9C%20%EB%8B%A4%EC%82%B0%EB%8F%99%206163%20%EB%8B%A4%EC%82%B0%20%ED%91%B8%EB%A5%B4%EC%A7%80%EC%98%A4&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A10024093`
+Exit status 1
 
 ── A15380403
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A15380403
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A15380403.json
-가산두산위브 (주소로 좌표) → 가산디지털단지역 직선 935m · 노선 7·1
-   다음: 독산역 1134m
-   다음: 남구로역 1196m
-   다음: 구로디지털단지역 1338m
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B8%88%EC%B2%9C%EA%B5%AC%20%EA%B0%80%EC%82%B0%EB%8F%99%20769%20%EA%B0%80%EC%82%B0%EB%91%90%EC%82%B0%EC%9C%84%EB%B8%8C&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A15380403`
+Exit status 1
 
 ── A44173913
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A44173913
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A44173913.json
-권선자이e편한세상 (주소로 좌표) → 수원시청역 직선 1052m · 노선 수인분당
-   다음: 매탄권선역 1279m
-   다음: 세류역 1519m
-   다음: 매교역 1658m
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%88%98%EC%9B%90%EA%B6%8C%EC%84%A0%EA%B5%AC%20%EA%B6%8C%EC%84%A0%EB%8F%99%201330%20%EA%B6%8C%EC%84%A0%EC%9E%90%EC%9D%B4e%ED%8E%B8%ED%95%9C%EC%84%B8%EC%83%81&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A44173913`
+Exit status 1
 
 ── A15209305
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A15209305
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A15209305.json
-개봉한진 (주소로 좌표) → 광명사거리역 직선 651m · 노선 7
-   다음: 천왕역 1204m
-   다음: 오류동역 1249m
-   다음: 개봉역 1257m
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B5%AC%EB%A1%9C%EA%B5%AC%20%EA%B0%9C%EB%B4%89%EB%8F%99%20478%20%EA%B0%9C%EB%B4%89%ED%95%9C%EC%A7%84&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A15209305`
+Exit status 1
 
 ── A44173006
 
 > @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
 > tsx src/aptStationCli.ts -- --kapt A44173006
 
-/home/runner/work/claude/claude/data/datasets/apt-station/A44173006.json
-구운삼환 (주소로 좌표) → 화서역 직선 952m · 노선 1
-   다음: 성균관대역 1940m
-
-── A44347020
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A44347020
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A44347020.json
-영통센트럴파크뷰 (주소로 좌표) → 청명역 직선 708m · 노선 수인분당
-   다음: 영통역 1761m
-
-── A10022331
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A10022331
-
-/home/runner/work/claude/claude/data/datasets/apt-station/A10022331.json
-오산세교2중흥S클래스에듀파크아파트 (주소로 좌표) → 오산대역 직선 1807m · 노선 1
-
-⏭ 이미 있음 — data/datasets/apt-station/A44340013.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13686302.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44033010.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10028021.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026600.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023875.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023329.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023740.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023833.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023991.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024453.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024488.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024831.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025412.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025621.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027344.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A12285703.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13922114.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13984004.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15005705.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15380403.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44033010.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44347020.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44347021.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44693813.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024974.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A14003106.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13778204.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15605103.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15205513.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43174208.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15703204.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13187702.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026388.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024040.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025331.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13612002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13987304.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15209305.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43176406.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026380.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027267.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13202312.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42084908.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024552.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026207.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13482706.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A14320304.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10045404.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13472701.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15180705.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023536.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13082704.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15209002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023630.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44851611.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13084803.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46571004.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027421.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15678103.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15178201.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13613007.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13615003.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43174208.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A47170801.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13987306.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027281.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A14210002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027514.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15288814.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15105302.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026065.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44656712.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027782.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023989.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024349.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027114.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44182326.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44347026.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027375.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15701003.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42383508.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44377204.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15205513.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15701007.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027233.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022907.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025336.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44573621.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023451.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024349.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024000.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023329.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023653.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43176406.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42085309.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027920.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13380703.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027692.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024426.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022845.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026600.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42385005.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42374402.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025621.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13009002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022677.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026215.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44878309.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027928.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43181606.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027643.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44851612.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022404.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026125.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025483.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026370.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027207.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15805303.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027180.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42374401.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46571103.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44573621.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44532015.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022387.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A12175203.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026881.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15681110.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025024.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027686.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15106901.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10028139.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022853.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A12179504.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15190705.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025310.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42384502.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44347023.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026043.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44878510.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43708008.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44812014.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A14272309.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44278215.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43070506.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44173913.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13381608.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027118.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10044002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A14007002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A14004002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A14072701.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13380104.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027602.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13309404.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13381608.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13375907.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13375902.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026748.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13376906.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13386702.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13377703.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A14381415.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A14381516.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A14383205.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13003202.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026232.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13003007.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13082805.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13010005.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13010006.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13071302.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13084804.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13006101.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023633.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023083.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023188.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13175103.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13185607.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13178101.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13186708.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13113007.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13176901.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13113008.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13184609.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024741.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13611103.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13611007.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13611006.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13611008.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13611011.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13611202.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13606107.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13606201.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13606004.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027189.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025283.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13610007.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13671205.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13613008.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025638.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023926.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025241.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A14272314.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A14272305.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A14272308.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A14272304.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A14207203.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A14206003.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13201208.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13201209.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13202002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13286304.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13286110.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13204409.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13204510.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13204103.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13204406.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13290107.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13204105.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13980019.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13980513.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13920506.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13983105.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13920804.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13982301.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13982202.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13981903.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13983004.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13971502.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13920706.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13920707.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13982704.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13921005.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13983816.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13983815.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13984005.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13984814.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13905105.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13986302.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13986306.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13986504.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13987303.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13923108.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13987305.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024547.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027816.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A12204004.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A12201003.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024828.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023076.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023079.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A12012202.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025976.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A12012203.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A12013003.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A12004001.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A12008003.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A12010104.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024719.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025130.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023959.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A12181103.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A12181406.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A12185004.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025003.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024347.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023508.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15875102.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15805003.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15805115.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15805002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15884703.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15807706.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15807606.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15807703.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15879502.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15807705.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15807605.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15875101.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024398.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15873701.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15805504.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15780905.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15728008.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15728009.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15703308.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15703309.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026879.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15721006.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15701602.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15792602.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15721007.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15209207.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15284906.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15286809.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15288813.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15205405.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15213007.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15213005.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025614.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027188.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15303205.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15370103.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15303002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025946.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15004507.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15081107.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15083404.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027073.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15010502.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15003002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026816.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15089421.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024615.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15609005.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15681502.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15603006.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15603206.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15685206.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025770.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15176202.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15105603.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15105303.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15101504.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15101506.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A15101508.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023661.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13718001.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13776509.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13776301.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13704404.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13704104.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027205.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13788208.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13778205.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13790929.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024240.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023043.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13599303.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025203.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025675.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027800.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13583604.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13583507.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13528004.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13527203.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13585804.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13509012.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13592706.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13520002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13520001.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13593802.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13551103.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024564.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024216.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027985.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023348.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13880806.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13811206.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13820006.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13820201.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13805002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13824005.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13824006.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13813010.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13822001.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13822003.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13822004.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13879102.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13822002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13876113.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13876114.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13822702.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025850.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024787.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13408003.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025415.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13407104.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13403101.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13485302.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13405201.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13405003.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A13470101.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025112.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025263.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025010.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024473.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024468.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022525.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10021122.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44072412.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44070706.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44030005.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44072212.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44071603.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44070904.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44073008.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44070707.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024170.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023204.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022987.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44173006.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44171927.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44183728.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44173912.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027295.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025992.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44170408.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026885.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44176304.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027871.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026230.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44170804.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44170808.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026336.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44170805.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44174611.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10028092.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026603.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44278301.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44275406.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44277306.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44270402.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023085.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44370614.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026799.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44384808.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44370903.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44380407.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44371004.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44347025.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44347019.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44347024.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44372702.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44382404.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44382103.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44376009.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44328002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025715.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44328006.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023155.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46170401.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026944.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024631.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46285003.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027842.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46210002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46271003.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46270901.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46271104.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023525.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023626.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023503.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46374321.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46390707.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46340002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46377208.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46377309.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46377610.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46377706.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46376107.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46392206.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46392104.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026318.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46377908.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46391625.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46378822.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46379226.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46379108.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46373315.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46382916.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46383017.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46378626.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46386328.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46374428.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46381114.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46341003.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43070306.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43080207.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43070902.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43070804.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027336.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43071005.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43075306.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43070705.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43181406.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43106006.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43171701.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43173004.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43105102.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43105004.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43181102.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43107007.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43182909.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43183405.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023559.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024077.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022506.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022268.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42081308.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42081209.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42081207.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42073301.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42085508.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42002001.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42084706.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42084708.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42280406.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42280404.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42280405.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42270610.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42270608.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42281205.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42204005.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027437.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026570.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026648.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42376401.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42381904.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026455.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42383806.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42370301.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42370302.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42384503.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42384702.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42385402.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42385302.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42385203.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025825.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024531.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023884.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022961.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025151.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A45070602.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A45015008.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A45074007.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026324.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025440.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027738.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A45974614.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A45907001.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026872.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025311.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025760.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025266.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024611.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024656.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024484.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024174.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024071.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023390.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023196.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42621003.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42672901.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42618201.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42681505.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42689406.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42683706.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42683704.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42683707.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026018.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42685306.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42681504.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42683705.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025014.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024584.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42590615.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42590616.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027619.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42580507.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42580506.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42580504.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42580505.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42590614.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42590617.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42583104.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42514303.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026028.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42513203.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42513001.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42513202.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42586610.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42586611.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42586609.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025458.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42586612.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025963.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025832.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025039.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023355.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022811.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41280403.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026532.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41206003.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41209002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027815.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41202002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41202001.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41204001.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41222114.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41222218.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41222112.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41222111.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41222113.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41282605.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41227205.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41227208.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41275901.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41227212.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41282711.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41282706.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41273301.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024952.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024601.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027923.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025333.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41070906.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41081007.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027517.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41077305.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41083710.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026142.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41031504.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41072715.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41084312.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41078303.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41144005.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41141019.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025681.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41176705.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41176703.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41131317.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41178504.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025989.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41183927.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42703002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024935.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024479.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024433.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024059.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026309.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026867.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027574.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A47174224.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A47174320.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A47174425.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A47174523.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A47291304.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A47279207.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A47279205.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027754.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025830.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027943.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027695.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024648.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A47295318.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A47278416.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A47278816.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A47279408.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025596.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025474.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025066.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024356.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024093.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44774004.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026524.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026716.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025195.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44771702.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44771901.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44724002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44729004.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44774203.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44773304.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025374.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44771315.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44774513.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44774617.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44772116.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026366.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44772901.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022789.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022331.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10020128.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42980007.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027950.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027886.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025651.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026534.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026846.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026012.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027300.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026631.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42983405.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42983404.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42987813.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026569.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42984208.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42946002.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A42979803.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026419.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025100.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025841.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024845.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024498.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025502.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43575706.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43576205.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43501009.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43574905.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43576807.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43576808.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43504006.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43573107.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43574805.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43504005.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43575904.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43576005.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43575403.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43571004.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43770703.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025761.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A43772723.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025188.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027379.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A46572201.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026619.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026784.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026640.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026630.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025660.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023051.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022690.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022829.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022681.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44655712.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44695410.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44658209.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44695804.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025541.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44657207.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025587.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44675301.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44659201.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44672601.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025933.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44694013.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44694209.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024231.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44851113.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44851511.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44815011.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44815010.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44853819.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44897120.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026839.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44876510.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44876411.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44898708.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44899209.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025481.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41570101.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41501010.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026448.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027014.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41576915.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41576916.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026284.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41574205.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41506012.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41574206.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41574207.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026216.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41574410.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41574408.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41574405.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41506013.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41574416.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027199.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41574412.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41574413.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41507008.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A41507010.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026165.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027488.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024763.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024486.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024689.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026773.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44577705.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026893.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44572703.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44599008.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44598308.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44536022.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44598820.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44598521.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A44532014.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026985.json (다시 받으려면 force=1)
-
-── A10026127
-
-> @wirit/collectors@0.1.0 collect-apt-station /home/runner/work/claude/claude/packages/collectors
-> tsx src/aptStationCli.ts -- --kapt A10026127
-
-⛔ 좌표를 못 잡았습니다: 경기도 화성동탄구 산척동 744 반도유보라아이비파크 10.0 1단지
+Error: GET 실패(4회 시도): https://dapi.kakao.com/v2/local/search/address.json?query=%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%88%98%EC%9B%90%EA%B6%8C%EC%84%A0%EA%B5%AC%20%EA%B5%AC%EC%9A%B4%EB%8F%99%20462%20%EA%B5%AC%EC%9A%B4%EC%82%BC%ED%99%98&size=5
+fetch failed — 원인: ConnectTimeoutError: Connect Timeout Error (attempted address: dapi.kakao.com:443, timeout: 10000ms) (code=UND_ERR_CONNECT_TIMEOUT)
+    at fetchText (/home/runner/work/claude/claude/packages/collectors/src/http.ts:59:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async kakao (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:37:16)
+    at async main (/home/runner/work/claude/claude/packages/collectors/src/aptStationCli.ts:73:13)
 /home/runner/work/claude/claude/packages/collectors:
- ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A10026127`
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-apt-station: `tsx src/aptStationCli.ts -- --kapt A44173006`
 Exit status 1
-⏭ 이미 있음 — data/datasets/apt-station/A10025680.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026888.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027122.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10028055.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10027830.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10028048.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025603.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025510.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025974.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026301.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023363.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10026088.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10025854.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10023699.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10022856.json (다시 받으려면 force=1)
-⏭ 이미 있음 — data/datasets/apt-station/A10024152.json (다시 받으려면 force=1)
-
-⚠️ 일부 줄이 실패했습니다
 ```
