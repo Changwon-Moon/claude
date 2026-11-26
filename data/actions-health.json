@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-26T03:46:14.786Z",
+  "generatedAt": "2026-11-26T05:15:32.457Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -282,15 +282,15 @@
         },
         {
           "day": "11-26",
-          "state": "none",
-          "at": null,
-          "delay": null
+          "state": "late",
+          "at": "13:05",
+          "delay": 355
         }
       ],
-      "medianDelay": null,
-      "maxDelay": null,
-      "lastRun": "2026-11-25",
-      "lastOk": "2026-11-25",
+      "medianDelay": 355,
+      "maxDelay": 355,
+      "lastRun": "2026-11-26",
+      "lastOk": "2026-11-26",
       "okDaysAgo": 0
     },
     {
@@ -1285,7 +1285,7 @@
       "lastOk": "2026-11-26",
       "okDaysAgo": 0,
       "fails30": 0,
-      "runs30": 63
+      "runs30": 64
     },
     {
       "file": "singo-prep.yml",
@@ -1314,8 +1314,8 @@
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 44,
-      "runs30": 65
+      "fails30": 45,
+      "runs30": 66
     }
   ]
 }
