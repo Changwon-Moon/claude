@@ -1,9 +1,102 @@
 # 신고가 단지 이력 — 마지막 실행
 
-- 대기열: 994줄
+- 대기열: 1002줄
 - 결과: **성공**
 
 ```
+
+── 양평한신 전용 59타입 (11560)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11560 --apt '양평한신' --umd '양평동5가' --type 59 --from 202001
+
+양평한신 · 전용 59타입 · 11560 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11560-양평한신-59.json
+거래 있던 달 73/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 14.4억 (2026-11-01 · 전용 59.94㎡ 6층)
+
+── 답십리청솔우성 전용 84타입 (11230)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11230 --apt '답십리청솔우성' --umd '답십리동' --type 84 --from 202001
+
+답십리청솔우성 · 전용 84타입 · 11230 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11230-답십리청솔우성-84.json
+거래 있던 달 37/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 12.45억 (2026-10-29 · 전용 84.94㎡ 18층)
+
+── 동탄역센트럴상록아파트 전용 59타입 (41597)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41597 --apt '동탄역센트럴상록아파트' --umd '영천동' --type 59 --from 202001 --force
+
+동탄역센트럴상록아파트 · 전용 59타입 · 41597 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41597-동탄역센트럴상록아파트-59.json
+거래 있던 달 75/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 12.15억 (2026-11-24 · 전용 59.98㎡ 25층)
+🧹 force=1 을 지웠습니다 — lawd=41597 umd=영천동 type=59 apt="동탄역센트럴상록아파트"
+
+── 쌍용 전용 84타입 (11230)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11230 --apt '쌍용' --umd '이문동' --type 84 --from 202001 --force
+
+쌍용 · 전용 84타입 · 11230 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11230-쌍용-84.json
+거래 있던 달 48/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 11.6억 (2026-11-19 · 전용 84.89㎡ 18층)
+🧹 force=1 을 지웠습니다 — lawd=11230 umd=이문동 type=84 apt="쌍용"
+
+── 한신 전용 84타입 (11290)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11290 --apt '한신' --umd '돈암동' --type 84 --from 202001 --force
+
+한신 · 전용 84타입 · 11290 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11290-한신-84.json
+거래 있던 달 41/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 11억 (2026-11-03 · 전용 84.87㎡ 11층)
+🧹 force=1 을 지웠습니다 — lawd=11290 umd=돈암동 type=84 apt="한신"
+
+── 장미마을삼성래미안2 전용 59타입 (41463)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41463 --apt '장미마을삼성래미안2' --umd '언남동' --type 59 --from 202001
+
+장미마을삼성래미안2 · 전용 59타입 · 41463 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41463-장미마을삼성래미안2-59.json
+거래 있던 달 32/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 8.28억 (2026-11-21 · 전용 59.85㎡ 11층)
+
+── 벽산라이브파크 전용 59타입 (11305)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 11305 --apt '벽산라이브파크' --umd '미아동' --type 59 --from 202001 --force
+
+벽산라이브파크 · 전용 59타입 · 11305 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/11305-벽산라이브파크-59.json
+거래 있던 달 68/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 7.71억 (2026-11-21 · 전용 60㎡ 22층)
+🧹 force=1 을 지웠습니다 — lawd=11305 umd=미아동 type=59 apt="벽산라이브파크"
+
+── 갈매6단지 전용 59타입 (41310)
+
+> @wirit/collectors@0.1.0 collect-singo-history /home/runner/work/claude/claude/packages/collectors
+> tsx src/molitHistoryCli.ts -- --lawd 41310 --apt '갈매6단지' --umd '갈매동' --type 59 --from 202001 --force
+
+갈매6단지 · 전용 59타입 · 41310 · 202001~202611 (83개월)
+/home/runner/work/claude/claude/data/datasets/singo-history/41310-갈매6단지-59.json
+거래 있던 달 20/83 · 수집 실패 0개월
+📦 캐시에서 80개월 · 국토부에 물은 것 3개월
+최고가 7.25억 (2026-11-24 · 전용 59.97㎡ 13층)
+🧹 force=1 을 지웠습니다 — lawd=41310 umd=갈매동 type=59 apt="갈매6단지"
 
 ── 동탄역 시범한화 꿈에그린 프레스티지 전용 84타입 (41597)
 
