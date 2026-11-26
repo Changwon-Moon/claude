@@ -70,7 +70,7 @@ lawd=11230 umd=이문동 type=84 apt="쌍용"
 lawd=11290 umd=돈암동 type=84 apt="한신"
 lawd=41463 umd=언남동 type=59 apt="장미마을삼성래미안2"
 lawd=11305 umd=미아동 type=59 apt="벽산라이브파크"
-lawd=41310 umd=갈매동 type=59 apt="갈매6단지" force=1
+lawd=41310 umd=갈매동 type=59 apt="갈매6단지"
 
 lawd=41597 umd=청계동 type=84 apt="동탄역 시범한화 꿈에그린 프레스티지"
 lawd=41135 umd=야탑동 type=59 apt="매화마을공무원2"
