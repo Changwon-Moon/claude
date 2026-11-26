@@ -65,7 +65,7 @@
 # ⚡ 2026-11-26 singo-daily-build 가 채운 줄 — 오늘 카드에 필요한 줄이라 맨 위에 둔다
 lawd=11560 umd=양평동5가 type=59 apt="양평한신"
 lawd=11230 umd=답십리동 type=84 apt="답십리청솔우성"
-lawd=41597 umd=영천동 type=59 apt="동탄역센트럴상록아파트" force=1
+lawd=41597 umd=영천동 type=59 apt="동탄역센트럴상록아파트"
 lawd=11230 umd=이문동 type=84 apt="쌍용" force=1
 lawd=11290 umd=돈암동 type=84 apt="한신" force=1
 lawd=41463 umd=언남동 type=59 apt="장미마을삼성래미안2"
