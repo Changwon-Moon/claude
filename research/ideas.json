@@ -2192,34 +2192,6 @@
       "at": "2026-11-24"
     },
     {
-      "id": "ah-remndr-2026910300",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 산곡역자이힐스테이트앤하늘채",
-      "why": "인천 · 550세대 · 접수 ~2026-11-24 · 73점(수도권·550가구·무순위·자이)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-11-24",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910300&pblancNo=2026910300",
-      "at": "2026-11-26"
-    },
-    {
-      "id": "ah-remndr-2026910307",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 인천 검단신도시 AB13블록 호반써밋Ⅲ",
-      "why": "인천 · 1세대 · 접수 ~2026-11-24 · 57점(수도권·무순위·써밋)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-11-24",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910307&pblancNo=2026910307",
-      "at": "2026-11-26"
-    },
-    {
       "id": "ah-remndr-2026910294",
       "cat": "todo",
       "topic": "부동산",
@@ -2248,20 +2220,6 @@
       "at": "2026-11-26"
     },
     {
-      "id": "ah-remndr-2026910306",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 광안센텀 비스타동원(조합원 취소분)",
-      "why": "부산 · 39세대 · 접수 ~2026-11-25 · 49점(광역시·39가구·무순위)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-11-25",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910306&pblancNo=2026910306",
-      "at": "2026-11-26"
-    },
-    {
       "id": "ah-apt-2026000521",
       "cat": "todo",
       "topic": "부동산",
@@ -2273,6 +2231,48 @@
       "status": "",
       "deadline": "2026-12-02",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000521&pblancNo=2026000521",
+      "at": "2026-11-26"
+    },
+    {
+      "id": "ah-remndr-2026910300",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 산곡역자이힐스테이트앤하늘채",
+      "why": "인천 · 550세대 · 접수 ~2026-11-24 · 73점(수도권·550가구·무순위·자이)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-11-24",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910300&pblancNo=2026910300",
+      "at": "2026-11-26"
+    },
+    {
+      "id": "ah-remndr-2026910307",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 인천 검단신도시 AB13블록 호반써밋Ⅲ",
+      "why": "인천 · 1세대 · 접수 ~2026-11-24 · 57점(수도권·무순위·써밋)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-11-24",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910307&pblancNo=2026910307",
+      "at": "2026-11-26"
+    },
+    {
+      "id": "ah-remndr-2026910306",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 광안센텀 비스타동원(조합원 취소분)",
+      "why": "부산 · 39세대 · 접수 ~2026-11-25 · 49점(광역시·39가구·무순위)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-11-25",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910306&pblancNo=2026910306",
       "at": "2026-11-26"
     }
   ]
