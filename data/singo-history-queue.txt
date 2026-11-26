@@ -69,7 +69,7 @@ lawd=11590 umd=사당동 type=84 apt="대림(169-8)"
 lawd=11500 umd=화곡동 type=84 apt="강서힐스테이트"
 lawd=11530 umd=신도림동 type=84 apt="동아1"
 lawd=41465 umd=성복동 type=84 apt="성복역롯데캐슬클라시엘"
-lawd=11380 umd=응암동 type=59 apt="녹번역e편한세상캐슬" force=1
+lawd=11380 umd=응암동 type=59 apt="녹번역e편한세상캐슬"
 lawd=41173 umd=호계동 type=84 apt="평촌더샵아이파크" force=1
 lawd=41173 umd=호계동 type=59 apt="평촌센텀퍼스트" force=1
 lawd=41430 umd=내손동 type=59 apt="인덕원 센트럴 자이 2단지" force=1
