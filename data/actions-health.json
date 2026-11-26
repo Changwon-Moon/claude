@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-26T05:15:32.457Z",
+  "generatedAt": "2026-11-26T23:12:00.342Z",
   "windowDays": 30,
   "scheduled": [
     {
@@ -8,12 +8,6 @@
       "cron": "55 16 * * *",
       "dueKst": "01:55",
       "dots": [
-        {
-          "day": "11-13",
-          "state": "ok",
-          "at": "09:15",
-          "delay": null
-        },
         {
           "day": "11-14",
           "state": "ok",
@@ -88,15 +82,21 @@
         },
         {
           "day": "11-26",
-          "state": "late",
-          "at": "09:48",
-          "delay": 473
+          "state": "ok",
+          "at": "11:09",
+          "delay": null
+        },
+        {
+          "day": "11-27",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
-      "medianDelay": 473,
-      "maxDelay": 473,
-      "lastRun": "2026-11-26",
-      "lastOk": "2026-11-26",
+      "medianDelay": null,
+      "maxDelay": null,
+      "lastRun": "2026-11-27",
+      "lastOk": "2026-11-27",
       "okDaysAgo": 0
     },
     {
@@ -105,12 +105,6 @@
       "cron": "10 20 8 * *",
       "dueKst": "05:10",
       "dots": [
-        {
-          "day": "11-13",
-          "state": "none",
-          "at": null,
-          "delay": null
-        },
         {
           "day": "11-14",
           "state": "none",
@@ -188,6 +182,12 @@
           "state": "none",
           "at": null,
           "delay": null
+        },
+        {
+          "day": "11-27",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": null,
@@ -202,12 +202,6 @@
       "cron": "10 22 * * *",
       "dueKst": "07:10",
       "dots": [
-        {
-          "day": "11-13",
-          "state": "ok",
-          "at": "16:44",
-          "delay": null
-        },
         {
           "day": "11-14",
           "state": "ok",
@@ -282,13 +276,19 @@
         },
         {
           "day": "11-26",
-          "state": "late",
-          "at": "13:05",
-          "delay": 355
+          "state": "ok",
+          "at": "18:19",
+          "delay": null
+        },
+        {
+          "day": "11-27",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
-      "medianDelay": 355,
-      "maxDelay": 355,
+      "medianDelay": null,
+      "maxDelay": null,
       "lastRun": "2026-11-26",
       "lastOk": "2026-11-26",
       "okDaysAgo": 0
@@ -299,12 +299,6 @@
       "cron": "20 1 1 * *",
       "dueKst": "10:20",
       "dots": [
-        {
-          "day": "11-13",
-          "state": "none",
-          "at": null,
-          "delay": null
-        },
         {
           "day": "11-14",
           "state": "none",
@@ -382,13 +376,19 @@
           "state": "none",
           "at": null,
           "delay": null
+        },
+        {
+          "day": "11-27",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": null,
       "maxDelay": null,
       "lastRun": "2026-11-01",
       "lastOk": "2026-11-01",
-      "okDaysAgo": 24
+      "okDaysAgo": 25
     },
     {
       "file": "reb-weekly-collect.yml",
@@ -396,12 +396,6 @@
       "cron": "37 1 * * 5",
       "dueKst": "10:37",
       "dots": [
-        {
-          "day": "11-13",
-          "state": "ok",
-          "at": "17:41",
-          "delay": null
-        },
         {
           "day": "11-14",
           "state": "none",
@@ -479,13 +473,19 @@
           "state": "none",
           "at": null,
           "delay": null
+        },
+        {
+          "day": "11-27",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": null,
       "maxDelay": null,
       "lastRun": "2026-11-20",
       "lastOk": "2026-11-20",
-      "okDaysAgo": 5
+      "okDaysAgo": 6
     },
     {
       "file": "month-backfill.yml",
@@ -493,12 +493,6 @@
       "cron": "40 1 * * *",
       "dueKst": "10:40",
       "dots": [
-        {
-          "day": "11-13",
-          "state": "ok",
-          "at": "17:41",
-          "delay": null
-        },
         {
           "day": "11-14",
           "state": "ok",
@@ -573,6 +567,12 @@
         },
         {
           "day": "11-26",
+          "state": "ok",
+          "at": "18:59",
+          "delay": null
+        },
+        {
+          "day": "11-27",
           "state": "none",
           "at": null,
           "delay": null
@@ -580,8 +580,8 @@
       ],
       "medianDelay": null,
       "maxDelay": null,
-      "lastRun": "2026-11-25",
-      "lastOk": "2026-11-25",
+      "lastRun": "2026-11-26",
+      "lastOk": "2026-11-26",
       "okDaysAgo": 0
     },
     {
@@ -590,12 +590,6 @@
       "cron": "0 2 * * *",
       "dueKst": "11:00",
       "dots": [
-        {
-          "day": "11-13",
-          "state": "ok",
-          "at": "18:12",
-          "delay": null
-        },
         {
           "day": "11-14",
           "state": "ok",
@@ -670,6 +664,12 @@
         },
         {
           "day": "11-26",
+          "state": "ok",
+          "at": "19:32",
+          "delay": null
+        },
+        {
+          "day": "11-27",
           "state": "none",
           "at": null,
           "delay": null
@@ -677,8 +677,8 @@
       ],
       "medianDelay": null,
       "maxDelay": null,
-      "lastRun": "2026-11-25",
-      "lastOk": "2026-11-25",
+      "lastRun": "2026-11-26",
+      "lastOk": "2026-11-26",
       "okDaysAgo": 0
     },
     {
@@ -687,12 +687,6 @@
       "cron": "23 2 12 1,4,7,10 *",
       "dueKst": "11:23",
       "dots": [
-        {
-          "day": "11-13",
-          "state": "none",
-          "at": null,
-          "delay": null
-        },
         {
           "day": "11-14",
           "state": "none",
@@ -770,6 +764,12 @@
           "state": "none",
           "at": null,
           "delay": null
+        },
+        {
+          "day": "11-27",
+          "state": "none",
+          "at": null,
+          "delay": null
         }
       ],
       "medianDelay": null,
@@ -784,12 +784,6 @@
       "cron": "37 2 17 1,7 *",
       "dueKst": "11:37",
       "dots": [
-        {
-          "day": "11-13",
-          "state": "ok",
-          "at": "15:38",
-          "delay": null
-        },
         {
           "day": "11-14",
           "state": "ok",
@@ -864,15 +858,21 @@
         },
         {
           "day": "11-26",
-          "state": "ontime",
-          "at": "11:49",
-          "delay": 12
+          "state": "ok",
+          "at": "21:23",
+          "delay": null
+        },
+        {
+          "day": "11-27",
+          "state": "late",
+          "at": "07:18",
+          "delay": 1182
         }
       ],
-      "medianDelay": 12,
-      "maxDelay": 12,
-      "lastRun": "2026-11-26",
-      "lastOk": "2026-11-26",
+      "medianDelay": 1182,
+      "maxDelay": 1182,
+      "lastRun": "2026-11-27",
+      "lastOk": "2026-11-27",
       "okDaysAgo": 0
     }
   ],
@@ -1241,9 +1241,9 @@
       "file": "ecos-m2.yml",
       "name": "ECOS M2 수집 (probe+collect)",
       "lastRun": "2026-11-17",
-      "daysAgo": 8,
+      "daysAgo": 9,
       "lastOk": "2026-11-17",
-      "okDaysAgo": 8,
+      "okDaysAgo": 9,
       "fails30": 0,
       "runs30": 2
     },
@@ -1251,11 +1251,21 @@
       "file": "reb-collect.yml",
       "name": "전세·월세 지수 수집 (한국부동산원)",
       "lastRun": "2026-11-17",
-      "daysAgo": 8,
+      "daysAgo": 9,
       "lastOk": "2026-11-17",
-      "okDaysAgo": 8,
+      "okDaysAgo": 9,
       "fails30": 0,
       "runs30": 3
+    },
+    {
+      "file": "silv-collect.yml",
+      "name": "분양권전매 실거래 수집 (국토부)",
+      "lastRun": "2026-11-23",
+      "daysAgo": 4,
+      "lastOk": "2026-11-23",
+      "okDaysAgo": 4,
+      "fails30": 0,
+      "runs30": 1
     },
     {
       "file": "auto-produce.yml",
@@ -1268,29 +1278,19 @@
       "runs30": 2
     },
     {
-      "file": "silv-collect.yml",
-      "name": "분양권전매 실거래 수집 (국토부)",
-      "lastRun": "2026-11-23",
-      "daysAgo": 3,
-      "lastOk": "2026-11-23",
-      "okDaysAgo": 3,
-      "fails30": 0,
-      "runs30": 1
-    },
-    {
       "file": "guard.yml",
       "name": "문지기 (guard)",
-      "lastRun": "2026-11-26",
+      "lastRun": "2026-11-27",
       "daysAgo": 0,
-      "lastOk": "2026-11-26",
+      "lastOk": "2026-11-27",
       "okDaysAgo": 0,
       "fails30": 0,
-      "runs30": 64
+      "runs30": 65
     },
     {
       "file": "singo-prep.yml",
       "name": "신고가 재료 미리 걸기 (아침 판정 직후)",
-      "lastRun": "2026-11-26",
+      "lastRun": "2026-11-27",
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
@@ -1300,7 +1300,7 @@
     {
       "file": "singo-retry.yml",
       "name": "오늘의 신고가 — 자동 재시도",
-      "lastRun": "2026-11-26",
+      "lastRun": "2026-11-27",
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
@@ -1310,12 +1310,12 @@
     {
       "file": "tower-deploy.yml",
       "name": "관제탑 배포 (Cloudflare)",
-      "lastRun": "2026-11-26",
+      "lastRun": "2026-11-27",
       "daysAgo": 0,
       "lastOk": null,
       "okDaysAgo": null,
-      "fails30": 45,
-      "runs30": 66
+      "fails30": 46,
+      "runs30": 67
     }
   ]
 }
