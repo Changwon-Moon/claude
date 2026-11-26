@@ -5,13 +5,13 @@
     "aptNm": "인덕원 센트럴 자이 2단지",
     "type": "59",
     "from": "202001",
-    "to": "202610",
-    "monthsTried": 82,
+    "to": "202611",
+    "monthsTried": 83,
     "monthsFailed": 0,
-    "monthsTraded": 58,
+    "monthsTraded": 59,
     "peak": {
-      "manwon": 112000,
-      "date": "2026-10-06",
+      "manwon": 117000,
+      "date": "2026-11-14",
       "area": 59.84,
       "floor": 11
     },
@@ -755,6 +755,15 @@
       "area": 59.84,
       "floor": 11,
       "date": "2026-10-06",
+      "ok": true
+    },
+    {
+      "ym": "202611",
+      "maxManwon": 117000,
+      "count": 2,
+      "area": 59.84,
+      "floor": 11,
+      "date": "2026-11-14",
       "ok": true
     }
   ]
