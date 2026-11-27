@@ -2248,20 +2248,6 @@
       "at": "2026-11-27"
     },
     {
-      "id": "ah-remndr-2026910306",
-      "cat": "hot",
-      "topic": "부동산",
-      "feed": "auto",
-      "title": "[줍줍] 광안센텀 비스타동원(조합원 취소분)",
-      "why": "부산 · 39세대 · 접수 ~2026-11-25 · 49점(광역시·39가구·무순위)",
-      "source": "한국부동산원 청약홈 API",
-      "state": "",
-      "status": "",
-      "deadline": "2026-11-25",
-      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910306&pblancNo=2026910306",
-      "at": "2026-11-27"
-    },
-    {
       "id": "ah-apt-2026000611",
       "cat": "todo",
       "topic": "부동산",
@@ -2273,6 +2259,20 @@
       "status": "",
       "deadline": "2026-12-10",
       "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000611&pblancNo=2026000611",
+      "at": "2026-11-27"
+    },
+    {
+      "id": "ah-remndr-2026910306",
+      "cat": "hot",
+      "topic": "부동산",
+      "feed": "auto",
+      "title": "[줍줍] 광안센텀 비스타동원(조합원 취소분)",
+      "why": "부산 · 39세대 · 접수 ~2026-11-25 · 49점(광역시·39가구·무순위)",
+      "source": "한국부동산원 청약홈 API",
+      "state": "",
+      "status": "",
+      "deadline": "2026-11-25",
+      "url": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910306&pblancNo=2026910306",
       "at": "2026-11-27"
     }
   ]
