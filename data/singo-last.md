@@ -1,33 +1,68 @@
 # 오늘의 신고가 — 마지막 실행
 
-- 실행: 2026-11-27 (KST) · 방아쇠 `workflow_dispatch`
+- 실행: 2026-11-28 (KST) · 방아쇠 `workflow_dispatch`
 - 기준: 1000세대 이상 명부 · 전용 59·84 타입 · 최근 2개월 신고분
-- 결과: **성공**
-- 커밋: `e9aedc2f083f548b8571b5625072ef0edf0e80d0`
+- 결과: **실패**
+- 커밋: `7658d6d2ba47c28aef2fb30f4f5e53c91cb4a6b5`
 
 ```
 
 > @wirit/collectors@0.1.0 collect-singo /home/runner/work/claude/claude/packages/collectors
-> tsx src/molitSingoCli.ts -- --today 2026-11-27 --months 2 --top 0 --sort price
+> tsx src/molitSingoCli.ts -- --today 2026-11-28 --months 2 --top 0 --sort price
 
    🔑 MOLIT_API_KEY: 166b… (64자) · 지문 4e34245e · 인코딩 안 됨
 명부 지번 조회판 1050칸 (지번 겹쳐 버린 것 9칸)
-명부 1147개 단지 · 판정 지역 61/61 · 수집 성공 122회 / 실패 0회
-→ 오늘의 신고가 11건
-  · 성남시분당구 시범현대 34평 22.45억 (전용 84.57㎡ 13층 2026-11-16 · 직전 21.85억 2026-11-21 · 1,695세대)
-  · 동작구 대림(169-8) 34평 18억 (전용 84.91㎡ 14층 2026-11-17 · 직전 17.5억 2026-02-07 · 1,152세대)
-  · 강서구 강서힐스테이트 34평 17.1억 (전용 84.99㎡ 18층 2026-11-06 · 직전 16.95억 2026-10-16 · 2,603세대)
-  · 구로구 동아1 34평 16.3억 (전용 84.908㎡ 23층 2026-11-13 · 직전 16.15억 2026-09-19 · 1,095세대)
-  · 용인시수지구 성복역롯데캐슬클라시엘 34평 15.45억 (전용 84.95㎡ 13층 2026-11-25 · 직전 15.25억 2026-10-17 · 1,094세대)
-  · 은평구 녹번역e편한세상캐슬 25평 14.7억 (전용 59.94㎡ 12층 2026-11-10 · 직전 14.3억 2026-09-12 · 2,569세대)
-  · 안양시동안구 평촌더샵아이파크 34평 14.5억 (전용 84.98㎡ 20층 2026-11-19 · 직전 14.4억 2026-11-07 · 1,174세대)
-  · 안양시동안구 평촌센텀퍼스트 25평 12.84억 (전용 59.997㎡ 8층 2026-11-18 · 직전 12.8억 2026-10-24 · 2,886세대)
-  · 의왕시 인덕원 센트럴 자이 2단지 25평 11.7억 (전용 59.84㎡ 11층 2026-11-14 · 직전 11.2억 2026-10-06 · 2,540세대)
-  · 광명시 광명아크포레자이위브 25평 11.2억 (전용 59.9915㎡ 11층 2026-11-21 · 직전 11.17억 2026-10-03 · 2,104세대)
-  · 광주시 광주역자연앤자이 34평 10.5억 (전용 84.5516㎡ 23층 2026-10-31 · 직전 10억 2026-11-10 · 1,031세대)
-기간 2026-11-27
-신고가 11건 · 돌파 0건
-→ /home/runner/work/claude/claude/docs/daily/신고가재료-2026-11-27.md
-→ data/datasets/singo-digest.json
-→ data/singo-digest-alert.txt
+⚠️ 종로구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+⚠️ 종로구 202611 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+⚠️ 중구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+   ⏸ 3번 연속 실패 — 문이 닫힌 것으로 보고 60초 기다립니다 (1/5)
+⚠️ 중구 202611 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+⚠️ 용산구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+⚠️ 용산구 202611 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+   ⏸ 3번 연속 실패 — 문이 닫힌 것으로 보고 60초 기다립니다 (2/5)
+⚠️ 성동구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+⚠️ 성동구 202611 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+⚠️ 광진구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+   ⏸ 3번 연속 실패 — 문이 닫힌 것으로 보고 60초 기다립니다 (3/5)
+⚠️ 광진구 202611 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+⚠️ 동대문구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+⚠️ 동대문구 202611 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+   ⏸ 3번 연속 실패 — 문이 닫힌 것으로 보고 60초 기다립니다 (4/5)
+⚠️ 중랑구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+⚠️ 중랑구 202611 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+⚠️ 성북구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+   ⏸ 3번 연속 실패 — 문이 닫힌 것으로 보고 60초 기다립니다 (5/5)
+⚠️ 성북구 202611 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+⚠️ 강북구 202610 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+⚠️ 강북구 202611 수집 실패: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cmmMsgHeader> <errMsg>SERVICE_KEY_IS_NOT_REGISTERED_ERROR</errMsg> <returnAuthMsg>등록되지 않은 서비스키 | getRTMSDataSvcAptTrade: API본문오류: 04 HTTP 에러
+↳ 403이면: (a) 방금 신청한 키의 전파 지연(최대 1~2시간) 또는 (b) 해당 API 활용신청 미완(상세/기본). 공공데이터포털 마이페이지에서 '아파트 매매 실거래가 상세/자료' 승인 상태 확인.  ← ⚠️ **일일 호출 한도**입니다(키 문제가 아닙니다). 자정(KST)에 리셋됩니다
+⛔ 5번(약 5분) 기다렸는데도 안 열립니다 — 여기서 접습니다.
+   (계속 두드리면 30분을 태우고도 결과는 같습니다)
+명부 1147개 단지 · 판정 지역 9/61 · 수집 성공 0회 / 실패 18회
+→ 오늘의 신고가 0건
+
+❌ 실거래 API 에서 한 건도 받지 못했습니다 (18회 시도 전부 실패) — 오늘 판정은 없습니다.
+   알림은 이미 나갔지만, 수집이 0건인 날을 초록불로 끝내지 않습니다.
+   첫 실패 사유: 종로구 202610: 모든 엔드포인트 실패 — getRTMSDataSvcAptTradeDev: HTTP 403 · <?xml version="1.0" encoding="UTF-8"?> <OpenAPI_ServiceResponse> <cm
+   ↳ 403/401 이면 공공데이터포털 마이페이지에서 **활용신청 상태와 만료일**을 확인하세요.
+/home/runner/work/claude/claude/packages/collectors:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @wirit/collectors@0.1.0 collect-singo: `tsx src/molitSingoCli.ts -- --today 2026-11-28 --months 2 --top 0 --sort price`
+Exit status 1
 ```
