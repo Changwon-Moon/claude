@@ -10,10 +10,10 @@
     "verified": true,
     "source": "한국부동산원 청약홈 분양정보 조회 서비스 (공공데이터포털 15098547)",
     "sourceUrl": "https://www.data.go.kr/data/15098547/openapi.do",
-    "collectedFor": "2026-11-27",
+    "collectedFor": "2026-11-28",
     "withinDays": 7,
     "totals": {
-      "APT 분양정보": 2956,
+      "APT 분양정보": 2965,
       "APT 무순위/잔여세대": 1770
     },
     "unit": {
@@ -21,6 +21,34 @@
     }
   },
   "notices": [
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910304",
+      "name": "더샵 분당하이스트(2차)",
+      "areaName": "경기",
+      "address": "경기도 성남시 분당구 정자동 90번지",
+      "supply": 34,
+      "noticeDate": "2026-11-23",
+      "receiptFrom": "2026-11-30",
+      "receiptTo": "2026-11-30",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2027-12",
+      "announceDate": "2026-12-03",
+      "builder": "느티마을4단지 리모델링주택조합",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://더샵분당하이스트.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910304&pblancNo=2026910304",
+      "score": 82,
+      "reasons": [
+        "수도권",
+        "34가구",
+        "무순위",
+        "D-2",
+        "더샵"
+      ]
+    },
     {
       "kind": "remndr",
       "pblancNo": "2026930047",
@@ -44,36 +72,8 @@
       "reasons": [
         "서울",
         "무순위",
-        "D-5",
+        "D-4",
         "롯데캐슬"
-      ]
-    },
-    {
-      "kind": "remndr",
-      "pblancNo": "2026910304",
-      "name": "더샵 분당하이스트(2차)",
-      "areaName": "경기",
-      "address": "경기도 성남시 분당구 정자동 90번지",
-      "supply": 34,
-      "noticeDate": "2026-11-23",
-      "receiptFrom": "2026-11-30",
-      "receiptTo": "2026-11-30",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2027-12",
-      "announceDate": "2026-12-03",
-      "builder": "느티마을4단지 리모델링주택조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://더샵분당하이스트.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910304&pblancNo=2026910304",
-      "score": 75,
-      "reasons": [
-        "수도권",
-        "34가구",
-        "무순위",
-        "D-3",
-        "더샵"
       ]
     },
     {
@@ -99,34 +99,8 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-4",
+        "D-3",
         "포레나"
-      ]
-    },
-    {
-      "kind": "apt",
-      "pblancNo": "2026820015",
-      "name": "시흥 거모 아테라(시흥거모 A-6BL) 신혼희망타운(공공분양)(본청약)",
-      "areaName": "경기",
-      "address": "경기도 시흥시 거모지구 내 A-6블록",
-      "supply": 480,
-      "noticeDate": "2026-11-06",
-      "receiptFrom": "2026-11-16",
-      "receiptTo": "2026-11-27",
-      "specialFrom": null,
-      "rank1From": "2026-11-16",
-      "moveInYm": "2029-09",
-      "announceDate": "2026-12-08",
-      "builder": "금호건설 주식회사",
-      "priceCap": true,
-      "speculative": false,
-      "homepage": "https://apply.lh.or.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820015&pblancNo=2026820015",
-      "score": 57,
-      "reasons": [
-        "수도권",
-        "오늘 마감",
-        "분양가상한제"
       ]
     },
     {
@@ -148,11 +122,11 @@
       "speculative": false,
       "homepage": "https://brand.hldni.com/thewaycity/",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910294&pblancNo=2026910294",
-      "score": 57,
+      "score": 64,
       "reasons": [
         "395가구",
         "무순위",
-        "D-3"
+        "D-2"
       ]
     },
     {
@@ -174,11 +148,11 @@
       "speculative": false,
       "homepage": "https://blog.naver.com/kkvista",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026930048&pblancNo=2026930048",
-      "score": 55,
+      "score": 62,
       "reasons": [
         "수도권",
         "무순위",
-        "D-3"
+        "D-2"
       ]
     },
     {
@@ -200,11 +174,11 @@
       "speculative": false,
       "homepage": "https://blog.naver.com/kkvista",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910305&pblancNo=2026910305",
-      "score": 55,
+      "score": 62,
       "reasons": [
         "수도권",
         "무순위",
-        "D-3"
+        "D-2"
       ]
     },
     {
@@ -226,11 +200,37 @@
       "speculative": false,
       "homepage": "https://blog.naver.com/kkvista",
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910303&pblancNo=2026910303",
-      "score": 55,
+      "score": 62,
       "reasons": [
         "수도권",
         "무순위",
-        "D-3"
+        "D-2"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000505",
+      "name": "경희궁 에피트",
+      "areaName": "서울",
+      "address": "서울특별시 종로구 교남동 28번지 일원",
+      "supply": 134,
+      "noticeDate": "2026-11-13",
+      "receiptFrom": "2026-11-26",
+      "receiptTo": "2026-11-30",
+      "specialFrom": "2026-11-25",
+      "rank1From": "2026-11-26",
+      "moveInYm": "2030-08",
+      "announceDate": "2026-12-04",
+      "builder": "에이치엘디앤아이한라 주식회사",
+      "priceCap": false,
+      "speculative": true,
+      "homepage": "https://brand.hldni.com/gyeonghuigung/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000505&pblancNo=2026000505",
+      "score": 56,
+      "reasons": [
+        "서울",
+        "D-2",
+        "투기과열지구"
       ]
     },
     {
@@ -256,7 +256,7 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-4"
+        "D-3"
       ]
     },
     {
@@ -282,7 +282,59 @@
       "reasons": [
         "수도권",
         "무순위",
-        "D-4"
+        "D-3"
+      ]
+    },
+    {
+      "kind": "remndr",
+      "pblancNo": "2026910289",
+      "name": "이안 엑소디움 에이펙스",
+      "areaName": "대구",
+      "address": "대구광역시 달서구 감삼동 599-51 (도로명주소 : 대구광역시 달서구 달구벌대로 1514)",
+      "supply": 6,
+      "noticeDate": "2026-11-23",
+      "receiptFrom": "2026-11-30",
+      "receiptTo": "2026-11-30",
+      "specialFrom": null,
+      "rank1From": null,
+      "moveInYm": "2026-12",
+      "announceDate": "2026-12-03",
+      "builder": "(주)위성도시건설",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": null,
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910289&pblancNo=2026910289",
+      "score": 54,
+      "reasons": [
+        "광역시",
+        "무순위",
+        "D-2"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000592",
+      "name": "경북도청 푸르지오 퍼스티온",
+      "areaName": "경북",
+      "address": "경상북도 예천군 호명읍 경북도청신도시 2단계 B-10BL",
+      "supply": 1165,
+      "noticeDate": "2026-11-27",
+      "receiptFrom": "2026-12-08",
+      "receiptTo": "2026-12-09",
+      "specialFrom": "2026-12-07",
+      "rank1From": "2026-12-08",
+      "moveInYm": "2029-08",
+      "announceDate": "2026-12-15",
+      "builder": "(주)대우건설",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://prugio.com/hb/2026/firstion",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000592&pblancNo=2026000592",
+      "score": 51,
+      "reasons": [
+        "1,165가구 대단지",
+        "푸르지오",
+        "분양가상한제"
       ]
     },
     {
@@ -307,60 +359,34 @@
       "score": 50,
       "reasons": [
         "수도권",
-        "D-5",
+        "D-4",
         "분양가상한제"
       ]
     },
     {
-      "kind": "remndr",
-      "pblancNo": "2026910306",
-      "name": "광안센텀 비스타동원(조합원 취소분)",
-      "areaName": "부산",
-      "address": "부산광역시 수영구 광안동 971",
-      "supply": 39,
-      "noticeDate": "2026-11-20",
-      "receiptFrom": "2026-11-25",
-      "receiptTo": "2026-11-25",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2027-09",
-      "announceDate": "2026-11-30",
-      "builder": "광안지역주택조합",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": "https://www.광안센텀비스타동원.com",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910306&pblancNo=2026910306",
-      "score": 49,
-      "reasons": [
-        "광역시",
-        "39가구",
-        "무순위"
-      ]
-    },
-    {
       "kind": "apt",
-      "pblancNo": "2026000505",
-      "name": "경희궁 에피트",
-      "areaName": "서울",
-      "address": "서울특별시 종로구 교남동 28번지 일원",
-      "supply": 134,
-      "noticeDate": "2026-11-13",
-      "receiptFrom": "2026-11-26",
-      "receiptTo": "2026-11-30",
-      "specialFrom": "2026-11-25",
-      "rank1From": "2026-11-26",
-      "moveInYm": "2030-08",
-      "announceDate": "2026-12-04",
-      "builder": "에이치엘디앤아이한라 주식회사",
-      "priceCap": false,
-      "speculative": true,
-      "homepage": "https://brand.hldni.com/gyeonghuigung/",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000505&pblancNo=2026000505",
-      "score": 49,
+      "pblancNo": "2026000612",
+      "name": "용인반도체클러스터 동일하이빌 파크밸리 2단지(D1-2블록)",
+      "areaName": "경기",
+      "address": "경기도 용인시 처인구 원삼면 용인 반도체 클러스터 일반산업단지 D1-2BL",
+      "supply": 661,
+      "noticeDate": "2026-11-27",
+      "receiptFrom": "2026-12-09",
+      "receiptTo": "2026-12-10",
+      "specialFrom": "2026-12-07",
+      "rank1From": "2026-12-09",
+      "moveInYm": "2029-05",
+      "announceDate": "2026-12-16",
+      "builder": "(주)동일토건",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://용인동일하이빌파크밸리2단지.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000612&pblancNo=2026000612",
+      "score": 48,
       "reasons": [
-        "서울",
-        "D-3",
-        "투기과열지구"
+        "수도권",
+        "661가구",
+        "분양가상한제"
       ]
     },
     {
@@ -390,32 +416,6 @@
       ]
     },
     {
-      "kind": "remndr",
-      "pblancNo": "2026910289",
-      "name": "이안 엑소디움 에이펙스",
-      "areaName": "대구",
-      "address": "대구광역시 달서구 감삼동 599-51 (도로명주소 : 대구광역시 달서구 달구벌대로 1514)",
-      "supply": 6,
-      "noticeDate": "2026-11-23",
-      "receiptFrom": "2026-11-30",
-      "receiptTo": "2026-11-30",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2026-12",
-      "announceDate": "2026-12-03",
-      "builder": "(주)위성도시건설",
-      "priceCap": false,
-      "speculative": false,
-      "homepage": null,
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910289&pblancNo=2026910289",
-      "score": 47,
-      "reasons": [
-        "광역시",
-        "무순위",
-        "D-3"
-      ]
-    },
-    {
       "kind": "apt",
       "pblancNo": "2026000521",
       "name": "더샵 천안라크원",
@@ -437,7 +437,7 @@
       "score": 47,
       "reasons": [
         "1,032가구 대단지",
-        "D-5",
+        "D-4",
         "더샵"
       ]
     },
@@ -468,34 +468,137 @@
       "score": 42,
       "reasons": [
         "711가구",
-        "D-5",
+        "D-4",
         "2개 블록 합계",
         "분양가상한제"
       ]
     },
     {
-      "kind": "remndr",
-      "pblancNo": "2026910298",
-      "name": "한양립스 에듀포레(조합원 취소분)",
-      "areaName": "광주",
-      "address": "전남광주통합특별시 광산구 하산동 269번지 일원",
-      "supply": 4,
-      "noticeDate": "2026-11-20",
-      "receiptFrom": "2026-11-25",
-      "receiptTo": "2026-11-25",
-      "specialFrom": null,
-      "rank1From": null,
-      "moveInYm": "2027-11",
-      "announceDate": "2026-11-30",
-      "builder": "송정리버파크지역주택조합",
-      "priceCap": false,
+      "kind": "apt",
+      "pblancNo": "2026000573",
+      "name": "세종스마트시티 엘 수자인(행정중심복합도시 5-1생활권 L11블록, 꽃나루마을 28단지)",
+      "areaName": "세종",
+      "address": "세종특별자치시 합강동 40번지 일원(행정중심복합도시 5-1생활권 L11BL)",
+      "supply": 507,
+      "noticeDate": "2026-11-27",
+      "receiptFrom": "2026-12-08",
+      "receiptTo": "2026-12-09",
+      "specialFrom": "2026-12-07",
+      "rank1From": "2026-12-08",
+      "moveInYm": "2029-11",
+      "announceDate": "2026-12-16",
+      "builder": "주식회사 비에스한양",
+      "priceCap": true,
       "speculative": false,
-      "homepage": "http://www.한양립스에듀포레.kr",
-      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTRemndrLttotPblancDetailView.do?houseManageNo=2026910298&pblancNo=2026910298",
-      "score": 39,
+      "homepage": "https://smartcity-l-sujain.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000573&pblancNo=2026000573",
+      "score": 40,
       "reasons": [
         "광역시",
-        "무순위"
+        "507가구",
+        "분양가상한제"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000571",
+      "name": "세종스마트시티 엘 수자인(행정중심복합도시 5-1생활권 L7블록, 꽃나루마을 24단지)",
+      "areaName": "세종",
+      "address": "세종특별자치시 합강동 산74-1번지 일원(행정중심복합도시 5-1생활권 L7BL)",
+      "supply": 648,
+      "noticeDate": "2026-11-27",
+      "receiptFrom": "2026-12-08",
+      "receiptTo": "2026-12-09",
+      "specialFrom": "2026-12-07",
+      "rank1From": "2026-12-08",
+      "moveInYm": "2029-10",
+      "announceDate": "2026-12-15",
+      "builder": "주식회사 비에스한양",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://smartcity-l-sujain.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000571&pblancNo=2026000571",
+      "score": 40,
+      "reasons": [
+        "광역시",
+        "648가구",
+        "분양가상한제"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000570",
+      "name": "세종스마트시티 엘 수자인(행정중심복합도시 5-1생활권 L6블록, 꽃나루마을 16단지)",
+      "areaName": "세종",
+      "address": "세종특별자치시 합강동 171-3번지 일원 (행정중심복합도시 5-1생활권 L6BL)",
+      "supply": 818,
+      "noticeDate": "2026-11-27",
+      "receiptFrom": "2026-12-08",
+      "receiptTo": "2026-12-09",
+      "specialFrom": "2026-12-07",
+      "rank1From": "2026-12-08",
+      "moveInYm": "2030-01",
+      "announceDate": "2026-12-15",
+      "builder": "주식회사 비에스한양",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://smartcity-l-sujain.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000570&pblancNo=2026000570",
+      "score": 40,
+      "reasons": [
+        "광역시",
+        "818가구",
+        "분양가상한제"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000574",
+      "name": "송도 대광로제비앙 모아엘가",
+      "areaName": "인천",
+      "address": "인천광역시 연수구 송도동 544 (송도국제도시 11공구 RC2BL)",
+      "supply": 592,
+      "noticeDate": "2026-11-27",
+      "receiptFrom": "2026-12-08",
+      "receiptTo": "2026-12-09",
+      "specialFrom": "2026-12-07",
+      "rank1From": "2026-12-08",
+      "moveInYm": "2030-01",
+      "announceDate": "2026-12-15",
+      "builder": "주식회사 대광건영,모아건설산업(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.송도대광로제비앙모아엘가.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000574&pblancNo=2026000574",
+      "score": 36,
+      "reasons": [
+        "수도권",
+        "592가구"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000588",
+      "name": "일광 THE S",
+      "areaName": "부산",
+      "address": "부산광역시 기장군 일광읍 이천리 345-1번지 일원",
+      "supply": 1968,
+      "noticeDate": "2026-11-27",
+      "receiptFrom": "2026-12-08",
+      "receiptTo": "2026-12-09",
+      "specialFrom": "2026-12-07",
+      "rank1From": "2026-12-08",
+      "moveInYm": "2029-07",
+      "announceDate": "2026-12-15",
+      "builder": "(주)동일스위트",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://일광더에스.kr",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000588&pblancNo=2026000588",
+      "score": 35,
+      "reasons": [
+        "광역시",
+        "1,968가구 대단지"
       ]
     },
     {
@@ -545,7 +648,7 @@
       "score": 32,
       "reasons": [
         "수도권",
-        "D-5"
+        "D-4"
       ]
     },
     {
@@ -569,8 +672,33 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000596&pblancNo=2026000596",
       "score": 30,
       "reasons": [
-        "D-5",
+        "D-4",
         "분양가상한제"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000589",
+      "name": "트리븐 가흥",
+      "areaName": "경북",
+      "address": "경상북도 영주시 가흥동 1059-10 일원",
+      "supply": 765,
+      "noticeDate": "2026-11-27",
+      "receiptFrom": "2026-12-03",
+      "receiptTo": "2026-12-04",
+      "specialFrom": "2026-12-02",
+      "rank1From": "2026-12-03",
+      "moveInYm": "2030-02",
+      "announceDate": "2026-12-10",
+      "builder": "두산에너빌리티(주)",
+      "priceCap": false,
+      "speculative": false,
+      "homepage": "https://www.trivn-doosan-gaheung.com",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000589&pblancNo=2026000589",
+      "score": 30,
+      "reasons": [
+        "765가구",
+        "D-6"
       ]
     },
     {
@@ -595,7 +723,7 @@
       "score": 28,
       "reasons": [
         "수도권",
-        "D-5"
+        "D-4"
       ]
     },
     {
@@ -619,8 +747,33 @@
       "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000590&pblancNo=2026000590",
       "score": 28,
       "reasons": [
-        "D-5",
+        "D-4",
         "위브"
+      ]
+    },
+    {
+      "kind": "apt",
+      "pblancNo": "2026000572",
+      "name": "세종스마트시티 엘 수자인(행정중심복합도시 5-1생활권 L8블록, 꽃나루마을 26단지)",
+      "areaName": "세종",
+      "address": "세종특별자치시 합강동 산74-1번지 일원(행정중심복합도시 5-1생활권 L8BL)",
+      "supply": 218,
+      "noticeDate": "2026-11-27",
+      "receiptFrom": "2026-12-08",
+      "receiptTo": "2026-12-09",
+      "specialFrom": "2026-12-07",
+      "rank1From": "2026-12-08",
+      "moveInYm": "2029-05",
+      "announceDate": "2026-12-17",
+      "builder": "주식회사 비에스한양",
+      "priceCap": true,
+      "speculative": false,
+      "homepage": "https://smartcity-l-sujain.kr/",
+      "noticeUrl": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000572&pblancNo=2026000572",
+      "score": 28,
+      "reasons": [
+        "광역시",
+        "분양가상한제"
       ]
     },
     {
@@ -645,7 +798,7 @@
       "score": 24,
       "reasons": [
         "광역시",
-        "D-5"
+        "D-4"
       ]
     }
   ]
