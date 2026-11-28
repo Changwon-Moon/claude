@@ -130,6 +130,39 @@ jobs:
       # 톡만 보내면 오너는 보는데 **세션은 못 본다** — 세션은 Actions 로그를 못 읽는다.
       # 실제로 08-28 에 이 버튼을 눌러 놓고 답을 못 읽어서 다시 두드려야 했다.
       # 다른 배관이 전부 `data/*-last.md` 로 답하는 것과 같은 자리다.
+      # ── 같은 키로 **다른 서비스**를 한 번씩 두드린다 (2026-11-28)
+      # 「등록되지 않은 서비스키」가 하루 종일 날 때, 그게 **키 전체**의 문제인지
+      # **실거래(상세) 서비스 하나**의 문제(한도·차단)인지를 가린다.
+      # 키 전체면 다른 서비스도 같은 403 이고, 서비스 하나면 다른 서비스는 00 이 온다.
+      - name: 다른 서비스로 대조한다
+        id: cross
+        if: always()
+        env:
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+        shell: bash
+        run: |
+          KEY_ENC=$(node -e 'const k=process.env.MOLIT_API_KEY||"";let d;try{d=decodeURIComponent(k)}catch{d=k};process.stdout.write(encodeURIComponent(d))')
+          YM=$(TZ=Asia/Seoul date +%Y%m)
+          : > /tmp/cross.txt
+          knock() {
+            local NAME="$1" URL="$2"
+            local CODE=$(curl -sS --max-time 20 -o /tmp/x.xml -w '%{http_code}' "${URL}&serviceKey=${KEY_ENC}" 2>/dev/null || echo "000")
+            local RC=$(grep -oE '<resultCode>[^<]*</resultCode>' /tmp/x.xml 2>/dev/null | head -1 | sed 's/<[^>]*>//g')
+            local ERR=$(grep -oE '<(errMsg|returnAuthMsg|resultMsg)>[^<]*</' /tmp/x.xml 2>/dev/null | head -2 | sed -E 's/<[^>]*>//g; s/<\/$//' | tr '\n' ' ')
+            local N=$(grep -c '<item>' /tmp/x.xml 2>/dev/null || true)
+            printf '\n· %s — HTTP %s · resultCode %s · item %s건 %s' "$NAME" "$CODE" "${RC:-?}" "${N:-0}" "$ERR" >> /tmp/cross.txt
+          }
+          knock "실거래 상세(지금 막힌 곳)" "https://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev?LAWD_CD=11110&DEAL_YMD=${YM}&pageNo=1&numOfRows=3"
+          knock "실거래 기본(비상세)" "https://apis.data.go.kr/1613000/RTMSDataSvcAptTrade/getRTMSDataSvcAptTrade?LAWD_CD=11110&DEAL_YMD=${YM}&pageNo=1&numOfRows=3"
+          knock "전월세 실거래" "https://apis.data.go.kr/1613000/RTMSDataSvcAptRent/getRTMSDataSvcAptRent?LAWD_CD=11110&DEAL_YMD=${YM}&pageNo=1&numOfRows=3"
+          knock "건축물대장" "https://apis.data.go.kr/1613000/BldRgstHubService/getBrTitleInfo?sigunguCd=11110&bjdongCd=10100&pageNo=1&numOfRows=3"
+          cat /tmp/cross.txt
+          {
+            echo "MSG<<EOF"
+            echo "🔀 같은 키로 다른 서비스:$(cat /tmp/cross.txt)"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
       - name: 답을 파일로 남긴다
         if: always()
         shell: bash
@@ -142,6 +175,8 @@ jobs:
             echo
             echo '```'
             echo "${{ steps.knock.outputs.MSG }}"
+            echo
+            echo "${{ steps.cross.outputs.MSG }}"
             echo '```'
           } > data/molit-door-last.md
           git config user.name "wirit-bot"
